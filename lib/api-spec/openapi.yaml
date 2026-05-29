@@ -10,6 +10,18 @@ servers:
 tags:
   - name: health
     description: Health operations
+  - name: categories
+    description: Thematic categories
+  - name: themes
+    description: Civic monitoring themes
+  - name: contracts
+    description: Public contracts
+  - name: acts
+    description: Albo pretorio acts
+  - name: reports
+    description: Citizen reports
+  - name: stats
+    description: Aggregate statistics
 paths:
   /healthz:
     get:
@@ -24,6 +36,281 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+
+  /categories:
+    get:
+      operationId: listCategories
+      tags: [categories]
+      summary: List categories
+      responses:
+        "200":
+          description: List of categories
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Category"
+
+  /themes:
+    get:
+      operationId: listThemes
+      tags: [themes]
+      summary: List monitoring themes
+      parameters:
+        - name: categoryId
+          in: query
+          required: false
+          schema:
+            type: integer
+        - name: search
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: sort
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [recent, relevance, shares]
+      responses:
+        "200":
+          description: List of themes
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Theme"
+
+  /themes/{id}:
+    get:
+      operationId: getTheme
+      tags: [themes]
+      summary: Get a theme with full detail
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Theme detail
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ThemeDetail"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /themes/{id}/relevant:
+    post:
+      operationId: markThemeRelevant
+      tags: [themes]
+      summary: Mark a theme as relevant
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Updated theme
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Theme"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /themes/{id}/share:
+    post:
+      operationId: shareTheme
+      tags: [themes]
+      summary: Register a share of a theme
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ShareInput"
+      responses:
+        "200":
+          description: Updated theme
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Theme"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /contracts:
+    get:
+      operationId: listContracts
+      tags: [contracts]
+      summary: List public contracts
+      parameters:
+        - name: search
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: themeId
+          in: query
+          required: false
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: List of contracts
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Contract"
+
+  /acts:
+    get:
+      operationId: listActs
+      tags: [acts]
+      summary: List albo pretorio acts
+      parameters:
+        - name: search
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: type
+          in: query
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: List of acts
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Act"
+
+  /reports:
+    get:
+      operationId: listReports
+      tags: [reports]
+      summary: List citizen reports
+      responses:
+        "200":
+          description: List of reports
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Report"
+    post:
+      operationId: createReport
+      tags: [reports]
+      summary: Submit a citizen report
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ReportInput"
+      responses:
+        "201":
+          description: Created report
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Report"
+        "400":
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /stats/overview:
+    get:
+      operationId: getStatsOverview
+      tags: [stats]
+      summary: Aggregate overview counts
+      responses:
+        "200":
+          description: Overview stats
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StatsOverview"
+
+  /stats/top-themes:
+    get:
+      operationId: getTopThemes
+      tags: [stats]
+      summary: Top themes by relevance and shares
+      responses:
+        "200":
+          description: Top themes
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TopThemes"
+
+  /stats/activity:
+    get:
+      operationId: getRecentActivity
+      tags: [stats]
+      summary: Recent activity feed
+      responses:
+        "200":
+          description: Activity feed
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ActivityItem"
+
+  /stats/shares:
+    get:
+      operationId: getShareStats
+      tags: [stats]
+      summary: Share statistics grouped by channel
+      responses:
+        "200":
+          description: Share stats
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ShareChannelStat"
+
 components:
   schemas:
     HealthStatus:
@@ -34,3 +321,352 @@ components:
       required:
         - status
 
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+      required:
+        - error
+
+    Category:
+      type: object
+      required: [id, name, slug, description, themeCount]
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        slug:
+          type: string
+        description:
+          type: string
+        themeCount:
+          type: integer
+
+    Theme:
+      type: object
+      required:
+        - id
+        - title
+        - slug
+        - summary
+        - categoryId
+        - categoryName
+        - status
+        - relevanceCount
+        - shareCount
+        - updatedAt
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        slug:
+          type: string
+        summary:
+          type: string
+        categoryId:
+          type: integer
+        categoryName:
+          type: string
+        status:
+          type: string
+          enum: [aperto, in_corso, monitoraggio, chiuso]
+        relevanceCount:
+          type: integer
+        shareCount:
+          type: integer
+        updatedAt:
+          type: string
+
+    ThemeDetail:
+      type: object
+      required:
+        - id
+        - title
+        - slug
+        - summary
+        - description
+        - categoryId
+        - categoryName
+        - status
+        - relevanceCount
+        - shareCount
+        - updatedAt
+        - documents
+        - emails
+        - metrics
+        - contracts
+        - acts
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        slug:
+          type: string
+        summary:
+          type: string
+        description:
+          type: string
+        categoryId:
+          type: integer
+        categoryName:
+          type: string
+        status:
+          type: string
+          enum: [aperto, in_corso, monitoraggio, chiuso]
+        relevanceCount:
+          type: integer
+        shareCount:
+          type: integer
+        updatedAt:
+          type: string
+        documents:
+          type: array
+          items:
+            $ref: "#/components/schemas/ThemeDocument"
+        emails:
+          type: array
+          items:
+            $ref: "#/components/schemas/ThemeEmail"
+        metrics:
+          type: array
+          items:
+            $ref: "#/components/schemas/ThemeMetric"
+        contracts:
+          type: array
+          items:
+            $ref: "#/components/schemas/Contract"
+        acts:
+          type: array
+          items:
+            $ref: "#/components/schemas/Act"
+
+    ThemeDocument:
+      type: object
+      required: [id, title, type, date]
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        type:
+          type: string
+        url:
+          type: ["string", "null"]
+        date:
+          type: string
+
+    ThemeEmail:
+      type: object
+      required: [id, subject, sender, recipient, direction, date, body]
+      properties:
+        id:
+          type: integer
+        subject:
+          type: string
+        sender:
+          type: string
+        recipient:
+          type: string
+        direction:
+          type: string
+          enum: [inviata, ricevuta]
+        date:
+          type: string
+        body:
+          type: string
+
+    ThemeMetric:
+      type: object
+      required: [id, label, value, unit]
+      properties:
+        id:
+          type: integer
+        label:
+          type: string
+        value:
+          type: string
+        unit:
+          type: string
+
+    Contract:
+      type: object
+      required:
+        - id
+        - title
+        - description
+        - supplier
+        - amount
+        - procedureType
+        - status
+        - awardDate
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        description:
+          type: string
+        supplier:
+          type: string
+        amount:
+          type: number
+        procedureType:
+          type: string
+        status:
+          type: string
+        awardDate:
+          type: string
+        themeId:
+          type: ["integer", "null"]
+
+    Act:
+      type: object
+      required:
+        - id
+        - title
+        - type
+        - number
+        - summary
+        - publishDate
+        - endDate
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        type:
+          type: string
+        number:
+          type: string
+        summary:
+          type: string
+        publishDate:
+          type: string
+        endDate:
+          type: string
+        themeId:
+          type: ["integer", "null"]
+
+    Report:
+      type: object
+      required:
+        - id
+        - title
+        - description
+        - category
+        - location
+        - status
+        - createdAt
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        description:
+          type: string
+        category:
+          type: string
+        location:
+          type: string
+        status:
+          type: string
+          enum: [ricevuta, in_valutazione, presa_in_carico, archiviata]
+        citizenName:
+          type: ["string", "null"]
+        createdAt:
+          type: string
+
+    ReportInput:
+      type: object
+      required: [title, description, category, location]
+      properties:
+        title:
+          type: string
+          minLength: 1
+        description:
+          type: string
+          minLength: 1
+        category:
+          type: string
+          minLength: 1
+        location:
+          type: string
+          minLength: 1
+        citizenName:
+          type: string
+
+    ShareInput:
+      type: object
+      required: [channel]
+      properties:
+        channel:
+          type: string
+          enum: [facebook, twitter, whatsapp, email, link]
+
+    StatsOverview:
+      type: object
+      required:
+        - themes
+        - contracts
+        - acts
+        - reports
+        - totalRelevance
+        - totalShares
+        - monitoredAmount
+      properties:
+        themes:
+          type: integer
+        contracts:
+          type: integer
+        acts:
+          type: integer
+        reports:
+          type: integer
+        totalRelevance:
+          type: integer
+        totalShares:
+          type: integer
+        monitoredAmount:
+          type: number
+
+    TopThemes:
+      type: object
+      required: [byRelevance, byShares]
+      properties:
+        byRelevance:
+          type: array
+          items:
+            $ref: "#/components/schemas/Theme"
+        byShares:
+          type: array
+          items:
+            $ref: "#/components/schemas/Theme"
+
+    ActivityItem:
+      type: object
+      required: [id, type, title, date]
+      properties:
+        id:
+          type: string
+        type:
+          type: string
+          enum: [theme, contract, act, report]
+        title:
+          type: string
+        date:
+          type: string
+        themeId:
+          type: ["integer", "null"]
+
+    ShareChannelStat:
+      type: object
+      required: [channel, count]
+      properties:
+        channel:
+          type: string
+        count:
+          type: integer
