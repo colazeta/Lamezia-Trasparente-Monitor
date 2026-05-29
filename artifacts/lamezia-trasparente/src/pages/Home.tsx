@@ -1,24 +1,46 @@
 import { Link } from "wouter";
-import { 
-  useGetStatsOverview, 
-  useGetTopThemes, 
+import {
+  useGetStatsOverview,
   useGetRecentActivity,
-  getGetStatsOverviewQueryKey,
-  getGetTopThemesQueryKey,
-  getGetRecentActivityQueryKey
+  useListConvocazioni,
+  useListPnrrProjects,
 } from "@workspace/api-client-react";
-import { ShieldAlert, ArrowRight, Eye, FileText, Megaphone, CheckCircle2, AlertTriangle, FileSearch, ArrowUpRight, Info } from "lucide-react";
+import {
+  ShieldAlert,
+  ArrowRight,
+  FileText,
+  Megaphone,
+  CheckCircle2,
+  AlertTriangle,
+  FileSearch,
+  ArrowUpRight,
+  Info,
+  Landmark,
+  Users,
+  CalendarClock,
+  Calendar,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { ThemeCard, ThemeCardSkeleton } from "@/components/theme/ThemeCard";
 import { format } from "date-fns";
 import { it } from "date-fns/locale";
 
+function formatDate(value: string | null | undefined) {
+  if (!value) return "—";
+  const d = new Date(value);
+  return Number.isNaN(d.getTime()) ? "—" : format(d, "dd MMM yyyy", { locale: it });
+}
+
 export function Home() {
   const { data: stats, isLoading: statsLoading } = useGetStatsOverview();
-  const { data: topThemes, isLoading: topThemesLoading } = useGetTopThemes();
   const { data: activity, isLoading: activityLoading } = useGetRecentActivity();
+  const { data: pnrrProjects } = useListPnrrProjects();
+  const { data: consiglio, isLoading: consiglioLoading } = useListConvocazioni({
+    tipo: "consiglio",
+  });
+  const { data: commissioni, isLoading: commissioniLoading } =
+    useListConvocazioni({ tipo: "commissione" });
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -26,27 +48,27 @@ export function Home() {
       <section className="relative bg-sidebar border-b border-sidebar-border text-sidebar-foreground overflow-hidden py-20 md:py-32">
         <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1518398046578-8cca57782e17?q=80&w=2000&auto=format&fit=crop')] bg-cover bg-center opacity-10 mix-blend-overlay pointer-events-none"></div>
         <div className="absolute inset-0 bg-gradient-to-t from-sidebar to-transparent opacity-80 pointer-events-none"></div>
-        
+
         <div className="container relative z-10 mx-auto px-4 md:px-6 flex flex-col items-center text-center max-w-4xl">
           <div className="inline-flex items-center rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-sm font-medium text-primary mb-8 backdrop-blur-sm">
             <ShieldAlert className="mr-2 h-4 w-4" />
             Osservatorio Civico Indipendente
           </div>
-          
+
           <h1 className="font-serif text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight text-white mb-6 leading-[1.1]">
             La trasparenza è un diritto.<br className="hidden md:inline" />
             <span className="text-primary">Il controllo è un dovere.</span>
           </h1>
-          
+
           <p className="text-lg md:text-xl text-sidebar-foreground/80 mb-10 max-w-2xl text-balance">
-            Monitoriamo gli atti, gli appalti e le decisioni del Comune di Lamezia Terme. 
+            Monitoriamo gli atti, gli appalti e le decisioni del Comune di Lamezia Terme.
             Uno strumento fatto dai cittadini, per i cittadini, per pretendere chiarezza sull'uso delle risorse pubbliche.
           </p>
-          
+
           <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
-            <Link href="/temi" className="w-full sm:w-auto">
+            <Link href="/albo" className="w-full sm:w-auto">
               <Button size="lg" className="w-full text-base h-12 px-8">
-                Esplora i Temi <ArrowRight className="ml-2 h-4 w-4" />
+                Esplora l'Albo Pretorio <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
             </Link>
             <Link href="/segnalazioni" className="w-full sm:w-auto">
@@ -62,29 +84,29 @@ export function Home() {
       <section className="py-12 bg-muted/30 border-b">
         <div className="container mx-auto px-4 md:px-6">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8">
-            <StatCard 
-              title="Temi Monitorati" 
-              value={stats?.themes} 
-              loading={statsLoading} 
-              icon={Eye} 
+            <StatCard
+              title="Atti Pubblicati"
+              value={stats?.acts}
+              loading={statsLoading}
+              icon={FileSearch}
             />
-            <StatCard 
-              title="Appalti" 
-              value={stats?.contracts} 
-              loading={statsLoading} 
-              icon={FileText} 
+            <StatCard
+              title="Appalti"
+              value={stats?.contracts}
+              loading={statsLoading}
+              icon={FileText}
             />
-            <StatCard 
-              title="Atti Analizzati" 
-              value={stats?.acts} 
-              loading={statsLoading} 
-              icon={FileSearch} 
+            <StatCard
+              title="Progetti PNRR"
+              value={pnrrProjects?.length}
+              loading={!pnrrProjects}
+              icon={Landmark}
             />
-            <StatCard 
-              title="Valore Monitorato" 
-              value={stats ? `€ ${(stats.monitoredAmount / 1000000).toFixed(1)}M` : undefined} 
-              loading={statsLoading} 
-              icon={CheckCircle2} 
+            <StatCard
+              title="Valore Monitorato"
+              value={stats ? `€ ${(stats.monitoredAmount / 1000000).toFixed(1)}M` : undefined}
+              loading={statsLoading}
+              icon={CheckCircle2}
               highlight
             />
           </div>
@@ -95,34 +117,43 @@ export function Home() {
       <section className="py-16 md:py-24">
         <div className="container mx-auto px-4 md:px-6">
           <div className="grid lg:grid-cols-3 gap-12">
-            
-            {/* Top Themes */}
+
+            {/* Convocazioni */}
             <div className="lg:col-span-2 space-y-8">
               <div className="flex items-center justify-between">
                 <div>
-                  <h2 className="text-3xl font-serif font-bold tracking-tight mb-2">Temi in Evidenza</h2>
-                  <p className="text-muted-foreground">Le questioni di maggiore rilevanza pubblica al momento.</p>
+                  <h2 className="text-3xl font-serif font-bold tracking-tight mb-2">
+                    Prossime Convocazioni
+                  </h2>
+                  <p className="text-muted-foreground">
+                    Sedute del Consiglio Comunale e delle Commissioni Consiliari.
+                  </p>
                 </div>
-                <Link href="/temi" className="hidden md:flex">
+                <Link href="/convocazioni" className="hidden md:flex">
                   <Button variant="ghost" className="gap-2">
-                    Vedi tutti <ArrowRight className="h-4 w-4" />
+                    Vedi tutte <ArrowRight className="h-4 w-4" />
                   </Button>
                 </Link>
               </div>
 
               <div className="grid md:grid-cols-2 gap-6">
-                {topThemesLoading ? (
-                  Array(4).fill(0).map((_, i) => <ThemeCardSkeleton key={i} />)
-                ) : (
-                  topThemes?.byRelevance.slice(0, 4).map(theme => (
-                    <ThemeCard key={theme.id} theme={theme} />
-                  ))
-                )}
+                <ConvocazioniColumn
+                  title="Consiglio Comunale"
+                  icon={Users}
+                  items={consiglio}
+                  loading={consiglioLoading}
+                />
+                <ConvocazioniColumn
+                  title="Commissioni Consiliari"
+                  icon={CalendarClock}
+                  items={commissioni}
+                  loading={commissioniLoading}
+                />
               </div>
-              
-              <Link href="/temi" className="md:hidden block mt-6">
+
+              <Link href="/convocazioni" className="md:hidden block mt-6">
                 <Button variant="outline" className="w-full">
-                  Vedi tutti i temi
+                  Vedi tutte le convocazioni
                 </Button>
               </Link>
             </div>
@@ -171,7 +202,7 @@ export function Home() {
           </div>
         </div>
       </section>
-      
+
       {/* CTA Section */}
       <section className="py-20 bg-primary text-primary-foreground">
         <div className="container mx-auto px-4 md:px-6 text-center max-w-3xl">
@@ -191,6 +222,55 @@ export function Home() {
   );
 }
 
+function ConvocazioniColumn({
+  title,
+  icon: Icon,
+  items,
+  loading,
+}: {
+  title: string;
+  icon: any;
+  items: { id: number; oggetto: string; dataAtto?: string | null; pubStart?: string | null }[] | undefined;
+  loading: boolean;
+}) {
+  return (
+    <Card className="border-border/50 shadow-sm">
+      <CardHeader className="flex flex-row items-center gap-2 space-y-0 border-b bg-muted/10 py-3">
+        <div className="p-1.5 rounded-md bg-primary/10 text-primary">
+          <Icon className="h-4 w-4" />
+        </div>
+        <h3 className="font-semibold text-sm">{title}</h3>
+      </CardHeader>
+      <CardContent className="p-0">
+        <div className="divide-y">
+          {loading ? (
+            Array(3).fill(0).map((_, i) => (
+              <div key={i} className="p-4 space-y-2">
+                <Skeleton className="h-3 w-24" />
+                <Skeleton className="h-4 w-full" />
+              </div>
+            ))
+          ) : items && items.length > 0 ? (
+            items.slice(0, 3).map((c) => (
+              <Link key={c.id} href="/convocazioni" className="block p-4 hover:bg-muted/30 transition-colors">
+                <div className="flex items-center gap-1.5 text-xs font-medium text-primary mb-1">
+                  <Calendar className="h-3.5 w-3.5" />
+                  {formatDate(c.dataAtto ?? c.pubStart)}
+                </div>
+                <p className="text-sm font-medium leading-snug line-clamp-2">{c.oggetto}</p>
+              </Link>
+            ))
+          ) : (
+            <div className="p-6 text-center text-sm text-muted-foreground">
+              Nessuna convocazione disponibile.
+            </div>
+          )}
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
+
 function StatCard({ title, value, loading, icon: Icon, highlight = false }: any) {
   return (
     <div className={`p-6 rounded-xl border ${highlight ? 'bg-primary/5 border-primary/20' : 'bg-card border-border/50 shadow-sm'}`}>
@@ -205,7 +285,7 @@ function StatCard({ title, value, loading, icon: Icon, highlight = false }: any)
           <Skeleton className="h-8 w-24" />
         ) : (
           <div className={`text-3xl font-serif font-bold tracking-tight ${highlight ? 'text-primary' : 'text-foreground'}`}>
-            {value || 0}
+            {value ?? 0}
           </div>
         )}
       </div>
@@ -218,7 +298,6 @@ function ActivityRow({ item }: { item: any }) {
     switch (item.type) {
       case 'act': return <FileSearch className="h-4 w-4" />;
       case 'contract': return <FileText className="h-4 w-4" />;
-      case 'theme': return <Eye className="h-4 w-4" />;
       case 'report': return <AlertTriangle className="h-4 w-4" />;
       default: return <Info className="h-4 w-4" />;
     }
@@ -228,7 +307,6 @@ function ActivityRow({ item }: { item: any }) {
     switch (item.type) {
       case 'act': return 'Nuovo Atto';
       case 'contract': return 'Nuovo Appalto';
-      case 'theme': return 'Aggiornamento Tema';
       case 'report': return 'Nuova Segnalazione';
       default: return 'Aggiornamento';
     }
@@ -250,13 +328,7 @@ function ActivityRow({ item }: { item: any }) {
           </span>
         </div>
         <p className="text-sm font-medium leading-snug line-clamp-2">
-          {item.themeId ? (
-            <Link href={`/temi/${item.themeId}`} className="hover:text-primary hover:underline">
-              {item.title}
-            </Link>
-          ) : (
-            item.title
-          )}
+          {item.title}
         </p>
       </div>
     </div>

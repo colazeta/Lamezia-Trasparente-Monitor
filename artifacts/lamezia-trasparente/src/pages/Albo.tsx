@@ -16,6 +16,7 @@ import {
   SelectTrigger,
 } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
+import { AlboLink } from "@/components/AlboLink";
 
 const CATEGORY_LABELS: Record<string, string> = {
   albo: "Albo",
@@ -223,6 +224,10 @@ export function Albo() {
                 {p.isPnrr && (
                   <span className="font-medium text-primary">PNRR</span>
                 )}
+              </div>
+
+              <div className="mt-3 border-t border-border/50 pt-3">
+                <AlboLink />
               </div>
             </div>
           ))

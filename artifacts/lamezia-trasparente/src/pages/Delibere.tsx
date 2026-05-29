@@ -7,6 +7,7 @@ import { it } from "date-fns/locale";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
+import { AlboLink } from "@/components/AlboLink";
 import { cn } from "@/lib/utils";
 
 const TABS = [
@@ -126,6 +127,9 @@ export function Delibere() {
                   {d.provenienza}
                 </p>
               )}
+              <div className="mt-3 border-t border-border/50 pt-3">
+                <AlboLink />
+              </div>
             </div>
           ))
         ) : (
