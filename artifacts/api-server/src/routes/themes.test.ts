@@ -190,6 +190,45 @@ describe("POST /api/themes/:id/follow", () => {
     expect(confirmations).toHaveLength(0);
   });
 
+  it("includes the theme title and a working unsubscribe link in the confirmation email", async () => {
+    const [theme] = await db
+      .select({ title: themesTable.title })
+      .from(themesTable)
+      .where(eq(themesTable.id, themeId));
+    expect(theme).toBeDefined();
+
+    const res = await request(app)
+      .post(`/api/themes/${themeId}/follow`)
+      .send({ email: "contenuto@example.com" });
+    expect(res.status).toBe(200);
+
+    const [follower] = await db
+      .select()
+      .from(themeFollowersTable)
+      .where(eq(themeFollowersTable.themeId, themeId));
+    expect(follower).toBeDefined();
+    expect(follower.unsubscribeToken).toBeTruthy();
+
+    const confirmation = await vi.waitFor(() => {
+      const found = mockedSendEmail.mock.calls.find(
+        ([params]) =>
+          params.to === "contenuto@example.com" &&
+          params.subject.startsWith("Segui:"),
+      )?.[0];
+      expect(found).toBeDefined();
+      return found!;
+    });
+
+    const expectedUnsub = `/api/unsubscribe?token=${follower.unsubscribeToken}`;
+    expect(confirmation.subject).toContain(theme.title);
+    expect(confirmation.html).toContain(theme.title);
+    expect(confirmation.html).toContain(expectedUnsub);
+    expect(confirmation.html).toContain(`/temi/${themeId}`);
+    expect(confirmation.text).toBeDefined();
+    expect(confirmation.text).toContain(theme.title);
+    expect(confirmation.text).toContain(expectedUnsub);
+  });
+
   it("returns 400 for an invalid email", async () => {
     const res = await request(app)
       .post(`/api/themes/${themeId}/follow`)
@@ -445,14 +484,35 @@ describe("POST /api/resubscribe", () => {
       .send({ themeId: String(themeId), email: "conferma-ritorno@example.com" });
     expect(res.status).toBe(200);
 
-    await vi.waitFor(() => {
+    const confirmation = await vi.waitFor(() => {
       const confirmations = mockedSendEmail.mock.calls.filter(
         ([params]) =>
           params.to === "conferma-ritorno@example.com" &&
           params.subject.startsWith("Segui:"),
       );
       expect(confirmations).toHaveLength(1);
+      return confirmations[0][0];
     });
+
+    const [theme] = await db
+      .select({ title: themesTable.title })
+      .from(themesTable)
+      .where(eq(themesTable.id, themeId));
+    const [follower] = await db
+      .select()
+      .from(themeFollowersTable)
+      .where(eq(themeFollowersTable.themeId, themeId));
+    expect(follower).toBeDefined();
+    expect(follower.unsubscribeToken).toBeTruthy();
+    const expectedUnsub = `/api/unsubscribe?token=${follower.unsubscribeToken}`;
+
+    expect(confirmation.subject).toContain(theme.title);
+    expect(confirmation.html).toContain(theme.title);
+    expect(confirmation.html).toContain(expectedUnsub);
+    expect(confirmation.html).toContain(`/temi/${themeId}`);
+    expect(confirmation.text).toBeDefined();
+    expect(confirmation.text).toContain(theme.title);
+    expect(confirmation.text).toContain(expectedUnsub);
   });
 
   it("renders an invalid-request page when fields are missing", async () => {
@@ -509,6 +569,26 @@ describe("POST /api/themes/:id/documents", () => {
     );
     expect(notificationCall).toBeDefined();
     expect(notificationCall?.[0].subject).toContain("Aggiornamento");
+
+    const [theme] = await db
+      .select({ title: themesTable.title })
+      .from(themesTable)
+      .where(eq(themesTable.id, themeId));
+    const [follower] = await db
+      .select()
+      .from(themeFollowersTable)
+      .where(eq(themeFollowersTable.themeId, themeId));
+    const expectedUnsub = `/api/unsubscribe?token=${follower.unsubscribeToken}`;
+
+    const notification = notificationCall![0];
+    expect(notification.subject).toContain(theme.title);
+    expect(notification.html).toContain(theme.title);
+    expect(notification.html).toContain("Nuovo documento");
+    expect(notification.html).toContain(expectedUnsub);
+    expect(notification.html).toContain(`/temi/${themeId}`);
+    expect(notification.text).toBeDefined();
+    expect(notification.text).toContain(theme.title);
+    expect(notification.text).toContain(expectedUnsub);
   });
 });
 
@@ -616,6 +696,25 @@ describe("POST /api/themes/:id/acts", () => {
     );
     expect(notificationCall).toBeDefined();
     expect(notificationCall?.[0].subject).toContain("Aggiornamento");
+
+    const [theme] = await db
+      .select({ title: themesTable.title })
+      .from(themesTable)
+      .where(eq(themesTable.id, themeId));
+    const [follower] = await db
+      .select()
+      .from(themeFollowersTable)
+      .where(eq(themeFollowersTable.themeId, themeId));
+    const expectedUnsub = `/api/unsubscribe?token=${follower.unsubscribeToken}`;
+
+    const notification = notificationCall![0];
+    expect(notification.subject).toContain(theme.title);
+    expect(notification.html).toContain(theme.title);
+    expect(notification.html).toContain(validAct.title);
+    expect(notification.html).toContain(expectedUnsub);
+    expect(notification.text).toBeDefined();
+    expect(notification.text).toContain(theme.title);
+    expect(notification.text).toContain(expectedUnsub);
   });
 
   it("returns 400 when required fields are missing", async () => {
@@ -696,6 +795,25 @@ describe("POST /api/themes/:id/emails", () => {
     );
     expect(notificationCall).toBeDefined();
     expect(notificationCall?.[0].subject).toContain("Aggiornamento");
+
+    const [theme] = await db
+      .select({ title: themesTable.title })
+      .from(themesTable)
+      .where(eq(themesTable.id, themeId));
+    const [follower] = await db
+      .select()
+      .from(themeFollowersTable)
+      .where(eq(themeFollowersTable.themeId, themeId));
+    const expectedUnsub = `/api/unsubscribe?token=${follower.unsubscribeToken}`;
+
+    const notification = notificationCall![0];
+    expect(notification.subject).toContain(theme.title);
+    expect(notification.html).toContain(theme.title);
+    expect(notification.html).toContain(validEmail.subject);
+    expect(notification.html).toContain(expectedUnsub);
+    expect(notification.text).toBeDefined();
+    expect(notification.text).toContain(theme.title);
+    expect(notification.text).toContain(expectedUnsub);
   });
 
   it("returns 400 when required fields are missing", async () => {
