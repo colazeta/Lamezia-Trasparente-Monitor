@@ -652,14 +652,18 @@ function renderStatusPage(params: {
   message: string;
   withHomeLink?: boolean;
   resubscribe?: { themeId: number; email: string };
+  subscriptionsToken?: string;
 }): string {
+  const subscriptionsLink = params.subscriptionsToken
+    ? `<p><a href="${escapeHtml(apiUrl(`/subscriptions?token=${encodeURIComponent(params.subscriptionsToken)}`))}">Gestisci tutte le tue iscrizioni</a></p>`
+    : "";
   const link = params.withHomeLink
     ? `<p><a href="${escapeHtml(homeUrl())}">Torna a Lamezia Trasparente</a></p>`
     : "";
   const form = params.resubscribe
     ? `<form method="post" action="${escapeHtml(apiUrl("/resubscribe"))}" style="margin-top:8px"><input type="hidden" name="themeId" value="${params.resubscribe.themeId}" /><input type="hidden" name="email" value="${escapeHtml(params.resubscribe.email)}" /><button type="submit" style="background:#2563eb;color:#fff;border:none;padding:10px 20px;border-radius:8px;font-size:14px;cursor:pointer">Iscriviti di nuovo</button></form>`
     : "";
-  return `<!doctype html><html lang="it"><head><meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" /><title>${escapeHtml(params.title)}</title><style>body{font-family:Arial,sans-serif;background:#f5f5f5;margin:0;display:flex;min-height:100vh;align-items:center;justify-content:center}div{background:#fff;padding:32px 40px;border-radius:12px;box-shadow:0 1px 4px rgba(0,0,0,.1);max-width:480px;text-align:center;color:#1a1a1a}a{color:#2563eb}</style></head><body><div><h1>Lamezia Trasparente</h1><p>${params.message}</p>${form}${link}</div></body></html>`;
+  return `<!doctype html><html lang="it"><head><meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" /><title>${escapeHtml(params.title)}</title><style>body{font-family:Arial,sans-serif;background:#f5f5f5;margin:0;display:flex;min-height:100vh;align-items:center;justify-content:center}div{background:#fff;padding:32px 40px;border-radius:12px;box-shadow:0 1px 4px rgba(0,0,0,.1);max-width:480px;text-align:center;color:#1a1a1a}a{color:#2563eb}</style></head><body><div><h1>Lamezia Trasparente</h1><p>${params.message}</p>${form}${subscriptionsLink}${link}</div></body></html>`;
 }
 
 router.get("/unsubscribe", async (req, res) => {
@@ -669,6 +673,7 @@ router.get("/unsubscribe", async (req, res) => {
     message: string,
     withHomeLink = false,
     resubscribe?: { themeId: number; email: string },
+    subscriptionsToken?: string,
   ) => {
     res
       .status(200)
@@ -679,6 +684,7 @@ router.get("/unsubscribe", async (req, res) => {
           message,
           withHomeLink,
           resubscribe,
+          subscriptionsToken,
         }),
       );
   };
@@ -704,13 +710,22 @@ router.get("/unsubscribe", async (req, res) => {
       .from(themesTable)
       .where(eq(themesTable.id, deleted[0].themeId));
 
+    const { token: remainingToken } = await getSubscriptionsByEmail(
+      deleted[0].email,
+    );
+
     const message = theme
       ? `Iscrizione annullata. Non riceverai più aggiornamenti su <strong>${escapeHtml(theme.title)}</strong>.`
       : "Iscrizione annullata. Non riceverai più aggiornamenti su questo tema.";
-    sendPage(message, true, {
-      themeId: deleted[0].themeId,
-      email: deleted[0].email,
-    });
+    sendPage(
+      message,
+      true,
+      {
+        themeId: deleted[0].themeId,
+        email: deleted[0].email,
+      },
+      remainingToken ?? undefined,
+    );
   } else {
     sendPage("Iscrizione già annullata o link non valido.");
   }
@@ -722,7 +737,11 @@ router.post("/resubscribe", async (req, res) => {
   const email =
     typeof body.email === "string" ? body.email.trim().toLowerCase() : "";
 
-  const sendPage = (message: string, withHomeLink = false) => {
+  const sendPage = (
+    message: string,
+    withHomeLink = false,
+    subscriptionsToken?: string,
+  ) => {
     res
       .status(200)
       .type("html")
@@ -731,6 +750,7 @@ router.post("/resubscribe", async (req, res) => {
           title: "Iscrizione ripristinata",
           message,
           withHomeLink,
+          subscriptionsToken,
         }),
       );
   };
@@ -756,8 +776,10 @@ router.post("/resubscribe", async (req, res) => {
     });
   }
 
+  const { token: remainingToken } = await getSubscriptionsByEmail(email);
+
   const message = `Iscrizione ripristinata. Riceverai di nuovo aggiornamenti su <strong>${escapeHtml(result.theme.title)}</strong>.`;
-  sendPage(message, true);
+  sendPage(message, true, remainingToken ?? undefined);
 });
 
 async function getEmailByToken(token: string): Promise<string | null> {
