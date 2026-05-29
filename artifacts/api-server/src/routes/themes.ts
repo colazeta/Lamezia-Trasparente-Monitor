@@ -566,15 +566,37 @@ router.post("/themes/:id/emails", requireIngestAuth, async (req, res) => {
   });
 });
 
+function homeUrl(): string {
+  if (process.env.PUBLIC_BASE_URL) {
+    return process.env.PUBLIC_BASE_URL.replace(/\/$/, "") || "/";
+  }
+  if (process.env.REPLIT_DEV_DOMAIN) {
+    return `https://${process.env.REPLIT_DEV_DOMAIN}`;
+  }
+  return "/";
+}
+
+function escapeHtml(value: string): string {
+  return value
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
 router.get("/unsubscribe", async (req, res) => {
   const token = typeof req.query.token === "string" ? req.query.token : "";
 
-  const sendPage = (message: string) => {
+  const sendPage = (message: string, withHomeLink = false) => {
+    const link = withHomeLink
+      ? `<p><a href="${escapeHtml(homeUrl())}">Torna a Lamezia Trasparente</a></p>`
+      : "";
     res
       .status(200)
       .type("html")
       .send(
-        `<!doctype html><html lang="it"><head><meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" /><title>Iscrizione annullata</title><style>body{font-family:Arial,sans-serif;background:#f5f5f5;margin:0;display:flex;min-height:100vh;align-items:center;justify-content:center}div{background:#fff;padding:32px 40px;border-radius:12px;box-shadow:0 1px 4px rgba(0,0,0,.1);max-width:480px;text-align:center;color:#1a1a1a}</style></head><body><div><h1>Lamezia Trasparente</h1><p>${message}</p></div></body></html>`,
+        `<!doctype html><html lang="it"><head><meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" /><title>Iscrizione annullata</title><style>body{font-family:Arial,sans-serif;background:#f5f5f5;margin:0;display:flex;min-height:100vh;align-items:center;justify-content:center}div{background:#fff;padding:32px 40px;border-radius:12px;box-shadow:0 1px 4px rgba(0,0,0,.1);max-width:480px;text-align:center;color:#1a1a1a}a{color:#2563eb}</style></head><body><div><h1>Lamezia Trasparente</h1><p>${message}</p>${link}</div></body></html>`,
       );
   };
 
@@ -593,7 +615,16 @@ router.get("/unsubscribe", async (req, res) => {
       .update(themesTable)
       .set({ followerCount: sql`GREATEST(${themesTable.followerCount} - 1, 0)` })
       .where(eq(themesTable.id, deleted[0].themeId));
-    sendPage("Iscrizione annullata. Non riceverai più aggiornamenti su questo tema.");
+
+    const [theme] = await db
+      .select({ title: themesTable.title })
+      .from(themesTable)
+      .where(eq(themesTable.id, deleted[0].themeId));
+
+    const message = theme
+      ? `Iscrizione annullata. Non riceverai più aggiornamenti su <strong>${escapeHtml(theme.title)}</strong>.`
+      : "Iscrizione annullata. Non riceverai più aggiornamenti su questo tema.";
+    sendPage(message, true);
   } else {
     sendPage("Iscrizione già annullata o link non valido.");
   }

@@ -227,9 +227,7 @@ describe("GET /api/unsubscribe", () => {
 
     expect(res.status).toBe(200);
     expect(res.headers["content-type"]).toContain("text/html");
-    expect(res.text).toContain(
-      "Iscrizione annullata. Non riceverai più aggiornamenti su questo tema.",
-    );
+    expect(res.text).toContain("Iscrizione annullata.");
     expect(await getFollowerCount(themeId)).toBe(0);
 
     const remaining = await db
@@ -237,6 +235,35 @@ describe("GET /api/unsubscribe", () => {
       .from(themeFollowersTable)
       .where(eq(themeFollowersTable.themeId, themeId));
     expect(remaining).toHaveLength(0);
+  });
+
+  it("names the unsubscribed theme and offers a link back home", async () => {
+    const [theme] = await db
+      .select({ title: themesTable.title })
+      .from(themesTable)
+      .where(eq(themesTable.id, themeId));
+    expect(theme).toBeDefined();
+
+    await request(app)
+      .post(`/api/themes/${themeId}/follow`)
+      .send({ email: "personalizzato@example.com" });
+
+    const [follower] = await db
+      .select()
+      .from(themeFollowersTable)
+      .where(eq(themeFollowersTable.themeId, themeId));
+
+    const res = await request(app)
+      .get("/api/unsubscribe")
+      .query({ token: follower.unsubscribeToken });
+
+    expect(res.status).toBe(200);
+    expect(res.headers["content-type"]).toContain("text/html");
+    expect(res.text).toContain(
+      `Non riceverai più aggiornamenti su <strong>${theme.title}</strong>`,
+    );
+    expect(res.text).toContain("Torna a Lamezia Trasparente");
+    expect(res.text).toContain("<a href=");
   });
 
   it("leaves the follower count unchanged when the token is missing", async () => {
