@@ -321,6 +321,170 @@ export interface ShareChannelStat {
   count: number;
 }
 
+export interface Official {
+  id: number;
+  name: string;
+  slug: string;
+  /** sindaco | assessore | consigliere | dirigente | dipendente */
+  role: string;
+  /** @nullable */
+  roleTitle?: string | null;
+  /** @nullable */
+  group?: string | null;
+  /** in_carica | cessato */
+  status: string;
+  /** @nullable */
+  appointmentDate?: string | null;
+  /** @nullable */
+  biography?: string | null;
+}
+
+export interface OfficialActivity {
+  id: number;
+  title: string;
+  /** @nullable */
+  description?: string | null;
+  /** @nullable */
+  date?: string | null;
+}
+
+export interface OfficialRemuneration {
+  id: number;
+  year: number;
+  /** @nullable */
+  amount?: number | null;
+  type: string;
+  /** @nullable */
+  note?: string | null;
+}
+
+export interface OfficialDeclaration {
+  id: number;
+  title: string;
+  /** @nullable */
+  date?: string | null;
+  /** @nullable */
+  content?: string | null;
+  /** @nullable */
+  url?: string | null;
+}
+
+export type OfficialVoteVote = typeof OfficialVoteVote[keyof typeof OfficialVoteVote];
+
+
+export const OfficialVoteVote = {
+  favorevole: 'favorevole',
+  contrario: 'contrario',
+  astenuto: 'astenuto',
+  assente: 'assente',
+} as const;
+
+export interface OfficialVote {
+  publicationId: number;
+  vote: OfficialVoteVote;
+  oggetto: string;
+  /** @nullable */
+  numRegGen?: string | null;
+  /** @nullable */
+  subcategory?: string | null;
+  /** @nullable */
+  dataAtto?: string | null;
+}
+
+export type OfficialProfile = Official & {
+  activities: OfficialActivity[];
+  remunerations: OfficialRemuneration[];
+  declarations: OfficialDeclaration[];
+  votes: OfficialVote[];
+};
+
+export type DeliberaVoteEntryVote = typeof DeliberaVoteEntryVote[keyof typeof DeliberaVoteEntryVote];
+
+
+export const DeliberaVoteEntryVote = {
+  favorevole: 'favorevole',
+  contrario: 'contrario',
+  astenuto: 'astenuto',
+  assente: 'assente',
+} as const;
+
+export interface DeliberaVoteEntry {
+  officialId: number;
+  name: string;
+  slug: string;
+  role: string;
+  /** @nullable */
+  group?: string | null;
+  vote: DeliberaVoteEntryVote;
+}
+
+export type DeliberaVotesTally = {
+  favorevole: number;
+  contrario: number;
+  astenuto: number;
+  assente: number;
+};
+
+export interface DeliberaVotes {
+  delibera: Publication;
+  tally: DeliberaVotesTally;
+  votes: DeliberaVoteEntry[];
+}
+
+export type OfficialInputActivitiesItem = {
+  /** @minLength 1 */
+  title: string;
+  description?: string;
+  date?: string;
+};
+
+export type OfficialInputRemunerationsItem = {
+  year: number;
+  amount?: number;
+  /** @minLength 1 */
+  type: string;
+  note?: string;
+};
+
+export type OfficialInputDeclarationsItem = {
+  /** @minLength 1 */
+  title: string;
+  date?: string;
+  content?: string;
+  url?: string;
+};
+
+export type OfficialInputVotesItemVote = typeof OfficialInputVotesItemVote[keyof typeof OfficialInputVotesItemVote];
+
+
+export const OfficialInputVotesItemVote = {
+  favorevole: 'favorevole',
+  contrario: 'contrario',
+  astenuto: 'astenuto',
+  assente: 'assente',
+} as const;
+
+export type OfficialInputVotesItem = {
+  publicationId: number;
+  vote: OfficialInputVotesItemVote;
+};
+
+export interface OfficialInput {
+  /** @minLength 1 */
+  name: string;
+  /** @minLength 1 */
+  role: string;
+  roleTitle?: string;
+  group?: string;
+  status?: string;
+  appointmentDate?: string;
+  biography?: string;
+  activities?: OfficialInputActivitiesItem[];
+  remunerations?: OfficialInputRemunerationsItem[];
+  declarations?: OfficialInputDeclarationsItem[];
+  votes?: OfficialInputVotesItem[];
+}
+
 export type ListThemesParams = {
 categoryId?: number;
 search?: string;
@@ -371,5 +535,13 @@ export type ListConvocazioniParams = {
  * consiglio | commissione
  */
 tipo?: string;
+};
+
+export type ListOfficialsParams = {
+/**
+ * sindaco | assessore | consigliere | dirigente | dipendente
+ */
+role?: string;
+q?: string;
 };
 

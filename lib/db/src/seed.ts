@@ -1,6 +1,15 @@
-import { sql } from "drizzle-orm";
+import { and, asc, desc, eq, sql } from "drizzle-orm";
 import { db, pool } from "./client";
-import { contractsTable, reportsTable } from "./schema";
+import {
+  contractsTable,
+  reportsTable,
+  officialsTable,
+  officialActivitiesTable,
+  officialRemunerationsTable,
+  officialDeclarationsTable,
+  officialVotesTable,
+  publicationsTable,
+} from "./schema";
 
 const contracts: {
   title: string;
@@ -93,6 +102,469 @@ const reports = [
   },
 ];
 
+type VoteValue = "favorevole" | "contrario" | "astenuto" | "assente";
+
+const officials: {
+  name: string;
+  slug: string;
+  role: string;
+  roleTitle: string | null;
+  group: string | null;
+  status: string;
+  appointmentDate: string | null;
+  biography: string | null;
+  votes: boolean;
+  voteBias: VoteValue;
+  activities: { title: string; description: string | null; date: string | null }[];
+  remunerations: {
+    year: number;
+    amount: number | null;
+    type: string;
+    note: string | null;
+  }[];
+  declarations: {
+    title: string;
+    date: string | null;
+    content: string | null;
+    url: string | null;
+  }[];
+}[] = [
+  {
+    name: "Mario Murmura",
+    slug: "mario-murmura",
+    role: "sindaco",
+    roleTitle: "Sindaco del Comune di Lamezia Terme",
+    group: "Lista del Sindaco",
+    status: "in_carica",
+    appointmentDate: "2024-06-25",
+    biography:
+      "Avvocato, eletto Sindaco al ballottaggio del giugno 2024. Già consigliere comunale, si occupa di sviluppo del territorio e rapporti istituzionali.",
+    votes: true,
+    voteBias: "favorevole",
+    activities: [
+      {
+        title: "Insediamento della nuova Giunta comunale",
+        description:
+          "Nomina degli assessori e definizione delle deleghe della consiliatura.",
+        date: "2024-07-02",
+      },
+      {
+        title: "Avvio del tavolo sul dissesto finanziario",
+        description: "Coordinamento del piano di riequilibrio dell'ente.",
+        date: "2024-09-15",
+      },
+    ],
+    remunerations: [
+      {
+        year: 2025,
+        amount: 47000,
+        type: "Indennità di funzione",
+        note: "Indennità annua lorda di carica da Sindaco.",
+      },
+      {
+        year: 2024,
+        amount: 23500,
+        type: "Indennità di funzione",
+        note: "Indennità rapportata ai mesi di carica nel 2024.",
+      },
+    ],
+    declarations: [
+      {
+        title: "Dichiarazione dei redditi 2024",
+        date: "2025-04-30",
+        content:
+          "Dichiarazione patrimoniale e reddituale pubblicata ai sensi del D.Lgs. 33/2013.",
+        url: null,
+      },
+      {
+        title: "Dichiarazione di insussistenza cause di inconferibilità",
+        date: "2024-07-02",
+        content: null,
+        url: null,
+      },
+    ],
+  },
+  {
+    name: "Giorgia Gargano",
+    slug: "giorgia-gargano",
+    role: "assessore",
+    roleTitle: "Assessora al Bilancio e ai Tributi",
+    group: "Lista del Sindaco",
+    status: "in_carica",
+    appointmentDate: "2024-07-02",
+    biography:
+      "Commercialista, con delega al bilancio, ai tributi e alla programmazione finanziaria dell'ente.",
+    votes: true,
+    voteBias: "favorevole",
+    activities: [
+      {
+        title: "Predisposizione del bilancio di previsione 2025-2027",
+        description: "Coordinamento tecnico-politico della manovra di bilancio.",
+        date: "2025-02-10",
+      },
+    ],
+    remunerations: [
+      {
+        year: 2025,
+        amount: 28000,
+        type: "Indennità di funzione",
+        note: "Indennità annua lorda da assessore.",
+      },
+    ],
+    declarations: [
+      {
+        title: "Dichiarazione dei redditi 2024",
+        date: "2025-05-12",
+        content:
+          "Dichiarazione patrimoniale pubblicata ai sensi della normativa sulla trasparenza.",
+        url: null,
+      },
+    ],
+  },
+  {
+    name: "Antonio Bevilacqua",
+    slug: "antonio-bevilacqua",
+    role: "assessore",
+    roleTitle: "Assessore ai Lavori Pubblici e all'Urbanistica",
+    group: "Insieme per Lamezia",
+    status: "in_carica",
+    appointmentDate: "2024-07-02",
+    biography:
+      "Ingegnere civile, con delega ai lavori pubblici, all'urbanistica e alla rigenerazione urbana.",
+    votes: true,
+    voteBias: "favorevole",
+    activities: [
+      {
+        title: "Programma triennale delle opere pubbliche",
+        description: "Definizione delle priorità di investimento infrastrutturale.",
+        date: "2025-01-20",
+      },
+    ],
+    remunerations: [
+      {
+        year: 2025,
+        amount: 28000,
+        type: "Indennità di funzione",
+        note: null,
+      },
+    ],
+    declarations: [
+      {
+        title: "Dichiarazione di insussistenza cause di incompatibilità",
+        date: "2024-07-05",
+        content: null,
+        url: null,
+      },
+    ],
+  },
+  {
+    name: "Rosa Cittadino",
+    slug: "rosa-cittadino",
+    role: "assessore",
+    roleTitle: "Assessora ai Servizi Sociali",
+    group: "Lista del Sindaco",
+    status: "in_carica",
+    appointmentDate: "2024-07-02",
+    biography:
+      "Assistente sociale, con delega al welfare, alle politiche per la famiglia e all'inclusione.",
+    votes: false,
+    voteBias: "favorevole",
+    activities: [],
+    remunerations: [
+      {
+        year: 2025,
+        amount: 28000,
+        type: "Indennità di funzione",
+        note: null,
+      },
+    ],
+    declarations: [],
+  },
+  {
+    name: "Francesco Costanzo",
+    slug: "francesco-costanzo",
+    role: "consigliere",
+    roleTitle: "Presidente del Consiglio Comunale",
+    group: "Lista del Sindaco",
+    status: "in_carica",
+    appointmentDate: "2024-06-25",
+    biography:
+      "Consigliere di maggioranza, eletto Presidente del Consiglio Comunale.",
+    votes: true,
+    voteBias: "favorevole",
+    activities: [
+      {
+        title: "Presidenza delle sedute del Consiglio Comunale",
+        description: "Convocazione e direzione dei lavori dell'assemblea.",
+        date: "2024-07-10",
+      },
+    ],
+    remunerations: [
+      {
+        year: 2025,
+        amount: 4200,
+        type: "Gettoni di presenza",
+        note: "Gettoni per la partecipazione alle sedute e alle commissioni.",
+      },
+    ],
+    declarations: [
+      {
+        title: "Dichiarazione dei redditi 2024",
+        date: "2025-05-20",
+        content: "Pubblicata ai sensi del D.Lgs. 33/2013.",
+        url: null,
+      },
+    ],
+  },
+  {
+    name: "Eugenio Guarascio",
+    slug: "eugenio-guarascio",
+    role: "consigliere",
+    roleTitle: "Consigliere comunale",
+    group: "Lista del Sindaco",
+    status: "in_carica",
+    appointmentDate: "2024-06-25",
+    biography: "Consigliere di maggioranza, componente della commissione bilancio.",
+    votes: true,
+    voteBias: "favorevole",
+    activities: [],
+    remunerations: [
+      {
+        year: 2025,
+        amount: 2600,
+        type: "Gettoni di presenza",
+        note: null,
+      },
+    ],
+    declarations: [],
+  },
+  {
+    name: "Teresa Bambara",
+    slug: "teresa-bambara",
+    role: "consigliere",
+    roleTitle: "Capogruppo di opposizione",
+    group: "Lamezia Bene Comune",
+    status: "in_carica",
+    appointmentDate: "2024-06-25",
+    biography:
+      "Consigliera di opposizione, capogruppo, attiva sui temi di ambiente e trasparenza.",
+    votes: true,
+    voteBias: "contrario",
+    activities: [
+      {
+        title: "Interrogazione sulla gestione dei rifiuti",
+        description: "Richiesta di chiarimenti sui costi del servizio di igiene urbana.",
+        date: "2025-03-05",
+      },
+    ],
+    remunerations: [
+      {
+        year: 2025,
+        amount: 3100,
+        type: "Gettoni di presenza",
+        note: null,
+      },
+    ],
+    declarations: [
+      {
+        title: "Dichiarazione dei redditi 2024",
+        date: "2025-05-18",
+        content: "Pubblicata ai sensi della normativa sulla trasparenza.",
+        url: null,
+      },
+    ],
+  },
+  {
+    name: "Salvatore Paola",
+    slug: "salvatore-paola",
+    role: "consigliere",
+    roleTitle: "Consigliere comunale",
+    group: "Movimento Civico Lametino",
+    status: "in_carica",
+    appointmentDate: "2024-06-25",
+    biography: "Consigliere di opposizione, componente della commissione urbanistica.",
+    votes: true,
+    voteBias: "astenuto",
+    activities: [],
+    remunerations: [
+      {
+        year: 2025,
+        amount: 2400,
+        type: "Gettoni di presenza",
+        note: null,
+      },
+    ],
+    declarations: [],
+  },
+  {
+    name: "Caterina Folino",
+    slug: "caterina-folino",
+    role: "dirigente",
+    roleTitle: "Dirigente del Settore Finanziario",
+    group: null,
+    status: "in_carica",
+    appointmentDate: "2023-03-01",
+    biography:
+      "Dirigente responsabile del settore bilancio, ragioneria e tributi del Comune.",
+    votes: false,
+    voteBias: "favorevole",
+    activities: [
+      {
+        title: "Responsabile del procedimento di riequilibrio finanziario",
+        description: "Coordinamento amministrativo del piano di rientro.",
+        date: "2024-10-01",
+      },
+    ],
+    remunerations: [
+      {
+        year: 2025,
+        amount: 62000,
+        type: "Retribuzione dirigenziale",
+        note: "Trattamento economico complessivo annuo lordo.",
+      },
+    ],
+    declarations: [],
+  },
+  {
+    name: "Domenico Riccelli",
+    slug: "domenico-riccelli",
+    role: "dipendente",
+    roleTitle: "Funzionario Ufficio Tecnico",
+    group: null,
+    status: "in_carica",
+    appointmentDate: "2018-09-01",
+    biography:
+      "Funzionario tecnico (categoria D) addetto alla gestione dei lavori pubblici.",
+    votes: false,
+    voteBias: "favorevole",
+    activities: [],
+    remunerations: [
+      {
+        year: 2025,
+        amount: 34000,
+        type: "Retribuzione tabellare",
+        note: "Trattamento economico annuo lordo da CCNL Funzioni Locali.",
+      },
+    ],
+    declarations: [],
+  },
+];
+
+function pickVote(bias: VoteValue, index: number): VoteValue {
+  if (bias === "favorevole") {
+    return index % 7 === 6 ? "assente" : "favorevole";
+  }
+  if (bias === "contrario") {
+    if (index % 5 === 0) return "favorevole";
+    if (index % 5 === 3) return "astenuto";
+    return "contrario";
+  }
+  if (bias === "astenuto") {
+    if (index % 3 === 0) return "favorevole";
+    if (index % 3 === 1) return "astenuto";
+    return "contrario";
+  }
+  return bias;
+}
+
+async function seedOfficials() {
+  const [{ count }] = await db
+    .select({ count: sql<number>`count(*)::int` })
+    .from(officialsTable);
+
+  if (count > 0) {
+    console.log("Officials seed skipped: officials already exist.");
+    return;
+  }
+
+  const delibere = await db
+    .select({ id: publicationsTable.id })
+    .from(publicationsTable)
+    .where(
+      and(
+        eq(publicationsTable.category, "delibera"),
+        eq(publicationsTable.subcategory, "consiglio"),
+      ),
+    )
+    .orderBy(desc(publicationsTable.dataAtto), asc(publicationsTable.id))
+    .limit(6);
+
+  console.log(
+    `Seeding officials (${officials.length}) and votes across ${delibere.length} delibere...`,
+  );
+
+  await db.transaction(async (tx) => {
+    for (const o of officials) {
+      const [created] = await tx
+        .insert(officialsTable)
+        .values({
+          name: o.name,
+          slug: o.slug,
+          role: o.role,
+          roleTitle: o.roleTitle,
+          group: o.group,
+          status: o.status,
+          appointmentDate: o.appointmentDate
+            ? new Date(o.appointmentDate)
+            : null,
+          biography: o.biography,
+        })
+        .returning();
+
+      if (o.activities.length) {
+        await tx.insert(officialActivitiesTable).values(
+          o.activities.map((a, index) => ({
+            officialId: created.id,
+            title: a.title,
+            description: a.description,
+            date: a.date ? new Date(a.date) : null,
+            position: index,
+          })),
+        );
+      }
+
+      if (o.remunerations.length) {
+        await tx.insert(officialRemunerationsTable).values(
+          o.remunerations.map((r, index) => ({
+            officialId: created.id,
+            year: r.year,
+            amount: r.amount === null ? null : r.amount.toFixed(2),
+            type: r.type,
+            note: r.note,
+            position: index,
+          })),
+        );
+      }
+
+      if (o.declarations.length) {
+        await tx.insert(officialDeclarationsTable).values(
+          o.declarations.map((d, index) => ({
+            officialId: created.id,
+            title: d.title,
+            date: d.date ? new Date(d.date) : null,
+            content: d.content,
+            url: d.url,
+            position: index,
+          })),
+        );
+      }
+
+      if (o.votes && delibere.length) {
+        await tx.insert(officialVotesTable).values(
+          delibere.map((d, index) => ({
+            officialId: created.id,
+            publicationId: d.id,
+            vote: pickVote(o.voteBias, index),
+            position: index,
+          })),
+        );
+      }
+    }
+  });
+
+  console.log("Officials seed complete.");
+}
+
 export async function seed() {
   await db.transaction(async (tx) => {
     const [{ count }] = await tx
@@ -133,6 +605,8 @@ export async function seed() {
 
     console.log("Seed complete.");
   });
+
+  await seedOfficials();
 }
 
 const entryPath = process.argv[1] ?? "";

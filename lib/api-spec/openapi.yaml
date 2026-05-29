@@ -446,6 +446,153 @@ paths:
                 items:
                   $ref: "#/components/schemas/PnrrProject"
 
+  /officials:
+    get:
+      operationId: listOfficials
+      tags: [officials]
+      summary: List public officials and staff
+      parameters:
+        - name: role
+          in: query
+          required: false
+          description: sindaco | assessore | consigliere | dirigente | dipendente
+          schema:
+            type: string
+        - name: q
+          in: query
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: List of officials
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Official"
+    post:
+      operationId: createOfficial
+      tags: [officials]
+      summary: Create a public official with optional profile data
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/OfficialInput"
+      responses:
+        "201":
+          description: Created official profile
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OfficialProfile"
+        "400":
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /officials/{id}:
+    get:
+      operationId: getOfficial
+      tags: [officials]
+      summary: Get a single official's full transparency profile
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Official profile
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OfficialProfile"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    post:
+      operationId: updateOfficial
+      tags: [officials]
+      summary: Update an official and replace their profile data
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/OfficialInput"
+      responses:
+        "200":
+          description: Updated official profile
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OfficialProfile"
+        "400":
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /delibere/{id}/votes:
+    get:
+      operationId: getDeliberaVotes
+      tags: [officials]
+      summary: Voting breakdown for a single delibera
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Delibera voting breakdown
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DeliberaVotes"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
   /reports:
     get:
       operationId: listReports
@@ -1081,3 +1228,228 @@ components:
           type: string
         count:
           type: integer
+
+    Official:
+      type: object
+      required: [id, name, slug, role, status]
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        slug:
+          type: string
+        role:
+          type: string
+          description: sindaco | assessore | consigliere | dirigente | dipendente
+        roleTitle:
+          type: ["string", "null"]
+        group:
+          type: ["string", "null"]
+        status:
+          type: string
+          description: in_carica | cessato
+        appointmentDate:
+          type: ["string", "null"]
+        biography:
+          type: ["string", "null"]
+
+    OfficialActivity:
+      type: object
+      required: [id, title]
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        description:
+          type: ["string", "null"]
+        date:
+          type: ["string", "null"]
+
+    OfficialRemuneration:
+      type: object
+      required: [id, year, type]
+      properties:
+        id:
+          type: integer
+        year:
+          type: integer
+        amount:
+          type: ["number", "null"]
+        type:
+          type: string
+        note:
+          type: ["string", "null"]
+
+    OfficialDeclaration:
+      type: object
+      required: [id, title]
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        date:
+          type: ["string", "null"]
+        content:
+          type: ["string", "null"]
+        url:
+          type: ["string", "null"]
+
+    OfficialVote:
+      type: object
+      required: [publicationId, vote, oggetto]
+      properties:
+        publicationId:
+          type: integer
+        vote:
+          type: string
+          enum: [favorevole, contrario, astenuto, assente]
+        oggetto:
+          type: string
+        numRegGen:
+          type: ["string", "null"]
+        subcategory:
+          type: ["string", "null"]
+        dataAtto:
+          type: ["string", "null"]
+
+    OfficialProfile:
+      allOf:
+        - $ref: "#/components/schemas/Official"
+        - type: object
+          required: [activities, remunerations, declarations, votes]
+          properties:
+            activities:
+              type: array
+              items:
+                $ref: "#/components/schemas/OfficialActivity"
+            remunerations:
+              type: array
+              items:
+                $ref: "#/components/schemas/OfficialRemuneration"
+            declarations:
+              type: array
+              items:
+                $ref: "#/components/schemas/OfficialDeclaration"
+            votes:
+              type: array
+              items:
+                $ref: "#/components/schemas/OfficialVote"
+
+    DeliberaVoteEntry:
+      type: object
+      required: [officialId, name, slug, role, vote]
+      properties:
+        officialId:
+          type: integer
+        name:
+          type: string
+        slug:
+          type: string
+        role:
+          type: string
+        group:
+          type: ["string", "null"]
+        vote:
+          type: string
+          enum: [favorevole, contrario, astenuto, assente]
+
+    DeliberaVotes:
+      type: object
+      required: [delibera, tally, votes]
+      properties:
+        delibera:
+          $ref: "#/components/schemas/Publication"
+        tally:
+          type: object
+          required: [favorevole, contrario, astenuto, assente]
+          properties:
+            favorevole:
+              type: integer
+            contrario:
+              type: integer
+            astenuto:
+              type: integer
+            assente:
+              type: integer
+        votes:
+          type: array
+          items:
+            $ref: "#/components/schemas/DeliberaVoteEntry"
+
+    OfficialInput:
+      type: object
+      required: [name, role]
+      properties:
+        name:
+          type: string
+          minLength: 1
+        role:
+          type: string
+          minLength: 1
+        roleTitle:
+          type: string
+        group:
+          type: string
+        status:
+          type: string
+        appointmentDate:
+          type: string
+        biography:
+          type: string
+        activities:
+          type: array
+          items:
+            type: object
+            required: [title]
+            properties:
+              title:
+                type: string
+                minLength: 1
+              description:
+                type: string
+              date:
+                type: string
+        remunerations:
+          type: array
+          items:
+            type: object
+            required: [year, type]
+            properties:
+              year:
+                type: integer
+              amount:
+                type: number
+              type:
+                type: string
+                minLength: 1
+              note:
+                type: string
+        declarations:
+          type: array
+          items:
+            type: object
+            required: [title]
+            properties:
+              title:
+                type: string
+                minLength: 1
+              date:
+                type: string
+              content:
+                type: string
+              url:
+                type: string
+        votes:
+          type: array
+          items:
+            type: object
+            required: [publicationId, vote]
+            properties:
+              publicationId:
+                type: integer
+              vote:
+                type: string
+                enum: [favorevole, contrario, astenuto, assente]

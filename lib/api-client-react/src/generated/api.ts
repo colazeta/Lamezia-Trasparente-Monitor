@@ -23,6 +23,7 @@ import type {
   ActivityItem,
   Category,
   Contract,
+  DeliberaVotes,
   Error,
   FeedStatus,
   FollowInput,
@@ -30,8 +31,12 @@ import type {
   ListContractsParams,
   ListConvocazioniParams,
   ListDelibereParams,
+  ListOfficialsParams,
   ListPublicationsParams,
   ListThemesParams,
+  Official,
+  OfficialInput,
+  OfficialProfile,
   PnrrProject,
   Publication,
   Report,
@@ -1288,6 +1293,387 @@ export function useListPnrrProjects<TData = Awaited<ReturnType<typeof listPnrrPr
  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
 
   const queryOptions = getListPnrrProjectsQueryOptions(options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
+
+
+
+export const getListOfficialsUrl = (params?: ListOfficialsParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : value.toString())
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/officials?${stringifiedParams}` : `/api/officials`
+}
+
+/**
+ * @summary List public officials and staff
+ */
+export const listOfficials = async (params?: ListOfficialsParams, options?: RequestInit): Promise<Official[]> => {
+
+  return customFetch<Official[]>(getListOfficialsUrl(params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getListOfficialsQueryKey = (params?: ListOfficialsParams,) => {
+    return [
+    `/api/officials`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getListOfficialsQueryOptions = <TData = Awaited<ReturnType<typeof listOfficials>>, TError = ErrorType<unknown>>(params?: ListOfficialsParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listOfficials>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListOfficialsQueryKey(params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listOfficials>>> = ({ signal }) => listOfficials(params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listOfficials>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ListOfficialsQueryResult = NonNullable<Awaited<ReturnType<typeof listOfficials>>>
+export type ListOfficialsQueryError = ErrorType<unknown>
+
+
+/**
+ * @summary List public officials and staff
+ */
+
+export function useListOfficials<TData = Awaited<ReturnType<typeof listOfficials>>, TError = ErrorType<unknown>>(
+ params?: ListOfficialsParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listOfficials>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getListOfficialsQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
+
+
+
+export const getCreateOfficialUrl = () => {
+
+
+
+
+  return `/api/officials`
+}
+
+/**
+ * @summary Create a public official with optional profile data
+ */
+export const createOfficial = async (officialInput: OfficialInput, options?: RequestInit): Promise<OfficialProfile> => {
+
+  return customFetch<OfficialProfile>(getCreateOfficialUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      officialInput,)
+  }
+);}
+
+
+
+
+export const getCreateOfficialMutationOptions = <TError = ErrorType<Error>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createOfficial>>, TError,{data: BodyType<OfficialInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof createOfficial>>, TError,{data: BodyType<OfficialInput>}, TContext> => {
+
+const mutationKey = ['createOfficial'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createOfficial>>, {data: BodyType<OfficialInput>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  createOfficial(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type CreateOfficialMutationResult = NonNullable<Awaited<ReturnType<typeof createOfficial>>>
+    export type CreateOfficialMutationBody = BodyType<OfficialInput>
+    export type CreateOfficialMutationError = ErrorType<Error>
+
+    /**
+ * @summary Create a public official with optional profile data
+ */
+export const useCreateOfficial = <TError = ErrorType<Error>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createOfficial>>, TError,{data: BodyType<OfficialInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof createOfficial>>,
+        TError,
+        {data: BodyType<OfficialInput>},
+        TContext
+      > => {
+      return useMutation(getCreateOfficialMutationOptions(options));
+    }
+
+export const getGetOfficialUrl = (id: number,) => {
+
+
+
+
+  return `/api/officials/${id}`
+}
+
+/**
+ * @summary Get a single official's full transparency profile
+ */
+export const getOfficial = async (id: number, options?: RequestInit): Promise<OfficialProfile> => {
+
+  return customFetch<OfficialProfile>(getGetOfficialUrl(id),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetOfficialQueryKey = (id: number,) => {
+    return [
+    `/api/officials/${id}`
+    ] as const;
+    }
+
+
+export const getGetOfficialQueryOptions = <TData = Awaited<ReturnType<typeof getOfficial>>, TError = ErrorType<Error>>(id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getOfficial>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetOfficialQueryKey(id);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getOfficial>>> = ({ signal }) => getOfficial(id, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: !!(id), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getOfficial>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetOfficialQueryResult = NonNullable<Awaited<ReturnType<typeof getOfficial>>>
+export type GetOfficialQueryError = ErrorType<Error>
+
+
+/**
+ * @summary Get a single official's full transparency profile
+ */
+
+export function useGetOfficial<TData = Awaited<ReturnType<typeof getOfficial>>, TError = ErrorType<Error>>(
+ id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getOfficial>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetOfficialQueryOptions(id,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
+
+
+
+export const getUpdateOfficialUrl = (id: number,) => {
+
+
+
+
+  return `/api/officials/${id}`
+}
+
+/**
+ * @summary Update an official and replace their profile data
+ */
+export const updateOfficial = async (id: number,
+    officialInput: OfficialInput, options?: RequestInit): Promise<OfficialProfile> => {
+
+  return customFetch<OfficialProfile>(getUpdateOfficialUrl(id),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      officialInput,)
+  }
+);}
+
+
+
+
+export const getUpdateOfficialMutationOptions = <TError = ErrorType<Error>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateOfficial>>, TError,{id: number;data: BodyType<OfficialInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof updateOfficial>>, TError,{id: number;data: BodyType<OfficialInput>}, TContext> => {
+
+const mutationKey = ['updateOfficial'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof updateOfficial>>, {id: number;data: BodyType<OfficialInput>}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  updateOfficial(id,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type UpdateOfficialMutationResult = NonNullable<Awaited<ReturnType<typeof updateOfficial>>>
+    export type UpdateOfficialMutationBody = BodyType<OfficialInput>
+    export type UpdateOfficialMutationError = ErrorType<Error>
+
+    /**
+ * @summary Update an official and replace their profile data
+ */
+export const useUpdateOfficial = <TError = ErrorType<Error>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateOfficial>>, TError,{id: number;data: BodyType<OfficialInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof updateOfficial>>,
+        TError,
+        {id: number;data: BodyType<OfficialInput>},
+        TContext
+      > => {
+      return useMutation(getUpdateOfficialMutationOptions(options));
+    }
+
+export const getGetDeliberaVotesUrl = (id: number,) => {
+
+
+
+
+  return `/api/delibere/${id}/votes`
+}
+
+/**
+ * @summary Voting breakdown for a single delibera
+ */
+export const getDeliberaVotes = async (id: number, options?: RequestInit): Promise<DeliberaVotes> => {
+
+  return customFetch<DeliberaVotes>(getGetDeliberaVotesUrl(id),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetDeliberaVotesQueryKey = (id: number,) => {
+    return [
+    `/api/delibere/${id}/votes`
+    ] as const;
+    }
+
+
+export const getGetDeliberaVotesQueryOptions = <TData = Awaited<ReturnType<typeof getDeliberaVotes>>, TError = ErrorType<Error>>(id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getDeliberaVotes>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetDeliberaVotesQueryKey(id);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getDeliberaVotes>>> = ({ signal }) => getDeliberaVotes(id, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: !!(id), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getDeliberaVotes>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetDeliberaVotesQueryResult = NonNullable<Awaited<ReturnType<typeof getDeliberaVotes>>>
+export type GetDeliberaVotesQueryError = ErrorType<Error>
+
+
+/**
+ * @summary Voting breakdown for a single delibera
+ */
+
+export function useGetDeliberaVotes<TData = Awaited<ReturnType<typeof getDeliberaVotes>>, TError = ErrorType<Error>>(
+ id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getDeliberaVotes>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetDeliberaVotesQueryOptions(id,options)
 
   const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
 

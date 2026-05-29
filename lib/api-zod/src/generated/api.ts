@@ -460,6 +460,250 @@ export const ListPnrrProjectsResponse = zod.array(ListPnrrProjectsResponseItem)
 
 
 /**
+ * @summary List public officials and staff
+ */
+export const ListOfficialsQueryParams = zod.object({
+  "role": zod.coerce.string().optional().describe('sindaco | assessore | consigliere | dirigente | dipendente'),
+  "q": zod.coerce.string().optional()
+})
+
+export const ListOfficialsResponseItem = zod.object({
+  "id": zod.number(),
+  "name": zod.string(),
+  "slug": zod.string(),
+  "role": zod.string().describe('sindaco | assessore | consigliere | dirigente | dipendente'),
+  "roleTitle": zod.string().nullish(),
+  "group": zod.string().nullish(),
+  "status": zod.string().describe('in_carica | cessato'),
+  "appointmentDate": zod.string().nullish(),
+  "biography": zod.string().nullish()
+})
+export const ListOfficialsResponse = zod.array(ListOfficialsResponseItem)
+
+
+/**
+ * @summary Create a public official with optional profile data
+ */
+
+
+
+
+
+
+
+export const CreateOfficialBody = zod.object({
+  "name": zod.string().min(1),
+  "role": zod.string().min(1),
+  "roleTitle": zod.string().optional(),
+  "group": zod.string().optional(),
+  "status": zod.string().optional(),
+  "appointmentDate": zod.string().optional(),
+  "biography": zod.string().optional(),
+  "activities": zod.array(zod.object({
+  "title": zod.string().min(1),
+  "description": zod.string().optional(),
+  "date": zod.string().optional()
+})).optional(),
+  "remunerations": zod.array(zod.object({
+  "year": zod.number(),
+  "amount": zod.number().optional(),
+  "type": zod.string().min(1),
+  "note": zod.string().optional()
+})).optional(),
+  "declarations": zod.array(zod.object({
+  "title": zod.string().min(1),
+  "date": zod.string().optional(),
+  "content": zod.string().optional(),
+  "url": zod.string().optional()
+})).optional(),
+  "votes": zod.array(zod.object({
+  "publicationId": zod.number(),
+  "vote": zod.enum(['favorevole', 'contrario', 'astenuto', 'assente'])
+})).optional()
+})
+
+
+/**
+ * @summary Get a single official's full transparency profile
+ */
+export const GetOfficialParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const GetOfficialResponse = zod.object({
+  "id": zod.number(),
+  "name": zod.string(),
+  "slug": zod.string(),
+  "role": zod.string().describe('sindaco | assessore | consigliere | dirigente | dipendente'),
+  "roleTitle": zod.string().nullish(),
+  "group": zod.string().nullish(),
+  "status": zod.string().describe('in_carica | cessato'),
+  "appointmentDate": zod.string().nullish(),
+  "biography": zod.string().nullish()
+}).and(zod.object({
+  "activities": zod.array(zod.object({
+  "id": zod.number(),
+  "title": zod.string(),
+  "description": zod.string().nullish(),
+  "date": zod.string().nullish()
+})),
+  "remunerations": zod.array(zod.object({
+  "id": zod.number(),
+  "year": zod.number(),
+  "amount": zod.number().nullish(),
+  "type": zod.string(),
+  "note": zod.string().nullish()
+})),
+  "declarations": zod.array(zod.object({
+  "id": zod.number(),
+  "title": zod.string(),
+  "date": zod.string().nullish(),
+  "content": zod.string().nullish(),
+  "url": zod.string().nullish()
+})),
+  "votes": zod.array(zod.object({
+  "publicationId": zod.number(),
+  "vote": zod.enum(['favorevole', 'contrario', 'astenuto', 'assente']),
+  "oggetto": zod.string(),
+  "numRegGen": zod.string().nullish(),
+  "subcategory": zod.string().nullish(),
+  "dataAtto": zod.string().nullish()
+}))
+}))
+
+
+/**
+ * @summary Update an official and replace their profile data
+ */
+export const UpdateOfficialParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+
+
+
+
+
+
+
+export const UpdateOfficialBody = zod.object({
+  "name": zod.string().min(1),
+  "role": zod.string().min(1),
+  "roleTitle": zod.string().optional(),
+  "group": zod.string().optional(),
+  "status": zod.string().optional(),
+  "appointmentDate": zod.string().optional(),
+  "biography": zod.string().optional(),
+  "activities": zod.array(zod.object({
+  "title": zod.string().min(1),
+  "description": zod.string().optional(),
+  "date": zod.string().optional()
+})).optional(),
+  "remunerations": zod.array(zod.object({
+  "year": zod.number(),
+  "amount": zod.number().optional(),
+  "type": zod.string().min(1),
+  "note": zod.string().optional()
+})).optional(),
+  "declarations": zod.array(zod.object({
+  "title": zod.string().min(1),
+  "date": zod.string().optional(),
+  "content": zod.string().optional(),
+  "url": zod.string().optional()
+})).optional(),
+  "votes": zod.array(zod.object({
+  "publicationId": zod.number(),
+  "vote": zod.enum(['favorevole', 'contrario', 'astenuto', 'assente'])
+})).optional()
+})
+
+export const UpdateOfficialResponse = zod.object({
+  "id": zod.number(),
+  "name": zod.string(),
+  "slug": zod.string(),
+  "role": zod.string().describe('sindaco | assessore | consigliere | dirigente | dipendente'),
+  "roleTitle": zod.string().nullish(),
+  "group": zod.string().nullish(),
+  "status": zod.string().describe('in_carica | cessato'),
+  "appointmentDate": zod.string().nullish(),
+  "biography": zod.string().nullish()
+}).and(zod.object({
+  "activities": zod.array(zod.object({
+  "id": zod.number(),
+  "title": zod.string(),
+  "description": zod.string().nullish(),
+  "date": zod.string().nullish()
+})),
+  "remunerations": zod.array(zod.object({
+  "id": zod.number(),
+  "year": zod.number(),
+  "amount": zod.number().nullish(),
+  "type": zod.string(),
+  "note": zod.string().nullish()
+})),
+  "declarations": zod.array(zod.object({
+  "id": zod.number(),
+  "title": zod.string(),
+  "date": zod.string().nullish(),
+  "content": zod.string().nullish(),
+  "url": zod.string().nullish()
+})),
+  "votes": zod.array(zod.object({
+  "publicationId": zod.number(),
+  "vote": zod.enum(['favorevole', 'contrario', 'astenuto', 'assente']),
+  "oggetto": zod.string(),
+  "numRegGen": zod.string().nullish(),
+  "subcategory": zod.string().nullish(),
+  "dataAtto": zod.string().nullish()
+}))
+}))
+
+
+/**
+ * @summary Voting breakdown for a single delibera
+ */
+export const GetDeliberaVotesParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const GetDeliberaVotesResponse = zod.object({
+  "delibera": zod.object({
+  "id": zod.number(),
+  "progressivo": zod.string(),
+  "tipologia": zod.string(),
+  "category": zod.string(),
+  "subcategory": zod.string().nullish(),
+  "provenienza": zod.string().nullish(),
+  "oggetto": zod.string(),
+  "dataAtto": zod.string().nullish(),
+  "pubStart": zod.string().nullish(),
+  "pubEnd": zod.string().nullish(),
+  "numRegSet": zod.string().nullish(),
+  "numRegGen": zod.string().nullish(),
+  "cups": zod.array(zod.string()),
+  "pnrrMission": zod.string().nullish(),
+  "isPnrr": zod.boolean(),
+  "isNew": zod.boolean(),
+  "firstSeenAt": zod.string()
+}),
+  "tally": zod.object({
+  "favorevole": zod.number(),
+  "contrario": zod.number(),
+  "astenuto": zod.number(),
+  "assente": zod.number()
+}),
+  "votes": zod.array(zod.object({
+  "officialId": zod.number(),
+  "name": zod.string(),
+  "slug": zod.string(),
+  "role": zod.string(),
+  "group": zod.string().nullish(),
+  "vote": zod.enum(['favorevole', 'contrario', 'astenuto', 'assente'])
+}))
+})
+
+
+/**
  * @summary List citizen reports
  */
 export const ListReportsResponseItem = zod.object({

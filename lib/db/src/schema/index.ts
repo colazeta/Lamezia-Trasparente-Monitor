@@ -11,3 +11,4 @@ export * from "./publications";
 export * from "./feedStatus";
 export * from "./themeFollowers";
 export * from "./sessionReports";
+export * from "./officials";
