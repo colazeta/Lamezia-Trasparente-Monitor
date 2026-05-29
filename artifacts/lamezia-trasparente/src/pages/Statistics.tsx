@@ -4,7 +4,7 @@ import {
   useGetShareStats, 
   useGetRecentActivity 
 } from "@workspace/api-client-react";
-import { BarChart3, TrendingUp, HandCoins, Share2, Activity, PieChart, Info } from "lucide-react";
+import { BarChart3, TrendingUp, HandCoins, Share2, Activity, PieChart, Info, Users } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { format } from "date-fns";
@@ -83,8 +83,11 @@ export function Statistics() {
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="font-medium text-foreground truncate">{theme.title}</div>
-                      <div className="text-xs text-muted-foreground font-mono mt-1">
-                        {theme.categoryName}
+                      <div className="text-xs text-muted-foreground font-mono mt-1 flex items-center gap-2">
+                        <span>{theme.categoryName}</span>
+                        <span className="flex items-center gap-1">
+                          <Users className="h-3 w-3" /> {theme.followerCount} follower
+                        </span>
                       </div>
                     </div>
                     <div className="text-right shrink-0">

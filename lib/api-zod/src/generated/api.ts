@@ -49,6 +49,7 @@ export const ListThemesResponseItem = zod.object({
   "status": zod.enum(['aperto', 'in_corso', 'monitoraggio', 'chiuso']),
   "relevanceCount": zod.number(),
   "shareCount": zod.number(),
+  "followerCount": zod.number(),
   "updatedAt": zod.string()
 })
 export const ListThemesResponse = zod.array(ListThemesResponseItem)
@@ -72,6 +73,7 @@ export const GetThemeResponse = zod.object({
   "status": zod.enum(['aperto', 'in_corso', 'monitoraggio', 'chiuso']),
   "relevanceCount": zod.number(),
   "shareCount": zod.number(),
+  "followerCount": zod.number(),
   "updatedAt": zod.string(),
   "documents": zod.array(zod.object({
   "id": zod.number(),
@@ -136,6 +138,7 @@ export const MarkThemeRelevantResponse = zod.object({
   "status": zod.enum(['aperto', 'in_corso', 'monitoraggio', 'chiuso']),
   "relevanceCount": zod.number(),
   "shareCount": zod.number(),
+  "followerCount": zod.number(),
   "updatedAt": zod.string()
 })
 
@@ -161,6 +164,33 @@ export const ShareThemeResponse = zod.object({
   "status": zod.enum(['aperto', 'in_corso', 'monitoraggio', 'chiuso']),
   "relevanceCount": zod.number(),
   "shareCount": zod.number(),
+  "followerCount": zod.number(),
+  "updatedAt": zod.string()
+})
+
+
+/**
+ * @summary Follow a theme to receive email updates
+ */
+export const FollowThemeParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const FollowThemeBody = zod.object({
+  "email": zod.string().email()
+})
+
+export const FollowThemeResponse = zod.object({
+  "id": zod.number(),
+  "title": zod.string(),
+  "slug": zod.string(),
+  "summary": zod.string(),
+  "categoryId": zod.number(),
+  "categoryName": zod.string(),
+  "status": zod.enum(['aperto', 'in_corso', 'monitoraggio', 'chiuso']),
+  "relevanceCount": zod.number(),
+  "shareCount": zod.number(),
+  "followerCount": zod.number(),
   "updatedAt": zod.string()
 })
 
@@ -390,6 +420,7 @@ export const GetTopThemesResponse = zod.object({
   "status": zod.enum(['aperto', 'in_corso', 'monitoraggio', 'chiuso']),
   "relevanceCount": zod.number(),
   "shareCount": zod.number(),
+  "followerCount": zod.number(),
   "updatedAt": zod.string()
 })),
   "byShares": zod.array(zod.object({
@@ -402,6 +433,7 @@ export const GetTopThemesResponse = zod.object({
   "status": zod.enum(['aperto', 'in_corso', 'monitoraggio', 'chiuso']),
   "relevanceCount": zod.number(),
   "shareCount": zod.number(),
+  "followerCount": zod.number(),
   "updatedAt": zod.string()
 }))
 })

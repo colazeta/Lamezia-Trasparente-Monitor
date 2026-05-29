@@ -23,6 +23,7 @@ export interface ThemeDetail {
   status: ThemeDetailStatus;
   relevanceCount: number;
   shareCount: number;
+  followerCount: number;
   updatedAt: string;
   documents: ThemeDocument[];
   emails: ThemeEmail[];

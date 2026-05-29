@@ -1,8 +1,10 @@
+import { useState } from "react";
 import { useParams, Link } from "wouter";
 import { 
   useGetTheme, 
   useMarkThemeRelevant, 
   useShareTheme,
+  useFollowTheme,
   getGetThemeQueryKey
 } from "@workspace/api-client-react";
 import { format } from "date-fns";
@@ -27,11 +29,14 @@ import {
   Facebook,
   Twitter,
   MessageCircle,
+  Bell,
+  Users,
   Link as LinkIcon
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
@@ -56,6 +61,33 @@ export function ThemeDetail() {
   
   const markRelevant = useMarkThemeRelevant();
   const shareTheme = useShareTheme();
+  const followTheme = useFollowTheme();
+
+  const [followEmail, setFollowEmail] = useState("");
+  const [followed, setFollowed] = useState(false);
+
+  const handleFollow = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!theme) return;
+    const email = followEmail.trim();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      toast.error("Email non valida", { description: "Inserisci un indirizzo email corretto." });
+      return;
+    }
+    followTheme.mutate({ id: themeId, data: { email } }, {
+      onSuccess: () => {
+        setFollowed(true);
+        setFollowEmail("");
+        toast.success("Iscrizione confermata", {
+          description: "Riceverai un'email ad ogni aggiornamento di questo tema."
+        });
+        queryClient.invalidateQueries({ queryKey: getGetThemeQueryKey(themeId) });
+      },
+      onError: () => {
+        toast.error("Errore", { description: "Non è stato possibile completare l'iscrizione." });
+      }
+    });
+  };
 
   const handleRelevant = () => {
     if (!theme) return;
@@ -158,6 +190,11 @@ export function ThemeDetail() {
               <Share2 className="h-4 w-4" />
               {theme.shareCount} condivisioni
             </div>
+            <span>•</span>
+            <div className="flex items-center gap-1.5">
+              <Users className="h-4 w-4" />
+              {theme.followerCount} follower
+            </div>
           </div>
           
           <div className="prose prose-slate dark:prose-invert max-w-none text-lg">
@@ -206,6 +243,52 @@ export function ThemeDetail() {
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
+            </CardContent>
+          </Card>
+
+          <Card className="border-primary/20">
+            <CardHeader className="pb-3">
+              <CardTitle className="text-base flex items-center gap-2">
+                <Bell className="h-4 w-4 text-primary" /> Segui questo tema
+              </CardTitle>
+              <CardDescription>
+                Ricevi un'email quando vengono aggiunti nuovi documenti, atti o corrispondenza.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              {followed ? (
+                <div className="flex items-start gap-3 rounded-lg bg-primary/5 p-3 text-sm">
+                  <Bell className="h-4 w-4 text-primary mt-0.5 shrink-0" />
+                  <p className="text-muted-foreground">
+                    Iscrizione attiva. Ti avviseremo via email ad ogni aggiornamento.
+                  </p>
+                </div>
+              ) : (
+                <form onSubmit={handleFollow} className="space-y-3">
+                  <Input
+                    type="email"
+                    inputMode="email"
+                    placeholder="La tua email"
+                    value={followEmail}
+                    onChange={(e) => setFollowEmail(e.target.value)}
+                    aria-label="Indirizzo email per seguire il tema"
+                    required
+                  />
+                  <Button
+                    type="submit"
+                    variant="secondary"
+                    disabled={followTheme.isPending}
+                    className="w-full gap-2"
+                  >
+                    <Bell className="h-4 w-4" />
+                    {followTheme.isPending ? "Iscrizione…" : "Seguimi via email"}
+                  </Button>
+                  <p className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                    <Users className="h-3.5 w-3.5" />
+                    {theme.followerCount} cittadini seguono questo tema
+                  </p>
+                </form>
+              )}
             </CardContent>
           </Card>
           

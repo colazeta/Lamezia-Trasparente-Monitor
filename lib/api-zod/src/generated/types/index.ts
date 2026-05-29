@@ -13,6 +13,7 @@ export * from './category';
 export * from './contract';
 export * from './error';
 export * from './feedStatus';
+export * from './followInput';
 export * from './healthStatus';
 export * from './listContractsParams';
 export * from './listConvocazioniParams';

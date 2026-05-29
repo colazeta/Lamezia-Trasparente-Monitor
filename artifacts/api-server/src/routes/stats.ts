@@ -22,6 +22,7 @@ function mapThemeRow(r: {
   status: string;
   relevanceCount: number;
   shareCount: number;
+  followerCount: number;
   updatedAt: Date;
 }) {
   return { ...r, updatedAt: r.updatedAt.toISOString() };
@@ -37,6 +38,7 @@ const themeSelect = {
   status: themesTable.status,
   relevanceCount: themesTable.relevanceCount,
   shareCount: themesTable.shareCount,
+  followerCount: themesTable.followerCount,
   updatedAt: themesTable.updatedAt,
 };
 

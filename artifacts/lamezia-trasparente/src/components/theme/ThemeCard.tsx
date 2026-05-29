@@ -1,4 +1,4 @@
-import { ShieldAlert, BookOpen, AlertTriangle, Info, TrendingUp, HandCoins } from "lucide-react";
+import { ShieldAlert, BookOpen, AlertTriangle, Info, TrendingUp, HandCoins, Users } from "lucide-react";
 import { format } from "date-fns";
 import { it } from "date-fns/locale";
 
@@ -76,6 +76,13 @@ export function ThemeCard({ theme }: ThemeCardProps) {
         </div>
         
         <div className="flex items-center gap-2">
+          <span
+            className="flex items-center gap-1.5 text-xs text-muted-foreground"
+            title={`${theme.followerCount} follower`}
+          >
+            <Users className="h-4 w-4" />
+            <span className="font-mono">{theme.followerCount}</span>
+          </span>
           <Button 
             variant="ghost" 
             size="sm" 

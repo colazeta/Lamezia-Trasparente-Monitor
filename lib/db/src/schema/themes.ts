@@ -13,6 +13,7 @@ export const themesTable = pgTable("themes", {
   status: text("status").notNull().default("aperto"),
   relevanceCount: integer("relevance_count").notNull().default(0),
   shareCount: integer("share_count").notNull().default(0),
+  followerCount: integer("follower_count").notNull().default(0),
   updatedAt: timestamp("updated_at", { withTimezone: true })
     .notNull()
     .defaultNow(),

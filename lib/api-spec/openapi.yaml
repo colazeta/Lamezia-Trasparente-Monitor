@@ -167,6 +167,43 @@ paths:
               schema:
                 $ref: "#/components/schemas/Error"
 
+  /themes/{id}/follow:
+    post:
+      operationId: followTheme
+      tags: [themes]
+      summary: Follow a theme to receive email updates
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/FollowInput"
+      responses:
+        "200":
+          description: Updated theme
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Theme"
+        "400":
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
   /contracts:
     get:
       operationId: listContracts
@@ -455,6 +492,7 @@ components:
         - status
         - relevanceCount
         - shareCount
+        - followerCount
         - updatedAt
       properties:
         id:
@@ -476,6 +514,8 @@ components:
           type: integer
         shareCount:
           type: integer
+        followerCount:
+          type: integer
         updatedAt:
           type: string
 
@@ -492,6 +532,7 @@ components:
         - status
         - relevanceCount
         - shareCount
+        - followerCount
         - updatedAt
         - documents
         - emails
@@ -519,6 +560,8 @@ components:
         relevanceCount:
           type: integer
         shareCount:
+          type: integer
+        followerCount:
           type: integer
         updatedAt:
           type: string
@@ -807,6 +850,14 @@ components:
         channel:
           type: string
           enum: [facebook, twitter, whatsapp, email, link]
+
+    FollowInput:
+      type: object
+      required: [email]
+      properties:
+        email:
+          type: string
+          format: email
 
     StatsOverview:
       type: object

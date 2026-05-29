@@ -9,3 +9,4 @@ export * from "./reports";
 export * from "./shares";
 export * from "./publications";
 export * from "./feedStatus";
+export * from "./themeFollowers";

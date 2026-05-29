@@ -41,6 +41,7 @@ export interface Theme {
   status: ThemeStatus;
   relevanceCount: number;
   shareCount: number;
+  followerCount: number;
   updatedAt: string;
 }
 
@@ -124,6 +125,7 @@ export interface ThemeDetail {
   status: ThemeDetailStatus;
   relevanceCount: number;
   shareCount: number;
+  followerCount: number;
   updatedAt: string;
   documents: ThemeDocument[];
   emails: ThemeEmail[];
@@ -237,6 +239,10 @@ export const ShareInputChannel = {
 
 export interface ShareInput {
   channel: ShareInputChannel;
+}
+
+export interface FollowInput {
+  email: string;
 }
 
 export interface StatsOverview {

@@ -25,6 +25,7 @@ import type {
   Contract,
   Error,
   FeedStatus,
+  FollowInput,
   HealthStatus,
   ListContractsParams,
   ListConvocazioniParams,
@@ -511,6 +512,78 @@ export const useShareTheme = <TError = ErrorType<Error>,
         TContext
       > => {
       return useMutation(getShareThemeMutationOptions(options));
+    }
+
+export const getFollowThemeUrl = (id: number,) => {
+
+
+
+
+  return `/api/themes/${id}/follow`
+}
+
+/**
+ * @summary Follow a theme to receive email updates
+ */
+export const followTheme = async (id: number,
+    followInput: FollowInput, options?: RequestInit): Promise<Theme> => {
+
+  return customFetch<Theme>(getFollowThemeUrl(id),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      followInput,)
+  }
+);}
+
+
+
+
+export const getFollowThemeMutationOptions = <TError = ErrorType<Error>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof followTheme>>, TError,{id: number;data: BodyType<FollowInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof followTheme>>, TError,{id: number;data: BodyType<FollowInput>}, TContext> => {
+
+const mutationKey = ['followTheme'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof followTheme>>, {id: number;data: BodyType<FollowInput>}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  followTheme(id,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type FollowThemeMutationResult = NonNullable<Awaited<ReturnType<typeof followTheme>>>
+    export type FollowThemeMutationBody = BodyType<FollowInput>
+    export type FollowThemeMutationError = ErrorType<Error>
+
+    /**
+ * @summary Follow a theme to receive email updates
+ */
+export const useFollowTheme = <TError = ErrorType<Error>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof followTheme>>, TError,{id: number;data: BodyType<FollowInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof followTheme>>,
+        TError,
+        {id: number;data: BodyType<FollowInput>},
+        TContext
+      > => {
+      return useMutation(getFollowThemeMutationOptions(options));
     }
 
 export const getListContractsUrl = (params?: ListContractsParams,) => {

@@ -17,5 +17,6 @@ export interface Theme {
   status: ThemeStatus;
   relevanceCount: number;
   shareCount: number;
+  followerCount: number;
   updatedAt: string;
 }
