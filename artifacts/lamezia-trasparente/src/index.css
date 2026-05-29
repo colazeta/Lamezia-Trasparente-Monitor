@@ -78,8 +78,8 @@
   --elevate-1: rgba(0,0,0, .03);
   --elevate-2: rgba(0,0,0, .08);
 
-  /* Calabrian Terracotta & Deep Slate theme */
-  --background: 40 33% 98%;
+  /* Civic Trust Blue & Deep Slate theme */
+  --background: 210 40% 98%;
   --foreground: 220 30% 15%;
 
   --border: 220 15% 90%;
@@ -91,17 +91,17 @@
   --sidebar: 220 30% 10%;
   --sidebar-foreground: 40 33% 98%;
   --sidebar-border: 220 30% 15%;
-  --sidebar-primary: 12 76% 45%;
+  --sidebar-primary: 214 90% 56%;
   --sidebar-primary-foreground: 0 0% 100%;
   --sidebar-accent: 220 30% 15%;
   --sidebar-accent-foreground: 40 33% 98%;
-  --sidebar-ring: 12 76% 45%;
+  --sidebar-ring: 214 90% 56%;
 
   --popover: 0 0% 100%;
   --popover-foreground: 220 30% 15%;
   --popover-border: 220 15% 90%;
 
-  --primary: 12 76% 45%;
+  --primary: 214 84% 44%;
   --primary-foreground: 0 0% 100%;
 
   --secondary: 220 20% 95%;
@@ -110,20 +110,20 @@
   --muted: 220 20% 95%;
   --muted-foreground: 220 15% 45%;
 
-  --accent: 40 33% 94%;
-  --accent-foreground: 12 76% 40%;
+  --accent: 214 45% 93%;
+  --accent-foreground: 214 84% 38%;
 
   --destructive: 0 84% 60%;
   --destructive-foreground: 0 0% 100%;
 
   --input: 220 15% 85%;
-  --ring: 12 76% 45%;
+  --ring: 214 84% 44%;
 
-  --chart-1: 12 76% 45%;
-  --chart-2: 220 30% 25%;
-  --chart-3: 40 60% 60%;
-  --chart-4: 180 40% 40%;
-  --chart-5: 340 50% 50%;
+  --chart-1: 214 84% 44%;
+  --chart-2: 220 30% 30%;
+  --chart-3: 199 89% 48%;
+  --chart-4: 234 60% 58%;
+  --chart-5: 188 70% 38%;
 
   --app-font-sans: 'Inter', sans-serif;
   --app-font-serif: 'Merriweather', Georgia, serif;
@@ -163,17 +163,17 @@
   --sidebar: 220 30% 10%;
   --sidebar-foreground: 40 33% 98%;
   --sidebar-border: 220 30% 15%;
-  --sidebar-primary: 12 76% 50%;
+  --sidebar-primary: 214 90% 60%;
   --sidebar-primary-foreground: 0 0% 100%;
   --sidebar-accent: 220 30% 20%;
   --sidebar-accent-foreground: 40 33% 98%;
-  --sidebar-ring: 12 76% 50%;
+  --sidebar-ring: 214 90% 60%;
 
   --popover: 220 30% 15%;
   --popover-foreground: 40 33% 98%;
   --popover-border: 220 30% 22%;
 
-  --primary: 12 76% 55%;
+  --primary: 214 90% 62%;
   --primary-foreground: 0 0% 100%;
 
   --secondary: 220 30% 25%;
@@ -183,19 +183,19 @@
   --muted-foreground: 220 15% 65%;
 
   --accent: 220 30% 25%;
-  --accent-foreground: 12 76% 60%;
+  --accent-foreground: 214 90% 70%;
 
   --destructive: 0 62% 45%;
   --destructive-foreground: 0 0% 100%;
 
   --input: 220 30% 25%;
-  --ring: 12 76% 55%;
+  --ring: 214 90% 62%;
   
-  --chart-1: 12 76% 55%;
-  --chart-2: 220 30% 75%;
-  --chart-3: 40 60% 50%;
-  --chart-4: 180 40% 50%;
-  --chart-5: 340 50% 60%;
+  --chart-1: 214 90% 62%;
+  --chart-2: 220 20% 75%;
+  --chart-3: 199 89% 56%;
+  --chart-4: 234 70% 68%;
+  --chart-5: 188 70% 50%;
 }
 
 @layer base {

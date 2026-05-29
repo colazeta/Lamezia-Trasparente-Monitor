@@ -17,7 +17,9 @@ tags:
   - name: contracts
     description: Public contracts
   - name: acts
-    description: Albo pretorio acts
+    description: Albo pretorio acts (legacy)
+  - name: publications
+    description: Live albo pretorio feed (publications, delibere, convocazioni, PNRR)
   - name: reports
     description: Citizen reports
   - name: stats
@@ -191,18 +193,24 @@ paths:
                 items:
                   $ref: "#/components/schemas/Contract"
 
-  /acts:
+  /publications:
     get:
-      operationId: listActs
-      tags: [acts]
-      summary: List albo pretorio acts
+      operationId: listPublications
+      tags: [publications]
+      summary: List albo pretorio publications (live feed)
       parameters:
-        - name: search
+        - name: q
           in: query
           required: false
           schema:
             type: string
-        - name: type
+        - name: category
+          in: query
+          required: false
+          description: albo | delibera | convocazione
+          schema:
+            type: string
+        - name: tipologia
           in: query
           required: false
           schema:
@@ -210,26 +218,103 @@ paths:
         - name: from
           in: query
           required: false
-          description: Filter acts published on or after this date (YYYY-MM-DD)
+          description: Filter published on or after this date (YYYY-MM-DD)
           schema:
             type: string
             format: date
         - name: to
           in: query
           required: false
-          description: Filter acts published on or before this date (YYYY-MM-DD)
+          description: Filter published on or before this date (YYYY-MM-DD)
           schema:
             type: string
             format: date
       responses:
         "200":
-          description: List of acts
+          description: List of publications
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/Act"
+                  $ref: "#/components/schemas/Publication"
+
+  /publications/feed-status:
+    get:
+      operationId: getFeedStatus
+      tags: [publications]
+      summary: Status and last-updated info for the live albo feed
+      responses:
+        "200":
+          description: Feed status
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FeedStatus"
+
+  /delibere:
+    get:
+      operationId: listDelibere
+      tags: [publications]
+      summary: List deliberazioni (giunta | consiglio)
+      parameters:
+        - name: tipo
+          in: query
+          required: false
+          description: giunta | consiglio
+          schema:
+            type: string
+        - name: q
+          in: query
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: List of delibere
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Publication"
+
+  /convocazioni:
+    get:
+      operationId: listConvocazioni
+      tags: [publications]
+      summary: List convocazioni (consiglio | commissione)
+      parameters:
+        - name: tipo
+          in: query
+          required: false
+          description: consiglio | commissione
+          schema:
+            type: string
+      responses:
+        "200":
+          description: List of convocazioni
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Publication"
+
+  /pnrr/projects:
+    get:
+      operationId: listPnrrProjects
+      tags: [publications]
+      summary: List PNRR projects grouped by CUP
+      responses:
+        "200":
+          description: List of PNRR projects
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/PnrrProject"
 
   /reports:
     get:
@@ -564,6 +649,108 @@ components:
           type: string
         themeId:
           type: ["integer", "null"]
+
+    Publication:
+      type: object
+      required:
+        - id
+        - progressivo
+        - tipologia
+        - category
+        - oggetto
+        - cups
+        - isPnrr
+        - isNew
+        - firstSeenAt
+      properties:
+        id:
+          type: integer
+        progressivo:
+          type: string
+        tipologia:
+          type: string
+        category:
+          type: string
+        subcategory:
+          type: ["string", "null"]
+        provenienza:
+          type: ["string", "null"]
+        oggetto:
+          type: string
+        dataAtto:
+          type: ["string", "null"]
+        pubStart:
+          type: ["string", "null"]
+        pubEnd:
+          type: ["string", "null"]
+        numRegSet:
+          type: ["string", "null"]
+        numRegGen:
+          type: ["string", "null"]
+        cups:
+          type: array
+          items:
+            type: string
+        pnrrMission:
+          type: ["string", "null"]
+        isPnrr:
+          type: boolean
+        isNew:
+          type: boolean
+        firstSeenAt:
+          type: string
+
+    FeedStatus:
+      type: object
+      required:
+        - source
+        - status
+        - itemsTotal
+        - itemsNew
+      properties:
+        source:
+          type: string
+        label:
+          type: ["string", "null"]
+        url:
+          type: ["string", "null"]
+        status:
+          type: string
+        error:
+          type: ["string", "null"]
+        itemsTotal:
+          type: integer
+        itemsNew:
+          type: integer
+        lastCheckedAt:
+          type: ["string", "null"]
+        lastUpdatedAt:
+          type: ["string", "null"]
+
+    PnrrProject:
+      type: object
+      required:
+        - key
+        - title
+        - documentsCount
+        - documents
+      properties:
+        key:
+          type: string
+        cup:
+          type: ["string", "null"]
+        mission:
+          type: ["string", "null"]
+        title:
+          type: string
+        documentsCount:
+          type: integer
+        lastPublication:
+          type: ["string", "null"]
+        documents:
+          type: array
+          items:
+            $ref: "#/components/schemas/Publication"
 
     Report:
       type: object

@@ -4,7 +4,7 @@ import {
   themesTable,
   categoriesTable,
   contractsTable,
-  actsTable,
+  publicationsTable,
   reportsTable,
   sharesTable,
 } from "@workspace/db";
@@ -44,7 +44,7 @@ router.get("/stats/overview", async (_req, res) => {
   const [[themes], [contracts], [acts], [reports], [agg]] = await Promise.all([
     db.select({ count: sql<number>`count(*)::int` }).from(themesTable),
     db.select({ count: sql<number>`count(*)::int` }).from(contractsTable),
-    db.select({ count: sql<number>`count(*)::int` }).from(actsTable),
+    db.select({ count: sql<number>`count(*)::int` }).from(publicationsTable),
     db.select({ count: sql<number>`count(*)::int` }).from(reportsTable),
     db
       .select({
@@ -116,13 +116,12 @@ router.get("/stats/activity", async (_req, res) => {
       .limit(10),
     db
       .select({
-        id: actsTable.id,
-        title: actsTable.title,
-        date: actsTable.publishDate,
-        themeId: actsTable.themeId,
+        id: publicationsTable.id,
+        title: publicationsTable.oggetto,
+        date: publicationsTable.pubStart,
       })
-      .from(actsTable)
-      .orderBy(desc(actsTable.publishDate))
+      .from(publicationsTable)
+      .orderBy(desc(publicationsTable.pubStart))
       .limit(10),
     db
       .select({
@@ -150,13 +149,15 @@ router.get("/stats/activity", async (_req, res) => {
       date: c.date,
       themeId: c.themeId,
     })),
-    ...acts.map((a) => ({
-      id: `act-${a.id}`,
-      type: "act" as const,
-      title: a.title,
-      date: a.date,
-      themeId: a.themeId,
-    })),
+    ...acts
+      .filter((a) => a.date !== null)
+      .map((a) => ({
+        id: `act-${a.id}`,
+        type: "act" as const,
+        title: a.title,
+        date: a.date as Date,
+        themeId: null as number | null,
+      })),
     ...reports.map((r) => ({
       id: `report-${r.id}`,
       type: "report" as const,

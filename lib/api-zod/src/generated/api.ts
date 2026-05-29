@@ -188,26 +188,144 @@ export const ListContractsResponse = zod.array(ListContractsResponseItem)
 
 
 /**
- * @summary List albo pretorio acts
+ * @summary List albo pretorio publications (live feed)
  */
-export const ListActsQueryParams = zod.object({
-  "search": zod.coerce.string().optional(),
-  "type": zod.coerce.string().optional(),
-  "from": zod.date().optional().describe('Filter acts published on or after this date (YYYY-MM-DD)'),
-  "to": zod.date().optional().describe('Filter acts published on or before this date (YYYY-MM-DD)')
+export const ListPublicationsQueryParams = zod.object({
+  "q": zod.coerce.string().optional(),
+  "category": zod.coerce.string().optional().describe('albo | delibera | convocazione'),
+  "tipologia": zod.coerce.string().optional(),
+  "from": zod.date().optional().describe('Filter published on or after this date (YYYY-MM-DD)'),
+  "to": zod.date().optional().describe('Filter published on or before this date (YYYY-MM-DD)')
 })
 
-export const ListActsResponseItem = zod.object({
+export const ListPublicationsResponseItem = zod.object({
   "id": zod.number(),
-  "title": zod.string(),
-  "type": zod.string(),
-  "number": zod.string(),
-  "summary": zod.string(),
-  "publishDate": zod.string(),
-  "endDate": zod.string(),
-  "themeId": zod.number().nullish()
+  "progressivo": zod.string(),
+  "tipologia": zod.string(),
+  "category": zod.string(),
+  "subcategory": zod.string().nullish(),
+  "provenienza": zod.string().nullish(),
+  "oggetto": zod.string(),
+  "dataAtto": zod.string().nullish(),
+  "pubStart": zod.string().nullish(),
+  "pubEnd": zod.string().nullish(),
+  "numRegSet": zod.string().nullish(),
+  "numRegGen": zod.string().nullish(),
+  "cups": zod.array(zod.string()),
+  "pnrrMission": zod.string().nullish(),
+  "isPnrr": zod.boolean(),
+  "isNew": zod.boolean(),
+  "firstSeenAt": zod.string()
 })
-export const ListActsResponse = zod.array(ListActsResponseItem)
+export const ListPublicationsResponse = zod.array(ListPublicationsResponseItem)
+
+
+/**
+ * @summary Status and last-updated info for the live albo feed
+ */
+export const GetFeedStatusResponse = zod.object({
+  "source": zod.string(),
+  "label": zod.string().nullish(),
+  "url": zod.string().nullish(),
+  "status": zod.string(),
+  "error": zod.string().nullish(),
+  "itemsTotal": zod.number(),
+  "itemsNew": zod.number(),
+  "lastCheckedAt": zod.string().nullish(),
+  "lastUpdatedAt": zod.string().nullish()
+})
+
+
+/**
+ * @summary List deliberazioni (giunta | consiglio)
+ */
+export const ListDelibereQueryParams = zod.object({
+  "tipo": zod.coerce.string().optional().describe('giunta | consiglio'),
+  "q": zod.coerce.string().optional()
+})
+
+export const ListDelibereResponseItem = zod.object({
+  "id": zod.number(),
+  "progressivo": zod.string(),
+  "tipologia": zod.string(),
+  "category": zod.string(),
+  "subcategory": zod.string().nullish(),
+  "provenienza": zod.string().nullish(),
+  "oggetto": zod.string(),
+  "dataAtto": zod.string().nullish(),
+  "pubStart": zod.string().nullish(),
+  "pubEnd": zod.string().nullish(),
+  "numRegSet": zod.string().nullish(),
+  "numRegGen": zod.string().nullish(),
+  "cups": zod.array(zod.string()),
+  "pnrrMission": zod.string().nullish(),
+  "isPnrr": zod.boolean(),
+  "isNew": zod.boolean(),
+  "firstSeenAt": zod.string()
+})
+export const ListDelibereResponse = zod.array(ListDelibereResponseItem)
+
+
+/**
+ * @summary List convocazioni (consiglio | commissione)
+ */
+export const ListConvocazioniQueryParams = zod.object({
+  "tipo": zod.coerce.string().optional().describe('consiglio | commissione')
+})
+
+export const ListConvocazioniResponseItem = zod.object({
+  "id": zod.number(),
+  "progressivo": zod.string(),
+  "tipologia": zod.string(),
+  "category": zod.string(),
+  "subcategory": zod.string().nullish(),
+  "provenienza": zod.string().nullish(),
+  "oggetto": zod.string(),
+  "dataAtto": zod.string().nullish(),
+  "pubStart": zod.string().nullish(),
+  "pubEnd": zod.string().nullish(),
+  "numRegSet": zod.string().nullish(),
+  "numRegGen": zod.string().nullish(),
+  "cups": zod.array(zod.string()),
+  "pnrrMission": zod.string().nullish(),
+  "isPnrr": zod.boolean(),
+  "isNew": zod.boolean(),
+  "firstSeenAt": zod.string()
+})
+export const ListConvocazioniResponse = zod.array(ListConvocazioniResponseItem)
+
+
+/**
+ * @summary List PNRR projects grouped by CUP
+ */
+export const ListPnrrProjectsResponseItem = zod.object({
+  "key": zod.string(),
+  "cup": zod.string().nullish(),
+  "mission": zod.string().nullish(),
+  "title": zod.string(),
+  "documentsCount": zod.number(),
+  "lastPublication": zod.string().nullish(),
+  "documents": zod.array(zod.object({
+  "id": zod.number(),
+  "progressivo": zod.string(),
+  "tipologia": zod.string(),
+  "category": zod.string(),
+  "subcategory": zod.string().nullish(),
+  "provenienza": zod.string().nullish(),
+  "oggetto": zod.string(),
+  "dataAtto": zod.string().nullish(),
+  "pubStart": zod.string().nullish(),
+  "pubEnd": zod.string().nullish(),
+  "numRegSet": zod.string().nullish(),
+  "numRegGen": zod.string().nullish(),
+  "cups": zod.array(zod.string()),
+  "pnrrMission": zod.string().nullish(),
+  "isPnrr": zod.boolean(),
+  "isNew": zod.boolean(),
+  "firstSeenAt": zod.string()
+}))
+})
+export const ListPnrrProjectsResponse = zod.array(ListPnrrProjectsResponseItem)
 
 
 /**

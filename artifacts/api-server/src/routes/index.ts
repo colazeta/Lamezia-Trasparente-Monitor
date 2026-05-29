@@ -3,7 +3,7 @@ import healthRouter from "./health";
 import categoriesRouter from "./categories";
 import themesRouter from "./themes";
 import contractsRouter from "./contracts";
-import actsRouter from "./acts";
+import publicationsRouter from "./publications";
 import reportsRouter from "./reports";
 import statsRouter from "./stats";
 
@@ -13,7 +13,7 @@ router.use(healthRouter);
 router.use(categoriesRouter);
 router.use(themesRouter);
 router.use(contractsRouter);
-router.use(actsRouter);
+router.use(publicationsRouter);
 router.use(reportsRouter);
 router.use(statsRouter);
 

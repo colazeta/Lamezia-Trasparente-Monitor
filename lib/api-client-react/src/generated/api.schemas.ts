@@ -132,6 +132,64 @@ export interface ThemeDetail {
   acts: Act[];
 }
 
+export interface Publication {
+  id: number;
+  progressivo: string;
+  tipologia: string;
+  category: string;
+  /** @nullable */
+  subcategory?: string | null;
+  /** @nullable */
+  provenienza?: string | null;
+  oggetto: string;
+  /** @nullable */
+  dataAtto?: string | null;
+  /** @nullable */
+  pubStart?: string | null;
+  /** @nullable */
+  pubEnd?: string | null;
+  /** @nullable */
+  numRegSet?: string | null;
+  /** @nullable */
+  numRegGen?: string | null;
+  cups: string[];
+  /** @nullable */
+  pnrrMission?: string | null;
+  isPnrr: boolean;
+  isNew: boolean;
+  firstSeenAt: string;
+}
+
+export interface FeedStatus {
+  source: string;
+  /** @nullable */
+  label?: string | null;
+  /** @nullable */
+  url?: string | null;
+  status: string;
+  /** @nullable */
+  error?: string | null;
+  itemsTotal: number;
+  itemsNew: number;
+  /** @nullable */
+  lastCheckedAt?: string | null;
+  /** @nullable */
+  lastUpdatedAt?: string | null;
+}
+
+export interface PnrrProject {
+  key: string;
+  /** @nullable */
+  cup?: string | null;
+  /** @nullable */
+  mission?: string | null;
+  title: string;
+  documentsCount: number;
+  /** @nullable */
+  lastPublication?: string | null;
+  documents: Publication[];
+}
+
 export type ReportStatus = typeof ReportStatus[keyof typeof ReportStatus];
 
 
@@ -240,16 +298,35 @@ search?: string;
 themeId?: number;
 };
 
-export type ListActsParams = {
-search?: string;
-type?: string;
+export type ListPublicationsParams = {
+q?: string;
 /**
- * Filter acts published on or after this date (YYYY-MM-DD)
+ * albo | delibera | convocazione
+ */
+category?: string;
+tipologia?: string;
+/**
+ * Filter published on or after this date (YYYY-MM-DD)
  */
 from?: string;
 /**
- * Filter acts published on or before this date (YYYY-MM-DD)
+ * Filter published on or before this date (YYYY-MM-DD)
  */
 to?: string;
+};
+
+export type ListDelibereParams = {
+/**
+ * giunta | consiglio
+ */
+tipo?: string;
+q?: string;
+};
+
+export type ListConvocazioniParams = {
+/**
+ * consiglio | commissione
+ */
+tipo?: string;
 };
 

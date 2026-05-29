@@ -20,15 +20,19 @@ import type {
 } from '@tanstack/react-query';
 
 import type {
-  Act,
   ActivityItem,
   Category,
   Contract,
   Error,
+  FeedStatus,
   HealthStatus,
-  ListActsParams,
   ListContractsParams,
+  ListConvocazioniParams,
+  ListDelibereParams,
+  ListPublicationsParams,
   ListThemesParams,
+  PnrrProject,
+  Publication,
   Report,
   ReportInput,
   ShareChannelStat,
@@ -593,7 +597,7 @@ export function useListContracts<TData = Awaited<ReturnType<typeof listContracts
 
 
 
-export const getListActsUrl = (params?: ListActsParams,) => {
+export const getListPublicationsUrl = (params?: ListPublicationsParams,) => {
   const normalizedParams = new URLSearchParams();
 
   Object.entries(params || {}).forEach(([key, value]) => {
@@ -605,15 +609,15 @@ export const getListActsUrl = (params?: ListActsParams,) => {
 
   const stringifiedParams = normalizedParams.toString();
 
-  return stringifiedParams.length > 0 ? `/api/acts?${stringifiedParams}` : `/api/acts`
+  return stringifiedParams.length > 0 ? `/api/publications?${stringifiedParams}` : `/api/publications`
 }
 
 /**
- * @summary List albo pretorio acts
+ * @summary List albo pretorio publications (live feed)
  */
-export const listActs = async (params?: ListActsParams, options?: RequestInit): Promise<Act[]> => {
+export const listPublications = async (params?: ListPublicationsParams, options?: RequestInit): Promise<Publication[]> => {
 
-  return customFetch<Act[]>(getListActsUrl(params),
+  return customFetch<Publication[]>(getListPublicationsUrl(params),
   {
     ...options,
     method: 'GET'
@@ -626,45 +630,367 @@ export const listActs = async (params?: ListActsParams, options?: RequestInit): 
 
 
 
-export const getListActsQueryKey = (params?: ListActsParams,) => {
+export const getListPublicationsQueryKey = (params?: ListPublicationsParams,) => {
     return [
-    `/api/acts`, ...(params ? [params] : [])
+    `/api/publications`, ...(params ? [params] : [])
     ] as const;
     }
 
 
-export const getListActsQueryOptions = <TData = Awaited<ReturnType<typeof listActs>>, TError = ErrorType<unknown>>(params?: ListActsParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listActs>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+export const getListPublicationsQueryOptions = <TData = Awaited<ReturnType<typeof listPublications>>, TError = ErrorType<unknown>>(params?: ListPublicationsParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listPublications>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
 ) => {
 
 const {query: queryOptions, request: requestOptions} = options ?? {};
 
-  const queryKey =  queryOptions?.queryKey ?? getListActsQueryKey(params);
+  const queryKey =  queryOptions?.queryKey ?? getListPublicationsQueryKey(params);
 
 
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof listActs>>> = ({ signal }) => listActs(params, { signal, ...requestOptions });
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listPublications>>> = ({ signal }) => listPublications(params, { signal, ...requestOptions });
 
 
 
 
 
-   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listActs>>, TError, TData> & { queryKey: QueryKey }
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listPublications>>, TError, TData> & { queryKey: QueryKey }
 }
 
-export type ListActsQueryResult = NonNullable<Awaited<ReturnType<typeof listActs>>>
-export type ListActsQueryError = ErrorType<unknown>
+export type ListPublicationsQueryResult = NonNullable<Awaited<ReturnType<typeof listPublications>>>
+export type ListPublicationsQueryError = ErrorType<unknown>
 
 
 /**
- * @summary List albo pretorio acts
+ * @summary List albo pretorio publications (live feed)
  */
 
-export function useListActs<TData = Awaited<ReturnType<typeof listActs>>, TError = ErrorType<unknown>>(
- params?: ListActsParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listActs>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+export function useListPublications<TData = Awaited<ReturnType<typeof listPublications>>, TError = ErrorType<unknown>>(
+ params?: ListPublicationsParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listPublications>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
 
  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
 
-  const queryOptions = getListActsQueryOptions(params,options)
+  const queryOptions = getListPublicationsQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
+
+
+
+export const getGetFeedStatusUrl = () => {
+
+
+
+
+  return `/api/publications/feed-status`
+}
+
+/**
+ * @summary Status and last-updated info for the live albo feed
+ */
+export const getFeedStatus = async ( options?: RequestInit): Promise<FeedStatus> => {
+
+  return customFetch<FeedStatus>(getGetFeedStatusUrl(),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetFeedStatusQueryKey = () => {
+    return [
+    `/api/publications/feed-status`
+    ] as const;
+    }
+
+
+export const getGetFeedStatusQueryOptions = <TData = Awaited<ReturnType<typeof getFeedStatus>>, TError = ErrorType<unknown>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getFeedStatus>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetFeedStatusQueryKey();
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getFeedStatus>>> = ({ signal }) => getFeedStatus({ signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getFeedStatus>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetFeedStatusQueryResult = NonNullable<Awaited<ReturnType<typeof getFeedStatus>>>
+export type GetFeedStatusQueryError = ErrorType<unknown>
+
+
+/**
+ * @summary Status and last-updated info for the live albo feed
+ */
+
+export function useGetFeedStatus<TData = Awaited<ReturnType<typeof getFeedStatus>>, TError = ErrorType<unknown>>(
+  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getFeedStatus>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetFeedStatusQueryOptions(options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
+
+
+
+export const getListDelibereUrl = (params?: ListDelibereParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : value.toString())
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/delibere?${stringifiedParams}` : `/api/delibere`
+}
+
+/**
+ * @summary List deliberazioni (giunta | consiglio)
+ */
+export const listDelibere = async (params?: ListDelibereParams, options?: RequestInit): Promise<Publication[]> => {
+
+  return customFetch<Publication[]>(getListDelibereUrl(params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getListDelibereQueryKey = (params?: ListDelibereParams,) => {
+    return [
+    `/api/delibere`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getListDelibereQueryOptions = <TData = Awaited<ReturnType<typeof listDelibere>>, TError = ErrorType<unknown>>(params?: ListDelibereParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listDelibere>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListDelibereQueryKey(params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listDelibere>>> = ({ signal }) => listDelibere(params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listDelibere>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ListDelibereQueryResult = NonNullable<Awaited<ReturnType<typeof listDelibere>>>
+export type ListDelibereQueryError = ErrorType<unknown>
+
+
+/**
+ * @summary List deliberazioni (giunta | consiglio)
+ */
+
+export function useListDelibere<TData = Awaited<ReturnType<typeof listDelibere>>, TError = ErrorType<unknown>>(
+ params?: ListDelibereParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listDelibere>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getListDelibereQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
+
+
+
+export const getListConvocazioniUrl = (params?: ListConvocazioniParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : value.toString())
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/convocazioni?${stringifiedParams}` : `/api/convocazioni`
+}
+
+/**
+ * @summary List convocazioni (consiglio | commissione)
+ */
+export const listConvocazioni = async (params?: ListConvocazioniParams, options?: RequestInit): Promise<Publication[]> => {
+
+  return customFetch<Publication[]>(getListConvocazioniUrl(params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getListConvocazioniQueryKey = (params?: ListConvocazioniParams,) => {
+    return [
+    `/api/convocazioni`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getListConvocazioniQueryOptions = <TData = Awaited<ReturnType<typeof listConvocazioni>>, TError = ErrorType<unknown>>(params?: ListConvocazioniParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listConvocazioni>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListConvocazioniQueryKey(params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listConvocazioni>>> = ({ signal }) => listConvocazioni(params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listConvocazioni>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ListConvocazioniQueryResult = NonNullable<Awaited<ReturnType<typeof listConvocazioni>>>
+export type ListConvocazioniQueryError = ErrorType<unknown>
+
+
+/**
+ * @summary List convocazioni (consiglio | commissione)
+ */
+
+export function useListConvocazioni<TData = Awaited<ReturnType<typeof listConvocazioni>>, TError = ErrorType<unknown>>(
+ params?: ListConvocazioniParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listConvocazioni>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getListConvocazioniQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
+
+
+
+export const getListPnrrProjectsUrl = () => {
+
+
+
+
+  return `/api/pnrr/projects`
+}
+
+/**
+ * @summary List PNRR projects grouped by CUP
+ */
+export const listPnrrProjects = async ( options?: RequestInit): Promise<PnrrProject[]> => {
+
+  return customFetch<PnrrProject[]>(getListPnrrProjectsUrl(),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getListPnrrProjectsQueryKey = () => {
+    return [
+    `/api/pnrr/projects`
+    ] as const;
+    }
+
+
+export const getListPnrrProjectsQueryOptions = <TData = Awaited<ReturnType<typeof listPnrrProjects>>, TError = ErrorType<unknown>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listPnrrProjects>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListPnrrProjectsQueryKey();
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listPnrrProjects>>> = ({ signal }) => listPnrrProjects({ signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listPnrrProjects>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ListPnrrProjectsQueryResult = NonNullable<Awaited<ReturnType<typeof listPnrrProjects>>>
+export type ListPnrrProjectsQueryError = ErrorType<unknown>
+
+
+/**
+ * @summary List PNRR projects grouped by CUP
+ */
+
+export function useListPnrrProjects<TData = Awaited<ReturnType<typeof listPnrrProjects>>, TError = ErrorType<unknown>>(
+  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listPnrrProjects>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getListPnrrProjectsQueryOptions(options)
 
   const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
 
