@@ -30,6 +30,12 @@ function unsubscribeUrl(token: string): string {
   return base ? `${base}${path}` : path;
 }
 
+function subscriptionsUrl(token: string): string {
+  const base = getBaseUrl();
+  const path = `/api/subscriptions?token=${encodeURIComponent(token)}`;
+  return base ? `${base}${path}` : path;
+}
+
 export async function sendFollowConfirmationEmail(params: {
   email: string;
   themeId: number;
@@ -38,6 +44,7 @@ export async function sendFollowConfirmationEmail(params: {
 }): Promise<void> {
   const link = themeUrl(params.themeId);
   const unsub = unsubscribeUrl(params.unsubscribeToken);
+  const manage = subscriptionsUrl(params.unsubscribeToken);
   const html = `
     <div style="font-family: Arial, sans-serif; color: #1a1a1a; line-height: 1.6;">
       <h2 style="margin-bottom: 8px;">Ora segui questo tema</h2>
@@ -46,13 +53,13 @@ export async function sendFollowConfirmationEmail(params: {
       )}</strong> avrà aggiornamenti (nuovi documenti, atti o corrispondenza).</p>
       <p><a href="${link}" style="color: #0b5fff;">Apri il tema su Lamezia Trasparente</a></p>
       <hr style="border:none;border-top:1px solid #e5e5e5;margin:24px 0;" />
-      <p style="font-size:12px;color:#666;">Non vuoi più ricevere aggiornamenti su questo tema? <a href="${unsub}" style="color:#666;">Annulla l'iscrizione</a>.</p>
+      <p style="font-size:12px;color:#666;">Gestisci tutte le tue iscrizioni dal <a href="${manage}" style="color:#666;">centro iscrizioni</a> oppure <a href="${unsub}" style="color:#666;">annulla l'iscrizione</a> a questo tema.</p>
     </div>`;
   await sendEmail({
     to: params.email,
     subject: `Segui: ${params.themeTitle}`,
     html,
-    text: `Ora segui "${params.themeTitle}". Riceverai un'email ad ogni aggiornamento. Apri: ${link}\n\nAnnulla l'iscrizione: ${unsub}`,
+    text: `Ora segui "${params.themeTitle}". Riceverai un'email ad ogni aggiornamento. Apri: ${link}\n\nGestisci tutte le tue iscrizioni: ${manage}\nAnnulla l'iscrizione a questo tema: ${unsub}`,
   });
 }
 
@@ -93,6 +100,7 @@ export async function notifyThemeFollowers(params: {
     await Promise.all(
       followers.map((follower) => {
         const unsub = unsubscribeUrl(follower.unsubscribeToken);
+        const manage = subscriptionsUrl(follower.unsubscribeToken);
         const html = `
           <div style="font-family: Arial, sans-serif; color: #1a1a1a; line-height: 1.6;">
             <h2 style="margin-bottom: 8px;">Aggiornamento su un tema che segui</h2>
@@ -104,13 +112,13 @@ export async function notifyThemeFollowers(params: {
             )}</p>
             <p><a href="${link}" style="color: #0b5fff;">Vedi l'aggiornamento su Lamezia Trasparente</a></p>
             <hr style="border:none;border-top:1px solid #e5e5e5;margin:24px 0;" />
-            <p style="font-size:12px;color:#666;">Non vuoi più ricevere aggiornamenti su questo tema? <a href="${unsub}" style="color:#666;">Annulla l'iscrizione</a>.</p>
+            <p style="font-size:12px;color:#666;">Gestisci tutte le tue iscrizioni dal <a href="${manage}" style="color:#666;">centro iscrizioni</a> oppure <a href="${unsub}" style="color:#666;">annulla l'iscrizione</a> a questo tema.</p>
           </div>`;
         return sendEmail({
           to: follower.email,
           subject: `Aggiornamento: ${theme.title}`,
           html,
-          text: `È stato aggiunto ${label} al tema "${theme.title}": ${params.contentTitle}. Vedi: ${link}\n\nAnnulla l'iscrizione: ${unsub}`,
+          text: `È stato aggiunto ${label} al tema "${theme.title}": ${params.contentTitle}. Vedi: ${link}\n\nGestisci tutte le tue iscrizioni: ${manage}\nAnnulla l'iscrizione a questo tema: ${unsub}`,
         });
       }),
     );

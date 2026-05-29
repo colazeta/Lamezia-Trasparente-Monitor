@@ -612,6 +612,41 @@ function escapeHtml(value: string): string {
     .replace(/'/g, "&#39;");
 }
 
+function renderSubscriptionsPage(params: {
+  email: string;
+  token: string;
+  subscriptions: { themeId: number; title: string }[];
+}): string {
+  const homeLink = `<p style="margin-top:24px"><a href="${escapeHtml(homeUrl())}">Torna a Lamezia Trasparente</a></p>`;
+
+  if (params.subscriptions.length === 0) {
+    return `<!doctype html><html lang="it"><head><meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" /><title>Le tue iscrizioni</title><style>body{font-family:Arial,sans-serif;background:#f5f5f5;margin:0;display:flex;min-height:100vh;align-items:center;justify-content:center}.card{background:#fff;padding:32px 40px;border-radius:12px;box-shadow:0 1px 4px rgba(0,0,0,.1);max-width:560px;width:90%;color:#1a1a1a}a{color:#2563eb}</style></head><body><div class="card"><h1>Le tue iscrizioni</h1><p>Non segui più nessun tema.</p>${homeLink}</div></body></html>`;
+  }
+
+  const items = params.subscriptions
+    .map(
+      (s) =>
+        `<li style="display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 0;border-bottom:1px solid #eee"><span>${escapeHtml(
+          s.title,
+        )}</span><form method="post" action="${escapeHtml(
+          apiUrl("/subscriptions/unsubscribe"),
+        )}" style="margin:0"><input type="hidden" name="token" value="${escapeHtml(
+          params.token,
+        )}" /><input type="hidden" name="themeId" value="${s.themeId}" /><button type="submit" style="background:#fff;color:#dc2626;border:1px solid #dc2626;padding:8px 16px;border-radius:8px;font-size:14px;cursor:pointer">Annulla</button></form></li>`,
+    )
+    .join("");
+
+  const unsubscribeAll = `<form method="post" action="${escapeHtml(
+    apiUrl("/subscriptions/unsubscribe-all"),
+  )}" style="margin-top:24px"><input type="hidden" name="token" value="${escapeHtml(
+    params.token,
+  )}" /><button type="submit" style="background:#dc2626;color:#fff;border:none;padding:10px 20px;border-radius:8px;font-size:14px;cursor:pointer">Annulla tutte le iscrizioni</button></form>`;
+
+  return `<!doctype html><html lang="it"><head><meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" /><title>Le tue iscrizioni</title><style>body{font-family:Arial,sans-serif;background:#f5f5f5;margin:0;display:flex;min-height:100vh;align-items:center;justify-content:center}.card{background:#fff;padding:32px 40px;border-radius:12px;box-shadow:0 1px 4px rgba(0,0,0,.1);max-width:560px;width:90%;color:#1a1a1a}ul{list-style:none;padding:0;margin:16px 0 0}a{color:#2563eb}</style></head><body><div class="card"><h1>Le tue iscrizioni</h1><p>Temi seguiti da <strong>${escapeHtml(
+    params.email,
+  )}</strong>:</p><ul>${items}</ul>${unsubscribeAll}${homeLink}</div></body></html>`;
+}
+
 function renderStatusPage(params: {
   title: string;
   message: string;
@@ -723,6 +758,191 @@ router.post("/resubscribe", async (req, res) => {
 
   const message = `Iscrizione ripristinata. Riceverai di nuovo aggiornamenti su <strong>${escapeHtml(result.theme.title)}</strong>.`;
   sendPage(message, true);
+});
+
+async function getEmailByToken(token: string): Promise<string | null> {
+  const [follower] = await db
+    .select({ email: themeFollowersTable.email })
+    .from(themeFollowersTable)
+    .where(eq(themeFollowersTable.unsubscribeToken, token));
+  return follower?.email ?? null;
+}
+
+async function getSubscriptionsByEmail(email: string): Promise<{
+  token: string | null;
+  subscriptions: { themeId: number; title: string }[];
+}> {
+  const rows = await db
+    .select({
+      themeId: themeFollowersTable.themeId,
+      title: themesTable.title,
+      token: themeFollowersTable.unsubscribeToken,
+    })
+    .from(themeFollowersTable)
+    .innerJoin(themesTable, eq(themeFollowersTable.themeId, themesTable.id))
+    .where(eq(themeFollowersTable.email, email))
+    .orderBy(themesTable.title);
+
+  return {
+    token: rows[0]?.token ?? null,
+    subscriptions: rows.map((r) => ({ themeId: r.themeId, title: r.title })),
+  };
+}
+
+router.get("/subscriptions", async (req, res) => {
+  const token = typeof req.query.token === "string" ? req.query.token : "";
+
+  const sendInvalid = () => {
+    res
+      .status(200)
+      .type("html")
+      .send(
+        renderStatusPage({
+          title: "Iscrizioni",
+          message: "Link non valido o scaduto.",
+          withHomeLink: true,
+        }),
+      );
+  };
+
+  if (!token) {
+    sendInvalid();
+    return;
+  }
+
+  const email = await getEmailByToken(token);
+  if (!email) {
+    sendInvalid();
+    return;
+  }
+
+  const { token: pageToken, subscriptions } =
+    await getSubscriptionsByEmail(email);
+
+  res
+    .status(200)
+    .type("html")
+    .send(
+      renderSubscriptionsPage({
+        email,
+        token: pageToken ?? token,
+        subscriptions,
+      }),
+    );
+});
+
+router.post("/subscriptions/unsubscribe", async (req, res) => {
+  const body = req.body as { token?: unknown; themeId?: unknown };
+  const token = typeof body.token === "string" ? body.token : "";
+  const themeId = Number(body.themeId);
+
+  const sendInvalid = () => {
+    res
+      .status(200)
+      .type("html")
+      .send(
+        renderStatusPage({
+          title: "Iscrizioni",
+          message: "Link non valido o scaduto.",
+          withHomeLink: true,
+        }),
+      );
+  };
+
+  if (!token || Number.isNaN(themeId)) {
+    sendInvalid();
+    return;
+  }
+
+  const email = await getEmailByToken(token);
+  if (!email) {
+    sendInvalid();
+    return;
+  }
+
+  const deleted = await db
+    .delete(themeFollowersTable)
+    .where(
+      and(
+        eq(themeFollowersTable.email, email),
+        eq(themeFollowersTable.themeId, themeId),
+      ),
+    )
+    .returning();
+
+  if (deleted.length > 0) {
+    await db
+      .update(themesTable)
+      .set({ followerCount: sql`GREATEST(${themesTable.followerCount} - 1, 0)` })
+      .where(eq(themesTable.id, themeId));
+  }
+
+  const { token: pageToken, subscriptions } =
+    await getSubscriptionsByEmail(email);
+
+  res
+    .status(200)
+    .type("html")
+    .send(
+      renderSubscriptionsPage({
+        email,
+        token: pageToken ?? token,
+        subscriptions,
+      }),
+    );
+});
+
+router.post("/subscriptions/unsubscribe-all", async (req, res) => {
+  const body = req.body as { token?: unknown };
+  const token = typeof body.token === "string" ? body.token : "";
+
+  const sendInvalid = () => {
+    res
+      .status(200)
+      .type("html")
+      .send(
+        renderStatusPage({
+          title: "Iscrizioni",
+          message: "Link non valido o scaduto.",
+          withHomeLink: true,
+        }),
+      );
+  };
+
+  if (!token) {
+    sendInvalid();
+    return;
+  }
+
+  const email = await getEmailByToken(token);
+  if (!email) {
+    sendInvalid();
+    return;
+  }
+
+  const deleted = await db
+    .delete(themeFollowersTable)
+    .where(eq(themeFollowersTable.email, email))
+    .returning();
+
+  for (const row of deleted) {
+    await db
+      .update(themesTable)
+      .set({ followerCount: sql`GREATEST(${themesTable.followerCount} - 1, 0)` })
+      .where(eq(themesTable.id, row.themeId));
+  }
+
+  res
+    .status(200)
+    .type("html")
+    .send(
+      renderStatusPage({
+        title: "Iscrizioni annullate",
+        message:
+          "Hai annullato tutte le tue iscrizioni. Non riceverai più aggiornamenti.",
+        withHomeLink: true,
+      }),
+    );
 });
 
 export default router;

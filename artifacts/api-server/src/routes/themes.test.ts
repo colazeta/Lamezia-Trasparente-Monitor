@@ -538,6 +538,127 @@ describe("POST /api/resubscribe", () => {
   });
 });
 
+describe("subscription center (/api/subscriptions)", () => {
+  const email = "centro@example.com";
+  let secondThemeId: number;
+
+  beforeEach(async () => {
+    secondThemeId = await createTheme(categoryId);
+    await request(app)
+      .post(`/api/themes/${themeId}/follow`)
+      .send({ email });
+    await request(app)
+      .post(`/api/themes/${secondThemeId}/follow`)
+      .send({ email });
+  });
+
+  afterEach(async () => {
+    await db
+      .delete(themeFollowersTable)
+      .where(eq(themeFollowersTable.themeId, secondThemeId));
+    await db.delete(themesTable).where(eq(themesTable.id, secondThemeId));
+  });
+
+  async function tokenFor(email: string): Promise<string> {
+    const [follower] = await db
+      .select()
+      .from(themeFollowersTable)
+      .where(eq(themeFollowersTable.email, email));
+    return follower.unsubscribeToken;
+  }
+
+  it("lists every theme the email currently follows", async () => {
+    const [t1] = await db
+      .select({ title: themesTable.title })
+      .from(themesTable)
+      .where(eq(themesTable.id, themeId));
+    const [t2] = await db
+      .select({ title: themesTable.title })
+      .from(themesTable)
+      .where(eq(themesTable.id, secondThemeId));
+
+    const token = await tokenFor(email);
+    const res = await request(app).get("/api/subscriptions").query({ token });
+
+    expect(res.status).toBe(200);
+    expect(res.headers["content-type"]).toContain("text/html");
+    expect(res.text).toContain("Le tue iscrizioni");
+    expect(res.text).toContain(email);
+    expect(res.text).toContain(t1.title);
+    expect(res.text).toContain(t2.title);
+    expect(res.text).toContain("/api/subscriptions/unsubscribe");
+    expect(res.text).toContain("/api/subscriptions/unsubscribe-all");
+  });
+
+  it("renders an invalid page for a missing or unknown token", async () => {
+    const missing = await request(app).get("/api/subscriptions");
+    expect(missing.status).toBe(200);
+    expect(missing.text).toContain("Link non valido o scaduto.");
+
+    const unknown = await request(app)
+      .get("/api/subscriptions")
+      .query({ token: "00000000-0000-0000-0000-000000000000" });
+    expect(unknown.status).toBe(200);
+    expect(unknown.text).toContain("Link non valido o scaduto.");
+  });
+
+  it("unsubscribes a single theme and keeps the others", async () => {
+    const token = await tokenFor(email);
+
+    const res = await request(app)
+      .post("/api/subscriptions/unsubscribe")
+      .type("form")
+      .send({ token, themeId: String(themeId) });
+
+    expect(res.status).toBe(200);
+    expect(res.text).toContain("Le tue iscrizioni");
+    expect(await getFollowerCount(themeId)).toBe(0);
+    expect(await getFollowerCount(secondThemeId)).toBe(1);
+
+    const remaining = await db
+      .select()
+      .from(themeFollowersTable)
+      .where(eq(themeFollowersTable.email, email));
+    expect(remaining).toHaveLength(1);
+    expect(remaining[0].themeId).toBe(secondThemeId);
+  });
+
+  it("unsubscribes from all themes at once", async () => {
+    const token = await tokenFor(email);
+
+    const res = await request(app)
+      .post("/api/subscriptions/unsubscribe-all")
+      .type("form")
+      .send({ token });
+
+    expect(res.status).toBe(200);
+    expect(res.text).toContain("Hai annullato tutte le tue iscrizioni.");
+    expect(await getFollowerCount(themeId)).toBe(0);
+    expect(await getFollowerCount(secondThemeId)).toBe(0);
+
+    const remaining = await db
+      .select()
+      .from(themeFollowersTable)
+      .where(eq(themeFollowersTable.email, email));
+    expect(remaining).toHaveLength(0);
+  });
+
+  it("includes a subscription center link in the confirmation email", async () => {
+    mockedSendEmail.mockClear();
+    await request(app)
+      .post(`/api/themes/${themeId}/follow`)
+      .send({ email: "link-conferma@example.com" });
+
+    await vi.waitFor(() => {
+      const call = mockedSendEmail.mock.calls.find(
+        ([params]) => params.to === "link-conferma@example.com",
+      );
+      expect(call).toBeDefined();
+      expect(call?.[0].html).toContain("/api/subscriptions?token=");
+    });
+  });
+});
+
 describe("POST /api/themes/:id/documents", () => {
   it("triggers a notification attempt to followers when a document is added", async () => {
     await request(app)
