@@ -1,0 +1,17 @@
+import { defineConfig } from "vitest/config";
+
+export default defineConfig({
+  resolve: {
+    conditions: ["workspace"],
+  },
+  test: {
+    environment: "node",
+    include: ["src/**/*.test.ts"],
+    fileParallelism: false,
+    hookTimeout: 30000,
+    testTimeout: 30000,
+    env: {
+      LOG_LEVEL: "silent",
+    },
+  },
+});
