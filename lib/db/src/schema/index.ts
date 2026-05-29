@@ -1,6 +1,7 @@
 export * from "./categories";
 export * from "./themes";
 export * from "./themeDocuments";
+export * from "./themePosts";
 export * from "./themeEmails";
 export * from "./themeMetrics";
 export * from "./contracts";

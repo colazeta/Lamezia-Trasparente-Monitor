@@ -5,6 +5,7 @@ import {
   themesTable,
   categoriesTable,
   themeDocumentsTable,
+  themePostsTable,
   themeEmailsTable,
   themeMetricsTable,
   contractsTable,
@@ -17,6 +18,8 @@ import {
   ShareThemeBody,
   FollowThemeBody,
   RequestSubscriptionsLinkBody,
+  CreateThemePostBody,
+  UpdateThemePostBody,
 } from "@workspace/api-zod";
 import {
   notifyThemeFollowers,
@@ -38,6 +41,18 @@ function mapContract(c: typeof contractsTable.$inferSelect) {
     status: c.status,
     awardDate: c.awardDate.toISOString(),
     themeId: c.themeId,
+  };
+}
+
+function mapPost(p: typeof themePostsTable.$inferSelect) {
+  return {
+    id: p.id,
+    themeId: p.themeId,
+    title: p.title,
+    body: p.body,
+    eventDate: p.eventDate.toISOString(),
+    createdAt: p.createdAt.toISOString(),
+    updatedAt: p.updatedAt.toISOString(),
   };
 }
 
@@ -133,21 +148,30 @@ router.get("/themes/:id", async (req, res) => {
     return;
   }
 
-  const [documents, emails, metrics, contracts, acts] = await Promise.all([
-    db
-      .select()
-      .from(themeDocumentsTable)
-      .where(eq(themeDocumentsTable.themeId, id))
-      .orderBy(desc(themeDocumentsTable.date)),
-    db
-      .select()
-      .from(themeEmailsTable)
-      .where(eq(themeEmailsTable.themeId, id))
-      .orderBy(desc(themeEmailsTable.date)),
-    db.select().from(themeMetricsTable).where(eq(themeMetricsTable.themeId, id)),
-    db.select().from(contractsTable).where(eq(contractsTable.themeId, id)),
-    db.select().from(actsTable).where(eq(actsTable.themeId, id)),
-  ]);
+  const [documents, emails, metrics, contracts, acts, posts] =
+    await Promise.all([
+      db
+        .select()
+        .from(themeDocumentsTable)
+        .where(eq(themeDocumentsTable.themeId, id))
+        .orderBy(desc(themeDocumentsTable.date)),
+      db
+        .select()
+        .from(themeEmailsTable)
+        .where(eq(themeEmailsTable.themeId, id))
+        .orderBy(desc(themeEmailsTable.date)),
+      db
+        .select()
+        .from(themeMetricsTable)
+        .where(eq(themeMetricsTable.themeId, id)),
+      db.select().from(contractsTable).where(eq(contractsTable.themeId, id)),
+      db.select().from(actsTable).where(eq(actsTable.themeId, id)),
+      db
+        .select()
+        .from(themePostsTable)
+        .where(eq(themePostsTable.themeId, id))
+        .orderBy(desc(themePostsTable.eventDate), desc(themePostsTable.id)),
+    ]);
 
   res.json({
     ...theme,
@@ -176,8 +200,182 @@ router.get("/themes/:id", async (req, res) => {
     })),
     contracts: contracts.map(mapContract),
     acts: acts.map(mapAct),
+    posts: posts.map(mapPost),
   });
 });
+
+router.get("/themes/:id/posts", async (req, res) => {
+  const id = Number(req.params.id);
+  if (Number.isNaN(id)) {
+    res.status(404).json({ error: "Tema non trovato" });
+    return;
+  }
+
+  const [theme] = await db
+    .select({ id: themesTable.id })
+    .from(themesTable)
+    .where(eq(themesTable.id, id));
+  if (!theme) {
+    res.status(404).json({ error: "Tema non trovato" });
+    return;
+  }
+
+  const posts = await db
+    .select()
+    .from(themePostsTable)
+    .where(eq(themePostsTable.themeId, id))
+    .orderBy(desc(themePostsTable.eventDate), desc(themePostsTable.id));
+
+  res.json(posts.map(mapPost));
+});
+
+router.post("/themes/:id/posts", requireIngestAuth, async (req, res) => {
+  const id = Number(req.params.id);
+  if (Number.isNaN(id)) {
+    res.status(404).json({ error: "Tema non trovato" });
+    return;
+  }
+
+  const parsed = CreateThemePostBody.safeParse(req.body);
+  if (!parsed.success) {
+    res.status(400).json({ error: "Il testo del post è obbligatorio" });
+    return;
+  }
+
+  const title = parsed.data.title?.trim() ? parsed.data.title.trim() : null;
+  const body = parsed.data.body.trim();
+  if (!body) {
+    res.status(400).json({ error: "Il testo del post è obbligatorio" });
+    return;
+  }
+
+  let eventDate = new Date();
+  if (parsed.data.eventDate) {
+    const candidate = new Date(parsed.data.eventDate);
+    if (Number.isNaN(candidate.getTime())) {
+      res.status(400).json({ error: "Data dell'evento non valida" });
+      return;
+    }
+    eventDate = candidate;
+  }
+
+  const [theme] = await db
+    .select({ id: themesTable.id })
+    .from(themesTable)
+    .where(eq(themesTable.id, id));
+  if (!theme) {
+    res.status(404).json({ error: "Tema non trovato" });
+    return;
+  }
+
+  const [post] = await db
+    .insert(themePostsTable)
+    .values({ themeId: id, title, body, eventDate })
+    .returning();
+
+  await db
+    .update(themesTable)
+    .set({ updatedAt: new Date() })
+    .where(eq(themesTable.id, id));
+
+  res.status(201).json(mapPost(post));
+});
+
+router.patch(
+  "/themes/:id/posts/:postId",
+  requireIngestAuth,
+  async (req, res) => {
+    const id = Number(req.params.id);
+    const postId = Number(req.params.postId);
+    if (Number.isNaN(id) || Number.isNaN(postId)) {
+      res.status(404).json({ error: "Post non trovato" });
+      return;
+    }
+
+    const parsed = UpdateThemePostBody.safeParse(req.body);
+    if (!parsed.success) {
+      res.status(400).json({ error: "Dati non validi" });
+      return;
+    }
+
+    const updates: {
+      title?: string | null;
+      body?: string;
+      eventDate?: Date;
+      updatedAt: Date;
+    } = { updatedAt: new Date() };
+
+    if (parsed.data.title !== undefined) {
+      updates.title = parsed.data.title?.trim()
+        ? parsed.data.title.trim()
+        : null;
+    }
+    if (parsed.data.body !== undefined) {
+      const body = parsed.data.body.trim();
+      if (!body) {
+        res.status(400).json({ error: "Il testo del post è obbligatorio" });
+        return;
+      }
+      updates.body = body;
+    }
+    if (parsed.data.eventDate !== undefined) {
+      const candidate = new Date(parsed.data.eventDate);
+      if (Number.isNaN(candidate.getTime())) {
+        res.status(400).json({ error: "Data dell'evento non valida" });
+        return;
+      }
+      updates.eventDate = candidate;
+    }
+
+    const [post] = await db
+      .update(themePostsTable)
+      .set(updates)
+      .where(
+        and(
+          eq(themePostsTable.id, postId),
+          eq(themePostsTable.themeId, id),
+        ),
+      )
+      .returning();
+
+    if (!post) {
+      res.status(404).json({ error: "Post non trovato" });
+      return;
+    }
+
+    res.json(mapPost(post));
+  },
+);
+
+router.delete(
+  "/themes/:id/posts/:postId",
+  requireIngestAuth,
+  async (req, res) => {
+    const id = Number(req.params.id);
+    const postId = Number(req.params.postId);
+    if (Number.isNaN(id) || Number.isNaN(postId)) {
+      res.status(404).json({ error: "Post non trovato" });
+      return;
+    }
+
+    const deleted = await db
+      .delete(themePostsTable)
+      .where(
+        and(
+          eq(themePostsTable.id, postId),
+          eq(themePostsTable.themeId, id),
+        ),
+      )
+      .returning();
+
+    if (deleted.length === 0) {
+      res.status(404).json({ error: "Post non trovato" });
+      return;
+    }
+
+    res.status(204).end();
+  },
+);
 
 router.post("/themes/:id/relevant", async (req, res) => {
   const id = Number(req.params.id);

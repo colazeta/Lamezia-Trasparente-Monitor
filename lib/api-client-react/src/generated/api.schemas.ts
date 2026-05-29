@@ -114,6 +114,17 @@ export interface Act {
   themeId?: number | null;
 }
 
+export interface ThemePost {
+  id: number;
+  themeId: number;
+  /** @nullable */
+  title?: string | null;
+  body: string;
+  eventDate: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export interface ThemeDetail {
   id: number;
   title: string;
@@ -132,6 +143,22 @@ export interface ThemeDetail {
   metrics: ThemeMetric[];
   contracts: Contract[];
   acts: Act[];
+  posts: ThemePost[];
+}
+
+export interface ThemePostInput {
+  title?: string;
+  /** @minLength 1 */
+  body: string;
+  eventDate?: string;
+}
+
+export interface ThemePostUpdateInput {
+  /** @nullable */
+  title?: string | null;
+  /** @minLength 1 */
+  body?: string;
+  eventDate?: string;
 }
 
 export interface Publication {

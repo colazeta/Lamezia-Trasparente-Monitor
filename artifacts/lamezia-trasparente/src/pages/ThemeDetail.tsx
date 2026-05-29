@@ -31,8 +31,10 @@ import {
   MessageCircle,
   Bell,
   Users,
-  Link as LinkIcon
+  Link as LinkIcon,
+  History
 } from "lucide-react";
+import ReactMarkdown from "react-markdown";
 
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -315,8 +317,11 @@ export function ThemeDetail() {
       </div>
       
       <div className="max-w-5xl">
-        <Tabs defaultValue="docs" className="w-full">
+        <Tabs defaultValue="cronistoria" className="w-full">
           <TabsList className="w-full justify-start border-b rounded-none h-auto p-0 bg-transparent mb-8 overflow-x-auto overflow-y-hidden">
+            <TabsTrigger value="cronistoria" className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent px-4 py-3 gap-2">
+              <History className="h-4 w-4" /> Cronistoria ({theme.posts?.length || 0})
+            </TabsTrigger>
             <TabsTrigger value="docs" className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent px-4 py-3 gap-2">
               <FileText className="h-4 w-4" /> Documenti ({theme.documents?.length || 0})
             </TabsTrigger>
@@ -331,6 +336,44 @@ export function ThemeDetail() {
             </TabsTrigger>
           </TabsList>
           
+          <TabsContent value="cronistoria" className="mt-0 outline-none">
+            {theme.posts?.length > 0 ? (
+              <div className="relative border-l-2 border-muted ml-3 pl-6 space-y-8 py-4">
+                {theme.posts.map(post => (
+                  <div key={post.id} className="relative">
+                    <div className="absolute -left-[35px] top-1 h-6 w-6 rounded-full border-4 border-background bg-primary flex items-center justify-center"></div>
+                    <Card className="border-primary/20">
+                      <CardHeader className="p-4 pb-3 bg-primary/5">
+                        <div className="flex items-center gap-1.5 text-xs text-primary font-mono uppercase tracking-wider mb-1">
+                          <Calendar className="h-3.5 w-3.5" />
+                          {format(new Date(post.eventDate), 'dd MMMM yyyy', { locale: it })}
+                        </div>
+                        {post.title && (
+                          <CardTitle className="text-lg font-serif leading-tight">{post.title}</CardTitle>
+                        )}
+                      </CardHeader>
+                      <CardContent className="p-4 pt-3 border-t">
+                        <div className="prose prose-slate dark:prose-invert max-w-none prose-sm prose-a:text-primary leading-relaxed">
+                          <ReactMarkdown
+                            components={{
+                              a: ({ node, ...props }) => (
+                                <a {...props} target="_blank" rel="noopener noreferrer" />
+                              ),
+                            }}
+                          >
+                            {post.body}
+                          </ReactMarkdown>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <EmptyState icon={History} text="Nessuna cronistoria pubblicata per questo tema. Gli aggiornamenti narrativi appariranno qui." />
+            )}
+          </TabsContent>
+
           <TabsContent value="docs" className="space-y-4 mt-0 outline-none">
             {theme.documents?.length > 0 ? (
               <div className="grid sm:grid-cols-2 gap-4">

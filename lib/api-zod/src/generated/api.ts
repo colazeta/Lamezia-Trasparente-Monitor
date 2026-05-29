@@ -117,6 +117,15 @@ export const GetThemeResponse = zod.object({
   "publishDate": zod.string(),
   "endDate": zod.string(),
   "themeId": zod.number().nullish()
+})),
+  "posts": zod.array(zod.object({
+  "id": zod.number(),
+  "themeId": zod.number(),
+  "title": zod.string().nullish(),
+  "body": zod.string(),
+  "eventDate": zod.string(),
+  "createdAt": zod.string(),
+  "updatedAt": zod.string()
 }))
 })
 
@@ -204,6 +213,79 @@ export const RequestSubscriptionsLinkBody = zod.object({
 
 export const RequestSubscriptionsLinkResponse = zod.object({
   "message": zod.string()
+})
+
+
+/**
+ * @summary List the narrative posts (cronistoria) of a theme
+ */
+export const ListThemePostsParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const ListThemePostsResponseItem = zod.object({
+  "id": zod.number(),
+  "themeId": zod.number(),
+  "title": zod.string().nullish(),
+  "body": zod.string(),
+  "eventDate": zod.string(),
+  "createdAt": zod.string(),
+  "updatedAt": zod.string()
+})
+export const ListThemePostsResponse = zod.array(ListThemePostsResponseItem)
+
+
+/**
+ * @summary Create a narrative post for a theme
+ */
+export const CreateThemePostParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+
+
+
+export const CreateThemePostBody = zod.object({
+  "title": zod.string().optional(),
+  "body": zod.string().min(1),
+  "eventDate": zod.string().optional()
+})
+
+
+/**
+ * @summary Edit a narrative post of a theme
+ */
+export const UpdateThemePostParams = zod.object({
+  "id": zod.coerce.number(),
+  "postId": zod.coerce.number()
+})
+
+
+
+
+export const UpdateThemePostBody = zod.object({
+  "title": zod.string().nullish(),
+  "body": zod.string().min(1).optional(),
+  "eventDate": zod.string().optional()
+})
+
+export const UpdateThemePostResponse = zod.object({
+  "id": zod.number(),
+  "themeId": zod.number(),
+  "title": zod.string().nullish(),
+  "body": zod.string(),
+  "eventDate": zod.string(),
+  "createdAt": zod.string(),
+  "updatedAt": zod.string()
+})
+
+
+/**
+ * @summary Delete a narrative post of a theme
+ */
+export const DeleteThemePostParams = zod.object({
+  "id": zod.coerce.number(),
+  "postId": zod.coerce.number()
 })
 
 

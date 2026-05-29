@@ -11,6 +11,7 @@ import type { ThemeDetailStatus } from './themeDetailStatus';
 import type { ThemeDocument } from './themeDocument';
 import type { ThemeEmail } from './themeEmail';
 import type { ThemeMetric } from './themeMetric';
+import type { ThemePost } from './themePost';
 
 export interface ThemeDetail {
   id: number;
@@ -30,4 +31,5 @@ export interface ThemeDetail {
   metrics: ThemeMetric[];
   contracts: Contract[];
   acts: Act[];
+  posts: ThemePost[];
 }

@@ -63,5 +63,8 @@ export * from './themeDocument';
 export * from './themeEmail';
 export * from './themeEmailDirection';
 export * from './themeMetric';
+export * from './themePost';
+export * from './themePostInput';
+export * from './themePostUpdateInput';
 export * from './themeStatus';
 export * from './topThemes';

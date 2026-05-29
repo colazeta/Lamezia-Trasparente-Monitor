@@ -24,6 +24,7 @@ import {
   themesTable,
   themeFollowersTable,
   themeDocumentsTable,
+  themePostsTable,
   actsTable,
   themeEmailsTable,
   sharesTable,
@@ -109,6 +110,9 @@ afterEach(async () => {
   await db
     .delete(themeDocumentsTable)
     .where(eq(themeDocumentsTable.themeId, themeId));
+  await db
+    .delete(themePostsTable)
+    .where(eq(themePostsTable.themeId, themeId));
   await db.delete(actsTable).where(eq(actsTable.themeId, themeId));
   await db.delete(themeEmailsTable).where(eq(themeEmailsTable.themeId, themeId));
   await db.delete(sharesTable).where(eq(sharesTable.themeId, themeId));
@@ -710,6 +714,118 @@ describe("POST /api/themes/:id/documents", () => {
     expect(notification.text).toBeDefined();
     expect(notification.text).toContain(theme.title);
     expect(notification.text).toContain(expectedUnsub);
+  });
+});
+
+describe("Cronistoria posts (/api/themes/:id/posts)", () => {
+  it("creates a post and returns it in the theme detail timeline", async () => {
+    const create = await request(app)
+      .post(`/api/themes/${themeId}/posts`)
+      .set("Authorization", `Bearer ${INGEST_TOKEN}`)
+      .send({
+        title: "Primo aggiornamento",
+        body: "Testo **in grassetto** della cronistoria.",
+        eventDate: "2025-01-15T00:00:00.000Z",
+      });
+
+    expect(create.status).toBe(201);
+    expect(create.body.title).toBe("Primo aggiornamento");
+    expect(create.body.body).toContain("grassetto");
+    expect(create.body.themeId).toBe(themeId);
+
+    const detail = await request(app).get(`/api/themes/${themeId}`);
+    expect(detail.status).toBe(200);
+    expect(detail.body.posts).toHaveLength(1);
+    expect(detail.body.posts[0].title).toBe("Primo aggiornamento");
+  });
+
+  it("orders posts most recent event first", async () => {
+    await request(app)
+      .post(`/api/themes/${themeId}/posts`)
+      .set("Authorization", `Bearer ${INGEST_TOKEN}`)
+      .send({ body: "Vecchio", eventDate: "2024-01-01T00:00:00.000Z" });
+    await request(app)
+      .post(`/api/themes/${themeId}/posts`)
+      .set("Authorization", `Bearer ${INGEST_TOKEN}`)
+      .send({ body: "Recente", eventDate: "2025-06-01T00:00:00.000Z" });
+
+    const list = await request(app).get(`/api/themes/${themeId}/posts`);
+    expect(list.status).toBe(200);
+    expect(list.body).toHaveLength(2);
+    expect(list.body[0].body).toBe("Recente");
+    expect(list.body[1].body).toBe("Vecchio");
+  });
+
+  it("requires the ingest token to create a post", async () => {
+    const res = await request(app)
+      .post(`/api/themes/${themeId}/posts`)
+      .send({ body: "Senza autorizzazione" });
+    expect(res.status).toBe(401);
+
+    const posts = await db
+      .select()
+      .from(themePostsTable)
+      .where(eq(themePostsTable.themeId, themeId));
+    expect(posts).toHaveLength(0);
+  });
+
+  it("rejects an empty body", async () => {
+    const res = await request(app)
+      .post(`/api/themes/${themeId}/posts`)
+      .set("Authorization", `Bearer ${INGEST_TOKEN}`)
+      .send({ body: "   " });
+    expect(res.status).toBe(400);
+  });
+
+  it("returns 404 when creating a post for an unknown theme", async () => {
+    const res = await request(app)
+      .post(`/api/themes/99999999/posts`)
+      .set("Authorization", `Bearer ${INGEST_TOKEN}`)
+      .send({ body: "Tema inesistente" });
+    expect(res.status).toBe(404);
+  });
+
+  it("edits an existing post", async () => {
+    const create = await request(app)
+      .post(`/api/themes/${themeId}/posts`)
+      .set("Authorization", `Bearer ${INGEST_TOKEN}`)
+      .send({ title: "Bozza", body: "Testo iniziale" });
+    const postId = create.body.id;
+
+    const update = await request(app)
+      .patch(`/api/themes/${themeId}/posts/${postId}`)
+      .set("Authorization", `Bearer ${INGEST_TOKEN}`)
+      .send({ title: "Definitivo", body: "Testo aggiornato" });
+
+    expect(update.status).toBe(200);
+    expect(update.body.title).toBe("Definitivo");
+    expect(update.body.body).toBe("Testo aggiornato");
+  });
+
+  it("deletes a post", async () => {
+    const create = await request(app)
+      .post(`/api/themes/${themeId}/posts`)
+      .set("Authorization", `Bearer ${INGEST_TOKEN}`)
+      .send({ body: "Da eliminare" });
+    const postId = create.body.id;
+
+    const del = await request(app)
+      .delete(`/api/themes/${themeId}/posts/${postId}`)
+      .set("Authorization", `Bearer ${INGEST_TOKEN}`);
+    expect(del.status).toBe(204);
+
+    const remaining = await db
+      .select()
+      .from(themePostsTable)
+      .where(eq(themePostsTable.themeId, themeId));
+    expect(remaining).toHaveLength(0);
+  });
+
+  it("returns 404 when deleting an unknown post", async () => {
+    const res = await request(app)
+      .delete(`/api/themes/${themeId}/posts/99999999`)
+      .set("Authorization", `Bearer ${INGEST_TOKEN}`);
+    expect(res.status).toBe(404);
   });
 });
 

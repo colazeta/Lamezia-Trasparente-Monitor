@@ -229,6 +229,134 @@ paths:
               schema:
                 $ref: "#/components/schemas/Error"
 
+  /themes/{id}/posts:
+    get:
+      operationId: listThemePosts
+      tags: [themes]
+      summary: List the narrative posts (cronistoria) of a theme
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: List of theme posts
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ThemePost"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    post:
+      operationId: createThemePost
+      tags: [themes]
+      summary: Create a narrative post for a theme
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ThemePostInput"
+      responses:
+        "201":
+          description: Created post
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ThemePost"
+        "400":
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /themes/{id}/posts/{postId}:
+    patch:
+      operationId: updateThemePost
+      tags: [themes]
+      summary: Edit a narrative post of a theme
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: postId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ThemePostUpdateInput"
+      responses:
+        "200":
+          description: Updated post
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ThemePost"
+        "400":
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    delete:
+      operationId: deleteThemePost
+      tags: [themes]
+      summary: Delete a narrative post of a theme
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: postId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
   /contracts:
     get:
       operationId: listContracts
@@ -777,6 +905,7 @@ components:
         - metrics
         - contracts
         - acts
+        - posts
       properties:
         id:
           type: integer
@@ -823,6 +952,52 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/Act"
+        posts:
+          type: array
+          items:
+            $ref: "#/components/schemas/ThemePost"
+
+    ThemePost:
+      type: object
+      required: [id, themeId, body, eventDate, createdAt, updatedAt]
+      properties:
+        id:
+          type: integer
+        themeId:
+          type: integer
+        title:
+          type: ["string", "null"]
+        body:
+          type: string
+        eventDate:
+          type: string
+        createdAt:
+          type: string
+        updatedAt:
+          type: string
+
+    ThemePostInput:
+      type: object
+      required: [body]
+      properties:
+        title:
+          type: string
+        body:
+          type: string
+          minLength: 1
+        eventDate:
+          type: string
+
+    ThemePostUpdateInput:
+      type: object
+      properties:
+        title:
+          type: ["string", "null"]
+        body:
+          type: string
+          minLength: 1
+        eventDate:
+          type: string
 
     ThemeDocument:
       type: object

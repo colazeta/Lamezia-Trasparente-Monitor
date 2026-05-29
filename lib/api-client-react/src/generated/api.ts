@@ -50,6 +50,9 @@ import type {
   SubscriptionsLinkResponse,
   Theme,
   ThemeDetail,
+  ThemePost,
+  ThemePostInput,
+  ThemePostUpdateInput,
   TopThemes
 } from './api.schemas';
 
@@ -664,6 +667,301 @@ export const useRequestSubscriptionsLink = <TError = ErrorType<Error>,
         TContext
       > => {
       return useMutation(getRequestSubscriptionsLinkMutationOptions(options));
+    }
+
+export const getListThemePostsUrl = (id: number,) => {
+
+
+
+
+  return `/api/themes/${id}/posts`
+}
+
+/**
+ * @summary List the narrative posts (cronistoria) of a theme
+ */
+export const listThemePosts = async (id: number, options?: RequestInit): Promise<ThemePost[]> => {
+
+  return customFetch<ThemePost[]>(getListThemePostsUrl(id),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getListThemePostsQueryKey = (id: number,) => {
+    return [
+    `/api/themes/${id}/posts`
+    ] as const;
+    }
+
+
+export const getListThemePostsQueryOptions = <TData = Awaited<ReturnType<typeof listThemePosts>>, TError = ErrorType<Error>>(id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listThemePosts>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListThemePostsQueryKey(id);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listThemePosts>>> = ({ signal }) => listThemePosts(id, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: !!(id), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listThemePosts>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ListThemePostsQueryResult = NonNullable<Awaited<ReturnType<typeof listThemePosts>>>
+export type ListThemePostsQueryError = ErrorType<Error>
+
+
+/**
+ * @summary List the narrative posts (cronistoria) of a theme
+ */
+
+export function useListThemePosts<TData = Awaited<ReturnType<typeof listThemePosts>>, TError = ErrorType<Error>>(
+ id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listThemePosts>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getListThemePostsQueryOptions(id,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
+
+
+
+export const getCreateThemePostUrl = (id: number,) => {
+
+
+
+
+  return `/api/themes/${id}/posts`
+}
+
+/**
+ * @summary Create a narrative post for a theme
+ */
+export const createThemePost = async (id: number,
+    themePostInput: ThemePostInput, options?: RequestInit): Promise<ThemePost> => {
+
+  return customFetch<ThemePost>(getCreateThemePostUrl(id),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      themePostInput,)
+  }
+);}
+
+
+
+
+export const getCreateThemePostMutationOptions = <TError = ErrorType<Error>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createThemePost>>, TError,{id: number;data: BodyType<ThemePostInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof createThemePost>>, TError,{id: number;data: BodyType<ThemePostInput>}, TContext> => {
+
+const mutationKey = ['createThemePost'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createThemePost>>, {id: number;data: BodyType<ThemePostInput>}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  createThemePost(id,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type CreateThemePostMutationResult = NonNullable<Awaited<ReturnType<typeof createThemePost>>>
+    export type CreateThemePostMutationBody = BodyType<ThemePostInput>
+    export type CreateThemePostMutationError = ErrorType<Error>
+
+    /**
+ * @summary Create a narrative post for a theme
+ */
+export const useCreateThemePost = <TError = ErrorType<Error>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createThemePost>>, TError,{id: number;data: BodyType<ThemePostInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof createThemePost>>,
+        TError,
+        {id: number;data: BodyType<ThemePostInput>},
+        TContext
+      > => {
+      return useMutation(getCreateThemePostMutationOptions(options));
+    }
+
+export const getUpdateThemePostUrl = (id: number,
+    postId: number,) => {
+
+
+
+
+  return `/api/themes/${id}/posts/${postId}`
+}
+
+/**
+ * @summary Edit a narrative post of a theme
+ */
+export const updateThemePost = async (id: number,
+    postId: number,
+    themePostUpdateInput: ThemePostUpdateInput, options?: RequestInit): Promise<ThemePost> => {
+
+  return customFetch<ThemePost>(getUpdateThemePostUrl(id,postId),
+  {
+    ...options,
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      themePostUpdateInput,)
+  }
+);}
+
+
+
+
+export const getUpdateThemePostMutationOptions = <TError = ErrorType<Error>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateThemePost>>, TError,{id: number;postId: number;data: BodyType<ThemePostUpdateInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof updateThemePost>>, TError,{id: number;postId: number;data: BodyType<ThemePostUpdateInput>}, TContext> => {
+
+const mutationKey = ['updateThemePost'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof updateThemePost>>, {id: number;postId: number;data: BodyType<ThemePostUpdateInput>}> = (props) => {
+          const {id,postId,data} = props ?? {};
+
+          return  updateThemePost(id,postId,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type UpdateThemePostMutationResult = NonNullable<Awaited<ReturnType<typeof updateThemePost>>>
+    export type UpdateThemePostMutationBody = BodyType<ThemePostUpdateInput>
+    export type UpdateThemePostMutationError = ErrorType<Error>
+
+    /**
+ * @summary Edit a narrative post of a theme
+ */
+export const useUpdateThemePost = <TError = ErrorType<Error>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateThemePost>>, TError,{id: number;postId: number;data: BodyType<ThemePostUpdateInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof updateThemePost>>,
+        TError,
+        {id: number;postId: number;data: BodyType<ThemePostUpdateInput>},
+        TContext
+      > => {
+      return useMutation(getUpdateThemePostMutationOptions(options));
+    }
+
+export const getDeleteThemePostUrl = (id: number,
+    postId: number,) => {
+
+
+
+
+  return `/api/themes/${id}/posts/${postId}`
+}
+
+/**
+ * @summary Delete a narrative post of a theme
+ */
+export const deleteThemePost = async (id: number,
+    postId: number, options?: RequestInit): Promise<void> => {
+
+  return customFetch<void>(getDeleteThemePostUrl(id,postId),
+  {
+    ...options,
+    method: 'DELETE'
+
+
+  }
+);}
+
+
+
+
+export const getDeleteThemePostMutationOptions = <TError = ErrorType<Error>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteThemePost>>, TError,{id: number;postId: number}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof deleteThemePost>>, TError,{id: number;postId: number}, TContext> => {
+
+const mutationKey = ['deleteThemePost'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof deleteThemePost>>, {id: number;postId: number}> = (props) => {
+          const {id,postId} = props ?? {};
+
+          return  deleteThemePost(id,postId,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type DeleteThemePostMutationResult = NonNullable<Awaited<ReturnType<typeof deleteThemePost>>>
+
+    export type DeleteThemePostMutationError = ErrorType<Error>
+
+    /**
+ * @summary Delete a narrative post of a theme
+ */
+export const useDeleteThemePost = <TError = ErrorType<Error>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteThemePost>>, TError,{id: number;postId: number}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof deleteThemePost>>,
+        TError,
+        {id: number;postId: number},
+        TContext
+      > => {
+      return useMutation(getDeleteThemePostMutationOptions(options));
     }
 
 export const getListContractsUrl = (params?: ListContractsParams,) => {
