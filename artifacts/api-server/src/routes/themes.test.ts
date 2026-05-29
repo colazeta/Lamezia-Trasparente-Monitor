@@ -24,6 +24,9 @@ import {
   themesTable,
   themeFollowersTable,
   themeDocumentsTable,
+  actsTable,
+  themeEmailsTable,
+  sharesTable,
 } from "@workspace/db";
 
 const mockedSendEmail = vi.mocked(sendEmail);
@@ -69,6 +72,22 @@ async function getFollowerCount(id: number): Promise<number> {
   return row?.followerCount ?? 0;
 }
 
+async function getRelevanceCount(id: number): Promise<number> {
+  const [row] = await db
+    .select({ relevanceCount: themesTable.relevanceCount })
+    .from(themesTable)
+    .where(eq(themesTable.id, id));
+  return row?.relevanceCount ?? 0;
+}
+
+async function getShareCount(id: number): Promise<number> {
+  const [row] = await db
+    .select({ shareCount: themesTable.shareCount })
+    .from(themesTable)
+    .where(eq(themesTable.id, id));
+  return row?.shareCount ?? 0;
+}
+
 beforeAll(() => {
   process.env.INGEST_API_TOKEN = INGEST_TOKEN;
 });
@@ -90,6 +109,9 @@ afterEach(async () => {
   await db
     .delete(themeDocumentsTable)
     .where(eq(themeDocumentsTable.themeId, themeId));
+  await db.delete(actsTable).where(eq(actsTable.themeId, themeId));
+  await db.delete(themeEmailsTable).where(eq(themeEmailsTable.themeId, themeId));
+  await db.delete(sharesTable).where(eq(sharesTable.themeId, themeId));
   await db.delete(themesTable).where(eq(themesTable.id, themeId));
   await db.delete(categoriesTable).where(eq(categoriesTable.id, categoryId));
 });
@@ -212,5 +234,230 @@ describe("POST /api/themes/:id/documents", () => {
     );
     expect(notificationCall).toBeDefined();
     expect(notificationCall?.[0].subject).toContain("Aggiornamento");
+  });
+});
+
+describe("POST /api/themes/:id/relevant", () => {
+  it("increments the relevance count", async () => {
+    expect(await getRelevanceCount(themeId)).toBe(0);
+
+    const res = await request(app).post(`/api/themes/${themeId}/relevant`);
+
+    expect(res.status).toBe(200);
+    expect(res.body.relevanceCount).toBe(1);
+    expect(await getRelevanceCount(themeId)).toBe(1);
+
+    const second = await request(app).post(`/api/themes/${themeId}/relevant`);
+    expect(second.status).toBe(200);
+    expect(second.body.relevanceCount).toBe(2);
+    expect(await getRelevanceCount(themeId)).toBe(2);
+  });
+
+  it("returns 404 for an unknown theme", async () => {
+    const res = await request(app).post("/api/themes/99999999/relevant");
+    expect(res.status).toBe(404);
+  });
+});
+
+describe("POST /api/themes/:id/share", () => {
+  it("increments the share count and records the channel", async () => {
+    expect(await getShareCount(themeId)).toBe(0);
+
+    const res = await request(app)
+      .post(`/api/themes/${themeId}/share`)
+      .send({ channel: "whatsapp" });
+
+    expect(res.status).toBe(200);
+    expect(res.body.shareCount).toBe(1);
+    expect(await getShareCount(themeId)).toBe(1);
+
+    const shares = await db
+      .select()
+      .from(sharesTable)
+      .where(eq(sharesTable.themeId, themeId));
+    expect(shares).toHaveLength(1);
+    expect(shares[0].channel).toBe("whatsapp");
+  });
+
+  it("returns 400 for an invalid channel", async () => {
+    const res = await request(app)
+      .post(`/api/themes/${themeId}/share`)
+      .send({ channel: "carrier-pigeon" });
+
+    expect(res.status).toBe(400);
+    expect(await getShareCount(themeId)).toBe(0);
+
+    const shares = await db
+      .select()
+      .from(sharesTable)
+      .where(eq(sharesTable.themeId, themeId));
+    expect(shares).toHaveLength(0);
+  });
+
+  it("returns 404 for an unknown theme", async () => {
+    const res = await request(app)
+      .post("/api/themes/99999999/share")
+      .send({ channel: "link" });
+
+    expect(res.status).toBe(404);
+  });
+});
+
+describe("POST /api/themes/:id/acts", () => {
+  const validAct = {
+    title: "Nuovo atto",
+    type: "delibera",
+    number: "123/2026",
+    summary: "Sintesi dell'atto",
+  };
+
+  it("triggers a notification attempt to followers when an act is added", async () => {
+    await request(app)
+      .post(`/api/themes/${themeId}/follow`)
+      .send({ email: "follower@example.com" });
+
+    await vi.waitFor(() => {
+      expect(mockedSendEmail).toHaveBeenCalledWith(
+        expect.objectContaining({ to: "follower@example.com" }),
+      );
+    });
+    mockedSendEmail.mockClear();
+
+    const res = await request(app)
+      .post(`/api/themes/${themeId}/acts`)
+      .set("Authorization", `Bearer ${INGEST_TOKEN}`)
+      .send(validAct);
+
+    expect(res.status).toBe(201);
+
+    await vi.waitFor(() => {
+      expect(mockedSendEmail).toHaveBeenCalledWith(
+        expect.objectContaining({ to: "follower@example.com" }),
+      );
+    });
+
+    const notificationCall = mockedSendEmail.mock.calls.find(
+      ([params]) => params.to === "follower@example.com",
+    );
+    expect(notificationCall).toBeDefined();
+    expect(notificationCall?.[0].subject).toContain("Aggiornamento");
+  });
+
+  it("returns 400 when required fields are missing", async () => {
+    const res = await request(app)
+      .post(`/api/themes/${themeId}/acts`)
+      .set("Authorization", `Bearer ${INGEST_TOKEN}`)
+      .send({ title: "Solo titolo" });
+
+    expect(res.status).toBe(400);
+
+    const acts = await db
+      .select()
+      .from(actsTable)
+      .where(eq(actsTable.themeId, themeId));
+    expect(acts).toHaveLength(0);
+  });
+
+  it("returns 401 without a valid ingest token", async () => {
+    const res = await request(app)
+      .post(`/api/themes/${themeId}/acts`)
+      .set("Authorization", "Bearer wrong-token")
+      .send(validAct);
+
+    expect(res.status).toBe(401);
+    expect(mockedSendEmail).not.toHaveBeenCalled();
+  });
+
+  it("returns 503 when ingestion is disabled", async () => {
+    const original = process.env.INGEST_API_TOKEN;
+    delete process.env.INGEST_API_TOKEN;
+    try {
+      const res = await request(app)
+        .post(`/api/themes/${themeId}/acts`)
+        .send(validAct);
+      expect(res.status).toBe(503);
+    } finally {
+      process.env.INGEST_API_TOKEN = original;
+    }
+  });
+});
+
+describe("POST /api/themes/:id/emails", () => {
+  const validEmail = {
+    subject: "Richiesta di accesso agli atti",
+    sender: "cittadino@example.com",
+    recipient: "comune@example.com",
+    direction: "inbound",
+    body: "Testo della corrispondenza",
+  };
+
+  it("triggers a notification attempt to followers when an email is added", async () => {
+    await request(app)
+      .post(`/api/themes/${themeId}/follow`)
+      .send({ email: "follower@example.com" });
+
+    await vi.waitFor(() => {
+      expect(mockedSendEmail).toHaveBeenCalledWith(
+        expect.objectContaining({ to: "follower@example.com" }),
+      );
+    });
+    mockedSendEmail.mockClear();
+
+    const res = await request(app)
+      .post(`/api/themes/${themeId}/emails`)
+      .set("Authorization", `Bearer ${INGEST_TOKEN}`)
+      .send(validEmail);
+
+    expect(res.status).toBe(201);
+
+    await vi.waitFor(() => {
+      expect(mockedSendEmail).toHaveBeenCalledWith(
+        expect.objectContaining({ to: "follower@example.com" }),
+      );
+    });
+
+    const notificationCall = mockedSendEmail.mock.calls.find(
+      ([params]) => params.to === "follower@example.com",
+    );
+    expect(notificationCall).toBeDefined();
+    expect(notificationCall?.[0].subject).toContain("Aggiornamento");
+  });
+
+  it("returns 400 when required fields are missing", async () => {
+    const res = await request(app)
+      .post(`/api/themes/${themeId}/emails`)
+      .set("Authorization", `Bearer ${INGEST_TOKEN}`)
+      .send({ subject: "Solo oggetto" });
+
+    expect(res.status).toBe(400);
+
+    const emails = await db
+      .select()
+      .from(themeEmailsTable)
+      .where(eq(themeEmailsTable.themeId, themeId));
+    expect(emails).toHaveLength(0);
+  });
+
+  it("returns 401 without a valid ingest token", async () => {
+    const res = await request(app)
+      .post(`/api/themes/${themeId}/emails`)
+      .set("Authorization", "Bearer wrong-token")
+      .send(validEmail);
+
+    expect(res.status).toBe(401);
+    expect(mockedSendEmail).not.toHaveBeenCalled();
+  });
+
+  it("returns 503 when ingestion is disabled", async () => {
+    const original = process.env.INGEST_API_TOKEN;
+    delete process.env.INGEST_API_TOKEN;
+    try {
+      const res = await request(app)
+        .post(`/api/themes/${themeId}/emails`)
+        .send(validEmail);
+      expect(res.status).toBe(503);
+    } finally {
+      process.env.INGEST_API_TOKEN = original;
+    }
   });
 });
