@@ -1,12 +1,12 @@
 import { useState } from "react";
+import { Link } from "wouter";
 import { useListConvocazioni } from "@workspace/api-client-react";
-import { CalendarClock, Users, Calendar } from "lucide-react";
+import { CalendarClock, Users, Calendar, ChevronRight } from "lucide-react";
 import { format } from "date-fns";
 import { it } from "date-fns/locale";
 
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
-import { AlboLink } from "@/components/AlboLink";
 import { cn } from "@/lib/utils";
 
 const TABS = [
@@ -76,9 +76,10 @@ export function Convocazioni() {
             ))
         ) : convocazioni && convocazioni.length > 0 ? (
           convocazioni.map((c) => (
-            <div
+            <Link
               key={c.id}
-              className="p-5 rounded-xl border border-border/60 bg-card shadow-sm hover:shadow-md hover:border-primary/30 transition-all"
+              href={`/convocazioni/${c.id}`}
+              className="group block p-5 rounded-xl border border-border/60 bg-card shadow-sm hover:shadow-md hover:border-primary/30 transition-all"
             >
               <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
                 <div className="flex items-center gap-2 text-sm font-medium text-primary">
@@ -97,10 +98,13 @@ export function Convocazioni() {
               {c.provenienza && (
                 <p className="text-xs text-muted-foreground">{c.provenienza}</p>
               )}
-              <div className="mt-3 border-t border-border/50 pt-3">
-                <AlboLink />
+              <div className="mt-3 flex items-center justify-between border-t border-border/50 pt-3">
+                <span className="inline-flex items-center gap-1 text-sm font-medium text-primary group-hover:underline">
+                  Vedi resoconto stenografico
+                  <ChevronRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+                </span>
               </div>
-            </div>
+            </Link>
           ))
         ) : (
           <div className="py-12 text-center text-muted-foreground bg-muted/20 rounded-xl border border-dashed">

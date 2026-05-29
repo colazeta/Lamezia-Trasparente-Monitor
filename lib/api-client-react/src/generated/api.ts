@@ -36,6 +36,8 @@ import type {
   Publication,
   Report,
   ReportInput,
+  SedutaDetail,
+  SedutaReportInput,
   ShareChannelStat,
   ShareInput,
   StatsOverview,
@@ -998,6 +1000,155 @@ export function useListConvocazioni<TData = Awaited<ReturnType<typeof listConvoc
 
 
 
+
+export const getGetSedutaUrl = (id: number,) => {
+
+
+
+
+  return `/api/convocazioni/${id}`
+}
+
+/**
+ * @summary Get a single seduta with its stenographic report
+ */
+export const getSeduta = async (id: number, options?: RequestInit): Promise<SedutaDetail> => {
+
+  return customFetch<SedutaDetail>(getGetSedutaUrl(id),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetSedutaQueryKey = (id: number,) => {
+    return [
+    `/api/convocazioni/${id}`
+    ] as const;
+    }
+
+
+export const getGetSedutaQueryOptions = <TData = Awaited<ReturnType<typeof getSeduta>>, TError = ErrorType<Error>>(id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getSeduta>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetSedutaQueryKey(id);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getSeduta>>> = ({ signal }) => getSeduta(id, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: !!(id), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getSeduta>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetSedutaQueryResult = NonNullable<Awaited<ReturnType<typeof getSeduta>>>
+export type GetSedutaQueryError = ErrorType<Error>
+
+
+/**
+ * @summary Get a single seduta with its stenographic report
+ */
+
+export function useGetSeduta<TData = Awaited<ReturnType<typeof getSeduta>>, TError = ErrorType<Error>>(
+ id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getSeduta>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetSedutaQueryOptions(id,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
+
+
+
+export const getUpsertSedutaReportUrl = (id: number,) => {
+
+
+
+
+  return `/api/convocazioni/${id}/report`
+}
+
+/**
+ * @summary Create or replace the stenographic report of a seduta
+ */
+export const upsertSedutaReport = async (id: number,
+    sedutaReportInput: SedutaReportInput, options?: RequestInit): Promise<SedutaDetail> => {
+
+  return customFetch<SedutaDetail>(getUpsertSedutaReportUrl(id),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      sedutaReportInput,)
+  }
+);}
+
+
+
+
+export const getUpsertSedutaReportMutationOptions = <TError = ErrorType<Error>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof upsertSedutaReport>>, TError,{id: number;data: BodyType<SedutaReportInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof upsertSedutaReport>>, TError,{id: number;data: BodyType<SedutaReportInput>}, TContext> => {
+
+const mutationKey = ['upsertSedutaReport'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof upsertSedutaReport>>, {id: number;data: BodyType<SedutaReportInput>}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  upsertSedutaReport(id,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type UpsertSedutaReportMutationResult = NonNullable<Awaited<ReturnType<typeof upsertSedutaReport>>>
+    export type UpsertSedutaReportMutationBody = BodyType<SedutaReportInput>
+    export type UpsertSedutaReportMutationError = ErrorType<Error>
+
+    /**
+ * @summary Create or replace the stenographic report of a seduta
+ */
+export const useUpsertSedutaReport = <TError = ErrorType<Error>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof upsertSedutaReport>>, TError,{id: number;data: BodyType<SedutaReportInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof upsertSedutaReport>>,
+        TError,
+        {id: number;data: BodyType<SedutaReportInput>},
+        TContext
+      > => {
+      return useMutation(getUpsertSedutaReportMutationOptions(options));
+    }
 
 export const getListPnrrProjectsUrl = () => {
 

@@ -192,6 +192,35 @@ export interface PnrrProject {
   documents: Publication[];
 }
 
+export interface SedutaIntervention {
+  id: number;
+  speakerName: string;
+  /** @nullable */
+  speakerRole?: string | null;
+  content: string;
+  position: number;
+}
+
+export type SedutaDetail = Publication & ({
+  hasReport: boolean;
+  /** @nullable */
+  summary: string | null;
+  interventions: SedutaIntervention[];
+});
+
+export type SedutaReportInputInterventionsItem = {
+  /** @minLength 1 */
+  speakerName: string;
+  speakerRole?: string;
+  /** @minLength 1 */
+  content: string;
+};
+
+export interface SedutaReportInput {
+  summary?: string;
+  interventions: SedutaReportInputInterventionsItem[];
+}
+
 export type ReportStatus = typeof ReportStatus[keyof typeof ReportStatus];
 
 

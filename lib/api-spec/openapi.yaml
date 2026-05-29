@@ -338,6 +338,74 @@ paths:
                 items:
                   $ref: "#/components/schemas/Publication"
 
+  /convocazioni/{id}:
+    get:
+      operationId: getSeduta
+      tags: [publications]
+      summary: Get a single seduta with its stenographic report
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Seduta detail
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SedutaDetail"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /convocazioni/{id}/report:
+    post:
+      operationId: upsertSedutaReport
+      tags: [publications]
+      summary: Create or replace the stenographic report of a seduta
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SedutaReportInput"
+      responses:
+        "200":
+          description: Updated seduta detail
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SedutaDetail"
+        "400":
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
   /pnrr/projects:
     get:
       operationId: listPnrrProjects
@@ -794,6 +862,57 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/Publication"
+
+    SedutaIntervention:
+      type: object
+      required: [id, speakerName, content, position]
+      properties:
+        id:
+          type: integer
+        speakerName:
+          type: string
+        speakerRole:
+          type: ["string", "null"]
+        content:
+          type: string
+        position:
+          type: integer
+
+    SedutaDetail:
+      allOf:
+        - $ref: "#/components/schemas/Publication"
+        - type: object
+          required: [hasReport, summary, interventions]
+          properties:
+            hasReport:
+              type: boolean
+            summary:
+              type: ["string", "null"]
+            interventions:
+              type: array
+              items:
+                $ref: "#/components/schemas/SedutaIntervention"
+
+    SedutaReportInput:
+      type: object
+      required: [interventions]
+      properties:
+        summary:
+          type: string
+        interventions:
+          type: array
+          items:
+            type: object
+            required: [speakerName, content]
+            properties:
+              speakerName:
+                type: string
+                minLength: 1
+              speakerRole:
+                type: string
+              content:
+                type: string
+                minLength: 1
 
     Report:
       type: object

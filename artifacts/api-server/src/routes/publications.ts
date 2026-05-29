@@ -3,12 +3,54 @@ import {
   db,
   publicationsTable,
   feedStatusTable,
+  sessionReportsTable,
+  sessionInterventionsTable,
   type Publication,
+  type SessionReport,
+  type SessionIntervention,
 } from "@workspace/db";
-import { and, eq, desc, ilike, gte, lte, sql } from "drizzle-orm";
+import { and, eq, asc, desc, ilike, gte, lte, sql } from "drizzle-orm";
+import { UpsertSedutaReportBody } from "@workspace/api-zod";
 import { ALBO_SOURCE } from "../lib/ingestion";
+import { requireIngestAuth } from "../middlewares/requireIngestAuth";
 
 const router: IRouter = Router();
+
+function mapIntervention(i: SessionIntervention) {
+  return {
+    id: i.id,
+    speakerName: i.speakerName,
+    speakerRole: i.speakerRole,
+    content: i.content,
+    position: i.position,
+  };
+}
+
+async function buildSedutaDetail(publication: Publication) {
+  const [report] = await db
+    .select()
+    .from(sessionReportsTable)
+    .where(eq(sessionReportsTable.publicationId, publication.id));
+
+  let interventions: SessionIntervention[] = [];
+  if (report) {
+    interventions = await db
+      .select()
+      .from(sessionInterventionsTable)
+      .where(eq(sessionInterventionsTable.reportId, report.id))
+      .orderBy(
+        asc(sessionInterventionsTable.position),
+        asc(sessionInterventionsTable.id),
+      );
+  }
+
+  return {
+    ...mapPublication(publication),
+    hasReport: Boolean(report),
+    summary: report?.summary ?? null,
+    interventions: interventions.map(mapIntervention),
+  };
+}
 
 function mapPublication(p: Publication) {
   return {
@@ -134,6 +176,108 @@ router.get("/convocazioni", async (req, res) => {
     .orderBy(desc(publicationsTable.pubStart), desc(publicationsTable.id));
   res.json(rows.map(mapPublication));
 });
+
+async function findConvocazione(id: number): Promise<Publication | undefined> {
+  const [publication] = await db
+    .select()
+    .from(publicationsTable)
+    .where(
+      and(
+        eq(publicationsTable.id, id),
+        eq(publicationsTable.category, "convocazione"),
+      ),
+    );
+  return publication;
+}
+
+router.get("/convocazioni/:id", async (req, res) => {
+  const id = Number(req.params.id);
+  if (Number.isNaN(id)) {
+    res.status(404).json({ error: "Seduta non trovata" });
+    return;
+  }
+
+  const publication = await findConvocazione(id);
+  if (!publication) {
+    res.status(404).json({ error: "Seduta non trovata" });
+    return;
+  }
+
+  res.json(await buildSedutaDetail(publication));
+});
+
+router.post(
+  "/convocazioni/:id/report",
+  requireIngestAuth,
+  async (req, res) => {
+    const id = Number(req.params.id);
+    if (Number.isNaN(id)) {
+      res.status(404).json({ error: "Seduta non trovata" });
+      return;
+    }
+
+    const parsed = UpsertSedutaReportBody.safeParse(req.body);
+    if (!parsed.success) {
+      res.status(400).json({ error: "Dati del resoconto non validi" });
+      return;
+    }
+
+    const publication = await findConvocazione(id);
+    if (!publication) {
+      res.status(404).json({ error: "Seduta non trovata" });
+      return;
+    }
+
+    const summary =
+      typeof parsed.data.summary === "string" && parsed.data.summary.trim()
+        ? parsed.data.summary.trim()
+        : null;
+
+    const interventions = parsed.data.interventions.map((intervention) => ({
+      speakerName: intervention.speakerName.trim(),
+      speakerRole:
+        typeof intervention.speakerRole === "string" &&
+        intervention.speakerRole.trim()
+          ? intervention.speakerRole.trim()
+          : null,
+      content: intervention.content.trim(),
+    }));
+
+    if (interventions.some((i) => !i.speakerName || !i.content)) {
+      res.status(400).json({
+        error: "Ogni intervento richiede un relatore e un contenuto.",
+      });
+      return;
+    }
+
+    await db.transaction(async (tx) => {
+      const [report]: SessionReport[] = await tx
+        .insert(sessionReportsTable)
+        .values({ publicationId: id, summary })
+        .onConflictDoUpdate({
+          target: sessionReportsTable.publicationId,
+          set: { summary, updatedAt: new Date() },
+        })
+        .returning();
+
+      await tx
+        .delete(sessionInterventionsTable)
+        .where(eq(sessionInterventionsTable.reportId, report.id));
+
+      if (interventions.length) {
+        await tx.insert(sessionInterventionsTable).values(
+          interventions.map((intervention, index) => ({
+            reportId: report.id,
+            ...intervention,
+            position: index,
+          })),
+        );
+      }
+    });
+
+    res.json(await buildSedutaDetail(publication));
+  },
+);
 
 router.get("/pnrr/projects", async (_req, res) => {
   const rows = await db

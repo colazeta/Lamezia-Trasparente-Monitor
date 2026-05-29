@@ -326,6 +326,95 @@ export const ListConvocazioniResponse = zod.array(ListConvocazioniResponseItem)
 
 
 /**
+ * @summary Get a single seduta with its stenographic report
+ */
+export const GetSedutaParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const GetSedutaResponse = zod.object({
+  "id": zod.number(),
+  "progressivo": zod.string(),
+  "tipologia": zod.string(),
+  "category": zod.string(),
+  "subcategory": zod.string().nullish(),
+  "provenienza": zod.string().nullish(),
+  "oggetto": zod.string(),
+  "dataAtto": zod.string().nullish(),
+  "pubStart": zod.string().nullish(),
+  "pubEnd": zod.string().nullish(),
+  "numRegSet": zod.string().nullish(),
+  "numRegGen": zod.string().nullish(),
+  "cups": zod.array(zod.string()),
+  "pnrrMission": zod.string().nullish(),
+  "isPnrr": zod.boolean(),
+  "isNew": zod.boolean(),
+  "firstSeenAt": zod.string()
+}).and(zod.object({
+  "hasReport": zod.boolean(),
+  "summary": zod.string().nullable(),
+  "interventions": zod.array(zod.object({
+  "id": zod.number(),
+  "speakerName": zod.string(),
+  "speakerRole": zod.string().nullish(),
+  "content": zod.string(),
+  "position": zod.number()
+}))
+}))
+
+
+/**
+ * @summary Create or replace the stenographic report of a seduta
+ */
+export const UpsertSedutaReportParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+
+
+
+
+export const UpsertSedutaReportBody = zod.object({
+  "summary": zod.string().optional(),
+  "interventions": zod.array(zod.object({
+  "speakerName": zod.string().min(1),
+  "speakerRole": zod.string().optional(),
+  "content": zod.string().min(1)
+}))
+})
+
+export const UpsertSedutaReportResponse = zod.object({
+  "id": zod.number(),
+  "progressivo": zod.string(),
+  "tipologia": zod.string(),
+  "category": zod.string(),
+  "subcategory": zod.string().nullish(),
+  "provenienza": zod.string().nullish(),
+  "oggetto": zod.string(),
+  "dataAtto": zod.string().nullish(),
+  "pubStart": zod.string().nullish(),
+  "pubEnd": zod.string().nullish(),
+  "numRegSet": zod.string().nullish(),
+  "numRegGen": zod.string().nullish(),
+  "cups": zod.array(zod.string()),
+  "pnrrMission": zod.string().nullish(),
+  "isPnrr": zod.boolean(),
+  "isNew": zod.boolean(),
+  "firstSeenAt": zod.string()
+}).and(zod.object({
+  "hasReport": zod.boolean(),
+  "summary": zod.string().nullable(),
+  "interventions": zod.array(zod.object({
+  "id": zod.number(),
+  "speakerName": zod.string(),
+  "speakerRole": zod.string().nullish(),
+  "content": zod.string(),
+  "position": zod.number()
+}))
+}))
+
+
+/**
  * @summary List PNRR projects grouped by CUP
  */
 export const ListPnrrProjectsResponseItem = zod.object({
