@@ -10,11 +10,20 @@ import {
   type SessionIntervention,
 } from "@workspace/db";
 import { and, eq, asc, desc, ilike, gte, lte, sql } from "drizzle-orm";
+import sanitizeHtml from "sanitize-html";
 import { UpsertSedutaReportBody } from "@workspace/api-zod";
 import { ALBO_SOURCE } from "../lib/ingestion";
 import { requireIngestAuth } from "../middlewares/requireIngestAuth";
 
 const router: IRouter = Router();
+
+function sanitizeText(value: string): string {
+  return sanitizeHtml(value, {
+    allowedTags: [],
+    allowedAttributes: {},
+    disallowedTagsMode: "discard",
+  }).trim();
+}
 
 function mapIntervention(i: SessionIntervention) {
   return {
@@ -229,18 +238,18 @@ router.post(
     }
 
     const summary =
-      typeof parsed.data.summary === "string" && parsed.data.summary.trim()
-        ? parsed.data.summary.trim()
+      typeof parsed.data.summary === "string" && sanitizeText(parsed.data.summary)
+        ? sanitizeText(parsed.data.summary)
         : null;
 
     const interventions = parsed.data.interventions.map((intervention) => ({
-      speakerName: intervention.speakerName.trim(),
+      speakerName: sanitizeText(intervention.speakerName),
       speakerRole:
         typeof intervention.speakerRole === "string" &&
-        intervention.speakerRole.trim()
-          ? intervention.speakerRole.trim()
+        sanitizeText(intervention.speakerRole)
+          ? sanitizeText(intervention.speakerRole)
           : null,
-      content: intervention.content.trim(),
+      content: sanitizeText(intervention.content),
     }));
 
     if (interventions.some((i) => !i.speakerName || !i.content)) {
