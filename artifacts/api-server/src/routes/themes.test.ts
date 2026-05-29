@@ -157,6 +157,39 @@ describe("POST /api/themes/:id/follow", () => {
     expect(followers).toHaveLength(1);
   });
 
+  it("sends exactly one confirmation email and none on an idempotent re-follow", async () => {
+    const first = await request(app)
+      .post(`/api/themes/${themeId}/follow`)
+      .send({ email: "conferma@example.com" });
+    expect(first.status).toBe(200);
+
+    await vi.waitFor(() => {
+      const confirmations = mockedSendEmail.mock.calls.filter(
+        ([params]) =>
+          params.to === "conferma@example.com" &&
+          params.subject.startsWith("Segui:"),
+      );
+      expect(confirmations).toHaveLength(1);
+    });
+
+    mockedSendEmail.mockClear();
+
+    const second = await request(app)
+      .post(`/api/themes/${themeId}/follow`)
+      .send({ email: "Conferma@Example.com" });
+    expect(second.status).toBe(200);
+    expect(second.body.followerCount).toBe(1);
+
+    await new Promise((resolve) => setTimeout(resolve, 100));
+
+    const confirmations = mockedSendEmail.mock.calls.filter(
+      ([params]) =>
+        params.to === "conferma@example.com" &&
+        params.subject.startsWith("Segui:"),
+    );
+    expect(confirmations).toHaveLength(0);
+  });
+
   it("returns 400 for an invalid email", async () => {
     const res = await request(app)
       .post(`/api/themes/${themeId}/follow`)
@@ -200,6 +233,71 @@ describe("GET /api/unsubscribe", () => {
       .from(themeFollowersTable)
       .where(eq(themeFollowersTable.themeId, themeId));
     expect(remaining).toHaveLength(0);
+  });
+
+  it("leaves the follower count unchanged when the token is missing", async () => {
+    await request(app)
+      .post(`/api/themes/${themeId}/follow`)
+      .send({ email: "resta@example.com" });
+    expect(await getFollowerCount(themeId)).toBe(1);
+
+    const res = await request(app).get("/api/unsubscribe");
+
+    expect(res.status).toBe(200);
+    expect(res.text).toContain("non valido");
+    expect(await getFollowerCount(themeId)).toBe(1);
+
+    const remaining = await db
+      .select()
+      .from(themeFollowersTable)
+      .where(eq(themeFollowersTable.themeId, themeId));
+    expect(remaining).toHaveLength(1);
+  });
+
+  it("leaves the follower count unchanged for an unknown token", async () => {
+    await request(app)
+      .post(`/api/themes/${themeId}/follow`)
+      .send({ email: "resta@example.com" });
+    expect(await getFollowerCount(themeId)).toBe(1);
+
+    const res = await request(app)
+      .get("/api/unsubscribe")
+      .query({ token: "00000000-0000-0000-0000-000000000000" });
+
+    expect(res.status).toBe(200);
+    expect(res.text).toContain("non valido");
+    expect(await getFollowerCount(themeId)).toBe(1);
+
+    const remaining = await db
+      .select()
+      .from(themeFollowersTable)
+      .where(eq(themeFollowersTable.themeId, themeId));
+    expect(remaining).toHaveLength(1);
+  });
+
+  it("does not double-decrement when the same token is used twice", async () => {
+    await request(app)
+      .post(`/api/themes/${themeId}/follow`)
+      .send({ email: "doppia-uscita@example.com" });
+    expect(await getFollowerCount(themeId)).toBe(1);
+
+    const [follower] = await db
+      .select()
+      .from(themeFollowersTable)
+      .where(eq(themeFollowersTable.themeId, themeId));
+
+    const first = await request(app)
+      .get("/api/unsubscribe")
+      .query({ token: follower.unsubscribeToken });
+    expect(first.status).toBe(200);
+    expect(await getFollowerCount(themeId)).toBe(0);
+
+    const second = await request(app)
+      .get("/api/unsubscribe")
+      .query({ token: follower.unsubscribeToken });
+    expect(second.status).toBe(200);
+    expect(second.text).toContain("non valido");
+    expect(await getFollowerCount(themeId)).toBe(0);
   });
 });
 
