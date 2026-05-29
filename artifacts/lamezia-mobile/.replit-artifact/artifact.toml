@@ -1,0 +1,27 @@
+kind = "mobile"
+previewPath = "/mobile/"
+title = "Lamezia Trasparente Mobile"
+version = "1.0.0"
+id = "artifacts/lamezia-mobile"
+router = "expo-domain"
+
+[[integratedSkills]]
+name = "expo"
+version = "1.0.0"
+
+[[services]]
+ensurePreviewReachable = "/status"
+name = "expo"
+paths = [ "/mobile/" ]
+localPort = 19563
+
+[services.development]
+run = "pnpm --filter @workspace/lamezia-mobile run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/lamezia-mobile", "run", "build" ]
+run = [ "pnpm", "--filter", "@workspace/lamezia-mobile", "run", "serve" ]
+
+[services.env]
+PORT = "19563"
+BASE_PATH = "/mobile/"
