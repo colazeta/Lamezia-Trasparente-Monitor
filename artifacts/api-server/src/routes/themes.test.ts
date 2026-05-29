@@ -226,6 +226,10 @@ describe("GET /api/unsubscribe", () => {
       .query({ token: follower.unsubscribeToken });
 
     expect(res.status).toBe(200);
+    expect(res.headers["content-type"]).toContain("text/html");
+    expect(res.text).toContain(
+      "Iscrizione annullata. Non riceverai più aggiornamenti su questo tema.",
+    );
     expect(await getFollowerCount(themeId)).toBe(0);
 
     const remaining = await db
@@ -244,7 +248,8 @@ describe("GET /api/unsubscribe", () => {
     const res = await request(app).get("/api/unsubscribe");
 
     expect(res.status).toBe(200);
-    expect(res.text).toContain("non valido");
+    expect(res.headers["content-type"]).toContain("text/html");
+    expect(res.text).toContain("Link di annullamento non valido.");
     expect(await getFollowerCount(themeId)).toBe(1);
 
     const remaining = await db
@@ -265,7 +270,8 @@ describe("GET /api/unsubscribe", () => {
       .query({ token: "00000000-0000-0000-0000-000000000000" });
 
     expect(res.status).toBe(200);
-    expect(res.text).toContain("non valido");
+    expect(res.headers["content-type"]).toContain("text/html");
+    expect(res.text).toContain("Iscrizione già annullata o link non valido.");
     expect(await getFollowerCount(themeId)).toBe(1);
 
     const remaining = await db
@@ -296,7 +302,8 @@ describe("GET /api/unsubscribe", () => {
       .get("/api/unsubscribe")
       .query({ token: follower.unsubscribeToken });
     expect(second.status).toBe(200);
-    expect(second.text).toContain("non valido");
+    expect(second.headers["content-type"]).toContain("text/html");
+    expect(second.text).toContain("Iscrizione già annullata o link non valido.");
     expect(await getFollowerCount(themeId)).toBe(0);
   });
 });
