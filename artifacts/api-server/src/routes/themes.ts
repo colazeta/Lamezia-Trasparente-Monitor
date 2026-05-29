@@ -272,6 +272,57 @@ router.post("/themes/:id/share", async (req, res) => {
   });
 });
 
+async function addFollower(
+  themeId: number,
+  email: string,
+): Promise<{
+  theme: typeof themesTable.$inferSelect | null;
+  isNew: boolean;
+  unsubscribeToken: string;
+} | null> {
+  const unsubscribeToken = randomUUID();
+
+  const result = await db.transaction(async (tx) => {
+    const [exists] = await tx
+      .select({ id: themesTable.id })
+      .from(themesTable)
+      .where(eq(themesTable.id, themeId));
+    if (!exists) {
+      return null;
+    }
+
+    const inserted = await tx
+      .insert(themeFollowersTable)
+      .values({ themeId, email, unsubscribeToken })
+      .onConflictDoNothing({
+        target: [themeFollowersTable.themeId, themeFollowersTable.email],
+      })
+      .returning();
+
+    const isNew = inserted.length > 0;
+
+    if (isNew) {
+      await tx
+        .update(themesTable)
+        .set({ followerCount: sql`${themesTable.followerCount} + 1` })
+        .where(eq(themesTable.id, themeId));
+    }
+
+    const [row] = await tx
+      .select()
+      .from(themesTable)
+      .where(eq(themesTable.id, themeId));
+
+    return { theme: row ?? null, isNew };
+  });
+
+  if (!result) {
+    return null;
+  }
+
+  return { ...result, unsubscribeToken };
+}
+
 router.post("/themes/:id/follow", async (req, res) => {
   const id = Number(req.params.id);
   if (Number.isNaN(id)) {
@@ -286,41 +337,8 @@ router.post("/themes/:id/follow", async (req, res) => {
   }
 
   const email = parsed.data.email.trim().toLowerCase();
-  const unsubscribeToken = randomUUID();
 
-  const result = await db.transaction(async (tx) => {
-    const [exists] = await tx
-      .select({ id: themesTable.id })
-      .from(themesTable)
-      .where(eq(themesTable.id, id));
-    if (!exists) {
-      return null;
-    }
-
-    const inserted = await tx
-      .insert(themeFollowersTable)
-      .values({ themeId: id, email, unsubscribeToken })
-      .onConflictDoNothing({
-        target: [themeFollowersTable.themeId, themeFollowersTable.email],
-      })
-      .returning();
-
-    const isNew = inserted.length > 0;
-
-    if (isNew) {
-      await tx
-        .update(themesTable)
-        .set({ followerCount: sql`${themesTable.followerCount} + 1` })
-        .where(eq(themesTable.id, id));
-    }
-
-    const [row] = await tx
-      .select()
-      .from(themesTable)
-      .where(eq(themesTable.id, id));
-
-    return { theme: row ?? null, isNew };
-  });
+  const result = await addFollower(id, email);
 
   if (!result || !result.theme) {
     res.status(404).json({ error: "Tema non trovato" });
@@ -334,7 +352,7 @@ router.post("/themes/:id/follow", async (req, res) => {
       email,
       themeId: id,
       themeTitle: updated.title,
-      unsubscribeToken,
+      unsubscribeToken: result.unsubscribeToken,
     });
   }
 
@@ -576,6 +594,15 @@ function homeUrl(): string {
   return "/";
 }
 
+function apiUrl(path: string): string {
+  const base = process.env.PUBLIC_BASE_URL
+    ? process.env.PUBLIC_BASE_URL.replace(/\/$/, "")
+    : process.env.REPLIT_DEV_DOMAIN
+      ? `https://${process.env.REPLIT_DEV_DOMAIN}`
+      : "";
+  return `${base}/api${path}`;
+}
+
 function escapeHtml(value: string): string {
   return value
     .replace(/&/g, "&amp;")
@@ -585,18 +612,39 @@ function escapeHtml(value: string): string {
     .replace(/'/g, "&#39;");
 }
 
+function renderStatusPage(params: {
+  title: string;
+  message: string;
+  withHomeLink?: boolean;
+  resubscribe?: { themeId: number; email: string };
+}): string {
+  const link = params.withHomeLink
+    ? `<p><a href="${escapeHtml(homeUrl())}">Torna a Lamezia Trasparente</a></p>`
+    : "";
+  const form = params.resubscribe
+    ? `<form method="post" action="${escapeHtml(apiUrl("/resubscribe"))}" style="margin-top:8px"><input type="hidden" name="themeId" value="${params.resubscribe.themeId}" /><input type="hidden" name="email" value="${escapeHtml(params.resubscribe.email)}" /><button type="submit" style="background:#2563eb;color:#fff;border:none;padding:10px 20px;border-radius:8px;font-size:14px;cursor:pointer">Iscriviti di nuovo</button></form>`
+    : "";
+  return `<!doctype html><html lang="it"><head><meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" /><title>${escapeHtml(params.title)}</title><style>body{font-family:Arial,sans-serif;background:#f5f5f5;margin:0;display:flex;min-height:100vh;align-items:center;justify-content:center}div{background:#fff;padding:32px 40px;border-radius:12px;box-shadow:0 1px 4px rgba(0,0,0,.1);max-width:480px;text-align:center;color:#1a1a1a}a{color:#2563eb}</style></head><body><div><h1>Lamezia Trasparente</h1><p>${params.message}</p>${form}${link}</div></body></html>`;
+}
+
 router.get("/unsubscribe", async (req, res) => {
   const token = typeof req.query.token === "string" ? req.query.token : "";
 
-  const sendPage = (message: string, withHomeLink = false) => {
-    const link = withHomeLink
-      ? `<p><a href="${escapeHtml(homeUrl())}">Torna a Lamezia Trasparente</a></p>`
-      : "";
+  const sendPage = (
+    message: string,
+    withHomeLink = false,
+    resubscribe?: { themeId: number; email: string },
+  ) => {
     res
       .status(200)
       .type("html")
       .send(
-        `<!doctype html><html lang="it"><head><meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" /><title>Iscrizione annullata</title><style>body{font-family:Arial,sans-serif;background:#f5f5f5;margin:0;display:flex;min-height:100vh;align-items:center;justify-content:center}div{background:#fff;padding:32px 40px;border-radius:12px;box-shadow:0 1px 4px rgba(0,0,0,.1);max-width:480px;text-align:center;color:#1a1a1a}a{color:#2563eb}</style></head><body><div><h1>Lamezia Trasparente</h1><p>${message}</p>${link}</div></body></html>`,
+        renderStatusPage({
+          title: "Iscrizione annullata",
+          message,
+          withHomeLink,
+          resubscribe,
+        }),
       );
   };
 
@@ -624,10 +672,57 @@ router.get("/unsubscribe", async (req, res) => {
     const message = theme
       ? `Iscrizione annullata. Non riceverai più aggiornamenti su <strong>${escapeHtml(theme.title)}</strong>.`
       : "Iscrizione annullata. Non riceverai più aggiornamenti su questo tema.";
-    sendPage(message, true);
+    sendPage(message, true, {
+      themeId: deleted[0].themeId,
+      email: deleted[0].email,
+    });
   } else {
     sendPage("Iscrizione già annullata o link non valido.");
   }
+});
+
+router.post("/resubscribe", async (req, res) => {
+  const body = req.body as { themeId?: unknown; email?: unknown };
+  const themeId = Number(body.themeId);
+  const email =
+    typeof body.email === "string" ? body.email.trim().toLowerCase() : "";
+
+  const sendPage = (message: string, withHomeLink = false) => {
+    res
+      .status(200)
+      .type("html")
+      .send(
+        renderStatusPage({
+          title: "Iscrizione ripristinata",
+          message,
+          withHomeLink,
+        }),
+      );
+  };
+
+  if (Number.isNaN(themeId) || !email) {
+    sendPage("Richiesta di iscrizione non valida.");
+    return;
+  }
+
+  const result = await addFollower(themeId, email);
+
+  if (!result || !result.theme) {
+    sendPage("Tema non trovato.");
+    return;
+  }
+
+  if (result.isNew) {
+    void sendFollowConfirmationEmail({
+      email,
+      themeId,
+      themeTitle: result.theme.title,
+      unsubscribeToken: result.unsubscribeToken,
+    });
+  }
+
+  const message = `Iscrizione ripristinata. Riceverai di nuovo aggiornamenti su <strong>${escapeHtml(result.theme.title)}</strong>.`;
+  sendPage(message, true);
 });
 
 export default router;

@@ -333,6 +333,149 @@ describe("GET /api/unsubscribe", () => {
     expect(second.text).toContain("Iscrizione già annullata o link non valido.");
     expect(await getFollowerCount(themeId)).toBe(0);
   });
+
+  it("offers a one-click re-subscribe action on the goodbye page", async () => {
+    await request(app)
+      .post(`/api/themes/${themeId}/follow`)
+      .send({ email: "ripensamento@example.com" });
+
+    const [follower] = await db
+      .select()
+      .from(themeFollowersTable)
+      .where(eq(themeFollowersTable.themeId, themeId));
+
+    const res = await request(app)
+      .get("/api/unsubscribe")
+      .query({ token: follower.unsubscribeToken });
+
+    expect(res.status).toBe(200);
+    expect(res.text).toContain("Iscriviti di nuovo");
+    expect(res.text).toContain('action=');
+    expect(res.text).toContain("/api/resubscribe");
+    expect(res.text).toContain('name="themeId"');
+    expect(res.text).toContain(`value="${themeId}"`);
+    expect(res.text).toContain('name="email"');
+    expect(res.text).toContain('value="ripensamento@example.com"');
+  });
+});
+
+describe("POST /api/resubscribe", () => {
+  it("restores the follower and increments the follower count", async () => {
+    await request(app)
+      .post(`/api/themes/${themeId}/follow`)
+      .send({ email: "ritorno@example.com" });
+
+    const [follower] = await db
+      .select()
+      .from(themeFollowersTable)
+      .where(eq(themeFollowersTable.themeId, themeId));
+
+    await request(app)
+      .get("/api/unsubscribe")
+      .query({ token: follower.unsubscribeToken });
+    expect(await getFollowerCount(themeId)).toBe(0);
+
+    const res = await request(app)
+      .post("/api/resubscribe")
+      .type("form")
+      .send({ themeId: String(themeId), email: "ritorno@example.com" });
+
+    expect(res.status).toBe(200);
+    expect(res.headers["content-type"]).toContain("text/html");
+    expect(res.text).toContain("Iscrizione ripristinata.");
+    expect(res.text).toContain("Torna a Lamezia Trasparente");
+    expect(await getFollowerCount(themeId)).toBe(1);
+
+    const restored = await db
+      .select()
+      .from(themeFollowersTable)
+      .where(eq(themeFollowersTable.themeId, themeId));
+    expect(restored).toHaveLength(1);
+    expect(restored[0].email).toBe("ritorno@example.com");
+  });
+
+  it("is idempotent when re-subscribing twice", async () => {
+    const first = await request(app)
+      .post("/api/resubscribe")
+      .type("form")
+      .send({ themeId: String(themeId), email: "doppio-ritorno@example.com" });
+    expect(first.status).toBe(200);
+    expect(await getFollowerCount(themeId)).toBe(1);
+
+    const second = await request(app)
+      .post("/api/resubscribe")
+      .type("form")
+      .send({ themeId: String(themeId), email: "Doppio-Ritorno@example.com" });
+    expect(second.status).toBe(200);
+    expect(await getFollowerCount(themeId)).toBe(1);
+
+    const followers = await db
+      .select()
+      .from(themeFollowersTable)
+      .where(eq(themeFollowersTable.themeId, themeId));
+    expect(followers).toHaveLength(1);
+  });
+
+  it("normalizes the email so re-subscribe is idempotent against the original follow", async () => {
+    await request(app)
+      .post(`/api/themes/${themeId}/follow`)
+      .send({ email: "maiuscole@example.com" });
+    expect(await getFollowerCount(themeId)).toBe(1);
+
+    const res = await request(app)
+      .post("/api/resubscribe")
+      .type("form")
+      .send({ themeId: String(themeId), email: "Maiuscole@Example.com" });
+    expect(res.status).toBe(200);
+    expect(await getFollowerCount(themeId)).toBe(1);
+
+    const followers = await db
+      .select()
+      .from(themeFollowersTable)
+      .where(eq(themeFollowersTable.themeId, themeId));
+    expect(followers).toHaveLength(1);
+  });
+
+  it("sends a confirmation email when re-subscribing restores a follower", async () => {
+    mockedSendEmail.mockClear();
+
+    const res = await request(app)
+      .post("/api/resubscribe")
+      .type("form")
+      .send({ themeId: String(themeId), email: "conferma-ritorno@example.com" });
+    expect(res.status).toBe(200);
+
+    await vi.waitFor(() => {
+      const confirmations = mockedSendEmail.mock.calls.filter(
+        ([params]) =>
+          params.to === "conferma-ritorno@example.com" &&
+          params.subject.startsWith("Segui:"),
+      );
+      expect(confirmations).toHaveLength(1);
+    });
+  });
+
+  it("renders an invalid-request page when fields are missing", async () => {
+    const res = await request(app)
+      .post("/api/resubscribe")
+      .type("form")
+      .send({ email: "senza-tema@example.com" });
+
+    expect(res.status).toBe(200);
+    expect(res.headers["content-type"]).toContain("text/html");
+    expect(res.text).toContain("Richiesta di iscrizione non valida.");
+  });
+
+  it("renders a not-found page for an unknown theme", async () => {
+    const res = await request(app)
+      .post("/api/resubscribe")
+      .type("form")
+      .send({ themeId: "99999999", email: "ignoto@example.com" });
+
+    expect(res.status).toBe(200);
+    expect(res.headers["content-type"]).toContain("text/html");
+    expect(res.text).toContain("Tema non trovato.");
+  });
 });
 
 describe("POST /api/themes/:id/documents", () => {
