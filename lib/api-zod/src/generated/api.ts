@@ -427,13 +427,30 @@ export const UpsertSedutaReportResponse = zod.object({
 
 
 /**
- * @summary List PNRR projects grouped by CUP
+ * @summary PNRR census based on the official Attuazione Misure PNRR registry
  */
-export const ListPnrrProjectsResponseItem = zod.object({
+export const ListPnrrProjectsResponse = zod.object({
+  "projects": zod.array(zod.object({
   "key": zod.string(),
+  "sourceId": zod.string(),
+  "url": zod.string(),
+  "title": zod.string(),
   "cup": zod.string().nullish(),
   "mission": zod.string().nullish(),
+  "component": zod.string().nullish(),
+  "investment": zod.string().nullish(),
+  "intervention": zod.string().nullish(),
+  "holder": zod.string().nullish(),
+  "attuatore": zod.string().nullish(),
+  "importoFinanziato": zod.string().nullish(),
+  "status": zod.string().nullish(),
+  "startDate": zod.string().nullish(),
+  "endDate": zod.string().nullish(),
+  "publishedAt": zod.string().nullish(),
+  "attachments": zod.array(zod.object({
   "title": zod.string(),
+  "url": zod.string()
+})),
   "documentsCount": zod.number(),
   "lastPublication": zod.string().nullish(),
   "documents": zod.array(zod.object({
@@ -455,8 +472,27 @@ export const ListPnrrProjectsResponseItem = zod.object({
   "isNew": zod.boolean(),
   "firstSeenAt": zod.string()
 }))
+})),
+  "uncensored": zod.array(zod.object({
+  "id": zod.number(),
+  "progressivo": zod.string(),
+  "tipologia": zod.string(),
+  "category": zod.string(),
+  "subcategory": zod.string().nullish(),
+  "provenienza": zod.string().nullish(),
+  "oggetto": zod.string(),
+  "dataAtto": zod.string().nullish(),
+  "pubStart": zod.string().nullish(),
+  "pubEnd": zod.string().nullish(),
+  "numRegSet": zod.string().nullish(),
+  "numRegGen": zod.string().nullish(),
+  "cups": zod.array(zod.string()),
+  "pnrrMission": zod.string().nullish(),
+  "isPnrr": zod.boolean(),
+  "isNew": zod.boolean(),
+  "firstSeenAt": zod.string()
+}))
 })
-export const ListPnrrProjectsResponse = zod.array(ListPnrrProjectsResponseItem)
 
 
 /**

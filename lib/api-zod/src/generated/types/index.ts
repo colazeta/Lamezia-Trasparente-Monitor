@@ -39,6 +39,8 @@ export * from './officialProfile';
 export * from './officialRemuneration';
 export * from './officialVote';
 export * from './officialVoteVote';
+export * from './pnrrAttachment';
+export * from './pnrrCensus';
 export * from './pnrrProject';
 export * from './publication';
 export * from './report';

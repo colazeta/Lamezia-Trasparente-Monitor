@@ -8,6 +8,7 @@ export * from "./acts";
 export * from "./reports";
 export * from "./shares";
 export * from "./publications";
+export * from "./attuazionePnrr";
 export * from "./feedStatus";
 export * from "./themeFollowers";
 export * from "./sessionReports";

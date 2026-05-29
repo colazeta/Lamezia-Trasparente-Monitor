@@ -98,7 +98,7 @@ export function Home() {
             />
             <StatCard
               title="Progetti PNRR"
-              value={pnrrProjects?.length}
+              value={pnrrProjects?.projects.length}
               loading={!pnrrProjects}
               icon={Landmark}
             />

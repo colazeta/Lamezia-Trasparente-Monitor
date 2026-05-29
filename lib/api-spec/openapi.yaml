@@ -435,16 +435,14 @@ paths:
     get:
       operationId: listPnrrProjects
       tags: [publications]
-      summary: List PNRR projects grouped by CUP
+      summary: PNRR census based on the official Attuazione Misure PNRR registry
       responses:
         "200":
-          description: List of PNRR projects
+          description: PNRR census
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/PnrrProject"
+                $ref: "#/components/schemas/PnrrCensus"
 
   /officials:
     get:
@@ -1010,27 +1008,80 @@ components:
         lastUpdatedAt:
           type: ["string", "null"]
 
+    PnrrAttachment:
+      type: object
+      required: [title, url]
+      properties:
+        title:
+          type: string
+        url:
+          type: string
+
     PnrrProject:
       type: object
       required:
         - key
+        - sourceId
+        - url
         - title
+        - attachments
         - documentsCount
         - documents
       properties:
         key:
           type: string
+        sourceId:
+          type: string
+        url:
+          type: string
+        title:
+          type: string
         cup:
           type: ["string", "null"]
         mission:
           type: ["string", "null"]
-        title:
-          type: string
+        component:
+          type: ["string", "null"]
+        investment:
+          type: ["string", "null"]
+        intervention:
+          type: ["string", "null"]
+        holder:
+          type: ["string", "null"]
+        attuatore:
+          type: ["string", "null"]
+        importoFinanziato:
+          type: ["string", "null"]
+        status:
+          type: ["string", "null"]
+        startDate:
+          type: ["string", "null"]
+        endDate:
+          type: ["string", "null"]
+        publishedAt:
+          type: ["string", "null"]
+        attachments:
+          type: array
+          items:
+            $ref: "#/components/schemas/PnrrAttachment"
         documentsCount:
           type: integer
         lastPublication:
           type: ["string", "null"]
         documents:
+          type: array
+          items:
+            $ref: "#/components/schemas/Publication"
+
+    PnrrCensus:
+      type: object
+      required: [projects, uncensored]
+      properties:
+        projects:
+          type: array
+          items:
+            $ref: "#/components/schemas/PnrrProject"
+        uncensored:
           type: array
           items:
             $ref: "#/components/schemas/Publication"

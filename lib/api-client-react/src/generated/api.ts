@@ -37,7 +37,7 @@ import type {
   Official,
   OfficialInput,
   OfficialProfile,
-  PnrrProject,
+  PnrrCensus,
   Publication,
   Report,
   ReportInput,
@@ -1237,11 +1237,11 @@ export const getListPnrrProjectsUrl = () => {
 }
 
 /**
- * @summary List PNRR projects grouped by CUP
+ * @summary PNRR census based on the official Attuazione Misure PNRR registry
  */
-export const listPnrrProjects = async ( options?: RequestInit): Promise<PnrrProject[]> => {
+export const listPnrrProjects = async ( options?: RequestInit): Promise<PnrrCensus> => {
 
-  return customFetch<PnrrProject[]>(getListPnrrProjectsUrl(),
+  return customFetch<PnrrCensus>(getListPnrrProjectsUrl(),
   {
     ...options,
     method: 'GET'
@@ -1284,7 +1284,7 @@ export type ListPnrrProjectsQueryError = ErrorType<unknown>
 
 
 /**
- * @summary List PNRR projects grouped by CUP
+ * @summary PNRR census based on the official Attuazione Misure PNRR registry
  */
 
 export function useListPnrrProjects<TData = Awaited<ReturnType<typeof listPnrrProjects>>, TError = ErrorType<unknown>>(

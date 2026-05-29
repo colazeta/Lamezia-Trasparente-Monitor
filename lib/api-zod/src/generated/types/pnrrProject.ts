@@ -5,15 +5,39 @@
  * API specification
  * OpenAPI spec version: 0.1.0
  */
+import type { PnrrAttachment } from './pnrrAttachment';
 import type { Publication } from './publication';
 
 export interface PnrrProject {
   key: string;
+  sourceId: string;
+  url: string;
+  title: string;
   /** @nullable */
   cup?: string | null;
   /** @nullable */
   mission?: string | null;
-  title: string;
+  /** @nullable */
+  component?: string | null;
+  /** @nullable */
+  investment?: string | null;
+  /** @nullable */
+  intervention?: string | null;
+  /** @nullable */
+  holder?: string | null;
+  /** @nullable */
+  attuatore?: string | null;
+  /** @nullable */
+  importoFinanziato?: string | null;
+  /** @nullable */
+  status?: string | null;
+  /** @nullable */
+  startDate?: string | null;
+  /** @nullable */
+  endDate?: string | null;
+  /** @nullable */
+  publishedAt?: string | null;
+  attachments: PnrrAttachment[];
   documentsCount: number;
   /** @nullable */
   lastPublication?: string | null;

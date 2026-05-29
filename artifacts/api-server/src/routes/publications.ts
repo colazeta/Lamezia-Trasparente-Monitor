@@ -2,6 +2,7 @@ import { Router, type IRouter } from "express";
 import {
   db,
   publicationsTable,
+  attuazionePnrrProjectsTable,
   feedStatusTable,
   sessionReportsTable,
   sessionInterventionsTable,
@@ -288,56 +289,80 @@ router.post(
   },
 );
 
+function normalizeCup(value: string): string {
+  return value.toUpperCase().replace(/\s+/g, "");
+}
+
 router.get("/pnrr/projects", async (_req, res) => {
-  const rows = await db
-    .select()
-    .from(publicationsTable)
-    .where(eq(publicationsTable.isPnrr, true))
-    .orderBy(desc(publicationsTable.pubStart), desc(publicationsTable.id));
+  const [registry, alboRows] = await Promise.all([
+    db
+      .select()
+      .from(attuazionePnrrProjectsTable)
+      .orderBy(
+        desc(attuazionePnrrProjectsTable.publishedAt),
+        desc(attuazionePnrrProjectsTable.id),
+      ),
+    db
+      .select()
+      .from(publicationsTable)
+      .where(eq(publicationsTable.isPnrr, true))
+      .orderBy(desc(publicationsTable.pubStart), desc(publicationsTable.id)),
+  ]);
 
-  const projects = new Map<
-    string,
-    {
-      key: string;
-      cup: string | null;
-      mission: string | null;
-      title: string;
-      documentsCount: number;
-      lastPublication: string | null;
-      documents: ReturnType<typeof mapPublication>[];
-    }
-  >();
-
-  for (const r of rows) {
-    const cup = r.cups.length ? r.cups[0] : null;
-    const key = cup ?? r.pnrrMission ?? `altro-${r.id}`;
-    let project = projects.get(key);
-    if (!project) {
-      project = {
-        key,
-        cup,
-        mission: r.pnrrMission,
-        title: r.oggetto,
-        documentsCount: 0,
-        lastPublication: null,
-        documents: [],
-      };
-      projects.set(key, project);
-    }
-    if (!project.mission && r.pnrrMission) project.mission = r.pnrrMission;
-    if (r.oggetto.length > project.title.length) project.title = r.oggetto;
-    const doc = mapPublication(r);
-    project.documents.push(doc);
-    project.documentsCount += 1;
-    if (
-      doc.pubStart &&
-      (!project.lastPublication || doc.pubStart > project.lastPublication)
-    ) {
-      project.lastPublication = doc.pubStart;
+  const docsByCup = new Map<string, Publication[]>();
+  for (const r of alboRows) {
+    for (const c of r.cups) {
+      const cup = normalizeCup(c);
+      const list = docsByCup.get(cup);
+      if (list) list.push(r);
+      else docsByCup.set(cup, [r]);
     }
   }
 
-  res.json(Array.from(projects.values()));
+  const matchedDocIds = new Set<number>();
+
+  const projects = registry.map((p) => {
+    const cup = p.cup ? normalizeCup(p.cup) : null;
+    const matched = cup ? (docsByCup.get(cup) ?? []) : [];
+    const documents = matched.map((d) => {
+      matchedDocIds.add(d.id);
+      return mapPublication(d);
+    });
+    let lastPublication: string | null = null;
+    for (const d of documents) {
+      if (d.pubStart && (!lastPublication || d.pubStart > lastPublication)) {
+        lastPublication = d.pubStart;
+      }
+    }
+    return {
+      key: p.sourceId,
+      sourceId: p.sourceId,
+      url: p.url,
+      title: p.title,
+      cup: p.cup,
+      mission: p.mission,
+      component: p.component,
+      investment: p.investment,
+      intervention: p.intervention,
+      holder: p.holder,
+      attuatore: p.attuatore,
+      importoFinanziato: p.importoFinanziato,
+      status: p.status,
+      startDate: p.startDate ? p.startDate.toISOString() : null,
+      endDate: p.endDate ? p.endDate.toISOString() : null,
+      publishedAt: p.publishedAt ? p.publishedAt.toISOString() : null,
+      attachments: p.attachments,
+      documentsCount: documents.length,
+      lastPublication,
+      documents,
+    };
+  });
+
+  const uncensored = alboRows
+    .filter((r) => !matchedDocIds.has(r.id))
+    .map(mapPublication);
+
+  res.json({ projects, uncensored });
 });
 
 export default router;
