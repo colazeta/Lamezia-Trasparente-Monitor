@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useListContracts, useListThemes } from "@workspace/api-client-react";
 import { Search, FileText, Filter, ArrowRight, ExternalLink } from "lucide-react";
 import { format } from "date-fns";
@@ -19,7 +19,7 @@ export function Contracts() {
 
   const { data: themes, isLoading: themesLoading } = useListThemes();
   
-  useState(() => {
+  useEffect(() => {
     const handler = setTimeout(() => {
       setDebouncedSearch(search);
     }, 500);

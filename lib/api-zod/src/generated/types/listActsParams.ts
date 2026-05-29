@@ -9,4 +9,12 @@
 export type ListActsParams = {
 search?: string;
 type?: string;
+/**
+ * Filter acts published on or after this date (YYYY-MM-DD)
+ */
+from?: Date;
+/**
+ * Filter acts published on or before this date (YYYY-MM-DD)
+ */
+to?: Date;
 };

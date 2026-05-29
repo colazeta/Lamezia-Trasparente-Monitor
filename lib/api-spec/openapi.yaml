@@ -207,6 +207,20 @@ paths:
           required: false
           schema:
             type: string
+        - name: from
+          in: query
+          required: false
+          description: Filter acts published on or after this date (YYYY-MM-DD)
+          schema:
+            type: string
+            format: date
+        - name: to
+          in: query
+          required: false
+          description: Filter acts published on or before this date (YYYY-MM-DD)
+          schema:
+            type: string
+            format: date
       responses:
         "200":
           description: List of acts

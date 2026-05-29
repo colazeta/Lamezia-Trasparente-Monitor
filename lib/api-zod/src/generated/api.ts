@@ -192,7 +192,9 @@ export const ListContractsResponse = zod.array(ListContractsResponseItem)
  */
 export const ListActsQueryParams = zod.object({
   "search": zod.coerce.string().optional(),
-  "type": zod.coerce.string().optional()
+  "type": zod.coerce.string().optional(),
+  "from": zod.date().optional().describe('Filter acts published on or after this date (YYYY-MM-DD)'),
+  "to": zod.date().optional().describe('Filter acts published on or before this date (YYYY-MM-DD)')
 })
 
 export const ListActsResponseItem = zod.object({

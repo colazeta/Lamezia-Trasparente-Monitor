@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useListActs } from "@workspace/api-client-react";
 import { Search, Filter, ShieldAlert, Calendar } from "lucide-react";
 import { format } from "date-fns";
@@ -13,8 +13,10 @@ export function Albo() {
   const [search, setSearch] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
   const [type, setType] = useState<string>("all");
+  const [from, setFrom] = useState<string>("");
+  const [to, setTo] = useState<string>("");
 
-  useState(() => {
+  useEffect(() => {
     const handler = setTimeout(() => {
       setDebouncedSearch(search);
     }, 500);
@@ -23,7 +25,9 @@ export function Albo() {
 
   const { data: acts, isLoading } = useListActs({
     search: debouncedSearch || undefined,
-    type: type !== "all" ? type : undefined
+    type: type !== "all" ? type : undefined,
+    from: from || undefined,
+    to: to || undefined
   });
 
   // Extract unique types from data for the filter (if real API, this might come from a separate endpoint)
@@ -54,7 +58,7 @@ export function Albo() {
           />
         </div>
         
-        <div className="w-full md:w-64">
+        <div className="w-full md:w-56">
           <Select value={type} onValueChange={setType}>
             <SelectTrigger className="h-11 bg-background">
               <div className="flex items-center gap-2">
@@ -69,6 +73,34 @@ export function Albo() {
               ))}
             </SelectContent>
           </Select>
+        </div>
+
+        <div className="flex items-center gap-2">
+          <div className="relative">
+            <label className="sr-only" htmlFor="albo-from">Dal</label>
+            <Input
+              id="albo-from"
+              type="date"
+              aria-label="Data inizio"
+              className="h-11 bg-background w-full md:w-[150px]"
+              value={from}
+              max={to || undefined}
+              onChange={(e) => setFrom(e.target.value)}
+            />
+          </div>
+          <span className="text-muted-foreground text-sm">–</span>
+          <div className="relative">
+            <label className="sr-only" htmlFor="albo-to">Al</label>
+            <Input
+              id="albo-to"
+              type="date"
+              aria-label="Data fine"
+              className="h-11 bg-background w-full md:w-[150px]"
+              value={to}
+              min={from || undefined}
+              onChange={(e) => setTo(e.target.value)}
+            />
+          </div>
         </div>
       </div>
 

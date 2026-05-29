@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useListCategories, useListThemes } from "@workspace/api-client-react";
 import { Search, Filter, SlidersHorizontal, Layers } from "lucide-react";
 import { Input } from "@/components/ui/input";
@@ -22,7 +22,7 @@ export function Themes() {
   const { data: categories, isLoading: categoriesLoading } = useListCategories();
   
   // Debounce search
-  useState(() => {
+  useEffect(() => {
     const handler = setTimeout(() => {
       setDebouncedSearch(search);
     }, 500);
