@@ -41,6 +41,8 @@ import type {
   ShareChannelStat,
   ShareInput,
   StatsOverview,
+  SubscriptionsLinkRequest,
+  SubscriptionsLinkResponse,
   Theme,
   ThemeDetail,
   TopThemes
@@ -586,6 +588,77 @@ export const useFollowTheme = <TError = ErrorType<Error>,
         TContext
       > => {
       return useMutation(getFollowThemeMutationOptions(options));
+    }
+
+export const getRequestSubscriptionsLinkUrl = () => {
+
+
+
+
+  return `/api/subscriptions/request`
+}
+
+/**
+ * @summary Email a citizen a secure link to their subscription center
+ */
+export const requestSubscriptionsLink = async (subscriptionsLinkRequest: SubscriptionsLinkRequest, options?: RequestInit): Promise<SubscriptionsLinkResponse> => {
+
+  return customFetch<SubscriptionsLinkResponse>(getRequestSubscriptionsLinkUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      subscriptionsLinkRequest,)
+  }
+);}
+
+
+
+
+export const getRequestSubscriptionsLinkMutationOptions = <TError = ErrorType<Error>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof requestSubscriptionsLink>>, TError,{data: BodyType<SubscriptionsLinkRequest>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof requestSubscriptionsLink>>, TError,{data: BodyType<SubscriptionsLinkRequest>}, TContext> => {
+
+const mutationKey = ['requestSubscriptionsLink'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof requestSubscriptionsLink>>, {data: BodyType<SubscriptionsLinkRequest>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  requestSubscriptionsLink(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type RequestSubscriptionsLinkMutationResult = NonNullable<Awaited<ReturnType<typeof requestSubscriptionsLink>>>
+    export type RequestSubscriptionsLinkMutationBody = BodyType<SubscriptionsLinkRequest>
+    export type RequestSubscriptionsLinkMutationError = ErrorType<Error>
+
+    /**
+ * @summary Email a citizen a secure link to their subscription center
+ */
+export const useRequestSubscriptionsLink = <TError = ErrorType<Error>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof requestSubscriptionsLink>>, TError,{data: BodyType<SubscriptionsLinkRequest>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof requestSubscriptionsLink>>,
+        TError,
+        {data: BodyType<SubscriptionsLinkRequest>},
+        TContext
+      > => {
+      return useMutation(getRequestSubscriptionsLinkMutationOptions(options));
     }
 
 export const getListContractsUrl = (params?: ListContractsParams,) => {

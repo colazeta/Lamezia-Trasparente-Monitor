@@ -13,10 +13,15 @@ import {
   themeFollowersTable,
 } from "@workspace/db";
 import { and, eq, desc, ilike, sql } from "drizzle-orm";
-import { ShareThemeBody, FollowThemeBody } from "@workspace/api-zod";
+import {
+  ShareThemeBody,
+  FollowThemeBody,
+  RequestSubscriptionsLinkBody,
+} from "@workspace/api-zod";
 import {
   notifyThemeFollowers,
   sendFollowConfirmationEmail,
+  sendSubscriptionsLinkEmail,
 } from "../lib/notifications";
 import { requireIngestAuth } from "../middlewares/requireIngestAuth";
 
@@ -851,6 +856,28 @@ router.get("/subscriptions", async (req, res) => {
         subscriptions,
       }),
     );
+});
+
+router.post("/subscriptions/request", async (req, res) => {
+  const parsed = RequestSubscriptionsLinkBody.safeParse(req.body);
+
+  // A generic response is returned regardless of outcome so the endpoint
+  // never reveals whether an address has subscriptions (no enumeration).
+  const genericMessage =
+    "Se l'indirizzo ha iscrizioni attive, riceverai un'email con il link per gestirle.";
+
+  if (!parsed.success) {
+    res.status(400).json({ error: "Indirizzo email non valido" });
+    return;
+  }
+
+  const email = parsed.data.email.trim().toLowerCase();
+
+  const { token } = await getSubscriptionsByEmail(email);
+
+  void sendSubscriptionsLinkEmail({ email, token });
+
+  res.status(200).json({ message: genericMessage });
 });
 
 router.post("/subscriptions/unsubscribe", async (req, res) => {

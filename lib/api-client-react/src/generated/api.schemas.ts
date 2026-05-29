@@ -274,6 +274,14 @@ export interface FollowInput {
   email: string;
 }
 
+export interface SubscriptionsLinkRequest {
+  email: string;
+}
+
+export interface SubscriptionsLinkResponse {
+  message: string;
+}
+
 export interface StatsOverview {
   themes: number;
   contracts: number;

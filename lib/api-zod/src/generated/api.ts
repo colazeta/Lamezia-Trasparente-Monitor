@@ -196,6 +196,18 @@ export const FollowThemeResponse = zod.object({
 
 
 /**
+ * @summary Email a citizen a secure link to their subscription center
+ */
+export const RequestSubscriptionsLinkBody = zod.object({
+  "email": zod.string().email()
+})
+
+export const RequestSubscriptionsLinkResponse = zod.object({
+  "message": zod.string()
+})
+
+
+/**
  * @summary List public contracts
  */
 export const ListContractsQueryParams = zod.object({

@@ -204,6 +204,31 @@ paths:
               schema:
                 $ref: "#/components/schemas/Error"
 
+  /subscriptions/request:
+    post:
+      operationId: requestSubscriptionsLink
+      tags: [themes]
+      summary: Email a citizen a secure link to their subscription center
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SubscriptionsLinkRequest"
+      responses:
+        "200":
+          description: Request accepted (response is identical whether or not the email has subscriptions)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SubscriptionsLinkResponse"
+        "400":
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
   /contracts:
     get:
       operationId: listContracts
@@ -977,6 +1002,21 @@ components:
         email:
           type: string
           format: email
+
+    SubscriptionsLinkRequest:
+      type: object
+      required: [email]
+      properties:
+        email:
+          type: string
+          format: email
+
+    SubscriptionsLinkResponse:
+      type: object
+      required: [message]
+      properties:
+        message:
+          type: string
 
     StatsOverview:
       type: object

@@ -64,6 +64,60 @@ export async function sendFollowConfirmationEmail(params: {
 }
 
 /**
+ * Emails a citizen a secure link to their subscription center.
+ *
+ * When the address follows at least one theme, `token` is that follower's
+ * existing unsubscribe token and the email contains a link to the center.
+ * When the address follows nothing, `token` is null and the email explains
+ * that no subscriptions were found. Either way an email is sent, so the HTTP
+ * response can stay identical and avoid leaking whether an address exists.
+ */
+export async function sendSubscriptionsLinkEmail(params: {
+  email: string;
+  token: string | null;
+}): Promise<void> {
+  if (params.token) {
+    const manage = subscriptionsUrl(params.token);
+    const html = `
+      <div style="font-family: Arial, sans-serif; color: #1a1a1a; line-height: 1.6;">
+        <h2 style="margin-bottom: 8px;">Il tuo centro iscrizioni</h2>
+        <p>Hai richiesto di gestire le tue iscrizioni ai temi di Lamezia Trasparente.</p>
+        <p><a href="${manage}" style="color: #0b5fff;">Apri il centro iscrizioni</a></p>
+        <hr style="border:none;border-top:1px solid #e5e5e5;margin:24px 0;" />
+        <p style="font-size:12px;color:#666;">Se non hai richiesto tu questo messaggio, puoi ignorarlo.</p>
+      </div>`;
+    await sendEmail({
+      to: params.email,
+      subject: "Le tue iscrizioni su Lamezia Trasparente",
+      html,
+      text: `Hai richiesto di gestire le tue iscrizioni ai temi di Lamezia Trasparente.\n\nApri il centro iscrizioni: ${manage}\n\nSe non hai richiesto tu questo messaggio, puoi ignorarlo.`,
+    });
+    return;
+  }
+
+  const home = getBaseUrl();
+  const homeLine = home
+    ? `<p><a href="${home}" style="color: #0b5fff;">Scopri i temi su Lamezia Trasparente</a></p>`
+    : "";
+  const homeText = home ? `\n\nScopri i temi: ${home}` : "";
+  const html = `
+    <div style="font-family: Arial, sans-serif; color: #1a1a1a; line-height: 1.6;">
+      <h2 style="margin-bottom: 8px;">Nessuna iscrizione trovata</h2>
+      <p>Hai richiesto di gestire le tue iscrizioni, ma questo indirizzo non segue al momento nessun tema.</p>
+      <p>Puoi iscriverti ai temi che ti interessano direttamente dalle loro pagine.</p>
+      ${homeLine}
+      <hr style="border:none;border-top:1px solid #e5e5e5;margin:24px 0;" />
+      <p style="font-size:12px;color:#666;">Se non hai richiesto tu questo messaggio, puoi ignorarlo.</p>
+    </div>`;
+  await sendEmail({
+    to: params.email,
+    subject: "Le tue iscrizioni su Lamezia Trasparente",
+    html,
+    text: `Hai richiesto di gestire le tue iscrizioni, ma questo indirizzo non segue al momento nessun tema. Puoi iscriverti ai temi che ti interessano direttamente dalle loro pagine.${homeText}\n\nSe non hai richiesto tu questo messaggio, puoi ignorarlo.`,
+  });
+}
+
+/**
  * Notifies all followers of a theme that new content has been added.
  * Failures are logged and do not interrupt the caller.
  */

@@ -40,6 +40,7 @@ export function Footer() {
             <h4 className="font-bold font-serif text-foreground">Partecipa</h4>
             <ul className="space-y-2 text-sm text-muted-foreground">
               <li><a href="/segnalazioni" className="hover:text-primary transition-colors">Invia Segnalazione</a></li>
+              <li><a href="/iscrizioni" className="hover:text-primary transition-colors">Centro Iscrizioni</a></li>
               <li><a href="#" className="hover:text-primary transition-colors">Metodologia</a></li>
               <li><a href="#" className="hover:text-primary transition-colors">Chi Siamo</a></li>
               <li><a href="#" className="hover:text-primary transition-colors">Contattaci</a></li>

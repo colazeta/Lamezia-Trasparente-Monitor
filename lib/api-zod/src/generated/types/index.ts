@@ -34,6 +34,8 @@ export * from './shareChannelStat';
 export * from './shareInput';
 export * from './shareInputChannel';
 export * from './statsOverview';
+export * from './subscriptionsLinkRequest';
+export * from './subscriptionsLinkResponse';
 export * from './theme';
 export * from './themeDetail';
 export * from './themeDetailStatus';
