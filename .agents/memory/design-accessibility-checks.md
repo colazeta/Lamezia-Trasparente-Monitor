@@ -7,8 +7,22 @@ description: How the lamezia-trasparente web app guards its themed, token-driven
 
 The web app has a vitest suite (jsdom) covering the redesign's polish:
 theme toggle/persistence, every page rendering in light+dark, a color-literal
-lint, and WCAG contrast on the design tokens. Runs via the `test` validation
-gate (now `pnpm -r --if-present run test`, so web + api-server tests both run).
+lint, WCAG contrast on the design tokens, and an axe-core a11y audit. Runs via
+the `test` validation gate (now `pnpm -r --if-present run test`, so web +
+api-server tests both run).
+
+## axe-core accessibility audit
+**Rule:** `src/test/accessibility.test.tsx` runs `axe.run` against every page
+(light+dark) and fails on any `serious`/`critical` violation. The shared
+page/provider/mock harness lives in `src/test/pages-harness.tsx` (reused by
+`pages-render.test.tsx`). `color-contrast` is disabled there (covered by
+`contrast.test.ts`; unreliable in jsdom). Intentional exceptions go in the
+`ALLOWED_RULES` allowlist with a justifying comment — keep it tiny.
+**Why:** Radix `Select` triggers render `role="combobox"`, whose accessible name
+is NOT computed from inner text, so every `SelectTrigger` needs an explicit
+`aria-label` or axe flags `button-name` (critical).
+**How to apply:** Any new `SelectTrigger` (or icon-only button) must carry an
+`aria-label`, or the audit will fail.
 
 ## Contrast tiering decision
 **Rule:** A handful of token pairs intentionally meet only AA *large-text*

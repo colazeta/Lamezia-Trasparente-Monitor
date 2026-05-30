@@ -123,7 +123,7 @@ export function Albo() {
 
         <div className="w-full md:w-44">
           <Select value={category} onValueChange={setCategory}>
-            <SelectTrigger className="h-11 bg-background">
+            <SelectTrigger className="h-11 bg-background" aria-label="Filtra per sezione">
               <div className="flex items-center gap-2">
                 <Filter className="h-4 w-4 text-muted-foreground shrink-0" />
                 <span>
@@ -144,7 +144,7 @@ export function Albo() {
 
         <div className="w-full md:w-56">
           <Select value={tipologia} onValueChange={setTipologia}>
-            <SelectTrigger className="h-11 bg-background">
+            <SelectTrigger className="h-11 bg-background" aria-label="Filtra per tipologia">
               <span className="truncate">
                 {tipologia === "all" ? "Tutte le tipologie" : tipologia}
               </span>

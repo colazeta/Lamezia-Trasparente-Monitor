@@ -133,7 +133,7 @@ export function Reports() {
                           <FormLabel>Categoria</FormLabel>
                           <Select onValueChange={field.onChange} defaultValue={field.value}>
                             <FormControl>
-                              <SelectTrigger className="h-11">
+                              <SelectTrigger className="h-11" aria-label="Categoria">
                                 <SelectValue placeholder="Seleziona ambito" />
                               </SelectTrigger>
                             </FormControl>

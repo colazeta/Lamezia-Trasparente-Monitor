@@ -59,7 +59,7 @@ export function Contracts() {
         
         <div className="w-full md:w-72">
           <Select value={themeId} onValueChange={setThemeId}>
-            <SelectTrigger className="h-11 bg-background">
+            <SelectTrigger className="h-11 bg-background" aria-label="Filtra per tema">
               <div className="flex items-center gap-2 truncate">
                 <Filter className="h-4 w-4 text-muted-foreground shrink-0" />
                 <span className="truncate">
