@@ -7,3 +7,4 @@
 - [Contract↔theme association](contract-theme-association.md) — "Filtra per tema" needs contract.themeId set; populated via CIG seed + CUP map in ANAC ingestion (non-destructive on update).
 - [drizzle push truncate prompt](drizzle-push-truncate-prompt.md) — push (even --force) blocks on the truncate prompt in non-TTY; truncate the table first, then push+seed.
 - [Expo typed-routes staleness](expo-typed-routes.md) — tsc flags new expo-router routes as invalid until the dev-server regenerates types; restart expo workflow, don't "fix" the route strings.
+- [Cartographer build breakers across pages](cartographer-build-breaker.md) — a syntax error in any one lamezia-trasparente page (e.g. duplicate lucide import) 500s the whole Vite app, not just that page.

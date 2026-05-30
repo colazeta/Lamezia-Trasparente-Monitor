@@ -17,3 +17,4 @@ export * from "./officials";
 export * from "./questions";
 export * from "./organi";
 export * from "./sedute";
+export * from "./oversightOpinions";

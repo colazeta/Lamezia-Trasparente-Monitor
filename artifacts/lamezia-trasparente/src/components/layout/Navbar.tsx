@@ -1,5 +1,5 @@
 import { Link, useLocation } from "wouter";
-import { Menu, X, ShieldAlert, BarChart3, FileText, FileSearch, Megaphone, Home, Gavel, CalendarClock, Landmark, Users, Building2 } from "lucide-react";
+import { Menu, X, ShieldAlert, BarChart3, FileText, FileSearch, Megaphone, Home, Gavel, CalendarClock, Landmark, Users, Building2, ShieldCheck } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -15,6 +15,7 @@ const navItems = [
   { href: "/organi", label: "Organi", icon: Building2 },
   { href: "/amministratori", label: "Amministratori", icon: Users },
   { href: "/pnrr", label: "PNRR", icon: Landmark },
+  { href: "/pareri", label: "Pareri di Vigilanza", icon: ShieldCheck },
   { href: "/contratti", label: "Contratti", icon: FileText },
   { href: "/statistiche", label: "Statistiche", icon: BarChart3 },
   { href: "/segnalazioni", label: "Segnalazioni", icon: Megaphone },

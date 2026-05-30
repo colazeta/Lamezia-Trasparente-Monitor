@@ -762,6 +762,43 @@ export interface OfficialInput {
   votes?: OfficialInputVotesItem[];
 }
 
+export interface OversightOpinion {
+  id: number;
+  title: string;
+  /** Organo emittente (es. Collegio dei Revisori, OIV, Corte dei Conti, ANAC) */
+  issuingBody: string;
+  /** Tipologia di parere */
+  opinionType: string;
+  /** Oggetto / breve descrizione del parere */
+  subject: string;
+  /**
+     * Eventuale esito o sintesi breve
+     * @nullable
+     */
+  outcome?: string | null;
+  /** Stato di pubblicazione */
+  status: string;
+  opinionDate: string;
+}
+
+export interface OversightOpinionDocument {
+  id: number;
+  title: string;
+  type: string;
+  /** @nullable */
+  url?: string | null;
+  date: string;
+}
+
+export type OversightOpinionDetail = OversightOpinion & ({
+  /**
+     * Testo o sintesi estesa del parere
+     * @nullable
+     */
+  body?: string | null;
+  documents: OversightOpinionDocument[];
+});
+
 export type ListThemesParams = {
 categoryId?: number;
 search?: string;
@@ -871,4 +908,25 @@ export type ListOfficialsParams = {
 role?: string;
 q?: string;
 };
+
+export type ListOversightOpinionsParams = {
+/**
+ * Filter by issuing oversight body
+ */
+issuingBody?: string;
+search?: string;
+/**
+ * Filter by year of the opinion date
+ */
+year?: number;
+sort?: ListOversightOpinionsSort;
+};
+
+export type ListOversightOpinionsSort = typeof ListOversightOpinionsSort[keyof typeof ListOversightOpinionsSort];
+
+
+export const ListOversightOpinionsSort = {
+  recent: 'recent',
+  oldest: 'oldest',
+} as const;
 

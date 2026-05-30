@@ -10,6 +10,7 @@ import reportsRouter from "./reports";
 import statsRouter from "./stats";
 import storageRouter from "./storage";
 import questionsRouter from "./questions";
+import oversightRouter from "./oversight";
 
 const router: IRouter = Router();
 
@@ -24,5 +25,6 @@ router.use(reportsRouter);
 router.use(statsRouter);
 router.use(storageRouter);
 router.use(questionsRouter);
+router.use(oversightRouter);
 
 export default router;

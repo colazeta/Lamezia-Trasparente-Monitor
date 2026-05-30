@@ -1327,3 +1327,54 @@ export const GetShareStatsResponseItem = zod.object({
 export const GetShareStatsResponse = zod.array(GetShareStatsResponseItem)
 
 
+/**
+ * @summary List oversight body opinions
+ */
+export const ListOversightOpinionsQueryParams = zod.object({
+  "issuingBody": zod.coerce.string().optional().describe('Filter by issuing oversight body'),
+  "search": zod.coerce.string().optional(),
+  "year": zod.coerce.number().optional().describe('Filter by year of the opinion date'),
+  "sort": zod.enum(['recent', 'oldest']).optional()
+})
+
+export const ListOversightOpinionsResponseItem = zod.object({
+  "id": zod.number(),
+  "title": zod.string(),
+  "issuingBody": zod.string().describe('Organo emittente (es. Collegio dei Revisori, OIV, Corte dei Conti, ANAC)'),
+  "opinionType": zod.string().describe('Tipologia di parere'),
+  "subject": zod.string().describe('Oggetto \/ breve descrizione del parere'),
+  "outcome": zod.string().nullish().describe('Eventuale esito o sintesi breve'),
+  "status": zod.string().describe('Stato di pubblicazione'),
+  "opinionDate": zod.string()
+})
+export const ListOversightOpinionsResponse = zod.array(ListOversightOpinionsResponseItem)
+
+
+/**
+ * @summary Get a single oversight opinion with its documents
+ */
+export const GetOversightOpinionParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const GetOversightOpinionResponse = zod.object({
+  "id": zod.number(),
+  "title": zod.string(),
+  "issuingBody": zod.string().describe('Organo emittente (es. Collegio dei Revisori, OIV, Corte dei Conti, ANAC)'),
+  "opinionType": zod.string().describe('Tipologia di parere'),
+  "subject": zod.string().describe('Oggetto \/ breve descrizione del parere'),
+  "outcome": zod.string().nullish().describe('Eventuale esito o sintesi breve'),
+  "status": zod.string().describe('Stato di pubblicazione'),
+  "opinionDate": zod.string()
+}).and(zod.object({
+  "body": zod.string().nullish().describe('Testo o sintesi estesa del parere'),
+  "documents": zod.array(zod.object({
+  "id": zod.number(),
+  "title": zod.string(),
+  "type": zod.string(),
+  "url": zod.string().nullish(),
+  "date": zod.string()
+}))
+}))
+
+

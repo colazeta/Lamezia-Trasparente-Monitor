@@ -14,6 +14,8 @@ import {
   categoriesTable,
   themesTable,
   questionsTable,
+  oversightOpinionsTable,
+  oversightOpinionDocumentsTable,
 } from "./schema";
 
 type SeedContract = {
@@ -1086,6 +1088,182 @@ async function seedQuestionsData(): Promise<void> {
   );
 }
 
+type SeedOpinion = {
+  title: string;
+  issuingBody: string;
+  opinionType: string;
+  subject: string;
+  outcome: string | null;
+  body: string | null;
+  opinionDate: string;
+  documents: {
+    title: string;
+    type: string;
+    url: string | null;
+    date: string;
+  }[];
+};
+
+const oversightOpinions: SeedOpinion[] = [
+  {
+    title:
+      "Parere sul Bilancio di Previsione 2025-2027",
+    issuingBody: "Collegio dei Revisori dei Conti",
+    opinionType: "Parere obbligatorio",
+    subject:
+      "Verifica della coerenza, attendibilità e congruità delle previsioni di bilancio per il triennio 2025-2027.",
+    outcome: "Parere favorevole con raccomandazioni",
+    body: "Il Collegio dei Revisori, esaminato lo schema di bilancio di previsione 2025-2027 e la documentazione allegata, ha verificato la coerenza interna degli equilibri di parte corrente e in conto capitale, l'attendibilità delle previsioni di entrata e la congruità delle previsioni di spesa.\n\nIl Collegio esprime parere favorevole all'approvazione dello schema di bilancio, raccomandando un attento monitoraggio della capacità di riscossione delle entrate proprie e il contenimento della spesa corrente entro i limiti programmati.",
+    opinionDate: "2025-01-22",
+    documents: [
+      {
+        title: "Relazione del Collegio dei Revisori al Bilancio 2025-2027",
+        type: "PDF",
+        url: "https://www.comune.lamezia-terme.cz.it/trasparenza/revisori-bilancio-2025.pdf",
+        date: "2025-01-22",
+      },
+    ],
+  },
+  {
+    title: "Parere sul Rendiconto della Gestione 2024",
+    issuingBody: "Collegio dei Revisori dei Conti",
+    opinionType: "Parere obbligatorio",
+    subject:
+      "Esame del rendiconto della gestione dell'esercizio finanziario 2024 e della relazione sulla gestione.",
+    outcome: "Parere favorevole",
+    body: "Il Collegio ha verificato la corrispondenza del rendiconto alle risultanze della gestione, la regolarità delle scritture contabili e il rispetto dei vincoli di finanza pubblica. Esprime parere favorevole all'approvazione del rendiconto 2024.",
+    opinionDate: "2025-04-15",
+    documents: [
+      {
+        title: "Relazione al Rendiconto 2024",
+        type: "PDF",
+        url: "https://www.comune.lamezia-terme.cz.it/trasparenza/revisori-rendiconto-2024.pdf",
+        date: "2025-04-15",
+      },
+    ],
+  },
+  {
+    title:
+      "Validazione della Relazione sulla Performance 2024",
+    issuingBody: "OIV / Nucleo di Valutazione",
+    opinionType: "Validazione",
+    subject:
+      "Validazione della Relazione sulla Performance dell'ente per l'anno 2024 ai sensi del D.Lgs. 150/2009.",
+    outcome: "Validata",
+    body: "Il Nucleo di Valutazione, verificata la conformità della Relazione sulla Performance 2024 al Sistema di Misurazione e Valutazione vigente, ne attesta la validazione, riscontrando il complessivo raggiungimento degli obiettivi strategici e operativi assegnati.",
+    opinionDate: "2025-06-30",
+    documents: [
+      {
+        title: "Documento di validazione della Performance 2024",
+        type: "PDF",
+        url: null,
+        date: "2025-06-30",
+      },
+    ],
+  },
+  {
+    title:
+      "Verifica sugli obblighi di pubblicazione - Trasparenza 2025",
+    issuingBody: "OIV / Nucleo di Valutazione",
+    opinionType: "Attestazione",
+    subject:
+      "Attestazione sull'assolvimento degli obblighi di pubblicazione previsti dalla normativa in materia di trasparenza.",
+    outcome: "Attestazione rilasciata",
+    body: "Il Nucleo di Valutazione ha condotto la verifica a campione sulle sezioni di Amministrazione Trasparente, attestando l'assolvimento degli obblighi di pubblicazione, con indicazione di alcune sezioni da aggiornare con maggiore tempestività.",
+    opinionDate: "2025-05-31",
+    documents: [
+      {
+        title: "Griglia di rilevazione trasparenza 2025",
+        type: "PDF",
+        url: null,
+        date: "2025-05-31",
+      },
+      {
+        title: "Documento di attestazione OIV",
+        type: "PDF",
+        url: null,
+        date: "2025-05-31",
+      },
+    ],
+  },
+  {
+    title:
+      "Deliberazione della Sezione regionale di controllo sul piano di riequilibrio",
+    issuingBody: "Corte dei Conti",
+    opinionType: "Deliberazione di controllo",
+    subject:
+      "Esame dello stato di attuazione del piano di riequilibrio finanziario pluriennale dell'ente.",
+    outcome: "Prescrizioni e monitoraggio",
+    body: "La Sezione regionale di controllo della Corte dei Conti, esaminata la documentazione trasmessa dall'ente, ha rilevato l'andamento del piano di riequilibrio, formulando prescrizioni in ordine al recupero dei residui attivi e disponendo il monitoraggio semestrale degli equilibri di bilancio.",
+    opinionDate: "2025-03-10",
+    documents: [
+      {
+        title: "Deliberazione Corte dei Conti - Sezione Calabria",
+        type: "PDF",
+        url: null,
+        date: "2025-03-10",
+      },
+    ],
+  },
+  {
+    title:
+      "Atto di segnalazione ANAC in materia di affidamenti",
+    issuingBody: "ANAC",
+    opinionType: "Segnalazione",
+    subject:
+      "Osservazioni in merito alle procedure di affidamento diretto e all'utilizzo degli strumenti di acquisto telematici.",
+    outcome: "Raccomandazioni",
+    body: "L'Autorità Nazionale Anticorruzione, nell'ambito dell'attività di vigilanza, ha formulato raccomandazioni sull'adeguata motivazione degli affidamenti diretti e sul ricorso preferenziale agli strumenti di acquisto del Mercato Elettronico della Pubblica Amministrazione, invitando l'ente ad adottare misure organizzative correttive.",
+    opinionDate: "2024-11-18",
+    documents: [],
+  },
+];
+
+async function seedOversightOpinions(): Promise<void> {
+  const [{ count }] = await db
+    .select({ count: sql<number>`count(*)::int` })
+    .from(oversightOpinionsTable);
+
+  if (count > 0) {
+    console.log("Oversight opinions seed skipped: opinions already exist.");
+    return;
+  }
+
+  console.log(`Seeding ${oversightOpinions.length} oversight opinions...`);
+
+  await db.transaction(async (tx) => {
+    for (const o of oversightOpinions) {
+      const [created] = await tx
+        .insert(oversightOpinionsTable)
+        .values({
+          title: o.title,
+          issuingBody: o.issuingBody,
+          opinionType: o.opinionType,
+          subject: o.subject,
+          outcome: o.outcome,
+          body: o.body,
+          status: "pubblicato",
+          opinionDate: new Date(o.opinionDate),
+        })
+        .returning();
+
+      if (o.documents.length) {
+        await tx.insert(oversightOpinionDocumentsTable).values(
+          o.documents.map((d) => ({
+            opinionId: created.id,
+            title: d.title,
+            type: d.type,
+            url: d.url,
+            date: new Date(d.date),
+          })),
+        );
+      }
+    }
+  });
+
+  console.log("Oversight opinions seed complete.");
+}
+
 export async function seed() {
   await db.transaction(async (tx) => {
     const [{ count }] = await tx
@@ -1158,6 +1336,7 @@ export async function seed() {
   await seedOfficials();
   await seedQuestionsData();
   await runOrganiSedutaSync();
+  await seedOversightOpinions();
 }
 
 const entryPath = process.argv[1] ?? "";

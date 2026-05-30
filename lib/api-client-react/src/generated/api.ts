@@ -34,6 +34,7 @@ import type {
   ListConvocazioniParams,
   ListDelibereParams,
   ListOfficialsParams,
+  ListOversightOpinionsParams,
   ListPublicationsParams,
   ListQuestionsParams,
   ListSeduteParams,
@@ -43,6 +44,8 @@ import type {
   OfficialProfile,
   Organo,
   OrganoDetail,
+  OversightOpinion,
+  OversightOpinionDetail,
   PnrrCensus,
   Publication,
   Question,
@@ -3525,6 +3528,167 @@ export function useGetShareStats<TData = Awaited<ReturnType<typeof getShareStats
  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
 
   const queryOptions = getGetShareStatsQueryOptions(options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
+
+
+
+export const getListOversightOpinionsUrl = (params?: ListOversightOpinionsParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : value.toString())
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/oversight-opinions?${stringifiedParams}` : `/api/oversight-opinions`
+}
+
+/**
+ * @summary List oversight body opinions
+ */
+export const listOversightOpinions = async (params?: ListOversightOpinionsParams, options?: RequestInit): Promise<OversightOpinion[]> => {
+
+  return customFetch<OversightOpinion[]>(getListOversightOpinionsUrl(params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getListOversightOpinionsQueryKey = (params?: ListOversightOpinionsParams,) => {
+    return [
+    `/api/oversight-opinions`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getListOversightOpinionsQueryOptions = <TData = Awaited<ReturnType<typeof listOversightOpinions>>, TError = ErrorType<unknown>>(params?: ListOversightOpinionsParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listOversightOpinions>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListOversightOpinionsQueryKey(params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listOversightOpinions>>> = ({ signal }) => listOversightOpinions(params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listOversightOpinions>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ListOversightOpinionsQueryResult = NonNullable<Awaited<ReturnType<typeof listOversightOpinions>>>
+export type ListOversightOpinionsQueryError = ErrorType<unknown>
+
+
+/**
+ * @summary List oversight body opinions
+ */
+
+export function useListOversightOpinions<TData = Awaited<ReturnType<typeof listOversightOpinions>>, TError = ErrorType<unknown>>(
+ params?: ListOversightOpinionsParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listOversightOpinions>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getListOversightOpinionsQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
+
+
+
+export const getGetOversightOpinionUrl = (id: number,) => {
+
+
+
+
+  return `/api/oversight-opinions/${id}`
+}
+
+/**
+ * @summary Get a single oversight opinion with its documents
+ */
+export const getOversightOpinion = async (id: number, options?: RequestInit): Promise<OversightOpinionDetail> => {
+
+  return customFetch<OversightOpinionDetail>(getGetOversightOpinionUrl(id),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetOversightOpinionQueryKey = (id: number,) => {
+    return [
+    `/api/oversight-opinions/${id}`
+    ] as const;
+    }
+
+
+export const getGetOversightOpinionQueryOptions = <TData = Awaited<ReturnType<typeof getOversightOpinion>>, TError = ErrorType<Error>>(id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getOversightOpinion>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetOversightOpinionQueryKey(id);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getOversightOpinion>>> = ({ signal }) => getOversightOpinion(id, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: !!(id), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getOversightOpinion>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetOversightOpinionQueryResult = NonNullable<Awaited<ReturnType<typeof getOversightOpinion>>>
+export type GetOversightOpinionQueryError = ErrorType<Error>
+
+
+/**
+ * @summary Get a single oversight opinion with its documents
+ */
+
+export function useGetOversightOpinion<TData = Awaited<ReturnType<typeof getOversightOpinion>>, TError = ErrorType<Error>>(
+ id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getOversightOpinion>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetOversightOpinionQueryOptions(id,options)
 
   const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
 
