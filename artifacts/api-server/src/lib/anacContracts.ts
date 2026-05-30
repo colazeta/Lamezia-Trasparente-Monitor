@@ -1,10 +1,11 @@
 import {
   db,
   contractsTable,
+  themesTable,
   feedStatusTable,
   type InsertContract,
 } from "@workspace/db";
-import { eq } from "drizzle-orm";
+import { eq, isNotNull } from "drizzle-orm";
 import { logger } from "./logger";
 
 export const ANAC_SOURCE = "anac-contratti-lamezia";
@@ -250,6 +251,72 @@ function anacUrlForCig(cig: string): string {
   return `${ANAC_PORTAL_URL}?cig=${cig}`;
 }
 
+// CUP (Codice Unico di Progetto): 15 caratteri alfanumerici che identificano
+// in modo univoco un investimento pubblico. È la chiave più affidabile per
+// collegare un contratto al tema civico del progetto di cui fa parte.
+const CUP_IN_TEXT_RE = /\b([A-Z]\d{2}[A-Z][0-9A-Z]{11})\b/gi;
+
+// Estrae i CUP eventualmente citati nel testo libero di un tema (sintesi o
+// descrizione redatte dalla redazione).
+export function extractCupsFromText(text: string): string[] {
+  const out = new Set<string>();
+  for (const m of text.matchAll(CUP_IN_TEXT_RE)) {
+    out.add(m[1].toUpperCase());
+  }
+  return [...out];
+}
+
+// Costruisce la mappa CUP -> themeId usata per associare i contratti ANAC al
+// tema corretto. Le associazioni provengono da due fonti complementari:
+//  1. i CUP citati nel testo dei temi curati dalla redazione;
+//  2. i CUP dei contratti già collegati a un tema (così i nuovi contratti dello
+//     stesso progetto ereditano automaticamente il tema).
+export function buildCupThemeMap(
+  themes: { id: number; summary: string; description: string }[],
+  themedContracts: { cup: string | null; themeId: number | null }[],
+): Map<string, number> {
+  const map = new Map<string, number>();
+  for (const t of themes) {
+    for (const cup of extractCupsFromText(`${t.summary} ${t.description}`)) {
+      if (!map.has(cup)) map.set(cup, t.id);
+    }
+  }
+  for (const c of themedContracts) {
+    if (c.cup && c.themeId != null) {
+      const cup = c.cup.toUpperCase();
+      if (!map.has(cup)) map.set(cup, c.themeId);
+    }
+  }
+  return map;
+}
+
+// Restituisce il tema da associare a un contratto in base al suo CUP, oppure
+// null se non c'è una corrispondenza certa ("dove applicabile").
+export function resolveThemeId(
+  cup: string | null,
+  cupThemeMap: Map<string, number>,
+): number | null {
+  if (!cup) return null;
+  return cupThemeMap.get(cup.toUpperCase()) ?? null;
+}
+
+async function loadCupThemeMap(): Promise<Map<string, number>> {
+  const [themes, themed] = await Promise.all([
+    db
+      .select({
+        id: themesTable.id,
+        summary: themesTable.summary,
+        description: themesTable.description,
+      })
+      .from(themesTable),
+    db
+      .select({ cup: contractsTable.cup, themeId: contractsTable.themeId })
+      .from(contractsTable)
+      .where(isNotNull(contractsTable.themeId)),
+  ]);
+  return buildCupThemeMap(themes, themed);
+}
+
 type ParsedContract = InsertContract & { sourceId: string };
 
 function parseFeed(xml: string): ParsedContract[] {
@@ -326,9 +393,13 @@ export async function runAnacContractsIngestion(): Promise<{
     const xml = await fetchFeed(ANAC_FEED_URL);
     const parsed = parseFeed(xml);
 
+    // Mappa CUP -> tema, per associare ogni contratto al tema corretto.
+    const cupThemeMap = await loadCupThemeMap();
+
     const now = new Date();
     let upserted = 0;
     for (const c of parsed) {
+      const themeId = resolveThemeId(c.cup, cupThemeMap);
       const existing = await db
         .select({ id: contractsTable.id })
         .from(contractsTable)
@@ -353,13 +424,16 @@ export async function runAnacContractsIngestion(): Promise<{
             withoutMepa: c.withoutMepa,
             anacUrl: c.anacUrl,
             awardDate: c.awardDate,
+            // Aggiorna il tema solo quando c'è una corrispondenza certa, per
+            // non sovrascrivere un collegamento curato manualmente.
+            ...(themeId !== null ? { themeId } : {}),
             lastSeenAt: now,
           })
           .where(eq(contractsTable.sourceId, c.sourceId));
       } else {
         await db
           .insert(contractsTable)
-          .values({ ...c, firstSeenAt: now, lastSeenAt: now });
+          .values({ ...c, themeId, firstSeenAt: now, lastSeenAt: now });
       }
       upserted += 1;
     }

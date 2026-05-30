@@ -116,7 +116,6 @@ export function Contracts() {
   const [maxAmount, setMaxAmount] = useState("");
   const [from, setFrom] = useState("");
   const [to, setTo] = useState("");
-  const [themeId, setThemeId] = useState("all");
   const [selected, setSelected] = useState<Contract | null>(null);
 
   const { data: themes, isLoading: themesLoading } = useListThemes();

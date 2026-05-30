@@ -10,6 +10,8 @@ import {
   officialVotesTable,
   publicationsTable,
   feedStatusTable,
+  categoriesTable,
+  themesTable,
 } from "./schema";
 
 type SeedContract = {
@@ -746,6 +748,160 @@ async function seedOfficials() {
   console.log("Officials seed complete.");
 }
 
+// Categorie civiche di base. La curatela completa dei Temi è affidata alla
+// redazione (vedi area editor), ma alcuni temi di esempio servono a rendere
+// utilizzabile il filtro "per tema" della pagina Appalti.
+const seedCategories: {
+  slug: string;
+  name: string;
+  description: string;
+}[] = [
+  {
+    slug: "ambiente-rifiuti",
+    name: "Ambiente e Rifiuti",
+    description:
+      "Igiene urbana, raccolta differenziata e tutela dell'ambiente.",
+  },
+  {
+    slug: "urbanistica-lavori-pubblici",
+    name: "Urbanistica e Lavori Pubblici",
+    description:
+      "Opere pubbliche, rigenerazione urbana e sicurezza del territorio.",
+  },
+  {
+    slug: "scuola-servizi-educativi",
+    name: "Scuola e Servizi Educativi",
+    description: "Mensa, trasporto scolastico e servizi per l'istruzione.",
+  },
+];
+
+// Temi di esempio. Ogni tema può citare nel testo i CUP dei progetti
+// collegati: l'ingestione ANAC usa quei CUP per associare automaticamente i
+// contratti al tema corretto. Inoltre `cigs` collega esplicitamente alcuni
+// contratti di esempio (utile per i contratti privi di CUP).
+const seedThemes: {
+  slug: string;
+  title: string;
+  summary: string;
+  description: string;
+  categorySlug: string;
+  cigs: string[];
+}[] = [
+  {
+    slug: "riqualificazione-lungomare-marinella",
+    title: "Riqualificazione del Lungomare di Marinella",
+    summary:
+      "Il cantiere per il nuovo lungomare: pavimentazione, illuminazione e verde.",
+    description:
+      "Monitoriamo i lavori di riqualificazione del lungomare Marinella (CUP C89J21001230001), dall'aggiudicazione all'esecuzione, con i relativi contratti pubblici.",
+    categorySlug: "urbanistica-lavori-pubblici",
+    cigs: ["9A1B2C3D4E"],
+  },
+  {
+    slug: "gestione-rifiuti-urbani",
+    title: "Gestione dei rifiuti urbani",
+    summary:
+      "L'appalto pluriennale per la raccolta e gestione dei rifiuti cittadini.",
+    description:
+      "Seguiamo il servizio di igiene urbana e raccolta differenziata: costi, durata e qualità del servizio reso alla città.",
+    categorySlug: "ambiente-rifiuti",
+    cigs: ["8F7E6D5C4B"],
+  },
+  {
+    slug: "sicurezza-idrogeologica",
+    title: "Sicurezza idrogeologica del territorio",
+    summary:
+      "Interventi su torrenti e argini per prevenire il rischio alluvioni.",
+    description:
+      "Messa in sicurezza del torrente Cantagalli (CUP C84J18000000002) e altri interventi di consolidamento idrogeologico.",
+    categorySlug: "urbanistica-lavori-pubblici",
+    cigs: ["6B5A4C3D2E"],
+  },
+  {
+    slug: "mensa-trasporto-scolastico",
+    title: "Mensa e trasporto scolastico",
+    summary:
+      "I servizi per gli studenti: refezione scolastica e trasporto degli alunni.",
+    description:
+      "Monitoriamo gli appalti per la refezione scolastica e per il trasporto degli alunni delle scuole dell'obbligo.",
+    categorySlug: "scuola-servizi-educativi",
+    cigs: ["B3C4D5E6F7", "I0J1K2L3M4"],
+  },
+];
+
+async function seedThemesAndCategories(): Promise<void> {
+  const [{ count }] = await db
+    .select({ count: sql<number>`count(*)::int` })
+    .from(themesTable);
+
+  if (count > 0) {
+    console.log("Themes seed skipped: themes already exist.");
+    return;
+  }
+
+  console.log(
+    `Seeding ${seedCategories.length} categories and ${seedThemes.length} themes...`,
+  );
+
+  await db.transaction(async (tx) => {
+    const categoryIdBySlug = new Map<string, number>();
+    for (const c of seedCategories) {
+      const [row] = await tx
+        .insert(categoriesTable)
+        .values(c)
+        .onConflictDoUpdate({
+          target: categoriesTable.slug,
+          set: { name: c.name, description: c.description },
+        })
+        .returning({ id: categoriesTable.id, slug: categoriesTable.slug });
+      categoryIdBySlug.set(row.slug, row.id);
+    }
+
+    for (const t of seedThemes) {
+      const categoryId = categoryIdBySlug.get(t.categorySlug);
+      if (!categoryId) continue;
+      await tx
+        .insert(themesTable)
+        .values({
+          title: t.title,
+          slug: t.slug,
+          summary: t.summary,
+          description: t.description,
+          categoryId,
+        })
+        .onConflictDoNothing({ target: themesTable.slug });
+    }
+  });
+}
+
+// Collega i contratti ai temi: per ogni tema, i contratti con un CIG elencato
+// ricevono il themeId del tema (solo se non già impostato manualmente).
+async function linkContractsToThemes(): Promise<void> {
+  const themes = await db
+    .select({ id: themesTable.id, slug: themesTable.slug })
+    .from(themesTable);
+  const themeIdBySlug = new Map(themes.map((t) => [t.slug, t.id]));
+
+  let linked = 0;
+  for (const t of seedThemes) {
+    const themeId = themeIdBySlug.get(t.slug);
+    if (!themeId) continue;
+    for (const cig of t.cigs) {
+      const updated = await db
+        .update(contractsTable)
+        .set({ themeId })
+        .where(
+          and(eq(contractsTable.cig, cig), sql`${contractsTable.themeId} is null`),
+        )
+        .returning({ id: contractsTable.id });
+      linked += updated.length;
+    }
+  }
+  if (linked > 0) {
+    console.log(`Linked ${linked} contract(s) to themes.`);
+  }
+}
+
 export async function seed() {
   await db.transaction(async (tx) => {
     const [{ count }] = await tx
@@ -813,6 +969,8 @@ export async function seed() {
     console.log("Seed complete.");
   });
 
+  await seedThemesAndCategories();
+  await linkContractsToThemes();
   await seedOfficials();
 }
 
