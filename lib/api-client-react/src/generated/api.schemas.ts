@@ -125,6 +125,18 @@ export interface Contract {
   status: string;
   awardDate: string;
   /** @nullable */
+  cig?: string | null;
+  /** @nullable */
+  cup?: string | null;
+  /** @nullable */
+  stazioneAppaltante?: string | null;
+  /** @nullable */
+  acquisitionTool?: string | null;
+  withoutTender?: boolean;
+  withoutMepa?: boolean;
+  /** @nullable */
+  anacUrl?: string | null;
+  /** @nullable */
   themeId?: number | null;
 }
 
@@ -185,6 +197,36 @@ export interface ThemePostUpdateInput {
   /** @minLength 1 */
   body?: string;
   eventDate?: string;
+}
+
+export interface NameCount {
+  name: string;
+  count: number;
+}
+
+export interface NameValue {
+  name: string;
+  value: number;
+}
+
+export interface AmountOverTime {
+  period: string;
+  amount: number;
+  count: number;
+}
+
+export interface ContractAnalytics {
+  totalCount: number;
+  totalAmount: number;
+  withoutTenderCount: number;
+  withoutTenderPct: number;
+  withoutMepaCount: number;
+  withoutMepaPct: number;
+  topBeneficiaries: NameValue[];
+  mostRecurrentBeneficiary: NameCount | null;
+  byProcedure: NameCount[];
+  byAcquisitionTool: NameCount[];
+  amountOverTime: AmountOverTime[];
 }
 
 export interface Publication {
@@ -588,6 +630,34 @@ export const ListThemesSort = {
 
 export type ListContractsParams = {
 search?: string;
+/**
+ * Filter by beneficiary / supplier name
+ */
+supplier?: string;
+procedureType?: string;
+acquisitionTool?: string;
+minAmount?: number;
+maxAmount?: number;
+/**
+ * Award date on or after (YYYY-MM-DD)
+ */
+from?: string;
+/**
+ * Award date on or before (YYYY-MM-DD)
+ */
+to?: string;
+themeId?: number;
+};
+
+export type GetContractsAnalyticsParams = {
+search?: string;
+supplier?: string;
+procedureType?: string;
+acquisitionTool?: string;
+minAmount?: number;
+maxAmount?: number;
+from?: string;
+to?: string;
 themeId?: number;
 };
 

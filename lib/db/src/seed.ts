@@ -9,63 +9,244 @@ import {
   officialDeclarationsTable,
   officialVotesTable,
   publicationsTable,
+  feedStatusTable,
 } from "./schema";
 
-const contracts: {
+type SeedContract = {
+  cig: string;
+  cup?: string;
   title: string;
   description: string;
   supplier: string;
   amount: string;
   procedureType: string;
+  acquisitionTool: string | null;
   status: string;
   awardDate: string;
-}[] = [
+};
+
+// Modalità di scelta del contraente che, ai sensi dei codici ANAC, NON
+// configurano una gara competitiva (affidamenti diretti / negoziate senza bando).
+const NON_COMPETITIVE = [
+  "Affidamento diretto",
+  "Affidamento diretto a società in house",
+  "Procedura negoziata senza previa pubblicazione",
+  "Affidamento in economia - cottimo fiduciario",
+];
+
+// Strumenti di acquisto che rientrano nel Mercato Elettronico della PA.
+const MEPA_TOOLS = [
+  "MePA - Ordine diretto",
+  "MePA - Trattativa diretta",
+  "MePA - RdO",
+];
+
+function isWithoutTender(procedureType: string): boolean {
+  return NON_COMPETITIVE.some((p) =>
+    procedureType.toLowerCase().includes(p.toLowerCase()),
+  );
+}
+
+function isWithoutMepa(acquisitionTool: string | null): boolean {
+  if (!acquisitionTool) return true;
+  return !MEPA_TOOLS.some((t) =>
+    acquisitionTool.toLowerCase().startsWith("mepa"),
+  );
+}
+
+// Link alla scheda/portale ufficiale ANAC per il singolo CIG.
+function anacUrlForCig(cig: string): string {
+  return `https://dati.anticorruzione.it/superset/dashboard/appalti/?cig=${cig}`;
+}
+
+const contracts: SeedContract[] = [
   {
+    cig: "9A1B2C3D4E",
+    cup: "C89J21001230001",
     title: "Lavori di riqualificazione lungomare Marinella",
     description:
       "Rifacimento pavimentazione, illuminazione LED e aree verdi del lungomare",
     supplier: "Edil Sud Costruzioni S.r.l.",
     amount: "1480000.00",
     procedureType: "Procedura aperta",
+    acquisitionTool: "Autonomo (fuori MePA)",
     status: "Aggiudicato",
     awardDate: "2025-02-12",
   },
   {
+    cig: "8F7E6D5C4B",
     title: "Servizio di igiene urbana e raccolta differenziata",
     description:
       "Appalto pluriennale per la raccolta e gestione dei rifiuti urbani",
     supplier: "Ecologia Calabra S.p.A.",
     amount: "7200000.00",
-    procedureType: "Gara europea",
+    procedureType: "Procedura aperta (gara europea)",
+    acquisitionTool: "Autonomo (fuori MePA)",
     status: "In esecuzione",
     awardDate: "2024-11-20",
   },
   {
+    cig: "7C8D9E0F1A",
     title: "Manutenzione del verde pubblico cittadino",
     description: "Sfalcio, potatura e manutenzione delle aree verdi comunali",
     supplier: "Green Service Lamezia S.r.l.",
     amount: "285000.00",
-    procedureType: "Procedura negoziata",
+    procedureType: "Procedura negoziata senza previa pubblicazione",
+    acquisitionTool: "MePA - RdO",
     status: "Aggiudicato",
     awardDate: "2024-10-08",
   },
   {
+    cig: "6B5A4C3D2E",
+    cup: "C84J18000000002",
     title: "Messa in sicurezza torrente Cantagalli",
     description: "Interventi di pulizia e consolidamento argini",
     supplier: "Idrogeo Appalti S.r.l.",
     amount: "3100000.00",
     procedureType: "Procedura aperta",
+    acquisitionTool: "Autonomo (fuori MePA)",
     status: "Aggiudicato",
     awardDate: "2024-12-03",
   },
   {
+    cig: "5E4D3C2B1A",
     title: "Servizio di global service immobili comunali",
     description: "Manutenzione ordinaria del patrimonio immobiliare",
     supplier: "Facility Management Sud S.r.l.",
     amount: "540000.00",
-    procedureType: "Procedura negoziata",
+    procedureType: "Procedura negoziata senza previa pubblicazione",
+    acquisitionTool: "MePA - Trattativa diretta",
     status: "In esecuzione",
     awardDate: "2025-01-22",
+  },
+  {
+    cig: "Z1234ABCD5",
+    title: "Fornitura di arredi per uffici comunali",
+    description:
+      "Acquisto di scrivanie, sedute e armadiature per i settori amministrativi",
+    supplier: "Ufficio Service Calabria S.r.l.",
+    amount: "48500.00",
+    procedureType: "Affidamento diretto",
+    acquisitionTool: "MePA - Ordine diretto",
+    status: "Concluso",
+    awardDate: "2024-09-15",
+  },
+  {
+    cig: "Z6789EFGH0",
+    title: "Servizio di manutenzione hardware e rete comunale",
+    description:
+      "Assistenza sistemistica, manutenzione server e apparati di rete",
+    supplier: "Tecno Informatica Sud S.r.l.",
+    amount: "62000.00",
+    procedureType: "Affidamento diretto",
+    acquisitionTool: "MePA - Trattativa diretta",
+    status: "In esecuzione",
+    awardDate: "2025-03-04",
+  },
+  {
+    cig: "A2B3C4D5E6",
+    cup: "C81B21003520001",
+    title: "Lavori PINQuA - riqualificazione spazi urbani sociali",
+    description:
+      "Appalto integrato per ristrutturazione e riqualificazione di spazi urbani sociali (PNRR M5C2)",
+    supplier: "Edil Sud Costruzioni S.r.l.",
+    amount: "4250000.00",
+    procedureType: "Procedura aperta",
+    acquisitionTool: "Autonomo (fuori MePA)",
+    status: "In esecuzione",
+    awardDate: "2025-04-18",
+  },
+  {
+    cig: "B3C4D5E6F7",
+    title: "Servizio di refezione scolastica",
+    description:
+      "Preparazione e distribuzione pasti per le scuole dell'infanzia e primarie",
+    supplier: "Ristorazione Mediterranea S.p.A.",
+    amount: "1980000.00",
+    procedureType: "Procedura aperta (gara europea)",
+    acquisitionTool: "Autonomo (fuori MePA)",
+    status: "In esecuzione",
+    awardDate: "2024-08-30",
+  },
+  {
+    cig: "C4D5E6F7G8",
+    title: "Fornitura di materiale di cancelleria",
+    description: "Acquisto annuale di carta, toner e materiale di consumo",
+    supplier: "Ufficio Service Calabria S.r.l.",
+    amount: "29800.00",
+    procedureType: "Affidamento diretto",
+    acquisitionTool: "MePA - Ordine diretto",
+    status: "Concluso",
+    awardDate: "2025-01-10",
+  },
+  {
+    cig: "D5E6F7G8H9",
+    cup: "C83H22000110001",
+    title: "Manutenzione straordinaria strade urbane",
+    description: "Rifacimento del manto stradale in diverse vie cittadine",
+    supplier: "Strade & Asfalti Calabria S.r.l.",
+    amount: "890000.00",
+    procedureType: "Procedura negoziata senza previa pubblicazione",
+    acquisitionTool: "Autonomo (fuori MePA)",
+    status: "Aggiudicato",
+    awardDate: "2025-02-28",
+  },
+  {
+    cig: "E6F7G8H9I0",
+    title: "Servizio di pulizia degli edifici comunali",
+    description: "Pulizia ordinaria di uffici, scuole e impianti sportivi",
+    supplier: "Facility Management Sud S.r.l.",
+    amount: "320000.00",
+    procedureType: "Procedura negoziata senza previa pubblicazione",
+    acquisitionTool: "MePA - RdO",
+    status: "In esecuzione",
+    awardDate: "2024-12-12",
+  },
+  {
+    cig: "F7G8H9I0J1",
+    title: "Fornitura di energia elettrica per utenze comunali",
+    description: "Somministrazione di energia elettrica tramite convenzione",
+    supplier: "Energia Italia S.p.A.",
+    amount: "1350000.00",
+    procedureType: "Adesione a convenzione Consip",
+    acquisitionTool: "Convenzione Consip",
+    status: "In esecuzione",
+    awardDate: "2024-07-01",
+  },
+  {
+    cig: "G8H9I0J1K2",
+    title: "Servizio di tesoreria comunale",
+    description: "Affidamento del servizio di tesoreria dell'ente",
+    supplier: "Banca di Credito Cooperativo del Reventino",
+    amount: "180000.00",
+    procedureType: "Procedura aperta",
+    acquisitionTool: "Autonomo (fuori MePA)",
+    status: "Aggiudicato",
+    awardDate: "2025-05-06",
+  },
+  {
+    cig: "H9I0J1K2L3",
+    cup: "C82C23000050004",
+    title: "Progettazione impianto sportivo polivalente",
+    description:
+      "Servizi di ingegneria e architettura per nuovo impianto sportivo",
+    supplier: "Studio Tecnico Associato Progetti Sud",
+    amount: "145000.00",
+    procedureType: "Affidamento diretto",
+    acquisitionTool: "MePA - Trattativa diretta",
+    status: "Aggiudicato",
+    awardDate: "2025-03-21",
+  },
+  {
+    cig: "I0J1K2L3M4",
+    title: "Servizio di trasporto scolastico",
+    description: "Trasporto degli alunni delle scuole dell'obbligo",
+    supplier: "Autolinee Lametine S.r.l.",
+    amount: "760000.00",
+    procedureType: "Procedura negoziata senza previa pubblicazione",
+    acquisitionTool: "Autonomo (fuori MePA)",
+    status: "In esecuzione",
+    awardDate: "2024-09-02",
   },
 ];
 
@@ -578,18 +759,44 @@ export async function seed() {
 
     console.log("Seeding database with Lamezia Terme sample data...");
 
+    const now = new Date();
     await tx.insert(contractsTable).values(
       contracts.map((c) => ({
+        sourceId: `seed-${c.cig}`,
         title: c.title,
         description: c.description,
         supplier: c.supplier,
         amount: c.amount,
         procedureType: c.procedureType,
         status: c.status,
+        cig: c.cig,
+        cup: c.cup ?? null,
+        stazioneAppaltante: "Comune di Lamezia Terme",
+        acquisitionTool: c.acquisitionTool,
+        withoutTender: isWithoutTender(c.procedureType),
+        withoutMepa: isWithoutMepa(c.acquisitionTool),
+        anacUrl: anacUrlForCig(c.cig),
         awardDate: new Date(c.awardDate),
         themeId: null,
+        firstSeenAt: now,
+        lastSeenAt: now,
       })),
     );
+
+    await tx
+      .insert(feedStatusTable)
+      .values({
+        source: "anac-contratti-lamezia",
+        label: "Contratti pubblici ANAC – Comune di Lamezia Terme",
+        url: "https://dati.anticorruzione.it/superset/dashboard/appalti/",
+        status: "ok",
+        error: null,
+        itemsTotal: contracts.length,
+        itemsNew: contracts.length,
+        lastCheckedAt: now,
+        lastUpdatedAt: now,
+      })
+      .onConflictDoNothing({ target: feedStatusTable.source });
 
     await tx.insert(reportsTable).values(
       reports.map((r) => ({

@@ -106,6 +106,13 @@ export const GetThemeResponse = zod.object({
   "procedureType": zod.string(),
   "status": zod.string(),
   "awardDate": zod.string(),
+  "cig": zod.string().nullish(),
+  "cup": zod.string().nullish(),
+  "stazioneAppaltante": zod.string().nullish(),
+  "acquisitionTool": zod.string().nullish(),
+  "withoutTender": zod.boolean().optional(),
+  "withoutMepa": zod.boolean().optional(),
+  "anacUrl": zod.string().nullish(),
   "themeId": zod.number().nullish()
 })),
   "acts": zod.array(zod.object({
@@ -346,10 +353,17 @@ export const GetStorageObjectParams = zod.object({
 
 
 /**
- * @summary List public contracts
+ * @summary List public contracts (ANAC)
  */
 export const ListContractsQueryParams = zod.object({
   "search": zod.coerce.string().optional(),
+  "supplier": zod.coerce.string().optional().describe('Filter by beneficiary \/ supplier name'),
+  "procedureType": zod.coerce.string().optional(),
+  "acquisitionTool": zod.coerce.string().optional(),
+  "minAmount": zod.coerce.number().optional(),
+  "maxAmount": zod.coerce.number().optional(),
+  "from": zod.date().optional().describe('Award date on or after (YYYY-MM-DD)'),
+  "to": zod.date().optional().describe('Award date on or before (YYYY-MM-DD)'),
   "themeId": zod.coerce.number().optional()
 })
 
@@ -362,9 +376,105 @@ export const ListContractsResponseItem = zod.object({
   "procedureType": zod.string(),
   "status": zod.string(),
   "awardDate": zod.string(),
+  "cig": zod.string().nullish(),
+  "cup": zod.string().nullish(),
+  "stazioneAppaltante": zod.string().nullish(),
+  "acquisitionTool": zod.string().nullish(),
+  "withoutTender": zod.boolean().optional(),
+  "withoutMepa": zod.boolean().optional(),
+  "anacUrl": zod.string().nullish(),
   "themeId": zod.number().nullish()
 })
 export const ListContractsResponse = zod.array(ListContractsResponseItem)
+
+
+/**
+ * @summary Status and last-updated info for the ANAC contracts feed
+ */
+export const GetContractsFeedStatusResponse = zod.object({
+  "source": zod.string(),
+  "label": zod.string().nullish(),
+  "url": zod.string().nullish(),
+  "status": zod.string(),
+  "error": zod.string().nullish(),
+  "itemsTotal": zod.number(),
+  "itemsNew": zod.number(),
+  "lastCheckedAt": zod.string().nullish(),
+  "lastUpdatedAt": zod.string().nullish()
+})
+
+
+/**
+ * @summary Filter-reactive analytics over public contracts
+ */
+export const GetContractsAnalyticsQueryParams = zod.object({
+  "search": zod.coerce.string().optional(),
+  "supplier": zod.coerce.string().optional(),
+  "procedureType": zod.coerce.string().optional(),
+  "acquisitionTool": zod.coerce.string().optional(),
+  "minAmount": zod.coerce.number().optional(),
+  "maxAmount": zod.coerce.number().optional(),
+  "from": zod.date().optional(),
+  "to": zod.date().optional(),
+  "themeId": zod.coerce.number().optional()
+})
+
+export const GetContractsAnalyticsResponse = zod.object({
+  "totalCount": zod.number(),
+  "totalAmount": zod.number(),
+  "withoutTenderCount": zod.number(),
+  "withoutTenderPct": zod.number(),
+  "withoutMepaCount": zod.number(),
+  "withoutMepaPct": zod.number(),
+  "topBeneficiaries": zod.array(zod.object({
+  "name": zod.string(),
+  "value": zod.number()
+})),
+  "mostRecurrentBeneficiary": zod.union([zod.object({
+  "name": zod.string(),
+  "count": zod.number()
+}),zod.null()]),
+  "byProcedure": zod.array(zod.object({
+  "name": zod.string(),
+  "count": zod.number()
+})),
+  "byAcquisitionTool": zod.array(zod.object({
+  "name": zod.string(),
+  "count": zod.number()
+})),
+  "amountOverTime": zod.array(zod.object({
+  "period": zod.string(),
+  "amount": zod.number(),
+  "count": zod.number()
+}))
+})
+
+
+/**
+ * @summary Get a single contract by id
+ */
+export const GetContractParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const GetContractResponse = zod.object({
+  "id": zod.number(),
+  "title": zod.string(),
+  "description": zod.string(),
+  "supplier": zod.string(),
+  "amount": zod.number(),
+  "procedureType": zod.string(),
+  "status": zod.string(),
+  "awardDate": zod.string(),
+  "cig": zod.string().nullish(),
+  "cup": zod.string().nullish(),
+  "stazioneAppaltante": zod.string().nullish(),
+  "acquisitionTool": zod.string().nullish(),
+  "withoutTender": zod.boolean().optional(),
+  "withoutMepa": zod.boolean().optional(),
+  "anacUrl": zod.string().nullish(),
+  "themeId": zod.number().nullish()
+})
 
 
 /**

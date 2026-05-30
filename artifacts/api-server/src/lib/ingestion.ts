@@ -7,6 +7,7 @@ import {
 import { sql, inArray } from "drizzle-orm";
 import { logger } from "./logger";
 import { runAttuazioneIngestion } from "./attuazionePnrr";
+import { runAnacContractsIngestion } from "./anacContracts";
 
 export const ALBO_SOURCE = "albo-lamezia";
 export const ALBO_LABEL = "Albo Pretorio – Amministrazione Trasparente";
@@ -211,8 +212,10 @@ const INGESTION_INTERVAL_MS = 3 * 60 * 60 * 1000;
 export function startIngestionScheduler(): void {
   void runIngestion().catch(() => {});
   void runAttuazioneIngestion().catch(() => {});
+  void runAnacContractsIngestion().catch(() => {});
   setInterval(() => {
     void runIngestion().catch(() => {});
     void runAttuazioneIngestion().catch(() => {});
+    void runAnacContractsIngestion().catch(() => {});
   }, INGESTION_INTERVAL_MS).unref();
 }

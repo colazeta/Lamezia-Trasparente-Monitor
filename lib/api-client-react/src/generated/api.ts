@@ -23,10 +23,12 @@ import type {
   ActivityItem,
   Category,
   Contract,
+  ContractAnalytics,
   DeliberaVotes,
   Error,
   FeedStatus,
   FollowInput,
+  GetContractsAnalyticsParams,
   HealthStatus,
   ListContractsParams,
   ListConvocazioniParams,
@@ -1217,7 +1219,7 @@ export const getListContractsUrl = (params?: ListContractsParams,) => {
 }
 
 /**
- * @summary List public contracts
+ * @summary List public contracts (ANAC)
  */
 export const listContracts = async (params?: ListContractsParams, options?: RequestInit): Promise<Contract[]> => {
 
@@ -1264,7 +1266,7 @@ export type ListContractsQueryError = ErrorType<unknown>
 
 
 /**
- * @summary List public contracts
+ * @summary List public contracts (ANAC)
  */
 
 export function useListContracts<TData = Awaited<ReturnType<typeof listContracts>>, TError = ErrorType<unknown>>(
@@ -1273,6 +1275,244 @@ export function useListContracts<TData = Awaited<ReturnType<typeof listContracts
  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
 
   const queryOptions = getListContractsQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
+
+
+
+export const getGetContractsFeedStatusUrl = () => {
+
+
+
+
+  return `/api/contracts/feed-status`
+}
+
+/**
+ * @summary Status and last-updated info for the ANAC contracts feed
+ */
+export const getContractsFeedStatus = async ( options?: RequestInit): Promise<FeedStatus> => {
+
+  return customFetch<FeedStatus>(getGetContractsFeedStatusUrl(),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetContractsFeedStatusQueryKey = () => {
+    return [
+    `/api/contracts/feed-status`
+    ] as const;
+    }
+
+
+export const getGetContractsFeedStatusQueryOptions = <TData = Awaited<ReturnType<typeof getContractsFeedStatus>>, TError = ErrorType<unknown>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getContractsFeedStatus>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetContractsFeedStatusQueryKey();
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getContractsFeedStatus>>> = ({ signal }) => getContractsFeedStatus({ signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getContractsFeedStatus>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetContractsFeedStatusQueryResult = NonNullable<Awaited<ReturnType<typeof getContractsFeedStatus>>>
+export type GetContractsFeedStatusQueryError = ErrorType<unknown>
+
+
+/**
+ * @summary Status and last-updated info for the ANAC contracts feed
+ */
+
+export function useGetContractsFeedStatus<TData = Awaited<ReturnType<typeof getContractsFeedStatus>>, TError = ErrorType<unknown>>(
+  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getContractsFeedStatus>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetContractsFeedStatusQueryOptions(options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
+
+
+
+export const getGetContractsAnalyticsUrl = (params?: GetContractsAnalyticsParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : value.toString())
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/contracts/analytics?${stringifiedParams}` : `/api/contracts/analytics`
+}
+
+/**
+ * @summary Filter-reactive analytics over public contracts
+ */
+export const getContractsAnalytics = async (params?: GetContractsAnalyticsParams, options?: RequestInit): Promise<ContractAnalytics> => {
+
+  return customFetch<ContractAnalytics>(getGetContractsAnalyticsUrl(params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetContractsAnalyticsQueryKey = (params?: GetContractsAnalyticsParams,) => {
+    return [
+    `/api/contracts/analytics`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getGetContractsAnalyticsQueryOptions = <TData = Awaited<ReturnType<typeof getContractsAnalytics>>, TError = ErrorType<unknown>>(params?: GetContractsAnalyticsParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getContractsAnalytics>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetContractsAnalyticsQueryKey(params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getContractsAnalytics>>> = ({ signal }) => getContractsAnalytics(params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getContractsAnalytics>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetContractsAnalyticsQueryResult = NonNullable<Awaited<ReturnType<typeof getContractsAnalytics>>>
+export type GetContractsAnalyticsQueryError = ErrorType<unknown>
+
+
+/**
+ * @summary Filter-reactive analytics over public contracts
+ */
+
+export function useGetContractsAnalytics<TData = Awaited<ReturnType<typeof getContractsAnalytics>>, TError = ErrorType<unknown>>(
+ params?: GetContractsAnalyticsParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getContractsAnalytics>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetContractsAnalyticsQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
+
+
+
+export const getGetContractUrl = (id: number,) => {
+
+
+
+
+  return `/api/contracts/${id}`
+}
+
+/**
+ * @summary Get a single contract by id
+ */
+export const getContract = async (id: number, options?: RequestInit): Promise<Contract> => {
+
+  return customFetch<Contract>(getGetContractUrl(id),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetContractQueryKey = (id: number,) => {
+    return [
+    `/api/contracts/${id}`
+    ] as const;
+    }
+
+
+export const getGetContractQueryOptions = <TData = Awaited<ReturnType<typeof getContract>>, TError = ErrorType<void>>(id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getContract>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetContractQueryKey(id);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getContract>>> = ({ signal }) => getContract(id, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: !!(id), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getContract>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetContractQueryResult = NonNullable<Awaited<ReturnType<typeof getContract>>>
+export type GetContractQueryError = ErrorType<void>
+
+
+/**
+ * @summary Get a single contract by id
+ */
+
+export function useGetContract<TData = Awaited<ReturnType<typeof getContract>>, TError = ErrorType<void>>(
+ id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getContract>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetContractQueryOptions(id,options)
 
   const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
 

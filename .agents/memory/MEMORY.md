@@ -1,3 +1,5 @@
 - [api-client-react stale dist](api-client-react-dist.md) — `@workspace/api-client-react` types resolve via stale `dist/*.d.ts`; rebuild after backend schema/codegen changes.
 - [Object storage template TS quirk](object-storage-template.md) — the object-storage skill's objectStorage.ts fails strict TS on `response.json()` (unknown); cast the result.
 - [Design accessibility / theme checks](design-accessibility-checks.md) — lamezia-trasparente vitest suite: theme toggle, page render light/dark, color-literal lint, WCAG contrast tiers (body >=4.5, accent surfaces >=3).
+- [Lamezia recharts gotchas](lamezia-recharts.md) — chart CSS vars are HSL triplets (use `hsl(var(--chart-N))`); Pie needs `isAnimationActive={false}`; web app tsc is pre-broken on recharts/React types.
+- [ANAC L.190 ingestion](anac-l190-ingestion.md) — Tinn L.190 feed mixes non-contract albo acts; only items with a CIG are genuine contracts.

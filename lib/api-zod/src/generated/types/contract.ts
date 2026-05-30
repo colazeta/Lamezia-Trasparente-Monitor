@@ -16,5 +16,17 @@ export interface Contract {
   status: string;
   awardDate: string;
   /** @nullable */
+  cig?: string | null;
+  /** @nullable */
+  cup?: string | null;
+  /** @nullable */
+  stazioneAppaltante?: string | null;
+  /** @nullable */
+  acquisitionTool?: string | null;
+  withoutTender?: boolean;
+  withoutMepa?: boolean;
+  /** @nullable */
+  anacUrl?: string | null;
+  /** @nullable */
   themeId?: number | null;
 }

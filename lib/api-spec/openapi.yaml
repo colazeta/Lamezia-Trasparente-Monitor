@@ -474,13 +474,53 @@ paths:
     get:
       operationId: listContracts
       tags: [contracts]
-      summary: List public contracts
+      summary: List public contracts (ANAC)
       parameters:
         - name: search
           in: query
           required: false
           schema:
             type: string
+        - name: supplier
+          in: query
+          required: false
+          description: Filter by beneficiary / supplier name
+          schema:
+            type: string
+        - name: procedureType
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: acquisitionTool
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: minAmount
+          in: query
+          required: false
+          schema:
+            type: number
+        - name: maxAmount
+          in: query
+          required: false
+          schema:
+            type: number
+        - name: from
+          in: query
+          required: false
+          description: Award date on or after (YYYY-MM-DD)
+          schema:
+            type: string
+            format: date
+        - name: to
+          in: query
+          required: false
+          description: Award date on or before (YYYY-MM-DD)
+          schema:
+            type: string
+            format: date
         - name: themeId
           in: query
           required: false
@@ -495,6 +535,101 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/Contract"
+
+  /contracts/feed-status:
+    get:
+      operationId: getContractsFeedStatus
+      tags: [contracts]
+      summary: Status and last-updated info for the ANAC contracts feed
+      responses:
+        "200":
+          description: Feed status
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FeedStatus"
+
+  /contracts/analytics:
+    get:
+      operationId: getContractsAnalytics
+      tags: [contracts]
+      summary: Filter-reactive analytics over public contracts
+      parameters:
+        - name: search
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: supplier
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: procedureType
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: acquisitionTool
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: minAmount
+          in: query
+          required: false
+          schema:
+            type: number
+        - name: maxAmount
+          in: query
+          required: false
+          schema:
+            type: number
+        - name: from
+          in: query
+          required: false
+          schema:
+            type: string
+            format: date
+        - name: to
+          in: query
+          required: false
+          schema:
+            type: string
+            format: date
+        - name: themeId
+          in: query
+          required: false
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Aggregated analytics
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ContractAnalytics"
+
+  /contracts/{id}:
+    get:
+      operationId: getContract
+      tags: [contracts]
+      summary: Get a single contract by id
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Contract detail
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Contract"
+        "404":
+          description: Not found
 
   /publications:
     get:
@@ -684,153 +819,6 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/PnrrCensus"
-
-  /officials:
-    get:
-      operationId: listOfficials
-      tags: [officials]
-      summary: List public officials and staff
-      parameters:
-        - name: role
-          in: query
-          required: false
-          description: sindaco | assessore | consigliere | dirigente | dipendente
-          schema:
-            type: string
-        - name: q
-          in: query
-          required: false
-          schema:
-            type: string
-      responses:
-        "200":
-          description: List of officials
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/Official"
-    post:
-      operationId: createOfficial
-      tags: [officials]
-      summary: Create a public official with optional profile data
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/OfficialInput"
-      responses:
-        "201":
-          description: Created official profile
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/OfficialProfile"
-        "400":
-          description: Invalid input
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-        "401":
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-
-  /officials/{id}:
-    get:
-      operationId: getOfficial
-      tags: [officials]
-      summary: Get a single official's full transparency profile
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: integer
-      responses:
-        "200":
-          description: Official profile
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/OfficialProfile"
-        "404":
-          description: Not found
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-    post:
-      operationId: updateOfficial
-      tags: [officials]
-      summary: Update an official and replace their profile data
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: integer
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/OfficialInput"
-      responses:
-        "200":
-          description: Updated official profile
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/OfficialProfile"
-        "400":
-          description: Invalid input
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-        "401":
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-        "404":
-          description: Not found
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-
-  /delibere/{id}/votes:
-    get:
-      operationId: getDeliberaVotes
-      tags: [officials]
-      summary: Voting breakdown for a single delibera
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: integer
-      responses:
-        "200":
-          description: Delibera voting breakdown
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/DeliberaVotes"
-        "404":
-          description: Not found
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
 
   /officials:
     get:
@@ -1366,8 +1354,99 @@ components:
           type: string
         awardDate:
           type: string
+        cig:
+          type: ["string", "null"]
+        cup:
+          type: ["string", "null"]
+        stazioneAppaltante:
+          type: ["string", "null"]
+        acquisitionTool:
+          type: ["string", "null"]
+        withoutTender:
+          type: boolean
+        withoutMepa:
+          type: boolean
+        anacUrl:
+          type: ["string", "null"]
         themeId:
           type: ["integer", "null"]
+
+    NameCount:
+      type: object
+      required: [name, count]
+      properties:
+        name:
+          type: string
+        count:
+          type: integer
+
+    NameValue:
+      type: object
+      required: [name, value]
+      properties:
+        name:
+          type: string
+        value:
+          type: number
+
+    AmountOverTime:
+      type: object
+      required: [period, amount, count]
+      properties:
+        period:
+          type: string
+        amount:
+          type: number
+        count:
+          type: integer
+
+    ContractAnalytics:
+      type: object
+      required:
+        - totalCount
+        - totalAmount
+        - withoutTenderCount
+        - withoutTenderPct
+        - withoutMepaCount
+        - withoutMepaPct
+        - topBeneficiaries
+        - mostRecurrentBeneficiary
+        - byProcedure
+        - byAcquisitionTool
+        - amountOverTime
+      properties:
+        totalCount:
+          type: integer
+        totalAmount:
+          type: number
+        withoutTenderCount:
+          type: integer
+        withoutTenderPct:
+          type: number
+        withoutMepaCount:
+          type: integer
+        withoutMepaPct:
+          type: number
+        topBeneficiaries:
+          type: array
+          items:
+            $ref: "#/components/schemas/NameValue"
+        mostRecurrentBeneficiary:
+          oneOf:
+            - $ref: "#/components/schemas/NameCount"
+            - type: "null"
+        byProcedure:
+          type: array
+          items:
+            $ref: "#/components/schemas/NameCount"
+        byAcquisitionTool:
+          type: array
+          items:
+            $ref: "#/components/schemas/NameCount"
+        amountOverTime:
+          type: array
+          items:
+            $ref: "#/components/schemas/AmountOverTime"
 
     Act:
       type: object

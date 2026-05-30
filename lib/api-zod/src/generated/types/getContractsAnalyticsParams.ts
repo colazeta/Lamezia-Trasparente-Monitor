@@ -6,23 +6,14 @@
  * OpenAPI spec version: 0.1.0
  */
 
-export type ListContractsParams = {
+export type GetContractsAnalyticsParams = {
 search?: string;
-/**
- * Filter by beneficiary / supplier name
- */
 supplier?: string;
 procedureType?: string;
 acquisitionTool?: string;
 minAmount?: number;
 maxAmount?: number;
-/**
- * Award date on or after (YYYY-MM-DD)
- */
 from?: Date;
-/**
- * Award date on or before (YYYY-MM-DD)
- */
 to?: Date;
 themeId?: number;
 };
