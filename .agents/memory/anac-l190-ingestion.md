@@ -15,3 +15,10 @@ description: How the Comune di Lamezia Terme contracts feed is sourced and filte
   **How to apply:** to wipe only ingested rows without touching seed, delete `WHERE source_id LIKE 'anac-%'`.
 
 - Analytics beneficiary rankings skip rows whose supplier is empty/"Non specificato" so unstructured items don't dominate "top/most-recurrent beneficiario".
+
+- **Live aggiudicatario/importo enrichment is done from the act `<oggetto>` free text, NOT from ANAC.** ANAC's `dati.anticorruzione.it` per-CIG endpoints (OCDS/smartCIG) are WAF-blocked ("Request Rejected") or 404 from the server; the comune's old L.190 dataset XML URLs return 410 Gone. `extractBeneficiario(oggetto)` (in anacContracts.ts) prefers a legal-form anchor (Srl/Spa/Soc.Coop./Ets…) walking tokens backward, falls back to trigger phrases ("in favore di…", "operatore economico…"); conservative by design — ~6/24 live items name a supplier, the rest genuinely don't.
+  **Why:** keeps precision high so analytics aren't polluted; recall is limited by what the act text actually states.
+
+- The contracts upsert must include `supplier` in BOTH insert and the UPDATE set, or already-ingested rows never get enriched on later runs (idempotency).
+
+- **Dev DB contracts table can be badly drifted** (missing source_id + all ANAC columns); `drizzle-kit push` then wants to *truncate* to add the source_id unique constraint and aborts in non-TTY. Fix additively via `ALTER TABLE ... ADD COLUMN IF NOT EXISTS` + backfill source_id + add the unique constraint manually — never truncate the seeded rows.

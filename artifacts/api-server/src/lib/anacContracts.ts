@@ -87,6 +87,141 @@ function extractCig(text: string): string | null {
   return m ? m[1].toUpperCase() : null;
 }
 
+// --- Estrazione del beneficiario (aggiudicatario) dal testo dell'atto ---
+// Il feed L.190 non espone un campo strutturato per l'aggiudicatario e gli
+// endpoint open data ANAC/BDNCP per singolo CIG non sono raggiungibili dal
+// server (WAF / 404). Il testo dell'atto (<oggetto>), però, nomina spesso
+// l'operatore economico affidatario. Lo estraiamo in modo conservativo,
+// privilegiando le forme societarie (Srl, Spa, Soc. Coop., …) per garantire
+// alta precisione ed evitare di inquinare le analitiche.
+const FORM_SOURCE =
+  "(s\\.?\\s?r\\.?\\s?l\\.?\\s?s?|s\\.?\\s?p\\.?\\s?a|s\\.?\\s?n\\.?\\s?c|s\\.?\\s?a\\.?\\s?s|s\\.?\\s?c\\.?\\s?s|società\\s+cooperativa(?:\\s+sociale)?|soc\\.?\\s*coop\\.?(?:\\s*soc(?:\\.|iale)?)?|cooperativa(?:\\s+sociale)?|consorzio|e\\.?\\s?t\\.?\\s?s|o\\.?\\s?n\\.?\\s?l\\.?\\s?u\\.?\\s?s|a\\.?\\s?p\\.?\\s?s)\\b\\.?";
+const FORM_RE = new RegExp(`\\b${FORM_SOURCE}`, "i");
+
+// Connettori ammessi all'interno di una ragione sociale ("X di Y", "A & B").
+const NAME_CONNECTORS = new Set([
+  "di",
+  "de",
+  "del",
+  "della",
+  "dei",
+  "degli",
+  "e",
+  "&",
+  "-",
+]);
+// Parole generiche da rimuovere in testa al nome estratto.
+const GENERIC_NAME_WORDS = new Set([
+  "ente",
+  "gestore",
+  "operatore",
+  "economico",
+  "spett",
+  "spettabile",
+  "ditta",
+  "impresa",
+  "alla",
+  "dalla",
+  "società",
+  "societa",
+  "al",
+  "del",
+  "della",
+]);
+
+function isNameToken(t: string): boolean {
+  // Parola che inizia con maiuscola (o acronimo) ammettendo apostrofi/&/cifre.
+  return (
+    /^[A-ZÀ-Ý0-9&][A-Za-zÀ-ÿ0-9'’&.\-]*$/.test(t) && /[A-ZÀ-Ý]/.test(t)
+  );
+}
+
+function stripConnectorEdges(tokens: string[]): string[] {
+  const out = tokens.slice();
+  while (out.length && NAME_CONNECTORS.has(out[0].toLowerCase())) out.shift();
+  while (out.length && NAME_CONNECTORS.has(out[out.length - 1].toLowerCase()))
+    out.pop();
+  return out;
+}
+
+// Strategia A (alta precisione): ragione sociale che termina con una forma
+// giuridica. Risaliamo a ritroso dai token che precedono la forma.
+function extractFromLegalForm(oggetto: string): string | null {
+  const g = new RegExp(`\\b${FORM_SOURCE}`, "gi");
+  let best: string | null = null;
+  let match: RegExpExecArray | null;
+  while ((match = g.exec(oggetto))) {
+    const formStr = match[0];
+    const pre = oggetto.slice(0, match.index).trim();
+    if (!pre) continue;
+    const preTokens = pre.split(/\s+/);
+    const name: string[] = [];
+    for (let i = preTokens.length - 1; i >= 0; i--) {
+      const t = preTokens[i];
+      if (isNameToken(t)) {
+        name.unshift(t);
+        continue;
+      }
+      if (
+        NAME_CONNECTORS.has(t.toLowerCase()) &&
+        name.length > 0 &&
+        i > 0 &&
+        isNameToken(preTokens[i - 1])
+      ) {
+        name.unshift(t);
+        continue;
+      }
+      break;
+    }
+    let tokens = stripConnectorEdges(name);
+    while (tokens.length && GENERIC_NAME_WORDS.has(tokens[0].toLowerCase()))
+      tokens.shift();
+    // Almeno un token distintivo (non generico) di lunghezza significativa.
+    const distinctive = tokens.filter(
+      (t) =>
+        !GENERIC_NAME_WORDS.has(t.toLowerCase()) &&
+        t.replace(/[.\-'’]/g, "").length >= 4,
+    );
+    if (distinctive.length >= 1) {
+      const full = clean([...tokens, formStr].join(" "));
+      if (!best || full.length > best.length) best = full;
+    }
+  }
+  return best;
+}
+
+// Strategia B: frasi introduttive esplicite seguite da un nome proprio, anche
+// senza forma giuridica (es. "in favore dell'operatore economico X").
+const TRIGGER_RE =
+  /(?:in favore (?:dell['’]operatore economico |della società |della ditta |dell['’]impresa |dell['’]associazione |del |della |dell['’]|di )|operatore economico |ente gestore )/i;
+
+function extractFromTrigger(oggetto: string): string | null {
+  const m = TRIGGER_RE.exec(oggetto);
+  if (!m) return null;
+  const rest = oggetto.slice(m.index + m[0].length);
+  const cm =
+    /^([A-ZÀ-Ý][A-Za-zÀ-ÿ0-9'’&.\- ]{2,70}?)(?=\s*(?:,|\.|;|:|CIG|CUP|P\.?\s?Iva|P\.?\s?I|periodo|per (?:l|i|la|le|gli|un|il)|a seguito|relativ|$))/.exec(
+      rest,
+    );
+  if (!cm) return null;
+  const cand = clean(cm[1]);
+  const caps = cand.split(/\s+/).filter((t) => isNameToken(t));
+  // Richiediamo almeno due token "nome proprio" oppure una forma giuridica,
+  // per non scambiare un sostantivo comune per un'azienda.
+  if (caps.length >= 2 || FORM_RE.test(cand)) return cand;
+  return null;
+}
+
+// Restituisce l'aggiudicatario individuato nel testo, oppure null.
+export function extractBeneficiario(oggetto: string): string | null {
+  if (!oggetto) return null;
+  const raw = extractFromLegalForm(oggetto) ?? extractFromTrigger(oggetto);
+  if (!raw) return null;
+  // Rimuove la punteggiatura di fine frase eventualmente agganciata alla forma.
+  const name = raw.replace(/[.,;:]+$/, "").trim();
+  return name.length >= 3 ? name : null;
+}
+
 function extractCup(text: string): string | null {
   // CUP: 15 caratteri alfanumerici.
   const m = /CUP[\s:.]*([0-9A-Za-z]{15})/.exec(text);
@@ -153,7 +288,7 @@ function parseFeed(xml: string): ParsedContract[] {
       sourceId: `anac-${progressivo}`,
       title,
       description: oggetto,
-      supplier: "Non specificato",
+      supplier: extractBeneficiario(oggetto) ?? "Non specificato",
       amount: parseImporto(oggetto) ?? "0.00",
       procedureType,
       status: tipologia || "Pubblicato",
@@ -206,6 +341,7 @@ export async function runAnacContractsIngestion(): Promise<{
           .set({
             title: c.title,
             description: c.description,
+            supplier: c.supplier,
             amount: c.amount,
             procedureType: c.procedureType,
             status: c.status,
