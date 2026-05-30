@@ -5,10 +5,11 @@ import {
   Inter_700Bold,
 } from "@expo-google-fonts/inter";
 import {
-  Merriweather_400Regular,
-  Merriweather_700Bold,
-  Merriweather_900Black,
-} from "@expo-google-fonts/merriweather";
+  SpaceGrotesk_400Regular,
+  SpaceGrotesk_500Medium,
+  SpaceGrotesk_600SemiBold,
+  SpaceGrotesk_700Bold,
+} from "@expo-google-fonts/space-grotesk";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { setBaseUrl } from "@workspace/api-client-react";
 import { useFonts } from "expo-font";
@@ -35,10 +36,28 @@ const queryClient = new QueryClient();
 function RootLayoutNav() {
   const scheme = useColorScheme();
   const palette = scheme === "dark" ? colors.dark : colors.light;
+  const stackHeader = {
+    headerShown: true,
+    headerStyle: { backgroundColor: palette.background },
+    headerTintColor: palette.primary,
+    headerTitleStyle: {
+      fontFamily: "SpaceGrotesk_700Bold",
+      color: palette.foreground,
+    },
+    headerShadowVisible: false,
+  } as const;
   return (
-    <Stack screenOptions={{ headerBackTitle: "Indietro" }}>
+    <Stack screenOptions={{ headerBackTitle: "Indietro", ...stackHeader }}>
       <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-      <Stack.Screen name="theme/[id]" options={{ headerShown: true, title: "Tema" }} />
+      <Stack.Screen name="theme/[id]" options={{ title: "Tema" }} />
+      <Stack.Screen name="albo" options={{ title: "Albo Pretorio" }} />
+      <Stack.Screen name="delibere" options={{ title: "Delibere" }} />
+      <Stack.Screen name="contratti" options={{ title: "Appalti" }} />
+      <Stack.Screen name="pnrr" options={{ title: "PNRR" }} />
+      <Stack.Screen name="convocazioni/index" options={{ title: "Convocazioni" }} />
+      <Stack.Screen name="convocazioni/[id]" options={{ title: "Seduta" }} />
+      <Stack.Screen name="amministratori/index" options={{ title: "Amministratori" }} />
+      <Stack.Screen name="amministratori/[id]" options={{ title: "Profilo" }} />
     </Stack>
   );
 }
@@ -50,9 +69,10 @@ export default function RootLayout() {
     Inter_500Medium,
     Inter_600SemiBold,
     Inter_700Bold,
-    Merriweather_400Regular,
-    Merriweather_700Bold,
-    Merriweather_900Black,
+    SpaceGrotesk_400Regular,
+    SpaceGrotesk_500Medium,
+    SpaceGrotesk_600SemiBold,
+    SpaceGrotesk_700Bold,
   });
 
   useEffect(() => {

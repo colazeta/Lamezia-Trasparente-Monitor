@@ -1,0 +1,1 @@
+- [api-client-react stale dist](api-client-react-dist.md) — `@workspace/api-client-react` types resolve via stale `dist/*.d.ts`; rebuild after backend schema/codegen changes.

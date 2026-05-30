@@ -42,6 +42,73 @@ export function categoryLabel(value: string): string {
   return REPORT_CATEGORIES.find((c) => c.value === value)?.label ?? value;
 }
 
+export const OFFICIAL_ROLES: { value: string; label: string }[] = [
+  { value: "sindaco", label: "Sindaco" },
+  { value: "assessore", label: "Assessori" },
+  { value: "consigliere", label: "Consiglieri" },
+  { value: "dirigente", label: "Dirigenti" },
+  { value: "dipendente", label: "Dipendenti" },
+];
+
+export function officialRoleLabel(role: string): string {
+  switch (role) {
+    case "sindaco":
+      return "Sindaco";
+    case "assessore":
+      return "Assessore";
+    case "consigliere":
+      return "Consigliere";
+    case "dirigente":
+      return "Dirigente";
+    case "dipendente":
+      return "Dipendente";
+    default:
+      return role;
+  }
+}
+
+export function officialStatusInfo(status: string): { label: string; intent: Intent } {
+  return status === "in_carica"
+    ? { label: "In carica", intent: "active" }
+    : { label: "Cessato", intent: "closed" };
+}
+
+export type VoteValue = "favorevole" | "contrario" | "astenuto" | "assente";
+
+export function voteInfo(vote: string): {
+  label: string;
+  intent: Intent;
+  icon: "check" | "x" | "minus" | "slash";
+} {
+  switch (vote) {
+    case "favorevole":
+      return { label: "Favorevole", intent: "active", icon: "check" };
+    case "contrario":
+      return { label: "Contrario", intent: "alert", icon: "x" };
+    case "astenuto":
+      return { label: "Astenuto", intent: "warn", icon: "minus" };
+    default:
+      return { label: "Assente", intent: "closed", icon: "slash" };
+  }
+}
+
+export const DELIBERA_TIPI: { value: string | undefined; label: string }[] = [
+  { value: undefined, label: "Tutte" },
+  { value: "giunta", label: "Giunta" },
+  { value: "consiglio", label: "Consiglio" },
+];
+
+export const CONVOCAZIONE_TIPI: { value: string | undefined; label: string }[] = [
+  { value: undefined, label: "Tutte" },
+  { value: "consiglio", label: "Consiglio" },
+  { value: "commissione", label: "Commissioni" },
+];
+
+export function formatDateOpt(iso?: string | null): string {
+  if (!iso) return "—";
+  return formatDate(iso);
+}
+
 function hexToRgba(hex: string, alpha: number): string {
   const clean = hex.replace("#", "");
   const r = parseInt(clean.substring(0, 2), 16);

@@ -3,8 +3,10 @@ import React, { useEffect } from "react";
 import {
   Platform,
   Pressable,
+  ScrollView,
   StyleSheet,
   Text,
+  TextInput,
   View,
   type ViewStyle,
 } from "react-native";
@@ -247,6 +249,114 @@ export function EmptyState({
   );
 }
 
+export function SearchBar({
+  value,
+  onChangeText,
+  placeholder,
+}: {
+  value: string;
+  onChangeText: (t: string) => void;
+  placeholder: string;
+}) {
+  const colors = useColors();
+  return (
+    <View
+      style={[
+        styles.searchBox,
+        {
+          backgroundColor: colors.card,
+          borderColor: colors.border,
+          borderRadius: colors.radius,
+        },
+      ]}
+    >
+      <Feather name="search" size={17} color={colors.mutedForeground} />
+      <TextInput
+        value={value}
+        onChangeText={onChangeText}
+        placeholder={placeholder}
+        placeholderTextColor={colors.mutedForeground}
+        style={[styles.searchInput, { color: colors.foreground }]}
+        returnKeyType="search"
+        clearButtonMode="while-editing"
+      />
+      {value.length > 0 ? (
+        <Pressable onPress={() => onChangeText("")} hitSlop={8}>
+          <Feather name="x" size={17} color={colors.mutedForeground} />
+        </Pressable>
+      ) : null}
+    </View>
+  );
+}
+
+export function Chip({
+  label,
+  active,
+  onPress,
+}: {
+  label: string;
+  active: boolean;
+  onPress: () => void;
+}) {
+  const colors = useColors();
+  return (
+    <Pressable
+      onPress={onPress}
+      style={[
+        styles.chip,
+        {
+          backgroundColor: active ? colors.primary : colors.card,
+          borderColor: active ? colors.primary : colors.border,
+          borderRadius: 999,
+        },
+      ]}
+    >
+      <Text
+        style={[
+          styles.chipText,
+          { color: active ? colors.primaryForeground : colors.foreground },
+        ]}
+      >
+        {label}
+      </Text>
+    </Pressable>
+  );
+}
+
+export function ChipRow<T>({
+  options,
+  selected,
+  getLabel,
+  getValue,
+  onSelect,
+}: {
+  options: T[];
+  selected: string | number | undefined;
+  getLabel: (o: T) => string;
+  getValue: (o: T) => string | number | undefined;
+  onSelect: (v: string | number | undefined) => void;
+}) {
+  return (
+    <ScrollView
+      horizontal
+      showsHorizontalScrollIndicator={false}
+      contentContainerStyle={styles.chipRow}
+    >
+      {options.map((o, i) => {
+        const v = getValue(o);
+        return (
+          <Chip
+            key={`${v ?? "all"}-${i}`}
+            label={getLabel(o)}
+            active={selected === v}
+            onPress={() => onSelect(v)}
+          />
+        );
+      })}
+    </ScrollView>
+  );
+}
+
 const styles = StyleSheet.create({
   header: {
     paddingHorizontal: 20,
@@ -255,6 +365,27 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "flex-end",
   },
+  searchBox: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+    paddingHorizontal: 12,
+    height: 44,
+    borderWidth: 1,
+  },
+  searchInput: {
+    flex: 1,
+    fontFamily: "Inter_400Regular",
+    fontSize: 15,
+    height: "100%",
+  },
+  chipRow: { gap: 8, paddingVertical: 2 },
+  chip: {
+    paddingHorizontal: 14,
+    paddingVertical: 8,
+    borderWidth: 1,
+  },
+  chipText: { fontFamily: "Inter_500Medium", fontSize: 13 },
   eyebrow: {
     fontFamily: "Inter_700Bold",
     fontSize: 11,
@@ -262,7 +393,7 @@ const styles = StyleSheet.create({
     marginBottom: 2,
   },
   headerTitle: {
-    fontFamily: "Merriweather_900Black",
+    fontFamily: "SpaceGrotesk_700Bold",
     fontSize: 26,
     letterSpacing: -0.5,
   },
@@ -316,7 +447,7 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   emptyTitle: {
-    fontFamily: "Merriweather_700Bold",
+    fontFamily: "SpaceGrotesk_600SemiBold",
     fontSize: 17,
     textAlign: "center",
   },

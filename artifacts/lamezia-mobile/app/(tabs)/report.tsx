@@ -443,7 +443,7 @@ const styles = StyleSheet.create({
     paddingBottom: Platform.OS === "web" ? 110 : 40,
   },
   boardTop: { flexDirection: "row", flexWrap: "wrap", gap: 6 },
-  boardTitle: { fontFamily: "Merriweather_700Bold", fontSize: 16, lineHeight: 22 },
+  boardTitle: { fontFamily: "SpaceGrotesk_600SemiBold", fontSize: 16, lineHeight: 22 },
   boardDesc: { fontFamily: "Inter_400Regular", fontSize: 13.5, lineHeight: 19 },
   boardFooter: {
     flexDirection: "row",

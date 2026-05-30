@@ -19,6 +19,12 @@ type TabDef = {
 const TAB_DEFS: TabDef[] = [
   { name: "index", title: "Home", sf: { default: "house", selected: "house.fill" }, feather: "home" },
   {
+    name: "monitor",
+    title: "Atti",
+    sf: { default: "building.columns", selected: "building.columns.fill" },
+    feather: "archive",
+  },
+  {
     name: "themes",
     title: "Temi",
     sf: { default: "doc.text.magnifyingglass", selected: "doc.text.magnifyingglass" },

@@ -227,7 +227,7 @@ const styles = StyleSheet.create({
     opacity: 0.8,
   },
   heroValue: {
-    fontFamily: "Merriweather_900Black",
+    fontFamily: "SpaceGrotesk_700Bold",
     fontSize: 34,
     marginTop: 6,
     letterSpacing: -0.5,
@@ -246,7 +246,7 @@ const styles = StyleSheet.create({
     padding: 5,
   },
   statValue: {
-    fontFamily: "Merriweather_900Black",
+    fontFamily: "SpaceGrotesk_700Bold",
     fontSize: 24,
     marginTop: 8,
   },
@@ -263,7 +263,7 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   sectionTitleText: {
-    fontFamily: "Merriweather_700Bold",
+    fontFamily: "SpaceGrotesk_600SemiBold",
     fontSize: 19,
     letterSpacing: -0.3,
   },

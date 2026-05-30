@@ -112,7 +112,7 @@ export default function ThemeDetailScreen() {
     title: "Tema",
     headerStyle: { backgroundColor: colors.background },
     headerTintColor: colors.primary,
-    headerTitleStyle: { fontFamily: "Merriweather_700Bold", color: colors.foreground },
+    headerTitleStyle: { fontFamily: "SpaceGrotesk_600SemiBold", color: colors.foreground },
     headerShadowVisible: false,
   };
 
@@ -420,7 +420,7 @@ const styles = StyleSheet.create({
   },
   badgeRow: { flexDirection: "row", flexWrap: "wrap", gap: 6, marginBottom: 12 },
   title: {
-    fontFamily: "Merriweather_900Black",
+    fontFamily: "SpaceGrotesk_700Bold",
     fontSize: 26,
     lineHeight: 33,
     letterSpacing: -0.5,
@@ -434,7 +434,7 @@ const styles = StyleSheet.create({
   actions: { flexDirection: "row", gap: 10, marginTop: 18 },
   bodyText: { fontFamily: "Inter_400Regular", fontSize: 14.5, lineHeight: 22 },
   sectionTitle: {
-    fontFamily: "Merriweather_700Bold",
+    fontFamily: "SpaceGrotesk_600SemiBold",
     fontSize: 19,
     letterSpacing: -0.3,
     marginTop: 26,
@@ -442,7 +442,7 @@ const styles = StyleSheet.create({
   },
   metricGrid: { flexDirection: "row", flexWrap: "wrap", marginHorizontal: -5 },
   metricItem: { width: "50%", padding: 5 },
-  metricValue: { fontFamily: "Merriweather_900Black", fontSize: 22 },
+  metricValue: { fontFamily: "SpaceGrotesk_700Bold", fontSize: 22 },
   metricUnit: { fontFamily: "Inter_500Medium", fontSize: 13 },
   metricLabel: { fontFamily: "Inter_500Medium", fontSize: 12.5, marginTop: 4 },
   tabRow: { gap: 8, paddingVertical: 2 },
@@ -459,7 +459,7 @@ const styles = StyleSheet.create({
   docTitle: { fontFamily: "Inter_600SemiBold", fontSize: 15, lineHeight: 20 },
   docMeta: { fontFamily: "Inter_400Regular", fontSize: 12.5, marginTop: 3 },
   contractTop: { flexDirection: "row", alignItems: "center", justifyContent: "space-between" },
-  contractAmount: { fontFamily: "Merriweather_900Black", fontSize: 19 },
+  contractAmount: { fontFamily: "SpaceGrotesk_700Bold", fontSize: 19 },
   contractFooter: {
     flexDirection: "row",
     justifyContent: "space-between",
@@ -482,7 +482,7 @@ const styles = StyleSheet.create({
     gap: 4,
   },
   modalTitle: {
-    fontFamily: "Merriweather_700Bold",
+    fontFamily: "SpaceGrotesk_600SemiBold",
     fontSize: 18,
     marginBottom: 10,
   },

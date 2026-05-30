@@ -80,7 +80,7 @@ const styles = StyleSheet.create({
     marginBottom: 2,
   },
   title: {
-    fontFamily: "Merriweather_700Bold",
+    fontFamily: "SpaceGrotesk_600SemiBold",
     fontSize: 17,
     lineHeight: 23,
     letterSpacing: -0.3,
