@@ -14,6 +14,7 @@ import { Pnrr } from "./pages/Pnrr";
 import { Reports } from "./pages/Reports";
 import { Statistics } from "./pages/Statistics";
 import { Subscriptions } from "./pages/Subscriptions";
+import { AdminCronistoria } from "./pages/AdminCronistoria";
 import NotFound from "./pages/not-found";
 
 export function Router() {
@@ -34,6 +35,7 @@ export function Router() {
         <Route path="/segnalazioni" component={Reports} />
         <Route path="/statistiche" component={Statistics} />
         <Route path="/iscrizioni" component={Subscriptions} />
+        <Route path="/admin/cronistoria" component={AdminCronistoria} />
         <Route component={NotFound} />
       </Switch>
     </MainLayout>

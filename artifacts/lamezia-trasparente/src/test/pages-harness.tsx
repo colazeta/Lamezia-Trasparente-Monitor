@@ -39,6 +39,8 @@ vi.mock("@workspace/api-client-react", () => {
   // Mutation hooks return an inert mutation; every other `use*` hook returns
   // a stable loading query result. Query-key helpers return a static array.
   const QUERY_HOOKS = [
+    "useGetContractsAnalytics",
+    "useGetContractsFeedStatus",
     "useGetFeedStatus",
     "useGetOfficial",
     "useGetRecentActivity",
@@ -55,20 +57,26 @@ vi.mock("@workspace/api-client-react", () => {
     "useListPnrrProjects",
     "useListPublications",
     "useListReports",
+    "useListThemePosts",
     "useListThemes",
   ];
   const MUTATION_HOOKS = [
     "useCreateReport",
+    "useCreateThemePost",
+    "useDeleteThemePost",
     "useFollowTheme",
     "useMarkThemeRelevant",
     "useRequestSubscriptionsLink",
+    "useRequestUploadUrl",
     "useShareTheme",
+    "useUpdateThemePost",
   ];
   const QUERY_KEYS = [
     "getGetOfficialQueryKey",
     "getGetSedutaQueryKey",
     "getGetThemeQueryKey",
     "getListReportsQueryKey",
+    "getListThemePostsQueryKey",
     "getListThemesQueryKey",
   ];
 
@@ -94,6 +102,7 @@ import { Pnrr } from "@/pages/Pnrr";
 import { Reports } from "@/pages/Reports";
 import { Statistics } from "@/pages/Statistics";
 import { Subscriptions } from "@/pages/Subscriptions";
+import { AdminCronistoria } from "@/pages/AdminCronistoria";
 import NotFound from "@/pages/not-found";
 
 export type PageComponent = (...args: never[]) => ReactNode;
@@ -113,6 +122,7 @@ export const PAGES: Array<[string, PageComponent]> = [
   ["Reports", Reports],
   ["Statistics", Statistics],
   ["Subscriptions", Subscriptions],
+  ["AdminCronistoria", AdminCronistoria],
   ["NotFound", NotFound],
 ];
 
