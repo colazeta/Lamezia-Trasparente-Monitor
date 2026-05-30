@@ -15,3 +15,5 @@ export * from "./themeFollowers";
 export * from "./sessionReports";
 export * from "./officials";
 export * from "./questions";
+export * from "./organi";
+export * from "./sedute";

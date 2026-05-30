@@ -8,6 +8,7 @@ import {
   unique,
 } from "drizzle-orm/pg-core";
 import { publicationsTable } from "./publications";
+import { seduteTable } from "./sedute";
 
 export const officialsTable = pgTable("officials", {
   id: serial("id").primaryKey(),
@@ -72,6 +73,7 @@ export const officialVotesTable = pgTable(
     publicationId: integer("publication_id")
       .notNull()
       .references(() => publicationsTable.id),
+    sedutaId: integer("seduta_id").references(() => seduteTable.id),
     vote: text("vote").notNull(),
     position: integer("position").notNull().default(0),
   },

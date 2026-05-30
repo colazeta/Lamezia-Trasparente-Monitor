@@ -8,6 +8,7 @@
 import type { Official } from './official';
 import type { OfficialActivity } from './officialActivity';
 import type { OfficialDeclaration } from './officialDeclaration';
+import type { OfficialOrgano } from './officialOrgano';
 import type { OfficialRemuneration } from './officialRemuneration';
 import type { OfficialVote } from './officialVote';
 
@@ -16,4 +17,5 @@ export type OfficialProfile = Official & {
   remunerations: OfficialRemuneration[];
   declarations: OfficialDeclaration[];
   votes: OfficialVote[];
+  organi: OfficialOrgano[];
 };

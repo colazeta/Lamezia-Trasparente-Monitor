@@ -36,10 +36,13 @@ import type {
   ListOfficialsParams,
   ListPublicationsParams,
   ListQuestionsParams,
+  ListSeduteParams,
   ListThemesParams,
   Official,
   OfficialInput,
   OfficialProfile,
+  Organo,
+  OrganoDetail,
   PnrrCensus,
   Publication,
   Question,
@@ -47,6 +50,7 @@ import type {
   QuestionUpdateInput,
   Report,
   ReportInput,
+  Seduta,
   SedutaDetail,
   SedutaReportInput,
   ShareChannelStat,
@@ -2380,6 +2384,244 @@ export const useUpsertSedutaReport = <TError = ErrorType<Error>,
       > => {
       return useMutation(getUpsertSedutaReportMutationOptions(options));
     }
+
+export const getListOrganiUrl = () => {
+
+
+
+
+  return `/api/organi`
+}
+
+/**
+ * @summary List the political bodies (organi) of the Comune
+ */
+export const listOrgani = async ( options?: RequestInit): Promise<Organo[]> => {
+
+  return customFetch<Organo[]>(getListOrganiUrl(),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getListOrganiQueryKey = () => {
+    return [
+    `/api/organi`
+    ] as const;
+    }
+
+
+export const getListOrganiQueryOptions = <TData = Awaited<ReturnType<typeof listOrgani>>, TError = ErrorType<unknown>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listOrgani>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListOrganiQueryKey();
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listOrgani>>> = ({ signal }) => listOrgani({ signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listOrgani>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ListOrganiQueryResult = NonNullable<Awaited<ReturnType<typeof listOrgani>>>
+export type ListOrganiQueryError = ErrorType<unknown>
+
+
+/**
+ * @summary List the political bodies (organi) of the Comune
+ */
+
+export function useListOrgani<TData = Awaited<ReturnType<typeof listOrgani>>, TError = ErrorType<unknown>>(
+  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listOrgani>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getListOrganiQueryOptions(options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
+
+
+
+export const getGetOrganoUrl = (slug: string,) => {
+
+
+
+
+  return `/api/organi/${slug}`
+}
+
+/**
+ * @summary Get an organo with its members and recent sedute
+ */
+export const getOrgano = async (slug: string, options?: RequestInit): Promise<OrganoDetail> => {
+
+  return customFetch<OrganoDetail>(getGetOrganoUrl(slug),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetOrganoQueryKey = (slug: string,) => {
+    return [
+    `/api/organi/${slug}`
+    ] as const;
+    }
+
+
+export const getGetOrganoQueryOptions = <TData = Awaited<ReturnType<typeof getOrgano>>, TError = ErrorType<Error>>(slug: string, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getOrgano>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetOrganoQueryKey(slug);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getOrgano>>> = ({ signal }) => getOrgano(slug, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: !!(slug), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getOrgano>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetOrganoQueryResult = NonNullable<Awaited<ReturnType<typeof getOrgano>>>
+export type GetOrganoQueryError = ErrorType<Error>
+
+
+/**
+ * @summary Get an organo with its members and recent sedute
+ */
+
+export function useGetOrgano<TData = Awaited<ReturnType<typeof getOrgano>>, TError = ErrorType<Error>>(
+ slug: string, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getOrgano>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetOrganoQueryOptions(slug,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
+
+
+
+export const getListSeduteUrl = (params?: ListSeduteParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : value.toString())
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/sedute?${stringifiedParams}` : `/api/sedute`
+}
+
+/**
+ * @summary List sedute, optionally filtered by organo or type
+ */
+export const listSedute = async (params?: ListSeduteParams, options?: RequestInit): Promise<Seduta[]> => {
+
+  return customFetch<Seduta[]>(getListSeduteUrl(params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getListSeduteQueryKey = (params?: ListSeduteParams,) => {
+    return [
+    `/api/sedute`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getListSeduteQueryOptions = <TData = Awaited<ReturnType<typeof listSedute>>, TError = ErrorType<unknown>>(params?: ListSeduteParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listSedute>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListSeduteQueryKey(params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listSedute>>> = ({ signal }) => listSedute(params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listSedute>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ListSeduteQueryResult = NonNullable<Awaited<ReturnType<typeof listSedute>>>
+export type ListSeduteQueryError = ErrorType<unknown>
+
+
+/**
+ * @summary List sedute, optionally filtered by organo or type
+ */
+
+export function useListSedute<TData = Awaited<ReturnType<typeof listSedute>>, TError = ErrorType<unknown>>(
+ params?: ListSeduteParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listSedute>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getListSeduteQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
+
+
 
 export const getListPnrrProjectsUrl = () => {
 

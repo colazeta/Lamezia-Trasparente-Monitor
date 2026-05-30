@@ -955,6 +955,74 @@ paths:
               schema:
                 $ref: "#/components/schemas/Error"
 
+  /organi:
+    get:
+      operationId: listOrgani
+      tags: [organi]
+      summary: List the political bodies (organi) of the Comune
+      responses:
+        "200":
+          description: List of organi
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Organo"
+
+  /organi/{slug}:
+    get:
+      operationId: getOrgano
+      tags: [organi]
+      summary: Get an organo with its members and recent sedute
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Organo detail
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrganoDetail"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /sedute:
+    get:
+      operationId: listSedute
+      tags: [organi]
+      summary: List sedute, optionally filtered by organo or type
+      parameters:
+        - name: organo
+          in: query
+          required: false
+          description: organo slug
+          schema:
+            type: string
+        - name: tipo
+          in: query
+          required: false
+          description: consiglio | giunta | commissione
+          schema:
+            type: string
+      responses:
+        "200":
+          description: List of sedute
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Seduta"
+
   /pnrr/projects:
     get:
       operationId: listPnrrProjects
@@ -1887,7 +1955,7 @@ components:
       allOf:
         - $ref: "#/components/schemas/Publication"
         - type: object
-          required: [hasReport, summary, interventions]
+          required: [hasReport, summary, interventions, organo, votes]
           properties:
             hasReport:
               type: boolean
@@ -1897,6 +1965,115 @@ components:
               type: array
               items:
                 $ref: "#/components/schemas/SedutaIntervention"
+            organo:
+              oneOf:
+                - $ref: "#/components/schemas/OrganoRef"
+                - type: "null"
+            votes:
+              type: array
+              items:
+                $ref: "#/components/schemas/SedutaVote"
+
+    OrganoRef:
+      type: object
+      required: [id, type, name, slug]
+      properties:
+        id:
+          type: integer
+        type:
+          type: string
+          description: consiglio | giunta | commissione
+        name:
+          type: string
+        slug:
+          type: string
+
+    Organo:
+      allOf:
+        - $ref: "#/components/schemas/OrganoRef"
+        - type: object
+          required: [description, position, memberCount, sedutaCount]
+          properties:
+            description:
+              type: ["string", "null"]
+            position:
+              type: integer
+            memberCount:
+              type: integer
+            sedutaCount:
+              type: integer
+
+    OrganoMember:
+      type: object
+      required: [officialId, name, slug, role, status, membershipRole]
+      properties:
+        officialId:
+          type: integer
+        name:
+          type: string
+        slug:
+          type: string
+        role:
+          type: string
+        roleTitle:
+          type: ["string", "null"]
+        group:
+          type: ["string", "null"]
+        status:
+          type: string
+        membershipRole:
+          type: ["string", "null"]
+
+    OrganoDetail:
+      allOf:
+        - $ref: "#/components/schemas/Organo"
+        - type: object
+          required: [members, sedute]
+          properties:
+            members:
+              type: array
+              items:
+                $ref: "#/components/schemas/OrganoMember"
+            sedute:
+              type: array
+              items:
+                $ref: "#/components/schemas/Seduta"
+
+    Seduta:
+      type: object
+      required: [id, type, date, agenda, hasReport, publicationId, organo]
+      properties:
+        id:
+          type: integer
+        type:
+          type: string
+          description: consiglio | giunta | commissione
+        date:
+          type: ["string", "null"]
+        agenda:
+          type: ["string", "null"]
+        hasReport:
+          type: boolean
+        publicationId:
+          type: ["integer", "null"]
+        organo:
+          oneOf:
+            - $ref: "#/components/schemas/OrganoRef"
+            - type: "null"
+
+    SedutaVote:
+      type: object
+      required: [officialId, name, slug, vote]
+      properties:
+        officialId:
+          type: integer
+        name:
+          type: string
+        slug:
+          type: string
+        vote:
+          type: string
+          enum: [favorevole, contrario, astenuto, assente]
 
     SedutaReportInput:
       type: object
@@ -2148,11 +2325,27 @@ components:
         dataAtto:
           type: ["string", "null"]
 
+    OfficialOrgano:
+      type: object
+      required: [id, type, name, slug, membershipRole]
+      properties:
+        id:
+          type: integer
+        type:
+          type: string
+          description: consiglio | giunta | commissione
+        name:
+          type: string
+        slug:
+          type: string
+        membershipRole:
+          type: ["string", "null"]
+
     OfficialProfile:
       allOf:
         - $ref: "#/components/schemas/Official"
         - type: object
-          required: [activities, remunerations, declarations, votes]
+          required: [activities, remunerations, declarations, votes, organi]
           properties:
             activities:
               type: array
@@ -2170,6 +2363,10 @@ components:
               type: array
               items:
                 $ref: "#/components/schemas/OfficialVote"
+            organi:
+              type: array
+              items:
+                $ref: "#/components/schemas/OfficialOrgano"
 
     DeliberaVoteEntry:
       type: object

@@ -5,12 +5,16 @@
  * API specification
  * OpenAPI spec version: 0.1.0
  */
+import type { OrganoRef } from './organoRef';
 import type { Publication } from './publication';
 import type { SedutaIntervention } from './sedutaIntervention';
+import type { SedutaVote } from './sedutaVote';
 
 export type SedutaDetail = Publication & ({
   hasReport: boolean;
   /** @nullable */
   summary: string | null;
   interventions: SedutaIntervention[];
+  organo: OrganoRef | null;
+  votes: SedutaVote[];
 });

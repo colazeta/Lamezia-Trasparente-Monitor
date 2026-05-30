@@ -43,6 +43,7 @@ vi.mock("@workspace/api-client-react", () => {
     "useGetContractsFeedStatus",
     "useGetFeedStatus",
     "useGetOfficial",
+    "useGetOrgano",
     "useGetRecentActivity",
     "useGetSeduta",
     "useGetShareStats",
@@ -54,8 +55,10 @@ vi.mock("@workspace/api-client-react", () => {
     "useListConvocazioni",
     "useListDelibere",
     "useListOfficials",
+    "useListOrgani",
     "useListPnrrProjects",
     "useListPublications",
+    "useListSedute",
     "useListReports",
     "useListThemePosts",
     "useListThemes",
@@ -73,6 +76,7 @@ vi.mock("@workspace/api-client-react", () => {
   ];
   const QUERY_KEYS = [
     "getGetOfficialQueryKey",
+    "getGetOrganoQueryKey",
     "getGetSedutaQueryKey",
     "getGetThemeQueryKey",
     "getListReportsQueryKey",
@@ -96,6 +100,8 @@ import { Albo } from "@/pages/Albo";
 import { Delibere } from "@/pages/Delibere";
 import { Convocazioni } from "@/pages/Convocazioni";
 import { SedutaDetail } from "@/pages/SedutaDetail";
+import { Organi } from "@/pages/Organi";
+import { OrganoDetail } from "@/pages/OrganoDetail";
 import { Amministratori } from "@/pages/Amministratori";
 import { AmministratoreDetail } from "@/pages/AmministratoreDetail";
 import { Pnrr } from "@/pages/Pnrr";
@@ -116,6 +122,8 @@ export const PAGES: Array<[string, PageComponent]> = [
   ["Delibere", Delibere],
   ["Convocazioni", Convocazioni],
   ["SedutaDetail", SedutaDetail],
+  ["Organi", Organi],
+  ["OrganoDetail", OrganoDetail],
   ["Amministratori", Amministratori],
   ["AmministratoreDetail", AmministratoreDetail],
   ["Pnrr", Pnrr],

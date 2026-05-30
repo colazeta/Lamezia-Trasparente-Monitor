@@ -2,6 +2,7 @@ import {
   db,
   publicationsTable,
   feedStatusTable,
+  runOrganiSedutaSync,
   type InsertPublication,
 } from "@workspace/db";
 import { sql, inArray } from "drizzle-orm";
@@ -32,10 +33,19 @@ function parseItDate(s: string | undefined): Date | null {
   return Number.isNaN(d.getTime()) ? null : d;
 }
 
+export const PUBLICATION_CATEGORIES = [
+  "albo",
+  "delibera",
+  "convocazione",
+  "ordinanza",
+] as const;
+
+export type PublicationCategory = (typeof PUBLICATION_CATEGORIES)[number];
+
 function classify(tipologia: string, oggetto: string) {
   const t = tipologia.toUpperCase();
   const o = oggetto.toUpperCase();
-  let category = "albo";
+  let category: PublicationCategory = "albo";
   let subcategory: string | null = null;
 
   if (t.includes("DELIBERAZIONE") || t.includes("DELIBERA")) {
@@ -53,6 +63,15 @@ function classify(tipologia: string, oggetto: string) {
       subcategory = "consiglio";
     } else {
       subcategory = "commissione";
+    }
+  } else if (t.includes("ORDINANZA") || o.startsWith("ORDINANZA")) {
+    category = "ordinanza";
+    if (t.includes("SINDAC") || o.includes("SINDAC")) {
+      subcategory = "sindacale";
+    } else if (t.includes("DIRIGENZ") || o.includes("DIRIGENZ")) {
+      subcategory = "dirigenziale";
+    } else {
+      subcategory = null;
     }
   }
 
@@ -209,13 +228,18 @@ export async function runIngestion(): Promise<{
 
 const INGESTION_INTERVAL_MS = 3 * 60 * 60 * 1000;
 
+async function runIngestionCycle(): Promise<void> {
+  await runIngestion().catch(() => {});
+  await runAttuazioneIngestion().catch(() => {});
+  await runAnacContractsIngestion().catch(() => {});
+  await runOrganiSedutaSync().catch((err) => {
+    logger.error({ err }, "Organi/sedute sync failed");
+  });
+}
+
 export function startIngestionScheduler(): void {
-  void runIngestion().catch(() => {});
-  void runAttuazioneIngestion().catch(() => {});
-  void runAnacContractsIngestion().catch(() => {});
+  void runIngestionCycle();
   setInterval(() => {
-    void runIngestion().catch(() => {});
-    void runAttuazioneIngestion().catch(() => {});
-    void runAnacContractsIngestion().catch(() => {});
+    void runIngestionCycle();
   }, INGESTION_INTERVAL_MS).unref();
 }

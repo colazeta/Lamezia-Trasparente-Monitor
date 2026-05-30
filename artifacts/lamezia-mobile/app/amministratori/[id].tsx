@@ -1,7 +1,7 @@
 import { Feather } from "@expo/vector-icons";
-import { useLocalSearchParams } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import React from "react";
-import { Platform, ScrollView, StyleSheet, Text, View } from "react-native";
+import { Platform, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 
 import { Badge, Card, EmptyState, Skeleton } from "@/components/ui";
 import { useColors } from "@/hooks/useColors";
@@ -17,6 +17,7 @@ import { useGetOfficial } from "@workspace/api-client-react";
 
 export default function OfficialDetailScreen() {
   const colors = useColors();
+  const router = useRouter();
   const { id } = useLocalSearchParams<{ id: string }>();
   const officialId = Number(id);
   const official = useGetOfficial(officialId);
@@ -80,6 +81,33 @@ export default function OfficialDetailScreen() {
           </Text>
         ) : null}
       </Card>
+
+      {p.organi.length > 0 ? (
+        <Card style={{ gap: 10 }}>
+          <SectionTitle icon="home" label="Appartenenza agli organi" />
+          {p.organi.map((o) => (
+            <Pressable
+              key={o.id}
+              onPress={() => router.push(`/organi/${o.slug}`)}
+              style={({ pressed }) => ({ opacity: pressed ? 0.85 : 1 })}
+            >
+              <View style={[styles.lineRow, { borderTopColor: colors.border }]}>
+                <View style={{ flex: 1, paddingRight: 8 }}>
+                  <Text style={[styles.lineTitle, { color: colors.foreground }]} numberOfLines={1}>
+                    {o.name}
+                  </Text>
+                  {o.membershipRole ? (
+                    <Text style={[styles.lineSub, { color: colors.mutedForeground }]} numberOfLines={1}>
+                      {o.membershipRole}
+                    </Text>
+                  ) : null}
+                </View>
+                <Feather name="chevron-right" size={16} color={colors.primary} />
+              </View>
+            </Pressable>
+          ))}
+        </Card>
+      ) : null}
 
       {p.biography ? (
         <Card style={{ gap: 8 }}>

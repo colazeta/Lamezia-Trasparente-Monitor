@@ -730,6 +730,18 @@ export const GetSedutaResponse = zod.object({
   "speakerRole": zod.string().nullish(),
   "content": zod.string(),
   "position": zod.number()
+})),
+  "organo": zod.union([zod.object({
+  "id": zod.number(),
+  "type": zod.string().describe('consiglio | giunta | commissione'),
+  "name": zod.string(),
+  "slug": zod.string()
+}),zod.null()]),
+  "votes": zod.array(zod.object({
+  "officialId": zod.number(),
+  "name": zod.string(),
+  "slug": zod.string(),
+  "vote": zod.enum(['favorevole', 'contrario', 'astenuto', 'assente'])
 }))
 }))
 
@@ -781,8 +793,107 @@ export const UpsertSedutaReportResponse = zod.object({
   "speakerRole": zod.string().nullish(),
   "content": zod.string(),
   "position": zod.number()
+})),
+  "organo": zod.union([zod.object({
+  "id": zod.number(),
+  "type": zod.string().describe('consiglio | giunta | commissione'),
+  "name": zod.string(),
+  "slug": zod.string()
+}),zod.null()]),
+  "votes": zod.array(zod.object({
+  "officialId": zod.number(),
+  "name": zod.string(),
+  "slug": zod.string(),
+  "vote": zod.enum(['favorevole', 'contrario', 'astenuto', 'assente'])
 }))
 }))
+
+
+/**
+ * @summary List the political bodies (organi) of the Comune
+ */
+export const ListOrganiResponseItem = zod.object({
+  "id": zod.number(),
+  "type": zod.string().describe('consiglio | giunta | commissione'),
+  "name": zod.string(),
+  "slug": zod.string()
+}).and(zod.object({
+  "description": zod.string().nullable(),
+  "position": zod.number(),
+  "memberCount": zod.number(),
+  "sedutaCount": zod.number()
+}))
+export const ListOrganiResponse = zod.array(ListOrganiResponseItem)
+
+
+/**
+ * @summary Get an organo with its members and recent sedute
+ */
+export const GetOrganoParams = zod.object({
+  "slug": zod.coerce.string()
+})
+
+export const GetOrganoResponse = zod.object({
+  "id": zod.number(),
+  "type": zod.string().describe('consiglio | giunta | commissione'),
+  "name": zod.string(),
+  "slug": zod.string()
+}).and(zod.object({
+  "description": zod.string().nullable(),
+  "position": zod.number(),
+  "memberCount": zod.number(),
+  "sedutaCount": zod.number()
+})).and(zod.object({
+  "members": zod.array(zod.object({
+  "officialId": zod.number(),
+  "name": zod.string(),
+  "slug": zod.string(),
+  "role": zod.string(),
+  "roleTitle": zod.string().nullish(),
+  "group": zod.string().nullish(),
+  "status": zod.string(),
+  "membershipRole": zod.string().nullable()
+})),
+  "sedute": zod.array(zod.object({
+  "id": zod.number(),
+  "type": zod.string().describe('consiglio | giunta | commissione'),
+  "date": zod.string().nullable(),
+  "agenda": zod.string().nullable(),
+  "hasReport": zod.boolean(),
+  "publicationId": zod.number().nullable(),
+  "organo": zod.union([zod.object({
+  "id": zod.number(),
+  "type": zod.string().describe('consiglio | giunta | commissione'),
+  "name": zod.string(),
+  "slug": zod.string()
+}),zod.null()])
+}))
+}))
+
+
+/**
+ * @summary List sedute, optionally filtered by organo or type
+ */
+export const ListSeduteQueryParams = zod.object({
+  "organo": zod.coerce.string().optional().describe('organo slug'),
+  "tipo": zod.coerce.string().optional().describe('consiglio | giunta | commissione')
+})
+
+export const ListSeduteResponseItem = zod.object({
+  "id": zod.number(),
+  "type": zod.string().describe('consiglio | giunta | commissione'),
+  "date": zod.string().nullable(),
+  "agenda": zod.string().nullable(),
+  "hasReport": zod.boolean(),
+  "publicationId": zod.number().nullable(),
+  "organo": zod.union([zod.object({
+  "id": zod.number(),
+  "type": zod.string().describe('consiglio | giunta | commissione'),
+  "name": zod.string(),
+  "slug": zod.string()
+}),zod.null()])
+})
+export const ListSeduteResponse = zod.array(ListSeduteResponseItem)
 
 
 /**
@@ -963,6 +1074,13 @@ export const GetOfficialResponse = zod.object({
   "numRegGen": zod.string().nullish(),
   "subcategory": zod.string().nullish(),
   "dataAtto": zod.string().nullish()
+})),
+  "organi": zod.array(zod.object({
+  "id": zod.number(),
+  "type": zod.string().describe('consiglio | giunta | commissione'),
+  "name": zod.string(),
+  "slug": zod.string(),
+  "membershipRole": zod.string().nullable()
 }))
 }))
 
@@ -1050,6 +1168,13 @@ export const UpdateOfficialResponse = zod.object({
   "numRegGen": zod.string().nullish(),
   "subcategory": zod.string().nullish(),
   "dataAtto": zod.string().nullish()
+})),
+  "organi": zod.array(zod.object({
+  "id": zod.number(),
+  "type": zod.string().describe('consiglio | giunta | commissione'),
+  "name": zod.string(),
+  "slug": zod.string(),
+  "membershipRole": zod.string().nullable()
 }))
 }))
 

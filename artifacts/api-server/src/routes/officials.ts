@@ -6,6 +6,8 @@ import {
   officialRemunerationsTable,
   officialDeclarationsTable,
   officialVotesTable,
+  organiTable,
+  organiMembersTable,
   publicationsTable,
   type Official,
   type OfficialActivity,
@@ -155,7 +157,8 @@ function mapDeclaration(d: OfficialDeclaration) {
 }
 
 async function buildProfile(official: Official) {
-  const [activities, remunerations, declarations, votes] = await Promise.all([
+  const [activities, remunerations, declarations, votes, organi] =
+    await Promise.all([
     db
       .select()
       .from(officialActivitiesTable)
@@ -204,6 +207,19 @@ async function buildProfile(official: Official) {
         desc(publicationsTable.pubStart),
         desc(publicationsTable.id),
       ),
+    db
+      .select({
+        id: organiTable.id,
+        type: organiTable.type,
+        name: organiTable.name,
+        slug: organiTable.slug,
+        membershipRole: organiMembersTable.membershipRole,
+        position: organiTable.position,
+      })
+      .from(organiMembersTable)
+      .innerJoin(organiTable, eq(organiMembersTable.organoId, organiTable.id))
+      .where(eq(organiMembersTable.officialId, official.id))
+      .orderBy(asc(organiTable.position), asc(organiTable.id)),
   ]);
 
   return {
@@ -222,6 +238,13 @@ async function buildProfile(official: Official) {
         : v.pubStart
           ? v.pubStart.toISOString()
           : null,
+    })),
+    organi: organi.map((o) => ({
+      id: o.id,
+      type: o.type,
+      name: o.name,
+      slug: o.slug,
+      membershipRole: o.membershipRole,
     })),
   };
 }

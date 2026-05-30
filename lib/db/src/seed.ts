@@ -1,5 +1,6 @@
 import { and, asc, desc, eq, sql } from "drizzle-orm";
 import { db, pool } from "./client";
+import { runOrganiSedutaSync } from "./organi-sync";
 import {
   contractsTable,
   reportsTable,
@@ -1156,6 +1157,7 @@ export async function seed() {
   await linkContractsToThemes();
   await seedOfficials();
   await seedQuestionsData();
+  await runOrganiSedutaSync();
 }
 
 const entryPath = process.argv[1] ?? "";

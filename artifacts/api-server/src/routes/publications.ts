@@ -6,6 +6,10 @@ import {
   feedStatusTable,
   sessionReportsTable,
   sessionInterventionsTable,
+  seduteTable,
+  organiTable,
+  officialsTable,
+  officialVotesTable,
   type Publication,
   type SessionReport,
   type SessionIntervention,
@@ -54,11 +58,57 @@ async function buildSedutaDetail(publication: Publication) {
       );
   }
 
+  const [seduta] = await db
+    .select()
+    .from(seduteTable)
+    .where(eq(seduteTable.publicationId, publication.id));
+
+  let organo: {
+    id: number;
+    type: string;
+    name: string;
+    slug: string;
+  } | null = null;
+  let votes: {
+    officialId: number;
+    name: string;
+    slug: string;
+    vote: string;
+  }[] = [];
+
+  if (seduta) {
+    if (seduta.organoId) {
+      const [org] = await db
+        .select()
+        .from(organiTable)
+        .where(eq(organiTable.id, seduta.organoId));
+      if (org) {
+        organo = { id: org.id, type: org.type, name: org.name, slug: org.slug };
+      }
+    }
+    votes = await db
+      .select({
+        officialId: officialsTable.id,
+        name: officialsTable.name,
+        slug: officialsTable.slug,
+        vote: officialVotesTable.vote,
+      })
+      .from(officialVotesTable)
+      .innerJoin(
+        officialsTable,
+        eq(officialVotesTable.officialId, officialsTable.id),
+      )
+      .where(eq(officialVotesTable.sedutaId, seduta.id))
+      .orderBy(asc(officialsTable.name));
+  }
+
   return {
     ...mapPublication(publication),
     hasReport: Boolean(report),
     summary: report?.summary ?? null,
     interventions: interventions.map(mapIntervention),
+    organo,
+    votes,
   };
 }
 

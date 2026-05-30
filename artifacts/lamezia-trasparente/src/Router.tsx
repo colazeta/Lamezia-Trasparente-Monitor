@@ -8,6 +8,8 @@ import { Albo } from "./pages/Albo";
 import { Delibere } from "./pages/Delibere";
 import { Convocazioni } from "./pages/Convocazioni";
 import { SedutaDetail } from "./pages/SedutaDetail";
+import { Organi } from "./pages/Organi";
+import { OrganoDetail } from "./pages/OrganoDetail";
 import { Amministratori } from "./pages/Amministratori";
 import { AmministratoreDetail } from "./pages/AmministratoreDetail";
 import { Pnrr } from "./pages/Pnrr";
@@ -30,6 +32,8 @@ export function Router() {
         <Route path="/delibere" component={Delibere} />
         <Route path="/convocazioni" component={Convocazioni} />
         <Route path="/convocazioni/:id" component={SedutaDetail} />
+        <Route path="/organi" component={Organi} />
+        <Route path="/organi/:slug" component={OrganoDetail} />
         <Route path="/amministratori" component={Amministratori} />
         <Route path="/amministratori/:id" component={AmministratoreDetail} />
         <Route path="/pnrr" component={Pnrr} />

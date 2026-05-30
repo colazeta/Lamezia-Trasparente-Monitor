@@ -1,11 +1,11 @@
-import { useState } from "react";
+import { useMemo } from "react";
 import { Link } from "wouter";
-import { useListConvocazioni } from "@workspace/api-client-react";
-import { CalendarClock, Users, Calendar, ChevronRight } from "lucide-react";
+import { useListSedute } from "@workspace/api-client-react";
+import type { Seduta } from "@workspace/api-client-react";
+import { CalendarClock, Calendar, ChevronRight, Building2 } from "lucide-react";
 import { format } from "date-fns";
 import { it } from "date-fns/locale";
 
-import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
@@ -15,12 +15,6 @@ import {
   EmptyTitle,
   EmptyDescription,
 } from "@/components/ui/empty";
-import { cn } from "@/lib/utils";
-
-const TABS = [
-  { value: "consiglio", label: "Consiglio Comunale", icon: Users },
-  { value: "commissione", label: "Commissioni", icon: Users },
-] as const;
 
 function formatDate(value: string | null | undefined) {
   if (!value) return "—";
@@ -30,10 +24,27 @@ function formatDate(value: string | null | undefined) {
     : format(d, "dd MMMM yyyy", { locale: it });
 }
 
-export function Convocazioni() {
-  const [tipo, setTipo] = useState<"consiglio" | "commissione">("consiglio");
+const UNGROUPED = "Altre sedute";
 
-  const { data: convocazioni, isLoading } = useListConvocazioni({ tipo });
+function groupByOrgano(sedute: Seduta[]) {
+  const groups = new Map<string, { name: string; slug: string | null; items: Seduta[] }>();
+  for (const s of sedute) {
+    const key = s.organo ? s.organo.slug : UNGROUPED;
+    const name = s.organo ? s.organo.name : UNGROUPED;
+    const existing = groups.get(key);
+    if (existing) {
+      existing.items.push(s);
+    } else {
+      groups.set(key, { name, slug: s.organo?.slug ?? null, items: [s] });
+    }
+  }
+  return Array.from(groups.values());
+}
+
+export function Convocazioni() {
+  const { data: sedute, isLoading } = useListSedute();
+
+  const groups = useMemo(() => groupByOrgano(sedute ?? []), [sedute]);
 
   return (
     <div className="container mx-auto px-4 py-8 md:py-12 max-w-5xl">
@@ -46,91 +57,92 @@ export function Convocazioni() {
           Convocazioni
         </h1>
         <p className="mt-3 text-muted-foreground text-lg max-w-3xl">
-          Le convocazioni del Consiglio Comunale e delle Commissioni Consiliari,
-          con data e argomenti all'ordine del giorno.
+          Le sedute del Consiglio Comunale e delle Commissioni Consiliari,
+          raggruppate per organo, con data e argomenti all'ordine del giorno.
         </p>
       </div>
 
-      <div className="inline-flex rounded-lg border border-border bg-muted/40 p-1 mb-8">
-        {TABS.map((t) => {
-          const Icon = t.icon;
-          return (
-            <button
-              key={t.value}
-              onClick={() => setTipo(t.value)}
-              className={cn(
-                "flex items-center gap-2 px-4 py-2 text-sm font-semibold rounded-md transition-colors",
-                tipo === t.value
-                  ? "bg-primary text-primary-foreground shadow-sm"
-                  : "text-muted-foreground hover:text-foreground hover-elevate",
-              )}
-            >
-              <Icon className="h-4 w-4" />
-              {t.label}
-            </button>
-          );
-        })}
-      </div>
-
-      <div className="space-y-3">
-        {isLoading ? (
-          Array(4)
+      {isLoading ? (
+        <div className="space-y-3">
+          {Array(4)
             .fill(0)
             .map((_, i) => (
               <Card key={i} className="p-5">
                 <Skeleton className="h-4 w-40 mb-3" />
                 <Skeleton className="h-5 w-full" />
               </Card>
-            ))
-        ) : convocazioni && convocazioni.length > 0 ? (
-          convocazioni.map((c) => (
-            <Link
-              key={c.id}
-              href={`/convocazioni/${c.id}`}
-              className="block"
-            >
-              <Card className="group p-5 transition-all hover:shadow-lg hover:-translate-y-0.5 hover:border-brand/40">
-                <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
-                  <div className="flex items-center gap-2 text-sm font-semibold text-brand">
-                    <Calendar className="h-4 w-4" />
-                    {formatDate(c.dataAtto ?? c.pubStart)}
-                  </div>
-                  {c.isNew && (
-                    <Badge variant="brand" className="text-xs">
-                      NUOVO
-                    </Badge>
-                  )}
-                </div>
-                <h3 className="font-display font-bold text-foreground leading-snug mb-1 group-hover:text-brand transition-colors">
-                  {c.oggetto}
-                </h3>
-                {c.provenienza && (
-                  <p className="text-xs text-muted-foreground">{c.provenienza}</p>
+            ))}
+        </div>
+      ) : groups.length > 0 ? (
+        <div className="space-y-10">
+          {groups.map((g) => (
+            <section key={g.slug ?? g.name}>
+              <div className="mb-4 flex items-center gap-2.5">
+                <span className="flex h-8 w-8 items-center justify-center rounded-md bg-brand/10 text-brand">
+                  <Building2 className="h-4 w-4" />
+                </span>
+                {g.slug ? (
+                  <Link
+                    href={`/organi/${g.slug}`}
+                    className="text-xl md:text-2xl font-display font-bold tracking-tight hover:text-brand transition-colors"
+                  >
+                    {g.name}
+                  </Link>
+                ) : (
+                  <h2 className="text-xl md:text-2xl font-display font-bold tracking-tight">
+                    {g.name}
+                  </h2>
                 )}
-                <div className="mt-3 flex items-center justify-between border-t border-border pt-3">
-                  <span className="inline-flex items-center gap-1 text-sm font-semibold text-primary group-hover:text-brand transition-colors">
-                    Vedi resoconto stenografico
-                    <ChevronRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
-                  </span>
-                </div>
-              </Card>
-            </Link>
-          ))
-        ) : (
-          <Empty className="border bg-muted/20">
-            <EmptyHeader>
-              <EmptyMedia variant="icon">
-                <CalendarClock />
-              </EmptyMedia>
-              <EmptyTitle>Nessuna convocazione disponibile</EmptyTitle>
-              <EmptyDescription>
-                Al momento non risultano convocazioni in questa sezione. Prova a
-                consultare l'altro organo o a tornare più tardi.
-              </EmptyDescription>
-            </EmptyHeader>
-          </Empty>
-        )}
-      </div>
+              </div>
+
+              <div className="space-y-3">
+                {g.items.map((s) => (
+                  <Link
+                    key={s.id}
+                    href={
+                      s.publicationId != null
+                        ? `/convocazioni/${s.publicationId}`
+                        : "#"
+                    }
+                    className="block"
+                  >
+                    <Card className="group p-5 transition-all hover:shadow-lg hover:-translate-y-0.5 hover:border-brand/40">
+                      <div className="flex items-center gap-2 text-sm font-semibold text-brand mb-2">
+                        <Calendar className="h-4 w-4" />
+                        {formatDate(s.date)}
+                      </div>
+                      {s.agenda && (
+                        <h3 className="font-display font-bold text-foreground leading-snug group-hover:text-brand transition-colors">
+                          {s.agenda}
+                        </h3>
+                      )}
+                      <div className="mt-3 flex items-center justify-between border-t border-border pt-3">
+                        <span className="inline-flex items-center gap-1 text-sm font-semibold text-primary group-hover:text-brand transition-colors">
+                          Vedi resoconto stenografico
+                          <ChevronRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+                        </span>
+                      </div>
+                    </Card>
+                  </Link>
+                ))}
+              </div>
+            </section>
+          ))}
+        </div>
+      ) : (
+        <Empty className="border bg-muted/20">
+          <EmptyHeader>
+            <EmptyMedia variant="icon">
+              <CalendarClock />
+            </EmptyMedia>
+            <EmptyTitle>Nessuna convocazione disponibile</EmptyTitle>
+            <EmptyDescription>
+              Al momento non risultano convocazioni pubblicate. Torna più tardi
+              per aggiornamenti.
+            </EmptyDescription>
+          </EmptyHeader>
+        </Empty>
+      )}
     </div>
   );
 }

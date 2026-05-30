@@ -1,5 +1,6 @@
 import { pgTable, serial, text, integer, timestamp } from "drizzle-orm/pg-core";
 import { publicationsTable } from "./publications";
+import { seduteTable } from "./sedute";
 
 export const sessionReportsTable = pgTable("session_reports", {
   id: serial("id").primaryKey(),
@@ -7,6 +8,7 @@ export const sessionReportsTable = pgTable("session_reports", {
     .notNull()
     .unique()
     .references(() => publicationsTable.id),
+  sedutaId: integer("seduta_id").references(() => seduteTable.id),
   summary: text("summary"),
   createdAt: timestamp("created_at", { withTimezone: true })
     .notNull()

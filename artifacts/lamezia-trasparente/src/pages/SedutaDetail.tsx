@@ -1,6 +1,14 @@
 import { useRoute, Link } from "wouter";
 import { useGetSeduta, getGetSedutaQueryKey } from "@workspace/api-client-react";
-import { ArrowLeft, Calendar, FileText, MessageSquare, User } from "lucide-react";
+import {
+  ArrowLeft,
+  Calendar,
+  FileText,
+  MessageSquare,
+  User,
+  Building2,
+  Vote,
+} from "lucide-react";
 import { format } from "date-fns";
 import { it } from "date-fns/locale";
 
@@ -14,6 +22,16 @@ import {
   EmptyDescription,
 } from "@/components/ui/empty";
 import { AlboLink } from "@/components/AlboLink";
+
+const VOTE_VARIANTS: Record<
+  string,
+  "success" | "destructive" | "warning" | "outline"
+> = {
+  favorevole: "success",
+  contrario: "destructive",
+  astenuto: "warning",
+  assente: "outline",
+};
 
 function formatDate(value: string | null | undefined) {
   if (!value) return "—";
@@ -72,14 +90,29 @@ export function SedutaDetail() {
                   <Calendar className="h-3.5 w-3.5" />
                   {formatDate(seduta.dataAtto ?? seduta.pubStart)}
                 </span>
-                {seduta.subcategory && (
-                  <Badge variant="secondary" className="uppercase tracking-wide">
-                    {seduta.subcategory === "consiglio"
-                      ? "Consiglio Comunale"
-                      : seduta.subcategory === "commissione"
-                        ? "Commissione"
-                        : seduta.subcategory}
-                  </Badge>
+                {seduta.organo ? (
+                  <Link href={`/organi/${seduta.organo.slug}`}>
+                    <Badge
+                      variant="secondary"
+                      className="uppercase tracking-wide gap-1.5 hover:bg-secondary/80 transition-colors"
+                    >
+                      <Building2 className="h-3.5 w-3.5" />
+                      {seduta.organo.name}
+                    </Badge>
+                  </Link>
+                ) : (
+                  seduta.subcategory && (
+                    <Badge
+                      variant="secondary"
+                      className="uppercase tracking-wide"
+                    >
+                      {seduta.subcategory === "consiglio"
+                        ? "Consiglio Comunale"
+                        : seduta.subcategory === "commissione"
+                          ? "Commissione"
+                          : seduta.subcategory}
+                    </Badge>
+                  )
                 )}
                 {seduta.isNew && <Badge variant="brand">Nuovo</Badge>}
               </div>
@@ -152,6 +185,39 @@ export function SedutaDetail() {
                 </EmptyDescription>
               </EmptyHeader>
             </Empty>
+          )}
+
+          {seduta.votes.length > 0 && (
+            <>
+              <div className="mt-10 mb-6 flex items-center gap-2.5">
+                <span className="flex h-8 w-8 items-center justify-center rounded-md bg-brand/10 text-brand">
+                  <Vote className="h-4 w-4" />
+                </span>
+                <h2 className="text-xl md:text-2xl font-display font-bold tracking-tight">
+                  Esito delle votazioni
+                </h2>
+              </div>
+              <ul className="space-y-2">
+                {seduta.votes.map((v) => (
+                  <li key={v.officialId}>
+                    <Link
+                      href={`/amministratori/${v.officialId}`}
+                      className="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-border/60 p-3 transition-colors hover:border-brand/40"
+                    >
+                      <span className="text-sm font-medium text-foreground">
+                        {v.name}
+                      </span>
+                      <Badge
+                        variant={VOTE_VARIANTS[v.vote] ?? "outline"}
+                        className="capitalize shrink-0"
+                      >
+                        {v.vote}
+                      </Badge>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </>
           )}
         </>
       )}

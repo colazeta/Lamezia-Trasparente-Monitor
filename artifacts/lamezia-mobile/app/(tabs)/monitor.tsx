@@ -33,6 +33,12 @@ const SECTIONS: Section[] = [
     icon: "calendar",
   },
   {
+    href: "/organi",
+    title: "Organi",
+    subtitle: "Consiglio, Giunta e Commissioni Consiliari",
+    icon: "home",
+  },
+  {
     href: "/contratti",
     title: "Appalti",
     subtitle: "Contratti e affidamenti pubblici",

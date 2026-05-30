@@ -104,6 +104,19 @@ export const CONVOCAZIONE_TIPI: { value: string | undefined; label: string }[] =
   { value: "commissione", label: "Commissioni" },
 ];
 
+export function organoTypeLabel(type: string): string {
+  switch (type) {
+    case "consiglio":
+      return "Consiglio Comunale";
+    case "giunta":
+      return "Giunta Comunale";
+    case "commissione":
+      return "Commissioni Consiliari";
+    default:
+      return type;
+  }
+}
+
 export function formatDateOpt(iso?: string | null): string {
   if (!iso) return "—";
   return formatDate(iso);

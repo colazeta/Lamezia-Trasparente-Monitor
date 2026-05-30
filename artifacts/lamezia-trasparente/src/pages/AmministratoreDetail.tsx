@@ -12,6 +12,8 @@ import {
   Vote,
   User,
   ExternalLink,
+  Building2,
+  ChevronRight,
 } from "lucide-react";
 import { format } from "date-fns";
 import { it } from "date-fns/locale";
@@ -191,6 +193,32 @@ export function AmministratoreDetail() {
           </header>
 
           <div className="space-y-5">
+            {official.organi.length > 0 && (
+              <Section icon={Building2} title="Appartenenza agli organi">
+                <ul className="grid gap-3 sm:grid-cols-2">
+                  {official.organi.map((o) => (
+                    <li key={o.id}>
+                      <Link href={`/organi/${o.slug}`} className="block">
+                        <div className="group flex items-center justify-between gap-3 rounded-lg border border-border/60 p-3 transition-colors hover:border-brand/40">
+                          <div className="min-w-0">
+                            <p className="font-medium text-foreground truncate group-hover:text-brand transition-colors">
+                              {o.name}
+                            </p>
+                            {o.membershipRole && (
+                              <p className="text-xs text-muted-foreground truncate">
+                                {o.membershipRole}
+                              </p>
+                            )}
+                          </div>
+                          <ChevronRight className="h-4 w-4 shrink-0 text-primary transition-transform group-hover:translate-x-0.5" />
+                        </div>
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </Section>
+            )}
+
             <Section icon={User} title="Curriculum">
               {official.biography ? (
                 <p className="text-foreground/90 leading-relaxed whitespace-pre-line">

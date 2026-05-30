@@ -399,12 +399,80 @@ export interface SedutaIntervention {
   position: number;
 }
 
+export interface OrganoRef {
+  id: number;
+  /** consiglio | giunta | commissione */
+  type: string;
+  name: string;
+  slug: string;
+}
+
+export type SedutaVoteVote = typeof SedutaVoteVote[keyof typeof SedutaVoteVote];
+
+
+export const SedutaVoteVote = {
+  favorevole: 'favorevole',
+  contrario: 'contrario',
+  astenuto: 'astenuto',
+  assente: 'assente',
+} as const;
+
+export interface SedutaVote {
+  officialId: number;
+  name: string;
+  slug: string;
+  vote: SedutaVoteVote;
+}
+
 export type SedutaDetail = Publication & ({
   hasReport: boolean;
   /** @nullable */
   summary: string | null;
   interventions: SedutaIntervention[];
+  organo: OrganoRef | null;
+  votes: SedutaVote[];
 });
+
+export type Organo = OrganoRef & ({
+  /** @nullable */
+  description: string | null;
+  position: number;
+  memberCount: number;
+  sedutaCount: number;
+});
+
+export interface OrganoMember {
+  officialId: number;
+  name: string;
+  slug: string;
+  role: string;
+  /** @nullable */
+  roleTitle?: string | null;
+  /** @nullable */
+  group?: string | null;
+  status: string;
+  /** @nullable */
+  membershipRole: string | null;
+}
+
+export interface Seduta {
+  id: number;
+  /** consiglio | giunta | commissione */
+  type: string;
+  /** @nullable */
+  date: string | null;
+  /** @nullable */
+  agenda: string | null;
+  hasReport: boolean;
+  /** @nullable */
+  publicationId: number | null;
+  organo: OrganoRef | null;
+}
+
+export type OrganoDetail = Organo & {
+  members: OrganoMember[];
+  sedute: Seduta[];
+};
 
 export type SedutaReportInputInterventionsItem = {
   /** @minLength 1 */
@@ -589,11 +657,22 @@ export interface OfficialVote {
   dataAtto?: string | null;
 }
 
+export interface OfficialOrgano {
+  id: number;
+  /** consiglio | giunta | commissione */
+  type: string;
+  name: string;
+  slug: string;
+  /** @nullable */
+  membershipRole: string | null;
+}
+
 export type OfficialProfile = Official & {
   activities: OfficialActivity[];
   remunerations: OfficialRemuneration[];
   declarations: OfficialDeclaration[];
   votes: OfficialVote[];
+  organi: OfficialOrgano[];
 };
 
 export type DeliberaVoteEntryVote = typeof DeliberaVoteEntryVote[keyof typeof DeliberaVoteEntryVote];
@@ -770,6 +849,17 @@ q?: string;
 export type ListConvocazioniParams = {
 /**
  * consiglio | commissione
+ */
+tipo?: string;
+};
+
+export type ListSeduteParams = {
+/**
+ * organo slug
+ */
+organo?: string;
+/**
+ * consiglio | giunta | commissione
  */
 tipo?: string;
 };

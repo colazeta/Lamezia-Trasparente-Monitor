@@ -57,6 +57,8 @@ function RootLayoutNav() {
       <Stack.Screen name="pnrr" options={{ title: "PNRR" }} />
       <Stack.Screen name="convocazioni/index" options={{ title: "Convocazioni" }} />
       <Stack.Screen name="convocazioni/[id]" options={{ title: "Seduta" }} />
+      <Stack.Screen name="organi/index" options={{ title: "Organi" }} />
+      <Stack.Screen name="organi/[slug]" options={{ title: "Organo" }} />
       <Stack.Screen name="amministratori/index" options={{ title: "Amministratori" }} />
       <Stack.Screen name="amministratori/[id]" options={{ title: "Profilo" }} />
     </Stack>

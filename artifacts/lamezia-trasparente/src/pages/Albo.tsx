@@ -30,6 +30,7 @@ const CATEGORY_LABELS: Record<string, string> = {
   albo: "Albo",
   delibera: "Delibere",
   convocazione: "Convocazioni",
+  ordinanza: "Ordinanze",
 };
 
 function formatDate(value: string | null | undefined, pattern = "dd MMM yyyy") {
@@ -138,6 +139,7 @@ export function Albo() {
               <SelectItem value="albo">Albo</SelectItem>
               <SelectItem value="delibera">Delibere</SelectItem>
               <SelectItem value="convocazione">Convocazioni</SelectItem>
+              <SelectItem value="ordinanza">Ordinanze</SelectItem>
             </SelectContent>
           </Select>
         </div>

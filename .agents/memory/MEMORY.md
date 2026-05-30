@@ -6,3 +6,4 @@
 - [DB schema drift in isolated env](db-schema-drift-isolated-env.md) — "column does not exist" 500s → truncate table, `pnpm -C lib/db push-force`, restart api-server to re-ingest.
 - [Contract↔theme association](contract-theme-association.md) — "Filtra per tema" needs contract.themeId set; populated via CIG seed + CUP map in ANAC ingestion (non-destructive on update).
 - [drizzle push truncate prompt](drizzle-push-truncate-prompt.md) — push (even --force) blocks on the truncate prompt in non-TTY; truncate the table first, then push+seed.
+- [Expo typed-routes staleness](expo-typed-routes.md) — tsc flags new expo-router routes as invalid until the dev-server regenerates types; restart expo workflow, don't "fix" the route strings.
