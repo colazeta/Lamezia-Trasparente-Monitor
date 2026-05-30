@@ -22,7 +22,6 @@ import {
   Hash,
   Building2,
   Calendar,
-  Filter,
   X,
 } from "lucide-react";
 import { format } from "date-fns";

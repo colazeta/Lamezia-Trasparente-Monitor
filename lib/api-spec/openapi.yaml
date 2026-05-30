@@ -26,6 +26,8 @@ tags:
     description: Aggregate statistics
   - name: storage
     description: Object storage upload and serving endpoints
+  - name: questions
+    description: Curated citizen questions ("Cosa puoi scoprire?")
 paths:
   /healthz:
     get:
@@ -465,6 +467,152 @@ paths:
                 $ref: "#/components/schemas/Error"
         "500":
           description: Failed to serve object.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /questions:
+    get:
+      operationId: listQuestions
+      tags: [questions]
+      summary: List published curated questions
+      parameters:
+        - name: topic
+          in: query
+          required: false
+          description: Filter by topic grouping
+          schema:
+            type: string
+        - name: featured
+          in: query
+          required: false
+          description: Only return featured questions
+          schema:
+            type: boolean
+      responses:
+        "200":
+          description: List of published questions ordered by sort order
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Question"
+    post:
+      operationId: createQuestion
+      tags: [questions]
+      summary: Create a curated question
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/QuestionInput"
+      responses:
+        "201":
+          description: Created question
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Question"
+        "400":
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /questions/all:
+    get:
+      operationId: listAllQuestions
+      tags: [questions]
+      summary: List all questions including drafts (protected, for the editor)
+      responses:
+        "200":
+          description: List of all questions ordered by sort order
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Question"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /questions/{id}:
+    patch:
+      operationId: updateQuestion
+      tags: [questions]
+      summary: Edit a curated question
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/QuestionUpdateInput"
+      responses:
+        "200":
+          description: Updated question
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Question"
+        "400":
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    delete:
+      operationId: deleteQuestion
+      tags: [questions]
+      summary: Delete a curated question
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "404":
+          description: Not found
           content:
             application/json:
               schema:
@@ -1277,6 +1425,95 @@ components:
           minLength: 1
         eventDate:
           type: string
+
+    Question:
+      type: object
+      required:
+        - id
+        - text
+        - destinationPath
+        - ctaLabel
+        - topic
+        - featured
+        - sortOrder
+        - status
+        - createdAt
+        - updatedAt
+      properties:
+        id:
+          type: integer
+        text:
+          type: string
+        teaser:
+          type: ["string", "null"]
+        destinationPath:
+          type: string
+        ctaLabel:
+          type: string
+        topic:
+          type: string
+        featured:
+          type: boolean
+        sortOrder:
+          type: integer
+        status:
+          type: string
+          enum: [draft, published]
+        createdAt:
+          type: string
+        updatedAt:
+          type: string
+
+    QuestionInput:
+      type: object
+      required: [text, destinationPath, ctaLabel, topic]
+      properties:
+        text:
+          type: string
+          minLength: 1
+        teaser:
+          type: string
+        destinationPath:
+          type: string
+          minLength: 1
+        ctaLabel:
+          type: string
+          minLength: 1
+        topic:
+          type: string
+          minLength: 1
+        featured:
+          type: boolean
+        sortOrder:
+          type: integer
+        status:
+          type: string
+          enum: [draft, published]
+
+    QuestionUpdateInput:
+      type: object
+      properties:
+        text:
+          type: string
+          minLength: 1
+        teaser:
+          type: ["string", "null"]
+        destinationPath:
+          type: string
+          minLength: 1
+        ctaLabel:
+          type: string
+          minLength: 1
+        topic:
+          type: string
+          minLength: 1
+        featured:
+          type: boolean
+        sortOrder:
+          type: integer
+        status:
+          type: string
+          enum: [draft, published]
 
     ThemeDocument:
       type: object

@@ -353,6 +353,117 @@ export const GetStorageObjectParams = zod.object({
 
 
 /**
+ * @summary List published curated questions
+ */
+export const ListQuestionsQueryParams = zod.object({
+  "topic": zod.coerce.string().optional().describe('Filter by topic grouping'),
+  "featured": zod.coerce.boolean().optional().describe('Only return featured questions')
+})
+
+export const ListQuestionsResponseItem = zod.object({
+  "id": zod.number(),
+  "text": zod.string(),
+  "teaser": zod.string().nullish(),
+  "destinationPath": zod.string(),
+  "ctaLabel": zod.string(),
+  "topic": zod.string(),
+  "featured": zod.boolean(),
+  "sortOrder": zod.number(),
+  "status": zod.enum(['draft', 'published']),
+  "createdAt": zod.string(),
+  "updatedAt": zod.string()
+})
+export const ListQuestionsResponse = zod.array(ListQuestionsResponseItem)
+
+
+/**
+ * @summary Create a curated question
+ */
+
+
+
+
+
+
+export const CreateQuestionBody = zod.object({
+  "text": zod.string().min(1),
+  "teaser": zod.string().optional(),
+  "destinationPath": zod.string().min(1),
+  "ctaLabel": zod.string().min(1),
+  "topic": zod.string().min(1),
+  "featured": zod.boolean().optional(),
+  "sortOrder": zod.number().optional(),
+  "status": zod.enum(['draft', 'published']).optional()
+})
+
+
+/**
+ * @summary List all questions including drafts (protected, for the editor)
+ */
+export const ListAllQuestionsResponseItem = zod.object({
+  "id": zod.number(),
+  "text": zod.string(),
+  "teaser": zod.string().nullish(),
+  "destinationPath": zod.string(),
+  "ctaLabel": zod.string(),
+  "topic": zod.string(),
+  "featured": zod.boolean(),
+  "sortOrder": zod.number(),
+  "status": zod.enum(['draft', 'published']),
+  "createdAt": zod.string(),
+  "updatedAt": zod.string()
+})
+export const ListAllQuestionsResponse = zod.array(ListAllQuestionsResponseItem)
+
+
+/**
+ * @summary Edit a curated question
+ */
+export const UpdateQuestionParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+
+
+
+
+
+
+export const UpdateQuestionBody = zod.object({
+  "text": zod.string().min(1).optional(),
+  "teaser": zod.string().nullish(),
+  "destinationPath": zod.string().min(1).optional(),
+  "ctaLabel": zod.string().min(1).optional(),
+  "topic": zod.string().min(1).optional(),
+  "featured": zod.boolean().optional(),
+  "sortOrder": zod.number().optional(),
+  "status": zod.enum(['draft', 'published']).optional()
+})
+
+export const UpdateQuestionResponse = zod.object({
+  "id": zod.number(),
+  "text": zod.string(),
+  "teaser": zod.string().nullish(),
+  "destinationPath": zod.string(),
+  "ctaLabel": zod.string(),
+  "topic": zod.string(),
+  "featured": zod.boolean(),
+  "sortOrder": zod.number(),
+  "status": zod.enum(['draft', 'published']),
+  "createdAt": zod.string(),
+  "updatedAt": zod.string()
+})
+
+
+/**
+ * @summary Delete a curated question
+ */
+export const DeleteQuestionParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+
+/**
  * @summary List public contracts (ANAC)
  */
 export const ListContractsQueryParams = zod.object({

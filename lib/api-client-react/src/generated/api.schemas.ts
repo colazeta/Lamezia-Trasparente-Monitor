@@ -199,6 +199,76 @@ export interface ThemePostUpdateInput {
   eventDate?: string;
 }
 
+export type QuestionStatus = typeof QuestionStatus[keyof typeof QuestionStatus];
+
+
+export const QuestionStatus = {
+  draft: 'draft',
+  published: 'published',
+} as const;
+
+export interface Question {
+  id: number;
+  text: string;
+  /** @nullable */
+  teaser?: string | null;
+  destinationPath: string;
+  ctaLabel: string;
+  topic: string;
+  featured: boolean;
+  sortOrder: number;
+  status: QuestionStatus;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export type QuestionInputStatus = typeof QuestionInputStatus[keyof typeof QuestionInputStatus];
+
+
+export const QuestionInputStatus = {
+  draft: 'draft',
+  published: 'published',
+} as const;
+
+export interface QuestionInput {
+  /** @minLength 1 */
+  text: string;
+  teaser?: string;
+  /** @minLength 1 */
+  destinationPath: string;
+  /** @minLength 1 */
+  ctaLabel: string;
+  /** @minLength 1 */
+  topic: string;
+  featured?: boolean;
+  sortOrder?: number;
+  status?: QuestionInputStatus;
+}
+
+export type QuestionUpdateInputStatus = typeof QuestionUpdateInputStatus[keyof typeof QuestionUpdateInputStatus];
+
+
+export const QuestionUpdateInputStatus = {
+  draft: 'draft',
+  published: 'published',
+} as const;
+
+export interface QuestionUpdateInput {
+  /** @minLength 1 */
+  text?: string;
+  /** @nullable */
+  teaser?: string | null;
+  /** @minLength 1 */
+  destinationPath?: string;
+  /** @minLength 1 */
+  ctaLabel?: string;
+  /** @minLength 1 */
+  topic?: string;
+  featured?: boolean;
+  sortOrder?: number;
+  status?: QuestionUpdateInputStatus;
+}
+
 export interface NameCount {
   name: string;
   count: number;
@@ -627,6 +697,17 @@ export const ListThemesSort = {
   relevance: 'relevance',
   shares: 'shares',
 } as const;
+
+export type ListQuestionsParams = {
+/**
+ * Filter by topic grouping
+ */
+topic?: string;
+/**
+ * Only return featured questions
+ */
+featured?: boolean;
+};
 
 export type ListContractsParams = {
 search?: string;

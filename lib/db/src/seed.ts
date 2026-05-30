@@ -12,6 +12,7 @@ import {
   feedStatusTable,
   categoriesTable,
   themesTable,
+  questionsTable,
 } from "./schema";
 
 type SeedContract = {
@@ -902,6 +903,188 @@ async function linkContractsToThemes(): Promise<void> {
   }
 }
 
+// Set iniziale di Domande curate ("Cosa puoi scoprire?"). Ogni domanda è
+// collegata alla sezione che la risponde (destinationPath) e raggruppata per
+// argomento (topic). Alcune sono marcate "in evidenza" per la home.
+const seedQuestions: {
+  text: string;
+  teaser: string;
+  destinationPath: string;
+  ctaLabel: string;
+  topic: string;
+  featured?: boolean;
+}[] = [
+  // Soldi pubblici / Appalti → Contratti
+  {
+    text: "Quanto ha speso il Comune in appalti?",
+    teaser:
+      "L'importo complessivo dei contratti pubblici affidati dal Comune di Lamezia Terme.",
+    destinationPath: "/contratti",
+    ctaLabel: "Vai agli appalti",
+    topic: "Soldi pubblici / Appalti",
+    featured: true,
+  },
+  {
+    text: "Quali aziende vincono più appalti dal Comune?",
+    teaser: "Le imprese che si aggiudicano più contratti pubblici, per importo.",
+    destinationPath: "/contratti?sort=amount",
+    ctaLabel: "Vedi i fornitori",
+    topic: "Soldi pubblici / Appalti",
+  },
+  {
+    text: "Quali sono gli ultimi appalti affidati, e a chi?",
+    teaser: "Gli affidamenti più recenti, con importo e beneficiario.",
+    destinationPath: "/contratti",
+    ctaLabel: "Ultimi appalti",
+    topic: "Soldi pubblici / Appalti",
+  },
+  {
+    text: "In cosa spende il Comune?",
+    teaser:
+      "Le categorie di spesa raggruppate per macrotemi (ambiente, scuole, strade, sociale) e le ultime spese registrate.",
+    destinationPath: "/contratti",
+    ctaLabel: "Esplora la spesa",
+    topic: "Soldi pubblici / Appalti",
+  },
+  // PNRR → PNRR
+  {
+    text: "Quanti fondi PNRR ha ricevuto Lamezia, e per quali opere?",
+    teaser:
+      "I finanziamenti del Piano Nazionale di Ripresa e Resilienza assegnati alla città e le opere collegate.",
+    destinationPath: "/pnrr",
+    ctaLabel: "Scopri i fondi PNRR",
+    topic: "PNRR",
+    featured: true,
+  },
+  {
+    text: "A che punto sono i lavori finanziati dal PNRR?",
+    teaser: "Lo stato di avanzamento dei progetti finanziati con fondi PNRR.",
+    destinationPath: "/pnrr",
+    ctaLabel: "Stato dei lavori",
+    topic: "PNRR",
+  },
+  // Atti e decisioni → Albo / Delibere
+  {
+    text: "Cosa ha deciso il Comune di recente?",
+    teaser: "Gli ultimi atti pubblicati all'albo pretorio del Comune.",
+    destinationPath: "/albo",
+    ctaLabel: "Vai all'albo",
+    topic: "Atti e decisioni",
+  },
+  {
+    text: "Quali delibere sono state approvate su un certo tema?",
+    teaser: "Le delibere di giunta e consiglio, ricercabili per argomento.",
+    destinationPath: "/delibere",
+    ctaLabel: "Cerca tra le delibere",
+    topic: "Atti e decisioni",
+  },
+  {
+    text: "Come ha votato il Consiglio su una delibera?",
+    teaser:
+      "L'esito del voto con l'appello nominale dei consiglieri su ogni delibera.",
+    destinationPath: "/delibere",
+    ctaLabel: "Vedi i voti",
+    topic: "Atti e decisioni",
+  },
+  // Chi governa → Amministratori
+  {
+    text: "Chi amministra la città, e con quali deleghe?",
+    teaser: "Sindaco, giunta e consiglio comunale, con i rispettivi incarichi.",
+    destinationPath: "/amministratori",
+    ctaLabel: "Chi governa",
+    topic: "Chi governa",
+    featured: true,
+  },
+  {
+    text: "Quanto guadagnano gli amministratori?",
+    teaser: "I compensi e le indennità degli amministratori comunali.",
+    destinationPath: "/amministratori",
+    ctaLabel: "Vedi i compensi",
+    topic: "Chi governa",
+  },
+  // Agenda istituzionale → Convocazioni
+  {
+    text: "Quando si riunisce il prossimo Consiglio comunale?",
+    teaser: "Le convocazioni del Consiglio comunale e l'ordine del giorno.",
+    destinationPath: "/convocazioni",
+    ctaLabel: "Prossime sedute",
+    topic: "Agenda istituzionale",
+  },
+  {
+    text: "Di cosa si è discusso nell'ultima seduta?",
+    teaser: "I resoconti delle sedute del Consiglio comunale.",
+    destinationPath: "/convocazioni",
+    ctaLabel: "Resoconti delle sedute",
+    topic: "Agenda istituzionale",
+  },
+  // Temi / Cronistoria → Temi
+  {
+    text: "A che punto è quest'opera pubblica?",
+    teaser: "Lo stato dei temi monitorati: opere, servizi e vicende cittadine.",
+    destinationPath: "/temi",
+    ctaLabel: "Esplora i temi",
+    topic: "Temi / Cronistoria",
+    featured: true,
+  },
+  {
+    text: "Com'è andata avanti questa vicenda nel tempo?",
+    teaser: "La cronistoria di ogni tema, aggiornamento dopo aggiornamento.",
+    destinationPath: "/temi",
+    ctaLabel: "Leggi le cronistorie",
+    topic: "Temi / Cronistoria",
+  },
+  {
+    text: "Quali temi seguono di più i cittadini?",
+    teaser: "I temi con più rilevanza e condivisioni da parte dei cittadini.",
+    destinationPath: "/temi?sort=relevance",
+    ctaLabel: "Temi più seguiti",
+    topic: "Temi / Cronistoria",
+  },
+  // Partecipazione → Segnalazioni
+  {
+    text: "Quali problemi hanno segnalato i cittadini vicino a me?",
+    teaser: "Le segnalazioni di sprechi e disservizi inviate dai cittadini.",
+    destinationPath: "/segnalazioni",
+    ctaLabel: "Vedi le segnalazioni",
+    topic: "Partecipazione",
+  },
+  {
+    text: "Come segnalo uno spreco o un disservizio?",
+    teaser: "Invia una segnalazione al Comune in pochi passaggi.",
+    destinationPath: "/segnalazioni",
+    ctaLabel: "Fai una segnalazione",
+    topic: "Partecipazione",
+    featured: true,
+  },
+];
+
+// Carica il set iniziale di Domande. Idempotente: salta se esistono già domande.
+async function seedQuestionsData(): Promise<void> {
+  const [{ count }] = await db
+    .select({ count: sql<number>`count(*)::int` })
+    .from(questionsTable);
+
+  if (count > 0) {
+    console.log("Questions seed skipped: questions already exist.");
+    return;
+  }
+
+  console.log(`Seeding ${seedQuestions.length} curated questions...`);
+
+  await db.insert(questionsTable).values(
+    seedQuestions.map((q, i) => ({
+      text: q.text,
+      teaser: q.teaser,
+      destinationPath: q.destinationPath,
+      ctaLabel: q.ctaLabel,
+      topic: q.topic,
+      featured: q.featured ?? false,
+      sortOrder: i,
+      status: "published",
+    })),
+  );
+}
+
 export async function seed() {
   await db.transaction(async (tx) => {
     const [{ count }] = await tx
@@ -972,6 +1155,7 @@ export async function seed() {
   await seedThemesAndCategories();
   await linkContractsToThemes();
   await seedOfficials();
+  await seedQuestionsData();
 }
 
 const entryPath = process.argv[1] ?? "";

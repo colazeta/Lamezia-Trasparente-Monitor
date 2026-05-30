@@ -35,12 +35,16 @@ import type {
   ListDelibereParams,
   ListOfficialsParams,
   ListPublicationsParams,
+  ListQuestionsParams,
   ListThemesParams,
   Official,
   OfficialInput,
   OfficialProfile,
   PnrrCensus,
   Publication,
+  Question,
+  QuestionInput,
+  QuestionUpdateInput,
   Report,
   ReportInput,
   SedutaDetail,
@@ -1202,6 +1206,380 @@ export function useGetStorageObject<TData = Awaited<ReturnType<typeof getStorage
 
 
 
+
+export const getListQuestionsUrl = (params?: ListQuestionsParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : value.toString())
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/questions?${stringifiedParams}` : `/api/questions`
+}
+
+/**
+ * @summary List published curated questions
+ */
+export const listQuestions = async (params?: ListQuestionsParams, options?: RequestInit): Promise<Question[]> => {
+
+  return customFetch<Question[]>(getListQuestionsUrl(params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getListQuestionsQueryKey = (params?: ListQuestionsParams,) => {
+    return [
+    `/api/questions`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getListQuestionsQueryOptions = <TData = Awaited<ReturnType<typeof listQuestions>>, TError = ErrorType<unknown>>(params?: ListQuestionsParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listQuestions>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListQuestionsQueryKey(params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listQuestions>>> = ({ signal }) => listQuestions(params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listQuestions>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ListQuestionsQueryResult = NonNullable<Awaited<ReturnType<typeof listQuestions>>>
+export type ListQuestionsQueryError = ErrorType<unknown>
+
+
+/**
+ * @summary List published curated questions
+ */
+
+export function useListQuestions<TData = Awaited<ReturnType<typeof listQuestions>>, TError = ErrorType<unknown>>(
+ params?: ListQuestionsParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listQuestions>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getListQuestionsQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
+
+
+
+export const getCreateQuestionUrl = () => {
+
+
+
+
+  return `/api/questions`
+}
+
+/**
+ * @summary Create a curated question
+ */
+export const createQuestion = async (questionInput: QuestionInput, options?: RequestInit): Promise<Question> => {
+
+  return customFetch<Question>(getCreateQuestionUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      questionInput,)
+  }
+);}
+
+
+
+
+export const getCreateQuestionMutationOptions = <TError = ErrorType<Error>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createQuestion>>, TError,{data: BodyType<QuestionInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof createQuestion>>, TError,{data: BodyType<QuestionInput>}, TContext> => {
+
+const mutationKey = ['createQuestion'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createQuestion>>, {data: BodyType<QuestionInput>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  createQuestion(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type CreateQuestionMutationResult = NonNullable<Awaited<ReturnType<typeof createQuestion>>>
+    export type CreateQuestionMutationBody = BodyType<QuestionInput>
+    export type CreateQuestionMutationError = ErrorType<Error>
+
+    /**
+ * @summary Create a curated question
+ */
+export const useCreateQuestion = <TError = ErrorType<Error>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createQuestion>>, TError,{data: BodyType<QuestionInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof createQuestion>>,
+        TError,
+        {data: BodyType<QuestionInput>},
+        TContext
+      > => {
+      return useMutation(getCreateQuestionMutationOptions(options));
+    }
+
+export const getListAllQuestionsUrl = () => {
+
+
+
+
+  return `/api/questions/all`
+}
+
+/**
+ * @summary List all questions including drafts (protected, for the editor)
+ */
+export const listAllQuestions = async ( options?: RequestInit): Promise<Question[]> => {
+
+  return customFetch<Question[]>(getListAllQuestionsUrl(),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getListAllQuestionsQueryKey = () => {
+    return [
+    `/api/questions/all`
+    ] as const;
+    }
+
+
+export const getListAllQuestionsQueryOptions = <TData = Awaited<ReturnType<typeof listAllQuestions>>, TError = ErrorType<Error>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listAllQuestions>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListAllQuestionsQueryKey();
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listAllQuestions>>> = ({ signal }) => listAllQuestions({ signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listAllQuestions>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ListAllQuestionsQueryResult = NonNullable<Awaited<ReturnType<typeof listAllQuestions>>>
+export type ListAllQuestionsQueryError = ErrorType<Error>
+
+
+/**
+ * @summary List all questions including drafts (protected, for the editor)
+ */
+
+export function useListAllQuestions<TData = Awaited<ReturnType<typeof listAllQuestions>>, TError = ErrorType<Error>>(
+  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listAllQuestions>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getListAllQuestionsQueryOptions(options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
+
+
+
+export const getUpdateQuestionUrl = (id: number,) => {
+
+
+
+
+  return `/api/questions/${id}`
+}
+
+/**
+ * @summary Edit a curated question
+ */
+export const updateQuestion = async (id: number,
+    questionUpdateInput: QuestionUpdateInput, options?: RequestInit): Promise<Question> => {
+
+  return customFetch<Question>(getUpdateQuestionUrl(id),
+  {
+    ...options,
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      questionUpdateInput,)
+  }
+);}
+
+
+
+
+export const getUpdateQuestionMutationOptions = <TError = ErrorType<Error>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateQuestion>>, TError,{id: number;data: BodyType<QuestionUpdateInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof updateQuestion>>, TError,{id: number;data: BodyType<QuestionUpdateInput>}, TContext> => {
+
+const mutationKey = ['updateQuestion'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof updateQuestion>>, {id: number;data: BodyType<QuestionUpdateInput>}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  updateQuestion(id,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type UpdateQuestionMutationResult = NonNullable<Awaited<ReturnType<typeof updateQuestion>>>
+    export type UpdateQuestionMutationBody = BodyType<QuestionUpdateInput>
+    export type UpdateQuestionMutationError = ErrorType<Error>
+
+    /**
+ * @summary Edit a curated question
+ */
+export const useUpdateQuestion = <TError = ErrorType<Error>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateQuestion>>, TError,{id: number;data: BodyType<QuestionUpdateInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof updateQuestion>>,
+        TError,
+        {id: number;data: BodyType<QuestionUpdateInput>},
+        TContext
+      > => {
+      return useMutation(getUpdateQuestionMutationOptions(options));
+    }
+
+export const getDeleteQuestionUrl = (id: number,) => {
+
+
+
+
+  return `/api/questions/${id}`
+}
+
+/**
+ * @summary Delete a curated question
+ */
+export const deleteQuestion = async (id: number, options?: RequestInit): Promise<void> => {
+
+  return customFetch<void>(getDeleteQuestionUrl(id),
+  {
+    ...options,
+    method: 'DELETE'
+
+
+  }
+);}
+
+
+
+
+export const getDeleteQuestionMutationOptions = <TError = ErrorType<Error>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteQuestion>>, TError,{id: number}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof deleteQuestion>>, TError,{id: number}, TContext> => {
+
+const mutationKey = ['deleteQuestion'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof deleteQuestion>>, {id: number}> = (props) => {
+          const {id} = props ?? {};
+
+          return  deleteQuestion(id,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type DeleteQuestionMutationResult = NonNullable<Awaited<ReturnType<typeof deleteQuestion>>>
+
+    export type DeleteQuestionMutationError = ErrorType<Error>
+
+    /**
+ * @summary Delete a curated question
+ */
+export const useDeleteQuestion = <TError = ErrorType<Error>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteQuestion>>, TError,{id: number}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof deleteQuestion>>,
+        TError,
+        {id: number},
+        TContext
+      > => {
+      return useMutation(getDeleteQuestionMutationOptions(options));
+    }
 
 export const getListContractsUrl = (params?: ListContractsParams,) => {
   const normalizedParams = new URLSearchParams();
