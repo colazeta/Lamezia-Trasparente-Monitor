@@ -21,6 +21,7 @@ import {
   Hash,
   Building2,
   Calendar,
+  Filter,
   X,
 } from "lucide-react";
 import { format } from "date-fns";
@@ -109,13 +110,14 @@ export function Contracts() {
   const [debouncedSearch, setDebouncedSearch] = useState("");
   const [procedureType, setProcedureType] = useState("all");
   const [acquisitionTool, setAcquisitionTool] = useState("all");
+  const [themeId, setThemeId] = useState("all");
   const [minAmount, setMinAmount] = useState("");
   const [maxAmount, setMaxAmount] = useState("");
   const [from, setFrom] = useState("");
   const [to, setTo] = useState("");
   const [selected, setSelected] = useState<Contract | null>(null);
 
-  const { data: themes } = useListThemes();
+  const { data: themes, isLoading: themesLoading } = useListThemes();
 
   useEffect(() => {
     const handler = setTimeout(() => setDebouncedSearch(search), 400);
@@ -127,6 +129,7 @@ export function Contracts() {
     if (debouncedSearch) f.search = debouncedSearch;
     if (procedureType !== "all") f.procedureType = procedureType;
     if (acquisitionTool !== "all") f.acquisitionTool = acquisitionTool;
+    if (themeId !== "all") f.themeId = Number(themeId);
     if (minAmount && !Number.isNaN(Number(minAmount)))
       f.minAmount = Number(minAmount);
     if (maxAmount && !Number.isNaN(Number(maxAmount)))
@@ -134,7 +137,7 @@ export function Contracts() {
     if (from) f.from = from;
     if (to) f.to = to;
     return f;
-  }, [debouncedSearch, procedureType, acquisitionTool, minAmount, maxAmount, from, to]);
+  }, [debouncedSearch, procedureType, acquisitionTool, themeId, minAmount, maxAmount, from, to]);
 
   const { data: contracts, isLoading } = useListContracts(filters);
   const { data: analytics, isLoading: analyticsLoading } =
@@ -160,6 +163,7 @@ export function Contracts() {
     debouncedSearch ||
     procedureType !== "all" ||
     acquisitionTool !== "all" ||
+    themeId !== "all" ||
     minAmount ||
     maxAmount ||
     from ||
@@ -169,6 +173,7 @@ export function Contracts() {
     setSearch("");
     setProcedureType("all");
     setAcquisitionTool("all");
+    setThemeId("all");
     setMinAmount("");
     setMaxAmount("");
     setFrom("");
@@ -280,7 +285,7 @@ export function Contracts() {
         </Select>
 
         <Select value={acquisitionTool} onValueChange={setAcquisitionTool}>
-          <SelectTrigger className="h-11 bg-background">
+          <SelectTrigger className="h-11 bg-background" aria-label="Filtra per strumento">
             <div className="flex items-center gap-2 truncate">
               <ShoppingCart className="h-4 w-4 text-muted-foreground shrink-0" />
               <span className="truncate">
@@ -321,22 +326,32 @@ export function Contracts() {
 
         <div className="flex items-center gap-2">
           <div className="flex-1">
-            <label className="text-[10px] uppercase tracking-wide text-muted-foreground">
+            <label
+              htmlFor="contracts-from"
+              className="text-[10px] uppercase tracking-wide text-muted-foreground"
+            >
               Dal
             </label>
             <Input
+              id="contracts-from"
               type="date"
+              aria-label="Data dal"
               className="h-9 bg-background"
               value={from}
               onChange={(e) => setFrom(e.target.value)}
             />
           </div>
           <div className="flex-1">
-            <label className="text-[10px] uppercase tracking-wide text-muted-foreground">
+            <label
+              htmlFor="contracts-to"
+              className="text-[10px] uppercase tracking-wide text-muted-foreground"
+            >
               Al
             </label>
             <Input
+              id="contracts-to"
               type="date"
+              aria-label="Data al"
               className="h-9 bg-background"
               value={to}
               onChange={(e) => setTo(e.target.value)}
