@@ -12,7 +12,7 @@ import {
   View,
 } from "react-native";
 
-import { Badge, Card, ChipRow, EmptyState, SearchBar, Skeleton } from "@/components/ui";
+import { Badge, Card, ChipRow, DateField, EmptyState, SearchBar, Skeleton } from "@/components/ui";
 import { useColors } from "@/hooks/useColors";
 import { compactAmount, formatAmount, formatDateOpt, intentColors } from "@/lib/civic";
 import {
@@ -189,26 +189,10 @@ export default function ContrattiScreen() {
 
         <View style={styles.fieldRow}>
           <FilterField label="Aggiudicato dal">
-            <TextInput
-              value={from}
-              onChangeText={setFrom}
-              placeholder="AAAA-MM-GG"
-              placeholderTextColor={colors.mutedForeground}
-              autoCapitalize="none"
-              autoCorrect={false}
-              style={[styles.fieldInput, { color: colors.foreground, borderColor: colors.border, backgroundColor: colors.background }]}
-            />
+            <DateField value={from} onChange={setFrom} placeholder="Da" />
           </FilterField>
           <FilterField label="Aggiudicato al">
-            <TextInput
-              value={to}
-              onChangeText={setTo}
-              placeholder="AAAA-MM-GG"
-              placeholderTextColor={colors.mutedForeground}
-              autoCapitalize="none"
-              autoCorrect={false}
-              style={[styles.fieldInput, { color: colors.foreground, borderColor: colors.border, backgroundColor: colors.background }]}
-            />
+            <DateField value={to} onChange={setTo} placeholder="A" />
           </FilterField>
         </View>
       </Card>

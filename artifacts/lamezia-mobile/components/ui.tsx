@@ -1,12 +1,17 @@
+import DateTimePicker, {
+  type DateTimePickerEvent,
+} from "@react-native-community/datetimepicker";
 import { Feather } from "@expo/vector-icons";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
+  Modal,
   Platform,
   Pressable,
   ScrollView,
   StyleSheet,
   Text,
   TextInput,
+  useColorScheme,
   View,
   type StyleProp,
   type ViewStyle,
@@ -358,6 +363,144 @@ export function ChipRow<T>({
   );
 }
 
+function parseYMD(v: string): Date | null {
+  const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(v);
+  if (!m) return null;
+  const d = new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3]));
+  return Number.isNaN(d.getTime()) ? null : d;
+}
+
+function toYMD(d: Date): string {
+  const y = d.getFullYear();
+  const mo = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${y}-${mo}-${day}`;
+}
+
+export function DateField({
+  value,
+  onChange,
+  placeholder = "Seleziona data",
+}: {
+  value: string;
+  onChange: (v: string) => void;
+  placeholder?: string;
+}) {
+  const colors = useColors();
+  const scheme = useColorScheme();
+  const [show, setShow] = useState(false);
+  const [tempDate, setTempDate] = useState<Date | null>(null);
+  const parsed = parseYMD(value);
+
+  const boxStyle = [
+    styles.dateField,
+    { borderColor: colors.border, backgroundColor: colors.background, borderRadius: 8 },
+  ];
+
+  if (Platform.OS === "web") {
+    return (
+      <View style={boxStyle}>
+        <Feather name="calendar" size={15} color={colors.mutedForeground} />
+        <input
+          type="date"
+          value={value}
+          onChange={(e: { target: { value: string } }) => onChange(e.target.value)}
+          style={{
+            flex: 1,
+            border: "none",
+            outline: "none",
+            background: "transparent",
+            color: colors.foreground,
+            fontFamily: "Inter_400Regular",
+            fontSize: 14,
+            height: "100%",
+            minWidth: 0,
+          }}
+        />
+        {value ? (
+          <Pressable onPress={() => onChange("")} hitSlop={8}>
+            <Feather name="x" size={15} color={colors.mutedForeground} />
+          </Pressable>
+        ) : null}
+      </View>
+    );
+  }
+
+  const open = () => {
+    setTempDate(parsed ?? new Date());
+    setShow(true);
+  };
+
+  const onAndroidChange = (event: DateTimePickerEvent, selected?: Date) => {
+    setShow(false);
+    if (event.type === "set" && selected) onChange(toYMD(selected));
+  };
+
+  return (
+    <>
+      <Pressable onPress={open} style={boxStyle}>
+        <Feather name="calendar" size={15} color={colors.mutedForeground} />
+        <Text
+          style={[styles.dateText, { color: parsed ? colors.foreground : colors.mutedForeground }]}
+          numberOfLines={1}
+        >
+          {parsed ? value : placeholder}
+        </Text>
+        {value ? (
+          <Pressable onPress={() => onChange("")} hitSlop={8}>
+            <Feather name="x" size={15} color={colors.mutedForeground} />
+          </Pressable>
+        ) : null}
+      </Pressable>
+
+      {Platform.OS === "android" && show ? (
+        <DateTimePicker
+          value={parsed ?? new Date()}
+          mode="date"
+          display="default"
+          onChange={onAndroidChange}
+        />
+      ) : null}
+
+      {Platform.OS === "ios" ? (
+        <Modal visible={show} transparent animationType="fade" onRequestClose={() => setShow(false)}>
+          <Pressable style={styles.modalBackdrop} onPress={() => setShow(false)}>
+            <Pressable
+              style={[styles.modalSheet, { backgroundColor: colors.card, borderColor: colors.border }]}
+              onPress={() => {}}
+            >
+              <View style={styles.modalHeader}>
+                <Pressable onPress={() => setShow(false)} hitSlop={8}>
+                  <Text style={[styles.modalAction, { color: colors.mutedForeground }]}>Annulla</Text>
+                </Pressable>
+                <Pressable
+                  onPress={() => {
+                    if (tempDate) onChange(toYMD(tempDate));
+                    setShow(false);
+                  }}
+                  hitSlop={8}
+                >
+                  <Text style={[styles.modalAction, { color: colors.primary }]}>Fatto</Text>
+                </Pressable>
+              </View>
+              <DateTimePicker
+                value={tempDate ?? new Date()}
+                mode="date"
+                display="spinner"
+                themeVariant={scheme === "dark" ? "dark" : "light"}
+                onChange={(_e: DateTimePickerEvent, selected?: Date) => {
+                  if (selected) setTempDate(selected);
+                }}
+                style={{ alignSelf: "stretch" }}
+              />
+            </Pressable>
+          </Pressable>
+        </Modal>
+      ) : null}
+    </>
+  );
+}
+
 const styles = StyleSheet.create({
   header: {
     paddingHorizontal: 20,
@@ -458,5 +601,41 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginTop: 6,
     lineHeight: 20,
+  },
+  dateField: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+    borderWidth: 1,
+    paddingHorizontal: 12,
+    height: 42,
+  },
+  dateText: {
+    flex: 1,
+    fontFamily: "Inter_400Regular",
+    fontSize: 14,
+  },
+  modalBackdrop: {
+    flex: 1,
+    backgroundColor: "rgba(0,0,0,0.4)",
+    justifyContent: "flex-end",
+  },
+  modalSheet: {
+    borderTopWidth: 1,
+    borderTopLeftRadius: 18,
+    borderTopRightRadius: 18,
+    paddingBottom: 24,
+    paddingHorizontal: 12,
+  },
+  modalHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingVertical: 12,
+    paddingHorizontal: 8,
+  },
+  modalAction: {
+    fontFamily: "Inter_600SemiBold",
+    fontSize: 16,
   },
 });
