@@ -3,6 +3,8 @@ import { Menu, X, ShieldAlert, BarChart3, FileText, FileSearch, Megaphone, Home,
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import { Logo } from "@/components/brand/Logo";
+import { ThemeToggle } from "@/components/theme/ThemeToggle";
 
 const navItems = [
   { href: "/", label: "Home", icon: Home },
@@ -22,24 +24,17 @@ export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container mx-auto px-4 md:px-6 flex h-16 items-center justify-between">
-        <Link href="/" className="flex items-center gap-2">
-          <div className="bg-primary text-primary-foreground p-1.5 rounded-md">
-            <ShieldAlert className="h-5 w-5" />
-          </div>
-          <div className="flex flex-col">
-            <span className="font-serif font-bold leading-none text-lg text-primary tracking-tight">
-              rendiamoLameziaTrasparente
-            </span>
-            <span className="text-[10px] font-medium tracking-widest text-muted-foreground uppercase">
-              Iniziativa Civica Indipendente
-            </span>
-          </div>
+    <header className="sticky top-0 z-50 w-full border-b border-border bg-background/85 backdrop-blur supports-[backdrop-filter]:bg-background/70">
+      <div className="container mx-auto px-4 md:px-6 flex h-16 items-center justify-between gap-4">
+        <Link href="/" className="shrink-0">
+          <Logo
+            textClassName="text-base sm:text-lg leading-none"
+            subtitle
+          />
         </Link>
 
         {/* Desktop Nav */}
-        <nav className="hidden md:flex items-center gap-6">
+        <nav className="hidden xl:flex items-center gap-1">
           {navItems.map((item) => {
             const Icon = item.icon;
             const isActive = location === item.href || (item.href !== "/" && location.startsWith(item.href));
@@ -48,33 +43,39 @@ export function Navbar() {
                 key={item.href}
                 href={item.href}
                 className={cn(
-                  "flex items-center gap-2 text-sm font-medium transition-colors hover:text-primary",
-                  isActive ? "text-primary" : "text-muted-foreground"
+                  "relative flex items-center gap-1.5 rounded-md px-2.5 py-2 text-[13px] font-semibold transition-colors hover-elevate",
+                  isActive ? "text-primary" : "text-muted-foreground hover:text-foreground"
                 )}
               >
                 <Icon className="h-4 w-4" />
                 {item.label}
+                {isActive && (
+                  <span className="absolute inset-x-2.5 -bottom-px h-0.5 rounded-full bg-brand" />
+                )}
               </Link>
             );
           })}
         </nav>
 
-        {/* Mobile Toggle */}
-        <Button
-          variant="ghost"
-          size="icon"
-          className="md:hidden"
-          onClick={() => setIsOpen(!isOpen)}
-          aria-label="Menu"
-        >
-          {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-        </Button>
+        <div className="flex items-center gap-2">
+          <ThemeToggle />
+          {/* Mobile Toggle */}
+          <Button
+            variant="outline"
+            size="icon"
+            className="xl:hidden"
+            onClick={() => setIsOpen(!isOpen)}
+            aria-label="Menu"
+          >
+            {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          </Button>
+        </div>
       </div>
 
       {/* Mobile Nav */}
       {isOpen && (
-        <div className="md:hidden border-b bg-background">
-          <nav className="container mx-auto px-4 py-4 flex flex-col gap-4">
+        <div className="xl:hidden border-t border-border bg-background">
+          <nav className="container mx-auto px-4 py-4 grid grid-cols-2 gap-2">
             {navItems.map((item) => {
               const Icon = item.icon;
               const isActive = location === item.href || (item.href !== "/" && location.startsWith(item.href));
@@ -84,11 +85,13 @@ export function Navbar() {
                   href={item.href}
                   onClick={() => setIsOpen(false)}
                   className={cn(
-                    "flex items-center gap-3 text-sm font-medium transition-colors p-2 rounded-md",
-                    isActive ? "bg-primary/10 text-primary" : "text-muted-foreground hover:bg-muted"
+                    "flex items-center gap-3 text-sm font-semibold transition-colors p-3 rounded-md border hover-elevate",
+                    isActive
+                      ? "bg-primary/10 text-primary border-primary/20"
+                      : "text-muted-foreground border-transparent"
                   )}
                 >
-                  <Icon className="h-5 w-5" />
+                  <Icon className="h-5 w-5 shrink-0" />
                   {item.label}
                 </Link>
               );

@@ -9,11 +9,12 @@ export function Themes() {
 
   return (
     <div className="container mx-auto px-4 py-8 md:py-12">
-      <div className="mb-8 space-y-4">
-        <h1 className="text-3xl md:text-4xl font-serif font-bold tracking-tight">
+      <div className="mb-8">
+        <span className="eyebrow text-brand">Osservatorio civico</span>
+        <h1 className="mt-2 text-3xl md:text-4xl font-display font-bold tracking-tight">
           Temi Monitorati
         </h1>
-        <p className="text-muted-foreground text-lg max-w-3xl">
+        <p className="mt-3 text-muted-foreground text-lg max-w-3xl">
           Le questioni pubbliche sotto osservazione. Ogni tema raccoglie
           documenti, atti e contratti per fare chiarezza su una vicenda della
           città.
@@ -39,7 +40,7 @@ export function Themes() {
           <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-primary/10 text-primary">
             <Compass className="h-8 w-8" />
           </div>
-          <h3 className="text-2xl font-serif font-bold mb-3">
+          <h3 className="text-2xl font-display font-bold tracking-tight mb-3">
             I temi sono in fase di curatela
           </h3>
           <p className="text-muted-foreground max-w-xl mx-auto mb-8">

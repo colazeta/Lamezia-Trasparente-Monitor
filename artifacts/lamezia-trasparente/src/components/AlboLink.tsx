@@ -10,7 +10,7 @@ export function AlboLink({ className }: { className?: string }) {
       rel="noopener noreferrer"
       onClick={(e) => e.stopPropagation()}
       className={cn(
-        "inline-flex items-center gap-1.5 text-xs font-medium text-primary hover:underline",
+        "inline-flex items-center gap-1.5 text-xs font-semibold text-primary hover:text-brand transition-colors",
         className,
       )}
     >

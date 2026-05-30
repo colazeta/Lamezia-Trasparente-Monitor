@@ -43,36 +43,58 @@ export function Home() {
     useListConvocazioni({ tipo: "commissione" });
 
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col">
       {/* Hero Section */}
-      <section className="relative bg-sidebar border-b border-sidebar-border text-sidebar-foreground overflow-hidden py-20 md:py-32">
-        <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1518398046578-8cca57782e17?q=80&w=2000&auto=format&fit=crop')] bg-cover bg-center opacity-10 mix-blend-overlay pointer-events-none"></div>
-        <div className="absolute inset-0 bg-gradient-to-t from-sidebar to-transparent opacity-80 pointer-events-none"></div>
+      <section className="relative bg-sidebar text-sidebar-foreground overflow-hidden">
+        {/* background texture */}
+        <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1518398046578-8cca57782e17?q=80&w=2000&auto=format&fit=crop')] bg-cover bg-center opacity-[0.07] pointer-events-none" />
+        <div
+          className="absolute inset-0 pointer-events-none opacity-[0.5]"
+          style={{
+            backgroundImage:
+              "radial-gradient(circle at 15% 10%, hsl(216 92% 58% / 0.22), transparent 45%), radial-gradient(circle at 90% 90%, hsl(14 88% 52% / 0.18), transparent 45%)",
+          }}
+        />
+        <div
+          className="absolute inset-0 pointer-events-none opacity-[0.04]"
+          style={{
+            backgroundImage:
+              "linear-gradient(hsl(0 0% 100%) 1px, transparent 1px), linear-gradient(90deg, hsl(0 0% 100%) 1px, transparent 1px)",
+            backgroundSize: "64px 64px",
+          }}
+        />
 
-        <div className="container relative z-10 mx-auto px-4 md:px-6 flex flex-col items-center text-center max-w-4xl">
-          <div className="inline-flex items-center rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-sm font-medium text-primary mb-8 backdrop-blur-sm">
-            <ShieldAlert className="mr-2 h-4 w-4" />
+        <div className="container relative z-10 mx-auto px-4 md:px-6 py-20 md:py-28 flex flex-col items-start max-w-4xl">
+          <div className="eyebrow rounded-full border border-brand/40 bg-brand/10 px-3.5 py-1.5 text-brand">
+            <ShieldAlert className="h-3.5 w-3.5" />
             Osservatorio Civico Indipendente
           </div>
 
-          <h1 className="font-serif text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight text-white mb-6 leading-[1.1]">
-            La trasparenza è un diritto.<br className="hidden md:inline" />
-            <span className="text-primary">Il controllo è un dovere.</span>
+          <h1 className="font-display text-5xl md:text-7xl lg:text-[5.25rem] font-bold tracking-[-0.03em] text-white mt-7 mb-6 leading-[0.95]">
+            La trasparenza<br className="hidden sm:inline" /> è un diritto.
+            <br />
+            <span className="text-gradient-brand">Il controllo è un dovere.</span>
           </h1>
 
-          <p className="text-lg md:text-xl text-sidebar-foreground/80 mb-10 max-w-2xl text-balance">
+          <p className="text-lg md:text-xl text-sidebar-foreground/75 mb-9 max-w-2xl text-balance">
             Monitoriamo gli atti, gli appalti e le decisioni del Comune di Lamezia Terme.
-            Uno strumento fatto dai cittadini, per i cittadini, per pretendere chiarezza sull'uso delle risorse pubbliche.
+            Uno strumento fatto dai cittadini, per i cittadini, per pretendere chiarezza
+            sull'uso delle risorse pubbliche.
           </p>
 
-          <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
+          <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
             <Link href="/albo" className="w-full sm:w-auto">
-              <Button size="lg" className="w-full text-base h-12 px-8">
-                Esplora l'Albo Pretorio <ArrowRight className="ml-2 h-4 w-4" />
+              <Button variant="brand" size="lg" className="w-full text-base h-12 px-7 font-bold">
+                Esplora l'Albo Pretorio <ArrowRight className="ml-1 h-4 w-4" />
               </Button>
             </Link>
             <Link href="/segnalazioni" className="w-full sm:w-auto">
-              <Button variant="outline" size="lg" className="w-full text-base h-12 px-8 bg-sidebar-foreground/5 text-white border-sidebar-foreground/20 hover:bg-sidebar-foreground/10 hover:text-white">
+              <Button
+                variant="outline"
+                size="lg"
+                className="w-full text-base h-12 px-7 font-bold bg-white/5 text-white border-white/25 hover:bg-white/10"
+              >
+                <Megaphone className="mr-1 h-4 w-4" />
                 Invia una Segnalazione
               </Button>
             </Link>
@@ -81,9 +103,9 @@ export function Home() {
       </section>
 
       {/* Stats Section */}
-      <section className="py-12 bg-muted/30 border-b">
+      <section className="border-b border-border bg-card">
         <div className="container mx-auto px-4 md:px-6">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8">
+          <div className="grid grid-cols-2 md:grid-cols-4 divide-x divide-y md:divide-y-0 divide-border">
             <StatCard
               title="Atti Pubblicati"
               value={stats?.acts}
@@ -120,17 +142,18 @@ export function Home() {
 
             {/* Convocazioni */}
             <div className="lg:col-span-2 space-y-8">
-              <div className="flex items-center justify-between">
+              <div className="flex items-end justify-between gap-4">
                 <div>
-                  <h2 className="text-3xl font-serif font-bold tracking-tight mb-2">
+                  <span className="eyebrow text-brand mb-2">Agenda pubblica</span>
+                  <h2 className="text-3xl md:text-4xl font-display font-bold tracking-tight mt-2">
                     Prossime Convocazioni
                   </h2>
-                  <p className="text-muted-foreground">
+                  <p className="text-muted-foreground mt-2">
                     Sedute del Consiglio Comunale e delle Commissioni Consiliari.
                   </p>
                 </div>
-                <Link href="/convocazioni" className="hidden md:flex">
-                  <Button variant="ghost" className="gap-2">
+                <Link href="/convocazioni" className="hidden md:flex shrink-0">
+                  <Button variant="ghost" className="gap-2 font-semibold">
                     Vedi tutte <ArrowRight className="h-4 w-4" />
                   </Button>
                 </Link>
@@ -152,7 +175,7 @@ export function Home() {
               </div>
 
               <Link href="/convocazioni" className="md:hidden block mt-6">
-                <Button variant="outline" className="w-full">
+                <Button variant="outline" className="w-full font-semibold">
                   Vedi tutte le convocazioni
                 </Button>
               </Link>
@@ -161,13 +184,16 @@ export function Home() {
             {/* Sidebar Activity */}
             <div className="space-y-8">
               <div>
-                <h2 className="text-3xl font-serif font-bold tracking-tight mb-2">Attività Recente</h2>
-                <p className="text-muted-foreground">Ultimi aggiornamenti dalla piattaforma.</p>
+                <span className="eyebrow text-brand mb-2">In tempo reale</span>
+                <h2 className="text-3xl md:text-4xl font-display font-bold tracking-tight mt-2">
+                  Attività Recente
+                </h2>
+                <p className="text-muted-foreground mt-2">Ultimi aggiornamenti dalla piattaforma.</p>
               </div>
 
-              <Card className="border-border/50 shadow-sm">
+              <Card className="overflow-hidden">
                 <CardContent className="p-0">
-                  <div className="divide-y">
+                  <div className="divide-y divide-border">
                     {activityLoading ? (
                       Array(5).fill(0).map((_, i) => (
                         <div key={i} className="p-4 flex gap-4">
@@ -189,9 +215,9 @@ export function Home() {
                     )}
                   </div>
                 </CardContent>
-                <CardHeader className="p-4 border-t bg-muted/10">
+                <CardHeader className="p-3 border-t border-border bg-muted/30">
                   <Link href="/albo" className="w-full">
-                    <Button variant="ghost" className="w-full justify-between text-muted-foreground hover:text-foreground">
+                    <Button variant="ghost" className="w-full justify-between font-semibold text-muted-foreground hover:text-foreground">
                       Vai all'Albo Pretorio <ArrowUpRight className="h-4 w-4" />
                     </Button>
                   </Link>
@@ -204,16 +230,27 @@ export function Home() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 bg-primary text-primary-foreground">
-        <div className="container mx-auto px-4 md:px-6 text-center max-w-3xl">
-          <Megaphone className="h-12 w-12 mx-auto mb-6 opacity-80" />
-          <h2 className="text-3xl md:text-4xl font-serif font-bold mb-4">Hai notato un'anomalia?</h2>
-          <p className="text-primary-foreground/80 text-lg mb-8 text-balance">
-            La trasparenza si costruisce insieme. Segnala lavori interrotti, bandi sospetti o sprechi di denaro pubblico. Il nostro team verificherà la segnalazione.
+      <section className="relative overflow-hidden bg-brand text-brand-foreground">
+        <div
+          className="absolute inset-0 opacity-10 pointer-events-none"
+          style={{
+            backgroundImage:
+              "linear-gradient(hsl(0 0% 0% / 0.6) 1px, transparent 1px), linear-gradient(90deg, hsl(0 0% 0% / 0.6) 1px, transparent 1px)",
+            backgroundSize: "48px 48px",
+          }}
+        />
+        <div className="container relative mx-auto px-4 md:px-6 py-20 text-center max-w-3xl">
+          <Megaphone className="h-12 w-12 mx-auto mb-6" />
+          <h2 className="text-3xl md:text-5xl font-display font-bold mb-4 tracking-tight">
+            Hai notato un'anomalia?
+          </h2>
+          <p className="text-brand-foreground/85 text-lg mb-8 text-balance">
+            La trasparenza si costruisce insieme. Segnala lavori interrotti, bandi sospetti o
+            sprechi di denaro pubblico. Il nostro team verificherà la segnalazione.
           </p>
           <Link href="/segnalazioni">
-            <Button size="lg" variant="secondary" className="text-base h-12 px-8 font-semibold">
-              Invia una Segnalazione
+            <Button size="lg" variant="secondary" className="text-base h-12 px-8 font-bold">
+              Invia una Segnalazione <ArrowRight className="ml-1 h-4 w-4" />
             </Button>
           </Link>
         </div>
@@ -234,15 +271,15 @@ function ConvocazioniColumn({
   loading: boolean;
 }) {
   return (
-    <Card className="border-border/50 shadow-sm">
-      <CardHeader className="flex flex-row items-center gap-2 space-y-0 border-b bg-muted/10 py-3">
+    <Card className="overflow-hidden">
+      <CardHeader className="flex flex-row items-center gap-2.5 space-y-0 border-b border-border bg-muted/30 py-3.5">
         <div className="p-1.5 rounded-md bg-primary/10 text-primary">
           <Icon className="h-4 w-4" />
         </div>
-        <h3 className="font-semibold text-sm">{title}</h3>
+        <h3 className="font-display font-bold text-sm tracking-tight">{title}</h3>
       </CardHeader>
       <CardContent className="p-0">
-        <div className="divide-y">
+        <div className="divide-y divide-border">
           {loading ? (
             Array(3).fill(0).map((_, i) => (
               <div key={i} className="p-4 space-y-2">
@@ -252,8 +289,8 @@ function ConvocazioniColumn({
             ))
           ) : items && items.length > 0 ? (
             items.slice(0, 3).map((c) => (
-              <Link key={c.id} href="/convocazioni" className="block p-4 hover:bg-muted/30 transition-colors">
-                <div className="flex items-center gap-1.5 text-xs font-medium text-primary mb-1">
+              <Link key={c.id} href="/convocazioni" className="block p-4 hover-elevate transition-colors">
+                <div className="flex items-center gap-1.5 text-xs font-bold text-brand mb-1.5">
                   <Calendar className="h-3.5 w-3.5" />
                   {formatDate(c.dataAtto ?? c.pubStart)}
                 </div>
@@ -273,18 +310,19 @@ function ConvocazioniColumn({
 
 function StatCard({ title, value, loading, icon: Icon, highlight = false }: any) {
   return (
-    <div className={`p-6 rounded-xl border ${highlight ? 'bg-primary/5 border-primary/20' : 'bg-card border-border/50 shadow-sm'}`}>
+    <div className={`relative p-6 md:p-8 ${highlight ? "bg-primary/5" : ""}`}>
+      {highlight && <span className="absolute left-0 top-0 h-full w-1 bg-brand" />}
       <div className="flex items-center gap-3 mb-3">
-        <div className={`p-2 rounded-lg ${highlight ? 'bg-primary/10 text-primary' : 'bg-muted text-muted-foreground'}`}>
+        <div className={`p-2 rounded-lg ${highlight ? "bg-brand/15 text-brand" : "bg-muted text-muted-foreground"}`}>
           <Icon className="h-5 w-5" />
         </div>
-        <h3 className="font-medium text-sm text-muted-foreground">{title}</h3>
+        <h3 className="eyebrow text-muted-foreground">{title}</h3>
       </div>
       <div>
         {loading ? (
-          <Skeleton className="h-8 w-24" />
+          <Skeleton className="h-9 w-24" />
         ) : (
-          <div className={`text-3xl font-serif font-bold tracking-tight ${highlight ? 'text-primary' : 'text-foreground'}`}>
+          <div className={`text-4xl font-display font-bold tracking-tight tabular-nums ${highlight ? "text-brand" : "text-foreground"}`}>
             {value ?? 0}
           </div>
         )}
@@ -313,13 +351,13 @@ function ActivityRow({ item }: { item: any }) {
   };
 
   return (
-    <div className="p-4 flex gap-4 hover:bg-muted/30 transition-colors group">
-      <div className="mt-0.5 bg-background border shadow-sm p-2 rounded-full h-8 w-8 flex items-center justify-center shrink-0 text-muted-foreground group-hover:text-primary transition-colors">
+    <div className="p-4 flex gap-4 hover-elevate transition-colors group">
+      <div className="mt-0.5 bg-background border border-border p-2 rounded-full h-9 w-9 flex items-center justify-center shrink-0 text-muted-foreground group-hover:text-brand group-hover:border-brand/40 transition-colors">
         {getIcon()}
       </div>
       <div className="min-w-0">
         <div className="flex items-center gap-2 mb-1">
-          <span className="text-[10px] font-mono font-medium uppercase tracking-wider text-muted-foreground">
+          <span className="text-[10px] font-bold uppercase tracking-wider text-brand">
             {getLabel()}
           </span>
           <span className="text-[10px] text-muted-foreground/60">•</span>

@@ -15,9 +15,16 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+import { Badge, type BadgeProps } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Skeleton } from "@/components/ui/skeleton";
+import {
+  Empty,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+  EmptyDescription,
+} from "@/components/ui/empty";
 
 const formSchema = z.object({
   title: z.string().min(5, "Il titolo deve avere almeno 5 caratteri").max(100),
@@ -29,11 +36,11 @@ const formSchema = z.object({
 
 type FormValues = z.infer<typeof formSchema>;
 
-const statusMap: Record<string, { label: string; icon: any; color: string }> = {
-  ricevuta: { label: "Ricevuta", icon: Clock, color: "text-blue-500 bg-blue-50 border-blue-200" },
-  in_valutazione: { label: "In Valutazione", icon: AlertCircle, color: "text-amber-500 bg-amber-50 border-amber-200" },
-  presa_in_carico: { label: "Presa in Carico", icon: CheckCircle2, color: "text-primary bg-primary/10 border-primary/20" },
-  archiviata: { label: "Archiviata", icon: Archive, color: "text-muted-foreground bg-muted border-muted-foreground/20" },
+const statusMap: Record<string, { label: string; icon: any; variant: BadgeProps["variant"] }> = {
+  ricevuta: { label: "Ricevuta", icon: Clock, variant: "secondary" },
+  in_valutazione: { label: "In Valutazione", icon: AlertCircle, variant: "warning" },
+  presa_in_carico: { label: "Presa in Carico", icon: CheckCircle2, variant: "brand" },
+  archiviata: { label: "Archiviata", icon: Archive, variant: "outline" },
 };
 
 export function Reports() {
@@ -72,13 +79,16 @@ export function Reports() {
 
   return (
     <div className="container mx-auto px-4 py-8 md:py-12 max-w-5xl">
-      <div className="mb-8 space-y-4 text-center max-w-3xl mx-auto">
-        <div className="inline-flex items-center justify-center p-3 bg-primary/10 rounded-full mb-2">
-          <Megaphone className="h-8 w-8 text-primary" />
-        </div>
-        <h1 className="text-3xl md:text-5xl font-serif font-bold tracking-tight">Segnalazioni Civiche</h1>
-        <p className="text-muted-foreground text-lg">
-          I cittadini sono le prime sentinelle del territorio. Invia segnalazioni su sprechi, 
+      <div className="mb-8 max-w-3xl">
+        <span className="eyebrow text-brand">
+          <Megaphone className="h-3.5 w-3.5" />
+          Sentinelle del territorio
+        </span>
+        <h1 className="mt-2 text-3xl md:text-4xl font-display font-bold tracking-tight">
+          Segnalazioni Civiche
+        </h1>
+        <p className="mt-3 text-muted-foreground text-lg">
+          I cittadini sono le prime sentinelle del territorio. Invia segnalazioni su sprechi,
           lavori bloccati o disservizi per attivare un monitoraggio indipendente.
         </p>
       </div>
@@ -90,9 +100,9 @@ export function Reports() {
         </TabsList>
         
         <TabsContent value="new">
-          <Card className="border-primary/20 shadow-md max-w-2xl mx-auto">
-            <CardHeader className="bg-muted/30 border-b">
-              <CardTitle>Nuova Segnalazione</CardTitle>
+          <Card className="max-w-2xl mx-auto overflow-hidden shadow-md">
+            <CardHeader className="border-b border-border bg-muted/40">
+              <CardTitle className="font-display font-bold tracking-tight">Nuova Segnalazione</CardTitle>
               <CardDescription>
                 Fornisci dettagli precisi. Le segnalazioni anonime sono accettate, ma i dati circostanziati sono essenziali per le verifiche.
               </CardDescription>
@@ -195,8 +205,9 @@ export function Reports() {
 
                   <Button 
                     type="submit" 
+                    variant="brand"
                     size="lg" 
-                    className="w-full text-base h-12"
+                    className="w-full text-base h-12 font-bold"
                     disabled={createReport.isPending}
                   >
                     {createReport.isPending ? "Invio in corso..." : "Invia Segnalazione Civica"}
@@ -228,14 +239,14 @@ export function Reports() {
                 const StatusIcon = status.icon;
                 
                 return (
-                  <Card key={report.id} className="overflow-hidden hover:shadow-md transition-shadow">
+                  <Card key={report.id} className="group overflow-hidden transition-all hover:shadow-lg hover:-translate-y-0.5 hover:border-brand/40">
                     <div className="flex flex-col md:flex-row">
                       <div className="p-6 flex-1">
                         <div className="flex items-start justify-between gap-4 mb-3">
-                          <h3 className="font-serif text-xl font-bold text-foreground leading-tight">
+                          <h3 className="font-display text-xl font-bold text-foreground leading-tight group-hover:text-brand transition-colors">
                             {report.title}
                           </h3>
-                          <Badge variant="outline" className={`shrink-0 flex gap-1.5 items-center px-2.5 py-1 ${status.color}`}>
+                          <Badge variant={status.variant} className="shrink-0 gap-1.5 shadow-none">
                             <StatusIcon className="h-3.5 w-3.5" />
                             {status.label}
                           </Badge>
@@ -258,10 +269,21 @@ export function Reports() {
                 );
               })
             ) : (
-              <div className="text-center py-20 bg-muted/20 border border-dashed rounded-xl">
-                <AlertCircle className="h-10 w-10 text-muted-foreground mx-auto mb-4 opacity-50" />
-                <p className="text-muted-foreground">Nessuna segnalazione pubblica al momento.</p>
-              </div>
+              <Empty className="border border-dashed border-border bg-muted/20">
+                <EmptyHeader>
+                  <EmptyMedia variant="icon" className="bg-brand/10 text-brand">
+                    <Megaphone className="h-6 w-6" />
+                  </EmptyMedia>
+                  <EmptyTitle className="font-display">
+                    Nessuna segnalazione pubblica
+                  </EmptyTitle>
+                  <EmptyDescription>
+                    Al momento non ci sono segnalazioni in bacheca. Sii la prima
+                    sentinella: invia la tua segnalazione per attivare il
+                    monitoraggio civico.
+                  </EmptyDescription>
+                </EmptyHeader>
+              </Empty>
             )}
           </div>
         </TabsContent>

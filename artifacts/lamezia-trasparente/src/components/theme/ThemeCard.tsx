@@ -15,11 +15,11 @@ interface ThemeCardProps {
   theme: any;
 }
 
-const statusMap: Record<string, { label: string; variant: "default" | "secondary" | "destructive" | "outline", icon: any }> = {
+const statusMap: Record<string, { label: string; variant: "default" | "secondary" | "destructive" | "outline" | "brand" | "success" | "warning", icon: any }> = {
   aperto: { label: "Aperto", variant: "destructive", icon: AlertTriangle },
-  in_corso: { label: "In Corso", variant: "default", icon: TrendingUp },
-  monitoraggio: { label: "In Monitoraggio", variant: "secondary", icon: BookOpen },
-  chiuso: { label: "Risolto/Chiuso", variant: "outline", icon: ShieldAlert },
+  in_corso: { label: "In Corso", variant: "brand", icon: TrendingUp },
+  monitoraggio: { label: "In Monitoraggio", variant: "warning", icon: BookOpen },
+  chiuso: { label: "Risolto/Chiuso", variant: "success", icon: ShieldAlert },
 };
 
 export function ThemeCard({ theme }: ThemeCardProps) {
@@ -48,20 +48,20 @@ export function ThemeCard({ theme }: ThemeCardProps) {
   const StatusIcon = statusInfo.icon;
 
   return (
-    <Card className="flex flex-col h-full overflow-hidden transition-all hover:shadow-md border-border/50">
+    <Card className="group flex flex-col h-full overflow-hidden transition-all hover:shadow-lg hover:-translate-y-0.5 hover:border-brand/40">
       <Link href={`/temi/${theme.id}`} className="flex-1 flex flex-col p-5 gap-4">
         <div className="flex justify-between items-start gap-4">
-          <Badge variant="outline" className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground bg-muted/30">
+          <Badge variant="outline" className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground bg-muted/40">
             {theme.categoryName}
           </Badge>
-          <Badge variant={statusInfo.variant as any} className="gap-1 rounded-sm shadow-none">
+          <Badge variant={statusInfo.variant as any} className="gap-1 shadow-none">
             <StatusIcon className="h-3 w-3" />
             {statusInfo.label}
           </Badge>
         </div>
         
         <div>
-          <h3 className="font-serif font-bold text-xl leading-tight mb-2 group-hover:text-primary transition-colors">
+          <h3 className="font-display font-bold text-xl leading-tight mb-2 group-hover:text-brand transition-colors">
             {theme.title}
           </h3>
           <p className="text-muted-foreground text-sm line-clamp-3">

@@ -14,6 +14,7 @@ import {
   Paperclip,
   AlertTriangle,
 } from "lucide-react";
+import { PnrrProject, Publication } from "@workspace/api-client-react";
 import { format } from "date-fns";
 import { it } from "date-fns/locale";
 
@@ -25,6 +26,13 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import {
+  Empty,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+  EmptyDescription,
+} from "@/components/ui/empty";
 import { AlboLink } from "@/components/AlboLink";
 
 function formatDate(value: string | null | undefined) {
@@ -38,8 +46,8 @@ function formatDate(value: string | null | undefined) {
 export function Pnrr() {
   const { data, isLoading } = useListPnrrProjects();
 
-  const projects = data?.projects;
-  const uncensored = data?.uncensored;
+  const projects: PnrrProject[] | undefined = data?.projects;
+  const uncensored: Publication[] | undefined = data?.uncensored;
 
   const census = useMemo(() => {
     if (!projects) {
@@ -74,7 +82,10 @@ export function Pnrr() {
 
     return {
       projectsCount: projects.length,
-      matchedDocsCount: projects.reduce((s, p) => s + p.documentsCount, 0),
+      matchedDocsCount: projects.reduce(
+        (s: number, p: PnrrProject) => s + p.documentsCount,
+        0,
+      ),
       uncensoredCount: uncensored?.length ?? 0,
       totalImporto,
       missionCount: missionMap.size,
@@ -95,15 +106,15 @@ export function Pnrr() {
 
   return (
     <div className="container mx-auto px-4 py-8 md:py-12 max-w-5xl">
-      <div className="mb-8 space-y-4">
-        <div className="inline-flex items-center rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-sm font-medium text-primary mb-2">
-          <Landmark className="mr-2 h-4 w-4" />
+      <div className="mb-8">
+        <span className="eyebrow text-brand">
+          <Landmark className="h-3.5 w-3.5" />
           Piano Nazionale di Ripresa e Resilienza
-        </div>
-        <h1 className="text-3xl md:text-4xl font-serif font-bold tracking-tight">
+        </span>
+        <h1 className="mt-2 text-3xl md:text-4xl font-display font-bold tracking-tight">
           Censimento PNRR
         </h1>
-        <p className="text-muted-foreground text-lg">
+        <p className="mt-3 text-muted-foreground text-lg max-w-3xl">
           Il censimento madre è la sezione ufficiale{" "}
           <a
             href="https://www.comune.lamezia-terme.cz.it/it/attuazione-misure-pnrr"
@@ -124,12 +135,16 @@ export function Pnrr() {
       </div>
 
       {isLoading ? (
-        <div className="grid gap-4 sm:grid-cols-4 mb-8">
+        <div className="grid gap-4 grid-cols-2 lg:grid-cols-4 mb-8">
           {Array(4)
             .fill(0)
             .map((_, i) => (
-              <div key={i} className="p-5 rounded-xl border bg-card shadow-sm">
-                <Skeleton className="h-8 w-16 mb-2" />
+              <div
+                key={i}
+                className="p-6 rounded-xl border border-card-border bg-card shadow-sm"
+              >
+                <Skeleton className="h-9 w-9 rounded-lg mb-4" />
+                <Skeleton className="h-9 w-16 mb-2" />
                 <Skeleton className="h-4 w-24" />
               </div>
             ))}
@@ -137,11 +152,12 @@ export function Pnrr() {
       ) : projects && projects.length > 0 ? (
         <>
           {/* Census totals */}
-          <div className="grid gap-4 grid-cols-2 lg:grid-cols-4 mb-8">
+          <div className="grid gap-4 grid-cols-2 lg:grid-cols-4 mb-10">
             <StatCard
               label="Progetti censiti"
               value={String(census.projectsCount)}
               icon={FolderKanban}
+              highlight
             />
             <StatCard
               label="Importo finanziato"
@@ -163,21 +179,29 @@ export function Pnrr() {
           {/* Mission breakdown */}
           {census.missions.length > 0 && (
             <div className="mb-10">
-              <h2 className="text-xl font-serif font-bold mb-3 flex items-center gap-2">
-                <Layers className="h-5 w-5 text-primary" />
-                Ripartizione per Missione
-              </h2>
+              <div className="mb-4 flex items-center gap-2">
+                <Layers className="h-5 w-5 text-brand" />
+                <h2 className="text-xl font-display font-bold tracking-tight">
+                  Ripartizione per Missione
+                </h2>
+              </div>
               <div className="flex flex-wrap gap-2">
                 {census.missions.map((m) => (
                   <div
                     key={m.mission}
-                    className="inline-flex items-center gap-2 rounded-lg border border-border/60 bg-card px-3 py-2 shadow-sm"
+                    className="inline-flex items-center gap-2 rounded-lg border border-card-border bg-card px-3 py-2 shadow-sm hover-elevate"
                   >
-                    <Badge className="bg-primary/10 text-primary border-transparent shadow-none font-mono text-xs">
+                    <Badge
+                      variant="brand"
+                      className="font-mono text-xs shadow-none"
+                    >
                       {m.mission}
                     </Badge>
                     <span className="text-sm text-muted-foreground">
-                      {m.count} {m.count === 1 ? "progetto" : "progetti"}
+                      <span className="font-display font-bold tabular-nums text-foreground">
+                        {m.count}
+                      </span>{" "}
+                      {m.count === 1 ? "progetto" : "progetti"}
                     </span>
                   </div>
                 ))}
@@ -185,24 +209,28 @@ export function Pnrr() {
             </div>
           )}
 
-          {/* Mother census: Attuazione projects */}
-          <h2 className="text-xl font-serif font-bold mb-3 flex items-center gap-2">
-            <FolderKanban className="h-5 w-5 text-primary" />
-            Progetti censiti in Attuazione PNRR
-          </h2>
+          <div className="mb-4 flex items-center gap-2">
+            <FolderKanban className="h-5 w-5 text-brand" />
+            <h2 className="text-xl font-display font-bold tracking-tight">
+              Progetti censiti in Attuazione PNRR
+            </h2>
+          </div>
           <Accordion type="single" collapsible className="space-y-3 mb-12">
-            {projects.map((project) => (
+            {projects.map((project: PnrrProject) => (
               <AccordionItem
                 key={project.key}
                 value={project.key}
-                className="rounded-xl border border-border/60 bg-card px-5 shadow-sm data-[state=open]:border-primary/30"
+                className="rounded-xl border border-card-border bg-card px-5 shadow-sm transition-colors data-[state=open]:border-brand/40"
               >
                 <AccordionTrigger className="hover:no-underline py-4 [&>svg]:hidden">
                   <div className="flex w-full items-start justify-between gap-4 text-left">
                     <div className="space-y-2">
                       <div className="flex flex-wrap items-center gap-2">
                         {project.cup && (
-                          <Badge className="bg-primary/10 text-primary border-transparent shadow-none font-mono text-xs">
+                          <Badge
+                            variant="brand"
+                            className="font-mono text-xs shadow-none"
+                          >
                             CUP {project.cup}
                           </Badge>
                         )}
@@ -223,14 +251,14 @@ export function Pnrr() {
                           </Badge>
                         )}
                       </div>
-                      <h3 className="font-semibold text-foreground leading-snug">
+                      <h3 className="font-display font-bold text-foreground leading-snug">
                         {project.title}
                       </h3>
                       <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-muted-foreground">
                         {project.importoFinanziato && (
                           <span className="flex items-center gap-1 font-medium text-foreground">
                             <Euro className="h-3 w-3" />
-                            {project.importoFinanziato}
+                            <span className="tabular-nums">{project.importoFinanziato}</span>
                           </span>
                         )}
                         {project.attuatore && (
@@ -240,10 +268,13 @@ export function Pnrr() {
                           </span>
                         )}
                         <span>
-                          {project.documentsCount}{" "}
+                          <span className="font-display font-bold tabular-nums text-foreground">
+                            {project.documentsCount}
+                          </span>{" "}
                           {project.documentsCount === 1
                             ? "documento Albo"
-                            : "documenti Albo"}
+                            : "documenti Albo"}{" "}
+                          · ultimo atto {formatDate(project.lastPublication)}
                         </span>
                       </div>
                     </div>
@@ -310,7 +341,7 @@ export function Pnrr() {
                           Allegati ufficiali
                         </h4>
                         <ul className="space-y-1.5">
-                          {project.attachments.map((att) => (
+                          {project.attachments.map((att: any) => (
                             <li key={att.url}>
                               <a
                                 href={att.url}
@@ -334,7 +365,7 @@ export function Pnrr() {
                       </h4>
                       {project.documents.length > 0 ? (
                         <div className="space-y-2">
-                          {project.documents.map((doc) => (
+                          {project.documents.map((doc: Publication) => (
                             <div
                               key={doc.id}
                               className="rounded-lg bg-muted/30 p-3"
@@ -347,7 +378,7 @@ export function Pnrr() {
                                   </p>
                                   <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted-foreground">
                                     <span>{doc.tipologia}</span>
-                                    <span className="flex items-center gap-1">
+                                    <span className="flex items-center gap-1 font-mono">
                                       <Calendar className="h-3 w-3" />
                                       {formatDate(doc.pubStart)}
                                     </span>
@@ -385,7 +416,7 @@ export function Pnrr() {
             </p>
             {uncensored && uncensored.length > 0 ? (
               <div className="space-y-2">
-                {uncensored.map((doc) => (
+                {uncensored.map((doc: Publication) => (
                   <div
                     key={doc.id}
                     className="rounded-lg border border-amber-200/60 bg-card p-3 dark:border-amber-500/20"
@@ -394,7 +425,7 @@ export function Pnrr() {
                       <Badge className="border-transparent bg-amber-100 text-amber-800 shadow-none dark:bg-amber-500/20 dark:text-amber-300">
                         Non censito in Attuazione
                       </Badge>
-                      {doc.cups.map((c) => (
+                      {doc.cups?.map((c: string) => (
                         <Badge
                           key={c}
                           variant="outline"
@@ -437,9 +468,22 @@ export function Pnrr() {
           </div>
         </>
       ) : (
-        <div className="py-12 text-center text-muted-foreground bg-muted/20 rounded-xl border border-dashed">
-          Nessun progetto PNRR censito al momento.
-        </div>
+        <>
+          <Empty className="border border-dashed border-border bg-muted/20">
+            <EmptyHeader>
+              <EmptyMedia variant="icon" className="bg-brand/10 text-brand">
+                <Landmark className="h-6 w-6" />
+              </EmptyMedia>
+              <EmptyTitle className="font-display">
+                Nessun progetto PNRR rilevato
+              </EmptyTitle>
+              <EmptyDescription>
+                Al momento non risultano progetti PNRR censiti. Continueremo a
+                monitorare l'Albo Pretorio per nuovi atti e finanziamenti.
+              </EmptyDescription>
+            </EmptyHeader>
+          </Empty>
+        </>
       )}
     </div>
   );
@@ -467,18 +511,39 @@ function StatCard({
   label,
   value,
   icon: Icon,
+  highlight = false,
 }: {
   label: string;
   value: string;
   icon: any;
+  highlight?: boolean;
 }) {
   return (
-    <div className="rounded-xl border border-border/60 bg-card p-5 shadow-sm">
-      <div className="mb-2 flex items-center gap-2 text-primary">
+    <div
+      className={`relative overflow-hidden rounded-xl border bg-card p-6 shadow-sm ${
+        highlight ? "border-brand/40" : "border-card-border"
+      }`}
+    >
+      {highlight && (
+        <span className="absolute left-0 top-0 h-full w-1 bg-brand" />
+      )}
+      <div
+        className={`mb-4 flex h-9 w-9 items-center justify-center rounded-lg ${
+          highlight
+            ? "bg-brand/15 text-brand"
+            : "bg-muted text-muted-foreground"
+        }`}
+      >
         <Icon className="h-5 w-5" />
       </div>
-      <div className="text-2xl font-bold text-foreground">{value}</div>
-      <div className="text-sm text-muted-foreground">{label}</div>
+      <div
+        className={`text-3xl font-display font-bold tracking-tight tabular-nums ${
+          highlight ? "text-brand" : "text-foreground"
+        }`}
+      >
+        {value}
+      </div>
+      <div className="mt-1 eyebrow text-muted-foreground">{label}</div>
     </div>
   );
 }

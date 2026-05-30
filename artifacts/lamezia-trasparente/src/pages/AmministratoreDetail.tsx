@@ -19,6 +19,13 @@ import { it } from "date-fns/locale";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
+import {
+  Empty,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+  EmptyDescription,
+} from "@/components/ui/empty";
 
 const ROLE_LABELS: Record<string, string> = {
   sindaco: "Sindaco",
@@ -28,11 +35,14 @@ const ROLE_LABELS: Record<string, string> = {
   dipendente: "Dipendente",
 };
 
-const VOTE_STYLES: Record<string, string> = {
-  favorevole: "bg-emerald-100 text-emerald-800 border-emerald-200",
-  contrario: "bg-red-100 text-red-800 border-red-200",
-  astenuto: "bg-amber-100 text-amber-800 border-amber-200",
-  assente: "bg-muted text-muted-foreground border-border",
+const VOTE_VARIANTS: Record<
+  string,
+  "success" | "destructive" | "warning" | "outline"
+> = {
+  favorevole: "success",
+  contrario: "destructive",
+  astenuto: "warning",
+  assente: "outline",
 };
 
 function formatDate(value: string | null | undefined) {
@@ -70,10 +80,12 @@ function Section({
   children: React.ReactNode;
 }) {
   return (
-    <section className="rounded-xl border border-border/60 bg-card shadow-sm p-5 md:p-6">
-      <div className="flex items-center gap-2 mb-4">
-        <Icon className="h-5 w-5 text-primary" />
-        <h2 className="font-serif text-lg font-bold tracking-tight">{title}</h2>
+    <section className="rounded-xl border border-border bg-card shadow-sm p-5 md:p-6">
+      <div className="flex items-center gap-2.5 mb-4">
+        <span className="flex h-8 w-8 items-center justify-center rounded-md bg-brand/10 text-brand">
+          <Icon className="h-4 w-4" />
+        </span>
+        <h2 className="font-display text-lg font-bold tracking-tight">{title}</h2>
       </div>
       {children}
     </section>
@@ -82,7 +94,7 @@ function Section({
 
 function EmptyState({ children }: { children: React.ReactNode }) {
   return (
-    <div className="py-6 text-center text-sm text-muted-foreground bg-muted/20 rounded-lg border border-dashed">
+    <div className="py-6 text-center text-sm text-muted-foreground bg-muted/30 rounded-lg border border-dashed border-border">
       {children}
     </div>
   );
@@ -118,46 +130,62 @@ export function AmministratoreDetail() {
       </Link>
 
       {isLoading ? (
-        <div className="space-y-4">
-          <Skeleton className="h-16 w-16 rounded-full" />
-          <Skeleton className="h-8 w-3/4" />
-          <Skeleton className="h-32 w-full" />
+        <div className="rounded-2xl border border-border bg-muted/30 p-6 md:p-8">
+          <div className="flex flex-col sm:flex-row sm:items-start gap-5">
+            <Skeleton className="h-16 w-16 rounded-full" />
+            <div className="flex-1 space-y-3">
+              <Skeleton className="h-5 w-28" />
+              <Skeleton className="h-9 w-3/4" />
+              <Skeleton className="h-4 w-40" />
+            </div>
+          </div>
         </div>
       ) : isError || !official ? (
-        <div className="py-12 text-center text-muted-foreground bg-muted/20 rounded-xl border border-dashed">
-          Soggetto non trovato.
-        </div>
+        <Empty className="border bg-muted/20">
+          <EmptyHeader>
+            <EmptyMedia variant="icon">
+              <User />
+            </EmptyMedia>
+            <EmptyTitle className="font-display">Soggetto non trovato</EmptyTitle>
+            <EmptyDescription>
+              Il profilo richiesto non esiste o è stato rimosso dal registro.
+            </EmptyDescription>
+          </EmptyHeader>
+        </Empty>
       ) : (
         <>
-          <header className="mb-8 flex flex-col sm:flex-row sm:items-start gap-5">
-            <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-full bg-primary/10 font-serif text-xl font-bold text-primary">
-              {initials(official.name)}
-            </div>
-            <div className="space-y-2">
-              <div className="flex flex-wrap items-center gap-2">
-                <Badge className="bg-primary/10 text-primary border-transparent shadow-none capitalize">
-                  {ROLE_LABELS[official.role] ?? official.role}
-                </Badge>
-                {official.status === "cessato" && (
-                  <Badge variant="outline">cessato</Badge>
-                )}
-                {official.group && (
-                  <span className="text-sm text-muted-foreground">
-                    {official.group}
-                  </span>
-                )}
+          <header className="mb-8 overflow-hidden rounded-2xl border border-border bg-muted/30">
+            <span className="block h-1.5 w-full bg-brand" />
+            <div className="flex flex-col sm:flex-row sm:items-start gap-5 p-6 md:p-8">
+              <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-full bg-brand/10 font-display text-xl font-bold text-brand">
+                {initials(official.name)}
               </div>
-              <h1 className="text-3xl md:text-4xl font-serif font-bold tracking-tight">
-                {official.name}
-              </h1>
-              {official.roleTitle && (
-                <p className="text-lg text-muted-foreground">
-                  {official.roleTitle}
-                </p>
-              )}
-              <div className="flex items-center gap-2 text-sm text-muted-foreground pt-1">
-                <CalendarClock className="h-4 w-4" />
-                Incarico dal {formatDate(official.appointmentDate)}
+              <div className="space-y-2">
+                <div className="flex flex-wrap items-center gap-2">
+                  <Badge variant="brand" className="capitalize">
+                    {ROLE_LABELS[official.role] ?? official.role}
+                  </Badge>
+                  {official.status === "cessato" && (
+                    <Badge variant="outline">Cessato</Badge>
+                  )}
+                  {official.group && (
+                    <span className="text-sm text-muted-foreground">
+                      {official.group}
+                    </span>
+                  )}
+                </div>
+                <h1 className="text-3xl md:text-4xl font-display font-bold tracking-tight">
+                  {official.name}
+                </h1>
+                {official.roleTitle && (
+                  <p className="text-lg text-muted-foreground">
+                    {official.roleTitle}
+                  </p>
+                )}
+                <div className="flex items-center gap-2 text-sm text-muted-foreground pt-1 font-mono">
+                  <CalendarClock className="h-4 w-4" />
+                  Incarico dal {formatDate(official.appointmentDate)}
+                </div>
               </div>
             </div>
           </header>
@@ -302,11 +330,8 @@ export function AmministratoreDetail() {
                           </div>
                         </div>
                         <Badge
-                          variant="outline"
-                          className={cn(
-                            "capitalize shrink-0",
-                            VOTE_STYLES[v.vote] ?? "",
-                          )}
+                          variant={VOTE_VARIANTS[v.vote] ?? "outline"}
+                          className="capitalize shrink-0"
                         >
                           {v.vote}
                         </Badge>

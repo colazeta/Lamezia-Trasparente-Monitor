@@ -6,7 +6,15 @@ import { it } from "date-fns/locale";
 
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
+import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+import {
+  Empty,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+  EmptyDescription,
+} from "@/components/ui/empty";
 import { AlboLink } from "@/components/AlboLink";
 import { cn } from "@/lib/utils";
 
@@ -39,15 +47,15 @@ export function Delibere() {
 
   return (
     <div className="container mx-auto px-4 py-8 md:py-12 max-w-5xl">
-      <div className="mb-8 space-y-4">
-        <div className="inline-flex items-center rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-sm font-medium text-primary mb-2">
-          <Gavel className="mr-2 h-4 w-4" />
+      <div className="mb-8">
+        <span className="eyebrow text-brand">
+          <Gavel className="h-3.5 w-3.5" />
           Organi collegiali
-        </div>
-        <h1 className="text-3xl md:text-4xl font-serif font-bold tracking-tight">
+        </span>
+        <h1 className="mt-2 text-3xl md:text-4xl font-display font-bold tracking-tight">
           Elenco Delibere
         </h1>
-        <p className="text-muted-foreground text-lg">
+        <p className="mt-3 text-muted-foreground text-lg max-w-3xl">
           Le deliberazioni della Giunta e del Consiglio Comunale, raccolte e
           rese consultabili in modo permanente.
         </p>
@@ -60,10 +68,10 @@ export function Delibere() {
               key={t.value}
               onClick={() => setTipo(t.value)}
               className={cn(
-                "px-4 py-2 text-sm font-medium rounded-md transition-colors",
+                "px-4 py-2 text-sm font-semibold rounded-md transition-colors",
                 tipo === t.value
                   ? "bg-primary text-primary-foreground shadow-sm"
-                  : "text-muted-foreground hover:text-foreground",
+                  : "text-muted-foreground hover:text-foreground hover-elevate",
               )}
             >
               {t.label}
@@ -87,24 +95,24 @@ export function Delibere() {
           Array(6)
             .fill(0)
             .map((_, i) => (
-              <div key={i} className="p-5 rounded-xl border bg-card shadow-sm">
+              <Card key={i} className="p-5">
                 <Skeleton className="h-4 w-32 mb-3" />
                 <Skeleton className="h-5 w-full" />
-              </div>
+              </Card>
             ))
         ) : delibere && delibere.length > 0 ? (
           delibere.map((d) => (
-            <div
+            <Card
               key={d.id}
-              className="p-5 rounded-xl border border-border/60 bg-card shadow-sm hover:shadow-md hover:border-primary/30 transition-all"
+              className="group p-5 transition-all hover:shadow-lg hover:-translate-y-0.5 hover:border-brand/40"
             >
               <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
                 <div className="flex flex-wrap items-center gap-2">
-                  <Badge className="bg-primary/10 text-primary border-transparent shadow-none text-xs capitalize">
+                  <Badge variant="secondary" className="text-xs capitalize">
                     {d.subcategory ?? "delibera"}
                   </Badge>
                   {d.isNew && (
-                    <Badge className="bg-primary text-primary-foreground border-transparent shadow-none text-xs">
+                    <Badge variant="brand" className="text-xs">
                       NUOVO
                     </Badge>
                   )}
@@ -119,7 +127,7 @@ export function Delibere() {
                   {formatDate(d.dataAtto ?? d.pubStart)}
                 </div>
               </div>
-              <h3 className="font-semibold text-foreground leading-snug">
+              <h3 className="font-display font-bold text-foreground leading-snug group-hover:text-brand transition-colors">
                 {d.oggetto}
               </h3>
               {d.provenienza && (
@@ -127,15 +135,24 @@ export function Delibere() {
                   {d.provenienza}
                 </p>
               )}
-              <div className="mt-3 border-t border-border/50 pt-3">
+              <div className="mt-3 border-t border-border pt-3">
                 <AlboLink />
               </div>
-            </div>
+            </Card>
           ))
         ) : (
-          <div className="py-12 text-center text-muted-foreground bg-muted/20 rounded-xl border border-dashed">
-            Nessuna delibera trovata con questi criteri.
-          </div>
+          <Empty className="border bg-muted/20">
+            <EmptyHeader>
+              <EmptyMedia variant="icon">
+                <Gavel />
+              </EmptyMedia>
+              <EmptyTitle>Nessuna delibera trovata</EmptyTitle>
+              <EmptyDescription>
+                Nessuna deliberazione corrisponde ai criteri selezionati. Prova a
+                cambiare organo o a modificare la ricerca.
+              </EmptyDescription>
+            </EmptyHeader>
+          </Empty>
         )}
       </div>
     </div>

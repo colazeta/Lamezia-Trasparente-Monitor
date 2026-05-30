@@ -9,6 +9,7 @@ import { it } from "date-fns/locale";
 
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
+import { Card } from "@/components/ui/card";
 import {
   Select,
   SelectContent,
@@ -16,6 +17,13 @@ import {
   SelectTrigger,
 } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
+import {
+  Empty,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+  EmptyDescription,
+} from "@/components/ui/empty";
 import { AlboLink } from "@/components/AlboLink";
 
 const CATEGORY_LABELS: Record<string, string> = {
@@ -63,15 +71,15 @@ export function Albo() {
 
   return (
     <div className="container mx-auto px-4 py-8 md:py-12 max-w-5xl">
-      <div className="mb-6 space-y-4">
-        <div className="inline-flex items-center rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-sm font-medium text-primary mb-2">
-          <ShieldAlert className="mr-2 h-4 w-4" />
-          Estrazione Indipendente in tempo reale
-        </div>
-        <h1 className="text-3xl md:text-4xl font-serif font-bold tracking-tight">
+      <div className="mb-8">
+        <span className="eyebrow text-brand">
+          <ShieldAlert className="h-3.5 w-3.5" />
+          Estrazione indipendente in tempo reale
+        </span>
+        <h1 className="mt-2 text-3xl md:text-4xl font-display font-bold tracking-tight">
           Albo Pretorio Civico
         </h1>
-        <p className="text-muted-foreground text-lg">
+        <p className="mt-3 text-muted-foreground text-lg max-w-3xl">
           Un archivio navigabile e permanente degli atti pubblicati dal Comune.
           A differenza dell'albo ufficiale, qui i documenti non scompaiono dopo
           15 giorni.
@@ -79,10 +87,10 @@ export function Albo() {
       </div>
 
       <div className="mb-8 flex flex-wrap items-center gap-x-6 gap-y-2 rounded-xl border border-primary/20 bg-primary/5 px-4 py-3 text-sm">
-        <span className="flex items-center gap-2 font-medium text-foreground">
+        <span className="flex items-center gap-2 font-semibold text-foreground">
           <RefreshCw className="h-4 w-4 text-primary" />
           Ultimo aggiornamento:{" "}
-          <span className="text-primary">
+          <span className="text-primary font-mono">
             {feed?.lastUpdatedAt
               ? formatDate(feed.lastUpdatedAt, "dd MMMM yyyy 'alle' HH:mm")
               : "in corso…"}
@@ -90,7 +98,10 @@ export function Albo() {
         </span>
         {feed && (
           <span className="text-muted-foreground">
-            {feed.itemsTotal} atti monitorati
+            <span className="font-display font-bold tabular-nums text-foreground">
+              {feed.itemsTotal}
+            </span>{" "}
+            atti monitorati
           </span>
         )}
         <span className="text-muted-foreground">
@@ -98,7 +109,7 @@ export function Albo() {
         </span>
       </div>
 
-      <div className="flex flex-col md:flex-row flex-wrap gap-4 mb-8 p-4 bg-muted/30 rounded-xl border border-border/50 shadow-sm">
+      <div className="flex flex-col md:flex-row flex-wrap gap-4 mb-8 p-4 bg-muted/40 rounded-xl border border-border shadow-sm">
         <div className="relative flex-1 min-w-[200px]">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
@@ -175,28 +186,25 @@ export function Albo() {
           Array(6)
             .fill(0)
             .map((_, i) => (
-              <div
-                key={i}
-                className="p-5 rounded-xl border bg-card shadow-sm"
-              >
+              <Card key={i} className="p-5">
                 <Skeleton className="h-4 w-32 mb-3" />
                 <Skeleton className="h-5 w-full mb-2" />
                 <Skeleton className="h-4 w-3/4" />
-              </div>
+              </Card>
             ))
         ) : publications && publications.length > 0 ? (
           publications.map((p) => (
-            <div
+            <Card
               key={p.id}
-              className="p-5 rounded-xl border border-border/60 bg-card shadow-sm hover:shadow-md hover:border-primary/30 transition-all"
+              className="group p-5 transition-all hover:shadow-lg hover:-translate-y-0.5 hover:border-brand/40"
             >
               <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
                 <div className="flex flex-wrap items-center gap-2">
-                  <Badge className="bg-primary/10 text-primary border-transparent shadow-none text-xs">
+                  <Badge variant="secondary" className="text-xs">
                     {p.tipologia}
                   </Badge>
                   {p.isNew && (
-                    <Badge className="bg-primary text-primary-foreground border-transparent shadow-none text-xs">
+                    <Badge variant="brand" className="text-xs">
                       NUOVO
                     </Badge>
                   )}
@@ -212,7 +220,7 @@ export function Albo() {
                 </div>
               </div>
 
-              <h3 className="font-semibold text-foreground leading-snug mb-2">
+              <h3 className="font-display font-bold text-foreground leading-snug mb-2 group-hover:text-brand transition-colors">
                 {p.oggetto}
               </h3>
 
@@ -222,19 +230,30 @@ export function Albo() {
                   <span>Pubblicato fino al {formatDate(p.pubEnd, "dd/MM/yyyy")}</span>
                 )}
                 {p.isPnrr && (
-                  <span className="font-medium text-primary">PNRR</span>
+                  <Badge variant="warning" className="text-[10px]">
+                    PNRR
+                  </Badge>
                 )}
               </div>
 
-              <div className="mt-3 border-t border-border/50 pt-3">
+              <div className="mt-3 border-t border-border pt-3">
                 <AlboLink />
               </div>
-            </div>
+            </Card>
           ))
         ) : (
-          <div className="py-12 text-center text-muted-foreground bg-muted/20 rounded-xl border border-dashed">
-            Nessun atto trovato con questi criteri.
-          </div>
+          <Empty className="border bg-muted/20">
+            <EmptyHeader>
+              <EmptyMedia variant="icon">
+                <ShieldAlert />
+              </EmptyMedia>
+              <EmptyTitle>Nessun atto trovato</EmptyTitle>
+              <EmptyDescription>
+                Nessun atto corrisponde ai criteri di ricerca selezionati. Prova
+                a modificare i filtri o ad ampliare l'intervallo di date.
+              </EmptyDescription>
+            </EmptyHeader>
+          </Empty>
         )}
       </div>
     </div>

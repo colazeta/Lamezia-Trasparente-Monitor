@@ -6,6 +6,13 @@ import { it } from "date-fns/locale";
 
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
+import {
+  Empty,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+  EmptyDescription,
+} from "@/components/ui/empty";
 import { AlboLink } from "@/components/AlboLink";
 
 function formatDate(value: string | null | undefined) {
@@ -38,77 +45,83 @@ export function SedutaDetail() {
       </Link>
 
       {isLoading ? (
-        <div className="space-y-4">
-          <Skeleton className="h-4 w-40" />
-          <Skeleton className="h-8 w-3/4" />
-          <Skeleton className="h-32 w-full" />
+        <div className="rounded-2xl border border-border bg-muted/30 p-6 md:p-8 space-y-4">
+          <Skeleton className="h-5 w-40" />
+          <Skeleton className="h-9 w-3/4" />
+          <Skeleton className="h-4 w-1/2" />
         </div>
       ) : isError || !seduta ? (
-        <div className="py-12 text-center text-muted-foreground bg-muted/20 rounded-xl border border-dashed">
-          Seduta non trovata.
-        </div>
+        <Empty className="border bg-muted/20">
+          <EmptyHeader>
+            <EmptyMedia variant="icon">
+              <FileText />
+            </EmptyMedia>
+            <EmptyTitle className="font-display">Seduta non trovata</EmptyTitle>
+            <EmptyDescription>
+              La convocazione richiesta non esiste o non è più disponibile.
+            </EmptyDescription>
+          </EmptyHeader>
+        </Empty>
       ) : (
         <>
-          <div className="mb-8 space-y-3">
-            <div className="flex flex-wrap items-center gap-3">
-              <div className="flex items-center gap-2 text-sm font-medium text-primary">
-                <Calendar className="h-4 w-4" />
-                {formatDate(seduta.dataAtto ?? seduta.pubStart)}
+          <header className="mb-10 overflow-hidden rounded-2xl border border-border bg-muted/30">
+            <span className="block h-1.5 w-full bg-brand" />
+            <div className="p-6 md:p-8 space-y-4">
+              <div className="flex flex-wrap items-center gap-2.5">
+                <span className="eyebrow text-brand">
+                  <Calendar className="h-3.5 w-3.5" />
+                  {formatDate(seduta.dataAtto ?? seduta.pubStart)}
+                </span>
+                {seduta.subcategory && (
+                  <Badge variant="secondary" className="uppercase tracking-wide">
+                    {seduta.subcategory === "consiglio"
+                      ? "Consiglio Comunale"
+                      : seduta.subcategory === "commissione"
+                        ? "Commissione"
+                        : seduta.subcategory}
+                  </Badge>
+                )}
+                {seduta.isNew && <Badge variant="brand">Nuovo</Badge>}
               </div>
-              {seduta.subcategory && (
-                <Badge
-                  variant="outline"
-                  className="border-primary/30 text-primary text-xs uppercase tracking-wide"
-                >
-                  {seduta.subcategory === "consiglio"
-                    ? "Consiglio Comunale"
-                    : seduta.subcategory === "commissione"
-                      ? "Commissione"
-                      : seduta.subcategory}
-                </Badge>
+              <h1 className="text-3xl md:text-4xl font-display font-bold tracking-tight leading-tight">
+                {seduta.oggetto}
+              </h1>
+              {seduta.provenienza && (
+                <p className="text-sm text-muted-foreground">
+                  {seduta.provenienza}
+                </p>
               )}
-              {seduta.isNew && (
-                <Badge className="bg-primary text-primary-foreground border-transparent shadow-none text-xs">
-                  NUOVO
-                </Badge>
-              )}
+              <div className="pt-1">
+                <AlboLink />
+              </div>
             </div>
-            <h1 className="text-2xl md:text-3xl font-serif font-bold tracking-tight leading-snug">
-              {seduta.oggetto}
-            </h1>
-            {seduta.provenienza && (
-              <p className="text-sm text-muted-foreground">
-                {seduta.provenienza}
-              </p>
-            )}
-            <div className="pt-2">
-              <AlboLink />
-            </div>
-          </div>
+          </header>
 
-          <div className="mb-6 flex items-center gap-2">
-            <MessageSquare className="h-5 w-5 text-primary" />
-            <h2 className="text-xl font-serif font-semibold">
+          <div className="mb-6 flex items-center gap-2.5">
+            <span className="flex h-8 w-8 items-center justify-center rounded-md bg-brand/10 text-brand">
+              <MessageSquare className="h-4 w-4" />
+            </span>
+            <h2 className="text-xl md:text-2xl font-display font-bold tracking-tight">
               Resoconto stenografico
             </h2>
           </div>
 
           {seduta.summary && (
-            <div className="mb-6 rounded-xl border border-primary/20 bg-primary/5 p-4 text-sm text-foreground/90 whitespace-pre-line">
+            <div className="mb-6 rounded-xl border border-border bg-card p-4 md:p-5 text-sm text-foreground/90 whitespace-pre-line">
               {seduta.summary}
             </div>
           )}
 
           {seduta.interventions.length > 0 ? (
-            <ol className="relative space-y-6 border-l border-border/60 pl-6">
+            <ol className="relative space-y-6 border-l-2 border-border pl-6">
               {seduta.interventions.map((intervento) => (
                 <li key={intervento.id} className="relative">
-                  <span className="absolute -left-[1.92rem] flex h-8 w-8 items-center justify-center rounded-full border border-primary/30 bg-background text-primary">
+                  <span className="absolute -left-[2.05rem] flex h-8 w-8 items-center justify-center rounded-full border-4 border-background bg-brand/10 text-brand">
                     <User className="h-4 w-4" />
                   </span>
-                  <div className="rounded-xl border border-border/60 bg-card p-4 shadow-sm">
+                  <div className="rounded-xl border border-border bg-card p-4 md:p-5 shadow-sm transition-all hover-elevate">
                     <div className="mb-2 flex flex-wrap items-baseline gap-2">
-                      <span className="font-semibold text-foreground">
+                      <span className="font-display font-bold text-foreground">
                         {intervento.speakerName}
                       </span>
                       {intervento.speakerRole && (
@@ -125,10 +138,20 @@ export function SedutaDetail() {
               ))}
             </ol>
           ) : (
-            <div className="py-12 text-center text-muted-foreground bg-muted/20 rounded-xl border border-dashed">
-              <FileText className="mx-auto mb-3 h-8 w-8 opacity-40" />
-              Resoconto non ancora disponibile per questa seduta.
-            </div>
+            <Empty className="border bg-muted/20">
+              <EmptyHeader>
+                <EmptyMedia variant="icon">
+                  <FileText />
+                </EmptyMedia>
+                <EmptyTitle className="font-display">
+                  Resoconto non disponibile
+                </EmptyTitle>
+                <EmptyDescription>
+                  Il resoconto stenografico non è ancora stato pubblicato per
+                  questa seduta.
+                </EmptyDescription>
+              </EmptyHeader>
+            </Empty>
           )}
         </>
       )}

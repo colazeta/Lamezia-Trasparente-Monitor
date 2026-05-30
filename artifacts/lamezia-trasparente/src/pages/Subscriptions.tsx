@@ -45,14 +45,15 @@ export function Subscriptions() {
   return (
     <div className="container mx-auto px-4 py-8 md:py-12">
       <div className="mx-auto max-w-xl">
-        <div className="mb-8 space-y-4 text-center">
-          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-primary/10 text-primary">
+        <div className="mb-8 flex flex-col items-center text-center">
+          <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-brand/10 text-brand">
             <Bell className="h-8 w-8" />
           </div>
-          <h1 className="text-3xl md:text-4xl font-serif font-bold tracking-tight">
+          <span className="eyebrow text-brand">Resta informato</span>
+          <h1 className="mt-2 text-3xl md:text-4xl font-display font-bold tracking-tight">
             Centro Iscrizioni
           </h1>
-          <p className="text-muted-foreground text-lg">
+          <p className="mt-3 text-muted-foreground text-lg">
             Gestisci i temi che segui. Inserisci la tua email e ti invieremo un
             link sicuro per vedere e modificare le tue iscrizioni.
           </p>
@@ -60,7 +61,7 @@ export function Subscriptions() {
 
         <Card>
           <CardHeader>
-            <CardTitle className="font-serif">
+            <CardTitle className="font-display font-bold tracking-tight">
               Ricevi il link via email
             </CardTitle>
             <CardDescription>
@@ -70,9 +71,11 @@ export function Subscriptions() {
           </CardHeader>
           <CardContent>
             {sent ? (
-              <div className="flex flex-col items-center gap-3 rounded-lg border border-primary/20 bg-primary/5 px-6 py-8 text-center">
-                <CheckCircle2 className="h-10 w-10 text-primary" />
-                <h3 className="text-lg font-semibold">Controlla la tua casella</h3>
+              <div className="flex flex-col items-center gap-3 rounded-xl border border-brand/30 bg-brand/5 px-6 py-8 text-center">
+                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-success/15 text-success">
+                  <CheckCircle2 className="h-7 w-7" />
+                </div>
+                <h3 className="text-lg font-display font-bold tracking-tight">Controlla la tua casella</h3>
                 <p className="text-muted-foreground text-sm">
                   Se l'indirizzo ha iscrizioni attive, riceverai un'email con il
                   link per gestirle. Controlla anche la cartella spam.
@@ -98,14 +101,16 @@ export function Subscriptions() {
                     placeholder="latua@email.it"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="pl-9"
+                    className="pl-9 h-11"
                     aria-label="Indirizzo email"
                     required
                   />
                 </div>
                 <Button
                   type="submit"
-                  className="w-full gap-2"
+                  variant="brand"
+                  size="lg"
+                  className="w-full gap-2 h-12 text-base font-bold"
                   disabled={requestLink.isPending}
                 >
                   <Mail className="h-4 w-4" />

@@ -719,6 +719,153 @@ paths:
               schema:
                 $ref: "#/components/schemas/Error"
 
+  /officials:
+    get:
+      operationId: listOfficials
+      tags: [officials]
+      summary: List public officials and staff
+      parameters:
+        - name: role
+          in: query
+          required: false
+          description: sindaco | assessore | consigliere | dirigente | dipendente
+          schema:
+            type: string
+        - name: q
+          in: query
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: List of officials
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Official"
+    post:
+      operationId: createOfficial
+      tags: [officials]
+      summary: Create a public official with optional profile data
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/OfficialInput"
+      responses:
+        "201":
+          description: Created official profile
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OfficialProfile"
+        "400":
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /officials/{id}:
+    get:
+      operationId: getOfficial
+      tags: [officials]
+      summary: Get a single official's full transparency profile
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Official profile
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OfficialProfile"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    post:
+      operationId: updateOfficial
+      tags: [officials]
+      summary: Update an official and replace their profile data
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/OfficialInput"
+      responses:
+        "200":
+          description: Updated official profile
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OfficialProfile"
+        "400":
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /delibere/{id}/votes:
+    get:
+      operationId: getDeliberaVotes
+      tags: [officials]
+      summary: Voting breakdown for a single delibera
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Delibera voting breakdown
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DeliberaVotes"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
   /reports:
     get:
       operationId: listReports

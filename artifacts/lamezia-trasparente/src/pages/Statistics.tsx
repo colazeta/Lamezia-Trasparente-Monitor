@@ -4,7 +4,7 @@ import {
   useGetShareStats, 
   useGetRecentActivity 
 } from "@workspace/api-client-react";
-import { BarChart3, TrendingUp, HandCoins, Share2, Activity, PieChart, Info, Users } from "lucide-react";
+import { BarChart3, TrendingUp, HandCoins, Share2, Activity, PieChart, Users } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { format } from "date-fns";
@@ -17,13 +17,16 @@ export function Statistics() {
   const { data: activity, isLoading: activityLoading } = useGetRecentActivity();
 
   return (
-    <div className="container mx-auto px-4 py-8 md:py-12 bg-muted/10 min-h-screen">
-      <div className="mb-8 space-y-2">
-        <h1 className="text-3xl md:text-4xl font-serif font-bold tracking-tight flex items-center gap-3">
-          <BarChart3 className="h-8 w-8 text-primary" />
+    <div className="container mx-auto px-4 py-8 md:py-12">
+      <div className="mb-8">
+        <span className="eyebrow text-brand">
+          <BarChart3 className="h-3.5 w-3.5" />
+          Osservatorio in cifre
+        </span>
+        <h1 className="mt-2 text-3xl md:text-4xl font-display font-bold tracking-tight">
           Dati & Statistiche
         </h1>
-        <p className="text-muted-foreground text-lg max-w-3xl">
+        <p className="mt-3 text-muted-foreground text-lg max-w-3xl">
           Quadro riassuntivo dell'attività dell'osservatorio civico e del coinvolgimento della cittadinanza.
         </p>
       </div>
@@ -57,7 +60,7 @@ export function Statistics() {
           loading={statsLoading} 
           icon={TrendingUp}
           desc="Soldi pubblici seguiti"
-          primary
+          highlight
         />
       </div>
 
@@ -66,19 +69,19 @@ export function Statistics() {
         <div className="lg:col-span-2 space-y-8">
           
           {/* Top by Relevance */}
-          <Card>
-            <CardHeader className="border-b bg-muted/20">
-              <CardTitle className="flex items-center gap-2">
-                <HandCoins className="h-5 w-5 text-primary" /> Temi Più Rilevanti per i Cittadini
+          <Card className="overflow-hidden">
+            <CardHeader className="border-b border-border bg-muted/40">
+              <CardTitle className="flex items-center gap-2 font-display font-bold tracking-tight">
+                <HandCoins className="h-5 w-5 text-brand" /> Temi Più Rilevanti per i Cittadini
               </CardTitle>
             </CardHeader>
             <CardContent className="p-0">
-              <div className="divide-y">
+              <div className="divide-y divide-border">
                 {themesLoading ? (
                   Array(5).fill(0).map((_, i) => <RankRowSkeleton key={i} />)
                 ) : topThemes?.byRelevance.map((theme, i) => (
-                  <div key={theme.id} className="flex items-center p-4 gap-4 hover:bg-muted/10 transition-colors">
-                    <div className="font-serif font-bold text-2xl text-muted-foreground/40 w-6 text-center">
+                  <div key={theme.id} className="flex items-center p-4 gap-4 hover-elevate transition-colors">
+                    <div className="font-display font-bold text-2xl tabular-nums text-muted-foreground/40 w-6 text-center">
                       {i + 1}
                     </div>
                     <div className="flex-1 min-w-0">
@@ -91,7 +94,7 @@ export function Statistics() {
                       </div>
                     </div>
                     <div className="text-right shrink-0">
-                      <div className="text-xl font-bold text-primary">{theme.relevanceCount}</div>
+                      <div className="text-xl font-display font-bold tabular-nums text-brand">{theme.relevanceCount}</div>
                       <div className="text-[10px] uppercase tracking-wider text-muted-foreground">Voti</div>
                     </div>
                   </div>
@@ -101,26 +104,26 @@ export function Statistics() {
           </Card>
 
           {/* Top by Shares */}
-          <Card>
-            <CardHeader className="border-b bg-muted/20">
-              <CardTitle className="flex items-center gap-2">
-                <Share2 className="h-5 w-5 text-secondary-foreground" /> Temi Più Condivisi
+          <Card className="overflow-hidden">
+            <CardHeader className="border-b border-border bg-muted/40">
+              <CardTitle className="flex items-center gap-2 font-display font-bold tracking-tight">
+                <Share2 className="h-5 w-5 text-primary" /> Temi Più Condivisi
               </CardTitle>
             </CardHeader>
             <CardContent className="p-0">
-              <div className="divide-y">
+              <div className="divide-y divide-border">
                 {themesLoading ? (
                   Array(5).fill(0).map((_, i) => <RankRowSkeleton key={i} />)
                 ) : topThemes?.byShares.map((theme, i) => (
-                  <div key={theme.id} className="flex items-center p-4 gap-4 hover:bg-muted/10 transition-colors">
-                    <div className="font-serif font-bold text-2xl text-muted-foreground/40 w-6 text-center">
+                  <div key={theme.id} className="flex items-center p-4 gap-4 hover-elevate transition-colors">
+                    <div className="font-display font-bold text-2xl tabular-nums text-muted-foreground/40 w-6 text-center">
                       {i + 1}
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="font-medium text-foreground truncate">{theme.title}</div>
                     </div>
                     <div className="text-right shrink-0">
-                      <div className="text-xl font-bold text-secondary-foreground">{theme.shareCount}</div>
+                      <div className="text-xl font-display font-bold tabular-nums text-primary">{theme.shareCount}</div>
                       <div className="text-[10px] uppercase tracking-wider text-muted-foreground">Share</div>
                     </div>
                   </div>
@@ -134,9 +137,9 @@ export function Statistics() {
         <div className="space-y-8">
           
           {/* Share Channels */}
-          <Card>
-            <CardHeader className="border-b">
-              <CardTitle className="text-base">Canali di Diffusione</CardTitle>
+          <Card className="overflow-hidden">
+            <CardHeader className="border-b border-border">
+              <CardTitle className="text-base font-display font-bold tracking-tight">Canali di Diffusione</CardTitle>
               <CardDescription>Come circolano le informazioni</CardDescription>
             </CardHeader>
             <CardContent className="p-6">
@@ -146,16 +149,19 @@ export function Statistics() {
                 </div>
               ) : shareStats && shareStats.length > 0 ? (
                 <div className="space-y-4">
-                  {shareStats.map(stat => (
+                  {shareStats.map((stat, i) => (
                     <div key={stat.channel}>
-                      <div className="flex justify-between text-sm mb-1">
+                      <div className="flex justify-between text-sm mb-1.5">
                         <span className="capitalize font-medium">{stat.channel}</span>
-                        <span className="text-muted-foreground font-mono">{stat.count}</span>
+                        <span className="text-muted-foreground font-display font-bold tabular-nums">{stat.count}</span>
                       </div>
-                      <div className="h-2 bg-muted rounded-full overflow-hidden">
+                      <div className="h-2.5 bg-muted rounded-full overflow-hidden">
                         <div 
-                          className="h-full bg-primary" 
-                          style={{ width: `${(stat.count / Math.max(...shareStats.map(s => s.count))) * 100}%` }}
+                          className="h-full rounded-full transition-all"
+                          style={{
+                            width: `${(stat.count / Math.max(...shareStats.map(s => s.count))) * 100}%`,
+                            backgroundColor: `hsl(var(--chart-${(i % 5) + 1}))`,
+                          }}
                         />
                       </div>
                     </div>
@@ -168,14 +174,14 @@ export function Statistics() {
           </Card>
 
           {/* Mini Activity Feed */}
-          <Card>
-            <CardHeader className="border-b bg-muted/10">
-              <CardTitle className="text-base flex items-center gap-2">
-                <Activity className="h-4 w-4" /> Pulse
+          <Card className="overflow-hidden">
+            <CardHeader className="border-b border-border bg-muted/40">
+              <CardTitle className="text-base flex items-center gap-2 font-display font-bold tracking-tight">
+                <Activity className="h-4 w-4 text-brand" /> Pulse
               </CardTitle>
             </CardHeader>
             <CardContent className="p-0">
-              <div className="divide-y text-sm">
+              <div className="divide-y divide-border text-sm">
                 {activityLoading ? (
                   Array(5).fill(0).map((_, i) => (
                     <div key={i} className="p-4 space-y-2">
@@ -184,7 +190,7 @@ export function Statistics() {
                     </div>
                   ))
                 ) : activity?.slice(0, 8).map(item => (
-                  <div key={item.id} className="p-4 hover:bg-muted/10">
+                  <div key={item.id} className="p-4 hover-elevate transition-colors">
                     <div className="text-xs text-muted-foreground font-mono mb-1">
                       {format(new Date(item.date), 'dd MMM', { locale: it })} • {item.type}
                     </div>
@@ -200,22 +206,23 @@ export function Statistics() {
   );
 }
 
-function KpiCard({ title, value, loading, icon: Icon, desc, primary = false }: any) {
+function KpiCard({ title, value, loading, icon: Icon, desc, highlight = false }: any) {
   return (
-    <Card className={primary ? 'border-primary shadow-sm bg-primary/5' : 'shadow-sm'}>
+    <Card className={`relative overflow-hidden ${highlight ? 'border-brand/40 bg-brand/5' : ''}`}>
+      {highlight && <span className="absolute left-0 top-0 h-full w-1 bg-brand" />}
       <CardContent className="p-6">
         <div className="flex justify-between items-start mb-4">
           <div className="space-y-1">
-            <p className="text-sm font-medium text-muted-foreground">{title}</p>
+            <p className="eyebrow text-muted-foreground">{title}</p>
             {loading ? (
-              <Skeleton className="h-8 w-24" />
+              <Skeleton className="h-9 w-24" />
             ) : (
-              <p className={`text-3xl font-serif font-bold tracking-tight ${primary ? 'text-primary' : 'text-foreground'}`}>
+              <p className={`text-3xl font-display font-bold tracking-tight tabular-nums ${highlight ? 'text-brand' : 'text-foreground'}`}>
                 {value || 0}
               </p>
             )}
           </div>
-          <div className={`p-2 rounded-md ${primary ? 'bg-primary/20 text-primary' : 'bg-muted text-muted-foreground'}`}>
+          <div className={`p-2 rounded-lg ${highlight ? 'bg-brand/15 text-brand' : 'bg-muted text-muted-foreground'}`}>
             <Icon className="h-5 w-5" />
           </div>
         </div>

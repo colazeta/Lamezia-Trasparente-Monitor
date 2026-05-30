@@ -6,6 +6,13 @@ import { Search, Users, ChevronRight } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
+import {
+  Empty,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+  EmptyDescription,
+} from "@/components/ui/empty";
 import { cn } from "@/lib/utils";
 
 const TABS = [
@@ -50,15 +57,15 @@ export function Amministratori() {
 
   return (
     <div className="container mx-auto px-4 py-8 md:py-12 max-w-5xl">
-      <div className="mb-8 space-y-4">
-        <div className="inline-flex items-center rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-sm font-medium text-primary mb-2">
-          <Users className="mr-2 h-4 w-4" />
+      <div className="mb-8">
+        <span className="eyebrow text-brand">
+          <Users className="h-3.5 w-3.5" />
           Censimento dei soggetti pubblici
-        </div>
-        <h1 className="text-3xl md:text-4xl font-serif font-bold tracking-tight">
+        </span>
+        <h1 className="mt-2 text-3xl md:text-4xl font-display font-bold tracking-tight">
           Amministratori e personale
         </h1>
-        <p className="text-muted-foreground text-lg">
+        <p className="mt-3 text-muted-foreground text-lg max-w-3xl">
           Il registro dei soggetti pubblici del Comune di Lamezia Terme: sindaco,
           assessori, consiglieri, dirigenti e personale. Per ciascuno il
           curriculum, le attività, i compensi, le dichiarazioni e — per
@@ -95,17 +102,18 @@ export function Amministratori() {
         </div>
       </div>
 
-      <div className="grid gap-3 sm:grid-cols-2">
+      <div className="grid gap-4 sm:grid-cols-2">
         {isLoading ? (
           Array(6)
             .fill(0)
             .map((_, i) => (
-              <div key={i} className="p-5 rounded-xl border bg-card shadow-sm">
-                <div className="flex items-center gap-3">
+              <div key={i} className="p-5 rounded-xl border border-border bg-card shadow-sm">
+                <div className="flex items-center gap-4">
                   <Skeleton className="h-12 w-12 rounded-full" />
                   <div className="flex-1 space-y-2">
                     <Skeleton className="h-4 w-32" />
                     <Skeleton className="h-3 w-24" />
+                    <Skeleton className="h-5 w-20 rounded-md" />
                   </div>
                 </div>
               </div>
@@ -115,27 +123,27 @@ export function Amministratori() {
             <Link
               key={o.id}
               href={`/amministratori/${o.id}`}
-              className="group flex items-center gap-4 p-5 rounded-xl border border-border/60 bg-card shadow-sm hover:shadow-md hover:border-primary/30 transition-all"
+              className="group flex items-center gap-4 p-5 rounded-xl border border-border bg-card shadow-sm hover-elevate transition-all hover:shadow-lg hover:-translate-y-0.5 hover:border-brand/40"
             >
-              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-primary/10 font-serif font-bold text-primary">
+              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-brand/10 font-display font-bold text-brand">
                 {initials(o.name)}
               </div>
               <div className="min-w-0 flex-1">
                 <div className="flex items-center gap-2">
-                  <h3 className="font-semibold text-foreground truncate">
+                  <h3 className="font-display font-bold text-foreground truncate group-hover:text-brand transition-colors">
                     {o.name}
                   </h3>
                   {o.status === "cessato" && (
                     <Badge variant="outline" className="text-[10px] shrink-0">
-                      cessato
+                      Cessato
                     </Badge>
                   )}
                 </div>
                 <p className="text-sm text-muted-foreground truncate">
                   {o.roleTitle ?? ROLE_LABELS[o.role] ?? o.role}
                 </p>
-                <div className="mt-1.5 flex flex-wrap items-center gap-1.5">
-                  <Badge className="bg-primary/10 text-primary border-transparent shadow-none text-xs capitalize">
+                <div className="mt-2 flex flex-wrap items-center gap-1.5">
+                  <Badge variant="secondary" className="text-xs capitalize">
                     {ROLE_LABELS[o.role] ?? o.role}
                   </Badge>
                   {o.group && (
@@ -145,12 +153,23 @@ export function Amministratori() {
                   )}
                 </div>
               </div>
-              <ChevronRight className="h-5 w-5 shrink-0 text-muted-foreground group-hover:text-primary transition-colors" />
+              <ChevronRight className="h-5 w-5 shrink-0 text-muted-foreground group-hover:text-brand transition-colors" />
             </Link>
           ))
         ) : (
-          <div className="sm:col-span-2 py-12 text-center text-muted-foreground bg-muted/20 rounded-xl border border-dashed">
-            Nessun soggetto trovato con questi criteri.
+          <div className="sm:col-span-2">
+            <Empty className="border bg-muted/20">
+              <EmptyHeader>
+                <EmptyMedia variant="icon">
+                  <Users />
+                </EmptyMedia>
+                <EmptyTitle className="font-display">Nessun soggetto trovato</EmptyTitle>
+                <EmptyDescription>
+                  Nessun amministratore o dipendente corrisponde ai criteri di
+                  ricerca selezionati.
+                </EmptyDescription>
+              </EmptyHeader>
+            </Empty>
           </div>
         )}
       </div>
