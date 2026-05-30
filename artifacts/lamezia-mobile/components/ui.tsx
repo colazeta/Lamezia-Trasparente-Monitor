@@ -8,6 +8,7 @@ import {
   Text,
   TextInput,
   View,
+  type StyleProp,
   type ViewStyle,
 } from "react-native";
 import Animated, {
@@ -77,7 +78,7 @@ export function Card({
   style,
 }: {
   children: React.ReactNode;
-  style?: ViewStyle;
+  style?: StyleProp<ViewStyle>;
 }) {
   const colors = useColors();
   return (

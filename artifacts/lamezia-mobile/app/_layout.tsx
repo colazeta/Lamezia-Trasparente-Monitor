@@ -52,7 +52,8 @@ function RootLayoutNav() {
       <Stack.Screen name="theme/[id]" options={{ title: "Tema" }} />
       <Stack.Screen name="albo" options={{ title: "Albo Pretorio" }} />
       <Stack.Screen name="delibere" options={{ title: "Delibere" }} />
-      <Stack.Screen name="contratti" options={{ title: "Appalti" }} />
+      <Stack.Screen name="contratti/index" options={{ title: "Appalti" }} />
+      <Stack.Screen name="contratti/[id]" options={{ title: "Contratto" }} />
       <Stack.Screen name="pnrr" options={{ title: "PNRR" }} />
       <Stack.Screen name="convocazioni/index" options={{ title: "Convocazioni" }} />
       <Stack.Screen name="convocazioni/[id]" options={{ title: "Seduta" }} />

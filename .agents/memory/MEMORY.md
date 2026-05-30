@@ -3,3 +3,4 @@
 - [Design accessibility / theme checks](design-accessibility-checks.md) — lamezia-trasparente vitest suite: theme toggle, page render light/dark, color-literal lint, WCAG contrast tiers (body >=4.5, accent surfaces >=3).
 - [Lamezia recharts gotchas](lamezia-recharts.md) — chart CSS vars are HSL triplets (use `hsl(var(--chart-N))`); Pie needs `isAnimationActive={false}`; web app tsc is pre-broken on recharts/React types.
 - [ANAC L.190 ingestion](anac-l190-ingestion.md) — Tinn L.190 feed mixes non-contract albo acts; only items with a CIG are genuine contracts.
+- [DB schema drift in isolated env](db-schema-drift-isolated-env.md) — "column does not exist" 500s → truncate table, `pnpm -C lib/db push-force`, restart api-server to re-ingest.
