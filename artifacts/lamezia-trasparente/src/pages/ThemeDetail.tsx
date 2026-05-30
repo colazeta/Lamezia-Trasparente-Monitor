@@ -44,6 +44,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Separator } from "@/components/ui/separator";
+import { resolvePostImageSrc } from "@/lib/postImages";
 
 const statusMap: Record<string, { label: string; variant: "default" | "secondary" | "destructive" | "outline" | "brand" | "success" | "warning", icon: any }> = {
   aperto: { label: "Aperto", variant: "destructive", icon: AlertTriangle },
@@ -51,27 +52,6 @@ const statusMap: Record<string, { label: string; variant: "default" | "secondary
   monitoraggio: { label: "In Monitoraggio", variant: "warning", icon: BookOpen },
   chiuso: { label: "Risolto/Chiuso", variant: "success", icon: ShieldAlert },
 };
-
-/**
- * Resolve an image source embedded in a Cronistoria post body.
- *
- * Only images hosted in our own object storage are allowed: the upload endpoint
- * returns an object path like `/objects/uploads/<id>`, which is served at
- * `/api/storage/objects/<id>`. Both the raw object path and the already-served
- * `/api/storage/...` path are accepted. Any other source (arbitrary external
- * URLs, `javascript:` etc.) is rejected so nothing unsafe is ever rendered.
- */
-function resolvePostImageSrc(src: string | undefined): string | null {
-  if (!src) return null;
-  if (src.startsWith("/objects/")) return `/api/storage${src}`;
-  if (
-    src.startsWith("/api/storage/objects/") ||
-    src.startsWith("/api/storage/public-objects/")
-  ) {
-    return src;
-  }
-  return null;
-}
 
 export function ThemeDetail() {
   const { id } = useParams();
