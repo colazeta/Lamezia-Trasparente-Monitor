@@ -68,3 +68,5 @@ export * from './themePostInput';
 export * from './themePostUpdateInput';
 export * from './themeStatus';
 export * from './topThemes';
+export * from './uploadUrlRequest';
+export * from './uploadUrlResponse';

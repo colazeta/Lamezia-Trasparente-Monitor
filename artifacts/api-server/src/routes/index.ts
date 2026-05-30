@@ -7,6 +7,7 @@ import publicationsRouter from "./publications";
 import officialsRouter from "./officials";
 import reportsRouter from "./reports";
 import statsRouter from "./stats";
+import storageRouter from "./storage";
 
 const router: IRouter = Router();
 
@@ -18,5 +19,6 @@ router.use(publicationsRouter);
 router.use(officialsRouter);
 router.use(reportsRouter);
 router.use(statsRouter);
+router.use(storageRouter);
 
 export default router;

@@ -52,6 +52,27 @@ const statusMap: Record<string, { label: string; variant: "default" | "secondary
   chiuso: { label: "Risolto/Chiuso", variant: "success", icon: ShieldAlert },
 };
 
+/**
+ * Resolve an image source embedded in a Cronistoria post body.
+ *
+ * Only images hosted in our own object storage are allowed: the upload endpoint
+ * returns an object path like `/objects/uploads/<id>`, which is served at
+ * `/api/storage/objects/<id>`. Both the raw object path and the already-served
+ * `/api/storage/...` path are accepted. Any other source (arbitrary external
+ * URLs, `javascript:` etc.) is rejected so nothing unsafe is ever rendered.
+ */
+function resolvePostImageSrc(src: string | undefined): string | null {
+  if (!src) return null;
+  if (src.startsWith("/objects/")) return `/api/storage${src}`;
+  if (
+    src.startsWith("/api/storage/objects/") ||
+    src.startsWith("/api/storage/public-objects/")
+  ) {
+    return src;
+  }
+  return null;
+}
+
 export function ThemeDetail() {
   const { id } = useParams();
   const themeId = id ? parseInt(id, 10) : 0;
@@ -381,6 +402,19 @@ export function ThemeDetail() {
                               a: ({ node, ...props }) => (
                                 <a {...props} target="_blank" rel="noopener noreferrer" />
                               ),
+                              img: ({ node, src, alt, ...props }) => {
+                                const resolved = resolvePostImageSrc(src);
+                                if (!resolved) return null;
+                                return (
+                                  <img
+                                    {...props}
+                                    src={resolved}
+                                    alt={typeof alt === "string" ? alt : ""}
+                                    loading="lazy"
+                                    className="rounded-lg border border-border my-4 max-w-full h-auto mx-auto"
+                                  />
+                                );
+                              },
                             }}
                           >
                             {post.body}

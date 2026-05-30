@@ -1,1 +1,2 @@
 - [api-client-react stale dist](api-client-react-dist.md) — `@workspace/api-client-react` types resolve via stale `dist/*.d.ts`; rebuild after backend schema/codegen changes.
+- [Object storage template TS quirk](object-storage-template.md) — the object-storage skill's objectStorage.ts fails strict TS on `response.json()` (unknown); cast the result.
