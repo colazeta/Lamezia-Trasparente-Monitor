@@ -8,6 +8,7 @@ import {
   Pressable,
   StyleSheet,
   Text,
+  TextInput,
   View,
 } from "react-native";
 
@@ -18,8 +19,10 @@ import {
   useGetContractsAnalytics,
   useGetContractsFeedStatus,
   useListContracts,
+  useListThemes,
   type Contract,
   type ContractAnalytics,
+  type ListContractsParams,
 } from "@workspace/api-client-react";
 
 const ANAC_PORTAL_URL = "https://dati.anticorruzione.it/superset/dashboard/appalti/";
@@ -30,19 +33,53 @@ export default function ContrattiScreen() {
   const [search, setSearch] = useState("");
   const [procedureType, setProcedureType] = useState<string | undefined>(undefined);
   const [acquisitionTool, setAcquisitionTool] = useState<string | undefined>(undefined);
+  const [themeId, setThemeId] = useState<number | undefined>(undefined);
+  const [minAmount, setMinAmount] = useState("");
+  const [maxAmount, setMaxAmount] = useState("");
+  const [from, setFrom] = useState("");
+  const [to, setTo] = useState("");
 
   useEffect(() => {
     const t = setTimeout(() => setSearch(input.trim()), 400);
     return () => clearTimeout(t);
   }, [input]);
 
+  const themes = useListThemes();
+
   const params = useMemo(() => {
-    const p: Record<string, string> = {};
+    const p: ListContractsParams = {};
     if (search) p.search = search;
     if (procedureType) p.procedureType = procedureType;
     if (acquisitionTool) p.acquisitionTool = acquisitionTool;
+    if (themeId != null) p.themeId = themeId;
+    if (minAmount && !Number.isNaN(Number(minAmount))) p.minAmount = Number(minAmount);
+    if (maxAmount && !Number.isNaN(Number(maxAmount))) p.maxAmount = Number(maxAmount);
+    if (from) p.from = from;
+    if (to) p.to = to;
     return p;
-  }, [search, procedureType, acquisitionTool]);
+  }, [search, procedureType, acquisitionTool, themeId, minAmount, maxAmount, from, to]);
+
+  const hasActiveFilters =
+    !!search ||
+    procedureType != null ||
+    acquisitionTool != null ||
+    themeId != null ||
+    minAmount !== "" ||
+    maxAmount !== "" ||
+    from !== "" ||
+    to !== "";
+
+  const resetFilters = () => {
+    setInput("");
+    setSearch("");
+    setProcedureType(undefined);
+    setAcquisitionTool(undefined);
+    setThemeId(undefined);
+    setMinAmount("");
+    setMaxAmount("");
+    setFrom("");
+    setTo("");
+  };
 
   const contracts = useListContracts(params);
   const analytics = useGetContractsAnalytics(params);
@@ -69,6 +106,13 @@ export default function ContrattiScreen() {
     () => [{ label: "Tutti gli strumenti", value: undefined as string | undefined }, ...tools.map((t) => ({ label: t, value: t }))],
     [tools],
   );
+  const themeOptions = useMemo(
+    () => [
+      { label: "Tutti i Temi", value: undefined as number | undefined },
+      ...(themes.data ?? []).map((t) => ({ label: t.title, value: t.id as number | undefined })),
+    ],
+    [themes.data],
+  );
 
   const items = contracts.data ?? [];
 
@@ -94,6 +138,81 @@ export default function ContrattiScreen() {
           onSelect={(v) => setAcquisitionTool(v as string | undefined)}
         />
       ) : null}
+      {(themes.data?.length ?? 0) > 0 ? (
+        <ChipRow
+          options={themeOptions}
+          selected={themeId}
+          getLabel={(o) => o.label}
+          getValue={(o) => o.value}
+          onSelect={(v) => setThemeId(v as number | undefined)}
+        />
+      ) : null}
+
+      <Card style={{ gap: 14 }}>
+        <View style={styles.filterHeaderRow}>
+          <View style={styles.filterTitleRow}>
+            <Feather name="sliders" size={14} color={colors.primary} />
+            <Text style={[styles.filterTitle, { color: colors.foreground }]}>Filtri avanzati</Text>
+          </View>
+          {hasActiveFilters ? (
+            <Pressable onPress={resetFilters} hitSlop={8} style={styles.resetBtn}>
+              <Feather name="x" size={13} color={colors.primary} />
+              <Text style={[styles.resetText, { color: colors.primary }]}>Azzera filtri</Text>
+            </Pressable>
+          ) : null}
+        </View>
+
+        <View style={styles.fieldRow}>
+          <FilterField label="Importo min €">
+            <TextInput
+              value={minAmount}
+              onChangeText={setMinAmount}
+              placeholder="0"
+              placeholderTextColor={colors.mutedForeground}
+              keyboardType="numeric"
+              inputMode="numeric"
+              style={[styles.fieldInput, { color: colors.foreground, borderColor: colors.border, backgroundColor: colors.background }]}
+            />
+          </FilterField>
+          <FilterField label="Importo max €">
+            <TextInput
+              value={maxAmount}
+              onChangeText={setMaxAmount}
+              placeholder="∞"
+              placeholderTextColor={colors.mutedForeground}
+              keyboardType="numeric"
+              inputMode="numeric"
+              style={[styles.fieldInput, { color: colors.foreground, borderColor: colors.border, backgroundColor: colors.background }]}
+            />
+          </FilterField>
+        </View>
+
+        <View style={styles.fieldRow}>
+          <FilterField label="Aggiudicato dal">
+            <TextInput
+              value={from}
+              onChangeText={setFrom}
+              placeholder="AAAA-MM-GG"
+              placeholderTextColor={colors.mutedForeground}
+              autoCapitalize="none"
+              autoCorrect={false}
+              style={[styles.fieldInput, { color: colors.foreground, borderColor: colors.border, backgroundColor: colors.background }]}
+            />
+          </FilterField>
+          <FilterField label="Aggiudicato al">
+            <TextInput
+              value={to}
+              onChangeText={setTo}
+              placeholder="AAAA-MM-GG"
+              placeholderTextColor={colors.mutedForeground}
+              autoCapitalize="none"
+              autoCorrect={false}
+              style={[styles.fieldInput, { color: colors.foreground, borderColor: colors.border, backgroundColor: colors.background }]}
+            />
+          </FilterField>
+        </View>
+      </Card>
+
       <Text style={[styles.resultCount, { color: colors.mutedForeground }]}>
         {items.length} {items.length === 1 ? "risultato" : "risultati"}
       </Text>
@@ -136,6 +255,16 @@ export default function ContrattiScreen() {
           }
         />
       )}
+    </View>
+  );
+}
+
+function FilterField({ label, children }: { label: string; children: React.ReactNode }) {
+  const colors = useColors();
+  return (
+    <View style={styles.field}>
+      <Text style={[styles.fieldLabel, { color: colors.mutedForeground }]}>{label}</Text>
+      {children}
     </View>
   );
 }
@@ -351,6 +480,32 @@ const styles = StyleSheet.create({
   linkBtn: { flexDirection: "row", alignItems: "center", gap: 6 },
   link: { fontFamily: "Inter_600SemiBold", fontSize: 13 },
   resultCount: { fontFamily: "Inter_500Medium", fontSize: 12.5 },
+  filterHeaderRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    gap: 10,
+  },
+  filterTitleRow: { flexDirection: "row", alignItems: "center", gap: 7 },
+  filterTitle: { fontFamily: "SpaceGrotesk_600SemiBold", fontSize: 14, letterSpacing: -0.2 },
+  resetBtn: { flexDirection: "row", alignItems: "center", gap: 4 },
+  resetText: { fontFamily: "Inter_600SemiBold", fontSize: 12.5 },
+  fieldRow: { flexDirection: "row", gap: 12 },
+  field: { flex: 1, gap: 5 },
+  fieldLabel: {
+    fontFamily: "Inter_500Medium",
+    fontSize: 10.5,
+    letterSpacing: 0.4,
+    textTransform: "uppercase",
+  },
+  fieldInput: {
+    borderWidth: 1,
+    borderRadius: 8,
+    paddingHorizontal: 12,
+    height: 42,
+    fontFamily: "Inter_400Regular",
+    fontSize: 14,
+  },
   statGrid: { flexDirection: "row", flexWrap: "wrap", gap: 10 },
   statItem: { width: "47.5%", flexGrow: 1, gap: 6, padding: 14 },
   statIcon: {
