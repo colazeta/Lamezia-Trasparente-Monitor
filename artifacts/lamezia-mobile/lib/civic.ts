@@ -1,3 +1,5 @@
+import type { Feather } from "@expo/vector-icons";
+
 import type { useColors } from "@/hooks/useColors";
 
 type Colors = ReturnType<typeof useColors>;
@@ -182,4 +184,75 @@ export function compactAmount(n: number): string {
   if (n >= 1_000_000) return `€ ${(n / 1_000_000).toFixed(1).replace(".", ",")}M`;
   if (n >= 1_000) return `€ ${Math.round(n / 1000)}k`;
   return formatAmount(n);
+}
+
+/**
+ * Resolves a web destination path (as stored on the curated questions, e.g.
+ * "/contratti", "/temi/5", "/segnalazioni") into the matching mobile route,
+ * preserving any path id and query string. Web-only routes that live in a
+ * different place on mobile (themes, segnalazioni) are remapped accordingly.
+ */
+export function resolveQuestionHref(destinationPath: string): string {
+  let path = (destinationPath ?? "").trim();
+  if (!path) return "/";
+  if (!path.startsWith("/")) path = `/${path}`;
+
+  const [pathname, query] = path.split("?");
+  const segments = pathname.split("/").filter(Boolean);
+  if (segments.length === 0) return "/";
+
+  const [head, ...rest] = segments;
+
+  let mapped: string[];
+  switch (head) {
+    case "temi":
+    case "tema":
+      mapped = rest.length > 0 ? ["theme", ...rest] : ["themes"];
+      break;
+    case "segnalazioni":
+    case "segnala":
+      mapped = ["report"];
+      break;
+    default:
+      mapped = segments;
+  }
+
+  const out = `/${mapped.join("/")}`;
+  return query ? `${out}?${query}` : out;
+}
+
+/**
+ * Picks a representative icon for a curated question based on the section its
+ * destination points to, so the "a domande" UI stays visually consistent with
+ * the rest of the app.
+ */
+export function questionIcon(
+  destinationPath: string,
+): keyof typeof Feather.glyphMap {
+  const head = (destinationPath ?? "")
+    .trim()
+    .replace(/^\//, "")
+    .split(/[/?]/)[0];
+  switch (head) {
+    case "contratti":
+      return "briefcase";
+    case "pnrr":
+      return "trending-up";
+    case "albo":
+      return "clipboard";
+    case "delibere":
+      return "file-text";
+    case "amministratori":
+      return "users";
+    case "convocazioni":
+      return "calendar";
+    case "temi":
+    case "tema":
+      return "folder";
+    case "segnalazioni":
+    case "segnala":
+      return "alert-triangle";
+    default:
+      return "help-circle";
+  }
 }

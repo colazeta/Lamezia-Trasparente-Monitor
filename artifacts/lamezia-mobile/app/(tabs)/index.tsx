@@ -14,12 +14,15 @@ import {
 import { ThemeCard } from "@/components/ThemeCard";
 import { Card, EmptyState, ScreenHeader, Skeleton } from "@/components/ui";
 import { useColors } from "@/hooks/useColors";
-import { compactAmount, formatDate } from "@/lib/civic";
+import { compactAmount, formatDate, questionIcon, resolveQuestionHref } from "@/lib/civic";
 import {
   useGetRecentActivity,
   useGetStatsOverview,
   useGetTopThemes,
+  useListQuestions,
+  type Question,
 } from "@workspace/api-client-react";
+import type { Href } from "expo-router";
 
 const ACTIVITY_ICON: Record<string, keyof typeof Feather.glyphMap> = {
   theme: "folder",
@@ -36,12 +39,25 @@ export default function HomeScreen() {
   const stats = useGetStatsOverview();
   const top = useGetTopThemes();
   const activity = useGetRecentActivity();
+  const questions = useListQuestions();
 
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
-    await Promise.all([stats.refetch(), top.refetch(), activity.refetch()]);
+    await Promise.all([
+      stats.refetch(),
+      top.refetch(),
+      activity.refetch(),
+      questions.refetch(),
+    ]);
     setRefreshing(false);
-  }, [stats, top, activity]);
+  }, [stats, top, activity, questions]);
+
+  const homeQuestions = React.useMemo(() => {
+    const list = questions.data ?? [];
+    const featured = list.filter((q) => q.featured);
+    const ordered = featured.length > 0 ? featured : list;
+    return ordered.slice(0, 3);
+  }, [questions.data]);
 
   const statItems = stats.data
     ? [
@@ -86,6 +102,31 @@ export default function HomeScreen() {
               </View>
             </View>
           </Card>
+        ) : null}
+
+        {/* Questions entry point */}
+        {questions.isLoading ? (
+          <View style={{ marginTop: 22, gap: 12 }}>
+            <Skeleton height={24} width="60%" />
+            <Skeleton height={88} radius={colors.radius + 2} />
+          </View>
+        ) : homeQuestions.length > 0 ? (
+          <>
+            <SectionTitle
+              title="Cosa vuoi scoprire?"
+              actionLabel="Tutte le domande"
+              onAction={() => router.push("/domande")}
+            />
+            <View style={{ gap: 12 }}>
+              {homeQuestions.map((q) => (
+                <QuestionRow
+                  key={q.id}
+                  question={q}
+                  onPress={() => router.push(resolveQuestionHref(q.destinationPath) as Href)}
+                />
+              ))}
+            </View>
+          </>
         ) : null}
 
         {/* Stat grid */}
@@ -191,6 +232,40 @@ export default function HomeScreen() {
   );
 }
 
+function QuestionRow({
+  question,
+  onPress,
+}: {
+  question: Question;
+  onPress: () => void;
+}) {
+  const colors = useColors();
+  const icon = questionIcon(question.destinationPath);
+  return (
+    <Pressable onPress={onPress} style={({ pressed }) => ({ opacity: pressed ? 0.85 : 1 })}>
+      <Card style={styles.questionCard}>
+        <View style={[styles.questionIcon, { backgroundColor: colors.accent }]}>
+          <Feather name={icon} size={18} color={colors.accentForeground} />
+        </View>
+        <View style={{ flex: 1 }}>
+          <Text style={[styles.questionText, { color: colors.foreground }]} numberOfLines={2}>
+            {question.text}
+          </Text>
+          {question.teaser ? (
+            <Text
+              style={[styles.questionTeaser, { color: colors.mutedForeground }]}
+              numberOfLines={2}
+            >
+              {question.teaser}
+            </Text>
+          ) : null}
+        </View>
+        <Feather name="chevron-right" size={18} color={colors.mutedForeground} />
+      </Card>
+    </Pressable>
+  );
+}
+
 function SectionTitle({
   title,
   actionLabel,
@@ -269,6 +344,26 @@ const styles = StyleSheet.create({
   },
   sectionAction: { flexDirection: "row", alignItems: "center", gap: 4 },
   sectionActionText: { fontFamily: "Inter_600SemiBold", fontSize: 13 },
+  questionCard: { flexDirection: "row", alignItems: "center", gap: 12 },
+  questionIcon: {
+    width: 40,
+    height: 40,
+    borderRadius: 10,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  questionText: {
+    fontFamily: "SpaceGrotesk_600SemiBold",
+    fontSize: 14.5,
+    lineHeight: 19,
+    letterSpacing: -0.2,
+  },
+  questionTeaser: {
+    fontFamily: "Inter_400Regular",
+    fontSize: 12.5,
+    lineHeight: 17,
+    marginTop: 3,
+  },
   activityRow: {
     flexDirection: "row",
     alignItems: "center",

@@ -10,3 +10,5 @@ In an isolated task/parallel environment, the local Postgres can lag behind `lib
 **Why:** feeds like ANAC contracts re-ingest on api-server startup, so truncating is safe — the restart repopulates the table with the corrected schema.
 
 **How to apply:** when a read endpoint 500s on a missing column, suspect drift before touching code; verify the column genuinely doesn't exist, then push schema rather than editing routes.
+
+**Newly-added tables (e.g. `questions`):** an isolated env may be missing the whole table → endpoint 500s `Errore interno del server`. A plain `pnpm -C lib/db push-force` creates new tables with NO truncate prompt (nothing to drop). Then `pnpm -C lib/db seed` populates sample/curated data; the seed is idempotent (skips each block if rows already exist), so it's safe to re-run.

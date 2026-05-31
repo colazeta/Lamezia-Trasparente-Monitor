@@ -49,6 +49,7 @@ function RootLayoutNav() {
   return (
     <Stack screenOptions={{ headerBackTitle: "Indietro", ...stackHeader }}>
       <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+      <Stack.Screen name="domande" options={{ title: "Cosa vuoi scoprire?" }} />
       <Stack.Screen name="theme/[id]" options={{ title: "Tema" }} />
       <Stack.Screen name="albo" options={{ title: "Albo Pretorio" }} />
       <Stack.Screen name="delibere" options={{ title: "Delibere" }} />
