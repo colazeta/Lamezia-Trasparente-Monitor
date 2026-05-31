@@ -23,6 +23,14 @@ import {
   Building2,
   Calendar,
   X,
+  Leaf,
+  GraduationCap,
+  HardHat,
+  HeartHandshake,
+  Palette,
+  Bus,
+  Package,
+  Wallet,
 } from "lucide-react";
 import { format } from "date-fns";
 import { it } from "date-fns/locale";
@@ -228,6 +236,12 @@ export function Contracts() {
           <ExternalLink className="h-3.5 w-3.5" />
         </a>
       </div>
+
+      {/* In cosa spende il Comune — spesa per macrotemi */}
+      <SpendingByMacrotema
+        contracts={contracts}
+        loading={isLoading}
+      />
 
       {/* Analytics */}
       <Analytics loading={analyticsLoading} analytics={analytics} />
@@ -852,6 +866,234 @@ function StatCard({
         <div className="mt-0.5 text-xs text-muted-foreground">{sub}</div>
       ) : null}
     </div>
+  );
+}
+
+const MACROTEMI: {
+  key: string;
+  label: string;
+  icon: React.ComponentType<{ className?: string }>;
+  match: RegExp;
+}[] = [
+  {
+    key: "ambiente",
+    label: "Ambiente e rifiuti",
+    icon: Leaf,
+    match:
+      /rifiut|ambient|ecolog|verde\b|igiene|raccolta|differenziat|spazzament|depurazione|fogna|idric/i,
+  },
+  {
+    key: "scuole",
+    label: "Scuole e istruzione",
+    icon: GraduationCap,
+    match: /scuol|istruz|educ|asilo|mensa|student|formazione|didatt|nido/i,
+  },
+  {
+    key: "strade",
+    label: "Strade e lavori pubblici",
+    icon: HardHat,
+    match:
+      /strad|lavori pubblici|manutenz|asfalt|marciapied|illuminaz|edili|infrastruttur|opere|ponte|riqualificaz|pavimentaz|cantier/i,
+  },
+  {
+    key: "sociale",
+    label: "Sociale e servizi alla persona",
+    icon: HeartHandshake,
+    match:
+      /social|assistenz|anzian|disabil|famigli|minor|sanit|inclusione|povert|welfare|domiciliar/i,
+  },
+  {
+    key: "cultura",
+    label: "Cultura, sport e turismo",
+    icon: Palette,
+    match: /cultur|sport|turism|bibliotec|event|spettacol|museo|teatro|festa/i,
+  },
+  {
+    key: "mobilita",
+    label: "Mobilità e trasporti",
+    icon: Bus,
+    match: /trasport|mobilit|parcheggi|\bbus\b|sosta|autobus|navetta/i,
+  },
+];
+
+const MACROTEMA_FALLBACK = {
+  key: "altro",
+  label: "Altri servizi e forniture",
+  icon: Package,
+};
+
+function classifyMacrotema(c: Contract) {
+  const haystack = `${c.title ?? ""} ${c.description ?? ""}`.toLowerCase();
+  for (const m of MACROTEMI) {
+    if (m.match.test(haystack)) return m;
+  }
+  return MACROTEMA_FALLBACK;
+}
+
+function SpendingByMacrotema({
+  contracts,
+  loading,
+}: {
+  contracts: Contract[] | undefined;
+  loading: boolean;
+}) {
+  const { groups, total, recent } = useMemo(() => {
+    const list = contracts ?? [];
+    const map = new Map<
+      string,
+      {
+        key: string;
+        label: string;
+        icon: React.ComponentType<{ className?: string }>;
+        amount: number;
+        count: number;
+      }
+    >();
+    let total = 0;
+    for (const c of list) {
+      const m = classifyMacrotema(c);
+      const amount = c.amount > 0 ? c.amount : 0;
+      total += amount;
+      const prev = map.get(m.key);
+      if (prev) {
+        prev.amount += amount;
+        prev.count += 1;
+      } else {
+        map.set(m.key, {
+          key: m.key,
+          label: m.label,
+          icon: m.icon,
+          amount,
+          count: 1,
+        });
+      }
+    }
+    const groups = Array.from(map.values()).sort(
+      (a, b) => b.amount - a.amount || b.count - a.count,
+    );
+    const recent = [...list]
+      .sort(
+        (a, b) =>
+          new Date(b.awardDate).getTime() - new Date(a.awardDate).getTime(),
+      )
+      .slice(0, 6);
+    return { groups, total, recent };
+  }, [contracts]);
+
+  if (loading) {
+    return (
+      <section id="spesa" className="mb-10 scroll-mt-24">
+        <Skeleton className="mb-4 h-7 w-64" />
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {Array(6)
+            .fill(0)
+            .map((_, i) => (
+              <Skeleton key={i} className="h-28 w-full rounded-xl" />
+            ))}
+        </div>
+      </section>
+    );
+  }
+
+  if (!contracts || contracts.length === 0) {
+    return null;
+  }
+
+  return (
+    <section id="spesa" className="mb-10 scroll-mt-24">
+      <div className="mb-5">
+        <span className="eyebrow text-brand">
+          <Wallet className="h-3.5 w-3.5" />
+          In cosa spende il Comune
+        </span>
+        <h2 className="mt-2 font-display text-2xl font-bold tracking-tight md:text-3xl">
+          La spesa per macrotemi
+        </h2>
+        <p className="mt-2 max-w-3xl text-muted-foreground">
+          Gli appalti raggruppati per ambito di spesa — ambiente, scuole,
+          strade, sociale e altro — con i relativi totali e l'elenco delle
+          ultime spese registrate.
+        </p>
+      </div>
+
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {groups.map((g) => {
+          const Icon = g.icon;
+          const pct = total > 0 ? (g.amount / total) * 100 : 0;
+          return (
+            <div
+              key={g.key}
+              className="rounded-xl border border-card-border bg-card p-5 shadow-sm"
+            >
+              <div className="flex items-start justify-between gap-3">
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-brand/10 text-brand">
+                  <Icon className="h-5 w-5" />
+                </div>
+                <div className="text-right">
+                  <div className="font-display text-xl font-bold tabular-nums text-foreground">
+                    {formatEuro(g.amount, true)}
+                  </div>
+                  <div className="text-xs text-muted-foreground">
+                    {g.count} {g.count === 1 ? "appalto" : "appalti"}
+                  </div>
+                </div>
+              </div>
+              <div className="mt-3 font-display font-bold tracking-tight text-foreground">
+                {g.label}
+              </div>
+              <div className="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-muted">
+                <span
+                  className="block h-full rounded-full bg-brand"
+                  style={{ width: `${Math.max(pct, 2)}%` }}
+                />
+              </div>
+              <div className="mt-1 text-xs text-muted-foreground tabular-nums">
+                {pct.toFixed(1)}% della spesa
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Ultime spese registrate */}
+      <div className="mt-6 rounded-xl border border-card-border bg-card p-5 shadow-sm">
+        <div className="mb-4 flex items-center gap-2">
+          <RefreshCw className="h-4 w-4 text-brand" />
+          <h3 className="font-display font-bold tracking-tight">
+            Ultime spese registrate
+          </h3>
+        </div>
+        <div className="divide-y divide-border">
+          {recent.map((c) => {
+            const m = classifyMacrotema(c);
+            const Icon = m.icon;
+            return (
+              <div
+                key={c.id}
+                className="flex items-center gap-3 py-3 first:pt-0 last:pb-0"
+              >
+                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-muted text-muted-foreground">
+                  <Icon className="h-4 w-4" />
+                </div>
+                <div className="min-w-0 flex-1">
+                  <div className="truncate text-sm font-medium text-foreground">
+                    {c.title}
+                  </div>
+                  <div className="flex flex-wrap items-center gap-x-2 text-xs text-muted-foreground">
+                    <span>{m.label}</span>
+                    <span>·</span>
+                    <span>{formatDate(c.awardDate)}</span>
+                  </div>
+                </div>
+                <div className="shrink-0 font-display font-bold tabular-nums text-foreground">
+                  {c.amount > 0 ? formatEuro(c.amount, true) : "—"}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </section>
   );
 }
 

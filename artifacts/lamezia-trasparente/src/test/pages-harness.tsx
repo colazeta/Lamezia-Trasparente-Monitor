@@ -59,6 +59,7 @@ vi.mock("@workspace/api-client-react", () => {
     "useListPnrrProjects",
     "useListPublications",
     "useListSedute",
+    "useListQuestions",
     "useListReports",
     "useListThemePosts",
     "useListThemes",
@@ -93,6 +94,7 @@ vi.mock("@workspace/api-client-react", () => {
 });
 
 import { Home } from "@/pages/Home";
+import { Domande } from "@/pages/Domande";
 import { Themes } from "@/pages/Themes";
 import { ThemeDetail } from "@/pages/ThemeDetail";
 import { Contracts } from "@/pages/Contracts";
@@ -115,6 +117,7 @@ export type PageComponent = (...args: never[]) => ReactNode;
 
 export const PAGES: Array<[string, PageComponent]> = [
   ["Home", Home],
+  ["Domande", Domande],
   ["Themes", Themes],
   ["ThemeDetail", ThemeDetail],
   ["Contracts", Contracts],

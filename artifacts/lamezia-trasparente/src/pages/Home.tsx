@@ -4,6 +4,8 @@ import {
   useGetRecentActivity,
   useListConvocazioni,
   useListPnrrProjects,
+  useListQuestions,
+  type Question,
 } from "@workspace/api-client-react";
 import {
   ShieldAlert,
@@ -19,10 +21,14 @@ import {
   Users,
   CalendarClock,
   Calendar,
+  HelpCircle,
 } from "lucide-react";
+import { useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+import { QuestionCard } from "@/components/questions/QuestionCard";
+import { iconForTopic } from "@/lib/questionTopics";
 import { format } from "date-fns";
 import { it } from "date-fns/locale";
 
@@ -36,11 +42,33 @@ export function Home() {
   const { data: stats, isLoading: statsLoading } = useGetStatsOverview();
   const { data: activity, isLoading: activityLoading } = useGetRecentActivity();
   const { data: pnrrProjects } = useListPnrrProjects();
+  const { data: questions, isLoading: questionsLoading } = useListQuestions();
   const { data: consiglio, isLoading: consiglioLoading } = useListConvocazioni({
     tipo: "consiglio",
   });
   const { data: commissioni, isLoading: commissioniLoading } =
     useListConvocazioni({ tipo: "commissione" });
+
+  const { featured, topics } = useMemo(() => {
+    const list = questions ?? [];
+    const featured = list
+      .filter((q) => q.featured)
+      .sort((a, b) => a.sortOrder - b.sortOrder)
+      .slice(0, 6);
+    const topicMap = new Map<string, Question[]>();
+    for (const q of list) {
+      const arr = topicMap.get(q.topic);
+      if (arr) arr.push(q);
+      else topicMap.set(q.topic, [q]);
+    }
+    const topics = Array.from(topicMap.entries())
+      .map(([topic, items]) => ({
+        topic,
+        count: items.length,
+      }))
+      .sort((a, b) => a.topic.localeCompare(b.topic, "it"));
+    return { featured, topics };
+  }, [questions]);
 
   return (
     <div className="flex flex-col">
@@ -131,6 +159,66 @@ export function Home() {
               icon={CheckCircle2}
               highlight
             />
+          </div>
+        </div>
+      </section>
+
+      {/* Questions Section — Cosa vuoi scoprire? */}
+      <section className="border-b border-border bg-muted/30 py-16 md:py-24">
+        <div className="container mx-auto px-4 md:px-6">
+          <div className="mx-auto max-w-3xl text-center">
+            <span className="eyebrow justify-center text-brand">
+              <HelpCircle className="h-3.5 w-3.5" />
+              Parti da una domanda
+            </span>
+            <h2 className="mt-3 font-display text-3xl font-bold tracking-tight md:text-5xl">
+              Cosa vuoi scoprire?
+            </h2>
+            <p className="mt-4 text-lg text-muted-foreground text-balance">
+              Abbiamo organizzato i dati pubblici del Comune attorno alle domande
+              che contano. Scegli un punto di partenza e ti guidiamo alle risposte.
+            </p>
+          </div>
+
+          {/* Topic chips */}
+          {topics.length > 0 && (
+            <div className="mt-8 flex flex-wrap justify-center gap-2">
+              {topics.map((t) => {
+                const Icon = iconForTopic(t.topic);
+                return (
+                  <Link
+                    key={t.topic}
+                    href={`/domande?topic=${encodeURIComponent(t.topic)}`}
+                    className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-4 py-2 text-sm font-semibold text-foreground transition-colors hover-elevate"
+                  >
+                    <Icon className="h-4 w-4 text-brand" />
+                    {t.topic}
+                    <span className="text-xs text-muted-foreground tabular-nums">
+                      {t.count}
+                    </span>
+                  </Link>
+                );
+              })}
+            </div>
+          )}
+
+          {/* Featured questions */}
+          <div className="mt-10 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+            {questionsLoading
+              ? Array(6)
+                  .fill(0)
+                  .map((_, i) => (
+                    <Skeleton key={i} className="h-48 w-full rounded-xl" />
+                  ))
+              : featured.map((q) => <QuestionCard key={q.id} question={q} />)}
+          </div>
+
+          <div className="mt-10 flex justify-center">
+            <Link href="/domande">
+              <Button variant="brand" size="lg" className="h-12 px-7 font-bold">
+                Esplora tutte le domande <ArrowRight className="ml-1 h-4 w-4" />
+              </Button>
+            </Link>
           </div>
         </div>
       </section>
