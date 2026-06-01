@@ -28,7 +28,9 @@ import {
   actsTable,
   themeEmailsTable,
   sharesTable,
+  themeRelevanceEventsTable,
 } from "@workspace/db";
+import { reconcileThemeCounters } from "../lib/counters";
 
 const mockedSendEmail = vi.mocked(sendEmail);
 
@@ -830,7 +832,7 @@ describe("Cronistoria posts (/api/themes/:id/posts)", () => {
 });
 
 describe("POST /api/themes/:id/relevant", () => {
-  it("increments the relevance count", async () => {
+  it("increments the relevance count and records an event", async () => {
     expect(await getRelevanceCount(themeId)).toBe(0);
 
     const res = await request(app).post(`/api/themes/${themeId}/relevant`);
@@ -843,11 +845,35 @@ describe("POST /api/themes/:id/relevant", () => {
     expect(second.status).toBe(200);
     expect(second.body.relevanceCount).toBe(2);
     expect(await getRelevanceCount(themeId)).toBe(2);
+
+    const events = await db
+      .select()
+      .from(themeRelevanceEventsTable)
+      .where(eq(themeRelevanceEventsTable.themeId, themeId));
+    expect(events).toHaveLength(2);
   });
 
   it("returns 404 for an unknown theme", async () => {
     const res = await request(app).post("/api/themes/99999999/relevant");
     expect(res.status).toBe(404);
+  });
+});
+
+describe("reconcileThemeCounters", () => {
+  it("recomputes relevance_count from the events table", async () => {
+    await request(app).post(`/api/themes/${themeId}/relevant`);
+    await request(app).post(`/api/themes/${themeId}/relevant`);
+    expect(await getRelevanceCount(themeId)).toBe(2);
+
+    await db
+      .update(themesTable)
+      .set({ relevanceCount: 99 })
+      .where(eq(themesTable.id, themeId));
+    expect(await getRelevanceCount(themeId)).toBe(99);
+
+    await reconcileThemeCounters();
+
+    expect(await getRelevanceCount(themeId)).toBe(2);
   });
 });
 

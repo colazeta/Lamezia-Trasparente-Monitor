@@ -18,6 +18,13 @@ clearly has them. The source is newer than the compiled dist.
 **Why:** the package has no `build` npm script; dist was emitted manually, so any
 backend OpenAPI/codegen update leaves dist stale until someone reruns tsc.
 
+**Same trap for `@workspace/db`:** its `package.json` exports `./src/index.ts`, yet
+`tsc` resolves types through the stale `lib/db/dist/*.d.ts`. So newly added schema
+tables/exports (e.g. `themePostsTable`, `themeRelevanceEventsTable`) show as
+"has no exported member" in typecheck even though runtime (vitest/tsx, which read
+source) works fine. db has no `build` script either; the dist is just stale. This
+is the bulk of the pre-existing api-server typecheck failures.
+
 **Also note:** some list hooks return wrapper objects, not bare arrays — e.g.
 `useListPnrrProjects()` returns `PnrrCensus` (`{ projects, uncensored }`), and
 `useGetFeedStatus()` returns a single `FeedStatus`, not an array. Generated

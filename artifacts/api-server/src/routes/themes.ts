@@ -11,6 +11,7 @@ import {
   contractsTable,
   actsTable,
   sharesTable,
+  themeRelevanceEventsTable,
   themeFollowersTable,
 } from "@workspace/db";
 import { and, eq, desc, ilike, sql } from "drizzle-orm";
@@ -384,11 +385,25 @@ router.post("/themes/:id/relevant", async (req, res) => {
     return;
   }
 
-  const [updated] = await db
-    .update(themesTable)
-    .set({ relevanceCount: sql`${themesTable.relevanceCount} + 1` })
-    .where(eq(themesTable.id, id))
-    .returning();
+  const updated = await db.transaction(async (tx) => {
+    const [exists] = await tx
+      .select({ id: themesTable.id })
+      .from(themesTable)
+      .where(eq(themesTable.id, id));
+    if (!exists) {
+      return null;
+    }
+
+    await tx.insert(themeRelevanceEventsTable).values({ themeId: id });
+
+    const [row] = await tx
+      .update(themesTable)
+      .set({ relevanceCount: sql`${themesTable.relevanceCount} + 1` })
+      .where(eq(themesTable.id, id))
+      .returning();
+
+    return row ?? null;
+  });
 
   if (!updated) {
     res.status(404).json({ error: "Tema non trovato" });

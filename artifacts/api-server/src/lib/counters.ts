@@ -4,11 +4,9 @@ import { logger } from "./logger";
 
 // Riallinea i contatori denormalizzati dei temi alle tabelle sorgente. I
 // contatori vengono aggiornati in modo atomico nelle stesse transazioni delle
-// inserzioni (share/follow), ma un ricalcolo periodico li mantiene coerenti
-// anche in presenza di dati storici incoerenti o interventi manuali sul DB.
-//
-// `relevanceCount` non ha una tabella sorgente (è un contatore puro) e quindi
-// non viene ricalcolato.
+// inserzioni (share/follow/relevant), ma un ricalcolo periodico li mantiene
+// coerenti anche in presenza di dati storici incoerenti o interventi manuali
+// sul DB.
 export async function reconcileThemeCounters(): Promise<void> {
   try {
     await db.execute(sql`
@@ -18,6 +16,10 @@ export async function reconcileThemeCounters(): Promise<void> {
         ),
         follower_count = (
           SELECT count(*)::int FROM theme_followers f WHERE f.theme_id = t.id
+        ),
+        relevance_count = (
+          SELECT count(*)::int FROM theme_relevance_events r
+          WHERE r.theme_id = t.id
         )
       WHERE
         t.share_count <> (
@@ -25,6 +27,10 @@ export async function reconcileThemeCounters(): Promise<void> {
         )
         OR t.follower_count <> (
           SELECT count(*)::int FROM theme_followers f WHERE f.theme_id = t.id
+        )
+        OR t.relevance_count <> (
+          SELECT count(*)::int FROM theme_relevance_events r
+          WHERE r.theme_id = t.id
         )
     `);
   } catch (err) {
