@@ -14,6 +14,7 @@ import {
   BarChart3,
   AlertTriangle,
   Table2,
+  Download,
 } from "lucide-react";
 import {
   BarChart,
@@ -59,6 +60,38 @@ function formatCell(value: string | number | null, type: string): string {
 }
 
 type SortState = { column: string; dir: "asc" | "desc" } | null;
+
+function csvEscape(value: string | number | null): string {
+  if (value === null || value === undefined) return "";
+  const str = String(value);
+  if (/[",\n\r]/.test(str)) {
+    return `"${str.replace(/"/g, '""')}"`;
+  }
+  return str;
+}
+
+function downloadCsv(
+  columns: OpendataColumn[],
+  rows: OpendataTableRowsItem[],
+  fileName: string,
+): void {
+  const header = columns.map((c) => csvEscape(c.name)).join(",");
+  const body = rows
+    .map((row) => columns.map((c) => csvEscape(row[c.name])).join(","))
+    .join("\r\n");
+  const csv = `${header}\r\n${body}`;
+  const blob = new Blob([`\uFEFF${csv}`], {
+    type: "text/csv;charset=utf-8;",
+  });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = fileName;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  URL.revokeObjectURL(url);
+}
 
 export function ResourceTable({ resourceId }: { resourceId: number }) {
   const { data, isLoading, isError } = useGetOpendataResourceContent(resourceId);
@@ -185,6 +218,17 @@ export function ResourceTable({ resourceId }: { resourceId: number }) {
               {showChart ? "Nascondi grafico" : "Mostra grafico"}
             </Button>
           ) : null}
+          <Button
+            variant="outline"
+            size="sm"
+            disabled={sorted.length === 0}
+            onClick={() =>
+              downloadCsv(columns, sorted, `risorsa-${resourceId}.csv`)
+            }
+          >
+            <Download className="mr-1.5 h-4 w-4" />
+            Scarica CSV
+          </Button>
         </div>
       </div>
 
