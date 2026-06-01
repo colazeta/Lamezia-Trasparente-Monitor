@@ -23,3 +23,28 @@ longer prompt. Contracts are re-seeded + re-ingested from ANAC on api-server boo
 
 **Why:** the prompt only appears while the constraint is pending; emptying the
 table lets drizzle add it without a data-loss confirmation.
+
+## Variant 2: text -> numeric column can't auto-cast (same cascade)
+
+Converting a column type (e.g. `attuazione_pnrr_projects.importo_finanziato`
+text -> `numeric(14,2)`) makes `push` abort with
+`column ... cannot be cast automatically to type numeric` BEFORE it applies any
+other pending changes (new columns/indexes). Result: same cascade — later
+columns (e.g. `publications.last_seen_at`) never get added and `seed` then dies
+with `column ... does not exist`.
+
+**Data gotcha:** in this dev DB the legacy `importo_finanziato` values are
+Italian-formatted currency strings like `1.512.000,00 €` (dot = thousands,
+comma = decimal, trailing €) — NOT plain decimals. A naive `::numeric` cast
+fails/corrupts. A merging task's "values were plain decimals so a direct cast
+worked" can be true in its isolated env but false here.
+
+**Recovery:** run the type change manually with a parsing USING clause, then
+`push` + `seed`:
+`ALTER TABLE attuazione_pnrr_projects ALTER COLUMN importo_finanziato TYPE numeric(14,2) USING NULLIF(replace(replace(regexp_replace(importo_finanziato,'[^0-9.,]','','g'),'.',''),',','.'),'')::numeric(14,2);`
+Verify there are no genuine plain-decimal rows first (that parse would corrupt
+`5000.00` -> `500000`); here all rows were euro-formatted or empty.
+
+**General pattern:** both variants = `push` aborts on a migration it won't do
+non-interactively/automatically -> seed crashes on a missing column. Fix the one
+blocking DDL by hand (truncate, or manual ALTER...USING), then re-run push+seed.
