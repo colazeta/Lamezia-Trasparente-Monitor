@@ -183,7 +183,7 @@ function AdminEditor({
   const [savingId, setSavingId] = useState<number | null>(null);
   const [editingLocation, setEditingLocation] = useState<Contract | null>(null);
   const [locationFilter, setLocationFilter] = useState<
-    "all" | "unplaced" | "located"
+    "all" | "review" | "confirmed"
   >("all");
   const [quickQueue, setQuickQueue] = useState<Contract[]>([]);
   const [quickIndex, setQuickIndex] = useState(0);
@@ -211,22 +211,25 @@ function AdminEditor({
   };
 
   const hasLocation = (c: Contract) => typeof c.latitude === "number";
+  // Un appalto va "rivisto" quando non ha posizione oppure ne ha una soltanto
+  // suggerita automaticamente (geoVerify) che la redazione deve confermare.
+  const needsReview = (c: Contract) => !hasLocation(c) || c.geoVerify === true;
 
-  const unplaced = useMemo(
-    () => (contracts ?? []).filter((c) => !hasLocation(c)),
+  const toReview = useMemo(
+    () => (contracts ?? []).filter((c) => needsReview(c)),
     [contracts],
   );
 
   const total = contracts?.length ?? 0;
-  const locatedCount = total - unplaced.length;
-  const locatedPct = total ? Math.round((locatedCount / total) * 100) : 0;
+  const confirmedCount = total - toReview.length;
+  const confirmedPct = total ? Math.round((confirmedCount / total) * 100) : 0;
 
   const filtered = useMemo(() => {
     let list = contracts ?? [];
-    if (locationFilter === "unplaced") {
-      list = list.filter((c) => !hasLocation(c));
-    } else if (locationFilter === "located") {
-      list = list.filter((c) => hasLocation(c));
+    if (locationFilter === "review") {
+      list = list.filter((c) => needsReview(c));
+    } else if (locationFilter === "confirmed") {
+      list = list.filter((c) => !needsReview(c));
     }
     const q = search.trim().toLowerCase();
     if (!q) return list;
@@ -239,10 +242,10 @@ function AdminEditor({
   }, [contracts, search, locationFilter]);
 
   const startQuickPlace = () => {
-    if (unplaced.length === 0) return;
-    setQuickQueue(unplaced);
+    if (toReview.length === 0) return;
+    setQuickQueue(toReview);
     setQuickIndex(0);
-    setEditingLocation(unplaced[0]);
+    setEditingLocation(toReview[0]);
   };
 
   const closeEditor = () => {
@@ -327,33 +330,33 @@ function AdminEditor({
                 Avanzamento mappa
               </div>
               <p className="mt-0.5 text-sm text-muted-foreground">
-                {locatedCount} di {total} appalti posizionati sulla mappa
-                {unplaced.length > 0
-                  ? ` · ${unplaced.length} ancora da posizionare`
-                  : " · tutti posizionati"}
+                {confirmedCount} di {total} appalti con posizione confermata
+                {toReview.length > 0
+                  ? ` · ${toReview.length} da rivedere`
+                  : " · tutti confermati"}
               </p>
             </div>
             <Button
               variant="brand"
               className="gap-2 shrink-0"
               onClick={startQuickPlace}
-              disabled={unplaced.length === 0}
+              disabled={toReview.length === 0}
             >
               <Locate className="h-4 w-4" />
-              Posiziona in sequenza
+              Rivedi in sequenza
             </Button>
           </div>
           <div
             className="mt-3 h-2 w-full overflow-hidden rounded-full bg-muted"
             role="progressbar"
-            aria-valuenow={locatedPct}
+            aria-valuenow={confirmedPct}
             aria-valuemin={0}
             aria-valuemax={100}
             aria-label="Appalti geolocalizzati"
           >
             <div
               className="h-full rounded-full bg-brand transition-all"
-              style={{ width: `${locatedPct}%` }}
+              style={{ width: `${confirmedPct}%` }}
             />
           </div>
         </CardContent>
@@ -363,8 +366,8 @@ function AdminEditor({
         {(
           [
             { key: "all", label: `Tutti (${total})` },
-            { key: "unplaced", label: `Da posizionare (${unplaced.length})` },
-            { key: "located", label: `Geolocalizzati (${locatedCount})` },
+            { key: "review", label: `Da rivedere (${toReview.length})` },
+            { key: "confirmed", label: `Confermati (${confirmedCount})` },
           ] as const
         ).map((f) => (
           <Button
@@ -398,8 +401,8 @@ function AdminEditor({
         </div>
       ) : filtered.length === 0 ? (
         <div className="rounded-xl border border-card-border bg-card p-10 text-center text-muted-foreground">
-          {locationFilter === "unplaced"
-            ? "Nessun appalto da posizionare: sono tutti sulla mappa."
+          {locationFilter === "review"
+            ? "Nessun appalto da rivedere: le posizioni sono tutte confermate."
             : "Nessun appalto corrisponde alla ricerca."}
         </div>
       ) : (
@@ -490,7 +493,9 @@ function AdminEditor({
                 >
                   <MapPin className="h-4 w-4" />
                   {typeof contract.latitude === "number"
-                    ? "Modifica posizione"
+                    ? contract.geoVerify
+                      ? "Conferma posizione"
+                      : "Modifica posizione"
                     : "Imposta posizione"}
                 </Button>
               </div>

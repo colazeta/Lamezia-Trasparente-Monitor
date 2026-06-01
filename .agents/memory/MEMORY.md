@@ -13,3 +13,4 @@
 - [Opendata section](opendata-frontend.md) — catalog/detail/tabular-viewer pages; auto-chart picks first numeric col vs date(line)/string(bar) axis; recharts tsc errors are pre-existing.
 - [react-native-maps on Expo web](expo-native-maps-web.md) — rn-maps 1.18.0 breaks web bundle; split native `.tsx` (rn-maps) + `.web.tsx` (react-leaflet); import RELATIVE not `@/` so metro picks `.web.tsx`.
 - [Deps not linked in isolated env](deps-not-materialized-isolated-env.md) — "Failed to resolve import X" when X is already in package.json+pnpm store → run `pnpm install`, it's not a code bug.
+- [Contract geocoding fallback & review](contract-geocoding-fallback.md) — auto-geocoding always returns a best-guess (comune-center fallback) with geoVerify=true; admin triage treats geoVerify as "da rivedere", confirmed = coords && !geoVerify.

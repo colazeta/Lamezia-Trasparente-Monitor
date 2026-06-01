@@ -8,7 +8,15 @@ import {
 } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import { toast } from "sonner";
-import { MapPin, Search, Trash2, Save, Loader2, SkipForward } from "lucide-react";
+import {
+  MapPin,
+  Search,
+  Trash2,
+  Save,
+  Loader2,
+  SkipForward,
+  Sparkles,
+} from "lucide-react";
 import { useUpdateContractLocation, type Contract } from "@workspace/api-client-react";
 import {
   Dialog,
@@ -209,6 +217,15 @@ export function LocationEditor({
             </DialogHeader>
 
             <div className="space-y-4">
+              {contract.geoVerify && typeof contract.latitude === "number" ? (
+                <div className="flex items-start gap-2 rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-sm text-amber-800 dark:border-amber-500/30 dark:bg-amber-500/10 dark:text-amber-300">
+                  <Sparkles className="mt-0.5 h-4 w-4 shrink-0" />
+                  <span>
+                    Posizione suggerita automaticamente. Conferma se è corretta o
+                    correggila cliccando sulla mappa, poi salva.
+                  </span>
+                </div>
+              ) : null}
               <div className="flex gap-2">
                 <div className="relative flex-1">
                   <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />

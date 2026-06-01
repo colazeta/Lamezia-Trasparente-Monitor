@@ -515,6 +515,7 @@ export async function runContractsGeocoding(
       id: contractsTable.id,
       title: contractsTable.title,
       description: contractsTable.description,
+      cup: contractsTable.cup,
     })
     .from(contractsTable)
     .where(
@@ -538,17 +539,20 @@ export async function runContractsGeocoding(
   for (const c of rows) {
     let result = null;
     try {
-      result = await geocodeContractText(c.title, c.description);
+      result = await geocodeContractText(c.title, c.description, c.cup);
     } catch (err) {
       logger.warn({ err, id: c.id }, "Geocoding failed for contract");
     }
     if (result) {
+      // geocodeContractText restituisce sempre un "miglior tentativo": le vie
+      // riconosciute sono affidabili (approximate=false), tutto il resto
+      // (POI, frazione, centro comunale) resta "da verificare" come pre-fill.
       await db
         .update(contractsTable)
         .set({
           latitude: result.latitude.toFixed(7),
           longitude: result.longitude.toFixed(7),
-          geoAddress: result.geoAddress,
+          geoAddress: result.geoAddress || null,
           geoQuartiere: result.geoQuartiere,
           geoSource: "auto",
           geoVerify: result.approximate,
@@ -557,8 +561,8 @@ export async function runContractsGeocoding(
       located += 1;
       if (result.approximate) toVerify += 1;
     } else {
-      // Nessuna posizione affidabile: segnaliamo "da verificare" e non
-      // ritentiamo più automaticamente (geoSource diventa non-null).
+      // Geocoding fallito (es. errore di rete su tutti i candidati): segnaliamo
+      // "da verificare" senza coordinate e non ritentiamo più automaticamente.
       await db
         .update(contractsTable)
         .set({ geoSource: "auto", geoVerify: true })
