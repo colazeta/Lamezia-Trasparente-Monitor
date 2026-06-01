@@ -970,6 +970,63 @@ describe("POST /api/themes/:id/share", () => {
     expect(shares[0].channel).toBe("whatsapp");
   });
 
+  it("does not double-count repeated shares from the same source and channel", async () => {
+    const first = await request(app)
+      .post(`/api/themes/${themeId}/share`)
+      .send({ channel: "whatsapp" });
+    expect(first.status).toBe(200);
+    expect(first.body.shareCount).toBe(1);
+
+    const second = await request(app)
+      .post(`/api/themes/${themeId}/share`)
+      .send({ channel: "whatsapp" });
+    expect(second.status).toBe(200);
+    expect(second.body.shareCount).toBe(1);
+
+    expect(await getShareCount(themeId)).toBe(1);
+
+    const shares = await db
+      .select()
+      .from(sharesTable)
+      .where(eq(sharesTable.themeId, themeId));
+    expect(shares).toHaveLength(1);
+  });
+
+  it("counts shares of the same source on different channels separately", async () => {
+    const first = await request(app)
+      .post(`/api/themes/${themeId}/share`)
+      .send({ channel: "whatsapp" });
+    expect(first.status).toBe(200);
+    expect(first.body.shareCount).toBe(1);
+
+    const second = await request(app)
+      .post(`/api/themes/${themeId}/share`)
+      .send({ channel: "facebook" });
+    expect(second.status).toBe(200);
+    expect(second.body.shareCount).toBe(2);
+
+    expect(await getShareCount(themeId)).toBe(2);
+
+    const shares = await db
+      .select()
+      .from(sharesTable)
+      .where(eq(sharesTable.themeId, themeId));
+    expect(shares).toHaveLength(2);
+  });
+
+  it("keeps an honest share count after reconciliation when duplicates are attempted", async () => {
+    await request(app)
+      .post(`/api/themes/${themeId}/share`)
+      .send({ channel: "link" });
+    await request(app)
+      .post(`/api/themes/${themeId}/share`)
+      .send({ channel: "link" });
+
+    await reconcileThemeCounters();
+
+    expect(await getShareCount(themeId)).toBe(1);
+  });
+
   it("returns 400 for an invalid channel", async () => {
     const res = await request(app)
       .post(`/api/themes/${themeId}/share`)

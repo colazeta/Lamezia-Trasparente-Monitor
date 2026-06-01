@@ -25,6 +25,12 @@ tables/exports (e.g. `themePostsTable`, `themeRelevanceEventsTable`) show as
 source) works fine. db has no `build` script either; the dist is just stale. This
 is the bulk of the pre-existing api-server typecheck failures.
 
+**Same trap for `@workspace/api-zod`:** newly generated zod bodies (e.g.
+`CreateThemePostBody`, `UpdateThemePostBody`) show as missing until you rebuild its
+declarations: `cd lib/api-zod && npx tsc -p tsconfig.json`. After rebuilding db +
+api-zod dist, api-server typecheck is clean except genuine pre-existing errors
+(e.g. `anacContracts.ts` null/undefined mismatch — a separate "type checks" task).
+
 **Also note:** some list hooks return wrapper objects, not bare arrays — e.g.
 `useListPnrrProjects()` returns `PnrrCensus` (`{ projects, uncensored }`), and
 `useGetFeedStatus()` returns a single `FeedStatus`, not an array. Generated

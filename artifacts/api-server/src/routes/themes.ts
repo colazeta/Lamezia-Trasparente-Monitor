@@ -381,9 +381,9 @@ router.delete(
 // Deriva una chiave anti-abuso stabile dalla provenienza della richiesta. Si
 // basa sull'IP del client (risolto tramite `trust proxy`) e ne salva solo
 // l'hash, così da non conservare l'indirizzo in chiaro. La chiave permette di
-// deduplicare i clic ripetuti dalla stessa sorgente: un solo segnale di
-// rilevanza per IP e per tema.
-function relevanceDedupeKey(req: Request): string {
+// deduplicare le azioni ripetute dalla stessa sorgente (segnali di rilevanza,
+// condivisioni), così un singolo utente non può gonfiare i contatori.
+function requestSourceKey(req: Request): string {
   const source = req.ip ?? req.socket.remoteAddress ?? "unknown";
   return createHash("sha256").update(source).digest("hex");
 }
@@ -395,7 +395,7 @@ router.post("/themes/:id/relevant", async (req, res) => {
     return;
   }
 
-  const dedupeKey = relevanceDedupeKey(req);
+  const dedupeKey = requestSourceKey(req);
 
   const updated = await db.transaction(async (tx) => {
     const [exists] = await tx
@@ -474,6 +474,8 @@ router.post("/themes/:id/share", async (req, res) => {
     return;
   }
 
+  const dedupeKey = requestSourceKey(req);
+
   const updated = await db.transaction(async (tx) => {
     const [exists] = await tx
       .select({ id: themesTable.id })
@@ -483,16 +485,35 @@ router.post("/themes/:id/share", async (req, res) => {
       return null;
     }
 
-    await tx
+    // Inserisce la condivisione solo se questa sorgente non ha già condiviso il
+    // tema su questo canale. In caso di duplicato l'inserimento viene ignorato
+    // e il contatore resta invariato, così un singolo utente non può gonfiare
+    // le condivisioni cliccando ripetutamente.
+    const inserted = await tx
       .insert(sharesTable)
-      .values({ themeId: id, channel: parsed.data.channel });
-
-    const [row] = await tx
-      .update(themesTable)
-      .set({ shareCount: sql`${themesTable.shareCount} + 1` })
-      .where(eq(themesTable.id, id))
+      .values({ themeId: id, channel: parsed.data.channel, dedupeKey })
+      .onConflictDoNothing({
+        target: [
+          sharesTable.themeId,
+          sharesTable.channel,
+          sharesTable.dedupeKey,
+        ],
+      })
       .returning();
 
+    if (inserted.length > 0) {
+      const [row] = await tx
+        .update(themesTable)
+        .set({ shareCount: sql`${themesTable.shareCount} + 1` })
+        .where(eq(themesTable.id, id))
+        .returning();
+      return row ?? null;
+    }
+
+    const [row] = await tx
+      .select()
+      .from(themesTable)
+      .where(eq(themesTable.id, id));
     return row ?? null;
   });
 
