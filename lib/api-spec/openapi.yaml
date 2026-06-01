@@ -1559,6 +1559,237 @@ paths:
               schema:
                 $ref: "#/components/schemas/Error"
 
+  /performance/categories:
+    get:
+      operationId: listPerformanceCategories
+      tags: [performance]
+      summary: List performance categories with their indicators
+      responses:
+        "200":
+          description: Performance categories with indicators
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/PerformanceCategoryWithIndicators"
+
+  /performance/indicators:
+    get:
+      operationId: listPerformanceIndicators
+      tags: [performance]
+      summary: List performance indicators, optionally filtered by category
+      parameters:
+        - name: categoryId
+          in: query
+          required: false
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Performance indicators
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/PerformanceIndicator"
+    post:
+      operationId: createPerformanceIndicator
+      tags: [performance]
+      summary: Create a performance indicator (redazione)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PerformanceIndicatorInput"
+      responses:
+        "201":
+          description: Created indicator
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PerformanceIndicator"
+        "400":
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "409":
+          description: Slug already in use
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /performance/feed-status:
+    get:
+      operationId: listPerformanceFeedStatus
+      tags: [performance]
+      summary: Status of the automatic performance data sources
+      responses:
+        "200":
+          description: Feed status entries
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/FeedStatus"
+
+  /performance/indicators/{id}:
+    get:
+      operationId: getPerformanceIndicator
+      tags: [performance]
+      summary: Get a performance indicator with its historical series
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Numeric id or slug of the indicator
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Performance indicator detail
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PerformanceIndicatorDetail"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: updatePerformanceIndicator
+      tags: [performance]
+      summary: Update a performance indicator (redazione)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Numeric id or slug of the indicator
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PerformanceIndicatorUpdateInput"
+      responses:
+        "200":
+          description: Updated indicator
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PerformanceIndicator"
+        "400":
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /performance/indicators/{id}/values:
+    put:
+      operationId: upsertPerformanceIndicatorValue
+      tags: [performance]
+      summary: Insert or update a value of an indicator's series (redazione, marks manual)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Numeric id or slug of the indicator
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PerformanceIndicatorValueInput"
+      responses:
+        "200":
+          description: Upserted value
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PerformanceIndicatorValue"
+        "400":
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /performance/indicators/{id}/values/{period}:
+    delete:
+      operationId: deletePerformanceIndicatorValue
+      tags: [performance]
+      summary: Delete a value of an indicator's series (redazione)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Numeric id or slug of the indicator
+          schema:
+            type: string
+        - name: period
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: Deleted
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
 components:
   schemas:
     HealthStatus:
@@ -2243,6 +2474,194 @@ components:
           type: ["string", "null"]
         lastUpdatedAt:
           type: ["string", "null"]
+
+    PerformanceCategory:
+      type: object
+      required: [id, slug, name, description, position]
+      properties:
+        id:
+          type: integer
+        slug:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        position:
+          type: integer
+
+    PerformanceIndicator:
+      type: object
+      required:
+        - id
+        - slug
+        - categoryId
+        - title
+        - description
+        - unit
+        - source
+        - updateMode
+        - polarity
+        - position
+        - createdAt
+        - updatedAt
+      properties:
+        id:
+          type: integer
+        slug:
+          type: string
+        categoryId:
+          type: integer
+        title:
+          type: string
+        description:
+          type: string
+        unit:
+          type: string
+        source:
+          type: string
+        sourceUrl:
+          type: ["string", "null"]
+        updateMode:
+          type: string
+          enum: [manual, automatic]
+        polarity:
+          type: string
+          enum: [higher_better, lower_better, neutral]
+        externalKey:
+          type: ["string", "null"]
+        position:
+          type: integer
+        createdAt:
+          type: string
+        updatedAt:
+          type: string
+
+    PerformanceIndicatorValue:
+      type: object
+      required:
+        - id
+        - indicatorId
+        - period
+        - value
+        - manual
+        - createdAt
+        - updatedAt
+      properties:
+        id:
+          type: integer
+        indicatorId:
+          type: integer
+        period:
+          type: string
+        value:
+          type: number
+        note:
+          type: ["string", "null"]
+        manual:
+          type: boolean
+        source:
+          type: ["string", "null"]
+        createdAt:
+          type: string
+        updatedAt:
+          type: string
+
+    PerformanceCategoryWithIndicators:
+      allOf:
+        - $ref: "#/components/schemas/PerformanceCategory"
+        - type: object
+          required: [indicators]
+          properties:
+            indicators:
+              type: array
+              items:
+                $ref: "#/components/schemas/PerformanceIndicator"
+
+    PerformanceIndicatorDetail:
+      allOf:
+        - $ref: "#/components/schemas/PerformanceIndicator"
+        - type: object
+          required: [values]
+          properties:
+            values:
+              type: array
+              items:
+                $ref: "#/components/schemas/PerformanceIndicatorValue"
+
+    PerformanceIndicatorInput:
+      type: object
+      required: [slug, categoryId, title, unit]
+      properties:
+        slug:
+          type: string
+          minLength: 1
+        categoryId:
+          type: integer
+        title:
+          type: string
+          minLength: 1
+        description:
+          type: string
+        unit:
+          type: string
+          minLength: 1
+        source:
+          type: string
+        sourceUrl:
+          type: string
+        updateMode:
+          type: string
+          enum: [manual, automatic]
+        polarity:
+          type: string
+          enum: [higher_better, lower_better, neutral]
+        externalKey:
+          type: string
+        position:
+          type: integer
+
+    PerformanceIndicatorUpdateInput:
+      type: object
+      properties:
+        categoryId:
+          type: integer
+        title:
+          type: string
+          minLength: 1
+        description:
+          type: string
+        unit:
+          type: string
+          minLength: 1
+        source:
+          type: string
+        sourceUrl:
+          type: string
+        updateMode:
+          type: string
+          enum: [manual, automatic]
+        polarity:
+          type: string
+          enum: [higher_better, lower_better, neutral]
+        externalKey:
+          type: string
+        position:
+          type: integer
+
+    PerformanceIndicatorValueInput:
+      type: object
+      required: [period, value]
+      properties:
+        period:
+          type: string
+          minLength: 1
+        value:
+          type: number
+        note:
+          type: string
+        source:
+          type: string
 
     PnrrAttachment:
       type: object

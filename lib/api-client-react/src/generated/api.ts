@@ -37,6 +37,7 @@ import type {
   ListOfficialsParams,
   ListOpendataDatasetsParams,
   ListOversightOpinionsParams,
+  ListPerformanceIndicatorsParams,
   ListPublicationsParams,
   ListQuestionsParams,
   ListSeduteParams,
@@ -50,6 +51,13 @@ import type {
   OrganoDetail,
   OversightOpinion,
   OversightOpinionDetail,
+  PerformanceCategoryWithIndicators,
+  PerformanceIndicator,
+  PerformanceIndicatorDetail,
+  PerformanceIndicatorInput,
+  PerformanceIndicatorUpdateInput,
+  PerformanceIndicatorValue,
+  PerformanceIndicatorValueInput,
   PnrrCensus,
   Publication,
   PublicationCategoryStat,
@@ -4398,4 +4406,606 @@ export function useGetOversightOpinion<TData = Awaited<ReturnType<typeof getOver
 
 
 
+
+export const getListPerformanceCategoriesUrl = () => {
+
+
+
+
+  return `/api/performance/categories`
+}
+
+/**
+ * @summary List performance categories with their indicators
+ */
+export const listPerformanceCategories = async ( options?: RequestInit): Promise<PerformanceCategoryWithIndicators[]> => {
+
+  return customFetch<PerformanceCategoryWithIndicators[]>(getListPerformanceCategoriesUrl(),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getListPerformanceCategoriesQueryKey = () => {
+    return [
+    `/api/performance/categories`
+    ] as const;
+    }
+
+
+export const getListPerformanceCategoriesQueryOptions = <TData = Awaited<ReturnType<typeof listPerformanceCategories>>, TError = ErrorType<unknown>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listPerformanceCategories>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListPerformanceCategoriesQueryKey();
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listPerformanceCategories>>> = ({ signal }) => listPerformanceCategories({ signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listPerformanceCategories>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ListPerformanceCategoriesQueryResult = NonNullable<Awaited<ReturnType<typeof listPerformanceCategories>>>
+export type ListPerformanceCategoriesQueryError = ErrorType<unknown>
+
+
+/**
+ * @summary List performance categories with their indicators
+ */
+
+export function useListPerformanceCategories<TData = Awaited<ReturnType<typeof listPerformanceCategories>>, TError = ErrorType<unknown>>(
+  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listPerformanceCategories>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getListPerformanceCategoriesQueryOptions(options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
+
+
+
+export const getListPerformanceIndicatorsUrl = (params?: ListPerformanceIndicatorsParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : value.toString())
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/performance/indicators?${stringifiedParams}` : `/api/performance/indicators`
+}
+
+/**
+ * @summary List performance indicators, optionally filtered by category
+ */
+export const listPerformanceIndicators = async (params?: ListPerformanceIndicatorsParams, options?: RequestInit): Promise<PerformanceIndicator[]> => {
+
+  return customFetch<PerformanceIndicator[]>(getListPerformanceIndicatorsUrl(params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getListPerformanceIndicatorsQueryKey = (params?: ListPerformanceIndicatorsParams,) => {
+    return [
+    `/api/performance/indicators`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getListPerformanceIndicatorsQueryOptions = <TData = Awaited<ReturnType<typeof listPerformanceIndicators>>, TError = ErrorType<unknown>>(params?: ListPerformanceIndicatorsParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listPerformanceIndicators>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListPerformanceIndicatorsQueryKey(params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listPerformanceIndicators>>> = ({ signal }) => listPerformanceIndicators(params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listPerformanceIndicators>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ListPerformanceIndicatorsQueryResult = NonNullable<Awaited<ReturnType<typeof listPerformanceIndicators>>>
+export type ListPerformanceIndicatorsQueryError = ErrorType<unknown>
+
+
+/**
+ * @summary List performance indicators, optionally filtered by category
+ */
+
+export function useListPerformanceIndicators<TData = Awaited<ReturnType<typeof listPerformanceIndicators>>, TError = ErrorType<unknown>>(
+ params?: ListPerformanceIndicatorsParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listPerformanceIndicators>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getListPerformanceIndicatorsQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
+
+
+
+export const getCreatePerformanceIndicatorUrl = () => {
+
+
+
+
+  return `/api/performance/indicators`
+}
+
+/**
+ * @summary Create a performance indicator (redazione)
+ */
+export const createPerformanceIndicator = async (performanceIndicatorInput: PerformanceIndicatorInput, options?: RequestInit): Promise<PerformanceIndicator> => {
+
+  return customFetch<PerformanceIndicator>(getCreatePerformanceIndicatorUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      performanceIndicatorInput,)
+  }
+);}
+
+
+
+
+export const getCreatePerformanceIndicatorMutationOptions = <TError = ErrorType<Error>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createPerformanceIndicator>>, TError,{data: BodyType<PerformanceIndicatorInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof createPerformanceIndicator>>, TError,{data: BodyType<PerformanceIndicatorInput>}, TContext> => {
+
+const mutationKey = ['createPerformanceIndicator'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createPerformanceIndicator>>, {data: BodyType<PerformanceIndicatorInput>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  createPerformanceIndicator(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type CreatePerformanceIndicatorMutationResult = NonNullable<Awaited<ReturnType<typeof createPerformanceIndicator>>>
+    export type CreatePerformanceIndicatorMutationBody = BodyType<PerformanceIndicatorInput>
+    export type CreatePerformanceIndicatorMutationError = ErrorType<Error>
+
+    /**
+ * @summary Create a performance indicator (redazione)
+ */
+export const useCreatePerformanceIndicator = <TError = ErrorType<Error>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createPerformanceIndicator>>, TError,{data: BodyType<PerformanceIndicatorInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof createPerformanceIndicator>>,
+        TError,
+        {data: BodyType<PerformanceIndicatorInput>},
+        TContext
+      > => {
+      return useMutation(getCreatePerformanceIndicatorMutationOptions(options));
+    }
+
+export const getListPerformanceFeedStatusUrl = () => {
+
+
+
+
+  return `/api/performance/feed-status`
+}
+
+/**
+ * @summary Status of the automatic performance data sources
+ */
+export const listPerformanceFeedStatus = async ( options?: RequestInit): Promise<FeedStatus[]> => {
+
+  return customFetch<FeedStatus[]>(getListPerformanceFeedStatusUrl(),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getListPerformanceFeedStatusQueryKey = () => {
+    return [
+    `/api/performance/feed-status`
+    ] as const;
+    }
+
+
+export const getListPerformanceFeedStatusQueryOptions = <TData = Awaited<ReturnType<typeof listPerformanceFeedStatus>>, TError = ErrorType<unknown>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listPerformanceFeedStatus>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListPerformanceFeedStatusQueryKey();
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listPerformanceFeedStatus>>> = ({ signal }) => listPerformanceFeedStatus({ signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listPerformanceFeedStatus>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ListPerformanceFeedStatusQueryResult = NonNullable<Awaited<ReturnType<typeof listPerformanceFeedStatus>>>
+export type ListPerformanceFeedStatusQueryError = ErrorType<unknown>
+
+
+/**
+ * @summary Status of the automatic performance data sources
+ */
+
+export function useListPerformanceFeedStatus<TData = Awaited<ReturnType<typeof listPerformanceFeedStatus>>, TError = ErrorType<unknown>>(
+  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listPerformanceFeedStatus>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getListPerformanceFeedStatusQueryOptions(options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
+
+
+
+export const getGetPerformanceIndicatorUrl = (id: string,) => {
+
+
+
+
+  return `/api/performance/indicators/${id}`
+}
+
+/**
+ * @summary Get a performance indicator with its historical series
+ */
+export const getPerformanceIndicator = async (id: string, options?: RequestInit): Promise<PerformanceIndicatorDetail> => {
+
+  return customFetch<PerformanceIndicatorDetail>(getGetPerformanceIndicatorUrl(id),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetPerformanceIndicatorQueryKey = (id: string,) => {
+    return [
+    `/api/performance/indicators/${id}`
+    ] as const;
+    }
+
+
+export const getGetPerformanceIndicatorQueryOptions = <TData = Awaited<ReturnType<typeof getPerformanceIndicator>>, TError = ErrorType<Error>>(id: string, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getPerformanceIndicator>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetPerformanceIndicatorQueryKey(id);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getPerformanceIndicator>>> = ({ signal }) => getPerformanceIndicator(id, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: !!(id), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getPerformanceIndicator>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetPerformanceIndicatorQueryResult = NonNullable<Awaited<ReturnType<typeof getPerformanceIndicator>>>
+export type GetPerformanceIndicatorQueryError = ErrorType<Error>
+
+
+/**
+ * @summary Get a performance indicator with its historical series
+ */
+
+export function useGetPerformanceIndicator<TData = Awaited<ReturnType<typeof getPerformanceIndicator>>, TError = ErrorType<Error>>(
+ id: string, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getPerformanceIndicator>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetPerformanceIndicatorQueryOptions(id,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
+
+
+
+export const getUpdatePerformanceIndicatorUrl = (id: string,) => {
+
+
+
+
+  return `/api/performance/indicators/${id}`
+}
+
+/**
+ * @summary Update a performance indicator (redazione)
+ */
+export const updatePerformanceIndicator = async (id: string,
+    performanceIndicatorUpdateInput: PerformanceIndicatorUpdateInput, options?: RequestInit): Promise<PerformanceIndicator> => {
+
+  return customFetch<PerformanceIndicator>(getUpdatePerformanceIndicatorUrl(id),
+  {
+    ...options,
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      performanceIndicatorUpdateInput,)
+  }
+);}
+
+
+
+
+export const getUpdatePerformanceIndicatorMutationOptions = <TError = ErrorType<Error>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updatePerformanceIndicator>>, TError,{id: string;data: BodyType<PerformanceIndicatorUpdateInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof updatePerformanceIndicator>>, TError,{id: string;data: BodyType<PerformanceIndicatorUpdateInput>}, TContext> => {
+
+const mutationKey = ['updatePerformanceIndicator'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof updatePerformanceIndicator>>, {id: string;data: BodyType<PerformanceIndicatorUpdateInput>}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  updatePerformanceIndicator(id,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type UpdatePerformanceIndicatorMutationResult = NonNullable<Awaited<ReturnType<typeof updatePerformanceIndicator>>>
+    export type UpdatePerformanceIndicatorMutationBody = BodyType<PerformanceIndicatorUpdateInput>
+    export type UpdatePerformanceIndicatorMutationError = ErrorType<Error>
+
+    /**
+ * @summary Update a performance indicator (redazione)
+ */
+export const useUpdatePerformanceIndicator = <TError = ErrorType<Error>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updatePerformanceIndicator>>, TError,{id: string;data: BodyType<PerformanceIndicatorUpdateInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof updatePerformanceIndicator>>,
+        TError,
+        {id: string;data: BodyType<PerformanceIndicatorUpdateInput>},
+        TContext
+      > => {
+      return useMutation(getUpdatePerformanceIndicatorMutationOptions(options));
+    }
+
+export const getUpsertPerformanceIndicatorValueUrl = (id: string,) => {
+
+
+
+
+  return `/api/performance/indicators/${id}/values`
+}
+
+/**
+ * @summary Insert or update a value of an indicator's series (redazione, marks manual)
+ */
+export const upsertPerformanceIndicatorValue = async (id: string,
+    performanceIndicatorValueInput: PerformanceIndicatorValueInput, options?: RequestInit): Promise<PerformanceIndicatorValue> => {
+
+  return customFetch<PerformanceIndicatorValue>(getUpsertPerformanceIndicatorValueUrl(id),
+  {
+    ...options,
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      performanceIndicatorValueInput,)
+  }
+);}
+
+
+
+
+export const getUpsertPerformanceIndicatorValueMutationOptions = <TError = ErrorType<Error>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof upsertPerformanceIndicatorValue>>, TError,{id: string;data: BodyType<PerformanceIndicatorValueInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof upsertPerformanceIndicatorValue>>, TError,{id: string;data: BodyType<PerformanceIndicatorValueInput>}, TContext> => {
+
+const mutationKey = ['upsertPerformanceIndicatorValue'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof upsertPerformanceIndicatorValue>>, {id: string;data: BodyType<PerformanceIndicatorValueInput>}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  upsertPerformanceIndicatorValue(id,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type UpsertPerformanceIndicatorValueMutationResult = NonNullable<Awaited<ReturnType<typeof upsertPerformanceIndicatorValue>>>
+    export type UpsertPerformanceIndicatorValueMutationBody = BodyType<PerformanceIndicatorValueInput>
+    export type UpsertPerformanceIndicatorValueMutationError = ErrorType<Error>
+
+    /**
+ * @summary Insert or update a value of an indicator's series (redazione, marks manual)
+ */
+export const useUpsertPerformanceIndicatorValue = <TError = ErrorType<Error>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof upsertPerformanceIndicatorValue>>, TError,{id: string;data: BodyType<PerformanceIndicatorValueInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof upsertPerformanceIndicatorValue>>,
+        TError,
+        {id: string;data: BodyType<PerformanceIndicatorValueInput>},
+        TContext
+      > => {
+      return useMutation(getUpsertPerformanceIndicatorValueMutationOptions(options));
+    }
+
+export const getDeletePerformanceIndicatorValueUrl = (id: string,
+    period: string,) => {
+
+
+
+
+  return `/api/performance/indicators/${id}/values/${period}`
+}
+
+/**
+ * @summary Delete a value of an indicator's series (redazione)
+ */
+export const deletePerformanceIndicatorValue = async (id: string,
+    period: string, options?: RequestInit): Promise<void> => {
+
+  return customFetch<void>(getDeletePerformanceIndicatorValueUrl(id,period),
+  {
+    ...options,
+    method: 'DELETE'
+
+
+  }
+);}
+
+
+
+
+export const getDeletePerformanceIndicatorValueMutationOptions = <TError = ErrorType<Error>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deletePerformanceIndicatorValue>>, TError,{id: string;period: string}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof deletePerformanceIndicatorValue>>, TError,{id: string;period: string}, TContext> => {
+
+const mutationKey = ['deletePerformanceIndicatorValue'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof deletePerformanceIndicatorValue>>, {id: string;period: string}> = (props) => {
+          const {id,period} = props ?? {};
+
+          return  deletePerformanceIndicatorValue(id,period,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type DeletePerformanceIndicatorValueMutationResult = NonNullable<Awaited<ReturnType<typeof deletePerformanceIndicatorValue>>>
+
+    export type DeletePerformanceIndicatorValueMutationError = ErrorType<Error>
+
+    /**
+ * @summary Delete a value of an indicator's series (redazione)
+ */
+export const useDeletePerformanceIndicatorValue = <TError = ErrorType<Error>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deletePerformanceIndicatorValue>>, TError,{id: string;period: string}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof deletePerformanceIndicatorValue>>,
+        TError,
+        {id: string;period: string},
+        TContext
+      > => {
+      return useMutation(getDeletePerformanceIndicatorValueMutationOptions(options));
+    }
 

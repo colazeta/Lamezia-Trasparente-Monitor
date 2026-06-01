@@ -15,6 +15,7 @@ import {
 import { reconcileThemeCounters } from "./counters";
 import { runOpendataIngestion } from "./opendata";
 import { enrichAlboAttachments } from "./alboAttachments";
+import { runPerformanceIngestion } from "./performanceIndicators";
 
 export const ALBO_SOURCE = "albo-lamezia";
 export const ALBO_LABEL = "Albo Pretorio – Amministrazione Trasparente";
@@ -255,6 +256,9 @@ async function runIngestionCycle(): Promise<void> {
     logger.error({ err }, "Contracts geocoding pass failed");
   });
   await runOpendataIngestion().catch(() => {});
+  await runPerformanceIngestion().catch((err) => {
+    logger.error({ err }, "Performance ingestion cycle failed");
+  });
   await runOrganiSedutaSync().catch((err) => {
     logger.error({ err }, "Organi/sedute sync failed");
   });

@@ -13,6 +13,7 @@ import statsRouter from "./stats";
 import storageRouter from "./storage";
 import questionsRouter from "./questions";
 import oversightRouter from "./oversight";
+import performanceRouter from "./performance";
 
 const router: IRouter = Router();
 
@@ -30,5 +31,6 @@ router.use(statsRouter);
 router.use(storageRouter);
 router.use(questionsRouter);
 router.use(oversightRouter);
+router.use(performanceRouter);
 
 export default router;

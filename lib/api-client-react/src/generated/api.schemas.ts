@@ -433,6 +433,146 @@ export interface FeedStatus {
   lastUpdatedAt?: string | null;
 }
 
+export interface PerformanceCategory {
+  id: number;
+  slug: string;
+  name: string;
+  description: string;
+  position: number;
+}
+
+export type PerformanceIndicatorUpdateMode = typeof PerformanceIndicatorUpdateMode[keyof typeof PerformanceIndicatorUpdateMode];
+
+
+export const PerformanceIndicatorUpdateMode = {
+  manual: 'manual',
+  automatic: 'automatic',
+} as const;
+
+export type PerformanceIndicatorPolarity = typeof PerformanceIndicatorPolarity[keyof typeof PerformanceIndicatorPolarity];
+
+
+export const PerformanceIndicatorPolarity = {
+  higher_better: 'higher_better',
+  lower_better: 'lower_better',
+  neutral: 'neutral',
+} as const;
+
+export interface PerformanceIndicator {
+  id: number;
+  slug: string;
+  categoryId: number;
+  title: string;
+  description: string;
+  unit: string;
+  source: string;
+  /** @nullable */
+  sourceUrl?: string | null;
+  updateMode: PerformanceIndicatorUpdateMode;
+  polarity: PerformanceIndicatorPolarity;
+  /** @nullable */
+  externalKey?: string | null;
+  position: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface PerformanceIndicatorValue {
+  id: number;
+  indicatorId: number;
+  period: string;
+  value: number;
+  /** @nullable */
+  note?: string | null;
+  manual: boolean;
+  /** @nullable */
+  source?: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export type PerformanceCategoryWithIndicators = PerformanceCategory & {
+  indicators: PerformanceIndicator[];
+};
+
+export type PerformanceIndicatorDetail = PerformanceIndicator & {
+  values: PerformanceIndicatorValue[];
+};
+
+export type PerformanceIndicatorInputUpdateMode = typeof PerformanceIndicatorInputUpdateMode[keyof typeof PerformanceIndicatorInputUpdateMode];
+
+
+export const PerformanceIndicatorInputUpdateMode = {
+  manual: 'manual',
+  automatic: 'automatic',
+} as const;
+
+export type PerformanceIndicatorInputPolarity = typeof PerformanceIndicatorInputPolarity[keyof typeof PerformanceIndicatorInputPolarity];
+
+
+export const PerformanceIndicatorInputPolarity = {
+  higher_better: 'higher_better',
+  lower_better: 'lower_better',
+  neutral: 'neutral',
+} as const;
+
+export interface PerformanceIndicatorInput {
+  /** @minLength 1 */
+  slug: string;
+  categoryId: number;
+  /** @minLength 1 */
+  title: string;
+  description?: string;
+  /** @minLength 1 */
+  unit: string;
+  source?: string;
+  sourceUrl?: string;
+  updateMode?: PerformanceIndicatorInputUpdateMode;
+  polarity?: PerformanceIndicatorInputPolarity;
+  externalKey?: string;
+  position?: number;
+}
+
+export type PerformanceIndicatorUpdateInputUpdateMode = typeof PerformanceIndicatorUpdateInputUpdateMode[keyof typeof PerformanceIndicatorUpdateInputUpdateMode];
+
+
+export const PerformanceIndicatorUpdateInputUpdateMode = {
+  manual: 'manual',
+  automatic: 'automatic',
+} as const;
+
+export type PerformanceIndicatorUpdateInputPolarity = typeof PerformanceIndicatorUpdateInputPolarity[keyof typeof PerformanceIndicatorUpdateInputPolarity];
+
+
+export const PerformanceIndicatorUpdateInputPolarity = {
+  higher_better: 'higher_better',
+  lower_better: 'lower_better',
+  neutral: 'neutral',
+} as const;
+
+export interface PerformanceIndicatorUpdateInput {
+  categoryId?: number;
+  /** @minLength 1 */
+  title?: string;
+  description?: string;
+  /** @minLength 1 */
+  unit?: string;
+  source?: string;
+  sourceUrl?: string;
+  updateMode?: PerformanceIndicatorUpdateInputUpdateMode;
+  polarity?: PerformanceIndicatorUpdateInputPolarity;
+  externalKey?: string;
+  position?: number;
+}
+
+export interface PerformanceIndicatorValueInput {
+  /** @minLength 1 */
+  period: string;
+  value: number;
+  note?: string;
+  source?: string;
+}
+
 export interface PnrrAttachment {
   title: string;
   url: string;
@@ -1123,4 +1263,8 @@ export const ListOversightOpinionsSort = {
   recent: 'recent',
   oldest: 'oldest',
 } as const;
+
+export type ListPerformanceIndicatorsParams = {
+categoryId?: number;
+};
 

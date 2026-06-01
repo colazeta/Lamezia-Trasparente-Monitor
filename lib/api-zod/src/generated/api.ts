@@ -1721,3 +1721,217 @@ export const GetOversightOpinionResponse = zod.object({
 }))
 
 
+/**
+ * @summary List performance categories with their indicators
+ */
+export const ListPerformanceCategoriesResponseItem = zod.object({
+  "id": zod.number(),
+  "slug": zod.string(),
+  "name": zod.string(),
+  "description": zod.string(),
+  "position": zod.number()
+}).and(zod.object({
+  "indicators": zod.array(zod.object({
+  "id": zod.number(),
+  "slug": zod.string(),
+  "categoryId": zod.number(),
+  "title": zod.string(),
+  "description": zod.string(),
+  "unit": zod.string(),
+  "source": zod.string(),
+  "sourceUrl": zod.string().nullish(),
+  "updateMode": zod.enum(['manual', 'automatic']),
+  "polarity": zod.enum(['higher_better', 'lower_better', 'neutral']),
+  "externalKey": zod.string().nullish(),
+  "position": zod.number(),
+  "createdAt": zod.string(),
+  "updatedAt": zod.string()
+}))
+}))
+export const ListPerformanceCategoriesResponse = zod.array(ListPerformanceCategoriesResponseItem)
+
+
+/**
+ * @summary List performance indicators, optionally filtered by category
+ */
+export const ListPerformanceIndicatorsQueryParams = zod.object({
+  "categoryId": zod.coerce.number().optional()
+})
+
+export const ListPerformanceIndicatorsResponseItem = zod.object({
+  "id": zod.number(),
+  "slug": zod.string(),
+  "categoryId": zod.number(),
+  "title": zod.string(),
+  "description": zod.string(),
+  "unit": zod.string(),
+  "source": zod.string(),
+  "sourceUrl": zod.string().nullish(),
+  "updateMode": zod.enum(['manual', 'automatic']),
+  "polarity": zod.enum(['higher_better', 'lower_better', 'neutral']),
+  "externalKey": zod.string().nullish(),
+  "position": zod.number(),
+  "createdAt": zod.string(),
+  "updatedAt": zod.string()
+})
+export const ListPerformanceIndicatorsResponse = zod.array(ListPerformanceIndicatorsResponseItem)
+
+
+/**
+ * @summary Create a performance indicator (redazione)
+ */
+
+
+
+
+
+export const CreatePerformanceIndicatorBody = zod.object({
+  "slug": zod.string().min(1),
+  "categoryId": zod.number(),
+  "title": zod.string().min(1),
+  "description": zod.string().optional(),
+  "unit": zod.string().min(1),
+  "source": zod.string().optional(),
+  "sourceUrl": zod.string().optional(),
+  "updateMode": zod.enum(['manual', 'automatic']).optional(),
+  "polarity": zod.enum(['higher_better', 'lower_better', 'neutral']).optional(),
+  "externalKey": zod.string().optional(),
+  "position": zod.number().optional()
+})
+
+
+/**
+ * @summary Status of the automatic performance data sources
+ */
+export const ListPerformanceFeedStatusResponseItem = zod.object({
+  "source": zod.string(),
+  "label": zod.string().nullish(),
+  "url": zod.string().nullish(),
+  "status": zod.string(),
+  "error": zod.string().nullish(),
+  "itemsTotal": zod.number(),
+  "itemsNew": zod.number(),
+  "lastCheckedAt": zod.string().nullish(),
+  "lastUpdatedAt": zod.string().nullish()
+})
+export const ListPerformanceFeedStatusResponse = zod.array(ListPerformanceFeedStatusResponseItem)
+
+
+/**
+ * @summary Get a performance indicator with its historical series
+ */
+export const GetPerformanceIndicatorParams = zod.object({
+  "id": zod.coerce.string().describe('Numeric id or slug of the indicator')
+})
+
+export const GetPerformanceIndicatorResponse = zod.object({
+  "id": zod.number(),
+  "slug": zod.string(),
+  "categoryId": zod.number(),
+  "title": zod.string(),
+  "description": zod.string(),
+  "unit": zod.string(),
+  "source": zod.string(),
+  "sourceUrl": zod.string().nullish(),
+  "updateMode": zod.enum(['manual', 'automatic']),
+  "polarity": zod.enum(['higher_better', 'lower_better', 'neutral']),
+  "externalKey": zod.string().nullish(),
+  "position": zod.number(),
+  "createdAt": zod.string(),
+  "updatedAt": zod.string()
+}).and(zod.object({
+  "values": zod.array(zod.object({
+  "id": zod.number(),
+  "indicatorId": zod.number(),
+  "period": zod.string(),
+  "value": zod.number(),
+  "note": zod.string().nullish(),
+  "manual": zod.boolean(),
+  "source": zod.string().nullish(),
+  "createdAt": zod.string(),
+  "updatedAt": zod.string()
+}))
+}))
+
+
+/**
+ * @summary Update a performance indicator (redazione)
+ */
+export const UpdatePerformanceIndicatorParams = zod.object({
+  "id": zod.coerce.string().describe('Numeric id or slug of the indicator')
+})
+
+
+
+
+
+export const UpdatePerformanceIndicatorBody = zod.object({
+  "categoryId": zod.number().optional(),
+  "title": zod.string().min(1).optional(),
+  "description": zod.string().optional(),
+  "unit": zod.string().min(1).optional(),
+  "source": zod.string().optional(),
+  "sourceUrl": zod.string().optional(),
+  "updateMode": zod.enum(['manual', 'automatic']).optional(),
+  "polarity": zod.enum(['higher_better', 'lower_better', 'neutral']).optional(),
+  "externalKey": zod.string().optional(),
+  "position": zod.number().optional()
+})
+
+export const UpdatePerformanceIndicatorResponse = zod.object({
+  "id": zod.number(),
+  "slug": zod.string(),
+  "categoryId": zod.number(),
+  "title": zod.string(),
+  "description": zod.string(),
+  "unit": zod.string(),
+  "source": zod.string(),
+  "sourceUrl": zod.string().nullish(),
+  "updateMode": zod.enum(['manual', 'automatic']),
+  "polarity": zod.enum(['higher_better', 'lower_better', 'neutral']),
+  "externalKey": zod.string().nullish(),
+  "position": zod.number(),
+  "createdAt": zod.string(),
+  "updatedAt": zod.string()
+})
+
+
+/**
+ * @summary Insert or update a value of an indicator's series (redazione, marks manual)
+ */
+export const UpsertPerformanceIndicatorValueParams = zod.object({
+  "id": zod.coerce.string().describe('Numeric id or slug of the indicator')
+})
+
+
+
+
+export const UpsertPerformanceIndicatorValueBody = zod.object({
+  "period": zod.string().min(1),
+  "value": zod.number(),
+  "note": zod.string().optional(),
+  "source": zod.string().optional()
+})
+
+export const UpsertPerformanceIndicatorValueResponse = zod.object({
+  "id": zod.number(),
+  "indicatorId": zod.number(),
+  "period": zod.string(),
+  "value": zod.number(),
+  "note": zod.string().nullish(),
+  "manual": zod.boolean(),
+  "source": zod.string().nullish(),
+  "createdAt": zod.string(),
+  "updatedAt": zod.string()
+})
+
+
+/**
+ * @summary Delete a value of an indicator's series (redazione)
+ */
+export const DeletePerformanceIndicatorValueParams = zod.object({
+  "id": zod.coerce.string().describe('Numeric id or slug of the indicator'),
+  "period": zod.coerce.string()
+})
+
+

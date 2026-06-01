@@ -16,8 +16,14 @@ import {
   questionsTable,
   oversightOpinionsTable,
   oversightOpinionDocumentsTable,
+  performanceCategoriesTable,
+  performanceIndicatorsTable,
 } from "./schema";
 import { classifyMacrotema } from "./macrotemi";
+import {
+  PERFORMANCE_CATEGORIES,
+  PERFORMANCE_INDICATORS,
+} from "./performanceCatalog";
 
 type SeedContract = {
   cig: string;
@@ -1265,6 +1271,83 @@ async function seedOversightOpinions(): Promise<void> {
   console.log("Oversight opinions seed complete.");
 }
 
+// Popola il catalogo della sezione "Performance del Comune": categorie e
+// indicatori. Non distruttivo: aggiorna i metadati per slug (upsert) senza
+// toccare le serie storiche già presenti. Eseguibile in modo idempotente.
+async function seedPerformance(): Promise<void> {
+  console.log(
+    `Seeding ${PERFORMANCE_CATEGORIES.length} performance categories and ${PERFORMANCE_INDICATORS.length} indicators...`,
+  );
+
+  await db.transaction(async (tx) => {
+    const categoryIdBySlug = new Map<string, number>();
+    for (let i = 0; i < PERFORMANCE_CATEGORIES.length; i++) {
+      const c = PERFORMANCE_CATEGORIES[i];
+      const [row] = await tx
+        .insert(performanceCategoriesTable)
+        .values({
+          slug: c.slug,
+          name: c.name,
+          description: c.description,
+          position: i,
+        })
+        .onConflictDoUpdate({
+          target: performanceCategoriesTable.slug,
+          set: { name: c.name, description: c.description, position: i },
+        })
+        .returning({
+          id: performanceCategoriesTable.id,
+          slug: performanceCategoriesTable.slug,
+        });
+      categoryIdBySlug.set(row.slug, row.id);
+    }
+
+    for (let i = 0; i < PERFORMANCE_INDICATORS.length; i++) {
+      const ind = PERFORMANCE_INDICATORS[i];
+      const categoryId = categoryIdBySlug.get(ind.categorySlug);
+      if (!categoryId) {
+        console.warn(
+          `Indicator "${ind.slug}" references unknown category "${ind.categorySlug}", skipped.`,
+        );
+        continue;
+      }
+      await tx
+        .insert(performanceIndicatorsTable)
+        .values({
+          slug: ind.slug,
+          categoryId,
+          title: ind.title,
+          description: ind.description,
+          unit: ind.unit,
+          source: ind.source,
+          sourceUrl: ind.sourceUrl ?? null,
+          updateMode: ind.updateMode,
+          polarity: ind.polarity,
+          externalKey: ind.externalKey ?? null,
+          position: i,
+        })
+        .onConflictDoUpdate({
+          target: performanceIndicatorsTable.slug,
+          set: {
+            categoryId,
+            title: ind.title,
+            description: ind.description,
+            unit: ind.unit,
+            source: ind.source,
+            sourceUrl: ind.sourceUrl ?? null,
+            updateMode: ind.updateMode,
+            polarity: ind.polarity,
+            externalKey: ind.externalKey ?? null,
+            position: i,
+            updatedAt: new Date(),
+          },
+        });
+    }
+  });
+
+  console.log("Performance catalog seed complete.");
+}
+
 export async function seed() {
   await db.transaction(async (tx) => {
     const [{ count }] = await tx
@@ -1339,6 +1422,7 @@ export async function seed() {
   await seedQuestionsData();
   await runOrganiSedutaSync();
   await seedOversightOpinions();
+  await seedPerformance();
 }
 
 const entryPath = process.argv[1] ?? "";
