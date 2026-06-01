@@ -1,15 +1,20 @@
 import "leaflet/dist/leaflet.css";
 
 import L from "leaflet";
-import React, { useMemo } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { View } from "react-native";
 import {
   CircleMarker,
   GeoJSON,
   MapContainer,
+  Marker,
   Popup,
+  Tooltip,
   TileLayer,
+  useMap,
+  useMapEvents,
 } from "react-leaflet";
+import Supercluster from "supercluster";
 
 import { useColors } from "@/hooks/useColors";
 import { LAMEZIA_CENTER, macrotemaColor, useComuneBoundary } from "@/lib/gis";
@@ -19,6 +24,143 @@ type LocatedContract = Contract & { latitude: number; longitude: number };
 
 function isLocated(c: Contract): c is LocatedContract {
   return typeof c.latitude === "number" && typeof c.longitude === "number";
+}
+
+type ClusterProps = { cluster: true; cluster_id: number; point_count: number };
+type LeafProps = { cluster?: false; contractId: number };
+
+function clusterIcon(count: number, color: string): L.DivIcon {
+  const size = count < 10 ? 34 : count < 50 ? 42 : count < 100 ? 50 : 58;
+  return L.divIcon({
+    html: `<div style="
+      width:${size}px;height:${size}px;
+      display:flex;align-items:center;justify-content:center;
+      border-radius:9999px;
+      background:${color};
+      color:#fff;font-weight:700;font-size:13px;
+      border:3px solid #fff;
+      box-shadow:0 1px 4px rgba(0,0,0,0.35);
+    ">${count}</div>`,
+    className: "",
+    iconSize: [size, size],
+    iconAnchor: [size / 2, size / 2],
+  });
+}
+
+function ClusteredMarkers({
+  located,
+  onMarkerPress,
+}: {
+  located: LocatedContract[];
+  onMarkerPress?: (contract: Contract) => void;
+}) {
+  const colors = useColors();
+  const map = useMap();
+  const [clusters, setClusters] = useState<
+    Supercluster.PointFeature<ClusterProps | LeafProps>[]
+  >([]);
+
+  const byId = useMemo(() => {
+    const m = new Map<number, LocatedContract>();
+    for (const c of located) m.set(c.id, c);
+    return m;
+  }, [located]);
+
+  const index = useMemo(() => {
+    const sc = new Supercluster<LeafProps, ClusterProps>({
+      radius: 60,
+      maxZoom: 17,
+    });
+    sc.load(
+      located.map((c) => ({
+        type: "Feature" as const,
+        properties: { cluster: false as const, contractId: c.id },
+        geometry: {
+          type: "Point" as const,
+          coordinates: [c.longitude, c.latitude],
+        },
+      })),
+    );
+    return sc;
+  }, [located]);
+
+  const refresh = useCallback(() => {
+    const b = map.getBounds();
+    const bbox: [number, number, number, number] = [
+      b.getWest(),
+      b.getSouth(),
+      b.getEast(),
+      b.getNorth(),
+    ];
+    const zoom = Math.round(map.getZoom());
+    setClusters(
+      index.getClusters(bbox, zoom) as Supercluster.PointFeature<
+        ClusterProps | LeafProps
+      >[],
+    );
+  }, [index, map]);
+
+  useEffect(() => {
+    refresh();
+  }, [refresh]);
+
+  useMapEvents({
+    moveend: refresh,
+    zoomend: refresh,
+  });
+
+  return (
+    <>
+      {clusters.map((feature) => {
+        const [lng, lat] = feature.geometry.coordinates;
+        const props = feature.properties;
+
+        if ("cluster" in props && props.cluster) {
+          const count = props.point_count;
+          return (
+            <Marker
+              key={`cluster-${props.cluster_id}`}
+              position={[lat, lng]}
+              icon={clusterIcon(count, colors.primary)}
+              eventHandlers={{
+                click: () => {
+                  const expansionZoom = Math.min(
+                    index.getClusterExpansionZoom(props.cluster_id),
+                    17,
+                  );
+                  map.setView([lat, lng], expansionZoom, { animate: true });
+                },
+              }}
+            >
+              <Tooltip direction="top" offset={[0, -8]}>
+                {count} interventi
+              </Tooltip>
+            </Marker>
+          );
+        }
+
+        const c = byId.get((props as LeafProps).contractId);
+        if (!c) return null;
+        const color = c.geoVerify ? "#d97706" : macrotemaColor(c.macrotema);
+        return (
+          <CircleMarker
+            key={c.id}
+            center={[lat, lng] as L.LatLngTuple}
+            radius={8}
+            pathOptions={{
+              color: "#ffffff",
+              weight: 2,
+              fillColor: color,
+              fillOpacity: 1,
+            }}
+            eventHandlers={{ click: () => onMarkerPress?.(c) }}
+          >
+            <Popup>{c.title}</Popup>
+          </CircleMarker>
+        );
+      })}
+    </>
+  );
 }
 
 export function InterventionsMap({
@@ -83,25 +225,7 @@ export function InterventionsMap({
             }}
           />
         ) : null}
-        {located.map((c) => {
-          const color = c.geoVerify ? "#d97706" : macrotemaColor(c.macrotema);
-          return (
-            <CircleMarker
-              key={c.id}
-              center={[c.latitude, c.longitude] as L.LatLngTuple}
-              radius={8}
-              pathOptions={{
-                color: "#ffffff",
-                weight: 2,
-                fillColor: color,
-                fillOpacity: 1,
-              }}
-              eventHandlers={{ click: () => onMarkerPress?.(c) }}
-            >
-              <Popup>{c.title}</Popup>
-            </CircleMarker>
-          );
-        })}
+        <ClusteredMarkers located={located} onMarkerPress={onMarkerPress} />
       </MapContainer>
     </View>
   );
