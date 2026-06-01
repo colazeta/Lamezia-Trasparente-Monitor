@@ -897,17 +897,23 @@ router.get("/unsubscribe", async (req, res) => {
     return;
   }
 
-  const deleted = await db
-    .delete(themeFollowersTable)
-    .where(eq(themeFollowersTable.unsubscribeToken, token))
-    .returning();
+  const deleted = await db.transaction(async (tx) => {
+    const removed = await tx
+      .delete(themeFollowersTable)
+      .where(eq(themeFollowersTable.unsubscribeToken, token))
+      .returning();
+    if (removed.length > 0) {
+      await tx
+        .update(themesTable)
+        .set({
+          followerCount: sql`GREATEST(${themesTable.followerCount} - 1, 0)`,
+        })
+        .where(eq(themesTable.id, removed[0].themeId));
+    }
+    return removed;
+  });
 
   if (deleted.length > 0) {
-    await db
-      .update(themesTable)
-      .set({ followerCount: sql`GREATEST(${themesTable.followerCount} - 1, 0)` })
-      .where(eq(themesTable.id, deleted[0].themeId));
-
     const [theme] = await db
       .select({ title: themesTable.title })
       .from(themesTable)
@@ -1107,22 +1113,25 @@ router.post("/subscriptions/unsubscribe", async (req, res) => {
     return;
   }
 
-  const deleted = await db
-    .delete(themeFollowersTable)
-    .where(
-      and(
-        eq(themeFollowersTable.email, email),
-        eq(themeFollowersTable.themeId, themeId),
-      ),
-    )
-    .returning();
-
-  if (deleted.length > 0) {
-    await db
-      .update(themesTable)
-      .set({ followerCount: sql`GREATEST(${themesTable.followerCount} - 1, 0)` })
-      .where(eq(themesTable.id, themeId));
-  }
+  await db.transaction(async (tx) => {
+    const deleted = await tx
+      .delete(themeFollowersTable)
+      .where(
+        and(
+          eq(themeFollowersTable.email, email),
+          eq(themeFollowersTable.themeId, themeId),
+        ),
+      )
+      .returning();
+    if (deleted.length > 0) {
+      await tx
+        .update(themesTable)
+        .set({
+          followerCount: sql`GREATEST(${themesTable.followerCount} - 1, 0)`,
+        })
+        .where(eq(themesTable.id, themeId));
+    }
+  });
 
   const { token: pageToken, subscriptions } =
     await getSubscriptionsByEmail(email);
@@ -1167,17 +1176,20 @@ router.post("/subscriptions/unsubscribe-all", async (req, res) => {
     return;
   }
 
-  const deleted = await db
-    .delete(themeFollowersTable)
-    .where(eq(themeFollowersTable.email, email))
-    .returning();
-
-  for (const row of deleted) {
-    await db
-      .update(themesTable)
-      .set({ followerCount: sql`GREATEST(${themesTable.followerCount} - 1, 0)` })
-      .where(eq(themesTable.id, row.themeId));
-  }
+  await db.transaction(async (tx) => {
+    const deleted = await tx
+      .delete(themeFollowersTable)
+      .where(eq(themeFollowersTable.email, email))
+      .returning();
+    for (const row of deleted) {
+      await tx
+        .update(themesTable)
+        .set({
+          followerCount: sql`GREATEST(${themesTable.followerCount} - 1, 0)`,
+        })
+        .where(eq(themesTable.id, row.themeId));
+    }
+  });
 
   res
     .status(200)

@@ -393,7 +393,7 @@ export interface PnrrProject {
   /** @nullable */
   attuatore?: string | null;
   /** @nullable */
-  importoFinanziato?: string | null;
+  importoFinanziato?: number | null;
   /** @nullable */
   status?: string | null;
   /** @nullable */

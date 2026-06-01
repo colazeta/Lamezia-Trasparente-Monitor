@@ -69,14 +69,8 @@ export function Pnrr() {
         const code = p.mission.split(" ")[0];
         missionMap.set(code, (missionMap.get(code) ?? 0) + 1);
       }
-      if (p.importoFinanziato) {
-        const numeric = Number(
-          p.importoFinanziato
-            .replace(/[^\d,.-]/g, "")
-            .replace(/\./g, "")
-            .replace(",", "."),
-        );
-        if (!Number.isNaN(numeric)) totalImporto += numeric;
+      if (p.importoFinanziato != null && !Number.isNaN(p.importoFinanziato)) {
+        totalImporto += p.importoFinanziato;
       }
     }
 
@@ -103,6 +97,15 @@ export function Pnrr() {
           maximumFractionDigits: 0,
         }).format(census.totalImporto)
       : "—";
+
+  const formatImporto = (value: number | null | undefined): string | null =>
+    value != null && !Number.isNaN(value)
+      ? new Intl.NumberFormat("it-IT", {
+          style: "currency",
+          currency: "EUR",
+          maximumFractionDigits: 2,
+        }).format(value)
+      : null;
 
   return (
     <div className="container mx-auto px-4 py-8 md:py-12 max-w-5xl">
@@ -255,10 +258,12 @@ export function Pnrr() {
                         {project.title}
                       </h3>
                       <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-muted-foreground">
-                        {project.importoFinanziato && (
+                        {formatImporto(project.importoFinanziato) && (
                           <span className="flex items-center gap-1 font-medium text-foreground">
                             <Euro className="h-3 w-3" />
-                            <span className="tabular-nums">{project.importoFinanziato}</span>
+                            <span className="tabular-nums">
+                              {formatImporto(project.importoFinanziato)}
+                            </span>
                           </span>
                         )}
                         {project.attuatore && (
@@ -296,7 +301,7 @@ export function Pnrr() {
                       />
                       <MetaRow
                         label="Importo Finanziato"
-                        value={project.importoFinanziato}
+                        value={formatImporto(project.importoFinanziato)}
                       />
                       <MetaRow
                         label="Stato di avanzamento"

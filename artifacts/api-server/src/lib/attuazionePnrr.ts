@@ -126,14 +126,21 @@ function parseProject(
       field(html, "Data di conclusione"),
   );
 
+  // Importo finanziato: lo memorizziamo come valore numerico (stringa decimale,
+  // come contracts.amount) così è ordinabile/sommabile. Il formato sorgente è
+  // italiano (es. "1.234.567,89 €").
   let importoFinanziato: string | null = null;
   const importoSection = sectionContent(html, "importo-finanziato");
   if (importoSection) {
     const euro = /([\d.]+,\d{2})\s*&euro;|([\d.]+,\d{2})\s*€/.exec(
       importoSection,
     );
-    if (euro) {
-      importoFinanziato = `${(euro[1] ?? euro[2]).trim()} €`;
+    const raw = euro ? (euro[1] ?? euro[2]).trim() : null;
+    if (raw) {
+      const numeric = Number(raw.replace(/\./g, "").replace(",", "."));
+      if (!Number.isNaN(numeric) && numeric > 0) {
+        importoFinanziato = numeric.toFixed(2);
+      }
     }
   }
 

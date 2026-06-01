@@ -4,6 +4,7 @@ import { FlatList, Linking, Platform, Pressable, StyleSheet, Text, View } from "
 
 import { Badge, Card, EmptyState, Skeleton } from "@/components/ui";
 import { useColors } from "@/hooks/useColors";
+import { formatAmount } from "@/lib/civic";
 import { useListPnrrProjects, type PnrrProject } from "@workspace/api-client-react";
 
 export default function PnrrScreen() {
@@ -60,9 +61,9 @@ function PnrrCard({ project }: { project: PnrrProject }) {
       <Text style={[styles.title, { color: colors.foreground }]} numberOfLines={3}>
         {project.title}
       </Text>
-      {project.importoFinanziato ? (
+      {project.importoFinanziato != null ? (
         <Text style={[styles.amount, { color: colors.primary }]}>
-          {project.importoFinanziato}
+          {formatAmount(project.importoFinanziato)}
         </Text>
       ) : null}
       {project.attuatore || project.holder ? (

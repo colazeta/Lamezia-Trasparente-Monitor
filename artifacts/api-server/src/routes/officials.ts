@@ -9,10 +9,12 @@ import {
   organiTable,
   organiMembersTable,
   publicationsTable,
+  OFFICIAL_STATUSES,
   type Official,
   type OfficialActivity,
   type OfficialRemuneration,
   type OfficialDeclaration,
+  type OfficialStatusValue,
 } from "@workspace/db";
 import { and, eq, asc, desc, ilike, inArray } from "drizzle-orm";
 import sanitizeHtml from "sanitize-html";
@@ -35,6 +37,18 @@ function cleanOptional(value: string | undefined | null): string | null {
   if (typeof value !== "string") return null;
   const cleaned = sanitizeText(value);
   return cleaned ? cleaned : null;
+}
+
+// Restituisce lo stato validato (default "in_carica" se assente) oppure null se
+// il valore fornito non è ammesso dal vincolo di check sul DB.
+function resolveOfficialStatus(
+  value: string | undefined | null,
+): OfficialStatusValue | null {
+  const cleaned = cleanOptional(value);
+  if (!cleaned) return "in_carica";
+  return OFFICIAL_STATUSES.includes(cleaned as OfficialStatusValue)
+    ? (cleaned as OfficialStatusValue)
+    : null;
 }
 
 function parseDate(value: string | undefined | null): Date | null {
@@ -384,6 +398,12 @@ router.post("/officials", requireIngestAuth, async (req, res) => {
     return;
   }
 
+  const status = resolveOfficialStatus(parsed.data.status);
+  if (status === null) {
+    res.status(400).json({ error: "Stato non valido" });
+    return;
+  }
+
   const { requested, valid } = await resolveDeliberaVoteIds(parsed.data.votes);
   if (requested.some((deliberaId) => !valid.has(deliberaId))) {
     res.status(400).json({
@@ -403,7 +423,7 @@ router.post("/officials", requireIngestAuth, async (req, res) => {
         role,
         roleTitle: cleanOptional(parsed.data.roleTitle),
         group: cleanOptional(parsed.data.group),
-        status: cleanOptional(parsed.data.status) ?? "in_carica",
+        status,
         appointmentDate: parseDate(parsed.data.appointmentDate),
         biography: cleanOptional(parsed.data.biography),
       })
@@ -444,6 +464,12 @@ router.post("/officials/:id", requireIngestAuth, async (req, res) => {
     return;
   }
 
+  const status = resolveOfficialStatus(parsed.data.status);
+  if (status === null) {
+    res.status(400).json({ error: "Stato non valido" });
+    return;
+  }
+
   const { requested, valid } = await resolveDeliberaVoteIds(parsed.data.votes);
   if (requested.some((deliberaId) => !valid.has(deliberaId))) {
     res.status(400).json({
@@ -466,7 +492,7 @@ router.post("/officials/:id", requireIngestAuth, async (req, res) => {
         role,
         roleTitle: cleanOptional(parsed.data.roleTitle),
         group: cleanOptional(parsed.data.group),
-        status: cleanOptional(parsed.data.status) ?? "in_carica",
+        status,
         appointmentDate: parseDate(parsed.data.appointmentDate),
         biography: cleanOptional(parsed.data.biography),
         updatedAt: new Date(),

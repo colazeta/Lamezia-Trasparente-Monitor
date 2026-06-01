@@ -951,7 +951,7 @@ export const ListPnrrProjectsResponse = zod.object({
   "intervention": zod.string().nullish(),
   "holder": zod.string().nullish(),
   "attuatore": zod.string().nullish(),
-  "importoFinanziato": zod.string().nullish(),
+  "importoFinanziato": zod.number().nullish(),
   "status": zod.string().nullish(),
   "startDate": zod.string().nullish(),
   "endDate": zod.string().nullish(),

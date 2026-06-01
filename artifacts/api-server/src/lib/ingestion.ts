@@ -9,6 +9,7 @@ import { sql, inArray } from "drizzle-orm";
 import { logger } from "./logger";
 import { runAttuazioneIngestion } from "./attuazionePnrr";
 import { runAnacContractsIngestion } from "./anacContracts";
+import { reconcileThemeCounters } from "./counters";
 
 export const ALBO_SOURCE = "albo-lamezia";
 export const ALBO_LABEL = "Albo Pretorio – Amministrazione Trasparente";
@@ -171,6 +172,16 @@ export async function runIngestion(): Promise<{
       }
 
       const now = new Date();
+
+      // Aggiorna lastSeenAt per tutti gli atti presenti nel feed corrente, così
+      // si possono individuare le pubblicazioni sparite (pattern uniforme a
+      // contratti ANAC e progetti PNRR).
+      if (progressivi.length) {
+        await tx
+          .update(publicationsTable)
+          .set({ lastSeenAt: now })
+          .where(inArray(publicationsTable.progressivo, progressivi));
+      }
       await tx
         .insert(feedStatusTable)
         .values({
@@ -235,6 +246,7 @@ async function runIngestionCycle(): Promise<void> {
   await runOrganiSedutaSync().catch((err) => {
     logger.error({ err }, "Organi/sedute sync failed");
   });
+  await reconcileThemeCounters();
 }
 
 export function startIngestionScheduler(): void {

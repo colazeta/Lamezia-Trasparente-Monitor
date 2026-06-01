@@ -5,6 +5,7 @@ import {
   integer,
   timestamp,
   unique,
+  index,
 } from "drizzle-orm/pg-core";
 import { officialsTable } from "./officials";
 
@@ -29,15 +30,16 @@ export const organiMembersTable = pgTable(
     id: serial("id").primaryKey(),
     organoId: integer("organo_id")
       .notNull()
-      .references(() => organiTable.id),
+      .references(() => organiTable.id, { onDelete: "cascade" }),
     officialId: integer("official_id")
       .notNull()
-      .references(() => officialsTable.id),
+      .references(() => officialsTable.id, { onDelete: "cascade" }),
     membershipRole: text("membership_role"),
     position: integer("position").notNull().default(0),
   },
   (t) => ({
     organoOfficialUnique: unique().on(t.organoId, t.officialId),
+    officialIdIdx: index("organi_members_official_id_idx").on(t.officialId),
   }),
 );
 

@@ -4,6 +4,7 @@ import {
   text,
   integer,
   timestamp,
+  index,
   uniqueIndex,
 } from "drizzle-orm/pg-core";
 import { themesTable } from "./themes";
@@ -14,7 +15,7 @@ export const themeFollowersTable = pgTable(
     id: serial("id").primaryKey(),
     themeId: integer("theme_id")
       .notNull()
-      .references(() => themesTable.id),
+      .references(() => themesTable.id, { onDelete: "cascade" }),
     email: text("email").notNull(),
     unsubscribeToken: text("unsubscribe_token").notNull().unique(),
     createdAt: timestamp("created_at", { withTimezone: true })
@@ -26,6 +27,7 @@ export const themeFollowersTable = pgTable(
       table.themeId,
       table.email,
     ),
+    emailIdx: index("theme_followers_email_idx").on(table.email),
   }),
 );
 

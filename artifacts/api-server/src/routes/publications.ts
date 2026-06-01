@@ -396,7 +396,8 @@ router.get("/pnrr/projects", async (_req, res) => {
       intervention: p.intervention,
       holder: p.holder,
       attuatore: p.attuatore,
-      importoFinanziato: p.importoFinanziato,
+      importoFinanziato:
+        p.importoFinanziato != null ? Number(p.importoFinanziato) : null,
       status: p.status,
       startDate: p.startDate ? p.startDate.toISOString() : null,
       endDate: p.endDate ? p.endDate.toISOString() : null,

@@ -2023,7 +2023,7 @@ components:
         attuatore:
           type: ["string", "null"]
         importoFinanziato:
-          type: ["string", "null"]
+          type: ["number", "null"]
         status:
           type: ["string", "null"]
         startDate:
