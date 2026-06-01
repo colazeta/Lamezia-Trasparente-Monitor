@@ -19,6 +19,8 @@ import { PareriVigilanza } from "./pages/PareriVigilanza";
 import { PareriVigilanzaDetail } from "./pages/PareriVigilanzaDetail";
 import { Opendata } from "./pages/Opendata";
 import { OpendataDetail } from "./pages/OpendataDetail";
+import { Performance } from "./pages/Performance";
+import { PerformanceDetail } from "./pages/PerformanceDetail";
 import { Reports } from "./pages/Reports";
 import { Metodologia } from "./pages/Metodologia";
 import { Statistics } from "./pages/Statistics";
@@ -49,6 +51,8 @@ export function Router() {
         <Route path="/pnrr" component={Pnrr} />
         <Route path="/opendata" component={Opendata} />
         <Route path="/opendata/:id" component={OpendataDetail} />
+        <Route path="/performance" component={Performance} />
+        <Route path="/performance/:id" component={PerformanceDetail} />
         <Route path="/pareri" component={PareriVigilanza} />
         <Route path="/pareri/:id" component={PareriVigilanzaDetail} />
         <Route path="/segnalazioni" component={Reports} />

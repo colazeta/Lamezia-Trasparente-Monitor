@@ -47,6 +47,7 @@ vi.mock("@workspace/api-client-react", () => {
     "useGetOpendataResourceContent",
     "useGetOfficial",
     "useGetOrgano",
+    "useGetPerformanceIndicator",
     "useGetPublicationsCategories",
     "useGetPublicationsTimeline",
     "useGetRecentActivity",
@@ -62,6 +63,8 @@ vi.mock("@workspace/api-client-react", () => {
     "useListDelibere",
     "useListOfficials",
     "useListOrgani",
+    "useListPerformanceCategories",
+    "useListPerformanceFeedStatus",
     "useListPnrrProjects",
     "useListPublications",
     "useListSedute",
@@ -116,6 +119,8 @@ import { AmministratoreDetail } from "@/pages/AmministratoreDetail";
 import { Pnrr } from "@/pages/Pnrr";
 import { Opendata } from "@/pages/Opendata";
 import { OpendataDetail } from "@/pages/OpendataDetail";
+import { Performance } from "@/pages/Performance";
+import { PerformanceDetail } from "@/pages/PerformanceDetail";
 import { Reports } from "@/pages/Reports";
 import { Statistics } from "@/pages/Statistics";
 import { Subscriptions } from "@/pages/Subscriptions";
@@ -141,6 +146,8 @@ export const PAGES: Array<[string, PageComponent]> = [
   ["Pnrr", Pnrr],
   ["Opendata", Opendata],
   ["OpendataDetail", OpendataDetail],
+  ["Performance", Performance],
+  ["PerformanceDetail", PerformanceDetail],
   ["Reports", Reports],
   ["Statistics", Statistics],
   ["Subscriptions", Subscriptions],
