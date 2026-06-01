@@ -628,6 +628,116 @@ export const UpdateContractMacrotemaResponse = zod.object({
 
 
 /**
+ * @summary List open-data datasets (Comune di Lamezia Terme catalog)
+ */
+export const ListOpendataDatasetsQueryParams = zod.object({
+  "search": zod.coerce.string().optional(),
+  "category": zod.coerce.string().optional().describe('Filter by catalog category (CKAN group)')
+})
+
+export const ListOpendataDatasetsResponseItem = zod.object({
+  "id": zod.number(),
+  "sourceId": zod.string(),
+  "slug": zod.string().nullish(),
+  "title": zod.string(),
+  "description": zod.string(),
+  "category": zod.string().nullish(),
+  "theme": zod.string().nullish(),
+  "frequency": zod.string().nullish(),
+  "licenseId": zod.string().nullish(),
+  "licenseTitle": zod.string().nullish(),
+  "holderName": zod.string().nullish(),
+  "portalUrl": zod.string().nullish(),
+  "tags": zod.array(zod.string()),
+  "resourceCount": zod.number(),
+  "metadataModified": zod.string().nullish(),
+  "resources": zod.array(zod.object({
+  "id": zod.number(),
+  "datasetId": zod.number(),
+  "name": zod.string(),
+  "description": zod.string().nullish(),
+  "format": zod.string().nullish(),
+  "url": zod.string(),
+  "position": zod.number(),
+  "lastModified": zod.string().nullish(),
+  "tabular": zod.boolean()
+}))
+})
+export const ListOpendataDatasetsResponse = zod.array(ListOpendataDatasetsResponseItem)
+
+
+/**
+ * @summary Status and last-updated info for the open-data feed
+ */
+export const GetOpendataFeedStatusResponse = zod.object({
+  "source": zod.string(),
+  "label": zod.string().nullish(),
+  "url": zod.string().nullish(),
+  "status": zod.string(),
+  "error": zod.string().nullish(),
+  "itemsTotal": zod.number(),
+  "itemsNew": zod.number(),
+  "lastCheckedAt": zod.string().nullish(),
+  "lastUpdatedAt": zod.string().nullish()
+})
+
+
+/**
+ * @summary Get a single open-data dataset by id
+ */
+export const GetOpendataDatasetParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const GetOpendataDatasetResponse = zod.object({
+  "id": zod.number(),
+  "sourceId": zod.string(),
+  "slug": zod.string().nullish(),
+  "title": zod.string(),
+  "description": zod.string(),
+  "category": zod.string().nullish(),
+  "theme": zod.string().nullish(),
+  "frequency": zod.string().nullish(),
+  "licenseId": zod.string().nullish(),
+  "licenseTitle": zod.string().nullish(),
+  "holderName": zod.string().nullish(),
+  "portalUrl": zod.string().nullish(),
+  "tags": zod.array(zod.string()),
+  "resourceCount": zod.number(),
+  "metadataModified": zod.string().nullish(),
+  "resources": zod.array(zod.object({
+  "id": zod.number(),
+  "datasetId": zod.number(),
+  "name": zod.string(),
+  "description": zod.string().nullish(),
+  "format": zod.string().nullish(),
+  "url": zod.string(),
+  "position": zod.number(),
+  "lastModified": zod.string().nullish(),
+  "tabular": zod.boolean()
+}))
+})
+
+
+/**
+ * @summary Parsed tabular content (rows + columns) for a CSV/JSON resource
+ */
+export const GetOpendataResourceContentParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const GetOpendataResourceContentResponse = zod.object({
+  "columns": zod.array(zod.object({
+  "name": zod.string(),
+  "type": zod.enum(['number', 'date', 'string'])
+})),
+  "rows": zod.array(zod.record(zod.string(), zod.union([zod.string(),zod.number()]).nullable())),
+  "rowCount": zod.number(),
+  "truncated": zod.boolean()
+})
+
+
+/**
  * @summary List albo pretorio publications (live feed)
  */
 export const ListPublicationsQueryParams = zod.object({

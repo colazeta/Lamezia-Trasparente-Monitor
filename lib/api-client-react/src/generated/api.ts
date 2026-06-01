@@ -34,6 +34,7 @@ import type {
   ListConvocazioniParams,
   ListDelibereParams,
   ListOfficialsParams,
+  ListOpendataDatasetsParams,
   ListOversightOpinionsParams,
   ListPublicationsParams,
   ListQuestionsParams,
@@ -42,6 +43,8 @@ import type {
   Official,
   OfficialInput,
   OfficialProfile,
+  OpendataDataset,
+  OpendataTable,
   Organo,
   OrganoDetail,
   OversightOpinion,
@@ -1982,6 +1985,321 @@ export const useUpdateContractMacrotema = <TError = ErrorType<void>,
       > => {
       return useMutation(getUpdateContractMacrotemaMutationOptions(options));
     }
+
+export const getListOpendataDatasetsUrl = (params?: ListOpendataDatasetsParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : value.toString())
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/opendata/datasets?${stringifiedParams}` : `/api/opendata/datasets`
+}
+
+/**
+ * @summary List open-data datasets (Comune di Lamezia Terme catalog)
+ */
+export const listOpendataDatasets = async (params?: ListOpendataDatasetsParams, options?: RequestInit): Promise<OpendataDataset[]> => {
+
+  return customFetch<OpendataDataset[]>(getListOpendataDatasetsUrl(params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getListOpendataDatasetsQueryKey = (params?: ListOpendataDatasetsParams,) => {
+    return [
+    `/api/opendata/datasets`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getListOpendataDatasetsQueryOptions = <TData = Awaited<ReturnType<typeof listOpendataDatasets>>, TError = ErrorType<unknown>>(params?: ListOpendataDatasetsParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listOpendataDatasets>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListOpendataDatasetsQueryKey(params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listOpendataDatasets>>> = ({ signal }) => listOpendataDatasets(params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listOpendataDatasets>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ListOpendataDatasetsQueryResult = NonNullable<Awaited<ReturnType<typeof listOpendataDatasets>>>
+export type ListOpendataDatasetsQueryError = ErrorType<unknown>
+
+
+/**
+ * @summary List open-data datasets (Comune di Lamezia Terme catalog)
+ */
+
+export function useListOpendataDatasets<TData = Awaited<ReturnType<typeof listOpendataDatasets>>, TError = ErrorType<unknown>>(
+ params?: ListOpendataDatasetsParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listOpendataDatasets>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getListOpendataDatasetsQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
+
+
+
+export const getGetOpendataFeedStatusUrl = () => {
+
+
+
+
+  return `/api/opendata/feed-status`
+}
+
+/**
+ * @summary Status and last-updated info for the open-data feed
+ */
+export const getOpendataFeedStatus = async ( options?: RequestInit): Promise<FeedStatus> => {
+
+  return customFetch<FeedStatus>(getGetOpendataFeedStatusUrl(),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetOpendataFeedStatusQueryKey = () => {
+    return [
+    `/api/opendata/feed-status`
+    ] as const;
+    }
+
+
+export const getGetOpendataFeedStatusQueryOptions = <TData = Awaited<ReturnType<typeof getOpendataFeedStatus>>, TError = ErrorType<unknown>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getOpendataFeedStatus>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetOpendataFeedStatusQueryKey();
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getOpendataFeedStatus>>> = ({ signal }) => getOpendataFeedStatus({ signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getOpendataFeedStatus>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetOpendataFeedStatusQueryResult = NonNullable<Awaited<ReturnType<typeof getOpendataFeedStatus>>>
+export type GetOpendataFeedStatusQueryError = ErrorType<unknown>
+
+
+/**
+ * @summary Status and last-updated info for the open-data feed
+ */
+
+export function useGetOpendataFeedStatus<TData = Awaited<ReturnType<typeof getOpendataFeedStatus>>, TError = ErrorType<unknown>>(
+  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getOpendataFeedStatus>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetOpendataFeedStatusQueryOptions(options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
+
+
+
+export const getGetOpendataDatasetUrl = (id: number,) => {
+
+
+
+
+  return `/api/opendata/datasets/${id}`
+}
+
+/**
+ * @summary Get a single open-data dataset by id
+ */
+export const getOpendataDataset = async (id: number, options?: RequestInit): Promise<OpendataDataset> => {
+
+  return customFetch<OpendataDataset>(getGetOpendataDatasetUrl(id),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetOpendataDatasetQueryKey = (id: number,) => {
+    return [
+    `/api/opendata/datasets/${id}`
+    ] as const;
+    }
+
+
+export const getGetOpendataDatasetQueryOptions = <TData = Awaited<ReturnType<typeof getOpendataDataset>>, TError = ErrorType<void>>(id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getOpendataDataset>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetOpendataDatasetQueryKey(id);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getOpendataDataset>>> = ({ signal }) => getOpendataDataset(id, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: !!(id), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getOpendataDataset>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetOpendataDatasetQueryResult = NonNullable<Awaited<ReturnType<typeof getOpendataDataset>>>
+export type GetOpendataDatasetQueryError = ErrorType<void>
+
+
+/**
+ * @summary Get a single open-data dataset by id
+ */
+
+export function useGetOpendataDataset<TData = Awaited<ReturnType<typeof getOpendataDataset>>, TError = ErrorType<void>>(
+ id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getOpendataDataset>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetOpendataDatasetQueryOptions(id,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
+
+
+
+export const getGetOpendataResourceContentUrl = (id: number,) => {
+
+
+
+
+  return `/api/opendata/resources/${id}/content`
+}
+
+/**
+ * @summary Parsed tabular content (rows + columns) for a CSV/JSON resource
+ */
+export const getOpendataResourceContent = async (id: number, options?: RequestInit): Promise<OpendataTable> => {
+
+  return customFetch<OpendataTable>(getGetOpendataResourceContentUrl(id),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetOpendataResourceContentQueryKey = (id: number,) => {
+    return [
+    `/api/opendata/resources/${id}/content`
+    ] as const;
+    }
+
+
+export const getGetOpendataResourceContentQueryOptions = <TData = Awaited<ReturnType<typeof getOpendataResourceContent>>, TError = ErrorType<void>>(id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getOpendataResourceContent>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetOpendataResourceContentQueryKey(id);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getOpendataResourceContent>>> = ({ signal }) => getOpendataResourceContent(id, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: !!(id), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getOpendataResourceContent>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetOpendataResourceContentQueryResult = NonNullable<Awaited<ReturnType<typeof getOpendataResourceContent>>>
+export type GetOpendataResourceContentQueryError = ErrorType<void>
+
+
+/**
+ * @summary Parsed tabular content (rows + columns) for a CSV/JSON resource
+ */
+
+export function useGetOpendataResourceContent<TData = Awaited<ReturnType<typeof getOpendataResourceContent>>, TError = ErrorType<void>>(
+ id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getOpendataResourceContent>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetOpendataResourceContentQueryOptions(id,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
+
+
 
 export const getListPublicationsUrl = (params?: ListPublicationsParams,) => {
   const normalizedParams = new URLSearchParams();

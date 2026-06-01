@@ -810,6 +810,92 @@ paths:
         "404":
           description: Not found
 
+  /opendata/datasets:
+    get:
+      operationId: listOpendataDatasets
+      tags: [opendata]
+      summary: List open-data datasets (Comune di Lamezia Terme catalog)
+      parameters:
+        - name: search
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: category
+          in: query
+          required: false
+          description: Filter by catalog category (CKAN group)
+          schema:
+            type: string
+      responses:
+        "200":
+          description: List of datasets
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/OpendataDataset"
+
+  /opendata/feed-status:
+    get:
+      operationId: getOpendataFeedStatus
+      tags: [opendata]
+      summary: Status and last-updated info for the open-data feed
+      responses:
+        "200":
+          description: Feed status
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FeedStatus"
+
+  /opendata/datasets/{id}:
+    get:
+      operationId: getOpendataDataset
+      tags: [opendata]
+      summary: Get a single open-data dataset by id
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Dataset detail
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OpendataDataset"
+        "404":
+          description: Not found
+
+  /opendata/resources/{id}/content:
+    get:
+      operationId: getOpendataResourceContent
+      tags: [opendata]
+      summary: Parsed tabular content (rows + columns) for a CSV/JSON resource
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Parsed table
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OpendataTable"
+        "404":
+          description: Resource not found
+        "422":
+          description: Resource format is not tabular
+        "502":
+          description: Resource could not be downloaded or parsed
+
   /publications:
     get:
       operationId: listPublications
@@ -2057,6 +2143,106 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/Publication"
+
+    OpendataResource:
+      type: object
+      required: [id, datasetId, name, url, position, tabular]
+      properties:
+        id:
+          type: integer
+        datasetId:
+          type: integer
+        name:
+          type: string
+        description:
+          type: ["string", "null"]
+        format:
+          type: ["string", "null"]
+        url:
+          type: string
+        position:
+          type: integer
+        lastModified:
+          type: ["string", "null"]
+        tabular:
+          type: boolean
+
+    OpendataDataset:
+      type: object
+      required:
+        - id
+        - sourceId
+        - title
+        - description
+        - tags
+        - resourceCount
+        - resources
+      properties:
+        id:
+          type: integer
+        sourceId:
+          type: string
+        slug:
+          type: ["string", "null"]
+        title:
+          type: string
+        description:
+          type: string
+        category:
+          type: ["string", "null"]
+        theme:
+          type: ["string", "null"]
+        frequency:
+          type: ["string", "null"]
+        licenseId:
+          type: ["string", "null"]
+        licenseTitle:
+          type: ["string", "null"]
+        holderName:
+          type: ["string", "null"]
+        portalUrl:
+          type: ["string", "null"]
+        tags:
+          type: array
+          items:
+            type: string
+        resourceCount:
+          type: integer
+        metadataModified:
+          type: ["string", "null"]
+        resources:
+          type: array
+          items:
+            $ref: "#/components/schemas/OpendataResource"
+
+    OpendataColumn:
+      type: object
+      required: [name, type]
+      properties:
+        name:
+          type: string
+        type:
+          type: string
+          enum: [number, date, string]
+
+    OpendataTable:
+      type: object
+      required: [columns, rows, rowCount, truncated]
+      properties:
+        columns:
+          type: array
+          items:
+            $ref: "#/components/schemas/OpendataColumn"
+        rows:
+          type: array
+          items:
+            type: object
+            additionalProperties:
+              type: ["string", "number", "null"]
+        rowCount:
+          type: integer
+        truncated:
+          type: boolean
 
     SedutaIntervention:
       type: object

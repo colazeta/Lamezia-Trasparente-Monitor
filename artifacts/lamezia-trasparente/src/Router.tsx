@@ -16,6 +16,8 @@ import { AmministratoreDetail } from "./pages/AmministratoreDetail";
 import { Pnrr } from "./pages/Pnrr";
 import { PareriVigilanza } from "./pages/PareriVigilanza";
 import { PareriVigilanzaDetail } from "./pages/PareriVigilanzaDetail";
+import { Opendata } from "./pages/Opendata";
+import { OpendataDetail } from "./pages/OpendataDetail";
 import { Reports } from "./pages/Reports";
 import { Statistics } from "./pages/Statistics";
 import { Subscriptions } from "./pages/Subscriptions";
@@ -42,6 +44,8 @@ export function Router() {
         <Route path="/amministratori" component={Amministratori} />
         <Route path="/amministratori/:id" component={AmministratoreDetail} />
         <Route path="/pnrr" component={Pnrr} />
+        <Route path="/opendata" component={Opendata} />
+        <Route path="/opendata/:id" component={OpendataDetail} />
         <Route path="/pareri" component={PareriVigilanza} />
         <Route path="/pareri/:id" component={PareriVigilanzaDetail} />
         <Route path="/segnalazioni" component={Reports} />

@@ -414,6 +414,72 @@ export interface PnrrCensus {
   uncensored: Publication[];
 }
 
+export interface OpendataResource {
+  id: number;
+  datasetId: number;
+  name: string;
+  /** @nullable */
+  description?: string | null;
+  /** @nullable */
+  format?: string | null;
+  url: string;
+  position: number;
+  /** @nullable */
+  lastModified?: string | null;
+  tabular: boolean;
+}
+
+export interface OpendataDataset {
+  id: number;
+  sourceId: string;
+  /** @nullable */
+  slug?: string | null;
+  title: string;
+  description: string;
+  /** @nullable */
+  category?: string | null;
+  /** @nullable */
+  theme?: string | null;
+  /** @nullable */
+  frequency?: string | null;
+  /** @nullable */
+  licenseId?: string | null;
+  /** @nullable */
+  licenseTitle?: string | null;
+  /** @nullable */
+  holderName?: string | null;
+  /** @nullable */
+  portalUrl?: string | null;
+  tags: string[];
+  resourceCount: number;
+  /** @nullable */
+  metadataModified?: string | null;
+  resources: OpendataResource[];
+}
+
+export type OpendataColumnType = typeof OpendataColumnType[keyof typeof OpendataColumnType];
+
+
+export const OpendataColumnType = {
+  number: 'number',
+  date: 'date',
+  string: 'string',
+} as const;
+
+export interface OpendataColumn {
+  name: string;
+  type: OpendataColumnType;
+}
+
+export type OpendataTableRowsItem = {[key: string]: string | number | null};
+
+export interface OpendataTable {
+  columns: OpendataColumn[];
+  rows: OpendataTableRowsItem[];
+  rowCount: number;
+  truncated: boolean;
+}
+
 export interface SedutaIntervention {
   id: number;
   speakerName: string;
@@ -880,6 +946,14 @@ maxAmount?: number;
 from?: string;
 to?: string;
 themeId?: number;
+};
+
+export type ListOpendataDatasetsParams = {
+search?: string;
+/**
+ * Filter by catalog category (CKAN group)
+ */
+category?: string;
 };
 
 export type ListPublicationsParams = {

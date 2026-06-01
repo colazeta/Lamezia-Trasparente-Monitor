@@ -10,6 +10,8 @@ export * from "./reports";
 export * from "./shares";
 export * from "./publications";
 export * from "./attuazionePnrr";
+export * from "./opendataDatasets";
+export * from "./opendataResources";
 export * from "./feedStatus";
 export * from "./themeFollowers";
 export * from "./sessionReports";

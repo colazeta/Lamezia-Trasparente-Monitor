@@ -17,6 +17,7 @@ import {
   HelpCircle,
   ChevronDown,
   LayoutGrid,
+  Database,
 } from "lucide-react";
 import { useState } from "react";
 import { useListQuestions } from "@workspace/api-client-react";
@@ -42,6 +43,7 @@ const sectionItems = [
   { href: "/pnrr", label: "PNRR", icon: Landmark },
   { href: "/pareri", label: "Pareri di Vigilanza", icon: ShieldCheck },
   { href: "/contratti", label: "Contratti", icon: FileText },
+  { href: "/opendata", label: "Opendata", icon: Database },
   { href: "/statistiche", label: "Statistiche", icon: BarChart3 },
   { href: "/segnalazioni", label: "Segnalazioni", icon: Megaphone },
 ];

@@ -42,6 +42,9 @@ vi.mock("@workspace/api-client-react", () => {
     "useGetContractsAnalytics",
     "useGetContractsFeedStatus",
     "useGetFeedStatus",
+    "useGetOpendataDataset",
+    "useGetOpendataFeedStatus",
+    "useGetOpendataResourceContent",
     "useGetOfficial",
     "useGetOrgano",
     "useGetRecentActivity",
@@ -52,6 +55,7 @@ vi.mock("@workspace/api-client-react", () => {
     "useGetTopThemes",
     "useListCategories",
     "useListContracts",
+    "useListOpendataDatasets",
     "useListConvocazioni",
     "useListDelibere",
     "useListOfficials",
@@ -107,6 +111,8 @@ import { OrganoDetail } from "@/pages/OrganoDetail";
 import { Amministratori } from "@/pages/Amministratori";
 import { AmministratoreDetail } from "@/pages/AmministratoreDetail";
 import { Pnrr } from "@/pages/Pnrr";
+import { Opendata } from "@/pages/Opendata";
+import { OpendataDetail } from "@/pages/OpendataDetail";
 import { Reports } from "@/pages/Reports";
 import { Statistics } from "@/pages/Statistics";
 import { Subscriptions } from "@/pages/Subscriptions";
@@ -130,6 +136,8 @@ export const PAGES: Array<[string, PageComponent]> = [
   ["Amministratori", Amministratori],
   ["AmministratoreDetail", AmministratoreDetail],
   ["Pnrr", Pnrr],
+  ["Opendata", Opendata],
+  ["OpendataDetail", OpendataDetail],
   ["Reports", Reports],
   ["Statistics", Statistics],
   ["Subscriptions", Subscriptions],

@@ -9,3 +9,4 @@
 - [drizzle push truncate prompt](drizzle-push-truncate-prompt.md) — push (even --force) blocks on the truncate prompt in non-TTY; truncate the table first, then push+seed.
 - [Expo typed-routes staleness](expo-typed-routes.md) — tsc flags new expo-router routes as invalid until the dev-server regenerates types; restart expo workflow, don't "fix" the route strings.
 - [Cartographer build breakers across pages](cartographer-build-breaker.md) — a syntax error in any one lamezia-trasparente page (e.g. duplicate lucide import) 500s the whole Vite app, not just that page.
+- [Opendata section](opendata-frontend.md) — catalog/detail/tabular-viewer pages; auto-chart picks first numeric col vs date(line)/string(bar) axis; recharts tsc errors are pre-existing.

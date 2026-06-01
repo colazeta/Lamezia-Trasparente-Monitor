@@ -10,6 +10,7 @@ import { logger } from "./logger";
 import { runAttuazioneIngestion } from "./attuazionePnrr";
 import { runAnacContractsIngestion } from "./anacContracts";
 import { reconcileThemeCounters } from "./counters";
+import { runOpendataIngestion } from "./opendata";
 
 export const ALBO_SOURCE = "albo-lamezia";
 export const ALBO_LABEL = "Albo Pretorio – Amministrazione Trasparente";
@@ -243,6 +244,7 @@ async function runIngestionCycle(): Promise<void> {
   await runIngestion().catch(() => {});
   await runAttuazioneIngestion().catch(() => {});
   await runAnacContractsIngestion().catch(() => {});
+  await runOpendataIngestion().catch(() => {});
   await runOrganiSedutaSync().catch((err) => {
     logger.error({ err }, "Organi/sedute sync failed");
   });
