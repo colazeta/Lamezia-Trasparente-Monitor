@@ -182,6 +182,42 @@ router.get("/stats/activity", async (_req, res) => {
   );
 });
 
+router.get("/stats/publications-timeline", async (req, res) => {
+  const daysParam =
+    typeof req.query.days === "string" ? Number(req.query.days) : NaN;
+  const days =
+    Number.isFinite(daysParam) && daysParam > 0 && daysParam <= 365
+      ? Math.floor(daysParam)
+      : 90;
+
+  const rows = await db
+    .select({
+      day: sql<string>`to_char(date_trunc('day', ${publicationsTable.pubStart}), 'YYYY-MM-DD')`,
+      count: sql<number>`count(*)::int`,
+    })
+    .from(publicationsTable)
+    .where(
+      sql`${publicationsTable.pubStart} IS NOT NULL AND ${publicationsTable.pubStart} >= now() - (${days} || ' days')::interval`,
+    )
+    .groupBy(sql`date_trunc('day', ${publicationsTable.pubStart})`)
+    .orderBy(sql`date_trunc('day', ${publicationsTable.pubStart}) asc`);
+
+  res.json({ days, points: rows });
+});
+
+router.get("/stats/publications-categories", async (_req, res) => {
+  const rows = await db
+    .select({
+      category: publicationsTable.category,
+      count: sql<number>`count(*)::int`,
+    })
+    .from(publicationsTable)
+    .groupBy(publicationsTable.category)
+    .orderBy(desc(sql`count(*)`));
+
+  res.json(rows);
+});
+
 router.get("/stats/shares", async (_req, res) => {
   const rows = await db
     .select({

@@ -2,8 +2,9 @@ import { useEffect, useMemo, useState } from "react";
 import {
   useListPublications,
   useGetFeedStatus,
+  useGetPublicationsCategories,
 } from "@workspace/api-client-react";
-import { Search, Filter, ShieldAlert, Calendar, RefreshCw, Info } from "lucide-react";
+import { Search, Filter, ShieldAlert, Calendar, RefreshCw, Info, Paperclip } from "lucide-react";
 import { format } from "date-fns";
 import { it } from "date-fns/locale";
 import { Link } from "wouter";
@@ -55,6 +56,7 @@ export function Albo() {
   }, [search]);
 
   const { data: feed } = useGetFeedStatus();
+  const { data: categoryStats } = useGetPublicationsCategories();
 
   const { data: publications, isLoading } = useListPublications({
     q: debouncedSearch || undefined,
@@ -71,6 +73,24 @@ export function Albo() {
         : [],
     [publications],
   );
+
+  const categoryCounts = useMemo(() => {
+    const map: Record<string, number> = {};
+    let total = 0;
+    for (const row of categoryStats ?? []) {
+      map[row.category] = row.count;
+      total += row.count;
+    }
+    return { map, total };
+  }, [categoryStats]);
+
+  const MACRO_CATEGORIES: { key: string; label: string }[] = [
+    { key: "all", label: "Tutte" },
+    { key: "albo", label: "Albo" },
+    { key: "delibera", label: "Delibere" },
+    { key: "convocazione", label: "Convocazioni" },
+    { key: "ordinanza", label: "Ordinanze" },
+  ];
 
   return (
     <div className="container mx-auto px-4 py-8 md:py-12 max-w-5xl">
@@ -123,6 +143,42 @@ export function Albo() {
             Scopri di più
           </Link>
         </p>
+      </div>
+
+      <div className="mb-6 flex flex-wrap gap-2">
+        {MACRO_CATEGORIES.map((mc) => {
+          const active = category === mc.key;
+          const count =
+            mc.key === "all"
+              ? categoryCounts.total
+              : (categoryCounts.map[mc.key] ?? 0);
+          return (
+            <button
+              key={mc.key}
+              type="button"
+              onClick={() => setCategory(mc.key)}
+              aria-pressed={active}
+              className={`inline-flex items-center gap-2 rounded-full border px-4 py-1.5 text-sm font-medium transition-colors ${
+                active
+                  ? "border-brand bg-brand text-brand-foreground"
+                  : "border-border bg-background text-muted-foreground hover:border-brand/40 hover:text-foreground"
+              }`}
+            >
+              {mc.label}
+              {categoryStats && (
+                <span
+                  className={`rounded-full px-1.5 text-xs font-display font-bold tabular-nums ${
+                    active
+                      ? "bg-brand-foreground/20 text-brand-foreground"
+                      : "bg-muted text-muted-foreground"
+                  }`}
+                >
+                  {count}
+                </span>
+              )}
+            </button>
+          );
+        })}
       </div>
 
       <div className="flex flex-col md:flex-row flex-wrap gap-4 mb-8 p-4 bg-muted/40 rounded-xl border border-border shadow-sm">
@@ -251,10 +307,17 @@ export function Albo() {
                     PNRR
                   </Badge>
                 )}
+                {p.attachments && p.attachments.length > 0 && (
+                  <span className="inline-flex items-center gap-1 text-brand">
+                    <Paperclip className="h-3.5 w-3.5" />
+                    {p.attachments.length}{" "}
+                    {p.attachments.length === 1 ? "documento" : "documenti"}
+                  </span>
+                )}
               </div>
 
               <div className="mt-3 border-t border-border pt-3">
-                <AlboLink />
+                <AlboLink attachments={p.attachments} />
               </div>
             </Card>
           ))

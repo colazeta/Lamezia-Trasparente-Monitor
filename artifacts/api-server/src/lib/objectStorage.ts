@@ -106,6 +106,27 @@ export class ObjectStorageService {
     return new Response(webStream, { headers });
   }
 
+  /**
+   * Store raw bytes as a publicly-readable object under the first configured
+   * public search path. `filePath` is relative (e.g. "albo/2026-1829/1.pdf").
+   * Returns the same relative path, served via /api/storage/public-objects/.
+   */
+  async uploadPublicObject(
+    filePath: string,
+    data: Buffer,
+    contentType: string,
+  ): Promise<string> {
+    const searchPaths = this.getPublicObjectSearchPaths();
+    const fullPath = `${searchPaths[0]}/${filePath}`;
+    const { bucketName, objectName } = parseObjectPath(fullPath);
+    const file = objectStorageClient.bucket(bucketName).file(objectName);
+    await file.save(data, {
+      contentType,
+      metadata: { contentType },
+    });
+    return filePath;
+  }
+
   async getObjectEntityUploadURL(): Promise<string> {
     const privateObjectDir = this.getPrivateObjectDir();
     if (!privateObjectDir) {

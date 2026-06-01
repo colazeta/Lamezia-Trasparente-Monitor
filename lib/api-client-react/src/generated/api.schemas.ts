@@ -327,6 +327,22 @@ export interface ContractAnalytics {
   amountOverTime: AmountOverTime[];
 }
 
+export interface PublicationAttachment {
+  name: string;
+  tipo: string;
+  /** Direct download link to the specific document on the official portal */
+  officialUrl: string;
+  /**
+     * Path of the locally-archived copy, or null if not archived
+     * @nullable
+     */
+  storagePath: string | null;
+  /** @nullable */
+  contentType: string | null;
+  /** @nullable */
+  size: number | null;
+}
+
 export interface Publication {
   id: number;
   progressivo: string;
@@ -351,6 +367,7 @@ export interface Publication {
   /** @nullable */
   pnrrMission?: string | null;
   isPnrr: boolean;
+  attachments?: PublicationAttachment[];
   isNew: boolean;
   firstSeenAt: string;
 }
@@ -678,6 +695,22 @@ export interface ActivityItem {
 
 export interface ShareChannelStat {
   channel: string;
+  count: number;
+}
+
+export interface PublicationsTimelinePoint {
+  /** Day bucket (YYYY-MM-DD) */
+  day: string;
+  count: number;
+}
+
+export interface PublicationsTimeline {
+  days: number;
+  points: PublicationsTimelinePoint[];
+}
+
+export interface PublicationCategoryStat {
+  category: string;
   count: number;
 }
 
@@ -1009,6 +1042,13 @@ export type ListOfficialsParams = {
  */
 role?: string;
 q?: string;
+};
+
+export type GetPublicationsTimelineParams = {
+/**
+ * Size of the look-back window in days (default 90, max 365)
+ */
+days?: number;
 };
 
 export type ListOversightOpinionsParams = {

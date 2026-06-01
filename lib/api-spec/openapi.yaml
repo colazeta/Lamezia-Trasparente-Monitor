@@ -1417,6 +1417,41 @@ paths:
                 items:
                   $ref: "#/components/schemas/ShareChannelStat"
 
+  /stats/publications-timeline:
+    get:
+      operationId: getPublicationsTimeline
+      tags: [stats]
+      summary: Albo publications counted per day over a recent window
+      parameters:
+        - name: days
+          in: query
+          required: false
+          description: Size of the look-back window in days (default 90, max 365)
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Publications-per-day timeline
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicationsTimeline"
+
+  /stats/publications-categories:
+    get:
+      operationId: getPublicationsCategories
+      tags: [stats]
+      summary: Albo publication counts grouped by macro-category
+      responses:
+        "200":
+          description: Counts per category
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/PublicationCategoryStat"
+
   /oversight-opinions:
     get:
       operationId: listOversightOpinions
@@ -2065,10 +2100,39 @@ components:
           type: ["string", "null"]
         isPnrr:
           type: boolean
+        attachments:
+          type: array
+          items:
+            $ref: "#/components/schemas/PublicationAttachment"
         isNew:
           type: boolean
         firstSeenAt:
           type: string
+
+    PublicationAttachment:
+      type: object
+      required:
+        - name
+        - tipo
+        - officialUrl
+        - storagePath
+        - contentType
+        - size
+      properties:
+        name:
+          type: string
+        tipo:
+          type: string
+        officialUrl:
+          type: string
+          description: Direct download link to the specific document on the official portal
+        storagePath:
+          type: ["string", "null"]
+          description: Path of the locally-archived copy, or null if not archived
+        contentType:
+          type: ["string", "null"]
+        size:
+          type: ["integer", "null"]
 
     FeedStatus:
       type: object
@@ -2574,6 +2638,36 @@ components:
       required: [channel, count]
       properties:
         channel:
+          type: string
+        count:
+          type: integer
+
+    PublicationsTimelinePoint:
+      type: object
+      required: [day, count]
+      properties:
+        day:
+          type: string
+          description: Day bucket (YYYY-MM-DD)
+        count:
+          type: integer
+
+    PublicationsTimeline:
+      type: object
+      required: [days, points]
+      properties:
+        days:
+          type: integer
+        points:
+          type: array
+          items:
+            $ref: "#/components/schemas/PublicationsTimelinePoint"
+
+    PublicationCategoryStat:
+      type: object
+      required: [category, count]
+      properties:
+        category:
           type: string
         count:
           type: integer

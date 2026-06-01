@@ -11,6 +11,7 @@ import { runAttuazioneIngestion } from "./attuazionePnrr";
 import { runAnacContractsIngestion } from "./anacContracts";
 import { reconcileThemeCounters } from "./counters";
 import { runOpendataIngestion } from "./opendata";
+import { enrichAlboAttachments } from "./alboAttachments";
 
 export const ALBO_SOURCE = "albo-lamezia";
 export const ALBO_LABEL = "Albo Pretorio – Amministrazione Trasparente";
@@ -242,6 +243,9 @@ const INGESTION_INTERVAL_MS = 3 * 60 * 60 * 1000;
 
 async function runIngestionCycle(): Promise<void> {
   await runIngestion().catch(() => {});
+  await enrichAlboAttachments().catch((err) => {
+    logger.error({ err }, "Albo attachment enrichment cycle failed");
+  });
   await runAttuazioneIngestion().catch(() => {});
   await runAnacContractsIngestion().catch(() => {});
   await runOpendataIngestion().catch(() => {});

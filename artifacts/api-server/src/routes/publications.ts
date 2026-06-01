@@ -129,6 +129,7 @@ function mapPublication(p: Publication) {
     cups: p.cups,
     pnrrMission: p.pnrrMission,
     isPnrr: p.isPnrr,
+    attachments: p.attachments ?? [],
     isNew: p.isNew,
     firstSeenAt: p.firstSeenAt.toISOString(),
   };

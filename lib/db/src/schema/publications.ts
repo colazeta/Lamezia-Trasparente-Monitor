@@ -4,8 +4,23 @@ import {
   text,
   boolean,
   timestamp,
+  jsonb,
   index,
 } from "drizzle-orm/pg-core";
+
+export type PublicationAttachment = {
+  // Allegato display name from the official viewer (NOMEALLEGATO).
+  name: string;
+  // Official Tinn allegato type code (X, P, ...), kept to rebuild the URL.
+  tipo: string;
+  // Direct download URL of the specific document on the official portal.
+  officialUrl: string;
+  // Path of the locally-archived copy, served via /api/storage/public-objects/.
+  // Null when the file could not be archived (best-effort).
+  storagePath: string | null;
+  contentType: string | null;
+  size: number | null;
+};
 
 export const publicationsTable = pgTable(
   "publications",
@@ -25,6 +40,11 @@ export const publicationsTable = pgTable(
     cups: text("cups").array().notNull().default([]),
     pnrrMission: text("pnrr_mission"),
     isPnrr: boolean("is_pnrr").notNull().default(false),
+    attachments: jsonb("attachments")
+      .$type<PublicationAttachment[]>()
+      .notNull()
+      .default([]),
+    detailFetchedAt: timestamp("detail_fetched_at", { withTimezone: true }),
     isNew: boolean("is_new").notNull().default(true),
     firstSeenAt: timestamp("first_seen_at", { withTimezone: true })
       .notNull()

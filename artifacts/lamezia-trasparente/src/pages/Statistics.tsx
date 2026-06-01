@@ -2,19 +2,41 @@ import {
   useGetStatsOverview, 
   useGetTopThemes, 
   useGetShareStats, 
-  useGetRecentActivity 
+  useGetRecentActivity,
+  useGetPublicationsTimeline
 } from "@workspace/api-client-react";
-import { BarChart3, TrendingUp, HandCoins, Share2, Activity, PieChart, Users } from "lucide-react";
+import { BarChart3, TrendingUp, HandCoins, Share2, Activity, PieChart, Users, FileClock } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { format } from "date-fns";
+import { format, parseISO } from "date-fns";
 import { it } from "date-fns/locale";
+import {
+  AreaChart,
+  Area,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+} from "recharts";
+
+const TIMELINE_DAYS = 90;
 
 export function Statistics() {
   const { data: stats, isLoading: statsLoading } = useGetStatsOverview();
   const { data: topThemes, isLoading: themesLoading } = useGetTopThemes();
   const { data: shareStats, isLoading: shareLoading } = useGetShareStats();
   const { data: activity, isLoading: activityLoading } = useGetRecentActivity();
+  const { data: timeline, isLoading: timelineLoading } = useGetPublicationsTimeline({
+    days: TIMELINE_DAYS,
+  });
+
+  const timelineData = (timeline?.points ?? []).map((p) => ({
+    day: p.day,
+    count: p.count,
+    label: format(parseISO(p.day), "dd MMM", { locale: it }),
+  }));
+  const timelineTotal = timelineData.reduce((sum, p) => sum + p.count, 0);
 
   return (
     <div className="container mx-auto px-4 py-8 md:py-12">
@@ -63,6 +85,103 @@ export function Statistics() {
           highlight
         />
       </div>
+
+      {/* Publications timeline */}
+      <Card className="overflow-hidden mb-8">
+        <CardHeader className="border-b border-border bg-muted/40">
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <div>
+              <CardTitle className="flex items-center gap-2 font-display font-bold tracking-tight">
+                <FileClock className="h-5 w-5 text-brand" /> Atti pubblicati all'Albo
+                Pretorio
+              </CardTitle>
+              <CardDescription>
+                Andamento delle pubblicazioni negli ultimi {TIMELINE_DAYS} giorni
+              </CardDescription>
+            </div>
+            {!timelineLoading && (
+              <div className="text-right">
+                <div className="text-2xl font-display font-bold tabular-nums text-brand">
+                  {timelineTotal}
+                </div>
+                <div className="text-[10px] uppercase tracking-wider text-muted-foreground">
+                  atti nel periodo
+                </div>
+              </div>
+            )}
+          </div>
+        </CardHeader>
+        <CardContent className="p-6">
+          {timelineLoading ? (
+            <Skeleton className="h-64 w-full" />
+          ) : timelineData.length > 0 ? (
+            <div className="h-64 w-full">
+              <ResponsiveContainer width="100%" height="100%">
+                <AreaChart
+                  data={timelineData}
+                  margin={{ top: 8, right: 8, left: -16, bottom: 0 }}
+                >
+                  <defs>
+                    <linearGradient id="alboTimeline" x1="0" y1="0" x2="0" y2="1">
+                      <stop
+                        offset="5%"
+                        stopColor="hsl(var(--chart-1))"
+                        stopOpacity={0.4}
+                      />
+                      <stop
+                        offset="95%"
+                        stopColor="hsl(var(--chart-1))"
+                        stopOpacity={0}
+                      />
+                    </linearGradient>
+                  </defs>
+                  <CartesianGrid
+                    strokeDasharray="3 3"
+                    stroke="hsl(var(--border))"
+                    vertical={false}
+                  />
+                  <XAxis
+                    dataKey="label"
+                    tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }}
+                    tickLine={false}
+                    axisLine={false}
+                    minTickGap={32}
+                  />
+                  <YAxis
+                    allowDecimals={false}
+                    tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }}
+                    tickLine={false}
+                    axisLine={false}
+                    width={32}
+                  />
+                  <Tooltip
+                    contentStyle={{
+                      backgroundColor: "hsl(var(--popover))",
+                      border: "1px solid hsl(var(--border))",
+                      borderRadius: "0.5rem",
+                      fontSize: "0.8rem",
+                    }}
+                    labelStyle={{ color: "hsl(var(--foreground))" }}
+                    formatter={(value: number) => [`${value}`, "Atti pubblicati"]}
+                  />
+                  <Area
+                    type="monotone"
+                    dataKey="count"
+                    stroke="hsl(var(--chart-1))"
+                    strokeWidth={2}
+                    fill="url(#alboTimeline)"
+                    isAnimationActive={false}
+                  />
+                </AreaChart>
+              </ResponsiveContainer>
+            </div>
+          ) : (
+            <div className="text-center text-sm text-muted-foreground py-12">
+              Nessuna pubblicazione registrata nel periodo selezionato.
+            </div>
+          )}
+        </CardContent>
+      </Card>
 
       <div className="grid lg:grid-cols-3 gap-8">
         {/* Left Column - Rankings */}

@@ -5,6 +5,7 @@
  * API specification
  * OpenAPI spec version: 0.1.0
  */
+import type { PublicationAttachment } from './publicationAttachment';
 
 export interface Publication {
   id: number;
@@ -30,6 +31,7 @@ export interface Publication {
   /** @nullable */
   pnrrMission?: string | null;
   isPnrr: boolean;
+  attachments?: PublicationAttachment[];
   isNew: boolean;
   firstSeenAt: string;
 }

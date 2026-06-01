@@ -29,6 +29,7 @@ import type {
   FeedStatus,
   FollowInput,
   GetContractsAnalyticsParams,
+  GetPublicationsTimelineParams,
   HealthStatus,
   ListContractsParams,
   ListConvocazioniParams,
@@ -51,6 +52,8 @@ import type {
   OversightOpinionDetail,
   PnrrCensus,
   Publication,
+  PublicationCategoryStat,
+  PublicationsTimeline,
   Question,
   QuestionInput,
   QuestionUpdateInput,
@@ -3989,6 +3992,167 @@ export function useGetShareStats<TData = Awaited<ReturnType<typeof getShareStats
  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
 
   const queryOptions = getGetShareStatsQueryOptions(options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
+
+
+
+export const getGetPublicationsTimelineUrl = (params?: GetPublicationsTimelineParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : value.toString())
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/stats/publications-timeline?${stringifiedParams}` : `/api/stats/publications-timeline`
+}
+
+/**
+ * @summary Albo publications counted per day over a recent window
+ */
+export const getPublicationsTimeline = async (params?: GetPublicationsTimelineParams, options?: RequestInit): Promise<PublicationsTimeline> => {
+
+  return customFetch<PublicationsTimeline>(getGetPublicationsTimelineUrl(params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetPublicationsTimelineQueryKey = (params?: GetPublicationsTimelineParams,) => {
+    return [
+    `/api/stats/publications-timeline`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getGetPublicationsTimelineQueryOptions = <TData = Awaited<ReturnType<typeof getPublicationsTimeline>>, TError = ErrorType<unknown>>(params?: GetPublicationsTimelineParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getPublicationsTimeline>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetPublicationsTimelineQueryKey(params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getPublicationsTimeline>>> = ({ signal }) => getPublicationsTimeline(params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getPublicationsTimeline>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetPublicationsTimelineQueryResult = NonNullable<Awaited<ReturnType<typeof getPublicationsTimeline>>>
+export type GetPublicationsTimelineQueryError = ErrorType<unknown>
+
+
+/**
+ * @summary Albo publications counted per day over a recent window
+ */
+
+export function useGetPublicationsTimeline<TData = Awaited<ReturnType<typeof getPublicationsTimeline>>, TError = ErrorType<unknown>>(
+ params?: GetPublicationsTimelineParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getPublicationsTimeline>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetPublicationsTimelineQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
+
+
+
+export const getGetPublicationsCategoriesUrl = () => {
+
+
+
+
+  return `/api/stats/publications-categories`
+}
+
+/**
+ * @summary Albo publication counts grouped by macro-category
+ */
+export const getPublicationsCategories = async ( options?: RequestInit): Promise<PublicationCategoryStat[]> => {
+
+  return customFetch<PublicationCategoryStat[]>(getGetPublicationsCategoriesUrl(),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetPublicationsCategoriesQueryKey = () => {
+    return [
+    `/api/stats/publications-categories`
+    ] as const;
+    }
+
+
+export const getGetPublicationsCategoriesQueryOptions = <TData = Awaited<ReturnType<typeof getPublicationsCategories>>, TError = ErrorType<unknown>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getPublicationsCategories>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetPublicationsCategoriesQueryKey();
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getPublicationsCategories>>> = ({ signal }) => getPublicationsCategories({ signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getPublicationsCategories>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetPublicationsCategoriesQueryResult = NonNullable<Awaited<ReturnType<typeof getPublicationsCategories>>>
+export type GetPublicationsCategoriesQueryError = ErrorType<unknown>
+
+
+/**
+ * @summary Albo publication counts grouped by macro-category
+ */
+
+export function useGetPublicationsCategories<TData = Awaited<ReturnType<typeof getPublicationsCategories>>, TError = ErrorType<unknown>>(
+  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getPublicationsCategories>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetPublicationsCategoriesQueryOptions(options)
 
   const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
 

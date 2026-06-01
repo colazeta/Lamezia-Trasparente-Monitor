@@ -792,6 +792,14 @@ export const ListPublicationsResponseItem = zod.object({
   "cups": zod.array(zod.string()),
   "pnrrMission": zod.string().nullish(),
   "isPnrr": zod.boolean(),
+  "attachments": zod.array(zod.object({
+  "name": zod.string(),
+  "tipo": zod.string(),
+  "officialUrl": zod.string().describe('Direct download link to the specific document on the official portal'),
+  "storagePath": zod.string().nullable().describe('Path of the locally-archived copy, or null if not archived'),
+  "contentType": zod.string().nullable(),
+  "size": zod.number().nullable()
+})).optional(),
   "isNew": zod.boolean(),
   "firstSeenAt": zod.string()
 })
@@ -838,6 +846,14 @@ export const ListDelibereResponseItem = zod.object({
   "cups": zod.array(zod.string()),
   "pnrrMission": zod.string().nullish(),
   "isPnrr": zod.boolean(),
+  "attachments": zod.array(zod.object({
+  "name": zod.string(),
+  "tipo": zod.string(),
+  "officialUrl": zod.string().describe('Direct download link to the specific document on the official portal'),
+  "storagePath": zod.string().nullable().describe('Path of the locally-archived copy, or null if not archived'),
+  "contentType": zod.string().nullable(),
+  "size": zod.number().nullable()
+})).optional(),
   "isNew": zod.boolean(),
   "firstSeenAt": zod.string()
 })
@@ -867,6 +883,14 @@ export const ListConvocazioniResponseItem = zod.object({
   "cups": zod.array(zod.string()),
   "pnrrMission": zod.string().nullish(),
   "isPnrr": zod.boolean(),
+  "attachments": zod.array(zod.object({
+  "name": zod.string(),
+  "tipo": zod.string(),
+  "officialUrl": zod.string().describe('Direct download link to the specific document on the official portal'),
+  "storagePath": zod.string().nullable().describe('Path of the locally-archived copy, or null if not archived'),
+  "contentType": zod.string().nullable(),
+  "size": zod.number().nullable()
+})).optional(),
   "isNew": zod.boolean(),
   "firstSeenAt": zod.string()
 })
@@ -896,6 +920,14 @@ export const GetSedutaResponse = zod.object({
   "cups": zod.array(zod.string()),
   "pnrrMission": zod.string().nullish(),
   "isPnrr": zod.boolean(),
+  "attachments": zod.array(zod.object({
+  "name": zod.string(),
+  "tipo": zod.string(),
+  "officialUrl": zod.string().describe('Direct download link to the specific document on the official portal'),
+  "storagePath": zod.string().nullable().describe('Path of the locally-archived copy, or null if not archived'),
+  "contentType": zod.string().nullable(),
+  "size": zod.number().nullable()
+})).optional(),
   "isNew": zod.boolean(),
   "firstSeenAt": zod.string()
 }).and(zod.object({
@@ -959,6 +991,14 @@ export const UpsertSedutaReportResponse = zod.object({
   "cups": zod.array(zod.string()),
   "pnrrMission": zod.string().nullish(),
   "isPnrr": zod.boolean(),
+  "attachments": zod.array(zod.object({
+  "name": zod.string(),
+  "tipo": zod.string(),
+  "officialUrl": zod.string().describe('Direct download link to the specific document on the official portal'),
+  "storagePath": zod.string().nullable().describe('Path of the locally-archived copy, or null if not archived'),
+  "contentType": zod.string().nullable(),
+  "size": zod.number().nullable()
+})).optional(),
   "isNew": zod.boolean(),
   "firstSeenAt": zod.string()
 }).and(zod.object({
@@ -1116,6 +1156,14 @@ export const ListPnrrProjectsResponse = zod.object({
   "cups": zod.array(zod.string()),
   "pnrrMission": zod.string().nullish(),
   "isPnrr": zod.boolean(),
+  "attachments": zod.array(zod.object({
+  "name": zod.string(),
+  "tipo": zod.string(),
+  "officialUrl": zod.string().describe('Direct download link to the specific document on the official portal'),
+  "storagePath": zod.string().nullable().describe('Path of the locally-archived copy, or null if not archived'),
+  "contentType": zod.string().nullable(),
+  "size": zod.number().nullable()
+})).optional(),
   "isNew": zod.boolean(),
   "firstSeenAt": zod.string()
 }))
@@ -1136,6 +1184,14 @@ export const ListPnrrProjectsResponse = zod.object({
   "cups": zod.array(zod.string()),
   "pnrrMission": zod.string().nullish(),
   "isPnrr": zod.boolean(),
+  "attachments": zod.array(zod.object({
+  "name": zod.string(),
+  "tipo": zod.string(),
+  "officialUrl": zod.string().describe('Direct download link to the specific document on the official portal'),
+  "storagePath": zod.string().nullable().describe('Path of the locally-archived copy, or null if not archived'),
+  "contentType": zod.string().nullable(),
+  "size": zod.number().nullable()
+})).optional(),
   "isNew": zod.boolean(),
   "firstSeenAt": zod.string()
 }))
@@ -1380,6 +1436,14 @@ export const GetDeliberaVotesResponse = zod.object({
   "cups": zod.array(zod.string()),
   "pnrrMission": zod.string().nullish(),
   "isPnrr": zod.boolean(),
+  "attachments": zod.array(zod.object({
+  "name": zod.string(),
+  "tipo": zod.string(),
+  "officialUrl": zod.string().describe('Direct download link to the specific document on the official portal'),
+  "storagePath": zod.string().nullable().describe('Path of the locally-archived copy, or null if not archived'),
+  "contentType": zod.string().nullable(),
+  "size": zod.number().nullable()
+})).optional(),
   "isNew": zod.boolean(),
   "firstSeenAt": zod.string()
 }),
@@ -1504,6 +1568,32 @@ export const GetShareStatsResponseItem = zod.object({
   "count": zod.number()
 })
 export const GetShareStatsResponse = zod.array(GetShareStatsResponseItem)
+
+
+/**
+ * @summary Albo publications counted per day over a recent window
+ */
+export const GetPublicationsTimelineQueryParams = zod.object({
+  "days": zod.coerce.number().optional().describe('Size of the look-back window in days (default 90, max 365)')
+})
+
+export const GetPublicationsTimelineResponse = zod.object({
+  "days": zod.number(),
+  "points": zod.array(zod.object({
+  "day": zod.string().describe('Day bucket (YYYY-MM-DD)'),
+  "count": zod.number()
+}))
+})
+
+
+/**
+ * @summary Albo publication counts grouped by macro-category
+ */
+export const GetPublicationsCategoriesResponseItem = zod.object({
+  "category": zod.string(),
+  "count": zod.number()
+})
+export const GetPublicationsCategoriesResponse = zod.array(GetPublicationsCategoriesResponseItem)
 
 
 /**
