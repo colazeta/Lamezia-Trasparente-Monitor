@@ -21,6 +21,19 @@ environment network limit, NOT a code bug. The ingestion catches it and writes a
 which `GET /performance/feed-status` surfaces. Expect real data only where the
 host is reachable (e.g. production).
 
+**Catalog must be seeded separately (isolated-env gotcha):** ingestion NEVER
+creates categories/indicators — it only fills value rows for indicators whose
+`external_key` already exists and `updateMode='automatic'`. The catalog
+(categories + indicators) is created only by `seedPerformance()` in
+`lib/db/src/seed.ts`, which the top-level `seed()` skips whenever sample
+contracts already exist. So in a fresh/isolated DB the performance tables may be
+absent or empty: run `pnpm -C lib/db push` to create the tables, then run the
+catalog upsert (categories/indicators) directly — a tiny tsx script importing
+`PERFORMANCE_CATEGORIES`/`PERFORMANCE_INDICATORS` + the tables from
+`@workspace/db` works, since `seedPerformance` is not exported. Empty `values`
+arrays afterward are expected (ISTAT unreachable + manual indicators unseeded),
+not a UI bug — the screens show "Dato non disponibile" / "Nessun dato".
+
 **How to apply / extend:** add more series to the `ISTAT_SERIES` config array in
 `artifacts/api-server/src/lib/performanceIndicators.ts`; each entry's
 `externalKey` must match a `performance_indicators.external_key` whose

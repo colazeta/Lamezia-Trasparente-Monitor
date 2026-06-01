@@ -62,6 +62,12 @@ const SECTIONS: Section[] = [
     subtitle: "Catalogo dei dataset aperti del Comune",
     icon: "database",
   },
+  {
+    href: "/performance",
+    title: "Performance del Comune",
+    subtitle: "Indicatori e qualità della vita nel tempo",
+    icon: "bar-chart-2",
+  },
 ];
 
 export default function MonitorScreen() {

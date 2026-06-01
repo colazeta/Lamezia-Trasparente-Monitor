@@ -58,6 +58,8 @@ function RootLayoutNav() {
       <Stack.Screen name="pnrr" options={{ title: "PNRR" }} />
       <Stack.Screen name="opendata/index" options={{ title: "Opendata" }} />
       <Stack.Screen name="opendata/[id]" options={{ title: "Dataset" }} />
+      <Stack.Screen name="performance/index" options={{ title: "Performance del Comune" }} />
+      <Stack.Screen name="performance/[id]" options={{ title: "Indicatore" }} />
       <Stack.Screen name="convocazioni/index" options={{ title: "Convocazioni" }} />
       <Stack.Screen name="convocazioni/[id]" options={{ title: "Seduta" }} />
       <Stack.Screen name="organi/index" options={{ title: "Organi" }} />
