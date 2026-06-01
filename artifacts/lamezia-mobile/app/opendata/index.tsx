@@ -28,6 +28,7 @@ export default function OpendataScreen() {
   const [input, setInput] = useState("");
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState<string | undefined>(undefined);
+  const [theme, setTheme] = useState<string | undefined>(undefined);
 
   useEffect(() => {
     const t = setTimeout(() => setSearch(input.trim()), 400);
@@ -61,7 +62,30 @@ export default function OpendataScreen() {
     [categories],
   );
 
-  const items = datasets.data ?? [];
+  const themes = useMemo(() => {
+    const set = new Set<string>();
+    (datasets.data ?? []).forEach((d) => {
+      if (d.theme) set.add(d.theme);
+    });
+    return Array.from(set).sort((a, b) => a.localeCompare(b));
+  }, [datasets.data]);
+
+  const themeOptions = useMemo(
+    () => [
+      { label: "Tutti i temi", value: undefined as string | undefined },
+      ...themes.map((t) => ({ label: t, value: t as string | undefined })),
+    ],
+    [themes],
+  );
+
+  useEffect(() => {
+    if (theme && !themes.includes(theme)) setTheme(undefined);
+  }, [themes, theme]);
+
+  const items = useMemo(() => {
+    const list = datasets.data ?? [];
+    return theme ? list.filter((d) => d.theme === theme) : list;
+  }, [datasets.data, theme]);
 
   const Header = (
     <View style={styles.headerArea}>
@@ -73,6 +97,15 @@ export default function OpendataScreen() {
           getLabel={(o) => o.label}
           getValue={(o) => o.value}
           onSelect={(v) => setCategory(v as string | undefined)}
+        />
+      ) : null}
+      {themes.length > 0 ? (
+        <ChipRow
+          options={themeOptions}
+          selected={theme}
+          getLabel={(o) => o.label}
+          getValue={(o) => o.value}
+          onSelect={(v) => setTheme(v as string | undefined)}
         />
       ) : null}
       <Text style={[styles.resultCount, { color: colors.mutedForeground }]}>
@@ -120,7 +153,7 @@ export default function OpendataScreen() {
             <EmptyState
               icon="database"
               title="Nessun dataset"
-              message="Nessun dataset corrisponde alla ricerca."
+              message="Nessun dataset corrisponde ai filtri attivi."
             />
           }
         />
