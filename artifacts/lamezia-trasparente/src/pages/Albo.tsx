@@ -3,9 +3,11 @@ import {
   useListPublications,
   useGetFeedStatus,
 } from "@workspace/api-client-react";
-import { Search, Filter, ShieldAlert, Calendar, RefreshCw } from "lucide-react";
+import { Search, Filter, ShieldAlert, Calendar, RefreshCw, Info } from "lucide-react";
 import { format } from "date-fns";
 import { it } from "date-fns/locale";
+import { Link } from "wouter";
+import { MONITORING_DOCS_NOTICE } from "@/lib/monitoring";
 
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -108,6 +110,19 @@ export function Albo() {
         <span className="text-muted-foreground">
           Aggiornamento automatico ogni 3 ore
         </span>
+      </div>
+
+      <div className="mb-8 flex items-start gap-3 rounded-xl border border-border bg-muted/40 px-4 py-3 text-sm text-muted-foreground">
+        <Info className="mt-0.5 h-4 w-4 shrink-0 text-brand" />
+        <p>
+          {MONITORING_DOCS_NOTICE}{" "}
+          <Link
+            href="/metodologia"
+            className="font-medium text-foreground underline underline-offset-2 hover:text-brand transition-colors"
+          >
+            Scopri di più
+          </Link>
+        </p>
       </div>
 
       <div className="flex flex-col md:flex-row flex-wrap gap-4 mb-8 p-4 bg-muted/40 rounded-xl border border-border shadow-sm">

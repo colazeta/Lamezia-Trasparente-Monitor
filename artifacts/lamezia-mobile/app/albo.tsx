@@ -2,9 +2,13 @@ import { Feather } from "@expo/vector-icons";
 import React, { useEffect, useMemo, useState } from "react";
 import { FlatList, Platform, StyleSheet, Text, View } from "react-native";
 
-import { Badge, Card, EmptyState, SearchBar, Skeleton } from "@/components/ui";
+import { Badge, Card, EmptyState, NoticeBanner, SearchBar, Skeleton } from "@/components/ui";
 import { useColors } from "@/hooks/useColors";
 import { formatDateOpt, intentColors } from "@/lib/civic";
+import {
+  MONITORING_NOTICE_BODY,
+  MONITORING_NOTICE_TITLE,
+} from "@/lib/monitoring";
 import {
   useGetFeedStatus,
   useListPublications,
@@ -45,6 +49,10 @@ export default function AlboScreen() {
             </Text>
           </View>
         ) : null}
+        <NoticeBanner
+          title={MONITORING_NOTICE_TITLE}
+          message={MONITORING_NOTICE_BODY}
+        />
       </View>
 
       {pubs.isLoading ? (

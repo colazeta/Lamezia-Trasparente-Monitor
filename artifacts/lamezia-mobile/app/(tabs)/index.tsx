@@ -12,8 +12,12 @@ import {
 } from "react-native";
 
 import { ThemeCard } from "@/components/ThemeCard";
-import { Card, EmptyState, ScreenHeader, Skeleton } from "@/components/ui";
+import { Card, EmptyState, NoticeBanner, ScreenHeader, Skeleton } from "@/components/ui";
 import { useColors } from "@/hooks/useColors";
+import {
+  MONITORING_NOTICE_BODY,
+  MONITORING_NOTICE_TITLE,
+} from "@/lib/monitoring";
 import { compactAmount, formatDate, questionIcon, resolveQuestionHref } from "@/lib/civic";
 import {
   useGetRecentActivity,
@@ -103,6 +107,14 @@ export default function HomeScreen() {
             </View>
           </Card>
         ) : null}
+
+        {/* Avviso data inizio monitoraggio */}
+        <View style={{ marginTop: 14 }}>
+          <NoticeBanner
+            title={MONITORING_NOTICE_TITLE}
+            message={MONITORING_NOTICE_BODY}
+          />
+        </View>
 
         {/* Questions entry point */}
         {questions.isLoading ? (

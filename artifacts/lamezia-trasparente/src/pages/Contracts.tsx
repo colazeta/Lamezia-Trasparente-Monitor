@@ -31,9 +31,12 @@ import {
   Bus,
   Package,
   Wallet,
+  Info,
 } from "lucide-react";
+import { Link } from "wouter";
 import { format } from "date-fns";
 import { it } from "date-fns/locale";
+import { MONITORING_DOCS_NOTICE } from "@/lib/monitoring";
 import {
   BarChart,
   Bar,
@@ -235,6 +238,20 @@ export function Contracts() {
           Portale ANAC – Dati Appalti
           <ExternalLink className="h-3.5 w-3.5" />
         </a>
+      </div>
+
+      {/* Avviso data inizio monitoraggio */}
+      <div className="mb-8 flex items-start gap-3 rounded-xl border border-border bg-muted/40 px-4 py-3 text-sm text-muted-foreground">
+        <Info className="mt-0.5 h-4 w-4 shrink-0 text-brand" />
+        <p>
+          {MONITORING_DOCS_NOTICE}{" "}
+          <Link
+            href="/metodologia"
+            className="font-medium text-foreground underline underline-offset-2 hover:text-brand transition-colors"
+          >
+            Scopri di più
+          </Link>
+        </p>
       </div>
 
       {/* In cosa spende il Comune — spesa per macrotemi */}

@@ -19,6 +19,7 @@ import { PareriVigilanzaDetail } from "./pages/PareriVigilanzaDetail";
 import { Opendata } from "./pages/Opendata";
 import { OpendataDetail } from "./pages/OpendataDetail";
 import { Reports } from "./pages/Reports";
+import { Metodologia } from "./pages/Metodologia";
 import { Statistics } from "./pages/Statistics";
 import { Subscriptions } from "./pages/Subscriptions";
 import { AdminCronistoria } from "./pages/AdminCronistoria";
@@ -50,6 +51,7 @@ export function Router() {
         <Route path="/pareri/:id" component={PareriVigilanzaDetail} />
         <Route path="/segnalazioni" component={Reports} />
         <Route path="/statistiche" component={Statistics} />
+        <Route path="/metodologia" component={Metodologia} />
         <Route path="/iscrizioni" component={Subscriptions} />
         <Route path="/admin/cronistoria" component={AdminCronistoria} />
         <Route path="/admin/domande" component={AdminDomande} />

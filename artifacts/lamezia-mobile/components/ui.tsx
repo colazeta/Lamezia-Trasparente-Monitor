@@ -255,6 +255,36 @@ export function EmptyState({
   );
 }
 
+export function NoticeBanner({
+  title,
+  message,
+  icon = "info",
+}: {
+  title: string;
+  message: string;
+  icon?: keyof typeof Feather.glyphMap;
+}) {
+  const colors = useColors();
+  return (
+    <View
+      style={[
+        styles.notice,
+        {
+          backgroundColor: colors.muted,
+          borderColor: colors.border,
+          borderRadius: colors.radius + 2,
+        },
+      ]}
+    >
+      <Feather name={icon} size={16} color={colors.primary} style={{ marginTop: 1 }} />
+      <View style={{ flex: 1 }}>
+        <Text style={[styles.noticeTitle, { color: colors.foreground }]}>{title}</Text>
+        <Text style={[styles.noticeBody, { color: colors.mutedForeground }]}>{message}</Text>
+      </View>
+    </View>
+  );
+}
+
 export function SearchBar({
   value,
   onChangeText,
@@ -522,6 +552,23 @@ const styles = StyleSheet.create({
     fontFamily: "Inter_400Regular",
     fontSize: 15,
     height: "100%",
+  },
+  notice: {
+    flexDirection: "row",
+    alignItems: "flex-start",
+    gap: 10,
+    borderWidth: 1,
+    padding: 12,
+  },
+  noticeTitle: {
+    fontFamily: "Inter_600SemiBold",
+    fontSize: 13,
+  },
+  noticeBody: {
+    fontFamily: "Inter_400Regular",
+    fontSize: 12.5,
+    lineHeight: 17,
+    marginTop: 2,
   },
   chipRow: { gap: 8, paddingVertical: 2 },
   chip: {

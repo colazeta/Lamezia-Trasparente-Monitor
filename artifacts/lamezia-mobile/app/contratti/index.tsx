@@ -12,9 +12,13 @@ import {
   View,
 } from "react-native";
 
-import { Badge, Card, ChipRow, DateField, EmptyState, SearchBar, Skeleton } from "@/components/ui";
+import { Badge, Card, ChipRow, DateField, EmptyState, NoticeBanner, SearchBar, Skeleton } from "@/components/ui";
 import { useColors } from "@/hooks/useColors";
 import { compactAmount, formatAmount, formatDateOpt, intentColors } from "@/lib/civic";
+import {
+  MONITORING_NOTICE_BODY,
+  MONITORING_NOTICE_TITLE,
+} from "@/lib/monitoring";
 import {
   useGetContractsAnalytics,
   useGetContractsFeedStatus,
@@ -119,6 +123,10 @@ export default function ContrattiScreen() {
   const Header = (
     <View style={styles.headerArea}>
       <FeedBanner feedStatus={feedStatus.data} />
+      <NoticeBanner
+        title={MONITORING_NOTICE_TITLE}
+        message={MONITORING_NOTICE_BODY}
+      />
       <Analytics loading={analytics.isLoading} analytics={analytics.data} />
       {procedures.length > 1 ? (
         <ChipRow
