@@ -56,6 +56,12 @@ const SECTIONS: Section[] = [
     subtitle: "Chi governa la città e come vota",
     icon: "users",
   },
+  {
+    href: "/opendata",
+    title: "Opendata",
+    subtitle: "Catalogo dei dataset aperti del Comune",
+    icon: "database",
+  },
 ];
 
 export default function MonitorScreen() {

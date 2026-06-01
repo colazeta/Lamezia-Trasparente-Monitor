@@ -56,6 +56,8 @@ function RootLayoutNav() {
       <Stack.Screen name="contratti/index" options={{ title: "Appalti" }} />
       <Stack.Screen name="contratti/[id]" options={{ title: "Contratto" }} />
       <Stack.Screen name="pnrr" options={{ title: "PNRR" }} />
+      <Stack.Screen name="opendata/index" options={{ title: "Opendata" }} />
+      <Stack.Screen name="opendata/[id]" options={{ title: "Dataset" }} />
       <Stack.Screen name="convocazioni/index" options={{ title: "Convocazioni" }} />
       <Stack.Screen name="convocazioni/[id]" options={{ title: "Seduta" }} />
       <Stack.Screen name="organi/index" options={{ title: "Organi" }} />
