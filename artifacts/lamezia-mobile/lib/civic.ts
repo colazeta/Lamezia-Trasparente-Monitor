@@ -44,6 +44,17 @@ export function categoryLabel(value: string): string {
   return REPORT_CATEGORIES.find((c) => c.value === value)?.label ?? value;
 }
 
+// Presentazione del pulsante "rilevante" in base allo stato del segnale della
+// sorgente corrente: se ha già segnalato il tema l'azione diventa un ritiro.
+export function relevanceAction(
+  signalled: boolean,
+  count: number,
+): { label: string; icon: "alert-circle" | "check-circle" } {
+  return signalled
+    ? { label: `Ritira · ${count}`, icon: "check-circle" }
+    : { label: `Segna rilevante · ${count}`, icon: "alert-circle" };
+}
+
 export const OFFICIAL_ROLES: { value: string; label: string }[] = [
   { value: "sindaco", label: "Sindaco" },
   { value: "assessore", label: "Assessori" },

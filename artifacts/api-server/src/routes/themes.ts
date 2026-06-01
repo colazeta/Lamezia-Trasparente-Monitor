@@ -94,6 +94,8 @@ router.get("/themes", async (req, res) => {
         ? desc(themesTable.shareCount)
         : desc(themesTable.updatedAt);
 
+  const dedupeKey = relevanceDedupeKey(req);
+
   const rows = await db
     .select({
       id: themesTable.id,
@@ -106,6 +108,7 @@ router.get("/themes", async (req, res) => {
       relevanceCount: themesTable.relevanceCount,
       shareCount: themesTable.shareCount,
       followerCount: themesTable.followerCount,
+      signalled: hasSignalledExpr(dedupeKey),
       updatedAt: themesTable.updatedAt,
     })
     .from(themesTable)
@@ -125,6 +128,8 @@ router.get("/themes/:id", async (req, res) => {
     return;
   }
 
+  const dedupeKey = relevanceDedupeKey(req);
+
   const [theme] = await db
     .select({
       id: themesTable.id,
@@ -138,6 +143,7 @@ router.get("/themes/:id", async (req, res) => {
       relevanceCount: themesTable.relevanceCount,
       shareCount: themesTable.shareCount,
       followerCount: themesTable.followerCount,
+      signalled: hasSignalledExpr(dedupeKey),
       updatedAt: themesTable.updatedAt,
     })
     .from(themesTable)
@@ -388,6 +394,32 @@ function requestSourceKey(req: Request): string {
   return createHash("sha256").update(source).digest("hex");
 }
 
+// Espressione SQL booleana che indica se la sorgente corrente (identificata
+// dalla chiave anti-abuso) ha già segnalato il tema. Viene usata nelle query di
+// lettura per riflettere lo stato del pulsante "rilevante" lato client.
+function hasSignalledExpr(dedupeKey: string) {
+  return sql<boolean>`EXISTS (SELECT 1 FROM ${themeRelevanceEventsTable} WHERE ${themeRelevanceEventsTable.themeId} = ${themesTable.id} AND ${themeRelevanceEventsTable.dedupeKey} = ${dedupeKey})`;
+}
+
+// Variante autonoma di `hasSignalledExpr`: verifica con una query se la sorgente
+// corrente ha già segnalato il tema. Usata dagli handler (share/follow) che
+// restituiscono il tema ma non leggono di per sé la tabella di rilevanza.
+async function isSignalled(
+  themeId: number,
+  dedupeKey: string,
+): Promise<boolean> {
+  const [row] = await db
+    .select({ id: themeRelevanceEventsTable.id })
+    .from(themeRelevanceEventsTable)
+    .where(
+      and(
+        eq(themeRelevanceEventsTable.themeId, themeId),
+        eq(themeRelevanceEventsTable.dedupeKey, dedupeKey),
+      ),
+    );
+  return !!row;
+}
+
 router.post("/themes/:id/relevant", async (req, res) => {
   const id = Number(req.params.id);
   if (Number.isNaN(id)) {
@@ -457,6 +489,83 @@ router.post("/themes/:id/relevant", async (req, res) => {
     relevanceCount: updated.relevanceCount,
     shareCount: updated.shareCount,
     followerCount: updated.followerCount,
+    signalled: true,
+    updatedAt: updated.updatedAt.toISOString(),
+  });
+});
+
+// Ritira un segnale di rilevanza inviato in precedenza dalla stessa sorgente.
+// Elimina la riga deduplicata e decrementa il contatore (con floor a 0). La
+// riconciliazione periodica ricalcola comunque un conteggio onesto dalle righe
+// della tabella sorgente, quindi il contatore resta coerente.
+router.delete("/themes/:id/relevant", async (req, res) => {
+  const id = Number(req.params.id);
+  if (Number.isNaN(id)) {
+    res.status(404).json({ error: "Tema non trovato" });
+    return;
+  }
+
+  const dedupeKey = relevanceDedupeKey(req);
+
+  const updated = await db.transaction(async (tx) => {
+    const [exists] = await tx
+      .select({ id: themesTable.id })
+      .from(themesTable)
+      .where(eq(themesTable.id, id));
+    if (!exists) {
+      return null;
+    }
+
+    const deleted = await tx
+      .delete(themeRelevanceEventsTable)
+      .where(
+        and(
+          eq(themeRelevanceEventsTable.themeId, id),
+          eq(themeRelevanceEventsTable.dedupeKey, dedupeKey),
+        ),
+      )
+      .returning();
+
+    if (deleted.length > 0) {
+      const [row] = await tx
+        .update(themesTable)
+        .set({
+          relevanceCount: sql`GREATEST(${themesTable.relevanceCount} - 1, 0)`,
+        })
+        .where(eq(themesTable.id, id))
+        .returning();
+      return row ?? null;
+    }
+
+    const [row] = await tx
+      .select()
+      .from(themesTable)
+      .where(eq(themesTable.id, id));
+    return row ?? null;
+  });
+
+  if (!updated) {
+    res.status(404).json({ error: "Tema non trovato" });
+    return;
+  }
+
+  const [category] = await db
+    .select({ name: categoriesTable.name })
+    .from(categoriesTable)
+    .where(eq(categoriesTable.id, updated.categoryId));
+
+  res.json({
+    id: updated.id,
+    title: updated.title,
+    slug: updated.slug,
+    summary: updated.summary,
+    categoryId: updated.categoryId,
+    categoryName: category?.name ?? "",
+    status: updated.status,
+    relevanceCount: updated.relevanceCount,
+    shareCount: updated.shareCount,
+    followerCount: updated.followerCount,
+    signalled: false,
     updatedAt: updated.updatedAt.toISOString(),
   });
 });
@@ -538,6 +647,7 @@ router.post("/themes/:id/share", async (req, res) => {
     relevanceCount: updated.relevanceCount,
     shareCount: updated.shareCount,
     followerCount: updated.followerCount,
+    signalled: await isSignalled(updated.id, relevanceDedupeKey(req)),
     updatedAt: updated.updatedAt.toISOString(),
   });
 });
@@ -642,6 +752,7 @@ router.post("/themes/:id/follow", async (req, res) => {
     relevanceCount: updated.relevanceCount,
     shareCount: updated.shareCount,
     followerCount: updated.followerCount,
+    signalled: await isSignalled(updated.id, relevanceDedupeKey(req)),
     updatedAt: updated.updatedAt.toISOString(),
   });
 });

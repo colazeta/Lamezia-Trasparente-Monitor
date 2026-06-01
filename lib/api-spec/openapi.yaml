@@ -141,6 +141,29 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
+    delete:
+      operationId: withdrawThemeRelevant
+      tags: [themes]
+      summary: Withdraw a previously sent relevance signal
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Updated theme
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Theme"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
 
   /themes/{id}/share:
     post:
@@ -1535,6 +1558,7 @@ components:
         - relevanceCount
         - shareCount
         - followerCount
+        - signalled
         - updatedAt
       properties:
         id:
@@ -1558,6 +1582,9 @@ components:
           type: integer
         followerCount:
           type: integer
+        signalled:
+          type: boolean
+          description: Whether the requesting source has already signalled this theme as relevant
         updatedAt:
           type: string
 
@@ -1575,6 +1602,7 @@ components:
         - relevanceCount
         - shareCount
         - followerCount
+        - signalled
         - updatedAt
         - documents
         - emails
@@ -1606,6 +1634,9 @@ components:
           type: integer
         followerCount:
           type: integer
+        signalled:
+          type: boolean
+          description: Whether the requesting source has already signalled this theme as relevant
         updatedAt:
           type: string
         documents:

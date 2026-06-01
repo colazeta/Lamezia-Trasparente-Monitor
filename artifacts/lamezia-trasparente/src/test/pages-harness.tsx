@@ -78,6 +78,7 @@ vi.mock("@workspace/api-client-react", () => {
     "useRequestUploadUrl",
     "useShareTheme",
     "useUpdateThemePost",
+    "useWithdrawThemeRelevant",
   ];
   const QUERY_KEYS = [
     "getGetOfficialQueryKey",

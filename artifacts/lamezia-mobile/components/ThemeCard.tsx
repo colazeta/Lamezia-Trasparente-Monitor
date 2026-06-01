@@ -44,12 +44,16 @@ export function ThemeCard({ theme }: { theme: Theme }) {
 
       <View style={[styles.footer, { borderTopColor: colors.border }]}>
         <View style={styles.metric}>
-          <Feather name="alert-circle" size={14} color={colors.primary} />
+          <Feather
+            name={theme.signalled ? "check-circle" : "alert-circle"}
+            size={14}
+            color={theme.signalled ? colors.primary : colors.mutedForeground}
+          />
           <Text style={[styles.metricText, { color: colors.foreground }]}>
             {theme.relevanceCount}
           </Text>
           <Text style={[styles.metricLabel, { color: colors.mutedForeground }]}>
-            rilevante
+            {theme.signalled ? "segnalato" : "rilevante"}
           </Text>
         </View>
         <View style={styles.metric}>

@@ -926,6 +926,125 @@ describe("POST /api/themes/:id/relevant", () => {
     const res = await request(app).post("/api/themes/99999999/relevant");
     expect(res.status).toBe(404);
   });
+
+  it("reports the signalled state for the requesting source", async () => {
+    const before = await request(app)
+      .get(`/api/themes/${themeId}`)
+      .set("X-Forwarded-For", "203.0.113.50");
+    expect(before.body.signalled).toBe(false);
+
+    const signal = await request(app)
+      .post(`/api/themes/${themeId}/relevant`)
+      .set("X-Forwarded-For", "203.0.113.50");
+    expect(signal.body.signalled).toBe(true);
+
+    const after = await request(app)
+      .get(`/api/themes/${themeId}`)
+      .set("X-Forwarded-For", "203.0.113.50");
+    expect(after.body.signalled).toBe(true);
+
+    // A different source has not signalled.
+    const other = await request(app)
+      .get(`/api/themes/${themeId}`)
+      .set("X-Forwarded-For", "203.0.113.51");
+    expect(other.body.signalled).toBe(false);
+  });
+});
+
+describe("DELETE /api/themes/:id/relevant", () => {
+  it("withdraws a signal, removes the event and decrements the count", async () => {
+    const signal = await request(app)
+      .post(`/api/themes/${themeId}/relevant`)
+      .set("X-Forwarded-For", "203.0.113.60");
+    expect(signal.body.relevanceCount).toBe(1);
+    expect(await getRelevanceCount(themeId)).toBe(1);
+
+    const withdraw = await request(app)
+      .delete(`/api/themes/${themeId}/relevant`)
+      .set("X-Forwarded-For", "203.0.113.60");
+    expect(withdraw.status).toBe(200);
+    expect(withdraw.body.relevanceCount).toBe(0);
+    expect(withdraw.body.signalled).toBe(false);
+    expect(await getRelevanceCount(themeId)).toBe(0);
+
+    const events = await db
+      .select()
+      .from(themeRelevanceEventsTable)
+      .where(eq(themeRelevanceEventsTable.themeId, themeId));
+    expect(events).toHaveLength(0);
+  });
+
+  it("only withdraws the signal of the requesting source", async () => {
+    await request(app)
+      .post(`/api/themes/${themeId}/relevant`)
+      .set("X-Forwarded-For", "203.0.113.70");
+    await request(app)
+      .post(`/api/themes/${themeId}/relevant`)
+      .set("X-Forwarded-For", "203.0.113.71");
+    expect(await getRelevanceCount(themeId)).toBe(2);
+
+    const withdraw = await request(app)
+      .delete(`/api/themes/${themeId}/relevant`)
+      .set("X-Forwarded-For", "203.0.113.70");
+    expect(withdraw.body.relevanceCount).toBe(1);
+    expect(await getRelevanceCount(themeId)).toBe(1);
+  });
+
+  it("is a no-op when the source never signalled (count stays floored at 0)", async () => {
+    expect(await getRelevanceCount(themeId)).toBe(0);
+
+    const withdraw = await request(app)
+      .delete(`/api/themes/${themeId}/relevant`)
+      .set("X-Forwarded-For", "203.0.113.80");
+    expect(withdraw.status).toBe(200);
+    expect(withdraw.body.relevanceCount).toBe(0);
+    expect(withdraw.body.signalled).toBe(false);
+    expect(await getRelevanceCount(themeId)).toBe(0);
+  });
+
+  it("lets a source re-signal after withdrawing", async () => {
+    await request(app)
+      .post(`/api/themes/${themeId}/relevant`)
+      .set("X-Forwarded-For", "203.0.113.90");
+    await request(app)
+      .delete(`/api/themes/${themeId}/relevant`)
+      .set("X-Forwarded-For", "203.0.113.90");
+    expect(await getRelevanceCount(themeId)).toBe(0);
+
+    const again = await request(app)
+      .post(`/api/themes/${themeId}/relevant`)
+      .set("X-Forwarded-For", "203.0.113.90");
+    expect(again.body.relevanceCount).toBe(1);
+    expect(again.body.signalled).toBe(true);
+    expect(await getRelevanceCount(themeId)).toBe(1);
+  });
+
+  it("returns 404 for an unknown theme", async () => {
+    const res = await request(app).delete("/api/themes/99999999/relevant");
+    expect(res.status).toBe(404);
+  });
+
+  it("reconciles an honest count after withdrawals", async () => {
+    await request(app)
+      .post(`/api/themes/${themeId}/relevant`)
+      .set("X-Forwarded-For", "192.0.2.10");
+    await request(app)
+      .post(`/api/themes/${themeId}/relevant`)
+      .set("X-Forwarded-For", "192.0.2.11");
+    await request(app)
+      .delete(`/api/themes/${themeId}/relevant`)
+      .set("X-Forwarded-For", "192.0.2.10");
+    expect(await getRelevanceCount(themeId)).toBe(1);
+
+    await db
+      .update(themesTable)
+      .set({ relevanceCount: 42 })
+      .where(eq(themesTable.id, themeId));
+
+    await reconcileThemeCounters();
+
+    expect(await getRelevanceCount(themeId)).toBe(1);
+  });
 });
 
 describe("reconcileThemeCounters", () => {

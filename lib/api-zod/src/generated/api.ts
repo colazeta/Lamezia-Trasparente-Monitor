@@ -50,6 +50,7 @@ export const ListThemesResponseItem = zod.object({
   "relevanceCount": zod.number(),
   "shareCount": zod.number(),
   "followerCount": zod.number(),
+  "signalled": zod.boolean().describe('Whether the requesting source has already signalled this theme as relevant'),
   "updatedAt": zod.string()
 })
 export const ListThemesResponse = zod.array(ListThemesResponseItem)
@@ -74,6 +75,7 @@ export const GetThemeResponse = zod.object({
   "relevanceCount": zod.number(),
   "shareCount": zod.number(),
   "followerCount": zod.number(),
+  "signalled": zod.boolean().describe('Whether the requesting source has already signalled this theme as relevant'),
   "updatedAt": zod.string(),
   "documents": zod.array(zod.object({
   "id": zod.number(),
@@ -157,6 +159,30 @@ export const MarkThemeRelevantResponse = zod.object({
   "relevanceCount": zod.number(),
   "shareCount": zod.number(),
   "followerCount": zod.number(),
+  "signalled": zod.boolean().describe('Whether the requesting source has already signalled this theme as relevant'),
+  "updatedAt": zod.string()
+})
+
+
+/**
+ * @summary Withdraw a previously sent relevance signal
+ */
+export const WithdrawThemeRelevantParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const WithdrawThemeRelevantResponse = zod.object({
+  "id": zod.number(),
+  "title": zod.string(),
+  "slug": zod.string(),
+  "summary": zod.string(),
+  "categoryId": zod.number(),
+  "categoryName": zod.string(),
+  "status": zod.enum(['aperto', 'in_corso', 'monitoraggio', 'chiuso']),
+  "relevanceCount": zod.number(),
+  "shareCount": zod.number(),
+  "followerCount": zod.number(),
+  "signalled": zod.boolean().describe('Whether the requesting source has already signalled this theme as relevant'),
   "updatedAt": zod.string()
 })
 
@@ -183,6 +209,7 @@ export const ShareThemeResponse = zod.object({
   "relevanceCount": zod.number(),
   "shareCount": zod.number(),
   "followerCount": zod.number(),
+  "signalled": zod.boolean().describe('Whether the requesting source has already signalled this theme as relevant'),
   "updatedAt": zod.string()
 })
 
@@ -209,6 +236,7 @@ export const FollowThemeResponse = zod.object({
   "relevanceCount": zod.number(),
   "shareCount": zod.number(),
   "followerCount": zod.number(),
+  "signalled": zod.boolean().describe('Whether the requesting source has already signalled this theme as relevant'),
   "updatedAt": zod.string()
 })
 
@@ -1435,6 +1463,7 @@ export const GetTopThemesResponse = zod.object({
   "relevanceCount": zod.number(),
   "shareCount": zod.number(),
   "followerCount": zod.number(),
+  "signalled": zod.boolean().describe('Whether the requesting source has already signalled this theme as relevant'),
   "updatedAt": zod.string()
 })),
   "byShares": zod.array(zod.object({
@@ -1448,6 +1477,7 @@ export const GetTopThemesResponse = zod.object({
   "relevanceCount": zod.number(),
   "shareCount": zod.number(),
   "followerCount": zod.number(),
+  "signalled": zod.boolean().describe('Whether the requesting source has already signalled this theme as relevant'),
   "updatedAt": zod.string()
 }))
 })

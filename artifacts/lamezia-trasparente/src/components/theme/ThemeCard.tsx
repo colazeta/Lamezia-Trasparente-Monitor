@@ -2,7 +2,7 @@ import { ShieldAlert, BookOpen, AlertTriangle, Info, TrendingUp, HandCoins, User
 import { format } from "date-fns";
 import { it } from "date-fns/locale";
 
-import { useListCategories, useListThemes, useMarkThemeRelevant, getListThemesQueryKey } from "@workspace/api-client-react";
+import { useListCategories, useListThemes, useMarkThemeRelevant, useWithdrawThemeRelevant, getListThemesQueryKey } from "@workspace/api-client-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -25,18 +25,39 @@ const statusMap: Record<string, { label: string; variant: "default" | "secondary
 export function ThemeCard({ theme }: ThemeCardProps) {
   const queryClient = useQueryClient();
   const markRelevant = useMarkThemeRelevant();
-  
+  const withdrawRelevant = useWithdrawThemeRelevant();
+  const pending = markRelevant.isPending || withdrawRelevant.isPending;
+
   const handleRelevant = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    
+
+    const invalidate = () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/themes"] });
+      queryClient.invalidateQueries({ queryKey: [`/api/themes/${theme.id}`] });
+    };
+
+    if (theme.signalled) {
+      withdrawRelevant.mutate({ id: theme.id }, {
+        onSuccess: () => {
+          toast.success("Segnale ritirato", {
+            description: "Hai ritirato il tuo segnale di rilevanza per questo tema."
+          });
+          invalidate();
+        },
+        onError: () => {
+          toast.error("Errore", { description: "Non è stato possibile ritirare il segnale." });
+        }
+      });
+      return;
+    }
+
     markRelevant.mutate({ id: theme.id }, {
       onSuccess: () => {
         toast.success("Segnato come rilevante", {
           description: "Il tuo interesse aiuta a stabilire le priorità civiche."
         });
-        queryClient.invalidateQueries({ queryKey: ["/api/themes"] });
-        queryClient.invalidateQueries({ queryKey: [`/api/themes/${theme.id}`] });
+        invalidate();
       },
       onError: () => {
         toast.error("Errore", { description: "Non è stato possibile segnare il tema come rilevante." });
@@ -83,14 +104,16 @@ export function ThemeCard({ theme }: ThemeCardProps) {
             <Users className="h-4 w-4" />
             <span className="font-mono">{theme.followerCount}</span>
           </span>
-          <Button 
-            variant="ghost" 
-            size="sm" 
-            className="h-8 gap-1.5 text-xs text-muted-foreground hover:text-foreground"
+          <Button
+            variant="ghost"
+            size="sm"
+            className={`h-8 gap-1.5 text-xs ${theme.signalled ? "text-brand hover:text-brand" : "text-muted-foreground hover:text-foreground"}`}
             onClick={handleRelevant}
-            disabled={markRelevant.isPending}
+            disabled={pending}
+            title={theme.signalled ? "Ritira il segnale di rilevanza" : "Segna come rilevante"}
+            aria-pressed={theme.signalled}
           >
-            <HandCoins className="h-4 w-4" />
+            <HandCoins className={`h-4 w-4 ${theme.signalled ? "fill-current" : ""}`} />
             <span className="font-mono">{theme.relevanceCount}</span>
           </Button>
         </div>

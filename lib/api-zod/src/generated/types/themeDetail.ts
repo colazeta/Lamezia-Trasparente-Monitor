@@ -25,6 +25,8 @@ export interface ThemeDetail {
   relevanceCount: number;
   shareCount: number;
   followerCount: number;
+  /** Whether the requesting source has already signalled this theme as relevant */
+  signalled: boolean;
   updatedAt: string;
   documents: ThemeDocument[];
   emails: ThemeEmail[];

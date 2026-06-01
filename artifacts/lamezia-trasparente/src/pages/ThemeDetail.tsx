@@ -3,6 +3,7 @@ import { useParams, Link } from "wouter";
 import { 
   useGetTheme, 
   useMarkThemeRelevant, 
+  useWithdrawThemeRelevant,
   useShareTheme,
   useFollowTheme,
   getGetThemeQueryKey
@@ -63,8 +64,10 @@ export function ThemeDetail() {
   });
   
   const markRelevant = useMarkThemeRelevant();
+  const withdrawRelevant = useWithdrawThemeRelevant();
   const shareTheme = useShareTheme();
   const followTheme = useFollowTheme();
+  const relevantPending = markRelevant.isPending || withdrawRelevant.isPending;
 
   const [followEmail, setFollowEmail] = useState("");
   const [followed, setFollowed] = useState(false);
@@ -94,12 +97,30 @@ export function ThemeDetail() {
 
   const handleRelevant = () => {
     if (!theme) return;
+    const invalidate = () =>
+      queryClient.invalidateQueries({ queryKey: getGetThemeQueryKey(themeId) });
+
+    if (theme.signalled) {
+      withdrawRelevant.mutate({ id: themeId }, {
+        onSuccess: () => {
+          toast.success("Segnale ritirato", {
+            description: "Hai ritirato il tuo segnale di rilevanza per questo tema."
+          });
+          invalidate();
+        },
+        onError: () => {
+          toast.error("Errore", { description: "Non è stato possibile ritirare il segnale." });
+        }
+      });
+      return;
+    }
+
     markRelevant.mutate({ id: themeId }, {
       onSuccess: () => {
         toast.success("Segnato come rilevante", {
           description: "Il tuo interesse aiuta a stabilire le priorità civiche."
         });
-        queryClient.invalidateQueries({ queryKey: getGetThemeQueryKey(themeId) });
+        invalidate();
       },
       onError: () => {
         toast.error("Errore", { description: "Non è stato possibile segnare il tema." });
@@ -237,12 +258,13 @@ export function ThemeDetail() {
             <CardContent className="p-4 space-y-4">
               <Button 
                 onClick={handleRelevant} 
-                disabled={markRelevant.isPending}
-                variant="brand"
+                disabled={relevantPending}
+                variant={theme.signalled ? "outline" : "brand"}
                 className="w-full gap-2 h-12 text-base font-semibold"
+                aria-pressed={theme.signalled}
               >
-                <HandCoins className="h-5 w-5" />
-                Segna come Rilevante
+                <HandCoins className={`h-5 w-5 ${theme.signalled ? "fill-current" : ""}`} />
+                {theme.signalled ? "Ritira Rilevanza" : "Segna come Rilevante"}
               </Button>
               
               <DropdownMenu>

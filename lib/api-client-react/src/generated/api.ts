@@ -473,6 +473,76 @@ export const useMarkThemeRelevant = <TError = ErrorType<Error>,
       return useMutation(getMarkThemeRelevantMutationOptions(options));
     }
 
+export const getWithdrawThemeRelevantUrl = (id: number,) => {
+
+
+
+
+  return `/api/themes/${id}/relevant`
+}
+
+/**
+ * @summary Withdraw a previously sent relevance signal
+ */
+export const withdrawThemeRelevant = async (id: number, options?: RequestInit): Promise<Theme> => {
+
+  return customFetch<Theme>(getWithdrawThemeRelevantUrl(id),
+  {
+    ...options,
+    method: 'DELETE'
+
+
+  }
+);}
+
+
+
+
+export const getWithdrawThemeRelevantMutationOptions = <TError = ErrorType<Error>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof withdrawThemeRelevant>>, TError,{id: number}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof withdrawThemeRelevant>>, TError,{id: number}, TContext> => {
+
+const mutationKey = ['withdrawThemeRelevant'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof withdrawThemeRelevant>>, {id: number}> = (props) => {
+          const {id} = props ?? {};
+
+          return  withdrawThemeRelevant(id,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type WithdrawThemeRelevantMutationResult = NonNullable<Awaited<ReturnType<typeof withdrawThemeRelevant>>>
+
+    export type WithdrawThemeRelevantMutationError = ErrorType<Error>
+
+    /**
+ * @summary Withdraw a previously sent relevance signal
+ */
+export const useWithdrawThemeRelevant = <TError = ErrorType<Error>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof withdrawThemeRelevant>>, TError,{id: number}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof withdrawThemeRelevant>>,
+        TError,
+        {id: number},
+        TContext
+      > => {
+      return useMutation(getWithdrawThemeRelevantMutationOptions(options));
+    }
+
 export const getShareThemeUrl = (id: number,) => {
 
 

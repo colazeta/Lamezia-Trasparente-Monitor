@@ -22,11 +22,13 @@ import {
   formatAmount,
   formatDate,
   intentColors,
+  relevanceAction,
 } from "@/lib/civic";
 import {
   getGetThemeQueryKey,
   useGetTheme,
   useMarkThemeRelevant,
+  useWithdrawThemeRelevant,
   useShareTheme,
   type ShareInputChannel,
 } from "@workspace/api-client-react";
@@ -60,14 +62,17 @@ export default function ThemeDetailScreen() {
 
   const { data: theme, isLoading, error, refetch } = useGetTheme(themeId);
   const markRelevant = useMarkThemeRelevant();
+  const withdrawRelevant = useWithdrawThemeRelevant();
   const shareTheme = useShareTheme();
 
   const [tab, setTab] = useState<DetailTab>("documenti");
   const [shareOpen, setShareOpen] = useState(false);
 
   const onMarkRelevant = () => {
+    if (!theme) return;
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-    markRelevant.mutate(
+    const mutation = theme.signalled ? withdrawRelevant : markRelevant;
+    mutation.mutate(
       { id: themeId },
       {
         onSuccess: () =>
@@ -165,10 +170,11 @@ export default function ThemeDetailScreen() {
         <View style={styles.actions}>
           <View style={{ flex: 1 }}>
             <PrimaryButton
-              label={`Segna rilevante · ${theme.relevanceCount}`}
-              icon="alert-circle"
+              label={relevanceAction(theme.signalled, theme.relevanceCount).label}
+              icon={relevanceAction(theme.signalled, theme.relevanceCount).icon}
+              variant={theme.signalled ? "outline" : "primary"}
               onPress={onMarkRelevant}
-              loading={markRelevant.isPending}
+              loading={markRelevant.isPending || withdrawRelevant.isPending}
             />
           </View>
           <View style={{ flex: 1 }}>
