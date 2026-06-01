@@ -5,6 +5,7 @@
  * API specification
  * OpenAPI spec version: 0.1.0
  */
+import type { MacrotemaKey } from './macrotemaKey';
 
 export interface Contract {
   id: number;
@@ -29,4 +30,8 @@ export interface Contract {
   anacUrl?: string | null;
   /** @nullable */
   themeId?: number | null;
+  /** Spending-area key (ambiente, scuole, strade, …) or null */
+  macrotema?: MacrotemaKey | null;
+  /** True when an editor manually corrected the spending area */
+  macrotemaManual?: boolean;
 }

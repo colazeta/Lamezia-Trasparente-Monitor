@@ -67,6 +67,7 @@ import type {
   ThemePostInput,
   ThemePostUpdateInput,
   TopThemes,
+  UpdateContract,
   UploadUrlRequest,
   UploadUrlResponse
 } from './api.schemas';
@@ -1909,6 +1910,78 @@ export function useGetContract<TData = Awaited<ReturnType<typeof getContract>>, 
 
 
 
+
+export const getUpdateContractMacrotemaUrl = (id: number,) => {
+
+
+
+
+  return `/api/contracts/${id}`
+}
+
+/**
+ * @summary Update a contract's spending area (macrotema). Editor only.
+ */
+export const updateContractMacrotema = async (id: number,
+    updateContract: UpdateContract, options?: RequestInit): Promise<Contract> => {
+
+  return customFetch<Contract>(getUpdateContractMacrotemaUrl(id),
+  {
+    ...options,
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      updateContract,)
+  }
+);}
+
+
+
+
+export const getUpdateContractMacrotemaMutationOptions = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateContractMacrotema>>, TError,{id: number;data: BodyType<UpdateContract>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof updateContractMacrotema>>, TError,{id: number;data: BodyType<UpdateContract>}, TContext> => {
+
+const mutationKey = ['updateContractMacrotema'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof updateContractMacrotema>>, {id: number;data: BodyType<UpdateContract>}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  updateContractMacrotema(id,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type UpdateContractMacrotemaMutationResult = NonNullable<Awaited<ReturnType<typeof updateContractMacrotema>>>
+    export type UpdateContractMacrotemaMutationBody = BodyType<UpdateContract>
+    export type UpdateContractMacrotemaMutationError = ErrorType<void>
+
+    /**
+ * @summary Update a contract's spending area (macrotema). Editor only.
+ */
+export const useUpdateContractMacrotema = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateContractMacrotema>>, TError,{id: number;data: BodyType<UpdateContract>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof updateContractMacrotema>>,
+        TError,
+        {id: number;data: BodyType<UpdateContract>},
+        TContext
+      > => {
+      return useMutation(getUpdateContractMacrotemaMutationOptions(options));
+    }
 
 export const getListPublicationsUrl = (params?: ListPublicationsParams,) => {
   const normalizedParams = new URLSearchParams();

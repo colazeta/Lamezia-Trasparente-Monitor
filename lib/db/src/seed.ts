@@ -17,6 +17,7 @@ import {
   oversightOpinionsTable,
   oversightOpinionDocumentsTable,
 } from "./schema";
+import { classifyMacrotema } from "./macrotemi";
 
 type SeedContract = {
   cig: string;
@@ -1296,6 +1297,7 @@ export async function seed() {
         anacUrl: anacUrlForCig(c.cig),
         awardDate: new Date(c.awardDate),
         themeId: null,
+        macrotema: classifyMacrotema(`${c.title} ${c.description}`),
         firstSeenAt: now,
         lastSeenAt: now,
       })),

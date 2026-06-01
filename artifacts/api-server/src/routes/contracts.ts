@@ -2,6 +2,8 @@ import { Router, type IRouter } from "express";
 import { db, contractsTable, feedStatusTable } from "@workspace/db";
 import { and, eq, desc, gte, lte, ilike, or, type SQL } from "drizzle-orm";
 import { ANAC_SOURCE, ANAC_LABEL, ANAC_PORTAL_URL } from "../lib/anacContracts";
+import { isMacrotemaKey } from "@workspace/db";
+import { requireIngestAuth } from "../middlewares/requireIngestAuth";
 
 const router: IRouter = Router();
 
@@ -23,6 +25,8 @@ function mapContract(c: typeof contractsTable.$inferSelect) {
     withoutMepa: c.withoutMepa,
     anacUrl: c.anacUrl,
     themeId: c.themeId,
+    macrotema: c.macrotema,
+    macrotemaManual: c.macrotemaManual,
   };
 }
 
@@ -248,6 +252,37 @@ router.get("/contracts/:id", async (req, res) => {
     .from(contractsTable)
     .where(eq(contractsTable.id, id))
     .limit(1);
+
+  if (!row) {
+    res.status(404).json({ message: "Contratto non trovato" });
+    return;
+  }
+
+  res.json(mapContract(row));
+});
+
+// Correzione redazionale del macrotema (ambito di spesa) di un contratto.
+// Protetta dal token di ingestione: solo la redazione può ritaggare i
+// contratti. Una volta corretto a mano, l'ingestione non sovrascrive più la
+// scelta con la classificazione automatica.
+router.patch("/contracts/:id", requireIngestAuth, async (req, res) => {
+  const id = Number(req.params.id);
+  if (Number.isNaN(id)) {
+    res.status(404).json({ message: "Contratto non trovato" });
+    return;
+  }
+
+  const body = req.body as { macrotema?: unknown };
+  if (!("macrotema" in body) || !isMacrotemaKey(body.macrotema)) {
+    res.status(400).json({ message: "Ambito di spesa non valido" });
+    return;
+  }
+
+  const [row] = await db
+    .update(contractsTable)
+    .set({ macrotema: body.macrotema, macrotemaManual: true })
+    .where(eq(contractsTable.id, id))
+    .returning();
 
   if (!row) {
     res.status(404).json({ message: "Contratto non trovato" });

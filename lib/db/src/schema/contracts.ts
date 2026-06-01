@@ -31,6 +31,13 @@ export const contractsTable = pgTable("contracts", {
   withoutMepa: boolean("without_mepa").notNull().default(false),
   // Link to the official ANAC dataset / scheda (e.g. by CIG).
   anacUrl: text("anac_url"),
+  // Ambito di spesa (macrotema) a cui appartiene il contratto, es. "ambiente",
+  // "scuole", "strade". Assegnato in modo euristico durante l'ingestione e
+  // correggibile dalla redazione. Null finché non classificato.
+  macrotema: text("macrotema"),
+  // True quando la redazione ha corretto manualmente il macrotema: in tal caso
+  // l'ingestione non lo sovrascrive più con la classificazione automatica.
+  macrotemaManual: boolean("macrotema_manual").notNull().default(false),
   awardDate: timestamp("award_date", { withTimezone: true })
     .notNull()
     .defaultNow(),

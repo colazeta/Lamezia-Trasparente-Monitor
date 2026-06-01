@@ -5,6 +5,7 @@
 - [ANAC L.190 ingestion](anac-l190-ingestion.md) — Tinn L.190 feed mixes non-contract albo acts; only items with a CIG are genuine contracts.
 - [DB schema drift in isolated env](db-schema-drift-isolated-env.md) — "column does not exist" 500s → truncate table, `pnpm -C lib/db push-force`, restart api-server to re-ingest.
 - [Contract↔theme association](contract-theme-association.md) — "Filtra per tema" needs contract.themeId set; populated via CIG seed + CUP map in ANAC ingestion (non-destructive on update).
+- [Macrotema classifier](macrotema-classifier.md) — spending-area classifier lives in lib/db (`@workspace/db`), shared by ANAC ingestion + seed; manual edits win.
 - [drizzle push truncate prompt](drizzle-push-truncate-prompt.md) — push (even --force) blocks on the truncate prompt in non-TTY; truncate the table first, then push+seed.
 - [Expo typed-routes staleness](expo-typed-routes.md) — tsc flags new expo-router routes as invalid until the dev-server regenerates types; restart expo workflow, don't "fix" the route strings.
 - [Cartographer build breakers across pages](cartographer-build-breaker.md) — a syntax error in any one lamezia-trasparente page (e.g. duplicate lucide import) 500s the whole Vite app, not just that page.

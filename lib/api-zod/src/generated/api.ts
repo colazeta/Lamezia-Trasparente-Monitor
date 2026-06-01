@@ -113,7 +113,9 @@ export const GetThemeResponse = zod.object({
   "withoutTender": zod.boolean().optional(),
   "withoutMepa": zod.boolean().optional(),
   "anacUrl": zod.string().nullish(),
-  "themeId": zod.number().nullish()
+  "themeId": zod.number().nullish(),
+  "macrotema": zod.union([zod.enum(['ambiente', 'scuole', 'strade', 'sociale', 'cultura', 'mobilita', 'altro']).describe('Ambito di spesa (macrotema) di un contratto'),zod.null()]).optional().describe('Spending-area key (ambiente, scuole, strade, …) or null'),
+  "macrotemaManual": zod.boolean().optional().describe('True when an editor manually corrected the spending area')
 })),
   "acts": zod.array(zod.object({
   "id": zod.number(),
@@ -494,7 +496,9 @@ export const ListContractsResponseItem = zod.object({
   "withoutTender": zod.boolean().optional(),
   "withoutMepa": zod.boolean().optional(),
   "anacUrl": zod.string().nullish(),
-  "themeId": zod.number().nullish()
+  "themeId": zod.number().nullish(),
+  "macrotema": zod.union([zod.enum(['ambiente', 'scuole', 'strade', 'sociale', 'cultura', 'mobilita', 'altro']).describe('Ambito di spesa (macrotema) di un contratto'),zod.null()]).optional().describe('Spending-area key (ambiente, scuole, strade, …) or null'),
+  "macrotemaManual": zod.boolean().optional().describe('True when an editor manually corrected the spending area')
 })
 export const ListContractsResponse = zod.array(ListContractsResponseItem)
 
@@ -584,7 +588,42 @@ export const GetContractResponse = zod.object({
   "withoutTender": zod.boolean().optional(),
   "withoutMepa": zod.boolean().optional(),
   "anacUrl": zod.string().nullish(),
-  "themeId": zod.number().nullish()
+  "themeId": zod.number().nullish(),
+  "macrotema": zod.union([zod.enum(['ambiente', 'scuole', 'strade', 'sociale', 'cultura', 'mobilita', 'altro']).describe('Ambito di spesa (macrotema) di un contratto'),zod.null()]).optional().describe('Spending-area key (ambiente, scuole, strade, …) or null'),
+  "macrotemaManual": zod.boolean().optional().describe('True when an editor manually corrected the spending area')
+})
+
+
+/**
+ * @summary Update a contract's spending area (macrotema). Editor only.
+ */
+export const UpdateContractMacrotemaParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const UpdateContractMacrotemaBody = zod.object({
+  "macrotema": zod.enum(['ambiente', 'scuole', 'strade', 'sociale', 'cultura', 'mobilita', 'altro']).describe('Ambito di spesa (macrotema) di un contratto')
+})
+
+export const UpdateContractMacrotemaResponse = zod.object({
+  "id": zod.number(),
+  "title": zod.string(),
+  "description": zod.string(),
+  "supplier": zod.string(),
+  "amount": zod.number(),
+  "procedureType": zod.string(),
+  "status": zod.string(),
+  "awardDate": zod.string(),
+  "cig": zod.string().nullish(),
+  "cup": zod.string().nullish(),
+  "stazioneAppaltante": zod.string().nullish(),
+  "acquisitionTool": zod.string().nullish(),
+  "withoutTender": zod.boolean().optional(),
+  "withoutMepa": zod.boolean().optional(),
+  "anacUrl": zod.string().nullish(),
+  "themeId": zod.number().nullish(),
+  "macrotema": zod.union([zod.enum(['ambiente', 'scuole', 'strade', 'sociale', 'cultura', 'mobilita', 'altro']).describe('Ambito di spesa (macrotema) di un contratto'),zod.null()]).optional().describe('Spending-area key (ambiente, scuole, strade, …) or null'),
+  "macrotemaManual": zod.boolean().optional().describe('True when an editor manually corrected the spending area')
 })
 
 

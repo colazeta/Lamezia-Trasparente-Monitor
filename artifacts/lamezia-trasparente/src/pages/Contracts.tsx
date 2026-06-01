@@ -869,65 +869,31 @@ function StatCard({
   );
 }
 
-const MACROTEMI: {
-  key: string;
-  label: string;
-  icon: React.ComponentType<{ className?: string }>;
-  match: RegExp;
-}[] = [
-  {
-    key: "ambiente",
-    label: "Ambiente e rifiuti",
-    icon: Leaf,
-    match:
-      /rifiut|ambient|ecolog|verde\b|igiene|raccolta|differenziat|spazzament|depurazione|fogna|idric/i,
-  },
-  {
-    key: "scuole",
-    label: "Scuole e istruzione",
-    icon: GraduationCap,
-    match: /scuol|istruz|educ|asilo|mensa|student|formazione|didatt|nido/i,
-  },
-  {
-    key: "strade",
-    label: "Strade e lavori pubblici",
-    icon: HardHat,
-    match:
-      /strad|lavori pubblici|manutenz|asfalt|marciapied|illuminaz|edili|infrastruttur|opere|ponte|riqualificaz|pavimentaz|cantier/i,
-  },
-  {
-    key: "sociale",
-    label: "Sociale e servizi alla persona",
-    icon: HeartHandshake,
-    match:
-      /social|assistenz|anzian|disabil|famigli|minor|sanit|inclusione|povert|welfare|domiciliar/i,
-  },
-  {
-    key: "cultura",
-    label: "Cultura, sport e turismo",
-    icon: Palette,
-    match: /cultur|sport|turism|bibliotec|event|spettacol|museo|teatro|festa/i,
-  },
-  {
-    key: "mobilita",
-    label: "Mobilità e trasporti",
-    icon: Bus,
-    match: /trasport|mobilit|parcheggi|\bbus\b|sosta|autobus|navetta/i,
-  },
-];
-
-const MACROTEMA_FALLBACK = {
-  key: "altro",
-  label: "Altri servizi e forniture",
-  icon: Package,
+// Presentazione dei macrotemi (etichetta + icona). La classificazione è
+// persistita sul contratto (campo `macrotema`, assegnato dall'ingestione e
+// correggibile dalla redazione): qui mappiamo solo la chiave alla sua resa
+// grafica.
+const MACROTEMA_META: Record<
+  string,
+  { label: string; icon: React.ComponentType<{ className?: string }> }
+> = {
+  ambiente: { label: "Ambiente e rifiuti", icon: Leaf },
+  scuole: { label: "Scuole e istruzione", icon: GraduationCap },
+  strade: { label: "Strade e lavori pubblici", icon: HardHat },
+  sociale: { label: "Sociale e servizi alla persona", icon: HeartHandshake },
+  cultura: { label: "Cultura, sport e turismo", icon: Palette },
+  mobilita: { label: "Mobilità e trasporti", icon: Bus },
+  altro: { label: "Altri servizi e forniture", icon: Package },
 };
 
-function classifyMacrotema(c: Contract) {
-  const haystack = `${c.title ?? ""} ${c.description ?? ""}`.toLowerCase();
-  for (const m of MACROTEMI) {
-    if (m.match.test(haystack)) return m;
-  }
-  return MACROTEMA_FALLBACK;
+const MACROTEMA_FALLBACK_KEY = "altro";
+
+function macrotemaOf(c: Contract) {
+  const key =
+    c.macrotema && MACROTEMA_META[c.macrotema]
+      ? c.macrotema
+      : MACROTEMA_FALLBACK_KEY;
+  return { key, ...MACROTEMA_META[key] };
 }
 
 function SpendingByMacrotema({
@@ -951,7 +917,7 @@ function SpendingByMacrotema({
     >();
     let total = 0;
     for (const c of list) {
-      const m = classifyMacrotema(c);
+      const m = macrotemaOf(c);
       const amount = c.amount > 0 ? c.amount : 0;
       total += amount;
       const prev = map.get(m.key);
@@ -1065,7 +1031,7 @@ function SpendingByMacrotema({
         </div>
         <div className="divide-y divide-border">
           {recent.map((c) => {
-            const m = classifyMacrotema(c);
+            const m = macrotemaOf(c);
             const Icon = m.icon;
             return (
               <div

@@ -3,6 +3,7 @@ import {
   contractsTable,
   themesTable,
   feedStatusTable,
+  classifyMacrotema,
   type InsertContract,
 } from "@workspace/db";
 import { eq, isNotNull } from "drizzle-orm";
@@ -369,6 +370,7 @@ function parseFeed(xml: string): ParsedContract[] {
       withoutMepa,
       anacUrl: cig ? anacUrlForCig(cig) : ANAC_PORTAL_URL,
       awardDate: dataAtto,
+      macrotema: classifyMacrotema(`${title} ${oggetto}`),
     });
   }
   return results;
@@ -401,7 +403,10 @@ export async function runAnacContractsIngestion(): Promise<{
     for (const c of parsed) {
       const themeId = resolveThemeId(c.cup, cupThemeMap);
       const existing = await db
-        .select({ id: contractsTable.id })
+        .select({
+          id: contractsTable.id,
+          macrotemaManual: contractsTable.macrotemaManual,
+        })
         .from(contractsTable)
         .where(eq(contractsTable.sourceId, c.sourceId))
         .limit(1);
@@ -427,6 +432,9 @@ export async function runAnacContractsIngestion(): Promise<{
             // Aggiorna il tema solo quando c'è una corrispondenza certa, per
             // non sovrascrivere un collegamento curato manualmente.
             ...(themeId !== null ? { themeId } : {}),
+            // Riclassifica il macrotema solo se la redazione non l'ha corretto
+            // a mano: in tal caso la scelta manuale è autorevole.
+            ...(existing[0].macrotemaManual ? {} : { macrotema: c.macrotema }),
             lastSeenAt: now,
           })
           .where(eq(contractsTable.sourceId, c.sourceId));

@@ -21,6 +21,7 @@ import { Statistics } from "./pages/Statistics";
 import { Subscriptions } from "./pages/Subscriptions";
 import { AdminCronistoria } from "./pages/AdminCronistoria";
 import { AdminDomande } from "./pages/AdminDomande";
+import { AdminAppalti } from "./pages/AdminAppalti";
 import NotFound from "./pages/not-found";
 
 export function Router() {
@@ -48,6 +49,7 @@ export function Router() {
         <Route path="/iscrizioni" component={Subscriptions} />
         <Route path="/admin/cronistoria" component={AdminCronistoria} />
         <Route path="/admin/domande" component={AdminDomande} />
+        <Route path="/admin/appalti" component={AdminAppalti} />
         <Route component={NotFound} />
       </Switch>
     </MainLayout>

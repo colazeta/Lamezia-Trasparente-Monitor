@@ -115,6 +115,22 @@ export interface ThemeMetric {
   unit: string;
 }
 
+/**
+ * Ambito di spesa (macrotema) di un contratto
+ */
+export type MacrotemaKey = typeof MacrotemaKey[keyof typeof MacrotemaKey];
+
+
+export const MacrotemaKey = {
+  ambiente: 'ambiente',
+  scuole: 'scuole',
+  strade: 'strade',
+  sociale: 'sociale',
+  cultura: 'cultura',
+  mobilita: 'mobilita',
+  altro: 'altro',
+} as const;
+
 export interface Contract {
   id: number;
   title: string;
@@ -138,6 +154,10 @@ export interface Contract {
   anacUrl?: string | null;
   /** @nullable */
   themeId?: number | null;
+  /** Spending-area key (ambiente, scuole, strade, …) or null */
+  macrotema?: MacrotemaKey | null;
+  /** True when an editor manually corrected the spending area */
+  macrotemaManual?: boolean;
 }
 
 export interface Act {
@@ -267,6 +287,10 @@ export interface QuestionUpdateInput {
   featured?: boolean;
   sortOrder?: number;
   status?: QuestionUpdateInputStatus;
+}
+
+export interface UpdateContract {
+  macrotema: MacrotemaKey;
 }
 
 export interface NameCount {
