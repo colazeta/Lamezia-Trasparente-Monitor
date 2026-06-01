@@ -1,6 +1,6 @@
 import { Feather } from "@expo/vector-icons";
 import React, { useMemo, useState } from "react";
-import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import { Pressable, ScrollView, Share, StyleSheet, Text, View } from "react-native";
 import Svg, { Line, Path, Rect } from "react-native-svg";
 
 import { Badge, Skeleton } from "@/components/ui";
@@ -26,6 +26,20 @@ function formatCell(value: string | number | null, type: string): string {
   return String(value);
 }
 
+function csvEscape(value: string | number | null): string {
+  if (value === null || value === undefined) return "";
+  const s = String(value);
+  return /[",\n\r]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+}
+
+function buildCsv(columns: OpendataColumn[], rows: OpendataTableRowsItem[]): string {
+  const header = columns.map((c) => csvEscape(c.name)).join(",");
+  const body = rows
+    .map((row) => columns.map((c) => csvEscape(row[c.name])).join(","))
+    .join("\n");
+  return body ? `${header}\n${body}` : header;
+}
+
 export function ResourceTable({ resourceId }: { resourceId: number }) {
   const colors = useColors();
   const { data, isLoading, isError, refetch } = useGetOpendataResourceContent(resourceId);
@@ -41,6 +55,15 @@ export function ResourceTable({ resourceId }: { resourceId: number }) {
   const pageRows = rows.slice(safePage * PAGE_SIZE, safePage * PAGE_SIZE + PAGE_SIZE);
 
   const chart = useMemo(() => pickChart(columns, rows), [columns, rows]);
+
+  const onExportCsv = async () => {
+    if (columns.length === 0 || rows.length === 0) return;
+    try {
+      await Share.share({ message: buildCsv(columns, rows) });
+    } catch {
+      /* ignore */
+    }
+  };
 
   if (isLoading) {
     return (
@@ -91,18 +114,29 @@ export function ResourceTable({ resourceId }: { resourceId: number }) {
           {data.rowCount === 1 ? "riga" : "righe"}
           {data.truncated ? " (anteprima limitata)" : ""}
         </Text>
-        {chart ? (
+        <View style={styles.summaryActions}>
+          {chart ? (
+            <Pressable
+              onPress={() => setShowChart((v) => !v)}
+              hitSlop={6}
+              style={styles.toggleBtn}
+            >
+              <Feather name="bar-chart-2" size={14} color={colors.primary} />
+              <Text style={[styles.toggleText, { color: colors.primary }]}>
+                {showChart ? "Nascondi grafico" : "Mostra grafico"}
+              </Text>
+            </Pressable>
+          ) : null}
           <Pressable
-            onPress={() => setShowChart((v) => !v)}
+            onPress={onExportCsv}
             hitSlop={6}
             style={styles.toggleBtn}
+            accessibilityLabel="Esporta CSV"
           >
-            <Feather name="bar-chart-2" size={14} color={colors.primary} />
-            <Text style={[styles.toggleText, { color: colors.primary }]}>
-              {showChart ? "Nascondi grafico" : "Mostra grafico"}
-            </Text>
+            <Feather name="download" size={14} color={colors.primary} />
+            <Text style={[styles.toggleText, { color: colors.primary }]}>CSV</Text>
           </Pressable>
-        ) : null}
+        </View>
       </View>
 
       {data.truncated ? (
@@ -354,7 +388,8 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     gap: 10,
   },
-  summaryText: { fontFamily: "Inter_500Medium", fontSize: 12.5 },
+  summaryText: { flex: 1, fontFamily: "Inter_500Medium", fontSize: 12.5 },
+  summaryActions: { flexDirection: "row", alignItems: "center", gap: 14 },
   toggleBtn: { flexDirection: "row", alignItems: "center", gap: 5 },
   toggleText: { fontFamily: "Inter_600SemiBold", fontSize: 12.5 },
   noteBox: {

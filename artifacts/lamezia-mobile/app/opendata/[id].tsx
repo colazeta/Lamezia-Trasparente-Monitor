@@ -1,7 +1,7 @@
 import { Feather } from "@expo/vector-icons";
 import { useLocalSearchParams } from "expo-router";
 import React, { useState } from "react";
-import { Linking, Platform, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import { Linking, Platform, Pressable, ScrollView, Share, StyleSheet, Text, View } from "react-native";
 
 import { ResourceTable } from "@/components/ResourceTable";
 import { Badge, Card, EmptyState, Skeleton } from "@/components/ui";
@@ -41,6 +41,15 @@ export default function OpendataDetailScreen() {
 
   const d = dataset.data;
 
+  const onShare = async () => {
+    const url = d.portalUrl || `https://${process.env.EXPO_PUBLIC_DOMAIN}`;
+    try {
+      await Share.share({ message: `${d.title}\n${url}`, url });
+    } catch {
+      /* ignore */
+    }
+  };
+
   return (
     <ScrollView
       style={{ flex: 1, backgroundColor: colors.background }}
@@ -48,13 +57,23 @@ export default function OpendataDetailScreen() {
       showsVerticalScrollIndicator={false}
     >
       <Card style={{ gap: 12 }}>
-        <View style={styles.badgeRow}>
-          {d.category ? (
-            <Badge label={d.category} bg={colors.accent} fg={colors.accentForeground} icon="layers" />
-          ) : null}
-          {d.theme ? (
-            <Badge label={d.theme} bg={colors.muted} fg={colors.mutedForeground} icon="tag" />
-          ) : null}
+        <View style={styles.headerTop}>
+          <View style={[styles.badgeRow, { flex: 1 }]}>
+            {d.category ? (
+              <Badge label={d.category} bg={colors.accent} fg={colors.accentForeground} icon="layers" />
+            ) : null}
+            {d.theme ? (
+              <Badge label={d.theme} bg={colors.muted} fg={colors.mutedForeground} icon="tag" />
+            ) : null}
+          </View>
+          <Pressable
+            onPress={onShare}
+            hitSlop={8}
+            style={[styles.shareBtn, { borderColor: colors.border }]}
+            accessibilityLabel="Condividi dataset"
+          >
+            <Feather name="share-2" size={16} color={colors.primary} />
+          </Pressable>
         </View>
         <Text style={[styles.title, { color: colors.foreground }]}>{d.title}</Text>
         {d.description ? (
@@ -205,6 +224,15 @@ const styles = StyleSheet.create({
     padding: 20,
     gap: 14,
     paddingBottom: Platform.OS === "web" ? 80 : 48,
+  },
+  headerTop: { flexDirection: "row", alignItems: "flex-start", gap: 10 },
+  shareBtn: {
+    width: 36,
+    height: 36,
+    borderWidth: 1,
+    borderRadius: 8,
+    alignItems: "center",
+    justifyContent: "center",
   },
   badgeRow: { flexDirection: "row", flexWrap: "wrap", gap: 6 },
   title: {
