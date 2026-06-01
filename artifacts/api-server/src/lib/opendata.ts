@@ -377,7 +377,7 @@ const DATE_RE =
 // value is not a plain number. When both separators are present the *last* one
 // is treated as the decimal separator; a lone separator followed by exactly 3
 // digits is treated as a thousands group, otherwise as a decimal point.
-function parseNumber(v: string): number | null {
+export function parseNumber(v: string): number | null {
   const s = v.trim();
   if (s === "" || !/^[+-]?[\d.,]+$/.test(s)) return null;
   const lastDot = s.lastIndexOf(".");
@@ -406,7 +406,7 @@ function parseNumber(v: string): number | null {
   return Number.isNaN(n) ? null : n;
 }
 
-function isNumeric(v: string): boolean {
+export function isNumeric(v: string): boolean {
   return parseNumber(v) !== null;
 }
 
@@ -414,7 +414,7 @@ function toNumber(v: string): number {
   return parseNumber(v) ?? Number.NaN;
 }
 
-function inferColumns(
+export function inferColumns(
   headers: string[],
   sample: string[][],
 ): TableColumn[] {
