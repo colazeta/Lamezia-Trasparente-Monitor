@@ -40,6 +40,16 @@ import ReactMarkdown from "react-markdown";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
@@ -71,6 +81,7 @@ export function ThemeDetail() {
 
   const [followEmail, setFollowEmail] = useState("");
   const [followed, setFollowed] = useState(false);
+  const [confirmWithdraw, setConfirmWithdraw] = useState(false);
 
   const handleFollow = (e: React.FormEvent) => {
     e.preventDefault();
@@ -95,23 +106,14 @@ export function ThemeDetail() {
     });
   };
 
+  const invalidateTheme = () =>
+    queryClient.invalidateQueries({ queryKey: getGetThemeQueryKey(themeId) });
+
   const handleRelevant = () => {
     if (!theme) return;
-    const invalidate = () =>
-      queryClient.invalidateQueries({ queryKey: getGetThemeQueryKey(themeId) });
 
     if (theme.signalled) {
-      withdrawRelevant.mutate({ id: themeId }, {
-        onSuccess: () => {
-          toast.success("Segnale ritirato", {
-            description: "Hai ritirato il tuo segnale di rilevanza per questo tema."
-          });
-          invalidate();
-        },
-        onError: () => {
-          toast.error("Errore", { description: "Non è stato possibile ritirare il segnale." });
-        }
-      });
+      setConfirmWithdraw(true);
       return;
     }
 
@@ -120,10 +122,24 @@ export function ThemeDetail() {
         toast.success("Segnato come rilevante", {
           description: "Il tuo interesse aiuta a stabilire le priorità civiche."
         });
-        invalidate();
+        invalidateTheme();
       },
       onError: () => {
         toast.error("Errore", { description: "Non è stato possibile segnare il tema." });
+      }
+    });
+  };
+
+  const performWithdraw = () => {
+    withdrawRelevant.mutate({ id: themeId }, {
+      onSuccess: () => {
+        toast.success("Segnale ritirato", {
+          description: "Hai ritirato il tuo segnale di rilevanza per questo tema."
+        });
+        invalidateTheme();
+      },
+      onError: () => {
+        toast.error("Errore", { description: "Non è stato possibile ritirare il segnale." });
       }
     });
   };
@@ -266,6 +282,30 @@ export function ThemeDetail() {
                 <HandCoins className={`h-5 w-5 ${theme.signalled ? "fill-current" : ""}`} />
                 {theme.signalled ? "Ritira Rilevanza" : "Segna come Rilevante"}
               </Button>
+
+              <AlertDialog open={confirmWithdraw} onOpenChange={setConfirmWithdraw}>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>Ritirare il segnale di rilevanza?</AlertDialogTitle>
+                    <AlertDialogDescription>
+                      Stai per ritirare il tuo segnale di rilevanza per “{theme.title}”. Puoi sempre
+                      segnarlo di nuovo come rilevante in seguito.
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel disabled={withdrawRelevant.isPending}>Annulla</AlertDialogCancel>
+                    <AlertDialogAction
+                      disabled={withdrawRelevant.isPending}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        performWithdraw();
+                      }}
+                    >
+                      Ritira segnale
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
               
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>

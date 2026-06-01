@@ -67,12 +67,28 @@ export default function ThemeDetailScreen() {
 
   const [tab, setTab] = useState<DetailTab>("documenti");
   const [shareOpen, setShareOpen] = useState(false);
+  const [confirmWithdraw, setConfirmWithdraw] = useState(false);
 
   const onMarkRelevant = () => {
     if (!theme) return;
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-    const mutation = theme.signalled ? withdrawRelevant : markRelevant;
-    mutation.mutate(
+    if (theme.signalled) {
+      setConfirmWithdraw(true);
+      return;
+    }
+    markRelevant.mutate(
+      { id: themeId },
+      {
+        onSuccess: () =>
+          queryClient.invalidateQueries({ queryKey: getGetThemeQueryKey(themeId) }),
+      },
+    );
+  };
+
+  const onConfirmWithdraw = () => {
+    setConfirmWithdraw(false);
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    withdrawRelevant.mutate(
       { id: themeId },
       {
         onSuccess: () =>
@@ -299,6 +315,45 @@ export default function ThemeDetailScreen() {
           </Pressable>
         </Pressable>
       </Modal>
+
+      {/* Withdraw confirmation modal */}
+      <Modal
+        visible={confirmWithdraw}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setConfirmWithdraw(false)}
+      >
+        <Pressable style={styles.confirmBackdrop} onPress={() => setConfirmWithdraw(false)}>
+          <Pressable
+            style={[styles.confirmCard, { backgroundColor: colors.card, borderColor: colors.border }]}
+          >
+            <Text style={[styles.confirmTitle, { color: colors.foreground }]}>
+              Ritirare il segnale di rilevanza?
+            </Text>
+            <Text style={[styles.confirmMessage, { color: colors.mutedForeground }]}>
+              Stai per ritirare il tuo segnale di rilevanza per questo tema. Puoi sempre segnarlo di
+              nuovo come rilevante in seguito.
+            </Text>
+            <View style={styles.confirmActions}>
+              <View style={{ flex: 1 }}>
+                <PrimaryButton
+                  label="Annulla"
+                  variant="outline"
+                  onPress={() => setConfirmWithdraw(false)}
+                />
+              </View>
+              <View style={{ flex: 1 }}>
+                <PrimaryButton
+                  label="Ritira"
+                  icon="x-circle"
+                  onPress={onConfirmWithdraw}
+                  loading={withdrawRelevant.isPending}
+                />
+              </View>
+            </View>
+          </Pressable>
+        </Pressable>
+      </Modal>
     </View>
   );
 }
@@ -506,4 +561,33 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   shareLabel: { fontFamily: "Inter_500Medium", fontSize: 15 },
+  confirmBackdrop: {
+    flex: 1,
+    backgroundColor: "rgba(0,0,0,0.45)",
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 24,
+  },
+  confirmCard: {
+    width: "100%",
+    maxWidth: 420,
+    borderRadius: 20,
+    borderWidth: 1,
+    padding: 22,
+    gap: 10,
+  },
+  confirmTitle: {
+    fontFamily: "SpaceGrotesk_600SemiBold",
+    fontSize: 18,
+  },
+  confirmMessage: {
+    fontFamily: "Inter_400Regular",
+    fontSize: 14.5,
+    lineHeight: 21,
+  },
+  confirmActions: {
+    flexDirection: "row",
+    gap: 10,
+    marginTop: 8,
+  },
 });

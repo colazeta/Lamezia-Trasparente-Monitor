@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { ShieldAlert, BookOpen, AlertTriangle, Info, TrendingUp, HandCoins, Users } from "lucide-react";
 import { format } from "date-fns";
 import { it } from "date-fns/locale";
@@ -6,6 +7,16 @@ import { useListCategories, useListThemes, useMarkThemeRelevant, useWithdrawThem
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { Link } from "wouter";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
@@ -27,28 +38,19 @@ export function ThemeCard({ theme }: ThemeCardProps) {
   const markRelevant = useMarkThemeRelevant();
   const withdrawRelevant = useWithdrawThemeRelevant();
   const pending = markRelevant.isPending || withdrawRelevant.isPending;
+  const [confirmWithdraw, setConfirmWithdraw] = useState(false);
+
+  const invalidate = () => {
+    queryClient.invalidateQueries({ queryKey: ["/api/themes"] });
+    queryClient.invalidateQueries({ queryKey: [`/api/themes/${theme.id}`] });
+  };
 
   const handleRelevant = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
 
-    const invalidate = () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/themes"] });
-      queryClient.invalidateQueries({ queryKey: [`/api/themes/${theme.id}`] });
-    };
-
     if (theme.signalled) {
-      withdrawRelevant.mutate({ id: theme.id }, {
-        onSuccess: () => {
-          toast.success("Segnale ritirato", {
-            description: "Hai ritirato il tuo segnale di rilevanza per questo tema."
-          });
-          invalidate();
-        },
-        onError: () => {
-          toast.error("Errore", { description: "Non è stato possibile ritirare il segnale." });
-        }
-      });
+      setConfirmWithdraw(true);
       return;
     }
 
@@ -61,6 +63,20 @@ export function ThemeCard({ theme }: ThemeCardProps) {
       },
       onError: () => {
         toast.error("Errore", { description: "Non è stato possibile segnare il tema come rilevante." });
+      }
+    });
+  };
+
+  const performWithdraw = () => {
+    withdrawRelevant.mutate({ id: theme.id }, {
+      onSuccess: () => {
+        toast.success("Segnale ritirato", {
+          description: "Hai ritirato il tuo segnale di rilevanza per questo tema."
+        });
+        invalidate();
+      },
+      onError: () => {
+        toast.error("Errore", { description: "Non è stato possibile ritirare il segnale." });
       }
     });
   };
@@ -118,6 +134,35 @@ export function ThemeCard({ theme }: ThemeCardProps) {
           </Button>
         </div>
       </div>
+
+      <AlertDialog open={confirmWithdraw} onOpenChange={setConfirmWithdraw}>
+        <AlertDialogContent
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+          }}
+        >
+          <AlertDialogHeader>
+            <AlertDialogTitle>Ritirare il segnale di rilevanza?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Stai per ritirare il tuo segnale di rilevanza per “{theme.title}”. Puoi sempre
+              segnarlo di nuovo come rilevante in seguito.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={withdrawRelevant.isPending}>Annulla</AlertDialogCancel>
+            <AlertDialogAction
+              disabled={withdrawRelevant.isPending}
+              onClick={(e) => {
+                e.preventDefault();
+                performWithdraw();
+              }}
+            >
+              Ritira segnale
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </Card>
   );
 }
