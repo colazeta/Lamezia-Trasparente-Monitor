@@ -5,13 +5,20 @@ import type { Question } from "@workspace/api-client-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { iconForTopic } from "@/lib/questionTopics";
+import { QuestionPreview } from "@/components/questions/QuestionPreview";
 
 interface QuestionCardProps {
   question: Question;
   showTopic?: boolean;
+  /** Mostra un'anteprima dati live sotto al testo della domanda. */
+  showPreview?: boolean;
 }
 
-export function QuestionCard({ question, showTopic = false }: QuestionCardProps) {
+export function QuestionCard({
+  question,
+  showTopic = false,
+  showPreview = true,
+}: QuestionCardProps) {
   const Icon = iconForTopic(question.topic);
 
   return (
@@ -43,6 +50,10 @@ export function QuestionCard({ question, showTopic = false }: QuestionCardProps)
           </p>
         ) : null}
       </div>
+
+      {showPreview ? (
+        <QuestionPreview destinationPath={question.destinationPath} />
+      ) : null}
 
       <Link href={question.destinationPath} className="mt-auto">
         <Button variant="outline" className="w-full justify-between font-semibold">
