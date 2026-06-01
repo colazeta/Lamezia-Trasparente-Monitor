@@ -15,6 +15,7 @@ import {
   Layers,
   CalendarRange,
   AlertTriangle,
+  GitCompare,
 } from "lucide-react";
 import {
   Area,
@@ -89,13 +90,23 @@ export function PerformanceDetail() {
 
   return (
     <div className="container mx-auto px-4 py-8 md:py-12 max-w-5xl">
-      <Link
-        href="/performance"
-        className="mb-6 inline-flex items-center gap-1.5 text-sm font-medium text-muted-foreground hover:text-foreground"
-      >
-        <ChevronLeft className="h-4 w-4" />
-        Torna agli indicatori
-      </Link>
+      <div className="mb-6 flex items-center justify-between gap-3">
+        <Link
+          href="/performance"
+          className="inline-flex items-center gap-1.5 text-sm font-medium text-muted-foreground hover:text-foreground"
+        >
+          <ChevronLeft className="h-4 w-4" />
+          Torna agli indicatori
+        </Link>
+        {indicator ? (
+          <Link href={`/performance/confronta?ids=${indicator.id}`}>
+            <Button variant="outline" size="sm" className="gap-2">
+              <GitCompare className="h-4 w-4" />
+              Confronta
+            </Button>
+          </Link>
+        ) : null}
+      </div>
 
       {isLoading ? (
         <div className="space-y-6">

@@ -17,6 +17,7 @@ import {
   RefreshCw,
   Building2,
   Layers,
+  GitCompare,
 } from "lucide-react";
 import { format } from "date-fns";
 import { it } from "date-fns/locale";
@@ -84,23 +85,31 @@ export function Performance() {
   return (
     <div className="container mx-auto px-4 py-8 md:py-12 max-w-6xl">
       {/* Header */}
-      <div className="mb-6">
-        <span className="eyebrow text-brand">
-          <Gauge className="h-3.5 w-3.5" />
-          Le prestazioni del Comune
-        </span>
-        <h1 className="mt-2 text-3xl md:text-4xl font-display font-bold tracking-tight">
-          Performance del Comune
-        </h1>
-        <p className="mt-3 text-muted-foreground text-lg max-w-3xl">
-          Gli indicatori che misurano l'andamento del{" "}
-          <span className="font-medium text-foreground">
-            Comune di Lamezia Terme
-          </span>{" "}
-          nel tempo — incluse le dimensioni dell'indice Qualità della Vita del
-          Sole 24 Ore e altri parametri rilevanti. Esplora ogni indicatore e
-          analizzane la serie storica.
-        </p>
+      <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+        <div>
+          <span className="eyebrow text-brand">
+            <Gauge className="h-3.5 w-3.5" />
+            Le prestazioni del Comune
+          </span>
+          <h1 className="mt-2 text-3xl md:text-4xl font-display font-bold tracking-tight">
+            Performance del Comune
+          </h1>
+          <p className="mt-3 text-muted-foreground text-lg max-w-3xl">
+            Gli indicatori che misurano l'andamento del{" "}
+            <span className="font-medium text-foreground">
+              Comune di Lamezia Terme
+            </span>{" "}
+            nel tempo — incluse le dimensioni dell'indice Qualità della Vita del
+            Sole 24 Ore e altri parametri rilevanti. Esplora ogni indicatore e
+            analizzane la serie storica.
+          </p>
+        </div>
+        <Link href="/performance/confronta" className="shrink-0">
+          <Button variant="outline" className="gap-2">
+            <GitCompare className="h-4 w-4" />
+            Confronta indicatori
+          </Button>
+        </Link>
       </div>
 
       {/* Last updated */}

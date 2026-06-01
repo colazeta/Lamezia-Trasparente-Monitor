@@ -10,6 +10,8 @@ description: Pitfalls when adding recharts charts to the lamezia-trasparente web
 
 - **Pie/donut charts need `isAnimationActive={false}`.** Without it the Pie sectors do not draw on first paint (bars/lines are unaffected). Also set explicit `cx="50%" cy="50%"`.
 
+- **Never pass `yAxisId={undefined}` to a `Line`/`Area`.** Recharts throws "Invariant failed: Specifying a(n) yAxisId requires a corresponding yAxisId" because the series looks up axis id `undefined` while a no-id `YAxis` registers as `0`. For single- vs dual-axis charts, give EVERY axis and series an explicit matching id (e.g. `"left"`/`"right"`), not a conditional `undefined`.
+
 - **The web app does not pass `tsc`** and is not typechecked in merge validation. The template ships pre-existing recharts-vs-React-types breakage in `src/components/ui/chart.tsx` (recharts components "cannot be used as a JSX component", TS2786/TS2607) and `src/components/ui/input-otp.tsx`. Any raw recharts JSX you add inherits the same TS2786/TS2322 noise.
   **Why:** Vite builds with esbuild (no typecheck); merge validation only runs `typecheck:libs` (the `lib/*` packages), not the artifact apps.
   **How to apply:** don't chase these recharts JSX type errors — verify behavior via the running app/screenshot instead. Still fix your own real errors (implicit-any, wrong types).

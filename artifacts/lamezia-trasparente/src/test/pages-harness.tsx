@@ -120,6 +120,7 @@ import { Pnrr } from "@/pages/Pnrr";
 import { Opendata } from "@/pages/Opendata";
 import { OpendataDetail } from "@/pages/OpendataDetail";
 import { Performance } from "@/pages/Performance";
+import { PerformanceCompare } from "@/pages/PerformanceCompare";
 import { PerformanceDetail } from "@/pages/PerformanceDetail";
 import { Reports } from "@/pages/Reports";
 import { Statistics } from "@/pages/Statistics";
@@ -147,6 +148,7 @@ export const PAGES: Array<[string, PageComponent]> = [
   ["Opendata", Opendata],
   ["OpendataDetail", OpendataDetail],
   ["Performance", Performance],
+  ["PerformanceCompare", PerformanceCompare],
   ["PerformanceDetail", PerformanceDetail],
   ["Reports", Reports],
   ["Statistics", Statistics],
