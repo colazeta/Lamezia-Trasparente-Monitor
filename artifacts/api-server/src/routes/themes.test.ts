@@ -832,18 +832,38 @@ describe("Cronistoria posts (/api/themes/:id/posts)", () => {
 });
 
 describe("POST /api/themes/:id/relevant", () => {
-  it("increments the relevance count and records an event", async () => {
+  it("counts a first signal and records a deduped event", async () => {
     expect(await getRelevanceCount(themeId)).toBe(0);
 
-    const res = await request(app).post(`/api/themes/${themeId}/relevant`);
+    const res = await request(app)
+      .post(`/api/themes/${themeId}/relevant`)
+      .set("X-Forwarded-For", "203.0.113.1");
 
     expect(res.status).toBe(200);
     expect(res.body.relevanceCount).toBe(1);
     expect(await getRelevanceCount(themeId)).toBe(1);
 
-    const second = await request(app).post(`/api/themes/${themeId}/relevant`);
+    const events = await db
+      .select()
+      .from(themeRelevanceEventsTable)
+      .where(eq(themeRelevanceEventsTable.themeId, themeId));
+    expect(events).toHaveLength(1);
+    expect(events[0].dedupeKey).toBeTruthy();
+  });
+
+  it("counts distinct sources separately", async () => {
+    const first = await request(app)
+      .post(`/api/themes/${themeId}/relevant`)
+      .set("X-Forwarded-For", "203.0.113.10");
+    expect(first.status).toBe(200);
+    expect(first.body.relevanceCount).toBe(1);
+
+    const second = await request(app)
+      .post(`/api/themes/${themeId}/relevant`)
+      .set("X-Forwarded-For", "203.0.113.20");
     expect(second.status).toBe(200);
     expect(second.body.relevanceCount).toBe(2);
+
     expect(await getRelevanceCount(themeId)).toBe(2);
 
     const events = await db
@@ -851,6 +871,55 @@ describe("POST /api/themes/:id/relevant", () => {
       .from(themeRelevanceEventsTable)
       .where(eq(themeRelevanceEventsTable.themeId, themeId));
     expect(events).toHaveLength(2);
+  });
+
+  it("ignores repeat signals from the same source", async () => {
+    const first = await request(app)
+      .post(`/api/themes/${themeId}/relevant`)
+      .set("X-Forwarded-For", "198.51.100.5");
+    expect(first.status).toBe(200);
+    expect(first.body.relevanceCount).toBe(1);
+
+    for (let i = 0; i < 5; i++) {
+      const repeat = await request(app)
+        .post(`/api/themes/${themeId}/relevant`)
+        .set("X-Forwarded-For", "198.51.100.5");
+      expect(repeat.status).toBe(200);
+      expect(repeat.body.relevanceCount).toBe(1);
+    }
+
+    expect(await getRelevanceCount(themeId)).toBe(1);
+
+    const events = await db
+      .select()
+      .from(themeRelevanceEventsTable)
+      .where(eq(themeRelevanceEventsTable.themeId, themeId));
+    expect(events).toHaveLength(1);
+  });
+
+  it("lets the same source signal different themes", async () => {
+    const otherThemeId = await createTheme(categoryId);
+    try {
+      const first = await request(app)
+        .post(`/api/themes/${themeId}/relevant`)
+        .set("X-Forwarded-For", "198.51.100.9");
+      expect(first.status).toBe(200);
+      expect(first.body.relevanceCount).toBe(1);
+
+      const second = await request(app)
+        .post(`/api/themes/${otherThemeId}/relevant`)
+        .set("X-Forwarded-For", "198.51.100.9");
+      expect(second.status).toBe(200);
+      expect(second.body.relevanceCount).toBe(1);
+
+      expect(await getRelevanceCount(themeId)).toBe(1);
+      expect(await getRelevanceCount(otherThemeId)).toBe(1);
+    } finally {
+      await db
+        .delete(themeRelevanceEventsTable)
+        .where(eq(themeRelevanceEventsTable.themeId, otherThemeId));
+      await db.delete(themesTable).where(eq(themesTable.id, otherThemeId));
+    }
   });
 
   it("returns 404 for an unknown theme", async () => {
@@ -861,8 +930,12 @@ describe("POST /api/themes/:id/relevant", () => {
 
 describe("reconcileThemeCounters", () => {
   it("recomputes relevance_count from the events table", async () => {
-    await request(app).post(`/api/themes/${themeId}/relevant`);
-    await request(app).post(`/api/themes/${themeId}/relevant`);
+    await request(app)
+      .post(`/api/themes/${themeId}/relevant`)
+      .set("X-Forwarded-For", "192.0.2.1");
+    await request(app)
+      .post(`/api/themes/${themeId}/relevant`)
+      .set("X-Forwarded-For", "192.0.2.2");
     expect(await getRelevanceCount(themeId)).toBe(2);
 
     await db

@@ -11,6 +11,12 @@ import { logger } from "./lib/logger";
 
 const app: Express = express();
 
+// L'API è servita dietro il proxy di Replit (e dal proxy del sito), quindi
+// `req.ip` deve essere risolto dall'header X-Forwarded-For per identificare la
+// sorgente reale delle richieste (usato dalla protezione anti-abuso della
+// rilevanza).
+app.set("trust proxy", true);
+
 app.use(
   pinoHttp({
     logger,
