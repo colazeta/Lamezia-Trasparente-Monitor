@@ -8,7 +8,7 @@ import {
 } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import { toast } from "sonner";
-import { MapPin, Search, Trash2, Save, Loader2 } from "lucide-react";
+import { MapPin, Search, Trash2, Save, Loader2, SkipForward } from "lucide-react";
 import { useUpdateContractLocation, type Contract } from "@workspace/api-client-react";
 import {
   Dialog,
@@ -49,12 +49,14 @@ export function LocationEditor({
   onClose,
   onSaved,
   onAuthError,
+  queue,
 }: {
   contract: Contract | null;
   token: string;
   onClose: () => void;
   onSaved: () => void;
   onAuthError: () => void;
+  queue?: { position: number; total: number; onNext: () => void } | null;
 }) {
   const { data: comune } = useComuneBoundary();
   const updateLocation = useUpdateContractLocation({
@@ -145,7 +147,8 @@ export function LocationEditor({
             description: "La correzione manuale non verrà sovrascritta.",
           });
           onSaved();
-          onClose();
+          if (queue) queue.onNext();
+          else onClose();
         },
         onError: (error) => {
           if (isAuthError(error)) {
@@ -169,7 +172,8 @@ export function LocationEditor({
         onSuccess: () => {
           toast.success("Posizione rimossa");
           onSaved();
-          onClose();
+          if (queue) queue.onNext();
+          else onClose();
         },
         onError: (error) => {
           if (isAuthError(error)) {
@@ -193,6 +197,11 @@ export function LocationEditor({
               <DialogTitle className="font-display flex items-center gap-2">
                 <MapPin className="h-5 w-5 text-brand" />
                 Posizione dell'intervento
+                {queue ? (
+                  <span className="ml-auto rounded-full bg-brand/10 px-2.5 py-0.5 text-xs font-medium text-brand">
+                    Da posizionare {queue.position} di {queue.total}
+                  </span>
+                ) : null}
               </DialogTitle>
               <DialogDescription className="line-clamp-2">
                 {contract.title}
@@ -329,20 +338,34 @@ export function LocationEditor({
                   <Trash2 className="h-4 w-4" />
                   Rimuovi posizione
                 </Button>
-                <Button
-                  type="button"
-                  variant="brand"
-                  className="gap-2"
-                  onClick={handleSave}
-                  disabled={saving}
-                >
-                  {saving ? (
-                    <Loader2 className="h-4 w-4 animate-spin" />
-                  ) : (
-                    <Save className="h-4 w-4" />
-                  )}
-                  Salva posizione
-                </Button>
+                <div className="flex flex-col-reverse gap-2 sm:flex-row">
+                  {queue ? (
+                    <Button
+                      type="button"
+                      variant="outline"
+                      className="gap-2"
+                      onClick={queue.onNext}
+                      disabled={saving}
+                    >
+                      <SkipForward className="h-4 w-4" />
+                      Salta
+                    </Button>
+                  ) : null}
+                  <Button
+                    type="button"
+                    variant="brand"
+                    className="gap-2"
+                    onClick={handleSave}
+                    disabled={saving}
+                  >
+                    {saving ? (
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                    ) : (
+                      <Save className="h-4 w-4" />
+                    )}
+                    {queue ? "Salva e prosegui" : "Salva posizione"}
+                  </Button>
+                </div>
               </div>
             </div>
           </>

@@ -24,6 +24,7 @@ import {
   CheckCircle2,
   MapPin,
   AlertTriangle,
+  Locate,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -181,6 +182,11 @@ function AdminEditor({
   const [search, setSearch] = useState("");
   const [savingId, setSavingId] = useState<number | null>(null);
   const [editingLocation, setEditingLocation] = useState<Contract | null>(null);
+  const [locationFilter, setLocationFilter] = useState<
+    "all" | "unplaced" | "located"
+  >("all");
+  const [quickQueue, setQuickQueue] = useState<Contract[]>([]);
+  const [quickIndex, setQuickIndex] = useState(0);
 
   const { data: contracts, isLoading } = useListContracts();
   const updateMacrotema = useUpdateContractMacrotema(authRequest);
@@ -204,8 +210,24 @@ function AdminEditor({
     onSignOut();
   };
 
+  const hasLocation = (c: Contract) => typeof c.latitude === "number";
+
+  const unplaced = useMemo(
+    () => (contracts ?? []).filter((c) => !hasLocation(c)),
+    [contracts],
+  );
+
+  const total = contracts?.length ?? 0;
+  const locatedCount = total - unplaced.length;
+  const locatedPct = total ? Math.round((locatedCount / total) * 100) : 0;
+
   const filtered = useMemo(() => {
-    const list = contracts ?? [];
+    let list = contracts ?? [];
+    if (locationFilter === "unplaced") {
+      list = list.filter((c) => !hasLocation(c));
+    } else if (locationFilter === "located") {
+      list = list.filter((c) => hasLocation(c));
+    }
     const q = search.trim().toLowerCase();
     if (!q) return list;
     return list.filter(
@@ -214,7 +236,31 @@ function AdminEditor({
         c.supplier.toLowerCase().includes(q) ||
         (c.cig ?? "").toLowerCase().includes(q),
     );
-  }, [contracts, search]);
+  }, [contracts, search, locationFilter]);
+
+  const startQuickPlace = () => {
+    if (unplaced.length === 0) return;
+    setQuickQueue(unplaced);
+    setQuickIndex(0);
+    setEditingLocation(unplaced[0]);
+  };
+
+  const closeEditor = () => {
+    setEditingLocation(null);
+    setQuickQueue([]);
+    setQuickIndex(0);
+  };
+
+  const advanceQuick = () => {
+    const next = quickIndex + 1;
+    if (next < quickQueue.length) {
+      setQuickIndex(next);
+      setEditingLocation(quickQueue[next]);
+    } else {
+      closeEditor();
+      toast.success("Hai esaminato tutti gli appalti da posizionare.");
+    }
+  };
 
   const handleChange = (contract: Contract, macrotema: MacrotemaKey) => {
     if (contract.macrotema === macrotema && contract.macrotemaManual) return;
@@ -272,6 +318,66 @@ function AdminEditor({
         </Button>
       </div>
 
+      <Card className="mb-4 border-card-border">
+        <CardContent className="p-4">
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <div className="min-w-0">
+              <div className="flex items-center gap-2 font-display font-bold text-foreground">
+                <MapPin className="h-4 w-4 text-brand" />
+                Avanzamento mappa
+              </div>
+              <p className="mt-0.5 text-sm text-muted-foreground">
+                {locatedCount} di {total} appalti posizionati sulla mappa
+                {unplaced.length > 0
+                  ? ` · ${unplaced.length} ancora da posizionare`
+                  : " · tutti posizionati"}
+              </p>
+            </div>
+            <Button
+              variant="brand"
+              className="gap-2 shrink-0"
+              onClick={startQuickPlace}
+              disabled={unplaced.length === 0}
+            >
+              <Locate className="h-4 w-4" />
+              Posiziona in sequenza
+            </Button>
+          </div>
+          <div
+            className="mt-3 h-2 w-full overflow-hidden rounded-full bg-muted"
+            role="progressbar"
+            aria-valuenow={locatedPct}
+            aria-valuemin={0}
+            aria-valuemax={100}
+            aria-label="Appalti geolocalizzati"
+          >
+            <div
+              className="h-full rounded-full bg-brand transition-all"
+              style={{ width: `${locatedPct}%` }}
+            />
+          </div>
+        </CardContent>
+      </Card>
+
+      <div className="mb-4 flex flex-wrap gap-2">
+        {(
+          [
+            { key: "all", label: `Tutti (${total})` },
+            { key: "unplaced", label: `Da posizionare (${unplaced.length})` },
+            { key: "located", label: `Geolocalizzati (${locatedCount})` },
+          ] as const
+        ).map((f) => (
+          <Button
+            key={f.key}
+            size="sm"
+            variant={locationFilter === f.key ? "brand" : "outline"}
+            onClick={() => setLocationFilter(f.key)}
+          >
+            {f.label}
+          </Button>
+        ))}
+      </div>
+
       <div className="relative mb-4">
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
         <Input
@@ -292,7 +398,9 @@ function AdminEditor({
         </div>
       ) : filtered.length === 0 ? (
         <div className="rounded-xl border border-card-border bg-card p-10 text-center text-muted-foreground">
-          Nessun appalto corrisponde alla ricerca.
+          {locationFilter === "unplaced"
+            ? "Nessun appalto da posizionare: sono tutti sulla mappa."
+            : "Nessun appalto corrisponde alla ricerca."}
         </div>
       ) : (
         <div className="space-y-3">
@@ -394,9 +502,18 @@ function AdminEditor({
       <LocationEditor
         contract={editingLocation}
         token={token}
-        onClose={() => setEditingLocation(null)}
+        onClose={closeEditor}
         onSaved={refreshContracts}
         onAuthError={handleAuthError}
+        queue={
+          quickQueue.length > 0
+            ? {
+                position: quickIndex + 1,
+                total: quickQueue.length,
+                onNext: advanceQuick,
+              }
+            : null
+        }
       />
     </div>
   );
