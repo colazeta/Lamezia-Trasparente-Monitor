@@ -402,7 +402,7 @@ export async function runAnacContractsIngestion(): Promise<{
     const now = new Date();
     let upserted = 0;
     for (const c of parsed) {
-      const themeId = resolveThemeId(c.cup, cupThemeMap);
+      const themeId = resolveThemeId(c.cup ?? null, cupThemeMap);
       const existing = await db
         .select({
           id: contractsTable.id,

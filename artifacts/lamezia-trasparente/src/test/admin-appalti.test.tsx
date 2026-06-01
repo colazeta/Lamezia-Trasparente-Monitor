@@ -117,11 +117,11 @@ describe("AdminAppalti map-positioning triage", () => {
 
     renderWithProviders(<AdminAppalti />);
 
-    // 2 of 4 located → "2 di 4 ... · 2 ancora da posizionare"
+    // 2 of 4 confirmed → "2 di 4 ... confermata · 2 da rivedere"
     expect(
-      screen.getByText(/2 di 4 appalti posizionati sulla mappa/),
+      screen.getByText(/2 di 4 appalti con posizione confermata/),
     ).toBeInTheDocument();
-    expect(screen.getByText(/2 ancora da posizionare/)).toBeInTheDocument();
+    expect(screen.getByText(/2 da rivedere/)).toBeInTheDocument();
 
     // Progress bar reflects 50% (2 of 4).
     const progressbar = screen.getByRole("progressbar");
@@ -134,14 +134,14 @@ describe("AdminAppalti map-positioning triage", () => {
       screen.getByRole("button", { name: "Tutti (4)" }),
     ).toBeInTheDocument();
     expect(
-      screen.getByRole("button", { name: "Da posizionare (2)" }),
+      screen.getByRole("button", { name: "Da rivedere (2)" }),
     ).toBeInTheDocument();
     expect(
-      screen.getByRole("button", { name: "Geolocalizzati (2)" }),
+      screen.getByRole("button", { name: "Confermati (2)" }),
     ).toBeInTheDocument();
   });
 
-  it("filters to only unplaced contracts via the 'Da posizionare' chip", () => {
+  it("filters to only contracts needing review via the 'Da rivedere' chip", () => {
     mockState.contracts = [
       makeContract({
         id: 1,
@@ -160,14 +160,49 @@ describe("AdminAppalti map-positioning triage", () => {
     expect(screen.getByText("Scuola da posizionare")).toBeInTheDocument();
     expect(screen.getByText("Parco da posizionare")).toBeInTheDocument();
 
-    fireEvent.click(
-      screen.getByRole("button", { name: "Da posizionare (2)" }),
-    );
+    fireEvent.click(screen.getByRole("button", { name: "Da rivedere (2)" }));
 
     // The located contract disappears, the unplaced ones remain.
     expect(screen.queryByText("Strada con posizione")).not.toBeInTheDocument();
     expect(screen.getByText("Scuola da posizionare")).toBeInTheDocument();
     expect(screen.getByText("Parco da posizionare")).toBeInTheDocument();
+  });
+
+  it("treats a located-but-flagged (geoVerify) contract as 'Da rivedere', not confirmed", () => {
+    mockState.contracts = [
+      makeContract({
+        id: 1,
+        title: "Strada confermata",
+        latitude: 38.96,
+        longitude: 16.31,
+      }),
+      // Has coordinates, but the auto-suggested position is flagged for review.
+      makeContract({
+        id: 2,
+        title: "Piazza da verificare",
+        latitude: 38.97,
+        longitude: 16.32,
+        geoVerify: true,
+      }),
+    ];
+
+    renderWithProviders(<AdminAppalti />);
+
+    // 1 confirmed, 1 flagged for review despite having coordinates.
+    expect(
+      screen.getByText(/1 di 2 appalti con posizione confermata/),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: "Da rivedere (1)" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: "Confermati (1)" }),
+    ).toBeInTheDocument();
+
+    // The "Da rivedere" filter surfaces the flagged contract, hides the confirmed one.
+    fireEvent.click(screen.getByRole("button", { name: "Da rivedere (1)" }));
+    expect(screen.getByText("Piazza da verificare")).toBeInTheDocument();
+    expect(screen.queryByText("Strada confermata")).not.toBeInTheDocument();
   });
 });
 

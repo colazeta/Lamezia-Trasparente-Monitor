@@ -47,6 +47,8 @@ vi.mock("@workspace/api-client-react", () => {
     "useGetOpendataResourceContent",
     "useGetOfficial",
     "useGetOrgano",
+    "useGetPublicationsCategories",
+    "useGetPublicationsTimeline",
     "useGetRecentActivity",
     "useGetSeduta",
     "useGetShareStats",

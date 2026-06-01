@@ -94,7 +94,7 @@ router.get("/themes", async (req, res) => {
         ? desc(themesTable.shareCount)
         : desc(themesTable.updatedAt);
 
-  const dedupeKey = relevanceDedupeKey(req);
+  const dedupeKey = requestSourceKey(req);
 
   const rows = await db
     .select({
@@ -128,7 +128,7 @@ router.get("/themes/:id", async (req, res) => {
     return;
   }
 
-  const dedupeKey = relevanceDedupeKey(req);
+  const dedupeKey = requestSourceKey(req);
 
   const [theme] = await db
     .select({
@@ -505,7 +505,7 @@ router.delete("/themes/:id/relevant", async (req, res) => {
     return;
   }
 
-  const dedupeKey = relevanceDedupeKey(req);
+  const dedupeKey = requestSourceKey(req);
 
   const updated = await db.transaction(async (tx) => {
     const [exists] = await tx
@@ -647,7 +647,7 @@ router.post("/themes/:id/share", async (req, res) => {
     relevanceCount: updated.relevanceCount,
     shareCount: updated.shareCount,
     followerCount: updated.followerCount,
-    signalled: await isSignalled(updated.id, relevanceDedupeKey(req)),
+    signalled: await isSignalled(updated.id, requestSourceKey(req)),
     updatedAt: updated.updatedAt.toISOString(),
   });
 });
@@ -752,7 +752,7 @@ router.post("/themes/:id/follow", async (req, res) => {
     relevanceCount: updated.relevanceCount,
     shareCount: updated.shareCount,
     followerCount: updated.followerCount,
-    signalled: await isSignalled(updated.id, relevanceDedupeKey(req)),
+    signalled: await isSignalled(updated.id, requestSourceKey(req)),
     updatedAt: updated.updatedAt.toISOString(),
   });
 });
