@@ -15,4 +15,5 @@
 - [react-native-maps on Expo web](expo-native-maps-web.md) — rn-maps 1.18.0 breaks web bundle; split native `.tsx` (rn-maps) + `.web.tsx` (react-leaflet); import RELATIVE not `@/` so metro picks `.web.tsx`.
 - [Deps not linked in isolated env](deps-not-materialized-isolated-env.md) — "Failed to resolve import X" when X is already in package.json+pnpm store → run `pnpm install`, it's not a code bug.
 - [Contract geocoding fallback & review](contract-geocoding-fallback.md) — auto-geocoding always returns a best-guess (comune-center fallback) with geoVerify=true; admin triage treats geoVerify as "da rivedere", confirmed = coords && !geoVerify.
+- [api-server dev route reload](api-server-dev-route-reload.md) — new Express routes 404 until you restart the api-server workflow in the isolated env; not a routing bug.
 - [ISTAT SDMX performance ingestion](istat-sdmx-performance.md) — performance indicators pull real ISTAT SDMX CSV; isolated env often can't reach esploradati.istat.it (env limit, not a bug); never overwrites manual=true values.

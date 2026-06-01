@@ -72,7 +72,7 @@ function parseItDate(s: string): Date | null {
 }
 
 // Importo in formato italiano (1.234.567,89) presente nel testo dell'oggetto.
-function parseImporto(text: string): string | null {
+export function parseImporto(text: string): string | null {
   const m =
     /(?:€|euro|importo[^0-9]{0,20})\s*([0-9]{1,3}(?:\.[0-9]{3})*(?:,[0-9]{2})?)/i.exec(
       text,
@@ -84,7 +84,7 @@ function parseImporto(text: string): string | null {
   return numeric.toFixed(2);
 }
 
-function extractCig(text: string): string | null {
+export function extractCig(text: string): string | null {
   // CIG: 10 caratteri alfanumerici, talvolta preceduti dall'etichetta.
   const m = /CIG[\s:.]*([0-9A-Za-z]{10})/.exec(text);
   return m ? m[1].toUpperCase() : null;

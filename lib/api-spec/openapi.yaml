@@ -845,6 +845,29 @@ paths:
         "404":
           description: Not found
 
+  /contracts/{id}/storyline:
+    get:
+      operationId: getContractStoryline
+      tags: [contracts]
+      summary: >-
+        Storyline (lifecycle) of a single contract, reconstructed by linking
+        Albo Pretorio publications via CIG/CUP.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Contract storyline
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ContractStoryline"
+        "404":
+          description: Not found
+
   /contracts/{id}/location:
     patch:
       operationId: updateContractLocation
@@ -2447,6 +2470,128 @@ components:
           type: ["string", "null"]
         size:
           type: ["integer", "null"]
+
+    LifecyclePhase:
+      type: string
+      description: >-
+        Phase of a public-spending lifecycle inferred from an act's type/subject.
+      enum:
+        - affidamento
+        - contratto
+        - variante
+        - liquidazione
+        - collaudo
+        - altro
+
+    StorylineStatus:
+      type: string
+      description: Synthetic progress status of the spending.
+      enum:
+        - liquidato
+        - in_corso
+        - nessuna_liquidazione
+
+    StorylineEvent:
+      type: object
+      required:
+        - publicationId
+        - progressivo
+        - phase
+        - matchedBy
+        - tipologia
+        - oggetto
+        - date
+        - estimatedAmount
+        - attachments
+      properties:
+        publicationId:
+          type: integer
+        progressivo:
+          type: string
+        phase:
+          $ref: "#/components/schemas/LifecyclePhase"
+        matchedBy:
+          type: string
+          description: How the publication was linked to the contract.
+          enum:
+            - cig
+            - cup
+        tipologia:
+          type: string
+        oggetto:
+          type: string
+        date:
+          type: ["string", "null"]
+          description: Act date (or publication date) used for ordering, ISO 8601.
+        estimatedAmount:
+          type: ["number", "null"]
+          description: Amount heuristically parsed from the act text (estimate).
+        attachments:
+          type: array
+          items:
+            $ref: "#/components/schemas/PublicationAttachment"
+
+    StorylineIndicators:
+      type: object
+      required:
+        - evidenceCount
+        - firstEvidenceDate
+        - lastEvidenceDate
+        - daysToFirstLiquidazione
+        - daysToLastLiquidazione
+        - awardedAmount
+        - extraAmount
+        - extraAmountIsEstimate
+        - costOverrunPct
+        - liquidatedAmount
+        - liquidatedAmountIsEstimate
+        - status
+      properties:
+        evidenceCount:
+          type: integer
+        phaseCounts:
+          type: object
+          additionalProperties:
+            type: integer
+        firstEvidenceDate:
+          type: ["string", "null"]
+        lastEvidenceDate:
+          type: ["string", "null"]
+        daysToFirstLiquidazione:
+          type: ["integer", "null"]
+        daysToLastLiquidazione:
+          type: ["integer", "null"]
+        awardedAmount:
+          type: number
+        extraAmount:
+          type: ["number", "null"]
+          description: Cost increase inferred from variant acts (estimate).
+        extraAmountIsEstimate:
+          type: boolean
+        costOverrunPct:
+          type: ["number", "null"]
+        liquidatedAmount:
+          type: ["number", "null"]
+        liquidatedAmountIsEstimate:
+          type: boolean
+        status:
+          $ref: "#/components/schemas/StorylineStatus"
+
+    ContractStoryline:
+      type: object
+      required:
+        - contract
+        - timeline
+        - indicators
+      properties:
+        contract:
+          $ref: "#/components/schemas/Contract"
+        timeline:
+          type: array
+          items:
+            $ref: "#/components/schemas/StorylineEvent"
+        indicators:
+          $ref: "#/components/schemas/StorylineIndicators"
 
     FeedStatus:
       type: object

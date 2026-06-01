@@ -686,6 +686,77 @@ export const UpdateContractMacrotemaResponse = zod.object({
 
 
 /**
+ * @summary Storyline (lifecycle) of a single contract, reconstructed by linking Albo Pretorio publications via CIG/CUP.
+ */
+export const GetContractStorylineParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const GetContractStorylineResponse = zod.object({
+  "contract": zod.object({
+  "id": zod.number(),
+  "title": zod.string(),
+  "description": zod.string(),
+  "supplier": zod.string(),
+  "amount": zod.number(),
+  "procedureType": zod.string(),
+  "status": zod.string(),
+  "awardDate": zod.string(),
+  "cig": zod.string().nullish(),
+  "cup": zod.string().nullish(),
+  "stazioneAppaltante": zod.string().nullish(),
+  "acquisitionTool": zod.string().nullish(),
+  "withoutTender": zod.boolean().optional(),
+  "withoutMepa": zod.boolean().optional(),
+  "anacUrl": zod.string().nullish(),
+  "themeId": zod.number().nullish(),
+  "macrotema": zod.union([zod.enum(['ambiente', 'scuole', 'strade', 'sociale', 'cultura', 'mobilita', 'altro']).describe('Ambito di spesa (macrotema) di un contratto'),zod.null()]).optional().describe('Spending-area key (ambiente, scuole, strade, …) or null'),
+  "macrotemaManual": zod.boolean().optional().describe('True when an editor manually corrected the spending area'),
+  "latitude": zod.number().nullish().describe('WGS84 latitude of the intervention, or null if not located'),
+  "longitude": zod.number().nullish().describe('WGS84 longitude of the intervention, or null if not located'),
+  "geoAddress": zod.string().nullish().describe('Resolved location label (e.g. street name)'),
+  "geoQuartiere": zod.string().nullish().describe('Neighborhood key (nicastro \/ sambiase \/ santeufemia)'),
+  "geoSource": zod.string().nullish().describe('Origin of the location (auto = geocoding, manual = editor)'),
+  "geoManual": zod.boolean().optional().describe('True when an editor manually set\/corrected the location'),
+  "geoVerify": zod.boolean().optional().describe('True when the location is uncertain and needs review')
+}),
+  "timeline": zod.array(zod.object({
+  "publicationId": zod.number(),
+  "progressivo": zod.string(),
+  "phase": zod.enum(['affidamento', 'contratto', 'variante', 'liquidazione', 'collaudo', 'altro']).describe('Phase of a public-spending lifecycle inferred from an act\'s type\/subject.'),
+  "matchedBy": zod.enum(['cig', 'cup']).describe('How the publication was linked to the contract.'),
+  "tipologia": zod.string(),
+  "oggetto": zod.string(),
+  "date": zod.string().nullable().describe('Act date (or publication date) used for ordering, ISO 8601.'),
+  "estimatedAmount": zod.number().nullable().describe('Amount heuristically parsed from the act text (estimate).'),
+  "attachments": zod.array(zod.object({
+  "name": zod.string(),
+  "tipo": zod.string(),
+  "officialUrl": zod.string().describe('Direct download link to the specific document on the official portal'),
+  "storagePath": zod.string().nullable().describe('Path of the locally-archived copy, or null if not archived'),
+  "contentType": zod.string().nullable(),
+  "size": zod.number().nullable()
+}))
+})),
+  "indicators": zod.object({
+  "evidenceCount": zod.number(),
+  "phaseCounts": zod.record(zod.string(), zod.number()).optional(),
+  "firstEvidenceDate": zod.string().nullable(),
+  "lastEvidenceDate": zod.string().nullable(),
+  "daysToFirstLiquidazione": zod.number().nullable(),
+  "daysToLastLiquidazione": zod.number().nullable(),
+  "awardedAmount": zod.number(),
+  "extraAmount": zod.number().nullable().describe('Cost increase inferred from variant acts (estimate).'),
+  "extraAmountIsEstimate": zod.boolean(),
+  "costOverrunPct": zod.number().nullable(),
+  "liquidatedAmount": zod.number().nullable(),
+  "liquidatedAmountIsEstimate": zod.boolean(),
+  "status": zod.enum(['liquidato', 'in_corso', 'nessuna_liquidazione']).describe('Synthetic progress status of the spending.')
+})
+})
+
+
+/**
  * @summary Editorial correction of a contract's geographic location. Editor only.
  */
 export const UpdateContractLocationParams = zod.object({

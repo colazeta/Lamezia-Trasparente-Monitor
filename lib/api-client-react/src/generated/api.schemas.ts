@@ -416,6 +416,99 @@ export interface Publication {
   firstSeenAt: string;
 }
 
+/**
+ * Phase of a public-spending lifecycle inferred from an act's type/subject.
+ */
+export type LifecyclePhase = typeof LifecyclePhase[keyof typeof LifecyclePhase];
+
+
+export const LifecyclePhase = {
+  affidamento: 'affidamento',
+  contratto: 'contratto',
+  variante: 'variante',
+  liquidazione: 'liquidazione',
+  collaudo: 'collaudo',
+  altro: 'altro',
+} as const;
+
+/**
+ * Synthetic progress status of the spending.
+ */
+export type StorylineStatus = typeof StorylineStatus[keyof typeof StorylineStatus];
+
+
+export const StorylineStatus = {
+  liquidato: 'liquidato',
+  in_corso: 'in_corso',
+  nessuna_liquidazione: 'nessuna_liquidazione',
+} as const;
+
+/**
+ * How the publication was linked to the contract.
+ */
+export type StorylineEventMatchedBy = typeof StorylineEventMatchedBy[keyof typeof StorylineEventMatchedBy];
+
+
+export const StorylineEventMatchedBy = {
+  cig: 'cig',
+  cup: 'cup',
+} as const;
+
+export interface StorylineEvent {
+  publicationId: number;
+  progressivo: string;
+  phase: LifecyclePhase;
+  /** How the publication was linked to the contract. */
+  matchedBy: StorylineEventMatchedBy;
+  tipologia: string;
+  oggetto: string;
+  /**
+     * Act date (or publication date) used for ordering, ISO 8601.
+     * @nullable
+     */
+  date: string | null;
+  /**
+     * Amount heuristically parsed from the act text (estimate).
+     * @nullable
+     */
+  estimatedAmount: number | null;
+  attachments: PublicationAttachment[];
+}
+
+export type StorylineIndicatorsPhaseCounts = {[key: string]: number};
+
+export interface StorylineIndicators {
+  evidenceCount: number;
+  phaseCounts?: StorylineIndicatorsPhaseCounts;
+  /** @nullable */
+  firstEvidenceDate: string | null;
+  /** @nullable */
+  lastEvidenceDate: string | null;
+  /** @nullable */
+  daysToFirstLiquidazione: number | null;
+  /** @nullable */
+  daysToLastLiquidazione: number | null;
+  awardedAmount: number;
+  /**
+     * Cost increase inferred from variant acts (estimate).
+     * @nullable
+     */
+  extraAmount: number | null;
+  extraAmountIsEstimate: boolean;
+  /** @nullable */
+  costOverrunPct: number | null;
+  /** @nullable */
+  liquidatedAmount: number | null;
+  liquidatedAmountIsEstimate: boolean;
+  status: StorylineStatus;
+}
+
+export interface ContractStoryline {
+  contract: Contract;
+  timeline: StorylineEvent[];
+  indicators: StorylineIndicators;
+}
+
 export interface FeedStatus {
   source: string;
   /** @nullable */

@@ -24,6 +24,7 @@ import type {
   Category,
   Contract,
   ContractAnalytics,
+  ContractStoryline,
   DeliberaVotes,
   Error,
   FeedStatus,
@@ -2067,6 +2068,83 @@ export const useUpdateContractMacrotema = <TError = ErrorType<void>,
       > => {
       return useMutation(getUpdateContractMacrotemaMutationOptions(options));
     }
+
+export const getGetContractStorylineUrl = (id: number,) => {
+
+
+
+
+  return `/api/contracts/${id}/storyline`
+}
+
+/**
+ * @summary Storyline (lifecycle) of a single contract, reconstructed by linking Albo Pretorio publications via CIG/CUP.
+ */
+export const getContractStoryline = async (id: number, options?: RequestInit): Promise<ContractStoryline> => {
+
+  return customFetch<ContractStoryline>(getGetContractStorylineUrl(id),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetContractStorylineQueryKey = (id: number,) => {
+    return [
+    `/api/contracts/${id}/storyline`
+    ] as const;
+    }
+
+
+export const getGetContractStorylineQueryOptions = <TData = Awaited<ReturnType<typeof getContractStoryline>>, TError = ErrorType<void>>(id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getContractStoryline>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetContractStorylineQueryKey(id);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getContractStoryline>>> = ({ signal }) => getContractStoryline(id, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: !!(id), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getContractStoryline>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetContractStorylineQueryResult = NonNullable<Awaited<ReturnType<typeof getContractStoryline>>>
+export type GetContractStorylineQueryError = ErrorType<void>
+
+
+/**
+ * @summary Storyline (lifecycle) of a single contract, reconstructed by linking Albo Pretorio publications via CIG/CUP.
+ */
+
+export function useGetContractStoryline<TData = Awaited<ReturnType<typeof getContractStoryline>>, TError = ErrorType<void>>(
+ id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getContractStoryline>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetContractStorylineQueryOptions(id,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
+
+
 
 export const getUpdateContractLocationUrl = (id: number,) => {
 

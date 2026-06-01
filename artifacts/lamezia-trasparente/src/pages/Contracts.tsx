@@ -33,7 +33,7 @@ import {
   Wallet,
   Info,
 } from "lucide-react";
-import { Link } from "wouter";
+import { Link, useLocation } from "wouter";
 import { format } from "date-fns";
 import { it } from "date-fns/locale";
 import { MONITORING_DOCS_NOTICE } from "@/lib/monitoring";
@@ -131,6 +131,7 @@ export function Contracts() {
   const [to, setTo] = useState("");
   const [quartiere, setQuartiere] = useState("all");
   const [selected, setSelected] = useState<Contract | null>(null);
+  const [, navigate] = useLocation();
 
   const { data: themes, isLoading: themesLoading } = useListThemes();
 
@@ -548,7 +549,7 @@ export function Contracts() {
                   <TableRow
                     key={contract.id}
                     className="group hover-elevate cursor-pointer"
-                    onClick={() => setSelected(contract)}
+                    onClick={() => navigate(`/contratti/${contract.id}`)}
                   >
                     <TableCell>
                       <div className="font-display font-bold text-foreground">
@@ -599,8 +600,9 @@ export function Contracts() {
                         className="h-8 w-8 text-primary hover:text-brand"
                         onClick={(e) => {
                           e.stopPropagation();
-                          setSelected(contract);
+                          navigate(`/contratti/${contract.id}`);
                         }}
+                        aria-label="Apri la storyline dell'appalto"
                       >
                         <ExternalLink className="h-4 w-4" />
                       </Button>
@@ -1278,17 +1280,27 @@ function ContractDetail({
                 </div>
               ) : null}
 
-              {contract.anacUrl ? (
-                <a
-                  href={contract.anacUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:underline"
+              <div className="flex flex-wrap items-center gap-4">
+                <Link
+                  href={`/contratti/${contract.id}`}
+                  onClick={onClose}
+                  className="inline-flex items-center gap-1.5 text-sm font-semibold text-primary hover:underline"
                 >
-                  <ExternalLink className="h-4 w-4" />
-                  Scheda ufficiale su ANAC
-                </a>
-              ) : null}
+                  <FileText className="h-4 w-4" />
+                  Vedi la storyline completa
+                </Link>
+                {contract.anacUrl ? (
+                  <a
+                    href={contract.anacUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:underline"
+                  >
+                    <ExternalLink className="h-4 w-4" />
+                    Scheda ufficiale su ANAC
+                  </a>
+                ) : null}
+              </div>
             </div>
           </>
         ) : null}

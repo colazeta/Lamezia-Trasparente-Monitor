@@ -1,5 +1,10 @@
 import { Router, type IRouter } from "express";
-import { db, contractsTable, feedStatusTable } from "@workspace/db";
+import {
+  db,
+  contractsTable,
+  publicationsTable,
+  feedStatusTable,
+} from "@workspace/db";
 import {
   and,
   eq,
@@ -9,12 +14,18 @@ import {
   ilike,
   or,
   isNotNull,
+  sql,
   type SQL,
 } from "drizzle-orm";
 import { ANAC_SOURCE, ANAC_LABEL, ANAC_PORTAL_URL } from "../lib/anacContracts";
 import { isMacrotemaKey } from "@workspace/db";
 import { requireIngestAuth } from "../middlewares/requireIngestAuth";
 import { nearestQuartiere } from "../lib/geocode";
+import {
+  buildStoryline,
+  type StorylineEvent,
+  type StorylineIndicators,
+} from "../lib/contractStoryline";
 
 const router: IRouter = Router();
 
@@ -288,6 +299,119 @@ router.get("/contracts/:id", async (req, res) => {
   }
 
   res.json(mapContract(row));
+});
+
+function serializeEvent(e: StorylineEvent) {
+  return {
+    publicationId: e.publicationId,
+    progressivo: e.progressivo,
+    phase: e.phase,
+    matchedBy: e.matchedBy,
+    tipologia: e.tipologia,
+    oggetto: e.oggetto,
+    date: e.date ? e.date.toISOString() : null,
+    estimatedAmount: e.estimatedAmount,
+  };
+}
+
+function serializeIndicators(i: StorylineIndicators) {
+  return {
+    evidenceCount: i.evidenceCount,
+    phaseCounts: i.phaseCounts,
+    firstEvidenceDate: i.firstEvidenceDate
+      ? i.firstEvidenceDate.toISOString()
+      : null,
+    lastEvidenceDate: i.lastEvidenceDate
+      ? i.lastEvidenceDate.toISOString()
+      : null,
+    daysToFirstLiquidazione: i.daysToFirstLiquidazione,
+    daysToLastLiquidazione: i.daysToLastLiquidazione,
+    awardedAmount: i.awardedAmount,
+    extraAmount: i.extraAmount,
+    extraAmountIsEstimate: i.extraAmountIsEstimate,
+    costOverrunPct: i.costOverrunPct,
+    liquidatedAmount: i.liquidatedAmount,
+    liquidatedAmountIsEstimate: i.liquidatedAmountIsEstimate,
+    status: i.status,
+  };
+}
+
+// Storyline della spesa pubblica: ciclo di vita di un singolo contratto
+// ricostruito collegando le pubblicazioni dell'Albo Pretorio tramite CIG/CUP.
+// Restituisce il contratto, la timeline cronologica delle evidenze e gli
+// indicatori sintetici (tempi alla liquidazione, scostamenti di costo, stato).
+router.get("/contracts/:id/storyline", async (req, res) => {
+  const id = Number(req.params.id);
+  if (Number.isNaN(id)) {
+    res.status(404).json({ message: "Contratto non trovato" });
+    return;
+  }
+  const [contract] = await db
+    .select()
+    .from(contractsTable)
+    .where(eq(contractsTable.id, id))
+    .limit(1);
+
+  if (!contract) {
+    res.status(404).json({ message: "Contratto non trovato" });
+    return;
+  }
+
+  // Filtro grossolano sulle candidate: oggetto/tipologia che cita il CIG o il
+  // CUP, oppure CUP presente tra quelli strutturati. Il match preciso (e la
+  // forza del collegamento) è poi rifinito da `matchStrength`.
+  const candidateFilters: SQL[] = [];
+  if (contract.cig) {
+    candidateFilters.push(ilike(publicationsTable.oggetto, `%${contract.cig}%`));
+  }
+  if (contract.cup) {
+    candidateFilters.push(ilike(publicationsTable.oggetto, `%${contract.cup}%`));
+    candidateFilters.push(
+      sql`${contract.cup} = ANY(${publicationsTable.cups})`,
+    );
+  }
+
+  let publications: (typeof publicationsTable.$inferSelect)[] = [];
+  if (candidateFilters.length > 0) {
+    publications = await db
+      .select()
+      .from(publicationsTable)
+      .where(or(...candidateFilters));
+  }
+
+  const { timeline, indicators } = buildStoryline(
+    {
+      cig: contract.cig,
+      cup: contract.cup,
+      amount: Number(contract.amount),
+      awardDate: contract.awardDate,
+    },
+    publications.map((p) => ({
+      id: p.id,
+      progressivo: p.progressivo,
+      tipologia: p.tipologia,
+      oggetto: p.oggetto,
+      cups: p.cups,
+      dataAtto: p.dataAtto,
+      pubStart: p.pubStart,
+    })),
+  );
+
+  // Allegati e link ufficiali, indicizzati per pubblicazione, per arricchire la
+  // timeline lato client senza esporre l'intero record della pubblicazione.
+  const pubById = new Map(publications.map((p) => [p.id, p]));
+
+  res.json({
+    contract: mapContract(contract),
+    timeline: timeline.map((e) => {
+      const pub = pubById.get(e.publicationId);
+      return {
+        ...serializeEvent(e),
+        attachments: pub?.attachments ?? [],
+      };
+    }),
+    indicators: serializeIndicators(indicators),
+  });
 });
 
 // Correzione redazionale del macrotema (ambito di spesa) di un contratto.

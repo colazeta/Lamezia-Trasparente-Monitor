@@ -9,15 +9,22 @@ import {
   contractsTable,
   themesTable,
   categoriesTable,
+  publicationsTable,
 } from "@workspace/db";
 import {
   extractCupsFromText,
   buildCupThemeMap,
   resolveThemeId,
 } from "../lib/anacContracts";
+import {
+  classifyPhase,
+  matchStrength,
+  buildStoryline,
+} from "../lib/contractStoryline";
 
 const createdContractIds: number[] = [];
 const createdThemeIds: number[] = [];
+const createdPublicationIds: number[] = [];
 let categoryId = 0;
 
 async function createCategory(): Promise<number> {
@@ -76,6 +83,28 @@ async function createContract(overrides: {
   return row.id;
 }
 
+async function createPublication(overrides: {
+  tipologia: string;
+  oggetto: string;
+  cups?: string[];
+  dataAtto?: Date | null;
+}): Promise<number> {
+  const unique = `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+  const [row] = await db
+    .insert(publicationsTable)
+    .values({
+      progressivo: `pub-${unique}`,
+      tipologia: overrides.tipologia,
+      category: "albo",
+      oggetto: overrides.oggetto,
+      cups: overrides.cups ?? [],
+      dataAtto: overrides.dataAtto ?? null,
+    })
+    .returning();
+  createdPublicationIds.push(row.id);
+  return row.id;
+}
+
 beforeAll(async () => {
   categoryId = await createCategory();
 });
@@ -97,6 +126,12 @@ afterEach(async () => {
   const themeIds = createdThemeIds.splice(0);
   if (themeIds.length) {
     await db.delete(themesTable).where(inArray(themesTable.id, themeIds));
+  }
+  const publicationIds = createdPublicationIds.splice(0);
+  if (publicationIds.length) {
+    await db
+      .delete(publicationsTable)
+      .where(inArray(publicationsTable.id, publicationIds));
   }
 });
 
@@ -225,5 +260,161 @@ describe("ANAC theme association helpers", () => {
     const res = await request(app).get(`/api/contracts?themeId=${themeId}`);
     expect(res.status).toBe(200);
     expect((res.body as unknown[]).length).toBe(1);
+  });
+});
+
+describe("contract storyline classification", () => {
+  it("classifies acts into lifecycle phases from type/subject", () => {
+    expect(
+      classifyPhase("Determina", "Determinazione di aggiudicazione lavori"),
+    ).toBe("affidamento");
+    expect(
+      classifyPhase("Contratto", "Stipula del contratto d'appalto rep. 123"),
+    ).toBe("contratto");
+    expect(
+      classifyPhase("Determina", "Perizia di variante e suppletiva"),
+    ).toBe("variante");
+    expect(
+      classifyPhase("Determina", "Liquidazione fattura saldo lavori"),
+    ).toBe("liquidazione");
+    expect(
+      classifyPhase("Atto", "Certificato di regolare esecuzione e collaudo"),
+    ).toBe("collaudo");
+    expect(classifyPhase("Avviso", "Avviso pubblico generico")).toBe("altro");
+  });
+
+  it("matches publications by CIG (strong) and CUP (weaker)", () => {
+    const contract = {
+      cig: "ABC1234567",
+      cup: "C84J18000000002",
+      amount: 1000,
+      awardDate: new Date("2024-01-01"),
+    };
+    expect(
+      matchStrength(contract, {
+        id: 1,
+        progressivo: "p1",
+        tipologia: "Determina",
+        oggetto: "Liquidazione relativa al CIG ABC1234567",
+        cups: [],
+        dataAtto: null,
+        pubStart: null,
+      }),
+    ).toBe("cig");
+    expect(
+      matchStrength(contract, {
+        id: 2,
+        progressivo: "p2",
+        tipologia: "Determina",
+        oggetto: "Atto generico",
+        cups: ["C84J18000000002"],
+        dataAtto: null,
+        pubStart: null,
+      }),
+    ).toBe("cup");
+    expect(
+      matchStrength(contract, {
+        id: 3,
+        progressivo: "p3",
+        tipologia: "Determina",
+        oggetto: "Atto non collegato",
+        cups: [],
+        dataAtto: null,
+        pubStart: null,
+      }),
+    ).toBeNull();
+  });
+
+  it("computes indicators (time to liquidation, cost overrun, status)", () => {
+    const contract = {
+      cig: "ABC1234567",
+      cup: null,
+      amount: 100000,
+      awardDate: new Date("2024-01-01"),
+    };
+    const { timeline, indicators } = buildStoryline(contract, [
+      {
+        id: 1,
+        progressivo: "p1",
+        tipologia: "Determina",
+        oggetto: "Perizia di variante, importo € 10.000,00 - CIG ABC1234567",
+        cups: [],
+        dataAtto: new Date("2024-02-01"),
+        pubStart: null,
+      },
+      {
+        id: 2,
+        progressivo: "p2",
+        tipologia: "Determina",
+        oggetto: "Liquidazione saldo importo € 50.000,00 CIG ABC1234567",
+        cups: [],
+        dataAtto: new Date("2024-04-01"),
+        pubStart: null,
+      },
+    ]);
+
+    expect(timeline).toHaveLength(2);
+    // Ordine cronologico: variante prima della liquidazione.
+    expect(timeline[0].phase).toBe("variante");
+    expect(timeline[1].phase).toBe("liquidazione");
+    expect(indicators.status).toBe("liquidato");
+    expect(indicators.daysToFirstLiquidazione).toBe(91);
+    expect(indicators.extraAmount).toBe(10000);
+    expect(indicators.costOverrunPct).toBeCloseTo(10);
+  });
+
+  it("reports 'nessuna_liquidazione' when no evidence is linked", () => {
+    const contract = {
+      cig: "ZZZ9999999",
+      cup: null,
+      amount: 1000,
+      awardDate: new Date("2024-01-01"),
+    };
+    const { timeline, indicators } = buildStoryline(contract, []);
+    expect(timeline).toHaveLength(0);
+    expect(indicators.evidenceCount).toBe(0);
+    expect(indicators.status).toBe("nessuna_liquidazione");
+  });
+});
+
+describe("GET /api/contracts/:id/storyline", () => {
+  it("returns the contract, linked timeline and indicators", async () => {
+    const cig = `CIG${Date.now().toString().slice(-7)}`;
+    const contractId = await createContract({
+      title: "Lavori di prova",
+      cig,
+      amount: "100000.00",
+    });
+    await createPublication({
+      tipologia: "Determina",
+      oggetto: `Stipula contratto d'appalto - CIG ${cig}`,
+      dataAtto: new Date("2024-02-01"),
+    });
+    await createPublication({
+      tipologia: "Determina",
+      oggetto: `Liquidazione fattura - CIG ${cig}`,
+      dataAtto: new Date("2024-03-01"),
+    });
+    // Pubblicazione non collegata: non deve comparire nella timeline.
+    await createPublication({
+      tipologia: "Determina",
+      oggetto: "Atto del tutto estraneo",
+      dataAtto: new Date("2024-02-15"),
+    });
+
+    const res = await request(app).get(
+      `/api/contracts/${contractId}/storyline`,
+    );
+    expect(res.status).toBe(200);
+    expect(res.body.contract.id).toBe(contractId);
+    expect(res.body.timeline).toHaveLength(2);
+    expect(res.body.timeline[0].phase).toBe("contratto");
+    expect(res.body.timeline[1].phase).toBe("liquidazione");
+    expect(res.body.indicators.status).toBe("liquidato");
+  });
+
+  it("returns 404 for an unknown contract", async () => {
+    const res = await request(app).get("/api/contracts/99999999/storyline");
+    expect(res.status).toBe(404);
   });
 });
