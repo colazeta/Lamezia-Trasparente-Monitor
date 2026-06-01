@@ -117,7 +117,14 @@ export const GetThemeResponse = zod.object({
   "anacUrl": zod.string().nullish(),
   "themeId": zod.number().nullish(),
   "macrotema": zod.union([zod.enum(['ambiente', 'scuole', 'strade', 'sociale', 'cultura', 'mobilita', 'altro']).describe('Ambito di spesa (macrotema) di un contratto'),zod.null()]).optional().describe('Spending-area key (ambiente, scuole, strade, …) or null'),
-  "macrotemaManual": zod.boolean().optional().describe('True when an editor manually corrected the spending area')
+  "macrotemaManual": zod.boolean().optional().describe('True when an editor manually corrected the spending area'),
+  "latitude": zod.number().nullish().describe('WGS84 latitude of the intervention, or null if not located'),
+  "longitude": zod.number().nullish().describe('WGS84 longitude of the intervention, or null if not located'),
+  "geoAddress": zod.string().nullish().describe('Resolved location label (e.g. street name)'),
+  "geoQuartiere": zod.string().nullish().describe('Neighborhood key (nicastro \/ sambiase \/ santeufemia)'),
+  "geoSource": zod.string().nullish().describe('Origin of the location (auto = geocoding, manual = editor)'),
+  "geoManual": zod.boolean().optional().describe('True when an editor manually set\/corrected the location'),
+  "geoVerify": zod.boolean().optional().describe('True when the location is uncertain and needs review')
 })),
   "acts": zod.array(zod.object({
   "id": zod.number(),
@@ -505,7 +512,9 @@ export const ListContractsQueryParams = zod.object({
   "maxAmount": zod.coerce.number().optional(),
   "from": zod.date().optional().describe('Award date on or after (YYYY-MM-DD)'),
   "to": zod.date().optional().describe('Award date on or before (YYYY-MM-DD)'),
-  "themeId": zod.coerce.number().optional()
+  "themeId": zod.coerce.number().optional(),
+  "quartiere": zod.coerce.string().optional().describe('Filter by neighborhood key (nicastro \/ sambiase \/ santeufemia)'),
+  "hasLocation": zod.coerce.boolean().optional().describe('When true, only contracts that have geographic coordinates')
 })
 
 export const ListContractsResponseItem = zod.object({
@@ -526,7 +535,14 @@ export const ListContractsResponseItem = zod.object({
   "anacUrl": zod.string().nullish(),
   "themeId": zod.number().nullish(),
   "macrotema": zod.union([zod.enum(['ambiente', 'scuole', 'strade', 'sociale', 'cultura', 'mobilita', 'altro']).describe('Ambito di spesa (macrotema) di un contratto'),zod.null()]).optional().describe('Spending-area key (ambiente, scuole, strade, …) or null'),
-  "macrotemaManual": zod.boolean().optional().describe('True when an editor manually corrected the spending area')
+  "macrotemaManual": zod.boolean().optional().describe('True when an editor manually corrected the spending area'),
+  "latitude": zod.number().nullish().describe('WGS84 latitude of the intervention, or null if not located'),
+  "longitude": zod.number().nullish().describe('WGS84 longitude of the intervention, or null if not located'),
+  "geoAddress": zod.string().nullish().describe('Resolved location label (e.g. street name)'),
+  "geoQuartiere": zod.string().nullish().describe('Neighborhood key (nicastro \/ sambiase \/ santeufemia)'),
+  "geoSource": zod.string().nullish().describe('Origin of the location (auto = geocoding, manual = editor)'),
+  "geoManual": zod.boolean().optional().describe('True when an editor manually set\/corrected the location'),
+  "geoVerify": zod.boolean().optional().describe('True when the location is uncertain and needs review')
 })
 export const ListContractsResponse = zod.array(ListContractsResponseItem)
 
@@ -618,7 +634,14 @@ export const GetContractResponse = zod.object({
   "anacUrl": zod.string().nullish(),
   "themeId": zod.number().nullish(),
   "macrotema": zod.union([zod.enum(['ambiente', 'scuole', 'strade', 'sociale', 'cultura', 'mobilita', 'altro']).describe('Ambito di spesa (macrotema) di un contratto'),zod.null()]).optional().describe('Spending-area key (ambiente, scuole, strade, …) or null'),
-  "macrotemaManual": zod.boolean().optional().describe('True when an editor manually corrected the spending area')
+  "macrotemaManual": zod.boolean().optional().describe('True when an editor manually corrected the spending area'),
+  "latitude": zod.number().nullish().describe('WGS84 latitude of the intervention, or null if not located'),
+  "longitude": zod.number().nullish().describe('WGS84 longitude of the intervention, or null if not located'),
+  "geoAddress": zod.string().nullish().describe('Resolved location label (e.g. street name)'),
+  "geoQuartiere": zod.string().nullish().describe('Neighborhood key (nicastro \/ sambiase \/ santeufemia)'),
+  "geoSource": zod.string().nullish().describe('Origin of the location (auto = geocoding, manual = editor)'),
+  "geoManual": zod.boolean().optional().describe('True when an editor manually set\/corrected the location'),
+  "geoVerify": zod.boolean().optional().describe('True when the location is uncertain and needs review')
 })
 
 
@@ -651,7 +674,58 @@ export const UpdateContractMacrotemaResponse = zod.object({
   "anacUrl": zod.string().nullish(),
   "themeId": zod.number().nullish(),
   "macrotema": zod.union([zod.enum(['ambiente', 'scuole', 'strade', 'sociale', 'cultura', 'mobilita', 'altro']).describe('Ambito di spesa (macrotema) di un contratto'),zod.null()]).optional().describe('Spending-area key (ambiente, scuole, strade, …) or null'),
-  "macrotemaManual": zod.boolean().optional().describe('True when an editor manually corrected the spending area')
+  "macrotemaManual": zod.boolean().optional().describe('True when an editor manually corrected the spending area'),
+  "latitude": zod.number().nullish().describe('WGS84 latitude of the intervention, or null if not located'),
+  "longitude": zod.number().nullish().describe('WGS84 longitude of the intervention, or null if not located'),
+  "geoAddress": zod.string().nullish().describe('Resolved location label (e.g. street name)'),
+  "geoQuartiere": zod.string().nullish().describe('Neighborhood key (nicastro \/ sambiase \/ santeufemia)'),
+  "geoSource": zod.string().nullish().describe('Origin of the location (auto = geocoding, manual = editor)'),
+  "geoManual": zod.boolean().optional().describe('True when an editor manually set\/corrected the location'),
+  "geoVerify": zod.boolean().optional().describe('True when the location is uncertain and needs review')
+})
+
+
+/**
+ * @summary Editorial correction of a contract's geographic location. Editor only.
+ */
+export const UpdateContractLocationParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const UpdateContractLocationBody = zod.object({
+  "latitude": zod.number().nullish(),
+  "longitude": zod.number().nullish(),
+  "geoAddress": zod.string().nullish(),
+  "geoQuartiere": zod.string().nullish(),
+  "geoVerify": zod.boolean().optional()
+}).describe('Editorial correction of a contract\'s geographic location. Provide latitude+longitude together to set\/move the point (or both null to clear it). Setting a location marks it as manual so the ingestion geocoding will not overwrite it.')
+
+export const UpdateContractLocationResponse = zod.object({
+  "id": zod.number(),
+  "title": zod.string(),
+  "description": zod.string(),
+  "supplier": zod.string(),
+  "amount": zod.number(),
+  "procedureType": zod.string(),
+  "status": zod.string(),
+  "awardDate": zod.string(),
+  "cig": zod.string().nullish(),
+  "cup": zod.string().nullish(),
+  "stazioneAppaltante": zod.string().nullish(),
+  "acquisitionTool": zod.string().nullish(),
+  "withoutTender": zod.boolean().optional(),
+  "withoutMepa": zod.boolean().optional(),
+  "anacUrl": zod.string().nullish(),
+  "themeId": zod.number().nullish(),
+  "macrotema": zod.union([zod.enum(['ambiente', 'scuole', 'strade', 'sociale', 'cultura', 'mobilita', 'altro']).describe('Ambito di spesa (macrotema) di un contratto'),zod.null()]).optional().describe('Spending-area key (ambiente, scuole, strade, …) or null'),
+  "macrotemaManual": zod.boolean().optional().describe('True when an editor manually corrected the spending area'),
+  "latitude": zod.number().nullish().describe('WGS84 latitude of the intervention, or null if not located'),
+  "longitude": zod.number().nullish().describe('WGS84 longitude of the intervention, or null if not located'),
+  "geoAddress": zod.string().nullish().describe('Resolved location label (e.g. street name)'),
+  "geoQuartiere": zod.string().nullish().describe('Neighborhood key (nicastro \/ sambiase \/ santeufemia)'),
+  "geoSource": zod.string().nullish().describe('Origin of the location (auto = geocoding, manual = editor)'),
+  "geoManual": zod.boolean().optional().describe('True when an editor manually set\/corrected the location'),
+  "geoVerify": zod.boolean().optional().describe('True when the location is uncertain and needs review')
 })
 
 

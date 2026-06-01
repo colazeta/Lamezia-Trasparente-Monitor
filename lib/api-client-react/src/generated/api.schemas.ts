@@ -160,6 +160,35 @@ export interface Contract {
   macrotema?: MacrotemaKey | null;
   /** True when an editor manually corrected the spending area */
   macrotemaManual?: boolean;
+  /**
+     * WGS84 latitude of the intervention, or null if not located
+     * @nullable
+     */
+  latitude?: number | null;
+  /**
+     * WGS84 longitude of the intervention, or null if not located
+     * @nullable
+     */
+  longitude?: number | null;
+  /**
+     * Resolved location label (e.g. street name)
+     * @nullable
+     */
+  geoAddress?: string | null;
+  /**
+     * Neighborhood key (nicastro / sambiase / santeufemia)
+     * @nullable
+     */
+  geoQuartiere?: string | null;
+  /**
+     * Origin of the location (auto = geocoding, manual = editor)
+     * @nullable
+     */
+  geoSource?: string | null;
+  /** True when an editor manually set/corrected the location */
+  geoManual?: boolean;
+  /** True when the location is uncertain and needs review */
+  geoVerify?: boolean;
 }
 
 export interface Act {
@@ -295,6 +324,21 @@ export interface QuestionUpdateInput {
 
 export interface UpdateContract {
   macrotema: MacrotemaKey;
+}
+
+/**
+ * Editorial correction of a contract's geographic location. Provide latitude+longitude together to set/move the point (or both null to clear it). Setting a location marks it as manual so the ingestion geocoding will not overwrite it.
+ */
+export interface UpdateContractLocation {
+  /** @nullable */
+  latitude?: number | null;
+  /** @nullable */
+  longitude?: number | null;
+  /** @nullable */
+  geoAddress?: string | null;
+  /** @nullable */
+  geoQuartiere?: string | null;
+  geoVerify?: boolean;
 }
 
 export interface NameCount {
@@ -971,6 +1015,14 @@ from?: string;
  */
 to?: string;
 themeId?: number;
+/**
+ * Filter by neighborhood key (nicastro / sambiase / santeufemia)
+ */
+quartiere?: string;
+/**
+ * When true, only contracts that have geographic coordinates
+ */
+hasLocation?: boolean;
 };
 
 export type GetContractsAnalyticsParams = {

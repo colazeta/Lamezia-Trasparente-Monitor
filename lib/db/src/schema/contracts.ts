@@ -41,6 +41,23 @@ export const contractsTable = pgTable(
     // True quando la redazione ha corretto manualmente il macrotema: in tal caso
     // l'ingestione non lo sovrascrive più con la classificazione automatica.
     macrotemaManual: boolean("macrotema_manual").notNull().default(false),
+    // --- Posizione geografica (Mappa GIS degli interventi) ---
+    // Coordinate WGS84 del contratto/intervento sul territorio comunale.
+    latitude: numeric("latitude", { precision: 10, scale: 7 }),
+    longitude: numeric("longitude", { precision: 10, scale: 7 }),
+    // Etichetta/indirizzo risolto della posizione (es. "Corso Numistrano").
+    geoAddress: text("geo_address"),
+    // Quartiere/circoscrizione storica a cui appartiene la posizione
+    // (nicastro / sambiase / santeufemia). Derivato dal centroide più vicino.
+    geoQuartiere: text("geo_quartiere"),
+    // Sorgente della posizione: "auto" (geocoding in ingestione) o "manual"
+    // (assegnata dalla redazione). Null finché non geolocalizzato.
+    geoSource: text("geo_source"),
+    // True quando la redazione ha impostato/corretto la posizione a mano: in tal
+    // caso l'ingestione non la sovrascrive più (stesso pattern di macrotemaManual).
+    geoManual: boolean("geo_manual").notNull().default(false),
+    // True quando la posizione è incerta o assente e va verificata dalla redazione.
+    geoVerify: boolean("geo_verify").notNull().default(false),
     awardDate: timestamp("award_date", { withTimezone: true })
       .notNull()
       .defaultNow(),

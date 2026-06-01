@@ -34,4 +34,33 @@ export interface Contract {
   macrotema?: MacrotemaKey | null;
   /** True when an editor manually corrected the spending area */
   macrotemaManual?: boolean;
+  /**
+     * WGS84 latitude of the intervention, or null if not located
+     * @nullable
+     */
+  latitude?: number | null;
+  /**
+     * WGS84 longitude of the intervention, or null if not located
+     * @nullable
+     */
+  longitude?: number | null;
+  /**
+     * Resolved location label (e.g. street name)
+     * @nullable
+     */
+  geoAddress?: string | null;
+  /**
+     * Neighborhood key (nicastro / sambiase / santeufemia)
+     * @nullable
+     */
+  geoQuartiere?: string | null;
+  /**
+     * Origin of the location (auto = geocoding, manual = editor)
+     * @nullable
+     */
+  geoSource?: string | null;
+  /** True when an editor manually set/corrected the location */
+  geoManual?: boolean;
+  /** True when the location is uncertain and needs review */
+  geoVerify?: boolean;
 }

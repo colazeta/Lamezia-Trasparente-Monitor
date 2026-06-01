@@ -74,6 +74,7 @@ import type {
   ThemePostUpdateInput,
   TopThemes,
   UpdateContract,
+  UpdateContractLocation,
   UploadUrlRequest,
   UploadUrlResponse
 } from './api.schemas';
@@ -2057,6 +2058,78 @@ export const useUpdateContractMacrotema = <TError = ErrorType<void>,
         TContext
       > => {
       return useMutation(getUpdateContractMacrotemaMutationOptions(options));
+    }
+
+export const getUpdateContractLocationUrl = (id: number,) => {
+
+
+
+
+  return `/api/contracts/${id}/location`
+}
+
+/**
+ * @summary Editorial correction of a contract's geographic location. Editor only.
+ */
+export const updateContractLocation = async (id: number,
+    updateContractLocation: UpdateContractLocation, options?: RequestInit): Promise<Contract> => {
+
+  return customFetch<Contract>(getUpdateContractLocationUrl(id),
+  {
+    ...options,
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      updateContractLocation,)
+  }
+);}
+
+
+
+
+export const getUpdateContractLocationMutationOptions = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateContractLocation>>, TError,{id: number;data: BodyType<UpdateContractLocation>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof updateContractLocation>>, TError,{id: number;data: BodyType<UpdateContractLocation>}, TContext> => {
+
+const mutationKey = ['updateContractLocation'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof updateContractLocation>>, {id: number;data: BodyType<UpdateContractLocation>}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  updateContractLocation(id,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type UpdateContractLocationMutationResult = NonNullable<Awaited<ReturnType<typeof updateContractLocation>>>
+    export type UpdateContractLocationMutationBody = BodyType<UpdateContractLocation>
+    export type UpdateContractLocationMutationError = ErrorType<void>
+
+    /**
+ * @summary Editorial correction of a contract's geographic location. Editor only.
+ */
+export const useUpdateContractLocation = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateContractLocation>>, TError,{id: number;data: BodyType<UpdateContractLocation>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof updateContractLocation>>,
+        TError,
+        {id: number;data: BodyType<UpdateContractLocation>},
+        TContext
+      > => {
+      return useMutation(getUpdateContractLocationMutationOptions(options));
     }
 
 export const getListOpendataDatasetsUrl = (params?: ListOpendataDatasetsParams,) => {

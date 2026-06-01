@@ -8,7 +8,10 @@ import {
 import { sql, inArray } from "drizzle-orm";
 import { logger } from "./logger";
 import { runAttuazioneIngestion } from "./attuazionePnrr";
-import { runAnacContractsIngestion } from "./anacContracts";
+import {
+  runAnacContractsIngestion,
+  runContractsGeocoding,
+} from "./anacContracts";
 import { reconcileThemeCounters } from "./counters";
 import { runOpendataIngestion } from "./opendata";
 import { enrichAlboAttachments } from "./alboAttachments";
@@ -248,6 +251,9 @@ async function runIngestionCycle(): Promise<void> {
   });
   await runAttuazioneIngestion().catch(() => {});
   await runAnacContractsIngestion().catch(() => {});
+  await runContractsGeocoding().catch((err) => {
+    logger.error({ err }, "Contracts geocoding pass failed");
+  });
   await runOpendataIngestion().catch(() => {});
   await runOrganiSedutaSync().catch((err) => {
     logger.error({ err }, "Organi/sedute sync failed");

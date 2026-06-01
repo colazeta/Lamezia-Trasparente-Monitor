@@ -22,6 +22,8 @@ import {
   Package,
   Wand2,
   CheckCircle2,
+  MapPin,
+  AlertTriangle,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -42,6 +44,7 @@ import {
   SelectItem,
   SelectTrigger,
 } from "@/components/ui/select";
+import { LocationEditor } from "@/components/LocationEditor";
 
 const TOKEN_STORAGE_KEY = "lt_ingest_token";
 
@@ -177,9 +180,17 @@ function AdminEditor({
 
   const [search, setSearch] = useState("");
   const [savingId, setSavingId] = useState<number | null>(null);
+  const [editingLocation, setEditingLocation] = useState<Contract | null>(null);
 
   const { data: contracts, isLoading } = useListContracts();
   const updateMacrotema = useUpdateContractMacrotema(authRequest);
+
+  const refreshContracts = () => {
+    queryClient.invalidateQueries({ queryKey: getListContractsQueryKey() });
+    queryClient.invalidateQueries({
+      queryKey: getGetContractsAnalyticsQueryKey(),
+    });
+  };
 
   const isAuthError = (error: unknown): boolean => {
     const status = (error as { status?: number } | null)?.status;
@@ -314,9 +325,27 @@ function AdminEditor({
                       Automatico
                     </Badge>
                   )}
+                  {typeof contract.latitude === "number" ? (
+                    contract.geoVerify ? (
+                      <Badge className="gap-1 border-transparent bg-amber-100 text-amber-800 text-[10px] shadow-none dark:bg-amber-500/20 dark:text-amber-300">
+                        <AlertTriangle className="h-3 w-3" />
+                        Posizione da verificare
+                      </Badge>
+                    ) : (
+                      <Badge className="gap-1 border-transparent bg-sky-100 text-sky-800 text-[10px] shadow-none dark:bg-sky-500/20 dark:text-sky-300">
+                        <MapPin className="h-3 w-3" />
+                        Geolocalizzato
+                      </Badge>
+                    )
+                  ) : (
+                    <Badge variant="outline" className="gap-1 text-[10px] shadow-none">
+                      <MapPin className="h-3 w-3" />
+                      Senza posizione
+                    </Badge>
+                  )}
                 </div>
               </div>
-              <div className="w-full sm:w-72 shrink-0">
+              <div className="flex w-full shrink-0 flex-col gap-2 sm:w-72">
                 <Select
                   value={contract.macrotema ?? "altro"}
                   onValueChange={(value) =>
@@ -346,11 +375,29 @@ function AdminEditor({
                     })}
                   </SelectContent>
                 </Select>
+                <Button
+                  variant="outline"
+                  className="h-10 w-full gap-2"
+                  onClick={() => setEditingLocation(contract)}
+                >
+                  <MapPin className="h-4 w-4" />
+                  {typeof contract.latitude === "number"
+                    ? "Modifica posizione"
+                    : "Imposta posizione"}
+                </Button>
               </div>
             </div>
           ))}
         </div>
       )}
+
+      <LocationEditor
+        contract={editingLocation}
+        token={token}
+        onClose={() => setEditingLocation(null)}
+        onSaved={refreshContracts}
+        onAuthError={handleAuthError}
+      />
     </div>
   );
 }

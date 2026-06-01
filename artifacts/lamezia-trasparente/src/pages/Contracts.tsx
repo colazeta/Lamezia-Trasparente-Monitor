@@ -80,6 +80,9 @@ import {
   ChartTooltipContent,
   type ChartConfig,
 } from "@/components/ui/chart";
+import { InterventionsMap } from "@/components/InterventionsMap";
+import { quartiereLabel } from "@/lib/gis";
+import { MapPin } from "lucide-react";
 
 const ANAC_PORTAL_URL = "https://dati.anticorruzione.it/superset/dashboard/appalti/";
 
@@ -126,6 +129,7 @@ export function Contracts() {
   const [maxAmount, setMaxAmount] = useState("");
   const [from, setFrom] = useState("");
   const [to, setTo] = useState("");
+  const [quartiere, setQuartiere] = useState("all");
   const [selected, setSelected] = useState<Contract | null>(null);
 
   const { data: themes, isLoading: themesLoading } = useListThemes();
@@ -147,8 +151,9 @@ export function Contracts() {
       f.maxAmount = Number(maxAmount);
     if (from) f.from = from;
     if (to) f.to = to;
+    if (quartiere !== "all") f.quartiere = quartiere;
     return f;
-  }, [debouncedSearch, procedureType, acquisitionTool, themeId, minAmount, maxAmount, from, to]);
+  }, [debouncedSearch, procedureType, acquisitionTool, themeId, minAmount, maxAmount, from, to, quartiere]);
 
   const { data: contracts, isLoading } = useListContracts(filters);
   const { data: analytics, isLoading: analyticsLoading } =
@@ -178,7 +183,8 @@ export function Contracts() {
     minAmount ||
     maxAmount ||
     from ||
-    to;
+    to ||
+    quartiere !== "all";
 
   const resetFilters = () => {
     setSearch("");
@@ -189,7 +195,17 @@ export function Contracts() {
     setMaxAmount("");
     setFrom("");
     setTo("");
+    setQuartiere("all");
   };
+
+  const locatedContracts = useMemo(
+    () =>
+      (contracts ?? []).filter(
+        (c) =>
+          typeof c.latitude === "number" && typeof c.longitude === "number",
+      ),
+    [contracts],
+  );
 
   return (
     <div className="container mx-auto px-4 py-8 md:py-12 max-w-6xl">
@@ -295,6 +311,25 @@ export function Contracts() {
             </SelectContent>
           </Select>
         </div>
+
+        <Select value={quartiere} onValueChange={setQuartiere}>
+          <SelectTrigger className="h-11 bg-background" aria-label="Filtra per quartiere">
+            <div className="flex items-center gap-2 truncate">
+              <MapPin className="h-4 w-4 text-muted-foreground shrink-0" />
+              <span className="truncate">
+                {quartiere === "all"
+                  ? "Tutti i quartieri"
+                  : quartiereLabel(quartiere)}
+              </span>
+            </div>
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">Tutti i quartieri</SelectItem>
+            <SelectItem value="nicastro">Nicastro</SelectItem>
+            <SelectItem value="sambiase">Sambiase</SelectItem>
+            <SelectItem value="santeufemia">Sant'Eufemia</SelectItem>
+          </SelectContent>
+        </Select>
 
         <Select value={procedureType} onValueChange={setProcedureType}>
           <SelectTrigger className="h-11 bg-background" aria-label="Filtra per procedura">
@@ -415,6 +450,44 @@ export function Contracts() {
             </Button>
           ) : null}
         </div>
+      </div>
+
+      {/* Mappa degli interventi (GIS) */}
+      <div className="mb-8 rounded-xl border border-card-border bg-card p-4 shadow-sm sm:p-5">
+        <div className="mb-3 flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex items-center gap-2">
+            <MapPin className="h-4 w-4 text-brand" />
+            <h3 className="font-display font-bold tracking-tight">
+              Mappa degli interventi
+            </h3>
+          </div>
+          <span className="text-xs text-muted-foreground">
+            {locatedContracts.length} su {contracts?.length ?? 0} appalti
+            geolocalizzati
+          </span>
+        </div>
+        <p className="mb-3 text-xs text-muted-foreground">
+          Solo gli appalti con un luogo riconoscibile (lavori, opere, interventi
+          su strade ed edifici) compaiono sulla mappa: la maggior parte degli
+          atti amministrativi non indica una posizione fisica. I punti tratteggiati
+          in ambra hanno una posizione approssimata, da verificare.
+        </p>
+        {isLoading ? (
+          <Skeleton className="h-[420px] w-full rounded-xl" />
+        ) : locatedContracts.length > 0 ? (
+          <InterventionsMap
+            contracts={locatedContracts}
+            selectedId={selected?.id ?? null}
+            onSelect={setSelected}
+          />
+        ) : (
+          <div className="flex h-[200px] flex-col items-center justify-center gap-2 rounded-xl border border-dashed border-border text-center">
+            <MapPin className="h-6 w-6 text-muted-foreground" />
+            <p className="text-sm text-muted-foreground">
+              Nessun appalto geolocalizzato per i filtri attuali.
+            </p>
+          </div>
+        )}
       </div>
 
       {/* Table */}
@@ -1173,7 +1246,37 @@ function ContractDetail({
                 {theme ? (
                   <MetaRow icon={FileText} label="Tema" value={theme.title} />
                 ) : null}
+                {typeof contract.latitude === "number" ? (
+                  <MetaRow
+                    icon={MapPin}
+                    label="Luogo dell'intervento"
+                    value={
+                      [
+                        contract.geoAddress,
+                        quartiereLabel(contract.geoQuartiere),
+                      ]
+                        .filter((v) => v && v !== "—")
+                        .join(" · ") || "Posizione disponibile"
+                    }
+                  />
+                ) : null}
               </dl>
+
+              {typeof contract.latitude === "number" ? (
+                <div className="overflow-hidden rounded-xl border border-border">
+                  <InterventionsMap
+                    contracts={[contract]}
+                    selectedId={contract.id}
+                    showBaseLayers={false}
+                    className="h-[240px] w-full"
+                  />
+                  {contract.geoVerify ? (
+                    <div className="bg-amber-50 px-3 py-2 text-xs font-medium text-amber-700 dark:bg-amber-500/10 dark:text-amber-300">
+                      Posizione approssimata, in attesa di verifica redazionale.
+                    </div>
+                  ) : null}
+                </div>
+              ) : null}
 
               {contract.anacUrl ? (
                 <a

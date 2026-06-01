@@ -25,4 +25,12 @@ from?: Date;
  */
 to?: Date;
 themeId?: number;
+/**
+ * Filter by neighborhood key (nicastro / sambiase / santeufemia)
+ */
+quartiere?: string;
+/**
+ * When true, only contracts that have geographic coordinates
+ */
+hasLocation?: boolean;
 };

@@ -1,9 +1,20 @@
 import { Router, type IRouter } from "express";
 import { db, contractsTable, feedStatusTable } from "@workspace/db";
-import { and, eq, desc, gte, lte, ilike, or, type SQL } from "drizzle-orm";
+import {
+  and,
+  eq,
+  desc,
+  gte,
+  lte,
+  ilike,
+  or,
+  isNotNull,
+  type SQL,
+} from "drizzle-orm";
 import { ANAC_SOURCE, ANAC_LABEL, ANAC_PORTAL_URL } from "../lib/anacContracts";
 import { isMacrotemaKey } from "@workspace/db";
 import { requireIngestAuth } from "../middlewares/requireIngestAuth";
+import { nearestQuartiere } from "../lib/geocode";
 
 const router: IRouter = Router();
 
@@ -27,6 +38,13 @@ function mapContract(c: typeof contractsTable.$inferSelect) {
     themeId: c.themeId,
     macrotema: c.macrotema,
     macrotemaManual: c.macrotemaManual,
+    latitude: c.latitude !== null ? Number(c.latitude) : null,
+    longitude: c.longitude !== null ? Number(c.longitude) : null,
+    geoAddress: c.geoAddress,
+    geoQuartiere: c.geoQuartiere,
+    geoSource: c.geoSource,
+    geoManual: c.geoManual,
+    geoVerify: c.geoVerify,
   };
 }
 
@@ -93,6 +111,17 @@ function buildFilters(query: Record<string, unknown>): SQL[] {
   const themeId = query.themeId ? Number(query.themeId) : NaN;
   if (!Number.isNaN(themeId)) {
     conditions.push(eq(contractsTable.themeId, themeId));
+  }
+
+  const quartiere =
+    typeof query.quartiere === "string" ? query.quartiere.trim() : "";
+  if (quartiere) {
+    conditions.push(eq(contractsTable.geoQuartiere, quartiere));
+  }
+
+  // hasLocation=true → solo contratti già geolocalizzati (con coordinate).
+  if (query.hasLocation === "true" || query.hasLocation === true) {
+    conditions.push(isNotNull(contractsTable.latitude));
   }
 
   return conditions;
@@ -281,6 +310,100 @@ router.patch("/contracts/:id", requireIngestAuth, async (req, res) => {
   const [row] = await db
     .update(contractsTable)
     .set({ macrotema: body.macrotema, macrotemaManual: true })
+    .where(eq(contractsTable.id, id))
+    .returning();
+
+  if (!row) {
+    res.status(404).json({ message: "Contratto non trovato" });
+    return;
+  }
+
+  res.json(mapContract(row));
+});
+
+// Correzione redazionale della posizione geografica di un contratto (Mappa GIS).
+// Protetta dal token di ingestione. La redazione può:
+//  - impostare/spostare la posizione (latitude+longitude) → geoManual=true,
+//    così l'ingestione non la sovrascrive più con il geocoding automatico;
+//  - rimuovere la posizione passando latitude/longitude = null;
+//  - aggiornare l'etichetta (geoAddress) e segnalare/rimuovere "da verificare".
+router.patch("/contracts/:id/location", requireIngestAuth, async (req, res) => {
+  const id = Number(req.params.id);
+  if (Number.isNaN(id)) {
+    res.status(404).json({ message: "Contratto non trovato" });
+    return;
+  }
+
+  const body = req.body as {
+    latitude?: unknown;
+    longitude?: unknown;
+    geoAddress?: unknown;
+    geoQuartiere?: unknown;
+    geoVerify?: unknown;
+  };
+
+  const hasLat = "latitude" in body;
+  const hasLon = "longitude" in body;
+  if (hasLat !== hasLon) {
+    res
+      .status(400)
+      .json({ message: "latitude e longitude vanno forniti insieme" });
+    return;
+  }
+
+  const update: Partial<typeof contractsTable.$inferInsert> = {
+    geoManual: true,
+    geoSource: "manual",
+  };
+
+  if (hasLat && hasLon) {
+    const clearing = body.latitude === null && body.longitude === null;
+    if (clearing) {
+      update.latitude = null;
+      update.longitude = null;
+      update.geoQuartiere = null;
+    } else {
+      const lat = Number(body.latitude);
+      const lon = Number(body.longitude);
+      if (
+        !Number.isFinite(lat) ||
+        !Number.isFinite(lon) ||
+        lat < -90 ||
+        lat > 90 ||
+        lon < -180 ||
+        lon > 180
+      ) {
+        res.status(400).json({ message: "Coordinate non valide" });
+        return;
+      }
+      update.latitude = lat.toFixed(7);
+      update.longitude = lon.toFixed(7);
+      update.geoQuartiere =
+        typeof body.geoQuartiere === "string" && body.geoQuartiere.trim()
+          ? body.geoQuartiere.trim()
+          : nearestQuartiere(lat, lon);
+    }
+  } else if (typeof body.geoQuartiere === "string") {
+    update.geoQuartiere = body.geoQuartiere.trim() || null;
+  }
+
+  if ("geoAddress" in body) {
+    update.geoAddress =
+      typeof body.geoAddress === "string" && body.geoAddress.trim()
+        ? body.geoAddress.trim()
+        : null;
+  }
+
+  if ("geoVerify" in body) {
+    update.geoVerify = body.geoVerify === true;
+  } else if (hasLat && hasLon && body.latitude !== null) {
+    // Una posizione confermata a mano non è più "da verificare".
+    update.geoVerify = false;
+  }
+
+  const [row] = await db
+    .update(contractsTable)
+    .set(update)
     .where(eq(contractsTable.id, id))
     .returning();
 

@@ -4,8 +4,10 @@ import React from "react";
 import { Linking, Platform, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 
 import { Badge, Card, EmptyState, Skeleton } from "@/components/ui";
+import { InterventionsMap } from "../../components/InterventionsMap";
 import { useColors } from "@/hooks/useColors";
 import { formatAmount, formatDateOpt, intentColors } from "@/lib/civic";
+import { quartiereLabel } from "@/lib/gis";
 import { useGetContract } from "@workspace/api-client-react";
 
 export default function ContractDetailScreen() {
@@ -67,6 +69,33 @@ export default function ContractDetailScreen() {
         <MetaRow icon="tag" label="Stato" value={c.status} last />
       </Card>
 
+      {typeof c.latitude === "number" && typeof c.longitude === "number" ? (
+        <Card style={{ gap: 10 }}>
+          <View style={styles.locTitleRow}>
+            <Feather name="map-pin" size={16} color={colors.primary} />
+            <Text style={[styles.locTitle, { color: colors.foreground }]}>
+              Luogo dell'intervento
+            </Text>
+          </View>
+          {c.geoAddress || c.geoQuartiere ? (
+            <Text style={[styles.locText, { color: colors.mutedForeground }]}>
+              {[c.geoAddress, quartiereLabel(c.geoQuartiere)]
+                .filter(Boolean)
+                .join(" · ")}
+            </Text>
+          ) : null}
+          <InterventionsMap contracts={[c]} height={220} showBoundary={false} />
+          {c.geoVerify ? (
+            <View style={[styles.verifyRow, { backgroundColor: warn.bg }]}>
+              <Feather name="alert-triangle" size={13} color={warn.fg} />
+              <Text style={[styles.verifyText, { color: warn.fg }]}>
+                Posizione approssimata, in attesa di verifica redazionale.
+              </Text>
+            </View>
+          ) : null}
+        </Card>
+      ) : null}
+
       {c.anacUrl ? (
         <Pressable
           onPress={() => Linking.openURL(c.anacUrl as string)}
@@ -122,6 +151,18 @@ const styles = StyleSheet.create({
   metaRow: { flexDirection: "row", gap: 10, paddingVertical: 11 },
   metaLabel: { fontFamily: "Inter_500Medium", fontSize: 10.5, letterSpacing: 0.4 },
   metaValue: { fontFamily: "Inter_500Medium", fontSize: 14, marginTop: 2, lineHeight: 19 },
+  locTitleRow: { flexDirection: "row", alignItems: "center", gap: 7 },
+  locTitle: { fontFamily: "SpaceGrotesk_600SemiBold", fontSize: 16, letterSpacing: -0.2 },
+  locText: { fontFamily: "Inter_500Medium", fontSize: 13, lineHeight: 18 },
+  verifyRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 7,
+    paddingVertical: 8,
+    paddingHorizontal: 10,
+    borderRadius: 8,
+  },
+  verifyText: { fontFamily: "Inter_500Medium", fontSize: 12, flex: 1, lineHeight: 16 },
   linkBtn: { flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 7, paddingVertical: 6 },
   link: { fontFamily: "Inter_600SemiBold", fontSize: 14 },
 });

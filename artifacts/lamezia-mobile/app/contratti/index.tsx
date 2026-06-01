@@ -13,6 +13,7 @@ import {
 } from "react-native";
 
 import { Badge, Card, ChipRow, DateField, EmptyState, NoticeBanner, SearchBar, Skeleton } from "@/components/ui";
+import { InterventionsMap } from "../../components/InterventionsMap";
 import { useColors } from "@/hooks/useColors";
 import { compactAmount, formatAmount, formatDateOpt, intentColors } from "@/lib/civic";
 import {
@@ -120,6 +121,14 @@ export default function ContrattiScreen() {
 
   const items = contracts.data ?? [];
 
+  const located = useMemo(
+    () =>
+      items.filter(
+        (c) => typeof c.latitude === "number" && typeof c.longitude === "number",
+      ),
+    [items],
+  );
+
   const Header = (
     <View style={styles.headerArea}>
       <FeedBanner feedStatus={feedStatus.data} />
@@ -128,6 +137,24 @@ export default function ContrattiScreen() {
         message={MONITORING_NOTICE_BODY}
       />
       <Analytics loading={analytics.isLoading} analytics={analytics.data} />
+      {located.length > 0 ? (
+        <Card style={{ gap: 10 }}>
+          <View style={styles.sectionTitleRow}>
+            <Feather name="map-pin" size={16} color={colors.primary} />
+            <Text style={[styles.sectionTitle, { color: colors.foreground }]}>
+              Mappa degli interventi
+            </Text>
+          </View>
+          <Text style={[styles.mapHint, { color: colors.mutedForeground }]}>
+            {located.length} su {items.length} appalti geolocalizzati. Tocca un
+            segnaposto per aprire la scheda.
+          </Text>
+          <InterventionsMap
+            contracts={located}
+            onMarkerPress={(c) => router.push(`/contratti/${c.id}`)}
+          />
+        </Card>
+      ) : null}
       {procedures.length > 1 ? (
         <ChipRow
           options={procedureOptions}
@@ -523,6 +550,7 @@ const styles = StyleSheet.create({
   recurrentCount: { fontFamily: "Inter_400Regular", fontSize: 12 },
   sectionTitleRow: { flexDirection: "row", alignItems: "center", gap: 7 },
   sectionTitle: { fontFamily: "SpaceGrotesk_600SemiBold", fontSize: 16, letterSpacing: -0.2 },
+  mapHint: { fontFamily: "Inter_400Regular", fontSize: 12.5, lineHeight: 17 },
   beneRow: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", gap: 10 },
   beneName: { fontFamily: "Inter_500Medium", fontSize: 13, flex: 1 },
   beneValue: { fontFamily: "SpaceGrotesk_700Bold", fontSize: 13 },

@@ -6,8 +6,9 @@ import {
   classifyMacrotema,
   type InsertContract,
 } from "@workspace/db";
-import { eq, isNotNull } from "drizzle-orm";
+import { and, eq, isNull, isNotNull } from "drizzle-orm";
 import { logger } from "./logger";
+import { geocodeContractText } from "./geocode";
 
 export const ANAC_SOURCE = "anac-contratti-lamezia";
 export const ANAC_LABEL =
@@ -496,4 +497,79 @@ export async function runAnacContractsIngestion(): Promise<{
       });
     throw err;
   }
+}
+
+// Geocoding automatico degli interventi (Mappa GIS).
+//
+// Tenta di assegnare una posizione ai contratti che non ne hanno ancora una,
+// estraendo vie/luoghi dal testo e geocodificandoli (vedi ./geocode). Non tocca
+// mai i contratti con posizione manuale (geoManual) e processa solo quelli mai
+// tentati (geoSource IS NULL), così da non interrogare Nominatim ad ogni ciclo
+// per gli stessi atti non localizzabili. Limitato per run per rispettare il
+// rate limit del servizio di geocoding aperto.
+export async function runContractsGeocoding(
+  limit = 25,
+): Promise<{ attempted: number; located: number; toVerify: number }> {
+  const rows = await db
+    .select({
+      id: contractsTable.id,
+      title: contractsTable.title,
+      description: contractsTable.description,
+    })
+    .from(contractsTable)
+    .where(
+      and(
+        isNull(contractsTable.latitude),
+        isNull(contractsTable.geoSource),
+        eq(contractsTable.geoManual, false),
+      ),
+    )
+    .limit(limit);
+
+  if (rows.length === 0) return { attempted: 0, located: 0, toVerify: 0 };
+
+  logger.info(
+    { source: ANAC_SOURCE, count: rows.length },
+    "Starting contracts geocoding pass",
+  );
+
+  let located = 0;
+  let toVerify = 0;
+  for (const c of rows) {
+    let result = null;
+    try {
+      result = await geocodeContractText(c.title, c.description);
+    } catch (err) {
+      logger.warn({ err, id: c.id }, "Geocoding failed for contract");
+    }
+    if (result) {
+      await db
+        .update(contractsTable)
+        .set({
+          latitude: result.latitude.toFixed(7),
+          longitude: result.longitude.toFixed(7),
+          geoAddress: result.geoAddress,
+          geoQuartiere: result.geoQuartiere,
+          geoSource: "auto",
+          geoVerify: result.approximate,
+        })
+        .where(eq(contractsTable.id, c.id));
+      located += 1;
+      if (result.approximate) toVerify += 1;
+    } else {
+      // Nessuna posizione affidabile: segnaliamo "da verificare" e non
+      // ritentiamo più automaticamente (geoSource diventa non-null).
+      await db
+        .update(contractsTable)
+        .set({ geoSource: "auto", geoVerify: true })
+        .where(eq(contractsTable.id, c.id));
+      toVerify += 1;
+    }
+  }
+
+  logger.info(
+    { source: ANAC_SOURCE, attempted: rows.length, located, toVerify },
+    "Contracts geocoding pass complete",
+  );
+  return { attempted: rows.length, located, toVerify };
 }

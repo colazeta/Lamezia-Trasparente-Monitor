@@ -108,5 +108,6 @@ export * from './themePostUpdateInput';
 export * from './themeStatus';
 export * from './topThemes';
 export * from './updateContract';
+export * from './updateContractLocation';
 export * from './uploadUrlRequest';
 export * from './uploadUrlResponse';

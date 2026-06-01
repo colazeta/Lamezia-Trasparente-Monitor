@@ -699,6 +699,18 @@ paths:
           required: false
           schema:
             type: integer
+        - name: quartiere
+          in: query
+          required: false
+          description: Filter by neighborhood key (nicastro / sambiase / santeufemia)
+          schema:
+            type: string
+        - name: hasLocation
+          in: query
+          required: false
+          description: When true, only contracts that have geographic coordinates
+          schema:
+            type: boolean
       responses:
         "200":
           description: List of contracts
@@ -828,6 +840,37 @@ paths:
                 $ref: "#/components/schemas/Contract"
         "400":
           description: Invalid spending area
+        "401":
+          description: Unauthorized
+        "404":
+          description: Not found
+
+  /contracts/{id}/location:
+    patch:
+      operationId: updateContractLocation
+      tags: [contracts]
+      summary: Editorial correction of a contract's geographic location. Editor only.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateContractLocation"
+      responses:
+        "200":
+          description: Updated contract
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Contract"
+        "400":
+          description: Invalid location
         "401":
           description: Unauthorized
         "404":
@@ -1930,6 +1973,27 @@ components:
         macrotemaManual:
           type: boolean
           description: True when an editor manually corrected the spending area
+        latitude:
+          type: ["number", "null"]
+          description: WGS84 latitude of the intervention, or null if not located
+        longitude:
+          type: ["number", "null"]
+          description: WGS84 longitude of the intervention, or null if not located
+        geoAddress:
+          type: ["string", "null"]
+          description: Resolved location label (e.g. street name)
+        geoQuartiere:
+          type: ["string", "null"]
+          description: Neighborhood key (nicastro / sambiase / santeufemia)
+        geoSource:
+          type: ["string", "null"]
+          description: Origin of the location (auto = geocoding, manual = editor)
+        geoManual:
+          type: boolean
+          description: True when an editor manually set/corrected the location
+        geoVerify:
+          type: boolean
+          description: True when the location is uncertain and needs review
 
     MacrotemaKey:
       type: string
@@ -1949,6 +2013,25 @@ components:
       properties:
         macrotema:
           $ref: "#/components/schemas/MacrotemaKey"
+
+    UpdateContractLocation:
+      type: object
+      description: >-
+        Editorial correction of a contract's geographic location. Provide
+        latitude+longitude together to set/move the point (or both null to
+        clear it). Setting a location marks it as manual so the ingestion
+        geocoding will not overwrite it.
+      properties:
+        latitude:
+          type: ["number", "null"]
+        longitude:
+          type: ["number", "null"]
+        geoAddress:
+          type: ["string", "null"]
+        geoQuartiere:
+          type: ["string", "null"]
+        geoVerify:
+          type: boolean
 
     NameCount:
       type: object
