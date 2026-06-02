@@ -19,6 +19,7 @@ import {
   X,
   FileJson,
   Braces,
+  Code2,
 } from "lucide-react";
 import { format } from "date-fns";
 import { it } from "date-fns/locale";
@@ -177,6 +178,12 @@ export function Opendata() {
               <ExternalLink className="ml-1.5 h-3.5 w-3.5 opacity-60" />
             </Button>
           </a>
+          <Link href="/sviluppatori">
+            <Button variant="outline" size="sm">
+              <Code2 className="mr-1.5 h-4 w-4" />
+              API e sviluppatori
+            </Button>
+          </Link>
         </div>
       </div>
 

@@ -38,6 +38,8 @@ export function Footer() {
               <li><Link href="/contratti" className="hover:text-primary transition-colors">Appalti Pubblici</Link></li>
               <li><Link href="/albo" className="hover:text-primary transition-colors">Albo Pretorio</Link></li>
               <li><Link href="/statistiche" className="hover:text-primary transition-colors">Statistiche</Link></li>
+              <li><Link href="/feeds" className="hover:text-primary transition-colors">Feed e abbonamenti</Link></li>
+              <li><Link href="/sviluppatori" className="hover:text-primary transition-colors">API e sviluppatori</Link></li>
             </ul>
           </div>
 

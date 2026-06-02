@@ -122,6 +122,8 @@ import { AmministratoreDetail } from "@/pages/AmministratoreDetail";
 import { Pnrr } from "@/pages/Pnrr";
 import { Opendata } from "@/pages/Opendata";
 import { OpendataDetail } from "@/pages/OpendataDetail";
+import { Feeds } from "@/pages/Feeds";
+import { Sviluppatori } from "@/pages/Sviluppatori";
 import { Performance } from "@/pages/Performance";
 import { PerformanceCompare } from "@/pages/PerformanceCompare";
 import { PerformanceDetail } from "@/pages/PerformanceDetail";
@@ -151,6 +153,8 @@ export const PAGES: Array<[string, PageComponent]> = [
   ["Pnrr", Pnrr],
   ["Opendata", Opendata],
   ["OpendataDetail", OpendataDetail],
+  ["Feeds", Feeds],
+  ["Sviluppatori", Sviluppatori],
   ["Performance", Performance],
   ["PerformanceCompare", PerformanceCompare],
   ["PerformanceDetail", PerformanceDetail],

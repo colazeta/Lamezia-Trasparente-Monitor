@@ -24,6 +24,8 @@ import {
   HandCoins,
   ShieldOff,
   Telescope,
+  Rss,
+  Code2,
 } from "lucide-react";
 import { useState } from "react";
 import { useListQuestions } from "@workspace/api-client-react";
@@ -56,6 +58,8 @@ const sectionItems = [
   { href: "/pareri", label: "Pareri di Vigilanza", icon: ShieldCheck },
   { href: "/contratti", label: "Contratti", icon: FileText },
   { href: "/opendata", label: "Opendata", icon: Database },
+  { href: "/sviluppatori", label: "API e sviluppatori", icon: Code2 },
+  { href: "/feeds", label: "Feed e abbonamenti", icon: Rss },
   { href: "/performance", label: "Performance", icon: Gauge },
   { href: "/statistiche", label: "Statistiche", icon: BarChart3 },
   { href: "/segnalazioni", label: "Segnalazioni", icon: Megaphone },
