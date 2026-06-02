@@ -9,6 +9,7 @@ import {
 import { and, eq, isNull, isNotNull } from "drizzle-orm";
 import { logger } from "./logger";
 import { geocodeContractText } from "./geocode";
+import { parseImporto } from "./importo";
 
 export const ANAC_SOURCE = "anac-contratti-lamezia";
 export const ANAC_LABEL =
@@ -71,18 +72,10 @@ function parseItDate(s: string): Date | null {
   return Number.isNaN(d.getTime()) ? null : d;
 }
 
-// Importo in formato italiano (1.234.567,89) presente nel testo dell'oggetto.
-export function parseImporto(text: string): string | null {
-  const m =
-    /(?:€|euro|importo[^0-9]{0,20})\s*([0-9]{1,3}(?:\.[0-9]{3})*(?:,[0-9]{2})?)/i.exec(
-      text,
-    );
-  const raw = m?.[1];
-  if (!raw) return null;
-  const numeric = Number(raw.replace(/\./g, "").replace(",", "."));
-  if (Number.isNaN(numeric) || numeric <= 0) return null;
-  return numeric.toFixed(2);
-}
+// Importo in formato italiano: il parser vive in un modulo isolato e
+// senza dipendenze (./importo) per evitare cicli di import. Lo ri-esportiamo
+// qui per compatibilità con i chiamatori esistenti.
+export { parseImporto } from "./importo";
 
 export function extractCig(text: string): string | null {
   // CIG: 10 caratteri alfanumerici, talvolta preceduti dall'etichetta.

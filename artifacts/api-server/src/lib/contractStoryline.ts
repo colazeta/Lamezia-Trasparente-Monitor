@@ -10,7 +10,7 @@
 // Le funzioni qui esposte sono pure (nessun accesso al DB) per essere facilmente
 // testabili: il caricamento dei dati avviene nella route.
 
-import { parseImporto } from "./anacContracts";
+import { parseImporto } from "./importo";
 
 // Fasi del ciclo di vita di una spesa pubblica.
 export type LifecyclePhase =
