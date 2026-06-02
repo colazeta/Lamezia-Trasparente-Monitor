@@ -22,6 +22,14 @@ import {
   CalendarClock,
   Calendar,
   HelpCircle,
+  Gavel,
+  HandCoins,
+  Gauge,
+  BarChart3,
+  Telescope,
+  Scale,
+  Database,
+  Building2,
 } from "lucide-react";
 import { useMemo } from "react";
 import { Button } from "@/components/ui/button";
@@ -37,6 +45,105 @@ function formatDate(value: string | null | undefined) {
   const d = new Date(value);
   return Number.isNaN(d.getTime()) ? "—" : format(d, "dd MMM yyyy", { locale: it });
 }
+
+const QUICK_ACCESS = [
+  {
+    href: "/albo",
+    label: "Albo Pretorio",
+    desc: "Atti e pubblicazioni ufficiali",
+    icon: ShieldAlert,
+    color: "text-blue-500",
+    bg: "bg-blue-500/10",
+  },
+  {
+    href: "/contratti",
+    label: "Contratti & Appalti",
+    desc: "Gare, fornitori e importi",
+    icon: FileText,
+    color: "text-emerald-500",
+    bg: "bg-emerald-500/10",
+  },
+  {
+    href: "/pnrr",
+    label: "PNRR",
+    desc: "Progetti e fondi europei",
+    icon: Landmark,
+    color: "text-violet-500",
+    bg: "bg-violet-500/10",
+  },
+  {
+    href: "/delibere",
+    label: "Delibere",
+    desc: "Decisioni del Consiglio e Giunta",
+    icon: Gavel,
+    color: "text-amber-500",
+    bg: "bg-amber-500/10",
+  },
+  {
+    href: "/convocazioni",
+    label: "Convocazioni",
+    desc: "Sedute e agenda istituzionale",
+    icon: CalendarClock,
+    color: "text-cyan-500",
+    bg: "bg-cyan-500/10",
+  },
+  {
+    href: "/bandi",
+    label: "Bandi",
+    desc: "Finanziamenti e contributi",
+    icon: HandCoins,
+    color: "text-lime-500",
+    bg: "bg-lime-500/10",
+  },
+  {
+    href: "/monitoraggio",
+    label: "Monitoraggio",
+    desc: "Cantieri e lavori pubblici",
+    icon: Telescope,
+    color: "text-rose-500",
+    bg: "bg-rose-500/10",
+  },
+  {
+    href: "/performance",
+    label: "Performance",
+    desc: "Indicatori e obiettivi",
+    icon: Gauge,
+    color: "text-orange-500",
+    bg: "bg-orange-500/10",
+  },
+  {
+    href: "/amministratori",
+    label: "Amministratori",
+    desc: "Sindaco, assessori, consiglieri",
+    icon: Users,
+    color: "text-indigo-500",
+    bg: "bg-indigo-500/10",
+  },
+  {
+    href: "/legalita",
+    label: "Legalità",
+    desc: "Trasparenza e anticorruzione",
+    icon: Scale,
+    color: "text-teal-500",
+    bg: "bg-teal-500/10",
+  },
+  {
+    href: "/statistiche",
+    label: "Statistiche",
+    desc: "Numeri e grafici riassuntivi",
+    icon: BarChart3,
+    color: "text-pink-500",
+    bg: "bg-pink-500/10",
+  },
+  {
+    href: "/opendata",
+    label: "Open Data",
+    desc: "Dataset scaricabili",
+    icon: Database,
+    color: "text-sky-500",
+    bg: "bg-sky-500/10",
+  },
+];
 
 export function Home() {
   const { data: stats, isLoading: statsLoading } = useGetStatsOverview();
@@ -138,27 +245,76 @@ export function Home() {
               title="Atti Pubblicati"
               value={stats?.acts}
               loading={statsLoading}
+              href="/albo"
               icon={FileSearch}
             />
             <StatCard
               title="Appalti"
               value={stats?.contracts}
               loading={statsLoading}
+              href="/contratti"
               icon={FileText}
             />
             <StatCard
               title="Progetti PNRR"
               value={pnrrProjects?.projects.length}
               loading={!pnrrProjects}
+              href="/pnrr"
               icon={Landmark}
             />
             <StatCard
               title="Valore Monitorato"
               value={stats ? `€ ${(stats.monitoredAmount / 1000000).toFixed(1)}M` : undefined}
               loading={statsLoading}
+              href="/statistiche"
               icon={CheckCircle2}
               highlight
             />
+          </div>
+        </div>
+      </section>
+
+      {/* Quick Access Grid */}
+      <section className="border-b border-border bg-background py-12 md:py-16">
+        <div className="container mx-auto px-4 md:px-6">
+          <div className="mb-8 flex items-end justify-between gap-4">
+            <div>
+              <span className="eyebrow text-primary mb-2">Accesso rapido</span>
+              <h2 className="mt-2 font-display text-2xl font-bold tracking-tight md:text-3xl">
+                Dove vuoi andare?
+              </h2>
+            </div>
+            <Link href="/domande" className="hidden sm:flex">
+              <Button variant="ghost" size="sm" className="gap-1.5 font-semibold text-muted-foreground">
+                Tutte le sezioni <ArrowRight className="h-3.5 w-3.5" />
+              </Button>
+            </Link>
+          </div>
+
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
+            {QUICK_ACCESS.map((item) => {
+              const Icon = item.icon;
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className="group flex flex-col items-center gap-3 rounded-xl border border-border bg-card p-4 text-center transition-all hover-elevate hover:border-primary/30 hover:shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                  aria-label={item.label}
+                >
+                  <div className={`rounded-xl p-3 ${item.bg} transition-transform group-hover:scale-105`}>
+                    <Icon className={`h-6 w-6 ${item.color}`} />
+                  </div>
+                  <div>
+                    <div className="text-sm font-bold leading-tight text-foreground">
+                      {item.label}
+                    </div>
+                    <div className="mt-0.5 hidden text-[11px] leading-snug text-muted-foreground lg:block">
+                      {item.desc}
+                    </div>
+                  </div>
+                </Link>
+              );
+            })}
           </div>
         </div>
       </section>
@@ -354,7 +510,7 @@ function ConvocazioniColumn({
   loading,
 }: {
   title: string;
-  icon: any;
+  icon: React.ElementType;
   items: { id: number; oggetto: string; dataAtto?: string | null; pubStart?: string | null }[] | undefined;
   loading: boolean;
 }) {
@@ -377,7 +533,7 @@ function ConvocazioniColumn({
             ))
           ) : items && items.length > 0 ? (
             items.slice(0, 3).map((c) => (
-              <Link key={c.id} href="/convocazioni" className="block p-4 hover-elevate transition-colors">
+              <Link key={c.id} href={`/convocazioni/${c.id}`} className="block p-4 hover-elevate transition-colors">
                 <div className="flex items-center gap-1.5 text-xs font-bold text-brand mb-1.5">
                   <Calendar className="h-3.5 w-3.5" />
                   {formatDate(c.dataAtto ?? c.pubStart)}
@@ -396,9 +552,16 @@ function ConvocazioniColumn({
   );
 }
 
-function StatCard({ title, value, loading, icon: Icon, highlight = false }: any) {
+function StatCard({ title, value, loading, href, icon: Icon, highlight = false }: {
+  title: string;
+  value?: string | number;
+  loading: boolean;
+  href: string;
+  icon: React.ElementType;
+  highlight?: boolean;
+}) {
   return (
-    <div className={`relative p-6 md:p-8 ${highlight ? "bg-primary/5" : ""}`}>
+    <Link href={href} className={`relative block p-6 md:p-8 transition-colors hover-elevate ${highlight ? "bg-primary/5" : ""}`}>
       {highlight && <span className="absolute left-0 top-0 h-full w-1 bg-brand" />}
       <div className="flex items-center gap-3 mb-3">
         <div className={`p-2 rounded-lg ${highlight ? "bg-brand/15 text-brand" : "bg-muted text-muted-foreground"}`}>
@@ -415,11 +578,23 @@ function StatCard({ title, value, loading, icon: Icon, highlight = false }: any)
           </div>
         )}
       </div>
-    </div>
+    </Link>
   );
 }
 
 function ActivityRow({ item }: { item: any }) {
+  const getHref = () => {
+    switch (item.type) {
+      case 'act': return '/albo';
+      case 'contract': {
+        const numericId = String(item.id).replace(/^contract-/, '');
+        return `/contratti/${numericId}`;
+      }
+      case 'report': return '/segnalazioni';
+      default: return '/statistiche';
+    }
+  };
+
   const getIcon = () => {
     switch (item.type) {
       case 'act': return <FileSearch className="h-4 w-4" />;
@@ -439,7 +614,7 @@ function ActivityRow({ item }: { item: any }) {
   };
 
   return (
-    <div className="p-4 flex gap-4 hover-elevate transition-colors group">
+    <Link href={getHref()} className="block p-4 flex gap-4 hover-elevate transition-colors group">
       <div className="mt-0.5 bg-background border border-border p-2 rounded-full h-9 w-9 flex items-center justify-center shrink-0 text-muted-foreground group-hover:text-brand group-hover:border-brand/40 transition-colors">
         {getIcon()}
       </div>
@@ -457,6 +632,6 @@ function ActivityRow({ item }: { item: any }) {
           {item.title}
         </p>
       </div>
-    </div>
+    </Link>
   );
 }

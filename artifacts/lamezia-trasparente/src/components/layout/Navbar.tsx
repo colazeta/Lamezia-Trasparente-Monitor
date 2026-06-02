@@ -16,7 +16,6 @@ import {
   ShieldCheck,
   HelpCircle,
   ChevronDown,
-  LayoutGrid,
   Database,
   Gauge,
   ScrollText,
@@ -37,32 +36,74 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { iconForTopic } from "@/lib/questionTopics";
+import {
+  CommandPalette,
+  SearchTrigger,
+  useCommandPalette,
+} from "@/components/search/CommandPalette";
 
-const sectionItems = [
-  { href: "/temi", label: "Temi", icon: FileSearch },
-  { href: "/albo", label: "Albo Pretorio", icon: ShieldAlert },
-  { href: "/atti-fondamentali", label: "Atti fondamentali", icon: ScrollText },
-  { href: "/bandi", label: "Bandi e finanziamenti", icon: HandCoins },
-  { href: "/beni-confiscati", label: "Beni confiscati", icon: ShieldOff },
-  { href: "/accesso-civico", label: "Accesso Civico", icon: FileSearch },
-  { href: "/monitoraggio", label: "Monitoraggio civico", icon: Telescope },
-  { href: "/legalita", label: "Legalità e Trasparenza", icon: Scale },
-  { href: "/delibere", label: "Delibere", icon: Gavel },
-  { href: "/convocazioni", label: "Convocazioni", icon: CalendarClock },
-  { href: "/organi", label: "Organi", icon: Building2 },
-  { href: "/amministratori", label: "Amministratori", icon: Users },
-  { href: "/pnrr", label: "PNRR", icon: Landmark },
-  { href: "/pareri", label: "Pareri di Vigilanza", icon: ShieldCheck },
-  { href: "/contratti", label: "Contratti", icon: FileText },
-  { href: "/opendata", label: "Opendata", icon: Database },
-  { href: "/sviluppatori", label: "API e sviluppatori", icon: Code2 },
-  { href: "/feeds", label: "Feed e abbonamenti", icon: Rss },
-  { href: "/performance", label: "Performance", icon: Gauge },
-  { href: "/statistiche", label: "Statistiche", icon: BarChart3 },
-  { href: "/segnalazioni", label: "Segnalazioni", icon: Megaphone },
+interface NavSection {
+  label: string;
+  items: { href: string; label: string; icon: React.ElementType }[];
+}
+
+const NAV_GROUPS: NavSection[] = [
+  {
+    label: "Trasparenza & Atti",
+    items: [
+      { href: "/albo", label: "Albo Pretorio", icon: ShieldAlert },
+      { href: "/atti-fondamentali", label: "Atti Fondamentali", icon: ScrollText },
+      { href: "/delibere", label: "Delibere", icon: Gavel },
+      { href: "/convocazioni", label: "Convocazioni", icon: CalendarClock },
+      { href: "/pareri", label: "Pareri di Vigilanza", icon: ShieldCheck },
+      { href: "/legalita", label: "Legalità e Trasparenza", icon: Scale },
+    ],
+  },
+  {
+    label: "Spesa & Contratti",
+    items: [
+      { href: "/contratti", label: "Contratti & Appalti", icon: FileText },
+      { href: "/bandi", label: "Bandi e Finanziamenti", icon: HandCoins },
+      { href: "/pnrr", label: "PNRR", icon: Landmark },
+      { href: "/beni-confiscati", label: "Beni Confiscati", icon: ShieldOff },
+    ],
+  },
+  {
+    label: "Organi & Persone",
+    items: [
+      { href: "/organi", label: "Organi Istituzionali", icon: Building2 },
+      { href: "/amministratori", label: "Amministratori", icon: Users },
+    ],
+  },
+  {
+    label: "Partecipazione",
+    items: [
+      { href: "/temi", label: "Temi", icon: FileSearch },
+      { href: "/monitoraggio", label: "Monitoraggio Civico", icon: Telescope },
+      { href: "/accesso-civico", label: "Accesso Civico", icon: FileSearch },
+      { href: "/segnalazioni", label: "Segnalazioni", icon: Megaphone },
+    ],
+  },
+  {
+    label: "Dati & Analisi",
+    items: [
+      { href: "/performance", label: "Performance", icon: Gauge },
+      { href: "/statistiche", label: "Statistiche", icon: BarChart3 },
+      { href: "/opendata", label: "Open Data", icon: Database },
+    ],
+  },
+  {
+    label: "Strumenti",
+    items: [
+      { href: "/feeds", label: "Feed e Abbonamenti", icon: Rss },
+      { href: "/sviluppatori", label: "API e Sviluppatori", icon: Code2 },
+    ],
+  },
 ];
 
 function useTopics(): string[] {
@@ -76,6 +117,7 @@ export function Navbar() {
   const [location] = useLocation();
   const [isOpen, setIsOpen] = useState(false);
   const topics = useTopics();
+  const { open: paletteOpen, setOpen: setPaletteOpen } = useCommandPalette();
 
   const isActive = (href: string) =>
     location === href || (href !== "/" && location.startsWith(href));
@@ -87,160 +129,189 @@ export function Navbar() {
     );
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-border bg-background/85 backdrop-blur supports-[backdrop-filter]:bg-background/70">
-      <div className="container mx-auto flex h-16 items-center justify-between gap-4 px-4 md:px-6">
-        <Link href="/" className="shrink-0">
-          <Logo textClassName="text-base sm:text-lg leading-none" subtitle />
-        </Link>
+    <>
+      <CommandPalette open={paletteOpen} onOpenChange={setPaletteOpen} />
 
-        {/* Desktop Nav */}
-        <nav className="hidden items-center gap-1 xl:flex">
-          <Link href="/" className={linkClass(location === "/")}>
-            <Home className="h-4 w-4" />
-            Home
-            {location === "/" && (
-              <span className="absolute inset-x-2.5 -bottom-px h-0.5 rounded-full bg-primary" />
-            )}
+      <header className="sticky top-0 z-50 w-full border-b border-border bg-background/85 backdrop-blur supports-[backdrop-filter]:bg-background/70">
+        <div className="container mx-auto flex h-16 items-center justify-between gap-4 px-4 md:px-6">
+          <Link href="/" className="shrink-0">
+            <Logo textClassName="text-base sm:text-lg leading-none" subtitle />
           </Link>
 
-          <Link href="/domande" className={linkClass(isActive("/domande"))}>
-            <HelpCircle className="h-4 w-4" />
-            Domande
-            {isActive("/domande") && (
-              <span className="absolute inset-x-2.5 -bottom-px h-0.5 rounded-full bg-primary" />
-            )}
-          </Link>
+          {/* Desktop Nav */}
+          <nav className="hidden items-center gap-1 xl:flex">
+            <Link href="/" className={linkClass(location === "/")}>
+              <Home className="h-4 w-4" />
+              Home
+              {location === "/" && (
+                <span className="absolute inset-x-2.5 -bottom-px h-0.5 rounded-full bg-primary" />
+              )}
+            </Link>
 
-          {/* Argomenti: porta agli elenchi di domande per argomento */}
-          {topics.length > 0 && (
+            <Link href="/domande" className={linkClass(isActive("/domande"))}>
+              <HelpCircle className="h-4 w-4" />
+              Domande
+              {isActive("/domande") && (
+                <span className="absolute inset-x-2.5 -bottom-px h-0.5 rounded-full bg-primary" />
+              )}
+            </Link>
+
+            {/* Argomenti */}
+            {topics.length > 0 && (
+              <DropdownMenu>
+                <DropdownMenuTrigger className={linkClass(false)}>
+                  <FileSearch className="h-4 w-4" />
+                  Argomenti
+                  <ChevronDown className="h-3.5 w-3.5 opacity-70" />
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="start" className="w-64">
+                  {topics.map((topic) => {
+                    const Icon = iconForTopic(topic);
+                    return (
+                      <DropdownMenuItem key={topic} asChild>
+                        <Link
+                          href={`/domande?topic=${encodeURIComponent(topic)}`}
+                          className="flex cursor-pointer items-center gap-2"
+                        >
+                          <Icon className="h-4 w-4 text-primary" />
+                          {topic}
+                        </Link>
+                      </DropdownMenuItem>
+                    );
+                  })}
+                </DropdownMenuContent>
+              </DropdownMenu>
+            )}
+
+            {/* Sezioni — grouped mega-menu */}
             <DropdownMenu>
               <DropdownMenuTrigger className={linkClass(false)}>
-                <LayoutGrid className="h-4 w-4" />
-                Argomenti
+                <FileText className="h-4 w-4" />
+                Sezioni
                 <ChevronDown className="h-3.5 w-3.5 opacity-70" />
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="start" className="w-64">
-                {topics.map((topic) => {
-                  const Icon = iconForTopic(topic);
-                  return (
-                    <DropdownMenuItem key={topic} asChild>
-                      <Link
-                        href={`/domande?topic=${encodeURIComponent(topic)}`}
-                        className="flex cursor-pointer items-center gap-2"
-                      >
-                        <Icon className="h-4 w-4 text-primary" />
-                        {topic}
-                      </Link>
-                    </DropdownMenuItem>
-                  );
-                })}
+              <DropdownMenuContent align="start" className="w-56">
+                {NAV_GROUPS.map((group, gi) => (
+                  <div key={group.label}>
+                    {gi > 0 && <DropdownMenuSeparator />}
+                    <DropdownMenuLabel className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground px-2 py-1">
+                      {group.label}
+                    </DropdownMenuLabel>
+                    {group.items.map((item) => {
+                      const Icon = item.icon;
+                      return (
+                        <DropdownMenuItem key={item.href} asChild>
+                          <Link
+                            href={item.href}
+                            className="flex cursor-pointer items-center gap-2"
+                          >
+                            <Icon className="h-4 w-4 text-muted-foreground" />
+                            {item.label}
+                          </Link>
+                        </DropdownMenuItem>
+                      );
+                    })}
+                  </div>
+                ))}
               </DropdownMenuContent>
             </DropdownMenu>
-          )}
-
-          {/* Sezioni: accesso diretto a tutte le pagine esistenti */}
-          <DropdownMenu>
-            <DropdownMenuTrigger className={linkClass(false)}>
-              <FileSearch className="h-4 w-4" />
-              Sezioni
-              <ChevronDown className="h-3.5 w-3.5 opacity-70" />
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="start" className="w-56">
-              {sectionItems.map((item) => {
-                const Icon = item.icon;
-                return (
-                  <DropdownMenuItem key={item.href} asChild>
-                    <Link
-                      href={item.href}
-                      className="flex cursor-pointer items-center gap-2"
-                    >
-                      <Icon className="h-4 w-4 text-muted-foreground" />
-                      {item.label}
-                    </Link>
-                  </DropdownMenuItem>
-                );
-              })}
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </nav>
-
-        <div className="flex items-center gap-2">
-          <ThemeToggle />
-          {/* Mobile Toggle */}
-          <Button
-            variant="outline"
-            size="icon"
-            className="xl:hidden"
-            onClick={() => setIsOpen(!isOpen)}
-            aria-label="Menu"
-          >
-            {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-          </Button>
-        </div>
-      </div>
-
-      {/* Mobile Nav */}
-      {isOpen && (
-        <div className="border-t border-border bg-background xl:hidden">
-          <nav className="container mx-auto space-y-5 px-4 py-4">
-            <div className="grid grid-cols-2 gap-2">
-              <MobileLink
-                href="/"
-                label="Home"
-                icon={Home}
-                active={location === "/"}
-                onClick={() => setIsOpen(false)}
-              />
-              <MobileLink
-                href="/domande"
-                label="Domande"
-                icon={HelpCircle}
-                active={isActive("/domande")}
-                onClick={() => setIsOpen(false)}
-              />
-            </div>
-
-            {topics.length > 0 && (
-              <div>
-                <div className="mb-2 px-1 text-[11px] font-bold uppercase tracking-wider text-muted-foreground">
-                  Argomenti
-                </div>
-                <div className="grid grid-cols-1 gap-2">
-                  {topics.map((topic) => (
-                    <MobileLink
-                      key={topic}
-                      href={`/domande?topic=${encodeURIComponent(topic)}`}
-                      label={topic}
-                      icon={iconForTopic(topic)}
-                      active={false}
-                      onClick={() => setIsOpen(false)}
-                    />
-                  ))}
-                </div>
-              </div>
-            )}
-
-            <div>
-              <div className="mb-2 px-1 text-[11px] font-bold uppercase tracking-wider text-muted-foreground">
-                Sezioni
-              </div>
-              <div className="grid grid-cols-2 gap-2">
-                {sectionItems.map((item) => (
-                  <MobileLink
-                    key={item.href}
-                    href={item.href}
-                    label={item.label}
-                    icon={item.icon}
-                    active={isActive(item.href)}
-                    onClick={() => setIsOpen(false)}
-                  />
-                ))}
-              </div>
-            </div>
           </nav>
+
+          <div className="flex items-center gap-2">
+            {/* Search trigger */}
+            <SearchTrigger onClick={() => setPaletteOpen(true)} />
+            <ThemeToggle />
+            {/* Mobile Toggle */}
+            <Button
+              variant="outline"
+              size="icon"
+              className="xl:hidden"
+              onClick={() => setIsOpen(!isOpen)}
+              aria-label="Menu"
+            >
+              {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+            </Button>
+          </div>
         </div>
-      )}
-    </header>
+
+        {/* Mobile Nav */}
+        {isOpen && (
+          <div className="border-t border-border bg-background xl:hidden">
+            <nav className="container mx-auto space-y-5 px-4 py-4">
+              {/* Search shortcut on mobile */}
+              <button
+                onClick={() => {
+                  setIsOpen(false);
+                  setPaletteOpen(true);
+                }}
+                className="flex w-full items-center gap-2 rounded-md border border-border bg-muted/50 px-3 py-2.5 text-sm text-muted-foreground"
+                aria-label="Cerca"
+              >
+                <FileSearch className="h-4 w-4" />
+                Cerca una sezione…
+              </button>
+
+              <div className="grid grid-cols-2 gap-2">
+                <MobileLink
+                  href="/"
+                  label="Home"
+                  icon={Home}
+                  active={location === "/"}
+                  onClick={() => setIsOpen(false)}
+                />
+                <MobileLink
+                  href="/domande"
+                  label="Domande"
+                  icon={HelpCircle}
+                  active={isActive("/domande")}
+                  onClick={() => setIsOpen(false)}
+                />
+              </div>
+
+              {topics.length > 0 && (
+                <div>
+                  <div className="mb-2 px-1 text-[11px] font-bold uppercase tracking-wider text-muted-foreground">
+                    Argomenti
+                  </div>
+                  <div className="grid grid-cols-1 gap-2">
+                    {topics.map((topic) => (
+                      <MobileLink
+                        key={topic}
+                        href={`/domande?topic=${encodeURIComponent(topic)}`}
+                        label={topic}
+                        icon={iconForTopic(topic)}
+                        active={false}
+                        onClick={() => setIsOpen(false)}
+                      />
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {NAV_GROUPS.map((group) => (
+                <div key={group.label}>
+                  <div className="mb-2 px-1 text-[11px] font-bold uppercase tracking-wider text-muted-foreground">
+                    {group.label}
+                  </div>
+                  <div className="grid grid-cols-2 gap-2">
+                    {group.items.map((item) => (
+                      <MobileLink
+                        key={item.href}
+                        href={item.href}
+                        label={item.label}
+                        icon={item.icon}
+                        active={isActive(item.href)}
+                        onClick={() => setIsOpen(false)}
+                      />
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </nav>
+          </div>
+        )}
+      </header>
+    </>
   );
 }
 
@@ -253,7 +324,7 @@ function MobileLink({
 }: {
   href: string;
   label: string;
-  icon: typeof Home;
+  icon: React.ElementType;
   active: boolean;
   onClick: () => void;
 }) {
