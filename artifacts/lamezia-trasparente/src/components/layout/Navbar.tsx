@@ -22,6 +22,7 @@ import {
   ScrollText,
   Scale,
   HandCoins,
+  ShieldOff,
 } from "lucide-react";
 import { useState } from "react";
 import { useListQuestions } from "@workspace/api-client-react";
@@ -42,6 +43,7 @@ const sectionItems = [
   { href: "/albo", label: "Albo Pretorio", icon: ShieldAlert },
   { href: "/atti-fondamentali", label: "Atti fondamentali", icon: ScrollText },
   { href: "/bandi", label: "Bandi e finanziamenti", icon: HandCoins },
+  { href: "/beni-confiscati", label: "Beni confiscati", icon: ShieldOff },
   { href: "/legalita", label: "Legalità e Trasparenza", icon: Scale },
   { href: "/delibere", label: "Delibere", icon: Gavel },
   { href: "/convocazioni", label: "Convocazioni", icon: CalendarClock },

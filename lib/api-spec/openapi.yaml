@@ -2799,6 +2799,231 @@ paths:
               schema:
                 $ref: "#/components/schemas/Error"
 
+  /beni-confiscati:
+    get:
+      tags: [confiscatedAssets]
+      operationId: listConfiscatedAssets
+      summary: Public catalog of confiscated assets in the municipality
+      description: |
+        Returns the confiscated assets (manual editorial entries plus those
+        imported from the ANBSC open data) with their location, filterable by
+        status and tipologia.
+      parameters:
+        - name: status
+          in: query
+          required: false
+          schema:
+            $ref: "#/components/schemas/ConfiscatedAssetStatus"
+        - name: tipologia
+          in: query
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: List of confiscated assets.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ConfiscatedAsset"
+    post:
+      tags: [confiscatedAssets]
+      operationId: createConfiscatedAsset
+      summary: Create a confiscated asset (editorial)
+      security:
+        - ingestToken: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ConfiscatedAssetCreateInput"
+      responses:
+        "201":
+          description: Created.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ConfiscatedAssetAdmin"
+        "400":
+          description: Invalid input.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "401":
+          description: Unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /beni-confiscati/summary:
+    get:
+      tags: [confiscatedAssets]
+      operationId: getConfiscatedAssetsSummary
+      summary: Aggregate stats for the confiscated assets section
+      responses:
+        "200":
+          description: Summary statistics.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ConfiscatedAssetSummary"
+
+  /beni-confiscati/admin:
+    get:
+      tags: [confiscatedAssets]
+      operationId: listConfiscatedAssetsAdmin
+      summary: Editorial list of all confiscated assets (incl. notes/source)
+      security:
+        - ingestToken: []
+      responses:
+        "200":
+          description: List of all confiscated assets with editorial metadata.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ConfiscatedAssetAdmin"
+        "401":
+          description: Unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /beni-confiscati/{slug}:
+    get:
+      tags: [confiscatedAssets]
+      operationId: getConfiscatedAsset
+      summary: Public detail of a confiscated asset
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Confiscated asset detail.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ConfiscatedAsset"
+        "404":
+          description: Not found.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      tags: [confiscatedAssets]
+      operationId: updateConfiscatedAsset
+      summary: Update a confiscated asset (editorial)
+      security:
+        - ingestToken: []
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ConfiscatedAssetUpdateInput"
+      responses:
+        "200":
+          description: Updated.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ConfiscatedAssetAdmin"
+        "400":
+          description: Invalid input.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "401":
+          description: Unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "404":
+          description: Not found.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    delete:
+      tags: [confiscatedAssets]
+      operationId: deleteConfiscatedAsset
+      summary: Delete a confiscated asset (editorial)
+      security:
+        - ingestToken: []
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: Deleted.
+        "401":
+          description: Unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "404":
+          description: Not found.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /beni-confiscati/{id}/location:
+    patch:
+      tags: [confiscatedAssets]
+      operationId: updateConfiscatedAssetLocation
+      summary: Editorial correction of a confiscated asset's location. Editor only.
+      security:
+        - ingestToken: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateConfiscatedAssetLocation"
+      responses:
+        "200":
+          description: Updated asset.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ConfiscatedAssetAdmin"
+        "400":
+          description: Invalid location.
+        "401":
+          description: Unauthorized.
+        "404":
+          description: Not found.
+
 components:
   schemas:
     HealthStatus:
@@ -4014,6 +4239,268 @@ components:
             type: string
         notes:
           type: string
+
+    ConfiscatedAssetStatus:
+      type: string
+      description: |
+        Stage of the asset along the confiscation process: `sequestrato`
+        (seized), `confiscato` (definitively confiscated), `assegnato`
+        (assigned to a body/association), `riutilizzato` (effectively reused).
+      enum: [sequestrato, confiscato, assegnato, riutilizzato]
+
+    ConfiscatedAssetSource:
+      type: string
+      enum: [manual, auto]
+
+    ConfiscatedAsset:
+      type: object
+      description: Public view of a confiscated asset (with its location).
+      required:
+        - id
+        - slug
+        - denominazione
+        - description
+        - tipologia
+        - status
+        - indirizzo
+        - assegnatario
+        - destinazioneUso
+        - datiCatastali
+        - officialUrl
+        - latitude
+        - longitude
+        - geoAddress
+        - geoQuartiere
+        - updatedAt
+      properties:
+        id:
+          type: integer
+        slug:
+          type: string
+        denominazione:
+          type: string
+        description:
+          type: string
+        tipologia:
+          type: string
+        status:
+          $ref: "#/components/schemas/ConfiscatedAssetStatus"
+        indirizzo:
+          type: string
+        assegnatario:
+          type: string
+        destinazioneUso:
+          type: string
+        datiCatastali:
+          type: string
+        officialUrl:
+          type: ["string", "null"]
+        latitude:
+          type: ["string", "null"]
+        longitude:
+          type: ["string", "null"]
+        geoAddress:
+          type: ["string", "null"]
+        geoQuartiere:
+          type: ["string", "null"]
+        updatedAt:
+          type: string
+
+    ConfiscatedAssetAdmin:
+      type: object
+      description: Editorial view of a confiscated asset (incl. source/notes/geo).
+      required:
+        - id
+        - slug
+        - denominazione
+        - description
+        - tipologia
+        - status
+        - indirizzo
+        - assegnatario
+        - destinazioneUso
+        - datiCatastali
+        - officialUrl
+        - source
+        - sourceId
+        - latitude
+        - longitude
+        - geoAddress
+        - geoQuartiere
+        - geoSource
+        - geoManual
+        - geoVerify
+        - notes
+        - createdAt
+        - updatedAt
+      properties:
+        id:
+          type: integer
+        slug:
+          type: string
+        denominazione:
+          type: string
+        description:
+          type: string
+        tipologia:
+          type: string
+        status:
+          $ref: "#/components/schemas/ConfiscatedAssetStatus"
+        indirizzo:
+          type: string
+        assegnatario:
+          type: string
+        destinazioneUso:
+          type: string
+        datiCatastali:
+          type: string
+        officialUrl:
+          type: ["string", "null"]
+        source:
+          $ref: "#/components/schemas/ConfiscatedAssetSource"
+        sourceId:
+          type: ["string", "null"]
+        latitude:
+          type: ["string", "null"]
+        longitude:
+          type: ["string", "null"]
+        geoAddress:
+          type: ["string", "null"]
+        geoQuartiere:
+          type: ["string", "null"]
+        geoSource:
+          type: ["string", "null"]
+        geoManual:
+          type: boolean
+        geoVerify:
+          type: boolean
+        notes:
+          type: string
+        createdAt:
+          type: string
+        updatedAt:
+          type: string
+
+    ConfiscatedAssetStatusStat:
+      type: object
+      required: [status, count]
+      properties:
+        status:
+          $ref: "#/components/schemas/ConfiscatedAssetStatus"
+        count:
+          type: integer
+
+    ConfiscatedAssetTipologiaStat:
+      type: object
+      required: [tipologia, count]
+      properties:
+        tipologia:
+          type: string
+        count:
+          type: integer
+
+    ConfiscatedAssetSummary:
+      type: object
+      required:
+        - totale
+        - sequestrati
+        - confiscati
+        - assegnati
+        - riutilizzati
+        - geolocalizzati
+        - perStatus
+        - perTipologia
+      properties:
+        totale:
+          type: integer
+        sequestrati:
+          type: integer
+        confiscati:
+          type: integer
+        assegnati:
+          type: integer
+        riutilizzati:
+          type: integer
+        geolocalizzati:
+          type: integer
+        perStatus:
+          type: array
+          items:
+            $ref: "#/components/schemas/ConfiscatedAssetStatusStat"
+        perTipologia:
+          type: array
+          items:
+            $ref: "#/components/schemas/ConfiscatedAssetTipologiaStat"
+
+    ConfiscatedAssetCreateInput:
+      type: object
+      required: [slug, denominazione]
+      properties:
+        slug:
+          type: string
+          minLength: 1
+        denominazione:
+          type: string
+          minLength: 1
+        description:
+          type: string
+        tipologia:
+          type: string
+        status:
+          $ref: "#/components/schemas/ConfiscatedAssetStatus"
+        indirizzo:
+          type: string
+        assegnatario:
+          type: string
+        destinazioneUso:
+          type: string
+        datiCatastali:
+          type: string
+        officialUrl:
+          type: ["string", "null"]
+        notes:
+          type: string
+
+    ConfiscatedAssetUpdateInput:
+      type: object
+      description: Partial update of a confiscated asset.
+      properties:
+        denominazione:
+          type: string
+          minLength: 1
+        description:
+          type: string
+        tipologia:
+          type: string
+        status:
+          $ref: "#/components/schemas/ConfiscatedAssetStatus"
+        indirizzo:
+          type: string
+        assegnatario:
+          type: string
+        destinazioneUso:
+          type: string
+        datiCatastali:
+          type: string
+        officialUrl:
+          type: ["string", "null"]
+        notes:
+          type: string
+
+    UpdateConfiscatedAssetLocation:
+      type: object
+      description: Editorial correction of a confiscated asset's location.
+      properties:
+        latitude:
+          type: ["number", "null"]
+        longitude:
+          type: ["number", "null"]
+        geoAddress:
+          type: ["string", "null"]
+        geoQuartiere:
+          type: ["string", "null"]
+        geoVerify:
+          type: boolean
 
     LifecyclePhase:
       type: string

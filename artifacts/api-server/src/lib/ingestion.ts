@@ -18,6 +18,10 @@ import { enrichAlboAttachments } from "./alboAttachments";
 import { runPerformanceIngestion } from "./performanceIndicators";
 import { refreshFundamentalActSuggestions } from "./fundamentalActs";
 import { refreshBandiSuggestions } from "./bandi";
+import {
+  runConfiscatedAssetsIngestion,
+  runConfiscatedAssetsGeocoding,
+} from "./confiscatedAssets";
 
 export const ALBO_SOURCE = "albo-lamezia";
 export const ALBO_LABEL = "Albo Pretorio – Amministrazione Trasparente";
@@ -269,6 +273,10 @@ async function runIngestionCycle(): Promise<void> {
   });
   await refreshBandiSuggestions().catch((err) => {
     logger.error({ err }, "Bandi suggestions refresh failed");
+  });
+  await runConfiscatedAssetsIngestion().catch(() => {});
+  await runConfiscatedAssetsGeocoding().catch((err) => {
+    logger.error({ err }, "Confiscated assets geocoding pass failed");
   });
   await reconcileThemeCounters();
 }

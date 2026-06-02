@@ -30,3 +30,4 @@ export * from "./legalityRequirements";
 export * from "./legalityOverview";
 export * from "./bandi";
 export * from "./bandoMatches";
+export * from "./confiscatedAssets";

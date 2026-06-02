@@ -20,6 +20,7 @@ import {
   performanceIndicatorsTable,
   fundamentalActsTable,
   bandiTable,
+  confiscatedAssetsTable,
 } from "./schema";
 import { classifyMacrotema } from "./macrotemi";
 import {
@@ -1499,6 +1500,141 @@ async function seedBandi(): Promise<void> {
   }
 }
 
+const SAMPLE_CONFISCATED_ASSETS: {
+  slug: string;
+  denominazione: string;
+  description: string;
+  tipologia: string;
+  status: "sequestrato" | "confiscato" | "assegnato" | "riutilizzato";
+  indirizzo: string;
+  assegnatario: string;
+  destinazioneUso: string;
+  datiCatastali: string;
+  officialUrl: string;
+  latitude: string | null;
+  longitude: string | null;
+  geoAddress: string | null;
+  geoQuartiere: string | null;
+}[] = [
+  {
+    slug: "appartamento-via-del-progresso-nicastro",
+    denominazione: "Appartamento in Via del Progresso",
+    description:
+      "Unità immobiliare residenziale confiscata e trasferita al patrimonio del Comune, in attesa di destinazione a finalità sociali.",
+    tipologia: "Appartamento",
+    status: "confiscato",
+    indirizzo: "Via del Progresso, Nicastro, Lamezia Terme",
+    assegnatario: "",
+    destinazioneUso: "",
+    datiCatastali: "Foglio 12, particella 340, sub 4",
+    officialUrl: "https://www.benisequestraticonfiscati.it/",
+    latitude: "38.9785000",
+    longitude: "16.3095000",
+    geoAddress: "Via del Progresso, Nicastro",
+    geoQuartiere: "nicastro",
+  },
+  {
+    slug: "terreno-agricolo-sambiase",
+    denominazione: "Terreno agricolo in località Sambiase",
+    description:
+      "Terreno agricolo confiscato e assegnato a una cooperativa sociale per la coltivazione e l'inserimento lavorativo di soggetti svantaggiati.",
+    tipologia: "Terreno",
+    status: "assegnato",
+    indirizzo: "Contrada Magolà, Sambiase, Lamezia Terme",
+    assegnatario: "Cooperativa sociale Terra Libera",
+    destinazioneUso: "Agricoltura sociale e inserimento lavorativo",
+    datiCatastali: "Foglio 28, particelle 12-15",
+    officialUrl: "https://www.benisequestraticonfiscati.it/",
+    latitude: "38.9620000",
+    longitude: "16.2980000",
+    geoAddress: "Contrada Magolà, Sambiase",
+    geoQuartiere: "sambiase",
+  },
+  {
+    slug: "capannone-zona-industriale",
+    denominazione: "Capannone in zona industriale",
+    description:
+      "Capannone artigianale sottoposto a sequestro nell'ambito di un procedimento di prevenzione patrimoniale.",
+    tipologia: "Capannone",
+    status: "sequestrato",
+    indirizzo: "Zona Industriale, Sant'Eufemia, Lamezia Terme",
+    assegnatario: "",
+    destinazioneUso: "",
+    datiCatastali: "Foglio 5, particella 88",
+    officialUrl: "https://www.benisequestraticonfiscati.it/",
+    latitude: "38.9180000",
+    longitude: "16.2620000",
+    geoAddress: "Zona Industriale, Sant'Eufemia",
+    geoQuartiere: "santeufemia",
+  },
+  {
+    slug: "villa-confiscata-riuso-sociale-nicastro",
+    denominazione: "Villa riutilizzata come centro polifunzionale",
+    description:
+      "Villa confiscata alla criminalità organizzata e riutilizzata come centro polifunzionale per attività educative e di aggregazione giovanile.",
+    tipologia: "Villa",
+    status: "riutilizzato",
+    indirizzo: "Via Marconi, Nicastro, Lamezia Terme",
+    assegnatario: "Associazione Libera – Presidio di Lamezia Terme",
+    destinazioneUso: "Centro polifunzionale e doposcuola",
+    datiCatastali: "Foglio 14, particella 210",
+    officialUrl: "https://www.libera.it/",
+    latitude: "38.9760000",
+    longitude: "16.3150000",
+    geoAddress: "Via Marconi, Nicastro",
+    geoQuartiere: "nicastro",
+  },
+  {
+    slug: "locale-commerciale-corso-numistrano",
+    denominazione: "Locale commerciale su Corso Numistrano",
+    description:
+      "Locale commerciale confiscato in attesa di assegnazione a un soggetto del terzo settore.",
+    tipologia: "Locale commerciale",
+    status: "confiscato",
+    indirizzo: "Corso Numistrano, Nicastro, Lamezia Terme",
+    assegnatario: "",
+    destinazioneUso: "",
+    datiCatastali: "Foglio 13, particella 155, sub 2",
+    officialUrl: "https://www.benisequestraticonfiscati.it/",
+    latitude: "38.9772000",
+    longitude: "16.3088000",
+    geoAddress: "Corso Numistrano, Nicastro",
+    geoQuartiere: "nicastro",
+  },
+];
+
+async function seedConfiscatedAssets(): Promise<void> {
+  console.log(
+    `Seeding ${SAMPLE_CONFISCATED_ASSETS.length} confiscated assets...`,
+  );
+  for (const a of SAMPLE_CONFISCATED_ASSETS) {
+    await db
+      .insert(confiscatedAssetsTable)
+      .values({
+        slug: a.slug,
+        denominazione: a.denominazione,
+        description: a.description,
+        tipologia: a.tipologia,
+        status: a.status,
+        indirizzo: a.indirizzo,
+        assegnatario: a.assegnatario,
+        destinazioneUso: a.destinazioneUso,
+        datiCatastali: a.datiCatastali,
+        officialUrl: a.officialUrl,
+        source: "manual",
+        latitude: a.latitude,
+        longitude: a.longitude,
+        geoAddress: a.geoAddress,
+        geoQuartiere: a.geoQuartiere,
+        geoSource: "manual",
+        geoManual: true,
+        geoVerify: false,
+      })
+      // Non distruttivo: la voce curata dalla redazione resta intatta.
+      .onConflictDoNothing({ target: confiscatedAssetsTable.slug });
+  }
+}
+
 // Popola il catalogo della sezione "Performance del Comune": categorie e
 // indicatori. Non distruttivo: aggiorna i metadati per slug (upsert) senza
 // toccare le serie storiche già presenti. Eseguibile in modo idempotente.
@@ -1653,6 +1789,7 @@ export async function seed() {
   await seedPerformance();
   await seedFundamentalActs();
   await seedBandi();
+  await seedConfiscatedAssets();
 }
 
 const entryPath = process.argv[1] ?? "";

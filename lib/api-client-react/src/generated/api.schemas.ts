@@ -746,6 +746,164 @@ export interface BandoUpdateInput {
 }
 
 /**
+ * Stage of the asset along the confiscation process: `sequestrato`
+(seized), `confiscato` (definitively confiscated), `assegnato`
+(assigned to a body/association), `riutilizzato` (effectively reused).
+
+ */
+export type ConfiscatedAssetStatus = typeof ConfiscatedAssetStatus[keyof typeof ConfiscatedAssetStatus];
+
+
+export const ConfiscatedAssetStatus = {
+  sequestrato: 'sequestrato',
+  confiscato: 'confiscato',
+  assegnato: 'assegnato',
+  riutilizzato: 'riutilizzato',
+} as const;
+
+export type ConfiscatedAssetSource = typeof ConfiscatedAssetSource[keyof typeof ConfiscatedAssetSource];
+
+
+export const ConfiscatedAssetSource = {
+  manual: 'manual',
+  auto: 'auto',
+} as const;
+
+/**
+ * Public view of a confiscated asset (with its location).
+ */
+export interface ConfiscatedAsset {
+  id: number;
+  slug: string;
+  denominazione: string;
+  description: string;
+  tipologia: string;
+  status: ConfiscatedAssetStatus;
+  indirizzo: string;
+  assegnatario: string;
+  destinazioneUso: string;
+  datiCatastali: string;
+  /** @nullable */
+  officialUrl: string | null;
+  /** @nullable */
+  latitude: string | null;
+  /** @nullable */
+  longitude: string | null;
+  /** @nullable */
+  geoAddress: string | null;
+  /** @nullable */
+  geoQuartiere: string | null;
+  updatedAt: string;
+}
+
+/**
+ * Editorial view of a confiscated asset (incl. source/notes/geo).
+ */
+export interface ConfiscatedAssetAdmin {
+  id: number;
+  slug: string;
+  denominazione: string;
+  description: string;
+  tipologia: string;
+  status: ConfiscatedAssetStatus;
+  indirizzo: string;
+  assegnatario: string;
+  destinazioneUso: string;
+  datiCatastali: string;
+  /** @nullable */
+  officialUrl: string | null;
+  source: ConfiscatedAssetSource;
+  /** @nullable */
+  sourceId: string | null;
+  /** @nullable */
+  latitude: string | null;
+  /** @nullable */
+  longitude: string | null;
+  /** @nullable */
+  geoAddress: string | null;
+  /** @nullable */
+  geoQuartiere: string | null;
+  /** @nullable */
+  geoSource: string | null;
+  geoManual: boolean;
+  geoVerify: boolean;
+  notes: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface ConfiscatedAssetStatusStat {
+  status: ConfiscatedAssetStatus;
+  count: number;
+}
+
+export interface ConfiscatedAssetTipologiaStat {
+  tipologia: string;
+  count: number;
+}
+
+export interface ConfiscatedAssetSummary {
+  totale: number;
+  sequestrati: number;
+  confiscati: number;
+  assegnati: number;
+  riutilizzati: number;
+  geolocalizzati: number;
+  perStatus: ConfiscatedAssetStatusStat[];
+  perTipologia: ConfiscatedAssetTipologiaStat[];
+}
+
+export interface ConfiscatedAssetCreateInput {
+  /** @minLength 1 */
+  slug: string;
+  /** @minLength 1 */
+  denominazione: string;
+  description?: string;
+  tipologia?: string;
+  status?: ConfiscatedAssetStatus;
+  indirizzo?: string;
+  assegnatario?: string;
+  destinazioneUso?: string;
+  datiCatastali?: string;
+  /** @nullable */
+  officialUrl?: string | null;
+  notes?: string;
+}
+
+/**
+ * Partial update of a confiscated asset.
+ */
+export interface ConfiscatedAssetUpdateInput {
+  /** @minLength 1 */
+  denominazione?: string;
+  description?: string;
+  tipologia?: string;
+  status?: ConfiscatedAssetStatus;
+  indirizzo?: string;
+  assegnatario?: string;
+  destinazioneUso?: string;
+  datiCatastali?: string;
+  /** @nullable */
+  officialUrl?: string | null;
+  notes?: string;
+}
+
+/**
+ * Editorial correction of a confiscated asset's location.
+ */
+export interface UpdateConfiscatedAssetLocation {
+  /** @nullable */
+  latitude?: number | null;
+  /** @nullable */
+  longitude?: number | null;
+  /** @nullable */
+  geoAddress?: string | null;
+  /** @nullable */
+  geoQuartiere?: string | null;
+  geoVerify?: boolean;
+}
+
+/**
  * Phase of a public-spending lifecycle inferred from an act's type/subject.
  */
 export type LifecyclePhase = typeof LifecyclePhase[keyof typeof LifecyclePhase];
@@ -1909,5 +2067,10 @@ status?: BandoStatus;
 settore?: string;
 esito?: BandoEsito;
 ente?: string;
+};
+
+export type ListConfiscatedAssetsParams = {
+status?: ConfiscatedAssetStatus;
+tipologia?: string;
 };
 

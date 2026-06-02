@@ -3041,3 +3041,237 @@ export const ConfirmBandoSuggestionResponse = zod.object({
 }).describe('Editorial view of a bando, incl. source, keywords and all matches.')
 
 
+/**
+ * Returns the confiscated assets (manual editorial entries plus those
+imported from the ANBSC open data) with their location, filterable by
+status and tipologia.
+
+ * @summary Public catalog of confiscated assets in the municipality
+ */
+export const ListConfiscatedAssetsQueryParams = zod.object({
+  "status": zod.enum(['sequestrato', 'confiscato', 'assegnato', 'riutilizzato']).optional(),
+  "tipologia": zod.coerce.string().optional()
+})
+
+export const ListConfiscatedAssetsResponseItem = zod.object({
+  "id": zod.number(),
+  "slug": zod.string(),
+  "denominazione": zod.string(),
+  "description": zod.string(),
+  "tipologia": zod.string(),
+  "status": zod.enum(['sequestrato', 'confiscato', 'assegnato', 'riutilizzato']).describe('Stage of the asset along the confiscation process: `sequestrato`\n(seized), `confiscato` (definitively confiscated), `assegnato`\n(assigned to a body\/association), `riutilizzato` (effectively reused).\n'),
+  "indirizzo": zod.string(),
+  "assegnatario": zod.string(),
+  "destinazioneUso": zod.string(),
+  "datiCatastali": zod.string(),
+  "officialUrl": zod.string().nullable(),
+  "latitude": zod.string().nullable(),
+  "longitude": zod.string().nullable(),
+  "geoAddress": zod.string().nullable(),
+  "geoQuartiere": zod.string().nullable(),
+  "updatedAt": zod.string()
+}).describe('Public view of a confiscated asset (with its location).')
+export const ListConfiscatedAssetsResponse = zod.array(ListConfiscatedAssetsResponseItem)
+
+
+/**
+ * @summary Create a confiscated asset (editorial)
+ */
+
+
+
+
+export const CreateConfiscatedAssetBody = zod.object({
+  "slug": zod.string().min(1),
+  "denominazione": zod.string().min(1),
+  "description": zod.string().optional(),
+  "tipologia": zod.string().optional(),
+  "status": zod.enum(['sequestrato', 'confiscato', 'assegnato', 'riutilizzato']).optional().describe('Stage of the asset along the confiscation process: `sequestrato`\n(seized), `confiscato` (definitively confiscated), `assegnato`\n(assigned to a body\/association), `riutilizzato` (effectively reused).\n'),
+  "indirizzo": zod.string().optional(),
+  "assegnatario": zod.string().optional(),
+  "destinazioneUso": zod.string().optional(),
+  "datiCatastali": zod.string().optional(),
+  "officialUrl": zod.string().nullish(),
+  "notes": zod.string().optional()
+})
+
+
+/**
+ * @summary Aggregate stats for the confiscated assets section
+ */
+export const GetConfiscatedAssetsSummaryResponse = zod.object({
+  "totale": zod.number(),
+  "sequestrati": zod.number(),
+  "confiscati": zod.number(),
+  "assegnati": zod.number(),
+  "riutilizzati": zod.number(),
+  "geolocalizzati": zod.number(),
+  "perStatus": zod.array(zod.object({
+  "status": zod.enum(['sequestrato', 'confiscato', 'assegnato', 'riutilizzato']).describe('Stage of the asset along the confiscation process: `sequestrato`\n(seized), `confiscato` (definitively confiscated), `assegnato`\n(assigned to a body\/association), `riutilizzato` (effectively reused).\n'),
+  "count": zod.number()
+})),
+  "perTipologia": zod.array(zod.object({
+  "tipologia": zod.string(),
+  "count": zod.number()
+}))
+})
+
+
+/**
+ * @summary Editorial list of all confiscated assets (incl. notes/source)
+ */
+export const ListConfiscatedAssetsAdminResponseItem = zod.object({
+  "id": zod.number(),
+  "slug": zod.string(),
+  "denominazione": zod.string(),
+  "description": zod.string(),
+  "tipologia": zod.string(),
+  "status": zod.enum(['sequestrato', 'confiscato', 'assegnato', 'riutilizzato']).describe('Stage of the asset along the confiscation process: `sequestrato`\n(seized), `confiscato` (definitively confiscated), `assegnato`\n(assigned to a body\/association), `riutilizzato` (effectively reused).\n'),
+  "indirizzo": zod.string(),
+  "assegnatario": zod.string(),
+  "destinazioneUso": zod.string(),
+  "datiCatastali": zod.string(),
+  "officialUrl": zod.string().nullable(),
+  "source": zod.enum(['manual', 'auto']),
+  "sourceId": zod.string().nullable(),
+  "latitude": zod.string().nullable(),
+  "longitude": zod.string().nullable(),
+  "geoAddress": zod.string().nullable(),
+  "geoQuartiere": zod.string().nullable(),
+  "geoSource": zod.string().nullable(),
+  "geoManual": zod.boolean(),
+  "geoVerify": zod.boolean(),
+  "notes": zod.string(),
+  "createdAt": zod.string(),
+  "updatedAt": zod.string()
+}).describe('Editorial view of a confiscated asset (incl. source\/notes\/geo).')
+export const ListConfiscatedAssetsAdminResponse = zod.array(ListConfiscatedAssetsAdminResponseItem)
+
+
+/**
+ * @summary Public detail of a confiscated asset
+ */
+export const GetConfiscatedAssetParams = zod.object({
+  "slug": zod.coerce.string()
+})
+
+export const GetConfiscatedAssetResponse = zod.object({
+  "id": zod.number(),
+  "slug": zod.string(),
+  "denominazione": zod.string(),
+  "description": zod.string(),
+  "tipologia": zod.string(),
+  "status": zod.enum(['sequestrato', 'confiscato', 'assegnato', 'riutilizzato']).describe('Stage of the asset along the confiscation process: `sequestrato`\n(seized), `confiscato` (definitively confiscated), `assegnato`\n(assigned to a body\/association), `riutilizzato` (effectively reused).\n'),
+  "indirizzo": zod.string(),
+  "assegnatario": zod.string(),
+  "destinazioneUso": zod.string(),
+  "datiCatastali": zod.string(),
+  "officialUrl": zod.string().nullable(),
+  "latitude": zod.string().nullable(),
+  "longitude": zod.string().nullable(),
+  "geoAddress": zod.string().nullable(),
+  "geoQuartiere": zod.string().nullable(),
+  "updatedAt": zod.string()
+}).describe('Public view of a confiscated asset (with its location).')
+
+
+/**
+ * @summary Update a confiscated asset (editorial)
+ */
+export const UpdateConfiscatedAssetParams = zod.object({
+  "slug": zod.coerce.string()
+})
+
+
+
+
+export const UpdateConfiscatedAssetBody = zod.object({
+  "denominazione": zod.string().min(1).optional(),
+  "description": zod.string().optional(),
+  "tipologia": zod.string().optional(),
+  "status": zod.enum(['sequestrato', 'confiscato', 'assegnato', 'riutilizzato']).optional().describe('Stage of the asset along the confiscation process: `sequestrato`\n(seized), `confiscato` (definitively confiscated), `assegnato`\n(assigned to a body\/association), `riutilizzato` (effectively reused).\n'),
+  "indirizzo": zod.string().optional(),
+  "assegnatario": zod.string().optional(),
+  "destinazioneUso": zod.string().optional(),
+  "datiCatastali": zod.string().optional(),
+  "officialUrl": zod.string().nullish(),
+  "notes": zod.string().optional()
+}).describe('Partial update of a confiscated asset.')
+
+export const UpdateConfiscatedAssetResponse = zod.object({
+  "id": zod.number(),
+  "slug": zod.string(),
+  "denominazione": zod.string(),
+  "description": zod.string(),
+  "tipologia": zod.string(),
+  "status": zod.enum(['sequestrato', 'confiscato', 'assegnato', 'riutilizzato']).describe('Stage of the asset along the confiscation process: `sequestrato`\n(seized), `confiscato` (definitively confiscated), `assegnato`\n(assigned to a body\/association), `riutilizzato` (effectively reused).\n'),
+  "indirizzo": zod.string(),
+  "assegnatario": zod.string(),
+  "destinazioneUso": zod.string(),
+  "datiCatastali": zod.string(),
+  "officialUrl": zod.string().nullable(),
+  "source": zod.enum(['manual', 'auto']),
+  "sourceId": zod.string().nullable(),
+  "latitude": zod.string().nullable(),
+  "longitude": zod.string().nullable(),
+  "geoAddress": zod.string().nullable(),
+  "geoQuartiere": zod.string().nullable(),
+  "geoSource": zod.string().nullable(),
+  "geoManual": zod.boolean(),
+  "geoVerify": zod.boolean(),
+  "notes": zod.string(),
+  "createdAt": zod.string(),
+  "updatedAt": zod.string()
+}).describe('Editorial view of a confiscated asset (incl. source\/notes\/geo).')
+
+
+/**
+ * @summary Delete a confiscated asset (editorial)
+ */
+export const DeleteConfiscatedAssetParams = zod.object({
+  "slug": zod.coerce.string()
+})
+
+
+/**
+ * @summary Editorial correction of a confiscated asset's location. Editor only.
+ */
+export const UpdateConfiscatedAssetLocationParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const UpdateConfiscatedAssetLocationBody = zod.object({
+  "latitude": zod.number().nullish(),
+  "longitude": zod.number().nullish(),
+  "geoAddress": zod.string().nullish(),
+  "geoQuartiere": zod.string().nullish(),
+  "geoVerify": zod.boolean().optional()
+}).describe('Editorial correction of a confiscated asset\'s location.')
+
+export const UpdateConfiscatedAssetLocationResponse = zod.object({
+  "id": zod.number(),
+  "slug": zod.string(),
+  "denominazione": zod.string(),
+  "description": zod.string(),
+  "tipologia": zod.string(),
+  "status": zod.enum(['sequestrato', 'confiscato', 'assegnato', 'riutilizzato']).describe('Stage of the asset along the confiscation process: `sequestrato`\n(seized), `confiscato` (definitively confiscated), `assegnato`\n(assigned to a body\/association), `riutilizzato` (effectively reused).\n'),
+  "indirizzo": zod.string(),
+  "assegnatario": zod.string(),
+  "destinazioneUso": zod.string(),
+  "datiCatastali": zod.string(),
+  "officialUrl": zod.string().nullable(),
+  "source": zod.enum(['manual', 'auto']),
+  "sourceId": zod.string().nullable(),
+  "latitude": zod.string().nullable(),
+  "longitude": zod.string().nullable(),
+  "geoAddress": zod.string().nullable(),
+  "geoQuartiere": zod.string().nullable(),
+  "geoSource": zod.string().nullable(),
+  "geoManual": zod.boolean(),
+  "geoVerify": zod.boolean(),
+  "notes": zod.string(),
+  "createdAt": zod.string(),
+  "updatedAt": zod.string()
+}).describe('Editorial view of a confiscated asset (incl. source\/notes\/geo).')
+
+

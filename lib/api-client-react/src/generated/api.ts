@@ -28,6 +28,11 @@ import type {
   BandoSummary,
   BandoUpdateInput,
   Category,
+  ConfiscatedAsset,
+  ConfiscatedAssetAdmin,
+  ConfiscatedAssetCreateInput,
+  ConfiscatedAssetSummary,
+  ConfiscatedAssetUpdateInput,
   Contract,
   ContractAnalytics,
   ContractStoryline,
@@ -52,6 +57,7 @@ import type {
   LegalityRequirementUpdateInput,
   LegalitySection,
   ListBandiParams,
+  ListConfiscatedAssetsParams,
   ListContractsParams,
   ListConvocazioniParams,
   ListDelibereParams,
@@ -106,6 +112,7 @@ import type {
   ThemePostInput,
   ThemePostUpdateInput,
   TopThemes,
+  UpdateConfiscatedAssetLocation,
   UpdateContract,
   UpdateContractLocation,
   UploadUrlRequest,
@@ -7378,5 +7385,609 @@ export const useConfirmBandoSuggestion = <TError = ErrorType<Error>,
         TContext
       > => {
       return useMutation(getConfirmBandoSuggestionMutationOptions(options));
+    }
+
+export const getListConfiscatedAssetsUrl = (params?: ListConfiscatedAssetsParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : value.toString())
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/beni-confiscati?${stringifiedParams}` : `/api/beni-confiscati`
+}
+
+/**
+ * Returns the confiscated assets (manual editorial entries plus those
+imported from the ANBSC open data) with their location, filterable by
+status and tipologia.
+
+ * @summary Public catalog of confiscated assets in the municipality
+ */
+export const listConfiscatedAssets = async (params?: ListConfiscatedAssetsParams, options?: RequestInit): Promise<ConfiscatedAsset[]> => {
+
+  return customFetch<ConfiscatedAsset[]>(getListConfiscatedAssetsUrl(params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getListConfiscatedAssetsQueryKey = (params?: ListConfiscatedAssetsParams,) => {
+    return [
+    `/api/beni-confiscati`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getListConfiscatedAssetsQueryOptions = <TData = Awaited<ReturnType<typeof listConfiscatedAssets>>, TError = ErrorType<unknown>>(params?: ListConfiscatedAssetsParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listConfiscatedAssets>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListConfiscatedAssetsQueryKey(params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listConfiscatedAssets>>> = ({ signal }) => listConfiscatedAssets(params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listConfiscatedAssets>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ListConfiscatedAssetsQueryResult = NonNullable<Awaited<ReturnType<typeof listConfiscatedAssets>>>
+export type ListConfiscatedAssetsQueryError = ErrorType<unknown>
+
+
+/**
+ * @summary Public catalog of confiscated assets in the municipality
+ */
+
+export function useListConfiscatedAssets<TData = Awaited<ReturnType<typeof listConfiscatedAssets>>, TError = ErrorType<unknown>>(
+ params?: ListConfiscatedAssetsParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listConfiscatedAssets>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getListConfiscatedAssetsQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
+
+
+
+export const getCreateConfiscatedAssetUrl = () => {
+
+
+
+
+  return `/api/beni-confiscati`
+}
+
+/**
+ * @summary Create a confiscated asset (editorial)
+ */
+export const createConfiscatedAsset = async (confiscatedAssetCreateInput: ConfiscatedAssetCreateInput, options?: RequestInit): Promise<ConfiscatedAssetAdmin> => {
+
+  return customFetch<ConfiscatedAssetAdmin>(getCreateConfiscatedAssetUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      confiscatedAssetCreateInput,)
+  }
+);}
+
+
+
+
+export const getCreateConfiscatedAssetMutationOptions = <TError = ErrorType<Error>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createConfiscatedAsset>>, TError,{data: BodyType<ConfiscatedAssetCreateInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof createConfiscatedAsset>>, TError,{data: BodyType<ConfiscatedAssetCreateInput>}, TContext> => {
+
+const mutationKey = ['createConfiscatedAsset'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createConfiscatedAsset>>, {data: BodyType<ConfiscatedAssetCreateInput>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  createConfiscatedAsset(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type CreateConfiscatedAssetMutationResult = NonNullable<Awaited<ReturnType<typeof createConfiscatedAsset>>>
+    export type CreateConfiscatedAssetMutationBody = BodyType<ConfiscatedAssetCreateInput>
+    export type CreateConfiscatedAssetMutationError = ErrorType<Error>
+
+    /**
+ * @summary Create a confiscated asset (editorial)
+ */
+export const useCreateConfiscatedAsset = <TError = ErrorType<Error>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createConfiscatedAsset>>, TError,{data: BodyType<ConfiscatedAssetCreateInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof createConfiscatedAsset>>,
+        TError,
+        {data: BodyType<ConfiscatedAssetCreateInput>},
+        TContext
+      > => {
+      return useMutation(getCreateConfiscatedAssetMutationOptions(options));
+    }
+
+export const getGetConfiscatedAssetsSummaryUrl = () => {
+
+
+
+
+  return `/api/beni-confiscati/summary`
+}
+
+/**
+ * @summary Aggregate stats for the confiscated assets section
+ */
+export const getConfiscatedAssetsSummary = async ( options?: RequestInit): Promise<ConfiscatedAssetSummary> => {
+
+  return customFetch<ConfiscatedAssetSummary>(getGetConfiscatedAssetsSummaryUrl(),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetConfiscatedAssetsSummaryQueryKey = () => {
+    return [
+    `/api/beni-confiscati/summary`
+    ] as const;
+    }
+
+
+export const getGetConfiscatedAssetsSummaryQueryOptions = <TData = Awaited<ReturnType<typeof getConfiscatedAssetsSummary>>, TError = ErrorType<unknown>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getConfiscatedAssetsSummary>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetConfiscatedAssetsSummaryQueryKey();
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getConfiscatedAssetsSummary>>> = ({ signal }) => getConfiscatedAssetsSummary({ signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getConfiscatedAssetsSummary>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetConfiscatedAssetsSummaryQueryResult = NonNullable<Awaited<ReturnType<typeof getConfiscatedAssetsSummary>>>
+export type GetConfiscatedAssetsSummaryQueryError = ErrorType<unknown>
+
+
+/**
+ * @summary Aggregate stats for the confiscated assets section
+ */
+
+export function useGetConfiscatedAssetsSummary<TData = Awaited<ReturnType<typeof getConfiscatedAssetsSummary>>, TError = ErrorType<unknown>>(
+  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getConfiscatedAssetsSummary>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetConfiscatedAssetsSummaryQueryOptions(options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
+
+
+
+export const getListConfiscatedAssetsAdminUrl = () => {
+
+
+
+
+  return `/api/beni-confiscati/admin`
+}
+
+/**
+ * @summary Editorial list of all confiscated assets (incl. notes/source)
+ */
+export const listConfiscatedAssetsAdmin = async ( options?: RequestInit): Promise<ConfiscatedAssetAdmin[]> => {
+
+  return customFetch<ConfiscatedAssetAdmin[]>(getListConfiscatedAssetsAdminUrl(),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getListConfiscatedAssetsAdminQueryKey = () => {
+    return [
+    `/api/beni-confiscati/admin`
+    ] as const;
+    }
+
+
+export const getListConfiscatedAssetsAdminQueryOptions = <TData = Awaited<ReturnType<typeof listConfiscatedAssetsAdmin>>, TError = ErrorType<Error>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listConfiscatedAssetsAdmin>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListConfiscatedAssetsAdminQueryKey();
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listConfiscatedAssetsAdmin>>> = ({ signal }) => listConfiscatedAssetsAdmin({ signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listConfiscatedAssetsAdmin>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ListConfiscatedAssetsAdminQueryResult = NonNullable<Awaited<ReturnType<typeof listConfiscatedAssetsAdmin>>>
+export type ListConfiscatedAssetsAdminQueryError = ErrorType<Error>
+
+
+/**
+ * @summary Editorial list of all confiscated assets (incl. notes/source)
+ */
+
+export function useListConfiscatedAssetsAdmin<TData = Awaited<ReturnType<typeof listConfiscatedAssetsAdmin>>, TError = ErrorType<Error>>(
+  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listConfiscatedAssetsAdmin>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getListConfiscatedAssetsAdminQueryOptions(options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
+
+
+
+export const getGetConfiscatedAssetUrl = (slug: string,) => {
+
+
+
+
+  return `/api/beni-confiscati/${slug}`
+}
+
+/**
+ * @summary Public detail of a confiscated asset
+ */
+export const getConfiscatedAsset = async (slug: string, options?: RequestInit): Promise<ConfiscatedAsset> => {
+
+  return customFetch<ConfiscatedAsset>(getGetConfiscatedAssetUrl(slug),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetConfiscatedAssetQueryKey = (slug: string,) => {
+    return [
+    `/api/beni-confiscati/${slug}`
+    ] as const;
+    }
+
+
+export const getGetConfiscatedAssetQueryOptions = <TData = Awaited<ReturnType<typeof getConfiscatedAsset>>, TError = ErrorType<Error>>(slug: string, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getConfiscatedAsset>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetConfiscatedAssetQueryKey(slug);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getConfiscatedAsset>>> = ({ signal }) => getConfiscatedAsset(slug, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: !!(slug), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getConfiscatedAsset>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetConfiscatedAssetQueryResult = NonNullable<Awaited<ReturnType<typeof getConfiscatedAsset>>>
+export type GetConfiscatedAssetQueryError = ErrorType<Error>
+
+
+/**
+ * @summary Public detail of a confiscated asset
+ */
+
+export function useGetConfiscatedAsset<TData = Awaited<ReturnType<typeof getConfiscatedAsset>>, TError = ErrorType<Error>>(
+ slug: string, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getConfiscatedAsset>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetConfiscatedAssetQueryOptions(slug,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
+
+
+
+export const getUpdateConfiscatedAssetUrl = (slug: string,) => {
+
+
+
+
+  return `/api/beni-confiscati/${slug}`
+}
+
+/**
+ * @summary Update a confiscated asset (editorial)
+ */
+export const updateConfiscatedAsset = async (slug: string,
+    confiscatedAssetUpdateInput: ConfiscatedAssetUpdateInput, options?: RequestInit): Promise<ConfiscatedAssetAdmin> => {
+
+  return customFetch<ConfiscatedAssetAdmin>(getUpdateConfiscatedAssetUrl(slug),
+  {
+    ...options,
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      confiscatedAssetUpdateInput,)
+  }
+);}
+
+
+
+
+export const getUpdateConfiscatedAssetMutationOptions = <TError = ErrorType<Error>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateConfiscatedAsset>>, TError,{slug: string;data: BodyType<ConfiscatedAssetUpdateInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof updateConfiscatedAsset>>, TError,{slug: string;data: BodyType<ConfiscatedAssetUpdateInput>}, TContext> => {
+
+const mutationKey = ['updateConfiscatedAsset'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof updateConfiscatedAsset>>, {slug: string;data: BodyType<ConfiscatedAssetUpdateInput>}> = (props) => {
+          const {slug,data} = props ?? {};
+
+          return  updateConfiscatedAsset(slug,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type UpdateConfiscatedAssetMutationResult = NonNullable<Awaited<ReturnType<typeof updateConfiscatedAsset>>>
+    export type UpdateConfiscatedAssetMutationBody = BodyType<ConfiscatedAssetUpdateInput>
+    export type UpdateConfiscatedAssetMutationError = ErrorType<Error>
+
+    /**
+ * @summary Update a confiscated asset (editorial)
+ */
+export const useUpdateConfiscatedAsset = <TError = ErrorType<Error>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateConfiscatedAsset>>, TError,{slug: string;data: BodyType<ConfiscatedAssetUpdateInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof updateConfiscatedAsset>>,
+        TError,
+        {slug: string;data: BodyType<ConfiscatedAssetUpdateInput>},
+        TContext
+      > => {
+      return useMutation(getUpdateConfiscatedAssetMutationOptions(options));
+    }
+
+export const getDeleteConfiscatedAssetUrl = (slug: string,) => {
+
+
+
+
+  return `/api/beni-confiscati/${slug}`
+}
+
+/**
+ * @summary Delete a confiscated asset (editorial)
+ */
+export const deleteConfiscatedAsset = async (slug: string, options?: RequestInit): Promise<void> => {
+
+  return customFetch<void>(getDeleteConfiscatedAssetUrl(slug),
+  {
+    ...options,
+    method: 'DELETE'
+
+
+  }
+);}
+
+
+
+
+export const getDeleteConfiscatedAssetMutationOptions = <TError = ErrorType<Error>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteConfiscatedAsset>>, TError,{slug: string}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof deleteConfiscatedAsset>>, TError,{slug: string}, TContext> => {
+
+const mutationKey = ['deleteConfiscatedAsset'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof deleteConfiscatedAsset>>, {slug: string}> = (props) => {
+          const {slug} = props ?? {};
+
+          return  deleteConfiscatedAsset(slug,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type DeleteConfiscatedAssetMutationResult = NonNullable<Awaited<ReturnType<typeof deleteConfiscatedAsset>>>
+
+    export type DeleteConfiscatedAssetMutationError = ErrorType<Error>
+
+    /**
+ * @summary Delete a confiscated asset (editorial)
+ */
+export const useDeleteConfiscatedAsset = <TError = ErrorType<Error>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteConfiscatedAsset>>, TError,{slug: string}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof deleteConfiscatedAsset>>,
+        TError,
+        {slug: string},
+        TContext
+      > => {
+      return useMutation(getDeleteConfiscatedAssetMutationOptions(options));
+    }
+
+export const getUpdateConfiscatedAssetLocationUrl = (id: number,) => {
+
+
+
+
+  return `/api/beni-confiscati/${id}/location`
+}
+
+/**
+ * @summary Editorial correction of a confiscated asset's location. Editor only.
+ */
+export const updateConfiscatedAssetLocation = async (id: number,
+    updateConfiscatedAssetLocation: UpdateConfiscatedAssetLocation, options?: RequestInit): Promise<ConfiscatedAssetAdmin> => {
+
+  return customFetch<ConfiscatedAssetAdmin>(getUpdateConfiscatedAssetLocationUrl(id),
+  {
+    ...options,
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      updateConfiscatedAssetLocation,)
+  }
+);}
+
+
+
+
+export const getUpdateConfiscatedAssetLocationMutationOptions = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateConfiscatedAssetLocation>>, TError,{id: number;data: BodyType<UpdateConfiscatedAssetLocation>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof updateConfiscatedAssetLocation>>, TError,{id: number;data: BodyType<UpdateConfiscatedAssetLocation>}, TContext> => {
+
+const mutationKey = ['updateConfiscatedAssetLocation'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof updateConfiscatedAssetLocation>>, {id: number;data: BodyType<UpdateConfiscatedAssetLocation>}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  updateConfiscatedAssetLocation(id,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type UpdateConfiscatedAssetLocationMutationResult = NonNullable<Awaited<ReturnType<typeof updateConfiscatedAssetLocation>>>
+    export type UpdateConfiscatedAssetLocationMutationBody = BodyType<UpdateConfiscatedAssetLocation>
+    export type UpdateConfiscatedAssetLocationMutationError = ErrorType<void>
+
+    /**
+ * @summary Editorial correction of a confiscated asset's location. Editor only.
+ */
+export const useUpdateConfiscatedAssetLocation = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateConfiscatedAssetLocation>>, TError,{id: number;data: BodyType<UpdateConfiscatedAssetLocation>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof updateConfiscatedAssetLocation>>,
+        TError,
+        {id: number;data: BodyType<UpdateConfiscatedAssetLocation>},
+        TContext
+      > => {
+      return useMutation(getUpdateConfiscatedAssetLocationMutationOptions(options));
     }
 
