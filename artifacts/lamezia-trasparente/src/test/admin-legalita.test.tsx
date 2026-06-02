@@ -1,5 +1,11 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import { render, screen, fireEvent, within } from "@testing-library/react";
+import {
+  render,
+  screen,
+  fireEvent,
+  within,
+  waitFor,
+} from "@testing-library/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Router as WouterRouter } from "wouter";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -14,9 +20,14 @@ import type {
  * Mutable holder so each test can supply its own section payload to the mocked
  * `useGetLegalitySection` hook before rendering.
  */
-const mockState: { data: LegalitySection | undefined; isLoading: boolean } = {
+const mockState: {
+  data: LegalitySection | undefined;
+  isLoading: boolean;
+  error: unknown;
+} = {
   data: undefined,
   isLoading: false,
+  error: null,
 };
 
 const updateOverviewMutate = vi.fn(async () => undefined);
@@ -31,7 +42,7 @@ vi.mock("@workspace/api-client-react", () => ({
   useGetLegalitySection: () => ({
     data: mockState.data,
     isLoading: mockState.isLoading,
-    error: null,
+    error: mockState.error,
   }),
   useUpdateLegalityOverview: () => ({
     mutateAsync: updateOverviewMutate,
@@ -72,6 +83,7 @@ vi.mock("sonner", () => ({
 }));
 
 import { AdminLegalita } from "@/pages/AdminLegalita";
+import { toast } from "sonner";
 
 const TOKEN_STORAGE_KEY = "lt_ingest_token";
 
@@ -150,6 +162,8 @@ describe("AdminLegalita", () => {
     sessionStorage.clear();
     mockState.data = undefined;
     mockState.isLoading = false;
+    mockState.error = null;
+    vi.restoreAllMocks();
   });
 
   it("shows the token gate when no token is stored", () => {
@@ -345,6 +359,228 @@ describe("AdminLegalita", () => {
     expect(updateRequirementMutate).toHaveBeenCalledWith({
       id: 30,
       data: expect.objectContaining({ linkedActs: [] }),
+    });
+  });
+
+  it("signs out and shows an error when the list query returns 401", () => {
+    sessionStorage.setItem(TOKEN_STORAGE_KEY, "test-token");
+    mockState.data = undefined;
+    mockState.error = { status: 401 };
+
+    renderWithProviders(<AdminLegalita />);
+
+    expect(toast.error).toHaveBeenCalledWith(
+      "Sessione scaduta o token non valido",
+      { description: "Effettua di nuovo l'accesso." },
+    );
+    expect(sessionStorage.getItem(TOKEN_STORAGE_KEY)).toBeNull();
+    expect(
+      screen.getByLabelText(/Token di accesso redazione/i),
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByText("Gestione Legalità e Trasparenza"),
+    ).not.toBeInTheDocument();
+  });
+
+  it("signs out and shows an error when a mutation returns 403", async () => {
+    sessionStorage.setItem(TOKEN_STORAGE_KEY, "test-token");
+    mockState.data = makeSection({ areas: [] });
+    createAreaMutate.mockRejectedValueOnce({ status: 403 });
+
+    renderWithProviders(<AdminLegalita />);
+
+    fireEvent.click(screen.getByRole("button", { name: /Nuova area/i }));
+    fireEvent.change(screen.getByLabelText("Slug"), {
+      target: { value: "antiriciclaggio" },
+    });
+    fireEvent.change(screen.getByLabelText("Titolo"), {
+      target: { value: "Antiriciclaggio" },
+    });
+    fireEvent.click(screen.getByRole("button", { name: /^Crea$/i }));
+
+    await waitFor(() => {
+      expect(toast.error).toHaveBeenCalledWith(
+        "Sessione scaduta o token non valido",
+        { description: "Effettua di nuovo l'accesso." },
+      );
+    });
+    expect(createAreaMutate).toHaveBeenCalledTimes(1);
+    expect(sessionStorage.getItem(TOKEN_STORAGE_KEY)).toBeNull();
+    await waitFor(() => {
+      expect(
+        screen.getByLabelText(/Token di accesso redazione/i),
+      ).toBeInTheDocument();
+    });
+  });
+
+  it("deletes an area after confirmation", () => {
+    sessionStorage.setItem(TOKEN_STORAGE_KEY, "test-token");
+    const confirmSpy = vi.spyOn(window, "confirm").mockReturnValue(true);
+    mockState.data = makeSection({
+      areas: [makeArea({ id: 7, slug: "trasparenza", title: "Trasparenza" })],
+    });
+
+    renderWithProviders(<AdminLegalita />);
+
+    fireEvent.click(screen.getByRole("button", { name: "Elimina area" }));
+
+    expect(confirmSpy).toHaveBeenCalledTimes(1);
+    expect(deleteAreaMutate).toHaveBeenCalledTimes(1);
+    expect(deleteAreaMutate).toHaveBeenCalledWith({ id: 7 });
+  });
+
+  it("does not delete an area when confirmation is cancelled", () => {
+    sessionStorage.setItem(TOKEN_STORAGE_KEY, "test-token");
+    const confirmSpy = vi.spyOn(window, "confirm").mockReturnValue(false);
+    mockState.data = makeSection({
+      areas: [makeArea({ id: 7, slug: "trasparenza", title: "Trasparenza" })],
+    });
+
+    renderWithProviders(<AdminLegalita />);
+
+    fireEvent.click(screen.getByRole("button", { name: "Elimina area" }));
+
+    expect(confirmSpy).toHaveBeenCalledTimes(1);
+    expect(deleteAreaMutate).not.toHaveBeenCalled();
+  });
+
+  it("deletes a requirement after confirmation", () => {
+    sessionStorage.setItem(TOKEN_STORAGE_KEY, "test-token");
+    const confirmSpy = vi.spyOn(window, "confirm").mockReturnValue(true);
+    mockState.data = makeSection({
+      areas: [
+        makeArea({
+          id: 1,
+          slug: "trasparenza",
+          title: "Trasparenza",
+          requirements: [
+            makeRequirement({ id: 40, areaId: 1, title: "Albo pretorio" }),
+          ],
+        }),
+      ],
+    });
+
+    renderWithProviders(<AdminLegalita />);
+
+    fireEvent.click(
+      screen.getByRole("button", { name: "Elimina requisito" }),
+    );
+
+    expect(confirmSpy).toHaveBeenCalledTimes(1);
+    expect(deleteRequirementMutate).toHaveBeenCalledTimes(1);
+    expect(deleteRequirementMutate).toHaveBeenCalledWith({ id: 40 });
+  });
+
+  it("does not delete a requirement when confirmation is cancelled", () => {
+    sessionStorage.setItem(TOKEN_STORAGE_KEY, "test-token");
+    const confirmSpy = vi.spyOn(window, "confirm").mockReturnValue(false);
+    mockState.data = makeSection({
+      areas: [
+        makeArea({
+          id: 1,
+          slug: "trasparenza",
+          title: "Trasparenza",
+          requirements: [
+            makeRequirement({ id: 40, areaId: 1, title: "Albo pretorio" }),
+          ],
+        }),
+      ],
+    });
+
+    renderWithProviders(<AdminLegalita />);
+
+    fireEvent.click(
+      screen.getByRole("button", { name: "Elimina requisito" }),
+    );
+
+    expect(confirmSpy).toHaveBeenCalledTimes(1);
+    expect(deleteRequirementMutate).not.toHaveBeenCalled();
+  });
+
+  it("reorders areas by swapping their positions on move down", () => {
+    sessionStorage.setItem(TOKEN_STORAGE_KEY, "test-token");
+    mockState.data = makeSection({
+      areas: [
+        makeArea({
+          id: 1,
+          slug: "trasparenza",
+          title: "Trasparenza",
+          position: 0,
+        }),
+        makeArea({
+          id: 2,
+          slug: "anticorruzione",
+          title: "Anticorruzione",
+          position: 1,
+        }),
+      ],
+    });
+
+    renderWithProviders(<AdminLegalita />);
+
+    const firstArea = screen.getByText("Trasparenza").closest(".rounded-xl") as
+      | HTMLElement
+      | null;
+    const moveDown = within(
+      firstArea ?? document.body,
+    ).getByRole("button", { name: "Sposta giù" });
+    fireEvent.click(moveDown);
+
+    expect(updateAreaMutate).toHaveBeenCalledTimes(2);
+    expect(updateAreaMutate).toHaveBeenCalledWith({
+      id: 1,
+      data: { position: 1 },
+    });
+    expect(updateAreaMutate).toHaveBeenCalledWith({
+      id: 2,
+      data: { position: 0 },
+    });
+  });
+
+  it("reorders requirements by swapping their positions on move up", () => {
+    sessionStorage.setItem(TOKEN_STORAGE_KEY, "test-token");
+    mockState.data = makeSection({
+      areas: [
+        makeArea({
+          id: 1,
+          slug: "trasparenza",
+          title: "Trasparenza",
+          requirements: [
+            makeRequirement({
+              id: 50,
+              areaId: 1,
+              title: "Primo requisito",
+              position: 0,
+            }),
+            makeRequirement({
+              id: 51,
+              areaId: 1,
+              title: "Secondo requisito",
+              position: 1,
+            }),
+          ],
+        }),
+      ],
+    });
+
+    renderWithProviders(<AdminLegalita />);
+
+    const secondReq = screen
+      .getByText("Secondo requisito")
+      .closest(".rounded-lg") as HTMLElement | null;
+    const moveUp = within(
+      secondReq ?? document.body,
+    ).getByRole("button", { name: "Sposta su" });
+    fireEvent.click(moveUp);
+
+    expect(updateRequirementMutate).toHaveBeenCalledTimes(2);
+    expect(updateRequirementMutate).toHaveBeenCalledWith({
+      id: 51,
+      data: { position: 0 },
+    });
+    expect(updateRequirementMutate).toHaveBeenCalledWith({
+      id: 50,
+      data: { position: 1 },
     });
   });
 });
