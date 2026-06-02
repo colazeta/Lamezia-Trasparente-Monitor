@@ -37,7 +37,9 @@ const ALL_YEARS = "__all__";
 export function PareriVigilanza() {
   const [issuingBody, setIssuingBody] = useState<string>(ALL_BODIES);
   const [year, setYear] = useState<string>(ALL_YEARS);
-  const [sort, setSort] = useState<"recent" | "oldest">("recent");
+  const [sort, setSort] = useState<"recent" | "oldest" | "referenceYear">(
+    "recent",
+  );
   const [search, setSearch] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
 
@@ -59,7 +61,11 @@ export function PareriVigilanza() {
   const years = useMemo(() => {
     if (!allOpinions) return [];
     return Array.from(
-      new Set(allOpinions.map((o) => new Date(o.opinionDate).getFullYear())),
+      new Set(
+        allOpinions
+          .map((o) => o.referenceYear)
+          .filter((y): y is number => y != null),
+      ),
     ).sort((a, b) => b - a);
   }, [allOpinions]);
 
@@ -145,7 +151,9 @@ export function PareriVigilanza() {
           <div className="sm:w-56">
             <Select
               value={sort}
-              onValueChange={(v) => setSort(v as "recent" | "oldest")}
+              onValueChange={(v) =>
+                setSort(v as "recent" | "oldest" | "referenceYear")
+              }
             >
               <SelectTrigger
                 className="h-11 bg-background"
@@ -159,6 +167,9 @@ export function PareriVigilanza() {
               <SelectContent>
                 <SelectItem value="recent">Più recenti</SelectItem>
                 <SelectItem value="oldest">Meno recenti</SelectItem>
+                <SelectItem value="referenceYear">
+                  Anno di riferimento
+                </SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -201,6 +212,11 @@ export function PareriVigilanza() {
                   <Badge variant="outline" className="text-xs">
                     {o.opinionType}
                   </Badge>
+                  {o.referenceYear != null && (
+                    <Badge variant="outline" className="text-xs font-mono">
+                      Rif. {o.referenceYear}
+                    </Badge>
+                  )}
                   {o.outcome && (
                     <span className="text-xs text-brand font-medium">
                       {o.outcome}

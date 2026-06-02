@@ -20,6 +20,11 @@ export interface OversightOpinion {
      * @nullable
      */
   outcome?: string | null;
+  /**
+     * Anno di riferimento del parere, distinto dalla data di emissione
+     * @nullable
+     */
+  referenceYear?: number | null;
   /** Stato di pubblicazione */
   status: string;
   opinionDate: string;

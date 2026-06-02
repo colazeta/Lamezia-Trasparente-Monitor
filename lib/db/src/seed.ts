@@ -1103,6 +1103,7 @@ type SeedOpinion = {
   subject: string;
   outcome: string | null;
   body: string | null;
+  referenceYear: number | null;
   opinionDate: string;
   documents: {
     title: string;
@@ -1122,6 +1123,7 @@ const oversightOpinions: SeedOpinion[] = [
       "Verifica della coerenza, attendibilità e congruità delle previsioni di bilancio per il triennio 2025-2027.",
     outcome: "Parere favorevole con raccomandazioni",
     body: "Il Collegio dei Revisori, esaminato lo schema di bilancio di previsione 2025-2027 e la documentazione allegata, ha verificato la coerenza interna degli equilibri di parte corrente e in conto capitale, l'attendibilità delle previsioni di entrata e la congruità delle previsioni di spesa.\n\nIl Collegio esprime parere favorevole all'approvazione dello schema di bilancio, raccomandando un attento monitoraggio della capacità di riscossione delle entrate proprie e il contenimento della spesa corrente entro i limiti programmati.",
+    referenceYear: 2025,
     opinionDate: "2025-01-22",
     documents: [
       {
@@ -1140,6 +1142,7 @@ const oversightOpinions: SeedOpinion[] = [
       "Esame del rendiconto della gestione dell'esercizio finanziario 2024 e della relazione sulla gestione.",
     outcome: "Parere favorevole",
     body: "Il Collegio ha verificato la corrispondenza del rendiconto alle risultanze della gestione, la regolarità delle scritture contabili e il rispetto dei vincoli di finanza pubblica. Esprime parere favorevole all'approvazione del rendiconto 2024.",
+    referenceYear: 2024,
     opinionDate: "2025-04-15",
     documents: [
       {
@@ -1159,6 +1162,7 @@ const oversightOpinions: SeedOpinion[] = [
       "Validazione della Relazione sulla Performance dell'ente per l'anno 2024 ai sensi del D.Lgs. 150/2009.",
     outcome: "Validata",
     body: "Il Nucleo di Valutazione, verificata la conformità della Relazione sulla Performance 2024 al Sistema di Misurazione e Valutazione vigente, ne attesta la validazione, riscontrando il complessivo raggiungimento degli obiettivi strategici e operativi assegnati.",
+    referenceYear: 2024,
     opinionDate: "2025-06-30",
     documents: [
       {
@@ -1178,6 +1182,7 @@ const oversightOpinions: SeedOpinion[] = [
       "Attestazione sull'assolvimento degli obblighi di pubblicazione previsti dalla normativa in materia di trasparenza.",
     outcome: "Attestazione rilasciata",
     body: "Il Nucleo di Valutazione ha condotto la verifica a campione sulle sezioni di Amministrazione Trasparente, attestando l'assolvimento degli obblighi di pubblicazione, con indicazione di alcune sezioni da aggiornare con maggiore tempestività.",
+    referenceYear: 2025,
     opinionDate: "2025-05-31",
     documents: [
       {
@@ -1203,6 +1208,7 @@ const oversightOpinions: SeedOpinion[] = [
       "Esame dello stato di attuazione del piano di riequilibrio finanziario pluriennale dell'ente.",
     outcome: "Prescrizioni e monitoraggio",
     body: "La Sezione regionale di controllo della Corte dei Conti, esaminata la documentazione trasmessa dall'ente, ha rilevato l'andamento del piano di riequilibrio, formulando prescrizioni in ordine al recupero dei residui attivi e disponendo il monitoraggio semestrale degli equilibri di bilancio.",
+    referenceYear: 2023,
     opinionDate: "2025-03-10",
     documents: [
       {
@@ -1222,6 +1228,7 @@ const oversightOpinions: SeedOpinion[] = [
       "Osservazioni in merito alle procedure di affidamento diretto e all'utilizzo degli strumenti di acquisto telematici.",
     outcome: "Raccomandazioni",
     body: "L'Autorità Nazionale Anticorruzione, nell'ambito dell'attività di vigilanza, ha formulato raccomandazioni sull'adeguata motivazione degli affidamenti diretti e sul ricorso preferenziale agli strumenti di acquisto del Mercato Elettronico della Pubblica Amministrazione, invitando l'ente ad adottare misure organizzative correttive.",
+    referenceYear: 2024,
     opinionDate: "2024-11-18",
     documents: [],
   },
@@ -1250,6 +1257,7 @@ async function seedOversightOpinions(): Promise<void> {
           subject: o.subject,
           outcome: o.outcome,
           body: o.body,
+          referenceYear: o.referenceYear,
           status: "pubblicato",
           opinionDate: new Date(o.opinionDate),
         })

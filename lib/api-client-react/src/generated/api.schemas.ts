@@ -1421,6 +1421,11 @@ export interface OversightOpinion {
      * @nullable
      */
   outcome?: string | null;
+  /**
+     * Anno di riferimento del parere, distinto dalla data di emissione
+     * @nullable
+     */
+  referenceYear?: number | null;
   /** Stato di pubblicazione */
   status: string;
   opinionDate: string;
@@ -1443,6 +1448,73 @@ export type OversightOpinionDetail = OversightOpinion & ({
   body?: string | null;
   documents: OversightOpinionDocument[];
 });
+
+export type OversightOpinionInputStatus = typeof OversightOpinionInputStatus[keyof typeof OversightOpinionInputStatus];
+
+
+export const OversightOpinionInputStatus = {
+  pubblicato: 'pubblicato',
+  bozza: 'bozza',
+} as const;
+
+export interface OversightOpinionInput {
+  /** @minLength 1 */
+  title: string;
+  /** @minLength 1 */
+  issuingBody: string;
+  /** @minLength 1 */
+  opinionType: string;
+  /** @minLength 1 */
+  subject: string;
+  /** @nullable */
+  outcome?: string | null;
+  /** @nullable */
+  body?: string | null;
+  /** @nullable */
+  referenceYear?: number | null;
+  status?: OversightOpinionInputStatus;
+  /** Data di emissione del parere (ISO 8601) */
+  opinionDate?: string;
+}
+
+export type OversightOpinionUpdateInputStatus = typeof OversightOpinionUpdateInputStatus[keyof typeof OversightOpinionUpdateInputStatus];
+
+
+export const OversightOpinionUpdateInputStatus = {
+  pubblicato: 'pubblicato',
+  bozza: 'bozza',
+} as const;
+
+export interface OversightOpinionUpdateInput {
+  /** @minLength 1 */
+  title?: string;
+  /** @minLength 1 */
+  issuingBody?: string;
+  /** @minLength 1 */
+  opinionType?: string;
+  /** @minLength 1 */
+  subject?: string;
+  /** @nullable */
+  outcome?: string | null;
+  /** @nullable */
+  body?: string | null;
+  /** @nullable */
+  referenceYear?: number | null;
+  status?: OversightOpinionUpdateInputStatus;
+  /** Data di emissione del parere (ISO 8601) */
+  opinionDate?: string;
+}
+
+export interface OversightOpinionDocumentInput {
+  /** @minLength 1 */
+  title: string;
+  /** @minLength 1 */
+  type: string;
+  /** @nullable */
+  url?: string | null;
+  /** Data del documento (ISO 8601) */
+  date?: string;
+}
 
 export type ListThemesParams = {
 categoryId?: number;
@@ -1584,9 +1656,14 @@ export type ListOversightOpinionsParams = {
 issuingBody?: string;
 search?: string;
 /**
- * Filter by year of the opinion date
+ * Filter by reference year (anno di riferimento)
  */
 year?: number;
+/**
+ * Ordering: recent/oldest by opinion date, referenceYear by reference
+year (secondary sort by issuing body)
+
+ */
 sort?: ListOversightOpinionsSort;
 };
 
@@ -1596,6 +1673,7 @@ export type ListOversightOpinionsSort = typeof ListOversightOpinionsSort[keyof t
 export const ListOversightOpinionsSort = {
   recent: 'recent',
   oldest: 'oldest',
+  referenceYear: 'referenceYear',
 } as const;
 
 export type ListPerformanceIndicatorsParams = {

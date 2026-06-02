@@ -9,6 +9,7 @@ import {
   AlertTriangle,
   ChevronLeft,
   Calendar,
+  CalendarRange,
   Building2,
   ShieldCheck,
   FileText,
@@ -101,6 +102,12 @@ export function PareriVigilanzaDetail() {
               {opinion.issuingBody}
             </Badge>
             <Badge variant="outline">{opinion.opinionType}</Badge>
+            {opinion.referenceYear != null && (
+              <Badge variant="outline" className="gap-1.5 font-mono">
+                <CalendarRange className="h-3.5 w-3.5" />
+                Rif. {opinion.referenceYear}
+              </Badge>
+            )}
           </div>
 
           <h1 className="text-3xl md:text-4xl font-display font-bold tracking-tight leading-[1.15] text-foreground">

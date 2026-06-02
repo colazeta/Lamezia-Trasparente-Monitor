@@ -65,6 +65,10 @@ import type {
   OrganoDetail,
   OversightOpinion,
   OversightOpinionDetail,
+  OversightOpinionDocument,
+  OversightOpinionDocumentInput,
+  OversightOpinionInput,
+  OversightOpinionUpdateInput,
   PerformanceCategoryWithIndicators,
   PerformanceIndicator,
   PerformanceIndicatorDetail,
@@ -4421,6 +4425,298 @@ export function useListOversightOpinions<TData = Awaited<ReturnType<typeof listO
 
 
 
+export const getCreateOversightOpinionUrl = () => {
+
+
+
+
+  return `/api/oversight-opinions`
+}
+
+/**
+ * @summary Create an oversight opinion (protected, editorial)
+ */
+export const createOversightOpinion = async (oversightOpinionInput: OversightOpinionInput, options?: RequestInit): Promise<OversightOpinionDetail> => {
+
+  return customFetch<OversightOpinionDetail>(getCreateOversightOpinionUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      oversightOpinionInput,)
+  }
+);}
+
+
+
+
+export const getCreateOversightOpinionMutationOptions = <TError = ErrorType<Error>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createOversightOpinion>>, TError,{data: BodyType<OversightOpinionInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof createOversightOpinion>>, TError,{data: BodyType<OversightOpinionInput>}, TContext> => {
+
+const mutationKey = ['createOversightOpinion'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createOversightOpinion>>, {data: BodyType<OversightOpinionInput>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  createOversightOpinion(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type CreateOversightOpinionMutationResult = NonNullable<Awaited<ReturnType<typeof createOversightOpinion>>>
+    export type CreateOversightOpinionMutationBody = BodyType<OversightOpinionInput>
+    export type CreateOversightOpinionMutationError = ErrorType<Error>
+
+    /**
+ * @summary Create an oversight opinion (protected, editorial)
+ */
+export const useCreateOversightOpinion = <TError = ErrorType<Error>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createOversightOpinion>>, TError,{data: BodyType<OversightOpinionInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof createOversightOpinion>>,
+        TError,
+        {data: BodyType<OversightOpinionInput>},
+        TContext
+      > => {
+      return useMutation(getCreateOversightOpinionMutationOptions(options));
+    }
+
+export const getListAllOversightOpinionsUrl = () => {
+
+
+
+
+  return `/api/oversight-opinions/all`
+}
+
+/**
+ * @summary List all opinions including drafts (protected, for the editor)
+ */
+export const listAllOversightOpinions = async ( options?: RequestInit): Promise<OversightOpinionDetail[]> => {
+
+  return customFetch<OversightOpinionDetail[]>(getListAllOversightOpinionsUrl(),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getListAllOversightOpinionsQueryKey = () => {
+    return [
+    `/api/oversight-opinions/all`
+    ] as const;
+    }
+
+
+export const getListAllOversightOpinionsQueryOptions = <TData = Awaited<ReturnType<typeof listAllOversightOpinions>>, TError = ErrorType<Error>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listAllOversightOpinions>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListAllOversightOpinionsQueryKey();
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listAllOversightOpinions>>> = ({ signal }) => listAllOversightOpinions({ signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listAllOversightOpinions>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ListAllOversightOpinionsQueryResult = NonNullable<Awaited<ReturnType<typeof listAllOversightOpinions>>>
+export type ListAllOversightOpinionsQueryError = ErrorType<Error>
+
+
+/**
+ * @summary List all opinions including drafts (protected, for the editor)
+ */
+
+export function useListAllOversightOpinions<TData = Awaited<ReturnType<typeof listAllOversightOpinions>>, TError = ErrorType<Error>>(
+  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listAllOversightOpinions>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getListAllOversightOpinionsQueryOptions(options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
+
+
+
+export const getAddOversightOpinionDocumentUrl = (id: number,) => {
+
+
+
+
+  return `/api/oversight-opinions/${id}/documents`
+}
+
+/**
+ * @summary Add a document to an oversight opinion (protected, editorial)
+ */
+export const addOversightOpinionDocument = async (id: number,
+    oversightOpinionDocumentInput: OversightOpinionDocumentInput, options?: RequestInit): Promise<OversightOpinionDocument> => {
+
+  return customFetch<OversightOpinionDocument>(getAddOversightOpinionDocumentUrl(id),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      oversightOpinionDocumentInput,)
+  }
+);}
+
+
+
+
+export const getAddOversightOpinionDocumentMutationOptions = <TError = ErrorType<Error>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof addOversightOpinionDocument>>, TError,{id: number;data: BodyType<OversightOpinionDocumentInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof addOversightOpinionDocument>>, TError,{id: number;data: BodyType<OversightOpinionDocumentInput>}, TContext> => {
+
+const mutationKey = ['addOversightOpinionDocument'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof addOversightOpinionDocument>>, {id: number;data: BodyType<OversightOpinionDocumentInput>}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  addOversightOpinionDocument(id,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type AddOversightOpinionDocumentMutationResult = NonNullable<Awaited<ReturnType<typeof addOversightOpinionDocument>>>
+    export type AddOversightOpinionDocumentMutationBody = BodyType<OversightOpinionDocumentInput>
+    export type AddOversightOpinionDocumentMutationError = ErrorType<Error>
+
+    /**
+ * @summary Add a document to an oversight opinion (protected, editorial)
+ */
+export const useAddOversightOpinionDocument = <TError = ErrorType<Error>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof addOversightOpinionDocument>>, TError,{id: number;data: BodyType<OversightOpinionDocumentInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof addOversightOpinionDocument>>,
+        TError,
+        {id: number;data: BodyType<OversightOpinionDocumentInput>},
+        TContext
+      > => {
+      return useMutation(getAddOversightOpinionDocumentMutationOptions(options));
+    }
+
+export const getDeleteOversightOpinionDocumentUrl = (id: number,
+    documentId: number,) => {
+
+
+
+
+  return `/api/oversight-opinions/${id}/documents/${documentId}`
+}
+
+/**
+ * @summary Delete a document of an oversight opinion (protected, editorial)
+ */
+export const deleteOversightOpinionDocument = async (id: number,
+    documentId: number, options?: RequestInit): Promise<void> => {
+
+  return customFetch<void>(getDeleteOversightOpinionDocumentUrl(id,documentId),
+  {
+    ...options,
+    method: 'DELETE'
+
+
+  }
+);}
+
+
+
+
+export const getDeleteOversightOpinionDocumentMutationOptions = <TError = ErrorType<Error>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteOversightOpinionDocument>>, TError,{id: number;documentId: number}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof deleteOversightOpinionDocument>>, TError,{id: number;documentId: number}, TContext> => {
+
+const mutationKey = ['deleteOversightOpinionDocument'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof deleteOversightOpinionDocument>>, {id: number;documentId: number}> = (props) => {
+          const {id,documentId} = props ?? {};
+
+          return  deleteOversightOpinionDocument(id,documentId,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type DeleteOversightOpinionDocumentMutationResult = NonNullable<Awaited<ReturnType<typeof deleteOversightOpinionDocument>>>
+
+    export type DeleteOversightOpinionDocumentMutationError = ErrorType<Error>
+
+    /**
+ * @summary Delete a document of an oversight opinion (protected, editorial)
+ */
+export const useDeleteOversightOpinionDocument = <TError = ErrorType<Error>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteOversightOpinionDocument>>, TError,{id: number;documentId: number}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof deleteOversightOpinionDocument>>,
+        TError,
+        {id: number;documentId: number},
+        TContext
+      > => {
+      return useMutation(getDeleteOversightOpinionDocumentMutationOptions(options));
+    }
+
 export const getGetOversightOpinionUrl = (id: number,) => {
 
 
@@ -4497,6 +4793,148 @@ export function useGetOversightOpinion<TData = Awaited<ReturnType<typeof getOver
 
 
 
+
+export const getUpdateOversightOpinionUrl = (id: number,) => {
+
+
+
+
+  return `/api/oversight-opinions/${id}`
+}
+
+/**
+ * @summary Edit an oversight opinion (protected, editorial)
+ */
+export const updateOversightOpinion = async (id: number,
+    oversightOpinionUpdateInput: OversightOpinionUpdateInput, options?: RequestInit): Promise<OversightOpinionDetail> => {
+
+  return customFetch<OversightOpinionDetail>(getUpdateOversightOpinionUrl(id),
+  {
+    ...options,
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      oversightOpinionUpdateInput,)
+  }
+);}
+
+
+
+
+export const getUpdateOversightOpinionMutationOptions = <TError = ErrorType<Error>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateOversightOpinion>>, TError,{id: number;data: BodyType<OversightOpinionUpdateInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof updateOversightOpinion>>, TError,{id: number;data: BodyType<OversightOpinionUpdateInput>}, TContext> => {
+
+const mutationKey = ['updateOversightOpinion'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof updateOversightOpinion>>, {id: number;data: BodyType<OversightOpinionUpdateInput>}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  updateOversightOpinion(id,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type UpdateOversightOpinionMutationResult = NonNullable<Awaited<ReturnType<typeof updateOversightOpinion>>>
+    export type UpdateOversightOpinionMutationBody = BodyType<OversightOpinionUpdateInput>
+    export type UpdateOversightOpinionMutationError = ErrorType<Error>
+
+    /**
+ * @summary Edit an oversight opinion (protected, editorial)
+ */
+export const useUpdateOversightOpinion = <TError = ErrorType<Error>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateOversightOpinion>>, TError,{id: number;data: BodyType<OversightOpinionUpdateInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof updateOversightOpinion>>,
+        TError,
+        {id: number;data: BodyType<OversightOpinionUpdateInput>},
+        TContext
+      > => {
+      return useMutation(getUpdateOversightOpinionMutationOptions(options));
+    }
+
+export const getDeleteOversightOpinionUrl = (id: number,) => {
+
+
+
+
+  return `/api/oversight-opinions/${id}`
+}
+
+/**
+ * @summary Delete an oversight opinion (protected, editorial)
+ */
+export const deleteOversightOpinion = async (id: number, options?: RequestInit): Promise<void> => {
+
+  return customFetch<void>(getDeleteOversightOpinionUrl(id),
+  {
+    ...options,
+    method: 'DELETE'
+
+
+  }
+);}
+
+
+
+
+export const getDeleteOversightOpinionMutationOptions = <TError = ErrorType<Error>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteOversightOpinion>>, TError,{id: number}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof deleteOversightOpinion>>, TError,{id: number}, TContext> => {
+
+const mutationKey = ['deleteOversightOpinion'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof deleteOversightOpinion>>, {id: number}> = (props) => {
+          const {id} = props ?? {};
+
+          return  deleteOversightOpinion(id,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type DeleteOversightOpinionMutationResult = NonNullable<Awaited<ReturnType<typeof deleteOversightOpinion>>>
+
+    export type DeleteOversightOpinionMutationError = ErrorType<Error>
+
+    /**
+ * @summary Delete an oversight opinion (protected, editorial)
+ */
+export const useDeleteOversightOpinion = <TError = ErrorType<Error>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteOversightOpinion>>, TError,{id: number}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof deleteOversightOpinion>>,
+        TError,
+        {id: number},
+        TContext
+      > => {
+      return useMutation(getDeleteOversightOpinionMutationOptions(options));
+    }
 
 export const getListPerformanceCategoriesUrl = () => {
 

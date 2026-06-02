@@ -20,3 +20,4 @@
 - [Performance categories inline window](performance-inline-window.md) — /performance/categories returns latest/previous/recentValues inline (single pass, no N+1); web sparkline reads recentValues. Isolated env has empty values table.
 - [Atti fondamentali section](atti-fondamentali.md) — public list shows only acts with a published current version (source!=none); admin (token gate) manages all types + confirms auto-suggestions.
 - [Legalità e Trasparenza section](legality-section.md) — fully manual editorial section (no ingestion/scores); GET /legality returns overview + nested areas/requirements; writes behind requireIngestAuth.
+- [Seed count-guard backfill](seed-guard-backfill.md) — seed fns skip when table non-empty; push-force adds NULL columns to old rows; truncate table + re-seed to backfill new seed columns.

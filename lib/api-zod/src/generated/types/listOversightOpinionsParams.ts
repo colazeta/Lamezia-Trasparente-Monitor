@@ -14,8 +14,13 @@ export type ListOversightOpinionsParams = {
 issuingBody?: string;
 search?: string;
 /**
- * Filter by year of the opinion date
+ * Filter by reference year (anno di riferimento)
  */
 year?: number;
+/**
+ * Ordering: recent/oldest by opinion date, referenceYear by reference
+year (secondary sort by issuing body)
+
+ */
 sort?: ListOversightOpinionsSort;
 };

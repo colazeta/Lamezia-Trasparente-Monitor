@@ -12,4 +12,5 @@ export type ListOversightOpinionsSort = typeof ListOversightOpinionsSort[keyof t
 export const ListOversightOpinionsSort = {
   recent: 'recent',
   oldest: 'oldest',
+  referenceYear: 'referenceYear',
 } as const;

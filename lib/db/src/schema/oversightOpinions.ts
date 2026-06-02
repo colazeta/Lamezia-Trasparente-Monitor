@@ -8,6 +8,10 @@ export const oversightOpinionsTable = pgTable("oversight_opinions", {
   subject: text("subject").notNull(),
   outcome: text("outcome"),
   body: text("body"),
+  // Anno di riferimento del parere, distinto dalla data di emissione (es. un
+  // parere emesso nel 2026 ma relativo al bilancio 2024). Usato per ordinamento
+  // e filtro nella pagina pubblica.
+  referenceYear: integer("reference_year"),
   status: text("status").notNull().default("pubblicato"),
   opinionDate: timestamp("opinion_date", { withTimezone: true })
     .notNull()

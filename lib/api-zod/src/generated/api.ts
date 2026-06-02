@@ -1747,8 +1747,8 @@ export const GetPublicationsCategoriesResponse = zod.array(GetPublicationsCatego
 export const ListOversightOpinionsQueryParams = zod.object({
   "issuingBody": zod.coerce.string().optional().describe('Filter by issuing oversight body'),
   "search": zod.coerce.string().optional(),
-  "year": zod.coerce.number().optional().describe('Filter by year of the opinion date'),
-  "sort": zod.enum(['recent', 'oldest']).optional()
+  "year": zod.coerce.number().optional().describe('Filter by reference year (anno di riferimento)'),
+  "sort": zod.enum(['recent', 'oldest', 'referenceYear']).optional().describe('Ordering: recent\/oldest by opinion date, referenceYear by reference\nyear (secondary sort by issuing body)\n')
 })
 
 export const ListOversightOpinionsResponseItem = zod.object({
@@ -1758,10 +1758,87 @@ export const ListOversightOpinionsResponseItem = zod.object({
   "opinionType": zod.string().describe('Tipologia di parere'),
   "subject": zod.string().describe('Oggetto \/ breve descrizione del parere'),
   "outcome": zod.string().nullish().describe('Eventuale esito o sintesi breve'),
+  "referenceYear": zod.number().nullish().describe('Anno di riferimento del parere, distinto dalla data di emissione'),
   "status": zod.string().describe('Stato di pubblicazione'),
   "opinionDate": zod.string()
 })
 export const ListOversightOpinionsResponse = zod.array(ListOversightOpinionsResponseItem)
+
+
+/**
+ * @summary Create an oversight opinion (protected, editorial)
+ */
+
+
+
+
+
+
+export const CreateOversightOpinionBody = zod.object({
+  "title": zod.string().min(1),
+  "issuingBody": zod.string().min(1),
+  "opinionType": zod.string().min(1),
+  "subject": zod.string().min(1),
+  "outcome": zod.string().nullish(),
+  "body": zod.string().nullish(),
+  "referenceYear": zod.number().nullish(),
+  "status": zod.enum(['pubblicato', 'bozza']).optional(),
+  "opinionDate": zod.string().optional().describe('Data di emissione del parere (ISO 8601)')
+})
+
+
+/**
+ * @summary List all opinions including drafts (protected, for the editor)
+ */
+export const ListAllOversightOpinionsResponseItem = zod.object({
+  "id": zod.number(),
+  "title": zod.string(),
+  "issuingBody": zod.string().describe('Organo emittente (es. Collegio dei Revisori, OIV, Corte dei Conti, ANAC)'),
+  "opinionType": zod.string().describe('Tipologia di parere'),
+  "subject": zod.string().describe('Oggetto \/ breve descrizione del parere'),
+  "outcome": zod.string().nullish().describe('Eventuale esito o sintesi breve'),
+  "referenceYear": zod.number().nullish().describe('Anno di riferimento del parere, distinto dalla data di emissione'),
+  "status": zod.string().describe('Stato di pubblicazione'),
+  "opinionDate": zod.string()
+}).and(zod.object({
+  "body": zod.string().nullish().describe('Testo o sintesi estesa del parere'),
+  "documents": zod.array(zod.object({
+  "id": zod.number(),
+  "title": zod.string(),
+  "type": zod.string(),
+  "url": zod.string().nullish(),
+  "date": zod.string()
+}))
+}))
+export const ListAllOversightOpinionsResponse = zod.array(ListAllOversightOpinionsResponseItem)
+
+
+/**
+ * @summary Add a document to an oversight opinion (protected, editorial)
+ */
+export const AddOversightOpinionDocumentParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+
+
+
+
+export const AddOversightOpinionDocumentBody = zod.object({
+  "title": zod.string().min(1),
+  "type": zod.string().min(1),
+  "url": zod.string().nullish(),
+  "date": zod.string().optional().describe('Data del documento (ISO 8601)')
+})
+
+
+/**
+ * @summary Delete a document of an oversight opinion (protected, editorial)
+ */
+export const DeleteOversightOpinionDocumentParams = zod.object({
+  "id": zod.coerce.number(),
+  "documentId": zod.coerce.number()
+})
 
 
 /**
@@ -1778,6 +1855,7 @@ export const GetOversightOpinionResponse = zod.object({
   "opinionType": zod.string().describe('Tipologia di parere'),
   "subject": zod.string().describe('Oggetto \/ breve descrizione del parere'),
   "outcome": zod.string().nullish().describe('Eventuale esito o sintesi breve'),
+  "referenceYear": zod.number().nullish().describe('Anno di riferimento del parere, distinto dalla data di emissione'),
   "status": zod.string().describe('Stato di pubblicazione'),
   "opinionDate": zod.string()
 }).and(zod.object({
@@ -1790,6 +1868,61 @@ export const GetOversightOpinionResponse = zod.object({
   "date": zod.string()
 }))
 }))
+
+
+/**
+ * @summary Edit an oversight opinion (protected, editorial)
+ */
+export const UpdateOversightOpinionParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+
+
+
+
+
+
+export const UpdateOversightOpinionBody = zod.object({
+  "title": zod.string().min(1).optional(),
+  "issuingBody": zod.string().min(1).optional(),
+  "opinionType": zod.string().min(1).optional(),
+  "subject": zod.string().min(1).optional(),
+  "outcome": zod.string().nullish(),
+  "body": zod.string().nullish(),
+  "referenceYear": zod.number().nullish(),
+  "status": zod.enum(['pubblicato', 'bozza']).optional(),
+  "opinionDate": zod.string().optional().describe('Data di emissione del parere (ISO 8601)')
+})
+
+export const UpdateOversightOpinionResponse = zod.object({
+  "id": zod.number(),
+  "title": zod.string(),
+  "issuingBody": zod.string().describe('Organo emittente (es. Collegio dei Revisori, OIV, Corte dei Conti, ANAC)'),
+  "opinionType": zod.string().describe('Tipologia di parere'),
+  "subject": zod.string().describe('Oggetto \/ breve descrizione del parere'),
+  "outcome": zod.string().nullish().describe('Eventuale esito o sintesi breve'),
+  "referenceYear": zod.number().nullish().describe('Anno di riferimento del parere, distinto dalla data di emissione'),
+  "status": zod.string().describe('Stato di pubblicazione'),
+  "opinionDate": zod.string()
+}).and(zod.object({
+  "body": zod.string().nullish().describe('Testo o sintesi estesa del parere'),
+  "documents": zod.array(zod.object({
+  "id": zod.number(),
+  "title": zod.string(),
+  "type": zod.string(),
+  "url": zod.string().nullish(),
+  "date": zod.string()
+}))
+}))
+
+
+/**
+ * @summary Delete an oversight opinion (protected, editorial)
+ */
+export const DeleteOversightOpinionParams = zod.object({
+  "id": zod.coerce.number()
+})
 
 
 /**

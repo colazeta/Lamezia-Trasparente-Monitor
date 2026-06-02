@@ -33,6 +33,7 @@ import { AdminDomande } from "./pages/AdminDomande";
 import { AdminAppalti } from "./pages/AdminAppalti";
 import { AdminAttiFondamentali } from "./pages/AdminAttiFondamentali";
 import { AdminLegalita } from "./pages/AdminLegalita";
+import { AdminPareri } from "./pages/AdminPareri";
 import NotFound from "./pages/not-found";
 
 export function Router() {
@@ -75,6 +76,7 @@ export function Router() {
           component={AdminAttiFondamentali}
         />
         <Route path="/admin/legalita" component={AdminLegalita} />
+        <Route path="/admin/pareri" component={AdminPareri} />
         <Route component={NotFound} />
       </Switch>
     </MainLayout>
