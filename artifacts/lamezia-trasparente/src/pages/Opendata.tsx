@@ -17,6 +17,8 @@ import {
   Tag,
   ChevronRight,
   X,
+  FileJson,
+  Braces,
 } from "lucide-react";
 import { format } from "date-fns";
 import { it } from "date-fns/locale";
@@ -141,6 +143,41 @@ export function Opendata() {
           Portale Opendata del Comune
           <ExternalLink className="h-3.5 w-3.5" />
         </a>
+      </div>
+
+      {/* Interoperabilità: catalogo DCAT-AP_IT + API CKAN per l'intero catalogo */}
+      <div className="mb-8 flex flex-col gap-3 rounded-xl border border-card-border bg-muted/30 p-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="text-sm text-muted-foreground">
+          <span className="font-medium text-foreground">
+            Catalogo interoperabile.
+          </span>{" "}
+          Metadati standard DCAT-AP_IT e API aperta in stile CKAN per il riuso
+          e la federazione con dati.gov.it.
+        </div>
+        <div className="flex flex-wrap gap-2">
+          <a
+            href="/api/opendata/catalog.jsonld"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <Button variant="outline" size="sm">
+              <FileJson className="mr-1.5 h-4 w-4" />
+              Catalogo DCAT-AP_IT
+              <ExternalLink className="ml-1.5 h-3.5 w-3.5 opacity-60" />
+            </Button>
+          </a>
+          <a
+            href="/api/3/action/package_search"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <Button variant="outline" size="sm">
+              <Braces className="mr-1.5 h-4 w-4" />
+              API CKAN
+              <ExternalLink className="ml-1.5 h-3.5 w-3.5 opacity-60" />
+            </Button>
+          </a>
+        </div>
       </div>
 
       {/* Filters */}

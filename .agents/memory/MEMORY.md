@@ -23,3 +23,4 @@
 - [Seed count-guard backfill](seed-guard-backfill.md) — seed fns skip when table non-empty; push-force adds NULL columns to old rows; truncate table + re-seed to backfill new seed columns.
 - [Bandi section](bandi-section.md) — grants catalog w/ auto participation cross-match (albo/contracts/pnrr) + lost-resources estimate; mirrors atti/legalità source/manual precedence.
 - [RSS/Atom feeds (AlboPOP)](rss-feeds.md) — public RSS 2.0 feeds under /api/feeds/*; item links must use siteUrl (public site), feed self-link uses feedUrl; web autodiscovery via FeedSubscribeButton head <link>.
+- [Opendata interoperability](opendata-interop.md) — public DCAT-AP_IT JSON-LD + CKAN-style read API (`/api/3/action/*`); serialization in lib/dcat.ts; intentionally NOT in openapi codegen.

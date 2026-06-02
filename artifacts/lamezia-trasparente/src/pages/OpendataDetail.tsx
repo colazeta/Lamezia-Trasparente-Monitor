@@ -18,6 +18,9 @@ import {
   Building2,
   Table2,
   ChevronDown,
+  Share2,
+  Braces,
+  FileJson,
 } from "lucide-react";
 import { format } from "date-fns";
 import { it } from "date-fns/locale";
@@ -170,6 +173,14 @@ export function OpendataDetail() {
             ) : null}
           </div>
 
+          {/* Interoperabilità: metadati DCAT-AP_IT e API CKAN */}
+          <InteropLinks
+            dcatUrl={`/api/opendata/datasets/${dataset.id}/dcat.jsonld`}
+            apiUrl={`/api/3/action/package_show?id=${encodeURIComponent(
+              dataset.sourceId,
+            )}`}
+          />
+
           {/* Resources */}
           <div className="mb-4 flex items-center gap-2">
             <Table2 className="h-5 w-5 text-brand" />
@@ -261,6 +272,45 @@ function ResourceItem({ resource }: { resource: OpendataResource }) {
           <ResourceTable resourceId={resource.id} />
         </div>
       ) : null}
+    </div>
+  );
+}
+
+function InteropLinks({
+  dcatUrl,
+  apiUrl,
+}: {
+  dcatUrl: string;
+  apiUrl: string;
+}) {
+  return (
+    <div className="mb-8 rounded-xl border border-card-border bg-muted/30 p-5">
+      <div className="mb-1 flex items-center gap-2">
+        <Share2 className="h-4 w-4 text-brand" />
+        <h2 className="text-sm font-display font-bold tracking-tight">
+          Interoperabilità e riuso
+        </h2>
+      </div>
+      <p className="mb-3 text-sm text-muted-foreground">
+        Metadati standard e API aperta per il riuso del dataset da parte di
+        terzi (giornalisti, sviluppatori, altre PA).
+      </p>
+      <div className="flex flex-wrap gap-2">
+        <a href={dcatUrl} target="_blank" rel="noopener noreferrer">
+          <Button variant="outline" size="sm">
+            <FileJson className="mr-1.5 h-4 w-4" />
+            Metadati DCAT-AP_IT
+            <ExternalLink className="ml-1.5 h-3.5 w-3.5 opacity-60" />
+          </Button>
+        </a>
+        <a href={apiUrl} target="_blank" rel="noopener noreferrer">
+          <Button variant="outline" size="sm">
+            <Braces className="mr-1.5 h-4 w-4" />
+            API CKAN (package_show)
+            <ExternalLink className="ml-1.5 h-3.5 w-3.5 opacity-60" />
+          </Button>
+        </a>
+      </div>
     </div>
   );
 }

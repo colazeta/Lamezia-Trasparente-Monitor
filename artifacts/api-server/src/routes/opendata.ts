@@ -13,8 +13,40 @@ import {
   isTabularFormat,
   loadResourceTable,
 } from "../lib/opendata";
+import {
+  buildDcatCatalog,
+  buildDcatDataset,
+  wrapDatasetDocument,
+  ckanPackage,
+  ckanResource,
+  ckanSuccess,
+  ckanError,
+} from "../lib/dcat";
+import type { Request } from "express";
 
 const router: IRouter = Router();
+
+// Public origin (scheme + host) behind the Replit / site proxy. `trust proxy`
+// is enabled on the app so the forwarded host/proto are honoured here.
+function publicOrigin(req: Request): string {
+  const host = req.get("host") ?? "localhost";
+  return `${req.protocol}://${host}`;
+}
+
+function groupResources(
+  resources: (typeof opendataResourcesTable.$inferSelect)[],
+): Map<number, (typeof opendataResourcesTable.$inferSelect)[]> {
+  const byDataset = new Map<
+    number,
+    (typeof opendataResourcesTable.$inferSelect)[]
+  >();
+  for (const r of resources) {
+    const list = byDataset.get(r.datasetId) ?? [];
+    list.push(r);
+    byDataset.set(r.datasetId, list);
+  }
+  return byDataset;
+}
 
 function mapResource(r: typeof opendataResourcesTable.$inferSelect) {
   return {
@@ -94,15 +126,7 @@ router.get("/opendata/datasets", async (req, res) => {
   }
 
   const allResources = await db.select().from(opendataResourcesTable);
-  const byDataset = new Map<
-    number,
-    (typeof opendataResourcesTable.$inferSelect)[]
-  >();
-  for (const r of allResources) {
-    const list = byDataset.get(r.datasetId) ?? [];
-    list.push(r);
-    byDataset.set(r.datasetId, list);
-  }
+  const byDataset = groupResources(allResources);
 
   res.json(
     datasets.map((d) => mapDataset(d, byDataset.get(d.id) ?? [])),
@@ -206,6 +230,218 @@ router.get("/opendata/resources/:id/content", async (req, res) => {
     req.log?.warn({ err, resourceId: id }, "Opendata resource preview failed");
     res.status(502).json({ message });
   }
+});
+
+// ---------------------------------------------------------------------------
+// DCAT-AP_IT (RDF/JSON-LD) metadata
+// ---------------------------------------------------------------------------
+
+// Full catalog as DCAT-AP_IT JSON-LD — federable with dati.gov.it.
+router.get("/opendata/catalog.jsonld", async (req, res) => {
+  const datasets = await db
+    .select()
+    .from(opendataDatasetsTable)
+    .orderBy(
+      desc(opendataDatasetsTable.metadataModified),
+      asc(opendataDatasetsTable.title),
+    );
+  const allResources = await db.select().from(opendataResourcesTable);
+  const byDataset = groupResources(allResources);
+
+  const modified = datasets.reduce<Date>((acc, d) => {
+    const m = d.metadataModified ?? d.lastSeenAt;
+    return m && m > acc ? m : acc;
+  }, new Date(0));
+
+  const catalog = buildDcatCatalog(
+    datasets.map((d) => ({ dataset: d, resources: byDataset.get(d.id) ?? [] })),
+    publicOrigin(req),
+    datasets.length ? modified : new Date(),
+  );
+
+  res.type("application/ld+json").json(catalog);
+});
+
+// Single dataset as a self-contained DCAT-AP_IT JSON-LD document.
+router.get("/opendata/datasets/:id/dcat.jsonld", async (req, res) => {
+  const id = Number(req.params.id);
+  if (Number.isNaN(id)) {
+    res.status(404).json({ message: "Dataset non trovato" });
+    return;
+  }
+  const [dataset] = await db
+    .select()
+    .from(opendataDatasetsTable)
+    .where(eq(opendataDatasetsTable.id, id))
+    .limit(1);
+  if (!dataset) {
+    res.status(404).json({ message: "Dataset non trovato" });
+    return;
+  }
+  const resources = await db
+    .select()
+    .from(opendataResourcesTable)
+    .where(eq(opendataResourcesTable.datasetId, id));
+
+  const node = buildDcatDataset(dataset, resources, publicOrigin(req));
+  res.type("application/ld+json").json(wrapDatasetDocument(node));
+});
+
+// ---------------------------------------------------------------------------
+// CKAN-compatible (read-only) Action API
+// ---------------------------------------------------------------------------
+
+async function resolveDatasetByRef(ref: string) {
+  const numeric = Number(ref);
+  const [dataset] = await db
+    .select()
+    .from(opendataDatasetsTable)
+    .where(
+      or(
+        eq(opendataDatasetsTable.sourceId, ref),
+        eq(opendataDatasetsTable.slug, ref),
+        ...(Number.isInteger(numeric) && numeric > 0
+          ? [eq(opendataDatasetsTable.id, numeric)]
+          : []),
+      ),
+    )
+    .limit(1);
+  return dataset ?? null;
+}
+
+// package_list — names (slugs) of every dataset in the catalog.
+router.get("/3/action/package_list", async (_req, res) => {
+  const datasets = await db
+    .select()
+    .from(opendataDatasetsTable)
+    .orderBy(asc(opendataDatasetsTable.title));
+  res.json(
+    ckanSuccess(
+      datasets.map((d) => d.slug ?? String(d.id)),
+      "package_list",
+    ),
+  );
+});
+
+// group_list — catalog categories (CKAN groups).
+router.get("/3/action/group_list", async (_req, res) => {
+  const datasets = await db
+    .select({ category: opendataDatasetsTable.category })
+    .from(opendataDatasetsTable);
+  const set = new Set<string>();
+  for (const d of datasets) if (d.category) set.add(d.category);
+  res.json(
+    ckanSuccess(
+      Array.from(set).sort((a, b) => a.localeCompare(b)),
+      "group_list",
+    ),
+  );
+});
+
+// package_search — full-text + category filter, CKAN result envelope.
+router.get("/3/action/package_search", async (req, res) => {
+  const query = req.query as Record<string, unknown>;
+  const conditions: SQL[] = [];
+
+  const q = typeof query.q === "string" ? query.q.trim() : "";
+  if (q && q !== "*:*") {
+    const like = `%${q}%`;
+    const clause = or(
+      ilike(opendataDatasetsTable.title, like),
+      ilike(opendataDatasetsTable.description, like),
+    );
+    if (clause) conditions.push(clause);
+  }
+
+  // Support CKAN `fq=groups:<category>` as well as a plain `groups` param.
+  const fq = typeof query.fq === "string" ? query.fq : "";
+  const groupMatch = fq.match(/groups:"?([^"]+)"?/);
+  const category =
+    groupMatch?.[1] ??
+    (typeof query.groups === "string" ? query.groups : "");
+  if (category) {
+    conditions.push(eq(opendataDatasetsTable.category, category));
+  }
+
+  const rows = Math.min(
+    Math.max(Number(query.rows) || 100, 0),
+    1000,
+  );
+  const start = Math.max(Number(query.start) || 0, 0);
+
+  const matched = await db
+    .select()
+    .from(opendataDatasetsTable)
+    .where(conditions.length ? and(...conditions) : undefined)
+    .orderBy(
+      desc(opendataDatasetsTable.metadataModified),
+      asc(opendataDatasetsTable.title),
+    );
+
+  const page = matched.slice(start, start + rows);
+  const allResources = page.length
+    ? await db.select().from(opendataResourcesTable)
+    : [];
+  const byDataset = groupResources(allResources);
+
+  res.json(
+    ckanSuccess(
+      {
+        count: matched.length,
+        results: page.map((d) => ckanPackage(d, byDataset.get(d.id) ?? [])),
+        sort: "metadata_modified desc",
+      },
+      "package_search",
+    ),
+  );
+});
+
+// package_show — single dataset by id, sourceId or slug.
+router.get("/3/action/package_show", async (req, res) => {
+  const ref =
+    typeof req.query.id === "string"
+      ? req.query.id
+      : typeof req.query.name_or_id === "string"
+        ? req.query.name_or_id
+        : "";
+  if (!ref) {
+    res
+      .status(400)
+      .json(ckanError("Missing value for parameter id", "Validation Error"));
+    return;
+  }
+  const dataset = await resolveDatasetByRef(ref);
+  if (!dataset) {
+    res.status(404).json(ckanError("Not found: Dataset"));
+    return;
+  }
+  const resources = await db
+    .select()
+    .from(opendataResourcesTable)
+    .where(eq(opendataResourcesTable.datasetId, dataset.id));
+  res.json(ckanSuccess(ckanPackage(dataset, resources), "package_show"));
+});
+
+// resource_show — single resource by id.
+router.get("/3/action/resource_show", async (req, res) => {
+  const ref = typeof req.query.id === "string" ? req.query.id : "";
+  const id = Number(ref);
+  if (!ref || Number.isNaN(id)) {
+    res
+      .status(400)
+      .json(ckanError("Missing value for parameter id", "Validation Error"));
+    return;
+  }
+  const [resource] = await db
+    .select()
+    .from(opendataResourcesTable)
+    .where(eq(opendataResourcesTable.id, id))
+    .limit(1);
+  if (!resource) {
+    res.status(404).json(ckanError("Not found: Resource"));
+    return;
+  }
+  res.json(ckanSuccess(ckanResource(resource), "resource_show"));
 });
 
 export default router;
