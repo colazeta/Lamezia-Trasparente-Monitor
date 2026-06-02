@@ -74,6 +74,12 @@ const SECTIONS: Section[] = [
     subtitle: "Indicatori e qualità della vita nel tempo",
     icon: "bar-chart-2",
   },
+  {
+    href: "/legality",
+    title: "Legalità e Trasparenza",
+    subtitle: "Monitoraggio su trasparenza e legalità",
+    icon: "shield",
+  },
 ];
 
 export default function MonitorScreen() {
