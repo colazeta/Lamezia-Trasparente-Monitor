@@ -5,6 +5,7 @@ import {
   baselineMigrations,
   isMigrationTrackingPresent,
   isSchemaBootstrapped,
+  type QueryClient,
 } from "./baselineLogic";
 
 // When bundled by esbuild the build copies lib/db/migrations/ next to the
@@ -39,7 +40,27 @@ const migrationsFolder = path.join(__dirname, "migrations");
  *
  * After that, `migrate` and the api-server auto-migrate will work normally.
  */
-export async function runMigrations(): Promise<void> {
+/**
+ * Optional dependency overrides for {@link runMigrations}. They default to the
+ * shared singleton pool/db and the bundled migrations folder, so production
+ * callers invoke `runMigrations()` with no arguments. Tests inject a throwaway
+ * database (and the source-tree migrations folder) to exercise each startup
+ * state in isolation without touching the real database.
+ */
+export interface RunMigrationsDeps {
+  /** Low-level query client used for the baseline detection/recording step. */
+  client?: QueryClient;
+  /** Drizzle instance the migrator applies pending migrations against. */
+  database?: Parameters<typeof migrate>[0];
+  /** Folder containing the generated `*.sql` migrations and `meta/_journal.json`. */
+  migrationsFolder?: string;
+}
+
+export async function runMigrations(deps: RunMigrationsDeps = {}): Promise<void> {
+  const client = deps.client ?? pool;
+  const database = deps.database ?? db;
+  const folder = deps.migrationsFolder ?? migrationsFolder;
+
   // First-time transition guard: a database bootstrapped via `drizzle-kit push`
   // already has the full schema but no migration-tracking record. Running the
   // migrator against it would attempt to re-execute CREATE TABLE statements that
@@ -47,10 +68,10 @@ export async function runMigrations(): Promise<void> {
   // applied, without running their SQL) before migrating. This only writes to
   // Drizzle's internal tracking table — never to application tables — and is a
   // no-op on databases already on the migration workflow.
-  const tracked = await isMigrationTrackingPresent(pool);
-  if (!tracked && (await isSchemaBootstrapped(pool))) {
-    await baselineMigrations(pool, migrationsFolder);
+  const tracked = await isMigrationTrackingPresent(client);
+  if (!tracked && (await isSchemaBootstrapped(client))) {
+    await baselineMigrations(client, folder);
   }
 
-  await migrate(db, { migrationsFolder });
+  await migrate(database, { migrationsFolder: folder });
 }
