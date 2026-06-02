@@ -1,5 +1,7 @@
-import { execFileSync } from "node:child_process";
-import { Client } from "pg";
+import { Client, Pool } from "pg";
+import { drizzle } from "drizzle-orm/node-postgres";
+import { pushSchema } from "drizzle-kit/api";
+import * as schema from "@workspace/db/schema";
 import { resolveTestDatabaseConfig } from "./testDatabase";
 
 async function recreateDatabase(
@@ -38,12 +40,22 @@ export default async function setup() {
   // Start from a clean slate every run.
   await recreateDatabase(adminDatabaseUrl, testDatabaseName);
 
-  // Apply migrations to the fresh database. Using the same migration path as
-  // production ensures tests catch any migration regressions before they ship.
-  execFileSync("pnpm", ["--filter", "@workspace/db", "run", "migrate"], {
-    env: { ...process.env, DATABASE_URL: testDatabaseUrl },
-    stdio: "inherit",
-  });
+  // Apply the current Drizzle schema to the fresh database using the
+  // programmatic API (drizzle-kit/api pushSchema) instead of spawning a
+  // CLI subprocess.  The subprocess approach (drizzle-kit push --force)
+  // intermittently stalls in non-TTY environments because drizzle-kit can
+  // prompt for confirmation even when the --force flag is present, causing
+  // the process to hang until it is killed, which leaves the test database
+  // with a partially applied schema.  The programmatic API has no interactive
+  // prompts and completes synchronously before any test worker connects.
+  const pool = new Pool({ connectionString: testDatabaseUrl });
+  try {
+    const db = drizzle(pool);
+    const { apply } = await pushSchema(schema as Record<string, unknown>, db);
+    await apply();
+  } finally {
+    await pool.end();
+  }
 
   return async function teardown() {
     await dropDatabase(adminDatabaseUrl, testDatabaseName);
