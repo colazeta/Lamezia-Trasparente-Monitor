@@ -1,5 +1,6 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "wouter";
+import { toast } from "sonner";
 import {
   useListPerformanceCategories,
   useGetPerformanceIndicator,
@@ -13,6 +14,9 @@ import {
   X,
   Check,
   Layers,
+  Download,
+  Link2,
+  ImageDown,
 } from "lucide-react";
 import {
   CartesianGrid,
@@ -132,6 +136,23 @@ export function PerformanceCompare() {
     if (selected.length > 2 && mode === "absolute") setMode("normalized");
   }, [selected.length, mode]);
 
+  const chartRef = useRef<HTMLDivElement>(null);
+
+  // Stringa di query che rispecchia lo stato corrente (id + modalità).
+  const searchString = useMemo(() => {
+    const params = new URLSearchParams();
+    if (selected.length) params.set("ids", selected.join(","));
+    params.set("mode", mode);
+    return params.toString();
+  }, [selected, mode]);
+
+  // Mantiene la URL del browser allineata allo stato così che sia condivisibile.
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const next = `${window.location.pathname}${searchString ? `?${searchString}` : ""}`;
+    window.history.replaceState(null, "", next);
+  }, [searchString]);
+
   // Fino a MAX_SERIES query per gli indicatori selezionati (numero di hook fisso).
   const q0 = useGetPerformanceIndicator(slotId(selected, 0), {
     query: { enabled: hasSlot(selected, 0) },
@@ -200,6 +221,77 @@ export function PerformanceCompare() {
       if (prev.length >= MAX_SERIES) return prev;
       return [...prev, id];
     });
+  }
+
+  const canExport = series.length >= 2 && chartData.length > 0;
+
+  async function handleCopyLink() {
+    if (typeof window === "undefined") return;
+    const url = `${window.location.origin}${window.location.pathname}${searchString ? `?${searchString}` : ""}`;
+    try {
+      if (navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(url);
+      } else {
+        const area = document.createElement("textarea");
+        area.value = url;
+        area.style.position = "fixed";
+        area.style.opacity = "0";
+        document.body.appendChild(area);
+        area.select();
+        document.execCommand("copy");
+        document.body.removeChild(area);
+      }
+      toast.success("Link copiato negli appunti", {
+        description: "Condividi questo confronto incollando il link.",
+      });
+    } catch {
+      toast.error("Impossibile copiare il link", {
+        description: "Copia manualmente la URL dalla barra del browser.",
+      });
+    }
+  }
+
+  function handleDownloadCsv() {
+    if (!canExport) return;
+    const headers = [
+      "Periodo",
+      ...series.map((s) => (s.unit ? `${s.title} (${s.unit})` : s.title)),
+    ];
+    const rows = chartData.map((point) => {
+      const cells = [String(point.period ?? "")];
+      for (const s of series) {
+        const raw = point[`${s.key}${RAW_SUFFIX}`];
+        cells.push(typeof raw === "number" ? String(raw) : "");
+      }
+      return cells;
+    });
+    const escape = (v: string) =>
+      /[",\n;]/.test(v) ? `"${v.replace(/"/g, '""')}"` : v;
+    const csv = [headers, ...rows]
+      .map((r) => r.map(escape).join(","))
+      .join("\r\n");
+    // BOM per la corretta lettura dei caratteri accentati in Excel.
+    const blob = new Blob(["\uFEFF" + csv], {
+      type: "text/csv;charset=utf-8;",
+    });
+    downloadBlob(blob, `confronto-indicatori-${exportStamp()}.csv`);
+    toast.success("CSV scaricato");
+  }
+
+  async function handleDownloadPng() {
+    if (!canExport) return;
+    const svg = chartRef.current?.querySelector("svg");
+    if (!svg) {
+      toast.error("Grafico non disponibile per l'esportazione");
+      return;
+    }
+    try {
+      const blob = await svgToPngBlob(svg);
+      downloadBlob(blob, `confronto-indicatori-${exportStamp()}.png`);
+      toast.success("Immagine scaricata");
+    } catch {
+      toast.error("Impossibile esportare l'immagine del grafico");
+    }
   }
 
   const visibleCategories = ((categories ?? []) as PerformanceCategoryWithIndicators[]).filter(
@@ -303,15 +395,53 @@ export function PerformanceCompare() {
       {/* Chart */}
       <Card className="overflow-hidden">
         <CardHeader className="border-b border-border bg-muted/40">
-          <CardTitle className="flex items-center gap-2 font-display font-bold tracking-tight">
-            <Gauge className="h-5 w-5 text-brand" />
-            Serie storiche a confronto
-          </CardTitle>
-          <CardDescription>
-            {mode === "normalized"
-              ? "Valori indicizzati a 100 sul primo periodo disponibile di ciascun indicatore."
-              : "Valori assoluti su doppio asse (sinistra / destra)."}
-          </CardDescription>
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+            <div>
+              <CardTitle className="flex items-center gap-2 font-display font-bold tracking-tight">
+                <Gauge className="h-5 w-5 text-brand" />
+                Serie storiche a confronto
+              </CardTitle>
+              <CardDescription className="mt-1.5">
+                {mode === "normalized"
+                  ? "Valori indicizzati a 100 sul primo periodo disponibile di ciascun indicatore."
+                  : "Valori assoluti su doppio asse (sinistra / destra)."}
+              </CardDescription>
+            </div>
+            <div className="flex shrink-0 flex-wrap items-center gap-2">
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                className="h-8"
+                onClick={handleCopyLink}
+              >
+                <Link2 className="h-4 w-4" />
+                Copia link
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                className="h-8"
+                onClick={handleDownloadCsv}
+                disabled={!canExport}
+              >
+                <Download className="h-4 w-4" />
+                Scarica CSV
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                className="h-8"
+                onClick={handleDownloadPng}
+                disabled={!canExport}
+              >
+                <ImageDown className="h-4 w-4" />
+                Scarica PNG
+              </Button>
+            </div>
+          </div>
         </CardHeader>
         <CardContent className="p-6">
           {selected.length < 2 ? (
@@ -330,7 +460,7 @@ export function PerformanceCompare() {
           ) : isFetchingSeries && chartData.length === 0 ? (
             <Skeleton className="h-80 w-full" />
           ) : chartData.length > 0 ? (
-            <div className="h-80 w-full">
+            <div ref={chartRef} className="h-80 w-full">
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart
                   data={chartData}
@@ -426,6 +556,120 @@ function slotId(selected: number[], index: number): string {
 
 function hasSlot(selected: number[], index: number): boolean {
   return selected[index] != null;
+}
+
+/** Avvia il download di un Blob con il nome indicato. */
+function downloadBlob(blob: Blob, filename: string) {
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+/** Marca temporale compatta (YYYY-MM-DD) per i nomi file esportati. */
+function exportStamp(): string {
+  return new Date().toISOString().slice(0, 10);
+}
+
+/** Proprietà di stile da inlineare per rendere l'SVG autonomo. */
+const SVG_STYLE_PROPS = [
+  "fill",
+  "fill-opacity",
+  "stroke",
+  "stroke-width",
+  "stroke-dasharray",
+  "stroke-opacity",
+  "opacity",
+  "color",
+  "font-family",
+  "font-size",
+  "font-weight",
+  "text-anchor",
+] as const;
+
+/** Copia gli stili calcolati dall'albero originale al clone (stessa struttura). */
+function inlineComputedStyles(source: Element, target: Element) {
+  const computed = window.getComputedStyle(source);
+  let inline = "";
+  for (const prop of SVG_STYLE_PROPS) {
+    const value = computed.getPropertyValue(prop);
+    if (value) inline += `${prop}:${value};`;
+  }
+  target.setAttribute("style", inline);
+  const sourceChildren = source.children;
+  const targetChildren = target.children;
+  for (let i = 0; i < sourceChildren.length; i++) {
+    const t = targetChildren[i];
+    if (t) inlineComputedStyles(sourceChildren[i], t);
+  }
+}
+
+/**
+ * Rasterizza un grafico SVG in un PNG con sfondo opaco. Gli stili (che usano
+ * variabili CSS) vengono inlineati prima della serializzazione, altrimenti i
+ * colori non sarebbero risolti nell'immagine autonoma.
+ */
+function svgToPngBlob(svg: SVGSVGElement): Promise<Blob> {
+  return new Promise((resolve, reject) => {
+    const rect = svg.getBoundingClientRect();
+    const width = Math.max(1, Math.round(rect.width));
+    const height = Math.max(1, Math.round(rect.height));
+    const scale = Math.min(window.devicePixelRatio || 1, 2);
+    // Sfondo coerente col tema corrente (token --card), così l'immagine
+    // esportata resta leggibile sia in chiaro sia in scuro.
+    const cardToken = getComputedStyle(document.documentElement)
+      .getPropertyValue("--card")
+      .trim();
+    const background = cardToken ? `hsl(${cardToken})` : "white";
+
+    const clone = svg.cloneNode(true) as SVGSVGElement;
+    inlineComputedStyles(svg, clone);
+    clone.setAttribute("xmlns", "http://www.w3.org/2000/svg");
+    clone.setAttribute("width", String(width));
+    clone.setAttribute("height", String(height));
+    clone.setAttribute("viewBox", `0 0 ${width} ${height}`);
+
+    const svgString = new XMLSerializer().serializeToString(clone);
+    const svgBlob = new Blob([svgString], {
+      type: "image/svg+xml;charset=utf-8",
+    });
+    const url = URL.createObjectURL(svgBlob);
+    const img = new Image();
+    img.onload = () => {
+      try {
+        const canvas = document.createElement("canvas");
+        canvas.width = width * scale;
+        canvas.height = height * scale;
+        const ctx = canvas.getContext("2d");
+        if (!ctx) {
+          URL.revokeObjectURL(url);
+          reject(new Error("Canvas non disponibile"));
+          return;
+        }
+        ctx.scale(scale, scale);
+        ctx.fillStyle = background;
+        ctx.fillRect(0, 0, width, height);
+        ctx.drawImage(img, 0, 0, width, height);
+        URL.revokeObjectURL(url);
+        canvas.toBlob((blob) => {
+          if (blob) resolve(blob);
+          else reject(new Error("Esportazione PNG non riuscita"));
+        }, "image/png");
+      } catch (err) {
+        URL.revokeObjectURL(url);
+        reject(err instanceof Error ? err : new Error("Errore esportazione"));
+      }
+    };
+    img.onerror = () => {
+      URL.revokeObjectURL(url);
+      reject(new Error("Impossibile caricare l'SVG"));
+    };
+    img.src = url;
+  });
 }
 
 function IndicatorPicker({
