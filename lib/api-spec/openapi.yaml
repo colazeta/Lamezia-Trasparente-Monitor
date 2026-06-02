@@ -2498,6 +2498,307 @@ paths:
               schema:
                 $ref: "#/components/schemas/Error"
 
+  /bandi:
+    get:
+      tags: [bandi]
+      operationId: listBandi
+      summary: Public catalog of grants/funding (curated entries only)
+      description: |
+        Returns the curated (manual) bandi, each with a derived participation
+        outcome (esito) and an estimate of lost resources for concluded bandi
+        without confirmed participation. Auto-suggested candidates are excluded.
+      parameters:
+        - name: status
+          in: query
+          required: false
+          schema:
+            $ref: "#/components/schemas/BandoStatus"
+        - name: settore
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: esito
+          in: query
+          required: false
+          schema:
+            $ref: "#/components/schemas/BandoEsito"
+        - name: ente
+          in: query
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: List of curated bandi.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Bando"
+    post:
+      tags: [bandi]
+      operationId: createBando
+      summary: Create a bando (editorial)
+      security:
+        - ingestToken: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BandoCreateInput"
+      responses:
+        "201":
+          description: Created.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BandoAdmin"
+        "400":
+          description: Invalid input.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "401":
+          description: Unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /bandi/summary:
+    get:
+      tags: [bandi]
+      operationId: getBandiSummary
+      summary: Aggregate stats for the bandi section (curated entries)
+      responses:
+        "200":
+          description: Summary statistics.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BandoSummary"
+
+  /bandi/admin:
+    get:
+      tags: [bandi]
+      operationId: listBandiAdmin
+      summary: Editorial list of all bandi (incl. suggestions and all matches)
+      security:
+        - ingestToken: []
+      responses:
+        "200":
+          description: List of all bandi with editorial metadata.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/BandoAdmin"
+        "401":
+          description: Unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /bandi/matches/{matchId}/conferma:
+    post:
+      tags: [bandi]
+      operationId: confirmBandoMatch
+      summary: Confirm a participation match (editorial)
+      security:
+        - ingestToken: []
+      parameters:
+        - name: matchId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Match confirmed; returns the parent bando.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BandoAdmin"
+        "401":
+          description: Unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "404":
+          description: Not found.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /bandi/matches/{matchId}/scarta:
+    post:
+      tags: [bandi]
+      operationId: dismissBandoMatch
+      summary: Dismiss a participation match suggestion (editorial)
+      security:
+        - ingestToken: []
+      parameters:
+        - name: matchId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Match dismissed; returns the parent bando.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BandoAdmin"
+        "401":
+          description: Unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "404":
+          description: Not found.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /bandi/{slug}:
+    get:
+      tags: [bandi]
+      operationId: getBando
+      summary: Public detail of a curated bando (with confirmed matches)
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Bando detail.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BandoDetail"
+        "404":
+          description: Not found.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      tags: [bandi]
+      operationId: updateBando
+      summary: Update a bando (editorial)
+      security:
+        - ingestToken: []
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BandoUpdateInput"
+      responses:
+        "200":
+          description: Updated.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BandoAdmin"
+        "400":
+          description: Invalid input.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "401":
+          description: Unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "404":
+          description: Not found.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    delete:
+      tags: [bandi]
+      operationId: deleteBando
+      summary: Delete a bando (editorial)
+      security:
+        - ingestToken: []
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: Deleted.
+        "401":
+          description: Unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "404":
+          description: Not found.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /bandi/{slug}/conferma:
+    post:
+      tags: [bandi]
+      operationId: confirmBandoSuggestion
+      summary: Promote an auto-suggested bando to a curated (manual) one
+      security:
+        - ingestToken: []
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Suggestion promoted.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BandoAdmin"
+        "401":
+          description: Unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "404":
+          description: Not found.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
 components:
   schemas:
     HealthStatus:
@@ -3339,6 +3640,380 @@ components:
           oneOf:
             - $ref: "#/components/schemas/FundamentalActFile"
             - type: "null"
+
+    BandoStatus:
+      type: string
+      enum: [aperto, in-scadenza, concluso]
+
+    BandoSource:
+      type: string
+      enum: [manual, suggested]
+
+    BandoEsito:
+      type: string
+      description: |
+        Derived participation outcome: `vinto` (confirmed funded contract/PNRR),
+        `partecipato` (confirmed act only), `non-partecipato` (concluded, no
+        confirmed evidence), `da-verificare` (pending suggestions or still open).
+      enum: [vinto, partecipato, non-partecipato, da-verificare]
+
+    BandoMatchTarget:
+      type: string
+      enum: [publication, contract, pnrr]
+
+    BandoMatch:
+      type: object
+      description: A participation match linking a bando to ingested content.
+      required:
+        - id
+        - targetType
+        - matchReason
+        - confirmed
+        - dismissed
+        - title
+        - reference
+        - date
+        - url
+        - publicationId
+        - contractId
+        - pnrrProjectId
+      properties:
+        id:
+          type: integer
+        targetType:
+          $ref: "#/components/schemas/BandoMatchTarget"
+        matchReason:
+          type: string
+        confirmed:
+          type: boolean
+        dismissed:
+          type: boolean
+        title:
+          type: string
+        reference:
+          type: ["string", "null"]
+        date:
+          type: ["string", "null"]
+        url:
+          type: ["string", "null"]
+        publicationId:
+          type: ["integer", "null"]
+        contractId:
+          type: ["integer", "null"]
+        pnrrProjectId:
+          type: ["integer", "null"]
+
+    Bando:
+      type: object
+      description: Public view of a curated bando.
+      required:
+        - id
+        - slug
+        - title
+        - enteErogatore
+        - description
+        - eligibility
+        - importoStanziato
+        - importoMedioAggiudicato
+        - scadenza
+        - status
+        - settore
+        - officialUrl
+        - esito
+        - lostAmount
+        - matchCount
+        - updatedAt
+      properties:
+        id:
+          type: integer
+        slug:
+          type: string
+        title:
+          type: string
+        enteErogatore:
+          type: string
+        description:
+          type: string
+        eligibility:
+          type: string
+        importoStanziato:
+          type: ["string", "null"]
+        importoMedioAggiudicato:
+          type: ["string", "null"]
+        scadenza:
+          type: ["string", "null"]
+        status:
+          $ref: "#/components/schemas/BandoStatus"
+        settore:
+          type: ["string", "null"]
+        officialUrl:
+          type: ["string", "null"]
+        esito:
+          $ref: "#/components/schemas/BandoEsito"
+        lostAmount:
+          type: number
+        matchCount:
+          type: integer
+        updatedAt:
+          type: string
+
+    BandoDetail:
+      type: object
+      description: Public detail of a curated bando with its confirmed matches.
+      required:
+        - id
+        - slug
+        - title
+        - enteErogatore
+        - description
+        - eligibility
+        - importoStanziato
+        - importoMedioAggiudicato
+        - scadenza
+        - status
+        - settore
+        - officialUrl
+        - esito
+        - lostAmount
+        - matches
+        - updatedAt
+      properties:
+        id:
+          type: integer
+        slug:
+          type: string
+        title:
+          type: string
+        enteErogatore:
+          type: string
+        description:
+          type: string
+        eligibility:
+          type: string
+        importoStanziato:
+          type: ["string", "null"]
+        importoMedioAggiudicato:
+          type: ["string", "null"]
+        scadenza:
+          type: ["string", "null"]
+        status:
+          $ref: "#/components/schemas/BandoStatus"
+        settore:
+          type: ["string", "null"]
+        officialUrl:
+          type: ["string", "null"]
+        esito:
+          $ref: "#/components/schemas/BandoEsito"
+        lostAmount:
+          type: number
+        matches:
+          type: array
+          items:
+            $ref: "#/components/schemas/BandoMatch"
+        updatedAt:
+          type: string
+
+    BandoAdmin:
+      type: object
+      description: Editorial view of a bando, incl. source, keywords and all matches.
+      required:
+        - id
+        - slug
+        - title
+        - enteErogatore
+        - description
+        - eligibility
+        - importoStanziato
+        - importoMedioAggiudicato
+        - scadenza
+        - status
+        - settore
+        - officialUrl
+        - source
+        - keywords
+        - notes
+        - esito
+        - lostAmount
+        - matches
+        - createdAt
+        - updatedAt
+      properties:
+        id:
+          type: integer
+        slug:
+          type: string
+        title:
+          type: string
+        enteErogatore:
+          type: string
+        description:
+          type: string
+        eligibility:
+          type: string
+        importoStanziato:
+          type: ["string", "null"]
+        importoMedioAggiudicato:
+          type: ["string", "null"]
+        scadenza:
+          type: ["string", "null"]
+        status:
+          $ref: "#/components/schemas/BandoStatus"
+        settore:
+          type: ["string", "null"]
+        officialUrl:
+          type: ["string", "null"]
+        source:
+          $ref: "#/components/schemas/BandoSource"
+        keywords:
+          type: array
+          items:
+            type: string
+        notes:
+          type: string
+        esito:
+          $ref: "#/components/schemas/BandoEsito"
+        lostAmount:
+          type: number
+        matches:
+          type: array
+          items:
+            $ref: "#/components/schemas/BandoMatch"
+        createdAt:
+          type: string
+        updatedAt:
+          type: string
+
+    BandoSettoreStat:
+      type: object
+      required: [settore, count, risorsePerse]
+      properties:
+        settore:
+          type: string
+        count:
+          type: integer
+        risorsePerse:
+          type: number
+
+    BandoEsitoStat:
+      type: object
+      required: [esito, count]
+      properties:
+        esito:
+          $ref: "#/components/schemas/BandoEsito"
+        count:
+          type: integer
+
+    BandoSummary:
+      type: object
+      required:
+        - totaleMappati
+        - aperti
+        - inScadenza
+        - conclusi
+        - partecipati
+        - vinti
+        - nonPartecipati
+        - daVerificare
+        - tassoPartecipazione
+        - risorsePerseTotale
+        - perSettore
+        - perEsito
+      properties:
+        totaleMappati:
+          type: integer
+        aperti:
+          type: integer
+        inScadenza:
+          type: integer
+        conclusi:
+          type: integer
+        partecipati:
+          type: integer
+        vinti:
+          type: integer
+        nonPartecipati:
+          type: integer
+        daVerificare:
+          type: integer
+        tassoPartecipazione:
+          type: number
+        risorsePerseTotale:
+          type: number
+        perSettore:
+          type: array
+          items:
+            $ref: "#/components/schemas/BandoSettoreStat"
+        perEsito:
+          type: array
+          items:
+            $ref: "#/components/schemas/BandoEsitoStat"
+
+    BandoCreateInput:
+      type: object
+      required: [slug, title]
+      properties:
+        slug:
+          type: string
+          minLength: 1
+        title:
+          type: string
+          minLength: 1
+        enteErogatore:
+          type: string
+        description:
+          type: string
+        eligibility:
+          type: string
+        importoStanziato:
+          type: ["string", "null"]
+        importoMedioAggiudicato:
+          type: ["string", "null"]
+        scadenza:
+          type: ["string", "null"]
+        status:
+          $ref: "#/components/schemas/BandoStatus"
+        settore:
+          type: ["string", "null"]
+        officialUrl:
+          type: ["string", "null"]
+        keywords:
+          type: array
+          items:
+            type: string
+        notes:
+          type: string
+
+    BandoUpdateInput:
+      type: object
+      description: Partial update of a bando.
+      properties:
+        title:
+          type: string
+          minLength: 1
+        enteErogatore:
+          type: string
+        description:
+          type: string
+        eligibility:
+          type: string
+        importoStanziato:
+          type: ["string", "null"]
+        importoMedioAggiudicato:
+          type: ["string", "null"]
+        scadenza:
+          type: ["string", "null"]
+        status:
+          $ref: "#/components/schemas/BandoStatus"
+        settore:
+          type: ["string", "null"]
+        officialUrl:
+          type: ["string", "null"]
+        keywords:
+          type: array
+          items:
+            type: string
+        notes:
+          type: string
 
     LifecyclePhase:
       type: string

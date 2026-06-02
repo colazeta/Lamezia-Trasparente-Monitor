@@ -17,6 +17,7 @@ import { runOpendataIngestion } from "./opendata";
 import { enrichAlboAttachments } from "./alboAttachments";
 import { runPerformanceIngestion } from "./performanceIndicators";
 import { refreshFundamentalActSuggestions } from "./fundamentalActs";
+import { refreshBandiSuggestions } from "./bandi";
 
 export const ALBO_SOURCE = "albo-lamezia";
 export const ALBO_LABEL = "Albo Pretorio – Amministrazione Trasparente";
@@ -265,6 +266,9 @@ async function runIngestionCycle(): Promise<void> {
   });
   await refreshFundamentalActSuggestions().catch((err) => {
     logger.error({ err }, "Fundamental act suggestions refresh failed");
+  });
+  await refreshBandiSuggestions().catch((err) => {
+    logger.error({ err }, "Bandi suggestions refresh failed");
   });
   await reconcileThemeCounters();
 }

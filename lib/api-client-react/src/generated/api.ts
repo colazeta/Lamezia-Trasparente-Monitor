@@ -21,6 +21,12 @@ import type {
 
 import type {
   ActivityItem,
+  Bando,
+  BandoAdmin,
+  BandoCreateInput,
+  BandoDetail,
+  BandoSummary,
+  BandoUpdateInput,
   Category,
   Contract,
   ContractAnalytics,
@@ -45,6 +51,7 @@ import type {
   LegalityRequirementInput,
   LegalityRequirementUpdateInput,
   LegalitySection,
+  ListBandiParams,
   ListContractsParams,
   ListConvocazioniParams,
   ListDelibereParams,
@@ -6629,5 +6636,747 @@ export const useConfirmFundamentalActSuggestion = <TError = ErrorType<Error>,
         TContext
       > => {
       return useMutation(getConfirmFundamentalActSuggestionMutationOptions(options));
+    }
+
+export const getListBandiUrl = (params?: ListBandiParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : value.toString())
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/bandi?${stringifiedParams}` : `/api/bandi`
+}
+
+/**
+ * Returns the curated (manual) bandi, each with a derived participation
+outcome (esito) and an estimate of lost resources for concluded bandi
+without confirmed participation. Auto-suggested candidates are excluded.
+
+ * @summary Public catalog of grants/funding (curated entries only)
+ */
+export const listBandi = async (params?: ListBandiParams, options?: RequestInit): Promise<Bando[]> => {
+
+  return customFetch<Bando[]>(getListBandiUrl(params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getListBandiQueryKey = (params?: ListBandiParams,) => {
+    return [
+    `/api/bandi`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getListBandiQueryOptions = <TData = Awaited<ReturnType<typeof listBandi>>, TError = ErrorType<unknown>>(params?: ListBandiParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listBandi>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListBandiQueryKey(params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listBandi>>> = ({ signal }) => listBandi(params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listBandi>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ListBandiQueryResult = NonNullable<Awaited<ReturnType<typeof listBandi>>>
+export type ListBandiQueryError = ErrorType<unknown>
+
+
+/**
+ * @summary Public catalog of grants/funding (curated entries only)
+ */
+
+export function useListBandi<TData = Awaited<ReturnType<typeof listBandi>>, TError = ErrorType<unknown>>(
+ params?: ListBandiParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listBandi>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getListBandiQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
+
+
+
+export const getCreateBandoUrl = () => {
+
+
+
+
+  return `/api/bandi`
+}
+
+/**
+ * @summary Create a bando (editorial)
+ */
+export const createBando = async (bandoCreateInput: BandoCreateInput, options?: RequestInit): Promise<BandoAdmin> => {
+
+  return customFetch<BandoAdmin>(getCreateBandoUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      bandoCreateInput,)
+  }
+);}
+
+
+
+
+export const getCreateBandoMutationOptions = <TError = ErrorType<Error>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createBando>>, TError,{data: BodyType<BandoCreateInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof createBando>>, TError,{data: BodyType<BandoCreateInput>}, TContext> => {
+
+const mutationKey = ['createBando'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createBando>>, {data: BodyType<BandoCreateInput>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  createBando(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type CreateBandoMutationResult = NonNullable<Awaited<ReturnType<typeof createBando>>>
+    export type CreateBandoMutationBody = BodyType<BandoCreateInput>
+    export type CreateBandoMutationError = ErrorType<Error>
+
+    /**
+ * @summary Create a bando (editorial)
+ */
+export const useCreateBando = <TError = ErrorType<Error>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createBando>>, TError,{data: BodyType<BandoCreateInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof createBando>>,
+        TError,
+        {data: BodyType<BandoCreateInput>},
+        TContext
+      > => {
+      return useMutation(getCreateBandoMutationOptions(options));
+    }
+
+export const getGetBandiSummaryUrl = () => {
+
+
+
+
+  return `/api/bandi/summary`
+}
+
+/**
+ * @summary Aggregate stats for the bandi section (curated entries)
+ */
+export const getBandiSummary = async ( options?: RequestInit): Promise<BandoSummary> => {
+
+  return customFetch<BandoSummary>(getGetBandiSummaryUrl(),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetBandiSummaryQueryKey = () => {
+    return [
+    `/api/bandi/summary`
+    ] as const;
+    }
+
+
+export const getGetBandiSummaryQueryOptions = <TData = Awaited<ReturnType<typeof getBandiSummary>>, TError = ErrorType<unknown>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getBandiSummary>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetBandiSummaryQueryKey();
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getBandiSummary>>> = ({ signal }) => getBandiSummary({ signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getBandiSummary>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetBandiSummaryQueryResult = NonNullable<Awaited<ReturnType<typeof getBandiSummary>>>
+export type GetBandiSummaryQueryError = ErrorType<unknown>
+
+
+/**
+ * @summary Aggregate stats for the bandi section (curated entries)
+ */
+
+export function useGetBandiSummary<TData = Awaited<ReturnType<typeof getBandiSummary>>, TError = ErrorType<unknown>>(
+  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getBandiSummary>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetBandiSummaryQueryOptions(options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
+
+
+
+export const getListBandiAdminUrl = () => {
+
+
+
+
+  return `/api/bandi/admin`
+}
+
+/**
+ * @summary Editorial list of all bandi (incl. suggestions and all matches)
+ */
+export const listBandiAdmin = async ( options?: RequestInit): Promise<BandoAdmin[]> => {
+
+  return customFetch<BandoAdmin[]>(getListBandiAdminUrl(),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getListBandiAdminQueryKey = () => {
+    return [
+    `/api/bandi/admin`
+    ] as const;
+    }
+
+
+export const getListBandiAdminQueryOptions = <TData = Awaited<ReturnType<typeof listBandiAdmin>>, TError = ErrorType<Error>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listBandiAdmin>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListBandiAdminQueryKey();
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listBandiAdmin>>> = ({ signal }) => listBandiAdmin({ signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listBandiAdmin>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ListBandiAdminQueryResult = NonNullable<Awaited<ReturnType<typeof listBandiAdmin>>>
+export type ListBandiAdminQueryError = ErrorType<Error>
+
+
+/**
+ * @summary Editorial list of all bandi (incl. suggestions and all matches)
+ */
+
+export function useListBandiAdmin<TData = Awaited<ReturnType<typeof listBandiAdmin>>, TError = ErrorType<Error>>(
+  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listBandiAdmin>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getListBandiAdminQueryOptions(options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
+
+
+
+export const getConfirmBandoMatchUrl = (matchId: number,) => {
+
+
+
+
+  return `/api/bandi/matches/${matchId}/conferma`
+}
+
+/**
+ * @summary Confirm a participation match (editorial)
+ */
+export const confirmBandoMatch = async (matchId: number, options?: RequestInit): Promise<BandoAdmin> => {
+
+  return customFetch<BandoAdmin>(getConfirmBandoMatchUrl(matchId),
+  {
+    ...options,
+    method: 'POST'
+
+
+  }
+);}
+
+
+
+
+export const getConfirmBandoMatchMutationOptions = <TError = ErrorType<Error>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof confirmBandoMatch>>, TError,{matchId: number}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof confirmBandoMatch>>, TError,{matchId: number}, TContext> => {
+
+const mutationKey = ['confirmBandoMatch'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof confirmBandoMatch>>, {matchId: number}> = (props) => {
+          const {matchId} = props ?? {};
+
+          return  confirmBandoMatch(matchId,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type ConfirmBandoMatchMutationResult = NonNullable<Awaited<ReturnType<typeof confirmBandoMatch>>>
+
+    export type ConfirmBandoMatchMutationError = ErrorType<Error>
+
+    /**
+ * @summary Confirm a participation match (editorial)
+ */
+export const useConfirmBandoMatch = <TError = ErrorType<Error>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof confirmBandoMatch>>, TError,{matchId: number}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof confirmBandoMatch>>,
+        TError,
+        {matchId: number},
+        TContext
+      > => {
+      return useMutation(getConfirmBandoMatchMutationOptions(options));
+    }
+
+export const getDismissBandoMatchUrl = (matchId: number,) => {
+
+
+
+
+  return `/api/bandi/matches/${matchId}/scarta`
+}
+
+/**
+ * @summary Dismiss a participation match suggestion (editorial)
+ */
+export const dismissBandoMatch = async (matchId: number, options?: RequestInit): Promise<BandoAdmin> => {
+
+  return customFetch<BandoAdmin>(getDismissBandoMatchUrl(matchId),
+  {
+    ...options,
+    method: 'POST'
+
+
+  }
+);}
+
+
+
+
+export const getDismissBandoMatchMutationOptions = <TError = ErrorType<Error>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof dismissBandoMatch>>, TError,{matchId: number}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof dismissBandoMatch>>, TError,{matchId: number}, TContext> => {
+
+const mutationKey = ['dismissBandoMatch'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof dismissBandoMatch>>, {matchId: number}> = (props) => {
+          const {matchId} = props ?? {};
+
+          return  dismissBandoMatch(matchId,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type DismissBandoMatchMutationResult = NonNullable<Awaited<ReturnType<typeof dismissBandoMatch>>>
+
+    export type DismissBandoMatchMutationError = ErrorType<Error>
+
+    /**
+ * @summary Dismiss a participation match suggestion (editorial)
+ */
+export const useDismissBandoMatch = <TError = ErrorType<Error>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof dismissBandoMatch>>, TError,{matchId: number}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof dismissBandoMatch>>,
+        TError,
+        {matchId: number},
+        TContext
+      > => {
+      return useMutation(getDismissBandoMatchMutationOptions(options));
+    }
+
+export const getGetBandoUrl = (slug: string,) => {
+
+
+
+
+  return `/api/bandi/${slug}`
+}
+
+/**
+ * @summary Public detail of a curated bando (with confirmed matches)
+ */
+export const getBando = async (slug: string, options?: RequestInit): Promise<BandoDetail> => {
+
+  return customFetch<BandoDetail>(getGetBandoUrl(slug),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetBandoQueryKey = (slug: string,) => {
+    return [
+    `/api/bandi/${slug}`
+    ] as const;
+    }
+
+
+export const getGetBandoQueryOptions = <TData = Awaited<ReturnType<typeof getBando>>, TError = ErrorType<Error>>(slug: string, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getBando>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetBandoQueryKey(slug);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getBando>>> = ({ signal }) => getBando(slug, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: !!(slug), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getBando>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetBandoQueryResult = NonNullable<Awaited<ReturnType<typeof getBando>>>
+export type GetBandoQueryError = ErrorType<Error>
+
+
+/**
+ * @summary Public detail of a curated bando (with confirmed matches)
+ */
+
+export function useGetBando<TData = Awaited<ReturnType<typeof getBando>>, TError = ErrorType<Error>>(
+ slug: string, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getBando>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetBandoQueryOptions(slug,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
+
+
+
+export const getUpdateBandoUrl = (slug: string,) => {
+
+
+
+
+  return `/api/bandi/${slug}`
+}
+
+/**
+ * @summary Update a bando (editorial)
+ */
+export const updateBando = async (slug: string,
+    bandoUpdateInput: BandoUpdateInput, options?: RequestInit): Promise<BandoAdmin> => {
+
+  return customFetch<BandoAdmin>(getUpdateBandoUrl(slug),
+  {
+    ...options,
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      bandoUpdateInput,)
+  }
+);}
+
+
+
+
+export const getUpdateBandoMutationOptions = <TError = ErrorType<Error>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateBando>>, TError,{slug: string;data: BodyType<BandoUpdateInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof updateBando>>, TError,{slug: string;data: BodyType<BandoUpdateInput>}, TContext> => {
+
+const mutationKey = ['updateBando'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof updateBando>>, {slug: string;data: BodyType<BandoUpdateInput>}> = (props) => {
+          const {slug,data} = props ?? {};
+
+          return  updateBando(slug,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type UpdateBandoMutationResult = NonNullable<Awaited<ReturnType<typeof updateBando>>>
+    export type UpdateBandoMutationBody = BodyType<BandoUpdateInput>
+    export type UpdateBandoMutationError = ErrorType<Error>
+
+    /**
+ * @summary Update a bando (editorial)
+ */
+export const useUpdateBando = <TError = ErrorType<Error>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateBando>>, TError,{slug: string;data: BodyType<BandoUpdateInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof updateBando>>,
+        TError,
+        {slug: string;data: BodyType<BandoUpdateInput>},
+        TContext
+      > => {
+      return useMutation(getUpdateBandoMutationOptions(options));
+    }
+
+export const getDeleteBandoUrl = (slug: string,) => {
+
+
+
+
+  return `/api/bandi/${slug}`
+}
+
+/**
+ * @summary Delete a bando (editorial)
+ */
+export const deleteBando = async (slug: string, options?: RequestInit): Promise<void> => {
+
+  return customFetch<void>(getDeleteBandoUrl(slug),
+  {
+    ...options,
+    method: 'DELETE'
+
+
+  }
+);}
+
+
+
+
+export const getDeleteBandoMutationOptions = <TError = ErrorType<Error>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteBando>>, TError,{slug: string}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof deleteBando>>, TError,{slug: string}, TContext> => {
+
+const mutationKey = ['deleteBando'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof deleteBando>>, {slug: string}> = (props) => {
+          const {slug} = props ?? {};
+
+          return  deleteBando(slug,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type DeleteBandoMutationResult = NonNullable<Awaited<ReturnType<typeof deleteBando>>>
+
+    export type DeleteBandoMutationError = ErrorType<Error>
+
+    /**
+ * @summary Delete a bando (editorial)
+ */
+export const useDeleteBando = <TError = ErrorType<Error>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteBando>>, TError,{slug: string}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof deleteBando>>,
+        TError,
+        {slug: string},
+        TContext
+      > => {
+      return useMutation(getDeleteBandoMutationOptions(options));
+    }
+
+export const getConfirmBandoSuggestionUrl = (slug: string,) => {
+
+
+
+
+  return `/api/bandi/${slug}/conferma`
+}
+
+/**
+ * @summary Promote an auto-suggested bando to a curated (manual) one
+ */
+export const confirmBandoSuggestion = async (slug: string, options?: RequestInit): Promise<BandoAdmin> => {
+
+  return customFetch<BandoAdmin>(getConfirmBandoSuggestionUrl(slug),
+  {
+    ...options,
+    method: 'POST'
+
+
+  }
+);}
+
+
+
+
+export const getConfirmBandoSuggestionMutationOptions = <TError = ErrorType<Error>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof confirmBandoSuggestion>>, TError,{slug: string}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof confirmBandoSuggestion>>, TError,{slug: string}, TContext> => {
+
+const mutationKey = ['confirmBandoSuggestion'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof confirmBandoSuggestion>>, {slug: string}> = (props) => {
+          const {slug} = props ?? {};
+
+          return  confirmBandoSuggestion(slug,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type ConfirmBandoSuggestionMutationResult = NonNullable<Awaited<ReturnType<typeof confirmBandoSuggestion>>>
+
+    export type ConfirmBandoSuggestionMutationError = ErrorType<Error>
+
+    /**
+ * @summary Promote an auto-suggested bando to a curated (manual) one
+ */
+export const useConfirmBandoSuggestion = <TError = ErrorType<Error>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof confirmBandoSuggestion>>, TError,{slug: string}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof confirmBandoSuggestion>>,
+        TError,
+        {slug: string},
+        TContext
+      > => {
+      return useMutation(getConfirmBandoSuggestionMutationOptions(options));
     }
 

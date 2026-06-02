@@ -2673,3 +2673,371 @@ export const ConfirmFundamentalActSuggestionResponse = zod.object({
 }).describe('Editorial view of a fundamental act, including suggestions.')
 
 
+/**
+ * Returns the curated (manual) bandi, each with a derived participation
+outcome (esito) and an estimate of lost resources for concluded bandi
+without confirmed participation. Auto-suggested candidates are excluded.
+
+ * @summary Public catalog of grants/funding (curated entries only)
+ */
+export const ListBandiQueryParams = zod.object({
+  "status": zod.enum(['aperto', 'in-scadenza', 'concluso']).optional(),
+  "settore": zod.coerce.string().optional(),
+  "esito": zod.enum(['vinto', 'partecipato', 'non-partecipato', 'da-verificare']).optional(),
+  "ente": zod.coerce.string().optional()
+})
+
+export const ListBandiResponseItem = zod.object({
+  "id": zod.number(),
+  "slug": zod.string(),
+  "title": zod.string(),
+  "enteErogatore": zod.string(),
+  "description": zod.string(),
+  "eligibility": zod.string(),
+  "importoStanziato": zod.string().nullable(),
+  "importoMedioAggiudicato": zod.string().nullable(),
+  "scadenza": zod.string().nullable(),
+  "status": zod.enum(['aperto', 'in-scadenza', 'concluso']),
+  "settore": zod.string().nullable(),
+  "officialUrl": zod.string().nullable(),
+  "esito": zod.enum(['vinto', 'partecipato', 'non-partecipato', 'da-verificare']).describe('Derived participation outcome: `vinto` (confirmed funded contract\/PNRR),\n`partecipato` (confirmed act only), `non-partecipato` (concluded, no\nconfirmed evidence), `da-verificare` (pending suggestions or still open).\n'),
+  "lostAmount": zod.number(),
+  "matchCount": zod.number(),
+  "updatedAt": zod.string()
+}).describe('Public view of a curated bando.')
+export const ListBandiResponse = zod.array(ListBandiResponseItem)
+
+
+/**
+ * @summary Create a bando (editorial)
+ */
+
+
+
+
+export const CreateBandoBody = zod.object({
+  "slug": zod.string().min(1),
+  "title": zod.string().min(1),
+  "enteErogatore": zod.string().optional(),
+  "description": zod.string().optional(),
+  "eligibility": zod.string().optional(),
+  "importoStanziato": zod.string().nullish(),
+  "importoMedioAggiudicato": zod.string().nullish(),
+  "scadenza": zod.string().nullish(),
+  "status": zod.enum(['aperto', 'in-scadenza', 'concluso']).optional(),
+  "settore": zod.string().nullish(),
+  "officialUrl": zod.string().nullish(),
+  "keywords": zod.array(zod.string()).optional(),
+  "notes": zod.string().optional()
+})
+
+
+/**
+ * @summary Aggregate stats for the bandi section (curated entries)
+ */
+export const GetBandiSummaryResponse = zod.object({
+  "totaleMappati": zod.number(),
+  "aperti": zod.number(),
+  "inScadenza": zod.number(),
+  "conclusi": zod.number(),
+  "partecipati": zod.number(),
+  "vinti": zod.number(),
+  "nonPartecipati": zod.number(),
+  "daVerificare": zod.number(),
+  "tassoPartecipazione": zod.number(),
+  "risorsePerseTotale": zod.number(),
+  "perSettore": zod.array(zod.object({
+  "settore": zod.string(),
+  "count": zod.number(),
+  "risorsePerse": zod.number()
+})),
+  "perEsito": zod.array(zod.object({
+  "esito": zod.enum(['vinto', 'partecipato', 'non-partecipato', 'da-verificare']).describe('Derived participation outcome: `vinto` (confirmed funded contract\/PNRR),\n`partecipato` (confirmed act only), `non-partecipato` (concluded, no\nconfirmed evidence), `da-verificare` (pending suggestions or still open).\n'),
+  "count": zod.number()
+}))
+})
+
+
+/**
+ * @summary Editorial list of all bandi (incl. suggestions and all matches)
+ */
+export const ListBandiAdminResponseItem = zod.object({
+  "id": zod.number(),
+  "slug": zod.string(),
+  "title": zod.string(),
+  "enteErogatore": zod.string(),
+  "description": zod.string(),
+  "eligibility": zod.string(),
+  "importoStanziato": zod.string().nullable(),
+  "importoMedioAggiudicato": zod.string().nullable(),
+  "scadenza": zod.string().nullable(),
+  "status": zod.enum(['aperto', 'in-scadenza', 'concluso']),
+  "settore": zod.string().nullable(),
+  "officialUrl": zod.string().nullable(),
+  "source": zod.enum(['manual', 'suggested']),
+  "keywords": zod.array(zod.string()),
+  "notes": zod.string(),
+  "esito": zod.enum(['vinto', 'partecipato', 'non-partecipato', 'da-verificare']).describe('Derived participation outcome: `vinto` (confirmed funded contract\/PNRR),\n`partecipato` (confirmed act only), `non-partecipato` (concluded, no\nconfirmed evidence), `da-verificare` (pending suggestions or still open).\n'),
+  "lostAmount": zod.number(),
+  "matches": zod.array(zod.object({
+  "id": zod.number(),
+  "targetType": zod.enum(['publication', 'contract', 'pnrr']),
+  "matchReason": zod.string(),
+  "confirmed": zod.boolean(),
+  "dismissed": zod.boolean(),
+  "title": zod.string(),
+  "reference": zod.string().nullable(),
+  "date": zod.string().nullable(),
+  "url": zod.string().nullable(),
+  "publicationId": zod.number().nullable(),
+  "contractId": zod.number().nullable(),
+  "pnrrProjectId": zod.number().nullable()
+}).describe('A participation match linking a bando to ingested content.')),
+  "createdAt": zod.string(),
+  "updatedAt": zod.string()
+}).describe('Editorial view of a bando, incl. source, keywords and all matches.')
+export const ListBandiAdminResponse = zod.array(ListBandiAdminResponseItem)
+
+
+/**
+ * @summary Confirm a participation match (editorial)
+ */
+export const ConfirmBandoMatchParams = zod.object({
+  "matchId": zod.coerce.number()
+})
+
+export const ConfirmBandoMatchResponse = zod.object({
+  "id": zod.number(),
+  "slug": zod.string(),
+  "title": zod.string(),
+  "enteErogatore": zod.string(),
+  "description": zod.string(),
+  "eligibility": zod.string(),
+  "importoStanziato": zod.string().nullable(),
+  "importoMedioAggiudicato": zod.string().nullable(),
+  "scadenza": zod.string().nullable(),
+  "status": zod.enum(['aperto', 'in-scadenza', 'concluso']),
+  "settore": zod.string().nullable(),
+  "officialUrl": zod.string().nullable(),
+  "source": zod.enum(['manual', 'suggested']),
+  "keywords": zod.array(zod.string()),
+  "notes": zod.string(),
+  "esito": zod.enum(['vinto', 'partecipato', 'non-partecipato', 'da-verificare']).describe('Derived participation outcome: `vinto` (confirmed funded contract\/PNRR),\n`partecipato` (confirmed act only), `non-partecipato` (concluded, no\nconfirmed evidence), `da-verificare` (pending suggestions or still open).\n'),
+  "lostAmount": zod.number(),
+  "matches": zod.array(zod.object({
+  "id": zod.number(),
+  "targetType": zod.enum(['publication', 'contract', 'pnrr']),
+  "matchReason": zod.string(),
+  "confirmed": zod.boolean(),
+  "dismissed": zod.boolean(),
+  "title": zod.string(),
+  "reference": zod.string().nullable(),
+  "date": zod.string().nullable(),
+  "url": zod.string().nullable(),
+  "publicationId": zod.number().nullable(),
+  "contractId": zod.number().nullable(),
+  "pnrrProjectId": zod.number().nullable()
+}).describe('A participation match linking a bando to ingested content.')),
+  "createdAt": zod.string(),
+  "updatedAt": zod.string()
+}).describe('Editorial view of a bando, incl. source, keywords and all matches.')
+
+
+/**
+ * @summary Dismiss a participation match suggestion (editorial)
+ */
+export const DismissBandoMatchParams = zod.object({
+  "matchId": zod.coerce.number()
+})
+
+export const DismissBandoMatchResponse = zod.object({
+  "id": zod.number(),
+  "slug": zod.string(),
+  "title": zod.string(),
+  "enteErogatore": zod.string(),
+  "description": zod.string(),
+  "eligibility": zod.string(),
+  "importoStanziato": zod.string().nullable(),
+  "importoMedioAggiudicato": zod.string().nullable(),
+  "scadenza": zod.string().nullable(),
+  "status": zod.enum(['aperto', 'in-scadenza', 'concluso']),
+  "settore": zod.string().nullable(),
+  "officialUrl": zod.string().nullable(),
+  "source": zod.enum(['manual', 'suggested']),
+  "keywords": zod.array(zod.string()),
+  "notes": zod.string(),
+  "esito": zod.enum(['vinto', 'partecipato', 'non-partecipato', 'da-verificare']).describe('Derived participation outcome: `vinto` (confirmed funded contract\/PNRR),\n`partecipato` (confirmed act only), `non-partecipato` (concluded, no\nconfirmed evidence), `da-verificare` (pending suggestions or still open).\n'),
+  "lostAmount": zod.number(),
+  "matches": zod.array(zod.object({
+  "id": zod.number(),
+  "targetType": zod.enum(['publication', 'contract', 'pnrr']),
+  "matchReason": zod.string(),
+  "confirmed": zod.boolean(),
+  "dismissed": zod.boolean(),
+  "title": zod.string(),
+  "reference": zod.string().nullable(),
+  "date": zod.string().nullable(),
+  "url": zod.string().nullable(),
+  "publicationId": zod.number().nullable(),
+  "contractId": zod.number().nullable(),
+  "pnrrProjectId": zod.number().nullable()
+}).describe('A participation match linking a bando to ingested content.')),
+  "createdAt": zod.string(),
+  "updatedAt": zod.string()
+}).describe('Editorial view of a bando, incl. source, keywords and all matches.')
+
+
+/**
+ * @summary Public detail of a curated bando (with confirmed matches)
+ */
+export const GetBandoParams = zod.object({
+  "slug": zod.coerce.string()
+})
+
+export const GetBandoResponse = zod.object({
+  "id": zod.number(),
+  "slug": zod.string(),
+  "title": zod.string(),
+  "enteErogatore": zod.string(),
+  "description": zod.string(),
+  "eligibility": zod.string(),
+  "importoStanziato": zod.string().nullable(),
+  "importoMedioAggiudicato": zod.string().nullable(),
+  "scadenza": zod.string().nullable(),
+  "status": zod.enum(['aperto', 'in-scadenza', 'concluso']),
+  "settore": zod.string().nullable(),
+  "officialUrl": zod.string().nullable(),
+  "esito": zod.enum(['vinto', 'partecipato', 'non-partecipato', 'da-verificare']).describe('Derived participation outcome: `vinto` (confirmed funded contract\/PNRR),\n`partecipato` (confirmed act only), `non-partecipato` (concluded, no\nconfirmed evidence), `da-verificare` (pending suggestions or still open).\n'),
+  "lostAmount": zod.number(),
+  "matches": zod.array(zod.object({
+  "id": zod.number(),
+  "targetType": zod.enum(['publication', 'contract', 'pnrr']),
+  "matchReason": zod.string(),
+  "confirmed": zod.boolean(),
+  "dismissed": zod.boolean(),
+  "title": zod.string(),
+  "reference": zod.string().nullable(),
+  "date": zod.string().nullable(),
+  "url": zod.string().nullable(),
+  "publicationId": zod.number().nullable(),
+  "contractId": zod.number().nullable(),
+  "pnrrProjectId": zod.number().nullable()
+}).describe('A participation match linking a bando to ingested content.')),
+  "updatedAt": zod.string()
+}).describe('Public detail of a curated bando with its confirmed matches.')
+
+
+/**
+ * @summary Update a bando (editorial)
+ */
+export const UpdateBandoParams = zod.object({
+  "slug": zod.coerce.string()
+})
+
+
+
+
+export const UpdateBandoBody = zod.object({
+  "title": zod.string().min(1).optional(),
+  "enteErogatore": zod.string().optional(),
+  "description": zod.string().optional(),
+  "eligibility": zod.string().optional(),
+  "importoStanziato": zod.string().nullish(),
+  "importoMedioAggiudicato": zod.string().nullish(),
+  "scadenza": zod.string().nullish(),
+  "status": zod.enum(['aperto', 'in-scadenza', 'concluso']).optional(),
+  "settore": zod.string().nullish(),
+  "officialUrl": zod.string().nullish(),
+  "keywords": zod.array(zod.string()).optional(),
+  "notes": zod.string().optional()
+}).describe('Partial update of a bando.')
+
+export const UpdateBandoResponse = zod.object({
+  "id": zod.number(),
+  "slug": zod.string(),
+  "title": zod.string(),
+  "enteErogatore": zod.string(),
+  "description": zod.string(),
+  "eligibility": zod.string(),
+  "importoStanziato": zod.string().nullable(),
+  "importoMedioAggiudicato": zod.string().nullable(),
+  "scadenza": zod.string().nullable(),
+  "status": zod.enum(['aperto', 'in-scadenza', 'concluso']),
+  "settore": zod.string().nullable(),
+  "officialUrl": zod.string().nullable(),
+  "source": zod.enum(['manual', 'suggested']),
+  "keywords": zod.array(zod.string()),
+  "notes": zod.string(),
+  "esito": zod.enum(['vinto', 'partecipato', 'non-partecipato', 'da-verificare']).describe('Derived participation outcome: `vinto` (confirmed funded contract\/PNRR),\n`partecipato` (confirmed act only), `non-partecipato` (concluded, no\nconfirmed evidence), `da-verificare` (pending suggestions or still open).\n'),
+  "lostAmount": zod.number(),
+  "matches": zod.array(zod.object({
+  "id": zod.number(),
+  "targetType": zod.enum(['publication', 'contract', 'pnrr']),
+  "matchReason": zod.string(),
+  "confirmed": zod.boolean(),
+  "dismissed": zod.boolean(),
+  "title": zod.string(),
+  "reference": zod.string().nullable(),
+  "date": zod.string().nullable(),
+  "url": zod.string().nullable(),
+  "publicationId": zod.number().nullable(),
+  "contractId": zod.number().nullable(),
+  "pnrrProjectId": zod.number().nullable()
+}).describe('A participation match linking a bando to ingested content.')),
+  "createdAt": zod.string(),
+  "updatedAt": zod.string()
+}).describe('Editorial view of a bando, incl. source, keywords and all matches.')
+
+
+/**
+ * @summary Delete a bando (editorial)
+ */
+export const DeleteBandoParams = zod.object({
+  "slug": zod.coerce.string()
+})
+
+
+/**
+ * @summary Promote an auto-suggested bando to a curated (manual) one
+ */
+export const ConfirmBandoSuggestionParams = zod.object({
+  "slug": zod.coerce.string()
+})
+
+export const ConfirmBandoSuggestionResponse = zod.object({
+  "id": zod.number(),
+  "slug": zod.string(),
+  "title": zod.string(),
+  "enteErogatore": zod.string(),
+  "description": zod.string(),
+  "eligibility": zod.string(),
+  "importoStanziato": zod.string().nullable(),
+  "importoMedioAggiudicato": zod.string().nullable(),
+  "scadenza": zod.string().nullable(),
+  "status": zod.enum(['aperto', 'in-scadenza', 'concluso']),
+  "settore": zod.string().nullable(),
+  "officialUrl": zod.string().nullable(),
+  "source": zod.enum(['manual', 'suggested']),
+  "keywords": zod.array(zod.string()),
+  "notes": zod.string(),
+  "esito": zod.enum(['vinto', 'partecipato', 'non-partecipato', 'da-verificare']).describe('Derived participation outcome: `vinto` (confirmed funded contract\/PNRR),\n`partecipato` (confirmed act only), `non-partecipato` (concluded, no\nconfirmed evidence), `da-verificare` (pending suggestions or still open).\n'),
+  "lostAmount": zod.number(),
+  "matches": zod.array(zod.object({
+  "id": zod.number(),
+  "targetType": zod.enum(['publication', 'contract', 'pnrr']),
+  "matchReason": zod.string(),
+  "confirmed": zod.boolean(),
+  "dismissed": zod.boolean(),
+  "title": zod.string(),
+  "reference": zod.string().nullable(),
+  "date": zod.string().nullable(),
+  "url": zod.string().nullable(),
+  "publicationId": zod.number().nullable(),
+  "contractId": zod.number().nullable(),
+  "pnrrProjectId": zod.number().nullable()
+}).describe('A participation match linking a bando to ingested content.')),
+  "createdAt": zod.string(),
+  "updatedAt": zod.string()
+}).describe('Editorial view of a bando, incl. source, keywords and all matches.')
+
+

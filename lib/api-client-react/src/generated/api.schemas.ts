@@ -521,6 +521,230 @@ export interface FundamentalActUpdateInput {
   manualFile?: FundamentalActFile | null;
 }
 
+export type BandoStatus = typeof BandoStatus[keyof typeof BandoStatus];
+
+
+export const BandoStatus = {
+  aperto: 'aperto',
+  'in-scadenza': 'in-scadenza',
+  concluso: 'concluso',
+} as const;
+
+export type BandoSource = typeof BandoSource[keyof typeof BandoSource];
+
+
+export const BandoSource = {
+  manual: 'manual',
+  suggested: 'suggested',
+} as const;
+
+/**
+ * Derived participation outcome: `vinto` (confirmed funded contract/PNRR),
+`partecipato` (confirmed act only), `non-partecipato` (concluded, no
+confirmed evidence), `da-verificare` (pending suggestions or still open).
+
+ */
+export type BandoEsito = typeof BandoEsito[keyof typeof BandoEsito];
+
+
+export const BandoEsito = {
+  vinto: 'vinto',
+  partecipato: 'partecipato',
+  'non-partecipato': 'non-partecipato',
+  'da-verificare': 'da-verificare',
+} as const;
+
+export type BandoMatchTarget = typeof BandoMatchTarget[keyof typeof BandoMatchTarget];
+
+
+export const BandoMatchTarget = {
+  publication: 'publication',
+  contract: 'contract',
+  pnrr: 'pnrr',
+} as const;
+
+/**
+ * A participation match linking a bando to ingested content.
+ */
+export interface BandoMatch {
+  id: number;
+  targetType: BandoMatchTarget;
+  matchReason: string;
+  confirmed: boolean;
+  dismissed: boolean;
+  title: string;
+  /** @nullable */
+  reference: string | null;
+  /** @nullable */
+  date: string | null;
+  /** @nullable */
+  url: string | null;
+  /** @nullable */
+  publicationId: number | null;
+  /** @nullable */
+  contractId: number | null;
+  /** @nullable */
+  pnrrProjectId: number | null;
+}
+
+/**
+ * Public view of a curated bando.
+ */
+export interface Bando {
+  id: number;
+  slug: string;
+  title: string;
+  enteErogatore: string;
+  description: string;
+  eligibility: string;
+  /** @nullable */
+  importoStanziato: string | null;
+  /** @nullable */
+  importoMedioAggiudicato: string | null;
+  /** @nullable */
+  scadenza: string | null;
+  status: BandoStatus;
+  /** @nullable */
+  settore: string | null;
+  /** @nullable */
+  officialUrl: string | null;
+  esito: BandoEsito;
+  lostAmount: number;
+  matchCount: number;
+  updatedAt: string;
+}
+
+/**
+ * Public detail of a curated bando with its confirmed matches.
+ */
+export interface BandoDetail {
+  id: number;
+  slug: string;
+  title: string;
+  enteErogatore: string;
+  description: string;
+  eligibility: string;
+  /** @nullable */
+  importoStanziato: string | null;
+  /** @nullable */
+  importoMedioAggiudicato: string | null;
+  /** @nullable */
+  scadenza: string | null;
+  status: BandoStatus;
+  /** @nullable */
+  settore: string | null;
+  /** @nullable */
+  officialUrl: string | null;
+  esito: BandoEsito;
+  lostAmount: number;
+  matches: BandoMatch[];
+  updatedAt: string;
+}
+
+/**
+ * Editorial view of a bando, incl. source, keywords and all matches.
+ */
+export interface BandoAdmin {
+  id: number;
+  slug: string;
+  title: string;
+  enteErogatore: string;
+  description: string;
+  eligibility: string;
+  /** @nullable */
+  importoStanziato: string | null;
+  /** @nullable */
+  importoMedioAggiudicato: string | null;
+  /** @nullable */
+  scadenza: string | null;
+  status: BandoStatus;
+  /** @nullable */
+  settore: string | null;
+  /** @nullable */
+  officialUrl: string | null;
+  source: BandoSource;
+  keywords: string[];
+  notes: string;
+  esito: BandoEsito;
+  lostAmount: number;
+  matches: BandoMatch[];
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface BandoSettoreStat {
+  settore: string;
+  count: number;
+  risorsePerse: number;
+}
+
+export interface BandoEsitoStat {
+  esito: BandoEsito;
+  count: number;
+}
+
+export interface BandoSummary {
+  totaleMappati: number;
+  aperti: number;
+  inScadenza: number;
+  conclusi: number;
+  partecipati: number;
+  vinti: number;
+  nonPartecipati: number;
+  daVerificare: number;
+  tassoPartecipazione: number;
+  risorsePerseTotale: number;
+  perSettore: BandoSettoreStat[];
+  perEsito: BandoEsitoStat[];
+}
+
+export interface BandoCreateInput {
+  /** @minLength 1 */
+  slug: string;
+  /** @minLength 1 */
+  title: string;
+  enteErogatore?: string;
+  description?: string;
+  eligibility?: string;
+  /** @nullable */
+  importoStanziato?: string | null;
+  /** @nullable */
+  importoMedioAggiudicato?: string | null;
+  /** @nullable */
+  scadenza?: string | null;
+  status?: BandoStatus;
+  /** @nullable */
+  settore?: string | null;
+  /** @nullable */
+  officialUrl?: string | null;
+  keywords?: string[];
+  notes?: string;
+}
+
+/**
+ * Partial update of a bando.
+ */
+export interface BandoUpdateInput {
+  /** @minLength 1 */
+  title?: string;
+  enteErogatore?: string;
+  description?: string;
+  eligibility?: string;
+  /** @nullable */
+  importoStanziato?: string | null;
+  /** @nullable */
+  importoMedioAggiudicato?: string | null;
+  /** @nullable */
+  scadenza?: string | null;
+  status?: BandoStatus;
+  /** @nullable */
+  settore?: string | null;
+  /** @nullable */
+  officialUrl?: string | null;
+  keywords?: string[];
+  notes?: string;
+}
+
 /**
  * Phase of a public-spending lifecycle inferred from an act's type/subject.
  */
@@ -1678,5 +1902,12 @@ export const ListOversightOpinionsSort = {
 
 export type ListPerformanceIndicatorsParams = {
 categoryId?: number;
+};
+
+export type ListBandiParams = {
+status?: BandoStatus;
+settore?: string;
+esito?: BandoEsito;
+ente?: string;
 };
 

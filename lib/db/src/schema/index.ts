@@ -28,3 +28,5 @@ export * from "./fundamentalActs";
 export * from "./legalityAreas";
 export * from "./legalityRequirements";
 export * from "./legalityOverview";
+export * from "./bandi";
+export * from "./bandoMatches";

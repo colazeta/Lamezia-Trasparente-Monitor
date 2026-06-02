@@ -20,6 +20,8 @@ import { PareriVigilanzaDetail } from "./pages/PareriVigilanzaDetail";
 import { Opendata } from "./pages/Opendata";
 import { OpendataDetail } from "./pages/OpendataDetail";
 import { AttiFondamentali } from "./pages/AttiFondamentali";
+import { Bandi } from "./pages/Bandi";
+import { BandoDetail } from "./pages/BandoDetail";
 import { Legalita } from "./pages/Legalita";
 import { Performance } from "./pages/Performance";
 import { PerformanceCompare } from "./pages/PerformanceCompare";
@@ -32,6 +34,7 @@ import { AdminCronistoria } from "./pages/AdminCronistoria";
 import { AdminDomande } from "./pages/AdminDomande";
 import { AdminAppalti } from "./pages/AdminAppalti";
 import { AdminAttiFondamentali } from "./pages/AdminAttiFondamentali";
+import { AdminBandi } from "./pages/AdminBandi";
 import { AdminLegalita } from "./pages/AdminLegalita";
 import { AdminPareri } from "./pages/AdminPareri";
 import { AdminIndex } from "./pages/AdminIndex";
@@ -49,6 +52,8 @@ export function Router() {
         <Route path="/contratti/:id" component={ContractStoryline} />
         <Route path="/albo" component={Albo} />
         <Route path="/atti-fondamentali" component={AttiFondamentali} />
+        <Route path="/bandi" component={Bandi} />
+        <Route path="/bandi/:slug" component={BandoDetail} />
         <Route path="/legalita" component={Legalita} />
         <Route path="/delibere" component={Delibere} />
         <Route path="/convocazioni" component={Convocazioni} />
@@ -77,6 +82,7 @@ export function Router() {
           path="/admin/atti-fondamentali"
           component={AdminAttiFondamentali}
         />
+        <Route path="/admin/bandi" component={AdminBandi} />
         <Route path="/admin/legalita" component={AdminLegalita} />
         <Route path="/admin/pareri" component={AdminPareri} />
         <Route component={NotFound} />

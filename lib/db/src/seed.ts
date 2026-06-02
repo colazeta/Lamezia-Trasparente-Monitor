@@ -19,6 +19,7 @@ import {
   performanceCategoriesTable,
   performanceIndicatorsTable,
   fundamentalActsTable,
+  bandiTable,
 } from "./schema";
 import { classifyMacrotema } from "./macrotemi";
 import {
@@ -1357,6 +1358,147 @@ async function seedFundamentalActs(): Promise<void> {
   }
 }
 
+// Dati di esempio per la sezione "Bandi e finanziamenti". Bandi curati
+// (source manuale) con keyword per il cross-matching della partecipazione.
+// Upsert per slug: non sovrascrive le modifiche redazionali su voci esistenti.
+const SAMPLE_BANDI: {
+  slug: string;
+  title: string;
+  enteErogatore: string;
+  description: string;
+  eligibility: string;
+  importoStanziato: string;
+  importoMedioAggiudicato: string;
+  daysToScadenza: number | null;
+  status: "aperto" | "in-scadenza" | "concluso";
+  settore: string;
+  officialUrl: string;
+  keywords: string[];
+}[] = [
+  {
+    slug: "pnrr-rigenerazione-urbana-2026",
+    title: "PNRR – Rigenerazione urbana e riqualificazione spazi pubblici",
+    enteErogatore: "Ministero dell'Interno",
+    description:
+      "Contributi per progetti di rigenerazione urbana volti alla riduzione del degrado e alla riqualificazione di aree e immobili pubblici.",
+    eligibility:
+      "Comuni con popolazione superiore a 15.000 abitanti. Cofinanziamento minimo del 20%.",
+    importoStanziato: "5000000.00",
+    importoMedioAggiudicato: "1200000.00",
+    daysToScadenza: 45,
+    status: "aperto",
+    settore: "strade",
+    officialUrl: "https://www.interno.gov.it/",
+    keywords: ["rigenerazione urbana", "riqualificazione", "spazi pubblici"],
+  },
+  {
+    slug: "regione-calabria-efficientamento-scuole",
+    title: "Efficientamento energetico degli edifici scolastici",
+    enteErogatore: "Regione Calabria",
+    description:
+      "Finanziamenti per interventi di efficientamento energetico e messa in sicurezza degli edifici scolastici comunali.",
+    eligibility:
+      "Comuni calabresi proprietari di edifici scolastici. Progetto esecutivo cantierabile.",
+    importoStanziato: "2000000.00",
+    importoMedioAggiudicato: "350000.00",
+    daysToScadenza: 12,
+    status: "in-scadenza",
+    settore: "scuole",
+    officialUrl: "https://www.regione.calabria.it/",
+    keywords: ["efficientamento", "scuola", "edifici scolastici", "scuole"],
+  },
+  {
+    slug: "por-fesr-mobilita-sostenibile-2025",
+    title: "POR FESR – Mobilità sostenibile e piste ciclabili",
+    enteErogatore: "Regione Calabria",
+    description:
+      "Contributi per la realizzazione di piste ciclabili e interventi di mobilità sostenibile urbana.",
+    eligibility: "Enti locali. Interventi coerenti con il PUMS.",
+    importoStanziato: "1500000.00",
+    importoMedioAggiudicato: "280000.00",
+    daysToScadenza: -30,
+    status: "concluso",
+    settore: "mobilita",
+    officialUrl: "https://calabriaeuropa.regione.calabria.it/",
+    keywords: ["mobilità", "piste ciclabili", "trasporto"],
+  },
+  {
+    slug: "ministero-cultura-biblioteche-2025",
+    title: "Fondo per la promozione della lettura e delle biblioteche",
+    enteErogatore: "Ministero della Cultura",
+    description:
+      "Contributi destinati al potenziamento delle biblioteche comunali e alla promozione di eventi culturali.",
+    eligibility: "Comuni con biblioteca civica attiva.",
+    importoStanziato: "800000.00",
+    importoMedioAggiudicato: "60000.00",
+    daysToScadenza: -90,
+    status: "concluso",
+    settore: "cultura",
+    officialUrl: "https://cultura.gov.it/",
+    keywords: ["biblioteca", "cultura", "lettura", "eventi"],
+  },
+  {
+    slug: "regione-calabria-raccolta-differenziata",
+    title: "Incentivi per il potenziamento della raccolta differenziata",
+    enteErogatore: "Regione Calabria",
+    description:
+      "Finanziamenti per migliorare i sistemi di raccolta differenziata e ridurre il conferimento in discarica.",
+    eligibility: "Comuni singoli o associati. Piano d'ambito approvato.",
+    importoStanziato: "1200000.00",
+    importoMedioAggiudicato: "180000.00",
+    daysToScadenza: 90,
+    status: "aperto",
+    settore: "ambiente",
+    officialUrl: "https://www.regione.calabria.it/",
+    keywords: ["raccolta differenziata", "rifiuti", "ambiente", "igiene"],
+  },
+  {
+    slug: "ministero-lavoro-inclusione-sociale-2025",
+    title: "Fondo per l'inclusione e l'assistenza sociale",
+    enteErogatore: "Ministero del Lavoro e delle Politiche Sociali",
+    description:
+      "Risorse per progetti di inclusione sociale, assistenza agli anziani e contrasto alla povertà.",
+    eligibility: "Ambiti territoriali sociali. Progetto coprogettato col terzo settore.",
+    importoStanziato: "900000.00",
+    importoMedioAggiudicato: "150000.00",
+    daysToScadenza: -10,
+    status: "concluso",
+    settore: "sociale",
+    officialUrl: "https://www.lavoro.gov.it/",
+    keywords: ["inclusione", "assistenza", "anziani", "sociale", "povertà"],
+  },
+];
+
+async function seedBandi(): Promise<void> {
+  console.log(`Seeding ${SAMPLE_BANDI.length} bandi...`);
+  const now = Date.now();
+  for (const b of SAMPLE_BANDI) {
+    const scadenza =
+      b.daysToScadenza == null
+        ? null
+        : new Date(now + b.daysToScadenza * 24 * 60 * 60 * 1000);
+    await db
+      .insert(bandiTable)
+      .values({
+        slug: b.slug,
+        title: b.title,
+        enteErogatore: b.enteErogatore,
+        description: b.description,
+        eligibility: b.eligibility,
+        importoStanziato: b.importoStanziato,
+        importoMedioAggiudicato: b.importoMedioAggiudicato,
+        scadenza,
+        status: b.status,
+        settore: b.settore,
+        officialUrl: b.officialUrl,
+        source: "manual",
+        keywords: b.keywords,
+      })
+      // Non distruttivo: la voce corrente curata dalla redazione resta intatta.
+      .onConflictDoNothing({ target: bandiTable.slug });
+  }
+}
+
 // Popola il catalogo della sezione "Performance del Comune": categorie e
 // indicatori. Non distruttivo: aggiorna i metadati per slug (upsert) senza
 // toccare le serie storiche già presenti. Eseguibile in modo idempotente.
@@ -1510,6 +1652,7 @@ export async function seed() {
   await seedOversightOpinions();
   await seedPerformance();
   await seedFundamentalActs();
+  await seedBandi();
 }
 
 const entryPath = process.argv[1] ?? "";

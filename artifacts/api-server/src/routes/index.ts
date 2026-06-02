@@ -16,6 +16,7 @@ import oversightRouter from "./oversight";
 import performanceRouter from "./performance";
 import fundamentalActsRouter from "./fundamentalActs";
 import legalityRouter from "./legality";
+import bandiRouter from "./bandi";
 
 const router: IRouter = Router();
 
@@ -36,5 +37,6 @@ router.use(oversightRouter);
 router.use(performanceRouter);
 router.use(fundamentalActsRouter);
 router.use(legalityRouter);
+router.use(bandiRouter);
 
 export default router;
