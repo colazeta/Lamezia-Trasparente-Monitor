@@ -58,6 +58,8 @@ vi.mock("@workspace/api-client-react", () => {
     "useGetTopThemes",
     "useListCategories",
     "useListContracts",
+    "useListFundamentalActs",
+    "useListFundamentalActsAdmin",
     "useListOpendataDatasets",
     "useListConvocazioni",
     "useListDelibere",
@@ -109,6 +111,7 @@ import { Themes } from "@/pages/Themes";
 import { ThemeDetail } from "@/pages/ThemeDetail";
 import { Contracts } from "@/pages/Contracts";
 import { Albo } from "@/pages/Albo";
+import { AttiFondamentali } from "@/pages/AttiFondamentali";
 import { Delibere } from "@/pages/Delibere";
 import { Convocazioni } from "@/pages/Convocazioni";
 import { SedutaDetail } from "@/pages/SedutaDetail";
@@ -137,6 +140,7 @@ export const PAGES: Array<[string, PageComponent]> = [
   ["ThemeDetail", ThemeDetail],
   ["Contracts", Contracts],
   ["Albo", Albo],
+  ["AttiFondamentali", AttiFondamentali],
   ["Delibere", Delibere],
   ["Convocazioni", Convocazioni],
   ["SedutaDetail", SedutaDetail],

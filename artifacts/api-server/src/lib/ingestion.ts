@@ -16,6 +16,7 @@ import { reconcileThemeCounters } from "./counters";
 import { runOpendataIngestion } from "./opendata";
 import { enrichAlboAttachments } from "./alboAttachments";
 import { runPerformanceIngestion } from "./performanceIndicators";
+import { refreshFundamentalActSuggestions } from "./fundamentalActs";
 
 export const ALBO_SOURCE = "albo-lamezia";
 export const ALBO_LABEL = "Albo Pretorio – Amministrazione Trasparente";
@@ -261,6 +262,9 @@ async function runIngestionCycle(): Promise<void> {
   });
   await runOrganiSedutaSync().catch((err) => {
     logger.error({ err }, "Organi/sedute sync failed");
+  });
+  await refreshFundamentalActSuggestions().catch((err) => {
+    logger.error({ err }, "Fundamental act suggestions refresh failed");
   });
   await reconcileThemeCounters();
 }

@@ -18,3 +18,4 @@
 - [api-server dev route reload](api-server-dev-route-reload.md) — new Express routes 404 until you restart the api-server workflow in the isolated env; not a routing bug.
 - [ISTAT SDMX performance ingestion](istat-sdmx-performance.md) — performance indicators pull real ISTAT SDMX CSV; isolated env often can't reach esploradati.istat.it (env limit, not a bug); never overwrites manual=true values.
 - [Performance categories inline window](performance-inline-window.md) — /performance/categories returns latest/previous/recentValues inline (single pass, no N+1); web sparkline reads recentValues. Isolated env has empty values table.
+- [Atti fondamentali section](atti-fondamentali.md) — public list shows only acts with a published current version (source!=none); admin (token gate) manages all types + confirms auto-suggestions.

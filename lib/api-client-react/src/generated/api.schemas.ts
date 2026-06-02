@@ -416,6 +416,111 @@ export interface Publication {
   firstSeenAt: string;
 }
 
+export type FundamentalActSource = typeof FundamentalActSource[keyof typeof FundamentalActSource];
+
+
+export const FundamentalActSource = {
+  none: 'none',
+  manual: 'manual',
+  auto: 'auto',
+} as const;
+
+export interface FundamentalActFile {
+  name: string;
+  storagePath: string;
+  /** @nullable */
+  contentType: string | null;
+  /** @nullable */
+  size: number | null;
+}
+
+export interface FundamentalActPublicationSummary {
+  id: number;
+  progressivo: string;
+  tipologia: string;
+  oggetto: string;
+  /** @nullable */
+  dataAtto: string | null;
+  /** @nullable */
+  pubStart: string | null;
+  attachments: PublicationAttachment[];
+}
+
+/**
+ * Public view of a fundamental act with a published current entry.
+ */
+export interface FundamentalAct {
+  id: number;
+  slug: string;
+  label: string;
+  /** @nullable */
+  title: string | null;
+  /** @nullable */
+  description: string | null;
+  source: FundamentalActSource;
+  attachments: PublicationAttachment[];
+  updatedAt: string;
+}
+
+/**
+ * Editorial view of a fundamental act, including suggestions.
+ */
+export interface FundamentalActAdmin {
+  id: number;
+  slug: string;
+  label: string;
+  keywords: string[];
+  sortOrder: number;
+  /** @nullable */
+  title: string | null;
+  /** @nullable */
+  description: string | null;
+  source: FundamentalActSource;
+  /** @nullable */
+  manualOfficialUrl: string | null;
+  manualFile: FundamentalActFile | null;
+  attachments: PublicationAttachment[];
+  linkedPublication: FundamentalActPublicationSummary | null;
+  suggestedPublication: FundamentalActPublicationSummary | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface FundamentalActCreateInput {
+  /** @minLength 1 */
+  slug: string;
+  /** @minLength 1 */
+  label: string;
+  keywords?: string[];
+  sortOrder?: number;
+  /** @nullable */
+  title?: string | null;
+  /** @nullable */
+  description?: string | null;
+  /** @nullable */
+  manualOfficialUrl?: string | null;
+  manualFile?: FundamentalActFile | null;
+}
+
+/**
+ * Partial update. Providing `manualOfficialUrl` or `manualFile` sets the
+source to `manual`. Clearing both (null) resets to the auto/none state.
+
+ */
+export interface FundamentalActUpdateInput {
+  /** @minLength 1 */
+  label?: string;
+  keywords?: string[];
+  sortOrder?: number;
+  /** @nullable */
+  title?: string | null;
+  /** @nullable */
+  description?: string | null;
+  /** @nullable */
+  manualOfficialUrl?: string | null;
+  manualFile?: FundamentalActFile | null;
+}
+
 /**
  * Phase of a public-spending lifecycle inferred from an act's type/subject.
  */

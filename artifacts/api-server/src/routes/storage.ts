@@ -19,6 +19,18 @@ const ALLOWED_IMAGE_TYPES = new Set([
 ]);
 const MAX_IMAGE_SIZE_BYTES = 10 * 1024 * 1024; // 10 MB
 
+const ALLOWED_DOCUMENT_TYPES = new Set([
+  "application/pdf",
+  "application/msword",
+  "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+  "application/vnd.ms-excel",
+  "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+  "application/vnd.ms-powerpoint",
+  "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+  "text/plain",
+]);
+const MAX_DOCUMENT_SIZE_BYTES = 30 * 1024 * 1024; // 30 MB
+
 /**
  * POST /storage/uploads/request-url
  *
@@ -66,6 +78,53 @@ router.post(
     res.status(500).json({ error: "Failed to generate upload URL" });
   }
 });
+
+/**
+ * POST /storage/uploads/request-document-url
+ *
+ * Like /storage/uploads/request-url but for documents (PDF / office files up
+ * to ~30MB), used by the "Atti fondamentali" editorial panel to archive a
+ * locally-uploaded copy of a fundamental act.
+ */
+router.post(
+  "/storage/uploads/request-document-url",
+  requireIngestAuth,
+  async (req: Request, res: Response) => {
+    const parsed = RequestUploadUrlBody.safeParse(req.body);
+    if (!parsed.success) {
+      res.status(400).json({ error: "Missing or invalid required fields" });
+      return;
+    }
+
+    const { name, size, contentType } = parsed.data;
+
+    if (!ALLOWED_DOCUMENT_TYPES.has(contentType)) {
+      res.status(400).json({ error: "Tipo di documento non supportato" });
+      return;
+    }
+    if (size > MAX_DOCUMENT_SIZE_BYTES) {
+      res.status(400).json({ error: "Documento troppo grande (max 30 MB)" });
+      return;
+    }
+
+    try {
+      const uploadURL = await objectStorageService.getObjectEntityUploadURL();
+      const objectPath =
+        objectStorageService.normalizeObjectEntityPath(uploadURL);
+
+      res.json(
+        RequestUploadUrlResponse.parse({
+          uploadURL,
+          objectPath,
+          metadata: { name, size, contentType },
+        }),
+      );
+    } catch (error) {
+      req.log.error({ err: error }, "Error generating document upload URL");
+      res.status(500).json({ error: "Failed to generate upload URL" });
+    }
+  },
+);
 
 /**
  * GET /storage/public-objects/*

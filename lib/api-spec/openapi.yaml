@@ -1813,6 +1813,232 @@ paths:
               schema:
                 $ref: "#/components/schemas/Error"
 
+  /storage/uploads/request-document-url:
+    post:
+      tags: [storage]
+      operationId: requestDocumentUploadUrl
+      summary: Request a presigned URL for document upload
+      description: |
+        Returns a presigned GCS URL for direct upload of a document (PDF or
+        office file, up to ~30MB). The client sends JSON metadata here, then
+        uploads the file directly to the returned URL. Protected by the same
+        ingest token as content ingestion.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UploadUrlRequest"
+      responses:
+        "200":
+          description: Presigned upload URL generated.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UploadUrlResponse"
+        "400":
+          description: Missing or invalid required fields.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "401":
+          description: Unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          description: Failed to generate upload URL.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /atti-fondamentali:
+    get:
+      tags: [fundamental-acts]
+      operationId: listFundamentalActs
+      summary: Public list of fundamental acts (latest version only)
+      description: |
+        Returns the fundamental acts that have a published current entry
+        (manual file/link or a confirmed auto-matched publication). Types with
+        no published content are omitted.
+      responses:
+        "200":
+          description: List of fundamental acts.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/FundamentalAct"
+    post:
+      tags: [fundamental-acts]
+      operationId: createFundamentalAct
+      summary: Create a fundamental act type/entry (editorial)
+      security:
+        - ingestToken: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/FundamentalActCreateInput"
+      responses:
+        "201":
+          description: Created.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FundamentalActAdmin"
+        "400":
+          description: Invalid input.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "401":
+          description: Unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /atti-fondamentali/admin:
+    get:
+      tags: [fundamental-acts]
+      operationId: listFundamentalActsAdmin
+      summary: Editorial list of all fundamental acts (incl. suggestions)
+      security:
+        - ingestToken: []
+      responses:
+        "200":
+          description: List of all fundamental acts with editorial metadata.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/FundamentalActAdmin"
+        "401":
+          description: Unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /atti-fondamentali/{id}:
+    patch:
+      tags: [fundamental-acts]
+      operationId: updateFundamentalAct
+      summary: Update a fundamental act (editorial)
+      security:
+        - ingestToken: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/FundamentalActUpdateInput"
+      responses:
+        "200":
+          description: Updated.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FundamentalActAdmin"
+        "400":
+          description: Invalid input.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "401":
+          description: Unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "404":
+          description: Not found.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    delete:
+      tags: [fundamental-acts]
+      operationId: deleteFundamentalAct
+      summary: Delete a fundamental act type (editorial)
+      security:
+        - ingestToken: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted.
+        "401":
+          description: Unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "404":
+          description: Not found.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /atti-fondamentali/{id}/conferma-suggerimento:
+    post:
+      tags: [fundamental-acts]
+      operationId: confirmFundamentalActSuggestion
+      summary: Confirm the auto-matched suggestion as the current entry
+      security:
+        - ingestToken: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Suggestion confirmed.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FundamentalActAdmin"
+        "400":
+          description: No suggestion available.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "401":
+          description: Unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "404":
+          description: Not found.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
 components:
   schemas:
     HealthStatus:
@@ -2470,6 +2696,190 @@ components:
           type: ["string", "null"]
         size:
           type: ["integer", "null"]
+
+    FundamentalActSource:
+      type: string
+      enum: [none, manual, auto]
+
+    FundamentalActFile:
+      type: object
+      required: [name, storagePath, contentType, size]
+      properties:
+        name:
+          type: string
+        storagePath:
+          type: string
+        contentType:
+          type: ["string", "null"]
+        size:
+          type: ["integer", "null"]
+
+    FundamentalActPublicationSummary:
+      type: object
+      required: [id, progressivo, tipologia, oggetto, dataAtto, pubStart, attachments]
+      properties:
+        id:
+          type: integer
+        progressivo:
+          type: string
+        tipologia:
+          type: string
+        oggetto:
+          type: string
+        dataAtto:
+          type: ["string", "null"]
+        pubStart:
+          type: ["string", "null"]
+        attachments:
+          type: array
+          items:
+            $ref: "#/components/schemas/PublicationAttachment"
+
+    FundamentalAct:
+      type: object
+      description: Public view of a fundamental act with a published current entry.
+      required:
+        - id
+        - slug
+        - label
+        - title
+        - description
+        - source
+        - attachments
+        - updatedAt
+      properties:
+        id:
+          type: integer
+        slug:
+          type: string
+        label:
+          type: string
+        title:
+          type: ["string", "null"]
+        description:
+          type: ["string", "null"]
+        source:
+          $ref: "#/components/schemas/FundamentalActSource"
+        attachments:
+          type: array
+          items:
+            $ref: "#/components/schemas/PublicationAttachment"
+        updatedAt:
+          type: string
+
+    FundamentalActAdmin:
+      type: object
+      description: Editorial view of a fundamental act, including suggestions.
+      required:
+        - id
+        - slug
+        - label
+        - keywords
+        - sortOrder
+        - title
+        - description
+        - source
+        - manualOfficialUrl
+        - manualFile
+        - attachments
+        - linkedPublication
+        - suggestedPublication
+        - createdAt
+        - updatedAt
+      properties:
+        id:
+          type: integer
+        slug:
+          type: string
+        label:
+          type: string
+        keywords:
+          type: array
+          items:
+            type: string
+        sortOrder:
+          type: integer
+        title:
+          type: ["string", "null"]
+        description:
+          type: ["string", "null"]
+        source:
+          $ref: "#/components/schemas/FundamentalActSource"
+        manualOfficialUrl:
+          type: ["string", "null"]
+        manualFile:
+          oneOf:
+            - $ref: "#/components/schemas/FundamentalActFile"
+            - type: "null"
+        attachments:
+          type: array
+          items:
+            $ref: "#/components/schemas/PublicationAttachment"
+        linkedPublication:
+          oneOf:
+            - $ref: "#/components/schemas/FundamentalActPublicationSummary"
+            - type: "null"
+        suggestedPublication:
+          oneOf:
+            - $ref: "#/components/schemas/FundamentalActPublicationSummary"
+            - type: "null"
+        createdAt:
+          type: string
+        updatedAt:
+          type: string
+
+    FundamentalActCreateInput:
+      type: object
+      required: [slug, label]
+      properties:
+        slug:
+          type: string
+          minLength: 1
+        label:
+          type: string
+          minLength: 1
+        keywords:
+          type: array
+          items:
+            type: string
+        sortOrder:
+          type: integer
+        title:
+          type: ["string", "null"]
+        description:
+          type: ["string", "null"]
+        manualOfficialUrl:
+          type: ["string", "null"]
+        manualFile:
+          oneOf:
+            - $ref: "#/components/schemas/FundamentalActFile"
+            - type: "null"
+
+    FundamentalActUpdateInput:
+      type: object
+      description: |
+        Partial update. Providing `manualOfficialUrl` or `manualFile` sets the
+        source to `manual`. Clearing both (null) resets to the auto/none state.
+      properties:
+        label:
+          type: string
+          minLength: 1
+        keywords:
+          type: array
+          items:
+            type: string
+        sortOrder:
+          type: integer
+        title:
+          type: ["string", "null"]
+        description:
+          type: ["string", "null"]
+        manualOfficialUrl:
+          type: ["string", "null"]
+        manualFile:
+          oneOf:
+            - $ref: "#/components/schemas/FundamentalActFile"
+            - type: "null"
 
     LifecyclePhase:
       type: string

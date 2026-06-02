@@ -19,6 +19,7 @@ import { PareriVigilanza } from "./pages/PareriVigilanza";
 import { PareriVigilanzaDetail } from "./pages/PareriVigilanzaDetail";
 import { Opendata } from "./pages/Opendata";
 import { OpendataDetail } from "./pages/OpendataDetail";
+import { AttiFondamentali } from "./pages/AttiFondamentali";
 import { Performance } from "./pages/Performance";
 import { PerformanceCompare } from "./pages/PerformanceCompare";
 import { PerformanceDetail } from "./pages/PerformanceDetail";
@@ -29,6 +30,7 @@ import { Subscriptions } from "./pages/Subscriptions";
 import { AdminCronistoria } from "./pages/AdminCronistoria";
 import { AdminDomande } from "./pages/AdminDomande";
 import { AdminAppalti } from "./pages/AdminAppalti";
+import { AdminAttiFondamentali } from "./pages/AdminAttiFondamentali";
 import NotFound from "./pages/not-found";
 
 export function Router() {
@@ -42,6 +44,7 @@ export function Router() {
         <Route path="/contratti" component={Contracts} />
         <Route path="/contratti/:id" component={ContractStoryline} />
         <Route path="/albo" component={Albo} />
+        <Route path="/atti-fondamentali" component={AttiFondamentali} />
         <Route path="/delibere" component={Delibere} />
         <Route path="/convocazioni" component={Convocazioni} />
         <Route path="/convocazioni/:id" component={SedutaDetail} />
@@ -64,6 +67,10 @@ export function Router() {
         <Route path="/admin/cronistoria" component={AdminCronistoria} />
         <Route path="/admin/domande" component={AdminDomande} />
         <Route path="/admin/appalti" component={AdminAppalti} />
+        <Route
+          path="/admin/atti-fondamentali"
+          component={AdminAttiFondamentali}
+        />
         <Route component={NotFound} />
       </Switch>
     </MainLayout>

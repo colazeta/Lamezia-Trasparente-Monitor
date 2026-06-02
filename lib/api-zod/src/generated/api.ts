@@ -2054,3 +2054,316 @@ export const DeletePerformanceIndicatorValueParams = zod.object({
 })
 
 
+/**
+ * Returns a presigned GCS URL for direct upload of a document (PDF or
+office file, up to ~30MB). The client sends JSON metadata here, then
+uploads the file directly to the returned URL. Protected by the same
+ingest token as content ingestion.
+
+ * @summary Request a presigned URL for document upload
+ */
+
+
+
+
+
+export const RequestDocumentUploadUrlBody = zod.object({
+  "name": zod.string().min(1).describe('Original file name.'),
+  "size": zod.number().min(1).describe('File size in bytes.'),
+  "contentType": zod.string().min(1).describe('MIME type of the file (e.g. `image\/jpeg`).')
+})
+
+
+
+
+
+
+export const RequestDocumentUploadUrlResponse = zod.object({
+  "uploadURL": zod.string().url().describe('Presigned GCS URL for PUT upload.'),
+  "objectPath": zod.string().describe('Normalized object path (e.g. `\/objects\/uploads\/uuid`). Embed this in the post body.'),
+  "metadata": zod.object({
+  "name": zod.string().min(1).describe('Original file name.'),
+  "size": zod.number().min(1).describe('File size in bytes.'),
+  "contentType": zod.string().min(1).describe('MIME type of the file (e.g. `image\/jpeg`).')
+}).optional()
+})
+
+
+/**
+ * Returns the fundamental acts that have a published current entry
+(manual file/link or a confirmed auto-matched publication). Types with
+no published content are omitted.
+
+ * @summary Public list of fundamental acts (latest version only)
+ */
+export const ListFundamentalActsResponseItem = zod.object({
+  "id": zod.number(),
+  "slug": zod.string(),
+  "label": zod.string(),
+  "title": zod.string().nullable(),
+  "description": zod.string().nullable(),
+  "source": zod.enum(['none', 'manual', 'auto']),
+  "attachments": zod.array(zod.object({
+  "name": zod.string(),
+  "tipo": zod.string(),
+  "officialUrl": zod.string().describe('Direct download link to the specific document on the official portal'),
+  "storagePath": zod.string().nullable().describe('Path of the locally-archived copy, or null if not archived'),
+  "contentType": zod.string().nullable(),
+  "size": zod.number().nullable()
+})),
+  "updatedAt": zod.string()
+}).describe('Public view of a fundamental act with a published current entry.')
+export const ListFundamentalActsResponse = zod.array(ListFundamentalActsResponseItem)
+
+
+/**
+ * @summary Create a fundamental act type/entry (editorial)
+ */
+
+
+
+
+export const CreateFundamentalActBody = zod.object({
+  "slug": zod.string().min(1),
+  "label": zod.string().min(1),
+  "keywords": zod.array(zod.string()).optional(),
+  "sortOrder": zod.number().optional(),
+  "title": zod.string().nullish(),
+  "description": zod.string().nullish(),
+  "manualOfficialUrl": zod.string().nullish(),
+  "manualFile": zod.union([zod.object({
+  "name": zod.string(),
+  "storagePath": zod.string(),
+  "contentType": zod.string().nullable(),
+  "size": zod.number().nullable()
+}),zod.null()]).optional()
+})
+
+
+/**
+ * @summary Editorial list of all fundamental acts (incl. suggestions)
+ */
+export const ListFundamentalActsAdminResponseItem = zod.object({
+  "id": zod.number(),
+  "slug": zod.string(),
+  "label": zod.string(),
+  "keywords": zod.array(zod.string()),
+  "sortOrder": zod.number(),
+  "title": zod.string().nullable(),
+  "description": zod.string().nullable(),
+  "source": zod.enum(['none', 'manual', 'auto']),
+  "manualOfficialUrl": zod.string().nullable(),
+  "manualFile": zod.union([zod.object({
+  "name": zod.string(),
+  "storagePath": zod.string(),
+  "contentType": zod.string().nullable(),
+  "size": zod.number().nullable()
+}),zod.null()]),
+  "attachments": zod.array(zod.object({
+  "name": zod.string(),
+  "tipo": zod.string(),
+  "officialUrl": zod.string().describe('Direct download link to the specific document on the official portal'),
+  "storagePath": zod.string().nullable().describe('Path of the locally-archived copy, or null if not archived'),
+  "contentType": zod.string().nullable(),
+  "size": zod.number().nullable()
+})),
+  "linkedPublication": zod.union([zod.object({
+  "id": zod.number(),
+  "progressivo": zod.string(),
+  "tipologia": zod.string(),
+  "oggetto": zod.string(),
+  "dataAtto": zod.string().nullable(),
+  "pubStart": zod.string().nullable(),
+  "attachments": zod.array(zod.object({
+  "name": zod.string(),
+  "tipo": zod.string(),
+  "officialUrl": zod.string().describe('Direct download link to the specific document on the official portal'),
+  "storagePath": zod.string().nullable().describe('Path of the locally-archived copy, or null if not archived'),
+  "contentType": zod.string().nullable(),
+  "size": zod.number().nullable()
+}))
+}),zod.null()]),
+  "suggestedPublication": zod.union([zod.object({
+  "id": zod.number(),
+  "progressivo": zod.string(),
+  "tipologia": zod.string(),
+  "oggetto": zod.string(),
+  "dataAtto": zod.string().nullable(),
+  "pubStart": zod.string().nullable(),
+  "attachments": zod.array(zod.object({
+  "name": zod.string(),
+  "tipo": zod.string(),
+  "officialUrl": zod.string().describe('Direct download link to the specific document on the official portal'),
+  "storagePath": zod.string().nullable().describe('Path of the locally-archived copy, or null if not archived'),
+  "contentType": zod.string().nullable(),
+  "size": zod.number().nullable()
+}))
+}),zod.null()]),
+  "createdAt": zod.string(),
+  "updatedAt": zod.string()
+}).describe('Editorial view of a fundamental act, including suggestions.')
+export const ListFundamentalActsAdminResponse = zod.array(ListFundamentalActsAdminResponseItem)
+
+
+/**
+ * @summary Update a fundamental act (editorial)
+ */
+export const UpdateFundamentalActParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+
+
+
+export const UpdateFundamentalActBody = zod.object({
+  "label": zod.string().min(1).optional(),
+  "keywords": zod.array(zod.string()).optional(),
+  "sortOrder": zod.number().optional(),
+  "title": zod.string().nullish(),
+  "description": zod.string().nullish(),
+  "manualOfficialUrl": zod.string().nullish(),
+  "manualFile": zod.union([zod.object({
+  "name": zod.string(),
+  "storagePath": zod.string(),
+  "contentType": zod.string().nullable(),
+  "size": zod.number().nullable()
+}),zod.null()]).optional()
+}).describe('Partial update. Providing `manualOfficialUrl` or `manualFile` sets the\nsource to `manual`. Clearing both (null) resets to the auto\/none state.\n')
+
+export const UpdateFundamentalActResponse = zod.object({
+  "id": zod.number(),
+  "slug": zod.string(),
+  "label": zod.string(),
+  "keywords": zod.array(zod.string()),
+  "sortOrder": zod.number(),
+  "title": zod.string().nullable(),
+  "description": zod.string().nullable(),
+  "source": zod.enum(['none', 'manual', 'auto']),
+  "manualOfficialUrl": zod.string().nullable(),
+  "manualFile": zod.union([zod.object({
+  "name": zod.string(),
+  "storagePath": zod.string(),
+  "contentType": zod.string().nullable(),
+  "size": zod.number().nullable()
+}),zod.null()]),
+  "attachments": zod.array(zod.object({
+  "name": zod.string(),
+  "tipo": zod.string(),
+  "officialUrl": zod.string().describe('Direct download link to the specific document on the official portal'),
+  "storagePath": zod.string().nullable().describe('Path of the locally-archived copy, or null if not archived'),
+  "contentType": zod.string().nullable(),
+  "size": zod.number().nullable()
+})),
+  "linkedPublication": zod.union([zod.object({
+  "id": zod.number(),
+  "progressivo": zod.string(),
+  "tipologia": zod.string(),
+  "oggetto": zod.string(),
+  "dataAtto": zod.string().nullable(),
+  "pubStart": zod.string().nullable(),
+  "attachments": zod.array(zod.object({
+  "name": zod.string(),
+  "tipo": zod.string(),
+  "officialUrl": zod.string().describe('Direct download link to the specific document on the official portal'),
+  "storagePath": zod.string().nullable().describe('Path of the locally-archived copy, or null if not archived'),
+  "contentType": zod.string().nullable(),
+  "size": zod.number().nullable()
+}))
+}),zod.null()]),
+  "suggestedPublication": zod.union([zod.object({
+  "id": zod.number(),
+  "progressivo": zod.string(),
+  "tipologia": zod.string(),
+  "oggetto": zod.string(),
+  "dataAtto": zod.string().nullable(),
+  "pubStart": zod.string().nullable(),
+  "attachments": zod.array(zod.object({
+  "name": zod.string(),
+  "tipo": zod.string(),
+  "officialUrl": zod.string().describe('Direct download link to the specific document on the official portal'),
+  "storagePath": zod.string().nullable().describe('Path of the locally-archived copy, or null if not archived'),
+  "contentType": zod.string().nullable(),
+  "size": zod.number().nullable()
+}))
+}),zod.null()]),
+  "createdAt": zod.string(),
+  "updatedAt": zod.string()
+}).describe('Editorial view of a fundamental act, including suggestions.')
+
+
+/**
+ * @summary Delete a fundamental act type (editorial)
+ */
+export const DeleteFundamentalActParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+
+/**
+ * @summary Confirm the auto-matched suggestion as the current entry
+ */
+export const ConfirmFundamentalActSuggestionParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const ConfirmFundamentalActSuggestionResponse = zod.object({
+  "id": zod.number(),
+  "slug": zod.string(),
+  "label": zod.string(),
+  "keywords": zod.array(zod.string()),
+  "sortOrder": zod.number(),
+  "title": zod.string().nullable(),
+  "description": zod.string().nullable(),
+  "source": zod.enum(['none', 'manual', 'auto']),
+  "manualOfficialUrl": zod.string().nullable(),
+  "manualFile": zod.union([zod.object({
+  "name": zod.string(),
+  "storagePath": zod.string(),
+  "contentType": zod.string().nullable(),
+  "size": zod.number().nullable()
+}),zod.null()]),
+  "attachments": zod.array(zod.object({
+  "name": zod.string(),
+  "tipo": zod.string(),
+  "officialUrl": zod.string().describe('Direct download link to the specific document on the official portal'),
+  "storagePath": zod.string().nullable().describe('Path of the locally-archived copy, or null if not archived'),
+  "contentType": zod.string().nullable(),
+  "size": zod.number().nullable()
+})),
+  "linkedPublication": zod.union([zod.object({
+  "id": zod.number(),
+  "progressivo": zod.string(),
+  "tipologia": zod.string(),
+  "oggetto": zod.string(),
+  "dataAtto": zod.string().nullable(),
+  "pubStart": zod.string().nullable(),
+  "attachments": zod.array(zod.object({
+  "name": zod.string(),
+  "tipo": zod.string(),
+  "officialUrl": zod.string().describe('Direct download link to the specific document on the official portal'),
+  "storagePath": zod.string().nullable().describe('Path of the locally-archived copy, or null if not archived'),
+  "contentType": zod.string().nullable(),
+  "size": zod.number().nullable()
+}))
+}),zod.null()]),
+  "suggestedPublication": zod.union([zod.object({
+  "id": zod.number(),
+  "progressivo": zod.string(),
+  "tipologia": zod.string(),
+  "oggetto": zod.string(),
+  "dataAtto": zod.string().nullable(),
+  "pubStart": zod.string().nullable(),
+  "attachments": zod.array(zod.object({
+  "name": zod.string(),
+  "tipo": zod.string(),
+  "officialUrl": zod.string().describe('Direct download link to the specific document on the official portal'),
+  "storagePath": zod.string().nullable().describe('Path of the locally-archived copy, or null if not archived'),
+  "contentType": zod.string().nullable(),
+  "size": zod.number().nullable()
+}))
+}),zod.null()]),
+  "createdAt": zod.string(),
+  "updatedAt": zod.string()
+}).describe('Editorial view of a fundamental act, including suggestions.')
+
+

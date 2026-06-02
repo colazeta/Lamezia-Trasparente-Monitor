@@ -18,6 +18,7 @@ import {
   oversightOpinionDocumentsTable,
   performanceCategoriesTable,
   performanceIndicatorsTable,
+  fundamentalActsTable,
 } from "./schema";
 import { classifyMacrotema } from "./macrotemi";
 import {
@@ -1271,6 +1272,83 @@ async function seedOversightOpinions(): Promise<void> {
   console.log("Oversight opinions seed complete.");
 }
 
+// Insieme iniziale di tipi di atto fondamentale. L'elenco è estendibile dalla
+// redazione (aggiungere/rimuovere voci dal pannello), perciò qui si fa solo un
+// upsert non distruttivo: si mantengono le voci correnti già gestite a mano.
+const FUNDAMENTAL_ACT_TYPES: {
+  slug: string;
+  label: string;
+  keywords: string[];
+}[] = [
+  {
+    slug: "piao",
+    label: "PIAO – Piano Integrato di Attività e Organizzazione",
+    keywords: ["piao", "piano integrato di attività"],
+  },
+  {
+    slug: "dup",
+    label: "DUP – Documento Unico di Programmazione",
+    keywords: ["dup", "documento unico di programmazione"],
+  },
+  {
+    slug: "defr",
+    label: "DEFR – Documento di Economia e Finanza Regionale",
+    keywords: ["defr", "documento di economia e finanza regionale"],
+  },
+  {
+    slug: "bilancio-previsione",
+    label: "Bilancio di previsione",
+    keywords: ["bilancio di previsione", "bilancio previsionale"],
+  },
+  {
+    slug: "rendiconto-gestione",
+    label: "Rendiconto della gestione (Bilancio consuntivo)",
+    keywords: ["rendiconto della gestione", "bilancio consuntivo", "rendiconto"],
+  },
+  {
+    slug: "statuto-comunale",
+    label: "Statuto comunale",
+    keywords: ["statuto comunale", "statuto del comune"],
+  },
+  {
+    slug: "regolamenti-comunali",
+    label: "Regolamenti comunali principali",
+    keywords: ["regolamento comunale", "regolamenti comunali"],
+  },
+  {
+    slug: "piano-opere-pubbliche",
+    label: "Piano triennale delle opere pubbliche",
+    keywords: [
+      "piano triennale delle opere pubbliche",
+      "programma triennale dei lavori pubblici",
+      "opere pubbliche",
+    ],
+  },
+];
+
+async function seedFundamentalActs(): Promise<void> {
+  console.log(
+    `Seeding ${FUNDAMENTAL_ACT_TYPES.length} fundamental act types...`,
+  );
+  for (let i = 0; i < FUNDAMENTAL_ACT_TYPES.length; i++) {
+    const t = FUNDAMENTAL_ACT_TYPES[i];
+    await db
+      .insert(fundamentalActsTable)
+      .values({
+        slug: t.slug,
+        label: t.label,
+        keywords: t.keywords,
+        sortOrder: i,
+      })
+      // Aggiorna solo metadati del tipo: non tocca la voce corrente (title,
+      // description, source, file/link) gestita dalla redazione.
+      .onConflictDoUpdate({
+        target: fundamentalActsTable.slug,
+        set: { label: t.label, keywords: t.keywords, sortOrder: i },
+      });
+  }
+}
+
 // Popola il catalogo della sezione "Performance del Comune": categorie e
 // indicatori. Non distruttivo: aggiorna i metadati per slug (upsert) senza
 // toccare le serie storiche già presenti. Eseguibile in modo idempotente.
@@ -1423,6 +1501,7 @@ export async function seed() {
   await runOrganiSedutaSync();
   await seedOversightOpinions();
   await seedPerformance();
+  await seedFundamentalActs();
 }
 
 const entryPath = process.argv[1] ?? "";

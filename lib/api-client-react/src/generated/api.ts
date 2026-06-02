@@ -29,6 +29,10 @@ import type {
   Error,
   FeedStatus,
   FollowInput,
+  FundamentalAct,
+  FundamentalActAdmin,
+  FundamentalActCreateInput,
+  FundamentalActUpdateInput,
   GetContractsAnalyticsParams,
   GetPublicationsTimelineParams,
   HealthStatus,
@@ -5085,5 +5089,522 @@ export const useDeletePerformanceIndicatorValue = <TError = ErrorType<Error>,
         TContext
       > => {
       return useMutation(getDeletePerformanceIndicatorValueMutationOptions(options));
+    }
+
+export const getRequestDocumentUploadUrlUrl = () => {
+
+
+
+
+  return `/api/storage/uploads/request-document-url`
+}
+
+/**
+ * Returns a presigned GCS URL for direct upload of a document (PDF or
+office file, up to ~30MB). The client sends JSON metadata here, then
+uploads the file directly to the returned URL. Protected by the same
+ingest token as content ingestion.
+
+ * @summary Request a presigned URL for document upload
+ */
+export const requestDocumentUploadUrl = async (uploadUrlRequest: UploadUrlRequest, options?: RequestInit): Promise<UploadUrlResponse> => {
+
+  return customFetch<UploadUrlResponse>(getRequestDocumentUploadUrlUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      uploadUrlRequest,)
+  }
+);}
+
+
+
+
+export const getRequestDocumentUploadUrlMutationOptions = <TError = ErrorType<Error>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof requestDocumentUploadUrl>>, TError,{data: BodyType<UploadUrlRequest>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof requestDocumentUploadUrl>>, TError,{data: BodyType<UploadUrlRequest>}, TContext> => {
+
+const mutationKey = ['requestDocumentUploadUrl'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof requestDocumentUploadUrl>>, {data: BodyType<UploadUrlRequest>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  requestDocumentUploadUrl(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type RequestDocumentUploadUrlMutationResult = NonNullable<Awaited<ReturnType<typeof requestDocumentUploadUrl>>>
+    export type RequestDocumentUploadUrlMutationBody = BodyType<UploadUrlRequest>
+    export type RequestDocumentUploadUrlMutationError = ErrorType<Error>
+
+    /**
+ * @summary Request a presigned URL for document upload
+ */
+export const useRequestDocumentUploadUrl = <TError = ErrorType<Error>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof requestDocumentUploadUrl>>, TError,{data: BodyType<UploadUrlRequest>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof requestDocumentUploadUrl>>,
+        TError,
+        {data: BodyType<UploadUrlRequest>},
+        TContext
+      > => {
+      return useMutation(getRequestDocumentUploadUrlMutationOptions(options));
+    }
+
+export const getListFundamentalActsUrl = () => {
+
+
+
+
+  return `/api/atti-fondamentali`
+}
+
+/**
+ * Returns the fundamental acts that have a published current entry
+(manual file/link or a confirmed auto-matched publication). Types with
+no published content are omitted.
+
+ * @summary Public list of fundamental acts (latest version only)
+ */
+export const listFundamentalActs = async ( options?: RequestInit): Promise<FundamentalAct[]> => {
+
+  return customFetch<FundamentalAct[]>(getListFundamentalActsUrl(),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getListFundamentalActsQueryKey = () => {
+    return [
+    `/api/atti-fondamentali`
+    ] as const;
+    }
+
+
+export const getListFundamentalActsQueryOptions = <TData = Awaited<ReturnType<typeof listFundamentalActs>>, TError = ErrorType<unknown>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listFundamentalActs>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListFundamentalActsQueryKey();
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listFundamentalActs>>> = ({ signal }) => listFundamentalActs({ signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listFundamentalActs>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ListFundamentalActsQueryResult = NonNullable<Awaited<ReturnType<typeof listFundamentalActs>>>
+export type ListFundamentalActsQueryError = ErrorType<unknown>
+
+
+/**
+ * @summary Public list of fundamental acts (latest version only)
+ */
+
+export function useListFundamentalActs<TData = Awaited<ReturnType<typeof listFundamentalActs>>, TError = ErrorType<unknown>>(
+  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listFundamentalActs>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getListFundamentalActsQueryOptions(options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
+
+
+
+export const getCreateFundamentalActUrl = () => {
+
+
+
+
+  return `/api/atti-fondamentali`
+}
+
+/**
+ * @summary Create a fundamental act type/entry (editorial)
+ */
+export const createFundamentalAct = async (fundamentalActCreateInput: FundamentalActCreateInput, options?: RequestInit): Promise<FundamentalActAdmin> => {
+
+  return customFetch<FundamentalActAdmin>(getCreateFundamentalActUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      fundamentalActCreateInput,)
+  }
+);}
+
+
+
+
+export const getCreateFundamentalActMutationOptions = <TError = ErrorType<Error>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createFundamentalAct>>, TError,{data: BodyType<FundamentalActCreateInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof createFundamentalAct>>, TError,{data: BodyType<FundamentalActCreateInput>}, TContext> => {
+
+const mutationKey = ['createFundamentalAct'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createFundamentalAct>>, {data: BodyType<FundamentalActCreateInput>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  createFundamentalAct(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type CreateFundamentalActMutationResult = NonNullable<Awaited<ReturnType<typeof createFundamentalAct>>>
+    export type CreateFundamentalActMutationBody = BodyType<FundamentalActCreateInput>
+    export type CreateFundamentalActMutationError = ErrorType<Error>
+
+    /**
+ * @summary Create a fundamental act type/entry (editorial)
+ */
+export const useCreateFundamentalAct = <TError = ErrorType<Error>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createFundamentalAct>>, TError,{data: BodyType<FundamentalActCreateInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof createFundamentalAct>>,
+        TError,
+        {data: BodyType<FundamentalActCreateInput>},
+        TContext
+      > => {
+      return useMutation(getCreateFundamentalActMutationOptions(options));
+    }
+
+export const getListFundamentalActsAdminUrl = () => {
+
+
+
+
+  return `/api/atti-fondamentali/admin`
+}
+
+/**
+ * @summary Editorial list of all fundamental acts (incl. suggestions)
+ */
+export const listFundamentalActsAdmin = async ( options?: RequestInit): Promise<FundamentalActAdmin[]> => {
+
+  return customFetch<FundamentalActAdmin[]>(getListFundamentalActsAdminUrl(),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getListFundamentalActsAdminQueryKey = () => {
+    return [
+    `/api/atti-fondamentali/admin`
+    ] as const;
+    }
+
+
+export const getListFundamentalActsAdminQueryOptions = <TData = Awaited<ReturnType<typeof listFundamentalActsAdmin>>, TError = ErrorType<Error>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listFundamentalActsAdmin>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListFundamentalActsAdminQueryKey();
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listFundamentalActsAdmin>>> = ({ signal }) => listFundamentalActsAdmin({ signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listFundamentalActsAdmin>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ListFundamentalActsAdminQueryResult = NonNullable<Awaited<ReturnType<typeof listFundamentalActsAdmin>>>
+export type ListFundamentalActsAdminQueryError = ErrorType<Error>
+
+
+/**
+ * @summary Editorial list of all fundamental acts (incl. suggestions)
+ */
+
+export function useListFundamentalActsAdmin<TData = Awaited<ReturnType<typeof listFundamentalActsAdmin>>, TError = ErrorType<Error>>(
+  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listFundamentalActsAdmin>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getListFundamentalActsAdminQueryOptions(options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
+
+
+
+export const getUpdateFundamentalActUrl = (id: number,) => {
+
+
+
+
+  return `/api/atti-fondamentali/${id}`
+}
+
+/**
+ * @summary Update a fundamental act (editorial)
+ */
+export const updateFundamentalAct = async (id: number,
+    fundamentalActUpdateInput: FundamentalActUpdateInput, options?: RequestInit): Promise<FundamentalActAdmin> => {
+
+  return customFetch<FundamentalActAdmin>(getUpdateFundamentalActUrl(id),
+  {
+    ...options,
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      fundamentalActUpdateInput,)
+  }
+);}
+
+
+
+
+export const getUpdateFundamentalActMutationOptions = <TError = ErrorType<Error>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateFundamentalAct>>, TError,{id: number;data: BodyType<FundamentalActUpdateInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof updateFundamentalAct>>, TError,{id: number;data: BodyType<FundamentalActUpdateInput>}, TContext> => {
+
+const mutationKey = ['updateFundamentalAct'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof updateFundamentalAct>>, {id: number;data: BodyType<FundamentalActUpdateInput>}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  updateFundamentalAct(id,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type UpdateFundamentalActMutationResult = NonNullable<Awaited<ReturnType<typeof updateFundamentalAct>>>
+    export type UpdateFundamentalActMutationBody = BodyType<FundamentalActUpdateInput>
+    export type UpdateFundamentalActMutationError = ErrorType<Error>
+
+    /**
+ * @summary Update a fundamental act (editorial)
+ */
+export const useUpdateFundamentalAct = <TError = ErrorType<Error>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateFundamentalAct>>, TError,{id: number;data: BodyType<FundamentalActUpdateInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof updateFundamentalAct>>,
+        TError,
+        {id: number;data: BodyType<FundamentalActUpdateInput>},
+        TContext
+      > => {
+      return useMutation(getUpdateFundamentalActMutationOptions(options));
+    }
+
+export const getDeleteFundamentalActUrl = (id: number,) => {
+
+
+
+
+  return `/api/atti-fondamentali/${id}`
+}
+
+/**
+ * @summary Delete a fundamental act type (editorial)
+ */
+export const deleteFundamentalAct = async (id: number, options?: RequestInit): Promise<void> => {
+
+  return customFetch<void>(getDeleteFundamentalActUrl(id),
+  {
+    ...options,
+    method: 'DELETE'
+
+
+  }
+);}
+
+
+
+
+export const getDeleteFundamentalActMutationOptions = <TError = ErrorType<Error>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteFundamentalAct>>, TError,{id: number}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof deleteFundamentalAct>>, TError,{id: number}, TContext> => {
+
+const mutationKey = ['deleteFundamentalAct'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof deleteFundamentalAct>>, {id: number}> = (props) => {
+          const {id} = props ?? {};
+
+          return  deleteFundamentalAct(id,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type DeleteFundamentalActMutationResult = NonNullable<Awaited<ReturnType<typeof deleteFundamentalAct>>>
+
+    export type DeleteFundamentalActMutationError = ErrorType<Error>
+
+    /**
+ * @summary Delete a fundamental act type (editorial)
+ */
+export const useDeleteFundamentalAct = <TError = ErrorType<Error>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteFundamentalAct>>, TError,{id: number}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof deleteFundamentalAct>>,
+        TError,
+        {id: number},
+        TContext
+      > => {
+      return useMutation(getDeleteFundamentalActMutationOptions(options));
+    }
+
+export const getConfirmFundamentalActSuggestionUrl = (id: number,) => {
+
+
+
+
+  return `/api/atti-fondamentali/${id}/conferma-suggerimento`
+}
+
+/**
+ * @summary Confirm the auto-matched suggestion as the current entry
+ */
+export const confirmFundamentalActSuggestion = async (id: number, options?: RequestInit): Promise<FundamentalActAdmin> => {
+
+  return customFetch<FundamentalActAdmin>(getConfirmFundamentalActSuggestionUrl(id),
+  {
+    ...options,
+    method: 'POST'
+
+
+  }
+);}
+
+
+
+
+export const getConfirmFundamentalActSuggestionMutationOptions = <TError = ErrorType<Error>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof confirmFundamentalActSuggestion>>, TError,{id: number}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof confirmFundamentalActSuggestion>>, TError,{id: number}, TContext> => {
+
+const mutationKey = ['confirmFundamentalActSuggestion'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof confirmFundamentalActSuggestion>>, {id: number}> = (props) => {
+          const {id} = props ?? {};
+
+          return  confirmFundamentalActSuggestion(id,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type ConfirmFundamentalActSuggestionMutationResult = NonNullable<Awaited<ReturnType<typeof confirmFundamentalActSuggestion>>>
+
+    export type ConfirmFundamentalActSuggestionMutationError = ErrorType<Error>
+
+    /**
+ * @summary Confirm the auto-matched suggestion as the current entry
+ */
+export const useConfirmFundamentalActSuggestion = <TError = ErrorType<Error>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof confirmFundamentalActSuggestion>>, TError,{id: number}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof confirmFundamentalActSuggestion>>,
+        TError,
+        {id: number},
+        TContext
+      > => {
+      return useMutation(getConfirmFundamentalActSuggestionMutationOptions(options));
     }
 
