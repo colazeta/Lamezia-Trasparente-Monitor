@@ -75,7 +75,7 @@ export function Performance() {
       {/* Header */}
       <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div>
-          <span className="eyebrow text-brand">
+          <span className="eyebrow text-primary">
             <Gauge className="h-3.5 w-3.5" />
             Le prestazioni del Comune
           </span>

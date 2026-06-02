@@ -92,7 +92,7 @@ export function Navbar() {
             <Home className="h-4 w-4" />
             Home
             {location === "/" && (
-              <span className="absolute inset-x-2.5 -bottom-px h-0.5 rounded-full bg-brand" />
+              <span className="absolute inset-x-2.5 -bottom-px h-0.5 rounded-full bg-primary" />
             )}
           </Link>
 
@@ -100,7 +100,7 @@ export function Navbar() {
             <HelpCircle className="h-4 w-4" />
             Domande
             {isActive("/domande") && (
-              <span className="absolute inset-x-2.5 -bottom-px h-0.5 rounded-full bg-brand" />
+              <span className="absolute inset-x-2.5 -bottom-px h-0.5 rounded-full bg-primary" />
             )}
           </Link>
 
@@ -121,7 +121,7 @@ export function Navbar() {
                         href={`/domande?topic=${encodeURIComponent(topic)}`}
                         className="flex cursor-pointer items-center gap-2"
                       >
-                        <Icon className="h-4 w-4 text-brand" />
+                        <Icon className="h-4 w-4 text-primary" />
                         {topic}
                       </Link>
                     </DropdownMenuItem>

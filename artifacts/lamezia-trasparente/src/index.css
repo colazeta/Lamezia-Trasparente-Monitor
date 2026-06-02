@@ -93,14 +93,14 @@
   --elevate-1: rgba(2, 12, 27, .04);
   --elevate-2: rgba(2, 12, 27, .09);
 
-  --background: 210 40% 98%;
+  --background: 220 24% 98%;
   --foreground: 222 47% 11%;
 
-  --border: 218 20% 88%;
+  --border: 220 16% 91%;
 
   --card: 0 0% 100%;
   --card-foreground: 222 47% 11%;
-  --card-border: 218 20% 89%;
+  --card-border: 220 16% 92%;
 
   --sidebar: 222 47% 9%;
   --sidebar-foreground: 210 33% 96%;
@@ -113,18 +113,18 @@
 
   --popover: 0 0% 100%;
   --popover-foreground: 222 47% 11%;
-  --popover-border: 218 20% 89%;
+  --popover-border: 220 16% 92%;
 
   --primary: 219 89% 46%;
   --primary-foreground: 0 0% 100%;
 
-  --secondary: 216 30% 94%;
+  --secondary: 220 18% 96%;
   --secondary-foreground: 222 47% 13%;
 
-  --muted: 216 28% 95%;
+  --muted: 220 18% 96%;
   --muted-foreground: 218 14% 40%;
 
-  --accent: 216 84% 94%;
+  --accent: 216 84% 95%;
   --accent-foreground: 219 89% 40%;
 
   --brand: 14 88% 48%;
@@ -139,7 +139,7 @@
   --destructive: 0 75% 48%;
   --destructive-foreground: 0 0% 100%;
 
-  --input: 218 18% 84%;
+  --input: 220 16% 88%;
   --ring: 219 89% 46%;
 
   --chart-1: 219 89% 50%;
@@ -152,7 +152,7 @@
   --app-font-display: 'Space Grotesk', 'Inter', system-ui, sans-serif;
   --app-font-mono: 'Space Grotesk', Menlo, monospace;
 
-  --radius: 0.5rem;
+  --radius: 0.75rem;
   --tracking-normal: 0em;
   --spacing: 0.25rem;
 
@@ -179,11 +179,11 @@
   --background: 224 44% 8%;
   --foreground: 210 33% 96%;
 
-  --border: 220 26% 20%;
+  --border: 220 22% 18%;
 
   --card: 223 40% 12%;
   --card-foreground: 210 33% 96%;
-  --card-border: 220 26% 22%;
+  --card-border: 220 22% 20%;
 
   --sidebar: 225 48% 6%;
   --sidebar-foreground: 210 33% 96%;
@@ -196,7 +196,7 @@
 
   --popover: 223 40% 12%;
   --popover-foreground: 210 33% 96%;
-  --popover-border: 220 26% 22%;
+  --popover-border: 220 22% 20%;
 
   --primary: 216 94% 62%;
   --primary-foreground: 224 60% 8%;
@@ -238,11 +238,12 @@
   }
 
   body {
-    @apply font-sans antialiased bg-background text-foreground selection:bg-brand/25 selection:text-foreground;
+    @apply font-sans antialiased leading-relaxed bg-background text-foreground selection:bg-brand/25 selection:text-foreground;
   }
 
   h1, h2, h3, h4, h5, h6 {
     @apply font-display tracking-tight text-foreground;
+    text-wrap: balance;
   }
 }
 

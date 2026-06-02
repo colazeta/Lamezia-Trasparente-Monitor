@@ -302,7 +302,7 @@ function AdminEditor({
     <div className="container mx-auto max-w-5xl px-4 py-8 md:py-12">
       <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <span className="eyebrow text-brand">
+          <span className="eyebrow text-primary">
             <Wand2 className="h-3.5 w-3.5" />
             Area Redazione
           </span>

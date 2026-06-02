@@ -34,21 +34,21 @@ export function Footer() {
           <div className="space-y-4">
             <h4 className="eyebrow text-brand">Risorse</h4>
             <ul className="space-y-2.5 text-sm text-sidebar-foreground/70">
-              <li><Link href="/temi" className="hover:text-brand transition-colors">Tutti i Temi</Link></li>
-              <li><Link href="/contratti" className="hover:text-brand transition-colors">Appalti Pubblici</Link></li>
-              <li><Link href="/albo" className="hover:text-brand transition-colors">Albo Pretorio</Link></li>
-              <li><Link href="/statistiche" className="hover:text-brand transition-colors">Statistiche</Link></li>
+              <li><Link href="/temi" className="hover:text-primary transition-colors">Tutti i Temi</Link></li>
+              <li><Link href="/contratti" className="hover:text-primary transition-colors">Appalti Pubblici</Link></li>
+              <li><Link href="/albo" className="hover:text-primary transition-colors">Albo Pretorio</Link></li>
+              <li><Link href="/statistiche" className="hover:text-primary transition-colors">Statistiche</Link></li>
             </ul>
           </div>
 
           <div className="space-y-4">
             <h4 className="eyebrow text-brand">Partecipa</h4>
             <ul className="space-y-2.5 text-sm text-sidebar-foreground/70">
-              <li><Link href="/segnalazioni" className="hover:text-brand transition-colors">Invia Segnalazione</Link></li>
-              <li><Link href="/iscrizioni" className="hover:text-brand transition-colors">Centro Iscrizioni</Link></li>
-              <li><Link href="/metodologia" className="hover:text-brand transition-colors">Metodologia</Link></li>
-              <li><a href="#" className="hover:text-brand transition-colors">Chi Siamo</a></li>
-              <li><a href="#" className="hover:text-brand transition-colors">Contattaci</a></li>
+              <li><Link href="/segnalazioni" className="hover:text-primary transition-colors">Invia Segnalazione</Link></li>
+              <li><Link href="/iscrizioni" className="hover:text-primary transition-colors">Centro Iscrizioni</Link></li>
+              <li><Link href="/metodologia" className="hover:text-primary transition-colors">Metodologia</Link></li>
+              <li><a href="#" className="hover:text-primary transition-colors">Chi Siamo</a></li>
+              <li><a href="#" className="hover:text-primary transition-colors">Contattaci</a></li>
             </ul>
           </div>
         </div>
@@ -57,7 +57,7 @@ export function Footer() {
           <CalendarClock className="h-4 w-4 shrink-0 text-brand" />
           <p>
             {MONITORING_FOOTER_NOTICE}{" "}
-            <Link href="/metodologia" className="font-medium text-sidebar-foreground hover:text-brand transition-colors underline underline-offset-2">
+            <Link href="/metodologia" className="font-medium text-sidebar-foreground hover:text-primary transition-colors underline underline-offset-2">
               Leggi la Metodologia
             </Link>
           </p>
@@ -66,9 +66,9 @@ export function Footer() {
         <div className="mt-6 pt-6 border-t border-sidebar-border flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-sidebar-foreground/60">
           <p>© {new Date().getFullYear()} Iniziativa Civica Lamezia Terme. Tutti i dati sono raccolti da fonti pubbliche.</p>
           <div className="flex gap-4">
-            <a href="#" className="hover:text-brand transition-colors">Privacy</a>
-            <a href="#" className="hover:text-brand transition-colors">Termini</a>
-            <Link href="/admin" className="hover:text-brand transition-colors">Area Redazione</Link>
+            <a href="#" className="hover:text-primary transition-colors">Privacy</a>
+            <a href="#" className="hover:text-primary transition-colors">Termini</a>
+            <Link href="/admin" className="hover:text-primary transition-colors">Area Redazione</Link>
           </div>
         </div>
       </div>

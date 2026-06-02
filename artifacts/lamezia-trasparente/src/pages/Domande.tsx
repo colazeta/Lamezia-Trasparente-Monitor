@@ -65,7 +65,7 @@ export function Domande() {
   return (
     <div className="container mx-auto px-4 py-8 md:py-12">
       <div className="mb-8 max-w-3xl">
-        <span className="eyebrow text-brand">
+        <span className="eyebrow text-primary">
           <HelpCircle className="h-3.5 w-3.5" />
           Le risposte che cerchi
         </span>

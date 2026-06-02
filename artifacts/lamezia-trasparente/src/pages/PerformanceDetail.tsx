@@ -135,7 +135,7 @@ export function PerformanceDetail() {
           {/* Header */}
           <div className="mb-8">
             <div className="mb-3 flex flex-wrap items-center gap-2">
-              <span className="eyebrow text-brand">
+              <span className="eyebrow text-primary">
                 <Gauge className="h-3.5 w-3.5" />
                 Performance del Comune
               </span>

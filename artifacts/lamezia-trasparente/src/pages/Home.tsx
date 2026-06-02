@@ -167,7 +167,7 @@ export function Home() {
       <section className="border-b border-border bg-muted/30 py-16 md:py-24">
         <div className="container mx-auto px-4 md:px-6">
           <div className="mx-auto max-w-3xl text-center">
-            <span className="eyebrow justify-center text-brand">
+            <span className="eyebrow justify-center text-primary">
               <HelpCircle className="h-3.5 w-3.5" />
               Parti da una domanda
             </span>
@@ -232,7 +232,7 @@ export function Home() {
             <div className="lg:col-span-2 space-y-8">
               <div className="flex items-end justify-between gap-4">
                 <div>
-                  <span className="eyebrow text-brand mb-2">Agenda pubblica</span>
+                  <span className="eyebrow text-primary mb-2">Agenda pubblica</span>
                   <h2 className="text-3xl md:text-4xl font-display font-bold tracking-tight mt-2">
                     Prossime Convocazioni
                   </h2>
@@ -272,7 +272,7 @@ export function Home() {
             {/* Sidebar Activity */}
             <div className="space-y-8">
               <div>
-                <span className="eyebrow text-brand mb-2">In tempo reale</span>
+                <span className="eyebrow text-primary mb-2">In tempo reale</span>
                 <h2 className="text-3xl md:text-4xl font-display font-bold tracking-tight mt-2">
                   Attività Recente
                 </h2>

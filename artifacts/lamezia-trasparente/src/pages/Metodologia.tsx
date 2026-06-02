@@ -8,7 +8,7 @@ export function Metodologia() {
   return (
     <div className="container mx-auto px-4 py-8 md:py-12 max-w-3xl">
       <div className="mb-8">
-        <span className="eyebrow text-brand">
+        <span className="eyebrow text-primary">
           <Info className="h-3.5 w-3.5" />
           Come lavoriamo
         </span>

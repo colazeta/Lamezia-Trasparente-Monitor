@@ -10,7 +10,7 @@ export function Themes() {
   return (
     <div className="container mx-auto px-4 py-8 md:py-12">
       <div className="mb-8">
-        <span className="eyebrow text-brand">Osservatorio civico</span>
+        <span className="eyebrow text-primary">Osservatorio civico</span>
         <h1 className="mt-2 text-3xl md:text-4xl font-display font-bold tracking-tight">
           Temi Monitorati
         </h1>

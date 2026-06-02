@@ -214,7 +214,7 @@ export function Contracts() {
       {/* Header */}
       <div className="mb-6 flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
         <div>
-          <span className="eyebrow text-brand">
+          <span className="eyebrow text-primary">
             <FileText className="h-3.5 w-3.5" />
             Soldi pubblici sotto controllo
           </span>
@@ -1069,7 +1069,7 @@ function SpendingByMacrotema({
   return (
     <section id="spesa" className="mb-10 scroll-mt-24">
       <div className="mb-5">
-        <span className="eyebrow text-brand">
+        <span className="eyebrow text-primary">
           <Wallet className="h-3.5 w-3.5" />
           In cosa spende il Comune
         </span>

@@ -97,7 +97,7 @@ export function Albo() {
     <div className="container mx-auto px-4 py-8 md:py-12 max-w-5xl">
       <div className="mb-8 flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
         <div>
-          <span className="eyebrow text-brand">
+          <span className="eyebrow text-primary">
             <ShieldAlert className="h-3.5 w-3.5" />
             Estrazione indipendente in tempo reale
           </span>

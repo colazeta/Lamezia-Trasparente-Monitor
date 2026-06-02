@@ -49,7 +49,7 @@ export function Subscriptions() {
           <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-brand/10 text-brand">
             <Bell className="h-8 w-8" />
           </div>
-          <span className="eyebrow text-brand">Resta informato</span>
+          <span className="eyebrow text-primary">Resta informato</span>
           <h1 className="mt-2 text-3xl md:text-4xl font-display font-bold tracking-tight">
             Centro Iscrizioni
           </h1>

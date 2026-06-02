@@ -86,7 +86,7 @@ export function SedutaDetail() {
             <span className="block h-1.5 w-full bg-brand" />
             <div className="p-6 md:p-8 space-y-4">
               <div className="flex flex-wrap items-center gap-2.5">
-                <span className="eyebrow text-brand">
+                <span className="eyebrow text-primary">
                   <Calendar className="h-3.5 w-3.5" />
                   {formatDate(seduta.dataAtto ?? seduta.pubStart)}
                 </span>

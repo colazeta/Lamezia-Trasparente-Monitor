@@ -310,7 +310,7 @@ export function PerformanceCompare() {
 
       {/* Header */}
       <div className="mb-8">
-        <span className="eyebrow text-brand">
+        <span className="eyebrow text-primary">
           <GitCompare className="h-3.5 w-3.5" />
           Confronto indicatori
         </span>

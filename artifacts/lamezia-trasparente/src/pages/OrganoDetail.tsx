@@ -78,7 +78,7 @@ export function OrganoDetail() {
           <header className="mb-10 overflow-hidden rounded-2xl border border-border bg-muted/30">
             <span className="block h-1.5 w-full bg-brand" />
             <div className="p-6 md:p-8 space-y-4">
-              <span className="eyebrow text-brand">
+              <span className="eyebrow text-primary">
                 <Landmark className="h-3.5 w-3.5" />
                 Organo del Comune
               </span>

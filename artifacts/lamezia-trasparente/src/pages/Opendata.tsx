@@ -101,7 +101,7 @@ export function Opendata() {
     <div className="container mx-auto px-4 py-8 md:py-12 max-w-6xl">
       {/* Header */}
       <div className="mb-6">
-        <span className="eyebrow text-brand">
+        <span className="eyebrow text-primary">
           <Database className="h-3.5 w-3.5" />
           Dati aperti del Comune
         </span>
