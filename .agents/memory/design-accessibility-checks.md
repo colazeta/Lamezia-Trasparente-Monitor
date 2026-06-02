@@ -37,6 +37,19 @@ always use large/bold type, where 3:1 is the correct WCAG AA criterion. Forcing
 pairs >= 4.5 and the four accent pairs >= 3. The contrast test enforces this for
 both `:root` and `.dark`.
 
+## Capturing dark mode in the screenshot tool
+**Rule:** The app-preview screenshot browser cannot have its `rlt-theme`
+localStorage cleared and defaults to light (system pref). To do a *visual* dark
+pass, temporarily hardcode `getInitialTheme()` in
+`src/components/theme/ThemeProvider.tsx` to `return "dark"`, screenshot, then
+revert.
+**Why:** A visual dark pass (task: verifica visiva tema scuro) found every main
+public page already coherent — backgrounds/cards/borders/accents all use the
+`.dark` tokens, no residual light surfaces. The token system holds up; don't
+chase phantom fixes.
+**How to apply:** Only force-dark transiently for capture; always restore the
+real localStorage→system fallback before finishing.
+
 ## Color-literal allowlist
 **Rule:** No `text-white/bg-white/text-black/bg-black` or raw hex outside the
 allowlist; everything else must use semantic tokens.
