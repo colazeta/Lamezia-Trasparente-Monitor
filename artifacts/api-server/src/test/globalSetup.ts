@@ -38,10 +38,9 @@ export default async function setup() {
   // Start from a clean slate every run.
   await recreateDatabase(adminDatabaseUrl, testDatabaseName);
 
-  // Apply the current Drizzle schema to the fresh database. Running the same
-  // push command the project uses for development keeps the schema in sync
-  // without requiring committed migration files.
-  execFileSync("pnpm", ["--filter", "@workspace/db", "run", "push-force"], {
+  // Apply migrations to the fresh database. Using the same migration path as
+  // production ensures tests catch any migration regressions before they ship.
+  execFileSync("pnpm", ["--filter", "@workspace/db", "run", "migrate"], {
     env: { ...process.env, DATABASE_URL: testDatabaseUrl },
     stdio: "inherit",
   });

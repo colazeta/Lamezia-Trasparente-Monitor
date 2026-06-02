@@ -2,6 +2,7 @@ import app from "./app";
 import { logger } from "./lib/logger";
 import { startIngestionScheduler } from "./lib/ingestion";
 import { verifySchema } from "./lib/schemaCheck";
+import { runMigrations } from "@workspace/db";
 
 const rawPort = process.env["PORT"];
 
@@ -24,16 +25,31 @@ app.listen(port, (err) => {
   }
 
   logger.info({ port }, "Server listening");
-  // Keep HTTP serving regardless, but only start ingestion once the schema is
-  // verified clean — drift would otherwise break every ingestion run with 500s.
-  void verifySchema().then((ok) => {
-    if (ok) {
-      startIngestionScheduler();
-    } else {
+
+  // Apply any pending migrations non-interactively, then verify the schema
+  // and start the ingestion scheduler only when everything is clean.
+  void runMigrations()
+    .then(() => {
+      logger.info("Database migrations applied (or already up to date).");
+      return verifySchema();
+    })
+    .catch((err: unknown) => {
       logger.error(
-        "Ingestion scheduler not started: database schema check failed. " +
-          "Resolve the schema drift above and restart the API server.",
+        { err },
+        "Failed to run database migrations at startup. " +
+          "To apply migrations manually: pnpm --filter @workspace/db run migrate. " +
+          "Then restart the API server.",
       );
-    }
-  });
+      return false;
+    })
+    .then((ok) => {
+      if (ok) {
+        startIngestionScheduler();
+      } else {
+        logger.error(
+          "Ingestion scheduler not started: database migration/schema check failed. " +
+            "Resolve the issue above and restart the API server.",
+        );
+      }
+    });
 });

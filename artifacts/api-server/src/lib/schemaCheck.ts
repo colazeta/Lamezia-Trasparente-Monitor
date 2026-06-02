@@ -57,9 +57,12 @@ export async function verifySchema(): Promise<boolean> {
           { table: tableName, missingColumns: missing },
           `Database schema drift detected: table "${tableName}" is missing ` +
             `column(s) [${missing.join(", ")}]. Contract ingestion will fail ` +
-            `until the schema is brought back in sync. Apply the latest schema ` +
-            `with "pnpm --filter db push" (or push-force if it requires a ` +
-            `non-trivial change), then restart the API server.`,
+            `until the schema is brought back in sync. ` +
+            `To apply pending migrations non-interactively (safe, no data loss): ` +
+            `pnpm --filter @workspace/db run migrate. ` +
+            `If there is no migration yet for the change, generate one first: ` +
+            `pnpm --filter @workspace/db run generate, then re-run migrate. ` +
+            `Restart the API server afterwards.`,
         );
       }
     } catch (err) {

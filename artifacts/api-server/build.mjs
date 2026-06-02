@@ -3,12 +3,13 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { build as esbuild } from "esbuild";
 import esbuildPluginPino from "esbuild-plugin-pino";
-import { rm } from "node:fs/promises";
+import { rm, cp } from "node:fs/promises";
 
 // Plugins (e.g. 'esbuild-plugin-pino') may use `require` to resolve dependencies
 globalThis.require = createRequire(import.meta.url);
 
 const artifactDir = path.dirname(fileURLToPath(import.meta.url));
+const workspaceRoot = path.resolve(artifactDir, "../..");
 
 async function buildAll() {
   const distDir = path.resolve(artifactDir, "dist");
@@ -123,6 +124,15 @@ globalThis.__dirname = __bannerPath.dirname(globalThis.__filename);
     `,
     },
   });
+
+  // Copy Drizzle migrations into the dist folder so the bundled server can
+  // apply them at startup via runMigrations() without needing the source tree.
+  // The path.join(__dirname, "migrations") in migrate.ts resolves to this copy.
+  await cp(
+    path.resolve(workspaceRoot, "lib/db/migrations"),
+    path.resolve(distDir, "migrations"),
+    { recursive: true },
+  );
 }
 
 buildAll().catch((err) => {
