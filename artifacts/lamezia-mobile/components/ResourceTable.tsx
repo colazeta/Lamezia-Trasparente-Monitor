@@ -1,7 +1,7 @@
 import { Feather } from "@expo/vector-icons";
 import React, { useMemo, useState } from "react";
 import { Pressable, ScrollView, Share, StyleSheet, Text, View } from "react-native";
-import Svg, { Line, Path, Rect } from "react-native-svg";
+import SvgBase, { Line as LineBase, Path as PathBase, Rect as RectBase } from "react-native-svg";
 
 import { Badge, Skeleton } from "@/components/ui";
 import { useColors } from "@/hooks/useColors";
@@ -10,6 +10,11 @@ import {
   type OpendataColumn,
   type OpendataTableRowsItem,
 } from "@workspace/api-client-react";
+
+const Svg = SvgBase as unknown as React.FC<React.ComponentProps<typeof SvgBase>>;
+const Line = LineBase as unknown as React.FC<React.ComponentProps<typeof LineBase>>;
+const Path = PathBase as unknown as React.FC<React.ComponentProps<typeof PathBase>>;
+const Rect = RectBase as unknown as React.FC<React.ComponentProps<typeof RectBase>>;
 
 const PAGE_SIZE = 12;
 const MAX_CHART_POINTS = 50;

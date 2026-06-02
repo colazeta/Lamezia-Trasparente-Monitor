@@ -1,10 +1,11 @@
 import React, { useCallback, useMemo, useRef, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import MapView, {
-  Marker,
+  Marker as MarkerBase,
   Polygon,
   PROVIDER_DEFAULT,
   type Region,
+  type MapMarkerProps,
 } from "react-native-maps";
 import Supercluster from "supercluster";
 
@@ -16,6 +17,8 @@ import {
   useComuneBoundary,
 } from "@/lib/gis";
 import type { Contract } from "@workspace/api-client-react";
+
+const Marker = MarkerBase as unknown as React.FC<MapMarkerProps>;
 
 type LocatedContract = Contract & { latitude: number; longitude: number };
 

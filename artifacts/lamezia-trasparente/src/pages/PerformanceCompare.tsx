@@ -154,21 +154,13 @@ export function PerformanceCompare() {
   }, [searchString]);
 
   // Fino a MAX_SERIES query per gli indicatori selezionati (numero di hook fisso).
-  const q0 = useGetPerformanceIndicator(slotId(selected, 0), {
-    query: { enabled: hasSlot(selected, 0) },
-  });
-  const q1 = useGetPerformanceIndicator(slotId(selected, 1), {
-    query: { enabled: hasSlot(selected, 1) },
-  });
-  const q2 = useGetPerformanceIndicator(slotId(selected, 2), {
-    query: { enabled: hasSlot(selected, 2) },
-  });
-  const q3 = useGetPerformanceIndicator(slotId(selected, 3), {
-    query: { enabled: hasSlot(selected, 3) },
-  });
-  const q4 = useGetPerformanceIndicator(slotId(selected, 4), {
-    query: { enabled: hasSlot(selected, 4) },
-  });
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const queryOpt = (i: number) => ({ query: { enabled: hasSlot(selected, i) } as any });
+  const q0 = useGetPerformanceIndicator(slotId(selected, 0), queryOpt(0));
+  const q1 = useGetPerformanceIndicator(slotId(selected, 1), queryOpt(1));
+  const q2 = useGetPerformanceIndicator(slotId(selected, 2), queryOpt(2));
+  const q3 = useGetPerformanceIndicator(slotId(selected, 3), queryOpt(3));
+  const q4 = useGetPerformanceIndicator(slotId(selected, 4), queryOpt(4));
   const queries = [q0, q1, q2, q3, q4];
 
   const series = useMemo(() => {

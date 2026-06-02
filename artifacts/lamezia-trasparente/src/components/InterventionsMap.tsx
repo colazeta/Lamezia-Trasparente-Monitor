@@ -44,7 +44,7 @@ type LocatedContract = Contract & { latitude: number; longitude: number };
 type ClusterProps = { cluster: true; cluster_id: number; point_count: number };
 type LeafProps = { cluster?: false; contractId: number };
 
-function clusterIcon(count: number): L.DivIcon {
+function clusterIcon(count: number) {
   // La dimensione cresce in modo discreto con il numero di interventi raggruppati.
   const size = count < 10 ? 36 : count < 50 ? 44 : count < 100 ? 52 : 60;
   return L.divIcon({
@@ -138,7 +138,7 @@ function ClusteredMarkers({
             <Marker
               key={`cluster-${props.cluster_id}`}
               position={[lat, lng]}
-              icon={clusterIcon(count)}
+              icon={clusterIcon(count) as any}
               eventHandlers={{
                 click: () => {
                   const expansionZoom = Math.min(
