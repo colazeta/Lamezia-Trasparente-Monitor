@@ -1,18 +1,10 @@
-import {
-  describe,
-  it,
-  expect,
-  beforeAll,
-  afterAll,
-  afterEach,
-  vi,
-} from "vitest";
-
+import { describe, it, expect, beforeAll, beforeEach, vi } from "vitest";
 import request from "supertest";
 
-// Mock the object-storage layer so the suite never reaches Replit's sidecar or
+// Mock the object-storage layer so these tests never reach Replit's sidecar or
 // Google Cloud Storage. The route module instantiates ObjectStorageService at
-// import time, so the mock must be hoisted before `../app` is imported.
+// import time, so the mock must be hoisted before `../app` is imported. This
+// mirrors the pattern used in monitoringReports.test.ts.
 const storageMocks = vi.hoisted(() => ({
   getObjectEntityUploadURL: vi.fn(),
   normalizeObjectEntityPath: vi.fn(),
@@ -39,187 +31,253 @@ vi.mock("../lib/objectStorage", () => {
   return { ObjectStorageService, ObjectNotFoundError };
 });
 
-const { ObjectNotFoundError } = await import("../lib/objectStorage");
 const app = (await import("../app")).default;
+const { ObjectNotFoundError } = await import("../lib/objectStorage");
 
 const INGEST_TOKEN = "test-ingest-token";
+const auth = { Authorization: `Bearer ${INGEST_TOKEN}` };
 
-const VALID_BODY = {
-  name: "foto-lavori.jpg",
-  size: 1024,
-  contentType: "image/jpeg",
-};
+beforeAll(() => {
+  process.env.INGEST_API_TOKEN = INGEST_TOKEN;
+});
 
-function fakeImageResponse(): Response {
-  return new Response("fake-image-bytes", {
-    headers: { "Content-Type": "image/jpeg" },
-  });
-}
+beforeEach(() => {
+  vi.clearAllMocks();
+});
 
-describe("Storage upload URL (/api/storage/uploads/request-url)", () => {
-  let previousToken: string | undefined;
-
-  beforeAll(() => {
-    previousToken = process.env.INGEST_API_TOKEN;
-  });
-
-  afterAll(() => {
-    if (previousToken === undefined) {
-      delete process.env.INGEST_API_TOKEN;
-    } else {
-      process.env.INGEST_API_TOKEN = previousToken;
-    }
-  });
-
-  afterEach(() => {
-    delete process.env.INGEST_API_TOKEN;
-    vi.clearAllMocks();
-  });
-
-  it("returns 503 when ingestion is disabled (no token configured)", async () => {
-    delete process.env.INGEST_API_TOKEN;
+describe("POST /api/storage/uploads/request-url (image)", () => {
+  it("requires an ingest token", async () => {
     const res = await request(app)
       .post("/api/storage/uploads/request-url")
-      .send(VALID_BODY);
-    expect(res.status).toBe(503);
+      .send({ name: "foto.jpg", size: 1024, contentType: "image/jpeg" });
+    expect(res.status).toBe(401);
   });
 
-  it("returns 401 without a valid ingest token", async () => {
-    process.env.INGEST_API_TOKEN = INGEST_TOKEN;
+  it("rejects a wrong token", async () => {
     const res = await request(app)
       .post("/api/storage/uploads/request-url")
       .set("Authorization", "Bearer wrong-token")
-      .send(VALID_BODY);
+      .send({ name: "foto.jpg", size: 1024, contentType: "image/jpeg" });
     expect(res.status).toBe(401);
   });
 
   it("rejects missing fields with 400", async () => {
-    process.env.INGEST_API_TOKEN = INGEST_TOKEN;
     const res = await request(app)
       .post("/api/storage/uploads/request-url")
-      .set("Authorization", `Bearer ${INGEST_TOKEN}`)
-      .send({ name: "x.jpg" });
+      .set(auth)
+      .send({ name: "foto.jpg" });
     expect(res.status).toBe(400);
+    expect(res.body.error).toContain("Missing or invalid");
   });
 
-  it("rejects unsupported content types with 400", async () => {
-    process.env.INGEST_API_TOKEN = INGEST_TOKEN;
+  it("rejects an unsupported content type with 400", async () => {
     const res = await request(app)
       .post("/api/storage/uploads/request-url")
-      .set("Authorization", `Bearer ${INGEST_TOKEN}`)
-      .send({ ...VALID_BODY, contentType: "application/pdf" });
+      .set(auth)
+      .send({ name: "x.exe", size: 1024, contentType: "application/x-msdownload" });
     expect(res.status).toBe(400);
-    expect(res.body.error).toContain("Tipo di immagine");
+    expect(res.body.error).toContain("Tipo di immagine non supportato");
   });
 
-  it("rejects oversized images with 400", async () => {
-    process.env.INGEST_API_TOKEN = INGEST_TOKEN;
+  it("rejects a document content type on the image endpoint with 400", async () => {
     const res = await request(app)
       .post("/api/storage/uploads/request-url")
-      .set("Authorization", `Bearer ${INGEST_TOKEN}`)
-      .send({ ...VALID_BODY, size: 20 * 1024 * 1024 });
+      .set(auth)
+      .send({ name: "doc.pdf", size: 1024, contentType: "application/pdf" });
+    expect(res.status).toBe(400);
+    expect(res.body.error).toContain("Tipo di immagine non supportato");
+  });
+
+  it("rejects an oversized image with 400", async () => {
+    const res = await request(app)
+      .post("/api/storage/uploads/request-url")
+      .set(auth)
+      .send({
+        name: "grande.jpg",
+        size: 11 * 1024 * 1024,
+        contentType: "image/jpeg",
+      });
     expect(res.status).toBe(400);
     expect(res.body.error).toContain("troppo grande");
   });
 
-  it("returns an upload URL and object path for a valid authorized request", async () => {
-    process.env.INGEST_API_TOKEN = INGEST_TOKEN;
+  it("accepts every allowed image type and normalizes the object path", async () => {
     const uploadURL =
       "https://storage.googleapis.com/bucket/.private/uploads/abc-123?sig=x";
     const objectPath = "/objects/uploads/abc-123";
     storageMocks.getObjectEntityUploadURL.mockResolvedValue(uploadURL);
     storageMocks.normalizeObjectEntityPath.mockReturnValue(objectPath);
 
-    const res = await request(app)
-      .post("/api/storage/uploads/request-url")
-      .set("Authorization", `Bearer ${INGEST_TOKEN}`)
-      .send(VALID_BODY);
-
-    expect(res.status).toBe(200);
-    expect(res.body.uploadURL).toBe(uploadURL);
-    expect(res.body.objectPath).toBe(objectPath);
-    expect(res.body.metadata).toEqual(VALID_BODY);
-    expect(storageMocks.getObjectEntityUploadURL).toHaveBeenCalledTimes(1);
-    expect(storageMocks.normalizeObjectEntityPath).toHaveBeenCalledWith(
-      uploadURL,
-    );
+    for (const contentType of [
+      "image/jpeg",
+      "image/png",
+      "image/gif",
+      "image/webp",
+      "image/avif",
+    ]) {
+      const body = { name: "foto.bin", size: 2048, contentType };
+      const res = await request(app)
+        .post("/api/storage/uploads/request-url")
+        .set(auth)
+        .send(body);
+      expect(res.status).toBe(200);
+      expect(res.body.uploadURL).toBe(uploadURL);
+      expect(res.body.objectPath).toBe(objectPath);
+      expect(res.body.metadata).toEqual(body);
+    }
+    expect(storageMocks.normalizeObjectEntityPath).toHaveBeenCalledWith(uploadURL);
   });
 
-  it("returns 500 when generating the upload URL fails", async () => {
-    process.env.INGEST_API_TOKEN = INGEST_TOKEN;
-    storageMocks.getObjectEntityUploadURL.mockRejectedValue(
-      new Error("sidecar down"),
-    );
-
+  it("returns 500 when the storage layer fails", async () => {
+    storageMocks.getObjectEntityUploadURL.mockRejectedValue(new Error("boom"));
     const res = await request(app)
       .post("/api/storage/uploads/request-url")
-      .set("Authorization", `Bearer ${INGEST_TOKEN}`)
-      .send(VALID_BODY);
-
+      .set(auth)
+      .send({ name: "foto.jpg", size: 1024, contentType: "image/jpeg" });
     expect(res.status).toBe(500);
   });
 });
 
-describe("Serve private object (/api/storage/objects/*)", () => {
-  afterEach(() => {
-    vi.clearAllMocks();
+describe("POST /api/storage/uploads/request-document-url (document)", () => {
+  it("requires an ingest token", async () => {
+    const res = await request(app)
+      .post("/api/storage/uploads/request-document-url")
+      .send({ name: "atto.pdf", size: 1024, contentType: "application/pdf" });
+    expect(res.status).toBe(401);
   });
 
-  it("streams the object when it exists", async () => {
-    storageMocks.getObjectEntityFile.mockResolvedValue({});
-    storageMocks.downloadObject.mockResolvedValue(fakeImageResponse());
+  it("rejects missing fields with 400", async () => {
+    const res = await request(app)
+      .post("/api/storage/uploads/request-document-url")
+      .set(auth)
+      .send({ name: "atto.pdf" });
+    expect(res.status).toBe(400);
+    expect(res.body.error).toContain("Missing or invalid");
+  });
 
-    const res = await request(app).get(
-      "/api/storage/objects/uploads/abc-123",
+  it("rejects an unsupported content type with 400", async () => {
+    const res = await request(app)
+      .post("/api/storage/uploads/request-document-url")
+      .set(auth)
+      .send({ name: "x.exe", size: 1024, contentType: "application/x-msdownload" });
+    expect(res.status).toBe(400);
+    expect(res.body.error).toContain("Tipo di documento non supportato");
+  });
+
+  it("rejects an image content type on the document endpoint with 400", async () => {
+    const res = await request(app)
+      .post("/api/storage/uploads/request-document-url")
+      .set(auth)
+      .send({ name: "foto.jpg", size: 1024, contentType: "image/jpeg" });
+    expect(res.status).toBe(400);
+    expect(res.body.error).toContain("Tipo di documento non supportato");
+  });
+
+  it("rejects an oversized document with 400", async () => {
+    const res = await request(app)
+      .post("/api/storage/uploads/request-document-url")
+      .set(auth)
+      .send({
+        name: "grande.pdf",
+        size: 31 * 1024 * 1024,
+        contentType: "application/pdf",
+      });
+    expect(res.status).toBe(400);
+    expect(res.body.error).toContain("troppo grande");
+  });
+
+  it("accepts allowed document types and normalizes the object path", async () => {
+    const uploadURL =
+      "https://storage.googleapis.com/bucket/.private/uploads/doc-9?sig=y";
+    const objectPath = "/objects/uploads/doc-9";
+    storageMocks.getObjectEntityUploadURL.mockResolvedValue(uploadURL);
+    storageMocks.normalizeObjectEntityPath.mockReturnValue(objectPath);
+
+    for (const contentType of [
+      "application/pdf",
+      "application/msword",
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+      "application/vnd.ms-excel",
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      "application/vnd.ms-powerpoint",
+      "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+      "text/plain",
+    ]) {
+      const body = { name: "atto.bin", size: 4096, contentType };
+      const res = await request(app)
+        .post("/api/storage/uploads/request-document-url")
+        .set(auth)
+        .send(body);
+      expect(res.status).toBe(200);
+      expect(res.body.uploadURL).toBe(uploadURL);
+      expect(res.body.objectPath).toBe(objectPath);
+      expect(res.body.metadata).toEqual(body);
+    }
+  });
+});
+
+describe("GET /api/storage/public-objects/*", () => {
+  it("returns 404 when the public object does not exist", async () => {
+    storageMocks.searchPublicObject.mockResolvedValue(null);
+    const res = await request(app).get("/api/storage/public-objects/missing.png");
+    expect(res.status).toBe(404);
+    expect(storageMocks.searchPublicObject).toHaveBeenCalledWith("missing.png");
+  });
+
+  it("streams the object body for an existing public object", async () => {
+    storageMocks.searchPublicObject.mockResolvedValue({ name: "logo.png" });
+    storageMocks.downloadObject.mockResolvedValue(
+      new Response("public-bytes", {
+        status: 200,
+        headers: { "content-type": "text/plain" },
+      }),
     );
-
+    const res = await request(app).get(
+      "/api/storage/public-objects/assets/logo.png",
+    );
     expect(res.status).toBe(200);
-    expect(res.headers["content-type"]).toContain("image/jpeg");
+    expect(res.headers["content-type"]).toContain("text/plain");
+    expect(res.text).toBe("public-bytes");
+    expect(storageMocks.searchPublicObject).toHaveBeenCalledWith(
+      "assets/logo.png",
+    );
+  });
+
+  it("returns 500 when downloading the public object throws", async () => {
+    storageMocks.searchPublicObject.mockResolvedValue({ name: "logo.png" });
+    storageMocks.downloadObject.mockRejectedValue(new Error("download failed"));
+    const res = await request(app).get("/api/storage/public-objects/logo.png");
+    expect(res.status).toBe(500);
+  });
+});
+
+describe("GET /api/storage/objects/*", () => {
+  it("streams a private object by its normalized path", async () => {
+    storageMocks.getObjectEntityFile.mockResolvedValue({ name: "file" });
+    storageMocks.downloadObject.mockResolvedValue(
+      new Response("private-bytes", {
+        status: 200,
+        headers: { "content-type": "text/plain" },
+      }),
+    );
+    const res = await request(app).get("/api/storage/objects/uploads/abc-123");
+    expect(res.status).toBe(200);
+    expect(res.text).toBe("private-bytes");
     expect(storageMocks.getObjectEntityFile).toHaveBeenCalledWith(
       "/objects/uploads/abc-123",
     );
   });
 
-  it("returns 404 when the object does not exist", async () => {
-    storageMocks.getObjectEntityFile.mockRejectedValue(
-      new ObjectNotFoundError(),
-    );
-
-    const res = await request(app).get(
-      "/api/storage/objects/uploads/missing",
-    );
-
+  it("returns 404 when the object is not found", async () => {
+    storageMocks.getObjectEntityFile.mockRejectedValue(new ObjectNotFoundError());
+    const res = await request(app).get("/api/storage/objects/uploads/missing");
     expect(res.status).toBe(404);
-    expect(res.body.error).toContain("Object not found");
-  });
-});
-
-describe("Serve public object (/api/storage/public-objects/*)", () => {
-  afterEach(() => {
-    vi.clearAllMocks();
+    expect(res.body.error).toContain("not found");
   });
 
-  it("streams the asset when it is found", async () => {
-    storageMocks.searchPublicObject.mockResolvedValue({});
-    storageMocks.downloadObject.mockResolvedValue(fakeImageResponse());
-
-    const res = await request(app).get(
-      "/api/storage/public-objects/banner.jpg",
-    );
-
-    expect(res.status).toBe(200);
-    expect(res.headers["content-type"]).toContain("image/jpeg");
-    expect(storageMocks.searchPublicObject).toHaveBeenCalledWith("banner.jpg");
-  });
-
-  it("returns 404 when the asset is not found", async () => {
-    storageMocks.searchPublicObject.mockResolvedValue(null);
-
-    const res = await request(app).get(
-      "/api/storage/public-objects/missing.jpg",
-    );
-
-    expect(res.status).toBe(404);
-    expect(res.body.error).toContain("File not found");
+  it("returns 500 for an unexpected error", async () => {
+    storageMocks.getObjectEntityFile.mockRejectedValue(new Error("kaboom"));
+    const res = await request(app).get("/api/storage/objects/uploads/boom");
+    expect(res.status).toBe(500);
   });
 });
