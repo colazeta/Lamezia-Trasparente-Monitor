@@ -7,6 +7,7 @@ import {
   Landmark,
   Scale,
   Gavel,
+  FileSearch,
   ArrowRight,
 } from "lucide-react";
 
@@ -49,6 +50,12 @@ const ADMIN_PANELS: AdminPanel[] = [
     title: "Atti fondamentali",
     description: "Gestisci gli atti fondamentali dell'amministrazione.",
     icon: Landmark,
+  },
+  {
+    href: "/admin/accesso-civico",
+    title: "Accesso Civico",
+    description: "Modera le richieste di accesso civico e i loro esiti.",
+    icon: FileSearch,
   },
   {
     href: "/admin/legalita",

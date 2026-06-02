@@ -1898,6 +1898,151 @@ export interface OversightOpinionDocumentInput {
   date?: string;
 }
 
+/**
+ * Type of access request, which determines the legal references:
+`generalizzato` (FOIA, art. 5 c.2 d.lgs. 33/2013), `semplice` (access to
+data subject to mandatory publication, art. 5 c.1 d.lgs. 33/2013),
+`documentale` (administrative document access, l. 241/1990).
+
+ */
+export type AccessoCivicoTipo = typeof AccessoCivicoTipo[keyof typeof AccessoCivicoTipo];
+
+
+export const AccessoCivicoTipo = {
+  generalizzato: 'generalizzato',
+  semplice: 'semplice',
+  documentale: 'documentale',
+} as const;
+
+/**
+ * Outcome of the request as tracked by the citizen.
+ */
+export type AccessoCivicoStato = typeof AccessoCivicoStato[keyof typeof AccessoCivicoStato];
+
+
+export const AccessoCivicoStato = {
+  'in-attesa': 'in-attesa',
+  accolta: 'accolta',
+  rifiutata: 'rifiutata',
+} as const;
+
+/**
+ * Public view of a published accesso civico / FOIA request.
+ */
+export interface AccessoCivicoRequest {
+  id: number;
+  oggetto: string;
+  tipo: AccessoCivicoTipo;
+  ente: string;
+  descrizione: string;
+  /** @nullable */
+  requesterName: string | null;
+  /** @nullable */
+  requestDate: string | null;
+  stato: AccessoCivicoStato;
+  esitoNote: string;
+  /** @nullable */
+  responseDate: string | null;
+  /** @nullable */
+  responseUrl: string | null;
+  /** @nullable */
+  responseLabel: string | null;
+  /** @nullable */
+  themeId: number | null;
+  /** @nullable */
+  pnrrProjectId: number | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export type AccessoCivicoRequestAdminStatus = typeof AccessoCivicoRequestAdminStatus[keyof typeof AccessoCivicoRequestAdminStatus];
+
+
+export const AccessoCivicoRequestAdminStatus = {
+  pending: 'pending',
+  published: 'published',
+} as const;
+
+/**
+ * Editorial view of a request, including moderation status.
+ */
+export interface AccessoCivicoRequestAdmin {
+  id: number;
+  oggetto: string;
+  tipo: AccessoCivicoTipo;
+  ente: string;
+  descrizione: string;
+  requestText: string;
+  /** @nullable */
+  requesterName: string | null;
+  /** @nullable */
+  requestDate: string | null;
+  stato: AccessoCivicoStato;
+  esitoNote: string;
+  /** @nullable */
+  responseDate: string | null;
+  /** @nullable */
+  responseUrl: string | null;
+  /** @nullable */
+  responseLabel: string | null;
+  /** @nullable */
+  themeId: number | null;
+  /** @nullable */
+  pnrrProjectId: number | null;
+  status: AccessoCivicoRequestAdminStatus;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface AccessoCivicoCreateInput {
+  /** @minLength 1 */
+  oggetto: string;
+  tipo?: AccessoCivicoTipo;
+  ente?: string;
+  descrizione?: string;
+  requestText?: string;
+  /** @nullable */
+  requesterName?: string | null;
+  /** @nullable */
+  requestDate?: string | null;
+  stato?: AccessoCivicoStato;
+  esitoNote?: string;
+  /** @nullable */
+  responseDate?: string | null;
+  /** @nullable */
+  themeId?: number | null;
+  /** @nullable */
+  pnrrProjectId?: number | null;
+}
+
+/**
+ * Partial update of a request (editorial).
+ */
+export interface AccessoCivicoUpdateInput {
+  /** @minLength 1 */
+  oggetto?: string;
+  tipo?: AccessoCivicoTipo;
+  ente?: string;
+  descrizione?: string;
+  requestText?: string;
+  /** @nullable */
+  requesterName?: string | null;
+  /** @nullable */
+  requestDate?: string | null;
+  stato?: AccessoCivicoStato;
+  esitoNote?: string;
+  /** @nullable */
+  responseDate?: string | null;
+  /** @nullable */
+  responseUrl?: string | null;
+  /** @nullable */
+  responseLabel?: string | null;
+  /** @nullable */
+  themeId?: number | null;
+  /** @nullable */
+  pnrrProjectId?: number | null;
+}
+
 export type ListThemesParams = {
 categoryId?: number;
 search?: string;
@@ -2072,5 +2217,11 @@ ente?: string;
 export type ListConfiscatedAssetsParams = {
 status?: ConfiscatedAssetStatus;
 tipologia?: string;
+};
+
+export type ListAccessoCivicoParams = {
+stato?: AccessoCivicoStato;
+tipo?: AccessoCivicoTipo;
+themeId?: number;
 };
 

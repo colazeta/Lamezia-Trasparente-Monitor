@@ -24,6 +24,7 @@ import { Bandi } from "./pages/Bandi";
 import { BandoDetail } from "./pages/BandoDetail";
 import { BeniConfiscati } from "./pages/BeniConfiscati";
 import { BeneConfiscatoDetail } from "./pages/BeneConfiscatoDetail";
+import { AccessoCivico } from "./pages/AccessoCivico";
 import { Legalita } from "./pages/Legalita";
 import { Performance } from "./pages/Performance";
 import { PerformanceCompare } from "./pages/PerformanceCompare";
@@ -38,6 +39,7 @@ import { AdminAppalti } from "./pages/AdminAppalti";
 import { AdminAttiFondamentali } from "./pages/AdminAttiFondamentali";
 import { AdminBandi } from "./pages/AdminBandi";
 import { AdminBeniConfiscati } from "./pages/AdminBeniConfiscati";
+import { AdminAccessoCivico } from "./pages/AdminAccessoCivico";
 import { AdminLegalita } from "./pages/AdminLegalita";
 import { AdminPareri } from "./pages/AdminPareri";
 import { AdminIndex } from "./pages/AdminIndex";
@@ -59,6 +61,7 @@ export function Router() {
         <Route path="/bandi/:slug" component={BandoDetail} />
         <Route path="/beni-confiscati" component={BeniConfiscati} />
         <Route path="/beni-confiscati/:slug" component={BeneConfiscatoDetail} />
+        <Route path="/accesso-civico" component={AccessoCivico} />
         <Route path="/legalita" component={Legalita} />
         <Route path="/delibere" component={Delibere} />
         <Route path="/convocazioni" component={Convocazioni} />
@@ -92,6 +95,7 @@ export function Router() {
           path="/admin/beni-confiscati"
           component={AdminBeniConfiscati}
         />
+        <Route path="/admin/accesso-civico" component={AdminAccessoCivico} />
         <Route path="/admin/legalita" component={AdminLegalita} />
         <Route path="/admin/pareri" component={AdminPareri} />
         <Route component={NotFound} />

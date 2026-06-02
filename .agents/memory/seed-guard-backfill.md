@@ -10,3 +10,5 @@ Each `seed*` function in `lib/db/src/seed.ts` has a `count > 0` skip guard (idem
 **Why:** push-force only alters the table; it does not re-run seed. And re-running `pnpm -C lib/db seed` is a no-op because the table already has rows (guard trips).
 
 **How to apply:** In the isolated dev env, to backfill seed-provided values for a single table: `TRUNCATE <table>, <child_tables> RESTART IDENTITY CASCADE;` then `pnpm -C lib/db seed`, then the data is fresh. Don't expect push-force alone to populate new seed columns.
+
+**Seeding is a manual command, not run at api-server boot.** When you add a brand-new table + `seed*` fn, the table stays empty until you run `pnpm -C lib/db seed` yourself. The master `seed()` opens a transaction that short-circuits early (`return`) when `contractsTable` already has rows — but that `return` only exits the transaction callback, so the post-transaction seed fns (seedThemesAndCategories … seedBandi … seedAccessoCivico) still run. So a new seed fn appended after seedBandi WILL populate its own empty table on the next `pnpm -C lib/db seed`, even in an env that already has contracts.

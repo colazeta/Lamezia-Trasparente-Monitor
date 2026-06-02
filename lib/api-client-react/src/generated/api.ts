@@ -20,6 +20,10 @@ import type {
 } from '@tanstack/react-query';
 
 import type {
+  AccessoCivicoCreateInput,
+  AccessoCivicoRequest,
+  AccessoCivicoRequestAdmin,
+  AccessoCivicoUpdateInput,
   ActivityItem,
   Bando,
   BandoAdmin,
@@ -56,6 +60,7 @@ import type {
   LegalityRequirementInput,
   LegalityRequirementUpdateInput,
   LegalitySection,
+  ListAccessoCivicoParams,
   ListBandiParams,
   ListConfiscatedAssetsParams,
   ListContractsParams,
@@ -7989,5 +7994,534 @@ export const useUpdateConfiscatedAssetLocation = <TError = ErrorType<void>,
         TContext
       > => {
       return useMutation(getUpdateConfiscatedAssetLocationMutationOptions(options));
+    }
+
+export const getListAccessoCivicoUrl = (params?: ListAccessoCivicoParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : value.toString())
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/accesso-civico?${stringifiedParams}` : `/api/accesso-civico`
+}
+
+/**
+ * Returns the published citizen-tracked requests, optionally filtered by
+outcome, type and linked theme. Pending (unmoderated) submissions are
+excluded.
+
+ * @summary Public registry of FOIA / accesso civico requests (published only)
+ */
+export const listAccessoCivico = async (params?: ListAccessoCivicoParams, options?: RequestInit): Promise<AccessoCivicoRequest[]> => {
+
+  return customFetch<AccessoCivicoRequest[]>(getListAccessoCivicoUrl(params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getListAccessoCivicoQueryKey = (params?: ListAccessoCivicoParams,) => {
+    return [
+    `/api/accesso-civico`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getListAccessoCivicoQueryOptions = <TData = Awaited<ReturnType<typeof listAccessoCivico>>, TError = ErrorType<unknown>>(params?: ListAccessoCivicoParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listAccessoCivico>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListAccessoCivicoQueryKey(params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listAccessoCivico>>> = ({ signal }) => listAccessoCivico(params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listAccessoCivico>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ListAccessoCivicoQueryResult = NonNullable<Awaited<ReturnType<typeof listAccessoCivico>>>
+export type ListAccessoCivicoQueryError = ErrorType<unknown>
+
+
+/**
+ * @summary Public registry of FOIA / accesso civico requests (published only)
+ */
+
+export function useListAccessoCivico<TData = Awaited<ReturnType<typeof listAccessoCivico>>, TError = ErrorType<unknown>>(
+ params?: ListAccessoCivicoParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listAccessoCivico>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getListAccessoCivicoQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
+
+
+
+export const getCreateAccessoCivicoUrl = () => {
+
+
+
+
+  return `/api/accesso-civico`
+}
+
+/**
+ * Lets a citizen register a request they sent to the entity. The entry is
+created in `pending` moderation state and is not publicly visible until
+the editorial team publishes it.
+
+ * @summary Register a sent FOIA request (public; held for moderation)
+ */
+export const createAccessoCivico = async (accessoCivicoCreateInput: AccessoCivicoCreateInput, options?: RequestInit): Promise<AccessoCivicoRequestAdmin> => {
+
+  return customFetch<AccessoCivicoRequestAdmin>(getCreateAccessoCivicoUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      accessoCivicoCreateInput,)
+  }
+);}
+
+
+
+
+export const getCreateAccessoCivicoMutationOptions = <TError = ErrorType<Error>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createAccessoCivico>>, TError,{data: BodyType<AccessoCivicoCreateInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof createAccessoCivico>>, TError,{data: BodyType<AccessoCivicoCreateInput>}, TContext> => {
+
+const mutationKey = ['createAccessoCivico'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createAccessoCivico>>, {data: BodyType<AccessoCivicoCreateInput>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  createAccessoCivico(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type CreateAccessoCivicoMutationResult = NonNullable<Awaited<ReturnType<typeof createAccessoCivico>>>
+    export type CreateAccessoCivicoMutationBody = BodyType<AccessoCivicoCreateInput>
+    export type CreateAccessoCivicoMutationError = ErrorType<Error>
+
+    /**
+ * @summary Register a sent FOIA request (public; held for moderation)
+ */
+export const useCreateAccessoCivico = <TError = ErrorType<Error>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createAccessoCivico>>, TError,{data: BodyType<AccessoCivicoCreateInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof createAccessoCivico>>,
+        TError,
+        {data: BodyType<AccessoCivicoCreateInput>},
+        TContext
+      > => {
+      return useMutation(getCreateAccessoCivicoMutationOptions(options));
+    }
+
+export const getListAccessoCivicoAdminUrl = () => {
+
+
+
+
+  return `/api/accesso-civico/admin`
+}
+
+/**
+ * @summary Editorial list of all requests (incl. pending) for moderation
+ */
+export const listAccessoCivicoAdmin = async ( options?: RequestInit): Promise<AccessoCivicoRequestAdmin[]> => {
+
+  return customFetch<AccessoCivicoRequestAdmin[]>(getListAccessoCivicoAdminUrl(),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getListAccessoCivicoAdminQueryKey = () => {
+    return [
+    `/api/accesso-civico/admin`
+    ] as const;
+    }
+
+
+export const getListAccessoCivicoAdminQueryOptions = <TData = Awaited<ReturnType<typeof listAccessoCivicoAdmin>>, TError = ErrorType<Error>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listAccessoCivicoAdmin>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListAccessoCivicoAdminQueryKey();
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listAccessoCivicoAdmin>>> = ({ signal }) => listAccessoCivicoAdmin({ signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listAccessoCivicoAdmin>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ListAccessoCivicoAdminQueryResult = NonNullable<Awaited<ReturnType<typeof listAccessoCivicoAdmin>>>
+export type ListAccessoCivicoAdminQueryError = ErrorType<Error>
+
+
+/**
+ * @summary Editorial list of all requests (incl. pending) for moderation
+ */
+
+export function useListAccessoCivicoAdmin<TData = Awaited<ReturnType<typeof listAccessoCivicoAdmin>>, TError = ErrorType<Error>>(
+  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listAccessoCivicoAdmin>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getListAccessoCivicoAdminQueryOptions(options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
+
+
+
+export const getGetAccessoCivicoUrl = (id: number,) => {
+
+
+
+
+  return `/api/accesso-civico/${id}`
+}
+
+/**
+ * @summary Public detail of a published request
+ */
+export const getAccessoCivico = async (id: number, options?: RequestInit): Promise<AccessoCivicoRequest> => {
+
+  return customFetch<AccessoCivicoRequest>(getGetAccessoCivicoUrl(id),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetAccessoCivicoQueryKey = (id: number,) => {
+    return [
+    `/api/accesso-civico/${id}`
+    ] as const;
+    }
+
+
+export const getGetAccessoCivicoQueryOptions = <TData = Awaited<ReturnType<typeof getAccessoCivico>>, TError = ErrorType<Error>>(id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getAccessoCivico>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetAccessoCivicoQueryKey(id);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getAccessoCivico>>> = ({ signal }) => getAccessoCivico(id, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: !!(id), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getAccessoCivico>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetAccessoCivicoQueryResult = NonNullable<Awaited<ReturnType<typeof getAccessoCivico>>>
+export type GetAccessoCivicoQueryError = ErrorType<Error>
+
+
+/**
+ * @summary Public detail of a published request
+ */
+
+export function useGetAccessoCivico<TData = Awaited<ReturnType<typeof getAccessoCivico>>, TError = ErrorType<Error>>(
+ id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getAccessoCivico>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetAccessoCivicoQueryOptions(id,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
+
+
+
+export const getUpdateAccessoCivicoUrl = (id: number,) => {
+
+
+
+
+  return `/api/accesso-civico/${id}`
+}
+
+/**
+ * @summary Update a request, its outcome and response document (editorial)
+ */
+export const updateAccessoCivico = async (id: number,
+    accessoCivicoUpdateInput: AccessoCivicoUpdateInput, options?: RequestInit): Promise<AccessoCivicoRequestAdmin> => {
+
+  return customFetch<AccessoCivicoRequestAdmin>(getUpdateAccessoCivicoUrl(id),
+  {
+    ...options,
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      accessoCivicoUpdateInput,)
+  }
+);}
+
+
+
+
+export const getUpdateAccessoCivicoMutationOptions = <TError = ErrorType<Error>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateAccessoCivico>>, TError,{id: number;data: BodyType<AccessoCivicoUpdateInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof updateAccessoCivico>>, TError,{id: number;data: BodyType<AccessoCivicoUpdateInput>}, TContext> => {
+
+const mutationKey = ['updateAccessoCivico'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof updateAccessoCivico>>, {id: number;data: BodyType<AccessoCivicoUpdateInput>}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  updateAccessoCivico(id,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type UpdateAccessoCivicoMutationResult = NonNullable<Awaited<ReturnType<typeof updateAccessoCivico>>>
+    export type UpdateAccessoCivicoMutationBody = BodyType<AccessoCivicoUpdateInput>
+    export type UpdateAccessoCivicoMutationError = ErrorType<Error>
+
+    /**
+ * @summary Update a request, its outcome and response document (editorial)
+ */
+export const useUpdateAccessoCivico = <TError = ErrorType<Error>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateAccessoCivico>>, TError,{id: number;data: BodyType<AccessoCivicoUpdateInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof updateAccessoCivico>>,
+        TError,
+        {id: number;data: BodyType<AccessoCivicoUpdateInput>},
+        TContext
+      > => {
+      return useMutation(getUpdateAccessoCivicoMutationOptions(options));
+    }
+
+export const getDeleteAccessoCivicoUrl = (id: number,) => {
+
+
+
+
+  return `/api/accesso-civico/${id}`
+}
+
+/**
+ * @summary Delete a request (editorial)
+ */
+export const deleteAccessoCivico = async (id: number, options?: RequestInit): Promise<void> => {
+
+  return customFetch<void>(getDeleteAccessoCivicoUrl(id),
+  {
+    ...options,
+    method: 'DELETE'
+
+
+  }
+);}
+
+
+
+
+export const getDeleteAccessoCivicoMutationOptions = <TError = ErrorType<Error>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteAccessoCivico>>, TError,{id: number}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof deleteAccessoCivico>>, TError,{id: number}, TContext> => {
+
+const mutationKey = ['deleteAccessoCivico'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof deleteAccessoCivico>>, {id: number}> = (props) => {
+          const {id} = props ?? {};
+
+          return  deleteAccessoCivico(id,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type DeleteAccessoCivicoMutationResult = NonNullable<Awaited<ReturnType<typeof deleteAccessoCivico>>>
+
+    export type DeleteAccessoCivicoMutationError = ErrorType<Error>
+
+    /**
+ * @summary Delete a request (editorial)
+ */
+export const useDeleteAccessoCivico = <TError = ErrorType<Error>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteAccessoCivico>>, TError,{id: number}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof deleteAccessoCivico>>,
+        TError,
+        {id: number},
+        TContext
+      > => {
+      return useMutation(getDeleteAccessoCivicoMutationOptions(options));
+    }
+
+export const getPublishAccessoCivicoUrl = (id: number,) => {
+
+
+
+
+  return `/api/accesso-civico/${id}/pubblica`
+}
+
+/**
+ * @summary Approve a pending request and make it public (editorial)
+ */
+export const publishAccessoCivico = async (id: number, options?: RequestInit): Promise<AccessoCivicoRequestAdmin> => {
+
+  return customFetch<AccessoCivicoRequestAdmin>(getPublishAccessoCivicoUrl(id),
+  {
+    ...options,
+    method: 'POST'
+
+
+  }
+);}
+
+
+
+
+export const getPublishAccessoCivicoMutationOptions = <TError = ErrorType<Error>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof publishAccessoCivico>>, TError,{id: number}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof publishAccessoCivico>>, TError,{id: number}, TContext> => {
+
+const mutationKey = ['publishAccessoCivico'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof publishAccessoCivico>>, {id: number}> = (props) => {
+          const {id} = props ?? {};
+
+          return  publishAccessoCivico(id,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PublishAccessoCivicoMutationResult = NonNullable<Awaited<ReturnType<typeof publishAccessoCivico>>>
+
+    export type PublishAccessoCivicoMutationError = ErrorType<Error>
+
+    /**
+ * @summary Approve a pending request and make it public (editorial)
+ */
+export const usePublishAccessoCivico = <TError = ErrorType<Error>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof publishAccessoCivico>>, TError,{id: number}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof publishAccessoCivico>>,
+        TError,
+        {id: number},
+        TContext
+      > => {
+      return useMutation(getPublishAccessoCivicoMutationOptions(options));
     }
 

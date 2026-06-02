@@ -3024,6 +3024,219 @@ paths:
         "404":
           description: Not found.
 
+  /accesso-civico:
+    get:
+      tags: [accesso-civico]
+      operationId: listAccessoCivico
+      summary: Public registry of FOIA / accesso civico requests (published only)
+      description: |
+        Returns the published citizen-tracked requests, optionally filtered by
+        outcome, type and linked theme. Pending (unmoderated) submissions are
+        excluded.
+      parameters:
+        - name: stato
+          in: query
+          required: false
+          schema:
+            $ref: "#/components/schemas/AccessoCivicoStato"
+        - name: tipo
+          in: query
+          required: false
+          schema:
+            $ref: "#/components/schemas/AccessoCivicoTipo"
+        - name: themeId
+          in: query
+          required: false
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: List of published requests.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/AccessoCivicoRequest"
+    post:
+      tags: [accesso-civico]
+      operationId: createAccessoCivico
+      summary: Register a sent FOIA request (public; held for moderation)
+      description: |
+        Lets a citizen register a request they sent to the entity. The entry is
+        created in `pending` moderation state and is not publicly visible until
+        the editorial team publishes it.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AccessoCivicoCreateInput"
+      responses:
+        "201":
+          description: Created (pending moderation).
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AccessoCivicoRequestAdmin"
+        "400":
+          description: Invalid input.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /accesso-civico/admin:
+    get:
+      tags: [accesso-civico]
+      operationId: listAccessoCivicoAdmin
+      summary: Editorial list of all requests (incl. pending) for moderation
+      security:
+        - ingestToken: []
+      responses:
+        "200":
+          description: List of all requests with editorial metadata.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/AccessoCivicoRequestAdmin"
+        "401":
+          description: Unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /accesso-civico/{id}:
+    get:
+      tags: [accesso-civico]
+      operationId: getAccessoCivico
+      summary: Public detail of a published request
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Request detail.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AccessoCivicoRequest"
+        "404":
+          description: Not found.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      tags: [accesso-civico]
+      operationId: updateAccessoCivico
+      summary: Update a request, its outcome and response document (editorial)
+      security:
+        - ingestToken: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AccessoCivicoUpdateInput"
+      responses:
+        "200":
+          description: Updated.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AccessoCivicoRequestAdmin"
+        "400":
+          description: Invalid input.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "401":
+          description: Unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "404":
+          description: Not found.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    delete:
+      tags: [accesso-civico]
+      operationId: deleteAccessoCivico
+      summary: Delete a request (editorial)
+      security:
+        - ingestToken: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted.
+        "401":
+          description: Unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "404":
+          description: Not found.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /accesso-civico/{id}/pubblica:
+    post:
+      tags: [accesso-civico]
+      operationId: publishAccessoCivico
+      summary: Approve a pending request and make it public (editorial)
+      security:
+        - ingestToken: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Request published.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AccessoCivicoRequestAdmin"
+        "401":
+          description: Unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "404":
+          description: Not found.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
 components:
   schemas:
     HealthStatus:
@@ -5956,3 +6169,196 @@ components:
         date:
           type: string
           description: Data del documento (ISO 8601)
+
+    AccessoCivicoTipo:
+      type: string
+      description: |
+        Type of access request, which determines the legal references:
+        `generalizzato` (FOIA, art. 5 c.2 d.lgs. 33/2013), `semplice` (access to
+        data subject to mandatory publication, art. 5 c.1 d.lgs. 33/2013),
+        `documentale` (administrative document access, l. 241/1990).
+      enum: [generalizzato, semplice, documentale]
+
+    AccessoCivicoStato:
+      type: string
+      description: Outcome of the request as tracked by the citizen.
+      enum: [in-attesa, accolta, rifiutata]
+
+    AccessoCivicoRequest:
+      type: object
+      description: Public view of a published accesso civico / FOIA request.
+      required:
+        - id
+        - oggetto
+        - tipo
+        - ente
+        - descrizione
+        - requesterName
+        - requestDate
+        - stato
+        - esitoNote
+        - responseDate
+        - responseUrl
+        - responseLabel
+        - themeId
+        - pnrrProjectId
+        - createdAt
+        - updatedAt
+      properties:
+        id:
+          type: integer
+        oggetto:
+          type: string
+        tipo:
+          $ref: "#/components/schemas/AccessoCivicoTipo"
+        ente:
+          type: string
+        descrizione:
+          type: string
+        requesterName:
+          type: ["string", "null"]
+        requestDate:
+          type: ["string", "null"]
+        stato:
+          $ref: "#/components/schemas/AccessoCivicoStato"
+        esitoNote:
+          type: string
+        responseDate:
+          type: ["string", "null"]
+        responseUrl:
+          type: ["string", "null"]
+        responseLabel:
+          type: ["string", "null"]
+        themeId:
+          type: ["integer", "null"]
+        pnrrProjectId:
+          type: ["integer", "null"]
+        createdAt:
+          type: string
+        updatedAt:
+          type: string
+
+    AccessoCivicoRequestAdmin:
+      type: object
+      description: Editorial view of a request, including moderation status.
+      required:
+        - id
+        - oggetto
+        - tipo
+        - ente
+        - descrizione
+        - requestText
+        - requesterName
+        - requestDate
+        - stato
+        - esitoNote
+        - responseDate
+        - responseUrl
+        - responseLabel
+        - themeId
+        - pnrrProjectId
+        - status
+        - createdAt
+        - updatedAt
+      properties:
+        id:
+          type: integer
+        oggetto:
+          type: string
+        tipo:
+          $ref: "#/components/schemas/AccessoCivicoTipo"
+        ente:
+          type: string
+        descrizione:
+          type: string
+        requestText:
+          type: string
+        requesterName:
+          type: ["string", "null"]
+        requestDate:
+          type: ["string", "null"]
+        stato:
+          $ref: "#/components/schemas/AccessoCivicoStato"
+        esitoNote:
+          type: string
+        responseDate:
+          type: ["string", "null"]
+        responseUrl:
+          type: ["string", "null"]
+        responseLabel:
+          type: ["string", "null"]
+        themeId:
+          type: ["integer", "null"]
+        pnrrProjectId:
+          type: ["integer", "null"]
+        status:
+          type: string
+          enum: [pending, published]
+        createdAt:
+          type: string
+        updatedAt:
+          type: string
+
+    AccessoCivicoCreateInput:
+      type: object
+      required: [oggetto]
+      properties:
+        oggetto:
+          type: string
+          minLength: 1
+        tipo:
+          $ref: "#/components/schemas/AccessoCivicoTipo"
+        ente:
+          type: string
+        descrizione:
+          type: string
+        requestText:
+          type: string
+        requesterName:
+          type: ["string", "null"]
+        requestDate:
+          type: ["string", "null"]
+        stato:
+          $ref: "#/components/schemas/AccessoCivicoStato"
+        esitoNote:
+          type: string
+        responseDate:
+          type: ["string", "null"]
+        themeId:
+          type: ["integer", "null"]
+        pnrrProjectId:
+          type: ["integer", "null"]
+
+    AccessoCivicoUpdateInput:
+      type: object
+      description: Partial update of a request (editorial).
+      properties:
+        oggetto:
+          type: string
+          minLength: 1
+        tipo:
+          $ref: "#/components/schemas/AccessoCivicoTipo"
+        ente:
+          type: string
+        descrizione:
+          type: string
+        requestText:
+          type: string
+        requesterName:
+          type: ["string", "null"]
+        requestDate:
+          type: ["string", "null"]
+        stato:
+          $ref: "#/components/schemas/AccessoCivicoStato"
+        esitoNote:
+          type: string
+        responseDate:
+          type: ["string", "null"]
+        responseUrl:
+          type: ["string", "null"]
+        responseLabel:
+          type: ["string", "null"]
+        themeId:
+          type: ["integer", "null"]
+        pnrrProjectId:
+          type: ["integer", "null"]

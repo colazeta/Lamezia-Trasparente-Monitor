@@ -3275,3 +3275,202 @@ export const UpdateConfiscatedAssetLocationResponse = zod.object({
 }).describe('Editorial view of a confiscated asset (incl. source\/notes\/geo).')
 
 
+/**
+ * Returns the published citizen-tracked requests, optionally filtered by
+outcome, type and linked theme. Pending (unmoderated) submissions are
+excluded.
+
+ * @summary Public registry of FOIA / accesso civico requests (published only)
+ */
+export const ListAccessoCivicoQueryParams = zod.object({
+  "stato": zod.enum(['in-attesa', 'accolta', 'rifiutata']).optional(),
+  "tipo": zod.enum(['generalizzato', 'semplice', 'documentale']).optional(),
+  "themeId": zod.coerce.number().optional()
+})
+
+export const ListAccessoCivicoResponseItem = zod.object({
+  "id": zod.number(),
+  "oggetto": zod.string(),
+  "tipo": zod.enum(['generalizzato', 'semplice', 'documentale']).describe('Type of access request, which determines the legal references:\n`generalizzato` (FOIA, art. 5 c.2 d.lgs. 33\/2013), `semplice` (access to\ndata subject to mandatory publication, art. 5 c.1 d.lgs. 33\/2013),\n`documentale` (administrative document access, l. 241\/1990).\n'),
+  "ente": zod.string(),
+  "descrizione": zod.string(),
+  "requesterName": zod.string().nullable(),
+  "requestDate": zod.string().nullable(),
+  "stato": zod.enum(['in-attesa', 'accolta', 'rifiutata']).describe('Outcome of the request as tracked by the citizen.'),
+  "esitoNote": zod.string(),
+  "responseDate": zod.string().nullable(),
+  "responseUrl": zod.string().nullable(),
+  "responseLabel": zod.string().nullable(),
+  "themeId": zod.number().nullable(),
+  "pnrrProjectId": zod.number().nullable(),
+  "createdAt": zod.string(),
+  "updatedAt": zod.string()
+}).describe('Public view of a published accesso civico \/ FOIA request.')
+export const ListAccessoCivicoResponse = zod.array(ListAccessoCivicoResponseItem)
+
+
+/**
+ * Lets a citizen register a request they sent to the entity. The entry is
+created in `pending` moderation state and is not publicly visible until
+the editorial team publishes it.
+
+ * @summary Register a sent FOIA request (public; held for moderation)
+ */
+
+
+
+export const CreateAccessoCivicoBody = zod.object({
+  "oggetto": zod.string().min(1),
+  "tipo": zod.enum(['generalizzato', 'semplice', 'documentale']).optional().describe('Type of access request, which determines the legal references:\n`generalizzato` (FOIA, art. 5 c.2 d.lgs. 33\/2013), `semplice` (access to\ndata subject to mandatory publication, art. 5 c.1 d.lgs. 33\/2013),\n`documentale` (administrative document access, l. 241\/1990).\n'),
+  "ente": zod.string().optional(),
+  "descrizione": zod.string().optional(),
+  "requestText": zod.string().optional(),
+  "requesterName": zod.string().nullish(),
+  "requestDate": zod.string().nullish(),
+  "stato": zod.enum(['in-attesa', 'accolta', 'rifiutata']).optional().describe('Outcome of the request as tracked by the citizen.'),
+  "esitoNote": zod.string().optional(),
+  "responseDate": zod.string().nullish(),
+  "themeId": zod.number().nullish(),
+  "pnrrProjectId": zod.number().nullish()
+})
+
+
+/**
+ * @summary Editorial list of all requests (incl. pending) for moderation
+ */
+export const ListAccessoCivicoAdminResponseItem = zod.object({
+  "id": zod.number(),
+  "oggetto": zod.string(),
+  "tipo": zod.enum(['generalizzato', 'semplice', 'documentale']).describe('Type of access request, which determines the legal references:\n`generalizzato` (FOIA, art. 5 c.2 d.lgs. 33\/2013), `semplice` (access to\ndata subject to mandatory publication, art. 5 c.1 d.lgs. 33\/2013),\n`documentale` (administrative document access, l. 241\/1990).\n'),
+  "ente": zod.string(),
+  "descrizione": zod.string(),
+  "requestText": zod.string(),
+  "requesterName": zod.string().nullable(),
+  "requestDate": zod.string().nullable(),
+  "stato": zod.enum(['in-attesa', 'accolta', 'rifiutata']).describe('Outcome of the request as tracked by the citizen.'),
+  "esitoNote": zod.string(),
+  "responseDate": zod.string().nullable(),
+  "responseUrl": zod.string().nullable(),
+  "responseLabel": zod.string().nullable(),
+  "themeId": zod.number().nullable(),
+  "pnrrProjectId": zod.number().nullable(),
+  "status": zod.enum(['pending', 'published']),
+  "createdAt": zod.string(),
+  "updatedAt": zod.string()
+}).describe('Editorial view of a request, including moderation status.')
+export const ListAccessoCivicoAdminResponse = zod.array(ListAccessoCivicoAdminResponseItem)
+
+
+/**
+ * @summary Public detail of a published request
+ */
+export const GetAccessoCivicoParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const GetAccessoCivicoResponse = zod.object({
+  "id": zod.number(),
+  "oggetto": zod.string(),
+  "tipo": zod.enum(['generalizzato', 'semplice', 'documentale']).describe('Type of access request, which determines the legal references:\n`generalizzato` (FOIA, art. 5 c.2 d.lgs. 33\/2013), `semplice` (access to\ndata subject to mandatory publication, art. 5 c.1 d.lgs. 33\/2013),\n`documentale` (administrative document access, l. 241\/1990).\n'),
+  "ente": zod.string(),
+  "descrizione": zod.string(),
+  "requesterName": zod.string().nullable(),
+  "requestDate": zod.string().nullable(),
+  "stato": zod.enum(['in-attesa', 'accolta', 'rifiutata']).describe('Outcome of the request as tracked by the citizen.'),
+  "esitoNote": zod.string(),
+  "responseDate": zod.string().nullable(),
+  "responseUrl": zod.string().nullable(),
+  "responseLabel": zod.string().nullable(),
+  "themeId": zod.number().nullable(),
+  "pnrrProjectId": zod.number().nullable(),
+  "createdAt": zod.string(),
+  "updatedAt": zod.string()
+}).describe('Public view of a published accesso civico \/ FOIA request.')
+
+
+/**
+ * @summary Update a request, its outcome and response document (editorial)
+ */
+export const UpdateAccessoCivicoParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+
+
+
+export const UpdateAccessoCivicoBody = zod.object({
+  "oggetto": zod.string().min(1).optional(),
+  "tipo": zod.enum(['generalizzato', 'semplice', 'documentale']).optional().describe('Type of access request, which determines the legal references:\n`generalizzato` (FOIA, art. 5 c.2 d.lgs. 33\/2013), `semplice` (access to\ndata subject to mandatory publication, art. 5 c.1 d.lgs. 33\/2013),\n`documentale` (administrative document access, l. 241\/1990).\n'),
+  "ente": zod.string().optional(),
+  "descrizione": zod.string().optional(),
+  "requestText": zod.string().optional(),
+  "requesterName": zod.string().nullish(),
+  "requestDate": zod.string().nullish(),
+  "stato": zod.enum(['in-attesa', 'accolta', 'rifiutata']).optional().describe('Outcome of the request as tracked by the citizen.'),
+  "esitoNote": zod.string().optional(),
+  "responseDate": zod.string().nullish(),
+  "responseUrl": zod.string().nullish(),
+  "responseLabel": zod.string().nullish(),
+  "themeId": zod.number().nullish(),
+  "pnrrProjectId": zod.number().nullish()
+}).describe('Partial update of a request (editorial).')
+
+export const UpdateAccessoCivicoResponse = zod.object({
+  "id": zod.number(),
+  "oggetto": zod.string(),
+  "tipo": zod.enum(['generalizzato', 'semplice', 'documentale']).describe('Type of access request, which determines the legal references:\n`generalizzato` (FOIA, art. 5 c.2 d.lgs. 33\/2013), `semplice` (access to\ndata subject to mandatory publication, art. 5 c.1 d.lgs. 33\/2013),\n`documentale` (administrative document access, l. 241\/1990).\n'),
+  "ente": zod.string(),
+  "descrizione": zod.string(),
+  "requestText": zod.string(),
+  "requesterName": zod.string().nullable(),
+  "requestDate": zod.string().nullable(),
+  "stato": zod.enum(['in-attesa', 'accolta', 'rifiutata']).describe('Outcome of the request as tracked by the citizen.'),
+  "esitoNote": zod.string(),
+  "responseDate": zod.string().nullable(),
+  "responseUrl": zod.string().nullable(),
+  "responseLabel": zod.string().nullable(),
+  "themeId": zod.number().nullable(),
+  "pnrrProjectId": zod.number().nullable(),
+  "status": zod.enum(['pending', 'published']),
+  "createdAt": zod.string(),
+  "updatedAt": zod.string()
+}).describe('Editorial view of a request, including moderation status.')
+
+
+/**
+ * @summary Delete a request (editorial)
+ */
+export const DeleteAccessoCivicoParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+
+/**
+ * @summary Approve a pending request and make it public (editorial)
+ */
+export const PublishAccessoCivicoParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const PublishAccessoCivicoResponse = zod.object({
+  "id": zod.number(),
+  "oggetto": zod.string(),
+  "tipo": zod.enum(['generalizzato', 'semplice', 'documentale']).describe('Type of access request, which determines the legal references:\n`generalizzato` (FOIA, art. 5 c.2 d.lgs. 33\/2013), `semplice` (access to\ndata subject to mandatory publication, art. 5 c.1 d.lgs. 33\/2013),\n`documentale` (administrative document access, l. 241\/1990).\n'),
+  "ente": zod.string(),
+  "descrizione": zod.string(),
+  "requestText": zod.string(),
+  "requesterName": zod.string().nullable(),
+  "requestDate": zod.string().nullable(),
+  "stato": zod.enum(['in-attesa', 'accolta', 'rifiutata']).describe('Outcome of the request as tracked by the citizen.'),
+  "esitoNote": zod.string(),
+  "responseDate": zod.string().nullable(),
+  "responseUrl": zod.string().nullable(),
+  "responseLabel": zod.string().nullable(),
+  "themeId": zod.number().nullable(),
+  "pnrrProjectId": zod.number().nullable(),
+  "status": zod.enum(['pending', 'published']),
+  "createdAt": zod.string(),
+  "updatedAt": zod.string()
+}).describe('Editorial view of a request, including moderation status.')
+
+

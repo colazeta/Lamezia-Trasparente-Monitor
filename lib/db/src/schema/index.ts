@@ -31,3 +31,4 @@ export * from "./legalityOverview";
 export * from "./bandi";
 export * from "./bandoMatches";
 export * from "./confiscatedAssets";
+export * from "./accessoCivico";

@@ -21,6 +21,7 @@ import {
   fundamentalActsTable,
   bandiTable,
   confiscatedAssetsTable,
+  accessoCivicoRequestsTable,
 } from "./schema";
 import { classifyMacrotema } from "./macrotemi";
 import {
@@ -1635,6 +1636,90 @@ async function seedConfiscatedAssets(): Promise<void> {
   }
 }
 
+const SAMPLE_ACCESSO_CIVICO: {
+  oggetto: string;
+  tipo: "generalizzato" | "semplice" | "documentale";
+  ente: string;
+  descrizione: string;
+  requesterName: string | null;
+  daysSinceRequest: number;
+  stato: "in-attesa" | "accolta" | "rifiutata";
+  esitoNote: string;
+  daysSinceResponse: number | null;
+}[] = [
+  {
+    oggetto: "Spese per la manutenzione del verde pubblico 2025",
+    tipo: "generalizzato",
+    ente: "Comune di Lamezia Terme",
+    descrizione:
+      "Richiesta dell'elenco degli affidamenti e dei relativi importi per la manutenzione del verde pubblico nell'anno 2025, con indicazione delle ditte affidatarie.",
+    requesterName: "Comitato di quartiere Sambiase",
+    daysSinceRequest: 40,
+    stato: "accolta",
+    esitoNote:
+      "L'ente ha trasmesso l'elenco completo degli affidamenti entro i termini di legge.",
+    daysSinceResponse: 15,
+  },
+  {
+    oggetto: "Verbali della commissione mensa scolastica",
+    tipo: "documentale",
+    ente: "Comune di Lamezia Terme",
+    descrizione:
+      "Richiesta di copia dei verbali delle ultime tre sedute della commissione mensa scolastica.",
+    requesterName: "Un genitore",
+    daysSinceRequest: 20,
+    stato: "in-attesa",
+    esitoNote: "",
+    daysSinceResponse: null,
+  },
+  {
+    oggetto: "Costi del servizio di illuminazione votiva cimiteriale",
+    tipo: "generalizzato",
+    ente: "Comune di Lamezia Terme",
+    descrizione:
+      "Richiesta dei costi sostenuti e degli introiti del servizio di illuminazione votiva del cimitero comunale negli ultimi tre anni.",
+    requesterName: null,
+    daysSinceRequest: 75,
+    stato: "rifiutata",
+    esitoNote:
+      "L'ente ha negato l'accesso adducendo la necessità di una elaborazione dati non dovuta. È in valutazione il riesame al responsabile della prevenzione della corruzione e della trasparenza.",
+    daysSinceResponse: 45,
+  },
+];
+
+async function seedAccessoCivico(): Promise<void> {
+  const existing = await db
+    .select({ id: accessoCivicoRequestsTable.id })
+    .from(accessoCivicoRequestsTable)
+    .limit(1);
+  if (existing.length > 0) {
+    console.log("Accesso civico requests already present, skipping seed.");
+    return;
+  }
+  console.log(
+    `Seeding ${SAMPLE_ACCESSO_CIVICO.length} accesso civico requests...`,
+  );
+  const now = Date.now();
+  const day = 24 * 60 * 60 * 1000;
+  for (const r of SAMPLE_ACCESSO_CIVICO) {
+    await db.insert(accessoCivicoRequestsTable).values({
+      oggetto: r.oggetto,
+      tipo: r.tipo,
+      ente: r.ente,
+      descrizione: r.descrizione,
+      requesterName: r.requesterName,
+      requestDate: new Date(now - r.daysSinceRequest * day),
+      stato: r.stato,
+      esitoNote: r.esitoNote,
+      responseDate:
+        r.daysSinceResponse == null
+          ? null
+          : new Date(now - r.daysSinceResponse * day),
+      status: "published",
+    });
+  }
+}
+
 // Popola il catalogo della sezione "Performance del Comune": categorie e
 // indicatori. Non distruttivo: aggiorna i metadati per slug (upsert) senza
 // toccare le serie storiche già presenti. Eseguibile in modo idempotente.
@@ -1790,6 +1875,7 @@ export async function seed() {
   await seedFundamentalActs();
   await seedBandi();
   await seedConfiscatedAssets();
+  await seedAccessoCivico();
 }
 
 const entryPath = process.argv[1] ?? "";

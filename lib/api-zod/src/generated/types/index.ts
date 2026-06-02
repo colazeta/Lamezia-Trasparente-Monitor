@@ -6,6 +6,13 @@
  * OpenAPI spec version: 0.1.0
  */
 
+export * from './accessoCivicoCreateInput';
+export * from './accessoCivicoRequest';
+export * from './accessoCivicoRequestAdmin';
+export * from './accessoCivicoRequestAdminStatus';
+export * from './accessoCivicoStato';
+export * from './accessoCivicoTipo';
+export * from './accessoCivicoUpdateInput';
 export * from './act';
 export * from './activityItem';
 export * from './activityItemType';
@@ -68,6 +75,7 @@ export * from './legalityRequirementUpdateInput';
 export * from './legalityRequirementUpdateInputStatus';
 export * from './legalitySection';
 export * from './lifecyclePhase';
+export * from './listAccessoCivicoParams';
 export * from './listBandiParams';
 export * from './listConfiscatedAssetsParams';
 export * from './listContractsParams';
