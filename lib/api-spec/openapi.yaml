@@ -1813,6 +1813,271 @@ paths:
               schema:
                 $ref: "#/components/schemas/Error"
 
+  /legality:
+    get:
+      operationId: getLegalitySection
+      tags: [legality]
+      summary: Get the legality & transparency monitoring section
+      description: >-
+        Returns the whole "Monitoraggio Legalità e Trasparenza" section in a
+        single call: the overall judgment plus every area with its nested
+        requirements (and their manually linked acts). All content is editorial.
+      responses:
+        "200":
+          description: Legality section
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LegalitySection"
+
+  /legality/overview:
+    patch:
+      operationId: updateLegalityOverview
+      tags: [legality]
+      summary: Update the section-wide overall judgment (redazione)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LegalityOverviewInput"
+      responses:
+        "200":
+          description: Updated overview
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LegalityOverview"
+        "400":
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /legality/areas:
+    post:
+      operationId: createLegalityArea
+      tags: [legality]
+      summary: Create a monitoring area (redazione)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LegalityAreaInput"
+      responses:
+        "201":
+          description: Created area
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LegalityArea"
+        "400":
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "409":
+          description: Slug already in use
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /legality/areas/{id}:
+    patch:
+      operationId: updateLegalityArea
+      tags: [legality]
+      summary: Update a monitoring area (redazione)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LegalityAreaUpdateInput"
+      responses:
+        "200":
+          description: Updated area
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LegalityArea"
+        "400":
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    delete:
+      operationId: deleteLegalityArea
+      tags: [legality]
+      summary: Delete a monitoring area and its requirements (redazione)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /legality/areas/{id}/requirements:
+    post:
+      operationId: createLegalityRequirement
+      tags: [legality]
+      summary: Create a requirement inside an area (redazione)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Area id
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LegalityRequirementInput"
+      responses:
+        "201":
+          description: Created requirement
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LegalityRequirement"
+        "400":
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "404":
+          description: Area not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /legality/requirements/{id}:
+    patch:
+      operationId: updateLegalityRequirement
+      tags: [legality]
+      summary: Update a requirement (redazione)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LegalityRequirementUpdateInput"
+      responses:
+        "200":
+          description: Updated requirement
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LegalityRequirement"
+        "400":
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    delete:
+      operationId: deleteLegalityRequirement
+      tags: [legality]
+      summary: Delete a requirement (redazione)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
   /storage/uploads/request-document-url:
     post:
       tags: [storage]
@@ -3251,6 +3516,196 @@ components:
           type: string
         source:
           type: string
+
+    LegalityActLink:
+      type: object
+      description: A manually-attached act reference (internal path or external URL).
+      required: [label, url]
+      properties:
+        label:
+          type: string
+        url:
+          type: string
+
+    LegalityArea:
+      type: object
+      required:
+        - id
+        - slug
+        - title
+        - description
+        - finalJudgment
+        - position
+        - createdAt
+        - updatedAt
+      properties:
+        id:
+          type: integer
+        slug:
+          type: string
+        title:
+          type: string
+        description:
+          type: string
+        finalJudgment:
+          type: string
+        position:
+          type: integer
+        createdAt:
+          type: string
+        updatedAt:
+          type: string
+
+    LegalityRequirement:
+      type: object
+      required:
+        - id
+        - areaId
+        - title
+        - description
+        - status
+        - comment
+        - linkedActs
+        - position
+        - createdAt
+        - updatedAt
+      properties:
+        id:
+          type: integer
+        areaId:
+          type: integer
+        title:
+          type: string
+        description:
+          type: string
+        status:
+          type: string
+          enum: [present, absent, partial, not_applicable]
+        comment:
+          type: string
+        linkedActs:
+          type: array
+          items:
+            $ref: "#/components/schemas/LegalityActLink"
+        position:
+          type: integer
+        createdAt:
+          type: string
+        updatedAt:
+          type: string
+
+    LegalityAreaWithRequirements:
+      allOf:
+        - $ref: "#/components/schemas/LegalityArea"
+        - type: object
+          required: [requirements]
+          properties:
+            requirements:
+              type: array
+              items:
+                $ref: "#/components/schemas/LegalityRequirement"
+
+    LegalityOverview:
+      type: object
+      required: [overallJudgment, updatedAt]
+      properties:
+        overallJudgment:
+          type: string
+        updatedAt:
+          type: ["string", "null"]
+
+    LegalitySection:
+      type: object
+      required: [overallJudgment, updatedAt, areas]
+      properties:
+        overallJudgment:
+          type: string
+        updatedAt:
+          type: ["string", "null"]
+        areas:
+          type: array
+          items:
+            $ref: "#/components/schemas/LegalityAreaWithRequirements"
+
+    LegalityOverviewInput:
+      type: object
+      required: [overallJudgment]
+      properties:
+        overallJudgment:
+          type: string
+
+    LegalityAreaInput:
+      type: object
+      required: [slug, title]
+      properties:
+        slug:
+          type: string
+          minLength: 1
+        title:
+          type: string
+          minLength: 1
+        description:
+          type: string
+        finalJudgment:
+          type: string
+        position:
+          type: integer
+
+    LegalityAreaUpdateInput:
+      type: object
+      properties:
+        title:
+          type: string
+          minLength: 1
+        description:
+          type: string
+        finalJudgment:
+          type: string
+        position:
+          type: integer
+
+    LegalityRequirementInput:
+      type: object
+      required: [title]
+      properties:
+        title:
+          type: string
+          minLength: 1
+        description:
+          type: string
+        status:
+          type: string
+          enum: [present, absent, partial, not_applicable]
+        comment:
+          type: string
+        linkedActs:
+          type: array
+          items:
+            $ref: "#/components/schemas/LegalityActLink"
+        position:
+          type: integer
+
+    LegalityRequirementUpdateInput:
+      type: object
+      properties:
+        areaId:
+          type: integer
+        title:
+          type: string
+          minLength: 1
+        description:
+          type: string
+        status:
+          type: string
+          enum: [present, absent, partial, not_applicable]
+        comment:
+          type: string
+        linkedActs:
+          type: array
+          items:
+            $ref: "#/components/schemas/LegalityActLink"
+        position:
+          type: integer
 
     PnrrAttachment:
       type: object

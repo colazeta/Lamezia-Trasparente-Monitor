@@ -36,6 +36,15 @@ import type {
   GetContractsAnalyticsParams,
   GetPublicationsTimelineParams,
   HealthStatus,
+  LegalityArea,
+  LegalityAreaInput,
+  LegalityAreaUpdateInput,
+  LegalityOverview,
+  LegalityOverviewInput,
+  LegalityRequirement,
+  LegalityRequirementInput,
+  LegalityRequirementUpdateInput,
+  LegalitySection,
   ListContractsParams,
   ListConvocazioniParams,
   ListDelibereParams,
@@ -5089,6 +5098,582 @@ export const useDeletePerformanceIndicatorValue = <TError = ErrorType<Error>,
         TContext
       > => {
       return useMutation(getDeletePerformanceIndicatorValueMutationOptions(options));
+    }
+
+export const getGetLegalitySectionUrl = () => {
+
+
+
+
+  return `/api/legality`
+}
+
+/**
+ * Returns the whole "Monitoraggio Legalità e Trasparenza" section in a single call: the overall judgment plus every area with its nested requirements (and their manually linked acts). All content is editorial.
+ * @summary Get the legality & transparency monitoring section
+ */
+export const getLegalitySection = async ( options?: RequestInit): Promise<LegalitySection> => {
+
+  return customFetch<LegalitySection>(getGetLegalitySectionUrl(),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetLegalitySectionQueryKey = () => {
+    return [
+    `/api/legality`
+    ] as const;
+    }
+
+
+export const getGetLegalitySectionQueryOptions = <TData = Awaited<ReturnType<typeof getLegalitySection>>, TError = ErrorType<unknown>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getLegalitySection>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetLegalitySectionQueryKey();
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getLegalitySection>>> = ({ signal }) => getLegalitySection({ signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getLegalitySection>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetLegalitySectionQueryResult = NonNullable<Awaited<ReturnType<typeof getLegalitySection>>>
+export type GetLegalitySectionQueryError = ErrorType<unknown>
+
+
+/**
+ * @summary Get the legality & transparency monitoring section
+ */
+
+export function useGetLegalitySection<TData = Awaited<ReturnType<typeof getLegalitySection>>, TError = ErrorType<unknown>>(
+  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getLegalitySection>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetLegalitySectionQueryOptions(options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
+
+
+
+export const getUpdateLegalityOverviewUrl = () => {
+
+
+
+
+  return `/api/legality/overview`
+}
+
+/**
+ * @summary Update the section-wide overall judgment (redazione)
+ */
+export const updateLegalityOverview = async (legalityOverviewInput: LegalityOverviewInput, options?: RequestInit): Promise<LegalityOverview> => {
+
+  return customFetch<LegalityOverview>(getUpdateLegalityOverviewUrl(),
+  {
+    ...options,
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      legalityOverviewInput,)
+  }
+);}
+
+
+
+
+export const getUpdateLegalityOverviewMutationOptions = <TError = ErrorType<Error>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateLegalityOverview>>, TError,{data: BodyType<LegalityOverviewInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof updateLegalityOverview>>, TError,{data: BodyType<LegalityOverviewInput>}, TContext> => {
+
+const mutationKey = ['updateLegalityOverview'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof updateLegalityOverview>>, {data: BodyType<LegalityOverviewInput>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  updateLegalityOverview(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type UpdateLegalityOverviewMutationResult = NonNullable<Awaited<ReturnType<typeof updateLegalityOverview>>>
+    export type UpdateLegalityOverviewMutationBody = BodyType<LegalityOverviewInput>
+    export type UpdateLegalityOverviewMutationError = ErrorType<Error>
+
+    /**
+ * @summary Update the section-wide overall judgment (redazione)
+ */
+export const useUpdateLegalityOverview = <TError = ErrorType<Error>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateLegalityOverview>>, TError,{data: BodyType<LegalityOverviewInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof updateLegalityOverview>>,
+        TError,
+        {data: BodyType<LegalityOverviewInput>},
+        TContext
+      > => {
+      return useMutation(getUpdateLegalityOverviewMutationOptions(options));
+    }
+
+export const getCreateLegalityAreaUrl = () => {
+
+
+
+
+  return `/api/legality/areas`
+}
+
+/**
+ * @summary Create a monitoring area (redazione)
+ */
+export const createLegalityArea = async (legalityAreaInput: LegalityAreaInput, options?: RequestInit): Promise<LegalityArea> => {
+
+  return customFetch<LegalityArea>(getCreateLegalityAreaUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      legalityAreaInput,)
+  }
+);}
+
+
+
+
+export const getCreateLegalityAreaMutationOptions = <TError = ErrorType<Error>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createLegalityArea>>, TError,{data: BodyType<LegalityAreaInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof createLegalityArea>>, TError,{data: BodyType<LegalityAreaInput>}, TContext> => {
+
+const mutationKey = ['createLegalityArea'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createLegalityArea>>, {data: BodyType<LegalityAreaInput>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  createLegalityArea(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type CreateLegalityAreaMutationResult = NonNullable<Awaited<ReturnType<typeof createLegalityArea>>>
+    export type CreateLegalityAreaMutationBody = BodyType<LegalityAreaInput>
+    export type CreateLegalityAreaMutationError = ErrorType<Error>
+
+    /**
+ * @summary Create a monitoring area (redazione)
+ */
+export const useCreateLegalityArea = <TError = ErrorType<Error>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createLegalityArea>>, TError,{data: BodyType<LegalityAreaInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof createLegalityArea>>,
+        TError,
+        {data: BodyType<LegalityAreaInput>},
+        TContext
+      > => {
+      return useMutation(getCreateLegalityAreaMutationOptions(options));
+    }
+
+export const getUpdateLegalityAreaUrl = (id: number,) => {
+
+
+
+
+  return `/api/legality/areas/${id}`
+}
+
+/**
+ * @summary Update a monitoring area (redazione)
+ */
+export const updateLegalityArea = async (id: number,
+    legalityAreaUpdateInput: LegalityAreaUpdateInput, options?: RequestInit): Promise<LegalityArea> => {
+
+  return customFetch<LegalityArea>(getUpdateLegalityAreaUrl(id),
+  {
+    ...options,
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      legalityAreaUpdateInput,)
+  }
+);}
+
+
+
+
+export const getUpdateLegalityAreaMutationOptions = <TError = ErrorType<Error>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateLegalityArea>>, TError,{id: number;data: BodyType<LegalityAreaUpdateInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof updateLegalityArea>>, TError,{id: number;data: BodyType<LegalityAreaUpdateInput>}, TContext> => {
+
+const mutationKey = ['updateLegalityArea'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof updateLegalityArea>>, {id: number;data: BodyType<LegalityAreaUpdateInput>}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  updateLegalityArea(id,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type UpdateLegalityAreaMutationResult = NonNullable<Awaited<ReturnType<typeof updateLegalityArea>>>
+    export type UpdateLegalityAreaMutationBody = BodyType<LegalityAreaUpdateInput>
+    export type UpdateLegalityAreaMutationError = ErrorType<Error>
+
+    /**
+ * @summary Update a monitoring area (redazione)
+ */
+export const useUpdateLegalityArea = <TError = ErrorType<Error>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateLegalityArea>>, TError,{id: number;data: BodyType<LegalityAreaUpdateInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof updateLegalityArea>>,
+        TError,
+        {id: number;data: BodyType<LegalityAreaUpdateInput>},
+        TContext
+      > => {
+      return useMutation(getUpdateLegalityAreaMutationOptions(options));
+    }
+
+export const getDeleteLegalityAreaUrl = (id: number,) => {
+
+
+
+
+  return `/api/legality/areas/${id}`
+}
+
+/**
+ * @summary Delete a monitoring area and its requirements (redazione)
+ */
+export const deleteLegalityArea = async (id: number, options?: RequestInit): Promise<void> => {
+
+  return customFetch<void>(getDeleteLegalityAreaUrl(id),
+  {
+    ...options,
+    method: 'DELETE'
+
+
+  }
+);}
+
+
+
+
+export const getDeleteLegalityAreaMutationOptions = <TError = ErrorType<Error>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteLegalityArea>>, TError,{id: number}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof deleteLegalityArea>>, TError,{id: number}, TContext> => {
+
+const mutationKey = ['deleteLegalityArea'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof deleteLegalityArea>>, {id: number}> = (props) => {
+          const {id} = props ?? {};
+
+          return  deleteLegalityArea(id,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type DeleteLegalityAreaMutationResult = NonNullable<Awaited<ReturnType<typeof deleteLegalityArea>>>
+
+    export type DeleteLegalityAreaMutationError = ErrorType<Error>
+
+    /**
+ * @summary Delete a monitoring area and its requirements (redazione)
+ */
+export const useDeleteLegalityArea = <TError = ErrorType<Error>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteLegalityArea>>, TError,{id: number}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof deleteLegalityArea>>,
+        TError,
+        {id: number},
+        TContext
+      > => {
+      return useMutation(getDeleteLegalityAreaMutationOptions(options));
+    }
+
+export const getCreateLegalityRequirementUrl = (id: number,) => {
+
+
+
+
+  return `/api/legality/areas/${id}/requirements`
+}
+
+/**
+ * @summary Create a requirement inside an area (redazione)
+ */
+export const createLegalityRequirement = async (id: number,
+    legalityRequirementInput: LegalityRequirementInput, options?: RequestInit): Promise<LegalityRequirement> => {
+
+  return customFetch<LegalityRequirement>(getCreateLegalityRequirementUrl(id),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      legalityRequirementInput,)
+  }
+);}
+
+
+
+
+export const getCreateLegalityRequirementMutationOptions = <TError = ErrorType<Error>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createLegalityRequirement>>, TError,{id: number;data: BodyType<LegalityRequirementInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof createLegalityRequirement>>, TError,{id: number;data: BodyType<LegalityRequirementInput>}, TContext> => {
+
+const mutationKey = ['createLegalityRequirement'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createLegalityRequirement>>, {id: number;data: BodyType<LegalityRequirementInput>}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  createLegalityRequirement(id,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type CreateLegalityRequirementMutationResult = NonNullable<Awaited<ReturnType<typeof createLegalityRequirement>>>
+    export type CreateLegalityRequirementMutationBody = BodyType<LegalityRequirementInput>
+    export type CreateLegalityRequirementMutationError = ErrorType<Error>
+
+    /**
+ * @summary Create a requirement inside an area (redazione)
+ */
+export const useCreateLegalityRequirement = <TError = ErrorType<Error>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createLegalityRequirement>>, TError,{id: number;data: BodyType<LegalityRequirementInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof createLegalityRequirement>>,
+        TError,
+        {id: number;data: BodyType<LegalityRequirementInput>},
+        TContext
+      > => {
+      return useMutation(getCreateLegalityRequirementMutationOptions(options));
+    }
+
+export const getUpdateLegalityRequirementUrl = (id: number,) => {
+
+
+
+
+  return `/api/legality/requirements/${id}`
+}
+
+/**
+ * @summary Update a requirement (redazione)
+ */
+export const updateLegalityRequirement = async (id: number,
+    legalityRequirementUpdateInput: LegalityRequirementUpdateInput, options?: RequestInit): Promise<LegalityRequirement> => {
+
+  return customFetch<LegalityRequirement>(getUpdateLegalityRequirementUrl(id),
+  {
+    ...options,
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      legalityRequirementUpdateInput,)
+  }
+);}
+
+
+
+
+export const getUpdateLegalityRequirementMutationOptions = <TError = ErrorType<Error>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateLegalityRequirement>>, TError,{id: number;data: BodyType<LegalityRequirementUpdateInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof updateLegalityRequirement>>, TError,{id: number;data: BodyType<LegalityRequirementUpdateInput>}, TContext> => {
+
+const mutationKey = ['updateLegalityRequirement'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof updateLegalityRequirement>>, {id: number;data: BodyType<LegalityRequirementUpdateInput>}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  updateLegalityRequirement(id,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type UpdateLegalityRequirementMutationResult = NonNullable<Awaited<ReturnType<typeof updateLegalityRequirement>>>
+    export type UpdateLegalityRequirementMutationBody = BodyType<LegalityRequirementUpdateInput>
+    export type UpdateLegalityRequirementMutationError = ErrorType<Error>
+
+    /**
+ * @summary Update a requirement (redazione)
+ */
+export const useUpdateLegalityRequirement = <TError = ErrorType<Error>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateLegalityRequirement>>, TError,{id: number;data: BodyType<LegalityRequirementUpdateInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof updateLegalityRequirement>>,
+        TError,
+        {id: number;data: BodyType<LegalityRequirementUpdateInput>},
+        TContext
+      > => {
+      return useMutation(getUpdateLegalityRequirementMutationOptions(options));
+    }
+
+export const getDeleteLegalityRequirementUrl = (id: number,) => {
+
+
+
+
+  return `/api/legality/requirements/${id}`
+}
+
+/**
+ * @summary Delete a requirement (redazione)
+ */
+export const deleteLegalityRequirement = async (id: number, options?: RequestInit): Promise<void> => {
+
+  return customFetch<void>(getDeleteLegalityRequirementUrl(id),
+  {
+    ...options,
+    method: 'DELETE'
+
+
+  }
+);}
+
+
+
+
+export const getDeleteLegalityRequirementMutationOptions = <TError = ErrorType<Error>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteLegalityRequirement>>, TError,{id: number}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof deleteLegalityRequirement>>, TError,{id: number}, TContext> => {
+
+const mutationKey = ['deleteLegalityRequirement'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof deleteLegalityRequirement>>, {id: number}> = (props) => {
+          const {id} = props ?? {};
+
+          return  deleteLegalityRequirement(id,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type DeleteLegalityRequirementMutationResult = NonNullable<Awaited<ReturnType<typeof deleteLegalityRequirement>>>
+
+    export type DeleteLegalityRequirementMutationError = ErrorType<Error>
+
+    /**
+ * @summary Delete a requirement (redazione)
+ */
+export const useDeleteLegalityRequirement = <TError = ErrorType<Error>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteLegalityRequirement>>, TError,{id: number}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof deleteLegalityRequirement>>,
+        TError,
+        {id: number},
+        TContext
+      > => {
+      return useMutation(getDeleteLegalityRequirementMutationOptions(options));
     }
 
 export const getRequestDocumentUploadUrlUrl = () => {

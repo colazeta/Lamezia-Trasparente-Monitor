@@ -20,6 +20,7 @@ import { PareriVigilanzaDetail } from "./pages/PareriVigilanzaDetail";
 import { Opendata } from "./pages/Opendata";
 import { OpendataDetail } from "./pages/OpendataDetail";
 import { AttiFondamentali } from "./pages/AttiFondamentali";
+import { Legalita } from "./pages/Legalita";
 import { Performance } from "./pages/Performance";
 import { PerformanceCompare } from "./pages/PerformanceCompare";
 import { PerformanceDetail } from "./pages/PerformanceDetail";
@@ -31,6 +32,7 @@ import { AdminCronistoria } from "./pages/AdminCronistoria";
 import { AdminDomande } from "./pages/AdminDomande";
 import { AdminAppalti } from "./pages/AdminAppalti";
 import { AdminAttiFondamentali } from "./pages/AdminAttiFondamentali";
+import { AdminLegalita } from "./pages/AdminLegalita";
 import NotFound from "./pages/not-found";
 
 export function Router() {
@@ -45,6 +47,7 @@ export function Router() {
         <Route path="/contratti/:id" component={ContractStoryline} />
         <Route path="/albo" component={Albo} />
         <Route path="/atti-fondamentali" component={AttiFondamentali} />
+        <Route path="/legalita" component={Legalita} />
         <Route path="/delibere" component={Delibere} />
         <Route path="/convocazioni" component={Convocazioni} />
         <Route path="/convocazioni/:id" component={SedutaDetail} />
@@ -71,6 +74,7 @@ export function Router() {
           path="/admin/atti-fondamentali"
           component={AdminAttiFondamentali}
         />
+        <Route path="/admin/legalita" component={AdminLegalita} />
         <Route component={NotFound} />
       </Switch>
     </MainLayout>

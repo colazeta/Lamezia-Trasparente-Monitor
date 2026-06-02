@@ -785,6 +785,128 @@ export interface PerformanceIndicatorValueInput {
   source?: string;
 }
 
+/**
+ * A manually-attached act reference (internal path or external URL).
+ */
+export interface LegalityActLink {
+  label: string;
+  url: string;
+}
+
+export interface LegalityArea {
+  id: number;
+  slug: string;
+  title: string;
+  description: string;
+  finalJudgment: string;
+  position: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export type LegalityRequirementStatus = typeof LegalityRequirementStatus[keyof typeof LegalityRequirementStatus];
+
+
+export const LegalityRequirementStatus = {
+  present: 'present',
+  absent: 'absent',
+  partial: 'partial',
+  not_applicable: 'not_applicable',
+} as const;
+
+export interface LegalityRequirement {
+  id: number;
+  areaId: number;
+  title: string;
+  description: string;
+  status: LegalityRequirementStatus;
+  comment: string;
+  linkedActs: LegalityActLink[];
+  position: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export type LegalityAreaWithRequirements = LegalityArea & {
+  requirements: LegalityRequirement[];
+};
+
+export interface LegalityOverview {
+  overallJudgment: string;
+  /** @nullable */
+  updatedAt: string | null;
+}
+
+export interface LegalitySection {
+  overallJudgment: string;
+  /** @nullable */
+  updatedAt: string | null;
+  areas: LegalityAreaWithRequirements[];
+}
+
+export interface LegalityOverviewInput {
+  overallJudgment: string;
+}
+
+export interface LegalityAreaInput {
+  /** @minLength 1 */
+  slug: string;
+  /** @minLength 1 */
+  title: string;
+  description?: string;
+  finalJudgment?: string;
+  position?: number;
+}
+
+export interface LegalityAreaUpdateInput {
+  /** @minLength 1 */
+  title?: string;
+  description?: string;
+  finalJudgment?: string;
+  position?: number;
+}
+
+export type LegalityRequirementInputStatus = typeof LegalityRequirementInputStatus[keyof typeof LegalityRequirementInputStatus];
+
+
+export const LegalityRequirementInputStatus = {
+  present: 'present',
+  absent: 'absent',
+  partial: 'partial',
+  not_applicable: 'not_applicable',
+} as const;
+
+export interface LegalityRequirementInput {
+  /** @minLength 1 */
+  title: string;
+  description?: string;
+  status?: LegalityRequirementInputStatus;
+  comment?: string;
+  linkedActs?: LegalityActLink[];
+  position?: number;
+}
+
+export type LegalityRequirementUpdateInputStatus = typeof LegalityRequirementUpdateInputStatus[keyof typeof LegalityRequirementUpdateInputStatus];
+
+
+export const LegalityRequirementUpdateInputStatus = {
+  present: 'present',
+  absent: 'absent',
+  partial: 'partial',
+  not_applicable: 'not_applicable',
+} as const;
+
+export interface LegalityRequirementUpdateInput {
+  areaId?: number;
+  /** @minLength 1 */
+  title?: string;
+  description?: string;
+  status?: LegalityRequirementUpdateInputStatus;
+  comment?: string;
+  linkedActs?: LegalityActLink[];
+  position?: number;
+}
+
 export interface PnrrAttachment {
   title: string;
   url: string;

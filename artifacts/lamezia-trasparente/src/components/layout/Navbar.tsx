@@ -20,6 +20,7 @@ import {
   Database,
   Gauge,
   ScrollText,
+  Scale,
 } from "lucide-react";
 import { useState } from "react";
 import { useListQuestions } from "@workspace/api-client-react";
@@ -39,6 +40,7 @@ const sectionItems = [
   { href: "/temi", label: "Temi", icon: FileSearch },
   { href: "/albo", label: "Albo Pretorio", icon: ShieldAlert },
   { href: "/atti-fondamentali", label: "Atti fondamentali", icon: ScrollText },
+  { href: "/legalita", label: "Legalità e Trasparenza", icon: Scale },
   { href: "/delibere", label: "Delibere", icon: Gavel },
   { href: "/convocazioni", label: "Convocazioni", icon: CalendarClock },
   { href: "/organi", label: "Organi", icon: Building2 },

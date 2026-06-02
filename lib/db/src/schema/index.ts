@@ -25,3 +25,6 @@ export * from "./organi";
 export * from "./sedute";
 export * from "./oversightOpinions";
 export * from "./fundamentalActs";
+export * from "./legalityAreas";
+export * from "./legalityRequirements";
+export * from "./legalityOverview";

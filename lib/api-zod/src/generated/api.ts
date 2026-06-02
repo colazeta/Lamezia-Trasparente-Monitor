@@ -2055,6 +2055,179 @@ export const DeletePerformanceIndicatorValueParams = zod.object({
 
 
 /**
+ * Returns the whole "Monitoraggio Legalità e Trasparenza" section in a single call: the overall judgment plus every area with its nested requirements (and their manually linked acts). All content is editorial.
+ * @summary Get the legality & transparency monitoring section
+ */
+export const GetLegalitySectionResponse = zod.object({
+  "overallJudgment": zod.string(),
+  "updatedAt": zod.string().nullable(),
+  "areas": zod.array(zod.object({
+  "id": zod.number(),
+  "slug": zod.string(),
+  "title": zod.string(),
+  "description": zod.string(),
+  "finalJudgment": zod.string(),
+  "position": zod.number(),
+  "createdAt": zod.string(),
+  "updatedAt": zod.string()
+}).and(zod.object({
+  "requirements": zod.array(zod.object({
+  "id": zod.number(),
+  "areaId": zod.number(),
+  "title": zod.string(),
+  "description": zod.string(),
+  "status": zod.enum(['present', 'absent', 'partial', 'not_applicable']),
+  "comment": zod.string(),
+  "linkedActs": zod.array(zod.object({
+  "label": zod.string(),
+  "url": zod.string()
+}).describe('A manually-attached act reference (internal path or external URL).')),
+  "position": zod.number(),
+  "createdAt": zod.string(),
+  "updatedAt": zod.string()
+}))
+})))
+})
+
+
+/**
+ * @summary Update the section-wide overall judgment (redazione)
+ */
+export const UpdateLegalityOverviewBody = zod.object({
+  "overallJudgment": zod.string()
+})
+
+export const UpdateLegalityOverviewResponse = zod.object({
+  "overallJudgment": zod.string(),
+  "updatedAt": zod.string().nullable()
+})
+
+
+/**
+ * @summary Create a monitoring area (redazione)
+ */
+
+
+
+
+export const CreateLegalityAreaBody = zod.object({
+  "slug": zod.string().min(1),
+  "title": zod.string().min(1),
+  "description": zod.string().optional(),
+  "finalJudgment": zod.string().optional(),
+  "position": zod.number().optional()
+})
+
+
+/**
+ * @summary Update a monitoring area (redazione)
+ */
+export const UpdateLegalityAreaParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+
+
+
+export const UpdateLegalityAreaBody = zod.object({
+  "title": zod.string().min(1).optional(),
+  "description": zod.string().optional(),
+  "finalJudgment": zod.string().optional(),
+  "position": zod.number().optional()
+})
+
+export const UpdateLegalityAreaResponse = zod.object({
+  "id": zod.number(),
+  "slug": zod.string(),
+  "title": zod.string(),
+  "description": zod.string(),
+  "finalJudgment": zod.string(),
+  "position": zod.number(),
+  "createdAt": zod.string(),
+  "updatedAt": zod.string()
+})
+
+
+/**
+ * @summary Delete a monitoring area and its requirements (redazione)
+ */
+export const DeleteLegalityAreaParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+
+/**
+ * @summary Create a requirement inside an area (redazione)
+ */
+export const CreateLegalityRequirementParams = zod.object({
+  "id": zod.coerce.number().describe('Area id')
+})
+
+
+
+
+export const CreateLegalityRequirementBody = zod.object({
+  "title": zod.string().min(1),
+  "description": zod.string().optional(),
+  "status": zod.enum(['present', 'absent', 'partial', 'not_applicable']).optional(),
+  "comment": zod.string().optional(),
+  "linkedActs": zod.array(zod.object({
+  "label": zod.string(),
+  "url": zod.string()
+}).describe('A manually-attached act reference (internal path or external URL).')).optional(),
+  "position": zod.number().optional()
+})
+
+
+/**
+ * @summary Update a requirement (redazione)
+ */
+export const UpdateLegalityRequirementParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+
+
+
+export const UpdateLegalityRequirementBody = zod.object({
+  "areaId": zod.number().optional(),
+  "title": zod.string().min(1).optional(),
+  "description": zod.string().optional(),
+  "status": zod.enum(['present', 'absent', 'partial', 'not_applicable']).optional(),
+  "comment": zod.string().optional(),
+  "linkedActs": zod.array(zod.object({
+  "label": zod.string(),
+  "url": zod.string()
+}).describe('A manually-attached act reference (internal path or external URL).')).optional(),
+  "position": zod.number().optional()
+})
+
+export const UpdateLegalityRequirementResponse = zod.object({
+  "id": zod.number(),
+  "areaId": zod.number(),
+  "title": zod.string(),
+  "description": zod.string(),
+  "status": zod.enum(['present', 'absent', 'partial', 'not_applicable']),
+  "comment": zod.string(),
+  "linkedActs": zod.array(zod.object({
+  "label": zod.string(),
+  "url": zod.string()
+}).describe('A manually-attached act reference (internal path or external URL).')),
+  "position": zod.number(),
+  "createdAt": zod.string(),
+  "updatedAt": zod.string()
+})
+
+
+/**
+ * @summary Delete a requirement (redazione)
+ */
+export const DeleteLegalityRequirementParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+
+/**
  * Returns a presigned GCS URL for direct upload of a document (PDF or
 office file, up to ~30MB). The client sends JSON metadata here, then
 uploads the file directly to the returned URL. Protected by the same

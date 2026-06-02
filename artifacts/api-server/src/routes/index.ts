@@ -15,6 +15,7 @@ import questionsRouter from "./questions";
 import oversightRouter from "./oversight";
 import performanceRouter from "./performance";
 import fundamentalActsRouter from "./fundamentalActs";
+import legalityRouter from "./legality";
 
 const router: IRouter = Router();
 
@@ -34,5 +35,6 @@ router.use(questionsRouter);
 router.use(oversightRouter);
 router.use(performanceRouter);
 router.use(fundamentalActsRouter);
+router.use(legalityRouter);
 
 export default router;
