@@ -1824,7 +1824,11 @@ export const ListPerformanceCategoriesResponseItem = zod.object({
   "previousValue": zod.union([zod.object({
   "value": zod.number(),
   "period": zod.string()
-}).describe('Compact value of a single period (used for inline latest\/previous).'),zod.null()]).optional().describe('Second most recent value, included inline by the categories endpoint so the list can compute the trend. Null when fewer than two values.')
+}).describe('Compact value of a single period (used for inline latest\/previous).'),zod.null()]).optional().describe('Second most recent value, included inline by the categories endpoint so the list can compute the trend. Null when fewer than two values.'),
+  "recentValues": zod.array(zod.object({
+  "value": zod.number(),
+  "period": zod.string()
+}).describe('Compact value of a single period (used for inline latest\/previous).')).optional().describe('A short window of the most recent values (oldest to newest, up to the last 6 periods), included inline by the categories endpoint so the list can render a mini trend sparkline without a per-indicator detail request. Empty when the indicator has no values.')
 }))
 }))
 export const ListPerformanceCategoriesResponse = zod.array(ListPerformanceCategoriesResponseItem)
@@ -1859,7 +1863,11 @@ export const ListPerformanceIndicatorsResponseItem = zod.object({
   "previousValue": zod.union([zod.object({
   "value": zod.number(),
   "period": zod.string()
-}).describe('Compact value of a single period (used for inline latest\/previous).'),zod.null()]).optional().describe('Second most recent value, included inline by the categories endpoint so the list can compute the trend. Null when fewer than two values.')
+}).describe('Compact value of a single period (used for inline latest\/previous).'),zod.null()]).optional().describe('Second most recent value, included inline by the categories endpoint so the list can compute the trend. Null when fewer than two values.'),
+  "recentValues": zod.array(zod.object({
+  "value": zod.number(),
+  "period": zod.string()
+}).describe('Compact value of a single period (used for inline latest\/previous).')).optional().describe('A short window of the most recent values (oldest to newest, up to the last 6 periods), included inline by the categories endpoint so the list can render a mini trend sparkline without a per-indicator detail request. Empty when the indicator has no values.')
 })
 export const ListPerformanceIndicatorsResponse = zod.array(ListPerformanceIndicatorsResponseItem)
 
@@ -1933,7 +1941,11 @@ export const GetPerformanceIndicatorResponse = zod.object({
   "previousValue": zod.union([zod.object({
   "value": zod.number(),
   "period": zod.string()
-}).describe('Compact value of a single period (used for inline latest\/previous).'),zod.null()]).optional().describe('Second most recent value, included inline by the categories endpoint so the list can compute the trend. Null when fewer than two values.')
+}).describe('Compact value of a single period (used for inline latest\/previous).'),zod.null()]).optional().describe('Second most recent value, included inline by the categories endpoint so the list can compute the trend. Null when fewer than two values.'),
+  "recentValues": zod.array(zod.object({
+  "value": zod.number(),
+  "period": zod.string()
+}).describe('Compact value of a single period (used for inline latest\/previous).')).optional().describe('A short window of the most recent values (oldest to newest, up to the last 6 periods), included inline by the categories endpoint so the list can render a mini trend sparkline without a per-indicator detail request. Empty when the indicator has no values.')
 }).and(zod.object({
   "values": zod.array(zod.object({
   "id": zod.number(),
@@ -1995,7 +2007,11 @@ export const UpdatePerformanceIndicatorResponse = zod.object({
   "previousValue": zod.union([zod.object({
   "value": zod.number(),
   "period": zod.string()
-}).describe('Compact value of a single period (used for inline latest\/previous).'),zod.null()]).optional().describe('Second most recent value, included inline by the categories endpoint so the list can compute the trend. Null when fewer than two values.')
+}).describe('Compact value of a single period (used for inline latest\/previous).'),zod.null()]).optional().describe('Second most recent value, included inline by the categories endpoint so the list can compute the trend. Null when fewer than two values.'),
+  "recentValues": zod.array(zod.object({
+  "value": zod.number(),
+  "period": zod.string()
+}).describe('Compact value of a single period (used for inline latest\/previous).')).optional().describe('A short window of the most recent values (oldest to newest, up to the last 6 periods), included inline by the categories endpoint so the list can render a mini trend sparkline without a per-indicator detail request. Empty when the indicator has no values.')
 })
 
 

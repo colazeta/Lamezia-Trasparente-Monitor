@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useId, useMemo, useState } from "react";
 import { Link } from "wouter";
 import {
   useListPerformanceCategories,
@@ -249,6 +249,81 @@ function CategorySection({
   );
 }
 
+/**
+ * Sparkline compatto disegnato in SVG dalla breve finestra recente di valori
+ * (più vecchio → più recente) allegata inline dall'endpoint categorie. Non
+ * richiede librerie di charting né una richiesta di dettaglio per card.
+ */
+function Sparkline({
+  values,
+  tone,
+  className,
+}: {
+  values: number[];
+  tone: TrendTone;
+  className?: string;
+}) {
+  if (values.length < 2) return null;
+
+  const width = 96;
+  const height = 32;
+  const pad = 2;
+  const min = Math.min(...values);
+  const max = Math.max(...values);
+  const span = max - min || 1;
+
+  const points = values.map((v, i) => {
+    const x = pad + (i / (values.length - 1)) * (width - pad * 2);
+    const y = pad + (1 - (v - min) / span) * (height - pad * 2);
+    return [x, y] as const;
+  });
+
+  const linePath = points
+    .map(([x, y], i) => `${i === 0 ? "M" : "L"}${x.toFixed(2)},${y.toFixed(2)}`)
+    .join(" ");
+  const areaPath = `${linePath} L${points[points.length - 1][0].toFixed(
+    2,
+  )},${height - pad} L${points[0][0].toFixed(2)},${height - pad} Z`;
+
+  const stroke =
+    tone === "good"
+      ? "hsl(var(--success))"
+      : tone === "bad"
+        ? "hsl(var(--destructive))"
+        : "hsl(var(--muted-foreground))";
+  const last = points[points.length - 1];
+  const gradientId = useId();
+
+  return (
+    <svg
+      viewBox={`0 0 ${width} ${height}`}
+      width={width}
+      height={height}
+      className={className}
+      role="img"
+      aria-label="Andamento recente dell'indicatore"
+      preserveAspectRatio="none"
+    >
+      <defs>
+        <linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor={stroke} stopOpacity={0.18} />
+          <stop offset="100%" stopColor={stroke} stopOpacity={0} />
+        </linearGradient>
+      </defs>
+      <path d={areaPath} fill={`url(#${gradientId})`} stroke="none" />
+      <path
+        d={linePath}
+        fill="none"
+        stroke={stroke}
+        strokeWidth={1.5}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <circle cx={last[0]} cy={last[1]} r={2} fill={stroke} />
+    </svg>
+  );
+}
+
 function IndicatorCard({ indicator }: { indicator: PerformanceIndicator }) {
   const latest = indicator.latestValue ?? null;
   const trend = latest
@@ -258,6 +333,8 @@ function IndicatorCard({ indicator }: { indicator: PerformanceIndicator }) {
         indicator.polarity,
       )
     : null;
+
+  const recentValues = (indicator.recentValues ?? []).map((v) => v.value);
 
   const trendIcon =
     trend?.direction === "up"
@@ -323,6 +400,13 @@ function IndicatorCard({ indicator }: { indicator: PerformanceIndicator }) {
             </div>
           ) : null}
         </div>
+        {recentValues.length >= 2 ? (
+          <Sparkline
+            values={recentValues}
+            tone={trend?.tone ?? "neutral"}
+            className="h-8 w-24 shrink-0 self-center"
+          />
+        ) : null}
       </div>
 
       <div className="mt-auto pt-4 flex items-center justify-between text-xs text-muted-foreground">

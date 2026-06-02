@@ -17,3 +17,4 @@
 - [Contract geocoding fallback & review](contract-geocoding-fallback.md) — auto-geocoding always returns a best-guess (comune-center fallback) with geoVerify=true; admin triage treats geoVerify as "da rivedere", confirmed = coords && !geoVerify.
 - [api-server dev route reload](api-server-dev-route-reload.md) — new Express routes 404 until you restart the api-server workflow in the isolated env; not a routing bug.
 - [ISTAT SDMX performance ingestion](istat-sdmx-performance.md) — performance indicators pull real ISTAT SDMX CSV; isolated env often can't reach esploradati.istat.it (env limit, not a bug); never overwrites manual=true values.
+- [Performance categories inline window](performance-inline-window.md) — /performance/categories returns latest/previous/recentValues inline (single pass, no N+1); web sparkline reads recentValues. Isolated env has empty values table.

@@ -98,19 +98,28 @@ router.get("/performance/categories", async (_req, res) => {
 
   // I valori arrivano ordinati per periodo crescente: scorrendoli, l'ultimo
   // visto è sempre il più recente e quello che lo precedeva diventa il
-  // "precedente".
+  // "precedente". Conserviamo inoltre una breve finestra recente (ultimi
+  // RECENT_WINDOW periodi) per disegnare lo sparkline nelle card senza una
+  // richiesta di dettaglio per indicatore.
+  const RECENT_WINDOW = 6;
   const latestByIndicator = new Map<number, { value: number; period: string }>();
   const previousByIndicator = new Map<
     number,
     { value: number; period: string }
   >();
+  const recentByIndicator = new Map<
+    number,
+    { value: number; period: string }[]
+  >();
   for (const v of values) {
     const prevLatest = latestByIndicator.get(v.indicatorId);
     if (prevLatest) previousByIndicator.set(v.indicatorId, prevLatest);
-    latestByIndicator.set(v.indicatorId, {
-      value: Number(v.value),
-      period: v.period,
-    });
+    const point = { value: Number(v.value), period: v.period };
+    latestByIndicator.set(v.indicatorId, point);
+    const recent = recentByIndicator.get(v.indicatorId) ?? [];
+    recent.push(point);
+    if (recent.length > RECENT_WINDOW) recent.shift();
+    recentByIndicator.set(v.indicatorId, recent);
   }
 
   const indicatorsByCategory = new Map<number, PerformanceIndicator[]>();
@@ -127,6 +136,7 @@ router.get("/performance/categories", async (_req, res) => {
         ...mapIndicator(ind),
         latestValue: latestByIndicator.get(ind.id) ?? null,
         previousValue: previousByIndicator.get(ind.id) ?? null,
+        recentValues: recentByIndicator.get(ind.id) ?? [],
       })),
     })),
   );
