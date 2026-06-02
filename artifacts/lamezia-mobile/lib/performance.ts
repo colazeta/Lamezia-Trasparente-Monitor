@@ -49,8 +49,23 @@ export function computeTrend(
   colors: Colors,
 ): TrendInfo | null {
   if (values.length < 2) return null;
-  const current = values[values.length - 1].value;
-  const previous = values[values.length - 2].value;
+  return trendFromPair(
+    values[values.length - 1].value,
+    values[values.length - 2].value,
+    polarity,
+    colors,
+  );
+}
+
+// Variante di computeTrend basata sui soli due valori più recenti (più recente
+// e precedente), come restituiti inline dall'endpoint categorie.
+export function trendFromPair(
+  current: number,
+  previous: number | null | undefined,
+  polarity: PerformanceIndicator["polarity"],
+  colors: Colors,
+): TrendInfo | null {
+  if (previous === null || previous === undefined) return null;
   const delta = current - previous;
 
   let direction: TrendInfo["direction"] = "flat";

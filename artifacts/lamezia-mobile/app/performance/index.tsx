@@ -14,13 +14,8 @@ import {
 import { Badge, Card, ChipRow, EmptyState, Skeleton } from "@/components/ui";
 import { useColors } from "@/hooks/useColors";
 import { formatDateOpt } from "@/lib/civic";
+import { formatIndicatorValue, trendFromPair } from "@/lib/performance";
 import {
-  computeTrend,
-  formatIndicatorValue,
-  latestValue,
-} from "@/lib/performance";
-import {
-  useGetPerformanceIndicator,
   useListPerformanceCategories,
   useListPerformanceFeedStatus,
   type FeedStatus,
@@ -187,13 +182,17 @@ function IndicatorCard({
   onPress: () => void;
 }) {
   const colors = useColors();
-  // Il valore più recente non è incluso nell'elenco categorie (risposta
-  // leggera): lo recuperiamo dal dettaglio, che viene messo in cache e
-  // riutilizzato dalla schermata di dettaglio.
-  const detail = useGetPerformanceIndicator(String(indicator.id));
-  const values = detail.data?.values ?? [];
-  const latest = latestValue(values);
-  const trend = computeTrend(values, indicator.polarity, colors);
+  // Il valore più recente (e il precedente, per il trend) arrivano inline
+  // dall'elenco categorie: niente richiesta di dettaglio per ogni card.
+  const latest = indicator.latestValue ?? null;
+  const trend = latest
+    ? trendFromPair(
+        latest.value,
+        indicator.previousValue?.value,
+        indicator.polarity,
+        colors,
+      )
+    : null;
 
   return (
     <Pressable
@@ -209,9 +208,7 @@ function IndicatorCard({
         </Text>
 
         <View style={styles.valueRow}>
-          {detail.isLoading ? (
-            <Skeleton height={26} width={90} />
-          ) : latest ? (
+          {latest ? (
             <Text style={[styles.value, { color: colors.primary }]}>
               {formatIndicatorValue(latest.value, indicator.unit)}
             </Text>

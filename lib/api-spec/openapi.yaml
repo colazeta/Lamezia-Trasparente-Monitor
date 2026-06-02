@@ -2681,6 +2681,31 @@ components:
           type: string
         updatedAt:
           type: string
+        latestValue:
+          description: >-
+            Most recent value (value + period), included inline by the
+            categories endpoint so the list can render without a per-indicator
+            detail request. Null when the indicator has no values.
+          oneOf:
+            - $ref: "#/components/schemas/PerformanceLatestValue"
+            - type: "null"
+        previousValue:
+          description: >-
+            Second most recent value, included inline by the categories endpoint
+            so the list can compute the trend. Null when fewer than two values.
+          oneOf:
+            - $ref: "#/components/schemas/PerformanceLatestValue"
+            - type: "null"
+
+    PerformanceLatestValue:
+      type: object
+      description: Compact value of a single period (used for inline latest/previous).
+      required: [value, period]
+      properties:
+        value:
+          type: number
+        period:
+          type: string
 
     PerformanceIndicatorValue:
       type: object

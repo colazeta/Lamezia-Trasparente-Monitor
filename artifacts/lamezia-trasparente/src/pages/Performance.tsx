@@ -3,7 +3,6 @@ import { Link } from "wouter";
 import {
   useListPerformanceCategories,
   useListPerformanceFeedStatus,
-  useGetPerformanceIndicator,
   type PerformanceIndicator,
   type PerformanceCategoryWithIndicators,
 } from "@workspace/api-client-react";
@@ -21,16 +20,9 @@ import {
 } from "lucide-react";
 import { format } from "date-fns";
 import { it } from "date-fns/locale";
-import {
-  Area,
-  AreaChart,
-  ResponsiveContainer,
-  YAxis,
-} from "recharts";
 
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
   Empty,
@@ -39,11 +31,7 @@ import {
   EmptyTitle,
   EmptyDescription,
 } from "@/components/ui/empty";
-import {
-  computeTrend,
-  formatIndicatorValue,
-  latestValue,
-} from "@/lib/performanceFormat";
+import { formatIndicatorValue, trendFromPair } from "@/lib/performanceFormat";
 
 function formatDateTime(value: string | null | undefined) {
   if (!value) return "—";
@@ -262,14 +250,14 @@ function CategorySection({
 }
 
 function IndicatorCard({ indicator }: { indicator: PerformanceIndicator }) {
-  const { data: detail, isLoading } = useGetPerformanceIndicator(
-    String(indicator.id),
-  );
-
-  const values = detail?.values ?? [];
-  const latest = latestValue(values);
-  const trend = computeTrend(values, indicator.polarity);
-  const series = values.map((v) => ({ period: v.period, value: v.value }));
+  const latest = indicator.latestValue ?? null;
+  const trend = latest
+    ? trendFromPair(
+        latest.value,
+        indicator.previousValue?.value,
+        indicator.polarity,
+      )
+    : null;
 
   const trendIcon =
     trend?.direction === "up"
@@ -303,9 +291,7 @@ function IndicatorCard({ indicator }: { indicator: PerformanceIndicator }) {
 
       <div className="mt-3 flex items-end justify-between gap-3">
         <div>
-          {isLoading ? (
-            <Skeleton className="h-9 w-24" />
-          ) : latest ? (
+          {latest ? (
             <div className="flex items-baseline gap-1.5">
               <span className="text-3xl font-display font-bold tabular-nums text-foreground">
                 {formatIndicatorValue(latest.value)}
@@ -337,48 +323,6 @@ function IndicatorCard({ indicator }: { indicator: PerformanceIndicator }) {
             </div>
           ) : null}
         </div>
-
-        {series.length > 1 ? (
-          <div className="h-12 w-24 shrink-0">
-            <ResponsiveContainer width="100%" height="100%">
-              <AreaChart
-                data={series}
-                margin={{ top: 4, right: 0, left: 0, bottom: 0 }}
-              >
-                <defs>
-                  <linearGradient
-                    id={`spark-${indicator.id}`}
-                    x1="0"
-                    y1="0"
-                    x2="0"
-                    y2="1"
-                  >
-                    <stop
-                      offset="5%"
-                      stopColor="hsl(var(--chart-1))"
-                      stopOpacity={0.4}
-                    />
-                    <stop
-                      offset="95%"
-                      stopColor="hsl(var(--chart-1))"
-                      stopOpacity={0}
-                    />
-                  </linearGradient>
-                </defs>
-                <YAxis hide domain={["dataMin", "dataMax"]} />
-                <Area
-                  type="monotone"
-                  dataKey="value"
-                  stroke="hsl(var(--chart-1))"
-                  strokeWidth={2}
-                  fill={`url(#spark-${indicator.id})`}
-                  isAnimationActive={false}
-                  dot={false}
-                />
-              </AreaChart>
-            </ResponsiveContainer>
-          </div>
-        ) : null}
       </div>
 
       <div className="mt-auto pt-4 flex items-center justify-between text-xs text-muted-foreground">

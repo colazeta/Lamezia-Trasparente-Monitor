@@ -63,11 +63,12 @@ function mapValue(v: PerformanceIndicatorValue) {
   };
 }
 
-// Elenco delle categorie, ciascuna con i propri indicatori (senza serie
-// storica, per mantenere la risposta leggera). Le serie si ottengono dal
-// dettaglio del singolo indicatore.
+// Elenco delle categorie, ciascuna con i propri indicatori. Per evitare un
+// pattern N+1 lato client (una richiesta di dettaglio per ogni card), ad ogni
+// indicatore vengono allegati inline il valore più recente e quello
+// precedente (valore + periodo). La serie storica completa resta nel dettaglio.
 router.get("/performance/categories", async (_req, res) => {
-  const [categories, indicators] = await Promise.all([
+  const [categories, indicators, values] = await Promise.all([
     db
       .select()
       .from(performanceCategoriesTable)
@@ -82,7 +83,35 @@ router.get("/performance/categories", async (_req, res) => {
         asc(performanceIndicatorsTable.position),
         asc(performanceIndicatorsTable.id),
       ),
+    db
+      .select({
+        indicatorId: performanceIndicatorValuesTable.indicatorId,
+        period: performanceIndicatorValuesTable.period,
+        value: performanceIndicatorValuesTable.value,
+      })
+      .from(performanceIndicatorValuesTable)
+      .orderBy(
+        asc(performanceIndicatorValuesTable.indicatorId),
+        asc(performanceIndicatorValuesTable.period),
+      ),
   ]);
+
+  // I valori arrivano ordinati per periodo crescente: scorrendoli, l'ultimo
+  // visto è sempre il più recente e quello che lo precedeva diventa il
+  // "precedente".
+  const latestByIndicator = new Map<number, { value: number; period: string }>();
+  const previousByIndicator = new Map<
+    number,
+    { value: number; period: string }
+  >();
+  for (const v of values) {
+    const prevLatest = latestByIndicator.get(v.indicatorId);
+    if (prevLatest) previousByIndicator.set(v.indicatorId, prevLatest);
+    latestByIndicator.set(v.indicatorId, {
+      value: Number(v.value),
+      period: v.period,
+    });
+  }
 
   const indicatorsByCategory = new Map<number, PerformanceIndicator[]>();
   for (const ind of indicators) {
@@ -94,7 +123,11 @@ router.get("/performance/categories", async (_req, res) => {
   res.json(
     categories.map((c) => ({
       ...mapCategory(c),
-      indicators: (indicatorsByCategory.get(c.id) ?? []).map(mapIndicator),
+      indicators: (indicatorsByCategory.get(c.id) ?? []).map((ind) => ({
+        ...mapIndicator(ind),
+        latestValue: latestByIndicator.get(ind.id) ?? null,
+        previousValue: previousByIndicator.get(ind.id) ?? null,
+      })),
     })),
   );
 });

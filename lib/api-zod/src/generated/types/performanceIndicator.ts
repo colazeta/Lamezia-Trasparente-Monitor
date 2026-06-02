@@ -7,6 +7,7 @@
  */
 import type { PerformanceIndicatorPolarity } from './performanceIndicatorPolarity';
 import type { PerformanceIndicatorUpdateMode } from './performanceIndicatorUpdateMode';
+import type { PerformanceLatestValue } from './performanceLatestValue';
 
 export interface PerformanceIndicator {
   id: number;
@@ -25,4 +26,8 @@ export interface PerformanceIndicator {
   position: number;
   createdAt: string;
   updatedAt: string;
+  /** Most recent value (value + period), included inline by the categories endpoint so the list can render without a per-indicator detail request. Null when the indicator has no values. */
+  latestValue?: PerformanceLatestValue | null;
+  /** Second most recent value, included inline by the categories endpoint so the list can compute the trend. Null when fewer than two values. */
+  previousValue?: PerformanceLatestValue | null;
 }

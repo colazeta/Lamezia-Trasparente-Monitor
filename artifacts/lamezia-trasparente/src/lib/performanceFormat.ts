@@ -37,8 +37,23 @@ export function computeTrend(
   polarity: PerformanceIndicator["polarity"],
 ): Trend | null {
   if (values.length < 2) return null;
-  const last = values[values.length - 1].value;
-  const prev = values[values.length - 2].value;
+  return trendFromPair(
+    values[values.length - 1].value,
+    values[values.length - 2].value,
+    polarity,
+  );
+}
+
+/**
+ * Variante di {@link computeTrend} che lavora sui soli due valori più recenti
+ * (più recente e precedente), come restituiti inline dall'endpoint categorie.
+ */
+export function trendFromPair(
+  last: number,
+  prev: number | null | undefined,
+  polarity: PerformanceIndicator["polarity"],
+): Trend | null {
+  if (prev === null || prev === undefined) return null;
   const delta = last - prev;
   const percent = prev !== 0 ? (delta / Math.abs(prev)) * 100 : null;
 

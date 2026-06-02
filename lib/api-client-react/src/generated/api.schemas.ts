@@ -551,6 +551,14 @@ export const PerformanceIndicatorPolarity = {
   neutral: 'neutral',
 } as const;
 
+/**
+ * Compact value of a single period (used for inline latest/previous).
+ */
+export interface PerformanceLatestValue {
+  value: number;
+  period: string;
+}
+
 export interface PerformanceIndicator {
   id: number;
   slug: string;
@@ -568,6 +576,10 @@ export interface PerformanceIndicator {
   position: number;
   createdAt: string;
   updatedAt: string;
+  /** Most recent value (value + period), included inline by the categories endpoint so the list can render without a per-indicator detail request. Null when the indicator has no values. */
+  latestValue?: PerformanceLatestValue | null;
+  /** Second most recent value, included inline by the categories endpoint so the list can compute the trend. Null when fewer than two values. */
+  previousValue?: PerformanceLatestValue | null;
 }
 
 export interface PerformanceIndicatorValue {

@@ -82,6 +82,7 @@ export * from './performanceIndicatorUpdateInputUpdateMode';
 export * from './performanceIndicatorUpdateMode';
 export * from './performanceIndicatorValue';
 export * from './performanceIndicatorValueInput';
+export * from './performanceLatestValue';
 export * from './pnrrAttachment';
 export * from './pnrrCensus';
 export * from './pnrrProject';
