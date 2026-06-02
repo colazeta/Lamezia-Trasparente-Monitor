@@ -34,6 +34,7 @@ import { AdminAppalti } from "./pages/AdminAppalti";
 import { AdminAttiFondamentali } from "./pages/AdminAttiFondamentali";
 import { AdminLegalita } from "./pages/AdminLegalita";
 import { AdminPareri } from "./pages/AdminPareri";
+import { AdminIndex } from "./pages/AdminIndex";
 import NotFound from "./pages/not-found";
 
 export function Router() {
@@ -68,6 +69,7 @@ export function Router() {
         <Route path="/statistiche" component={Statistics} />
         <Route path="/metodologia" component={Metodologia} />
         <Route path="/iscrizioni" component={Subscriptions} />
+        <Route path="/admin" component={AdminIndex} />
         <Route path="/admin/cronistoria" component={AdminCronistoria} />
         <Route path="/admin/domande" component={AdminDomande} />
         <Route path="/admin/appalti" component={AdminAppalti} />
