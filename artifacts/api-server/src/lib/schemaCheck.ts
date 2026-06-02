@@ -1,7 +1,20 @@
-import { db, contractsTable, publicationsTable } from "@workspace/db";
-import { sql, getTableColumns, getTableName } from "drizzle-orm";
-import type { PgTable } from "drizzle-orm/pg-core";
+import { db } from "@workspace/db";
+import * as schema from "@workspace/db/schema";
+import { sql, is, getTableColumns, getTableName } from "drizzle-orm";
+import { PgTable } from "drizzle-orm/pg-core";
 import { logger } from "./logger";
+
+/**
+ * Discovers every table defined in the shared schema package. Iterating over
+ * the schema exports (instead of hard-coding a list) means new tables are
+ * covered by the drift check automatically as soon as they are added to the
+ * schema, so the guard never silently goes stale.
+ */
+function getAllSchemaTables(): PgTable[] {
+  return (Object.values(schema) as unknown[]).filter(
+    (value): value is PgTable => is(value, PgTable),
+  );
+}
 
 /**
  * Compares the columns Drizzle expects for a table against the columns that
@@ -31,10 +44,11 @@ async function findMissingColumns(table: PgTable): Promise<string[]> {
 
 /**
  * Verifies that the database schema is in sync with what the application code
- * expects for the tables that drive contract ingestion. A drift here (e.g. the
- * `contracts` table missing the ANAC or geo columns) silently breaks ingestion
- * with 500s, so we surface it loudly at startup with an actionable message
- * instead of failing later, deep inside the ingestion loop.
+ * expects. Every table exported from the shared schema package is checked, so a
+ * drift (e.g. the `contracts` table missing the ANAC or geo columns, or a newly
+ * added table such as bandi / confiscated assets / PNRR missing entirely)
+ * silently breaks ingestion with 500s. We surface it loudly at startup with an
+ * actionable message instead of failing later, deep inside the ingestion loop.
  *
  * Returns `true` only when every table was successfully checked and no drift
  * was found. Returns `false` on detected drift OR when a check could not be
@@ -42,7 +56,7 @@ async function findMissingColumns(table: PgTable): Promise<string[]> {
  * assuming the schema is fine.
  */
 export async function verifySchema(): Promise<boolean> {
-  const tables: PgTable[] = [contractsTable, publicationsTable];
+  const tables = getAllSchemaTables();
 
   let drifted = false;
   let hadCheckError = false;
@@ -76,7 +90,10 @@ export async function verifySchema(): Promise<boolean> {
 
   const ok = !drifted && !hadCheckError;
   if (ok) {
-    logger.info("Database schema check passed: no drift detected.");
+    logger.info(
+      { tablesChecked: tables.length },
+      "Database schema check passed: no drift detected.",
+    );
   }
   return ok;
 }
