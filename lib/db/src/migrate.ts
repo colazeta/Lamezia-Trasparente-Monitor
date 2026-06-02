@@ -1,6 +1,11 @@
 import { migrate } from "drizzle-orm/node-postgres/migrator";
 import path from "path";
-import { db } from "./client";
+import { db, pool } from "./client";
+import {
+  baselineMigrations,
+  isMigrationTrackingPresent,
+  isSchemaBootstrapped,
+} from "./baselineLogic";
 
 // When bundled by esbuild the build copies lib/db/migrations/ next to the
 // bundle entrypoint as dist/migrations/, so __dirname resolves correctly in
@@ -35,5 +40,17 @@ const migrationsFolder = path.join(__dirname, "migrations");
  * After that, `migrate` and the api-server auto-migrate will work normally.
  */
 export async function runMigrations(): Promise<void> {
+  // First-time transition guard: a database bootstrapped via `drizzle-kit push`
+  // already has the full schema but no migration-tracking record. Running the
+  // migrator against it would attempt to re-execute CREATE TABLE statements that
+  // already exist and fail. Detect that case and baseline (record migrations as
+  // applied, without running their SQL) before migrating. This only writes to
+  // Drizzle's internal tracking table — never to application tables — and is a
+  // no-op on databases already on the migration workflow.
+  const tracked = await isMigrationTrackingPresent(pool);
+  if (!tracked && (await isSchemaBootstrapped(pool))) {
+    await baselineMigrations(pool, migrationsFolder);
+  }
+
   await migrate(db, { migrationsFolder });
 }
