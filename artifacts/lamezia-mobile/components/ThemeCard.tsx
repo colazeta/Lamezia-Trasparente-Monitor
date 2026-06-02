@@ -3,7 +3,7 @@ import { useRouter } from "expo-router";
 import React from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 
-import { Badge } from "@/components/ui";
+import { Badge, cardShadow } from "@/components/ui";
 import { useColors } from "@/hooks/useColors";
 import { THEME_STATUS, formatDate, intentColors } from "@/lib/civic";
 import type { Theme } from "@workspace/api-client-react";
@@ -22,10 +22,11 @@ export function ThemeCard({ theme }: { theme: Theme }) {
       onPress={() => router.push(`/theme/${theme.id}`)}
       style={({ pressed }) => [
         styles.card,
+        cardShadow,
         {
           backgroundColor: colors.card,
           borderColor: colors.cardBorder,
-          borderRadius: colors.radius + 2,
+          borderRadius: colors.radius + 4,
           opacity: pressed ? 0.9 : 1,
         },
       ]}
@@ -74,8 +75,8 @@ export function ThemeCard({ theme }: { theme: Theme }) {
 const styles = StyleSheet.create({
   card: {
     borderWidth: 1,
-    padding: 16,
-    gap: 8,
+    padding: 18,
+    gap: 9,
   },
   topRow: {
     flexDirection: "row",
@@ -85,8 +86,8 @@ const styles = StyleSheet.create({
   },
   title: {
     fontFamily: "SpaceGrotesk_600SemiBold",
-    fontSize: 17,
-    lineHeight: 23,
+    fontSize: 17.5,
+    lineHeight: 24,
     letterSpacing: -0.3,
   },
   summary: {

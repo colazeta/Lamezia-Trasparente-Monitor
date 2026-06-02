@@ -26,6 +26,21 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { useColors } from "@/hooks/useColors";
 
+/**
+ * Discrete elevation for cards — soft, low-contrast shadow on native, flat
+ * (border-only) on web. Keeps surfaces calm and minimal rather than heavy.
+ */
+export const cardShadow = Platform.select<ViewStyle>({
+  ios: {
+    shadowColor: "#0b1220",
+    shadowOpacity: 0.06,
+    shadowRadius: 12,
+    shadowOffset: { width: 0, height: 4 },
+  },
+  android: { elevation: 1 },
+  default: {},
+}) as ViewStyle;
+
 export function useTopInset(): number {
   const insets = useSafeAreaInsets();
   return Platform.OS === "web" ? 67 : insets.top;
@@ -49,7 +64,7 @@ export function ScreenHeader({
       style={[
         styles.header,
         {
-          paddingTop: top + 14,
+          paddingTop: top + 18,
           backgroundColor: colors.background,
           borderBottomColor: colors.border,
         },
@@ -90,10 +105,11 @@ export function Card({
     <View
       style={[
         styles.card,
+        cardShadow,
         {
           backgroundColor: colors.card,
           borderColor: colors.cardBorder,
-          borderRadius: colors.radius + 2,
+          borderRadius: colors.radius + 4,
         },
         style,
       ]}
@@ -117,7 +133,7 @@ export function Badge({
   const colors = useColors();
   return (
     <View
-      style={[styles.badge, { backgroundColor: bg, borderRadius: colors.radius }]}
+      style={[styles.badge, { backgroundColor: bg, borderRadius: colors.radius - 4 }]}
     >
       {icon ? <Feather name={icon} size={11} color={fg} /> : null}
       <Text style={[styles.badgeText, { color: fg }]} numberOfLines={1}>
@@ -533,8 +549,8 @@ export function DateField({
 
 const styles = StyleSheet.create({
   header: {
-    paddingHorizontal: 20,
-    paddingBottom: 14,
+    paddingHorizontal: 22,
+    paddingBottom: 16,
     borderBottomWidth: StyleSheet.hairlineWidth,
     flexDirection: "row",
     alignItems: "flex-end",
@@ -543,8 +559,8 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: 8,
-    paddingHorizontal: 12,
-    height: 44,
+    paddingHorizontal: 14,
+    height: 48,
     borderWidth: 1,
   },
   searchInput: {
@@ -556,9 +572,9 @@ const styles = StyleSheet.create({
   notice: {
     flexDirection: "row",
     alignItems: "flex-start",
-    gap: 10,
+    gap: 11,
     borderWidth: 1,
-    padding: 12,
+    padding: 14,
   },
   noticeTitle: {
     fontFamily: "Inter_600SemiBold",
@@ -572,39 +588,40 @@ const styles = StyleSheet.create({
   },
   chipRow: { gap: 8, paddingVertical: 2 },
   chip: {
-    paddingHorizontal: 14,
-    paddingVertical: 8,
+    paddingHorizontal: 15,
+    paddingVertical: 9,
     borderWidth: 1,
   },
   chipText: { fontFamily: "Inter_500Medium", fontSize: 13 },
   eyebrow: {
     fontFamily: "Inter_700Bold",
     fontSize: 11,
-    letterSpacing: 1.2,
-    marginBottom: 2,
+    letterSpacing: 1.6,
+    marginBottom: 4,
   },
   headerTitle: {
     fontFamily: "SpaceGrotesk_700Bold",
-    fontSize: 26,
-    letterSpacing: -0.5,
+    fontSize: 29,
+    lineHeight: 34,
+    letterSpacing: -0.6,
   },
   headerSubtitle: {
     fontFamily: "Inter_400Regular",
-    fontSize: 13,
-    marginTop: 3,
-    lineHeight: 18,
+    fontSize: 13.5,
+    marginTop: 5,
+    lineHeight: 19,
   },
   headerRight: { marginLeft: 12, marginBottom: 4 },
   card: {
     borderWidth: 1,
-    padding: 16,
+    padding: 18,
   },
   badge: {
     flexDirection: "row",
     alignItems: "center",
     gap: 4,
-    paddingHorizontal: 8,
-    paddingVertical: 4,
+    paddingHorizontal: 9,
+    paddingVertical: 5,
     alignSelf: "flex-start",
   },
   badgeText: {
@@ -617,8 +634,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     gap: 8,
-    paddingHorizontal: 16,
-    paddingVertical: 12,
+    paddingHorizontal: 18,
+    paddingVertical: 14,
   },
   buttonText: {
     fontFamily: "Inter_600SemiBold",

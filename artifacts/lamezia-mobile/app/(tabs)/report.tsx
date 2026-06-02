@@ -391,9 +391,9 @@ function Input({
           borderColor: colors.border,
           color: colors.foreground,
           borderRadius: colors.radius,
-          height: multiline ? 110 : 46,
+          height: multiline ? 120 : 48,
           textAlignVertical: multiline ? "top" : "center",
-          paddingTop: multiline ? 12 : 0,
+          paddingTop: multiline ? 13 : 0,
         },
       ]}
     />
@@ -402,8 +402,8 @@ function Input({
 
 const styles = StyleSheet.create({
   tabBarWrap: { paddingHorizontal: 20, paddingTop: 14, paddingBottom: 4 },
-  segment: { flexDirection: "row", padding: 3 },
-  segmentItem: { flex: 1, paddingVertical: 8, alignItems: "center" },
+  segment: { flexDirection: "row", padding: 4 },
+  segmentItem: { flex: 1, paddingVertical: 9, alignItems: "center" },
   segmentText: { fontFamily: "Inter_600SemiBold", fontSize: 13 },
   formContent: {
     padding: 20,

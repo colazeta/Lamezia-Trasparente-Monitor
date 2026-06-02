@@ -130,14 +130,14 @@ const styles = StyleSheet.create({
     gap: 12,
     paddingBottom: Platform.OS === "web" ? 110 : 40,
   },
-  row: { flexDirection: "row", alignItems: "center", gap: 14 },
+  row: { flexDirection: "row", alignItems: "center", gap: 15 },
   icon: {
     width: 46,
     height: 46,
-    borderRadius: 10,
+    borderRadius: 12,
     alignItems: "center",
     justifyContent: "center",
   },
   title: { fontFamily: "SpaceGrotesk_600SemiBold", fontSize: 16.5, letterSpacing: -0.2 },
-  subtitle: { fontFamily: "Inter_400Regular", fontSize: 13, marginTop: 2, lineHeight: 18 },
+  subtitle: { fontFamily: "Inter_400Regular", fontSize: 13, marginTop: 3, lineHeight: 18 },
 });

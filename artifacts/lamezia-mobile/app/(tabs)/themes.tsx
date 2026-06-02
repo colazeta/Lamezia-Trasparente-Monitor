@@ -208,8 +208,8 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: 8,
-    paddingHorizontal: 12,
-    height: 44,
+    paddingHorizontal: 14,
+    height: 48,
     borderWidth: 1,
   },
   searchInput: {
@@ -220,18 +220,18 @@ const styles = StyleSheet.create({
   },
   segment: {
     flexDirection: "row",
-    padding: 3,
+    padding: 4,
   },
   segmentItem: {
     flex: 1,
-    paddingVertical: 7,
+    paddingVertical: 8,
     alignItems: "center",
   },
   segmentText: { fontFamily: "Inter_600SemiBold", fontSize: 13 },
   chipRow: { gap: 8, paddingVertical: 2 },
   chip: {
-    paddingHorizontal: 14,
-    paddingVertical: 8,
+    paddingHorizontal: 15,
+    paddingVertical: 9,
     borderWidth: 1,
   },
   chipText: { fontFamily: "Inter_500Medium", fontSize: 13 },
