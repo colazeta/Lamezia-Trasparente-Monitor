@@ -8,6 +8,7 @@ import {
   Scale,
   Gavel,
   FileSearch,
+  Telescope,
   ArrowRight,
 } from "lucide-react";
 
@@ -62,6 +63,12 @@ const ADMIN_PANELS: AdminPanel[] = [
     title: "Legalità e Trasparenza",
     description: "Aggiorna le aree e i requisiti di legalità.",
     icon: Scale,
+  },
+  {
+    href: "/admin/monitoraggio",
+    title: "Monitoraggio Civico",
+    description: "Modera i report di monitoraggio inviati dai cittadini.",
+    icon: Telescope,
   },
   {
     href: "/admin/pareri",

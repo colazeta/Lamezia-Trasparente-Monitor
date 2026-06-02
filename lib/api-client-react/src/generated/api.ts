@@ -66,6 +66,7 @@ import type {
   ListContractsParams,
   ListConvocazioniParams,
   ListDelibereParams,
+  ListMonitoringReportsParams,
   ListOfficialsParams,
   ListOpendataDatasetsParams,
   ListOversightOpinionsParams,
@@ -74,6 +75,9 @@ import type {
   ListQuestionsParams,
   ListSeduteParams,
   ListThemesParams,
+  MonitoringReport,
+  MonitoringReportInput,
+  MonitoringReportModerationInput,
   Official,
   OfficialInput,
   OfficialProfile,
@@ -3889,6 +3893,528 @@ export const useCreateReport = <TError = ErrorType<Error>,
         TContext
       > => {
       return useMutation(getCreateReportMutationOptions(options));
+    }
+
+export const getListMonitoringReportsUrl = (params?: ListMonitoringReportsParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : value.toString())
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/monitoring-reports?${stringifiedParams}` : `/api/monitoring-reports`
+}
+
+/**
+ * @summary List published civic monitoring reports
+ */
+export const listMonitoringReports = async (params?: ListMonitoringReportsParams, options?: RequestInit): Promise<MonitoringReport[]> => {
+
+  return customFetch<MonitoringReport[]>(getListMonitoringReportsUrl(params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getListMonitoringReportsQueryKey = (params?: ListMonitoringReportsParams,) => {
+    return [
+    `/api/monitoring-reports`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getListMonitoringReportsQueryOptions = <TData = Awaited<ReturnType<typeof listMonitoringReports>>, TError = ErrorType<unknown>>(params?: ListMonitoringReportsParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listMonitoringReports>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListMonitoringReportsQueryKey(params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listMonitoringReports>>> = ({ signal }) => listMonitoringReports(params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listMonitoringReports>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ListMonitoringReportsQueryResult = NonNullable<Awaited<ReturnType<typeof listMonitoringReports>>>
+export type ListMonitoringReportsQueryError = ErrorType<unknown>
+
+
+/**
+ * @summary List published civic monitoring reports
+ */
+
+export function useListMonitoringReports<TData = Awaited<ReturnType<typeof listMonitoringReports>>, TError = ErrorType<unknown>>(
+ params?: ListMonitoringReportsParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listMonitoringReports>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getListMonitoringReportsQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
+
+
+
+export const getCreateMonitoringReportUrl = () => {
+
+
+
+
+  return `/api/monitoring-reports`
+}
+
+/**
+ * @summary Submit a civic monitoring report
+ */
+export const createMonitoringReport = async (monitoringReportInput: MonitoringReportInput, options?: RequestInit): Promise<MonitoringReport> => {
+
+  return customFetch<MonitoringReport>(getCreateMonitoringReportUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      monitoringReportInput,)
+  }
+);}
+
+
+
+
+export const getCreateMonitoringReportMutationOptions = <TError = ErrorType<Error>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createMonitoringReport>>, TError,{data: BodyType<MonitoringReportInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof createMonitoringReport>>, TError,{data: BodyType<MonitoringReportInput>}, TContext> => {
+
+const mutationKey = ['createMonitoringReport'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createMonitoringReport>>, {data: BodyType<MonitoringReportInput>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  createMonitoringReport(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type CreateMonitoringReportMutationResult = NonNullable<Awaited<ReturnType<typeof createMonitoringReport>>>
+    export type CreateMonitoringReportMutationBody = BodyType<MonitoringReportInput>
+    export type CreateMonitoringReportMutationError = ErrorType<Error>
+
+    /**
+ * @summary Submit a civic monitoring report
+ */
+export const useCreateMonitoringReport = <TError = ErrorType<Error>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createMonitoringReport>>, TError,{data: BodyType<MonitoringReportInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof createMonitoringReport>>,
+        TError,
+        {data: BodyType<MonitoringReportInput>},
+        TContext
+      > => {
+      return useMutation(getCreateMonitoringReportMutationOptions(options));
+    }
+
+export const getRequestMonitoringReportUploadUrlUrl = () => {
+
+
+
+
+  return `/api/monitoring-reports/uploads/request-url`
+}
+
+/**
+ * @summary Request a presigned URL to attach a file to a monitoring report
+ */
+export const requestMonitoringReportUploadUrl = async (uploadUrlRequest: UploadUrlRequest, options?: RequestInit): Promise<UploadUrlResponse> => {
+
+  return customFetch<UploadUrlResponse>(getRequestMonitoringReportUploadUrlUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      uploadUrlRequest,)
+  }
+);}
+
+
+
+
+export const getRequestMonitoringReportUploadUrlMutationOptions = <TError = ErrorType<Error>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof requestMonitoringReportUploadUrl>>, TError,{data: BodyType<UploadUrlRequest>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof requestMonitoringReportUploadUrl>>, TError,{data: BodyType<UploadUrlRequest>}, TContext> => {
+
+const mutationKey = ['requestMonitoringReportUploadUrl'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof requestMonitoringReportUploadUrl>>, {data: BodyType<UploadUrlRequest>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  requestMonitoringReportUploadUrl(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type RequestMonitoringReportUploadUrlMutationResult = NonNullable<Awaited<ReturnType<typeof requestMonitoringReportUploadUrl>>>
+    export type RequestMonitoringReportUploadUrlMutationBody = BodyType<UploadUrlRequest>
+    export type RequestMonitoringReportUploadUrlMutationError = ErrorType<Error>
+
+    /**
+ * @summary Request a presigned URL to attach a file to a monitoring report
+ */
+export const useRequestMonitoringReportUploadUrl = <TError = ErrorType<Error>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof requestMonitoringReportUploadUrl>>, TError,{data: BodyType<UploadUrlRequest>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof requestMonitoringReportUploadUrl>>,
+        TError,
+        {data: BodyType<UploadUrlRequest>},
+        TContext
+      > => {
+      return useMutation(getRequestMonitoringReportUploadUrlMutationOptions(options));
+    }
+
+export const getListMonitoringReportsAdminUrl = () => {
+
+
+
+
+  return `/api/monitoring-reports/admin`
+}
+
+/**
+ * @summary List all monitoring reports for moderation (any status)
+ */
+export const listMonitoringReportsAdmin = async ( options?: RequestInit): Promise<MonitoringReport[]> => {
+
+  return customFetch<MonitoringReport[]>(getListMonitoringReportsAdminUrl(),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getListMonitoringReportsAdminQueryKey = () => {
+    return [
+    `/api/monitoring-reports/admin`
+    ] as const;
+    }
+
+
+export const getListMonitoringReportsAdminQueryOptions = <TData = Awaited<ReturnType<typeof listMonitoringReportsAdmin>>, TError = ErrorType<Error>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listMonitoringReportsAdmin>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListMonitoringReportsAdminQueryKey();
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listMonitoringReportsAdmin>>> = ({ signal }) => listMonitoringReportsAdmin({ signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listMonitoringReportsAdmin>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ListMonitoringReportsAdminQueryResult = NonNullable<Awaited<ReturnType<typeof listMonitoringReportsAdmin>>>
+export type ListMonitoringReportsAdminQueryError = ErrorType<Error>
+
+
+/**
+ * @summary List all monitoring reports for moderation (any status)
+ */
+
+export function useListMonitoringReportsAdmin<TData = Awaited<ReturnType<typeof listMonitoringReportsAdmin>>, TError = ErrorType<Error>>(
+  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listMonitoringReportsAdmin>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getListMonitoringReportsAdminQueryOptions(options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
+
+
+
+export const getGetMonitoringReportUrl = (id: number,) => {
+
+
+
+
+  return `/api/monitoring-reports/${id}`
+}
+
+/**
+ * @summary Get a published monitoring report by id
+ */
+export const getMonitoringReport = async (id: number, options?: RequestInit): Promise<MonitoringReport> => {
+
+  return customFetch<MonitoringReport>(getGetMonitoringReportUrl(id),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetMonitoringReportQueryKey = (id: number,) => {
+    return [
+    `/api/monitoring-reports/${id}`
+    ] as const;
+    }
+
+
+export const getGetMonitoringReportQueryOptions = <TData = Awaited<ReturnType<typeof getMonitoringReport>>, TError = ErrorType<Error>>(id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getMonitoringReport>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetMonitoringReportQueryKey(id);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getMonitoringReport>>> = ({ signal }) => getMonitoringReport(id, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: !!(id), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getMonitoringReport>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetMonitoringReportQueryResult = NonNullable<Awaited<ReturnType<typeof getMonitoringReport>>>
+export type GetMonitoringReportQueryError = ErrorType<Error>
+
+
+/**
+ * @summary Get a published monitoring report by id
+ */
+
+export function useGetMonitoringReport<TData = Awaited<ReturnType<typeof getMonitoringReport>>, TError = ErrorType<Error>>(
+ id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getMonitoringReport>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetMonitoringReportQueryOptions(id,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
+
+
+
+export const getModerateMonitoringReportUrl = (id: number,) => {
+
+
+
+
+  return `/api/monitoring-reports/${id}`
+}
+
+/**
+ * @summary Moderate a monitoring report (publish/reject)
+ */
+export const moderateMonitoringReport = async (id: number,
+    monitoringReportModerationInput: MonitoringReportModerationInput, options?: RequestInit): Promise<MonitoringReport> => {
+
+  return customFetch<MonitoringReport>(getModerateMonitoringReportUrl(id),
+  {
+    ...options,
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      monitoringReportModerationInput,)
+  }
+);}
+
+
+
+
+export const getModerateMonitoringReportMutationOptions = <TError = ErrorType<Error>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof moderateMonitoringReport>>, TError,{id: number;data: BodyType<MonitoringReportModerationInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof moderateMonitoringReport>>, TError,{id: number;data: BodyType<MonitoringReportModerationInput>}, TContext> => {
+
+const mutationKey = ['moderateMonitoringReport'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof moderateMonitoringReport>>, {id: number;data: BodyType<MonitoringReportModerationInput>}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  moderateMonitoringReport(id,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type ModerateMonitoringReportMutationResult = NonNullable<Awaited<ReturnType<typeof moderateMonitoringReport>>>
+    export type ModerateMonitoringReportMutationBody = BodyType<MonitoringReportModerationInput>
+    export type ModerateMonitoringReportMutationError = ErrorType<Error>
+
+    /**
+ * @summary Moderate a monitoring report (publish/reject)
+ */
+export const useModerateMonitoringReport = <TError = ErrorType<Error>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof moderateMonitoringReport>>, TError,{id: number;data: BodyType<MonitoringReportModerationInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof moderateMonitoringReport>>,
+        TError,
+        {id: number;data: BodyType<MonitoringReportModerationInput>},
+        TContext
+      > => {
+      return useMutation(getModerateMonitoringReportMutationOptions(options));
+    }
+
+export const getDeleteMonitoringReportUrl = (id: number,) => {
+
+
+
+
+  return `/api/monitoring-reports/${id}`
+}
+
+/**
+ * @summary Delete a monitoring report
+ */
+export const deleteMonitoringReport = async (id: number, options?: RequestInit): Promise<void> => {
+
+  return customFetch<void>(getDeleteMonitoringReportUrl(id),
+  {
+    ...options,
+    method: 'DELETE'
+
+
+  }
+);}
+
+
+
+
+export const getDeleteMonitoringReportMutationOptions = <TError = ErrorType<Error>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteMonitoringReport>>, TError,{id: number}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof deleteMonitoringReport>>, TError,{id: number}, TContext> => {
+
+const mutationKey = ['deleteMonitoringReport'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof deleteMonitoringReport>>, {id: number}> = (props) => {
+          const {id} = props ?? {};
+
+          return  deleteMonitoringReport(id,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type DeleteMonitoringReportMutationResult = NonNullable<Awaited<ReturnType<typeof deleteMonitoringReport>>>
+
+    export type DeleteMonitoringReportMutationError = ErrorType<Error>
+
+    /**
+ * @summary Delete a monitoring report
+ */
+export const useDeleteMonitoringReport = <TError = ErrorType<Error>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteMonitoringReport>>, TError,{id: number}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof deleteMonitoringReport>>,
+        TError,
+        {id: number},
+        TContext
+      > => {
+      return useMutation(getDeleteMonitoringReportMutationOptions(options));
     }
 
 export const getGetStatsOverviewUrl = () => {

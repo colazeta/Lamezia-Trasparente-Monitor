@@ -10,6 +10,7 @@ export * from "./performanceIndicatorValues";
 export * from "./contracts";
 export * from "./acts";
 export * from "./reports";
+export * from "./monitoringReports";
 export * from "./shares";
 export * from "./themeRelevanceEvents";
 export * from "./publications";

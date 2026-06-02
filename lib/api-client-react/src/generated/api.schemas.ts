@@ -1295,6 +1295,7 @@ export interface PnrrAttachment {
 }
 
 export interface PnrrProject {
+  id: number;
   key: string;
   sourceId: string;
   url: string;
@@ -1530,6 +1531,119 @@ export interface ReportInput {
   /** @minLength 1 */
   location: string;
   citizenName?: string;
+}
+
+export interface MonitoringReportAttachment {
+  title: string;
+  url: string;
+  /** @nullable */
+  contentType?: string | null;
+}
+
+export type MonitoringReportSubjectType = typeof MonitoringReportSubjectType[keyof typeof MonitoringReportSubjectType];
+
+
+export const MonitoringReportSubjectType = {
+  contract: 'contract',
+  pnrr: 'pnrr',
+} as const;
+
+export type MonitoringReportOverallAssessment = typeof MonitoringReportOverallAssessment[keyof typeof MonitoringReportOverallAssessment];
+
+
+export const MonitoringReportOverallAssessment = {
+  positivo: 'positivo',
+  neutro: 'neutro',
+  critico: 'critico',
+} as const;
+
+export type MonitoringReportStatus = typeof MonitoringReportStatus[keyof typeof MonitoringReportStatus];
+
+
+export const MonitoringReportStatus = {
+  in_revisione: 'in_revisione',
+  pubblicato: 'pubblicato',
+  rifiutato: 'rifiutato',
+} as const;
+
+export interface MonitoringReport {
+  id: number;
+  subjectType: MonitoringReportSubjectType;
+  /** @nullable */
+  contractId?: number | null;
+  /** @nullable */
+  pnrrProjectId?: number | null;
+  subjectTitle: string;
+  /** @nullable */
+  cig?: string | null;
+  /** @nullable */
+  cup?: string | null;
+  title: string;
+  /** @nullable */
+  authorName?: string | null;
+  deskAnalysis: string;
+  effectivenessEvaluation: string;
+  impactResults: string;
+  overallAssessment: MonitoringReportOverallAssessment;
+  attachments: MonitoringReportAttachment[];
+  status: MonitoringReportStatus;
+  /** @nullable */
+  moderationNote?: string | null;
+  createdAt: string;
+  /** @nullable */
+  publishedAt?: string | null;
+}
+
+export type MonitoringReportInputSubjectType = typeof MonitoringReportInputSubjectType[keyof typeof MonitoringReportInputSubjectType];
+
+
+export const MonitoringReportInputSubjectType = {
+  contract: 'contract',
+  pnrr: 'pnrr',
+} as const;
+
+export type MonitoringReportInputOverallAssessment = typeof MonitoringReportInputOverallAssessment[keyof typeof MonitoringReportInputOverallAssessment];
+
+
+export const MonitoringReportInputOverallAssessment = {
+  positivo: 'positivo',
+  neutro: 'neutro',
+  critico: 'critico',
+} as const;
+
+export interface MonitoringReportInput {
+  subjectType: MonitoringReportInputSubjectType;
+  contractId?: number;
+  pnrrProjectId?: number;
+  /**
+     * @minLength 5
+     * @maxLength 160
+     */
+  title: string;
+  authorName?: string;
+  /** @minLength 20 */
+  deskAnalysis: string;
+  /** @minLength 20 */
+  effectivenessEvaluation: string;
+  /** @minLength 20 */
+  impactResults: string;
+  overallAssessment: MonitoringReportInputOverallAssessment;
+  attachments?: MonitoringReportAttachment[];
+}
+
+export type MonitoringReportModerationInputStatus = typeof MonitoringReportModerationInputStatus[keyof typeof MonitoringReportModerationInputStatus];
+
+
+export const MonitoringReportModerationInputStatus = {
+  in_revisione: 'in_revisione',
+  pubblicato: 'pubblicato',
+  rifiutato: 'rifiutato',
+} as const;
+
+export interface MonitoringReportModerationInput {
+  status: MonitoringReportModerationInputStatus;
+  /** @nullable */
+  moderationNote?: string | null;
 }
 
 export type ShareInputChannel = typeof ShareInputChannel[keyof typeof ShareInputChannel];
@@ -2167,6 +2281,17 @@ export type ListOfficialsParams = {
  */
 role?: string;
 q?: string;
+};
+
+export type ListMonitoringReportsParams = {
+/**
+ * Filter by monitored contract id
+ */
+contractId?: number;
+/**
+ * Filter by monitored PNRR project id
+ */
+pnrrProjectId?: number;
 };
 
 export type GetPublicationsTimelineParams = {

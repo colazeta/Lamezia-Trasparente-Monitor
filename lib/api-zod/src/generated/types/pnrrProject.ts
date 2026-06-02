@@ -9,6 +9,7 @@ import type { PnrrAttachment } from './pnrrAttachment';
 import type { Publication } from './publication';
 
 export interface PnrrProject {
+  id: number;
   key: string;
   sourceId: string;
   url: string;

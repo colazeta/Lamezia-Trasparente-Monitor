@@ -1263,6 +1263,7 @@ export const ListSeduteResponse = zod.array(ListSeduteResponseItem)
  */
 export const ListPnrrProjectsResponse = zod.object({
   "projects": zod.array(zod.object({
+  "id": zod.number(),
   "key": zod.string(),
   "sourceId": zod.string(),
   "url": zod.string(),
@@ -1640,6 +1641,212 @@ export const CreateReportBody = zod.object({
   "category": zod.string().min(1),
   "location": zod.string().min(1),
   "citizenName": zod.string().optional()
+})
+
+
+/**
+ * @summary List published civic monitoring reports
+ */
+export const ListMonitoringReportsQueryParams = zod.object({
+  "contractId": zod.coerce.number().optional().describe('Filter by monitored contract id'),
+  "pnrrProjectId": zod.coerce.number().optional().describe('Filter by monitored PNRR project id')
+})
+
+export const ListMonitoringReportsResponseItem = zod.object({
+  "id": zod.number(),
+  "subjectType": zod.enum(['contract', 'pnrr']),
+  "contractId": zod.number().nullish(),
+  "pnrrProjectId": zod.number().nullish(),
+  "subjectTitle": zod.string(),
+  "cig": zod.string().nullish(),
+  "cup": zod.string().nullish(),
+  "title": zod.string(),
+  "authorName": zod.string().nullish(),
+  "deskAnalysis": zod.string(),
+  "effectivenessEvaluation": zod.string(),
+  "impactResults": zod.string(),
+  "overallAssessment": zod.enum(['positivo', 'neutro', 'critico']),
+  "attachments": zod.array(zod.object({
+  "title": zod.string(),
+  "url": zod.string(),
+  "contentType": zod.string().nullish()
+})),
+  "status": zod.enum(['in_revisione', 'pubblicato', 'rifiutato']),
+  "moderationNote": zod.string().nullish(),
+  "createdAt": zod.string(),
+  "publishedAt": zod.string().nullish()
+})
+export const ListMonitoringReportsResponse = zod.array(ListMonitoringReportsResponseItem)
+
+
+/**
+ * @summary Submit a civic monitoring report
+ */
+export const createMonitoringReportBodyTitleMin = 5;
+export const createMonitoringReportBodyTitleMax = 160;
+
+export const createMonitoringReportBodyDeskAnalysisMin = 20;
+
+export const createMonitoringReportBodyEffectivenessEvaluationMin = 20;
+
+export const createMonitoringReportBodyImpactResultsMin = 20;
+
+
+
+export const CreateMonitoringReportBody = zod.object({
+  "subjectType": zod.enum(['contract', 'pnrr']),
+  "contractId": zod.number().optional(),
+  "pnrrProjectId": zod.number().optional(),
+  "title": zod.string().min(createMonitoringReportBodyTitleMin).max(createMonitoringReportBodyTitleMax),
+  "authorName": zod.string().optional(),
+  "deskAnalysis": zod.string().min(createMonitoringReportBodyDeskAnalysisMin),
+  "effectivenessEvaluation": zod.string().min(createMonitoringReportBodyEffectivenessEvaluationMin),
+  "impactResults": zod.string().min(createMonitoringReportBodyImpactResultsMin),
+  "overallAssessment": zod.enum(['positivo', 'neutro', 'critico']),
+  "attachments": zod.array(zod.object({
+  "title": zod.string(),
+  "url": zod.string(),
+  "contentType": zod.string().nullish()
+})).optional()
+})
+
+
+/**
+ * @summary Request a presigned URL to attach a file to a monitoring report
+ */
+
+
+
+
+
+export const RequestMonitoringReportUploadUrlBody = zod.object({
+  "name": zod.string().min(1).describe('Original file name.'),
+  "size": zod.number().min(1).describe('File size in bytes.'),
+  "contentType": zod.string().min(1).describe('MIME type of the file (e.g. `image\/jpeg`).')
+})
+
+
+
+
+
+
+export const RequestMonitoringReportUploadUrlResponse = zod.object({
+  "uploadURL": zod.string().url().describe('Presigned GCS URL for PUT upload.'),
+  "objectPath": zod.string().describe('Normalized object path (e.g. `\/objects\/uploads\/uuid`). Embed this in the post body.'),
+  "metadata": zod.object({
+  "name": zod.string().min(1).describe('Original file name.'),
+  "size": zod.number().min(1).describe('File size in bytes.'),
+  "contentType": zod.string().min(1).describe('MIME type of the file (e.g. `image\/jpeg`).')
+}).optional()
+})
+
+
+/**
+ * @summary List all monitoring reports for moderation (any status)
+ */
+export const ListMonitoringReportsAdminResponseItem = zod.object({
+  "id": zod.number(),
+  "subjectType": zod.enum(['contract', 'pnrr']),
+  "contractId": zod.number().nullish(),
+  "pnrrProjectId": zod.number().nullish(),
+  "subjectTitle": zod.string(),
+  "cig": zod.string().nullish(),
+  "cup": zod.string().nullish(),
+  "title": zod.string(),
+  "authorName": zod.string().nullish(),
+  "deskAnalysis": zod.string(),
+  "effectivenessEvaluation": zod.string(),
+  "impactResults": zod.string(),
+  "overallAssessment": zod.enum(['positivo', 'neutro', 'critico']),
+  "attachments": zod.array(zod.object({
+  "title": zod.string(),
+  "url": zod.string(),
+  "contentType": zod.string().nullish()
+})),
+  "status": zod.enum(['in_revisione', 'pubblicato', 'rifiutato']),
+  "moderationNote": zod.string().nullish(),
+  "createdAt": zod.string(),
+  "publishedAt": zod.string().nullish()
+})
+export const ListMonitoringReportsAdminResponse = zod.array(ListMonitoringReportsAdminResponseItem)
+
+
+/**
+ * @summary Get a published monitoring report by id
+ */
+export const GetMonitoringReportParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const GetMonitoringReportResponse = zod.object({
+  "id": zod.number(),
+  "subjectType": zod.enum(['contract', 'pnrr']),
+  "contractId": zod.number().nullish(),
+  "pnrrProjectId": zod.number().nullish(),
+  "subjectTitle": zod.string(),
+  "cig": zod.string().nullish(),
+  "cup": zod.string().nullish(),
+  "title": zod.string(),
+  "authorName": zod.string().nullish(),
+  "deskAnalysis": zod.string(),
+  "effectivenessEvaluation": zod.string(),
+  "impactResults": zod.string(),
+  "overallAssessment": zod.enum(['positivo', 'neutro', 'critico']),
+  "attachments": zod.array(zod.object({
+  "title": zod.string(),
+  "url": zod.string(),
+  "contentType": zod.string().nullish()
+})),
+  "status": zod.enum(['in_revisione', 'pubblicato', 'rifiutato']),
+  "moderationNote": zod.string().nullish(),
+  "createdAt": zod.string(),
+  "publishedAt": zod.string().nullish()
+})
+
+
+/**
+ * @summary Moderate a monitoring report (publish/reject)
+ */
+export const ModerateMonitoringReportParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const ModerateMonitoringReportBody = zod.object({
+  "status": zod.enum(['in_revisione', 'pubblicato', 'rifiutato']),
+  "moderationNote": zod.string().nullish()
+})
+
+export const ModerateMonitoringReportResponse = zod.object({
+  "id": zod.number(),
+  "subjectType": zod.enum(['contract', 'pnrr']),
+  "contractId": zod.number().nullish(),
+  "pnrrProjectId": zod.number().nullish(),
+  "subjectTitle": zod.string(),
+  "cig": zod.string().nullish(),
+  "cup": zod.string().nullish(),
+  "title": zod.string(),
+  "authorName": zod.string().nullish(),
+  "deskAnalysis": zod.string(),
+  "effectivenessEvaluation": zod.string(),
+  "impactResults": zod.string(),
+  "overallAssessment": zod.enum(['positivo', 'neutro', 'critico']),
+  "attachments": zod.array(zod.object({
+  "title": zod.string(),
+  "url": zod.string(),
+  "contentType": zod.string().nullish()
+})),
+  "status": zod.enum(['in_revisione', 'pubblicato', 'rifiutato']),
+  "moderationNote": zod.string().nullish(),
+  "createdAt": zod.string(),
+  "publishedAt": zod.string().nullish()
+})
+
+
+/**
+ * @summary Delete a monitoring report
+ */
+export const DeleteMonitoringReportParams = zod.object({
+  "id": zod.coerce.number()
 })
 
 

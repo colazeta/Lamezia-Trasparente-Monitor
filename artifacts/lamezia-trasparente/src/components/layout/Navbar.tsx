@@ -23,6 +23,7 @@ import {
   Scale,
   HandCoins,
   ShieldOff,
+  Telescope,
 } from "lucide-react";
 import { useState } from "react";
 import { useListQuestions } from "@workspace/api-client-react";
@@ -45,6 +46,7 @@ const sectionItems = [
   { href: "/bandi", label: "Bandi e finanziamenti", icon: HandCoins },
   { href: "/beni-confiscati", label: "Beni confiscati", icon: ShieldOff },
   { href: "/accesso-civico", label: "Accesso Civico", icon: FileSearch },
+  { href: "/monitoraggio", label: "Monitoraggio civico", icon: Telescope },
   { href: "/legalita", label: "Legalità e Trasparenza", icon: Scale },
   { href: "/delibere", label: "Delibere", icon: Gavel },
   { href: "/convocazioni", label: "Convocazioni", icon: CalendarClock },

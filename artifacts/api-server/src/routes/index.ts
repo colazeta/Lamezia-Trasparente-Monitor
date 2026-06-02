@@ -21,6 +21,7 @@ import feedsRouter from "./feeds";
 import confiscatedAssetsRouter from "./confiscatedAssets";
 import accessoCivicoRouter from "./accessoCivico";
 import publicRouter from "./public";
+import monitoringReportsRouter from "./monitoringReports";
 
 const router: IRouter = Router();
 
@@ -46,5 +47,6 @@ router.use(feedsRouter);
 router.use(confiscatedAssetsRouter);
 router.use(accessoCivicoRouter);
 router.use("/public/v1", publicRouter);
+router.use(monitoringReportsRouter);
 
 export default router;

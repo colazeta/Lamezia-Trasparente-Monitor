@@ -25,6 +25,7 @@ import {
   Clock,
   TrendingUp,
   AlertTriangle,
+  Telescope,
 } from "lucide-react";
 import { format } from "date-fns";
 import { it } from "date-fns/locale";
@@ -32,6 +33,7 @@ import { it } from "date-fns/locale";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { AlboLink } from "@/components/AlboLink";
+import { MonitoringReportsSection } from "@/components/MonitoringReportsSection";
 import {
   Empty,
   EmptyHeader,
@@ -219,18 +221,33 @@ function StorylineContent({
           />
         </dl>
 
-        {contract.anacUrl ? (
-          <a
-            href={contract.anacUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="mt-6 inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:underline"
+        <div className="mt-6 flex flex-wrap items-center gap-4">
+          {contract.anacUrl ? (
+            <a
+              href={contract.anacUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:underline"
+            >
+              <ExternalLink className="h-4 w-4" />
+              Scheda ufficiale su ANAC
+            </a>
+          ) : null}
+          <Link
+            href={`/monitoraggio/nuovo?contractId=${contract.id}`}
+            className="inline-flex items-center gap-1.5 rounded-md border border-brand/40 bg-brand/10 px-3 py-1.5 text-sm font-semibold text-brand transition-colors hover:bg-brand/20"
+            data-testid="link-monitora-contratto"
           >
-            <ExternalLink className="h-4 w-4" />
-            Scheda ufficiale su ANAC
-          </a>
-        ) : null}
+            <Telescope className="h-4 w-4" />
+            Monitora questo progetto
+          </Link>
+        </div>
       </header>
+
+      <MonitoringReportsSection
+        subjectType="contract"
+        contractId={contract.id}
+      />
 
       {/* Indicators */}
       <section>

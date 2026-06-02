@@ -1,4 +1,5 @@
 import { useMemo } from "react";
+import { Link } from "wouter";
 import { useListPnrrProjects } from "@workspace/api-client-react";
 import {
   Landmark,
@@ -13,6 +14,7 @@ import {
   ExternalLink,
   Paperclip,
   AlertTriangle,
+  Telescope,
 } from "lucide-react";
 import { PnrrProject, Publication } from "@workspace/api-client-react";
 import { format } from "date-fns";
@@ -34,6 +36,7 @@ import {
   EmptyDescription,
 } from "@/components/ui/empty";
 import { AlboLink } from "@/components/AlboLink";
+import { MonitoringReportsSection } from "@/components/MonitoringReportsSection";
 
 function formatDate(value: string | null | undefined) {
   if (!value) return "—";
@@ -336,7 +339,21 @@ export function Pnrr() {
                         <ExternalLink className="h-3.5 w-3.5" />
                         Scheda ufficiale Attuazione
                       </a>
+                      <Link
+                        href={`/monitoraggio/nuovo?pnrrProjectId=${project.id}`}
+                        className="inline-flex items-center gap-1.5 rounded-md border border-brand/40 bg-brand/10 px-2.5 py-1 text-xs font-semibold text-brand transition-colors hover:bg-brand/20"
+                        data-testid={`link-monitora-pnrr-${project.id}`}
+                      >
+                        <Telescope className="h-3.5 w-3.5" />
+                        Monitora questo progetto
+                      </Link>
                     </div>
+
+                    {/* Civic monitoring reports */}
+                    <MonitoringReportsSection
+                      subjectType="pnrr"
+                      pnrrProjectId={project.id}
+                    />
 
                     {/* Official attachments */}
                     {project.attachments.length > 0 && (

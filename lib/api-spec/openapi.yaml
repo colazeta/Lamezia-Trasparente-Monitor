@@ -1427,6 +1427,192 @@ paths:
               schema:
                 $ref: "#/components/schemas/Error"
 
+  /monitoring-reports:
+    get:
+      operationId: listMonitoringReports
+      tags: [monitoring-reports]
+      summary: List published civic monitoring reports
+      parameters:
+        - in: query
+          name: contractId
+          schema:
+            type: integer
+          description: Filter by monitored contract id
+        - in: query
+          name: pnrrProjectId
+          schema:
+            type: integer
+          description: Filter by monitored PNRR project id
+      responses:
+        "200":
+          description: List of published monitoring reports
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/MonitoringReport"
+    post:
+      operationId: createMonitoringReport
+      tags: [monitoring-reports]
+      summary: Submit a civic monitoring report
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MonitoringReportInput"
+      responses:
+        "201":
+          description: Created monitoring report
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MonitoringReport"
+        "400":
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /monitoring-reports/uploads/request-url:
+    post:
+      operationId: requestMonitoringReportUploadUrl
+      tags: [monitoring-reports]
+      summary: Request a presigned URL to attach a file to a monitoring report
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UploadUrlRequest"
+      responses:
+        "200":
+          description: Presigned upload URL
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UploadUrlResponse"
+        "400":
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /monitoring-reports/admin:
+    get:
+      operationId: listMonitoringReportsAdmin
+      tags: [monitoring-reports]
+      summary: List all monitoring reports for moderation (any status)
+      security:
+        - ingestToken: []
+      responses:
+        "200":
+          description: List of monitoring reports
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/MonitoringReport"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /monitoring-reports/{id}:
+    get:
+      operationId: getMonitoringReport
+      tags: [monitoring-reports]
+      summary: Get a published monitoring report by id
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Monitoring report
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MonitoringReport"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      operationId: moderateMonitoringReport
+      tags: [monitoring-reports]
+      summary: Moderate a monitoring report (publish/reject)
+      security:
+        - ingestToken: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MonitoringReportModerationInput"
+      responses:
+        "200":
+          description: Updated monitoring report
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MonitoringReport"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    delete:
+      operationId: deleteMonitoringReport
+      tags: [monitoring-reports]
+      summary: Delete a monitoring report
+      security:
+        - ingestToken: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
   /stats/overview:
     get:
       operationId: getStatsOverview
@@ -5288,6 +5474,7 @@ components:
     PnrrProject:
       type: object
       required:
+        - id
         - key
         - sourceId
         - url
@@ -5296,6 +5483,8 @@ components:
         - documentsCount
         - documents
       properties:
+        id:
+          type: integer
         key:
           type: string
         sourceId:
@@ -5661,6 +5850,124 @@ components:
           minLength: 1
         citizenName:
           type: string
+
+    MonitoringReportAttachment:
+      type: object
+      required: [title, url]
+      properties:
+        title:
+          type: string
+        url:
+          type: string
+        contentType:
+          type: ["string", "null"]
+
+    MonitoringReport:
+      type: object
+      required:
+        - id
+        - subjectType
+        - subjectTitle
+        - title
+        - deskAnalysis
+        - effectivenessEvaluation
+        - impactResults
+        - overallAssessment
+        - attachments
+        - status
+        - createdAt
+      properties:
+        id:
+          type: integer
+        subjectType:
+          type: string
+          enum: [contract, pnrr]
+        contractId:
+          type: ["integer", "null"]
+        pnrrProjectId:
+          type: ["integer", "null"]
+        subjectTitle:
+          type: string
+        cig:
+          type: ["string", "null"]
+        cup:
+          type: ["string", "null"]
+        title:
+          type: string
+        authorName:
+          type: ["string", "null"]
+        deskAnalysis:
+          type: string
+        effectivenessEvaluation:
+          type: string
+        impactResults:
+          type: string
+        overallAssessment:
+          type: string
+          enum: [positivo, neutro, critico]
+        attachments:
+          type: array
+          items:
+            $ref: "#/components/schemas/MonitoringReportAttachment"
+        status:
+          type: string
+          enum: [in_revisione, pubblicato, rifiutato]
+        moderationNote:
+          type: ["string", "null"]
+        createdAt:
+          type: string
+        publishedAt:
+          type: ["string", "null"]
+
+    MonitoringReportInput:
+      type: object
+      required:
+        - subjectType
+        - title
+        - deskAnalysis
+        - effectivenessEvaluation
+        - impactResults
+        - overallAssessment
+      properties:
+        subjectType:
+          type: string
+          enum: [contract, pnrr]
+        contractId:
+          type: integer
+        pnrrProjectId:
+          type: integer
+        title:
+          type: string
+          minLength: 5
+          maxLength: 160
+        authorName:
+          type: string
+        deskAnalysis:
+          type: string
+          minLength: 20
+        effectivenessEvaluation:
+          type: string
+          minLength: 20
+        impactResults:
+          type: string
+          minLength: 20
+        overallAssessment:
+          type: string
+          enum: [positivo, neutro, critico]
+        attachments:
+          type: array
+          items:
+            $ref: "#/components/schemas/MonitoringReportAttachment"
+
+    MonitoringReportModerationInput:
+      type: object
+      required: [status]
+      properties:
+        status:
+          type: string
+          enum: [in_revisione, pubblicato, rifiutato]
+        moderationNote:
+          type: ["string", "null"]
 
     ShareInput:
       type: object

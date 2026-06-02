@@ -386,6 +386,7 @@ router.get("/pnrr/projects", async (_req, res) => {
       }
     }
     return {
+      id: p.id,
       key: p.sourceId,
       sourceId: p.sourceId,
       url: p.url,
