@@ -15,6 +15,7 @@ import {
 import { reconcileThemeCounters } from "./counters";
 import { runOpendataIngestion } from "./opendata";
 import { enrichAlboAttachments } from "./alboAttachments";
+import { extractDocumentMarkdown } from "./documentMarkdown";
 import { runPerformanceIngestion } from "./performanceIndicators";
 import { refreshFundamentalActSuggestions } from "./fundamentalActs";
 import { refreshBandiSuggestions } from "./bandi";
@@ -255,6 +256,9 @@ async function runIngestionCycle(): Promise<void> {
   await runIngestion().catch(() => {});
   await enrichAlboAttachments().catch((err) => {
     logger.error({ err }, "Albo attachment enrichment cycle failed");
+  });
+  await extractDocumentMarkdown().catch((err) => {
+    logger.error({ err }, "Document Markdown extraction cycle failed");
   });
   await runAttuazioneIngestion().catch(() => {});
   await runAnacContractsIngestion().catch(() => {});

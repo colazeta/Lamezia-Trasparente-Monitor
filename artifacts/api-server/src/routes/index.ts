@@ -20,6 +20,7 @@ import bandiRouter from "./bandi";
 import feedsRouter from "./feeds";
 import confiscatedAssetsRouter from "./confiscatedAssets";
 import accessoCivicoRouter from "./accessoCivico";
+import publicRouter from "./public";
 
 const router: IRouter = Router();
 
@@ -44,5 +45,6 @@ router.use(bandiRouter);
 router.use(feedsRouter);
 router.use(confiscatedAssetsRouter);
 router.use(accessoCivicoRouter);
+router.use("/public/v1", publicRouter);
 
 export default router;

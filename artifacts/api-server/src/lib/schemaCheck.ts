@@ -1,4 +1,4 @@
-import { db, contractsTable } from "@workspace/db";
+import { db, contractsTable, publicationsTable } from "@workspace/db";
 import { sql, getTableColumns, getTableName } from "drizzle-orm";
 import type { PgTable } from "drizzle-orm/pg-core";
 import { logger } from "./logger";
@@ -42,7 +42,7 @@ async function findMissingColumns(table: PgTable): Promise<string[]> {
  * assuming the schema is fine.
  */
 export async function verifySchema(): Promise<boolean> {
-  const tables: PgTable[] = [contractsTable];
+  const tables: PgTable[] = [contractsTable, publicationsTable];
 
   let drifted = false;
   let hadCheckError = false;

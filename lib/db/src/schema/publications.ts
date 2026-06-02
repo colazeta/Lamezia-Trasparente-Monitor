@@ -45,6 +45,15 @@ export const publicationsTable = pgTable(
       .notNull()
       .default([]),
     detailFetchedAt: timestamp("detail_fetched_at", { withTimezone: true }),
+    // Testo pulito in Markdown estratto dall'allegato PDF principale, archiviato
+    // per l'API pubblica/MCP (giornalisti, assistenti AI). Best-effort: null
+    // finché non viene estratto (o se nessun allegato è leggibile).
+    markdownText: text("markdown_text"),
+    // Nome dell'allegato da cui è stato estratto il testo (tracciabilità fonte).
+    markdownSource: text("markdown_source"),
+    markdownExtractedAt: timestamp("markdown_extracted_at", {
+      withTimezone: true,
+    }),
     isNew: boolean("is_new").notNull().default(true),
     firstSeenAt: timestamp("first_seen_at", { withTimezone: true })
       .notNull()

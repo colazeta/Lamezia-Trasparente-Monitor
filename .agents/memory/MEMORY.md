@@ -25,3 +25,5 @@
 - [RSS/Atom feeds (AlboPOP)](rss-feeds.md) — public RSS 2.0 feeds under /api/feeds/*; item links must use siteUrl (public site), feed self-link uses feedUrl; web autodiscovery via FeedSubscribeButton head <link>.
 - [Opendata interoperability](opendata-interop.md) — public DCAT-AP_IT JSON-LD + CKAN-style read API (`/api/3/action/*`); serialization in lib/dcat.ts; intentionally NOT in openapi codegen.
 - [Beni Confiscati section](beni-confiscati-section.md) — ANBSC confiscated-assets catalog mirrors bandi; URL path is Italian (/api/beni-confiscati) while generated hooks/types use ConfiscatedAsset naming.
+- [Public API + MCP](public-api-mcp.md) — read-only `/api/public/v1` (REST, paginated, self-hosted OpenAPI) + stateless `/api/mcp`; both share `lib/publicData.ts`.
+- [pdf-parse v2 + esbuild](pdf-parse-v2-esbuild.md) — pdf-parse@2 class API needs @napi-rs/canvas + externalize pdf-parse/pdfjs-dist in build.mjs; MCP SDK/zod bundle fine.

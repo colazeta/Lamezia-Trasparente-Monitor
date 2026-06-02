@@ -29,6 +29,11 @@ async function buildAll() {
     // - use path traversal to read files (e.g. @google-cloud/secret-manager loads sibling .proto files)
     external: [
       "*.node",
+      "@napi-rs/canvas",
+      // pdf-parse drives pdfjs, which dynamically imports its worker entry at
+      // runtime; bundling breaks that resolution, so load both from node_modules.
+      "pdf-parse",
+      "pdfjs-dist",
       "sharp",
       "better-sqlite3",
       "sqlite3",
