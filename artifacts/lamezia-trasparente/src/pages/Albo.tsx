@@ -28,6 +28,7 @@ import {
   EmptyDescription,
 } from "@/components/ui/empty";
 import { AlboLink } from "@/components/AlboLink";
+import { FeedSubscribeButton } from "@/components/FeedSubscribeButton";
 
 const CATEGORY_LABELS: Record<string, string> = {
   albo: "Albo",
@@ -94,19 +95,26 @@ export function Albo() {
 
   return (
     <div className="container mx-auto px-4 py-8 md:py-12 max-w-5xl">
-      <div className="mb-8">
-        <span className="eyebrow text-brand">
-          <ShieldAlert className="h-3.5 w-3.5" />
-          Estrazione indipendente in tempo reale
-        </span>
-        <h1 className="mt-2 text-3xl md:text-4xl font-display font-bold tracking-tight">
-          Albo Pretorio Civico
-        </h1>
-        <p className="mt-3 text-muted-foreground text-lg max-w-3xl">
-          Un archivio navigabile e permanente degli atti pubblicati dal Comune.
-          A differenza dell'albo ufficiale, qui i documenti non scompaiono dopo
-          15 giorni.
-        </p>
+      <div className="mb-8 flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+        <div>
+          <span className="eyebrow text-brand">
+            <ShieldAlert className="h-3.5 w-3.5" />
+            Estrazione indipendente in tempo reale
+          </span>
+          <h1 className="mt-2 text-3xl md:text-4xl font-display font-bold tracking-tight">
+            Albo Pretorio Civico
+          </h1>
+          <p className="mt-3 text-muted-foreground text-lg max-w-3xl">
+            Un archivio navigabile e permanente degli atti pubblicati dal
+            Comune. A differenza dell'albo ufficiale, qui i documenti non
+            scompaiono dopo 15 giorni.
+          </p>
+        </div>
+        <FeedSubscribeButton
+          feedPath="/feeds/albo.xml"
+          title="Albo Pretorio Civico — Lamezia Trasparente"
+          className="shrink-0"
+        />
       </div>
 
       <div className="mb-8 flex flex-wrap items-center gap-x-6 gap-y-2 rounded-xl border border-primary/20 bg-primary/5 px-4 py-3 text-sm">

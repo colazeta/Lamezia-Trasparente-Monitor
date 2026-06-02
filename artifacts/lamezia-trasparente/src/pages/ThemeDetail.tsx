@@ -55,6 +55,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Separator } from "@/components/ui/separator";
+import { FeedSubscribeButton } from "@/components/FeedSubscribeButton";
 import { resolvePostImageSrc } from "@/lib/postImages";
 
 const statusMap: Record<string, { label: string; variant: "default" | "secondary" | "destructive" | "outline" | "brand" | "success" | "warning", icon: any }> = {
@@ -376,6 +377,14 @@ export function ThemeDetail() {
                   </p>
                 </form>
               )}
+              <Separator className="my-4" />
+              <FeedSubscribeButton
+                feedPath={`/feeds/temi/${themeId}.xml`}
+                title={`Tema: ${theme.title} — Lamezia Trasparente`}
+                label="Abbonati al feed RSS"
+                variant="ghost"
+                className="w-full justify-start text-muted-foreground"
+              />
             </CardContent>
           </Card>
           

@@ -81,6 +81,7 @@ import {
   type ChartConfig,
 } from "@/components/ui/chart";
 import { InterventionsMap } from "@/components/InterventionsMap";
+import { FeedSubscribeButton } from "@/components/FeedSubscribeButton";
 import { quartiereLabel } from "@/lib/gis";
 import { MapPin } from "lucide-react";
 
@@ -211,22 +212,30 @@ export function Contracts() {
   return (
     <div className="container mx-auto px-4 py-8 md:py-12 max-w-6xl">
       {/* Header */}
-      <div className="mb-6">
-        <span className="eyebrow text-brand">
-          <FileText className="h-3.5 w-3.5" />
-          Soldi pubblici sotto controllo
-        </span>
-        <h1 className="mt-2 text-3xl md:text-4xl font-display font-bold tracking-tight">
-          Appalti Pubblici
-        </h1>
-        <p className="mt-3 text-muted-foreground text-lg max-w-3xl">
-          Contratti e affidamenti pubblici della stazione appaltante{" "}
-          <span className="font-medium text-foreground">
-            Comune di Lamezia Terme
-          </span>{" "}
-          (CF 00301390795), basati sui dati ANAC. Monitoriamo dove vengono spesi
-          i soldi della comunità e chi esegue lavori, servizi e forniture.
-        </p>
+      <div className="mb-6 flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+        <div>
+          <span className="eyebrow text-brand">
+            <FileText className="h-3.5 w-3.5" />
+            Soldi pubblici sotto controllo
+          </span>
+          <h1 className="mt-2 text-3xl md:text-4xl font-display font-bold tracking-tight">
+            Appalti Pubblici
+          </h1>
+          <p className="mt-3 text-muted-foreground text-lg max-w-3xl">
+            Contratti e affidamenti pubblici della stazione appaltante{" "}
+            <span className="font-medium text-foreground">
+              Comune di Lamezia Terme
+            </span>{" "}
+            (CF 00301390795), basati sui dati ANAC. Monitoriamo dove vengono
+            spesi i soldi della comunità e chi esegue lavori, servizi e
+            forniture.
+          </p>
+        </div>
+        <FeedSubscribeButton
+          feedPath="/feeds/contratti.xml"
+          title="Appalti Pubblici — Lamezia Trasparente"
+          className="shrink-0"
+        />
       </div>
 
       {/* Last updated + ANAC portal link */}

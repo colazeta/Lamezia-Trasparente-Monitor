@@ -17,6 +17,7 @@ import performanceRouter from "./performance";
 import fundamentalActsRouter from "./fundamentalActs";
 import legalityRouter from "./legality";
 import bandiRouter from "./bandi";
+import feedsRouter from "./feeds";
 
 const router: IRouter = Router();
 
@@ -38,5 +39,6 @@ router.use(performanceRouter);
 router.use(fundamentalActsRouter);
 router.use(legalityRouter);
 router.use(bandiRouter);
+router.use(feedsRouter);
 
 export default router;
