@@ -61,7 +61,7 @@ function mapReport(r: MonitoringReportRow) {
   };
 }
 
-function sanitizeAttachments(
+export function sanitizeAttachments(
   raw: unknown,
 ): MonitoringReportAttachment[] {
   if (!Array.isArray(raw)) return [];

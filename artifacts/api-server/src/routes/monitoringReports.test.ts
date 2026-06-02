@@ -50,6 +50,7 @@ vi.mock("../lib/objectStorage", () => {
 });
 
 const app = (await import("../app")).default;
+const { sanitizeAttachments } = await import("./monitoringReports");
 
 const INGEST_TOKEN = "test-ingest-token";
 const auth = { Authorization: `Bearer ${INGEST_TOKEN}` };
@@ -276,6 +277,106 @@ describe("POST /api/monitoring-reports (create)", () => {
     expect(res.status).toBe(201);
     createdReportIds.push(res.body.id);
     expect(res.body.attachments).toHaveLength(10);
+  });
+});
+
+describe("sanitizeAttachments (unit)", () => {
+  it("returns an empty array for non-array input", () => {
+    expect(sanitizeAttachments(undefined)).toEqual([]);
+    expect(sanitizeAttachments(null)).toEqual([]);
+    expect(sanitizeAttachments("not-an-array")).toEqual([]);
+    expect(sanitizeAttachments(42)).toEqual([]);
+    expect(sanitizeAttachments({ title: "x", url: "/api/storage/objects/a" })).toEqual(
+      [],
+    );
+  });
+
+  it("drops non-object and falsy entries", () => {
+    expect(
+      sanitizeAttachments([null, undefined, "string", 7, true]),
+    ).toEqual([]);
+  });
+
+  it("drops entries with a missing or non-string title or url", () => {
+    expect(
+      sanitizeAttachments([
+        { url: "/api/storage/objects/a" },
+        { title: "Solo titolo" },
+        { title: 5, url: "/api/storage/objects/a" },
+        { title: "ok", url: 5 },
+      ]),
+    ).toEqual([]);
+  });
+
+  it("drops entries with a blank (whitespace-only) title or url", () => {
+    expect(
+      sanitizeAttachments([
+        { title: "   ", url: "/api/storage/objects/a" },
+        { title: "Foto", url: "   " },
+      ]),
+    ).toEqual([]);
+  });
+
+  it("rejects urls that are not under /api/storage/", () => {
+    expect(
+      sanitizeAttachments([
+        { title: "Esterno", url: "https://evil.example.org/x.jpg" },
+        { title: "Relativo", url: "/uploads/x.jpg" },
+        { title: "Protocollo", url: "javascript:alert(1)" },
+        { title: "Quasi", url: "/api/storageX/objects/a" },
+      ]),
+    ).toEqual([]);
+  });
+
+  it("keeps a valid storage-backed attachment", () => {
+    expect(
+      sanitizeAttachments([
+        { title: "Foto", url: "/api/storage/objects/abc" },
+      ]),
+    ).toEqual([
+      { title: "Foto", url: "/api/storage/objects/abc", contentType: null },
+    ]);
+  });
+
+  it("trims the title and truncates it to 200 characters", () => {
+    const longTitle = "a".repeat(250);
+    const [out] = sanitizeAttachments([
+      { title: `  ${longTitle}  `, url: "/api/storage/objects/abc" },
+    ]);
+    expect(out.title).toHaveLength(200);
+    expect(out.title).toBe("a".repeat(200));
+  });
+
+  it("passes through a string contentType and nulls anything else", () => {
+    const out = sanitizeAttachments([
+      {
+        title: "Con tipo",
+        url: "/api/storage/objects/a",
+        contentType: "image/jpeg",
+      },
+      {
+        title: "Tipo numerico",
+        url: "/api/storage/objects/b",
+        contentType: 123,
+      },
+      { title: "Senza tipo", url: "/api/storage/objects/c" },
+    ]);
+    expect(out).toEqual([
+      { title: "Con tipo", url: "/api/storage/objects/a", contentType: "image/jpeg" },
+      { title: "Tipo numerico", url: "/api/storage/objects/b", contentType: null },
+      { title: "Senza tipo", url: "/api/storage/objects/c", contentType: null },
+    ]);
+  });
+
+  it("caps the number of attachments at 10", () => {
+    const many = Array.from({ length: 15 }, (_, i) => ({
+      title: `Allegato ${i}`,
+      url: `/api/storage/objects/file-${i}`,
+    }));
+    const out = sanitizeAttachments(many);
+    expect(out).toHaveLength(10);
+    expect(out[0].url).toBe("/api/storage/objects/file-0");
+    expect(out[9].url).toBe("/api/storage/objects/file-9");
   });
 });
 
