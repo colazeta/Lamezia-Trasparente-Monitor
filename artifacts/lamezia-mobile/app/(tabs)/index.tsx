@@ -35,6 +35,22 @@ const ACTIVITY_ICON: Record<string, keyof typeof Feather.glyphMap> = {
   report: "alert-triangle",
 };
 
+type ShortcutDef = {
+  label: string;
+  icon: keyof typeof Feather.glyphMap;
+  href: string;
+  color: "accent" | "primary" | "muted";
+};
+
+const SHORTCUTS: ShortcutDef[] = [
+  { label: "Appalti", icon: "briefcase", href: "/contratti", color: "accent" },
+  { label: "PNRR", icon: "trending-up", href: "/pnrr", color: "accent" },
+  { label: "Delibere", icon: "file-text", href: "/delibere", color: "accent" },
+  { label: "Albo", icon: "clipboard", href: "/albo", color: "accent" },
+  { label: "Organi", icon: "home", href: "/organi", color: "accent" },
+  { label: "Performance", icon: "bar-chart-2", href: "/performance", color: "accent" },
+];
+
 export default function HomeScreen() {
   const colors = useColors();
   const router = useRouter();
@@ -72,12 +88,33 @@ export default function HomeScreen() {
       ]
     : [];
 
+  function activityHref(item: {
+    type: string;
+    themeId?: number | null;
+    id: string;
+  }): string | null {
+    if (item.type === "theme" && item.themeId != null) return `/theme/${item.themeId}`;
+    if (item.type === "contract") return "/contratti";
+    if (item.type === "act") return "/albo";
+    if (item.type === "report") return "/report";
+    return null;
+  }
+
   return (
     <View style={{ flex: 1, backgroundColor: colors.background }}>
       <ScreenHeader
         eyebrow="Sorveglianza civica"
         title="Lamezia Trasparente"
         subtitle="Il controllo dei cittadini sulla cosa pubblica"
+        right={
+          <Pressable
+            onPress={() => router.push("/search")}
+            hitSlop={8}
+            style={[styles.searchBtn, { backgroundColor: colors.muted, borderRadius: colors.radius }]}
+          >
+            <Feather name="search" size={18} color={colors.foreground} />
+          </Pressable>
+        }
       />
       <ScrollView
         contentContainerStyle={styles.content}
@@ -114,6 +151,23 @@ export default function HomeScreen() {
             title={MONITORING_NOTICE_TITLE}
             message={MONITORING_NOTICE_BODY}
           />
+        </View>
+
+        {/* Quick access shortcuts */}
+        <SectionTitle
+          title="Accesso rapido"
+          actionLabel="Tutti gli atti"
+          onAction={() => router.push("/monitor")}
+        />
+        <View style={styles.shortcuts}>
+          {SHORTCUTS.map((s) => (
+            <ShortcutCard
+              key={s.href}
+              label={s.label}
+              icon={s.icon}
+              onPress={() => router.push(s.href as Href)}
+            />
+          ))}
         </View>
 
         {/* Questions entry point */}
@@ -196,18 +250,18 @@ export default function HomeScreen() {
         ) : activity.data && activity.data.length > 0 ? (
           <Card style={{ padding: 0 }}>
             {activity.data.slice(0, 6).map((item, idx) => {
-              const clickable = item.type === "theme" && item.themeId != null;
+              const href = activityHref(item);
               return (
                 <Pressable
                   key={item.id}
-                  disabled={!clickable}
-                  onPress={() => clickable && router.push(`/theme/${item.themeId}`)}
+                  disabled={!href}
+                  onPress={() => href && router.push(href as Href)}
                   style={({ pressed }) => [
                     styles.activityRow,
                     {
                       borderTopColor: colors.border,
                       borderTopWidth: idx === 0 ? 0 : StyleSheet.hairlineWidth,
-                      opacity: pressed && clickable ? 0.7 : 1,
+                      opacity: pressed && !!href ? 0.7 : 1,
                     },
                   ]}
                 >
@@ -229,7 +283,7 @@ export default function HomeScreen() {
                       {formatDate(item.date)}
                     </Text>
                   </View>
-                  {clickable ? (
+                  {href ? (
                     <Feather name="chevron-right" size={18} color={colors.mutedForeground} />
                   ) : null}
                 </Pressable>
@@ -241,6 +295,41 @@ export default function HomeScreen() {
         )}
       </ScrollView>
     </View>
+  );
+}
+
+function ShortcutCard({
+  label,
+  icon,
+  onPress,
+}: {
+  label: string;
+  icon: keyof typeof Feather.glyphMap;
+  onPress: () => void;
+}) {
+  const colors = useColors();
+  return (
+    <Pressable
+      onPress={onPress}
+      style={({ pressed }) => ({ opacity: pressed ? 0.75 : 1, width: "33.3%" })}
+    >
+      <View style={styles.shortcutItem}>
+        <View
+          style={[
+            styles.shortcutIcon,
+            { backgroundColor: colors.accent, borderRadius: colors.radius },
+          ]}
+        >
+          <Feather name={icon} size={22} color={colors.accentForeground} />
+        </View>
+        <Text
+          style={[styles.shortcutLabel, { color: colors.foreground }]}
+          numberOfLines={1}
+        >
+          {label}
+        </Text>
+      </View>
+    </Pressable>
   );
 }
 
@@ -307,6 +396,12 @@ const styles = StyleSheet.create({
     paddingBottom: Platform.OS === "web" ? 110 : 40,
     gap: 8,
   },
+  searchBtn: {
+    width: 38,
+    height: 38,
+    alignItems: "center",
+    justifyContent: "center",
+  },
   heroLabel: {
     fontFamily: "Inter_700Bold",
     fontSize: 11,
@@ -322,6 +417,28 @@ const styles = StyleSheet.create({
   heroRow: { marginTop: 10 },
   heroMetric: { flexDirection: "row", alignItems: "center", gap: 6 },
   heroMetricText: { fontFamily: "Inter_500Medium", fontSize: 12.5, opacity: 0.9 },
+  shortcuts: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    marginHorizontal: -4,
+  },
+  shortcutItem: {
+    margin: 4,
+    alignItems: "center",
+    gap: 7,
+    paddingVertical: 4,
+  },
+  shortcutIcon: {
+    width: 56,
+    height: 56,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  shortcutLabel: {
+    fontFamily: "Inter_500Medium",
+    fontSize: 12.5,
+    textAlign: "center",
+  },
   grid: {
     flexDirection: "row",
     flexWrap: "wrap",
