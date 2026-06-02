@@ -66,6 +66,8 @@ function RootLayoutNav() {
       <Stack.Screen name="organi/[slug]" options={{ title: "Organo" }} />
       <Stack.Screen name="amministratori/index" options={{ title: "Amministratori" }} />
       <Stack.Screen name="amministratori/[id]" options={{ title: "Profilo" }} />
+      <Stack.Screen name="pareri/index" options={{ title: "Pareri di Vigilanza" }} />
+      <Stack.Screen name="pareri/[id]" options={{ title: "Parere" }} />
     </Stack>
   );
 }

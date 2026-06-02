@@ -57,6 +57,12 @@ const SECTIONS: Section[] = [
     icon: "users",
   },
   {
+    href: "/pareri",
+    title: "Pareri di Vigilanza",
+    subtitle: "Controlli di Revisori, OIV, Corte dei Conti e ANAC",
+    icon: "shield",
+  },
+  {
     href: "/opendata",
     title: "Opendata",
     subtitle: "Catalogo dei dataset aperti del Comune",
