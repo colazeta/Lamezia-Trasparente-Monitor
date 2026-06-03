@@ -25,6 +25,7 @@ import {
   runConfiscatedAssetsIngestion,
   runConfiscatedAssetsGeocoding,
 } from "./confiscatedAssets";
+import { runBriefBatchAfterIngestion } from "../routes/publications";
 
 export const ALBO_SOURCE = "albo-lamezia";
 export const ALBO_LABEL = "Albo Pretorio – Amministrazione Trasparente";
@@ -270,6 +271,11 @@ async function runIngestionCycle(): Promise<void> {
   });
   await extractDocumentMarkdown().catch((err) => {
     logger.error({ err }, "Document Markdown extraction cycle failed");
+  });
+  // Genera le sintesi "In breve" per i nuovi atti subito dopo aver acquisito il
+  // testo completo. Riusa il batch manuale (stesso lock, idempotenza, briefManual).
+  await runBriefBatchAfterIngestion().catch((err) => {
+    logger.error({ err }, "Brief batch after ingestion failed");
   });
   await runAttuazioneIngestion().catch(() => {});
   await runItaliadomaniIngestion().catch((err) => {

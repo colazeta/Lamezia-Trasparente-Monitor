@@ -1104,6 +1104,40 @@ async function runBriefBatch(): Promise<{
   };
 }
 
+// Avvia il batch sintesi dal ciclo di ingestione, una volta che gli atti nuovi
+// e il loro testo completo (markdownText) sono stati acquisiti. Rispetta lo
+// stesso lock del batch manuale (briefBatchRunning) così i due non girano mai
+// in concorrenza, le stesse condizioni di candidatura (idempotenza + briefManual)
+// e salta in silenzio se l'AI non è configurata o non ci sono atti da elaborare.
+export async function runBriefBatchAfterIngestion(): Promise<void> {
+  const baseUrl = process.env["AI_INTEGRATIONS_OPENAI_BASE_URL"];
+  const apiKey = process.env["AI_INTEGRATIONS_OPENAI_API_KEY"];
+  if (!baseUrl || !apiKey) return;
+
+  // Acquisizione atomica del lock (check + set sincroni, nessun await in mezzo):
+  // se un batch manuale è in corso non ne avviamo un secondo.
+  if (briefBatchRunning) {
+    console.log(
+      "[briefs] batch post-ingestione saltato: un batch è già in corso.",
+    );
+    return;
+  }
+  briefBatchRunning = true;
+
+  try {
+    const [counts] = await db
+      .select({ count: sql<number>`count(*)::int` })
+      .from(publicationsTable)
+      .where(briefBatchCandidateConditions());
+    const candidates = counts?.count ?? 0;
+    if (candidates === 0) return;
+
+    await runBriefBatch();
+  } finally {
+    briefBatchRunning = false;
+  }
+}
+
 async function generateBrief(
   oggetto: string,
   markdownText: string | null,
