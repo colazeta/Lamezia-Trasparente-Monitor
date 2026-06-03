@@ -31,7 +31,11 @@ import {
   EmptyTitle,
   EmptyDescription,
 } from "@/components/ui/empty";
-import { formatIndicatorValue, trendFromPair, type TrendTone } from "@/lib/performanceFormat";
+import {
+  formatIndicatorValue,
+  trendFromPair,
+  type TrendTone,
+} from "@/lib/performanceFormat";
 
 function formatDateTime(value: string | null | undefined) {
   if (!value) return "—";

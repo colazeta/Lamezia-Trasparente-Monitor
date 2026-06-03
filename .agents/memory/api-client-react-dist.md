@@ -15,6 +15,15 @@ clearly has them. The source is newer than the compiled dist.
 **Fix:** rebuild the package declarations:
 `cd lib/api-client-react && npx tsc -p tsconfig.json` (it is `emitDeclarationOnly`).
 
+**Better fix when many hooks/types are missing at once** (whole sections like
+accesso-civico, bandi, beni-confiscati, legalità, monitoraggio, performance,
+storyline all reporting "has no exported member"): the generated client itself is
+stale, not just dist. Re-run codegen from the spec:
+`pnpm --filter @workspace/api-spec run codegen`. Its script runs orval then
+`pnpm -w run typecheck:libs` (tsc --build), which also rebuilds the dist. This
+regenerates `lib/api-client-react/src/generated/api.ts` from `lib/api-spec/openapi.yaml`
+(paths were already in the spec) and resolves all the missing-export errors in one shot.
+
 **Why:** the package has no `build` npm script; dist was emitted manually, so any
 backend OpenAPI/codegen update leaves dist stale until someone reruns tsc.
 
