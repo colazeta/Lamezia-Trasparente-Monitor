@@ -20,6 +20,7 @@ import {
   FileJson,
   Braces,
   Code2,
+  Sparkles,
 } from "lucide-react";
 import { format } from "date-fns";
 import { it } from "date-fns/locale";
@@ -60,10 +61,36 @@ function formatDateTime(value: string | null | undefined) {
     : format(d, "dd MMM yyyy, HH:mm", { locale: it });
 }
 
+const LAST_VISIT_KEY = "opendata:lastVisit";
+
+function readLastVisit(): number | null {
+  try {
+    const v = localStorage.getItem(LAST_VISIT_KEY);
+    if (!v) return null;
+    const n = Number(v);
+    return Number.isFinite(n) ? n : null;
+  } catch {
+    return null;
+  }
+}
+
 export function Opendata() {
   const [search, setSearch] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
   const [category, setCategory] = useState("all");
+
+  // Snapshot of the previous visit time, captured once on mount. Datasets whose
+  // content changed after this moment get an "Aggiornato" badge. The current
+  // visit time is written back to localStorage so the next visit compares fresh.
+  const [lastVisit] = useState<number | null>(readLastVisit);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem(LAST_VISIT_KEY, String(Date.now()));
+    } catch {
+      // Ignore storage failures (private mode, disabled storage, etc.).
+    }
+  }, []);
 
   useEffect(() => {
     const handler = setTimeout(() => setDebouncedSearch(search), 400);
@@ -92,6 +119,14 @@ export function Opendata() {
   }, [allDatasets]);
 
   const hasActiveFilters = Boolean(debouncedSearch) || category !== "all";
+
+  const isUpdatedSinceLastVisit = (dataset: OpendataDataset) => {
+    if (lastVisit === null || !dataset.lastChangedAt) return false;
+    const changed = new Date(dataset.lastChangedAt).getTime();
+    return Number.isFinite(changed) && changed > lastVisit;
+  };
+
+  const updatedCount = (datasets ?? []).filter(isUpdatedSinceLastVisit).length;
 
   const resetFilters = () => {
     setSearch("");
@@ -238,13 +273,21 @@ export function Opendata() {
       </div>
 
       {/* Result count */}
-      <div className="mb-4 text-sm text-muted-foreground">
+      <div className="mb-4 flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
         {datasets ? (
           <>
-            <span className="font-display font-bold text-foreground tabular-nums">
-              {datasets.length}
-            </span>{" "}
-            {datasets.length === 1 ? "dataset" : "dataset"}
+            <span>
+              <span className="font-display font-bold text-foreground tabular-nums">
+                {datasets.length}
+              </span>{" "}
+              dataset
+            </span>
+            {updatedCount > 0 ? (
+              <Badge variant="success" className="text-[11px] shadow-none">
+                <Sparkles className="mr-1 h-3 w-3" />
+                {updatedCount} aggiornati dall'ultima visita
+              </Badge>
+            ) : null}
           </>
         ) : (
           "—"
@@ -272,7 +315,11 @@ export function Opendata() {
       ) : datasets && datasets.length > 0 ? (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {datasets.map((d) => (
-            <DatasetCard key={d.id} dataset={d} />
+            <DatasetCard
+              key={d.id}
+              dataset={d}
+              isUpdated={isUpdatedSinceLastVisit(d)}
+            />
           ))}
         </div>
       ) : (
@@ -296,7 +343,13 @@ export function Opendata() {
   );
 }
 
-function DatasetCard({ dataset }: { dataset: OpendataDataset }) {
+function DatasetCard({
+  dataset,
+  isUpdated = false,
+}: {
+  dataset: OpendataDataset;
+  isUpdated?: boolean;
+}) {
   const formats = useMemo(() => {
     const set = new Set<string>();
     dataset.resources.forEach((r) => {
@@ -311,6 +364,12 @@ function DatasetCard({ dataset }: { dataset: OpendataDataset }) {
       className="group flex flex-col rounded-xl border border-card-border bg-card p-5 shadow-sm transition-colors hover-elevate hover:border-brand/40"
     >
       <div className="mb-3 flex flex-wrap items-center gap-1.5">
+        {isUpdated ? (
+          <Badge variant="success" className="text-[11px] shadow-none">
+            <Sparkles className="mr-1 h-3 w-3" />
+            Aggiornato
+          </Badge>
+        ) : null}
         {dataset.category ? (
           <Badge variant="brand" className="text-[11px] shadow-none">
             <Layers className="mr-1 h-3 w-3" />

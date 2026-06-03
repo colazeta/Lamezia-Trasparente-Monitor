@@ -32,5 +32,10 @@ export interface OpendataDataset {
   resourceCount: number;
   /** @nullable */
   metadataModified?: string | null;
+  /**
+     * Capture time (ISO 8601) of the most recent snapshot whose content actually changed, across all of the dataset's resources. Null when no change has ever been recorded. Source of truth for the "Aggiornato" badge.
+     * @nullable
+     */
+  lastChangedAt?: string | null;
   resources: OpendataResource[];
 }

@@ -6,7 +6,7 @@ import {
   opendataSnapshotsTable,
   feedStatusTable,
 } from "@workspace/db";
-import { and, asc, desc, eq, ilike, or, type SQL } from "drizzle-orm";
+import { and, asc, desc, eq, ilike, max, or, type SQL } from "drizzle-orm";
 import {
   OPENDATA_SOURCE,
   OPENDATA_LABEL,
@@ -68,6 +68,7 @@ function mapResource(r: typeof opendataResourcesTable.$inferSelect) {
 function mapDataset(
   d: typeof opendataDatasetsTable.$inferSelect,
   resources: (typeof opendataResourcesTable.$inferSelect)[] = [],
+  lastChangedAt: string | null = null,
 ) {
   return {
     id: d.id,
@@ -87,11 +88,35 @@ function mapDataset(
     metadataModified: d.metadataModified
       ? d.metadataModified.toISOString()
       : null,
+    lastChangedAt,
     resources: resources
       .slice()
       .sort((a, b) => a.position - b.position)
       .map(mapResource),
   };
+}
+
+// Most recent capture time of a *changed* snapshot, grouped by dataset. This is
+// the source of truth for the "Aggiornato" badge on the catalog.
+async function getLastChangedByDataset(): Promise<Map<number, string>> {
+  const rows = await db
+    .select({
+      datasetId: opendataResourcesTable.datasetId,
+      lastChangedAt: max(opendataSnapshotsTable.capturedAt),
+    })
+    .from(opendataSnapshotsTable)
+    .innerJoin(
+      opendataResourcesTable,
+      eq(opendataSnapshotsTable.resourceId, opendataResourcesTable.id),
+    )
+    .where(eq(opendataSnapshotsTable.changed, true))
+    .groupBy(opendataResourcesTable.datasetId);
+
+  const map = new Map<number, string>();
+  for (const r of rows) {
+    if (r.lastChangedAt) map.set(r.datasetId, r.lastChangedAt.toISOString());
+  }
+  return map;
 }
 
 router.get("/opendata/datasets", async (req, res) => {
@@ -130,9 +155,12 @@ router.get("/opendata/datasets", async (req, res) => {
 
   const allResources = await db.select().from(opendataResourcesTable);
   const byDataset = groupResources(allResources);
+  const lastChangedByDataset = await getLastChangedByDataset();
 
   res.json(
-    datasets.map((d) => mapDataset(d, byDataset.get(d.id) ?? [])),
+    datasets.map((d) =>
+      mapDataset(d, byDataset.get(d.id) ?? [], lastChangedByDataset.get(d.id) ?? null),
+    ),
   );
 });
 
@@ -193,7 +221,27 @@ router.get("/opendata/datasets/:id", async (req, res) => {
     .from(opendataResourcesTable)
     .where(eq(opendataResourcesTable.datasetId, id));
 
-  res.json(mapDataset(dataset, resources));
+  const [changedRow] = await db
+    .select({ lastChangedAt: max(opendataSnapshotsTable.capturedAt) })
+    .from(opendataSnapshotsTable)
+    .innerJoin(
+      opendataResourcesTable,
+      eq(opendataSnapshotsTable.resourceId, opendataResourcesTable.id),
+    )
+    .where(
+      and(
+        eq(opendataResourcesTable.datasetId, id),
+        eq(opendataSnapshotsTable.changed, true),
+      ),
+    );
+
+  res.json(
+    mapDataset(
+      dataset,
+      resources,
+      changedRow?.lastChangedAt ? changedRow.lastChangedAt.toISOString() : null,
+    ),
+  );
 });
 
 router.get("/opendata/resources/:id/content", async (req, res) => {

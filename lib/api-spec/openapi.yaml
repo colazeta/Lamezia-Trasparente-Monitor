@@ -5671,6 +5671,13 @@ components:
           type: integer
         metadataModified:
           type: ["string", "null"]
+        lastChangedAt:
+          type: ["string", "null"]
+          description: >-
+            Capture time (ISO 8601) of the most recent snapshot whose content
+            actually changed, across all of the dataset's resources. Null when
+            no change has ever been recorded. Source of truth for the
+            "Aggiornato" badge.
         resources:
           type: array
           items:

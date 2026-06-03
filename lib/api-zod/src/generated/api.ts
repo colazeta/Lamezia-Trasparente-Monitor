@@ -824,6 +824,7 @@ export const ListOpendataDatasetsResponseItem = zod.object({
   "tags": zod.array(zod.string()),
   "resourceCount": zod.number(),
   "metadataModified": zod.string().nullish(),
+  "lastChangedAt": zod.string().nullish().describe('Capture time (ISO 8601) of the most recent snapshot whose content actually changed, across all of the dataset\'s resources. Null when no change has ever been recorded. Source of truth for the \"Aggiornato\" badge.'),
   "resources": zod.array(zod.object({
   "id": zod.number(),
   "datasetId": zod.number(),
@@ -878,6 +879,7 @@ export const GetOpendataDatasetResponse = zod.object({
   "tags": zod.array(zod.string()),
   "resourceCount": zod.number(),
   "metadataModified": zod.string().nullish(),
+  "lastChangedAt": zod.string().nullish().describe('Capture time (ISO 8601) of the most recent snapshot whose content actually changed, across all of the dataset\'s resources. Null when no change has ever been recorded. Source of truth for the \"Aggiornato\" badge.'),
   "resources": zod.array(zod.object({
   "id": zod.number(),
   "datasetId": zod.number(),

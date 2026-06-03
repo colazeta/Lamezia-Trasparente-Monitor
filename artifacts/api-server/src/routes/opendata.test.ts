@@ -1,5 +1,5 @@
 import { describe, it, expect, afterAll, afterEach } from "vitest";
-import { inArray } from "drizzle-orm";
+import { eq, inArray } from "drizzle-orm";
 
 import request from "supertest";
 import app from "../app";
@@ -8,6 +8,7 @@ import {
   pool,
   opendataDatasetsTable,
   opendataResourcesTable,
+  opendataSnapshotsTable,
 } from "@workspace/db";
 
 const createdDatasetIds: number[] = [];
@@ -61,6 +62,52 @@ afterEach(async () => {
       .delete(opendataDatasetsTable)
       .where(inArray(opendataDatasetsTable.id, createdDatasetIds.splice(0)));
   }
+});
+
+describe("lastChangedAt (Aggiornato badge source of truth)", () => {
+  it("is null when no changed snapshot exists", async () => {
+    const ds = await createDataset();
+    const res = await request(app).get("/api/opendata/datasets");
+    expect(res.status).toBe(200);
+    const found = res.body.find(
+      (d: { id: number }) => d.id === ds.id,
+    );
+    expect(found).toBeTruthy();
+    expect(found.lastChangedAt).toBeNull();
+  });
+
+  it("reports the latest changed snapshot capture time in list and detail", async () => {
+    const ds = await createDataset();
+    const [resource] = await db
+      .select()
+      .from(opendataResourcesTable)
+      .where(eq(opendataResourcesTable.datasetId, ds.id));
+
+    // First snapshot is the baseline (changed=false), a later one is the change.
+    await db.insert(opendataSnapshotsTable).values({
+      resourceId: resource.id,
+      capturedAt: new Date("2025-06-01T10:00:00Z"),
+      checksum: "aaa",
+      rowCount: 3,
+      changed: false,
+    });
+    const changedAt = new Date("2025-06-10T10:00:00Z");
+    await db.insert(opendataSnapshotsTable).values({
+      resourceId: resource.id,
+      capturedAt: changedAt,
+      checksum: "bbb",
+      rowCount: 4,
+      changed: true,
+    });
+
+    const list = await request(app).get("/api/opendata/datasets");
+    const found = list.body.find((d: { id: number }) => d.id === ds.id);
+    expect(found.lastChangedAt).toBe(changedAt.toISOString());
+
+    const detail = await request(app).get(`/api/opendata/datasets/${ds.id}`);
+    expect(detail.status).toBe(200);
+    expect(detail.body.lastChangedAt).toBe(changedAt.toISOString());
+  });
 });
 
 describe("DCAT-AP_IT catalog", () => {
