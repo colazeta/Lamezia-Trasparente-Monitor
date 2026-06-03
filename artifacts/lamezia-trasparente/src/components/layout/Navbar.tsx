@@ -2,29 +2,11 @@ import { Link, useLocation } from "wouter";
 import {
   Menu,
   X,
-  ShieldAlert,
-  BarChart3,
   FileText,
   FileSearch,
-  Megaphone,
   Home,
-  Gavel,
-  CalendarClock,
-  Landmark,
-  Users,
-  Building2,
-  ShieldCheck,
   HelpCircle,
   ChevronDown,
-  Database,
-  Gauge,
-  ScrollText,
-  Scale,
-  HandCoins,
-  ShieldOff,
-  Telescope,
-  Rss,
-  Code2,
 } from "lucide-react";
 import { useState } from "react";
 import { useListQuestions } from "@workspace/api-client-react";
@@ -46,65 +28,7 @@ import {
   SearchTrigger,
   useCommandPalette,
 } from "@/components/search/CommandPalette";
-
-interface NavSection {
-  label: string;
-  items: { href: string; label: string; icon: React.ElementType }[];
-}
-
-const NAV_GROUPS: NavSection[] = [
-  {
-    label: "Trasparenza & Atti",
-    items: [
-      { href: "/albo", label: "Albo Pretorio", icon: ShieldAlert },
-      { href: "/atti-fondamentali", label: "Atti Fondamentali", icon: ScrollText },
-      { href: "/delibere", label: "Delibere", icon: Gavel },
-      { href: "/convocazioni", label: "Convocazioni", icon: CalendarClock },
-      { href: "/pareri", label: "Pareri di Vigilanza", icon: ShieldCheck },
-      { href: "/legalita", label: "Legalità e Trasparenza", icon: Scale },
-    ],
-  },
-  {
-    label: "Spesa & Contratti",
-    items: [
-      { href: "/contratti", label: "Contratti & Appalti", icon: FileText },
-      { href: "/bandi", label: "Bandi e Finanziamenti", icon: HandCoins },
-      { href: "/pnrr", label: "PNRR", icon: Landmark },
-      { href: "/beni-confiscati", label: "Beni Confiscati", icon: ShieldOff },
-    ],
-  },
-  {
-    label: "Organi & Persone",
-    items: [
-      { href: "/organi", label: "Organi Istituzionali", icon: Building2 },
-      { href: "/amministratori", label: "Amministratori", icon: Users },
-    ],
-  },
-  {
-    label: "Partecipazione",
-    items: [
-      { href: "/temi", label: "Temi", icon: FileSearch },
-      { href: "/monitoraggio", label: "Monitoraggio Civico", icon: Telescope },
-      { href: "/accesso-civico", label: "Accesso Civico", icon: FileSearch },
-      { href: "/segnalazioni", label: "Segnalazioni", icon: Megaphone },
-    ],
-  },
-  {
-    label: "Dati & Analisi",
-    items: [
-      { href: "/performance", label: "Performance", icon: Gauge },
-      { href: "/statistiche", label: "Statistiche", icon: BarChart3 },
-      { href: "/opendata", label: "Open Data", icon: Database },
-    ],
-  },
-  {
-    label: "Strumenti",
-    items: [
-      { href: "/feeds", label: "Feed e Abbonamenti", icon: Rss },
-      { href: "/sviluppatori", label: "API e Sviluppatori", icon: Code2 },
-    ],
-  },
-];
+import { NAV_GROUPS, isSectionActive } from "./navSections";
 
 function useTopics(): string[] {
   const { data: questions } = useListQuestions();
@@ -119,8 +43,11 @@ export function Navbar() {
   const topics = useTopics();
   const { open: paletteOpen, setOpen: setPaletteOpen } = useCommandPalette();
 
-  const isActive = (href: string) =>
-    location === href || (href !== "/" && location.startsWith(href));
+  const isActive = (href: string) => isSectionActive(href, location);
+
+  const sezioniActive = NAV_GROUPS.some((group) =>
+    group.items.some((item) => isActive(item.href)),
+  );
 
   const linkClass = (active: boolean) =>
     cn(
@@ -185,10 +112,13 @@ export function Navbar() {
 
             {/* Sezioni — grouped mega-menu */}
             <DropdownMenu>
-              <DropdownMenuTrigger className={linkClass(false)}>
+              <DropdownMenuTrigger className={linkClass(sezioniActive)}>
                 <FileText className="h-4 w-4" />
                 Sezioni
                 <ChevronDown className="h-3.5 w-3.5 opacity-70" />
+                {sezioniActive && (
+                  <span className="absolute inset-x-2.5 -bottom-px h-0.5 rounded-full bg-primary" />
+                )}
               </DropdownMenuTrigger>
               <DropdownMenuContent align="start" className="w-56">
                 {NAV_GROUPS.map((group, gi) => (
@@ -199,13 +129,23 @@ export function Navbar() {
                     </DropdownMenuLabel>
                     {group.items.map((item) => {
                       const Icon = item.icon;
+                      const active = isActive(item.href);
                       return (
                         <DropdownMenuItem key={item.href} asChild>
                           <Link
                             href={item.href}
-                            className="flex cursor-pointer items-center gap-2"
+                            aria-current={active ? "page" : undefined}
+                            className={cn(
+                              "flex cursor-pointer items-center gap-2",
+                              active && "font-semibold text-primary",
+                            )}
                           >
-                            <Icon className="h-4 w-4 text-muted-foreground" />
+                            <Icon
+                              className={cn(
+                                "h-4 w-4",
+                                active ? "text-primary" : "text-muted-foreground",
+                              )}
+                            />
                             {item.label}
                           </Link>
                         </DropdownMenuItem>
