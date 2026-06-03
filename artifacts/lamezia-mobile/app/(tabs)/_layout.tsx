@@ -1,4 +1,4 @@
-import { BlurView } from "expo-blur";
+import { BlurView as BlurViewBase, type BlurViewProps } from "expo-blur";
 import { isLiquidGlassAvailable } from "expo-glass-effect";
 import { Tabs } from "expo-router";
 import { Icon, Label, NativeTabs } from "expo-router/unstable-native-tabs";
@@ -8,6 +8,11 @@ import React from "react";
 import { Platform, StyleSheet, View, useColorScheme } from "react-native";
 
 import { useColors } from "@/hooks/useColors";
+
+const BlurView = BlurViewBase as unknown as React.FC<BlurViewProps>;
+const NativeTabsRoot = NativeTabs as unknown as React.FC<{
+  children?: React.ReactNode;
+}>;
 
 type TabDef = {
   name: string;
@@ -44,14 +49,14 @@ const TAB_DEFS: TabDef[] = [
 // Custom brand colors are applied only on the ClassicTabLayout path (older iOS / Android / web).
 function NativeTabLayout() {
   return (
-    <NativeTabs>
+    <NativeTabsRoot>
       {TAB_DEFS.map((t) => (
         <NativeTabs.Trigger key={t.name} name={t.name}>
           <Icon sf={{ default: t.sf.default as any, selected: t.sf.selected as any }} />
           <Label>{t.title}</Label>
         </NativeTabs.Trigger>
       ))}
-    </NativeTabs>
+    </NativeTabsRoot>
   );
 }
 

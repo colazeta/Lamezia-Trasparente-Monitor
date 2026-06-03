@@ -1,11 +1,13 @@
 import React, { useCallback, useMemo, useRef, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
-import MapView, {
+import MapViewBase, {
   Marker as MarkerBase,
-  Polygon,
+  Polygon as PolygonBase,
   PROVIDER_DEFAULT,
   type Region,
   type MapMarkerProps,
+  type MapPolygonProps,
+  type MapViewProps,
 } from "react-native-maps";
 import Supercluster from "supercluster";
 
@@ -18,7 +20,11 @@ import {
 } from "@/lib/gis";
 import type { Contract } from "@workspace/api-client-react";
 
+const MapView = MapViewBase as unknown as React.ForwardRefExoticComponent<
+  MapViewProps & React.RefAttributes<MapViewBase>
+>;
 const Marker = MarkerBase as unknown as React.FC<MapMarkerProps>;
+const Polygon = PolygonBase as unknown as React.FC<MapPolygonProps>;
 
 type LocatedContract = Contract & { latitude: number; longitude: number };
 
@@ -55,7 +61,7 @@ export function InterventionsMap({
 }) {
   const colors = useColors();
   const { data: comune } = useComuneBoundary();
-  const mapRef = useRef<MapView | null>(null);
+  const mapRef = useRef<MapViewBase | null>(null);
 
   const located = useMemo(() => contracts.filter(isLocated), [contracts]);
 

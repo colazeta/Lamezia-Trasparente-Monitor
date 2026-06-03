@@ -15,7 +15,12 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { Card, Skeleton } from "@/components/ui";
 import { useColors } from "@/hooks/useColors";
-import { useListContracts, useListThemes } from "@workspace/api-client-react";
+import {
+  getListContractsQueryKey,
+  getListThemesQueryKey,
+  useListContracts,
+  useListThemes,
+} from "@workspace/api-client-react";
 
 type SectionEntry = {
   title: string;
@@ -63,11 +68,24 @@ export default function SearchScreen() {
 
   const themes = useListThemes(
     { search: debouncedQuery, sort: "relevance" },
-    { query: { enabled: hasQuery } },
+    {
+      query: {
+        enabled: hasQuery,
+        queryKey: getListThemesQueryKey({
+          search: debouncedQuery,
+          sort: "relevance",
+        }),
+      },
+    },
   );
   const contracts = useListContracts(
     { search: debouncedQuery },
-    { query: { enabled: hasQuery } },
+    {
+      query: {
+        enabled: hasQuery,
+        queryKey: getListContractsQueryKey({ search: debouncedQuery }),
+      },
+    },
   );
 
   const filteredSections = useMemo(() => {
@@ -171,9 +189,9 @@ export default function SearchScreen() {
                         <Text style={[styles.resultTitle, { color: colors.foreground }]} numberOfLines={1}>
                           {t.title}
                         </Text>
-                        {t.category ? (
+                        {t.categoryName ? (
                           <Text style={[styles.resultSub, { color: colors.mutedForeground }]} numberOfLines={1}>
-                            {t.category}
+                            {t.categoryName}
                           </Text>
                         ) : null}
                       </View>
@@ -205,7 +223,7 @@ export default function SearchScreen() {
                       </View>
                       <View style={{ flex: 1 }}>
                         <Text style={[styles.resultTitle, { color: colors.foreground }]} numberOfLines={1}>
-                          {c.subject ?? c.cig}
+                          {c.title ?? c.cig}
                         </Text>
                         {c.cig ? (
                           <Text style={[styles.resultSub, { color: colors.mutedForeground }]} numberOfLines={1}>

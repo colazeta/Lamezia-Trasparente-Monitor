@@ -10,8 +10,7 @@ import {
   Text,
   View,
 } from "react-native";
-import Svg, { Circle, Line, Path } from "react-native-svg";
-
+import { Circle, Line, Path, Svg } from "@/components/svg";
 import { Badge, Card, EmptyState, Skeleton } from "@/components/ui";
 import { useColors } from "@/hooks/useColors";
 import {
