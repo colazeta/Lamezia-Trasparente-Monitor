@@ -24,6 +24,7 @@ import {
   HelpCircle,
   Home,
   Search,
+  Clock,
 } from "lucide-react";
 import {
   CommandDialog,
@@ -86,6 +87,63 @@ const GROUPS = [
   "Strumenti",
 ];
 
+const RECENTS_STORAGE_KEY = "lt-command-palette-recents";
+const RECENTS_MAX = 5;
+const RECENTS_MAX_AGE_MS = 30 * 24 * 60 * 60 * 1000;
+
+interface RecentEntry {
+  href: string;
+  visitedAt: number;
+}
+
+function readRecents(): RecentEntry[] {
+  if (typeof window === "undefined") return [];
+  try {
+    const raw = window.localStorage.getItem(RECENTS_STORAGE_KEY);
+    if (!raw) return [];
+    const parsed = JSON.parse(raw);
+    if (!Array.isArray(parsed)) return [];
+    const now = Date.now();
+    const valid = parsed
+      .filter(
+        (e): e is RecentEntry =>
+          e != null &&
+          typeof e.href === "string" &&
+          typeof e.visitedAt === "number" &&
+          now - e.visitedAt <= RECENTS_MAX_AGE_MS,
+      )
+      .sort((a, b) => b.visitedAt - a.visitedAt)
+      .slice(0, RECENTS_MAX);
+    if (valid.length !== parsed.length) {
+      try {
+        window.localStorage.setItem(
+          RECENTS_STORAGE_KEY,
+          JSON.stringify(valid),
+        );
+      } catch {
+        // ignore storage errors (private mode, quota, etc.)
+      }
+    }
+    return valid;
+  } catch {
+    return [];
+  }
+}
+
+function recordRecent(href: string) {
+  if (typeof window === "undefined") return;
+  try {
+    const existing = readRecents().filter((e) => e.href !== href);
+    const updated = [{ href, visitedAt: Date.now() }, ...existing].slice(
+      0,
+      RECENTS_MAX,
+    );
+    window.localStorage.setItem(RECENTS_STORAGE_KEY, JSON.stringify(updated));
+  } catch {
+    // ignore storage errors (private mode, quota, etc.)
+  }
+}
+
 interface CommandPaletteProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -93,26 +151,50 @@ interface CommandPaletteProps {
 
 export function CommandPalette({ open, onOpenChange }: CommandPaletteProps) {
   const [, navigate] = useLocation();
+  const [recents, setRecents] = useState<RecentEntry[]>([]);
+
+  useEffect(() => {
+    if (open) setRecents(readRecents());
+  }, [open]);
 
   const runCommand = useCallback(
     (href: string) => {
+      recordRecent(href);
       onOpenChange(false);
       navigate(href);
     },
     [navigate, onOpenChange],
   );
 
+  const recentItems = recents
+    .map((entry) => ALL_ITEMS.find((item) => item.href === entry.href))
+    .filter((item): item is NavItem => item != null);
+
   return (
     <CommandDialog open={open} onOpenChange={onOpenChange}>
       <CommandInput placeholder="Cerca una sezione o funzione…" />
       <CommandList className="max-h-[420px]">
         <CommandEmpty>Nessun risultato trovato.</CommandEmpty>
+        {recentItems.length > 0 && (
+          <CommandGroup heading="Recenti">
+            {recentItems.map((item) => (
+              <CommandItem
+                key={`recent-${item.href}`}
+                value={`recenti ${item.label} ${item.keywords ?? ""}`}
+                onSelect={() => runCommand(item.href)}
+              >
+                <Clock className="h-4 w-4 text-muted-foreground" />
+                {item.label}
+              </CommandItem>
+            ))}
+          </CommandGroup>
+        )}
         {GROUPS.map((group, i) => {
           const items = ALL_ITEMS.filter((item) => item.group === group);
           if (items.length === 0) return null;
           return (
             <div key={group}>
-              {i > 0 && <CommandSeparator />}
+              {(i > 0 || recentItems.length > 0) && <CommandSeparator />}
               <CommandGroup heading={group}>
                 {items.map((item) => {
                   const Icon = item.icon;
