@@ -43,6 +43,19 @@ function readJournal(migrationsFolder: string): Journal {
 }
 
 /**
+ * Computes the sha256 hash of a migration's SQL file the exact same way
+ * Drizzle's node-postgres migrator does, so a recorded hash can be matched back
+ * to the journal entry (and therefore its human-readable tag) that produced it.
+ */
+function migrationHash(migrationsFolder: string, tag: string): string {
+  const sql = fs.readFileSync(
+    path.join(migrationsFolder, `${tag}.sql`),
+    "utf-8",
+  );
+  return crypto.createHash("sha256").update(sql).digest("hex");
+}
+
+/**
  * True when Drizzle's migration-tracking table exists AND has at least one
  * recorded migration. An empty (or missing) tracking table means the database
  * has never been driven by the migration workflow.
@@ -105,11 +118,9 @@ export async function baselineMigrations(
   const baselined: string[] = [];
 
   for (const entry of journal.entries) {
-    const sqlFile = path.join(migrationsFolder, `${entry.tag}.sql`);
-    const sql = fs.readFileSync(sqlFile, "utf-8");
     // Drizzle's node-postgres migrator hashes the full file contents with
     // sha256; match that exactly so it recognises these as already applied.
-    const hash = crypto.createHash("sha256").update(sql).digest("hex");
+    const hash = migrationHash(migrationsFolder, entry.tag);
 
     const existing = await client.query(
       "SELECT id FROM drizzle.__drizzle_migrations WHERE hash = $1",
@@ -126,4 +137,93 @@ export async function baselineMigrations(
   }
 
   return baselined;
+}
+
+/**
+ * A point-in-time snapshot of where the connected database sits relative to the
+ * migrations committed in the repository. Used to verify a deploy at a glance
+ * and to produce actionable diagnostics when {@link runMigrations} aborts.
+ */
+export interface MigrationStatus {
+  /**
+   * Whether Drizzle's tracking table exists and has at least one recorded
+   * migration. `false` means the database has never run the migration workflow.
+   */
+  trackingPresent: boolean;
+  /** Number of migrations recorded as applied in the tracking table. */
+  appliedCount: number;
+  /** Total number of migrations committed in the journal (source of truth). */
+  journalCount: number;
+  /**
+   * Human-readable tag of the most recently applied migration (e.g.
+   * `0042_add_foo`), or `null` when nothing is applied yet.
+   */
+  lastAppliedTag: string | null;
+  /**
+   * Tags present in the journal but not yet recorded as applied, in journal
+   * order. The first entry is the migration the migrator will attempt next.
+   */
+  pendingTags: string[];
+}
+
+/**
+ * Reports the current migration state of the database without modifying it.
+ *
+ * Maps each recorded migration hash back to its journal tag so the status is
+ * legible (`lastAppliedTag`) rather than an opaque hash. Safe to call before or
+ * after {@link runMigrations}: when the tracking table is missing it reports
+ * `trackingPresent: false` with every journal tag listed as pending.
+ */
+export async function getMigrationStatus(
+  client: QueryClient,
+  migrationsFolder: string,
+): Promise<MigrationStatus> {
+  const journal = readJournal(migrationsFolder);
+  // Order journal entries deterministically so "last" and "next" are stable
+  // regardless of how the journal happens to be serialised.
+  const orderedEntries = [...journal.entries].sort((a, b) => a.idx - b.idx);
+  const hashToTag = new Map<string, string>(
+    orderedEntries.map((entry) => [
+      migrationHash(migrationsFolder, entry.tag),
+      entry.tag,
+    ]),
+  );
+
+  const trackingPresent = await isMigrationTrackingPresent(client);
+  if (!trackingPresent) {
+    return {
+      trackingPresent: false,
+      appliedCount: 0,
+      journalCount: orderedEntries.length,
+      lastAppliedTag: null,
+      pendingTags: orderedEntries.map((entry) => entry.tag),
+    };
+  }
+
+  const applied = await client.query(
+    "SELECT hash, created_at FROM drizzle.__drizzle_migrations ORDER BY created_at DESC, id DESC",
+  );
+  const appliedHashes = new Set(
+    applied.rows.map((row) => String(row["hash"])),
+  );
+
+  const lastAppliedHash =
+    applied.rows.length > 0 ? String(applied.rows[0]?.["hash"]) : null;
+  const lastAppliedTag =
+    lastAppliedHash !== null ? (hashToTag.get(lastAppliedHash) ?? null) : null;
+
+  const pendingTags = orderedEntries
+    .filter(
+      (entry) =>
+        !appliedHashes.has(migrationHash(migrationsFolder, entry.tag)),
+    )
+    .map((entry) => entry.tag);
+
+  return {
+    trackingPresent: true,
+    appliedCount: applied.rows.length,
+    journalCount: orderedEntries.length,
+    lastAppliedTag,
+    pendingTags,
+  };
 }

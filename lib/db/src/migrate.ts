@@ -3,8 +3,10 @@ import path from "path";
 import { db, pool } from "./client";
 import {
   baselineMigrations,
+  getMigrationStatus,
   isMigrationTrackingPresent,
   isSchemaBootstrapped,
+  type MigrationStatus,
   type QueryClient,
 } from "./baselineLogic";
 
@@ -56,7 +58,79 @@ export interface RunMigrationsDeps {
   migrationsFolder?: string;
 }
 
-export async function runMigrations(deps: RunMigrationsDeps = {}): Promise<void> {
+/**
+ * The startup state {@link runMigrations} detected before doing any work:
+ * - `empty`             — no schema and no tracking; a fresh database.
+ * - `push-bootstrapped` — schema exists from `drizzle-kit push` but has never
+ *                         been tracked; needs a one-time baseline first.
+ * - `tracked`           — already on the migration workflow.
+ */
+export type MigrationStartupState = "empty" | "push-bootstrapped" | "tracked";
+
+/**
+ * Thrown when {@link runMigrations} aborts. Carries the state that was detected
+ * before migrating and the set of migrations the run was attempting, so the
+ * startup logs say exactly what went wrong instead of surfacing only an opaque
+ * Postgres error.
+ *
+ * Note: drizzle applies every pending migration inside a single transaction, so
+ * a failure rolls the whole batch back — none of `pendingMigrations` are
+ * applied. The offending statement is identified by the underlying Postgres
+ * error (`cause`); the batch is all-or-nothing, so we report the full set rather
+ * than guessing a single culprit from the (unchanged) post-failure state.
+ */
+export class MigrationError extends Error {
+  constructor(
+    /** Which phase failed: recording the baseline or applying migrations. */
+    readonly phase: "baseline" | "migrate",
+    /** The database state detected before migrating. */
+    readonly detectedState: MigrationStartupState,
+    /**
+     * The migrations the run was attempting (pending before it started). Empty
+     * for the baseline phase. Because the migrate phase is atomic, all of these
+     * were rolled back when the failure occurred.
+     */
+    readonly pendingMigrations: string[],
+    /** Best-effort status snapshot taken after the failure (may be null). */
+    readonly status: MigrationStatus | null,
+    /** The underlying error thrown by drizzle / Postgres. */
+    readonly cause: unknown,
+  ) {
+    const detail = cause instanceof Error ? cause.message : String(cause);
+    const where =
+      phase === "baseline"
+        ? " while recording the baseline"
+        : pendingMigrations.length > 0
+          ? ` while applying ${pendingMigrations.length} pending migration(s) ` +
+            `[${pendingMigrations.join(", ")}] (atomic — none were applied)`
+          : "";
+    super(
+      `Database migration aborted${where} (detected state: ${detectedState}): ${detail}`,
+    );
+    this.name = "MigrationError";
+  }
+}
+
+async function safeStatus(
+  client: QueryClient,
+  folder: string,
+): Promise<MigrationStatus | null> {
+  try {
+    return await getMigrationStatus(client, folder);
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Applies pending migrations and returns the resulting {@link MigrationStatus}
+ * (last applied tag, applied/journal counts) so a deploy can be verified at a
+ * glance. Throws {@link MigrationError} — annotated with the detected state and
+ * the failing migration — when it cannot complete.
+ */
+export async function runMigrations(
+  deps: RunMigrationsDeps = {},
+): Promise<MigrationStatus> {
   const client = deps.client ?? pool;
   const database = deps.database ?? db;
   const folder = deps.migrationsFolder ?? migrationsFolder;
@@ -69,9 +143,56 @@ export async function runMigrations(deps: RunMigrationsDeps = {}): Promise<void>
   // Drizzle's internal tracking table — never to application tables — and is a
   // no-op on databases already on the migration workflow.
   const tracked = await isMigrationTrackingPresent(client);
-  if (!tracked && (await isSchemaBootstrapped(client))) {
-    await baselineMigrations(client, folder);
+  const detectedState: MigrationStartupState = tracked
+    ? "tracked"
+    : (await isSchemaBootstrapped(client))
+      ? "push-bootstrapped"
+      : "empty";
+
+  if (detectedState === "push-bootstrapped") {
+    try {
+      await baselineMigrations(client, folder);
+    } catch (err) {
+      throw new MigrationError(
+        "baseline",
+        detectedState,
+        [],
+        await safeStatus(client, folder),
+        err,
+      );
+    }
   }
 
-  await migrate(database, { migrationsFolder: folder });
+  // Snapshot what this run is about to apply, before migrating. drizzle applies
+  // the whole batch atomically, so on failure these are the migrations that were
+  // rolled back together.
+  const before = await safeStatus(client, folder);
+
+  try {
+    await migrate(database, { migrationsFolder: folder });
+  } catch (err) {
+    throw new MigrationError(
+      "migrate",
+      detectedState,
+      before?.pendingTags ?? [],
+      await safeStatus(client, folder),
+      err,
+    );
+  }
+
+  return getMigrationStatus(client, folder);
+}
+
+/**
+ * Reports the current {@link MigrationStatus} of the production database without
+ * modifying it, using the same default pool and bundled migrations folder as
+ * {@link runMigrations}. Intended for a startup health log and/or a health
+ * endpoint that verifies the deploy landed on the expected migration.
+ */
+export async function reportMigrationStatus(
+  deps: Pick<RunMigrationsDeps, "client" | "migrationsFolder"> = {},
+): Promise<MigrationStatus> {
+  const client = deps.client ?? pool;
+  const folder = deps.migrationsFolder ?? migrationsFolder;
+  return getMigrationStatus(client, folder);
 }

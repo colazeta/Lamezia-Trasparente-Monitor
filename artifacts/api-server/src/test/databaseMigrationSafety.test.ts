@@ -10,10 +10,13 @@ import { pushSchema } from "drizzle-kit/api";
 import * as schema from "@workspace/db/schema";
 import {
   baselineMigrations,
+  getMigrationStatus,
   isMigrationTrackingPresent,
   isSchemaBootstrapped,
+  MigrationError,
   runMigrations,
 } from "@workspace/db";
+import os from "node:os";
 
 import { resolveTestDatabaseConfig } from "./testDatabase";
 
@@ -58,6 +61,66 @@ function readJournalExpectations(): { tag: string; hash: string; when: number } 
 }
 
 const expected = readJournalExpectations();
+
+/** Tag of the newest migration in the production journal (highest idx). */
+function latestJournalTag(): string {
+  const journal = JSON.parse(
+    fs.readFileSync(path.join(migrationsFolder, "meta/_journal.json"), "utf-8"),
+  ) as { entries: Array<{ idx: number; tag: string }> };
+  const newest = [...journal.entries].sort((a, b) => b.idx - a.idx)[0];
+  if (!newest) {
+    throw new Error("expected at least one migration in the journal");
+  }
+  return newest.tag;
+}
+
+/**
+ * Builds a throwaway migrations folder containing one valid migration followed
+ * by one with deliberately invalid SQL, so a `runMigrations` run aborts midway.
+ * Returns the temp path, both tags, and a cleanup function.
+ */
+function makeBrokenMigrationsFolder(): {
+  path: string;
+  okTag: string;
+  brokenTag: string;
+  cleanup: () => void;
+} {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "migbroken_"));
+  fs.mkdirSync(path.join(dir, "meta"), { recursive: true });
+
+  const okTag = "0000_ok";
+  const brokenTag = "0001_broken";
+
+  fs.writeFileSync(
+    path.join(dir, `${okTag}.sql`),
+    "CREATE TABLE status_probe (id serial PRIMARY KEY);\n",
+  );
+  // Invalid SQL — references a table that does not exist, so Postgres rejects it.
+  fs.writeFileSync(
+    path.join(dir, `${brokenTag}.sql`),
+    "ALTER TABLE does_not_exist ADD COLUMN broken integer;\n",
+  );
+
+  const journal = {
+    version: "7",
+    dialect: "postgresql",
+    entries: [
+      { idx: 0, version: "7", when: 1, tag: okTag, breakpoints: true },
+      { idx: 1, version: "7", when: 2, tag: brokenTag, breakpoints: true },
+    ],
+  };
+  fs.writeFileSync(
+    path.join(dir, "meta/_journal.json"),
+    JSON.stringify(journal, null, 2),
+  );
+
+  return {
+    path: dir,
+    okTag,
+    brokenTag,
+    cleanup: () => fs.rmSync(dir, { recursive: true, force: true }),
+  };
+}
 
 let adminBaseUrl: URL;
 const createdDatabases: string[] = [];
@@ -270,6 +333,84 @@ describe("database upgrade safety (baselineLogic / runMigrations)", () => {
       expect(after[0]?.hash).toBe(expected.hash);
       expect(await countCategories(scratch.pool)).toBe(1);
     } finally {
+      await scratch.pool.end();
+    }
+  });
+});
+
+describe("migration status reporting (getMigrationStatus / runMigrations)", () => {
+  it("reports every migration as pending on a never-tracked database", async () => {
+    const scratch = await createScratchDatabase();
+    try {
+      const status = await getMigrationStatus(scratch.pool, migrationsFolder);
+      expect(status.trackingPresent).toBe(false);
+      expect(status.appliedCount).toBe(0);
+      expect(status.lastAppliedTag).toBeNull();
+      expect(status.journalCount).toBeGreaterThan(0);
+      expect(status.pendingTags).toContain(expected.tag);
+      expect(status.pendingTags).toHaveLength(status.journalCount);
+    } finally {
+      await scratch.pool.end();
+    }
+  });
+
+  it("reports the last applied tag and zero pending after a clean migrate", async () => {
+    const scratch = await createScratchDatabase();
+    try {
+      const result = await runMigrations({
+        client: scratch.pool,
+        database: scratch.db,
+        migrationsFolder,
+      });
+
+      // runMigrations now returns the resulting status directly.
+      expect(result.trackingPresent).toBe(true);
+      expect(result.pendingTags).toHaveLength(0);
+      expect(result.appliedCount).toBe(result.journalCount);
+
+      const status = await getMigrationStatus(scratch.pool, migrationsFolder);
+      expect(status.lastAppliedTag).not.toBeNull();
+      expect(status.pendingTags).toHaveLength(0);
+      // The newest journal entry must be the one reported as last applied.
+      expect(status.lastAppliedTag).toBe(latestJournalTag());
+    } finally {
+      await scratch.pool.end();
+    }
+  });
+
+  it("throws an annotated MigrationError listing the migrations the aborted run attempted", async () => {
+    const scratch = await createScratchDatabase();
+    const brokenFolder = makeBrokenMigrationsFolder();
+    try {
+      let caught: unknown;
+      try {
+        await runMigrations({
+          client: scratch.pool,
+          database: scratch.db,
+          migrationsFolder: brokenFolder.path,
+        });
+      } catch (err) {
+        caught = err;
+      }
+
+      expect(caught).toBeInstanceOf(MigrationError);
+      const error = caught as MigrationError;
+      expect(error.phase).toBe("migrate");
+      expect(error.detectedState).toBe("empty");
+      // drizzle applies the batch atomically, so the run attempted both pending
+      // migrations and rolled them all back when the second one failed.
+      expect(error.pendingMigrations).toEqual([
+        brokenFolder.okTag,
+        brokenFolder.brokenTag,
+      ]);
+      expect(error.status?.appliedCount).toBe(0);
+      expect(error.status?.lastAppliedTag).toBeNull();
+      expect(error.message).toContain(brokenFolder.brokenTag);
+
+      // Atomic rollback: even the valid first migration left nothing behind.
+      expect(await tableExists(scratch.pool, "status_probe")).toBe(false);
+    } finally {
+      brokenFolder.cleanup();
       await scratch.pool.end();
     }
   });

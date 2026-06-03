@@ -2,7 +2,8 @@ import app from "./app";
 import { logger } from "./lib/logger";
 import { startIngestionScheduler } from "./lib/ingestion";
 import { verifySchema } from "./lib/schemaCheck";
-import { runMigrations } from "@workspace/db";
+import { runMigrations, MigrationError } from "@workspace/db";
+import { logMigrationStatus } from "./lib/migrationStatus";
 
 const rawPort = process.env["PORT"];
 
@@ -29,17 +30,32 @@ app.listen(port, (err) => {
   // Apply any pending migrations non-interactively, then verify the schema
   // and start the ingestion scheduler only when everything is clean.
   void runMigrations()
-    .then(() => {
-      logger.info("Database migrations applied (or already up to date).");
+    .then((status) => {
+      logMigrationStatus(status);
       return verifySchema();
     })
     .catch((err: unknown) => {
-      logger.error(
-        { err },
-        "Failed to run database migrations at startup. " +
-          "To apply migrations manually: pnpm --filter @workspace/db run migrate. " +
-          "Then restart the API server.",
-      );
+      if (err instanceof MigrationError) {
+        logger.error(
+          {
+            err,
+            phase: err.phase,
+            detectedState: err.detectedState,
+            pendingMigrations: err.pendingMigrations,
+            migration: err.status,
+          },
+          `Failed to run database migrations at startup: ${err.message} ` +
+            "To apply migrations manually: pnpm --filter @workspace/db run migrate. " +
+            "Then restart the API server.",
+        );
+      } else {
+        logger.error(
+          { err },
+          "Failed to run database migrations at startup. " +
+            "To apply migrations manually: pnpm --filter @workspace/db run migrate. " +
+            "Then restart the API server.",
+        );
+      }
       return false;
     })
     .then((ok) => {

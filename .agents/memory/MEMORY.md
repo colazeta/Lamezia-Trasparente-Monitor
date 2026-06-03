@@ -28,3 +28,4 @@
 - [Public API + MCP](public-api-mcp.md) — read-only `/api/public/v1` (REST, paginated, self-hosted OpenAPI) + stateless `/api/mcp`; both share `lib/publicData.ts`.
 - [pdf-parse v2 + esbuild](pdf-parse-v2-esbuild.md) — pdf-parse@2 class API needs @napi-rs/canvas + externalize pdf-parse/pdfjs-dist in build.mjs; MCP SDK/zod bundle fine.
 - [Monitoraggio civico section](monitoraggio-civico.md) — Monithon-style 3-phase citizen reports tied to contract(CIG)/PNRR(CUP); public upload-url unauth w/ limits; moderation behind requireIngestAuth; bidirectional MonitoringReportsSection on contract+pnrr.
+- [drizzle migrate is atomic](drizzle-migrate-atomic.md) — node-postgres migrator wraps ALL pending migrations in one transaction; any failure rolls the whole batch back, so the exact culprit can't be read from post-failure tracking state.
