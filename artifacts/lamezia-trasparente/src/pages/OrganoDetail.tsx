@@ -114,7 +114,7 @@ export function OrganoDetail() {
           </div>
 
           {organo.members.length > 0 ? (
-            <ul className="mb-10 grid gap-3 sm:grid-cols-2">
+            <ul data-tour="organi-members" className="mb-10 grid gap-3 sm:grid-cols-2">
               {organo.members.map((m) => (
                 <li key={m.officialId}>
                   <Link

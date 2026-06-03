@@ -112,7 +112,7 @@ export function ThemeCard({ theme }: ThemeCardProps) {
           Aggiornato il {format(new Date(theme.updatedAt), 'dd MMM yyyy', { locale: it })}
         </div>
         
-        <div className="flex items-center gap-2">
+        <div data-tour="theme-follow" className="flex items-center gap-2">
           <span
             className="flex items-center gap-1.5 text-xs text-muted-foreground"
             title={`${theme.followerCount} follower`}

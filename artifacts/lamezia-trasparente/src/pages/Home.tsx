@@ -180,7 +180,7 @@ export function Home() {
   return (
     <div className="flex flex-col">
       {/* Hero Section */}
-      <section className="relative bg-sidebar text-sidebar-foreground overflow-hidden">
+      <section data-tour="home-hero" className="relative bg-sidebar text-sidebar-foreground overflow-hidden">
         {/* background texture */}
         <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1518398046578-8cca57782e17?q=80&w=2000&auto=format&fit=crop')] bg-cover bg-center opacity-[0.07] pointer-events-none" />
         <div
@@ -238,7 +238,7 @@ export function Home() {
       </section>
 
       {/* Stats Section */}
-      <section className="border-b border-border bg-card">
+      <section data-tour="home-stats" className="border-b border-border bg-card">
         <div className="container mx-auto px-4 md:px-6">
           <div className="grid grid-cols-2 md:grid-cols-4 divide-x divide-y md:divide-y-0 divide-border">
             <StatCard
@@ -275,7 +275,7 @@ export function Home() {
       </section>
 
       {/* Quick Access Grid */}
-      <section className="border-b border-border bg-background py-12 md:py-16">
+      <section data-tour="home-themes" className="border-b border-border bg-background py-12 md:py-16">
         <div className="container mx-auto px-4 md:px-6">
           <div className="mb-8 flex items-end justify-between gap-4">
             <div>

@@ -49,6 +49,7 @@ import { AdminLegalita } from "./pages/AdminLegalita";
 import { AdminPareri } from "./pages/AdminPareri";
 import { AdminMonitoraggio } from "./pages/AdminMonitoraggio";
 import { AdminIndex } from "./pages/AdminIndex";
+import { Guida } from "./pages/Guida";
 import NotFound from "./pages/not-found";
 
 export function Router() {
@@ -93,6 +94,7 @@ export function Router() {
         <Route path="/statistiche" component={Statistics} />
         <Route path="/metodologia" component={Metodologia} />
         <Route path="/iscrizioni" component={Subscriptions} />
+        <Route path="/guida" component={Guida} />
         <Route path="/admin" component={AdminIndex} />
         <Route path="/admin/cronistoria" component={AdminCronistoria} />
         <Route path="/admin/domande" component={AdminDomande} />

@@ -149,7 +149,7 @@ export function Legalita() {
           </EmptyHeader>
         </Empty>
       ) : (
-        <div className="space-y-12">
+        <div data-tour="legality-areas" className="space-y-12">
           {data?.overallJudgment.trim() ? (
             <OverallJudgment
               text={data.overallJudgment}
@@ -174,7 +174,7 @@ function OverallJudgment({
   updatedAt: string | null;
 }) {
   return (
-    <section className="rounded-2xl border border-brand/30 bg-brand/5 p-6 md:p-8">
+    <section data-tour="legality-overview" className="rounded-2xl border border-brand/30 bg-brand/5 p-6 md:p-8">
       <div className="flex items-center gap-2 text-brand">
         <ShieldCheck className="h-5 w-5" />
         <h2 className="font-display text-lg font-bold tracking-tight">

@@ -70,7 +70,7 @@ export function Monitoraggio() {
 
   return (
     <div className="container mx-auto px-4 py-8 md:py-12 max-w-5xl">
-      <div className="mb-8 flex flex-wrap items-start justify-between gap-4">
+      <div data-tour="monitoring-intro" className="mb-8 flex flex-wrap items-start justify-between gap-4">
         <div className="space-y-2">
           <div className="flex items-center gap-2 text-brand">
             <Telescope className="h-5 w-5" />
@@ -81,14 +81,14 @@ export function Monitoraggio() {
           <h1 className="font-display text-3xl font-bold tracking-tight md:text-4xl">
             Report di Monitoraggio Civico
           </h1>
-          <p className="max-w-3xl text-muted-foreground">
+          <p data-tour="monitoring-phases" className="max-w-3xl text-muted-foreground">
             Cittadini e associazioni raccontano com'è andato un progetto
             finanziato con denaro pubblico: un'analisi in tre fasi — analisi
             desk, valutazione di efficacia e impatto sui risultati — ispirata al
             metodo Monithon.
           </p>
         </div>
-        <Button asChild variant="brand" className="gap-2">
+        <Button data-tour="monitoring-new" asChild variant="brand" className="gap-2">
           <Link href="/monitoraggio/nuovo">
             <Plus className="h-4 w-4" />
             Crea un report

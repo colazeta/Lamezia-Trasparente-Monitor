@@ -31,7 +31,7 @@ export function Organi() {
         </p>
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <div data-tour="organi-list" className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {isLoading ? (
           Array(3)
             .fill(0)

@@ -178,7 +178,7 @@ export function BeniConfiscati() {
       </div>
 
       {assets && assets.length > 0 ? (
-        <Card className="mb-8 overflow-hidden p-0">
+        <Card data-tour="beni-list" className="mb-8 overflow-hidden p-0">
           <ConfiscatedAssetsMap
             assets={assets}
             className="h-[460px] w-full"

@@ -290,7 +290,7 @@ export function Contracts() {
       <Analytics loading={analyticsLoading} analytics={analytics} />
 
       {/* Filters */}
-      <div className="mt-10 mb-4 grid gap-3 rounded-xl border border-border bg-muted/40 p-4 shadow-sm md:grid-cols-2 lg:grid-cols-3">
+      <div data-tour="contracts-search" className="mt-10 mb-4 grid gap-3 rounded-xl border border-border bg-muted/40 p-4 shadow-sm md:grid-cols-2 lg:grid-cols-3">
         <div className="relative md:col-span-2 lg:col-span-1">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
@@ -501,7 +501,7 @@ export function Contracts() {
       </div>
 
       {/* Table */}
-      <div className="border border-border rounded-xl bg-card overflow-hidden shadow-sm">
+      <div data-tour="contracts-list" className="border border-border rounded-xl bg-card overflow-hidden shadow-sm">
         <div className="overflow-x-auto">
           <Table>
             <TableHeader className="bg-muted/40">

@@ -169,7 +169,7 @@ export function Pnrr() {
       ) : projects && projects.length > 0 ? (
         <>
           {/* Census totals */}
-          <div className="grid gap-4 grid-cols-2 lg:grid-cols-4 mb-10">
+          <div data-tour="pnrr-stats" className="grid gap-4 grid-cols-2 lg:grid-cols-4 mb-10">
             <StatCard
               label="Progetti censiti"
               value={String(census.projectsCount)}
@@ -233,7 +233,7 @@ export function Pnrr() {
             </h2>
           </div>
 
-          <div className="space-y-4 mb-12">
+          <div data-tour="pnrr-list" className="space-y-4 mb-12">
             {projects.map((project: PnrrProject) => (
               <PnrrCard
                 key={project.key}
@@ -330,7 +330,7 @@ function PnrrCard({
   formatImporto: (v: number | null | undefined) => string | null;
 }) {
   return (
-    <div className="rounded-xl border border-card-border bg-card shadow-sm overflow-hidden">
+    <div data-tour="pnrr-detail" className="rounded-xl border border-card-border bg-card shadow-sm overflow-hidden">
       {/* Card header stripe for transparency */}
       <div
         className={`h-1 w-full ${

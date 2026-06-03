@@ -435,7 +435,7 @@ const sections: HelperSection[] = [
     title: "API Pubblica e Open Data per Sviluppatori",
     description:
       "Accedi a tutti i dati della piattaforma tramite API REST documentata (OpenAPI) o tramite il server MCP per assistenti AI. Pensata per giornalisti, ricercatori e sviluppatori.",
-    route: "/api/public/v1",
+    route: "/sviluppatori",
     tourSteps: [
       {
         target: "[data-tour='api-intro']",

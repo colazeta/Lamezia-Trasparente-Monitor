@@ -25,6 +25,7 @@ import {
   Home,
   Search,
   Clock,
+  BookOpen,
 } from "lucide-react";
 import {
   CommandDialog,
@@ -47,6 +48,7 @@ interface NavItem {
 const ALL_ITEMS: NavItem[] = [
   { href: "/", label: "Home", icon: Home, group: "Navigazione" },
   { href: "/domande", label: "Domande & Risposte", icon: HelpCircle, group: "Navigazione" },
+  { href: "/guida", label: "Centro Guida", icon: BookOpen, group: "Navigazione", keywords: "tour assistente aiuto guida storia progetto" },
 
   { href: "/albo", label: "Albo Pretorio", icon: ShieldAlert, group: "Trasparenza & Atti", keywords: "pubblicazioni atti ufficiali" },
   { href: "/atti-fondamentali", label: "Atti Fondamentali", icon: ScrollText, group: "Trasparenza & Atti", keywords: "statuto regolamenti" },

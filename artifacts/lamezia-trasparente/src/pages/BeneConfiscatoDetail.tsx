@@ -119,7 +119,7 @@ export function BeneConfiscatoDetail() {
         </Button>
       </Link>
 
-      <div className="grid gap-6 lg:grid-cols-3">
+      <div data-tour="beni-detail" className="grid gap-6 lg:grid-cols-3">
         <div className="space-y-6 lg:col-span-2">
           <div className="space-y-3">
             <div className="flex items-center gap-2 text-brand">

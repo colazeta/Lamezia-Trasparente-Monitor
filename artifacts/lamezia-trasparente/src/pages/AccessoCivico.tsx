@@ -724,7 +724,7 @@ export function AccessoCivico() {
         </p>
       </div>
 
-      <section className="mb-12">
+      <section data-tour="accesso-civico-intro" className="mb-12">
         <h2 className="mb-4 font-display text-xl font-semibold">
           Come funziona
         </h2>
@@ -741,7 +741,7 @@ export function AccessoCivico() {
         </Card>
       </section>
 
-      <section className="mb-12">
+      <section data-tour="accesso-civico-new" className="mb-12">
         <h2 className="mb-4 font-display text-xl font-semibold">
           Assistente alla richiesta
         </h2>

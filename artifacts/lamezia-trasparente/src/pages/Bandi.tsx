@@ -233,7 +233,7 @@ export function Bandi() {
         </p>
       </div>
 
-      <div className="mb-8">
+      <div data-tour="bandi-match" className="mb-8">
         <SummaryCards />
       </div>
 
@@ -293,7 +293,7 @@ export function Bandi() {
           ))}
         </div>
       ) : bandi && bandi.length > 0 ? (
-        <div className="grid gap-4 md:grid-cols-2">
+        <div data-tour="bandi-list" className="grid gap-4 md:grid-cols-2">
           {bandi.map((b) => (
             <BandoCard key={b.id} bando={b} />
           ))}

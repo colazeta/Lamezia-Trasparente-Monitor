@@ -313,7 +313,7 @@ export function Opendata() {
             ))}
         </div>
       ) : datasets && datasets.length > 0 ? (
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <div data-tour="opendata-catalog" className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {datasets.map((d) => (
             <DatasetCard
               key={d.id}
@@ -361,6 +361,7 @@ function DatasetCard({
   return (
     <Link
       href={`/opendata/${dataset.id}`}
+      data-tour="opendata-preview"
       className="group flex flex-col rounded-xl border border-card-border bg-card p-5 shadow-sm transition-colors hover-elevate hover:border-brand/40"
     >
       <div className="mb-3 flex flex-wrap items-center gap-1.5">

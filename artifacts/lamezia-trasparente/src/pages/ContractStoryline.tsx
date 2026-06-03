@@ -159,7 +159,7 @@ function StorylineContent({
   return (
     <div className="space-y-8">
       {/* Header */}
-      <header className="rounded-2xl border border-border bg-card p-6 md:p-8 shadow-sm">
+      <header data-tour="contract-detail" className="rounded-2xl border border-border bg-card p-6 md:p-8 shadow-sm">
         <div className="flex flex-wrap items-center gap-1.5">
           {contract.cig ? (
             <Badge variant="brand" className="font-mono text-xs shadow-none">

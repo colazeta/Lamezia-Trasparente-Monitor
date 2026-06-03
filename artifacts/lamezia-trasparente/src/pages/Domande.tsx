@@ -80,7 +80,7 @@ export function Domande() {
       </div>
 
       {/* Ricerca + filtro per argomento */}
-      <div className="mb-8 space-y-4">
+      <div data-tour="questions-new" className="mb-8 space-y-4">
         <div className="relative max-w-xl">
           <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           <Input
@@ -123,7 +123,7 @@ export function Domande() {
       </div>
 
       {isLoading ? (
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
+        <div data-tour="questions-list" className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
           {Array(6)
             .fill(0)
             .map((_, i) => (
@@ -157,13 +157,13 @@ export function Domande() {
           ) : null}
         </div>
       ) : activeTopic !== "all" ? (
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
+        <div data-tour="questions-list" className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
           {filtered.map((q) => (
             <QuestionCard key={q.id} question={q} />
           ))}
         </div>
       ) : (
-        <div className="space-y-12">
+        <div data-tour="questions-list" className="space-y-12">
           {grouped.map(([topicName, items]) => {
             const TopicIcon = iconForTopic(topicName);
             return (

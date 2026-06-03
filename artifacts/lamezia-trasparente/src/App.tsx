@@ -3,6 +3,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ThemeProvider } from "@/components/theme/ThemeProvider";
+import { CivicHelperProvider } from "@/components/helper/CivicHelperContext";
 import { Router } from "./Router";
 
 const queryClient = new QueryClient({
@@ -20,7 +21,9 @@ function App() {
       <ThemeProvider>
         <TooltipProvider>
           <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}>
-            <Router />
+            <CivicHelperProvider>
+              <Router />
+            </CivicHelperProvider>
           </WouterRouter>
           <Toaster position="top-right" />
         </TooltipProvider>

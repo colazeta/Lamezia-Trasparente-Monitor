@@ -9,7 +9,7 @@ export function Themes() {
 
   return (
     <div className="container mx-auto px-4 py-8 md:py-12">
-      <div className="mb-8">
+      <div data-tour="themes-filter" className="mb-8">
         <span className="eyebrow text-primary">Osservatorio civico</span>
         <h1 className="mt-2 text-3xl md:text-4xl font-display font-bold tracking-tight">
           Temi Monitorati
@@ -22,7 +22,7 @@ export function Themes() {
       </div>
 
       {isLoading ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+        <div data-tour="themes-list" className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
           {Array(3)
             .fill(0)
             .map((_, i) => (
@@ -30,7 +30,7 @@ export function Themes() {
             ))}
         </div>
       ) : themes && themes.length > 0 ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+        <div data-tour="themes-list" className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
           {themes.map((theme) => (
             <ThemeCard key={theme.id} theme={theme} />
           ))}

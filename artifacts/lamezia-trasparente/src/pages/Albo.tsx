@@ -189,7 +189,7 @@ export function Albo() {
         })}
       </div>
 
-      <div className="flex flex-col md:flex-row flex-wrap gap-4 mb-8 p-4 bg-muted/40 rounded-xl border border-border shadow-sm">
+      <div data-tour="albo-filter" className="flex flex-col md:flex-row flex-wrap gap-4 mb-8 p-4 bg-muted/40 rounded-xl border border-border shadow-sm">
         <div className="relative flex-1 min-w-[200px]">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
@@ -262,7 +262,7 @@ export function Albo() {
         </div>
       </div>
 
-      <div className="space-y-3">
+      <div data-tour="albo-list" className="space-y-3">
         {isLoading ? (
           Array(6)
             .fill(0)
@@ -324,7 +324,7 @@ export function Albo() {
                 )}
               </div>
 
-              <div className="mt-3 border-t border-border pt-3">
+              <div data-tour="albo-markdown" className="mt-3 border-t border-border pt-3">
                 <AlboLink attachments={p.attachments} />
               </div>
             </Card>

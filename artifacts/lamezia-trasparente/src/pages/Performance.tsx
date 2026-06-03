@@ -130,7 +130,7 @@ export function Performance() {
             ))}
         </div>
       ) : categories && categories.length > 0 ? (
-        <div className="mb-8 flex flex-wrap items-center gap-2">
+        <div data-tour="performance-categories" className="mb-8 flex flex-wrap items-center gap-2">
           <span className="mr-1 inline-flex items-center gap-1.5 text-sm text-muted-foreground">
             <Filter className="h-4 w-4" />
             Categoria:
@@ -173,7 +173,7 @@ export function Performance() {
             ))}
         </div>
       ) : visibleCategories.length > 0 ? (
-        <div className="space-y-12">
+        <div data-tour="performance-indicator" className="space-y-12">
           {visibleCategories.map((category) => (
             <CategorySection key={category.id} category={category} />
           ))}

@@ -462,7 +462,7 @@ export function Sviluppatori() {
   return (
     <div className="container mx-auto max-w-5xl px-4 py-8 md:py-12">
       {/* Header */}
-      <div className="mb-6">
+      <div data-tour="api-intro" className="mb-6">
         <span className="eyebrow text-primary">
           <Code2 className="h-3.5 w-3.5" />
           Per sviluppatori, giornalisti e ricercatori
@@ -536,7 +536,7 @@ export function Sviluppatori() {
             consulta la specifica grezza.
           </div>
         ) : (
-          <div className="space-y-8">
+          <div data-tour="api-docs" className="space-y-8">
             {grouped.map((group) => (
               <div key={group.tag}>
                 <div className="mb-3">

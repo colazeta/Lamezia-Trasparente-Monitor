@@ -7,6 +7,7 @@ import {
   Home,
   HelpCircle,
   ChevronDown,
+  BookOpen,
 } from "lucide-react";
 import { useState } from "react";
 import { useListQuestions } from "@workspace/api-client-react";
@@ -79,6 +80,14 @@ export function Navbar() {
               <HelpCircle className="h-4 w-4" />
               Domande
               {isActive("/domande") && (
+                <span className="absolute inset-x-2.5 -bottom-px h-0.5 rounded-full bg-primary" />
+              )}
+            </Link>
+
+            <Link href="/guida" className={linkClass(isActive("/guida"))}>
+              <BookOpen className="h-4 w-4" />
+              Guida
+              {isActive("/guida") && (
                 <span className="absolute inset-x-2.5 -bottom-px h-0.5 rounded-full bg-primary" />
               )}
             </Link>
@@ -204,6 +213,13 @@ export function Navbar() {
                   label="Domande"
                   icon={HelpCircle}
                   active={isActive("/domande")}
+                  onClick={() => setIsOpen(false)}
+                />
+                <MobileLink
+                  href="/guida"
+                  label="Guida"
+                  icon={BookOpen}
+                  active={isActive("/guida")}
                   onClick={() => setIsOpen(false)}
                 />
               </div>
