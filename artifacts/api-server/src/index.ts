@@ -3,7 +3,10 @@ import { logger } from "./lib/logger";
 import { startIngestionScheduler } from "./lib/ingestion";
 import { verifySchema } from "./lib/schemaCheck";
 import { runMigrations, MigrationError } from "@workspace/db";
-import { logMigrationStatus } from "./lib/migrationStatus";
+import {
+  logMigrationStatus,
+  alertMigrationProblem,
+} from "./lib/migrationStatus";
 
 const rawPort = process.env["PORT"];
 
@@ -30,11 +33,16 @@ app.listen(port, (err) => {
   // Apply any pending migrations non-interactively, then verify the schema
   // and start the ingestion scheduler only when everything is clean.
   void runMigrations()
-    .then((status) => {
+    .then(async (status) => {
       logMigrationStatus(status);
+      // A successful run that still leaves migrations pending means a new
+      // migration was deployed but not applied — actively alert the team.
+      if (status.pendingTags.length > 0) {
+        await alertMigrationProblem({ kind: "pending", status });
+      }
       return verifySchema();
     })
-    .catch((err: unknown) => {
+    .catch(async (err: unknown) => {
       if (err instanceof MigrationError) {
         logger.error(
           {
@@ -48,6 +56,7 @@ app.listen(port, (err) => {
             "To apply migrations manually: pnpm --filter @workspace/db run migrate. " +
             "Then restart the API server.",
         );
+        await alertMigrationProblem({ kind: "aborted", error: err });
       } else {
         logger.error(
           { err },
@@ -55,6 +64,7 @@ app.listen(port, (err) => {
             "To apply migrations manually: pnpm --filter @workspace/db run migrate. " +
             "Then restart the API server.",
         );
+        await alertMigrationProblem({ kind: "failed", error: err });
       }
       return false;
     })
