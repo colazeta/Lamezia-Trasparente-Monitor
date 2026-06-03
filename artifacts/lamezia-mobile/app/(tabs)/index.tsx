@@ -11,6 +11,7 @@ import {
   View,
 } from "react-native";
 
+import { HelperMenuButton } from "@/components/HelperMenu";
 import { ThemeCard } from "@/components/ThemeCard";
 import { Card, EmptyState, NoticeBanner, ScreenHeader, Skeleton } from "@/components/ui";
 import { useColors } from "@/hooks/useColors";
@@ -107,13 +108,16 @@ export default function HomeScreen() {
         title="Lamezia Trasparente"
         subtitle="Il controllo dei cittadini sulla cosa pubblica"
         right={
-          <Pressable
-            onPress={() => router.push("/search")}
-            hitSlop={8}
-            style={[styles.searchBtn, { backgroundColor: colors.muted, borderRadius: colors.radius }]}
-          >
-            <Feather name="search" size={18} color={colors.foreground} />
-          </Pressable>
+          <View style={styles.headerButtons}>
+            <Pressable
+              onPress={() => router.push("/search")}
+              hitSlop={8}
+              style={[styles.headerIconBtn, { backgroundColor: colors.muted, borderRadius: colors.radius }]}
+            >
+              <Feather name="search" size={18} color={colors.foreground} />
+            </Pressable>
+            <HelperMenuButton />
+          </View>
         }
       />
       <ScrollView
@@ -396,7 +400,12 @@ const styles = StyleSheet.create({
     paddingBottom: Platform.OS === "web" ? 110 : 40,
     gap: 8,
   },
-  searchBtn: {
+  headerButtons: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+  },
+  headerIconBtn: {
     width: 38,
     height: 38,
     alignItems: "center",

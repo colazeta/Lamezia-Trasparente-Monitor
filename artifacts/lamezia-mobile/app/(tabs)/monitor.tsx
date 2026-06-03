@@ -3,6 +3,7 @@ import { useRouter, type Href } from "expo-router";
 import React from "react";
 import { Platform, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 
+import { HelperMenuButton } from "@/components/HelperMenu";
 import { ScreenHeader } from "@/components/ui";
 import { useColors } from "@/hooks/useColors";
 
@@ -117,6 +118,7 @@ export default function MonitorScreen() {
         eyebrow="Sorveglianza civica"
         title="Atti & Organi"
         subtitle="Tutti i documenti della cosa pubblica"
+        right={<HelperMenuButton />}
       />
       <ScrollView
         contentContainerStyle={styles.content}

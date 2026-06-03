@@ -13,25 +13,39 @@ import {
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { setBaseUrl } from "@workspace/api-client-react";
 import { useFonts } from "expo-font";
-import { Stack } from "expo-router";
+import { Stack, useRouter } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import * as SystemUI from "expo-system-ui";
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import { useColorScheme } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { KeyboardProvider } from "react-native-keyboard-controller";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 
 import { ErrorBoundary } from "@/components/ErrorBoundary";
+import { HelperProvider, useHelper } from "@/context/HelperContext";
 import colors from "@/constants/colors";
 
-// Point the generated API client at the shared backend (same server as the web app).
 setBaseUrl(`https://${process.env.EXPO_PUBLIC_DOMAIN}`);
 
-// Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
 const queryClient = new QueryClient();
+
+function WalkthroughGate() {
+  const { walkthroughReady, walkthroughSeen } = useHelper();
+  const router = useRouter();
+  const hasNavigated = useRef(false);
+
+  useEffect(() => {
+    if (walkthroughReady && !walkthroughSeen && !hasNavigated.current) {
+      hasNavigated.current = true;
+      router.push("/walkthrough");
+    }
+  }, [walkthroughReady, walkthroughSeen]);
+
+  return null;
+}
 
 function RootLayoutNav() {
   const scheme = useColorScheme();
@@ -47,30 +61,54 @@ function RootLayoutNav() {
     headerShadowVisible: false,
   } as const;
   return (
-    <Stack screenOptions={{ headerBackTitle: "Indietro", ...stackHeader }}>
-      <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-      <Stack.Screen name="domande" options={{ title: "Cosa vuoi scoprire?" }} />
-      <Stack.Screen name="theme/[id]" options={{ title: "Tema" }} />
-      <Stack.Screen name="albo" options={{ title: "Albo Pretorio" }} />
-      <Stack.Screen name="delibere" options={{ title: "Delibere" }} />
-      <Stack.Screen name="contratti/index" options={{ title: "Appalti" }} />
-      <Stack.Screen name="contratti/[id]" options={{ title: "Contratto" }} />
-      <Stack.Screen name="pnrr" options={{ title: "PNRR" }} />
-      <Stack.Screen name="opendata/index" options={{ title: "Opendata" }} />
-      <Stack.Screen name="opendata/[id]" options={{ title: "Dataset" }} />
-      <Stack.Screen name="performance/index" options={{ title: "Performance del Comune" }} />
-      <Stack.Screen name="performance/[id]" options={{ title: "Indicatore" }} />
-      <Stack.Screen name="legality" options={{ title: "Legalità e Trasparenza" }} />
-      <Stack.Screen name="convocazioni/index" options={{ title: "Convocazioni" }} />
-      <Stack.Screen name="convocazioni/[id]" options={{ title: "Seduta" }} />
-      <Stack.Screen name="organi/index" options={{ title: "Organi" }} />
-      <Stack.Screen name="organi/[slug]" options={{ title: "Organo" }} />
-      <Stack.Screen name="amministratori/index" options={{ title: "Amministratori" }} />
-      <Stack.Screen name="amministratori/[id]" options={{ title: "Profilo" }} />
-      <Stack.Screen name="pareri/index" options={{ title: "Pareri di Vigilanza" }} />
-      <Stack.Screen name="pareri/[id]" options={{ title: "Parere" }} />
-      <Stack.Screen name="search" options={{ headerShown: false }} />
-    </Stack>
+    <>
+      <WalkthroughGate />
+      <Stack screenOptions={{ headerBackTitle: "Indietro", ...stackHeader }}>
+        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        <Stack.Screen name="domande" options={{ title: "Cosa vuoi scoprire?" }} />
+        <Stack.Screen name="theme/[id]" options={{ title: "Tema" }} />
+        <Stack.Screen name="albo" options={{ title: "Albo Pretorio" }} />
+        <Stack.Screen name="delibere" options={{ title: "Delibere" }} />
+        <Stack.Screen name="contratti/index" options={{ title: "Appalti" }} />
+        <Stack.Screen name="contratti/[id]" options={{ title: "Contratto" }} />
+        <Stack.Screen name="pnrr" options={{ title: "PNRR" }} />
+        <Stack.Screen name="opendata/index" options={{ title: "Opendata" }} />
+        <Stack.Screen name="opendata/[id]" options={{ title: "Dataset" }} />
+        <Stack.Screen name="performance/index" options={{ title: "Performance del Comune" }} />
+        <Stack.Screen name="performance/[id]" options={{ title: "Indicatore" }} />
+        <Stack.Screen name="legality" options={{ title: "Legalità e Trasparenza" }} />
+        <Stack.Screen name="convocazioni/index" options={{ title: "Convocazioni" }} />
+        <Stack.Screen name="convocazioni/[id]" options={{ title: "Seduta" }} />
+        <Stack.Screen name="organi/index" options={{ title: "Organi" }} />
+        <Stack.Screen name="organi/[slug]" options={{ title: "Organo" }} />
+        <Stack.Screen name="amministratori/index" options={{ title: "Amministratori" }} />
+        <Stack.Screen name="amministratori/[id]" options={{ title: "Profilo" }} />
+        <Stack.Screen name="pareri/index" options={{ title: "Pareri di Vigilanza" }} />
+        <Stack.Screen name="pareri/[id]" options={{ title: "Parere" }} />
+        <Stack.Screen name="search" options={{ headerShown: false }} />
+        <Stack.Screen
+          name="walkthrough"
+          options={{
+            headerShown: false,
+            presentation: "fullScreenModal",
+            animation: "fade",
+          }}
+        />
+        <Stack.Screen
+          name="assistente"
+          options={{
+            headerShown: false,
+            presentation: "modal",
+          }}
+        />
+        <Stack.Screen
+          name="guida"
+          options={{
+            headerShown: false,
+          }}
+        />
+      </Stack>
+    </>
   );
 }
 
@@ -104,11 +142,13 @@ export default function RootLayout() {
     <SafeAreaProvider>
       <ErrorBoundary>
         <QueryClientProvider client={queryClient}>
-          <GestureHandlerRootView>
-            <KeyboardProvider>
-              <RootLayoutNav />
-            </KeyboardProvider>
-          </GestureHandlerRootView>
+          <HelperProvider>
+            <GestureHandlerRootView>
+              <KeyboardProvider>
+                <RootLayoutNav />
+              </KeyboardProvider>
+            </GestureHandlerRootView>
+          </HelperProvider>
         </QueryClientProvider>
       </ErrorBoundary>
     </SafeAreaProvider>

@@ -12,6 +12,7 @@ import {
 } from "react-native";
 
 import { ThemeCard } from "@/components/ThemeCard";
+import { HelperMenuButton } from "@/components/HelperMenu";
 import { EmptyState, ScreenHeader, Skeleton } from "@/components/ui";
 import { useColors } from "@/hooks/useColors";
 import { THEME_SORTS } from "@/lib/civic";
@@ -46,6 +47,7 @@ export default function ThemesScreen() {
         eyebrow="Archivio civico"
         title="Temi monitorati"
         subtitle="Sfoglia le inchieste e i fascicoli aperti"
+        right={<HelperMenuButton />}
       />
 
       {/* Search */}

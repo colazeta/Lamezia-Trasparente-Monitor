@@ -15,6 +15,7 @@ import {
 import { useQueryClient } from "@tanstack/react-query";
 
 import { KeyboardAwareScrollViewCompat } from "@/components/KeyboardAwareScrollViewCompat";
+import { HelperMenuButton } from "@/components/HelperMenu";
 import { Badge, Card, EmptyState, PrimaryButton, ScreenHeader, Skeleton } from "@/components/ui";
 import { useColors } from "@/hooks/useColors";
 import {
@@ -42,6 +43,7 @@ export default function ReportScreen() {
         eyebrow="Partecipazione"
         title="Segnala"
         subtitle="Contribuisci alla vigilanza sul territorio"
+        right={<HelperMenuButton />}
       />
       <View style={styles.tabBarWrap}>
         <View style={[styles.segment, { backgroundColor: colors.muted, borderRadius: colors.radius }]}>
