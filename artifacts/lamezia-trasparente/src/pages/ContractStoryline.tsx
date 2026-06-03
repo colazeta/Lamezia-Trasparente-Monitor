@@ -26,6 +26,12 @@ import {
   TrendingUp,
   AlertTriangle,
   Telescope,
+  ShoppingCart,
+  Layers,
+  MapPin,
+  FileCheck,
+  FileSearch,
+  ShieldAlert,
 } from "lucide-react";
 import { format } from "date-fns";
 import { it } from "date-fns/locale";
@@ -34,6 +40,7 @@ import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { AlboLink } from "@/components/AlboLink";
 import { MonitoringReportsSection } from "@/components/MonitoringReportsSection";
+import { quartiereLabel } from "@/lib/gis";
 import {
   Empty,
   EmptyHeader,
@@ -59,6 +66,17 @@ function formatDate(value: string | null | undefined) {
     : format(d, "dd MMMM yyyy", { locale: it });
 }
 
+// Etichette degli ambiti di spesa (macrotema), allineate alla pagina Appalti.
+const MACROTEMA_LABELS: Record<string, string> = {
+  ambiente: "Ambiente e rifiuti",
+  scuole: "Scuole e istruzione",
+  strade: "Strade e lavori pubblici",
+  sociale: "Sociale e servizi alla persona",
+  cultura: "Cultura, sport e turismo",
+  mobilita: "Mobilità e trasporti",
+  altro: "Altri servizi e forniture",
+};
+
 const PHASE_META: Record<
   LifecyclePhase,
   { label: string; icon: React.ComponentType<{ className?: string }> }
@@ -70,6 +88,15 @@ const PHASE_META: Record<
   collaudo: { label: "Collaudo / chiusura", icon: CheckCircle2 },
   altro: { label: "Altro atto", icon: Circle },
 };
+
+// Ordine canonico del ciclo di vita di una spesa, usato per lo stepper.
+const LIFECYCLE_ORDER: LifecyclePhase[] = [
+  "affidamento",
+  "contratto",
+  "variante",
+  "liquidazione",
+  "collaudo",
+];
 
 const STATUS_META: Record<
   StorylineStatus,
@@ -155,11 +182,22 @@ function StorylineContent({
   indicators: StorylineIndicators;
 }) {
   const status = STATUS_META[indicators.status];
+  const macrotemaLabel = contract.macrotema
+    ? MACROTEMA_LABELS[contract.macrotema] ?? null
+    : null;
+  const locationLabel = contract.geoAddress
+    ? contract.geoAddress
+    : contract.geoQuartiere
+      ? quartiereLabel(contract.geoQuartiere)
+      : null;
 
   return (
     <div className="space-y-8">
       {/* Header */}
-      <header data-tour="contract-detail" className="rounded-2xl border border-border bg-card p-6 md:p-8 shadow-sm">
+      <header
+        data-tour="contract-detail"
+        className="rounded-2xl border border-border bg-card p-6 md:p-8 shadow-sm"
+      >
         <div className="flex flex-wrap items-center gap-1.5">
           {contract.cig ? (
             <Badge variant="brand" className="font-mono text-xs shadow-none">
@@ -176,6 +214,11 @@ function StorylineContent({
               Senza gara
             </Badge>
           ) : null}
+          {contract.withoutMepa ? (
+            <Badge className="border-transparent bg-amber-100 text-amber-800 text-xs shadow-none dark:bg-amber-500/20 dark:text-amber-300">
+              Fuori MEPA
+            </Badge>
+          ) : null}
           <Badge className={`text-xs shadow-none ${status.className}`}>
             {status.label}
           </Badge>
@@ -188,38 +231,6 @@ function StorylineContent({
             {contract.description}
           </p>
         ) : null}
-
-        <dl className="mt-6 grid gap-x-6 gap-y-4 sm:grid-cols-2 text-sm">
-          <MetaRow
-            icon={Euro}
-            label="Importo aggiudicato"
-            value={
-              contract.amount > 0
-                ? formatEuro(contract.amount)
-                : "Non disponibile"
-            }
-          />
-          <MetaRow
-            icon={Building2}
-            label="Beneficiario"
-            value={contract.supplier}
-          />
-          <MetaRow
-            icon={Gavel}
-            label="Modalità di scelta"
-            value={contract.procedureType}
-          />
-          <MetaRow
-            icon={Landmark}
-            label="Stazione appaltante"
-            value={contract.stazioneAppaltante ?? "Comune di Lamezia Terme"}
-          />
-          <MetaRow
-            icon={Calendar}
-            label="Data di aggiudicazione"
-            value={formatDate(contract.awardDate)}
-          />
-        </dl>
 
         <div className="mt-6 flex flex-wrap items-center gap-4">
           {contract.anacUrl ? (
@@ -244,6 +255,61 @@ function StorylineContent({
         </div>
       </header>
 
+      {/* Caratteristiche dell'appalto */}
+      <section>
+        <h2 className="mb-1 font-display text-xl font-bold tracking-tight">
+          Caratteristiche dell'appalto
+        </h2>
+        <p className="mb-4 text-sm text-muted-foreground">
+          I dati identificativi della spesa, così come pubblicati dalla stazione
+          appaltante.
+        </p>
+        <div className="rounded-2xl border border-card-border bg-card p-6 shadow-sm">
+          <dl className="grid gap-x-6 gap-y-5 sm:grid-cols-2 text-sm">
+            <MetaRow
+              icon={Euro}
+              label="Importo aggiudicato"
+              value={
+                contract.amount > 0
+                  ? formatEuro(contract.amount)
+                  : "Non disponibile"
+              }
+            />
+            <MetaRow
+              icon={Building2}
+              label="Beneficiario"
+              value={contract.supplier}
+            />
+            <MetaRow
+              icon={Gavel}
+              label="Modalità di scelta"
+              value={contract.procedureType}
+            />
+            <MetaRow
+              icon={ShoppingCart}
+              label="Strumento di acquisizione"
+              value={contract.acquisitionTool}
+            />
+            <MetaRow
+              icon={Landmark}
+              label="Stazione appaltante"
+              value={contract.stazioneAppaltante ?? "Comune di Lamezia Terme"}
+            />
+            <MetaRow
+              icon={Calendar}
+              label="Data di aggiudicazione"
+              value={formatDate(contract.awardDate)}
+            />
+            <MetaRow
+              icon={Layers}
+              label="Ambito di spesa"
+              value={macrotemaLabel}
+            />
+            <MetaRow icon={MapPin} label="Localizzazione" value={locationLabel} />
+          </dl>
+        </div>
+      </section>
+
       <MonitoringReportsSection
         subjectType="contract"
         contractId={contract.id}
@@ -257,7 +323,7 @@ function StorylineContent({
         <div className="grid gap-4 grid-cols-2 lg:grid-cols-4">
           <IndicatorCard
             icon={FileText}
-            label="Evidenze collegate"
+            label="Atti collegati"
             value={String(indicators.evidenceCount)}
           />
           <IndicatorCard
@@ -298,6 +364,14 @@ function StorylineContent({
             }
           />
         </div>
+
+        {indicators.liquidatedAmount != null && contract.amount > 0 ? (
+          <FundProgress
+            awarded={contract.amount}
+            liquidated={indicators.liquidatedAmount}
+          />
+        ) : null}
+
         {indicators.extraAmountIsEstimate ||
         indicators.liquidatedAmountIsEstimate ? (
           <p className="mt-3 flex items-start gap-1.5 text-xs text-muted-foreground">
@@ -309,33 +383,109 @@ function StorylineContent({
         ) : null}
       </section>
 
-      {/* Timeline */}
+      {/* Cronistoria degli atti */}
       <section>
-        <h2 className="mb-4 font-display text-xl font-bold tracking-tight">
-          Ciclo di vita della spesa
+        <h2 className="mb-1 font-display text-xl font-bold tracking-tight">
+          Cronistoria degli atti
         </h2>
+        <p className="mb-5 text-sm text-muted-foreground">
+          Ricostruita dagli atti dell'Albo Pretorio collegati a questo appalto
+          tramite CIG o CUP.
+        </p>
+
         {timeline.length === 0 ? (
           <Empty className="rounded-2xl border border-dashed border-border">
             <EmptyHeader>
               <EmptyMedia variant="icon">
                 <FileText className="h-6 w-6" />
               </EmptyMedia>
-              <EmptyTitle>Nessuna evidenza collegata</EmptyTitle>
+              <EmptyTitle>Nessun atto collegato</EmptyTitle>
               <EmptyDescription>
                 Non sono state trovate pubblicazioni dell'Albo Pretorio
-                collegabili a questo appalto tramite CIG o CUP. La storyline si
+                collegabili a questo appalto tramite CIG o CUP. La cronistoria si
                 arricchirà con le nuove pubblicazioni.
               </EmptyDescription>
             </EmptyHeader>
           </Empty>
         ) : (
-          <ol className="relative space-y-6 before:absolute before:left-[19px] before:top-2 before:bottom-2 before:w-px before:bg-border">
-            {timeline.map((event) => (
-              <TimelineItem key={event.publicationId} event={event} />
-            ))}
-          </ol>
+          <>
+            <PhaseStepper indicators={indicators} />
+            <AttiLegend timeline={timeline} />
+            <ol className="relative space-y-6 before:absolute before:left-[19px] before:top-2 before:bottom-2 before:w-px before:bg-border">
+              {timeline.map((event) => (
+                <TimelineItem key={event.publicationId} event={event} />
+              ))}
+            </ol>
+          </>
         )}
       </section>
+    </div>
+  );
+}
+
+// Stepper orizzontale che evidenzia le fasi del ciclo di vita raggiunte.
+function PhaseStepper({ indicators }: { indicators: StorylineIndicators }) {
+  return (
+    <ol className="mb-6 grid grid-cols-5 gap-1.5">
+      {LIFECYCLE_ORDER.map((phase) => {
+        const meta = PHASE_META[phase];
+        const Icon = meta.icon;
+        const count = indicators.phaseCounts?.[phase] ?? 0;
+        const reached = count > 0;
+        return (
+          <li
+            key={phase}
+            className="flex flex-col items-center gap-1.5 text-center"
+          >
+            <div
+              className={`flex h-10 w-10 items-center justify-center rounded-full border transition-colors ${
+                reached
+                  ? "border-brand/30 bg-brand/10 text-brand"
+                  : "border-border bg-muted/40 text-muted-foreground/50"
+              }`}
+            >
+              <Icon className="h-5 w-5" />
+            </div>
+            <span
+              className={`text-[11px] leading-tight ${
+                reached ? "font-medium text-foreground" : "text-muted-foreground"
+              }`}
+            >
+              {meta.label}
+            </span>
+            {reached ? (
+              <span className="text-[10px] tabular-nums text-muted-foreground">
+                {count} {count === 1 ? "atto" : "atti"}
+              </span>
+            ) : (
+              <span className="text-[10px] text-muted-foreground/60">—</span>
+            )}
+          </li>
+        );
+      })}
+    </ol>
+  );
+}
+
+// Riepilogo "atti noti vs reperibili" sopra la timeline.
+function AttiLegend({ timeline }: { timeline: StorylineEvent[] }) {
+  const total = timeline.length;
+  const reperibili = timeline.filter((e) => e.attachments.length > 0).length;
+  const noti = total - reperibili;
+  return (
+    <div className="mb-5 flex flex-wrap items-center gap-x-5 gap-y-2 rounded-xl border border-card-border bg-muted/30 px-4 py-3 text-xs">
+      <span className="font-medium text-foreground">
+        {total} {total === 1 ? "atto collegato" : "atti collegati"}
+      </span>
+      <span className="inline-flex items-center gap-1.5 text-muted-foreground">
+        <FileCheck className="h-3.5 w-3.5 text-emerald-600 dark:text-emerald-400" />
+        {reperibili} {reperibili === 1 ? "reperibile" : "reperibili"} (con
+        documento)
+      </span>
+      <span className="inline-flex items-center gap-1.5 text-muted-foreground">
+        <FileSearch className="h-3.5 w-3.5" />
+        {noti} {noti === 1 ? "noto" : "noti"} (solo riferimento)
+      </span>
     </div>
   );
 }
@@ -343,6 +493,7 @@ function StorylineContent({
 function TimelineItem({ event }: { event: StorylineEvent }) {
   const meta = PHASE_META[event.phase] ?? PHASE_META.altro;
   const Icon = meta.icon;
+  const reperibile = event.attachments.length > 0;
   return (
     <li className="relative flex gap-4">
       <div className="relative z-10 flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-border bg-card text-brand shadow-sm">
@@ -353,11 +504,25 @@ function TimelineItem({ event }: { event: StorylineEvent }) {
           <Badge variant="outline" className="text-[10px] shadow-none">
             {meta.label}
           </Badge>
+          {reperibile ? (
+            <Badge className="border-transparent bg-emerald-100 text-emerald-800 text-[10px] shadow-none dark:bg-emerald-500/20 dark:text-emerald-300">
+              <FileCheck className="mr-1 h-3 w-3" />
+              Atto reperibile
+            </Badge>
+          ) : (
+            <Badge
+              variant="outline"
+              className="text-[10px] font-normal shadow-none text-muted-foreground"
+            >
+              <FileSearch className="mr-1 h-3 w-3" />
+              Atto noto
+            </Badge>
+          )}
           <Badge
             variant="outline"
             className="text-[10px] font-normal shadow-none text-muted-foreground"
           >
-            collegato via {event.matchedBy.toUpperCase()}
+            via {event.matchedBy.toUpperCase()}
           </Badge>
           <span className="ml-auto font-mono text-xs text-muted-foreground">
             {formatDate(event.date)}
@@ -375,11 +540,58 @@ function TimelineItem({ event }: { event: StorylineEvent }) {
             </span>
           </div>
         ) : null}
-        {event.attachments.length > 0 ? (
+        {reperibile ? (
           <AlboLink attachments={event.attachments} className="mt-3" />
-        ) : null}
+        ) : (
+          <p className="mt-3 flex items-center gap-1.5 text-xs text-muted-foreground">
+            <ShieldAlert className="h-3.5 w-3.5 shrink-0" />
+            Documento non ancora reperibile online: atto noto dal riferimento
+            nell'Albo Pretorio.
+          </p>
+        )}
       </div>
     </li>
+  );
+}
+
+// Barra di avanzamento dell'importo liquidato rispetto all'aggiudicato.
+function FundProgress({
+  awarded,
+  liquidated,
+}: {
+  awarded: number;
+  liquidated: number;
+}) {
+  const pct = Math.min(100, Math.round((liquidated / awarded) * 100));
+  return (
+    <div className="mt-4 rounded-xl border border-card-border bg-card p-5 shadow-sm">
+      <div className="flex items-baseline justify-between gap-2">
+        <span className="eyebrow text-muted-foreground">Avanzamento dei pagamenti</span>
+        <span className="text-sm font-semibold tabular-nums text-foreground">
+          {pct}%
+        </span>
+      </div>
+      <div className="mt-3 h-2.5 w-full overflow-hidden rounded-full bg-muted">
+        <div
+          className="h-full rounded-full bg-brand transition-all"
+          style={{ width: `${pct}%` }}
+        />
+      </div>
+      <div className="mt-2 flex flex-wrap items-center justify-between gap-2 text-xs text-muted-foreground">
+        <span>
+          Liquidato (stima):{" "}
+          <span className="font-medium text-foreground">
+            {formatEuro(liquidated)}
+          </span>
+        </span>
+        <span>
+          Aggiudicato:{" "}
+          <span className="font-medium text-foreground">
+            {formatEuro(awarded)}
+          </span>
+        </span>
+      </div>
+    </div>
   );
 }
 
