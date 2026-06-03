@@ -35,3 +35,5 @@ export * from "./bandi";
 export * from "./bandoMatches";
 export * from "./confiscatedAssets";
 export * from "./accessoCivico";
+export * from "./conversations";
+export * from "./messages";

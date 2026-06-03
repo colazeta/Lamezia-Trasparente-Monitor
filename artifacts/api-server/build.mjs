@@ -31,6 +31,9 @@ async function buildAll() {
     external: [
       "*.node",
       "@napi-rs/canvas",
+      // openai SDK uses dynamic imports internally (fetching model lists etc.)
+      // that esbuild can't fully resolve; load from node_modules at runtime.
+      "openai",
       // pdf-parse drives pdfjs, which dynamically imports its worker entry at
       // runtime; bundling breaks that resolution, so load both from node_modules.
       "pdf-parse",
