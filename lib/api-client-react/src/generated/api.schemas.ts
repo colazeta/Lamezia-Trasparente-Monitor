@@ -1417,6 +1417,26 @@ export interface OpendataTable {
   truncated: boolean;
 }
 
+export interface OpendataSnapshotMeta {
+  id: number;
+  capturedAt: string;
+  rowCount: number;
+  changed: boolean;
+}
+
+export type OpendataSnapshotRowsItem = {[key: string]: string | number | null};
+
+export interface OpendataSnapshot {
+  id: number;
+  resourceId: number;
+  capturedAt: string;
+  rowCount: number;
+  changed: boolean;
+  columns: OpendataColumn[];
+  rows: OpendataSnapshotRowsItem[];
+  truncated: boolean;
+}
+
 export interface SedutaIntervention {
   id: number;
   speakerName: string;

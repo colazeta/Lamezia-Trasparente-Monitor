@@ -82,6 +82,8 @@ import type {
   OfficialInput,
   OfficialProfile,
   OpendataDataset,
+  OpendataSnapshot,
+  OpendataSnapshotMeta,
   OpendataTable,
   Organo,
   OrganoDetail,
@@ -2561,6 +2563,165 @@ export function useGetOpendataResourceContent<TData = Awaited<ReturnType<typeof 
  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
 
   const queryOptions = getGetOpendataResourceContentQueryOptions(id,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
+
+
+
+export const getListOpendataResourceSnapshotsUrl = (id: number,) => {
+
+
+
+
+  return `/api/opendata/resources/${id}/snapshots`
+}
+
+/**
+ * @summary List available historical snapshots for a tabular resource
+ */
+export const listOpendataResourceSnapshots = async (id: number, options?: RequestInit): Promise<OpendataSnapshotMeta[]> => {
+
+  return customFetch<OpendataSnapshotMeta[]>(getListOpendataResourceSnapshotsUrl(id),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getListOpendataResourceSnapshotsQueryKey = (id: number,) => {
+    return [
+    `/api/opendata/resources/${id}/snapshots`
+    ] as const;
+    }
+
+
+export const getListOpendataResourceSnapshotsQueryOptions = <TData = Awaited<ReturnType<typeof listOpendataResourceSnapshots>>, TError = ErrorType<void>>(id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listOpendataResourceSnapshots>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListOpendataResourceSnapshotsQueryKey(id);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listOpendataResourceSnapshots>>> = ({ signal }) => listOpendataResourceSnapshots(id, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: !!(id), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listOpendataResourceSnapshots>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ListOpendataResourceSnapshotsQueryResult = NonNullable<Awaited<ReturnType<typeof listOpendataResourceSnapshots>>>
+export type ListOpendataResourceSnapshotsQueryError = ErrorType<void>
+
+
+/**
+ * @summary List available historical snapshots for a tabular resource
+ */
+
+export function useListOpendataResourceSnapshots<TData = Awaited<ReturnType<typeof listOpendataResourceSnapshots>>, TError = ErrorType<void>>(
+ id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listOpendataResourceSnapshots>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getListOpendataResourceSnapshotsQueryOptions(id,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
+
+
+
+export const getGetOpendataSnapshotUrl = (id: number,
+    snapshotId: number,) => {
+
+
+
+
+  return `/api/opendata/resources/${id}/snapshots/${snapshotId}`
+}
+
+/**
+ * @summary Get the full content (columns + rows) of a specific snapshot
+ */
+export const getOpendataSnapshot = async (id: number,
+    snapshotId: number, options?: RequestInit): Promise<OpendataSnapshot> => {
+
+  return customFetch<OpendataSnapshot>(getGetOpendataSnapshotUrl(id,snapshotId),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetOpendataSnapshotQueryKey = (id: number,
+    snapshotId: number,) => {
+    return [
+    `/api/opendata/resources/${id}/snapshots/${snapshotId}`
+    ] as const;
+    }
+
+
+export const getGetOpendataSnapshotQueryOptions = <TData = Awaited<ReturnType<typeof getOpendataSnapshot>>, TError = ErrorType<void>>(id: number,
+    snapshotId: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getOpendataSnapshot>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetOpendataSnapshotQueryKey(id,snapshotId);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getOpendataSnapshot>>> = ({ signal }) => getOpendataSnapshot(id,snapshotId, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: !!(id && snapshotId), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getOpendataSnapshot>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetOpendataSnapshotQueryResult = NonNullable<Awaited<ReturnType<typeof getOpendataSnapshot>>>
+export type GetOpendataSnapshotQueryError = ErrorType<void>
+
+
+/**
+ * @summary Get the full content (columns + rows) of a specific snapshot
+ */
+
+export function useGetOpendataSnapshot<TData = Awaited<ReturnType<typeof getOpendataSnapshot>>, TError = ErrorType<void>>(
+ id: number,
+    snapshotId: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getOpendataSnapshot>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetOpendataSnapshotQueryOptions(id,snapshotId,options)
 
   const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
 

@@ -18,6 +18,7 @@ export * from "./attuazionePnrr";
 export * from "./italiadomaniProjects";
 export * from "./opendataDatasets";
 export * from "./opendataResources";
+export * from "./opendataSnapshots";
 export * from "./feedStatus";
 export * from "./themeFollowers";
 export * from "./sessionReports";

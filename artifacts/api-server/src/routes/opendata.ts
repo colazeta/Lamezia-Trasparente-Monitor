@@ -3,6 +3,7 @@ import {
   db,
   opendataDatasetsTable,
   opendataResourcesTable,
+  opendataSnapshotsTable,
   feedStatusTable,
 } from "@workspace/db";
 import { and, asc, desc, eq, ilike, or, type SQL } from "drizzle-orm";
@@ -12,6 +13,8 @@ import {
   OPENDATA_PORTAL_URL,
   isTabularFormat,
   loadResourceTable,
+  listResourceSnapshots,
+  getSnapshotById,
 } from "../lib/opendata";
 import {
   buildDcatCatalog,
@@ -230,6 +233,105 @@ router.get("/opendata/resources/:id/content", async (req, res) => {
     req.log?.warn({ err, resourceId: id }, "Opendata resource preview failed");
     res.status(502).json({ message });
   }
+});
+
+// ---------------------------------------------------------------------------
+// Snapshot endpoints
+// ---------------------------------------------------------------------------
+
+// List all snapshots for a resource (metadata only, no rows).
+router.get("/opendata/resources/:id/snapshots", async (req, res) => {
+  const id = Number(req.params.id);
+  if (Number.isNaN(id)) {
+    res.status(404).json({ message: "Risorsa non trovata" });
+    return;
+  }
+  const [resource] = await db
+    .select({ id: opendataResourcesTable.id })
+    .from(opendataResourcesTable)
+    .where(eq(opendataResourcesTable.id, id))
+    .limit(1);
+
+  if (!resource) {
+    res.status(404).json({ message: "Risorsa non trovata" });
+    return;
+  }
+
+  const snapshots = await listResourceSnapshots(id);
+  res.json(
+    snapshots.map((s) => ({
+      id: s.id,
+      capturedAt: s.capturedAt.toISOString(),
+      rowCount: s.rowCount,
+      changed: s.changed,
+    })),
+  );
+});
+
+// Get the full content (columns + rows) of a specific snapshot.
+router.get("/opendata/resources/:id/snapshots/:snapshotId", async (req, res) => {
+  const resourceId = Number(req.params.id);
+  const snapshotId = Number(req.params.snapshotId);
+  if (Number.isNaN(resourceId) || Number.isNaN(snapshotId)) {
+    res.status(404).json({ message: "Snapshot non trovato" });
+    return;
+  }
+
+  const snap = await getSnapshotById(snapshotId);
+  if (!snap || snap.resourceId !== resourceId) {
+    res.status(404).json({ message: "Snapshot non trovato" });
+    return;
+  }
+
+  res.json({
+    id: snap.id,
+    resourceId: snap.resourceId,
+    capturedAt: snap.capturedAt.toISOString(),
+    rowCount: snap.rowCount,
+    changed: snap.changed,
+    columns: snap.columns ?? [],
+    rows: snap.rows ?? [],
+    truncated: false,
+  });
+});
+
+// Download a snapshot as CSV.
+router.get("/opendata/resources/:id/snapshots/:snapshotId/csv", async (req, res) => {
+  const resourceId = Number(req.params.id);
+  const snapshotId = Number(req.params.snapshotId);
+  if (Number.isNaN(resourceId) || Number.isNaN(snapshotId)) {
+    res.status(404).json({ message: "Snapshot non trovato" });
+    return;
+  }
+
+  const snap = await getSnapshotById(snapshotId);
+  if (!snap || snap.resourceId !== resourceId) {
+    res.status(404).json({ message: "Snapshot non trovato" });
+    return;
+  }
+
+  const columns = snap.columns ?? [];
+  const rows = snap.rows ?? [];
+
+  function csvEscape(v: string | number | null): string {
+    if (v === null || v === undefined) return "";
+    const s = String(v);
+    return /[",\n\r]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+  }
+
+  const header = columns.map((c) => csvEscape(c.name)).join(",");
+  const body = rows
+    .map((row) => columns.map((c) => csvEscape(row[c.name])).join(","))
+    .join("\r\n");
+  const csv = `\uFEFF${header}\r\n${body}`;
+
+  const date = snap.capturedAt.toISOString().slice(0, 10);
+  res.setHeader("Content-Type", "text/csv;charset=utf-8");
+  res.setHeader(
+    "Content-Disposition",
+    `attachment; filename="snapshot-${snapshotId}-${date}.csv"`,
+  );
+  res.send(csv);
 });
 
 // ---------------------------------------------------------------------------

@@ -100,8 +100,10 @@ vi.mock("@workspace/api-client-react", () => ({
     }
     return { data: detail, isLoading: false };
   },
-  getGetPerformanceIndicatorQueryKey: (id: string) => [
-    `/api/performance/indicators/${id}`,
+  getGetPerformanceIndicatorQueryKey: (...args: unknown[]) => [
+    "mock",
+    "getGetPerformanceIndicatorQueryKey",
+    ...args,
   ],
 }));
 

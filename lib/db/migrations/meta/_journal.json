@@ -15,6 +15,13 @@
       "when": 1780515600000,
       "tag": "0001_italiadomani_projects",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1780520000000,
+      "tag": "0002_opendata_snapshots",
+      "breakpoints": true
     }
   ]
 }

@@ -45,6 +45,8 @@ vi.mock("@workspace/api-client-react", () => {
     "useGetOpendataDataset",
     "useGetOpendataFeedStatus",
     "useGetOpendataResourceContent",
+    "useGetOpendataSnapshot",
+    "useListOpendataResourceSnapshots",
     "useGetOfficial",
     "useGetOrgano",
     "useGetPerformanceIndicator",
@@ -88,6 +90,8 @@ vi.mock("@workspace/api-client-react", () => {
     "useWithdrawThemeRelevant",
   ];
   const QUERY_KEYS = [
+    "getGetOpendataSnapshotQueryKey",
+    "getGetPerformanceIndicatorQueryKey",
     "getGetOfficialQueryKey",
     "getGetOrganoQueryKey",
     "getGetPerformanceIndicatorQueryKey",

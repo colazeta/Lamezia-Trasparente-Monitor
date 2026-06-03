@@ -2,11 +2,13 @@ import {
   db,
   opendataDatasetsTable,
   opendataResourcesTable,
+  opendataSnapshotsTable,
   feedStatusTable,
   type InsertOpendataDataset,
   type InsertOpendataResource,
 } from "@workspace/db";
-import { eq } from "drizzle-orm";
+import { eq, desc, asc } from "drizzle-orm";
+import { createHash } from "crypto";
 import { logger } from "./logger";
 
 export const OPENDATA_SOURCE = "opendata-lamezia";
@@ -24,6 +26,9 @@ const DATASET_PORTAL_BASE =
 const PAGE_SIZE = 20;
 const USER_AGENT =
   "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) rendiamoLameziaTrasparente/1.0";
+
+// Maximum number of snapshots to retain per resource.
+const MAX_SNAPSHOTS = 50;
 
 type RawResource = {
   id?: string;
@@ -155,6 +160,106 @@ function mapDataset(raw: RawDataset): {
   return { dataset, resources };
 }
 
+// ---------------------------------------------------------------------------
+// Snapshot capture
+// ---------------------------------------------------------------------------
+
+function computeChecksum(text: string): string {
+  return createHash("sha256").update(text, "utf8").digest("hex");
+}
+
+async function captureSnapshot(
+  resourceId: number,
+  resourceSourceId: string,
+  url: string,
+  format: string | null,
+): Promise<void> {
+  try {
+    const res = await fetch(url, {
+      headers: { "User-Agent": USER_AGENT },
+      signal: AbortSignal.timeout(30_000),
+    });
+    if (!res.ok) {
+      logger.warn(
+        { resourceId, status: res.status },
+        "Snapshot download failed – skipping",
+      );
+      return;
+    }
+    const text = await res.text();
+    const checksum = computeChecksum(text);
+
+    // Check last snapshot for this resource.
+    const [last] = await db
+      .select({ id: opendataSnapshotsTable.id, checksum: opendataSnapshotsTable.checksum })
+      .from(opendataSnapshotsTable)
+      .where(eq(opendataSnapshotsTable.resourceId, resourceId))
+      .orderBy(desc(opendataSnapshotsTable.capturedAt))
+      .limit(1);
+
+    // Skip if content unchanged.
+    if (last?.checksum === checksum) {
+      logger.debug(
+        { resourceId, resourceSourceId },
+        "Snapshot unchanged – skipping",
+      );
+      return;
+    }
+
+    // Parse the table for storage.
+    let table: ParsedTable;
+    try {
+      table = parseTabular(text, format);
+    } catch {
+      logger.warn(
+        { resourceId, resourceSourceId },
+        "Snapshot parse failed – skipping",
+      );
+      return;
+    }
+
+    const changed = last !== undefined; // not the first snapshot
+    await db.insert(opendataSnapshotsTable).values({
+      resourceId,
+      checksum,
+      rowCount: table.rowCount,
+      changed,
+      columns: table.columns,
+      rows: table.rows,
+    });
+
+    // Prune old snapshots, keeping only the MAX_SNAPSHOTS most recent.
+    const all = await db
+      .select({ id: opendataSnapshotsTable.id })
+      .from(opendataSnapshotsTable)
+      .where(eq(opendataSnapshotsTable.resourceId, resourceId))
+      .orderBy(desc(opendataSnapshotsTable.capturedAt));
+
+    if (all.length > MAX_SNAPSHOTS) {
+      const toDelete = all.slice(MAX_SNAPSHOTS).map((s) => s.id);
+      for (const id of toDelete) {
+        await db
+          .delete(opendataSnapshotsTable)
+          .where(eq(opendataSnapshotsTable.id, id));
+      }
+    }
+
+    // Invalidate in-memory cache so the next viewer sees fresh data.
+    resourceCache.delete(resourceSourceId);
+
+    logger.info(
+      { resourceId, resourceSourceId, rowCount: table.rowCount, changed },
+      "Opendata snapshot saved",
+    );
+  } catch (err) {
+    // Never let snapshot failure bubble up and break metadata ingestion.
+    logger.warn(
+      { err, resourceId, resourceSourceId },
+      "Snapshot capture error – skipping",
+    );
+  }
+}
+
 export async function runOpendataIngestion(): Promise<{
   total: number;
   upserted: number;
@@ -209,7 +314,7 @@ export async function runOpendataIngestion(): Promise<{
           position: typeof r.position === "number" ? r.position : 0,
           lastModified: parseDate(r.lastModified),
         };
-        await db
+        const [savedResource] = await db
           .insert(opendataResourcesTable)
           .values({ ...resource, firstSeenAt: now, lastSeenAt: now })
           .onConflictDoUpdate({
@@ -224,7 +329,19 @@ export async function runOpendataIngestion(): Promise<{
               lastModified: resource.lastModified,
               lastSeenAt: now,
             },
-          });
+          })
+          .returning({ id: opendataResourcesTable.id });
+
+        // Capture snapshot for tabular resources (fire-and-forget style – errors
+        // are swallowed inside captureSnapshot to avoid breaking metadata ingestion).
+        if (isTabularFormat(resource.format)) {
+          await captureSnapshot(
+            savedResource.id,
+            resource.sourceId,
+            resource.url,
+            resource.format ?? null,
+          );
+        }
       }
     }
 
@@ -477,7 +594,7 @@ function tableFromRecords(
   return { columns, rows, rowCount: rows.length, truncated };
 }
 
-function parseTabular(text: string, format: string | null): ParsedTable {
+export function parseTabular(text: string, format: string | null): ParsedTable {
   const fmt = (format ?? "").toUpperCase();
   const trimmed = text.trimStart();
   const looksJson =
@@ -557,4 +674,31 @@ export async function loadResourceTable(
   const table = parseTabular(text, format);
   resourceCache.set(resourceSourceId, { at: Date.now(), table });
   return table;
+}
+
+// ---------------------------------------------------------------------------
+// Snapshot helpers (used by routes)
+// ---------------------------------------------------------------------------
+
+export async function listResourceSnapshots(resourceId: number) {
+  return db
+    .select({
+      id: opendataSnapshotsTable.id,
+      capturedAt: opendataSnapshotsTable.capturedAt,
+      checksum: opendataSnapshotsTable.checksum,
+      rowCount: opendataSnapshotsTable.rowCount,
+      changed: opendataSnapshotsTable.changed,
+    })
+    .from(opendataSnapshotsTable)
+    .where(eq(opendataSnapshotsTable.resourceId, resourceId))
+    .orderBy(desc(opendataSnapshotsTable.capturedAt));
+}
+
+export async function getSnapshotById(snapshotId: number) {
+  const [snap] = await db
+    .select()
+    .from(opendataSnapshotsTable)
+    .where(eq(opendataSnapshotsTable.id, snapshotId))
+    .limit(1);
+  return snap ?? null;
 }

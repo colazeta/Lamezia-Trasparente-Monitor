@@ -985,6 +985,55 @@ paths:
         "502":
           description: Resource could not be downloaded or parsed
 
+  /opendata/resources/{id}/snapshots:
+    get:
+      operationId: listOpendataResourceSnapshots
+      tags: [opendata]
+      summary: List available historical snapshots for a tabular resource
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: List of snapshots (metadata only, no row data)
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/OpendataSnapshotMeta"
+        "404":
+          description: Resource not found
+
+  /opendata/resources/{id}/snapshots/{snapshotId}:
+    get:
+      operationId: getOpendataSnapshot
+      tags: [opendata]
+      summary: Get the full content (columns + rows) of a specific snapshot
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: snapshotId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Snapshot with full tabular content
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OpendataSnapshot"
+        "404":
+          description: Snapshot not found
+
   /publications:
     get:
       operationId: listPublications
@@ -5653,6 +5702,48 @@ components:
               type: ["string", "number", "null"]
         rowCount:
           type: integer
+        truncated:
+          type: boolean
+
+    OpendataSnapshotMeta:
+      type: object
+      required: [id, capturedAt, rowCount, changed]
+      properties:
+        id:
+          type: integer
+        capturedAt:
+          type: string
+          format: date-time
+        rowCount:
+          type: integer
+        changed:
+          type: boolean
+
+    OpendataSnapshot:
+      type: object
+      required: [id, resourceId, capturedAt, rowCount, changed, columns, rows, truncated]
+      properties:
+        id:
+          type: integer
+        resourceId:
+          type: integer
+        capturedAt:
+          type: string
+          format: date-time
+        rowCount:
+          type: integer
+        changed:
+          type: boolean
+        columns:
+          type: array
+          items:
+            $ref: "#/components/schemas/OpendataColumn"
+        rows:
+          type: array
+          items:
+            type: object
+            additionalProperties:
+              type: ["string", "number", "null"]
         truncated:
           type: boolean
 

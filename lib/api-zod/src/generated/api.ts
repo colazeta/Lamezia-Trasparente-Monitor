@@ -911,6 +911,45 @@ export const GetOpendataResourceContentResponse = zod.object({
 
 
 /**
+ * @summary List available historical snapshots for a tabular resource
+ */
+export const ListOpendataResourceSnapshotsParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const ListOpendataResourceSnapshotsResponseItem = zod.object({
+  "id": zod.number(),
+  "capturedAt": zod.coerce.date(),
+  "rowCount": zod.number(),
+  "changed": zod.boolean()
+})
+export const ListOpendataResourceSnapshotsResponse = zod.array(ListOpendataResourceSnapshotsResponseItem)
+
+
+/**
+ * @summary Get the full content (columns + rows) of a specific snapshot
+ */
+export const GetOpendataSnapshotParams = zod.object({
+  "id": zod.coerce.number(),
+  "snapshotId": zod.coerce.number()
+})
+
+export const GetOpendataSnapshotResponse = zod.object({
+  "id": zod.number(),
+  "resourceId": zod.number(),
+  "capturedAt": zod.coerce.date(),
+  "rowCount": zod.number(),
+  "changed": zod.boolean(),
+  "columns": zod.array(zod.object({
+  "name": zod.string(),
+  "type": zod.enum(['number', 'date', 'string'])
+})),
+  "rows": zod.array(zod.record(zod.string(), zod.union([zod.string(),zod.number()]).nullable())),
+  "truncated": zod.boolean()
+})
+
+
+/**
  * @summary List albo pretorio publications (live feed)
  */
 export const ListPublicationsQueryParams = zod.object({
