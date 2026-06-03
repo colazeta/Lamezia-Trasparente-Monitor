@@ -11,4 +11,9 @@ import type { Publication } from './publication';
 export interface PnrrCensus {
   projects: PnrrProject[];
   uncensored: Publication[];
+  /**
+     * When the Italia Domani census feed was last successfully updated
+     * @nullable
+     */
+  censusLastUpdatedAt?: string | null;
 }

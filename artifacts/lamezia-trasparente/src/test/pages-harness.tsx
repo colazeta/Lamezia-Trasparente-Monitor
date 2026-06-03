@@ -90,6 +90,7 @@ vi.mock("@workspace/api-client-react", () => {
   const QUERY_KEYS = [
     "getGetOfficialQueryKey",
     "getGetOrganoQueryKey",
+    "getGetPerformanceIndicatorQueryKey",
     "getGetSedutaQueryKey",
     "getGetThemeQueryKey",
     "getListReportsQueryKey",

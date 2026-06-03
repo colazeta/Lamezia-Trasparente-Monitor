@@ -12,7 +12,8 @@ export interface PnrrProject {
   id: number;
   key: string;
   sourceId: string;
-  url: string;
+  /** @nullable */
+  url?: string | null;
   title: string;
   /** @nullable */
   cup?: string | null;
@@ -38,6 +39,15 @@ export interface PnrrProject {
   endDate?: string | null;
   /** @nullable */
   publishedAt?: string | null;
+  /**
+     * Date of last update from Italia Domani census
+     * @nullable
+     */
+  lastUpdatedAt?: string | null;
+  /** True when the project is also present in the Comune's Attuazione Misure PNRR page (matched by CUP) */
+  trasparenzaCompleta: boolean;
+  /** True when lastUpdatedAt is more than 6 months ago and the project is not concluded */
+  aggiornamentoVecchio: boolean;
   attachments: PnrrAttachment[];
   documentsCount: number;
   /** @nullable */

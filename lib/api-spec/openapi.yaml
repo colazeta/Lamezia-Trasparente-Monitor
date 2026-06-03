@@ -1233,7 +1233,7 @@ paths:
     get:
       operationId: listPnrrProjects
       tags: [publications]
-      summary: PNRR census based on the official Attuazione Misure PNRR registry
+      summary: PNRR census based on the Italia Domani master list (municipality of Lamezia Terme)
       responses:
         "200":
           description: PNRR census
@@ -5477,11 +5477,12 @@ components:
         - id
         - key
         - sourceId
-        - url
         - title
         - attachments
         - documentsCount
         - documents
+        - trasparenzaCompleta
+        - aggiornamentoVecchio
       properties:
         id:
           type: integer
@@ -5490,7 +5491,7 @@ components:
         sourceId:
           type: string
         url:
-          type: string
+          type: ["string", "null"]
         title:
           type: string
         cup:
@@ -5517,6 +5518,15 @@ components:
           type: ["string", "null"]
         publishedAt:
           type: ["string", "null"]
+        lastUpdatedAt:
+          type: ["string", "null"]
+          description: Date of last update from Italia Domani census
+        trasparenzaCompleta:
+          type: boolean
+          description: True when the project is also present in the Comune's Attuazione Misure PNRR page (matched by CUP)
+        aggiornamentoVecchio:
+          type: boolean
+          description: True when lastUpdatedAt is more than 6 months ago and the project is not concluded
         attachments:
           type: array
           items:
@@ -5542,6 +5552,9 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/Publication"
+        censusLastUpdatedAt:
+          type: ["string", "null"]
+          description: When the Italia Domani census feed was last successfully updated
 
     OpendataResource:
       type: object

@@ -1259,14 +1259,14 @@ export const ListSeduteResponse = zod.array(ListSeduteResponseItem)
 
 
 /**
- * @summary PNRR census based on the official Attuazione Misure PNRR registry
+ * @summary PNRR census based on the Italia Domani master list (municipality of Lamezia Terme)
  */
 export const ListPnrrProjectsResponse = zod.object({
   "projects": zod.array(zod.object({
   "id": zod.number(),
   "key": zod.string(),
   "sourceId": zod.string(),
-  "url": zod.string(),
+  "url": zod.string().nullish(),
   "title": zod.string(),
   "cup": zod.string().nullish(),
   "mission": zod.string().nullish(),
@@ -1280,6 +1280,9 @@ export const ListPnrrProjectsResponse = zod.object({
   "startDate": zod.string().nullish(),
   "endDate": zod.string().nullish(),
   "publishedAt": zod.string().nullish(),
+  "lastUpdatedAt": zod.string().nullish().describe('Date of last update from Italia Domani census'),
+  "trasparenzaCompleta": zod.boolean().describe('True when the project is also present in the Comune\'s Attuazione Misure PNRR page (matched by CUP)'),
+  "aggiornamentoVecchio": zod.boolean().describe('True when lastUpdatedAt is more than 6 months ago and the project is not concluded'),
   "attachments": zod.array(zod.object({
   "title": zod.string(),
   "url": zod.string()
@@ -1340,7 +1343,8 @@ export const ListPnrrProjectsResponse = zod.object({
 })).optional(),
   "isNew": zod.boolean(),
   "firstSeenAt": zod.string()
-}))
+})),
+  "censusLastUpdatedAt": zod.string().nullish().describe('When the Italia Domani census feed was last successfully updated')
 })
 
 

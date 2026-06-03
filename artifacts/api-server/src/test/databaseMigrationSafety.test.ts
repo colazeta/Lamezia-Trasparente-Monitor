@@ -62,6 +62,16 @@ function readJournalExpectations(): { tag: string; hash: string; when: number } 
 
 const expected = readJournalExpectations();
 
+/** Total number of migrations currently in the journal. */
+function journalEntryCount(): number {
+  const journal = JSON.parse(
+    fs.readFileSync(path.join(migrationsFolder, "meta/_journal.json"), "utf-8"),
+  ) as { entries: Array<unknown> };
+  return journal.entries.length;
+}
+
+const journalCount = journalEntryCount();
+
 /** Tag of the newest migration in the production journal (highest idx). */
 function latestJournalTag(): string {
   const journal = JSON.parse(
@@ -221,8 +231,8 @@ describe("database upgrade safety (baselineLogic / runMigrations)", () => {
       expect(baselined).toContain(expected.tag);
 
       const rows = await readMigrationRows(scratch.pool);
-      expect(rows).toHaveLength(1);
-      // Hash must match sha256(full .sql) exactly.
+      expect(rows).toHaveLength(journalCount);
+      // Hash must match sha256(full .sql) exactly (checked against first migration).
       expect(rows[0]?.hash).toBe(expected.hash);
       // created_at must be the journal `when` (folderMillis) so drizzle treats
       // the migration as already applied and skips it.
@@ -235,7 +245,7 @@ describe("database upgrade safety (baselineLogic / runMigrations)", () => {
       // Baselining is idempotent: a second pass records nothing new.
       const again = await baselineMigrations(scratch.pool, migrationsFolder);
       expect(again).toHaveLength(0);
-      expect(await readMigrationRows(scratch.pool)).toHaveLength(1);
+      expect(await readMigrationRows(scratch.pool)).toHaveLength(journalCount);
     } finally {
       await scratch.pool.end();
     }
@@ -259,9 +269,9 @@ describe("database upgrade safety (baselineLogic / runMigrations)", () => {
       await insertSentinelCategory(scratch.pool, "fresh");
       expect(await countCategories(scratch.pool)).toBe(1);
 
-      // Exactly one migration is recorded, with the real hash/timestamp.
+      // All migrations are recorded, with the first having the real hash.
       const rows = await readMigrationRows(scratch.pool);
-      expect(rows).toHaveLength(1);
+      expect(rows).toHaveLength(journalCount);
       expect(rows[0]?.hash).toBe(expected.hash);
       expect(await isMigrationTrackingPresent(scratch.pool)).toBe(true);
     } finally {
@@ -291,11 +301,11 @@ describe("database upgrade safety (baselineLogic / runMigrations)", () => {
       // Live data must be untouched by the upgrade.
       expect(await countCategories(scratch.pool)).toBe(1);
 
-      // The migration was baselined (recorded) but its SQL never re-ran, and
-      // the subsequent migrate added nothing new: exactly one tracking row with
-      // the journal hash/timestamp.
+      // All migrations were baselined (recorded) but their SQL never re-ran,
+      // and the subsequent migrate added nothing new: one tracking row per
+      // journal entry, the first holding the expected hash/timestamp.
       const rows = await readMigrationRows(scratch.pool);
-      expect(rows).toHaveLength(1);
+      expect(rows).toHaveLength(journalCount);
       expect(rows[0]?.hash).toBe(expected.hash);
       expect(Number(rows[0]?.created_at)).toBe(expected.when);
       expect(await isMigrationTrackingPresent(scratch.pool)).toBe(true);
@@ -316,7 +326,7 @@ describe("database upgrade safety (baselineLogic / runMigrations)", () => {
       await insertSentinelCategory(scratch.pool, "already-migrated");
 
       const before = await readMigrationRows(scratch.pool);
-      expect(before).toHaveLength(1);
+      expect(before).toHaveLength(journalCount);
       expect(await isMigrationTrackingPresent(scratch.pool)).toBe(true);
 
       // A second deploy: tracking is present, so the baseline branch is skipped
@@ -329,7 +339,7 @@ describe("database upgrade safety (baselineLogic / runMigrations)", () => {
 
       // No duplicate tracking rows and no data loss.
       const after = await readMigrationRows(scratch.pool);
-      expect(after).toHaveLength(1);
+      expect(after).toHaveLength(journalCount);
       expect(after[0]?.hash).toBe(expected.hash);
       expect(await countCategories(scratch.pool)).toBe(1);
     } finally {

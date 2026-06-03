@@ -3,6 +3,7 @@ import {
   db,
   publicationsTable,
   attuazionePnrrProjectsTable,
+  italiadomaniProjectsTable,
   feedStatusTable,
   sessionReportsTable,
   sessionInterventionsTable,
@@ -18,6 +19,7 @@ import { and, eq, asc, desc, ilike, gte, lte, sql } from "drizzle-orm";
 import sanitizeHtml from "sanitize-html";
 import { UpsertSedutaReportBody } from "@workspace/api-zod";
 import { ALBO_SOURCE } from "../lib/ingestion";
+import { ITALIADOMANI_SOURCE } from "../lib/italiadomaniPnrr";
 import { requireIngestAuth } from "../middlewares/requireIngestAuth";
 
 const router: IRouter = Router();
@@ -344,22 +346,59 @@ function normalizeCup(value: string): string {
   return value.toUpperCase().replace(/\s+/g, "");
 }
 
-router.get("/pnrr/projects", async (_req, res) => {
-  const [registry, alboRows] = await Promise.all([
-    db
-      .select()
-      .from(attuazionePnrrProjectsTable)
-      .orderBy(
-        desc(attuazionePnrrProjectsTable.publishedAt),
-        desc(attuazionePnrrProjectsTable.id),
-      ),
-    db
-      .select()
-      .from(publicationsTable)
-      .where(eq(publicationsTable.isPnrr, true))
-      .orderBy(desc(publicationsTable.pubStart), desc(publicationsTable.id)),
-  ]);
+const SIX_MONTHS_MS = 6 * 30 * 24 * 60 * 60 * 1000;
 
+function isStaleUpdate(
+  lastUpdatedAt: Date | null,
+  lastSeenAt: Date,
+  status: string | null,
+): boolean {
+  const s = (status ?? "").toLowerCase();
+  if (
+    s.includes("conclus") ||
+    s.includes("complet") ||
+    s.includes("chius") ||
+    s.includes("terminat")
+  ) {
+    return false;
+  }
+  const ref = lastUpdatedAt ?? lastSeenAt;
+  return Date.now() - ref.getTime() > SIX_MONTHS_MS;
+}
+
+router.get("/pnrr/projects", async (_req, res) => {
+  const [masterList, attuazioneRows, alboRows, italiadomaniStatus] =
+    await Promise.all([
+      db
+        .select()
+        .from(italiadomaniProjectsTable)
+        .orderBy(
+          desc(italiadomaniProjectsTable.lastSeenAt),
+          desc(italiadomaniProjectsTable.id),
+        ),
+      db.select().from(attuazionePnrrProjectsTable),
+      db
+        .select()
+        .from(publicationsTable)
+        .where(eq(publicationsTable.isPnrr, true))
+        .orderBy(desc(publicationsTable.pubStart), desc(publicationsTable.id)),
+      db
+        .select()
+        .from(feedStatusTable)
+        .where(eq(feedStatusTable.source, ITALIADOMANI_SOURCE))
+        .then((rows) => rows[0] ?? null),
+    ]);
+
+  // Index attuazione rows by normalised CUP for O(1) lookup.
+  const attuazioneByCup = new Map<
+    string,
+    (typeof attuazioneRows)[number]
+  >();
+  for (const r of attuazioneRows) {
+    if (r.cup) attuazioneByCup.set(normalizeCup(r.cup), r);
+  }
+
+  // Index albo publications by CUP.
   const docsByCup = new Map<string, Publication[]>();
   for (const r of alboRows) {
     for (const c of r.cups) {
@@ -372,50 +411,84 @@ router.get("/pnrr/projects", async (_req, res) => {
 
   const matchedDocIds = new Set<number>();
 
-  const projects = registry.map((p) => {
-    const cup = p.cup ? normalizeCup(p.cup) : null;
-    const matched = cup ? (docsByCup.get(cup) ?? []) : [];
-    const documents = matched.map((d) => {
-      matchedDocIds.add(d.id);
-      return mapPublication(d);
-    });
-    let lastPublication: string | null = null;
-    for (const d of documents) {
-      if (d.pubStart && (!lastPublication || d.pubStart > lastPublication)) {
-        lastPublication = d.pubStart;
+  // The Italia Domani census is always the authoritative master list.
+  // If the table is empty (ingestor has not yet run or failed), return an
+  // empty census with explicit feed state — never substitute the old
+  // Attuazione source as master, which would misrepresent coverage.
+
+  let projects: object[];
+
+  if (masterList.length === 0) {
+    projects = [];
+  } else {
+    projects = masterList.map((p) => {
+      const cup = normalizeCup(p.cup);
+      const attuazione = attuazioneByCup.get(cup);
+      const trasparenzaCompleta = Boolean(attuazione);
+      const aggiornamentoVecchio = isStaleUpdate(
+        p.italiadomaniUpdatedAt,
+        p.lastSeenAt,
+        p.status,
+      );
+
+      const alboMatched = docsByCup.get(cup) ?? [];
+      const documents = alboMatched.map((d) => {
+        matchedDocIds.add(d.id);
+        return mapPublication(d);
+      });
+      let lastPublication: string | null = null;
+      for (const d of documents) {
+        if (d.pubStart && (!lastPublication || d.pubStart > lastPublication)) {
+          lastPublication = d.pubStart;
+        }
       }
-    }
-    return {
-      id: p.id,
-      key: p.sourceId,
-      sourceId: p.sourceId,
-      url: p.url,
-      title: p.title,
-      cup: p.cup,
-      mission: p.mission,
-      component: p.component,
-      investment: p.investment,
-      intervention: p.intervention,
-      holder: p.holder,
-      attuatore: p.attuatore,
-      importoFinanziato:
-        p.importoFinanziato != null ? Number(p.importoFinanziato) : null,
-      status: p.status,
-      startDate: p.startDate ? p.startDate.toISOString() : null,
-      endDate: p.endDate ? p.endDate.toISOString() : null,
-      publishedAt: p.publishedAt ? p.publishedAt.toISOString() : null,
-      attachments: p.attachments,
-      documentsCount: documents.length,
-      lastPublication,
-      documents,
-    };
-  });
+
+      const allAttachments = attuazione?.attachments ?? [];
+      const lastUpdatedAt =
+        p.italiadomaniUpdatedAt?.toISOString() ??
+        p.lastSeenAt.toISOString();
+
+      return {
+        id: p.id,
+        key: p.cup,
+        sourceId: p.cup,
+        url: attuazione?.url ?? null,
+        title: p.title,
+        cup: p.cup,
+        mission: p.mission,
+        component: p.component,
+        investment: p.investment,
+        intervention: attuazione?.intervention ?? null,
+        holder: p.holder,
+        attuatore: p.attuatore,
+        importoFinanziato:
+          p.importoFinanziato != null ? Number(p.importoFinanziato) : null,
+        status: p.status,
+        startDate: p.startDate ? p.startDate.toISOString() : null,
+        endDate: p.endDate ? p.endDate.toISOString() : null,
+        publishedAt: attuazione?.publishedAt
+          ? attuazione.publishedAt.toISOString()
+          : null,
+        lastUpdatedAt,
+        attachments: allAttachments,
+        trasparenzaCompleta,
+        aggiornamentoVecchio,
+        documentsCount: documents.length,
+        lastPublication,
+        documents,
+      };
+    });
+  }
 
   const uncensored = alboRows
     .filter((r) => !matchedDocIds.has(r.id))
     .map(mapPublication);
 
-  res.json({ projects, uncensored });
+  const censusLastUpdatedAt = italiadomaniStatus?.lastUpdatedAt
+    ? italiadomaniStatus.lastUpdatedAt.toISOString()
+    : null;
+
+  res.json({ projects, uncensored, censusLastUpdatedAt });
 });
 
 export default router;

@@ -8,6 +8,7 @@ import {
 import { sql, inArray } from "drizzle-orm";
 import { logger } from "./logger";
 import { runAttuazioneIngestion } from "./attuazionePnrr";
+import { runItaliadomaniIngestion } from "./italiadomaniPnrr";
 import {
   runAnacContractsIngestion,
   runContractsGeocoding,
@@ -261,6 +262,9 @@ async function runIngestionCycle(): Promise<void> {
     logger.error({ err }, "Document Markdown extraction cycle failed");
   });
   await runAttuazioneIngestion().catch(() => {});
+  await runItaliadomaniIngestion().catch((err) => {
+    logger.error({ err }, "Italia Domani PNRR ingestion cycle failed");
+  });
   await runAnacContractsIngestion().catch(() => {});
   await runContractsGeocoding().catch((err) => {
     logger.error({ err }, "Contracts geocoding pass failed");

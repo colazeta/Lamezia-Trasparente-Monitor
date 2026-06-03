@@ -15,6 +15,7 @@ export * from "./shares";
 export * from "./themeRelevanceEvents";
 export * from "./publications";
 export * from "./attuazionePnrr";
+export * from "./italiadomaniProjects";
 export * from "./opendataDatasets";
 export * from "./opendataResources";
 export * from "./feedStatus";

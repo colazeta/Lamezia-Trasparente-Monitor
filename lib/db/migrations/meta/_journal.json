@@ -8,6 +8,13 @@
       "when": 1780429169503,
       "tag": "0000_clever_wolf_cub",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1780515600000,
+      "tag": "0001_italiadomani_projects",
+      "breakpoints": true
     }
   ]
 }

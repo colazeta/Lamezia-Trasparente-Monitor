@@ -4,9 +4,7 @@ import { useListPnrrProjects } from "@workspace/api-client-react";
 import {
   Landmark,
   FileText,
-  ChevronDown,
   Calendar,
-  Hash,
   Layers,
   FolderKanban,
   Euro,
@@ -14,7 +12,12 @@ import {
   ExternalLink,
   Paperclip,
   AlertTriangle,
+  ShieldCheck,
+  ShieldAlert,
+  Clock,
+  Hash,
   Telescope,
+  RefreshCw,
 } from "lucide-react";
 import { PnrrProject, Publication } from "@workspace/api-client-react";
 import { format } from "date-fns";
@@ -22,12 +25,6 @@ import { it } from "date-fns/locale";
 
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
 import {
   Empty,
   EmptyHeader,
@@ -51,13 +48,15 @@ export function Pnrr() {
 
   const projects: PnrrProject[] | undefined = data?.projects;
   const uncensored: Publication[] | undefined = data?.uncensored;
+  const censusLastUpdatedAt: string | null | undefined =
+    data?.censusLastUpdatedAt;
 
   const census = useMemo(() => {
     if (!projects) {
       return {
         projectsCount: 0,
-        matchedDocsCount: 0,
-        uncensoredCount: 0,
+        transparentCount: 0,
+        staleCount: 0,
         totalImporto: 0,
         missionCount: 0,
         missions: [] as { mission: string; count: number }[],
@@ -66,6 +65,8 @@ export function Pnrr() {
 
     const missionMap = new Map<string, number>();
     let totalImporto = 0;
+    let transparentCount = 0;
+    let staleCount = 0;
 
     for (const p of projects) {
       if (p.mission) {
@@ -75,22 +76,21 @@ export function Pnrr() {
       if (p.importoFinanziato != null && !Number.isNaN(p.importoFinanziato)) {
         totalImporto += p.importoFinanziato;
       }
+      if (p.trasparenzaCompleta) transparentCount += 1;
+      if (p.aggiornamentoVecchio) staleCount += 1;
     }
 
     return {
       projectsCount: projects.length,
-      matchedDocsCount: projects.reduce(
-        (s: number, p: PnrrProject) => s + p.documentsCount,
-        0,
-      ),
-      uncensoredCount: uncensored?.length ?? 0,
+      transparentCount,
+      staleCount,
       totalImporto,
       missionCount: missionMap.size,
       missions: Array.from(missionMap.entries())
         .map(([mission, count]) => ({ mission, count }))
         .sort((a, b) => a.mission.localeCompare(b.mission)),
     };
-  }, [projects, uncensored]);
+  }, [projects]);
 
   const importoLabel =
     census.totalImporto > 0
@@ -121,7 +121,17 @@ export function Pnrr() {
           Censimento PNRR
         </h1>
         <p className="mt-3 text-muted-foreground text-lg max-w-3xl">
-          Il censimento madre è la sezione ufficiale{" "}
+          Lista master tratta dal censimento ufficiale{" "}
+          <a
+            href="https://www.italiadomani.gov.it"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-primary font-medium hover:underline"
+          >
+            Italia Domani
+          </a>
+          : tutti i progetti PNRR localizzati nel Comune di Lamezia Terme. Per
+          ogni progetto verifichiamo la presenza sulla pagina{" "}
           <a
             href="https://www.comune.lamezia-terme.cz.it/it/attuazione-misure-pnrr"
             target="_blank"
@@ -130,14 +140,15 @@ export function Pnrr() {
           >
             Attuazione Misure PNRR
           </a>{" "}
-          del Comune. Per ogni progetto censito mostriamo i metadati ufficiali e
-          i documenti dell'Albo Pretorio che vi corrispondono per CUP. I
-          documenti PNRR dell'Albo senza corrispondenza sono segnalati come{" "}
-          <span className="font-medium text-foreground">
-            non censiti in Attuazione
-          </span>
-          .
+          del Comune (flag di trasparenza) e colleghiamo i documenti dell'Albo
+          Pretorio per CUP.
         </p>
+        {censusLastUpdatedAt && (
+          <p className="mt-2 flex items-center gap-1.5 text-xs text-muted-foreground">
+            <RefreshCw className="h-3 w-3" />
+            Censimento aggiornato il {formatDate(censusLastUpdatedAt)}
+          </p>
+        )}
       </div>
 
       {isLoading ? (
@@ -171,14 +182,14 @@ export function Pnrr() {
               icon={Euro}
             />
             <StatCard
-              label="Documenti Albo collegati"
-              value={String(census.matchedDocsCount)}
-              icon={FileText}
+              label="Trasparenza completa"
+              value={String(census.transparentCount)}
+              icon={ShieldCheck}
             />
             <StatCard
-              label="Non censiti in Attuazione"
-              value={String(census.uncensoredCount)}
-              icon={AlertTriangle}
+              label="Aggiornamento vecchio"
+              value={String(census.staleCount)}
+              icon={Clock}
             />
           </div>
 
@@ -218,225 +229,31 @@ export function Pnrr() {
           <div className="mb-4 flex items-center gap-2">
             <FolderKanban className="h-5 w-5 text-brand" />
             <h2 className="text-xl font-display font-bold tracking-tight">
-              Progetti censiti in Attuazione PNRR
+              Progetti PNRR – Censimento Italia Domani
             </h2>
           </div>
-          <Accordion type="single" collapsible className="space-y-3 mb-12">
+
+          <div className="space-y-4 mb-12">
             {projects.map((project: PnrrProject) => (
-              <AccordionItem
+              <PnrrCard
                 key={project.key}
-                value={project.key}
-                className="rounded-xl border border-card-border bg-card px-5 shadow-sm transition-colors data-[state=open]:border-brand/40"
-              >
-                <AccordionTrigger className="hover:no-underline py-4 [&>svg]:hidden">
-                  <div className="flex w-full items-start justify-between gap-4 text-left">
-                    <div className="space-y-2">
-                      <div className="flex flex-wrap items-center gap-2">
-                        {project.cup && (
-                          <Badge
-                            variant="brand"
-                            className="font-mono text-xs shadow-none"
-                          >
-                            CUP {project.cup}
-                          </Badge>
-                        )}
-                        {project.mission && (
-                          <Badge
-                            variant="outline"
-                            className="text-xs shadow-none"
-                          >
-                            {project.mission.split(" ")[0]}
-                          </Badge>
-                        )}
-                        {project.component && (
-                          <Badge
-                            variant="outline"
-                            className="text-xs shadow-none font-mono"
-                          >
-                            {project.component.split(" ")[0]}
-                          </Badge>
-                        )}
-                      </div>
-                      <h3 className="font-display font-bold text-foreground leading-snug">
-                        {project.title}
-                      </h3>
-                      <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-muted-foreground">
-                        {formatImporto(project.importoFinanziato) && (
-                          <span className="flex items-center gap-1 font-medium text-foreground">
-                            <Euro className="h-3 w-3" />
-                            <span className="tabular-nums">
-                              {formatImporto(project.importoFinanziato)}
-                            </span>
-                          </span>
-                        )}
-                        {project.attuatore && (
-                          <span className="flex items-center gap-1">
-                            <Building2 className="h-3 w-3" />
-                            {project.attuatore}
-                          </span>
-                        )}
-                        <span>
-                          <span className="font-display font-bold tabular-nums text-foreground">
-                            {project.documentsCount}
-                          </span>{" "}
-                          {project.documentsCount === 1
-                            ? "documento Albo"
-                            : "documenti Albo"}{" "}
-                          · ultimo atto {formatDate(project.lastPublication)}
-                        </span>
-                      </div>
-                    </div>
-                    <ChevronDown className="h-5 w-5 shrink-0 text-muted-foreground transition-transform [[data-state=open]_&]:rotate-180" />
-                  </div>
-                </AccordionTrigger>
-                <AccordionContent className="pb-4">
-                  <div className="space-y-4 border-t border-border/60 pt-4">
-                    {/* Official metadata grid */}
-                    <dl className="grid gap-x-6 gap-y-2 sm:grid-cols-2 text-sm">
-                      <MetaRow label="Missione" value={project.mission} />
-                      <MetaRow label="Componente" value={project.component} />
-                      <MetaRow label="Investimento" value={project.investment} />
-                      <MetaRow label="Intervento" value={project.intervention} />
-                      <MetaRow label="Titolare" value={project.holder} />
-                      <MetaRow
-                        label="Soggetto Attuatore"
-                        value={project.attuatore}
-                      />
-                      <MetaRow
-                        label="Importo Finanziato"
-                        value={formatImporto(project.importoFinanziato)}
-                      />
-                      <MetaRow
-                        label="Stato di avanzamento"
-                        value={project.status}
-                      />
-                      {project.startDate && (
-                        <MetaRow
-                          label="Data avvio"
-                          value={formatDate(project.startDate)}
-                        />
-                      )}
-                      {project.endDate && (
-                        <MetaRow
-                          label="Data fine"
-                          value={formatDate(project.endDate)}
-                        />
-                      )}
-                      <MetaRow
-                        label="Pubblicato sul sito"
-                        value={formatDate(project.publishedAt)}
-                      />
-                    </dl>
-
-                    {/* Official links */}
-                    <div className="flex flex-wrap items-center gap-4">
-                      <a
-                        href={project.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1.5 text-xs font-medium text-primary hover:underline"
-                      >
-                        <ExternalLink className="h-3.5 w-3.5" />
-                        Scheda ufficiale Attuazione
-                      </a>
-                      <Link
-                        href={`/monitoraggio/nuovo?pnrrProjectId=${project.id}`}
-                        className="inline-flex items-center gap-1.5 rounded-md border border-brand/40 bg-brand/10 px-2.5 py-1 text-xs font-semibold text-brand transition-colors hover:bg-brand/20"
-                        data-testid={`link-monitora-pnrr-${project.id}`}
-                      >
-                        <Telescope className="h-3.5 w-3.5" />
-                        Monitora questo progetto
-                      </Link>
-                    </div>
-
-                    {/* Civic monitoring reports */}
-                    <MonitoringReportsSection
-                      subjectType="pnrr"
-                      pnrrProjectId={project.id}
-                    />
-
-                    {/* Official attachments */}
-                    {project.attachments.length > 0 && (
-                      <div>
-                        <h4 className="mb-2 flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                          <Paperclip className="h-3.5 w-3.5" />
-                          Allegati ufficiali
-                        </h4>
-                        <ul className="space-y-1.5">
-                          {project.attachments.map((att: any) => (
-                            <li key={att.url}>
-                              <a
-                                href={att.url}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="inline-flex items-start gap-1.5 text-sm text-primary hover:underline"
-                              >
-                                <FileText className="mt-0.5 h-3.5 w-3.5 shrink-0" />
-                                <span className="break-all">{att.title}</span>
-                              </a>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    )}
-
-                    {/* Matched Albo documents */}
-                    <div>
-                      <h4 className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                        Documenti Albo Pretorio collegati (per CUP)
-                      </h4>
-                      {project.documents.length > 0 ? (
-                        <div className="space-y-2">
-                          {project.documents.map((doc: Publication) => (
-                            <div
-                              key={doc.id}
-                              className="rounded-lg bg-muted/30 p-3"
-                            >
-                              <div className="flex items-start gap-3">
-                                <FileText className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
-                                <div className="min-w-0 flex-1">
-                                  <p className="text-sm font-medium leading-snug">
-                                    {doc.oggetto}
-                                  </p>
-                                  <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted-foreground">
-                                    <span>{doc.tipologia}</span>
-                                    <span className="flex items-center gap-1 font-mono">
-                                      <Calendar className="h-3 w-3" />
-                                      {formatDate(doc.pubStart)}
-                                    </span>
-                                  </div>
-                                </div>
-                              </div>
-                              <div className="mt-2 pl-7">
-                                <AlboLink />
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                      ) : (
-                        <p className="text-sm text-muted-foreground italic">
-                          Nessun documento dell'Albo Pretorio collegato a questo
-                          progetto.
-                        </p>
-                      )}
-                    </div>
-                  </div>
-                </AccordionContent>
-              </AccordionItem>
+                project={project}
+                formatImporto={formatImporto}
+              />
             ))}
-          </Accordion>
+          </div>
 
           {/* Uncensored Albo documents */}
-          <div className="rounded-xl border border-amber-300/60 bg-amber-50/60 p-5 dark:border-amber-500/30 dark:bg-amber-500/10">
-            <h2 className="text-xl font-serif font-bold mb-1 flex items-center gap-2 text-amber-700 dark:text-amber-400">
-              <AlertTriangle className="h-5 w-5" />
-              Documenti Albo non censiti in Attuazione
-            </h2>
-            <p className="text-sm text-muted-foreground mb-4">
-              Documenti PNRR rilevati sull'Albo Pretorio il cui CUP non risulta
-              in alcun progetto della sezione ufficiale Attuazione Misure PNRR.
-            </p>
-            {uncensored && uncensored.length > 0 ? (
+          {uncensored && uncensored.length > 0 && (
+            <div className="rounded-xl border border-amber-300/60 bg-amber-50/60 p-5 dark:border-amber-500/30 dark:bg-amber-500/10">
+              <h2 className="text-xl font-serif font-bold mb-1 flex items-center gap-2 text-amber-700 dark:text-amber-400">
+                <AlertTriangle className="h-5 w-5" />
+                Documenti Albo non collegati a censimento
+              </h2>
+              <p className="text-sm text-muted-foreground mb-4">
+                Documenti PNRR rilevati sull'Albo Pretorio il cui CUP non
+                corrisponde ad alcun progetto nel censimento Italia Domani.
+              </p>
               <div className="space-y-2">
                 {uncensored.map((doc: Publication) => (
                   <div
@@ -445,7 +262,7 @@ export function Pnrr() {
                   >
                     <div className="mb-1.5 flex flex-wrap items-center gap-2">
                       <Badge className="border-transparent bg-amber-100 text-amber-800 shadow-none dark:bg-amber-500/20 dark:text-amber-300">
-                        Non censito in Attuazione
+                        Non censito
                       </Badge>
                       {doc.cups?.map((c: string) => (
                         <Badge
@@ -482,31 +299,234 @@ export function Pnrr() {
                   </div>
                 ))}
               </div>
-            ) : (
-              <p className="py-4 text-center text-sm text-muted-foreground">
-                Tutti i documenti PNRR dell'Albo risultano censiti in Attuazione.
-              </p>
-            )}
-          </div>
+            </div>
+          )}
         </>
       ) : (
-        <>
-          <Empty className="border border-dashed border-border bg-muted/20">
-            <EmptyHeader>
-              <EmptyMedia variant="icon" className="bg-brand/10 text-brand">
-                <Landmark className="h-6 w-6" />
-              </EmptyMedia>
-              <EmptyTitle className="font-display">
-                Nessun progetto PNRR rilevato
-              </EmptyTitle>
-              <EmptyDescription>
-                Al momento non risultano progetti PNRR censiti. Continueremo a
-                monitorare l'Albo Pretorio per nuovi atti e finanziamenti.
-              </EmptyDescription>
-            </EmptyHeader>
-          </Empty>
-        </>
+        <Empty className="border border-dashed border-border bg-muted/20">
+          <EmptyHeader>
+            <EmptyMedia variant="icon" className="bg-brand/10 text-brand">
+              <Landmark className="h-6 w-6" />
+            </EmptyMedia>
+            <EmptyTitle className="font-display">
+              Nessun progetto PNRR nel censimento
+            </EmptyTitle>
+            <EmptyDescription>
+              Il censimento Italia Domani non è ancora stato importato. I
+              progetti compariranno al completamento della prima ingestione.
+            </EmptyDescription>
+          </EmptyHeader>
+        </Empty>
       )}
+    </div>
+  );
+}
+
+function PnrrCard({
+  project,
+  formatImporto,
+}: {
+  project: PnrrProject;
+  formatImporto: (v: number | null | undefined) => string | null;
+}) {
+  return (
+    <div className="rounded-xl border border-card-border bg-card shadow-sm overflow-hidden">
+      {/* Card header stripe for transparency */}
+      <div
+        className={`h-1 w-full ${
+          project.trasparenzaCompleta ? "bg-emerald-500" : "bg-amber-400"
+        }`}
+      />
+
+      <div className="p-5">
+        {/* Top badges row */}
+        <div className="flex flex-wrap items-center gap-2 mb-3">
+          {project.cup && (
+            <Badge
+              variant="brand"
+              className="font-mono text-xs shadow-none"
+            >
+              CUP {project.cup}
+            </Badge>
+          )}
+          {project.mission && (
+            <Badge variant="outline" className="text-xs shadow-none">
+              {project.mission.split(" ")[0]}
+            </Badge>
+          )}
+          {project.component && (
+            <Badge variant="outline" className="text-xs shadow-none font-mono">
+              {project.component.split(" ")[0]}
+            </Badge>
+          )}
+          <div className="ml-auto flex flex-wrap items-center gap-2">
+            {project.trasparenzaCompleta ? (
+              <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-semibold text-emerald-700 ring-1 ring-emerald-200 dark:bg-emerald-500/10 dark:text-emerald-400 dark:ring-emerald-500/30">
+                <ShieldCheck className="h-3 w-3" />
+                Trasparenza completa
+              </span>
+            ) : (
+              <span className="inline-flex items-center gap-1 rounded-full bg-amber-50 px-2.5 py-1 text-xs font-semibold text-amber-700 ring-1 ring-amber-200 dark:bg-amber-500/10 dark:text-amber-400 dark:ring-amber-500/30">
+                <ShieldAlert className="h-3 w-3" />
+                Lacuna di trasparenza
+              </span>
+            )}
+            {project.aggiornamentoVecchio && (
+              <span className="inline-flex items-center gap-1 rounded-full bg-red-50 px-2.5 py-1 text-xs font-semibold text-red-700 ring-1 ring-red-200 dark:bg-red-500/10 dark:text-red-400 dark:ring-red-500/30">
+                <Clock className="h-3 w-3" />
+                Aggiornamento vecchio
+              </span>
+            )}
+          </div>
+        </div>
+
+        {/* Title */}
+        <h3 className="font-display font-bold text-foreground leading-snug mb-3">
+          {project.title}
+        </h3>
+
+        {/* Key metadata row */}
+        <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5 text-sm text-muted-foreground mb-4">
+          {formatImporto(project.importoFinanziato) && (
+            <span className="flex items-center gap-1 font-semibold text-foreground">
+              <Euro className="h-3.5 w-3.5 text-brand" />
+              {formatImporto(project.importoFinanziato)}
+            </span>
+          )}
+          {(project.attuatore ?? project.holder) && (
+            <span className="flex items-center gap-1">
+              <Building2 className="h-3.5 w-3.5" />
+              {project.attuatore ?? project.holder}
+            </span>
+          )}
+          {project.status && (
+            <span className="flex items-center gap-1">
+              <span className="h-2 w-2 rounded-full bg-primary/40" />
+              {project.status}
+            </span>
+          )}
+          {project.lastUpdatedAt && (
+            <span className="flex items-center gap-1">
+              <Calendar className="h-3.5 w-3.5" />
+              Aggiornato {formatDate(project.lastUpdatedAt)}
+            </span>
+          )}
+        </div>
+
+        {/* Details grid */}
+        <dl className="grid gap-x-6 gap-y-2 sm:grid-cols-2 text-sm mb-4">
+          <MetaRow label="Missione" value={project.mission} />
+          <MetaRow label="Componente" value={project.component} />
+          <MetaRow label="Investimento" value={project.investment} />
+          <MetaRow label="Intervento" value={project.intervention} />
+          <MetaRow label="Titolare" value={project.holder} />
+          <MetaRow label="Soggetto Attuatore" value={project.attuatore} />
+          {project.startDate && (
+            <MetaRow label="Data avvio" value={formatDate(project.startDate)} />
+          )}
+          {project.endDate && (
+            <MetaRow label="Data fine" value={formatDate(project.endDate)} />
+          )}
+        </dl>
+
+        {/* Action links */}
+        <div className="flex flex-wrap items-center gap-3 mb-4">
+          {project.url && (
+            <a
+              href={project.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 text-xs font-medium text-primary hover:underline"
+            >
+              <ExternalLink className="h-3.5 w-3.5" />
+              Scheda Attuazione Comune
+            </a>
+          )}
+          <Link
+            href={`/monitoraggio/nuovo?pnrrProjectId=${project.id}`}
+            className="inline-flex items-center gap-1.5 rounded-md border border-brand/40 bg-brand/10 px-2.5 py-1 text-xs font-semibold text-brand transition-colors hover:bg-brand/20"
+            data-testid={`link-monitora-pnrr-${project.id}`}
+          >
+            <Telescope className="h-3.5 w-3.5" />
+            Monitora questo progetto
+          </Link>
+        </div>
+
+        {/* Civic monitoring */}
+        <MonitoringReportsSection
+          subjectType="pnrr"
+          pnrrProjectId={project.id}
+        />
+
+        {/* Official attachments from Comune */}
+        {project.attachments.length > 0 && (
+          <div className="mt-4 pt-4 border-t border-border/60">
+            <h4 className="mb-2 flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+              <Paperclip className="h-3.5 w-3.5" />
+              Allegati ufficiali Comune
+            </h4>
+            <ul className="space-y-1.5">
+              {project.attachments.map((att: any) => (
+                <li key={att.url}>
+                  <a
+                    href={att.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-start gap-1.5 text-sm text-primary hover:underline"
+                  >
+                    <FileText className="mt-0.5 h-3.5 w-3.5 shrink-0" />
+                    <span className="break-all">{att.title}</span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        {/* Matched Albo documents */}
+        <div className="mt-4 pt-4 border-t border-border/60">
+          <h4 className="mb-2 flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+            <FileText className="h-3.5 w-3.5" />
+            Documenti Albo Pretorio collegati per CUP
+            <span className="ml-auto rounded-full bg-muted px-2 py-0.5 text-xs font-bold tabular-nums text-foreground">
+              {project.documentsCount}
+            </span>
+          </h4>
+          {project.documents.length > 0 ? (
+            <div className="space-y-2">
+              {project.documents.map((doc: Publication) => (
+                <div
+                  key={doc.id}
+                  className="rounded-lg bg-muted/30 p-3"
+                >
+                  <div className="flex items-start gap-3">
+                    <FileText className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
+                    <div className="min-w-0 flex-1">
+                      <p className="text-sm font-medium leading-snug">
+                        {doc.oggetto}
+                      </p>
+                      <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted-foreground">
+                        <span>{doc.tipologia}</span>
+                        <span className="flex items-center gap-1 font-mono">
+                          <Calendar className="h-3 w-3" />
+                          {formatDate(doc.pubStart)}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="mt-2 pl-7">
+                    <AlboLink />
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <p className="text-sm text-muted-foreground italic">
+              Nessun documento dell'Albo Pretorio collegato a questo progetto.
+            </p>
+          )}
+        </div>
+      </div>
     </div>
   );
 }

@@ -3298,7 +3298,7 @@ export const getListPnrrProjectsUrl = () => {
 }
 
 /**
- * @summary PNRR census based on the official Attuazione Misure PNRR registry
+ * @summary PNRR census based on the Italia Domani master list (municipality of Lamezia Terme)
  */
 export const listPnrrProjects = async ( options?: RequestInit): Promise<PnrrCensus> => {
 
@@ -3345,7 +3345,7 @@ export type ListPnrrProjectsQueryError = ErrorType<unknown>
 
 
 /**
- * @summary PNRR census based on the official Attuazione Misure PNRR registry
+ * @summary PNRR census based on the Italia Domani master list (municipality of Lamezia Terme)
  */
 
 export function useListPnrrProjects<TData = Awaited<ReturnType<typeof listPnrrProjects>>, TError = ErrorType<unknown>>(

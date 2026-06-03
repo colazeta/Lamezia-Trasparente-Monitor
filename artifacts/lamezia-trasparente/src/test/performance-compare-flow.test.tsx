@@ -100,6 +100,9 @@ vi.mock("@workspace/api-client-react", () => ({
     }
     return { data: detail, isLoading: false };
   },
+  getGetPerformanceIndicatorQueryKey: (id: string) => [
+    `/api/performance/indicators/${id}`,
+  ],
 }));
 
 // recharts' ResponsiveContainer measures its parent via layout APIs that jsdom
