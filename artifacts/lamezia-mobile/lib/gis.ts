@@ -35,6 +35,21 @@ export function macrotemaColor(key?: string | null): string {
   return MACROTEMA_COLORS[key] ?? MACROTEMA_COLORS.altro;
 }
 
+const MACROTEMA_LABELS: Record<string, string> = {
+  ambiente: "Ambiente e rifiuti",
+  scuole: "Scuole e istruzione",
+  strade: "Strade e lavori pubblici",
+  sociale: "Sociale e servizi alla persona",
+  cultura: "Cultura, sport e turismo",
+  mobilita: "Mobilità e trasporti",
+  altro: "Altri servizi e forniture",
+};
+
+export function macrotemaLabel(key?: string | null): string {
+  if (!key) return MACROTEMA_LABELS.altro;
+  return MACROTEMA_LABELS[key] ?? key;
+}
+
 function apiBase(): string {
   const domain = process.env.EXPO_PUBLIC_DOMAIN;
   return domain ? `https://${domain}` : "";

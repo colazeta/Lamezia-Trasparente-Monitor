@@ -1,10 +1,12 @@
 import { Feather } from "@expo/vector-icons";
+import { router } from "expo-router";
 import React, { useEffect, useMemo, useState } from "react";
-import { FlatList, Platform, StyleSheet, Text, View } from "react-native";
+import { FlatList, Platform, Pressable, StyleSheet, Text, View } from "react-native";
 
 import { Badge, Card, EmptyState, NoticeBanner, SearchBar, Skeleton } from "@/components/ui";
 import { useColors } from "@/hooks/useColors";
 import { formatDateOpt, intentColors } from "@/lib/civic";
+import { macrotemaColor, macrotemaLabel } from "@/lib/gis";
 import {
   MONITORING_NOTICE_BODY,
   MONITORING_NOTICE_TITLE,
@@ -72,7 +74,12 @@ export default function AlboScreen() {
         <FlatList
           data={pubs.data ?? []}
           keyExtractor={(item) => String(item.id)}
-          renderItem={({ item }) => <PublicationCard pub={item} />}
+          renderItem={({ item }) => (
+            <PublicationCard
+              pub={item}
+              onPress={() => router.push(`/albo/${item.id}`)}
+            />
+          )}
           contentContainerStyle={styles.list}
           ItemSeparatorComponent={() => <View style={{ height: 12 }} />}
           showsVerticalScrollIndicator={false}
@@ -90,10 +97,17 @@ export default function AlboScreen() {
   );
 }
 
-export function PublicationCard({ pub }: { pub: Publication }) {
+export function PublicationCard({
+  pub,
+  onPress,
+}: {
+  pub: Publication;
+  onPress?: () => void;
+}) {
   const colors = useColors();
   const newColor = intentColors("alert", colors);
-  return (
+  const showMacrotema = pub.macrotema && pub.macrotema !== "altro";
+  const card = (
     <Card style={{ gap: 8 }}>
       <View style={styles.topRow}>
         <Badge label={pub.tipologia || pub.category} bg={colors.muted} fg={colors.mutedForeground} />
@@ -102,18 +116,46 @@ export function PublicationCard({ pub }: { pub: Publication }) {
         ) : null}
         {pub.isNew ? <Badge label="Nuovo" bg={newColor.bg} fg={newColor.fg} /> : null}
       </View>
+      {showMacrotema ? (
+        <Badge
+          label={macrotemaLabel(pub.macrotema)}
+          bg={`${macrotemaColor(pub.macrotema)}22`}
+          fg={macrotemaColor(pub.macrotema)}
+          icon="layers"
+        />
+      ) : null}
       <Text style={[styles.title, { color: colors.foreground }]} numberOfLines={3}>
         {pub.oggetto}
       </Text>
+      {pub.brief ? (
+        <Text
+          style={[styles.brief, { color: colors.mutedForeground }]}
+          numberOfLines={2}
+        >
+          {pub.brief}
+        </Text>
+      ) : null}
       <View style={[styles.footer, { borderTopColor: colors.border }]}>
         <Text style={[styles.meta, { color: colors.mutedForeground }]} numberOfLines={1}>
           {pub.progressivo ? `N. ${pub.progressivo}` : pub.provenienza ?? ""}
         </Text>
-        <Text style={[styles.meta, { color: colors.mutedForeground }]}>
-          {formatDateOpt(pub.pubStart ?? pub.dataAtto)}
-        </Text>
+        <View style={styles.footerRight}>
+          <Text style={[styles.meta, { color: colors.mutedForeground }]}>
+            {formatDateOpt(pub.pubStart ?? pub.dataAtto)}
+          </Text>
+          {onPress ? (
+            <Feather name="chevron-right" size={16} color={colors.mutedForeground} />
+          ) : null}
+        </View>
       </View>
     </Card>
+  );
+
+  if (!onPress) return card;
+  return (
+    <Pressable onPress={onPress} style={({ pressed }) => ({ opacity: pressed ? 0.85 : 1 })}>
+      {card}
+    </Pressable>
   );
 }
 
@@ -133,6 +175,11 @@ const styles = StyleSheet.create({
     lineHeight: 21,
     letterSpacing: -0.2,
   },
+  brief: {
+    fontFamily: "Inter_400Regular",
+    fontSize: 13,
+    lineHeight: 18,
+  },
   footer: {
     flexDirection: "row",
     alignItems: "center",
@@ -142,5 +189,6 @@ const styles = StyleSheet.create({
     paddingTop: 10,
     marginTop: 2,
   },
+  footerRight: { flexDirection: "row", alignItems: "center", gap: 4 },
   meta: { fontFamily: "Inter_500Medium", fontSize: 12 },
 });
