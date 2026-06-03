@@ -2,10 +2,12 @@ import { useRoute, Link } from "wouter";
 import {
   useGetContractStoryline,
   getGetContractStorylineQueryKey,
+  useListPublications,
   type StorylineEvent,
   type StorylineIndicators,
   type LifecyclePhase,
   type StorylineStatus,
+  type Publication,
 } from "@workspace/api-client-react";
 import {
   ArrowLeft,
@@ -32,6 +34,8 @@ import {
   FileCheck,
   FileSearch,
   ShieldAlert,
+  Paperclip,
+  ChevronRight,
 } from "lucide-react";
 import { format } from "date-fns";
 import { it } from "date-fns/locale";
@@ -419,7 +423,109 @@ function StorylineContent({
           </>
         )}
       </section>
+
+      {/* Documenti dell'Albo collegati */}
+      {contract.cig ? <AlboDocumentsSection cig={contract.cig} /> : null}
     </div>
+  );
+}
+
+// Elenco compatto delle pubblicazioni dell'Albo Pretorio che citano il CIG,
+// con collegamento diretto alla scheda di dettaglio di ciascun atto.
+function AlboDocumentsSection({ cig }: { cig: string }) {
+  const { data, isLoading } = useListPublications({ q: cig });
+  const publications = data ?? [];
+
+  return (
+    <section>
+      <h2 className="mb-1 font-display text-xl font-bold tracking-tight">
+        Documenti dell'Albo
+      </h2>
+      <p className="mb-5 text-sm text-muted-foreground">
+        Gli atti dell'Albo Pretorio che citano il CIG di questo appalto. Apri
+        ciascuna scheda per leggere il testo completo e gli allegati.
+      </p>
+
+      {isLoading ? (
+        <div className="space-y-3">
+          {Array(3)
+            .fill(0)
+            .map((_, i) => (
+              <div
+                key={i}
+                className="rounded-xl border border-card-border bg-card p-4 shadow-sm"
+              >
+                <Skeleton className="mb-3 h-4 w-32" />
+                <Skeleton className="h-5 w-3/4" />
+              </div>
+            ))}
+        </div>
+      ) : publications.length === 0 ? (
+        <Empty className="rounded-2xl border border-dashed border-border">
+          <EmptyHeader>
+            <EmptyMedia variant="icon">
+              <FileSearch className="h-6 w-6" />
+            </EmptyMedia>
+            <EmptyTitle>Nessun documento collegato</EmptyTitle>
+            <EmptyDescription>
+              Non abbiamo trovato atti dell'Albo Pretorio che citano questo CIG.
+            </EmptyDescription>
+          </EmptyHeader>
+        </Empty>
+      ) : (
+        <ul className="space-y-3">
+          {publications.map((p) => (
+            <AlboDocumentItem key={p.id} publication={p} />
+          ))}
+        </ul>
+      )}
+    </section>
+  );
+}
+
+function AlboDocumentItem({ publication: p }: { publication: Publication }) {
+  const attachmentsCount = p.attachments?.length ?? 0;
+  return (
+    <li>
+      <Link href={`/albo/${p.id}`} className="block">
+        <div className="group rounded-xl border border-card-border bg-card p-4 shadow-sm transition-all hover:-translate-y-0.5 hover:border-brand/40 hover:shadow-md">
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <div className="flex flex-wrap items-center gap-2">
+              <Badge variant="secondary" className="text-[10px] shadow-none">
+                {p.tipologia}
+              </Badge>
+              {p.numRegGen ? (
+                <span className="font-mono text-xs text-muted-foreground">
+                  Reg. gen. {p.numRegGen}
+                </span>
+              ) : null}
+            </div>
+            <span className="inline-flex items-center gap-1.5 font-mono text-xs text-muted-foreground">
+              <Calendar className="h-3.5 w-3.5" />
+              {formatDate(p.pubStart)}
+            </span>
+          </div>
+          <h3 className="mt-2 font-display font-semibold leading-snug text-foreground transition-colors group-hover:text-brand">
+            {p.oggetto}
+          </h3>
+          <div className="mt-3 flex items-center justify-between gap-2">
+            {attachmentsCount > 0 ? (
+              <span className="inline-flex items-center gap-1 text-xs text-brand">
+                <Paperclip className="h-3.5 w-3.5" />
+                {attachmentsCount}{" "}
+                {attachmentsCount === 1 ? "documento" : "documenti"}
+              </span>
+            ) : (
+              <span />
+            )}
+            <span className="inline-flex items-center gap-1 text-xs font-semibold text-primary transition-colors group-hover:text-brand">
+              Vedi dettaglio
+              <ChevronRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
+            </span>
+          </div>
+        </div>
+      </Link>
+    </li>
   );
 }
 
