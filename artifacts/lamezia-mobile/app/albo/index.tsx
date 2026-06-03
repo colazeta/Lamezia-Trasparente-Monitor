@@ -1,7 +1,15 @@
 import { Feather } from "@expo/vector-icons";
 import { router } from "expo-router";
 import React, { useEffect, useMemo, useState } from "react";
-import { FlatList, Platform, Pressable, StyleSheet, Text, View } from "react-native";
+import {
+  FlatList,
+  Platform,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 
 import { Badge, Card, EmptyState, NoticeBanner, SearchBar, Skeleton } from "@/components/ui";
 import { useColors } from "@/hooks/useColors";
@@ -14,13 +22,25 @@ import {
 import {
   useGetFeedStatus,
   useListPublications,
+  type MacrotemaKey,
   type Publication,
 } from "@workspace/api-client-react";
+
+const MACROTEMA_KEYS: MacrotemaKey[] = [
+  "ambiente",
+  "scuole",
+  "strade",
+  "sociale",
+  "cultura",
+  "mobilita",
+  "altro",
+];
 
 export default function AlboScreen() {
   const colors = useColors();
   const [input, setInput] = useState("");
   const [q, setQ] = useState("");
+  const [macrotema, setMacrotema] = useState<MacrotemaKey | null>(null);
 
   useEffect(() => {
     const t = setTimeout(() => setQ(input.trim()), 400);
@@ -28,8 +48,12 @@ export default function AlboScreen() {
   }, [input]);
 
   const params = useMemo(
-    () => ({ category: "albo", ...(q ? { q } : {}) }),
-    [q],
+    () => ({
+      category: "albo",
+      ...(q ? { q } : {}),
+      ...(macrotema ? { macrotema } : {}),
+    }),
+    [q, macrotema],
   );
   const pubs = useListPublications(params);
   const feed = useGetFeedStatus();
@@ -43,6 +67,27 @@ export default function AlboScreen() {
           onChangeText={setInput}
           placeholder="Cerca per oggetto…"
         />
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={styles.chipRow}
+        >
+          <MacrotemaChip
+            label="Tutti i temi"
+            color={colors.primary}
+            active={macrotema === null}
+            onPress={() => setMacrotema(null)}
+          />
+          {MACROTEMA_KEYS.map((key) => (
+            <MacrotemaChip
+              key={key}
+              label={macrotemaLabel(key)}
+              color={macrotemaColor(key)}
+              active={macrotema === key}
+              onPress={() => setMacrotema(key)}
+            />
+          ))}
+        </ScrollView>
         {alboFeed?.lastUpdatedAt ? (
           <View style={styles.feedRow}>
             <Feather name="rss" size={12} color={colors.mutedForeground} />
@@ -94,6 +139,43 @@ export default function AlboScreen() {
         />
       )}
     </View>
+  );
+}
+
+function MacrotemaChip({
+  label,
+  color,
+  active,
+  onPress,
+}: {
+  label: string;
+  color: string;
+  active: boolean;
+  onPress: () => void;
+}) {
+  const colors = useColors();
+  return (
+    <Pressable
+      onPress={onPress}
+      style={[
+        styles.chip,
+        {
+          backgroundColor: active ? color : `${color}1A`,
+          borderColor: active ? color : `${color}55`,
+        },
+      ]}
+    >
+      <View style={[styles.chipDot, { backgroundColor: active ? "#fff" : color }]} />
+      <Text
+        style={[
+          styles.chipText,
+          { color: active ? "#fff" : colors.foreground },
+        ]}
+        numberOfLines={1}
+      >
+        {label}
+      </Text>
+    </Pressable>
   );
 }
 
@@ -161,6 +243,18 @@ export function PublicationCard({
 
 const styles = StyleSheet.create({
   controls: { paddingHorizontal: 20, paddingTop: 14, paddingBottom: 8, gap: 8 },
+  chipRow: { gap: 8, paddingVertical: 2, paddingRight: 4 },
+  chip: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 6,
+    paddingHorizontal: 12,
+    paddingVertical: 7,
+    borderRadius: 999,
+    borderWidth: StyleSheet.hairlineWidth,
+  },
+  chipDot: { width: 8, height: 8, borderRadius: 4 },
+  chipText: { fontFamily: "Inter_600SemiBold", fontSize: 12.5 },
   feedRow: { flexDirection: "row", alignItems: "center", gap: 5, paddingHorizontal: 2 },
   feedText: { fontFamily: "Inter_400Regular", fontSize: 12 },
   list: {
