@@ -175,10 +175,48 @@ async function captureSnapshot(
   format: string | null,
 ): Promise<void> {
   try {
+    const now = new Date();
+
+    // Look up the most recent snapshot first so we can issue a conditional
+    // request and short-circuit the (expensive) download + parse + store when
+    // the upstream file is unchanged.
+    const [last] = await db
+      .select({
+        id: opendataSnapshotsTable.id,
+        checksum: opendataSnapshotsTable.checksum,
+        etag: opendataSnapshotsTable.etag,
+        lastModified: opendataSnapshotsTable.lastModified,
+      })
+      .from(opendataSnapshotsTable)
+      .where(eq(opendataSnapshotsTable.resourceId, resourceId))
+      .orderBy(desc(opendataSnapshotsTable.capturedAt))
+      .limit(1);
+
+    const requestHeaders: Record<string, string> = { "User-Agent": USER_AGENT };
+    if (last?.etag) requestHeaders["If-None-Match"] = last.etag;
+    if (last?.lastModified)
+      requestHeaders["If-Modified-Since"] = last.lastModified;
+
     const res = await fetch(url, {
-      headers: { "User-Agent": USER_AGENT },
+      headers: requestHeaders,
       signal: AbortSignal.timeout(30_000),
     });
+
+    // 304 Not Modified – the server confirmed the file is unchanged via the
+    // conditional headers, so we never transfer or parse the body. Still bump
+    // the latest snapshot's lastCheckedAt so the feed reflects this run.
+    if (res.status === 304 && last) {
+      await db
+        .update(opendataSnapshotsTable)
+        .set({ lastCheckedAt: now })
+        .where(eq(opendataSnapshotsTable.id, last.id));
+      logger.debug(
+        { resourceId, resourceSourceId },
+        "Snapshot unchanged (304) – skipping parse",
+      );
+      return;
+    }
+
     if (!res.ok) {
       logger.warn(
         { resourceId, status: res.status },
@@ -186,22 +224,24 @@ async function captureSnapshot(
       );
       return;
     }
+
+    const etag = res.headers.get("etag");
+    const lastModifiedHeader = res.headers.get("last-modified");
+
     const text = await res.text();
     const checksum = computeChecksum(text);
 
-    // Check last snapshot for this resource.
-    const [last] = await db
-      .select({ id: opendataSnapshotsTable.id, checksum: opendataSnapshotsTable.checksum })
-      .from(opendataSnapshotsTable)
-      .where(eq(opendataSnapshotsTable.resourceId, resourceId))
-      .orderBy(desc(opendataSnapshotsTable.capturedAt))
-      .limit(1);
-
-    // Skip if content unchanged.
+    // Skip if content unchanged (server ignored the conditional headers but the
+    // bytes match). Refresh the stored validators + lastCheckedAt so the next
+    // run can still short-circuit, and the feed reflects this run.
     if (last?.checksum === checksum) {
+      await db
+        .update(opendataSnapshotsTable)
+        .set({ lastCheckedAt: now, etag, lastModified: lastModifiedHeader })
+        .where(eq(opendataSnapshotsTable.id, last.id));
       logger.debug(
         { resourceId, resourceSourceId },
-        "Snapshot unchanged – skipping",
+        "Snapshot unchanged – skipping parse",
       );
       return;
     }
@@ -222,6 +262,9 @@ async function captureSnapshot(
     await db.insert(opendataSnapshotsTable).values({
       resourceId,
       checksum,
+      etag,
+      lastModified: lastModifiedHeader,
+      lastCheckedAt: now,
       rowCount: table.rowCount,
       changed,
       columns: table.columns,

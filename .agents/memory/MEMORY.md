@@ -30,3 +30,4 @@
 - [Monitoraggio civico section](monitoraggio-civico.md) — Monithon-style 3-phase citizen reports tied to contract(CIG)/PNRR(CUP); public upload-url unauth w/ limits; moderation behind requireIngestAuth; bidirectional MonitoringReportsSection on contract+pnrr.
 - [drizzle migrate is atomic](drizzle-migrate-atomic.md) — node-postgres migrator wraps ALL pending migrations in one transaction; any failure rolls the whole batch back, so the exact culprit can't be read from post-failure tracking state.
 - [Deploy migration alert](deploy-migration-alert.md) — non-"ok" migration state at api-server startup (pending/aborted/failed) emails OPS_ALERT_EMAIL via sendEmail; best-effort, degrades if unset.
+- [Half-tracked migration drift](half-tracked-migrations.md) — boot `MigrationError: relation already exists` w/ state "tracked" → run `pnpm -C lib/db run baseline` (records by hash), don't truncate.
