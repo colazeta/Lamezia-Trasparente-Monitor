@@ -4,6 +4,7 @@ import {
   publicationsTable,
   attuazionePnrrProjectsTable,
   italiadomaniProjectsTable,
+  contractsTable,
   feedStatusTable,
   sessionReportsTable,
   sessionInterventionsTable,
@@ -11,11 +12,12 @@ import {
   organiTable,
   officialsTable,
   officialVotesTable,
+  classifyMacrotema,
   type Publication,
   type SessionReport,
   type SessionIntervention,
 } from "@workspace/db";
-import { and, eq, asc, desc, ilike, gte, lte, sql } from "drizzle-orm";
+import { and, eq, asc, desc, ilike, gte, lte, ne, or, sql } from "drizzle-orm";
 import sanitizeHtml from "sanitize-html";
 import { UpsertSedutaReportBody } from "@workspace/api-zod";
 import { ALBO_SOURCE } from "../lib/ingestion";
@@ -42,11 +44,156 @@ function mapIntervention(i: SessionIntervention) {
   };
 }
 
+// ---------------------------------------------------------------------------
+// Estrazione punti all'Ordine del Giorno (ODG) dalla seduta/convocazione.
+// Supporta i pattern più comuni nei documenti comunali italiani:
+//   "1. Approvazione …"  |  "1) Approvazione …"
+//   "PUNTO 1: …"         |  "Punto 1 - …"
+//
+// Se vengono fornite delibere e contratti collegati alla seduta, ogni punto
+// viene abbinato agli atti corrispondenti per testo (overlap di parole chiave)
+// oppure per posizione (se il numero di delibere corrisponde al numero di punti).
+// ---------------------------------------------------------------------------
+
+const ODG_STOPWORDS = new Set([
+  "di", "il", "la", "le", "lo", "gli", "i", "e", "in", "a", "per", "con",
+  "del", "della", "dei", "delle", "degli", "su", "da", "tra", "fra",
+  "un", "una", "uno", "che", "non", "al", "ai", "all", "alle", "nelle",
+  "nei", "col", "etc", "vari", "varie", "atti", "atto", "atti",
+  "approvazione", "delibera", "deliberazione", "proposta", "schema",
+  "ratifica", "presa", "d'atto", "dato", "voto", "parere", "mozione",
+]);
+
+function odgKeywords(text: string): string[] {
+  return text
+    .toLowerCase()
+    .split(/[\s,;:.!?()\[\]{}'"/\\]+/)
+    .filter((w) => w.length >= 4 && !ODG_STOPWORDS.has(w));
+}
+
+function keywordOverlap(a: string[], b: string[]): number {
+  const setB = new Set(b);
+  return a.filter((w) => setB.has(w)).length;
+}
+
+type OdgOutcome = {
+  type: "delibera" | "albo" | "contract";
+  id: number;
+  title: string;
+  matchedBy: "keywords" | "position";
+};
+
+export function extractOdgPoints(
+  text: string | null,
+  relatedDelibere: { id: number; oggetto: string; category: string }[] = [],
+  relatedContracts: { id: number; title: string }[] = [],
+): { index: number; text: string; macrotema: string; outcomes: OdgOutcome[] }[] {
+  if (!text || !text.trim()) return [];
+
+  // Cerca una sezione ODG esplicita; altrimenti usa l'intero testo.
+  const odgMatch =
+    /(?:ordine del giorno|o\.d\.g\.|punti all.{0,15}o\.?d\.?g\.?)[:\s]*([\s\S]*?)(?:\n{2,}|$)/i.exec(
+      text,
+    );
+  const source = odgMatch ? odgMatch[1] : text;
+
+  const points: { index: number; text: string; macrotema: string; outcomes: OdgOutcome[] }[] = [];
+  const seen = new Set<number>();
+
+  // Pattern: "1. testo" o "1) testo"
+  const p1 = /^(\d+)[.)]\s+(.+)/gm;
+  // Pattern: "PUNTO 1: testo" o "Punto 1 - testo"
+  const p2 = /^PUNTO\s+(\d+)[:\-\s]+(.+)/gim;
+
+  for (const pattern of [p1, p2]) {
+    let m;
+    while ((m = pattern.exec(source)) !== null) {
+      const idx = parseInt(m[1], 10);
+      if (seen.has(idx)) continue;
+      seen.add(idx);
+      const pointText = m[2].replace(/\s+/g, " ").trim();
+      if (pointText.length < 5) continue;
+      points.push({
+        index: idx,
+        text: pointText,
+        macrotema: classifyMacrotema(pointText),
+        outcomes: [],
+      });
+    }
+    if (points.length > 0) break;
+  }
+
+  points.sort((a, b) => a.index - b.index);
+
+  if (points.length > 0) {
+    const pointKeywords = points.map((p) => odgKeywords(p.text));
+
+    // Abbinamento per parole chiave: soglia ≥ 2 parole in comune.
+    const MIN_OVERLAP = 2;
+    for (let i = 0; i < points.length; i++) {
+      const kw = pointKeywords[i];
+
+      for (const d of relatedDelibere) {
+        if (keywordOverlap(kw, odgKeywords(d.oggetto)) >= MIN_OVERLAP) {
+          points[i].outcomes.push({
+            type: d.category === "delibera" ? "delibera" : "albo",
+            id: d.id,
+            title: d.oggetto,
+            matchedBy: "keywords",
+          });
+        }
+      }
+
+      for (const c of relatedContracts) {
+        if (keywordOverlap(kw, odgKeywords(c.title)) >= MIN_OVERLAP) {
+          points[i].outcomes.push({
+            type: "contract",
+            id: c.id,
+            title: c.title,
+            matchedBy: "keywords",
+          });
+        }
+      }
+
+      // Abbinamento per posizione se le keyword non trovano nulla e il numero
+      // di delibere corrisponde al numero di punti ODG (pattern frequente nelle
+      // sedute comunali con un delibera per punto).
+      if (
+        points[i].outcomes.length === 0 &&
+        relatedDelibere.length === points.length
+      ) {
+        const d = relatedDelibere[i];
+        if (d) {
+          points[i].outcomes.push({
+            type: d.category === "delibera" ? "delibera" : "albo",
+            id: d.id,
+            title: d.oggetto,
+            matchedBy: "position",
+          });
+        }
+      }
+    }
+  }
+
+  return points.slice(0, 30);
+}
+
+// Restituisce i macrotemi unici degli ODG della convocazione (per badge multi-tema
+// nella lista convocazioni).
+function computeOdgMacrotemi(text: string | null): string[] {
+  const pts = extractOdgPoints(text);
+  const unique = Array.from(new Set(pts.map((p) => p.macrotema))).filter(
+    (m) => m !== "altro",
+  );
+  return unique;
+}
+
 async function buildSedutaDetail(publication: Publication) {
   const [report] = await db
     .select()
     .from(sessionReportsTable)
     .where(eq(sessionReportsTable.publicationId, publication.id));
+
 
   let interventions: SessionIntervention[] = [];
   if (report) {
@@ -104,6 +251,39 @@ async function buildSedutaDetail(publication: Publication) {
       .orderBy(asc(officialsTable.name));
   }
 
+  // Cerca delibere prodotte nella stessa sessione (stessa subcategory,
+  // entro 14 giorni dalla convocazione) per abbinamento ai punti ODG.
+  let sessionDelibere: { id: number; oggetto: string; category: string }[] = [];
+  if (publication.pubStart) {
+    const windowMs = 14 * 24 * 60 * 60 * 1000;
+    const after = new Date(publication.pubStart.getTime() - windowMs);
+    const before = new Date(publication.pubStart.getTime() + windowMs);
+    const conditions = [
+      eq(publicationsTable.category, "delibera"),
+      gte(publicationsTable.pubStart, after),
+      lte(publicationsTable.pubStart, before),
+    ];
+    if (publication.subcategory) {
+      conditions.push(eq(publicationsTable.subcategory, publication.subcategory));
+    }
+    sessionDelibere = await db
+      .select({
+        id: publicationsTable.id,
+        oggetto: publicationsTable.oggetto,
+        category: publicationsTable.category,
+      })
+      .from(publicationsTable)
+      .where(and(...conditions))
+      .orderBy(asc(publicationsTable.dataAtto), asc(publicationsTable.id))
+      .limit(30);
+  }
+
+  // Estrai i punti ODG dal campo agenda della seduta (se disponibile) oppure
+  // dal markdownText della convocazione (fallback). Usato per mostrare il tema
+  // di ciascun punto dell'ordine del giorno nella UI.
+  const odgSource = seduta?.agenda ?? publication.markdownText ?? null;
+  const odgPoints = extractOdgPoints(odgSource, sessionDelibere, []);
+
   return {
     ...mapPublication(publication),
     hasReport: Boolean(report),
@@ -111,6 +291,7 @@ async function buildSedutaDetail(publication: Publication) {
     interventions: interventions.map(mapIntervention),
     organo,
     votes,
+    odgPoints,
   };
 }
 
@@ -134,6 +315,19 @@ function mapPublication(p: Publication) {
     attachments: p.attachments ?? [],
     isNew: p.isNew,
     firstSeenAt: p.firstSeenAt.toISOString(),
+    // Macrotema: usa il valore persistito (eventualmente curato manualmente);
+    // ricade sulla classificazione automatica per i record ancora senza valore.
+    macrotema:
+      p.macrotema ?? classifyMacrotema(`${p.oggetto} ${p.tipologia ?? ""}`),
+    // Sintesi "In breve" generata dall'AI (null finché non generata).
+    brief: p.brief ?? null,
+    // Per le convocazioni: macrotemi aggregati dai punti ODG (multi-tema).
+    // Permette alla lista convocazioni di mostrare badge per tutti i temi
+    // trattati nella seduta, non solo il macrotema principale.
+    odgMacrotemi:
+      p.category === "convocazione"
+        ? computeOdgMacrotemi(p.markdownText ?? null)
+        : [],
   };
 }
 
@@ -201,13 +395,263 @@ router.get("/publications/feed-status", async (_req, res) => {
 });
 
 router.get("/publications", async (req, res) => {
+  const macrotemaFilter =
+    typeof req.query.macrotema === "string" ? req.query.macrotema : undefined;
   const conditions = buildFilters(req);
+  // Filtro macrotema a livello DB: usa il valore persistito quando disponibile;
+  // le righe senza macrotema persistito vengono incluse solo se la classificazione
+  // automatica in-memory corrisponde (post-filter residuale).
+  if (macrotemaFilter) {
+    conditions.push(
+      or(
+        eq(publicationsTable.macrotema, macrotemaFilter),
+        // Include rows not yet backfilled: resolved to in-memory filter below.
+        sql`${publicationsTable.macrotema} IS NULL`,
+      )!,
+    );
+  }
   const rows = await db
     .select()
     .from(publicationsTable)
     .where(conditions.length ? and(...conditions) : undefined)
     .orderBy(desc(publicationsTable.pubStart), desc(publicationsTable.id));
-  res.json(rows.map(mapPublication));
+
+  let filtered = rows;
+  // Post-filter only the IS NULL rows that haven't been classified+persisted yet.
+  if (macrotemaFilter) {
+    filtered = rows.filter(
+      (r) =>
+        r.macrotema === macrotemaFilter ||
+        (!r.macrotema &&
+          classifyMacrotema(`${r.oggetto} ${r.tipologia ?? ""}`) ===
+            macrotemaFilter),
+    );
+  }
+
+  res.json(filtered.map(mapPublication));
+});
+
+router.get("/publications/:id", async (req, res) => {
+  const id = Number(req.params.id);
+  if (Number.isNaN(id)) {
+    res.status(404).json({ error: "Atto non trovato" });
+    return;
+  }
+
+  const [publication] = await db
+    .select()
+    .from(publicationsTable)
+    .where(eq(publicationsTable.id, id));
+
+  if (!publication) {
+    res.status(404).json({ error: "Atto non trovato" });
+    return;
+  }
+
+  // Genera "In breve" in modo lazy se non ancora disponibile.
+  // Funziona sia con markdownText (testo completo) sia con solo l'oggetto.
+  // Non sovrascrive le sintesi manuali (briefManual=true).
+  // Il lock impedisce chiamate LLM concorrenti per lo stesso atto (protezione costi).
+  if (!publication.brief && !publication.briefManual && !briefGenerationInProgress.has(id)) {
+    briefGenerationInProgress.add(id);
+    // Fire-and-forget: non blocca la risposta, il brief appare al prossimo caricamento.
+    generateBrief(publication.oggetto, publication.markdownText ?? null)
+      .then(async (generated) => {
+        if (generated) {
+          await db
+            .update(publicationsTable)
+            .set({ brief: generated, briefGeneratedAt: new Date() })
+            .where(eq(publicationsTable.id, id));
+        }
+      })
+      .catch(() => {})
+      .finally(() => briefGenerationInProgress.delete(id));
+  }
+
+  res.json(mapPublication(publication));
+});
+
+router.get("/publications/:id/storia", async (req, res) => {
+  const id = Number(req.params.id);
+  if (Number.isNaN(id)) {
+    res.status(404).json({ error: "Atto non trovato" });
+    return;
+  }
+
+  const [publication] = await db
+    .select()
+    .from(publicationsTable)
+    .where(eq(publicationsTable.id, id));
+
+  if (!publication) {
+    res.status(404).json({ error: "Atto non trovato" });
+    return;
+  }
+
+  const oggettoUpper = publication.oggetto.toUpperCase();
+  const cupsUpper = publication.cups.map((c) => c.toUpperCase());
+
+  // Cerca contratti collegati via CIG (il CIG del contratto compare nell'oggetto
+  // dell'atto) oppure via CUP (il CUP del contratto è nella lista cups dell'atto).
+  const allContracts = await db.select().from(contractsTable);
+  const relatedContracts: {
+    id: number;
+    title: string;
+    cig: string | null;
+    cup: string | null;
+    amount: number;
+    awardDate: string;
+    macrotema: string | null;
+    matchedBy: "cig" | "cup";
+  }[] = [];
+
+  for (const c of allContracts) {
+    let matchedBy: "cig" | "cup" | null = null;
+    if (c.cig && oggettoUpper.includes(c.cig.toUpperCase())) {
+      matchedBy = "cig";
+    } else if (c.cup && cupsUpper.includes(c.cup.toUpperCase())) {
+      matchedBy = "cup";
+    }
+    if (matchedBy) {
+      relatedContracts.push({
+        id: c.id,
+        title: c.title,
+        cig: c.cig,
+        cup: c.cup,
+        amount: Number(c.amount),
+        awardDate: c.awardDate.toISOString(),
+        macrotema: c.macrotema ?? null,
+        matchedBy,
+      });
+    }
+  }
+
+  // Cerca progetti PNRR collegati via CUP.
+  const relatedPnrr: {
+    id: number;
+    cup: string;
+    title: string;
+    mission: string | null;
+    matchedBy: "cup";
+  }[] = [];
+
+  if (cupsUpper.length > 0) {
+    const pnrrRows = await db
+      .select()
+      .from(italiadomaniProjectsTable)
+      .where(
+        sql`UPPER(${italiadomaniProjectsTable.cup}) = ANY(ARRAY[${sql.join(cupsUpper.map((c) => sql`${c}`), sql`, `)}]::text[])`,
+      );
+    for (const p of pnrrRows) {
+      relatedPnrr.push({
+        id: p.id,
+        cup: p.cup,
+        title: p.title,
+        mission: p.mission ?? null,
+        matchedBy: "cup",
+      });
+    }
+  }
+
+  // Cerca pubblicazioni sorelle che condividono lo stesso CIG o uno dei CUP.
+  // Usa i CIG estratti dai contratti correlati come pivot.
+  const relatedCigs = relatedContracts
+    .filter((c) => c.cig)
+    .map((c) => c.cig as string);
+
+  const siblingRows: Publication[] = [];
+
+  // Match per CIG: cerca altre pubblicazioni che menzionano gli stessi CIG.
+  for (const cig of relatedCigs) {
+    const rows = await db
+      .select()
+      .from(publicationsTable)
+      .where(
+        and(
+          ne(publicationsTable.id, id),
+          ilike(publicationsTable.oggetto, `%${cig}%`),
+        ),
+      )
+      .orderBy(desc(publicationsTable.pubStart))
+      .limit(10);
+    for (const r of rows) {
+      if (!siblingRows.find((s) => s.id === r.id)) siblingRows.push(r);
+    }
+  }
+
+  // Match per CUP: cerca altre pubblicazioni con gli stessi CUP strutturati.
+  if (cupsUpper.length > 0) {
+    const cupRows = await db
+      .select()
+      .from(publicationsTable)
+      .where(
+        and(
+          ne(publicationsTable.id, id),
+          sql`${publicationsTable.cups} && ARRAY[${sql.join(cupsUpper.map((c) => sql`${c}`), sql`, `)}]::text[]`,
+        ),
+      )
+      .orderBy(desc(publicationsTable.pubStart))
+      .limit(10);
+    for (const r of cupRows) {
+      if (!siblingRows.find((s) => s.id === r.id)) siblingRows.push(r);
+    }
+  }
+
+  const siblings = siblingRows.slice(0, 15).map((r) => {
+    const cig = relatedCigs.find((c) => r.oggetto.toUpperCase().includes(c.toUpperCase()));
+    const matchedBy: "cig" | "cup" = cig ? "cig" : "cup";
+    return {
+      id: r.id,
+      progressivo: r.progressivo,
+      oggetto: r.oggetto,
+      tipologia: r.tipologia,
+      category: r.category,
+      pubStart: r.pubStart ? r.pubStart.toISOString() : null,
+      macrotema:
+        r.macrotema ?? classifyMacrotema(`${r.oggetto} ${r.tipologia ?? ""}`),
+      matchedBy,
+    };
+  });
+
+  // Seduta di origine: la convocazione da cui è stato prodotto questo atto.
+  // Non applicabile se questo atto è già una convocazione (è esso stesso la seduta).
+  // Cerca la prima convocazione sorella che condivide CIG o CUP (cronologicamente
+  // precedente o coincidente), presumendo che sia l'atto che ha convocato la seduta.
+  let originatingSeduta: {
+    id: number;
+    progressivo: string;
+    oggetto: string;
+    pubStart: string | null;
+    subcategory: string | null;
+  } | null = null;
+
+  if (publication.category !== "convocazione") {
+    const convSiblings = siblingRows.filter(
+      (r) => r.category === "convocazione",
+    );
+    if (convSiblings.length > 0) {
+      // Prefer the earliest convocazione (likely the one that called the meeting).
+      const earliest = [...convSiblings].sort((a, b) => {
+        const ta = a.pubStart?.getTime() ?? 0;
+        const tb = b.pubStart?.getTime() ?? 0;
+        return ta - tb;
+      })[0];
+      originatingSeduta = {
+        id: earliest.id,
+        progressivo: earliest.progressivo,
+        oggetto: earliest.oggetto,
+        pubStart: earliest.pubStart ? earliest.pubStart.toISOString() : null,
+        subcategory: earliest.subcategory ?? null,
+      };
+    }
+  }
+
+  res.json({
+    contracts: relatedContracts,
+    pnrrProjects: relatedPnrr,
+    siblings,
+    originatingSeduta,
+  });
 });
 
 router.get("/delibere", async (req, res) => {
@@ -228,16 +672,39 @@ router.get("/delibere", async (req, res) => {
 
 router.get("/convocazioni", async (req, res) => {
   const tipo = typeof req.query.tipo === "string" ? req.query.tipo : undefined;
+  const macrotemaFilter =
+    typeof req.query.macrotema === "string" ? req.query.macrotema : undefined;
 
   const conditions = [eq(publicationsTable.category, "convocazione")];
   if (tipo) conditions.push(eq(publicationsTable.subcategory, tipo));
+  // Macrotema DB filter: include rows matching persisted value OR not yet classified.
+  if (macrotemaFilter) {
+    conditions.push(
+      or(
+        eq(publicationsTable.macrotema, macrotemaFilter),
+        sql`${publicationsTable.macrotema} IS NULL`,
+      )!,
+    );
+  }
 
   const rows = await db
     .select()
     .from(publicationsTable)
     .where(and(...conditions))
     .orderBy(desc(publicationsTable.pubStart), desc(publicationsTable.id));
-  res.json(rows.map(mapPublication));
+
+  // Map and then post-filter: include rows whose publication-level macrotema
+  // OR any ODG-point macrotema matches the requested filter.
+  const mapped = rows.map(mapPublication);
+  const filtered = macrotemaFilter
+    ? mapped.filter(
+        (r) =>
+          r.macrotema === macrotemaFilter ||
+          r.odgMacrotemi.includes(macrotemaFilter),
+      )
+    : mapped;
+
+  res.json(filtered);
 });
 
 async function findConvocazione(id: number): Promise<Publication | undefined> {
@@ -490,5 +957,59 @@ router.get("/pnrr/projects", async (_req, res) => {
 
   res.json({ projects, uncensored, censusLastUpdatedAt });
 });
+
+// ---------------------------------------------------------------------------
+// AI "In breve" generation — lazy, best-effort.
+// Uses the OpenAI-compatible AI Integrations proxy if configured.
+//
+// SECURITY: generation is gated behind an in-memory lock to prevent
+// cost-amplification abuse (mass-hit IDs forcing concurrent LLM calls).
+// At most one generation per publication is ever in-flight; subsequent
+// requests return the current DB value (null until first generation completes).
+// ---------------------------------------------------------------------------
+
+const briefGenerationInProgress = new Set<number>();
+
+async function generateBrief(
+  oggetto: string,
+  markdownText: string | null,
+): Promise<string | null> {
+  const baseUrl = process.env["AI_INTEGRATIONS_OPENAI_BASE_URL"];
+  const apiKey = process.env["AI_INTEGRATIONS_OPENAI_API_KEY"];
+  if (!baseUrl || !apiKey) return null;
+
+  try {
+    const { default: OpenAI } = await import("openai");
+    const openai = new OpenAI({ apiKey, baseURL: baseUrl });
+
+    const text = markdownText
+      ? `Oggetto dell'atto: ${oggetto}\n\nTesto dell'atto (estratto):\n${markdownText.slice(0, 2000)}`
+      : `Oggetto dell'atto: ${oggetto}`;
+
+    const response = await openai.chat.completions.create({
+      model: "gpt-4o-mini",
+      messages: [
+        {
+          role: "system",
+          content:
+            "Sei un assistente che aiuta i cittadini del Comune di Lamezia Terme a capire gli atti dell'Albo Pretorio. " +
+            "Il tuo compito è spiegare in modo semplice e comprensibile di cosa si tratta. " +
+            "Usa un linguaggio chiaro, diretto e accessibile. Evita termini burocratici o tecnici. " +
+            "Rispondi con 2-3 frasi al massimo, in italiano.",
+        },
+        {
+          role: "user",
+          content: `Spiega in breve questo atto:\n\n${text}`,
+        },
+      ],
+      max_tokens: 200,
+      temperature: 0.3,
+    });
+
+    return response.choices[0]?.message?.content?.trim() ?? null;
+  } catch {
+    return null;
+  }
+}
 
 export default router;

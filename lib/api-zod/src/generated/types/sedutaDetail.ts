@@ -5,6 +5,7 @@
  * API specification
  * OpenAPI spec version: 0.1.0
  */
+import type { OdgPoint } from './odgPoint';
 import type { OrganoRef } from './organoRef';
 import type { Publication } from './publication';
 import type { SedutaIntervention } from './sedutaIntervention';
@@ -17,4 +18,6 @@ export type SedutaDetail = Publication & ({
   interventions: SedutaIntervention[];
   organo: OrganoRef | null;
   votes: SedutaVote[];
+  /** Punti all'ordine del giorno estratti dal testo della convocazione, con macrotema per punto. */
+  odgPoints: OdgPoint[];
 });

@@ -7,6 +7,7 @@ import { ThemeDetail } from "./pages/ThemeDetail";
 import { Contracts } from "./pages/Contracts";
 import { ContractStoryline } from "./pages/ContractStoryline";
 import { Albo } from "./pages/Albo";
+import { AlboDetail } from "./pages/AlboDetail";
 import { Delibere } from "./pages/Delibere";
 import { Convocazioni } from "./pages/Convocazioni";
 import { SedutaDetail } from "./pages/SedutaDetail";
@@ -63,6 +64,7 @@ export function Router() {
         <Route path="/contratti" component={Contracts} />
         <Route path="/contratti/:id" component={ContractStoryline} />
         <Route path="/albo" component={Albo} />
+        <Route path="/albo/:id" component={AlboDetail} />
         <Route path="/atti-fondamentali" component={AttiFondamentali} />
         <Route path="/bandi" component={Bandi} />
         <Route path="/bandi/:slug" component={BandoDetail} />

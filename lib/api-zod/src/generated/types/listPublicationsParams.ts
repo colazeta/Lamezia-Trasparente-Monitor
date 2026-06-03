@@ -5,6 +5,7 @@
  * API specification
  * OpenAPI spec version: 0.1.0
  */
+import type { MacrotemaKey } from './macrotemaKey';
 
 export type ListPublicationsParams = {
 q?: string;
@@ -13,6 +14,10 @@ q?: string;
  */
 category?: string;
 tipologia?: string;
+/**
+ * Filter by spending area (macrotema key)
+ */
+macrotema?: MacrotemaKey;
 /**
  * Filter published on or after this date (YYYY-MM-DD)
  */

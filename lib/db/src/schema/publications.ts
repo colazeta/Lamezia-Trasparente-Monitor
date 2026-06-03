@@ -54,6 +54,19 @@ export const publicationsTable = pgTable(
     markdownExtractedAt: timestamp("markdown_extracted_at", {
       withTimezone: true,
     }),
+    // Sintesi "In breve" in linguaggio semplice, generata dall'AI a partire dal
+    // testo estratto (markdown_text) o dall'oggetto. Null finché non generata.
+    // Rispetta il principio "modifiche manuali vincono": se brief_manual=true
+    // il valore non viene sovrascritto dall'ingestione.
+    brief: text("brief"),
+    briefManual: boolean("brief_manual").notNull().default(false),
+    briefGeneratedAt: timestamp("brief_generated_at", { withTimezone: true }),
+    // Ambito di spesa (macrotema) classificato automaticamente dall'oggetto/tipologia.
+    // Persistito per consentire il filtro a livello DB e la curazione manuale.
+    // Rispetta il principio "modifiche manuali vincono": se macrotema_manual=true
+    // il valore non viene sovrascritto dalla riclassificazione automatica.
+    macrotema: text("macrotema"),
+    macrotemanManual: boolean("macrotema_manual").notNull().default(false),
     isNew: boolean("is_new").notNull().default(true),
     firstSeenAt: timestamp("first_seen_at", { withTimezone: true })
       .notNull()

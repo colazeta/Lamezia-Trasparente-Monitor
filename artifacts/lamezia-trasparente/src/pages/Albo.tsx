@@ -4,7 +4,18 @@ import {
   useGetFeedStatus,
   useGetPublicationsCategories,
 } from "@workspace/api-client-react";
-import { Search, Filter, ShieldAlert, Calendar, RefreshCw, Info, Paperclip } from "lucide-react";
+import type { MacrotemaKey } from "@workspace/api-client-react";
+import {
+  Search,
+  Filter,
+  ShieldAlert,
+  Calendar,
+  RefreshCw,
+  Info,
+  Paperclip,
+  Layers,
+  ChevronRight,
+} from "lucide-react";
 import { format } from "date-fns";
 import { it } from "date-fns/locale";
 import { Link } from "wouter";
@@ -27,7 +38,6 @@ import {
   EmptyTitle,
   EmptyDescription,
 } from "@/components/ui/empty";
-import { AlboLink } from "@/components/AlboLink";
 import { FeedSubscribeButton } from "@/components/FeedSubscribeButton";
 
 const CATEGORY_LABELS: Record<string, string> = {
@@ -36,6 +46,57 @@ const CATEGORY_LABELS: Record<string, string> = {
   convocazione: "Convocazioni",
   ordinanza: "Ordinanze",
 };
+
+const MACROTEMA_LABELS: Record<string, string> = {
+  ambiente: "Ambiente e rifiuti",
+  scuole: "Scuole e istruzione",
+  strade: "Strade e lavori pubblici",
+  sociale: "Sociale e servizi alla persona",
+  cultura: "Cultura, sport e turismo",
+  mobilita: "Mobilità e trasporti",
+  altro: "Altri servizi e forniture",
+};
+
+const MACROTEMA_COLORS: Record<string, string> = {
+  ambiente:
+    "border-transparent bg-emerald-100 text-emerald-800 dark:bg-emerald-500/20 dark:text-emerald-300",
+  scuole:
+    "border-transparent bg-blue-100 text-blue-800 dark:bg-blue-500/20 dark:text-blue-300",
+  strade:
+    "border-transparent bg-amber-100 text-amber-800 dark:bg-amber-500/20 dark:text-amber-300",
+  sociale:
+    "border-transparent bg-rose-100 text-rose-800 dark:bg-rose-500/20 dark:text-rose-300",
+  cultura:
+    "border-transparent bg-purple-100 text-purple-800 dark:bg-purple-500/20 dark:text-purple-300",
+  mobilita:
+    "border-transparent bg-cyan-100 text-cyan-800 dark:bg-cyan-500/20 dark:text-cyan-300",
+  altro: "border-transparent bg-muted text-muted-foreground",
+};
+
+const MACROTEMA_OPTS: { key: string; label: string }[] = [
+  { key: "all", label: "Tutti i temi" },
+  { key: "ambiente", label: "Ambiente e rifiuti" },
+  { key: "scuole", label: "Scuole e istruzione" },
+  { key: "strade", label: "Strade e lavori pubblici" },
+  { key: "sociale", label: "Sociale e servizi" },
+  { key: "cultura", label: "Cultura, sport e turismo" },
+  { key: "mobilita", label: "Mobilità e trasporti" },
+  { key: "altro", label: "Altri servizi e forniture" },
+];
+
+function MacrotemaBadge({ macrotema }: { macrotema: string | null | undefined }) {
+  if (!macrotema || macrotema === "altro") return null;
+  const label = MACROTEMA_LABELS[macrotema] ?? macrotema;
+  const colors = MACROTEMA_COLORS[macrotema] ?? MACROTEMA_COLORS.altro;
+  return (
+    <span
+      className={`inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[10px] font-semibold ${colors}`}
+    >
+      <Layers className="h-3 w-3" />
+      {label}
+    </span>
+  );
+}
 
 function formatDate(value: string | null | undefined, pattern = "dd MMM yyyy") {
   if (!value) return "—";
@@ -48,6 +109,7 @@ export function Albo() {
   const [debouncedSearch, setDebouncedSearch] = useState("");
   const [category, setCategory] = useState<string>("all");
   const [tipologia, setTipologia] = useState<string>("all");
+  const [macrotema, setMacrotema] = useState<string>("all");
   const [from, setFrom] = useState<string>("");
   const [to, setTo] = useState<string>("");
 
@@ -63,6 +125,7 @@ export function Albo() {
     q: debouncedSearch || undefined,
     category: category !== "all" ? category : undefined,
     tipologia: tipologia !== "all" ? tipologia : undefined,
+    macrotema: macrotema !== "all" ? (macrotema as MacrotemaKey) : undefined,
     from: from || undefined,
     to: to || undefined,
   });
@@ -224,6 +287,28 @@ export function Albo() {
         </div>
 
         <div className="w-full md:w-56">
+          <Select value={macrotema} onValueChange={setMacrotema}>
+            <SelectTrigger className="h-11 bg-background" aria-label="Filtra per tema">
+              <div className="flex items-center gap-2">
+                <Layers className="h-4 w-4 text-muted-foreground shrink-0" />
+                <span className="truncate">
+                  {macrotema === "all"
+                    ? "Tutti i temi"
+                    : MACROTEMA_LABELS[macrotema] ?? macrotema}
+                </span>
+              </div>
+            </SelectTrigger>
+            <SelectContent>
+              {MACROTEMA_OPTS.map((opt) => (
+                <SelectItem key={opt.key} value={opt.key}>
+                  {opt.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+
+        <div className="w-full md:w-56">
           <Select value={tipologia} onValueChange={setTipologia}>
             <SelectTrigger className="h-11 bg-background" aria-label="Filtra per tipologia">
               <span className="truncate">
@@ -275,59 +360,68 @@ export function Albo() {
             ))
         ) : publications && publications.length > 0 ? (
           publications.map((p) => (
-            <Card
-              key={p.id}
-              className="group p-5 transition-all hover:shadow-lg hover:-translate-y-0.5 hover:border-brand/40"
-            >
-              <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
-                <div className="flex flex-wrap items-center gap-2">
-                  <Badge variant="secondary" className="text-xs">
-                    {p.tipologia}
-                  </Badge>
-                  {p.isNew && (
-                    <Badge variant="brand" className="text-xs">
-                      NUOVO
+            <Link key={p.id} href={`/albo/${p.id}`} className="block">
+              <Card className="group p-5 transition-all hover:shadow-lg hover:-translate-y-0.5 hover:border-brand/40 cursor-pointer">
+                <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <Badge variant="secondary" className="text-xs">
+                      {p.tipologia}
+                    </Badge>
+                    <MacrotemaBadge macrotema={p.macrotema} />
+                    {p.isNew && (
+                      <Badge variant="brand" className="text-xs">
+                        NUOVO
+                      </Badge>
+                    )}
+                    {p.numRegGen && (
+                      <span className="font-mono text-xs text-muted-foreground">
+                        Reg. gen. {p.numRegGen}
+                      </span>
+                    )}
+                  </div>
+                  <div className="flex items-center gap-1.5 text-xs font-mono text-muted-foreground">
+                    <Calendar className="h-3.5 w-3.5" />
+                    {formatDate(p.pubStart)}
+                  </div>
+                </div>
+
+                <h3 className="font-display font-bold text-foreground leading-snug mb-2 group-hover:text-brand transition-colors">
+                  {p.oggetto}
+                </h3>
+
+                {p.brief && (
+                  <p className="text-sm text-muted-foreground leading-relaxed mb-2 line-clamp-2">
+                    {p.brief}
+                  </p>
+                )}
+
+                <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-muted-foreground">
+                  {p.provenienza && <span>{p.provenienza}</span>}
+                  {p.pubEnd && (
+                    <span>Pubblicato fino al {formatDate(p.pubEnd, "dd/MM/yyyy")}</span>
+                  )}
+                  {p.isPnrr && (
+                    <Badge variant="warning" className="text-[10px]">
+                      PNRR
                     </Badge>
                   )}
-                  {p.numRegGen && (
-                    <span className="font-mono text-xs text-muted-foreground">
-                      Reg. gen. {p.numRegGen}
+                  {p.attachments && p.attachments.length > 0 && (
+                    <span className="inline-flex items-center gap-1 text-brand">
+                      <Paperclip className="h-3.5 w-3.5" />
+                      {p.attachments.length}{" "}
+                      {p.attachments.length === 1 ? "documento" : "documenti"}
                     </span>
                   )}
                 </div>
-                <div className="flex items-center gap-1.5 text-xs font-mono text-muted-foreground">
-                  <Calendar className="h-3.5 w-3.5" />
-                  {formatDate(p.pubStart)}
-                </div>
-              </div>
 
-              <h3 className="font-display font-bold text-foreground leading-snug mb-2 group-hover:text-brand transition-colors">
-                {p.oggetto}
-              </h3>
-
-              <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-muted-foreground">
-                {p.provenienza && <span>{p.provenienza}</span>}
-                {p.pubEnd && (
-                  <span>Pubblicato fino al {formatDate(p.pubEnd, "dd/MM/yyyy")}</span>
-                )}
-                {p.isPnrr && (
-                  <Badge variant="warning" className="text-[10px]">
-                    PNRR
-                  </Badge>
-                )}
-                {p.attachments && p.attachments.length > 0 && (
-                  <span className="inline-flex items-center gap-1 text-brand">
-                    <Paperclip className="h-3.5 w-3.5" />
-                    {p.attachments.length}{" "}
-                    {p.attachments.length === 1 ? "documento" : "documenti"}
+                <div data-tour="albo-markdown" className="mt-3 border-t border-border pt-3 flex items-center justify-end">
+                  <span className="inline-flex items-center gap-1 text-xs font-semibold text-primary group-hover:text-brand transition-colors">
+                    Vedi dettaglio e allegati
+                    <ChevronRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
                   </span>
-                )}
-              </div>
-
-              <div data-tour="albo-markdown" className="mt-3 border-t border-border pt-3">
-                <AlboLink attachments={p.attachments} />
-              </div>
-            </Card>
+                </div>
+              </Card>
+            </Link>
           ))
         ) : (
           <Empty className="border bg-muted/20">

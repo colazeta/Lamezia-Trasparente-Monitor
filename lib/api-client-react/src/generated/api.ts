@@ -103,6 +103,7 @@ import type {
   PnrrCensus,
   Publication,
   PublicationCategoryStat,
+  PublicationStoria,
   PublicationsTimeline,
   Question,
   QuestionInput,
@@ -2806,6 +2807,160 @@ export function useListPublications<TData = Awaited<ReturnType<typeof listPublic
  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
 
   const queryOptions = getListPublicationsQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
+
+
+
+export const getGetPublicationUrl = (id: number,) => {
+
+
+
+
+  return `/api/publications/${id}`
+}
+
+/**
+ * @summary Get a single publication with full detail (generates "In breve" lazily)
+ */
+export const getPublication = async (id: number, options?: RequestInit): Promise<Publication> => {
+
+  return customFetch<Publication>(getGetPublicationUrl(id),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetPublicationQueryKey = (id: number,) => {
+    return [
+    `/api/publications/${id}`
+    ] as const;
+    }
+
+
+export const getGetPublicationQueryOptions = <TData = Awaited<ReturnType<typeof getPublication>>, TError = ErrorType<Error>>(id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getPublication>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetPublicationQueryKey(id);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getPublication>>> = ({ signal }) => getPublication(id, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: !!(id), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getPublication>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetPublicationQueryResult = NonNullable<Awaited<ReturnType<typeof getPublication>>>
+export type GetPublicationQueryError = ErrorType<Error>
+
+
+/**
+ * @summary Get a single publication with full detail (generates "In breve" lazily)
+ */
+
+export function useGetPublication<TData = Awaited<ReturnType<typeof getPublication>>, TError = ErrorType<Error>>(
+ id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getPublication>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetPublicationQueryOptions(id,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
+
+
+
+export const getGetPublicationStoriaUrl = (id: number,) => {
+
+
+
+
+  return `/api/publications/${id}/storia`
+}
+
+/**
+ * @summary Get linked story items for an Albo act (contracts, PNRR projects, sibling acts)
+ */
+export const getPublicationStoria = async (id: number, options?: RequestInit): Promise<PublicationStoria> => {
+
+  return customFetch<PublicationStoria>(getGetPublicationStoriaUrl(id),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetPublicationStoriaQueryKey = (id: number,) => {
+    return [
+    `/api/publications/${id}/storia`
+    ] as const;
+    }
+
+
+export const getGetPublicationStoriaQueryOptions = <TData = Awaited<ReturnType<typeof getPublicationStoria>>, TError = ErrorType<Error>>(id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getPublicationStoria>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetPublicationStoriaQueryKey(id);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getPublicationStoria>>> = ({ signal }) => getPublicationStoria(id, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: !!(id), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getPublicationStoria>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetPublicationStoriaQueryResult = NonNullable<Awaited<ReturnType<typeof getPublicationStoria>>>
+export type GetPublicationStoriaQueryError = ErrorType<Error>
+
+
+/**
+ * @summary Get linked story items for an Albo act (contracts, PNRR projects, sibling acts)
+ */
+
+export function useGetPublicationStoria<TData = Awaited<ReturnType<typeof getPublicationStoria>>, TError = ErrorType<Error>>(
+ id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getPublicationStoria>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetPublicationStoriaQueryOptions(id,options)
 
   const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
 

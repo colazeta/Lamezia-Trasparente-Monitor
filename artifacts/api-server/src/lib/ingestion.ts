@@ -3,6 +3,7 @@ import {
   publicationsTable,
   feedStatusTable,
   runOrganiSedutaSync,
+  classifyMacrotema,
   type InsertPublication,
 } from "@workspace/db";
 import { sql, inArray } from "drizzle-orm";
@@ -181,7 +182,16 @@ export async function runIngestion(): Promise<{
       if (fresh.length) {
         await tx
           .insert(publicationsTable)
-          .values(fresh.map((i) => ({ ...i, isNew: !firstRun })))
+          .values(
+            fresh.map((i) => ({
+              ...i,
+              isNew: !firstRun,
+              // Classifica e persiste il macrotema al momento dell'inserimento;
+              // rispetta il principio "manuale vince": non toccare se macrotemanManual=true
+              // (gestito in separata curazione admin, mai in INSERT automatico).
+              macrotema: classifyMacrotema(`${i.oggetto} ${i.tipologia ?? ""}`),
+            })),
+          )
           .onConflictDoNothing({ target: publicationsTable.progressivo });
       }
 

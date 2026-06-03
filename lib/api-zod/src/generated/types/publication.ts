@@ -5,6 +5,7 @@
  * API specification
  * OpenAPI spec version: 0.1.0
  */
+import type { MacrotemaKey } from './macrotemaKey';
 import type { PublicationAttachment } from './publicationAttachment';
 
 export interface Publication {
@@ -34,4 +35,13 @@ export interface Publication {
   attachments?: PublicationAttachment[];
   isNew: boolean;
   firstSeenAt: string;
+  /** Spending area automatically classified from the act text */
+  macrotema: MacrotemaKey;
+  /**
+     * AI-generated plain-language summary ("In breve")
+     * @nullable
+     */
+  brief?: string | null;
+  /** Per convocazioni — macrotemi aggregati dai punti ODG (può coprire più temi). Vuoto per gli altri tipi di atti. */
+  odgMacrotemi?: string[];
 }

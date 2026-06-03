@@ -50,6 +50,8 @@ vi.mock("@workspace/api-client-react", () => {
     "useGetOfficial",
     "useGetOrgano",
     "useGetPerformanceIndicator",
+    "useGetPublication",
+    "useGetPublicationStoria",
     "useGetPublicationsCategories",
     "useGetPublicationsTimeline",
     "useGetRecentActivity",
@@ -95,6 +97,8 @@ vi.mock("@workspace/api-client-react", () => {
     "getGetOfficialQueryKey",
     "getGetOrganoQueryKey",
     "getGetPerformanceIndicatorQueryKey",
+    "getGetPublicationQueryKey",
+    "getGetPublicationStoriaQueryKey",
     "getGetSedutaQueryKey",
     "getGetThemeQueryKey",
     "getListReportsQueryKey",
@@ -116,6 +120,7 @@ import { Themes } from "@/pages/Themes";
 import { ThemeDetail } from "@/pages/ThemeDetail";
 import { Contracts } from "@/pages/Contracts";
 import { Albo } from "@/pages/Albo";
+import { AlboDetail } from "@/pages/AlboDetail";
 import { AttiFondamentali } from "@/pages/AttiFondamentali";
 import { Delibere } from "@/pages/Delibere";
 import { Convocazioni } from "@/pages/Convocazioni";
@@ -147,6 +152,7 @@ export const PAGES: Array<[string, PageComponent]> = [
   ["ThemeDetail", ThemeDetail],
   ["Contracts", Contracts],
   ["Albo", Albo],
+  ["AlboDetail", AlboDetail],
   ["AttiFondamentali", AttiFondamentali],
   ["Delibere", Delibere],
   ["Convocazioni", Convocazioni],

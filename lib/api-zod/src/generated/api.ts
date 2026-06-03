@@ -958,6 +958,7 @@ export const ListPublicationsQueryParams = zod.object({
   "q": zod.coerce.string().optional(),
   "category": zod.coerce.string().optional().describe('albo | delibera | convocazione'),
   "tipologia": zod.coerce.string().optional(),
+  "macrotema": zod.enum(['ambiente', 'scuole', 'strade', 'sociale', 'cultura', 'mobilita', 'altro']).optional().describe('Filter by spending area (macrotema key)'),
   "from": zod.date().optional().describe('Filter published on or after this date (YYYY-MM-DD)'),
   "to": zod.date().optional().describe('Filter published on or before this date (YYYY-MM-DD)')
 })
@@ -987,9 +988,96 @@ export const ListPublicationsResponseItem = zod.object({
   "size": zod.number().nullable()
 })).optional(),
   "isNew": zod.boolean(),
-  "firstSeenAt": zod.string()
+  "firstSeenAt": zod.string(),
+  "macrotema": zod.enum(['ambiente', 'scuole', 'strade', 'sociale', 'cultura', 'mobilita', 'altro']).describe('Spending area automatically classified from the act text'),
+  "brief": zod.string().nullish().describe('AI-generated plain-language summary (\"In breve\")'),
+  "odgMacrotemi": zod.array(zod.string()).optional().describe('Per convocazioni — macrotemi aggregati dai punti ODG (può coprire più temi). Vuoto per gli altri tipi di atti.')
 })
 export const ListPublicationsResponse = zod.array(ListPublicationsResponseItem)
+
+
+/**
+ * @summary Get a single publication with full detail (generates "In breve" lazily)
+ */
+export const GetPublicationParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const GetPublicationResponse = zod.object({
+  "id": zod.number(),
+  "progressivo": zod.string(),
+  "tipologia": zod.string(),
+  "category": zod.string(),
+  "subcategory": zod.string().nullish(),
+  "provenienza": zod.string().nullish(),
+  "oggetto": zod.string(),
+  "dataAtto": zod.string().nullish(),
+  "pubStart": zod.string().nullish(),
+  "pubEnd": zod.string().nullish(),
+  "numRegSet": zod.string().nullish(),
+  "numRegGen": zod.string().nullish(),
+  "cups": zod.array(zod.string()),
+  "pnrrMission": zod.string().nullish(),
+  "isPnrr": zod.boolean(),
+  "attachments": zod.array(zod.object({
+  "name": zod.string(),
+  "tipo": zod.string(),
+  "officialUrl": zod.string().describe('Direct download link to the specific document on the official portal'),
+  "storagePath": zod.string().nullable().describe('Path of the locally-archived copy, or null if not archived'),
+  "contentType": zod.string().nullable(),
+  "size": zod.number().nullable()
+})).optional(),
+  "isNew": zod.boolean(),
+  "firstSeenAt": zod.string(),
+  "macrotema": zod.enum(['ambiente', 'scuole', 'strade', 'sociale', 'cultura', 'mobilita', 'altro']).describe('Spending area automatically classified from the act text'),
+  "brief": zod.string().nullish().describe('AI-generated plain-language summary (\"In breve\")'),
+  "odgMacrotemi": zod.array(zod.string()).optional().describe('Per convocazioni — macrotemi aggregati dai punti ODG (può coprire più temi). Vuoto per gli altri tipi di atti.')
+})
+
+
+/**
+ * @summary Get linked story items for an Albo act (contracts, PNRR projects, sibling acts)
+ */
+export const GetPublicationStoriaParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const GetPublicationStoriaResponse = zod.object({
+  "contracts": zod.array(zod.object({
+  "id": zod.number(),
+  "title": zod.string(),
+  "cig": zod.string().nullish(),
+  "cup": zod.string().nullish(),
+  "amount": zod.number(),
+  "awardDate": zod.string(),
+  "macrotema": zod.string().nullish(),
+  "matchedBy": zod.enum(['cig', 'cup'])
+})),
+  "pnrrProjects": zod.array(zod.object({
+  "id": zod.number(),
+  "cup": zod.string(),
+  "title": zod.string(),
+  "mission": zod.string().nullish(),
+  "matchedBy": zod.string()
+})),
+  "siblings": zod.array(zod.object({
+  "id": zod.number(),
+  "progressivo": zod.string(),
+  "oggetto": zod.string(),
+  "tipologia": zod.string(),
+  "category": zod.string(),
+  "pubStart": zod.string().nullish(),
+  "macrotema": zod.string().nullish(),
+  "matchedBy": zod.enum(['cig', 'cup'])
+})),
+  "originatingSeduta": zod.union([zod.object({
+  "id": zod.number(),
+  "progressivo": zod.string(),
+  "oggetto": zod.string(),
+  "pubStart": zod.string().nullish(),
+  "subcategory": zod.string().nullish()
+}),zod.null()])
+})
 
 
 /**
@@ -1041,7 +1129,10 @@ export const ListDelibereResponseItem = zod.object({
   "size": zod.number().nullable()
 })).optional(),
   "isNew": zod.boolean(),
-  "firstSeenAt": zod.string()
+  "firstSeenAt": zod.string(),
+  "macrotema": zod.enum(['ambiente', 'scuole', 'strade', 'sociale', 'cultura', 'mobilita', 'altro']).describe('Spending area automatically classified from the act text'),
+  "brief": zod.string().nullish().describe('AI-generated plain-language summary (\"In breve\")'),
+  "odgMacrotemi": zod.array(zod.string()).optional().describe('Per convocazioni — macrotemi aggregati dai punti ODG (può coprire più temi). Vuoto per gli altri tipi di atti.')
 })
 export const ListDelibereResponse = zod.array(ListDelibereResponseItem)
 
@@ -1078,7 +1169,10 @@ export const ListConvocazioniResponseItem = zod.object({
   "size": zod.number().nullable()
 })).optional(),
   "isNew": zod.boolean(),
-  "firstSeenAt": zod.string()
+  "firstSeenAt": zod.string(),
+  "macrotema": zod.enum(['ambiente', 'scuole', 'strade', 'sociale', 'cultura', 'mobilita', 'altro']).describe('Spending area automatically classified from the act text'),
+  "brief": zod.string().nullish().describe('AI-generated plain-language summary (\"In breve\")'),
+  "odgMacrotemi": zod.array(zod.string()).optional().describe('Per convocazioni — macrotemi aggregati dai punti ODG (può coprire più temi). Vuoto per gli altri tipi di atti.')
 })
 export const ListConvocazioniResponse = zod.array(ListConvocazioniResponseItem)
 
@@ -1115,7 +1209,10 @@ export const GetSedutaResponse = zod.object({
   "size": zod.number().nullable()
 })).optional(),
   "isNew": zod.boolean(),
-  "firstSeenAt": zod.string()
+  "firstSeenAt": zod.string(),
+  "macrotema": zod.enum(['ambiente', 'scuole', 'strade', 'sociale', 'cultura', 'mobilita', 'altro']).describe('Spending area automatically classified from the act text'),
+  "brief": zod.string().nullish().describe('AI-generated plain-language summary (\"In breve\")'),
+  "odgMacrotemi": zod.array(zod.string()).optional().describe('Per convocazioni — macrotemi aggregati dai punti ODG (può coprire più temi). Vuoto per gli altri tipi di atti.')
 }).and(zod.object({
   "hasReport": zod.boolean(),
   "summary": zod.string().nullable(),
@@ -1137,7 +1234,18 @@ export const GetSedutaResponse = zod.object({
   "name": zod.string(),
   "slug": zod.string(),
   "vote": zod.enum(['favorevole', 'contrario', 'astenuto', 'assente'])
-}))
+})),
+  "odgPoints": zod.array(zod.object({
+  "index": zod.number().describe('Numero progressivo del punto ODG'),
+  "text": zod.string().describe('Testo del punto all\'ordine del giorno'),
+  "macrotema": zod.string().describe('Ambito tematico classificato automaticamente'),
+  "outcomes": zod.array(zod.object({
+  "type": zod.enum(['delibera', 'albo', 'contract']).describe('Tipo di atto collegato'),
+  "id": zod.number(),
+  "title": zod.string(),
+  "matchedBy": zod.enum(['keywords', 'position']).describe('Come è stato trovato il collegamento')
+})).describe('Atti\/contratti collegati a questo specifico punto ODG')
+})).describe('Punti all\'ordine del giorno estratti dal testo della convocazione, con macrotema per punto.')
 }))
 
 
@@ -1186,7 +1294,10 @@ export const UpsertSedutaReportResponse = zod.object({
   "size": zod.number().nullable()
 })).optional(),
   "isNew": zod.boolean(),
-  "firstSeenAt": zod.string()
+  "firstSeenAt": zod.string(),
+  "macrotema": zod.enum(['ambiente', 'scuole', 'strade', 'sociale', 'cultura', 'mobilita', 'altro']).describe('Spending area automatically classified from the act text'),
+  "brief": zod.string().nullish().describe('AI-generated plain-language summary (\"In breve\")'),
+  "odgMacrotemi": zod.array(zod.string()).optional().describe('Per convocazioni — macrotemi aggregati dai punti ODG (può coprire più temi). Vuoto per gli altri tipi di atti.')
 }).and(zod.object({
   "hasReport": zod.boolean(),
   "summary": zod.string().nullable(),
@@ -1208,7 +1319,18 @@ export const UpsertSedutaReportResponse = zod.object({
   "name": zod.string(),
   "slug": zod.string(),
   "vote": zod.enum(['favorevole', 'contrario', 'astenuto', 'assente'])
-}))
+})),
+  "odgPoints": zod.array(zod.object({
+  "index": zod.number().describe('Numero progressivo del punto ODG'),
+  "text": zod.string().describe('Testo del punto all\'ordine del giorno'),
+  "macrotema": zod.string().describe('Ambito tematico classificato automaticamente'),
+  "outcomes": zod.array(zod.object({
+  "type": zod.enum(['delibera', 'albo', 'contract']).describe('Tipo di atto collegato'),
+  "id": zod.number(),
+  "title": zod.string(),
+  "matchedBy": zod.enum(['keywords', 'position']).describe('Come è stato trovato il collegamento')
+})).describe('Atti\/contratti collegati a questo specifico punto ODG')
+})).describe('Punti all\'ordine del giorno estratti dal testo della convocazione, con macrotema per punto.')
 }))
 
 
@@ -1355,7 +1477,10 @@ export const ListPnrrProjectsResponse = zod.object({
   "size": zod.number().nullable()
 })).optional(),
   "isNew": zod.boolean(),
-  "firstSeenAt": zod.string()
+  "firstSeenAt": zod.string(),
+  "macrotema": zod.enum(['ambiente', 'scuole', 'strade', 'sociale', 'cultura', 'mobilita', 'altro']).describe('Spending area automatically classified from the act text'),
+  "brief": zod.string().nullish().describe('AI-generated plain-language summary (\"In breve\")'),
+  "odgMacrotemi": zod.array(zod.string()).optional().describe('Per convocazioni — macrotemi aggregati dai punti ODG (può coprire più temi). Vuoto per gli altri tipi di atti.')
 }))
 })),
   "uncensored": zod.array(zod.object({
@@ -1383,7 +1508,10 @@ export const ListPnrrProjectsResponse = zod.object({
   "size": zod.number().nullable()
 })).optional(),
   "isNew": zod.boolean(),
-  "firstSeenAt": zod.string()
+  "firstSeenAt": zod.string(),
+  "macrotema": zod.enum(['ambiente', 'scuole', 'strade', 'sociale', 'cultura', 'mobilita', 'altro']).describe('Spending area automatically classified from the act text'),
+  "brief": zod.string().nullish().describe('AI-generated plain-language summary (\"In breve\")'),
+  "odgMacrotemi": zod.array(zod.string()).optional().describe('Per convocazioni — macrotemi aggregati dai punti ODG (può coprire più temi). Vuoto per gli altri tipi di atti.')
 })),
   "censusLastUpdatedAt": zod.string().nullish().describe('When the Italia Domani census feed was last successfully updated')
 })
@@ -1636,7 +1764,10 @@ export const GetDeliberaVotesResponse = zod.object({
   "size": zod.number().nullable()
 })).optional(),
   "isNew": zod.boolean(),
-  "firstSeenAt": zod.string()
+  "firstSeenAt": zod.string(),
+  "macrotema": zod.enum(['ambiente', 'scuole', 'strade', 'sociale', 'cultura', 'mobilita', 'altro']).describe('Spending area automatically classified from the act text'),
+  "brief": zod.string().nullish().describe('AI-generated plain-language summary (\"In breve\")'),
+  "odgMacrotemi": zod.array(zod.string()).optional().describe('Per convocazioni — macrotemi aggregati dai punti ODG (può coprire più temi). Vuoto per gli altri tipi di atti.')
 }),
   "tally": zod.object({
   "favorevole": zod.number(),

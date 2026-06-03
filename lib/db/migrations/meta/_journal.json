@@ -29,6 +29,20 @@
       "when": 1780693200000,
       "tag": "0003_opendata_snapshot_validators",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1780704000000,
+      "tag": "0004_publications_brief",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1780711200000,
+      "tag": "0005_publications_macrotema",
+      "breakpoints": true
     }
   ]
 }

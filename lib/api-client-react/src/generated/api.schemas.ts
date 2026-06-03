@@ -414,6 +414,84 @@ export interface Publication {
   attachments?: PublicationAttachment[];
   isNew: boolean;
   firstSeenAt: string;
+  /** Spending area automatically classified from the act text */
+  macrotema: MacrotemaKey;
+  /**
+     * AI-generated plain-language summary ("In breve")
+     * @nullable
+     */
+  brief?: string | null;
+  /** Per convocazioni — macrotemi aggregati dai punti ODG (può coprire più temi). Vuoto per gli altri tipi di atti. */
+  odgMacrotemi?: string[];
+}
+
+export type StoriaContractItemMatchedBy = typeof StoriaContractItemMatchedBy[keyof typeof StoriaContractItemMatchedBy];
+
+
+export const StoriaContractItemMatchedBy = {
+  cig: 'cig',
+  cup: 'cup',
+} as const;
+
+export interface StoriaContractItem {
+  id: number;
+  title: string;
+  /** @nullable */
+  cig?: string | null;
+  /** @nullable */
+  cup?: string | null;
+  amount: number;
+  awardDate: string;
+  /** @nullable */
+  macrotema?: string | null;
+  matchedBy: StoriaContractItemMatchedBy;
+}
+
+export interface StoriaPnrrItem {
+  id: number;
+  cup: string;
+  title: string;
+  /** @nullable */
+  mission?: string | null;
+  matchedBy: string;
+}
+
+export type StoriaPublicationItemMatchedBy = typeof StoriaPublicationItemMatchedBy[keyof typeof StoriaPublicationItemMatchedBy];
+
+
+export const StoriaPublicationItemMatchedBy = {
+  cig: 'cig',
+  cup: 'cup',
+} as const;
+
+export interface StoriaPublicationItem {
+  id: number;
+  progressivo: string;
+  oggetto: string;
+  tipologia: string;
+  category: string;
+  /** @nullable */
+  pubStart?: string | null;
+  /** @nullable */
+  macrotema?: string | null;
+  matchedBy: StoriaPublicationItemMatchedBy;
+}
+
+export interface StoriaOriginatingSeduta {
+  id: number;
+  progressivo: string;
+  oggetto: string;
+  /** @nullable */
+  pubStart?: string | null;
+  /** @nullable */
+  subcategory?: string | null;
+}
+
+export interface PublicationStoria {
+  contracts: StoriaContractItem[];
+  pnrrProjects: StoriaPnrrItem[];
+  siblings: StoriaPublicationItem[];
+  originatingSeduta: StoriaOriginatingSeduta | null;
 }
 
 export type FundamentalActSource = typeof FundamentalActSource[keyof typeof FundamentalActSource];
@@ -1476,6 +1554,49 @@ export interface SedutaVote {
   vote: SedutaVoteVote;
 }
 
+/**
+ * Tipo di atto collegato
+ */
+export type OdgPointOutcomeType = typeof OdgPointOutcomeType[keyof typeof OdgPointOutcomeType];
+
+
+export const OdgPointOutcomeType = {
+  delibera: 'delibera',
+  albo: 'albo',
+  contract: 'contract',
+} as const;
+
+/**
+ * Come è stato trovato il collegamento
+ */
+export type OdgPointOutcomeMatchedBy = typeof OdgPointOutcomeMatchedBy[keyof typeof OdgPointOutcomeMatchedBy];
+
+
+export const OdgPointOutcomeMatchedBy = {
+  keywords: 'keywords',
+  position: 'position',
+} as const;
+
+export interface OdgPointOutcome {
+  /** Tipo di atto collegato */
+  type: OdgPointOutcomeType;
+  id: number;
+  title: string;
+  /** Come è stato trovato il collegamento */
+  matchedBy: OdgPointOutcomeMatchedBy;
+}
+
+export interface OdgPoint {
+  /** Numero progressivo del punto ODG */
+  index: number;
+  /** Testo del punto all'ordine del giorno */
+  text: string;
+  /** Ambito tematico classificato automaticamente */
+  macrotema: string;
+  /** Atti/contratti collegati a questo specifico punto ODG */
+  outcomes: OdgPointOutcome[];
+}
+
 export type SedutaDetail = Publication & ({
   hasReport: boolean;
   /** @nullable */
@@ -1483,6 +1604,8 @@ export type SedutaDetail = Publication & ({
   interventions: SedutaIntervention[];
   organo: OrganoRef | null;
   votes: SedutaVote[];
+  /** Punti all'ordine del giorno estratti dal testo della convocazione, con macrotema per punto. */
+  odgPoints: OdgPoint[];
 });
 
 export type Organo = OrganoRef & ({
@@ -2279,6 +2402,10 @@ q?: string;
  */
 category?: string;
 tipologia?: string;
+/**
+ * Filter by spending area (macrotema key)
+ */
+macrotema?: MacrotemaKey;
 /**
  * Filter published on or after this date (YYYY-MM-DD)
  */

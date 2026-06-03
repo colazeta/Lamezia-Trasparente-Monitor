@@ -1,5 +1,10 @@
 import { useRoute, Link } from "wouter";
-import { useGetSeduta, getGetSedutaQueryKey } from "@workspace/api-client-react";
+import {
+  useGetSeduta,
+  useGetPublicationStoria,
+  getGetSedutaQueryKey,
+  getGetPublicationStoriaQueryKey,
+} from "@workspace/api-client-react";
 import {
   ArrowLeft,
   Calendar,
@@ -8,11 +13,15 @@ import {
   User,
   Building2,
   Vote,
+  Layers,
+  GitMerge,
+  ChevronRight,
 } from "lucide-react";
 import { format } from "date-fns";
 import { it } from "date-fns/locale";
 
 import { Badge } from "@/components/ui/badge";
+import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
   Empty,
@@ -22,6 +31,32 @@ import {
   EmptyDescription,
 } from "@/components/ui/empty";
 import { AlboLink } from "@/components/AlboLink";
+
+const MACROTEMA_LABELS: Record<string, string> = {
+  ambiente: "Ambiente e rifiuti",
+  scuole: "Scuole e istruzione",
+  strade: "Strade e lavori pubblici",
+  sociale: "Sociale e servizi alla persona",
+  cultura: "Cultura, sport e turismo",
+  mobilita: "Mobilità e trasporti",
+  altro: "Altri servizi e forniture",
+};
+
+const MACROTEMA_COLORS: Record<string, string> = {
+  ambiente:
+    "border-transparent bg-emerald-100 text-emerald-800 dark:bg-emerald-500/20 dark:text-emerald-300",
+  scuole:
+    "border-transparent bg-blue-100 text-blue-800 dark:bg-blue-500/20 dark:text-blue-300",
+  strade:
+    "border-transparent bg-amber-100 text-amber-800 dark:bg-amber-500/20 dark:text-amber-300",
+  sociale:
+    "border-transparent bg-rose-100 text-rose-800 dark:bg-rose-500/20 dark:text-rose-300",
+  cultura:
+    "border-transparent bg-purple-100 text-purple-800 dark:bg-purple-500/20 dark:text-purple-300",
+  mobilita:
+    "border-transparent bg-cyan-100 text-cyan-800 dark:bg-cyan-500/20 dark:text-cyan-300",
+  altro: "border-transparent bg-muted text-muted-foreground",
+};
 
 const VOTE_VARIANTS: Record<
   string,
@@ -41,6 +76,20 @@ function formatDate(value: string | null | undefined) {
     : format(d, "dd MMMM yyyy", { locale: it });
 }
 
+function MacrotemaBadge({ macrotema }: { macrotema: string | null | undefined }) {
+  if (!macrotema || macrotema === "altro") return null;
+  const label = MACROTEMA_LABELS[macrotema] ?? macrotema;
+  const colors = MACROTEMA_COLORS[macrotema] ?? MACROTEMA_COLORS.altro;
+  return (
+    <span
+      className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-semibold ${colors}`}
+    >
+      <Layers className="h-3.5 w-3.5" />
+      {label}
+    </span>
+  );
+}
+
 export function SedutaDetail() {
   const [, params] = useRoute("/convocazioni/:id");
   const id = params?.id ? Number(params.id) : NaN;
@@ -51,6 +100,20 @@ export function SedutaDetail() {
       queryKey: getGetSedutaQueryKey(id),
     },
   });
+
+  const { data: storia } = useGetPublicationStoria(id, {
+    query: {
+      enabled: !Number.isNaN(id) && !!seduta,
+      queryKey: getGetPublicationStoriaQueryKey(id),
+    },
+  });
+
+  const hasStoria =
+    storia &&
+    (storia.contracts.length > 0 ||
+      storia.pnrrProjects.length > 0 ||
+      storia.siblings.length > 0 ||
+      storia.originatingSeduta !== null);
 
   return (
     <div className="container mx-auto px-4 py-8 md:py-12 max-w-4xl">
@@ -124,11 +187,75 @@ export function SedutaDetail() {
                   {seduta.provenienza}
                 </p>
               )}
+              {seduta.macrotema && seduta.macrotema !== "altro" && (
+                <MacrotemaBadge macrotema={seduta.macrotema} />
+              )}
               <div className="pt-1">
                 <AlboLink />
               </div>
             </div>
           </header>
+
+          {/* Ordine del giorno — punti con macrotema per punto */}
+          {seduta.odgPoints.length > 0 && (
+            <>
+              <div className="mb-6 flex items-center gap-2.5">
+                <span className="flex h-8 w-8 items-center justify-center rounded-md bg-brand/10 text-brand">
+                  <Layers className="h-4 w-4" />
+                </span>
+                <h2 className="text-xl md:text-2xl font-display font-bold tracking-tight">
+                  Ordine del giorno
+                </h2>
+              </div>
+              <ol className="mb-10 space-y-3">
+                {seduta.odgPoints.map((punto) => (
+                  <li
+                    key={punto.index}
+                    className="rounded-xl border border-border bg-card p-4"
+                  >
+                    <div className="flex items-start gap-3">
+                      <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-brand/10 text-xs font-bold text-brand">
+                        {punto.index}
+                      </span>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm leading-snug text-foreground">
+                          {punto.text}
+                        </p>
+                        {punto.macrotema && punto.macrotema !== "altro" && (
+                          <span
+                            className={`mt-1.5 inline-flex items-center rounded-full border px-2 py-0.5 text-[11px] font-medium ${MACROTEMA_COLORS[punto.macrotema] ?? MACROTEMA_COLORS.altro}`}
+                          >
+                            {MACROTEMA_LABELS[punto.macrotema] ?? punto.macrotema}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                    {punto.outcomes.length > 0 && (
+                      <div className="mt-3 ml-10 space-y-1.5">
+                        {punto.outcomes.map((out, oi) => (
+                          <Link
+                            key={oi}
+                            href={
+                              out.type === "contract"
+                                ? `/contratti/${out.id}`
+                                : `/albo/${out.id}`
+                            }
+                            className="flex items-center gap-2 rounded-lg border border-border/60 bg-background/60 px-3 py-2 text-xs font-medium text-muted-foreground hover:border-brand/40 hover:text-brand transition-colors"
+                          >
+                            <span className="shrink-0 rounded border px-1 py-0.5 text-[9px] font-bold uppercase tracking-wide">
+                              {out.type === "contract" ? "Contratto" : out.type === "delibera" ? "Delibera" : "Atto"}
+                            </span>
+                            <span className="flex-1 truncate">{out.title}</span>
+                            <ChevronRight className="h-3.5 w-3.5 shrink-0" />
+                          </Link>
+                        ))}
+                      </div>
+                    )}
+                  </li>
+                ))}
+              </ol>
+            </>
+          )}
 
           <div className="mb-6 flex items-center gap-2.5">
             <span className="flex h-8 w-8 items-center justify-center rounded-md bg-brand/10 text-brand">
@@ -217,6 +344,130 @@ export function SedutaDetail() {
                   </li>
                 ))}
               </ul>
+            </>
+          )}
+
+          {/* Storia collegata — contratti, PNRR e atti fratelli */}
+          {hasStoria && (
+            <>
+              <div className="mt-10 mb-6 flex items-center gap-2.5">
+                <span className="flex h-8 w-8 items-center justify-center rounded-md bg-brand/10 text-brand">
+                  <GitMerge className="h-4 w-4" />
+                </span>
+                <h2 className="text-xl md:text-2xl font-display font-bold tracking-tight">
+                  Storia collegata
+                </h2>
+              </div>
+              <p className="mb-4 text-sm text-muted-foreground">
+                Contratti e atti collegati a questa seduta tramite CIG o CUP.
+              </p>
+
+              <div className="space-y-6">
+                {storia.contracts.length > 0 && (
+                  <div>
+                    <h3 className="mb-3 flex items-center gap-2 text-sm font-semibold uppercase tracking-wider text-muted-foreground">
+                      <Building2 className="h-3.5 w-3.5" />
+                      Appalti collegati ({storia.contracts.length})
+                    </h3>
+                    <div className="space-y-2">
+                      {storia.contracts.map((c) => (
+                        <Link key={c.id} href={`/contratti/${c.id}`} className="block">
+                          <Card className="group p-4 transition-all hover:shadow-md hover:-translate-y-0.5 hover:border-brand/40">
+                            <div className="flex items-start justify-between gap-2">
+                              <p className="font-medium text-foreground text-sm leading-snug group-hover:text-brand transition-colors line-clamp-2 flex-1">
+                                {c.title}
+                              </p>
+                              <ChevronRight className="h-4 w-4 text-muted-foreground shrink-0 transition-transform group-hover:translate-x-0.5" />
+                            </div>
+                            {c.cig && (
+                              <p className="mt-1 font-mono text-xs text-muted-foreground">
+                                CIG {c.cig}
+                              </p>
+                            )}
+                          </Card>
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {storia.pnrrProjects.length > 0 && (
+                  <div>
+                    <h3 className="mb-3 flex items-center gap-2 text-sm font-semibold uppercase tracking-wider text-muted-foreground">
+                      Progetti PNRR collegati ({storia.pnrrProjects.length})
+                    </h3>
+                    <div className="space-y-2">
+                      {storia.pnrrProjects.map((p) => (
+                        <Link key={p.id} href="/pnrr" className="block">
+                          <Card className="group p-4 transition-all hover:shadow-md hover:-translate-y-0.5 hover:border-brand/40">
+                            <p className="font-medium text-foreground text-sm leading-snug group-hover:text-brand transition-colors">
+                              {p.title}
+                            </p>
+                            <p className="mt-1 font-mono text-xs text-muted-foreground">
+                              CUP {p.cup}
+                            </p>
+                          </Card>
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Delibere: esiti della seduta */}
+                {storia.siblings.filter((s) => s.category === "delibera").length > 0 && (
+                  <div>
+                    <h3 className="mb-3 flex items-center gap-2 text-sm font-semibold uppercase tracking-wider text-muted-foreground">
+                      <FileText className="h-3.5 w-3.5" />
+                      Delibere approvate ({storia.siblings.filter((s) => s.category === "delibera").length})
+                    </h3>
+                    <div className="space-y-2">
+                      {storia.siblings
+                        .filter((s) => s.category === "delibera")
+                        .map((s) => (
+                          <Link key={s.id} href={`/albo/${s.id}`} className="block">
+                            <Card className="group p-4 transition-all hover:shadow-md hover:-translate-y-0.5 hover:border-brand/40">
+                              <div className="flex items-start justify-between gap-2">
+                                <p className="font-medium text-foreground text-sm leading-snug group-hover:text-brand transition-colors line-clamp-2 flex-1">
+                                  {s.oggetto}
+                                </p>
+                                <ChevronRight className="h-4 w-4 text-muted-foreground shrink-0 transition-transform group-hover:translate-x-0.5" />
+                              </div>
+                            </Card>
+                          </Link>
+                        ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Altri atti collegati */}
+                {storia.siblings.filter((s) => s.category !== "delibera").length > 0 && (
+                  <div>
+                    <h3 className="mb-3 flex items-center gap-2 text-sm font-semibold uppercase tracking-wider text-muted-foreground">
+                      <GitMerge className="h-3.5 w-3.5" />
+                      Altri atti collegati ({storia.siblings.filter((s) => s.category !== "delibera").length})
+                    </h3>
+                    <div className="space-y-2">
+                      {storia.siblings
+                        .filter((s) => s.category !== "delibera")
+                        .map((s) => (
+                          <Link key={s.id} href={`/albo/${s.id}`} className="block">
+                            <Card className="group p-4 transition-all hover:shadow-md hover:-translate-y-0.5 hover:border-brand/40">
+                              <div className="flex items-start justify-between gap-2">
+                                <p className="font-medium text-foreground text-sm leading-snug group-hover:text-brand transition-colors line-clamp-2 flex-1">
+                                  {s.oggetto}
+                                </p>
+                                <ChevronRight className="h-4 w-4 text-muted-foreground shrink-0 transition-transform group-hover:translate-x-0.5" />
+                              </div>
+                              <p className="mt-1 text-xs text-muted-foreground">
+                                {s.tipologia}
+                              </p>
+                            </Card>
+                          </Link>
+                        ))}
+                    </div>
+                  </div>
+                )}
+              </div>
             </>
           )}
         </>

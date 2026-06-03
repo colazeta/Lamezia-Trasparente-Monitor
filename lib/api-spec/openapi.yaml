@@ -1056,6 +1056,12 @@ paths:
           required: false
           schema:
             type: string
+        - name: macrotema
+          in: query
+          required: false
+          description: Filter by spending area (macrotema key)
+          schema:
+            $ref: "#/components/schemas/MacrotemaKey"
         - name: from
           in: query
           required: false
@@ -1079,6 +1085,56 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/Publication"
+
+  /publications/{id}:
+    get:
+      operationId: getPublication
+      tags: [publications]
+      summary: Get a single publication with full detail (generates "In breve" lazily)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Publication detail
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Publication"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /publications/{id}/storia:
+    get:
+      operationId: getPublicationStoria
+      tags: [publications]
+      summary: Get linked story items for an Albo act (contracts, PNRR projects, sibling acts)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Linked story
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicationStoria"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
 
   /publications/feed-status:
     get:
@@ -4063,6 +4119,7 @@ components:
         - isPnrr
         - isNew
         - firstSeenAt
+        - macrotema
       properties:
         id:
           type: integer
@@ -4104,6 +4161,112 @@ components:
           type: boolean
         firstSeenAt:
           type: string
+        macrotema:
+          $ref: "#/components/schemas/MacrotemaKey"
+          description: Spending area automatically classified from the act text
+        brief:
+          type: ["string", "null"]
+          description: AI-generated plain-language summary ("In breve")
+        odgMacrotemi:
+          type: array
+          description: Per convocazioni — macrotemi aggregati dai punti ODG (può coprire più temi). Vuoto per gli altri tipi di atti.
+          items:
+            type: string
+
+    PublicationStoria:
+      type: object
+      required: [contracts, pnrrProjects, siblings, originatingSeduta]
+      properties:
+        contracts:
+          type: array
+          items:
+            $ref: "#/components/schemas/StoriaContractItem"
+        pnrrProjects:
+          type: array
+          items:
+            $ref: "#/components/schemas/StoriaPnrrItem"
+        siblings:
+          type: array
+          items:
+            $ref: "#/components/schemas/StoriaPublicationItem"
+        originatingSeduta:
+          oneOf:
+            - $ref: "#/components/schemas/StoriaOriginatingSeduta"
+            - type: "null"
+
+    StoriaOriginatingSeduta:
+      type: object
+      required: [id, progressivo, oggetto]
+      properties:
+        id:
+          type: integer
+        progressivo:
+          type: string
+        oggetto:
+          type: string
+        pubStart:
+          type: ["string", "null"]
+        subcategory:
+          type: ["string", "null"]
+
+    StoriaContractItem:
+      type: object
+      required: [id, title, amount, awardDate, matchedBy]
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        cig:
+          type: ["string", "null"]
+        cup:
+          type: ["string", "null"]
+        amount:
+          type: number
+        awardDate:
+          type: string
+        macrotema:
+          type: ["string", "null"]
+        matchedBy:
+          type: string
+          enum: [cig, cup]
+
+    StoriaPnrrItem:
+      type: object
+      required: [id, cup, title, matchedBy]
+      properties:
+        id:
+          type: integer
+        cup:
+          type: string
+        title:
+          type: string
+        mission:
+          type: ["string", "null"]
+        matchedBy:
+          type: string
+
+    StoriaPublicationItem:
+      type: object
+      required: [id, progressivo, oggetto, tipologia, category, matchedBy]
+      properties:
+        id:
+          type: integer
+        progressivo:
+          type: string
+        oggetto:
+          type: string
+        tipologia:
+          type: string
+        category:
+          type: string
+        pubStart:
+          type: ["string", "null"]
+        macrotema:
+          type: ["string", "null"]
+        matchedBy:
+          type: string
+          enum: [cig, cup]
 
     PublicationAttachment:
       type: object
@@ -5773,7 +5936,7 @@ components:
       allOf:
         - $ref: "#/components/schemas/Publication"
         - type: object
-          required: [hasReport, summary, interventions, organo, votes]
+          required: [hasReport, summary, interventions, organo, votes, odgPoints]
           properties:
             hasReport:
               type: boolean
@@ -5791,6 +5954,47 @@ components:
               type: array
               items:
                 $ref: "#/components/schemas/SedutaVote"
+            odgPoints:
+              type: array
+              description: Punti all'ordine del giorno estratti dal testo della convocazione, con macrotema per punto.
+              items:
+                $ref: "#/components/schemas/OdgPoint"
+
+    OdgPoint:
+      type: object
+      required: [index, text, macrotema, outcomes]
+      properties:
+        index:
+          type: integer
+          description: Numero progressivo del punto ODG
+        text:
+          type: string
+          description: Testo del punto all'ordine del giorno
+        macrotema:
+          type: string
+          description: Ambito tematico classificato automaticamente
+        outcomes:
+          type: array
+          description: Atti/contratti collegati a questo specifico punto ODG
+          items:
+            $ref: "#/components/schemas/OdgPointOutcome"
+
+    OdgPointOutcome:
+      type: object
+      required: [type, id, title, matchedBy]
+      properties:
+        type:
+          type: string
+          enum: [delibera, albo, contract]
+          description: Tipo di atto collegato
+        id:
+          type: integer
+        title:
+          type: string
+        matchedBy:
+          type: string
+          enum: [keywords, position]
+          description: Come è stato trovato il collegamento
 
     OrganoRef:
       type: object
