@@ -5,7 +5,6 @@ import { Footer } from "./Footer";
 import { MigrationStatusBanner } from "@/components/admin/MigrationStatusBanner";
 import { CivicHelperFAB } from "@/components/helper/CivicHelperFAB";
 import { CivicAssistant } from "@/components/helper/CivicAssistant";
-import { CivicTour } from "@/components/helper/CivicTour";
 import { CivicWelcome } from "@/components/helper/CivicWelcome";
 
 interface MainLayoutProps {
@@ -24,7 +23,6 @@ export function MainLayout({ children }: MainLayoutProps) {
       <Footer />
       <CivicHelperFAB />
       <CivicAssistant />
-      <CivicTour />
       <CivicWelcome />
     </div>
   );

@@ -130,43 +130,32 @@ function sectionTitle(raw: string): string {
 
 // ---------------------------------------------------------------------------
 // Dati statici di fallback (usati se il backend non è raggiungibile)
+// 4 schede essenziali
 // ---------------------------------------------------------------------------
 export const FALLBACK_SLIDES: WalkthroughSlide[] = [
   {
     id: "welcome",
     icon: "eye",
     title: "Benvenuto in Lamezia Trasparente",
-    body: "Un'app di sorveglianza civica sulla cosa pubblica. Scopri come vengono spesi i soldi del tuo Comune, monitora gli appalti e segnala anomalie.",
-  },
-  {
-    id: "home",
-    icon: "home",
-    title: "Home: il quadro generale",
-    body: "Dalla schermata principale vedi il valore pubblico monitorato, le ultime attività e i temi più rilevanti — un colpo d'occhio sull'intero sistema.",
+    body: "Un osservatorio civico indipendente sui dati pubblici del Comune di Lamezia Terme. Scopri come vengono spesi i tuoi soldi, monitora gli appalti e segnala anomalie.",
   },
   {
     id: "atti",
-    icon: "archive",
-    title: "Atti: i documenti ufficiali",
-    body: "Nella sezione Atti trovi delibere, appalti, albo pretorio, organi consiliari e molto altro — tutti i documenti pubblici in un unico posto.",
+    icon: "briefcase",
+    title: "Contratti, atti e delibere",
+    body: "Appalti pubblici con importi e aggiudicatari, delibere consiliari, albo pretorio e organi del Comune — tutto in un unico posto.",
   },
   {
     id: "temi",
     icon: "folder",
-    title: "Temi: segui ciò che conta",
-    body: "I Temi raggruppano atti, contratti e segnalazioni per area tematica. Segui un tema e tieniti aggiornato su quello che ti interessa davvero.",
-  },
-  {
-    id: "segnala",
-    icon: "alert-triangle",
-    title: "Segnala: la tua voce conta",
-    body: "Hai notato qualcosa di strano? Invia una segnalazione di monitoraggio civico. Ogni segnalazione viene collegata ai contratti e ai progetti PNRR.",
+    title: "Temi e segnalazioni civiche",
+    body: "Segui le aree tematiche che ti interessano e invia segnalazioni di monitoraggio collegate ai contratti e ai progetti PNRR.",
   },
   {
     id: "assistente",
     icon: "message-circle",
     title: "L'assistente è sempre disponibile",
-    body: "Tocca il pulsante aiuto (?) in alto a destra per riaprire questo tour, consultare la guida o chattare con l'assistente in qualsiasi momento.",
+    body: "Tocca il pulsante (?) in alto a destra per riaprire questa introduzione, consultare la guida o chattare con l'assistente in qualsiasi momento.",
   },
 ];
 
@@ -221,8 +210,6 @@ function mapApiToGuideContent(api: ApiGuideContent): GuideContent {
     (a, b) => a.order - b.order,
   );
 
-  // Walkthrough slides: deterministic coverage of the four main mobile tabs,
-  // with each slot filled from backend content (fallback to static if missing).
   const byId = new Map(api.sections.map((s) => [s.id, s]));
 
   function makeSlide(
@@ -243,6 +230,7 @@ function mapApiToGuideContent(api: ApiGuideContent): GuideContent {
     return fallback;
   }
 
+  // 4 essential slides
   const slides: WalkthroughSlide[] = [
     {
       id: "welcome",
@@ -252,20 +240,12 @@ function mapApiToGuideContent(api: ApiGuideContent): GuideContent {
         storyChapters[0]?.body.split("\n\n")[0].replace(/\*\*/g, "") ??
         FALLBACK_SLIDES[0].body,
     },
-    // Home tab
-    makeSlide(["home"], FALLBACK_SLIDES[1]),
-    // Atti tab (delibere / albo / contratti)
-    makeSlide(["contratti", "albo", "delibere"], FALLBACK_SLIDES[2]),
-    // Temi tab
-    makeSlide(["temi"], FALLBACK_SLIDES[3]),
-    // Segnala tab (monitoraggio = /report on mobile)
-    makeSlide(["monitoraggio", "segnalazioni", "report"], FALLBACK_SLIDES[4]),
-    {
-      id: "assistente",
-      icon: "message-circle",
-      title: "L'assistente è sempre disponibile",
-      body: "Tocca il pulsante (?) in alto a destra per riaprire questo tour, consultare la guida o chattare con l'assistente in qualsiasi momento.",
-    },
+    // Contratti/atti tab
+    makeSlide(["contratti", "albo", "delibere"], FALLBACK_SLIDES[1]),
+    // Temi + segnalazioni
+    makeSlide(["temi", "monitoraggio", "segnalazioni"], FALLBACK_SLIDES[2]),
+    // Assistente — always static
+    FALLBACK_SLIDES[3],
   ];
 
   return { slides, sections, storyChapters };

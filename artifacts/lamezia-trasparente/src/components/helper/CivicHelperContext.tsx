@@ -29,17 +29,11 @@ export type GuideContents = {
 };
 
 interface CivicHelperContextValue {
-  tourOpen: boolean;
-  tourStep: number;
   assistantOpen: boolean;
   guideContents: GuideContents | null;
   guideLoading: boolean;
-  tourSeen: boolean;
-  startTour: () => void;
-  closeTour: () => void;
-  nextTourStep: () => void;
-  prevTourStep: () => void;
-  skipTour: () => void;
+  introSeen: boolean;
+  openIntro: () => void;
   openAssistant: () => void;
   closeAssistant: () => void;
   dismissWelcome: () => void;
@@ -50,53 +44,37 @@ const CivicHelperContext = createContext<CivicHelperContextValue | undefined>(
   undefined,
 );
 
-const TOUR_SEEN_KEY = "rlt-tour-seen";
+const INTRO_SEEN_KEY = "rlt-tour-seen";
 
-function readTourSeen(): boolean {
+function readIntroSeen(): boolean {
   if (typeof window === "undefined") return false;
   try {
-    return window.localStorage.getItem(TOUR_SEEN_KEY) === "1";
+    return window.localStorage.getItem(INTRO_SEEN_KEY) === "1";
   } catch {
     return false;
   }
 }
 
-function writeTourSeen() {
+function writeIntroSeen() {
   if (typeof window === "undefined") return;
   try {
-    window.localStorage.setItem(TOUR_SEEN_KEY, "1");
+    window.localStorage.setItem(INTRO_SEEN_KEY, "1");
   } catch {}
 }
 
 export function CivicHelperProvider({ children }: { children: ReactNode }) {
-  const [tourOpen, setTourOpen] = useState(false);
-  const [tourStep, setTourStep] = useState(0);
   const [assistantOpen, setAssistantOpen] = useState(false);
   const [guideContents, setGuideContents] = useState<GuideContents | null>(null);
   const [guideLoading, setGuideLoading] = useState(false);
-  const [tourSeen, setTourSeen] = useState<boolean>(readTourSeen);
+  const [introSeen, setIntroSeen] = useState<boolean>(readIntroSeen);
   const [welcomeOpen, setWelcomeOpen] = useState(false);
 
   useEffect(() => {
-    const seen = readTourSeen();
-    if (!seen) {
-      const timer = setTimeout(() => setWelcomeOpen(true), 800);
-      return () => clearTimeout(timer);
-    }
+    const seen = readIntroSeen();
+    if (seen) return;
+    const timer = setTimeout(() => setWelcomeOpen(true), 800);
+    return () => clearTimeout(timer);
   }, []);
-
-  // Lock body scroll only while the welcome popup is shown.
-  // The tour intentionally does NOT lock scroll — the user must be able to
-  // scroll the page to reach highlighted elements.
-  useEffect(() => {
-    if (welcomeOpen) {
-      const prev = document.body.style.overflow;
-      document.body.style.overflow = "hidden";
-      return () => {
-        document.body.style.overflow = prev;
-      };
-    }
-  }, [welcomeOpen]);
 
   useEffect(() => {
     setGuideLoading(true);
@@ -107,31 +85,8 @@ export function CivicHelperProvider({ children }: { children: ReactNode }) {
       .finally(() => setGuideLoading(false));
   }, []);
 
-  const startTour = useCallback(() => {
-    setTourStep(0);
-    setTourOpen(true);
-    setWelcomeOpen(false);
-  }, []);
-
-  const closeTour = useCallback(() => {
-    setTourOpen(false);
-    writeTourSeen();
-    setTourSeen(true);
-  }, []);
-
-  const skipTour = useCallback(() => {
-    setTourOpen(false);
-    setWelcomeOpen(false);
-    writeTourSeen();
-    setTourSeen(true);
-  }, []);
-
-  const nextTourStep = useCallback(() => {
-    setTourStep((s) => s + 1);
-  }, []);
-
-  const prevTourStep = useCallback(() => {
-    setTourStep((s) => Math.max(0, s - 1));
+  const openIntro = useCallback(() => {
+    setWelcomeOpen(true);
   }, []);
 
   const openAssistant = useCallback(() => {
@@ -143,25 +98,19 @@ export function CivicHelperProvider({ children }: { children: ReactNode }) {
 
   const dismissWelcome = useCallback(() => {
     setWelcomeOpen(false);
-    writeTourSeen();
-    setTourSeen(true);
+    writeIntroSeen();
+    setIntroSeen(true);
   }, []);
 
   return (
     <CivicHelperContext.Provider
       value={{
-        tourOpen,
-        tourStep,
         assistantOpen,
         guideContents,
         guideLoading,
-        tourSeen,
+        introSeen,
         welcomeOpen,
-        startTour,
-        closeTour,
-        nextTourStep,
-        prevTourStep,
-        skipTour,
+        openIntro,
         openAssistant,
         closeAssistant,
         dismissWelcome,

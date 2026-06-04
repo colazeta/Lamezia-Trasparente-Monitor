@@ -1,11 +1,11 @@
-import { Bot, Map, BookOpen, X } from "lucide-react";
+import { Bot, BookOpen, X, Info } from "lucide-react";
 import { useState } from "react";
 import { Link } from "wouter";
 import { useCivicHelper } from "./CivicHelperContext";
 import { cn } from "@/lib/utils";
 
 export function CivicHelperFAB() {
-  const { assistantOpen, openAssistant, closeAssistant, startTour } =
+  const { assistantOpen, openAssistant, closeAssistant, openIntro } =
     useCivicHelper();
   const [expanded, setExpanded] = useState(false);
 
@@ -28,10 +28,10 @@ export function CivicHelperFAB() {
       },
     },
     {
-      label: "Tour guidato",
-      icon: Map,
+      label: "Introduzione",
+      icon: Info,
       onClick: () => {
-        startTour();
+        openIntro();
         setExpanded(false);
       },
     },

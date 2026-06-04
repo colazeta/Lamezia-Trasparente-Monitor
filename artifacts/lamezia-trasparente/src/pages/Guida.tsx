@@ -2,7 +2,7 @@ import { Link } from "wouter";
 import {
   BookOpen,
   Bot,
-  Map,
+  Info,
   ArrowRight,
   Loader2,
   AlertCircle,
@@ -32,7 +32,7 @@ function isAppRoute(route: string): boolean {
 }
 
 export function Guida() {
-  const { guideContents, guideLoading, startTour, openAssistant } =
+  const { guideContents, guideLoading, openIntro, openAssistant } =
     useCivicHelper();
 
   const chapters = (guideContents?.storyChapters ?? []).slice().sort(
@@ -53,14 +53,14 @@ export function Guida() {
         </h1>
         <p className="mt-3 text-lg text-muted-foreground max-w-2xl">
           Scopri il progetto, come è nato e cosa puoi fare su questo sito.
-          Rilancia il tour guidato o chatta con l'assistente in qualsiasi momento.
+          Riapri l'introduzione o chatta con l'assistente in qualsiasi momento.
         </p>
       </div>
 
       <div className="flex flex-wrap gap-3 mb-12">
-        <Button onClick={startTour} className="gap-2">
-          <Map className="h-4 w-4" />
-          Avvia il tour guidato
+        <Button onClick={openIntro} className="gap-2">
+          <Info className="h-4 w-4" />
+          Riapri l'introduzione
         </Button>
         <Button variant="outline" onClick={openAssistant} className="gap-2">
           <Bot className="h-4 w-4" />
@@ -143,13 +143,6 @@ export function Guida() {
                         <p className="mt-1 text-xs text-muted-foreground leading-relaxed line-clamp-2">
                           {section.description}
                         </p>
-                        {section.tourSteps.length > 0 && (
-                          <div className="mt-2 inline-flex items-center gap-1 rounded-full bg-primary/8 px-2 py-0.5 text-[10px] font-semibold text-primary">
-                            <Map className="h-2.5 w-2.5" />
-                            {section.tourSteps.length}{" "}
-                            {section.tourSteps.length === 1 ? "passo" : "passi"} nel tour
-                          </div>
-                        )}
                       </div>
                     </>
                   );
