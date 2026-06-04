@@ -5,6 +5,7 @@ import { MacrotemaChips } from "@/components/MacrotemaChips";
 import { Badge, Card, ChipRow, EmptyState, SearchBar, Skeleton } from "@/components/ui";
 import { useColors } from "@/hooks/useColors";
 import { DELIBERA_TIPI, formatDateOpt } from "@/lib/civic";
+import { macrotemaColor, macrotemaLabel } from "@/lib/gis";
 import {
   useListDelibere,
   type MacrotemaKey,
@@ -82,6 +83,7 @@ export default function DelibereScreen() {
 
 function DeliberaCard({ pub }: { pub: Publication }) {
   const colors = useColors();
+  const showMacrotema = pub.macrotema && pub.macrotema !== "altro";
   return (
     <Card style={{ gap: 8 }}>
       <View style={styles.topRow}>
@@ -94,6 +96,14 @@ function DeliberaCard({ pub }: { pub: Publication }) {
           <Badge label={`N. ${pub.numRegGen}`} bg={colors.muted} fg={colors.mutedForeground} />
         ) : null}
       </View>
+      {showMacrotema ? (
+        <Badge
+          label={macrotemaLabel(pub.macrotema)}
+          bg={`${macrotemaColor(pub.macrotema)}22`}
+          fg={macrotemaColor(pub.macrotema)}
+          icon="layers"
+        />
+      ) : null}
       <Text style={[styles.title, { color: colors.foreground }]} numberOfLines={3}>
         {pub.oggetto}
       </Text>

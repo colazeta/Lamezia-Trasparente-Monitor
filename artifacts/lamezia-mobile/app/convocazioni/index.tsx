@@ -7,6 +7,7 @@ import { MacrotemaChips } from "@/components/MacrotemaChips";
 import { Badge, Card, EmptyState, Skeleton } from "@/components/ui";
 import { useColors } from "@/hooks/useColors";
 import { formatDateOpt } from "@/lib/civic";
+import { macrotemaColor, macrotemaLabel } from "@/lib/gis";
 import {
   useListSedute,
   type MacrotemaKey,
@@ -111,6 +112,12 @@ export default function ConvocazioniScreen() {
 
 function SedutaCard({ seduta, onPress }: { seduta: Seduta; onPress: () => void }) {
   const colors = useColors();
+  const macrotemi = useMemo(() => {
+    const keys = [seduta.macrotema, ...seduta.odgMacrotemi].filter(
+      (k): k is MacrotemaKey => !!k && k !== "altro",
+    );
+    return Array.from(new Set(keys));
+  }, [seduta.macrotema, seduta.odgMacrotemi]);
   return (
     <Pressable
       onPress={onPress}
@@ -135,6 +142,19 @@ function SedutaCard({ seduta, onPress }: { seduta: Seduta; onPress: () => void }
             </Text>
           </View>
         </View>
+        {macrotemi.length > 0 ? (
+          <View style={styles.macrotemaRow}>
+            {macrotemi.map((key) => (
+              <Badge
+                key={key}
+                label={macrotemaLabel(key)}
+                bg={`${macrotemaColor(key)}22`}
+                fg={macrotemaColor(key)}
+                icon="layers"
+              />
+            ))}
+          </View>
+        ) : null}
         {seduta.agenda ? (
           <Text style={[styles.title, { color: colors.foreground }]} numberOfLines={3}>
             {seduta.agenda}
@@ -170,6 +190,7 @@ const styles = StyleSheet.create({
     gap: 6,
   },
   dateRow: { flexDirection: "row", alignItems: "center", gap: 5 },
+  macrotemaRow: { flexDirection: "row", flexWrap: "wrap", gap: 6 },
   title: {
     fontFamily: "SpaceGrotesk_600SemiBold",
     fontSize: 15.5,
