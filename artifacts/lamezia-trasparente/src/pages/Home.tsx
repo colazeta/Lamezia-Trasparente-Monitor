@@ -22,15 +22,8 @@ import {
   CalendarClock,
   Calendar,
   HelpCircle,
-  Gavel,
-  HandCoins,
-  Gauge,
-  BarChart3,
-  Telescope,
-  Scale,
-  Database,
-  Building2,
 } from "lucide-react";
+import { NAV_GROUPS } from "@/components/layout/navSections";
 import { useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
@@ -46,104 +39,29 @@ function formatDate(value: string | null | undefined) {
   return Number.isNaN(d.getTime()) ? "—" : format(d, "dd MMM yyyy", { locale: it });
 }
 
-const QUICK_ACCESS = [
-  {
-    href: "/albo",
-    label: "Albo Pretorio",
-    desc: "Atti e pubblicazioni ufficiali",
-    icon: ShieldAlert,
-    color: "text-blue-500",
-    bg: "bg-blue-500/10",
-  },
-  {
-    href: "/contratti",
-    label: "Contratti & Appalti",
-    desc: "Gare, fornitori e importi",
-    icon: FileText,
-    color: "text-emerald-500",
-    bg: "bg-emerald-500/10",
-  },
-  {
-    href: "/pnrr",
-    label: "PNRR",
-    desc: "Progetti e fondi europei",
-    icon: Landmark,
-    color: "text-violet-500",
-    bg: "bg-violet-500/10",
-  },
-  {
-    href: "/delibere",
-    label: "Delibere",
-    desc: "Decisioni del Consiglio e Giunta",
-    icon: Gavel,
-    color: "text-amber-500",
-    bg: "bg-amber-500/10",
-  },
-  {
-    href: "/convocazioni",
-    label: "Convocazioni",
-    desc: "Sedute e agenda istituzionale",
-    icon: CalendarClock,
-    color: "text-cyan-500",
-    bg: "bg-cyan-500/10",
-  },
-  {
-    href: "/bandi",
-    label: "Bandi",
-    desc: "Finanziamenti e contributi",
-    icon: HandCoins,
-    color: "text-lime-500",
-    bg: "bg-lime-500/10",
-  },
-  {
-    href: "/monitoraggio",
-    label: "Monitoraggio",
-    desc: "Cantieri e lavori pubblici",
-    icon: Telescope,
-    color: "text-rose-500",
-    bg: "bg-rose-500/10",
-  },
-  {
-    href: "/performance",
-    label: "Performance",
-    desc: "Indicatori e obiettivi",
-    icon: Gauge,
-    color: "text-orange-500",
-    bg: "bg-orange-500/10",
-  },
-  {
-    href: "/amministratori",
-    label: "Amministratori",
-    desc: "Sindaco, assessori, consiglieri",
-    icon: Users,
-    color: "text-indigo-500",
-    bg: "bg-indigo-500/10",
-  },
-  {
-    href: "/legalita",
-    label: "Legalità",
-    desc: "Trasparenza e anticorruzione",
-    icon: Scale,
-    color: "text-teal-500",
-    bg: "bg-teal-500/10",
-  },
-  {
-    href: "/statistiche",
-    label: "Statistiche",
-    desc: "Numeri e grafici riassuntivi",
-    icon: BarChart3,
-    color: "text-pink-500",
-    bg: "bg-pink-500/10",
-  },
-  {
-    href: "/opendata",
-    label: "Open Data",
-    desc: "Dataset scaricabili",
-    icon: Database,
-    color: "text-sky-500",
-    bg: "bg-sky-500/10",
-  },
-];
+const SECTION_COLORS: Record<string, { color: string; bg: string }> = {
+  "/albo":              { color: "text-blue-500",    bg: "bg-blue-500/10" },
+  "/atti-fondamentali": { color: "text-sky-500",     bg: "bg-sky-500/10" },
+  "/delibere":          { color: "text-amber-500",   bg: "bg-amber-500/10" },
+  "/convocazioni":      { color: "text-cyan-500",    bg: "bg-cyan-500/10" },
+  "/pareri":            { color: "text-indigo-400",  bg: "bg-indigo-400/10" },
+  "/legalita":          { color: "text-teal-500",    bg: "bg-teal-500/10" },
+  "/contratti":         { color: "text-emerald-500", bg: "bg-emerald-500/10" },
+  "/bandi":             { color: "text-lime-500",    bg: "bg-lime-500/10" },
+  "/pnrr":              { color: "text-violet-500",  bg: "bg-violet-500/10" },
+  "/beni-confiscati":   { color: "text-green-600",   bg: "bg-green-600/10" },
+  "/organi":            { color: "text-slate-500",   bg: "bg-slate-500/10" },
+  "/amministratori":    { color: "text-indigo-500",  bg: "bg-indigo-500/10" },
+  "/temi":              { color: "text-fuchsia-500", bg: "bg-fuchsia-500/10" },
+  "/monitoraggio":      { color: "text-rose-500",    bg: "bg-rose-500/10" },
+  "/accesso-civico":    { color: "text-red-500",     bg: "bg-red-500/10" },
+  "/segnalazioni":      { color: "text-orange-400",  bg: "bg-orange-400/10" },
+  "/performance":       { color: "text-orange-500",  bg: "bg-orange-500/10" },
+  "/statistiche":       { color: "text-pink-500",    bg: "bg-pink-500/10" },
+  "/opendata":          { color: "text-purple-500",  bg: "bg-purple-500/10" },
+  "/feeds":             { color: "text-blue-400",    bg: "bg-blue-400/10" },
+  "/sviluppatori":      { color: "text-gray-500",    bg: "bg-gray-500/10" },
+};
 
 export function Home() {
   const { data: stats, isLoading: statsLoading } = useGetStatsOverview();
@@ -274,47 +192,53 @@ export function Home() {
         </div>
       </section>
 
-      {/* Quick Access Grid */}
+      {/* Quick Access Grid — grouped by nav category */}
       <section data-tour="home-themes" className="border-b border-border bg-background py-12 md:py-16">
         <div className="container mx-auto px-4 md:px-6">
-          <div className="mb-8 flex items-end justify-between gap-4">
-            <div>
-              <span className="eyebrow text-primary mb-2">Accesso rapido</span>
-              <h2 className="mt-2 font-display text-2xl font-bold tracking-tight md:text-3xl">
-                Dove vuoi andare?
-              </h2>
-            </div>
-            <Link href="/domande" className="hidden sm:flex">
-              <Button variant="ghost" size="sm" className="gap-1.5 font-semibold text-muted-foreground">
-                Tutte le sezioni <ArrowRight className="h-3.5 w-3.5" />
-              </Button>
-            </Link>
+          <div className="mb-10">
+            <span className="eyebrow text-primary mb-2">Accesso rapido</span>
+            <h2 className="mt-2 font-display text-2xl font-bold tracking-tight md:text-3xl">
+              Dove vuoi andare?
+            </h2>
           </div>
 
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
-            {QUICK_ACCESS.map((item) => {
-              const Icon = item.icon;
-              return (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className="group flex flex-col items-center gap-3 rounded-xl border border-border bg-card p-4 text-center transition-all hover-elevate hover:border-primary/30 hover:shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-                  aria-label={item.label}
-                >
-                  <div className={`rounded-xl p-3 ${item.bg} transition-transform group-hover:scale-105`}>
-                    <Icon className={`h-6 w-6 ${item.color}`} />
-                  </div>
-                  <div>
-                    <div className="text-sm font-bold leading-tight text-foreground">
-                      {item.label}
-                    </div>
-                    <div className="mt-0.5 hidden text-[11px] leading-snug text-muted-foreground lg:block">
-                      {item.desc}
-                    </div>
-                  </div>
-                </Link>
-              );
-            })}
+          <div className="space-y-10">
+            {NAV_GROUPS.map((group) => (
+              <div key={group.label}>
+                <div className="mb-4 flex items-center gap-3">
+                  <span className="text-[11px] font-bold uppercase tracking-widest text-muted-foreground whitespace-nowrap">
+                    {group.label}
+                  </span>
+                  <div className="flex-1 h-px bg-border" />
+                </div>
+                <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
+                  {group.items.map((item) => {
+                    const Icon = item.icon;
+                    const colors = SECTION_COLORS[item.href] ?? { color: "text-primary", bg: "bg-primary/10" };
+                    return (
+                      <Link
+                        key={item.href}
+                        href={item.href}
+                        className="group flex flex-col items-center gap-3 rounded-xl border border-border bg-card p-4 text-center transition-all hover-elevate hover:border-primary/30 hover:shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                        aria-label={item.label}
+                      >
+                        <div className={`rounded-xl p-3 ${colors.bg} transition-transform group-hover:scale-105`}>
+                          <Icon className={`h-6 w-6 ${colors.color}`} />
+                        </div>
+                        <div>
+                          <div className="text-sm font-bold leading-tight text-foreground">
+                            {item.label}
+                          </div>
+                          <div className="mt-0.5 hidden text-[11px] leading-snug text-muted-foreground lg:block">
+                            {item.description}
+                          </div>
+                        </div>
+                      </Link>
+                    );
+                  })}
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </section>
