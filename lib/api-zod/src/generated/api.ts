@@ -2146,6 +2146,20 @@ export const GetPublicationsCategoriesResponse = zod.array(GetPublicationsCatego
 
 
 /**
+ * @summary Publication counts grouped by macrotema (spending area)
+ */
+export const GetPublicationsMacrotemiQueryParams = zod.object({
+  "category": zod.coerce.string().optional().describe('Restrict counts to a single publication category (e.g. albo)')
+})
+
+export const GetPublicationsMacrotemiResponseItem = zod.object({
+  "macrotema": zod.string(),
+  "count": zod.number()
+})
+export const GetPublicationsMacrotemiResponse = zod.array(GetPublicationsMacrotemiResponseItem)
+
+
+/**
  * @summary List oversight body opinions
  */
 export const ListOversightOpinionsQueryParams = zod.object({

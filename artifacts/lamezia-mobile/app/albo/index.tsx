@@ -21,6 +21,7 @@ import {
 } from "@/lib/monitoring";
 import {
   useGetFeedStatus,
+  useGetPublicationsMacrotemi,
   useListPublications,
   type MacrotemaKey,
   type Publication,
@@ -59,6 +60,21 @@ export default function AlboScreen() {
   const feed = useGetFeedStatus();
   const alboFeed = feed.data;
 
+  const macrotemiStats = useGetPublicationsMacrotemi({ category: "albo" });
+  const counts = useMemo(() => {
+    const map: Partial<Record<MacrotemaKey, number>> = {};
+    let total = 0;
+    for (const row of macrotemiStats.data ?? []) {
+      map[row.macrotema as MacrotemaKey] = row.count;
+      total += row.count;
+    }
+    return { map, total };
+  }, [macrotemiStats.data]);
+  const hasCounts = (macrotemiStats.data?.length ?? 0) > 0;
+  const visibleKeys = hasCounts
+    ? MACROTEMA_KEYS.filter((key) => (counts.map[key] ?? 0) > 0)
+    : MACROTEMA_KEYS;
+
   return (
     <View style={{ flex: 1, backgroundColor: colors.background }}>
       <View style={styles.controls}>
@@ -76,14 +92,16 @@ export default function AlboScreen() {
             label="Tutti i temi"
             color={colors.primary}
             active={macrotema === null}
+            count={hasCounts ? counts.total : undefined}
             onPress={() => setMacrotema(null)}
           />
-          {MACROTEMA_KEYS.map((key) => (
+          {visibleKeys.map((key) => (
             <MacrotemaChip
               key={key}
               label={macrotemaLabel(key)}
               color={macrotemaColor(key)}
               active={macrotema === key}
+              count={hasCounts ? counts.map[key] ?? 0 : undefined}
               onPress={() => setMacrotema(key)}
             />
           ))}
@@ -146,11 +164,13 @@ function MacrotemaChip({
   label,
   color,
   active,
+  count,
   onPress,
 }: {
   label: string;
   color: string;
   active: boolean;
+  count?: number;
   onPress: () => void;
 }) {
   const colors = useColors();
@@ -175,6 +195,25 @@ function MacrotemaChip({
       >
         {label}
       </Text>
+      {count !== undefined ? (
+        <View
+          style={[
+            styles.chipCount,
+            {
+              backgroundColor: active ? "rgba(255,255,255,0.25)" : `${color}26`,
+            },
+          ]}
+        >
+          <Text
+            style={[
+              styles.chipCountText,
+              { color: active ? "#fff" : color },
+            ]}
+          >
+            {count}
+          </Text>
+        </View>
+      ) : null}
     </Pressable>
   );
 }
@@ -255,6 +294,15 @@ const styles = StyleSheet.create({
   },
   chipDot: { width: 8, height: 8, borderRadius: 4 },
   chipText: { fontFamily: "Inter_600SemiBold", fontSize: 12.5 },
+  chipCount: {
+    minWidth: 18,
+    paddingHorizontal: 5,
+    paddingVertical: 1,
+    borderRadius: 999,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  chipCountText: { fontFamily: "Inter_600SemiBold", fontSize: 11 },
   feedRow: { flexDirection: "row", alignItems: "center", gap: 5, paddingHorizontal: 2 },
   feedText: { fontFamily: "Inter_400Regular", fontSize: 12 },
   list: {

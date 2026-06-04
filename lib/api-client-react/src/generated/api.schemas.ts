@@ -1917,6 +1917,11 @@ export interface PublicationCategoryStat {
   count: number;
 }
 
+export interface PublicationMacrotemaStat {
+  macrotema: string;
+  count: number;
+}
+
 export interface Official {
   id: number;
   name: string;
@@ -2492,6 +2497,13 @@ export type GetPublicationsTimelineParams = {
  * Size of the look-back window in days (default 90, max 365)
  */
 days?: number;
+};
+
+export type GetPublicationsMacrotemiParams = {
+/**
+ * Restrict counts to a single publication category (e.g. albo)
+ */
+category?: string;
 };
 
 export type ListOversightOpinionsParams = {

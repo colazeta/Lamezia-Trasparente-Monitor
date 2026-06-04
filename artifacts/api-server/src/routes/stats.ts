@@ -7,6 +7,9 @@ import {
   publicationsTable,
   reportsTable,
   sharesTable,
+  classifyMacrotema,
+  MACROTEMA_KEYS,
+  type MacrotemaKey,
 } from "@workspace/db";
 import { eq, desc, sql } from "drizzle-orm";
 
@@ -216,6 +219,45 @@ router.get("/stats/publications-categories", async (_req, res) => {
     .orderBy(desc(sql`count(*)`));
 
   res.json(rows);
+});
+
+router.get("/stats/publications-macrotemi", async (req, res) => {
+  const category =
+    typeof req.query.category === "string" ? req.query.category : undefined;
+
+  const rows = await db
+    .select({
+      macrotema: publicationsTable.macrotema,
+      oggetto: publicationsTable.oggetto,
+      tipologia: publicationsTable.tipologia,
+    })
+    .from(publicationsTable)
+    .where(category ? eq(publicationsTable.category, category) : undefined);
+
+  // Conteggio per macrotema applicando la stessa logica del listing:
+  // usa il macrotema persistito quando presente, altrimenti la classificazione
+  // automatica dal testo (oggetto + tipologia).
+  const counts: Record<MacrotemaKey, number> = MACROTEMA_KEYS.reduce(
+    (acc, key) => {
+      acc[key] = 0;
+      return acc;
+    },
+    {} as Record<MacrotemaKey, number>,
+  );
+
+  for (const r of rows) {
+    const key = (r.macrotema ??
+      classifyMacrotema(`${r.oggetto} ${r.tipologia ?? ""}`)) as MacrotemaKey;
+    if (key in counts) {
+      counts[key] += 1;
+    } else {
+      counts.altro += 1;
+    }
+  }
+
+  res.json(
+    MACROTEMA_KEYS.map((macrotema) => ({ macrotema, count: counts[macrotema] })),
+  );
 });
 
 router.get("/stats/shares", async (_req, res) => {

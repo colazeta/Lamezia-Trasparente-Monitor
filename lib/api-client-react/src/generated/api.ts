@@ -51,6 +51,7 @@ import type {
   FundamentalActCreateInput,
   FundamentalActUpdateInput,
   GetContractsAnalyticsParams,
+  GetPublicationsMacrotemiParams,
   GetPublicationsTimelineParams,
   HealthStatus,
   LegalityArea,
@@ -105,6 +106,7 @@ import type {
   PnrrCensus,
   Publication,
   PublicationCategoryStat,
+  PublicationMacrotemaStat,
   PublicationStoria,
   PublicationsTimeline,
   Question,
@@ -5339,6 +5341,90 @@ export function useGetPublicationsCategories<TData = Awaited<ReturnType<typeof g
  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
 
   const queryOptions = getGetPublicationsCategoriesQueryOptions(options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
+
+
+
+export const getGetPublicationsMacrotemiUrl = (params?: GetPublicationsMacrotemiParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : value.toString())
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/stats/publications-macrotemi?${stringifiedParams}` : `/api/stats/publications-macrotemi`
+}
+
+/**
+ * @summary Publication counts grouped by macrotema (spending area)
+ */
+export const getPublicationsMacrotemi = async (params?: GetPublicationsMacrotemiParams, options?: RequestInit): Promise<PublicationMacrotemaStat[]> => {
+
+  return customFetch<PublicationMacrotemaStat[]>(getGetPublicationsMacrotemiUrl(params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetPublicationsMacrotemiQueryKey = (params?: GetPublicationsMacrotemiParams,) => {
+    return [
+    `/api/stats/publications-macrotemi`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getGetPublicationsMacrotemiQueryOptions = <TData = Awaited<ReturnType<typeof getPublicationsMacrotemi>>, TError = ErrorType<unknown>>(params?: GetPublicationsMacrotemiParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getPublicationsMacrotemi>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetPublicationsMacrotemiQueryKey(params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getPublicationsMacrotemi>>> = ({ signal }) => getPublicationsMacrotemi(params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getPublicationsMacrotemi>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetPublicationsMacrotemiQueryResult = NonNullable<Awaited<ReturnType<typeof getPublicationsMacrotemi>>>
+export type GetPublicationsMacrotemiQueryError = ErrorType<unknown>
+
+
+/**
+ * @summary Publication counts grouped by macrotema (spending area)
+ */
+
+export function useGetPublicationsMacrotemi<TData = Awaited<ReturnType<typeof getPublicationsMacrotemi>>, TError = ErrorType<unknown>>(
+ params?: GetPublicationsMacrotemiParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getPublicationsMacrotemi>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetPublicationsMacrotemiQueryOptions(params,options)
 
   const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
 

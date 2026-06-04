@@ -1875,6 +1875,27 @@ paths:
                 items:
                   $ref: "#/components/schemas/PublicationCategoryStat"
 
+  /stats/publications-macrotemi:
+    get:
+      operationId: getPublicationsMacrotemi
+      tags: [stats]
+      summary: Publication counts grouped by macrotema (spending area)
+      parameters:
+        - in: query
+          name: category
+          schema:
+            type: string
+          description: Restrict counts to a single publication category (e.g. albo)
+      responses:
+        "200":
+          description: Counts per macrotema
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/PublicationMacrotemaStat"
+
   /oversight-opinions:
     get:
       operationId: listOversightOpinions
@@ -6503,6 +6524,15 @@ components:
       required: [category, count]
       properties:
         category:
+          type: string
+        count:
+          type: integer
+
+    PublicationMacrotemaStat:
+      type: object
+      required: [macrotema, count]
+      properties:
+        macrotema:
           type: string
         count:
           type: integer
