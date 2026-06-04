@@ -6,6 +6,7 @@ import {
   useCallback,
   ReactNode,
 } from "react";
+import { useLocation } from "wouter";
 
 export type HelperSection = {
   id: string;
@@ -38,6 +39,8 @@ interface CivicHelperContextValue {
   closeAssistant: () => void;
   dismissWelcome: () => void;
   welcomeOpen: boolean;
+  visitedRoutes: string[];
+  isSectionVisited: (route: string) => boolean;
 }
 
 const CivicHelperContext = createContext<CivicHelperContextValue | undefined>(
@@ -45,6 +48,7 @@ const CivicHelperContext = createContext<CivicHelperContextValue | undefined>(
 );
 
 const INTRO_SEEN_KEY = "rlt-tour-seen";
+const VISITED_KEY = "rlt-visited-sections";
 
 function readIntroSeen(): boolean {
   if (typeof window === "undefined") return false;
@@ -62,12 +66,50 @@ function writeIntroSeen() {
   } catch {}
 }
 
+function readVisited(): string[] {
+  if (typeof window === "undefined") return [];
+  try {
+    const raw = window.localStorage.getItem(VISITED_KEY);
+    if (!raw) return [];
+    const parsed = JSON.parse(raw);
+    return Array.isArray(parsed)
+      ? parsed.filter((x): x is string => typeof x === "string")
+      : [];
+  } catch {
+    return [];
+  }
+}
+
+function writeVisited(routes: string[]) {
+  if (typeof window === "undefined") return;
+  try {
+    window.localStorage.setItem(VISITED_KEY, JSON.stringify(routes));
+  } catch {}
+}
+
+/** Normalize a location to a bare pathname (strip query string and hash). */
+function normalizePath(location: string): string {
+  return location.split("?")[0].split("#")[0] || "/";
+}
+
+/** A section is "visited" when the user navigated to its route or any
+ *  detail page nested beneath it. The root route matches only exactly. */
+function matchesVisited(visited: string[], route: string): boolean {
+  if (!route.startsWith("/")) return false;
+  const target = normalizePath(route);
+  return visited.some((v) =>
+    target === "/" ? v === "/" : v === target || v.startsWith(target + "/"),
+  );
+}
+
 export function CivicHelperProvider({ children }: { children: ReactNode }) {
   const [assistantOpen, setAssistantOpen] = useState(false);
   const [guideContents, setGuideContents] = useState<GuideContents | null>(null);
   const [guideLoading, setGuideLoading] = useState(false);
   const [introSeen, setIntroSeen] = useState<boolean>(readIntroSeen);
   const [welcomeOpen, setWelcomeOpen] = useState(false);
+  const [visitedRoutes, setVisitedRoutes] = useState<string[]>(readVisited);
+  const [location] = useLocation();
 
   useEffect(() => {
     const seen = readIntroSeen();
@@ -75,6 +117,22 @@ export function CivicHelperProvider({ children }: { children: ReactNode }) {
     const timer = setTimeout(() => setWelcomeOpen(true), 800);
     return () => clearTimeout(timer);
   }, []);
+
+  useEffect(() => {
+    if (!location) return;
+    const path = normalizePath(location);
+    setVisitedRoutes((prev) => {
+      if (prev.includes(path)) return prev;
+      const next = [...prev, path];
+      writeVisited(next);
+      return next;
+    });
+  }, [location]);
+
+  const isSectionVisited = useCallback(
+    (route: string) => matchesVisited(visitedRoutes, route),
+    [visitedRoutes],
+  );
 
   useEffect(() => {
     setGuideLoading(true);
@@ -114,6 +172,8 @@ export function CivicHelperProvider({ children }: { children: ReactNode }) {
         openAssistant,
         closeAssistant,
         dismissWelcome,
+        visitedRoutes,
+        isSectionVisited,
       }}
     >
       {children}

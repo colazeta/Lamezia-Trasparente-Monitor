@@ -27,6 +27,50 @@ export async function resetWalkthroughSeenStorage(): Promise<void> {
 }
 
 // ---------------------------------------------------------------------------
+// Persistenza "sezioni esplorate" (riprendi da dove avevi lasciato)
+// ---------------------------------------------------------------------------
+const VISITED_SECTIONS_KEY = "helper:visited_sections_v1";
+
+/** Legge l'elenco delle route già visitate da AsyncStorage. */
+export async function getVisitedSections(): Promise<string[]> {
+  try {
+    const raw = await AsyncStorage.getItem(VISITED_SECTIONS_KEY);
+    if (!raw) return [];
+    const parsed = JSON.parse(raw);
+    return Array.isArray(parsed)
+      ? parsed.filter((x): x is string => typeof x === "string")
+      : [];
+  } catch {
+    return [];
+  }
+}
+
+/** Salva l'elenco delle route già visitate su AsyncStorage. */
+export async function setVisitedSections(routes: string[]): Promise<void> {
+  try {
+    await AsyncStorage.setItem(VISITED_SECTIONS_KEY, JSON.stringify(routes));
+  } catch {}
+}
+
+/** Normalizza un pathname (rimuove query string e frammenti). */
+export function normalizeRoute(route: string): string {
+  return route.split("?")[0].split("#")[0] || "/";
+}
+
+/**
+ * Una sezione è "esplorata" quando l'utente ha aperto la sua route o una
+ * pagina di dettaglio annidata sotto di essa. La home ("/") combacia solo
+ * in modo esatto.
+ */
+export function isRouteVisited(visited: string[], route?: string): boolean {
+  if (!route) return false;
+  const target = normalizeRoute(route);
+  return visited.some((v) =>
+    target === "/" ? v === "/" : v === target || v.startsWith(target + "/"),
+  );
+}
+
+// ---------------------------------------------------------------------------
 // Tipi condivisi
 // ---------------------------------------------------------------------------
 export type WalkthroughSlide = {

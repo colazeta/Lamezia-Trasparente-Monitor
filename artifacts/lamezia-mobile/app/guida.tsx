@@ -19,7 +19,7 @@ export default function GuidaScreen() {
   const colors = useColors();
   const router = useRouter();
   const insets = useSafeAreaInsets();
-  const { sections, storyChapters, guideLoading } = useHelper();
+  const { sections, storyChapters, guideLoading, isSectionVisited } = useHelper();
 
   const handleRestartTour = () => {
     router.push("/walkthrough" as Href);
@@ -110,45 +110,62 @@ export default function GuidaScreen() {
             ))}
           </View>
         ) : (
-          sections.map((section) => (
-            <Pressable
-              key={section.id}
-              onPress={() => section.route && router.push(section.route as Href)}
-              disabled={!section.route}
-              style={({ pressed }) => ({ opacity: pressed && section.route ? 0.8 : 1 })}
-            >
-              <View
-                style={[
-                  styles.sectionCard,
-                  {
-                    backgroundColor: colors.card,
-                    borderColor: colors.cardBorder,
-                    borderRadius: colors.radius + 2,
-                  },
-                ]}
+          sections.map((section) => {
+            const visited = isSectionVisited(section.route);
+            return (
+              <Pressable
+                key={section.id}
+                onPress={() => section.route && router.push(section.route as Href)}
+                disabled={!section.route}
+                style={({ pressed }) => ({ opacity: pressed && section.route ? 0.8 : 1 })}
               >
                 <View
                   style={[
-                    styles.sectionIcon,
-                    { backgroundColor: colors.accent, borderRadius: colors.radius - 2 },
+                    styles.sectionCard,
+                    {
+                      backgroundColor: colors.card,
+                      borderColor: colors.cardBorder,
+                      borderRadius: colors.radius + 2,
+                    },
                   ]}
                 >
-                  <Feather name={section.icon as any} size={20} color={colors.primary} />
+                  <View
+                    style={[
+                      styles.sectionIcon,
+                      {
+                        backgroundColor: visited ? colors.primary : colors.accent,
+                        borderRadius: colors.radius - 2,
+                      },
+                    ]}
+                  >
+                    <Feather
+                      name={visited ? "check" : (section.icon as any)}
+                      size={20}
+                      color={visited ? colors.primaryForeground : colors.primary}
+                    />
+                  </View>
+                  <View style={{ flex: 1, gap: 3 }}>
+                    <View style={styles.sectionTitleRow}>
+                      <Text style={[styles.sectionTitle, { color: colors.foreground }]}>
+                        {section.title}
+                      </Text>
+                      {visited ? (
+                        <Text style={[styles.visitedBadge, { color: colors.primary }]}>
+                          ESPLORATA
+                        </Text>
+                      ) : null}
+                    </View>
+                    <Text style={[styles.sectionDesc, { color: colors.mutedForeground }]}>
+                      {section.description}
+                    </Text>
+                  </View>
+                  {section.route ? (
+                    <Feather name="chevron-right" size={16} color={colors.mutedForeground} />
+                  ) : null}
                 </View>
-                <View style={{ flex: 1, gap: 3 }}>
-                  <Text style={[styles.sectionTitle, { color: colors.foreground }]}>
-                    {section.title}
-                  </Text>
-                  <Text style={[styles.sectionDesc, { color: colors.mutedForeground }]}>
-                    {section.description}
-                  </Text>
-                </View>
-                {section.route ? (
-                  <Feather name="chevron-right" size={16} color={colors.mutedForeground} />
-                ) : null}
-              </View>
-            </Pressable>
-          ))
+              </Pressable>
+            );
+          })
         )}
 
         {/* Apri assistente */}
@@ -249,10 +266,20 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     flexShrink: 0,
   },
+  sectionTitleRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+  },
   sectionTitle: {
     fontFamily: "SpaceGrotesk_600SemiBold",
     fontSize: 15,
     letterSpacing: -0.2,
+  },
+  visitedBadge: {
+    fontFamily: "Inter_600SemiBold",
+    fontSize: 9,
+    letterSpacing: 0.6,
   },
   sectionDesc: {
     fontFamily: "Inter_400Regular",

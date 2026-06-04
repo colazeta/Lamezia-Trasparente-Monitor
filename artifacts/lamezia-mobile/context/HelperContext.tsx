@@ -1,3 +1,4 @@
+import { usePathname } from "expo-router";
 import React, { createContext, useCallback, useContext, useEffect, useState } from "react";
 
 import {
@@ -5,6 +6,10 @@ import {
   getWalkthroughSeen,
   markWalkthroughSeenStorage,
   resetWalkthroughSeenStorage,
+  getVisitedSections,
+  setVisitedSections,
+  normalizeRoute,
+  isRouteVisited,
   type GuideContent,
   type GuideSection,
   type StoryChapter,
@@ -23,6 +28,8 @@ type HelperContextType = {
   sections: GuideSection[];
   storyChapters: StoryChapter[];
   guideLoading: boolean;
+  visitedRoutes: string[];
+  isSectionVisited: (route?: string) => boolean;
 };
 
 const HelperContext = createContext<HelperContextType>({
@@ -34,6 +41,8 @@ const HelperContext = createContext<HelperContextType>({
   sections: FALLBACK_SECTIONS,
   storyChapters: FALLBACK_STORY_CHAPTERS,
   guideLoading: true,
+  visitedRoutes: [],
+  isSectionVisited: () => false,
 });
 
 export function HelperProvider({ children }: { children: React.ReactNode }) {
@@ -45,6 +54,9 @@ export function HelperProvider({ children }: { children: React.ReactNode }) {
     storyChapters: FALLBACK_STORY_CHAPTERS,
   });
   const [guideLoading, setGuideLoading] = useState(true);
+  const [visitedRoutes, setVisitedRoutesState] = useState<string[]>([]);
+  const [visitedLoaded, setVisitedLoaded] = useState(false);
+  const pathname = usePathname();
 
   useEffect(() => {
     getWalkthroughSeen().then((seen) => {
@@ -52,11 +64,34 @@ export function HelperProvider({ children }: { children: React.ReactNode }) {
       setWalkthroughReady(true);
     });
 
+    getVisitedSections().then((stored) => {
+      setVisitedRoutesState(stored);
+      setVisitedLoaded(true);
+    });
+
     fetchHelperGuide().then((content) => {
       setGuide(content);
       setGuideLoading(false);
     });
   }, []);
+
+  // Only start recording the current route once the previously stored routes
+  // have loaded, otherwise the first write would clobber saved progress.
+  useEffect(() => {
+    if (!visitedLoaded || !pathname) return;
+    const path = normalizeRoute(pathname);
+    setVisitedRoutesState((prev) => {
+      if (prev.includes(path)) return prev;
+      const next = [...prev, path];
+      void setVisitedSections(next);
+      return next;
+    });
+  }, [visitedLoaded, pathname]);
+
+  const isSectionVisited = useCallback(
+    (route?: string) => isRouteVisited(visitedRoutes, route),
+    [visitedRoutes],
+  );
 
   const markWalkthroughSeen = useCallback(async () => {
     await markWalkthroughSeenStorage();
@@ -79,6 +114,8 @@ export function HelperProvider({ children }: { children: React.ReactNode }) {
         sections: guide.sections,
         storyChapters: guide.storyChapters,
         guideLoading,
+        visitedRoutes,
+        isSectionVisited,
       }}
     >
       {children}

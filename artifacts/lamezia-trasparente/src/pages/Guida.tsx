@@ -8,6 +8,7 @@ import {
   AlertCircle,
   ChevronRight,
   ExternalLink,
+  Check,
 } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import { useCivicHelper } from "@/components/helper/CivicHelperContext";
@@ -32,8 +33,13 @@ function isAppRoute(route: string): boolean {
 }
 
 export function Guida() {
-  const { guideContents, guideLoading, openIntro, openAssistant } =
-    useCivicHelper();
+  const {
+    guideContents,
+    guideLoading,
+    openIntro,
+    openAssistant,
+    isSectionVisited,
+  } = useCivicHelper();
 
   const chapters = (guideContents?.storyChapters ?? []).slice().sort(
     (a, b) => a.order - b.order,
@@ -122,23 +128,41 @@ export function Guida() {
                 {sections.map((section) => {
                   const Icon = iconForRoute(section.route);
                   const appRoute = isAppRoute(section.route);
+                  const visited = isSectionVisited(section.route);
                   const cardClass =
                     "group flex items-start gap-3.5 rounded-xl border border-border bg-card px-4 py-4 hover-elevate transition-all";
                   const inner = (
                     <>
-                      <div className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary group-hover:bg-primary/15 transition-colors">
-                        <Icon className="h-4 w-4" />
+                      <div
+                        className={
+                          visited
+                            ? "mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-primary text-primary-foreground transition-colors"
+                            : "mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary group-hover:bg-primary/15 transition-colors"
+                        }
+                      >
+                        {visited ? (
+                          <Check className="h-4 w-4" />
+                        ) : (
+                          <Icon className="h-4 w-4" />
+                        )}
                       </div>
                       <div className="min-w-0 flex-1">
-                        <div className="flex items-center justify-between gap-1">
+                        <div className="flex items-center justify-between gap-1.5">
                           <p className="font-semibold text-sm leading-snug">
                             {section.title}
                           </p>
-                          {appRoute ? (
-                            <ChevronRight className="h-3.5 w-3.5 shrink-0 text-muted-foreground group-hover:text-foreground transition-colors" />
-                          ) : (
-                            <ExternalLink className="h-3.5 w-3.5 shrink-0 text-muted-foreground group-hover:text-foreground transition-colors" />
-                          )}
+                          <div className="flex items-center gap-1.5 shrink-0">
+                            {visited && (
+                              <span className="text-[10px] font-semibold uppercase tracking-wide text-primary">
+                                Esplorata
+                              </span>
+                            )}
+                            {appRoute ? (
+                              <ChevronRight className="h-3.5 w-3.5 text-muted-foreground group-hover:text-foreground transition-colors" />
+                            ) : (
+                              <ExternalLink className="h-3.5 w-3.5 text-muted-foreground group-hover:text-foreground transition-colors" />
+                            )}
+                          </div>
                         </div>
                         <p className="mt-1 text-xs text-muted-foreground leading-relaxed line-clamp-2">
                           {section.description}
