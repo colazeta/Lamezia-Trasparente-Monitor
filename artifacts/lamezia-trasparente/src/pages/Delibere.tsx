@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useListDelibere } from "@workspace/api-client-react";
-import { Search, Gavel, Calendar } from "lucide-react";
+import { Search, Gavel, Calendar, Layers } from "lucide-react";
 import { format } from "date-fns";
 import { it } from "date-fns/locale";
 
@@ -23,6 +23,47 @@ const TABS = [
   { value: "giunta", label: "Giunta" },
   { value: "consiglio", label: "Consiglio" },
 ] as const;
+
+const MACROTEMA_LABELS: Record<string, string> = {
+  ambiente: "Ambiente e rifiuti",
+  scuole: "Scuole e istruzione",
+  strade: "Strade e lavori pubblici",
+  sociale: "Sociale e servizi alla persona",
+  cultura: "Cultura, sport e turismo",
+  mobilita: "Mobilità e trasporti",
+  altro: "Altri servizi e forniture",
+};
+
+const MACROTEMA_COLORS: Record<string, string> = {
+  ambiente:
+    "bg-emerald-100 text-emerald-800 dark:bg-emerald-500/20 dark:text-emerald-300",
+  scuole: "bg-blue-100 text-blue-800 dark:bg-blue-500/20 dark:text-blue-300",
+  strade:
+    "bg-amber-100 text-amber-800 dark:bg-amber-500/20 dark:text-amber-300",
+  sociale: "bg-rose-100 text-rose-800 dark:bg-rose-500/20 dark:text-rose-300",
+  cultura:
+    "bg-purple-100 text-purple-800 dark:bg-purple-500/20 dark:text-purple-300",
+  mobilita: "bg-cyan-100 text-cyan-800 dark:bg-cyan-500/20 dark:text-cyan-300",
+  altro: "bg-muted text-muted-foreground",
+};
+
+function MacrotemaBadge({
+  macrotema,
+}: {
+  macrotema: string | null | undefined;
+}) {
+  if (!macrotema || macrotema === "altro") return null;
+  const label = MACROTEMA_LABELS[macrotema] ?? macrotema;
+  const colors = MACROTEMA_COLORS[macrotema] ?? MACROTEMA_COLORS.altro;
+  return (
+    <span
+      className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-semibold ${colors}`}
+    >
+      <Layers className="h-3 w-3" />
+      {label}
+    </span>
+  );
+}
 
 function formatDate(value: string | null | undefined) {
   if (!value) return "—";
@@ -111,6 +152,7 @@ export function Delibere() {
                   <Badge variant="secondary" className="text-xs capitalize">
                     {d.subcategory ?? "delibera"}
                   </Badge>
+                  <MacrotemaBadge macrotema={d.macrotema} />
                   {d.isNew && (
                     <Badge variant="brand" className="text-xs">
                       NUOVO
