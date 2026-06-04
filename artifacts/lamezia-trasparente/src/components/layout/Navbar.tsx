@@ -94,7 +94,7 @@ export function Navbar() {
 
             {/* Argomenti */}
             {topics.length > 0 && (
-              <DropdownMenu>
+              <DropdownMenu modal={false}>
                 <DropdownMenuTrigger className={linkClass(false)}>
                   <FileSearch className="h-4 w-4" />
                   Argomenti
@@ -120,7 +120,7 @@ export function Navbar() {
             )}
 
             {/* Sezioni — grouped mega-menu */}
-            <DropdownMenu>
+            <DropdownMenu modal={false}>
               <DropdownMenuTrigger className={linkClass(sezioniActive)}>
                 <FileText className="h-4 w-4" />
                 Sezioni
@@ -185,7 +185,7 @@ export function Navbar() {
 
         {/* Mobile Nav */}
         {isOpen && (
-          <div className="border-t border-border bg-background xl:hidden">
+          <div className="border-t border-border bg-background xl:hidden max-h-[calc(100dvh-4rem)] overflow-y-auto">
             <nav className="container mx-auto space-y-5 px-4 py-4">
               {/* Search shortcut on mobile */}
               <button

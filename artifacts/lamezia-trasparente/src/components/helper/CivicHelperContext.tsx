@@ -85,6 +85,19 @@ export function CivicHelperProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
+  // Lock body scroll only while the welcome popup is shown.
+  // The tour intentionally does NOT lock scroll — the user must be able to
+  // scroll the page to reach highlighted elements.
+  useEffect(() => {
+    if (welcomeOpen) {
+      const prev = document.body.style.overflow;
+      document.body.style.overflow = "hidden";
+      return () => {
+        document.body.style.overflow = prev;
+      };
+    }
+  }, [welcomeOpen]);
+
   useEffect(() => {
     setGuideLoading(true);
     fetch("/api/helper/guide")
