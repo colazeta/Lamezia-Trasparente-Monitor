@@ -34,3 +34,4 @@
 - [Migration journal `when` ordering](migration-journal-when-ordering.md) — hand-authored journal `when` must exceed prior entry or lastAppliedTag mis-reports; databaseMigrationSafety test fails.
 - [Albo brief generation](albo-brief-generation.md) — "In breve" AI summaries live in lib/briefs.ts (lazy + proactive ingestion batch); candidates = brief NULL & !manual (no markdownText gate); two locks protect cost.
 - [Strict calendar-date validation](strict-date-validation.md) — JS `new Date()` silently normalizes impossible dates (31/02→Mar 2); validate via UTC round-trip on both parser + server import.
+- [Accesso Civico import skipped lines](accesso-civico-import-skipped.md) — server scartate.indice points at filtered rows, not file lines; carry sourceRiga→sourceLines to show real line; jsdom lacks File.text() (polyfill in tests).

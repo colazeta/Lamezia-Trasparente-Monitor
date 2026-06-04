@@ -135,4 +135,21 @@ describe("parseAccessoCivicoImport", () => {
     expect(result.invalidRows).toEqual([]);
     expect(result.rows).toHaveLength(2);
   });
+
+  it("tags each valid row with its source file line, skipping invalid ones", () => {
+    // Riga 2 (valida), riga 3 (oggetto mancante -> scartata in anteprima),
+    // riga 4 (valida). Le righe valide devono conservare la riga sorgente reale
+    // così che gli scarti lato server possano essere ricondotti al file.
+    const csv = [
+      "oggetto,data presentazione",
+      "primo,15/03/2024",
+      ",10/01/2024",
+      "terzo,20/02/2024",
+    ].join("\n");
+    const result = parseAccessoCivicoImport(csv);
+    expect(result.rows.map((r) => r.oggetto)).toEqual(["primo", "terzo"]);
+    expect(result.rows.map((r) => r.sourceRiga)).toEqual([2, 4]);
+    expect(result.invalidRows).toHaveLength(1);
+    expect(result.invalidRows[0].riga).toBe(2);
+  });
 });

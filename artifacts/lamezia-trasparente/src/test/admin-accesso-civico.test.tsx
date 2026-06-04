@@ -1,5 +1,11 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import { render, screen, within } from "@testing-library/react";
+import {
+  render,
+  screen,
+  within,
+  fireEvent,
+  waitFor,
+} from "@testing-library/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Router as WouterRouter } from "wouter";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -137,5 +143,81 @@ describe("AdminAccessoCivico source distinction", () => {
     expect(
       within(citizenRow).queryByTestId("link-fonte-1"),
     ).not.toBeInTheDocument();
+  });
+});
+
+describe("AdminAccessoCivico import summary", () => {
+  beforeEach(() => {
+    importMutate.mockClear();
+  });
+
+  afterEach(() => {
+    sessionStorage.clear();
+    mockState.requests = [];
+  });
+
+  it("lists each skipped row with its source line, reason, counts and a re-upload CTA", async () => {
+    sessionStorage.setItem(TOKEN_STORAGE_KEY, "test-token");
+    // Riga 3 (oggetto mancante) viene scartata in anteprima; restano due righe
+    // valide su righe sorgente 2 e 4. Il server scarta la seconda (indice 1),
+    // che deve essere ricondotta alla riga 4 del file.
+    importMutate.mockResolvedValueOnce({
+      create: 1,
+      aggiornate: 0,
+      scartate: [
+        {
+          indice: 1,
+          oggetto: "terzo",
+          motivo: "Data presentazione non valida",
+        },
+      ],
+    });
+
+    renderWithProviders(<AdminAccessoCivico />);
+
+    fireEvent.click(screen.getByTestId("button-toggle-import"));
+
+    const csv = [
+      "oggetto,data presentazione",
+      "primo,15/03/2024",
+      ",10/01/2024",
+      "terzo,20/02/2024",
+    ].join("\n");
+    const file = new File([csv], "registro.csv", { type: "text/csv" });
+    // jsdom in questo ambiente non implementa File.text(): la forniamo noi.
+    if (typeof file.text !== "function") {
+      Object.defineProperty(file, "text", { value: async () => csv });
+    }
+    fireEvent.change(screen.getByTestId("input-import-file"), {
+      target: { files: [file] },
+    });
+
+    const confirm = await screen.findByTestId("button-confirm-import");
+    fireEvent.click(confirm);
+
+    const summary = await screen.findByTestId("import-summary");
+    // Conteggi creati/aggiornati restano visibili.
+    expect(summary).toHaveTextContent("1 nuove");
+    expect(summary).toHaveTextContent("0 aggiornate");
+    expect(summary).toHaveTextContent("1 scartate");
+
+    const skipped = await screen.findByTestId("import-summary-skipped");
+    // Riga sorgente reale (4), oggetto e motivo dello scarto.
+    expect(skipped).toHaveTextContent("Riga 4");
+    expect(skipped).toHaveTextContent("terzo");
+    expect(skipped).toHaveTextContent("Data presentazione non valida");
+
+    // Call-to-action per correggere e ricaricare.
+    expect(
+      within(skipped).getByTestId("button-reupload-import"),
+    ).toBeInTheDocument();
+
+    // Le righe inviate al server non includono il campo interno sourceRiga.
+    await waitFor(() => expect(importMutate).toHaveBeenCalledTimes(1));
+    const sentRighe = importMutate.mock.calls[0][0].data.righe;
+    expect(sentRighe).toHaveLength(2);
+    for (const riga of sentRighe) {
+      expect(riga).not.toHaveProperty("sourceRiga");
+    }
   });
 });

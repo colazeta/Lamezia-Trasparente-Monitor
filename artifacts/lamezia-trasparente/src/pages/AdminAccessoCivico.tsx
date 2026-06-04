@@ -920,6 +920,10 @@ type ImportSummary = {
   create: number;
   aggiornate: number;
   scartate: Array<{ indice: number; oggetto: string; motivo: string }>;
+  // Mappa indice riga inviata -> numero di riga nel file sorgente (1-based,
+  // intestazione = riga 1). Permette di mostrare la riga reale del file negli
+  // scarti, dato che le righe inviate sono già filtrate dall'anteprima.
+  sourceLines: Array<number | undefined>;
 };
 
 function ImportPanel({
@@ -930,7 +934,7 @@ function ImportPanel({
 }: {
   onImport: (
     righe: ImportParseResult["rows"],
-  ) => Promise<ImportSummary>;
+  ) => Promise<Omit<ImportSummary, "sourceLines">>;
   isPending: boolean;
   onAuthError: () => void;
   isAuthError: (error: unknown) => boolean;
@@ -963,9 +967,14 @@ function ImportPanel({
 
   const handleConfirm = async () => {
     if (!parsed || parsed.rows.length === 0) return;
+    // Le righe inviate sono già filtrate dalle invalidRows: teniamo traccia
+    // della riga sorgente di ciascuna per poter mostrare la riga reale del file
+    // negli scarti restituiti dal server.
+    const sourceLines = parsed.rows.map((r) => r.sourceRiga);
+    const righe = parsed.rows.map(({ sourceRiga: _sourceRiga, ...riga }) => riga);
     try {
-      const result = await onImport(parsed.rows);
-      setSummary(result);
+      const result = await onImport(righe);
+      setSummary({ ...result, sourceLines });
       setParsed(null);
       toast.success(
         `Import completato: ${result.create} nuove, ${result.aggiornate} aggiornate.`,
@@ -1155,24 +1164,60 @@ function ImportPanel({
           )}
 
           {summary && (
-            <div
-              className="space-y-2 rounded-md border border-emerald-500/40 bg-emerald-500/10 p-3 text-sm"
-              data-testid="import-summary"
-            >
-              <p className="flex items-center gap-2 font-medium text-emerald-700 dark:text-emerald-400">
-                <CheckCircle2 className="h-4 w-4" />
-                {summary.create} nuove · {summary.aggiornate} aggiornate ·{" "}
-                {summary.scartate.length} scartate
-              </p>
+            <div className="space-y-3" data-testid="import-summary">
+              <div className="space-y-2 rounded-md border border-emerald-500/40 bg-emerald-500/10 p-3 text-sm">
+                <p className="flex items-center gap-2 font-medium text-emerald-700 dark:text-emerald-400">
+                  <CheckCircle2 className="h-4 w-4" />
+                  {summary.create} nuove · {summary.aggiornate} aggiornate ·{" "}
+                  {summary.scartate.length} scartate
+                </p>
+              </div>
+
               {summary.scartate.length > 0 && (
-                <ul className="ml-5 list-disc text-xs text-muted-foreground">
-                  {summary.scartate.slice(0, 10).map((s) => (
-                    <li key={`${s.indice}-${s.oggetto}`}>
-                      Riga {s.indice + 2}: {s.motivo}
-                      {s.oggetto ? ` («${s.oggetto}»)` : ""}
-                    </li>
-                  ))}
-                </ul>
+                <div
+                  className="space-y-2 rounded-md border border-amber-500/40 bg-amber-500/10 p-3 text-xs text-amber-800 dark:text-amber-300"
+                  data-testid="import-summary-skipped"
+                >
+                  <p className="flex items-center gap-1.5 font-medium">
+                    <AlertTriangle className="h-3.5 w-3.5 shrink-0" />
+                    {summary.scartate.length}{" "}
+                    {summary.scartate.length === 1
+                      ? "riga non importata"
+                      : "righe non importate"}{" "}
+                    — correggi il file e ricaricalo per includerle:
+                  </p>
+                  <ul className="ml-5 list-disc">
+                    {summary.scartate.slice(0, 10).map((s) => {
+                      const sourceLine = summary.sourceLines[s.indice];
+                      const lineLabel =
+                        sourceLine != null ? sourceLine : s.indice + 2;
+                      return (
+                        <li key={`${s.indice}-${s.oggetto}`}>
+                          Riga {lineLabel}
+                          {s.oggetto ? ` («${s.oggetto}»)` : ""}: {s.motivo}
+                        </li>
+                      );
+                    })}
+                  </ul>
+                  {summary.scartate.length > 10 && (
+                    <p>…e altre {summary.scartate.length - 10}.</p>
+                  )}
+                  <div className="pt-1">
+                    <Button
+                      type="button"
+                      size="sm"
+                      variant="outline"
+                      className="gap-2"
+                      onClick={() => {
+                        setSummary(null);
+                        importFileRef.current?.click();
+                      }}
+                      data-testid="button-reupload-import"
+                    >
+                      <FileUp className="h-3.5 w-3.5" /> Carica file corretto
+                    </Button>
+                  </div>
+                </div>
               )}
             </div>
           )}

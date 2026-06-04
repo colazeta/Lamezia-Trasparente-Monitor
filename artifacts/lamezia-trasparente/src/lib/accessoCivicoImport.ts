@@ -14,6 +14,10 @@ export interface ParsedImportRow {
   responseDate?: string | null;
   responseUrl?: string | null;
   fonteUrl?: string | null;
+  // Numero di riga nel file sorgente (1-based, intestazione inclusa come riga 1).
+  // Serve a ricondurre gli scarti lato server alla riga reale del file, dato
+  // che le righe inviate sono già filtrate dalle invalidRows dell'anteprima.
+  sourceRiga?: number;
 }
 
 // Una riga del file che non può essere importata, con la riga sorgente
@@ -371,7 +375,9 @@ export function parseAccessoCivicoImport(
       continue;
     }
 
-    const parsed: ParsedImportRow = { oggetto };
+    // riga = r (indice nella matrice, intestazione = 0). La riga sorgente
+    // mostrata all'utente è r + 1 (intestazione = riga 1).
+    const parsed: ParsedImportRow = { oggetto, sourceRiga: riga + 1 };
     if (record.tipo) parsed.tipo = matchEnum(record.tipo, TIPO_VALUES);
     if (record.ente) parsed.ente = record.ente;
     if (record.requestDate) parsed.requestDate = normalizeDate(record.requestDate);
