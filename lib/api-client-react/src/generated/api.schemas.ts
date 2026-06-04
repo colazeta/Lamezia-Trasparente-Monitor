@@ -1675,6 +1675,13 @@ export interface Seduta {
   /** @nullable */
   publicationId: number | null;
   organo: OrganoRef | null;
+  /**
+     * Ambito tematico principale della seduta (dal provvedimento collegato)
+     * @nullable
+     */
+  macrotema: string | null;
+  /** Macrotemi aggregati dai punti all'ordine del giorno (multi-tema) */
+  odgMacrotemi: string[];
 }
 
 export type OrganoDetail = Organo & {

@@ -7,10 +7,14 @@ import {
   officialsTable,
   publicationsTable,
   sessionReportsTable,
+  classifyMacrotema,
   type Organo,
+  type Publication,
   type Seduta,
 } from "@workspace/db";
-import { and, eq, asc, desc, sql } from "drizzle-orm";
+import { and, eq, asc, desc, inArray, sql } from "drizzle-orm";
+
+import { computeOdgMacrotemi } from "./publications";
 
 const router: IRouter = Router();
 
@@ -18,11 +22,38 @@ function organoRef(o: Pick<Organo, "id" | "type" | "name" | "slug">) {
   return { id: o.id, type: o.type, name: o.name, slug: o.slug };
 }
 
-async function mapSeduta(
+/**
+ * Builds a lookup of the publication linked to each seduta, so listings can
+ * expose the seduta's macrotema (and the ODG-derived macrotemi) for filtering.
+ */
+async function publicationsForSedute(
+  sedute: Seduta[],
+): Promise<Map<number, Publication>> {
+  const ids = Array.from(
+    new Set(
+      sedute
+        .map((s) => s.publicationId)
+        .filter((id): id is number => id != null),
+    ),
+  );
+  if (!ids.length) return new Map();
+  const rows = await db
+    .select()
+    .from(publicationsTable)
+    .where(inArray(publicationsTable.id, ids));
+  return new Map(rows.map((r) => [r.id, r]));
+}
+
+function mapSeduta(
   s: Seduta,
   organo: Organo | undefined,
   hasReport: boolean,
+  pub?: Publication,
 ) {
+  const macrotema = pub
+    ? pub.macrotema ?? classifyMacrotema(`${pub.oggetto} ${pub.tipologia ?? ""}`)
+    : null;
+  const odgMacrotemi = pub ? computeOdgMacrotemi(pub.markdownText ?? null) : [];
   return {
     id: s.id,
     type: s.type,
@@ -31,6 +62,8 @@ async function mapSeduta(
     hasReport,
     publicationId: s.publicationId,
     organo: organo ? organoRef(organo) : null,
+    macrotema,
+    odgMacrotemi,
   };
 }
 
@@ -125,6 +158,7 @@ router.get("/organi/:slug", async (req, res) => {
     .orderBy(desc(seduteTable.date), desc(seduteTable.id));
 
   const reportSet = await sedutaIdsWithReport(sedute.map((s) => s.id));
+  const pubMap = await publicationsForSedute(sedute);
 
   res.json({
     ...organoRef(organo),
@@ -142,8 +176,13 @@ router.get("/organi/:slug", async (req, res) => {
       status: m.status,
       membershipRole: m.membershipRole,
     })),
-    sedute: await Promise.all(
-      sedute.map((s) => mapSeduta(s, organo, reportSet.has(s.id))),
+    sedute: sedute.map((s) =>
+      mapSeduta(
+        s,
+        organo,
+        reportSet.has(s.id),
+        s.publicationId != null ? pubMap.get(s.publicationId) : undefined,
+      ),
     ),
   });
 });
@@ -175,15 +214,15 @@ router.get("/sedute", async (req, res) => {
     .orderBy(desc(seduteTable.date), desc(seduteTable.id));
 
   const reportSet = await sedutaIdsWithReport(sedute.map((s) => s.id));
+  const pubMap = await publicationsForSedute(sedute);
 
   res.json(
-    await Promise.all(
-      sedute.map((s) =>
-        mapSeduta(
-          s,
-          s.organoId ? organiById.get(s.organoId) : undefined,
-          reportSet.has(s.id),
-        ),
+    sedute.map((s) =>
+      mapSeduta(
+        s,
+        s.organoId ? organiById.get(s.organoId) : undefined,
+        reportSet.has(s.id),
+        s.publicationId != null ? pubMap.get(s.publicationId) : undefined,
       ),
     ),
   );

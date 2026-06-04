@@ -6294,7 +6294,18 @@ components:
 
     Seduta:
       type: object
-      required: [id, type, date, agenda, hasReport, publicationId, organo]
+      required:
+        [
+          id,
+          type,
+          date,
+          agenda,
+          hasReport,
+          publicationId,
+          organo,
+          macrotema,
+          odgMacrotemi,
+        ]
       properties:
         id:
           type: integer
@@ -6313,6 +6324,14 @@ components:
           oneOf:
             - $ref: "#/components/schemas/OrganoRef"
             - type: "null"
+        macrotema:
+          type: ["string", "null"]
+          description: Ambito tematico principale della seduta (dal provvedimento collegato)
+        odgMacrotemi:
+          type: array
+          items:
+            type: string
+          description: Macrotemi aggregati dai punti all'ordine del giorno (multi-tema)
 
     SedutaVote:
       type: object

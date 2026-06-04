@@ -1,12 +1,17 @@
 import { Feather } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
-import React, { useMemo } from "react";
+import React, { useMemo, useState } from "react";
 import { Platform, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 
+import { MacrotemaChips } from "@/components/MacrotemaChips";
 import { Badge, Card, EmptyState, Skeleton } from "@/components/ui";
 import { useColors } from "@/hooks/useColors";
 import { formatDateOpt } from "@/lib/civic";
-import { useListSedute, type Seduta } from "@workspace/api-client-react";
+import {
+  useListSedute,
+  type MacrotemaKey,
+  type Seduta,
+} from "@workspace/api-client-react";
 
 const UNGROUPED = "Altre sedute";
 
@@ -30,76 +35,77 @@ function groupByOrgano(sedute: Seduta[]): Group[] {
   return Array.from(groups.values());
 }
 
+function matchesMacrotema(s: Seduta, key: MacrotemaKey): boolean {
+  return s.macrotema === key || s.odgMacrotemi.includes(key);
+}
+
 export default function ConvocazioniScreen() {
   const colors = useColors();
   const router = useRouter();
   const sedute = useListSedute();
+  const [macrotema, setMacrotema] = useState<MacrotemaKey | null>(null);
 
-  const groups = useMemo(() => groupByOrgano(sedute.data ?? []), [sedute.data]);
+  const groups = useMemo(() => {
+    const data = sedute.data ?? [];
+    const filtered = macrotema
+      ? data.filter((s) => matchesMacrotema(s, macrotema))
+      : data;
+    return groupByOrgano(filtered);
+  }, [sedute.data, macrotema]);
 
-  if (sedute.isLoading) {
-    return (
-      <View style={{ flex: 1, backgroundColor: colors.background }}>
-        <View style={{ paddingHorizontal: 20, paddingTop: 14, gap: 12 }}>
+  return (
+    <View style={{ flex: 1, backgroundColor: colors.background }}>
+      <View style={styles.controls}>
+        <MacrotemaChips value={macrotema} onChange={setMacrotema} />
+      </View>
+
+      {sedute.isLoading ? (
+        <View style={{ paddingHorizontal: 20, paddingTop: 6, gap: 12 }}>
           {[0, 1, 2, 3].map((i) => (
             <Skeleton key={i} height={100} radius={colors.radius + 2} />
           ))}
         </View>
-      </View>
-    );
-  }
-
-  if (sedute.isError) {
-    return (
-      <View style={{ flex: 1, backgroundColor: colors.background }}>
+      ) : sedute.isError ? (
         <EmptyState
           icon="wifi-off"
           title="Errore di caricamento"
           message="Impossibile recuperare le convocazioni."
           onRetry={() => sedute.refetch()}
         />
-      </View>
-    );
-  }
-
-  if (groups.length === 0) {
-    return (
-      <View style={{ flex: 1, backgroundColor: colors.background }}>
+      ) : groups.length === 0 ? (
         <EmptyState icon="calendar" title="Nessuna seduta" message="Nessuna convocazione." />
-      </View>
-    );
-  }
-
-  return (
-    <ScrollView
-      style={{ flex: 1, backgroundColor: colors.background }}
-      contentContainerStyle={styles.list}
-      showsVerticalScrollIndicator={false}
-    >
-      {groups.map((g) => (
-        <View key={g.slug ?? g.name} style={{ gap: 12, marginBottom: 18 }}>
-          <Pressable
-            disabled={!g.slug}
-            onPress={() => g.slug && router.push(`/organi/${g.slug}`)}
-            style={({ pressed }) => ({ opacity: pressed ? 0.85 : 1 })}
-          >
-            <View style={styles.groupHeader}>
-              <Feather name="home" size={15} color={colors.primary} />
-              <Text style={[styles.groupTitle, { color: colors.foreground }]}>{g.name}</Text>
+      ) : (
+        <ScrollView
+          style={{ flex: 1 }}
+          contentContainerStyle={styles.list}
+          showsVerticalScrollIndicator={false}
+        >
+          {groups.map((g) => (
+            <View key={g.slug ?? g.name} style={{ gap: 12, marginBottom: 18 }}>
+              <Pressable
+                disabled={!g.slug}
+                onPress={() => g.slug && router.push(`/organi/${g.slug}`)}
+                style={({ pressed }) => ({ opacity: pressed ? 0.85 : 1 })}
+              >
+                <View style={styles.groupHeader}>
+                  <Feather name="home" size={15} color={colors.primary} />
+                  <Text style={[styles.groupTitle, { color: colors.foreground }]}>{g.name}</Text>
+                </View>
+              </Pressable>
+              {g.items.map((s) => (
+                <SedutaCard
+                  key={s.id}
+                  seduta={s}
+                  onPress={() =>
+                    s.publicationId != null && router.push(`/convocazioni/${s.publicationId}`)
+                  }
+                />
+              ))}
             </View>
-          </Pressable>
-          {g.items.map((s) => (
-            <SedutaCard
-              key={s.id}
-              seduta={s}
-              onPress={() =>
-                s.publicationId != null && router.push(`/convocazioni/${s.publicationId}`)
-              }
-            />
           ))}
-        </View>
-      ))}
-    </ScrollView>
+        </ScrollView>
+      )}
+    </View>
   );
 }
 
@@ -144,9 +150,10 @@ function SedutaCard({ seduta, onPress }: { seduta: Seduta; onPress: () => void }
 }
 
 const styles = StyleSheet.create({
+  controls: { paddingHorizontal: 20, paddingTop: 14, paddingBottom: 8 },
   list: {
     paddingHorizontal: 20,
-    paddingTop: 14,
+    paddingTop: 6,
     paddingBottom: Platform.OS === "web" ? 60 : 40,
   },
   groupHeader: { flexDirection: "row", alignItems: "center", gap: 7 },

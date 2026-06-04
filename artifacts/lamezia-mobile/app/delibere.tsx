@@ -1,16 +1,22 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { FlatList, Platform, StyleSheet, Text, View } from "react-native";
 
+import { MacrotemaChips } from "@/components/MacrotemaChips";
 import { Badge, Card, ChipRow, EmptyState, SearchBar, Skeleton } from "@/components/ui";
 import { useColors } from "@/hooks/useColors";
 import { DELIBERA_TIPI, formatDateOpt } from "@/lib/civic";
-import { useListDelibere, type Publication } from "@workspace/api-client-react";
+import {
+  useListDelibere,
+  type MacrotemaKey,
+  type Publication,
+} from "@workspace/api-client-react";
 
 export default function DelibereScreen() {
   const colors = useColors();
   const [input, setInput] = useState("");
   const [q, setQ] = useState("");
   const [tipo, setTipo] = useState<string | undefined>(undefined);
+  const [macrotema, setMacrotema] = useState<MacrotemaKey | null>(null);
 
   useEffect(() => {
     const t = setTimeout(() => setQ(input.trim()), 400);
@@ -23,6 +29,12 @@ export default function DelibereScreen() {
   );
   const delibere = useListDelibere(params);
 
+  const items = useMemo(() => {
+    const data = delibere.data ?? [];
+    if (!macrotema) return data;
+    return data.filter((d) => d.macrotema === macrotema);
+  }, [delibere.data, macrotema]);
+
   return (
     <View style={{ flex: 1, backgroundColor: colors.background }}>
       <View style={styles.controls}>
@@ -34,6 +46,7 @@ export default function DelibereScreen() {
           getValue={(o) => o.value}
           onSelect={(v) => setTipo(v as string | undefined)}
         />
+        <MacrotemaChips value={macrotema} onChange={setMacrotema} />
       </View>
 
       {delibere.isLoading ? (
@@ -51,13 +64,13 @@ export default function DelibereScreen() {
         />
       ) : (
         <FlatList
-          data={delibere.data ?? []}
+          data={items}
           keyExtractor={(item) => String(item.id)}
           renderItem={({ item }) => <DeliberaCard pub={item} />}
           contentContainerStyle={styles.list}
           ItemSeparatorComponent={() => <View style={{ height: 12 }} />}
           showsVerticalScrollIndicator={false}
-          scrollEnabled={(delibere.data?.length ?? 0) > 0}
+          scrollEnabled={items.length > 0}
           ListEmptyComponent={
             <EmptyState icon="file-text" title="Nessuna delibera" message="Nessun risultato." />
           }

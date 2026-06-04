@@ -1510,7 +1510,9 @@ export const GetOrganoResponse = zod.object({
   "type": zod.string().describe('consiglio | giunta | commissione'),
   "name": zod.string(),
   "slug": zod.string()
-}),zod.null()])
+}),zod.null()]),
+  "macrotema": zod.string().nullable().describe('Ambito tematico principale della seduta (dal provvedimento collegato)'),
+  "odgMacrotemi": zod.array(zod.string()).describe('Macrotemi aggregati dai punti all\'ordine del giorno (multi-tema)')
 }))
 }))
 
@@ -1535,7 +1537,9 @@ export const ListSeduteResponseItem = zod.object({
   "type": zod.string().describe('consiglio | giunta | commissione'),
   "name": zod.string(),
   "slug": zod.string()
-}),zod.null()])
+}),zod.null()]),
+  "macrotema": zod.string().nullable().describe('Ambito tematico principale della seduta (dal provvedimento collegato)'),
+  "odgMacrotemi": zod.array(zod.string()).describe('Macrotemi aggregati dai punti all\'ordine del giorno (multi-tema)')
 })
 export const ListSeduteResponse = zod.array(ListSeduteResponseItem)
 

@@ -192,7 +192,7 @@ export function extractOdgPoints(
 
 // Restituisce i macrotemi unici degli ODG della convocazione (per badge multi-tema
 // nella lista convocazioni).
-function computeOdgMacrotemi(text: string | null): string[] {
+export function computeOdgMacrotemi(text: string | null): string[] {
   const pts = extractOdgPoints(text);
   const unique = Array.from(new Set(pts.map((p) => p.macrotema))).filter(
     (m) => m !== "altro",
