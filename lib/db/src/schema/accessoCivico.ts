@@ -5,6 +5,7 @@ import {
   integer,
   timestamp,
   index,
+  uniqueIndex,
   check,
 } from "drizzle-orm/pg-core";
 import { sql } from "drizzle-orm";
@@ -36,6 +37,15 @@ export type AccessoCivicoStato = (typeof ACCESSO_CIVICO_STATI)[number];
 export const ACCESSO_CIVICO_MODERAZIONE = ["pending", "published"] as const;
 export type AccessoCivicoModerazione =
   (typeof ACCESSO_CIVICO_MODERAZIONE)[number];
+
+// Origine della voce: "cittadino" per le richieste inserite dai cittadini via
+// portale, "registro-ufficiale" per le voci importate dal Registro degli accessi
+// pubblicato dall'ente.
+export const ACCESSO_CIVICO_ORIGINI = [
+  "cittadino",
+  "registro-ufficiale",
+] as const;
+export type AccessoCivicoOrigine = (typeof ACCESSO_CIVICO_ORIGINI)[number];
 
 // Registro pubblico delle richieste di accesso civico / FOIA inviate al Comune
 // dai cittadini, con il relativo esito ed eventuale documento di risposta. Le
@@ -88,6 +98,17 @@ export const accessoCivicoRequestsTable = pgTable(
       .$type<AccessoCivicoModerazione>()
       .notNull()
       .default("pending"),
+    // Origine della voce: "cittadino" (inserita dal portale) o
+    // "registro-ufficiale" (importata dal registro ufficiale del Comune).
+    origine: text("origine")
+      .$type<AccessoCivicoOrigine>()
+      .notNull()
+      .default("cittadino"),
+    // Chiave di deduplica per le voci del registro ufficiale (null per le voci
+    // dei cittadini). Garantisce che la re-importazione non crei duplicati.
+    deduplicaKey: text("deduplica_key"),
+    // URL della fonte ufficiale (registro del Comune o atto pubblicato).
+    fonteUrl: text("fonte_url"),
     createdAt: timestamp("created_at", { withTimezone: true })
       .notNull()
       .defaultNow(),
@@ -100,6 +121,10 @@ export const accessoCivicoRequestsTable = pgTable(
     statusIdx: index("accesso_civico_status_idx").on(t.status),
     tipoIdx: index("accesso_civico_tipo_idx").on(t.tipo),
     themeIdIdx: index("accesso_civico_theme_id_idx").on(t.themeId),
+    origineIdx: index("accesso_civico_origine_idx").on(t.origine),
+    deduplicaKeyIdx: uniqueIndex("accesso_civico_deduplica_key_idx")
+      .on(t.deduplicaKey)
+      .where(sql`${t.deduplicaKey} IS NOT NULL`),
     tipoCheck: check(
       "accesso_civico_tipo_check",
       sql`${t.tipo} in ('generalizzato', 'semplice', 'documentale')`,
@@ -111,6 +136,10 @@ export const accessoCivicoRequestsTable = pgTable(
     statusCheck: check(
       "accesso_civico_status_check",
       sql`${t.status} in ('pending', 'published')`,
+    ),
+    origineCheck: check(
+      "accesso_civico_origine_check",
+      sql`${t.origine} in ('cittadino', 'registro-ufficiale')`,
     ),
   }),
 );

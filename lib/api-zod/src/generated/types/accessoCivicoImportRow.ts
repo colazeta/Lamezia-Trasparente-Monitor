@@ -9,31 +9,26 @@ import type { AccessoCivicoStato } from './accessoCivicoStato';
 import type { AccessoCivicoTipo } from './accessoCivicoTipo';
 
 /**
- * Partial update of a request (editorial).
+ * A single row from the municipality's official access register to import.
+
  */
-export interface AccessoCivicoUpdateInput {
+export interface AccessoCivicoImportRow {
   /** @minLength 1 */
-  oggetto?: string;
+  oggetto: string;
   tipo?: AccessoCivicoTipo;
-  ente?: string;
-  descrizione?: string;
-  requestText?: string;
   /** @nullable */
-  requesterName?: string | null;
+  ente?: string | null;
   /** @nullable */
   requestDate?: string | null;
   stato?: AccessoCivicoStato;
-  esitoNote?: string;
+  /** @nullable */
+  esitoNote?: string | null;
   /** @nullable */
   responseDate?: string | null;
   /** @nullable */
   responseUrl?: string | null;
   /** @nullable */
   responseLabel?: string | null;
-  /** @nullable */
-  themeId?: number | null;
-  /** @nullable */
-  pnrrProjectId?: number | null;
   /** @nullable */
   fonteUrl?: string | null;
 }

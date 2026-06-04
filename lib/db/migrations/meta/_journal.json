@@ -43,6 +43,13 @@
       "when": 1780711200000,
       "tag": "0005_publications_macrotema",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1780714800000,
+      "tag": "0006_accesso_civico_origine",
+      "breakpoints": true
     }
   ]
 }

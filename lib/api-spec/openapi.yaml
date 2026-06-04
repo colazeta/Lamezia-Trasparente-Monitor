@@ -3587,6 +3587,45 @@ paths:
               schema:
                 $ref: "#/components/schemas/Error"
 
+  /accesso-civico/importa:
+    post:
+      tags: [accesso-civico]
+      operationId: importAccessoCivico
+      summary: Bulk-import rows from the official municipal access register (editorial)
+      description: |
+        Imports historical entries from the municipality's official access
+        register (Registro degli accessi). Entries are marked with origin
+        `registro-ufficiale`, published immediately, and deduplicated on a stable
+        key (oggetto + requestDate + ente) so re-importing does not create
+        duplicates. Returns a summary of created / updated / skipped rows.
+      security:
+        - ingestToken: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AccessoCivicoImportInput"
+      responses:
+        "200":
+          description: Import summary.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AccessoCivicoImportResult"
+        "400":
+          description: Invalid input.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "401":
+          description: Unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
   /accesso-civico/admin:
     get:
       tags: [accesso-civico]
@@ -7096,6 +7135,14 @@ components:
       description: Outcome of the request as tracked by the citizen.
       enum: [in-attesa, accolta, rifiutata]
 
+    AccessoCivicoOrigine:
+      type: string
+      description: |
+        Origin of the entry: `cittadino` for requests filed by citizens through
+        the portal, `registro-ufficiale` for entries imported from the
+        municipality's official access register (Registro degli accessi).
+      enum: [cittadino, registro-ufficiale]
+
     AccessoCivicoRequest:
       type: object
       description: Public view of a published accesso civico / FOIA request.
@@ -7145,6 +7192,10 @@ components:
           type: ["integer", "null"]
         pnrrProjectId:
           type: ["integer", "null"]
+        origine:
+          $ref: "#/components/schemas/AccessoCivicoOrigine"
+        fonteUrl:
+          type: ["string", "null"]
         createdAt:
           type: string
         updatedAt:
@@ -7206,6 +7257,10 @@ components:
         status:
           type: string
           enum: [pending, published]
+        origine:
+          $ref: "#/components/schemas/AccessoCivicoOrigine"
+        fonteUrl:
+          type: ["string", "null"]
         createdAt:
           type: string
         updatedAt:
@@ -7274,3 +7329,68 @@ components:
           type: ["integer", "null"]
         pnrrProjectId:
           type: ["integer", "null"]
+        fonteUrl:
+          type: ["string", "null"]
+
+    AccessoCivicoImportRow:
+      type: object
+      description: |
+        A single row from the municipality's official access register to import.
+      required: [oggetto]
+      properties:
+        oggetto:
+          type: string
+          minLength: 1
+        tipo:
+          $ref: "#/components/schemas/AccessoCivicoTipo"
+        ente:
+          type: ["string", "null"]
+        requestDate:
+          type: ["string", "null"]
+        stato:
+          $ref: "#/components/schemas/AccessoCivicoStato"
+        esitoNote:
+          type: ["string", "null"]
+        responseDate:
+          type: ["string", "null"]
+        responseUrl:
+          type: ["string", "null"]
+        responseLabel:
+          type: ["string", "null"]
+        fonteUrl:
+          type: ["string", "null"]
+
+    AccessoCivicoImportInput:
+      type: object
+      description: Bulk import of rows from the official municipal access register.
+      required: [righe]
+      properties:
+        righe:
+          type: array
+          items:
+            $ref: "#/components/schemas/AccessoCivicoImportRow"
+
+    AccessoCivicoImportResult:
+      type: object
+      description: Summary of a bulk import run.
+      required: [create, aggiornate, scartate]
+      properties:
+        create:
+          type: integer
+          description: Number of new entries created.
+        aggiornate:
+          type: integer
+          description: Number of existing entries updated (matched by dedup key).
+        scartate:
+          type: array
+          description: Rows skipped due to validation errors.
+          items:
+            type: object
+            required: [indice, oggetto, motivo]
+            properties:
+              indice:
+                type: integer
+              oggetto:
+                type: string
+              motivo:
+                type: string

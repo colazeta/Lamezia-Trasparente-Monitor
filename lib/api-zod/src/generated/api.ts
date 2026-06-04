@@ -3832,6 +3832,8 @@ export const ListAccessoCivicoResponseItem = zod.object({
   "responseLabel": zod.string().nullable(),
   "themeId": zod.number().nullable(),
   "pnrrProjectId": zod.number().nullable(),
+  "origine": zod.enum(['cittadino', 'registro-ufficiale']).optional().describe('Origin of the entry: `cittadino` for requests filed by citizens through\nthe portal, `registro-ufficiale` for entries imported from the\nmunicipality\'s official access register (Registro degli accessi).\n'),
+  "fonteUrl": zod.string().nullish(),
   "createdAt": zod.string(),
   "updatedAt": zod.string()
 }).describe('Public view of a published accesso civico \/ FOIA request.')
@@ -3865,6 +3867,44 @@ export const CreateAccessoCivicoBody = zod.object({
 
 
 /**
+ * Imports historical entries from the municipality's official access
+register (Registro degli accessi). Entries are marked with origin
+`registro-ufficiale`, published immediately, and deduplicated on a stable
+key (oggetto + requestDate + ente) so re-importing does not create
+duplicates. Returns a summary of created / updated / skipped rows.
+
+ * @summary Bulk-import rows from the official municipal access register (editorial)
+ */
+
+
+
+export const ImportAccessoCivicoBody = zod.object({
+  "righe": zod.array(zod.object({
+  "oggetto": zod.string().min(1),
+  "tipo": zod.enum(['generalizzato', 'semplice', 'documentale']).optional().describe('Type of access request, which determines the legal references:\n`generalizzato` (FOIA, art. 5 c.2 d.lgs. 33\/2013), `semplice` (access to\ndata subject to mandatory publication, art. 5 c.1 d.lgs. 33\/2013),\n`documentale` (administrative document access, l. 241\/1990).\n'),
+  "ente": zod.string().nullish(),
+  "requestDate": zod.string().nullish(),
+  "stato": zod.enum(['in-attesa', 'accolta', 'rifiutata']).optional().describe('Outcome of the request as tracked by the citizen.'),
+  "esitoNote": zod.string().nullish(),
+  "responseDate": zod.string().nullish(),
+  "responseUrl": zod.string().nullish(),
+  "responseLabel": zod.string().nullish(),
+  "fonteUrl": zod.string().nullish()
+}).describe('A single row from the municipality\'s official access register to import.\n'))
+}).describe('Bulk import of rows from the official municipal access register.')
+
+export const ImportAccessoCivicoResponse = zod.object({
+  "create": zod.number().describe('Number of new entries created.'),
+  "aggiornate": zod.number().describe('Number of existing entries updated (matched by dedup key).'),
+  "scartate": zod.array(zod.object({
+  "indice": zod.number(),
+  "oggetto": zod.string(),
+  "motivo": zod.string()
+})).describe('Rows skipped due to validation errors.')
+}).describe('Summary of a bulk import run.')
+
+
+/**
  * @summary Editorial list of all requests (incl. pending) for moderation
  */
 export const ListAccessoCivicoAdminResponseItem = zod.object({
@@ -3884,6 +3924,8 @@ export const ListAccessoCivicoAdminResponseItem = zod.object({
   "themeId": zod.number().nullable(),
   "pnrrProjectId": zod.number().nullable(),
   "status": zod.enum(['pending', 'published']),
+  "origine": zod.enum(['cittadino', 'registro-ufficiale']).optional().describe('Origin of the entry: `cittadino` for requests filed by citizens through\nthe portal, `registro-ufficiale` for entries imported from the\nmunicipality\'s official access register (Registro degli accessi).\n'),
+  "fonteUrl": zod.string().nullish(),
   "createdAt": zod.string(),
   "updatedAt": zod.string()
 }).describe('Editorial view of a request, including moderation status.')
@@ -3912,6 +3954,8 @@ export const GetAccessoCivicoResponse = zod.object({
   "responseLabel": zod.string().nullable(),
   "themeId": zod.number().nullable(),
   "pnrrProjectId": zod.number().nullable(),
+  "origine": zod.enum(['cittadino', 'registro-ufficiale']).optional().describe('Origin of the entry: `cittadino` for requests filed by citizens through\nthe portal, `registro-ufficiale` for entries imported from the\nmunicipality\'s official access register (Registro degli accessi).\n'),
+  "fonteUrl": zod.string().nullish(),
   "createdAt": zod.string(),
   "updatedAt": zod.string()
 }).describe('Public view of a published accesso civico \/ FOIA request.')
@@ -3941,7 +3985,8 @@ export const UpdateAccessoCivicoBody = zod.object({
   "responseUrl": zod.string().nullish(),
   "responseLabel": zod.string().nullish(),
   "themeId": zod.number().nullish(),
-  "pnrrProjectId": zod.number().nullish()
+  "pnrrProjectId": zod.number().nullish(),
+  "fonteUrl": zod.string().nullish()
 }).describe('Partial update of a request (editorial).')
 
 export const UpdateAccessoCivicoResponse = zod.object({
@@ -3961,6 +4006,8 @@ export const UpdateAccessoCivicoResponse = zod.object({
   "themeId": zod.number().nullable(),
   "pnrrProjectId": zod.number().nullable(),
   "status": zod.enum(['pending', 'published']),
+  "origine": zod.enum(['cittadino', 'registro-ufficiale']).optional().describe('Origin of the entry: `cittadino` for requests filed by citizens through\nthe portal, `registro-ufficiale` for entries imported from the\nmunicipality\'s official access register (Registro degli accessi).\n'),
+  "fonteUrl": zod.string().nullish(),
   "createdAt": zod.string(),
   "updatedAt": zod.string()
 }).describe('Editorial view of a request, including moderation status.')
@@ -3998,6 +4045,8 @@ export const PublishAccessoCivicoResponse = zod.object({
   "themeId": zod.number().nullable(),
   "pnrrProjectId": zod.number().nullable(),
   "status": zod.enum(['pending', 'published']),
+  "origine": zod.enum(['cittadino', 'registro-ufficiale']).optional().describe('Origin of the entry: `cittadino` for requests filed by citizens through\nthe portal, `registro-ufficiale` for entries imported from the\nmunicipality\'s official access register (Registro degli accessi).\n'),
+  "fonteUrl": zod.string().nullish(),
   "createdAt": zod.string(),
   "updatedAt": zod.string()
 }).describe('Editorial view of a request, including moderation status.')

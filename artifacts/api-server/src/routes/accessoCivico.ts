@@ -7,6 +7,7 @@ import {
 import { and, desc, eq, gte, lte, type SQL } from "drizzle-orm";
 import {
   CreateAccessoCivicoBody,
+  ImportAccessoCivicoBody,
   UpdateAccessoCivicoBody,
 } from "@workspace/api-zod";
 import { requireIngestAuth } from "../middlewares/requireIngestAuth";
@@ -31,6 +32,8 @@ function mapPublic(r: AccessoCivicoRequest) {
     responseLabel: r.responseLabel,
     themeId: r.themeId,
     pnrrProjectId: r.pnrrProjectId,
+    origine: r.origine,
+    fonteUrl: r.fonteUrl,
     createdAt: r.createdAt.toISOString(),
     updatedAt: r.updatedAt.toISOString(),
   };
@@ -55,9 +58,65 @@ function mapAdmin(r: AccessoCivicoRequest) {
     themeId: r.themeId,
     pnrrProjectId: r.pnrrProjectId,
     status: r.status,
+    origine: r.origine,
+    fonteUrl: r.fonteUrl,
     createdAt: r.createdAt.toISOString(),
     updatedAt: r.updatedAt.toISOString(),
   };
+}
+
+/**
+ * Parsa una data in modo rigoroso: accetta solo date che esistono realmente
+ * nel calendario, rifiutando la normalizzazione automatica di JS Date
+ * (es. "2024-02-31" -> 2 marzo). Restituisce:
+ *  - { ok: true, date: Date|null } per input validi (null se vuoto/assente),
+ *  - { ok: false } per date impossibili o non interpretabili.
+ */
+function parseStrictDate(
+  raw: string | null | undefined,
+): { ok: true; date: Date | null } | { ok: false } {
+  if (raw === null || raw === undefined || String(raw).trim() === "") {
+    return { ok: true, date: null };
+  }
+  const v = String(raw).trim();
+  const iso = v.match(/^(\d{4})-(\d{2})-(\d{2})/);
+  if (!iso) {
+    // Formati non-ISO non sono attesi qui (il parser frontend normalizza in
+    // ISO); accettiamo solo se interpretabili come data reale via round-trip.
+    const d = new Date(v);
+    if (Number.isNaN(d.getTime())) return { ok: false };
+    return { ok: true, date: d };
+  }
+  const year = Number(iso[1]);
+  const month = Number(iso[2]);
+  const day = Number(iso[3]);
+  if (month < 1 || month > 12 || day < 1 || day > 31) return { ok: false };
+  const d = new Date(Date.UTC(year, month - 1, day));
+  if (
+    d.getUTCFullYear() !== year ||
+    d.getUTCMonth() !== month - 1 ||
+    d.getUTCDate() !== day
+  ) {
+    return { ok: false };
+  }
+  return { ok: true, date: d };
+}
+
+/**
+ * Calcola la chiave di deduplica per una riga del registro ufficiale.
+ * La chiave è stabile rispetto a whitespace e capitalizzazione.
+ */
+function computeDeduplicaKey(
+  oggetto: string,
+  ente: string,
+  requestDate: string | null | undefined,
+): string {
+  const parts = [
+    oggetto.trim().toLowerCase(),
+    ente.trim().toLowerCase(),
+    requestDate ? requestDate.slice(0, 10) : "",
+  ];
+  return parts.join("|");
 }
 
 /**
@@ -65,8 +124,6 @@ function mapAdmin(r: AccessoCivicoRequest) {
  * Public registry: only published requests, with optional filters.
  */
 router.get("/accesso-civico", async (req: Request, res: Response) => {
-  // Filtri applicati a livello di query DB: ente destinatario e intervallo di
-  // date (sulla data di invio della richiesta).
   const conditions: SQL[] = [
     eq(accessoCivicoRequestsTable.status, "published"),
   ];
@@ -132,11 +189,104 @@ router.get(
       .select()
       .from(accessoCivicoRequestsTable)
       .orderBy(
-        // Le richieste in attesa di moderazione per prime.
         desc(accessoCivicoRequestsTable.createdAt),
         desc(accessoCivicoRequestsTable.id),
       );
     res.json(rows.map(mapAdmin));
+  },
+);
+
+/**
+ * POST /accesso-civico/importa
+ * Admin: bulk-import rows from the official municipal access register.
+ * Validates, deduplicates (upsert by deduplicaKey), marks as "registro-ufficiale",
+ * publishes immediately, and returns a summary {create, aggiornate, scartate}.
+ */
+router.post(
+  "/accesso-civico/importa",
+  requireIngestAuth,
+  async (req: Request, res: Response) => {
+    const parsed = ImportAccessoCivicoBody.safeParse(req.body);
+    if (!parsed.success) {
+      res.status(400).json({ error: "Dati non validi", details: parsed.error.issues });
+      return;
+    }
+
+    const { righe } = parsed.data;
+
+    let create = 0;
+    let aggiornate = 0;
+    const scartate: Array<{ indice: number; oggetto: string; motivo: string }> = [];
+
+    for (let i = 0; i < righe.length; i++) {
+      const riga = righe[i];
+      const oggettoTrim = riga.oggetto.trim();
+      if (!oggettoTrim) {
+        scartate.push({ indice: i, oggetto: riga.oggetto, motivo: "Oggetto mancante o vuoto" });
+        continue;
+      }
+
+      const enteTrim = (riga.ente ?? "Comune di Lamezia Terme").trim() || "Comune di Lamezia Terme";
+      const requestDateParsed = parseStrictDate(riga.requestDate ?? null);
+      if (!requestDateParsed.ok) {
+        scartate.push({ indice: i, oggetto: oggettoTrim, motivo: "Data presentazione non valida" });
+        continue;
+      }
+      const requestDate = requestDateParsed.date;
+
+      const responseDateParsed = parseStrictDate(riga.responseDate ?? null);
+      if (!responseDateParsed.ok) {
+        scartate.push({ indice: i, oggetto: oggettoTrim, motivo: "Data decisione non valida" });
+        continue;
+      }
+      const responseDate = responseDateParsed.date;
+
+      const deduplicaKey = computeDeduplicaKey(
+        oggettoTrim,
+        enteTrim,
+        requestDate ? requestDate.toISOString() : null,
+      );
+
+      // Cerca una voce esistente con la stessa chiave di deduplica.
+      const [existing] = await db
+        .select({ id: accessoCivicoRequestsTable.id })
+        .from(accessoCivicoRequestsTable)
+        .where(eq(accessoCivicoRequestsTable.deduplicaKey, deduplicaKey));
+
+      const values = {
+        oggetto: oggettoTrim,
+        tipo: riga.tipo ?? "generalizzato",
+        ente: enteTrim,
+        descrizione: riga.esitoNote ?? "",
+        requestText: "",
+        stato: riga.stato ?? "in-attesa",
+        esitoNote: riga.esitoNote ?? "",
+        requestDate: requestDate,
+        responseDate: responseDate,
+        responseUrl: riga.responseUrl ?? null,
+        responseLabel: riga.responseUrl ? (riga.responseLabel ?? "Documento di risposta") : null,
+        origine: "registro-ufficiale" as const,
+        deduplicaKey,
+        fonteUrl: riga.fonteUrl ?? null,
+        status: "published" as const,
+        updatedAt: new Date(),
+      };
+
+      if (existing) {
+        await db
+          .update(accessoCivicoRequestsTable)
+          .set(values)
+          .where(eq(accessoCivicoRequestsTable.id, existing.id));
+        aggiornate++;
+      } else {
+        await db
+          .insert(accessoCivicoRequestsTable)
+          .values(values);
+        create++;
+      }
+    }
+
+    res.json({ create, aggiornate, scartate });
   },
 );
 
@@ -167,6 +317,7 @@ router.post("/accesso-civico", async (req: Request, res: Response) => {
       responseDate: body.responseDate ? new Date(body.responseDate) : null,
       themeId: body.themeId ?? null,
       pnrrProjectId: body.pnrrProjectId ?? null,
+      origine: "cittadino",
       // Le richieste dei cittadini partono sempre in moderazione.
       status: "pending",
     })
@@ -249,6 +400,7 @@ router.patch(
     if ("themeId" in body) updates.themeId = body.themeId ?? null;
     if ("pnrrProjectId" in body)
       updates.pnrrProjectId = body.pnrrProjectId ?? null;
+    if ("fonteUrl" in body) updates.fonteUrl = body.fonteUrl ?? null;
 
     const [updated] = await db
       .update(accessoCivicoRequestsTable)

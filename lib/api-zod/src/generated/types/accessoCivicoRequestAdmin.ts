@@ -5,6 +5,7 @@
  * API specification
  * OpenAPI spec version: 0.1.0
  */
+import type { AccessoCivicoOrigine } from './accessoCivicoOrigine';
 import type { AccessoCivicoRequestAdminStatus } from './accessoCivicoRequestAdminStatus';
 import type { AccessoCivicoStato } from './accessoCivicoStato';
 import type { AccessoCivicoTipo } from './accessoCivicoTipo';
@@ -36,6 +37,9 @@ export interface AccessoCivicoRequestAdmin {
   /** @nullable */
   pnrrProjectId: number | null;
   status: AccessoCivicoRequestAdminStatus;
+  origine?: AccessoCivicoOrigine;
+  /** @nullable */
+  fonteUrl?: string | null;
   createdAt: string;
   updatedAt: string;
 }

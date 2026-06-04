@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeAll, afterAll, afterEach } from "vitest";
-import { inArray } from "drizzle-orm";
+import { inArray, eq } from "drizzle-orm";
 
 import request from "supertest";
 import app from "../app";
@@ -498,5 +498,194 @@ describe("DELETE /api/accesso-civico/:id", () => {
       .delete("/api/accesso-civico/99999999")
       .set(auth);
     expect(res.status).toBe(404);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// POST /api/accesso-civico/importa (bulk import from official register)
+// ---------------------------------------------------------------------------
+describe("POST /api/accesso-civico/importa", () => {
+  it("requires authentication", async () => {
+    const res = await request(app)
+      .post("/api/accesso-civico/importa")
+      .send({ righe: [{ oggetto: "x" }] });
+    expect(res.status).toBe(401);
+  });
+
+  it("rejects invalid payloads", async () => {
+    const res = await request(app)
+      .post("/api/accesso-civico/importa")
+      .set(auth)
+      .send({ nope: true });
+    expect(res.status).toBe(400);
+  });
+
+  it("imports rows marked as official register, published immediately", async () => {
+    const oggetto = `Import ufficiale ${unique("imp")}`;
+    const res = await request(app)
+      .post("/api/accesso-civico/importa")
+      .set(auth)
+      .send({
+        righe: [
+          {
+            oggetto,
+            tipo: "documentale",
+            ente: "Comune di Lamezia Terme",
+            requestDate: "2024-03-15",
+            stato: "accolta",
+            esitoNote: "Concessa copia atti.",
+            fonteUrl: "https://comune.example/registro",
+          },
+        ],
+      });
+    expect(res.status).toBe(200);
+    expect(res.body.create).toBe(1);
+    expect(res.body.aggiornate).toBe(0);
+    expect(res.body.scartate).toHaveLength(0);
+
+    // The imported entry must be public, official-sourced, and carry fonteUrl.
+    const list = await request(app).get("/api/accesso-civico");
+    const found = (list.body as Array<Record<string, unknown>>).find(
+      (r) => r.oggetto === oggetto,
+    );
+    expect(found).toBeDefined();
+    expect(found?.origine).toBe("registro-ufficiale");
+    expect(found?.fonteUrl).toBe("https://comune.example/registro");
+    if (found) createdIds.push(found.id as number);
+  });
+
+  it("deduplicates on re-import (oggetto + requestDate + ente)", async () => {
+    const oggetto = `Dedup test ${unique("dedup")}`;
+    const riga = {
+      oggetto,
+      ente: "Comune di Lamezia Terme",
+      requestDate: "2024-01-10",
+      stato: "in-attesa" as const,
+    };
+
+    const first = await request(app)
+      .post("/api/accesso-civico/importa")
+      .set(auth)
+      .send({ righe: [riga] });
+    expect(first.body.create).toBe(1);
+
+    // Re-import the same row (with whitespace/case variations) — should update,
+    // not duplicate.
+    const second = await request(app)
+      .post("/api/accesso-civico/importa")
+      .set(auth)
+      .send({
+        righe: [
+          {
+            ...riga,
+            oggetto: `  ${oggetto.toUpperCase()}  `,
+            stato: "accolta",
+          },
+        ],
+      });
+    expect(second.body.create).toBe(0);
+    expect(second.body.aggiornate).toBe(1);
+
+    // Only one row should exist for this oggetto, with the updated stato.
+    const rows = await db
+      .select()
+      .from(accessoCivicoRequestsTable)
+      .where(eq(accessoCivicoRequestsTable.deduplicaKey, `${oggetto.trim().toLowerCase()}|comune di lamezia terme|2024-01-10`));
+    expect(rows).toHaveLength(1);
+    expect(rows[0].stato).toBe("accolta");
+    createdIds.push(rows[0].id);
+  });
+
+  it("deduplicates across equivalent date formats on re-import", async () => {
+    const oggetto = `Dedup date fmt ${unique("datefmt")}`;
+    const base = {
+      oggetto,
+      ente: "Comune di Lamezia Terme",
+      stato: "in-attesa" as const,
+    };
+
+    // First import uses a plain date string.
+    const first = await request(app)
+      .post("/api/accesso-civico/importa")
+      .set(auth)
+      .send({ righe: [{ ...base, requestDate: "2024-01-10" }] });
+    expect(first.body.create).toBe(1);
+
+    // Re-import the same logical date in a different (full ISO datetime) format —
+    // must update, not create a duplicate.
+    const second = await request(app)
+      .post("/api/accesso-civico/importa")
+      .set(auth)
+      .send({
+        righe: [{ ...base, requestDate: "2024-01-10T00:00:00.000Z", stato: "accolta" }],
+      });
+    expect(second.body.create).toBe(0);
+    expect(second.body.aggiornate).toBe(1);
+
+    const rows = await db
+      .select()
+      .from(accessoCivicoRequestsTable)
+      .where(eq(accessoCivicoRequestsTable.oggetto, oggetto));
+    expect(rows).toHaveLength(1);
+    expect(rows[0].stato).toBe("accolta");
+    for (const r of rows) createdIds.push(r.id);
+  });
+
+  it("skips rows with a missing oggetto and reports them", async () => {
+    const valido = `Valido ${unique("ok")}`;
+    const res = await request(app)
+      .post("/api/accesso-civico/importa")
+      .set(auth)
+      .send({
+        righe: [
+          { oggetto: valido, requestDate: "2024-05-01" },
+          { oggetto: "   " },
+        ],
+      });
+    expect(res.status).toBe(200);
+    expect(res.body.create).toBe(1);
+    expect(res.body.scartate).toHaveLength(1);
+    expect(res.body.scartate[0].indice).toBe(1);
+
+    const rows = await db
+      .select()
+      .from(accessoCivicoRequestsTable)
+      .where(eq(accessoCivicoRequestsTable.oggetto, valido));
+    for (const r of rows) createdIds.push(r.id);
+  });
+
+  it("skips rows with an invalid date", async () => {
+    const res = await request(app)
+      .post("/api/accesso-civico/importa")
+      .set(auth)
+      .send({
+        righe: [{ oggetto: `Bad date ${unique("bd")}`, requestDate: "not-a-date" }],
+      });
+    expect(res.status).toBe(200);
+    expect(res.body.create).toBe(0);
+    expect(res.body.scartate).toHaveLength(1);
+  });
+
+  it("rejects impossible calendar dates instead of importing a shifted date", async () => {
+    const oggetto = `Impossible date ${unique("imposs")}`;
+    const res = await request(app)
+      .post("/api/accesso-civico/importa")
+      .set(auth)
+      .send({
+        righe: [
+          { oggetto, requestDate: "2024-02-31" },
+          { oggetto: `${oggetto} feb`, requestDate: "2023-02-29" },
+        ],
+      });
+    expect(res.status).toBe(200);
+    expect(res.body.create).toBe(0);
+    expect(res.body.scartate).toHaveLength(2);
+
+    // Nothing should have been imported (no silently-shifted dates).
+    const rows = await db
+      .select()
+      .from(accessoCivicoRequestsTable)
+      .where(eq(accessoCivicoRequestsTable.oggetto, oggetto));
+    expect(rows).toHaveLength(0);
   });
 });

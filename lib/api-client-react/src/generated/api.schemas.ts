@@ -2254,6 +2254,20 @@ export const AccessoCivicoStato = {
 } as const;
 
 /**
+ * Origin of the entry: `cittadino` for requests filed by citizens through
+the portal, `registro-ufficiale` for entries imported from the
+municipality's official access register (Registro degli accessi).
+
+ */
+export type AccessoCivicoOrigine = typeof AccessoCivicoOrigine[keyof typeof AccessoCivicoOrigine];
+
+
+export const AccessoCivicoOrigine = {
+  cittadino: 'cittadino',
+  'registro-ufficiale': 'registro-ufficiale',
+} as const;
+
+/**
  * Public view of a published accesso civico / FOIA request.
  */
 export interface AccessoCivicoRequest {
@@ -2278,6 +2292,9 @@ export interface AccessoCivicoRequest {
   themeId: number | null;
   /** @nullable */
   pnrrProjectId: number | null;
+  origine?: AccessoCivicoOrigine;
+  /** @nullable */
+  fonteUrl?: string | null;
   createdAt: string;
   updatedAt: string;
 }
@@ -2317,6 +2334,9 @@ export interface AccessoCivicoRequestAdmin {
   /** @nullable */
   pnrrProjectId: number | null;
   status: AccessoCivicoRequestAdminStatus;
+  origine?: AccessoCivicoOrigine;
+  /** @nullable */
+  fonteUrl?: string | null;
   createdAt: string;
   updatedAt: string;
 }
@@ -2368,6 +2388,58 @@ export interface AccessoCivicoUpdateInput {
   themeId?: number | null;
   /** @nullable */
   pnrrProjectId?: number | null;
+  /** @nullable */
+  fonteUrl?: string | null;
+}
+
+/**
+ * A single row from the municipality's official access register to import.
+
+ */
+export interface AccessoCivicoImportRow {
+  /** @minLength 1 */
+  oggetto: string;
+  tipo?: AccessoCivicoTipo;
+  /** @nullable */
+  ente?: string | null;
+  /** @nullable */
+  requestDate?: string | null;
+  stato?: AccessoCivicoStato;
+  /** @nullable */
+  esitoNote?: string | null;
+  /** @nullable */
+  responseDate?: string | null;
+  /** @nullable */
+  responseUrl?: string | null;
+  /** @nullable */
+  responseLabel?: string | null;
+  /** @nullable */
+  fonteUrl?: string | null;
+}
+
+/**
+ * Bulk import of rows from the official municipal access register.
+ */
+export interface AccessoCivicoImportInput {
+  righe: AccessoCivicoImportRow[];
+}
+
+export type AccessoCivicoImportResultScartateItem = {
+  indice: number;
+  oggetto: string;
+  motivo: string;
+};
+
+/**
+ * Summary of a bulk import run.
+ */
+export interface AccessoCivicoImportResult {
+  /** Number of new entries created. */
+  create: number;
+  /** Number of existing entries updated (matched by dedup key). */
+  aggiornate: number;
+  /** Rows skipped due to validation errors. */
+  scartate: AccessoCivicoImportResultScartateItem[];
 }
 
 export type ListThemesParams = {

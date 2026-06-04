@@ -7,6 +7,11 @@
  */
 
 export * from './accessoCivicoCreateInput';
+export * from './accessoCivicoImportInput';
+export * from './accessoCivicoImportResult';
+export * from './accessoCivicoImportResultScartateItem';
+export * from './accessoCivicoImportRow';
+export * from './accessoCivicoOrigine';
 export * from './accessoCivicoRequest';
 export * from './accessoCivicoRequestAdmin';
 export * from './accessoCivicoRequestAdminStatus';

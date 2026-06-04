@@ -28,6 +28,9 @@ import {
   CalendarDays,
   FileText,
   ExternalLink,
+  Landmark,
+  User,
+  FileX,
 } from "lucide-react";
 
 import { Card } from "@/components/ui/card";
@@ -630,6 +633,12 @@ function RequestCard({ request }: { request: AccessoCivicoRequest }) {
       : request.responseUrl
     : null;
 
+  const isRegistroUfficiale = request.origine === "registro-ufficiale";
+  // Esito concluso (accolta/rifiutata) ma senza documento allegato: tipico
+  // delle voci importate dal registro ufficiale, dove la risposta non è online.
+  const documentoNonDisponibile =
+    !docUrl && request.stato !== "in-attesa";
+
   return (
     <Card
       className="flex h-full flex-col gap-3 p-5"
@@ -640,6 +649,42 @@ function RequestCard({ request }: { request: AccessoCivicoRequest }) {
         <Badge variant="secondary" className="text-[10px]">
           {TIPO_SHORT[request.tipo]}
         </Badge>
+        {isRegistroUfficiale ? (
+          request.fonteUrl ? (
+            <a
+              href={request.fonteUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              data-testid={`badge-origine-${request.id}`}
+            >
+              <Badge
+                variant="outline"
+                className="gap-1 border-brand/40 bg-brand/10 text-[10px] text-brand hover:bg-brand/20"
+              >
+                <Landmark className="h-3 w-3" />
+                Registro ufficiale del Comune
+              </Badge>
+            </a>
+          ) : (
+            <Badge
+              variant="outline"
+              className="gap-1 border-brand/40 bg-brand/10 text-[10px] text-brand"
+              data-testid={`badge-origine-${request.id}`}
+            >
+              <Landmark className="h-3 w-3" />
+              Registro ufficiale del Comune
+            </Badge>
+          )
+        ) : (
+          <Badge
+            variant="outline"
+            className="gap-1 text-[10px] text-muted-foreground"
+            data-testid={`badge-origine-${request.id}`}
+          >
+            <User className="h-3 w-3" />
+            Richiesta da cittadino
+          </Badge>
+        )}
       </div>
 
       <h3 className="font-display text-base font-semibold leading-tight">
@@ -685,7 +730,7 @@ function RequestCard({ request }: { request: AccessoCivicoRequest }) {
             Richiedente: {request.requesterName}
           </div>
         )}
-        {docUrl && (
+        {docUrl ? (
           <a
             href={docUrl}
             target="_blank"
@@ -696,7 +741,15 @@ function RequestCard({ request }: { request: AccessoCivicoRequest }) {
             <ExternalLink className="h-3.5 w-3.5" />
             {request.responseLabel?.trim() || "Documento di risposta"}
           </a>
-        )}
+        ) : documentoNonDisponibile ? (
+          <p
+            className="flex items-center gap-1 pt-1 text-muted-foreground"
+            data-testid={`doc-unavailable-${request.id}`}
+          >
+            <FileX className="h-3.5 w-3.5 shrink-0" />
+            Documento di risposta non disponibile
+          </p>
+        ) : null}
       </div>
     </Card>
   );
@@ -756,8 +809,10 @@ export function AccessoCivico() {
           </h2>
         </div>
         <p className="mb-6 max-w-3xl text-sm text-muted-foreground">
-          Le richieste di accesso civico inviate al Comune e tracciate dai
-          cittadini, con il relativo esito ed eventuale documento di risposta.
+          Le richieste di accesso civico inviate al Comune, con il relativo
+          esito ed eventuale documento di risposta. Il registro raccoglie sia le
+          richieste tracciate dai cittadini sia lo storico importato dal Registro
+          ufficiale degli accessi del Comune.
         </p>
         <RegistrySection />
       </section>

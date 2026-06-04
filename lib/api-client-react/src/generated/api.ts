@@ -21,6 +21,8 @@ import type {
 
 import type {
   AccessoCivicoCreateInput,
+  AccessoCivicoImportInput,
+  AccessoCivicoImportResult,
   AccessoCivicoRequest,
   AccessoCivicoRequestAdmin,
   AccessoCivicoUpdateInput,
@@ -9377,6 +9379,83 @@ export const useCreateAccessoCivico = <TError = ErrorType<Error>,
         TContext
       > => {
       return useMutation(getCreateAccessoCivicoMutationOptions(options));
+    }
+
+export const getImportAccessoCivicoUrl = () => {
+
+
+
+
+  return `/api/accesso-civico/importa`
+}
+
+/**
+ * Imports historical entries from the municipality's official access
+register (Registro degli accessi). Entries are marked with origin
+`registro-ufficiale`, published immediately, and deduplicated on a stable
+key (oggetto + requestDate + ente) so re-importing does not create
+duplicates. Returns a summary of created / updated / skipped rows.
+
+ * @summary Bulk-import rows from the official municipal access register (editorial)
+ */
+export const importAccessoCivico = async (accessoCivicoImportInput: AccessoCivicoImportInput, options?: RequestInit): Promise<AccessoCivicoImportResult> => {
+
+  return customFetch<AccessoCivicoImportResult>(getImportAccessoCivicoUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      accessoCivicoImportInput,)
+  }
+);}
+
+
+
+
+export const getImportAccessoCivicoMutationOptions = <TError = ErrorType<Error>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof importAccessoCivico>>, TError,{data: BodyType<AccessoCivicoImportInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof importAccessoCivico>>, TError,{data: BodyType<AccessoCivicoImportInput>}, TContext> => {
+
+const mutationKey = ['importAccessoCivico'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof importAccessoCivico>>, {data: BodyType<AccessoCivicoImportInput>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  importAccessoCivico(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type ImportAccessoCivicoMutationResult = NonNullable<Awaited<ReturnType<typeof importAccessoCivico>>>
+    export type ImportAccessoCivicoMutationBody = BodyType<AccessoCivicoImportInput>
+    export type ImportAccessoCivicoMutationError = ErrorType<Error>
+
+    /**
+ * @summary Bulk-import rows from the official municipal access register (editorial)
+ */
+export const useImportAccessoCivico = <TError = ErrorType<Error>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof importAccessoCivico>>, TError,{data: BodyType<AccessoCivicoImportInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof importAccessoCivico>>,
+        TError,
+        {data: BodyType<AccessoCivicoImportInput>},
+        TContext
+      > => {
+      return useMutation(getImportAccessoCivicoMutationOptions(options));
     }
 
 export const getListAccessoCivicoAdminUrl = () => {

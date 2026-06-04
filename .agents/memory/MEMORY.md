@@ -31,4 +31,6 @@
 - [drizzle migrate is atomic](drizzle-migrate-atomic.md) — node-postgres migrator wraps ALL pending migrations in one transaction; any failure rolls the whole batch back, so the exact culprit can't be read from post-failure tracking state.
 - [Deploy migration alert](deploy-migration-alert.md) — non-"ok" migration state at api-server startup (pending/aborted/failed) emails OPS_ALERT_EMAIL via sendEmail; best-effort, degrades if unset.
 - [Half-tracked migration drift](half-tracked-migrations.md) — boot `MigrationError: relation already exists` w/ state "tracked" → run `pnpm -C lib/db run baseline` (records by hash), don't truncate.
+- [Migration journal `when` ordering](migration-journal-when-ordering.md) — hand-authored journal `when` must exceed prior entry or lastAppliedTag mis-reports; databaseMigrationSafety test fails.
 - [Albo brief generation](albo-brief-generation.md) — "In breve" AI summaries live in lib/briefs.ts (lazy + proactive ingestion batch); candidates = brief NULL & !manual (no markdownText gate); two locks protect cost.
+- [Strict calendar-date validation](strict-date-validation.md) — JS `new Date()` silently normalizes impossible dates (31/02→Mar 2); validate via UTC round-trip on both parser + server import.
