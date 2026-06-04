@@ -4,7 +4,7 @@ import {
   accessoCivicoRequestsTable,
   type AccessoCivicoRequest,
 } from "@workspace/db";
-import { desc, eq } from "drizzle-orm";
+import { and, desc, eq, gte, lte, type SQL } from "drizzle-orm";
 import {
   CreateAccessoCivicoBody,
   UpdateAccessoCivicoBody,
@@ -65,10 +65,33 @@ function mapAdmin(r: AccessoCivicoRequest) {
  * Public registry: only published requests, with optional filters.
  */
 router.get("/accesso-civico", async (req: Request, res: Response) => {
+  // Filtri applicati a livello di query DB: ente destinatario e intervallo di
+  // date (sulla data di invio della richiesta).
+  const conditions: SQL[] = [
+    eq(accessoCivicoRequestsTable.status, "published"),
+  ];
+
+  const enteFilter = typeof req.query.ente === "string" ? req.query.ente.trim() : "";
+  if (enteFilter) {
+    conditions.push(eq(accessoCivicoRequestsTable.ente, enteFilter));
+  }
+
+  const fromRaw = typeof req.query.from === "string" ? req.query.from : "";
+  const fromDate = fromRaw ? new Date(fromRaw) : null;
+  if (fromDate && !Number.isNaN(fromDate.getTime())) {
+    conditions.push(gte(accessoCivicoRequestsTable.requestDate, fromDate));
+  }
+
+  const toRaw = typeof req.query.to === "string" ? req.query.to : "";
+  const toDate = toRaw ? new Date(toRaw) : null;
+  if (toDate && !Number.isNaN(toDate.getTime())) {
+    conditions.push(lte(accessoCivicoRequestsTable.requestDate, toDate));
+  }
+
   const rows = await db
     .select()
     .from(accessoCivicoRequestsTable)
-    .where(eq(accessoCivicoRequestsTable.status, "published"))
+    .where(and(...conditions))
     .orderBy(
       desc(accessoCivicoRequestsTable.requestDate),
       desc(accessoCivicoRequestsTable.id),

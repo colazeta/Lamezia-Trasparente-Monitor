@@ -3803,15 +3803,18 @@ export const UpdateConfiscatedAssetLocationResponse = zod.object({
 
 /**
  * Returns the published citizen-tracked requests, optionally filtered by
-outcome, type and linked theme. Pending (unmoderated) submissions are
-excluded.
+outcome, type, linked theme, recipient entity and request-date range.
+Pending (unmoderated) submissions are excluded.
 
  * @summary Public registry of FOIA / accesso civico requests (published only)
  */
 export const ListAccessoCivicoQueryParams = zod.object({
   "stato": zod.enum(['in-attesa', 'accolta', 'rifiutata']).optional(),
   "tipo": zod.enum(['generalizzato', 'semplice', 'documentale']).optional(),
-  "themeId": zod.coerce.number().optional()
+  "themeId": zod.coerce.number().optional(),
+  "ente": zod.coerce.string().optional().describe('Filter by recipient entity (exact match).'),
+  "from": zod.date().optional().describe('Only requests sent on or after this ISO date.'),
+  "to": zod.date().optional().describe('Only requests sent on or before this ISO date.')
 })
 
 export const ListAccessoCivicoResponseItem = zod.object({

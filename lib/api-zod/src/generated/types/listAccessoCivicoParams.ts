@@ -12,4 +12,16 @@ export type ListAccessoCivicoParams = {
 stato?: AccessoCivicoStato;
 tipo?: AccessoCivicoTipo;
 themeId?: number;
+/**
+ * Filter by recipient entity (exact match).
+ */
+ente?: string;
+/**
+ * Only requests sent on or after this ISO date.
+ */
+from?: Date;
+/**
+ * Only requests sent on or before this ISO date.
+ */
+to?: Date;
 };

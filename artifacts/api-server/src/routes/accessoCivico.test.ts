@@ -174,6 +174,126 @@ describe("GET /api/accesso-civico (public list)", () => {
     expect(ids).toContain(semplice.id);
     expect(ids).not.toContain(documentale.id);
   });
+
+  it("filters by ente", async () => {
+    const ente = unique("Assessorato");
+    const target = await insertRequest({ status: "published", ente });
+    const other = await insertRequest({
+      status: "published",
+      ente: "Regione Calabria",
+    });
+
+    const res = await request(app)
+      .get("/api/accesso-civico")
+      .query({ ente });
+    expect(res.status).toBe(200);
+    const ids = res.body.map((r: { id: number }) => r.id);
+    expect(ids).toContain(target.id);
+    expect(ids).not.toContain(other.id);
+  });
+
+  it("filters by from date (inclusive lower bound)", async () => {
+    const recent = await insertRequest({
+      status: "published",
+      requestDate: new Date("2025-06-15T00:00:00.000Z"),
+    });
+    const old = await insertRequest({
+      status: "published",
+      requestDate: new Date("2024-01-10T00:00:00.000Z"),
+    });
+
+    const res = await request(app)
+      .get("/api/accesso-civico")
+      .query({ from: "2025-01-01" });
+    expect(res.status).toBe(200);
+    const ids = res.body.map((r: { id: number }) => r.id);
+    expect(ids).toContain(recent.id);
+    expect(ids).not.toContain(old.id);
+  });
+
+  it("filters by to date (inclusive upper bound)", async () => {
+    const recent = await insertRequest({
+      status: "published",
+      requestDate: new Date("2025-06-15T00:00:00.000Z"),
+    });
+    const old = await insertRequest({
+      status: "published",
+      requestDate: new Date("2024-01-10T00:00:00.000Z"),
+    });
+
+    const res = await request(app)
+      .get("/api/accesso-civico")
+      .query({ to: "2024-12-31" });
+    expect(res.status).toBe(200);
+    const ids = res.body.map((r: { id: number }) => r.id);
+    expect(ids).toContain(old.id);
+    expect(ids).not.toContain(recent.id);
+  });
+
+  it("filters by a from/to date range", async () => {
+    const inside = await insertRequest({
+      status: "published",
+      requestDate: new Date("2025-03-15T00:00:00.000Z"),
+    });
+    const before = await insertRequest({
+      status: "published",
+      requestDate: new Date("2025-01-01T00:00:00.000Z"),
+    });
+    const after = await insertRequest({
+      status: "published",
+      requestDate: new Date("2025-06-01T00:00:00.000Z"),
+    });
+
+    const res = await request(app)
+      .get("/api/accesso-civico")
+      .query({ from: "2025-02-01", to: "2025-04-30" });
+    expect(res.status).toBe(200);
+    const ids = res.body.map((r: { id: number }) => r.id);
+    expect(ids).toContain(inside.id);
+    expect(ids).not.toContain(before.id);
+    expect(ids).not.toContain(after.id);
+  });
+
+  it("combines ente and date-range filters", async () => {
+    const ente = unique("Settore");
+    const match = await insertRequest({
+      status: "published",
+      ente,
+      requestDate: new Date("2025-03-15T00:00:00.000Z"),
+    });
+    const wrongEnte = await insertRequest({
+      status: "published",
+      ente: "Altro ente",
+      requestDate: new Date("2025-03-15T00:00:00.000Z"),
+    });
+    const wrongDate = await insertRequest({
+      status: "published",
+      ente,
+      requestDate: new Date("2024-03-15T00:00:00.000Z"),
+    });
+
+    const res = await request(app)
+      .get("/api/accesso-civico")
+      .query({ ente, from: "2025-01-01", to: "2025-12-31" });
+    expect(res.status).toBe(200);
+    const ids = res.body.map((r: { id: number }) => r.id);
+    expect(ids).toContain(match.id);
+    expect(ids).not.toContain(wrongEnte.id);
+    expect(ids).not.toContain(wrongDate.id);
+  });
+
+  it("ignores invalid date filters", async () => {
+    const req = await insertRequest({
+      status: "published",
+      requestDate: new Date("2025-03-15T00:00:00.000Z"),
+    });
+    const res = await request(app)
+      .get("/api/accesso-civico")
+      .query({ from: "not-a-date", to: "" });
+    expect(res.status).toBe(200);
+    const ids = res.body.map((r: { id: number }) => r.id);
+    expect(ids).toContain(req.id);
+  });
 });
 
 // ---------------------------------------------------------------------------

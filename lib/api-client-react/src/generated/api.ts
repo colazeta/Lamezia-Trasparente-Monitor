@@ -9233,8 +9233,8 @@ export const getListAccessoCivicoUrl = (params?: ListAccessoCivicoParams,) => {
 
 /**
  * Returns the published citizen-tracked requests, optionally filtered by
-outcome, type and linked theme. Pending (unmoderated) submissions are
-excluded.
+outcome, type, linked theme, recipient entity and request-date range.
+Pending (unmoderated) submissions are excluded.
 
  * @summary Public registry of FOIA / accesso civico requests (published only)
  */

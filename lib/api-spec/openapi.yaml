@@ -3512,8 +3512,8 @@ paths:
       summary: Public registry of FOIA / accesso civico requests (published only)
       description: |
         Returns the published citizen-tracked requests, optionally filtered by
-        outcome, type and linked theme. Pending (unmoderated) submissions are
-        excluded.
+        outcome, type, linked theme, recipient entity and request-date range.
+        Pending (unmoderated) submissions are excluded.
       parameters:
         - name: stato
           in: query
@@ -3530,6 +3530,26 @@ paths:
           required: false
           schema:
             type: integer
+        - name: ente
+          in: query
+          required: false
+          description: Filter by recipient entity (exact match).
+          schema:
+            type: string
+        - name: from
+          in: query
+          required: false
+          description: Only requests sent on or after this ISO date.
+          schema:
+            type: string
+            format: date
+        - name: to
+          in: query
+          required: false
+          description: Only requests sent on or before this ISO date.
+          schema:
+            type: string
+            format: date
       responses:
         "200":
           description: List of published requests.
