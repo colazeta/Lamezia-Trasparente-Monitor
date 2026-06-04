@@ -959,6 +959,37 @@ router.get("/pnrr/projects", async (_req, res) => {
 });
 
 // ---------------------------------------------------------------------------
+// Stato della generazione "In breve": quante sintesi mancano ancora (atti con
+// testo completo ma senza brief, non curati a mano), quante sono già presenti e
+// se un batch è in corso. Usato dal pannello di redazione per mostrare lo stato
+// e l'avanzamento del backfill senza dover leggere i log dell'api-server.
+// La logica condivisa vive in ../lib/briefs.
+// ---------------------------------------------------------------------------
+router.get(
+  "/admin/publications/briefs-status",
+  requireIngestAuth,
+  async (_req, res) => {
+    const [pending, [withBrief], [total]] = await Promise.all([
+      countBriefCandidates(),
+      db
+        .select({ count: sql<number>`count(*)::int` })
+        .from(publicationsTable)
+        .where(sql`${publicationsTable.brief} IS NOT NULL`),
+      db
+        .select({ count: sql<number>`count(*)::int` })
+        .from(publicationsTable),
+    ]);
+
+    res.json({
+      running: isBriefBatchRunning(),
+      pending,
+      withBrief: withBrief?.count ?? 0,
+      total: total?.count ?? 0,
+    });
+  },
+);
+
+// ---------------------------------------------------------------------------
 // Batch job: pre-genera le sintesi "In breve" per tutti gli atti esistenti che
 // non hanno ancora una sintesi. Avvio manuale via endpoint protetto
 // (server-to-server / cron). Gira in background per non incappare nei timeout

@@ -49,6 +49,7 @@ import { AdminAccessoCivico } from "./pages/AdminAccessoCivico";
 import { AdminLegalita } from "./pages/AdminLegalita";
 import { AdminPareri } from "./pages/AdminPareri";
 import { AdminMonitoraggio } from "./pages/AdminMonitoraggio";
+import { AdminBriefs } from "./pages/AdminBriefs";
 import { AdminIndex } from "./pages/AdminIndex";
 import { Guida } from "./pages/Guida";
 import NotFound from "./pages/not-found";
@@ -114,6 +115,7 @@ export function Router() {
         <Route path="/admin/legalita" component={AdminLegalita} />
         <Route path="/admin/pareri" component={AdminPareri} />
         <Route path="/admin/monitoraggio" component={AdminMonitoraggio} />
+        <Route path="/admin/sintesi" component={AdminBriefs} />
         <Route component={NotFound} />
       </Switch>
     </MainLayout>

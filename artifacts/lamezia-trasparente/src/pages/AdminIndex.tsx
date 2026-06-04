@@ -9,6 +9,7 @@ import {
   Gavel,
   FileSearch,
   Telescope,
+  Sparkles,
   ArrowRight,
 } from "lucide-react";
 
@@ -75,6 +76,12 @@ const ADMIN_PANELS: AdminPanel[] = [
     title: "Pareri di Vigilanza",
     description: "Gestisci i pareri degli organi di vigilanza.",
     icon: Gavel,
+  },
+  {
+    href: "/admin/sintesi",
+    title: "Sintesi “In breve”",
+    description: "Genera con un clic le sintesi AI mancanti degli atti.",
+    icon: Sparkles,
   },
 ];
 

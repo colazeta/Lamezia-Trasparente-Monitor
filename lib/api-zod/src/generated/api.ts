@@ -1097,6 +1097,27 @@ export const GetFeedStatusResponse = zod.object({
 
 
 /**
+ * @summary Status of the "In breve" (AI summary) backfill: how many acts still lack a summary, how many already have one, and whether a batch is running. Editor only.
+ */
+export const GetBriefsStatusResponse = zod.object({
+  "running": zod.boolean().describe('Whether a brief-generation batch is currently running.'),
+  "pending": zod.number().describe('Acts that have full text but still lack an \"In breve\" summary (candidates for generation).'),
+  "withBrief": zod.number().describe('Acts that already have an \"In breve\" summary.'),
+  "total": zod.number().describe('Total number of acts (publications).')
+})
+
+
+/**
+ * @summary Start a background batch that generates the "In breve" (AI summary) for every act that has full text but no summary yet. Editor only. Returns immediately; progress is visible in the api-server logs.
+ */
+export const GenerateBriefsResponse = zod.object({
+  "status": zod.enum(['started', 'noop']),
+  "candidates": zod.number().describe('Number of acts the batch will process.'),
+  "message": zod.string().optional()
+})
+
+
+/**
  * @summary List deliberazioni (giunta | consiglio)
  */
 export const ListDelibereQueryParams = zod.object({

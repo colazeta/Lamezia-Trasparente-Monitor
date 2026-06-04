@@ -31,6 +31,8 @@ import type {
   BandoDetail,
   BandoSummary,
   BandoUpdateInput,
+  BriefBatchResult,
+  BriefBatchStatus,
   Category,
   ConfiscatedAsset,
   ConfiscatedAssetAdmin,
@@ -3049,6 +3051,153 @@ export function useGetFeedStatus<TData = Awaited<ReturnType<typeof getFeedStatus
 
 
 
+
+export const getGetBriefsStatusUrl = () => {
+
+
+
+
+  return `/api/admin/publications/briefs-status`
+}
+
+/**
+ * @summary Status of the "In breve" (AI summary) backfill: how many acts still lack a summary, how many already have one, and whether a batch is running. Editor only.
+ */
+export const getBriefsStatus = async ( options?: RequestInit): Promise<BriefBatchStatus> => {
+
+  return customFetch<BriefBatchStatus>(getGetBriefsStatusUrl(),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetBriefsStatusQueryKey = () => {
+    return [
+    `/api/admin/publications/briefs-status`
+    ] as const;
+    }
+
+
+export const getGetBriefsStatusQueryOptions = <TData = Awaited<ReturnType<typeof getBriefsStatus>>, TError = ErrorType<Error>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getBriefsStatus>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetBriefsStatusQueryKey();
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getBriefsStatus>>> = ({ signal }) => getBriefsStatus({ signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getBriefsStatus>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetBriefsStatusQueryResult = NonNullable<Awaited<ReturnType<typeof getBriefsStatus>>>
+export type GetBriefsStatusQueryError = ErrorType<Error>
+
+
+/**
+ * @summary Status of the "In breve" (AI summary) backfill: how many acts still lack a summary, how many already have one, and whether a batch is running. Editor only.
+ */
+
+export function useGetBriefsStatus<TData = Awaited<ReturnType<typeof getBriefsStatus>>, TError = ErrorType<Error>>(
+  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getBriefsStatus>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetBriefsStatusQueryOptions(options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
+
+
+
+export const getGenerateBriefsUrl = () => {
+
+
+
+
+  return `/api/admin/publications/generate-briefs`
+}
+
+/**
+ * @summary Start a background batch that generates the "In breve" (AI summary) for every act that has full text but no summary yet. Editor only. Returns immediately; progress is visible in the api-server logs.
+ */
+export const generateBriefs = async ( options?: RequestInit): Promise<BriefBatchResult> => {
+
+  return customFetch<BriefBatchResult>(getGenerateBriefsUrl(),
+  {
+    ...options,
+    method: 'POST'
+
+
+  }
+);}
+
+
+
+
+export const getGenerateBriefsMutationOptions = <TError = ErrorType<Error>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof generateBriefs>>, TError,void, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof generateBriefs>>, TError,void, TContext> => {
+
+const mutationKey = ['generateBriefs'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof generateBriefs>>, void> = () => {
+
+
+          return  generateBriefs(requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type GenerateBriefsMutationResult = NonNullable<Awaited<ReturnType<typeof generateBriefs>>>
+
+    export type GenerateBriefsMutationError = ErrorType<Error>
+
+    /**
+ * @summary Start a background batch that generates the "In breve" (AI summary) for every act that has full text but no summary yet. Editor only. Returns immediately; progress is visible in the api-server logs.
+ */
+export const useGenerateBriefs = <TError = ErrorType<Error>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof generateBriefs>>, TError,void, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof generateBriefs>>,
+        TError,
+        void,
+        TContext
+      > => {
+      return useMutation(getGenerateBriefsMutationOptions(options));
+    }
 
 export const getListDelibereUrl = (params?: ListDelibereParams,) => {
   const normalizedParams = new URLSearchParams();

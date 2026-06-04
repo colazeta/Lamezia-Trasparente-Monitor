@@ -1091,6 +1091,32 @@ export interface FeedStatus {
   lastUpdatedAt?: string | null;
 }
 
+export interface BriefBatchStatus {
+  /** Whether a brief-generation batch is currently running. */
+  running: boolean;
+  /** Acts that have full text but still lack an "In breve" summary (candidates for generation). */
+  pending: number;
+  /** Acts that already have an "In breve" summary. */
+  withBrief: number;
+  /** Total number of acts (publications). */
+  total: number;
+}
+
+export type BriefBatchResultStatus = typeof BriefBatchResultStatus[keyof typeof BriefBatchResultStatus];
+
+
+export const BriefBatchResultStatus = {
+  started: 'started',
+  noop: 'noop',
+} as const;
+
+export interface BriefBatchResult {
+  status: BriefBatchResultStatus;
+  /** Number of acts the batch will process. */
+  candidates: number;
+  message?: string;
+}
+
 export interface PerformanceCategory {
   id: number;
   slug: string;
