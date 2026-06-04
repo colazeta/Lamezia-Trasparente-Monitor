@@ -25,7 +25,7 @@ import {
   runConfiscatedAssetsIngestion,
   runConfiscatedAssetsGeocoding,
 } from "./confiscatedAssets";
-import { runBriefBatchAfterIngestion } from "../routes/publications";
+import { runBriefBatchGuarded } from "./briefs";
 
 export const ALBO_SOURCE = "albo-lamezia";
 export const ALBO_LABEL = "Albo Pretorio – Amministrazione Trasparente";
@@ -272,11 +272,6 @@ async function runIngestionCycle(): Promise<void> {
   await extractDocumentMarkdown().catch((err) => {
     logger.error({ err }, "Document Markdown extraction cycle failed");
   });
-  // Genera le sintesi "In breve" per i nuovi atti subito dopo aver acquisito il
-  // testo completo. Riusa il batch manuale (stesso lock, idempotenza, briefManual).
-  await runBriefBatchAfterIngestion().catch((err) => {
-    logger.error({ err }, "Brief batch after ingestion failed");
-  });
   await runAttuazioneIngestion().catch(() => {});
   await runItaliadomaniIngestion().catch((err) => {
     logger.error({ err }, "Italia Domani PNRR ingestion cycle failed");
@@ -303,6 +298,13 @@ async function runIngestionCycle(): Promise<void> {
     logger.error({ err }, "Confiscated assets geocoding pass failed");
   });
   await reconcileThemeCounters();
+  // Pre-genera le sintesi "In breve" degli atti dell'Albo (proattivo, non lazy):
+  // così le anteprime nelle liste web/mobile sono già popolate senza dover aprire
+  // ogni atto. Idempotente, con rate-limit e protezione costi (vedi lib/briefs).
+  // Gira per ultimo perché dipende dal testo estratto (extractDocumentMarkdown).
+  await runBriefBatchGuarded().catch((err) => {
+    logger.error({ err }, "Brief generation batch failed");
+  });
 }
 
 export function startIngestionScheduler(): void {

@@ -23,6 +23,14 @@ import { UpsertSedutaReportBody } from "@workspace/api-zod";
 import { ALBO_SOURCE } from "../lib/ingestion";
 import { ITALIADOMANI_SOURCE } from "../lib/italiadomaniPnrr";
 import { requireIngestAuth } from "../middlewares/requireIngestAuth";
+import {
+  briefGenerationInProgress,
+  countBriefCandidates,
+  isBriefAiConfigured,
+  isBriefBatchRunning,
+  startBriefBatch,
+  startLazyBriefGeneration,
+} from "../lib/briefs";
 
 const router: IRouter = Router();
 
@@ -452,20 +460,12 @@ router.get("/publications/:id", async (req, res) => {
   // Funziona sia con markdownText (testo completo) sia con solo l'oggetto.
   // Non sovrascrive le sintesi manuali (briefManual=true).
   // Il lock impedisce chiamate LLM concorrenti per lo stesso atto (protezione costi).
-  if (!publication.brief && !publication.briefManual && !briefGenerationInProgress.has(id)) {
-    briefGenerationInProgress.add(id);
-    // Fire-and-forget: non blocca la risposta, il brief appare al prossimo caricamento.
-    generateBrief(publication.oggetto, publication.markdownText ?? null)
-      .then(async (generated) => {
-        if (generated) {
-          await db
-            .update(publicationsTable)
-            .set({ brief: generated, briefGeneratedAt: new Date() })
-            .where(eq(publicationsTable.id, id));
-        }
-      })
-      .catch(() => {})
-      .finally(() => briefGenerationInProgress.delete(id));
+  if (!publication.brief && !publication.briefManual) {
+    startLazyBriefGeneration(
+      id,
+      publication.oggetto,
+      publication.markdownText ?? null,
+    );
   }
 
   res.json(mapPublication(publication));
@@ -959,240 +959,18 @@ router.get("/pnrr/projects", async (_req, res) => {
 });
 
 // ---------------------------------------------------------------------------
-// AI "In breve" generation — lazy, best-effort.
-// Uses the OpenAI-compatible AI Integrations proxy if configured.
-//
-// SECURITY: generation is gated behind an in-memory lock to prevent
-// cost-amplification abuse (mass-hit IDs forcing concurrent LLM calls).
-// At most one generation per publication is ever in-flight; subsequent
-// requests return the current DB value (null until first generation completes).
-// ---------------------------------------------------------------------------
-
-const briefGenerationInProgress = new Set<number>();
-
-// Pausa tra una chiamata LLM e la successiva nel batch, per limitare il rate
-// (protezione costi + rispetto dei limiti del proxy AI Integrations).
-const BRIEF_BATCH_DELAY_MS = 1500;
-
-// Lock di processo: impedisce l'avvio di più batch concorrenti (un solo job
-// di generazione "In breve" è attivo alla volta su questa istanza).
-let briefBatchRunning = false;
-
-function sleep(ms: number): Promise<void> {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
-
-// Condizioni per gli atti candidati alla generazione automatica della sintesi:
-// hanno il testo completo (markdownText), non hanno ancora un "In breve" e non
-// sono stati curati manualmente (briefManual=true → "le modifiche manuali vincono").
-function briefBatchCandidateConditions() {
-  return and(
-    sql`${publicationsTable.brief} IS NULL`,
-    sql`${publicationsTable.markdownText} IS NOT NULL`,
-    eq(publicationsTable.briefManual, false),
-  );
-}
-
-// Genera le sintesi "In breve" per tutti gli atti candidati, in sequenza e con
-// rate-limit. Idempotente: salta gli atti già con brief o briefManual=true e
-// ri-verifica lo stato in fase di update. Pensato per girare in background;
-// l'avanzamento è loggato e visibile nei log dell'api-server.
-async function runBriefBatch(): Promise<{
-  candidates: number;
-  generated: number;
-  failed: number;
-  skipped: number;
-}> {
-  const candidates = await db
-    .select({
-      id: publicationsTable.id,
-      oggetto: publicationsTable.oggetto,
-      markdownText: publicationsTable.markdownText,
-    })
-    .from(publicationsTable)
-    .where(briefBatchCandidateConditions())
-    .orderBy(asc(publicationsTable.id));
-
-  console.log(
-    `[briefs] batch avviato: ${candidates.length} atti senza sintesi "In breve"`,
-  );
-
-  let generated = 0;
-  let failed = 0;
-  let skipped = 0;
-
-  for (let i = 0; i < candidates.length; i++) {
-    const c = candidates[i];
-
-    // Coordina con la generazione lazy: se un altro flusso sta già generando
-    // questo atto, lo saltiamo per non duplicare la chiamata LLM.
-    if (briefGenerationInProgress.has(c.id)) {
-      skipped++;
-      continue;
-    }
-    briefGenerationInProgress.add(c.id);
-
-    try {
-      // Ri-verifica lo stato corrente prima della chiamata LLM: se la sintesi è
-      // stata generata altrove (flusso lazy) o impostata manualmente dopo lo
-      // snapshot dei candidati, non paghiamo una generazione inutile.
-      const [current] = await db
-        .select({
-          brief: publicationsTable.brief,
-          briefManual: publicationsTable.briefManual,
-        })
-        .from(publicationsTable)
-        .where(eq(publicationsTable.id, c.id));
-      if (!current || current.brief || current.briefManual) {
-        skipped++;
-        continue;
-      }
-
-      const brief = await generateBrief(c.oggetto, c.markdownText ?? null);
-      if (brief) {
-        // Update idempotente: scrive solo se brief è ancora NULL e non è una
-        // sintesi manuale; così non sovrascrive valori impostati tra select e
-        // update. Il numero di righe aggiornate distingue generato da saltato.
-        const updated = await db
-          .update(publicationsTable)
-          .set({ brief, briefGeneratedAt: new Date() })
-          .where(
-            and(
-              eq(publicationsTable.id, c.id),
-              sql`${publicationsTable.brief} IS NULL`,
-              eq(publicationsTable.briefManual, false),
-            ),
-          )
-          .returning({ id: publicationsTable.id });
-        if (updated.length > 0) {
-          generated++;
-        } else {
-          skipped++;
-        }
-      } else {
-        failed++;
-      }
-    } catch (err) {
-      failed++;
-      console.error(`[briefs] errore generazione atto ${c.id}:`, err);
-    } finally {
-      briefGenerationInProgress.delete(c.id);
-    }
-
-    if ((i + 1) % 10 === 0 || i === candidates.length - 1) {
-      console.log(
-        `[briefs] avanzamento ${i + 1}/${candidates.length} ` +
-          `(generati ${generated}, falliti ${failed}, saltati ${skipped})`,
-      );
-    }
-
-    if (i < candidates.length - 1) {
-      await sleep(BRIEF_BATCH_DELAY_MS);
-    }
-  }
-
-  console.log(
-    `[briefs] batch completato: generati ${generated}, falliti ${failed}, ` +
-      `saltati ${skipped} su ${candidates.length} candidati`,
-  );
-
-  return {
-    candidates: candidates.length,
-    generated,
-    failed,
-    skipped,
-  };
-}
-
-// Avvia il batch sintesi dal ciclo di ingestione, una volta che gli atti nuovi
-// e il loro testo completo (markdownText) sono stati acquisiti. Rispetta lo
-// stesso lock del batch manuale (briefBatchRunning) così i due non girano mai
-// in concorrenza, le stesse condizioni di candidatura (idempotenza + briefManual)
-// e salta in silenzio se l'AI non è configurata o non ci sono atti da elaborare.
-export async function runBriefBatchAfterIngestion(): Promise<void> {
-  const baseUrl = process.env["AI_INTEGRATIONS_OPENAI_BASE_URL"];
-  const apiKey = process.env["AI_INTEGRATIONS_OPENAI_API_KEY"];
-  if (!baseUrl || !apiKey) return;
-
-  // Acquisizione atomica del lock (check + set sincroni, nessun await in mezzo):
-  // se un batch manuale è in corso non ne avviamo un secondo.
-  if (briefBatchRunning) {
-    console.log(
-      "[briefs] batch post-ingestione saltato: un batch è già in corso.",
-    );
-    return;
-  }
-  briefBatchRunning = true;
-
-  try {
-    const [counts] = await db
-      .select({ count: sql<number>`count(*)::int` })
-      .from(publicationsTable)
-      .where(briefBatchCandidateConditions());
-    const candidates = counts?.count ?? 0;
-    if (candidates === 0) return;
-
-    await runBriefBatch();
-  } finally {
-    briefBatchRunning = false;
-  }
-}
-
-async function generateBrief(
-  oggetto: string,
-  markdownText: string | null,
-): Promise<string | null> {
-  const baseUrl = process.env["AI_INTEGRATIONS_OPENAI_BASE_URL"];
-  const apiKey = process.env["AI_INTEGRATIONS_OPENAI_API_KEY"];
-  if (!baseUrl || !apiKey) return null;
-
-  try {
-    const { default: OpenAI } = await import("openai");
-    const openai = new OpenAI({ apiKey, baseURL: baseUrl });
-
-    const text = markdownText
-      ? `Oggetto dell'atto: ${oggetto}\n\nTesto dell'atto (estratto):\n${markdownText.slice(0, 2000)}`
-      : `Oggetto dell'atto: ${oggetto}`;
-
-    const response = await openai.chat.completions.create({
-      model: "gpt-4o-mini",
-      messages: [
-        {
-          role: "system",
-          content:
-            "Sei un assistente che aiuta i cittadini del Comune di Lamezia Terme a capire gli atti dell'Albo Pretorio. " +
-            "Il tuo compito è spiegare in modo semplice e comprensibile di cosa si tratta. " +
-            "Usa un linguaggio chiaro, diretto e accessibile. Evita termini burocratici o tecnici. " +
-            "Rispondi con 2-3 frasi al massimo, in italiano.",
-        },
-        {
-          role: "user",
-          content: `Spiega in breve questo atto:\n\n${text}`,
-        },
-      ],
-      max_tokens: 200,
-      temperature: 0.3,
-    });
-
-    return response.choices[0]?.message?.content?.trim() ?? null;
-  } catch {
-    return null;
-  }
-}
-
-// ---------------------------------------------------------------------------
 // Batch job: pre-genera le sintesi "In breve" per tutti gli atti esistenti che
-// hanno il testo completo ma nessuna sintesi. Avvio manuale via endpoint protetto
+// non hanno ancora una sintesi. Avvio manuale via endpoint protetto
 // (server-to-server / cron). Gira in background per non incappare nei timeout
 // HTTP su grandi volumi; l'avanzamento è visibile nei log dell'api-server.
+// La logica condivisa vive in ../lib/briefs (riusata anche dal ciclo di
+// ingestione per pre-generare le sintesi proattivamente).
 // ---------------------------------------------------------------------------
 router.post(
   "/admin/publications/generate-briefs",
   requireIngestAuth,
   async (_req, res) => {
-    const baseUrl = process.env["AI_INTEGRATIONS_OPENAI_BASE_URL"];
-    const apiKey = process.env["AI_INTEGRATIONS_OPENAI_API_KEY"];
-    if (!baseUrl || !apiKey) {
+    if (!isBriefAiConfigured()) {
       res.status(503).json({
         error:
           "Generazione AI non configurata: impostare AI_INTEGRATIONS_OPENAI_BASE_URL e AI_INTEGRATIONS_OPENAI_API_KEY.",
@@ -1200,55 +978,34 @@ router.post(
       return;
     }
 
-    // Acquisizione atomica del lock: il check e l'assegnazione avvengono in modo
-    // sincrono (nessun await tra i due), quindi due richieste quasi simultanee
-    // non possono avviare entrambe un batch. Il lock viene rilasciato in tutti i
-    // percorsi: errore pre-avvio (catch), nessun candidato (noop), o fine job.
-    if (briefBatchRunning) {
-      res
-        .status(409)
-        .json({ error: "Generazione sintesi già in corso." });
+    if (isBriefBatchRunning()) {
+      res.status(409).json({ error: "Generazione sintesi già in corso." });
       return;
     }
-    briefBatchRunning = true;
 
-    try {
-      const [counts] = await db
-        .select({ count: sql<number>`count(*)::int` })
-        .from(publicationsTable)
-        .where(briefBatchCandidateConditions());
-      const candidates = counts?.count ?? 0;
-
-      if (candidates === 0) {
-        briefBatchRunning = false;
-        res.json({
-          status: "noop",
-          candidates: 0,
-          message:
-            "Nessun atto da elaborare: tutte le sintesi sono già presenti.",
-        });
-        return;
-      }
-
-      // Fire-and-forget: la risposta torna subito, il job continua in background.
-      void runBriefBatch()
-        .catch((err) => {
-          console.error("[briefs] batch interrotto da errore:", err);
-        })
-        .finally(() => {
-          briefBatchRunning = false;
-        });
-
-      res.status(202).json({
-        status: "started",
-        candidates,
-        message: `Generazione avviata per ${candidates} atti. Avanzamento nei log dell'api-server.`,
+    const candidates = await countBriefCandidates();
+    if (candidates === 0) {
+      res.json({
+        status: "noop",
+        candidates: 0,
+        message: "Nessun atto da elaborare: tutte le sintesi sono già presenti.",
       });
-    } catch (err) {
-      // Rilascia il lock se qualcosa fallisce prima dell'avvio del job in background.
-      briefBatchRunning = false;
-      throw err;
+      return;
     }
+
+    // Avvio fire-and-forget protetto dal lock di processo: la risposta torna
+    // subito, il job continua in background.
+    const outcome = startBriefBatch();
+    if (outcome === "already-running") {
+      res.status(409).json({ error: "Generazione sintesi già in corso." });
+      return;
+    }
+
+    res.status(202).json({
+      status: "started",
+      candidates,
+      message: `Generazione avviata per ${candidates} atti. Avanzamento nei log dell'api-server.`,
+    });
   },
 );
 
