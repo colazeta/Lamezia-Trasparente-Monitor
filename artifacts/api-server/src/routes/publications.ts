@@ -19,7 +19,10 @@ import {
 } from "@workspace/db";
 import { and, eq, asc, desc, ilike, gte, lte, ne, or, sql } from "drizzle-orm";
 import sanitizeHtml from "sanitize-html";
-import { UpsertSedutaReportBody } from "@workspace/api-zod";
+import {
+  UpsertSedutaReportBody,
+  SetPublicationBriefBody,
+} from "@workspace/api-zod";
 import { ALBO_SOURCE } from "../lib/ingestion";
 import { ITALIADOMANI_SOURCE } from "../lib/italiadomaniPnrr";
 import { requireIngestAuth } from "../middlewares/requireIngestAuth";
@@ -28,6 +31,7 @@ import {
   countBriefCandidates,
   isBriefAiConfigured,
   isBriefBatchRunning,
+  regenerateBriefNow,
   startBriefBatch,
   startLazyBriefGeneration,
 } from "../lib/briefs";
@@ -329,6 +333,12 @@ function mapPublication(p: Publication) {
       p.macrotema ?? classifyMacrotema(`${p.oggetto} ${p.tipologia ?? ""}`),
     // Sintesi "In breve" generata dall'AI (null finché non generata).
     brief: p.brief ?? null,
+    // Vero se la sintesi è stata scritta/curata a mano (il batch la lascia stare).
+    briefManual: p.briefManual,
+    // Quando la sintesi è stata generata/aggiornata l'ultima volta.
+    briefGeneratedAt: p.briefGeneratedAt
+      ? p.briefGeneratedAt.toISOString()
+      : null,
     // Per le convocazioni: macrotemi aggregati dai punti ODG (multi-tema).
     // Permette alla lista convocazioni di mostrare badge per tutti i temi
     // trattati nella seduta, non solo il macrotema principale.
@@ -957,6 +967,131 @@ router.get("/pnrr/projects", async (_req, res) => {
 
   res.json({ projects, uncensored, censusLastUpdatedAt });
 });
+
+// ---------------------------------------------------------------------------
+// Rigenera la sintesi "In breve" di un SINGOLO atto su richiesta (un clic dalla
+// scheda atto del pannello di redazione). A differenza del batch, FORZA la
+// sovrascrittura: utile quando una sintesi generata è sbagliata o di bassa
+// qualità. Reimposta briefManual=false (è una sintesi AI). Le sintesi scritte a
+// mano si gestiscono con PUT /admin/publications/:id/brief.
+// ---------------------------------------------------------------------------
+router.post(
+  "/admin/publications/:id/regenerate-brief",
+  requireIngestAuth,
+  async (req, res) => {
+    const id = Number(req.params.id);
+    if (Number.isNaN(id)) {
+      res.status(404).json({ error: "Atto non trovato" });
+      return;
+    }
+
+    if (!isBriefAiConfigured()) {
+      res.status(503).json({
+        error:
+          "Generazione AI non configurata: impostare AI_INTEGRATIONS_OPENAI_BASE_URL e AI_INTEGRATIONS_OPENAI_API_KEY.",
+      });
+      return;
+    }
+
+    const [publication] = await db
+      .select()
+      .from(publicationsTable)
+      .where(eq(publicationsTable.id, id));
+
+    if (!publication) {
+      res.status(404).json({ error: "Atto non trovato" });
+      return;
+    }
+
+    const outcome = await regenerateBriefNow(
+      id,
+      publication.oggetto,
+      publication.markdownText ?? null,
+    );
+
+    if (outcome.status === "busy") {
+      res.status(409).json({
+        error: "Generazione già in corso per questo atto. Riprova tra poco.",
+      });
+      return;
+    }
+    if (outcome.status === "failed") {
+      res.status(502).json({
+        error:
+          "Impossibile rigenerare la sintesi: il servizio AI non ha restituito un testo. Riprova più tardi.",
+      });
+      return;
+    }
+
+    const [updated] = await db
+      .select()
+      .from(publicationsTable)
+      .where(eq(publicationsTable.id, id));
+
+    res.json(mapPublication(updated ?? publication));
+  },
+);
+
+// ---------------------------------------------------------------------------
+// Imposta/sostituisce a mano la sintesi "In breve" di un SINGOLO atto. Scrivere
+// un testo imposta briefManual=true così il batch automatico la lascia stare;
+// inviare un testo vuoto azzera la sintesi (brief=null, briefManual=false) così
+// la generazione automatica potrà riproporne una. Un clic dalla scheda atto del
+// pannello di redazione.
+// ---------------------------------------------------------------------------
+router.put(
+  "/admin/publications/:id/brief",
+  requireIngestAuth,
+  async (req, res) => {
+    const id = Number(req.params.id);
+    if (Number.isNaN(id)) {
+      res.status(404).json({ error: "Atto non trovato" });
+      return;
+    }
+
+    const parsed = SetPublicationBriefBody.safeParse(req.body);
+    if (!parsed.success) {
+      res.status(400).json({ error: "Sintesi non valida" });
+      return;
+    }
+
+    const [publication] = await db
+      .select()
+      .from(publicationsTable)
+      .where(eq(publicationsTable.id, id));
+
+    if (!publication) {
+      res.status(404).json({ error: "Atto non trovato" });
+      return;
+    }
+
+    const cleaned = sanitizeText(parsed.data.brief);
+
+    if (!cleaned) {
+      // Testo vuoto → azzera la sintesi e riabilita la generazione automatica.
+      await db
+        .update(publicationsTable)
+        .set({ brief: null, briefManual: false, briefGeneratedAt: null })
+        .where(eq(publicationsTable.id, id));
+    } else {
+      await db
+        .update(publicationsTable)
+        .set({
+          brief: cleaned,
+          briefManual: true,
+          briefGeneratedAt: new Date(),
+        })
+        .where(eq(publicationsTable.id, id));
+    }
+
+    const [updated] = await db
+      .select()
+      .from(publicationsTable)
+      .where(eq(publicationsTable.id, id));
+
+    res.json(mapPublication(updated ?? publication));
+  },
+);
 
 // ---------------------------------------------------------------------------
 // Stato della generazione "In breve": quante sintesi mancano ancora (atti con

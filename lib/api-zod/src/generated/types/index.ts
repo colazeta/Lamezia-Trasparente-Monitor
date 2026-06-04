@@ -189,6 +189,7 @@ export * from './sedutaReportInput';
 export * from './sedutaReportInputInterventionsItem';
 export * from './sedutaVote';
 export * from './sedutaVoteVote';
+export * from './setPublicationBriefInput';
 export * from './shareChannelStat';
 export * from './shareInput';
 export * from './shareInputChannel';

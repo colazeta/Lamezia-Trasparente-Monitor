@@ -991,6 +991,8 @@ export const ListPublicationsResponseItem = zod.object({
   "firstSeenAt": zod.string(),
   "macrotema": zod.enum(['ambiente', 'scuole', 'strade', 'sociale', 'cultura', 'mobilita', 'altro']).describe('Spending area automatically classified from the act text'),
   "brief": zod.string().nullish().describe('AI-generated plain-language summary (\"In breve\")'),
+  "briefManual": zod.boolean().optional().describe('True when the \"In breve\" summary was written\/curated by hand; the automatic batch never overwrites it.'),
+  "briefGeneratedAt": zod.string().nullish().describe('When the \"In breve\" summary was last generated or edited (ISO 8601).'),
   "odgMacrotemi": zod.array(zod.string()).optional().describe('Per convocazioni — macrotemi aggregati dai punti ODG (può coprire più temi). Vuoto per gli altri tipi di atti.')
 })
 export const ListPublicationsResponse = zod.array(ListPublicationsResponseItem)
@@ -1031,6 +1033,8 @@ export const GetPublicationResponse = zod.object({
   "firstSeenAt": zod.string(),
   "macrotema": zod.enum(['ambiente', 'scuole', 'strade', 'sociale', 'cultura', 'mobilita', 'altro']).describe('Spending area automatically classified from the act text'),
   "brief": zod.string().nullish().describe('AI-generated plain-language summary (\"In breve\")'),
+  "briefManual": zod.boolean().optional().describe('True when the \"In breve\" summary was written\/curated by hand; the automatic batch never overwrites it.'),
+  "briefGeneratedAt": zod.string().nullish().describe('When the \"In breve\" summary was last generated or edited (ISO 8601).'),
   "odgMacrotemi": zod.array(zod.string()).optional().describe('Per convocazioni — macrotemi aggregati dai punti ODG (può coprire più temi). Vuoto per gli altri tipi di atti.')
 })
 
@@ -1118,6 +1122,92 @@ export const GenerateBriefsResponse = zod.object({
 
 
 /**
+ * @summary Regenerate the "In breve" (AI summary) for a single act on demand, force overwriting an existing non-manual summary. Editor only. Use when a generated summary is wrong or low quality.
+ */
+export const RegeneratePublicationBriefParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const RegeneratePublicationBriefResponse = zod.object({
+  "id": zod.number(),
+  "progressivo": zod.string(),
+  "tipologia": zod.string(),
+  "category": zod.string(),
+  "subcategory": zod.string().nullish(),
+  "provenienza": zod.string().nullish(),
+  "oggetto": zod.string(),
+  "dataAtto": zod.string().nullish(),
+  "pubStart": zod.string().nullish(),
+  "pubEnd": zod.string().nullish(),
+  "numRegSet": zod.string().nullish(),
+  "numRegGen": zod.string().nullish(),
+  "cups": zod.array(zod.string()),
+  "pnrrMission": zod.string().nullish(),
+  "isPnrr": zod.boolean(),
+  "attachments": zod.array(zod.object({
+  "name": zod.string(),
+  "tipo": zod.string(),
+  "officialUrl": zod.string().describe('Direct download link to the specific document on the official portal'),
+  "storagePath": zod.string().nullable().describe('Path of the locally-archived copy, or null if not archived'),
+  "contentType": zod.string().nullable(),
+  "size": zod.number().nullable()
+})).optional(),
+  "isNew": zod.boolean(),
+  "firstSeenAt": zod.string(),
+  "macrotema": zod.enum(['ambiente', 'scuole', 'strade', 'sociale', 'cultura', 'mobilita', 'altro']).describe('Spending area automatically classified from the act text'),
+  "brief": zod.string().nullish().describe('AI-generated plain-language summary (\"In breve\")'),
+  "briefManual": zod.boolean().optional().describe('True when the \"In breve\" summary was written\/curated by hand; the automatic batch never overwrites it.'),
+  "briefGeneratedAt": zod.string().nullish().describe('When the \"In breve\" summary was last generated or edited (ISO 8601).'),
+  "odgMacrotemi": zod.array(zod.string()).optional().describe('Per convocazioni — macrotemi aggregati dai punti ODG (può coprire più temi). Vuoto per gli altri tipi di atti.')
+})
+
+
+/**
+ * @summary Write or replace the "In breve" summary of a single act by hand. A non-empty text sets briefManual=true so the automatic batch leaves it alone; an empty text clears the summary and re-enables auto generation. Editor only.
+ */
+export const SetPublicationBriefParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const SetPublicationBriefBody = zod.object({
+  "brief": zod.string().describe('Hand-written \"In breve\" summary. A non-empty value sets briefManual=true; an empty\/whitespace value clears the summary and re-enables automatic generation.')
+})
+
+export const SetPublicationBriefResponse = zod.object({
+  "id": zod.number(),
+  "progressivo": zod.string(),
+  "tipologia": zod.string(),
+  "category": zod.string(),
+  "subcategory": zod.string().nullish(),
+  "provenienza": zod.string().nullish(),
+  "oggetto": zod.string(),
+  "dataAtto": zod.string().nullish(),
+  "pubStart": zod.string().nullish(),
+  "pubEnd": zod.string().nullish(),
+  "numRegSet": zod.string().nullish(),
+  "numRegGen": zod.string().nullish(),
+  "cups": zod.array(zod.string()),
+  "pnrrMission": zod.string().nullish(),
+  "isPnrr": zod.boolean(),
+  "attachments": zod.array(zod.object({
+  "name": zod.string(),
+  "tipo": zod.string(),
+  "officialUrl": zod.string().describe('Direct download link to the specific document on the official portal'),
+  "storagePath": zod.string().nullable().describe('Path of the locally-archived copy, or null if not archived'),
+  "contentType": zod.string().nullable(),
+  "size": zod.number().nullable()
+})).optional(),
+  "isNew": zod.boolean(),
+  "firstSeenAt": zod.string(),
+  "macrotema": zod.enum(['ambiente', 'scuole', 'strade', 'sociale', 'cultura', 'mobilita', 'altro']).describe('Spending area automatically classified from the act text'),
+  "brief": zod.string().nullish().describe('AI-generated plain-language summary (\"In breve\")'),
+  "briefManual": zod.boolean().optional().describe('True when the \"In breve\" summary was written\/curated by hand; the automatic batch never overwrites it.'),
+  "briefGeneratedAt": zod.string().nullish().describe('When the \"In breve\" summary was last generated or edited (ISO 8601).'),
+  "odgMacrotemi": zod.array(zod.string()).optional().describe('Per convocazioni — macrotemi aggregati dai punti ODG (può coprire più temi). Vuoto per gli altri tipi di atti.')
+})
+
+
+/**
  * @summary List deliberazioni (giunta | consiglio)
  */
 export const ListDelibereQueryParams = zod.object({
@@ -1153,6 +1243,8 @@ export const ListDelibereResponseItem = zod.object({
   "firstSeenAt": zod.string(),
   "macrotema": zod.enum(['ambiente', 'scuole', 'strade', 'sociale', 'cultura', 'mobilita', 'altro']).describe('Spending area automatically classified from the act text'),
   "brief": zod.string().nullish().describe('AI-generated plain-language summary (\"In breve\")'),
+  "briefManual": zod.boolean().optional().describe('True when the \"In breve\" summary was written\/curated by hand; the automatic batch never overwrites it.'),
+  "briefGeneratedAt": zod.string().nullish().describe('When the \"In breve\" summary was last generated or edited (ISO 8601).'),
   "odgMacrotemi": zod.array(zod.string()).optional().describe('Per convocazioni — macrotemi aggregati dai punti ODG (può coprire più temi). Vuoto per gli altri tipi di atti.')
 })
 export const ListDelibereResponse = zod.array(ListDelibereResponseItem)
@@ -1193,6 +1285,8 @@ export const ListConvocazioniResponseItem = zod.object({
   "firstSeenAt": zod.string(),
   "macrotema": zod.enum(['ambiente', 'scuole', 'strade', 'sociale', 'cultura', 'mobilita', 'altro']).describe('Spending area automatically classified from the act text'),
   "brief": zod.string().nullish().describe('AI-generated plain-language summary (\"In breve\")'),
+  "briefManual": zod.boolean().optional().describe('True when the \"In breve\" summary was written\/curated by hand; the automatic batch never overwrites it.'),
+  "briefGeneratedAt": zod.string().nullish().describe('When the \"In breve\" summary was last generated or edited (ISO 8601).'),
   "odgMacrotemi": zod.array(zod.string()).optional().describe('Per convocazioni — macrotemi aggregati dai punti ODG (può coprire più temi). Vuoto per gli altri tipi di atti.')
 })
 export const ListConvocazioniResponse = zod.array(ListConvocazioniResponseItem)
@@ -1233,6 +1327,8 @@ export const GetSedutaResponse = zod.object({
   "firstSeenAt": zod.string(),
   "macrotema": zod.enum(['ambiente', 'scuole', 'strade', 'sociale', 'cultura', 'mobilita', 'altro']).describe('Spending area automatically classified from the act text'),
   "brief": zod.string().nullish().describe('AI-generated plain-language summary (\"In breve\")'),
+  "briefManual": zod.boolean().optional().describe('True when the \"In breve\" summary was written\/curated by hand; the automatic batch never overwrites it.'),
+  "briefGeneratedAt": zod.string().nullish().describe('When the \"In breve\" summary was last generated or edited (ISO 8601).'),
   "odgMacrotemi": zod.array(zod.string()).optional().describe('Per convocazioni — macrotemi aggregati dai punti ODG (può coprire più temi). Vuoto per gli altri tipi di atti.')
 }).and(zod.object({
   "hasReport": zod.boolean(),
@@ -1318,6 +1414,8 @@ export const UpsertSedutaReportResponse = zod.object({
   "firstSeenAt": zod.string(),
   "macrotema": zod.enum(['ambiente', 'scuole', 'strade', 'sociale', 'cultura', 'mobilita', 'altro']).describe('Spending area automatically classified from the act text'),
   "brief": zod.string().nullish().describe('AI-generated plain-language summary (\"In breve\")'),
+  "briefManual": zod.boolean().optional().describe('True when the \"In breve\" summary was written\/curated by hand; the automatic batch never overwrites it.'),
+  "briefGeneratedAt": zod.string().nullish().describe('When the \"In breve\" summary was last generated or edited (ISO 8601).'),
   "odgMacrotemi": zod.array(zod.string()).optional().describe('Per convocazioni — macrotemi aggregati dai punti ODG (può coprire più temi). Vuoto per gli altri tipi di atti.')
 }).and(zod.object({
   "hasReport": zod.boolean(),
@@ -1501,6 +1599,8 @@ export const ListPnrrProjectsResponse = zod.object({
   "firstSeenAt": zod.string(),
   "macrotema": zod.enum(['ambiente', 'scuole', 'strade', 'sociale', 'cultura', 'mobilita', 'altro']).describe('Spending area automatically classified from the act text'),
   "brief": zod.string().nullish().describe('AI-generated plain-language summary (\"In breve\")'),
+  "briefManual": zod.boolean().optional().describe('True when the \"In breve\" summary was written\/curated by hand; the automatic batch never overwrites it.'),
+  "briefGeneratedAt": zod.string().nullish().describe('When the \"In breve\" summary was last generated or edited (ISO 8601).'),
   "odgMacrotemi": zod.array(zod.string()).optional().describe('Per convocazioni — macrotemi aggregati dai punti ODG (può coprire più temi). Vuoto per gli altri tipi di atti.')
 }))
 })),
@@ -1532,6 +1632,8 @@ export const ListPnrrProjectsResponse = zod.object({
   "firstSeenAt": zod.string(),
   "macrotema": zod.enum(['ambiente', 'scuole', 'strade', 'sociale', 'cultura', 'mobilita', 'altro']).describe('Spending area automatically classified from the act text'),
   "brief": zod.string().nullish().describe('AI-generated plain-language summary (\"In breve\")'),
+  "briefManual": zod.boolean().optional().describe('True when the \"In breve\" summary was written\/curated by hand; the automatic batch never overwrites it.'),
+  "briefGeneratedAt": zod.string().nullish().describe('When the \"In breve\" summary was last generated or edited (ISO 8601).'),
   "odgMacrotemi": zod.array(zod.string()).optional().describe('Per convocazioni — macrotemi aggregati dai punti ODG (può coprire più temi). Vuoto per gli altri tipi di atti.')
 })),
   "censusLastUpdatedAt": zod.string().nullish().describe('When the Italia Domani census feed was last successfully updated')
@@ -1788,6 +1890,8 @@ export const GetDeliberaVotesResponse = zod.object({
   "firstSeenAt": zod.string(),
   "macrotema": zod.enum(['ambiente', 'scuole', 'strade', 'sociale', 'cultura', 'mobilita', 'altro']).describe('Spending area automatically classified from the act text'),
   "brief": zod.string().nullish().describe('AI-generated plain-language summary (\"In breve\")'),
+  "briefManual": zod.boolean().optional().describe('True when the \"In breve\" summary was written\/curated by hand; the automatic batch never overwrites it.'),
+  "briefGeneratedAt": zod.string().nullish().describe('When the \"In breve\" summary was last generated or edited (ISO 8601).'),
   "odgMacrotemi": zod.array(zod.string()).optional().describe('Per convocazioni — macrotemi aggregati dai punti ODG (può coprire più temi). Vuoto per gli altri tipi di atti.')
 }),
   "tally": zod.object({

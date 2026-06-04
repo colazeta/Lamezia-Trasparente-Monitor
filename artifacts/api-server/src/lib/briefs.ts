@@ -141,6 +141,45 @@ export function startLazyBriefGeneration(
     .finally(() => briefGenerationInProgress.delete(id));
 }
 
+// Rigenera (forzando la sovrascrittura) la sintesi "In breve" di un singolo
+// atto, in modo atteso. Pensata per l'azione manuale del pannello di redazione
+// quando una sintesi generata è sbagliata o di bassa qualità: a differenza del
+// flusso lazy/batch NON richiede brief IS NULL, quindi sovrascrive anche una
+// sintesi esistente non manuale. Reimposta briefManual=false (è una sintesi AI)
+// e aggiorna briefGeneratedAt. Rispetta il lock per-atto per evitare chiamate
+// LLM concorrenti sullo stesso atto (protezione costi).
+// Ritorna:
+//   - "busy"   se una generazione per questo atto è già in volo;
+//   - "failed" se l'AI non è configurata o la chiamata non produce testo;
+//   - "ok"     con il nuovo brief.
+export async function regenerateBriefNow(
+  id: number,
+  oggetto: string,
+  markdownText: string | null,
+): Promise<{ status: "ok" | "busy" | "failed"; brief: string | null }> {
+  if (briefGenerationInProgress.has(id)) {
+    return { status: "busy", brief: null };
+  }
+  briefGenerationInProgress.add(id);
+  try {
+    const generated = await generateBrief(oggetto, markdownText);
+    if (!generated) {
+      return { status: "failed", brief: null };
+    }
+    await db
+      .update(publicationsTable)
+      .set({
+        brief: generated,
+        briefGeneratedAt: new Date(),
+        briefManual: false,
+      })
+      .where(eq(publicationsTable.id, id));
+    return { status: "ok", brief: generated };
+  } finally {
+    briefGenerationInProgress.delete(id);
+  }
+}
+
 // Genera le sintesi "In breve" per tutti gli atti candidati, in sequenza e con
 // rate-limit. Idempotente: salta gli atti già con brief o briefManual=true e
 // ri-verifica lo stato in fase di update. Pensato per girare in background;

@@ -1,9 +1,15 @@
+import { useState } from "react";
 import { useRoute, Link } from "wouter";
+import { useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
 import {
   useGetPublication,
   useGetPublicationStoria,
+  useRegeneratePublicationBrief,
+  useSetPublicationBrief,
   getGetPublicationQueryKey,
   getGetPublicationStoriaQueryKey,
+  type Publication,
 } from "@workspace/api-client-react";
 import {
   ArrowLeft,
@@ -17,13 +23,22 @@ import {
   AlertCircle,
   ChevronRight,
   Vote,
+  Sparkles,
+  Pencil,
+  Loader2,
+  Save,
+  X,
+  RotateCw,
+  ShieldCheck,
 } from "lucide-react";
 import { format } from "date-fns";
 import { it } from "date-fns/locale";
 
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Textarea } from "@/components/ui/textarea";
 import {
   Empty,
   EmptyHeader,
@@ -32,6 +47,16 @@ import {
   EmptyDescription,
 } from "@/components/ui/empty";
 import { AlboLink } from "@/components/AlboLink";
+
+const TOKEN_STORAGE_KEY = "lt_ingest_token";
+
+function readStoredToken(): string {
+  try {
+    return sessionStorage.getItem(TOKEN_STORAGE_KEY) ?? "";
+  } catch {
+    return "";
+  }
+}
 
 const MACROTEMA_LABELS: Record<string, string> = {
   ambiente: "Ambiente e rifiuti",
@@ -208,6 +233,9 @@ export function AlboDetail() {
               </div>
             </section>
           )}
+
+          {/* Redazione: gestione della sintesi "In breve" del singolo atto */}
+          <BriefAdmin publication={publication} />
 
           {/* Allegati e link */}
           <section>
@@ -439,5 +467,220 @@ export function AlboDetail() {
         </div>
       )}
     </div>
+  );
+}
+
+function isAuthError(error: unknown): boolean {
+  const s = (error as { status?: number } | null)?.status;
+  return s === 401 || s === 403;
+}
+
+// Pannello di redazione per la sintesi "In breve" del singolo atto. Visibile solo
+// a chi ha già effettuato l'accesso all'area redazione (token in sessionStorage,
+// la stessa chiave usata dalle altre pagine Admin). Permette di rigenerare la
+// sintesi AI o di scriverla/sostituirla a mano.
+function BriefAdmin({ publication }: { publication: Publication }) {
+  const token = readStoredToken();
+  const queryClient = useQueryClient();
+  const [editing, setEditing] = useState(false);
+  const [draft, setDraft] = useState(publication.brief ?? "");
+
+  const authRequest = {
+    request: { headers: { Authorization: `Bearer ${token}` } },
+  };
+
+  const regenerate = useRegeneratePublicationBrief(authRequest);
+  const save = useSetPublicationBrief(authRequest);
+
+  if (!token) return null;
+
+  const id = publication.id;
+  const busy = regenerate.isPending || save.isPending;
+
+  const refresh = () => {
+    queryClient.invalidateQueries({ queryKey: getGetPublicationQueryKey(id) });
+  };
+
+  const handleAuthError = () => {
+    toast.error("Sessione scaduta o token non valido", {
+      description: "Effettua di nuovo l'accesso dall'area redazione.",
+    });
+  };
+
+  const handleRegenerate = () => {
+    regenerate.mutate(
+      { id },
+      {
+        onSuccess: () => {
+          toast.success("Sintesi rigenerata");
+          setEditing(false);
+          refresh();
+        },
+        onError: (error) => {
+          if (isAuthError(error)) {
+            handleAuthError();
+            return;
+          }
+          const s = (error as { status?: number } | null)?.status;
+          if (s === 409) {
+            toast.error("Generazione già in corso per questo atto", {
+              description: "Attendi qualche istante e riprova.",
+            });
+            return;
+          }
+          if (s === 503) {
+            toast.error("Generazione AI non configurata", {
+              description:
+                "Le chiavi del servizio AI non sono impostate sul server.",
+            });
+            return;
+          }
+          if (s === 502) {
+            toast.error("Il servizio AI non ha restituito una sintesi", {
+              description: "Riprova più tardi.",
+            });
+            return;
+          }
+          toast.error("Impossibile rigenerare la sintesi");
+        },
+      },
+    );
+  };
+
+  const handleSave = () => {
+    save.mutate(
+      { id, data: { brief: draft } },
+      {
+        onSuccess: (updated) => {
+          toast.success(
+            updated.brief
+              ? "Sintesi salvata a mano"
+              : "Sintesi azzerata (tornerà automatica)",
+          );
+          setEditing(false);
+          refresh();
+        },
+        onError: (error) => {
+          if (isAuthError(error)) {
+            handleAuthError();
+            return;
+          }
+          toast.error("Impossibile salvare la sintesi");
+        },
+      },
+    );
+  };
+
+  return (
+    <section
+      className="rounded-xl border border-dashed border-brand/30 bg-muted/20 p-4 md:p-5"
+      data-testid="brief-admin"
+    >
+      <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
+        <div className="flex items-center gap-2 text-sm font-display font-bold text-foreground">
+          <ShieldCheck className="h-4 w-4 text-brand" />
+          Redazione · Sintesi “In breve”
+        </div>
+        <div className="flex items-center gap-2 text-xs text-muted-foreground">
+          {publication.brief ? (
+            <Badge
+              variant={publication.briefManual ? "secondary" : "outline"}
+              className="text-[10px]"
+              data-testid="badge-brief-source"
+            >
+              {publication.briefManual ? "Scritta a mano" : "Generata AI"}
+            </Badge>
+          ) : (
+            <Badge variant="outline" className="text-[10px]">
+              Nessuna sintesi
+            </Badge>
+          )}
+          {publication.briefGeneratedAt && (
+            <span>agg. {formatDate(publication.briefGeneratedAt)}</span>
+          )}
+        </div>
+      </div>
+
+      {editing ? (
+        <div className="space-y-3">
+          <Textarea
+            value={draft}
+            onChange={(e) => setDraft(e.target.value)}
+            rows={4}
+            placeholder="Scrivi una sintesi in linguaggio semplice (2-3 frasi). Lascia vuoto per tornare alla generazione automatica."
+            aria-label="Testo della sintesi In breve"
+            data-testid="textarea-brief"
+          />
+          <div className="flex flex-wrap gap-2">
+            <Button
+              variant="brand"
+              size="sm"
+              className="gap-2"
+              onClick={handleSave}
+              disabled={busy}
+              data-testid="button-save-brief"
+            >
+              {save.isPending ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <Save className="h-4 w-4" />
+              )}
+              Salva a mano
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="gap-2"
+              onClick={() => {
+                setDraft(publication.brief ?? "");
+                setEditing(false);
+              }}
+              disabled={busy}
+              data-testid="button-cancel-brief"
+            >
+              <X className="h-4 w-4" />
+              Annulla
+            </Button>
+          </div>
+          <p className="text-xs text-muted-foreground">
+            Salvando un testo la sintesi viene marcata come “scritta a mano” e la
+            generazione automatica non la sovrascrive. Salva un testo vuoto per
+            tornare alla sintesi automatica.
+          </p>
+        </div>
+      ) : (
+        <div className="flex flex-wrap gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            className="gap-2"
+            onClick={handleRegenerate}
+            disabled={busy}
+            data-testid="button-regenerate-brief"
+          >
+            {regenerate.isPending ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : (
+              <RotateCw className="h-4 w-4" />
+            )}
+            Rigenera con l'AI
+          </Button>
+          <Button
+            variant="ghost"
+            size="sm"
+            className="gap-2"
+            onClick={() => {
+              setDraft(publication.brief ?? "");
+              setEditing(true);
+            }}
+            disabled={busy}
+            data-testid="button-edit-brief"
+          >
+            <Pencil className="h-4 w-4" />
+            {publication.brief ? "Modifica a mano" : "Scrivi a mano"}
+          </Button>
+        </div>
+      )}
+    </section>
   );
 }

@@ -421,6 +421,13 @@ export interface Publication {
      * @nullable
      */
   brief?: string | null;
+  /** True when the "In breve" summary was written/curated by hand; the automatic batch never overwrites it. */
+  briefManual?: boolean;
+  /**
+     * When the "In breve" summary was last generated or edited (ISO 8601).
+     * @nullable
+     */
+  briefGeneratedAt?: string | null;
   /** Per convocazioni — macrotemi aggregati dai punti ODG (può coprire più temi). Vuoto per gli altri tipi di atti. */
   odgMacrotemi?: string[];
 }
@@ -1686,6 +1693,11 @@ export type SedutaReportInputInterventionsItem = {
 export interface SedutaReportInput {
   summary?: string;
   interventions: SedutaReportInputInterventionsItem[];
+}
+
+export interface SetPublicationBriefInput {
+  /** Hand-written "In breve" summary. A non-empty value sets briefManual=true; an empty/whitespace value clears the summary and re-enables automatic generation. */
+  brief: string;
 }
 
 export type ReportStatus = typeof ReportStatus[keyof typeof ReportStatus];

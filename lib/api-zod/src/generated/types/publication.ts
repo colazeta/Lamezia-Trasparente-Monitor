@@ -42,6 +42,13 @@ export interface Publication {
      * @nullable
      */
   brief?: string | null;
+  /** True when the "In breve" summary was written/curated by hand; the automatic batch never overwrites it. */
+  briefManual?: boolean;
+  /**
+     * When the "In breve" summary was last generated or edited (ISO 8601).
+     * @nullable
+     */
+  briefGeneratedAt?: string | null;
   /** Per convocazioni — macrotemi aggregati dai punti ODG (può coprire più temi). Vuoto per gli altri tipi di atti. */
   odgMacrotemi?: string[];
 }

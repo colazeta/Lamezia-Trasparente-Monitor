@@ -1215,6 +1215,109 @@ paths:
               schema:
                 $ref: "#/components/schemas/Error"
 
+  /admin/publications/{id}/regenerate-brief:
+    post:
+      operationId: regeneratePublicationBrief
+      tags: [publications]
+      summary: >-
+        Regenerate the "In breve" (AI summary) for a single act on demand, force
+        overwriting an existing non-manual summary. Editor only. Use when a
+        generated summary is wrong or low quality.
+      security:
+        - ingestToken: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Updated act with the regenerated summary
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Publication"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "409":
+          description: A generation for this act is already in flight
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "502":
+          description: The AI service did not return a summary
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "503":
+          description: AI generation not configured
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /admin/publications/{id}/brief:
+    put:
+      operationId: setPublicationBrief
+      tags: [publications]
+      summary: >-
+        Write or replace the "In breve" summary of a single act by hand. A
+        non-empty text sets briefManual=true so the automatic batch leaves it
+        alone; an empty text clears the summary and re-enables auto generation.
+        Editor only.
+      security:
+        - ingestToken: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SetPublicationBriefInput"
+      responses:
+        "200":
+          description: Updated act
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Publication"
+        "400":
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
   /delibere:
     get:
       operationId: listDelibere
@@ -4254,6 +4357,15 @@ components:
         brief:
           type: ["string", "null"]
           description: AI-generated plain-language summary ("In breve")
+        briefManual:
+          type: boolean
+          description: >-
+            True when the "In breve" summary was written/curated by hand; the
+            automatic batch never overwrites it.
+        briefGeneratedAt:
+          type: ["string", "null"]
+          description: >-
+            When the "In breve" summary was last generated or edited (ISO 8601).
         odgMacrotemi:
           type: array
           description: Per convocazioni — macrotemi aggregati dai punti ODG (può coprire più temi). Vuoto per gli altri tipi di atti.
@@ -6236,6 +6348,17 @@ components:
               content:
                 type: string
                 minLength: 1
+
+    SetPublicationBriefInput:
+      type: object
+      required: [brief]
+      properties:
+        brief:
+          type: string
+          description: >-
+            Hand-written "In breve" summary. A non-empty value sets
+            briefManual=true; an empty/whitespace value clears the summary and
+            re-enables automatic generation.
 
     Report:
       type: object

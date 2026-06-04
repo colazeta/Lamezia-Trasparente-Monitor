@@ -117,6 +117,7 @@ import type {
   Seduta,
   SedutaDetail,
   SedutaReportInput,
+  SetPublicationBriefInput,
   ShareChannelStat,
   ShareInput,
   StatsOverview,
@@ -3199,6 +3200,148 @@ export const useGenerateBriefs = <TError = ErrorType<Error>,
         TContext
       > => {
       return useMutation(getGenerateBriefsMutationOptions(options));
+    }
+
+export const getRegeneratePublicationBriefUrl = (id: number,) => {
+
+
+
+
+  return `/api/admin/publications/${id}/regenerate-brief`
+}
+
+/**
+ * @summary Regenerate the "In breve" (AI summary) for a single act on demand, force overwriting an existing non-manual summary. Editor only. Use when a generated summary is wrong or low quality.
+ */
+export const regeneratePublicationBrief = async (id: number, options?: RequestInit): Promise<Publication> => {
+
+  return customFetch<Publication>(getRegeneratePublicationBriefUrl(id),
+  {
+    ...options,
+    method: 'POST'
+
+
+  }
+);}
+
+
+
+
+export const getRegeneratePublicationBriefMutationOptions = <TError = ErrorType<Error>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof regeneratePublicationBrief>>, TError,{id: number}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof regeneratePublicationBrief>>, TError,{id: number}, TContext> => {
+
+const mutationKey = ['regeneratePublicationBrief'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof regeneratePublicationBrief>>, {id: number}> = (props) => {
+          const {id} = props ?? {};
+
+          return  regeneratePublicationBrief(id,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type RegeneratePublicationBriefMutationResult = NonNullable<Awaited<ReturnType<typeof regeneratePublicationBrief>>>
+
+    export type RegeneratePublicationBriefMutationError = ErrorType<Error>
+
+    /**
+ * @summary Regenerate the "In breve" (AI summary) for a single act on demand, force overwriting an existing non-manual summary. Editor only. Use when a generated summary is wrong or low quality.
+ */
+export const useRegeneratePublicationBrief = <TError = ErrorType<Error>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof regeneratePublicationBrief>>, TError,{id: number}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof regeneratePublicationBrief>>,
+        TError,
+        {id: number},
+        TContext
+      > => {
+      return useMutation(getRegeneratePublicationBriefMutationOptions(options));
+    }
+
+export const getSetPublicationBriefUrl = (id: number,) => {
+
+
+
+
+  return `/api/admin/publications/${id}/brief`
+}
+
+/**
+ * @summary Write or replace the "In breve" summary of a single act by hand. A non-empty text sets briefManual=true so the automatic batch leaves it alone; an empty text clears the summary and re-enables auto generation. Editor only.
+ */
+export const setPublicationBrief = async (id: number,
+    setPublicationBriefInput: SetPublicationBriefInput, options?: RequestInit): Promise<Publication> => {
+
+  return customFetch<Publication>(getSetPublicationBriefUrl(id),
+  {
+    ...options,
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      setPublicationBriefInput,)
+  }
+);}
+
+
+
+
+export const getSetPublicationBriefMutationOptions = <TError = ErrorType<Error>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof setPublicationBrief>>, TError,{id: number;data: BodyType<SetPublicationBriefInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof setPublicationBrief>>, TError,{id: number;data: BodyType<SetPublicationBriefInput>}, TContext> => {
+
+const mutationKey = ['setPublicationBrief'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof setPublicationBrief>>, {id: number;data: BodyType<SetPublicationBriefInput>}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  setPublicationBrief(id,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type SetPublicationBriefMutationResult = NonNullable<Awaited<ReturnType<typeof setPublicationBrief>>>
+    export type SetPublicationBriefMutationBody = BodyType<SetPublicationBriefInput>
+    export type SetPublicationBriefMutationError = ErrorType<Error>
+
+    /**
+ * @summary Write or replace the "In breve" summary of a single act by hand. A non-empty text sets briefManual=true so the automatic batch leaves it alone; an empty text clears the summary and re-enables auto generation. Editor only.
+ */
+export const useSetPublicationBrief = <TError = ErrorType<Error>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof setPublicationBrief>>, TError,{id: number;data: BodyType<SetPublicationBriefInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof setPublicationBrief>>,
+        TError,
+        {id: number;data: BodyType<SetPublicationBriefInput>},
+        TContext
+      > => {
+      return useMutation(getSetPublicationBriefMutationOptions(options));
     }
 
 export const getListDelibereUrl = (params?: ListDelibereParams,) => {
