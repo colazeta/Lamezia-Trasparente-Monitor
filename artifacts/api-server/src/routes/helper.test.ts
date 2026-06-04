@@ -94,6 +94,19 @@ describe("GET /api/helper/guide", () => {
     }
   });
 
+  it("returns a non-empty welcomeHighlights array with icon and text", async () => {
+    const res = await request(app).get("/api/helper/guide");
+    expect(res.status).toBe(200);
+    expect(Array.isArray(res.body.welcomeHighlights)).toBe(true);
+    expect(res.body.welcomeHighlights.length).toBeGreaterThan(0);
+    for (const h of res.body.welcomeHighlights) {
+      expect(typeof h.icon).toBe("string");
+      expect(h.icon.length).toBeGreaterThan(0);
+      expect(typeof h.text).toBe("string");
+      expect(h.text.length).toBeGreaterThan(0);
+    }
+  });
+
   it("each story chapter has required fields", async () => {
     const res = await request(app).get("/api/helper/guide");
     for (const chapter of res.body.storyChapters) {

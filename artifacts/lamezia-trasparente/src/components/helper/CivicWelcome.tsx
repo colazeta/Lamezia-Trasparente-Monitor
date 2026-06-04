@@ -1,33 +1,65 @@
-import { Bot, BookOpen, X, FileText, TrendingUp, Shield, AlertTriangle } from "lucide-react";
+import {
+  Bot,
+  BookOpen,
+  X,
+  FileText,
+  TrendingUp,
+  Shield,
+  AlertTriangle,
+  Sparkles,
+  type LucideIcon,
+} from "lucide-react";
 import { Link } from "wouter";
 import { useCivicHelper } from "./CivicHelperContext";
 import { Button } from "@/components/ui/button";
 
-const HIGHLIGHTS = [
+// Mappa nome icona (dal backend) -> componente Lucide. Le icone non mappate
+// usano un'icona di default, così l'editor può scegliere fra un set noto senza
+// rischiare di rompere la card.
+const ICON_MAP: Record<string, LucideIcon> = {
+  FileText,
+  BookOpen,
+  TrendingUp,
+  AlertTriangle,
+  Shield,
+  Sparkles,
+};
+
+const DEFAULT_ICON: LucideIcon = Sparkles;
+
+// Fallback usato quando l'API /api/helper/guide non è disponibile o non
+// restituisce i punti della card. Tenuto allineato a helperContent.ts.
+const FALLBACK_HIGHLIGHTS: { icon: string; text: string }[] = [
   {
-    icon: FileText,
+    icon: "FileText",
     text: "Contratti e appalti pubblici con importi e aggiudicatari (fonte ANAC)",
   },
   {
-    icon: BookOpen,
+    icon: "BookOpen",
     text: "Atti fondamentali, delibere e albo pretorio del Comune",
   },
   {
-    icon: TrendingUp,
+    icon: "TrendingUp",
     text: "Progetti PNRR: avanzamento lavori e risorse assegnate",
   },
   {
-    icon: AlertTriangle,
+    icon: "AlertTriangle",
     text: "Segnalazioni civiche collegate ai dati — la tua voce conta",
   },
   {
-    icon: Shield,
+    icon: "Shield",
     text: "Legalità e trasparenza: obblighi di pubblicazione e anticorruzione",
   },
 ];
 
 export function CivicWelcome() {
-  const { welcomeOpen, openAssistant, dismissWelcome } = useCivicHelper();
+  const { welcomeOpen, openAssistant, dismissWelcome, guideContents } =
+    useCivicHelper();
+
+  const highlights =
+    guideContents?.welcomeHighlights && guideContents.welcomeHighlights.length > 0
+      ? guideContents.welcomeHighlights
+      : FALLBACK_HIGHLIGHTS;
 
   if (!welcomeOpen) return null;
 
@@ -56,14 +88,19 @@ export function CivicWelcome() {
         </div>
 
         <ul className="mb-5 space-y-2.5">
-          {HIGHLIGHTS.map(({ icon: Icon, text }) => (
-            <li key={text} className="flex items-start gap-2.5">
-              <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-md bg-primary/10 text-primary">
-                <Icon className="h-3 w-3" />
-              </span>
-              <span className="text-sm leading-snug text-foreground">{text}</span>
-            </li>
-          ))}
+          {highlights.map(({ icon, text }) => {
+            const Icon = ICON_MAP[icon] ?? DEFAULT_ICON;
+            return (
+              <li key={text} className="flex items-start gap-2.5">
+                <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-md bg-primary/10 text-primary">
+                  <Icon className="h-3 w-3" />
+                </span>
+                <span className="text-sm leading-snug text-foreground">
+                  {text}
+                </span>
+              </li>
+            );
+          })}
         </ul>
 
         <div className="flex flex-col gap-2">

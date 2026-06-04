@@ -23,10 +23,16 @@ export type StoryChapter = {
   order: number;
 };
 
+export type WelcomeHighlight = {
+  icon: string;
+  text: string;
+};
+
 export type GuideContents = {
   version: string;
   storyChapters: StoryChapter[];
   sections: HelperSection[];
+  welcomeHighlights?: WelcomeHighlight[];
 };
 
 interface CivicHelperContextValue {

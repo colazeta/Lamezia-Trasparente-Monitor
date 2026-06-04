@@ -56,6 +56,17 @@ export type StoryChapter = {
   order: number;
 };
 
+export type WelcomeHighlight = {
+  /**
+   * Nome dell'icona Lucide mostrata accanto al punto (es. "FileText",
+   * "BookOpen"). Il web mappa il nome a un componente icona; se il nome non è
+   * riconosciuto viene usata un'icona di default.
+   */
+  icon: string;
+  /** Testo del punto elenco mostrato nella card di benvenuto. */
+  text: string;
+};
+
 export type HelperContents = {
   /** Versione del modello, incrementare quando la struttura cambia in modo incompatibile. */
   version: string;
@@ -63,6 +74,8 @@ export type HelperContents = {
   storyChapters: StoryChapter[];
   /** Schede funzionalità, una per sezione/area del sito. */
   sections: HelperSection[];
+  /** Punti elenco mostrati nella card di benvenuto al primo accesso. */
+  welcomeHighlights: WelcomeHighlight[];
 };
 
 // ---------------------------------------------------------------------------
@@ -471,12 +484,43 @@ const sections: HelperSection[] = [
 ];
 
 // ---------------------------------------------------------------------------
+// PUNTI DELLA CARD DI BENVENUTO (primo accesso)
+// ---------------------------------------------------------------------------
+// CONVENZIONE: modificare qui i punti elenco mostrati nella card di benvenuto.
+// `icon` è il nome di un'icona Lucide (es. "FileText"); il web la mappa a un
+// componente, con un'icona di default se il nome non è riconosciuto.
+// ---------------------------------------------------------------------------
+const welcomeHighlights: WelcomeHighlight[] = [
+  {
+    icon: "FileText",
+    text: "Contratti e appalti pubblici con importi e aggiudicatari (fonte ANAC)",
+  },
+  {
+    icon: "BookOpen",
+    text: "Atti fondamentali, delibere e albo pretorio del Comune",
+  },
+  {
+    icon: "TrendingUp",
+    text: "Progetti PNRR: avanzamento lavori e risorse assegnate",
+  },
+  {
+    icon: "AlertTriangle",
+    text: "Segnalazioni civiche collegate ai dati — la tua voce conta",
+  },
+  {
+    icon: "Shield",
+    text: "Legalità e trasparenza: obblighi di pubblicazione e anticorruzione",
+  },
+];
+
+// ---------------------------------------------------------------------------
 // EXPORT principale
 // ---------------------------------------------------------------------------
 export const helperContents: HelperContents = {
-  version: "1.0.0",
+  version: "1.1.0",
   storyChapters,
   sections,
+  welcomeHighlights,
 };
 
 /**
