@@ -17,7 +17,6 @@ import {
   FileText,
   ExternalLink,
   Building2,
-  Layers,
   BookOpen,
   GitMerge,
   AlertCircle,
@@ -47,6 +46,7 @@ import {
   EmptyDescription,
 } from "@/components/ui/empty";
 import { AlboLink } from "@/components/AlboLink";
+import { MacrotemaBadge } from "@/lib/macrotema";
 
 const TOKEN_STORAGE_KEY = "lt_ingest_token";
 
@@ -57,33 +57,6 @@ function readStoredToken(): string {
     return "";
   }
 }
-
-const MACROTEMA_LABELS: Record<string, string> = {
-  ambiente: "Ambiente e rifiuti",
-  scuole: "Scuole e istruzione",
-  strade: "Strade e lavori pubblici",
-  sociale: "Sociale e servizi alla persona",
-  cultura: "Cultura, sport e turismo",
-  mobilita: "Mobilità e trasporti",
-  altro: "Altri servizi e forniture",
-};
-
-const MACROTEMA_COLORS: Record<string, string> = {
-  ambiente:
-    "border-transparent bg-emerald-100 text-emerald-800 dark:bg-emerald-500/20 dark:text-emerald-300",
-  scuole:
-    "border-transparent bg-blue-100 text-blue-800 dark:bg-blue-500/20 dark:text-blue-300",
-  strade:
-    "border-transparent bg-amber-100 text-amber-800 dark:bg-amber-500/20 dark:text-amber-300",
-  sociale:
-    "border-transparent bg-rose-100 text-rose-800 dark:bg-rose-500/20 dark:text-rose-300",
-  cultura:
-    "border-transparent bg-purple-100 text-purple-800 dark:bg-purple-500/20 dark:text-purple-300",
-  mobilita:
-    "border-transparent bg-cyan-100 text-cyan-800 dark:bg-cyan-500/20 dark:text-cyan-300",
-  altro:
-    "border-transparent bg-muted text-muted-foreground",
-};
 
 function formatEuro(value: number): string {
   return new Intl.NumberFormat("it-IT", {
@@ -99,20 +72,6 @@ function formatDate(value: string | null | undefined) {
   return Number.isNaN(d.getTime())
     ? "—"
     : format(d, "dd MMMM yyyy", { locale: it });
-}
-
-function MacrotemaBadge({ macrotema }: { macrotema: string | null | undefined }) {
-  if (!macrotema || macrotema === "altro") return null;
-  const label = MACROTEMA_LABELS[macrotema] ?? macrotema;
-  const colors = MACROTEMA_COLORS[macrotema] ?? MACROTEMA_COLORS.altro;
-  return (
-    <span
-      className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-semibold ${colors}`}
-    >
-      <Layers className="h-3.5 w-3.5" />
-      {label}
-    </span>
-  );
 }
 
 export function AlboDetail() {
@@ -201,7 +160,7 @@ export function AlboDetail() {
               )}
 
               <div className="flex flex-wrap items-center gap-3">
-                <MacrotemaBadge macrotema={publication.macrotema} />
+                <MacrotemaBadge macrotema={publication.macrotema} size="lg" />
                 {publication.numRegGen && (
                   <span className="font-mono text-xs text-muted-foreground">
                     Reg. gen. {publication.numRegGen}

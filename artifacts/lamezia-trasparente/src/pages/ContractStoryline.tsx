@@ -45,6 +45,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { AlboLink } from "@/components/AlboLink";
 import { MonitoringReportsSection } from "@/components/MonitoringReportsSection";
 import { quartiereLabel } from "@/lib/gis";
+import { MACROTEMA_LABELS } from "@/lib/macrotema";
 import {
   Empty,
   EmptyHeader,
@@ -69,17 +70,6 @@ function formatDate(value: string | null | undefined) {
     ? "—"
     : format(d, "dd MMMM yyyy", { locale: it });
 }
-
-// Etichette degli ambiti di spesa (macrotema), allineate alla pagina Appalti.
-const MACROTEMA_LABELS: Record<string, string> = {
-  ambiente: "Ambiente e rifiuti",
-  scuole: "Scuole e istruzione",
-  strade: "Strade e lavori pubblici",
-  sociale: "Sociale e servizi alla persona",
-  cultura: "Cultura, sport e turismo",
-  mobilita: "Mobilità e trasporti",
-  altro: "Altri servizi e forniture",
-};
 
 const PHASE_META: Record<
   LifecyclePhase,

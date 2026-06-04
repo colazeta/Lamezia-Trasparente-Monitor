@@ -29,43 +29,11 @@ import {
   SelectItem,
   SelectTrigger,
 } from "@/components/ui/select";
-
-const MACROTEMA_LABELS: Record<string, string> = {
-  ambiente: "Ambiente e rifiuti",
-  scuole: "Scuole e istruzione",
-  strade: "Strade e lavori pubblici",
-  sociale: "Sociale e servizi alla persona",
-  cultura: "Cultura, sport e turismo",
-  mobilita: "Mobilità e trasporti",
-  altro: "Altri servizi e forniture",
-};
-
-const MACROTEMA_COLORS: Record<string, string> = {
-  ambiente:
-    "bg-emerald-100 text-emerald-800 dark:bg-emerald-500/20 dark:text-emerald-300",
-  scuole:
-    "bg-blue-100 text-blue-800 dark:bg-blue-500/20 dark:text-blue-300",
-  strade:
-    "bg-amber-100 text-amber-800 dark:bg-amber-500/20 dark:text-amber-300",
-  sociale:
-    "bg-rose-100 text-rose-800 dark:bg-rose-500/20 dark:text-rose-300",
-  cultura:
-    "bg-purple-100 text-purple-800 dark:bg-purple-500/20 dark:text-purple-300",
-  mobilita:
-    "bg-cyan-100 text-cyan-800 dark:bg-cyan-500/20 dark:text-cyan-300",
-  altro: "bg-muted text-muted-foreground",
-};
-
-const MACROTEMA_OPTS: { key: string; label: string }[] = [
-  { key: "all", label: "Tutti i temi" },
-  { key: "ambiente", label: "Ambiente e rifiuti" },
-  { key: "scuole", label: "Scuole e istruzione" },
-  { key: "strade", label: "Strade e lavori pubblici" },
-  { key: "sociale", label: "Sociale e servizi" },
-  { key: "cultura", label: "Cultura, sport e turismo" },
-  { key: "mobilita", label: "Mobilità e trasporti" },
-  { key: "altro", label: "Altri servizi e forniture" },
-];
+import {
+  MACROTEMA_LABELS,
+  MACROTEMA_OPTS,
+  MacrotemaBadge,
+} from "@/lib/macrotema";
 
 function MacrotemasRow({ macrotemi }: { macrotemi: string[] }) {
   const unique = Array.from(new Set(macrotemi)).filter((m) => m !== "altro");
@@ -73,13 +41,7 @@ function MacrotemasRow({ macrotemi }: { macrotemi: string[] }) {
   return (
     <div className="mt-2 flex flex-wrap gap-1.5">
       {unique.slice(0, 4).map((m) => (
-        <span
-          key={m}
-          className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-semibold ${MACROTEMA_COLORS[m] ?? MACROTEMA_COLORS.altro}`}
-        >
-          <Layers className="h-3 w-3" />
-          {MACROTEMA_LABELS[m] ?? m}
-        </span>
+        <MacrotemaBadge key={m} macrotema={m} />
       ))}
     </div>
   );

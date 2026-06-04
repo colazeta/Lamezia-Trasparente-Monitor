@@ -31,32 +31,11 @@ import {
   EmptyDescription,
 } from "@/components/ui/empty";
 import { AlboLink } from "@/components/AlboLink";
-
-const MACROTEMA_LABELS: Record<string, string> = {
-  ambiente: "Ambiente e rifiuti",
-  scuole: "Scuole e istruzione",
-  strade: "Strade e lavori pubblici",
-  sociale: "Sociale e servizi alla persona",
-  cultura: "Cultura, sport e turismo",
-  mobilita: "Mobilità e trasporti",
-  altro: "Altri servizi e forniture",
-};
-
-const MACROTEMA_COLORS: Record<string, string> = {
-  ambiente:
-    "border-transparent bg-emerald-100 text-emerald-800 dark:bg-emerald-500/20 dark:text-emerald-300",
-  scuole:
-    "border-transparent bg-blue-100 text-blue-800 dark:bg-blue-500/20 dark:text-blue-300",
-  strade:
-    "border-transparent bg-amber-100 text-amber-800 dark:bg-amber-500/20 dark:text-amber-300",
-  sociale:
-    "border-transparent bg-rose-100 text-rose-800 dark:bg-rose-500/20 dark:text-rose-300",
-  cultura:
-    "border-transparent bg-purple-100 text-purple-800 dark:bg-purple-500/20 dark:text-purple-300",
-  mobilita:
-    "border-transparent bg-cyan-100 text-cyan-800 dark:bg-cyan-500/20 dark:text-cyan-300",
-  altro: "border-transparent bg-muted text-muted-foreground",
-};
+import {
+  MacrotemaBadge,
+  macrotemaColors,
+  macrotemaLabel,
+} from "@/lib/macrotema";
 
 const VOTE_VARIANTS: Record<
   string,
@@ -74,20 +53,6 @@ function formatDate(value: string | null | undefined) {
   return Number.isNaN(d.getTime())
     ? "—"
     : format(d, "dd MMMM yyyy", { locale: it });
-}
-
-function MacrotemaBadge({ macrotema }: { macrotema: string | null | undefined }) {
-  if (!macrotema || macrotema === "altro") return null;
-  const label = MACROTEMA_LABELS[macrotema] ?? macrotema;
-  const colors = MACROTEMA_COLORS[macrotema] ?? MACROTEMA_COLORS.altro;
-  return (
-    <span
-      className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-semibold ${colors}`}
-    >
-      <Layers className="h-3.5 w-3.5" />
-      {label}
-    </span>
-  );
 }
 
 export function SedutaDetail() {
@@ -188,7 +153,7 @@ export function SedutaDetail() {
                 </p>
               )}
               {seduta.macrotema && seduta.macrotema !== "altro" && (
-                <MacrotemaBadge macrotema={seduta.macrotema} />
+                <MacrotemaBadge macrotema={seduta.macrotema} size="lg" />
               )}
               <div className="pt-1">
                 <AlboLink />
@@ -223,9 +188,9 @@ export function SedutaDetail() {
                         </p>
                         {punto.macrotema && punto.macrotema !== "altro" && (
                           <span
-                            className={`mt-1.5 inline-flex items-center rounded-full border px-2 py-0.5 text-[11px] font-medium ${MACROTEMA_COLORS[punto.macrotema] ?? MACROTEMA_COLORS.altro}`}
+                            className={`mt-1.5 inline-flex items-center rounded-full border px-2 py-0.5 text-[11px] font-medium ${macrotemaColors(punto.macrotema)}`}
                           >
-                            {MACROTEMA_LABELS[punto.macrotema] ?? punto.macrotema}
+                            {macrotemaLabel(punto.macrotema)}
                           </span>
                         )}
                       </div>
