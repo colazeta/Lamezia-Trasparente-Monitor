@@ -9,6 +9,10 @@ export interface TestDatabaseConfig {
   testDatabaseName: string;
 }
 
+export function hasTestDatabaseConfig(): boolean {
+  return Boolean(process.env.TEST_DATABASE_URL ?? process.env.DATABASE_URL);
+}
+
 function databaseNameFromUrl(url: URL): string {
   return decodeURIComponent(url.pathname.replace(/^\//, ""));
 }
