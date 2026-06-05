@@ -14,6 +14,14 @@ import {
   HelpCircle,
   Megaphone,
   Type,
+  Landmark,
+  ScrollText,
+  Scale,
+  FileStack,
+  BriefcaseBusiness,
+  HomeIcon,
+  ClipboardCheck,
+  MessageSquareWarning,
   LogOut,
   Menu,
   X,
@@ -33,7 +41,7 @@ import { RedazioneDomande } from "./redazione/RedazioneDomande";
 import { RedazioneSegnalazioni } from "./redazione/RedazioneSegnalazioni";
 import { RedazioneTesti } from "./redazione/RedazioneTesti";
 import { RedazionePagine } from "./redazione/RedazionePagine";
-import { useState } from "react";
+import { lazy, Suspense, useState, type ComponentType, type ElementType } from "react";
 
 const basePath = import.meta.env.BASE_URL.replace(/\/$/, "");
 
@@ -44,19 +52,80 @@ type Section =
   | "cronistoria"
   | "domande"
   | "segnalazioni"
-  | "testi";
+  | "testi"
+  | "accesso-civico"
+  | "appalti"
+  | "atti-fondamentali"
+  | "bandi"
+  | "beni-confiscati"
+  | "brief"
+  | "legalita"
+  | "monitoraggio"
+  | "pareri";
 
-const NAV_ITEMS: { id: Section; label: string; icon: React.ElementType; description: string }[] = [
+const TOKEN_STORAGE_KEY = "lt_ingest_token";
+const CLERK_SESSION_TOKEN_SENTINEL = "__clerk_session__";
+
+const AdminAccessoCivico = lazy(() =>
+  import("./AdminAccessoCivico").then((m) => ({ default: m.AdminAccessoCivico })),
+);
+const AdminAppalti = lazy(() =>
+  import("./AdminAppalti").then((m) => ({ default: m.AdminAppalti })),
+);
+const AdminAttiFondamentali = lazy(() =>
+  import("./AdminAttiFondamentali").then((m) => ({ default: m.AdminAttiFondamentali })),
+);
+const AdminBandi = lazy(() =>
+  import("./AdminBandi").then((m) => ({ default: m.AdminBandi })),
+);
+const AdminBeniConfiscati = lazy(() =>
+  import("./AdminBeniConfiscati").then((m) => ({ default: m.AdminBeniConfiscati })),
+);
+const AdminBriefs = lazy(() =>
+  import("./AdminBriefs").then((m) => ({ default: m.AdminBriefs })),
+);
+const AdminLegalita = lazy(() =>
+  import("./AdminLegalita").then((m) => ({ default: m.AdminLegalita })),
+);
+const AdminMonitoraggio = lazy(() =>
+  import("./AdminMonitoraggio").then((m) => ({ default: m.AdminMonitoraggio })),
+);
+const AdminPareri = lazy(() =>
+  import("./AdminPareri").then((m) => ({ default: m.AdminPareri })),
+);
+
+function withClerkSessionToken(Component: ComponentType): ComponentType {
+  return function ClerkSessionTokenBridge() {
+    try {
+      sessionStorage.setItem(TOKEN_STORAGE_KEY, CLERK_SESSION_TOKEN_SENTINEL);
+    } catch {
+      /* sessionStorage can be unavailable in hardened browsers; the Clerk cookie still authenticates requests. */
+    }
+
+    return <Component />;
+  };
+}
+
+const NAV_ITEMS: { id: Section; label: string; icon: ElementType; description: string }[] = [
   { id: "bacheca", label: "Bacheca", icon: LayoutDashboard, description: "Stato fonti e avvisi" },
   { id: "pagine", label: "Pagine & Zone", icon: Layers, description: "Costruttore a blocchi" },
+  { id: "testi", label: "Testi del sito", icon: Type, description: "Micro-copy editoriale" },
   { id: "temi", label: "Temi", icon: FileText, description: "Crea e gestisci i temi" },
   { id: "cronistoria", label: "Cronistoria", icon: History, description: "Aggiornamenti narrativi" },
   { id: "domande", label: "Domande", icon: HelpCircle, description: "Cosa puoi scoprire?" },
   { id: "segnalazioni", label: "Segnalazioni", icon: Megaphone, description: "Modera le segnalazioni" },
-  { id: "testi", label: "Testi del sito", icon: Type, description: "Micro-copy editoriale" },
+  { id: "monitoraggio", label: "Monitoraggio", icon: MessageSquareWarning, description: "Modera report civici" },
+  { id: "accesso-civico", label: "Accesso civico", icon: Landmark, description: "Registro FOIA e documenti" },
+  { id: "appalti", label: "Appalti", icon: BriefcaseBusiness, description: "Ambiti e posizioni contratti" },
+  { id: "bandi", label: "Bandi", icon: ClipboardCheck, description: "Avvisi, esiti e scadenze" },
+  { id: "beni-confiscati", label: "Beni confiscati", icon: HomeIcon, description: "Censimento e geografia" },
+  { id: "atti-fondamentali", label: "Atti fondamentali", icon: ScrollText, description: "Statuti, regolamenti e PIAO" },
+  { id: "legalita", label: "Legalità", icon: Scale, description: "Aree e requisiti trasparenza" },
+  { id: "pareri", label: "Pareri", icon: FileStack, description: "Pareri organi di vigilanza" },
+  { id: "brief", label: "Brief AI", icon: ShieldCheck, description: "Sintesi automatiche albo" },
 ];
 
-const SECTION_MAP: Record<Section, React.ComponentType> = {
+const SECTION_MAP: Record<Section, ComponentType> = {
   bacheca: RedazioneBacheca,
   pagine: RedazionePagine,
   temi: RedazioneTemi,
@@ -64,6 +133,15 @@ const SECTION_MAP: Record<Section, React.ComponentType> = {
   domande: RedazioneDomande,
   segnalazioni: RedazioneSegnalazioni,
   testi: RedazioneTesti,
+  monitoraggio: withClerkSessionToken(AdminMonitoraggio),
+  "accesso-civico": AdminAccessoCivico,
+  appalti: withClerkSessionToken(AdminAppalti),
+  bandi: withClerkSessionToken(AdminBandi),
+  "beni-confiscati": withClerkSessionToken(AdminBeniConfiscati),
+  "atti-fondamentali": withClerkSessionToken(AdminAttiFondamentali),
+  legalita: withClerkSessionToken(AdminLegalita),
+  pareri: withClerkSessionToken(AdminPareri),
+  brief: AdminBriefs,
 };
 
 function useWhoami(enabled: boolean) {
@@ -94,7 +172,7 @@ export function Redazione() {
   const { data: whoami, isLoading: whoamiLoading } = useWhoami(!!user);
 
   function navigateTo(id: Section) {
-    navigate(`${basePath}/redazione?s=${id}`);
+    navigate(`/redazione?s=${id}`);
     setSidebarOpen(false);
   }
 
@@ -254,7 +332,15 @@ export function Redazione() {
         </header>
 
         <main className="flex-1 overflow-auto">
-          <SectionComponent />
+          <Suspense
+            fallback={
+              <div className="flex min-h-[50dvh] items-center justify-center">
+                <Loader2 className="h-6 w-6 animate-spin text-brand" />
+              </div>
+            }
+          >
+            <SectionComponent />
+          </Suspense>
         </main>
       </div>
     </div>
