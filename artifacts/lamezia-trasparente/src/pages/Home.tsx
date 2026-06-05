@@ -103,26 +103,40 @@ function usePublishedBlocks(pageSlug: string) {
 // React Query deduplicates the requests when the same hooks run in the
 // static layout too.
 
+function getStringContent(
+  content: Record<string, unknown>,
+  ...keys: string[]
+): string | undefined {
+  for (const key of keys) {
+    const value = content[key];
+    if (typeof value === "string" && value.trim()) {
+      return value;
+    }
+  }
+  return undefined;
+}
+
 function BlockHero({ content }: { content: Record<string, unknown> }) {
-  const title = content.title ?? content.headline;
-  const subtitle = content.subtitle ?? content.subtext;
-  const ctaHref = content.ctaUrl ?? content.ctaHref;
+  const title = getStringContent(content, "title", "headline");
+  const subtitle = getStringContent(content, "subtitle", "subtext");
+  const ctaHref = getStringContent(content, "ctaUrl", "ctaHref");
+  const ctaLabel = getStringContent(content, "ctaLabel");
   return (
     <section className="bg-sidebar text-sidebar-foreground py-16 px-6 text-center">
       {title && (
         <h1 className="font-display text-4xl font-bold tracking-tight sm:text-5xl">
-          {String(title)}
+          {title}
         </h1>
       )}
       {subtitle && (
         <p className="mt-4 max-w-2xl mx-auto text-lg text-sidebar-foreground/70">
-          {String(subtitle)}
+          {subtitle}
         </p>
       )}
-      {content.ctaLabel && ctaHref && (
+      {ctaLabel && ctaHref && (
         <div className="mt-8">
           <Button asChild size="lg">
-            <Link href={String(ctaHref)}>{String(content.ctaLabel)}</Link>
+            <Link href={ctaHref}>{ctaLabel}</Link>
           </Button>
         </div>
       )}
@@ -131,21 +145,22 @@ function BlockHero({ content }: { content: Record<string, unknown> }) {
 }
 
 function BlockCtaBanner({ content }: { content: Record<string, unknown> }) {
-  const title = content.title ?? content.headline;
-  const subtitle = content.subtitle ?? content.subtext;
-  const ctaHref = content.ctaUrl ?? content.ctaHref;
+  const title = getStringContent(content, "title", "headline");
+  const subtitle = getStringContent(content, "subtitle", "subtext");
+  const ctaHref = getStringContent(content, "ctaUrl", "ctaHref");
+  const ctaLabel = getStringContent(content, "ctaLabel");
   return (
     <section className="bg-brand/10 border-y border-brand/20 py-10 px-6 text-center">
       {title && (
-        <h2 className="font-display text-2xl font-bold">{String(title)}</h2>
+        <h2 className="font-display text-2xl font-bold">{title}</h2>
       )}
       {subtitle && (
-        <p className="mt-2 text-muted-foreground">{String(subtitle)}</p>
+        <p className="mt-2 text-muted-foreground">{subtitle}</p>
       )}
-      {content.ctaLabel && ctaHref && (
+      {ctaLabel && ctaHref && (
         <div className="mt-6">
           <Button asChild variant="default">
-            <Link href={String(ctaHref)}>{String(content.ctaLabel)}</Link>
+            <Link href={ctaHref}>{ctaLabel}</Link>
           </Button>
         </div>
       )}
@@ -160,8 +175,8 @@ function BlockQuickLinks({ content }: { content: Record<string, unknown> }) {
   if (links.length === 0) return null;
   return (
     <section className="py-10 px-6 max-w-5xl mx-auto">
-      {content.title && (
-        <h2 className="font-display text-xl font-bold mb-4">{String(content.title)}</h2>
+      {getStringContent(content, "title") && (
+        <h2 className="font-display text-xl font-bold mb-4">{getStringContent(content, "title")}</h2>
       )}
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
         {links.map((link, i) => (
@@ -179,12 +194,12 @@ function BlockQuickLinks({ content }: { content: Record<string, unknown> }) {
 function BlockRichText({ content }: { content: Record<string, unknown> }) {
   return (
     <section className="py-10 px-6 max-w-3xl mx-auto">
-      {content.title && (
-        <h2 className="font-display text-xl font-bold mb-4">{String(content.title)}</h2>
+      {getStringContent(content, "title") && (
+        <h2 className="font-display text-xl font-bold mb-4">{getStringContent(content, "title")}</h2>
       )}
-      {content.body && (
+      {getStringContent(content, "body") && (
         <div className="prose prose-sm max-w-none text-foreground">
-          <p>{String(content.body)}</p>
+          <p>{getStringContent(content, "body")}</p>
         </div>
       )}
     </section>
@@ -192,16 +207,17 @@ function BlockRichText({ content }: { content: Record<string, unknown> }) {
 }
 
 function BlockCallToAction({ content }: { content: Record<string, unknown> }) {
-  const ctaHref = content.ctaUrl ?? content.ctaHref;
-  if (!content.ctaLabel || !ctaHref) return null;
+  const ctaHref = getStringContent(content, "ctaUrl", "ctaHref");
+  const ctaLabel = getStringContent(content, "ctaLabel");
+  if (!ctaLabel || !ctaHref) return null;
   return (
     <section className="py-10 px-6 text-center">
-      {content.title && (
-        <h2 className="font-display text-xl font-bold mb-4">{String(content.title)}</h2>
+      {getStringContent(content, "title") && (
+        <h2 className="font-display text-xl font-bold mb-4">{getStringContent(content, "title")}</h2>
       )}
       <Button asChild size="lg" variant="brand">
-        <Link href={String(ctaHref)}>
-          {String(content.ctaLabel)} <ArrowRight className="ml-1 h-4 w-4" />
+        <Link href={ctaHref}>
+          {ctaLabel} <ArrowRight className="ml-1 h-4 w-4" />
         </Link>
       </Button>
     </section>
@@ -209,18 +225,20 @@ function BlockCallToAction({ content }: { content: Record<string, unknown> }) {
 }
 
 function BlockImage({ content }: { content: Record<string, unknown> }) {
-  if (!content.src) return null;
+  const src = getStringContent(content, "src");
+  const caption = getStringContent(content, "caption");
+  if (!src) return null;
   return (
     <section className="py-10 px-6 max-w-3xl mx-auto">
       <figure>
         <img
-          src={String(content.src)}
-          alt={content.alt ? String(content.alt) : ""}
+          src={src}
+          alt={getStringContent(content, "alt") ?? ""}
           className="rounded-xl w-full object-cover"
         />
-        {content.caption && (
+        {caption && (
           <figcaption className="mt-2 text-center text-sm text-muted-foreground">
-            {String(content.caption)}
+            {caption}
           </figcaption>
         )}
       </figure>
@@ -229,19 +247,22 @@ function BlockImage({ content }: { content: Record<string, unknown> }) {
 }
 
 function BlockSectionEmbed({ content }: { content: Record<string, unknown> }) {
-  if (!content.href) return null;
+  const href = getStringContent(content, "href");
+  const title = getStringContent(content, "title");
+  const description = getStringContent(content, "description");
+  if (!href) return null;
   return (
     <section className="py-8 px-6 max-w-3xl mx-auto">
       <Link
-        href={String(content.href)}
+        href={href}
         className="flex items-center justify-between rounded-xl border border-border bg-card p-5 hover:border-primary/40 hover:bg-muted/40 transition-colors group"
       >
         <div>
-          {content.title && (
-            <p className="font-semibold text-foreground">{String(content.title)}</p>
+          {title && (
+            <p className="font-semibold text-foreground">{title}</p>
           )}
-          {content.description && (
-            <p className="text-sm text-muted-foreground mt-0.5">{String(content.description)}</p>
+          {description && (
+            <p className="text-sm text-muted-foreground mt-0.5">{description}</p>
           )}
         </div>
         <ArrowUpRight className="h-5 w-5 text-muted-foreground group-hover:text-primary transition-colors shrink-0" />

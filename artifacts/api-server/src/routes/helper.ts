@@ -1,4 +1,8 @@
 import { Router, type IRouter } from "express";
+import type {
+  ChatCompletionMessageFunctionToolCall,
+  ChatCompletionMessageToolCall,
+} from "openai/resources/chat/completions";
 import {
   listDocuments,
   listContracts,
@@ -56,6 +60,12 @@ export function _resetOpenAiClientForTest(): void {
 const RATE_WINDOW_MS = 60_000;
 const RATE_LIMIT = 10;
 const ipBuckets = new Map<string, { count: number; resetAt: number }>();
+
+function isFunctionToolCall(
+  toolCall: ChatCompletionMessageToolCall,
+): toolCall is ChatCompletionMessageFunctionToolCall {
+  return toolCall.type === "function";
+}
 
 function checkRateLimit(ip: string): boolean {
   const now = Date.now();
@@ -420,6 +430,15 @@ ${routeHint}`;
         messages.push(msg);
 
         for (const tc of msg.tool_calls) {
+          if (!isFunctionToolCall(tc)) {
+            messages.push({
+              role: "tool",
+              tool_call_id: tc.id,
+              content: JSON.stringify({ error: "Tipo di tool non supportato" }),
+            });
+            continue;
+          }
+
           let parsedArgs: Record<string, unknown> = {};
           try {
             parsedArgs = JSON.parse(tc.function.arguments) as Record<

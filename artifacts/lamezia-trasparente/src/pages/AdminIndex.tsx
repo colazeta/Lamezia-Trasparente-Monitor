@@ -79,7 +79,7 @@ const ADMIN_PANELS: AdminPanel[] = [
   },
   {
     href: "/redazione",
-    title: "Sintesi "In breve"",
+    title: 'Sintesi "In breve"',
     description: "Genera con un clic le sintesi AI mancanti degli atti.",
     icon: Sparkles,
   },

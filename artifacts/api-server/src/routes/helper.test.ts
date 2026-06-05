@@ -1,5 +1,5 @@
 import { describe, it, expect, afterAll, vi, beforeEach } from "vitest";
-import request from "supertest";
+import request, { type Response } from "supertest";
 import app from "../app";
 import { pool } from "@workspace/db";
 import { _resetOpenAiClientForTest } from "./helper";
@@ -166,7 +166,7 @@ describe("POST /api/helper/ask — validation", () => {
 // ---------------------------------------------------------------------------
 // Helper that collects SSE body as a string. Supertest's custom parser stores
 // the result in res.body (not res.text) when a parse fn is provided.
-function sseBody(res: import("superagent").Response): string {
+function sseBody(res: Response): string {
   return typeof res.body === "string" ? res.body : "";
 }
 
@@ -180,7 +180,7 @@ function parseSseEvents(raw: string): Record<string, unknown>[] {
 async function askSse(
   question: string,
   extra: Record<string, unknown> = {},
-): Promise<import("supertest").Response> {
+): Promise<Response> {
   return request(app)
     .post("/api/helper/ask")
     .send({ question, ...extra })
