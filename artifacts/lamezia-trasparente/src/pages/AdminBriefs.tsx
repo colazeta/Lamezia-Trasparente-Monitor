@@ -1,4 +1,3 @@
-import { useState, type FormEvent } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import {
@@ -8,7 +7,6 @@ import {
 } from "@workspace/api-client-react";
 import {
   ShieldCheck,
-  LogOut,
   Sparkles,
   RefreshCw,
   Loader2,
@@ -17,8 +15,6 @@ import {
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import {
   Card,
   CardContent,
@@ -27,119 +23,8 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
-const TOKEN_STORAGE_KEY = "lt_ingest_token";
-
-function readStoredToken(): string {
-  try {
-    return sessionStorage.getItem(TOKEN_STORAGE_KEY) ?? "";
-  } catch {
-    return "";
-  }
-}
-
 export function AdminBriefs() {
-  const [token, setToken] = useState<string>(() => readStoredToken());
-
-  if (!token) {
-    return (
-      <TokenGate
-        onAuthenticated={(value) => {
-          try {
-            sessionStorage.setItem(TOKEN_STORAGE_KEY, value);
-          } catch {
-            /* sessionStorage unavailable — keep in-memory only */
-          }
-          setToken(value);
-        }}
-      />
-    );
-  }
-
-  return (
-    <AdminEditor
-      token={token}
-      onSignOut={() => {
-        try {
-          sessionStorage.removeItem(TOKEN_STORAGE_KEY);
-        } catch {
-          /* ignore */
-        }
-        setToken("");
-      }}
-    />
-  );
-}
-
-function TokenGate({
-  onAuthenticated,
-}: {
-  onAuthenticated: (token: string) => void;
-}) {
-  const [value, setValue] = useState("");
-
-  const handleSubmit = (e: FormEvent) => {
-    e.preventDefault();
-    const trimmed = value.trim();
-    if (!trimmed) {
-      toast.error("Inserisci il token di accesso.");
-      return;
-    }
-    onAuthenticated(trimmed);
-  };
-
-  return (
-    <div className="container mx-auto px-4 py-16 md:py-24">
-      <div className="mx-auto max-w-md">
-        <Card className="border-brand/30 shadow-md">
-          <CardHeader className="space-y-2">
-            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-brand/10 text-brand">
-              <ShieldCheck className="h-6 w-6" />
-            </div>
-            <CardTitle className="font-display text-2xl">
-              Area Redazione
-            </CardTitle>
-            <CardDescription>
-              Inserisci il token di accesso per generare le sintesi “In breve”
-              mancanti.
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="ingest-token">Token di accesso</Label>
-                <Input
-                  id="ingest-token"
-                  type="password"
-                  autoComplete="off"
-                  placeholder="••••••••••••"
-                  value={value}
-                  onChange={(e) => setValue(e.target.value)}
-                  aria-label="Token di accesso redazione"
-                />
-              </div>
-              <Button type="submit" variant="brand" className="w-full gap-2">
-                <ShieldCheck className="h-4 w-4" />
-                Accedi
-              </Button>
-            </form>
-          </CardContent>
-        </Card>
-      </div>
-    </div>
-  );
-}
-
-function AdminEditor({
-  token,
-  onSignOut,
-}: {
-  token: string;
-  onSignOut: () => void;
-}) {
   const queryClient = useQueryClient();
-  const authRequest = {
-    request: { headers: { Authorization: `Bearer ${token}` } },
-  };
 
   const {
     data: status,
@@ -147,7 +32,6 @@ function AdminEditor({
     isFetching,
     refetch,
   } = useGetBriefsStatus({
-    ...authRequest,
     query: {
       queryKey: getGetBriefsStatusQueryKey(),
       // Mantieni aggiornato l'avanzamento mentre il batch gira in background.
@@ -156,19 +40,7 @@ function AdminEditor({
     },
   });
 
-  const generate = useGenerateBriefs(authRequest);
-
-  const isAuthError = (error: unknown): boolean => {
-    const s = (error as { status?: number } | null)?.status;
-    return s === 401 || s === 403;
-  };
-
-  const handleAuthError = () => {
-    toast.error("Sessione scaduta o token non valido", {
-      description: "Effettua di nuovo l'accesso.",
-    });
-    onSignOut();
-  };
+  const generate = useGenerateBriefs();
 
   const refreshStatus = () => {
     queryClient.invalidateQueries({ queryKey: getGetBriefsStatusQueryKey() });
@@ -192,10 +64,6 @@ function AdminEditor({
         refreshStatus();
       },
       onError: (error) => {
-        if (isAuthError(error)) {
-          handleAuthError();
-          return;
-        }
         const s = (error as { status?: number } | null)?.status;
         if (s === 409) {
           toast.error("Generazione già in corso", {
@@ -226,25 +94,19 @@ function AdminEditor({
 
   return (
     <div className="container mx-auto max-w-3xl px-4 py-8 md:py-12">
-      <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <span className="eyebrow text-primary">
-            <Sparkles className="h-3.5 w-3.5" />
-            Area Redazione
-          </span>
-          <h1 className="mt-2 font-display text-3xl font-bold tracking-tight">
-            Sintesi “In breve”
-          </h1>
-          <p className="mt-2 max-w-2xl text-muted-foreground">
-            Genera con un clic tutte le sintesi “In breve” mancanti per gli atti
-            dell'Albo Pretorio che hanno il testo completo. Le sintesi curate a
-            mano non vengono mai sovrascritte.
-          </p>
-        </div>
-        <Button variant="outline" className="gap-2 shrink-0" onClick={onSignOut}>
-          <LogOut className="h-4 w-4" />
-          Esci
-        </Button>
+      <div className="mb-6">
+        <span className="eyebrow text-primary">
+          <Sparkles className="h-3.5 w-3.5" />
+          Area Redazione
+        </span>
+        <h1 className="mt-2 font-display text-3xl font-bold tracking-tight">
+          Sintesi "In breve"
+        </h1>
+        <p className="mt-2 max-w-2xl text-muted-foreground">
+          Genera con un clic tutte le sintesi "In breve" mancanti per gli atti
+          dell'Albo Pretorio che hanno il testo completo. Le sintesi curate a
+          mano non vengono mai sovrascritte.
+        </p>
       </div>
 
       <Card className="mb-4 border-card-border">

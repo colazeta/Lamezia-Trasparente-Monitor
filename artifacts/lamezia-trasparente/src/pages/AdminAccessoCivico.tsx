@@ -18,7 +18,6 @@ import {
 } from "@workspace/api-client-react";
 import {
   ShieldCheck,
-  LogOut,
   Loader2,
   Save,
   Pencil,
@@ -64,8 +63,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-const TOKEN_STORAGE_KEY = "lt_ingest_token";
-
 const ALLOWED_DOCUMENT_TYPES = [
   "application/pdf",
   "application/msword",
@@ -106,106 +103,6 @@ const STATO_META: Record<
   },
 };
 
-function readStoredToken(): string {
-  try {
-    return sessionStorage.getItem(TOKEN_STORAGE_KEY) ?? "";
-  } catch {
-    return "";
-  }
-}
-
-export function AdminAccessoCivico() {
-  const [token, setToken] = useState<string>(() => readStoredToken());
-
-  if (!token) {
-    return (
-      <TokenGate
-        onAuthenticated={(value) => {
-          try {
-            sessionStorage.setItem(TOKEN_STORAGE_KEY, value);
-          } catch {
-            /* sessionStorage unavailable — keep in-memory only */
-          }
-          setToken(value);
-        }}
-      />
-    );
-  }
-
-  return (
-    <AdminEditor
-      token={token}
-      onSignOut={() => {
-        try {
-          sessionStorage.removeItem(TOKEN_STORAGE_KEY);
-        } catch {
-          /* ignore */
-        }
-        setToken("");
-      }}
-    />
-  );
-}
-
-function TokenGate({
-  onAuthenticated,
-}: {
-  onAuthenticated: (token: string) => void;
-}) {
-  const [value, setValue] = useState("");
-
-  const handleSubmit = (e: FormEvent) => {
-    e.preventDefault();
-    const trimmed = value.trim();
-    if (!trimmed) {
-      toast.error("Inserisci il token di accesso.");
-      return;
-    }
-    onAuthenticated(trimmed);
-  };
-
-  return (
-    <div className="container mx-auto px-4 py-16 md:py-24">
-      <div className="mx-auto max-w-md">
-        <Card className="border-brand/30 shadow-md">
-          <CardHeader className="space-y-2">
-            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-brand/10 text-brand">
-              <ShieldCheck className="h-6 w-6" />
-            </div>
-            <CardTitle className="font-display text-2xl">
-              Area Redazione
-            </CardTitle>
-            <CardDescription>
-              Inserisci il token di accesso per moderare le richieste di accesso
-              civico.
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="ingest-token">Token di accesso</Label>
-                <Input
-                  id="ingest-token"
-                  type="password"
-                  autoComplete="off"
-                  placeholder="••••••••••••"
-                  value={value}
-                  onChange={(e) => setValue(e.target.value)}
-                  aria-label="Token di accesso redazione"
-                />
-              </div>
-              <Button type="submit" variant="brand" className="w-full gap-2">
-                <ShieldCheck className="h-4 w-4" />
-                Accedi
-              </Button>
-            </form>
-          </CardContent>
-        </Card>
-      </div>
-    </div>
-  );
-}
-
 type FormState = {
   oggetto: string;
   tipo: AccessoCivicoTipo;
@@ -242,17 +139,8 @@ function fromForm(r: AccessoCivicoRequestAdmin): FormState {
   };
 }
 
-function AdminEditor({
-  token,
-  onSignOut,
-}: {
-  token: string;
-  onSignOut: () => void;
-}) {
+export function AdminAccessoCivico() {
   const queryClient = useQueryClient();
-  const authRequest = {
-    request: { headers: { Authorization: `Bearer ${token}` } },
-  };
 
   const [editingId, setEditingId] = useState<number | null>(null);
   const [form, setForm] = useState<FormState | null>(null);
@@ -262,33 +150,15 @@ function AdminEditor({
   const {
     data: requests,
     isLoading,
-    error: listError,
   } = useListAccessoCivicoAdmin({
-    ...authRequest,
     query: { queryKey: getListAccessoCivicoAdminQueryKey() },
   });
 
-  const updateRequest = useUpdateAccessoCivico(authRequest);
-  const deleteRequest = useDeleteAccessoCivico(authRequest);
-  const publishRequest = usePublishAccessoCivico(authRequest);
-  const importRequest = useImportAccessoCivico(authRequest);
-  const requestUploadUrl = useRequestDocumentUploadUrl(authRequest);
-
-  const isAuthError = (error: unknown): boolean => {
-    const status = (error as { status?: number } | null)?.status;
-    return status === 401 || status === 403;
-  };
-
-  const handleAuthError = () => {
-    toast.error("Sessione scaduta o token non valido", {
-      description: "Effettua di nuovo l'accesso.",
-    });
-    onSignOut();
-  };
-
-  if (listError && isAuthError(listError)) {
-    handleAuthError();
-  }
+  const updateRequest = useUpdateAccessoCivico();
+  const deleteRequest = useDeleteAccessoCivico();
+  const publishRequest = usePublishAccessoCivico();
+  const importRequest = useImportAccessoCivico();
+  const requestUploadUrl = useRequestDocumentUploadUrl();
 
   const invalidate = () => {
     queryClient.invalidateQueries({
@@ -347,11 +217,7 @@ function AdminEditor({
       toast.success("Documento caricato", {
         description: "Salva la richiesta per allegarlo.",
       });
-    } catch (error) {
-      if (isAuthError(error)) {
-        handleAuthError();
-        return;
-      }
+    } catch {
       toast.error("Caricamento non riuscito.");
     } finally {
       setUploading(false);
@@ -390,11 +256,7 @@ function AdminEditor({
       toast.success("Richiesta aggiornata.");
       invalidate();
       resetForm();
-    } catch (error) {
-      if (isAuthError(error)) {
-        handleAuthError();
-        return;
-      }
+    } catch {
       toast.error("Operazione non riuscita.");
     }
   };
@@ -406,11 +268,7 @@ function AdminEditor({
         description: "Ora è visibile nel registro pubblico.",
       });
       invalidate();
-    } catch (error) {
-      if (isAuthError(error)) {
-        handleAuthError();
-        return;
-      }
+    } catch {
       toast.error("Pubblicazione non riuscita.");
     }
   };
@@ -424,11 +282,7 @@ function AdminEditor({
       toast.success("Richiesta eliminata.");
       if (editingId === r.id) resetForm();
       invalidate();
-    } catch (error) {
-      if (isAuthError(error)) {
-        handleAuthError();
-        return;
-      }
+    } catch {
       toast.error("Eliminazione non riuscita.");
     }
   };
@@ -438,26 +292,20 @@ function AdminEditor({
 
   return (
     <div className="container mx-auto px-4 py-8 md:py-12">
-      <div className="mb-8 flex flex-wrap items-start justify-between gap-4">
-        <div className="space-y-1">
-          <div className="flex items-center gap-2 text-brand">
-            <ShieldCheck className="h-5 w-5" />
-            <span className="font-mono text-xs uppercase tracking-wider">
-              Area Redazione
-            </span>
-          </div>
-          <h1 className="font-display text-3xl font-bold tracking-tight md:text-4xl">
-            Accesso Civico
-          </h1>
-          <p className="text-muted-foreground">
-            Modera le richieste inviate dai cittadini, aggiorna l'esito e allega
-            il documento di risposta dell'ente.
-          </p>
+      <div className="mb-8 space-y-1">
+        <div className="flex items-center gap-2 text-brand">
+          <ShieldCheck className="h-5 w-5" />
+          <span className="font-mono text-xs uppercase tracking-wider">
+            Area Redazione
+          </span>
         </div>
-        <Button variant="outline" className="gap-2" onClick={onSignOut}>
-          <LogOut className="h-4 w-4" />
-          Esci
-        </Button>
+        <h1 className="font-display text-3xl font-bold tracking-tight md:text-4xl">
+          Accesso Civico
+        </h1>
+        <p className="text-muted-foreground">
+          Modera le richieste inviate dai cittadini, aggiorna l'esito e allega
+          il documento di risposta dell'ente.
+        </p>
       </div>
 
       <ImportPanel
@@ -467,8 +315,6 @@ function AdminEditor({
           return result;
         }}
         isPending={importRequest.isPending}
-        onAuthError={handleAuthError}
-        isAuthError={isAuthError}
       />
 
       <div className="grid gap-8 lg:grid-cols-2">
@@ -929,15 +775,11 @@ type ImportSummary = {
 function ImportPanel({
   onImport,
   isPending,
-  onAuthError,
-  isAuthError,
 }: {
   onImport: (
     righe: ImportParseResult["rows"],
   ) => Promise<Omit<ImportSummary, "sourceLines">>;
   isPending: boolean;
-  onAuthError: () => void;
-  isAuthError: (error: unknown) => boolean;
 }) {
   const [open, setOpen] = useState(false);
   const [parsed, setParsed] = useState<ImportParseResult | null>(null);
@@ -982,11 +824,7 @@ function ImportPanel({
           ? { description: `${result.scartate.length} righe scartate.` }
           : undefined,
       );
-    } catch (error) {
-      if (isAuthError(error)) {
-        onAuthError();
-        return;
-      }
+    } catch {
       toast.error("Importazione non riuscita.");
     }
   };

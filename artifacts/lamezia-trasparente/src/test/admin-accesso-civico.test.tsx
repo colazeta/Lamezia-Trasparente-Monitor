@@ -53,8 +53,6 @@ vi.mock("sonner", () => ({
 
 import { AdminAccessoCivico } from "@/pages/AdminAccessoCivico";
 
-const TOKEN_STORAGE_KEY = "lt_ingest_token";
-
 function makeRequest(
   overrides: Partial<AccessoCivicoRequestAdmin> & { id: number },
 ): AccessoCivicoRequestAdmin {
@@ -106,12 +104,10 @@ describe("AdminAccessoCivico source distinction", () => {
   });
 
   afterEach(() => {
-    sessionStorage.clear();
     mockState.requests = [];
   });
 
   it("distinguishes official-register entries from citizen requests in the list", () => {
-    sessionStorage.setItem(TOKEN_STORAGE_KEY, "test-token");
     mockState.requests = [
       makeRequest({ id: 1, origine: "cittadino" }),
       makeRequest({
@@ -152,12 +148,10 @@ describe("AdminAccessoCivico import summary", () => {
   });
 
   afterEach(() => {
-    sessionStorage.clear();
     mockState.requests = [];
   });
 
   it("lists each skipped row with its source line, reason, counts and a re-upload CTA", async () => {
-    sessionStorage.setItem(TOKEN_STORAGE_KEY, "test-token");
     // Riga 3 (oggetto mancante) viene scartata in anteprima; restano due righe
     // valide su righe sorgente 2 e 4. Il server scarta la seconda (indice 1),
     // che deve essere ricondotta alla riga 4 del file.

@@ -30,56 +30,56 @@ type AdminPanel = {
 
 const ADMIN_PANELS: AdminPanel[] = [
   {
-    href: "/admin/cronistoria",
+    href: "/redazione?s=cronistoria",
     title: "Cronistoria",
     description: "Pubblica e modifica gli aggiornamenti della cronistoria.",
     icon: CalendarClock,
   },
   {
-    href: "/admin/domande",
+    href: "/redazione?s=domande",
     title: "Domande",
     description: "Gestisci le domande inviate dai cittadini.",
     icon: MessageSquare,
   },
   {
-    href: "/admin/appalti",
+    href: "/redazione",
     title: "Appalti",
     description: "Classifica gli ambiti di spesa degli appalti.",
     icon: FileSignature,
   },
   {
-    href: "/admin/atti-fondamentali",
+    href: "/redazione",
     title: "Atti fondamentali",
     description: "Gestisci gli atti fondamentali dell'amministrazione.",
     icon: Landmark,
   },
   {
-    href: "/admin/accesso-civico",
+    href: "/redazione",
     title: "Accesso Civico",
     description: "Modera le richieste di accesso civico e i loro esiti.",
     icon: FileSearch,
   },
   {
-    href: "/admin/legalita",
+    href: "/redazione",
     title: "Legalità e Trasparenza",
     description: "Aggiorna le aree e i requisiti di legalità.",
     icon: Scale,
   },
   {
-    href: "/admin/monitoraggio",
+    href: "/redazione",
     title: "Monitoraggio Civico",
     description: "Modera i report di monitoraggio inviati dai cittadini.",
     icon: Telescope,
   },
   {
-    href: "/admin/pareri",
+    href: "/redazione",
     title: "Pareri di Vigilanza",
     description: "Gestisci i pareri degli organi di vigilanza.",
     icon: Gavel,
   },
   {
-    href: "/admin/sintesi",
-    title: "Sintesi “In breve”",
+    href: "/redazione",
+    title: "Sintesi "In breve"",
     description: "Genera con un clic le sintesi AI mancanti degli atti.",
     icon: Sparkles,
   },
@@ -99,8 +99,7 @@ export function AdminIndex() {
           Pannelli di Redazione
         </h1>
         <p className="text-muted-foreground">
-          Accedi agli strumenti editoriali. Ogni pannello richiede il token di
-          accesso della redazione.
+          Accedi agli strumenti editoriali tramite il pannello /redazione.
         </p>
       </div>
 
@@ -109,9 +108,9 @@ export function AdminIndex() {
           const Icon = panel.icon;
           return (
             <Link
-              key={panel.href}
+              key={`${panel.href}-${panel.title}`}
               href={panel.href}
-              data-testid={`link-admin-${panel.href.split("/").pop()}`}
+              data-testid={`link-admin-${panel.title.toLowerCase().replace(/\s+/g, "-")}`}
               className="group"
             >
               <Card className="h-full transition-colors hover:border-brand/50">

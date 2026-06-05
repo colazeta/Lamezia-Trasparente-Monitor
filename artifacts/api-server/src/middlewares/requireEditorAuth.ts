@@ -3,8 +3,6 @@ import type { Request, Response, NextFunction } from "express";
 
 /**
  * Editor allowlist: comma-separated email addresses in EDITOR_EMAILS env var.
- * If not set, falls back to INGEST_API_TOKEN bearer check for backwards
- * compatibility with existing server-to-server usage.
  */
 function getAllowedEmails(): Set<string> {
   const raw = process.env.EDITOR_EMAILS ?? "";
@@ -16,39 +14,17 @@ function getAllowedEmails(): Set<string> {
   );
 }
 
-function checkBearerToken(req: Request): boolean {
-  const expected = process.env.INGEST_API_TOKEN;
-  if (!expected) return false;
-  const header = req.get("authorization") ?? "";
-  const match = /^Bearer\s+(.+)$/i.exec(header);
-  const provided = match?.[1]?.trim() ?? "";
-  if (!provided) return false;
-  // Constant-time comparison
-  const { timingSafeEqual } = require("node:crypto") as typeof import("node:crypto");
-  const bufA = Buffer.from(provided);
-  const bufB = Buffer.from(expected);
-  if (bufA.length !== bufB.length) return false;
-  return timingSafeEqual(bufA, bufB);
-}
-
 /**
  * Protects editorial endpoints.
- * Accepts:
- *   1. Valid Clerk session whose primary email is in the EDITOR_EMAILS allowlist.
- *   2. INGEST_API_TOKEN Bearer token (server-to-server / legacy compatibility).
+ * Accepts a valid Clerk session whose primary email is in the EDITOR_EMAILS
+ * allowlist. In development, any authenticated Clerk user is accepted when no
+ * allowlist is configured.
  */
 export function requireEditorAuth(
   req: Request,
   res: Response,
   next: NextFunction,
 ): void {
-  // --- Option 1: Bearer token (server-to-server / legacy) ---
-  if (checkBearerToken(req)) {
-    next();
-    return;
-  }
-
-  // --- Option 2: Clerk session ---
   const auth = getAuth(req);
   const userId = auth?.userId;
   if (!userId) {
