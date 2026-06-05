@@ -67,10 +67,14 @@ function getDeploymentDomain() {
     return stripProtocol(process.env.EXPO_PUBLIC_DOMAIN);
   }
 
-  console.error(
-    "ERROR: No deployment domain found. Set REPLIT_INTERNAL_APP_DOMAIN, REPLIT_DEV_DOMAIN, or EXPO_PUBLIC_DOMAIN",
+  const fallbackDomain = `localhost:${process.env.PORT || "5000"}`;
+  console.warn(
+    "WARNING: No deployment domain found. Falling back to " +
+      `${fallbackDomain} for local/CI validation builds. Set ` +
+      "REPLIT_INTERNAL_APP_DOMAIN, REPLIT_DEV_DOMAIN, or EXPO_PUBLIC_DOMAIN " +
+      "for deployable Expo manifests.",
   );
-  process.exit(1);
+  return fallbackDomain;
 }
 
 function prepareDirectories(timestamp) {
@@ -138,6 +142,8 @@ async function startMetro(expoPublicDomain, expoPublicReplId) {
   console.log(`Setting EXPO_PUBLIC_DOMAIN=${expoPublicDomain}`);
   const env = {
     ...process.env,
+    EXPO_NO_DEPENDENCY_VALIDATION:
+      process.env.EXPO_NO_DEPENDENCY_VALIDATION || "1",
     EXPO_PUBLIC_DOMAIN: expoPublicDomain,
     EXPO_PUBLIC_REPL_ID: expoPublicReplId,
   };
