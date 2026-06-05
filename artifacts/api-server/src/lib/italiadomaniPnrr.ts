@@ -150,7 +150,7 @@ async function fetchFromOpenPnrr(): Promise<InsertItaliadomaniProject[]> {
 
   while (url && pages < 20) {
     pages += 1;
-    const data = await fetchJson<OpenPnrrResponse>(url);
+    const data: OpenPnrrResponse = await fetchJson<OpenPnrrResponse>(url);
     const results = data.results ?? [];
     for (const item of results) {
       const p = mapOpenPnrrProject(item);
@@ -166,7 +166,7 @@ async function fetchFromOpenPnrr(): Promise<InsertItaliadomaniProject[]> {
     let pages2 = 0;
     while (url2 && pages2 < 20) {
       pages2 += 1;
-      const data = await fetchJson<OpenPnrrResponse>(url2);
+      const data: OpenPnrrResponse = await fetchJson<OpenPnrrResponse>(url2);
       const results = data.results ?? [];
       for (const item of results) {
         const p = mapOpenPnrrProject(item);
