@@ -6,7 +6,9 @@ import {
   listPerformance,
   listPnrr,
 } from "../lib/publicData";
-import { helperContents, buildAssistantContext } from "../lib/helperContent";
+import { helperContents, buildAssistantContext, type HelperSection } from "../lib/helperContent";
+import { db, helperOverridesTable } from "@workspace/db";
+import { isNotNull } from "drizzle-orm";
 
 // ============================================================================
 // Helper Cittadinanza Civica — Routes
@@ -282,8 +284,30 @@ async function callTool(
 // Restituisce i contenuti strutturati dell'helper: capitoli della storia e
 // schede sezioni con i passi del tour. Endpoint pubblico, sola lettura.
 // ---------------------------------------------------------------------------
-router.get("/helper/guide", (_req, res) => {
-  res.json(helperContents);
+router.get("/helper/guide", async (_req, res) => {
+  let overrides: { key: string; publishedJson: unknown }[] = [];
+  try {
+    overrides = await db
+      .select({ key: helperOverridesTable.key, publishedJson: helperOverridesTable.publishedJson })
+      .from(helperOverridesTable)
+      .where(isNotNull(helperOverridesTable.publishedJson));
+  } catch {
+    // DB unavailable — serve static content without overrides
+  }
+
+  if (overrides.length === 0) {
+    res.json(helperContents);
+    return;
+  }
+
+  const overrideMap = new Map(overrides.map((o) => [o.key, o.publishedJson]));
+  const mergedSections = helperContents.sections.map((section) => {
+    const override = overrideMap.get(section.id);
+    if (!override || typeof override !== "object" || Array.isArray(override)) return section;
+    return { ...section, ...(override as Partial<HelperSection>) };
+  });
+
+  res.json({ ...helperContents, sections: mergedSections });
 });
 
 // ---------------------------------------------------------------------------

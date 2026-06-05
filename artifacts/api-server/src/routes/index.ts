@@ -23,6 +23,7 @@ import accessoCivicoRouter from "./accessoCivico";
 import publicRouter from "./public";
 import monitoringReportsRouter from "./monitoringReports";
 import helperRouter from "./helper";
+import redazioneRouter from "./redazione";
 
 const router: IRouter = Router();
 
@@ -50,5 +51,6 @@ router.use(accessoCivicoRouter);
 router.use("/public/v1", publicRouter);
 router.use(monitoringReportsRouter);
 router.use(helperRouter);
+router.use(redazioneRouter);
 
 export default router;

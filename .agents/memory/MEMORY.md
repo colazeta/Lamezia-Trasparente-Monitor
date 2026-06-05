@@ -36,3 +36,4 @@
 - [Strict calendar-date validation](strict-date-validation.md) — JS `new Date()` silently normalizes impossible dates (31/02→Mar 2); validate via UTC round-trip on both parser + server import.
 - [Accesso Civico import skipped lines](accesso-civico-import-skipped.md) — server scartate.indice points at filtered rows, not file lines; carry sourceRiga→sourceLines to show real line; jsdom lacks File.text() (polyfill in tests).
 - [Per-section reading progress](per-section-progress.md) — explored-sections persistence: web localStorage `rlt-visited-sections` (wouter useLocation) + mobile AsyncStorage `helper:visited_sections_v1` (expo usePathname).
+- [Redazione editorial panel](redazione-panel.md) — auth/allowlist behavior, public vs draft data partitioning, Clerk appearance design tokens, migration strategy for push'd tables.

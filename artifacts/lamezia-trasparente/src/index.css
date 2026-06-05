@@ -2,6 +2,8 @@
 @import "tw-animate-css";
 @plugin "@tailwindcss/typography";
 
+@layer clerk;
+
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {

@@ -6,16 +6,19 @@ import express, {
 } from "express";
 import cors from "cors";
 import pinoHttp from "pino-http";
+import { clerkMiddleware } from "@clerk/express";
+import { publishableKeyFromHost } from "@clerk/shared/keys";
+import {
+  CLERK_PROXY_PATH,
+  clerkProxyMiddleware,
+  getClerkProxyHost,
+} from "./middlewares/clerkProxyMiddleware";
 import router from "./routes";
 import mcpRouter from "./routes/mcp";
 import { logger } from "./lib/logger";
 
 const app: Express = express();
 
-// L'API è servita dietro il proxy di Replit (e dal proxy del sito), quindi
-// `req.ip` deve essere risolto dall'header X-Forwarded-For per identificare la
-// sorgente reale delle richieste (usato dalla protezione anti-abuso della
-// rilevanza).
 app.set("trust proxy", true);
 
 app.use(
@@ -37,9 +40,23 @@ app.use(
     },
   }),
 );
-app.use(cors());
+
+// Clerk proxy must be before body parsers (streams raw bytes)
+app.use(CLERK_PROXY_PATH, clerkProxyMiddleware());
+
+app.use(cors({ credentials: true, origin: true }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// Clerk session middleware — resolves key from host for multi-domain support
+app.use(
+  clerkMiddleware((req) => ({
+    publishableKey: publishableKeyFromHost(
+      getClerkProxyHost(req) ?? "",
+      process.env.CLERK_PUBLISHABLE_KEY,
+    ),
+  })),
+);
 
 app.use("/api/mcp", mcpRouter);
 app.use("/api", router);

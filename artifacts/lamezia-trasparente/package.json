@@ -85,6 +85,9 @@
     "zod": "catalog:"
   },
   "dependencies": {
+    "@clerk/react": "^6.7.3",
+    "@clerk/themes": "^2.4.57",
+    "internal": "link:@clerk/react/internal",
     "leaflet": "^1.9.4",
     "react-leaflet": "^5.0.0",
     "react-markdown": "^10.1.0",

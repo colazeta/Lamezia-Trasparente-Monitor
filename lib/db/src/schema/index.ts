@@ -37,3 +37,4 @@ export * from "./confiscatedAssets";
 export * from "./accessoCivico";
 export * from "./conversations";
 export * from "./messages";
+export * from "./redazione";

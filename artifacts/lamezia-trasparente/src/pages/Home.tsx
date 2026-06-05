@@ -25,9 +25,138 @@ import {
 } from "lucide-react";
 import { NAV_GROUPS } from "@/components/layout/navSections";
 import { useMemo } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+
+// ---------------------------------------------------------------------------
+// Published page-block renderer
+// Fetches blocks from /api/redazione/pages/home/blocks (published only).
+// If the editorial team has configured any blocks, they appear at the top of
+// Home in the order and layout defined in Redazione > Pagine & Zone.
+// Falls back gracefully to the default static layout when the table is empty.
+// ---------------------------------------------------------------------------
+const _basePath = import.meta.env.BASE_URL.replace(/\/$/, "");
+
+type PageBlock = {
+  id: number;
+  blockType: string;
+  position: number;
+  content: Record<string, unknown>;
+};
+
+function usePublishedBlocks(pageSlug: string) {
+  return useQuery<PageBlock[]>({
+    queryKey: ["published-blocks", pageSlug],
+    queryFn: async () => {
+      const res = await fetch(`${_basePath}/api/redazione/pages/${pageSlug}/blocks`);
+      if (!res.ok) return [];
+      return res.json();
+    },
+    staleTime: 2 * 60 * 1000,
+    retry: false,
+  });
+}
+
+function BlockHero({ content }: { content: Record<string, unknown> }) {
+  return (
+    <section className="bg-sidebar text-sidebar-foreground py-16 px-6 text-center">
+      {content.headline && (
+        <h1 className="font-display text-4xl font-bold tracking-tight sm:text-5xl">
+          {String(content.headline)}
+        </h1>
+      )}
+      {content.subtext && (
+        <p className="mt-4 max-w-2xl mx-auto text-lg text-sidebar-foreground/70">
+          {String(content.subtext)}
+        </p>
+      )}
+      {content.ctaLabel && content.ctaHref && (
+        <div className="mt-8">
+          <Button asChild size="lg">
+            <Link href={String(content.ctaHref)}>{String(content.ctaLabel)}</Link>
+          </Button>
+        </div>
+      )}
+    </section>
+  );
+}
+
+function BlockCtaBanner({ content }: { content: Record<string, unknown> }) {
+  return (
+    <section className="bg-brand/10 border-y border-brand/20 py-10 px-6 text-center">
+      {content.headline && (
+        <h2 className="font-display text-2xl font-bold">{String(content.headline)}</h2>
+      )}
+      {content.subtext && (
+        <p className="mt-2 text-muted-foreground">{String(content.subtext)}</p>
+      )}
+      {content.ctaLabel && content.ctaHref && (
+        <div className="mt-6">
+          <Button asChild variant="default">
+            <Link href={String(content.ctaHref)}>{String(content.ctaLabel)}</Link>
+          </Button>
+        </div>
+      )}
+    </section>
+  );
+}
+
+function BlockQuickLinks({ content }: { content: Record<string, unknown> }) {
+  const links = Array.isArray(content.links) ? (content.links as { label: string; href: string }[]) : [];
+  if (links.length === 0) return null;
+  return (
+    <section className="py-10 px-6 max-w-5xl mx-auto">
+      {content.title && (
+        <h2 className="font-display text-xl font-bold mb-4">{String(content.title)}</h2>
+      )}
+      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        {links.map((link, i) => (
+          <Link key={i} href={link.href}>
+            <div className="rounded-xl border border-border bg-card p-4 hover:bg-muted/50 transition-colors cursor-pointer">
+              <span className="text-sm font-medium">{link.label}</span>
+            </div>
+          </Link>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function BlockRichText({ content }: { content: Record<string, unknown> }) {
+  return (
+    <section className="py-10 px-6 max-w-3xl mx-auto">
+      {content.title && (
+        <h2 className="font-display text-xl font-bold mb-4">{String(content.title)}</h2>
+      )}
+      {content.body && (
+        <div className="prose prose-sm max-w-none text-foreground">
+          <p>{String(content.body)}</p>
+        </div>
+      )}
+    </section>
+  );
+}
+
+const BLOCK_RENDERERS: Record<string, React.ComponentType<{ content: Record<string, unknown> }>> = {
+  hero:       BlockHero,
+  cta_banner: BlockCtaBanner,
+  quick_links: BlockQuickLinks,
+  rich_text:  BlockRichText,
+};
+
+function PublishedBlocks({ blocks }: { blocks: PageBlock[] }) {
+  return (
+    <div>
+      {blocks.map((block) => {
+        const Renderer = BLOCK_RENDERERS[block.blockType];
+        if (!Renderer) return null;
+        return <Renderer key={block.id} content={block.content} />;
+      })}
+    </div>
+  );
+}
 import { QuestionCard } from "@/components/questions/QuestionCard";
 import { iconForTopic } from "@/lib/questionTopics";
 import { format } from "date-fns";
@@ -73,6 +202,7 @@ export function Home() {
   });
   const { data: commissioni, isLoading: commissioniLoading } =
     useListConvocazioni({ tipo: "commissione" });
+  const { data: publishedBlocks = [] } = usePublishedBlocks("home");
 
   const { featured, topics } = useMemo(() => {
     const list = questions ?? [];
@@ -97,7 +227,11 @@ export function Home() {
 
   return (
     <div className="flex flex-col">
-      {/* Hero Section */}
+      {/* Editorial block renderer — shows published blocks from Redazione > Pagine & Zone.
+          Falls back to the static layout below when no blocks are published. */}
+      {publishedBlocks.length > 0 && <PublishedBlocks blocks={publishedBlocks} />}
+
+      {/* Hero Section (shown when no editorial blocks override it) */}
       <section data-tour="home-hero" className="relative bg-sidebar text-sidebar-foreground overflow-hidden">
         {/* background texture */}
         <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1518398046578-8cca57782e17?q=80&w=2000&auto=format&fit=crop')] bg-cover bg-center opacity-[0.07] pointer-events-none" />

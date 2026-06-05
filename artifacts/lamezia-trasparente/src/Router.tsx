@@ -39,85 +39,76 @@ import { Reports } from "./pages/Reports";
 import { Metodologia } from "./pages/Metodologia";
 import { Statistics } from "./pages/Statistics";
 import { Subscriptions } from "./pages/Subscriptions";
-import { AdminCronistoria } from "./pages/AdminCronistoria";
-import { AdminDomande } from "./pages/AdminDomande";
-import { AdminAppalti } from "./pages/AdminAppalti";
-import { AdminAttiFondamentali } from "./pages/AdminAttiFondamentali";
-import { AdminBandi } from "./pages/AdminBandi";
-import { AdminBeniConfiscati } from "./pages/AdminBeniConfiscati";
-import { AdminAccessoCivico } from "./pages/AdminAccessoCivico";
-import { AdminLegalita } from "./pages/AdminLegalita";
-import { AdminPareri } from "./pages/AdminPareri";
-import { AdminMonitoraggio } from "./pages/AdminMonitoraggio";
-import { AdminBriefs } from "./pages/AdminBriefs";
-import { AdminIndex } from "./pages/AdminIndex";
 import { Guida } from "./pages/Guida";
+import { Redazione } from "./pages/Redazione";
 import NotFound from "./pages/not-found";
+
+// Legacy /admin/* → redirect to /redazione
+import { Redirect } from "wouter";
+
+function AdminRedirect() {
+  return <Redirect to="/redazione" />;
+}
 
 export function Router() {
   return (
-    <MainLayout>
-      <Switch>
-        <Route path="/" component={Home} />
-        <Route path="/domande" component={Domande} />
-        <Route path="/temi" component={Themes} />
-        <Route path="/temi/:id" component={ThemeDetail} />
-        <Route path="/contratti" component={Contracts} />
-        <Route path="/contratti/:id" component={ContractStoryline} />
-        <Route path="/albo" component={Albo} />
-        <Route path="/albo/:id" component={AlboDetail} />
-        <Route path="/atti-fondamentali" component={AttiFondamentali} />
-        <Route path="/bandi" component={Bandi} />
-        <Route path="/bandi/:slug" component={BandoDetail} />
-        <Route path="/beni-confiscati" component={BeniConfiscati} />
-        <Route path="/beni-confiscati/:slug" component={BeneConfiscatoDetail} />
-        <Route path="/accesso-civico" component={AccessoCivico} />
-        <Route path="/monitoraggio" component={Monitoraggio} />
-        <Route path="/monitoraggio/nuovo" component={MonitoraggioNuovo} />
-        <Route path="/monitoraggio/:id" component={MonitoraggioDetail} />
-        <Route path="/legalita" component={Legalita} />
-        <Route path="/delibere" component={Delibere} />
-        <Route path="/convocazioni" component={Convocazioni} />
-        <Route path="/convocazioni/:id" component={SedutaDetail} />
-        <Route path="/organi" component={Organi} />
-        <Route path="/organi/:slug" component={OrganoDetail} />
-        <Route path="/amministratori" component={Amministratori} />
-        <Route path="/amministratori/:id" component={AmministratoreDetail} />
-        <Route path="/pnrr" component={Pnrr} />
-        <Route path="/opendata" component={Opendata} />
-        <Route path="/opendata/:id" component={OpendataDetail} />
-        <Route path="/feeds" component={Feeds} />
-        <Route path="/sviluppatori" component={Sviluppatori} />
-        <Route path="/performance" component={Performance} />
-        <Route path="/performance/confronta" component={PerformanceCompare} />
-        <Route path="/performance/:id" component={PerformanceDetail} />
-        <Route path="/pareri" component={PareriVigilanza} />
-        <Route path="/pareri/:id" component={PareriVigilanzaDetail} />
-        <Route path="/segnalazioni" component={Reports} />
-        <Route path="/statistiche" component={Statistics} />
-        <Route path="/metodologia" component={Metodologia} />
-        <Route path="/iscrizioni" component={Subscriptions} />
-        <Route path="/guida" component={Guida} />
-        <Route path="/admin" component={AdminIndex} />
-        <Route path="/admin/cronistoria" component={AdminCronistoria} />
-        <Route path="/admin/domande" component={AdminDomande} />
-        <Route path="/admin/appalti" component={AdminAppalti} />
-        <Route
-          path="/admin/atti-fondamentali"
-          component={AdminAttiFondamentali}
-        />
-        <Route path="/admin/bandi" component={AdminBandi} />
-        <Route
-          path="/admin/beni-confiscati"
-          component={AdminBeniConfiscati}
-        />
-        <Route path="/admin/accesso-civico" component={AdminAccessoCivico} />
-        <Route path="/admin/legalita" component={AdminLegalita} />
-        <Route path="/admin/pareri" component={AdminPareri} />
-        <Route path="/admin/monitoraggio" component={AdminMonitoraggio} />
-        <Route path="/admin/sintesi" component={AdminBriefs} />
-        <Route component={NotFound} />
-      </Switch>
-    </MainLayout>
+    <Switch>
+      {/* /redazione — no MainLayout (has its own full layout) */}
+      <Route path="/redazione" component={Redazione} />
+      <Route path="/redazione/*" component={Redazione} />
+
+      {/* Legacy /admin/* redirects to /redazione */}
+      <Route path="/admin" component={AdminRedirect} />
+      <Route path="/admin/*" component={AdminRedirect} />
+
+      {/* Public pages — wrapped in MainLayout */}
+      <Route>
+        <MainLayout>
+          <Switch>
+            <Route path="/" component={Home} />
+            <Route path="/domande" component={Domande} />
+            <Route path="/temi" component={Themes} />
+            <Route path="/temi/:id" component={ThemeDetail} />
+            <Route path="/contratti" component={Contracts} />
+            <Route path="/contratti/:id" component={ContractStoryline} />
+            <Route path="/albo" component={Albo} />
+            <Route path="/albo/:id" component={AlboDetail} />
+            <Route path="/atti-fondamentali" component={AttiFondamentali} />
+            <Route path="/bandi" component={Bandi} />
+            <Route path="/bandi/:slug" component={BandoDetail} />
+            <Route path="/beni-confiscati" component={BeniConfiscati} />
+            <Route path="/beni-confiscati/:slug" component={BeneConfiscatoDetail} />
+            <Route path="/accesso-civico" component={AccessoCivico} />
+            <Route path="/monitoraggio" component={Monitoraggio} />
+            <Route path="/monitoraggio/nuovo" component={MonitoraggioNuovo} />
+            <Route path="/monitoraggio/:id" component={MonitoraggioDetail} />
+            <Route path="/legalita" component={Legalita} />
+            <Route path="/delibere" component={Delibere} />
+            <Route path="/convocazioni" component={Convocazioni} />
+            <Route path="/convocazioni/:id" component={SedutaDetail} />
+            <Route path="/organi" component={Organi} />
+            <Route path="/organi/:slug" component={OrganoDetail} />
+            <Route path="/amministratori" component={Amministratori} />
+            <Route path="/amministratori/:id" component={AmministratoreDetail} />
+            <Route path="/pnrr" component={Pnrr} />
+            <Route path="/opendata" component={Opendata} />
+            <Route path="/opendata/:id" component={OpendataDetail} />
+            <Route path="/feeds" component={Feeds} />
+            <Route path="/sviluppatori" component={Sviluppatori} />
+            <Route path="/performance" component={Performance} />
+            <Route path="/performance/confronta" component={PerformanceCompare} />
+            <Route path="/performance/:id" component={PerformanceDetail} />
+            <Route path="/pareri" component={PareriVigilanza} />
+            <Route path="/pareri/:id" component={PareriVigilanzaDetail} />
+            <Route path="/segnalazioni" component={Reports} />
+            <Route path="/statistiche" component={Statistics} />
+            <Route path="/metodologia" component={Metodologia} />
+            <Route path="/iscrizioni" component={Subscriptions} />
+            <Route path="/guida" component={Guida} />
+            <Route component={NotFound} />
+          </Switch>
+        </MainLayout>
+      </Route>
+    </Switch>
   );
 }
