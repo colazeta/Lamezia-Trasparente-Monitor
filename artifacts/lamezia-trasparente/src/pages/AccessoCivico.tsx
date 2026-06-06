@@ -1,45 +1,24 @@
-import { useMemo, useState, type FormEvent } from "react";
-import { useQueryClient } from "@tanstack/react-query";
+import { useMemo, useState } from "react";
 import { toast } from "sonner";
-import { format } from "date-fns";
-import { it } from "date-fns/locale";
 import {
-  useListAccessoCivico,
-  useCreateAccessoCivico,
-  getListAccessoCivicoQueryKey,
-  type AccessoCivicoRequest,
-  type AccessoCivicoStato,
-  type AccessoCivicoTipo,
-  type ListAccessoCivicoParams,
-} from "@workspace/api-client-react";
-import {
+  AlertTriangle,
+  ClipboardList,
+  Copy,
+  FileQuestion,
   FileSearch,
+  FileText,
   Info,
+  Landmark,
   Scale,
   ShieldCheck,
-  Sparkles,
-  Copy,
-  Download,
-  Send,
-  Clock,
-  CheckCircle2,
-  XCircle,
-  Building2,
-  CalendarDays,
-  FileText,
-  ExternalLink,
-  Landmark,
-  User,
-  FileX,
 } from "lucide-react";
 
-import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Skeleton } from "@/components/ui/skeleton";
 import {
   Select,
   SelectContent,
@@ -54,775 +33,671 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import {
-  Empty,
-  EmptyHeader,
-  EmptyMedia,
-  EmptyTitle,
-  EmptyDescription,
-} from "@/components/ui/empty";
 import { PageMeta } from "@/components/seo/PageMeta";
 
 const DEFAULT_ENTE = "Comune di Lamezia Terme";
+const DEFAULT_OFFICE = "Responsabile della trasparenza / Ufficio competente";
+const TODAY = new Date().toISOString().slice(0, 10);
 
-const TIPO_LABELS: Record<AccessoCivicoTipo, string> = {
-  generalizzato: "Accesso civico generalizzato (FOIA)",
-  semplice: "Accesso civico semplice",
-  documentale: "Accesso documentale (l. 241/1990)",
-};
+type RequestKind = "semplice" | "generalizzato" | "integrazione";
+type ProblemCategoryId =
+  | "atto"
+  | "contratto"
+  | "cig-cup"
+  | "liquidazione"
+  | "pnrr"
+  | "verbale"
+  | "incompleto";
+type RegisterStatus =
+  | "bozza"
+  | "inviata"
+  | "in attesa"
+  | "risposta ricevuta"
+  | "diniego"
+  | "silenzio"
+  | "riesame"
+  | "chiusa";
 
-const TIPO_SHORT: Record<AccessoCivicoTipo, string> = {
-  generalizzato: "Generalizzato",
-  semplice: "Semplice",
-  documentale: "Documentale",
-};
-
-// Riferimenti normativi per ciascun tipo di accesso, usati sia nell'info
-// page sia nel testo precompilato della richiesta.
-const TIPO_NORME: Record<AccessoCivicoTipo, string> = {
-  generalizzato:
-    "art. 5, comma 2, del d.lgs. 14 marzo 2013, n. 33 (accesso civico generalizzato)",
-  semplice:
-    "art. 5, comma 1, del d.lgs. 14 marzo 2013, n. 33 (accesso civico semplice)",
-  documentale:
-    "artt. 22 e seguenti della legge 7 agosto 1990, n. 241 (accesso documentale)",
-};
-
-const STATO_META: Record<
-  AccessoCivicoStato,
-  { label: string; className: string; icon: typeof Clock }
-> = {
-  "in-attesa": {
-    label: "In attesa",
-    className:
-      "border-amber-500/40 bg-amber-500/10 text-amber-700 dark:text-amber-400",
-    icon: Clock,
-  },
-  accolta: {
-    label: "Accolta",
-    className:
-      "border-emerald-500/40 bg-emerald-500/10 text-emerald-700 dark:text-emerald-400",
-    icon: CheckCircle2,
-  },
-  rifiutata: {
-    label: "Rifiutata",
-    className: "border-destructive/40 bg-destructive/10 text-destructive",
-    icon: XCircle,
-  },
-};
-
-function formatDate(value: string | null | undefined) {
-  if (!value) return "—";
-  const d = new Date(value);
-  return Number.isNaN(d.getTime())
-    ? "—"
-    : format(d, "dd MMM yyyy", { locale: it });
-}
-
-function StatoBadge({ stato }: { stato: AccessoCivicoStato }) {
-  const meta = STATO_META[stato];
-  const Icon = meta.icon;
-  return (
-    <Badge
-      variant="outline"
-      className={`gap-1 text-[10px] ${meta.className}`}
-      data-testid={`badge-stato-${stato}`}
-    >
-      <Icon className="h-3 w-3" />
-      {meta.label}
-    </Badge>
-  );
-}
-
-// Costruisce il testo della richiesta a partire dai campi del generatore.
-function buildRequestText(input: {
-  tipo: AccessoCivicoTipo;
-  ente: string;
-  oggetto: string;
-  descrizione: string;
+type GeneratorState = {
+  requestKind: RequestKind;
+  category: ProblemCategoryId;
   requesterName: string;
-}): string {
-  const ente = input.ente.trim() || DEFAULT_ENTE;
-  const norma = TIPO_NORME[input.tipo];
-  const dati =
-    input.descrizione.trim() ||
-    "[indicare i dati, le informazioni o i documenti richiesti]";
-  const oggetto = input.oggetto.trim() || "[oggetto della richiesta]";
-  const firma = input.requesterName.trim() || "[Nome e cognome del richiedente]";
+  documentTarget: string;
+  dateReference: string;
+  recipientOffice: string;
+  contact: string;
+  details: string;
+};
 
-  const intro =
-    input.tipo === "documentale"
-      ? `Il/la sottoscritto/a, in qualità di soggetto interessato e titolare di un interesse diretto, concreto e attuale, ai sensi degli ${norma}, chiede di poter accedere ai seguenti documenti amministrativi:`
-      : `Il/la sottoscritto/a, ai sensi dell'${norma}, non essendo necessaria alcuna motivazione, chiede di poter accedere ai seguenti dati/documenti:`;
+type Template = {
+  id: RequestKind;
+  title: string;
+  description: string;
+};
+
+type ProblemCategory = {
+  id: ProblemCategoryId;
+  label: string;
+  hint: string;
+  suggestedKind: RequestKind;
+  subjectPrefix: string;
+  bodyPrompt: string;
+};
+
+type RegisterEntry = {
+  id: string;
+  creationDate: string;
+  sendingDate?: string;
+  subject: string;
+  category: string;
+  recipientOffice: string;
+  status: RegisterStatus;
+  estimatedDeadline: string;
+  outcome: string;
+  linkedItem?: string;
+  notes: string;
+};
+
+const templates: Template[] = [
+  {
+    id: "semplice",
+    title: "Accesso civico semplice",
+    description:
+      "Per chiedere la pubblicazione di documenti, dati o informazioni soggetti a obbligo di pubblicazione.",
+  },
+  {
+    id: "generalizzato",
+    title: "Accesso civico generalizzato",
+    description:
+      "Per chiedere dati o documenti detenuti dall'amministrazione, ulteriori rispetto a quelli pubblicati.",
+  },
+  {
+    id: "integrazione",
+    title: "Integrazione o chiarimento",
+    description:
+      "Per segnalare in modo prudente un documento pubblicato in modo incompleto o non accessibile.",
+  },
+];
+
+const problemCategories: ProblemCategory[] = [
+  {
+    id: "atto",
+    label: "Non trovo un atto",
+    hint: "Delibera, determina, ordinanza o altro atto amministrativo non rintracciato nella sezione consultata.",
+    suggestedKind: "generalizzato",
+    subjectPrefix: "documento o atto non rintracciato",
+    bodyPrompt:
+      "il documento/atto indicato, o le informazioni essenziali per rintracciarlo, non risultano disponibili nella sezione consultata",
+  },
+  {
+    id: "contratto",
+    label: "Non trovo un contratto/convenzione",
+    hint: "Contratti, convenzioni, accordi, allegati o informazioni di contesto.",
+    suggestedKind: "generalizzato",
+    subjectPrefix: "contratto o convenzione non rintracciati",
+    bodyPrompt:
+      "il contratto, la convenzione o gli allegati indicati non risultano rintracciati nella sezione consultata",
+  },
+  {
+    id: "cig-cup",
+    label: "Non trovo un CIG/CUP",
+    hint: "Codici identificativi di gara o progetto da verificare su atti, affidamenti o interventi.",
+    suggestedKind: "generalizzato",
+    subjectPrefix: "CIG/CUP o riferimenti di progetto non rintracciati",
+    bodyPrompt:
+      "il CIG, il CUP o gli ulteriori riferimenti necessari a identificare la procedura/progetto non risultano disponibili nella sezione consultata",
+  },
+  {
+    id: "liquidazione",
+    label: "Non trovo una liquidazione",
+    hint: "Mandato, determina di liquidazione, beneficiario, importo o causale.",
+    suggestedKind: "generalizzato",
+    subjectPrefix: "liquidazione non rintracciata",
+    bodyPrompt:
+      "la liquidazione o i relativi dati essenziali non risultano rintracciati nella sezione consultata",
+  },
+  {
+    id: "pnrr",
+    label: "Non trovo lo stato di un progetto PNRR",
+    hint: "Avanzamento, milestone, importi, cronoprogramma o documentazione collegata a un progetto PNRR.",
+    suggestedKind: "generalizzato",
+    subjectPrefix: "stato di avanzamento progetto PNRR",
+    bodyPrompt:
+      "lo stato di avanzamento o la documentazione essenziale del progetto PNRR indicato non risultano disponibili nella sezione consultata",
+  },
+  {
+    id: "verbale",
+    label: "Non trovo un verbale/resoconto di seduta",
+    hint: "Verbali, resoconti, registrazioni o allegati relativi a sedute di organi collegiali.",
+    suggestedKind: "generalizzato",
+    subjectPrefix: "verbale o resoconto di seduta non rintracciato",
+    bodyPrompt:
+      "il verbale, il resoconto o gli allegati della seduta indicata non risultano rintracciati nella sezione consultata",
+  },
+  {
+    id: "incompleto",
+    label: "Documento pubblicato in modo incompleto o non accessibile",
+    hint: "Documento con allegati mancanti, file non leggibile, scansione incompleta o link non funzionante.",
+    suggestedKind: "integrazione",
+    subjectPrefix: "richiesta di integrazione/chiarimento su documento incompleto o non accessibile",
+    bodyPrompt:
+      "il documento indicato risulta non pienamente consultabile o presenta informazioni/allegati che sembrano incompleti nella sezione consultata",
+  },
+];
+
+const registerStatuses: RegisterStatus[] = [
+  "bozza",
+  "inviata",
+  "in attesa",
+  "risposta ricevuta",
+  "diniego",
+  "silenzio",
+  "riesame",
+  "chiusa",
+];
+
+const initialGenerator: GeneratorState = {
+  requestKind: "generalizzato",
+  category: "atto",
+  requesterName: "",
+  documentTarget: "",
+  dateReference: "",
+  recipientOffice: DEFAULT_OFFICE,
+  contact: "",
+  details: "",
+};
+
+const seedRegister: RegisterEntry[] = [
+  {
+    id: "FOIA-2026-001",
+    creationDate: "2026-06-06",
+    sendingDate: "2026-06-06",
+    subject: "Richiesta stato di avanzamento progetto PNRR: [titolo progetto]",
+    category: "Non trovo lo stato di un progetto PNRR",
+    recipientOffice: DEFAULT_OFFICE,
+    status: "in attesa",
+    estimatedDeadline: "2026-07-06",
+    outcome: "In attesa di riscontro.",
+    linkedItem: "[CUP/progetto da verificare]",
+    notes: "Voce locale dimostrativa: verificare destinatario e riferimenti prima dell'invio effettivo.",
+  },
+  {
+    id: "FOIA-2026-002",
+    creationDate: "2026-06-06",
+    subject: "Bozza richiesta integrazione documento non accessibile: [atto]",
+    category: "Documento pubblicato in modo incompleto o non accessibile",
+    recipientOffice: DEFAULT_OFFICE,
+    status: "bozza",
+    estimatedDeadline: "Da calcolare dopo l'invio",
+    outcome: "Bozza non inviata.",
+    linkedItem: "[atto/documento]",
+    notes: "Il registro v0 non invia email o PEC: conserva solo una traccia client-side.",
+  },
+];
+
+function formatDisplayDate(value: string | undefined) {
+  if (!value) return "—";
+  const date = new Date(`${value}T00:00:00`);
+  return Number.isNaN(date.getTime())
+    ? value
+    : new Intl.DateTimeFormat("it-IT", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+      }).format(date);
+}
+
+function addDays(dateValue: string, days: number) {
+  const date = new Date(`${dateValue}T00:00:00`);
+  date.setDate(date.getDate() + days);
+  return date.toISOString().slice(0, 10);
+}
+
+function getCategory(id: ProblemCategoryId) {
+  return problemCategories.find((category) => category.id === id) ?? problemCategories[0];
+}
+
+function buildSubject(form: GeneratorState) {
+  const category = getCategory(form.category);
+  const item = form.documentTarget.trim() || "[documento/atto/progetto da indicare]";
+
+  if (form.requestKind === "semplice") {
+    return `Richiesta di accesso civico semplice: ${category.subjectPrefix} — ${item}`;
+  }
+
+  if (form.requestKind === "integrazione") {
+    return `Richiesta di integrazione/chiarimento: ${category.subjectPrefix} — ${item}`;
+  }
+
+  return `Richiesta di accesso civico generalizzato: ${category.subjectPrefix} — ${item}`;
+}
+
+function buildRequestText(form: GeneratorState) {
+  const category = getCategory(form.category);
+  const requester = form.requesterName.trim() || "[nome e cognome del/della richiedente]";
+  const recipient = form.recipientOffice.trim() || DEFAULT_OFFICE;
+  const item = form.documentTarget.trim() || "[documento/atto/progetto da indicare]";
+  const dateReference = form.dateReference.trim() || "[data, periodo o estremi noti]";
+  const contact = form.contact.trim() || "[recapito email/PEC o altro contatto]";
+  const details =
+    form.details.trim() ||
+    "[aggiungere eventuali riferimenti utili: sezione consultata, URL, numero atto, CIG/CUP, ufficio, importo, seduta o progetto]";
+  const subject = buildSubject(form);
+
+  const legalReference =
+    form.requestKind === "semplice"
+      ? "ai sensi dell'art. 5, comma 1, del d.lgs. 33/2013"
+      : form.requestKind === "generalizzato"
+        ? "ai sensi dell'art. 5, comma 2, del d.lgs. 33/2013"
+        : "come richiesta di chiarimento/integrazione della pubblicazione consultata, da valutare anche ai sensi dell'art. 5 del d.lgs. 33/2013 ove applicabile";
+
+  const requestAction =
+    form.requestKind === "semplice"
+      ? "chiede la pubblicazione o l'indicazione del collegamento aggiornato al documento, dato o informazione soggetto a obbligo di pubblicazione"
+      : form.requestKind === "generalizzato"
+        ? "chiede di ricevere copia o indicazione puntuale dei dati/documenti detenuti dall'amministrazione"
+        : "chiede un chiarimento e, ove possibile, l'integrazione della pubblicazione o l'indicazione del documento completo/accessibile";
 
   return [
-    `Spett.le ${ente}`,
-    `Responsabile della trasparenza / Ufficio competente`,
+    `Destinatario: ${DEFAULT_ENTE}`,
+    `Ufficio/recapito da verificare: ${recipient}`,
+    `Oggetto: ${subject}`,
     "",
-    `OGGETTO: Richiesta di accesso civico — ${oggetto}`,
+    `Il/La sottoscritto/a ${requester}, contattabile a ${contact}, ${legalReference}, espone quanto segue.`,
     "",
-    intro,
+    `Nella sezione consultata, ${category.bodyPrompt}. La presente segnalazione è formulata in termini neutrali e sulla base delle informazioni disponibili al richiedente.`,
     "",
-    dati,
+    `Documento/atto/progetto di riferimento: ${item}`,
+    `Data o periodo di riferimento: ${dateReference}`,
+    `Categoria del problema: ${category.label}`,
+    `Ulteriori dettagli: ${details}`,
     "",
-    `Si chiede che la presente istanza sia riscontrata nei termini di legge (di norma 30 giorni). Si indica come modalità preferita per la trasmissione dei dati/documenti la posta elettronica.`,
+    `Per quanto sopra, ${requestAction}. Si chiede cortesemente di indicare, se diverso, l'ufficio competente o il canale corretto a cui indirizzare la richiesta.`,
     "",
-    `In caso di diniego, totale o parziale, o di mancata risposta, ci si riserva di presentare richiesta di riesame al titolare del potere sostitutivo e, ove previsto, al Responsabile della prevenzione della corruzione e della trasparenza (RPCT).`,
+    "Si chiede un riscontro nei termini previsti dalla normativa applicabile, di norma entro 30 giorni per l'accesso civico. La richiesta non contiene, per quanto noto al richiedente, dati personali non necessari; prima dell'invio il testo deve essere verificato e adattato al caso concreto.",
     "",
-    `Distinti saluti.`,
+    "Promemoria prima dell'invio: verificare destinatario, riferimenti normativi, riferimenti dell'atto/progetto, recapiti e dati personali. Questo testo è una bozza informativa e non costituisce consulenza legale personalizzata.",
     "",
-    firma,
-    `Data: ${format(new Date(), "dd/MM/yyyy")}`,
+    "Distinti saluti,",
+    requester,
+    `Data: [data di invio]`,
   ].join("\n");
 }
 
+async function copyText(text: string, successMessage: string) {
+  try {
+    await navigator.clipboard.writeText(text);
+    toast.success(successMessage);
+  } catch {
+    toast.error("Copia non riuscita. Seleziona il testo e copialo manualmente.");
+  }
+}
+
 function InfoSection() {
-  const cards: {
-    tipo: AccessoCivicoTipo;
-    desc: string;
-  }[] = [
-    {
-      tipo: "generalizzato",
-      desc: "Chiunque può chiedere dati e documenti detenuti dalla pubblica amministrazione, ulteriori rispetto a quelli già pubblicati, senza dover motivare la richiesta.",
-    },
-    {
-      tipo: "semplice",
-      desc: "Permette di chiedere la pubblicazione di documenti, informazioni o dati che l'ente avrebbe dovuto pubblicare per obbligo di legge e non ha pubblicato.",
-    },
-    {
-      tipo: "documentale",
-      desc: "Riservato a chi ha un interesse diretto, concreto e attuale: consente di accedere a specifici documenti amministrativi che riguardano la propria situazione.",
-    },
-  ];
-
   return (
-    <div className="grid gap-4 md:grid-cols-3">
-      {cards.map((c) => (
-        <Card key={c.tipo} className="flex flex-col gap-2 p-5">
-          <div className="flex items-center gap-2 text-brand">
-            <Scale className="h-4 w-4"  aria-hidden="true"/>
-            <span className="text-sm font-semibold">{TIPO_LABELS[c.tipo]}</span>
-          </div>
-          <p className="text-sm text-muted-foreground">{c.desc}</p>
-          <p className="mt-auto pt-2 text-[11px] font-medium text-muted-foreground">
-            Rif. {TIPO_NORME[c.tipo]}
-          </p>
-        </Card>
-      ))}
-    </div>
-  );
-}
-
-type GeneratorState = {
-  tipo: AccessoCivicoTipo;
-  ente: string;
-  oggetto: string;
-  descrizione: string;
-  requesterName: string;
-  stato: AccessoCivicoStato;
-  esitoNote: string;
-  responseDate: string;
-};
-
-const EMPTY_GENERATOR: GeneratorState = {
-  tipo: "generalizzato",
-  ente: DEFAULT_ENTE,
-  oggetto: "",
-  descrizione: "",
-  requesterName: "",
-  stato: "in-attesa",
-  esitoNote: "",
-  responseDate: "",
-};
-
-function GeneratorSection() {
-  const queryClient = useQueryClient();
-  const [form, setForm] = useState<GeneratorState>(EMPTY_GENERATOR);
-  const [registerPublicly, setRegisterPublicly] = useState(false);
-
-  const createRequest = useCreateAccessoCivico();
-
-  const text = useMemo(() => buildRequestText(form), [form]);
-
-  const handleCopy = async () => {
-    try {
-      await navigator.clipboard.writeText(text);
-      toast.success("Testo copiato negli appunti.");
-    } catch {
-      toast.error("Impossibile copiare il testo.");
-    }
-  };
-
-  const handleDownload = () => {
-    const blob = new Blob([text], { type: "text/plain;charset=utf-8" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    const safe = (form.oggetto.trim() || "richiesta-accesso-civico")
-      .toLowerCase()
-      .replace(/[^a-z0-9]+/g, "-")
-      .replace(/(^-|-$)/g, "")
-      .slice(0, 60);
-    a.download = `${safe || "richiesta-accesso-civico"}.txt`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-  };
-
-  const handleRegister = async (e: FormEvent) => {
-    e.preventDefault();
-    if (!form.oggetto.trim()) {
-      toast.error("Indica l'oggetto della richiesta.");
-      return;
-    }
-    try {
-      await createRequest.mutateAsync({
-        data: {
-          oggetto: form.oggetto.trim(),
-          tipo: form.tipo,
-          ente: form.ente.trim() || DEFAULT_ENTE,
-          descrizione: form.descrizione.trim(),
-          requestText: text,
-          requesterName: form.requesterName.trim() || null,
-          requestDate: new Date().toISOString(),
-          stato: form.stato,
-          esitoNote: form.esitoNote.trim(),
-          responseDate:
-            form.stato !== "in-attesa" && form.responseDate
-              ? new Date(form.responseDate).toISOString()
-              : null,
-        },
-      });
-      queryClient.invalidateQueries({
-        queryKey: getListAccessoCivicoQueryKey(),
-      });
-      toast.success("Richiesta registrata.", {
-        description:
-          "Sarà visibile nel registro pubblico dopo la verifica della redazione.",
-      });
-      setRegisterPublicly(false);
-    } catch {
-      toast.error("Registrazione non riuscita. Riprova.");
-    }
-  };
-
-  return (
-    <div className="grid gap-6 lg:grid-cols-2">
-      <UICard className="h-fit">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2 font-display text-xl">
-            <Sparkles className="h-5 w-5 text-brand"  aria-hidden="true"/> Genera la tua richiesta
-          </CardTitle>
-          <CardDescription>
-            Compila i campi: il testo della richiesta, con i riferimenti
-            normativi corretti, viene generato automaticamente.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handleRegister} className="space-y-4">
-            <div className="space-y-2">
-              <Label>Tipo di accesso</Label>
-              <Select
-                value={form.tipo}
-                onValueChange={(v) =>
-                  setForm((p) => ({ ...p, tipo: v as AccessoCivicoTipo }))
-                }
-              >
-                <SelectTrigger data-testid="generator-tipo">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {(Object.keys(TIPO_LABELS) as AccessoCivicoTipo[]).map((t) => (
-                    <SelectItem key={t} value={t}>
-                      {TIPO_LABELS[t]}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="gen-ente">Ente destinatario</Label>
-              <Input
-                id="gen-ente"
-                value={form.ente}
-                onChange={(e) =>
-                  setForm((p) => ({ ...p, ente: e.target.value }))
-                }
-                placeholder={DEFAULT_ENTE}
-                data-testid="generator-ente"
-              />
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="gen-oggetto">Oggetto della richiesta</Label>
-              <Input
-                id="gen-oggetto"
-                value={form.oggetto}
-                onChange={(e) =>
-                  setForm((p) => ({ ...p, oggetto: e.target.value }))
-                }
-                placeholder="es. Spese per la manutenzione del verde pubblico 2025"
-                data-testid="generator-oggetto"
-              />
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="gen-descrizione">
-                Dati / documenti richiesti
-              </Label>
-              <Textarea
-                id="gen-descrizione"
-                value={form.descrizione}
-                onChange={(e) =>
-                  setForm((p) => ({ ...p, descrizione: e.target.value }))
-                }
-                placeholder="Descrivi con precisione i dati o i documenti che vuoi ottenere."
-                className="min-h-[90px]"
-                data-testid="generator-descrizione"
-              />
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="gen-nome">Nome e cognome (facoltativo)</Label>
-              <Input
-                id="gen-nome"
-                value={form.requesterName}
-                onChange={(e) =>
-                  setForm((p) => ({ ...p, requesterName: e.target.value }))
-                }
-                placeholder="Come firmare la richiesta"
-                data-testid="generator-nome"
-              />
-            </div>
-
-            <div className="flex flex-wrap gap-2 pt-1">
-              <Button
-                type="button"
-                variant="brand"
-                className="gap-2"
-                onClick={handleCopy}
-                data-testid="button-copy"
-              >
-                <Copy className="h-4 w-4"  aria-hidden="true"/> Copia testo
-              </Button>
-              <Button
-                type="button"
-                variant="outline"
-                className="gap-2"
-                onClick={handleDownload}
-                data-testid="button-download"
-              >
-                <Download className="h-4 w-4"  aria-hidden="true"/> Scarica .txt
-              </Button>
-            </div>
-
-            <div className="rounded-lg border border-dashed border-brand/30 bg-brand/5 p-4">
-              {registerPublicly ? (
-                <div className="space-y-3">
-                  <p className="text-sm text-muted-foreground">
-                    Hai già inviato questa richiesta all'ente? Registrala nel
-                    registro pubblico per dare conto dell'esito. Sarà visibile
-                    dopo la verifica della redazione.
-                  </p>
-                  <div className="space-y-2">
-                    <Label>Esito della richiesta</Label>
-                    <Select
-                      value={form.stato}
-                      onValueChange={(v) =>
-                        setForm((p) => ({
-                          ...p,
-                          stato: v as AccessoCivicoStato,
-                        }))
-                      }
-                    >
-                      <SelectTrigger data-testid="register-stato">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="in-attesa">In attesa</SelectItem>
-                        <SelectItem value="accolta">Accolta</SelectItem>
-                        <SelectItem value="rifiutata">Rifiutata</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  {form.stato !== "in-attesa" && (
-                    <>
-                      <div className="space-y-2">
-                        <Label htmlFor="register-esitonote">
-                          Note sull'esito (facoltativo)
-                        </Label>
-                        <Textarea
-                          id="register-esitonote"
-                          value={form.esitoNote}
-                          onChange={(e) =>
-                            setForm((p) => ({
-                              ...p,
-                              esitoNote: e.target.value,
-                            }))
-                          }
-                          placeholder="Com'è andata? Cosa ha risposto l'ente?"
-                          className="min-h-[60px]"
-                          data-testid="register-esitonote"
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="register-responsedate">
-                          Data della risposta (facoltativo)
-                        </Label>
-                        <Input
-                          id="register-responsedate"
-                          type="date"
-                          value={form.responseDate}
-                          onChange={(e) =>
-                            setForm((p) => ({
-                              ...p,
-                              responseDate: e.target.value,
-                            }))
-                          }
-                          data-testid="register-responsedate"
-                        />
-                      </div>
-                    </>
-                  )}
-                  <p className="text-xs text-muted-foreground">
-                    Hai ricevuto un documento di risposta dall'ente? Indicalo
-                    nelle note: la redazione potrà allegarlo al registro.
-                  </p>
-                  <div className="flex flex-wrap gap-2">
-                    <Button
-                      type="submit"
-                      variant="brand"
-                      className="gap-2"
-                      disabled={createRequest.isPending}
-                      data-testid="button-register-confirm"
-                    >
-                      <Send className="h-4 w-4"  aria-hidden="true"/>
-                      {createRequest.isPending
-                        ? "Invio…"
-                        : "Registra nel registro"}
-                    </Button>
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      onClick={() => setRegisterPublicly(false)}
-                    >
-                      Annulla
-                    </Button>
-                  </div>
-                </div>
-              ) : (
-                <button
-                  type="button"
-                  className="flex items-center gap-2 text-sm font-medium text-brand"
-                  onClick={() => setRegisterPublicly(true)}
-                  data-testid="button-register-open"
-                >
-                  <Send className="h-4 w-4"  aria-hidden="true"/>
-                  Hai già inviato questa richiesta? Registrala nel registro
-                  pubblico
-                </button>
-              )}
-            </div>
-          </form>
-        </CardContent>
-      </UICard>
-
-      <UICard className="h-fit">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2 font-display text-xl">
-            <FileText className="h-5 w-5 text-brand"  aria-hidden="true"/> Anteprima
-          </CardTitle>
-          <CardDescription>
-            Testo pronto da copiare o scaricare e inviare all'ente (via PEC o
-            email).
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <pre
-            className="max-h-[520px] overflow-auto whitespace-pre-wrap rounded-lg bg-muted/50 p-4 font-mono text-xs leading-relaxed"
-            data-testid="generator-preview"
-          >
-            {text}
-          </pre>
-        </CardContent>
-      </UICard>
-    </div>
-  );
-}
-
-function RegistrySection() {
-  const [stato, setStato] = useState<string>("all");
-  const [tipo, setTipo] = useState<string>("all");
-
-  const params = useMemo(() => {
-    const p: ListAccessoCivicoParams = {};
-    if (stato !== "all") p.stato = stato as AccessoCivicoStato;
-    if (tipo !== "all") p.tipo = tipo as AccessoCivicoTipo;
-    return p;
-  }, [stato, tipo]);
-
-  const { data: requests, isLoading } = useListAccessoCivico(params);
-
-  return (
-    <div>
-      <div className="mb-6 flex flex-wrap gap-3">
-        <Select value={stato} onValueChange={setStato}>
-          <SelectTrigger className="w-[180px]" data-testid="filter-stato">
-            <SelectValue placeholder="Esito" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">Tutti gli esiti</SelectItem>
-            <SelectItem value="in-attesa">In attesa</SelectItem>
-            <SelectItem value="accolta">Accolte</SelectItem>
-            <SelectItem value="rifiutata">Rifiutate</SelectItem>
-          </SelectContent>
-        </Select>
-
-        <Select value={tipo} onValueChange={setTipo}>
-          <SelectTrigger className="w-[220px]" data-testid="filter-tipo">
-            <SelectValue placeholder="Tipo" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">Tutti i tipi</SelectItem>
-            {(Object.keys(TIPO_SHORT) as AccessoCivicoTipo[]).map((t) => (
-              <SelectItem key={t} value={t}>
-                {TIPO_LABELS[t]}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
-
-      {isLoading ? (
-        <div className="grid gap-4 md:grid-cols-2">
-          {Array.from({ length: 4 }).map((_, i) => (
-            <Skeleton key={i} className="h-44 w-full" />
-          ))}
+    <div className="grid gap-4 md:grid-cols-2">
+      <Card className="p-5">
+        <div className="mb-2 flex items-center gap-2 text-brand">
+          <Scale className="h-4 w-4" aria-hidden="true" />
+          <h3 className="font-display text-base font-semibold">Accesso civico semplice</h3>
         </div>
-      ) : requests && requests.length > 0 ? (
-        <div className="grid gap-4 md:grid-cols-2">
-          {requests.map((r) => (
-            <RequestCard key={r.id} request={r} />
-          ))}
+        <p className="text-sm text-muted-foreground">
+          Serve quando si cerca un documento, dato o informazione che dovrebbe essere pubblicato per obbligo di trasparenza. La bozza chiede la pubblicazione o il collegamento corretto, senza accusare l'ente di omissioni.
+        </p>
+      </Card>
+      <Card className="p-5">
+        <div className="mb-2 flex items-center gap-2 text-brand">
+          <FileSearch className="h-4 w-4" aria-hidden="true" />
+          <h3 className="font-display text-base font-semibold">Accesso civico generalizzato</h3>
         </div>
-      ) : (
-        <Empty>
-          <EmptyHeader>
-            <EmptyMedia variant="icon">
-              <Info className="h-6 w-6"  aria-hidden="true"/>
-            </EmptyMedia>
-            <EmptyTitle>Nessuna richiesta nel registro</EmptyTitle>
-            <EmptyDescription>
-              Non ci sono richieste che corrispondono ai filtri selezionati.
-            </EmptyDescription>
-          </EmptyHeader>
-        </Empty>
-      )}
+        <p className="text-sm text-muted-foreground">
+          Serve per chiedere dati o documenti detenuti dall'amministrazione, anche se non soggetti a pubblicazione obbligatoria. La richiesta resta generale e non richiede motivazione, ma va resa precisa e verificabile.
+        </p>
+      </Card>
     </div>
   );
 }
 
-function RequestCard({ request }: { request: AccessoCivicoRequest }) {
-  const docUrl = request.responseUrl
-    ? request.responseUrl.startsWith("/objects/") ||
-      request.responseUrl.startsWith("/api/storage")
-      ? request.responseUrl.startsWith("/api/storage")
-        ? request.responseUrl
-        : `/api/storage${request.responseUrl}`
-      : request.responseUrl
-    : null;
-
-  const isRegistroUfficiale = request.origine === "registro-ufficiale";
-  // Esito concluso (accolta/rifiutata) ma senza documento allegato: tipico
-  // delle voci importate dal registro ufficiale, dove la risposta non è online.
-  const documentoNonDisponibile =
-    !docUrl && request.stato !== "in-attesa";
-
+function TemplateCards({ form }: { form: GeneratorState }) {
   return (
-    <Card
-      className="flex h-full flex-col gap-3 p-5"
-      data-testid={`card-request-${request.id}`}
-    >
-      <div className="flex flex-wrap items-center gap-2">
-        <StatoBadge stato={request.stato} />
-        <Badge variant="secondary" className="text-[10px]">
-          {TIPO_SHORT[request.tipo]}
-        </Badge>
-        {isRegistroUfficiale ? (
-          request.fonteUrl ? (
-            <a
-              href={request.fonteUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              data-testid={`badge-origine-${request.id}`}
-            >
-              <Badge
-                variant="outline"
-                className="gap-1 border-brand/40 bg-brand/10 text-[10px] text-brand hover:bg-brand/20"
-              >
-                <Landmark className="h-3 w-3"  aria-hidden="true"/>
-                Registro ufficiale del Comune
-              </Badge>
-            </a>
-          ) : (
-            <Badge
+    <div className="grid gap-4 lg:grid-cols-3">
+      {templates.map((template) => {
+        const templateText = buildRequestText({ ...form, requestKind: template.id });
+        return (
+          <Card key={template.id} className="flex flex-col gap-3 p-5">
+            <div className="flex items-start gap-2">
+              <FileText className="mt-1 h-4 w-4 shrink-0 text-brand" aria-hidden="true" />
+              <div>
+                <h3 className="font-display text-base font-semibold">{template.title}</h3>
+                <p className="text-sm text-muted-foreground">{template.description}</p>
+              </div>
+            </div>
+            <Button
+              type="button"
               variant="outline"
-              className="gap-1 border-brand/40 bg-brand/10 text-[10px] text-brand"
-              data-testid={`badge-origine-${request.id}`}
+              className="mt-auto gap-2"
+              aria-label={`Copia template: ${template.title}`}
+              onClick={() => copyText(templateText, `Template copiato: ${template.title}.`)}
             >
-              <Landmark className="h-3 w-3"  aria-hidden="true"/>
-              Registro ufficiale del Comune
-            </Badge>
-          )
-        ) : (
-          <Badge
-            variant="outline"
-            className="gap-1 text-[10px] text-muted-foreground"
-            data-testid={`badge-origine-${request.id}`}
-          >
-            <User className="h-3 w-3"  aria-hidden="true"/>
-            Richiesta da cittadino
+              <Copy className="h-4 w-4" aria-hidden="true" />
+              Copia template
+            </Button>
+          </Card>
+        );
+      })}
+    </div>
+  );
+}
+
+function GeneratorSection({
+  onAddDraft,
+}: {
+  onAddDraft: (entry: RegisterEntry) => void;
+}) {
+  const [form, setForm] = useState<GeneratorState>(initialGenerator);
+  const selectedCategory = getCategory(form.category);
+  const requestText = useMemo(() => buildRequestText(form), [form]);
+  const subject = useMemo(() => buildSubject(form), [form]);
+
+  const updateCategory = (value: ProblemCategoryId) => {
+    const category = getCategory(value);
+    setForm((current) => ({
+      ...current,
+      category: value,
+      requestKind:
+        current.requestKind === getCategory(current.category).suggestedKind
+          ? category.suggestedKind
+          : current.requestKind,
+    }));
+  };
+
+  const addDraftToRegister = () => {
+    const entry: RegisterEntry = {
+      id: `FOIA-LOCAL-${Date.now().toString().slice(-6)}`,
+      creationDate: TODAY,
+      subject,
+      category: selectedCategory.label,
+      recipientOffice: form.recipientOffice.trim() || DEFAULT_OFFICE,
+      status: "bozza",
+      estimatedDeadline: "Da calcolare dopo l'invio",
+      outcome: "Bozza generata, non inviata automaticamente.",
+      linkedItem: form.documentTarget.trim() || undefined,
+      notes:
+        "Voce creata nel registro locale v0. Verificare destinatario, riferimenti e dati personali prima dell'invio.",
+    };
+    onAddDraft(entry);
+    toast.success("Bozza aggiunta al registro locale.");
+  };
+
+  return (
+    <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_minmax(320px,0.9fr)]">
+      <UICard>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2 font-display text-xl">
+            <FileQuestion className="h-5 w-5 text-brand" aria-hidden="true" />
+            Generatore guidato FOIA Machine v0
+          </CardTitle>
+          <CardDescription>
+            Scegli il problema, completa i campi personalizzabili e copia la bozza. Nessuna email o PEC viene inviata automaticamente.
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-5">
+          <div className="space-y-2">
+            <Label>Categoria del problema</Label>
+            <Select value={form.category} onValueChange={(value) => updateCategory(value as ProblemCategoryId)}>
+              <SelectTrigger data-testid="foia-category-select" aria-label="Categoria del problema">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {problemCategories.map((category) => (
+                  <SelectItem key={category.id} value={category.id}>
+                    {category.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <p className="text-xs text-muted-foreground">{selectedCategory.hint}</p>
+          </div>
+
+          <div className="space-y-2">
+            <Label>Template da generare</Label>
+            <Select
+              value={form.requestKind}
+              onValueChange={(value) => setForm((current) => ({ ...current, requestKind: value as RequestKind }))}
+            >
+              <SelectTrigger data-testid="foia-template-select" aria-label="Template da generare">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {templates.map((template) => (
+                  <SelectItem key={template.id} value={template.id}>
+                    {template.title}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="grid gap-4 md:grid-cols-2">
+            <div className="space-y-2">
+              <Label htmlFor="requester-name">Nome richiedente</Label>
+              <Input
+                id="requester-name"
+                value={form.requesterName}
+                onChange={(event) => setForm((current) => ({ ...current, requesterName: event.target.value }))}
+                aria-describedby="requester-name-help"
+              />
+              <p id="requester-name-help" className="text-xs text-muted-foreground">Campo da verificare prima dell'invio.</p>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="contact">Contatto</Label>
+              <Input
+                id="contact"
+                value={form.contact}
+                onChange={(event) => setForm((current) => ({ ...current, contact: event.target.value }))}
+              />
+            </div>
+            <div className="space-y-2 md:col-span-2">
+              <Label htmlFor="document-target">Documento, atto o progetto</Label>
+              <Input
+                id="document-target"
+                value={form.documentTarget}
+                onChange={(event) => setForm((current) => ({ ...current, documentTarget: event.target.value }))}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="date-reference">Data, periodo o estremi noti</Label>
+              <Input
+                id="date-reference"
+                value={form.dateReference}
+                onChange={(event) => setForm((current) => ({ ...current, dateReference: event.target.value }))}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="recipient-office">Ufficio destinatario da verificare</Label>
+              <Input
+                id="recipient-office"
+                value={form.recipientOffice}
+                onChange={(event) => setForm((current) => ({ ...current, recipientOffice: event.target.value }))}
+              />
+            </div>
+            <div className="space-y-2 md:col-span-2">
+              <Label htmlFor="details">Dettagli utili e fonti consultate</Label>
+              <Textarea
+                id="details"
+                value={form.details}
+                onChange={(event) => setForm((current) => ({ ...current, details: event.target.value }))}
+                className="min-h-28"
+              />
+            </div>
+          </div>
+
+          <div className="rounded-lg border border-amber-500/30 bg-amber-500/10 p-4 text-sm text-muted-foreground">
+            <div className="mb-1 flex items-center gap-2 font-medium text-foreground">
+              <AlertTriangle className="h-4 w-4" aria-hidden="true" />
+              Promemoria prima dell'invio
+            </div>
+            Verifica destinatario, riferimenti normativi, riferimenti dell'atto/progetto, recapiti e dati personali. La bozza è informativa, non è consulenza legale personalizzata e non viene inviata automaticamente.
+          </div>
+
+          <div className="flex flex-wrap gap-2">
+            <Button
+              type="button"
+              variant="brand"
+              className="gap-2"
+              aria-label="Copia il testo generato della richiesta"
+              onClick={() => copyText(requestText, "Richiesta copiata negli appunti.")}
+              data-testid="foia-copy-generated"
+            >
+              <Copy className="h-4 w-4" aria-hidden="true" />
+              Copia richiesta
+            </Button>
+            <Button type="button" variant="outline" className="gap-2" onClick={addDraftToRegister}>
+              <ClipboardList className="h-4 w-4" aria-hidden="true" />
+              Salva bozza nel registro v0
+            </Button>
+          </div>
+        </CardContent>
+      </UICard>
+
+      <UICard>
+        <CardHeader>
+          <CardTitle className="font-display text-xl">Anteprima copiabile</CardTitle>
+          <CardDescription>Oggetto e testo generati in base alla categoria selezionata.</CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-3">
+          <div>
+            <h3 className="mb-2 text-sm font-semibold">Oggetto</h3>
+            <p className="rounded-lg bg-muted/50 p-3 text-sm" data-testid="foia-generated-subject">{subject}</p>
+          </div>
+          <div>
+            <h3 className="mb-2 text-sm font-semibold">Testo richiesta</h3>
+            <pre className="max-h-[560px] overflow-auto whitespace-pre-wrap rounded-lg bg-muted/50 p-4 font-mono text-xs leading-relaxed" data-testid="foia-generated-body">
+              {requestText}
+            </pre>
+          </div>
+        </CardContent>
+      </UICard>
+    </div>
+  );
+}
+
+function RegisterSection({ entries }: { entries: RegisterEntry[] }) {
+  return (
+    <div className="space-y-4">
+      <div className="flex flex-wrap gap-2" aria-label="Stati disponibili nel registro">
+        {registerStatuses.map((status) => (
+          <Badge key={status} variant="outline" className="capitalize">
+            {status}
           </Badge>
-        )}
+        ))}
       </div>
-
-      <h3 className="font-display text-base font-semibold leading-tight">
-        {request.oggetto}
-      </h3>
-
-      <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-        <Building2 className="h-3.5 w-3.5 shrink-0"  aria-hidden="true"/>
-        <span className="truncate">{request.ente}</span>
+      <div className="overflow-x-auto rounded-xl border">
+        <table className="min-w-[980px] w-full text-left text-sm">
+          <caption className="sr-only">Registro locale delle richieste di accesso civico</caption>
+          <thead className="bg-muted/60 text-xs uppercase tracking-wide text-muted-foreground">
+            <tr>
+              <th scope="col" className="px-4 py-3">ID interno</th>
+              <th scope="col" className="px-4 py-3">Creazione</th>
+              <th scope="col" className="px-4 py-3">Invio</th>
+              <th scope="col" className="px-4 py-3">Oggetto</th>
+              <th scope="col" className="px-4 py-3">Tema</th>
+              <th scope="col" className="px-4 py-3">Destinatario</th>
+              <th scope="col" className="px-4 py-3">Stato</th>
+              <th scope="col" className="px-4 py-3">Scadenza stimata</th>
+              <th scope="col" className="px-4 py-3">Esito</th>
+              <th scope="col" className="px-4 py-3">Atto/progetto</th>
+              <th scope="col" className="px-4 py-3">Note</th>
+            </tr>
+          </thead>
+          <tbody>
+            {entries.map((entry) => (
+              <tr key={entry.id} className="border-t align-top">
+                <td className="px-4 py-3 font-mono text-xs">{entry.id}</td>
+                <td className="px-4 py-3">{formatDisplayDate(entry.creationDate)}</td>
+                <td className="px-4 py-3">{formatDisplayDate(entry.sendingDate)}</td>
+                <td className="px-4 py-3 font-medium">{entry.subject}</td>
+                <td className="px-4 py-3">{entry.category}</td>
+                <td className="px-4 py-3">{entry.recipientOffice}</td>
+                <td className="px-4 py-3"><Badge variant="secondary" className="capitalize">{entry.status}</Badge></td>
+                <td className="px-4 py-3">{formatDisplayDate(entry.estimatedDeadline)}</td>
+                <td className="px-4 py-3">{entry.outcome}</td>
+                <td className="px-4 py-3">{entry.linkedItem ?? "—"}</td>
+                <td className="px-4 py-3">{entry.notes}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
-
-      {request.descrizione?.trim() && (
-        <p className="line-clamp-2 text-sm text-muted-foreground">
-          {request.descrizione}
-        </p>
-      )}
-
-      {request.esitoNote?.trim() && (
-        <p className="rounded-md bg-muted/50 p-2 text-xs text-muted-foreground">
-          {request.esitoNote}
-        </p>
-      )}
-
-      <div className="mt-auto flex flex-col gap-2 pt-2 text-xs">
-        <div className="flex items-center justify-between">
-          <span className="flex items-center gap-1 text-muted-foreground">
-            <CalendarDays className="h-3.5 w-3.5"  aria-hidden="true"/> Inviata
-          </span>
-          <span className="font-medium">{formatDate(request.requestDate)}</span>
-        </div>
-        {request.responseDate && (
-          <div className="flex items-center justify-between">
-            <span className="flex items-center gap-1 text-muted-foreground">
-              <CalendarDays className="h-3.5 w-3.5"  aria-hidden="true"/> Risposta
-            </span>
-            <span className="font-medium">
-              {formatDate(request.responseDate)}
-            </span>
-          </div>
-        )}
-        {request.requesterName?.trim() && (
-          <div className="text-muted-foreground">
-            Richiedente: {request.requesterName}
-          </div>
-        )}
-        {docUrl ? (
-          <a
-            href={docUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center gap-1 pt-1 font-medium text-brand"
-            data-testid={`link-document-${request.id}`}
-          >
-            <ExternalLink className="h-3.5 w-3.5"  aria-hidden="true"/>
-            {request.responseLabel?.trim() || "Documento di risposta"}
-          </a>
-        ) : documentoNonDisponibile ? (
-          <p
-            className="flex items-center gap-1 pt-1 text-muted-foreground"
-            data-testid={`doc-unavailable-${request.id}`}
-          >
-            <FileX className="h-3.5 w-3.5 shrink-0"  aria-hidden="true"/>
-            Documento di risposta non disponibile
-          </p>
-        ) : null}
-      </div>
-    </Card>
+    </div>
   );
 }
 
 export function AccessoCivico() {
+  const [registerEntries, setRegisterEntries] = useState<RegisterEntry[]>(seedRegister);
+
+  const addDraft = (entry: RegisterEntry) => {
+    setRegisterEntries((current) => [entry, ...current]);
+  };
+
   return (
     <>
       <PageMeta
-        title="Accesso civico e registro richieste"
-        description="Guida pratica agli strumenti di accesso civico, documentale e generalizzato, con registro consultabile e generatore di bozze di richiesta."
+        title="FOIA Machine v0 — accesso civico e registro richieste"
+        description="Generatore guidato di bozze per accesso civico semplice, accesso civico generalizzato e richieste di integrazione, con registro locale delle richieste."
         path="/accesso-civico"
       />
       <div className="container mx-auto px-4 py-8 md:py-12">
-      <div className="mb-8 max-w-3xl space-y-3">
-        <div className="flex items-center gap-2 text-brand">
-          <FileSearch className="h-5 w-5" />
-          <span className="font-mono text-xs uppercase tracking-wider">
-            Diritto di accesso
-          </span>
-        </div>
-        <h1 className="font-display text-3xl font-bold tracking-tight md:text-4xl">
-          Sportello Accesso Civico
-        </h1>
-        <p className="text-muted-foreground">
-          L'accesso civico generalizzato (FOIA) permette a chiunque di chiedere
-          dati e documenti alla pubblica amministrazione, senza dover spiegare
-          il perché. Qui trovi una guida, un assistente che prepara la richiesta
-          al posto tuo e un registro pubblico delle richieste inviate e dei loro
-          esiti.
-        </p>
-      </div>
-
-      <section data-tour="accesso-civico-intro" className="mb-12">
-        <h2 className="mb-4 font-display text-xl font-semibold">
-          Come funziona
-        </h2>
-        <InfoSection />
-        <Card className="mt-4 flex items-start gap-3 p-4">
-          <Info className="mt-0.5 h-4 w-4 shrink-0 text-brand"  aria-hidden="true"/>
-          <p className="text-sm text-muted-foreground">
-            L'ente deve rispondere di norma entro 30 giorni. In caso di diniego o
-            silenzio puoi chiedere il riesame al Responsabile della prevenzione
-            della corruzione e della trasparenza (RPCT). Questo sportello non
-            invia la richiesta al posto tuo né fornisce consulenza legale: ti
-            aiuta a preparare il testo e a tenerne traccia pubblica.
+        <header className="mb-8 max-w-4xl space-y-3">
+          <div className="flex items-center gap-2 text-brand">
+            <FileSearch className="h-5 w-5" aria-hidden="true" />
+            <span className="font-mono text-xs uppercase tracking-wider">Diritto di accesso</span>
+          </div>
+          <h1 className="font-display text-3xl font-bold tracking-tight md:text-4xl">
+            FOIA Machine v0: generatore di accessi civici
+          </h1>
+          <p className="text-muted-foreground">
+            Uno strumento civico per preparare bozze copiabili di richieste di accesso civico e tenere un registro semplice delle richieste. Non invia automaticamente email o PEC e non sostituisce una verifica legale o amministrativa sul caso concreto.
           </p>
-        </Card>
-      </section>
+        </header>
 
-      <section data-tour="accesso-civico-new" className="mb-12">
-        <h2 className="mb-4 font-display text-xl font-semibold">
-          Assistente alla richiesta
-        </h2>
-        <GeneratorSection />
-      </section>
+        <section data-tour="accesso-civico-intro" className="mb-10" aria-labelledby="come-funziona-title">
+          <h2 id="come-funziona-title" className="mb-4 font-display text-xl font-semibold">Come scegliere lo strumento</h2>
+          <InfoSection />
+          <Card className="mt-4 flex items-start gap-3 p-4">
+            <Info className="mt-0.5 h-4 w-4 shrink-0 text-brand" aria-hidden="true" />
+            <p className="text-sm text-muted-foreground">
+              Usa formulazioni neutrali come “documento non rintracciato”, “informazione non disponibile nella sezione consultata” o “richiesta di chiarimento”. Prima dell'invio verifica sempre destinatario, riferimenti normativi, dati personali e allegati.
+            </p>
+          </Card>
+        </section>
 
-      <section>
-        <div className="mb-4 flex items-center gap-2">
-          <ShieldCheck className="h-5 w-5 text-brand"  aria-hidden="true"/>
-          <h2 className="font-display text-xl font-semibold">
-            Registro pubblico delle richieste
-          </h2>
-        </div>
-        <p className="mb-6 max-w-3xl text-sm text-muted-foreground">
-          Le richieste di accesso civico inviate al Comune, con il relativo
-          esito ed eventuale documento di risposta. Il registro raccoglie sia le
-          richieste tracciate dai cittadini sia lo storico importato dal Registro
-          ufficiale degli accessi del Comune.
-        </p>
-        <RegistrySection />
-      </section>
+        <section className="mb-10" aria-labelledby="templates-title">
+          <div className="mb-4 flex items-center gap-2">
+            <FileText className="h-5 w-5 text-brand" aria-hidden="true" />
+            <h2 id="templates-title" className="font-display text-xl font-semibold">Template copiabili disponibili</h2>
+          </div>
+          <TemplateCards form={initialGenerator} />
+        </section>
+
+        <section data-tour="accesso-civico-new" className="mb-12" aria-labelledby="generator-title">
+          <div className="mb-4 flex items-center gap-2">
+            <Landmark className="h-5 w-5 text-brand" aria-hidden="true" />
+            <h2 id="generator-title" className="font-display text-xl font-semibold">Generatore guidato della richiesta</h2>
+          </div>
+          <GeneratorSection onAddDraft={addDraft} />
+        </section>
+
+        <section aria-labelledby="registro-title">
+          <div className="mb-4 flex items-center gap-2">
+            <ShieldCheck className="h-5 w-5 text-brand" aria-hidden="true" />
+            <h2 id="registro-title" className="font-display text-xl font-semibold">Registro richieste v0</h2>
+          </div>
+          <p className="mb-6 max-w-4xl text-sm text-muted-foreground">
+            Registro locale con dati seed e bozze aggiunte in questa sessione. Include ID interno, date, oggetto, categoria, destinatario, stato, scadenza stimata, esito, collegamento ad atto/progetto e note. La scadenza indicativa di una richiesta inviata può essere stimata a 30 giorni dalla data di invio (esempio: {formatDisplayDate(addDays(TODAY, 30))}).
+          </p>
+          <RegisterSection entries={registerEntries} />
+        </section>
       </div>
     </>
   );
