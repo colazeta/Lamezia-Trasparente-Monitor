@@ -94,7 +94,7 @@ function getDeploymentDomain() {
     return stripProtocol(process.env.EXPO_PUBLIC_DOMAIN);
   }
 
-  const fallbackDomain = `localhost:${process.env.PORT || "5000"}`;
+  const fallbackDomain = `localhost:${process.env.PORT || "3000"}`;
   console.warn(
     "WARNING: No deployment domain found. Falling back to " +
       `${fallbackDomain} for local/CI validation builds. Set ` +
