@@ -430,10 +430,7 @@ async function downloadAssets(assets, timestamp) {
       projectRoot,
       "static-build",
       timestamp,
-      "_expo",
-      "static",
-      "js",
-      asset.relativePath,
+      staticAssetDirectory(asset),
     );
     fs.mkdirSync(outputDir, { recursive: true });
     const output = path.join(outputDir, asset.filename);
@@ -473,7 +470,11 @@ async function downloadAssets(assets, timestamp) {
   return successCount;
 }
 
-function updateBundleUrls(timestamp, baseUrl) {
+function updateBundleUrls(timestamp, baseUrl, assets) {
+  const assetsByOriginalPath = new Map(
+    assets.map((asset) => [asset.originalPath, asset]),
+  );
+
   const updateForPlatform = (platform) => {
     const bundlePath = path.join(
       projectRoot,
@@ -499,8 +500,15 @@ function updateBundleUrls(timestamp, baseUrl) {
           );
         }
 
-        const decodedPath = decodeURIComponent(unstablePath);
-        return `httpServerLocation:"${baseUrl}${basePath}/${timestamp}/_expo/static/js/${decodedPath}"`;
+        const asset = assetsByOriginalPath.get(capturedPath);
+
+        if (!asset) {
+          throw new Error(
+            `Asset not found while updating bundle URL: ${capturedPath}`,
+          );
+        }
+
+        return `httpServerLocation:"${baseUrl}${basePath}/${timestamp}/${staticAssetDirectory(asset)}"`;
       },
     );
 
@@ -512,8 +520,21 @@ function updateBundleUrls(timestamp, baseUrl) {
   console.log("Updated bundle URLs");
 }
 
+function staticAssetDirectory(asset) {
+  // Do not publish Metro's unstable_path verbatim: dependency assets often
+  // contain ../ segments. A hash-scoped directory keeps URLs stable and safe.
+  if (asset.hash) {
+    return path.posix.join("_expo", "static", "assets", asset.hash);
+  }
+
+  const fallbackKey = `${asset.relativePath}/${asset.filename}`
+    .replace(/[^a-zA-Z0-9._-]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+  return path.posix.join("_expo", "static", "assets", fallbackKey || "asset");
+}
+
 function manifestAssetUrl(baseUrl, timestamp, assetInfo) {
-  return `${baseUrl}${basePath}/${timestamp}/_expo/static/js/${assetInfo.relativePath}/${assetInfo.filename}`;
+  return `${baseUrl}${basePath}/${timestamp}/${staticAssetDirectory(assetInfo)}/${assetInfo.filename}`;
 }
 
 function toManifestAsset(baseUrl, timestamp, asset) {
@@ -628,7 +649,7 @@ async function main() {
   const assetCount = await downloadAssets(assets, timestamp);
 
   if (assetCount > 0) {
-    updateBundleUrls(timestamp, baseUrl);
+    updateBundleUrls(timestamp, baseUrl, assets);
   }
 
   console.log("Updating manifests and creating landing page...");
