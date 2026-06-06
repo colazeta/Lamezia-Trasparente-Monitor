@@ -16,11 +16,38 @@ function findWorkspaceRoot(startDir) {
     }
     dir = path.dirname(dir);
   }
-  throw new Error("Could not find workspace root (no pnpm-workspace.yaml found)");
+  throw new Error(
+    "Could not find workspace root (no pnpm-workspace.yaml found)",
+  );
 }
 
 const workspaceRoot = findWorkspaceRoot(projectRoot);
 const basePath = (process.env.BASE_PATH || "/").replace(/\/+$/, "");
+
+const ASSET_CONTENT_TYPES = {
+  avif: "image/avif",
+  gif: "image/gif",
+  jpg: "image/jpeg",
+  jpeg: "image/jpeg",
+  js: "application/javascript",
+  json: "application/json",
+  lottie: "application/json",
+  mp3: "audio/mpeg",
+  mp4: "video/mp4",
+  otf: "font/otf",
+  png: "image/png",
+  svg: "image/svg+xml",
+  ttf: "font/ttf",
+  webp: "image/webp",
+  woff: "font/woff",
+  woff2: "font/woff2",
+};
+
+function contentTypeForExtension(extension) {
+  return (
+    ASSET_CONTENT_TYPES[extension.toLowerCase()] || "application/octet-stream"
+  );
+}
 
 function exitWithError(message) {
   console.error(message);
@@ -154,14 +181,7 @@ async function startMetro(expoPublicDomain, expoPublicReplId) {
 
   metroProcess = spawn(
     "pnpm",
-    [
-      "exec",
-      "expo",
-      "start",
-      "--no-dev",
-      "--minify",
-      "--localhost",
-    ],
+    ["exec", "expo", "start", "--no-dev", "--minify", "--localhost"],
     {
       stdio: ["ignore", "pipe", "pipe"],
       detached: false,
@@ -234,7 +254,12 @@ async function downloadFile(url, outputPath) {
 }
 
 async function downloadBundle(platform, timestamp) {
-  const entryPath = path.resolve(projectRoot, "node_modules", "expo-router", "entry");
+  const entryPath = path.resolve(
+    projectRoot,
+    "node_modules",
+    "expo-router",
+    "entry",
+  );
   const bundlePath = path.relative(workspaceRoot, entryPath);
   const url = new URL(`http://localhost:8081/${bundlePath}.bundle`);
   url.searchParams.set("platform", platform);
@@ -314,11 +339,27 @@ function extractAssets(timestamp) {
   const staticBuild = path.join(projectRoot, "static-build");
   const bundles = {
     ios: fs.readFileSync(
-      path.join(staticBuild, timestamp, "_expo", "static", "js", "ios", "bundle.js"),
+      path.join(
+        staticBuild,
+        timestamp,
+        "_expo",
+        "static",
+        "js",
+        "ios",
+        "bundle.js",
+      ),
       "utf-8",
     ),
     android: fs.readFileSync(
-      path.join(staticBuild, timestamp, "_expo", "static", "js", "android", "bundle.js"),
+      path.join(
+        staticBuild,
+        timestamp,
+        "_expo",
+        "static",
+        "js",
+        "android",
+        "bundle.js",
+      ),
       "utf-8",
     ),
   };
@@ -330,7 +371,8 @@ function extractAssets(timestamp) {
   const extractFromBundle = (bundle, platform) => {
     for (const match of bundle.matchAll(assetPattern)) {
       const originalPath = match[1];
-      const filename = match[3] + "." + match[4];
+      const extension = match[4];
+      const filename = match[3] + "." + extension;
 
       const tempUrl = new URL(`http://localhost:8081${originalPath}`);
       const unstablePath = tempUrl.searchParams.get("unstable_path");
@@ -349,6 +391,7 @@ function extractAssets(timestamp) {
           filename: filename,
           relativePath: decodedPath,
           hash: match[2],
+          type: extension,
           platforms: new Set(),
         };
 
@@ -469,7 +512,29 @@ function updateBundleUrls(timestamp, baseUrl) {
   console.log("Updated bundle URLs");
 }
 
-function updateManifests(manifests, timestamp, baseUrl, assetsByHash) {
+function manifestAssetUrl(baseUrl, timestamp, assetInfo) {
+  return `${baseUrl}${basePath}/${timestamp}/_expo/static/js/${assetInfo.relativePath}/${assetInfo.filename}`;
+}
+
+function toManifestAsset(baseUrl, timestamp, asset) {
+  const key = asset.hash || `${asset.relativePath}/${asset.filename}`;
+  return {
+    hash: asset.hash,
+    key,
+    contentType: contentTypeForExtension(asset.type),
+    fileExtension: asset.type,
+    url: manifestAssetUrl(baseUrl, timestamp, asset),
+  };
+}
+
+function updateManifests(manifests, timestamp, baseUrl, assets) {
+  const assetsByHash = new Map();
+  for (const asset of assets) {
+    if (asset.hash) {
+      assetsByHash.set(asset.hash, asset);
+    }
+  }
+
   const updateForPlatform = (platform, manifest) => {
     if (!manifest.launchAsset || !manifest.extra) {
       exitWithError(`Malformed manifest for ${platform}`);
@@ -486,17 +551,32 @@ function updateManifests(manifests, timestamp, baseUrl, assetsByHash) {
       baseUrl.replace("https://", "") + "/" + platform;
     manifest.extra.expoGo.packagerOpts.dev = false;
 
-    if (manifest.assets && manifest.assets.length > 0) {
-      manifest.assets.forEach((asset) => {
-        if (!asset.url) return;
+    if (!Array.isArray(manifest.assets)) {
+      manifest.assets = [];
+    }
 
+    if (manifest.assets.length === 0 && assets.length > 0) {
+      // Metro can emit a valid manifest with an empty assets array when its
+      // manifest asset resolver cannot fetch local files in proxied CI/Replit
+      // environments. The bundle still contains the full asset registry, so we
+      // rebuild the Expo manifest assets from the already extracted registry to
+      // keep icons, images and fonts available in Expo Go.
+      manifest.assets = assets.map((asset) =>
+        toManifestAsset(baseUrl, timestamp, asset),
+      );
+    } else {
+      manifest.assets.forEach((asset) => {
         const hash = asset.hash;
         if (!hash) return;
 
         const assetInfo = assetsByHash.get(hash);
         if (!assetInfo) return;
 
-        asset.url = `${baseUrl}${basePath}/${timestamp}/_expo/static/js/${assetInfo.relativePath}/${assetInfo.filename}`;
+        asset.url = manifestAssetUrl(baseUrl, timestamp, assetInfo);
+        asset.contentType =
+          asset.contentType || contentTypeForExtension(assetInfo.type);
+        asset.fileExtension = asset.fileExtension || assetInfo.type;
+        asset.key = asset.key || hash;
       });
     }
 
@@ -545,14 +625,6 @@ async function main() {
   const assets = extractAssets(timestamp);
   console.log("Found", assets.length, "unique asset(s)");
 
-  const assetsByHash = new Map();
-  for (const asset of assets) {
-    assetsByHash.set(asset.hash, {
-      relativePath: asset.relativePath,
-      filename: asset.filename,
-    });
-  }
-
   const assetCount = await downloadAssets(assets, timestamp);
 
   if (assetCount > 0) {
@@ -560,7 +632,7 @@ async function main() {
   }
 
   console.log("Updating manifests and creating landing page...");
-  updateManifests(manifests, timestamp, baseUrl, assetsByHash);
+  updateManifests(manifests, timestamp, baseUrl, assets);
 
   console.log("Build complete! Deploy to:", baseUrl);
 
