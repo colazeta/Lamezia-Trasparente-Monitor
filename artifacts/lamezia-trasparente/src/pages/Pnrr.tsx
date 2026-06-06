@@ -34,6 +34,7 @@ import {
 } from "@/components/ui/empty";
 import { AlboLink } from "@/components/AlboLink";
 import { MonitoringReportsSection } from "@/components/MonitoringReportsSection";
+import { PageMeta } from "@/components/seo/PageMeta";
 
 function formatDate(value: string | null | undefined) {
   if (!value) return "—";
@@ -111,7 +112,13 @@ export function Pnrr() {
       : null;
 
   return (
-    <div className="container mx-auto px-4 py-8 md:py-12 max-w-5xl">
+    <>
+      <PageMeta
+        title="Progetti PNRR a Lamezia Terme"
+        description="Consultazione civica dei progetti PNRR collegati a Lamezia Terme, con importi, stati e collegamenti alle fonti ufficiali disponibili."
+        path="/pnrr"
+      />
+      <div className="container mx-auto px-4 py-8 md:py-12 max-w-5xl">
       <div className="mb-8">
         <span className="eyebrow text-primary">
           <Landmark className="h-3.5 w-3.5" />
@@ -145,7 +152,7 @@ export function Pnrr() {
         </p>
         {censusLastUpdatedAt && (
           <p className="mt-2 flex items-center gap-1.5 text-xs text-muted-foreground">
-            <RefreshCw className="h-3 w-3" />
+            <RefreshCw className="h-3 w-3"  aria-hidden="true"/>
             Censimento aggiornato il {formatDate(censusLastUpdatedAt)}
           </p>
         )}
@@ -197,7 +204,7 @@ export function Pnrr() {
           {census.missions.length > 0 && (
             <div className="mb-10">
               <div className="mb-4 flex items-center gap-2">
-                <Layers className="h-5 w-5 text-brand" />
+                <Layers className="h-5 w-5 text-brand"  aria-hidden="true"/>
                 <h2 className="text-xl font-display font-bold tracking-tight">
                   Ripartizione per Missione
                 </h2>
@@ -227,7 +234,7 @@ export function Pnrr() {
           )}
 
           <div className="mb-4 flex items-center gap-2">
-            <FolderKanban className="h-5 w-5 text-brand" />
+            <FolderKanban className="h-5 w-5 text-brand"  aria-hidden="true"/>
             <h2 className="text-xl font-display font-bold tracking-tight">
               Progetti PNRR – Censimento Italia Domani
             </h2>
@@ -247,7 +254,7 @@ export function Pnrr() {
           {uncensored && uncensored.length > 0 && (
             <div className="rounded-xl border border-amber-300/60 bg-amber-50/60 p-5 dark:border-amber-500/30 dark:bg-amber-500/10">
               <h2 className="text-xl font-serif font-bold mb-1 flex items-center gap-2 text-amber-700 dark:text-amber-400">
-                <AlertTriangle className="h-5 w-5" />
+                <AlertTriangle className="h-5 w-5"  aria-hidden="true"/>
                 Documenti Albo non collegati a censimento
               </h2>
               <p className="text-sm text-muted-foreground mb-4">
@@ -270,7 +277,7 @@ export function Pnrr() {
                           variant="outline"
                           className="font-mono text-xs shadow-none"
                         >
-                          <Hash className="mr-1 h-3 w-3" />
+                          <Hash className="mr-1 h-3 w-3"  aria-hidden="true"/>
                           {c}
                         </Badge>
                       ))}
@@ -283,7 +290,7 @@ export function Pnrr() {
                         </Badge>
                       )}
                       <span className="ml-auto flex items-center gap-1 text-xs text-muted-foreground">
-                        <Calendar className="h-3 w-3" />
+                        <Calendar className="h-3 w-3"  aria-hidden="true"/>
                         {formatDate(doc.pubStart)}
                       </span>
                     </div>
@@ -318,7 +325,8 @@ export function Pnrr() {
           </EmptyHeader>
         </Empty>
       )}
-    </div>
+      </div>
+    </>
   );
 }
 
@@ -362,18 +370,18 @@ function PnrrCard({
           <div className="ml-auto flex flex-wrap items-center gap-2">
             {project.trasparenzaCompleta ? (
               <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-semibold text-emerald-700 ring-1 ring-emerald-200 dark:bg-emerald-500/10 dark:text-emerald-400 dark:ring-emerald-500/30">
-                <ShieldCheck className="h-3 w-3" />
+                <ShieldCheck className="h-3 w-3"  aria-hidden="true"/>
                 Trasparenza completa
               </span>
             ) : (
               <span className="inline-flex items-center gap-1 rounded-full bg-amber-50 px-2.5 py-1 text-xs font-semibold text-amber-700 ring-1 ring-amber-200 dark:bg-amber-500/10 dark:text-amber-400 dark:ring-amber-500/30">
-                <ShieldAlert className="h-3 w-3" />
+                <ShieldAlert className="h-3 w-3"  aria-hidden="true"/>
                 Lacuna di trasparenza
               </span>
             )}
             {project.aggiornamentoVecchio && (
               <span className="inline-flex items-center gap-1 rounded-full bg-red-50 px-2.5 py-1 text-xs font-semibold text-red-700 ring-1 ring-red-200 dark:bg-red-500/10 dark:text-red-400 dark:ring-red-500/30">
-                <Clock className="h-3 w-3" />
+                <Clock className="h-3 w-3"  aria-hidden="true"/>
                 Aggiornamento vecchio
               </span>
             )}
@@ -389,13 +397,13 @@ function PnrrCard({
         <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5 text-sm text-muted-foreground mb-4">
           {formatImporto(project.importoFinanziato) && (
             <span className="flex items-center gap-1 font-semibold text-foreground">
-              <Euro className="h-3.5 w-3.5 text-brand" />
+              <Euro className="h-3.5 w-3.5 text-brand"  aria-hidden="true"/>
               {formatImporto(project.importoFinanziato)}
             </span>
           )}
           {(project.attuatore ?? project.holder) && (
             <span className="flex items-center gap-1">
-              <Building2 className="h-3.5 w-3.5" />
+              <Building2 className="h-3.5 w-3.5"  aria-hidden="true"/>
               {project.attuatore ?? project.holder}
             </span>
           )}
@@ -407,7 +415,7 @@ function PnrrCard({
           )}
           {project.lastUpdatedAt && (
             <span className="flex items-center gap-1">
-              <Calendar className="h-3.5 w-3.5" />
+              <Calendar className="h-3.5 w-3.5"  aria-hidden="true"/>
               Aggiornato {formatDate(project.lastUpdatedAt)}
             </span>
           )}
@@ -438,7 +446,7 @@ function PnrrCard({
               rel="noopener noreferrer"
               className="inline-flex items-center gap-1.5 text-xs font-medium text-primary hover:underline"
             >
-              <ExternalLink className="h-3.5 w-3.5" />
+              <ExternalLink className="h-3.5 w-3.5"  aria-hidden="true"/>
               Scheda Attuazione Comune
             </a>
           )}
@@ -447,7 +455,7 @@ function PnrrCard({
             className="inline-flex items-center gap-1.5 rounded-md border border-brand/40 bg-brand/10 px-2.5 py-1 text-xs font-semibold text-brand transition-colors hover:bg-brand/20"
             data-testid={`link-monitora-pnrr-${project.id}`}
           >
-            <Telescope className="h-3.5 w-3.5" />
+            <Telescope className="h-3.5 w-3.5"  aria-hidden="true"/>
             Monitora questo progetto
           </Link>
         </div>
@@ -462,7 +470,7 @@ function PnrrCard({
         {project.attachments.length > 0 && (
           <div className="mt-4 pt-4 border-t border-border/60">
             <h4 className="mb-2 flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-              <Paperclip className="h-3.5 w-3.5" />
+              <Paperclip className="h-3.5 w-3.5"  aria-hidden="true"/>
               Allegati ufficiali Comune
             </h4>
             <ul className="space-y-1.5">
@@ -474,7 +482,7 @@ function PnrrCard({
                     rel="noopener noreferrer"
                     className="inline-flex items-start gap-1.5 text-sm text-primary hover:underline"
                   >
-                    <FileText className="mt-0.5 h-3.5 w-3.5 shrink-0" />
+                    <FileText className="mt-0.5 h-3.5 w-3.5 shrink-0"  aria-hidden="true"/>
                     <span className="break-all">{att.title}</span>
                   </a>
                 </li>
@@ -486,7 +494,7 @@ function PnrrCard({
         {/* Matched Albo documents */}
         <div className="mt-4 pt-4 border-t border-border/60">
           <h4 className="mb-2 flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-            <FileText className="h-3.5 w-3.5" />
+            <FileText className="h-3.5 w-3.5"  aria-hidden="true"/>
             Documenti Albo Pretorio collegati per CUP
             <span className="ml-auto rounded-full bg-muted px-2 py-0.5 text-xs font-bold tabular-nums text-foreground">
               {project.documentsCount}
@@ -500,7 +508,7 @@ function PnrrCard({
                   className="rounded-lg bg-muted/30 p-3"
                 >
                   <div className="flex items-start gap-3">
-                    <FileText className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
+                    <FileText className="mt-0.5 h-4 w-4 shrink-0 text-primary"  aria-hidden="true"/>
                     <div className="min-w-0 flex-1">
                       <p className="text-sm font-medium leading-snug">
                         {doc.oggetto}
@@ -508,7 +516,7 @@ function PnrrCard({
                       <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted-foreground">
                         <span>{doc.tipologia}</span>
                         <span className="flex items-center gap-1 font-mono">
-                          <Calendar className="h-3 w-3" />
+                          <Calendar className="h-3 w-3"  aria-hidden="true"/>
                           {formatDate(doc.pubStart)}
                         </span>
                       </div>

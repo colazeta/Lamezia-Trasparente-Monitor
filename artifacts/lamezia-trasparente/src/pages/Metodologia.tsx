@@ -4,6 +4,7 @@ import {
   MONITORING_START_LABEL,
   MONITORING_METHODOLOGY_PARAGRAPHS,
 } from "@/lib/monitoring";
+import { PageMeta } from "@/components/seo/PageMeta";
 
 const METHOD_STEPS = [
   {
@@ -49,10 +50,16 @@ const DATA_STATUSES = [
 
 export function Metodologia() {
   return (
-    <div className="container mx-auto max-w-4xl px-4 py-8 md:py-12">
+    <>
+      <PageMeta
+        title="Metodologia di monitoraggio civico"
+        description="Criteri, cautele e stato dei dati usati per leggere gli indicatori civici senza considerarli prove di irregolarità o illeciti."
+        path="/metodologia"
+      />
+      <div className="container mx-auto max-w-4xl px-4 py-8 md:py-12">
       <header className="mb-8">
         <span className="eyebrow text-primary">
-          <Info className="h-3.5 w-3.5" />
+          <Info className="h-3.5 w-3.5"  aria-hidden="true"/>
           Come lavoriamo
         </span>
         <h1 className="mt-2 text-3xl font-display font-bold tracking-tight md:text-4xl">
@@ -208,6 +215,7 @@ export function Metodologia() {
           o dichiarati come estratti, arricchiti o da verificare.
         </p>
       </div>
-    </div>
+      </div>
+    </>
   );
 }

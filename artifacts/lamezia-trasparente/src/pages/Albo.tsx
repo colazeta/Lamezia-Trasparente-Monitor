@@ -44,6 +44,7 @@ import {
   MACROTEMA_OPTS,
   MacrotemaBadge,
 } from "@/lib/macrotema";
+import { PageMeta } from "@/components/seo/PageMeta";
 
 const CATEGORY_LABELS: Record<string, string> = {
   albo: "Albo",
@@ -111,11 +112,17 @@ export function Albo() {
   ];
 
   return (
-    <div className="container mx-auto px-4 py-8 md:py-12 max-w-5xl">
+    <>
+      <PageMeta
+        title="Albo Pretorio civico navigabile"
+        description="Archivio civico consultabile degli atti pubblicati all'Albo Pretorio di Lamezia Terme, con filtri per categoria, periodo e macrotema."
+        path="/albo"
+      />
+      <div className="container mx-auto px-4 py-8 md:py-12 max-w-5xl">
       <div className="mb-8 flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
         <div>
           <span className="eyebrow text-primary">
-            <ShieldAlert className="h-3.5 w-3.5" />
+            <ShieldAlert className="h-3.5 w-3.5"  aria-hidden="true"/>
             Estrazione indipendente in tempo reale
           </span>
           <h1 className="mt-2 text-3xl md:text-4xl font-display font-bold tracking-tight">
@@ -136,7 +143,7 @@ export function Albo() {
 
       <div className="mb-8 flex flex-wrap items-center gap-x-6 gap-y-2 rounded-xl border border-primary/20 bg-primary/5 px-4 py-3 text-sm">
         <span className="flex items-center gap-2 font-semibold text-foreground">
-          <RefreshCw className="h-4 w-4 text-primary" />
+          <RefreshCw className="h-4 w-4 text-primary"  aria-hidden="true"/>
           Ultimo aggiornamento:{" "}
           <span className="text-primary font-mono">
             {feed?.lastUpdatedAt
@@ -158,7 +165,7 @@ export function Albo() {
       </div>
 
       <div className="mb-8 flex items-start gap-3 rounded-xl border border-border bg-muted/40 px-4 py-3 text-sm text-muted-foreground">
-        <Info className="mt-0.5 h-4 w-4 shrink-0 text-brand" />
+        <Info className="mt-0.5 h-4 w-4 shrink-0 text-brand"  aria-hidden="true"/>
         <p>
           {MONITORING_DOCS_NOTICE}{" "}
           <Link
@@ -222,7 +229,7 @@ export function Albo() {
           <Select value={category} onValueChange={setCategory}>
             <SelectTrigger className="h-11 bg-background" aria-label="Filtra per sezione">
               <div className="flex items-center gap-2">
-                <Filter className="h-4 w-4 text-muted-foreground shrink-0" />
+                <Filter className="h-4 w-4 text-muted-foreground shrink-0"  aria-hidden="true"/>
                 <span>
                   {category === "all"
                     ? "Tutte le sezioni"
@@ -244,7 +251,7 @@ export function Albo() {
           <Select value={macrotema} onValueChange={setMacrotema}>
             <SelectTrigger className="h-11 bg-background" aria-label="Filtra per tema">
               <div className="flex items-center gap-2">
-                <Layers className="h-4 w-4 text-muted-foreground shrink-0" />
+                <Layers className="h-4 w-4 text-muted-foreground shrink-0"  aria-hidden="true"/>
                 <span className="truncate">
                   {macrotema === "all"
                     ? "Tutti i temi"
@@ -334,7 +341,7 @@ export function Albo() {
                     )}
                   </div>
                   <div className="flex items-center gap-1.5 text-xs font-mono text-muted-foreground">
-                    <Calendar className="h-3.5 w-3.5" />
+                    <Calendar className="h-3.5 w-3.5"  aria-hidden="true"/>
                     {formatDate(p.pubStart)}
                   </div>
                 </div>
@@ -361,7 +368,7 @@ export function Albo() {
                   )}
                   {p.attachments && p.attachments.length > 0 && (
                     <span className="inline-flex items-center gap-1 text-brand">
-                      <Paperclip className="h-3.5 w-3.5" />
+                      <Paperclip className="h-3.5 w-3.5"  aria-hidden="true"/>
                       {p.attachments.length}{" "}
                       {p.attachments.length === 1 ? "documento" : "documenti"}
                     </span>
@@ -371,7 +378,7 @@ export function Albo() {
                 <div data-tour="albo-markdown" className="mt-3 border-t border-border pt-3 flex items-center justify-end">
                   <span className="inline-flex items-center gap-1 text-xs font-semibold text-primary group-hover:text-brand transition-colors">
                     Vedi dettaglio e allegati
-                    <ChevronRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
+                    <ChevronRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5"  aria-hidden="true"/>
                   </span>
                 </div>
               </Card>
@@ -381,7 +388,7 @@ export function Albo() {
           <Empty className="border bg-muted/20">
             <EmptyHeader>
               <EmptyMedia variant="icon">
-                <ShieldAlert />
+                <ShieldAlert  aria-hidden="true"/>
               </EmptyMedia>
               <EmptyTitle>Nessun atto trovato</EmptyTitle>
               <EmptyDescription>
@@ -392,6 +399,7 @@ export function Albo() {
           </Empty>
         )}
       </div>
-    </div>
+      </div>
+    </>
   );
 }
