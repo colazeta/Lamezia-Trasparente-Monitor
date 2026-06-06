@@ -33,6 +33,7 @@ import { QuestionCard } from "@/components/questions/QuestionCard";
 import { iconForTopic } from "@/lib/questionTopics";
 import { format } from "date-fns";
 import { it } from "date-fns/locale";
+import { PageMeta } from "@/components/seo/PageMeta";
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -217,7 +218,7 @@ function BlockCallToAction({ content }: { content: Record<string, unknown> }) {
       )}
       <Button asChild size="lg" variant="brand">
         <Link href={ctaHref}>
-          {ctaLabel} <ArrowRight className="ml-1 h-4 w-4" />
+          {ctaLabel} <ArrowRight className="ml-1 h-4 w-4"  aria-hidden="true"/>
         </Link>
       </Button>
     </section>
@@ -265,7 +266,7 @@ function BlockSectionEmbed({ content }: { content: Record<string, unknown> }) {
             <p className="text-sm text-muted-foreground mt-0.5">{description}</p>
           )}
         </div>
-        <ArrowUpRight className="h-5 w-5 text-muted-foreground group-hover:text-primary transition-colors shrink-0" />
+        <ArrowUpRight className="h-5 w-5 text-muted-foreground group-hover:text-primary transition-colors shrink-0"  aria-hidden="true"/>
       </Link>
     </section>
   );
@@ -326,7 +327,7 @@ function BlockThemesGrid({ content }: { content: Record<string, unknown> }) {
                       aria-label={item.label}
                     >
                       <div className={`rounded-xl p-3 ${colors.bg} transition-transform group-hover:scale-105`}>
-                        <Icon className={`h-6 w-6 ${colors.color}`} />
+                        <Icon className={`h-6 w-6 ${colors.color}`} aria-hidden="true" />
                       </div>
                       <div>
                         <div className="text-sm font-bold leading-tight text-foreground">
@@ -371,7 +372,7 @@ function BlockQuestionsFeatured() {
       <div className="container mx-auto px-4 md:px-6">
         <div className="mx-auto max-w-3xl text-center">
           <span className="eyebrow justify-center text-primary">
-            <HelpCircle className="h-3.5 w-3.5" />
+            <HelpCircle className="h-3.5 w-3.5"  aria-hidden="true"/>
             Parti da una domanda
           </span>
           <h2 className="mt-3 font-display text-3xl font-bold tracking-tight md:text-5xl">
@@ -392,7 +393,7 @@ function BlockQuestionsFeatured() {
                   href={`/domande?topic=${encodeURIComponent(t.topic)}`}
                   className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-4 py-2 text-sm font-semibold text-foreground transition-colors hover-elevate"
                 >
-                  <Icon className="h-4 w-4 text-brand" />
+                  <Icon className="h-4 w-4 text-brand" aria-hidden="true" />
                   {t.topic}
                   <span className="text-xs text-muted-foreground tabular-nums">{t.count}</span>
                 </Link>
@@ -408,7 +409,7 @@ function BlockQuestionsFeatured() {
         <div className="mt-10 flex justify-center">
           <Link href="/domande">
             <Button variant="brand" size="lg" className="h-12 px-7 font-bold">
-              Esplora tutte le domande <ArrowRight className="ml-1 h-4 w-4" />
+              Esplora tutte le domande <ArrowRight className="ml-1 h-4 w-4"  aria-hidden="true"/>
             </Button>
           </Link>
         </div>
@@ -452,7 +453,7 @@ function BlockRecentActivity() {
           <CardHeader className="p-3 border-t border-border bg-muted/30">
             <Link href="/albo" className="w-full">
               <Button variant="ghost" className="w-full justify-between font-semibold text-muted-foreground hover:text-foreground">
-                Vai all'Albo Pretorio <ArrowUpRight className="h-4 w-4" />
+                Vai all'Albo Pretorio <ArrowUpRight className="h-4 w-4"  aria-hidden="true"/>
               </Button>
             </Link>
           </CardHeader>
@@ -476,7 +477,7 @@ function BlockConvocazioni() {
           </div>
           <Link href="/convocazioni" className="hidden md:flex shrink-0">
             <Button variant="ghost" className="gap-2 font-semibold">
-              Vedi tutte <ArrowRight className="h-4 w-4" />
+              Vedi tutte <ArrowRight className="h-4 w-4"  aria-hidden="true"/>
             </Button>
           </Link>
         </div>
@@ -576,7 +577,7 @@ function StaticHomeLayout() {
         />
         <div className="container relative z-10 mx-auto px-4 md:px-6 py-20 md:py-28 flex flex-col items-start max-w-4xl">
           <div className="eyebrow rounded-full border border-brand/40 bg-brand/10 px-3.5 py-1.5 text-brand">
-            <ShieldAlert className="h-3.5 w-3.5" />
+            <ShieldAlert className="h-3.5 w-3.5" aria-hidden="true" />
             Osservatorio Civico Indipendente
           </div>
 
@@ -595,7 +596,7 @@ function StaticHomeLayout() {
           <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
             <Link href="/albo" className="w-full sm:w-auto">
               <Button variant="brand" size="lg" className="w-full text-base h-12 px-7 font-bold">
-                Esplora l'Albo Pretorio <ArrowRight className="ml-1 h-4 w-4" />
+                Esplora l'Albo Pretorio <ArrowRight className="ml-1 h-4 w-4"  aria-hidden="true"/>
               </Button>
             </Link>
             <Link href="/segnalazioni" className="w-full sm:w-auto">
@@ -604,7 +605,7 @@ function StaticHomeLayout() {
                 size="lg"
                 className="w-full text-base h-12 px-7 font-bold bg-white/5 text-white border-white/25 hover:bg-white/10"
               >
-                <Megaphone className="mr-1 h-4 w-4" />
+                <Megaphone className="mr-1 h-4 w-4"  aria-hidden="true"/>
                 Invia una Segnalazione
               </Button>
             </Link>
@@ -662,7 +663,7 @@ function StaticHomeLayout() {
                         aria-label={item.label}
                       >
                         <div className={`rounded-xl p-3 ${colors.bg} transition-transform group-hover:scale-105`}>
-                          <Icon className={`h-6 w-6 ${colors.color}`} />
+                          <Icon className={`h-6 w-6 ${colors.color}`} aria-hidden="true" />
                         </div>
                         <div>
                           <div className="text-sm font-bold leading-tight text-foreground">
@@ -687,7 +688,7 @@ function StaticHomeLayout() {
         <div className="container mx-auto px-4 md:px-6">
           <div className="mx-auto max-w-3xl text-center">
             <span className="eyebrow justify-center text-primary">
-              <HelpCircle className="h-3.5 w-3.5" />
+              <HelpCircle className="h-3.5 w-3.5"  aria-hidden="true"/>
               Parti da una domanda
             </span>
             <h2 className="mt-3 font-display text-3xl font-bold tracking-tight md:text-5xl">
@@ -709,7 +710,7 @@ function StaticHomeLayout() {
                     href={`/domande?topic=${encodeURIComponent(t.topic)}`}
                     className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-4 py-2 text-sm font-semibold text-foreground transition-colors hover-elevate"
                   >
-                    <Icon className="h-4 w-4 text-brand" />
+                    <Icon className="h-4 w-4 text-brand" aria-hidden="true" />
                     {t.topic}
                     <span className="text-xs text-muted-foreground tabular-nums">{t.count}</span>
                   </Link>
@@ -727,7 +728,7 @@ function StaticHomeLayout() {
           <div className="mt-10 flex justify-center">
             <Link href="/domande">
               <Button variant="brand" size="lg" className="h-12 px-7 font-bold">
-                Esplora tutte le domande <ArrowRight className="ml-1 h-4 w-4" />
+                Esplora tutte le domande <ArrowRight className="ml-1 h-4 w-4"  aria-hidden="true"/>
               </Button>
             </Link>
           </div>
@@ -752,7 +753,7 @@ function StaticHomeLayout() {
                 </div>
                 <Link href="/convocazioni" className="hidden md:flex shrink-0">
                   <Button variant="ghost" className="gap-2 font-semibold">
-                    Vedi tutte <ArrowRight className="h-4 w-4" />
+                    Vedi tutte <ArrowRight className="h-4 w-4"  aria-hidden="true"/>
                   </Button>
                 </Link>
               </div>
@@ -804,7 +805,7 @@ function StaticHomeLayout() {
                 <CardHeader className="p-3 border-t border-border bg-muted/30">
                   <Link href="/albo" className="w-full">
                     <Button variant="ghost" className="w-full justify-between font-semibold text-muted-foreground hover:text-foreground">
-                      Vai all'Albo Pretorio <ArrowUpRight className="h-4 w-4" />
+                      Vai all'Albo Pretorio <ArrowUpRight className="h-4 w-4"  aria-hidden="true"/>
                     </Button>
                   </Link>
                 </CardHeader>
@@ -825,7 +826,7 @@ function StaticHomeLayout() {
           }}
         />
         <div className="container relative mx-auto px-4 md:px-6 py-20 text-center max-w-3xl">
-          <Megaphone className="h-12 w-12 mx-auto mb-6" />
+          <Megaphone className="h-12 w-12 mx-auto mb-6"  aria-hidden="true"/>
           <h2 className="text-3xl md:text-5xl font-display font-bold mb-4 tracking-tight">
             Hai notato un'anomalia?
           </h2>
@@ -835,7 +836,7 @@ function StaticHomeLayout() {
           </p>
           <Link href="/segnalazioni">
             <Button size="lg" variant="secondary" className="text-base h-12 px-8 font-bold">
-              Invia una Segnalazione <ArrowRight className="ml-1 h-4 w-4" />
+              Invia una Segnalazione <ArrowRight className="ml-1 h-4 w-4"  aria-hidden="true"/>
             </Button>
           </Link>
         </div>
@@ -863,6 +864,11 @@ export function Home() {
 
   return (
     <div className="flex flex-col">
+      <PageMeta
+        title="Home — osservatorio civico su atti, appalti e PNRR"
+        description="Osservatorio civico indipendente per consultare atti, contratti, delibere, convocazioni, open data e progetti PNRR del Comune di Lamezia Terme."
+        path="/"
+      />
       {publishedBlocks && publishedBlocks.length > 0
         ? <PublishedBlocks blocks={publishedBlocks} />
         : <StaticHomeLayout />}
@@ -889,7 +895,7 @@ function ConvocazioniColumn({
     <Card className="overflow-hidden">
       <CardHeader className="flex flex-row items-center gap-2.5 space-y-0 border-b border-border bg-muted/30 py-3.5">
         <div className="p-1.5 rounded-md bg-primary/10 text-primary">
-          <Icon className="h-4 w-4" />
+          <Icon className="h-4 w-4" aria-hidden="true" />
         </div>
         <h3 className="font-display font-bold text-sm tracking-tight">{title}</h3>
       </CardHeader>
@@ -906,7 +912,7 @@ function ConvocazioniColumn({
             items.slice(0, 3).map((c) => (
               <Link key={c.id} href={`/convocazioni/${c.id}`} className="block p-4 hover-elevate transition-colors">
                 <div className="flex items-center gap-1.5 text-xs font-bold text-brand mb-1.5">
-                  <Calendar className="h-3.5 w-3.5" />
+                  <Calendar className="h-3.5 w-3.5"  aria-hidden="true"/>
                   {formatDate(c.dataAtto ?? c.pubStart)}
                 </div>
                 <p className="text-sm font-medium leading-snug line-clamp-2">{c.oggetto}</p>
@@ -943,7 +949,7 @@ function StatCard({
       {highlight && <span className="absolute left-0 top-0 h-full w-1 bg-brand" />}
       <div className="flex items-center gap-3 mb-3">
         <div className={`p-2 rounded-lg ${highlight ? "bg-brand/15 text-brand" : "bg-muted text-muted-foreground"}`}>
-          <Icon className="h-5 w-5" />
+          <Icon className="h-5 w-5" aria-hidden="true" />
         </div>
         <h3 className="eyebrow text-muted-foreground">{title}</h3>
       </div>
@@ -975,10 +981,10 @@ function ActivityRow({ item }: { item: any }) {
 
   const getIcon = () => {
     switch (item.type) {
-      case "act": return <FileSearch className="h-4 w-4" />;
-      case "contract": return <FileText className="h-4 w-4" />;
-      case "report": return <AlertTriangle className="h-4 w-4" />;
-      default: return <Info className="h-4 w-4" />;
+      case "act": return <FileSearch className="h-4 w-4"  aria-hidden="true"/>;
+      case "contract": return <FileText className="h-4 w-4"  aria-hidden="true"/>;
+      case "report": return <AlertTriangle className="h-4 w-4"  aria-hidden="true"/>;
+      default: return <Info className="h-4 w-4"  aria-hidden="true"/>;
     }
   };
 

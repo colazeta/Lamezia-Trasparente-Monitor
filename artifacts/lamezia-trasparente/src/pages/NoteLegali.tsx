@@ -1,5 +1,6 @@
 import { AlertTriangle, ExternalLink, Scale, ShieldAlert } from "lucide-react";
 import { Link } from "wouter";
+import { PageMeta } from "@/components/seo/PageMeta";
 
 const PRINCIPLES = [
   "Il sito è un progetto civico indipendente e non sostituisce comunicazioni, atti o banche dati istituzionali.",
@@ -29,10 +30,16 @@ const CAUTIONS = [
 
 export function NoteLegali() {
   return (
-    <div className="container mx-auto max-w-4xl px-4 py-8 md:py-12">
+    <>
+      <PageMeta
+        title="Note legali, cautele e riuso dei dati"
+        description="Informazioni sulla natura indipendente del progetto, sulle cautele di lettura e sui riferimenti istituzionali per verificare le fonti ufficiali."
+        path="/note-legali"
+      />
+      <div className="container mx-auto max-w-4xl px-4 py-8 md:py-12">
       <header className="mb-8">
         <span className="eyebrow text-primary">
-          <Scale className="h-3.5 w-3.5" />
+          <Scale className="h-3.5 w-3.5"  aria-hidden="true"/>
           Cautele interpretative
         </span>
         <h1 className="mt-2 text-3xl font-display font-bold tracking-tight md:text-4xl">
@@ -148,7 +155,7 @@ export function NoteLegali() {
             <a
               href="https://www.normattiva.it/"
               target="_blank"
-              rel="noreferrer"
+              rel="noopener noreferrer"
               className="inline-flex items-center gap-1 text-primary underline underline-offset-4 hover:text-primary/80"
             >
               Normattiva — testi normativi vigenti
@@ -159,7 +166,7 @@ export function NoteLegali() {
             <a
               href="https://www.anticorruzione.it/"
               target="_blank"
-              rel="noreferrer"
+              rel="noopener noreferrer"
               className="inline-flex items-center gap-1 text-primary underline underline-offset-4 hover:text-primary/80"
             >
               ANAC — trasparenza e contratti pubblici
@@ -170,7 +177,7 @@ export function NoteLegali() {
             <a
               href="https://www.comune.lamezia-terme.cz.it/"
               target="_blank"
-              rel="noreferrer"
+              rel="noopener noreferrer"
               className="inline-flex items-center gap-1 text-primary underline underline-offset-4 hover:text-primary/80"
             >
               Comune di Lamezia Terme — sito istituzionale
@@ -179,6 +186,7 @@ export function NoteLegali() {
           </li>
         </ul>
       </section>
-    </div>
+      </div>
+    </>
   );
 }

@@ -10,14 +10,14 @@ export function Footer() {
         <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-4">
           <div className="space-y-4 lg:col-span-2">
             <div className="flex items-center gap-2.5">
-              <LogoMark className="h-9 w-9" />
+              <LogoMark className="h-9 w-9" aria-hidden="true" />
               <span className="font-display font-bold text-lg tracking-tight">
                 rendiamo<span className="text-brand">Lamezia</span>Trasparente
               </span>
             </div>
             <div className="space-y-3 text-sm text-sidebar-foreground/70 max-w-sm">
               <p className="flex gap-2">
-                <AlertTriangle className="h-4 w-4 shrink-0 mt-0.5 text-brand" />
+                <AlertTriangle className="h-4 w-4 shrink-0 mt-0.5 text-brand" aria-hidden="true" />
                 <span>
                   <strong className="text-sidebar-foreground">Attenzione:</strong> progetto civico
                   indipendente gestito da cittadini. Non è un sito istituzionale e non ha alcun
@@ -51,14 +51,14 @@ export function Footer() {
               <li><Link href="/iscrizioni" className="hover:text-primary transition-colors">Centro Iscrizioni</Link></li>
               <li><Link href="/metodologia" className="hover:text-primary transition-colors">Metodologia</Link></li>
               <li><Link href="/note-legali" className="hover:text-primary transition-colors">Note legali</Link></li>
-              <li><a href="#" className="hover:text-primary transition-colors">Chi Siamo</a></li>
-              <li><a href="#" className="hover:text-primary transition-colors">Contattaci</a></li>
+              <li><Link href="/note-legali" className="hover:text-primary transition-colors">Chi siamo</Link></li>
+              <li><Link href="/accesso-civico" className="hover:text-primary transition-colors">Accesso civico</Link></li>
             </ul>
           </div>
         </div>
 
         <div className="mt-12 pt-8 border-t border-sidebar-border flex flex-col gap-2 text-xs text-sidebar-foreground/70 sm:flex-row sm:items-center">
-          <CalendarClock className="h-4 w-4 shrink-0 text-brand" />
+          <CalendarClock className="h-4 w-4 shrink-0 text-brand" aria-hidden="true" />
           <p>
             {MONITORING_FOOTER_NOTICE}{" "}
             <Link href="/metodologia" className="font-medium text-sidebar-foreground hover:text-primary transition-colors underline underline-offset-2">
