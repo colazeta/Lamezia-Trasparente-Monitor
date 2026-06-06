@@ -19,6 +19,8 @@ import {
   Telescope,
   Rss,
   Code2,
+  BookOpen,
+  Scale3D,
 } from "lucide-react";
 
 export interface NavItem {
@@ -184,6 +186,27 @@ export const NAV_GROUPS: NavSection[] = [
         description:
           "Dataset scaricabili in formato aperto e riutilizzabile.",
         icon: Database,
+      },
+      {
+        href: "/fonti-dati",
+        label: "Fonti dati",
+        description:
+          "Origine, stato, frequenza e limiti delle fonti monitorate.",
+        icon: BookOpen,
+      },
+      {
+        href: "/metodologia",
+        label: "Metodologia",
+        description:
+          "Metodo di raccolta, trattamento e lettura prudente degli indicatori.",
+        icon: FileSearch,
+      },
+      {
+        href: "/note-legali",
+        label: "Note legali",
+        description:
+          "Cautele interpretative e uso responsabile dei dati civici.",
+        icon: Scale3D,
       },
     ],
   },
