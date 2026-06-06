@@ -25,11 +25,11 @@ export function QuestionCard({
     <Card className="group flex h-full flex-col gap-4 p-5 transition-all hover:-translate-y-0.5 hover:border-brand/40 hover:shadow-lg">
       <div className="flex items-start justify-between gap-3">
         <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-brand/10 text-brand">
-          <Icon className="h-5 w-5" />
+          <Icon className="h-5 w-5" aria-hidden="true" />
         </div>
         {question.featured ? (
           <span className="inline-flex items-center gap-1 rounded-full border border-brand/40 bg-brand/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-brand">
-            <Star className="h-3 w-3 fill-current" />
+            <Star className="h-3 w-3 fill-current" aria-hidden="true" />
             In evidenza
           </span>
         ) : null}
