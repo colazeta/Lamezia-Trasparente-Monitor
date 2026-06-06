@@ -2,4 +2,4 @@ User-agent: *
 Allow: /
 
 # Static sitemap for the public civic routes served by the web app.
-Sitemap: /sitemap.xml
+Sitemap: https://lamezia-trasparente-monitor.replit.app/sitemap.xml

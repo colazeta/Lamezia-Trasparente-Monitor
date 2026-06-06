@@ -327,7 +327,7 @@ function BlockThemesGrid({ content }: { content: Record<string, unknown> }) {
                       aria-label={item.label}
                     >
                       <div className={`rounded-xl p-3 ${colors.bg} transition-transform group-hover:scale-105`}>
-                        <Icon className={`h-6 w-6 ${colors.color}`} />
+                        <Icon className={`h-6 w-6 ${colors.color}`} aria-hidden="true" />
                       </div>
                       <div>
                         <div className="text-sm font-bold leading-tight text-foreground">
@@ -393,7 +393,7 @@ function BlockQuestionsFeatured() {
                   href={`/domande?topic=${encodeURIComponent(t.topic)}`}
                   className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-4 py-2 text-sm font-semibold text-foreground transition-colors hover-elevate"
                 >
-                  <Icon className="h-4 w-4 text-brand" />
+                  <Icon className="h-4 w-4 text-brand" aria-hidden="true" />
                   {t.topic}
                   <span className="text-xs text-muted-foreground tabular-nums">{t.count}</span>
                 </Link>
@@ -663,7 +663,7 @@ function StaticHomeLayout() {
                         aria-label={item.label}
                       >
                         <div className={`rounded-xl p-3 ${colors.bg} transition-transform group-hover:scale-105`}>
-                          <Icon className={`h-6 w-6 ${colors.color}`} />
+                          <Icon className={`h-6 w-6 ${colors.color}`} aria-hidden="true" />
                         </div>
                         <div>
                           <div className="text-sm font-bold leading-tight text-foreground">
@@ -710,7 +710,7 @@ function StaticHomeLayout() {
                     href={`/domande?topic=${encodeURIComponent(t.topic)}`}
                     className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-4 py-2 text-sm font-semibold text-foreground transition-colors hover-elevate"
                   >
-                    <Icon className="h-4 w-4 text-brand" />
+                    <Icon className="h-4 w-4 text-brand" aria-hidden="true" />
                     {t.topic}
                     <span className="text-xs text-muted-foreground tabular-nums">{t.count}</span>
                   </Link>
@@ -895,7 +895,7 @@ function ConvocazioniColumn({
     <Card className="overflow-hidden">
       <CardHeader className="flex flex-row items-center gap-2.5 space-y-0 border-b border-border bg-muted/30 py-3.5">
         <div className="p-1.5 rounded-md bg-primary/10 text-primary">
-          <Icon className="h-4 w-4" />
+          <Icon className="h-4 w-4" aria-hidden="true" />
         </div>
         <h3 className="font-display font-bold text-sm tracking-tight">{title}</h3>
       </CardHeader>
@@ -949,7 +949,7 @@ function StatCard({
       {highlight && <span className="absolute left-0 top-0 h-full w-1 bg-brand" />}
       <div className="flex items-center gap-3 mb-3">
         <div className={`p-2 rounded-lg ${highlight ? "bg-brand/15 text-brand" : "bg-muted text-muted-foreground"}`}>
-          <Icon className="h-5 w-5" />
+          <Icon className="h-5 w-5" aria-hidden="true" />
         </div>
         <h3 className="eyebrow text-muted-foreground">{title}</h3>
       </div>

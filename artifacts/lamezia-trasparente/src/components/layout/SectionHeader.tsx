@@ -28,7 +28,7 @@ export function SectionHeader() {
             href="/"
             className="flex items-center gap-1 transition-colors hover:text-foreground"
           >
-            <Home className="h-3.5 w-3.5" />
+            <Home className="h-3.5 w-3.5" aria-hidden="true" />
             Home
           </Link>
           <ChevronRight className="h-3.5 w-3.5 opacity-60" aria-hidden="true" />
@@ -38,7 +38,7 @@ export function SectionHeader() {
             aria-current="page"
             className="flex items-center gap-1.5 font-semibold text-foreground"
           >
-            <Icon className="h-3.5 w-3.5 text-primary" />
+            <Icon className="h-3.5 w-3.5 text-primary" aria-hidden="true" />
             {item.label}
           </span>
         </nav>

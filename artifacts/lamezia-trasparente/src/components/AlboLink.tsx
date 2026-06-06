@@ -36,9 +36,9 @@ export function AlboLink({
               title={att.name}
             >
               {att.storagePath ? (
-                <Download className="h-3.5 w-3.5 shrink-0" />
+                <Download className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
               ) : (
-                <FileText className="h-3.5 w-3.5 shrink-0" />
+                <FileText className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
               )}
               <span className="truncate">{att.name}</span>
             </a>
@@ -59,7 +59,7 @@ export function AlboLink({
         className,
       )}
     >
-      <ExternalLink className="h-3.5 w-3.5" />
+      <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
       Consulta sull'Albo ufficiale
     </a>
   );

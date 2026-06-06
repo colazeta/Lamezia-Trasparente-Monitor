@@ -69,7 +69,7 @@ export function Navbar() {
           {/* Desktop Nav */}
           <nav className="hidden items-center gap-1 xl:flex">
             <Link href="/" className={linkClass(location === "/")}>
-              <Home className="h-4 w-4" />
+              <Home className="h-4 w-4" aria-hidden="true" />
               Home
               {location === "/" && (
                 <span className="absolute inset-x-2.5 -bottom-px h-0.5 rounded-full bg-primary" />
@@ -77,7 +77,7 @@ export function Navbar() {
             </Link>
 
             <Link href="/domande" className={linkClass(isActive("/domande"))}>
-              <HelpCircle className="h-4 w-4" />
+              <HelpCircle className="h-4 w-4" aria-hidden="true" />
               Domande
               {isActive("/domande") && (
                 <span className="absolute inset-x-2.5 -bottom-px h-0.5 rounded-full bg-primary" />
@@ -85,7 +85,7 @@ export function Navbar() {
             </Link>
 
             <Link href="/guida" className={linkClass(isActive("/guida"))}>
-              <BookOpen className="h-4 w-4" />
+              <BookOpen className="h-4 w-4" aria-hidden="true" />
               Guida
               {isActive("/guida") && (
                 <span className="absolute inset-x-2.5 -bottom-px h-0.5 rounded-full bg-primary" />
@@ -96,9 +96,9 @@ export function Navbar() {
             {topics.length > 0 && (
               <DropdownMenu modal={false}>
                 <DropdownMenuTrigger className={linkClass(false)}>
-                  <FileSearch className="h-4 w-4" />
+                  <FileSearch className="h-4 w-4" aria-hidden="true" />
                   Argomenti
-                  <ChevronDown className="h-3.5 w-3.5 opacity-70" />
+                  <ChevronDown className="h-3.5 w-3.5 opacity-70" aria-hidden="true" />
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="start" className="w-64">
                   {topics.map((topic) => {
@@ -109,7 +109,7 @@ export function Navbar() {
                           href={`/domande?topic=${encodeURIComponent(topic)}`}
                           className="flex cursor-pointer items-center gap-2"
                         >
-                          <Icon className="h-4 w-4 text-primary" />
+                          <Icon className="h-4 w-4 text-primary" aria-hidden="true" />
                           {topic}
                         </Link>
                       </DropdownMenuItem>
@@ -122,9 +122,9 @@ export function Navbar() {
             {/* Sezioni — grouped mega-menu */}
             <DropdownMenu modal={false}>
               <DropdownMenuTrigger className={linkClass(sezioniActive)}>
-                <FileText className="h-4 w-4" />
+                <FileText className="h-4 w-4" aria-hidden="true" />
                 Sezioni
-                <ChevronDown className="h-3.5 w-3.5 opacity-70" />
+                <ChevronDown className="h-3.5 w-3.5 opacity-70" aria-hidden="true" />
                 {sezioniActive && (
                   <span className="absolute inset-x-2.5 -bottom-px h-0.5 rounded-full bg-primary" />
                 )}
@@ -178,7 +178,7 @@ export function Navbar() {
               onClick={() => setIsOpen(!isOpen)}
               aria-label="Menu"
             >
-              {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+              {isOpen ? <X className="h-5 w-5" aria-hidden="true" /> : <Menu className="h-5 w-5" aria-hidden="true" />}
             </Button>
           </div>
         </div>
@@ -196,7 +196,7 @@ export function Navbar() {
                 className="flex w-full items-center gap-2 rounded-md border border-border bg-muted/50 px-3 py-2.5 text-sm text-muted-foreground"
                 aria-label="Cerca"
               >
-                <FileSearch className="h-4 w-4" />
+                <FileSearch className="h-4 w-4" aria-hidden="true" />
                 Cerca una sezione…
               </button>
 
@@ -295,7 +295,7 @@ function MobileLink({
           : "border-transparent text-muted-foreground",
       )}
     >
-      <Icon className="h-5 w-5 shrink-0" />
+      <Icon className="h-5 w-5 shrink-0" aria-hidden="true" />
       {label}
     </Link>
   );

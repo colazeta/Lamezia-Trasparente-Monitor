@@ -71,12 +71,12 @@ export function CivicWelcome() {
           className="absolute right-3 top-3 rounded-md p-1 text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
           aria-label="Chiudi"
         >
-          <X className="h-4 w-4" />
+          <X className="h-4 w-4" aria-hidden="true" />
         </button>
 
         <div className="mb-5">
           <div className="mb-3 flex h-11 w-11 items-center justify-center rounded-2xl bg-primary/10 text-primary">
-            <Bot className="h-6 w-6" />
+            <Bot className="h-6 w-6" aria-hidden="true" />
           </div>
           <h2 className="font-display text-lg font-bold leading-tight">
             Benvenuto/a su rendiamoLameziaTrasparente
@@ -93,7 +93,7 @@ export function CivicWelcome() {
             return (
               <li key={text} className="flex items-start gap-2.5">
                 <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-md bg-primary/10 text-primary">
-                  <Icon className="h-3 w-3" />
+                  <Icon className="h-3 w-3" aria-hidden="true" />
                 </span>
                 <span className="text-sm leading-snug text-foreground">
                   {text}
@@ -109,12 +109,12 @@ export function CivicWelcome() {
             className="w-full justify-start gap-3"
             onClick={openAssistant}
           >
-            <Bot className="h-4 w-4 shrink-0" />
+            <Bot className="h-4 w-4 shrink-0" aria-hidden="true" />
             Chatta con l'assistente
           </Button>
           <Link href="/guida" onClick={dismissWelcome}>
             <Button className="w-full justify-start gap-3">
-              <BookOpen className="h-4 w-4 shrink-0" />
+              <BookOpen className="h-4 w-4 shrink-0" aria-hidden="true" />
               Scopri il progetto
             </Button>
           </Link>
