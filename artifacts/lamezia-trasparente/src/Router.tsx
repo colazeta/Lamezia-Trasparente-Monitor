@@ -5,6 +5,7 @@ import { Domande } from "./pages/Domande";
 import { Themes } from "./pages/Themes";
 import { ThemeDetail } from "./pages/ThemeDetail";
 import { Contracts } from "./pages/Contracts";
+import { Incarichimetro } from "./pages/Incarichimetro";
 import { ContractStoryline } from "./pages/ContractStoryline";
 import { Albo } from "./pages/Albo";
 import { AlboDetail } from "./pages/AlboDetail";
@@ -72,6 +73,7 @@ export function Router() {
             <Route path="/temi" component={Themes} />
             <Route path="/temi/:id" component={ThemeDetail} />
             <Route path="/contratti" component={Contracts} />
+            <Route path="/incarichimetro" component={Incarichimetro} />
             <Route path="/contratti/:id" component={ContractStoryline} />
             <Route path="/albo" component={Albo} />
             <Route path="/albo/:id" component={AlboDetail} />

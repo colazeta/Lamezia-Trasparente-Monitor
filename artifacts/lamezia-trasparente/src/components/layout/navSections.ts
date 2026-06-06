@@ -2,6 +2,7 @@ import {
   ShieldAlert,
   BarChart3,
   FileText,
+  ClipboardList,
   FileSearch,
   Megaphone,
   Gavel,
@@ -91,6 +92,13 @@ export const NAV_GROUPS: NavSection[] = [
         label: "Contratti & Appalti",
         description: "Gare, affidamenti e fornitori del Comune.",
         icon: FileText,
+      },
+      {
+        href: "/incarichimetro",
+        label: "Incarichimetro",
+        description:
+          "Concentrazione, ricorrenza e rotazione negli incarichi esterni.",
+        icon: ClipboardList,
       },
       {
         href: "/bandi",

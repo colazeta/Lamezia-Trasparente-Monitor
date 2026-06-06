@@ -36,6 +36,7 @@ export function Footer() {
             <ul className="space-y-2.5 text-sm text-sidebar-foreground/70">
               <li><Link href="/temi" className="hover:text-primary transition-colors">Tutti i Temi</Link></li>
               <li><Link href="/contratti" className="hover:text-primary transition-colors">Appalti Pubblici</Link></li>
+              <li><Link href="/incarichimetro" className="hover:text-primary transition-colors">Incarichimetro</Link></li>
               <li><Link href="/albo" className="hover:text-primary transition-colors">Albo Pretorio</Link></li>
               <li><Link href="/statistiche" className="hover:text-primary transition-colors">Statistiche</Link></li>
               <li><Link href="/fonti-dati" className="hover:text-primary transition-colors">Fonti dati</Link></li>

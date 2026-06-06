@@ -3,6 +3,7 @@ import { useLocation } from "wouter";
 import {
   ShieldAlert,
   FileText,
+  ClipboardList,
   FileSearch,
   Megaphone,
   Gavel,
@@ -59,6 +60,7 @@ const ALL_ITEMS: NavItem[] = [
   { href: "/legalita", label: "Legalità e Trasparenza", icon: Scale, group: "Trasparenza & Atti", keywords: "anticorruzione trasparenza" },
 
   { href: "/contratti", label: "Contratti & Appalti", icon: FileText, group: "Spesa & Contratti", keywords: "gare fornitori cig" },
+  { href: "/incarichimetro", label: "Incarichimetro", icon: ClipboardList, group: "Spesa & Contratti", keywords: "incarichi consulenze ricorrenza rotazione operatori beneficiari cig cup" },
   { href: "/bandi", label: "Bandi e Finanziamenti", icon: HandCoins, group: "Spesa & Contratti", keywords: "contributi fondi europei" },
   { href: "/pnrr", label: "PNRR", icon: Landmark, group: "Spesa & Contratti", keywords: "piano ripresa resilienza cup" },
   { href: "/beni-confiscati", label: "Beni Confiscati", icon: ShieldOff, group: "Spesa & Contratti", keywords: "anbsc mafia patrimonio" },
