@@ -38,6 +38,7 @@ export function Footer() {
               <li><Link href="/contratti" className="hover:text-primary transition-colors">Appalti Pubblici</Link></li>
               <li><Link href="/albo" className="hover:text-primary transition-colors">Albo Pretorio</Link></li>
               <li><Link href="/statistiche" className="hover:text-primary transition-colors">Statistiche</Link></li>
+              <li><Link href="/fonti-dati" className="hover:text-primary transition-colors">Fonti dati</Link></li>
               <li><Link href="/feeds" className="hover:text-primary transition-colors">Feed e abbonamenti</Link></li>
               <li><Link href="/sviluppatori" className="hover:text-primary transition-colors">API e sviluppatori</Link></li>
             </ul>
@@ -49,6 +50,7 @@ export function Footer() {
               <li><Link href="/segnalazioni" className="hover:text-primary transition-colors">Invia Segnalazione</Link></li>
               <li><Link href="/iscrizioni" className="hover:text-primary transition-colors">Centro Iscrizioni</Link></li>
               <li><Link href="/metodologia" className="hover:text-primary transition-colors">Metodologia</Link></li>
+              <li><Link href="/note-legali" className="hover:text-primary transition-colors">Note legali</Link></li>
               <li><a href="#" className="hover:text-primary transition-colors">Chi Siamo</a></li>
               <li><a href="#" className="hover:text-primary transition-colors">Contattaci</a></li>
             </ul>
@@ -68,8 +70,8 @@ export function Footer() {
         <div className="mt-6 pt-6 border-t border-sidebar-border flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-sidebar-foreground/60">
           <p>© {new Date().getFullYear()} Iniziativa Civica Lamezia Terme. Tutti i dati sono raccolti da fonti pubbliche.</p>
           <div className="flex gap-4">
-            <a href="#" className="hover:text-primary transition-colors">Privacy</a>
-            <a href="#" className="hover:text-primary transition-colors">Termini</a>
+            <Link href="/note-legali" className="hover:text-primary transition-colors">Note legali</Link>
+            <Link href="/fonti-dati" className="hover:text-primary transition-colors">Fonti dati</Link>
             <Link href="/redazione" className="hover:text-primary transition-colors">Area Redazione</Link>
           </div>
         </div>
