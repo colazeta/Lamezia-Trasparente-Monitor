@@ -15,6 +15,8 @@ import {
   Paperclip,
   Layers,
   ChevronRight,
+  BadgeEuro,
+  Landmark,
 } from "lucide-react";
 import { format } from "date-fns";
 import { it } from "date-fns/locale";
@@ -59,12 +61,38 @@ function formatDate(value: string | null | undefined, pattern = "dd MMM yyyy") {
   return Number.isNaN(d.getTime()) ? "—" : format(d, pattern, { locale: it });
 }
 
+const CIG_RE = /\b(?:CIG|SMART\s+CIG)[:\s-]*([A-Z0-9]{10})\b/gi;
+const AMOUNT_RE = /(?:€|euro|importo)\s*(?:di)?\s*\d{1,3}(?:[.\s]\d{3})*(?:,\d{2})?/i;
+const BENEFICIARY_RE = /\b(?:beneficiari[oa]|affidatari[oa]|operatore\s+economico|ditta|societ[aà]|impresa)\b/i;
+
+function extractCigs(text: string | null | undefined): string[] {
+  if (!text) return [];
+  return Array.from(text.matchAll(CIG_RE), (match) => match[1].toUpperCase());
+}
+
+function hasDetectedAmount(text: string | null | undefined): boolean {
+  return Boolean(text && AMOUNT_RE.test(text));
+}
+
+function hasDetectedBeneficiary(text: string | null | undefined): boolean {
+  return Boolean(text && BENEFICIARY_RE.test(text));
+}
+
+function matchesPresence(value: boolean, filter: string): boolean {
+  return filter === "all" || (filter === "yes" ? value : !value);
+}
+
 export function Albo() {
   const [search, setSearch] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
   const [category, setCategory] = useState<string>("all");
   const [tipologia, setTipologia] = useState<string>("all");
   const [macrotema, setMacrotema] = useState<string>("all");
+  const [office, setOffice] = useState<string>("all");
+  const [hasCig, setHasCig] = useState<string>("all");
+  const [hasCup, setHasCup] = useState<string>("all");
+  const [hasAmount, setHasAmount] = useState<string>("all");
+  const [hasBeneficiary, setHasBeneficiary] = useState<string>("all");
   const [from, setFrom] = useState<string>("");
   const [to, setTo] = useState<string>("");
 
@@ -77,7 +105,6 @@ export function Albo() {
   const { data: categoryStats } = useGetPublicationsCategories();
 
   const { data: publications, isLoading } = useListPublications({
-    q: debouncedSearch || undefined,
     category: category !== "all" ? category : undefined,
     tipologia: tipologia !== "all" ? tipologia : undefined,
     macrotema: macrotema !== "all" ? (macrotema as MacrotemaKey) : undefined,
@@ -92,6 +119,41 @@ export function Albo() {
         : [],
     [publications],
   );
+
+  const uniqueOffices = useMemo(
+    () =>
+      publications
+        ? Array.from(
+            new Set(
+              publications
+                .map((p) => p.provenienza?.trim())
+                .filter((value): value is string => Boolean(value)),
+            ),
+          ).sort((a, b) => a.localeCompare(b, "it"))
+        : [],
+    [publications],
+  );
+
+  const filteredPublications = useMemo(() => {
+    const normalizedSearch = debouncedSearch.trim().toLowerCase();
+    return (publications ?? []).filter((p) => {
+      const searchable = [p.oggetto, p.brief, p.provenienza, p.tipologia, p.category]
+        .filter(Boolean)
+        .join(" ")
+        .toLowerCase();
+      const textForDetections = [p.oggetto, p.brief, p.provenienza].filter(Boolean).join(" ");
+      const cigs = extractCigs(textForDetections);
+
+      return (
+        (!normalizedSearch || searchable.includes(normalizedSearch)) &&
+        (office === "all" || p.provenienza === office) &&
+        matchesPresence(cigs.length > 0, hasCig) &&
+        matchesPresence((p.cups ?? []).length > 0, hasCup) &&
+        matchesPresence(hasDetectedAmount(textForDetections), hasAmount) &&
+        matchesPresence(hasDetectedBeneficiary(textForDetections), hasBeneficiary)
+      );
+    });
+  }, [debouncedSearch, hasAmount, hasBeneficiary, hasCig, hasCup, office, publications]);
 
   const categoryCounts = useMemo(() => {
     const map: Record<string, number> = {};
@@ -215,10 +277,10 @@ export function Albo() {
 
       <div data-tour="albo-filter" className="flex flex-col md:flex-row flex-wrap gap-4 mb-8 p-4 bg-muted/40 rounded-xl border border-border shadow-sm">
         <div className="relative flex-1 min-w-[200px]">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" aria-hidden="true" />
           <Input
-            placeholder="Cerca nell'oggetto dell'atto..."
-            aria-label="Cerca nell'oggetto dell'atto"
+            placeholder="Cerca in oggetto, descrizione, tipologia o ufficio..."
+            aria-label="Cerca in oggetto, descrizione, tipologia o ufficio"
             className="pl-9 h-11 bg-background"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
@@ -287,6 +349,46 @@ export function Albo() {
           </Select>
         </div>
 
+        {uniqueOffices.length > 0 && (
+          <div className="w-full md:w-56">
+            <Select value={office} onValueChange={setOffice}>
+              <SelectTrigger className="h-11 bg-background" aria-label="Filtra per settore o ufficio">
+                <span className="truncate">
+                  {office === "all" ? "Tutti gli uffici" : office}
+                </span>
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Tutti gli uffici</SelectItem>
+                {uniqueOffices.map((value) => (
+                  <SelectItem key={value} value={value}>
+                    {value}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+        )}
+
+        <div className="grid w-full grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-4">
+          {[
+            ["CIG", hasCig, setHasCig],
+            ["CUP", hasCup, setHasCup],
+            ["importo", hasAmount, setHasAmount],
+            ["beneficiario/operatore", hasBeneficiary, setHasBeneficiary],
+          ].map(([label, value, setter]) => (
+            <Select key={label as string} value={value as string} onValueChange={setter as (next: string) => void}>
+              <SelectTrigger className="h-11 bg-background" aria-label={`Filtra per presenza ${label}`}>
+                <span className="truncate">{`Presenza ${label}`}</span>
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">{`Qualsiasi ${label}`}</SelectItem>
+                <SelectItem value="yes">Rilevato</SelectItem>
+                <SelectItem value="no">Non rilevato</SelectItem>
+              </SelectContent>
+            </Select>
+          ))}
+        </div>
+
         <div className="flex items-center gap-2">
           <Input
             type="date"
@@ -319,8 +421,8 @@ export function Albo() {
                 <Skeleton className="h-4 w-3/4" />
               </Card>
             ))
-        ) : publications && publications.length > 0 ? (
-          publications.map((p) => (
+        ) : filteredPublications.length > 0 ? (
+          filteredPublications.map((p) => (
             <Link key={p.id} href={`/albo/${p.id}`} className="block">
               <Card className="group p-5 transition-all hover:shadow-lg hover:-translate-y-0.5 hover:border-brand/40 cursor-pointer">
                 <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
@@ -357,7 +459,13 @@ export function Albo() {
                 )}
 
                 <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-muted-foreground">
-                  {p.provenienza && <span>{p.provenienza}</span>}
+                  <span>ID interno {p.id}</span>
+                  {p.provenienza && (
+                    <span className="inline-flex items-center gap-1">
+                      <Landmark className="h-3.5 w-3.5" aria-hidden="true" />
+                      {p.provenienza}
+                    </span>
+                  )}
                   {p.pubEnd && (
                     <span>Pubblicato fino al {formatDate(p.pubEnd, "dd/MM/yyyy")}</span>
                   )}
@@ -365,6 +473,18 @@ export function Albo() {
                     <Badge variant="warning" className="text-[10px]">
                       PNRR
                     </Badge>
+                  )}
+                  {(p.cups ?? []).length > 0 && (
+                    <span className="font-mono">CUP {p.cups.join(", ")}</span>
+                  )}
+                  {extractCigs([p.oggetto, p.brief].filter(Boolean).join(" ")).map((cig) => (
+                    <span key={cig} className="font-mono">CIG {cig}</span>
+                  ))}
+                  {hasDetectedAmount([p.oggetto, p.brief].filter(Boolean).join(" ")) && (
+                    <span className="inline-flex items-center gap-1">
+                      <BadgeEuro className="h-3.5 w-3.5" aria-hidden="true" />
+                      importo rilevato nel testo
+                    </span>
                   )}
                   {p.attachments && p.attachments.length > 0 && (
                     <span className="inline-flex items-center gap-1 text-brand">
