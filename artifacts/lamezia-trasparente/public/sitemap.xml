@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Static sitemap for the public civic web app.
+  Vite copies this file as-is from public/, so paths are kept relative to the
+  deployment host instead of hard-coding an environment-specific domain.
+-->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>/</loc></url>
+  <url><loc>/albo</loc></url>
+  <url><loc>/contratti</loc></url>
+  <url><loc>/pnrr</loc></url>
+  <url><loc>/accesso-civico</loc></url>
+  <url><loc>/fonti-dati</loc></url>
+  <url><loc>/metodologia</loc></url>
+  <url><loc>/note-legali</loc></url>
+  <url><loc>/opendata</loc></url>
+  <url><loc>/statistiche</loc></url>
+  <url><loc>/convocazioni</loc></url>
+  <url><loc>/delibere</loc></url>
+</urlset>

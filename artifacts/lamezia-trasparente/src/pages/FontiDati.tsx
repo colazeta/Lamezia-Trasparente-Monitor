@@ -1,5 +1,6 @@
 import { AlertTriangle, Database, ExternalLink, Info } from "lucide-react";
 import { Link } from "wouter";
+import { PageMeta } from "@/components/seo/PageMeta";
 
 interface DataSource {
   name: string;
@@ -133,10 +134,16 @@ const DATA_TYPE_DESCRIPTIONS = [
 
 export function FontiDati() {
   return (
-    <div className="container mx-auto max-w-5xl px-4 py-8 md:py-12">
+    <>
+      <PageMeta
+        title="Fonti dati pubbliche e stato dei dataset"
+        description="Elenco delle fonti ufficiali, estratte, arricchite o da verificare usate dal portale civico per atti, contratti, PNRR, open data e accesso civico."
+        path="/fonti-dati"
+      />
+      <div className="container mx-auto max-w-5xl px-4 py-8 md:py-12">
       <header className="mb-8 max-w-3xl">
         <span className="eyebrow text-primary">
-          <Database className="h-3.5 w-3.5" />
+          <Database className="h-3.5 w-3.5"  aria-hidden="true"/>
           Trasparenza delle fonti
         </span>
         <h1 className="mt-2 text-3xl font-display font-bold tracking-tight md:text-4xl">
@@ -187,7 +194,7 @@ export function FontiDati() {
                     <a
                       href={source.href}
                       target="_blank"
-                      rel="noreferrer"
+                      rel="noopener noreferrer"
                       className="inline-flex items-center gap-1 text-primary underline underline-offset-4 hover:text-primary/80"
                     >
                       Apri la fonte ufficiale o il dataset
@@ -239,6 +246,7 @@ export function FontiDati() {
           </div>
         </div>
       </aside>
-    </div>
+      </div>
+    </>
   );
 }

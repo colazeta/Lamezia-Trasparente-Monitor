@@ -61,6 +61,7 @@ import {
   EmptyTitle,
   EmptyDescription,
 } from "@/components/ui/empty";
+import { PageMeta } from "@/components/seo/PageMeta";
 
 const DEFAULT_ENTE = "Comune di Lamezia Terme";
 
@@ -199,7 +200,7 @@ function InfoSection() {
       {cards.map((c) => (
         <Card key={c.tipo} className="flex flex-col gap-2 p-5">
           <div className="flex items-center gap-2 text-brand">
-            <Scale className="h-4 w-4" />
+            <Scale className="h-4 w-4"  aria-hidden="true"/>
             <span className="text-sm font-semibold">{TIPO_LABELS[c.tipo]}</span>
           </div>
           <p className="text-sm text-muted-foreground">{c.desc}</p>
@@ -311,7 +312,7 @@ function GeneratorSection() {
       <UICard className="h-fit">
         <CardHeader>
           <CardTitle className="flex items-center gap-2 font-display text-xl">
-            <Sparkles className="h-5 w-5 text-brand" /> Genera la tua richiesta
+            <Sparkles className="h-5 w-5 text-brand"  aria-hidden="true"/> Genera la tua richiesta
           </CardTitle>
           <CardDescription>
             Compila i campi: il testo della richiesta, con i riferimenti
@@ -404,7 +405,7 @@ function GeneratorSection() {
                 onClick={handleCopy}
                 data-testid="button-copy"
               >
-                <Copy className="h-4 w-4" /> Copia testo
+                <Copy className="h-4 w-4"  aria-hidden="true"/> Copia testo
               </Button>
               <Button
                 type="button"
@@ -413,7 +414,7 @@ function GeneratorSection() {
                 onClick={handleDownload}
                 data-testid="button-download"
               >
-                <Download className="h-4 w-4" /> Scarica .txt
+                <Download className="h-4 w-4"  aria-hidden="true"/> Scarica .txt
               </Button>
             </div>
 
@@ -497,7 +498,7 @@ function GeneratorSection() {
                       disabled={createRequest.isPending}
                       data-testid="button-register-confirm"
                     >
-                      <Send className="h-4 w-4" />
+                      <Send className="h-4 w-4"  aria-hidden="true"/>
                       {createRequest.isPending
                         ? "Invio…"
                         : "Registra nel registro"}
@@ -518,7 +519,7 @@ function GeneratorSection() {
                   onClick={() => setRegisterPublicly(true)}
                   data-testid="button-register-open"
                 >
-                  <Send className="h-4 w-4" />
+                  <Send className="h-4 w-4"  aria-hidden="true"/>
                   Hai già inviato questa richiesta? Registrala nel registro
                   pubblico
                 </button>
@@ -531,7 +532,7 @@ function GeneratorSection() {
       <UICard className="h-fit">
         <CardHeader>
           <CardTitle className="flex items-center gap-2 font-display text-xl">
-            <FileText className="h-5 w-5 text-brand" /> Anteprima
+            <FileText className="h-5 w-5 text-brand"  aria-hidden="true"/> Anteprima
           </CardTitle>
           <CardDescription>
             Testo pronto da copiare o scaricare e inviare all'ente (via PEC o
@@ -610,7 +611,7 @@ function RegistrySection() {
         <Empty>
           <EmptyHeader>
             <EmptyMedia variant="icon">
-              <Info className="h-6 w-6" />
+              <Info className="h-6 w-6"  aria-hidden="true"/>
             </EmptyMedia>
             <EmptyTitle>Nessuna richiesta nel registro</EmptyTitle>
             <EmptyDescription>
@@ -661,7 +662,7 @@ function RequestCard({ request }: { request: AccessoCivicoRequest }) {
                 variant="outline"
                 className="gap-1 border-brand/40 bg-brand/10 text-[10px] text-brand hover:bg-brand/20"
               >
-                <Landmark className="h-3 w-3" />
+                <Landmark className="h-3 w-3"  aria-hidden="true"/>
                 Registro ufficiale del Comune
               </Badge>
             </a>
@@ -671,7 +672,7 @@ function RequestCard({ request }: { request: AccessoCivicoRequest }) {
               className="gap-1 border-brand/40 bg-brand/10 text-[10px] text-brand"
               data-testid={`badge-origine-${request.id}`}
             >
-              <Landmark className="h-3 w-3" />
+              <Landmark className="h-3 w-3"  aria-hidden="true"/>
               Registro ufficiale del Comune
             </Badge>
           )
@@ -681,7 +682,7 @@ function RequestCard({ request }: { request: AccessoCivicoRequest }) {
             className="gap-1 text-[10px] text-muted-foreground"
             data-testid={`badge-origine-${request.id}`}
           >
-            <User className="h-3 w-3" />
+            <User className="h-3 w-3"  aria-hidden="true"/>
             Richiesta da cittadino
           </Badge>
         )}
@@ -692,7 +693,7 @@ function RequestCard({ request }: { request: AccessoCivicoRequest }) {
       </h3>
 
       <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-        <Building2 className="h-3.5 w-3.5 shrink-0" />
+        <Building2 className="h-3.5 w-3.5 shrink-0"  aria-hidden="true"/>
         <span className="truncate">{request.ente}</span>
       </div>
 
@@ -711,14 +712,14 @@ function RequestCard({ request }: { request: AccessoCivicoRequest }) {
       <div className="mt-auto flex flex-col gap-2 pt-2 text-xs">
         <div className="flex items-center justify-between">
           <span className="flex items-center gap-1 text-muted-foreground">
-            <CalendarDays className="h-3.5 w-3.5" /> Inviata
+            <CalendarDays className="h-3.5 w-3.5"  aria-hidden="true"/> Inviata
           </span>
           <span className="font-medium">{formatDate(request.requestDate)}</span>
         </div>
         {request.responseDate && (
           <div className="flex items-center justify-between">
             <span className="flex items-center gap-1 text-muted-foreground">
-              <CalendarDays className="h-3.5 w-3.5" /> Risposta
+              <CalendarDays className="h-3.5 w-3.5"  aria-hidden="true"/> Risposta
             </span>
             <span className="font-medium">
               {formatDate(request.responseDate)}
@@ -738,7 +739,7 @@ function RequestCard({ request }: { request: AccessoCivicoRequest }) {
             className="flex items-center gap-1 pt-1 font-medium text-brand"
             data-testid={`link-document-${request.id}`}
           >
-            <ExternalLink className="h-3.5 w-3.5" />
+            <ExternalLink className="h-3.5 w-3.5"  aria-hidden="true"/>
             {request.responseLabel?.trim() || "Documento di risposta"}
           </a>
         ) : documentoNonDisponibile ? (
@@ -746,7 +747,7 @@ function RequestCard({ request }: { request: AccessoCivicoRequest }) {
             className="flex items-center gap-1 pt-1 text-muted-foreground"
             data-testid={`doc-unavailable-${request.id}`}
           >
-            <FileX className="h-3.5 w-3.5 shrink-0" />
+            <FileX className="h-3.5 w-3.5 shrink-0"  aria-hidden="true"/>
             Documento di risposta non disponibile
           </p>
         ) : null}
@@ -757,7 +758,13 @@ function RequestCard({ request }: { request: AccessoCivicoRequest }) {
 
 export function AccessoCivico() {
   return (
-    <div className="container mx-auto px-4 py-8 md:py-12">
+    <>
+      <PageMeta
+        title="Accesso civico e registro richieste"
+        description="Guida pratica agli strumenti di accesso civico, documentale e generalizzato, con registro consultabile e generatore di bozze di richiesta."
+        path="/accesso-civico"
+      />
+      <div className="container mx-auto px-4 py-8 md:py-12">
       <div className="mb-8 max-w-3xl space-y-3">
         <div className="flex items-center gap-2 text-brand">
           <FileSearch className="h-5 w-5" />
@@ -783,7 +790,7 @@ export function AccessoCivico() {
         </h2>
         <InfoSection />
         <Card className="mt-4 flex items-start gap-3 p-4">
-          <Info className="mt-0.5 h-4 w-4 shrink-0 text-brand" />
+          <Info className="mt-0.5 h-4 w-4 shrink-0 text-brand"  aria-hidden="true"/>
           <p className="text-sm text-muted-foreground">
             L'ente deve rispondere di norma entro 30 giorni. In caso di diniego o
             silenzio puoi chiedere il riesame al Responsabile della prevenzione
@@ -803,7 +810,7 @@ export function AccessoCivico() {
 
       <section>
         <div className="mb-4 flex items-center gap-2">
-          <ShieldCheck className="h-5 w-5 text-brand" />
+          <ShieldCheck className="h-5 w-5 text-brand"  aria-hidden="true"/>
           <h2 className="font-display text-xl font-semibold">
             Registro pubblico delle richieste
           </h2>
@@ -816,6 +823,7 @@ export function AccessoCivico() {
         </p>
         <RegistrySection />
       </section>
-    </div>
+      </div>
+    </>
   );
 }
