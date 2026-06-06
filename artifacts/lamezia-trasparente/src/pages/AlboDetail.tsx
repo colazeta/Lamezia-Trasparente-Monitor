@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 import { useRoute, Link } from "wouter";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
@@ -29,6 +29,10 @@ import {
   X,
   RotateCw,
   ShieldCheck,
+  Hash,
+  Landmark,
+  BadgeEuro,
+  UserRound,
 } from "lucide-react";
 import { format } from "date-fns";
 import { it } from "date-fns/locale";
@@ -47,6 +51,7 @@ import {
 } from "@/components/ui/empty";
 import { AlboLink } from "@/components/AlboLink";
 import { MacrotemaBadge } from "@/lib/macrotema";
+import { ALBO_PORTAL_URL } from "@/lib/albo";
 
 const TOKEN_STORAGE_KEY = "lt_ingest_token";
 
@@ -74,6 +79,73 @@ function formatDate(value: string | null | undefined) {
     : format(d, "dd MMMM yyyy", { locale: it });
 }
 
+const CIG_RE = /\b(?:CIG|SMART\s+CIG)[:\s-]*([A-Z0-9]{10})\b/gi;
+const AMOUNT_RE = /(?:€|euro|importo)\s*(?:di)?\s*(\d{1,3}(?:[.\s]\d{3})*(?:,\d{2})?)/i;
+const BENEFICIARY_RE = /\b(?:beneficiari[oa]|affidatari[oa]|operatore\s+economico|ditta|societ[aà]|impresa)\b/i;
+
+type DataStatus = "official" | "extracted" | "enriched" | "to-verify";
+
+const DATA_STATUS_LABELS: Record<DataStatus, string> = {
+  official: "ufficiale",
+  extracted: "estratto",
+  enriched: "arricchito",
+  "to-verify": "da verificare",
+};
+
+function DataStatusBadge({ status }: { status: DataStatus }) {
+  const variant = status === "official" ? "secondary" : status === "to-verify" ? "outline" : "warning";
+  return (
+    <Badge variant={variant} className="text-[10px] uppercase tracking-wide">
+      {DATA_STATUS_LABELS[status]}
+    </Badge>
+  );
+}
+
+function textForExtraction(publication: Publication): string {
+  return [publication.oggetto, publication.brief, publication.provenienza]
+    .filter(Boolean)
+    .join(" ");
+}
+
+function extractCigs(text: string): string[] {
+  return Array.from(text.matchAll(CIG_RE), (match) => match[1].toUpperCase());
+}
+
+function extractAmount(text: string): string | null {
+  const match = AMOUNT_RE.exec(text);
+  return match ? match[0] : null;
+}
+
+function hasBeneficiarySignal(text: string): boolean {
+  return BENEFICIARY_RE.test(text);
+}
+
+function unavailable(label = "Non disponibile") {
+  return <span className="text-muted-foreground">{label}</span>;
+}
+
+function ProfileField({
+  label,
+  value,
+  status,
+}: {
+  label: string;
+  value: ReactNode;
+  status: DataStatus;
+}) {
+  return (
+    <div className="rounded-lg border border-border bg-background p-3">
+      <dt className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+        {label}
+      </dt>
+      <dd className="mt-1 flex flex-wrap items-center gap-2 text-sm text-foreground">
+        {value}
+        <DataStatusBadge status={status} />
+      </dd>
+    </div>
+  );
+}
+
 export function AlboDetail() {
   const [, params] = useRoute("/albo/:id");
   const id = params?.id ? Number(params.id) : NaN;
@@ -98,7 +170,7 @@ export function AlboDetail() {
         href="/albo"
         className="inline-flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-primary transition-colors mb-6"
       >
-        <ArrowLeft className="h-4 w-4" />
+        <ArrowLeft className="h-4 w-4" aria-hidden="true" />
         Torna all'Albo
       </Link>
 
@@ -115,7 +187,7 @@ export function AlboDetail() {
         <Empty className="border bg-muted/20">
           <EmptyHeader>
             <EmptyMedia variant="icon">
-              <FileText />
+              <FileText aria-hidden="true" />
             </EmptyMedia>
             <EmptyTitle>Atto non trovato</EmptyTitle>
             <EmptyDescription>
@@ -131,7 +203,7 @@ export function AlboDetail() {
             <div className="p-6 md:p-8 space-y-4">
               <div className="flex flex-wrap items-center gap-2.5">
                 <span className="eyebrow text-primary">
-                  <Calendar className="h-3.5 w-3.5" />
+                  <Calendar className="h-3.5 w-3.5" aria-hidden="true" />
                   {formatDate(publication.dataAtto ?? publication.pubStart)}
                 </span>
                 <Badge variant="secondary" className="text-xs">
@@ -181,7 +253,7 @@ export function AlboDetail() {
             <section>
               <div className="mb-3 flex items-center gap-2.5">
                 <span className="flex h-8 w-8 items-center justify-center rounded-md bg-brand/10 text-brand">
-                  <BookOpen className="h-4 w-4" />
+                  <BookOpen className="h-4 w-4" aria-hidden="true" />
                 </span>
                 <h2 className="text-xl font-display font-bold tracking-tight">
                   In breve
@@ -193,6 +265,10 @@ export function AlboDetail() {
             </section>
           )}
 
+
+          {/* Scheda strutturata */}
+          <StructuredActProfile publication={publication} />
+
           {/* Redazione: gestione della sintesi "In breve" del singolo atto */}
           <BriefAdmin publication={publication} />
 
@@ -200,7 +276,7 @@ export function AlboDetail() {
           <section>
             <div className="mb-3 flex items-center gap-2.5">
               <span className="flex h-8 w-8 items-center justify-center rounded-md bg-brand/10 text-brand">
-                <FileText className="h-4 w-4" />
+                <FileText className="h-4 w-4" aria-hidden="true" />
               </span>
               <h2 className="text-xl font-display font-bold tracking-tight">
                 Documenti e allegati
@@ -215,15 +291,16 @@ export function AlboDetail() {
           <section>
             <div className="mb-4 flex items-center gap-2.5">
               <span className="flex h-8 w-8 items-center justify-center rounded-md bg-brand/10 text-brand">
-                <GitMerge className="h-4 w-4" />
+                <GitMerge className="h-4 w-4" aria-hidden="true" />
               </span>
               <h2 className="text-xl font-display font-bold tracking-tight">
                 Storia collegata
               </h2>
             </div>
             <p className="mb-4 text-sm text-muted-foreground">
-              Contratti, progetti PNRR e altri atti dell'Albo collegati a
-              questa pubblicazione tramite CIG o CUP.
+              Atti collegati quando esistono dati che permettono un collegamento
+              esplicito, ad esempio tramite CIG o CUP. Non vengono inventate
+              relazioni non presenti nei dati.
             </p>
 
             {storiaLoading ? (
@@ -245,7 +322,7 @@ export function AlboDetail() {
                 {storia.originatingSeduta && (
                   <div>
                     <h3 className="mb-3 flex items-center gap-2 text-sm font-semibold uppercase tracking-wider text-muted-foreground">
-                      <Vote className="h-3.5 w-3.5" />
+                      <Vote className="h-3.5 w-3.5" aria-hidden="true" />
                       Seduta di origine
                     </h3>
                     <Link href={`/convocazioni/${storia.originatingSeduta.id}`} className="block">
@@ -266,7 +343,7 @@ export function AlboDetail() {
                               )}
                             </div>
                           </div>
-                          <ChevronRight className="h-4 w-4 text-muted-foreground shrink-0 transition-transform group-hover:translate-x-0.5" />
+                          <ChevronRight className="h-4 w-4 text-muted-foreground shrink-0 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
                         </div>
                       </Card>
                     </Link>
@@ -277,7 +354,7 @@ export function AlboDetail() {
                 {storia.contracts.length > 0 && (
                   <div>
                     <h3 className="mb-3 flex items-center gap-2 text-sm font-semibold uppercase tracking-wider text-muted-foreground">
-                      <Building2 className="h-3.5 w-3.5" />
+                      <Building2 className="h-3.5 w-3.5" aria-hidden="true" />
                       Appalti e contratti ({storia.contracts.length})
                     </h3>
                     <div className="space-y-2">
@@ -301,7 +378,7 @@ export function AlboDetail() {
                                   </span>
                                 </div>
                               </div>
-                              <ChevronRight className="h-4 w-4 text-muted-foreground shrink-0 transition-transform group-hover:translate-x-0.5" />
+                              <ChevronRight className="h-4 w-4 text-muted-foreground shrink-0 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
                             </div>
                           </Card>
                         </Link>
@@ -314,7 +391,7 @@ export function AlboDetail() {
                 {storia.pnrrProjects.length > 0 && (
                   <div>
                     <h3 className="mb-3 flex items-center gap-2 text-sm font-semibold uppercase tracking-wider text-muted-foreground">
-                      <ExternalLink className="h-3.5 w-3.5" />
+                      <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
                       Progetti PNRR ({storia.pnrrProjects.length})
                     </h3>
                     <div className="space-y-2">
@@ -339,7 +416,7 @@ export function AlboDetail() {
                 {storia.siblings.filter((s) => s.category === "delibera").length > 0 && (
                   <div>
                     <h3 className="mb-3 flex items-center gap-2 text-sm font-semibold uppercase tracking-wider text-muted-foreground">
-                      <FileText className="h-3.5 w-3.5" />
+                      <FileText className="h-3.5 w-3.5" aria-hidden="true" />
                       Delibere collegate ({storia.siblings.filter((s) => s.category === "delibera").length})
                     </h3>
                     <div className="space-y-2">
@@ -360,7 +437,7 @@ export function AlboDetail() {
                                     </span>
                                   </div>
                                 </div>
-                                <ChevronRight className="h-4 w-4 text-muted-foreground shrink-0 transition-transform group-hover:translate-x-0.5" />
+                                <ChevronRight className="h-4 w-4 text-muted-foreground shrink-0 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
                               </div>
                             </Card>
                           </Link>
@@ -373,7 +450,7 @@ export function AlboDetail() {
                 {storia.siblings.filter((s) => s.category !== "delibera").length > 0 && (
                   <div>
                     <h3 className="mb-3 flex items-center gap-2 text-sm font-semibold uppercase tracking-wider text-muted-foreground">
-                      <GitMerge className="h-3.5 w-3.5" />
+                      <GitMerge className="h-3.5 w-3.5" aria-hidden="true" />
                       Altri atti dello stesso filone ({storia.siblings.filter((s) => s.category !== "delibera").length})
                     </h3>
                     <div className="space-y-2">
@@ -399,7 +476,7 @@ export function AlboDetail() {
                                     </span>
                                   </div>
                                 </div>
-                                <ChevronRight className="h-4 w-4 text-muted-foreground shrink-0 transition-transform group-hover:translate-x-0.5" />
+                                <ChevronRight className="h-4 w-4 text-muted-foreground shrink-0 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
                               </div>
                             </Card>
                           </Link>
@@ -412,12 +489,14 @@ export function AlboDetail() {
               <Empty className="border border-dashed bg-muted/10">
                 <EmptyHeader>
                   <EmptyMedia variant="icon">
-                    <AlertCircle />
+                    <AlertCircle aria-hidden="true" />
                   </EmptyMedia>
                   <EmptyTitle>Nessun collegamento trovato</EmptyTitle>
                   <EmptyDescription>
-                    Non sono stati trovati contratti, progetti PNRR o altri
-                    atti collegabili a questa pubblicazione tramite CIG o CUP.
+                    Non sono stati trovati atti collegabili a questa pubblicazione
+                    con i dati oggi disponibili. Nelle prossime versioni il
+                    collegamento degli atti potrà unire deliberazioni, determinazioni,
+                    liquidazioni e documenti collegati senza inventare relazioni.
                   </EmptyDescription>
                 </EmptyHeader>
               </Empty>
@@ -426,6 +505,61 @@ export function AlboDetail() {
         </div>
       )}
     </div>
+  );
+}
+
+
+function StructuredActProfile({ publication }: { publication: Publication }) {
+  const extractionText = textForExtraction(publication);
+  const cigs = extractCigs(extractionText);
+  const amount = extractAmount(extractionText);
+  const hasBeneficiary = hasBeneficiarySignal(extractionText);
+  const sourceHref = publication.attachments?.[0]?.officialUrl ?? ALBO_PORTAL_URL;
+
+  return (
+    <section>
+      <div className="mb-3 flex items-center gap-2.5">
+        <span className="flex h-8 w-8 items-center justify-center rounded-md bg-brand/10 text-brand">
+          <Hash className="h-4 w-4" aria-hidden="true" />
+        </span>
+        <h2 className="text-xl font-display font-bold tracking-tight">
+          Scheda strutturata dell'atto
+        </h2>
+      </div>
+
+      <div className="mb-4 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-950 dark:border-amber-900/60 dark:bg-amber-950/30 dark:text-amber-100">
+        I campi marcati come estratti o arricchiti derivano dal testo della pubblicazione
+        o da classificazioni automatiche: devono essere controllati sul documento sorgente
+        prima di usarli come certezza ufficiale.
+      </div>
+
+      <dl className="grid gap-3 md:grid-cols-2">
+        <ProfileField label="ID interno" value={<span className="font-mono">{publication.id}</span>} status="official" />
+        <ProfileField label="Numero pubblicazione Albo" value={<span className="font-mono">{publication.progressivo || unavailable()}</span>} status="official" />
+        <ProfileField label="Tipo / categoria atto" value={`${publication.tipologia} · ${publication.category}`} status="official" />
+        <ProfileField label="Numero atto" value={publication.numRegGen ? <span className="font-mono">Reg. gen. {publication.numRegGen}</span> : unavailable()} status={publication.numRegGen ? "official" : "to-verify"} />
+        <ProfileField label="Data atto" value={publication.dataAtto ? formatDate(publication.dataAtto) : unavailable()} status={publication.dataAtto ? "official" : "to-verify"} />
+        <ProfileField label="Inizio pubblicazione" value={publication.pubStart ? formatDate(publication.pubStart) : unavailable()} status={publication.pubStart ? "official" : "to-verify"} />
+        <ProfileField label="Fine pubblicazione" value={publication.pubEnd ? formatDate(publication.pubEnd) : unavailable()} status={publication.pubEnd ? "official" : "to-verify"} />
+        <ProfileField label="Settore / ufficio competente" value={publication.provenienza ? <span className="inline-flex items-center gap-1"><Landmark className="h-3.5 w-3.5" aria-hidden="true" />{publication.provenienza}</span> : unavailable()} status={publication.provenienza ? "official" : "to-verify"} />
+        <ProfileField label="Oggetto" value={publication.oggetto} status="official" />
+        <ProfileField label="Tema civico" value={<MacrotemaBadge macrotema={publication.macrotema} />} status="enriched" />
+        <ProfileField label="CIG" value={cigs.length ? <span className="font-mono">{cigs.join(", ")}</span> : unavailable("Non rilevato")} status={cigs.length ? "extracted" : "to-verify"} />
+        <ProfileField label="CUP" value={(publication.cups ?? []).length ? <span className="font-mono">{publication.cups.join(", ")}</span> : unavailable("Non rilevato")} status={(publication.cups ?? []).length ? "extracted" : "to-verify"} />
+        <ProfileField label="Importo" value={amount ? <span className="inline-flex items-center gap-1"><BadgeEuro className="h-3.5 w-3.5" aria-hidden="true" />{amount}</span> : unavailable("Non rilevato")} status={amount ? "extracted" : "to-verify"} />
+        <ProfileField label="Beneficiario / operatore" value={hasBeneficiary ? <span className="inline-flex items-center gap-1"><UserRound className="h-3.5 w-3.5" aria-hidden="true" />campo rilevato nel testo</span> : unavailable("Non rilevato")} status={hasBeneficiary ? "extracted" : "to-verify"} />
+        <ProfileField
+          label="Fonte originale"
+          value={
+            <a href={sourceHref} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 font-medium text-primary underline underline-offset-2 hover:text-brand">
+              Apri documento sorgente
+              <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
+            </a>
+          }
+          status="official"
+        />
+      </dl>
+    </section>
   );
 }
 
@@ -537,7 +671,7 @@ function BriefAdmin({ publication }: { publication: Publication }) {
     >
       <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
         <div className="flex items-center gap-2 text-sm font-display font-bold text-foreground">
-          <ShieldCheck className="h-4 w-4 text-brand" />
+          <ShieldCheck className="h-4 w-4 text-brand" aria-hidden="true" />
           Redazione · Sintesi “In breve”
         </div>
         <div className="flex items-center gap-2 text-xs text-muted-foreground">
@@ -580,9 +714,9 @@ function BriefAdmin({ publication }: { publication: Publication }) {
               data-testid="button-save-brief"
             >
               {save.isPending ? (
-                <Loader2 className="h-4 w-4 animate-spin" />
+                <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
               ) : (
-                <Save className="h-4 w-4" />
+                <Save className="h-4 w-4" aria-hidden="true" />
               )}
               Salva a mano
             </Button>
@@ -597,7 +731,7 @@ function BriefAdmin({ publication }: { publication: Publication }) {
               disabled={busy}
               data-testid="button-cancel-brief"
             >
-              <X className="h-4 w-4" />
+              <X className="h-4 w-4" aria-hidden="true" />
               Annulla
             </Button>
           </div>
@@ -618,9 +752,9 @@ function BriefAdmin({ publication }: { publication: Publication }) {
             data-testid="button-regenerate-brief"
           >
             {regenerate.isPending ? (
-              <Loader2 className="h-4 w-4 animate-spin" />
+              <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
             ) : (
-              <RotateCw className="h-4 w-4" />
+              <RotateCw className="h-4 w-4" aria-hidden="true" />
             )}
             Rigenera con l'AI
           </Button>
@@ -635,7 +769,7 @@ function BriefAdmin({ publication }: { publication: Publication }) {
             disabled={busy}
             data-testid="button-edit-brief"
           >
-            <Pencil className="h-4 w-4" />
+            <Pencil className="h-4 w-4" aria-hidden="true" />
             {publication.brief ? "Modifica a mano" : "Scrivi a mano"}
           </Button>
         </div>
