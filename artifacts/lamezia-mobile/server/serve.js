@@ -15,7 +15,16 @@ const path = require("path");
 
 const STATIC_ROOT = path.resolve(__dirname, "..", "static-build");
 const TEMPLATE_PATH = path.resolve(__dirname, "templates", "landing-page.html");
-const basePath = (process.env.BASE_PATH || "/").replace(/\/+$/, "");
+function normalizeBasePath(value) {
+  const trimmed = (value || "/").trim();
+  if (!trimmed || trimmed === "/") {
+    return "";
+  }
+
+  return `/${trimmed.replace(/^\/+|\/+$/g, "")}`;
+}
+
+const basePath = normalizeBasePath(process.env.BASE_PATH);
 
 const MIME_TYPES = {
   ".html": "text/html; charset=utf-8",
@@ -65,27 +74,77 @@ function serveManifest(platform, res) {
   res.end(manifest);
 }
 
-function serveLandingPage(req, res, landingPageTemplate, appName) {
-  const forwardedProto = req.headers["x-forwarded-proto"];
+function firstForwardedValue(value) {
+  if (Array.isArray(value)) {
+    return value[0];
+  }
+
+  return String(value || "").split(",")[0].trim();
+}
+
+function requestBaseUrls(req) {
+  const forwardedProto = firstForwardedValue(req.headers["x-forwarded-proto"]);
   const protocol = forwardedProto || "https";
-  const host = req.headers["x-forwarded-host"] || req.headers["host"];
-  const baseUrl = `${protocol}://${host}`;
-  const expsUrl = `${host}`;
+  const forwardedHost = firstForwardedValue(req.headers["x-forwarded-host"]);
+  const host = forwardedHost || req.headers.host || "localhost";
+  const httpBaseUrl = `${protocol}://${host}${basePath}`;
+  const expoBaseUrl = `${host}${basePath}`;
+
+  return { httpBaseUrl, expoBaseUrl };
+}
+
+function serveLandingPage(req, res, landingPageTemplate, appName) {
+  const { httpBaseUrl, expoBaseUrl } = requestBaseUrls(req);
 
   const html = landingPageTemplate
-    .replace(/BASE_URL_PLACEHOLDER/g, baseUrl)
-    .replace(/EXPS_URL_PLACEHOLDER/g, expsUrl)
+    .replace(/BASE_URL_PLACEHOLDER/g, httpBaseUrl)
+    .replace(/EXPS_URL_PLACEHOLDER/g, expoBaseUrl)
     .replace(/APP_NAME_PLACEHOLDER/g, appName);
 
   res.writeHead(200, { "content-type": "text/html; charset=utf-8" });
   res.end(html);
 }
 
-function serveStaticFile(urlPath, res) {
-  const safePath = path.normalize(urlPath).replace(/^(\.\.(\/|\\|$))+/, "");
-  const filePath = path.join(STATIC_ROOT, safePath);
+function stripBasePath(pathname) {
+  if (!basePath) {
+    return pathname;
+  }
 
-  if (!filePath.startsWith(STATIC_ROOT)) {
+  if (pathname === basePath) {
+    return "/";
+  }
+
+  if (pathname.startsWith(`${basePath}/`)) {
+    return pathname.slice(basePath.length);
+  }
+
+  return null;
+}
+
+function isInsideStaticRoot(filePath) {
+  const relativePath = path.relative(STATIC_ROOT, filePath);
+  return (
+    Boolean(relativePath) &&
+    !relativePath.startsWith("..") &&
+    !path.isAbsolute(relativePath)
+  );
+}
+
+function serveStaticFile(urlPath, res) {
+  let decodedPath;
+
+  try {
+    decodedPath = decodeURIComponent(urlPath);
+  } catch {
+    res.writeHead(400);
+    res.end("Bad Request");
+    return;
+  }
+
+  const safePath = path.normalize(decodedPath).replace(/^([/\\])+/, "");
+  const filePath = path.resolve(STATIC_ROOT, safePath);
+
+  if (!isInsideStaticRoot(filePath)) {
     res.writeHead(403);
     res.end("Forbidden");
     return;
@@ -111,8 +170,12 @@ const server = http.createServer((req, res) => {
   const url = new URL(req.url || "/", `http://${req.headers.host}`);
   let pathname = url.pathname;
 
-  if (basePath && pathname.startsWith(basePath)) {
-    pathname = pathname.slice(basePath.length) || "/";
+  pathname = stripBasePath(pathname);
+
+  if (pathname === null) {
+    res.writeHead(404);
+    res.end("Not Found");
+    return;
   }
 
   if (pathname === "/" || pathname === "/manifest") {
