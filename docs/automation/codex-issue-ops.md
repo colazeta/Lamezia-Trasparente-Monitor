@@ -8,6 +8,8 @@ The objective is not to let Codex work indiscriminately on every open issue. The
 
 Codex may work only on issues that have been explicitly marked as ready. Human review remains mandatory before merge and before closing an issue.
 
+The source of truth for queue state is the issue label set. Comments are operational evidence, but they must not override labels when stale, contradictory, duplicated or explicitly superseded.
+
 ## Suggested labels
 
 - `codex:candidate` — issue may be considered for automation.
@@ -21,6 +23,24 @@ Codex may work only on issues that have been explicitly marked as ready. Human r
 - `codex:blocked` — automation should not proceed.
 - `codex:dangerous` — issue is sensitive and requires manual handling only.
 
+## Comment hygiene and cleanup
+
+Before any automation posts a new operational comment, it must inspect the existing issue thread and run a cleanup preflight.
+
+The cleanup preflight must identify:
+
+- placeholder comments, including comments containing only punctuation or filler text;
+- queue-state comments that contradict the current labels;
+- duplicate Codex prompts or duplicate blocker/follow-up comments;
+- comments that tell later agents to ignore, reinterpret or bypass the label state;
+- stale automation comments superseded by a later label transition or final prompt.
+
+When the GitHub integration allows deletion, inappropriate automation comments should be deleted. When deletion is not available, the automation should update the comment body to a short neutral supersession note, for example: `Superseded during queue cleanup. Not operative; use current labels and the latest valid prompt/blocker only.`
+
+Automation must not add a final Codex prompt on top of unresolved contradictory comments. If cleanup cannot be completed, the correct outcome is to add `codex:follow-up` or `codex:blocked` and explain the cleanup obstacle. Do not use placeholder comments to test connectivity or reserve a comment slot.
+
+At the end of cleanup, the issue thread should have at most one current operative comment for the current state: either one final Codex prompt, one blocker/follow-up comment, or one review-routing comment.
+
 ## Recommended sequence
 
 ### Automation 1 — Explore issue and prepare prompt
@@ -30,13 +50,15 @@ Frequency: every 15 minutes, or manually triggered.
 Purpose:
 
 1. identify the next open issue with `codex:ready` and without `codex:prompted`;
-2. read title, body, labels and linked context;
-3. classify the issue as technical, civic-methodological, UI/copy, data/API, or backlog/governance;
-4. generate a precise implementation prompt using the templates in `.github/codex-prompts/`;
-5. post the prompt as a GitHub comment;
-6. add `codex:prompted`.
+2. exclude issues with `codex:invoked`, `codex:blocked` or `codex:dangerous`;
+3. read title, body, labels, comments and linked context;
+4. run the comment cleanup preflight before posting anything new;
+5. classify the issue as technical, civic-methodological, UI/copy, data/API, or backlog/governance;
+6. generate a precise implementation prompt using the templates in `.github/codex-prompts/`;
+7. post the prompt as a GitHub comment only if the thread has no unresolved contradictory operational comments;
+8. add `codex:prompted` only after a real operational prompt has been posted or an existing prompt has been updated into final form.
 
-Safety rule: if the issue is ambiguous, potentially accusatory, legally sensitive or too broad, the automation should add `codex:blocked` or `codex:follow-up` instead of preparing an implementation prompt.
+Safety rule: if the issue is ambiguous, potentially accusatory, legally sensitive, too broad, or the thread cannot be cleaned into a coherent state, the automation should add `codex:blocked` or `codex:follow-up` instead of preparing an implementation prompt.
 
 ### Automation 2 — Invoke Codex
 
@@ -45,9 +67,11 @@ Frequency: every 15 minutes, offset after Automation 1.
 Purpose:
 
 1. identify an issue with `codex:prompted` and without `codex:invoked`;
-2. post the final `@codex` instruction or use the selected Codex integration;
-3. add `codex:invoked` and `codex:working`;
-4. avoid invoking Codex on more than one or two issues at the same time.
+2. verify that exactly one current operative Codex prompt exists in the issue thread;
+3. refuse invocation if the thread contains unresolved contradictory prompt/blocker/status comments;
+4. post the final `@codex` instruction or use the selected Codex integration;
+5. add `codex:invoked` and `codex:working`;
+6. avoid invoking Codex on more than one or two issues at the same time.
 
 Safety rule: never invoke Codex on issues labelled `codex:blocked`, `codex:dangerous`, `needs:human-decision` or equivalent.
 
@@ -117,7 +141,8 @@ Every prompt prepared for Codex should include:
 7. validation commands;
 8. civic/legal/copy safeguards;
 9. branch and PR instructions;
-10. explicit stop condition.
+10. explicit stop condition;
+11. confirmation that comment cleanup was completed or was unnecessary.
 
 ## Stop conditions
 
@@ -128,4 +153,5 @@ Codex or the automation should stop and ask for human decision when:
 - the change may imply allegations against persons or entities;
 - implementation requires credentials or secrets;
 - migrations, generated API packages or public data semantics would be changed without a clear source of truth;
-- the same files are already touched by an open PR.
+- the same files are already touched by an open PR;
+- the issue thread contains unresolved contradictory automation comments or multiple active prompts.
