@@ -2,13 +2,40 @@
 
 This document defines the controlled automation protocol for using Codex on the Lamezia Trasparente Monitor backlog.
 
-The objective is not to let Codex work indiscriminately on every open issue. The objective is to create a controlled queue where issues are explored, converted into precise implementation prompts, assigned to Codex, reviewed, and either closed or returned to follow-up.
+The objective is not to let Codex work indiscriminately on every open issue. The objective is to operate a controlled capacity-3 queue where issues are explored, converted into precise implementation prompts, assigned to Codex on dedicated branches, reviewed by humans through pull requests, and either routed to follow-up or recommended for closure after review.
 
 ## Core principle
 
-Codex may work only on issues that have been explicitly marked as ready. Human review remains mandatory before merge and before closing an issue.
+Codex may work only on issues that have been explicitly marked as ready. Human review remains mandatory before merge and before closing an issue. Codex must not auto-merge pull requests and must not close issues directly.
 
 The source of truth for queue state is the issue label set. Comments are operational evidence, but they must not override labels when stale, contradictory, duplicated or explicitly superseded.
+
+## Capacity model
+
+The Codex work queue has a controlled maximum capacity of **3 operational tasks**.
+
+Operational tasks are issues in one of these states:
+
+- `codex:prompted` waiting for immediate invocation;
+- `codex:invoked`;
+- `codex:working`;
+- an open Codex implementation PR that still requires Codex-side changes.
+
+`codex:review-needed` is a human review/merge wait state. It does **not** saturate the Codex work queue unless there is a concrete file/module collision with a candidate task or the same PR still needs Codex-side rework.
+
+The governor may keep capacity partially filled instead of always filling all three slots. It should prioritise low-collision, clearly scoped work and pause new promotion when collision risk, CI instability, public-copy risk or methodological risk would make parallel work unsafe.
+
+## Branch and pull request requirement
+
+Every implementation prompt and invocation must require Codex to:
+
+1. create a dedicated branch named `codex/<issue-number>-<slug>`;
+2. commit changes on that branch;
+3. open a pull request targeting `main`;
+4. reference the issue in the PR description;
+5. include changed files/modules, validation performed, residual limitations and safeguard impact in the PR description.
+
+If Codex cannot open a pull request, it must comment on the issue with the exact technical reason and indicate the branch/diff location or the blocker that prevented branch or diff creation. Delivery without a PR is not a completed implementation state; it must be routed to `codex:follow-up` unless a human reviewer explicitly accepts another path.
 
 ## Suggested labels
 
@@ -16,9 +43,9 @@ The source of truth for queue state is the issue label set. Comments are operati
 - `codex:ready` — issue is sufficiently clear and may enter the automated sequence.
 - `codex:prompted` — an implementation prompt has been prepared.
 - `codex:invoked` — Codex has been invoked on the issue.
-- `codex:working` — a pull request or implementation attempt is in progress.
-- `codex:review-needed` — changes exist and require review.
-- `codex:follow-up` — the issue needs clarification, additional work or a new issue.
+- `codex:working` — Codex work or an implementation PR is in progress.
+- `codex:review-needed` — a PR exists and is waiting for human review/merge; not queue-saturating unless there is a concrete collision or Codex-side rework.
+- `codex:follow-up` — the issue needs clarification, additional work, stale-task recovery or a new issue.
 - `codex:done` — acceptance criteria appear satisfied after review.
 - `codex:blocked` — automation should not proceed.
 - `codex:dangerous` — issue is sensitive and requires manual handling only.
@@ -50,13 +77,16 @@ Frequency: every 15 minutes, or manually triggered.
 Purpose:
 
 1. identify the next open issue with `codex:ready` and without `codex:prompted`;
-2. exclude issues with `codex:invoked`, `codex:blocked` or `codex:dangerous`;
-3. read title, body, labels, comments and linked context;
-4. run the comment cleanup preflight before posting anything new;
-5. classify the issue as technical, civic-methodological, UI/copy, data/API, or backlog/governance;
-6. generate a precise implementation prompt using the templates in `.github/codex-prompts/`;
-7. post the prompt as a GitHub comment only if the thread has no unresolved contradictory operational comments;
-8. add `codex:prompted` only after a real operational prompt has been posted or an existing prompt has been updated into final form.
+2. exclude issues with `codex:invoked`, `codex:working`, `codex:blocked` or `codex:dangerous`;
+3. confirm that adding the issue would keep operational capacity at or below 3;
+4. read title, body, labels, comments and linked context;
+5. run the comment cleanup preflight before posting anything new;
+6. classify the issue as technical, civic-methodological, UI/copy, data/API, or backlog/governance;
+7. record minimum collision-control fields: probable scope, likely files/modules, and collision risk (`low`, `medium` or `high`);
+8. generate a precise implementation prompt using the templates in `.github/codex-prompts/`;
+9. require branch `codex/<issue-number>-<slug>` and a PR targeting `main` in the final prompt;
+10. post the prompt as a GitHub comment only if the thread has no unresolved contradictory operational comments;
+11. add `codex:prompted` only after a real operational prompt has been posted or an existing prompt has been updated into final form.
 
 Safety rule: if the issue is ambiguous, potentially accusatory, legally sensitive, too broad, or the thread cannot be cleaned into a coherent state, the automation should add `codex:blocked` or `codex:follow-up` instead of preparing an implementation prompt.
 
@@ -68,10 +98,11 @@ Purpose:
 
 1. identify an issue with `codex:prompted` and without `codex:invoked`;
 2. verify that exactly one current operative Codex prompt exists in the issue thread;
-3. refuse invocation if the thread contains unresolved contradictory prompt/blocker/status comments;
-4. post the final `@codex` instruction or use the selected Codex integration;
-5. add `codex:invoked` and `codex:working`;
-6. avoid invoking Codex on more than one or two issues at the same time.
+3. verify that invocation would keep operational capacity at or below 3;
+4. refuse invocation if the thread contains unresolved contradictory prompt/blocker/status comments;
+5. post the final `@codex` instruction or use the selected Codex integration;
+6. require branch `codex/<issue-number>-<slug>`, commit, and PR targeting `main` as mandatory output;
+7. add `codex:invoked` and `codex:working`.
 
 Safety rule: never invoke Codex on issues labelled `codex:blocked`, `codex:dangerous`, `needs:human-decision` or equivalent.
 
@@ -82,15 +113,20 @@ Frequency: every 15 minutes, offset after Automation 2.
 Purpose:
 
 1. identify issues with `codex:working`, linked pull requests or recent Codex comments;
-2. check whether a pull request exists;
+2. check whether a pull request exists and targets `main` from a `codex/<issue-number>-<slug>` branch;
 3. inspect whether the PR references the issue;
 4. check whether the issue acceptance criteria appear satisfied;
-5. route the issue to one of three outcomes:
+5. route the issue to one of four outcomes:
    - `codex:review-needed` if a PR exists and needs human review;
-   - `codex:follow-up` if the implementation is incomplete, failing or too broad;
-   - `codex:done` if the issue appears solved after merge/review.
+   - `codex:follow-up` if no PR was opened, the delivery is incomplete, validation is failing, the task is stale, or the implementation is too broad;
+   - `codex:blocked` if a safety or collision blocker prevents continuation;
+   - `codex:done` only after review/merge evidence indicates the issue appears solved.
 
-Safety rule: this automation should not close issues automatically unless the final policy explicitly allows it. The safer default is to comment with a closure recommendation.
+Stale-task rule: if an issue has `codex:invoked` or `codex:working` for more than 60 minutes with no PR, branch, Codex comment, commit or other concrete activity, move it to `codex:follow-up`, comment with the observed inactivity, and release operational capacity.
+
+Fallback rule: if Codex reports that it could not open a PR, route to `codex:follow-up` unless the comment gives a concrete recoverable technical blocker that should become `codex:blocked`. The follow-up comment must preserve the exact technical reason and branch/diff or blocker information.
+
+Safety rule: this automation must not close issues automatically unless a future explicit policy allows it. The current policy is to comment with a closure recommendation only.
 
 ### Automation 4 — Queue governor and collision control
 
@@ -98,20 +134,41 @@ Frequency: every 30–60 minutes, or before each automation cycle.
 
 Purpose:
 
-1. ensure only a limited number of Codex tasks are active simultaneously;
-2. detect duplicate work across issues and pull requests;
-3. detect stale `codex:working` issues;
-4. stop the queue when CI fails repeatedly;
-5. add `codex:blocked` where the automation should not continue.
+1. count operational Codex tasks against the capacity-3 limit;
+2. exclude `codex:review-needed` from saturation unless there is concrete file/module collision or Codex-side rework;
+3. detect duplicate work across issues and pull requests;
+4. detect stale `codex:invoked` or `codex:working` issues with no concrete activity for more than 60 minutes;
+5. stop or slow promotion when CI fails repeatedly because of recent Codex work;
+6. add `codex:blocked` where the automation should not continue;
+7. promote safe tasks to `codex:ready` when the queue is empty or below safe partial capacity.
 
-This fourth automation is recommended because the main risk is not prompt generation. The main risk is collision: multiple Codex tasks modifying the same files or creating overlapping pull requests.
+Anti-empty-queue rule: if there are no operational tasks and no open PRs, the governor should promote safe technical tasks to `codex:ready` up to partial capacity, prioritising typecheck/build/lint/test failures, small bugs and technical-debt tasks with low collision risk.
+
+Collision-control minimum fields for every promotion or pause decision:
+
+- probable scope;
+- likely files/modules;
+- collision risk: `low`, `medium` or `high`.
+
+This fourth automation is required for stable parallelism because the main risk is not prompt generation. The main risk is collision: multiple Codex tasks modifying the same files or creating overlapping pull requests.
+
+## Technical fast lane
+
+The governor may fast-lane tightly scoped technical tasks when capacity is available and collision risk is low. Suitable fast-lane examples include:
+
+- typecheck, build, lint or test failures;
+- small regressions with clear reproduction steps;
+- limited technical-debt cleanups with no public civic-copy or methodology impact;
+- package configuration or automation fixes that do not modify generated files.
+
+Fast-lane tasks still require acceptance criteria, collision-control fields, dedicated branch, PR, validation notes, no auto-merge and no auto-close.
 
 ## Issue classes and default policy
 
 | Issue class | Default policy |
 | --- | --- |
-| Technical bug/typecheck/build | Suitable for Codex if acceptance criteria are clear. |
-| UI/accessibility/metadata | Suitable for Codex with screenshots or route checklist. |
+| Technical bug/typecheck/build/lint/test | Suitable for fast lane when acceptance criteria are clear and collision risk is low. |
+| UI/accessibility/metadata | Suitable for Codex with screenshots or route checklist; assess public route and accessibility risk. |
 | Civic-methodological dashboard | Suitable only for v0, cautious copy, source notes and methodological caveats. |
 | Copy/legal tone | Suitable for limited edits; should require human review. |
 | Data/API/schema | Suitable only if source of truth and migration implications are clear. |
@@ -137,12 +194,16 @@ Every prompt prepared for Codex should include:
 3. issue body summary;
 4. objective;
 5. acceptance criteria;
-6. files or modules likely involved, if known;
-7. validation commands;
-8. civic/legal/copy safeguards;
-9. branch and PR instructions;
-10. explicit stop condition;
-11. confirmation that comment cleanup was completed or was unnecessary.
+6. probable scope;
+7. likely files or modules involved, if known;
+8. collision risk (`low`, `medium` or `high`);
+9. validation commands;
+10. civic/legal/copy safeguards;
+11. mandatory branch name `codex/<issue-number>-<slug>`;
+12. mandatory PR requirement targeting `main`;
+13. PR fallback instruction if the PR cannot be opened;
+14. explicit stop condition;
+15. confirmation that comment cleanup was completed or was unnecessary.
 
 ## Stop conditions
 
@@ -153,5 +214,6 @@ Codex or the automation should stop and ask for human decision when:
 - the change may imply allegations against persons or entities;
 - implementation requires credentials or secrets;
 - migrations, generated API packages or public data semantics would be changed without a clear source of truth;
-- the same files are already touched by an open PR;
-- the issue thread contains unresolved contradictory automation comments or multiple active prompts.
+- the same files are already touched by an open PR in a conflicting way;
+- the issue thread contains unresolved contradictory automation comments or multiple active prompts;
+- proceeding would exceed the capacity-3 operational queue or create medium/high collision risk without a human decision.
