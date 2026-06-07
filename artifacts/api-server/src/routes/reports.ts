@@ -1,11 +1,10 @@
 import { Router, type IRouter } from "express";
 import { db, reportsTable } from "@workspace/db";
-import { desc } from "drizzle-orm";
 import { CreateReportBody } from "@workspace/api-zod";
 
 const router: IRouter = Router();
 
-function mapReport(r: typeof reportsTable.$inferSelect) {
+function mapPublicReport(r: typeof reportsTable.$inferSelect) {
   return {
     id: r.id,
     title: r.title,
@@ -13,17 +12,18 @@ function mapReport(r: typeof reportsTable.$inferSelect) {
     category: r.category,
     location: r.location,
     status: r.status,
-    citizenName: r.citizenName,
     createdAt: r.createdAt.toISOString(),
   };
 }
 
 router.get("/reports", async (_req, res) => {
-  const rows = await db
-    .select()
-    .from(reportsTable)
-    .orderBy(desc(reportsTable.createdAt));
-  res.json(rows.map(mapReport));
+  // Privacy guard: the legacy reports table has workflow statuses but no
+  // explicit public/published moderation flag. Until a human-reviewed
+  // publication model is introduced, do not expose unmoderated submissions on
+  // the public board.
+  // TODO(#74): decide whether to consolidate this legacy board into the
+  // monitoringReports flow or add an explicit published flag/admin workflow.
+  res.json([]);
 });
 
 router.post("/reports", async (req, res) => {
@@ -44,7 +44,7 @@ router.post("/reports", async (req, res) => {
     })
     .returning();
 
-  res.status(201).json(mapReport(created));
+  res.status(201).json(mapPublicReport(created));
 });
 
 export default router;

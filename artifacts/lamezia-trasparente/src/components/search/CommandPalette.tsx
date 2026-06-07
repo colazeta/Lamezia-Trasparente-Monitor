@@ -76,7 +76,7 @@ const ALL_ITEMS: NavItem[] = [
   { href: "/temi", label: "Temi", icon: FileSearch, group: "Partecipazione", keywords: "argomenti categorie" },
   { href: "/monitoraggio", label: "Monitoraggio Civico", icon: Telescope, group: "Partecipazione", keywords: "monithon cantieri lavori" },
   { href: "/accesso-civico", label: "Accesso Civico", icon: FileSearch, group: "Partecipazione", keywords: "foia istanza richiesta" },
-  { href: "/segnalazioni", label: "Segnalazioni", icon: Megaphone, group: "Partecipazione", keywords: "anomalia spreco denuncia" },
+  { href: "/segnalazioni", label: "Segnalazioni", icon: Megaphone, group: "Partecipazione", keywords: "segnale civico verifica accesso civico richiesta formale" },
 
   { href: "/performance", label: "Performance", icon: Gauge, group: "Dati & Analisi", keywords: "indicatori kpi misurazione" },
   { href: "/statistiche", label: "Statistiche", icon: BarChart3, group: "Dati & Analisi", keywords: "grafici numeri dati" },
