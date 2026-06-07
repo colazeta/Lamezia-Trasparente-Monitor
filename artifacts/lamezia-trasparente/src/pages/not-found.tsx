@@ -1,5 +1,6 @@
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
+import { PageMeta } from "@/components/seo/PageMeta";
 import { Compass, Home, ShieldAlert } from "lucide-react";
 import { PageMeta } from "@/components/seo/PageMeta";
 
@@ -8,7 +9,7 @@ export default function NotFound() {
     <>
       <PageMeta
         title="Pagina non trovata"
-        description="Messaggio 404 per una pagina non disponibile, con collegamenti per tornare alla home o ai temi civici."
+        description="Pagina non trovata: usa i collegamenti principali per tornare alla home o ai temi civici monitorati."
       />
       <div className="relative flex min-h-[70vh] w-full items-center justify-center overflow-hidden bg-sidebar text-sidebar-foreground">
         <div
@@ -48,11 +49,7 @@ export default function NotFound() {
 
           <div className="flex flex-col sm:flex-row gap-3 mt-9 w-full sm:w-auto">
             <Link href="/" className="w-full sm:w-auto">
-              <Button
-                variant="brand"
-                size="lg"
-                className="w-full text-base h-12 px-7 font-bold"
-              >
+              <Button variant="brand" size="lg" className="w-full text-base h-12 px-7 font-bold">
                 <Home className="mr-1 h-4 w-4" aria-hidden="true" />
                 Torna alla Home
               </Button>

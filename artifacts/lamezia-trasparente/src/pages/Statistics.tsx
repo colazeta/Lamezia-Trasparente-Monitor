@@ -342,7 +342,7 @@ function KpiCard({ title, value, loading, icon: Icon, desc, highlight = false }:
             )}
           </div>
           <div className={`p-2 rounded-lg ${highlight ? 'bg-brand/15 text-brand' : 'bg-muted text-muted-foreground'}`}>
-            <Icon className="h-5 w-5" />
+            <Icon className="h-5 w-5" aria-hidden="true" />
           </div>
         </div>
         <p className="text-xs text-muted-foreground font-mono">{desc}</p>
