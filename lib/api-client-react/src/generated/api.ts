@@ -4368,7 +4368,7 @@ export const getListReportsUrl = () => {
 }
 
 /**
- * @summary List citizen reports
+ * @summary List public-safe citizen reports
  */
 export const listReports = async ( options?: RequestInit): Promise<Report[]> => {
 
@@ -4415,7 +4415,7 @@ export type ListReportsQueryError = ErrorType<unknown>
 
 
 /**
- * @summary List citizen reports
+ * @summary List public-safe citizen reports
  */
 
 export function useListReports<TData = Awaited<ReturnType<typeof listReports>>, TError = ErrorType<unknown>>(
@@ -4445,7 +4445,7 @@ export const getCreateReportUrl = () => {
 }
 
 /**
- * @summary Submit a citizen report
+ * @summary Submit a citizen report for internal review
  */
 export const createReport = async (reportInput: ReportInput, options?: RequestInit): Promise<Report> => {
 
@@ -4494,7 +4494,7 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
     export type CreateReportMutationError = ErrorType<Error>
 
     /**
- * @summary Submit a citizen report
+ * @summary Submit a citizen report for internal review
  */
 export const useCreateReport = <TError = ErrorType<Error>,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createReport>>, TError,{data: BodyType<ReportInput>}, TContext>, request?: SecondParameter<typeof customFetch>}

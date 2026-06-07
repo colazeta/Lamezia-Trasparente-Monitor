@@ -1667,10 +1667,10 @@ paths:
     get:
       operationId: listReports
       tags: [reports]
-      summary: List citizen reports
+      summary: List public-safe citizen reports
       responses:
         "200":
-          description: List of reports
+          description: Public-safe list of reviewed reports
           content:
             application/json:
               schema:
@@ -1680,7 +1680,7 @@ paths:
     post:
       operationId: createReport
       tags: [reports]
-      summary: Submit a citizen report
+      summary: Submit a citizen report for internal review
       requestBody:
         required: true
         content:
@@ -6462,8 +6462,6 @@ components:
         status:
           type: string
           enum: [ricevuta, in_valutazione, presa_in_carico, archiviata]
-        citizenName:
-          type: ["string", "null"]
         createdAt:
           type: string
 

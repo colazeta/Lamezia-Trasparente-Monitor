@@ -92,7 +92,7 @@ export function Statistics() {
           <div className="flex flex-wrap items-center justify-between gap-2">
             <div>
               <CardTitle className="flex items-center gap-2 font-display font-bold tracking-tight">
-                <FileClock className="h-5 w-5 text-brand" /> Atti pubblicati all'Albo
+                <FileClock className="h-5 w-5 text-brand" aria-hidden="true" /> Atti pubblicati all'Albo
                 Pretorio
               </CardTitle>
               <CardDescription>
@@ -191,7 +191,7 @@ export function Statistics() {
           <Card className="overflow-hidden">
             <CardHeader className="border-b border-border bg-muted/40">
               <CardTitle className="flex items-center gap-2 font-display font-bold tracking-tight">
-                <HandCoins className="h-5 w-5 text-brand" /> Temi Più Rilevanti per i Cittadini
+                <HandCoins className="h-5 w-5 text-brand" aria-hidden="true" /> Temi Più Rilevanti per i Cittadini
               </CardTitle>
             </CardHeader>
             <CardContent className="p-0">
@@ -208,7 +208,7 @@ export function Statistics() {
                       <div className="text-xs text-muted-foreground font-mono mt-1 flex items-center gap-2">
                         <span>{theme.categoryName}</span>
                         <span className="flex items-center gap-1">
-                          <Users className="h-3 w-3" /> {theme.followerCount} follower
+                          <Users className="h-3 w-3" aria-hidden="true" /> {theme.followerCount} follower
                         </span>
                       </div>
                     </div>
@@ -226,7 +226,7 @@ export function Statistics() {
           <Card className="overflow-hidden">
             <CardHeader className="border-b border-border bg-muted/40">
               <CardTitle className="flex items-center gap-2 font-display font-bold tracking-tight">
-                <Share2 className="h-5 w-5 text-primary" /> Temi Più Condivisi
+                <Share2 className="h-5 w-5 text-primary" aria-hidden="true" /> Temi Più Condivisi
               </CardTitle>
             </CardHeader>
             <CardContent className="p-0">
@@ -296,7 +296,7 @@ export function Statistics() {
           <Card className="overflow-hidden">
             <CardHeader className="border-b border-border bg-muted/40">
               <CardTitle className="text-base flex items-center gap-2 font-display font-bold tracking-tight">
-                <Activity className="h-4 w-4 text-brand" /> Pulse
+                <Activity className="h-4 w-4 text-brand" aria-hidden="true" /> Pulse
               </CardTitle>
             </CardHeader>
             <CardContent className="p-0">

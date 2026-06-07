@@ -24,10 +24,10 @@ Repository context:
 - Before posting any operational comment, apply the comment cleanup preflight defined in `docs/automation/codex-issue-ops.md`.
 
 Queue model:
-- Maximum operational Codex capacity is 3 tasks.
+- Maximum operational Codex capacity is 5 tasks.
 - `codex:prompted`, `codex:invoked` and `codex:working` are operational states.
 - `codex:review-needed` is human review/merge wait and does not saturate Codex capacity unless there is concrete file/module collision or Codex-side rework.
-- Do not prepare a prompt that would exceed capacity 3 or create unresolved collision risk.
+- Do not prepare a prompt that would exceed capacity 5 or create unresolved collision risk.
 
 Task:
 1. classify the issue as one of: technical, UI/accessibility/metadata, civic-methodological, copy/legal tone, data/API/schema, backlog/governance, unsafe/manual;

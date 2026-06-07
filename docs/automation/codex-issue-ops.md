@@ -2,7 +2,7 @@
 
 This document defines the controlled automation protocol for using Codex on the Lamezia Trasparente Monitor backlog.
 
-The objective is not to let Codex work indiscriminately on every open issue. The objective is to operate a controlled capacity-3 queue where issues are explored, converted into precise implementation prompts, assigned to Codex on dedicated branches, reviewed by humans through pull requests, and either routed to follow-up or recommended for closure after review.
+The objective is not to let Codex work indiscriminately on every open issue. The objective is to operate a controlled capacity-5 queue where issues are explored, converted into precise implementation prompts, assigned to Codex on dedicated branches, reviewed by humans through pull requests, and either routed to follow-up or recommended for closure after review.
 
 ## Core principle
 
@@ -12,7 +12,7 @@ The source of truth for queue state is the issue label set. Comments are operati
 
 ## Capacity model
 
-The Codex work queue has a controlled maximum capacity of **3 operational tasks**.
+The Codex work queue has a controlled maximum capacity of **5 operational tasks**.
 
 Operational tasks are issues in one of these states:
 
@@ -23,7 +23,7 @@ Operational tasks are issues in one of these states:
 
 `codex:review-needed` is a human review/merge wait state. It does **not** saturate the Codex work queue unless there is a concrete file/module collision with a candidate task or the same PR still needs Codex-side rework.
 
-The governor may keep capacity partially filled instead of always filling all three slots. It should prioritise low-collision, clearly scoped work and pause new promotion when collision risk, CI instability, public-copy risk or methodological risk would make parallel work unsafe.
+The governor should use all five slots when eligible low-collision backlog exists. A queue below 5/5 is healthy only when there is no real eligible backlog, a concrete file/module collision, legal/copy/methodological risk, CI instability, or a decision that must be made by Giovanni before parallel work is safe.
 
 ## Branch and pull request requirement
 
@@ -60,11 +60,12 @@ The cleanup preflight must identify:
 - queue-state comments that contradict the current labels;
 - duplicate Codex prompts or duplicate blocker/follow-up comments;
 - comments that tell later agents to ignore, reinterpret or bypass the label state;
-- stale automation comments superseded by a later label transition or final prompt.
+- stale automation comments superseded by a later label transition or final prompt;
+- stale blocker comments whose cited PR, issue or dependency is closed, merged, resolved or explicitly superseded.
 
 When the GitHub integration allows deletion, inappropriate automation comments should be deleted. When deletion is not available, the automation should update the comment body to a short neutral supersession note, for example: `Superseded during queue cleanup. Not operative; use current labels and the latest valid prompt/blocker only.`
 
-Automation must not add a final Codex prompt on top of unresolved contradictory comments. If cleanup cannot be completed, the correct outcome is to add `codex:follow-up` or `codex:blocked` and explain the cleanup obstacle. Do not use placeholder comments to test connectivity or reserve a comment slot.
+Automation must not add a final Codex prompt on top of unresolved contradictory comments. Stale comments must not block an issue when the PR, issue or dependency cited as the blocker is closed, merged, resolved or explicitly superseded; the automation should neutralise the stale comment and proceed from the current labels. If cleanup cannot be completed, the correct outcome is to add `codex:follow-up` or `codex:blocked` and explain the cleanup obstacle. Do not use placeholder comments to test connectivity or reserve a comment slot.
 
 At the end of cleanup, the issue thread should have at most one current operative comment for the current state: either one final Codex prompt, one blocker/follow-up comment, or one review-routing comment.
 
@@ -78,7 +79,7 @@ Purpose:
 
 1. identify the next open issue with `codex:ready` and without `codex:prompted`;
 2. exclude issues with `codex:invoked`, `codex:working`, `codex:blocked` or `codex:dangerous`;
-3. confirm that adding the issue would keep operational capacity at or below 3;
+3. confirm that adding the issue would keep operational capacity at or below 5;
 4. read title, body, labels, comments and linked context;
 5. run the comment cleanup preflight before posting anything new;
 6. classify the issue as technical, civic-methodological, UI/copy, data/API, or backlog/governance;
@@ -98,7 +99,7 @@ Purpose:
 
 1. identify an issue with `codex:prompted` and without `codex:invoked`;
 2. verify that exactly one current operative Codex prompt exists in the issue thread;
-3. verify that invocation would keep operational capacity at or below 3;
+3. verify that invocation would keep operational capacity at or below 5;
 4. refuse invocation if the thread contains unresolved contradictory prompt/blocker/status comments;
 5. post the final `@codex` instruction or use the selected Codex integration;
 6. require branch `codex/<issue-number>-<slug>`, commit, and PR targeting `main` as mandatory output;
@@ -134,15 +135,15 @@ Frequency: every 30–60 minutes, or before each automation cycle.
 
 Purpose:
 
-1. count operational Codex tasks against the capacity-3 limit;
+1. count operational Codex tasks against the capacity-5 limit;
 2. exclude `codex:review-needed` from saturation unless there is concrete file/module collision or Codex-side rework;
 3. detect duplicate work across issues and pull requests;
 4. detect stale `codex:invoked` or `codex:working` issues with no concrete activity for more than 60 minutes;
 5. stop or slow promotion when CI fails repeatedly because of recent Codex work;
 6. add `codex:blocked` where the automation should not continue;
-7. promote safe tasks to `codex:ready` when the queue is empty or below safe partial capacity.
+7. promote safe tasks to `codex:ready` whenever the queue is below 5/5 and eligible low-collision backlog exists.
 
-Anti-empty-queue rule: if there are no operational tasks and no open PRs, the governor should promote safe technical tasks to `codex:ready` up to partial capacity, prioritising typecheck/build/lint/test failures, small bugs and technical-debt tasks with low collision risk.
+Anti-idle rule: if operational capacity is below 5/5, the governor should promote safe technical tasks to `codex:ready` until the queue is full or it records an explicit reason not to fill it. Valid reasons are absence of real eligible backlog, concrete file/module collision, legal/copy/methodological risk, CI instability, or a decision required from Giovanni. Prioritise typecheck/build/lint/test failures, small bugs and technical-debt tasks with low collision risk.
 
 Collision-control minimum fields for every promotion or pause decision:
 
@@ -216,4 +217,4 @@ Codex or the automation should stop and ask for human decision when:
 - migrations, generated API packages or public data semantics would be changed without a clear source of truth;
 - the same files are already touched by an open PR in a conflicting way;
 - the issue thread contains unresolved contradictory automation comments or multiple active prompts;
-- proceeding would exceed the capacity-3 operational queue or create medium/high collision risk without a human decision.
+- proceeding would exceed the capacity-5 operational queue or create medium/high collision risk without a human decision.

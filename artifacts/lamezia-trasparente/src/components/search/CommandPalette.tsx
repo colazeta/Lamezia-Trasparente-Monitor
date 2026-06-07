@@ -76,7 +76,7 @@ const ALL_ITEMS: NavItem[] = [
   { href: "/temi", label: "Temi", icon: FileSearch, group: "Partecipazione", keywords: "argomenti categorie" },
   { href: "/monitoraggio", label: "Monitoraggio Civico", icon: Telescope, group: "Partecipazione", keywords: "monithon cantieri lavori" },
   { href: "/accesso-civico", label: "Accesso Civico", icon: FileSearch, group: "Partecipazione", keywords: "foia istanza richiesta" },
-  { href: "/segnalazioni", label: "Segnalazioni", icon: Megaphone, group: "Partecipazione", keywords: "anomalia spreco denuncia" },
+  { href: "/segnalazioni", label: "Segnalazioni", icon: Megaphone, group: "Partecipazione", keywords: "segnale civico verifica accesso civico richiesta formale" },
 
   { href: "/performance", label: "Performance", icon: Gauge, group: "Dati & Analisi", keywords: "indicatori kpi misurazione" },
   { href: "/statistiche", label: "Statistiche", icon: BarChart3, group: "Dati & Analisi", keywords: "grafici numeri dati" },
@@ -85,8 +85,6 @@ const ALL_ITEMS: NavItem[] = [
   { href: "/metodologia", label: "Metodologia", icon: FileSearch, group: "Dati & Analisi", keywords: "metodo indicatori cautela verifiche" },
   { href: "/note-legali", label: "Note legali", icon: Scale3D, group: "Dati & Analisi", keywords: "cautele indicatori interpretazione legalità" },
 
-  { href: "/chi-siamo", label: "Chi siamo", icon: ShieldCheck, group: "Strumenti", keywords: "progetto indipendente natura civica governance" },
-  { href: "/contatti", label: "Contatti", icon: MailQuestion, group: "Strumenti", keywords: "recapiti segnalazioni accesso civico richieste formali" },
   { href: "/feeds", label: "Feed e Abbonamenti", icon: Rss, group: "Strumenti", keywords: "rss atom notifiche" },
   { href: "/sviluppatori", label: "API e Sviluppatori", icon: Code2, group: "Strumenti", keywords: "json rest endpoint" },
   { href: "/iscrizioni", label: "Centro Iscrizioni", icon: Rss, group: "Strumenti", keywords: "email newsletter" },
