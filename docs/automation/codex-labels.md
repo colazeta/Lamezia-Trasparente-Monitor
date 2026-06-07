@@ -8,8 +8,8 @@ The labels are not merely cosmetic. They are the state machine used by the autom
 
 | Label | Meaning | Who/what may add it |
 | --- | --- | --- |
-| `codex:candidate` | The issue may be suitable for Codex after triage. | Human or scouting automation. |
-| `codex:ready` | The issue is clear enough to enter the automated queue. | Human only, unless explicitly changed later. |
+| `codex:candidate` | The issue may be suitable for Codex after triage. | Human, scouting automation or queue-governor automation. |
+| `codex:ready` | The issue has passed queue-governor triage and is clear enough to enter the automated queue. | Queue-governor automation or human reviewer. |
 | `codex:prompted` | A Codex-ready prompt has been generated and posted. | Automation 1. |
 | `codex:invoked` | Codex has been invoked. | Automation 2. |
 | `codex:working` | Codex work or a linked PR is in progress. | Automation 2 or review automation. |
@@ -17,7 +17,7 @@ The labels are not merely cosmetic. They are the state machine used by the autom
 | `codex:follow-up` | The issue needs additional work or clarification. | Automation 3 or human reviewer. |
 | `codex:done` | The issue appears resolved after review. | Automation 3 or human reviewer. |
 | `codex:blocked` | The automation must not continue. | Any safety check or human reviewer. |
-| `codex:dangerous` | Manual handling only because the issue is legally, reputationally or methodologically sensitive. | Human reviewer. |
+| `codex:dangerous` | Manual handling only because the issue is legally, reputationally or methodologically sensitive. | Human reviewer or queue-governor automation. |
 
 ## Classification labels
 
@@ -42,6 +42,7 @@ The labels are not merely cosmetic. They are the state machine used by the autom
 ## Automation guardrails
 
 - `codex:ready` should be the only label that starts the queue.
+- `codex:ready` is normally assigned by the queue-governor automation after checking priority, scope, acceptance criteria, active queue saturation and possible overlap with open PRs.
 - `codex:dangerous` always overrides `codex:ready`.
 - `codex:blocked` always pauses the issue.
 - `area:copy-legal-tone`, `area:civic-methodology` and `area:data-api` require stricter review.
