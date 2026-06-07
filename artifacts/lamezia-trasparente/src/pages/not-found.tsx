@@ -2,7 +2,6 @@ import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { PageMeta } from "@/components/seo/PageMeta";
 import { Compass, Home, ShieldAlert } from "lucide-react";
-import { PageMeta } from "@/components/seo/PageMeta";
 
 export default function NotFound() {
   return (

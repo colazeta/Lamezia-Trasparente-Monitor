@@ -40,6 +40,7 @@ import { PerformanceDetail } from "./pages/PerformanceDetail";
 import { Reports } from "./pages/Reports";
 import { FontiDati } from "./pages/FontiDati";
 import { Metodologia } from "./pages/Metodologia";
+import { Roadmap } from "./pages/Roadmap";
 import { NoteLegali } from "./pages/NoteLegali";
 import { ChiSiamo } from "./pages/ChiSiamo";
 import { Contatti } from "./pages/Contatti";
@@ -244,6 +245,7 @@ export function Router() {
             />
             <Route path="/fonti-dati" component={FontiDati} />
             <Route path="/metodologia" component={Metodologia} />
+            <Route path="/roadmap" component={Roadmap} />
             <Route path="/note-legali" component={NoteLegali} />
             <PublicRouteWithMeta
               path="/iscrizioni"
