@@ -21,24 +21,29 @@ Repository context:
 - API contract: `lib/api-spec/openapi.yaml`.
 - DB schema/migrations: `lib/db`.
 - Do not edit generated files manually.
+- Before posting any operational comment, apply the comment cleanup preflight defined in `docs/automation/codex-issue-ops.md`.
 
 Task:
 1. classify the issue as one of: technical, UI/accessibility/metadata, civic-methodological, copy/legal tone, data/API/schema, backlog/governance, unsafe/manual;
-2. extract the objective;
-3. define narrow acceptance criteria;
-4. identify likely files/modules to inspect;
-5. define validation commands;
-6. add civic/legal/copy safeguards where relevant;
-7. produce a final `@codex` prompt ready to be posted as a GitHub comment.
+2. confirm whether the issue thread is clean, cleaned, or blocked by unresolved contradictory comments;
+3. extract the objective;
+4. define narrow acceptance criteria;
+5. identify likely files/modules to inspect;
+6. define validation commands;
+7. add civic/legal/copy safeguards where relevant;
+8. produce a final `@codex` prompt ready to be posted as a GitHub comment only if the cleanup preflight passed.
 
 Safety rules:
 - If the issue is ambiguous, too broad, legally sensitive or potentially accusatory, do not produce an implementation prompt. Produce a blocker comment instead.
 - If the issue is backlog/governance, prefer a triage prompt or analysis-only prompt, not a direct implementation prompt.
+- If the thread contains unresolved contradictory automation comments, produce a follow-up/blocker comment instead of an implementation prompt.
 - Keep the resulting task narrow and reviewable.
 
 Output format:
 
 ### Classification
+
+### Cleanup preflight
 
 ### Decision
 Proceed / Block / Human review needed
