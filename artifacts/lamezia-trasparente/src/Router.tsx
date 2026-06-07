@@ -41,6 +41,8 @@ import { Reports } from "./pages/Reports";
 import { FontiDati } from "./pages/FontiDati";
 import { Metodologia } from "./pages/Metodologia";
 import { NoteLegali } from "./pages/NoteLegali";
+import { ChiSiamo } from "./pages/ChiSiamo";
+import { Contatti } from "./pages/Contatti";
 import { Statistics } from "./pages/Statistics";
 import { Subscriptions } from "./pages/Subscriptions";
 import { Guida } from "./pages/Guida";
@@ -243,6 +245,8 @@ export function Router() {
             <Route path="/fonti-dati" component={FontiDati} />
             <Route path="/metodologia" component={Metodologia} />
             <Route path="/note-legali" component={NoteLegali} />
+            <Route path="/chi-siamo" component={ChiSiamo} />
+            <Route path="/contatti" component={Contatti} />
             <PublicRouteWithMeta
               path="/iscrizioni"
               component={Subscriptions}

@@ -52,7 +52,8 @@ export function Footer() {
               <li><Link href="/iscrizioni" className="hover:text-primary transition-colors">Centro Iscrizioni</Link></li>
               <li><Link href="/metodologia" className="hover:text-primary transition-colors">Metodologia</Link></li>
               <li><Link href="/note-legali" className="hover:text-primary transition-colors">Note legali</Link></li>
-              <li><Link href="/note-legali" className="hover:text-primary transition-colors">Chi siamo</Link></li>
+              <li><Link href="/chi-siamo" className="hover:text-primary transition-colors">Chi siamo</Link></li>
+              <li><Link href="/contatti" className="hover:text-primary transition-colors">Contatti</Link></li>
               <li><Link href="/accesso-civico" className="hover:text-primary transition-colors">Accesso civico</Link></li>
             </ul>
           </div>
@@ -73,6 +74,8 @@ export function Footer() {
           <div className="flex gap-4">
             <Link href="/note-legali" className="hover:text-primary transition-colors">Note legali</Link>
             <Link href="/fonti-dati" className="hover:text-primary transition-colors">Fonti dati</Link>
+            <Link href="/chi-siamo" className="hover:text-primary transition-colors">Chi siamo</Link>
+            <Link href="/contatti" className="hover:text-primary transition-colors">Contatti</Link>
             <Link href="/redazione" className="hover:text-primary transition-colors">Area Redazione</Link>
           </div>
         </div>
