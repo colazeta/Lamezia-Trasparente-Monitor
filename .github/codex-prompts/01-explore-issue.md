@@ -24,10 +24,11 @@ Repository context:
 - Before posting any operational comment, apply the comment cleanup preflight defined in `docs/automation/codex-issue-ops.md`.
 
 Queue model:
-- Maximum operational Codex capacity is 5 tasks.
+- Maximum operational Codex capacity is 5 real active tasks.
 - `codex:prompted`, `codex:invoked` and `codex:working` are operational states.
-- `codex:review-needed` is human review/merge wait and does not saturate Codex capacity unless there is concrete file/module collision or Codex-side rework.
-- Do not prepare a prompt that would exceed capacity 5 or create unresolved collision risk.
+- `codex:review-needed` and PRs/issues waiting only for Giovanni review/merge are human review wait and do not saturate Codex capacity unless there is concrete file/module collision or Codex-side rework.
+- Effective free slots are `5 - real active Codex operational tasks`; do not subtract human-review-pending items.
+- Do not prepare a prompt that would exceed capacity 5 or create unresolved collision risk on the same files/modules.
 
 Task:
 1. classify the issue as one of: technical, UI/accessibility/metadata, civic-methodological, copy/legal tone, data/API/schema, backlog/governance, unsafe/manual;
@@ -60,7 +61,9 @@ Output format:
 - Probable scope:
 - Likely files/modules:
 - Collision risk: low / medium / high
-- Capacity impact:
+- Real active capacity impact:
+- Human review wait outside capacity:
+- Effective free slots:
 
 ### Decision
 Proceed / Block / Human review needed

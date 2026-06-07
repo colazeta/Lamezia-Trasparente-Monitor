@@ -24,6 +24,11 @@ Likely files/modules to inspect:
 Collision risk:
 {{COLLISION_RISK}}
 
+Capacity context:
+- Capacity 5 is computed only on real active Codex tasks.
+- Issues or PRs waiting only for Giovanni review/merge, including `codex:review-needed`, are outside the capacity count.
+- A human-review-pending PR blocks this invocation only when it touches the same files/modules or creates a concrete implementation collision.
+
 Repository rules:
 - Follow `AGENTS.md`.
 - Keep the implementation strictly scoped to this issue.
@@ -62,6 +67,7 @@ Fallback if PR creation fails:
 Stop conditions:
 - If the issue is ambiguous, comment with the precise missing information instead of guessing.
 - If the implementation would require secrets, credentials or unsupported factual claims, stop and explain.
-- If another open PR already touches the same files in a conflicting way, stop and report the collision.
+- If another open PR already touches the same files/modules in a conflicting way, stop and report the concrete collision.
+- Do not stop merely because another PR is waiting for Giovanni review/merge when it is non-colliding and needs no Codex-side rework.
 - If you cannot create the required branch or produce a reviewable diff, stop and report the exact technical blocker.
 ````
