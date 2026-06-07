@@ -1,38 +1,67 @@
 # Prompt template — 04 queue governor and collision control
 
-Use this template for the optional fourth automation.
+Use this template for the fourth automation.
 
-```markdown
+````markdown
 Assess the Codex automation queue for `colazeta/Lamezia-Trasparente-Monitor`.
 
 Scope:
 - open issues with labels matching `codex:*`;
 - open pull requests related to Codex work;
-- recent Codex comments, if available;
-- recent CI/typecheck/build failures, if available.
+- recent Codex comments, branches and commits, if available;
+- recent CI/typecheck/build/lint/test failures, if available.
 
 Task:
-1. count active Codex tasks;
-2. identify issues with `codex:working` but no visible PR;
-3. identify issues with multiple overlapping Codex attempts;
-4. identify open PRs touching the same files or solving overlapping issues;
-5. identify stale tasks that need `codex:follow-up` or `codex:blocked`;
-6. recommend whether the queue should continue, pause or require human intervention.
+1. count operational Codex tasks against maximum capacity 3;
+2. treat `codex:prompted`, `codex:invoked`, `codex:working` and open Codex PRs needing Codex-side changes as operational;
+3. treat `codex:review-needed` as human review/merge wait, not saturation, unless there is concrete file/module collision or Codex-side rework;
+4. identify issues with `codex:working` or `codex:invoked` but no visible PR;
+5. identify stale zombie tasks with `codex:invoked` or `codex:working` for more than 60 minutes and no PR, branch, Codex comment, commit or concrete activity;
+6. identify issues with multiple overlapping Codex attempts;
+7. identify open PRs touching the same files or solving overlapping issues;
+8. identify stale tasks that need `codex:follow-up` or `codex:blocked`;
+9. apply the anti-empty-queue rule when there are no operational tasks and no open PRs;
+10. recommend whether the queue should continue, pause or require human intervention.
 
 Default queue limits:
-- maximum active Codex tasks: 2;
-- maximum active task touching API/schema/migrations: 1;
-- maximum active task touching public copy/legal/methodological notes: 1;
+- maximum active operational Codex tasks: 3;
+- maximum active task touching API/schema/migrations: 1 unless a human reviewer accepts the collision risk;
+- maximum active task touching public copy/legal/methodological notes: 1 unless a human reviewer accepts the collision risk;
 - do not start new tasks if root typecheck or build is failing because of a recent Codex PR.
+
+Anti-empty-queue rule:
+- If there are no operational tasks and no open PRs, promote safe technical tasks to `codex:ready` up to partial capacity.
+- Prefer typecheck/build/lint/test failures, small bugs and limited technical-debt tasks.
+- Do not promote unsafe/manual, accusatory, broad, generated-file or unclear tasks merely to fill the queue.
+
+Collision-control fields required for every recommended promotion, pause or block:
+- Probable scope: {{PROBABLE_SCOPE}}
+- Likely files/modules: {{LIKELY_FILES}}
+- Collision risk: low / medium / high
+
+Fast lane treatment:
+- Technical fast-lane candidates may be promoted ahead of ordinary backlog items when they are small, clear, low-collision and validate with typecheck/build/lint/test commands.
+- Fast-lane tasks still require a dedicated branch `codex/<issue-number>-<slug>`, a PR targeting `main`, validation notes, no auto-merge and no auto-close.
 
 Output format:
 
 ### Queue status
 Continue / Pause / Human intervention required
 
+### Capacity count
+- Operational tasks:
+- Human review wait (`codex:review-needed`):
+- Remaining safe capacity:
+
 ### Active tasks
 
 ### Collision risks
+
+### Stale zombie tasks
+
+### Anti-empty-queue actions
+
+### Fast-lane candidates
 
 ### Recommended label changes
 
@@ -40,4 +69,4 @@ Continue / Pause / Human intervention required
 ```markdown
 ...
 ```
-```
+````
