@@ -52,7 +52,8 @@ export function Footer() {
               <li><Link href="/iscrizioni" className="hover:text-primary transition-colors">Centro Iscrizioni</Link></li>
               <li><Link href="/metodologia" className="hover:text-primary transition-colors">Metodologia</Link></li>
               <li><Link href="/note-legali" className="hover:text-primary transition-colors">Note legali</Link></li>
-              <li><Link href="/note-legali" className="hover:text-primary transition-colors">Chi siamo</Link></li>
+              <li><Link href="/chi-siamo" className="hover:text-primary transition-colors">Chi siamo</Link></li>
+              <li><Link href="/contatti" className="hover:text-primary transition-colors">Contatti</Link></li>
               <li><Link href="/accesso-civico" className="hover:text-primary transition-colors">Accesso civico</Link></li>
             </ul>
           </div>
@@ -70,9 +71,10 @@ export function Footer() {
 
         <div className="mt-6 pt-6 border-t border-sidebar-border flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-sidebar-foreground/60">
           <p>© {new Date().getFullYear()} Iniziativa Civica Lamezia Terme. Tutti i dati sono raccolti da fonti pubbliche.</p>
-          <div className="flex gap-4">
+          <div className="flex flex-wrap justify-center gap-4">
             <Link href="/note-legali" className="hover:text-primary transition-colors">Note legali</Link>
             <Link href="/fonti-dati" className="hover:text-primary transition-colors">Fonti dati</Link>
+            <Link href="/contatti" className="hover:text-primary transition-colors">Contatti</Link>
             <Link href="/redazione" className="hover:text-primary transition-colors">Area Redazione</Link>
           </div>
         </div>

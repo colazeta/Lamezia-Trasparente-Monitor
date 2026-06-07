@@ -41,6 +41,8 @@ import { Reports } from "./pages/Reports";
 import { FontiDati } from "./pages/FontiDati";
 import { Metodologia } from "./pages/Metodologia";
 import { NoteLegali } from "./pages/NoteLegali";
+import { ChiSiamo } from "./pages/ChiSiamo";
+import { Contatti } from "./pages/Contatti";
 import { Statistics } from "./pages/Statistics";
 import { Subscriptions } from "./pages/Subscriptions";
 import { Guida } from "./pages/Guida";
@@ -243,6 +245,18 @@ export function Router() {
             <Route path="/fonti-dati" component={FontiDati} />
             <Route path="/metodologia" component={Metodologia} />
             <Route path="/note-legali" component={NoteLegali} />
+            <PublicRouteWithMeta
+              path="/chi-siamo"
+              component={ChiSiamo}
+              title="Chi siamo"
+              description="Natura civica e indipendente del progetto, limiti del portale e collegamenti a fonti, metodologia e note legali."
+            />
+            <PublicRouteWithMeta
+              path="/contatti"
+              component={Contatti}
+              title="Contatti"
+              description="Canali corretti per segnalazioni civiche, accesso civico e richieste formali, distinti dalle note legali."
+            />
             <PublicRouteWithMeta
               path="/iscrizioni"
               component={Subscriptions}
