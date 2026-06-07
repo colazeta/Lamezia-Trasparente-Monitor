@@ -1,10 +1,16 @@
-import { AlertTriangle, CalendarClock, CheckCircle2, Info, ShieldAlert } from "lucide-react";
+import { AlertTriangle, CalendarClock, CheckCircle2, History, Info, ShieldAlert } from "lucide-react";
 import { Link } from "wouter";
 import {
   MONITORING_START_LABEL,
   MONITORING_METHODOLOGY_PARAGRAPHS,
 } from "@/lib/monitoring";
 import { PageMeta } from "@/components/seo/PageMeta";
+import {
+  METHODOLOGY_CHANGE_CATEGORIES,
+  METHODOLOGY_CHANGE_IMPACTS,
+  METHODOLOGY_CHANGELOG_ENTRIES,
+  METHODOLOGY_CHANGELOG_FORMAT_FIELDS,
+} from "@/content/methodologyChangelog";
 
 const METHOD_STEPS = [
   {
@@ -158,6 +164,119 @@ export function Metodologia() {
             e, se necessario, chiedere chiarimenti con strumenti formali come
             l'accesso civico.
           </p>
+        </div>
+      </section>
+
+
+      <section aria-labelledby="registro-metodologico" className="mb-8 rounded-2xl border border-border bg-card p-6 shadow-sm">
+        <div className="flex items-start gap-3">
+          <History className="mt-1 h-5 w-5 shrink-0 text-primary" aria-hidden="true" />
+          <div>
+            <h2 id="registro-metodologico" className="text-2xl font-display font-bold">
+              Registro metodologico
+            </h2>
+            <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+              Le modifiche rilevanti al metodo sono annotate in un registro
+              versionato. Il registro serve a ricostruire quando cambia una
+              regola di lettura, una fonte o una classificazione, distinguendo
+              questi casi dalla manutenzione ordinaria del sito. Non introduce
+              valutazioni sull'operato di enti, persone o soggetti citati negli
+              atti pubblici.
+            </p>
+          </div>
+        </div>
+
+        <div className="mt-6 grid gap-4 md:grid-cols-2">
+          <div className="rounded-xl border border-border bg-muted/30 p-4">
+            <h3 className="font-display text-base font-bold">Formato minimo di ogni voce</h3>
+            <ul className="mt-3 space-y-2">
+              {METHODOLOGY_CHANGELOG_FORMAT_FIELDS.map((field) => (
+                <li key={field} className="flex gap-2 text-sm leading-relaxed text-muted-foreground">
+                  <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" aria-hidden="true" />
+                  <span>{field}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div className="rounded-xl border border-border bg-muted/30 p-4">
+            <h3 className="font-display text-base font-bold">Categorie metodologiche</h3>
+            <dl className="mt-3 space-y-3">
+              {Object.entries(METHODOLOGY_CHANGE_CATEGORIES).map(([key, category]) => (
+                <div key={key}>
+                  <dt className="text-sm font-semibold text-foreground">{category.label}</dt>
+                  <dd className="mt-1 text-sm leading-relaxed text-muted-foreground">
+                    {category.description}
+                  </dd>
+                </div>
+              ))}
+            </dl>
+          </div>
+        </div>
+
+        <div className="mt-6 space-y-4">
+          <h3 className="font-display text-lg font-bold">Voci registrate</h3>
+          {METHODOLOGY_CHANGELOG_ENTRIES.map((entry) => {
+            const category = METHODOLOGY_CHANGE_CATEGORIES[entry.category];
+            const impact = METHODOLOGY_CHANGE_IMPACTS[entry.historicalImpact];
+
+            return (
+              <article key={entry.version} className="rounded-xl border border-border bg-background p-4">
+                <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
+                  <div>
+                    <p className="text-xs font-semibold uppercase tracking-wide text-primary">
+                      {entry.version} · {new Date(entry.date).toLocaleDateString("it-IT", {
+                        day: "2-digit",
+                        month: "long",
+                        year: "numeric",
+                      })}
+                    </p>
+                    <h4 className="mt-1 font-display text-base font-bold">{entry.title}</h4>
+                  </div>
+                  <span className="w-fit rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">
+                    {category.label}
+                  </span>
+                </div>
+
+                <div className="mt-4 space-y-3 text-sm leading-relaxed text-muted-foreground">
+                  <p>
+                    <span className="font-semibold text-foreground">Ambito:</span> {entry.scope}
+                  </p>
+                  <p>{entry.description}</p>
+                  <p>
+                    <span className="font-semibold text-foreground">Nota interpretativa:</span>{" "}
+                    {entry.whyItMatters}
+                  </p>
+                  <p>
+                    <span className="font-semibold text-foreground">Impatto storico:</span>{" "}
+                    {impact.label}. {impact.description}
+                  </p>
+                  <p>
+                    <span className="font-semibold text-foreground">Confine con manutenzione ordinaria:</span>{" "}
+                    {entry.maintenanceBoundary}
+                  </p>
+                  {entry.references.length > 0 ? (
+                    <p>
+                      <span className="font-semibold text-foreground">Riferimenti:</span>{" "}
+                      {entry.references.map((reference, index) => (
+                        <span key={reference.href}>
+                          {index > 0 ? ", " : null}
+                          <a
+                            href={reference.href}
+                            className="font-semibold underline underline-offset-4"
+                            rel="noreferrer"
+                            target="_blank"
+                          >
+                            {reference.label}
+                          </a>
+                        </span>
+                      ))}
+                    </p>
+                  ) : null}
+                </div>
+              </article>
+            );
+          })}
         </div>
       </section>
 
