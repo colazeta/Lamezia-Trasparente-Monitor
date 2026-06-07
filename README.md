@@ -120,6 +120,7 @@ In Replit, il pulsante **Run** avvia tutti i servizi tramite il workflow `Projec
 | Comando | Descrizione |
 |---|---|
 | `pnpm install` | Installa tutte le dipendenze del workspace |
+| `pnpm install --frozen-lockfile && pnpm run typecheck && pnpm run build` | Replica in locale il gate CI minimo |
 | `pnpm run typecheck` | Typecheck completo (libs + artifacts) |
 | `pnpm run build` | Typecheck + build di tutti i pacchetti |
 | `pnpm --filter @workspace/api-server run dev` | Avvia l'API server in modalità dev |
