@@ -145,7 +145,10 @@ function EndpointCard({ endpoint }: { endpoint: Endpoint }) {
     for (const param of endpoint.parameters) {
       if (param.in === "path") {
         const v = values[param.name]?.trim();
-        p = p.replace(`{${param.name}}`, v ? encodeURIComponent(v) : `{${param.name}}`);
+        p = p.replace(
+          `{${param.name}}`,
+          v ? encodeURIComponent(v) : `{${param.name}}`,
+        );
       }
     }
     const query = endpoint.parameters
@@ -222,7 +225,9 @@ function EndpointCard({ endpoint }: { endpoint: Endpoint }) {
             </p>
           )}
           {endpoint.description && (
-            <p className="text-sm text-muted-foreground">{endpoint.description}</p>
+            <p className="text-sm text-muted-foreground">
+              {endpoint.description}
+            </p>
           )}
 
           {endpoint.parameters.length > 0 && (
@@ -252,12 +257,15 @@ function EndpointCard({ endpoint }: { endpoint: Endpoint }) {
                       <Input
                         value={values[param.name] ?? ""}
                         onChange={(e) =>
-                          setValues((v) => ({ ...v, [param.name]: e.target.value }))
+                          setValues((v) => ({
+                            ...v,
+                            [param.name]: e.target.value,
+                          }))
                         }
                         placeholder={
                           param.schema?.enum
                             ? param.schema.enum.join(" | ")
-                            : param.description ?? ""
+                            : (param.description ?? "")
                         }
                         className="h-9 font-mono text-xs"
                       />
@@ -367,6 +375,213 @@ const CKAN_ENDPOINTS: CkanEndpoint[] = [
   },
 ];
 
+type TransparencyDataset = {
+  name: string;
+  coverage:
+    | "API pubblica + MCP"
+    | "Sito/API di servizio"
+    | "Sito o documentazione"
+    | "Da valutare";
+  dataKind:
+    | "Dato ufficiale"
+    | "Dato derivato"
+    | "Dato arricchito"
+    | "Dato misto";
+  source: string;
+  update: string;
+  fields: string;
+  access: string;
+  limits: string;
+};
+
+const TRANSPARENCY_DATASETS: TransparencyDataset[] = [
+  {
+    name: "Atti e documenti dell'Albo Pretorio",
+    coverage: "API pubblica + MCP",
+    dataKind: "Dato misto",
+    source:
+      "Metadati e allegati provenienti da pubblicazioni amministrative; link alla fonte ufficiale quando disponibile.",
+    update:
+      "Segue le acquisizioni del portale; la pagina non introduce garanzie su completezza o tempestività.",
+    fields:
+      "id, progressivo, tipologia, categoria, provenienza, oggetto, date, registri, CUP, indicatori PNRR, allegati e stato del testo Markdown.",
+    access:
+      "REST: /api/public/v1/documents, /documents/{id}, /documents/{id}/markdown. MCP: search_documents, get_document, get_document_markdown.",
+    limits:
+      "Il Markdown è un arricchimento tecnico disponibile solo per alcuni allegati; i file firmati o non testuali possono richiedere verifica sulla fonte ufficiale.",
+  },
+  {
+    name: "Contratti pubblici",
+    coverage: "API pubblica + MCP",
+    dataKind: "Dato misto",
+    source:
+      "Contratti censiti a partire da dati ANAC e collegamenti interni a temi di monitoraggio quando presenti.",
+    update:
+      "Aggiornamento legato alle procedure di importazione; eventuali scostamenti vanno verificati sulla fonte ufficiale.",
+    fields:
+      "id, titolo, descrizione, fornitore, importo, procedura, stato, CIG, CUP, stazione appaltante, link ANAC, tema, macrotema e coordinate se presenti.",
+    access:
+      "REST: /api/public/v1/contracts, /contracts/{id}. MCP: search_contracts, get_contract.",
+    limits:
+      "Macrotemi, collegamenti a temi e coordinate sono livelli derivati o arricchiti e non sostituiscono la documentazione di gara.",
+  },
+  {
+    name: "Temi di monitoraggio",
+    coverage: "API pubblica + MCP",
+    dataKind: "Dato derivato",
+    source:
+      "Schede redazionali del portale costruite per raggruppare documenti e contratti pubblici rilevanti per la consultazione civica.",
+    update:
+      "Aggiornamento redazionale; non rappresenta una classificazione ufficiale dell'ente.",
+    fields:
+      "id, titolo, slug, sintesi, categoria, stato, contatori civici, data aggiornamento e contratti collegati nel dettaglio.",
+    access:
+      "REST: /api/public/v1/themes, /themes/{id}. MCP: list_themes, get_theme.",
+    limits:
+      "I collegamenti sono segnali di navigazione e monitoraggio, non valutazioni di responsabilità o irregolarità.",
+  },
+  {
+    name: "Indicatori di performance",
+    coverage: "API pubblica + MCP",
+    dataKind: "Dato misto",
+    source:
+      "Categorie e indicatori con fonte dichiarata nei campi esposti dall'API quando disponibile.",
+    update:
+      "Dipende dalla disponibilità delle serie e dagli aggiornamenti importati; usare periodo e fonte per interpretare ogni valore.",
+    fields:
+      "categoria, indicatore, descrizione, unità, fonte, URL fonte, polarità, ultimo valore e valore precedente con periodo.",
+    access: "REST: /api/public/v1/performance. MCP: list_performance.",
+    limits:
+      "Gli indicatori descrivono segnali e andamenti: non sono prove di qualità amministrativa né graduatorie ufficiali.",
+  },
+  {
+    name: "Progetti PNRR",
+    coverage: "API pubblica + MCP",
+    dataKind: "Dato ufficiale",
+    source:
+      "Censimento Attuazione citato nella documentazione API, con link sorgente del progetto quando presente.",
+    update:
+      "Segue la disponibilità del censimento acquisito; stati e importi richiedono confronto con la scheda ufficiale più recente.",
+    fields:
+      "id, identificativo sorgente, URL, titolo, CUP, missione, componente, investimento, intervento, titolare, attuatore, importo, stato e date.",
+    access: "REST: /api/public/v1/pnrr. MCP: list_pnrr.",
+    limits:
+      "La presenza in API facilita il riuso ma non certifica avanzamento, rendicontazione o completamento del progetto.",
+  },
+  {
+    name: "Catalogo open data comunale",
+    coverage: "Sito/API di servizio",
+    dataKind: "Dato ufficiale",
+    source:
+      "Schede e risorse del catalogo open data comunale, ri-esposte come metadati DCAT-AP_IT e API compatibile CKAN.",
+    update:
+      "Dipende dagli snapshot e dai metadati del catalogo monitorato; ogni dataset può avere periodicità diversa.",
+    fields:
+      "titolo, descrizione, tema, categoria, titolare, licenza, frequenza, date metadato, risorse e URL del portale.",
+    access:
+      "Sito/API di servizio: /opendata, /api/opendata/catalog.jsonld, /api/3/action/package_search e endpoint CKAN/DCAT elencati sotto.",
+    limits:
+      "Non è incluso nella REST /api/public/v1 né nel MCP v0; le trasformazioni locali vanno confrontate con la scheda ufficiale del dataset.",
+  },
+  {
+    name: "Feed e stato aggiornamenti",
+    coverage: "Sito o documentazione",
+    dataKind: "Dato derivato",
+    source:
+      "Sezioni pubbliche del sito dedicate a feed, avvisi e stato delle acquisizioni.",
+    update:
+      "Mostra informazioni di servizio quando disponibili; non costituisce uno SLA di aggiornamento.",
+    fields:
+      "stato fonte, conteggi, ultime acquisizioni o link a feed secondo la sezione consultata.",
+    access:
+      "Pagina pubblica: /feeds. Non documentato come risorsa /api/public/v1 o tool MCP v0.",
+    limits:
+      "Da usare come supporto alla verifica operativa, non come attestazione di completezza dei dati.",
+  },
+  {
+    name: "Accesso civico, segnalazioni, beni confiscati, bandi e organi",
+    coverage: "Da valutare",
+    dataKind: "Dato misto",
+    source:
+      "Contenuti o sezioni citati nel perimetro informativo del sito, con sensibilità e granularità differenti.",
+    update:
+      "Non viene definita qui una frequenza unica; eventuale esposizione API richiede valutazione puntuale.",
+    fields:
+      "Variabili a seconda della sezione: richieste, schede, documenti, scadenze, soggetti pubblici o riferimenti amministrativi.",
+    access:
+      "Non esposti nella REST pubblica /api/public/v1 né nel MCP v0 sulla base della documentazione presente.",
+    limits:
+      "Possibile esclusione o rinvio per privacy, qualità dati, carico applicativo o prudenza civica; non vengono aggiunti nuovi endpoint in questa issue.",
+  },
+];
+
+const REST_EXAMPLE = `curl "https://<host>/api/public/v1/documents?hasMarkdown=true&pageSize=5"`;
+
+const MCP_EXAMPLE = `curl -X POST "https://<host>/api/mcp" \
+  -H "Content-Type: application/json" \
+  -d '{"jsonrpc":"2.0","id":1,"method":"tools/list","params":{}}'`;
+
+function CoverageBadge({ value }: { value: TransparencyDataset["coverage"] }) {
+  const style =
+    value === "API pubblica + MCP"
+      ? "border-emerald-500/20 bg-emerald-500/10 text-emerald-700 dark:text-emerald-400"
+      : value === "Sito/API di servizio"
+        ? "border-sky-500/20 bg-sky-500/10 text-sky-700 dark:text-sky-400"
+        : value === "Sito o documentazione"
+          ? "border-amber-500/20 bg-amber-500/10 text-amber-700 dark:text-amber-400"
+          : "border-muted-foreground/20 bg-muted/60 text-muted-foreground";
+
+  return (
+    <Badge variant="outline" className={cn("w-fit shadow-none", style)}>
+      {value}
+    </Badge>
+  );
+}
+
+function TransparencyDatasetCard({
+  dataset,
+}: {
+  dataset: TransparencyDataset;
+}) {
+  return (
+    <article className="rounded-xl border border-card-border bg-card p-4 shadow-sm">
+      <div className="mb-3 flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
+        <div>
+          <h3 className="font-display text-base font-bold tracking-tight text-foreground">
+            {dataset.name}
+          </h3>
+          <p className="mt-1 text-xs font-medium uppercase tracking-wider text-muted-foreground">
+            {dataset.dataKind}
+          </p>
+        </div>
+        <CoverageBadge value={dataset.coverage} />
+      </div>
+      <dl className="grid gap-3 text-sm sm:grid-cols-2">
+        <div>
+          <dt className="font-semibold text-foreground">Fonte</dt>
+          <dd className="mt-1 text-muted-foreground">{dataset.source}</dd>
+        </div>
+        <div>
+          <dt className="font-semibold text-foreground">Aggiornamento</dt>
+          <dd className="mt-1 text-muted-foreground">{dataset.update}</dd>
+        </div>
+        <div>
+          <dt className="font-semibold text-foreground">Campi principali</dt>
+          <dd className="mt-1 text-muted-foreground">{dataset.fields}</dd>
+        </div>
+        <div>
+          <dt className="font-semibold text-foreground">Accesso documentato</dt>
+          <dd className="mt-1 text-muted-foreground">{dataset.access}</dd>
+        </div>
+        <div className="sm:col-span-2">
+          <dt className="font-semibold text-foreground">Limiti noti</dt>
+          <dd className="mt-1 text-muted-foreground">{dataset.limits}</dd>
+        </div>
+      </dl>
+    </article>
+  );
+}
+
 function CkanCard({ ep }: { ep: CkanEndpoint }) {
   return (
     <div className="flex flex-col gap-2 rounded-xl border border-card-border bg-card p-4 shadow-sm">
@@ -456,7 +671,11 @@ export function Sviluppatori() {
         const ib = tagOrder.indexOf(b);
         return (ia === -1 ? 999 : ia) - (ib === -1 ? 999 : ib);
       })
-      .map(([tag, eps]) => ({ tag, description: tagDesc.get(tag), endpoints: eps }));
+      .map(([tag, eps]) => ({
+        tag,
+        description: tagDesc.get(tag),
+        endpoints: eps,
+      }));
   }, [endpoints, spec]);
 
   return (
@@ -471,9 +690,11 @@ export function Sviluppatori() {
           API e riuso dei dati
         </h1>
         <p className="mt-3 max-w-3xl text-lg text-muted-foreground">
-          Tutti i dati civici della piattaforma sono interrogabili tramite
-          un'API pubblica e gratuita in sola lettura. Esplora gli endpoint qui
-          sotto e provali direttamente nel browser.
+          Alcune risorse civiche documentate dalla piattaforma sono
+          interrogabili tramite superfici pubbliche di lettura: REST, MCP e
+          catalogo open data. Questa pagina chiarisce copertura, limiti e
+          differenze tra dati ufficiali, derivati e arricchiti senza presentare
+          il catalogo come completo.
         </p>
       </div>
 
@@ -495,7 +716,8 @@ export function Sviluppatori() {
             Base dell'API
           </div>
           <p className="text-xs text-muted-foreground">
-            Tutti gli endpoint REST sono relativi a questo indirizzo.
+            Gli endpoint REST pubblici documentati sono relativi a questo
+            indirizzo.
           </p>
           <UrlBox url={absoluteUrl(PUBLIC_API_BASE)} />
         </div>
@@ -510,6 +732,115 @@ export function Sviluppatori() {
           <UrlBox url={absoluteUrl(MCP_ENDPOINT)} />
         </div>
       </div>
+
+      {/* API / dataset transparency */}
+      <section className="mb-12 rounded-2xl border border-card-border bg-muted/20 p-5 md:p-6">
+        <div className="mb-5">
+          <span className="eyebrow text-primary">API Transparency Hub</span>
+          <h2 className="mt-2 font-display text-2xl font-bold tracking-tight">
+            Copertura API pubblica e dataset
+          </h2>
+          <p className="mt-2 max-w-3xl text-sm text-muted-foreground">
+            La tabella distingue le risorse esposte nella REST pubblica
+            <code className="mx-1 rounded bg-muted px-1 py-0.5 font-mono text-xs">
+              /api/public/v1
+            </code>
+            e nel server MCP dalle sezioni disponibili solo nel sito o tramite
+            API di servizio. Le informazioni riusano la documentazione API, la
+            specifica OpenAPI e le pagine pubbliche esistenti: non aggiungono
+            promesse su completezza, freschezza o copertura.
+          </p>
+        </div>
+
+        <div className="mb-5 grid gap-3 md:grid-cols-3">
+          <div className="rounded-xl border border-border bg-background/70 p-4">
+            <h3 className="text-sm font-semibold text-foreground">
+              Dato ufficiale
+            </h3>
+            <p className="mt-1 text-xs text-muted-foreground">
+              Informazione proveniente da una fonte pubblica istituzionale o da
+              una banca dati indicata dalla documentazione. Va comunque
+              verificata sulla fonte quando serve valore ufficiale.
+            </p>
+          </div>
+          <div className="rounded-xl border border-border bg-background/70 p-4">
+            <h3 className="text-sm font-semibold text-foreground">
+              Dato derivato
+            </h3>
+            <p className="mt-1 text-xs text-muted-foreground">
+              Organizzazione, raggruppamento o indicatore creato dal portale per
+              facilitare consultazione e monitoraggio civico. Non è una
+              classificazione ufficiale dell'ente.
+            </p>
+          </div>
+          <div className="rounded-xl border border-border bg-background/70 p-4">
+            <h3 className="text-sm font-semibold text-foreground">
+              Dato arricchito
+            </h3>
+            <p className="mt-1 text-xs text-muted-foreground">
+              Metadati tecnici, testo Markdown, collegamenti tematici o
+              coordinate aggiunti per ricerca e accessibilità. Richiedono
+              controllo sul documento originale in caso di dubbio.
+            </p>
+          </div>
+        </div>
+
+        <div className="mb-5 flex flex-wrap gap-2 text-xs text-muted-foreground">
+          <Link
+            href="/fonti-dati"
+            className="font-medium text-primary hover:underline"
+          >
+            Fonti dati
+          </Link>
+          <span aria-hidden="true">·</span>
+          <Link
+            href="/metodologia"
+            className="font-medium text-primary hover:underline"
+          >
+            Metodologia
+          </Link>
+          <span aria-hidden="true">·</span>
+          <Link
+            href="/note-legali"
+            className="font-medium text-primary hover:underline"
+          >
+            Note legali
+          </Link>
+        </div>
+
+        <div className="grid gap-4">
+          {TRANSPARENCY_DATASETS.map((dataset) => (
+            <TransparencyDatasetCard key={dataset.name} dataset={dataset} />
+          ))}
+        </div>
+
+        <div className="mt-6 grid gap-4 md:grid-cols-2">
+          <div className="rounded-xl border border-border bg-background/70 p-4">
+            <h3 className="font-display text-base font-bold tracking-tight">
+              Esempio REST minimale
+            </h3>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Richiesta in sola lettura verso un elenco documentato della REST
+              pubblica.
+            </p>
+            <pre className="mt-3 overflow-auto rounded-lg border border-border bg-muted/40 p-3 font-mono text-xs text-foreground">
+              {REST_EXAMPLE}
+            </pre>
+          </div>
+          <div className="rounded-xl border border-border bg-background/70 p-4">
+            <h3 className="font-display text-base font-bold tracking-tight">
+              Esempio MCP minimale
+            </h3>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Chiamata generica al server MCP per elencare i tool disponibili,
+              senza dipendenze da provider esterni.
+            </p>
+            <pre className="mt-3 overflow-auto rounded-lg border border-border bg-muted/40 p-3 font-mono text-xs text-foreground">
+              {MCP_EXAMPLE}
+            </pre>
+          </div>
+        </div>
+      </section>
 
       {/* Interactive explorer */}
       <section className="mb-12">
@@ -597,7 +928,10 @@ export function Sviluppatori() {
       <div className="rounded-xl border border-card-border bg-muted/30 p-4 text-sm text-muted-foreground">
         I dati sono raccolti da fonti pubbliche e offerti per il riuso. Cerchi
         aggiornamenti automatici? Consulta la pagina{" "}
-        <Link href="/feeds" className="font-medium text-primary hover:underline">
+        <Link
+          href="/feeds"
+          className="font-medium text-primary hover:underline"
+        >
           Feed e abbonamenti
         </Link>
         .
