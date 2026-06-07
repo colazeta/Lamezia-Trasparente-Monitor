@@ -71,7 +71,7 @@ export function Footer() {
 
         <div className="mt-6 pt-6 border-t border-sidebar-border flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-sidebar-foreground/60">
           <p>© {new Date().getFullYear()} Iniziativa Civica Lamezia Terme. Tutti i dati sono raccolti da fonti pubbliche.</p>
-          <div className="flex gap-4">
+          <div className="flex flex-wrap justify-center gap-4">
             <Link href="/note-legali" className="hover:text-primary transition-colors">Note legali</Link>
             <Link href="/fonti-dati" className="hover:text-primary transition-colors">Fonti dati</Link>
             <Link href="/chi-siamo" className="hover:text-primary transition-colors">Chi siamo</Link>

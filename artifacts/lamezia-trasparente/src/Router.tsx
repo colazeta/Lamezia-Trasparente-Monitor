@@ -248,6 +248,18 @@ export function Router() {
             <Route path="/chi-siamo" component={ChiSiamo} />
             <Route path="/contatti" component={Contatti} />
             <PublicRouteWithMeta
+              path="/chi-siamo"
+              component={ChiSiamo}
+              title="Chi siamo"
+              description="Natura civica e indipendente del progetto, limiti del portale e collegamenti a fonti, metodologia e note legali."
+            />
+            <PublicRouteWithMeta
+              path="/contatti"
+              component={Contatti}
+              title="Contatti"
+              description="Canali corretti per segnalazioni civiche, accesso civico e richieste formali, distinti dalle note legali."
+            />
+            <PublicRouteWithMeta
               path="/iscrizioni"
               component={Subscriptions}
               title="Iscrizioni agli aggiornamenti"
