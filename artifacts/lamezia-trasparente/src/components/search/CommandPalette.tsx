@@ -30,6 +30,7 @@ import {
   Scale3D,
   Info,
   Mail,
+  MailQuestion,
 } from "lucide-react";
 import {
   CommandDialog,
