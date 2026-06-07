@@ -5,7 +5,7 @@
  */
 import { Router, type IRouter } from "express";
 import { db, feedStatusTable, pageBlocksTable, siteStringsTable, helperOverridesTable, themesTable } from "@workspace/db";
-import { eq, asc, inArray, and } from "drizzle-orm";
+import { eq, asc, desc, inArray, and } from "drizzle-orm";
 import { getAuth } from "@clerk/express";
 import { requireEditorAuth } from "../middlewares/requireEditorAuth";
 import { runIngestion } from "../lib/ingestion";
@@ -366,8 +366,29 @@ router.patch("/redazione/themes/:id/status", requireEditorAuth, async (req, res)
 });
 
 // ---------------------------------------------------------------------------
-// Reports — moderation from editorial panel
+// Reports — protected editorial listing and moderation
 // ---------------------------------------------------------------------------
+router.get("/redazione/reports", requireEditorAuth, async (_req, res) => {
+  const { reportsTable } = await import("@workspace/db");
+  const rows = await db
+    .select()
+    .from(reportsTable)
+    .orderBy(desc(reportsTable.createdAt));
+
+  res.json(
+    rows.map((r) => ({
+      id: r.id,
+      title: r.title,
+      description: r.description,
+      category: r.category,
+      location: r.location,
+      status: r.status,
+      citizenName: r.citizenName,
+      createdAt: r.createdAt.toISOString(),
+    })),
+  );
+});
+
 const VALID_REPORT_STATUSES = ["in_valutazione", "presa_in_carico", "archiviata"];
 
 router.patch("/redazione/reports/:id/status", requireEditorAuth, async (req, res) => {

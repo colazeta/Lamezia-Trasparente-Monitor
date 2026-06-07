@@ -88,8 +88,9 @@ export function Reports() {
           Segnalazioni Civiche
         </h1>
         <p className="mt-3 text-muted-foreground text-lg">
-          I cittadini sono le prime sentinelle del territorio. Invia segnalazioni su sprechi,
-          lavori bloccati o disservizi per attivare un monitoraggio indipendente.
+          Invia un segnale civico circostanziato su servizi, lavori o informazioni pubbliche
+          che richiedono verifica. La segnalazione non sostituisce una richiesta di accesso
+          civico né una denuncia formale alle autorità competenti.
         </p>
       </div>
 
@@ -104,7 +105,8 @@ export function Reports() {
             <CardHeader className="border-b border-border bg-muted/40">
               <CardTitle className="font-display font-bold tracking-tight">Nuova Segnalazione</CardTitle>
               <CardDescription>
-                Fornisci dettagli precisi. Le segnalazioni anonime sono accettate, ma i dati circostanziati sono essenziali per le verifiche.
+                Fornisci dettagli verificabili. I contenuti inviati restano soggetti a revisione
+                redazionale prima di qualsiasi eventuale pubblicazione in bacheca.
               </CardDescription>
             </CardHeader>
             <CardContent className="pt-6">
@@ -176,7 +178,7 @@ export function Reports() {
                         <FormLabel>Dettagli</FormLabel>
                         <FormControl>
                           <Textarea 
-                            placeholder="Descrivi la situazione. Includi date, attori coinvolti e ogni dettaglio utile alle verifiche..." 
+                            placeholder="Descrivi la situazione. Includi date, luoghi, riferimenti amministrativi e ogni dettaglio utile alle verifiche..."
                             className="min-h-[150px] resize-y" 
                             {...field} 
                           />
@@ -196,7 +198,7 @@ export function Reports() {
                           <Input placeholder="Mario Rossi" {...field} className="h-11" />
                         </FormControl>
                         <FormDescription>
-                          Lascia vuoto per restare anonimo. Non pubblicheremo il tuo nome.
+                          Lascia vuoto per restare anonimo. Il nome, se indicato, è trattato come dato interno e non viene pubblicato nella risposta pubblica.
                         </FormDescription>
                         <FormMessage />
                       </FormItem>
@@ -278,9 +280,9 @@ export function Reports() {
                     Nessuna segnalazione pubblica
                   </EmptyTitle>
                   <EmptyDescription>
-                    Al momento non ci sono segnalazioni in bacheca. Sii la prima
-                    sentinella: invia la tua segnalazione per attivare il
-                    monitoraggio civico.
+                    Al momento la bacheca mostra solo contenuti che possono essere resi
+                    pubblici dopo revisione. Le nuove segnalazioni restano segnali civici
+                    interni finché non esiste una verifica redazionale esplicita.
                   </EmptyDescription>
                 </EmptyHeader>
               </Empty>

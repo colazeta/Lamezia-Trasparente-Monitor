@@ -1916,7 +1916,7 @@ export const GetDeliberaVotesResponse = zod.object({
 
 
 /**
- * @summary List citizen reports
+ * @summary List public-safe citizen reports
  */
 export const ListReportsResponseItem = zod.object({
   "id": zod.number(),
@@ -1925,14 +1925,13 @@ export const ListReportsResponseItem = zod.object({
   "category": zod.string(),
   "location": zod.string(),
   "status": zod.enum(['ricevuta', 'in_valutazione', 'presa_in_carico', 'archiviata']),
-  "citizenName": zod.string().nullish(),
   "createdAt": zod.string()
 })
 export const ListReportsResponse = zod.array(ListReportsResponseItem)
 
 
 /**
- * @summary Submit a citizen report
+ * @summary Submit a citizen report for internal review
  */
 
 
