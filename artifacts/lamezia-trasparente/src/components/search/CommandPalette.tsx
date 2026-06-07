@@ -28,7 +28,8 @@ import {
   Clock,
   BookOpen,
   Scale3D,
-  MailQuestion,
+  Info,
+  Mail,
 } from "lucide-react";
 import {
   CommandDialog,
@@ -52,6 +53,8 @@ const ALL_ITEMS: NavItem[] = [
   { href: "/", label: "Home", icon: Home, group: "Navigazione" },
   { href: "/domande", label: "Domande & Risposte", icon: HelpCircle, group: "Navigazione" },
   { href: "/guida", label: "Centro Guida", icon: BookOpen, group: "Navigazione", keywords: "tour assistente aiuto guida storia progetto" },
+  { href: "/chi-siamo", label: "Chi siamo", icon: Info, group: "Navigazione", keywords: "progetto indipendente natura civica governance fonti comune" },
+  { href: "/contatti", label: "Contatti", icon: Mail, group: "Navigazione", keywords: "contatti segnalazioni accesso civico canale redazionale" },
 
   { href: "/albo", label: "Albo Pretorio", icon: ShieldAlert, group: "Trasparenza & Atti", keywords: "pubblicazioni atti ufficiali" },
   { href: "/atti-fondamentali", label: "Atti Fondamentali", icon: ScrollText, group: "Trasparenza & Atti", keywords: "statuto regolamenti" },

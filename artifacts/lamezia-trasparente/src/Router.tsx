@@ -245,6 +245,8 @@ export function Router() {
             <Route path="/fonti-dati" component={FontiDati} />
             <Route path="/metodologia" component={Metodologia} />
             <Route path="/note-legali" component={NoteLegali} />
+            <Route path="/chi-siamo" component={ChiSiamo} />
+            <Route path="/contatti" component={Contatti} />
             <PublicRouteWithMeta
               path="/chi-siamo"
               component={ChiSiamo}

@@ -74,6 +74,7 @@ export function Footer() {
           <div className="flex flex-wrap justify-center gap-4">
             <Link href="/note-legali" className="hover:text-primary transition-colors">Note legali</Link>
             <Link href="/fonti-dati" className="hover:text-primary transition-colors">Fonti dati</Link>
+            <Link href="/chi-siamo" className="hover:text-primary transition-colors">Chi siamo</Link>
             <Link href="/contatti" className="hover:text-primary transition-colors">Contatti</Link>
             <Link href="/redazione" className="hover:text-primary transition-colors">Area Redazione</Link>
           </div>
