@@ -12,6 +12,8 @@ import {
   Bot,
   ChevronDown,
   AlertCircle,
+  AlertTriangle,
+  Database,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -23,6 +25,170 @@ import { cn } from "@/lib/utils";
 const PUBLIC_API_BASE = "/api/public/v1";
 const OPENAPI_URL = `${PUBLIC_API_BASE}/openapi.json`;
 const MCP_ENDPOINT = "/api/mcp";
+
+type DatasetTransparencyItem = {
+  name: string;
+  dataKind: string;
+  description: string;
+  provenance: string;
+  updateFrequency: string;
+  fields: string[];
+  endpoints: string[];
+  mcpTools: string[];
+  limitations: string;
+};
+
+const DATASET_TRANSPARENCY: DatasetTransparencyItem[] = [
+  {
+    name: "Atti dell'Albo Pretorio e pubblicazioni collegate",
+    dataKind: "Dato ufficiale con estrazioni documentali best-effort",
+    description:
+      "Schede di pubblicazione amministrativa con metadati, allegati e, quando disponibile, testo Markdown estratto dall'allegato principale.",
+    provenance:
+      "Registro Albo Pretorio e documenti pubblicati dal Comune; la documentazione dell'API pubblica indica link ufficiale e copia archiviata degli allegati quando disponibili.",
+    updateFrequency:
+      "Dipende dal feed pubblico e dalla disponibilità degli allegati; la documentazione non consente di assumere completezza o freschezza per ogni categoria.",
+    fields: [
+      "id/progressivo",
+      "oggetto",
+      "tipologia e categoria",
+      "date di pubblicazione",
+      "allegati e URL ufficiali",
+      "markdownSource/markdownExtractedAt dove presenti",
+    ],
+    endpoints: [
+      "GET /documents",
+      "GET /documents/{id}",
+      "GET /documents/{id}/markdown",
+    ],
+    mcpTools: ["search_documents", "get_document", "get_document_markdown"],
+    limitations:
+      "L'estrazione Markdown riguarda gli atti con PDF non firmato ed è best-effort; gli allegati firmati .p7m non sono elaborati. Ogni lettura deve restare collegata al documento originale.",
+  },
+  {
+    name: "Contratti pubblici",
+    dataKind: "Dato ufficiale normalizzato e arricchito",
+    description:
+      "Elenco e dettagli dei contratti pubblici consultabili per testo, fornitore, procedura, importi, periodo e collegamenti tematici.",
+    provenance:
+      "Dati ANAC indicati nella documentazione di progetto, con normalizzazioni editoriali come macrotema o geolocalizzazione quando presenti.",
+    updateFrequency:
+      "Legata al feed ANAC e agli eventuali arricchimenti editoriali; lo stato puntuale va verificato dagli endpoint di feed/status o dalle fonti ufficiali.",
+    fields: [
+      "id e CIG",
+      "titolo/descrizione",
+      "fornitore",
+      "tipo procedura",
+      "importo",
+      "data aggiudicazione",
+      "macrotema e collegamenti",
+    ],
+    endpoints: ["GET /contracts", "GET /contracts/{id}"],
+    mcpTools: ["search_contracts", "get_contract"],
+    limitations:
+      "Importi, procedure e collegamenti devono essere verificati rispetto alla scheda ANAC o agli atti collegati. Le categorie civiche sono supporti di lettura, non valutazioni di regolarità.",
+  },
+  {
+    name: "Temi di monitoraggio",
+    dataKind: "Dato derivato/editoriale",
+    description:
+      "Raccolte tematiche che collegano descrizioni, stato del tema e contratti pertinenti per rendere più leggibili filoni amministrativi ricorrenti.",
+    provenance:
+      "Contenuti e collegamenti redazionali interni basati sui dati civici disponibili nella piattaforma.",
+    updateFrequency:
+      "Aggiornamento redazionale; non esiste nel repository una periodicità automatica garantita per ogni tema.",
+    fields: [
+      "id",
+      "titolo",
+      "categoria",
+      "stato",
+      "descrizione",
+      "contratti collegati",
+    ],
+    endpoints: ["GET /themes", "GET /themes/{id}"],
+    mcpTools: ["list_themes", "get_theme"],
+    limitations:
+      "I temi servono a orientare la consultazione. Non rappresentano giudizi su responsabilità, intenzioni o irregolarità e possono non includere ogni documento pertinente.",
+  },
+  {
+    name: "Indicatori di performance",
+    dataKind: "Dato ufficiale o derivato con valore indicativo",
+    description:
+      "Categorie e indicatori con valore più recente e precedente, pensati per seguire serie amministrative e andamenti documentati.",
+    provenance:
+      "Catalogo e valori di performance definiti nello schema e nelle fonti applicative del progetto; alcuni valori possono richiedere aggiornamento manuale o feed dedicati.",
+    updateFrequency:
+      "Variabile per indicatore e fonte; usare le note dell'indicatore o gli endpoint di stato quando disponibili prima di assumere un aggiornamento recente.",
+    fields: [
+      "categoria",
+      "indicatore",
+      "periodo",
+      "latestValue",
+      "previousValue",
+      "unità/descrizione",
+    ],
+    endpoints: ["GET /performance"],
+    mcpTools: ["list_performance"],
+    limitations:
+      "Gli indicatori sono segnali di monitoraggio e non prove di qualità amministrativa, responsabilità individuale o completezza documentale.",
+  },
+  {
+    name: "Catalogo open data e risorse tabellari",
+    dataKind: "Metadati ufficiali con parsing tecnico dove possibile",
+    description:
+      "Catalogo dei dataset comunali con metadati DCAT-AP_IT, API compatibile CKAN e lettura tabellare di risorse CSV/JSON quando il parsing riesce.",
+    provenance:
+      "Catalogo open data del Comune di Lamezia Terme e risorse associate, come descritto nelle sezioni pubbliche Fonti dati e API sviluppatori.",
+    updateFrequency:
+      "Dipende dalla pubblicazione nel catalogo comunale e dalle importazioni applicative; le snapshot indicano disponibilità storica della risorsa, non una garanzia di completezza.",
+    fields: [
+      "id/slug dataset",
+      "titolo",
+      "gruppo/categoria",
+      "risorse",
+      "formato",
+      "colonne e righe parse dove disponibili",
+      "snapshot storiche",
+    ],
+    endpoints: [
+      "GET /api/opendata/catalog.jsonld",
+      "GET /api/3/action/package_search",
+      "GET /api/3/action/package_show",
+      "GET /opendata/resources/{id}/content",
+    ],
+    mcpTools: [],
+    limitations:
+      "Non tutti i formati sono tabellari o parseabili automaticamente. Il catalogo descrive risorse pubblicate, ma l'uso analitico richiede controllo dei metadati, del file originale e della data della snapshot.",
+  },
+  {
+    name: "Progetti PNRR",
+    dataKind: "Dato ufficiale censito e filtrabile",
+    description:
+      "Elenco dei progetti collegati al censimento Attuazione/Italia Domani per il Comune, con filtri per testo, missione e stato.",
+    provenance:
+      "Censimento Attuazione/Italia Domani citato dalla documentazione del repository e dalle rotte PNRR.",
+    updateFrequency:
+      "Dipende dagli aggiornamenti della fonte nazionale e dall'importazione nel progetto; non è dichiarata una copertura completa in questa pagina.",
+    fields: [
+      "id",
+      "titolo",
+      "missione",
+      "stato",
+      "CUP o riferimenti progettuali dove presenti",
+    ],
+    endpoints: ["GET /pnrr"],
+    mcpTools: ["list_pnrr"],
+    limitations:
+      "Lo stato dei progetti e i collegamenti con atti o contratti devono essere verificati sulla fonte ufficiale e sui documenti amministrativi disponibili.",
+  },
+];
+
+const REST_EXAMPLE = `curl "https://<host>/api/public/v1/documents?hasMarkdown=true&pageSize=5"`;
+
+const MCP_EXAMPLE = `curl -X POST "https://<host>/api/mcp" \
+  -H "Content-Type: application/json" \
+  -H "Accept: application/json, text/event-stream" \
+  -d '{"jsonrpc":"2.0","id":3,"method":"tools/call","params":{"name":"search_documents","arguments":{"hasMarkdown":true,"pageSize":3}}}'`;
 
 type OpenApiParam = {
   name: string;
@@ -91,9 +257,9 @@ function CopyButton({ text }: { text: string }) {
       className="h-7 w-7 shrink-0 text-muted-foreground"
     >
       {copied ? (
-        <Check className="h-3.5 w-3.5 text-primary" />
+        <Check className="h-3.5 w-3.5 text-primary" aria-hidden="true" />
       ) : (
-        <Copy className="h-3.5 w-3.5" />
+        <Copy className="h-3.5 w-3.5" aria-hidden="true" />
       )}
     </Button>
   );
@@ -118,9 +284,23 @@ function UrlBox({ url }: { url: string }) {
           rel="noopener noreferrer"
           aria-label="Apri in una nuova scheda"
         >
-          <ExternalLink className="h-3.5 w-3.5" />
+          <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
         </a>
       </Button>
+    </div>
+  );
+}
+
+function CodeExample({ label, code }: { label: string; code: string }) {
+  return (
+    <div className="rounded-xl border border-card-border bg-card p-4 shadow-sm">
+      <div className="mb-2 flex items-center justify-between gap-2">
+        <span className="text-sm font-semibold text-foreground">{label}</span>
+        <CopyButton text={code} />
+      </div>
+      <pre className="overflow-x-auto rounded-lg border border-border bg-muted/40 p-3 font-mono text-xs leading-relaxed text-foreground">
+        <code>{code}</code>
+      </pre>
     </div>
   );
 }
@@ -214,6 +394,7 @@ function EndpointCard({ endpoint }: { endpoint: Endpoint }) {
             "h-4 w-4 shrink-0 text-muted-foreground transition-transform",
             open && "rotate-180",
           )}
+          aria-hidden="true"
         />
       </button>
 
@@ -281,9 +462,9 @@ function EndpointCard({ endpoint }: { endpoint: Endpoint }) {
           <div className="flex items-center gap-2">
             <Button type="button" size="sm" onClick={run} disabled={loading}>
               {loading ? (
-                <Loader2 className="h-4 w-4 animate-spin" />
+                <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
               ) : (
-                <Play className="h-4 w-4" />
+                <Play className="h-4 w-4" aria-hidden="true" />
               )}
               Esegui
             </Button>
@@ -304,7 +485,7 @@ function EndpointCard({ endpoint }: { endpoint: Endpoint }) {
 
           {error && (
             <div className="flex items-center gap-2 rounded-md border border-destructive/20 bg-destructive/10 px-3 py-2 text-sm text-destructive">
-              <AlertCircle className="h-4 w-4 shrink-0" />
+              <AlertCircle className="h-4 w-4 shrink-0" aria-hidden="true" />
               {error}
             </div>
           )}
@@ -683,7 +864,7 @@ export function Sviluppatori() {
       {/* Header */}
       <div data-tour="api-intro" className="mb-6">
         <span className="eyebrow text-primary">
-          <Code2 className="h-3.5 w-3.5" />
+          <Code2 className="h-3.5 w-3.5" aria-hidden="true" />
           Per sviluppatori, giornalisti e ricercatori
         </span>
         <h1 className="mt-2 font-display text-3xl font-bold tracking-tight md:text-4xl">
@@ -702,7 +883,7 @@ export function Sviluppatori() {
       <div className="mb-8 grid gap-3 sm:grid-cols-3">
         <div className="flex flex-col gap-2 rounded-xl border border-card-border bg-muted/30 p-4">
           <div className="flex items-center gap-2 text-sm font-semibold text-foreground">
-            <FileJson className="h-4 w-4 text-primary" />
+            <FileJson className="h-4 w-4 text-primary" aria-hidden="true" />
             Specifica OpenAPI
           </div>
           <p className="text-xs text-muted-foreground">
@@ -712,7 +893,7 @@ export function Sviluppatori() {
         </div>
         <div className="flex flex-col gap-2 rounded-xl border border-card-border bg-muted/30 p-4">
           <div className="flex items-center gap-2 text-sm font-semibold text-foreground">
-            <Braces className="h-4 w-4 text-primary" />
+            <Braces className="h-4 w-4 text-primary" aria-hidden="true" />
             Base dell'API
           </div>
           <p className="text-xs text-muted-foreground">
@@ -723,7 +904,7 @@ export function Sviluppatori() {
         </div>
         <div className="flex flex-col gap-2 rounded-xl border border-card-border bg-muted/30 p-4">
           <div className="flex items-center gap-2 text-sm font-semibold text-foreground">
-            <Bot className="h-4 w-4 text-primary" />
+            <Bot className="h-4 w-4 text-primary" aria-hidden="true" />
             Server MCP
           </div>
           <p className="text-xs text-muted-foreground">
@@ -862,7 +1043,7 @@ export function Sviluppatori() {
           </div>
         ) : loadError ? (
           <div className="flex items-center gap-2 rounded-xl border border-destructive/20 bg-destructive/10 px-4 py-3 text-sm text-destructive">
-            <AlertCircle className="h-4 w-4 shrink-0" />
+            <AlertCircle className="h-4 w-4 shrink-0" aria-hidden="true" />
             Impossibile caricare la specifica dell'API. Riprova più tardi oppure
             consulta la specifica grezza.
           </div>

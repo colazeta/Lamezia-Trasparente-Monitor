@@ -1724,8 +1724,6 @@ export interface Report {
   category: string;
   location: string;
   status: ReportStatus;
-  /** @nullable */
-  citizenName?: string | null;
   createdAt: string;
 }
 

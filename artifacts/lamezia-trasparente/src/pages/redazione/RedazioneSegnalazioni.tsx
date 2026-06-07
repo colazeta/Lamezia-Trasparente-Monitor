@@ -1,6 +1,5 @@
 import { useState } from "react";
-import { useListReports } from "@workspace/api-client-react";
-import { useQueryClient } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { format } from "date-fns";
 import { it } from "date-fns/locale";
 import { toast } from "sonner";
@@ -20,6 +19,25 @@ const STATUS_MAP: Record<string, { label: string; icon: React.ElementType; varia
   archiviata:     { label: "Archiviata",        icon: Archive,       variant: "outline" },
 };
 
+type EditorialReport = {
+  id: number;
+  title: string;
+  description: string;
+  category: string;
+  location: string;
+  status: string;
+  citizenName?: string | null;
+  createdAt: string;
+};
+
+const editorialReportsQueryKey = ["redazioneReports"] as const;
+
+async function fetchEditorialReports(): Promise<EditorialReport[]> {
+  const res = await fetch(`${basePath}/api/redazione/reports`, { credentials: "include" });
+  if (!res.ok) throw new Error("Errore nel caricamento delle segnalazioni");
+  return res.json();
+}
+
 const MODERATION_ACTIONS: { to: string; label: string }[] = [
   { to: "in_valutazione",  label: "In valutazione" },
   { to: "presa_in_carico", label: "Prendi in carico" },
@@ -30,7 +48,10 @@ export function RedazioneSegnalazioni() {
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [pending, setPending] = useState<number | null>(null);
-  const { data: reports, isLoading, refetch } = useListReports();
+  const { data: reports, isLoading, refetch } = useQuery({
+    queryKey: editorialReportsQueryKey,
+    queryFn: fetchEditorialReports,
+  });
   const queryClient = useQueryClient();
 
   const filtered = (reports ?? []).filter((r) => {
@@ -52,7 +73,7 @@ export function RedazioneSegnalazioni() {
         credentials: "include",
       });
       if (!res.ok) throw new Error("Errore di rete");
-      await queryClient.invalidateQueries({ queryKey: ["listReports"] });
+      await queryClient.invalidateQueries({ queryKey: editorialReportsQueryKey });
       await refetch();
       toast.success("Stato aggiornato");
     } catch {
