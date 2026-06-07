@@ -30,6 +30,8 @@ Task:
 
 Queue rules:
 - `codex:review-needed` is human review/merge wait and does not saturate Codex capacity unless there is concrete file/module collision or Codex-side rework.
+- PRs/issues waiting only for Giovanni review or merge are outside the queue capacity count and block only candidate work touching the same files/modules.
+- Compute remaining capacity as `5 - real active Codex operational tasks`; do not subtract human-review-pending items.
 - Moving a stale or failed no-PR task to `codex:follow-up` releases operational capacity.
 - Preserve no-auto-merge and no-auto-close policy.
 
