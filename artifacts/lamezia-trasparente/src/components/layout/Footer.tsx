@@ -51,6 +51,7 @@ export function Footer() {
               <li><Link href="/segnalazioni" className="hover:text-primary transition-colors">Invia Segnalazione</Link></li>
               <li><Link href="/iscrizioni" className="hover:text-primary transition-colors">Centro Iscrizioni</Link></li>
               <li><Link href="/metodologia" className="hover:text-primary transition-colors">Metodologia</Link></li>
+              <li><Link href="/roadmap" className="hover:text-primary transition-colors">Roadmap</Link></li>
               <li><Link href="/note-legali" className="hover:text-primary transition-colors">Note legali</Link></li>
               <li><Link href="/chi-siamo" className="hover:text-primary transition-colors">Chi siamo</Link></li>
               <li><Link href="/contatti" className="hover:text-primary transition-colors">Contatti</Link></li>

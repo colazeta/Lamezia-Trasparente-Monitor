@@ -183,13 +183,6 @@ const DATASET_TRANSPARENCY: DatasetTransparencyItem[] = [
   },
 ];
 
-const REST_EXAMPLE = `curl "https://<host>/api/public/v1/documents?hasMarkdown=true&pageSize=5"`;
-
-const MCP_EXAMPLE = `curl -X POST "https://<host>/api/mcp" \
-  -H "Content-Type: application/json" \
-  -H "Accept: application/json, text/event-stream" \
-  -d '{"jsonrpc":"2.0","id":3,"method":"tools/call","params":{"name":"search_documents","arguments":{"hasMarkdown":true,"pageSize":3}}}'`;
-
 type OpenApiParam = {
   name: string;
   in: "query" | "path";
