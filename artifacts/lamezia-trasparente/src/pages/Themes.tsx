@@ -38,7 +38,7 @@ export function Themes() {
       ) : (
         <div className="relative overflow-hidden rounded-2xl border border-primary/20 bg-gradient-to-b from-primary/5 to-transparent px-6 py-16 text-center">
           <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-primary/10 text-primary">
-            <Compass className="h-8 w-8" />
+            <Compass className="h-8 w-8" aria-hidden="true" />
           </div>
           <h3 className="text-2xl font-display font-bold tracking-tight mb-3">
             I temi sono in fase di curatela
@@ -52,14 +52,14 @@ export function Themes() {
           <div className="flex flex-wrap items-center justify-center gap-3">
             <Link href="/albo">
               <Button className="gap-2">
-                <FileSearch className="h-4 w-4" />
+                <FileSearch className="h-4 w-4" aria-hidden="true" />
                 Esplora l'Albo Pretorio
               </Button>
             </Link>
             <Link href="/delibere">
               <Button variant="outline" className="gap-2">
                 Vai alle delibere
-                <ArrowRight className="h-4 w-4" />
+                <ArrowRight className="h-4 w-4" aria-hidden="true" />
               </Button>
             </Link>
           </div>

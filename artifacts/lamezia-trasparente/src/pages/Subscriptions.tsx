@@ -47,7 +47,7 @@ export function Subscriptions() {
       <div className="mx-auto max-w-xl">
         <div className="mb-8 flex flex-col items-center text-center">
           <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-brand/10 text-brand">
-            <Bell className="h-8 w-8" />
+            <Bell className="h-8 w-8" aria-hidden="true" />
           </div>
           <span className="eyebrow text-primary">Resta informato</span>
           <h1 className="mt-2 text-3xl md:text-4xl font-display font-bold tracking-tight">
@@ -73,7 +73,7 @@ export function Subscriptions() {
             {sent ? (
               <div className="flex flex-col items-center gap-3 rounded-xl border border-brand/30 bg-brand/5 px-6 py-8 text-center">
                 <div className="flex h-12 w-12 items-center justify-center rounded-full bg-success/15 text-success">
-                  <CheckCircle2 className="h-7 w-7" />
+                  <CheckCircle2 className="h-7 w-7" aria-hidden="true" />
                 </div>
                 <h3 className="text-lg font-display font-bold tracking-tight">Controlla la tua casella</h3>
                 <p className="text-muted-foreground text-sm">
@@ -93,7 +93,7 @@ export function Subscriptions() {
             ) : (
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div className="relative">
-                  <Mail className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                  <Mail className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" aria-hidden="true" />
                   <Input
                     type="email"
                     inputMode="email"
@@ -113,7 +113,7 @@ export function Subscriptions() {
                   className="w-full gap-2 h-12 text-base font-bold"
                   disabled={requestLink.isPending}
                 >
-                  <Mail className="h-4 w-4" />
+                  <Mail className="h-4 w-4" aria-hidden="true" />
                   {requestLink.isPending ? "Invio in corso…" : "Inviami il link"}
                 </Button>
               </form>

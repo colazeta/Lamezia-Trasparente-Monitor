@@ -257,9 +257,9 @@ function CopyButton({ text }: { text: string }) {
       className="h-7 w-7 shrink-0 text-muted-foreground"
     >
       {copied ? (
-        <Check className="h-3.5 w-3.5 text-primary" />
+        <Check className="h-3.5 w-3.5 text-primary" aria-hidden="true" />
       ) : (
-        <Copy className="h-3.5 w-3.5" />
+        <Copy className="h-3.5 w-3.5" aria-hidden="true" />
       )}
     </Button>
   );
@@ -284,7 +284,7 @@ function UrlBox({ url }: { url: string }) {
           rel="noopener noreferrer"
           aria-label="Apri in una nuova scheda"
         >
-          <ExternalLink className="h-3.5 w-3.5" />
+          <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
         </a>
       </Button>
     </div>
@@ -325,7 +325,10 @@ function EndpointCard({ endpoint }: { endpoint: Endpoint }) {
     for (const param of endpoint.parameters) {
       if (param.in === "path") {
         const v = values[param.name]?.trim();
-        p = p.replace(`{${param.name}}`, v ? encodeURIComponent(v) : `{${param.name}}`);
+        p = p.replace(
+          `{${param.name}}`,
+          v ? encodeURIComponent(v) : `{${param.name}}`,
+        );
       }
     }
     const query = endpoint.parameters
@@ -391,6 +394,7 @@ function EndpointCard({ endpoint }: { endpoint: Endpoint }) {
             "h-4 w-4 shrink-0 text-muted-foreground transition-transform",
             open && "rotate-180",
           )}
+          aria-hidden="true"
         />
       </button>
 
@@ -402,7 +406,9 @@ function EndpointCard({ endpoint }: { endpoint: Endpoint }) {
             </p>
           )}
           {endpoint.description && (
-            <p className="text-sm text-muted-foreground">{endpoint.description}</p>
+            <p className="text-sm text-muted-foreground">
+              {endpoint.description}
+            </p>
           )}
 
           {endpoint.parameters.length > 0 && (
@@ -432,12 +438,15 @@ function EndpointCard({ endpoint }: { endpoint: Endpoint }) {
                       <Input
                         value={values[param.name] ?? ""}
                         onChange={(e) =>
-                          setValues((v) => ({ ...v, [param.name]: e.target.value }))
+                          setValues((v) => ({
+                            ...v,
+                            [param.name]: e.target.value,
+                          }))
                         }
                         placeholder={
                           param.schema?.enum
                             ? param.schema.enum.join(" | ")
-                            : param.description ?? ""
+                            : (param.description ?? "")
                         }
                         className="h-9 font-mono text-xs"
                       />
@@ -453,9 +462,9 @@ function EndpointCard({ endpoint }: { endpoint: Endpoint }) {
           <div className="flex items-center gap-2">
             <Button type="button" size="sm" onClick={run} disabled={loading}>
               {loading ? (
-                <Loader2 className="h-4 w-4 animate-spin" />
+                <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
               ) : (
-                <Play className="h-4 w-4" />
+                <Play className="h-4 w-4" aria-hidden="true" />
               )}
               Esegui
             </Button>
@@ -476,7 +485,7 @@ function EndpointCard({ endpoint }: { endpoint: Endpoint }) {
 
           {error && (
             <div className="flex items-center gap-2 rounded-md border border-destructive/20 bg-destructive/10 px-3 py-2 text-sm text-destructive">
-              <AlertCircle className="h-4 w-4 shrink-0" />
+              <AlertCircle className="h-4 w-4 shrink-0" aria-hidden="true" />
               {error}
             </div>
           )}
@@ -636,7 +645,11 @@ export function Sviluppatori() {
         const ib = tagOrder.indexOf(b);
         return (ia === -1 ? 999 : ia) - (ib === -1 ? 999 : ib);
       })
-      .map(([tag, eps]) => ({ tag, description: tagDesc.get(tag), endpoints: eps }));
+      .map(([tag, eps]) => ({
+        tag,
+        description: tagDesc.get(tag),
+        endpoints: eps,
+      }));
   }, [endpoints, spec]);
 
   return (
@@ -644,7 +657,7 @@ export function Sviluppatori() {
       {/* Header */}
       <div data-tour="api-intro" className="mb-6">
         <span className="eyebrow text-primary">
-          <Code2 className="h-3.5 w-3.5" />
+          <Code2 className="h-3.5 w-3.5" aria-hidden="true" />
           Per sviluppatori, giornalisti e ricercatori
         </span>
         <h1 className="mt-2 font-display text-3xl font-bold tracking-tight md:text-4xl">
@@ -661,7 +674,7 @@ export function Sviluppatori() {
       <div className="mb-8 grid gap-3 sm:grid-cols-3">
         <div className="flex flex-col gap-2 rounded-xl border border-card-border bg-muted/30 p-4">
           <div className="flex items-center gap-2 text-sm font-semibold text-foreground">
-            <FileJson className="h-4 w-4 text-primary" />
+            <FileJson className="h-4 w-4 text-primary" aria-hidden="true" />
             Specifica OpenAPI
           </div>
           <p className="text-xs text-muted-foreground">
@@ -671,7 +684,7 @@ export function Sviluppatori() {
         </div>
         <div className="flex flex-col gap-2 rounded-xl border border-card-border bg-muted/30 p-4">
           <div className="flex items-center gap-2 text-sm font-semibold text-foreground">
-            <Braces className="h-4 w-4 text-primary" />
+            <Braces className="h-4 w-4 text-primary" aria-hidden="true" />
             Base dell'API
           </div>
           <p className="text-xs text-muted-foreground">
@@ -681,7 +694,7 @@ export function Sviluppatori() {
         </div>
         <div className="flex flex-col gap-2 rounded-xl border border-card-border bg-muted/30 p-4">
           <div className="flex items-center gap-2 text-sm font-semibold text-foreground">
-            <Bot className="h-4 w-4 text-primary" />
+            <Bot className="h-4 w-4 text-primary" aria-hidden="true" />
             Server MCP
           </div>
           <p className="text-xs text-muted-foreground">
@@ -877,7 +890,7 @@ export function Sviluppatori() {
           </div>
         ) : loadError ? (
           <div className="flex items-center gap-2 rounded-xl border border-destructive/20 bg-destructive/10 px-4 py-3 text-sm text-destructive">
-            <AlertCircle className="h-4 w-4 shrink-0" />
+            <AlertCircle className="h-4 w-4 shrink-0" aria-hidden="true" />
             Impossibile caricare la specifica dell'API. Riprova più tardi oppure
             consulta la specifica grezza.
           </div>
@@ -943,7 +956,10 @@ export function Sviluppatori() {
       <div className="rounded-xl border border-card-border bg-muted/30 p-4 text-sm text-muted-foreground">
         I dati sono raccolti da fonti pubbliche e offerti per il riuso. Cerchi
         aggiornamenti automatici? Consulta la pagina{" "}
-        <Link href="/feeds" className="font-medium text-primary hover:underline">
+        <Link
+          href="/feeds"
+          className="font-medium text-primary hover:underline"
+        >
           Feed e abbonamenti
         </Link>
         .
