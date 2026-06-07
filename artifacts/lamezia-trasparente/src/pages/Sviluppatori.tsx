@@ -91,9 +91,9 @@ function CopyButton({ text }: { text: string }) {
       className="h-7 w-7 shrink-0 text-muted-foreground"
     >
       {copied ? (
-        <Check className="h-3.5 w-3.5 text-primary" />
+        <Check className="h-3.5 w-3.5 text-primary" aria-hidden="true" />
       ) : (
-        <Copy className="h-3.5 w-3.5" />
+        <Copy className="h-3.5 w-3.5" aria-hidden="true" />
       )}
     </Button>
   );
@@ -118,7 +118,7 @@ function UrlBox({ url }: { url: string }) {
           rel="noopener noreferrer"
           aria-label="Apri in una nuova scheda"
         >
-          <ExternalLink className="h-3.5 w-3.5" />
+          <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
         </a>
       </Button>
     </div>
@@ -296,7 +296,7 @@ function EndpointCard({ endpoint }: { endpoint: Endpoint }) {
 
           {error && (
             <div className="flex items-center gap-2 rounded-md border border-destructive/20 bg-destructive/10 px-3 py-2 text-sm text-destructive">
-              <AlertCircle className="h-4 w-4 shrink-0" />
+              <AlertCircle className="h-4 w-4 shrink-0" aria-hidden="true" />
               {error}
             </div>
           )}
@@ -481,7 +481,7 @@ export function Sviluppatori() {
       <div className="mb-8 grid gap-3 sm:grid-cols-3">
         <div className="flex flex-col gap-2 rounded-xl border border-card-border bg-muted/30 p-4">
           <div className="flex items-center gap-2 text-sm font-semibold text-foreground">
-            <FileJson className="h-4 w-4 text-primary" />
+            <FileJson className="h-4 w-4 text-primary" aria-hidden="true" />
             Specifica OpenAPI
           </div>
           <p className="text-xs text-muted-foreground">
@@ -491,7 +491,7 @@ export function Sviluppatori() {
         </div>
         <div className="flex flex-col gap-2 rounded-xl border border-card-border bg-muted/30 p-4">
           <div className="flex items-center gap-2 text-sm font-semibold text-foreground">
-            <Braces className="h-4 w-4 text-primary" />
+            <Braces className="h-4 w-4 text-primary" aria-hidden="true" />
             Base dell'API
           </div>
           <p className="text-xs text-muted-foreground">
@@ -501,7 +501,7 @@ export function Sviluppatori() {
         </div>
         <div className="flex flex-col gap-2 rounded-xl border border-card-border bg-muted/30 p-4">
           <div className="flex items-center gap-2 text-sm font-semibold text-foreground">
-            <Bot className="h-4 w-4 text-primary" />
+            <Bot className="h-4 w-4 text-primary" aria-hidden="true" />
             Server MCP
           </div>
           <p className="text-xs text-muted-foreground">
@@ -531,7 +531,7 @@ export function Sviluppatori() {
           </div>
         ) : loadError ? (
           <div className="flex items-center gap-2 rounded-xl border border-destructive/20 bg-destructive/10 px-4 py-3 text-sm text-destructive">
-            <AlertCircle className="h-4 w-4 shrink-0" />
+            <AlertCircle className="h-4 w-4 shrink-0" aria-hidden="true" />
             Impossibile caricare la specifica dell'API. Riprova più tardi oppure
             consulta la specifica grezza.
           </div>

@@ -42,7 +42,7 @@ export function Statistics() {
     <div className="container mx-auto px-4 py-8 md:py-12">
       <div className="mb-8">
         <span className="eyebrow text-primary">
-          <BarChart3 className="h-3.5 w-3.5" />
+          <BarChart3 className="h-3.5 w-3.5" aria-hidden="true" />
           Osservatorio in cifre
         </span>
         <h1 className="mt-2 text-3xl md:text-4xl font-display font-bold tracking-tight">
@@ -342,7 +342,7 @@ function KpiCard({ title, value, loading, icon: Icon, desc, highlight = false }:
             )}
           </div>
           <div className={`p-2 rounded-lg ${highlight ? 'bg-brand/15 text-brand' : 'bg-muted text-muted-foreground'}`}>
-            <Icon className="h-5 w-5" />
+            <Icon className="h-5 w-5" aria-hidden="true" />
           </div>
         </div>
         <p className="text-xs text-muted-foreground font-mono">{desc}</p>
