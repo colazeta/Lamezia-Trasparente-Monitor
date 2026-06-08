@@ -5,8 +5,6 @@
  * API specification
  * OpenAPI spec version: 0.1.0
  */
-import type { ReportOutcome } from './reportOutcome';
-import type { ReportVerificationStatus } from './reportVerificationStatus';
 
 export interface ReportInput {
   /** @minLength 1 */
@@ -29,7 +27,4 @@ export interface ReportInput {
   availableData?: string;
   missingData?: string;
   foiaLink?: string;
-  outcome?: ReportOutcome;
-  verificationStatus?: ReportVerificationStatus;
-  interpretiveCaution?: string;
 }

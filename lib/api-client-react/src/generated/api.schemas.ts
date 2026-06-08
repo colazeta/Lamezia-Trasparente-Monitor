@@ -1821,6 +1821,8 @@ export interface Report {
   outcome: ReportOutcome;
   verificationStatus: ReportVerificationStatus;
   interpretiveCaution: string;
+  /** @nullable */
+  publishedAt?: string | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -1846,9 +1848,6 @@ export interface ReportInput {
   availableData?: string;
   missingData?: string;
   foiaLink?: string;
-  outcome?: ReportOutcome;
-  verificationStatus?: ReportVerificationStatus;
-  interpretiveCaution?: string;
 }
 
 export interface MonitoringReportAttachment {
