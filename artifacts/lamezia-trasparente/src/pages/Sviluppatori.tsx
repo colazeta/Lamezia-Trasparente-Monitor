@@ -21,167 +21,19 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
+import {
+  CKAN_ENDPOINTS,
+  DCAT_ENDPOINTS,
+  MCP_EXAMPLE,
+  REST_EXAMPLE,
+  TRANSPARENCY_DATASETS,
+  type CkanEndpoint,
+  type TransparencyDataset,
+} from "@/data/apiTransparency";
 
 const PUBLIC_API_BASE = "/api/public/v1";
 const OPENAPI_URL = `${PUBLIC_API_BASE}/openapi.json`;
 const MCP_ENDPOINT = "/api/mcp";
-
-type DatasetTransparencyItem = {
-  name: string;
-  dataKind: string;
-  description: string;
-  provenance: string;
-  updateFrequency: string;
-  fields: string[];
-  endpoints: string[];
-  mcpTools: string[];
-  limitations: string;
-};
-
-const DATASET_TRANSPARENCY: DatasetTransparencyItem[] = [
-  {
-    name: "Atti dell'Albo Pretorio e pubblicazioni collegate",
-    dataKind: "Dato ufficiale con estrazioni documentali best-effort",
-    description:
-      "Schede di pubblicazione amministrativa con metadati, allegati e, quando disponibile, testo Markdown estratto dall'allegato principale.",
-    provenance:
-      "Registro Albo Pretorio e documenti pubblicati dal Comune; la documentazione dell'API pubblica indica link ufficiale e copia archiviata degli allegati quando disponibili.",
-    updateFrequency:
-      "Dipende dal feed pubblico e dalla disponibilità degli allegati; la documentazione non consente di assumere completezza o freschezza per ogni categoria.",
-    fields: [
-      "id/progressivo",
-      "oggetto",
-      "tipologia e categoria",
-      "date di pubblicazione",
-      "allegati e URL ufficiali",
-      "markdownSource/markdownExtractedAt dove presenti",
-    ],
-    endpoints: [
-      "GET /documents",
-      "GET /documents/{id}",
-      "GET /documents/{id}/markdown",
-    ],
-    mcpTools: ["search_documents", "get_document", "get_document_markdown"],
-    limitations:
-      "L'estrazione Markdown riguarda gli atti con PDF non firmato ed è best-effort; gli allegati firmati .p7m non sono elaborati. Ogni lettura deve restare collegata al documento originale.",
-  },
-  {
-    name: "Contratti pubblici",
-    dataKind: "Dato ufficiale normalizzato e arricchito",
-    description:
-      "Elenco e dettagli dei contratti pubblici consultabili per testo, fornitore, procedura, importi, periodo e collegamenti tematici.",
-    provenance:
-      "Dati ANAC indicati nella documentazione di progetto, con normalizzazioni editoriali come macrotema o geolocalizzazione quando presenti.",
-    updateFrequency:
-      "Legata al feed ANAC e agli eventuali arricchimenti editoriali; lo stato puntuale va verificato dagli endpoint di feed/status o dalle fonti ufficiali.",
-    fields: [
-      "id e CIG",
-      "titolo/descrizione",
-      "fornitore",
-      "tipo procedura",
-      "importo",
-      "data aggiudicazione",
-      "macrotema e collegamenti",
-    ],
-    endpoints: ["GET /contracts", "GET /contracts/{id}"],
-    mcpTools: ["search_contracts", "get_contract"],
-    limitations:
-      "Importi, procedure e collegamenti devono essere verificati rispetto alla scheda ANAC o agli atti collegati. Le categorie civiche sono supporti di lettura, non valutazioni di regolarità.",
-  },
-  {
-    name: "Temi di monitoraggio",
-    dataKind: "Dato derivato/editoriale",
-    description:
-      "Raccolte tematiche che collegano descrizioni, stato del tema e contratti pertinenti per rendere più leggibili filoni amministrativi ricorrenti.",
-    provenance:
-      "Contenuti e collegamenti redazionali interni basati sui dati civici disponibili nella piattaforma.",
-    updateFrequency:
-      "Aggiornamento redazionale; non esiste nel repository una periodicità automatica garantita per ogni tema.",
-    fields: [
-      "id",
-      "titolo",
-      "categoria",
-      "stato",
-      "descrizione",
-      "contratti collegati",
-    ],
-    endpoints: ["GET /themes", "GET /themes/{id}"],
-    mcpTools: ["list_themes", "get_theme"],
-    limitations:
-      "I temi servono a orientare la consultazione. Non rappresentano giudizi su responsabilità, intenzioni o irregolarità e possono non includere ogni documento pertinente.",
-  },
-  {
-    name: "Indicatori di performance",
-    dataKind: "Dato ufficiale o derivato con valore indicativo",
-    description:
-      "Categorie e indicatori con valore più recente e precedente, pensati per seguire serie amministrative e andamenti documentati.",
-    provenance:
-      "Catalogo e valori di performance definiti nello schema e nelle fonti applicative del progetto; alcuni valori possono richiedere aggiornamento manuale o feed dedicati.",
-    updateFrequency:
-      "Variabile per indicatore e fonte; usare le note dell'indicatore o gli endpoint di stato quando disponibili prima di assumere un aggiornamento recente.",
-    fields: [
-      "categoria",
-      "indicatore",
-      "periodo",
-      "latestValue",
-      "previousValue",
-      "unità/descrizione",
-    ],
-    endpoints: ["GET /performance"],
-    mcpTools: ["list_performance"],
-    limitations:
-      "Gli indicatori sono segnali di monitoraggio e non prove di qualità amministrativa, responsabilità individuale o completezza documentale.",
-  },
-  {
-    name: "Catalogo open data e risorse tabellari",
-    dataKind: "Metadati ufficiali con parsing tecnico dove possibile",
-    description:
-      "Catalogo dei dataset comunali con metadati DCAT-AP_IT, API compatibile CKAN e lettura tabellare di risorse CSV/JSON quando il parsing riesce.",
-    provenance:
-      "Catalogo open data del Comune di Lamezia Terme e risorse associate, come descritto nelle sezioni pubbliche Fonti dati e API sviluppatori.",
-    updateFrequency:
-      "Dipende dalla pubblicazione nel catalogo comunale e dalle importazioni applicative; le snapshot indicano disponibilità storica della risorsa, non una garanzia di completezza.",
-    fields: [
-      "id/slug dataset",
-      "titolo",
-      "gruppo/categoria",
-      "risorse",
-      "formato",
-      "colonne e righe parse dove disponibili",
-      "snapshot storiche",
-    ],
-    endpoints: [
-      "GET /api/opendata/catalog.jsonld",
-      "GET /api/3/action/package_search",
-      "GET /api/3/action/package_show",
-      "GET /opendata/resources/{id}/content",
-    ],
-    mcpTools: [],
-    limitations:
-      "Non tutti i formati sono tabellari o parseabili automaticamente. Il catalogo descrive risorse pubblicate, ma l'uso analitico richiede controllo dei metadati, del file originale e della data della snapshot.",
-  },
-  {
-    name: "Progetti PNRR",
-    dataKind: "Dato ufficiale censito e filtrabile",
-    description:
-      "Elenco dei progetti collegati al censimento Attuazione/Italia Domani per il Comune, con filtri per testo, missione e stato.",
-    provenance:
-      "Censimento Attuazione/Italia Domani citato dalla documentazione del repository e dalle rotte PNRR.",
-    updateFrequency:
-      "Dipende dagli aggiornamenti della fonte nazionale e dall'importazione nel progetto; non è dichiarata una copertura completa in questa pagina.",
-    fields: [
-      "id",
-      "titolo",
-      "missione",
-      "stato",
-      "CUP o riferimenti progettuali dove presenti",
-    ],
-    endpoints: ["GET /pnrr"],
-    mcpTools: ["list_pnrr"],
-    limitations:
-      "Lo stato dei progetti e i collegamenti con atti o contratti devono essere verificati sulla fonte ufficiale e sui documenti amministrativi disponibili.",
-  },
-];
 
 type OpenApiParam = {
   name: string;
@@ -494,208 +346,11 @@ function EndpointCard({ endpoint }: { endpoint: Endpoint }) {
   );
 }
 
-type CkanEndpoint = {
-  title: string;
-  example: string;
-  description: string;
-  params?: string;
-};
-
-const DCAT_ENDPOINTS: CkanEndpoint[] = [
-  {
-    title: "Catalogo DCAT-AP_IT",
-    example: "/api/opendata/catalog.jsonld",
-    description:
-      "L'intero catalogo come metadati standard DCAT-AP_IT in formato JSON-LD, pronto per la federazione con dati.gov.it.",
-  },
-  {
-    title: "Dataset DCAT-AP_IT",
-    example: "/api/opendata/datasets/{id}/dcat.jsonld",
-    description:
-      "I metadati DCAT-AP_IT di un singolo dataset. {id} può essere lo slug o l'identificativo del dataset.",
-  },
-];
-
-const CKAN_ENDPOINTS: CkanEndpoint[] = [
-  {
-    title: "package_list",
-    example: "/api/3/action/package_list",
-    description: "Elenco degli identificativi di tutti i dataset.",
-  },
-  {
-    title: "package_search",
-    example: "/api/3/action/package_search?q=bilancio&rows=10",
-    description:
-      "Ricerca dei dataset con envelope CKAN {help, success, result}.",
-    params: "q · fq=groups:… · groups · rows · start",
-  },
-  {
-    title: "package_show",
-    example: "/api/3/action/package_show?id=",
-    description:
-      "Dettaglio di un dataset risolto per sourceId, slug o id numerico.",
-    params: "id",
-  },
-  {
-    title: "group_list",
-    example: "/api/3/action/group_list",
-    description: "Elenco dei gruppi tematici del catalogo.",
-  },
-  {
-    title: "resource_show",
-    example: "/api/3/action/resource_show?id=",
-    description: "Dettaglio di una singola risorsa (file) di un dataset.",
-    params: "id",
-  },
-];
-
-type TransparencyDataset = {
-  name: string;
-  coverage:
-    | "API pubblica + MCP"
-    | "Sito/API di servizio"
-    | "Sito o documentazione"
-    | "Da valutare";
-  dataKind:
-    | "Dato ufficiale"
-    | "Dato derivato"
-    | "Dato arricchito"
-    | "Dato misto";
-  source: string;
-  update: string;
-  fields: string;
-  access: string;
-  limits: string;
-};
-
-const TRANSPARENCY_DATASETS: TransparencyDataset[] = [
-  {
-    name: "Atti e documenti dell'Albo Pretorio",
-    coverage: "API pubblica + MCP",
-    dataKind: "Dato misto",
-    source:
-      "Metadati e allegati provenienti da pubblicazioni amministrative; link alla fonte ufficiale quando disponibile.",
-    update:
-      "Segue le acquisizioni del portale; la pagina non introduce garanzie su completezza o tempestività.",
-    fields:
-      "id, progressivo, tipologia, categoria, provenienza, oggetto, date, registri, CUP, indicatori PNRR, allegati e stato del testo Markdown.",
-    access:
-      "REST: /api/public/v1/documents, /documents/{id}, /documents/{id}/markdown. MCP: search_documents, get_document, get_document_markdown.",
-    limits:
-      "Il Markdown è un arricchimento tecnico disponibile solo per alcuni allegati; i file firmati o non testuali possono richiedere verifica sulla fonte ufficiale.",
-  },
-  {
-    name: "Contratti pubblici",
-    coverage: "API pubblica + MCP",
-    dataKind: "Dato misto",
-    source:
-      "Contratti censiti a partire da dati ANAC e collegamenti interni a temi di monitoraggio quando presenti.",
-    update:
-      "Aggiornamento legato alle procedure di importazione; eventuali scostamenti vanno verificati sulla fonte ufficiale.",
-    fields:
-      "id, titolo, descrizione, fornitore, importo, procedura, stato, CIG, CUP, stazione appaltante, link ANAC, tema, macrotema e coordinate se presenti.",
-    access:
-      "REST: /api/public/v1/contracts, /contracts/{id}. MCP: search_contracts, get_contract.",
-    limits:
-      "Macrotemi, collegamenti a temi e coordinate sono livelli derivati o arricchiti e non sostituiscono la documentazione di gara.",
-  },
-  {
-    name: "Temi di monitoraggio",
-    coverage: "API pubblica + MCP",
-    dataKind: "Dato derivato",
-    source:
-      "Schede redazionali del portale costruite per raggruppare documenti e contratti pubblici rilevanti per la consultazione civica.",
-    update:
-      "Aggiornamento redazionale; non rappresenta una classificazione ufficiale dell'ente.",
-    fields:
-      "id, titolo, slug, sintesi, categoria, stato, contatori civici, data aggiornamento e contratti collegati nel dettaglio.",
-    access:
-      "REST: /api/public/v1/themes, /themes/{id}. MCP: list_themes, get_theme.",
-    limits:
-      "I collegamenti sono segnali di navigazione e monitoraggio, non valutazioni di responsabilità o irregolarità.",
-  },
-  {
-    name: "Indicatori di performance",
-    coverage: "API pubblica + MCP",
-    dataKind: "Dato misto",
-    source:
-      "Categorie e indicatori con fonte dichiarata nei campi esposti dall'API quando disponibile.",
-    update:
-      "Dipende dalla disponibilità delle serie e dagli aggiornamenti importati; usare periodo e fonte per interpretare ogni valore.",
-    fields:
-      "categoria, indicatore, descrizione, unità, fonte, URL fonte, polarità, ultimo valore e valore precedente con periodo.",
-    access: "REST: /api/public/v1/performance. MCP: list_performance.",
-    limits:
-      "Gli indicatori descrivono segnali e andamenti: non sono prove di qualità amministrativa né graduatorie ufficiali.",
-  },
-  {
-    name: "Progetti PNRR",
-    coverage: "API pubblica + MCP",
-    dataKind: "Dato ufficiale",
-    source:
-      "Censimento Attuazione citato nella documentazione API, con link sorgente del progetto quando presente.",
-    update:
-      "Segue la disponibilità del censimento acquisito; stati e importi richiedono confronto con la scheda ufficiale più recente.",
-    fields:
-      "id, identificativo sorgente, URL, titolo, CUP, missione, componente, investimento, intervento, titolare, attuatore, importo, stato e date.",
-    access: "REST: /api/public/v1/pnrr. MCP: list_pnrr.",
-    limits:
-      "La presenza in API facilita il riuso ma non certifica avanzamento, rendicontazione o completamento del progetto.",
-  },
-  {
-    name: "Catalogo open data comunale",
-    coverage: "Sito/API di servizio",
-    dataKind: "Dato ufficiale",
-    source:
-      "Schede e risorse del catalogo open data comunale, ri-esposte come metadati DCAT-AP_IT e API compatibile CKAN.",
-    update:
-      "Dipende dagli snapshot e dai metadati del catalogo monitorato; ogni dataset può avere periodicità diversa.",
-    fields:
-      "titolo, descrizione, tema, categoria, titolare, licenza, frequenza, date metadato, risorse e URL del portale.",
-    access:
-      "Sito/API di servizio: /opendata, /api/opendata/catalog.jsonld, /api/3/action/package_search e endpoint CKAN/DCAT elencati sotto.",
-    limits:
-      "Non è incluso nella REST /api/public/v1 né nel MCP v0; le trasformazioni locali vanno confrontate con la scheda ufficiale del dataset.",
-  },
-  {
-    name: "Feed e stato aggiornamenti",
-    coverage: "Sito o documentazione",
-    dataKind: "Dato derivato",
-    source:
-      "Sezioni pubbliche del sito dedicate a feed, avvisi e stato delle acquisizioni.",
-    update:
-      "Mostra informazioni di servizio quando disponibili; non costituisce uno SLA di aggiornamento.",
-    fields:
-      "stato fonte, conteggi, ultime acquisizioni o link a feed secondo la sezione consultata.",
-    access:
-      "Pagina pubblica: /feeds. Non documentato come risorsa /api/public/v1 o tool MCP v0.",
-    limits:
-      "Da usare come supporto alla verifica operativa, non come attestazione di completezza dei dati.",
-  },
-  {
-    name: "Accesso civico, segnalazioni, beni confiscati, bandi e organi",
-    coverage: "Da valutare",
-    dataKind: "Dato misto",
-    source:
-      "Contenuti o sezioni citati nel perimetro informativo del sito, con sensibilità e granularità differenti.",
-    update:
-      "Non viene definita qui una frequenza unica; eventuale esposizione API richiede valutazione puntuale.",
-    fields:
-      "Variabili a seconda della sezione: richieste, schede, documenti, scadenze, soggetti pubblici o riferimenti amministrativi.",
-    access:
-      "Non esposti nella REST pubblica /api/public/v1 né nel MCP v0 sulla base della documentazione presente.",
-    limits:
-      "Possibile esclusione o rinvio per privacy, qualità dati, carico applicativo o prudenza civica; non vengono aggiunti nuovi endpoint in questa issue.",
-  },
-];
-
-const REST_EXAMPLE = `curl "https://<host>/api/public/v1/documents?hasMarkdown=true&pageSize=5"`;
-
-const MCP_EXAMPLE = `curl -X POST "https://<host>/api/mcp" \
-  -H "Content-Type: application/json" \
-  -d '{"jsonrpc":"2.0","id":1,"method":"tools/list","params":{}}'`;
-
-function CoverageBadge({ value }: { value: TransparencyDataset["coverage"] }) {
+function CoverageBadge({
+  value,
+}: {
+  value: TransparencyDataset["coverageStatus"];
+}) {
   const style =
     value === "API pubblica + MCP"
       ? "border-emerald-500/20 bg-emerald-500/10 text-emerald-700 dark:text-emerald-400"
@@ -722,22 +377,24 @@ function TransparencyDatasetCard({
       <div className="mb-3 flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
         <div>
           <h3 className="font-display text-base font-bold tracking-tight text-foreground">
-            {dataset.name}
+            {dataset.datasetName}
           </h3>
           <p className="mt-1 text-xs font-medium uppercase tracking-wider text-muted-foreground">
-            {dataset.dataKind}
+            {dataset.dataKindLabel}
           </p>
         </div>
-        <CoverageBadge value={dataset.coverage} />
+        <CoverageBadge value={dataset.coverageStatus} />
       </div>
       <dl className="grid gap-3 text-sm sm:grid-cols-2">
         <div>
           <dt className="font-semibold text-foreground">Fonte</dt>
-          <dd className="mt-1 text-muted-foreground">{dataset.source}</dd>
+          <dd className="mt-1 text-muted-foreground">{dataset.sourceNote}</dd>
         </div>
         <div>
           <dt className="font-semibold text-foreground">Aggiornamento</dt>
-          <dd className="mt-1 text-muted-foreground">{dataset.update}</dd>
+          <dd className="mt-1 text-muted-foreground">
+            {dataset.updateCadenceNote}
+          </dd>
         </div>
         <div>
           <dt className="font-semibold text-foreground">Campi principali</dt>
@@ -749,7 +406,7 @@ function TransparencyDatasetCard({
         </div>
         <div className="sm:col-span-2">
           <dt className="font-semibold text-foreground">Limiti noti</dt>
-          <dd className="mt-1 text-muted-foreground">{dataset.limits}</dd>
+          <dd className="mt-1 text-muted-foreground">{dataset.knownLimits}</dd>
         </div>
       </dl>
     </article>
@@ -924,6 +581,14 @@ export function Sviluppatori() {
             specifica OpenAPI e le pagine pubbliche esistenti: non aggiungono
             promesse su completezza, freschezza o copertura.
           </p>
+          <p className="mt-2 max-w-3xl text-xs text-muted-foreground">
+            Nota di manutenzione: il catalogo ripetibile è centralizzato in
+            <code className="mx-1 rounded bg-muted px-1 py-0.5 font-mono text-[11px]">
+              src/data/apiTransparency.ts
+            </code>
+            e un controllo Vitest verifica gli endpoint e i tool principali
+            rispetto a PUBLIC_API.md.
+          </p>
         </div>
 
         <div className="mb-5 grid gap-3 md:grid-cols-3">
@@ -984,7 +649,10 @@ export function Sviluppatori() {
 
         <div className="grid gap-4">
           {TRANSPARENCY_DATASETS.map((dataset) => (
-            <TransparencyDatasetCard key={dataset.name} dataset={dataset} />
+            <TransparencyDatasetCard
+              key={dataset.datasetName}
+              dataset={dataset}
+            />
           ))}
         </div>
 
