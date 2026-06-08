@@ -37,6 +37,7 @@ import {
 } from "@workspace/api-zod";
 import { ALBO_SOURCE } from "../lib/ingestion";
 import {
+  ITALIADOMANI_LABEL,
   ITALIADOMANI_LOC_URL,
   ITALIADOMANI_PROJ_URL,
   ITALIADOMANI_SOURCE,
@@ -958,6 +959,20 @@ router.get("/pnrr/projects", async (_req, res) => {
 
   const matchedDocIds = new Set<number>();
 
+  const importSourceLabel = italiadomaniStatus?.label ?? ITALIADOMANI_LABEL;
+  const importSourceUrl = italiadomaniStatus?.url ?? ITALIADOMANI_LOC_URL;
+  const importSourceStatus = italiadomaniStatus?.status ?? null;
+  const importSourceError = italiadomaniStatus?.error ?? null;
+  const sourceUsesOpenPnrr =
+    importSourceUrl.includes("openpnrr.it") ||
+    importSourceLabel.toLowerCase().includes("openpnrr");
+  const projectSourceUrl = sourceUsesOpenPnrr
+    ? importSourceUrl
+    : ITALIADOMANI_PROJ_URL;
+  const locationSourceUrl = sourceUsesOpenPnrr
+    ? importSourceUrl
+    : ITALIADOMANI_LOC_URL;
+
   // The Italia Domani census is always the authoritative master list.
   // If the table is empty (ingestor has not yet run or failed), return an
   // empty census with explicit feed state — never substitute the old
@@ -1000,8 +1015,12 @@ router.get("/pnrr/projects", async (_req, res) => {
         id: p.id,
         key: p.cup,
         sourceId: p.cup,
-        projectSourceUrl: ITALIADOMANI_PROJ_URL,
-        locationSourceUrl: ITALIADOMANI_LOC_URL,
+        projectSourceUrl,
+        locationSourceUrl,
+        importSourceLabel,
+        importSourceUrl,
+        importSourceStatus,
+        importSourceError,
         url: attuazione?.url ?? null,
         title: p.title,
         cup: p.cup,
@@ -1045,7 +1064,15 @@ router.get("/pnrr/projects", async (_req, res) => {
     ? italiadomaniStatus.lastUpdatedAt.toISOString()
     : null;
 
-  res.json({ projects, uncensored, censusLastUpdatedAt });
+  res.json({
+    projects,
+    uncensored,
+    censusLastUpdatedAt,
+    importSourceLabel,
+    importSourceUrl,
+    importSourceStatus,
+    importSourceError,
+  });
 });
 
 // ---------------------------------------------------------------------------
