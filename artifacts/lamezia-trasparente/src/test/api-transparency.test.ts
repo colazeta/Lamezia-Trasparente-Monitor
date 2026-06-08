@@ -4,6 +4,10 @@ import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
 
 import {
+  CKAN_ENDPOINTS,
+  DCAT_ENDPOINTS,
+  MCP_EXAMPLE,
+  OPENDATA_DOCUMENTED_ENDPOINTS,
   PUBLIC_API_DOC_PATH,
   PUBLIC_API_DOCUMENTED_MCP_TOOLS,
   PUBLIC_API_DOCUMENTED_REST_ENDPOINTS,
@@ -15,6 +19,17 @@ const repoRoot = path.resolve(testDir, "../../../..");
 
 function readPublicApiDocumentation() {
   return readFileSync(path.join(repoRoot, PUBLIC_API_DOC_PATH), "utf8");
+}
+
+function readOpendataRouter() {
+  return readFileSync(
+    path.join(repoRoot, "artifacts/api-server/src/routes/opendata.ts"),
+    "utf8",
+  );
+}
+
+function toOpendataRouterPath(endpoint: string) {
+  return endpoint.replace(/^\/api/, "").replace(/\{([^}]+)\}/g, ":$1");
 }
 
 describe("API transparency catalog", () => {
@@ -48,5 +63,39 @@ describe("API transparency catalog", () => {
     for (const tool of PUBLIC_API_DOCUMENTED_MCP_TOOLS) {
       expect(publicApiDocumentation).toContain(tool);
     }
+  });
+
+  it("keeps OpenData examples aligned with documentation and implemented routes", () => {
+    const publicApiDocumentation = readPublicApiDocumentation();
+    const opendataRouter = readOpendataRouter();
+
+    for (const endpoint of OPENDATA_DOCUMENTED_ENDPOINTS) {
+      expect(publicApiDocumentation).toContain(endpoint);
+      expect(opendataRouter).toContain(
+        `router.get("${toOpendataRouterPath(endpoint)}"`,
+      );
+    }
+
+    const documentedExamples = new Set(
+      [...DCAT_ENDPOINTS, ...CKAN_ENDPOINTS].map(
+        (endpoint) => endpoint.example.split("?")[0],
+      ),
+    );
+    const examples = [...DCAT_ENDPOINTS, ...CKAN_ENDPOINTS].map(
+      (endpoint) => endpoint.example,
+    );
+    for (const endpoint of OPENDATA_DOCUMENTED_ENDPOINTS) {
+      expect(documentedExamples).toContain(endpoint);
+    }
+    expect(examples).not.toContain("/api/3/action/package_show?id=");
+    expect(examples).not.toContain("/api/3/action/resource_show?id=");
+  });
+
+  it("documents the required MCP Streamable HTTP headers in the reusable example", () => {
+    expect(MCP_EXAMPLE).toContain('-H "Content-Type: application/json"');
+    expect(MCP_EXAMPLE).toContain(
+      '-H "Accept: application/json, text/event-stream"',
+    );
+    expect(MCP_EXAMPLE).not.toContain("Authorization");
   });
 });
