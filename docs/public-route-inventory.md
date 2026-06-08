@@ -44,6 +44,7 @@ Le route incluse sono mantenute in `PUBLIC_INDEXABLE_ROUTES` e verificate dal te
 - `/convocazioni`
 - `/organi`
 - `/amministratori`
+- `/macchina-comunale`
 - `/pnrr`
 - `/opendata`
 - `/feeds`
