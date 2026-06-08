@@ -7,6 +7,7 @@ import {
 } from "lucide-react";
 import { Link } from "wouter";
 import { PageMeta } from "@/components/seo/PageMeta";
+import { DATA_QUALITY_MATRIX, QUALITY_LEGEND } from "@/data/dataQuality";
 
 interface DataSource {
   name: string;
@@ -15,16 +16,6 @@ interface DataSource {
   dataType: "Ufficiale" | "Estratto" | "Arricchito" | "Da verificare";
   updateFrequency: string;
   limitations: string;
-}
-
-interface DataQualityIndicator {
-  sourceName: string;
-  lastKnownUpdate: string;
-  sourceTraceability: "Calcolato" | "Documentato";
-  sourceLinkAvailability: string;
-  identifierCoverage: string;
-  attachmentAvailability: string;
-  coverageLimits: string;
 }
 
 const DATA_SOURCES: DataSource[] = [
@@ -138,116 +129,6 @@ const DATA_SOURCES: DataSource[] = [
       "Aggiornamento redazionale o automatico dove disponibile; la periodicità varia per tipologia di documento e per pubblicazione istituzionale.",
     limitations:
       "Le schede possono includere collegamenti, note e sintesi civiche. La valutazione di completezza documentale richiede sempre il confronto con l'ultimo documento ufficiale pubblicato dall'ente.",
-  },
-];
-
-const MAIN_MONITORED_SOURCE_NAMES = [
-  "Albo Pretorio del Comune di Lamezia Terme",
-  "Bandi di gara e contratti — feed Legge 190/2012",
-  "Portale ANAC / BDNCP sui contratti pubblici",
-  "Catalogo Open Data del Comune di Lamezia Terme",
-  "Italia Domani — Open data PNRR",
-  "ANBSC — Open data beni sequestrati e confiscati",
-  "Registro comunale degli accessi civici",
-] as const;
-
-const DOCUMENTED_QUALITY_NOTES: Record<
-  (typeof MAIN_MONITORED_SOURCE_NAMES)[number],
-  Pick<
-    DataQualityIndicator,
-    "lastKnownUpdate" | "identifierCoverage" | "attachmentAvailability"
-  >
-> = {
-  "Albo Pretorio del Comune di Lamezia Terme": {
-    lastKnownUpdate:
-      "Documentato: monitoraggio automatico periodico; questa pagina non espone un timestamp di ultimo snapshot.",
-    identifierCoverage:
-      "Documentato/manuale: numero atto, tipo e date dipendono dalla pubblicazione ufficiale; copertura aggregata non calcolata qui.",
-    attachmentAvailability:
-      "Documentato/manuale: allegati presenti quando pubblicati dall'Albo e recuperabili nella finestra pubblica; quota non calcolata qui.",
-  },
-  "Bandi di gara e contratti — feed Legge 190/2012": {
-    lastKnownUpdate:
-      "Documentato: sincronizzazione periodica del feed; il valore puntuale dipende dall'ultima pubblicazione del gestore.",
-    identifierCoverage:
-      "Documentato/manuale: CIG e operatori possono essere presenti o estratti dal testo; percentuale non calcolata senza uno snapshot strutturato.",
-    attachmentAvailability:
-      "Documentato/manuale: gli allegati vanno verificati sugli atti collegati; quota non calcolata dal feed sintetico.",
-  },
-  "Portale ANAC / BDNCP sui contratti pubblici": {
-    lastKnownUpdate:
-      "Documentato: aggiornamento secondo flussi nazionali ANAC; nessun timestamp locale calcolato in questa sezione.",
-    identifierCoverage:
-      "Documentato/manuale: il CIG è l'identificativo di consultazione, ma la disponibilità puntuale varia per scheda e trasmissione.",
-    attachmentAvailability:
-      "Non applicabile in questa matrice: la sezione monitora il collegamento alle schede, non la presenza di allegati locali.",
-  },
-  "Catalogo Open Data del Comune di Lamezia Terme": {
-    lastKnownUpdate:
-      "Documentato: sincronizzazione periodica del catalogo; le date effettive restano nei metadati delle singole schede.",
-    identifierCoverage:
-      "Documentato/manuale: identificativi e campi chiave variano per dataset; copertura aggregata non confrontabile tra risorse eterogenee.",
-    attachmentAvailability:
-      "Documentato/manuale: risorse CSV, JSON o altri formati sono collegate nelle schede quando pubblicate; quota aggregata non calcolata qui.",
-  },
-  "Italia Domani — Open data PNRR": {
-    lastKnownUpdate:
-      "Documentato: aggiornamento secondo calendario nazionale PNRR; questa pagina conserva solo la regola di consultazione.",
-    identifierCoverage:
-      "Documentato/manuale: il CUP è l'identificativo principale; la copertura va verificata sugli open data nazionali filtrati.",
-    attachmentAvailability:
-      "Non applicabile in questa matrice: i dataset PNRR sono basi tabellari nazionali, non fascicoli con allegati locali.",
-  },
-  "ANBSC — Open data beni sequestrati e confiscati": {
-    lastKnownUpdate:
-      "Documentato: sincronizzazione periodica del CSV nazionale; il timestamp puntuale dipende dalla pubblicazione ANBSC.",
-    identifierCoverage:
-      "Documentato/manuale: localizzazione e stato amministrativo sono campi del CSV nazionale; copertura locale non calcolata qui.",
-    attachmentAvailability:
-      "Non applicabile in questa matrice: fonte tabellare nazionale senza allegati locali monitorati dal portale.",
-  },
-  "Registro comunale degli accessi civici": {
-    lastKnownUpdate:
-      "Documentato/manuale: aggiornamento in base alla disponibilità del registro ufficiale o dei file importati.",
-    identifierCoverage:
-      "Documentato/manuale: date, oggetti ed esiti dipendono dal formato del registro; copertura aggregata non calcolata qui.",
-    attachmentAvailability:
-      "Documentato/manuale: eventuali file o documenti di provenienza vanno letti con il registro ufficiale; quota non calcolata qui.",
-  },
-};
-
-const DATA_QUALITY_MATRIX: DataQualityIndicator[] =
-  MAIN_MONITORED_SOURCE_NAMES.map((sourceName) => {
-    const source = DATA_SOURCES.find((item) => item.name === sourceName);
-    const documented = DOCUMENTED_QUALITY_NOTES[sourceName];
-
-    return {
-      sourceName,
-      lastKnownUpdate: documented.lastKnownUpdate,
-      sourceTraceability: source?.href ? "Calcolato" : "Documentato",
-      sourceLinkAvailability: source?.href
-        ? "Disponibile: la scheda fonte contiene un link pubblico verificabile."
-        : "Documentato/manuale: link non presente nella scheda fonte.",
-      identifierCoverage: documented.identifierCoverage,
-      attachmentAvailability: documented.attachmentAvailability,
-      coverageLimits:
-        source?.limitations ??
-        "Limiti da documentare nella scheda fonte prima dell'uso analitico.",
-    };
-  });
-
-const QUALITY_LEGEND = [
-  {
-    label: "Calcolato",
-    text: "valore derivato direttamente da campi già presenti in questa pagina, ad esempio la presenza di un link pubblico nella scheda fonte.",
-  },
-  {
-    label: "Documentato/manuale",
-    text: "nota metodologica ricavata dalle schede fonte esistenti: segnala che l'aggregato non è ancora calcolato da uno snapshot strutturato.",
-  },
-  {
-    label: "Non applicabile",
-    text: "indicatore non confrontabile per quella fonte, ad esempio allegati locali su dataset tabellari nazionali.",
   },
 ];
 
