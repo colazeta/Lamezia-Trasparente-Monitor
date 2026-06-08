@@ -26,6 +26,10 @@ import {
   runConfiscatedAssetsGeocoding,
 } from "./confiscatedAssets";
 import { runBriefBatchGuarded } from "./briefs";
+import {
+  MONITORED_SOURCE_BY_ID,
+  type MonitoredSourceId,
+} from "./sourceRegistry";
 
 export const ALBO_SOURCE = "albo-lamezia";
 export const ALBO_LABEL = "Albo Pretorio – Amministrazione Trasparente";
@@ -96,7 +100,9 @@ function classify(tipologia: string, oggetto: string) {
 }
 
 function parseAlboXml(xml: string): InsertPublication[] {
-  const blocks = [...xml.matchAll(/<pubblicazione>([\s\S]*?)<\/pubblicazione>/g)];
+  const blocks = [
+    ...xml.matchAll(/<pubblicazione>([\s\S]*?)<\/pubblicazione>/g),
+  ];
   const out: InsertPublication[] = [];
 
   for (const b of blocks) {
@@ -264,47 +270,193 @@ export async function runIngestion(): Promise<{
 
 const INGESTION_INTERVAL_MS = 3 * 60 * 60 * 1000;
 
+type MonitoredStepCounts = {
+  itemsTotal?: number;
+  itemsNew?: number;
+};
+
+function monitoredStepCounts(result: unknown): MonitoredStepCounts {
+  if (!result || typeof result !== "object") return {};
+  const record = result as Record<string, unknown>;
+  const total =
+    typeof record.total === "number"
+      ? record.total
+      : typeof record.processed === "number"
+        ? record.processed
+        : typeof record.attempted === "number"
+          ? record.attempted
+          : typeof record.candidates === "number"
+            ? record.candidates
+            : undefined;
+  const itemsNew =
+    typeof record.inserted === "number"
+      ? record.inserted
+      : typeof record.upserted === "number"
+        ? record.upserted
+        : typeof record.withFiles === "number"
+          ? record.withFiles
+          : typeof record.withText === "number"
+            ? record.withText
+            : typeof record.matched === "number"
+              ? record.matched
+              : typeof record.located === "number"
+                ? record.located
+                : undefined;
+  return { itemsTotal: total, itemsNew };
+}
+
+async function recordMonitoredStep(
+  sourceId: MonitoredSourceId,
+  outcome:
+    | ({ status: "ok" } & MonitoredStepCounts)
+    | { status: "error"; error: string },
+): Promise<void> {
+  const source = MONITORED_SOURCE_BY_ID.get(sourceId);
+  if (!source) return;
+
+  const now = new Date();
+  if (outcome.status === "ok") {
+    await db
+      .insert(feedStatusTable)
+      .values({
+        source: source.source,
+        label: source.label,
+        url: source.url ?? "",
+        status: "ok",
+        error: null,
+        itemsTotal: outcome.itemsTotal ?? 0,
+        itemsNew: outcome.itemsNew ?? 0,
+        lastCheckedAt: now,
+        lastUpdatedAt: now,
+      })
+      .onConflictDoUpdate({
+        target: feedStatusTable.source,
+        set: {
+          label: source.label,
+          url: source.url ?? "",
+          status: "ok",
+          error: null,
+          ...(outcome.itemsTotal !== undefined
+            ? { itemsTotal: outcome.itemsTotal }
+            : {}),
+          ...(outcome.itemsNew !== undefined
+            ? { itemsNew: outcome.itemsNew }
+            : {}),
+          lastCheckedAt: now,
+          lastUpdatedAt: now,
+        },
+      });
+    return;
+  }
+
+  await db
+    .insert(feedStatusTable)
+    .values({
+      source: source.source,
+      label: source.label,
+      url: source.url ?? "",
+      status: "error",
+      error: outcome.error,
+      lastCheckedAt: now,
+    })
+    .onConflictDoUpdate({
+      target: feedStatusTable.source,
+      set: {
+        label: source.label,
+        url: source.url ?? "",
+        status: "error",
+        error: outcome.error,
+        lastCheckedAt: now,
+      },
+    });
+}
+
+async function runMonitoredStep<T>(
+  sourceId: MonitoredSourceId,
+  step: () => Promise<T>,
+): Promise<T> {
+  try {
+    const result = await step();
+    await recordMonitoredStep(sourceId, {
+      status: "ok",
+      ...monitoredStepCounts(result),
+    });
+    return result;
+  } catch (err) {
+    const message = err instanceof Error ? err.message : "Errore sconosciuto";
+    await recordMonitoredStep(sourceId, {
+      status: "error",
+      error: message,
+    }).catch((statusErr) => {
+      logger.error(
+        { err: statusErr, source: sourceId },
+        "Failed to record monitored step status",
+      );
+    });
+    throw err;
+  }
+}
+
 async function runIngestionCycle(): Promise<void> {
   await runIngestion().catch(() => {});
-  await enrichAlboAttachments().catch((err) => {
-    logger.error({ err }, "Albo attachment enrichment cycle failed");
-  });
-  await extractDocumentMarkdown().catch((err) => {
-    logger.error({ err }, "Document Markdown extraction cycle failed");
-  });
+  await runMonitoredStep("albo-attachments", enrichAlboAttachments).catch(
+    (err) => {
+      logger.error({ err }, "Albo attachment enrichment cycle failed");
+    },
+  );
+  await runMonitoredStep("document-markdown", extractDocumentMarkdown).catch(
+    (err) => {
+      logger.error({ err }, "Document Markdown extraction cycle failed");
+    },
+  );
   await runAttuazioneIngestion().catch(() => {});
   await runItaliadomaniIngestion().catch((err) => {
     logger.error({ err }, "Italia Domani PNRR ingestion cycle failed");
   });
   await runAnacContractsIngestion().catch(() => {});
-  await runContractsGeocoding().catch((err) => {
+  await runMonitoredStep(
+    "anac-contracts-geocoding",
+    runContractsGeocoding,
+  ).catch((err) => {
     logger.error({ err }, "Contracts geocoding pass failed");
   });
   await runOpendataIngestion().catch(() => {});
   await runPerformanceIngestion().catch((err) => {
     logger.error({ err }, "Performance ingestion cycle failed");
   });
-  await runOrganiSedutaSync().catch((err) => {
+  await runMonitoredStep("organi-sedute", runOrganiSedutaSync).catch((err) => {
     logger.error({ err }, "Organi/sedute sync failed");
   });
-  await refreshFundamentalActSuggestions().catch((err) => {
+  await runMonitoredStep(
+    "fundamental-acts",
+    refreshFundamentalActSuggestions,
+  ).catch((err) => {
     logger.error({ err }, "Fundamental act suggestions refresh failed");
   });
-  await refreshBandiSuggestions().catch((err) => {
+  await runMonitoredStep("bandi", refreshBandiSuggestions).catch((err) => {
     logger.error({ err }, "Bandi suggestions refresh failed");
   });
   await runConfiscatedAssetsIngestion().catch(() => {});
-  await runConfiscatedAssetsGeocoding().catch((err) => {
+  await runMonitoredStep(
+    "anbsc-beni-confiscati-geocoding",
+    runConfiscatedAssetsGeocoding,
+  ).catch((err) => {
     logger.error({ err }, "Confiscated assets geocoding pass failed");
   });
-  await reconcileThemeCounters();
+  await runMonitoredStep("theme-counters", reconcileThemeCounters).catch(
+    (err) => {
+      logger.error({ err }, "Theme counter reconciliation failed");
+    },
+  );
   // Pre-genera le sintesi "In breve" degli atti dell'Albo (proattivo, non lazy):
   // così le anteprime nelle liste web/mobile sono già popolate senza dover aprire
   // ogni atto. Idempotente, con rate-limit e protezione costi (vedi lib/briefs).
   // Gira per ultimo perché dipende dal testo estratto (extractDocumentMarkdown).
-  await runBriefBatchGuarded().catch((err) => {
-    logger.error({ err }, "Brief generation batch failed");
-  });
+  await runMonitoredStep("brief-generation", runBriefBatchGuarded).catch(
+    (err) => {
+      logger.error({ err }, "Brief generation batch failed");
+    },
+  );
 }
 
 export function startIngestionScheduler(): void {
