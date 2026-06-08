@@ -46,12 +46,21 @@ export const PUBLIC_INDEXABLE_ROUTES = [
     rationale: "Indice pubblico del monitoraggio civico.",
   },
   {
+    path: "/promessometro",
+    rationale:
+      "Pagina pubblica di monitoraggio documentale delle promesse programmatiche.",
+  },
+  {
     path: "/monitoraggio/nuovo",
     rationale: "Modulo pubblico per nuove segnalazioni civiche.",
   },
   {
     path: "/legalita",
     rationale: "Pagina pubblica su legalità e beni confiscati.",
+  },
+  {
+    path: "/legalita/timeline",
+    rationale: "Timeline pubblica di legalità e memoria civica.",
   },
   { path: "/delibere", rationale: "Indice pubblico delle delibere." },
   { path: "/convocazioni", rationale: "Indice pubblico delle convocazioni." },
