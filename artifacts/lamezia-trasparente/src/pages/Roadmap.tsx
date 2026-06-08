@@ -5,7 +5,6 @@ import {
   CheckCircle2,
   CircleDotDashed,
 } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
 import { PageMeta } from "@/components/seo/PageMeta";
 
 import {
@@ -18,7 +17,7 @@ import {
 } from "@/data/roadmap";
 
 const STATUS_STYLES = {
-  "pianificato":
+  pianificato:
     "border-violet-200 bg-violet-50 text-violet-800 dark:border-violet-900/60 dark:bg-violet-950/40 dark:text-violet-200",
   "in sviluppo":
     "border-amber-200 bg-amber-50 text-amber-800 dark:border-amber-900/60 dark:bg-amber-950/40 dark:text-amber-200",
@@ -32,12 +31,11 @@ const STATUS_STYLES = {
 
 function StatusBadge({ status }: { status: RoadmapStatus }) {
   return (
-    <Badge
-      variant="outline"
-      className={`rounded-full ${STATUS_STYLES[status]}`}
+    <span
+      className={`inline-flex items-center whitespace-nowrap rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors ${STATUS_STYLES[status]}`}
     >
       {status}
-    </Badge>
+    </span>
   );
 }
 
@@ -61,25 +59,30 @@ export function Roadmap() {
             </h1>
             <p className="text-lg leading-8 text-muted-foreground">
               Questa pagina descrive lo stato dei moduli di Lamezia Trasparente
-              Monitor con linguaggio prudente. Serve a distinguere ciò che è
-              già consultabile, ciò che è sperimentale e ciò che richiede
-              ulteriori verifiche, senza promettere date o copertura completa.
+              Monitor con linguaggio prudente. Serve a distinguere ciò che è già
+              consultabile, ciò che è sperimentale e ciò che richiede ulteriori
+              verifiche, senza promettere date o copertura completa.
             </p>
           </div>
-          <div className="rounded-2xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-950 dark:border-amber-900/60 dark:bg-amber-950/30 dark:text-amber-100">
+          <aside
+            className="rounded-2xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-950 dark:border-amber-900/60 dark:bg-amber-950/30 dark:text-amber-100"
+            aria-labelledby="criteri-lettura-roadmap"
+          >
             <div className="flex gap-3">
               <AlertTriangle
                 className="mt-0.5 h-5 w-5 shrink-0"
                 aria-hidden="true"
               />
               <div className="space-y-2">
-                <p className="font-semibold">{ROADMAP_READING_CRITERIA.title}</p>
+                <h2 id="criteri-lettura-roadmap" className="font-semibold">
+                  {ROADMAP_READING_CRITERIA.title}
+                </h2>
                 <p className="leading-6">
                   {ROADMAP_READING_CRITERIA.description}
                 </p>
               </div>
             </div>
-          </div>
+          </aside>
         </header>
 
         <section className="mt-10" aria-labelledby="stati-roadmap">
@@ -90,19 +93,27 @@ export function Roadmap() {
             Stati usati nella roadmap
           </h2>
           <div className="mt-4 grid gap-4 md:grid-cols-2 lg:grid-cols-5">
-            {ROADMAP_STATUS_SUMMARY.map((item) => (
-              <article
-                key={item.status}
-                className="rounded-2xl border border-border bg-card p-4 shadow-sm"
-              >
-                <h3 className="flex items-center gap-2 text-base font-semibold">
-                  <StatusBadge status={item.status} />
-                </h3>
-                <p className="mt-3 text-sm leading-6 text-muted-foreground">
-                  {item.description}
-                </p>
-              </article>
-            ))}
+            {ROADMAP_STATUS_SUMMARY.map((item, index) => {
+              const statusHeadingId = `stato-roadmap-${index}`;
+
+              return (
+                <article
+                  key={item.status}
+                  className="rounded-2xl border border-border bg-card p-4 shadow-sm"
+                  aria-labelledby={statusHeadingId}
+                >
+                  <h3
+                    id={statusHeadingId}
+                    className="flex items-center gap-2 text-base font-semibold"
+                  >
+                    <StatusBadge status={item.status} />
+                  </h3>
+                  <p className="mt-3 text-sm leading-6 text-muted-foreground">
+                    {item.description}
+                  </p>
+                </article>
+              );
+            })}
           </div>
         </section>
 
@@ -129,66 +140,74 @@ export function Roadmap() {
           </div>
 
           <div className="mt-6 grid gap-5 lg:grid-cols-2">
-            {ROADMAP_MODULES.map((module) => (
-              <article
-                key={module.name}
-                className="flex h-full flex-col rounded-3xl border border-border bg-card p-5 shadow-sm"
-              >
-                <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-                  <h3 className="font-display text-xl font-semibold tracking-tight">
-                    {module.name}
-                  </h3>
-                  <StatusBadge status={module.status} />
-                </div>
+            {ROADMAP_MODULES.map((module, index) => {
+              const moduleHeadingId = `modulo-roadmap-${index}`;
 
-                <p className="mt-4 text-sm leading-6 text-muted-foreground">
-                  {module.description}
-                </p>
-
-                <dl className="mt-5 grid gap-4 text-sm">
-                  <div>
-                    <dt className="font-semibold text-foreground">
-                      Fonti dati previste o usate
-                    </dt>
-                    <dd className="mt-1 leading-6 text-muted-foreground">
-                      {module.sources}
-                    </dd>
-                  </div>
-                  <div>
-                    <dt className="font-semibold text-foreground">
-                      Limiti noti
-                    </dt>
-                    <dd className="mt-1 leading-6 text-muted-foreground">
-                      {module.limits}
-                    </dd>
-                  </div>
-                  <div>
-                    <dt className="font-semibold text-foreground">
-                      Priorità prudente
-                    </dt>
-                    <dd className="mt-1 leading-6 text-muted-foreground">
-                      {module.priority}
-                    </dd>
-                  </div>
-                </dl>
-
-                <div className="mt-5 flex flex-wrap gap-2 pt-1">
-                  {module.hrefs.map((link) => (
-                    <Link
-                      key={`${module.name}-${link.href}`}
-                      href={link.href}
-                      className="inline-flex items-center gap-2 rounded-full border border-border px-3 py-1.5 text-xs font-medium text-foreground transition-colors hover:border-primary hover:text-primary"
+              return (
+                <article
+                  key={module.name}
+                  className="flex h-full flex-col rounded-3xl border border-border bg-card p-5 shadow-sm"
+                  aria-labelledby={moduleHeadingId}
+                >
+                  <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                    <h3
+                      id={moduleHeadingId}
+                      className="font-display text-xl font-semibold tracking-tight"
                     >
-                      <CheckCircle2
-                        className="h-3.5 w-3.5"
-                        aria-hidden="true"
-                      />
-                      {link.label}
-                    </Link>
-                  ))}
-                </div>
-              </article>
-            ))}
+                      {module.name}
+                    </h3>
+                    <StatusBadge status={module.status} />
+                  </div>
+
+                  <p className="mt-4 text-sm leading-6 text-muted-foreground">
+                    {module.description}
+                  </p>
+
+                  <dl className="mt-5 grid gap-4 text-sm">
+                    <div>
+                      <dt className="font-semibold text-foreground">
+                        Fonti dati previste o usate
+                      </dt>
+                      <dd className="mt-1 leading-6 text-muted-foreground">
+                        {module.sources}
+                      </dd>
+                    </div>
+                    <div>
+                      <dt className="font-semibold text-foreground">
+                        Limiti noti
+                      </dt>
+                      <dd className="mt-1 leading-6 text-muted-foreground">
+                        {module.limits}
+                      </dd>
+                    </div>
+                    <div>
+                      <dt className="font-semibold text-foreground">
+                        Priorità prudente
+                      </dt>
+                      <dd className="mt-1 leading-6 text-muted-foreground">
+                        {module.priority}
+                      </dd>
+                    </div>
+                  </dl>
+
+                  <div className="mt-5 flex flex-wrap gap-2 pt-1">
+                    {module.hrefs.map((link) => (
+                      <Link
+                        key={`${module.name}-${link.href}`}
+                        href={link.href}
+                        className="inline-flex items-center gap-2 rounded-full border border-border px-3 py-1.5 text-xs font-medium text-foreground transition-colors hover:border-primary hover:text-primary"
+                      >
+                        <CheckCircle2
+                          className="h-3.5 w-3.5"
+                          aria-hidden="true"
+                        />
+                        {link.label}
+                      </Link>
+                    ))}
+                  </div>
+                </article>
+              );
+            })}
           </div>
         </section>
 
@@ -203,14 +222,21 @@ export function Roadmap() {
             Limiti e moduli esclusi dalla roadmap v0
           </h2>
           <div className="mt-4 grid gap-4 text-sm leading-6 text-muted-foreground md:grid-cols-3">
-            {ROADMAP_LIMIT_NOTES.map((note) => (
-              <div key={note.title}>
-                <h3 className="font-semibold text-foreground">
-                  {note.title}
-                </h3>
-                <p className="mt-1">{note.description}</p>
-              </div>
-            ))}
+            {ROADMAP_LIMIT_NOTES.map((note, index) => {
+              const noteHeadingId = `limite-roadmap-${index}`;
+
+              return (
+                <div key={note.title} aria-labelledby={noteHeadingId}>
+                  <h3
+                    id={noteHeadingId}
+                    className="font-semibold text-foreground"
+                  >
+                    {note.title}
+                  </h3>
+                  <p className="mt-1">{note.description}</p>
+                </div>
+              );
+            })}
           </div>
         </section>
       </div>
