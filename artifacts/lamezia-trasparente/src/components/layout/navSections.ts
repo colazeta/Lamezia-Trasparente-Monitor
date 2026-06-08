@@ -21,6 +21,7 @@ import {
   Rss,
   Code2,
   BookOpen,
+  CircleDotDashed,
   Scale3D,
 } from "lucide-react";
 
@@ -208,6 +209,13 @@ export const NAV_GROUPS: NavSection[] = [
         description:
           "Metodo di raccolta, trattamento e lettura prudente degli indicatori.",
         icon: FileSearch,
+      },
+      {
+        href: "/roadmap",
+        label: "Roadmap",
+        description:
+          "Stato pubblico, limiti e priorità prudenti dei moduli civici.",
+        icon: CircleDotDashed,
       },
       {
         href: "/note-legali",

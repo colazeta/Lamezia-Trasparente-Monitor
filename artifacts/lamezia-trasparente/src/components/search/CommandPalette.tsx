@@ -31,6 +31,7 @@ import {
   Info,
   Mail,
   MailQuestion,
+  CircleDotDashed,
 } from "lucide-react";
 import {
   CommandDialog,
@@ -83,6 +84,7 @@ const ALL_ITEMS: NavItem[] = [
   { href: "/opendata", label: "Open Data", icon: Database, group: "Dati & Analisi", keywords: "dataset csv download" },
   { href: "/fonti-dati", label: "Fonti dati", icon: BookOpen, group: "Dati & Analisi", keywords: "fonti ufficiali estratti arricchiti limiti aggiornamento" },
   { href: "/metodologia", label: "Metodologia", icon: FileSearch, group: "Dati & Analisi", keywords: "metodo indicatori cautela verifiche" },
+  { href: "/roadmap", label: "Roadmap", icon: CircleDotDashed, group: "Dati & Analisi", keywords: "stato moduli priorità limiti pianificato sviluppo sperimentale" },
   { href: "/note-legali", label: "Note legali", icon: Scale3D, group: "Dati & Analisi", keywords: "cautele indicatori interpretazione legalità" },
 
   { href: "/feeds", label: "Feed e Abbonamenti", icon: Rss, group: "Strumenti", keywords: "rss atom notifiche" },

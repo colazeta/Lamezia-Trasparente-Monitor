@@ -9,16 +9,15 @@ import { Badge } from "@/components/ui/badge";
 import { PageMeta } from "@/components/seo/PageMeta";
 
 const STATUS_STYLES = {
-  pubblicato:
-    "border-emerald-200 bg-emerald-50 text-emerald-800 dark:border-emerald-900/60 dark:bg-emerald-950/40 dark:text-emerald-200",
-  v0: "border-sky-200 bg-sky-50 text-sky-800 dark:border-sky-900/60 dark:bg-sky-950/40 dark:text-sky-200",
-  "in refinement":
-    "border-amber-200 bg-amber-50 text-amber-800 dark:border-amber-900/60 dark:bg-amber-950/40 dark:text-amber-200",
-  pianificato:
+  "pianificato":
     "border-violet-200 bg-violet-50 text-violet-800 dark:border-violet-900/60 dark:bg-violet-950/40 dark:text-violet-200",
-  "dipendente da dati esterni":
-    "border-orange-200 bg-orange-50 text-orange-800 dark:border-orange-900/60 dark:bg-orange-950/40 dark:text-orange-200",
-  "in valutazione":
+  "in sviluppo":
+    "border-amber-200 bg-amber-50 text-amber-800 dark:border-amber-900/60 dark:bg-amber-950/40 dark:text-amber-200",
+  "v0 disponibile":
+    "border-emerald-200 bg-emerald-50 text-emerald-800 dark:border-emerald-900/60 dark:bg-emerald-950/40 dark:text-emerald-200",
+  sperimentale:
+    "border-sky-200 bg-sky-50 text-sky-800 dark:border-sky-900/60 dark:bg-sky-950/40 dark:text-sky-200",
+  "da validare":
     "border-slate-200 bg-slate-50 text-slate-700 dark:border-slate-800 dark:bg-slate-900/60 dark:text-slate-200",
 } as const;
 
@@ -28,39 +27,37 @@ type RoadmapModule = {
   name: string;
   status: RoadmapStatus;
   description: string;
-  dependencies: string;
+  sources: string;
   limits: string;
-  nextSteps: string;
+  priority: string;
   hrefs: Array<{ href: string; label: string }>;
-  issue?: string;
 };
 
 const MODULES: RoadmapModule[] = [
   {
     name: "Albo Monitor",
-    status: "pubblicato",
+    status: "v0 disponibile",
     description:
-      "Indice pubblico degli atti dell'Albo Pretorio, organizzato per aiutare ricerca, orientamento e verifica sui documenti disponibili.",
-    dependencies:
-      "Dipende dalla continuità di pubblicazione dell'Albo ufficiale e dalla reperibilità degli allegati nella finestra pubblica.",
+      "Indice pubblico degli atti dell'Albo Pretorio pensato per orientare ricerca, lettura e verifica sui documenti disponibili.",
+    sources:
+      "Albo Pretorio e allegati pubblicati dall'ente, con rinvii alla fonte originaria quando disponibili.",
     limits:
-      "Non sostituisce l'Albo ufficiale; date, allegati e contenuti devono essere verificati sulla fonte originaria quando necessario.",
-    nextSteps:
-      "Mantenere leggibilità, rinvii alla fonte e controlli conservativi sulla qualità dei metadati.",
-    hrefs: [{ href: "/albo", label: "Vai ad Albo Pretorio" }],
-    issue: "issue #43 per questa roadmap pubblica",
+      "Non sostituisce l'Albo ufficiale; pubblicazioni, date, allegati e contenuti devono essere verificati sulla fonte primaria.",
+    priority:
+      "Mantenere tracciabilità dei rinvii, leggibilità mobile e cautele sui metadati parziali.",
+    hrefs: [{ href: "/albo", label: "Vai ad Albo Monitor" }],
   },
   {
     name: "PNRR Tracker",
-    status: "dipendente da dati esterni",
+    status: "sperimentale",
     description:
-      "Vista civica sui progetti PNRR collegati al territorio, con filtri e segnali di consultazione da leggere insieme agli atti locali e nazionali.",
-    dependencies:
-      "Dipende dagli aggiornamenti dei dataset nazionali, dai CUP disponibili e dai documenti locali pubblicati.",
+      "Vista civica sui progetti PNRR collegati al territorio, da leggere come supporto di orientamento e non come registro esaustivo.",
+    sources:
+      "Dataset e documenti pubblici nazionali o locali quando disponibili, CUP e atti collegati se pubblicati.",
     limits:
-      "Stato, importi e cronoprogrammi possono cambiare nelle fonti; la pagina evita di presentare il dato come completo o definitivo.",
-    nextSteps:
-      "Rafforzare collegamenti documentali e note di qualità quando le fonti espongono dati verificabili.",
+      "Importi, stati e cronoprogrammi possono cambiare nelle fonti; la copertura dipende dalla disponibilità e qualità dei dati pubblici.",
+    priority:
+      "Rafforzare collegamenti documentali e note di qualità prima di ampliare filtri o sintesi.",
     hrefs: [
       { href: "/pnrr", label: "Vai al PNRR Tracker" },
       { href: "/fonti-dati", label: "Fonti dati" },
@@ -68,57 +65,57 @@ const MODULES: RoadmapModule[] = [
   },
   {
     name: "Incarichimetro",
-    status: "v0",
+    status: "sperimentale",
     description:
-      "Modulo di lettura su incarichi, affidamenti e ricorrenze amministrative, pensato per evidenziare indicatori da verificare sugli atti.",
-    dependencies:
-      "Dipende da feed, determine, CIG/CUP quando presenti e da classificazioni conservative.",
+      "Modulo di lettura su incarichi, affidamenti e ricorrenze amministrative, con indicatori da verificare sempre sugli atti.",
+    sources:
+      "Determine, pubblicazioni amministrative, CIG/CUP quando presenti e classificazioni conservative derivate da fonti pubbliche.",
     limits:
       "Ricorrenze e pattern sono segnali di monitoraggio, non evidenze di irregolarità o responsabilità individuale.",
-    nextSteps:
-      "Proseguire con refinement tecnico e metodologico sulle etichette, sui filtri e sulla tracciabilità delle fonti.",
+    priority:
+      "Rendere più esplicite fonte, criterio di classificazione e significato prudente degli indicatori.",
     hrefs: [{ href: "/incarichimetro", label: "Vai a Incarichimetro" }],
   },
   {
-    name: "FOIA Machine",
-    status: "in refinement",
+    name: "FOIA Machine / Accesso civico",
+    status: "v0 disponibile",
     description:
-      "Area per orientare richieste di accesso civico e raccolta di elementi informativi utili a una domanda documentata.",
-    dependencies:
-      "Dipende dalla chiarezza dell'oggetto richiesto, dalle fonti già consultate e dall'eventuale registro pubblico degli accessi.",
+      "Area di orientamento per richieste di accesso civico e raccolta di elementi utili a una domanda documentata.",
+    sources:
+      "Normativa e indicazioni pubbliche sull'accesso civico, fonti già consultate dall'utente e documenti amministrativi richiamati nella richiesta.",
     limits:
-      "La pagina non fornisce consulenza legale e non assicura esiti o tempi delle risposte istituzionali.",
-    nextSteps:
-      "Migliorare testi guida, esempi prudenti e collegamenti alle note metodologiche senza automatismi non verificati.",
+      "Non fornisce consulenza legale, non assicura esiti o tempi di risposta e non invia richieste in modo automatico.",
+    priority:
+      "Migliorare testi guida, esempi prudenti e collegamenti alle note metodologiche.",
     hrefs: [{ href: "/accesso-civico", label: "Vai ad Accesso civico" }],
   },
   {
-    name: "Capacità amministrativa / macchina comunale",
-    status: "in valutazione",
+    name: "Macchina comunale / capacità amministrativa",
+    status: "da validare",
     description:
-      "Area di analisi sulle condizioni organizzative che possono incidere sulla capacità amministrativa, letta tramite indicatori pubblici e caveat.",
-    dependencies:
-      "Richiede basi dati documentate, definizioni stabili e confronti coerenti tra fonti eterogenee.",
+      "Area di analisi sulle condizioni organizzative che possono aiutare a formulare domande di monitoraggio sulla capacità amministrativa.",
+    sources:
+      "Dati e documenti pubblici su performance, organizzazione, procedimenti e atti fondamentali, solo dove fonte e metodo sono documentabili.",
     limits:
-      "Gli indicatori non spiegano da soli cause, intenti o responsabilità; servono come supporto per domande di monitoraggio.",
-    nextSteps:
-      "Consolidare glossario, metriche ammissibili e soglie descrittive prima di ampliare la pubblicazione.",
+      "Gli indicatori non spiegano da soli cause, intenti o responsabilità; prima di nuove viste servono definizioni stabili e caveat.",
+    priority:
+      "Validare glossario, metriche ammissibili e soglie descrittive senza introdurre ranking impropri.",
     hrefs: [
-      { href: "/performance", label: "Indicatori performance" },
+      { href: "/performance", label: "Performance" },
       { href: "/metodologia", label: "Metodologia" },
     ],
   },
   {
     name: "Trasparenza organizzativa",
-    status: "pubblicato",
+    status: "v0 disponibile",
     description:
-      "Percorsi di consultazione su organi, amministratori e informazioni pubbliche organizzative già presenti nel sito.",
-    dependencies:
-      "Dipende dalla pubblicazione e dalla manutenzione delle informazioni disponibili nelle fonti pubbliche.",
+      "Percorsi di consultazione su organi, amministratori e informazioni organizzative pubbliche già presenti nel sito.",
+    sources:
+      "Sezioni istituzionali, atti pubblici e schede informative disponibili presso le fonti dell'ente.",
     limits:
-      "Le schede sono informative e vanno lette con riferimento agli atti e alle sezioni istituzionali aggiornate.",
-    nextSteps:
-      "Mantenere accessibilità, metadata e rinvii alle fonti senza introdurre valutazioni personali.",
+      "Le schede sono informative e devono essere lette con riferimento agli atti e alle sezioni istituzionali aggiornate.",
+    priority:
+      "Preservare accessibilità, metadata e rinvii alle fonti senza introdurre valutazioni personali.",
     hrefs: [
       { href: "/organi", label: "Organi istituzionali" },
       { href: "/amministratori", label: "Amministratori" },
@@ -126,96 +123,109 @@ const MODULES: RoadmapModule[] = [
   },
   {
     name: "Registro criticità pubbliche",
-    status: "v0",
+    status: "in sviluppo",
     description:
-      "Spazio di monitoraggio civico per raccogliere elementi verificabili, bisogni informativi e segnalazioni documentali.",
-    dependencies:
-      "Dipende dalla qualità delle fonti allegate, dalla moderazione redazionale e dalla distinzione tra fatto, richiesta e interpretazione.",
+      "Spazio di monitoraggio civico per raccogliere elementi verificabili, bisogni informativi e richieste di attenzione documentale.",
+    sources:
+      "Segnalazioni civiche, documenti allegati, atti pubblici e verifiche redazionali sulle fonti disponibili.",
     limits:
-      "Una criticità registrata è un bisogno di verifica o una questione di trasparenza, non una conclusione su condotte o responsabilità.",
-    nextSteps:
-      "Rendere più espliciti stato di verifica, fonte disponibile e percorso di aggiornamento per ciascun elemento.",
-    hrefs: [{ href: "/monitoraggio", label: "Vai a Monitoraggio civico" }],
-  },
-  {
-    name: "Dashboard capacità amministrativa",
-    status: "pianificato",
-    description:
-      "Sintesi futura di indicatori amministrativi selezionati, da pubblicare solo quando metrica, fonte e limiti saranno documentati.",
-    dependencies:
-      "Richiede dataset affidabili, criteri di aggiornamento e note metodologiche prima della diffusione pubblica.",
-    limits:
-      "Non sono indicate date di rilascio; ogni visualizzazione dovrà evitare ranking impropri o letture accusatorie.",
-    nextSteps:
-      "Valutare un v0 con poche metriche spiegate, collegamenti alle fonti e avvisi di interpretazione.",
+      "Una criticità registrata è una questione di trasparenza o un bisogno di verifica, non una conclusione su condotte o responsabilità.",
+    priority:
+      "Esplicitare stato di verifica, fonte disponibile e percorso di aggiornamento prima di ampliare la pubblicazione.",
     hrefs: [
-      { href: "/statistiche", label: "Statistiche esistenti" },
-      { href: "/performance", label: "Performance" },
+      { href: "/monitoraggio", label: "Monitoraggio civico" },
+      { href: "/segnalazioni", label: "Segnalazioni" },
     ],
   },
   {
-    name: "Open data / API",
-    status: "in refinement",
+    name: "Beni confiscati",
+    status: "v0 disponibile",
     description:
-      "Catalogo e strumenti per riuso civico dei dati disponibili, inclusi dataset, risorse e documentazione per sviluppatori.",
-    dependencies:
-      "Dipende dai cataloghi sorgente, dagli endpoint disponibili e dalla coerenza tra API, client e validazioni generate.",
+      "Schede e mappe informative sui beni confiscati, con lettura civica orientata a riuso, stato informativo e fonti disponibili.",
+    sources:
+      "Informazioni pubbliche e atti amministrativi disponibili sui beni, con rinvii alla fonte quando presenti.",
+    limits:
+      "La presenza di un bene non implica valutazioni su persone o responsabilità; dati e stato d'uso possono richiedere verifica sulla fonte.",
+    priority:
+      "Mantenere cautele testuali e aggiornare limiti quando cambiano fonti o qualità dei dati.",
+    hrefs: [{ href: "/beni-confiscati", label: "Vai a Beni confiscati" }],
+  },
+  {
+    name: "Open Data",
+    status: "v0 disponibile",
+    description:
+      "Catalogo e strumenti per il riuso civico dei dati disponibili, inclusi dataset, risorse e documentazione tecnica.",
+    sources:
+      "Cataloghi sorgente, snapshot pubblicati dal progetto, API e metadati documentati nelle pagine dedicate.",
     limits:
       "Snapshot e API possono riflettere trasformazioni tecniche; per usi ufficiali occorre controllare la fonte primaria.",
-    nextSteps:
-      "Migliorare chiarezza su formati, limiti, frequenza di aggiornamento e differenza tra dato ufficiale ed elaborazione civica.",
+    priority:
+      "Chiarire formati, frequenza di aggiornamento, limiti e differenza tra dato ufficiale ed elaborazione civica.",
     hrefs: [
-      { href: "/opendata", label: "Open data" },
+      { href: "/opendata", label: "Open Data" },
       { href: "/sviluppatori", label: "API e sviluppatori" },
     ],
   },
   {
-    name: "Metodologia / glossario",
-    status: "pubblicato",
+    name: "Convocazioni e delibere",
+    status: "v0 disponibile",
     description:
-      "Note di metodo, cautele linguistiche e glossario operativo per leggere indicatori, fonti e limiti del progetto.",
-    dependencies:
-      "Dipende dall'allineamento continuo con nuove pagine, dataset e moduli pubblicati.",
+      "Percorsi di consultazione su sedute, convocazioni e delibere per seguire l'attività degli organi istituzionali.",
+    sources:
+      "Convocazioni, delibere, verbali e pubblicazioni istituzionali quando reperibili dalle fonti pubbliche.",
     limits:
-      "Le note metodologiche non trasformano dati incompleti in conclusioni definitive; servono a rendere espliciti limiti e verifiche.",
-    nextSteps:
-      "Aggiornare il glossario quando nuovi indicatori vengono resi pubblici o quando emergono ambiguità interpretative.",
+      "Calendari, allegati e testi possono essere incompleti o aggiornati successivamente; la fonte istituzionale resta il riferimento.",
+    priority:
+      "Conservare collegamenti alle fonti e distinguere chiaramente dati disponibili, assenti o da verificare.",
     hrefs: [
-      { href: "/metodologia", label: "Metodologia" },
-      { href: "/note-legali", label: "Note legali" },
+      { href: "/convocazioni", label: "Convocazioni" },
+      { href: "/delibere", label: "Delibere" },
+    ],
+  },
+  {
+    name: "Contratti, bandi e pareri",
+    status: "v0 disponibile",
+    description:
+      "Aree pubbliche già navigabili per orientarsi tra contratti, bandi, finanziamenti e documenti di vigilanza.",
+    sources:
+      "Atti pubblici, pubblicazioni amministrative, CIG/CUP ove disponibili e documenti di vigilanza richiamati nelle schede.",
+    limits:
+      "Le viste aiutano la consultazione ma non certificano completezza o correttezza del dato rispetto alla fonte ufficiale.",
+    priority:
+      "Tenere allineate note di fonte, limiti e linguaggio prudente nelle schede pubbliche.",
+    hrefs: [
+      { href: "/contratti", label: "Contratti" },
+      { href: "/bandi", label: "Bandi" },
+      { href: "/pareri", label: "Pareri" },
     ],
   },
 ];
 
 const STATUS_SUMMARY: Array<{ status: RoadmapStatus; description: string }> = [
   {
-    status: "pubblicato",
-    description:
-      "Pagina o modulo già raggiungibile, con limiti e fonti da verificare.",
-  },
-  {
-    status: "v0",
-    description:
-      "Prima versione pubblica utile, ancora soggetta a miglioramenti mirati.",
-  },
-  {
-    status: "in refinement",
-    description:
-      "Funzione esistente o impostata, in miglioramento tecnico/metodologico.",
-  },
-  {
     status: "pianificato",
-    description: "Area prevista, senza promessa di date o copertura completa.",
+    description:
+      "Area prevista o ipotizzata, senza date, copertura garantita o impegni di rilascio.",
   },
   {
-    status: "dipendente da dati esterni",
+    status: "in sviluppo",
     description:
-      "Modulo condizionato da disponibilità, qualità o aggiornamento delle fonti.",
+      "Area in lavorazione o refinement, da pubblicare solo con fonti, limiti e verifiche adeguati.",
   },
   {
-    status: "in valutazione",
+    status: "v0 disponibile",
     description:
-      "Ambito da definire con ulteriori verifiche prima di una pubblicazione stabile.",
+      "Prima versione pubblica raggiungibile, utile alla consultazione ma ancora soggetta a miglioramenti.",
+  },
+  {
+    status: "sperimentale",
+    description:
+      "Modulo consultabile con cautele rafforzate perché dipende da dati, classificazioni o integrazioni ancora da consolidare.",
+  },
+  {
+    status: "da validare",
+    description:
+      "Ambito da definire meglio prima di ampliare esposizione pubblica o metriche di sintesi.",
   },
 ];
 
@@ -235,23 +245,24 @@ export function Roadmap() {
     <>
       <PageMeta
         title="Roadmap pubblica"
-        description="Stato prudente dei moduli di Lamezia Trasparente Monitor, con dipendenze, limiti e prossimi passi senza promesse non verificate."
+        description="Stato prudente dei moduli di Lamezia Trasparente Monitor, con fonti, limiti e priorità senza promesse non verificate."
         path="/roadmap"
       />
       <div className="container mx-auto max-w-6xl px-4 py-8 md:px-6 md:py-12">
         <header className="space-y-5">
           <div className="inline-flex items-center gap-2 rounded-full border border-border bg-muted/40 px-3 py-1 text-xs font-medium text-muted-foreground">
             <CircleDotDashed className="h-3.5 w-3.5" aria-hidden="true" />
-            Roadmap pubblica v0 · collegata a issue #43
+            Roadmap pubblica v0 · issue #42
           </div>
           <div className="max-w-3xl space-y-4">
             <h1 className="font-display text-4xl font-bold tracking-tight md:text-5xl">
-              Roadmap pubblica del monitor
+              Roadmap pubblica del monitor civico
             </h1>
             <p className="text-lg leading-8 text-muted-foreground">
-              Questa pagina descrive lo stato attuale dei moduli di Lamezia
-              Trasparente Monitor con linguaggio prudente, senza promettere
-              date, coperture o funzionalità non verificate.
+              Questa pagina descrive lo stato dei moduli di Lamezia Trasparente
+              Monitor con linguaggio prudente. Serve a distinguere ciò che è
+              già consultabile, ciò che è sperimentale e ciò che richiede
+              ulteriori verifiche, senza promettere date o copertura completa.
             </p>
           </div>
           <div className="rounded-2xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-950 dark:border-amber-900/60 dark:bg-amber-950/30 dark:text-amber-100">
@@ -260,23 +271,27 @@ export function Roadmap() {
                 className="mt-0.5 h-5 w-5 shrink-0"
                 aria-hidden="true"
               />
-              <p>
-                Gli stati indicano maturità e dipendenze del progetto civico.
-                Non costituiscono valutazioni sull'operato di persone o uffici e
-                vanno letti insieme a fonti, metodologia e note legali.
-              </p>
+              <div className="space-y-2">
+                <p className="font-semibold">Criterio di lettura degli stati</p>
+                <p className="leading-6">
+                  Gli stati sono assegnati in base a disponibilità della pagina
+                  pubblica, tracciabilità delle fonti, maturità metodologica e
+                  limiti noti. Non indicano priorità politiche, esiti certi o
+                  completezza dei dati.
+                </p>
+              </div>
             </div>
           </div>
         </header>
 
-        <section className="mt-10" aria-labelledby="criteri-stato">
+        <section className="mt-10" aria-labelledby="stati-roadmap">
           <h2
-            id="criteri-stato"
+            id="stati-roadmap"
             className="font-display text-2xl font-semibold tracking-tight"
           >
-            Criteri di lettura degli stati
+            Stati usati nella roadmap
           </h2>
-          <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="mt-4 grid gap-4 md:grid-cols-2 lg:grid-cols-5">
             {STATUS_SUMMARY.map((item) => (
               <article
                 key={item.status}
@@ -300,12 +315,12 @@ export function Roadmap() {
                 id="moduli-monitor"
                 className="font-display text-2xl font-semibold tracking-tight"
               >
-                Stato dei moduli e delle aree pubbliche
+                Moduli inclusi in questa versione
               </h2>
               <p className="mt-2 max-w-3xl text-sm leading-6 text-muted-foreground">
-                Ogni scheda indica descrizione, dipendenze, limiti e prossimi
-                passi in forma cauta. Le issue sono riportate solo come
-                riferimento di lavoro, non come promessa di rilascio.
+                Le schede includono i moduli esistenti e pianificati richiamati
+                da issue #42. Altre issue di modulo restano autonome: qui sono
+                citate solo come aree di roadmap, senza duplicarne il lavoro.
               </p>
             </div>
             <Link
@@ -324,16 +339,9 @@ export function Roadmap() {
                 className="flex h-full flex-col rounded-3xl border border-border bg-card p-5 shadow-sm"
               >
                 <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-                  <div>
-                    <h3 className="font-display text-xl font-semibold tracking-tight">
-                      {module.name}
-                    </h3>
-                    {module.issue && (
-                      <p className="mt-1 text-xs text-muted-foreground">
-                        Riferimento: {module.issue}
-                      </p>
-                    )}
-                  </div>
+                  <h3 className="font-display text-xl font-semibold tracking-tight">
+                    {module.name}
+                  </h3>
                   <StatusBadge status={module.status} />
                 </div>
 
@@ -344,15 +352,15 @@ export function Roadmap() {
                 <dl className="mt-5 grid gap-4 text-sm">
                   <div>
                     <dt className="font-semibold text-foreground">
-                      Dipendenze principali
+                      Fonti dati previste o usate
                     </dt>
                     <dd className="mt-1 leading-6 text-muted-foreground">
-                      {module.dependencies}
+                      {module.sources}
                     </dd>
                   </div>
                   <div>
                     <dt className="font-semibold text-foreground">
-                      Cautele e limiti
+                      Limiti noti
                     </dt>
                     <dd className="mt-1 leading-6 text-muted-foreground">
                       {module.limits}
@@ -360,10 +368,10 @@ export function Roadmap() {
                   </div>
                   <div>
                     <dt className="font-semibold text-foreground">
-                      Prossimi passi prudenti
+                      Priorità prudente
                     </dt>
                     <dd className="mt-1 leading-6 text-muted-foreground">
-                      {module.nextSteps}
+                      {module.priority}
                     </dd>
                   </div>
                 </dl>
@@ -396,7 +404,7 @@ export function Roadmap() {
             id="limiti-roadmap"
             className="font-display text-2xl font-semibold tracking-tight"
           >
-            Limiti della roadmap v0
+            Limiti e moduli esclusi dalla roadmap v0
           </h2>
           <div className="mt-4 grid gap-4 text-sm leading-6 text-muted-foreground md:grid-cols-3">
             <div>
@@ -410,11 +418,12 @@ export function Roadmap() {
             </div>
             <div>
               <h3 className="font-semibold text-foreground">
-                Fonti prima delle funzioni
+                Moduli non duplicati
               </h3>
               <p className="mt-1">
-                Nuovi moduli pubblici richiedono fonti tracciabili, limiti
-                dichiarati e aggiornamenti sostenibili.
+                Le issue su moduli applicativi, hub di navigazione e
+                indicizzazione restano fuori da questa PR salvo link minimi già
+                a basso rischio.
               </p>
             </div>
             <div>
