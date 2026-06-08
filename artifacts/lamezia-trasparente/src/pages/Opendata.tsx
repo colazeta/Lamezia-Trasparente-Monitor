@@ -22,8 +22,6 @@ import {
   Code2,
   Sparkles,
 } from "lucide-react";
-import { format } from "date-fns";
-import { it } from "date-fns/locale";
 
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -42,24 +40,9 @@ import {
   EmptyTitle,
   EmptyDescription,
 } from "@/components/ui/empty";
+import { formatPublicTimeField } from "@/lib/time";
 
 const PORTAL_URL = "https://opendata.comune.lamezia-terme.cz.it";
-
-function formatDate(value: string | null | undefined) {
-  if (!value) return "—";
-  const d = new Date(value);
-  return Number.isNaN(d.getTime())
-    ? "—"
-    : format(d, "dd MMM yyyy", { locale: it });
-}
-
-function formatDateTime(value: string | null | undefined) {
-  if (!value) return "—";
-  const d = new Date(value);
-  return Number.isNaN(d.getTime())
-    ? "—"
-    : format(d, "dd MMM yyyy, HH:mm", { locale: it });
-}
 
 const LAST_VISIT_KEY = "opendata:lastVisit";
 
@@ -162,7 +145,10 @@ export function Opendata() {
           <span>
             Ultimo aggiornamento:{" "}
             <span className="font-medium text-foreground">
-              {formatDateTime(feedStatus?.lastUpdatedAt)}
+              {formatPublicTimeField(
+                feedStatus?.lastUpdatedAt,
+                "dd MMM yyyy, HH:mm",
+              )}
             </span>
             {feedStatus?.itemsTotal ? (
               <> · {feedStatus.itemsTotal} dataset monitorati</>
@@ -414,7 +400,7 @@ function DatasetCard({
             </span>{" "}
             {dataset.resourceCount === 1 ? "risorsa" : "risorse"}
             {dataset.metadataModified ? (
-              <> · agg. {formatDate(dataset.metadataModified)}</>
+              <> · agg. {formatPublicTimeField(dataset.metadataModified)}</>
             ) : null}
           </span>
           <span className="inline-flex items-center gap-0.5 font-medium text-primary group-hover:underline">

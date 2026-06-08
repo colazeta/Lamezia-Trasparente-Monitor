@@ -1,7 +1,5 @@
 import { useListFundamentalActs } from "@workspace/api-client-react";
 import { FileText, ScrollText, Info } from "lucide-react";
-import { format } from "date-fns";
-import { it } from "date-fns/locale";
 
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -14,12 +12,7 @@ import {
   EmptyDescription,
 } from "@/components/ui/empty";
 import { AlboLink } from "@/components/AlboLink";
-
-function formatDate(value: string | null | undefined, pattern = "dd MMM yyyy") {
-  if (!value) return "—";
-  const d = new Date(value);
-  return Number.isNaN(d.getTime()) ? "—" : format(d, pattern, { locale: it });
-}
+import { formatPublicTimeField } from "@/lib/time";
 
 export function AttiFondamentali() {
   const { data: acts, isLoading } = useListFundamentalActs();
@@ -82,7 +75,7 @@ export function AttiFondamentali() {
               <div className="mt-auto flex flex-col gap-3 pt-2">
                 <div className="flex items-center gap-2">
                   <Badge variant="outline" className="font-mono text-[10px]">
-                    Agg. {formatDate(act.updatedAt)}
+                    Agg. {formatPublicTimeField(act.updatedAt)}
                   </Badge>
                   {act.source === "auto" && (
                     <Badge variant="secondary" className="text-[10px]">
