@@ -2,7 +2,7 @@
 
 This document defines the controlled automation protocol for using Codex on the Lamezia Trasparente Monitor backlog.
 
-The objective is not to let Codex work indiscriminately on every open issue. The objective is to operate a controlled capacity-10 queue where issues are explored, converted into precise implementation prompts, assigned to Codex on dedicated branches, reviewed by humans through pull requests, and either routed to follow-up or recommended for closure after review.
+The objective is not to let Codex work indiscriminately on every open issue. The objective is to operate a controlled capacity-5 queue where issues are explored, converted into precise implementation prompts, assigned to Codex on dedicated branches, reviewed by humans through pull requests, and either routed to follow-up or recommended for closure after review.
 
 ## Core principle
 
@@ -10,15 +10,9 @@ Codex may work only on issues that have been explicitly marked as ready. Human r
 
 The source of truth for queue state is the issue label set. Comments are operational evidence, but they must not override labels when stale, contradictory, duplicated or explicitly superseded.
 
-## Role separation and invocation mandate
-
-Automations own issue preparation and Codex invocation only: they create useful issues, make them ready, keep prompts coherent and invoke Codex when the issue is eligible. Giovanni owns pull request review, merge decisions and issue closure decisions. Automations may inspect PRs only as evidence for labels, artifacts, validation state or concrete file/module collisions; they must not treat PR review or merge management as automation capacity.
-
-When a non-colliding issue is labelled `codex:ready` or `codex:prompted`, has no recent operative `@codex` invocation, and would keep real active operational work within the capacity-10 limit, the automation should invoke Codex directly or complete the prompt-and-invoke sequence without waiting for unrelated open PRs, reviews or merges. Open PRs are informative signals for collision checks, not a queue-saturation metric and not a bottleneck for unrelated issue invocations.
-
 ## Capacity model
 
-The Codex work queue has a controlled maximum capacity of **10 operational tasks**.
+The Codex work queue has a controlled maximum capacity of **5 operational tasks**.
 
 Operational tasks are issues in one of these states:
 
@@ -29,20 +23,9 @@ Operational tasks are issues in one of these states:
 
 `codex:review-needed` is a human review/merge wait state. It does **not** saturate the Codex work queue unless there is a concrete file/module collision with a candidate task or the same PR still needs Codex-side rework. A PR or issue waiting only for Giovanni's human review or merge is therefore outside the capacity count and blocks only new work that would touch the same files/modules or otherwise create an unresolved review conflict.
 
-Effective free slots are calculated as `10 - real active Codex operational tasks`. Human-review-pending items, including `codex:review-needed` issues and PRs awaiting Giovanni's merge decision, are excluded from that arithmetic unless they become Codex-side rework or have a concrete file/module collision with the candidate work.
+Effective free slots are calculated as `5 - real active Codex operational tasks`. Human-review-pending items, including `codex:review-needed` issues and PRs awaiting Giovanni's merge decision, are excluded from that arithmetic unless they become Codex-side rework or have a concrete file/module collision with the candidate work.
 
-### No PR, no active slot
-
-A Codex invocation counts as real active work only when at least one reviewer-verifiable artifact exists:
-
-- an open pull request targeting `main`;
-- a branch visible in GitHub with the exact ref and a recent commit SHA;
-- a concrete diff or execution artifact that a reviewer can inspect;
-- an explicit technical blocker explaining why the branch, diff or pull request could not be produced.
-
-A generic operational summary without one of those artifacts is classified as `output-without-PR`. It must not saturate the capacity-10 queue, must be routed to `codex:follow-up`, and must receive a recovery comment asking Codex to open a reviewable PR or provide the exact verifiable blocker.
-
-The governor should use all ten real active slots when eligible low-collision backlog exists. A queue below 10/10 is healthy only when there is no real eligible backlog, a concrete file/module collision, legal/copy/methodological risk, CI instability, or a decision that must be made by Giovanni before parallel work on the affected files/modules is safe. Giovanni review/merge wait alone is not a reason to pause the whole pipeline.
+The governor should use all five real active slots when eligible low-collision backlog exists. A queue below 5/5 is healthy only when there is no real eligible backlog, a concrete file/module collision, legal/copy/methodological risk, CI instability, or a decision that must be made by Giovanni before parallel work on the affected files/modules is safe. Giovanni review/merge wait alone is not a reason to pause the whole pipeline.
 
 ## Branch and pull request requirement
 
@@ -55,6 +38,15 @@ Every implementation prompt and invocation must require Codex to:
 5. include changed files/modules, validation performed, residual limitations and safeguard impact in the PR description.
 
 If Codex cannot open a pull request, it must comment on the issue with the exact technical reason and indicate the branch/diff location or the blocker that prevented branch or diff creation. Delivery without a PR is not a completed implementation state; it must be routed to `codex:follow-up` unless a human reviewer explicitly accepts another path.
+
+A Codex summary without a reviewable PR is classified as `output-without-PR` unless it includes at least one of these concrete signals:
+
+- an open pull request targeting `main`;
+- a visible branch named `codex/<issue-number>-<slug>` with recent commits;
+- an explicit technical blocker that explains why PR creation or branch/diff creation failed;
+- recent evidence of execution, such as a concrete commit SHA, validation log, artifact or diff location that a reviewer can inspect.
+
+`output-without-PR` does not count as a real active Codex slot, must not be treated as completed delivery and must not keep an issue in `codex:invoked`, `codex:prompted` or `codex:working` by itself. Route it to stale-task recovery with `codex:follow-up` unless a human reviewer confirms a valid branch, PR, blocker or reviewable diff.
 
 ## Suggested labels
 
@@ -88,6 +80,20 @@ Automation must not add a final Codex prompt on top of unresolved contradictory 
 
 At the end of cleanup, the issue thread should have at most one current operative comment for the current state: either one final Codex prompt, one blocker/follow-up comment, or one review-routing comment.
 
+## Triage checklist for `output-without-PR`
+
+Use this checklist whenever an issue has `codex:invoked`, `codex:prompted` or `codex:working` but no obvious reviewable PR. The goal is to distinguish real active work from a false active slot.
+
+1. Check for an open pull request that references the issue, targets `main` and uses a `codex/<issue-number>-<slug>` branch.
+2. If no PR exists, check whether the branch is visible and has recent commits that match the issue scope.
+3. If no branch exists, check whether the latest Codex comment includes an explicit technical blocker, including the exact reason PR creation failed and any branch, diff or artifact location.
+4. If no blocker exists, check for recent execution evidence: concrete commit SHA, validation output, artifact, patch location or other reviewer-inspectable activity.
+5. If the only evidence is a summary or completion-style comment, classify the state as `output-without-PR`.
+6. For `output-without-PR`, remove it from the real active capacity count, recommend `codex:follow-up`, and post or prepare a recovery comment requesting a new invocation with mandatory PR to `main` or an explicit blocker.
+7. Do not promote the issue to `codex:review-needed`, `codex:done` or completion routing until a PR, branch, blocker or reviewable diff is verified.
+
+Recovery comments should use neutral wording: the issue is stalled or missing reviewable evidence; do not imply bad faith by the agent or by project maintainers.
+
 ## Recommended sequence
 
 ### Automation 1 — Explore issue and prepare prompt
@@ -98,7 +104,7 @@ Purpose:
 
 1. identify the next open issue with `codex:ready` and without `codex:prompted`;
 2. exclude issues with `codex:invoked`, `codex:working`, `codex:blocked` or `codex:dangerous`;
-3. confirm that adding the issue would keep real active operational capacity at or below 10;
+3. confirm that adding the issue would keep real active operational capacity at or below 5;
 4. read title, body, labels, comments and linked context;
 5. run the comment cleanup preflight before posting anything new;
 6. classify the issue as technical, civic-methodological, UI/copy, data/API, or backlog/governance;
@@ -116,13 +122,14 @@ Frequency: every 15 minutes, offset after Automation 1.
 
 Purpose:
 
-1. identify an issue with `codex:prompted` and without `codex:invoked` or a recent operative `@codex` invocation;
+1. identify an issue with `codex:prompted` and without `codex:invoked`;
 2. verify that exactly one current operative Codex prompt exists in the issue thread;
-3. verify that invocation would keep real active operational capacity at or below 10;
+3. verify that invocation would keep real active operational capacity at or below 5;
 4. refuse invocation if the thread contains unresolved contradictory prompt/blocker/status comments;
-5. post the final `@codex` instruction or use the selected Codex integration without waiting for unrelated PR review or merge activity;
+5. post the final `@codex` instruction or use the selected Codex integration;
 6. require branch `codex/<issue-number>-<slug>`, commit, and PR targeting `main` as mandatory output;
-7. add `codex:invoked` and `codex:working`.
+7. include the stop condition that Codex must report the exact blocker if the PR, branch or reviewable diff cannot be created;
+8. add `codex:invoked` and `codex:working`.
 
 Safety rule: never invoke Codex on issues labelled `codex:blocked`, `codex:dangerous`, `needs:human-decision` or equivalent.
 
@@ -135,8 +142,9 @@ Purpose:
 1. identify issues with `codex:working`, linked pull requests or recent Codex comments;
 2. check whether a pull request exists and targets `main` from a `codex/<issue-number>-<slug>` branch;
 3. inspect whether the PR references the issue;
-4. check whether the issue acceptance criteria appear satisfied;
-5. route the issue to one of four outcomes:
+4. classify summary-only attempts with no PR, visible branch, explicit blocker or recent execution evidence as `output-without-PR`;
+5. check whether the issue acceptance criteria appear satisfied;
+6. route the issue to one of four outcomes:
    - `codex:review-needed` if a PR exists and needs human review;
    - `codex:follow-up` if no PR was opened, the delivery is incomplete, validation is failing, the task is stale, or the implementation is too broad;
    - `codex:blocked` if a safety or collision blocker prevents continuation;
@@ -144,16 +152,9 @@ Purpose:
 
 Stale-task rule: if an issue has `codex:invoked` or `codex:working` for more than 60 minutes with no PR, branch, Codex comment, commit or other concrete activity, move it to `codex:follow-up`, comment with the observed inactivity, and release operational capacity.
 
-Output-without-PR triage checklist:
+No-PR recovery rule: if an issue has `codex:prompted`, `codex:invoked` or `codex:working` and the only evidence is a Codex summary, classify it as `output-without-PR`, move it to `codex:follow-up`, request a new PR-to-`main` invocation or explicit blocker, and release operational capacity.
 
-1. verify whether GitHub shows an open PR targeting `main` for the issue branch;
-2. verify whether GitHub shows the claimed `codex/<issue-number>-<slug>` branch;
-3. if a branch is claimed, record the exact ref and latest commit SHA, or record that no such ref is visible;
-4. inspect the latest Codex summary for a direct PR URL, branch ref, commit SHA, diff location or explicit technical blocker;
-5. if none exists, classify the attempt as `output-without-PR`, move it to `codex:follow-up`, and release the active slot;
-6. post a recovery comment requiring either a reviewable PR to `main` or a precise blocker with verifiable branch/diff/SHA details.
-
-Fallback rule: if Codex reports that it could not open a PR, route to `codex:follow-up` unless the comment gives a concrete recoverable technical blocker that should become `codex:blocked`. The follow-up comment must preserve the exact technical reason and branch/diff or blocker information. If Codex claims a PR or branch exists but GitHub cannot verify it, treat the claim as `output-without-PR` until Codex provides the direct PR URL, exact ref and commit SHA, or a technical blocker.
+Fallback rule: if Codex reports that it could not open a PR, route to `codex:follow-up` unless the comment gives a concrete recoverable technical blocker that should become `codex:blocked`. The follow-up comment must preserve the exact technical reason and branch/diff or blocker information.
 
 Safety rule: this automation must not close issues automatically unless a future explicit policy allows it. The current policy is to comment with a closure recommendation only.
 
@@ -163,17 +164,17 @@ Frequency: every 30–60 minutes, or before each automation cycle.
 
 Purpose:
 
-1. count real active Codex tasks against the capacity-10 limit;
+1. count real active Codex tasks against the capacity-5 limit;
 2. exclude `codex:review-needed` and PRs/issues awaiting Giovanni review or merge from saturation unless there is concrete file/module collision or Codex-side rework;
-3. calculate effective free slots as `10 - real active Codex operational tasks`;
+3. calculate effective free slots as `5 - real active Codex operational tasks`;
 4. detect duplicate work across issues and pull requests;
-5. detect stale `codex:invoked` or `codex:working` issues with no concrete activity for more than 60 minutes;
-6. stop or slow promotion when CI fails repeatedly because of recent Codex work;
-7. add `codex:blocked` where the automation should not continue;
-8. promote safe tasks to `codex:ready` whenever real active capacity is below 10/10 and eligible low-collision backlog exists;
-9. recommend direct Codex invocation for non-colliding `codex:ready` or `codex:prompted` issues with no recent operative `@codex` invocation.
+5. detect stale `codex:prompted`, `codex:invoked` or `codex:working` issues with no PR, branch, blocker or concrete activity;
+6. detect `output-without-PR` summaries and exclude them from active capacity;
+7. stop or slow promotion when CI fails repeatedly because of recent Codex work;
+8. add `codex:blocked` where the automation should not continue;
+9. promote safe tasks to `codex:ready` whenever real active capacity is below 5/5 and eligible low-collision backlog exists.
 
-Anti-idle rule: if real active operational capacity is below 10/10, the governor should promote safe technical tasks to `codex:ready` and surface eligible `codex:ready` or `codex:prompted` issues for direct invocation until the queue is full or it records an explicit reason not to fill it. Valid reasons are absence of real eligible backlog, concrete file/module collision, legal/copy/methodological risk, CI instability, or a decision required from Giovanni before work on the same files/modules can proceed safely. Giovanni review/merge wait for non-colliding work must remain outside the queue and must not pause unrelated promotions. Prioritise typecheck/build/lint/test failures, small bugs and technical-debt tasks with low collision risk.
+Anti-idle rule: if real active operational capacity is below 5/5, the governor should promote safe technical tasks to `codex:ready` until the queue is full or it records an explicit reason not to fill it. Valid reasons are absence of real eligible backlog, concrete file/module collision, legal/copy/methodological risk, CI instability, or a decision required from Giovanni before work on the same files/modules can proceed safely. Giovanni review/merge wait for non-colliding work must remain outside the queue and must not pause unrelated promotions. Prioritise typecheck/build/lint/test failures, small bugs and technical-debt tasks with low collision risk.
 
 Collision-control minimum fields for every promotion or pause decision:
 
@@ -233,8 +234,9 @@ Every prompt prepared for Codex should include:
 11. mandatory branch name `codex/<issue-number>-<slug>`;
 12. mandatory PR requirement targeting `main`;
 13. PR fallback instruction if the PR cannot be opened;
-14. explicit stop condition;
-15. confirmation that comment cleanup was completed or was unnecessary.
+14. explicit stop condition requiring Codex to stop and report the exact blocker if it cannot open the PR or produce a reviewable branch/diff;
+15. `output-without-PR` recovery rule for summaries without PR, branch, blocker or recent execution evidence;
+16. confirmation that comment cleanup was completed or was unnecessary.
 
 ## Stop conditions
 
@@ -247,4 +249,5 @@ Codex or the automation should stop and ask for human decision when:
 - migrations, generated API packages or public data semantics would be changed without a clear source of truth;
 - the same files are already touched by an open PR in a conflicting way;
 - the issue thread contains unresolved contradictory automation comments or multiple active prompts;
-- proceeding would exceed the capacity-10 real active operational queue or create medium/high collision risk without a human decision.
+- proceeding would exceed the capacity-5 real active operational queue or create medium/high collision risk without a human decision;
+- Codex cannot open the mandatory PR to `main` and cannot provide a visible branch, reviewable diff or explicit technical blocker.
