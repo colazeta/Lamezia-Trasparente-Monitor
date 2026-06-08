@@ -12,8 +12,22 @@ export interface PnrrCensus {
   projects: PnrrProject[];
   uncensored: Publication[];
   /**
-     * When the Italia Domani census feed was last successfully updated
+     * When the PNRR census feed was last successfully updated
      * @nullable
      */
   censusLastUpdatedAt?: string | null;
+  /** Label recorded by the latest PNRR import for the data source actually used */
+  importSourceLabel: string;
+  /** URL recorded by the latest PNRR import for the data source actually used */
+  importSourceUrl: string;
+  /**
+     * Latest import status for the recorded PNRR data source
+     * @nullable
+     */
+  importSourceStatus: string | null;
+  /**
+     * Latest import warning or error recorded for the PNRR data source, when present
+     * @nullable
+     */
+  importSourceError: string | null;
 }

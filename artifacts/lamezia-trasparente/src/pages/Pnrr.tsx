@@ -125,6 +125,9 @@ export function Pnrr() {
   const uncensored: Publication[] | undefined = data?.uncensored;
   const censusLastUpdatedAt: string | null | undefined =
     data?.censusLastUpdatedAt;
+  const importSourceLabel = data?.importSourceLabel;
+  const importSourceUrl = data?.importSourceUrl;
+  const importSourceStatus = data?.importSourceStatus;
 
   const [search, setSearch] = useState("");
   const [amountFilter, setAmountFilter] = useState<AmountFilter>("all");
@@ -297,13 +300,38 @@ export function Pnrr() {
             fonti.
           </p>
           <CivicMonitorReturn context="I progetti PNRR possono essere collegati a report civici, atti, affidamenti e richieste di accesso civico come elementi documentali da verificare." />
-          {censusLastUpdatedAt && (
-            <p className="mt-2 flex items-center gap-1.5 text-xs text-muted-foreground">
-              <RefreshCw className="h-3 w-3" aria-hidden="true" />
-              Ultimo aggiornamento dati rilevato:{" "}
-              {formatDate(censusLastUpdatedAt)}
-            </p>
-          )}
+          <div className="mt-2 space-y-1 text-xs text-muted-foreground">
+            {importSourceLabel && (
+              <p className="flex flex-wrap items-center gap-1.5">
+                <ExternalLink className="h-3 w-3" aria-hidden="true" />
+                Fonte dati usata dall'ultima importazione:{" "}
+                {importSourceUrl ? (
+                  <a
+                    href={importSourceUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="font-medium text-primary hover:underline"
+                  >
+                    {importSourceLabel}
+                  </a>
+                ) : (
+                  <span className="font-medium text-foreground">
+                    {importSourceLabel}
+                  </span>
+                )}
+                {importSourceStatus && importSourceStatus !== "ok" ? (
+                  <span>· stato importazione: {importSourceStatus}</span>
+                ) : null}
+              </p>
+            )}
+            {censusLastUpdatedAt && (
+              <p className="flex items-center gap-1.5">
+                <RefreshCw className="h-3 w-3" aria-hidden="true" />
+                Ultimo aggiornamento dati rilevato:{" "}
+                {formatDate(censusLastUpdatedAt)}
+              </p>
+            )}
+          </div>
         </header>
 
         {isLoading ? (
@@ -908,22 +936,26 @@ function SourceTraceability({ project }: { project: PnrrProject }) {
       <div className="grid gap-2 text-sm md:grid-cols-3">
         <div className="rounded-md bg-card p-2">
           <Badge variant="outline" className="mb-1 text-xs shadow-none">
-            Fonte nazionale specifica
+            Fonte dati importata
           </Badge>
           <a
             href={
-              project.projectSourceUrl || ITALIA_DOMANI_PROJECTS_DATASET_URL
+              project.importSourceUrl ||
+              project.projectSourceUrl ||
+              ITALIA_DOMANI_PROJECTS_DATASET_URL
             }
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-1.5 text-primary hover:underline"
           >
             <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
-            Dataset ufficiale Italia Domani — Progetti PNRR
+            {project.importSourceLabel ||
+              "Dataset ufficiale Italia Domani — Progetti PNRR"}
           </a>
           <p className="mt-1 text-xs text-muted-foreground">
-            Dataset nazionale usato per leggere anagrafica, importi, missione e
-            stato dei CUP selezionati.
+            Fonte registrata dallo stato dell'importazione per leggere o
+            verificare anagrafica, importi, missione e stato dei CUP
+            selezionati.
           </p>
         </div>
         <div className="rounded-md bg-card p-2">
