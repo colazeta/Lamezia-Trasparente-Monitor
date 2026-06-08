@@ -42,6 +42,7 @@ import { PerformanceCompare } from "./pages/PerformanceCompare";
 import { PerformanceDetail } from "./pages/PerformanceDetail";
 import { Reports } from "./pages/Reports";
 import { FontiDati } from "./pages/FontiDati";
+import { StatoMonitoraggio } from "./pages/StatoMonitoraggio";
 import { Metodologia } from "./pages/Metodologia";
 import { Roadmap } from "./pages/Roadmap";
 import { NoteLegali } from "./pages/NoteLegali";
@@ -271,6 +272,12 @@ export function Router() {
               description="Sintesi statistiche del monitoraggio civico, utili per orientare lettura, verifica e approfondimento delle fonti."
             />
             <Route path="/fonti-dati" component={FontiDati} />
+            <PublicRouteWithMeta
+              path="/stato-monitoraggio"
+              component={StatoMonitoraggio}
+              title="Stato del monitoraggio"
+              description="Dashboard prudente sulla freschezza e copertura operativa delle fonti censite dal monitoraggio civico."
+            />
             <Route path="/metodologia" component={Metodologia} />
             <Route path="/roadmap" component={Roadmap} />
             <Route path="/note-legali" component={NoteLegali} />
