@@ -36,8 +36,51 @@ export type MacchinaComunaleSummary = {
   averageVacancyRate: number | null;
 };
 
+export type PublicAdministrativeSignal = {
+  id: string;
+  title: string;
+  source: StaffingSource & {
+    publishedAt: string;
+    sourceType: "fonte secondaria di stampa locale";
+  };
+  documentedFact: string;
+  reportedElements: readonly string[];
+  verificationNeeds: readonly string[];
+  civicUse: string;
+};
+
 export const MACCHINA_COMUNALE_DATASET_NOTE =
   "Dataset seed manuale e dimostrativo: i valori sono segnaposto tecnici per validare schema, calcoli e interfaccia. Non rappresentano la dotazione organica ufficiale del Comune di Lamezia Terme e devono essere sostituiti o confermati con fonti pubbliche documentate.";
+
+export const publicAdministrativeSignals: readonly PublicAdministrativeSignal[] =
+  [
+    {
+      id: "lametino-2026-06-06-lettera-personale",
+      title: "Segnalazione pubblica su fabbisogno e incarichi ad interim",
+      source: {
+        label:
+          "Il Lametino, 6 giugno 2026 — articolo su lettera attribuita a personale e rappresentanze",
+        url: "https://www.lametino.it/ultimora/lamezia-dirigenti-e-dipendenti-contro-alcuni-consiglieri-di-maggioranza-e-assessora-basta-accuse-alla-macchina-comunale.html",
+        publishedAt: "2026-06-06",
+        sourceType: "fonte secondaria di stampa locale",
+        note: "Fonte giornalistica utile come spunto di verifica: non sostituisce PIAO, dotazione organica, piano dei fabbisogni, atti di conferimento o documenti protocollati.",
+      },
+      documentedFact:
+        "Esistenza dell'articolo pubblicato il 6 giugno 2026; il testo riferisce di una lettera indirizzata agli organi comunali e attribuita a dirigenti, segreteria comunale, RSU, Cisl-Fp e Csa-Ral.",
+      reportedElements: [
+        "Rapporto indicato dalla fonte come circa 220 unità in servizio a fronte di oltre 550 necessarie.",
+        "Dotazione dirigenziale descritta dalla fonte come sottodimensionata, con incarichi ad interim per alcuni settori.",
+      ],
+      verificationNeeds: [
+        "Acquisire ultimo PIAO e piano triennale del fabbisogno del personale.",
+        "Verificare dotazione organica vigente e personale effettivamente in servizio per settore.",
+        "Individuare eventuali atti ufficiali sugli incarichi dirigenziali ad interim.",
+        "Verificare eventuale protocollo o pubblicazione istituzionale della lettera citata dalla stampa, se ostensibile.",
+      ],
+      civicUse:
+        "Elemento da trattare come segnale pubblico da verificare e come possibile traccia per richieste documentali, non come dato consolidato né come base per valutazioni individuali o accuse.",
+    },
+  ];
 
 export const macchinaComunaleRecords: readonly MacchinaComunaleRecord[] = [
   {
