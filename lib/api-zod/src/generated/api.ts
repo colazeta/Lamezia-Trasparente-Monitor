@@ -1976,6 +1976,7 @@ export const ListReportsResponseItem = zod.object({
   "outcome": zod.enum(['aperta', 'risolta', 'parzialmente_risolta', 'non_risolta', 'non_verificabile', 'archiviata']),
   "verificationStatus": zod.enum(['non_verificata', 'in_verifica', 'documentata', 'risposta_ricevuta', 'chiusa', 'archiviata', 'da_aggiornare']),
   "interpretiveCaution": zod.string(),
+  "publishedAt": zod.string().nullish(),
   "updatedAt": zod.string(),
   "createdAt": zod.string()
 })
@@ -2007,10 +2008,7 @@ export const CreateReportBody = zod.object({
   "institutionalResponseDate": zod.string().optional(),
   "availableData": zod.string().optional(),
   "missingData": zod.string().optional(),
-  "foiaLink": zod.string().optional(),
-  "outcome": zod.enum(['aperta', 'risolta', 'parzialmente_risolta', 'non_risolta', 'non_verificabile', 'archiviata']).optional(),
-  "verificationStatus": zod.enum(['non_verificata', 'in_verifica', 'documentata', 'risposta_ricevuta', 'chiusa', 'archiviata', 'da_aggiornare']).optional(),
-  "interpretiveCaution": zod.string().optional()
+  "foiaLink": zod.string().optional()
 })
 
 

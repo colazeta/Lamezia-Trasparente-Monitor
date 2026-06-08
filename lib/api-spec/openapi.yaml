@@ -6566,6 +6566,8 @@ components:
           $ref: '#/components/schemas/ReportVerificationStatus'
         interpretiveCaution:
           type: string
+        publishedAt:
+          type: ["string", "null"]
         updatedAt:
           type: string
         createdAt:
@@ -6610,12 +6612,6 @@ components:
         missingData:
           type: string
         foiaLink:
-          type: string
-        outcome:
-          $ref: '#/components/schemas/ReportOutcome'
-        verificationStatus:
-          $ref: '#/components/schemas/ReportVerificationStatus'
-        interpretiveCaution:
           type: string
 
     MonitoringReportAttachment:
