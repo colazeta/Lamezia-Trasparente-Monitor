@@ -32,7 +32,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import {
-  legalityTimelineEvents,
+  getPublishedLegalityTimelineEvents,
   TIMELINE_EVENT_TYPE_LABELS,
   TIMELINE_SOURCE_KIND_LABELS,
   TIMELINE_STATUS_LABELS,
@@ -43,21 +43,31 @@ import {
 } from "@/content/legalitaTimeline";
 
 const STATUS_BADGE: Record<TimelineStatus, string> = {
-  indagine: "border-amber-500/40 bg-amber-500/10 text-amber-700 dark:text-amber-300",
-  misura_cautelare: "border-amber-500/40 bg-amber-500/10 text-amber-700 dark:text-amber-300",
-  processo_in_corso: "border-sky-500/40 bg-sky-500/10 text-sky-700 dark:text-sky-300",
-  condanna_non_definitiva: "border-orange-500/40 bg-orange-500/10 text-orange-700 dark:text-orange-300",
-  condanna_definitiva: "border-red-500/40 bg-red-500/10 text-red-700 dark:text-red-300",
-  assoluzione: "border-emerald-500/40 bg-emerald-500/10 text-emerald-700 dark:text-emerald-300",
-  archiviazione: "border-emerald-500/40 bg-emerald-500/10 text-emerald-700 dark:text-emerald-300",
-  misura_amministrativa: "border-violet-500/40 bg-violet-500/10 text-violet-700 dark:text-violet-300",
+  indagine:
+    "border-amber-500/40 bg-amber-500/10 text-amber-700 dark:text-amber-300",
+  misura_cautelare:
+    "border-amber-500/40 bg-amber-500/10 text-amber-700 dark:text-amber-300",
+  processo_in_corso:
+    "border-sky-500/40 bg-sky-500/10 text-sky-700 dark:text-sky-300",
+  condanna_non_definitiva:
+    "border-orange-500/40 bg-orange-500/10 text-orange-700 dark:text-orange-300",
+  condanna_definitiva:
+    "border-red-500/40 bg-red-500/10 text-red-700 dark:text-red-300",
+  assoluzione:
+    "border-emerald-500/40 bg-emerald-500/10 text-emerald-700 dark:text-emerald-300",
+  archiviazione:
+    "border-emerald-500/40 bg-emerald-500/10 text-emerald-700 dark:text-emerald-300",
+  misura_amministrativa:
+    "border-violet-500/40 bg-violet-500/10 text-violet-700 dark:text-violet-300",
   fatto_storico_istituzionale: "border-brand/40 bg-brand/10 text-brand",
   non_applicabile: "border-border bg-muted text-muted-foreground",
 };
 
 type FilterValue = "all" | string;
 
-const SORTED_EVENTS = [...legalityTimelineEvents].sort((a, b) =>
+const PUBLIC_TIMELINE_EVENTS = getPublishedLegalityTimelineEvents();
+
+const SORTED_EVENTS = [...PUBLIC_TIMELINE_EVENTS].sort((a, b) =>
   b.startDate.localeCompare(a.startDate),
 );
 
@@ -87,11 +97,14 @@ export function LegalitaTimeline() {
     [],
   );
 
+  const publishedEventsCount = SORTED_EVENTS.length;
+
   const filteredEvents = useMemo(
     () =>
       SORTED_EVENTS.filter((event) => {
         const matchesPeriod = period === "all" || getYear(event) === period;
-        const matchesType = eventType === "all" || event.eventType === eventType;
+        const matchesType =
+          eventType === "all" || event.eventType === eventType;
         const matchesStatus = status === "all" || event.status === status;
         return matchesPeriod && matchesType && matchesStatus;
       }),
@@ -119,9 +132,9 @@ export function LegalitaTimeline() {
         <p className="text-lg text-muted-foreground">
           Una struttura pubblica per ordinare eventi documentati da fonti
           istituzionali o amministrative, distinguendo sempre data, tipologia,
-          status, fonte e limiti di lettura. La v0 non pubblica casi reali finché
-          la verifica redazionale non collega una fonte primaria e una cautela
-          specifica per ogni scheda.
+          status, fonte e limiti di lettura. La lista pubblica include solo
+          schede esplicitamente abilitate alla pubblicazione dopo verifica
+          redazionale di fonte primaria, cautela e ultimo controllo.
         </p>
       </header>
 
@@ -137,8 +150,8 @@ export function LegalitaTimeline() {
                 La timeline non formula accuse autonome, non sostituisce atti
                 giudiziari o amministrativi e non attribuisce responsabilità a
                 persone fisiche. Ogni scheda pubblicata deve essere letta come
-                promemoria documentale, secondo la fonte indicata e con lo status
-                riportato nella scheda.
+                promemoria documentale, secondo la fonte indicata e con lo
+                status riportato nella scheda.
               </p>
             </div>
           </div>
@@ -152,9 +165,13 @@ export function LegalitaTimeline() {
                 Stato della v0
               </h2>
               <p className="text-sm leading-relaxed text-muted-foreground">
-                Nessun evento reale è pubblicato in questa prima struttura: i
-                record saranno aggiunti solo dopo verifica di fonte primaria,
-                status giudiziario o amministrativo e ultimo controllo.
+                {publishedEventsCount === 0
+                  ? "Nessun evento reale è pubblicato in questa prima struttura: i record saranno aggiunti solo dopo verifica di fonte primaria, status giudiziario o amministrativo e ultimo controllo."
+                  : `${publishedEventsCount} ${
+                      publishedEventsCount === 1
+                        ? "scheda verificata è pubblicata"
+                        : "schede verificate sono pubblicate"
+                    } nella lista pubblica. Eventuali record redazionali non abilitati restano esclusi dalla timeline.`}
               </p>
             </div>
           </div>
@@ -168,7 +185,10 @@ export function LegalitaTimeline() {
         </div>
         <div className="flex flex-wrap gap-3">
           <Select value={period} onValueChange={setPeriod}>
-            <SelectTrigger className="w-[190px]" aria-label="Filtra per periodo o anno">
+            <SelectTrigger
+              className="w-[190px]"
+              aria-label="Filtra per periodo o anno"
+            >
               <SelectValue placeholder="Periodo o anno" />
             </SelectTrigger>
             <SelectContent>
@@ -182,7 +202,10 @@ export function LegalitaTimeline() {
           </Select>
 
           <Select value={eventType} onValueChange={setEventType}>
-            <SelectTrigger className="w-[250px]" aria-label="Filtra per tipologia evento">
+            <SelectTrigger
+              className="w-[250px]"
+              aria-label="Filtra per tipologia evento"
+            >
               <SelectValue placeholder="Tipologia evento" />
             </SelectTrigger>
             <SelectContent>
@@ -196,7 +219,10 @@ export function LegalitaTimeline() {
           </Select>
 
           <Select value={status} onValueChange={setStatus}>
-            <SelectTrigger className="w-[250px]" aria-label="Filtra per status giudiziario o amministrativo">
+            <SelectTrigger
+              className="w-[250px]"
+              aria-label="Filtra per status giudiziario o amministrativo"
+            >
               <SelectValue placeholder="Status" />
             </SelectTrigger>
             <SelectContent>
@@ -212,7 +238,10 @@ export function LegalitaTimeline() {
       </section>
 
       {filteredEvents.length > 0 ? (
-        <section aria-label="Eventi della timeline" className="space-y-4">
+        <section
+          aria-label={`Eventi della timeline (${publishedEventsCount} pubblicati)`}
+          className="space-y-4"
+        >
           {filteredEvents.map((event) => (
             <TimelineEventCard key={event.id} event={event} />
           ))}
@@ -233,7 +262,10 @@ export function LegalitaTimeline() {
       )}
 
       <section className="mt-10" aria-labelledby="timeline-schema">
-        <h2 id="timeline-schema" className="font-display text-xl font-bold tracking-tight">
+        <h2
+          id="timeline-schema"
+          className="font-display text-xl font-bold tracking-tight"
+        >
           Schema redazionale prima della pubblicazione
         </h2>
         <p className="mt-2 max-w-3xl text-sm text-muted-foreground">
@@ -265,7 +297,10 @@ function TimelineEventCard({
             {TIMELINE_EVENT_TYPE_LABELS[event.eventType]}
           </Badge>
           {isSchemaPreview ? (
-            <Badge variant="outline" className="border-border bg-muted text-muted-foreground">
+            <Badge
+              variant="outline"
+              className="border-border bg-muted text-muted-foreground"
+            >
               Schema, non evento reale
             </Badge>
           ) : null}
@@ -288,11 +323,29 @@ function TimelineEventCard({
 
         <dl className="mt-5 grid gap-4 md:grid-cols-2">
           <InfoBlock icon={FileText} label="Fonte primaria">
-            <SourceLink label={event.primarySource.label} url={event.primarySource.url} />
+            <SourceLink
+              label={event.primarySource.label}
+              url={event.primarySource.url}
+            />
             <div className="mt-1 text-xs text-muted-foreground">
               {TIMELINE_SOURCE_KIND_LABELS[event.primarySource.kind]}
             </div>
           </InfoBlock>
+
+          {event.secondarySources.length > 0 ? (
+            <InfoBlock icon={FileText} label="Fonti aggiuntive">
+              <ul className="space-y-2">
+                {event.secondarySources.map((source) => (
+                  <li key={`${source.kind}-${source.url}`}>
+                    <SourceLink label={source.label} url={source.url} />
+                    <div className="mt-1 text-xs text-muted-foreground">
+                      {TIMELINE_SOURCE_KIND_LABELS[source.kind]}
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </InfoBlock>
+          ) : null}
 
           <InfoBlock icon={Landmark} label="Effetto istituzionale o civico">
             {event.civicEffect}
@@ -357,7 +410,10 @@ function InfoBlock({
 function SourceLink({ label, url }: { label: string; url: string }) {
   if (isInternalUrl(url)) {
     return (
-      <Link href={url} className="inline-flex items-center gap-1.5 font-medium text-primary hover:underline">
+      <Link
+        href={url}
+        className="inline-flex items-center gap-1.5 font-medium text-primary hover:underline"
+      >
         {label}
       </Link>
     );
