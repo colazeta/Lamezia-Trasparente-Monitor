@@ -247,6 +247,8 @@ export function Router() {
             <Route path="/metodologia" component={Metodologia} />
             <Route path="/roadmap" component={Roadmap} />
             <Route path="/note-legali" component={NoteLegali} />
+            <Route path="/chi-siamo" component={ChiSiamo} />
+            <Route path="/contatti" component={Contatti} />
             <PublicRouteWithMeta
               path="/iscrizioni"
               component={Subscriptions}
