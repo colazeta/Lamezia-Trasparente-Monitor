@@ -1701,6 +1701,51 @@ paths:
               schema:
                 $ref: "#/components/schemas/Error"
 
+  /reports/{id}/publication:
+    patch:
+      operationId: publishReport
+      tags: [reports]
+      summary: Set or clear the editorial publication timestamp for a citizen report
+      security:
+        - ingestToken: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PublishReportInput"
+      responses:
+        "200":
+          description: Updated report
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Report"
+        "400":
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
   /monitoring-reports:
     get:
       operationId: listMonitoringReports
@@ -6613,6 +6658,13 @@ components:
           type: string
         foiaLink:
           type: string
+
+    PublishReportInput:
+      type: object
+      properties:
+        publishedAt:
+          type: ["string", "null"]
+          description: ISO 8601 UTC timestamp controlled by the server/redazione path. Omit to publish now; set null to unpublish.
 
     MonitoringReportAttachment:
       type: object

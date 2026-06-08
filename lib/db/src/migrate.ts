@@ -3,6 +3,7 @@ import path from "path";
 import { db, pool } from "./client";
 import {
   baselineMigrations,
+  ensureReportsPublishedAtColumn,
   getMigrationStatus,
   isMigrationTrackingPresent,
   isSchemaBootstrapped,
@@ -138,10 +139,11 @@ export async function runMigrations(
   // First-time transition guard: a database bootstrapped via `drizzle-kit push`
   // already has the full schema but no migration-tracking record. Running the
   // migrator against it would attempt to re-execute CREATE TABLE statements that
-  // already exist and fail. Detect that case and baseline (record migrations as
-  // applied, without running their SQL) before migrating. This only writes to
-  // Drizzle's internal tracking table — never to application tables — and is a
-  // no-op on databases already on the migration workflow.
+  // already exist and fail. Detect that case, run the idempotent compatibility
+  // repair for the reports publication column, then baseline (record migrations
+  // as applied without running their SQL) before migrating. The repair is
+  // additive and non-destructive; the baseline itself only writes Drizzle
+  // tracking rows.
   const tracked = await isMigrationTrackingPresent(client);
   const detectedState: MigrationStartupState = tracked
     ? "tracked"
@@ -151,6 +153,7 @@ export async function runMigrations(
 
   if (detectedState === "push-bootstrapped") {
     try {
+      await ensureReportsPublishedAtColumn(client);
       await baselineMigrations(client, folder);
     } catch (err) {
       throw new MigrationError(
@@ -170,6 +173,7 @@ export async function runMigrations(
 
   try {
     await migrate(database, { migrationsFolder: folder });
+    await ensureReportsPublishedAtColumn(client);
   } catch (err) {
     throw new MigrationError(
       "migrate",

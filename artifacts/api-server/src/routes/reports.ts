@@ -1,7 +1,8 @@
 import { Router, type IRouter } from "express";
 import { db, reportsTable } from "@workspace/db";
-import { CreateReportBody } from "@workspace/api-zod";
-import { desc, isNotNull } from "drizzle-orm";
+import { CreateReportBody, PublishReportBody } from "@workspace/api-zod";
+import { desc, eq, isNotNull } from "drizzle-orm";
+import { requireIngestAuth } from "../middlewares/requireIngestAuth";
 
 const router: IRouter = Router();
 
@@ -57,31 +58,64 @@ function parseOptionalDate(
     return { ok: true, date: null };
   }
 
-  const isoPrefix = value.match(/^(\d{4})-(\d{2})-(\d{2})(?:$|[T\s])/);
-  if (isoPrefix) {
-    const year = Number(isoPrefix[1]);
-    const month = Number(isoPrefix[2]);
-    const day = Number(isoPrefix[3]);
-    const calendarDate = new Date(Date.UTC(year, month - 1, day));
-    if (
-      calendarDate.getUTCFullYear() !== year ||
-      calendarDate.getUTCMonth() !== month - 1 ||
-      calendarDate.getUTCDate() !== day
-    ) {
-      return { ok: false };
-    }
-
-    if (value.length === 10) {
-      return { ok: true, date: calendarDate };
-    }
+  const dateOnly = /^(\d{4})-(\d{2})-(\d{2})$/.exec(value);
+  if (dateOnly) {
+    const year = Number(dateOnly[1]);
+    const month = Number(dateOnly[2]);
+    const day = Number(dateOnly[3]);
+    const date = new Date(Date.UTC(year, month - 1, day));
+    return date.getUTCFullYear() === year &&
+      date.getUTCMonth() === month - 1 &&
+      date.getUTCDate() === day
+      ? { ok: true, date }
+      : { ok: false };
   }
 
-  const dateTime = new Date(value);
-  if (Number.isNaN(dateTime.getTime())) {
+  const dateTime =
+    /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2})(?:\.(\d{1,3}))?Z$/.exec(
+      value,
+    );
+  if (!dateTime) {
     return { ok: false };
   }
 
-  return { ok: true, date: dateTime };
+  const [, yearRaw, monthRaw, dayRaw, hourRaw, minuteRaw, secondRaw, msRaw] =
+    dateTime;
+  const year = Number(yearRaw);
+  const month = Number(monthRaw);
+  const day = Number(dayRaw);
+  const hour = Number(hourRaw);
+  const minute = Number(minuteRaw);
+  const second = Number(secondRaw);
+  const millisecond = Number((msRaw ?? "0").padEnd(3, "0"));
+
+  if (hour > 23 || minute > 59 || second > 59) {
+    return { ok: false };
+  }
+
+  const date = new Date(
+    Date.UTC(year, month - 1, day, hour, minute, second, millisecond),
+  );
+  if (
+    date.getUTCFullYear() !== year ||
+    date.getUTCMonth() !== month - 1 ||
+    date.getUTCDate() !== day ||
+    date.getUTCHours() !== hour ||
+    date.getUTCMinutes() !== minute ||
+    date.getUTCSeconds() !== second ||
+    date.getUTCMilliseconds() !== millisecond
+  ) {
+    return { ok: false };
+  }
+
+  return { ok: true, date };
+}
+
+function publicationPatchDate(raw: string | null | undefined) {
+  if (raw === undefined) {
+    return { ok: true as const, date: new Date() };
+  }
+  return parseOptionalDate(raw);
 }
 
 router.get("/reports", async (_req, res) => {
@@ -141,5 +175,42 @@ router.post("/reports", async (req, res) => {
 
   res.status(201).json(mapPublicReport(created));
 });
+
+router.patch(
+  "/reports/:id/publication",
+  requireIngestAuth,
+  async (req, res) => {
+    const id = Number(req.params.id);
+    if (!Number.isInteger(id)) {
+      res.status(404).json({ error: "Segnalazione non trovata" });
+      return;
+    }
+
+    const parsed = PublishReportBody.safeParse(req.body);
+    if (!parsed.success) {
+      res.status(400).json({ error: "Dati non validi" });
+      return;
+    }
+
+    const publishedAt = publicationPatchDate(parsed.data.publishedAt);
+    if (!publishedAt.ok) {
+      res.status(400).json({ error: "Date non valide" });
+      return;
+    }
+
+    const [row] = await db
+      .update(reportsTable)
+      .set({ publishedAt: publishedAt.date, updatedAt: new Date() })
+      .where(eq(reportsTable.id, id))
+      .returning();
+
+    if (!row) {
+      res.status(404).json({ error: "Segnalazione non trovata" });
+      return;
+    }
+
+    res.json(mapPublicReport(row));
+  },
+);
 
 export default router;

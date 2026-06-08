@@ -1852,6 +1852,14 @@ export interface ReportInput {
   foiaLink?: string;
 }
 
+export interface PublishReportInput {
+  /**
+     * ISO 8601 UTC timestamp controlled by the server/redazione path. Omit to publish now; set null to unpublish.
+     * @nullable
+     */
+  publishedAt?: string | null;
+}
+
 export interface MonitoringReportAttachment {
   title: string;
   url: string;

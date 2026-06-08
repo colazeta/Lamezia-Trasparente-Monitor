@@ -92,6 +92,26 @@ export async function isSchemaBootstrapped(
 }
 
 /**
+ * Compatibility repair for the civic issue register publication gate. Some
+ * deployments were bootstrapped before the nullable `reports.published_at`
+ * column was introduced; if those databases also lack Drizzle tracking, the
+ * normal push-bootstrap baseline would otherwise mark the additive migration as
+ * applied without running its SQL. The statement is intentionally idempotent and
+ * non-destructive, and is safe to run after normal migrations as a post-flight
+ * column check too.
+ */
+export async function ensureReportsPublishedAtColumn(
+  client: QueryClient,
+): Promise<void> {
+  await client.query(`
+    ALTER TABLE IF EXISTS "reports"
+      ADD COLUMN IF NOT EXISTS "published_at" timestamp with time zone;
+    CREATE INDEX IF NOT EXISTS "reports_published_at_idx"
+      ON "reports" USING btree ("published_at");
+  `);
+}
+
+/**
  * Records every migration in the journal as already applied without running its
  * SQL. Idempotent: migrations already recorded (matched by content hash) are
  * left untouched. `created_at` is set to the migration's journal timestamp
