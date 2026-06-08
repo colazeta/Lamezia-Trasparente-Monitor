@@ -116,6 +116,18 @@ const DATA_SOURCES: DataSource[] = [
     limitations:
       "Oggetti, esiti e date possono provenire da CSV o documenti ufficiali con formati non uniformi. Ogni riga deve essere letta insieme al registro o all'atto di provenienza.",
   },
+
+  {
+    name: "Promessometro amministrativo — seed manuale",
+    description:
+      "Struttura redazionale locale per collegare promesse programmatiche, fonti della promessa e atti amministrativi pertinenti quando verificati.",
+    href: "https://www.comune.lamezia-terme.cz.it/",
+    dataType: "Da verificare",
+    updateFrequency:
+      "Aggiornamento manuale nella v0: ogni promessa reale richiede fonte programmatica, data, mandato di riferimento, nota di cautela e ultima verifica.",
+    limitations:
+      "La v0 contiene un record modello non conteggiato quando non sono disponibili promesse verificate nel repository. I collegamenti ad atti non equivalgono automaticamente a completamento o realizzazione osservabile.",
+  },
   {
     name: "Atti fondamentali, performance, legalità e pareri",
     description:

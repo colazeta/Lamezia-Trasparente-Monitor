@@ -167,6 +167,34 @@ export function Metodologia() {
         </div>
       </section>
 
+      <section aria-labelledby="promessometro-metodo" className="mb-8 rounded-2xl border border-border bg-card p-6 shadow-sm">
+        <h2 id="promessometro-metodo" className="text-2xl font-display font-bold">
+          Promessometro amministrativo
+        </h2>
+        <div className="mt-4 space-y-4 text-sm leading-relaxed text-muted-foreground">
+          <p>
+            Il Promessometro collega promesse o linee programmatiche a evidenze
+            amministrative disponibili. Ogni record reale deve avere fonte
+            programmatica, data, mandato di riferimento, sintesi redazionale,
+            cautela interpretativa e ultima verifica. I record modello sono
+            esclusi dai conteggi e servono solo a mostrare lo schema minimo.
+          </p>
+          <p>
+            La classificazione separa promessa dichiarata, atto di indirizzo,
+            atto attuativo/gestionale e realizzazione osservabile. Una delibera,
+            un comunicato o una scheda di finanziamento non vengono trattati
+            automaticamente come completamento della promessa: indicano solo il
+            livello documentale che la fonte consente di osservare.
+          </p>
+          <p>
+            Gli stati sono descrittivi e non costituiscono giudizi politici,
+            accuse o prove di irregolarità. Assenza di atti collegati, atti solo
+            di indirizzo o avanzamento non verificabile sono bisogni di verifica
+            documentale da approfondire sulle fonti ufficiali.
+          </p>
+        </div>
+      </section>
+
 
       <section aria-labelledby="registro-metodologico" className="mb-8 rounded-2xl border border-border bg-card p-6 shadow-sm">
         <div className="flex items-start gap-3">

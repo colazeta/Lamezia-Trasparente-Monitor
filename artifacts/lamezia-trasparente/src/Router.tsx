@@ -33,6 +33,7 @@ import { AccessoCivico } from "./pages/AccessoCivico";
 import { Monitoraggio } from "./pages/Monitoraggio";
 import { MonitoraggioDetail } from "./pages/MonitoraggioDetail";
 import { MonitoraggioNuovo } from "./pages/MonitoraggioNuovo";
+import { Promessometro } from "./pages/Promessometro";
 import { Legalita } from "./pages/Legalita";
 import { Performance } from "./pages/Performance";
 import { PerformanceCompare } from "./pages/PerformanceCompare";
@@ -153,6 +154,12 @@ export function Router() {
               component={MonitoraggioNuovo}
               title="Nuova segnalazione civica"
               description="Modulo per proporre un elemento di monitoraggio civico da valutare con cautele, fonti e verifiche successive."
+            />
+            <PublicRouteWithMeta
+              path="/promessometro"
+              component={Promessometro}
+              title="Promessometro amministrativo"
+              description="Modulo civico per collegare promesse programmatiche e atti amministrativi con cautele documentali e senza scoring politico."
             />
             <Route path="/monitoraggio/:id" component={MonitoraggioDetail} />
             <PublicRouteWithMeta
