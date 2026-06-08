@@ -15,21 +15,24 @@ Issue acceptance criteria:
 {{ACCEPTANCE_CRITERIA}}
 
 Task:
-1. determine whether a Codex implementation attempt exists;
-2. determine whether a pull request exists, targets `main`, uses a `codex/{{ISSUE_NUMBER}}-<slug>` branch and references the issue;
-3. detect delivery without PR and capture the exact reported reason, branch/diff or blocker;
-4. classify any summary without an open PR to `main`, visible `codex/{{ISSUE_NUMBER}}-<slug>` branch, explicit blocker or recent execution evidence as `output-without-PR`;
-5. detect stale zombie tasks: `codex:prompted`, `codex:invoked` or `codex:working` with no PR, branch, explicit blocker, commit, validation log, diff location or other concrete activity;
-6. check whether the implementation appears to satisfy the acceptance criteria;
-7. identify validation status if available;
-8. identify whether the implementation changed copy/legal/methodological safeguards;
-9. recommend one of the following outcomes:
+1. derive the issue state as `idle`, `candidate`, `ready`, `invoked`, `working`, `pr-open`, `blocked`, `stale`, `completed-by-pr` or `superseded` from labels plus evidence;
+2. determine whether a Codex implementation attempt exists;
+3. determine whether a pull request exists, targets `main`, uses a `codex/{{ISSUE_NUMBER}}-<slug>` branch and references the issue;
+4. detect delivery without PR and capture the exact reported reason, branch/diff or blocker;
+5. classify any summary without an open PR to `main`, visible `codex/{{ISSUE_NUMBER}}-<slug>` branch, explicit blocker or recent execution evidence as `output-without-PR`;
+6. detect stale zombie tasks: `codex:prompted`, `codex:invoked` or `codex:working` with no PR, branch, explicit blocker, commit, validation log, diff location or other concrete activity;
+7. check whether the implementation appears to satisfy the acceptance criteria;
+8. identify validation status if available;
+9. identify whether the implementation changed copy/legal/methodological safeguards;
+10. recommend one of the following outcomes:
+   - remove or neutralise stale `codex:ready` when a PR, blocker, supersession or completed outcome means the issue is no longer eligible backlog;
    - `codex:review-needed` when a PR exists and needs human review/merge;
    - `codex:follow-up` when no PR exists, delivery without PR needs recovery, the task is stale, validation is failing, or the implementation is incomplete;
    - `codex:blocked` when a concrete safety, permission, credential or collision blocker prevents continuation;
    - `codex:done` only after review/merge evidence indicates the issue appears solved.
 
 Queue rules:
+- `codex:ready` is not active work and must not be counted as an occupied slot.
 - `codex:review-needed` is human review/merge wait and does not saturate Codex capacity unless there is concrete file/module collision or Codex-side rework.
 - PRs/issues waiting only for Giovanni review or merge are outside the queue capacity count and block only candidate work touching the same files/modules.
 - Compute remaining capacity as `5 - real active Codex operational tasks`; do not subtract human-review-pending items.
@@ -42,6 +45,11 @@ Do not close the issue automatically unless the repository policy explicitly aut
 Output format:
 
 ### Review result
+
+### Derived operational state
+- State:
+- Evidence used and age:
+- Stale label cleanup needed:
 
 ### PR and branch status
 

@@ -24,8 +24,15 @@ Likely files/modules to inspect:
 Collision risk:
 {{COLLISION_RISK}}
 
+Collision matrix decision:
+- High: same generated files, API contract, DB schema/migrations, generated clients, runtime file/module, prompt/doc section or public copy/legal/methodological text; stop unless human accepted the risk.
+- Medium: same package/domain with distinct files and compatible criteria; continue only with narrow scope and explicit collision note.
+- Low: unrelated files/modules or unrelated human-review PRs needing no Codex-side rework; continue when other safeguards pass.
+
 Capacity context:
-- Capacity 5 is computed only on real active Codex tasks.
+- Capacity 5 is computed only on real active Codex tasks backed by evidence.
+- `codex:ready` is eligible backlog only and does not count as active work.
+- Count `codex:prompted`, `codex:invoked` or `codex:working` only when supported by recent invocation, branch/task/commit, validation, diff, open PR needing Codex-side changes, explicit blocker or in-progress Codex response.
 - Issues or PRs waiting only for Giovanni review/merge, including `codex:review-needed`, are outside the capacity count.
 - A human-review-pending PR blocks this invocation only when it touches the same files/modules or creates a concrete implementation collision.
 - A prior Codex summary without an open PR to `main`, visible branch, explicit blocker or recent execution evidence is `output-without-PR`; it is stale follow-up, not a real active slot.
@@ -68,7 +75,7 @@ Fallback if PR creation fails:
 Stop conditions:
 - If the issue is ambiguous, comment with the precise missing information instead of guessing.
 - If the implementation would require secrets, credentials or unsupported factual claims, stop and explain.
-- If another open PR already touches the same files/modules in a conflicting way, stop and report the concrete collision.
+- If another open PR, recent Codex branch/task or review-wait item already touches the same files/modules in a conflicting way, stop and report the concrete collision.
 - Do not stop merely because another PR is waiting for Giovanni review/merge when it is non-colliding and needs no Codex-side rework.
 - If you cannot open the mandatory PR to `main`, create the required branch or produce a reviewable diff, stop and report the exact technical blocker.
 ````

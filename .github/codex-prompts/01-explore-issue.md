@@ -25,7 +25,9 @@ Repository context:
 
 Queue model:
 - Maximum operational Codex capacity is 5 real active tasks.
-- `codex:prompted`, `codex:invoked` and `codex:working` are operational states.
+- Derive operational state from evidence before counting: `idle`, `candidate`, `ready`, `invoked`, `working`, `pr-open`, `blocked`, `stale`, `completed-by-pr` or `superseded`.
+- `codex:ready` is eligible backlog only; it is not active work and never consumes a slot by itself.
+- `codex:prompted`, `codex:invoked` and `codex:working` count only when backed by recent invocation, branch/task/commit, validation, diff, open PR needing Codex-side changes, explicit blocker or in-progress Codex response.
 - `codex:review-needed` and PRs/issues waiting only for Giovanni review/merge are human review wait and do not saturate Codex capacity unless there is concrete file/module collision or Codex-side rework.
 - Effective free slots are `5 - real active Codex operational tasks`; do not subtract human-review-pending items.
 - A Codex summary without an open PR to `main`, visible `codex/<issue-number>-<slug>` branch, explicit technical blocker or recent execution evidence is `output-without-PR` and does not count as a real active task.
@@ -38,17 +40,18 @@ Task:
 4. define narrow acceptance criteria;
 5. identify probable scope;
 6. identify likely files/modules to inspect;
-7. classify collision risk as `low`, `medium` or `high` and explain the reason;
-8. define validation commands;
-9. add civic/legal/copy safeguards where relevant;
-10. require a dedicated branch named `codex/{{ISSUE_NUMBER}}-<slug>` and a pull request targeting `main` as mandatory Codex output;
-11. include fallback instructions requiring Codex to stop and comment with the exact technical reason, branch/diff or blocker if a PR to `main` cannot be opened;
-12. include the `output-without-PR` rule so a summary without PR, branch, blocker or recent execution evidence is routed to follow-up and not counted as active;
-13. produce a final `@codex` prompt ready to be posted as a GitHub comment only if the cleanup preflight passed.
+7. classify collision risk as `low`, `medium` or `high` using the documented matrix and explain the reason;
+8. identify stale-label cleanup needed if the issue is already served, blocked, superseded or no longer eligible;
+9. define validation commands;
+10. add civic/legal/copy safeguards where relevant;
+11. require a dedicated branch named `codex/{{ISSUE_NUMBER}}-<slug>` and a pull request targeting `main` as mandatory Codex output;
+12. include fallback instructions requiring Codex to stop and comment with the exact technical reason, branch/diff or blocker if a PR to `main` cannot be opened;
+13. include the `output-without-PR` rule so a summary without PR, branch, blocker or recent execution evidence is routed to follow-up and not counted as active;
+14. produce a final `@codex` prompt ready to be posted as a GitHub comment only if the cleanup preflight passed.
 
 Safety rules:
 - If the issue is ambiguous, too broad, legally sensitive or potentially accusatory, do not produce an implementation prompt. Produce a blocker comment instead.
-- If the issue is backlog/governance, prefer a triage prompt or analysis-only prompt, not a direct implementation prompt.
+- If the issue is backlog/governance, prefer a triage prompt or narrow documentation/prompt-only implementation prompt, not a broad runtime implementation prompt.
 - If the thread contains unresolved contradictory automation comments, produce a follow-up/blocker comment instead of an implementation prompt.
 - Keep the resulting task narrow and reviewable.
 - Preserve the no-auto-merge and no-auto-close policy.
@@ -58,6 +61,11 @@ Output format:
 ### Classification
 
 ### Cleanup preflight
+
+### Derived operational state
+- State: idle / candidate / ready / invoked / working / pr-open / blocked / stale / completed-by-pr / superseded
+- Evidence used and age:
+- Stale label cleanup needed:
 
 ### Capacity and collision check
 - Probable scope:
