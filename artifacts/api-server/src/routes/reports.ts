@@ -12,6 +12,22 @@ function mapPublicReport(r: typeof reportsTable.$inferSelect) {
     category: r.category,
     location: r.location,
     status: r.status,
+    initialSourceType: r.initialSourceType,
+    initialSourceUrl: r.initialSourceUrl,
+    publicEmergenceDate: r.publicEmergenceDate?.toISOString() ?? null,
+    involvedSector: r.involvedSector,
+    competentOffice: r.competentOffice,
+    formalAct: r.formalAct,
+    institutionalResponse: r.institutionalResponse,
+    institutionalResponseDate:
+      r.institutionalResponseDate?.toISOString() ?? null,
+    availableData: r.availableData,
+    missingData: r.missingData,
+    foiaLink: r.foiaLink,
+    outcome: r.outcome,
+    verificationStatus: r.verificationStatus,
+    interpretiveCaution: r.interpretiveCaution,
+    updatedAt: r.updatedAt.toISOString(),
     createdAt: r.createdAt.toISOString(),
   };
 }
@@ -41,6 +57,24 @@ router.post("/reports", async (req, res) => {
       category: parsed.data.category,
       location: parsed.data.location,
       citizenName: parsed.data.citizenName ?? null,
+      initialSourceType: parsed.data.initialSourceType ?? null,
+      initialSourceUrl: parsed.data.initialSourceUrl ?? null,
+      publicEmergenceDate: parsed.data.publicEmergenceDate
+        ? new Date(parsed.data.publicEmergenceDate)
+        : null,
+      involvedSector: parsed.data.involvedSector ?? null,
+      competentOffice: parsed.data.competentOffice ?? null,
+      formalAct: parsed.data.formalAct ?? null,
+      institutionalResponse: parsed.data.institutionalResponse ?? null,
+      institutionalResponseDate: parsed.data.institutionalResponseDate
+        ? new Date(parsed.data.institutionalResponseDate)
+        : null,
+      availableData: parsed.data.availableData ?? null,
+      missingData: parsed.data.missingData ?? null,
+      foiaLink: parsed.data.foiaLink ?? null,
+      outcome: parsed.data.outcome ?? "aperta",
+      verificationStatus: parsed.data.verificationStatus ?? "non_verificata",
+      interpretiveCaution: parsed.data.interpretiveCaution,
     })
     .returning();
 

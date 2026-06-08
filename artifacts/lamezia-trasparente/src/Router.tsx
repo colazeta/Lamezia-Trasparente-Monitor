@@ -232,10 +232,16 @@ export function Router() {
             />
             <Route path="/pareri/:id" component={PareriVigilanzaDetail} />
             <PublicRouteWithMeta
+              path="/criticita-pubbliche"
+              component={Reports}
+              title="Registro delle criticità pubbliche"
+              description="Registro civico per distinguere segnalazioni, fonti, atti, risposte istituzionali e dati mancanti senza presentare accuse come fatti."
+            />
+            <PublicRouteWithMeta
               path="/segnalazioni"
               component={Reports}
-              title="Segnalazioni civiche"
-              description="Area per consultare o inviare segnalazioni civiche come richieste di attenzione e verifica, non accuse."
+              title="Segnalazioni e criticità pubbliche"
+              description="Area unica per inviare segnalazioni civiche e consultarle come criticità pubbliche da verificare, non accuse."
             />
             <PublicRouteWithMeta
               path="/statistiche"

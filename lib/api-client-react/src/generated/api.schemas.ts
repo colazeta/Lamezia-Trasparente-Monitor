@@ -1707,6 +1707,31 @@ export interface SetPublicationBriefInput {
   brief: string;
 }
 
+export type ReportVerificationStatus = typeof ReportVerificationStatus[keyof typeof ReportVerificationStatus];
+
+
+export const ReportVerificationStatus = {
+  non_verificata: 'non_verificata',
+  in_verifica: 'in_verifica',
+  documentata: 'documentata',
+  risposta_ricevuta: 'risposta_ricevuta',
+  chiusa: 'chiusa',
+  archiviata: 'archiviata',
+  da_aggiornare: 'da_aggiornare',
+} as const;
+
+export type ReportOutcome = typeof ReportOutcome[keyof typeof ReportOutcome];
+
+
+export const ReportOutcome = {
+  aperta: 'aperta',
+  risolta: 'risolta',
+  parzialmente_risolta: 'parzialmente_risolta',
+  non_risolta: 'non_risolta',
+  non_verificabile: 'non_verificabile',
+  archiviata: 'archiviata',
+} as const;
+
 export type ReportStatus = typeof ReportStatus[keyof typeof ReportStatus];
 
 
@@ -1721,9 +1746,40 @@ export interface Report {
   id: number;
   title: string;
   description: string;
+  /** Ambito della criticità pubblica. */
   category: string;
+  /** Quartiere, via, edificio, area o `non localizzato`. */
   location: string;
   status: ReportStatus;
+  /**
+     * Fonte iniziale, per esempio articolo, comunicato, post pubblico, interrogazione, mozione, accesso, albo, delibera o altro.
+     * @nullable
+     */
+  initialSourceType?: string | null;
+  /** @nullable */
+  initialSourceUrl?: string | null;
+  /** @nullable */
+  publicEmergenceDate?: string | null;
+  /** @nullable */
+  involvedSector?: string | null;
+  /** @nullable */
+  competentOffice?: string | null;
+  /** @nullable */
+  formalAct?: string | null;
+  /** @nullable */
+  institutionalResponse?: string | null;
+  /** @nullable */
+  institutionalResponseDate?: string | null;
+  /** @nullable */
+  availableData?: string | null;
+  /** @nullable */
+  missingData?: string | null;
+  /** @nullable */
+  foiaLink?: string | null;
+  outcome: ReportOutcome;
+  verificationStatus: ReportVerificationStatus;
+  interpretiveCaution: string;
+  updatedAt: string;
   createdAt: string;
 }
 
@@ -1737,6 +1793,20 @@ export interface ReportInput {
   /** @minLength 1 */
   location: string;
   citizenName?: string;
+  initialSourceType?: string;
+  initialSourceUrl?: string;
+  publicEmergenceDate?: string;
+  involvedSector?: string;
+  competentOffice?: string;
+  formalAct?: string;
+  institutionalResponse?: string;
+  institutionalResponseDate?: string;
+  availableData?: string;
+  missingData?: string;
+  foiaLink?: string;
+  outcome?: ReportOutcome;
+  verificationStatus?: ReportVerificationStatus;
+  interpretiveCaution?: string;
 }
 
 export interface MonitoringReportAttachment {
