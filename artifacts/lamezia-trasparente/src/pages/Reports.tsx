@@ -313,10 +313,9 @@ export function Reports() {
           Segnalazioni e criticità pubbliche
         </h1>
         <p className="mt-3 text-muted-foreground text-lg">
-          La pagina <strong>/segnalazioni</strong> resta il punto unico per inviare
-          contributi civici e consultarli come schede verificabili. Il registro non
-          archivia accuse: separa segnalazione, fonte, atti formali, dati disponibili,
-          risposta istituzionale e dati mancanti.
+          Invia un segnale civico circostanziato su servizi, lavori o informazioni pubbliche
+          che richiedono verifica. La segnalazione non sostituisce una richiesta di accesso
+          civico né eventuali atti formali rivolti alle autorità competenti.
         </p>
       </div>
 
