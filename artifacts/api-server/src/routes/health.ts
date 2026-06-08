@@ -35,11 +35,9 @@ router.get("/healthz/migrations", (_req, res) => {
 });
 
 /**
- * Read-only operations endpoint for the monitored-source backbone. It reports
- * technical freshness/completeness signals from the source registry joined with
- * feed_status. The payload is intentionally operational: it distinguishes
- * missing, stale, warning and technical error states without making claims about
- * absolute completeness of public acts.
+ * Read-only ops endpoint for data-source monitoring. It reports technical
+ * freshness and coverage signals for sources already present in the ingestion
+ * cycle; it does not make public or substantive completeness claims.
  */
 router.get("/healthz/sources", (_req, res) => {
   void getSourceAudit()
@@ -47,10 +45,13 @@ router.get("/healthz/sources", (_req, res) => {
       res.json(audit);
     })
     .catch((err: unknown) => {
-      logger.error({ err }, "Failed to read monitored source status.");
+      logger.error({ err }, "Failed to read source health status.");
       res
         .status(503)
-        .json({ status: "error", error: "Could not read source status." });
+        .json({
+          status: "error",
+          error: "Could not read source health status.",
+        });
     });
 });
 

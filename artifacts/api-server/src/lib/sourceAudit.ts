@@ -1,5 +1,3 @@
-import { db, feedStatusTable, type FeedStatus } from "@workspace/db";
-import { asc } from "drizzle-orm";
 import {
   MONITORED_SOURCES,
   type MonitoredSource,
@@ -15,16 +13,17 @@ export type SourceAuditStatus =
   | "stale";
 export type SourceHealthStatus = "ok" | "warning" | "error";
 
-export type FeedStatusAuditRow = Pick<
-  FeedStatus,
-  | "source"
-  | "status"
-  | "error"
-  | "itemsTotal"
-  | "itemsNew"
-  | "lastCheckedAt"
-  | "lastUpdatedAt"
->;
+export type SourceStatusRow = {
+  source: string;
+  label?: string | null;
+  url?: string | null;
+  status?: string | null;
+  error?: string | null;
+  itemsTotal?: number | null;
+  itemsNew?: number | null;
+  lastCheckedAt?: Date | string | null;
+  lastUpdatedAt?: Date | string | null;
+};
 
 export type SourceAuditResult = {
   source: string;
@@ -59,7 +58,7 @@ export type SourceAuditPayload = {
   sources: SourceAuditResult[];
 };
 
-const SCORE_BY_STATUS: Record<SourceAuditStatus, number> = {
+const COMPLETENESS_SCORE: Record<SourceAuditStatus, number> = {
   ok: 1,
   warning: 0.7,
   stale: 0.4,
@@ -67,30 +66,87 @@ const SCORE_BY_STATUS: Record<SourceAuditStatus, number> = {
   missing: 0,
 };
 
-function toIso(value: Date | string | null | undefined): string | null {
+function toDate(value: Date | string | null | undefined): Date | null {
   if (!value) return null;
   const date = value instanceof Date ? value : new Date(value);
-  return Number.isNaN(date.getTime()) ? null : date.toISOString();
+  return Number.isNaN(date.getTime()) ? null : date;
 }
 
-function freshnessMinutes(
-  lastCheckedAt: Date | string | null | undefined,
+function toIso(value: Date | string | null | undefined): string | null {
+  return toDate(value)?.toISOString() ?? null;
+}
+
+function minutesSince(
+  value: Date | string | null | undefined,
   now: Date,
 ): number | null {
-  if (!lastCheckedAt) return null;
-  const checked =
-    lastCheckedAt instanceof Date ? lastCheckedAt : new Date(lastCheckedAt);
-  if (Number.isNaN(checked.getTime())) return null;
-  return Math.max(0, Math.floor((now.getTime() - checked.getTime()) / 60000));
+  const date = toDate(value);
+  if (!date) return null;
+  return Math.max(0, Math.floor((now.getTime() - date.getTime()) / 60000));
 }
 
-function isOperationallyOpen(result: SourceAuditResult): boolean {
-  return ["error", "missing", "stale"].includes(result.status);
+function hasRequiredItemSignal(source: MonitoredSource): boolean {
+  return source.requiredSignals?.includes("itemsTotal") ?? false;
 }
 
-export function aggregateSourceAudit(
-  sources: SourceAuditResult[],
-): Pick<SourceAuditPayload, "status" | "summary"> {
+function auditOne(
+  source: MonitoredSource,
+  row: SourceStatusRow | undefined,
+  now: Date,
+): SourceAuditResult {
+  const findings: string[] = [];
+  const freshnessMinutes = minutesSince(row?.lastCheckedAt, now);
+  const itemsTotal = row?.itemsTotal ?? null;
+  const itemsNew = row?.itemsNew ?? null;
+  const error = row?.error ?? null;
+  let status: SourceAuditStatus = "ok";
+
+  if (!row) {
+    status = "missing";
+    findings.push(
+      "Fonte presente nel registro ma senza stato runtime in feed_status.",
+    );
+  } else if (row.status === "error") {
+    status = "error";
+    findings.push("Ultimo controllo registrato come errore tecnico.");
+    if (error) findings.push(error);
+  } else if (freshnessMinutes === null) {
+    status = "missing";
+    findings.push("Ultimo controllo non disponibile in feed_status.");
+  } else if (freshnessMinutes > source.staleAfterMinutes) {
+    status = "stale";
+    findings.push(
+      `Fonte non aggiornata da ${freshnessMinutes} minuti; soglia tecnica ${source.staleAfterMinutes} minuti.`,
+    );
+  } else if (hasRequiredItemSignal(source) && itemsTotal === 0) {
+    status = "warning";
+    findings.push(
+      "Ultimo controllo recente ma senza record elaborati: segnale operativo da verificare.",
+    );
+  } else {
+    findings.push(
+      "Ultimo controllo recente e senza errori tecnici registrati.",
+    );
+  }
+
+  return {
+    source: source.source,
+    label: source.label,
+    kind: source.kind,
+    priority: source.priority,
+    status,
+    lastCheckedAt: toIso(row?.lastCheckedAt),
+    lastUpdatedAt: toIso(row?.lastUpdatedAt),
+    freshnessMinutes,
+    itemsTotal,
+    itemsNew,
+    error,
+    completenessScore: COMPLETENESS_SCORE[status],
+    findings,
+  };
+}
+
+function summarize(sources: SourceAuditResult[]): SourceAuditSummary {
   const summary: SourceAuditSummary = {
     total: sources.length,
     ok: 0,
@@ -105,136 +161,59 @@ export function aggregateSourceAudit(
     summary[source.status] += 1;
     if (
       (source.priority === "critical" || source.priority === "high") &&
-      isOperationallyOpen(source)
+      (source.status === "error" ||
+        source.status === "missing" ||
+        source.status === "stale")
     ) {
       summary.criticalOpen += 1;
     }
   }
 
-  const status: SourceHealthStatus =
-    summary.criticalOpen > 0
-      ? "error"
-      : summary.warning > 0 ||
-          summary.stale > 0 ||
-          summary.error > 0 ||
-          summary.missing > 0
-        ? "warning"
-        : "ok";
+  return summary;
+}
 
-  return { status, summary };
+function aggregateStatus(summary: SourceAuditSummary): SourceHealthStatus {
+  if (summary.criticalOpen > 0) return "error";
+  if (
+    summary.warning > 0 ||
+    summary.stale > 0 ||
+    summary.error > 0 ||
+    summary.missing > 0
+  ) {
+    return "warning";
+  }
+  return "ok";
 }
 
 export function auditSources(
   registry: readonly MonitoredSource[],
-  statuses: readonly FeedStatusAuditRow[],
-  now: Date = new Date(),
+  statuses: readonly SourceStatusRow[],
+  now = new Date(),
 ): SourceAuditPayload {
   const rowsBySource = new Map(statuses.map((row) => [row.source, row]));
-
-  const sources = registry.map<SourceAuditResult>((source) => {
-    const row = rowsBySource.get(source.source);
-    if (!row) {
-      return {
-        source: source.source,
-        label: source.label,
-        kind: source.kind,
-        priority: source.priority,
-        status: "missing",
-        lastCheckedAt: null,
-        lastUpdatedAt: null,
-        freshnessMinutes: null,
-        itemsTotal: null,
-        itemsNew: null,
-        error: null,
-        completenessScore: SCORE_BY_STATUS.missing,
-        findings: [
-          "Fonte monitorata non presente in feed_status: verifica richiesta.",
-        ],
-      };
-    }
-
-    const findings: string[] = [];
-    const minutes = freshnessMinutes(row.lastCheckedAt, now);
-    let status: SourceAuditStatus = "ok";
-    let error = row.error ?? null;
-
-    if (row.status === "error") {
-      status = "error";
-      findings.push(
-        "Errore tecnico registrato dall'ultimo controllo della fonte.",
-      );
-      if (!error) error = "Errore tecnico senza dettaglio registrato.";
-    } else if (minutes === null) {
-      status = "warning";
-      findings.push("Fonte censita ma senza ultimo controllo registrato.");
-    } else if (minutes > source.staleAfterMinutes) {
-      status = "stale";
-      findings.push(
-        `Ultimo controllo più vecchio della soglia operativa (${source.staleAfterMinutes} minuti).`,
-      );
-    } else if (row.status !== "ok") {
-      status = "warning";
-      findings.push(
-        `Stato operativo non verde registrato in feed_status: ${row.status}.`,
-      );
-    }
-
-    if (
-      status === "ok" &&
-      source.requiredSignals?.includes("itemsTotal") &&
-      row.itemsTotal === 0
-    ) {
-      status = "warning";
-      findings.push(
-        "Segnale di copertura debole: itemsTotal è 0 per una fonte che dovrebbe esporre righe.",
-      );
-    }
-
-    if (findings.length === 0) {
-      findings.push(
-        "Ultimo controllo recente e senza errori tecnici registrati.",
-      );
-    }
-
-    return {
-      source: source.source,
-      label: source.label,
-      kind: source.kind,
-      priority: source.priority,
-      status,
-      lastCheckedAt: toIso(row.lastCheckedAt),
-      lastUpdatedAt: toIso(row.lastUpdatedAt),
-      freshnessMinutes: minutes,
-      itemsTotal: row.itemsTotal ?? null,
-      itemsNew: row.itemsNew ?? null,
-      error,
-      completenessScore: SCORE_BY_STATUS[status],
-      findings,
-    };
-  });
+  const sources = registry.map((source) =>
+    auditOne(source, rowsBySource.get(source.source), now),
+  );
+  const summary = summarize(sources);
 
   return {
+    status: aggregateStatus(summary),
     generatedAt: now.toISOString(),
+    summary,
     sources,
-    ...aggregateSourceAudit(sources),
   };
 }
 
 export async function getSourceAudit(
-  now: Date = new Date(),
+  now = new Date(),
 ): Promise<SourceAuditPayload> {
-  const statuses = await db
-    .select({
-      source: feedStatusTable.source,
-      status: feedStatusTable.status,
-      error: feedStatusTable.error,
-      itemsTotal: feedStatusTable.itemsTotal,
-      itemsNew: feedStatusTable.itemsNew,
-      lastCheckedAt: feedStatusTable.lastCheckedAt,
-      lastUpdatedAt: feedStatusTable.lastUpdatedAt,
-    })
+  const [{ db, feedStatusTable }, { asc }] = await Promise.all([
+    import("@workspace/db"),
+    import("drizzle-orm"),
+  ]);
+  const rows = await db
+    .select()
     .from(feedStatusTable)
     .orderBy(asc(feedStatusTable.source));
-
-  return auditSources(MONITORED_SOURCES, statuses, now);
+  return auditSources(MONITORED_SOURCES, rows, now);
 }

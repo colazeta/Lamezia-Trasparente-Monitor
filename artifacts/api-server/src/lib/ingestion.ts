@@ -8,6 +8,7 @@ import {
 } from "@workspace/db";
 import { sql, inArray } from "drizzle-orm";
 import { logger } from "./logger";
+import { getMonitoredSource } from "./sourceRegistry";
 import { runAttuazioneIngestion } from "./attuazionePnrr";
 import { runItaliadomaniIngestion } from "./italiadomaniPnrr";
 import {
@@ -26,10 +27,6 @@ import {
   runConfiscatedAssetsGeocoding,
 } from "./confiscatedAssets";
 import { runBriefBatchGuarded } from "./briefs";
-import {
-  MONITORED_SOURCE_BY_ID,
-  type MonitoredSourceId,
-} from "./sourceRegistry";
 
 export const ALBO_SOURCE = "albo-lamezia";
 export const ALBO_LABEL = "Albo Pretorio – Amministrazione Trasparente";
@@ -270,144 +267,76 @@ export async function runIngestion(): Promise<{
 
 const INGESTION_INTERVAL_MS = 3 * 60 * 60 * 1000;
 
-type MonitoredStepCounts = {
-  itemsTotal?: number;
-  itemsNew?: number;
-};
-
-function monitoredStepCounts(result: unknown): MonitoredStepCounts {
-  if (!result || typeof result !== "object") return {};
-  const record = result as Record<string, unknown>;
-  const total =
-    typeof record.total === "number"
-      ? record.total
-      : typeof record.processed === "number"
-        ? record.processed
-        : typeof record.attempted === "number"
-          ? record.attempted
-          : typeof record.candidates === "number"
-            ? record.candidates
-            : undefined;
-  const itemsNew =
-    typeof record.inserted === "number"
-      ? record.inserted
-      : typeof record.upserted === "number"
-        ? record.upserted
-        : typeof record.withFiles === "number"
-          ? record.withFiles
-          : typeof record.withText === "number"
-            ? record.withText
-            : typeof record.matched === "number"
-              ? record.matched
-              : typeof record.located === "number"
-                ? record.located
-                : undefined;
-  return { itemsTotal: total, itemsNew };
-}
-
-async function recordMonitoredStep(
-  sourceId: MonitoredSourceId,
-  outcome:
-    | ({ status: "ok" } & MonitoredStepCounts)
-    | { status: "error"; error: string },
+async function markMonitoredStep(
+  source: string,
+  status: "ok" | "error",
+  error: string | null,
 ): Promise<void> {
-  const source = MONITORED_SOURCE_BY_ID.get(sourceId);
-  if (!source) return;
-
-  const now = new Date();
-  if (outcome.status === "ok") {
-    await db
-      .insert(feedStatusTable)
-      .values({
-        source: source.source,
-        label: source.label,
-        url: source.url ?? "",
-        status: "ok",
-        error: null,
-        itemsTotal: outcome.itemsTotal ?? 0,
-        itemsNew: outcome.itemsNew ?? 0,
-        lastCheckedAt: now,
-        lastUpdatedAt: now,
-      })
-      .onConflictDoUpdate({
-        target: feedStatusTable.source,
-        set: {
-          label: source.label,
-          url: source.url ?? "",
-          status: "ok",
-          error: null,
-          ...(outcome.itemsTotal !== undefined
-            ? { itemsTotal: outcome.itemsTotal }
-            : {}),
-          ...(outcome.itemsNew !== undefined
-            ? { itemsNew: outcome.itemsNew }
-            : {}),
-          lastCheckedAt: now,
-          lastUpdatedAt: now,
-        },
-      });
+  const monitored = getMonitoredSource(source);
+  if (!monitored) {
+    logger.warn(
+      { source },
+      "Monitored ingestion step missing from source registry",
+    );
     return;
   }
 
+  const now = new Date();
   await db
     .insert(feedStatusTable)
     .values({
-      source: source.source,
-      label: source.label,
-      url: source.url ?? "",
-      status: "error",
-      error: outcome.error,
+      source: monitored.source,
+      label: monitored.label,
+      url: monitored.url ?? "internal://ingestion",
+      status,
+      error,
       lastCheckedAt: now,
+      ...(status === "ok" ? { lastUpdatedAt: now } : {}),
     })
     .onConflictDoUpdate({
       target: feedStatusTable.source,
       set: {
-        label: source.label,
-        url: source.url ?? "",
-        status: "error",
-        error: outcome.error,
+        label: monitored.label,
+        url: monitored.url ?? "internal://ingestion",
+        status,
+        error,
         lastCheckedAt: now,
+        ...(status === "ok" ? { lastUpdatedAt: now } : {}),
       },
     });
 }
 
-async function runMonitoredStep<T>(
-  sourceId: MonitoredSourceId,
-  step: () => Promise<T>,
-): Promise<T> {
+async function runMonitoredStep(
+  source: string,
+  action: () => Promise<unknown>,
+  failureMessage: string,
+): Promise<void> {
   try {
-    const result = await step();
-    await recordMonitoredStep(sourceId, {
-      status: "ok",
-      ...monitoredStepCounts(result),
-    });
-    return result;
+    await action();
+    await markMonitoredStep(source, "ok", null);
   } catch (err) {
+    logger.error({ err, source }, failureMessage);
     const message = err instanceof Error ? err.message : "Errore sconosciuto";
-    await recordMonitoredStep(sourceId, {
-      status: "error",
-      error: message,
-    }).catch((statusErr) => {
+    await markMonitoredStep(source, "error", message).catch((statusErr) => {
       logger.error(
-        { err: statusErr, source: sourceId },
-        "Failed to record monitored step status",
+        { err: statusErr, source },
+        "Failed to record monitored ingestion step status",
       );
     });
-    throw err;
   }
 }
 
 async function runIngestionCycle(): Promise<void> {
   await runIngestion().catch(() => {});
-  await runMonitoredStep("albo-attachments", enrichAlboAttachments).catch(
-    (err) => {
-      logger.error({ err }, "Albo attachment enrichment cycle failed");
-    },
+  await runMonitoredStep(
+    "albo-attachments-enrichment",
+    enrichAlboAttachments,
+    "Albo attachment enrichment cycle failed",
   );
-  await runMonitoredStep("document-markdown", extractDocumentMarkdown).catch(
-    (err) => {
-      logger.error({ err }, "Document Markdown extraction cycle failed");
-    },
+  await runMonitoredStep(
+    "document-markdown-extraction",
+    extractDocumentMarkdown,
+    "Document Markdown extraction cycle failed",
   );
   await runAttuazioneIngestion().catch(() => {});
   await runItaliadomaniIngestion().catch((err) => {
@@ -417,45 +346,46 @@ async function runIngestionCycle(): Promise<void> {
   await runMonitoredStep(
     "anac-contracts-geocoding",
     runContractsGeocoding,
-  ).catch((err) => {
-    logger.error({ err }, "Contracts geocoding pass failed");
-  });
+    "Contracts geocoding pass failed",
+  );
   await runOpendataIngestion().catch(() => {});
   await runPerformanceIngestion().catch((err) => {
     logger.error({ err }, "Performance ingestion cycle failed");
   });
-  await runMonitoredStep("organi-sedute", runOrganiSedutaSync).catch((err) => {
-    logger.error({ err }, "Organi/sedute sync failed");
-  });
   await runMonitoredStep(
-    "fundamental-acts",
+    "organi-sedute-sync",
+    runOrganiSedutaSync,
+    "Organi/sedute sync failed",
+  );
+  await runMonitoredStep(
+    "fundamental-acts-suggestions",
     refreshFundamentalActSuggestions,
-  ).catch((err) => {
-    logger.error({ err }, "Fundamental act suggestions refresh failed");
-  });
-  await runMonitoredStep("bandi", refreshBandiSuggestions).catch((err) => {
-    logger.error({ err }, "Bandi suggestions refresh failed");
-  });
+    "Fundamental act suggestions refresh failed",
+  );
+  await runMonitoredStep(
+    "bandi-suggestions",
+    refreshBandiSuggestions,
+    "Bandi suggestions refresh failed",
+  );
   await runConfiscatedAssetsIngestion().catch(() => {});
   await runMonitoredStep(
-    "anbsc-beni-confiscati-geocoding",
+    "confiscated-assets-geocoding",
     runConfiscatedAssetsGeocoding,
-  ).catch((err) => {
-    logger.error({ err }, "Confiscated assets geocoding pass failed");
-  });
-  await runMonitoredStep("theme-counters", reconcileThemeCounters).catch(
-    (err) => {
-      logger.error({ err }, "Theme counter reconciliation failed");
-    },
+    "Confiscated assets geocoding pass failed",
+  );
+  await runMonitoredStep(
+    "theme-counters-reconciliation",
+    reconcileThemeCounters,
+    "Theme counters reconciliation failed",
   );
   // Pre-genera le sintesi "In breve" degli atti dell'Albo (proattivo, non lazy):
   // così le anteprime nelle liste web/mobile sono già popolate senza dover aprire
   // ogni atto. Idempotente, con rate-limit e protezione costi (vedi lib/briefs).
   // Gira per ultimo perché dipende dal testo estratto (extractDocumentMarkdown).
-  await runMonitoredStep("brief-generation", runBriefBatchGuarded).catch(
-    (err) => {
-      logger.error({ err }, "Brief generation batch failed");
-    },
+  await runMonitoredStep(
+    "ai-brief-generation",
+    runBriefBatchGuarded,
+    "Brief generation batch failed",
   );
 }
 
