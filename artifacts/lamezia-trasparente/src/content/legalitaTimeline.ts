@@ -108,7 +108,10 @@ export const TIMELINE_STATUS_LABELS: Record<TimelineStatus, string> = {
   non_applicabile: "Non applicabile",
 };
 
-export const TIMELINE_SOURCE_KIND_LABELS: Record<TimelineSource["kind"], string> = {
+export const TIMELINE_SOURCE_KIND_LABELS: Record<
+  TimelineSource["kind"],
+  string
+> = {
   sentenza: "Sentenza",
   comunicato_istituzionale: "Comunicato istituzionale",
   ministero_interno: "Ministero dell'Interno",
@@ -123,6 +126,12 @@ export const TIMELINE_SOURCE_KIND_LABELS: Record<TimelineSource["kind"], string>
 // v0: no real events are published until the editorial team records a primary
 // source, status, caution note and last verification for each item.
 export const legalityTimelineEvents: LegalityTimelineEvent[] = [];
+
+export function getPublishedLegalityTimelineEvents(
+  events: LegalityTimelineEvent[] = legalityTimelineEvents,
+) {
+  return events.filter((event) => event.published === true);
+}
 
 export const timelineSchemaExample: LegalityTimelineEvent = {
   id: "schema-evento-da-verificare",
