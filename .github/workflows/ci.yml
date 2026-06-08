@@ -13,7 +13,7 @@ permissions:
 
 jobs:
   validate:
-    name: Install, typecheck and build
+    name: Install, typecheck, build and test
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -39,3 +39,6 @@ jobs:
 
       - name: Build
         run: pnpm run build
+
+      - name: Test stable workspace suites
+        run: pnpm -r --if-present run test

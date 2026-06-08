@@ -5973,6 +5973,30 @@ components:
         url:
           type: string
 
+    PnrrLocationQuality:
+      type: string
+      description: Qualità della localizzazione esposta nella scheda PNRR
+      enum: [ufficiale, dedotta, da_verificare, non_disponibile]
+
+    PnrrLinkedContract:
+      type: object
+      required:
+        - relationKey
+        - relationValue
+        - relationNote
+        - contract
+      properties:
+        relationKey:
+          type: string
+          description: Chiave documentale usata per collegare progetto e contratto/affidamento
+          enum: [CUP, CIG, altra_chiave]
+        relationValue:
+          type: string
+        relationNote:
+          type: string
+        contract:
+          $ref: "#/components/schemas/Contract"
+
     PnrrProject:
       type: object
       required:
@@ -5985,6 +6009,10 @@ components:
         - documents
         - trasparenzaCompleta
         - aggiornamentoVecchio
+        - location
+        - locationQuality
+        - locationNote
+        - linkedContracts
       properties:
         id:
           type: integer
@@ -6023,6 +6051,14 @@ components:
         lastUpdatedAt:
           type: ["string", "null"]
           description: Date of last update from Italia Domani census
+        location:
+          type: ["string", "null"]
+          description: Territorial label exposed by the PNRR source or by the local filtering logic
+        locationQuality:
+          $ref: "#/components/schemas/PnrrLocationQuality"
+        locationNote:
+          type: string
+          description: Methodological note explaining whether the location is official, inferred, needs verification or is unavailable
         trasparenzaCompleta:
           type: boolean
           description: True when the project is also present in the Comune's Attuazione Misure PNRR page (matched by CUP)
@@ -6041,6 +6077,10 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/Publication"
+        linkedContracts:
+          type: array
+          items:
+            $ref: "#/components/schemas/PnrrLinkedContract"
 
     PnrrCensus:
       type: object
@@ -6438,6 +6478,27 @@ components:
             briefManual=true; an empty/whitespace value clears the summary and
             re-enables automatic generation.
 
+    ReportVerificationStatus:
+      type: string
+      enum:
+        - non_verificata
+        - in_verifica
+        - documentata
+        - risposta_ricevuta
+        - chiusa
+        - archiviata
+        - da_aggiornare
+
+    ReportOutcome:
+      type: string
+      enum:
+        - aperta
+        - risolta
+        - parzialmente_risolta
+        - non_risolta
+        - non_verificabile
+        - archiviata
+
     Report:
       type: object
       required:
@@ -6447,6 +6508,10 @@ components:
         - category
         - location
         - status
+        - outcome
+        - verificationStatus
+        - interpretiveCaution
+        - updatedAt
         - createdAt
       properties:
         id:
@@ -6457,11 +6522,44 @@ components:
           type: string
         category:
           type: string
+          description: Ambito della criticità pubblica.
         location:
           type: string
+          description: Quartiere, via, edificio, area o `non localizzato`.
         status:
           type: string
           enum: [ricevuta, in_valutazione, presa_in_carico, archiviata]
+        initialSourceType:
+          type: ["string", "null"]
+          description: Fonte iniziale, per esempio articolo, comunicato, post pubblico, interrogazione, mozione, accesso, albo, delibera o altro.
+        initialSourceUrl:
+          type: ["string", "null"]
+        publicEmergenceDate:
+          type: ["string", "null"]
+        involvedSector:
+          type: ["string", "null"]
+        competentOffice:
+          type: ["string", "null"]
+        formalAct:
+          type: ["string", "null"]
+        institutionalResponse:
+          type: ["string", "null"]
+        institutionalResponseDate:
+          type: ["string", "null"]
+        availableData:
+          type: ["string", "null"]
+        missingData:
+          type: ["string", "null"]
+        foiaLink:
+          type: ["string", "null"]
+        outcome:
+          $ref: '#/components/schemas/ReportOutcome'
+        verificationStatus:
+          $ref: '#/components/schemas/ReportVerificationStatus'
+        interpretiveCaution:
+          type: string
+        updatedAt:
+          type: string
         createdAt:
           type: string
 
@@ -6482,6 +6580,34 @@ components:
           type: string
           minLength: 1
         citizenName:
+          type: string
+        initialSourceType:
+          type: string
+        initialSourceUrl:
+          type: string
+        publicEmergenceDate:
+          type: string
+        involvedSector:
+          type: string
+        competentOffice:
+          type: string
+        formalAct:
+          type: string
+        institutionalResponse:
+          type: string
+        institutionalResponseDate:
+          type: string
+        availableData:
+          type: string
+        missingData:
+          type: string
+        foiaLink:
+          type: string
+        outcome:
+          $ref: '#/components/schemas/ReportOutcome'
+        verificationStatus:
+          $ref: '#/components/schemas/ReportVerificationStatus'
+        interpretiveCaution:
           type: string
 
     MonitoringReportAttachment:

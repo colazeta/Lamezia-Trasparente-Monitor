@@ -6,7 +6,7 @@ const PRINCIPLES = [
   "Il sito è un progetto civico indipendente e non sostituisce comunicazioni, atti o banche dati istituzionali.",
   "Ogni informazione va ricondotta alla fonte originaria quando è disponibile un link ufficiale o un documento pubblico.",
   "Le sintesi redazionali, le categorie e gli indicatori sono strumenti di orientamento: aiutano a leggere fenomeni amministrativi, ma non stabiliscono responsabilità personali o illiceità.",
-  "Le eventuali anomalie devono essere trattate come red flag amministrative che richiedono ulteriore verifica documentale e, se necessario, interlocuzione con l'ente competente.",
+  "Le eventuali criticità devono essere trattate come segnali amministrativi che richiedono ulteriore verifica documentale e, se necessario, interlocuzione con l'ente competente.",
 ];
 
 const CAUTIONS = [

@@ -22,6 +22,7 @@ import { format } from "date-fns";
 import { it } from "date-fns/locale";
 
 import { PageMeta } from "@/components/seo/PageMeta";
+import { CivicMonitorReturn } from "@/components/CivicMonitorReturn";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -352,6 +353,7 @@ export function Incarichimetro() {
             servizi professionali, negli affidamenti tecnici, legali e di
             consulenza.
           </p>
+          <CivicMonitorReturn context="Gli indicatori su incarichi e affidamenti rientrano nel Monitor civico come segnali da collegare a fonti, atti e bisogni di verifica." />
         </div>
 
         <section

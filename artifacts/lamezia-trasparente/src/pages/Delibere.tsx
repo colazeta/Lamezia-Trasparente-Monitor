@@ -18,6 +18,7 @@ import {
 import { AlboLink } from "@/components/AlboLink";
 import { cn } from "@/lib/utils";
 import { MacrotemaBadge } from "@/lib/macrotema";
+import { CivicMonitorReturn } from "@/components/CivicMonitorReturn";
 
 const TABS = [
   { value: "all", label: "Tutte" },
@@ -28,7 +29,9 @@ const TABS = [
 function formatDate(value: string | null | undefined) {
   if (!value) return "—";
   const d = new Date(value);
-  return Number.isNaN(d.getTime()) ? "—" : format(d, "dd MMM yyyy", { locale: it });
+  return Number.isNaN(d.getTime())
+    ? "—"
+    : format(d, "dd MMM yyyy", { locale: it });
 }
 
 export function Delibere() {
@@ -60,6 +63,7 @@ export function Delibere() {
           Le deliberazioni della Giunta e del Consiglio Comunale, raccolte e
           rese consultabili in modo permanente.
         </p>
+        <CivicMonitorReturn context="Le delibere sono fonti primarie per verificare promesse, criticità pubbliche e atti collegati senza trarre conclusioni autonome." />
       </div>
 
       <div className="flex flex-col md:flex-row md:items-center gap-4 mb-8">
@@ -150,8 +154,8 @@ export function Delibere() {
               </EmptyMedia>
               <EmptyTitle>Nessuna delibera trovata</EmptyTitle>
               <EmptyDescription>
-                Nessuna deliberazione corrisponde ai criteri selezionati. Prova a
-                cambiare organo o a modificare la ricerca.
+                Nessuna deliberazione corrisponde ai criteri selezionati. Prova
+                a cambiare organo o a modificare la ricerca.
               </EmptyDescription>
             </EmptyHeader>
           </Empty>

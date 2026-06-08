@@ -33,7 +33,9 @@ import { AccessoCivico } from "./pages/AccessoCivico";
 import { Monitoraggio } from "./pages/Monitoraggio";
 import { MonitoraggioDetail } from "./pages/MonitoraggioDetail";
 import { MonitoraggioNuovo } from "./pages/MonitoraggioNuovo";
+import { Promessometro } from "./pages/Promessometro";
 import { Legalita } from "./pages/Legalita";
+import { LegalitaTimeline } from "./pages/LegalitaTimeline";
 import { Performance } from "./pages/Performance";
 import { PerformanceCompare } from "./pages/PerformanceCompare";
 import { PerformanceDetail } from "./pages/PerformanceDetail";
@@ -145,8 +147,8 @@ export function Router() {
             <PublicRouteWithMeta
               path="/monitoraggio"
               component={Monitoraggio}
-              title="Monitoraggio civico"
-              description="Spazio per seguire segnalazioni e bisogni di verifica civica, senza sostituire le fonti ufficiali."
+              title="Monitor civico"
+              description="Hub documentale che collega criticità pubbliche, programma sotto verifica, atti, PNRR, incarichi, accesso civico e legalità senza formulare accuse autonome."
             />
             <PublicRouteWithMeta
               path="/monitoraggio/nuovo"
@@ -154,7 +156,19 @@ export function Router() {
               title="Nuova segnalazione civica"
               description="Modulo per proporre un elemento di monitoraggio civico da valutare con cautele, fonti e verifiche successive."
             />
+            <PublicRouteWithMeta
+              path="/promessometro"
+              component={Promessometro}
+              title="Promessometro amministrativo"
+              description="Modulo civico per collegare promesse programmatiche e atti amministrativi con cautele documentali e senza scoring politico."
+            />
             <Route path="/monitoraggio/:id" component={MonitoraggioDetail} />
+            <PublicRouteWithMeta
+              path="/legalita/timeline"
+              component={LegalitaTimeline}
+              title="Timeline legalità e memoria civica"
+              description="Struttura pubblica per eventi documentati su legalità, antimafia e memoria istituzionale, con fonti, status e cautele esplicite."
+            />
             <PublicRouteWithMeta
               path="/legalita"
               component={Legalita}
@@ -232,10 +246,16 @@ export function Router() {
             />
             <Route path="/pareri/:id" component={PareriVigilanzaDetail} />
             <PublicRouteWithMeta
+              path="/criticita-pubbliche"
+              component={Reports}
+              title="Registro delle criticità pubbliche"
+              description="Registro civico per distinguere segnalazioni, fonti, atti, risposte istituzionali e dati mancanti senza presentare accuse come fatti."
+            />
+            <PublicRouteWithMeta
               path="/segnalazioni"
               component={Reports}
-              title="Segnalazioni civiche"
-              description="Area per consultare o inviare segnalazioni civiche come richieste di attenzione e verifica, non accuse."
+              title="Segnalazioni e criticità pubbliche"
+              description="Area unica per inviare segnalazioni civiche e consultarle come criticità pubbliche da verificare, non accuse."
             />
             <PublicRouteWithMeta
               path="/statistiche"
@@ -247,6 +267,8 @@ export function Router() {
             <Route path="/metodologia" component={Metodologia} />
             <Route path="/roadmap" component={Roadmap} />
             <Route path="/note-legali" component={NoteLegali} />
+            <Route path="/chi-siamo" component={ChiSiamo} />
+            <Route path="/contatti" component={Contatti} />
             <PublicRouteWithMeta
               path="/iscrizioni"
               component={Subscriptions}

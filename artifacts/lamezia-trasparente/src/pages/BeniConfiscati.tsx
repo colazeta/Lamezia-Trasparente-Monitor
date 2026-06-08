@@ -40,12 +40,12 @@ import {
   STATUS_COLOR,
   STATUS_LABEL,
 } from "@/components/ConfiscatedAssetsMap";
+import { CivicMonitorReturn } from "@/components/CivicMonitorReturn";
 
 const STATUS_BADGE: Record<ConfiscatedAssetStatus, string> = {
   sequestrato:
     "border-amber-500/40 bg-amber-500/10 text-amber-700 dark:text-amber-400",
-  confiscato:
-    "border-sky-500/40 bg-sky-500/10 text-sky-700 dark:text-sky-400",
+  confiscato: "border-sky-500/40 bg-sky-500/10 text-sky-700 dark:text-sky-400",
   assegnato:
     "border-emerald-500/40 bg-emerald-500/10 text-emerald-700 dark:text-emerald-400",
   riutilizzato:
@@ -171,6 +171,7 @@ export function BeniConfiscati() {
           l'eventuale ente o associazione assegnataria e la destinazione d'uso,
           per seguire il percorso di restituzione alla collettività.
         </p>
+        <CivicMonitorReturn context="Le schede sui beni confiscati alimentano la memoria civica del Monitor e possono collegarsi ad atti, requisiti di legalità e fonti pubbliche." />
       </div>
 
       <div className="mb-8">
@@ -179,22 +180,19 @@ export function BeniConfiscati() {
 
       {assets && assets.length > 0 ? (
         <Card data-tour="beni-list" className="mb-8 overflow-hidden p-0">
-          <ConfiscatedAssetsMap
-            assets={assets}
-            className="h-[460px] w-full"
-          />
+          <ConfiscatedAssetsMap assets={assets} className="h-[460px] w-full" />
           <div className="flex flex-wrap gap-x-4 gap-y-2 border-t border-border p-3 text-xs">
-            {(
-              Object.keys(STATUS_LABEL) as ConfiscatedAssetStatus[]
-            ).map((s) => (
-              <span key={s} className="flex items-center gap-1.5">
-                <span
-                  className="inline-block h-3 w-3 rounded-full"
-                  style={{ backgroundColor: STATUS_COLOR[s] }}
-                />
-                {STATUS_LABEL[s]}
-              </span>
-            ))}
+            {(Object.keys(STATUS_LABEL) as ConfiscatedAssetStatus[]).map(
+              (s) => (
+                <span key={s} className="flex items-center gap-1.5">
+                  <span
+                    className="inline-block h-3 w-3 rounded-full"
+                    style={{ backgroundColor: STATUS_COLOR[s] }}
+                  />
+                  {STATUS_LABEL[s]}
+                </span>
+              ),
+            )}
           </div>
         </Card>
       ) : null}
