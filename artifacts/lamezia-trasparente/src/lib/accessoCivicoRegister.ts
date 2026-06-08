@@ -149,29 +149,59 @@ export const seedFoiaRegisterEntries: FoiaRegisterEntry[] = [
   },
 ];
 
+function parseDateOnlyUtc(value: string) {
+  const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(value);
+  if (!match) return undefined;
+
+  const year = Number(match[1]);
+  const month = Number(match[2]);
+  const day = Number(match[3]);
+  const time = Date.UTC(year, month - 1, day);
+  const date = new Date(time);
+
+  if (
+    Number.isNaN(time) ||
+    date.getUTCFullYear() !== year ||
+    date.getUTCMonth() !== month - 1 ||
+    date.getUTCDate() !== day
+  ) {
+    return undefined;
+  }
+
+  return date;
+}
+
+function formatDateOnlyUtc(date: Date) {
+  const year = date.getUTCFullYear();
+  const month = String(date.getUTCMonth() + 1).padStart(2, "0");
+  const day = String(date.getUTCDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
+
 export function calculateIndicativeDeadline(sentDate: string, days = 30) {
-  const date = new Date(`${sentDate}T00:00:00`);
-  if (Number.isNaN(date.getTime())) return undefined;
-  date.setDate(date.getDate() + days);
-  return date.toISOString().slice(0, 10);
+  const date = parseDateOnlyUtc(sentDate);
+  if (!date) return undefined;
+  date.setUTCDate(date.getUTCDate() + days);
+  return formatDateOnlyUtc(date);
 }
 
 export function formatFoiaDate(value: string | undefined) {
   if (!value) return "—";
-  const date = new Date(`${value}T00:00:00`);
-  return Number.isNaN(date.getTime())
-    ? value
-    : new Intl.DateTimeFormat("it-IT", {
+  const date = parseDateOnlyUtc(value);
+  return date
+    ? new Intl.DateTimeFormat("it-IT", {
         day: "2-digit",
         month: "2-digit",
         year: "numeric",
-      }).format(date);
+        timeZone: "UTC",
+      }).format(date)
+    : value;
 }
 
 function daysUntil(dateValue: string, today: string) {
-  const target = new Date(`${dateValue}T00:00:00`).getTime();
-  const current = new Date(`${today}T00:00:00`).getTime();
-  if (Number.isNaN(target) || Number.isNaN(current)) return undefined;
+  const target = parseDateOnlyUtc(dateValue)?.getTime();
+  const current = parseDateOnlyUtc(today)?.getTime();
+  if (target === undefined || current === undefined) return undefined;
   return Math.ceil((target - current) / 86_400_000);
 }
 
