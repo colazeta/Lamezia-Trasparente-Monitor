@@ -37,6 +37,7 @@ import {
 import { AlboLink } from "@/components/AlboLink";
 import { MonitoringReportsSection } from "@/components/MonitoringReportsSection";
 import { PageMeta } from "@/components/seo/PageMeta";
+import { CivicMonitorReturn } from "@/components/CivicMonitorReturn";
 
 const ITALIA_DOMANI_PROJECTS_DATASET_URL =
   "https://www.italiadomani.gov.it/content/dam/italiadomani/opendata/Progetti_del_PNRR/Progetti_PNRR.csv";
@@ -282,6 +283,7 @@ export function Pnrr() {
             solo tramite CUP o altra chiave documentata, senza dedurre ritardi o
             criticità non documentate dalle fonti.
           </p>
+          <CivicMonitorReturn context="I progetti PNRR possono essere collegati a report civici, atti, affidamenti e richieste di accesso civico come elementi documentali da verificare." />
           {censusLastUpdatedAt && (
             <p className="mt-2 flex items-center gap-1.5 text-xs text-muted-foreground">
               <RefreshCw className="h-3 w-3" aria-hidden="true" />

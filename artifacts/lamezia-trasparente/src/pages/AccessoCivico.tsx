@@ -924,6 +924,7 @@ export function AccessoCivico() {
             invia automaticamente email o PEC e non sostituisce una verifica
             legale o amministrativa sul caso concreto.
           </p>
+          <CivicMonitorReturn context="Le richieste FOIA aiutano a trasformare data gap e documenti non rintracciati in verifiche tracciabili dentro il Monitor civico." />
         </header>
 
         <section
