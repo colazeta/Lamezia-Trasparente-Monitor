@@ -828,11 +828,11 @@ function StaticHomeLayout() {
         <div className="container relative mx-auto px-4 md:px-6 py-20 text-center max-w-3xl">
           <Megaphone className="h-12 w-12 mx-auto mb-6"  aria-hidden="true"/>
           <h2 className="text-3xl md:text-5xl font-display font-bold mb-4 tracking-tight">
-            Hai notato un'anomalia?
+            Hai notato una criticità da verificare?
           </h2>
           <p className="text-brand-foreground/85 text-lg mb-8 text-balance">
-            La trasparenza si costruisce insieme. Segnala lavori interrotti, bandi sospetti o
-            sprechi di denaro pubblico. Il nostro team verificherà la segnalazione.
+            La trasparenza si costruisce insieme. Segnala lavori interrotti, documentazione mancante o
+            possibili incoerenze documentali. Il nostro team verificherà la segnalazione.
           </p>
           <Link href="/segnalazioni">
             <Button size="lg" variant="secondary" className="text-base h-12 px-8 font-bold">

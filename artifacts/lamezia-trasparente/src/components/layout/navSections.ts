@@ -79,7 +79,7 @@ export const NAV_GROUPS: NavSection[] = [
         href: "/legalita",
         label: "Legalità e Trasparenza",
         description:
-          "Impegni e misure contro la corruzione e per la trasparenza.",
+          "Impegni, prevenzione della corruzione e obblighi di trasparenza.",
         icon: Scale,
       },
     ],
@@ -167,7 +167,7 @@ export const NAV_GROUPS: NavSection[] = [
       {
         href: "/segnalazioni",
         label: "Segnalazioni",
-        description: "Segnala anomalie, sprechi o disservizi.",
+        description: "Segnala criticità da verificare o disservizi documentati.",
         icon: Megaphone,
       },
     ],

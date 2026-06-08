@@ -342,7 +342,7 @@ function InfoSection() {
           <h3 className="font-display text-base font-semibold">Accesso civico semplice</h3>
         </div>
         <p className="text-sm text-muted-foreground">
-          Serve quando si cerca un documento, dato o informazione che dovrebbe essere pubblicato per obbligo di trasparenza. La bozza chiede la pubblicazione o il collegamento corretto, senza accusare l'ente di omissioni.
+          Serve quando si cerca un documento, dato o informazione che dovrebbe essere pubblicato per obbligo di trasparenza. La bozza chiede la pubblicazione o il collegamento corretto, senza formulare accuse sulla mancata pubblicazione.
         </p>
       </Card>
       <Card className="p-5">

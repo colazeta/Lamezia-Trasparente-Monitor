@@ -90,7 +90,7 @@ export function Reports() {
         <p className="mt-3 text-muted-foreground text-lg">
           Invia un segnale civico circostanziato su servizi, lavori o informazioni pubbliche
           che richiedono verifica. La segnalazione non sostituisce una richiesta di accesso
-          civico né una denuncia formale alle autorità competenti.
+          civico né eventuali atti formali rivolti alle autorità competenti.
         </p>
       </div>
 
