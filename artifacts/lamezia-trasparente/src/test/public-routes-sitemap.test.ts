@@ -28,6 +28,15 @@ describe("public route sitemap inventory", () => {
     expect(readSitemapUrls()).toEqual(expectedUrls);
   });
 
+  it("keeps sitemap URLs and typed public route paths unique", () => {
+    const sitemapUrls = readSitemapUrls();
+
+    expect(new Set(PUBLIC_INDEXABLE_PATHS).size).toBe(
+      PUBLIC_INDEXABLE_PATHS.length,
+    );
+    expect(new Set(sitemapUrls).size).toBe(sitemapUrls.length);
+  });
+
   it("keeps dynamic, protected and redirect routes out of the sitemap inventory", () => {
     const indexedPaths = PUBLIC_INDEXABLE_PATHS.join("\n");
 
