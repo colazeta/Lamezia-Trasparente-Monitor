@@ -38,9 +38,20 @@ A Codex invocation counts as real active work only when at least one reviewer-ve
 - an open pull request targeting `main`;
 - a branch visible in GitHub with the exact ref and a recent commit SHA;
 - a concrete diff or execution artifact that a reviewer can inspect;
-- an explicit technical blocker explaining why the branch, diff or pull request could not be produced.
+- an in-progress Codex invocation that is still within the stale-task grace window defined below.
 
 A generic operational summary without one of those artifacts is classified as `output-without-PR`. It must not saturate the capacity-10 queue, must be routed to `codex:follow-up`, and must receive a recovery comment asking Codex to open a reviewable PR or provide the exact verifiable blocker.
+
+An explicit technical blocker is reviewable evidence, but it is **not active work**. Once Codex or an automation reports a precise blocker that prevents branch, diff or pull request creation, route the issue to `codex:blocked` or `codex:follow-up` according to recoverability, preserve the exact blocker details in the comment, and release the active slot. Do not keep the task in `codex:invoked` or `codex:working` merely because a blocker was reported.
+
+### Fresh prompt and stale-task grace window
+
+Do not classify a newly prepared issue as stale or `output-without-PR` before Codex has had a reasonable opportunity to act.
+
+- `codex:prompted` means a prompt is prepared and waiting for invocation. It counts as operational capacity, but it must not be treated as a failed or stale implementation attempt until an operative `@codex` invocation exists or the prompt itself is older than 60 minutes with no invocation or cleanup action.
+- `codex:invoked` and `codex:working` may be considered stale only after more than 60 minutes with no visible PR, branch, Codex comment, commit or other concrete activity.
+- The 60-minute clock starts from the most recent operative event: prompt publication, Codex invocation, Codex status comment, branch push, commit, PR creation or explicit blocker report.
+- If there is a recent operative event inside the grace window, record the issue as pending/in-progress rather than stale, and leave capacity accounting unchanged unless a concrete blocker has already released the slot.
 
 The governor should use all ten real active slots when eligible low-collision backlog exists. A queue below 10/10 is healthy only when there is no real eligible backlog, a concrete file/module collision, legal/copy/methodological risk, CI instability, or a decision that must be made by Giovanni before parallel work on the affected files/modules is safe. Giovanni review/merge wait alone is not a reason to pause the whole pipeline.
 
@@ -142,7 +153,9 @@ Purpose:
    - `codex:blocked` if a safety or collision blocker prevents continuation;
    - `codex:done` only after review/merge evidence indicates the issue appears solved.
 
-Stale-task rule: if an issue has `codex:invoked` or `codex:working` for more than 60 minutes with no PR, branch, Codex comment, commit or other concrete activity, move it to `codex:follow-up`, comment with the observed inactivity, and release operational capacity.
+Fresh-prompt rule: do not mark a just-prepared `codex:prompted` issue as stalled merely because no PR exists yet. It remains a prompt awaiting invocation until an operative `@codex` invocation is posted, or until the prompt is older than 60 minutes with no invocation or cleanup action.
+
+Stale-task rule: if an issue has `codex:invoked` or `codex:working` for more than 60 minutes since the most recent operative event and still has no PR, branch, Codex comment, commit or other concrete activity, move it to `codex:follow-up`, comment with the observed inactivity, and release operational capacity.
 
 Output-without-PR triage checklist:
 
@@ -153,7 +166,7 @@ Output-without-PR triage checklist:
 5. if none exists, classify the attempt as `output-without-PR`, move it to `codex:follow-up`, and release the active slot;
 6. post a recovery comment requiring either a reviewable PR to `main` or a precise blocker with verifiable branch/diff/SHA details.
 
-Fallback rule: if Codex reports that it could not open a PR, route to `codex:follow-up` unless the comment gives a concrete recoverable technical blocker that should become `codex:blocked`. The follow-up comment must preserve the exact technical reason and branch/diff or blocker information. If Codex claims a PR or branch exists but GitHub cannot verify it, treat the claim as `output-without-PR` until Codex provides the direct PR URL, exact ref and commit SHA, or a technical blocker.
+Fallback rule: if Codex reports that it could not open a PR, route to `codex:follow-up` unless the comment gives a concrete technical blocker that should become `codex:blocked`. The follow-up or blocker comment must preserve the exact technical reason and branch/diff or blocker information. A reported blocker is a review artifact, not an active slot: release capacity as soon as it is routed. If Codex claims a PR or branch exists but GitHub cannot verify it, treat the claim as `output-without-PR` until Codex provides the direct PR URL, exact ref and commit SHA, or a technical blocker.
 
 Safety rule: this automation must not close issues automatically unless a future explicit policy allows it. The current policy is to comment with a closure recommendation only.
 
@@ -167,7 +180,7 @@ Purpose:
 2. exclude `codex:review-needed` and PRs/issues awaiting Giovanni review or merge from saturation unless there is concrete file/module collision or Codex-side rework;
 3. calculate effective free slots as `10 - real active Codex operational tasks`;
 4. detect duplicate work across issues and pull requests;
-5. detect stale `codex:invoked` or `codex:working` issues with no concrete activity for more than 60 minutes;
+5. detect stale `codex:invoked` or `codex:working` issues with no concrete activity for more than 60 minutes since the latest operative event, while exempting newly prepared `codex:prompted` issues that are still inside the 60-minute prompt/invocation grace window;
 6. stop or slow promotion when CI fails repeatedly because of recent Codex work;
 7. add `codex:blocked` where the automation should not continue;
 8. promote safe tasks to `codex:ready` whenever real active capacity is below 10/10 and eligible low-collision backlog exists;

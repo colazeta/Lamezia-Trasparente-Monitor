@@ -19,7 +19,7 @@ Task:
 2. determine whether a pull request exists, targets `main`, uses a `codex/{{ISSUE_NUMBER}}-<slug>` branch and references the issue;
 3. detect delivery without PR and capture the exact reported reason, branch/diff, commit SHA or blocker;
 4. classify any generic summary without a GitHub-visible PR, GitHub-visible branch plus recent commit SHA, reviewable diff/execution artifact or explicit technical blocker as `output-without-PR`;
-5. detect stale zombie tasks: `codex:invoked` or `codex:working` for more than 60 minutes with no PR, branch, Codex comment, commit or other concrete activity;
+5. detect stale zombie tasks only after the grace window: `codex:invoked` or `codex:working` for more than 60 minutes since the latest operative event with no PR, branch, Codex comment, commit or other concrete activity;
 6. check whether the implementation appears to satisfy the acceptance criteria;
 7. identify validation status if available;
 8. identify whether the implementation changed copy/legal/methodological safeguards;
@@ -33,8 +33,10 @@ Queue rules:
 - `codex:review-needed` is human review/merge wait and does not saturate Codex capacity unless there is concrete file/module collision or Codex-side rework.
 - Open PRs, pending reviews and PRs/issues waiting only for Giovanni review or merge are outside the queue capacity count and block only candidate work touching the same files/modules or creating a concrete implementation collision.
 - Compute remaining capacity as `10 - real active Codex operational tasks`; do not subtract human-review-pending items.
+- A newly prepared `codex:prompted` issue is not stale merely because it has no PR yet. Treat it as awaiting invocation until an operative `@codex` invocation exists or the prompt is older than 60 minutes with no invocation or cleanup action.
 - Moving a stale, failed no-PR or `output-without-PR` task to `codex:follow-up` releases operational capacity.
-- If a claimed PR or branch is not visible on GitHub, require the direct PR URL, exact branch ref and commit SHA, or a precise blocker before counting the task as active.
+- A concrete technical blocker is reviewable evidence but not active work. Route it to `codex:blocked` or `codex:follow-up`, preserve the exact blocker details, and release the active slot.
+- If a claimed PR or branch is not visible on GitHub, require the direct PR URL, exact branch ref and commit SHA before counting the task as active, or require a precise blocker before routing it to `codex:blocked` / `codex:follow-up` and releasing capacity.
 - Preserve no-auto-merge and no-auto-close policy.
 
 Do not close the issue automatically unless the repository policy explicitly authorises automatic closure. The current policy is to recommend closure only after human review.

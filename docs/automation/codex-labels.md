@@ -44,7 +44,8 @@ The state machine separates automation work from human pull request management. 
 ## Operational groups
 
 - **Candidate/triage states:** `codex:candidate`, `codex:ready`.
-- **Operational states that can saturate capacity:** real active Codex work: `codex:prompted`, `codex:invoked`, `codex:working`, and open Codex PRs that still need Codex-side changes, only when backed by a visible PR, visible branch with recent commit, reviewable diff/execution artifact, or explicit technical blocker.
+- **Operational states that can saturate capacity:** real active Codex work: `codex:prompted`, `codex:invoked`, `codex:working`, and open Codex PRs that still need Codex-side changes, only while backed by a visible PR, visible branch with recent commit, reviewable diff/execution artifact or an in-progress invocation inside the stale-task grace window. Explicit technical blockers are reviewable evidence, but after routing they release capacity instead of saturating it.
+- **Fresh prompt grace:** a newly prepared `codex:prompted` issue is awaiting invocation, not stalled, until an operative `@codex` invocation exists or the prompt is older than 60 minutes with no invocation or cleanup action.
 - **Human review wait:** `codex:review-needed` and PRs/issues waiting only for Giovanni review or merge; these are outside the capacity count unless there is concrete file/module collision or Codex-side rework.
 - **Follow-up/blocking states:** `codex:follow-up`, `codex:blocked`, `codex:dangerous`.
 - **Completion state:** `codex:done`, which must not be used to auto-close an issue.
@@ -74,7 +75,9 @@ The state machine separates automation work from human pull request management. 
 - `area:backlog-governance` should generally produce triage comments, not direct code changes.
 - Issues should not move from `codex:working` to `codex:done` without evidence of a PR, validation or explicit reviewer confirmation.
 - Issues with `codex:invoked` or `codex:working` for more than 60 minutes and no PR, branch, Codex comment, commit or other concrete activity should move to `codex:follow-up` and release operational capacity.
+- Start the 60-minute stale-task clock from the latest operative event: prompt publication, Codex invocation, Codex status comment, branch push, commit, PR creation or explicit blocker report.
 - A Codex summary without a GitHub-visible PR, GitHub-visible branch plus recent commit SHA, reviewable diff/execution artifact or explicit technical blocker is `output-without-PR`; it does not count as a real active slot and should be routed to `codex:follow-up` for recovery.
+- A precise technical blocker is reviewable evidence but not active work after routing; move it to `codex:blocked` or `codex:follow-up`, preserve the exact blocker details, and release capacity.
 - All implementation work must use a dedicated branch named `codex/<issue-number>-<slug>` and open a PR targeting `main`; if a PR cannot be opened, Codex must comment with the exact technical reason and the branch ref, commit SHA, diff location or blocker.
 - Codex must not auto-merge PRs and must not close issues directly.
 

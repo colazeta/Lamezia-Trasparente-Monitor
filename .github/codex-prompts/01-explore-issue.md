@@ -29,6 +29,8 @@ Queue model:
 - `codex:review-needed`, open PRs, pending reviews and PRs/issues waiting only for Giovanni review/merge are human review wait and do not saturate Codex capacity unless there is concrete file/module collision or Codex-side rework.
 - Effective free slots are `10 - real active Codex operational tasks`; do not subtract human-review-pending items.
 - Do not prepare a prompt that would exceed capacity 10 or create unresolved collision risk on the same files/modules; do not block a non-colliding issue merely because unrelated PRs are open or awaiting review/merge.
+- A newly prepared `codex:prompted` issue is not stalled just because no PR exists yet; it remains awaiting invocation until an operative `@codex` invocation exists or the prompt is older than 60 minutes with no invocation or cleanup action.
+- A precise technical blocker is reviewable evidence, but once routed to `codex:blocked` or `codex:follow-up` it is not active work and must not occupy capacity.
 
 Task:
 1. classify the issue as one of: technical, UI/accessibility/metadata, civic-methodological, copy/legal tone, data/API/schema, backlog/governance, unsafe/manual;
