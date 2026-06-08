@@ -48,7 +48,7 @@ interface CliOptions {
   warningRunsThreshold: number;
 }
 
-interface GitHubIssue {
+export interface GitHubIssue {
   number: number;
   html_url: string;
   body?: string | null;
@@ -72,6 +72,11 @@ const RELEVANT_STATUSES = new Set<SourceStatus>([
   "missing",
   "warning",
 ]);
+
+const VOLATILE_ISSUE_LINE_PREFIXES = [
+  "- Ultimo controllo:",
+  "- Ultimo controllo riuscito:",
+];
 
 function usage(): string {
   return [
@@ -144,18 +149,50 @@ export async function readSourceHealth(
   options: CliOptions,
 ): Promise<SourceHealthRecord[]> {
   if (options.auditFile) {
-    const contents = await readFile(options.auditFile, "utf8");
-    return normalizePayload(JSON.parse(contents));
+    return readAuditFileSourceHealth(options.auditFile);
   }
 
   const url = options.url ?? "http://localhost:5000/api/healthz/sources";
-  const response = await fetch(url, {
-    headers: { accept: "application/json" },
-  });
-  if (!response.ok) {
-    throw new Error(`Source health endpoint returned HTTP ${response.status}.`);
+  return readEndpointSourceHealth(url);
+}
+
+async function readAuditFileSourceHealth(
+  auditFile: string,
+): Promise<SourceHealthRecord[]> {
+  try {
+    const contents = await readFile(auditFile, "utf8");
+    return normalizePayload(JSON.parse(contents));
+  } catch (error) {
+    return [
+      monitorReadErrorRecord(
+        `File audit non leggibile o JSON non valido (\`${auditFile}\`): ${formatErrorMessage(error)}`,
+      ),
+    ];
   }
-  return normalizePayload(await response.json());
+}
+
+async function readEndpointSourceHealth(
+  url: string,
+): Promise<SourceHealthRecord[]> {
+  try {
+    const response = await fetch(url, {
+      headers: { accept: "application/json" },
+    });
+    if (!response.ok) {
+      return [
+        monitorReadErrorRecord(
+          `Endpoint stato fonti non disponibile (HTTP ${response.status}) su \`${url}\`.`,
+        ),
+      ];
+    }
+    return normalizePayload(await response.json());
+  } catch (error) {
+    return [
+      monitorReadErrorRecord(
+        `Endpoint stato fonti non raggiungibile o risposta JSON non valida su \`${url}\`: ${formatErrorMessage(error)}`,
+      ),
+    ];
+  }
 }
 
 export function normalizePayload(payload: unknown): SourceHealthRecord[] {
@@ -244,6 +281,18 @@ export function detectAnomalies(
       },
     ];
   });
+}
+
+function monitorReadErrorRecord(reason: string): SourceHealthRecord {
+  return {
+    source: "source-health-monitor",
+    status: "error",
+    label: "Monitor fonti dati",
+    checkedAt: new Date().toISOString(),
+    lastSuccessAt: null,
+    priority: "high",
+    reason,
+  };
 }
 
 function isPersistentWarning(
@@ -367,7 +416,7 @@ async function createOrUpdateIssue(
     });
   }
 
-  if (existing.body !== body || existing.title !== anomaly.title) {
+  if (shouldUpdateExistingIssue(existing, anomaly)) {
     return githubRequest<GitHubIssue>(
       `/repos/${repo}/issues/${existing.number}`,
       {
@@ -410,6 +459,35 @@ async function main(): Promise<void> {
     const issue = await createOrUpdateIssue(options.repo, anomaly);
     console.log(`${anomaly.marker} -> #${issue.number} ${issue.html_url}`);
   }
+}
+
+export function shouldUpdateExistingIssue(
+  existing: Pick<GitHubIssue, "body" | "title">,
+  anomaly: NormalizedAnomaly,
+): boolean {
+  if (existing.title !== anomaly.title) return true;
+
+  const existingBody = existing.body ?? "";
+  const nextBody = renderIssueBody(anomaly);
+  if (existingBody === nextBody) return false;
+
+  return (
+    stripVolatileIssueLines(existingBody) !== stripVolatileIssueLines(nextBody)
+  );
+}
+
+function stripVolatileIssueLines(body: string): string {
+  return body
+    .split("\n")
+    .filter(
+      (line) =>
+        !VOLATILE_ISSUE_LINE_PREFIXES.some((prefix) => line.startsWith(prefix)),
+    )
+    .join("\n");
+}
+
+function formatErrorMessage(error: unknown): string {
+  return error instanceof Error ? error.message : String(error);
 }
 
 function isObject(value: unknown): value is Record<string, unknown> {
