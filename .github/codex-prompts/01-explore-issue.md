@@ -24,11 +24,12 @@ Repository context:
 - Before posting any operational comment, apply the comment cleanup preflight defined in `docs/automation/codex-issue-ops.md`.
 
 Queue model:
-- Maximum operational Codex capacity is 10 real active tasks.
+- Maximum operational Codex capacity is 5 real active tasks.
 - `codex:prompted`, `codex:invoked` and `codex:working` are operational states.
-- `codex:review-needed`, open PRs, pending reviews and PRs/issues waiting only for Giovanni review/merge are human review wait and do not saturate Codex capacity unless there is concrete file/module collision or Codex-side rework.
-- Effective free slots are `10 - real active Codex operational tasks`; do not subtract human-review-pending items.
-- Do not prepare a prompt that would exceed capacity 10 or create unresolved collision risk on the same files/modules; do not block a non-colliding issue merely because unrelated PRs are open or awaiting review/merge.
+- `codex:review-needed` and PRs/issues waiting only for Giovanni review/merge are human review wait and do not saturate Codex capacity unless there is concrete file/module collision or Codex-side rework.
+- Effective free slots are `5 - real active Codex operational tasks`; do not subtract human-review-pending items.
+- A Codex summary without an open PR to `main`, visible `codex/<issue-number>-<slug>` branch, explicit technical blocker or recent execution evidence is `output-without-PR` and does not count as a real active task.
+- Do not prepare a prompt that would exceed capacity 5 or create unresolved collision risk on the same files/modules.
 
 Task:
 1. classify the issue as one of: technical, UI/accessibility/metadata, civic-methodological, copy/legal tone, data/API/schema, backlog/governance, unsafe/manual;
@@ -41,8 +42,9 @@ Task:
 8. define validation commands;
 9. add civic/legal/copy safeguards where relevant;
 10. require a dedicated branch named `codex/{{ISSUE_NUMBER}}-<slug>` and a pull request targeting `main` as mandatory Codex output;
-11. include fallback instructions requiring Codex to comment with the exact technical reason, branch/diff or blocker if a PR cannot be opened;
-12. produce a final `@codex` prompt ready to be posted as a GitHub comment only if the cleanup preflight passed.
+11. include fallback instructions requiring Codex to stop and comment with the exact technical reason, branch/diff or blocker if a PR to `main` cannot be opened;
+12. include the `output-without-PR` rule so a summary without PR, branch, blocker or recent execution evidence is routed to follow-up and not counted as active;
+13. produce a final `@codex` prompt ready to be posted as a GitHub comment only if the cleanup preflight passed.
 
 Safety rules:
 - If the issue is ambiguous, too broad, legally sensitive or potentially accusatory, do not produce an implementation prompt. Produce a blocker comment instead.
@@ -76,7 +78,7 @@ Proceed / Block / Human review needed
 
 Work on GitHub issue #{{ISSUE_NUMBER}} in `colazeta/Lamezia-Trasparente-Monitor`.
 
-Create branch `codex/{{ISSUE_NUMBER}}-<slug>`, commit your changes there, and open a pull request targeting `main`. If you cannot open the pull request, comment on the issue with the exact technical reason and indicate the branch/diff or blocker.
+Create branch `codex/{{ISSUE_NUMBER}}-<slug>`, commit your changes there, and open a pull request targeting `main`. If you cannot open the pull request or produce a reviewable branch/diff, stop and comment on the issue with the exact technical reason and indicate the branch/diff or blocker. A summary without PR, branch, blocker or recent execution evidence is `output-without-PR` and does not count as active work.
 ...
 ```
 ````
