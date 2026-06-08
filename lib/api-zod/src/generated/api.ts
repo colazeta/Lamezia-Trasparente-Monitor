@@ -1567,6 +1567,9 @@ export const ListPnrrProjectsResponse = zod.object({
   "endDate": zod.string().nullish(),
   "publishedAt": zod.string().nullish(),
   "lastUpdatedAt": zod.string().nullish().describe('Date of last update from Italia Domani census'),
+  "location": zod.string().nullable().describe('Territorial label exposed by the PNRR source or by the local filtering logic'),
+  "locationQuality": zod.enum(['ufficiale', 'dedotta', 'da_verificare', 'non_disponibile']).describe('Qualità della localizzazione esposta nella scheda PNRR'),
+  "locationNote": zod.string().describe('Methodological note explaining whether the location is official, inferred, needs verification or is unavailable'),
   "trasparenzaCompleta": zod.boolean().describe('True when the project is also present in the Comune\'s Attuazione Misure PNRR page (matched by CUP)'),
   "aggiornamentoVecchio": zod.boolean().describe('True when lastUpdatedAt is more than 6 months ago and the project is not concluded'),
   "attachments": zod.array(zod.object({
@@ -1606,6 +1609,38 @@ export const ListPnrrProjectsResponse = zod.object({
   "briefManual": zod.boolean().optional().describe('True when the \"In breve\" summary was written\/curated by hand; the automatic batch never overwrites it.'),
   "briefGeneratedAt": zod.string().nullish().describe('When the \"In breve\" summary was last generated or edited (ISO 8601).'),
   "odgMacrotemi": zod.array(zod.string()).optional().describe('Per convocazioni — macrotemi aggregati dai punti ODG (può coprire più temi). Vuoto per gli altri tipi di atti.')
+})),
+  "linkedContracts": zod.array(zod.object({
+  "relationKey": zod.enum(['CUP', 'CIG', 'altra_chiave']).describe('Chiave documentale usata per collegare progetto e contratto\/affidamento'),
+  "relationValue": zod.string(),
+  "relationNote": zod.string(),
+  "contract": zod.object({
+  "id": zod.number(),
+  "title": zod.string(),
+  "description": zod.string(),
+  "supplier": zod.string(),
+  "amount": zod.number(),
+  "procedureType": zod.string(),
+  "status": zod.string(),
+  "awardDate": zod.string(),
+  "cig": zod.string().nullish(),
+  "cup": zod.string().nullish(),
+  "stazioneAppaltante": zod.string().nullish(),
+  "acquisitionTool": zod.string().nullish(),
+  "withoutTender": zod.boolean().optional(),
+  "withoutMepa": zod.boolean().optional(),
+  "anacUrl": zod.string().nullish(),
+  "themeId": zod.number().nullish(),
+  "macrotema": zod.union([zod.enum(['ambiente', 'scuole', 'strade', 'sociale', 'cultura', 'mobilita', 'altro']).describe('Ambito di spesa (macrotema) di un contratto'),zod.null()]).optional().describe('Spending-area key (ambiente, scuole, strade, …) or null'),
+  "macrotemaManual": zod.boolean().optional().describe('True when an editor manually corrected the spending area'),
+  "latitude": zod.number().nullish().describe('WGS84 latitude of the intervention, or null if not located'),
+  "longitude": zod.number().nullish().describe('WGS84 longitude of the intervention, or null if not located'),
+  "geoAddress": zod.string().nullish().describe('Resolved location label (e.g. street name)'),
+  "geoQuartiere": zod.string().nullish().describe('Neighborhood key (nicastro \/ sambiase \/ santeufemia)'),
+  "geoSource": zod.string().nullish().describe('Origin of the location (auto = geocoding, manual = editor)'),
+  "geoManual": zod.boolean().optional().describe('True when an editor manually set\/corrected the location'),
+  "geoVerify": zod.boolean().optional().describe('True when the location is uncertain and needs review')
+})
 }))
 })),
   "uncensored": zod.array(zod.object({

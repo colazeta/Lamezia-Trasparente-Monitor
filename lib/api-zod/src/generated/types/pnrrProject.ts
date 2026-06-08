@@ -6,6 +6,8 @@
  * OpenAPI spec version: 0.1.0
  */
 import type { PnrrAttachment } from './pnrrAttachment';
+import type { PnrrLinkedContract } from './pnrrLinkedContract';
+import type { PnrrLocationQuality } from './pnrrLocationQuality';
 import type { Publication } from './publication';
 
 export interface PnrrProject {
@@ -44,6 +46,14 @@ export interface PnrrProject {
      * @nullable
      */
   lastUpdatedAt?: string | null;
+  /**
+     * Territorial label exposed by the PNRR source or by the local filtering logic
+     * @nullable
+     */
+  location: string | null;
+  locationQuality: PnrrLocationQuality;
+  /** Methodological note explaining whether the location is official, inferred, needs verification or is unavailable */
+  locationNote: string;
   /** True when the project is also present in the Comune's Attuazione Misure PNRR page (matched by CUP) */
   trasparenzaCompleta: boolean;
   /** True when lastUpdatedAt is more than 6 months ago and the project is not concluded */
@@ -53,4 +63,5 @@ export interface PnrrProject {
   /** @nullable */
   lastPublication?: string | null;
   documents: Publication[];
+  linkedContracts: PnrrLinkedContract[];
 }
