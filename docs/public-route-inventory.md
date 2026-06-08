@@ -37,6 +37,8 @@ Le route incluse sono mantenute in `PUBLIC_INDEXABLE_ROUTES` e verificate dal te
 - `/accesso-civico`
 - `/monitoraggio`
 - `/monitoraggio/nuovo`
+- `/promessometro`
+- `/legalita/timeline`
 - `/legalita`
 - `/delibere`
 - `/convocazioni`
@@ -49,6 +51,7 @@ Le route incluse sono mantenute in `PUBLIC_INDEXABLE_ROUTES` e verificate dal te
 - `/performance`
 - `/performance/confronta`
 - `/pareri`
+- `/criticita-pubbliche`
 - `/segnalazioni`
 - `/statistiche`
 - `/fonti-dati`
