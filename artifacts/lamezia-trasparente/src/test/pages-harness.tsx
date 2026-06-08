@@ -120,6 +120,7 @@ import { Themes } from "@/pages/Themes";
 import { ThemeDetail } from "@/pages/ThemeDetail";
 import { Contracts } from "@/pages/Contracts";
 import { Incarichimetro } from "@/pages/Incarichimetro";
+import { MacchinaComunale } from "@/pages/MacchinaComunale";
 import { Albo } from "@/pages/Albo";
 import { AlboDetail } from "@/pages/AlboDetail";
 import { AttiFondamentali } from "@/pages/AttiFondamentali";
@@ -153,6 +154,7 @@ export const PAGES: Array<[string, PageComponent]> = [
   ["ThemeDetail", ThemeDetail],
   ["Contracts", Contracts],
   ["Incarichimetro", Incarichimetro],
+  ["MacchinaComunale", MacchinaComunale],
   ["Albo", Albo],
   ["AlboDetail", AlboDetail],
   ["AttiFondamentali", AttiFondamentali],

@@ -10,6 +10,7 @@ import {
   CalendarClock,
   Landmark,
   Users,
+  Network,
   Building2,
   ShieldCheck,
   HandCoins,
@@ -27,6 +28,7 @@ import {
   Search,
   Clock,
   BookOpen,
+  BookOpenCheck,
   Scale3D,
   Info,
   Mail,
@@ -73,6 +75,7 @@ const ALL_ITEMS: NavItem[] = [
 
   { href: "/organi", label: "Organi Istituzionali", icon: Building2, group: "Organi & Persone", keywords: "consiglio giunta commissioni" },
   { href: "/amministratori", label: "Amministratori", icon: Users, group: "Organi & Persone", keywords: "sindaco assessori consiglieri" },
+  { href: "/macchina-comunale", label: "Macchina comunale", icon: Network, group: "Organi & Persone", keywords: "organico dotazione personale scoperture capacità amministrativa fonti" },
 
   { href: "/temi", label: "Temi", icon: FileSearch, group: "Partecipazione", keywords: "argomenti categorie" },
   { href: "/monitoraggio", label: "Monitoraggio Civico", icon: Telescope, group: "Partecipazione", keywords: "monithon cantieri lavori" },
