@@ -1,0 +1,46 @@
+name: Source health monitor
+
+on:
+  workflow_dispatch:
+    inputs:
+      source_health_url:
+        description: "Optional GET /healthz/sources URL override"
+        required: false
+        type: string
+  schedule:
+    # Every 3 hours, offset from hour-based ingestion cycles.
+    - cron: "20 */3 * * *"
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  check-source-health:
+    name: Check monitored source health
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          run_install: false
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Check source health and sync issues
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          SOURCE_HEALTH_URL: ${{ inputs.source_health_url || secrets.SOURCE_HEALTH_URL }}
+          SOURCE_HEALTH_WARNING_RUNS: ${{ vars.SOURCE_HEALTH_WARNING_RUNS || '2' }}
+        run: pnpm --dir scripts run check-source-health
