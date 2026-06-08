@@ -32,8 +32,8 @@ Task:
 Queue rules:
 - `codex:review-needed` is human review/merge wait and does not saturate Codex capacity unless there is concrete file/module collision or Codex-side rework.
 - Open PRs, pending reviews and PRs/issues waiting only for Giovanni review or merge are outside the queue capacity count and block only candidate work touching the same files/modules or creating a concrete implementation collision.
-- Compute remaining capacity as `10 - real active Codex operational tasks`; do not subtract human-review-pending items.
-- A newly prepared `codex:prompted` issue is not stale merely because it has no PR yet. Treat it as awaiting invocation until an operative `@codex` invocation exists or the prompt is older than 60 minutes with no invocation or cleanup action.
+- Compute remaining capacity as `10 - (real active Codex operational tasks + reserved fresh codex:prompted slots awaiting invocation)`; do not subtract human-review-pending items.
+- A newly prepared `codex:prompted` issue is not stale merely because it has no PR yet. Treat it as a reserved pending slot awaiting invocation until an operative `@codex` invocation exists or the prompt is older than 60 minutes with no invocation or cleanup action.
 - Moving a stale, failed no-PR or `output-without-PR` task to `codex:follow-up` releases operational capacity.
 - A concrete technical blocker is reviewable evidence but not active work. Route it to `codex:blocked` or `codex:follow-up`, preserve the exact blocker details, and release the active slot.
 - If a claimed PR or branch is not visible on GitHub, require the direct PR URL, exact branch ref and commit SHA before counting the task as active, or require a precise blocker before routing it to `codex:blocked` / `codex:follow-up` and releasing capacity.

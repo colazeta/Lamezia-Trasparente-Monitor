@@ -14,11 +14,11 @@ The source of truth for queue state is the issue label set. Comments are operati
 
 Automations own issue preparation and Codex invocation only: they create useful issues, make them ready, keep prompts coherent and invoke Codex when the issue is eligible. Giovanni owns pull request review, merge decisions and issue closure decisions. Automations may inspect PRs only as evidence for labels, artifacts, validation state or concrete file/module collisions; they must not treat PR review or merge management as automation capacity.
 
-When a non-colliding issue is labelled `codex:ready` or `codex:prompted`, has no recent operative `@codex` invocation, and would keep real active operational work within the capacity-10 limit, the automation should invoke Codex directly or complete the prompt-and-invoke sequence without waiting for unrelated open PRs, reviews or merges. Open PRs are informative signals for collision checks, not a queue-saturation metric and not a bottleneck for unrelated issue invocations.
+When a non-colliding issue is labelled `codex:ready` or `codex:prompted`, has no recent operative `@codex` invocation, and would keep active plus reserved operational slots within the capacity-10 limit, the automation should invoke Codex directly or complete the prompt-and-invoke sequence without waiting for unrelated open PRs, reviews or merges. Open PRs are informative signals for collision checks, not a queue-saturation metric and not a bottleneck for unrelated issue invocations.
 
 ## Capacity model
 
-The Codex work queue has a controlled maximum capacity of **10 operational tasks**.
+The Codex work queue has a controlled maximum capacity of **10 active or reserved operational slots**.
 
 Operational tasks are issues in one of these states:
 
@@ -29,7 +29,7 @@ Operational tasks are issues in one of these states:
 
 `codex:review-needed` is a human review/merge wait state. It does **not** saturate the Codex work queue unless there is a concrete file/module collision with a candidate task or the same PR still needs Codex-side rework. A PR or issue waiting only for Giovanni's human review or merge is therefore outside the capacity count and blocks only new work that would touch the same files/modules or otherwise create an unresolved review conflict.
 
-Effective free slots are calculated as `10 - real active Codex operational tasks`. Human-review-pending items, including `codex:review-needed` issues and PRs awaiting Giovanni's merge decision, are excluded from that arithmetic unless they become Codex-side rework or have a concrete file/module collision with the candidate work.
+Effective free slots are calculated as `10 - (real active Codex operational tasks + reserved fresh codex:prompted slots awaiting invocation)`. Human-review-pending items, including `codex:review-needed` issues and PRs awaiting Giovanni's merge decision, are excluded from that arithmetic unless they become Codex-side rework or have a concrete file/module collision with the candidate work.
 
 ### No PR, no active slot
 
@@ -48,12 +48,12 @@ An explicit technical blocker is reviewable evidence, but it is **not active wor
 
 Do not classify a newly prepared issue as stale or `output-without-PR` before Codex has had a reasonable opportunity to act.
 
-- `codex:prompted` means a prompt is prepared and waiting for invocation. It counts as operational capacity, but it must not be treated as a failed or stale implementation attempt until an operative `@codex` invocation exists or the prompt itself is older than 60 minutes with no invocation or cleanup action.
+- `codex:prompted` means a prompt is prepared and waiting for invocation. While it is fresh, it reserves one pending operational slot so the governor cannot exceed capacity 10 by preparing additional work. It must not be treated as a failed or stale implementation attempt until an operative `@codex` invocation exists or the prompt itself is older than 60 minutes with no invocation or cleanup action.
 - `codex:invoked` and `codex:working` may be considered stale only after more than 60 minutes with no visible PR, branch, Codex comment, commit or other concrete activity.
 - The 60-minute clock starts from the most recent operative event: prompt publication, Codex invocation, Codex status comment, branch push, commit, PR creation or explicit blocker report.
-- If there is a recent operative event inside the grace window, record the issue as pending/in-progress rather than stale, and leave capacity accounting unchanged unless a concrete blocker has already released the slot.
+- If there is a recent operative event inside the grace window, record the issue as pending/in-progress rather than stale, and keep its active or reserved capacity accounting in place unless a concrete blocker has already released the slot.
 
-The governor should use all ten real active slots when eligible low-collision backlog exists. A queue below 10/10 is healthy only when there is no real eligible backlog, a concrete file/module collision, legal/copy/methodological risk, CI instability, or a decision that must be made by Giovanni before parallel work on the affected files/modules is safe. Giovanni review/merge wait alone is not a reason to pause the whole pipeline.
+The governor should use all ten active or reserved slots when eligible low-collision backlog exists. A queue below 10/10 is healthy only when there is no real eligible backlog, a concrete file/module collision, legal/copy/methodological risk, CI instability, or a decision that must be made by Giovanni before parallel work on the affected files/modules is safe. Giovanni review/merge wait alone is not a reason to pause the whole pipeline.
 
 ## Branch and pull request requirement
 
@@ -109,7 +109,7 @@ Purpose:
 
 1. identify the next open issue with `codex:ready` and without `codex:prompted`;
 2. exclude issues with `codex:invoked`, `codex:working`, `codex:blocked` or `codex:dangerous`;
-3. confirm that adding the issue would keep real active operational capacity at or below 10;
+3. confirm that adding the issue would keep active plus reserved operational capacity at or below 10, with `codex:ready` alone not counted until a prompt is posted;
 4. read title, body, labels, comments and linked context;
 5. run the comment cleanup preflight before posting anything new;
 6. classify the issue as technical, civic-methodological, UI/copy, data/API, or backlog/governance;
@@ -129,7 +129,7 @@ Purpose:
 
 1. identify an issue with `codex:prompted` and without `codex:invoked` or a recent operative `@codex` invocation;
 2. verify that exactly one current operative Codex prompt exists in the issue thread;
-3. verify that invocation would keep real active operational capacity at or below 10;
+3. verify that invocation would keep active plus reserved operational capacity at or below 10;
 4. refuse invocation if the thread contains unresolved contradictory prompt/blocker/status comments;
 5. post the final `@codex` instruction or use the selected Codex integration without waiting for unrelated PR review or merge activity;
 6. require branch `codex/<issue-number>-<slug>`, commit, and PR targeting `main` as mandatory output;
@@ -153,7 +153,7 @@ Purpose:
    - `codex:blocked` if a safety or collision blocker prevents continuation;
    - `codex:done` only after review/merge evidence indicates the issue appears solved.
 
-Fresh-prompt rule: do not mark a just-prepared `codex:prompted` issue as stalled merely because no PR exists yet. It remains a prompt awaiting invocation until an operative `@codex` invocation is posted, or until the prompt is older than 60 minutes with no invocation or cleanup action.
+Fresh-prompt rule: do not mark a just-prepared `codex:prompted` issue as stalled merely because no PR exists yet. It remains a reserved prompt awaiting invocation until an operative `@codex` invocation is posted, or until the prompt is older than 60 minutes with no invocation or cleanup action.
 
 Stale-task rule: if an issue has `codex:invoked` or `codex:working` for more than 60 minutes since the most recent operative event and still has no PR, branch, Codex comment, commit or other concrete activity, move it to `codex:follow-up`, comment with the observed inactivity, and release operational capacity.
 
@@ -176,17 +176,17 @@ Frequency: every 30–60 minutes, or before each automation cycle.
 
 Purpose:
 
-1. count real active Codex tasks against the capacity-10 limit;
+1. count real active Codex tasks plus reserved fresh `codex:prompted` slots against the capacity-10 limit;
 2. exclude `codex:review-needed` and PRs/issues awaiting Giovanni review or merge from saturation unless there is concrete file/module collision or Codex-side rework;
-3. calculate effective free slots as `10 - real active Codex operational tasks`;
+3. calculate effective free slots as `10 - (real active Codex operational tasks + reserved fresh codex:prompted slots awaiting invocation)`;
 4. detect duplicate work across issues and pull requests;
-5. detect stale `codex:invoked` or `codex:working` issues with no concrete activity for more than 60 minutes since the latest operative event, while exempting newly prepared `codex:prompted` issues that are still inside the 60-minute prompt/invocation grace window;
+5. detect stale `codex:invoked` or `codex:working` issues with no concrete activity for more than 60 minutes since the latest operative event, while reserving capacity for newly prepared `codex:prompted` issues that are still inside the 60-minute prompt/invocation grace window;
 6. stop or slow promotion when CI fails repeatedly because of recent Codex work;
 7. add `codex:blocked` where the automation should not continue;
-8. promote safe tasks to `codex:ready` whenever real active capacity is below 10/10 and eligible low-collision backlog exists;
+8. promote safe tasks to `codex:ready` whenever active plus reserved capacity is below 10/10 and eligible low-collision backlog exists;
 9. recommend direct Codex invocation for non-colliding `codex:ready` or `codex:prompted` issues with no recent operative `@codex` invocation.
 
-Anti-idle rule: if real active operational capacity is below 10/10, the governor should promote safe technical tasks to `codex:ready` and surface eligible `codex:ready` or `codex:prompted` issues for direct invocation until the queue is full or it records an explicit reason not to fill it. Valid reasons are absence of real eligible backlog, concrete file/module collision, legal/copy/methodological risk, CI instability, or a decision required from Giovanni before work on the same files/modules can proceed safely. Giovanni review/merge wait for non-colliding work must remain outside the queue and must not pause unrelated promotions. Prioritise typecheck/build/lint/test failures, small bugs and technical-debt tasks with low collision risk.
+Anti-idle rule: if active plus reserved operational capacity is below 10/10, the governor should promote safe technical tasks to `codex:ready` and surface eligible `codex:ready` or `codex:prompted` issues for direct invocation until the queue is full or it records an explicit reason not to fill it. Valid reasons are absence of real eligible backlog, concrete file/module collision, legal/copy/methodological risk, CI instability, or a decision required from Giovanni before work on the same files/modules can proceed safely. Giovanni review/merge wait for non-colliding work must remain outside the queue and must not pause unrelated promotions. Prioritise typecheck/build/lint/test failures, small bugs and technical-debt tasks with low collision risk.
 
 Collision-control minimum fields for every promotion or pause decision:
 
@@ -260,4 +260,4 @@ Codex or the automation should stop and ask for human decision when:
 - migrations, generated API packages or public data semantics would be changed without a clear source of truth;
 - the same files are already touched by an open PR in a conflicting way;
 - the issue thread contains unresolved contradictory automation comments or multiple active prompts;
-- proceeding would exceed the capacity-10 real active operational queue or create medium/high collision risk without a human decision.
+- proceeding would exceed the capacity-10 active/reserved operational queue or create medium/high collision risk without a human decision.

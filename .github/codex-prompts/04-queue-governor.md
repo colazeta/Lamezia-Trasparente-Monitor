@@ -12,30 +12,30 @@ Scope:
 - recent CI/typecheck/build/lint/test failures, if available.
 
 Task:
-1. count real active Codex tasks against maximum capacity 10;
+1. count real active plus reserved Codex slots against maximum capacity 10;
 2. treat `codex:prompted`, `codex:invoked`, `codex:working` and open Codex PRs needing Codex-side changes as operational;
 3. treat `codex:review-needed` and PRs/issues waiting only for Giovanni review/merge as human review wait, not saturation, unless there is concrete file/module collision or Codex-side rework;
-4. compute effective free slots as `10 - real active Codex operational tasks`, excluding human-review-pending items;
+4. compute effective free slots as `10 - (real active Codex operational tasks + reserved fresh codex:prompted slots)`, excluding human-review-pending items;
 5. identify issues with `codex:working` or `codex:invoked` but no visible PR, while checking whether their latest operative event is still inside the stale-task grace window;
 6. classify summaries without a GitHub-visible PR, GitHub-visible branch plus recent commit SHA, reviewable diff/execution artifact or explicit technical blocker as `output-without-PR`;
 7. identify stale zombie tasks with `codex:invoked` or `codex:working` for more than 60 minutes since the latest operative event and no PR, branch, Codex comment, commit or concrete activity;
 8. identify issues with multiple overlapping Codex attempts;
 9. identify open PRs touching the same files/modules or solving overlapping issues;
 10. identify stale tasks that need `codex:follow-up` or `codex:blocked`;
-11. apply the anti-idle rule whenever real active operational capacity is below 10/10;
+11. apply the anti-idle rule whenever real active plus reserved operational capacity is below 10/10;
 12. identify non-colliding `codex:ready` or `codex:prompted` issues with no recent operative `@codex` invocation and recommend direct invocation;
 13. recommend whether the queue should continue, pause or require human intervention.
 
 Default queue limits:
-- maximum active operational Codex tasks: 10, counted only from real active Codex work backed by a visible PR, visible branch with recent commit, reviewable diff/execution artifact or an in-progress invocation inside the stale-task grace window; explicit technical blockers are routed evidence, not active slots;
+- maximum active/reserved operational Codex slots: 10, counted from real active Codex work backed by a visible PR, visible branch with recent commit, reviewable diff/execution artifact or an in-progress invocation inside the stale-task grace window, plus fresh `codex:prompted` issues that are awaiting invocation inside the 60-minute prompt grace window; `codex:ready` alone is eligible backlog and does not reserve capacity; explicit technical blockers are routed evidence, not active slots;
 - maximum active task touching API/schema/migrations: 1 unless a human reviewer accepts the collision risk;
 - maximum active task touching public copy/legal/methodological notes: 1 unless a human reviewer accepts the collision risk;
 - do not start new tasks if root typecheck or build is failing because of a recent Codex PR.
 
 Anti-idle rule:
-- If real active operational capacity is below 10/10, promote safe technical tasks to `codex:ready` until the queue is full or record an explicit reason not to fill it. Valid reasons are absence of real eligible backlog, concrete file/module collision, legal/copy/methodological risk, CI instability, or a decision required from Giovanni before same-file/module work can proceed safely.
+- If real active plus reserved operational capacity is below 10/10, promote safe technical tasks to `codex:ready` until the queue is full or record an explicit reason not to fill it. Valid reasons are absence of real eligible backlog, concrete file/module collision, legal/copy/methodological risk, CI instability, or a decision required from Giovanni before same-file/module work can proceed safely.
 - Do not pause the whole pipeline merely because a PR is open, pending review, pending merge, or an issue is awaiting Giovanni review/merge; treat it as outside the queue unless it collides on files/modules or needs Codex-side rework.
-- Do not classify a newly prepared `codex:prompted` issue as stalled merely because no PR exists yet. Treat it as awaiting invocation until an operative `@codex` invocation exists or the prompt is older than 60 minutes with no invocation or cleanup action.
+- Do not classify a newly prepared `codex:prompted` issue as stalled merely because no PR exists yet. Treat it as a reserved pending slot awaiting invocation until an operative `@codex` invocation exists or the prompt is older than 60 minutes with no invocation or cleanup action.
 - Prefer typecheck/build/lint/test failures, small bugs and limited technical-debt tasks.
 - Do not promote unsafe/manual, accusatory, broad, generated-file or unclear tasks merely to fill the queue.
 - Do not let stale blocker comments pause an issue when the cited PR, issue or dependency is closed, merged, resolved or explicitly superseded.
@@ -58,9 +58,10 @@ Continue / Pause / Human intervention required
 
 ### Capacity count
 - Real active operational tasks:
+- Reserved fresh `codex:prompted` slots awaiting invocation:
 - Human review wait outside capacity (`codex:review-needed` / Giovanni review or merge):
 - Concrete file/module collisions from review-wait items:
-- Effective free slots (`10 - real active operational tasks`):
+- Effective free slots (`10 - real active tasks - reserved fresh prompted slots`):
 - Remaining safe capacity after collisions:
 
 ### Active tasks

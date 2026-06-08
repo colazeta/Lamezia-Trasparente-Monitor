@@ -25,10 +25,10 @@ Collision risk:
 {{COLLISION_RISK}}
 
 Capacity context:
-- Capacity 10 is computed only on real active Codex tasks.
+- Capacity 10 is computed on real active Codex tasks plus reserved fresh `codex:prompted` slots awaiting invocation.
 - Open PRs, pending reviews, pending merges and issues waiting only for Giovanni review/merge, including `codex:review-needed`, are outside the capacity count.
 - A human-review-pending PR blocks this invocation only when it touches the same files/modules or creates a concrete implementation collision; otherwise invoke Codex directly on eligible `codex:ready` or `codex:prompted` issues that have no recent operative `@codex` invocation.
-- Do not treat a newly prepared `codex:prompted` issue as stalled merely because no PR exists yet; apply the 60-minute prompt/invocation grace window before routing it as stale.
+- Do not treat a newly prepared `codex:prompted` issue as stalled merely because no PR exists yet; count it as reserved pending capacity and apply the 60-minute prompt/invocation grace window before routing it as stale.
 - If a precise technical blocker prevents branch, diff or PR creation, report it exactly; once routed, that blocker is reviewable evidence but not an active capacity slot.
 
 Repository rules:
