@@ -47,7 +47,7 @@ export const SOURCE_PRIORITY_LABELS: Record<SourceHealthPriority, string> = {
 
 /**
  * Mock tipizzato compatibile con il futuro payload pubblico di GET /healthz/sources.
- * Quando #121 renderà disponibile l'endpoint, questa costante potrà essere sostituita
+ * Quando la issue 121 renderà disponibile l'endpoint, questa costante potrà essere sostituita
  * da una chiamata API mantenendo invariata la struttura usata dalla pagina.
  */
 export const MOCK_SOURCE_HEALTH: SourceHealthPayload = {
