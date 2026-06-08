@@ -11,6 +11,24 @@ import { DATA_QUALITY_MATRIX, QUALITY_LEGEND } from "@/data/dataQuality";
 
 import { DATA_SOURCES } from "@/data/dataSources";
 
+const LINK_SCOPE_LABELS = {
+  specifico: "Collegamento specifico",
+  consultazione: "Portale di consultazione",
+  fallback: "Fallback/documentazione",
+  generico: "Collegamento generico",
+} as const;
+
+const LINK_SCOPE_CLASSES = {
+  specifico:
+    "border-emerald-500/20 bg-emerald-500/10 text-emerald-700 dark:text-emerald-300",
+  consultazione:
+    "border-sky-500/20 bg-sky-500/10 text-sky-700 dark:text-sky-300",
+  fallback:
+    "border-amber-500/20 bg-amber-500/10 text-amber-700 dark:text-amber-300",
+  generico:
+    "border-slate-500/20 bg-slate-500/10 text-slate-700 dark:text-slate-300",
+} as const;
+
 const DATA_TYPE_DESCRIPTIONS = [
   {
     label: "Dati ufficiali",
@@ -50,7 +68,11 @@ export function FontiDati() {
           <p className="mt-3 text-lg text-muted-foreground">
             Questa pagina documenta le principali fonti usate dal sito, il loro
             stato informativo, la frequenza di aggiornamento attesa e i limiti
-            da considerare prima di usare i dati per analisi civiche.
+            da considerare prima di usare i dati per analisi civiche. I
+            collegamenti possono essere puntuali, di consultazione, di fallback
+            o generici: la loro etichetta descrive il grado di specificità
+            documentato nel repository, non la completezza sostanziale degli
+            atti disponibili.
           </p>
         </header>
 
@@ -228,21 +250,32 @@ export function FontiDati() {
                 <dl className="mt-5 grid gap-4 md:grid-cols-2">
                   <div>
                     <dt className="text-sm font-semibold text-foreground">
-                      Link alla fonte
+                      Collegamento documentato
                     </dt>
-                    <dd className="mt-1 text-sm">
+                    <dd className="mt-1 space-y-2 text-sm">
+                      <span
+                        className={`inline-flex w-fit rounded-full border px-2 py-0.5 text-[11px] font-semibold ${
+                          LINK_SCOPE_CLASSES[source.linkScope]
+                        }`}
+                      >
+                        {LINK_SCOPE_LABELS[source.linkScope]}
+                      </span>
                       <a
                         href={source.href}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1 text-primary underline underline-offset-4 hover:text-primary/80"
+                        className="flex w-fit items-center gap-1 text-primary underline underline-offset-4 hover:text-primary/80"
+                        aria-label={`${source.linkLabel} (apre in una nuova scheda)`}
                       >
-                        Apri la fonte ufficiale o il dataset
+                        {source.linkLabel}
                         <ExternalLink
                           className="h-3.5 w-3.5"
                           aria-hidden="true"
                         />
                       </a>
+                      <p className="leading-relaxed text-muted-foreground">
+                        {source.linkNote}
+                      </p>
                     </dd>
                   </div>
                   <div>
