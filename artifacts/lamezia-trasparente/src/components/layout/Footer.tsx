@@ -41,6 +41,7 @@ export function Footer() {
               <li><Link href="/promessometro" className="hover:text-primary transition-colors">Promessometro</Link></li>
               <li><Link href="/statistiche" className="hover:text-primary transition-colors">Statistiche</Link></li>
               <li><Link href="/fonti-dati" className="hover:text-primary transition-colors">Fonti dati</Link></li>
+              <li><Link href="/stato-monitoraggio" className="hover:text-primary transition-colors">Stato monitoraggio</Link></li>
               <li><Link href="/feeds" className="hover:text-primary transition-colors">Feed e abbonamenti</Link></li>
               <li><Link href="/sviluppatori" className="hover:text-primary transition-colors">API e sviluppatori</Link></li>
             </ul>
@@ -76,6 +77,7 @@ export function Footer() {
           <div className="flex flex-wrap justify-center gap-4">
             <Link href="/note-legali" className="hover:text-primary transition-colors">Note legali</Link>
             <Link href="/fonti-dati" className="hover:text-primary transition-colors">Fonti dati</Link>
+            <Link href="/stato-monitoraggio" className="hover:text-primary transition-colors">Stato monitoraggio</Link>
             <Link href="/chi-siamo" className="hover:text-primary transition-colors">Chi siamo</Link>
             <Link href="/contatti" className="hover:text-primary transition-colors">Contatti</Link>
             <Link href="/redazione" className="hover:text-primary transition-colors">Area Redazione</Link>

@@ -99,6 +99,10 @@ export const PUBLIC_INDEXABLE_ROUTES = [
   },
   { path: "/statistiche", rationale: "Pagina pubblica delle statistiche." },
   { path: "/fonti-dati", rationale: "Pagina pubblica sulle fonti dati." },
+  {
+    path: "/stato-monitoraggio",
+    rationale: "Dashboard pubblica sullo stato operativo delle fonti censite.",
+  },
   { path: "/metodologia", rationale: "Pagina pubblica sulla metodologia." },
   { path: "/roadmap", rationale: "Pagina pubblica della roadmap." },
   { path: "/note-legali", rationale: "Pagina pubblica delle note legali." },
