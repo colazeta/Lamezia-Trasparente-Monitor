@@ -36,7 +36,11 @@ import {
   SetPublicationBriefBody,
 } from "@workspace/api-zod";
 import { ALBO_SOURCE } from "../lib/ingestion";
-import { ITALIADOMANI_SOURCE } from "../lib/italiadomaniPnrr";
+import {
+  ITALIADOMANI_LOC_URL,
+  ITALIADOMANI_PROJ_URL,
+  ITALIADOMANI_SOURCE,
+} from "../lib/italiadomaniPnrr";
 import { requireIngestAuth } from "../middlewares/requireIngestAuth";
 import {
   briefGenerationInProgress,
@@ -996,6 +1000,8 @@ router.get("/pnrr/projects", async (_req, res) => {
         id: p.id,
         key: p.cup,
         sourceId: p.cup,
+        projectSourceUrl: ITALIADOMANI_PROJ_URL,
+        locationSourceUrl: ITALIADOMANI_LOC_URL,
         url: attuazione?.url ?? null,
         title: p.title,
         cup: p.cup,
@@ -1017,7 +1023,7 @@ router.get("/pnrr/projects", async (_req, res) => {
         location: "Lamezia Terme",
         locationQuality: "dedotta",
         locationNote:
-          "Localizzazione territoriale dedotta dal filtro comunale usato dal censimento/API; la scheda non espone un campo di localizzazione ufficiale puntuale.",
+          "Localizzazione territoriale ricavata dal dataset Italia Domani di localizzazione dei progetti PNRR, filtrato per Comune di Lamezia Terme e unito al dataset nazionale Progetti PNRR tramite CUP; non indica una localizzazione puntuale dell'intervento.",
         attachments: allAttachments,
         trasparenzaCompleta,
         aggiornamentoVecchio,

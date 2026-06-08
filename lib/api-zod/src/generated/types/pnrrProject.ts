@@ -14,6 +14,10 @@ export interface PnrrProject {
   id: number;
   key: string;
   sourceId: string;
+  /** Official Italia Domani national projects dataset used for the project details */
+  projectSourceUrl: string;
+  /** Official Italia Domani localization dataset used to select CUPs for the municipality */
+  locationSourceUrl: string;
   /** @nullable */
   url?: string | null;
   title: string;
@@ -47,7 +51,7 @@ export interface PnrrProject {
      */
   lastUpdatedAt?: string | null;
   /**
-     * Territorial label exposed by the PNRR source or by the local filtering logic
+     * Territorial label exposed by the PNRR localization source or by the local filtering logic
      * @nullable
      */
   location: string | null;

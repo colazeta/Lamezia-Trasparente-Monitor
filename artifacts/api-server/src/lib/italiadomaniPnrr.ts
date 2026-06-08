@@ -190,10 +190,10 @@ async function fetchFromOpenPnrr(): Promise<InsertItaliadomaniProject[]> {
 
 // Direct download URLs provided by the Italia Domani open-data CKAN catalog.
 // (These mirror the canonical dataset, may change if the catalog updates.)
-const ITALIADOMANI_LOC_URL =
+export const ITALIADOMANI_LOC_URL =
   process.env.ITALIADOMANI_LOC_CSV_URL ??
   "https://www.italiadomani.gov.it/content/dam/italiadomani/opendata/localizzazione-dei-progetti-del-pnrr/localizzazione-progetti-pnrr.csv";
-const ITALIADOMANI_PROJ_URL =
+export const ITALIADOMANI_PROJ_URL =
   process.env.ITALIADOMANI_PROJ_CSV_URL ??
   "https://www.italiadomani.gov.it/content/dam/italiadomani/opendata/Progetti_del_PNRR/Progetti_PNRR.csv";
 
