@@ -68,7 +68,7 @@ const HUB_MODULES = [
     id: "criticita-pubbliche",
     title: "Cosa è stato segnalato",
     label: "Criticità pubbliche",
-    href: "/segnalazioni",
+    href: "/criticita-pubbliche",
     status: "v0 manuale + redazionale",
     description:
       "Segnali civici e bisogni di verifica raccolti come punti di attenzione, non come conclusioni autonome.",
@@ -78,7 +78,7 @@ const HUB_MODULES = [
     id: "programma-sotto-verifica",
     title: "Cosa era stato promesso",
     label: "Programma sotto verifica",
-    href: "/roadmap",
+    href: "/promessometro",
     status: "modulo in predisposizione",
     description:
       "Spazio previsto per collegare impegni programmatici, stato documentale e atti disponibili senza duplicare la roadmap.",
