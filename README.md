@@ -131,7 +131,25 @@ In Replit, il pulsante **Run** avvia tutti i servizi tramite il workflow `Projec
 | `pnpm --filter @workspace/db run migrate` | Esegue le migrazioni in ordine (sicuro, non interattivo) |
 | `pnpm --filter @workspace/db run seed` | Popola i dati di riferimento |
 | `pnpm --filter @workspace/db run baseline` | Segna le migrazioni esistenti come già applicate (post-push) |
-| `pnpm -r --if-present run test` | Esegue tutti i test (vitest) |
+| `pnpm -r --if-present run test` | Esegue le suite test workspace dichiarate nei pacchetti (vitest) |
+
+### Validazione CI e test stabili
+
+La CI replica un gate locale riproducibile con:
+
+```bash
+pnpm install --frozen-lockfile
+pnpm run typecheck
+pnpm run build
+pnpm -r --if-present run test
+```
+
+Lo step test CI è separato da typecheck e build e usa `pnpm -r --if-present run test`, così esegue solo le suite dichiarate dai pacchetti workspace. Al momento include:
+
+- `artifacts/api-server`: test Vitest senza database esterno quando non è configurato un database di test; le suite che richiedono PostgreSQL restano escluse dalla configurazione Vitest in ambienti leggeri.
+- `artifacts/lamezia-trasparente`: test Vitest/jsdom di rendering, accessibilità, componenti e utilità frontend, senza servizi esterni.
+
+Le esclusioni sono intenzionali: i test che richiedono servizi non disponibili o non mockati non devono rendere fragile il gate CI minimo.
 
 ---
 

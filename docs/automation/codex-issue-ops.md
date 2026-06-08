@@ -21,9 +21,11 @@ Operational tasks are issues in one of these states:
 - `codex:working`;
 - an open Codex implementation PR that still requires Codex-side changes.
 
-`codex:review-needed` is a human review/merge wait state. It does **not** saturate the Codex work queue unless there is a concrete file/module collision with a candidate task or the same PR still needs Codex-side rework.
+`codex:review-needed` is a human review/merge wait state. It does **not** saturate the Codex work queue unless there is a concrete file/module collision with a candidate task or the same PR still needs Codex-side rework. A PR or issue waiting only for Giovanni's human review or merge is therefore outside the capacity count and blocks only new work that would touch the same files/modules or otherwise create an unresolved review conflict.
 
-The governor should use all five slots when eligible low-collision backlog exists. A queue below 5/5 is healthy only when there is no real eligible backlog, a concrete file/module collision, legal/copy/methodological risk, CI instability, or a decision that must be made by Giovanni before parallel work is safe.
+Effective free slots are calculated as `5 - real active Codex operational tasks`. Human-review-pending items, including `codex:review-needed` issues and PRs awaiting Giovanni's merge decision, are excluded from that arithmetic unless they become Codex-side rework or have a concrete file/module collision with the candidate work.
+
+The governor should use all five real active slots when eligible low-collision backlog exists. A queue below 5/5 is healthy only when there is no real eligible backlog, a concrete file/module collision, legal/copy/methodological risk, CI instability, or a decision that must be made by Giovanni before parallel work on the affected files/modules is safe. Giovanni review/merge wait alone is not a reason to pause the whole pipeline.
 
 ## Branch and pull request requirement
 
@@ -79,7 +81,7 @@ Purpose:
 
 1. identify the next open issue with `codex:ready` and without `codex:prompted`;
 2. exclude issues with `codex:invoked`, `codex:working`, `codex:blocked` or `codex:dangerous`;
-3. confirm that adding the issue would keep operational capacity at or below 5;
+3. confirm that adding the issue would keep real active operational capacity at or below 5;
 4. read title, body, labels, comments and linked context;
 5. run the comment cleanup preflight before posting anything new;
 6. classify the issue as technical, civic-methodological, UI/copy, data/API, or backlog/governance;
@@ -99,7 +101,7 @@ Purpose:
 
 1. identify an issue with `codex:prompted` and without `codex:invoked`;
 2. verify that exactly one current operative Codex prompt exists in the issue thread;
-3. verify that invocation would keep operational capacity at or below 5;
+3. verify that invocation would keep real active operational capacity at or below 5;
 4. refuse invocation if the thread contains unresolved contradictory prompt/blocker/status comments;
 5. post the final `@codex` instruction or use the selected Codex integration;
 6. require branch `codex/<issue-number>-<slug>`, commit, and PR targeting `main` as mandatory output;
@@ -135,15 +137,16 @@ Frequency: every 30–60 minutes, or before each automation cycle.
 
 Purpose:
 
-1. count operational Codex tasks against the capacity-5 limit;
-2. exclude `codex:review-needed` from saturation unless there is concrete file/module collision or Codex-side rework;
-3. detect duplicate work across issues and pull requests;
-4. detect stale `codex:invoked` or `codex:working` issues with no concrete activity for more than 60 minutes;
-5. stop or slow promotion when CI fails repeatedly because of recent Codex work;
-6. add `codex:blocked` where the automation should not continue;
-7. promote safe tasks to `codex:ready` whenever the queue is below 5/5 and eligible low-collision backlog exists.
+1. count real active Codex tasks against the capacity-5 limit;
+2. exclude `codex:review-needed` and PRs/issues awaiting Giovanni review or merge from saturation unless there is concrete file/module collision or Codex-side rework;
+3. calculate effective free slots as `5 - real active Codex operational tasks`;
+4. detect duplicate work across issues and pull requests;
+5. detect stale `codex:invoked` or `codex:working` issues with no concrete activity for more than 60 minutes;
+6. stop or slow promotion when CI fails repeatedly because of recent Codex work;
+7. add `codex:blocked` where the automation should not continue;
+8. promote safe tasks to `codex:ready` whenever real active capacity is below 5/5 and eligible low-collision backlog exists.
 
-Anti-idle rule: if operational capacity is below 5/5, the governor should promote safe technical tasks to `codex:ready` until the queue is full or it records an explicit reason not to fill it. Valid reasons are absence of real eligible backlog, concrete file/module collision, legal/copy/methodological risk, CI instability, or a decision required from Giovanni. Prioritise typecheck/build/lint/test failures, small bugs and technical-debt tasks with low collision risk.
+Anti-idle rule: if real active operational capacity is below 5/5, the governor should promote safe technical tasks to `codex:ready` until the queue is full or it records an explicit reason not to fill it. Valid reasons are absence of real eligible backlog, concrete file/module collision, legal/copy/methodological risk, CI instability, or a decision required from Giovanni before work on the same files/modules can proceed safely. Giovanni review/merge wait for non-colliding work must remain outside the queue and must not pause unrelated promotions. Prioritise typecheck/build/lint/test failures, small bugs and technical-debt tasks with low collision risk.
 
 Collision-control minimum fields for every promotion or pause decision:
 
@@ -217,4 +220,4 @@ Codex or the automation should stop and ask for human decision when:
 - migrations, generated API packages or public data semantics would be changed without a clear source of truth;
 - the same files are already touched by an open PR in a conflicting way;
 - the issue thread contains unresolved contradictory automation comments or multiple active prompts;
-- proceeding would exceed the capacity-5 operational queue or create medium/high collision risk without a human decision.
+- proceeding would exceed the capacity-5 real active operational queue or create medium/high collision risk without a human decision.

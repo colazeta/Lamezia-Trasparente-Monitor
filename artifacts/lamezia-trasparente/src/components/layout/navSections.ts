@@ -18,6 +18,7 @@ import {
   HandCoins,
   ShieldOff,
   Telescope,
+  BookOpenCheck,
   Rss,
   Code2,
   BookOpen,
@@ -156,6 +157,13 @@ export const NAV_GROUPS: NavSection[] = [
         description:
           "Segui e racconta lo stato di opere e finanziamenti.",
         icon: Telescope,
+      },
+      {
+        href: "/promessometro",
+        label: "Promessometro",
+        description:
+          "Collega promesse programmatiche, atti e stati documentali senza scoring politico.",
+        icon: BookOpenCheck,
       },
       {
         href: "/accesso-civico",

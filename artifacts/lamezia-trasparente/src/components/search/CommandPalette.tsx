@@ -31,6 +31,7 @@ import {
   Info,
   Mail,
   MailQuestion,
+  BookOpenCheck,
 } from "lucide-react";
 import {
   CommandDialog,
@@ -75,6 +76,7 @@ const ALL_ITEMS: NavItem[] = [
 
   { href: "/temi", label: "Temi", icon: FileSearch, group: "Partecipazione", keywords: "argomenti categorie" },
   { href: "/monitoraggio", label: "Monitoraggio Civico", icon: Telescope, group: "Partecipazione", keywords: "monithon cantieri lavori" },
+  { href: "/promessometro", label: "Promessometro", icon: BookOpenCheck, group: "Partecipazione", keywords: "programma promesse atti indirizzo attuazione stato documentale" },
   { href: "/accesso-civico", label: "Accesso Civico", icon: FileSearch, group: "Partecipazione", keywords: "foia istanza richiesta" },
   { href: "/segnalazioni", label: "Segnalazioni", icon: Megaphone, group: "Partecipazione", keywords: "segnale civico verifica accesso civico richiesta formale" },
 

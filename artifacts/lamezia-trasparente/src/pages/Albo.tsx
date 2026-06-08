@@ -22,6 +22,12 @@ import { format } from "date-fns";
 import { it } from "date-fns/locale";
 import { Link } from "wouter";
 import { MONITORING_DOCS_NOTICE } from "@/lib/monitoring";
+import {
+  alboExtractionText,
+  extractAlboCigs,
+  hasAlboBeneficiarySignal,
+  hasAlboDetectedAmount,
+} from "@/lib/albo";
 
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -59,23 +65,6 @@ function formatDate(value: string | null | undefined, pattern = "dd MMM yyyy") {
   if (!value) return "—";
   const d = new Date(value);
   return Number.isNaN(d.getTime()) ? "—" : format(d, pattern, { locale: it });
-}
-
-const CIG_RE = /\b(?:CIG|SMART\s+CIG)[:\s-]*([A-Z0-9]{10})\b/gi;
-const AMOUNT_RE = /(?:€|euro|importo)\s*(?:di)?\s*\d{1,3}(?:[.\s]\d{3})*(?:,\d{2})?/i;
-const BENEFICIARY_RE = /\b(?:beneficiari[oa]|affidatari[oa]|operatore\s+economico|ditta|societ[aà]|impresa)\b/i;
-
-function extractCigs(text: string | null | undefined): string[] {
-  if (!text) return [];
-  return Array.from(text.matchAll(CIG_RE), (match) => match[1].toUpperCase());
-}
-
-function hasDetectedAmount(text: string | null | undefined): boolean {
-  return Boolean(text && AMOUNT_RE.test(text));
-}
-
-function hasDetectedBeneficiary(text: string | null | undefined): boolean {
-  return Boolean(text && BENEFICIARY_RE.test(text));
 }
 
 function matchesPresence(value: boolean, filter: string): boolean {
@@ -141,16 +130,16 @@ export function Albo() {
         .filter(Boolean)
         .join(" ")
         .toLowerCase();
-      const textForDetections = [p.oggetto, p.brief, p.provenienza].filter(Boolean).join(" ");
-      const cigs = extractCigs(textForDetections);
+      const textForDetections = alboExtractionText([p.oggetto, p.brief, p.provenienza]);
+      const cigs = extractAlboCigs(textForDetections);
 
       return (
         (!normalizedSearch || searchable.includes(normalizedSearch)) &&
         (office === "all" || p.provenienza === office) &&
         matchesPresence(cigs.length > 0, hasCig) &&
         matchesPresence((p.cups ?? []).length > 0, hasCup) &&
-        matchesPresence(hasDetectedAmount(textForDetections), hasAmount) &&
-        matchesPresence(hasDetectedBeneficiary(textForDetections), hasBeneficiary)
+        matchesPresence(hasAlboDetectedAmount(textForDetections), hasAmount) &&
+        matchesPresence(hasAlboBeneficiarySignal(textForDetections), hasBeneficiary)
       );
     });
   }, [debouncedSearch, hasAmount, hasBeneficiary, hasCig, hasCup, office, publications]);
@@ -382,7 +371,7 @@ export function Albo() {
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">{`Qualsiasi ${label}`}</SelectItem>
-                <SelectItem value="yes">Rilevato</SelectItem>
+                <SelectItem value="yes">Segnale rilevato</SelectItem>
                 <SelectItem value="no">Non rilevato</SelectItem>
               </SelectContent>
             </Select>
@@ -477,14 +466,17 @@ export function Albo() {
                   {(p.cups ?? []).length > 0 && (
                     <span className="font-mono">CUP {p.cups.join(", ")}</span>
                   )}
-                  {extractCigs([p.oggetto, p.brief].filter(Boolean).join(" ")).map((cig) => (
+                  {extractAlboCigs(alboExtractionText([p.oggetto, p.brief])).map((cig) => (
                     <span key={cig} className="font-mono">CIG {cig}</span>
                   ))}
-                  {hasDetectedAmount([p.oggetto, p.brief].filter(Boolean).join(" ")) && (
+                  {hasAlboDetectedAmount(alboExtractionText([p.oggetto, p.brief])) && (
                     <span className="inline-flex items-center gap-1">
                       <BadgeEuro className="h-3.5 w-3.5" aria-hidden="true" />
-                      importo rilevato nel testo
+                      importo: segnale testuale
                     </span>
+                  )}
+                  {hasAlboBeneficiarySignal(alboExtractionText([p.oggetto, p.brief])) && (
+                    <span>beneficiario/operatore: segnale testuale</span>
                   )}
                   {p.attachments && p.attachments.length > 0 && (
                     <span className="inline-flex items-center gap-1 text-brand">
