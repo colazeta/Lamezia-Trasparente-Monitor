@@ -1,9 +1,14 @@
 import assert from "node:assert/strict";
+import { mkdtemp, writeFile } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import { test } from "node:test";
 import {
   detectAnomalies,
   normalizePayload,
+  readSourceHealth,
   renderIssueBody,
+  shouldUpdateExistingIssue,
 } from "./check-source-health";
 
 test("normalizes source-health payload shapes and filters ok records", () => {
@@ -80,4 +85,99 @@ test("renders cautious technical issue body with stable dedupe key", () => {
   );
   assert.match(body, /Non indica una mancanza sostantiva degli atti pubblici/);
   assert.doesNotMatch(body, /corruzione|mafia|colpevole/i);
+});
+
+test("turns predictable audit read failures into monitor anomalies", async () => {
+  const dir = await mkdtemp(join(tmpdir(), "source-health-"));
+  const auditFile = join(dir, "broken.json");
+  await writeFile(auditFile, "{ not-json", "utf8");
+
+  const records = await readSourceHealth({
+    auditFile,
+    dryRun: true,
+    warningRunsThreshold: 2,
+  });
+  const anomalies = detectAnomalies(
+    records,
+    new Date("2026-06-08T13:00:00.000Z"),
+  );
+
+  assert.equal(anomalies.length, 1);
+  assert.equal(
+    anomalies[0]?.marker,
+    "source-health:source-health-monitor:error",
+  );
+  assert.match(anomalies[0]?.reason ?? "", /JSON non valido/);
+});
+
+test("does not update an existing issue only for volatile timestamps", () => {
+  const original = detectAnomalies(
+    [
+      {
+        source: "albo",
+        status: "stale",
+        label: "Albo pretorio",
+        lastCheckedAt: "2026-06-08T10:00:00.000Z",
+        lastSuccessAt: "2026-06-08T08:00:00.000Z",
+      },
+    ],
+    new Date("2026-06-08T11:00:00.000Z"),
+  )[0];
+  const next = detectAnomalies(
+    [
+      {
+        source: "albo",
+        status: "stale",
+        label: "Albo pretorio",
+        lastCheckedAt: "2026-06-08T13:00:00.000Z",
+        lastSuccessAt: "2026-06-08T12:00:00.000Z",
+      },
+    ],
+    new Date("2026-06-08T14:00:00.000Z"),
+  )[0];
+
+  assert.ok(original);
+  assert.ok(next);
+  assert.equal(
+    shouldUpdateExistingIssue(
+      { title: original.title, body: renderIssueBody(original) },
+      next,
+    ),
+    false,
+  );
+});
+
+test("updates an existing issue when a substantive detail changes", () => {
+  const original = detectAnomalies(
+    [
+      {
+        source: "albo",
+        status: "stale",
+        label: "Albo pretorio",
+        reason: "Prima soglia tecnica superata.",
+      },
+    ],
+    new Date("2026-06-08T11:00:00.000Z"),
+  )[0];
+  const next = detectAnomalies(
+    [
+      {
+        source: "albo",
+        status: "stale",
+        label: "Albo pretorio",
+        reason: "Seconda soglia tecnica superata.",
+      },
+    ],
+    new Date("2026-06-08T14:00:00.000Z"),
+  )[0];
+
+  assert.ok(original);
+  assert.ok(next);
+  assert.equal(
+    shouldUpdateExistingIssue(
+      { title: original.title, body: renderIssueBody(original) },
+      next,
+    ),
+    true,
+  );
 });
