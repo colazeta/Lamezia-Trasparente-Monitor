@@ -674,8 +674,9 @@ export function Sviluppatori() {
               Esempio MCP minimale
             </h3>
             <p className="mt-1 text-sm text-muted-foreground">
-              Chiamata generica al server MCP per elencare i tool disponibili,
-              senza dipendenze da provider esterni.
+              Chiamata generica al server MCP per elencare i tool disponibili.
+              L'endpoint è stateless: non richiede Authorization, ma l'esempio
+              include gli header Content-Type e Accept richiesti dal trasporto.
             </p>
             <pre className="mt-3 overflow-auto rounded-lg border border-border bg-muted/40 p-3 font-mono text-xs text-foreground">
               {MCP_EXAMPLE}
@@ -744,7 +745,8 @@ export function Sviluppatori() {
         <p className="mb-4 max-w-3xl text-sm text-muted-foreground">
           Il catalogo dei dataset è esposto con metadati standard DCAT-AP_IT e
           un'API di lettura compatibile CKAN, per il riuso e la federazione con
-          i portali nazionali.
+          i portali nazionali. Gli esempi con parentesi graffe richiedono la
+          sostituzione del placeholder con valori restituiti dal catalogo.
         </p>
 
         <h3 className="mb-2 text-[11px] font-bold uppercase tracking-wider text-muted-foreground">
