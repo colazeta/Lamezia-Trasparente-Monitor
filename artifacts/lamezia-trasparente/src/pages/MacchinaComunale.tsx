@@ -42,6 +42,7 @@ import {
   getVacancyRate,
   getVacantPositions,
   macchinaComunaleRecords,
+  publicAdministrativeSignals,
   summarizeMacchinaComunale,
   type DataStatus,
 } from "@/data/macchinaComunale";
@@ -97,8 +98,7 @@ function formatRate(value: number | null) {
 
 export function MacchinaComunale() {
   const [areaFilter, setAreaFilter] = useState<AreaFilter>(ALL_AREAS);
-  const [statusFilter, setStatusFilter] =
-    useState<StatusFilter>(ALL_STATUSES);
+  const [statusFilter, setStatusFilter] = useState<StatusFilter>(ALL_STATUSES);
 
   const areas = useMemo(
     () => Array.from(new Set(macchinaComunaleRecords.map((item) => item.area))),
@@ -111,7 +111,8 @@ export function MacchinaComunale() {
   const filteredRecords = useMemo(
     () =>
       macchinaComunaleRecords.filter((record) => {
-        const areaMatches = areaFilter === ALL_AREAS || record.area === areaFilter;
+        const areaMatches =
+          areaFilter === ALL_AREAS || record.area === areaFilter;
         const statusMatches =
           statusFilter === ALL_STATUSES || record.dataStatus === statusFilter;
         return areaMatches && statusMatches;
@@ -191,8 +192,8 @@ export function MacchinaComunale() {
               Filtra tabella
             </CardTitle>
             <CardDescription>
-              I filtri aiutano a distinguere area organizzativa e stato del
-              dato senza attribuire giudizi o responsabilità.
+              I filtri aiutano a distinguere area organizzativa e stato del dato
+              senza attribuire giudizi o responsabilità.
             </CardDescription>
           </CardHeader>
           <CardContent className="grid gap-4 sm:grid-cols-2">
@@ -223,7 +224,9 @@ export function MacchinaComunale() {
               </label>
               <Select
                 value={statusFilter}
-                onValueChange={(value) => setStatusFilter(value as StatusFilter)}
+                onValueChange={(value) =>
+                  setStatusFilter(value as StatusFilter)
+                }
               >
                 <SelectTrigger
                   id="status-filter"
@@ -269,6 +272,92 @@ export function MacchinaComunale() {
         </Card>
       </section>
 
+      <section aria-labelledby="segnali-pubblici" className="mb-8">
+        <Card className="border-amber-500/30 bg-amber-500/5 shadow-none">
+          <CardHeader>
+            <CardTitle
+              id="segnali-pubblici"
+              className="flex items-center gap-2"
+            >
+              <FileSearch className="h-5 w-5 text-amber-600" />
+              Segnali pubblici da verificare
+            </CardTitle>
+            <CardDescription>
+              Fonti secondarie utili a orientare richieste documentali. Questi
+              elementi non alimentano i conteggi sull'organico finché non sono
+              confermati da fonti ufficiali o atti pubblici pertinenti.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            {publicAdministrativeSignals.map((signal) => (
+              <article
+                key={signal.id}
+                className="rounded-lg border bg-background/80 p-4"
+              >
+                <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
+                  <div>
+                    <Badge
+                      variant="outline"
+                      className="mb-2 border-amber-500/30 bg-amber-500/10 text-amber-800 dark:text-amber-200"
+                    >
+                      Da verificare con fonte primaria
+                    </Badge>
+                    <h3 className="font-semibold">{signal.title}</h3>
+                    <p className="mt-2 text-sm leading-6 text-muted-foreground">
+                      {signal.documentedFact}
+                    </p>
+                  </div>
+                  <a
+                    className="inline-flex shrink-0 items-center gap-1 text-sm font-medium text-primary underline-offset-4 hover:underline"
+                    href={signal.source.url}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    Fonte giornalistica
+                    <ExternalLink className="h-3.5 w-3.5" />
+                  </a>
+                </div>
+
+                <div className="mt-4 grid gap-4 lg:grid-cols-3">
+                  <div>
+                    <h4 className="text-sm font-semibold">
+                      Elementi riportati
+                    </h4>
+                    <ul className="mt-2 list-disc space-y-1 pl-5 text-sm leading-6 text-muted-foreground">
+                      {signal.reportedElements.map((item) => (
+                        <li key={item}>{item}</li>
+                      ))}
+                    </ul>
+                  </div>
+                  <div>
+                    <h4 className="text-sm font-semibold">
+                      Verifiche proporzionate
+                    </h4>
+                    <ul className="mt-2 list-disc space-y-1 pl-5 text-sm leading-6 text-muted-foreground">
+                      {signal.verificationNeeds.map((item) => (
+                        <li key={item}>{item}</li>
+                      ))}
+                    </ul>
+                  </div>
+                  <div>
+                    <h4 className="text-sm font-semibold">
+                      Uso civico prudente
+                    </h4>
+                    <p className="mt-2 text-sm leading-6 text-muted-foreground">
+                      {signal.civicUse}
+                    </p>
+                    <p className="mt-2 text-xs leading-5 text-muted-foreground">
+                      {signal.source.label}. Stato: {signal.source.sourceType};
+                      pubblicazione del {formatDate(signal.source.publishedAt)}.
+                    </p>
+                  </div>
+                </div>
+              </article>
+            ))}
+          </CardContent>
+        </Card>
+      </section>
+
       <section aria-labelledby="tabella-organico" className="mb-8">
         <Card>
           <CardHeader>
@@ -276,7 +365,9 @@ export function MacchinaComunale() {
               Organico, scoperture e stato delle fonti
             </CardTitle>
             <CardDescription>
-              {filteredRecords.length} record visualizzati su {summary.totalServices}. Il tasso di scopertura è mostrato solo quando il dato previsto e i posti vacanti sono disponibili.
+              {filteredRecords.length} record visualizzati su{" "}
+              {summary.totalServices}. Il tasso di scopertura è mostrato solo
+              quando il dato previsto e i posti vacanti sono disponibili.
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -317,7 +408,9 @@ export function MacchinaComunale() {
                       <TableCell className="text-right">
                         {formatNumber(vacancies)}
                       </TableCell>
-                      <TableCell className="min-w-36">{formatRate(rate)}</TableCell>
+                      <TableCell className="min-w-36">
+                        {formatRate(rate)}
+                      </TableCell>
                       <TableCell className="min-w-72">
                         <div className="flex flex-col gap-2">
                           <Badge
@@ -386,7 +479,9 @@ export function MacchinaComunale() {
               aggiornamento, metodo di estrazione e limiti d'uso pubblico per
               ogni record, privilegiando PIAO, dotazione organica, piano dei
               fabbisogni, Amministrazione Trasparente e atti ufficiali
-              pubblicati.
+              pubblicati. Fonti giornalistiche o segnalazioni pubbliche possono
+              orientare verifiche e richieste di accesso, ma restano escluse dai
+              conteggi finché non sono riscontrate con documenti primari.
             </p>
           </CardContent>
         </Card>
