@@ -5988,8 +5988,8 @@ components:
       properties:
         relationKey:
           type: string
-          description: Chiave documentale usata per collegare progetto e contratto/affidamento
-          enum: [CUP, CIG, altra_chiave]
+          description: Chiave documentale effettivamente usata dal PNRR Tracker per collegare progetto e contratto/affidamento
+          enum: [CUP]
         relationValue:
           type: string
         relationNote:
@@ -6003,6 +6003,8 @@ components:
         - id
         - key
         - sourceId
+        - projectSourceUrl
+        - locationSourceUrl
         - title
         - attachments
         - documentsCount
@@ -6020,6 +6022,12 @@ components:
           type: string
         sourceId:
           type: string
+        projectSourceUrl:
+          type: string
+          description: Official Italia Domani national projects dataset used for the project details
+        locationSourceUrl:
+          type: string
+          description: Official Italia Domani localization dataset used to select CUPs for the municipality
         url:
           type: ["string", "null"]
         title:
@@ -6053,7 +6061,7 @@ components:
           description: Date of last update from Italia Domani census
         location:
           type: ["string", "null"]
-          description: Territorial label exposed by the PNRR source or by the local filtering logic
+          description: Territorial label exposed by the PNRR localization source or by the local filtering logic
         locationQuality:
           $ref: "#/components/schemas/PnrrLocationQuality"
         locationNote:
@@ -6558,6 +6566,8 @@ components:
           $ref: '#/components/schemas/ReportVerificationStatus'
         interpretiveCaution:
           type: string
+        publishedAt:
+          type: ["string", "null"]
         updatedAt:
           type: string
         createdAt:
@@ -6602,12 +6612,6 @@ components:
         missingData:
           type: string
         foiaLink:
-          type: string
-        outcome:
-          $ref: '#/components/schemas/ReportOutcome'
-        verificationStatus:
-          $ref: '#/components/schemas/ReportVerificationStatus'
-        interpretiveCaution:
           type: string
 
     MonitoringReportAttachment:

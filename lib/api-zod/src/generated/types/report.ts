@@ -46,6 +46,8 @@ export interface Report {
   outcome: ReportOutcome;
   verificationStatus: ReportVerificationStatus;
   interpretiveCaution: string;
+  /** @nullable */
+  publishedAt?: string | null;
   updatedAt: string;
   createdAt: string;
 }

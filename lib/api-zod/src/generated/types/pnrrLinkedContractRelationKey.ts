@@ -7,13 +7,11 @@
  */
 
 /**
- * Chiave documentale usata per collegare progetto e contratto/affidamento
+ * Chiave documentale effettivamente usata dal PNRR Tracker per collegare progetto e contratto/affidamento
  */
 export type PnrrLinkedContractRelationKey = typeof PnrrLinkedContractRelationKey[keyof typeof PnrrLinkedContractRelationKey];
 
 
 export const PnrrLinkedContractRelationKey = {
   CUP: 'CUP',
-  CIG: 'CIG',
-  altra_chiave: 'altra_chiave',
 } as const;

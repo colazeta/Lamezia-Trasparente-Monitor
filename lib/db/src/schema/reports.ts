@@ -72,6 +72,7 @@ export const reportsTable = pgTable(
       .default(
         "Scheda da leggere come tracciamento civico: la presenza nel registro non indica responsabilità o irregolarità accertate.",
       ),
+    publishedAt: timestamp("published_at", { withTimezone: true }),
     updatedAt: timestamp("updated_at", { withTimezone: true })
       .notNull()
       .defaultNow(),
@@ -90,6 +91,7 @@ export const reportsTable = pgTable(
       t.verificationStatus,
     ),
     createdAtIdx: index("reports_created_at_idx").on(t.createdAt),
+    publishedAtIdx: index("reports_published_at_idx").on(t.publishedAt),
     statusCheck: check(
       "reports_status_check",
       sql`${t.status} in ('ricevuta', 'in_valutazione', 'presa_in_carico', 'archiviata')`,

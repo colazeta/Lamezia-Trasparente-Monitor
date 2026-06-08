@@ -25,9 +25,9 @@ Collision risk:
 {{COLLISION_RISK}}
 
 Capacity context:
-- Capacity 5 is computed only on real active Codex tasks.
-- Issues or PRs waiting only for Giovanni review/merge, including `codex:review-needed`, are outside the capacity count.
-- A human-review-pending PR blocks this invocation only when it touches the same files/modules or creates a concrete implementation collision.
+- Capacity 10 is computed only on real active Codex tasks.
+- Open PRs, pending reviews, pending merges and issues waiting only for Giovanni review/merge, including `codex:review-needed`, are outside the capacity count.
+- A human-review-pending PR blocks this invocation only when it touches the same files/modules or creates a concrete implementation collision; otherwise invoke Codex directly on eligible `codex:ready` or `codex:prompted` issues that have no recent operative `@codex` invocation.
 
 Repository rules:
 - Follow `AGENTS.md`.
@@ -61,7 +61,8 @@ Branch and pull request requirements:
 
 Fallback if PR creation fails:
 - Comment on issue #{{ISSUE_NUMBER}} with the exact technical reason the PR could not be opened.
-- Include the branch name, diff location or precise blocker.
+- Include the pull request URL targeting `main`; if no PR exists, include the branch ref, commit SHA, diff location and precise blocker.
+- Do not publish a completion summary that cannot be verified from GitHub as a PR, branch plus commit, reviewable diff or explicit blocker; that state is `output-without-PR` and does not count as active work.
 - Do not present delivery without a PR as completed work.
 
 Stop conditions:
@@ -69,5 +70,5 @@ Stop conditions:
 - If the implementation would require secrets, credentials or unsupported factual claims, stop and explain.
 - If another open PR already touches the same files/modules in a conflicting way, stop and report the concrete collision.
 - Do not stop merely because another PR is waiting for Giovanni review/merge when it is non-colliding and needs no Codex-side rework.
-- If you cannot create the required branch or produce a reviewable diff, stop and report the exact technical blocker.
+- If you cannot create the required branch, push/attach a reviewable diff, or open the required PR to `main`, stop and report the exact technical blocker plus any verifiable branch ref, commit SHA or diff location.
 ````

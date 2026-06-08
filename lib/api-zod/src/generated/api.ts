@@ -1552,6 +1552,8 @@ export const ListPnrrProjectsResponse = zod.object({
   "id": zod.number(),
   "key": zod.string(),
   "sourceId": zod.string(),
+  "projectSourceUrl": zod.string().describe('Official Italia Domani national projects dataset used for the project details'),
+  "locationSourceUrl": zod.string().describe('Official Italia Domani localization dataset used to select CUPs for the municipality'),
   "url": zod.string().nullish(),
   "title": zod.string(),
   "cup": zod.string().nullish(),
@@ -1567,7 +1569,7 @@ export const ListPnrrProjectsResponse = zod.object({
   "endDate": zod.string().nullish(),
   "publishedAt": zod.string().nullish(),
   "lastUpdatedAt": zod.string().nullish().describe('Date of last update from Italia Domani census'),
-  "location": zod.string().nullable().describe('Territorial label exposed by the PNRR source or by the local filtering logic'),
+  "location": zod.string().nullable().describe('Territorial label exposed by the PNRR localization source or by the local filtering logic'),
   "locationQuality": zod.enum(['ufficiale', 'dedotta', 'da_verificare', 'non_disponibile']).describe('Qualità della localizzazione esposta nella scheda PNRR'),
   "locationNote": zod.string().describe('Methodological note explaining whether the location is official, inferred, needs verification or is unavailable'),
   "trasparenzaCompleta": zod.boolean().describe('True when the project is also present in the Comune\'s Attuazione Misure PNRR page (matched by CUP)'),
@@ -1611,7 +1613,7 @@ export const ListPnrrProjectsResponse = zod.object({
   "odgMacrotemi": zod.array(zod.string()).optional().describe('Per convocazioni — macrotemi aggregati dai punti ODG (può coprire più temi). Vuoto per gli altri tipi di atti.')
 })),
   "linkedContracts": zod.array(zod.object({
-  "relationKey": zod.enum(['CUP', 'CIG', 'altra_chiave']).describe('Chiave documentale usata per collegare progetto e contratto\/affidamento'),
+  "relationKey": zod.enum(['CUP']).describe('Chiave documentale effettivamente usata dal PNRR Tracker per collegare progetto e contratto\/affidamento'),
   "relationValue": zod.string(),
   "relationNote": zod.string(),
   "contract": zod.object({
@@ -1974,6 +1976,7 @@ export const ListReportsResponseItem = zod.object({
   "outcome": zod.enum(['aperta', 'risolta', 'parzialmente_risolta', 'non_risolta', 'non_verificabile', 'archiviata']),
   "verificationStatus": zod.enum(['non_verificata', 'in_verifica', 'documentata', 'risposta_ricevuta', 'chiusa', 'archiviata', 'da_aggiornare']),
   "interpretiveCaution": zod.string(),
+  "publishedAt": zod.string().nullish(),
   "updatedAt": zod.string(),
   "createdAt": zod.string()
 })
@@ -2005,10 +2008,7 @@ export const CreateReportBody = zod.object({
   "institutionalResponseDate": zod.string().optional(),
   "availableData": zod.string().optional(),
   "missingData": zod.string().optional(),
-  "foiaLink": zod.string().optional(),
-  "outcome": zod.enum(['aperta', 'risolta', 'parzialmente_risolta', 'non_risolta', 'non_verificabile', 'archiviata']).optional(),
-  "verificationStatus": zod.enum(['non_verificata', 'in_verifica', 'documentata', 'risposta_ricevuta', 'chiusa', 'archiviata', 'da_aggiornare']).optional(),
-  "interpretiveCaution": zod.string().optional()
+  "foiaLink": zod.string().optional()
 })
 
 

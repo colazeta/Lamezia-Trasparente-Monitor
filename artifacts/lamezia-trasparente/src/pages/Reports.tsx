@@ -67,7 +67,9 @@ const formSchema = z.object({
     .string()
     .min(20, "La descrizione deve essere dettagliata (min. 20 caratteri)"),
   category: z.string().min(1, "Seleziona un ambito"),
-  location: z.string().min(3, "Specifica un luogo, quartiere o 'non localizzato'"),
+  location: z
+    .string()
+    .min(3, "Specifica un luogo, quartiere o 'non localizzato'"),
   citizenName: z.string().optional(),
 });
 
@@ -89,7 +91,6 @@ type CriticalReport = Report & {
   verificationStatus?: string;
   interpretiveCaution?: string;
   updatedAt?: string;
-  isExample?: boolean;
 };
 
 const SOURCE_TYPES = [
@@ -123,7 +124,11 @@ const VERIFICATION_STATUS_MAP: Record<
   string,
   { label: string; icon: ElementType; variant: BadgeProps["variant"] }
 > = {
-  non_verificata: { label: "Non verificata", icon: Clock, variant: "secondary" },
+  non_verificata: {
+    label: "Non verificata",
+    icon: Clock,
+    variant: "secondary",
+  },
   in_verifica: { label: "In verifica", icon: AlertCircle, variant: "warning" },
   documentata: { label: "Documentata", icon: FileSearch, variant: "brand" },
   risposta_ricevuta: {
@@ -133,7 +138,11 @@ const VERIFICATION_STATUS_MAP: Record<
   },
   chiusa: { label: "Chiusa", icon: CheckCircle2, variant: "outline" },
   archiviata: { label: "Archiviata", icon: Archive, variant: "outline" },
-  da_aggiornare: { label: "Da aggiornare", icon: AlertCircle, variant: "warning" },
+  da_aggiornare: {
+    label: "Da aggiornare",
+    icon: AlertCircle,
+    variant: "warning",
+  },
 };
 
 const OUTCOME_LABELS: Record<string, string> = {
@@ -148,64 +157,10 @@ const OUTCOME_LABELS: Record<string, string> = {
 const DEFAULT_CAUTION =
   "Scheda da leggere come tracciamento civico: la presenza nel registro non indica responsabilità o irregolarità accertate.";
 
-const FOIA_PATH = "/accesso-civico";
-
-const exampleCriticalReports: CriticalReport[] = [
-  {
-    id: 9001,
-    title: "Tempi di risposta da chiarire su una richiesta di manutenzione",
-    description:
-      "Scheda dimostrativa su una segnalazione di servizio che richiede riscontro documentale sui tempi di presa in carico e sugli eventuali atti collegati.",
-    category: "servizio",
-    location: "non localizzato",
-    status: "in_valutazione",
-    createdAt: "2026-06-07T00:00:00.000Z",
-    initialSourceType: "segnalazione",
-    initialSourceUrl: null,
-    publicEmergenceDate: "2026-06-07T00:00:00.000Z",
-    involvedSector: "Area tecnica o servizio competente da verificare",
-    competentOffice: "Comune",
-    formalAct: "Non individuato nella scheda dimostrativa",
-    institutionalResponse: "Non disponibile nella scheda dimostrativa",
-    availableData: "Titolo, descrizione sintetica, ambito e luogo indicativo",
-    missingData:
-      "Protocollo, ufficio responsabile, eventuale cronoprogramma e risposta istituzionale",
-    foiaLink: FOIA_PATH,
-    outcome: "aperta",
-    verificationStatus: "non_verificata",
-    interpretiveCaution: DEFAULT_CAUTION,
-    updatedAt: "2026-06-07T00:00:00.000Z",
-    isExample: true,
-  },
-  {
-    id: 9002,
-    title: "Dati pubblici incompleti su avanzamento di un intervento",
-    description:
-      "Scheda dimostrativa per distinguere il dato disponibile nel portale da quanto resta da chiedere con una richiesta di accesso civico generalizzato.",
-    category: "trasparenza",
-    location: "area comunale non specificata",
-    status: "in_valutazione",
-    createdAt: "2026-06-07T00:00:00.000Z",
-    initialSourceType: "albo",
-    initialSourceUrl: null,
-    publicEmergenceDate: "2026-06-07T00:00:00.000Z",
-    involvedSector: "Settore da associare dopo verifica degli atti",
-    competentOffice: "Comune",
-    formalAct: "Atto formale da collegare quando disponibile",
-    institutionalResponse: "Risposta non presente nel dataset dimostrativo",
-    availableData: "Riferimento generico all'esistenza di dati amministrativi da consultare",
-    missingData: "Stato aggiornato, responsabile del procedimento e documenti di avanzamento",
-    foiaLink: FOIA_PATH,
-    outcome: "non_verificabile",
-    verificationStatus: "da_aggiornare",
-    interpretiveCaution: DEFAULT_CAUTION,
-    updatedAt: "2026-06-07T00:00:00.000Z",
-    isExample: true,
-  },
-];
-
 function getCategoryLabel(value: string) {
-  return CATEGORY_OPTIONS.find((option) => option.value === value)?.label ?? value;
+  return (
+    CATEGORY_OPTIONS.find((option) => option.value === value)?.label ?? value
+  );
 }
 
 function formatMaybeDate(value?: string | null) {
@@ -239,39 +194,46 @@ export function Reports() {
   });
 
   const registryReports = useMemo<CriticalReport[]>(() => {
-    if (reports && reports.length > 0) {
-      return reports.map((report) => ({
-        ...report,
-        outcome: report.outcome ?? "aperta",
-        verificationStatus: report.verificationStatus ?? "non_verificata",
-        interpretiveCaution: report.interpretiveCaution ?? DEFAULT_CAUTION,
-        updatedAt: report.updatedAt ?? report.createdAt,
-      }));
-    }
-    return exampleCriticalReports;
+    return (reports ?? []).map((report) => ({
+      ...report,
+      outcome: report.outcome ?? "aperta",
+      verificationStatus: report.verificationStatus ?? "non_verificata",
+      interpretiveCaution: report.interpretiveCaution ?? DEFAULT_CAUTION,
+      updatedAt: report.updatedAt ?? report.createdAt,
+    }));
   }, [reports]);
 
   const locations = useMemo(
-    () => Array.from(new Set(registryReports.map((report) => filterValue(report.location)))),
+    () =>
+      Array.from(
+        new Set(registryReports.map((report) => filterValue(report.location))),
+      ),
     [registryReports],
   );
   const offices = useMemo(
     () =>
       Array.from(
-        new Set(registryReports.map((report) => filterValue(report.competentOffice))),
+        new Set(
+          registryReports.map((report) => filterValue(report.competentOffice)),
+        ),
       ),
     [registryReports],
   );
 
   const filteredReports = registryReports.filter((report) => {
-    const matchesCategory = categoryFilter === "all" || report.category === categoryFilter;
+    const matchesCategory =
+      categoryFilter === "all" || report.category === categoryFilter;
     const matchesLocation =
-      locationFilter === "all" || filterValue(report.location) === locationFilter;
+      locationFilter === "all" ||
+      filterValue(report.location) === locationFilter;
     const matchesOffice =
-      officeFilter === "all" || filterValue(report.competentOffice) === officeFilter;
+      officeFilter === "all" ||
+      filterValue(report.competentOffice) === officeFilter;
     const matchesVerification =
-      verificationFilter === "all" || report.verificationStatus === verificationFilter;
-    const matchesOutcome = outcomeFilter === "all" || report.outcome === outcomeFilter;
+      verificationFilter === "all" ||
+      report.verificationStatus === verificationFilter;
+    const matchesOutcome =
+      outcomeFilter === "all" || report.outcome === outcomeFilter;
     return (
       matchesCategory &&
       matchesLocation &&
@@ -313,19 +275,21 @@ export function Reports() {
           Segnalazioni e criticità pubbliche
         </h1>
         <p className="mt-3 text-muted-foreground text-lg">
-          Invia un segnale civico circostanziato su servizi, lavori o informazioni pubbliche
-          che richiedono verifica. La segnalazione non sostituisce una richiesta di accesso
-          civico né eventuali atti formali rivolti alle autorità competenti.
+          Invia un segnale civico circostanziato su servizi, lavori o
+          informazioni pubbliche che richiedono verifica. La segnalazione non
+          sostituisce una richiesta di accesso civico né eventuali atti formali
+          rivolti alle autorità competenti.
         </p>
       </div>
 
       <Card className="mb-8 border-brand/20 bg-brand/5">
         <CardContent className="p-5 text-sm text-muted-foreground">
           <p>
-            Ogni scheda va letta con cautela: indica un elemento da verificare e non
-            dimostra responsabilità individuali, irregolarità o disfunzioni accertate.
-            Quando mancano dati, il collegamento alla FOIA Machine aiuta a formulare
-            una richiesta documentale senza presentare persistenza fittizia.
+            Ogni scheda va letta con cautela: indica un elemento da verificare e
+            non dimostra responsabilità individuali, irregolarità o disfunzioni
+            accertate. Quando mancano dati, il collegamento alla FOIA Machine
+            aiuta a formulare una richiesta documentale senza presentare
+            persistenza fittizia.
           </p>
         </CardContent>
       </Card>
@@ -346,8 +310,8 @@ export function Reports() {
               <CardTitle className="font-display">Filtri minimi</CardTitle>
               <CardDescription>
                 Filtra per ambito, luogo, ente/ufficio competente, stato della
-                verifica ed esito osservabile. I dati dimostrativi sono marcati come
-                esempi finché non esiste una pubblicazione redazionale esplicita.
+                verifica ed esito osservabile. L'archivio mostra solo schede
+                pubblicate dopo revisione redazionale esplicita.
               </CardDescription>
             </CardHeader>
             <CardContent className="grid gap-3 md:grid-cols-5">
@@ -390,17 +354,22 @@ export function Reports() {
                   ))}
                 </SelectContent>
               </Select>
-              <Select value={verificationFilter} onValueChange={setVerificationFilter}>
+              <Select
+                value={verificationFilter}
+                onValueChange={setVerificationFilter}
+              >
                 <SelectTrigger aria-label="Filtra per stato verifica">
                   <SelectValue placeholder="Stato verifica" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">Tutti gli stati</SelectItem>
-                  {Object.entries(VERIFICATION_STATUS_MAP).map(([value, meta]) => (
-                    <SelectItem key={value} value={value}>
-                      {meta.label}
-                    </SelectItem>
-                  ))}
+                  {Object.entries(VERIFICATION_STATUS_MAP).map(
+                    ([value, meta]) => (
+                      <SelectItem key={value} value={value}>
+                        {meta.label}
+                      </SelectItem>
+                    ),
+                  )}
                 </SelectContent>
               </Select>
               <Select value={outcomeFilter} onValueChange={setOutcomeFilter}>
@@ -438,12 +407,16 @@ export function Reports() {
             ) : filteredReports.length > 0 ? (
               filteredReports.map((report) => {
                 const verification =
-                  VERIFICATION_STATUS_MAP[report.verificationStatus ?? "non_verificata"] ??
-                  VERIFICATION_STATUS_MAP.non_verificata;
+                  VERIFICATION_STATUS_MAP[
+                    report.verificationStatus ?? "non_verificata"
+                  ] ?? VERIFICATION_STATUS_MAP.non_verificata;
                 const StatusIcon = verification.icon;
 
                 return (
-                  <Card key={report.id} className="overflow-hidden border-border/80">
+                  <Card
+                    key={report.id}
+                    className="overflow-hidden border-border/80"
+                  >
                     <CardHeader className="space-y-3">
                       <div className="flex flex-wrap items-start justify-between gap-3">
                         <div>
@@ -451,21 +424,23 @@ export function Reports() {
                             <CardTitle className="font-display text-xl">
                               {report.title}
                             </CardTitle>
-                            {report.isExample && (
-                              <Badge variant="outline">Esempio neutrale</Badge>
-                            )}
                           </div>
                           <CardDescription className="mt-2">
                             {report.description}
                           </CardDescription>
                         </div>
                         <div className="flex flex-wrap gap-2">
-                          <Badge variant={verification.variant} className="gap-1.5">
+                          <Badge
+                            variant={verification.variant}
+                            className="gap-1.5"
+                          >
                             <StatusIcon className="h-3.5 w-3.5" />
                             {verification.label}
                           </Badge>
                           <Badge variant="secondary">
-                            Esito: {OUTCOME_LABELS[report.outcome ?? "aperta"] ?? report.outcome}
+                            Esito:{" "}
+                            {OUTCOME_LABELS[report.outcome ?? "aperta"] ??
+                              report.outcome}
                           </Badge>
                         </div>
                       </div>
@@ -477,7 +452,10 @@ export function Reports() {
                           {getCategoryLabel(report.category)}
                         </span>
                         <span>
-                          Ultimo aggiornamento: {formatMaybeDate(report.updatedAt ?? report.createdAt)}
+                          Ultimo aggiornamento:{" "}
+                          {formatMaybeDate(
+                            report.updatedAt ?? report.createdAt,
+                          )}
                         </span>
                       </div>
                     </CardHeader>
@@ -490,12 +468,17 @@ export function Reports() {
                         <InfoBlock
                           title="Fonte iniziale"
                           value={`${report.initialSourceType ?? "Non indicata"}${
-                            report.initialSourceUrl ? ` · ${report.initialSourceUrl}` : ""
+                            report.initialSourceUrl
+                              ? ` · ${report.initialSourceUrl}`
+                              : ""
                           }`}
                         />
                         <InfoBlock
                           title="Atto formale collegato"
-                          value={report.formalAct ?? "Nessun atto formale collegato nella scheda"}
+                          value={
+                            report.formalAct ??
+                            "Nessun atto formale collegato nella scheda"
+                          }
                         />
                         <InfoBlock
                           title="Ente/ufficio potenzialmente competente"
@@ -517,7 +500,9 @@ export function Reports() {
                         />
                         <InfoBlock
                           title="Dati mancanti o da richiedere"
-                          value={report.missingData ?? "Da valutare in redazione"}
+                          value={
+                            report.missingData ?? "Da valutare in redazione"
+                          }
                         />
                         <InfoBlock
                           title="Data emersione pubblica"
@@ -525,7 +510,9 @@ export function Reports() {
                         />
                       </div>
                       <div className="rounded-lg border border-dashed border-border bg-muted/30 p-4 text-sm text-muted-foreground">
-                        <strong className="text-foreground">Cautela interpretativa:</strong>{" "}
+                        <strong className="text-foreground">
+                          Cautela interpretativa:
+                        </strong>{" "}
                         {report.interpretiveCaution ?? DEFAULT_CAUTION}
                       </div>
                       {report.foiaLink && (
@@ -548,11 +535,13 @@ export function Reports() {
                     <Megaphone className="h-6 w-6" />
                   </EmptyMedia>
                   <EmptyTitle className="font-display">
-                    Nessuna criticità corrisponde ai filtri
+                    Nessuna scheda pubblicata disponibile
                   </EmptyTitle>
                   <EmptyDescription>
-                    Modifica i filtri o invia una segnalazione circostanziata. Le
-                    schede pubbliche richiedono revisione e fonti verificabili.
+                    L'archivio è alimentato solo da schede pubblicate dopo
+                    revisione. Puoi modificare i filtri o inviare una
+                    segnalazione circostanziata che resterà distinta dalla
+                    pubblicazione automatica.
                   </EmptyDescription>
                 </EmptyHeader>
               </Empty>
@@ -568,13 +557,16 @@ export function Reports() {
               </CardTitle>
               <CardDescription>
                 Fornisci dettagli verificabili. L'invio resta distinto dalla
-                pubblicazione nel registro e non sostituisce un accesso civico o una
-                comunicazione alle autorità competenti.
+                pubblicazione nel registro e non sostituisce un accesso civico o
+                una comunicazione alle autorità competenti.
               </CardDescription>
             </CardHeader>
             <CardContent className="pt-6">
               <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                <form
+                  onSubmit={form.handleSubmit(onSubmit)}
+                  className="space-y-6"
+                >
                   <FormField
                     control={form.control}
                     name="title"
@@ -602,15 +594,24 @@ export function Reports() {
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>Ambito</FormLabel>
-                          <Select onValueChange={field.onChange} defaultValue={field.value}>
+                          <Select
+                            onValueChange={field.onChange}
+                            defaultValue={field.value}
+                          >
                             <FormControl>
-                              <SelectTrigger className="h-11" aria-label="Ambito">
+                              <SelectTrigger
+                                className="h-11"
+                                aria-label="Ambito"
+                              >
                                 <SelectValue placeholder="Seleziona ambito" />
                               </SelectTrigger>
                             </FormControl>
                             <SelectContent>
                               {CATEGORY_OPTIONS.map((option) => (
-                                <SelectItem key={option.value} value={option.value}>
+                                <SelectItem
+                                  key={option.value}
+                                  value={option.value}
+                                >
                                   {option.label}
                                 </SelectItem>
                               ))}
@@ -648,7 +649,9 @@ export function Reports() {
                     name="description"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Descrizione sintetica e verificabile</FormLabel>
+                        <FormLabel>
+                          Descrizione sintetica e verificabile
+                        </FormLabel>
                         <FormControl>
                           <Textarea
                             placeholder="Descrivi il fatto dichiarato o segnalato, indicando date, fonti pubbliche, atti o dati mancanti senza attribuire responsabilità non documentate."
@@ -662,10 +665,11 @@ export function Reports() {
                   />
 
                   <div className="rounded-lg border border-dashed border-border bg-muted/30 p-4 text-sm text-muted-foreground">
-                    Campi come fonte iniziale, stato verifica, ufficio competente,
-                    risposta istituzionale, esito, dati mancanti e collegamento FOIA
-                    sono predisposti nello schema e vengono completati nella revisione
-                    redazionale, senza pubblicazione automatica.
+                    Campi come fonte iniziale, stato verifica, ufficio
+                    competente, risposta istituzionale, esito, dati mancanti e
+                    collegamento FOIA sono predisposti nello schema e vengono
+                    completati nella revisione redazionale, senza pubblicazione
+                    automatica.
                     <div className="mt-2 text-xs">
                       Fonti iniziali supportate: {SOURCE_TYPES.join(", ")}.
                     </div>
@@ -683,12 +687,16 @@ export function Reports() {
                           </span>
                         </FormLabel>
                         <FormControl>
-                          <Input placeholder="Nome e cognome, se vuoi indicarlo" {...field} className="h-11" />
+                          <Input
+                            placeholder="Nome e cognome, se vuoi indicarlo"
+                            {...field}
+                            className="h-11"
+                          />
                         </FormControl>
                         <FormDescription>
-                          Lascia vuoto per restare anonimo. Il nome, se indicato, è
-                          trattato come dato interno e non viene pubblicato nella
-                          scheda pubblica.
+                          Lascia vuoto per restare anonimo. Il nome, se
+                          indicato, è trattato come dato interno e non viene
+                          pubblicato nella scheda pubblica.
                         </FormDescription>
                         <FormMessage />
                       </FormItem>

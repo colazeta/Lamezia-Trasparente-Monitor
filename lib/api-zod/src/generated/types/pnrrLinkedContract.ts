@@ -9,7 +9,7 @@ import type { Contract } from './contract';
 import type { PnrrLinkedContractRelationKey } from './pnrrLinkedContractRelationKey';
 
 export interface PnrrLinkedContract {
-  /** Chiave documentale usata per collegare progetto e contratto/affidamento */
+  /** Chiave documentale effettivamente usata dal PNRR Tracker per collegare progetto e contratto/affidamento */
   relationKey: PnrrLinkedContractRelationKey;
   relationValue: string;
   relationNote: string;
