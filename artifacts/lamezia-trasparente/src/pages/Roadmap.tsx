@@ -5,7 +5,6 @@ import {
   CheckCircle2,
   CircleDotDashed,
 } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
 import { PageMeta } from "@/components/seo/PageMeta";
 
 import {
@@ -32,12 +31,11 @@ const STATUS_STYLES = {
 
 function StatusBadge({ status }: { status: RoadmapStatus }) {
   return (
-    <Badge
-      variant="outline"
-      className={`rounded-full ${STATUS_STYLES[status]}`}
+    <span
+      className={`inline-flex whitespace-nowrap rounded-full border px-2.5 py-0.5 text-xs font-semibold text-foreground [border-color:var(--badge-outline)] ${STATUS_STYLES[status]}`}
     >
       {status}
-    </Badge>
+    </span>
   );
 }
 
@@ -66,20 +64,28 @@ export function Roadmap() {
               ulteriori verifiche, senza promettere date o copertura completa.
             </p>
           </div>
-          <div className="rounded-2xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-950 dark:border-amber-900/60 dark:bg-amber-950/30 dark:text-amber-100">
+          <aside
+            className="rounded-2xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-950 dark:border-amber-900/60 dark:bg-amber-950/30 dark:text-amber-100"
+            aria-labelledby="criterio-lettura-roadmap"
+          >
             <div className="flex gap-3">
               <AlertTriangle
                 className="mt-0.5 h-5 w-5 shrink-0"
                 aria-hidden="true"
               />
               <div className="space-y-2">
-                <p className="font-semibold">{ROADMAP_READING_CRITERIA.title}</p>
+                <h2
+                  id="criterio-lettura-roadmap"
+                  className="text-sm font-semibold"
+                >
+                  {ROADMAP_READING_CRITERIA.title}
+                </h2>
                 <p className="leading-6">
                   {ROADMAP_READING_CRITERIA.description}
                 </p>
               </div>
             </div>
-          </div>
+          </aside>
         </header>
 
         <section className="mt-10" aria-labelledby="stati-roadmap">
@@ -90,12 +96,16 @@ export function Roadmap() {
             Stati usati nella roadmap
           </h2>
           <div className="mt-4 grid gap-4 md:grid-cols-2 lg:grid-cols-5">
-            {ROADMAP_STATUS_SUMMARY.map((item) => (
+            {ROADMAP_STATUS_SUMMARY.map((item, index) => (
               <article
                 key={item.status}
                 className="rounded-2xl border border-border bg-card p-4 shadow-sm"
+                aria-labelledby={`stato-roadmap-${index}`}
               >
-                <h3 className="flex items-center gap-2 text-base font-semibold">
+                <h3
+                  id={`stato-roadmap-${index}`}
+                  className="flex items-center gap-2 text-base font-semibold"
+                >
                   <StatusBadge status={item.status} />
                 </h3>
                 <p className="mt-3 text-sm leading-6 text-muted-foreground">
@@ -129,13 +139,17 @@ export function Roadmap() {
           </div>
 
           <div className="mt-6 grid gap-5 lg:grid-cols-2">
-            {ROADMAP_MODULES.map((module) => (
+            {ROADMAP_MODULES.map((module, index) => (
               <article
                 key={module.name}
                 className="flex h-full flex-col rounded-3xl border border-border bg-card p-5 shadow-sm"
+                aria-labelledby={`modulo-roadmap-${index}`}
               >
                 <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-                  <h3 className="font-display text-xl font-semibold tracking-tight">
+                  <h3
+                    id={`modulo-roadmap-${index}`}
+                    className="font-display text-xl font-semibold tracking-tight"
+                  >
                     {module.name}
                   </h3>
                   <StatusBadge status={module.status} />
@@ -203,9 +217,12 @@ export function Roadmap() {
             Limiti e moduli esclusi dalla roadmap v0
           </h2>
           <div className="mt-4 grid gap-4 text-sm leading-6 text-muted-foreground md:grid-cols-3">
-            {ROADMAP_LIMIT_NOTES.map((note) => (
-              <div key={note.title}>
-                <h3 className="font-semibold text-foreground">
+            {ROADMAP_LIMIT_NOTES.map((note, index) => (
+              <div key={note.title} aria-labelledby={`limite-roadmap-${index}`}>
+                <h3
+                  id={`limite-roadmap-${index}`}
+                  className="font-semibold text-foreground"
+                >
                   {note.title}
                 </h3>
                 <p className="mt-1">{note.description}</p>
