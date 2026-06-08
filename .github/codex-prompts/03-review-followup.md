@@ -17,12 +17,13 @@ Issue acceptance criteria:
 Task:
 1. determine whether a Codex implementation attempt exists;
 2. determine whether a pull request exists, targets `main`, uses a `codex/{{ISSUE_NUMBER}}-<slug>` branch and references the issue;
-3. detect delivery without PR and capture the exact reported reason, branch/diff or blocker;
-4. detect stale zombie tasks: `codex:invoked` or `codex:working` for more than 60 minutes with no PR, branch, Codex comment, commit or other concrete activity;
-5. check whether the implementation appears to satisfy the acceptance criteria;
-6. identify validation status if available;
-7. identify whether the implementation changed copy/legal/methodological safeguards;
-8. recommend one of the following outcomes:
+3. detect delivery without PR and capture the exact reported reason, branch/diff, commit SHA or blocker;
+4. classify any generic summary without a GitHub-visible PR, GitHub-visible branch plus recent commit SHA, reviewable diff/execution artifact or explicit technical blocker as `output-without-PR`;
+5. detect stale zombie tasks: `codex:invoked` or `codex:working` for more than 60 minutes with no PR, branch, Codex comment, commit or other concrete activity;
+6. check whether the implementation appears to satisfy the acceptance criteria;
+7. identify validation status if available;
+8. identify whether the implementation changed copy/legal/methodological safeguards;
+9. recommend one of the following outcomes:
    - `codex:review-needed` when a PR exists and needs human review/merge;
    - `codex:follow-up` when no PR exists, delivery without PR needs recovery, the task is stale, validation is failing, or the implementation is incomplete;
    - `codex:blocked` when a concrete safety, permission, credential or collision blocker prevents continuation;
@@ -32,7 +33,8 @@ Queue rules:
 - `codex:review-needed` is human review/merge wait and does not saturate Codex capacity unless there is concrete file/module collision or Codex-side rework.
 - PRs/issues waiting only for Giovanni review or merge are outside the queue capacity count and block only candidate work touching the same files/modules.
 - Compute remaining capacity as `5 - real active Codex operational tasks`; do not subtract human-review-pending items.
-- Moving a stale or failed no-PR task to `codex:follow-up` releases operational capacity.
+- Moving a stale, failed no-PR or `output-without-PR` task to `codex:follow-up` releases operational capacity.
+- If a claimed PR or branch is not visible on GitHub, require the direct PR URL, exact branch ref and commit SHA, or a precise blocker before counting the task as active.
 - Preserve no-auto-merge and no-auto-close policy.
 
 Do not close the issue automatically unless the repository policy explicitly authorises automatic closure. The current policy is to recommend closure only after human review.
