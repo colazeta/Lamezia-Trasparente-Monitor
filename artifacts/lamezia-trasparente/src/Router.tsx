@@ -34,6 +34,7 @@ import { Monitoraggio } from "./pages/Monitoraggio";
 import { MonitoraggioDetail } from "./pages/MonitoraggioDetail";
 import { MonitoraggioNuovo } from "./pages/MonitoraggioNuovo";
 import { Legalita } from "./pages/Legalita";
+import { LegalitaTimeline } from "./pages/LegalitaTimeline";
 import { Performance } from "./pages/Performance";
 import { PerformanceCompare } from "./pages/PerformanceCompare";
 import { PerformanceDetail } from "./pages/PerformanceDetail";
@@ -155,6 +156,12 @@ export function Router() {
               description="Modulo per proporre un elemento di monitoraggio civico da valutare con cautele, fonti e verifiche successive."
             />
             <Route path="/monitoraggio/:id" component={MonitoraggioDetail} />
+            <PublicRouteWithMeta
+              path="/legalita/timeline"
+              component={LegalitaTimeline}
+              title="Timeline legalità e memoria civica"
+              description="Struttura pubblica per eventi documentati su legalità, antimafia e memoria istituzionale, con fonti, status e cautele esplicite."
+            />
             <PublicRouteWithMeta
               path="/legalita"
               component={Legalita}
