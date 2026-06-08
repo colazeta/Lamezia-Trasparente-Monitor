@@ -11,6 +11,10 @@ import {
   Info,
   Users,
 } from "lucide-react";
+import {
+  MACCHINA_COMUNALE_SECONDARY_SOURCE_APPLICATION,
+  SECONDARY_SOURCES_POLICY,
+} from "@/content/secondarySourcesPolicy";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -283,12 +287,22 @@ export function MacchinaComunale() {
               Segnali pubblici da verificare
             </CardTitle>
             <CardDescription>
-              Fonti secondarie utili a orientare richieste documentali. Questi
-              elementi non alimentano i conteggi sull'organico finché non sono
-              confermati da fonti ufficiali o atti pubblici pertinenti.
+              {SECONDARY_SOURCES_POLICY.summary} Questi elementi non alimentano
+              i conteggi sull'organico finché non sono confermati da fonti
+              ufficiali o atti pubblici pertinenti.
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
+            <div className="rounded-lg border border-amber-200 bg-amber-50 p-4 text-amber-950 dark:border-amber-900/60 dark:bg-amber-950/20 dark:text-amber-100">
+              <h3 className="font-display text-base font-bold">
+                Applicazione al modulo Macchina comunale
+              </h3>
+              <ul className="mt-2 list-disc space-y-1 pl-5 text-sm leading-6">
+                {MACCHINA_COMUNALE_SECONDARY_SOURCE_APPLICATION.map((item) => (
+                  <li key={item}>{item}</li>
+                ))}
+              </ul>
+            </div>
             {publicAdministrativeSignals.map((signal) => (
               <article
                 key={signal.id}
@@ -481,7 +495,9 @@ export function MacchinaComunale() {
               fabbisogni, Amministrazione Trasparente e atti ufficiali
               pubblicati. Fonti giornalistiche o segnalazioni pubbliche possono
               orientare verifiche e richieste di accesso, ma restano escluse dai
-              conteggi finché non sono riscontrate con documenti primari.
+              conteggi finché non sono riscontrate con documenti primari e vanno
+              riesaminate, ritirate o declassate in caso di rettifiche, nuove
+              fonti ufficiali o riscontro insufficiente.
             </p>
           </CardContent>
         </Card>
