@@ -25,9 +25,9 @@ Collision risk:
 {{COLLISION_RISK}}
 
 Capacity context:
-- Capacity 5 is computed only on real active Codex tasks.
-- Issues or PRs waiting only for Giovanni review/merge, including `codex:review-needed`, are outside the capacity count.
-- A human-review-pending PR blocks this invocation only when it touches the same files/modules or creates a concrete implementation collision.
+- Capacity 10 is computed only on real active Codex tasks.
+- Open PRs, pending reviews, pending merges and issues waiting only for Giovanni review/merge, including `codex:review-needed`, are outside the capacity count.
+- A human-review-pending PR blocks this invocation only when it touches the same files/modules or creates a concrete implementation collision; otherwise invoke Codex directly on eligible `codex:ready` or `codex:prompted` issues that have no recent operative `@codex` invocation.
 
 Repository rules:
 - Follow `AGENTS.md`.

@@ -31,8 +31,8 @@ Task:
 
 Queue rules:
 - `codex:review-needed` is human review/merge wait and does not saturate Codex capacity unless there is concrete file/module collision or Codex-side rework.
-- PRs/issues waiting only for Giovanni review or merge are outside the queue capacity count and block only candidate work touching the same files/modules.
-- Compute remaining capacity as `5 - real active Codex operational tasks`; do not subtract human-review-pending items.
+- Open PRs, pending reviews and PRs/issues waiting only for Giovanni review or merge are outside the queue capacity count and block only candidate work touching the same files/modules or creating a concrete implementation collision.
+- Compute remaining capacity as `10 - real active Codex operational tasks`; do not subtract human-review-pending items.
 - Moving a stale, failed no-PR or `output-without-PR` task to `codex:follow-up` releases operational capacity.
 - If a claimed PR or branch is not visible on GitHub, require the direct PR URL, exact branch ref and commit SHA, or a precise blocker before counting the task as active.
 - Preserve no-auto-merge and no-auto-close policy.
