@@ -9,6 +9,7 @@ import {
   CalendarClock,
   Landmark,
   Users,
+  Network,
   Building2,
   ShieldCheck,
   Database,
@@ -135,6 +136,13 @@ export const NAV_GROUPS: NavSection[] = [
         label: "Amministratori",
         description: "Sindaco, assessori e consiglieri in carica.",
         icon: Users,
+      },
+      {
+        href: "/macchina-comunale",
+        label: "Macchina comunale",
+        description:
+          "Capacità amministrativa, organico, scoperture e stato delle fonti.",
+        icon: Network,
       },
     ],
   },
