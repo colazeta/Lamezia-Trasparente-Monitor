@@ -17,15 +17,16 @@ Task:
 3. treat `codex:review-needed` and PRs/issues waiting only for Giovanni review/merge as human review wait, not saturation, unless there is concrete file/module collision or Codex-side rework;
 4. compute effective free slots as `5 - real active Codex operational tasks`, excluding human-review-pending items;
 5. identify issues with `codex:working` or `codex:invoked` but no visible PR;
-6. identify stale zombie tasks with `codex:invoked` or `codex:working` for more than 60 minutes and no PR, branch, Codex comment, commit or concrete activity;
-7. identify issues with multiple overlapping Codex attempts;
-8. identify open PRs touching the same files/modules or solving overlapping issues;
-9. identify stale tasks that need `codex:follow-up` or `codex:blocked`;
-10. apply the anti-idle rule whenever real active operational capacity is below 5/5;
-11. recommend whether the queue should continue, pause or require human intervention.
+6. classify summaries without a GitHub-visible PR, GitHub-visible branch plus recent commit SHA, reviewable diff/execution artifact or explicit technical blocker as `output-without-PR`;
+7. identify stale zombie tasks with `codex:invoked` or `codex:working` for more than 60 minutes and no PR, branch, Codex comment, commit or concrete activity;
+8. identify issues with multiple overlapping Codex attempts;
+9. identify open PRs touching the same files/modules or solving overlapping issues;
+10. identify stale tasks that need `codex:follow-up` or `codex:blocked`;
+11. apply the anti-idle rule whenever real active operational capacity is below 5/5;
+12. recommend whether the queue should continue, pause or require human intervention.
 
 Default queue limits:
-- maximum active operational Codex tasks: 5, counted only from real active Codex work;
+- maximum active operational Codex tasks: 5, counted only from real active Codex work backed by a visible PR, visible branch with recent commit, reviewable diff/execution artifact or explicit technical blocker;
 - maximum active task touching API/schema/migrations: 1 unless a human reviewer accepts the collision risk;
 - maximum active task touching public copy/legal/methodological notes: 1 unless a human reviewer accepts the collision risk;
 - do not start new tasks if root typecheck or build is failing because of a recent Codex PR.
@@ -36,6 +37,7 @@ Anti-idle rule:
 - Prefer typecheck/build/lint/test failures, small bugs and limited technical-debt tasks.
 - Do not promote unsafe/manual, accusatory, broad, generated-file or unclear tasks merely to fill the queue.
 - Do not let stale blocker comments pause an issue when the cited PR, issue or dependency is closed, merged, resolved or explicitly superseded.
+- Do not count `output-without-PR` summaries as active slots; route them to `codex:follow-up` and request a reviewable PR to `main` or a verifiable blocker with exact branch/ref/SHA details.
 
 Collision-control fields required for every recommended promotion, pause or block:
 - Probable scope: {{PROBABLE_SCOPE}}

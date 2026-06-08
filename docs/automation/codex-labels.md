@@ -42,7 +42,7 @@ The labels are not merely cosmetic. They are the state machine used by the autom
 ## Operational groups
 
 - **Candidate/triage states:** `codex:candidate`, `codex:ready`.
-- **Operational states that can saturate capacity:** real active Codex work: `codex:prompted`, `codex:invoked`, `codex:working`, and open Codex PRs that still need Codex-side changes.
+- **Operational states that can saturate capacity:** real active Codex work: `codex:prompted`, `codex:invoked`, `codex:working`, and open Codex PRs that still need Codex-side changes, only when backed by a visible PR, visible branch with recent commit, reviewable diff/execution artifact, or explicit technical blocker.
 - **Human review wait:** `codex:review-needed` and PRs/issues waiting only for Giovanni review or merge; these are outside the capacity count unless there is concrete file/module collision or Codex-side rework.
 - **Follow-up/blocking states:** `codex:follow-up`, `codex:blocked`, `codex:dangerous`.
 - **Completion state:** `codex:done`, which must not be used to auto-close an issue.
@@ -72,7 +72,8 @@ The labels are not merely cosmetic. They are the state machine used by the autom
 - `area:backlog-governance` should generally produce triage comments, not direct code changes.
 - Issues should not move from `codex:working` to `codex:done` without evidence of a PR, validation or explicit reviewer confirmation.
 - Issues with `codex:invoked` or `codex:working` for more than 60 minutes and no PR, branch, Codex comment, commit or other concrete activity should move to `codex:follow-up` and release operational capacity.
-- All implementation work must use a dedicated branch named `codex/<issue-number>-<slug>` and open a PR targeting `main`; if a PR cannot be opened, Codex must comment with the exact technical reason and the branch/diff or blocker.
+- A Codex summary without a GitHub-visible PR, GitHub-visible branch plus recent commit SHA, reviewable diff/execution artifact or explicit technical blocker is `output-without-PR`; it does not count as a real active slot and should be routed to `codex:follow-up` for recovery.
+- All implementation work must use a dedicated branch named `codex/<issue-number>-<slug>` and open a PR targeting `main`; if a PR cannot be opened, Codex must comment with the exact technical reason and the branch ref, commit SHA, diff location or blocker.
 - Codex must not auto-merge PRs and must not close issues directly.
 
 ## Recommended processing rule

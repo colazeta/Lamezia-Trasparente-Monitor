@@ -25,6 +25,17 @@ Operational tasks are issues in one of these states:
 
 Effective free slots are calculated as `5 - real active Codex operational tasks`. Human-review-pending items, including `codex:review-needed` issues and PRs awaiting Giovanni's merge decision, are excluded from that arithmetic unless they become Codex-side rework or have a concrete file/module collision with the candidate work.
 
+### No PR, no active slot
+
+A Codex invocation counts as real active work only when at least one reviewer-verifiable artifact exists:
+
+- an open pull request targeting `main`;
+- a branch visible in GitHub with the exact ref and a recent commit SHA;
+- a concrete diff or execution artifact that a reviewer can inspect;
+- an explicit technical blocker explaining why the branch, diff or pull request could not be produced.
+
+A generic operational summary without one of those artifacts is classified as `output-without-PR`. It must not saturate the capacity-5 queue, must be routed to `codex:follow-up`, and must receive a recovery comment asking Codex to open a reviewable PR or provide the exact verifiable blocker.
+
 The governor should use all five real active slots when eligible low-collision backlog exists. A queue below 5/5 is healthy only when there is no real eligible backlog, a concrete file/module collision, legal/copy/methodological risk, CI instability, or a decision that must be made by Giovanni before parallel work on the affected files/modules is safe. Giovanni review/merge wait alone is not a reason to pause the whole pipeline.
 
 ## Branch and pull request requirement
@@ -127,7 +138,16 @@ Purpose:
 
 Stale-task rule: if an issue has `codex:invoked` or `codex:working` for more than 60 minutes with no PR, branch, Codex comment, commit or other concrete activity, move it to `codex:follow-up`, comment with the observed inactivity, and release operational capacity.
 
-Fallback rule: if Codex reports that it could not open a PR, route to `codex:follow-up` unless the comment gives a concrete recoverable technical blocker that should become `codex:blocked`. The follow-up comment must preserve the exact technical reason and branch/diff or blocker information.
+Output-without-PR triage checklist:
+
+1. verify whether GitHub shows an open PR targeting `main` for the issue branch;
+2. verify whether GitHub shows the claimed `codex/<issue-number>-<slug>` branch;
+3. if a branch is claimed, record the exact ref and latest commit SHA, or record that no such ref is visible;
+4. inspect the latest Codex summary for a direct PR URL, branch ref, commit SHA, diff location or explicit technical blocker;
+5. if none exists, classify the attempt as `output-without-PR`, move it to `codex:follow-up`, and release the active slot;
+6. post a recovery comment requiring either a reviewable PR to `main` or a precise blocker with verifiable branch/diff/SHA details.
+
+Fallback rule: if Codex reports that it could not open a PR, route to `codex:follow-up` unless the comment gives a concrete recoverable technical blocker that should become `codex:blocked`. The follow-up comment must preserve the exact technical reason and branch/diff or blocker information. If Codex claims a PR or branch exists but GitHub cannot verify it, treat the claim as `output-without-PR` until Codex provides the direct PR URL, exact ref and commit SHA, or a technical blocker.
 
 Safety rule: this automation must not close issues automatically unless a future explicit policy allows it. The current policy is to comment with a closure recommendation only.
 
