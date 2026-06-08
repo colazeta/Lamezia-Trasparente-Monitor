@@ -74,7 +74,7 @@ const ALL_ITEMS: NavItem[] = [
   { href: "/amministratori", label: "Amministratori", icon: Users, group: "Organi & Persone", keywords: "sindaco assessori consiglieri" },
 
   { href: "/temi", label: "Temi", icon: FileSearch, group: "Partecipazione", keywords: "argomenti categorie" },
-  { href: "/monitoraggio", label: "Monitoraggio Civico", icon: Telescope, group: "Partecipazione", keywords: "monithon cantieri lavori" },
+  { href: "/monitoraggio", label: "Monitor civico", icon: Telescope, group: "Partecipazione", keywords: "hub criticità programma promesse atti pnrr incarichi legalità foia monithon" },
   { href: "/accesso-civico", label: "Accesso Civico", icon: FileSearch, group: "Partecipazione", keywords: "foia istanza richiesta" },
   { href: "/segnalazioni", label: "Segnalazioni", icon: Megaphone, group: "Partecipazione", keywords: "segnale civico verifica accesso civico richiesta formale" },
 

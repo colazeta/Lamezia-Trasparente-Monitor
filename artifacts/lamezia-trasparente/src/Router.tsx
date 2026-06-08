@@ -145,8 +145,8 @@ export function Router() {
             <PublicRouteWithMeta
               path="/monitoraggio"
               component={Monitoraggio}
-              title="Monitoraggio civico"
-              description="Spazio per seguire segnalazioni e bisogni di verifica civica, senza sostituire le fonti ufficiali."
+              title="Monitor civico"
+              description="Hub documentale che collega criticità pubbliche, programma sotto verifica, atti, PNRR, incarichi, accesso civico e legalità senza formulare accuse autonome."
             />
             <PublicRouteWithMeta
               path="/monitoraggio/nuovo"

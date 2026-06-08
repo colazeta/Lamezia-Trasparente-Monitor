@@ -37,6 +37,7 @@ import {
 import { AlboLink } from "@/components/AlboLink";
 import { MonitoringReportsSection } from "@/components/MonitoringReportsSection";
 import { PageMeta } from "@/components/seo/PageMeta";
+import { CivicMonitorReturn } from "@/components/CivicMonitorReturn";
 
 const ITALIA_DOMANI_URL = "https://www.italiadomani.gov.it";
 const COMUNE_PNRR_URL =
@@ -266,6 +267,7 @@ export function Pnrr() {
             e i documenti dell'Albo Pretorio rilevati per CUP, senza dedurre
             ritardi o criticità non documentate dalle fonti.
           </p>
+          <CivicMonitorReturn context="I progetti PNRR possono essere collegati a report civici, atti, affidamenti e richieste di accesso civico come elementi documentali da verificare." />
           {censusLastUpdatedAt && (
             <p className="mt-2 flex items-center gap-1.5 text-xs text-muted-foreground">
               <RefreshCw className="h-3 w-3" aria-hidden="true" />

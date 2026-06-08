@@ -20,6 +20,7 @@ import {
 import { format } from "date-fns";
 import { it } from "date-fns/locale";
 
+import { CivicMonitorReturn } from "@/components/CivicMonitorReturn";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
@@ -41,15 +42,13 @@ const STATUS_META: Record<LegalityRequirementStatus, StatusMeta> = {
   present: {
     label: "Presente",
     icon: CheckCircle2,
-    badgeClass:
-      "border-success/30 bg-success/10 text-success",
+    badgeClass: "border-success/30 bg-success/10 text-success",
     dotClass: "bg-success",
   },
   absent: {
     label: "Assente",
     icon: XCircle,
-    badgeClass:
-      "border-destructive/30 bg-destructive/10 text-destructive",
+    badgeClass: "border-destructive/30 bg-destructive/10 text-destructive",
     dotClass: "bg-destructive",
   },
   partial: {
@@ -113,6 +112,7 @@ export function Legalita() {
           Tutte le valutazioni sono redazionali e non sono il frutto di un
           punteggio calcolato automaticamente.
         </p>
+        <CivicMonitorReturn context="Legalità, requisiti di trasparenza e memoria civica sono collegati al hub come contesto documentale, con linguaggio prudente e non accusatorio." />
       </div>
 
       {isLoading ? (
@@ -174,7 +174,10 @@ function OverallJudgment({
   updatedAt: string | null;
 }) {
   return (
-    <section data-tour="legality-overview" className="rounded-2xl border border-brand/30 bg-brand/5 p-6 md:p-8">
+    <section
+      data-tour="legality-overview"
+      className="rounded-2xl border border-brand/30 bg-brand/5 p-6 md:p-8"
+    >
       <div className="flex items-center gap-2 text-brand">
         <ShieldCheck className="h-5 w-5" />
         <h2 className="font-display text-lg font-bold tracking-tight">

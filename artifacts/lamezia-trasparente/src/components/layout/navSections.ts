@@ -50,22 +50,19 @@ export const NAV_GROUPS: NavSection[] = [
       {
         href: "/atti-fondamentali",
         label: "Atti Fondamentali",
-        description:
-          "Statuto, regolamenti e documenti che governano l'ente.",
+        description: "Statuto, regolamenti e documenti che governano l'ente.",
         icon: ScrollText,
       },
       {
         href: "/delibere",
         label: "Delibere",
-        description:
-          "Decisioni di Giunta e Consiglio con voti e allegati.",
+        description: "Decisioni di Giunta e Consiglio con voti e allegati.",
         icon: Gavel,
       },
       {
         href: "/convocazioni",
         label: "Convocazioni",
-        description:
-          "Calendario delle sedute degli organi istituzionali.",
+        description: "Calendario delle sedute degli organi istituzionali.",
         icon: CalendarClock,
       },
       {
@@ -103,8 +100,7 @@ export const NAV_GROUPS: NavSection[] = [
       {
         href: "/bandi",
         label: "Bandi e Finanziamenti",
-        description:
-          "Contributi, fondi e opportunità di finanziamento.",
+        description: "Contributi, fondi e opportunità di finanziamento.",
         icon: HandCoins,
       },
       {
@@ -146,28 +142,27 @@ export const NAV_GROUPS: NavSection[] = [
       {
         href: "/temi",
         label: "Temi",
-        description:
-          "Esplora gli argomenti che attraversano i dati pubblici.",
+        description: "Esplora gli argomenti che attraversano i dati pubblici.",
         icon: FileSearch,
       },
       {
         href: "/monitoraggio",
-        label: "Monitoraggio Civico",
+        label: "Monitor civico",
         description:
-          "Segui e racconta lo stato di opere e finanziamenti.",
+          "Hub documentale per collegare criticità, atti, PNRR, incarichi, legalità e accesso civico.",
         icon: Telescope,
       },
       {
         href: "/accesso-civico",
         label: "Accesso Civico",
-        description:
-          "Richiedi documenti e dati con l'accesso civico (FOIA).",
+        description: "Richiedi documenti e dati con l'accesso civico (FOIA).",
         icon: FileSearch,
       },
       {
         href: "/segnalazioni",
         label: "Segnalazioni",
-        description: "Segnala anomalie, sprechi o disservizi.",
+        description:
+          "Registro delle criticità pubbliche da leggere come segnali di verifica.",
         icon: Megaphone,
       },
     ],
@@ -184,15 +179,13 @@ export const NAV_GROUPS: NavSection[] = [
       {
         href: "/statistiche",
         label: "Statistiche",
-        description:
-          "Numeri e grafici che sintetizzano i dati pubblici.",
+        description: "Numeri e grafici che sintetizzano i dati pubblici.",
         icon: BarChart3,
       },
       {
         href: "/opendata",
         label: "Open Data",
-        description:
-          "Dataset scaricabili in formato aperto e riutilizzabile.",
+        description: "Dataset scaricabili in formato aperto e riutilizzabile.",
         icon: Database,
       },
       {
@@ -230,8 +223,7 @@ export const NAV_GROUPS: NavSection[] = [
       {
         href: "/sviluppatori",
         label: "API e Sviluppatori",
-        description:
-          "Accedi ai dati tramite API pubbliche e documentazione.",
+        description: "Accedi ai dati tramite API pubbliche e documentazione.",
         icon: Code2,
       },
     ],

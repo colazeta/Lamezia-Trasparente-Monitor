@@ -15,12 +15,21 @@ import {
   Minus,
   ThumbsDown,
   Paperclip,
+  MessageSquareWarning,
+  ListChecks,
+  Gavel,
+  ClipboardList,
+  ShieldCheck,
+  FileQuestion,
+  Scale,
+  Database,
 } from "lucide-react";
 import { format } from "date-fns";
 import { it } from "date-fns/locale";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
   Empty,
@@ -54,6 +63,83 @@ const ASSESSMENT_META: Record<
   },
 };
 
+const HUB_MODULES = [
+  {
+    id: "criticita-pubbliche",
+    title: "Cosa è stato segnalato",
+    label: "Criticità pubbliche",
+    href: "/segnalazioni",
+    status: "v0 manuale + redazionale",
+    description:
+      "Segnali civici e bisogni di verifica raccolti come punti di attenzione, non come conclusioni autonome.",
+    icon: MessageSquareWarning,
+  },
+  {
+    id: "programma-sotto-verifica",
+    title: "Cosa era stato promesso",
+    label: "Programma sotto verifica",
+    href: "/roadmap",
+    status: "modulo in predisposizione",
+    description:
+      "Spazio previsto per collegare impegni programmatici, stato documentale e atti disponibili senza duplicare la roadmap.",
+    icon: ListChecks,
+  },
+  {
+    id: "atti-prodotti",
+    title: "Quali atti sono stati prodotti",
+    label: "Delibere e Albo",
+    href: "/delibere",
+    secondaryHref: "/albo",
+    secondaryLabel: "Albo Pretorio",
+    status: "automatico da fonti pubbliche",
+    description:
+      "Delibere, pubblicazioni e documenti amministrativi da usare come fonte primaria per ogni verifica civica.",
+    icon: Gavel,
+  },
+  {
+    id: "risorse-affidamenti",
+    title: "Quali risorse e affidamenti sono collegati",
+    label: "Contratti, incarichi e PNRR",
+    href: "/contratti",
+    secondaryHref: "/incarichimetro",
+    secondaryLabel: "Incarichimetro",
+    status: "misto automatico + indicatori",
+    description:
+      "Affidamenti, incarichi e progetti PNRR letti come contesto documentale e segnali da verificare sulle fonti.",
+    icon: ClipboardList,
+  },
+  {
+    id: "memoria-civica",
+    title: "Quale memoria civica e istituzionale va conservata",
+    label: "Legalità e beni confiscati",
+    href: "/legalita",
+    secondaryHref: "/beni-confiscati",
+    secondaryLabel: "Beni confiscati",
+    status: "v0 redazionale + fonti",
+    description:
+      "Percorsi su legalità, requisiti di trasparenza, riuso civico e memoria istituzionale con cautele esplicite.",
+    icon: ShieldCheck,
+  },
+  {
+    id: "cosa-manca",
+    title: "Cosa manca e può essere richiesto",
+    label: "Accesso civico",
+    href: "/accesso-civico",
+    status: "strumento assistito",
+    description:
+      "Generatore e registro operativo per trasformare data gap e documenti non rintracciati in richieste verificabili.",
+    icon: FileQuestion,
+  },
+];
+
+const RELATION_HINTS = [
+  "criticità pubblica ↔ promessa programmatica",
+  "promessa ↔ delibera, pubblicazione, contratto o progetto PNRR",
+  "criticità ↔ richiesta di accesso civico",
+  "evento di memoria civica ↔ bene confiscato, delibera o requisito di legalità",
+  "incarico o affidamento ↔ promessa, criticità o fonte metodologica",
+];
+
 function formatDate(value: string | null | undefined) {
   if (!value) return "—";
   const d = new Date(value);
@@ -69,26 +155,34 @@ export function Monitoraggio() {
   const reports = useMemo(() => data ?? [], [data]);
 
   return (
-    <div className="container mx-auto px-4 py-8 md:py-12 max-w-5xl">
-      <div data-tour="monitoring-intro" className="mb-8 flex flex-wrap items-start justify-between gap-4">
+    <div className="container mx-auto max-w-6xl px-4 py-8 md:py-12">
+      <div
+        data-tour="monitoring-intro"
+        className="mb-8 flex flex-wrap items-start justify-between gap-4"
+      >
         <div className="space-y-2">
           <div className="flex items-center gap-2 text-brand">
             <Telescope className="h-5 w-5" />
             <span className="font-mono text-xs uppercase tracking-wider">
-              Monitoraggio civico
+              Monitor civico hub
             </span>
           </div>
           <h1 className="font-display text-3xl font-bold tracking-tight md:text-4xl">
-            Report di Monitoraggio Civico
+            Monitor civico
           </h1>
-          <p data-tour="monitoring-phases" className="max-w-3xl text-muted-foreground">
-            Cittadini e associazioni raccontano com'è andato un progetto
-            finanziato con denaro pubblico: un'analisi in tre fasi — analisi
-            desk, valutazione di efficacia e impatto sui risultati — ispirata al
-            metodo Monithon.
+          <p className="max-w-3xl text-muted-foreground">
+            La rotta <code>/monitoraggio</code> resta il punto di ingresso
+            generale: collega fonti pubbliche, segnalazioni, programma sotto
+            verifica, atti, risorse e memoria civica senza formulare accuse
+            autonome o sostituire le fonti ufficiali.
           </p>
         </div>
-        <Button data-tour="monitoring-new" asChild variant="brand" className="gap-2">
+        <Button
+          data-tour="monitoring-new"
+          asChild
+          variant="brand"
+          className="gap-2"
+        >
           <Link href="/monitoraggio/nuovo">
             <Plus className="h-4 w-4" />
             Crea un report
@@ -96,32 +190,151 @@ export function Monitoraggio() {
         </Button>
       </div>
 
-      {isLoading ? (
-        <div className="grid gap-4 sm:grid-cols-2">
-          {Array.from({ length: 4 }).map((_, i) => (
-            <Skeleton key={i} className="h-44 w-full rounded-2xl" />
-          ))}
+      <section aria-labelledby="monitor-civico-moduli" className="space-y-4">
+        <div className="flex flex-wrap items-end justify-between gap-3">
+          <div>
+            <h2
+              id="monitor-civico-moduli"
+              className="font-display text-2xl font-bold tracking-tight"
+            >
+              Moduli collegati
+            </h2>
+            <p className="mt-2 max-w-3xl text-sm text-muted-foreground">
+              Ogni scheda indica lo stato del modulo e il tipo di collegamento
+              previsto. Le relazioni sono documentali: evidenziano indicatori,
+              data gap e bisogni di verifica, non responsabilità individuali.
+            </p>
+          </div>
+          <Button asChild variant="outline" size="sm">
+            <Link href="/metodologia">Fonti e cautele</Link>
+          </Button>
         </div>
-      ) : reports.length === 0 ? (
-        <Empty>
-          <EmptyHeader>
-            <EmptyMedia variant="icon">
-              <Telescope className="h-6 w-6" />
-            </EmptyMedia>
-            <EmptyTitle>Ancora nessun report pubblicato</EmptyTitle>
-            <EmptyDescription>
-              Sii il primo a monitorare un progetto: scegli un appalto o un
-              progetto PNRR e racconta com'è andato.
-            </EmptyDescription>
-          </EmptyHeader>
-        </Empty>
-      ) : (
-        <div className="grid gap-4 sm:grid-cols-2">
-          {reports.map((report) => (
-            <ReportCard key={report.id} report={report} />
-          ))}
+
+        <div className="grid gap-4 md:grid-cols-2">
+          {HUB_MODULES.map((module) => {
+            const Icon = module.icon;
+            return (
+              <Card
+                key={module.id}
+                id={module.id}
+                className="flex h-full flex-col gap-4 p-5"
+              >
+                <div className="flex items-start justify-between gap-3">
+                  <div className="rounded-2xl bg-brand/10 p-3 text-brand">
+                    <Icon className="h-5 w-5" aria-hidden="true" />
+                  </div>
+                  <Badge variant="outline" className="text-[11px]">
+                    {module.status}
+                  </Badge>
+                </div>
+                <div>
+                  <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                    {module.title}
+                  </p>
+                  <h3 className="mt-1 font-display text-xl font-bold">
+                    {module.label}
+                  </h3>
+                  <p className="mt-2 text-sm text-muted-foreground">
+                    {module.description}
+                  </p>
+                </div>
+                <div className="mt-auto flex flex-wrap gap-2 pt-1">
+                  <Button asChild size="sm" variant="outline">
+                    <Link href={module.href}>Apri modulo</Link>
+                  </Button>
+                  {module.secondaryHref ? (
+                    <Button asChild size="sm" variant="ghost">
+                      <Link href={module.secondaryHref}>
+                        {module.secondaryLabel}
+                      </Link>
+                    </Button>
+                  ) : null}
+                </div>
+              </Card>
+            );
+          })}
         </div>
-      )}
+      </section>
+
+      <section
+        aria-labelledby="monitor-civico-relazioni"
+        className="mt-8 grid gap-4 rounded-2xl border border-border bg-muted/30 p-5 md:grid-cols-[1.2fr_0.8fr]"
+      >
+        <div>
+          <div className="flex items-center gap-2 text-brand">
+            <Database className="h-4 w-4" aria-hidden="true" />
+            <h2
+              id="monitor-civico-relazioni"
+              className="font-display text-xl font-bold"
+            >
+              Relazioni previste per le prossime versioni
+            </h2>
+          </div>
+          <p className="mt-2 text-sm text-muted-foreground">
+            La v0 usa collegamenti manuali e percorsi di navigazione. Le
+            relazioni dati restano predisposte come tracce di lavoro per
+            collegare criticità, promesse, atti, incarichi, PNRR, accesso civico
+            e memoria istituzionale.
+          </p>
+        </div>
+        <ul className="space-y-2 text-sm text-muted-foreground">
+          {RELATION_HINTS.map((hint) => (
+            <li key={hint} className="flex gap-2">
+              <Scale className="mt-0.5 h-4 w-4 shrink-0 text-brand" />
+              <span>{hint}</span>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      <section
+        aria-labelledby="monitor-civico-report"
+        className="mt-10"
+        data-tour="monitoring-phases"
+      >
+        <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
+          <div>
+            <h2
+              id="monitor-civico-report"
+              className="font-display text-2xl font-bold tracking-tight"
+            >
+              Report civici già disponibili
+            </h2>
+            <p className="mt-2 max-w-3xl text-muted-foreground">
+              I report in stile Monithon restano in questa pagina come
+              sottosezione operativa: analisi desk, valutazione di efficacia e
+              impatto sui risultati, sempre con verifica sulle fonti.
+            </p>
+          </div>
+        </div>
+
+        {isLoading ? (
+          <div className="grid gap-4 sm:grid-cols-2">
+            {Array.from({ length: 4 }).map((_, i) => (
+              <Skeleton key={i} className="h-44 w-full rounded-2xl" />
+            ))}
+          </div>
+        ) : reports.length === 0 ? (
+          <Empty>
+            <EmptyHeader>
+              <EmptyMedia variant="icon">
+                <Telescope className="h-6 w-6" />
+              </EmptyMedia>
+              <EmptyTitle>Ancora nessun report pubblicato</EmptyTitle>
+              <EmptyDescription>
+                Sii il primo a monitorare un progetto: scegli un appalto o un
+                progetto PNRR e racconta com'è andato.
+              </EmptyDescription>
+            </EmptyHeader>
+          </Empty>
+        ) : (
+          <div className="grid gap-4 sm:grid-cols-2">
+            {reports.map((report) => (
+              <ReportCard key={report.id} report={report} />
+            ))}
+          </div>
+        )}
+      </section>
     </div>
   );
 }
@@ -139,7 +352,9 @@ function ReportCard({ report }: { report: MonitoringReport }) {
     >
       <article className="flex h-full flex-col rounded-2xl border border-border bg-card p-5 shadow-sm transition-colors hover:border-brand/50">
         <div className="flex flex-wrap items-center gap-1.5">
-          <Badge className={`gap-1 text-xs shadow-none ${assessment.className}`}>
+          <Badge
+            className={`gap-1 text-xs shadow-none ${assessment.className}`}
+          >
             <AssessmentIcon className="h-3 w-3" />
             {assessment.label}
           </Badge>

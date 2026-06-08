@@ -34,6 +34,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { PageMeta } from "@/components/seo/PageMeta";
+import { CivicMonitorReturn } from "@/components/CivicMonitorReturn";
 
 const DEFAULT_ENTE = "Comune di Lamezia Terme";
 const DEFAULT_OFFICE = "Responsabile della trasparenza / Ufficio competente";
@@ -659,6 +660,7 @@ export function AccessoCivico() {
           <p className="text-muted-foreground">
             Uno strumento civico per preparare bozze copiabili di richieste di accesso civico e tenere un registro semplice delle richieste. Non invia automaticamente email o PEC e non sostituisce una verifica legale o amministrativa sul caso concreto.
           </p>
+          <CivicMonitorReturn context="Le richieste FOIA aiutano a trasformare data gap e documenti non rintracciati in verifiche tracciabili dentro il Monitor civico." />
         </header>
 
         <section data-tour="accesso-civico-intro" className="mb-10" aria-labelledby="come-funziona-title">
