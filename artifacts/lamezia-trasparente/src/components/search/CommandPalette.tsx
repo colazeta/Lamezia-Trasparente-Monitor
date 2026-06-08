@@ -27,6 +27,7 @@ import {
   Search,
   Clock,
   BookOpen,
+  BookOpenCheck,
   Scale3D,
   Info,
   Mail,
