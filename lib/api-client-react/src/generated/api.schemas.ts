@@ -1405,6 +1405,39 @@ export interface PnrrAttachment {
   url: string;
 }
 
+/**
+ * Qualità della localizzazione esposta nella scheda PNRR
+ */
+export type PnrrLocationQuality = typeof PnrrLocationQuality[keyof typeof PnrrLocationQuality];
+
+
+export const PnrrLocationQuality = {
+  ufficiale: 'ufficiale',
+  dedotta: 'dedotta',
+  da_verificare: 'da_verificare',
+  non_disponibile: 'non_disponibile',
+} as const;
+
+/**
+ * Chiave documentale usata per collegare progetto e contratto/affidamento
+ */
+export type PnrrLinkedContractRelationKey = typeof PnrrLinkedContractRelationKey[keyof typeof PnrrLinkedContractRelationKey];
+
+
+export const PnrrLinkedContractRelationKey = {
+  CUP: 'CUP',
+  CIG: 'CIG',
+  altra_chiave: 'altra_chiave',
+} as const;
+
+export interface PnrrLinkedContract {
+  /** Chiave documentale usata per collegare progetto e contratto/affidamento */
+  relationKey: PnrrLinkedContractRelationKey;
+  relationValue: string;
+  relationNote: string;
+  contract: Contract;
+}
+
 export interface PnrrProject {
   id: number;
   key: string;
@@ -1441,6 +1474,14 @@ export interface PnrrProject {
      * @nullable
      */
   lastUpdatedAt?: string | null;
+  /**
+     * Territorial label exposed by the PNRR source or by the local filtering logic
+     * @nullable
+     */
+  location: string | null;
+  locationQuality: PnrrLocationQuality;
+  /** Methodological note explaining whether the location is official, inferred, needs verification or is unavailable */
+  locationNote: string;
   /** True when the project is also present in the Comune's Attuazione Misure PNRR page (matched by CUP) */
   trasparenzaCompleta: boolean;
   /** True when lastUpdatedAt is more than 6 months ago and the project is not concluded */
@@ -1450,6 +1491,7 @@ export interface PnrrProject {
   /** @nullable */
   lastPublication?: string | null;
   documents: Publication[];
+  linkedContracts: PnrrLinkedContract[];
 }
 
 export interface PnrrCensus {

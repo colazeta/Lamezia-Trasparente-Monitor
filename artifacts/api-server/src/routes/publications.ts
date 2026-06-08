@@ -17,7 +17,19 @@ import {
   type SessionReport,
   type SessionIntervention,
 } from "@workspace/db";
-import { and, eq, asc, desc, ilike, gte, lte, ne, or, sql } from "drizzle-orm";
+import {
+  and,
+  eq,
+  asc,
+  desc,
+  ilike,
+  gte,
+  lte,
+  isNotNull,
+  ne,
+  or,
+  sql,
+} from "drizzle-orm";
 import sanitizeHtml from "sanitize-html";
 import {
   UpsertSedutaReportBody,
@@ -823,6 +835,45 @@ function normalizeCup(value: string): string {
   return value.toUpperCase().replace(/\s+/g, "");
 }
 
+function mapPnrrLinkedContract(
+  c: typeof contractsTable.$inferSelect,
+  cup: string,
+) {
+  return {
+    relationKey: "CUP" as const,
+    relationValue: cup,
+    relationNote:
+      "Collegamento documentale tramite CUP presente sia nella scheda PNRR sia nel contratto/affidamento.",
+    contract: {
+      id: c.id,
+      title: c.title,
+      description: c.description,
+      supplier: c.supplier,
+      amount: Number(c.amount),
+      procedureType: c.procedureType,
+      status: c.status,
+      awardDate: c.awardDate.toISOString(),
+      cig: c.cig,
+      cup: c.cup,
+      stazioneAppaltante: c.stazioneAppaltante,
+      acquisitionTool: c.acquisitionTool,
+      withoutTender: c.withoutTender,
+      withoutMepa: c.withoutMepa,
+      anacUrl: c.anacUrl,
+      themeId: c.themeId,
+      macrotema: c.macrotema,
+      macrotemaManual: c.macrotemaManual,
+      latitude: c.latitude !== null ? Number(c.latitude) : null,
+      longitude: c.longitude !== null ? Number(c.longitude) : null,
+      geoAddress: c.geoAddress,
+      geoQuartiere: c.geoQuartiere,
+      geoSource: c.geoSource,
+      geoManual: c.geoManual,
+      geoVerify: c.geoVerify,
+    },
+  };
+}
+
 const SIX_MONTHS_MS = 6 * 30 * 24 * 60 * 60 * 1000;
 
 function isStaleUpdate(
@@ -844,27 +895,33 @@ function isStaleUpdate(
 }
 
 router.get("/pnrr/projects", async (_req, res) => {
-  const [masterList, attuazioneRows, alboRows, italiadomaniStatus] =
-    await Promise.all([
-      db
-        .select()
-        .from(italiadomaniProjectsTable)
-        .orderBy(
-          desc(italiadomaniProjectsTable.lastSeenAt),
-          desc(italiadomaniProjectsTable.id),
-        ),
-      db.select().from(attuazionePnrrProjectsTable),
-      db
-        .select()
-        .from(publicationsTable)
-        .where(eq(publicationsTable.isPnrr, true))
-        .orderBy(desc(publicationsTable.pubStart), desc(publicationsTable.id)),
-      db
-        .select()
-        .from(feedStatusTable)
-        .where(eq(feedStatusTable.source, ITALIADOMANI_SOURCE))
-        .then((rows) => rows[0] ?? null),
-    ]);
+  const [
+    masterList,
+    attuazioneRows,
+    alboRows,
+    contractRows,
+    italiadomaniStatus,
+  ] = await Promise.all([
+    db
+      .select()
+      .from(italiadomaniProjectsTable)
+      .orderBy(
+        desc(italiadomaniProjectsTable.lastSeenAt),
+        desc(italiadomaniProjectsTable.id),
+      ),
+    db.select().from(attuazionePnrrProjectsTable),
+    db
+      .select()
+      .from(publicationsTable)
+      .where(eq(publicationsTable.isPnrr, true))
+      .orderBy(desc(publicationsTable.pubStart), desc(publicationsTable.id)),
+    db.select().from(contractsTable).where(isNotNull(contractsTable.cup)),
+    db
+      .select()
+      .from(feedStatusTable)
+      .where(eq(feedStatusTable.source, ITALIADOMANI_SOURCE))
+      .then((rows) => rows[0] ?? null),
+  ]);
 
   // Index attuazione rows by normalised CUP for O(1) lookup.
   const attuazioneByCup = new Map<
@@ -884,6 +941,15 @@ router.get("/pnrr/projects", async (_req, res) => {
       if (list) list.push(r);
       else docsByCup.set(cup, [r]);
     }
+  }
+
+  const contractsByCup = new Map<string, (typeof contractRows)[number][]>();
+  for (const r of contractRows) {
+    if (!r.cup) continue;
+    const cup = normalizeCup(r.cup);
+    const list = contractsByCup.get(cup);
+    if (list) list.push(r);
+    else contractsByCup.set(cup, [r]);
   }
 
   const matchedDocIds = new Set<number>();
@@ -909,6 +975,7 @@ router.get("/pnrr/projects", async (_req, res) => {
       );
 
       const alboMatched = docsByCup.get(cup) ?? [];
+      const contractMatched = contractsByCup.get(cup) ?? [];
       const documents = alboMatched.map((d) => {
         matchedDocIds.add(d.id);
         return mapPublication(d);
@@ -947,12 +1014,19 @@ router.get("/pnrr/projects", async (_req, res) => {
           ? attuazione.publishedAt.toISOString()
           : null,
         lastUpdatedAt,
+        location: "Lamezia Terme",
+        locationQuality: "dedotta",
+        locationNote:
+          "Localizzazione territoriale dedotta dal filtro comunale usato dal censimento/API; la scheda non espone un campo di localizzazione ufficiale puntuale.",
         attachments: allAttachments,
         trasparenzaCompleta,
         aggiornamentoVecchio,
         documentsCount: documents.length,
         lastPublication,
         documents,
+        linkedContracts: contractMatched.map((c) =>
+          mapPnrrLinkedContract(c, p.cup),
+        ),
       };
     });
   }

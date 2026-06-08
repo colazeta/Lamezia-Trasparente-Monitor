@@ -5973,6 +5973,30 @@ components:
         url:
           type: string
 
+    PnrrLocationQuality:
+      type: string
+      description: Qualità della localizzazione esposta nella scheda PNRR
+      enum: [ufficiale, dedotta, da_verificare, non_disponibile]
+
+    PnrrLinkedContract:
+      type: object
+      required:
+        - relationKey
+        - relationValue
+        - relationNote
+        - contract
+      properties:
+        relationKey:
+          type: string
+          description: Chiave documentale usata per collegare progetto e contratto/affidamento
+          enum: [CUP, CIG, altra_chiave]
+        relationValue:
+          type: string
+        relationNote:
+          type: string
+        contract:
+          $ref: "#/components/schemas/Contract"
+
     PnrrProject:
       type: object
       required:
@@ -5985,6 +6009,10 @@ components:
         - documents
         - trasparenzaCompleta
         - aggiornamentoVecchio
+        - location
+        - locationQuality
+        - locationNote
+        - linkedContracts
       properties:
         id:
           type: integer
@@ -6023,6 +6051,14 @@ components:
         lastUpdatedAt:
           type: ["string", "null"]
           description: Date of last update from Italia Domani census
+        location:
+          type: ["string", "null"]
+          description: Territorial label exposed by the PNRR source or by the local filtering logic
+        locationQuality:
+          $ref: "#/components/schemas/PnrrLocationQuality"
+        locationNote:
+          type: string
+          description: Methodological note explaining whether the location is official, inferred, needs verification or is unavailable
         trasparenzaCompleta:
           type: boolean
           description: True when the project is also present in the Comune's Attuazione Misure PNRR page (matched by CUP)
@@ -6041,6 +6077,10 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/Publication"
+        linkedContracts:
+          type: array
+          items:
+            $ref: "#/components/schemas/PnrrLinkedContract"
 
     PnrrCensus:
       type: object
