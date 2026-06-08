@@ -54,6 +54,14 @@ export const PUBLIC_INDEXABLE_ROUTES = [
     rationale: "Modulo pubblico per nuove segnalazioni civiche.",
   },
   {
+    path: "/promessometro",
+    rationale: "Modulo pubblico sulle promesse programmatiche monitorate.",
+  },
+  {
+    path: "/legalita/timeline",
+    rationale: "Timeline pubblica su legalità e memoria civica.",
+  },
+  {
     path: "/legalita",
     rationale: "Pagina pubblica su legalità e beni confiscati.",
   },
@@ -89,6 +97,10 @@ export const PUBLIC_INDEXABLE_ROUTES = [
     rationale: "Strumento pubblico di confronto performance.",
   },
   { path: "/pareri", rationale: "Indice pubblico di pareri e vigilanza." },
+  {
+    path: "/criticita-pubbliche",
+    rationale: "Registro pubblico delle criticità civiche da verificare.",
+  },
   {
     path: "/segnalazioni",
     rationale: "Pagina pubblica delle segnalazioni civiche.",
