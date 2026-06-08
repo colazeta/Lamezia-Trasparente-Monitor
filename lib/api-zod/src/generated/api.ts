@@ -1922,9 +1922,24 @@ export const ListReportsResponseItem = zod.object({
   "id": zod.number(),
   "title": zod.string(),
   "description": zod.string(),
-  "category": zod.string(),
-  "location": zod.string(),
+  "category": zod.string().describe('Ambito della criticità pubblica.'),
+  "location": zod.string().describe('Quartiere, via, edificio, area o `non localizzato`.'),
   "status": zod.enum(['ricevuta', 'in_valutazione', 'presa_in_carico', 'archiviata']),
+  "initialSourceType": zod.string().nullish().describe('Fonte iniziale, per esempio articolo, comunicato, post pubblico, interrogazione, mozione, accesso, albo, delibera o altro.'),
+  "initialSourceUrl": zod.string().nullish(),
+  "publicEmergenceDate": zod.string().nullish(),
+  "involvedSector": zod.string().nullish(),
+  "competentOffice": zod.string().nullish(),
+  "formalAct": zod.string().nullish(),
+  "institutionalResponse": zod.string().nullish(),
+  "institutionalResponseDate": zod.string().nullish(),
+  "availableData": zod.string().nullish(),
+  "missingData": zod.string().nullish(),
+  "foiaLink": zod.string().nullish(),
+  "outcome": zod.enum(['aperta', 'risolta', 'parzialmente_risolta', 'non_risolta', 'non_verificabile', 'archiviata']),
+  "verificationStatus": zod.enum(['non_verificata', 'in_verifica', 'documentata', 'risposta_ricevuta', 'chiusa', 'archiviata', 'da_aggiornare']),
+  "interpretiveCaution": zod.string(),
+  "updatedAt": zod.string(),
   "createdAt": zod.string()
 })
 export const ListReportsResponse = zod.array(ListReportsResponseItem)
@@ -1944,7 +1959,21 @@ export const CreateReportBody = zod.object({
   "description": zod.string().min(1),
   "category": zod.string().min(1),
   "location": zod.string().min(1),
-  "citizenName": zod.string().optional()
+  "citizenName": zod.string().optional(),
+  "initialSourceType": zod.string().optional(),
+  "initialSourceUrl": zod.string().optional(),
+  "publicEmergenceDate": zod.string().optional(),
+  "involvedSector": zod.string().optional(),
+  "competentOffice": zod.string().optional(),
+  "formalAct": zod.string().optional(),
+  "institutionalResponse": zod.string().optional(),
+  "institutionalResponseDate": zod.string().optional(),
+  "availableData": zod.string().optional(),
+  "missingData": zod.string().optional(),
+  "foiaLink": zod.string().optional(),
+  "outcome": zod.enum(['aperta', 'risolta', 'parzialmente_risolta', 'non_risolta', 'non_verificabile', 'archiviata']).optional(),
+  "verificationStatus": zod.enum(['non_verificata', 'in_verifica', 'documentata', 'risposta_ricevuta', 'chiusa', 'archiviata', 'da_aggiornare']).optional(),
+  "interpretiveCaution": zod.string().optional()
 })
 
 

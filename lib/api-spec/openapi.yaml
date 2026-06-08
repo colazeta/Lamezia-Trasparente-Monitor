@@ -6438,6 +6438,27 @@ components:
             briefManual=true; an empty/whitespace value clears the summary and
             re-enables automatic generation.
 
+    ReportVerificationStatus:
+      type: string
+      enum:
+        - non_verificata
+        - in_verifica
+        - documentata
+        - risposta_ricevuta
+        - chiusa
+        - archiviata
+        - da_aggiornare
+
+    ReportOutcome:
+      type: string
+      enum:
+        - aperta
+        - risolta
+        - parzialmente_risolta
+        - non_risolta
+        - non_verificabile
+        - archiviata
+
     Report:
       type: object
       required:
@@ -6447,6 +6468,10 @@ components:
         - category
         - location
         - status
+        - outcome
+        - verificationStatus
+        - interpretiveCaution
+        - updatedAt
         - createdAt
       properties:
         id:
@@ -6457,11 +6482,44 @@ components:
           type: string
         category:
           type: string
+          description: Ambito della criticità pubblica.
         location:
           type: string
+          description: Quartiere, via, edificio, area o `non localizzato`.
         status:
           type: string
           enum: [ricevuta, in_valutazione, presa_in_carico, archiviata]
+        initialSourceType:
+          type: ["string", "null"]
+          description: Fonte iniziale, per esempio articolo, comunicato, post pubblico, interrogazione, mozione, accesso, albo, delibera o altro.
+        initialSourceUrl:
+          type: ["string", "null"]
+        publicEmergenceDate:
+          type: ["string", "null"]
+        involvedSector:
+          type: ["string", "null"]
+        competentOffice:
+          type: ["string", "null"]
+        formalAct:
+          type: ["string", "null"]
+        institutionalResponse:
+          type: ["string", "null"]
+        institutionalResponseDate:
+          type: ["string", "null"]
+        availableData:
+          type: ["string", "null"]
+        missingData:
+          type: ["string", "null"]
+        foiaLink:
+          type: ["string", "null"]
+        outcome:
+          $ref: '#/components/schemas/ReportOutcome'
+        verificationStatus:
+          $ref: '#/components/schemas/ReportVerificationStatus'
+        interpretiveCaution:
+          type: string
+        updatedAt:
+          type: string
         createdAt:
           type: string
 
@@ -6482,6 +6540,34 @@ components:
           type: string
           minLength: 1
         citizenName:
+          type: string
+        initialSourceType:
+          type: string
+        initialSourceUrl:
+          type: string
+        publicEmergenceDate:
+          type: string
+        involvedSector:
+          type: string
+        competentOffice:
+          type: string
+        formalAct:
+          type: string
+        institutionalResponse:
+          type: string
+        institutionalResponseDate:
+          type: string
+        availableData:
+          type: string
+        missingData:
+          type: string
+        foiaLink:
+          type: string
+        outcome:
+          $ref: '#/components/schemas/ReportOutcome'
+        verificationStatus:
+          $ref: '#/components/schemas/ReportVerificationStatus'
+        interpretiveCaution:
           type: string
 
     MonitoringReportAttachment:
