@@ -18,6 +18,7 @@ import {
   HandCoins,
   ShieldOff,
   Telescope,
+  BookOpenCheck,
   Rss,
   Code2,
   BookOpen,
@@ -76,7 +77,7 @@ export const NAV_GROUPS: NavSection[] = [
         href: "/legalita",
         label: "Legalità e Trasparenza",
         description:
-          "Impegni e misure contro la corruzione e per la trasparenza.",
+          "Impegni, prevenzione della corruzione e obblighi di trasparenza.",
         icon: Scale,
       },
     ],
@@ -153,6 +154,13 @@ export const NAV_GROUPS: NavSection[] = [
         icon: Telescope,
       },
       {
+        href: "/promessometro",
+        label: "Promessometro",
+        description:
+          "Collega promesse programmatiche, atti e stati documentali senza scoring politico.",
+        icon: BookOpenCheck,
+      },
+      {
         href: "/accesso-civico",
         label: "Accesso Civico",
         description: "Richiedi documenti e dati con l'accesso civico (FOIA).",
@@ -161,8 +169,7 @@ export const NAV_GROUPS: NavSection[] = [
       {
         href: "/segnalazioni",
         label: "Segnalazioni",
-        description:
-          "Registro delle criticità pubbliche da leggere come segnali di verifica.",
+        description: "Segnala criticità da verificare o disservizi documentati.",
         icon: Megaphone,
       },
     ],

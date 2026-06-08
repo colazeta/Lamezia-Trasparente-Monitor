@@ -39,12 +39,14 @@ import { MonitoringReportsSection } from "@/components/MonitoringReportsSection"
 import { PageMeta } from "@/components/seo/PageMeta";
 import { CivicMonitorReturn } from "@/components/CivicMonitorReturn";
 
-const ITALIA_DOMANI_URL = "https://www.italiadomani.gov.it";
+const ITALIA_DOMANI_PROJECTS_DATASET_URL =
+  "https://www.italiadomani.gov.it/content/dam/italiadomani/opendata/Progetti_del_PNRR/Progetti_PNRR.csv";
 const COMUNE_PNRR_URL =
   "https://www.comune.lamezia-terme.cz.it/it/attuazione-misure-pnrr";
 
 type AmountFilter = "all" | "under-100k" | "100k-500k" | "500k-1m" | "over-1m";
 type PresenceFilter = "all" | "yes" | "no";
+type LocationQuality = PnrrProject["locationQuality"];
 
 const amountFilters: { value: AmountFilter; label: string }[] = [
   { value: "all", label: "Tutti gli importi" },
@@ -90,6 +92,19 @@ function projectMatchesAmount(project: PnrrProject, filter: AmountFilter) {
   if (filter === "100k-500k") return amount >= 100_000 && amount < 500_000;
   if (filter === "500k-1m") return amount >= 500_000 && amount < 1_000_000;
   return amount >= 1_000_000;
+}
+
+const locationQualityLabels: Record<LocationQuality, string> = {
+  ufficiale: "localizzazione ufficiale",
+  dedotta: "localizzazione dedotta",
+  da_verificare: "localizzazione da verificare",
+  non_disponibile: "localizzazione non disponibile",
+};
+
+function locationQualityLabel(value: LocationQuality | null | undefined) {
+  return value
+    ? locationQualityLabels[value]
+    : "localizzazione non disponibile";
 }
 
 function dataStatus(project: PnrrProject) {
@@ -248,12 +263,12 @@ export function Pnrr() {
             Schede pubbliche dei progetti PNRR localizzati a Lamezia Terme,
             basate sul censimento ufficiale{" "}
             <a
-              href={ITALIA_DOMANI_URL}
+              href={ITALIA_DOMANI_PROJECTS_DATASET_URL}
               target="_blank"
               rel="noopener noreferrer"
               className="font-medium text-primary hover:underline"
             >
-              Italia Domani
+              Italia Domani — dataset Progetti PNRR
             </a>
             . Quando disponibili, la pagina collega la scheda comunale{" "}
             <a
@@ -264,8 +279,9 @@ export function Pnrr() {
             >
               Attuazione Misure PNRR
             </a>{" "}
-            e i documenti dell'Albo Pretorio rilevati per CUP, senza dedurre
-            ritardi o criticità non documentate dalle fonti.
+            , i documenti dell'Albo Pretorio e i contratti/affidamenti rilevati
+            solo tramite CUP o altra chiave documentata, senza dedurre ritardi o
+            criticità non documentate dalle fonti.
           </p>
           <CivicMonitorReturn context="I progetti PNRR possono essere collegati a report civici, atti, affidamenti e richieste di accesso civico come elementi documentali da verificare." />
           {censusLastUpdatedAt && (
@@ -683,7 +699,8 @@ function PnrrCard({ project }: { project: PnrrProject }) {
           )}
           <span className="flex items-center gap-1">
             <MapPin className="h-3.5 w-3.5" aria-hidden="true" />
-            Lamezia Terme, dato territoriale del censimento
+            {project.location ?? "Localizzazione non disponibile"} —{" "}
+            {locationQualityLabel(project.locationQuality)}
           </span>
           <span className="flex items-center gap-1">
             <Calendar className="h-3.5 w-3.5" aria-hidden="true" />
@@ -731,7 +748,15 @@ function PnrrCard({ project }: { project: PnrrProject }) {
             value={project.attuatore}
             fallback="Non disponibile"
           />
-          <MetaRow label="Localizzazione" value="Lamezia Terme" />
+          <MetaRow
+            label="Localizzazione"
+            value={project.location}
+            fallback="Localizzazione non disponibile"
+          />
+          <MetaRow
+            label="Qualità localizzazione"
+            value={locationQualityLabel(project.locationQuality)}
+          />
           <MetaRow
             label="Stato procedurale / lavori"
             value={project.status}
@@ -745,27 +770,9 @@ function PnrrCard({ project }: { project: PnrrProject }) {
           <MetaRow label="Data status" value={dataStatus(project)} />
         </dl>
 
+        <SourceTraceability project={project} />
+
         <div className="mb-4 flex flex-wrap items-center gap-3">
-          <a
-            href={ITALIA_DOMANI_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 text-xs font-medium text-primary hover:underline"
-          >
-            <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
-            Fonte ufficiale Italia Domani
-          </a>
-          {project.url && (
-            <a
-              href={project.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 text-xs font-medium text-primary hover:underline"
-            >
-              <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
-              Scheda Attuazione Misure PNRR del Comune
-            </a>
-          )}
           <Link
             href={`/monitoraggio/nuovo?pnrrProjectId=${project.id}`}
             className="inline-flex items-center gap-1.5 rounded-md border border-brand/40 bg-brand/10 px-2.5 py-1 text-xs font-semibold text-brand transition-colors hover:bg-brand/20"
@@ -866,25 +873,166 @@ function PnrrCard({ project }: { project: PnrrProject }) {
           )}
         </section>
 
-        <section
-          className="mt-4 border-t border-border/60 pt-4"
-          aria-labelledby={`pnrr-contracts-${project.id}`}
-        >
-          <h4
-            id={`pnrr-contracts-${project.id}`}
-            className="mb-2 flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground"
-          >
-            <Link2 className="h-3.5 w-3.5" aria-hidden="true" />
-            Contratti / affidamenti collegati
-          </h4>
-          <p className="text-sm text-muted-foreground">
-            Contratti o affidamenti collegati non rilevati nella scheda dati
-            PNRR disponibile; dato da verificare sulla fonte ufficiale e negli
-            atti collegati.
-          </p>
-        </section>
+        <LinkedContractsSection project={project} />
       </div>
     </article>
+  );
+}
+
+function SourceTraceability({ project }: { project: PnrrProject }) {
+  return (
+    <section
+      className="mb-4 rounded-lg border border-border/60 bg-muted/20 p-3"
+      aria-labelledby={`pnrr-sources-${project.id}`}
+    >
+      <h4
+        id={`pnrr-sources-${project.id}`}
+        className="mb-2 flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground"
+      >
+        <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
+        Tracciabilità fonti e localizzazione
+      </h4>
+      <div className="grid gap-2 text-sm md:grid-cols-2">
+        <div className="rounded-md bg-card p-2">
+          <Badge variant="outline" className="mb-1 text-xs shadow-none">
+            Fonte nazionale specifica
+          </Badge>
+          <a
+            href={ITALIA_DOMANI_PROJECTS_DATASET_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1.5 text-primary hover:underline"
+          >
+            <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
+            Dataset ufficiale Italia Domani — Progetti PNRR
+          </a>
+          <p className="mt-1 text-xs text-muted-foreground">
+            La scheda nazionale puntuale del singolo CUP non è esposta dal dato
+            disponibile; viene indicata la fonte ufficiale più puntuale usata
+            dal censimento.
+          </p>
+        </div>
+        <div className="rounded-md bg-card p-2">
+          <Badge
+            variant={project.url ? "brand" : "outline"}
+            className="mb-1 text-xs shadow-none"
+          >
+            {project.url
+              ? "Fonte comunale puntuale"
+              : "Fonte comunale non disponibile"}
+          </Badge>
+          {project.url ? (
+            <a
+              href={project.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 text-primary hover:underline"
+            >
+              <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
+              Scheda Attuazione Misure PNRR del Comune
+            </a>
+          ) : (
+            <p className="text-muted-foreground">
+              Link comunale puntuale non rilevato nei dati disponibili.
+            </p>
+          )}
+        </div>
+      </div>
+      <p className="mt-2 text-xs text-muted-foreground">
+        {project.locationNote ||
+          "La qualità della localizzazione richiede verifica sulla fonte ufficiale."}
+      </p>
+    </section>
+  );
+}
+
+function LinkedContractsSection({ project }: { project: PnrrProject }) {
+  const linkedContracts = project.linkedContracts ?? [];
+
+  return (
+    <section
+      className="mt-4 border-t border-border/60 pt-4"
+      aria-labelledby={`pnrr-contracts-${project.id}`}
+    >
+      <h4
+        id={`pnrr-contracts-${project.id}`}
+        className="mb-2 flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground"
+      >
+        <Link2 className="h-3.5 w-3.5" aria-hidden="true" />
+        Contratti / affidamenti collegati
+        <span className="ml-auto rounded-full bg-muted px-2 py-0.5 text-xs font-bold tabular-nums text-foreground">
+          {linkedContracts.length}
+        </span>
+      </h4>
+      {linkedContracts.length > 0 ? (
+        <div className="space-y-2">
+          {linkedContracts.map((item) => (
+            <div
+              key={`${item.relationKey}-${item.relationValue}-${item.contract.id}`}
+              className="rounded-lg bg-muted/30 p-3"
+            >
+              <div className="mb-1.5 flex flex-wrap items-center gap-2">
+                <Badge
+                  variant="brand"
+                  className="font-mono text-xs shadow-none"
+                >
+                  Collegato per {item.relationKey} {item.relationValue}
+                </Badge>
+                {item.contract.cig && (
+                  <Badge
+                    variant="outline"
+                    className="font-mono text-xs shadow-none"
+                  >
+                    CIG {item.contract.cig}
+                  </Badge>
+                )}
+                {item.contract.cup && (
+                  <Badge
+                    variant="outline"
+                    className="font-mono text-xs shadow-none"
+                  >
+                    CUP {item.contract.cup}
+                  </Badge>
+                )}
+              </div>
+              <Link
+                href={`/contratti/${item.contract.id}`}
+                className="text-sm font-medium leading-snug text-primary hover:underline"
+              >
+                {item.contract.title}
+              </Link>
+              <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted-foreground">
+                <span>{item.contract.supplier}</span>
+                <span>{formatImporto(item.contract.amount)}</span>
+                <span>{item.contract.procedureType}</span>
+                <span>{formatDate(item.contract.awardDate)}</span>
+              </div>
+              <p className="mt-2 text-xs text-muted-foreground">
+                {item.relationNote}
+              </p>
+              {item.contract.anacUrl && (
+                <a
+                  href={item.contract.anacUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-2 inline-flex items-center gap-1.5 text-xs font-medium text-primary hover:underline"
+                >
+                  <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
+                  Fonte ANAC del contratto
+                </a>
+              )}
+            </div>
+          ))}
+        </div>
+      ) : (
+        <p className="text-sm text-muted-foreground">
+          Nessun contratto o affidamento collegato tramite CUP, CIG o altra
+          chiave documentata nei dati disponibili. La sezione resta predisposta
+          per mostrare solo relazioni verificabili, senza dedurre collegamenti
+          da titolo, importo o somiglianza descrittiva.
+        </p>
+      )}
+    </section>
   );
 }
 

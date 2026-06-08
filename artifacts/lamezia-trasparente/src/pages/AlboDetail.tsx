@@ -51,7 +51,15 @@ import {
 } from "@/components/ui/empty";
 import { AlboLink } from "@/components/AlboLink";
 import { MacrotemaBadge } from "@/lib/macrotema";
-import { ALBO_PORTAL_URL } from "@/lib/albo";
+import {
+  alboExtractionText,
+  describeAlboMatchCriterion,
+  extractAlboAmount,
+  extractAlboCigs,
+  getAlboSourceInfo,
+  hasAlboBeneficiarySignal,
+  isReliableAlboProgressivo,
+} from "@/lib/albo";
 
 const TOKEN_STORAGE_KEY = "lt_ingest_token";
 
@@ -79,15 +87,12 @@ function formatDate(value: string | null | undefined) {
     : format(d, "dd MMMM yyyy", { locale: it });
 }
 
-const CIG_RE = /\b(?:CIG|SMART\s+CIG)[:\s-]*([A-Z0-9]{10})\b/gi;
-const AMOUNT_RE = /(?:€|euro|importo)\s*(?:di)?\s*(\d{1,3}(?:[.\s]\d{3})*(?:,\d{2})?)/i;
-const BENEFICIARY_RE = /\b(?:beneficiari[oa]|affidatari[oa]|operatore\s+economico|ditta|societ[aà]|impresa)\b/i;
-
-type DataStatus = "official" | "extracted" | "enriched" | "to-verify";
+type DataStatus = "official" | "extracted" | "signal" | "enriched" | "to-verify";
 
 const DATA_STATUS_LABELS: Record<DataStatus, string> = {
   official: "ufficiale",
   extracted: "estratto",
+  signal: "segnale rilevato",
   enriched: "arricchito",
   "to-verify": "da verificare",
 };
@@ -99,25 +104,6 @@ function DataStatusBadge({ status }: { status: DataStatus }) {
       {DATA_STATUS_LABELS[status]}
     </Badge>
   );
-}
-
-function textForExtraction(publication: Publication): string {
-  return [publication.oggetto, publication.brief, publication.provenienza]
-    .filter(Boolean)
-    .join(" ");
-}
-
-function extractCigs(text: string): string[] {
-  return Array.from(text.matchAll(CIG_RE), (match) => match[1].toUpperCase());
-}
-
-function extractAmount(text: string): string | null {
-  const match = AMOUNT_RE.exec(text);
-  return match ? match[0] : null;
-}
-
-function hasBeneficiarySignal(text: string): boolean {
-  return BENEFICIARY_RE.test(text);
 }
 
 function unavailable(label = "Non disponibile") {
@@ -299,8 +285,9 @@ export function AlboDetail() {
             </div>
             <p className="mb-4 text-sm text-muted-foreground">
               Atti collegati quando esistono dati che permettono un collegamento
-              esplicito, ad esempio tramite CIG o CUP. Non vengono inventate
-              relazioni non presenti nei dati.
+              documentale dichiarabile: via CUP, via CIG, via seduta o via
+              categoria quando disponibile. Non vengono inventate relazioni non
+              presenti nei dati.
             </p>
 
             {storiaLoading ? (
@@ -341,6 +328,9 @@ export function AlboDetail() {
                                   {storia.originatingSeduta.subcategory}
                                 </Badge>
                               )}
+                              <span className="text-[10px] rounded border px-1.5 py-0.5 font-semibold uppercase tracking-wide">
+                                via seduta
+                              </span>
                             </div>
                           </div>
                           <ChevronRight className="h-4 w-4 text-muted-foreground shrink-0 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
@@ -374,7 +364,7 @@ export function AlboDetail() {
                                     <span>{formatEuro(c.amount)}</span>
                                   )}
                                   <span className="text-[10px] rounded border px-1.5 py-0.5 font-semibold uppercase tracking-wide">
-                                    via {c.matchedBy.toUpperCase()}
+                                    {describeAlboMatchCriterion(c.matchedBy)}
                                   </span>
                                 </div>
                               </div>
@@ -404,6 +394,9 @@ export function AlboDetail() {
                             <div className="mt-1.5 flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
                               <span className="font-mono">CUP {p.cup}</span>
                               {p.mission && <span>{p.mission}</span>}
+                              <span className="text-[10px] rounded border px-1.5 py-0.5 font-semibold uppercase tracking-wide">
+                                {describeAlboMatchCriterion(p.matchedBy)}
+                              </span>
                             </div>
                           </Card>
                         </Link>
@@ -433,7 +426,7 @@ export function AlboDetail() {
                                   <div className="mt-1.5 flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
                                     {s.pubStart && <span>{formatDate(s.pubStart)}</span>}
                                     <span className="text-[10px] rounded border px-1.5 py-0.5 font-semibold uppercase tracking-wide">
-                                      via {s.matchedBy.toUpperCase()}
+                                      {describeAlboMatchCriterion(s.matchedBy)}
                                     </span>
                                   </div>
                                 </div>
@@ -472,7 +465,7 @@ export function AlboDetail() {
                                       <span>{formatDate(s.pubStart)}</span>
                                     )}
                                     <span className="text-[10px] rounded border px-1.5 py-0.5 font-semibold uppercase tracking-wide">
-                                      via {s.matchedBy.toUpperCase()}
+                                      {describeAlboMatchCriterion(s.matchedBy)}
                                     </span>
                                   </div>
                                 </div>
@@ -510,11 +503,16 @@ export function AlboDetail() {
 
 
 function StructuredActProfile({ publication }: { publication: Publication }) {
-  const extractionText = textForExtraction(publication);
-  const cigs = extractCigs(extractionText);
-  const amount = extractAmount(extractionText);
-  const hasBeneficiary = hasBeneficiarySignal(extractionText);
-  const sourceHref = publication.attachments?.[0]?.officialUrl ?? ALBO_PORTAL_URL;
+  const extractionText = alboExtractionText([
+    publication.oggetto,
+    publication.brief,
+    publication.provenienza,
+  ]);
+  const cigs = extractAlboCigs(extractionText);
+  const amount = extractAlboAmount(extractionText);
+  const hasBeneficiary = hasAlboBeneficiarySignal(extractionText);
+  const source = getAlboSourceInfo(publication.attachments);
+  const hasReliableProgressivo = isReliableAlboProgressivo(publication.progressivo);
 
   return (
     <section>
@@ -528,14 +526,25 @@ function StructuredActProfile({ publication }: { publication: Publication }) {
       </div>
 
       <div className="mb-4 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-950 dark:border-amber-900/60 dark:bg-amber-950/30 dark:text-amber-100">
-        I campi marcati come estratti o arricchiti derivano dal testo della pubblicazione
-        o da classificazioni automatiche: devono essere controllati sul documento sorgente
-        prima di usarli come certezza ufficiale.
+        I campi marcati come estratti, segnali rilevati, arricchiti o da verificare
+        derivano dal testo della pubblicazione, da classificazioni automatiche o
+        da dati incompleti: devono essere controllati sulla fonte prima di usarli
+        come certezza ufficiale.
       </div>
 
       <dl className="grid gap-3 md:grid-cols-2">
         <ProfileField label="ID interno" value={<span className="font-mono">{publication.id}</span>} status="official" />
-        <ProfileField label="Numero pubblicazione Albo" value={<span className="font-mono">{publication.progressivo || unavailable()}</span>} status="official" />
+        <ProfileField
+          label="Numero pubblicazione Albo"
+          value={
+            publication.progressivo ? (
+              <span className="font-mono">{publication.progressivo}</span>
+            ) : (
+              unavailable("Da verificare")
+            )
+          }
+          status={hasReliableProgressivo ? "official" : "to-verify"}
+        />
         <ProfileField label="Tipo / categoria atto" value={`${publication.tipologia} · ${publication.category}`} status="official" />
         <ProfileField label="Numero atto" value={publication.numRegGen ? <span className="font-mono">Reg. gen. {publication.numRegGen}</span> : unavailable()} status={publication.numRegGen ? "official" : "to-verify"} />
         <ProfileField label="Data atto" value={publication.dataAtto ? formatDate(publication.dataAtto) : unavailable()} status={publication.dataAtto ? "official" : "to-verify"} />
@@ -547,16 +556,19 @@ function StructuredActProfile({ publication }: { publication: Publication }) {
         <ProfileField label="CIG" value={cigs.length ? <span className="font-mono">{cigs.join(", ")}</span> : unavailable("Non rilevato")} status={cigs.length ? "extracted" : "to-verify"} />
         <ProfileField label="CUP" value={(publication.cups ?? []).length ? <span className="font-mono">{publication.cups.join(", ")}</span> : unavailable("Non rilevato")} status={(publication.cups ?? []).length ? "extracted" : "to-verify"} />
         <ProfileField label="Importo" value={amount ? <span className="inline-flex items-center gap-1"><BadgeEuro className="h-3.5 w-3.5" aria-hidden="true" />{amount}</span> : unavailable("Non rilevato")} status={amount ? "extracted" : "to-verify"} />
-        <ProfileField label="Beneficiario / operatore" value={hasBeneficiary ? <span className="inline-flex items-center gap-1"><UserRound className="h-3.5 w-3.5" aria-hidden="true" />campo rilevato nel testo</span> : unavailable("Non rilevato")} status={hasBeneficiary ? "extracted" : "to-verify"} />
+        <ProfileField label="Beneficiario / operatore" value={hasBeneficiary ? <span className="inline-flex items-center gap-1"><UserRound className="h-3.5 w-3.5" aria-hidden="true" />segnale testuale, non identificazione certa</span> : unavailable("Non rilevato")} status={hasBeneficiary ? "signal" : "to-verify"} />
         <ProfileField
-          label="Fonte originale"
+          label={source.isPunctual ? "Fonte puntuale" : "Fonte Albo"}
           value={
-            <a href={sourceHref} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 font-medium text-primary underline underline-offset-2 hover:text-brand">
-              Apri documento sorgente
-              <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
-            </a>
+            <span className="flex flex-col gap-1">
+              <a href={source.href} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 font-medium text-primary underline underline-offset-2 hover:text-brand">
+                {source.label}
+                <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
+              </a>
+              <span className="text-xs text-muted-foreground">{source.description}</span>
+            </span>
           }
-          status="official"
+          status={source.isPunctual ? "official" : "to-verify"}
         />
       </dl>
     </section>

@@ -5,14 +5,47 @@
  * API specification
  * OpenAPI spec version: 0.1.0
  */
+import type { ReportOutcome } from './reportOutcome';
 import type { ReportStatus } from './reportStatus';
+import type { ReportVerificationStatus } from './reportVerificationStatus';
 
 export interface Report {
   id: number;
   title: string;
   description: string;
+  /** Ambito della criticità pubblica. */
   category: string;
+  /** Quartiere, via, edificio, area o `non localizzato`. */
   location: string;
   status: ReportStatus;
+  /**
+     * Fonte iniziale, per esempio articolo, comunicato, post pubblico, interrogazione, mozione, accesso, albo, delibera o altro.
+     * @nullable
+     */
+  initialSourceType?: string | null;
+  /** @nullable */
+  initialSourceUrl?: string | null;
+  /** @nullable */
+  publicEmergenceDate?: string | null;
+  /** @nullable */
+  involvedSector?: string | null;
+  /** @nullable */
+  competentOffice?: string | null;
+  /** @nullable */
+  formalAct?: string | null;
+  /** @nullable */
+  institutionalResponse?: string | null;
+  /** @nullable */
+  institutionalResponseDate?: string | null;
+  /** @nullable */
+  availableData?: string | null;
+  /** @nullable */
+  missingData?: string | null;
+  /** @nullable */
+  foiaLink?: string | null;
+  outcome: ReportOutcome;
+  verificationStatus: ReportVerificationStatus;
+  interpretiveCaution: string;
+  updatedAt: string;
   createdAt: string;
 }

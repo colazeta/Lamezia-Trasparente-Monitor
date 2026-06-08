@@ -1405,6 +1405,39 @@ export interface PnrrAttachment {
   url: string;
 }
 
+/**
+ * Qualità della localizzazione esposta nella scheda PNRR
+ */
+export type PnrrLocationQuality = typeof PnrrLocationQuality[keyof typeof PnrrLocationQuality];
+
+
+export const PnrrLocationQuality = {
+  ufficiale: 'ufficiale',
+  dedotta: 'dedotta',
+  da_verificare: 'da_verificare',
+  non_disponibile: 'non_disponibile',
+} as const;
+
+/**
+ * Chiave documentale usata per collegare progetto e contratto/affidamento
+ */
+export type PnrrLinkedContractRelationKey = typeof PnrrLinkedContractRelationKey[keyof typeof PnrrLinkedContractRelationKey];
+
+
+export const PnrrLinkedContractRelationKey = {
+  CUP: 'CUP',
+  CIG: 'CIG',
+  altra_chiave: 'altra_chiave',
+} as const;
+
+export interface PnrrLinkedContract {
+  /** Chiave documentale usata per collegare progetto e contratto/affidamento */
+  relationKey: PnrrLinkedContractRelationKey;
+  relationValue: string;
+  relationNote: string;
+  contract: Contract;
+}
+
 export interface PnrrProject {
   id: number;
   key: string;
@@ -1441,6 +1474,14 @@ export interface PnrrProject {
      * @nullable
      */
   lastUpdatedAt?: string | null;
+  /**
+     * Territorial label exposed by the PNRR source or by the local filtering logic
+     * @nullable
+     */
+  location: string | null;
+  locationQuality: PnrrLocationQuality;
+  /** Methodological note explaining whether the location is official, inferred, needs verification or is unavailable */
+  locationNote: string;
   /** True when the project is also present in the Comune's Attuazione Misure PNRR page (matched by CUP) */
   trasparenzaCompleta: boolean;
   /** True when lastUpdatedAt is more than 6 months ago and the project is not concluded */
@@ -1450,6 +1491,7 @@ export interface PnrrProject {
   /** @nullable */
   lastPublication?: string | null;
   documents: Publication[];
+  linkedContracts: PnrrLinkedContract[];
 }
 
 export interface PnrrCensus {
@@ -1707,6 +1749,31 @@ export interface SetPublicationBriefInput {
   brief: string;
 }
 
+export type ReportVerificationStatus = typeof ReportVerificationStatus[keyof typeof ReportVerificationStatus];
+
+
+export const ReportVerificationStatus = {
+  non_verificata: 'non_verificata',
+  in_verifica: 'in_verifica',
+  documentata: 'documentata',
+  risposta_ricevuta: 'risposta_ricevuta',
+  chiusa: 'chiusa',
+  archiviata: 'archiviata',
+  da_aggiornare: 'da_aggiornare',
+} as const;
+
+export type ReportOutcome = typeof ReportOutcome[keyof typeof ReportOutcome];
+
+
+export const ReportOutcome = {
+  aperta: 'aperta',
+  risolta: 'risolta',
+  parzialmente_risolta: 'parzialmente_risolta',
+  non_risolta: 'non_risolta',
+  non_verificabile: 'non_verificabile',
+  archiviata: 'archiviata',
+} as const;
+
 export type ReportStatus = typeof ReportStatus[keyof typeof ReportStatus];
 
 
@@ -1721,9 +1788,40 @@ export interface Report {
   id: number;
   title: string;
   description: string;
+  /** Ambito della criticità pubblica. */
   category: string;
+  /** Quartiere, via, edificio, area o `non localizzato`. */
   location: string;
   status: ReportStatus;
+  /**
+     * Fonte iniziale, per esempio articolo, comunicato, post pubblico, interrogazione, mozione, accesso, albo, delibera o altro.
+     * @nullable
+     */
+  initialSourceType?: string | null;
+  /** @nullable */
+  initialSourceUrl?: string | null;
+  /** @nullable */
+  publicEmergenceDate?: string | null;
+  /** @nullable */
+  involvedSector?: string | null;
+  /** @nullable */
+  competentOffice?: string | null;
+  /** @nullable */
+  formalAct?: string | null;
+  /** @nullable */
+  institutionalResponse?: string | null;
+  /** @nullable */
+  institutionalResponseDate?: string | null;
+  /** @nullable */
+  availableData?: string | null;
+  /** @nullable */
+  missingData?: string | null;
+  /** @nullable */
+  foiaLink?: string | null;
+  outcome: ReportOutcome;
+  verificationStatus: ReportVerificationStatus;
+  interpretiveCaution: string;
+  updatedAt: string;
   createdAt: string;
 }
 
@@ -1737,6 +1835,20 @@ export interface ReportInput {
   /** @minLength 1 */
   location: string;
   citizenName?: string;
+  initialSourceType?: string;
+  initialSourceUrl?: string;
+  publicEmergenceDate?: string;
+  involvedSector?: string;
+  competentOffice?: string;
+  formalAct?: string;
+  institutionalResponse?: string;
+  institutionalResponseDate?: string;
+  availableData?: string;
+  missingData?: string;
+  foiaLink?: string;
+  outcome?: ReportOutcome;
+  verificationStatus?: ReportVerificationStatus;
+  interpretiveCaution?: string;
 }
 
 export interface MonitoringReportAttachment {
