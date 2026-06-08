@@ -41,6 +41,8 @@ import { CivicMonitorReturn } from "@/components/CivicMonitorReturn";
 
 const ITALIA_DOMANI_PROJECTS_DATASET_URL =
   "https://www.italiadomani.gov.it/content/dam/italiadomani/opendata/Progetti_del_PNRR/Progetti_PNRR.csv";
+const ITALIA_DOMANI_LOCATION_DATASET_URL =
+  "https://www.italiadomani.gov.it/content/dam/italiadomani/opendata/localizzazione-dei-progetti-del-pnrr/localizzazione-progetti-pnrr.csv";
 const COMUNE_PNRR_URL =
   "https://www.comune.lamezia-terme.cz.it/it/attuazione-misure-pnrr";
 
@@ -269,8 +271,18 @@ export function Pnrr() {
               className="font-medium text-primary hover:underline"
             >
               Italia Domani — dataset Progetti PNRR
+            </a>{" "}
+            e sul dataset di{" "}
+            <a
+              href={ITALIA_DOMANI_LOCATION_DATASET_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-medium text-primary hover:underline"
+            >
+              localizzazione dei progetti PNRR
             </a>
-            . Quando disponibili, la pagina collega la scheda comunale{" "}
+            {". "}
+            Quando disponibili, la pagina collega la scheda comunale{" "}
             <a
               href={COMUNE_PNRR_URL}
               target="_blank"
@@ -278,10 +290,11 @@ export function Pnrr() {
               className="font-medium text-primary hover:underline"
             >
               Attuazione Misure PNRR
-            </a>{" "}
-            , i documenti dell'Albo Pretorio e i contratti/affidamenti rilevati
-            solo tramite CUP o altra chiave documentata, senza dedurre ritardi o
-            criticità non documentate dalle fonti.
+            </a>
+            {", "}
+            i documenti dell'Albo Pretorio e i contratti/affidamenti collegati
+            tramite CUP, senza dedurre ritardi o criticità non documentate dalle
+            fonti.
           </p>
           <CivicMonitorReturn context="I progetti PNRR possono essere collegati a report civici, atti, affidamenti e richieste di accesso civico come elementi documentali da verificare." />
           {censusLastUpdatedAt && (
@@ -892,13 +905,15 @@ function SourceTraceability({ project }: { project: PnrrProject }) {
         <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
         Tracciabilità fonti e localizzazione
       </h4>
-      <div className="grid gap-2 text-sm md:grid-cols-2">
+      <div className="grid gap-2 text-sm md:grid-cols-3">
         <div className="rounded-md bg-card p-2">
           <Badge variant="outline" className="mb-1 text-xs shadow-none">
             Fonte nazionale specifica
           </Badge>
           <a
-            href={ITALIA_DOMANI_PROJECTS_DATASET_URL}
+            href={
+              project.projectSourceUrl || ITALIA_DOMANI_PROJECTS_DATASET_URL
+            }
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-1.5 text-primary hover:underline"
@@ -907,9 +922,28 @@ function SourceTraceability({ project }: { project: PnrrProject }) {
             Dataset ufficiale Italia Domani — Progetti PNRR
           </a>
           <p className="mt-1 text-xs text-muted-foreground">
-            La scheda nazionale puntuale del singolo CUP non è esposta dal dato
-            disponibile; viene indicata la fonte ufficiale più puntuale usata
-            dal censimento.
+            Dataset nazionale usato per leggere anagrafica, importi, missione e
+            stato dei CUP selezionati.
+          </p>
+        </div>
+        <div className="rounded-md bg-card p-2">
+          <Badge variant="outline" className="mb-1 text-xs shadow-none">
+            Fonte localizzazione territoriale
+          </Badge>
+          <a
+            href={
+              project.locationSourceUrl || ITALIA_DOMANI_LOCATION_DATASET_URL
+            }
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1.5 text-primary hover:underline"
+          >
+            <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
+            Dataset ufficiale Italia Domani — Localizzazione progetti PNRR
+          </a>
+          <p className="mt-1 text-xs text-muted-foreground">
+            Dataset usato per filtrare i CUP associati al Comune di Lamezia
+            Terme prima dell'unione con il dataset nazionale progetti.
           </p>
         </div>
         <div className="rounded-md bg-card p-2">
@@ -1026,10 +1060,10 @@ function LinkedContractsSection({ project }: { project: PnrrProject }) {
         </div>
       ) : (
         <p className="text-sm text-muted-foreground">
-          Nessun contratto o affidamento collegato tramite CUP, CIG o altra
-          chiave documentata nei dati disponibili. La sezione resta predisposta
-          per mostrare solo relazioni verificabili, senza dedurre collegamenti
-          da titolo, importo o somiglianza descrittiva.
+          Nessun contratto o affidamento collegato tramite CUP nei dati
+          disponibili. La sezione resta predisposta per mostrare solo relazioni
+          verificabili, senza dedurre collegamenti da CIG, titolo, importo o
+          somiglianza descrittiva.
         </p>
       )}
     </section>
