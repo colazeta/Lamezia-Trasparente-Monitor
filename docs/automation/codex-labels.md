@@ -4,15 +4,17 @@ This file defines the intended label taxonomy for the controlled Codex issue wor
 
 The labels are not merely cosmetic. They are the state machine used by the automation sequence.
 
+The state machine separates automation work from human pull request management. Automations prepare issues, keep prompts current and invoke Codex on eligible non-colliding `codex:ready` or `codex:prompted` issues. Giovanni handles PR review, merge decisions and final closure decisions; open PRs, pending reviews and pending merges are collision signals only, not automation-capacity blockers.
+
 ## State labels
 
 | Label | Meaning | Queue effect | Who/what may add it |
 | --- | --- | --- | --- |
 | `codex:candidate` | The issue may be suitable for Codex after triage. | Candidate only; not operational. | Human, scouting automation or queue-governor automation. |
 | `codex:ready` | The issue has passed queue-governor triage and is clear enough to enter the automated queue. | Eligible for operation but not active until prompted/invoked. | Queue-governor automation or human reviewer. |
-| `codex:prompted` | A Codex-ready prompt has been generated and posted. | Operational; counts toward capacity 5 while waiting for invocation. | Automation 1. |
-| `codex:invoked` | Codex has been invoked. | Operational; counts toward capacity 5. | Automation 2. |
-| `codex:working` | Codex work or an implementation PR is in progress. | Operational; counts toward capacity 5 until PR is ready for human review. | Automation 2 or review automation. |
+| `codex:prompted` | A Codex-ready prompt has been generated and posted. | Operational; counts toward capacity 10 while waiting for invocation. | Automation 1. |
+| `codex:invoked` | Codex has been invoked. | Operational; counts toward capacity 10. | Automation 2. |
+| `codex:working` | Codex work or an implementation PR is in progress. | Operational; counts toward capacity 10 until PR is ready for human review. | Automation 2 or review automation. |
 | `codex:review-needed` | A PR exists and requires human review/merge. | Human review wait; does not saturate Codex capacity unless there is concrete file/module collision or Codex-side rework. | Automation 3. |
 | `codex:follow-up` | The issue needs additional work, clarification, stale-task recovery or a new issue. | Releases operational capacity unless re-promoted. | Automation 3 or human reviewer. |
 | `codex:done` | The issue appears resolved after review. | Not operational. | Automation 3 or human reviewer. |
@@ -49,16 +51,16 @@ The labels are not merely cosmetic. They are the state machine used by the autom
 
 ## Capacity and collision guardrails
 
-- The operational queue has maximum capacity 5, computed only on real active Codex work. Effective free slots are `5 - real active Codex operational tasks`.
-- `codex:ready` should be the only label that starts the queue.
+- The operational queue has maximum capacity 10, computed only on real active Codex work. Effective free slots are `10 - real active Codex operational tasks`.
+- `codex:ready` should be the only label that starts the queue; when it is non-colliding and capacity remains available, automation should move it toward prompting and invocation rather than wait for unrelated PR review or merge activity. A `codex:prompted` issue with no recent operative `@codex` invocation should be invoked directly when the same capacity and collision checks pass.
 - `codex:ready` is normally assigned by the queue-governor automation after checking priority, scope, acceptance criteria, active queue saturation and possible overlap with open PRs.
 - Every promotion or pause decision should include minimum collision-control fields:
   - probable scope;
   - likely files/modules;
   - collision risk: `low`, `medium` or `high`.
-- The queue governor should not treat `codex:review-needed` or Giovanni review/merge wait as saturation unless a concrete file/module collision exists or the PR needs Codex-side rework.
+- The queue governor should not treat `codex:review-needed`, open PRs, pending reviews or Giovanni review/merge wait as saturation unless a concrete file/module collision exists or the PR needs Codex-side rework.
 - Pending Giovanni review/merge blocks only candidate work touching the same files/modules or creating a concrete review conflict; it must not stop unrelated queue promotion.
-- If real active operational capacity is below 5/5, the queue governor should apply the anti-idle rule and promote safe technical tasks to `codex:ready` until the queue reaches 5/5 or it records an explicit reason not to fill it. Valid reasons are absence of real eligible backlog, concrete file/module collision, legal/copy/methodological risk, CI instability, or a decision required from Giovanni before same-file/module work can proceed safely.
+- If real active operational capacity is below 10/10, the queue governor should apply the anti-idle rule and promote safe technical tasks to `codex:ready` until the queue reaches 10/10 or it records an explicit reason not to fill it. Valid reasons are absence of real eligible backlog, concrete file/module collision, legal/copy/methodological risk, CI instability, or a decision required from Giovanni before same-file/module work can proceed safely.
 - Fast-lane candidates include typecheck/build/lint/test failures, small bugs and limited technical-debt tasks with clear acceptance criteria and low collision risk.
 
 ## Automation guardrails
@@ -86,5 +88,5 @@ Process issues that satisfy all of the following:
 - no already open linked implementation PR requiring Codex-side changes;
 - clear acceptance criteria in the issue body or generated by Automation 1;
 - a clean issue thread, meaning no active contradictory queue comments and no duplicate active prompt;
-- real active operational capacity remains at or below 5 after promotion/invocation;
+- real active operational capacity remains at or below 10 after promotion/invocation;
 - collision risk is low, or a human reviewer has explicitly accepted the medium/high collision risk.
