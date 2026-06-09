@@ -12,7 +12,10 @@ const databaseConfig = hasTestDatabaseConfig()
 // disposable PostgreSQL database.  In environments that do not provide a DB
 // URL (for example the lightweight Replit validation workflow), still run the
 // database-free unit tests instead of failing while loading the config.
-const databaseFreeTests = ["src/lib/geocode.test.ts"];
+const databaseFreeTests = [
+  "src/lib/geocode.test.ts",
+  "src/lib/ingestionSchedulerConfig.test.ts",
+];
 
 export default defineConfig({
   resolve: {
