@@ -397,7 +397,7 @@ async function runMonitoredStep<T>(
   }
 }
 
-async function runIngestionCycle(): Promise<void> {
+export async function runIngestionCycle(): Promise<void> {
   await runIngestion().catch(() => {});
   await runMonitoredStep("albo-attachments", enrichAlboAttachments).catch(
     (err) => {

@@ -38,13 +38,13 @@ Backend Node.js (Express 5). Responsabilità principali:
 - **API REST interna** (`/api/*`) — dati civici per web e mobile
 - **API pubblica in sola lettura** (`/api/public/v1`) — per giornalisti, ricercatori, AI
 - **Server MCP** (`/api/mcp`) — protocollo Model Context Protocol per assistenti AI
-- **Ingestione dati** — Albo Pretorio (Tinn), ANAC, ITALIADOMANI, ANBSC, ISTAT
+- **Ingestione dati** — ciclo richiamabile una tantum da `runIngestionCycle()`; lo scheduler periodico nel processo API è disabilitato di default e si abilita solo con `INGESTION_SCHEDULER_MODE=local` o `INGESTION_SCHEDULER_MODE=legacy`
 - **Migrazioni DB** — esegue automaticamente le migrazioni Drizzle all'avvio
 - **Generazione brief AI** — riassunti automatici degli atti tramite OpenAI
 - **Email** — notifiche cittadini via Resend
 - **Object Storage** — allegati e file tramite Google Cloud Storage (sidecar Replit)
 
-Build: `esbuild` produce un bundle CJS singolo in `dist/index.mjs`.
+Build: `esbuild` produce un bundle CJS singolo in `dist/index.mjs`. Per avviare l'API senza ingestion periodica lasciare `INGESTION_SCHEDULER_MODE` vuota o `disabled`; un futuro worker può importare `runIngestionCycle()` da `src/lib/ingestion` per eseguire un ciclo one-shot mantenendo gli stessi step monitorati.
 
 → Documentazione API pubblica: [`artifacts/api-server/PUBLIC_API.md`](artifacts/api-server/PUBLIC_API.md)
 
