@@ -67,9 +67,12 @@ export function formatPublicPercentage(
     return missingPublicNumber(options);
   }
 
+  const maximumFractionDigits =
+    options.maximumFractionDigits ?? Math.max(options.minimumFractionDigits ?? 0, 1);
+
   return new Intl.NumberFormat(options.locale ?? DEFAULT_LOCALE, {
     minimumFractionDigits: options.minimumFractionDigits,
-    maximumFractionDigits: options.maximumFractionDigits ?? 1,
+    maximumFractionDigits,
     style: "percent",
     useGrouping: true,
   }).format(value / 100);
