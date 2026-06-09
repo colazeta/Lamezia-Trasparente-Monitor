@@ -7,6 +7,7 @@ import {
   CKAN_ENDPOINTS,
   DCAT_ENDPOINTS,
   MCP_EXAMPLE,
+  getTransparencyDatasetQualitySignals,
   OPENDATA_DOCUMENTED_ENDPOINTS,
   PUBLIC_API_DOC_PATH,
   PUBLIC_API_DOCUMENTED_MCP_TOOLS,
@@ -44,12 +45,35 @@ describe("API transparency catalog", () => {
       expect(dataset.sourceType).toMatch(
         /^(ufficiale|derivata|redazionale|seed\/demo)$/,
       );
-      expect(dataset.coverageStatus).toBeTruthy();
-      expect(dataset.updateCadenceNote).toMatch(
-        /non|dipende|segue|variabil|valutazione|verificat|SLA/i,
+      expect(dataset.dataKindLabel).toMatch(
+        /^Dato (ufficiale|derivato|arricchito|misto)$/,
       );
+      expect(dataset.coverageStatus).toBeTruthy();
+      expect(dataset.sourceNote).toBeTruthy();
+      expect(dataset.updateCadenceNote).toBeTruthy();
       expect(dataset.knownLimits).toBeTruthy();
       expect(dataset.reuseExamples.length).toBeGreaterThan(0);
+      for (const example of dataset.reuseExamples) {
+        expect(example.trim()).not.toHaveLength(0);
+      }
+    }
+  });
+
+  it("guards provenance, quality notes and civic caveats for every public dataset", () => {
+    const qualitySignals = getTransparencyDatasetQualitySignals();
+
+    expect(qualitySignals).toHaveLength(TRANSPARENCY_DATASETS.length);
+
+    for (const signal of qualitySignals) {
+      expect(signal.hasProvenanceFields, signal.datasetName).toBe(true);
+      expect(signal.hasQualityAndLimitNotes, signal.datasetName).toBe(true);
+      expect(signal.hasReuseExamples, signal.datasetName).toBe(true);
+      expect(signal.hasMethodologicalCaution, signal.datasetName).toBe(true);
+      expect(signal.hasCoherentSourceKind, signal.datasetName).toBe(true);
+      expect(signal.hasNoUnsupportedAssuranceClaims, signal.datasetName).toBe(
+        true,
+      );
+      expect(signal.hasValidOptionalSourceUrl, signal.datasetName).toBe(true);
     }
   });
 

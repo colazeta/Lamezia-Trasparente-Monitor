@@ -38,6 +38,99 @@ export type TransparencyDataset = {
   relatedBenchmarkIds?: string[];
 };
 
+export type TransparencyDatasetQualitySignals = {
+  datasetName: string;
+  hasProvenanceFields: boolean;
+  hasQualityAndLimitNotes: boolean;
+  hasReuseExamples: boolean;
+  hasMethodologicalCaution: boolean;
+  hasCoherentSourceKind: boolean;
+  hasNoUnsupportedAssuranceClaims: boolean;
+  hasValidOptionalSourceUrl: boolean;
+};
+
+const CAUTION_NOTE_PATTERN = new RegExp(
+  [
+    "non",
+    "dipende",
+    "segue",
+    "variabil",
+    "verificat",
+    "richied",
+    "limiti",
+    "prudente",
+    "quando disponibile",
+    "quando presenti",
+    "valutazione",
+  ].join("|"),
+  "i",
+);
+
+const UNSUPPORTED_ASSURANCE_PATTERN = new RegExp(
+  [
+    "completezza garantita",
+    "garantisce(?: la)? completezza",
+    "sla garantito",
+    "(?:è|costituisce|rappresenta) prova di (?:irregolarità|responsabilità)",
+    "certificazione (?:esterna|ufficiale)",
+    "validazione esterna",
+  ].join("|"),
+  "i",
+);
+
+function hasText(value: string | undefined) {
+  return Boolean(value?.trim());
+}
+
+function hasValidOptionalSourceUrl(value: string | undefined) {
+  return value === undefined || /^https?:\/\//i.test(value);
+}
+
+function hasCoherentSourceKind(dataset: TransparencyDataset) {
+  if (dataset.dataKindLabel === "Dato ufficiale") {
+    return dataset.sourceType === "ufficiale";
+  }
+
+  if (dataset.dataKindLabel === "Dato derivato") {
+    return ["derivata", "redazionale", "seed/demo"].includes(
+      dataset.sourceType,
+    );
+  }
+
+  return true;
+}
+
+export function getTransparencyDatasetQualitySignals(
+  datasets: readonly TransparencyDataset[] = TRANSPARENCY_DATASETS,
+): TransparencyDatasetQualitySignals[] {
+  return datasets.map((dataset) => {
+    const notes = [
+      dataset.sourceNote,
+      dataset.updateCadenceNote,
+      dataset.knownLimits,
+      ...dataset.reuseExamples,
+    ].join(" ");
+
+    return {
+      datasetName: dataset.datasetName,
+      hasProvenanceFields:
+        hasText(dataset.sourceType) &&
+        hasText(dataset.dataKindLabel) &&
+        hasText(dataset.sourceNote),
+      hasQualityAndLimitNotes:
+        hasText(dataset.updateCadenceNote) && hasText(dataset.knownLimits),
+      hasReuseExamples: dataset.reuseExamples.some((example) =>
+        hasText(example),
+      ),
+      hasMethodologicalCaution: CAUTION_NOTE_PATTERN.test(notes),
+      hasCoherentSourceKind: hasCoherentSourceKind(dataset),
+      hasNoUnsupportedAssuranceClaims:
+        !UNSUPPORTED_ASSURANCE_PATTERN.test(notes),
+      hasValidOptionalSourceUrl: hasValidOptionalSourceUrl(dataset.sourceUrl),
+    };
+  });
+}
+
 export const PUBLIC_API_DOC_PATH = "artifacts/api-server/PUBLIC_API.md";
 
 export const PUBLIC_API_DOCUMENTED_REST_ENDPOINTS = [
