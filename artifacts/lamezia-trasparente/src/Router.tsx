@@ -271,55 +271,25 @@ export function Router() {
               title="Statistiche"
               description="Sintesi statistiche del monitoraggio civico, utili per orientare lettura, verifica e approfondimento delle fonti."
             />
-            <PublicRouteWithMeta
-              path="/fonti-dati"
-              component={FontiDati}
-              title="Fonti dati"
-              description="Indice tecnico delle fonti informative usate dal monitoraggio civico, con contesto su origine, aggiornamento e limiti di consultazione."
-            />
+            <Route path="/fonti-dati" component={FontiDati} />
             <PublicRouteWithMeta
               path="/stato-monitoraggio"
               component={StatoMonitoraggio}
               title="Stato del monitoraggio"
               description="Dashboard prudente sulla freschezza e copertura operativa delle fonti censite dal monitoraggio civico."
             />
-            <PublicRouteWithMeta
-              path="/metodologia"
-              component={Metodologia}
-              title="Metodologia"
-              description="Note metodologiche su raccolta, lettura e limiti dei dati pubblici usati per il monitoraggio civico."
-            />
+            <Route path="/metodologia" component={Metodologia} />
             <Route path="/roadmap" component={Roadmap} />
-            <PublicRouteWithMeta
-              path="/note-legali"
-              component={NoteLegali}
-              title="Note legali"
-              description="Informazioni legali, cautele d'uso e limitazioni relative alla consultazione dei contenuti del progetto."
-            />
-            <PublicRouteWithMeta
-              path="/chi-siamo"
-              component={ChiSiamo}
-              title="Chi siamo"
-              description="Presentazione del progetto civico, del suo approccio documentale e degli obiettivi di trasparenza pubblica."
-            />
-            <PublicRouteWithMeta
-              path="/contatti"
-              component={Contatti}
-              title="Contatti"
-              description="Canali di contatto per richieste, segnalazioni civiche e comunicazioni relative al progetto."
-            />
+            <Route path="/note-legali" component={NoteLegali} />
+            <Route path="/chi-siamo" component={ChiSiamo} />
+            <Route path="/contatti" component={Contatti} />
             <PublicRouteWithMeta
               path="/iscrizioni"
               component={Subscriptions}
               title="Iscrizioni agli aggiornamenti"
               description="Gestione delle preferenze per ricevere aggiornamenti civici e seguire le novità del progetto."
             />
-            <PublicRouteWithMeta
-              path="/guida"
-              component={Guida}
-              title="Guida"
-              description="Guida pratica alla consultazione delle sezioni, delle fonti e degli strumenti del monitoraggio civico."
-            />
+            <Route path="/guida" component={Guida} />
             <Route component={NotFound} />
           </Switch>
         </MainLayout>
