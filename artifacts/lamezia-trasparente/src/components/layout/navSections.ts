@@ -20,6 +20,7 @@ import {
   ShieldOff,
   Telescope,
   BookOpenCheck,
+  Archive,
   Rss,
   Code2,
   BookOpen,
@@ -168,6 +169,13 @@ export const NAV_GROUPS: NavSection[] = [
         description:
           "Collega promesse programmatiche, atti e stati documentali senza scoring politico.",
         icon: BookOpenCheck,
+      },
+      {
+        href: "/archivio-proposte",
+        label: "Archivio proposte",
+        description:
+          "Memoria documentale neutra delle proposte pubbliche di valore civico.",
+        icon: Archive,
       },
       {
         href: "/accesso-civico",
