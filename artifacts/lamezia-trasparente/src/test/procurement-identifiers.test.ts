@@ -40,23 +40,43 @@ describe("procurement identifier classification", () => {
     });
   });
 
-  it("classifies ordinary CIG values with 7 digits and 3 hex characters", () => {
-    expect(classifyProcurementIdentifier("1234567ABC")).toEqual({
-      original: "1234567ABC",
-      normalized: "1234567ABC",
+  it("classifies ordinary CIG values only when the local check digits match", () => {
+    expect(classifyProcurementIdentifier("1234567CE7")).toEqual({
+      original: "1234567CE7",
+      normalized: "1234567CE7",
       type: "cig",
       formallyValid: true,
       reason: "formal-cig",
     });
   });
 
-  it("classifies Smart CIG and unified CIG formats", () => {
-    expect(classifyProcurementIdentifier("V123456789")).toMatchObject({
-      normalized: "V123456789",
+  it("rejects ordinary CIG values with wrong check digits or all-zero numeric parts", () => {
+    expect(classifyProcurementIdentifier("1234567ABC")).toEqual({
+      original: "1234567ABC",
+      normalized: "1234567ABC",
       type: "cig",
-      formallyValid: true,
-      reason: "formal-cig",
+      formallyValid: false,
+      reason: "invalid-cig-format",
     });
+
+    expect(classifyProcurementIdentifier("0000000000")).toEqual({
+      original: "0000000000",
+      normalized: "0000000000",
+      type: "cig",
+      formallyValid: false,
+      reason: "invalid-cig-format",
+    });
+  });
+
+  it("classifies documented Smart CIG and unified CIG formats", () => {
+    for (const value of ["X123456789", "Y123456789", "Z123456789"]) {
+      expect(classifyProcurementIdentifier(value)).toMatchObject({
+        normalized: value,
+        type: "cig",
+        formallyValid: true,
+        reason: "formal-cig",
+      });
+    }
 
     expect(classifyProcurementIdentifier("A12BCD34EF")).toMatchObject({
       normalized: "A12BCD34EF",
@@ -66,10 +86,22 @@ describe("procurement identifier classification", () => {
     });
   });
 
+  it("rejects Smart CIG values outside the documented X/Y/Z prefix family", () => {
+    for (const value of ["V123456789", "W123456789"]) {
+      expect(classifyProcurementIdentifier(value)).toEqual({
+        original: value,
+        normalized: value,
+        type: "cig",
+        formallyValid: false,
+        reason: "invalid-cig-format",
+      });
+    }
+  });
+
   it("classifies lowercase CIG input with spaces or simple hyphens after normalization", () => {
-    expect(classifyProcurementIdentifier(" 1234-567 abc ")).toEqual({
-      original: " 1234-567 abc ",
-      normalized: "1234567ABC",
+    expect(classifyProcurementIdentifier(" 1234-567 ce7 ")).toEqual({
+      original: " 1234-567 ce7 ",
+      normalized: "1234567CE7",
       type: "cig",
       formallyValid: true,
       reason: "formal-cig",
