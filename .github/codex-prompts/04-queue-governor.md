@@ -13,7 +13,7 @@ Scope:
 
 Task:
 1. count real active plus reserved Codex slots against maximum capacity 10;
-2. treat `codex:prompted`, `codex:invoked`, `codex:working` and open Codex PRs needing Codex-side changes as operational;
+2. derive operational state from current labels plus verifier-visible evidence, treating fresh `codex:prompted`, `codex:invoked`, `codex:working` and open Codex PRs needing Codex-side changes as operational;
 3. treat `codex:review-needed` and PRs/issues waiting only for Giovanni review/merge as human review wait, not saturation, unless there is concrete file/module collision or Codex-side rework;
 4. compute effective free slots as `10 - (real active Codex operational tasks + reserved fresh codex:prompted slots)`, excluding human-review-pending items;
 5. identify issues with `codex:working` or `codex:invoked` but no visible PR, while checking whether their latest operative event is still inside the stale-task grace window;
@@ -23,7 +23,7 @@ Task:
 9. identify open PRs touching the same files/modules or solving overlapping issues;
 10. identify stale tasks that need `codex:follow-up` or `codex:blocked`;
 11. apply the anti-idle rule whenever real active plus reserved operational capacity is below 10/10;
-12. identify non-colliding `codex:ready` or `codex:prompted` issues with no recent operative `@codex` invocation and recommend direct invocation;
+12. identify non-colliding `codex:ready` or `codex:prompted` issues with no recent operative `@codex` invocation and recommend direct invocation, remembering that `codex:ready` alone is backlog and never active capacity;
 13. recommend whether the queue should continue, pause or require human intervention.
 
 Default queue limits:
@@ -46,6 +46,18 @@ Collision-control fields required for every recommended promotion, pause or bloc
 - Probable scope: {{PROBABLE_SCOPE}}
 - Likely files/modules: {{LIKELY_FILES}}
 - Collision risk: low / medium / high
+
+
+Capacity/collision matrix:
+- `codex:ready` only: backlog, no active or reserved slot; promote or prompt only when capacity and collision checks pass.
+- Fresh `codex:prompted` inside the 60-minute prompt grace window: reserved pending slot; invoke Codex directly or record the concrete reason invocation must wait.
+- `codex:invoked` / `codex:working` with recent operative evidence, or a PR/branch/diff needing Codex-side changes: real active slot.
+- Explicit technical blocker after routing: release capacity and preserve blocker details under `codex:blocked` or `codex:follow-up`.
+- `codex:review-needed` or Giovanni review/merge wait only: outside capacity, blocking only same-file/module collisions.
+- `output-without-PR`: not active after recovery routing; request a PR to `main`, exact ref/SHA, diff or blocker.
+
+Promotion SLA:
+- Every governor pass must either promote, prompt or invoke eligible low-collision work toward 10/10 active or reserved slots, or record the concrete anti-idle reason that prevents filling the queue.
 
 Fast lane treatment:
 - Technical fast-lane candidates may be promoted ahead of ordinary backlog items when they are small, clear, low-collision and validate with typecheck/build/lint/test commands.

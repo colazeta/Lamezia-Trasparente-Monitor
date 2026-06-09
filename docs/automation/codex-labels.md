@@ -53,7 +53,7 @@ The state machine separates automation work from human pull request management. 
 ## Capacity and collision guardrails
 
 - The operational queue has maximum capacity 10, computed on real active Codex work plus reserved fresh `codex:prompted` slots awaiting invocation. Effective free slots are `10 - (real active Codex operational tasks + reserved fresh codex:prompted slots awaiting invocation)`.
-- `codex:ready` should be the only label that starts the queue; by itself it is eligible backlog and does not reserve capacity. When it is non-colliding and capacity remains available after active work and fresh `codex:prompted` reservations are counted, automation should move it toward prompting and invocation rather than wait for unrelated PR review or merge activity. A `codex:prompted` issue with no recent operative `@codex` invocation should be invoked directly when the same capacity and collision checks pass.
+- `codex:ready` should be the only label that starts the queue; by itself it is eligible backlog, never an active state, and does not reserve capacity. When it is non-colliding and capacity remains available after active work and fresh `codex:prompted` reservations are counted, automation should move it toward prompting and invocation rather than wait for unrelated PR review or merge activity. A `codex:prompted` issue with no recent operative `@codex` invocation should be invoked directly when the same capacity and collision checks pass.
 - `codex:ready` is normally assigned by the queue-governor automation after checking priority, scope, acceptance criteria, active queue saturation and possible overlap with open PRs.
 - Every promotion or pause decision should include minimum collision-control fields:
   - probable scope;
@@ -63,6 +63,8 @@ The state machine separates automation work from human pull request management. 
 - Pending Giovanni review/merge blocks only candidate work touching the same files/modules or creating a concrete review conflict; it must not stop unrelated queue promotion.
 - If active plus reserved operational capacity is below 10/10, the queue governor should apply the anti-idle rule and promote safe technical tasks to `codex:ready` until the queue reaches 10/10 or it records an explicit reason not to fill it. Valid reasons are absence of real eligible backlog, concrete file/module collision, legal/copy/methodological risk, CI instability, or a decision required from Giovanni before same-file/module work can proceed safely.
 - Fast-lane candidates include typecheck/build/lint/test failures, small bugs and limited technical-debt tasks with clear acceptance criteria and low collision risk.
+- Collision decisions should follow this matrix: `codex:ready` only is unreserved backlog; fresh `codex:prompted` inside the 60-minute prompt grace window is reserved pending capacity; `codex:invoked` / `codex:working` with recent operative evidence or a PR/branch/diff needing Codex-side changes is real active capacity; routed technical blockers and `output-without-PR` recovery release capacity; `codex:review-needed` and Giovanni review/merge wait stay outside capacity except for same-file/module collisions.
+- Promotion SLA: every queue-governor pass must either use available capacity by promoting, prompting or invoking eligible low-collision work toward 10/10 active or reserved slots, or record the concrete anti-idle reason that prevents doing so.
 
 ## Automation guardrails
 

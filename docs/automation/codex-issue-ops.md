@@ -8,7 +8,7 @@ The objective is not to let Codex work indiscriminately on every open issue. The
 
 Codex may work only on issues that have been explicitly marked as ready. Human review remains mandatory before merge and before closing an issue. Codex must not auto-merge pull requests and must not close issues directly.
 
-The source of truth for queue state is the issue label set. Comments are operational evidence, but they must not override labels when stale, contradictory, duplicated or explicitly superseded.
+The source of truth for queue state is the issue label set. Comments, pull requests, branches, commits, CI results and blockers are operational evidence; they explain or verify a label state, but they must not override labels when stale, contradictory, duplicated or explicitly superseded. Derived operational states must therefore be computed from the current label plus reviewer-verifiable evidence, not from labels or comments alone.
 
 ## Role separation and invocation mandate
 
@@ -27,7 +27,7 @@ Operational tasks are issues in one of these states:
 - `codex:working`;
 - an open Codex implementation PR that still requires Codex-side changes.
 
-`codex:review-needed` is a human review/merge wait state. It does **not** saturate the Codex work queue unless there is a concrete file/module collision with a candidate task or the same PR still needs Codex-side rework. A PR or issue waiting only for Giovanni's human review or merge is therefore outside the capacity count and blocks only new work that would touch the same files/modules or otherwise create an unresolved review conflict.
+`codex:ready` is eligible backlog only; it is never an active or reserved slot by itself. `codex:review-needed` is a human review/merge wait state. It does **not** saturate the Codex work queue unless there is a concrete file/module collision with a candidate task or the same PR still needs Codex-side rework. A PR or issue waiting only for Giovanni's human review or merge is therefore outside the capacity count and blocks only new work that would touch the same files/modules or otherwise create an unresolved review conflict.
 
 Effective free slots are calculated as `10 - (real active Codex operational tasks + reserved fresh codex:prompted slots awaiting invocation)`. Human-review-pending items, including `codex:review-needed` issues and PRs awaiting Giovanni's merge decision, are excluded from that arithmetic unless they become Codex-side rework or have a concrete file/module collision with the candidate work.
 
@@ -195,6 +195,21 @@ Collision-control minimum fields for every promotion or pause decision:
 - collision risk: `low`, `medium` or `high`.
 
 This fourth automation is required for stable parallelism because the main risk is not prompt generation. The main risk is collision: multiple Codex tasks modifying the same files or creating overlapping pull requests.
+
+
+Collision matrix for capacity decisions:
+
+| Observed state | Capacity effect | Required action |
+| --- | --- | --- |
+| `codex:ready` only | Backlog, no active or reserved slot | Promote or prompt only when capacity and collision checks pass. |
+| Fresh `codex:prompted` inside the 60-minute prompt grace window | Reserved pending slot | Invoke Codex directly or record the concrete reason invocation must wait. |
+| `codex:invoked` / `codex:working` with recent operative evidence | Real active slot | Monitor until PR, blocker, stale recovery or review routing is available. |
+| GitHub-visible PR, branch plus recent commit, or reviewable diff needing Codex-side changes | Real active slot | Keep active until routed to review, blocker or follow-up. |
+| Explicit technical blocker after routing | Releases capacity | Preserve blocker details and move to `codex:blocked` or `codex:follow-up`. |
+| `codex:review-needed` or Giovanni review/merge wait only | Outside capacity | Block only same-file/module candidate work that would collide. |
+| `output-without-PR` with no verifiable artifact or blocker | Not active after recovery routing | Move to `codex:follow-up` and request a PR to `main`, exact ref/SHA, diff or blocker. |
+
+Promotion SLA: during each 30–60 minute governor cycle, if active plus reserved capacity is below 10/10 and eligible low-collision backlog exists, the governor must either promote/prompt/invoke enough work to move toward ten active or reserved slots, or post the concrete anti-idle reason that prevents filling the queue. The recorded reason must name the limiting backlog, collision, legal/copy/methodological, CI or Giovanni decision dependency.
 
 ## Technical fast lane
 
