@@ -34,6 +34,7 @@ import { Monitoraggio } from "./pages/Monitoraggio";
 import { MonitoraggioDetail } from "./pages/MonitoraggioDetail";
 import { MonitoraggioNuovo } from "./pages/MonitoraggioNuovo";
 import { Promessometro } from "./pages/Promessometro";
+import { PropostePubbliche } from "./pages/PropostePubbliche";
 import { MacchinaComunale } from "./pages/MacchinaComunale";
 import { Legalita } from "./pages/Legalita";
 import { LegalitaTimeline } from "./pages/LegalitaTimeline";
@@ -163,6 +164,12 @@ export function Router() {
               component={Promessometro}
               title="Promessometro amministrativo"
               description="Modulo civico per collegare promesse programmatiche e atti amministrativi con cautele documentali e senza scoring politico."
+            />
+            <PublicRouteWithMeta
+              path="/archivio-proposte"
+              component={PropostePubbliche}
+              title="Archivio delle proposte pubbliche"
+              description="Archivio documentale e neutro delle proposte di valore pubblico censite come memoria civica verificabile."
             />
             <PublicRouteWithMeta
               path="/macchina-comunale"
