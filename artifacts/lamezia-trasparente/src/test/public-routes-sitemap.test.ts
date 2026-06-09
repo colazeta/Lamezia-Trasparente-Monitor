@@ -13,12 +13,18 @@ const appRoot = path.resolve(
   "../..",
 );
 
+function readPublicFile(relativePath: string) {
+  return readFileSync(path.join(appRoot, relativePath), "utf8");
+}
+
 function readSitemapUrls() {
-  const sitemap = readFileSync(
-    path.join(appRoot, "public/sitemap.xml"),
-    "utf8",
-  );
+  const sitemap = readPublicFile("public/sitemap.xml");
   return Array.from(sitemap.matchAll(/<loc>([^<]+)<\/loc>/g), ([, loc]) => loc);
+}
+
+function readRobotsSitemapUrl() {
+  const robots = readPublicFile("public/robots.txt");
+  return robots.match(/^Sitemap:\s*(\S+)$/m)?.[1];
 }
 
 describe("public route sitemap inventory", () => {
@@ -35,6 +41,27 @@ describe("public route sitemap inventory", () => {
       PUBLIC_INDEXABLE_PATHS.length,
     );
     expect(new Set(sitemapUrls).size).toBe(sitemapUrls.length);
+  });
+
+  it("uses absolute URLs and keeps robots.txt aligned with the sitemap base", () => {
+    const sitemapUrls = readSitemapUrls();
+
+    for (const sitemapUrl of sitemapUrls) {
+      expect(sitemapUrl).toMatch(/^https?:\/\//);
+      expect(() => new URL(sitemapUrl)).not.toThrow();
+    }
+    expect(readRobotsSitemapUrl()).toBe(`${PUBLIC_SITE_ORIGIN}/sitemap.xml`);
+  });
+
+  it("does not publish the previous Replit deployment domain as a hard-coded SEO base", () => {
+    const publicSeoFiles = [
+      readPublicFile("public/sitemap.xml"),
+      readPublicFile("public/robots.txt"),
+    ].join("\n");
+
+    expect(publicSeoFiles).not.toContain(
+      "https://lamezia-trasparente-monitor.replit.app",
+    );
   });
 
   it("keeps dynamic, protected and redirect routes out of the sitemap inventory", () => {

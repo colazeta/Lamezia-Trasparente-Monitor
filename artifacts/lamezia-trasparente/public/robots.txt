@@ -2,4 +2,5 @@ User-agent: *
 Allow: /
 
 # Static sitemap for the public civic routes served by the web app.
-Sitemap: https://lamezia-trasparente-monitor.replit.app/sitemap.xml
+# Uses the documented local fallback origin when VITE_PUBLIC_SITE_URL is not set.
+Sitemap: http://localhost:5173/sitemap.xml

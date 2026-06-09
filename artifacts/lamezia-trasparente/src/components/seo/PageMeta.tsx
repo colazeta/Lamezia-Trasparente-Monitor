@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { toAbsolutePublicUrl } from "@/lib/publicSiteUrl";
 
 const SITE_NAME = "rendiamoLameziaTrasparente";
 const DEFAULT_IMAGE = "/opengraph.jpg";
@@ -47,14 +48,6 @@ function setCanonical(href: string) {
   tag.setAttribute("href", href);
 }
 
-function absoluteUrl(pathOrUrl: string) {
-  try {
-    return new URL(pathOrUrl, window.location.origin).toString();
-  } catch {
-    return `${window.location.origin}/`;
-  }
-}
-
 export function PageMeta({
   title,
   description,
@@ -66,8 +59,10 @@ export function PageMeta({
     const fullTitle = title.includes(SITE_NAME)
       ? title
       : `${title} — ${SITE_NAME}`;
-    const canonicalUrl = absoluteUrl(path ?? window.location.pathname);
-    const imageUrl = absoluteUrl(image);
+    const currentPath =
+      typeof window !== "undefined" ? window.location.pathname : "/";
+    const canonicalUrl = toAbsolutePublicUrl(path ?? currentPath);
+    const imageUrl = toAbsolutePublicUrl(image);
 
     document.title = fullTitle;
     setMetaByName("description", description);

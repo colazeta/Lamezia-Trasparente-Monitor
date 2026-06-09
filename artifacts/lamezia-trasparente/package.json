@@ -8,7 +8,9 @@
     "build": "vite build --config vite.config.ts",
     "serve": "vite preview --config vite.config.ts --host 0.0.0.0",
     "typecheck": "tsc -p tsconfig.json --noEmit",
-    "test": "vitest run"
+    "test": "vitest run",
+    "seo:check": "node scripts/generate-public-seo-assets.mjs --check && vitest run src/test/public-site-url.test.ts src/test/public-routes-sitemap.test.ts",
+    "seo:generate": "node scripts/generate-public-seo-assets.mjs"
   },
   "devDependencies": {
     "@hookform/resolvers": "^3.10.0",

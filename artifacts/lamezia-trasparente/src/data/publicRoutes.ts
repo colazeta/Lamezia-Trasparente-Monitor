@@ -1,5 +1,18 @@
-export const PUBLIC_SITE_ORIGIN =
-  "https://lamezia-trasparente-monitor.replit.app";
+import {
+  LOCAL_PUBLIC_SITE_URL,
+  normalizePublicSiteOrigin,
+  toAbsolutePublicUrl,
+} from "../lib/publicSiteUrl";
+
+/**
+ * Fallback origin used by the committed static sitemap/robots assets.
+ * Set VITE_PUBLIC_SITE_URL and update the generated public files before a
+ * production deployment on a definitive public domain.
+ */
+export const PUBLIC_SITE_ORIGIN = normalizePublicSiteOrigin(
+  import.meta.env.VITE_PUBLIC_SITE_URL,
+  LOCAL_PUBLIC_SITE_URL,
+);
 
 export type PublicIndexableRoute = {
   /** Static router path that may be listed in the public sitemap. */
@@ -123,5 +136,7 @@ export const PUBLIC_INDEXABLE_PATHS = PUBLIC_INDEXABLE_ROUTES.map(
 );
 
 export function toPublicUrl(path: PublicIndexableRoute["path"]) {
-  return path === "/" ? PUBLIC_SITE_ORIGIN : `${PUBLIC_SITE_ORIGIN}${path}`;
+  return path === "/"
+    ? PUBLIC_SITE_ORIGIN
+    : toAbsolutePublicUrl(path, PUBLIC_SITE_ORIGIN).replace(/\/$/, "");
 }
