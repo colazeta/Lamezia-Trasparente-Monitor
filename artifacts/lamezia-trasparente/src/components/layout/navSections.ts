@@ -254,7 +254,9 @@ export const NAV_GROUPS: NavSection[] = [
 ];
 
 export function isSectionActive(href: string, location: string): boolean {
-  return location === href || (href !== "/" && location.startsWith(href));
+  return (
+    location === href || (href !== "/" && location.startsWith(`${href}/`))
+  );
 }
 
 export interface ActiveSection {
