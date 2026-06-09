@@ -88,7 +88,7 @@ test("renders cautious technical issue body with stable dedupe key", () => {
   assert.doesNotMatch(body, /corruzione|mafia|colpevole/i);
 });
 
-test("normalizes blank source-health URL values to the deterministic fallback", async () => {
+test("skips source-health reads when URL and audit path are not configured", async () => {
   const originalUrl = process.env.SOURCE_HEALTH_URL;
   const originalAuditPath = process.env.SOURCE_HEALTH_AUDIT_PATH;
   const originalFetch = globalThis.fetch;
@@ -105,8 +105,17 @@ test("normalizes blank source-health URL values to the deterministic fallback", 
   }) as typeof fetch;
 
   try {
-    await readSourceHealth(parseArgs([]));
-    await readSourceHealth(parseArgs(["--url", "\t  "]));
+    const envRecords = await readSourceHealth(parseArgs([]));
+    const explicitBlankRecords = await readSourceHealth(
+      parseArgs(["--url", "\t  "]),
+    );
+
+    assert.deepEqual(envRecords, []);
+    assert.deepEqual(explicitBlankRecords, []);
+    assert.deepEqual(
+      detectAnomalies(envRecords, new Date("2026-06-09T08:00:00.000Z")),
+      [],
+    );
   } finally {
     globalThis.fetch = originalFetch;
     if (originalUrl === undefined) {
@@ -121,14 +130,10 @@ test("normalizes blank source-health URL values to the deterministic fallback", 
     }
   }
 
-  assert.deepEqual(fetchedUrls, [
-    "http://localhost:5000/api/healthz/sources",
-    "http://localhost:5000/api/healthz/sources",
-  ]);
-  assert.ok(!fetchedUrls.includes(""));
+  assert.deepEqual(fetchedUrls, []);
 });
 
-test("normalizes blank audit paths before choosing the source-health reader", async () => {
+test("normalizes blank audit paths before choosing configured endpoints", async () => {
   const originalAuditPath = process.env.SOURCE_HEALTH_AUDIT_PATH;
   const originalUrl = process.env.SOURCE_HEALTH_URL;
   const originalFetch = globalThis.fetch;
@@ -142,8 +147,13 @@ test("normalizes blank audit paths before choosing the source-health reader", as
   }) as typeof fetch;
 
   try {
-    await readSourceHealth(parseArgs([]));
-    await readSourceHealth(parseArgs(["--audit-file", "   "]));
+    const recordsFromEnv = await readSourceHealth(parseArgs([]));
+    const recordsFromBlankAudit = await readSourceHealth(
+      parseArgs(["--audit-file", "   "]),
+    );
+
+    assert.deepEqual(recordsFromEnv, []);
+    assert.deepEqual(recordsFromBlankAudit, []);
   } finally {
     globalThis.fetch = originalFetch;
     if (originalAuditPath === undefined) {
@@ -158,10 +168,42 @@ test("normalizes blank audit paths before choosing the source-health reader", as
     }
   }
 
-  assert.deepEqual(fetchedUrls, [
-    "https://monitor.example.test/sources",
-    "http://localhost:5000/api/healthz/sources",
-  ]);
+  assert.deepEqual(fetchedUrls, ["https://monitor.example.test/sources"]);
+});
+
+test("classifies unreachable endpoints separately from invalid JSON", async () => {
+  const originalFetch = globalThis.fetch;
+
+  try {
+    globalThis.fetch = (async () => {
+      throw new Error("network down");
+    }) as typeof fetch;
+
+    const unreachableRecords = await readSourceHealth({
+      url: "https://monitor.example.test/sources",
+      dryRun: true,
+      warningRunsThreshold: 2,
+    });
+    assert.match(
+      unreachableRecords[0]?.reason ?? "",
+      /configurato ma non raggiungibile/,
+    );
+
+    globalThis.fetch = (async () =>
+      new Response("{ not json", { status: 200 })) as typeof fetch;
+
+    const invalidJsonRecords = await readSourceHealth({
+      url: "https://monitor.example.test/sources",
+      dryRun: true,
+      warningRunsThreshold: 2,
+    });
+    assert.match(
+      invalidJsonRecords[0]?.reason ?? "",
+      /raggiunto ma risposta JSON non valida/,
+    );
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
 });
 
 test("turns predictable audit read failures into monitor anomalies", async () => {

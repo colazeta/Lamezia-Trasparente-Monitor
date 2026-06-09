@@ -42,5 +42,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_REPOSITORY: ${{ github.repository }}
           SOURCE_HEALTH_URL: ${{ inputs.source_health_url || secrets.SOURCE_HEALTH_URL }}
+          SOURCE_HEALTH_AUDIT_PATH: ${{ vars.SOURCE_HEALTH_AUDIT_PATH }}
           SOURCE_HEALTH_WARNING_RUNS: ${{ vars.SOURCE_HEALTH_WARNING_RUNS || '2' }}
         run: pnpm --dir scripts run check-source-health
