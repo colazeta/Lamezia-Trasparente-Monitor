@@ -1,6 +1,7 @@
 import app from "./app";
 import { logger } from "./lib/logger";
 import { startIngestionScheduler } from "./lib/ingestion";
+import { resolveIngestionSchedulerConfig } from "./lib/ingestionSchedulerConfig";
 import { verifySchema } from "./lib/schemaCheck";
 import { runMigrations, MigrationError } from "@workspace/db";
 import {
@@ -69,12 +70,25 @@ app.listen(port, (err) => {
       return false;
     })
     .then((ok) => {
-      if (ok) {
-        startIngestionScheduler();
-      } else {
+      if (!ok) {
         logger.error(
           "Ingestion scheduler not started: database migration/schema check failed. " +
             "Resolve the issue above and restart the API server.",
+        );
+        return;
+      }
+
+      const schedulerConfig = resolveIngestionSchedulerConfig();
+
+      if (schedulerConfig.enabled) {
+        startIngestionScheduler();
+        logger.info(
+          { ingestionSchedulerMode: schedulerConfig.mode },
+          "Embedded ingestion scheduler started",
+        );
+      } else {
+        logger.info(
+          "Embedded ingestion scheduler disabled; API startup completed without periodic ingestion",
         );
       }
     });

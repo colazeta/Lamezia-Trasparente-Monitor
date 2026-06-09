@@ -46,6 +46,8 @@ Backend Node.js (Express 5). Responsabilità principali:
 
 Build: `esbuild` produce un bundle CJS singolo in `dist/index.mjs`.
 
+In produzione l'API può avviarsi senza scheduler periodico di ingestion: all'avvio restano attivi migrazioni e `verifySchema()`, mentre lo scheduler embedded parte solo con `INGESTION_SCHEDULER_MODE=local`, `development`/`dev` o `legacy`. Il ciclo one-shot resta disponibile dal codice server tramite `runIngestionCycle()` per un futuro worker dedicato.
+
 → Documentazione API pubblica: [`artifacts/api-server/PUBLIC_API.md`](artifacts/api-server/PUBLIC_API.md)
 
 ### `artifacts/lamezia-trasparente` — Sito web
