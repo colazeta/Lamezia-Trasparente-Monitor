@@ -220,7 +220,12 @@ export function Router() {
               path="/amministratori/:id"
               component={AmministratoreDetail}
             />
-            <Route path="/pnrr" component={Pnrr} />
+            <PublicRouteWithMeta
+              path="/pnrr"
+              component={Pnrr}
+              title="PNRR"
+              description="Sezione informativa sui contenuti PNRR disponibili nel monitoraggio civico, da consultare insieme alle fonti e ai relativi limiti."
+            />
             <PublicRouteWithMeta
               path="/opendata"
               component={Opendata}
