@@ -25,11 +25,22 @@ function publicPlaceholder(options: PublicNumberFormatOptions): string {
   return options.placeholder ?? PUBLIC_NUMBER_PLACEHOLDER;
 }
 
-function decimalDigits(options: PublicDecimalFormatOptions) {
+function normalizedFractionDigits(
+  options: PublicDecimalFormatOptions,
+  defaultMaximumFractionDigits: number,
+  defaultMinimumFractionDigits?: number,
+) {
+  const minimumFractionDigits =
+    options.minimumFractionDigits ?? defaultMinimumFractionDigits;
+  const requestedMaximumFractionDigits =
+    options.maximumFractionDigits ?? defaultMaximumFractionDigits;
+
   return {
-    minimumFractionDigits: options.minimumFractionDigits,
+    minimumFractionDigits,
     maximumFractionDigits:
-      options.maximumFractionDigits ?? DEFAULT_DECIMAL_MAX_FRACTION_DIGITS,
+      minimumFractionDigits === undefined
+        ? requestedMaximumFractionDigits
+        : Math.max(requestedMaximumFractionDigits, minimumFractionDigits),
   };
 }
 
@@ -45,7 +56,7 @@ export function formatPublicNumber(
 
   return new Intl.NumberFormat(options.locale ?? DEFAULT_LOCALE, {
     useGrouping: true,
-    ...decimalDigits(options),
+    ...normalizedFractionDigits(options, DEFAULT_DECIMAL_MAX_FRACTION_DIGITS),
   }).format(value);
 }
 
@@ -74,7 +85,7 @@ export function formatPublicPercentage(
   return new Intl.NumberFormat(options.locale ?? DEFAULT_LOCALE, {
     style: "percent",
     useGrouping: true,
-    ...decimalDigits(options),
+    ...normalizedFractionDigits(options, DEFAULT_DECIMAL_MAX_FRACTION_DIGITS),
   }).format(value / 100);
 }
 
@@ -89,7 +100,6 @@ export function formatPublicEuro(
     style: "currency",
     currency: "EUR",
     useGrouping: true,
-    minimumFractionDigits: options.minimumFractionDigits ?? 2,
-    maximumFractionDigits: options.maximumFractionDigits ?? 2,
+    ...normalizedFractionDigits(options, 2, 2),
   }).format(value);
 }

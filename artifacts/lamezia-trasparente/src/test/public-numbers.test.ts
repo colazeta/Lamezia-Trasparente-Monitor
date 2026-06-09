@@ -36,6 +36,18 @@ describe("public number formatting", () => {
     expect(formatPublicEuro(1234.567)).toBe("1.234,57 €");
   });
 
+  it("keeps fraction digit options coherent when minimum exceeds the default maximum", () => {
+    expect(formatPublicNumber(1234.5, { minimumFractionDigits: 3 })).toBe(
+      "1.234,500",
+    );
+    expect(formatPublicPercentage(12.5, { minimumFractionDigits: 3 })).toBe(
+      "12,500%",
+    );
+    expect(formatPublicEuro(1234.5, { minimumFractionDigits: 3 })).toBe(
+      "1.234,500 €",
+    );
+  });
+
   it("uses a deterministic placeholder for absent or non-finite values", () => {
     expect(formatPublicNumber(null)).toBe(PUBLIC_NUMBER_PLACEHOLDER);
     expect(formatPublicNumber(undefined)).toBe(PUBLIC_NUMBER_PLACEHOLDER);
