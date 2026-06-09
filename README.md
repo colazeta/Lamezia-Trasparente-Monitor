@@ -38,13 +38,13 @@ Backend Node.js (Express 5). Responsabilità principali:
 - **API REST interna** (`/api/*`) — dati civici per web e mobile
 - **API pubblica in sola lettura** (`/api/public/v1`) — per giornalisti, ricercatori, AI
 - **Server MCP** (`/api/mcp`) — protocollo Model Context Protocol per assistenti AI
-- **Ingestione dati** — Albo Pretorio (Tinn), ANAC, ITALIADOMANI, ANBSC, ISTAT
+- **Ingestione dati** — ciclo richiamabile una tantum da `runIngestionCycle()`; lo scheduler periodico nel processo API è disabilitato di default e si abilita solo con `INGESTION_SCHEDULER_MODE=local` o `INGESTION_SCHEDULER_MODE=legacy`
 - **Migrazioni DB** — esegue automaticamente le migrazioni Drizzle all'avvio
 - **Generazione brief AI** — riassunti automatici degli atti tramite OpenAI
 - **Email** — notifiche cittadini via Resend
-- **Object Storage** — allegati e file tramite Google Cloud Storage (sidecar Replit)
+- **Object Storage** — allegati e file tramite adapter server-side; l'implementazione corrente usa percorsi GCS/Replit, mentre un target R2/S3-compatible richiede una modifica runtime dedicata
 
-Build: `esbuild` produce un bundle CJS singolo in `dist/index.mjs`.
+Build: `esbuild` produce un bundle CJS singolo in `dist/index.mjs`. Per avviare l'API senza ingestion periodica lasciare `INGESTION_SCHEDULER_MODE` vuota o `disabled`; un futuro worker può importare `runIngestionCycle()` da `src/lib/ingestion` per eseguire un ciclo one-shot mantenendo gli stessi step monitorati.
 
 → Documentazione API pubblica: [`artifacts/api-server/PUBLIC_API.md`](artifacts/api-server/PUBLIC_API.md)
 
@@ -89,7 +89,7 @@ Usati da `lamezia-trasparente` e `lamezia-mobile`. Generati da `lib/api-spec`.
 - **Node.js 24** (gestito da Nix/Replit)
 - **pnpm** (versione specificata in `.replit`)
 - **PostgreSQL 16** (locale in dev, managed in prod)
-- Variabili d'ambiente configurate (vedi `.env.example`)
+- Variabili d'ambiente configurate (vedi `.env.example` per sviluppo locale e [`docs/production-environment.md`](docs/production-environment.md) per il catalogo produzione/secrets)
 
 ---
 
@@ -191,23 +191,27 @@ pnpm run build
 pnpm --filter @workspace/api-server run build
 ```
 
-Il deploy avviene tramite il pannello **Deployments** di Replit (target: `autoscale`). Alla pubblicazione:
-1. Replit esegue `pnpm run build`
-2. Avvia l'api-server (`node dist/index.mjs`)
-3. L'api-server esegue le migrazioni e poi avvia l'ingestione
+Il target primario di produzione è portabile: una piattaforma Node.js deve eseguire il build, avviare l'api-server (`node dist/index.mjs`) e fornire secret server-side, PostgreSQL managed e storage configurato. Replit può restare un ambiente di sviluppo assistito o un fallback temporaneo, ma non è un requisito architetturale per la produzione.
+
+Checklist sintetica:
+1. eseguire `pnpm run build`;
+2. configurare i secret descritti nel [catalogo production environment](docs/production-environment.md);
+3. avviare l'api-server (`node dist/index.mjs`);
+4. lasciare che l'api-server esegua le migrazioni previste e verificare health check/API URL;
+5. mantenere worker schedulati, storage ed email separati dal bundle frontend.
 
 ---
 
 ## Dev vs Produzione
 
-| Aspetto | Dev (workspace Replit) | Produzione (deployment autoscale) |
+| Aspetto | Dev locale/Replit | Produzione portabile |
 |---|---|---|
 | **Codice** | Identico | Identico |
-| **Database** | PostgreSQL locale (Replit) | PostgreSQL managed (Replit) |
-| **Schema** | `push` (interattivo, niente SQL) | Migrazione runner automatica all'avvio |
-| **Avvio** | `tsx` (hot-reload via workflow) | `node dist/index.mjs` (bundle esbuild) |
-| **Variabili d'ambiente** | `.env` locale / Secrets Replit dev | Secrets Replit produzione |
-| **Object Storage** | Sidecar Replit (`REPL_IDENTITY`) | Sidecar Replit (`REPL_IDENTITY`) |
+| **Database** | PostgreSQL locale o managed di sviluppo | PostgreSQL managed non condiviso con dev/test |
+| **Schema** | `push` solo in dev, oppure migrazioni | Migrazione runner automatica all'avvio; mai `push` interattivo |
+| **Avvio** | `tsx` / workflow con hot-reload | `node dist/index.mjs` (bundle esbuild) dietro reverse proxy/hosting Node |
+| **Variabili d'ambiente** | `.env` locale o secret dev della piattaforma | Secret manager della piattaforma scelta; vedere catalogo produzione |
+| **Object Storage** | Sidecar Replit o storage di sviluppo compatibile con l'implementazione corrente | Storage server-side configurato e separato tra pubblico/privato; R2/S3-compatible richiede supporto runtime dedicato |
 | **Log** | Pino pretty (stdout) | Pino JSON (stdout) |
 | `NODE_ENV` | `development` | `production` |
 
@@ -244,3 +248,4 @@ pnpm --filter db seed      # aggiorna i dati di seed
 ## Documentazione aggiuntiva
 
 - [API pubblica (REST + MCP)](artifacts/api-server/PUBLIC_API.md)
+- [Catalogo production environment e secrets](docs/production-environment.md)
