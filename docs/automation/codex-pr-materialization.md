@@ -22,7 +22,8 @@ La prova deve inoltre superare questi controlli minimi:
 - la PR, branch o commit deve riferirsi alla issue corretta nel titolo, body, nome branch o commit message;
 - il branch remoto deve essere coerente con la issue e non generico o riusato;
 - il commit recuperabile deve toccare file coerenti con lo scope dichiarato;
-- un artefatto relativo a un'altra issue non può attestare il task corrente.
+- un artefatto relativo a un'altra issue non può attestare il task corrente;
+- ogni link `blob/<sha>/<path>` deve superare il guardrail `docs/automation/codex-output-link-integrity.md`: commit recuperabile, issue coerente, path esistente e contenuto coerente.
 
 Non sono prove sufficienti:
 
@@ -30,6 +31,7 @@ Non sono prove sufficienti:
 - un branch dichiarato ma non presente su GitHub;
 - `created PR via make_pr` senza URL o numero PR;
 - link `blob` verso un commit incoerente o relativo ad altra issue;
+- link `blob` verso un path inesistente o non contenente i simboli dichiarati;
 - un semplice `Summary` senza artefatto;
 - una PR reale ma non collegata allo scope o alla issue del task.
 
