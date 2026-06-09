@@ -35,6 +35,18 @@ describe("public number formatting", () => {
     ).toBe("12,34%");
   });
 
+  it("raises the implicit percentage maximum to the requested minimum", () => {
+    expect(formatPublicPercentage(12.34, { minimumFractionDigits: 2 })).toBe(
+      "12,34%",
+    );
+  });
+
+  it("respects an explicit valid percentage maximum", () => {
+    expect(formatPublicPercentage(12.345, { maximumFractionDigits: 3 })).toBe(
+      "12,345%",
+    );
+  });
+
   it("formats euro amounts with deterministic decimals", () => {
     expect(formatPublicEuro(1234.5)).toBe("1.234,50 €");
   });
