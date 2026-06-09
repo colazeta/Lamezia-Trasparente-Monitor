@@ -20,10 +20,9 @@ export interface ProcurementIdentifierClassification {
 const CIG_LENGTH = 10;
 const CUP_LENGTH = 15;
 const SIMPLE_SEPARATORS_RE = /[\s-]+/g;
-const ASCII_RE = /^[\x00-\x7F]*$/;
 const ALPHANUMERIC_ASCII_RE = /^[A-Za-z0-9]+$/;
-const ORDINARY_CIG_RE = /^[0-9]{7}[A-F0-9]{3}$/;
-const SMART_CIG_RE = /^[V-Z][A-F0-9]{9}$/;
+const ORDINARY_CIG_RE = /^([0-9]{7})([A-F0-9]{3})$/;
+const SMART_CIG_RE = /^[XYZ][A-F0-9]{9}$/;
 const UNIFIED_CIG_RE = /^[A-U][A-F0-9]{9}$/;
 const CUP_RE = /^[A-Z][0-9]{2}[A-Z][A-Z0-9]{11}$/;
 
@@ -49,11 +48,11 @@ export function normalizeCupCandidate(value: string | null | undefined): string 
  * Classificazione solo formale di un token CIG/CUP candidato.
  *
  * La funzione applica esclusivamente controlli locali di formato: CIG ordinario
- * (7 cifre + 3 caratteri esadecimali), Smart CIG (V-Z + 9 esadecimali), CIG
- * unificato (A-U + 9 esadecimali) e CUP nella forma lettera + due cifre +
- * lettera + 11 alfanumerici. Non fa lookup ANAC/BDNCP o su altri registri,
- * non dichiara l'esistenza sostanziale di contratti/progetti e non produce
- * matching fra record amministrativi.
+ * (7 cifre + 3 caratteri esadecimali di controllo), Smart CIG documentato
+ * (X/Y/Z + 9 esadecimali), CIG unificato (A-U + 9 esadecimali) e CUP nella
+ * forma lettera + due cifre + lettera + 11 alfanumerici. Non fa lookup
+ * ANAC/BDNCP o su altri registri, non dichiara l'esistenza sostanziale di
+ * contratti/progetti e non produce matching fra record amministrativi.
  */
 export function classifyProcurementIdentifier(
   value: string | null | undefined,
@@ -65,7 +64,7 @@ export function classifyProcurementIdentifier(
     return buildResult(original, "", "empty", false, "empty-input");
   }
 
-  if (!ASCII_RE.test(stripped) || !ALPHANUMERIC_ASCII_RE.test(stripped)) {
+  if (!hasOnlyAsciiCharacters(stripped) || !ALPHANUMERIC_ASCII_RE.test(stripped)) {
     return buildResult(original, stripped, "unknown", false, "invalid-characters");
   }
 
@@ -98,8 +97,34 @@ function stripSimpleSeparators(value: string): string {
   return value.replace(SIMPLE_SEPARATORS_RE, "");
 }
 
+function hasOnlyAsciiCharacters(value: string): boolean {
+  return Array.from(value).every((character) => character.charCodeAt(0) <= 0x7f);
+}
+
 function isFormalCig(value: string): boolean {
-  return ORDINARY_CIG_RE.test(value) || SMART_CIG_RE.test(value) || UNIFIED_CIG_RE.test(value);
+  return isFormalOrdinaryCig(value) || SMART_CIG_RE.test(value) || UNIFIED_CIG_RE.test(value);
+}
+
+function isFormalOrdinaryCig(value: string): boolean {
+  const match = ORDINARY_CIG_RE.exec(value);
+
+  if (!match) {
+    return false;
+  }
+
+  const numericPart = match[1];
+  const checkValue = match[2];
+
+  if (!numericPart || !checkValue || numericPart === "0000000") {
+    return false;
+  }
+
+  const expectedCheckValue = ((Number(numericPart) * 211) % 4091)
+    .toString(16)
+    .toUpperCase()
+    .padStart(3, "0");
+
+  return checkValue === expectedCheckValue;
 }
 
 function buildResult(
