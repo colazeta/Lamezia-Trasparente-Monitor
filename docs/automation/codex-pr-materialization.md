@@ -8,13 +8,21 @@ Il risultato non deve essere trattato come completato finché non esiste una pro
 
 ## Regola di attestazione
 
-Un output Codex è reviewable solo se contiene almeno uno dei seguenti elementi:
+Un output Codex è reviewable solo se contiene almeno uno dei seguenti elementi, verificato nel repository corretto:
 
-1. URL di una Pull Request GitHub.
-2. Numero di Pull Request GitHub.
+1. URL di una Pull Request GitHub aperta o chiusa nel repository.
+2. Numero di Pull Request GitHub recuperabile nel repository.
 3. Branch remoto esistente nel repository.
 4. Commit SHA completo recuperabile da GitHub.
 5. Evidenza che la modifica è già presente su `main`.
+
+La prova deve inoltre superare questi controlli minimi:
+
+- la PR deve avere base `main` o altra base esplicitamente autorizzata;
+- la PR, branch o commit deve riferirsi alla issue corretta nel titolo, body, nome branch o commit message;
+- il branch remoto deve essere coerente con la issue e non generico o riusato;
+- il commit recuperabile deve toccare file coerenti con lo scope dichiarato;
+- un artefatto relativo a un'altra issue non può attestare il task corrente.
 
 Non sono prove sufficienti:
 
@@ -22,7 +30,8 @@ Non sono prove sufficienti:
 - un branch dichiarato ma non presente su GitHub;
 - `created PR via make_pr` senza URL o numero PR;
 - link `blob` verso un commit incoerente o relativo ad altra issue;
-- un semplice `Summary` senza artefatto.
+- un semplice `Summary` senza artefatto;
+- una PR reale ma non collegata allo scope o alla issue del task.
 
 ## Classificazione dei fallimenti
 
@@ -45,6 +54,8 @@ Materialization:
 - Remote branch: <branch remoto oppure none>
 - Full commit SHA: <sha completo oppure none>
 - GitHub verification: <comando/verifica eseguita oppure blocker>
+- Issue linkage: <come PR/branch/commit riferisce la issue corrente>
+- Scope check: <file toccati e coerenza con scope>
 - If no PR: <unified diff completo oppure lista file con contenuto completo, se il cambio è recuperabile>
 ```
 
@@ -56,7 +67,7 @@ Il PR governor o un'automazione autorizzata può materializzare un output solo s
 
 - patch completa e applicabile; oppure
 - percorso file + contenuto completo per ogni file modificato; oppure
-- branch remoto già esistente.
+- branch remoto già esistente e coerente con la issue.
 
 Il materializzatore deve:
 
@@ -95,4 +106,4 @@ Le automazioni devono smettere di contare come slot attivo qualunque task che ab
 
 ## Decisione
 
-Il collo di bottiglia non è il merge. Il collo di bottiglia è la materializzazione GitHub dell'output Codex. La pipeline è corretta solo quando ogni lavoro produce un artefatto GitHub verificabile o un fallback completo materializzabile.
+Il collo di bottiglia non è il merge. Il collo di bottiglia è la materializzazione GitHub dell'output Codex. La pipeline è corretta solo quando ogni lavoro produce un artefatto GitHub verificabile e coerente con la issue, oppure un fallback completo materializzabile.
