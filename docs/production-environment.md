@@ -53,6 +53,19 @@ Il repository contiene logiche di ingestione nell'API server e script di support
 | `ANBSC_TARGET_COMUNE` | Opzionale | production, preview, development | Server-only config | Comune target per filtrare i dati ANBSC. | Non è un secret; mantenere denominazione coerente con la fonte. |
 | `LOG_LEVEL` | Opzionale | production, preview, development | Server runtime config | Livello log per job schedulati se condividono logger server. | Non loggare payload con token o dati personali non necessari. |
 
+### Worker schedulato di ingestione (`artifacts/ingestion-worker`)
+
+Il worker `@workspace/ingestion-worker` è un artifact Node separato dall'API server: esegue una sola chiamata a `runIngestionCycle()` e poi termina. Prima dell'ingestione applica le migrazioni disponibili, registra lo stato migrazioni, verifica lo schema e rilascia il pool PostgreSQL, così un cron provider può trattare ogni esecuzione come job one-shot.
+
+Comando consigliato per il cron provider, dopo la fase di install/build del deployment:
+
+```bash
+pnpm --filter @workspace/ingestion-worker run build
+node artifacts/ingestion-worker/dist/index.mjs
+```
+
+Il job usa variabili server-only già documentate per API/ingestion, in particolare `DATABASE_URL`, `LOG_LEVEL`, `OPS_ALERT_EMAIL` e le configurazioni opzionali delle fonti. Questa documentazione non introduce file provider-specifici, nuove credenziali o cambi di cadenza runtime.
+
 ## Database PostgreSQL managed
 
 | Variabile | Required | Ambienti | Visibilità | Descrizione | Note sicurezza/rotazione |
