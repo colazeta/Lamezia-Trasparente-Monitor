@@ -6,6 +6,8 @@ Alcuni task Codex producono un `Summary` che dichiara branch, commit o PR, ma Gi
 
 Il risultato non deve essere trattato come completato finché non esiste una prova GitHub pubblica e verificabile.
 
+> Nota diagnostica: la issue #315 è usata come smoke test di `make_pr`.
+
 ## Regola di attestazione
 
 Un output Codex è reviewable solo se contiene almeno uno dei seguenti elementi, verificato nel repository corretto:

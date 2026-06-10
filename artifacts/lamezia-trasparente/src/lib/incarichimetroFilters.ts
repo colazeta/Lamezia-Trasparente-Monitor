@@ -47,11 +47,17 @@ const OPERATOR_PATTERNS = [
 
 export type MonitoredSource = "Contratti ANAC" | "Albo Pretorio";
 export type SourceStatus = "ufficiale" | "estratto" | "da verificare";
+export type DirectProcedureSignalSource =
+  | "withoutTender"
+  | "procedureType"
+  | "alboText"
+  | null;
 
 export interface MonitoredRecordFlags {
   hasCig: boolean;
   hasCup: boolean;
   hasDirectProcedureSignal: boolean;
+  directProcedureSignalSource: DirectProcedureSignalSource;
   hasComparativeProcedureSignal: boolean;
   needsOperatorVerification: boolean;
 }
@@ -182,6 +188,7 @@ export function buildRecordFlags({
   cup,
   text,
   directProcedureText,
+  directProcedureTextSource = "alboText",
   operator,
   forceDirectSignal,
 }: {
@@ -189,17 +196,25 @@ export function buildRecordFlags({
   cup: string | null | undefined;
   text: string | null | undefined;
   directProcedureText?: string | null;
+  directProcedureTextSource?: Exclude<
+    DirectProcedureSignalSource,
+    "withoutTender" | null
+  >;
   operator?: string | null;
   forceDirectSignal?: boolean | null;
 }): MonitoredRecordFlags {
   const procedureSignalText = directProcedureText ?? text;
+  const directProcedureSignalSource: DirectProcedureSignalSource = forceDirectSignal
+    ? "withoutTender"
+    : includesAny(procedureSignalText, DIRECT_PROCEDURE_KEYWORDS)
+      ? directProcedureTextSource
+      : null;
 
   return {
     hasCig: Boolean(cig),
     hasCup: Boolean(cup),
-    hasDirectProcedureSignal:
-      Boolean(forceDirectSignal) ||
-      includesAny(procedureSignalText, DIRECT_PROCEDURE_KEYWORDS),
+    hasDirectProcedureSignal: directProcedureSignalSource !== null,
+    directProcedureSignalSource,
     hasComparativeProcedureSignal: includesAny(text, COMPARATIVE_KEYWORDS),
     needsOperatorVerification: operator === null,
   };
@@ -241,6 +256,7 @@ export function buildContractRecord(
     cup: contract.cup,
     text,
     directProcedureText: contract.procedureType ?? "",
+    directProcedureTextSource: "procedureType",
     operator: contract.supplier?.trim() || "Operatore non indicato",
     forceDirectSignal: contract.withoutTender,
   });
