@@ -10,6 +10,7 @@ Piattaforma civica di trasparenza per il Comune di Lamezia Terme: aggrega e rend
 .
 ├── artifacts/
 │   ├── api-server/          # Backend Express 5 — API REST, MCP, ingestione dati
+│   ├── ingestion-worker/    # Worker Node one-shot per un ciclo schedulato di ingestione
 │   ├── lamezia-trasparente/ # Web app React + Vite (sito pubblico)
 │   ├── lamezia-mobile/      # App mobile Expo (React Native) per iOS/Android/Web
 │   └── mockup-sandbox/      # Sandbox Vite per prototipazione UI (non pubblica)
@@ -44,9 +45,27 @@ Backend Node.js (Express 5). Responsabilità principali:
 - **Email** — notifiche cittadini via Resend
 - **Object Storage** — allegati e file tramite adapter server-side; l'implementazione corrente usa percorsi GCS/Replit, mentre un target R2/S3-compatible richiede una modifica runtime dedicata
 
-Build: `esbuild` produce un bundle CJS singolo in `dist/index.mjs`. Per avviare l'API senza ingestion periodica lasciare `INGESTION_SCHEDULER_MODE` vuota o `disabled`; un futuro worker può importare `runIngestionCycle()` da `src/lib/ingestion` per eseguire un ciclo one-shot mantenendo gli stessi step monitorati.
+Build: `esbuild` produce un bundle ESM singolo in `dist/index.mjs`. Per avviare l'API senza ingestion periodica lasciare `INGESTION_SCHEDULER_MODE` vuota o `disabled`; il worker dedicato importa `runIngestionCycle()` per eseguire gli stessi step monitorati in modalità one-shot.
 
 → Documentazione API pubblica: [`artifacts/api-server/PUBLIC_API.md`](artifacts/api-server/PUBLIC_API.md)
+
+### `artifacts/ingestion-worker` — Worker ingestion one-shot
+
+Artifact Node.js separato dall'API per job schedulati: esegue migrazioni/verifica schema, richiama `runIngestionCycle()` dall'api-server, chiude la pool PostgreSQL e termina. Non contiene crawler duplicati e non avvia scheduler periodici.
+
+Comandi principali:
+
+```bash
+pnpm --filter @workspace/ingestion-worker run typecheck
+pnpm --filter @workspace/ingestion-worker run build
+pnpm --filter @workspace/ingestion-worker run start
+```
+
+Dopo il build, un provider cron deve eseguire il job con le variabili server-side configurate e il comando:
+
+```bash
+node artifacts/ingestion-worker/dist/index.mjs
+```
 
 ### `artifacts/lamezia-trasparente` — Sito web
 
@@ -198,7 +217,8 @@ Checklist sintetica:
 2. configurare i secret descritti nel [catalogo production environment](docs/production-environment.md);
 3. avviare l'api-server (`node dist/index.mjs`);
 4. lasciare che l'api-server esegua le migrazioni previste e verificare health check/API URL;
-5. mantenere worker schedulati, storage ed email separati dal bundle frontend.
+5. buildare il worker (`pnpm --filter @workspace/ingestion-worker run build`) e configurare il cron provider per eseguire `node artifacts/ingestion-worker/dist/index.mjs`;
+6. mantenere worker schedulati, storage ed email separati dal bundle frontend.
 
 ---
 

@@ -41,7 +41,7 @@ Replit resta documentato come ambiente di sviluppo assistito o fallback temporan
 
 ## Ingestion worker schedulato
 
-Il repository contiene logiche di ingestione nell'API server e script di supporto; un worker schedulato separato deve riusare solo variabili server-side e non deve dipendere dal bundle frontend.
+Il worker `@workspace/ingestion-worker` esegue un singolo ciclo di ingestione e termina: il cron provider deve buildare l'artifact e poi lanciare `node artifacts/ingestion-worker/dist/index.mjs`. Il worker riusa la logica di ingestione dell'API server, usa solo variabili server-side e non dipende dal bundle frontend.
 
 | Variabile | Required | Ambienti | Visibilità | Descrizione | Note sicurezza/rotazione |
 |---|---:|---|---|---|---|
