@@ -28,13 +28,16 @@ const VALID_REAL_PROMISE: ProgrammePromise = {
 };
 
 describe("Promessometro real-data validation", () => {
-  it("keeps the current placeholder out of real-record counts", () => {
+  it("keeps the current placeholder out of real-record validation", () => {
     const result = validatePromessometroRealRecords(PROGRAMME_PROMISES);
+    const realPromises = getRealProgrammePromises(PROGRAMME_PROMISES);
 
-    expect(result.realRecordCount).toBe(0);
-    expect(result.placeholderCount).toBe(1);
+    expect(result.realRecordCount).toBe(realPromises.length);
+    expect(result.placeholderCount).toBe(
+      PROGRAMME_PROMISES.filter((promise) => promise.isPlaceholder === true).length,
+    );
     expect(result.issues).toEqual([]);
-    expect(getRealProgrammePromises(PROGRAMME_PROMISES)).toEqual([]);
+    expect(realPromises.every((promise) => promise.isPlaceholder !== true)).toBe(true);
   });
 
   it("accepts a complete future real record with documented caution fields", () => {
@@ -43,7 +46,9 @@ describe("Promessometro real-data validation", () => {
       VALID_REAL_PROMISE,
     ]);
 
-    expect(result.realRecordCount).toBe(1);
+    expect(result.realRecordCount).toBe(
+      getRealProgrammePromises([...PROGRAMME_PROMISES, VALID_REAL_PROMISE]).length,
+    );
     expect(result.placeholderCount).toBe(1);
     expect(result.issues).toEqual([]);
   });
@@ -77,25 +82,76 @@ describe("Promessometro real-data validation", () => {
     );
   });
 
-  it("rejects residual model copy in mandatory real-record fields", () => {
+  it("rejects impossible calendar dates instead of accepting JavaScript normalization", () => {
     const invalidPromise: ProgrammePromise = {
       ...VALID_REAL_PROMISE,
-      id: "real-test-template-copy",
-      sourceLabel: "Fonte programmatica da indicare prima della pubblicazione",
-      mandateReference: "Mandato/amministrazione da inserire nella scheda reale",
-      cautionNote: "Record dimostrativo da sostituire con una nota reale.",
-      missingForObservableImplementation: "Esempio da censire in seguito.",
+      id: "real-test-impossible-date",
+      sourceDate: "2026-02-31",
+      lastVerification: "2026-04-31",
     };
 
     const result = validatePromessometroRealRecords([invalidPromise]);
 
     expect(result.issues).toEqual(
       expect.arrayContaining([
+        expect.objectContaining({
+          promiseId: "real-test-impossible-date",
+          field: "sourceDate",
+        }),
+        expect.objectContaining({
+          promiseId: "real-test-impossible-date",
+          field: "lastVerification",
+        }),
+      ]),
+    );
+  });
+
+  it("rejects residual model copy in mandatory real-record fields", () => {
+    const invalidPromise: ProgrammePromise = {
+      ...VALID_REAL_PROMISE,
+      id: "real-test-template-copy",
+      sourcePromiseSummary:
+        "Questo record è un modello redazionale, non una promessa reale: va sostituito con un estratto da programma elettorale.",
+      sourceLabel: "Fonte programmatica da indicare prima della pubblicazione",
+      mandateReference: "Mandato/amministrazione da indicare nella scheda reale",
+      cautionNote: "Record dimostrativo escluso dai conteggi documentali.",
+      missingForObservableImplementation:
+        "Testo redazionale già completo senza residui modello.",
+    };
+
+    const result = validatePromessometroRealRecords([invalidPromise]);
+
+    expect(result.issues).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ field: "sourcePromiseSummary" }),
         expect.objectContaining({ field: "sourceLabel" }),
         expect.objectContaining({ field: "mandateReference" }),
         expect.objectContaining({ field: "cautionNote" }),
+      ]),
+    );
+    expect(result.issues).not.toEqual(
+      expect.arrayContaining([
         expect.objectContaining({ field: "missingForObservableImplementation" }),
       ]),
     );
+  });
+
+  it("allows legitimate real-record text containing generic words such as modello and esempio", () => {
+    const validPromise: ProgrammePromise = {
+      ...VALID_REAL_PROMISE,
+      id: "real-test-generic-words",
+      sourcePromiseSummary:
+        "La fonte cita un modello organizzativo e un esempio di intervento amministrativo verificabile.",
+      sourceLabel: "Documento con esempio applicativo allegato alla fonte",
+      mandateReference: "Mandato che descrive il modello operativo dell'intervento",
+      cautionNote:
+        "La presenza delle parole modello ed esempio non indica automaticamente testo placeholder.",
+      missingForObservableImplementation:
+        "Serve una verifica documentale successiva sul modello operativo citato dalla fonte.",
+    };
+
+    const result = validatePromessometroRealRecords([validPromise]);
+
+    expect(result.issues).toEqual([]);
   });
 });

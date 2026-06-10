@@ -23,8 +23,15 @@ export interface PromessometroValidationResult {
   issues: PromessometroValidationIssue[];
 }
 
-const DEMONSTRATIVE_RESIDUE_PATTERN =
-  /\b(template|placeholder|demo|dimostrativ[oa]|fittizi[oa]|modello|esempio|da inserire|da indicare|da censire|sostituire)\b/i;
+const MODEL_RECORD_RESIDUE_PHRASES = [
+  "questo record è un modello redazionale, non una promessa reale",
+  "va sostituito con un estratto da programma elettorale",
+  "fonte programmatica da indicare prima della pubblicazione",
+  "mandato/amministrazione da indicare nella scheda reale",
+  "record dimostrativo escluso dai conteggi documentali",
+  "esempio di collegamento da sostituire",
+  "da inserire dopo verifica documentale",
+] as const;
 
 const REQUIRED_TEXT_FIELDS = [
   "sourcePromiseSummary",
@@ -43,12 +50,27 @@ function isIsoDate(value: string | undefined): boolean {
     return false;
   }
 
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) {
+  const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(value);
+
+  if (!match) {
     return false;
   }
 
-  const timestamp = Date.parse(`${value}T00:00:00.000Z`);
-  return Number.isFinite(timestamp);
+  const year = Number(match[1]);
+  const month = Number(match[2]);
+  const day = Number(match[3]);
+
+  if (month < 1 || month > 12 || day < 1 || day > 31) {
+    return false;
+  }
+
+  const parsed = new Date(Date.UTC(year, month - 1, day));
+
+  return (
+    parsed.getUTCFullYear() === year &&
+    parsed.getUTCMonth() === month - 1 &&
+    parsed.getUTCDate() === day
+  );
 }
 
 function isHttpUrl(value: string | undefined): boolean {
@@ -62,6 +84,14 @@ function isHttpUrl(value: string | undefined): boolean {
   } catch {
     return false;
   }
+}
+
+function containsModelRecordResidue(value: string): boolean {
+  const normalizedValue = value.trim().toLocaleLowerCase("it-IT");
+
+  return MODEL_RECORD_RESIDUE_PHRASES.some((phrase) =>
+    normalizedValue.includes(phrase.toLocaleLowerCase("it-IT")),
+  );
 }
 
 function pushIssue(
@@ -92,7 +122,7 @@ function validateRequiredTextFields(
       continue;
     }
 
-    if (DEMONSTRATIVE_RESIDUE_PATTERN.test(promise[field])) {
+    if (containsModelRecordResidue(promise[field])) {
       pushIssue(
         issues,
         promise,
