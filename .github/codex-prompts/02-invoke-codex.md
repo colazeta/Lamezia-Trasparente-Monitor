@@ -29,6 +29,11 @@ Collision matrix decision:
 - Medium: same package/domain with distinct files and compatible criteria; continue only with narrow scope and explicit collision note.
 - Low: unrelated files/modules or unrelated human-review PRs needing no Codex-side rework; continue when other safeguards pass.
 
+Materialization debt gate:
+- Before this invocation is posted, confirm materialization debt is 5 or fewer, or that this task is itself materialization verification, manual UI/export recovery, split-required cleanup, blocker stabilization or PR rebase/recovery/supersede work.
+- Materialization debt labels/states are `materialization:required`, `fallback-bundle-incomplete`, `output-without-PR`, `invalid-output`, `local-only` and `needs-materialization-verification`.
+- If debt is greater than 5 and this is ordinary technical/platform work, stop before invoking Codex and post the debt-gate blocker instead.
+
 Capacity context:
 - Capacity 5 is computed only on real active Codex tasks backed by evidence.
 - `codex:ready` is eligible backlog only and does not count as active work.
@@ -68,9 +73,11 @@ Branch and pull request requirements:
 - Do not close the issue directly.
 
 Fallback if PR creation fails:
-- Comment on issue #{{ISSUE_NUMBER}} with the exact technical reason the PR could not be opened.
-- Include the branch name, diff location or precise blocker.
-- Do not present delivery without a PR as completed work; a summary without PR, visible branch, explicit blocker or recent execution evidence is `output-without-PR` and must be routed to follow-up.
+- The final response must contain a `Materialization` section with either a verified PR URL/number, a complete unified diff directly applicable from `main`, a complete small FILE/ACTION/BEGIN_FILE/END_FILE bundle, or an explicit technical blocker.
+- Prefer a complete unified diff over full-file bundles when no PR exists.
+- Do not emit partial fallback content: no ellipses, no `(truncated)`, no omitted hunks and no local-only commit as proof.
+- If the response channel cannot carry the complete fallback, report this blocker exactly enough for classification: PR creation failed and no complete non-truncated fallback can be safely emitted.
+- Do not present delivery without a PR as completed work; a summary without PR URL/number, complete fallback or explicit blocker is `output-without-PR` and must be routed to follow-up.
 
 Stop conditions:
 - If the issue is ambiguous, comment with the precise missing information instead of guessing.

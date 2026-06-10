@@ -25,13 +25,14 @@ Repository context:
 
 Queue model:
 - Maximum operational Codex capacity is 5 real active tasks.
+- Before preparing an ordinary implementation prompt, count materialization debt: open issues/PRs with `materialization:required`, `fallback-bundle-incomplete`, `output-without-PR`, `invalid-output`, `local-only` or `needs-materialization-verification`. If debt is greater than 5, do not prepare ordinary technical/platform prompts; prepare only materialization verification, manual UI/export recovery, split-required, blocker or PR rebase/recovery/supersede handoff.
 - Derive operational state from evidence before counting: `idle`, `candidate`, `ready`, `invoked`, `working`, `pr-open`, `blocked`, `stale`, `completed-by-pr` or `superseded`.
 - `codex:ready` is eligible backlog only; it is not active work and never consumes a slot by itself.
 - `codex:prompted`, `codex:invoked` and `codex:working` count only when backed by recent invocation, branch/task/commit, validation, diff, open PR needing Codex-side changes, explicit blocker or in-progress Codex response.
 - `codex:review-needed` and PRs/issues waiting only for Giovanni review/merge are human review wait and do not saturate Codex capacity unless there is concrete file/module collision or Codex-side rework.
 - Effective free slots are `5 - real active Codex operational tasks`; do not subtract human-review-pending items.
 - A Codex summary without an open PR to `main`, visible `codex/<issue-number>-<slug>` branch, explicit technical blocker or recent execution evidence is `output-without-PR` and does not count as a real active task.
-- Do not prepare a prompt that would exceed capacity 5 or create unresolved collision risk on the same files/modules.
+- Do not prepare a prompt that would exceed capacity 5, bypass the materialization debt gate or create unresolved collision risk on the same files/modules.
 
 Task:
 1. classify the issue as one of: technical, UI/accessibility/metadata, civic-methodological, copy/legal tone, data/API/schema, backlog/governance, unsafe/manual;
@@ -47,11 +48,13 @@ Task:
 11. require a dedicated branch named `codex/{{ISSUE_NUMBER}}-<slug>` and a pull request targeting `main` as mandatory Codex output;
 12. include fallback instructions requiring Codex to stop and comment with the exact technical reason, branch/diff or blocker if a PR to `main` cannot be opened;
 13. include the `output-without-PR` rule so a summary without PR, branch, blocker or recent execution evidence is routed to follow-up and not counted as active;
-14. produce a final `@codex` prompt ready to be posted as a GitHub comment only if the cleanup preflight passed.
+14. record the materialization debt count and whether the debt gate allows this prompt;
+15. produce a final `@codex` prompt ready to be posted as a GitHub comment only if the cleanup preflight and debt gate passed.
 
 Safety rules:
 - If the issue is ambiguous, too broad, legally sensitive or potentially accusatory, do not produce an implementation prompt. Produce a blocker comment instead.
 - If the issue is backlog/governance, prefer a triage prompt or narrow documentation/prompt-only implementation prompt, not a broad runtime implementation prompt.
+- If materialization debt is greater than 5, block ordinary work even when capacity appears free; choose a cleanup/recovery handoff instead.
 - If the thread contains unresolved contradictory automation comments, produce a follow-up/blocker comment instead of an implementation prompt.
 - Keep the resulting task narrow and reviewable.
 - Preserve the no-auto-merge and no-auto-close policy.
@@ -74,6 +77,7 @@ Output format:
 - Real active capacity impact:
 - Human review wait outside capacity:
 - Effective free slots:
+- Materialization debt count and gate result:
 
 ### Decision
 Proceed / Block / Human review needed

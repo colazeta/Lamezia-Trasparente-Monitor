@@ -19,12 +19,13 @@ Task:
 2. determine whether a Codex implementation attempt exists;
 3. determine whether a pull request exists, targets `main`, uses a `codex/{{ISSUE_NUMBER}}-<slug>` branch and references the issue;
 4. detect delivery without PR and capture the exact reported reason, branch/diff or blocker;
-5. classify any summary without an open PR to `main`, visible `codex/{{ISSUE_NUMBER}}-<slug>` branch, explicit blocker or recent execution evidence as `output-without-PR`;
+5. classify any summary without an open PR to `main`, complete non-truncated fallback, visible `codex/{{ISSUE_NUMBER}}-<slug>` branch, explicit blocker or recent execution evidence as `output-without-PR`;
 6. detect stale zombie tasks: `codex:prompted`, `codex:invoked` or `codex:working` with no PR, branch, explicit blocker, commit, validation log, diff location or other concrete activity;
-7. check whether the implementation appears to satisfy the acceptance criteria;
-8. identify validation status if available;
-9. identify whether the implementation changed copy/legal/methodological safeguards;
-10. recommend one of the following outcomes:
+7. classify declared fallback content with `...`, `(truncated)`, omitted sections, missing files or unparseable file blocks as `fallback-bundle-incomplete` plus `output-without-PR`;
+8. check whether the implementation appears to satisfy the acceptance criteria;
+9. identify validation status if available;
+10. identify whether the implementation changed copy/legal/methodological safeguards;
+11. recommend one of the following outcomes:
    - remove or neutralise stale `codex:ready` when a PR, blocker, supersession or completed outcome means the issue is no longer eligible backlog;
    - `codex:review-needed` when a PR exists and needs human review/merge;
    - `codex:follow-up` when no PR exists, delivery without PR needs recovery, the task is stale, validation is failing, or the implementation is incomplete;
@@ -56,6 +57,12 @@ Output format:
 ### Stale-task and output-without-PR check
 
 ### Recommended label changes
+
+### Materialization status
+- PR verified: yes/no
+- Fallback complete: yes/no
+- Truncation marker present: yes/no
+- Canonical state: pr-open / ready-for-human-merge / needs-rebase / ci-pending / ci-failed / review-needed / scope-risk / complete-diff-provided / small-file-bundle-complete / fallback-bundle-incomplete / output-without-PR / invalid-output / local-only / manual-ui-recoverable / split-required / blocked-stable / needs-human-decision / superseded / duplicate / archivable
 
 ### Capacity effect
 
