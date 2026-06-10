@@ -118,7 +118,7 @@ Le automazioni devono smettere di contare come slot attivo qualunque task che ab
 - PR governor su PR reale;
 - materializzazione da patch completa;
 - recovery controllata;
-- blocked stabile;
+- blocked-stable;
 - needs-human-decision;
 - archiviazione/superseded.
 

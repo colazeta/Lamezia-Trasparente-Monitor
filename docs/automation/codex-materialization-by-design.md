@@ -29,6 +29,20 @@ A task is not complete when code is written. A task is complete only when the sa
 
 No intermediate state may occupy the active queue.
 
+## Materialization debt gate
+
+Materialization debt is the count of open issues or PRs with any of these states or labels: `materialization:required`, `fallback-bundle-incomplete`, `output-without-PR`, `invalid-output`, `local-only` or `needs-materialization-verification`. The debt count is operational evidence, not a civic or legal indicator.
+
+When materialization debt is **greater than 5**, every ordinary technical or platform lane must pause new non-urgent Codex invocations. During the gate, allowed work is limited to:
+
+- verifying whether an existing output has a public PR, remote branch, complete diff or complete small file bundle;
+- recovering a real PR from a manual UI/export path when it can be verified;
+- splitting an unmaterialized task so the next output can fit in a complete fallback;
+- updating labels/comments to `complete-diff-provided`, `small-file-bundle-complete`, `fallback-bundle-incomplete`, `output-without-PR`, `invalid-output`, `local-only`, `manual-ui-recoverable`, `split-required`, `blocked-stable`, `superseded` or `duplicate`;
+- handling real open PRs with no merge, no approval and no auto-merge, especially rebase/recovery/supersede decisions.
+
+The anti-idle rule is suspended while this gate is active. Empty capacity must not be filled with ordinary work until debt is back to **5 or fewer** or a human explicitly declares an urgent exception.
+
 ## Required prompt contract
 
 Every Codex invocation and recovery prompt must include this exact contract or an equivalent stricter version:
@@ -113,7 +127,7 @@ When a Codex output is received:
 3. If there is no PR but a complete small file bundle with no truncation/omission markers, create branch `materialize/<issue>-<slug>` from `main`, apply it, and open a PR.
 4. If there is no PR and no complete bundle, classify `output-without-PR` or `local-only`.
 5. If the output declares a complete fallback but contains `...`, `(truncated)`, omitted sections, missing files, or cannot be mechanically parsed, classify `fallback-bundle-incomplete` and `output-without-PR`.
-6. If a second recovery also lacks PR or complete bundle, classify `blocked stabile` and do not reinvoke.
+6. If a second recovery also lacks PR or complete bundle, classify `blocked-stable` and do not reinvoke.
 
 ## Anti-patterns to reject
 
