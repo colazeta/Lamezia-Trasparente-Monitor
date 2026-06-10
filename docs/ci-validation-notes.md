@@ -45,3 +45,23 @@ A concise PR body or final comment should include:
 - validation commands and results;
 - targeted checks, when used;
 - residual blockers or a note that none were observed.
+
+## Issue #287 — `main` CI run `27235668660` at `65359d2`
+
+The failed GitHub Actions run reported for issue #287 was the `CI` workflow on a push to `main` at commit `65359d29a515c384cccf7790dc2d10a5751bd942` (`Add ingestion worker package manifest for #240`). The publicly visible run page confirms the run failed in job `Install, typecheck, build and test` with the annotation `Process completed with exit code 1`.
+
+A local detached worktree at `65359d2` reproduces the failure with the CI install command:
+
+```text
+pnpm install --frozen-lockfile
+```
+
+The command exits with `ERR_PNPM_OUTDATED_LOCKFILE` because `artifacts/ingestion-worker/package.json` had been added at that commit without a corresponding `pnpm-lock.yaml` update. pnpm reported that the lockfile specifiers did not match the new package manifest dependencies for the ingestion worker.
+
+On the current branch, the failure is no longer present as a source/workflow issue: `artifacts/ingestion-worker/package.json` is now represented in `pnpm-lock.yaml`, including the ingestion worker dependency block and worker-only runtime helper entries. Therefore the smallest safe follow-up for issue #287 is this diagnostic note rather than a speculative CI workflow change.
+
+Validation performed for this diagnosis:
+
+- historical reproduction: `pnpm install --frozen-lockfile` from a detached worktree at `65359d2` reproduced `ERR_PNPM_OUTDATED_LOCKFILE`;
+- current workspace install: `pnpm install --frozen-lockfile` passes on the current branch;
+- patch hygiene: `git diff --check` passes for this documentation-only change.
