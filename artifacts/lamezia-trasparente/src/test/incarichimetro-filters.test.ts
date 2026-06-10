@@ -57,6 +57,7 @@ describe("incarichimetroFilters", () => {
       hasCig: false,
       hasCup: true,
       hasDirectProcedureSignal: true,
+      directProcedureSignalSource: "withoutTender",
       hasComparativeProcedureSignal: false,
     });
     expect(record?.flags).toContain("CIG non presente nel dato");
@@ -78,6 +79,7 @@ describe("incarichimetroFilters", () => {
 
     expect(record).not.toBeNull();
     expect(record?.signals.hasDirectProcedureSignal).toBe(false);
+    expect(record?.signals.directProcedureSignalSource).toBeNull();
     expect(record?.flags).not.toContain("Possibile affidamento diretto");
   });
 
@@ -104,7 +106,9 @@ describe("incarichimetroFilters", () => {
     });
 
     expect(fromProcedure?.signals.hasDirectProcedureSignal).toBe(true);
+    expect(fromProcedure?.signals.directProcedureSignalSource).toBe("procedureType");
     expect(fromWithoutTender?.signals.hasDirectProcedureSignal).toBe(true);
+    expect(fromWithoutTender?.signals.directProcedureSignalSource).toBe("withoutTender");
   });
 
   it("richiede formule forti per il segnale diretto negli atti Albo", () => {
@@ -125,8 +129,11 @@ describe("incarichimetroFilters", () => {
     });
 
     expect(strongPattern?.signals.hasDirectProcedureSignal).toBe(true);
+    expect(strongPattern?.signals.directProcedureSignalSource).toBe("alboText");
     expect(genericDirect?.signals.hasDirectProcedureSignal).toBe(false);
+    expect(genericDirect?.signals.directProcedureSignalSource).toBeNull();
     expect(directorOnly?.signals.hasDirectProcedureSignal).toBe(false);
+    expect(directorOnly?.signals.directProcedureSignalSource).toBeNull();
   });
 
   it("costruisce record albo con estrazioni e stato da verificare quando l'operatore manca", () => {
