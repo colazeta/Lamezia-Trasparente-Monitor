@@ -35,12 +35,24 @@ Non sono prove sufficienti:
 - un semplice `Summary` senza artefatto;
 - una PR reale ma non collegata allo scope o alla issue del task.
 
+## Same-response materialization contract
+
+La materializzazione deve avvenire nella stessa risposta finale di Codex. Non è accettato il pattern `Summary ora, materializzazione dopo`.
+
+Ogni risposta finale Codex deve avere uno e un solo esito:
+
+1. **PR reale materializzata**: URL PR, numero PR, branch remoto, full SHA, verifica GitHub, collegamento alla issue e scope check.
+2. **Fallback materializzabile**: patch unificata completa oppure contenuto completo di ogni file modificato, con path.
+3. **Blocker tecnico esplicito**: ragione precisa per cui non può produrre PR, branch, commit, patch o file completi.
+
+Una risposta finale senza PR verificabile, senza patch/file completi e senza blocker non è un output valido: è `output-without-PR`.
+
 ## Classificazione dei fallimenti
 
-Se manca la prova GitHub, classificare il caso come segue:
+Se manca la prova GitHub o il fallback same-response, classificare il caso come segue:
 
 - `local-only`: Codex dichiara commit/branch locale ma nessun artefatto remoto.
-- `output-without-PR`: Summary prodotto, ma nessuna PR o branch verificabile.
+- `output-without-PR`: Summary prodotto, ma nessuna PR o branch verificabile e nessuna patch/file completa.
 - `invalid-output`: il commit o i file citati non sono coerenti con la issue.
 - `blocked`: esiste un blocker tecnico esplicito e non superabile dal task.
 - `needs-human-decision`: serve una decisione non meccanica.
@@ -61,7 +73,9 @@ Materialization:
 - If no PR: <unified diff completo oppure lista file con contenuto completo, se il cambio è recuperabile>
 ```
 
-Se il task non può creare una PR GitHub visibile, deve dichiararlo esplicitamente e fornire un fallback materializzabile: patch completa o contenuto completo dei file modificati.
+Se il task non può creare una PR GitHub visibile, deve dichiararlo esplicitamente e fornire nella stessa risposta un fallback materializzabile: patch completa o contenuto completo dei file modificati.
+
+Se non può fornire né PR né fallback, deve dichiarare blocker tecnico. Non deve presentare il lavoro come completato.
 
 ## Materializzatore GitHub
 
@@ -106,6 +120,8 @@ Le automazioni devono smettere di contare come slot attivo qualunque task che ab
 - needs-human-decision;
 - archiviazione/superseded.
 
+Se una risposta Codex manca del blocco same-response `Materialization`, la successiva automazione non deve attendere la UI Codex: deve chiedere patch/file completi una sola volta o classificare il caso come blocked/local-only.
+
 ## Decisione
 
-Il collo di bottiglia non è il merge. Il collo di bottiglia è la materializzazione GitHub dell'output Codex. La pipeline è corretta solo quando ogni lavoro produce un artefatto GitHub verificabile e coerente con la issue, oppure un fallback completo materializzabile.
+Il collo di bottiglia non è il merge. Il collo di bottiglia è la materializzazione GitHub dell'output Codex. La pipeline è corretta solo quando ogni lavoro produce nella stessa risposta finale un artefatto GitHub verificabile e coerente con la issue, oppure un fallback completo materializzabile, oppure un blocker tecnico.
