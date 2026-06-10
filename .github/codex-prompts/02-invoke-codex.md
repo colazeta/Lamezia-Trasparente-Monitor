@@ -2,6 +2,17 @@
 
 Use this template for the second automation in the sequence.
 
+## Pre-invocation materialization debt gate
+
+Automation must evaluate this gate before rendering or posting the `@codex` invocation below.
+
+- Confirm materialization debt is 5 or fewer before posting an ordinary invocation.
+- The only allowed exceptions are materialization verification, manual UI/export recovery, split-required cleanup, blocker stabilization, or PR rebase/recovery/supersede work.
+- Materialization debt labels/states are `materialization:required`, `fallback-bundle-incomplete`, `output-without-PR`, `invalid-output`, `local-only` and `needs-materialization-verification`.
+- If debt is greater than 5 and the task is ordinary technical/platform work, do not post the invocation. Post a debt-gate blocker/handoff instead, so `@codex` is never the first line before the stop condition is evaluated.
+
+Only after the pre-invocation gate passes or an allowed exception applies, post the prompt body below.
+
 ````markdown
 @codex
 
@@ -30,9 +41,8 @@ Collision matrix decision:
 - Low: unrelated files/modules or unrelated human-review PRs needing no Codex-side rework; continue when other safeguards pass.
 
 Materialization debt gate:
-- Before this invocation is posted, confirm materialization debt is 5 or fewer, or that this task is itself materialization verification, manual UI/export recovery, split-required cleanup, blocker stabilization or PR rebase/recovery/supersede work.
-- Materialization debt labels/states are `materialization:required`, `fallback-bundle-incomplete`, `output-without-PR`, `invalid-output`, `local-only` and `needs-materialization-verification`.
-- If debt is greater than 5 and this is ordinary technical/platform work, stop before invoking Codex and post the debt-gate blocker instead.
+- This invocation assumes the pre-invocation materialization debt gate above has already passed, or that an allowed exception applies.
+- Do not use this prompt body as the first place where the debt stop condition is evaluated.
 
 Capacity context:
 - Capacity 5 is computed only on real active Codex tasks backed by evidence.
