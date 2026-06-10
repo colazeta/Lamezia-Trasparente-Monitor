@@ -1,5 +1,9 @@
 # rendiamoLameziaTrasparente
 
+## Frontend web app
+
+The public React/Vite frontend lives in `artifacts/lamezia-trasparente`. For provider-neutral preparation notes covering build commands, static output, public configuration and the frontend/API/worker deployment boundary, see `docs/frontend-deployment.md`.
+
 ## Ingestion worker
 
 The monorepo includes `@workspace/ingestion-worker`, a scheduled-job artifact that runs one ingestion cycle and exits. It reuses the API server ingestion pipeline instead of duplicating crawler logic, applies the same migration/schema startup safeguards before ingestion, and closes the PostgreSQL pool when the run finishes.
