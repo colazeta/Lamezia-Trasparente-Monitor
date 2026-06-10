@@ -61,6 +61,45 @@ Flag as high priority:
 
 ## Codex operating rule
 
-When invoked from an issue, Codex must create a dedicated branch named `codex/<issue-number>-<slug>`, commit changes there, and open a pull request targeting `main`. Delivery without a pull request is not a completed implementation state. If Codex cannot open a pull request, it must comment on the issue with the exact technical reason and indicate the branch, diff location or blocker. Codex must not close the issue directly. The issue may be closed only after review confirms that the acceptance criteria are met and no follow-up issue is required.
+When invoked from an issue, Codex must create a dedicated branch named `codex/<issue-number>-<slug>`, commit changes there, and open a pull request targeting `main`. Delivery without a pull request is not a completed implementation state. Codex must not close the issue directly. The issue may be closed only after review confirms that the acceptance criteria are met and no follow-up issue is required.
 
-A Codex summary or completion comment without one of the following is `output-without-PR` and must not count as a real active slot: an open PR targeting `main`, a visible `codex/<issue-number>-<slug>` branch with recent commits, an explicit technical blocker, or recent evidence of execution such as a commit, validation log or concrete diff location. Issues labelled `codex:invoked` or `codex:prompted` that only have such a summary must be triaged as stalled follow-up, not treated as ongoing work. Future invocations must restate the mandatory PR-to-`main` requirement and the stop condition: if Codex cannot open the PR or produce a reviewable branch/diff, it must stop and report the exact blocker instead of presenting the work as complete.
+## Same-response materialization contract
+
+Codex must materialize its work in the same final response. Delayed materialization is not accepted.
+
+Every final Codex response must contain exactly one of these outcomes:
+
+1. **GitHub PR materialized**
+   - PR URL
+   - PR number
+   - remote branch
+   - full commit SHA
+   - GitHub verification performed
+   - issue linkage
+   - scope check with changed files
+2. **Fallback materializable output**
+   - complete unified diff; or
+   - complete contents of every modified file, including file paths
+3. **Explicit technical blocker**
+   - exact reason why no PR, branch, commit, patch or file contents can be provided.
+
+A plain Summary is not an outcome. `created PR via make_pr` is not an outcome unless the public GitHub PR URL or number is included and verifiable. A short SHA, local branch, internal task link, or GitHub `blob` link that cannot pass repository verification is not an outcome.
+
+If Codex cannot create a public PR, it must include the complete patch or full file contents in the same response under `Materialization`. If it cannot provide either a PR or patch/files, it must report a blocker and must not claim success.
+
+Required final section:
+
+```text
+## Materialization
+
+- PR URL:
+- PR number:
+- Remote branch:
+- Full commit SHA:
+- GitHub verification:
+- Issue linkage:
+- Scope check:
+- If no PR exists: provide complete unified diff or complete contents of every modified file.
+```
+
+A final response without this section must be triaged as `output-without-PR` or `invalid-output`, must not count as an active slot, and must not be treated as completed work.
