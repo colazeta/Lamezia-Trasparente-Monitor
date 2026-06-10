@@ -78,14 +78,14 @@ Every final Codex response must contain exactly one of these outcomes:
    - issue linkage
    - scope check with changed files
 2. **Fallback materializable output**
-   - complete unified diff; or
-   - complete contents of every modified file, including file paths
+   - complete unified diff directly applicable from `main`; or
+   - complete small file-content bundle, only when safe from truncation
 3. **Explicit technical blocker**
-   - exact reason why no PR, branch, commit, patch or file contents can be provided.
+   - exact reason why no PR, branch, commit, complete diff or complete file bundle can be provided.
 
 A plain Summary is not an outcome. `created PR via make_pr` is not an outcome unless the public GitHub PR URL or number is included and verifiable. A short SHA, local branch, internal task link, or GitHub `blob` link that cannot pass repository verification is not an outcome.
 
-If Codex cannot create a public PR, it must include the complete patch or full file contents in the same response under `Materialization`. If it cannot provide either a PR or patch/files, it must report a blocker and must not claim success.
+If Codex cannot create a public PR, it must prefer a complete unified diff in the same response under `Materialization`. Use full file contents only for small bundles that can be provided completely. If it cannot provide either a PR or a complete fallback, it must report a blocker and must not claim success.
 
 Required final section:
 
@@ -99,12 +99,29 @@ Required final section:
 - GitHub verification:
 - Issue linkage:
 - Scope check:
-- If no PR exists: provide complete unified diff or complete contents of every modified file.
+- If no PR exists: provide a complete unified diff directly applicable from main. Use structured file blocks only for small complete bundles.
 ```
 
-## Structured fallback bundle
+## Fallback hierarchy
 
-When using fallback materialization, Codex must provide a machine-readable bundle. Prefer complete unified diff. If full file contents are safer, use exactly one block per file:
+Fallbacks must follow this order:
+
+```text
+PR verified > complete unified diff > complete small file bundle > explicit blocker > failed output
+```
+
+### Preferred fallback: complete unified diff
+
+```diff
+--- a/path/to/file.ts
++++ b/path/to/file.ts
+@@
+<complete hunks directly applicable from main>
+```
+
+### Secondary fallback: structured file bundle
+
+Use exactly one block per file only when the whole bundle is small enough to be safely complete:
 
 ```text
 FILE: path/from/repository/root.ts
@@ -121,8 +138,9 @@ Fallback rules:
 - no omitted imports, omitted tests or partial snippets;
 - no prose inside file blocks;
 - include every modified file;
-- if the bundle would be too long to provide completely, report a blocker instead of sending a partial fallback.
+- do not use full-file fallback for long multi-file changes if truncation is likely;
+- if the fallback would be too long to provide completely, report a blocker instead of sending a partial fallback.
 
-A final response without the `Materialization` section and a verifiable PR, complete fallback bundle or explicit blocker must be triaged as `output-without-PR` or `invalid-output`, must not count as an active slot, and must not be treated as completed work.
+A final response without the `Materialization` section and a verifiable PR, complete unified diff, complete small file bundle or explicit blocker must be triaged as `output-without-PR` or `invalid-output`, must not count as an active slot, and must not be treated as completed work.
 
 See also: `docs/automation/codex-materialization-by-design.md` and `docs/automation/codex-pr-materialization.md`.
