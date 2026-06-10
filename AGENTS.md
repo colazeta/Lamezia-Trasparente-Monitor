@@ -102,4 +102,27 @@ Required final section:
 - If no PR exists: provide complete unified diff or complete contents of every modified file.
 ```
 
-A final response without this section must be triaged as `output-without-PR` or `invalid-output`, must not count as an active slot, and must not be treated as completed work.
+## Structured fallback bundle
+
+When using fallback materialization, Codex must provide a machine-readable bundle. Prefer complete unified diff. If full file contents are safer, use exactly one block per file:
+
+```text
+FILE: path/from/repository/root.ts
+ACTION: create|replace|delete
+BEGIN_FILE
+<complete file content, no omissions>
+END_FILE
+```
+
+Fallback rules:
+
+- no ellipses;
+- no `(truncated)` markers;
+- no omitted imports, omitted tests or partial snippets;
+- no prose inside file blocks;
+- include every modified file;
+- if the bundle would be too long to provide completely, report a blocker instead of sending a partial fallback.
+
+A final response without the `Materialization` section and a verifiable PR, complete fallback bundle or explicit blocker must be triaged as `output-without-PR` or `invalid-output`, must not count as an active slot, and must not be treated as completed work.
+
+See also: `docs/automation/codex-materialization-by-design.md` and `docs/automation/codex-pr-materialization.md`.
