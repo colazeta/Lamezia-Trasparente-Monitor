@@ -74,7 +74,7 @@ const REQUEST_KIND_LABELS: Record<FoiaRequestKind, string> = {
 
 const DEFAULT_CAUTIONS = [
   "Bozza tecnica modificabile: verificare destinatario, competenza dell'ufficio e contenuti prima di qualsiasi invio.",
-  "La bozza descrive solo quanto dichiarato dall'utente nel controllo e non accerta responsabilità, intenzioni o cause del dato non rintracciato.",
+  "La bozza descrive solo quanto dichiarato dall'utente nel controllo e non attribuisce intenzioni, cause o condotte individuali.",
   "Evitare riferimenti personali o dati non necessari; integrare solo informazioni verificabili e pertinenti.",
   "Verificare separatamente eventuali riferimenti normativi e termini applicabili prima dell'uso esterno.",
 ] as const;
@@ -82,15 +82,37 @@ const DEFAULT_CAUTIONS = [
 const EMPTY_EDITABLE_VALUE = "";
 const FALLBACK_DATA_TYPE = "informazione o documento indicato dall'utente";
 const FALLBACK_MODULE = "contesto di monitoraggio indicato dall'utente";
+const NEUTRALIZED_DATA_TYPE = "informazione o documento da descrivere in termini neutrali";
+const NEUTRALIZED_MODULE = "contesto da descrivere in termini neutrali";
+const NEUTRALIZED_SOURCE = "fonte dichiarata da verificare con formulazione neutrale";
+const NEUTRALIZED_URL = "URL dichiarato da verificare con formulazione neutrale";
+const NEUTRALIZED_NOTE =
+  "Nota dell'utente da riformulare in termini documentali neutrali prima dell'eventuale uso esterno.";
+
+const MISCONDUCT_PATTERN =
+  /\b(?:corruzion\w*|illecit\w*|illegal\w*|violazion\w*|omission\w*|favoritism\w*|clientel\w*|collusion\w*|mafios\w*|mafia|infiltrazion\w*|responsabilit[aà]\w*|colpevol\w*|abuso|abusi|frode|frodi|truffa|truffe)\b/i;
 
 function cleanText(value: string | undefined): string | undefined {
   const normalized = value?.trim().replace(/\s+/g, " ");
   return normalized ? normalized : undefined;
 }
 
+function neutralizeMisconductText(
+  value: string | undefined,
+  neutralValue: string,
+): string | undefined {
+  const cleaned = cleanText(value);
+
+  if (!cleaned) {
+    return undefined;
+  }
+
+  return MISCONDUCT_PATTERN.test(cleaned) ? neutralValue : cleaned;
+}
+
 function cleanList(values: readonly string[] | undefined): string[] {
   return values
-    ?.map((value) => cleanText(value))
+    ?.map((value) => neutralizeMisconductText(value, NEUTRALIZED_SOURCE))
     .filter((value): value is string => Boolean(value)) ?? [];
 }
 
@@ -114,21 +136,37 @@ function resolveRequestKind(metadata: FoiaDraftMetadata): FoiaRequestKind {
   return "da_valutare";
 }
 
+function formatCheckedAt(metadata: FoiaDraftMetadata): string {
+  return metadata.checkedAt
+    ? `alla data del controllo dichiarata (${metadata.checkedAt})`
+    : "alla data del controllo indicata dall'utente";
+}
+
+function buildOutcomeContext(metadata: FoiaDraftMetadata): string {
+  const checkedAt = formatCheckedAt(metadata);
+
+  switch (metadata.checkOutcome) {
+    case "documento_non_rintracciato":
+      return `Il controllo dichiarato segnala che il documento indicato non è stato rintracciato ${checkedAt}, sulla base delle sole informazioni dichiarate dall'utente.`;
+    case "aggiornamento_non_rintracciato":
+      return `Il controllo dichiarato segnala che l'aggiornamento atteso del documento indicato non è stato rintracciato ${checkedAt}, sulla base delle sole informazioni dichiarate dall'utente.`;
+    case "dato_incompleto":
+      return `Il controllo dichiarato descrive un dato parziale o non completo ${checkedAt}; la bozza serve solo a chiedere indicazioni documentali o integrazioni disponibili.`;
+    case "chiarimento_puntuale":
+      return `Il controllo dichiarato richiede un chiarimento circoscritto ${checkedAt}, senza assumere che manchi un documento obbligatorio.`;
+    case "documentazione_ampia":
+      return `Il controllo dichiarato riguarda documentazione amministrativa ampia ${checkedAt}; la bozza serve a delimitare una richiesta documentale nei limiti applicabili.`;
+    case "altro":
+      return `Il controllo dichiarato ha un esito da valutare ${checkedAt}; la bozza non qualifica il caso oltre le informazioni fornite dall'utente.`;
+  }
+}
+
 function buildCheckedContext(metadata: FoiaDraftMetadata): string[] {
   const contextLines = [
     `Modulo o contesto dichiarato: ${metadata.sourceModule ?? FALLBACK_MODULE}.`,
     `Informazione o documento di interesse: ${metadata.dataType ?? FALLBACK_DATA_TYPE}.`,
+    buildOutcomeContext(metadata),
   ];
-
-  if (metadata.checkedAt) {
-    contextLines.push(
-      `Non risulta rintracciato/aggiornato alla data del controllo (${metadata.checkedAt}) quanto indicato, sulla base delle sole informazioni dichiarate dall'utente.`,
-    );
-  } else {
-    contextLines.push(
-      "Non risulta rintracciato/aggiornato alla data del controllo indicata dall'utente quanto indicato, sulla base delle sole informazioni dichiarate dall'utente.",
-    );
-  }
 
   if (metadata.checkedSources.length > 0) {
     contextLines.push(`Fonti consultate dichiarate: ${metadata.checkedSources.join("; ")}.`);
@@ -164,11 +202,11 @@ function buildSubject(requestKind: FoiaRequestKind, dataType: string | undefined
 
 export function buildFoiaDraft(draftCase: FoiaDraftCase): FoiaDraftResult {
   const metadata: FoiaDraftMetadata = {
-    sourceModule: cleanText(draftCase.sourceModule),
-    dataType: cleanText(draftCase.dataType),
+    sourceModule: neutralizeMisconductText(draftCase.sourceModule, NEUTRALIZED_MODULE),
+    dataType: neutralizeMisconductText(draftCase.dataType, NEUTRALIZED_DATA_TYPE),
     checkedAt: cleanText(draftCase.checkedAt),
     checkedSources: cleanList(draftCase.checkedSources),
-    checkedUrl: cleanText(draftCase.checkedUrl),
+    checkedUrl: neutralizeMisconductText(draftCase.checkedUrl, NEUTRALIZED_URL),
     checkOutcome: draftCase.checkOutcome ?? "altro",
     publicationExpectation: draftCase.publicationExpectation ?? "non_specificata",
     requestScope: draftCase.requestScope ?? "da_valutare",
@@ -176,7 +214,7 @@ export function buildFoiaDraft(draftCase: FoiaDraftCase): FoiaDraftResult {
 
   const requestKind = resolveRequestKind(metadata);
   const subject = buildSubject(requestKind, metadata.dataType);
-  const userNote = cleanText(draftCase.note);
+  const userNote = neutralizeMisconductText(draftCase.note, NEUTRALIZED_NOTE);
   const contextLines = buildCheckedContext(metadata);
   const requestSentence = buildRequestSentence(requestKind, metadata);
   const noteLines = userNote ? ["Nota dell'utente:", userNote, ""] : [];
