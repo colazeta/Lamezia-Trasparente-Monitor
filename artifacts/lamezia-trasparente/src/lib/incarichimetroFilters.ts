@@ -35,7 +35,6 @@ export const COMPARATIVE_KEYWORDS = [
 
 export const DIRECT_PROCEDURE_KEYWORDS = [
   "affidamento diretto",
-  "diretto",
   "senza previa pubblicazione",
 ] as const;
 
@@ -182,20 +181,25 @@ export function buildRecordFlags({
   cig,
   cup,
   text,
+  directProcedureText,
   operator,
   forceDirectSignal,
 }: {
   cig: string | null | undefined;
   cup: string | null | undefined;
   text: string | null | undefined;
+  directProcedureText?: string | null;
   operator?: string | null;
   forceDirectSignal?: boolean | null;
 }): MonitoredRecordFlags {
+  const procedureSignalText = directProcedureText ?? text;
+
   return {
     hasCig: Boolean(cig),
     hasCup: Boolean(cup),
     hasDirectProcedureSignal:
-      Boolean(forceDirectSignal) || includesAny(text, DIRECT_PROCEDURE_KEYWORDS),
+      Boolean(forceDirectSignal) ||
+      includesAny(procedureSignalText, DIRECT_PROCEDURE_KEYWORDS),
     hasComparativeProcedureSignal: includesAny(text, COMPARATIVE_KEYWORDS),
     needsOperatorVerification: operator === null,
   };
@@ -236,6 +240,7 @@ export function buildContractRecord(
     cig: contract.cig,
     cup: contract.cup,
     text,
+    directProcedureText: contract.procedureType ?? "",
     operator: contract.supplier?.trim() || "Operatore non indicato",
     forceDirectSignal: contract.withoutTender,
   });
