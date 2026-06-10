@@ -32,6 +32,10 @@ Task:
    - `codex:blocked` when a concrete safety, permission, credential or collision blocker prevents continuation;
    - `codex:done` only after review/merge evidence indicates the issue appears solved.
 
+Materialization gate:
+- Count open issues/PRs with `materialization:required`, `fallback-bundle-incomplete`, `output-without-PR`, `invalid-output`, `local-only` or `needs-materialization-verification`.
+- If the count is greater than 5, recommend only materialization verification, manual UI/export recovery, split-required cleanup, blocker stabilization, stale-label cleanup or PR rebase/recovery/supersede; do not recommend a new ordinary Codex invocation.
+
 Queue rules:
 - `codex:ready` is not active work and must not be counted as an occupied slot.
 - `codex:review-needed` is human review/merge wait and does not saturate Codex capacity unless there is concrete file/module collision or Codex-side rework.
