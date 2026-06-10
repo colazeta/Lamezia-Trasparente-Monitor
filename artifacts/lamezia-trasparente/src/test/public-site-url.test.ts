@@ -7,12 +7,15 @@ import {
 } from "../lib/publicSiteUrl";
 
 describe("public site URL configuration", () => {
-  it("normalizes a configured public site URL to a stable origin", () => {
+  it("normalizes a configured public site URL to a stable public base", () => {
     expect(normalizePublicSiteOrigin("https://example.org/")).toBe(
       "https://example.org",
     );
-    expect(normalizePublicSiteOrigin("https://example.org/path?q=1")).toBe(
-      "https://example.org",
+    expect(normalizePublicSiteOrigin("https://example.org/path?q=1#top")).toBe(
+      "https://example.org/path",
+    );
+    expect(normalizePublicSiteOrigin("https://example.org/path/")).toBe(
+      "https://example.org/path",
     );
   });
 
@@ -45,6 +48,20 @@ describe("public site URL configuration", () => {
     );
     expect(toAbsolutePublicUrl("opengraph.jpg", publicOrigin)).toBe(
       "https://civic.example/opengraph.jpg",
+    );
+  });
+
+  it("preserves configured public base paths for deployed subdirectories", () => {
+    const publicOrigin = normalizePublicSiteOrigin(
+      "https://prod.example/lamezia/?from=config#hash",
+    );
+
+    expect(publicOrigin).toBe("https://prod.example/lamezia");
+    expect(toAbsolutePublicUrl("/metodologia", publicOrigin)).toBe(
+      "https://prod.example/lamezia/metodologia",
+    );
+    expect(toAbsolutePublicUrl("opengraph.jpg", publicOrigin)).toBe(
+      "https://prod.example/lamezia/opengraph.jpg",
     );
   });
 });

@@ -1,4 +1,4 @@
-import { readFileSync, writeFileSync } from "node:fs";
+import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import path from "node:path";
 
@@ -8,28 +8,41 @@ const appRoot = path.resolve(
   "..",
 );
 const publicRoutesPath = path.join(appRoot, "src/data/publicRoutes.ts");
-const sitemapPath = path.join(appRoot, "public/sitemap.xml");
-const robotsPath = path.join(appRoot, "public/robots.txt");
+const defaultOutputDir = path.join(appRoot, "public");
 const checkOnly = process.argv.includes("--check");
+const outDirArgIndex = process.argv.indexOf("--out-dir");
+const outputDir =
+  outDirArgIndex === -1
+    ? defaultOutputDir
+    : path.resolve(appRoot, process.argv[outDirArgIndex + 1] ?? "");
+const sitemapPath = path.join(outputDir, "sitemap.xml");
+const robotsPath = path.join(outputDir, "robots.txt");
 
 function normalizePublicSiteOrigin(
   siteUrl,
   fallbackSiteUrl = LOCAL_PUBLIC_SITE_URL,
 ) {
-  const fallbackOrigin = new URL(fallbackSiteUrl).origin;
+  const fallbackUrl = new URL(fallbackSiteUrl);
+  const fallbackPublicSiteUrl = `${fallbackUrl.origin}${fallbackUrl.pathname}`.replace(
+    /\/$/,
+    "",
+  );
   const candidate = siteUrl?.trim();
 
   if (!candidate) {
-    return fallbackOrigin;
+    return fallbackPublicSiteUrl;
   }
 
   try {
     const url = new URL(candidate);
-    return url.protocol === "http:" || url.protocol === "https:"
-      ? url.origin
-      : fallbackOrigin;
+
+    if (url.protocol !== "http:" && url.protocol !== "https:") {
+      return fallbackPublicSiteUrl;
+    }
+
+    return `${url.origin}${url.pathname}`.replace(/\/$/, "");
   } catch {
-    return fallbackOrigin;
+    return fallbackPublicSiteUrl;
   }
 }
 
@@ -94,6 +107,7 @@ if (checkOnly) {
     process.exit(1);
   }
 } else {
+  mkdirSync(outputDir, { recursive: true });
   writeFileSync(sitemapPath, generatedSitemap);
   writeFileSync(robotsPath, generatedRobots);
 }

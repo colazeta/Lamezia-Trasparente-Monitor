@@ -5,11 +5,11 @@
   "type": "module",
   "scripts": {
     "dev": "vite --config vite.config.ts --host 0.0.0.0",
-    "build": "vite build --config vite.config.ts",
+    "build": "vite build --config vite.config.ts && node scripts/generate-public-seo-assets.mjs --out-dir dist/public",
     "serve": "vite preview --config vite.config.ts --host 0.0.0.0",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test": "vitest run",
-    "seo:check": "node scripts/generate-public-seo-assets.mjs --check && vitest run src/test/public-site-url.test.ts src/test/public-routes-sitemap.test.ts",
+    "seo:check": "node scripts/generate-public-seo-assets.mjs --check && vitest run src/test/public-site-url.test.ts src/test/public-routes-sitemap.test.ts src/test/public-build-seo-assets.test.ts",
     "seo:generate": "node scripts/generate-public-seo-assets.mjs"
   },
   "devDependencies": {

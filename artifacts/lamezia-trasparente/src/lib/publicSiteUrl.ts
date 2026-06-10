@@ -14,18 +14,27 @@ export function normalizePublicSiteOrigin(
   siteUrl: string | undefined,
   fallbackSiteUrl = LOCAL_PUBLIC_SITE_URL,
 ) {
-  const fallbackOrigin = new URL(fallbackSiteUrl).origin;
+  const fallbackUrl = new URL(fallbackSiteUrl);
+  const fallbackPublicSiteUrl = `${fallbackUrl.origin}${fallbackUrl.pathname}`.replace(
+    /\/$/,
+    "",
+  );
   const candidate = siteUrl?.trim();
 
   if (!candidate) {
-    return fallbackOrigin;
+    return fallbackPublicSiteUrl;
   }
 
   try {
     const url = new URL(candidate);
-    return isHttpUrl(url) ? url.origin : fallbackOrigin;
+
+    if (!isHttpUrl(url)) {
+      return fallbackPublicSiteUrl;
+    }
+
+    return `${url.origin}${url.pathname}`.replace(/\/$/, "");
   } catch {
-    return fallbackOrigin;
+    return fallbackPublicSiteUrl;
   }
 }
 
@@ -52,10 +61,17 @@ export function toAbsolutePublicUrl(
   publicSiteOrigin = resolvePublicSiteOrigin(),
 ) {
   const normalizedOrigin = normalizePublicSiteOrigin(publicSiteOrigin);
+  const candidate = pathOrUrl?.trim();
+
+  if (!candidate || candidate === "/") {
+    return `${normalizedOrigin}/`;
+  }
 
   try {
-    return new URL(pathOrUrl || "/", `${normalizedOrigin}/`).toString();
+    const url = new URL(candidate);
+    return isHttpUrl(url) ? url.toString() : `${normalizedOrigin}/`;
   } catch {
-    return `${normalizedOrigin}/`;
+    const relativePath = candidate.replace(/^\/+/, "");
+    return new URL(relativePath, `${normalizedOrigin}/`).toString();
   }
 }
