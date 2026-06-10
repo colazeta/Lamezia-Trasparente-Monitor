@@ -7,7 +7,7 @@
     "hello": "tsx ./src/hello.ts",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "check-source-health": "tsx ./check-source-health.ts",
-    "test": "node --import tsx --test ./check-source-health.test.ts ./production-smoke-plan.test.ts",
+    "test": "node --import tsx --test ./check-source-health.test.ts ./production-smoke-plan.test.ts ./civic-source-registry.test.ts",
     "production-smoke-plan": "tsx ./production-smoke-plan.ts"
   },
   "devDependencies": {
