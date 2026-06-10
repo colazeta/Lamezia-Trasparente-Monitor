@@ -63,6 +63,72 @@ describe("incarichimetroFilters", () => {
     expect(record?.flags).toContain("Possibile affidamento diretto");
   });
 
+  it("non usa titolo o descrizione dei contratti ANAC per il segnale diretto generico", () => {
+    const record = buildContractRecord({
+      id: "anac-false-positive",
+      title: "Incarico di direttore dei lavori",
+      description: "Supporto diretto al rup per attività tecnica",
+      procedureType: "procedura aperta",
+      withoutTender: false,
+      supplier: "Studio Tecnico Beta",
+      amount: 3500,
+      cig: "A123456789",
+      cup: null,
+    });
+
+    expect(record).not.toBeNull();
+    expect(record?.signals.hasDirectProcedureSignal).toBe(false);
+    expect(record?.flags).not.toContain("Possibile affidamento diretto");
+  });
+
+  it("mantiene i segnali diretti ANAC forti da procedureType e withoutTender", () => {
+    const fromProcedure = buildContractRecord({
+      id: "anac-procedure-type",
+      title: "Incarico tecnico specialistico",
+      procedureType: "affidamento diretto",
+      withoutTender: false,
+      supplier: "Studio Gamma",
+      amount: 4500,
+      cig: "B123456789",
+      cup: null,
+    });
+    const fromWithoutTender = buildContractRecord({
+      id: "anac-without-tender",
+      title: "Servizio professionale di collaudo",
+      procedureType: "procedura negoziata",
+      withoutTender: true,
+      supplier: "Studio Delta",
+      amount: 6400,
+      cig: "C123456789",
+      cup: null,
+    });
+
+    expect(fromProcedure?.signals.hasDirectProcedureSignal).toBe(true);
+    expect(fromWithoutTender?.signals.hasDirectProcedureSignal).toBe(true);
+  });
+
+  it("richiede formule forti per il segnale diretto negli atti Albo", () => {
+    const strongPattern = buildPublicationRecord({
+      id: "albo-direct-strong",
+      oggetto: "Determina per affidamento diretto di incarico tecnico",
+      brief: "Professionista Studio Lambda con CIG D123456789",
+    });
+    const genericDirect = buildPublicationRecord({
+      id: "albo-generic-direct",
+      oggetto: "Determina per incarico tecnico",
+      brief: "Collegamento diretto con il direttore dei lavori",
+    });
+    const directorOnly = buildPublicationRecord({
+      id: "albo-director-only",
+      oggetto: "Determina per incarico di direttore dei lavori",
+      brief: "Attività tecnica senza formula procedurale esplicita",
+    });
+
+    expect(strongPattern?.signals.hasDirectProcedureSignal).toBe(true);
+    expect(genericDirect?.signals.hasDirectProcedureSignal).toBe(false);
+    expect(directorOnly?.signals.hasDirectProcedureSignal).toBe(false);
+  });
+
   it("costruisce record albo con estrazioni e stato da verificare quando l'operatore manca", () => {
     const record = buildPublicationRecord({
       id: "albo-7",
