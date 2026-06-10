@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import {
   classifyProcurementIdentifier,
+  describeProcurementIdentifierClassification,
   normalizeCigCandidate,
   normalizeCupCandidate,
 } from "../lib/procurementIdentifiers";
@@ -202,5 +203,145 @@ describe("procurement identifier classification", () => {
       formallyValid: false,
       reason: "unsupported-length",
     });
+  });
+});
+
+describe("procurement identifier diagnostics", () => {
+  it("describes formally coherent CIG classifications as formal-only and registry-verification limited", () => {
+    const classification = classifyProcurementIdentifier("1234567CE7");
+    const snapshot = { ...classification };
+
+    expect(describeProcurementIdentifierClassification(classification)).toEqual(
+      {
+        label: "formato CIG formalmente coerente",
+        summary:
+          "Il token rispetta i controlli locali di formato CIG e richiede verifica su fonte ufficiale.",
+        status: "formal-only",
+        requiresRegistryVerification: true,
+      },
+    );
+    expect(classification).toEqual(snapshot);
+  });
+
+  it("describes formally coherent CUP classifications as formal-only and registry-verification limited", () => {
+    expect(
+      describeProcurementIdentifierClassification(
+        classifyProcurementIdentifier("H12B123456789AB"),
+      ),
+    ).toEqual({
+      label: "formato CUP formalmente coerente",
+      summary:
+        "Il token rispetta i controlli locali di formato CUP e richiede verifica su fonte ufficiale.",
+      status: "formal-only",
+      requiresRegistryVerification: true,
+    });
+  });
+
+  it("describes invalid CIG and CUP formats without substantial verification claims", () => {
+    expect(
+      describeProcurementIdentifierClassification(
+        classifyProcurementIdentifier("1234567ABC"),
+      ),
+    ).toMatchObject({
+      label: "formato CIG non riconosciuto",
+      status: "invalid-format",
+      requiresRegistryVerification: false,
+    });
+
+    expect(
+      describeProcurementIdentifierClassification(
+        classifyProcurementIdentifier("A1B2C3D4E5F6G7H"),
+      ),
+    ).toMatchObject({
+      label: "formato CUP non riconosciuto",
+      status: "invalid-format",
+      requiresRegistryVerification: false,
+    });
+  });
+
+  it("describes empty, unsupported-length and unsupported-character inputs conservatively", () => {
+    expect(
+      describeProcurementIdentifierClassification(
+        classifyProcurementIdentifier(" - -- "),
+      ),
+    ).toMatchObject({
+      label: "input identificativo assente",
+      status: "empty",
+      requiresRegistryVerification: false,
+    });
+
+    expect(
+      describeProcurementIdentifierClassification(
+        classifyProcurementIdentifier("AB12CD34E"),
+      ),
+    ).toMatchObject({
+      label: "lunghezza identificativo non supportata",
+      status: "unsupported",
+      requiresRegistryVerification: false,
+    });
+
+    expect(
+      describeProcurementIdentifierClassification(
+        classifyProcurementIdentifier("AB12_CD34EF"),
+      ),
+    ).toMatchObject({
+      label: "caratteri identificativo non ammessi",
+      status: "unsupported",
+      requiresRegistryVerification: false,
+    });
+
+    expect(
+      describeProcurementIdentifierClassification(
+        classifyProcurementIdentifier("AB12CD3ßE"),
+      ),
+    ).toMatchObject({
+      label: "caratteri identificativo non ammessi",
+      status: "unsupported",
+      requiresRegistryVerification: false,
+    });
+  });
+
+  it("maps every current reason to a diagnostic without banned substantial phrases", () => {
+    const examples = [
+      classifyProcurementIdentifier(""),
+      classifyProcurementIdentifier("AB12_CD34EF"),
+      classifyProcurementIdentifier("1234567CE7"),
+      classifyProcurementIdentifier("H12B123456789AB"),
+      classifyProcurementIdentifier("1234567ABC"),
+      classifyProcurementIdentifier("A1B2C3D4E5F6G7H"),
+      classifyProcurementIdentifier("AB12CD34E"),
+    ];
+    const bannedSubstantialPhrases = [
+      "valido su anac",
+      "contratto esistente",
+      "progetto esistente",
+      "irregolare",
+      "illecito",
+      "anomalia",
+      "responsabilità",
+    ];
+
+    expect(examples.map((classification) => classification.reason)).toEqual([
+      "empty-input",
+      "invalid-characters",
+      "formal-cig",
+      "formal-cup",
+      "invalid-cig-format",
+      "invalid-cup-format",
+      "unsupported-length",
+    ]);
+
+    for (const classification of examples) {
+      const diagnostic =
+        describeProcurementIdentifierClassification(classification);
+      const diagnosticText =
+        `${diagnostic.label} ${diagnostic.summary}`.toLocaleLowerCase("it-IT");
+
+      expect(diagnostic.label.length).toBeGreaterThan(0);
+      expect(diagnostic.summary.length).toBeGreaterThan(0);
+      for (const phrase of bannedSubstantialPhrases) {
+        expect(diagnosticText).not.toContain(phrase);
+      }
+    }
   });
 });

@@ -17,6 +17,19 @@ export interface ProcurementIdentifierClassification {
   reason: ProcurementIdentifierReason;
 }
 
+export type ProcurementIdentifierDiagnosticStatus =
+  | "formal-only"
+  | "invalid-format"
+  | "unsupported"
+  | "empty";
+
+export interface ProcurementIdentifierDiagnostic {
+  label: string;
+  summary: string;
+  status: ProcurementIdentifierDiagnosticStatus;
+  requiresRegistryVerification: boolean;
+}
+
 const CIG_LENGTH = 10;
 const CUP_LENGTH = 15;
 const SIMPLE_SEPARATORS_RE = /[\s-]+/g;
@@ -25,6 +38,61 @@ const ORDINARY_CIG_RE = /^([0-9]{7})([A-F0-9]{3})$/;
 const SMART_CIG_RE = /^[XYZ][A-F0-9]{9}$/;
 const UNIFIED_CIG_RE = /^[A-U][A-F0-9]{9}$/;
 const CUP_RE = /^[A-Z][0-9]{2}[A-Z][A-Z0-9]{11}$/;
+
+const PROCUREMENT_IDENTIFIER_DIAGNOSTICS = {
+  "empty-input": {
+    label: "input identificativo assente",
+    summary:
+      "Nessun token CIG/CUP normalizzabile è disponibile per un controllo formale locale.",
+    status: "empty",
+    requiresRegistryVerification: false,
+  },
+  "invalid-characters": {
+    label: "caratteri identificativo non ammessi",
+    summary:
+      "Il token contiene caratteri non ASCII o separatori non supportati dal controllo formale locale.",
+    status: "unsupported",
+    requiresRegistryVerification: false,
+  },
+  "formal-cig": {
+    label: "formato CIG formalmente coerente",
+    summary:
+      "Il token rispetta i controlli locali di formato CIG e richiede verifica su fonte ufficiale.",
+    status: "formal-only",
+    requiresRegistryVerification: true,
+  },
+  "formal-cup": {
+    label: "formato CUP formalmente coerente",
+    summary:
+      "Il token rispetta i controlli locali di formato CUP e richiede verifica su fonte ufficiale.",
+    status: "formal-only",
+    requiresRegistryVerification: true,
+  },
+  "invalid-cig-format": {
+    label: "formato CIG non riconosciuto",
+    summary:
+      "Il token ha lunghezza CIG ma non rispetta i controlli locali di formato previsti.",
+    status: "invalid-format",
+    requiresRegistryVerification: false,
+  },
+  "invalid-cup-format": {
+    label: "formato CUP non riconosciuto",
+    summary:
+      "Il token ha lunghezza CUP ma non rispetta i controlli locali di formato previsti.",
+    status: "invalid-format",
+    requiresRegistryVerification: false,
+  },
+  "unsupported-length": {
+    label: "lunghezza identificativo non supportata",
+    summary:
+      "Il token normalizzato non ha una lunghezza gestita dai controlli locali CIG/CUP.",
+    status: "unsupported",
+    requiresRegistryVerification: false,
+  },
+} as const satisfies Record<
+  ProcurementIdentifierReason,
+  ProcurementIdentifierDiagnostic
+>;
 
 /**
  * Normalizza meccanicamente un candidato CIG rimuovendo solo spazi e trattini
@@ -54,6 +122,12 @@ export function normalizeCupCandidate(value: string | null | undefined): string 
  * ANAC/BDNCP o su altri registri, non dichiara l'esistenza sostanziale di
  * contratti/progetti e non produce matching fra record amministrativi.
  */
+export function describeProcurementIdentifierClassification(
+  classification: ProcurementIdentifierClassification,
+): ProcurementIdentifierDiagnostic {
+  return PROCUREMENT_IDENTIFIER_DIAGNOSTICS[classification.reason];
+}
+
 export function classifyProcurementIdentifier(
   value: string | null | undefined,
 ): ProcurementIdentifierClassification {
