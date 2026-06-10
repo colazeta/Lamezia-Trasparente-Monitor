@@ -11,9 +11,16 @@ export type PromessometroValidationField =
   | "lastVerification"
   | "missingForObservableImplementation";
 
+export type PromessometroValidationReason =
+  | "missing-required-text"
+  | "model-record-residue"
+  | "invalid-date"
+  | "invalid-url";
+
 export interface PromessometroValidationIssue {
   promiseId: string;
   field: PromessometroValidationField;
+  reason: PromessometroValidationReason;
   message: string;
 }
 
@@ -98,11 +105,13 @@ function pushIssue(
   issues: PromessometroValidationIssue[],
   promise: ProgrammePromise,
   field: PromessometroValidationField,
+  reason: PromessometroValidationReason,
   message: string,
 ) {
   issues.push({
     promiseId: promise.id,
     field,
+    reason,
     message,
   });
 }
@@ -117,6 +126,7 @@ function validateRequiredTextFields(
         issues,
         promise,
         field,
+        "missing-required-text",
         "Campo obbligatorio per una promessa reale.",
       );
       continue;
@@ -127,6 +137,7 @@ function validateRequiredTextFields(
         issues,
         promise,
         field,
+        "model-record-residue",
         "Il record reale contiene testo modello/dimostrativo residuo.",
       );
     }
@@ -160,6 +171,7 @@ export function validatePromessometroRealRecords(
         issues,
         promise,
         "sourceLink",
+        "invalid-url",
         "La fonte della promessa deve essere un URL http(s) verificabile.",
       );
     }
@@ -169,6 +181,7 @@ export function validatePromessometroRealRecords(
         issues,
         promise,
         "sourceDate",
+        "invalid-date",
         "La data fonte deve essere compilata in formato YYYY-MM-DD.",
       );
     }
@@ -178,6 +191,7 @@ export function validatePromessometroRealRecords(
         issues,
         promise,
         "implementationStatus",
+        "missing-required-text",
         "Lo stato documentale è obbligatorio per una promessa reale.",
       );
     }
@@ -187,6 +201,7 @@ export function validatePromessometroRealRecords(
         issues,
         promise,
         "lastVerification",
+        "invalid-date",
         "L'ultimo aggiornamento deve essere compilato in formato YYYY-MM-DD.",
       );
     }

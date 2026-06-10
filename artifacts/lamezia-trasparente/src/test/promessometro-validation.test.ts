@@ -69,14 +69,17 @@ describe("Promessometro real-data validation", () => {
         expect.objectContaining({
           promiseId: "real-test-missing-source",
           field: "sourceLink",
+          reason: "invalid-url",
         }),
         expect.objectContaining({
           promiseId: "real-test-missing-source",
           field: "sourceDate",
+          reason: "invalid-date",
         }),
         expect.objectContaining({
           promiseId: "real-test-missing-source",
           field: "lastVerification",
+          reason: "invalid-date",
         }),
       ]),
     );
@@ -97,13 +100,51 @@ describe("Promessometro real-data validation", () => {
         expect.objectContaining({
           promiseId: "real-test-impossible-date",
           field: "sourceDate",
+          reason: "invalid-date",
         }),
         expect.objectContaining({
           promiseId: "real-test-impossible-date",
           field: "lastVerification",
+          reason: "invalid-date",
         }),
       ]),
     );
+  });
+
+  it("rejects non-http source URLs with a stable reason code", () => {
+    const invalidPromise: ProgrammePromise = {
+      ...VALID_REAL_PROMISE,
+      id: "real-test-invalid-url",
+      sourceLink: "ftp://www.comune.lamezia-terme.cz.it/documento.pdf",
+    };
+
+    const result = validatePromessometroRealRecords([invalidPromise]);
+
+    expect(result.issues).toEqual([
+      expect.objectContaining({
+        promiseId: "real-test-invalid-url",
+        field: "sourceLink",
+        reason: "invalid-url",
+      }),
+    ]);
+  });
+
+  it("rejects empty mandatory text fields with a stable reason code", () => {
+    const invalidPromise: ProgrammePromise = {
+      ...VALID_REAL_PROMISE,
+      id: "real-test-empty-required-text",
+      sourceLabel: "   ",
+    };
+
+    const result = validatePromessometroRealRecords([invalidPromise]);
+
+    expect(result.issues).toEqual([
+      expect.objectContaining({
+        promiseId: "real-test-empty-required-text",
+        field: "sourceLabel",
+        reason: "missing-required-text",
+      }),
+    ]);
   });
 
   it("rejects residual model copy in mandatory real-record fields", () => {
@@ -123,10 +164,22 @@ describe("Promessometro real-data validation", () => {
 
     expect(result.issues).toEqual(
       expect.arrayContaining([
-        expect.objectContaining({ field: "sourcePromiseSummary" }),
-        expect.objectContaining({ field: "sourceLabel" }),
-        expect.objectContaining({ field: "mandateReference" }),
-        expect.objectContaining({ field: "cautionNote" }),
+        expect.objectContaining({
+          field: "sourcePromiseSummary",
+          reason: "model-record-residue",
+        }),
+        expect.objectContaining({
+          field: "sourceLabel",
+          reason: "model-record-residue",
+        }),
+        expect.objectContaining({
+          field: "mandateReference",
+          reason: "model-record-residue",
+        }),
+        expect.objectContaining({
+          field: "cautionNote",
+          reason: "model-record-residue",
+        }),
       ]),
     );
     expect(result.issues).not.toEqual(
