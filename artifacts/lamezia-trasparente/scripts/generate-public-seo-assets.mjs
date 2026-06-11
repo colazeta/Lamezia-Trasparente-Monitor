@@ -13,7 +13,31 @@ function readOption(name) {
   return process.argv[index + 1];
 }
 
-export function normalizePublicSiteUrl(value) {
+function normalizeRoutePathname(value) {
+  const rawValue = (value ?? "").trim();
+  if (!rawValue || rawValue === "/" || rawValue === "./") {
+    return "";
+  }
+
+  const withLeadingSlash = rawValue.startsWith("/") ? rawValue : `/${rawValue}`;
+  const withoutTrailingSlash = withLeadingSlash.replace(/\/+$/, "");
+  return withoutTrailingSlash === "/" ? "" : withoutTrailingSlash;
+}
+
+export function normalizeBasePath(value) {
+  const rawValue = (value ?? "").trim();
+  if (!rawValue || rawValue === "/" || rawValue === "./") {
+    return "";
+  }
+
+  if (URL.canParse(rawValue)) {
+    return normalizeRoutePathname(new URL(rawValue).pathname);
+  }
+
+  return normalizeRoutePathname(rawValue);
+}
+
+export function normalizePublicSiteUrl(value, { basePath = "" } = {}) {
   const rawValue = (value ?? DEFAULT_PUBLIC_SITE_URL).trim();
   if (!rawValue) {
     throw new Error("VITE_PUBLIC_SITE_URL cannot be blank.");
@@ -24,13 +48,29 @@ export function normalizePublicSiteUrl(value) {
     throw new Error("VITE_PUBLIC_SITE_URL must be an HTTPS URL, except for localhost development checks.");
   }
 
-  const pathname = parsedUrl.pathname.replace(/\/+$/, "");
-  return `${parsedUrl.origin}${pathname === "/" ? "" : pathname}`;
+  const sitePathname = normalizeRoutePathname(parsedUrl.pathname);
+  const normalizedBasePath = normalizeBasePath(basePath);
+  const effectivePathname = normalizedBasePath && sitePathname !== normalizedBasePath && !sitePathname.startsWith(`${normalizedBasePath}/`)
+    ? `${normalizedBasePath}${sitePathname}`
+    : sitePathname || normalizedBasePath;
+
+  return `${parsedUrl.origin}${effectivePathname}`;
 }
 
 function joinPublicUrl(siteUrl, pathname) {
-  const cleanPathname = pathname === "/" ? "" : pathname;
-  return `${siteUrl}${cleanPathname}`;
+  const parsedSiteUrl = new URL(siteUrl);
+  const siteBasePath = normalizeRoutePathname(parsedSiteUrl.pathname);
+  const routePathname = normalizeRoutePathname(pathname);
+
+  if (!routePathname) {
+    return siteUrl;
+  }
+
+  const routeWithinBase = siteBasePath && (routePathname === siteBasePath || routePathname.startsWith(`${siteBasePath}/`))
+    ? routePathname.slice(siteBasePath.length)
+    : routePathname;
+
+  return `${siteUrl}${routeWithinBase}`;
 }
 
 function pathnameFromLoc(value) {
@@ -59,7 +99,8 @@ export function renderRobots(template, siteUrl) {
 export function generatePublicSeoAssets({
   publicDir = path.resolve("public"),
   outputDir = path.resolve("dist", "public"),
-  siteUrl = normalizePublicSiteUrl(process.env.VITE_PUBLIC_SITE_URL),
+  basePath = process.env.BASE_PATH,
+  siteUrl = normalizePublicSiteUrl(process.env.VITE_PUBLIC_SITE_URL, { basePath }),
 } = {}) {
   const sitemapTemplate = readFileSync(path.join(publicDir, "sitemap.xml"), "utf8");
   const robotsTemplate = readFileSync(path.join(publicDir, "robots.txt"), "utf8");
