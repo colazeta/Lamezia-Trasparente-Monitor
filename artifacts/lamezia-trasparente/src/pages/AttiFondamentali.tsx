@@ -12,6 +12,8 @@ import {
   EmptyDescription,
 } from "@/components/ui/empty";
 import { AlboLink } from "@/components/AlboLink";
+import { IstatDimensionChips } from "@/components/istat/IstatPaLens";
+import { getIstatActTags } from "@/data/istatPaLens";
 import { formatPublicTimeField } from "@/lib/time";
 
 export function AttiFondamentali() {
@@ -36,6 +38,25 @@ export function AttiFondamentali() {
           disponibile, con il documento consultabile (copia archiviata o link
           ufficiale).
         </p>
+        <div className="rounded-xl border border-primary/20 bg-primary/5 p-4">
+          <p className="text-sm leading-6 text-muted-foreground">
+            Alcuni documenti sono letti anche come evidenze utili per le
+            dimensioni osservate dal censimento ISTAT delle istituzioni
+            pubbliche: formazione, organizzazione, digitalizzazione, servizi e
+            sostenibilità. I badge segnalano una pista documentale, non una
+            valutazione automatica del Comune.
+          </p>
+          <IstatDimensionChips
+            className="mt-3"
+            dimensions={[
+              "formazione",
+              "organizzazione",
+              "digitalizzazione",
+              "servizi",
+              "sostenibilita",
+            ]}
+          />
+        </div>
       </div>
 
       {isLoading ? (
@@ -46,47 +67,65 @@ export function AttiFondamentali() {
         </div>
       ) : acts && acts.length > 0 ? (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {acts.map((act) => (
-            <Card
-              key={act.id}
-              className="flex flex-col gap-3 p-5"
-              data-testid={`card-atto-${act.slug}`}
-            >
-              <div className="flex items-start gap-3">
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-brand/10 text-brand">
-                  <FileText className="h-5 w-5" />
-                </div>
-                <div className="min-w-0 space-y-1">
-                  <h2 className="font-display text-base font-semibold leading-tight">
-                    {act.title?.trim() ? act.title : act.label}
-                  </h2>
-                  {act.title?.trim() && (
-                    <p className="text-xs text-muted-foreground">{act.label}</p>
-                  )}
-                </div>
-              </div>
+          {acts.map((act) => {
+            const istatTags = getIstatActTags(act.slug);
 
-              {act.description?.trim() && (
-                <p className="text-sm text-muted-foreground">
-                  {act.description}
-                </p>
-              )}
+            return (
+              <Card
+                key={act.id}
+                className="flex flex-col gap-3 p-5"
+                data-testid={`card-atto-${act.slug}`}
+              >
+                <div className="flex items-start gap-3">
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-brand/10 text-brand">
+                    <FileText className="h-5 w-5" />
+                  </div>
+                  <div className="min-w-0 space-y-1">
+                    <h2 className="font-display text-base font-semibold leading-tight">
+                      {act.title?.trim() ? act.title : act.label}
+                    </h2>
+                    {act.title?.trim() && (
+                      <p className="text-xs text-muted-foreground">{act.label}</p>
+                    )}
+                  </div>
+                </div>
 
-              <div className="mt-auto flex flex-col gap-3 pt-2">
-                <div className="flex items-center gap-2">
-                  <Badge variant="outline" className="font-mono text-[10px]">
-                    Agg. {formatPublicTimeField(act.updatedAt)}
-                  </Badge>
-                  {act.source === "auto" && (
-                    <Badge variant="secondary" className="text-[10px]">
-                      Da Albo / Pubblicazioni
+                {istatTags.length > 0 ? (
+                  <div className="flex flex-wrap gap-1.5">
+                    {istatTags.map((tag) => (
+                      <Badge
+                        key={`${act.slug}-${tag.label}`}
+                        variant="outline"
+                        className="border-primary/20 bg-primary/5 text-[10px] text-primary shadow-none"
+                      >
+                        ISTAT PA · {tag.label}
+                      </Badge>
+                    ))}
+                  </div>
+                ) : null}
+
+                {act.description?.trim() && (
+                  <p className="text-sm text-muted-foreground">
+                    {act.description}
+                  </p>
+                )}
+
+                <div className="mt-auto flex flex-col gap-3 pt-2">
+                  <div className="flex items-center gap-2">
+                    <Badge variant="outline" className="font-mono text-[10px]">
+                      Agg. {formatPublicTimeField(act.updatedAt)}
                     </Badge>
-                  )}
+                    {act.source === "auto" && (
+                      <Badge variant="secondary" className="text-[10px]">
+                        Da Albo / Pubblicazioni
+                      </Badge>
+                    )}
+                  </div>
+                  <AlboLink attachments={act.attachments} />
                 </div>
-                <AlboLink attachments={act.attachments} />
-              </div>
-            </Card>
-          ))}
+              </Card>
+            );
+          })}
         </div>
       ) : (
         <Empty>
