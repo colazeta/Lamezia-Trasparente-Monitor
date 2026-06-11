@@ -10,15 +10,18 @@ import {
   Users,
 } from "lucide-react";
 
-export type IstatPaDimensionId =
-  | "formazione"
-  | "organizzazione"
-  | "digitalizzazione"
-  | "cybersecurity"
-  | "servizi"
-  | "sostenibilita"
-  | "innovazione-sociale"
-  | "ai-pa";
+export const ISTAT_PA_DIMENSION_IDS = [
+  "formazione",
+  "organizzazione",
+  "digitalizzazione",
+  "cybersecurity",
+  "servizi",
+  "sostenibilita",
+  "innovazione-sociale",
+  "ai-pa",
+] as const;
+
+export type IstatPaDimensionId = (typeof ISTAT_PA_DIMENSION_IDS)[number];
 
 export type IstatPaRouteLink = {
   href: string;
@@ -166,9 +169,31 @@ export const ISTAT_PA_DIMENSIONS = [
   },
 ] as const satisfies readonly IstatPaDimension[];
 
-export const ISTAT_PA_DIMENSION_BY_ID = Object.fromEntries(
-  ISTAT_PA_DIMENSIONS.map((dimension) => [dimension.id, dimension]),
-) as Record<IstatPaDimensionId, IstatPaDimension>;
+function assertCompleteIstatPaDimensionMap(
+  dimensionById: Partial<Record<IstatPaDimensionId, IstatPaDimension>>,
+): asserts dimensionById is Record<IstatPaDimensionId, IstatPaDimension> {
+  for (const dimensionId of ISTAT_PA_DIMENSION_IDS) {
+    if (!dimensionById[dimensionId]) {
+      throw new Error(`Missing ISTAT PA dimension: ${dimensionId}`);
+    }
+  }
+}
+
+function buildIstatPaDimensionMap(
+  dimensions: readonly IstatPaDimension[],
+): Record<IstatPaDimensionId, IstatPaDimension> {
+  const dimensionById: Partial<Record<IstatPaDimensionId, IstatPaDimension>> = {};
+
+  for (const dimension of dimensions) {
+    dimensionById[dimension.id] = dimension;
+  }
+
+  assertCompleteIstatPaDimensionMap(dimensionById);
+
+  return dimensionById;
+}
+
+export const ISTAT_PA_DIMENSION_BY_ID = buildIstatPaDimensionMap(ISTAT_PA_DIMENSIONS);
 
 export const ISTAT_PA_READING_RULES = [
   "ISTAT suggerisce dimensioni da osservare, non conclusioni sul Comune.",
