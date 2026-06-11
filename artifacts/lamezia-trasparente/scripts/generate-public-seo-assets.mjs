@@ -1,6 +1,7 @@
 import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
+import { fileURLToPath } from "node:url";
 
 const DEFAULT_PUBLIC_SITE_URL = "https://lamezia-trasparente-monitor.replit.app";
 
@@ -12,7 +13,7 @@ function readOption(name) {
   return process.argv[index + 1];
 }
 
-function normalizePublicSiteUrl(value) {
+export function normalizePublicSiteUrl(value) {
   const rawValue = (value ?? DEFAULT_PUBLIC_SITE_URL).trim();
   if (!rawValue) {
     throw new Error("VITE_PUBLIC_SITE_URL cannot be blank.");
@@ -41,13 +42,13 @@ function pathnameFromLoc(value) {
   }
 }
 
-function renderSitemap(template, siteUrl) {
+export function renderSitemap(template, siteUrl) {
   return template.replace(/<loc>([^<]+)<\/loc>/g, (_match, loc) => {
     return `<loc>${joinPublicUrl(siteUrl, pathnameFromLoc(loc))}</loc>`;
   });
 }
 
-function renderRobots(template, siteUrl) {
+export function renderRobots(template, siteUrl) {
   const sitemapLine = `Sitemap: ${joinPublicUrl(siteUrl, "/sitemap.xml")}`;
   if (/^Sitemap:\s*.+$/m.test(template)) {
     return template.replace(/^Sitemap:\s*.+$/m, sitemapLine);
@@ -55,22 +56,38 @@ function renderRobots(template, siteUrl) {
   return `${template.trimEnd()}\n${sitemapLine}\n`;
 }
 
-const isCheck = process.argv.includes("--check");
-const publicDir = path.resolve(readOption("--public-dir") ?? process.env.SEO_ASSETS_PUBLIC_DIR ?? "public");
-const outputDir = path.resolve(
-  readOption("--out-dir") ??
-    process.env.SEO_ASSETS_OUTPUT_DIR ??
-    (isCheck ? mkdtempSync(path.join(tmpdir(), "lamezia-seo-assets-")) : path.join("dist", "public")),
-);
+export function generatePublicSeoAssets({
+  publicDir = path.resolve("public"),
+  outputDir = path.resolve("dist", "public"),
+  siteUrl = normalizePublicSiteUrl(process.env.VITE_PUBLIC_SITE_URL),
+} = {}) {
+  const sitemapTemplate = readFileSync(path.join(publicDir, "sitemap.xml"), "utf8");
+  const robotsTemplate = readFileSync(path.join(publicDir, "robots.txt"), "utf8");
 
-const siteUrl = normalizePublicSiteUrl(process.env.VITE_PUBLIC_SITE_URL);
-const sitemapTemplate = readFileSync(path.join(publicDir, "sitemap.xml"), "utf8");
-const robotsTemplate = readFileSync(path.join(publicDir, "robots.txt"), "utf8");
+  mkdirSync(outputDir, { recursive: true });
+  writeFileSync(path.join(outputDir, "sitemap.xml"), renderSitemap(sitemapTemplate, siteUrl), "utf8");
+  writeFileSync(path.join(outputDir, "robots.txt"), renderRobots(robotsTemplate, siteUrl), "utf8");
 
-mkdirSync(outputDir, { recursive: true });
-writeFileSync(path.join(outputDir, "sitemap.xml"), renderSitemap(sitemapTemplate, siteUrl), "utf8");
-writeFileSync(path.join(outputDir, "robots.txt"), renderRobots(robotsTemplate, siteUrl), "utf8");
+  return { outputDir, siteUrl };
+}
 
-if (isCheck && !readOption("--out-dir") && !process.env.SEO_ASSETS_OUTPUT_DIR) {
-  rmSync(outputDir, { recursive: true, force: true });
+function runCli() {
+  const isCheck = process.argv.includes("--check");
+  const hasExplicitOutput = Boolean(readOption("--out-dir") || process.env.SEO_ASSETS_OUTPUT_DIR);
+  const publicDir = path.resolve(readOption("--public-dir") ?? process.env.SEO_ASSETS_PUBLIC_DIR ?? "public");
+  const outputDir = path.resolve(
+    readOption("--out-dir") ??
+      process.env.SEO_ASSETS_OUTPUT_DIR ??
+      (isCheck ? mkdtempSync(path.join(tmpdir(), "lamezia-seo-assets-")) : path.join("dist", "public")),
+  );
+
+  generatePublicSeoAssets({ publicDir, outputDir });
+
+  if (isCheck && !hasExplicitOutput) {
+    rmSync(outputDir, { recursive: true, force: true });
+  }
+}
+
+if (process.argv[1] === fileURLToPath(import.meta.url)) {
+  runCli();
 }
