@@ -30,6 +30,7 @@ export default defineConfig({
         generatePublicSeoAssets({
           publicDir,
           outputDir: publicOutputDir,
+          basePath,
         });
       },
     },
