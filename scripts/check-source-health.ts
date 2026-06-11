@@ -187,7 +187,7 @@ export async function readSourceHealth(
     return [];
   }
 
-  return readEndpointSourceHealth("http://localhost:5000/api/healthz/sources");
+  return readEndpointSourceHealth(url);
 }
 
 async function readAuditFileSourceHealth(
@@ -215,15 +215,25 @@ async function readEndpointSourceHealth(
     if (!response.ok) {
       return [
         monitorReadErrorRecord(
-          `Endpoint stato fonti non disponibile (HTTP ${response.status}) su \`${url}\`.`,
+          `Endpoint stato fonti raggiunto ma non disponibile (HTTP ${response.status}) su \`${url}\`.`,
         ),
       ];
     }
-    return normalizePayload(await response.json());
+
+    const text = await response.text();
+    try {
+      return normalizePayload(JSON.parse(text));
+    } catch (error) {
+      return [
+        monitorReadErrorRecord(
+          `Endpoint stato fonti raggiunto ma risposta JSON non valida su \`${url}\`: ${formatErrorMessage(error)}`,
+        ),
+      ];
+    }
   } catch (error) {
     return [
       monitorReadErrorRecord(
-        `Endpoint stato fonti non raggiungibile o risposta JSON non valida su \`${url}\`: ${formatErrorMessage(error)}`,
+        `Endpoint stato fonti configurato ma non raggiungibile su \`${url}\`: ${formatErrorMessage(error)}`,
       ),
     ];
   }
