@@ -88,14 +88,16 @@ test("renders cautious technical issue body with stable dedupe key", () => {
   assert.doesNotMatch(body, /corruzione|mafia|colpevole/i);
 });
 
-test("normalizes blank source-health URL values to the deterministic fallback", async () => {
+test("skips source-health reads when URL and audit path are not configured", async () => {
   const originalUrl = process.env.SOURCE_HEALTH_URL;
   const originalAuditPath = process.env.SOURCE_HEALTH_AUDIT_PATH;
+  const originalSkip = process.env.SOURCE_HEALTH_SKIP_UNCONFIGURED;
   const originalFetch = globalThis.fetch;
   const fetchedUrls: string[] = [];
 
   process.env.SOURCE_HEALTH_URL = "   ";
   delete process.env.SOURCE_HEALTH_AUDIT_PATH;
+  delete process.env.SOURCE_HEALTH_SKIP_UNCONFIGURED;
   globalThis.fetch = (async (input: string | URL | Request) => {
     fetchedUrls.push(input.toString());
     return new Response(JSON.stringify({ sources: [] }), {
@@ -105,8 +107,17 @@ test("normalizes blank source-health URL values to the deterministic fallback", 
   }) as typeof fetch;
 
   try {
-    await readSourceHealth(parseArgs([]));
-    await readSourceHealth(parseArgs(["--url", "\t  "]));
+    const envRecords = await readSourceHealth(parseArgs([]));
+    const explicitBlankRecords = await readSourceHealth(
+      parseArgs(["--url", "\t  "]),
+    );
+
+    assert.deepEqual(envRecords, []);
+    assert.deepEqual(explicitBlankRecords, []);
+    assert.deepEqual(
+      detectAnomalies(envRecords, new Date("2026-06-09T08:00:00.000Z")),
+      [],
+    );
   } finally {
     globalThis.fetch = originalFetch;
     if (originalUrl === undefined) {
@@ -119,13 +130,59 @@ test("normalizes blank source-health URL values to the deterministic fallback", 
     } else {
       process.env.SOURCE_HEALTH_AUDIT_PATH = originalAuditPath;
     }
+    if (originalSkip === undefined) {
+      delete process.env.SOURCE_HEALTH_SKIP_UNCONFIGURED;
+    } else {
+      process.env.SOURCE_HEALTH_SKIP_UNCONFIGURED = originalSkip;
+    }
   }
 
-  assert.deepEqual(fetchedUrls, [
-    "http://localhost:5000/api/healthz/sources",
-    "http://localhost:5000/api/healthz/sources",
-  ]);
-  assert.ok(!fetchedUrls.includes(""));
+  assert.deepEqual(fetchedUrls, []);
+});
+
+test("skips source-health endpoint reads when the workflow endpoint is not configured", async () => {
+  const originalUrl = process.env.SOURCE_HEALTH_URL;
+  const originalAuditPath = process.env.SOURCE_HEALTH_AUDIT_PATH;
+  const originalSkip = process.env.SOURCE_HEALTH_SKIP_UNCONFIGURED;
+  const originalFetch = globalThis.fetch;
+  let fetchCalls = 0;
+
+  process.env.SOURCE_HEALTH_URL = "   ";
+  delete process.env.SOURCE_HEALTH_AUDIT_PATH;
+  process.env.SOURCE_HEALTH_SKIP_UNCONFIGURED = "true";
+  globalThis.fetch = (async () => {
+    fetchCalls += 1;
+    throw new Error("fetch should not be called");
+  }) as typeof fetch;
+
+  try {
+    const records = await readSourceHealth(parseArgs([]));
+    const anomalies = detectAnomalies(
+      records,
+      new Date("2026-06-09T08:00:00.000Z"),
+    );
+
+    assert.deepEqual(records, []);
+    assert.deepEqual(anomalies, []);
+    assert.equal(fetchCalls, 0);
+  } finally {
+    globalThis.fetch = originalFetch;
+    if (originalUrl === undefined) {
+      delete process.env.SOURCE_HEALTH_URL;
+    } else {
+      process.env.SOURCE_HEALTH_URL = originalUrl;
+    }
+    if (originalAuditPath === undefined) {
+      delete process.env.SOURCE_HEALTH_AUDIT_PATH;
+    } else {
+      process.env.SOURCE_HEALTH_AUDIT_PATH = originalAuditPath;
+    }
+    if (originalSkip === undefined) {
+      delete process.env.SOURCE_HEALTH_SKIP_UNCONFIGURED;
+    } else {
+      process.env.SOURCE_HEALTH_SKIP_UNCONFIGURED = originalSkip;
+    }
+  }
 });
 
 test("normalizes blank audit paths before choosing the source-health reader", async () => {
@@ -142,8 +199,71 @@ test("normalizes blank audit paths before choosing the source-health reader", as
   }) as typeof fetch;
 
   try {
-    await readSourceHealth(parseArgs([]));
-    await readSourceHealth(parseArgs(["--audit-file", "   "]));
+    const recordsFromEnv = await readSourceHealth(parseArgs([]));
+    const recordsFromBlankAudit = await readSourceHealth(
+      parseArgs(["--audit-file", "   "]),
+    );
+
+    assert.deepEqual(recordsFromEnv, []);
+    assert.deepEqual(recordsFromBlankAudit, []);
+  } finally {
+    globalThis.fetch = originalFetch;
+    if (originalAuditPath === undefined) {
+      delete process.env.SOURCE_HEALTH_AUDIT_PATH;
+    } else {
+      process.env.SOURCE_HEALTH_AUDIT_PATH = originalAuditPath;
+    }
+    if (originalUrl === undefined) {
+      delete process.env.SOURCE_HEALTH_URL;
+    } else {
+      process.env.SOURCE_HEALTH_URL = originalUrl;
+    }
+  }
+
+  assert.deepEqual(fetchedUrls, ["https://monitor.example.test/sources"]);
+});
+
+test("explicit URL arguments override configured audit paths", async () => {
+  const originalAuditPath = process.env.SOURCE_HEALTH_AUDIT_PATH;
+  const originalUrl = process.env.SOURCE_HEALTH_URL;
+  const originalFetch = globalThis.fetch;
+  const dir = await mkdtemp(join(tmpdir(), "source-health-"));
+  const auditFile = join(dir, "audit.json");
+  const fetchedUrls: string[] = [];
+
+  await writeFile(
+    auditFile,
+    JSON.stringify({
+      sources: [{ source: "audit-file", status: "error" }],
+    }),
+    "utf8",
+  );
+
+  process.env.SOURCE_HEALTH_AUDIT_PATH = auditFile;
+  process.env.SOURCE_HEALTH_URL = "https://monitor.example.test/default";
+  globalThis.fetch = (async (input: string | URL | Request) => {
+    fetchedUrls.push(input.toString());
+    return new Response(
+      JSON.stringify({
+        sources: [{ source: "manual-url", status: "ok" }],
+      }),
+      { status: 200 },
+    );
+  }) as typeof fetch;
+
+  try {
+    const options = parseArgs([
+      "--url",
+      "https://override.example.test/healthz/sources",
+    ]);
+
+    assert.equal(options.auditFile, undefined);
+    assert.equal(options.url, "https://override.example.test/healthz/sources");
+    const records = await readSourceHealth(options);
+
+    assert.equal(records.length, 1);
+    assert.equal(records[0]?.source, "manual-url");
+    assert.equal(records[0]?.status, "ok");
   } finally {
     globalThis.fetch = originalFetch;
     if (originalAuditPath === undefined) {
@@ -159,9 +279,43 @@ test("normalizes blank audit paths before choosing the source-health reader", as
   }
 
   assert.deepEqual(fetchedUrls, [
-    "https://monitor.example.test/sources",
-    "http://localhost:5000/api/healthz/sources",
+    "https://override.example.test/healthz/sources",
   ]);
+});
+
+test("classifies unreachable endpoints separately from invalid JSON", async () => {
+  const originalFetch = globalThis.fetch;
+
+  try {
+    globalThis.fetch = (async () => {
+      throw new Error("network down");
+    }) as typeof fetch;
+
+    const unreachableRecords = await readSourceHealth({
+      url: "https://monitor.example.test/sources",
+      dryRun: true,
+      warningRunsThreshold: 2,
+    });
+    assert.match(
+      unreachableRecords[0]?.reason ?? "",
+      /configurato ma non raggiungibile/,
+    );
+
+    globalThis.fetch = (async () =>
+      new Response("{ not json", { status: 200 })) as typeof fetch;
+
+    const invalidJsonRecords = await readSourceHealth({
+      url: "https://monitor.example.test/sources",
+      dryRun: true,
+      warningRunsThreshold: 2,
+    });
+    assert.match(
+      invalidJsonRecords[0]?.reason ?? "",
+      /raggiunto ma risposta JSON non valida/,
+    );
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
 });
 
 test("turns predictable audit read failures into monitor anomalies", async () => {

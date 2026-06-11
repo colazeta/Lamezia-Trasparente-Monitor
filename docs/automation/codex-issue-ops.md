@@ -29,6 +29,12 @@ For every issue inspected by the queue governor, derive and record one operation
 
 Derived state must be based on verifiable evidence, not label names alone. The governor must list the evidence used, the evidence age and any uncertainty whenever it promotes, invokes, blocks or releases an issue.
 
+### Canonical operational vocabulary
+
+Use these exact state names in handoffs, queue reports and materialization comments when they apply: `pr-open`, `ready-for-human-merge`, `needs-rebase`, `ci-pending`, `ci-failed`, `review-needed`, `scope-risk`, `complete-diff-provided`, `small-file-bundle-complete`, `fallback-bundle-incomplete`, `output-without-PR`, `invalid-output`, `local-only`, `manual-ui-recoverable`, `split-required`, `blocked-stable`, `needs-human-decision`, `superseded`, `duplicate` and `archivable`.
+
+The queue governor may keep the compact derived states above for capacity arithmetic, but comments and handoffs must include the canonical state where it is more precise. Do not invent near-synonyms such as `patch-available` when the published fallback contains truncation markers.
+
 ## Capacity model
 
 The Codex work queue has a controlled maximum capacity of **5 real active operational tasks**.
@@ -55,6 +61,14 @@ Do **not** count these as occupied slots:
 Effective free slots are calculated as `5 - real active Codex operational tasks`. Human-review-pending items, including `codex:review-needed` issues and PRs awaiting Giovanni's merge decision, are excluded from that arithmetic unless they become Codex-side rework or have a concrete file/module collision with the candidate work.
 
 The governor must use all five real active slots when eligible low-collision backlog exists. A queue below 5/5 is healthy only when there is no real eligible backlog, a concrete file/module collision, legal/copy/methodological risk, CI instability, or a decision that must be made by Giovanni before parallel work on the affected files/modules is safe. Giovanni review/merge wait alone is not a reason to pause the whole pipeline.
+
+### Materialization debt gate
+
+Before applying anti-idle promotion, count open issues and PRs carrying any materialization-debt state or label: `materialization:required`, `fallback-bundle-incomplete`, `output-without-PR`, `invalid-output`, `local-only` or `needs-materialization-verification`.
+
+If the count is **greater than 5**, ordinary technical and platform invocations are blocked. The only permitted queue actions are materialization verification, complete-diff or complete-bundle application, manual UI/export recovery classification, split-required classification, blocker stabilization, PR rebase/recovery/supersede triage, and stale active-label cleanup. Do not create new ordinary technical issues, do not post new ordinary `@codex` prompts and do not fill empty slots via anti-idle while this gate is active.
+
+Debt-gated reports must include the debt count, the labels/states counted, the first page or query scope inspected, the allowed cleanup action chosen, and any real PRs that need no-merge/no-approval human decisions such as `needs-rebase` or `needs-human-decision`.
 
 ## Promotion SLA and anti-idle rule
 
@@ -246,9 +260,10 @@ Purpose:
 10. stop or slow promotion when CI fails repeatedly because of recent Codex work;
 11. add `codex:blocked` where the automation must not continue;
 12. apply stale-label cleanup whenever a PR, blocker, supersession or completed outcome means an issue is no longer eligible backlog;
-13. invoke or prepare invocation for safe tasks whenever real active capacity is below 5/5 and eligible low-collision backlog exists.
+13. invoke or prepare invocation for safe tasks whenever real active capacity is below 5/5, eligible low-collision backlog exists and the materialization debt gate is not active;
+14. if materialization debt is greater than 5, pause ordinary promotion and choose only a materialization verification, recovery, split, blocker, stale-label cleanup or PR rebase/recovery/supersede action.
 
-Anti-idle rule: if real active operational capacity is below 5/5, the governor must not stop at a report when eligible backlog exists. It must, in order, invoke a ready non-colliding issue, promote and invoke a mature non-colliding candidate, create and invoke a concrete micro-issue from a verified maintenance need, or record a verifiable reason not to fill capacity. Valid reasons are absence of real eligible backlog, concrete file/module collision, legal/copy/methodological risk, CI instability, or a decision required from Giovanni before work on the same files/modules can proceed safely. Giovanni review/merge wait for non-colliding work must remain outside the queue and must not pause unrelated promotions. Prioritise typecheck/build/lint/test failures, small bugs and technical-debt tasks with low collision risk.
+Anti-idle rule: if materialization debt is 5 or fewer and real active operational capacity is below 5/5, the governor must not stop at a report when eligible backlog exists. It must, in order, invoke a ready non-colliding issue, promote and invoke a mature non-colliding candidate, create and invoke a concrete micro-issue from a verified maintenance need, or record a verifiable reason not to fill capacity. Valid reasons are absence of real eligible backlog, concrete file/module collision, legal/copy/methodological risk, CI instability, or a decision required from Giovanni before work on the same files/modules can proceed safely. Giovanni review/merge wait for non-colliding work must remain outside the queue and must not pause unrelated promotions. Prioritise typecheck/build/lint/test failures, small bugs and technical-debt tasks with low collision risk.
 
 Collision-control minimum fields for every promotion, invocation, pause or block decision:
 

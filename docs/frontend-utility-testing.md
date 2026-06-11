@@ -38,7 +38,7 @@ Quando una utility gestisce dati assenti o incompleti, preferire aspettative esp
 Per eseguire un singolo file di test dal root del monorepo:
 
 ```bash
-pnpm --filter @workspace/lamezia-trasparente exec vitest run artifacts/lamezia-trasparente/src/test/nomeUtility.test.ts
+pnpm --filter @workspace/lamezia-trasparente exec vitest run src/test/nomeUtility.test.ts
 ```
 
 Sostituire `nomeUtility.test.ts` con il file effettivo. Il comando deve restare mirato quando la modifica riguarda una sola utility pura, così da rendere la verifica ripetibile e facilmente revisionabile.

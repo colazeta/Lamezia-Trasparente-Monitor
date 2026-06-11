@@ -61,6 +61,86 @@ Flag as high priority:
 
 ## Codex operating rule
 
-When invoked from an issue, Codex must create a dedicated branch named `codex/<issue-number>-<slug>`, commit changes there, and open a pull request targeting `main`. Delivery without a pull request is not a completed implementation state. If Codex cannot open a pull request, it must comment on the issue with the exact technical reason and indicate the branch, diff location or blocker. Codex must not close the issue directly. The issue may be closed only after review confirms that the acceptance criteria are met and no follow-up issue is required.
+When invoked from an issue, Codex must create a dedicated branch named `codex/<issue-number>-<slug>`, commit changes there, and open a pull request targeting `main`. Delivery without a pull request is not a completed implementation state. Codex must not close the issue directly. The issue may be closed only after review confirms that the acceptance criteria are met and no follow-up issue is required.
 
-A Codex summary or completion comment without one of the following is `output-without-PR` and must not count as a real active slot: an open PR targeting `main`, a visible `codex/<issue-number>-<slug>` branch with recent commits, an explicit technical blocker, or recent evidence of execution such as a commit, validation log or concrete diff location. Issues labelled `codex:invoked` or `codex:prompted` that only have such a summary must be triaged as stalled follow-up, not treated as ongoing work. Future invocations must restate the mandatory PR-to-`main` requirement and the stop condition: if Codex cannot open the PR or produce a reviewable branch/diff, it must stop and report the exact blocker instead of presenting the work as complete.
+## Same-response materialization contract
+
+Codex must materialize its work in the same final response. Delayed materialization is not accepted.
+
+Every final Codex response must contain exactly one of these outcomes:
+
+1. **GitHub PR materialized**
+   - PR URL
+   - PR number
+   - remote branch
+   - full commit SHA
+   - GitHub verification performed
+   - issue linkage
+   - scope check with changed files
+2. **Fallback materializable output**
+   - complete unified diff directly applicable from `main`; or
+   - complete small file-content bundle, only when safe from truncation
+3. **Explicit technical blocker**
+   - exact reason why no PR, branch, commit, complete diff or complete file bundle can be provided.
+
+A plain Summary is not an outcome. `created PR via make_pr` is not an outcome unless the public GitHub PR URL or number is included and verifiable. A short SHA, local branch, internal task link, or GitHub `blob` link that cannot pass repository verification is not an outcome.
+
+If Codex cannot create a public PR, it must prefer a complete unified diff in the same response under `Materialization`. Use full file contents only for small bundles that can be provided completely. If it cannot provide either a PR or a complete fallback, it must report a blocker and must not claim success.
+
+Required final section:
+
+```text
+## Materialization
+
+- PR URL:
+- PR number:
+- Remote branch:
+- Full commit SHA:
+- GitHub verification:
+- Issue linkage:
+- Scope check:
+- If no PR exists: provide a complete unified diff directly applicable from main. Use structured file blocks only for small complete bundles.
+```
+
+## Fallback hierarchy
+
+Fallbacks must follow this order:
+
+```text
+PR verified > complete unified diff > complete small file bundle > explicit blocker > failed output
+```
+
+### Preferred fallback: complete unified diff
+
+```diff
+--- a/path/to/file.ts
++++ b/path/to/file.ts
+@@
+<complete hunks directly applicable from main>
+```
+
+### Secondary fallback: structured file bundle
+
+Use exactly one block per file only when the whole bundle is small enough to be safely complete:
+
+```text
+FILE: path/from/repository/root.ts
+ACTION: create|replace|delete
+BEGIN_FILE
+<complete file content, no omissions>
+END_FILE
+```
+
+Fallback rules:
+
+- no ellipses;
+- no `(truncated)` markers;
+- no omitted imports, omitted tests or partial snippets;
+- no prose inside file blocks;
+- include every modified file;
+- do not use full-file fallback for long multi-file changes if truncation is likely;
+- if the fallback would be too long to provide completely, report a blocker instead of sending a partial fallback.
+
+A final response without the `Materialization` section and a verifiable PR, complete unified diff, complete small file bundle or explicit blocker must be triaged as `output-without-PR` or `invalid-output`, must not count as an active slot, and must not be treated as completed work.
+
+See also: `docs/automation/codex-materialization-by-design.md` and `docs/automation/codex-pr-materialization.md`.

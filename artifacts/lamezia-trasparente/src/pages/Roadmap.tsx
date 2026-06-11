@@ -106,6 +106,7 @@ export function Roadmap() {
                     id={statusHeadingId}
                     className="flex items-center gap-2 text-base font-semibold"
                   >
+                    <span className="sr-only">Stato: </span>
                     <StatusBadge status={item.status} />
                   </h3>
                   <p className="mt-3 text-sm leading-6 text-muted-foreground">

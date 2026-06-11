@@ -46,6 +46,7 @@ interface CliOptions {
   dryRun: boolean;
   repo?: string;
   warningRunsThreshold: number;
+  skipUnconfiguredEndpoint?: boolean;
 }
 
 export interface GitHubIssue {
@@ -85,6 +86,7 @@ function usage(): string {
     "Environment:",
     "  SOURCE_HEALTH_AUDIT_PATH   Path to a JSON audit file, used when --audit-file is omitted.",
     "  SOURCE_HEALTH_URL          URL for GET /healthz/sources, used when --url is omitted.",
+    "  SOURCE_HEALTH_SKIP_UNCONFIGURED Skip without opening/updating issues when no audit file or URL is configured.",
     "  SOURCE_HEALTH_WARNING_RUNS Number of consecutive warning runs required before opening/updating an issue (default: 2).",
     "  GITHUB_REPOSITORY          owner/repo for issue operations.",
     "  GITHUB_TOKEN or GH_TOKEN   Token with issues:write permission; required unless --dry-run is used.",
@@ -100,6 +102,10 @@ export function parseArgs(argv: string[]): CliOptions {
     warningRunsThreshold: parseInteger(
       process.env.SOURCE_HEALTH_WARNING_RUNS,
       2,
+    ),
+    skipUnconfiguredEndpoint: parseBoolean(
+      process.env.SOURCE_HEALTH_SKIP_UNCONFIGURED,
+      false,
     ),
   };
 
@@ -153,6 +159,14 @@ function parseInteger(value: string | undefined, fallback: number): number {
   return Number.isFinite(parsed) && parsed > 0 ? parsed : fallback;
 }
 
+function parseBoolean(value: string | undefined, fallback: boolean): boolean {
+  const normalized = normalizeOptionalString(value)?.toLowerCase();
+  if (!normalized) return fallback;
+  if (["1", "true", "yes", "on"].includes(normalized)) return true;
+  if (["0", "false", "no", "off"].includes(normalized)) return false;
+  return fallback;
+}
+
 export async function readSourceHealth(
   options: CliOptions,
 ): Promise<SourceHealthRecord[]> {
@@ -161,9 +175,18 @@ export async function readSourceHealth(
     return readAuditFileSourceHealth(auditFile);
   }
 
-  const url =
-    normalizeOptionalString(options.url) ??
-    "http://localhost:5000/api/healthz/sources";
+  const url = normalizeOptionalString(options.url);
+  if (url) {
+    return readEndpointSourceHealth(url);
+  }
+
+  if (options.skipUnconfiguredEndpoint) {
+    console.warn(
+      "SOURCE_HEALTH_URL non configurato: controllo source-health saltato in modo tecnico controllato.",
+    );
+    return [];
+  }
+
   return readEndpointSourceHealth(url);
 }
 
@@ -192,15 +215,25 @@ async function readEndpointSourceHealth(
     if (!response.ok) {
       return [
         monitorReadErrorRecord(
-          `Endpoint stato fonti non disponibile (HTTP ${response.status}) su \`${url}\`.`,
+          `Endpoint stato fonti raggiunto ma non disponibile (HTTP ${response.status}) su \`${url}\`.`,
         ),
       ];
     }
-    return normalizePayload(await response.json());
+
+    const text = await response.text();
+    try {
+      return normalizePayload(JSON.parse(text));
+    } catch (error) {
+      return [
+        monitorReadErrorRecord(
+          `Endpoint stato fonti raggiunto ma risposta JSON non valida su \`${url}\`: ${formatErrorMessage(error)}`,
+        ),
+      ];
+    }
   } catch (error) {
     return [
       monitorReadErrorRecord(
-        `Endpoint stato fonti non raggiungibile o risposta JSON non valida su \`${url}\`: ${formatErrorMessage(error)}`,
+        `Endpoint stato fonti configurato ma non raggiungibile su \`${url}\`: ${formatErrorMessage(error)}`,
       ),
     ];
   }

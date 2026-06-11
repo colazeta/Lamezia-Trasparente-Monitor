@@ -61,7 +61,7 @@ import {
   EmptyDescription,
 } from "@/components/ui/empty";
 
-const formSchema = z.object({
+export const formSchema = z.object({
   title: z.string().min(5, "Il titolo deve avere almeno 5 caratteri").max(100),
   description: z
     .string()
@@ -71,9 +71,15 @@ const formSchema = z.object({
     .string()
     .min(3, "Specifica un luogo, quartiere o 'non localizzato'"),
   citizenName: z.string().optional(),
+  initialSourceUrl: z.string().optional(),
+  initialSourceType: z.string().optional(),
+  competentOffice: z.string().optional(),
+  formalAct: z.string().optional(),
+  availableData: z.string().optional(),
+  missingData: z.string().optional(),
 });
 
-type FormValues = z.infer<typeof formSchema>;
+export type FormValues = z.infer<typeof formSchema>;
 
 type CriticalReport = Report & {
   initialSourceType?: string | null;
@@ -93,7 +99,7 @@ type CriticalReport = Report & {
   updatedAt?: string;
 };
 
-const SOURCE_TYPES = [
+export const SOURCE_TYPES = [
   "articolo",
   "comunicato",
   "post pubblico",
@@ -103,7 +109,7 @@ const SOURCE_TYPES = [
   "albo",
   "delibera",
   "altro",
-];
+] as const;
 
 const CATEGORY_OPTIONS = [
   { value: "organico", label: "Organico" },
@@ -172,6 +178,60 @@ function filterValue(value?: string | null) {
   return value?.trim() || "non indicato";
 }
 
+function optionalText(value?: string) {
+  const trimmed = value?.trim();
+  return trimmed ? trimmed : undefined;
+}
+
+function buildContextLine(label: string, value?: string) {
+  const trimmed = optionalText(value);
+  return trimmed ? `- ${label}: ${trimmed}` : undefined;
+}
+
+export function buildReportSubmission(data: FormValues) {
+  const contextLines = [
+    buildContextLine(
+      "Ufficio o settore potenzialmente competente",
+      data.competentOffice,
+    ),
+    buildContextLine("Atto formale collegato, se noto", data.formalAct),
+    buildContextLine("Dati disponibili indicati", data.availableData),
+    buildContextLine("Dati mancanti o da richiedere", data.missingData),
+  ].filter(Boolean);
+
+  const missingData = optionalText(data.missingData);
+  const description = [
+    data.description.trim(),
+    contextLines.length
+      ? [
+          "Contesto documentale fornito per la verifica redazionale:",
+          ...contextLines,
+        ].join("\n")
+      : undefined,
+    missingData
+      ? "Possibile handoff logico: valutare una richiesta Accesso civico/FOIA Machine sui dati mancanti, senza invio automatico."
+      : undefined,
+  ]
+    .filter(Boolean)
+    .join("\n\n");
+
+  return {
+    title: data.title.trim(),
+    description,
+    category: data.category,
+    location: data.location.trim(),
+    ...(optionalText(data.citizenName)
+      ? { citizenName: optionalText(data.citizenName) }
+      : {}),
+    ...(optionalText(data.initialSourceType)
+      ? { initialSourceType: optionalText(data.initialSourceType) }
+      : {}),
+    ...(optionalText(data.initialSourceUrl)
+      ? { initialSourceUrl: optionalText(data.initialSourceUrl) }
+      : {}),
+  };
+}
+
 export function Reports() {
   const queryClient = useQueryClient();
   const createReport = useCreateReport();
@@ -190,6 +250,12 @@ export function Reports() {
       category: "",
       location: "",
       citizenName: "",
+      initialSourceUrl: "",
+      initialSourceType: "",
+      competentOffice: "",
+      formalAct: "",
+      availableData: "",
+      missingData: "",
     },
   });
 
@@ -245,7 +311,7 @@ export function Reports() {
 
   function onSubmit(data: FormValues) {
     createReport.mutate(
-      { data },
+      { data: buildReportSubmission(data) },
       {
         onSuccess: () => {
           toast.success("Segnalazione inviata con successo", {
@@ -665,13 +731,173 @@ export function Reports() {
                   />
 
                   <div className="rounded-lg border border-dashed border-border bg-muted/30 p-4 text-sm text-muted-foreground">
-                    Campi come fonte iniziale, stato verifica, ufficio
-                    competente, risposta istituzionale, esito, dati mancanti e
-                    collegamento FOIA sono predisposti nello schema e vengono
-                    completati nella revisione redazionale, senza pubblicazione
-                    automatica.
-                    <div className="mt-2 text-xs">
-                      Fonti iniziali supportate: {SOURCE_TYPES.join(", ")}.
+                    La fonte iniziale e i dati disponibili aiutano la verifica,
+                    ma non trasformano la segnalazione in una prova di criticità
+                    accertata. I dati personali restano separati dalla parte
+                    documentale potenzialmente pubblicabile.
+                  </div>
+
+                  <div className="space-y-4 rounded-lg border border-border bg-card p-4">
+                    <div>
+                      <h3 className="font-display text-lg font-semibold">
+                        Elementi documentali facoltativi
+                      </h3>
+                      <p className="mt-1 text-sm text-muted-foreground">
+                        Compila solo ciò che conosci. Questi campi guidano la
+                        revisione redazionale e, quando l'API non espone ancora
+                        campi dedicati, vengono conservati come contesto
+                        documentale non personale nella descrizione.
+                      </p>
+                    </div>
+
+                    <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                      <FormField
+                        control={form.control}
+                        name="initialSourceUrl"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Fonte iniziale o URL</FormLabel>
+                            <FormControl>
+                              <Input
+                                placeholder="Es. link ad albo, comunicato o pagina pubblica"
+                                {...field}
+                                className="h-11"
+                              />
+                            </FormControl>
+                            <FormDescription>
+                              Inserisci un riferimento pubblico, se disponibile.
+                            </FormDescription>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+
+                      <FormField
+                        control={form.control}
+                        name="initialSourceType"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Tipo fonte</FormLabel>
+                            <Select
+                              onValueChange={field.onChange}
+                              defaultValue={field.value}
+                            >
+                              <FormControl>
+                                <SelectTrigger
+                                  className="h-11"
+                                  aria-label="Tipo fonte"
+                                >
+                                  <SelectValue placeholder="Se nota, seleziona fonte" />
+                                </SelectTrigger>
+                              </FormControl>
+                              <SelectContent>
+                                {SOURCE_TYPES.map((sourceType) => (
+                                  <SelectItem
+                                    key={sourceType}
+                                    value={sourceType}
+                                  >
+                                    {sourceType}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                            <FormDescription>
+                              Facoltativo: serve solo a orientare la verifica.
+                            </FormDescription>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+
+                    <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                      <FormField
+                        control={form.control}
+                        name="competentOffice"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>
+                              Ufficio o settore potenzialmente competente
+                            </FormLabel>
+                            <FormControl>
+                              <Input
+                                placeholder="Es. Settore lavori pubblici, se noto"
+                                {...field}
+                                className="h-11"
+                              />
+                            </FormControl>
+                            <FormDescription>
+                              Indicalo come ipotesi da verificare, non come
+                              attribuzione di responsabilità.
+                            </FormDescription>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+
+                      <FormField
+                        control={form.control}
+                        name="formalAct"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Atto formale collegato</FormLabel>
+                            <FormControl>
+                              <Input
+                                placeholder="Es. delibera, determina, ordinanza, se nota"
+                                {...field}
+                                className="h-11"
+                              />
+                            </FormControl>
+                            <FormDescription>
+                              Usa un riferimento documentale, anche incompleto.
+                            </FormDescription>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+
+                    <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                      <FormField
+                        control={form.control}
+                        name="availableData"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Dati disponibili</FormLabel>
+                            <FormControl>
+                              <Textarea
+                                placeholder="Elenca dati, atti o risposte già disponibili, senza dati personali non necessari."
+                                className="min-h-[120px] resize-y"
+                                {...field}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+
+                      <FormField
+                        control={form.control}
+                        name="missingData"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Dati mancanti o da richiedere</FormLabel>
+                            <FormControl>
+                              <Textarea
+                                placeholder="Indica quali documenti o dati sarebbero utili per verificare meglio la segnalazione."
+                                className="min-h-[120px] resize-y"
+                                {...field}
+                              />
+                            </FormControl>
+                            <FormDescription>
+                              Se compilato, prepara solo un handoff logico verso
+                              Accesso civico/FOIA Machine: non viene inviata
+                              alcuna richiesta automatica.
+                            </FormDescription>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
                     </div>
                   </div>
 
