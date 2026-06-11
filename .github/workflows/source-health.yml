@@ -41,7 +41,18 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_REPOSITORY: ${{ github.repository }}
-          SOURCE_HEALTH_URL: ${{ inputs.source_health_url || secrets.SOURCE_HEALTH_URL }}
+          SOURCE_HEALTH_URL: ${{ secrets.SOURCE_HEALTH_URL }}
+          SOURCE_HEALTH_MANUAL_URL: ${{ inputs.source_health_url }}
           SOURCE_HEALTH_AUDIT_PATH: ${{ vars.SOURCE_HEALTH_AUDIT_PATH }}
           SOURCE_HEALTH_WARNING_RUNS: ${{ vars.SOURCE_HEALTH_WARNING_RUNS || '2' }}
-        run: pnpm --dir scripts run check-source-health
+        run: |
+          args=()
+          if [ -n "$(printf '%s' "$SOURCE_HEALTH_MANUAL_URL" | tr -d '[:space:]')" ]; then
+            args+=(--url "$SOURCE_HEALTH_MANUAL_URL")
+          fi
+
+          if [ ${#args[@]} -gt 0 ]; then
+            pnpm --dir scripts run check-source-health -- "${args[@]}"
+          else
+            pnpm --dir scripts run check-source-health
+          fi

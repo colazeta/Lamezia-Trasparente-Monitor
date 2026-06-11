@@ -171,6 +171,66 @@ test("normalizes blank audit paths before choosing configured endpoints", async 
   assert.deepEqual(fetchedUrls, ["https://monitor.example.test/sources"]);
 });
 
+test("explicit URL arguments override configured audit paths", async () => {
+  const originalAuditPath = process.env.SOURCE_HEALTH_AUDIT_PATH;
+  const originalUrl = process.env.SOURCE_HEALTH_URL;
+  const originalFetch = globalThis.fetch;
+  const dir = await mkdtemp(join(tmpdir(), "source-health-"));
+  const auditFile = join(dir, "audit.json");
+  const fetchedUrls: string[] = [];
+
+  await writeFile(
+    auditFile,
+    JSON.stringify({
+      sources: [{ source: "audit-file", status: "error" }],
+    }),
+    "utf8",
+  );
+
+  process.env.SOURCE_HEALTH_AUDIT_PATH = auditFile;
+  process.env.SOURCE_HEALTH_URL = "https://monitor.example.test/default";
+  globalThis.fetch = (async (input: string | URL | Request) => {
+    fetchedUrls.push(input.toString());
+    return new Response(
+      JSON.stringify({
+        sources: [{ source: "manual-url", status: "ok" }],
+      }),
+      { status: 200 },
+    );
+  }) as typeof fetch;
+
+  try {
+    const options = parseArgs([
+      "--url",
+      "https://override.example.test/healthz/sources",
+    ]);
+
+    assert.equal(options.auditFile, undefined);
+    assert.equal(options.url, "https://override.example.test/healthz/sources");
+    const records = await readSourceHealth(options);
+
+    assert.equal(records.length, 1);
+    assert.equal(records[0]?.source, "manual-url");
+    assert.equal(records[0]?.status, "ok");
+  } finally {
+    globalThis.fetch = originalFetch;
+    if (originalAuditPath === undefined) {
+      delete process.env.SOURCE_HEALTH_AUDIT_PATH;
+    } else {
+      process.env.SOURCE_HEALTH_AUDIT_PATH = originalAuditPath;
+    }
+    if (originalUrl === undefined) {
+      delete process.env.SOURCE_HEALTH_URL;
+    } else {
+      process.env.SOURCE_HEALTH_URL = originalUrl;
+    }
+  }
+
+  assert.deepEqual(fetchedUrls, [
+    "https://override.example.test/healthz/sources",
+  ]);
+});
+
 test("classifies unreachable endpoints separately from invalid JSON", async () => {
   const originalFetch = globalThis.fetch;
 
