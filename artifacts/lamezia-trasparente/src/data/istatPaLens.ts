@@ -1,0 +1,234 @@
+import type { LucideIcon } from "lucide-react";
+import {
+  BookOpenCheck,
+  Bot,
+  Building2,
+  Database,
+  Leaf,
+  Network,
+  ShieldCheck,
+  Users,
+} from "lucide-react";
+
+export type IstatPaDimensionId =
+  | "formazione"
+  | "organizzazione"
+  | "digitalizzazione"
+  | "cybersecurity"
+  | "servizi"
+  | "sostenibilita"
+  | "innovazione-sociale"
+  | "ai-pa";
+
+export type IstatPaRouteLink = {
+  href: string;
+  label: string;
+};
+
+export type IstatPaDimension = {
+  id: IstatPaDimensionId;
+  label: string;
+  shortLabel: string;
+  description: string;
+  localEvidence: readonly string[];
+  routes: readonly IstatPaRouteLink[];
+  icon: LucideIcon;
+};
+
+export type IstatActTag = {
+  label: string;
+  dimensionId: IstatPaDimensionId;
+};
+
+export const ISTAT_PA_SOURCE = {
+  id: "istat-censimento-istituzioni-pubbliche",
+  name: "ISTAT — Censimento permanente delle istituzioni pubbliche",
+  href: "https://www.istat.it/statistiche-per-temi/censimenti/istituzioni-pubbliche/",
+  sourceKind: "fonte statistica ufficiale di contesto",
+  civicUse:
+    "griglia nazionale per orientare domande civiche su capacità amministrativa, trasformazione digitale, servizi pubblici e qualità delle fonti locali",
+  caveat:
+    "La fonte ISTAT non prova automaticamente condizioni specifiche del Comune di Lamezia Terme: ogni lettura locale richiede dati disaggregati, tavole territoriali pertinenti o riscontri in fonti comunali ufficiali.",
+} as const;
+
+export const ISTAT_PA_DIMENSIONS = [
+  {
+    id: "formazione",
+    label: "Formazione del personale",
+    shortLabel: "Formazione",
+    description:
+      "Competenze, aggiornamento professionale e capacità amministrativa interna.",
+    localEvidence: ["PIAO", "piano della formazione", "atti su competenze digitali"],
+    routes: [
+      { href: "/atti-fondamentali", label: "Atti fondamentali" },
+      { href: "/macchina-comunale", label: "Macchina comunale" },
+      { href: "/accesso-civico", label: "Accesso civico" },
+    ],
+    icon: BookOpenCheck,
+  },
+  {
+    id: "organizzazione",
+    label: "Organizzazione e lavoro pubblico",
+    shortLabel: "Organizzazione",
+    description:
+      "Assetti organizzativi, lavoro agile, fabbisogni, copertura degli uffici e capacità di presidio dei servizi.",
+    localEvidence: ["PIAO", "piano dei fabbisogni", "dotazione organica", "atti organizzativi"],
+    routes: [
+      { href: "/macchina-comunale", label: "Macchina comunale" },
+      { href: "/atti-fondamentali", label: "Atti fondamentali" },
+      { href: "/performance", label: "Performance" },
+    ],
+    icon: Building2,
+  },
+  {
+    id: "digitalizzazione",
+    label: "Digitalizzazione",
+    shortLabel: "Digitale",
+    description:
+      "Servizi digitali, interoperabilità, dati aperti, infrastrutture e processi online.",
+    localEvidence: ["portale open data", "servizi online", "contratti ICT", "obiettivi PIAO"],
+    routes: [
+      { href: "/opendata", label: "Open data" },
+      { href: "/sviluppatori", label: "API e sviluppatori" },
+      { href: "/contratti", label: "Contratti ICT" },
+    ],
+    icon: Database,
+  },
+  {
+    id: "cybersecurity",
+    label: "Sicurezza informatica",
+    shortLabel: "Cybersecurity",
+    description:
+      "Misure organizzative, contratti, policy e documenti pubblici sulla sicurezza ICT.",
+    localEvidence: ["atti ICT", "contratti di manutenzione rete", "misure organizzative pubbliche"],
+    routes: [
+      { href: "/contratti", label: "Contratti" },
+      { href: "/atti-fondamentali", label: "Atti fondamentali" },
+      { href: "/accesso-civico", label: "Accesso civico" },
+    ],
+    icon: ShieldCheck,
+  },
+  {
+    id: "servizi",
+    label: "Servizi finali ai cittadini",
+    shortLabel: "Servizi",
+    description:
+      "Tracce pubbliche su qualità, accessibilità, tempi e canali dei servizi erogati alla cittadinanza.",
+    localEvidence: ["indicatori di performance", "carte dei servizi", "dataset su servizi", "segnalazioni civiche"],
+    routes: [
+      { href: "/performance", label: "Performance" },
+      { href: "/opendata", label: "Open data" },
+      { href: "/segnalazioni", label: "Segnalazioni" },
+    ],
+    icon: Users,
+  },
+  {
+    id: "sostenibilita",
+    label: "Gestione ecosostenibile",
+    shortLabel: "Sostenibilità",
+    description:
+      "Atti, dati e contratti su ambiente, energia, rifiuti, acquisti verdi e gestione sostenibile.",
+    localEvidence: ["dataset ambientali", "contratti energia/rifiuti", "progetti PNRR", "atti di programmazione"],
+    routes: [
+      { href: "/opendata", label: "Open data" },
+      { href: "/contratti", label: "Contratti" },
+      { href: "/pnrr", label: "PNRR" },
+    ],
+    icon: Leaf,
+  },
+  {
+    id: "innovazione-sociale",
+    label: "Innovazione sociale",
+    shortLabel: "Innovazione sociale",
+    description:
+      "Co-progettazioni, patti, partenariati, avvisi e iniziative con valore pubblico e sociale.",
+    localEvidence: ["bandi", "avvisi", "archivio proposte", "atti di co-progettazione"],
+    routes: [
+      { href: "/bandi", label: "Bandi" },
+      { href: "/archivio-proposte", label: "Archivio proposte" },
+      { href: "/monitoraggio", label: "Monitor civico" },
+    ],
+    icon: Network,
+  },
+  {
+    id: "ai-pa",
+    label: "Intelligenza artificiale nella PA",
+    shortLabel: "IA nella PA",
+    description:
+      "Eventuali policy, atti o informative sull’uso di strumenti automatizzati o IA da parte dell’ente.",
+    localEvidence: ["policy comunali", "informative", "atti su strumenti automatizzati", "cautele metodologiche"],
+    routes: [
+      { href: "/metodologia", label: "Metodologia" },
+      { href: "/note-legali", label: "Note legali" },
+      { href: "/fonti-dati", label: "Fonti dati" },
+    ],
+    icon: Bot,
+  },
+] as const satisfies readonly IstatPaDimension[];
+
+export const ISTAT_PA_DIMENSION_BY_ID = Object.fromEntries(
+  ISTAT_PA_DIMENSIONS.map((dimension) => [dimension.id, dimension]),
+) as Record<IstatPaDimensionId, IstatPaDimension>;
+
+export const ISTAT_PA_READING_RULES = [
+  "ISTAT suggerisce dimensioni da osservare, non conclusioni sul Comune.",
+  "Le fonti comunali documentano eventuali risposte locali.",
+  "L’assenza di un dato pubblico è un bisogno di verifica, non una prova negativa.",
+] as const;
+
+export const ISTAT_PA_OPEN_DATA_SEARCH_HINTS = [
+  { dimensionId: "digitalizzazione", query: "digitale servizi online interoperabilità" },
+  { dimensionId: "servizi", query: "servizi cittadini tempi qualità" },
+  { dimensionId: "sostenibilita", query: "ambiente rifiuti energia sostenibilità" },
+  { dimensionId: "cybersecurity", query: "sicurezza informatica ICT" },
+  { dimensionId: "ai-pa", query: "intelligenza artificiale algoritmi automazione" },
+] as const satisfies readonly {
+  dimensionId: IstatPaDimensionId;
+  query: string;
+}[];
+
+export const ISTAT_ACT_TAGS_BY_SLUG: Record<string, readonly IstatActTag[]> = {
+  piao: [
+    { label: "Formazione", dimensionId: "formazione" },
+    { label: "Organizzazione", dimensionId: "organizzazione" },
+    { label: "Digitale", dimensionId: "digitalizzazione" },
+  ],
+  dup: [
+    { label: "Programmazione", dimensionId: "organizzazione" },
+    { label: "Servizi", dimensionId: "servizi" },
+  ],
+  bilancio: [
+    { label: "Risorse", dimensionId: "organizzazione" },
+    { label: "Servizi", dimensionId: "servizi" },
+  ],
+  rendiconto: [
+    { label: "Risorse", dimensionId: "organizzazione" },
+    { label: "Servizi", dimensionId: "servizi" },
+  ],
+  regolamenti: [
+    { label: "Organizzazione", dimensionId: "organizzazione" },
+    { label: "Trasparenza", dimensionId: "digitalizzazione" },
+  ],
+  "piano-opere-pubbliche": [
+    { label: "Sostenibilità", dimensionId: "sostenibilita" },
+    { label: "Servizi", dimensionId: "servizi" },
+  ],
+};
+
+export function getIstatActTags(slug: string | null | undefined) {
+  if (!slug) return [];
+  const normalized = slug.toLowerCase();
+  const direct = ISTAT_ACT_TAGS_BY_SLUG[normalized];
+  if (direct) return direct;
+
+  if (normalized.includes("piao")) return ISTAT_ACT_TAGS_BY_SLUG.piao;
+  if (normalized.includes("dup")) return ISTAT_ACT_TAGS_BY_SLUG.dup;
+  if (normalized.includes("bilancio")) return ISTAT_ACT_TAGS_BY_SLUG.bilancio;
+  if (normalized.includes("rendiconto")) return ISTAT_ACT_TAGS_BY_SLUG.rendiconto;
+  if (normalized.includes("regol")) return ISTAT_ACT_TAGS_BY_SLUG.regolamenti;
+  if (normalized.includes("opera") || normalized.includes("opere")) {
+    return ISTAT_ACT_TAGS_BY_SLUG["piano-opere-pubbliche"];
+  }
+
+  return [];
+}
