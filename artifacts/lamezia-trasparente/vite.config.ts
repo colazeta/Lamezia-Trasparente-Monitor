@@ -3,6 +3,7 @@ import react from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
 import path from "path";
 import runtimeErrorOverlay from "@replit/vite-plugin-runtime-error-modal";
+import { generatePublicSeoAssets } from "./scripts/generate-public-seo-assets.mjs";
 
 const rawPort = process.env.PORT ?? "8081";
 
@@ -13,6 +14,8 @@ if (Number.isNaN(port) || port <= 0) {
 }
 
 const basePath = process.env.BASE_PATH ?? "/";
+const publicDir = path.resolve(import.meta.dirname, "public");
+const publicOutputDir = path.resolve(import.meta.dirname, "dist", "public");
 
 export default defineConfig({
   base: basePath,
@@ -20,6 +23,16 @@ export default defineConfig({
     react(),
     tailwindcss(),
     runtimeErrorOverlay(),
+    {
+      name: "lamezia-public-seo-assets",
+      apply: "build",
+      writeBundle() {
+        generatePublicSeoAssets({
+          publicDir,
+          outputDir: publicOutputDir,
+        });
+      },
+    },
     ...(process.env.NODE_ENV !== "production" &&
     process.env.REPL_ID !== undefined
       ? [
@@ -48,7 +61,7 @@ export default defineConfig({
   },
   root: path.resolve(import.meta.dirname),
   build: {
-    outDir: path.resolve(import.meta.dirname, "dist/public"),
+    outDir: publicOutputDir,
     emptyOutDir: true,
   },
   server: {
