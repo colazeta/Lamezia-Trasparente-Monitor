@@ -1,4 +1,4 @@
-import type { LucideIcon } from "lucide-react";
+import type { ElementType } from "react";
 import {
   BookOpenCheck,
   Bot,
@@ -35,7 +35,7 @@ export type IstatPaDimension = {
   description: string;
   localEvidence: readonly string[];
   routes: readonly IstatPaRouteLink[];
-  icon: LucideIcon;
+  icon: ElementType;
 };
 
 export type IstatActTag = {
@@ -212,47 +212,61 @@ export const ISTAT_PA_OPEN_DATA_SEARCH_HINTS = [
   query: string;
 }[];
 
-export const ISTAT_ACT_TAGS_BY_SLUG: Record<string, readonly IstatActTag[]> = {
-  piao: [
-    { label: "Formazione", dimensionId: "formazione" },
-    { label: "Organizzazione", dimensionId: "organizzazione" },
-    { label: "Digitale", dimensionId: "digitalizzazione" },
-  ],
-  dup: [
-    { label: "Programmazione", dimensionId: "organizzazione" },
-    { label: "Servizi", dimensionId: "servizi" },
-  ],
-  bilancio: [
-    { label: "Risorse", dimensionId: "organizzazione" },
-    { label: "Servizi", dimensionId: "servizi" },
-  ],
-  rendiconto: [
-    { label: "Risorse", dimensionId: "organizzazione" },
-    { label: "Servizi", dimensionId: "servizi" },
-  ],
-  regolamenti: [
-    { label: "Organizzazione", dimensionId: "organizzazione" },
-    { label: "Trasparenza", dimensionId: "digitalizzazione" },
-  ],
-  "piano-opere-pubbliche": [
-    { label: "Sostenibilità", dimensionId: "sostenibilita" },
-    { label: "Servizi", dimensionId: "servizi" },
-  ],
+const PIAO_TAGS = [
+  { label: "Formazione", dimensionId: "formazione" },
+  { label: "Organizzazione", dimensionId: "organizzazione" },
+  { label: "Digitale", dimensionId: "digitalizzazione" },
+] as const satisfies readonly IstatActTag[];
+
+const DUP_TAGS = [
+  { label: "Programmazione", dimensionId: "organizzazione" },
+  { label: "Servizi", dimensionId: "servizi" },
+] as const satisfies readonly IstatActTag[];
+
+const BILANCIO_TAGS = [
+  { label: "Risorse", dimensionId: "organizzazione" },
+  { label: "Servizi", dimensionId: "servizi" },
+] as const satisfies readonly IstatActTag[];
+
+const RENDICONTO_TAGS = [
+  { label: "Risorse", dimensionId: "organizzazione" },
+  { label: "Servizi", dimensionId: "servizi" },
+] as const satisfies readonly IstatActTag[];
+
+const REGOLAMENTI_TAGS = [
+  { label: "Organizzazione", dimensionId: "organizzazione" },
+  { label: "Trasparenza", dimensionId: "digitalizzazione" },
+] as const satisfies readonly IstatActTag[];
+
+const PIANO_OPERE_TAGS = [
+  { label: "Sostenibilità", dimensionId: "sostenibilita" },
+  { label: "Servizi", dimensionId: "servizi" },
+] as const satisfies readonly IstatActTag[];
+
+const ISTAT_ACT_TAGS_BY_SLUG: Record<string, readonly IstatActTag[]> = {
+  piao: PIAO_TAGS,
+  dup: DUP_TAGS,
+  bilancio: BILANCIO_TAGS,
+  rendiconto: RENDICONTO_TAGS,
+  regolamenti: REGOLAMENTI_TAGS,
+  "piano-opere-pubbliche": PIANO_OPERE_TAGS,
 };
 
-export function getIstatActTags(slug: string | null | undefined) {
+export function getIstatActTags(
+  slug: string | null | undefined,
+): readonly IstatActTag[] {
   if (!slug) return [];
   const normalized = slug.toLowerCase();
   const direct = ISTAT_ACT_TAGS_BY_SLUG[normalized];
   if (direct) return direct;
 
-  if (normalized.includes("piao")) return ISTAT_ACT_TAGS_BY_SLUG.piao;
-  if (normalized.includes("dup")) return ISTAT_ACT_TAGS_BY_SLUG.dup;
-  if (normalized.includes("bilancio")) return ISTAT_ACT_TAGS_BY_SLUG.bilancio;
-  if (normalized.includes("rendiconto")) return ISTAT_ACT_TAGS_BY_SLUG.rendiconto;
-  if (normalized.includes("regol")) return ISTAT_ACT_TAGS_BY_SLUG.regolamenti;
+  if (normalized.includes("piao")) return PIAO_TAGS;
+  if (normalized.includes("dup")) return DUP_TAGS;
+  if (normalized.includes("bilancio")) return BILANCIO_TAGS;
+  if (normalized.includes("rendiconto")) return RENDICONTO_TAGS;
+  if (normalized.includes("regol")) return REGOLAMENTI_TAGS;
   if (normalized.includes("opera") || normalized.includes("opere")) {
-    return ISTAT_ACT_TAGS_BY_SLUG["piano-opere-pubbliche"];
+    return PIANO_OPERE_TAGS;
   }
 
   return [];
