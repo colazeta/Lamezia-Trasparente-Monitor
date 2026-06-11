@@ -1,5 +1,18 @@
+import type { ElementType } from "react";
 import { Link } from "wouter";
-import { ExternalLink, Info, Telescope } from "lucide-react";
+import {
+  BookOpenCheck,
+  Bot,
+  Building2,
+  Database,
+  ExternalLink,
+  Info,
+  Leaf,
+  Network,
+  ShieldCheck,
+  Telescope,
+  Users,
+} from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -11,22 +24,32 @@ import {
   ISTAT_PA_SOURCE,
   type IstatPaDimension,
   type IstatPaDimensionId,
+  type IstatPaIconName,
 } from "@/data/istatPaLens";
 
 export type IstatPaLensVariant = "compact" | "inline" | "full";
 
-function isIstatPaDimension(
-  value: IstatPaDimension | undefined,
-): value is IstatPaDimension {
-  return value !== undefined;
-}
+const ISTAT_PA_ICONS: Record<IstatPaIconName, ElementType> = {
+  "book-open-check": BookOpenCheck,
+  bot: Bot,
+  building: Building2,
+  database: Database,
+  leaf: Leaf,
+  network: Network,
+  "shield-check": ShieldCheck,
+  users: Users,
+};
 
 function getDimensions(
   ids?: readonly IstatPaDimensionId[],
 ): readonly IstatPaDimension[] {
   return ids?.length
-    ? ids.map((id) => ISTAT_PA_DIMENSION_BY_ID[id]).filter(isIstatPaDimension)
+    ? ids.map((id) => ISTAT_PA_DIMENSION_BY_ID[id])
     : ISTAT_PA_DIMENSIONS;
+}
+
+function getDimensionIcon(dimension: IstatPaDimension): ElementType {
+  return ISTAT_PA_ICONS[dimension.iconName];
 }
 
 export function IstatDimensionChips({
@@ -41,7 +64,7 @@ export function IstatDimensionChips({
   return (
     <div className={`flex flex-wrap gap-2 ${className ?? ""}`}>
       {items.map((dimension) => {
-        const Icon = dimension.icon;
+        const Icon = getDimensionIcon(dimension);
         return (
           <Badge
             key={dimension.id}
@@ -112,7 +135,7 @@ export function IstatPaLensCard({
         {isFull ? (
           <div className="grid gap-3 md:grid-cols-2">
             {items.map((dimension) => {
-              const Icon = dimension.icon;
+              const Icon = getDimensionIcon(dimension);
               return (
                 <article
                   key={dimension.id}
