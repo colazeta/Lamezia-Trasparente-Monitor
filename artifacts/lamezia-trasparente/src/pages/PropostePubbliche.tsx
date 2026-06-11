@@ -6,14 +6,17 @@ import {
   FileText,
   Filter,
   Landmark,
+  Lightbulb,
   RefreshCw,
   SearchCheck,
 } from "lucide-react";
 
+import { CivicPracticeCard } from "@/components/civic-practices/CivicPracticeCard";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { PageMeta } from "@/components/seo/PageMeta";
+import { CIVIC_PRACTICES } from "@/data/civicPractices";
 import {
   PUBLIC_PROPOSALS,
   PROPOSAL_CHANNEL_LABELS,
@@ -101,9 +104,10 @@ export function PropostePubbliche() {
               </h1>
               <p className="mt-3 max-w-3xl text-lg leading-relaxed text-muted-foreground">
                 Una v0 data-driven per raccogliere proposte di interesse pubblico
-                in modo ordinato, consultabile e prudente. La presenza in questo
-                archivio indica rilevanza civica e verificabilità documentale, non
-                adesione politica o valutazione di merito.
+                e pratiche replicabili in modo ordinato, consultabile e prudente.
+                La presenza in questo archivio indica rilevanza civica e
+                verificabilità documentale, non adesione politica o valutazione di
+                merito.
               </p>
             </div>
             <aside className="rounded-2xl border border-amber-200 bg-amber-50 p-4 text-amber-950 dark:border-amber-900/60 dark:bg-amber-950/20 dark:text-amber-100">
@@ -114,8 +118,8 @@ export function PropostePubbliche() {
                 />
                 <p className="text-sm leading-relaxed">
                   Archivio documentale, non endorsement: ogni scheda va letta con
-                  fonti, limiti e stato dichiarato. I record seed non introducono
-                  fonti esterne né dati personali non necessari.
+                  fonti, limiti e stato dichiarato. I casi osservati altrove
+                  servono a generare domande civiche, non confronti accusatori.
                 </p>
               </div>
             </aside>
@@ -133,17 +137,17 @@ export function PropostePubbliche() {
             {
               icon: SearchCheck,
               title: "Criterio di inclusione",
-              text: "Sono censite proposte con valore pubblico: trasparenza, servizi, beni comuni, partecipazione, accessibilità o gestione delle risorse collettive.",
+              text: "Sono censite proposte e pratiche con valore pubblico: trasparenza, servizi, beni comuni, partecipazione, accessibilità o gestione delle risorse collettive.",
             },
             {
               icon: FileText,
               title: "Fonti e limiti",
-              text: "La v0 usa un manifest tipizzato locale. Le schede seed sono interne/documentali e richiedono collegamenti futuri ad atti o fonti ufficiali.",
+              text: "La v0 usa manifest tipizzati locali. Fonti social, screenshot o stampa servono solo allo scouting finché non sono riscontrate da fonti primarie.",
             },
             {
               icon: Landmark,
               title: "Lettura neutra",
-              text: "Stato, canale e destinatario descrivono il percorso documentale noto; non implicano responsabilità, recepimento o giudizi politici.",
+              text: "Stato, canale, destinatario e replicabilità descrivono il percorso documentale noto; non implicano responsabilità, recepimento o giudizi politici.",
             },
           ].map((item) => (
             <Card key={item.title} className="p-5">
@@ -158,6 +162,34 @@ export function PropostePubbliche() {
           ))}
         </section>
 
+        <section className="mt-8" aria-labelledby="pratiche-replicabili">
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+              <span className="eyebrow text-primary">
+                <Lightbulb className="h-3.5 w-3.5" aria-hidden="true" />
+                Soluzioni osservate altrove
+              </span>
+              <h2
+                id="pratiche-replicabili"
+                className="mt-2 font-display text-2xl font-bold"
+              >
+                Pratiche replicabili
+              </h2>
+              <p className="mt-1 max-w-3xl text-sm leading-relaxed text-muted-foreground">
+                Casi civici osservati in comuni vicini o comparabili. Ogni scheda
+                distingue pratica, problema, fonte, condizioni minime e domande
+                per Lamezia, senza trasformare l'esempio in accusa o benchmark
+                automatico.
+              </p>
+            </div>
+          </div>
+          <div className="mt-5 grid gap-5">
+            {CIVIC_PRACTICES.map((practice) => (
+              <CivicPracticeCard key={practice.id} practice={practice} />
+            ))}
+          </div>
+        </section>
+
         <section
           aria-labelledby="filtri-proposte"
           className="mt-8 rounded-2xl border border-border bg-card p-4 shadow-sm"
@@ -166,7 +198,7 @@ export function PropostePubbliche() {
             <div className="flex items-center gap-2">
               <Filter className="h-5 w-5 text-primary" aria-hidden="true" />
               <h2 id="filtri-proposte" className="font-display text-xl font-bold">
-                Filtri
+                Filtri proposte
               </h2>
             </div>
             <Button
