@@ -109,6 +109,13 @@ function locationQualityLabel(value: LocationQuality | null | undefined) {
     : "localizzazione non disponibile";
 }
 
+function sourceLabelForUrl(url: string | null | undefined, fallback: string) {
+  if (!url) return null;
+  return url.includes("openpnrr.it")
+    ? "OpenPNRR — progetti/localizzazioni per Comune"
+    : fallback;
+}
+
 function dataStatus(project: PnrrProject) {
   if (project.aggiornamentoVecchio)
     return "da verificare sulla fonte ufficiale";
@@ -921,6 +928,15 @@ function PnrrCard({ project }: { project: PnrrProject }) {
 }
 
 function SourceTraceability({ project }: { project: PnrrProject }) {
+  const projectSourceLabel = sourceLabelForUrl(
+    project.projectSourceUrl,
+    "Dataset ufficiale Italia Domani — Progetti PNRR",
+  );
+  const locationSourceLabel = sourceLabelForUrl(
+    project.locationSourceUrl,
+    "Dataset ufficiale Italia Domani — Localizzazione progetti PNRR",
+  );
+
   return (
     <section
       className="mb-4 rounded-lg border border-border/60 bg-muted/20 p-3"
@@ -938,44 +954,52 @@ function SourceTraceability({ project }: { project: PnrrProject }) {
           <Badge variant="outline" className="mb-1 text-xs shadow-none">
             Fonte dati importata
           </Badge>
-          <a
-            href={
-              project.importSourceUrl ||
-              project.projectSourceUrl ||
-              ITALIA_DOMANI_PROJECTS_DATASET_URL
-            }
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 text-primary hover:underline"
-          >
-            <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
-            {project.importSourceLabel ||
-              "Dataset ufficiale Italia Domani — Progetti PNRR"}
-          </a>
+          {projectSourceLabel ? (
+            <a
+              href={project.projectSourceUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 text-primary hover:underline"
+            >
+              <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
+              {projectSourceLabel}
+            </a>
+          ) : (
+            <p className="text-muted-foreground">
+              {project.importSourceLabel ||
+                "Fonte effettiva dei dati pubblicati non determinabile"}
+            </p>
+          )}
           <p className="mt-1 text-xs text-muted-foreground">
-            Fonte registrata dallo stato dell'importazione per leggere o
-            verificare anagrafica, importi, missione e stato dei CUP
-            selezionati.
+            {projectSourceLabel
+              ? "Fonte usata per leggere o verificare anagrafica, importi, missione e stato dei CUP selezionati."
+              : "Il metadato dell'ultimo tentativo è separato dai dati già pubblicati: serve verifica tecnica prima di attribuire una fonte puntuale."}
           </p>
         </div>
         <div className="rounded-md bg-card p-2">
           <Badge variant="outline" className="mb-1 text-xs shadow-none">
             Fonte localizzazione territoriale
           </Badge>
-          <a
-            href={
-              project.locationSourceUrl || ITALIA_DOMANI_LOCATION_DATASET_URL
-            }
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 text-primary hover:underline"
-          >
-            <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
-            Dataset ufficiale Italia Domani — Localizzazione progetti PNRR
-          </a>
+          {locationSourceLabel ? (
+            <a
+              href={project.locationSourceUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 text-primary hover:underline"
+            >
+              <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
+              {locationSourceLabel}
+            </a>
+          ) : (
+            <p className="text-muted-foreground">
+              Fonte localizzazione effettiva non determinabile dai metadati
+              disponibili.
+            </p>
+          )}
           <p className="mt-1 text-xs text-muted-foreground">
-            Dataset usato per filtrare i CUP associati al Comune di Lamezia
-            Terme prima dell'unione con il dataset nazionale progetti.
+            {locationSourceLabel
+              ? "Fonte usata per filtrare o verificare i CUP associati al Comune di Lamezia Terme prima della pubblicazione nel tracker."
+              : "Il metadato disponibile non permette di attribuire con certezza la fonte di localizzazione delle righe già pubblicate."}
           </p>
         </div>
         <div className="rounded-md bg-card p-2">
