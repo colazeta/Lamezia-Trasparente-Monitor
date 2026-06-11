@@ -1,4 +1,10 @@
-import { mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import {
+  mkdirSync,
+  mkdtempSync,
+  readFileSync,
+  rmSync,
+  writeFileSync,
+} from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { describe, expect, test } from "vitest";
@@ -14,6 +20,7 @@ describe("production SEO asset generation", () => {
     const outputDir = path.join(workspace, "dist", "public");
 
     try {
+      mkdirSync(publicDir, { recursive: true });
       writeFileSync(
         path.join(publicDir, "sitemap.xml"),
         `<?xml version="1.0" encoding="UTF-8"?>
@@ -55,6 +62,7 @@ describe("production SEO asset generation", () => {
     const outputDir = path.join(workspace, "dist", "public");
 
     try {
+      mkdirSync(publicDir, { recursive: true });
       writeFileSync(
         path.join(publicDir, "sitemap.xml"),
         `<?xml version="1.0" encoding="UTF-8"?>
