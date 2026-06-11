@@ -115,6 +115,11 @@ function publicationPatchDate(raw: string | null | undefined) {
   if (raw === undefined) {
     return { ok: true as const, date: new Date() };
   }
+
+  if (typeof raw === "string" && raw.trim() === "") {
+    return { ok: false as const };
+  }
+
   return parseOptionalDate(raw);
 }
 

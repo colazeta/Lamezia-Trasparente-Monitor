@@ -201,4 +201,27 @@ describe("PATCH /api/reports/:id/publication", () => {
     expect(res.status).toBe(400);
     expect(res.body).toEqual({ error: "Date non valide" });
   });
+
+  it.each(["", "   "])(
+    "rejects blank publishedAt string %j instead of clearing publication",
+    async (publishedAt) => {
+      const id = await createLegacyReport({
+        publishedAt: new Date("2026-06-08T10:00:00.000Z"),
+      });
+
+      const res = await request(app)
+        .patch(`/api/reports/${id}/publication`)
+        .set(auth)
+        .send({ publishedAt });
+
+      expect(res.status).toBe(400);
+      expect(res.body).toEqual({ error: "Date non valide" });
+
+      const [row] = await db
+        .select({ publishedAt: reportsTable.publishedAt })
+        .from(reportsTable)
+        .where(inArray(reportsTable.id, [id]));
+      expect(row.publishedAt?.toISOString()).toBe("2026-06-08T10:00:00.000Z");
+    },
+  );
 });
