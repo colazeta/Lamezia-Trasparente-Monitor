@@ -6005,6 +6005,10 @@ components:
         - sourceId
         - projectSourceUrl
         - locationSourceUrl
+        - importSourceLabel
+        - importSourceUrl
+        - importSourceStatus
+        - importSourceError
         - title
         - attachments
         - documentsCount
@@ -6024,10 +6028,22 @@ components:
           type: string
         projectSourceUrl:
           type: string
-          description: Official Italia Domani national projects dataset used for the project details
+          description: Data source URL used for the project details; it follows the import source when the importer used a fallback source
         locationSourceUrl:
           type: string
-          description: Official Italia Domani localization dataset used to select CUPs for the municipality
+          description: Data source URL used to select or verify CUPs for the municipality; it follows the import source when the importer used a fallback source
+        importSourceLabel:
+          type: string
+          description: Label recorded by the latest PNRR import for the data source actually used
+        importSourceUrl:
+          type: string
+          description: URL recorded by the latest PNRR import for the data source actually used
+        importSourceStatus:
+          type: ["string", "null"]
+          description: Latest import status for the recorded PNRR data source
+        importSourceError:
+          type: ["string", "null"]
+          description: Latest import warning or error recorded for the PNRR data source, when present
         url:
           type: ["string", "null"]
         title:
@@ -6092,7 +6108,13 @@ components:
 
     PnrrCensus:
       type: object
-      required: [projects, uncensored]
+      required:
+        - projects
+        - uncensored
+        - importSourceLabel
+        - importSourceUrl
+        - importSourceStatus
+        - importSourceError
       properties:
         projects:
           type: array
@@ -6104,7 +6126,19 @@ components:
             $ref: "#/components/schemas/Publication"
         censusLastUpdatedAt:
           type: ["string", "null"]
-          description: When the Italia Domani census feed was last successfully updated
+          description: When the PNRR census feed was last successfully updated
+        importSourceLabel:
+          type: string
+          description: Label recorded by the latest PNRR import for the data source actually used
+        importSourceUrl:
+          type: string
+          description: URL recorded by the latest PNRR import for the data source actually used
+        importSourceStatus:
+          type: ["string", "null"]
+          description: Latest import status for the recorded PNRR data source
+        importSourceError:
+          type: ["string", "null"]
+          description: Latest import warning or error recorded for the PNRR data source, when present
 
     OpendataResource:
       type: object

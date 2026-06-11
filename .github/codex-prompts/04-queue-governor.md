@@ -42,10 +42,12 @@ Anti-idle rule:
 - Do not count `output-without-PR` summaries as active slots; route them to `codex:follow-up` and request a reviewable PR to `main` or a verifiable blocker with exact branch/ref/SHA details.
 - Do not count explicit technical blockers as active slots after they are reported. Route them to `codex:blocked` or `codex:follow-up`, preserve exact blocker details, and release capacity.
 
-Collision-control fields required for every recommended promotion, pause or block:
+Collision-control fields required for every recommended promotion, invocation, pause or block:
 - Probable scope: {{PROBABLE_SCOPE}}
 - Likely files/modules: {{LIKELY_FILES}}
 - Collision risk: low / medium / high
+- Evidence used and age:
+- Matrix result: high blocks unless human accepted; medium requires narrow scope and explicit note; low may proceed
 
 
 Capacity/collision matrix:
@@ -68,6 +70,16 @@ Output format:
 ### Queue status
 Continue / Pause / Human intervention required
 
+### Materialization debt gate
+- Debt count:
+- Labels/states counted:
+- Query/page scope inspected:
+- Gate result: open / enforced
+- Allowed action chosen:
+
+### Derived states
+- Issue / state / evidence age / capacity effect:
+
 ### Capacity count
 - Real active operational tasks:
 - Reserved fresh `codex:prompted` slots awaiting invocation:
@@ -80,13 +92,13 @@ Continue / Pause / Human intervention required
 
 ### Collision risks
 
-### Stale zombie tasks
+### Stale zombie and output-without-PR tasks
 
 ### Fresh prompted issues inside grace window
 
 ### Anti-idle actions
 
-### Direct Codex invocations
+### Anti-idle actions
 
 ### Fast-lane candidates
 

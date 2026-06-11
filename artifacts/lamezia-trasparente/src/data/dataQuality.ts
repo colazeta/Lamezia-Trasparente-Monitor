@@ -68,6 +68,16 @@ const DATA_QUALITY_NOTES = [
     attachmentAvailability:
       "Non applicabile in questa matrice: i dataset PNRR sono basi tabellari nazionali, non fascicoli con allegati locali.",
   },
+
+  {
+    sourceName: "OpenPNRR — Openpolis",
+    lastKnownUpdate:
+      "Documentato/manuale: fonte di supporto consultata solo come fallback; gli aggiornamenti dipendono dal servizio OpenPNRR e dalle basi dati PNRR sottostanti.",
+    identifierCoverage:
+      "Documentato/manuale: CUP e collegamenti di progetto vanno confrontati con il catalogo ufficiale Italia Domani e con gli atti dell'ente attuatore; copertura locale non calcolata qui.",
+    attachmentAvailability:
+      "Non applicabile in questa matrice: fonte civica di consultazione e rielaborazione, non fascicolo locale con allegati monitorati dal portale.",
+  },
   {
     sourceName: "ANBSC — Open data beni sequestrati e confiscati",
     lastKnownUpdate:
@@ -86,7 +96,29 @@ const DATA_QUALITY_NOTES = [
     attachmentAvailability:
       "Documentato/manuale: eventuali file o documenti di provenienza vanno letti con il registro ufficiale; quota non calcolata qui.",
   },
+
+  {
+    sourceName: "Promessometro amministrativo — seed manuale",
+    lastKnownUpdate:
+      "Documentato/manuale: seed redazionale v0 aggiornabile solo dopo verifica di fonte programmatica, data, mandato di riferimento e nota di cautela.",
+    identifierCoverage:
+      "Documentato/manuale: eventuali promesse reali richiedono fonte e atto pertinente verificati; nessuna copertura aggregata è calcolata da questa matrice.",
+    attachmentAvailability:
+      "Documentato/manuale: i collegamenti ad atti o fonti programmatiche vanno verificati caso per caso; quota di allegati non calcolata qui.",
+  },
+  {
+    sourceName: "Atti fondamentali, performance, legalità e pareri",
+    lastKnownUpdate:
+      "Documentato/manuale: periodicità variabile per tipologia di documento istituzionale; questa matrice non calcola un timestamp unico di aggiornamento.",
+    identifierCoverage:
+      "Documentato/manuale: estremi, annualità e versioni dipendono dalle schede ufficiali dei singoli documenti; copertura aggregata non calcolata qui.",
+    attachmentAvailability:
+      "Documentato/manuale: documenti e pareri vanno confrontati con l'ultima pubblicazione ufficiale dell'ente; quota di allegati non calcolata qui.",
+  },
 ] satisfies readonly DataQualityNote[];
+
+export const DATA_QUALITY_EXCLUDED_SOURCE_NAMES =
+  [] satisfies readonly DataSourceName[];
 
 const getSourceLinkAvailability = (href: string) =>
   href.trim().length > 0

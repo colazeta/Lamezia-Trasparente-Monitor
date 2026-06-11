@@ -14,10 +14,24 @@ export interface PnrrProject {
   id: number;
   key: string;
   sourceId: string;
-  /** Official Italia Domani national projects dataset used for the project details */
+  /** Data source URL used for the project details; it follows the import source when the importer used a fallback source */
   projectSourceUrl: string;
-  /** Official Italia Domani localization dataset used to select CUPs for the municipality */
+  /** Data source URL used to select or verify CUPs for the municipality; it follows the import source when the importer used a fallback source */
   locationSourceUrl: string;
+  /** Label recorded by the latest PNRR import for the data source actually used */
+  importSourceLabel: string;
+  /** URL recorded by the latest PNRR import for the data source actually used */
+  importSourceUrl: string;
+  /**
+     * Latest import status for the recorded PNRR data source
+     * @nullable
+     */
+  importSourceStatus: string | null;
+  /**
+     * Latest import warning or error recorded for the PNRR data source, when present
+     * @nullable
+     */
+  importSourceError: string | null;
   /** @nullable */
   url?: string | null;
   title: string;

@@ -18,10 +18,9 @@ import {
   BadgeEuro,
   Landmark,
 } from "lucide-react";
-import { format } from "date-fns";
-import { it } from "date-fns/locale";
 import { Link } from "wouter";
 import { MONITORING_DOCS_NOTICE } from "@/lib/monitoring";
+import { formatPublicTimeField } from "@/lib/time";
 import {
   alboExtractionText,
   extractAlboCigs,
@@ -60,12 +59,6 @@ const CATEGORY_LABELS: Record<string, string> = {
   convocazione: "Convocazioni",
   ordinanza: "Ordinanze",
 };
-
-function formatDate(value: string | null | undefined, pattern = "dd MMM yyyy") {
-  if (!value) return "—";
-  const d = new Date(value);
-  return Number.isNaN(d.getTime()) ? "—" : format(d, pattern, { locale: it });
-}
 
 function matchesPresence(value: boolean, filter: string): boolean {
   return filter === "all" || (filter === "yes" ? value : !value);
@@ -198,7 +191,10 @@ export function Albo() {
           Ultimo aggiornamento:{" "}
           <span className="text-primary font-mono">
             {feed?.lastUpdatedAt
-              ? formatDate(feed.lastUpdatedAt, "dd MMMM yyyy 'alle' HH:mm")
+              ? formatPublicTimeField(
+                  feed.lastUpdatedAt,
+                  "dd MMMM yyyy 'alle' HH:mm",
+                )
               : "in corso…"}
           </span>
         </span>
@@ -433,7 +429,7 @@ export function Albo() {
                   </div>
                   <div className="flex items-center gap-1.5 text-xs font-mono text-muted-foreground">
                     <Calendar className="h-3.5 w-3.5"  aria-hidden="true"/>
-                    {formatDate(p.pubStart)}
+                    {formatPublicTimeField(p.pubStart)}
                   </div>
                 </div>
 
@@ -456,7 +452,9 @@ export function Albo() {
                     </span>
                   )}
                   {p.pubEnd && (
-                    <span>Pubblicato fino al {formatDate(p.pubEnd, "dd/MM/yyyy")}</span>
+                    <span>
+                      Pubblicato fino al {formatPublicTimeField(p.pubEnd, "dd/MM/yyyy")}
+                    </span>
                   )}
                   {p.isPnrr && (
                     <Badge variant="warning" className="text-[10px]">

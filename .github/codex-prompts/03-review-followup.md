@@ -29,7 +29,12 @@ Task:
    - `codex:blocked` when a concrete safety, permission, credential or collision blocker prevents continuation;
    - `codex:done` only after review/merge evidence indicates the issue appears solved.
 
+Materialization gate:
+- Count open issues/PRs with `materialization:required`, `fallback-bundle-incomplete`, `output-without-PR`, `invalid-output`, `local-only` or `needs-materialization-verification`.
+- If the count is greater than 5, recommend only materialization verification, manual UI/export recovery, split-required cleanup, blocker stabilization, stale-label cleanup or PR rebase/recovery/supersede; do not recommend a new ordinary Codex invocation.
+
 Queue rules:
+- `codex:ready` is not active work and must not be counted as an occupied slot.
 - `codex:review-needed` is human review/merge wait and does not saturate Codex capacity unless there is concrete file/module collision or Codex-side rework.
 - Open PRs, pending reviews and PRs/issues waiting only for Giovanni review or merge are outside the queue capacity count and block only candidate work touching the same files/modules or creating a concrete implementation collision.
 - Compute remaining capacity as `10 - (real active Codex operational tasks + reserved fresh codex:prompted slots awaiting invocation)`; do not subtract human-review-pending items.
@@ -45,11 +50,22 @@ Output format:
 
 ### Review result
 
+### Derived operational state
+- State:
+- Evidence used and age:
+- Stale label cleanup needed:
+
 ### PR and branch status
 
-### Stale-task check
+### Stale-task and output-without-PR check
 
 ### Recommended label changes
+
+### Materialization status
+- PR verified: yes/no
+- Fallback complete: yes/no
+- Truncation marker present: yes/no
+- Canonical state: pr-open / ready-for-human-merge / needs-rebase / ci-pending / ci-failed / review-needed / scope-risk / complete-diff-provided / small-file-bundle-complete / fallback-bundle-incomplete / output-without-PR / invalid-output / local-only / manual-ui-recoverable / split-required / blocked-stable / needs-human-decision / superseded / duplicate / archivable
 
 ### Capacity effect
 

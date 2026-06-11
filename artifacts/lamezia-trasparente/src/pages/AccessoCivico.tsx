@@ -2,6 +2,7 @@ import { useMemo, useState } from "react";
 import { toast } from "sonner";
 import {
   AlertTriangle,
+  BarChart3,
   ClipboardList,
   Copy,
   FileQuestion,
@@ -38,6 +39,7 @@ import {
 import { PageMeta } from "@/components/seo/PageMeta";
 import { CivicMonitorReturn } from "@/components/CivicMonitorReturn";
 import {
+  calculateFoiaCivicMeterMetrics,
   calculateIndicativeDeadline,
   foiaDeadlineFilterLabels,
   foiaRegisterAdapter,
@@ -311,7 +313,10 @@ function InfoSection() {
           </h3>
         </div>
         <p className="text-sm text-muted-foreground">
-          Serve quando si cerca un documento, dato o informazione che dovrebbe essere pubblicato per obbligo di trasparenza. La bozza chiede la pubblicazione o il collegamento corretto, senza formulare accuse sulla mancata pubblicazione.
+          Serve quando si cerca un documento, dato o informazione che dovrebbe
+          essere pubblicato per obbligo di trasparenza. La bozza chiede la
+          pubblicazione o il collegamento corretto, senza formulare accuse sulla
+          mancata pubblicazione.
         </p>
       </Card>
       <Card className="p-5">
@@ -657,6 +662,121 @@ function GeneratorSection({
   );
 }
 
+function RispostometroSection({ entries }: { entries: FoiaRegisterEntry[] }) {
+  const metrics = useMemo(
+    () => calculateFoiaCivicMeterMetrics(entries, { today: TODAY }),
+    [entries],
+  );
+
+  const metricCards = [
+    {
+      label: "Richieste pubbliche nel registro",
+      value: metrics.totalPublicRequests,
+      note: "Include seed dimostrativi e bozze di sessione pubblicabili.",
+    },
+    {
+      label: "Richieste inviate",
+      value: metrics.sentRequests,
+      note: "Conteggio basato sulla data pubblica di invio, se presente.",
+    },
+    {
+      label: "In attesa",
+      value: metrics.pendingRequests,
+      note: "Stati “inviata” o “in attesa”, senza valutazioni sul merito.",
+    },
+    {
+      label: "Scadenze prossime",
+      value: metrics.upcomingDeadlines,
+      note: "Termini indicativi entro 14 giorni, da verificare caso per caso.",
+    },
+    {
+      label: "Oltre termine indicativo",
+      value: metrics.overdueToVerify,
+      note: "Segnale da verificare, non violazione accertata.",
+    },
+    {
+      label: "Con risposta",
+      value: metrics.answeredRequests,
+      note: "Stati “risposta ricevuta” o “chiusa” nel registro pubblico.",
+    },
+    {
+      label: "Dinieghi / riesami / silenzi",
+      value:
+        metrics.deniedRequests +
+        metrics.reviewRequests +
+        metrics.silenceSignals,
+      note: `${metrics.deniedRequests} dinieghi, ${metrics.reviewRequests} riesami, ${metrics.silenceSignals} silenzi: classificazioni documentali, non giudizi di legittimità.`,
+    },
+    {
+      label: "Senza scadenza stimata",
+      value: metrics.noEstimatedDeadline,
+      note: "Richieste inviate con data di scadenza pubblica assente o non valida.",
+    },
+  ];
+
+  return (
+    <div className="space-y-4">
+      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        {metricCards.map((metric) => (
+          <Card key={metric.label} className="p-4">
+            <div className="text-sm font-medium text-muted-foreground">
+              {metric.label}
+            </div>
+            <div className="mt-2 font-display text-3xl font-bold">
+              {metric.value}
+            </div>
+            <p className="mt-2 text-xs leading-relaxed text-muted-foreground">
+              {metric.note}
+            </p>
+          </Card>
+        ))}
+      </div>
+
+      <div className="grid gap-4 md:grid-cols-2">
+        <Card className="flex items-start gap-3 p-4">
+          <AlertTriangle
+            className="mt-0.5 h-4 w-4 shrink-0 text-amber-600"
+            aria-hidden="true"
+          />
+          <div className="space-y-1 text-sm text-muted-foreground">
+            <h3 className="font-display text-base font-semibold text-foreground">
+              Lettura prudente delle scadenze
+            </h3>
+            <p>
+              Il Rispostometro usa il termine indicativo calcolato dal registro
+              FOIA quando esiste una data pubblica di invio. Le scadenze
+              superate sono segnali “da verificare” con l'ufficio competente,
+              non accertamenti di ritardo o responsabilità.
+            </p>
+          </div>
+        </Card>
+        <Card className="flex items-start gap-3 p-4">
+          <LockKeyhole
+            className="mt-0.5 h-4 w-4 shrink-0 text-brand"
+            aria-hidden="true"
+          />
+          <div className="space-y-1 text-sm text-muted-foreground">
+            <h3 className="font-display text-base font-semibold text-foreground">
+              Solo campi pubblici del registro
+            </h3>
+            <p>
+              Le metriche sono aggregate da{" "}
+              <span className="font-mono">publicFields</span>: stato, date
+              pubblicabili, oggetto, modulo e note pubbliche. Dati personali e{" "}
+              <span className="font-mono">privateFields</span> non vengono usati
+              per questa vista. Il portale non invia PEC/email e l'adapter resta{" "}
+              <span className="font-mono">
+                {foiaRegisterAdapter.persistence}
+              </span>
+              .
+            </p>
+          </div>
+        </Card>
+      </div>
+    </div>
+  );
+}
+
 function RegisterSection({ entries }: { entries: FoiaRegisterEntry[] }) {
   const [statusFilter, setStatusFilter] = useState<FoiaRegisterStatus | "all">(
     "all",
@@ -982,6 +1102,25 @@ export function AccessoCivico() {
             </h2>
           </div>
           <GeneratorSection onAddDraft={addDraft} />
+        </section>
+
+        <section className="mb-12" aria-labelledby="rispostometro-title">
+          <div className="mb-4 flex items-center gap-2">
+            <BarChart3 className="h-5 w-5 text-brand" aria-hidden="true" />
+            <h2
+              id="rispostometro-title"
+              className="font-display text-xl font-semibold"
+            >
+              Rispostometro civico v0
+            </h2>
+          </div>
+          <p className="mb-6 max-w-4xl text-sm text-muted-foreground">
+            Vista sintetica di accountability documentale derivata dal registro
+            FOIA esistente. Riassume tempi indicativi e stati pubblici senza
+            duplicare la FOIA Machine, senza nuovo storage e senza invio
+            automatico di richieste dal portale.
+          </p>
+          <RispostometroSection entries={registerEntries} />
         </section>
 
         <section aria-labelledby="registro-title">

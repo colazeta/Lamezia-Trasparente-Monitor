@@ -39,16 +39,20 @@ Task:
 4. define narrow acceptance criteria;
 5. identify probable scope;
 6. identify likely files/modules to inspect;
-7. classify collision risk as `low`, `medium` or `high` and explain the reason;
-8. define validation commands;
-9. add civic/legal/copy safeguards where relevant;
-10. require a dedicated branch named `codex/{{ISSUE_NUMBER}}-<slug>` and a pull request targeting `main` as mandatory Codex output;
-11. include fallback instructions requiring Codex to comment with the exact technical reason, branch/diff or blocker if a PR cannot be opened;
-12. produce a final `@codex` prompt ready to be posted as a GitHub comment only if the cleanup preflight passed.
+7. classify collision risk as `low`, `medium` or `high` using the documented matrix and explain the reason;
+8. identify stale-label cleanup needed if the issue is already served, blocked, superseded or no longer eligible;
+9. define validation commands;
+10. add civic/legal/copy safeguards where relevant;
+11. require a dedicated branch named `codex/{{ISSUE_NUMBER}}-<slug>` and a pull request targeting `main` as mandatory Codex output;
+12. include fallback instructions requiring Codex to stop and comment with the exact technical reason, branch/diff or blocker if a PR to `main` cannot be opened;
+13. include the `output-without-PR` rule so a summary without PR, branch, blocker or recent execution evidence is routed to follow-up and not counted as active;
+14. record the materialization debt count and whether the debt gate allows this prompt;
+15. produce a final `@codex` prompt ready to be posted as a GitHub comment only if the cleanup preflight and debt gate passed.
 
 Safety rules:
 - If the issue is ambiguous, too broad, legally sensitive or potentially accusatory, do not produce an implementation prompt. Produce a blocker comment instead.
-- If the issue is backlog/governance, prefer a triage prompt or analysis-only prompt, not a direct implementation prompt.
+- If the issue is backlog/governance, prefer a triage prompt or narrow documentation/prompt-only implementation prompt, not a broad runtime implementation prompt.
+- If materialization debt is greater than 5, block ordinary work even when capacity appears free; choose a cleanup/recovery handoff instead.
 - If the thread contains unresolved contradictory automation comments, produce a follow-up/blocker comment instead of an implementation prompt.
 - Keep the resulting task narrow and reviewable.
 - Preserve the no-auto-merge and no-auto-close policy.
@@ -59,6 +63,11 @@ Output format:
 
 ### Cleanup preflight
 
+### Derived operational state
+- State: idle / candidate / ready / invoked / working / pr-open / blocked / stale / completed-by-pr / superseded
+- Evidence used and age:
+- Stale label cleanup needed:
+
 ### Capacity and collision check
 - Probable scope:
 - Likely files/modules:
@@ -66,6 +75,7 @@ Output format:
 - Real active capacity impact:
 - Human review wait outside capacity:
 - Effective free slots:
+- Materialization debt count and gate result:
 
 ### Decision
 Proceed / Block / Human review needed
@@ -78,7 +88,7 @@ Proceed / Block / Human review needed
 
 Work on GitHub issue #{{ISSUE_NUMBER}} in `colazeta/Lamezia-Trasparente-Monitor`.
 
-Create branch `codex/{{ISSUE_NUMBER}}-<slug>`, commit your changes there, and open a pull request targeting `main`. If you cannot open the pull request, comment on the issue with the exact technical reason and indicate the branch/diff or blocker.
+Create branch `codex/{{ISSUE_NUMBER}}-<slug>`, commit your changes there, and open a pull request targeting `main`. If you cannot open the pull request or produce a reviewable branch/diff, stop and comment on the issue with the exact technical reason and indicate the branch/diff or blocker. A summary without PR, branch, blocker or recent execution evidence is `output-without-PR` and does not count as active work.
 ...
 ```
 ````

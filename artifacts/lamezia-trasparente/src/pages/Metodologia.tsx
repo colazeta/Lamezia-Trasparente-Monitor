@@ -5,6 +5,7 @@ import {
   MONITORING_METHODOLOGY_PARAGRAPHS,
 } from "@/lib/monitoring";
 import { PageMeta } from "@/components/seo/PageMeta";
+import { SECONDARY_SOURCES_POLICY } from "@/content/secondarySourcesPolicy";
 import {
   METHODOLOGY_CHANGE_CATEGORIES,
   METHODOLOGY_CHANGE_IMPACTS,
@@ -141,6 +142,34 @@ export function Metodologia() {
             </article>
           ))}
         </div>
+      </section>
+
+
+      <section aria-labelledby="fonti-secondarie" className="mb-8 rounded-2xl border border-amber-500/30 bg-amber-500/5 p-6 shadow-sm">
+        <div className="flex gap-3">
+          <ShieldAlert className="mt-0.5 h-5 w-5 shrink-0 text-amber-600" aria-hidden="true" />
+          <div>
+            <h2 id="fonti-secondarie" className="text-2xl font-display font-bold">
+              {SECONDARY_SOURCES_POLICY.title}
+            </h2>
+            <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+              {SECONDARY_SOURCES_POLICY.summary}
+            </p>
+          </div>
+        </div>
+        <div className="mt-5 grid gap-4 md:grid-cols-3">
+          {SECONDARY_SOURCES_POLICY.steps.map((step) => (
+            <article key={step.title} className="rounded-xl border border-border bg-background p-4">
+              <h3 className="font-display text-base font-bold">{step.title}</h3>
+              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                {step.text}
+              </p>
+            </article>
+          ))}
+        </div>
+        <p className="mt-5 rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm leading-relaxed text-amber-950 dark:border-amber-900/60 dark:bg-amber-950/20 dark:text-amber-100">
+          {SECONDARY_SOURCES_POLICY.civicUse}
+        </p>
       </section>
 
       <section aria-labelledby="criteri-indicatori" className="mb-8 rounded-2xl border border-border bg-card p-6 shadow-sm">
