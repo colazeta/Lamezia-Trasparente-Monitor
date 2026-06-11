@@ -1,6 +1,7 @@
 import app from "./app";
 import { logger } from "./lib/logger";
 import { startIngestionScheduler } from "./lib/ingestion";
+import { resolveEmbeddedIngestionSchedulerConfig } from "./lib/ingestionSchedulerConfig";
 import { verifySchema } from "./lib/schemaCheck";
 import { runMigrations, MigrationError } from "@workspace/db";
 import {
@@ -30,8 +31,8 @@ app.listen(port, (err) => {
 
   logger.info({ port }, "Server listening");
 
-  // Apply any pending migrations non-interactively, then verify the schema
-  // and start the ingestion scheduler only when everything is clean.
+  // Apply any pending migrations non-interactively, then verify the schema.
+  // The embedded ingestion scheduler remains opt-in after the schema is clean.
   void runMigrations()
     .then(async (status) => {
       logMigrationStatus(status);
@@ -70,7 +71,19 @@ app.listen(port, (err) => {
     })
     .then((ok) => {
       if (ok) {
-        startIngestionScheduler();
+        const schedulerConfig = resolveEmbeddedIngestionSchedulerConfig();
+        if (schedulerConfig.enabled) {
+          logger.info(
+            { mode: schedulerConfig.mode },
+            "Starting embedded ingestion scheduler",
+          );
+          startIngestionScheduler();
+        } else {
+          logger.info(
+            { reason: schedulerConfig.reason },
+            "Embedded ingestion scheduler disabled for API process",
+          );
+        }
       } else {
         logger.error(
           "Ingestion scheduler not started: database migration/schema check failed. " +

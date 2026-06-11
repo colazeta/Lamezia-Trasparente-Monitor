@@ -38,6 +38,99 @@ export type TransparencyDataset = {
   relatedBenchmarkIds?: string[];
 };
 
+export type TransparencyDatasetQualitySignals = {
+  datasetName: string;
+  hasProvenanceFields: boolean;
+  hasQualityAndLimitNotes: boolean;
+  hasReuseExamples: boolean;
+  hasMethodologicalCaution: boolean;
+  hasCoherentSourceKind: boolean;
+  hasNoUnsupportedAssuranceClaims: boolean;
+  hasValidOptionalSourceUrl: boolean;
+};
+
+const CAUTION_NOTE_PATTERN = new RegExp(
+  [
+    "non",
+    "dipende",
+    "segue",
+    "variabil",
+    "verificat",
+    "richied",
+    "limiti",
+    "prudente",
+    "quando disponibile",
+    "quando presenti",
+    "valutazione",
+  ].join("|"),
+  "i",
+);
+
+const UNSUPPORTED_ASSURANCE_PATTERN = new RegExp(
+  [
+    "completezza garantita",
+    "garantisce(?: la)? completezza",
+    "sla garantito",
+    "(?:è|costituisce|rappresenta) prova di (?:irregolarità|responsabilità)",
+    "certificazione (?:esterna|ufficiale)",
+    "validazione esterna",
+  ].join("|"),
+  "i",
+);
+
+function hasText(value: string | undefined) {
+  return Boolean(value?.trim());
+}
+
+function hasValidOptionalSourceUrl(value: string | undefined) {
+  return value === undefined || /^https?:\/\//i.test(value);
+}
+
+function hasCoherentSourceKind(dataset: TransparencyDataset) {
+  if (dataset.dataKindLabel === "Dato ufficiale") {
+    return dataset.sourceType === "ufficiale";
+  }
+
+  if (dataset.dataKindLabel === "Dato derivato") {
+    return ["derivata", "redazionale", "seed/demo"].includes(
+      dataset.sourceType,
+    );
+  }
+
+  return true;
+}
+
+export function getTransparencyDatasetQualitySignals(
+  datasets: readonly TransparencyDataset[] = TRANSPARENCY_DATASETS,
+): TransparencyDatasetQualitySignals[] {
+  return datasets.map((dataset) => {
+    const notes = [
+      dataset.sourceNote,
+      dataset.updateCadenceNote,
+      dataset.knownLimits,
+      ...dataset.reuseExamples,
+    ].join(" ");
+
+    return {
+      datasetName: dataset.datasetName,
+      hasProvenanceFields:
+        hasText(dataset.sourceType) &&
+        hasText(dataset.dataKindLabel) &&
+        hasText(dataset.sourceNote),
+      hasQualityAndLimitNotes:
+        hasText(dataset.updateCadenceNote) && hasText(dataset.knownLimits),
+      hasReuseExamples: dataset.reuseExamples.some((example) =>
+        hasText(example),
+      ),
+      hasMethodologicalCaution: CAUTION_NOTE_PATTERN.test(notes),
+      hasCoherentSourceKind: hasCoherentSourceKind(dataset),
+      hasNoUnsupportedAssuranceClaims:
+        !UNSUPPORTED_ASSURANCE_PATTERN.test(notes),
+      hasValidOptionalSourceUrl: hasValidOptionalSourceUrl(dataset.sourceUrl),
+    };
+  });
+}
+
 export const PUBLIC_API_DOC_PATH = "artifacts/api-server/PUBLIC_API.md";
 
 export const PUBLIC_API_DOCUMENTED_REST_ENDPOINTS = [
@@ -64,6 +157,16 @@ export const PUBLIC_API_DOCUMENTED_MCP_TOOLS = [
   "list_pnrr",
 ] as const;
 
+export const OPENDATA_DOCUMENTED_ENDPOINTS = [
+  "/api/opendata/catalog.jsonld",
+  "/api/opendata/datasets/{id}/dcat.jsonld",
+  "/api/3/action/package_list",
+  "/api/3/action/package_search",
+  "/api/3/action/package_show",
+  "/api/3/action/group_list",
+  "/api/3/action/resource_show",
+] as const;
+
 export const DCAT_ENDPOINTS: CkanEndpoint[] = [
   {
     title: "Catalogo DCAT-AP_IT",
@@ -75,7 +178,8 @@ export const DCAT_ENDPOINTS: CkanEndpoint[] = [
     title: "Dataset DCAT-AP_IT",
     example: "/api/opendata/datasets/{id}/dcat.jsonld",
     description:
-      "I metadati DCAT-AP_IT di un singolo dataset. {id} può essere lo slug o l'identificativo del dataset.",
+      "I metadati DCAT-AP_IT di un singolo dataset. {id} è l'identificativo numerico esposto dal catalogo locale.",
+    params: "id numerico del dataset",
   },
 ];
 
@@ -94,10 +198,10 @@ export const CKAN_ENDPOINTS: CkanEndpoint[] = [
   },
   {
     title: "package_show",
-    example: "/api/3/action/package_show?id=",
+    example: "/api/3/action/package_show?id={sourceId|slug|id}",
     description:
-      "Dettaglio di un dataset risolto per sourceId, slug o id numerico.",
-    params: "id",
+      "Dettaglio di un dataset risolto per sourceId, slug o id numerico. Sostituisci il placeholder con un valore restituito da package_list o package_search.",
+    params: "id · name_or_id",
   },
   {
     title: "group_list",
@@ -106,9 +210,10 @@ export const CKAN_ENDPOINTS: CkanEndpoint[] = [
   },
   {
     title: "resource_show",
-    example: "/api/3/action/resource_show?id=",
-    description: "Dettaglio di una singola risorsa (file) di un dataset.",
-    params: "id",
+    example: "/api/3/action/resource_show?id={resourceId}",
+    description:
+      "Dettaglio di una singola risorsa (file) di un dataset. Usa l'id numerico di una risorsa restituita da package_show.",
+    params: "id numerico della risorsa",
   },
 ];
 
@@ -277,4 +382,5 @@ export const REST_EXAMPLE = `curl "https://<host>/api/public/v1/documents?hasMar
 
 export const MCP_EXAMPLE = `curl -X POST "https://<host>/api/mcp" \
   -H "Content-Type: application/json" \
+  -H "Accept: application/json, text/event-stream" \
   -d '{"jsonrpc":"2.0","id":1,"method":"tools/list","params":{}}'`;

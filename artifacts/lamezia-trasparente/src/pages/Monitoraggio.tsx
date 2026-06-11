@@ -68,7 +68,7 @@ const HUB_MODULES = [
     id: "criticita-pubbliche",
     title: "Cosa è stato segnalato",
     label: "Criticità pubbliche",
-    href: "/criticita-pubbliche",
+    links: [{ href: "/criticita-pubbliche", label: "Apri registro" }],
     status: "v0 manuale + redazionale",
     description:
       "Segnali civici e bisogni di verifica raccolti come punti di attenzione, non come conclusioni autonome.",
@@ -78,7 +78,7 @@ const HUB_MODULES = [
     id: "programma-sotto-verifica",
     title: "Cosa era stato promesso",
     label: "Programma sotto verifica",
-    href: "/promessometro",
+    links: [{ href: "/promessometro", label: "Apri modulo" }],
     status: "modulo in predisposizione",
     description:
       "Spazio previsto per collegare impegni programmatici, stato documentale e atti disponibili senza duplicare la roadmap.",
@@ -88,9 +88,10 @@ const HUB_MODULES = [
     id: "atti-prodotti",
     title: "Quali atti sono stati prodotti",
     label: "Delibere e Albo",
-    href: "/delibere",
-    secondaryHref: "/albo",
-    secondaryLabel: "Albo Pretorio",
+    links: [
+      { href: "/delibere", label: "Delibere" },
+      { href: "/albo", label: "Albo Pretorio" },
+    ],
     status: "automatico da fonti pubbliche",
     description:
       "Delibere, pubblicazioni e documenti amministrativi da usare come fonte primaria per ogni verifica civica.",
@@ -100,9 +101,11 @@ const HUB_MODULES = [
     id: "risorse-affidamenti",
     title: "Quali risorse e affidamenti sono collegati",
     label: "Contratti, incarichi e PNRR",
-    href: "/contratti",
-    secondaryHref: "/incarichimetro",
-    secondaryLabel: "Incarichimetro",
+    links: [
+      { href: "/contratti", label: "Contratti" },
+      { href: "/incarichimetro", label: "Incarichimetro" },
+      { href: "/pnrr", label: "PNRR" },
+    ],
     status: "misto automatico + indicatori",
     description:
       "Affidamenti, incarichi e progetti PNRR letti come contesto documentale e segnali da verificare sulle fonti.",
@@ -112,9 +115,10 @@ const HUB_MODULES = [
     id: "memoria-civica",
     title: "Quale memoria civica e istituzionale va conservata",
     label: "Legalità e beni confiscati",
-    href: "/legalita",
-    secondaryHref: "/beni-confiscati",
-    secondaryLabel: "Beni confiscati",
+    links: [
+      { href: "/legalita", label: "Legalità" },
+      { href: "/beni-confiscati", label: "Beni confiscati" },
+    ],
     status: "v0 redazionale + fonti",
     description:
       "Percorsi su legalità, requisiti di trasparenza, riuso civico e memoria istituzionale con cautele esplicite.",
@@ -124,7 +128,7 @@ const HUB_MODULES = [
     id: "cosa-manca",
     title: "Cosa manca e può essere richiesto",
     label: "Accesso civico",
-    href: "/accesso-civico",
+    links: [{ href: "/accesso-civico", label: "Apri modulo" }],
     status: "strumento assistito",
     description:
       "Generatore e registro operativo per trasformare data gap e documenti non rintracciati in richieste verificabili.",
@@ -239,16 +243,16 @@ export function Monitoraggio() {
                   </p>
                 </div>
                 <div className="mt-auto flex flex-wrap gap-2 pt-1">
-                  <Button asChild size="sm" variant="outline">
-                    <Link href={module.href}>Apri modulo</Link>
-                  </Button>
-                  {module.secondaryHref ? (
-                    <Button asChild size="sm" variant="ghost">
-                      <Link href={module.secondaryHref}>
-                        {module.secondaryLabel}
-                      </Link>
+                  {module.links.map((link, index) => (
+                    <Button
+                      key={link.href}
+                      asChild
+                      size="sm"
+                      variant={index === 0 ? "outline" : "ghost"}
+                    >
+                      <Link href={link.href}>{link.label}</Link>
                     </Button>
-                  ) : null}
+                  ))}
                 </div>
               </Card>
             );

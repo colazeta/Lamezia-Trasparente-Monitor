@@ -28,7 +28,7 @@ describe("public route sitemap inventory", () => {
     expect(readSitemapUrls()).toEqual(expectedUrls);
   });
 
-  it("keeps sitemap URLs and typed public route paths unique", () => {
+  it("does not contain duplicate public paths or sitemap URLs", () => {
     const sitemapUrls = readSitemapUrls();
 
     expect(new Set(PUBLIC_INDEXABLE_PATHS).size).toBe(

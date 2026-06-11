@@ -54,6 +54,10 @@ export const PUBLIC_INDEXABLE_ROUTES = [
     rationale: "Modulo pubblico sulle promesse programmatiche monitorate.",
   },
   {
+    path: "/archivio-proposte",
+    rationale: "Archivio pubblico delle proposte civiche documentate.",
+  },
+  {
     path: "/legalita/timeline",
     rationale: "Timeline pubblica su legalità e memoria civica.",
   },

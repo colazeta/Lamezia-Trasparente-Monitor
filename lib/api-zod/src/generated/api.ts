@@ -1552,8 +1552,12 @@ export const ListPnrrProjectsResponse = zod.object({
   "id": zod.number(),
   "key": zod.string(),
   "sourceId": zod.string(),
-  "projectSourceUrl": zod.string().describe('Official Italia Domani national projects dataset used for the project details'),
-  "locationSourceUrl": zod.string().describe('Official Italia Domani localization dataset used to select CUPs for the municipality'),
+  "projectSourceUrl": zod.string().describe('Data source URL used for the project details; it follows the import source when the importer used a fallback source'),
+  "locationSourceUrl": zod.string().describe('Data source URL used to select or verify CUPs for the municipality; it follows the import source when the importer used a fallback source'),
+  "importSourceLabel": zod.string().describe('Label recorded by the latest PNRR import for the data source actually used'),
+  "importSourceUrl": zod.string().describe('URL recorded by the latest PNRR import for the data source actually used'),
+  "importSourceStatus": zod.string().nullable().describe('Latest import status for the recorded PNRR data source'),
+  "importSourceError": zod.string().nullable().describe('Latest import warning or error recorded for the PNRR data source, when present'),
   "url": zod.string().nullish(),
   "title": zod.string(),
   "cup": zod.string().nullish(),
@@ -1677,7 +1681,11 @@ export const ListPnrrProjectsResponse = zod.object({
   "briefGeneratedAt": zod.string().nullish().describe('When the \"In breve\" summary was last generated or edited (ISO 8601).'),
   "odgMacrotemi": zod.array(zod.string()).optional().describe('Per convocazioni — macrotemi aggregati dai punti ODG (può coprire più temi). Vuoto per gli altri tipi di atti.')
 })),
-  "censusLastUpdatedAt": zod.string().nullish().describe('When the Italia Domani census feed was last successfully updated')
+  "censusLastUpdatedAt": zod.string().nullish().describe('When the PNRR census feed was last successfully updated'),
+  "importSourceLabel": zod.string().describe('Label recorded by the latest PNRR import for the data source actually used'),
+  "importSourceUrl": zod.string().describe('URL recorded by the latest PNRR import for the data source actually used'),
+  "importSourceStatus": zod.string().nullable().describe('Latest import status for the recorded PNRR data source'),
+  "importSourceError": zod.string().nullable().describe('Latest import warning or error recorded for the PNRR data source, when present')
 })
 
 

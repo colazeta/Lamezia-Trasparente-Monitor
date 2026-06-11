@@ -46,9 +46,10 @@ interface CliOptions {
   dryRun: boolean;
   repo?: string;
   warningRunsThreshold: number;
+  skipUnconfiguredEndpoint?: boolean;
 }
 
-interface GitHubIssue {
+export interface GitHubIssue {
   number: number;
   html_url: string;
   body?: string | null;
@@ -73,6 +74,11 @@ const RELEVANT_STATUSES = new Set<SourceStatus>([
   "warning",
 ]);
 
+const VOLATILE_ISSUE_LINE_PREFIXES = [
+  "- Ultimo controllo:",
+  "- Ultimo controllo riuscito:",
+];
+
 function usage(): string {
   return [
     "Usage: pnpm --dir scripts exec tsx check-source-health.ts [--audit-file <path> | --url <url>] [--dry-run]",
@@ -80,6 +86,7 @@ function usage(): string {
     "Environment:",
     "  SOURCE_HEALTH_AUDIT_PATH   Path to a JSON audit file, used when --audit-file is omitted.",
     "  SOURCE_HEALTH_URL          URL for GET /healthz/sources, used when --url is omitted.",
+    "  SOURCE_HEALTH_SKIP_UNCONFIGURED Skip without opening/updating issues when no audit file or URL is configured.",
     "  SOURCE_HEALTH_WARNING_RUNS Number of consecutive warning runs required before opening/updating an issue (default: 2).",
     "  GITHUB_REPOSITORY          owner/repo for issue operations.",
     "  GITHUB_TOKEN or GH_TOKEN   Token with issues:write permission; required unless --dry-run is used.",
@@ -88,28 +95,34 @@ function usage(): string {
 
 export function parseArgs(argv: string[]): CliOptions {
   const options: CliOptions = {
-    auditFile: process.env.SOURCE_HEALTH_AUDIT_PATH,
-    url: process.env.SOURCE_HEALTH_URL,
+    auditFile: normalizeOptionalString(process.env.SOURCE_HEALTH_AUDIT_PATH),
+    url: normalizeOptionalString(process.env.SOURCE_HEALTH_URL),
     dryRun: false,
-    repo: process.env.GITHUB_REPOSITORY,
+    repo: normalizeOptionalString(process.env.GITHUB_REPOSITORY),
     warningRunsThreshold: parseInteger(
       process.env.SOURCE_HEALTH_WARNING_RUNS,
       2,
+    ),
+    skipUnconfiguredEndpoint: parseBoolean(
+      process.env.SOURCE_HEALTH_SKIP_UNCONFIGURED,
+      false,
     ),
   };
 
   for (let i = 0; i < argv.length; i += 1) {
     const arg = argv[i];
     if (arg === "--audit-file") {
-      options.auditFile = requiredValue(argv, (i += 1), arg);
+      options.auditFile = normalizeOptionalString(
+        requiredValue(argv, (i += 1), arg),
+      );
       options.url = undefined;
     } else if (arg === "--url") {
-      options.url = requiredValue(argv, (i += 1), arg);
+      options.url = normalizeOptionalString(requiredValue(argv, (i += 1), arg));
       options.auditFile = undefined;
     } else if (arg === "--dry-run") {
       options.dryRun = true;
     } else if (arg === "--repo") {
-      options.repo = requiredValue(argv, (i += 1), arg);
+      options.repo = normalizeOptionalString(requiredValue(argv, (i += 1), arg));
     } else if (arg === "--warning-runs") {
       options.warningRunsThreshold = parseInteger(
         requiredValue(argv, (i += 1), arg),
@@ -128,34 +141,102 @@ export function parseArgs(argv: string[]): CliOptions {
 
 function requiredValue(argv: string[], index: number, flag: string): string {
   const value = argv[index];
-  if (!value || value.startsWith("--")) {
+  if (value === undefined || value.startsWith("--")) {
     throw new Error(`Missing value for ${flag}.`);
   }
   return value;
 }
 
+function normalizeOptionalString(value: string | undefined): string | undefined {
+  const normalized = value?.trim();
+  return normalized ? normalized : undefined;
+}
+
 function parseInteger(value: string | undefined, fallback: number): number {
-  if (!value) return fallback;
-  const parsed = Number.parseInt(value, 10);
+  const normalized = normalizeOptionalString(value);
+  if (!normalized) return fallback;
+  const parsed = Number.parseInt(normalized, 10);
   return Number.isFinite(parsed) && parsed > 0 ? parsed : fallback;
+}
+
+function parseBoolean(value: string | undefined, fallback: boolean): boolean {
+  const normalized = normalizeOptionalString(value)?.toLowerCase();
+  if (!normalized) return fallback;
+  if (["1", "true", "yes", "on"].includes(normalized)) return true;
+  if (["0", "false", "no", "off"].includes(normalized)) return false;
+  return fallback;
 }
 
 export async function readSourceHealth(
   options: CliOptions,
 ): Promise<SourceHealthRecord[]> {
-  if (options.auditFile) {
-    const contents = await readFile(options.auditFile, "utf8");
-    return normalizePayload(JSON.parse(contents));
+  const auditFile = normalizeOptionalString(options.auditFile);
+  if (auditFile) {
+    return readAuditFileSourceHealth(auditFile);
   }
 
-  const url = options.url ?? "http://localhost:5000/api/healthz/sources";
-  const response = await fetch(url, {
-    headers: { accept: "application/json" },
-  });
-  if (!response.ok) {
-    throw new Error(`Source health endpoint returned HTTP ${response.status}.`);
+  const url = normalizeOptionalString(options.url);
+  if (url) {
+    return readEndpointSourceHealth(url);
   }
-  return normalizePayload(await response.json());
+
+  if (options.skipUnconfiguredEndpoint) {
+    console.warn(
+      "SOURCE_HEALTH_URL non configurato: controllo source-health saltato in modo tecnico controllato.",
+    );
+    return [];
+  }
+
+  return readEndpointSourceHealth(url);
+}
+
+async function readAuditFileSourceHealth(
+  auditFile: string,
+): Promise<SourceHealthRecord[]> {
+  try {
+    const contents = await readFile(auditFile, "utf8");
+    return normalizePayload(JSON.parse(contents));
+  } catch (error) {
+    return [
+      monitorReadErrorRecord(
+        `File audit non leggibile o JSON non valido (\`${auditFile}\`): ${formatErrorMessage(error)}`,
+      ),
+    ];
+  }
+}
+
+async function readEndpointSourceHealth(
+  url: string,
+): Promise<SourceHealthRecord[]> {
+  try {
+    const response = await fetch(url, {
+      headers: { accept: "application/json" },
+    });
+    if (!response.ok) {
+      return [
+        monitorReadErrorRecord(
+          `Endpoint stato fonti raggiunto ma non disponibile (HTTP ${response.status}) su \`${url}\`.`,
+        ),
+      ];
+    }
+
+    const text = await response.text();
+    try {
+      return normalizePayload(JSON.parse(text));
+    } catch (error) {
+      return [
+        monitorReadErrorRecord(
+          `Endpoint stato fonti raggiunto ma risposta JSON non valida su \`${url}\`: ${formatErrorMessage(error)}`,
+        ),
+      ];
+    }
+  } catch (error) {
+    return [
+      monitorReadErrorRecord(
+        `Endpoint stato fonti configurato ma non raggiungibile su \`${url}\`: ${formatErrorMessage(error)}`,
+      ),
+    ];
+  }
 }
 
 export function normalizePayload(payload: unknown): SourceHealthRecord[] {
@@ -244,6 +325,18 @@ export function detectAnomalies(
       },
     ];
   });
+}
+
+function monitorReadErrorRecord(reason: string): SourceHealthRecord {
+  return {
+    source: "source-health-monitor",
+    status: "error",
+    label: "Monitor fonti dati",
+    checkedAt: new Date().toISOString(),
+    lastSuccessAt: null,
+    priority: "high",
+    reason,
+  };
 }
 
 function isPersistentWarning(
@@ -367,7 +460,7 @@ async function createOrUpdateIssue(
     });
   }
 
-  if (existing.body !== body || existing.title !== anomaly.title) {
+  if (shouldUpdateExistingIssue(existing, anomaly)) {
     return githubRequest<GitHubIssue>(
       `/repos/${repo}/issues/${existing.number}`,
       {
@@ -410,6 +503,35 @@ async function main(): Promise<void> {
     const issue = await createOrUpdateIssue(options.repo, anomaly);
     console.log(`${anomaly.marker} -> #${issue.number} ${issue.html_url}`);
   }
+}
+
+export function shouldUpdateExistingIssue(
+  existing: Pick<GitHubIssue, "body" | "title">,
+  anomaly: NormalizedAnomaly,
+): boolean {
+  if (existing.title !== anomaly.title) return true;
+
+  const existingBody = existing.body ?? "";
+  const nextBody = renderIssueBody(anomaly);
+  if (existingBody === nextBody) return false;
+
+  return (
+    stripVolatileIssueLines(existingBody) !== stripVolatileIssueLines(nextBody)
+  );
+}
+
+function stripVolatileIssueLines(body: string): string {
+  return body
+    .split("\n")
+    .filter(
+      (line) =>
+        !VOLATILE_ISSUE_LINE_PREFIXES.some((prefix) => line.startsWith(prefix)),
+    )
+    .join("\n");
+}
+
+function formatErrorMessage(error: unknown): string {
+  return error instanceof Error ? error.message : String(error);
 }
 
 function isObject(value: unknown): value is Record<string, unknown> {

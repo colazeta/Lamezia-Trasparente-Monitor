@@ -20,6 +20,7 @@ import {
   Search,
   Link2,
   MapPin,
+  Hammer,
 } from "lucide-react";
 import { PnrrProject, Publication } from "@workspace/api-client-react";
 import { format } from "date-fns";
@@ -38,6 +39,17 @@ import { AlboLink } from "@/components/AlboLink";
 import { MonitoringReportsSection } from "@/components/MonitoringReportsSection";
 import { PageMeta } from "@/components/seo/PageMeta";
 import { CivicMonitorReturn } from "@/components/CivicMonitorReturn";
+import {
+  buildCantieriometroCards,
+  defaultCantieriometroFilters,
+  filterCantieriometroCards,
+  type CantieriometroAmountFilter,
+  type CantieriometroCard,
+  type CantieriometroFilters,
+  type CantieriometroFreshnessFilter,
+  type CantieriometroLocationFilter,
+  type CantieriometroPresenceFilter,
+} from "@/lib/cantieriometro";
 
 const ITALIA_DOMANI_PROJECTS_DATASET_URL =
   "https://www.italiadomani.gov.it/content/dam/italiadomani/opendata/Progetti_del_PNRR/Progetti_PNRR.csv";
@@ -46,8 +58,8 @@ const ITALIA_DOMANI_LOCATION_DATASET_URL =
 const COMUNE_PNRR_URL =
   "https://www.comune.lamezia-terme.cz.it/it/attuazione-misure-pnrr";
 
-type AmountFilter = "all" | "under-100k" | "100k-500k" | "500k-1m" | "over-1m";
-type PresenceFilter = "all" | "yes" | "no";
+type AmountFilter = CantieriometroAmountFilter;
+type PresenceFilter = CantieriometroPresenceFilter;
 type LocationQuality = PnrrProject["locationQuality"];
 
 const amountFilters: { value: AmountFilter; label: string }[] = [
@@ -109,6 +121,13 @@ function locationQualityLabel(value: LocationQuality | null | undefined) {
     : "localizzazione non disponibile";
 }
 
+function sourceLabelForUrl(url: string | null | undefined, fallback: string) {
+  if (!url) return null;
+  return url.includes("openpnrr.it")
+    ? "OpenPNRR — progetti/localizzazioni per Comune"
+    : fallback;
+}
+
 function dataStatus(project: PnrrProject) {
   if (project.aggiornamentoVecchio)
     return "da verificare sulla fonte ufficiale";
@@ -125,6 +144,9 @@ export function Pnrr() {
   const uncensored: Publication[] | undefined = data?.uncensored;
   const censusLastUpdatedAt: string | null | undefined =
     data?.censusLastUpdatedAt;
+  const importSourceLabel = data?.importSourceLabel;
+  const importSourceUrl = data?.importSourceUrl;
+  const importSourceStatus = data?.importSourceStatus;
 
   const [search, setSearch] = useState("");
   const [amountFilter, setAmountFilter] = useState<AmountFilter>("all");
@@ -133,6 +155,8 @@ export function Pnrr() {
   const [cupFilter, setCupFilter] = useState<PresenceFilter>("all");
   const [actsFilter, setActsFilter] = useState<PresenceFilter>("all");
   const [staleFilter, setStaleFilter] = useState<PresenceFilter>("all");
+  const [cantieriometroFilters, setCantieriometroFilters] =
+    useState<CantieriometroFilters>(defaultCantieriometroFilters);
 
   const census = useMemo(() => {
     const missionMap = new Map<string, number>();
@@ -182,6 +206,22 @@ export function Pnrr() {
       statuses: Array.from(statuses).sort((a, b) => a.localeCompare(b)),
     };
   }, [projects]);
+
+  const cantieriometroCards = useMemo(
+    () => buildCantieriometroCards(projects),
+    [projects],
+  );
+  const filteredCantieriometroCards = useMemo(
+    () => filterCantieriometroCards(cantieriometroCards, cantieriometroFilters),
+    [cantieriometroCards, cantieriometroFilters],
+  );
+
+  const updateCantieriometroFilter = <K extends keyof CantieriometroFilters>(
+    key: K,
+    value: CantieriometroFilters[K],
+  ) => {
+    setCantieriometroFilters((current) => ({ ...current, [key]: value }));
+  };
 
   const filteredProjects = useMemo(() => {
     const normalizedSearch = search.trim().toLowerCase();
@@ -291,19 +331,43 @@ export function Pnrr() {
             >
               Attuazione Misure PNRR
             </a>
-            {", "}
-            i documenti dell'Albo Pretorio e i contratti/affidamenti collegati
-            tramite CUP, senza dedurre ritardi o criticità non documentate dalle
-            fonti.
+            {", "}i documenti dell'Albo Pretorio e i contratti/affidamenti
+            collegati tramite CUP, senza dedurre ritardi o criticità non
+            documentate dalle fonti.
           </p>
           <CivicMonitorReturn context="I progetti PNRR possono essere collegati a report civici, atti, affidamenti e richieste di accesso civico come elementi documentali da verificare." />
-          {censusLastUpdatedAt && (
-            <p className="mt-2 flex items-center gap-1.5 text-xs text-muted-foreground">
-              <RefreshCw className="h-3 w-3" aria-hidden="true" />
-              Ultimo aggiornamento dati rilevato:{" "}
-              {formatDate(censusLastUpdatedAt)}
-            </p>
-          )}
+          <div className="mt-2 space-y-1 text-xs text-muted-foreground">
+            {importSourceLabel && (
+              <p className="flex flex-wrap items-center gap-1.5">
+                <ExternalLink className="h-3 w-3" aria-hidden="true" />
+                Fonte dati usata dall'ultima importazione:{" "}
+                {importSourceUrl ? (
+                  <a
+                    href={importSourceUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="font-medium text-primary hover:underline"
+                  >
+                    {importSourceLabel}
+                  </a>
+                ) : (
+                  <span className="font-medium text-foreground">
+                    {importSourceLabel}
+                  </span>
+                )}
+                {importSourceStatus && importSourceStatus !== "ok" ? (
+                  <span>· stato importazione: {importSourceStatus}</span>
+                ) : null}
+              </p>
+            )}
+            {censusLastUpdatedAt && (
+              <p className="flex items-center gap-1.5">
+                <RefreshCw className="h-3 w-3" aria-hidden="true" />
+                Ultimo aggiornamento dati rilevato:{" "}
+                {formatDate(censusLastUpdatedAt)}
+              </p>
+            )}
+          </div>
         </header>
 
         {isLoading ? (
@@ -394,6 +458,13 @@ export function Pnrr() {
                 </div>
               </section>
             )}
+
+            <CantieriometroSection
+              cards={filteredCantieriometroCards}
+              totalCards={cantieriometroCards.length}
+              filters={cantieriometroFilters}
+              onFilterChange={updateCantieriometroFilter}
+            />
 
             <section
               aria-labelledby="pnrr-filters"
@@ -605,6 +676,202 @@ export function Pnrr() {
         )}
       </div>
     </>
+  );
+}
+
+function CantieriometroSection({
+  cards,
+  totalCards,
+  filters,
+  onFilterChange,
+}: {
+  cards: CantieriometroCard[];
+  totalCards: number;
+  filters: CantieriometroFilters;
+  onFilterChange: <K extends keyof CantieriometroFilters>(
+    key: K,
+    value: CantieriometroFilters[K],
+  ) => void;
+}) {
+  return (
+    <section
+      aria-labelledby="cantieriometro-bridge"
+      className="mb-10 overflow-hidden rounded-xl border border-brand/25 bg-card shadow-sm"
+    >
+      <div className="border-b border-border/60 bg-brand/5 p-5">
+        <div className="mb-2 flex items-center gap-2">
+          <Hammer className="h-5 w-5 text-brand" aria-hidden="true" />
+          <h2
+            id="cantieriometro-bridge"
+            className="text-xl font-display font-bold tracking-tight"
+          >
+            Cantieriometro bridge v0
+          </h2>
+        </div>
+        <p className="max-w-4xl text-sm text-muted-foreground">
+          Vista leggera che riorganizza i progetti PNRR già presenti in schede
+          opera/intervento e mostra solo collegamenti documentali disponibili
+          verso PNRR, Albo Pretorio e contratti. Non certifica avanzamento
+          fisico, ritardi o responsabilità: le assenze sono bisogni di verifica
+          sulle fonti pubbliche.
+        </p>
+      </div>
+
+      <div className="p-5">
+        <div className="mb-4 grid gap-3 md:grid-cols-2 lg:grid-cols-5">
+          <FilterSelect
+            label="Importo opera/intervento"
+            value={filters.amount}
+            onChange={(value) =>
+              onFilterChange("amount", value as CantieriometroAmountFilter)
+            }
+            options={amountFilters}
+          />
+          <FilterSelect
+            label="Presenza CUP"
+            value={filters.cup}
+            onChange={(value) =>
+              onFilterChange("cup", value as CantieriometroPresenceFilter)
+            }
+            options={presenceOptions("Tutti")}
+          />
+          <FilterSelect
+            label="Atti Albo collegati"
+            value={filters.linkedActs}
+            onChange={(value) =>
+              onFilterChange(
+                "linkedActs",
+                value as CantieriometroPresenceFilter,
+              )
+            }
+            options={presenceOptions("Tutti")}
+          />
+          <FilterSelect
+            label="Localizzazione"
+            value={filters.location}
+            onChange={(value) =>
+              onFilterChange("location", value as CantieriometroLocationFilter)
+            }
+            options={[
+              { value: "all", label: "Tutte" },
+              { value: "available", label: "Disponibile" },
+              { value: "missing", label: "Non disponibile" },
+            ]}
+          />
+          <FilterSelect
+            label="Aggiornamento dato"
+            value={filters.freshness}
+            onChange={(value) =>
+              onFilterChange(
+                "freshness",
+                value as CantieriometroFreshnessFilter,
+              )
+            }
+            options={[
+              { value: "all", label: "Tutti" },
+              { value: "updated", label: "Aggiornato" },
+              { value: "verify", label: "Da verificare" },
+            ]}
+          />
+        </div>
+
+        <p className="mb-4 text-sm text-muted-foreground" aria-live="polite">
+          {cards.length} schede opera/intervento visualizzate su {totalCards}
+          derivate dai dati PNRR disponibili.
+        </p>
+
+        {cards.length > 0 ? (
+          <div className="grid gap-3 lg:grid-cols-2">
+            {cards.map((card) => (
+              <article
+                key={card.projectKey}
+                className="rounded-lg border border-card-border bg-background p-4"
+              >
+                <div className="mb-2 flex flex-wrap items-center gap-2">
+                  {card.cup ? (
+                    <Badge
+                      variant="brand"
+                      className="font-mono text-xs shadow-none"
+                    >
+                      CUP {card.cup}
+                    </Badge>
+                  ) : (
+                    <Badge variant="outline" className="text-xs shadow-none">
+                      CUP da verificare
+                    </Badge>
+                  )}
+                  <Badge
+                    variant={card.hasLocation ? "outline" : "secondary"}
+                    className="text-xs shadow-none"
+                  >
+                    {locationQualityLabel(card.locationQuality)}
+                  </Badge>
+                  {card.needsDataVerification && (
+                    <Badge
+                      variant="outline"
+                      className="border-amber-300 text-xs text-amber-700 shadow-none dark:border-amber-500/40 dark:text-amber-300"
+                    >
+                      Dato da verificare
+                    </Badge>
+                  )}
+                </div>
+                <h3 className="font-display font-bold leading-snug">
+                  {card.title}
+                </h3>
+                <dl className="mt-3 grid gap-x-4 gap-y-2 text-sm sm:grid-cols-2">
+                  <MetaRow
+                    label="Importo"
+                    value={formatImporto(card.amount)}
+                    fallback="Importo non disponibile"
+                  />
+                  <MetaRow
+                    label="Localizzazione"
+                    value={card.location}
+                    fallback="Localizzazione non disponibile"
+                  />
+                  <MetaRow
+                    label="Stato progetto"
+                    value={card.projectStatus}
+                    fallback="Stato non disponibile"
+                  />
+                  <MetaRow
+                    label="Ultimo aggiornamento"
+                    value={formatDate(card.lastUpdatedAt)}
+                  />
+                  <MetaRow
+                    label="Atti Albo collegati"
+                    value={`${card.linkedActsCount}`}
+                  />
+                  <MetaRow
+                    label="Contratti collegati"
+                    value={`${card.linkedContractsCount}`}
+                  />
+                </dl>
+                <p className="mt-3 text-xs text-muted-foreground">
+                  {card.locationNote ||
+                    "La localizzazione richiede verifica sulla fonte ufficiale."}
+                </p>
+              </article>
+            ))}
+          </div>
+        ) : (
+          <Empty className="border border-dashed border-border bg-muted/20">
+            <EmptyHeader>
+              <EmptyMedia variant="icon" className="bg-brand/10 text-brand">
+                <Search className="h-6 w-6" aria-hidden="true" />
+              </EmptyMedia>
+              <EmptyTitle className="font-display">
+                Nessuna scheda opera per i filtri selezionati
+              </EmptyTitle>
+              <EmptyDescription>
+                Modifica i filtri del Cantieriometro bridge per consultare altre
+                schede derivate dai dati PNRR disponibili.
+              </EmptyDescription>
+            </EmptyHeader>
+          </Empty>
+        )}
+      </div>
+    </section>
   );
 }
 
@@ -893,6 +1160,15 @@ function PnrrCard({ project }: { project: PnrrProject }) {
 }
 
 function SourceTraceability({ project }: { project: PnrrProject }) {
+  const projectSourceLabel = sourceLabelForUrl(
+    project.projectSourceUrl,
+    "Dataset ufficiale Italia Domani — Progetti PNRR",
+  );
+  const locationSourceLabel = sourceLabelForUrl(
+    project.locationSourceUrl,
+    "Dataset ufficiale Italia Domani — Localizzazione progetti PNRR",
+  );
+
   return (
     <section
       className="mb-4 rounded-lg border border-border/60 bg-muted/20 p-3"
@@ -908,42 +1184,54 @@ function SourceTraceability({ project }: { project: PnrrProject }) {
       <div className="grid gap-2 text-sm md:grid-cols-3">
         <div className="rounded-md bg-card p-2">
           <Badge variant="outline" className="mb-1 text-xs shadow-none">
-            Fonte nazionale specifica
+            Fonte dati importata
           </Badge>
-          <a
-            href={
-              project.projectSourceUrl || ITALIA_DOMANI_PROJECTS_DATASET_URL
-            }
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 text-primary hover:underline"
-          >
-            <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
-            Dataset ufficiale Italia Domani — Progetti PNRR
-          </a>
+          {projectSourceLabel ? (
+            <a
+              href={project.projectSourceUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 text-primary hover:underline"
+            >
+              <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
+              {projectSourceLabel}
+            </a>
+          ) : (
+            <p className="text-muted-foreground">
+              {project.importSourceLabel ||
+                "Fonte effettiva dei dati pubblicati non determinabile"}
+            </p>
+          )}
           <p className="mt-1 text-xs text-muted-foreground">
-            Dataset nazionale usato per leggere anagrafica, importi, missione e
-            stato dei CUP selezionati.
+            {projectSourceLabel
+              ? "Fonte usata per leggere o verificare anagrafica, importi, missione e stato dei CUP selezionati."
+              : "Il metadato dell'ultimo tentativo è separato dai dati già pubblicati: serve verifica tecnica prima di attribuire una fonte puntuale."}
           </p>
         </div>
         <div className="rounded-md bg-card p-2">
           <Badge variant="outline" className="mb-1 text-xs shadow-none">
             Fonte localizzazione territoriale
           </Badge>
-          <a
-            href={
-              project.locationSourceUrl || ITALIA_DOMANI_LOCATION_DATASET_URL
-            }
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 text-primary hover:underline"
-          >
-            <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
-            Dataset ufficiale Italia Domani — Localizzazione progetti PNRR
-          </a>
+          {locationSourceLabel ? (
+            <a
+              href={project.locationSourceUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 text-primary hover:underline"
+            >
+              <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
+              {locationSourceLabel}
+            </a>
+          ) : (
+            <p className="text-muted-foreground">
+              Fonte localizzazione effettiva non determinabile dai metadati
+              disponibili.
+            </p>
+          )}
           <p className="mt-1 text-xs text-muted-foreground">
-            Dataset usato per filtrare i CUP associati al Comune di Lamezia
-            Terme prima dell'unione con il dataset nazionale progetti.
+            {locationSourceLabel
+              ? "Fonte usata per filtrare o verificare i CUP associati al Comune di Lamezia Terme prima della pubblicazione nel tracker."
+              : "Il metadato disponibile non permette di attribuire con certezza la fonte di localizzazione delle righe già pubblicate."}
           </p>
         </div>
         <div className="rounded-md bg-card p-2">
