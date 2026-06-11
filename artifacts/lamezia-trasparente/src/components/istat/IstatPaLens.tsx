@@ -9,14 +9,23 @@ import {
   ISTAT_PA_DIMENSIONS,
   ISTAT_PA_READING_RULES,
   ISTAT_PA_SOURCE,
+  type IstatPaDimension,
   type IstatPaDimensionId,
 } from "@/data/istatPaLens";
 
 export type IstatPaLensVariant = "compact" | "inline" | "full";
 
-function getDimensions(ids?: readonly IstatPaDimensionId[]) {
+function isIstatPaDimension(
+  value: IstatPaDimension | undefined,
+): value is IstatPaDimension {
+  return value !== undefined;
+}
+
+function getDimensions(
+  ids?: readonly IstatPaDimensionId[],
+): readonly IstatPaDimension[] {
   return ids?.length
-    ? ids.map((id) => ISTAT_PA_DIMENSION_BY_ID[id]).filter(Boolean)
+    ? ids.map((id) => ISTAT_PA_DIMENSION_BY_ID[id]).filter(isIstatPaDimension)
     : ISTAT_PA_DIMENSIONS;
 }
 
@@ -50,10 +59,15 @@ export function IstatDimensionChips({
 
 export function IstatReadingRules({ className }: { className?: string }) {
   return (
-    <ul className={`space-y-2 text-sm leading-6 text-muted-foreground ${className ?? ""}`}>
+    <ul
+      className={`space-y-2 text-sm leading-6 text-muted-foreground ${className ?? ""}`}
+    >
       {ISTAT_PA_READING_RULES.map((rule) => (
         <li key={rule} className="flex gap-2">
-          <Info className="mt-1 h-3.5 w-3.5 shrink-0 text-primary" aria-hidden="true" />
+          <Info
+            className="mt-1 h-3.5 w-3.5 shrink-0 text-primary"
+            aria-hidden="true"
+          />
           <span>{rule}</span>
         </li>
       ))}
