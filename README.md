@@ -235,8 +235,8 @@ feature/xxx  →  dev  →  (test + review)  →  main
 **Script post-merge** (`scripts/post-merge.sh`): viene eseguito automaticamente da Replit dopo ogni merge nel workspace dev. Esegue:
 ```bash
 pnpm install --frozen-lockfile
-pnpm --filter db push      # aggiorna lo schema del DB di dev
-pnpm --filter db seed      # aggiorna i dati di seed
+pnpm --filter @workspace/db push      # aggiorna lo schema del DB di dev
+pnpm --filter @workspace/db seed      # aggiorna i dati di seed
 ```
 
 ---
