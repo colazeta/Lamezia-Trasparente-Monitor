@@ -187,7 +187,11 @@ export async function readSourceHealth(
     return [];
   }
 
-  return readEndpointSourceHealth(url);
+  return [
+    monitorReadErrorRecord(
+      "SOURCE_HEALTH_URL non configurato: impossibile leggere l'endpoint stato fonti.",
+    ),
+  ];
 }
 
 async function readAuditFileSourceHealth(
