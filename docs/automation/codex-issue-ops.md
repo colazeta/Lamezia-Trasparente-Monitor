@@ -183,10 +183,10 @@ Purpose:
 5. detect stale `codex:invoked` or `codex:working` issues with no concrete activity for more than 60 minutes since the latest operative event, while reserving capacity for newly prepared `codex:prompted` issues that are still inside the 60-minute prompt/invocation grace window;
 6. stop or slow promotion when CI fails repeatedly because of recent Codex work;
 7. add `codex:blocked` where the automation should not continue;
-8. promote safe tasks to `codex:ready` whenever active plus reserved capacity is below 10/10 and eligible low-collision backlog exists;
+8. prompt or invoke safe tasks whenever active plus reserved capacity is below 10/10 and eligible low-collision backlog exists, using `codex:ready` promotion only as preparatory backlog triage that does not itself fill a slot;
 9. recommend direct Codex invocation for non-colliding `codex:ready` or `codex:prompted` issues with no recent operative `@codex` invocation.
 
-Anti-idle rule: if active plus reserved operational capacity is below 10/10, the governor should promote safe technical tasks to `codex:ready` and surface eligible `codex:ready` or `codex:prompted` issues for direct invocation until the queue is full or it records an explicit reason not to fill it. Valid reasons are absence of real eligible backlog, concrete file/module collision, legal/copy/methodological risk, CI instability, or a decision required from Giovanni before work on the same files/modules can proceed safely. Giovanni review/merge wait for non-colliding work must remain outside the queue and must not pause unrelated promotions. Prioritise typecheck/build/lint/test failures, small bugs and technical-debt tasks with low collision risk.
+Anti-idle rule: if active plus reserved operational capacity is below 10/10, the governor should use available slots by prompting or invoking eligible low-collision work so it becomes reserved fresh `codex:prompted` capacity or real active Codex work. Promoting an issue only to `codex:ready` is backlog triage, not capacity fill; the governor may do it as preparation, but must continue to prompt/invoke within capacity or record an explicit reason the slot cannot be reserved or activated. Valid reasons are absence of real eligible backlog, concrete file/module collision, legal/copy/methodological risk, CI instability, or a decision required from Giovanni before work on the same files/modules can proceed safely. Giovanni review/merge wait for non-colliding work must remain outside the queue and must not pause unrelated prompting or invocation. Prioritise typecheck/build/lint/test failures, small bugs and technical-debt tasks with low collision risk.
 
 Collision-control minimum fields for every promotion or pause decision:
 
@@ -201,7 +201,7 @@ Collision matrix for capacity decisions:
 
 | Observed state | Capacity effect | Required action |
 | --- | --- | --- |
-| `codex:ready` only | Backlog, no active or reserved slot | Promote or prompt only when capacity and collision checks pass. |
+| `codex:ready` only | Backlog, no active or reserved slot | Triage/promote as backlog only when priority and collision checks pass; prompt or invoke only when active-plus-reserved capacity is available. |
 | Fresh `codex:prompted` inside the 60-minute prompt grace window | Reserved pending slot | Invoke Codex directly or record the concrete reason invocation must wait. |
 | `codex:invoked` / `codex:working` with recent operative evidence | Real active slot | Monitor until PR, blocker, stale recovery or review routing is available. |
 | GitHub-visible PR, branch plus recent commit, or reviewable diff needing Codex-side changes | Real active slot | Keep active until routed to review, blocker or follow-up. |
@@ -209,7 +209,7 @@ Collision matrix for capacity decisions:
 | `codex:review-needed` or Giovanni review/merge wait only | Outside capacity | Block only same-file/module candidate work that would collide. |
 | `output-without-PR` with no verifiable artifact or blocker | Not active after recovery routing | Move to `codex:follow-up` and request a PR to `main`, exact ref/SHA, diff or blocker. |
 
-Promotion SLA: during each 30–60 minute governor cycle, if active plus reserved capacity is below 10/10 and eligible low-collision backlog exists, the governor must either promote/prompt/invoke enough work to move toward ten active or reserved slots, or post the concrete anti-idle reason that prevents filling the queue. The recorded reason must name the limiting backlog, collision, legal/copy/methodological, CI or Giovanni decision dependency.
+Promotion SLA: during each 30–60 minute governor cycle, if active plus reserved capacity is below 10/10 and eligible low-collision backlog exists, the governor must either prompt/invoke enough work to move toward ten active or reserved slots, optionally promoting issues to `codex:ready` only as backlog triage before reserving or activating a slot, or post the concrete anti-idle reason that prevents filling the queue. The recorded reason must name the limiting backlog, collision, legal/copy/methodological, CI or Giovanni decision dependency.
 
 ## Technical fast lane
 

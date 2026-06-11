@@ -33,7 +33,7 @@ Default queue limits:
 - do not start new tasks if root typecheck or build is failing because of a recent Codex PR.
 
 Anti-idle rule:
-- If real active plus reserved operational capacity is below 10/10, promote safe technical tasks to `codex:ready` until the queue is full or record an explicit reason not to fill it. Valid reasons are absence of real eligible backlog, concrete file/module collision, legal/copy/methodological risk, CI instability, or a decision required from Giovanni before same-file/module work can proceed safely.
+- If real active plus reserved operational capacity is below 10/10, use the free slots by prompting or invoking eligible low-collision work so it becomes reserved fresh `codex:prompted` capacity or real active Codex work. Promoting an issue only to `codex:ready` is backlog triage, not capacity fill; do it only as a preparatory action and continue to prompt/invoke within capacity, or record an explicit reason the slot cannot be reserved or activated. Valid reasons are absence of real eligible backlog, concrete file/module collision, legal/copy/methodological risk, CI instability, or a decision required from Giovanni before same-file/module work can proceed safely.
 - Do not pause the whole pipeline merely because a PR is open, pending review, pending merge, or an issue is awaiting Giovanni review/merge; treat it as outside the queue unless it collides on files/modules or needs Codex-side rework.
 - Do not classify a newly prepared `codex:prompted` issue as stalled merely because no PR exists yet. Treat it as a reserved pending slot awaiting invocation until an operative `@codex` invocation exists or the prompt is older than 60 minutes with no invocation or cleanup action.
 - Prefer typecheck/build/lint/test failures, small bugs and limited technical-debt tasks.
@@ -49,7 +49,7 @@ Collision-control fields required for every recommended promotion, pause or bloc
 
 
 Capacity/collision matrix:
-- `codex:ready` only: backlog, no active or reserved slot; promote or prompt only when capacity and collision checks pass.
+- `codex:ready` only: backlog, no active or reserved slot; triage/promote as backlog only when priority and collision checks pass, and prompt or invoke it only when active-plus-reserved capacity is available.
 - Fresh `codex:prompted` inside the 60-minute prompt grace window: reserved pending slot; invoke Codex directly or record the concrete reason invocation must wait.
 - `codex:invoked` / `codex:working` with recent operative evidence, or a PR/branch/diff needing Codex-side changes: real active slot.
 - Explicit technical blocker after routing: release capacity and preserve blocker details under `codex:blocked` or `codex:follow-up`.
@@ -57,7 +57,7 @@ Capacity/collision matrix:
 - `output-without-PR`: not active after recovery routing; request a PR to `main`, exact ref/SHA, diff or blocker.
 
 Promotion SLA:
-- Every governor pass must either promote, prompt or invoke eligible low-collision work toward 10/10 active or reserved slots, or record the concrete anti-idle reason that prevents filling the queue.
+- Every governor pass must either prompt or invoke eligible low-collision work toward 10/10 active or reserved slots, optionally promoting issues to `codex:ready` only as backlog triage before reserving/activating a slot, or record the concrete anti-idle reason that prevents filling the queue.
 
 Fast lane treatment:
 - Technical fast-lane candidates may be promoted ahead of ordinary backlog items when they are small, clear, low-collision and validate with typecheck/build/lint/test commands.
