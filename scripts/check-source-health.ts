@@ -184,10 +184,9 @@ export async function readSourceHealth(
     console.warn(
       "SOURCE_HEALTH_URL non configurato: controllo source-health saltato in modo tecnico controllato.",
     );
-    return [];
   }
 
-  return readEndpointSourceHealth(url);
+  return [];
 }
 
 async function readAuditFileSourceHealth(
