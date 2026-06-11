@@ -20,6 +20,7 @@ import {
   ShieldOff,
   Telescope,
   BookOpenCheck,
+  Archive,
   Rss,
   Code2,
   BookOpen,
@@ -170,6 +171,13 @@ export const NAV_GROUPS: NavSection[] = [
         icon: BookOpenCheck,
       },
       {
+        href: "/archivio-proposte",
+        label: "Archivio proposte",
+        description:
+          "Memoria documentale neutra delle proposte pubbliche di valore civico.",
+        icon: Archive,
+      },
+      {
         href: "/accesso-civico",
         label: "Accesso Civico",
         description: "Richiedi documenti e dati con l'accesso civico (FOIA).",
@@ -254,7 +262,9 @@ export const NAV_GROUPS: NavSection[] = [
 ];
 
 export function isSectionActive(href: string, location: string): boolean {
-  return location === href || (href !== "/" && location.startsWith(href));
+  return (
+    location === href || (href !== "/" && location.startsWith(`${href}/`))
+  );
 }
 
 export interface ActiveSection {

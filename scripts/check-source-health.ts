@@ -46,6 +46,7 @@ interface CliOptions {
   dryRun: boolean;
   repo?: string;
   warningRunsThreshold: number;
+  skipUnconfiguredEndpoint?: boolean;
 }
 
 export interface GitHubIssue {
@@ -85,6 +86,7 @@ function usage(): string {
     "Environment:",
     "  SOURCE_HEALTH_AUDIT_PATH   Path to a JSON audit file, used when --audit-file is omitted.",
     "  SOURCE_HEALTH_URL          URL for GET /healthz/sources, used when --url is omitted.",
+    "  SOURCE_HEALTH_SKIP_UNCONFIGURED Skip without opening/updating issues when no audit file or URL is configured.",
     "  SOURCE_HEALTH_WARNING_RUNS Number of consecutive warning runs required before opening/updating an issue (default: 2).",
     "  GITHUB_REPOSITORY          owner/repo for issue operations.",
     "  GITHUB_TOKEN or GH_TOKEN   Token with issues:write permission; required unless --dry-run is used.",
@@ -93,28 +95,34 @@ function usage(): string {
 
 export function parseArgs(argv: string[]): CliOptions {
   const options: CliOptions = {
-    auditFile: process.env.SOURCE_HEALTH_AUDIT_PATH,
-    url: process.env.SOURCE_HEALTH_URL,
+    auditFile: normalizeOptionalString(process.env.SOURCE_HEALTH_AUDIT_PATH),
+    url: normalizeOptionalString(process.env.SOURCE_HEALTH_URL),
     dryRun: false,
-    repo: process.env.GITHUB_REPOSITORY,
+    repo: normalizeOptionalString(process.env.GITHUB_REPOSITORY),
     warningRunsThreshold: parseInteger(
       process.env.SOURCE_HEALTH_WARNING_RUNS,
       2,
+    ),
+    skipUnconfiguredEndpoint: parseBoolean(
+      process.env.SOURCE_HEALTH_SKIP_UNCONFIGURED,
+      false,
     ),
   };
 
   for (let i = 0; i < argv.length; i += 1) {
     const arg = argv[i];
     if (arg === "--audit-file") {
-      options.auditFile = requiredValue(argv, (i += 1), arg);
+      options.auditFile = normalizeOptionalString(
+        requiredValue(argv, (i += 1), arg),
+      );
       options.url = undefined;
     } else if (arg === "--url") {
-      options.url = requiredValue(argv, (i += 1), arg);
+      options.url = normalizeOptionalString(requiredValue(argv, (i += 1), arg));
       options.auditFile = undefined;
     } else if (arg === "--dry-run") {
       options.dryRun = true;
     } else if (arg === "--repo") {
-      options.repo = requiredValue(argv, (i += 1), arg);
+      options.repo = normalizeOptionalString(requiredValue(argv, (i += 1), arg));
     } else if (arg === "--warning-runs") {
       options.warningRunsThreshold = parseInteger(
         requiredValue(argv, (i += 1), arg),
@@ -133,27 +141,53 @@ export function parseArgs(argv: string[]): CliOptions {
 
 function requiredValue(argv: string[], index: number, flag: string): string {
   const value = argv[index];
-  if (!value || value.startsWith("--")) {
+  if (value === undefined || value.startsWith("--")) {
     throw new Error(`Missing value for ${flag}.`);
   }
   return value;
 }
 
+function normalizeOptionalString(value: string | undefined): string | undefined {
+  const normalized = value?.trim();
+  return normalized ? normalized : undefined;
+}
+
 function parseInteger(value: string | undefined, fallback: number): number {
-  if (!value) return fallback;
-  const parsed = Number.parseInt(value, 10);
+  const normalized = normalizeOptionalString(value);
+  if (!normalized) return fallback;
+  const parsed = Number.parseInt(normalized, 10);
   return Number.isFinite(parsed) && parsed > 0 ? parsed : fallback;
+}
+
+function parseBoolean(value: string | undefined, fallback: boolean): boolean {
+  const normalized = normalizeOptionalString(value)?.toLowerCase();
+  if (!normalized) return fallback;
+  if (["1", "true", "yes", "on"].includes(normalized)) return true;
+  if (["0", "false", "no", "off"].includes(normalized)) return false;
+  return fallback;
 }
 
 export async function readSourceHealth(
   options: CliOptions,
 ): Promise<SourceHealthRecord[]> {
-  if (options.auditFile) {
-    return readAuditFileSourceHealth(options.auditFile);
+  const auditFile = normalizeOptionalString(options.auditFile);
+  if (auditFile) {
+    return readAuditFileSourceHealth(auditFile);
   }
 
-  const url = options.url ?? "http://localhost:5000/api/healthz/sources";
-  return readEndpointSourceHealth(url);
+  const url = normalizeOptionalString(options.url);
+  if (url) {
+    return readEndpointSourceHealth(url);
+  }
+
+  if (options.skipUnconfiguredEndpoint) {
+    console.warn(
+      "SOURCE_HEALTH_URL non configurato: controllo source-health saltato in modo tecnico controllato.",
+    );
+    return [];
+  }
+
+  return readEndpointSourceHealth("http://localhost:5000/api/healthz/sources");
 }
 
 async function readAuditFileSourceHealth(
