@@ -10,6 +10,7 @@ import path from "node:path";
 import { describe, expect, test } from "vitest";
 import {
   generatePublicSeoAssets,
+  normalizeBasePath,
   normalizePublicSiteUrl,
 } from "../../scripts/generate-public-seo-assets.mjs";
 
@@ -90,6 +91,95 @@ describe("production SEO asset generation", () => {
 
       expect(sitemap).toContain("<loc>https://prod.example/lamezia</loc>");
       expect(sitemap).toContain("<loc>https://prod.example/lamezia/domande</loc>");
+      expect(robots).toContain("Sitemap: https://prod.example/lamezia/sitemap.xml");
+    } finally {
+      rmSync(workspace, { recursive: true, force: true });
+    }
+  });
+
+  test("applies BASE_PATH when the public site URL is origin-only", () => {
+    const workspace = mkdtempSync(path.join(tmpdir(), "lamezia-seo-assets-"));
+    const publicDir = path.join(workspace, "public");
+    const outputDir = path.join(workspace, "dist", "public");
+
+    try {
+      mkdirSync(publicDir, { recursive: true });
+      writeFileSync(
+        path.join(publicDir, "sitemap.xml"),
+        `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>http://localhost:5173</loc></url>
+  <url><loc>http://localhost:5173/domande</loc></url>
+</urlset>
+`,
+        "utf8",
+      );
+      writeFileSync(
+        path.join(publicDir, "robots.txt"),
+        "User-agent: *\nAllow: /\nSitemap: http://localhost:5173/sitemap.xml\n",
+        "utf8",
+      );
+
+      generatePublicSeoAssets({
+        publicDir,
+        outputDir,
+        basePath: "/lamezia/",
+        siteUrl: normalizePublicSiteUrl("https://prod.example", {
+          basePath: "/lamezia/",
+        }),
+      });
+
+      const sitemap = readFileSync(path.join(outputDir, "sitemap.xml"), "utf8");
+      const robots = readFileSync(path.join(outputDir, "robots.txt"), "utf8");
+
+      expect(normalizeBasePath("/lamezia/")).toBe("/lamezia");
+      expect(sitemap).toContain("<loc>https://prod.example/lamezia</loc>");
+      expect(sitemap).toContain("<loc>https://prod.example/lamezia/domande</loc>");
+      expect(sitemap).not.toContain("https://prod.example/domande");
+      expect(sitemap).not.toContain("http://localhost:5173");
+      expect(robots).toContain("Sitemap: https://prod.example/lamezia/sitemap.xml");
+    } finally {
+      rmSync(workspace, { recursive: true, force: true });
+    }
+  });
+
+  test("does not duplicate a base path already present in template routes", () => {
+    const workspace = mkdtempSync(path.join(tmpdir(), "lamezia-seo-assets-"));
+    const publicDir = path.join(workspace, "public");
+    const outputDir = path.join(workspace, "dist", "public");
+
+    try {
+      mkdirSync(publicDir, { recursive: true });
+      writeFileSync(
+        path.join(publicDir, "sitemap.xml"),
+        `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://prod.example/lamezia</loc></url>
+  <url><loc>https://prod.example/lamezia/domande</loc></url>
+</urlset>
+`,
+        "utf8",
+      );
+      writeFileSync(
+        path.join(publicDir, "robots.txt"),
+        "User-agent: *\nAllow: /\nSitemap: https://prod.example/lamezia/sitemap.xml\n",
+        "utf8",
+      );
+
+      generatePublicSeoAssets({
+        publicDir,
+        outputDir,
+        siteUrl: normalizePublicSiteUrl("https://prod.example/lamezia", {
+          basePath: "/lamezia",
+        }),
+      });
+
+      const sitemap = readFileSync(path.join(outputDir, "sitemap.xml"), "utf8");
+      const robots = readFileSync(path.join(outputDir, "robots.txt"), "utf8");
+
+      expect(sitemap).toContain("<loc>https://prod.example/lamezia</loc>");
+      expect(sitemap).toContain("<loc>https://prod.example/lamezia/domande</loc>");
+      expect(sitemap).not.toContain("/lamezia/lamezia");
       expect(robots).toContain("Sitemap: https://prod.example/lamezia/sitemap.xml");
     } finally {
       rmSync(workspace, { recursive: true, force: true });
