@@ -1,15 +1,3 @@
-import type { ElementType } from "react";
-import {
-  BookOpenCheck,
-  Bot,
-  Building2,
-  Database,
-  Leaf,
-  Network,
-  ShieldCheck,
-  Users,
-} from "lucide-react";
-
 export const ISTAT_PA_DIMENSION_IDS = [
   "formazione",
   "organizzazione",
@@ -23,6 +11,16 @@ export const ISTAT_PA_DIMENSION_IDS = [
 
 export type IstatPaDimensionId = (typeof ISTAT_PA_DIMENSION_IDS)[number];
 
+export type IstatPaIconName =
+  | "book-open-check"
+  | "bot"
+  | "building"
+  | "database"
+  | "leaf"
+  | "network"
+  | "shield-check"
+  | "users";
+
 export type IstatPaRouteLink = {
   href: string;
   label: string;
@@ -35,7 +33,7 @@ export type IstatPaDimension = {
   description: string;
   localEvidence: readonly string[];
   routes: readonly IstatPaRouteLink[];
-  icon: ElementType;
+  iconName: IstatPaIconName;
 };
 
 export type IstatActTag = {
@@ -67,7 +65,7 @@ export const ISTAT_PA_DIMENSIONS = [
       { href: "/macchina-comunale", label: "Macchina comunale" },
       { href: "/accesso-civico", label: "Accesso civico" },
     ],
-    icon: BookOpenCheck,
+    iconName: "book-open-check",
   },
   {
     id: "organizzazione",
@@ -81,7 +79,7 @@ export const ISTAT_PA_DIMENSIONS = [
       { href: "/atti-fondamentali", label: "Atti fondamentali" },
       { href: "/performance", label: "Performance" },
     ],
-    icon: Building2,
+    iconName: "building",
   },
   {
     id: "digitalizzazione",
@@ -95,7 +93,7 @@ export const ISTAT_PA_DIMENSIONS = [
       { href: "/sviluppatori", label: "API e sviluppatori" },
       { href: "/contratti", label: "Contratti ICT" },
     ],
-    icon: Database,
+    iconName: "database",
   },
   {
     id: "cybersecurity",
@@ -109,7 +107,7 @@ export const ISTAT_PA_DIMENSIONS = [
       { href: "/atti-fondamentali", label: "Atti fondamentali" },
       { href: "/accesso-civico", label: "Accesso civico" },
     ],
-    icon: ShieldCheck,
+    iconName: "shield-check",
   },
   {
     id: "servizi",
@@ -123,7 +121,7 @@ export const ISTAT_PA_DIMENSIONS = [
       { href: "/opendata", label: "Open data" },
       { href: "/segnalazioni", label: "Segnalazioni" },
     ],
-    icon: Users,
+    iconName: "users",
   },
   {
     id: "sostenibilita",
@@ -137,7 +135,7 @@ export const ISTAT_PA_DIMENSIONS = [
       { href: "/contratti", label: "Contratti" },
       { href: "/pnrr", label: "PNRR" },
     ],
-    icon: Leaf,
+    iconName: "leaf",
   },
   {
     id: "innovazione-sociale",
@@ -151,7 +149,7 @@ export const ISTAT_PA_DIMENSIONS = [
       { href: "/archivio-proposte", label: "Archivio proposte" },
       { href: "/monitoraggio", label: "Monitor civico" },
     ],
-    icon: Network,
+    iconName: "network",
   },
   {
     id: "ai-pa",
@@ -165,7 +163,7 @@ export const ISTAT_PA_DIMENSIONS = [
       { href: "/note-legali", label: "Note legali" },
       { href: "/fonti-dati", label: "Fonti dati" },
     ],
-    icon: Bot,
+    iconName: "bot",
   },
 ] as const satisfies readonly IstatPaDimension[];
 
