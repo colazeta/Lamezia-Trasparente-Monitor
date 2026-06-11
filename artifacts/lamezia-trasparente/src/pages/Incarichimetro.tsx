@@ -1,9 +1,7 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import {
   useListContracts,
   useListPublications,
-  type Contract,
-  type Publication,
 } from "@workspace/api-client-react";
 import {
   AlertTriangle,
@@ -21,11 +19,30 @@ import { Link } from "wouter";
 import { format } from "date-fns";
 import { it } from "date-fns/locale";
 
+import {
+  buildContractRecord,
+  buildOperatorAggregates,
+  buildPublicationRecord,
+  DEFAULT_INCARICHIMETRO_FILTERS,
+  filterMonitoredRecords,
+  type IncarichimetroFilters,
+  type MonitoredRecord,
+} from "@/lib/incarichimetroFilters";
+
 import { PageMeta } from "@/components/seo/PageMeta";
 import { CivicMonitorReturn } from "@/components/CivicMonitorReturn";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
 import { Skeleton } from "@/components/ui/skeleton";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import {
   Table,
   TableBody,
@@ -34,109 +51,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-
-const INCARICHI_KEYWORDS = [
-  "incarico",
-  "incarichi",
-  "affidamento",
-  "affidamenti",
-  "servizio professionale",
-  "servizi professionali",
-  "prestazione professionale",
-  "prestazioni professionali",
-  "consulenza",
-  "consulenze",
-  "legale",
-  "avvocato",
-  "patrocinio",
-  "tecnico",
-  "progettazione",
-  "direzione lavori",
-  "collaudo",
-  "supporto al rup",
-  "esperto",
-];
-
-const COMPARATIVE_KEYWORDS = [
-  "procedura comparativa",
-  "comparazione",
-  "confronto",
-  "manifestazione di interesse",
-  "avviso pubblico",
-  "selezione pubblica",
-  "gara",
-  "aperta",
-  "negoziata",
-  "indagine di mercato",
-];
-
-const DIRECT_PROCEDURE_KEYWORDS = [
-  "affidamento diretto",
-  "diretto",
-  "senza previa pubblicazione",
-];
-
-const CIG_RE = /\b(?:CIG|SMART\s+CIG)[:\s-]*([A-Z0-9]{10})\b/gi;
-const CUP_RE = /\bCUP[:\s-]*([A-Z0-9]{15})\b/gi;
-const OPERATOR_PATTERNS = [
-  /(?:affidatari[oa]|beneficiari[oa]|operatore\s+economico|professionista|ditta|societ[aà]|impresa|avv\.?|ing\.?|arch\.?)\s+(?:individuat[oa]\s+)?(?:in\s+)?(?:favore\s+di\s+)?([A-ZÀ-ÖØ-Ý][\wÀ-ÖØ-öø-ÿ'&.,\- ]{3,80})/i,
-  /(?:alla|al)\s+(?:ditta|societ[aà]|professionista|avv\.?|ing\.?|arch\.?)\s+([A-ZÀ-ÖØ-Ý][\wÀ-ÖØ-öø-ÿ'&.,\- ]{3,80})/i,
-];
-
-interface MonitoredRecord {
-  id: string;
-  source: "Contratti ANAC" | "Albo Pretorio";
-  title: string;
-  operator: string;
-  amount: number | null;
-  date: string | null;
-  cig: string | null;
-  cup: string | null;
-  procedure: string | null;
-  sourceHref: string;
-  sourceStatus: "ufficiale" | "estratto" | "da verificare";
-  flags: string[];
-}
-
-interface OperatorAggregate {
-  operator: string;
-  records: number;
-  totalAmount: number;
-  directCount: number;
-  missingCigCount: number;
-  missingComparativeCount: number;
-  sourceStatuses: Set<MonitoredRecord["sourceStatus"]>;
-}
-
-function normalizeText(value: string | null | undefined): string {
-  return (value ?? "").toLocaleLowerCase("it");
-}
-
-function includesAny(text: string, keywords: string[]): boolean {
-  const normalized = normalizeText(text);
-  return keywords.some((keyword) => normalized.includes(keyword));
-}
-
-function extractFirst(regex: RegExp, text: string): string | null {
-  regex.lastIndex = 0;
-  const match = regex.exec(text);
-  return match?.[1]?.toUpperCase() ?? null;
-}
-
-function extractOperator(text: string): string | null {
-  for (const pattern of OPERATOR_PATTERNS) {
-    const match = pattern.exec(text);
-    const candidate = match?.[1]
-      ?.replace(
-        /\s+(?:per|con|relativo|relativa|inerente|mediante|ai sensi).*$/i,
-        "",
-      )
-      .replace(/[.;:,\-–]+$/g, "")
-      .trim();
-    if (candidate && candidate.length >= 4) return candidate;
-  }
-  return null;
-}
 
 function formatDate(value: string | null | undefined) {
   if (!value) return "—";
@@ -153,121 +67,6 @@ function formatEuro(value: number | null | undefined): string {
     currency: "EUR",
     maximumFractionDigits: 0,
   }).format(value);
-}
-
-function buildContractRecord(contract: Contract): MonitoredRecord | null {
-  const text = [contract.title, contract.description, contract.procedureType]
-    .filter(Boolean)
-    .join(" ");
-  if (!includesAny(text, INCARICHI_KEYWORDS)) return null;
-
-  const hasComparative = includesAny(text, COMPARATIVE_KEYWORDS);
-  const isDirect =
-    contract.withoutTender ||
-    includesAny(contract.procedureType, DIRECT_PROCEDURE_KEYWORDS);
-  const flags = [
-    !contract.cig ? "CIG non presente nel dato" : null,
-    !contract.cup ? "CUP non presente nel dato" : null,
-    !hasComparative ? "Procedura comparativa non rilevata" : null,
-    isDirect ? "Possibile affidamento diretto" : null,
-  ].filter((flag): flag is string => Boolean(flag));
-
-  return {
-    id: `contract-${contract.id}`,
-    source: "Contratti ANAC",
-    title: contract.title,
-    operator: contract.supplier?.trim() || "Operatore non indicato",
-    amount: contract.amount,
-    date: contract.awardDate,
-    cig: contract.cig ?? null,
-    cup: contract.cup ?? null,
-    procedure: contract.procedureType || null,
-    sourceHref: `/contratti/${contract.id}`,
-    sourceStatus: "ufficiale",
-    flags,
-  };
-}
-
-function buildPublicationRecord(
-  publication: Publication,
-): MonitoredRecord | null {
-  const text = [
-    publication.oggetto,
-    publication.brief,
-    publication.tipologia,
-    publication.provenienza,
-  ]
-    .filter(Boolean)
-    .join(" ");
-  if (!includesAny(text, INCARICHI_KEYWORDS)) return null;
-
-  const cig = extractFirst(CIG_RE, text);
-  const cup = publication.cups?.[0] ?? extractFirst(CUP_RE, text);
-  const hasComparative = includesAny(text, COMPARATIVE_KEYWORDS);
-  const isDirect = includesAny(text, DIRECT_PROCEDURE_KEYWORDS);
-  const operator = extractOperator(text);
-  const flags = [
-    !operator ? "Operatore da verificare nell'atto" : null,
-    !cig ? "CIG non rilevato" : null,
-    !cup ? "CUP non rilevato" : null,
-    !hasComparative ? "Procedura comparativa non rilevata" : null,
-    isDirect ? "Possibile affidamento diretto" : null,
-  ].filter((flag): flag is string => Boolean(flag));
-
-  return {
-    id: `publication-${publication.id}`,
-    source: "Albo Pretorio",
-    title: publication.oggetto,
-    operator: operator ?? "Da verificare nell'atto",
-    amount: null,
-    date:
-      publication.dataAtto ?? publication.pubStart ?? publication.firstSeenAt,
-    cig,
-    cup,
-    procedure: hasComparative
-      ? "Elementi comparativi rilevati nel testo"
-      : isDirect
-        ? "Affidamento diretto rilevato nel testo"
-        : null,
-    sourceHref: `/albo/${publication.id}`,
-    sourceStatus: operator ? "estratto" : "da verificare",
-    flags,
-  };
-}
-
-function buildOperatorAggregates(
-  records: MonitoredRecord[],
-): OperatorAggregate[] {
-  const map = new Map<string, OperatorAggregate>();
-  for (const record of records) {
-    const key = record.operator.toLocaleLowerCase("it");
-    const current = map.get(key) ?? {
-      operator: record.operator,
-      records: 0,
-      totalAmount: 0,
-      directCount: 0,
-      missingCigCount: 0,
-      missingComparativeCount: 0,
-      sourceStatuses: new Set<MonitoredRecord["sourceStatus"]>(),
-    };
-    current.records += 1;
-    current.totalAmount += record.amount ?? 0;
-    if (record.flags.some((flag) => flag.includes("affidamento diretto"))) {
-      current.directCount += 1;
-    }
-    if (record.flags.some((flag) => flag.includes("CIG"))) {
-      current.missingCigCount += 1;
-    }
-    if (record.flags.some((flag) => flag.includes("comparativa"))) {
-      current.missingComparativeCount += 1;
-    }
-    current.sourceStatuses.add(record.sourceStatus);
-    map.set(key, current);
-  }
-  return Array.from(map.values()).sort((a, b) => {
-    if (b.records !== a.records) return b.records - a.records;
-    return b.totalAmount - a.totalAmount;
-  });
 }
 
 function StatCard({
@@ -297,10 +96,55 @@ function StatCard({
   );
 }
 
+function FilterSelect<TValue extends string>({
+  id,
+  label,
+  value,
+  onValueChange,
+  options,
+}: {
+  id: string;
+  label: string;
+  value: TValue;
+  onValueChange: (value: TValue) => void;
+  options: { value: TValue; label: string }[];
+}) {
+  return (
+    <div className="space-y-2">
+      <Label htmlFor={id}>{label}</Label>
+      <Select
+        value={value}
+        onValueChange={(next) => onValueChange(next as TValue)}
+      >
+        <SelectTrigger id={id} aria-label={label}>
+          <SelectValue />
+        </SelectTrigger>
+        <SelectContent>
+          {options.map((option) => (
+            <SelectItem key={option.value} value={option.value}>
+              {option.label}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+    </div>
+  );
+}
+
 export function Incarichimetro() {
   const { data: contracts, isLoading: contractsLoading } = useListContracts();
   const { data: publications, isLoading: publicationsLoading } =
     useListPublications();
+  const [filters, setFilters] = useState<IncarichimetroFilters>(
+    DEFAULT_INCARICHIMETRO_FILTERS,
+  );
+
+  const updateFilter = <TKey extends keyof IncarichimetroFilters>(
+    key: TKey,
+    value: IncarichimetroFilters[TKey],
+  ) => {
+    setFilters((current) => ({ ...current, [key]: value }));
+  };
 
   const records = useMemo(() => {
     const contractRecords = (contracts ?? [])
@@ -316,18 +160,28 @@ export function Incarichimetro() {
     });
   }, [contracts, publications]);
 
-  const aggregates = useMemo(() => buildOperatorAggregates(records), [records]);
+  const filteredRecords = useMemo(
+    () => filterMonitoredRecords(records, filters),
+    [records, filters],
+  );
+  const aggregates = useMemo(
+    () => buildOperatorAggregates(filteredRecords),
+    [filteredRecords],
+  );
   const loading = contractsLoading || publicationsLoading;
   const repeatedOperators = aggregates.filter((item) => item.records > 1);
-  const knownAmount = records.reduce(
+  const knownAmount = filteredRecords.reduce(
     (sum, record) => sum + (record.amount ?? 0),
     0,
   );
-  const missingCig = records.filter((record) =>
-    record.flags.some((flag) => flag.includes("CIG")),
+  const missingCig = filteredRecords.filter(
+    (record) => !record.signals.hasCig,
   ).length;
-  const missingComparative = records.filter((record) =>
-    record.flags.some((flag) => flag.includes("comparativa")),
+  const missingComparative = filteredRecords.filter(
+    (record) => !record.signals.hasComparativeProcedureSignal,
+  ).length;
+  const activeFilters = Object.values(filters).filter(
+    (value) => value !== "all",
   ).length;
 
   return (
@@ -390,6 +244,116 @@ export function Incarichimetro() {
         </section>
 
         <section
+          aria-labelledby="filtri-incarichimetro"
+          className="mt-8 rounded-2xl border bg-card p-5"
+        >
+          <div className="mb-4 flex flex-col gap-2 md:flex-row md:items-start md:justify-between">
+            <div>
+              <h2
+                id="filtri-incarichimetro"
+                className="text-xl font-bold tracking-tight"
+              >
+                Filtri pubblici
+              </h2>
+              <p className="mt-1 text-sm text-muted-foreground">
+                I filtri restringono la vista e le aggregazioni senza modificare
+                le cautele: ogni selezione mostra segnali documentali da
+                verificare sulle fonti.
+              </p>
+            </div>
+            <div className="flex flex-wrap items-center gap-2">
+              <Badge variant="outline">
+                {filteredRecords.length} di {records.length} record
+              </Badge>
+              {activeFilters > 0 && (
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setFilters(DEFAULT_INCARICHIMETRO_FILTERS)}
+                >
+                  Reimposta filtri
+                </Button>
+              )}
+            </div>
+          </div>
+
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            <FilterSelect
+              id="incarichimetro-source-filter"
+              label="Fonte"
+              value={filters.source}
+              onValueChange={(value) => updateFilter("source", value)}
+              options={[
+                { value: "all", label: "Tutte le fonti" },
+                { value: "Contratti ANAC", label: "Contratti ANAC" },
+                { value: "Albo Pretorio", label: "Albo Pretorio" },
+              ]}
+            />
+            <FilterSelect
+              id="incarichimetro-cig-filter"
+              label="Presenza CIG"
+              value={filters.cig}
+              onValueChange={(value) => updateFilter("cig", value)}
+              options={[
+                { value: "all", label: "Tutti" },
+                { value: "present", label: "CIG presente" },
+                { value: "missing", label: "CIG non presente/rilevato" },
+              ]}
+            />
+            <FilterSelect
+              id="incarichimetro-cup-filter"
+              label="Presenza CUP"
+              value={filters.cup}
+              onValueChange={(value) => updateFilter("cup", value)}
+              options={[
+                { value: "all", label: "Tutti" },
+                { value: "present", label: "CUP presente" },
+                { value: "missing", label: "CUP non presente/rilevato" },
+              ]}
+            />
+            <FilterSelect
+              id="incarichimetro-direct-filter"
+              label="Affidamento diretto rilevato"
+              value={filters.directProcedure}
+              onValueChange={(value) =>
+                updateFilter("directProcedure", value)
+              }
+              options={[
+                { value: "all", label: "Tutti" },
+                { value: "present", label: "Segnale presente" },
+                { value: "missing", label: "Segnale non rilevato" },
+              ]}
+            />
+            <FilterSelect
+              id="incarichimetro-comparative-filter"
+              label="Procedura comparativa"
+              value={filters.comparativeMissing}
+              onValueChange={(value) =>
+                updateFilter("comparativeMissing", value)
+              }
+              options={[
+                { value: "all", label: "Tutti" },
+                { value: "present", label: "Comparativa non rilevata" },
+                { value: "missing", label: "Elementi comparativi rilevati" },
+              ]}
+            />
+            <FilterSelect
+              id="incarichimetro-status-filter"
+              label="Stato del dato"
+              value={filters.sourceStatus}
+              onValueChange={(value) => updateFilter("sourceStatus", value)}
+              options={[
+                { value: "all", label: "Tutti gli stati" },
+                { value: "ufficiale", label: "Ufficiale" },
+                { value: "estratto", label: "Estratto" },
+                { value: "da verificare", label: "Da verificare" },
+              ]}
+            />
+          </div>
+        </section>
+
+        <section
           aria-label="Indicatori sintetici"
           className="mt-8 grid gap-4 md:grid-cols-2 xl:grid-cols-4"
         >
@@ -402,7 +366,7 @@ export function Incarichimetro() {
               <StatCard
                 icon={FileText}
                 label="Record monitorati"
-                value={String(records.length)}
+                value={String(filteredRecords.length)}
                 note="Contratti e atti filtrati per parole chiave pertinenti."
               />
               <StatCard
@@ -557,8 +521,8 @@ export function Incarichimetro() {
               Array.from({ length: 6 }).map((_, index) => (
                 <Skeleton key={index} className="h-28 rounded-xl" />
               ))
-            ) : records.length > 0 ? (
-              records.slice(0, 30).map((record) => (
+            ) : filteredRecords.length > 0 ? (
+              filteredRecords.slice(0, 30).map((record) => (
                 <Card key={record.id} className="p-4">
                   <div className="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
                     <div className="min-w-0 space-y-2">

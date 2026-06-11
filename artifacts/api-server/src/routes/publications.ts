@@ -959,19 +959,42 @@ router.get("/pnrr/projects", async (_req, res) => {
 
   const matchedDocIds = new Set<number>();
 
-  const importSourceLabel = italiadomaniStatus?.label ?? ITALIADOMANI_LABEL;
-  const importSourceUrl = italiadomaniStatus?.url ?? ITALIADOMANI_LOC_URL;
+  const latestImportSourceLabel = italiadomaniStatus?.label ?? ITALIADOMANI_LABEL;
+  const latestImportSourceUrl = italiadomaniStatus?.url ?? ITALIADOMANI_LOC_URL;
   const importSourceStatus = italiadomaniStatus?.status ?? null;
   const importSourceError = italiadomaniStatus?.error ?? null;
-  const sourceUsesOpenPnrr =
-    importSourceUrl.includes("openpnrr.it") ||
-    importSourceLabel.toLowerCase().includes("openpnrr");
-  const projectSourceUrl = sourceUsesOpenPnrr
-    ? importSourceUrl
-    : ITALIADOMANI_PROJ_URL;
-  const locationSourceUrl = sourceUsesOpenPnrr
-    ? importSourceUrl
-    : ITALIADOMANI_LOC_URL;
+  const latestImportUsesOpenPnrr =
+    latestImportSourceUrl.includes("openpnrr.it") ||
+    latestImportSourceLabel.toLowerCase().includes("openpnrr");
+  const hasPublishedPnrrRows = masterList.length > 0;
+  const latestImportSucceeded = importSourceStatus === "ok";
+  const canAttributePublishedSource =
+    latestImportSucceeded || !hasPublishedPnrrRows;
+  const unknownEffectiveSourceLabel =
+    "Fonte effettiva dei dati pubblicati non determinabile dai metadati disponibili";
+  const unknownEffectiveSourceNote =
+    "L'ultimo tentativo di importazione PNRR risulta non completato sui metadati runtime; la tabella contiene righe già pubblicate, ma il sistema non conserva una traccia separata dell'ultimo refresh riuscito. Verifica tecnica richiesta prima di attribuire una fonte puntuale a questi dati.";
+  const importSourceLabel = canAttributePublishedSource
+    ? latestImportSourceLabel
+    : unknownEffectiveSourceLabel;
+  const importSourceUrl = canAttributePublishedSource
+    ? latestImportSourceUrl
+    : "";
+  const projectSourceUrl = canAttributePublishedSource
+    ? latestImportUsesOpenPnrr
+      ? latestImportSourceUrl
+      : ITALIADOMANI_PROJ_URL
+    : "";
+  const locationSourceUrl = canAttributePublishedSource
+    ? latestImportUsesOpenPnrr
+      ? latestImportSourceUrl
+      : ITALIADOMANI_LOC_URL
+    : "";
+  const locationNote = canAttributePublishedSource
+    ? latestImportUsesOpenPnrr
+      ? "Localizzazione territoriale ricavata dal fallback OpenPNRR filtrato per Comune di Lamezia Terme; non indica una localizzazione puntuale dell'intervento."
+      : "Localizzazione territoriale ricavata dal dataset Italia Domani di localizzazione dei progetti PNRR, filtrato per Comune di Lamezia Terme e unito al dataset nazionale Progetti PNRR tramite CUP; non indica una localizzazione puntuale dell'intervento."
+    : unknownEffectiveSourceNote;
 
   // The Italia Domani census is always the authoritative master list.
   // If the table is empty (ingestor has not yet run or failed), return an
@@ -1041,8 +1064,7 @@ router.get("/pnrr/projects", async (_req, res) => {
         lastUpdatedAt,
         location: "Lamezia Terme",
         locationQuality: "dedotta",
-        locationNote:
-          "Localizzazione territoriale ricavata dal dataset Italia Domani di localizzazione dei progetti PNRR, filtrato per Comune di Lamezia Terme e unito al dataset nazionale Progetti PNRR tramite CUP; non indica una localizzazione puntuale dell'intervento.",
+        locationNote,
         attachments: allAttachments,
         trasparenzaCompleta,
         aggiornamentoVecchio,

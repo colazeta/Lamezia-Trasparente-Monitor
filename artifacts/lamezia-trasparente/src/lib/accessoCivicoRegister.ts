@@ -52,6 +52,35 @@ export type FoiaRegisterEntry = {
   privateFields?: FoiaRegisterPrivateFields;
 };
 
+export type FoiaCivicMeterMetrics = {
+  totalPublicRequests: number;
+  sentRequests: number;
+  pendingRequests: number;
+  upcomingDeadlines: number;
+  overdueToVerify: number;
+  answeredRequests: number;
+  deniedRequests: number;
+  reviewRequests: number;
+  silenceSignals: number;
+  noEstimatedDeadline: number;
+};
+
+export type FoiaCivicMeterOptions = {
+  today: string;
+  upcomingDays?: number;
+};
+
+const foiaPendingStatuses = new Set<FoiaRegisterStatus>([
+  "inviata",
+  "in attesa",
+]);
+const foiaOpenVerificationStatuses = new Set<FoiaRegisterStatus>([
+  "inviata",
+  "in attesa",
+  "silenzio",
+  "riesame",
+]);
+
 export type FoiaRegisterAdapter = {
   name: string;
   persistence: "not-configured" | "application-storage";
@@ -218,4 +247,90 @@ export function matchesFoiaDeadlineFilter(
   if (filter === "upcoming") return diff >= 0 && diff <= 14;
   if (filter === "overdue") return diff < 0;
   return true;
+}
+
+function getDeadlineDistance(entry: FoiaRegisterEntry, today: string) {
+  const deadline = entry.publicFields.estimatedDeadline;
+  return deadline ? daysUntil(deadline, today) : undefined;
+}
+
+function hasEstimatedDeadline(entry: FoiaRegisterEntry, today: string) {
+  return getDeadlineDistance(entry, today) !== undefined;
+}
+
+export function calculateFoiaCivicMeterMetrics(
+  entries: FoiaRegisterEntry[],
+  { today, upcomingDays = 14 }: FoiaCivicMeterOptions,
+): FoiaCivicMeterMetrics {
+  return entries.reduce<FoiaCivicMeterMetrics>(
+    (metrics, entry) => {
+      const { publicFields } = entry;
+      const status = publicFields.status;
+      const deadlineDistance = getDeadlineDistance(entry, today);
+      const hasSentDate = Boolean(publicFields.sentDate);
+      const isPending = foiaPendingStatuses.has(status);
+      const isOpenForVerification = foiaOpenVerificationStatuses.has(status);
+
+      metrics.totalPublicRequests += 1;
+
+      if (hasSentDate) {
+        metrics.sentRequests += 1;
+      }
+
+      if (isPending) {
+        metrics.pendingRequests += 1;
+      }
+
+      if (
+        isOpenForVerification &&
+        deadlineDistance !== undefined &&
+        deadlineDistance >= 0 &&
+        deadlineDistance <= upcomingDays
+      ) {
+        metrics.upcomingDeadlines += 1;
+      }
+
+      if (
+        isOpenForVerification &&
+        deadlineDistance !== undefined &&
+        deadlineDistance < 0
+      ) {
+        metrics.overdueToVerify += 1;
+      }
+
+      if (status === "risposta ricevuta" || status === "chiusa") {
+        metrics.answeredRequests += 1;
+      }
+
+      if (status === "diniego") {
+        metrics.deniedRequests += 1;
+      }
+
+      if (status === "riesame") {
+        metrics.reviewRequests += 1;
+      }
+
+      if (status === "silenzio") {
+        metrics.silenceSignals += 1;
+      }
+
+      if (hasSentDate && !hasEstimatedDeadline(entry, today)) {
+        metrics.noEstimatedDeadline += 1;
+      }
+
+      return metrics;
+    },
+    {
+      totalPublicRequests: 0,
+      sentRequests: 0,
+      pendingRequests: 0,
+      upcomingDeadlines: 0,
+      overdueToVerify: 0,
+      answeredRequests: 0,
+      deniedRequests: 0,
+      reviewRequests: 0,
+      silenceSignals: 0,
+      noEstimatedDeadline: 0,
+    },
+  );
 }

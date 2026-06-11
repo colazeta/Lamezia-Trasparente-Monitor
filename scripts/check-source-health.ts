@@ -46,6 +46,7 @@ interface CliOptions {
   dryRun: boolean;
   repo?: string;
   warningRunsThreshold: number;
+  skipUnconfiguredEndpoint?: boolean;
 }
 
 export interface GitHubIssue {
@@ -85,6 +86,7 @@ function usage(): string {
     "Environment:",
     "  SOURCE_HEALTH_AUDIT_PATH   Path to a JSON audit file, used when --audit-file is omitted.",
     "  SOURCE_HEALTH_URL          URL for GET /healthz/sources, used when --url is omitted.",
+    "  SOURCE_HEALTH_SKIP_UNCONFIGURED Skip without opening/updating issues when no audit file or URL is configured.",
     "  SOURCE_HEALTH_WARNING_RUNS Number of consecutive warning runs required before opening/updating an issue (default: 2).",
     "  GITHUB_REPOSITORY          owner/repo for issue operations.",
     "  GITHUB_TOKEN or GH_TOKEN   Token with issues:write permission; required unless --dry-run is used.",
@@ -100,6 +102,10 @@ export function parseArgs(argv: string[]): CliOptions {
     warningRunsThreshold: parseInteger(
       process.env.SOURCE_HEALTH_WARNING_RUNS,
       2,
+    ),
+    skipUnconfiguredEndpoint: parseBoolean(
+      process.env.SOURCE_HEALTH_SKIP_UNCONFIGURED,
+      false,
     ),
   };
 
@@ -153,6 +159,14 @@ function parseInteger(value: string | undefined, fallback: number): number {
   return Number.isFinite(parsed) && parsed > 0 ? parsed : fallback;
 }
 
+function parseBoolean(value: string | undefined, fallback: boolean): boolean {
+  const normalized = normalizeOptionalString(value)?.toLowerCase();
+  if (!normalized) return fallback;
+  if (["1", "true", "yes", "on"].includes(normalized)) return true;
+  if (["0", "false", "no", "off"].includes(normalized)) return false;
+  return fallback;
+}
+
 export async function readSourceHealth(
   options: CliOptions,
 ): Promise<SourceHealthRecord[]> {
@@ -162,9 +176,13 @@ export async function readSourceHealth(
   }
 
   const url = normalizeOptionalString(options.url);
-  if (!url) {
-    console.log(
-      "Source-health endpoint not configured: set SOURCE_HEALTH_URL or SOURCE_HEALTH_AUDIT_PATH. Skipping technical check without creating source-health anomalies.",
+  if (url) {
+    return readEndpointSourceHealth(url);
+  }
+
+  if (options.skipUnconfiguredEndpoint) {
+    console.warn(
+      "SOURCE_HEALTH_URL non configurato: controllo source-health saltato in modo tecnico controllato.",
     );
     return [];
   }

@@ -87,6 +87,9 @@ export interface PromiseActLink {
   isPlaceholder?: boolean;
 }
 
+export const PROMESSOMETRO_REAL_DATA_EDITORIAL_NOTE =
+  "Nuove promesse reali vanno inserite solo dopo verifica della fonte programmatica o istituzionale originale: ogni record non-placeholder deve avere URL fonte, data fonte, mandato/amministrazione, stato documentale, nota cautelativa, ultimo aggiornamento e cosa manca per considerare osservabile la realizzazione. Il record modello resta escluso dai conteggi.";
+
 export const PROGRAMME_PROMISES: ProgrammePromise[] = [
   {
     id: "template-001",
