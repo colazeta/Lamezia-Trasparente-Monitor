@@ -24,15 +24,13 @@ Repository context:
 - Before posting any operational comment, apply the comment cleanup preflight defined in `docs/automation/codex-issue-ops.md`.
 
 Queue model:
-- Maximum operational Codex capacity is 5 real active tasks.
-- Before preparing an ordinary implementation prompt, count materialization debt: open issues/PRs with `materialization:required`, `fallback-bundle-incomplete`, `output-without-PR`, `invalid-output`, `local-only` or `needs-materialization-verification`. If debt is greater than 5, do not prepare ordinary technical/platform prompts; prepare only materialization verification, manual UI/export recovery, split-required, blocker or PR rebase/recovery/supersede handoff.
-- Derive operational state from evidence before counting: `idle`, `candidate`, `ready`, `invoked`, `working`, `pr-open`, `blocked`, `stale`, `completed-by-pr` or `superseded`.
-- `codex:ready` is eligible backlog only; it is not active work and never consumes a slot by itself.
-- `codex:prompted`, `codex:invoked` and `codex:working` count only when backed by recent invocation, branch/task/commit, validation, diff, open PR needing Codex-side changes, explicit blocker or in-progress Codex response.
-- `codex:review-needed` and PRs/issues waiting only for Giovanni review/merge are human review wait and do not saturate Codex capacity unless there is concrete file/module collision or Codex-side rework.
-- Effective free slots are `5 - real active Codex operational tasks`; do not subtract human-review-pending items.
-- A Codex summary without an open PR to `main`, visible `codex/<issue-number>-<slug>` branch, explicit technical blocker or recent execution evidence is `output-without-PR` and does not count as a real active task.
-- Do not prepare a prompt that would exceed capacity 5, bypass the materialization debt gate or create unresolved collision risk on the same files/modules.
+- Maximum operational Codex capacity is 10 active or reserved slots.
+- `codex:prompted`, `codex:invoked` and `codex:working` are operational states.
+- `codex:review-needed`, open PRs, pending reviews and PRs/issues waiting only for Giovanni review/merge are human review wait and do not saturate Codex capacity unless there is concrete file/module collision or Codex-side rework.
+- Effective free slots are `10 - (real active Codex operational tasks + reserved fresh codex:prompted slots awaiting invocation)`; do not subtract human-review-pending items.
+- Do not prepare a prompt that would exceed capacity 10 after counting active work and fresh `codex:prompted` reservations, or create unresolved collision risk on the same files/modules; do not block a non-colliding issue merely because unrelated PRs are open or awaiting review/merge.
+- A newly prepared `codex:prompted` issue is not stalled just because no PR exists yet; it reserves pending capacity while awaiting invocation until an operative `@codex` invocation exists or the prompt is older than 60 minutes with no invocation or cleanup action.
+- A precise technical blocker is reviewable evidence, but once routed to `codex:blocked` or `codex:follow-up` it is not active work and must not occupy capacity.
 
 Task:
 1. classify the issue as one of: technical, UI/accessibility/metadata, civic-methodological, copy/legal tone, data/API/schema, backlog/governance, unsafe/manual;

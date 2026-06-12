@@ -45,12 +45,11 @@ Materialization debt gate:
 - Do not use this prompt body as the first place where the debt stop condition is evaluated.
 
 Capacity context:
-- Capacity 5 is computed only on real active Codex tasks backed by evidence.
-- `codex:ready` is eligible backlog only and does not count as active work.
-- Count `codex:prompted`, `codex:invoked` or `codex:working` only when supported by recent invocation, branch/task/commit, validation, diff, open PR needing Codex-side changes, explicit blocker or in-progress Codex response.
-- Issues or PRs waiting only for Giovanni review/merge, including `codex:review-needed`, are outside the capacity count.
-- A human-review-pending PR blocks this invocation only when it touches the same files/modules or creates a concrete implementation collision.
-- A prior Codex summary without an open PR to `main`, visible branch, explicit blocker or recent execution evidence is `output-without-PR`; it is stale follow-up, not a real active slot.
+- Capacity 10 is computed on real active Codex tasks plus reserved fresh `codex:prompted` slots awaiting invocation.
+- Open PRs, pending reviews, pending merges and issues waiting only for Giovanni review/merge, including `codex:review-needed`, are outside the capacity count.
+- A human-review-pending PR blocks this invocation only when it touches the same files/modules or creates a concrete implementation collision; otherwise invoke Codex directly on eligible `codex:ready` or `codex:prompted` issues that have no recent operative `@codex` invocation.
+- Do not treat a newly prepared `codex:prompted` issue as stalled merely because no PR exists yet; count it as reserved pending capacity and apply the 60-minute prompt/invocation grace window before routing it as stale.
+- If a precise technical blocker prevents branch, diff or PR creation, report it exactly; once routed, that blocker is reviewable evidence but not an active capacity slot.
 
 Repository rules:
 - Follow `AGENTS.md`.

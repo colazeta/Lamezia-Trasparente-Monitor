@@ -15,18 +15,15 @@ Issue acceptance criteria:
 {{ACCEPTANCE_CRITERIA}}
 
 Task:
-1. derive the issue state as `idle`, `candidate`, `ready`, `invoked`, `working`, `pr-open`, `blocked`, `stale`, `completed-by-pr` or `superseded` from labels plus evidence;
-2. determine whether a Codex implementation attempt exists;
-3. determine whether a pull request exists, targets `main`, uses a `codex/{{ISSUE_NUMBER}}-<slug>` branch and references the issue;
-4. detect delivery without PR and capture the exact reported reason, branch/diff or blocker;
-5. classify any summary without an open PR to `main`, complete non-truncated fallback, visible `codex/{{ISSUE_NUMBER}}-<slug>` branch, explicit blocker or recent execution evidence as `output-without-PR`;
-6. detect stale zombie tasks: `codex:prompted`, `codex:invoked` or `codex:working` with no PR, branch, explicit blocker, commit, validation log, diff location or other concrete activity;
-7. classify declared fallback content with `...`, `(truncated)`, omitted sections, missing files or unparseable file blocks as `fallback-bundle-incomplete` plus `output-without-PR`;
-8. check whether the implementation appears to satisfy the acceptance criteria;
-9. identify validation status if available;
-10. identify whether the implementation changed copy/legal/methodological safeguards;
-11. recommend one of the following outcomes:
-   - remove or neutralise stale `codex:ready` when a PR, blocker, supersession or completed outcome means the issue is no longer eligible backlog;
+1. determine whether a Codex implementation attempt exists;
+2. determine whether a pull request exists, targets `main`, uses a `codex/{{ISSUE_NUMBER}}-<slug>` branch and references the issue;
+3. detect delivery without PR and capture the exact reported reason, branch/diff, commit SHA or blocker;
+4. classify any generic summary without a GitHub-visible PR, GitHub-visible branch plus recent commit SHA, reviewable diff/execution artifact or explicit technical blocker as `output-without-PR`;
+5. detect stale zombie tasks only after the grace window: `codex:invoked` or `codex:working` for more than 60 minutes since the latest operative event with no PR, branch, Codex comment, commit or other concrete activity;
+6. check whether the implementation appears to satisfy the acceptance criteria;
+7. identify validation status if available;
+8. identify whether the implementation changed copy/legal/methodological safeguards;
+9. recommend one of the following outcomes:
    - `codex:review-needed` when a PR exists and needs human review/merge;
    - `codex:follow-up` when no PR exists, delivery without PR needs recovery, the task is stale, validation is failing, or the implementation is incomplete;
    - `codex:blocked` when a concrete safety, permission, credential or collision blocker prevents continuation;
@@ -39,10 +36,12 @@ Materialization gate:
 Queue rules:
 - `codex:ready` is not active work and must not be counted as an occupied slot.
 - `codex:review-needed` is human review/merge wait and does not saturate Codex capacity unless there is concrete file/module collision or Codex-side rework.
-- PRs/issues waiting only for Giovanni review or merge are outside the queue capacity count and block only candidate work touching the same files/modules.
-- Compute remaining capacity as `5 - real active Codex operational tasks`; do not subtract human-review-pending items.
-- Moving a stale or failed no-PR task to `codex:follow-up` releases operational capacity.
-- `output-without-PR` is not active work; it must not be promoted to review or done without verified PR, branch, explicit blocker or reviewable execution evidence.
+- Open PRs, pending reviews and PRs/issues waiting only for Giovanni review or merge are outside the queue capacity count and block only candidate work touching the same files/modules or creating a concrete implementation collision.
+- Compute remaining capacity as `10 - (real active Codex operational tasks + reserved fresh codex:prompted slots awaiting invocation)`; do not subtract human-review-pending items.
+- A newly prepared `codex:prompted` issue is not stale merely because it has no PR yet. Treat it as a reserved pending slot awaiting invocation until an operative `@codex` invocation exists or the prompt is older than 60 minutes with no invocation or cleanup action.
+- Moving a stale, failed no-PR or `output-without-PR` task to `codex:follow-up` releases operational capacity.
+- A concrete technical blocker is reviewable evidence but not active work. Route it to `codex:blocked` or `codex:follow-up`, preserve the exact blocker details, and release the active slot.
+- If a claimed PR or branch is not visible on GitHub, require the direct PR URL, exact branch ref and commit SHA before counting the task as active, or require a precise blocker before routing it to `codex:blocked` / `codex:follow-up` and releasing capacity.
 - Preserve no-auto-merge and no-auto-close policy.
 
 Do not close the issue automatically unless the repository policy explicitly authorises automatic closure. The current policy is to recommend closure only after human review.
