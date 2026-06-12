@@ -29,9 +29,7 @@ function isLocated(c: Contract): c is LocatedContract {
 type ClusterProps = { cluster: true; cluster_id: number; point_count: number };
 type LeafProps = { cluster?: false; contractId: number };
 
-type MarkerIcon = NonNullable<React.ComponentProps<typeof Marker>["icon"]>;
-
-function clusterIcon(count: number, color: string): MarkerIcon {
+function clusterIcon(count: number, color: string): L.DivIcon {
   const size = count < 10 ? 34 : count < 50 ? 42 : count < 100 ? 50 : 58;
   return L.divIcon({
     html: `<div style="
@@ -46,7 +44,7 @@ function clusterIcon(count: number, color: string): MarkerIcon {
     className: "",
     iconSize: [size, size],
     iconAnchor: [size / 2, size / 2],
-  }) as MarkerIcon;
+  });
 }
 
 function ClusteredMarkers({

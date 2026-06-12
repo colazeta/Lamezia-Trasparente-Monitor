@@ -2,6 +2,10 @@
 
 Use this template for the second automation in the sequence.
 
+This template is goal-shaped even when the GitHub `@codex` surface does not support literal slash commands such as `/goal`. The contract below is intended to make Codex work as one coherent implementation run, with internal checkpoints, validation persistence and an explicit materialization or manual-recovery outcome.
+
+See also: `docs/automation/codex-goal-driven-manual-materialization.md`.
+
 ## Pre-invocation materialization debt gate
 
 Automation must evaluate this gate before rendering or posting the `@codex` invocation below.
@@ -20,6 +24,13 @@ Work on GitHub issue #{{ISSUE_NUMBER}} in `colazeta/Lamezia-Trasparente-Monitor`
 
 Issue title: {{ISSUE_TITLE}}
 
+Goal-mode execution contract:
+- Complete this issue as one coherent implementation run, not as analysis-only work and not as a shallow one-turn summary.
+- Do not stop after partial progress. Continue until all acceptance criteria are satisfied, or until a precise stop condition below applies.
+- Use internal checkpoints rather than splitting the task into separate issues, unless reviewability, collision risk or materialization safety would otherwise fail.
+- Treat the objective, acceptance criteria, probable scope, likely files, collision decision, repository rules, validation requirements and stop conditions below as hard boundaries.
+- Do not claim repository completion unless the final response contains a valid materialization outcome.
+
 Objective:
 {{OBJECTIVE}}
 
@@ -31,6 +42,21 @@ Probable scope:
 
 Likely files/modules to inspect:
 {{LIKELY_FILES}}
+
+Internal checkpoints:
+1. Read `AGENTS.md` and any relevant repository governance docs before editing.
+2. Inspect the likely files/modules and confirm the narrow implementation boundary.
+3. Map every acceptance criterion to concrete file changes, validation evidence or an explicit non-applicability note.
+4. Implement the smallest coherent end-to-end change that satisfies the acceptance criteria.
+5. Run the relevant validation commands for the changed package/module.
+6. If validation fails, inspect the root cause, attempt targeted fixes where feasible and rerun the relevant checks.
+7. Materialize the result through a verified PR, or produce a complete fallback or manual-materialization-ready blocker handoff as described below.
+
+Execution effort contract:
+- This is a full implementation run. Do not stop at planning, repository inspection or a prose-only recommendation.
+- Do not reduce effort by creating separate follow-up issues unless the current task is too broad to review, unsafe to combine or impossible to materialize safely.
+- Prefer one reviewable branch and one PR for a coherent macro-task touching a bounded set of files/modules.
+- If the work becomes larger than the prompt can safely materialize without a PR, continue only if a verified PR can be opened or a manual-materialization-ready handoff can be produced.
 
 Collision risk:
 {{COLLISION_RISK}}
@@ -62,16 +88,23 @@ Repository rules:
 - Treat indicators as transparency and risk-screening signals, not as proof of wrongdoing.
 - Preserve methodological caveats, source limitations and legal notes.
 
+Civic and election safeguards:
+- For election, civic, public-administration or transparency work, do not introduce factual claims unless they are already present in authorised source data or explicitly required by the issue.
+- Do not infer misconduct, manipulation, irregularity, intent, favouritism, corruption, mafia infiltration or individual responsibility from administrative or electoral data.
+- Distinguish indicators, signals, patterns, data gaps and verification needs from factual conclusions.
+- List any public-facing copy, legal, methodological or source-traceability change separately in the PR or manual handoff.
+
 Validation:
 - Run the most relevant checks for the changed package/module.
 - When feasible, run:
   - `pnpm run typecheck`
   - `pnpm run build`
+- If validation cannot be run, explain the exact reason and classify any residual risk.
 
 Branch and pull request requirements:
 - Create a dedicated branch named `codex/{{ISSUE_NUMBER}}-{{ISSUE_SLUG}}`.
 - Commit your changes on that branch.
-- Open a pull request targeting `main` and referencing issue #{{ISSUE_NUMBER}}; this PR is mandatory for completed delivery.
+- Open a pull request targeting `main` and referencing issue #{{ISSUE_NUMBER}}; this PR is mandatory for completed repository delivery.
 - In the PR description, include:
   - summary;
   - files/modules changed;
@@ -84,15 +117,28 @@ Branch and pull request requirements:
 
 Fallback if PR creation fails:
 - The final response must contain a `Materialization` section with either a verified PR URL/number, a complete unified diff directly applicable from `main`, a complete small FILE/ACTION/BEGIN_FILE/END_FILE bundle, or an explicit technical blocker.
-- Prefer a complete unified diff over full-file bundles when no PR exists.
+- Prefer a complete unified diff over full-file bundles when no PR exists and the full diff can be emitted safely.
 - Do not emit partial fallback content: no ellipses, no `(truncated)`, no omitted hunks and no local-only commit as proof.
-- If the response channel cannot carry the complete fallback, report this blocker exactly enough for classification: PR creation failed and no complete non-truncated fallback can be safely emitted.
-- Do not present delivery without a PR as completed work; a summary without PR URL/number, complete fallback or explicit blocker is `output-without-PR` and must be routed to follow-up.
+- If the implementation is complete but automatic GitHub materialization fails, produce a `manual-materialization-ready` handoff inside the explicit blocker outcome. This is not completed repository delivery; it is a recovery package for Giovanni to materialize manually from the Codex/Dialogo output.
+- The `manual-materialization-ready` handoff must include:
+  - state: `manual-materialization-ready`;
+  - issue number and issue title;
+  - objective and acceptance criteria addressed;
+  - exact files changed, created or deleted;
+  - implementation summary at file/module level;
+  - validation commands run and their results;
+  - known failures, residual limitations and whether they are related to this issue;
+  - generated-file, API contract, database, copy/legal/methodological and source-traceability impact;
+  - suggested branch name;
+  - suggested PR title and PR body;
+  - exact instructions for Giovanni to materialize the changes manually from the Codex/Dialogo output.
+- If the response channel cannot carry a complete diff or bundle, do not paste a partial fallback. Report the materialization blocker and include the manual-materialization-ready handoff fields above.
+- Do not present delivery without a PR as completed repository work; a summary without PR URL/number, complete fallback, manual-materialization-ready blocker handoff or explicit blocker is `output-without-PR` and must be routed to follow-up.
 
 Stop conditions:
 - If the issue is ambiguous, comment with the precise missing information instead of guessing.
 - If the implementation would require secrets, credentials or unsupported factual claims, stop and explain.
 - If another open PR, recent Codex branch/task or review-wait item already touches the same files/modules in a conflicting way, stop and report the concrete collision.
 - Do not stop merely because another PR is waiting for Giovanni review/merge when it is non-colliding and needs no Codex-side rework.
-- If you cannot open the mandatory PR to `main`, create the required branch or produce a reviewable diff, stop and report the exact technical blocker.
+- If you cannot open the mandatory PR to `main`, create the required branch, produce a complete fallback or produce a manual-materialization-ready blocker handoff, stop and report the exact technical blocker.
 ````
