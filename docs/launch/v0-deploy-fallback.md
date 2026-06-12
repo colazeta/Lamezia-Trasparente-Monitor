@@ -27,7 +27,7 @@ Use this mode only if the app shell or routing is blocked but a public placehold
 ## Minimum checks before public sharing
 
 - Public URL opens without authentication.
-- `VITE_PUBLIC_SITE_URL` matches the URL users will receive.
+- `PUBLIC_BASE_URL` matches the public URL used by server-side links and smoke checks when API/server deployment is in scope.
 - `BASE_PATH` is documented when the site is served below a subpath.
 - API base URL or API-disabled mode is explicit.
 - Static assets load from the same deployed path.
