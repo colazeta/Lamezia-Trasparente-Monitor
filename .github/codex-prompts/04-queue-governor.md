@@ -6,12 +6,14 @@ Use this template for the fourth automation.
 Assess the Codex automation queue for `colazeta/Lamezia-Trasparente-Monitor`.
 
 Scope:
+
 - open issues with labels matching `codex:*`;
 - open pull requests related to Codex work;
 - recent Codex comments, branches and commits, if available;
 - recent CI/typecheck/build/lint/test failures, if available.
 
 Task:
+
 1. count materialization debt first: open issues/PRs with `materialization:required`, `fallback-bundle-incomplete`, `output-without-PR`, `invalid-output`, `local-only` or `needs-materialization-verification`;
 2. if materialization debt is greater than 5, pause ordinary technical/platform promotion and choose only materialization verification, manual UI/export recovery, split-required cleanup, blocker stabilization, stale-label cleanup or real-PR rebase/recovery/supersede handoff;
 3. derive a state for every inspected issue from labels plus evidence: `idle`, `candidate`, `ready`, `invoked`, `working`, `pr-open`, `blocked`, `stale`, `completed-by-pr` or `superseded`;
@@ -31,11 +33,13 @@ Task:
 17. recommend whether the queue should continue, pause or require human intervention.
 
 Materialization debt gate:
+
 - Debt labels/states: `materialization:required`, `fallback-bundle-incomplete`, `output-without-PR`, `invalid-output`, `local-only`, `needs-materialization-verification`.
 - Gate threshold: debt greater than 5 blocks new ordinary technical/platform prompts, even when active capacity is below 5/5.
 - Allowed actions while gated: verify PR/branch/SHA/link integrity, apply complete diff or complete small bundle, classify manual UI/export recovery, split oversized tasks, stabilize blockers, clean stale active labels, or route real PRs to `needs-rebase`, `needs-human-decision`, `superseded` or `ready-for-human-merge` without merge/approval.
 
 Default queue limits:
+
 - maximum active operational Codex tasks: 5, counted only from real active Codex work; `codex:ready` and `output-without-PR` are excluded from this count;
 - materialization debt greater than 5 overrides anti-idle and pauses ordinary new work;
 - maximum active task touching API/schema/migrations: 1 unless a human reviewer accepts the collision risk;
@@ -43,6 +47,7 @@ Default queue limits:
 - do not start new tasks if root typecheck or build is failing because of a recent Codex PR.
 
 Anti-idle rule:
+
 - Apply anti-idle only when materialization debt is 5 or fewer.
 - If real active operational capacity is below 5/5, a report-only pass is insufficient when eligible backlog exists. In order: invoke a ready non-colliding issue; promote a mature non-colliding candidate and invoke it; create a concrete micro-issue from a verified maintenance need and invoke it; or record a verifiable reason not to fill capacity. Valid reasons are absence of real eligible backlog, concrete file/module collision, legal/copy/methodological risk, CI instability, or a decision required from Giovanni before same-file/module work can proceed safely.
 - Do not pause the whole pipeline merely because a PR or issue is awaiting Giovanni review/merge; treat it as outside the queue unless it collides on files/modules or needs Codex-side rework.
@@ -51,7 +56,33 @@ Anti-idle rule:
 - Do not let stale blocker comments pause an issue when the cited PR, issue or dependency is closed, merged, resolved or explicitly superseded.
 - Do not let a summary-only Codex comment consume an active slot; route it to `codex:follow-up` as `output-without-PR` unless PR, branch, blocker or recent execution evidence is verified.
 
+Operational decision for Giovanni:
+
+- Every operationally relevant queue comment must include a final section titled `## Decisione operativa per Giovanni`.
+- Report Task Codex, PR/branch, PR state, CI, scope, decision and exactly one concrete action for Giovanni.
+- Preserve every field in the template below; if evidence is absent, state `non disponibile / non verificata`, `nessuna PR verificabile`, `non verificato` or `non verificabile` explicitly.
+- A PR with conflicts, `mergeable: false`, failed CI, stale branch, scope risk, unverifiable branch/PR, or supersession must not be described as generic `review-needed`; choose `NON MERGIARE`, `RIGENERARE DA MAIN` or `CHIUDERE COME SUPERSEDED`.
+- Use `ATTENDERE` only when CI is pending, a draft PR is plausibly recoverable, a content review is missing, or Giovanni must decide before safe routing.
+- This section is a routing aid and does not authorize merge, approval, auto-merge, or automatic issue/PR closure.
+
+Required decision template:
+
+```markdown
+## Decisione operativa per Giovanni
+
+- Task Codex: <link diretto alla Task Codex, oppure `non disponibile / non verificata`>
+- PR GitHub: #<numero> / <link>, oppure `nessuna PR verificabile`
+- Branch: `<branch>`, oppure `non verificato`
+- Stato PR: `mergeable` / `conflict-on-creation` / `needs-rebase` / `ci-pending` / `ci-failed` / `draft` / `superseded` / `non verificabile`
+- CI: `success` / `failure` / `pending` / `not run` / `non verificata`
+- Scope: `ok` / `scope-risk` / `troppo ampia` / `non verificato`
+- Decisione: `MERGIARE` / `NON MERGIARE` / `ATTENDERE` / `RIGENERARE DA MAIN` / `CHIUDERE COME SUPERSEDED`
+- Azione richiesta a Giovanni: <una sola azione concreta, oppure `nessuna azione richiesta`>
+- Motivo sintetico: <1-3 righe>
+```
+
 Collision-control fields required for every recommended promotion, invocation, pause or block:
+
 - Probable scope: {{PROBABLE_SCOPE}}
 - Likely files/modules: {{LIKELY_FILES}}
 - Collision risk: low / medium / high
@@ -59,15 +90,18 @@ Collision-control fields required for every recommended promotion, invocation, p
 - Matrix result: high blocks unless human accepted; medium requires narrow scope and explicit note; low may proceed
 
 Fast lane treatment:
+
 - Technical fast-lane candidates may be promoted ahead of ordinary backlog items when they are small, clear, low-collision and validate with typecheck/build/lint/test commands.
 - Fast-lane tasks still require a dedicated branch `codex/<issue-number>-<slug>`, a PR targeting `main`, validation notes, no auto-merge and no auto-close.
 
 Output format:
 
 ### Queue status
+
 Continue / Pause / Human intervention required
 
 ### Materialization debt gate
+
 - Debt count:
 - Labels/states counted:
 - Query/page scope inspected:
@@ -75,9 +109,11 @@ Continue / Pause / Human intervention required
 - Allowed action chosen:
 
 ### Derived states
+
 - Issue / state / evidence age / capacity effect:
 
 ### Capacity count
+
 - Real active operational tasks:
 - Human review wait outside capacity (`codex:review-needed` / Giovanni review or merge):
 - Concrete file/module collisions from review-wait items:
@@ -91,6 +127,7 @@ Continue / Pause / Human intervention required
 ### Stale zombie and output-without-PR tasks
 
 ### Promotion SLA outcomes
+
 - New or newly discovered issue / outcome:
 
 ### Anti-idle actions
@@ -100,7 +137,20 @@ Continue / Pause / Human intervention required
 ### Recommended label changes
 
 ### Comment to post, if needed
+
 ```markdown
 ...
+
+## Decisione operativa per Giovanni
+
+- Task Codex: <link diretto alla Task Codex, oppure `non disponibile / non verificata`>
+- PR GitHub: #<numero> / <link>, oppure `nessuna PR verificabile`
+- Branch: `<branch>`, oppure `non verificato`
+- Stato PR: `mergeable` / `conflict-on-creation` / `needs-rebase` / `ci-pending` / `ci-failed` / `draft` / `superseded` / `non verificabile`
+- CI: `success` / `failure` / `pending` / `not run` / `non verificata`
+- Scope: `ok` / `scope-risk` / `troppo ampia` / `non verificato`
+- Decisione: `MERGIARE` / `NON MERGIARE` / `ATTENDERE` / `RIGENERARE DA MAIN` / `CHIUDERE COME SUPERSEDED`
+- Azione richiesta a Giovanni: <una sola azione concreta, oppure `nessuna azione richiesta`>
+- Motivo sintetico: <1-3 righe>
 ```
 ````

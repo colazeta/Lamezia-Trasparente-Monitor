@@ -36,15 +36,18 @@ Collision risk:
 {{COLLISION_RISK}}
 
 Collision matrix decision:
+
 - High: same generated files, API contract, DB schema/migrations, generated clients, runtime file/module, prompt/doc section or public copy/legal/methodological text; stop unless human accepted the risk.
 - Medium: same package/domain with distinct files and compatible criteria; continue only with narrow scope and explicit collision note.
 - Low: unrelated files/modules or unrelated human-review PRs needing no Codex-side rework; continue when other safeguards pass.
 
 Materialization debt gate:
+
 - This invocation assumes the pre-invocation materialization debt gate above has already passed, or that an allowed exception applies.
 - Do not use this prompt body as the first place where the debt stop condition is evaluated.
 
 Capacity context:
+
 - Capacity 5 is computed only on real active Codex tasks backed by evidence.
 - `codex:ready` is eligible backlog only and does not count as active work.
 - Count `codex:prompted`, `codex:invoked` or `codex:working` only when supported by recent invocation, branch/task/commit, validation, diff, open PR needing Codex-side changes, explicit blocker or in-progress Codex response.
@@ -53,6 +56,7 @@ Capacity context:
 - A prior Codex summary without an open PR to `main`, visible branch, explicit blocker or recent execution evidence is `output-without-PR`; it is stale follow-up, not a real active slot.
 
 Repository rules:
+
 - Follow `AGENTS.md`.
 - Keep the implementation strictly scoped to this issue.
 - Do not introduce unrelated refactoring.
@@ -63,12 +67,14 @@ Repository rules:
 - Preserve methodological caveats, source limitations and legal notes.
 
 Validation:
+
 - Run the most relevant checks for the changed package/module.
 - When feasible, run:
   - `pnpm run typecheck`
   - `pnpm run build`
 
 Branch and pull request requirements:
+
 - Create a dedicated branch named `codex/{{ISSUE_NUMBER}}-{{ISSUE_SLUG}}`.
 - Commit your changes on that branch.
 - Open a pull request targeting `main` and referencing issue #{{ISSUE_NUMBER}}; this PR is mandatory for completed delivery.
@@ -82,7 +88,32 @@ Branch and pull request requirements:
 - Do not auto-merge the PR.
 - Do not close the issue directly.
 
+Operational decision section required:
+
+- Every final response or GitHub update for this task must include a final section titled `## Decisione operativa per Giovanni`.
+- The section must use this template exactly, filling unknown values explicitly instead of omitting fields:
+
+```markdown
+## Decisione operativa per Giovanni
+
+- Task Codex: <link diretto alla Task Codex, oppure `non disponibile / non verificata`>
+- PR GitHub: #<numero> / <link>, oppure `nessuna PR verificabile`
+- Branch: `<branch>`, oppure `non verificato`
+- Stato PR: `mergeable` / `conflict-on-creation` / `needs-rebase` / `ci-pending` / `ci-failed` / `draft` / `superseded` / `non verificabile`
+- CI: `success` / `failure` / `pending` / `not run` / `non verificata`
+- Scope: `ok` / `scope-risk` / `troppo ampia` / `non verificato`
+- Decisione: `MERGIARE` / `NON MERGIARE` / `ATTENDERE` / `RIGENERARE DA MAIN` / `CHIUDERE COME SUPERSEDED`
+- Azione richiesta a Giovanni: <una sola azione concreta, oppure `nessuna azione richiesta`>
+- Motivo sintetico: <1-3 righe>
+```
+
+- Use `MERGIARE` only for a verified PR that is not draft, is mergeable, has no conflicts, has successful CI or explicitly sufficient validation, is in scope, and has no unresolved copy/legal/privacy/methodological risk.
+- If the PR is conflicting, `mergeable: false`, stale against `main`, CI failed, scope-risk, not verifiable, or superseded by another canonical PR, the decision must not be generic `review-needed`; use `NON MERGIARE`, `RIGENERARE DA MAIN`, or `CHIUDERE COME SUPERSEDED` as appropriate.
+- If CI is pending, the PR is draft but recoverable, or a human content/privacy/deploy decision is needed, use `ATTENDERE` and state the single concrete wait/review action for Giovanni.
+- This section is decision support only: it does not authorize approval, merge, auto-merge, or issue closure.
+
 Fallback if PR creation fails:
+
 - The final response must contain a `Materialization` section with either a verified PR URL/number, a complete unified diff directly applicable from `main`, a complete small FILE/ACTION/BEGIN_FILE/END_FILE bundle, or an explicit technical blocker.
 - Prefer a complete unified diff over full-file bundles when no PR exists.
 - Do not emit partial fallback content: no ellipses, no `(truncated)`, no omitted hunks and no local-only commit as proof.
@@ -90,6 +121,7 @@ Fallback if PR creation fails:
 - Do not present delivery without a PR as completed work; a summary without PR URL/number, complete fallback or explicit blocker is `output-without-PR` and must be routed to follow-up.
 
 Stop conditions:
+
 - If the issue is ambiguous, comment with the precise missing information instead of guessing.
 - If the implementation would require secrets, credentials or unsupported factual claims, stop and explain.
 - If another open PR, recent Codex branch/task or review-wait item already touches the same files/modules in a conflicting way, stop and report the concrete collision.

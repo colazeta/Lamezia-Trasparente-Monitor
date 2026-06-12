@@ -87,13 +87,13 @@ Rules:
 
 Use one fenced block per file only when the whole bundle is small enough to be safely complete.
 
-````text
+```text
 FILE: artifacts/lamezia-trasparente/src/lib/example.ts
 ACTION: create|replace|delete
 BEGIN_FILE
 <complete file content here>
 END_FILE
-````
+```
 
 Rules:
 
@@ -117,6 +117,36 @@ Technical blocker: PR creation did not return a public PR URL/number, and the re
 ```
 
 This blocker releases the active slot and requires either a real PR, a smaller issue split, or manual UI export.
+
+## Decisione operativa per Giovanni
+
+Every Codex or automation update that materially changes the routing of an issue or pull request must end with a standard `Decisione operativa per Giovanni` section. This section turns materialization evidence into one operational decision for the human maintainer.
+
+Required template:
+
+```md
+## Decisione operativa per Giovanni
+
+- Task Codex: <link diretto alla Task Codex, oppure `non disponibile / non verificata`>
+- PR GitHub: #<numero> / <link>, oppure `nessuna PR verificabile`
+- Branch: `<branch>`, oppure `non verificato`
+- Stato PR: `mergeable` / `conflict-on-creation` / `needs-rebase` / `ci-pending` / `ci-failed` / `draft` / `superseded` / `non verificabile`
+- CI: `success` / `failure` / `pending` / `not run` / `non verificata`
+- Scope: `ok` / `scope-risk` / `troppo ampia` / `non verificato`
+- Decisione: `MERGIARE` / `NON MERGIARE` / `ATTENDERE` / `RIGENERARE DA MAIN` / `CHIUDERE COME SUPERSEDED`
+- Azione richiesta a Giovanni: <una sola azione concreta, oppure `nessuna azione richiesta`>
+- Motivo sintetico: <1-3 righe>
+```
+
+Decision rules:
+
+- Use `MERGIARE` only when the PR is verified, not draft, mergeable, conflict-free, green or sufficiently validated, in scope, and has no unresolved copy/legal/privacy/methodological risk.
+- Use `NON MERGIARE` when the PR is conflicting, `mergeable: false`, failed in CI, scope-risk, too broad, too stale, not verifiable, based on an unreliable branch, or superseded by a canonical PR.
+- Use `ATTENDERE` when CI is pending, a draft PR is plausibly recoverable, content review is missing, or Giovanni must decide on MVP/deploy/privacy/copy before routing.
+- Use `RIGENERARE DA MAIN` when a useful patch is attached to a branch that starts conflicted, stale, or otherwise unreliable.
+- Use `CHIUDERE COME SUPERSEDED` when another PR has already solved the requirement or the work is intentionally replaced.
+- Do not describe conflicting PRs, failed-CI PRs or unverifiable outputs as generic `review-needed` without the operational decision above.
+- The section may advise Giovanni, but it does not authorize approval, merge, auto-merge, or automatic issue/PR closure.
 
 ## Materializer decision logic
 
