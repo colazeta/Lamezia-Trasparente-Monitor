@@ -13,6 +13,7 @@ import {
   Vote,
   Link2,
   ClipboardList,
+  Info,
 } from "lucide-react";
 import { format } from "date-fns";
 import { it } from "date-fns/locale";
@@ -44,6 +45,10 @@ import {
   type CoverageFilter,
   type SedutaPublication,
 } from "@/lib/convocazioniCoverage";
+import {
+  CouncilSessionV0DemoNotice,
+  CouncilSessionV0DemoSummaryCard,
+} from "@/components/launch/CouncilSessionV0DemoCard";
 
 function MacrotemasRow({ macrotemi }: { macrotemi: string[] }) {
   const unique = Array.from(new Set(macrotemi)).filter((m) => m !== "altro");
@@ -133,7 +138,7 @@ function groupByOrgano(sedute: Seduta[]) {
 }
 
 export function Convocazioni() {
-  const { data: sedute, isLoading } = useListSedute();
+  const { data: sedute, isLoading, isError } = useListSedute();
   const [organoFilter, setOrganoFilter] = useState<string>(ALL_ORGANI);
   const [macrotemaFilter, setMacrotemaFilter] = useState<string>("all");
   const [reportFilter, setReportFilter] = useState<CoverageFilter>("all");
@@ -222,6 +227,15 @@ export function Convocazioni() {
   ]);
 
   const groups = useMemo(() => groupByOrgano(filteredSedute), [filteredSedute]);
+  const hasActiveFilters =
+    organoFilter !== ALL_ORGANI ||
+    macrotemaFilter !== "all" ||
+    reportFilter !== "all" ||
+    votesFilter !== "all" ||
+    actsFilter !== "all";
+  const shouldShowDemoFallback =
+    !isLoading &&
+    (isError || ((sedute?.length ?? 0) === 0 && !hasActiveFilters));
 
   return (
     <div className="container mx-auto px-4 py-8 md:py-12 max-w-5xl">
@@ -235,11 +249,52 @@ export function Convocazioni() {
             Convocazioni
           </h1>
           <p className="mt-3 text-muted-foreground text-lg max-w-3xl">
-            Le sedute del Consiglio Comunale e delle Commissioni Consiliari,
-            raggruppate per organo, con data e argomenti all'ordine del giorno.
+            Primo output civico v0: orientamento prudente su sedute e
+            convocazioni del Consiglio comunale, con stati del dato, limiti
+            dichiarati e rinvio alle fonti quando disponibili.
           </p>
         </div>
       </div>
+
+      <section
+        className="mb-8 rounded-2xl border border-brand/25 bg-brand/5 p-4 md:p-5"
+        aria-labelledby="convocazioni-v0-path-title"
+      >
+        <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+          <div className="max-w-3xl">
+            <span className="eyebrow text-primary">
+              <Info className="h-3.5 w-3.5" aria-hidden="true" />
+              Percorso pubblico minimo v0
+            </span>
+            <h2
+              id="convocazioni-v0-path-title"
+              className="mt-2 font-display text-xl font-bold tracking-tight"
+            >
+              Home → Convocazioni → scheda seduta → fonti e limiti
+            </h2>
+            <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+              Questa pagina è il primo punto di consultazione pubblicabile. I
+              badge “da verificare” segnalano campi non presenti nella base
+              locale o da controllare sulla fonte originaria, senza implicare
+              irregolarità o completezza della documentazione amministrativa.
+            </p>
+          </div>
+          <Link
+            href="/fonti-dati"
+            className="inline-flex text-sm font-semibold text-primary underline-offset-4 hover:underline"
+          >
+            Leggi fonti e limiti
+          </Link>
+        </div>
+      </section>
+
+      {shouldShowDemoFallback && (
+        <div className="mb-8 space-y-4">
+          <CouncilSessionV0DemoNotice compact />
+          <CouncilSessionV0DemoSummaryCard />
+        </div>
+      )}
+
       <section
         className="mb-8 rounded-2xl border border-border bg-card/70 p-4 md:p-5"
         aria-labelledby="convocazioni-dashboard-title"
@@ -486,7 +541,7 @@ export function Convocazioni() {
             </section>
           ))}
         </div>
-      ) : (
+      ) : shouldShowDemoFallback ? null : (
         <Empty className="border bg-muted/20">
           <EmptyHeader>
             <EmptyMedia variant="icon">

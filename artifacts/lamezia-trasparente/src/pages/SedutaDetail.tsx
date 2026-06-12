@@ -36,6 +36,8 @@ import {
   macrotemaColors,
   macrotemaLabel,
 } from "@/lib/macrotema";
+import { CouncilSessionV0DemoDetail } from "@/components/launch/CouncilSessionV0DemoCard";
+import { councilSessionV0DemoFixture } from "@/data/councilSessionV0";
 
 const VOTE_VARIANTS: Record<
   string,
@@ -57,18 +59,20 @@ function formatDate(value: string | null | undefined) {
 
 export function SedutaDetail() {
   const [, params] = useRoute("/convocazioni/:id");
-  const id = params?.id ? Number(params.id) : NaN;
+  const routeId = params?.id ?? "";
+  const isDemoRoute = routeId === councilSessionV0DemoFixture.id;
+  const id = routeId && !isDemoRoute ? Number(routeId) : NaN;
 
   const { data: seduta, isLoading, isError } = useGetSeduta(id, {
     query: {
-      enabled: !Number.isNaN(id),
+      enabled: !Number.isNaN(id) && !isDemoRoute,
       queryKey: getGetSedutaQueryKey(id),
     },
   });
 
   const { data: storia } = useGetPublicationStoria(id, {
     query: {
-      enabled: !Number.isNaN(id) && !!seduta,
+      enabled: !Number.isNaN(id) && !isDemoRoute && !!seduta,
       queryKey: getGetPublicationStoriaQueryKey(id),
     },
   });
@@ -90,7 +94,9 @@ export function SedutaDetail() {
         Torna alle convocazioni
       </Link>
 
-      {isLoading ? (
+      {isDemoRoute ? (
+        <CouncilSessionV0DemoDetail />
+      ) : isLoading ? (
         <div className="rounded-2xl border border-border bg-muted/30 p-6 md:p-8 space-y-4">
           <Skeleton className="h-5 w-40" />
           <Skeleton className="h-9 w-3/4" />
