@@ -120,7 +120,7 @@ This blocker releases the active slot and requires either a real PR, a smaller i
 
 ## Decisione operativa per Giovanni
 
-Every Codex or automation update that materially changes the routing of an issue or pull request must end with a standard `Decisione operativa per Giovanni` section. This section turns materialization evidence into one operational decision for the human maintainer.
+Every Codex or automation update that materially changes the routing of an issue or pull request must include a standard `Decisione operativa per Giovanni` section. This section turns materialization evidence into one operational decision for the human maintainer. When the same output also requires `Materialization`, the decision section must appear before the final `Materialization` section so the materialization contract remains last.
 
 Required template:
 

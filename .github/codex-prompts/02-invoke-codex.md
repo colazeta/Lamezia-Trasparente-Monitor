@@ -90,7 +90,8 @@ Branch and pull request requirements:
 
 Operational decision section required:
 
-- Every final response or GitHub update for this task must include a final section titled `## Decisione operativa per Giovanni`.
+- Every final response or GitHub update for this task must include a section titled `## Decisione operativa per Giovanni`.
+- When the response also requires `Materialization`, place `## Decisione operativa per Giovanni` before the final `## Materialization` section so materialization evidence remains last.
 - The section must use this template exactly, filling unknown values explicitly instead of omitting fields:
 
 ```markdown

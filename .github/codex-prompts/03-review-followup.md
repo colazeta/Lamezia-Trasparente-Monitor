@@ -36,7 +36,8 @@ Task:
 
 Operational decision for Giovanni:
 
-- The follow-up comment must include a final section titled `## Decisione operativa per Giovanni`.
+- The follow-up comment must include a section titled `## Decisione operativa per Giovanni`.
+- When the same comment also requires `Materialization`, place `## Decisione operativa per Giovanni` before the final `## Materialization` section so materialization evidence remains last.
 - The section must report Task Codex, PR/branch, PR state, CI, scope, decision and exactly one concrete action for Giovanni.
 - Use the template below and preserve every field, using `non disponibile / non verificata`, `nessuna PR verificabile`, `non verificato` or `non verificabile` when evidence is missing.
 - Do not classify a conflicting PR, `mergeable: false` PR, failed-CI PR, stale branch, unverifiable output, scope-risk PR or superseded PR as generic `codex:review-needed` without an explicit `NON MERGIARE`, `RIGENERARE DA MAIN` or `CHIUDERE COME SUPERSEDED` decision.

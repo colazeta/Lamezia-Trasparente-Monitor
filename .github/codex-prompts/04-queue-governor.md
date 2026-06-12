@@ -58,7 +58,8 @@ Anti-idle rule:
 
 Operational decision for Giovanni:
 
-- Every operationally relevant queue comment must include a final section titled `## Decisione operativa per Giovanni`.
+- Every operationally relevant queue comment must include a section titled `## Decisione operativa per Giovanni`.
+- When the same comment also requires `Materialization`, place `## Decisione operativa per Giovanni` before the final `## Materialization` section so materialization evidence remains last.
 - Report Task Codex, PR/branch, PR state, CI, scope, decision and exactly one concrete action for Giovanni.
 - Preserve every field in the template below; if evidence is absent, state `non disponibile / non verificata`, `nessuna PR verificabile`, `non verificato` or `non verificabile` explicitly.
 - A PR with conflicts, `mergeable: false`, failed CI, stale branch, scope risk, unverifiable branch/PR, or supersession must not be described as generic `review-needed`; choose `NON MERGIARE`, `RIGENERARE DA MAIN` or `CHIUDERE COME SUPERSEDED`.
