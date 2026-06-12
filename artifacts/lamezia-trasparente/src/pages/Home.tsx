@@ -588,15 +588,25 @@ function StaticHomeLayout() {
           </h1>
 
           <p className="text-lg md:text-xl text-sidebar-foreground/75 mb-9 max-w-2xl text-balance">
-            Monitoriamo gli atti, gli appalti e le decisioni del Comune di Lamezia Terme.
-            Uno strumento fatto dai cittadini, per i cittadini, per pretendere chiarezza
-            sull'uso delle risorse pubbliche.
+            Organizziamo informazioni amministrative di interesse pubblico con un
+            approccio documentale e prudente. Nella v0 il percorso principale parte
+            dalle convocazioni del Consiglio comunale e dai relativi limiti di verifica.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
-            <Link href="/albo" className="w-full sm:w-auto">
+            <Link href="/convocazioni" className="w-full sm:w-auto">
               <Button variant="brand" size="lg" className="w-full text-base h-12 px-7 font-bold">
-                Esplora l'Albo Pretorio <ArrowRight className="ml-1 h-4 w-4"  aria-hidden="true"/>
+                Apri il percorso v0 <ArrowRight className="ml-1 h-4 w-4"  aria-hidden="true"/>
+              </Button>
+            </Link>
+            <Link href="/fonti-dati" className="w-full sm:w-auto">
+              <Button
+                variant="outline"
+                size="lg"
+                className="w-full text-base h-12 px-7 font-bold bg-white/5 text-white border-white/25 hover:bg-white/10"
+              >
+                <Info className="mr-1 h-4 w-4"  aria-hidden="true"/>
+                Fonti e limiti
               </Button>
             </Link>
             <Link href="/segnalazioni" className="w-full sm:w-auto">
@@ -845,6 +855,38 @@ function StaticHomeLayout() {
   );
 }
 
+
+function V0PublicPathBanner() {
+  return (
+    <section className="border-b border-brand/20 bg-brand/5 py-6" aria-labelledby="v0-public-path-title">
+      <div className="container mx-auto flex flex-col gap-4 px-4 md:flex-row md:items-center md:justify-between md:px-6">
+        <div className="max-w-3xl">
+          <span className="eyebrow text-primary">
+            <CalendarClock className="h-3.5 w-3.5" aria-hidden="true" />
+            Percorso pubblico minimo v0
+          </span>
+          <h2 id="v0-public-path-title" className="mt-2 font-display text-2xl font-bold tracking-tight">
+            Il primo output civico consultabile sono le convocazioni del Consiglio comunale.
+          </h2>
+          <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+            Segui il percorso Home → Convocazioni → scheda seduta → fonti e limiti.
+            Dove mancano dati verificati, eventuali esempi sono dichiarati come fixture
+            dimostrative e non come informazioni ufficiali complete.
+          </p>
+        </div>
+        <div className="flex flex-col gap-2 sm:flex-row md:shrink-0">
+          <Button asChild>
+            <Link href="/convocazioni">Vai alle convocazioni</Link>
+          </Button>
+          <Button asChild variant="outline">
+            <Link href="/fonti-dati">Fonti e limiti</Link>
+          </Button>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 // ---------------------------------------------------------------------------
 // Home page entry point
 // ---------------------------------------------------------------------------
@@ -869,6 +911,7 @@ export function Home() {
         description="Osservatorio civico indipendente per consultare atti, contratti, delibere, convocazioni, open data e progetti PNRR del Comune di Lamezia Terme."
         path="/"
       />
+      <V0PublicPathBanner />
       {publishedBlocks && publishedBlocks.length > 0
         ? <PublishedBlocks blocks={publishedBlocks} />
         : <StaticHomeLayout />}
