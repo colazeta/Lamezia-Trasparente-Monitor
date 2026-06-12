@@ -88,7 +88,7 @@ test("renders cautious technical issue body with stable dedupe key", () => {
   assert.doesNotMatch(body, /corruzione|mafia|colpevole/i);
 });
 
-test("skips source-health reads when URL and audit path are not configured", async () => {
+test("returns a monitor read error when URL and audit path are required but not configured", async () => {
   const originalUrl = process.env.SOURCE_HEALTH_URL;
   const originalAuditPath = process.env.SOURCE_HEALTH_AUDIT_PATH;
   const originalSkip = process.env.SOURCE_HEALTH_SKIP_UNCONFIGURED;
@@ -112,11 +112,21 @@ test("skips source-health reads when URL and audit path are not configured", asy
       parseArgs(["--url", "\t  "]),
     );
 
-    assert.deepEqual(envRecords, []);
-    assert.deepEqual(explicitBlankRecords, []);
+    for (const records of [envRecords, explicitBlankRecords]) {
+      assert.equal(records.length, 1);
+      assert.equal(records[0]?.source, "source-health-monitor");
+      assert.equal(records[0]?.status, "error");
+      assert.match(
+        records[0]?.reason ?? "",
+        /SOURCE_HEALTH_URL non configurato/,
+      );
+    }
     assert.deepEqual(
-      detectAnomalies(envRecords, new Date("2026-06-09T08:00:00.000Z")),
-      [],
+      detectAnomalies(
+        envRecords,
+        new Date("2026-06-09T08:00:00.000Z"),
+      ).map((anomaly) => anomaly.marker),
+      ["source-health:source-health-monitor:error"],
     );
   } finally {
     globalThis.fetch = originalFetch;
@@ -220,7 +230,10 @@ test("normalizes blank audit paths before choosing the source-health reader", as
     }
   }
 
-  assert.deepEqual(fetchedUrls, ["https://monitor.example.test/sources"]);
+  assert.deepEqual(fetchedUrls, [
+    "https://monitor.example.test/sources",
+    "https://monitor.example.test/sources",
+  ]);
 });
 
 test("explicit URL arguments override configured audit paths", async () => {
