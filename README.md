@@ -76,3 +76,8 @@ pnpm --filter @workspace/db seed      # aggiorna i dati di seed
 ## Documentazione aggiuntiva
 
 - [API pubblica (REST + MCP)](artifacts/api-server/PUBLIC_API.md)
+- [Architettura generale](docs/architecture.md)
+- [Architettura delle integrazioni dati](docs/integrations/README.md)
+- [Inventario fonti e pipeline](docs/integrations/source-inventory.md)
+- [Integrazione Cruscotto Italia](docs/integrations/cruscotto-italia.md)
+- [Checklist interoperabilità AgID](docs/agid-interoperability-checklist.md)
