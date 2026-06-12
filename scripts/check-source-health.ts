@@ -112,10 +112,13 @@ export function parseArgs(argv: string[]): CliOptions {
   for (let i = 0; i < argv.length; i += 1) {
     const arg = argv[i];
     if (arg === "--audit-file") {
-      options.auditFile = normalizeOptionalString(
+      const auditFile = normalizeOptionalString(
         requiredValue(argv, (i += 1), arg),
       );
-      options.url = undefined;
+      options.auditFile = auditFile;
+      if (auditFile) {
+        options.url = undefined;
+      }
     } else if (arg === "--url") {
       options.url = normalizeOptionalString(requiredValue(argv, (i += 1), arg));
       options.auditFile = undefined;
