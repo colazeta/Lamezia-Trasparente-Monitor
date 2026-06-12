@@ -11,10 +11,10 @@ The labels are not merely cosmetic, but they are still nominal routing hints. Au
 | `codex:candidate` | The issue may be suitable for Codex after triage. | Candidate only; not operational. | Human, scouting automation or queue-governor automation. |
 | `codex:ready` | The issue has passed queue-governor triage and is clear enough to enter the automated queue. | Eligible for operation but not active until prompted/invoked. | Queue-governor automation or human reviewer. |
 | `codex:prompted` | A Codex-ready prompt has been generated and posted. | Operational only while it has a current prompt and is awaiting invocation; if later evidence is only `output-without-PR`, route to follow-up and release capacity. | Automation 1. |
-| `codex:invoked` | Codex has been invoked. | Operational only with recent execution evidence, a visible branch, an open PR or an explicit blocker; a summary alone is `output-without-PR` and does not count. | Automation 2. |
+| `codex:invoked` | Codex has been invoked. | Operational only with recent execution evidence, a visible branch, an open PR, a complete fallback, a sufficient manual-materialization handoff or an explicit blocker; a summary alone is `output-without-PR` and does not count. | Automation 2. |
 | `codex:working` | Codex work or an implementation PR is in progress. | Operational only while backed by a reviewable PR/branch, recent execution evidence or Codex-side rework; otherwise route to follow-up. | Automation 2 or review automation. |
 | `codex:review-needed` | A PR exists and requires human review/merge. | Human review wait; does not saturate Codex capacity unless there is concrete file/module collision or Codex-side rework. | Automation 3. |
-| `codex:follow-up` | The issue needs additional work, clarification, stale-task recovery or a new issue. | Releases operational capacity unless re-promoted. | Automation 3 or human reviewer. |
+| `codex:follow-up` | The issue needs additional work, clarification, stale-task recovery, manual materialization or a new issue. | Releases operational capacity unless re-promoted. | Automation 3 or human reviewer. |
 | `codex:done` | The issue appears resolved after review. | Not operational. | Automation 3 or human reviewer. |
 | `codex:blocked` | The automation must not continue. | Blocks automation and releases operational capacity. | Any safety check or human reviewer. |
 | `codex:dangerous` | Manual handling only because the issue is legally, reputationally or methodologically sensitive. | Blocks automation. | Human reviewer or queue-governor automation. |
@@ -41,17 +41,18 @@ The labels are not merely cosmetic, but they are still nominal routing hints. Au
 
 ## Materialization debt labels
 
-These labels and canonical states define materialization debt for queue control: `materialization:required`, `fallback-bundle-incomplete`, `output-without-PR`, `invalid-output`, `local-only` and `needs-materialization-verification`.
+These labels and canonical states define materialization debt for queue control: `materialization:required`, `fallback-bundle-incomplete`, `output-without-PR`, `invalid-output`, `local-only`, `manual-materialization-ready` and `needs-materialization-verification`.
 
-When more than 5 open issues or PRs carry materialization debt, queue governance must pause new ordinary technical/platform invocations. The only allowed actions are PR/branch/SHA verification, complete-diff or complete-bundle materialization, manual UI/export recovery classification, split-required classification, blocker stabilization, stale active-label cleanup, and no-merge/no-approval PR rebase/recovery/supersede handoff.
+When more than 5 open issues or PRs carry materialization debt, queue governance must pause new ordinary technical/platform invocations. The only allowed actions are PR/branch/SHA verification, complete-diff or complete-bundle materialization, manual UI/export recovery classification, manual-materialization-ready recovery, split-required classification, blocker stabilization, stale active-label cleanup, and no-merge/no-approval PR rebase/recovery/supersede handoff.
 
 Do not use `codex:ready`, `codex:prompted`, `codex:invoked` or `codex:working` to hide materialization debt. If the published fallback contains truncation markers, classify it as `fallback-bundle-incomplete` and `output-without-PR`, not as patch-available.
 
 ## Operational groups
 
 - **Candidate/triage states:** `codex:candidate`, `codex:ready`. These are nominal routing hints and never consume operational capacity by themselves.
-- **Operational states that can saturate capacity:** real active Codex work: `codex:prompted`, `codex:invoked`, `codex:working`, and open Codex PRs that still need Codex-side changes. A label alone is not enough: count only when a recent invocation, branch/task/commit, validation log, diff, open PR needing Codex-side changes, explicit blocker or in-progress Codex response exists. Summaries without PR, visible branch, explicit blocker or recent execution evidence are `output-without-PR` and are excluded from capacity.
+- **Operational states that can saturate capacity:** real active Codex work: `codex:prompted`, `codex:invoked`, `codex:working`, and open Codex PRs that still need Codex-side changes. A label alone is not enough: count only when a recent invocation, branch/task/commit, validation log, diff, open PR needing Codex-side changes, explicit blocker or in-progress Codex response exists. Summaries without PR, visible branch, explicit blocker, sufficient manual-materialization handoff or recent execution evidence are `output-without-PR` and are excluded from capacity.
 - **Human review wait:** `codex:review-needed` and PRs/issues waiting only for Giovanni review or merge; these are outside the capacity count unless there is concrete file/module collision or Codex-side rework.
+- **Manual materialization recovery:** `manual-materialization-ready` and `manual-ui-recoverable` are human recovery states. They do not occupy a real active Codex slot when the handoff is sufficient, but they may remain materialization debt until Giovanni creates a verified PR/commit or supersedes the work.
 - **Follow-up/blocking states:** `codex:follow-up`, `codex:blocked`, `codex:dangerous`.
 - **Completion state:** `codex:done`, which must not be used to auto-close an issue.
 
@@ -79,7 +80,7 @@ Do not use `codex:ready`, `codex:prompted`, `codex:invoked` or `codex:working` t
 ## Automation guardrails
 
 - Labels are nominal routing hints; derived operational state from labels plus evidence is the source of truth for queue decisions. Stale comments must not override current evidence. Comments that cite a blocker PR, issue or dependency must not block work after that blocker is closed, merged, resolved or explicitly superseded.
-- After a PR, blocker, stale output or supersession is found, remove or neutralise stale `codex:ready`, `codex:prompted`, `codex:invoked` or `codex:working` labels so served issues do not re-enter the candidate pool. If labels such as `codex:pr-open`, `codex:completed-by-pr`, `duplicate`, `superseded` or `needs-human-decision` do not exist, use a short issue comment with that fallback state instead of inventing labels.
+- After a PR, blocker, stale output, manual-materialization-ready handoff or supersession is found, remove or neutralise stale `codex:ready`, `codex:prompted`, `codex:invoked` or `codex:working` labels so served issues do not re-enter the candidate pool. If labels such as `codex:pr-open`, `codex:completed-by-pr`, `manual-materialization-ready`, `duplicate`, `superseded` or `needs-human-decision` do not exist, use a short issue comment with that fallback state instead of inventing labels.
 - Before `codex:prompted` is added, Automation 1 must confirm that the issue thread contains no unresolved contradictory, duplicated or placeholder automation comments.
 - If contradictory comments cannot be removed or neutralised, the issue must receive `codex:follow-up` or `codex:blocked`, not `codex:prompted`.
 - `codex:dangerous` always overrides `codex:ready`.
@@ -88,9 +89,9 @@ Do not use `codex:ready`, `codex:prompted`, `codex:invoked` or `codex:working` t
 - `area:backlog-governance` generally produces triage comments, not direct code changes.
 - Issues must not move from `codex:working` to `codex:done` without evidence of a PR, validation or explicit reviewer confirmation.
 - Issues with `codex:invoked` or `codex:working` for more than 60 minutes and no PR, branch, Codex comment, commit or other concrete activity must move to `codex:follow-up` and release operational capacity.
-- A Codex summary without an open PR targeting `main`, a visible branch with recent commits, an explicit technical blocker or recent execution evidence is `output-without-PR`; it must move to `codex:follow-up` and must not count as a real active slot.
-- Triage `codex:prompted`, `codex:invoked` and `codex:working` issues without PR/branch/blocker by checking, in order: linked PR to `main`, visible `codex/<issue-number>-<slug>` branch with recent commits, explicit blocker, recent commit/validation/diff evidence, and only then recovery as `output-without-PR`.
-- All implementation work must use a dedicated branch named `codex/<issue-number>-<slug>` and open a PR targeting `main`; every future invocation must include this PR requirement and the stop condition that Codex reports the exact blocker if it cannot open the PR or produce a reviewable branch/diff.
+- A Codex summary without an open PR targeting `main`, a visible branch with recent commits, an explicit technical blocker, sufficient manual-materialization-ready handoff or recent execution evidence is `output-without-PR`; it must move to `codex:follow-up` and must not count as a real active slot.
+- Triage `codex:prompted`, `codex:invoked` and `codex:working` issues without PR/branch/blocker by checking, in order: linked PR to `main`, visible `codex/<issue-number>-<slug>` branch with recent commits, explicit blocker, sufficient manual-materialization-ready handoff, recent commit/validation/diff evidence, and only then recovery as `output-without-PR`.
+- All implementation work must use a dedicated branch named `codex/<issue-number>-<slug>` and open a PR targeting `main`; every future invocation must include this PR requirement and the stop condition that Codex reports the exact blocker if it cannot open the PR, produce a reviewable branch/diff or produce a sufficient manual-materialization-ready handoff.
 - Codex must not auto-merge PRs and must not close issues directly.
 
 ## Recommended processing rule
