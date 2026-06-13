@@ -42,6 +42,7 @@ Le route incluse sono mantenute in `PUBLIC_INDEXABLE_ROUTES` e verificate dal te
 - `/legalita`
 - `/delibere`
 - `/convocazioni`
+- `/convocazioni/demo-consiglio-comunale-v0`
 - `/organi`
 - `/amministratori`
 - `/macchina-comunale`
@@ -56,6 +57,7 @@ Le route incluse sono mantenute in `PUBLIC_INDEXABLE_ROUTES` e verificate dal te
 - `/segnalazioni`
 - `/statistiche`
 - `/fonti-dati`
+- `/stato-monitoraggio`
 - `/metodologia`
 - `/roadmap`
 - `/note-legali`
@@ -63,6 +65,8 @@ Le route incluse sono mantenute in `PUBLIC_INDEXABLE_ROUTES` e verificate dal te
 - `/contatti`
 - `/iscrizioni`
 - `/guida`
+
+La route `/convocazioni/demo-consiglio-comunale-v0` resta una fixture dimostrativa per QA e lancio v0: non rappresenta una convocazione reale e non va presentata come dato civico verificato.
 
 ## Controllo minimo
 
