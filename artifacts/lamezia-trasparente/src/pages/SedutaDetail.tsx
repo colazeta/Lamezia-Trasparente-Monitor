@@ -31,6 +31,7 @@ import {
   EmptyDescription,
 } from "@/components/ui/empty";
 import { AlboLink } from "@/components/AlboLink";
+import { PageMeta } from "@/components/seo/PageMeta";
 import {
   MacrotemaBadge,
   macrotemaColors,
@@ -95,7 +96,15 @@ export function SedutaDetail() {
       </Link>
 
       {isDemoRoute ? (
-        <CouncilSessionV0DemoDetail />
+        <>
+          <PageMeta
+            title="Scheda demo v0 convocazione"
+            description="Fixture dimostrativa per verificare il formato minimo di una scheda seduta: fonti, limiti del dato e stato di verifica. Non rappresenta una convocazione reale."
+            path={`/convocazioni/${councilSessionV0DemoFixture.id}`}
+            type="article"
+          />
+          <CouncilSessionV0DemoDetail />
+        </>
       ) : isLoading ? (
         <div className="rounded-2xl border border-border bg-muted/30 p-6 md:p-8 space-y-4">
           <Skeleton className="h-5 w-40" />
