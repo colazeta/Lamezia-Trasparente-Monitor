@@ -162,7 +162,7 @@ export const councilSessionV0DemoFixture: CouncilSessionV0 = {
     key: "lastCheckedAt",
     label: "Ultimo controllo",
     value: null,
-    sourceStatus: "da_verificare",
+    sourceStatus: "fixture_dimostrativa",
     limit: "Nessun controllo reale è stato eseguito per questa fixture.",
   },
   dataLimits: {
