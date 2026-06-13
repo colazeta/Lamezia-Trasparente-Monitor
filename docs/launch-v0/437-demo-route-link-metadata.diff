@@ -1,0 +1,65 @@
+diff --git a/artifacts/lamezia-trasparente/src/pages/Convocazioni.tsx b/artifacts/lamezia-trasparente/src/pages/Convocazioni.tsx
+--- a/artifacts/lamezia-trasparente/src/pages/Convocazioni.tsx
++++ b/artifacts/lamezia-trasparente/src/pages/Convocazioni.tsx
+@@ -51,6 +51,7 @@ import {
+   CouncilSessionV0DemoNotice,
+   CouncilSessionV0DemoSummaryCard,
+ } from "@/components/launch/CouncilSessionV0DemoCard";
++import { councilSessionV0DemoFixture } from "@/data/councilSessionV0";
+ 
+ function MacrotemasRow({ macrotemi }: { macrotemi: string[] }) {
+   const unique = Array.from(new Set(macrotemi)).filter((m) => m !== "altro");
+@@ -281,12 +282,21 @@ export function Convocazioni() {
+               irregolarità o completezza della documentazione amministrativa.
+             </p>
+           </div>
+-          <Link
+-            href="/fonti-dati"
+-            className="inline-flex text-sm font-semibold text-primary underline-offset-4 hover:underline"
+-          >
+-            Leggi fonti e limiti
+-          </Link>
++          <div className="flex flex-col items-start gap-2 sm:flex-row md:flex-col md:items-end">
++            <Link
++              href={`/convocazioni/${councilSessionV0DemoFixture.id}`}
++              className="inline-flex text-sm font-semibold text-primary underline-offset-4 hover:underline"
++            >
++              Apri scheda demo v0
++            </Link>
++            <Link
++              href="/fonti-dati"
++              className="inline-flex text-sm font-semibold text-muted-foreground underline-offset-4 hover:text-primary hover:underline"
++            >
++              Leggi fonti e limiti
++            </Link>
++          </div>
+         </div>
+       </section>
+ 
+diff --git a/artifacts/lamezia-trasparente/src/pages/SedutaDetail.tsx b/artifacts/lamezia-trasparente/src/pages/SedutaDetail.tsx
+--- a/artifacts/lamezia-trasparente/src/pages/SedutaDetail.tsx
++++ b/artifacts/lamezia-trasparente/src/pages/SedutaDetail.tsx
+@@ -34,6 +34,7 @@ import {
+ } from "@/components/ui/empty";
+ import { AlboLink } from "@/components/AlboLink";
++import { PageMeta } from "@/components/seo/PageMeta";
+ import {
+   MacrotemaBadge,
+   macrotemaColors,
+@@ -97,7 +98,18 @@ export function SedutaDetail() {
+       </Link>
+ 
+       {isDemoRoute ? (
+-        <CouncilSessionV0DemoDetail />
++        <>
++          <PageMeta
++            title="Scheda demo v0 convocazione"
++            description="Fixture dimostrativa per verificare il formato minimo di una scheda seduta: fonti, limiti del dato e stato di verifica. Non rappresenta una convocazione reale."
++            path={`/convocazioni/${councilSessionV0DemoFixture.id}`}
++            type="article"
++          />
++          <CouncilSessionV0DemoDetail />
++        </>
+       ) : isLoading ? (
+         <div className="rounded-2xl border border-border bg-muted/30 p-6 md:p-8 space-y-4">
+           <Skeleton className="h-5 w-40" />
