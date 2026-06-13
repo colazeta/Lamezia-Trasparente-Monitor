@@ -22,3 +22,7 @@ Il percorso punta alla scheda dimostrativa già registrata dall'applicazione per
 - Issue: #437
 - Gate finale: #341
 - Classificazione: `launch-enabler` / `quality-enabler`
+
+## Allineamento CI
+
+La route è censita anche in `PUBLIC_INDEXABLE_ROUTES`, `public/sitemap.xml` e `docs/public-route-inventory.md` per mantenere verde il controllo `public-routes-sitemap.test.ts`.
