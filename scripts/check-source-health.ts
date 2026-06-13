@@ -176,17 +176,17 @@ export async function readSourceHealth(
   }
 
   const url = normalizeOptionalString(options.url);
-  if (url) {
-    return readEndpointSourceHealth(url);
+  if (!url) {
+    if (options.skipUnconfiguredEndpoint) {
+      console.warn(
+        "SOURCE_HEALTH_URL non configurato: controllo source-health saltato in modo tecnico controllato.",
+      );
+    }
+
+    return [];
   }
 
-  if (options.skipUnconfiguredEndpoint) {
-    console.warn(
-      "SOURCE_HEALTH_URL non configurato: controllo source-health saltato in modo tecnico controllato.",
-    );
-  }
-
-  return [];
+  return readEndpointSourceHealth(url);
 }
 
 async function readAuditFileSourceHealth(
