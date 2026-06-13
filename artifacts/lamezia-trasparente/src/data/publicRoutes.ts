@@ -8,6 +8,9 @@ export type PublicIndexableRoute = {
   rationale: string;
 };
 
+export const COUNCIL_SESSION_V0_DEMO_PATH =
+  "/convocazioni/demo-consiglio-comunale-v0" as const;
+
 /**
  * Static inventory for public, indexable routes.
  *
@@ -67,6 +70,11 @@ export const PUBLIC_INDEXABLE_ROUTES = [
   },
   { path: "/delibere", rationale: "Indice pubblico delle delibere." },
   { path: "/convocazioni", rationale: "Indice pubblico delle convocazioni." },
+  {
+    path: COUNCIL_SESSION_V0_DEMO_PATH,
+    rationale:
+      "Scheda demo v0 dichiarata per verificare il percorso pubblico minimo senza dati reali.",
+  },
   { path: "/organi", rationale: "Indice pubblico degli organi istituzionali." },
   {
     path: "/amministratori",
