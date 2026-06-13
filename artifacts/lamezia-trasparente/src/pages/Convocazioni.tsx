@@ -49,6 +49,7 @@ import {
   CouncilSessionV0DemoNotice,
   CouncilSessionV0DemoSummaryCard,
 } from "@/components/launch/CouncilSessionV0DemoCard";
+import { councilSessionV0DemoFixture } from "@/data/councilSessionV0";
 
 function MacrotemasRow({ macrotemi }: { macrotemi: string[] }) {
   const unique = Array.from(new Set(macrotemi)).filter((m) => m !== "altro");
@@ -279,12 +280,20 @@ export function Convocazioni() {
               irregolarità o completezza della documentazione amministrativa.
             </p>
           </div>
-          <Link
-            href="/fonti-dati"
-            className="inline-flex text-sm font-semibold text-primary underline-offset-4 hover:underline"
-          >
-            Leggi fonti e limiti
-          </Link>
+          <div className="flex flex-col items-start gap-2 sm:flex-row md:flex-col md:items-end">
+            <Link
+              href={`/convocazioni/${councilSessionV0DemoFixture.id}`}
+              className="inline-flex text-sm font-semibold text-primary underline-offset-4 hover:underline"
+            >
+              Apri scheda demo v0
+            </Link>
+            <Link
+              href="/fonti-dati"
+              className="inline-flex text-sm font-semibold text-muted-foreground underline-offset-4 hover:text-primary hover:underline"
+            >
+              Leggi fonti e limiti
+            </Link>
+          </div>
         </div>
       </section>
 
