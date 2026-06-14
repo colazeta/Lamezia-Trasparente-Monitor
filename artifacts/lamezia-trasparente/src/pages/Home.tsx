@@ -941,6 +941,8 @@ function ConvocazioniColumn({
   items: { id: number; oggetto: string; dataAtto?: string | null; pubStart?: string | null }[] | undefined;
   loading: boolean;
 }) {
+  const safeItems = asArray<{ id: number; oggetto: string; dataAtto?: string | null; pubStart?: string | null }>(items);
+
   return (
     <Card className="overflow-hidden">
       <CardHeader className="flex flex-row items-center gap-2.5 space-y-0 border-b border-border bg-muted/30 py-3.5">
@@ -958,8 +960,8 @@ function ConvocazioniColumn({
                 <Skeleton className="h-4 w-full" />
               </div>
             ))
-          ) : items && items.length > 0 ? (
-            items.slice(0, 3).map((c) => (
+          ) : safeItems.length > 0 ? (
+            safeItems.slice(0, 3).map((c) => (
               <Link key={c.id} href={`/convocazioni/${c.id}`} className="block p-4 hover-elevate transition-colors">
                 <div className="flex items-center gap-1.5 text-xs font-bold text-brand mb-1.5">
                   <Calendar className="h-3.5 w-3.5"  aria-hidden="true"/>
