@@ -181,6 +181,7 @@ export * from './publicationMacrotemaStat';
 export * from './publicationsTimeline';
 export * from './publicationsTimelinePoint';
 export * from './publicationStoria';
+export * from './publishReportInput';
 export * from './question';
 export * from './questionInput';
 export * from './questionInputStatus';
