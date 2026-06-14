@@ -8,6 +8,7 @@ import cors from "cors";
 import pinoHttp from "pino-http";
 import { clerkMiddleware } from "@clerk/express";
 import { publishableKeyFromHost } from "@clerk/shared/keys";
+import { HealthCheckResponse } from "@workspace/api-zod";
 import {
   CLERK_PROXY_PATH,
   clerkProxyMiddleware,
@@ -40,6 +41,11 @@ app.use(
     },
   }),
 );
+
+app.get("/api/healthz", (_req: Request, res: Response) => {
+  const data = HealthCheckResponse.parse({ status: "ok" });
+  res.json(data);
+});
 
 // Clerk proxy must be before body parsers (streams raw bytes)
 app.use(CLERK_PROXY_PATH, clerkProxyMiddleware());
