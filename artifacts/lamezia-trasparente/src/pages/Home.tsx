@@ -41,6 +41,10 @@ import { PageMeta } from "@/components/seo/PageMeta";
 
 const _basePath = import.meta.env.BASE_URL.replace(/\/$/, "");
 
+function asArray<T>(value: T[] | unknown): T[] {
+  return Array.isArray(value) ? value : [];
+}
+
 function formatDate(value: string | null | undefined) {
   if (!value) return "—";
   const d = new Date(value);
@@ -91,7 +95,7 @@ function usePublishedBlocks(pageSlug: string) {
     queryFn: async () => {
       const res = await fetch(`${_basePath}/api/redazione/pages/${pageSlug}/blocks`);
       if (!res.ok) return [];
-      return res.json();
+      return asArray<PageBlock>(await res.json());
     },
     staleTime: 2 * 60 * 1000,
     retry: false,
@@ -353,7 +357,7 @@ function BlockQuestionsFeatured() {
   const { data: questions, isLoading: questionsLoading } = useListQuestions();
 
   const { featured, topics } = useMemo(() => {
-    const list = questions ?? [];
+    const list = asArray<Question>(questions);
     const featured = list.filter((q) => q.featured).sort((a, b) => a.sortOrder - b.sortOrder).slice(0, 6);
     const topicMap = new Map<string, Question[]>();
     for (const q of list) {
@@ -441,7 +445,7 @@ function BlockRecentActivity() {
                       </div>
                     </div>
                   ))
-                : activity && activity.length > 0
+                : Array.isArray(activity) && activity.length > 0
                 ? activity.slice(0, 6).map((item) => <ActivityRow key={item.id} item={item} />)
                 : (
                     <div className="p-8 text-center text-muted-foreground">
@@ -538,7 +542,7 @@ function StaticHomeLayout() {
   const { data: commissioni, isLoading: commissioniLoading } = useListConvocazioni({ tipo: "commissione" });
 
   const { featured, topics } = useMemo(() => {
-    const list = questions ?? [];
+    const list = asArray<Question>(questions);
     const featured = list
       .filter((q) => q.featured)
       .sort((a, b) => a.sortOrder - b.sortOrder)
@@ -803,7 +807,7 @@ function StaticHomeLayout() {
                           </div>
                         </div>
                       ))
-                    ) : activity && activity.length > 0 ? (
+                    ) : Array.isArray(activity) && activity.length > 0 ? (
                       activity.slice(0, 6).map((item) => <ActivityRow key={item.id} item={item} />)
                     ) : (
                       <div className="p-8 text-center text-muted-foreground">
@@ -892,7 +896,8 @@ function V0PublicPathBanner() {
 // ---------------------------------------------------------------------------
 
 export function Home() {
-  const { data: publishedBlocks, isLoading: blocksLoading } = usePublishedBlocks("home");
+  const { data: publishedBlocksData, isLoading: blocksLoading } = usePublishedBlocks("home");
+  const publishedBlocks = asArray<PageBlock>(publishedBlocksData);
 
   // While loading we render nothing (avoids layout flash between states).
   // The static layout will show immediately on next visit thanks to staleTime.
@@ -912,7 +917,7 @@ export function Home() {
         path="/"
       />
       <V0PublicPathBanner />
-      {publishedBlocks && publishedBlocks.length > 0
+      {publishedBlocks.length > 0
         ? <PublishedBlocks blocks={publishedBlocks} />
         : <StaticHomeLayout />}
     </div>

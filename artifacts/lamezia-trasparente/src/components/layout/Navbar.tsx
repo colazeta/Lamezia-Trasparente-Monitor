@@ -34,7 +34,7 @@ import { NAV_GROUPS, isSectionActive } from "./navSections";
 function useTopics(): string[] {
   const { data: questions } = useListQuestions();
   const set = new Set<string>();
-  for (const q of questions ?? []) set.add(q.topic);
+  for (const q of Array.isArray(questions) ? questions : []) set.add(q.topic);
   return Array.from(set).sort((a, b) => a.localeCompare(b, "it"));
 }
 
