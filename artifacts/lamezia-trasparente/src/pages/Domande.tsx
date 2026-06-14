@@ -28,8 +28,9 @@ export function Domande() {
   const [topic, setTopic] = useState<string>(initialTopic);
 
   const topics = useMemo(() => {
+    const list = Array.isArray(questions) ? questions : [];
     const set = new Set<string>();
-    for (const q of questions ?? []) set.add(q.topic);
+    for (const q of list) set.add(q.topic);
     return Array.from(set).sort((a, b) => a.localeCompare(b, "it"));
   }, [questions]);
 
@@ -38,7 +39,8 @@ export function Domande() {
 
   const filtered = useMemo(() => {
     const q = normalize(query.trim());
-    return (questions ?? []).filter((item) => {
+    const list = Array.isArray(questions) ? questions : [];
+    return list.filter((item) => {
       if (activeTopic !== "all" && item.topic !== activeTopic) return false;
       if (!q) return true;
       const haystack = normalize(

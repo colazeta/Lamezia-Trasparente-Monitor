@@ -1,6 +1,5 @@
 import { useEffect, useRef } from "react";
 import { ClerkProvider, SignIn, useClerk } from "@clerk/react";
-import { publishableKeyFromHost } from "@clerk/react/internal";
 import { shadcn } from "@clerk/themes";
 import { Router as WouterRouter, Route, Switch, useLocation } from "wouter";
 import { QueryClient, QueryClientProvider, useQueryClient } from "@tanstack/react-query";
@@ -19,11 +18,8 @@ const queryClient = new QueryClient({
   },
 });
 
-// REQUIRED — copy verbatim from clerk-auth skill
-const clerkPubKey = publishableKeyFromHost(
-  window.location.hostname,
-  import.meta.env.VITE_CLERK_PUBLISHABLE_KEY,
-);
+const configuredClerkPubKey = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY?.trim() ?? "";
+const clerkPubKey = configuredClerkPubKey.length > 0 ? configuredClerkPubKey : undefined;
 
 // REQUIRED — empty in dev, auto-set in prod
 const clerkProxyUrl = import.meta.env.VITE_CLERK_PROXY_URL;
