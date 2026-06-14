@@ -20,7 +20,8 @@ node scripts/check-v0-static-fallback.mjs \
   --route / \
   --route /convocazioni \
   --route /convocazioni/demo-consiglio-comunale-v0 \
-  --route /fonti-dati
+  --route /fonti-dati \
+  --route /metodologia
 ```
 
 ## Smoke manuale pubblico minimo
@@ -31,11 +32,12 @@ Aprire, in ordine:
 2. `/convocazioni`
 3. `/convocazioni/demo-consiglio-comunale-v0`
 4. `/fonti-dati`
-5. `/note-legali`
+5. `/metodologia`
+6. `/note-legali`
 
 Verificare che:
 
-- la navigazione minima Home → Convocazioni → scheda demo → Fonti e limiti sia comprensibile;
+- la navigazione minima Home → Convocazioni → scheda demo → Fonti e limiti/Metodologia sia comprensibile;
 - la scheda demo non sia presentata come convocazione reale;
 - fonti, limiti del dato e stato dimostrativo siano visibili prima di qualsiasi interpretazione civica;
 - l'assenza o incompletezza di un dato non sia formulata come irregolarità dell'ente;

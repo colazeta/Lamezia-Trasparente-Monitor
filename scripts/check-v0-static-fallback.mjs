@@ -10,6 +10,7 @@ const REQUIRED_ROUTES = [
   "/convocazioni",
   "/convocazioni/demo-consiglio-comunale-v0",
   "/fonti-dati",
+  "/metodologia",
 ];
 const REQUIRED_PUBLIC_TEXT = [
   "rendiamoLameziaTrasparente",
