@@ -279,13 +279,14 @@ function BlockSectionEmbed({ content }: { content: Record<string, unknown> }) {
 function BlockStats() {
   const { data: stats, isLoading: statsLoading } = useGetStatsOverview();
   const { data: pnrrProjects } = useListPnrrProjects();
+  const pnrrProjectCount = asArray(pnrrProjects?.projects).length;
   return (
     <section className="border-b border-border bg-card">
       <div className="container mx-auto px-4 md:px-6">
         <div className="grid grid-cols-2 md:grid-cols-4 divide-x divide-y md:divide-y-0 divide-border">
           <StatCard title="Atti Pubblicati" value={stats?.acts} loading={statsLoading} href="/albo" icon={FileSearch} />
           <StatCard title="Appalti" value={stats?.contracts} loading={statsLoading} href="/contratti" icon={FileText} />
-          <StatCard title="Progetti PNRR" value={pnrrProjects?.projects.length} loading={!pnrrProjects} href="/pnrr" icon={Landmark} />
+          <StatCard title="Progetti PNRR" value={pnrrProjectCount} loading={!pnrrProjects} href="/pnrr" icon={Landmark} />
           <StatCard
             title="Valore Monitorato"
             value={stats ? `€ ${(stats.monitoredAmount / 1000000).toFixed(1)}M` : undefined}
@@ -540,6 +541,7 @@ function StaticHomeLayout() {
   const { data: questions, isLoading: questionsLoading } = useListQuestions();
   const { data: consiglio, isLoading: consiglioLoading } = useListConvocazioni({ tipo: "consiglio" });
   const { data: commissioni, isLoading: commissioniLoading } = useListConvocazioni({ tipo: "commissione" });
+  const pnrrProjectCount = asArray(pnrrProjects?.projects).length;
 
   const { featured, topics } = useMemo(() => {
     const list = asArray<Question>(questions);
@@ -633,7 +635,7 @@ function StaticHomeLayout() {
           <div className="grid grid-cols-2 md:grid-cols-4 divide-x divide-y md:divide-y-0 divide-border">
             <StatCard title="Atti Pubblicati" value={stats?.acts} loading={statsLoading} href="/albo" icon={FileSearch} />
             <StatCard title="Appalti" value={stats?.contracts} loading={statsLoading} href="/contratti" icon={FileText} />
-            <StatCard title="Progetti PNRR" value={pnrrProjects?.projects.length} loading={!pnrrProjects} href="/pnrr" icon={Landmark} />
+            <StatCard title="Progetti PNRR" value={pnrrProjectCount} loading={!pnrrProjects} href="/pnrr" icon={Landmark} />
             <StatCard
               title="Valore Monitorato"
               value={stats ? `€ ${(stats.monitoredAmount / 1000000).toFixed(1)}M` : undefined}
