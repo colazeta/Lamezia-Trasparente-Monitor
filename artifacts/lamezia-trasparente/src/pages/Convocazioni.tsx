@@ -50,6 +50,7 @@ import {
   CouncilSessionV0DemoSummaryCard,
 } from "@/components/launch/CouncilSessionV0DemoCard";
 import { councilSessionV0DemoFixture } from "@/data/councilSessionV0";
+import { asApiList } from "@/lib/apiList";
 
 function MacrotemasRow({ macrotemi }: { macrotemi: string[] }) {
   const unique = Array.from(new Set(macrotemi)).filter((m) => m !== "altro");
@@ -139,7 +140,8 @@ function groupByOrgano(sedute: Seduta[]) {
 }
 
 export function Convocazioni() {
-  const { data: sedute, isLoading, isError } = useListSedute();
+  const { data: seduteData, isLoading, isError } = useListSedute();
+  const sedute = asApiList<Seduta>(seduteData);
   const [organoFilter, setOrganoFilter] = useState<string>(ALL_ORGANI);
   const [macrotemaFilter, setMacrotemaFilter] = useState<string>("all");
   const [reportFilter, setReportFilter] = useState<CoverageFilter>("all");
@@ -147,21 +149,22 @@ export function Convocazioni() {
   const [actsFilter, setActsFilter] = useState<CoverageFilter>("all");
 
   // Load convocazione publications to get macrotema and PNRR/CUP metadata per publicationId.
-  const { data: convocazioniPubs } = useListPublications({
+  const { data: convocazioniPubsData } = useListPublications({
     category: "convocazione",
   });
+  const convocazioniPubs = asApiList<SedutaPublication & { macrotema?: string | null }>(convocazioniPubsData);
 
   // Build a map publicationId -> odgMacrotemi (multi-theme array from ODG points).
   // Falls back to the publication-level macrotema if no ODG points are found.
   const publicationsById = useMemo(() => {
     const m = new Map<number, SedutaPublication>();
-    for (const p of convocazioniPubs ?? []) m.set(p.id, p);
+    for (const p of convocazioniPubs) m.set(p.id, p);
     return m;
   }, [convocazioniPubs]);
 
   const macrotemiByPubId = useMemo(() => {
     const m = new Map<number, string[]>();
-    for (const p of convocazioniPubs ?? []) {
+    for (const p of convocazioniPubs) {
       const odg = p.odgMacrotemi ?? [];
       const themes =
         odg.length > 0
@@ -176,7 +179,7 @@ export function Convocazioni() {
 
   const organoOptions = useMemo(() => {
     const options = new Map<string, string>();
-    for (const s of sedute ?? []) {
+    for (const s of sedute) {
       if (s.organo) options.set(s.organo.slug, s.organo.name);
     }
     return Array.from(options.entries()).map(([slug, name]) => ({
@@ -186,13 +189,13 @@ export function Convocazioni() {
   }, [sedute]);
 
   const coverageSummary = useMemo(
-    () => summarizeConvocazioniCoverage(sedute ?? [], publicationsById),
+    () => summarizeConvocazioniCoverage(sedute, publicationsById),
     [sedute, publicationsById],
   );
 
   // Filter sedute by organo, macrotema and coverage flags if filters are active.
   const filteredSedute = useMemo(() => {
-    return (sedute ?? []).filter((s) => {
+    return sedute.filter((s) => {
       if (organoFilter !== ALL_ORGANI && s.organo?.slug !== organoFilter) {
         return false;
       }
@@ -236,7 +239,7 @@ export function Convocazioni() {
     actsFilter !== "all";
   const shouldShowDemoFallback =
     !isLoading &&
-    (isError || ((sedute?.length ?? 0) === 0 && !hasActiveFilters));
+    (isError || (sedute.length === 0 && !hasActiveFilters));
 
   return (
     <div className="container mx-auto px-4 py-8 md:py-12 max-w-5xl">

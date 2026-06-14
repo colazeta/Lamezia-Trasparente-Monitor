@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { QuestionCard } from "@/components/questions/QuestionCard";
 import { iconForTopic } from "@/lib/questionTopics";
+import { asApiList } from "@/lib/apiList";
 
 function normalize(value: string): string {
   return value
@@ -28,7 +29,7 @@ export function Domande() {
   const [topic, setTopic] = useState<string>(initialTopic);
 
   const topics = useMemo(() => {
-    const list = Array.isArray(questions) ? questions : [];
+    const list = asApiList<Question>(questions);
     const set = new Set<string>();
     for (const q of list) set.add(q.topic);
     return Array.from(set).sort((a, b) => a.localeCompare(b, "it"));
@@ -39,7 +40,7 @@ export function Domande() {
 
   const filtered = useMemo(() => {
     const q = normalize(query.trim());
-    const list = Array.isArray(questions) ? questions : [];
+    const list = asApiList<Question>(questions);
     return list.filter((item) => {
       if (activeTopic !== "all" && item.topic !== activeTopic) return false;
       if (!q) return true;

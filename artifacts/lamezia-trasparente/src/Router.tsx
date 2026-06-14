@@ -55,6 +55,7 @@ import { Guida } from "./pages/Guida";
 import { Redazione } from "./pages/Redazione";
 import NotFound from "./pages/not-found";
 import { PageMeta } from "./components/seo/PageMeta";
+import { PublicErrorBoundary } from "./components/PublicErrorBoundary";
 
 // Legacy /admin/* → redirect to /redazione
 import { Redirect } from "wouter";
@@ -97,8 +98,9 @@ export function Router() {
 
       {/* Public pages — wrapped in MainLayout */}
       <Route>
-        <MainLayout>
-          <Switch>
+        <PublicErrorBoundary>
+          <MainLayout>
+            <Switch>
             <Route path="/" component={Home} />
             <PublicRouteWithMeta
               path="/domande"
@@ -333,8 +335,9 @@ export function Router() {
               description="Guida pratica per orientarsi tra sezioni, fonti e strumenti del monitoraggio civico."
             />
             <Route component={NotFound} />
-          </Switch>
-        </MainLayout>
+            </Switch>
+          </MainLayout>
+        </PublicErrorBoundary>
       </Route>
     </Switch>
   );

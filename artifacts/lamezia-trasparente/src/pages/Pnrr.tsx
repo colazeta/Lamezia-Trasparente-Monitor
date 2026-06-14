@@ -50,6 +50,7 @@ import {
   type CantieriometroLocationFilter,
   type CantieriometroPresenceFilter,
 } from "@/lib/cantieriometro";
+import { asApiList } from "@/lib/apiList";
 
 const ITALIA_DOMANI_PROJECTS_DATASET_URL =
   "https://www.italiadomani.gov.it/content/dam/italiadomani/opendata/Progetti_del_PNRR/Progetti_PNRR.csv";
@@ -131,7 +132,7 @@ function sourceLabelForUrl(url: string | null | undefined, fallback: string) {
 function dataStatus(project: PnrrProject) {
   if (project.aggiornamentoVecchio)
     return "da verificare sulla fonte ufficiale";
-  if (project.documentsCount > 0 || project.attachments.length > 0)
+  if (project.documentsCount > 0 || asApiList<PnrrProject["attachments"][number]>(project.attachments).length > 0)
     return "arricchito con collegamenti rilevati";
   if (project.trasparenzaCompleta) return "ufficiale (Comune rilevato)";
   return "ufficiale (censimento Italia Domani)";
@@ -140,8 +141,8 @@ function dataStatus(project: PnrrProject) {
 export function Pnrr() {
   const { data, isLoading } = useListPnrrProjects();
 
-  const projects: PnrrProject[] = data?.projects ?? [];
-  const uncensored: Publication[] | undefined = data?.uncensored;
+  const projects = asApiList<PnrrProject>(data?.projects);
+  const uncensored = asApiList<Publication>(data?.uncensored);
   const censusLastUpdatedAt: string | null | undefined =
     data?.censusLastUpdatedAt;
   const importSourceLabel = data?.importSourceLabel;
@@ -620,7 +621,7 @@ export function Pnrr() {
                         <Badge className="border-transparent bg-amber-100 text-amber-800 shadow-none dark:bg-amber-500/20 dark:text-amber-300">
                           Da verificare
                         </Badge>
-                        {doc.cups?.map((c: string) => (
+                        {asApiList<string>(doc.cups).map((c: string) => (
                           <Badge
                             key={c}
                             variant="outline"
@@ -1068,7 +1069,7 @@ function PnrrCard({ project }: { project: PnrrProject }) {
           pnrrProjectId={project.id}
         />
 
-        {project.attachments.length > 0 && (
+        {asApiList<PnrrProject["attachments"][number]>(project.attachments).length > 0 && (
           <section
             className="mt-4 border-t border-border/60 pt-4"
             aria-labelledby={`pnrr-attachments-${project.id}`}
@@ -1081,7 +1082,7 @@ function PnrrCard({ project }: { project: PnrrProject }) {
               Allegati ufficiali Comune
             </h4>
             <ul className="space-y-1.5">
-              {project.attachments.map((att) => (
+              {asApiList<PnrrProject["attachments"][number]>(project.attachments).map((att) => (
                 <li key={att.url}>
                   <a
                     href={att.url}
@@ -1115,9 +1116,9 @@ function PnrrCard({ project }: { project: PnrrProject }) {
               {project.documentsCount}
             </span>
           </h4>
-          {project.documents.length > 0 ? (
+          {asApiList<PnrrProject["documents"][number]>(project.documents).length > 0 ? (
             <div className="space-y-2">
-              {project.documents.map((doc) => (
+              {asApiList<PnrrProject["documents"][number]>(project.documents).map((doc) => (
                 <div key={doc.id} className="rounded-lg bg-muted/30 p-3">
                   <div className="flex items-start gap-3">
                     <FileText
@@ -1269,7 +1270,7 @@ function SourceTraceability({ project }: { project: PnrrProject }) {
 }
 
 function LinkedContractsSection({ project }: { project: PnrrProject }) {
-  const linkedContracts = project.linkedContracts ?? [];
+  const linkedContracts = asApiList<PnrrProject["linkedContracts"][number]>(project.linkedContracts);
 
   return (
     <section

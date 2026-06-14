@@ -34,16 +34,13 @@ import { iconForTopic } from "@/lib/questionTopics";
 import { format } from "date-fns";
 import { it } from "date-fns/locale";
 import { PageMeta } from "@/components/seo/PageMeta";
+import { asApiList } from "@/lib/apiList";
 
 // ---------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------
 
 const _basePath = import.meta.env.BASE_URL.replace(/\/$/, "");
-
-function asArray<T>(value: T[] | unknown): T[] {
-  return Array.isArray(value) ? value : [];
-}
 
 function formatDate(value: string | null | undefined) {
   if (!value) return "—";
@@ -95,7 +92,7 @@ function usePublishedBlocks(pageSlug: string) {
     queryFn: async () => {
       const res = await fetch(`${_basePath}/api/redazione/pages/${pageSlug}/blocks`);
       if (!res.ok) return [];
-      return asArray<PageBlock>(await res.json());
+      return asApiList<PageBlock>(await res.json());
     },
     staleTime: 2 * 60 * 1000,
     retry: false,
@@ -279,7 +276,7 @@ function BlockSectionEmbed({ content }: { content: Record<string, unknown> }) {
 function BlockStats() {
   const { data: stats, isLoading: statsLoading } = useGetStatsOverview();
   const { data: pnrrProjects } = useListPnrrProjects();
-  const pnrrProjectCount = asArray(pnrrProjects?.projects).length;
+  const pnrrProjectCount = asApiList(pnrrProjects?.projects).length;
   return (
     <section className="border-b border-border bg-card">
       <div className="container mx-auto px-4 md:px-6">
@@ -358,7 +355,7 @@ function BlockQuestionsFeatured() {
   const { data: questions, isLoading: questionsLoading } = useListQuestions();
 
   const { featured, topics } = useMemo(() => {
-    const list = asArray<Question>(questions);
+    const list = asApiList<Question>(questions);
     const featured = list.filter((q) => q.featured).sort((a, b) => a.sortOrder - b.sortOrder).slice(0, 6);
     const topicMap = new Map<string, Question[]>();
     for (const q of list) {
@@ -541,10 +538,10 @@ function StaticHomeLayout() {
   const { data: questions, isLoading: questionsLoading } = useListQuestions();
   const { data: consiglio, isLoading: consiglioLoading } = useListConvocazioni({ tipo: "consiglio" });
   const { data: commissioni, isLoading: commissioniLoading } = useListConvocazioni({ tipo: "commissione" });
-  const pnrrProjectCount = asArray(pnrrProjects?.projects).length;
+  const pnrrProjectCount = asApiList(pnrrProjects?.projects).length;
 
   const { featured, topics } = useMemo(() => {
-    const list = asArray<Question>(questions);
+    const list = asApiList<Question>(questions);
     const featured = list
       .filter((q) => q.featured)
       .sort((a, b) => a.sortOrder - b.sortOrder)
@@ -899,7 +896,7 @@ function V0PublicPathBanner() {
 
 export function Home() {
   const { data: publishedBlocksData, isLoading: blocksLoading } = usePublishedBlocks("home");
-  const publishedBlocks = asArray<PageBlock>(publishedBlocksData);
+  const publishedBlocks = asApiList<PageBlock>(publishedBlocksData);
 
   // While loading we render nothing (avoids layout flash between states).
   // The static layout will show immediately on next visit thanks to staleTime.
@@ -941,7 +938,7 @@ function ConvocazioniColumn({
   items: { id: number; oggetto: string; dataAtto?: string | null; pubStart?: string | null }[] | undefined;
   loading: boolean;
 }) {
-  const safeItems = asArray<{ id: number; oggetto: string; dataAtto?: string | null; pubStart?: string | null }>(items);
+  const safeItems = asApiList<{ id: number; oggetto: string; dataAtto?: string | null; pubStart?: string | null }>(items);
 
   return (
     <Card className="overflow-hidden">

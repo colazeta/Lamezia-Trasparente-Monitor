@@ -6,6 +6,7 @@ import {
   useListThemes,
   type Contract,
   type ContractAnalytics,
+  type Theme,
 } from "@workspace/api-client-react";
 import {
   Search,
@@ -83,6 +84,7 @@ import {
 import { InterventionsMap } from "@/components/InterventionsMap";
 import { FeedSubscribeButton } from "@/components/FeedSubscribeButton";
 import { quartiereLabel } from "@/lib/gis";
+import { asApiList } from "@/lib/apiList";
 import { MapPin } from "lucide-react";
 
 const ANAC_PORTAL_URL = "https://dati.anticorruzione.it/superset/dashboard/appalti/";
@@ -134,7 +136,8 @@ export function Contracts() {
   const [selected, setSelected] = useState<Contract | null>(null);
   const [, navigate] = useLocation();
 
-  const { data: themes, isLoading: themesLoading } = useListThemes();
+  const { data: themesData, isLoading: themesLoading } = useListThemes();
+  const themes = asApiList<Theme>(themesData);
 
   useEffect(() => {
     const handler = setTimeout(() => setDebouncedSearch(search), 400);
@@ -157,7 +160,8 @@ export function Contracts() {
     return f;
   }, [debouncedSearch, procedureType, acquisitionTool, themeId, minAmount, maxAmount, from, to, quartiere]);
 
-  const { data: contracts, isLoading } = useListContracts(filters);
+  const { data: contractsData, isLoading } = useListContracts(filters);
+  const contracts = asApiList<Contract>(contractsData);
   const { data: analytics, isLoading: analyticsLoading } =
     useGetContractsAnalytics(filters);
   const { data: feedStatus } = useGetContractsFeedStatus();
@@ -167,7 +171,7 @@ export function Contracts() {
   const { procedures, tools } = useMemo(() => {
     const p = new Set<string>();
     const t = new Set<string>();
-    (contracts ?? []).forEach((c) => {
+    contracts.forEach((c) => {
       if (c.procedureType) p.add(c.procedureType);
       if (c.acquisitionTool) t.add(c.acquisitionTool);
     });
@@ -202,7 +206,7 @@ export function Contracts() {
 
   const locatedContracts = useMemo(
     () =>
-      (contracts ?? []).filter(
+      contracts.filter(
         (c) =>
           typeof c.latitude === "number" && typeof c.longitude === "number",
       ),
@@ -313,7 +317,7 @@ export function Contracts() {
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">Tutti i Temi</SelectItem>
-              {!themesLoading && themes?.map((t) => (
+              {!themesLoading && themes.map((t) => (
                 <SelectItem key={t.id} value={t.id.toString()}>
                   {t.title}
                 </SelectItem>
@@ -472,7 +476,7 @@ export function Contracts() {
             </h3>
           </div>
           <span className="text-xs text-muted-foreground">
-            {locatedContracts.length} su {contracts?.length ?? 0} appalti
+            {locatedContracts.length} su {contracts.length} appalti
             geolocalizzati
           </span>
         </div>
@@ -553,7 +557,7 @@ export function Contracts() {
                       </TableCell>
                     </TableRow>
                   ))
-              ) : contracts && contracts.length > 0 ? (
+              ) : contracts.length > 0 ? (
                 contracts.map((contract) => (
                   <TableRow
                     key={contract.id}
@@ -693,20 +697,20 @@ function Analytics({
     value: { label: "Importo", color: "hsl(var(--chart-2))" },
   };
 
-  const procedureData = analytics.byProcedure.map((d, i) => ({
+  const procedureData = asApiList<NonNullable<ContractAnalytics["byProcedure"]>[number]>(analytics.byProcedure).map((d, i) => ({
     ...d,
     fill: CHART_COLORS[i % CHART_COLORS.length],
   }));
-  const toolData = analytics.byAcquisitionTool.map((d, i) => ({
+  const toolData = asApiList<NonNullable<ContractAnalytics["byAcquisitionTool"]>[number]>(analytics.byAcquisitionTool).map((d, i) => ({
     ...d,
     fill: CHART_COLORS[i % CHART_COLORS.length],
   }));
-  const beneficiaryData = analytics.topBeneficiaries.map((d) => ({
+  const beneficiaryData = asApiList<NonNullable<ContractAnalytics["topBeneficiaries"]>[number]>(analytics.topBeneficiaries).map((d) => ({
     name: d.name.length > 24 ? `${d.name.slice(0, 22)}…` : d.name,
     fullName: d.name,
     value: d.value,
   }));
-  const timeData = analytics.amountOverTime.map((d) => ({
+  const timeData = asApiList<NonNullable<ContractAnalytics["amountOverTime"]>[number]>(analytics.amountOverTime).map((d) => ({
     period: d.period,
     amount: d.amount,
     count: d.count,
@@ -1005,7 +1009,7 @@ function SpendingByMacrotema({
   loading: boolean;
 }) {
   const { groups, total, recent } = useMemo(() => {
-    const list = contracts ?? [];
+    const list = asApiList<Contract>(contracts);
     const map = new Map<
       string,
       {
