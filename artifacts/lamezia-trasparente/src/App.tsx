@@ -117,6 +117,32 @@ function SignInPage() {
   );
 }
 
+function RedazioneUnavailablePage() {
+  return (
+    <main className="flex min-h-[100dvh] items-center justify-center bg-sidebar px-4 py-10">
+      <section className="w-full max-w-xl rounded-2xl border border-border bg-card p-6 text-card-foreground shadow-sm">
+        <p className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+          Area redazione
+        </p>
+        <h1 className="mt-3 text-2xl font-bold">
+          Redazione non disponibile in questa anteprima
+        </h1>
+        <p className="mt-4 text-muted-foreground">
+          La preview pubblica non ha una configurazione Clerk attiva. Per
+          proteggere il percorso riservato, l’area redazione resta disattivata
+          finché la chiave pubblicabile Clerk non viene configurata.
+        </p>
+        <a
+          className="mt-6 inline-flex rounded-lg bg-brand px-4 py-2 text-sm font-semibold text-brand-foreground transition-colors hover:bg-brand/90"
+          href={basePath || "/"}
+        >
+          Torna alle pagine pubbliche
+        </a>
+      </section>
+    </main>
+  );
+}
+
 function ClerkProviderWithRoutes() {
   const [, setLocation] = useLocation();
 
@@ -165,7 +191,17 @@ function App() {
           <TooltipProvider>
             <WouterRouter base={basePath}>
               <CivicHelperProvider>
-                <Router />
+                <Switch>
+                  <Route
+                    path="/redazione/*?"
+                    component={RedazioneUnavailablePage}
+                  />
+                  <Route
+                    path="/admin/*?"
+                    component={RedazioneUnavailablePage}
+                  />
+                  <Route component={Router} />
+                </Switch>
               </CivicHelperProvider>
               <Toaster position="top-right" />
             </WouterRouter>
