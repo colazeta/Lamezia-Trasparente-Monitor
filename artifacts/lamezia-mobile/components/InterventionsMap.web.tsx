@@ -45,7 +45,7 @@ function clusterIcon(count: number, color: string): MarkerIcon {
     className: "",
     iconSize: [size, size],
     iconAnchor: [size / 2, size / 2],
-  }) as MarkerIcon;
+  }) as unknown as MarkerIcon;
 }
 
 function ClusteredMarkers({
