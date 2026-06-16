@@ -27,12 +27,19 @@ import {
   CircleDotDashed,
   Scale3D,
 } from "lucide-react";
+import {
+  getPublicV0RouteContract,
+  V0_ROUTE_STATUS_LABELS,
+  type V0RouteStatus,
+} from "@/data/publicRoutes";
 
 export interface NavItem {
   href: string;
   label: string;
   description: string;
   icon: React.ElementType;
+  v0Status?: V0RouteStatus;
+  v0StatusLabel?: string;
 }
 
 export interface NavSection {
@@ -40,7 +47,7 @@ export interface NavSection {
   items: NavItem[];
 }
 
-export const NAV_GROUPS: NavSection[] = [
+const RAW_NAV_GROUPS: NavSection[] = [
   {
     label: "Trasparenza & Atti",
     items: [
@@ -186,7 +193,8 @@ export const NAV_GROUPS: NavSection[] = [
       {
         href: "/segnalazioni",
         label: "Segnalazioni",
-        description: "Segnala criticità da verificare o disservizi documentati.",
+        description:
+          "Segnala criticità da verificare o disservizi documentati.",
         icon: Megaphone,
       },
     ],
@@ -261,10 +269,22 @@ export const NAV_GROUPS: NavSection[] = [
   },
 ];
 
+export const NAV_GROUPS: NavSection[] = RAW_NAV_GROUPS.map((group) => ({
+  ...group,
+  items: group.items.map((item) => {
+    const contract = getPublicV0RouteContract(item.href);
+    return contract
+      ? {
+          ...item,
+          v0Status: contract.status,
+          v0StatusLabel: V0_ROUTE_STATUS_LABELS[contract.status],
+        }
+      : item;
+  }),
+}));
+
 export function isSectionActive(href: string, location: string): boolean {
-  return (
-    location === href || (href !== "/" && location.startsWith(`${href}/`))
-  );
+  return location === href || (href !== "/" && location.startsWith(`${href}/`));
 }
 
 export interface ActiveSection {
