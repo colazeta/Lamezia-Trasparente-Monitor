@@ -1,15 +1,170 @@
 export const PUBLIC_SITE_ORIGIN =
   "https://lamezia-trasparente-monitor.replit.app";
 
+export const COUNCIL_SESSION_V0_DEMO_PATH =
+  "/convocazioni/demo-consiglio-comunale-v0" as const;
+
+export type V0RouteStatus =
+  | "pubblicabile"
+  | "sperimentale"
+  | "in-preparazione"
+  | "riservata"
+  | "static-marker";
+
+export type V0ExpectedDataMode = "real" | "fixture" | "manual" | "none" | "mixed";
+
+export type V0PublicRouteContract = {
+  path: `/${string}`;
+  status: V0RouteStatus;
+  v0Critical: boolean;
+  expectedDataMode: V0ExpectedDataMode;
+  mustNotErrorBoundary: boolean;
+  requiresSourceAndLimits: boolean;
+  humanCheckRequired: boolean;
+  qaResult: "pass" | "manual-check" | "static-only";
+  notes: string;
+};
+
+/**
+ * Structural contract for the minimum public v0 routes.
+ *
+ * This list is intentionally separate from the full sitemap inventory: it is
+ * the launch-readiness subset that must render predictably, declare its
+ * publication state and avoid using the public error boundary as normal flow.
+ */
+export const V0_PUBLIC_ROUTE_CONTRACT = [
+  {
+    path: "/",
+    status: "pubblicabile",
+    v0Critical: true,
+    expectedDataMode: "mixed",
+    mustNotErrorBoundary: true,
+    requiresSourceAndLimits: true,
+    humanCheckRequired: true,
+    qaResult: "manual-check",
+    notes:
+      "Ingresso pubblico della v0: deve introdurre percorso, limiti e rimandi a fonti senza assumere completezza dei dati.",
+  },
+  {
+    path: "/convocazioni",
+    status: "pubblicabile",
+    v0Critical: true,
+    expectedDataMode: "mixed",
+    mustNotErrorBoundary: true,
+    requiresSourceAndLimits: true,
+    humanCheckRequired: true,
+    qaResult: "manual-check",
+    notes:
+      "Percorso principale v0: dati API normalizzati tramite asApiList e fallback demo dichiarato quando i dati non sono disponibili.",
+  },
+  {
+    path: COUNCIL_SESSION_V0_DEMO_PATH,
+    status: "sperimentale",
+    v0Critical: true,
+    expectedDataMode: "fixture",
+    mustNotErrorBoundary: true,
+    requiresSourceAndLimits: true,
+    humanCheckRequired: true,
+    qaResult: "manual-check",
+    notes:
+      "Scheda demo esplicitamente marcata come fixture dimostrativa; non rappresenta una convocazione reale o aggiornata.",
+  },
+  {
+    path: "/contratti",
+    status: "pubblicabile",
+    v0Critical: true,
+    expectedDataMode: "mixed",
+    mustNotErrorBoundary: true,
+    requiresSourceAndLimits: true,
+    humanCheckRequired: true,
+    qaResult: "manual-check",
+    notes:
+      "Pagina data-driven con normalizzazione liste API, stato feed e rimandi a fonti/limiti ANAC/comunali.",
+  },
+  {
+    path: "/pnrr",
+    status: "pubblicabile",
+    v0Critical: true,
+    expectedDataMode: "mixed",
+    mustNotErrorBoundary: true,
+    requiresSourceAndLimits: true,
+    humanCheckRequired: true,
+    qaResult: "manual-check",
+    notes:
+      "Pagina data-driven con normalizzazione liste API e copy prudente su censimenti, localizzazioni e collegamenti documentali.",
+  },
+  {
+    path: "/redazione",
+    status: "riservata",
+    v0Critical: true,
+    expectedDataMode: "none",
+    mustNotErrorBoundary: true,
+    requiresSourceAndLimits: false,
+    humanCheckRequired: true,
+    qaResult: "manual-check",
+    notes:
+      "Area non pubblica: in assenza di Clerk deve mostrare fallback riservato dedicato, non contenuto ordinario né error boundary pubblico.",
+  },
+  {
+    path: "/healthz.json",
+    status: "static-marker",
+    v0Critical: true,
+    expectedDataMode: "none",
+    mustNotErrorBoundary: true,
+    requiresSourceAndLimits: false,
+    humanCheckRequired: false,
+    qaResult: "static-only",
+    notes:
+      "Marker statico della fallback bundle; verificato dallo smoke check provider-neutral.",
+  },
+  {
+    path: "/fonti-dati",
+    status: "pubblicabile",
+    v0Critical: true,
+    expectedDataMode: "manual",
+    mustNotErrorBoundary: true,
+    requiresSourceAndLimits: true,
+    humanCheckRequired: true,
+    qaResult: "manual-check",
+    notes:
+      "Pagina di riferimento per origine, aggiornamento e limiti delle fonti censite.",
+  },
+  {
+    path: "/metodologia",
+    status: "pubblicabile",
+    v0Critical: true,
+    expectedDataMode: "manual",
+    mustNotErrorBoundary: true,
+    requiresSourceAndLimits: true,
+    humanCheckRequired: true,
+    qaResult: "manual-check",
+    notes:
+      "Pagina di metodo e cautele interpretative per lettura non accusatoria degli indicatori.",
+  },
+  {
+    path: "/note-legali",
+    status: "pubblicabile",
+    v0Critical: true,
+    expectedDataMode: "manual",
+    mustNotErrorBoundary: true,
+    requiresSourceAndLimits: true,
+    humanCheckRequired: true,
+    qaResult: "manual-check",
+    notes:
+      "Presidio legale e metodologico: deve restare raggiungibile prima di qualsiasi annuncio pubblico v0.",
+  },
+] as const satisfies readonly V0PublicRouteContract[];
+
+export const V0_PUBLIC_ROUTE_PATHS = V0_PUBLIC_ROUTE_CONTRACT.map(
+  (route) => route.path,
+);
+
 export type PublicIndexableRoute = {
   /** Static router path that may be listed in the public sitemap. */
   path: `/${string}`;
   /** Short maintenance note for reviewers comparing Router.tsx and sitemap.xml. */
   rationale: string;
 };
-
-export const COUNCIL_SESSION_V0_DEMO_PATH =
-  "/convocazioni/demo-consiglio-comunale-v0" as const;
 
 /**
  * Static inventory for public, indexable routes.
