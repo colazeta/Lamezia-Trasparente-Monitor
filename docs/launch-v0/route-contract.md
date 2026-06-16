@@ -4,6 +4,12 @@ Questo contratto definisce le route minime da controllare prima della pubblicazi
 
 Fonte machine-readable: `docs/launch-v0/v0-routes.json`.
 
+Documenti collegati:
+
+- Tassonomia civica sezioni v0: `docs/launch-v0/section-taxonomy-v0.md`.
+- Guida copy civico prudente v0: `docs/launch-v0/civic-copy-style-guide.md`.
+- Collegamento applicativo minimo: `artifacts/lamezia-trasparente/src/data/publicRoutes.ts`, campo `civicSectionId`.
+
 ## Stati ammessi
 
 - `pubblicabile`: route pubblica candidabile alla v0, con limiti e fonti espliciti.
@@ -23,15 +29,15 @@ Fonte machine-readable: `docs/launch-v0/v0-routes.json`.
 
 ## Route minime
 
-| Route | Stato | Dati attesi | Critica v0 | Note |
-| --- | --- | --- | --- | --- |
-| `/` | pubblicabile | mixed | sì | Homepage con rimandi a fonti, metodo e limiti. |
-| `/convocazioni` | pubblicabile | mixed | sì | Empty state prudente per dati mancanti. |
-| `/convocazioni/demo-consiglio-comunale-v0` | sperimentale | fixture | no | Demo da marcare come sperimentale/non definitiva. |
-| `/contratti` | pubblicabile | mixed | sì | Indicatori come segnali, non conclusioni. |
-| `/pnrr` | pubblicabile | mixed | sì | Fonti, limiti e stato di verifica. |
-| `/redazione` | riservata | none | sì | Non deve esporre contenuto ordinario in preview non autenticata. |
-| `/healthz.json` | static-marker | none | sì | Marker statico, non controllo live data. |
-| `/fonti-dati` | pubblicabile | manual | sì | Indice fonti e limiti. |
-| `/metodologia` | pubblicabile | manual | sì | Criteri e cautele. |
-| `/note-legali` | pubblicabile | manual | sì | Note legali e limiti d'uso. |
+| Route | Stato | Dati attesi | Critica v0 | Sezione civica | Note |
+| --- | --- | --- | --- | --- | --- |
+| `/` | pubblicabile | mixed | sì | `home` | Homepage con rimandi a fonti, metodo e limiti. |
+| `/convocazioni` | pubblicabile | mixed | sì | `council-sessions` | Empty state prudente per dati mancanti. |
+| `/convocazioni/demo-consiglio-comunale-v0` | sperimentale | fixture | no | `council-sessions` | Demo da marcare come sperimentale/non definitiva. |
+| `/contratti` | pubblicabile | mixed | sì | `contracts` | Indicatori come segnali, non conclusioni. |
+| `/pnrr` | pubblicabile | mixed | sì | `pnrr-projects` | Fonti, limiti e stato di verifica. |
+| `/redazione` | riservata | none | sì | `editorial-area` | Non deve esporre contenuto ordinario in preview non autenticata. |
+| `/healthz.json` | static-marker | none | sì | `static-health` | Marker statico, non controllo live data. |
+| `/fonti-dati` | pubblicabile | manual | sì | `data-sources` | Indice fonti e limiti. |
+| `/metodologia` | pubblicabile | manual | sì | `method` | Criteri e cautele. |
+| `/note-legali` | pubblicabile | manual | sì | `legal-notes` | Note legali e limiti d'uso. |
