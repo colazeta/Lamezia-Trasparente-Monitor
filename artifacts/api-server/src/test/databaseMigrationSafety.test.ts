@@ -42,7 +42,11 @@ const migrationsFolder = path.resolve(path.dirname(dbEntry), "../migrations");
 const { adminDatabaseUrl } = resolveTestDatabaseConfig();
 
 /** Read the single generated migration's expected hash + journal timestamp. */
-function readJournalExpectations(): { tag: string; hash: string; when: number } {
+function readJournalExpectations(): {
+  tag: string;
+  hash: string;
+  when: number;
+} {
   const journal = JSON.parse(
     fs.readFileSync(path.join(migrationsFolder, "meta/_journal.json"), "utf-8"),
   ) as { entries: Array<{ tag: string; when: number }> };
@@ -194,6 +198,24 @@ async function tableExists(pool: Pool, table: string): Promise<boolean> {
   return Boolean(res.rows[0]?.present);
 }
 
+async function columnExists(
+  pool: Pool,
+  table: string,
+  column: string,
+): Promise<boolean> {
+  const res = await pool.query<{ present: boolean }>(
+    `SELECT EXISTS (
+       SELECT 1
+       FROM information_schema.columns
+       WHERE table_schema = 'public'
+         AND table_name = $1
+         AND column_name = $2
+     ) AS present`,
+    [table, column],
+  );
+  return Boolean(res.rows[0]?.present);
+}
+
 async function insertSentinelCategory(pool: Pool, slug: string): Promise<void> {
   await pool.query(
     "INSERT INTO categories (name, slug, description) VALUES ($1, $2, $3)",
@@ -227,7 +249,10 @@ describe("database upgrade safety (baselineLogic / runMigrations)", () => {
   it("records hashes with drizzle's sha256 scheme and the journal `when`", async () => {
     const scratch = await createScratchDatabase();
     try {
-      const baselined = await baselineMigrations(scratch.pool, migrationsFolder);
+      const baselined = await baselineMigrations(
+        scratch.pool,
+        migrationsFolder,
+      );
       expect(baselined).toContain(expected.tag);
 
       const rows = await readMigrationRows(scratch.pool);
@@ -274,6 +299,35 @@ describe("database upgrade safety (baselineLogic / runMigrations)", () => {
       const rows = await readMigrationRows(scratch.pool);
       expect(rows.length).toBeGreaterThanOrEqual(1);
       expect(rows[0]?.hash).toBe(expected.hash);
+      expect(await isMigrationTrackingPresent(scratch.pool)).toBe(true);
+    } finally {
+      await scratch.pool.end();
+    }
+  });
+
+  it("repairs missing reports.published_at on a push-bootstrapped database before baselining", async () => {
+    const scratch = await createScratchDatabase();
+    try {
+      await pushBootstrap(scratch.db);
+      await scratch.pool.query(
+        'ALTER TABLE "reports" DROP COLUMN "published_at"',
+      );
+
+      expect(await isSchemaBootstrapped(scratch.pool)).toBe(true);
+      expect(await isMigrationTrackingPresent(scratch.pool)).toBe(false);
+      expect(await columnExists(scratch.pool, "reports", "published_at")).toBe(
+        false,
+      );
+
+      await runMigrations({
+        client: scratch.pool,
+        database: scratch.db,
+        migrationsFolder,
+      });
+
+      expect(await columnExists(scratch.pool, "reports", "published_at")).toBe(
+        true,
+      );
       expect(await isMigrationTrackingPresent(scratch.pool)).toBe(true);
     } finally {
       await scratch.pool.end();
