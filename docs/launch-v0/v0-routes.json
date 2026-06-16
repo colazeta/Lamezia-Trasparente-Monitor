@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "routes": [
+    {"path":"/","status":"pubblicabile","v0Critical":true,"expectedDataMode":"mixed","mustNotErrorBoundary":true,"requiresSourceAndLimits":true,"humanCheckRequired":true,"notes":"Homepage pubblica: deve renderizzare anche con dati incompleti e rinviare a fonti, metodologia e limiti."},
+    {"path":"/convocazioni","status":"pubblicabile","v0Critical":true,"expectedDataMode":"mixed","mustNotErrorBoundary":true,"requiresSourceAndLimits":true,"humanCheckRequired":true,"notes":"Elenco convocazioni: data-driven, richiede empty state prudente e fonte/limiti visibili."},
+    {"path":"/convocazioni/demo-consiglio-comunale-v0","status":"sperimentale","v0Critical":false,"expectedDataMode":"fixture","mustNotErrorBoundary":false,"requiresSourceAndLimits":true,"humanCheckRequired":true,"notes":"Scheda dimostrativa v0 raggiunta dal routing parametrico; deve restare marcata come demo/fixture."},
+    {"path":"/contratti","status":"pubblicabile","v0Critical":true,"expectedDataMode":"mixed","mustNotErrorBoundary":true,"requiresSourceAndLimits":true,"humanCheckRequired":true,"notes":"Pagina critica con indicatori: leggere come segnali documentali, non conclusioni automatiche."},
+    {"path":"/pnrr","status":"pubblicabile","v0Critical":true,"expectedDataMode":"mixed","mustNotErrorBoundary":true,"requiresSourceAndLimits":true,"humanCheckRequired":true,"notes":"Sezione PNRR informativa: deve dichiarare copertura, limiti e dati mancanti."},
+    {"path":"/redazione","status":"riservata","v0Critical":false,"expectedDataMode":"none","mustNotErrorBoundary":false,"requiresSourceAndLimits":false,"humanCheckRequired":false,"notes":"Area riservata; in preview senza Clerk deve mostrare indisponibilità protettiva, non contenuto pubblico ordinario."},
+    {"path":"/healthz.json","status":"static-marker","v0Critical":true,"expectedDataMode":"none","mustNotErrorBoundary":true,"requiresSourceAndLimits":false,"humanCheckRequired":false,"notes":"Marker statico di fallback; non certifica API, worker, dati live o completezza fonti."},
+    {"path":"/fonti-dati","status":"pubblicabile","v0Critical":true,"expectedDataMode":"manual","mustNotErrorBoundary":true,"requiresSourceAndLimits":true,"humanCheckRequired":true,"notes":"Indice delle fonti e dei limiti pubblici della v0."},
+    {"path":"/metodologia","status":"pubblicabile","v0Critical":true,"expectedDataMode":"manual","mustNotErrorBoundary":true,"requiresSourceAndLimits":true,"humanCheckRequired":true,"notes":"Pagina di metodo, caveat e lettura prudente degli indicatori."},
+    {"path":"/note-legali","status":"pubblicabile","v0Critical":true,"expectedDataMode":"manual","mustNotErrorBoundary":true,"requiresSourceAndLimits":true,"humanCheckRequired":true,"notes":"Note legali e limiti d'uso: parte obbligatoria della pubblicazione v0."}
+  ]
+}
