@@ -1,15 +1,120 @@
 export const PUBLIC_SITE_ORIGIN =
   "https://lamezia-trasparente-monitor.replit.app";
 
+export const COUNCIL_SESSION_V0_DEMO_PATH =
+  "/convocazioni/demo-consiglio-comunale-v0" as const;
+
+export type V0RouteStatus =
+  | "pubblicabile"
+  | "sperimentale"
+  | "in-preparazione"
+  | "riservata"
+  | "static-marker";
+
+export type PublicV0RouteContract = {
+  path: `/${string}`;
+  status: V0RouteStatus;
+  title: string;
+  note: string;
+  rationale: string;
+};
+
+export const V0_ROUTE_STATUS_LABELS: Record<V0RouteStatus, string> = {
+  pubblicabile: "Pubblicabile v0",
+  sperimentale: "Sperimentale",
+  "in-preparazione": "In preparazione",
+  riservata: "Riservata",
+  "static-marker": "Marker tecnico",
+};
+
+export const PUBLIC_V0_ROUTE_CONTRACT = [
+  {
+    path: "/",
+    status: "pubblicabile",
+    title: "Home page pubblica",
+    note: "Ingresso pubblico alla v0: orientamento, limiti e percorsi principali.",
+    rationale: "Home page pubblica.",
+  },
+  {
+    path: "/convocazioni",
+    status: "pubblicabile",
+    title: "Convocazioni",
+    note: "Indice pubblico con stati vuoti se le convocazioni non sono disponibili.",
+    rationale: "Indice pubblico delle convocazioni.",
+  },
+  {
+    path: COUNCIL_SESSION_V0_DEMO_PATH,
+    status: "sperimentale",
+    title: "Scheda demo convocazione v0",
+    note: "Fixture dichiarata: verifica struttura, fonti e limiti senza rappresentare una seduta reale.",
+    rationale:
+      "Scheda demo v0 dichiarata per verificare il percorso pubblico minimo senza dati reali.",
+  },
+  {
+    path: "/contratti",
+    status: "pubblicabile",
+    title: "Contratti pubblici",
+    note: "Consultazione civica con cautele su fonti, importi e dati mancanti.",
+    rationale: "Indice pubblico dei contratti.",
+  },
+  {
+    path: "/pnrr",
+    status: "sperimentale",
+    title: "PNRR",
+    note: "Sezione in consolidamento: collegamenti e dati vanno verificati sulle fonti richiamate.",
+    rationale: "Pagina pubblica di monitoraggio PNRR.",
+  },
+  {
+    path: "/redazione",
+    status: "riservata",
+    title: "Area redazione",
+    note: "Percorso riservato: senza Clerk deve mostrare il fallback dedicato, non l'error boundary pubblico.",
+    rationale: "Area editoriale protetta esclusa dal sitemap pubblico.",
+  },
+  {
+    path: "/healthz.json",
+    status: "static-marker",
+    title: "Health check statico",
+    note: "Marker JSON statico della preview; non esegue verifiche su API, worker o dati live.",
+    rationale: "Marker statico pubblico per smoke test della fallback v0.",
+  },
+  {
+    path: "/fonti-dati",
+    status: "pubblicabile",
+    title: "Fonti dati",
+    note: "Indice delle fonti con limiti, frequenze e assunzioni pubbliche.",
+    rationale: "Pagina pubblica sulle fonti dati.",
+  },
+  {
+    path: "/metodologia",
+    status: "pubblicabile",
+    title: "Metodologia",
+    note: "Criteri e cautele per leggere indicatori e dati come segnali da verificare.",
+    rationale: "Pagina pubblica sulla metodologia.",
+  },
+  {
+    path: "/note-legali",
+    status: "pubblicabile",
+    title: "Note legali",
+    note: "Avvertenze e limiti d'uso da preservare senza modifiche sostanziali in questa issue.",
+    rationale: "Pagina pubblica delle note legali.",
+  },
+] as const satisfies readonly PublicV0RouteContract[];
+
+export const PUBLIC_V0_ROUTE_PATHS = PUBLIC_V0_ROUTE_CONTRACT.map(
+  (route) => route.path,
+);
+
+export function getPublicV0RouteContract(path: string) {
+  return PUBLIC_V0_ROUTE_CONTRACT.find((route) => route.path === path) ?? null;
+}
+
 export type PublicIndexableRoute = {
   /** Static router path that may be listed in the public sitemap. */
   path: `/${string}`;
   /** Short maintenance note for reviewers comparing Router.tsx and sitemap.xml. */
   rationale: string;
 };
-
-export const COUNCIL_SESSION_V0_DEMO_PATH =
-  "/convocazioni/demo-consiglio-comunale-v0" as const;
 
 /**
  * Static inventory for public, indexable routes.

@@ -5,6 +5,8 @@ import { describe, expect, it } from "vitest";
 import {
   PUBLIC_INDEXABLE_PATHS,
   PUBLIC_SITE_ORIGIN,
+  PUBLIC_V0_ROUTE_CONTRACT,
+  PUBLIC_V0_ROUTE_PATHS,
   toPublicUrl,
 } from "../data/publicRoutes";
 
@@ -45,5 +47,35 @@ describe("public route sitemap inventory", () => {
     expect(indexedPaths).not.toContain("/redazione");
     expect(readSitemapUrls()).not.toContain(`${PUBLIC_SITE_ORIGIN}/admin`);
     expect(readSitemapUrls()).not.toContain(`${PUBLIC_SITE_ORIGIN}/redazione`);
+  });
+});
+
+describe("v0 public route structural contract", () => {
+  it("covers the P0 launch-blocker routes with explicit readiness statuses", () => {
+    expect(PUBLIC_V0_ROUTE_PATHS).toEqual([
+      "/",
+      "/convocazioni",
+      "/convocazioni/demo-consiglio-comunale-v0",
+      "/contratti",
+      "/pnrr",
+      "/redazione",
+      "/healthz.json",
+      "/fonti-dati",
+      "/metodologia",
+      "/note-legali",
+    ]);
+
+    for (const route of PUBLIC_V0_ROUTE_CONTRACT) {
+      expect(route.title.trim()).not.toBe("");
+      expect(route.note.trim()).not.toBe("");
+      expect(route.rationale.trim()).not.toBe("");
+    }
+  });
+
+  it("keeps reserved and static-marker routes out of the public sitemap inventory", () => {
+    const indexedPaths = PUBLIC_INDEXABLE_PATHS.join("\n");
+
+    expect(indexedPaths).not.toContain("/redazione");
+    expect(indexedPaths).not.toContain("/healthz.json");
   });
 });
