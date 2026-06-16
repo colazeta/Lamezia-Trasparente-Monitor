@@ -5,6 +5,8 @@ import { describe, expect, it } from "vitest";
 import {
   PUBLIC_INDEXABLE_PATHS,
   PUBLIC_SITE_ORIGIN,
+  V0_PUBLIC_ROUTE_CONTRACT,
+  V0_PUBLIC_ROUTE_PATHS,
   toPublicUrl,
 } from "../data/publicRoutes";
 
@@ -45,5 +47,42 @@ describe("public route sitemap inventory", () => {
     expect(indexedPaths).not.toContain("/redazione");
     expect(readSitemapUrls()).not.toContain(`${PUBLIC_SITE_ORIGIN}/admin`);
     expect(readSitemapUrls()).not.toContain(`${PUBLIC_SITE_ORIGIN}/redazione`);
+  });
+});
+
+
+describe("v0 structural route contract", () => {
+  it("covers the minimum v0 route set with unique paths", () => {
+    expect(V0_PUBLIC_ROUTE_PATHS).toEqual([
+      "/",
+      "/convocazioni",
+      "/convocazioni/demo-consiglio-comunale-v0",
+      "/contratti",
+      "/pnrr",
+      "/redazione",
+      "/healthz.json",
+      "/fonti-dati",
+      "/metodologia",
+      "/note-legali",
+    ]);
+    expect(new Set(V0_PUBLIC_ROUTE_PATHS).size).toBe(
+      V0_PUBLIC_ROUTE_PATHS.length,
+    );
+  });
+
+  it("keeps critical v0 routes out of normal error-boundary flow", () => {
+    for (const route of V0_PUBLIC_ROUTE_CONTRACT) {
+      if (route.v0Critical) {
+        expect(route.mustNotErrorBoundary, route.path).toBe(true);
+      }
+      if (route.status === "pubblicabile") {
+        expect(route.requiresSourceAndLimits, route.path).toBe(true);
+      }
+    }
+  });
+
+  it("keeps reserved and marker routes outside the public sitemap", () => {
+    expect(PUBLIC_INDEXABLE_PATHS).not.toContain("/redazione");
+    expect(PUBLIC_INDEXABLE_PATHS).not.toContain("/healthz.json");
   });
 });
