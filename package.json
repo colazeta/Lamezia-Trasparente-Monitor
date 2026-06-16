@@ -9,7 +9,10 @@
     "typecheck:libs": "tsc --build",
     "typecheck": "pnpm run typecheck:libs && pnpm -r --filter \"./artifacts/**\" --filter \"./scripts\" --if-present run typecheck",
     "test": "pnpm -r --if-present run test",
-    "smoke:v0-static-fallback": "pnpm --filter @workspace/lamezia-trasparente run build && node scripts/check-v0-static-fallback.mjs"
+    "smoke:v0-static-fallback": "pnpm --filter @workspace/lamezia-trasparente run build && node scripts/check-v0-static-fallback.mjs",
+    "hook:pr-guard": "node scripts/hooks/pr-guard.mjs",
+    "hook:source-metadata": "node scripts/hooks/source-metadata-check.mjs",
+    "hook:zero-cost": "node scripts/hooks/zero-cost-policy-check.mjs"
   },
   "private": true,
   "devDependencies": {
