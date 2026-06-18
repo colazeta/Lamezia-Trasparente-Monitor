@@ -30,7 +30,7 @@ export function PrototypeNotice() {
 
         <dl className="grid gap-2 text-sm md:grid-cols-2 xl:grid-cols-3">
           {noticeFields.map(([label, value]) => (
-            <div key={label} className="rounded-lg border border-amber-200 bg-white/70 p-3">
+            <div key={label} className="rounded-lg border border-amber-200 bg-background/70 p-3">
               <dt className="font-semibold text-amber-950">{label}</dt>
               <dd className="mt-1 leading-5 text-amber-900">{value}</dd>
             </div>
