@@ -1,4 +1,5 @@
-import { defineConfig } from "vite";
+import { existsSync, readFileSync } from "node:fs";
+import { defineConfig, type Plugin } from "vite";
 import react from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
 import path from "path";
@@ -13,6 +14,62 @@ if (Number.isNaN(port) || port <= 0) {
 }
 
 const basePath = process.env.BASE_PATH ?? "/";
+const repoRoot = path.resolve(import.meta.dirname, "..", "..");
+const atlantePublicDataFiles = [
+  "data/processed/territorio/istat_sezioni_censimento_lamezia.geojson",
+  "data/processed/territorio/istat_sezioni_censimento_lamezia.metadata.json",
+];
+
+function atlantePublicDataPlugin(): Plugin {
+  return {
+    name: "atlante-public-data",
+    configureServer(server) {
+      server.middlewares.use((request, response, next) => {
+        const requestPath = decodeURIComponent(
+          request.url?.split("?")[0] ?? "",
+        );
+        const relativePath = atlantePublicDataFiles.find(
+          (candidate) => requestPath === `/${candidate}`,
+        );
+
+        if (!relativePath) {
+          next();
+          return;
+        }
+
+        const sourcePath = path.join(repoRoot, relativePath);
+        if (!existsSync(sourcePath)) {
+          next();
+          return;
+        }
+
+        response.statusCode = 200;
+        response.setHeader("Content-Type", contentTypeFor(relativePath));
+        response.end(readFileSync(sourcePath));
+      });
+    },
+    generateBundle() {
+      for (const relativePath of atlantePublicDataFiles) {
+        const sourcePath = path.join(repoRoot, relativePath);
+        if (!existsSync(sourcePath)) {
+          continue;
+        }
+
+        this.emitFile({
+          type: "asset",
+          fileName: relativePath,
+          source: readFileSync(sourcePath),
+        });
+      }
+    },
+  };
+}
+
+function contentTypeFor(filePath: string) {
+  return filePath.endsWith(".geojson")
+    ? "application/geo+json; charset=utf-8"
+    : "application/json; charset=utf-8";
+}
 
 export default defineConfig({
   base: basePath,
@@ -20,6 +77,7 @@ export default defineConfig({
     react(),
     tailwindcss(),
     runtimeErrorOverlay(),
+    atlantePublicDataPlugin(),
     ...(process.env.NODE_ENV !== "production" &&
     process.env.REPL_ID !== undefined
       ? [
