@@ -49,7 +49,7 @@ export interface NavSection {
 
 const RAW_NAV_GROUPS: NavSection[] = [
   {
-    label: "Trasparenza & Atti",
+    label: "Atti e trasparenza",
     items: [
       {
         href: "/albo",
@@ -60,7 +60,7 @@ const RAW_NAV_GROUPS: NavSection[] = [
       },
       {
         href: "/atti-fondamentali",
-        label: "Atti Fondamentali",
+        label: "Atti fondamentali",
         description: "Statuto, regolamenti e documenti che governano l'ente.",
         icon: ScrollText,
       },
@@ -72,14 +72,14 @@ const RAW_NAV_GROUPS: NavSection[] = [
       },
       {
         href: "/convocazioni",
-        label: "Sedute e ordini del giorno",
+        label: "Sedute",
         description:
           "Agenda di Consiglio e commissioni con avvisi, ordini del giorno e limiti della fonte consultata.",
         icon: CalendarClock,
       },
       {
         href: "/pareri",
-        label: "Pareri di Vigilanza",
+        label: "Pareri",
         description:
           "Controlli e pareri dei revisori e degli organi di vigilanza.",
         icon: ShieldCheck,
@@ -91,14 +91,14 @@ const RAW_NAV_GROUPS: NavSection[] = [
     items: [
       {
         href: "/legalita",
-        label: "Legalità e Trasparenza",
+        label: "Legalità",
         description:
           "Impegni, prevenzione della corruzione e obblighi di trasparenza.",
         icon: Scale,
       },
       {
         href: "/beni-confiscati",
-        label: "Beni Confiscati",
+        label: "Beni confiscati",
         description:
           "Patrimoni confiscati e percorsi di riuso sociale documentati con cautele e fonti.",
         icon: ShieldOff,
@@ -106,11 +106,11 @@ const RAW_NAV_GROUPS: NavSection[] = [
     ],
   },
   {
-    label: "Spesa & Contratti",
+    label: "Spesa e contratti",
     items: [
       {
         href: "/contratti",
-        label: "Contratti pubblici sotto osservazione",
+        label: "Contratti",
         description:
           "Gare, affidamenti e fornitori leggibili come schede documentali, senza promettere copertura completa.",
         icon: FileText,
@@ -124,13 +124,13 @@ const RAW_NAV_GROUPS: NavSection[] = [
       },
       {
         href: "/bandi",
-        label: "Bandi e Finanziamenti",
+        label: "Bandi",
         description: "Contributi, fondi e opportunità di finanziamento.",
         icon: HandCoins,
       },
       {
         href: "/pnrr",
-        label: "Progetti e informazioni PNRR",
+        label: "PNRR",
         description:
           "Schede PNRR e collegamenti disponibili, da leggere con stato di verifica e fonte richiamata.",
         icon: Landmark,
@@ -138,11 +138,11 @@ const RAW_NAV_GROUPS: NavSection[] = [
     ],
   },
   {
-    label: "Organi & Persone",
+    label: "Organi e persone",
     items: [
       {
         href: "/organi",
-        label: "Organi Istituzionali",
+        label: "Organi istituzionali",
         description: "Consiglio, Giunta e commissioni del Comune.",
         icon: Building2,
       },
@@ -193,7 +193,7 @@ const RAW_NAV_GROUPS: NavSection[] = [
       },
       {
         href: "/accesso-civico",
-        label: "Accesso Civico",
+        label: "Accesso civico",
         description: "Richiedi documenti e dati con l'accesso civico (FOIA).",
         icon: FileSearch,
       },
@@ -207,7 +207,7 @@ const RAW_NAV_GROUPS: NavSection[] = [
     ],
   },
   {
-    label: "Dati & Analisi",
+    label: "Dati e analisi",
     items: [
       {
         href: "/performance",
@@ -262,13 +262,13 @@ const RAW_NAV_GROUPS: NavSection[] = [
     items: [
       {
         href: "/feeds",
-        label: "Feed e Abbonamenti",
+        label: "Feed",
         description: "Iscriviti agli aggiornamenti via RSS ed email.",
         icon: Rss,
       },
       {
         href: "/sviluppatori",
-        label: "API e Sviluppatori",
+        label: "API",
         description: "Accedi ai dati tramite API pubbliche e documentazione.",
         icon: Code2,
       },

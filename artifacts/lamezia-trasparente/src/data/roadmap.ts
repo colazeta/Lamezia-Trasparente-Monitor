@@ -68,7 +68,7 @@ export const ROADMAP_MODULES: RoadmapModule[] = [
       "Non sostituisce l'Albo ufficiale; pubblicazioni, date, allegati e contenuti devono essere verificati sulla fonte primaria.",
     priority:
       "Mantenere tracciabilità dei rinvii, leggibilità mobile e cautele sui metadati parziali.",
-    hrefs: [{ href: "/albo", label: "Vai ad Albo Monitor" }],
+    hrefs: [{ href: "/albo", label: "Apri Albo" }],
   },
   {
     name: "PNRR Tracker",
@@ -82,7 +82,7 @@ export const ROADMAP_MODULES: RoadmapModule[] = [
     priority:
       "Rafforzare collegamenti documentali e note di qualità prima di ampliare filtri o sintesi.",
     hrefs: [
-      { href: "/pnrr", label: "Vai al PNRR Tracker" },
+      { href: "/pnrr", label: "Apri PNRR" },
       { href: "/fonti-dati", label: "Fonti dati" },
     ],
   },
@@ -97,7 +97,7 @@ export const ROADMAP_MODULES: RoadmapModule[] = [
       "Ricorrenze e pattern sono segnali di monitoraggio, non evidenze di irregolarità o responsabilità individuale.",
     priority:
       "Rendere più esplicite fonte, criterio di classificazione e significato prudente degli indicatori.",
-    hrefs: [{ href: "/incarichimetro", label: "Vai a Incarichimetro" }],
+    hrefs: [{ href: "/incarichimetro", label: "Apri Incarichimetro" }],
   },
   {
     name: "FOIA Machine / Accesso civico",
@@ -110,7 +110,7 @@ export const ROADMAP_MODULES: RoadmapModule[] = [
       "Non fornisce consulenza legale, non assicura esiti o tempi di risposta e non invia richieste in modo automatico.",
     priority:
       "Migliorare testi guida, esempi prudenti e collegamenti alle note metodologiche.",
-    hrefs: [{ href: "/accesso-civico", label: "Vai ad Accesso civico" }],
+    hrefs: [{ href: "/accesso-civico", label: "Apri Accesso civico" }],
   },
   {
     name: "Macchina comunale / capacità amministrativa",
@@ -171,7 +171,7 @@ export const ROADMAP_MODULES: RoadmapModule[] = [
       "La presenza di un bene non implica valutazioni su persone o responsabilità; dati e stato d'uso possono richiedere verifica sulla fonte.",
     priority:
       "Mantenere cautele testuali e aggiornare limiti quando cambiano fonti o qualità dei dati.",
-    hrefs: [{ href: "/beni-confiscati", label: "Vai a Beni confiscati" }],
+    hrefs: [{ href: "/beni-confiscati", label: "Apri Beni confiscati" }],
   },
   {
     name: "Open Data",
@@ -186,7 +186,7 @@ export const ROADMAP_MODULES: RoadmapModule[] = [
       "Chiarire formati, frequenza di aggiornamento, limiti e differenza tra dato ufficiale ed elaborazione civica.",
     hrefs: [
       { href: "/opendata", label: "Open Data" },
-      { href: "/sviluppatori", label: "API e sviluppatori" },
+      { href: "/sviluppatori", label: "API" },
     ],
   },
   {
