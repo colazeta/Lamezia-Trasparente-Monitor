@@ -1,0 +1,42 @@
+{
+  "id": "istat-sezioni-censimento-lamezia",
+  "publicLabel": "Dato ufficiale ISTAT per sezione censuaria",
+  "source": "ISTAT",
+  "sourceInstitution": "ISTAT",
+  "sourceDataset": {
+    "geometries": "Basi territoriali 2021 - Calabria, sezioni di censimento",
+    "variables": "Dati per sezioni di censimento - Censimento permanente della popolazione e delle abitazioni 2023"
+  },
+  "sourceYear": {
+    "geometries": 2021,
+    "variables": 2023
+  },
+  "sourcePages": {
+    "geometries": "https://www.istat.it/notizia/basi-territoriali-e-variabili-censuarie/",
+    "variables": "https://www.istat.it/notizia/dati-per-sezioni-di-censimento/",
+    "legalNotes": "https://www.istat.it/note-legali/"
+  },
+  "downloadUrls": {
+    "geometriesZip": "https://www.istat.it/storage/cartografia/basi_territoriali/2021/R18_21.zip",
+    "variablesZip": "https://esploradati.istat.it/databrowser/DWL/PERMPOP/SUBCOM/Dati_regionali_2023.zip"
+  },
+  "territorialLevel": "sezione di censimento",
+  "municipality": "Lamezia Terme",
+  "istatMunicipalCode": "079160",
+  "processingDate": null,
+  "verificationStatus": "source identified, ETL foundation prepared, not yet validated against official ISTAT census sections",
+  "frontendStatus": "metadata only, not wired into the public map",
+  "publicMapRole": "future primary census-section base after validation",
+  "rawFilesCommitted": false,
+  "processedOutputPath": "data/processed/territorio/istat_sezioni_censimento_lamezia.geojson",
+  "generatedMetadataPath": "data/processed/territorio/istat_sezioni_censimento_lamezia.metadata.json",
+  "metadataSchemaPath": "data/processed/territorio/istat_sezioni_censimento_lamezia.metadata.schema.json",
+  "knownLimits": [
+    "Raw ISTAT ZIPs are intentionally not committed because they are reproducible and heavy.",
+    "The ETL must be run against locally downloaded official ISTAT files before public use.",
+    "Fictitious sections 888888x and 999999x are excluded by default or reported separately.",
+    "Indicator labels must be checked against the ISTAT tracciato before frontend presentation.",
+    "This layer must not be confused with Zornade cadastral urban sections."
+  ],
+  "warning": "Non confondere con sezioni urbane catastali; non usare layer catastali per indicatori censuari ISTAT"
+}
