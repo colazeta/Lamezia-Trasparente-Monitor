@@ -84,61 +84,6 @@ async function assertReadableFile(filePath, label) {
   }
 }
 
-function assertHealthzMarker(healthz, healthzPath) {
-  if (!healthz || typeof healthz !== "object" || Array.isArray(healthz)) {
-    throw new Error(`Static healthz marker must be a JSON object: ${healthzPath}`);
-  }
-
-  if (healthz.status !== "static-fallback-available") {
-    throw new Error(
-      `Static healthz marker has unexpected status: ${String(healthz.status)}`,
-    );
-  }
-
-  if (healthz.scope !== "v0-public-fallback") {
-    throw new Error(
-      `Static healthz marker has unexpected scope: ${String(healthz.scope)}`,
-    );
-  }
-
-  const checks = healthz.checks;
-  if (!checks || typeof checks !== "object" || Array.isArray(checks)) {
-    throw new Error(`Static healthz marker checks must be a JSON object: ${healthzPath}`);
-  }
-
-  if (checks.staticFrontendReachability !== true) {
-    throw new Error(
-      "Static healthz marker must report checks.staticFrontendReachability as true.",
-    );
-  }
-
-  for (const checkName of EXPECTED_HEALTHZ_NOT_CHECKED) {
-    if (checks[checkName] !== "not-checked") {
-      throw new Error(
-        `Static healthz marker must report checks.${checkName} as "not-checked".`,
-      );
-    }
-  }
-
-  if (!Array.isArray(healthz.limitations) || healthz.limitations.length === 0) {
-    throw new Error("Static healthz marker limitations must be a non-empty array.");
-  }
-}
-
-async function readJsonFile(filePath, label) {
-  await assertReadableFile(filePath, label);
-  const raw = await readFile(filePath, "utf8");
-  try {
-    return JSON.parse(raw);
-  } catch (error) {
-    throw new Error(
-      `${label} is not valid JSON: ${filePath} (${
-        error instanceof Error ? error.message : String(error)
-      })`,
-    );
-  }
-}
-
 async function assertDirectory(dirPath, label) {
   let info;
   try {
@@ -247,10 +192,6 @@ async function main() {
   await assertReadableFile(healthzPath, "Static fallback healthz.json");
 
   const healthz = await readJsonFile(healthzPath, "Static fallback healthz.json");
-  assertHealthzMarker(healthz, healthzPath);
-
-  const healthzPath = path.join(absoluteDistDir, STATIC_HEALTHZ_MARKER);
-  const healthz = await readJsonFile(healthzPath, "Static healthz marker");
   assertHealthzMarker(healthz, healthzPath);
 
   const indexHtml = await readFile(indexPath, "utf8");
