@@ -4,7 +4,7 @@ Date: 2026-06-19
 
 Scope: post-merge verification on `main` for PR #585, electoral data foundation.
 
-Main commit checked: `db44604ff25cd3227e7469da29de9276346268b5`.
+Main commit checked: `295f8b3f3e64ba7aa2ebaa49dae2c51c8d1104f9`.
 
 ## Summary
 
