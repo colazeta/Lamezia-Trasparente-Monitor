@@ -36,9 +36,9 @@ describe("formatPublicTimeField", () => {
   });
 
   it("normalizes absent or invalid values to the existing placeholder", () => {
-    expect(formatPublicTimeField(null)).toBe("â€”");
-    expect(formatPublicTimeField(undefined)).toBe("â€”");
-    expect(formatPublicTimeField("non-una-data")).toBe("â€”");
-    expect(formatPublicTimeField("2026-02-31")).toBe("â€”");
+    expect(formatPublicTimeField(null)).toBe("—");
+    expect(formatPublicTimeField(undefined)).toBe("—");
+    expect(formatPublicTimeField("non-una-data")).toBe("—");
+    expect(formatPublicTimeField("2026-02-31")).toBe("—");
   });
 });
