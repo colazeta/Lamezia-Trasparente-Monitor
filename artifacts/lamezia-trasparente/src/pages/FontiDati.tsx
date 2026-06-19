@@ -7,6 +7,7 @@ import {
 } from "lucide-react";
 import { Link } from "wouter";
 import { PageMeta } from "@/components/seo/PageMeta";
+import { V0SectionLanding } from "@/components/launch/V0SectionLanding";
 import { DATA_QUALITY_MATRIX, QUALITY_LEGEND } from "@/data/dataQuality";
 
 import { DATA_SOURCES } from "@/data/dataSources";
@@ -57,26 +58,30 @@ export function FontiDati() {
         path="/fonti-dati"
       />
       <div className="container mx-auto max-w-5xl px-4 py-8 md:py-12">
-        <header className="mb-8 max-w-3xl">
-          <span className="eyebrow text-primary">
-            <Database className="h-3.5 w-3.5" aria-hidden="true" />
-            Trasparenza delle fonti
-          </span>
-          <h1 className="mt-2 text-3xl font-display font-bold tracking-tight md:text-4xl">
-            Fonti dati
-          </h1>
-          <p className="mt-3 text-lg text-muted-foreground">
-            Questa pagina documenta le principali fonti usate dal sito, il loro
-            stato informativo, la frequenza di aggiornamento attesa e i limiti
-            da considerare prima di usare i dati per analisi civiche. I
-            collegamenti possono essere puntuali, di consultazione, di fallback
-            o generici: la loro etichetta descrive il grado di specificità
-            documentato nel repository, non la completezza sostanziale degli
-            atti disponibili.
-          </p>
-        </header>
+        <V0SectionLanding
+          eyebrow="Trasparenza delle fonti"
+          icon={Database}
+          title="Fonti e limiti dei dati"
+          subtitle="Registro narrativo delle fonti pubbliche, delle frequenze attese, dei perimetri e dei limiti informativi usati dal portale civico."
+          stateLabel="Pubblicabile v0"
+          stateDescription="Sezione manuale/documentale: aiuta a capire cosa può e non può dimostrare ogni base informativa."
+          findItems={[
+            "Principali fonti censite e loro stato informativo.",
+            "Legenda su dati ufficiali, estratti, arricchiti e indicatori interpretativi.",
+            "Matrice prudente su completezza, aggiornamento e tracciabilità.",
+          ]}
+          missingItems={[
+            "Mappatura più granulare per ogni fonte e sincronizzatore.",
+            "Automazione completa degli aggiornamenti e dello storico tecnico.",
+            "Verifiche umane periodiche sui collegamenti di fonte.",
+          ]}
+          sourceLimit="Le fonti possono essere incomplete, non aggiornate o non ancora collegate. Questa pagina documenta il perimetro disponibile, non certifica completezza sostanziale."
+          cta={{ label: "Leggi fonti e limiti", href: "#contenuto-principale" }}
+          secondaryLink={{ label: "Sezione collegata", href: "/metodologia" }}
+        />
 
         <section
+          id="contenuto-principale"
           aria-labelledby="tipi-dato"
           className="mb-10 rounded-2xl border border-border bg-card p-6 shadow-sm"
         >

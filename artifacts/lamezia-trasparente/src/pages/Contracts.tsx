@@ -83,11 +83,13 @@ import {
 } from "@/components/ui/chart";
 import { InterventionsMap } from "@/components/InterventionsMap";
 import { FeedSubscribeButton } from "@/components/FeedSubscribeButton";
+import { V0SectionLanding } from "@/components/launch/V0SectionLanding";
 import { quartiereLabel } from "@/lib/gis";
 import { asApiList } from "@/lib/apiList";
 import { MapPin } from "lucide-react";
 
-const ANAC_PORTAL_URL = "https://dati.anticorruzione.it/superset/dashboard/appalti/";
+const ANAC_PORTAL_URL =
+  "https://dati.anticorruzione.it/superset/dashboard/appalti/";
 
 const CHART_COLORS = [
   "hsl(var(--chart-1))",
@@ -158,7 +160,17 @@ export function Contracts() {
     if (to) f.to = to;
     if (quartiere !== "all") f.quartiere = quartiere;
     return f;
-  }, [debouncedSearch, procedureType, acquisitionTool, themeId, minAmount, maxAmount, from, to, quartiere]);
+  }, [
+    debouncedSearch,
+    procedureType,
+    acquisitionTool,
+    themeId,
+    minAmount,
+    maxAmount,
+    from,
+    to,
+    quartiere,
+  ]);
 
   const { data: contractsData, isLoading } = useListContracts(filters);
   const contracts = asApiList<Contract>(contractsData);
@@ -215,35 +227,55 @@ export function Contracts() {
 
   return (
     <div className="container mx-auto px-4 py-8 md:py-12 max-w-6xl">
-      {/* Header */}
-      <div className="mb-6 flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
-        <div>
-          <span className="eyebrow text-primary">
-            <FileText className="h-3.5 w-3.5" />
-            Soldi pubblici sotto controllo
-          </span>
-          <h1 className="mt-2 text-3xl md:text-4xl font-display font-bold tracking-tight">
-            Appalti Pubblici
-          </h1>
-          <p className="mt-3 text-muted-foreground text-lg max-w-3xl">
-            Contratti e affidamenti pubblici della stazione appaltante{" "}
+      <V0SectionLanding
+        eyebrow="Contratti pubblici"
+        icon={FileText}
+        title="Contratti pubblici sotto osservazione"
+        subtitle={
+          <>
+            Contratti e affidamenti della stazione appaltante{" "}
             <span className="font-medium text-foreground">
               Comune di Lamezia Terme
             </span>{" "}
-            (CF 00301390795), basati sui dati ANAC. Monitoriamo dove vengono
-            spesi i soldi della comunità e chi esegue lavori, servizi e
-            forniture.
-          </p>
-        </div>
-        <FeedSubscribeButton
-          feedPath="/feeds/contratti.xml"
-          title="Appalti Pubblici — Lamezia Trasparente"
-          className="shrink-0"
-        />
-      </div>
+            (CF 00301390795), letti come documenti amministrativi da consultare
+            con fonti e limiti espliciti.
+          </>
+        }
+        stateLabel="Pubblicabile v0"
+        stateDescription="Sezione consultabile nella v0, con copertura e aggiornamenti da verificare sulle fonti."
+        findItems={[
+          "Elenco, filtri e mappe dei contratti disponibili nel perimetro locale.",
+          "Importi, oggetti, operatori economici e collegamenti documentali quando presenti.",
+          "Indicatori di lettura trattati come segnali documentali, non come conclusioni.",
+        ]}
+        missingItems={[
+          "Copertura esaustiva e sincronizzazione definitiva di tutte le fonti contrattuali.",
+          "Schede di dettaglio consolidate per ogni affidamento e aggiornamento storico completo.",
+          "Verifica puntuale dei dati mancanti sui documenti originari.",
+        ]}
+        sourceLimit={
+          <>
+            La base usa dati ANAC e collegamenti disponibili nel sistema. Dati
+            mancanti o incompleti indicano una necessità di verifica documentale
+            e non implicano irregolarità.
+          </>
+        }
+        cta={{ label: "Consulta i contratti", href: "#contratti-elenco" }}
+        secondaryLink={{ label: "Metodo", href: "/metodologia" }}
+        actions={
+          <FeedSubscribeButton
+            feedPath="/feeds/contratti.xml"
+            title="Appalti Pubblici — Lamezia Trasparente"
+            className="shrink-0"
+          />
+        }
+      />
 
       {/* Last updated + ANAC portal link */}
-      <div className="mb-8 flex flex-col gap-3 rounded-xl border border-card-border bg-muted/30 p-4 sm:flex-row sm:items-center sm:justify-between">
+      <div
+        id="contratti-elenco"
+        className="mb-8 flex flex-col gap-3 rounded-xl border border-card-border bg-muted/30 p-4 sm:flex-row sm:items-center sm:justify-between"
+      >
         <div className="flex items-center gap-2 text-sm text-muted-foreground">
           <RefreshCw className="h-4 w-4 text-brand" />
           <span>
@@ -252,9 +284,7 @@ export function Contracts() {
               {formatDateTime(feedStatus?.lastUpdatedAt)}
             </span>
             {feedStatus?.itemsTotal ? (
-              <>
-                {" "}· {feedStatus.itemsTotal} contratti monitorati
-              </>
+              <> · {feedStatus.itemsTotal} contratti monitorati</>
             ) : null}
           </span>
         </div>
@@ -285,16 +315,16 @@ export function Contracts() {
       </div>
 
       {/* In cosa spende il Comune — spesa per macrotemi */}
-      <SpendingByMacrotema
-        contracts={contracts}
-        loading={isLoading}
-      />
+      <SpendingByMacrotema contracts={contracts} loading={isLoading} />
 
       {/* Analytics */}
       <Analytics loading={analyticsLoading} analytics={analytics} />
 
       {/* Filters */}
-      <div data-tour="contracts-search" className="mt-10 mb-4 grid gap-3 rounded-xl border border-border bg-muted/40 p-4 shadow-sm md:grid-cols-2 lg:grid-cols-3">
+      <div
+        data-tour="contracts-search"
+        className="mt-10 mb-4 grid gap-3 rounded-xl border border-border bg-muted/40 p-4 shadow-sm md:grid-cols-2 lg:grid-cols-3"
+      >
         <div className="relative md:col-span-2 lg:col-span-1">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
@@ -307,27 +337,37 @@ export function Contracts() {
 
         <div className="w-full md:w-72">
           <Select value={themeId} onValueChange={setThemeId}>
-            <SelectTrigger className="h-11 bg-background" aria-label="Filtra per tema">
+            <SelectTrigger
+              className="h-11 bg-background"
+              aria-label="Filtra per tema"
+            >
               <div className="flex items-center gap-2 truncate">
                 <Filter className="h-4 w-4 text-muted-foreground shrink-0" />
                 <span className="truncate">
-                  {themeId === "all" ? "Tutti i Temi" : themes?.find(t => t.id.toString() === themeId)?.title || "Tema"}
+                  {themeId === "all"
+                    ? "Tutti i Temi"
+                    : themes?.find((t) => t.id.toString() === themeId)?.title ||
+                      "Tema"}
                 </span>
               </div>
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">Tutti i Temi</SelectItem>
-              {!themesLoading && themes.map((t) => (
-                <SelectItem key={t.id} value={t.id.toString()}>
-                  {t.title}
-                </SelectItem>
-              ))}
+              {!themesLoading &&
+                themes.map((t) => (
+                  <SelectItem key={t.id} value={t.id.toString()}>
+                    {t.title}
+                  </SelectItem>
+                ))}
             </SelectContent>
           </Select>
         </div>
 
         <Select value={quartiere} onValueChange={setQuartiere}>
-          <SelectTrigger className="h-11 bg-background" aria-label="Filtra per quartiere">
+          <SelectTrigger
+            className="h-11 bg-background"
+            aria-label="Filtra per quartiere"
+          >
             <div className="flex items-center gap-2 truncate">
               <MapPin className="h-4 w-4 text-muted-foreground shrink-0" />
               <span className="truncate">
@@ -346,7 +386,10 @@ export function Contracts() {
         </Select>
 
         <Select value={procedureType} onValueChange={setProcedureType}>
-          <SelectTrigger className="h-11 bg-background" aria-label="Filtra per procedura">
+          <SelectTrigger
+            className="h-11 bg-background"
+            aria-label="Filtra per procedura"
+          >
             <div className="flex items-center gap-2 truncate">
               <Gavel className="h-4 w-4 text-muted-foreground shrink-0" />
               <span className="truncate">
@@ -365,7 +408,10 @@ export function Contracts() {
         </Select>
 
         <Select value={acquisitionTool} onValueChange={setAcquisitionTool}>
-          <SelectTrigger className="h-11 bg-background" aria-label="Filtra per strumento">
+          <SelectTrigger
+            className="h-11 bg-background"
+            aria-label="Filtra per strumento"
+          >
             <div className="flex items-center gap-2 truncate">
               <ShoppingCart className="h-4 w-4 text-muted-foreground shrink-0" />
               <span className="truncate">
@@ -483,8 +529,8 @@ export function Contracts() {
         <p className="mb-3 text-xs text-muted-foreground">
           Solo gli appalti con un luogo riconoscibile (lavori, opere, interventi
           su strade ed edifici) compaiono sulla mappa: la maggior parte degli
-          atti amministrativi non indica una posizione fisica. I punti tratteggiati
-          in ambra hanno una posizione approssimata, da verificare.
+          atti amministrativi non indica una posizione fisica. I punti
+          tratteggiati in ambra hanno una posizione approssimata, da verificare.
         </p>
         {isLoading ? (
           <Skeleton className="h-[420px] w-full rounded-xl" />
@@ -505,7 +551,10 @@ export function Contracts() {
       </div>
 
       {/* Table */}
-      <div data-tour="contracts-list" className="border border-border rounded-xl bg-card overflow-hidden shadow-sm">
+      <div
+        data-tour="contracts-list"
+        className="border border-border rounded-xl bg-card overflow-hidden shadow-sm"
+      >
         <div className="overflow-x-auto">
           <Table>
             <TableHeader className="bg-muted/40">
@@ -591,7 +640,9 @@ export function Contracts() {
                     </TableCell>
                     <TableCell className="text-right">
                       <div className="font-display font-bold tabular-nums whitespace-nowrap text-foreground">
-                        {contract.amount > 0 ? formatEuro(contract.amount) : "—"}
+                        {contract.amount > 0
+                          ? formatEuro(contract.amount)
+                          : "—"}
                       </div>
                       <Badge
                         variant="outline"
@@ -697,20 +748,28 @@ function Analytics({
     value: { label: "Importo", color: "hsl(var(--chart-2))" },
   };
 
-  const procedureData = asApiList<NonNullable<ContractAnalytics["byProcedure"]>[number]>(analytics.byProcedure).map((d, i) => ({
+  const procedureData = asApiList<
+    NonNullable<ContractAnalytics["byProcedure"]>[number]
+  >(analytics.byProcedure).map((d, i) => ({
     ...d,
     fill: CHART_COLORS[i % CHART_COLORS.length],
   }));
-  const toolData = asApiList<NonNullable<ContractAnalytics["byAcquisitionTool"]>[number]>(analytics.byAcquisitionTool).map((d, i) => ({
+  const toolData = asApiList<
+    NonNullable<ContractAnalytics["byAcquisitionTool"]>[number]
+  >(analytics.byAcquisitionTool).map((d, i) => ({
     ...d,
     fill: CHART_COLORS[i % CHART_COLORS.length],
   }));
-  const beneficiaryData = asApiList<NonNullable<ContractAnalytics["topBeneficiaries"]>[number]>(analytics.topBeneficiaries).map((d) => ({
+  const beneficiaryData = asApiList<
+    NonNullable<ContractAnalytics["topBeneficiaries"]>[number]
+  >(analytics.topBeneficiaries).map((d) => ({
     name: d.name.length > 24 ? `${d.name.slice(0, 22)}…` : d.name,
     fullName: d.name,
     value: d.value,
   }));
-  const timeData = asApiList<NonNullable<ContractAnalytics["amountOverTime"]>[number]>(analytics.amountOverTime).map((d) => ({
+  const timeData = asApiList<
+    NonNullable<ContractAnalytics["amountOverTime"]>[number]
+  >(analytics.amountOverTime).map((d) => ({
     period: d.period,
     amount: d.amount,
     count: d.count,
@@ -834,10 +893,7 @@ function Analytics({
 
         {/* Distribution by procedure */}
         <ChartCard title="Distribuzione per procedura" icon={Gavel}>
-          <ChartContainer
-            config={procedureConfig}
-            className="h-[280px] w-full"
-          >
+          <ChartContainer config={procedureConfig} className="h-[280px] w-full">
             <PieChart>
               <ChartTooltip content={<ChartTooltipContent />} />
               <Pie
@@ -954,7 +1010,9 @@ function StatCard({
       )}
       <div
         className={`mb-4 flex h-9 w-9 items-center justify-center rounded-lg ${
-          highlight ? "bg-brand/15 text-brand" : "bg-muted text-muted-foreground"
+          highlight
+            ? "bg-brand/15 text-brand"
+            : "bg-muted text-muted-foreground"
         }`}
       >
         <Icon className="h-5 w-5" />
@@ -1250,7 +1308,9 @@ function ContractDetail({
                 <MetaRow
                   icon={Landmark}
                   label="Stazione appaltante"
-                  value={contract.stazioneAppaltante ?? "Comune di Lamezia Terme"}
+                  value={
+                    contract.stazioneAppaltante ?? "Comune di Lamezia Terme"
+                  }
                 />
                 <MetaRow
                   icon={Calendar}
