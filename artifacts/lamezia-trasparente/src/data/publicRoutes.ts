@@ -192,6 +192,11 @@ export const PUBLIC_INDEXABLE_ROUTES = [
     rationale: "Timeline pubblica su legalità e memoria civica.",
   },
   {
+    path: "/legalita/trame-festival",
+    rationale:
+      "Raccolta pubblica selettiva di idee e analisi da Trame Festival, solo dopo verifica redazionale.",
+  },
+  {
     path: "/legalita",
     rationale: "Pagina pubblica su legalità e beni confiscati.",
   },

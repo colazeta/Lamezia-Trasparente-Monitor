@@ -66,6 +66,7 @@ const ALL_ITEMS: NavItem[] = [
   { href: "/convocazioni", label: "Convocazioni", icon: CalendarClock, group: "Trasparenza & Atti", keywords: "sedute agenda calendario" },
   { href: "/pareri", label: "Pareri di Vigilanza", icon: ShieldCheck, group: "Trasparenza & Atti", keywords: "revisori controllo" },
   { href: "/legalita", label: "Legalità e Trasparenza", icon: Scale, group: "Trasparenza & Atti", keywords: "anticorruzione trasparenza" },
+  { href: "/legalita/trame-festival", label: "Trame - Festival", icon: BookOpenCheck, group: "Trasparenza & Atti", keywords: "trame antimafia festival legalita lamezia idee proposte" },
 
   { href: "/contratti", label: "Contratti & Appalti", icon: FileText, group: "Spesa & Contratti", keywords: "gare fornitori cig" },
   { href: "/incarichimetro", label: "Incarichimetro", icon: ClipboardList, group: "Spesa & Contratti", keywords: "incarichi consulenze ricorrenza rotazione operatori beneficiari cig cup" },

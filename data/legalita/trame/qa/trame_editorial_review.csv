@@ -1,0 +1,5 @@
+review_id,review_date,item_type,item_id,review_area,decision,review_status,notes
+qa_2026_06_19_001,2026-06-19,source,trame_official_site,source_reliability,use_as_primary,open,"Sito ufficiale usato per edizione, programma e playlist incorporata."
+qa_2026_06_19_002,2026-06-19,playlist,PLC9oIvsXy4uFd-aXGDR8zMfYsSdBMh7q7,source_reliability,use_for_internal_census,needs_human_review,"Playlist incorporata nel sito ufficiale; durata e transcript da verificare per singolo video."
+qa_2026_06_19_003,2026-06-19,public_cards,all,publication_safety,do_not_publish_without_approval,open,"Nessuna scheda pubblica approvata nella prima materializzazione."
+qa_2026_06_19_004,2026-06-19,transcripts,all,copyright_and_verification,probe_only,open,"Non scaricare o pubblicare trascrizioni integrali senza verifica di disponibilita', limiti d'uso e revisione umana."

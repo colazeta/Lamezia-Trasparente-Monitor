@@ -14,6 +14,10 @@
     "hook:pr-guard": "node scripts/hooks/pr-guard.mjs",
     "hook:source-metadata": "node scripts/hooks/source-metadata-check.mjs",
     "hook:zero-cost": "node scripts/hooks/zero-cost-policy-check.mjs",
+    "trame:discover": "node scripts/legalita/trame/discover_trame_program.mjs && node scripts/legalita/trame/discover_trame_videos.mjs",
+    "trame:transcripts:probe": "node scripts/legalita/trame/fetch_trame_transcripts.mjs",
+    "trame:cards": "node scripts/legalita/trame/extract_trame_public_cards.mjs",
+    "trame:qa": "node scripts/legalita/trame/qa_trame_section.mjs",
     "v0:readiness": "node scripts/check-v0-readiness.mjs"
   },
   "private": true,
