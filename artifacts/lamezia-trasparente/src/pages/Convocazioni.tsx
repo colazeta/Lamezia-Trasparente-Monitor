@@ -13,7 +13,6 @@ import {
   Vote,
   Link2,
   ClipboardList,
-  Info,
 } from "lucide-react";
 import { format } from "date-fns";
 import { it } from "date-fns/locale";
@@ -267,47 +266,6 @@ export function Convocazioni() {
         secondaryLink={{ label: "Fonti e limiti", href: "/fonti-dati" }}
       />
 
-      <section
-        id="convocazioni-elenco"
-        className="mb-8 rounded-2xl border border-brand/25 bg-brand/5 p-4 md:p-5"
-        aria-labelledby="convocazioni-v0-path-title"
-      >
-        <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
-          <div className="max-w-3xl">
-            <span className="eyebrow text-primary">
-              <Info className="h-3.5 w-3.5" aria-hidden="true" />
-              Percorso pubblico minimo
-            </span>
-            <h2
-              id="convocazioni-v0-path-title"
-              className="mt-2 font-display text-xl font-bold tracking-tight"
-            >
-              Home → Convocazioni → scheda seduta → fonti e limiti
-            </h2>
-            <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-              Questa pagina è il primo punto di consultazione pubblicabile. I
-              badge “da verificare” segnalano campi non presenti nella base
-              locale o da controllare sulla fonte originaria, senza implicare
-              irregolarità o completezza della documentazione amministrativa.
-            </p>
-          </div>
-          <div className="flex flex-col items-start gap-2 sm:flex-row md:flex-col md:items-end">
-            <Link
-              href={`/convocazioni/${councilSessionV0DemoFixture.id}`}
-              className="inline-flex text-sm font-semibold text-primary underline-offset-4 hover:underline"
-            >
-              Apri scheda demo
-            </Link>
-            <Link
-              href="/fonti-dati"
-              className="inline-flex text-sm font-semibold text-muted-foreground underline-offset-4 hover:text-primary hover:underline"
-            >
-              Leggi fonti e limiti
-            </Link>
-          </div>
-        </div>
-      </section>
-
       {shouldShowDemoFallback && (
         <div className="mb-8 space-y-4">
           <CouncilSessionV0DemoNotice compact />
@@ -316,6 +274,7 @@ export function Convocazioni() {
       )}
 
       <section
+        id="convocazioni-elenco"
         className="mb-8 rounded-2xl border border-border bg-card/70 p-4 md:p-5"
         aria-labelledby="convocazioni-dashboard-title"
       >

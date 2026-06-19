@@ -3,7 +3,6 @@ import { Navbar } from "./Navbar";
 import { SectionHeader } from "./SectionHeader";
 import { Footer } from "./Footer";
 import { MigrationStatusBanner } from "@/components/admin/MigrationStatusBanner";
-import { PrototypeNotice } from "@/components/civic/PrototypeNotice";
 import { CivicHelperFAB } from "@/components/helper/CivicHelperFAB";
 import { CivicAssistant } from "@/components/helper/CivicAssistant";
 import { CivicWelcome } from "@/components/helper/CivicWelcome";
@@ -18,10 +17,7 @@ export function MainLayout({ children }: MainLayoutProps) {
       <Navbar />
       <SectionHeader />
       <MigrationStatusBanner />
-      <main className="flex-1 bg-background">
-        <PrototypeNotice />
-        {children}
-      </main>
+      <main className="flex-1 bg-background">{children}</main>
       <Footer />
       <CivicHelperFAB />
       <CivicAssistant />
