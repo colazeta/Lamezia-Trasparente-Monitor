@@ -240,6 +240,11 @@ export const PUBLIC_INDEXABLE_ROUTES = [
     rationale: "Pagina pubblica delle segnalazioni civiche.",
   },
   { path: "/statistiche", rationale: "Pagina pubblica delle statistiche." },
+  {
+    path: "/atlante-territoriale",
+    rationale:
+      "Mappa pubblica per sezioni censuarie ISTAT con metadati e limiti visibili.",
+  },
   { path: "/fonti-dati", rationale: "Pagina pubblica sulle fonti dati." },
   {
     path: "/stato-monitoraggio",

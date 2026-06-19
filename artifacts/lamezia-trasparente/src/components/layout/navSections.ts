@@ -26,6 +26,7 @@ import {
   BookOpen,
   CircleDotDashed,
   Scale3D,
+  MapPinned,
 } from "lucide-react";
 import {
   getPublicV0RouteContract,
@@ -239,6 +240,13 @@ const RAW_NAV_GROUPS: NavSection[] = [
         label: "Statistiche",
         description: "Numeri e grafici che sintetizzano i dati pubblici.",
         icon: BarChart3,
+      },
+      {
+        href: "/atlante-territoriale",
+        label: "Atlante territoriale",
+        description:
+          "Mappa di Lamezia Terme per sezioni censuarie ISTAT, con fonti e limiti sempre visibili.",
+        icon: MapPinned,
       },
       {
         href: "/opendata",
