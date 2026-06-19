@@ -23,7 +23,7 @@ import {
   Calendar,
   HelpCircle,
 } from "lucide-react";
-import { NAV_GROUPS } from "@/components/layout/navSections";
+import { NAV_GROUPS, isNavItemUnavailable } from "@/components/layout/navSections";
 import { useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
@@ -357,13 +357,9 @@ function BlockThemesGrid({ content }: { content: Record<string, unknown> }) {
                     color: "text-primary",
                     bg: "bg-primary/10",
                   };
-                  return (
-                    <Link
-                      key={item.href}
-                      href={item.href}
-                      className="group flex flex-col items-center gap-3 rounded-xl border border-border bg-card p-4 text-center transition-all hover-elevate hover:border-primary/30 hover:shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-                      aria-label={item.label}
-                    >
+                  const unavailable = isNavItemUnavailable(item);
+                  const cardContent = (
+                    <>
                       <div
                         className={`rounded-xl p-3 ${colors.bg} transition-transform group-hover:scale-105`}
                       >
@@ -379,7 +375,31 @@ function BlockThemesGrid({ content }: { content: Record<string, unknown> }) {
                         <div className="mt-0.5 hidden text-[11px] leading-snug text-muted-foreground lg:block">
                           {item.description}
                         </div>
+                        {unavailable && item.v0StatusLabel ? (
+                          <div className="mt-2 inline-flex rounded-full border border-border bg-background/70 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
+                            {item.v0StatusLabel}
+                          </div>
+                        ) : null}
                       </div>
+                    </>
+                  );
+                  return unavailable ? (
+                    <div
+                      key={item.href}
+                      className="group flex flex-col items-center gap-3 rounded-xl border border-dashed border-border bg-muted/40 p-4 text-center opacity-75 grayscale cursor-not-allowed"
+                      aria-disabled="true"
+                      aria-label={`${item.label}: ${item.v0StatusLabel ?? "in preparazione"}`}
+                    >
+                      {cardContent}
+                    </div>
+                  ) : (
+                    <Link
+                      key={item.href}
+                      href={item.href}
+                      className="group flex flex-col items-center gap-3 rounded-xl border border-border bg-card p-4 text-center transition-all hover-elevate hover:border-primary/30 hover:shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                      aria-label={item.label}
+                    >
+                      {cardContent}
                     </Link>
                   );
                 })}
@@ -696,14 +716,24 @@ function StaticHomeLayout() {
           </p>
 
           <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
-            <Link href="/convocazioni" className="w-full sm:w-auto">
+            <Link href="/domande" className="w-full sm:w-auto">
               <Button
                 variant="brand"
                 size="lg"
                 className="w-full text-base h-12 px-7 font-bold"
               >
-                Consulta le sedute{" "}
+                Esplora le domande{" "}
                 <ArrowRight className="ml-1 h-4 w-4" aria-hidden="true" />
+              </Button>
+            </Link>
+            <Link href="/convocazioni" className="w-full sm:w-auto">
+              <Button
+                variant="outline"
+                size="lg"
+                className="w-full text-base h-12 px-7 font-bold bg-white/5 text-white border-white/25 hover:bg-white/10"
+              >
+                <Calendar className="mr-1 h-4 w-4" aria-hidden="true" />
+                Consulta le sedute
               </Button>
             </Link>
             <Link href="/fonti-dati" className="w-full sm:w-auto">
@@ -714,16 +744,6 @@ function StaticHomeLayout() {
               >
                 <Info className="mr-1 h-4 w-4" aria-hidden="true" />
                 Capisci fonti e limiti
-              </Button>
-            </Link>
-            <Link href="/segnalazioni" className="w-full sm:w-auto">
-              <Button
-                variant="outline"
-                size="lg"
-                className="w-full text-base h-12 px-7 font-bold bg-white/5 text-white border-white/25 hover:bg-white/10"
-              >
-                <Megaphone className="mr-1 h-4 w-4" aria-hidden="true" />
-                Segnala un dato da verificare
               </Button>
             </Link>
           </div>
@@ -885,14 +905,10 @@ function StaticHomeLayout() {
               : featured.map((q) => <QuestionCard key={q.id} question={q} />)}
           </div>
 
-          <div className="mt-10 flex justify-center">
-            <Link href="/domande">
-              <Button variant="brand" size="lg" className="h-12 px-7 font-bold">
-                Esplora tutte le domande{" "}
-                <ArrowRight className="ml-1 h-4 w-4" aria-hidden="true" />
-              </Button>
-            </Link>
-          </div>
+          <p className="mt-10 text-center text-sm text-muted-foreground">
+            Il percorso completo delle domande civiche è ora raggiungibile dal
+            banner principale della pagina.
+          </p>
         </div>
       </section>
 

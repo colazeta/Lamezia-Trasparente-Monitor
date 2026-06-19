@@ -13,16 +13,20 @@ import {
 import ReactMarkdown from "react-markdown";
 import { useCivicHelper } from "@/components/helper/CivicHelperContext";
 import { Button } from "@/components/ui/button";
-import { NAV_GROUPS } from "@/components/layout/navSections";
+import { NAV_GROUPS, isNavItemUnavailable } from "@/components/layout/navSections";
 import { PageMeta } from "@/components/seo/PageMeta";
 
-function iconForRoute(route: string): React.ElementType {
+function navItemForRoute(route: string) {
   for (const group of NAV_GROUPS) {
     for (const item of group.items) {
-      if (item.href === route) return item.icon;
+      if (item.href === route) return item;
     }
   }
-  return BookOpen;
+  return null;
+}
+
+function iconForRoute(route: string): React.ElementType {
+  return navItemForRoute(route)?.icon ?? BookOpen;
 }
 
 /** Returns true when the route is handled by the SPA router.
@@ -137,9 +141,14 @@ export function Guida() {
                   {sections.map((section) => {
                     const Icon = iconForRoute(section.route);
                     const appRoute = isAppRoute(section.route);
+                    const navItem = navItemForRoute(section.route);
+                    const unavailable = navItem
+                      ? isNavItemUnavailable(navItem)
+                      : false;
                     const visited = isSectionVisited(section.route);
-                    const cardClass =
-                      "group flex items-start gap-3.5 rounded-xl border border-border bg-card px-4 py-4 hover-elevate transition-all";
+                    const cardClass = unavailable
+                      ? "group flex items-start gap-3.5 rounded-xl border border-dashed border-border bg-muted/40 px-4 py-4 opacity-75 grayscale cursor-not-allowed"
+                      : "group flex items-start gap-3.5 rounded-xl border border-border bg-card px-4 py-4 hover-elevate transition-all";
                     const inner = (
                       <>
                         <div
@@ -161,12 +170,17 @@ export function Guida() {
                               {section.title}
                             </p>
                             <div className="flex items-center gap-1.5 shrink-0">
-                              {visited && (
+                              {unavailable && navItem?.v0StatusLabel ? (
+                                <span className="text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
+                                  {navItem.v0StatusLabel}
+                                </span>
+                              ) : null}
+                              {visited && !unavailable && (
                                 <span className="text-[10px] font-semibold uppercase tracking-wide text-primary">
                                   Esplorata
                                 </span>
                               )}
-                              {appRoute ? (
+                              {unavailable ? null : appRoute ? (
                                 <ChevronRight
                                   className="h-3.5 w-3.5 text-muted-foreground group-hover:text-foreground transition-colors"
                                   aria-hidden="true"
@@ -185,6 +199,17 @@ export function Guida() {
                         </div>
                       </>
                     );
+                    if (unavailable) {
+                      return (
+                        <div
+                          key={section.id}
+                          className={cardClass}
+                          aria-disabled="true"
+                        >
+                          {inner}
+                        </div>
+                      );
+                    }
                     return appRoute ? (
                       <Link
                         key={section.id}
