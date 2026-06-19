@@ -99,7 +99,10 @@ export function Navbar() {
                 <DropdownMenuTrigger className={linkClass(false)}>
                   <FileSearch className="h-4 w-4" aria-hidden="true" />
                   Argomenti
-                  <ChevronDown className="h-3.5 w-3.5 opacity-70" aria-hidden="true" />
+                  <ChevronDown
+                    className="h-3.5 w-3.5 opacity-70"
+                    aria-hidden="true"
+                  />
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="start" className="w-64">
                   {topics.map((topic) => {
@@ -110,7 +113,10 @@ export function Navbar() {
                           href={`/domande?topic=${encodeURIComponent(topic)}`}
                           className="flex cursor-pointer items-center gap-2"
                         >
-                          <Icon className="h-4 w-4 text-primary" aria-hidden="true" />
+                          <Icon
+                            className="h-4 w-4 text-primary"
+                            aria-hidden="true"
+                          />
                           {topic}
                         </Link>
                       </DropdownMenuItem>
@@ -125,7 +131,10 @@ export function Navbar() {
               <DropdownMenuTrigger className={linkClass(sezioniActive)}>
                 <FileText className="h-4 w-4" aria-hidden="true" />
                 Sezioni
-                <ChevronDown className="h-3.5 w-3.5 opacity-70" aria-hidden="true" />
+                <ChevronDown
+                  className="h-3.5 w-3.5 opacity-70"
+                  aria-hidden="true"
+                />
                 {sezioniActive && (
                   <span className="absolute inset-x-2.5 -bottom-px h-0.5 rounded-full bg-primary" />
                 )}
@@ -153,10 +162,20 @@ export function Navbar() {
                             <Icon
                               className={cn(
                                 "h-4 w-4",
-                                active ? "text-primary" : "text-muted-foreground",
+                                active
+                                  ? "text-primary"
+                                  : "text-muted-foreground",
                               )}
                             />
-                            {item.label}
+                            <span className="flex min-w-0 flex-1 items-center justify-between gap-2">
+                              <span className="truncate">{item.label}</span>
+                              {item.v0StatusLabel &&
+                              item.v0Status !== "pubblicabile" ? (
+                                <span className="rounded-full border border-border bg-muted px-1.5 py-0.5 text-[9px] font-semibold uppercase tracking-wide text-muted-foreground">
+                                  {item.v0StatusLabel}
+                                </span>
+                              ) : null}
+                            </span>
                           </Link>
                         </DropdownMenuItem>
                       );
@@ -179,7 +198,11 @@ export function Navbar() {
               onClick={() => setIsOpen(!isOpen)}
               aria-label="Menu"
             >
-              {isOpen ? <X className="h-5 w-5" aria-hidden="true" /> : <Menu className="h-5 w-5" aria-hidden="true" />}
+              {isOpen ? (
+                <X className="h-5 w-5" aria-hidden="true" />
+              ) : (
+                <Menu className="h-5 w-5" aria-hidden="true" />
+              )}
             </Button>
           </div>
         </div>
@@ -259,6 +282,11 @@ export function Navbar() {
                         icon={item.icon}
                         active={isActive(item.href)}
                         onClick={() => setIsOpen(false)}
+                        statusLabel={
+                          item.v0Status !== "pubblicabile"
+                            ? item.v0StatusLabel
+                            : undefined
+                        }
                       />
                     ))}
                   </div>
@@ -278,12 +306,14 @@ function MobileLink({
   icon: Icon,
   active,
   onClick,
+  statusLabel,
 }: {
   href: string;
   label: string;
   icon: React.ElementType;
   active: boolean;
   onClick: () => void;
+  statusLabel?: string;
 }) {
   return (
     <Link
@@ -297,7 +327,14 @@ function MobileLink({
       )}
     >
       <Icon className="h-5 w-5 shrink-0" aria-hidden="true" />
-      {label}
+      <span className="min-w-0 flex-1">
+        <span className="block truncate">{label}</span>
+        {statusLabel ? (
+          <span className="mt-1 block text-[10px] font-medium uppercase tracking-wide text-muted-foreground">
+            {statusLabel}
+          </span>
+        ) : null}
+      </span>
     </Link>
   );
 }

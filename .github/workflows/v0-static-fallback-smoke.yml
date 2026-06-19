@@ -2,6 +2,13 @@ name: v0 static fallback smoke
 
 on:
   workflow_dispatch:
+  pull_request:
+    paths:
+      - '.github/workflows/v0-static-fallback-smoke.yml'
+      - 'artifacts/lamezia-trasparente/**'
+      - 'package.json'
+      - 'pnpm-lock.yaml'
+      - 'pnpm-workspace.yaml'
 
 permissions:
   contents: read

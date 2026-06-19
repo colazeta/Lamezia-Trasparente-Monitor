@@ -1,0 +1,15 @@
+{
+  "status": "static-fallback-available",
+  "scope": "v0-public-fallback",
+  "checks": {
+    "staticFrontendReachability": true,
+    "api": "not-checked",
+    "worker": "not-checked",
+    "liveData": "not-checked",
+    "sourceCompleteness": "not-checked"
+  },
+  "limitations": [
+    "This marker only indicates that the static frontend fallback file can be reached.",
+    "It does not verify API, worker, live data, source completeness, SLA, or compliance posture."
+  ]
+}

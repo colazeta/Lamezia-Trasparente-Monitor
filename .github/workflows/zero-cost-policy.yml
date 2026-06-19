@@ -1,0 +1,32 @@
+name: zero-cost automation policy
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - '.github/workflows/**'
+      - 'scripts/hooks/zero-cost-policy-check.mjs'
+      - 'docs/automation/zero-cost-hooks.md'
+      - 'AGENTS.md'
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/**'
+      - 'scripts/hooks/zero-cost-policy-check.mjs'
+
+permissions:
+  contents: read
+
+jobs:
+  zero-cost-policy:
+    name: Check zero-cost workflow policy
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Check workflow runner policy
+        run: node scripts/hooks/zero-cost-policy-check.mjs

@@ -11,7 +11,7 @@ import {
   MACROTEMA_KEYS,
   type MacrotemaKey,
 } from "@workspace/db";
-import { eq, desc, sql } from "drizzle-orm";
+import { eq, desc, isNotNull, sql } from "drizzle-orm";
 
 const router: IRouter = Router();
 
@@ -132,10 +132,11 @@ router.get("/stats/activity", async (_req, res) => {
       .select({
         id: reportsTable.id,
         title: reportsTable.title,
-        date: reportsTable.createdAt,
+        date: reportsTable.publishedAt,
       })
       .from(reportsTable)
-      .orderBy(desc(reportsTable.createdAt))
+      .where(isNotNull(reportsTable.publishedAt))
+      .orderBy(desc(reportsTable.publishedAt))
       .limit(10),
   ]);
 
@@ -163,13 +164,15 @@ router.get("/stats/activity", async (_req, res) => {
         date: a.date as Date,
         themeId: null as number | null,
       })),
-    ...reports.map((r) => ({
-      id: `report-${r.id}`,
-      type: "report" as const,
-      title: r.title,
-      date: r.date,
-      themeId: null,
-    })),
+    ...reports
+      .filter((r) => r.date !== null)
+      .map((r) => ({
+        id: `report-${r.id}`,
+        type: "report" as const,
+        title: r.title,
+        date: r.date as Date,
+        themeId: null,
+      })),
   ];
 
   items.sort((a, b) => b.date.getTime() - a.date.getTime());
