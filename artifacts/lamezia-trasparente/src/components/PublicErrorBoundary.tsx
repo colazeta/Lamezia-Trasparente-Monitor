@@ -10,6 +10,20 @@ type PublicErrorBoundaryState = {
   hasError: boolean;
 };
 
+function publicHomePath() {
+  const basePath = import.meta.env.BASE_URL.trim();
+
+  if (!basePath || basePath === "/") {
+    return "/";
+  }
+
+  const withLeadingSlash = basePath.startsWith("/")
+    ? basePath
+    : `/${basePath}`;
+
+  return withLeadingSlash.endsWith("/") ? withLeadingSlash : `${withLeadingSlash}/`;
+}
+
 export class PublicErrorBoundary extends Component<
   PublicErrorBoundaryProps,
   PublicErrorBoundaryState
@@ -45,7 +59,7 @@ export class PublicErrorBoundary extends Component<
               className="mt-6"
               onClick={() => {
                 this.setState({ hasError: false });
-                window.location.assign("/");
+                window.location.assign(publicHomePath());
               }}
             >
               Torna alla homepage
