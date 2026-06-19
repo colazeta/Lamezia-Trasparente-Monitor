@@ -25,15 +25,20 @@ describe("formatPublicTimeField", () => {
   });
 
   it("renders timestamps with an explicit public timestamp pattern", () => {
-    expect(
-      formatPublicTimeField("2026-06-08T06:20:00.000Z", "dd MMM yyyy, HH:mm"),
-    ).toBe("08 giu 2026, 06:20");
+    withTimezone("UTC", () => {
+      expect(
+        formatPublicTimeField(
+          "2026-06-08T06:20:00.000Z",
+          "dd MMM yyyy, HH:mm",
+        ),
+      ).toBe("08 giu 2026, 06:20");
+    });
   });
 
   it("normalizes absent or invalid values to the existing placeholder", () => {
-    expect(formatPublicTimeField(null)).toBe("—");
-    expect(formatPublicTimeField(undefined)).toBe("—");
-    expect(formatPublicTimeField("non-una-data")).toBe("—");
-    expect(formatPublicTimeField("2026-02-31")).toBe("—");
+    expect(formatPublicTimeField(null)).toBe("â€”");
+    expect(formatPublicTimeField(undefined)).toBe("â€”");
+    expect(formatPublicTimeField("non-una-data")).toBe("â€”");
+    expect(formatPublicTimeField("2026-02-31")).toBe("â€”");
   });
 });

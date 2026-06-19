@@ -1,0 +1,26 @@
+{
+  "id": "zornade-sezioni-urbane-catasto",
+  "publicLabel": "Layer catastale accessorio",
+  "source": "Zornade / Agenzia delle Entrate-derived cadastral data",
+  "sourcePage": "https://zornade.com/blog/sezioni-urbane-catasto-download-gratuito-pulite/",
+  "downloadCatalog": "https://zornade.com/data-downloads/",
+  "downloadUrls": {
+    "geopackage": "https://wupqwfqjfpwrapgnogjv.supabase.co/storage/v1/object/public/parcel-data-access/sezioni/sezioni.gpkg",
+    "geojson": "https://wupqwfqjfpwrapgnogjv.supabase.co/storage/v1/object/public/parcel-data-access/sezioni/sezioni.geojson"
+  },
+  "territorialLevel": "cadastral urban section",
+  "datasetType": "optional cadastral/accessory layer",
+  "verificationStatus": "source identified, not yet validated against official ISTAT census sections",
+  "frontendStatus": "metadata only, not wired into the public map",
+  "publicMapRole": "future optional overlay",
+  "warning": "Non usare per indicatori censuari ISTAT",
+  "notFor": [
+    "main territorial base",
+    "ISTAT census-section demographic indicators",
+    "ISTAT census-section social indicators"
+  ],
+  "rawPath": "data/raw/territorio/zornade/sezioni_urbane_catasto/sezioni.gpkg",
+  "processedGeoJsonPath": "data/processed/territorio/zornade_sezioni_urbane_catasto.geojson",
+  "lameziaSubsetPath": "data/processed/territorio/zornade_sezioni_urbane_catasto_lamezia.geojson",
+  "lastSourceCheck": "2026-06-19"
+}
