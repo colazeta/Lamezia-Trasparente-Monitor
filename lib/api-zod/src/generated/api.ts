@@ -2021,6 +2021,44 @@ export const CreateReportBody = zod.object({
 
 
 /**
+ * @summary Set or clear the editorial publication timestamp for a citizen report
+ */
+export const PublishReportParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const PublishReportBody = zod.object({
+  "publishedAt": zod.string().nullish().describe('ISO 8601 UTC timestamp controlled by the server\/redazione path. Omit to publish now; set null to unpublish.')
+})
+
+export const PublishReportResponse = zod.object({
+  "id": zod.number(),
+  "title": zod.string(),
+  "description": zod.string(),
+  "category": zod.string().describe('Ambito della criticità pubblica.'),
+  "location": zod.string().describe('Quartiere, via, edificio, area o `non localizzato`.'),
+  "status": zod.enum(['ricevuta', 'in_valutazione', 'presa_in_carico', 'archiviata']),
+  "initialSourceType": zod.string().nullish().describe('Fonte iniziale, per esempio articolo, comunicato, post pubblico, interrogazione, mozione, accesso, albo, delibera o altro.'),
+  "initialSourceUrl": zod.string().nullish(),
+  "publicEmergenceDate": zod.string().nullish(),
+  "involvedSector": zod.string().nullish(),
+  "competentOffice": zod.string().nullish(),
+  "formalAct": zod.string().nullish(),
+  "institutionalResponse": zod.string().nullish(),
+  "institutionalResponseDate": zod.string().nullish(),
+  "availableData": zod.string().nullish(),
+  "missingData": zod.string().nullish(),
+  "foiaLink": zod.string().nullish(),
+  "outcome": zod.enum(['aperta', 'risolta', 'parzialmente_risolta', 'non_risolta', 'non_verificabile', 'archiviata']),
+  "verificationStatus": zod.enum(['non_verificata', 'in_verifica', 'documentata', 'risposta_ricevuta', 'chiusa', 'archiviata', 'da_aggiornare']),
+  "interpretiveCaution": zod.string(),
+  "publishedAt": zod.string().nullish(),
+  "updatedAt": zod.string(),
+  "createdAt": zod.string()
+})
+
+
+/**
  * @summary List published civic monitoring reports
  */
 export const ListMonitoringReportsQueryParams = zod.object({

@@ -27,12 +27,19 @@ import {
   CircleDotDashed,
   Scale3D,
 } from "lucide-react";
+import {
+  getPublicV0RouteContract,
+  V0_ROUTE_STATUS_LABELS,
+  type V0RouteStatus,
+} from "@/data/publicRoutes";
 
 export interface NavItem {
   href: string;
   label: string;
   description: string;
   icon: React.ElementType;
+  v0Status?: V0RouteStatus;
+  v0StatusLabel?: string;
 }
 
 export interface NavSection {
@@ -40,7 +47,7 @@ export interface NavSection {
   items: NavItem[];
 }
 
-export const NAV_GROUPS: NavSection[] = [
+const RAW_NAV_GROUPS: NavSection[] = [
   {
     label: "Trasparenza & Atti",
     items: [
@@ -65,8 +72,9 @@ export const NAV_GROUPS: NavSection[] = [
       },
       {
         href: "/convocazioni",
-        label: "Convocazioni",
-        description: "Calendario delle sedute degli organi istituzionali.",
+        label: "Sedute e ordini del giorno",
+        description:
+          "Agenda di Consiglio e commissioni con avvisi, ordini del giorno e limiti della fonte consultata.",
         icon: CalendarClock,
       },
       {
@@ -90,8 +98,9 @@ export const NAV_GROUPS: NavSection[] = [
     items: [
       {
         href: "/contratti",
-        label: "Contratti & Appalti",
-        description: "Gare, affidamenti e fornitori del Comune.",
+        label: "Contratti pubblici sotto osservazione",
+        description:
+          "Gare, affidamenti e fornitori leggibili come schede documentali, senza promettere copertura completa.",
         icon: FileText,
       },
       {
@@ -109,9 +118,9 @@ export const NAV_GROUPS: NavSection[] = [
       },
       {
         href: "/pnrr",
-        label: "PNRR",
+        label: "Progetti e informazioni PNRR",
         description:
-          "Progetti e fondi del Piano Nazionale di Ripresa e Resilienza.",
+          "Schede PNRR e collegamenti disponibili, da leggere con stato di verifica e fonte richiamata.",
         icon: Landmark,
       },
       {
@@ -160,7 +169,7 @@ export const NAV_GROUPS: NavSection[] = [
         href: "/monitoraggio",
         label: "Monitor civico",
         description:
-          "Hub documentale per collegare criticità, atti, PNRR, incarichi, legalità e accesso civico.",
+          "Hub documentale per collegare segnalazioni, atti, PNRR, incarichi e accesso civico come elementi da verificare.",
         icon: Telescope,
       },
       {
@@ -186,7 +195,8 @@ export const NAV_GROUPS: NavSection[] = [
       {
         href: "/segnalazioni",
         label: "Segnalazioni",
-        description: "Segnala criticità da verificare o disservizi documentati.",
+        description:
+          "Segnala una trasparenza da verificare o un disservizio documentato, distinguendo fatti e interpretazioni.",
         icon: Megaphone,
       },
     ],
@@ -216,14 +226,14 @@ export const NAV_GROUPS: NavSection[] = [
         href: "/fonti-dati",
         label: "Fonti dati",
         description:
-          "Origine, stato, frequenza e limiti delle fonti monitorate.",
+          "Quali fonti alimentano la v0, con stato del collegamento, frequenza attesa e limiti informativi.",
         icon: BookOpen,
       },
       {
         href: "/metodologia",
         label: "Metodologia",
         description:
-          "Metodo di raccolta, trattamento e lettura prudente degli indicatori.",
+          "Come leggere dati, indicatori e assenze informative come segnali documentali da verificare.",
         icon: FileSearch,
       },
       {
@@ -237,7 +247,7 @@ export const NAV_GROUPS: NavSection[] = [
         href: "/note-legali",
         label: "Note legali",
         description:
-          "Cautele interpretative e uso responsabile dei dati civici.",
+          "Avvertenze per consultare la piattaforma senza dedurre responsabilità o completezza dai dati pubblicati.",
         icon: Scale3D,
       },
     ],
@@ -261,10 +271,22 @@ export const NAV_GROUPS: NavSection[] = [
   },
 ];
 
+export const NAV_GROUPS: NavSection[] = RAW_NAV_GROUPS.map((group) => ({
+  ...group,
+  items: group.items.map((item) => {
+    const contract = getPublicV0RouteContract(item.href);
+    return contract
+      ? {
+          ...item,
+          v0Status: contract.status,
+          v0StatusLabel: V0_ROUTE_STATUS_LABELS[contract.status],
+        }
+      : item;
+  }),
+}));
+
 export function isSectionActive(href: string, location: string): boolean {
-  return (
-    location === href || (href !== "/" && location.startsWith(`${href}/`))
-  );
+  return location === href || (href !== "/" && location.startsWith(`${href}/`));
 }
 
 export interface ActiveSection {

@@ -51,6 +51,7 @@ import {
 } from "@/components/launch/CouncilSessionV0DemoCard";
 import { councilSessionV0DemoFixture } from "@/data/councilSessionV0";
 import { asApiList } from "@/lib/apiList";
+import { V0SectionLanding } from "@/components/launch/V0SectionLanding";
 
 function MacrotemasRow({ macrotemi }: { macrotemi: string[] }) {
   const unique = Array.from(new Set(macrotemi)).filter((m) => m !== "altro");
@@ -152,7 +153,9 @@ export function Convocazioni() {
   const { data: convocazioniPubsData } = useListPublications({
     category: "convocazione",
   });
-  const convocazioniPubs = asApiList<SedutaPublication & { macrotema?: string | null }>(convocazioniPubsData);
+  const convocazioniPubs = asApiList<
+    SedutaPublication & { macrotema?: string | null }
+  >(convocazioniPubsData);
 
   // Build a map publicationId -> odgMacrotemi (multi-theme array from ODG points).
   // Falls back to the publication-level macrotema if no ODG points are found.
@@ -238,29 +241,34 @@ export function Convocazioni() {
     votesFilter !== "all" ||
     actsFilter !== "all";
   const shouldShowDemoFallback =
-    !isLoading &&
-    (isError || (sedute.length === 0 && !hasActiveFilters));
+    !isLoading && (isError || (sedute.length === 0 && !hasActiveFilters));
 
   return (
     <div className="container mx-auto px-4 py-8 md:py-12 max-w-5xl">
-      <div className="mb-8 flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
-        <div>
-          <span className="eyebrow text-primary">
-            <CalendarClock className="h-3.5 w-3.5" />
-            Sedute e ordini del giorno
-          </span>
-          <h1 className="mt-2 text-3xl md:text-4xl font-display font-bold tracking-tight">
-            Convocazioni
-          </h1>
-          <p className="mt-3 text-muted-foreground text-lg max-w-3xl">
-            Primo output civico v0: orientamento prudente su sedute e
-            convocazioni del Consiglio comunale, con stati del dato, limiti
-            dichiarati e rinvio alle fonti quando disponibili.
-          </p>
-        </div>
-      </div>
+      <V0SectionLanding
+        eyebrow="Sedute e ordini del giorno"
+        icon={CalendarClock}
+        title="Sedute e ordini del giorno del Consiglio"
+        subtitle="Percorso civico v0 per orientarsi tra convocazioni, sedute, ordini del giorno e documenti collegati, distinguendo dati presenti, dati da verificare e contenuti dimostrativi."
+        stateLabel="Pubblicabile v0"
+        stateDescription="Indice consultabile con stati del dato e limiti dichiarati vicino ai contenuti."
+        findItems={[
+          "Sedute caricate, filtri per organo e macrotema e copertura documentale disponibile.",
+          "Ordini del giorno, resoconti, votazioni e atti collegati quando rilevati.",
+          "Demo v0 dichiarata per mostrare il percorso senza sostituire sedute reali.",
+        ]}
+        missingItems={[
+          "Sincronizzazione stabile e verificata con tutte le fonti istituzionali delle sedute.",
+          "Collegamento puntuale e completo alle fonti per ogni documento di seduta.",
+          "Conferma manuale dei campi indicati come da verificare.",
+        ]}
+        sourceLimit="I badge da verificare indicano campi non presenti nella base locale o da controllare sulla fonte originaria: sono segnali di copertura, non valutazioni sulla regolarità degli atti."
+        cta={{ label: "Consulta convocazioni", href: "#convocazioni-elenco" }}
+        secondaryLink={{ label: "Fonti e limiti", href: "/fonti-dati" }}
+      />
 
       <section
+        id="convocazioni-elenco"
         className="mb-8 rounded-2xl border border-brand/25 bg-brand/5 p-4 md:p-5"
         aria-labelledby="convocazioni-v0-path-title"
       >

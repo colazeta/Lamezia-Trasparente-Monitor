@@ -1,0 +1,383 @@
+{
+  "schemaVersion": "v0-readiness/1",
+  "generatedAt": "2026-06-16T10:57:55.328Z",
+  "outcome": "GO_WITH_LIMITS",
+  "counts": {
+    "P0": 0,
+    "P1": 9,
+    "P2": 4,
+    "INFO": 3
+  },
+  "reportPath": "docs/launch-v0/current-readiness.md",
+  "routeContractPath": "docs/launch-v0/v0-routes.json",
+  "routeResults": [
+    {
+      "path": "/",
+      "status": "pubblicabile",
+      "v0Critical": true,
+      "expectedDataMode": "mixed",
+      "mustNotErrorBoundary": true,
+      "requiresSourceAndLimits": true,
+      "humanCheckRequired": true,
+      "notes": "Homepage pubblica: deve restare renderizzabile e rimandare a fonti, metodo e limiti.",
+      "checks": [
+        {
+          "name": "routing/static presence",
+          "result": "PASS"
+        },
+        {
+          "name": "error-boundary policy documented",
+          "result": "PASS"
+        },
+        {
+          "name": "source/limits human review",
+          "result": "MANUAL"
+        }
+      ],
+      "result": "LIMITED"
+    },
+    {
+      "path": "/convocazioni",
+      "status": "pubblicabile",
+      "v0Critical": true,
+      "expectedDataMode": "mixed",
+      "mustNotErrorBoundary": true,
+      "requiresSourceAndLimits": true,
+      "humanCheckRequired": true,
+      "notes": "Calendario e schede convocazioni; dati mancanti devono produrre empty state prudente.",
+      "checks": [
+        {
+          "name": "routing/static presence",
+          "result": "PASS"
+        },
+        {
+          "name": "error-boundary policy documented",
+          "result": "PASS"
+        },
+        {
+          "name": "source/limits human review",
+          "result": "MANUAL"
+        }
+      ],
+      "result": "LIMITED"
+    },
+    {
+      "path": "/convocazioni/demo-consiglio-comunale-v0",
+      "status": "sperimentale",
+      "v0Critical": false,
+      "expectedDataMode": "fixture",
+      "mustNotErrorBoundary": true,
+      "requiresSourceAndLimits": true,
+      "humanCheckRequired": true,
+      "notes": "Demo v0 basata su fixture: deve essere riconoscibile come sperimentale/non definitiva.",
+      "checks": [
+        {
+          "name": "routing/static presence",
+          "result": "PASS"
+        },
+        {
+          "name": "error-boundary policy documented",
+          "result": "PASS"
+        },
+        {
+          "name": "source/limits human review",
+          "result": "MANUAL"
+        }
+      ],
+      "result": "LIMITED"
+    },
+    {
+      "path": "/contratti",
+      "status": "pubblicabile",
+      "v0Critical": true,
+      "expectedDataMode": "mixed",
+      "mustNotErrorBoundary": true,
+      "requiresSourceAndLimits": true,
+      "humanCheckRequired": true,
+      "notes": "Sezione data-driven con indicatori da leggere come segnali e non come conclusioni.",
+      "checks": [
+        {
+          "name": "routing/static presence",
+          "result": "PASS"
+        },
+        {
+          "name": "error-boundary policy documented",
+          "result": "PASS"
+        },
+        {
+          "name": "source/limits human review",
+          "result": "MANUAL"
+        }
+      ],
+      "result": "LIMITED"
+    },
+    {
+      "path": "/pnrr",
+      "status": "pubblicabile",
+      "v0Critical": true,
+      "expectedDataMode": "mixed",
+      "mustNotErrorBoundary": true,
+      "requiresSourceAndLimits": true,
+      "humanCheckRequired": true,
+      "notes": "Sezione informativa PNRR con fonti, limiti e stato di verifica espliciti.",
+      "checks": [
+        {
+          "name": "routing/static presence",
+          "result": "PASS"
+        },
+        {
+          "name": "error-boundary policy documented",
+          "result": "PASS"
+        },
+        {
+          "name": "source/limits human review",
+          "result": "MANUAL"
+        }
+      ],
+      "result": "LIMITED"
+    },
+    {
+      "path": "/redazione",
+      "status": "riservata",
+      "v0Critical": true,
+      "expectedDataMode": "none",
+      "mustNotErrorBoundary": true,
+      "requiresSourceAndLimits": false,
+      "humanCheckRequired": true,
+      "notes": "Area riservata: in preview senza Clerk deve mostrare indisponibilità protetta, non contenuto redazionale pubblico ordinario.",
+      "checks": [
+        {
+          "name": "routing/static presence",
+          "result": "PASS"
+        },
+        {
+          "name": "reserved preview fallback",
+          "result": "PASS"
+        },
+        {
+          "name": "error-boundary policy documented",
+          "result": "PASS"
+        },
+        {
+          "name": "source/limits human review",
+          "result": "MANUAL"
+        }
+      ],
+      "result": "LIMITED"
+    },
+    {
+      "path": "/healthz.json",
+      "status": "static-marker",
+      "v0Critical": true,
+      "expectedDataMode": "none",
+      "mustNotErrorBoundary": true,
+      "requiresSourceAndLimits": true,
+      "humanCheckRequired": false,
+      "notes": "Marker statico di raggiungibilità frontend; non verifica API, worker, live data o completezza fonti.",
+      "checks": [
+        {
+          "name": "routing/static presence",
+          "result": "PASS"
+        },
+        {
+          "name": "error-boundary policy documented",
+          "result": "PASS"
+        },
+        {
+          "name": "source/limits human review",
+          "result": "PASS"
+        }
+      ],
+      "result": "PASS"
+    },
+    {
+      "path": "/fonti-dati",
+      "status": "pubblicabile",
+      "v0Critical": true,
+      "expectedDataMode": "manual",
+      "mustNotErrorBoundary": true,
+      "requiresSourceAndLimits": true,
+      "humanCheckRequired": true,
+      "notes": "Indice fonti e limiti: controllo centrale per la pubblicazione prudente.",
+      "checks": [
+        {
+          "name": "routing/static presence",
+          "result": "PASS"
+        },
+        {
+          "name": "error-boundary policy documented",
+          "result": "PASS"
+        },
+        {
+          "name": "source/limits human review",
+          "result": "MANUAL"
+        }
+      ],
+      "result": "LIMITED"
+    },
+    {
+      "path": "/metodologia",
+      "status": "pubblicabile",
+      "v0Critical": true,
+      "expectedDataMode": "manual",
+      "mustNotErrorBoundary": true,
+      "requiresSourceAndLimits": true,
+      "humanCheckRequired": true,
+      "notes": "Metodo, cautele e limiti del monitoraggio civico.",
+      "checks": [
+        {
+          "name": "routing/static presence",
+          "result": "PASS"
+        },
+        {
+          "name": "error-boundary policy documented",
+          "result": "PASS"
+        },
+        {
+          "name": "source/limits human review",
+          "result": "MANUAL"
+        }
+      ],
+      "result": "LIMITED"
+    },
+    {
+      "path": "/note-legali",
+      "status": "pubblicabile",
+      "v0Critical": true,
+      "expectedDataMode": "manual",
+      "mustNotErrorBoundary": true,
+      "requiresSourceAndLimits": true,
+      "humanCheckRequired": true,
+      "notes": "Note legali e limiti d'uso da preservare.",
+      "checks": [
+        {
+          "name": "routing/static presence",
+          "result": "PASS"
+        },
+        {
+          "name": "error-boundary policy documented",
+          "result": "PASS"
+        },
+        {
+          "name": "source/limits human review",
+          "result": "MANUAL"
+        }
+      ],
+      "result": "LIMITED"
+    }
+  ],
+  "issues": [
+    {
+      "severity": "P1",
+      "code": "manual-source-limit-review",
+      "route": "/",
+      "message": "/ richiede revisione umana di fonti, limiti, stato verifica e copy prudente.",
+      "action": "Confermare in review che la pagina non usa claim definitivi o accusatori."
+    },
+    {
+      "severity": "P1",
+      "code": "manual-source-limit-review",
+      "route": "/convocazioni",
+      "message": "/convocazioni richiede revisione umana di fonti, limiti, stato verifica e copy prudente.",
+      "action": "Confermare in review che la pagina non usa claim definitivi o accusatori."
+    },
+    {
+      "severity": "P1",
+      "code": "manual-source-limit-review",
+      "route": "/convocazioni/demo-consiglio-comunale-v0",
+      "message": "/convocazioni/demo-consiglio-comunale-v0 richiede revisione umana di fonti, limiti, stato verifica e copy prudente.",
+      "action": "Confermare in review che la pagina non usa claim definitivi o accusatori."
+    },
+    {
+      "severity": "P1",
+      "code": "manual-source-limit-review",
+      "route": "/contratti",
+      "message": "/contratti richiede revisione umana di fonti, limiti, stato verifica e copy prudente.",
+      "action": "Confermare in review che la pagina non usa claim definitivi o accusatori."
+    },
+    {
+      "severity": "P1",
+      "code": "manual-source-limit-review",
+      "route": "/pnrr",
+      "message": "/pnrr richiede revisione umana di fonti, limiti, stato verifica e copy prudente.",
+      "action": "Confermare in review che la pagina non usa claim definitivi o accusatori."
+    },
+    {
+      "severity": "P1",
+      "code": "manual-source-limit-review",
+      "route": "/redazione",
+      "message": "/redazione richiede revisione umana di fonti, limiti, stato verifica e copy prudente.",
+      "action": "Confermare in review che la pagina non usa claim definitivi o accusatori."
+    },
+    {
+      "severity": "P1",
+      "code": "manual-source-limit-review",
+      "route": "/fonti-dati",
+      "message": "/fonti-dati richiede revisione umana di fonti, limiti, stato verifica e copy prudente.",
+      "action": "Confermare in review che la pagina non usa claim definitivi o accusatori."
+    },
+    {
+      "severity": "P1",
+      "code": "manual-source-limit-review",
+      "route": "/metodologia",
+      "message": "/metodologia richiede revisione umana di fonti, limiti, stato verifica e copy prudente.",
+      "action": "Confermare in review che la pagina non usa claim definitivi o accusatori."
+    },
+    {
+      "severity": "P1",
+      "code": "manual-source-limit-review",
+      "route": "/note-legali",
+      "message": "/note-legali richiede revisione umana di fonti, limiti, stato verifica e copy prudente.",
+      "action": "Confermare in review che la pagina non usa claim definitivi o accusatori."
+    },
+    {
+      "severity": "INFO",
+      "code": "spa-redirects-present",
+      "route": null,
+      "message": "Fallback SPA _redirects presente.",
+      "action": "Nessuna azione."
+    },
+    {
+      "severity": "INFO",
+      "code": "healthz-static-marker",
+      "route": null,
+      "message": "healthz.json presente come marker statico con limiti espliciti.",
+      "action": "Nessuna azione."
+    },
+    {
+      "severity": "P2",
+      "code": "data-operations-reviewed",
+      "route": null,
+      "message": "Convocazioni.tsx usa 19 operazioni su liste: verificare che input non normalizzati non producano error boundary.",
+      "action": "Mantenere fallback/normalizzazione e test di render."
+    },
+    {
+      "severity": "P2",
+      "code": "data-operations-reviewed",
+      "route": null,
+      "message": "Contracts.tsx usa 30 operazioni su liste: verificare che input non normalizzati non producano error boundary.",
+      "action": "Mantenere fallback/normalizzazione e test di render."
+    },
+    {
+      "severity": "P2",
+      "code": "data-operations-reviewed",
+      "route": null,
+      "message": "Pnrr.tsx usa 30 operazioni su liste: verificare che input non normalizzati non producano error boundary.",
+      "action": "Mantenere fallback/normalizzazione e test di render."
+    },
+    {
+      "severity": "P2",
+      "code": "data-operations-reviewed",
+      "route": null,
+      "message": "Home.tsx usa 38 operazioni su liste: verificare che input non normalizzati non producano error boundary.",
+      "action": "Mantenere fallback/normalizzazione e test di render."
+    },
+    {
+      "severity": "INFO",
+      "code": "no-live-dependencies",
+      "route": null,
+      "message": "Il detector legge solo file versionati locali e non richiede backend, segreti, provider o servizi esterni.",
+      "action": "Eseguibile in CI senza costi."
+    }
+  ]
+}

@@ -64,7 +64,11 @@ export function SedutaDetail() {
   const isDemoRoute = routeId === councilSessionV0DemoFixture.id;
   const id = routeId && !isDemoRoute ? Number(routeId) : NaN;
 
-  const { data: seduta, isLoading, isError } = useGetSeduta(id, {
+  const {
+    data: seduta,
+    isLoading,
+    isError,
+  } = useGetSeduta(id, {
     query: {
       enabled: !Number.isNaN(id) && !isDemoRoute,
       queryKey: getGetSedutaQueryKey(id),
@@ -78,11 +82,32 @@ export function SedutaDetail() {
     },
   });
 
+  const storiaContracts = Array.isArray(storia?.contracts)
+    ? storia.contracts
+    : [];
+  const storiaPnrrProjects = Array.isArray(storia?.pnrrProjects)
+    ? storia.pnrrProjects
+    : [];
+  const storiaSiblings = Array.isArray(storia?.siblings) ? storia.siblings : [];
+  const sedutaOdgPoints = Array.isArray(seduta?.odgPoints)
+    ? seduta.odgPoints
+    : [];
+  const sedutaVotes = Array.isArray(seduta?.votes) ? seduta.votes : [];
+  const sedutaInterventions = Array.isArray(seduta?.interventions)
+    ? seduta.interventions
+    : [];
+  const storiaDelibere = storiaSiblings.filter(
+    (s) => s.category === "delibera",
+  );
+  const storiaAltriAtti = storiaSiblings.filter(
+    (s) => s.category !== "delibera",
+  );
+
   const hasStoria =
     storia &&
-    (storia.contracts.length > 0 ||
-      storia.pnrrProjects.length > 0 ||
-      storia.siblings.length > 0 ||
+    (storiaContracts.length > 0 ||
+      storiaPnrrProjects.length > 0 ||
+      storiaSiblings.length > 0 ||
       storia.originatingSeduta !== null);
 
   return (
@@ -177,7 +202,7 @@ export function SedutaDetail() {
           </header>
 
           {/* Ordine del giorno — punti con macrotema per punto */}
-          {seduta.odgPoints.length > 0 && (
+          {sedutaOdgPoints.length > 0 && (
             <>
               <div className="mb-6 flex items-center gap-2.5">
                 <span className="flex h-8 w-8 items-center justify-center rounded-md bg-brand/10 text-brand">
@@ -188,7 +213,7 @@ export function SedutaDetail() {
                 </h2>
               </div>
               <ol className="mb-10 space-y-3">
-                {seduta.odgPoints.map((punto) => (
+                {sedutaOdgPoints.map((punto) => (
                   <li
                     key={punto.index}
                     className="rounded-xl border border-border bg-card p-4"
@@ -210,27 +235,34 @@ export function SedutaDetail() {
                         )}
                       </div>
                     </div>
-                    {punto.outcomes.length > 0 && (
-                      <div className="mt-3 ml-10 space-y-1.5">
-                        {punto.outcomes.map((out, oi) => (
-                          <Link
-                            key={oi}
-                            href={
-                              out.type === "contract"
-                                ? `/contratti/${out.id}`
-                                : `/albo/${out.id}`
-                            }
-                            className="flex items-center gap-2 rounded-lg border border-border/60 bg-background/60 px-3 py-2 text-xs font-medium text-muted-foreground hover:border-brand/40 hover:text-brand transition-colors"
-                          >
-                            <span className="shrink-0 rounded border px-1 py-0.5 text-[9px] font-bold uppercase tracking-wide">
-                              {out.type === "contract" ? "Contratto" : out.type === "delibera" ? "Delibera" : "Atto"}
-                            </span>
-                            <span className="flex-1 truncate">{out.title}</span>
-                            <ChevronRight className="h-3.5 w-3.5 shrink-0" />
-                          </Link>
-                        ))}
-                      </div>
-                    )}
+                    {Array.isArray(punto.outcomes) &&
+                      punto.outcomes.length > 0 && (
+                        <div className="mt-3 ml-10 space-y-1.5">
+                          {punto.outcomes.map((out, oi) => (
+                            <Link
+                              key={oi}
+                              href={
+                                out.type === "contract"
+                                  ? `/contratti/${out.id}`
+                                  : `/albo/${out.id}`
+                              }
+                              className="flex items-center gap-2 rounded-lg border border-border/60 bg-background/60 px-3 py-2 text-xs font-medium text-muted-foreground hover:border-brand/40 hover:text-brand transition-colors"
+                            >
+                              <span className="shrink-0 rounded border px-1 py-0.5 text-[9px] font-bold uppercase tracking-wide">
+                                {out.type === "contract"
+                                  ? "Contratto"
+                                  : out.type === "delibera"
+                                    ? "Delibera"
+                                    : "Atto"}
+                              </span>
+                              <span className="flex-1 truncate">
+                                {out.title}
+                              </span>
+                              <ChevronRight className="h-3.5 w-3.5 shrink-0" />
+                            </Link>
+                          ))}
+                        </div>
+                      )}
                   </li>
                 ))}
               </ol>
@@ -252,9 +284,9 @@ export function SedutaDetail() {
             </div>
           )}
 
-          {seduta.interventions.length > 0 ? (
+          {sedutaInterventions.length > 0 ? (
             <ol className="relative space-y-6 border-l-2 border-border pl-6">
-              {seduta.interventions.map((intervento) => (
+              {sedutaInterventions.map((intervento) => (
                 <li key={intervento.id} className="relative">
                   <span className="absolute -left-[2.05rem] flex h-8 w-8 items-center justify-center rounded-full border-4 border-background bg-brand/10 text-brand">
                     <User className="h-4 w-4" />
@@ -294,7 +326,7 @@ export function SedutaDetail() {
             </Empty>
           )}
 
-          {seduta.votes.length > 0 && (
+          {sedutaVotes.length > 0 && (
             <>
               <div className="mt-10 mb-6 flex items-center gap-2.5">
                 <span className="flex h-8 w-8 items-center justify-center rounded-md bg-brand/10 text-brand">
@@ -305,7 +337,7 @@ export function SedutaDetail() {
                 </h2>
               </div>
               <ul className="space-y-2">
-                {seduta.votes.map((v) => (
+                {sedutaVotes.map((v) => (
                   <li key={v.officialId}>
                     <Link
                       href={`/amministratori/${v.officialId}`}
@@ -343,15 +375,19 @@ export function SedutaDetail() {
               </p>
 
               <div className="space-y-6">
-                {storia.contracts.length > 0 && (
+                {storiaContracts.length > 0 && (
                   <div>
                     <h3 className="mb-3 flex items-center gap-2 text-sm font-semibold uppercase tracking-wider text-muted-foreground">
                       <Building2 className="h-3.5 w-3.5" />
-                      Appalti collegati ({storia.contracts.length})
+                      Appalti collegati ({storiaContracts.length})
                     </h3>
                     <div className="space-y-2">
-                      {storia.contracts.map((c) => (
-                        <Link key={c.id} href={`/contratti/${c.id}`} className="block">
+                      {storiaContracts.map((c) => (
+                        <Link
+                          key={c.id}
+                          href={`/contratti/${c.id}`}
+                          className="block"
+                        >
                           <Card className="group p-4 transition-all hover:shadow-md hover:-translate-y-0.5 hover:border-brand/40">
                             <div className="flex items-start justify-between gap-2">
                               <p className="font-medium text-foreground text-sm leading-snug group-hover:text-brand transition-colors line-clamp-2 flex-1">
@@ -371,13 +407,13 @@ export function SedutaDetail() {
                   </div>
                 )}
 
-                {storia.pnrrProjects.length > 0 && (
+                {storiaPnrrProjects.length > 0 && (
                   <div>
                     <h3 className="mb-3 flex items-center gap-2 text-sm font-semibold uppercase tracking-wider text-muted-foreground">
-                      Progetti PNRR collegati ({storia.pnrrProjects.length})
+                      Progetti PNRR collegati ({storiaPnrrProjects.length})
                     </h3>
                     <div className="space-y-2">
-                      {storia.pnrrProjects.map((p) => (
+                      {storiaPnrrProjects.map((p) => (
                         <Link key={p.id} href="/pnrr" className="block">
                           <Card className="group p-4 transition-all hover:shadow-md hover:-translate-y-0.5 hover:border-brand/40">
                             <p className="font-medium text-foreground text-sm leading-snug group-hover:text-brand transition-colors">
@@ -394,56 +430,60 @@ export function SedutaDetail() {
                 )}
 
                 {/* Delibere: esiti della seduta */}
-                {storia.siblings.filter((s) => s.category === "delibera").length > 0 && (
+                {storiaDelibere.length > 0 && (
                   <div>
                     <h3 className="mb-3 flex items-center gap-2 text-sm font-semibold uppercase tracking-wider text-muted-foreground">
                       <FileText className="h-3.5 w-3.5" />
-                      Delibere approvate ({storia.siblings.filter((s) => s.category === "delibera").length})
+                      Delibere approvate ({storiaDelibere.length})
                     </h3>
                     <div className="space-y-2">
-                      {storia.siblings
-                        .filter((s) => s.category === "delibera")
-                        .map((s) => (
-                          <Link key={s.id} href={`/albo/${s.id}`} className="block">
-                            <Card className="group p-4 transition-all hover:shadow-md hover:-translate-y-0.5 hover:border-brand/40">
-                              <div className="flex items-start justify-between gap-2">
-                                <p className="font-medium text-foreground text-sm leading-snug group-hover:text-brand transition-colors line-clamp-2 flex-1">
-                                  {s.oggetto}
-                                </p>
-                                <ChevronRight className="h-4 w-4 text-muted-foreground shrink-0 transition-transform group-hover:translate-x-0.5" />
-                              </div>
-                            </Card>
-                          </Link>
-                        ))}
+                      {storiaDelibere.map((s) => (
+                        <Link
+                          key={s.id}
+                          href={`/albo/${s.id}`}
+                          className="block"
+                        >
+                          <Card className="group p-4 transition-all hover:shadow-md hover:-translate-y-0.5 hover:border-brand/40">
+                            <div className="flex items-start justify-between gap-2">
+                              <p className="font-medium text-foreground text-sm leading-snug group-hover:text-brand transition-colors line-clamp-2 flex-1">
+                                {s.oggetto}
+                              </p>
+                              <ChevronRight className="h-4 w-4 text-muted-foreground shrink-0 transition-transform group-hover:translate-x-0.5" />
+                            </div>
+                          </Card>
+                        </Link>
+                      ))}
                     </div>
                   </div>
                 )}
 
                 {/* Altri atti collegati */}
-                {storia.siblings.filter((s) => s.category !== "delibera").length > 0 && (
+                {storiaAltriAtti.length > 0 && (
                   <div>
                     <h3 className="mb-3 flex items-center gap-2 text-sm font-semibold uppercase tracking-wider text-muted-foreground">
                       <GitMerge className="h-3.5 w-3.5" />
-                      Altri atti collegati ({storia.siblings.filter((s) => s.category !== "delibera").length})
+                      Altri atti collegati ({storiaAltriAtti.length})
                     </h3>
                     <div className="space-y-2">
-                      {storia.siblings
-                        .filter((s) => s.category !== "delibera")
-                        .map((s) => (
-                          <Link key={s.id} href={`/albo/${s.id}`} className="block">
-                            <Card className="group p-4 transition-all hover:shadow-md hover:-translate-y-0.5 hover:border-brand/40">
-                              <div className="flex items-start justify-between gap-2">
-                                <p className="font-medium text-foreground text-sm leading-snug group-hover:text-brand transition-colors line-clamp-2 flex-1">
-                                  {s.oggetto}
-                                </p>
-                                <ChevronRight className="h-4 w-4 text-muted-foreground shrink-0 transition-transform group-hover:translate-x-0.5" />
-                              </div>
-                              <p className="mt-1 text-xs text-muted-foreground">
-                                {s.tipologia}
+                      {storiaAltriAtti.map((s) => (
+                        <Link
+                          key={s.id}
+                          href={`/albo/${s.id}`}
+                          className="block"
+                        >
+                          <Card className="group p-4 transition-all hover:shadow-md hover:-translate-y-0.5 hover:border-brand/40">
+                            <div className="flex items-start justify-between gap-2">
+                              <p className="font-medium text-foreground text-sm leading-snug group-hover:text-brand transition-colors line-clamp-2 flex-1">
+                                {s.oggetto}
                               </p>
-                            </Card>
-                          </Link>
-                        ))}
+                              <ChevronRight className="h-4 w-4 text-muted-foreground shrink-0 transition-transform group-hover:translate-x-0.5" />
+                            </div>
+                            <p className="mt-1 text-xs text-muted-foreground">
+                              {s.tipologia}
+                            </p>
+                          </Card>
+                        </Link>
+                      ))}
                     </div>
                   </div>
                 )}

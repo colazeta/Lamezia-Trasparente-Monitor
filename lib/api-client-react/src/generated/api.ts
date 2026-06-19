@@ -111,6 +111,7 @@ import type {
   PublicationMacrotemaStat,
   PublicationStoria,
   PublicationsTimeline,
+  PublishReportInput,
   Question,
   QuestionInput,
   QuestionUpdateInput,
@@ -4505,6 +4506,78 @@ export const useCreateReport = <TError = ErrorType<Error>,
         TContext
       > => {
       return useMutation(getCreateReportMutationOptions(options));
+    }
+
+export const getPublishReportUrl = (id: number,) => {
+
+
+
+
+  return `/api/reports/${id}/publication`
+}
+
+/**
+ * @summary Set or clear the editorial publication timestamp for a citizen report
+ */
+export const publishReport = async (id: number,
+    publishReportInput: PublishReportInput, options?: RequestInit): Promise<Report> => {
+
+  return customFetch<Report>(getPublishReportUrl(id),
+  {
+    ...options,
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      publishReportInput,)
+  }
+);}
+
+
+
+
+export const getPublishReportMutationOptions = <TError = ErrorType<Error>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof publishReport>>, TError,{id: number;data: BodyType<PublishReportInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof publishReport>>, TError,{id: number;data: BodyType<PublishReportInput>}, TContext> => {
+
+const mutationKey = ['publishReport'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof publishReport>>, {id: number;data: BodyType<PublishReportInput>}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  publishReport(id,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PublishReportMutationResult = NonNullable<Awaited<ReturnType<typeof publishReport>>>
+    export type PublishReportMutationBody = BodyType<PublishReportInput>
+    export type PublishReportMutationError = ErrorType<Error>
+
+    /**
+ * @summary Set or clear the editorial publication timestamp for a citizen report
+ */
+export const usePublishReport = <TError = ErrorType<Error>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof publishReport>>, TError,{id: number;data: BodyType<PublishReportInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof publishReport>>,
+        TError,
+        {id: number;data: BodyType<PublishReportInput>},
+        TContext
+      > => {
+      return useMutation(getPublishReportMutationOptions(options));
     }
 
 export const getListMonitoringReportsUrl = (params?: ListMonitoringReportsParams,) => {

@@ -1,15 +1,142 @@
 export const PUBLIC_SITE_ORIGIN =
   "https://lamezia-trasparente-monitor.replit.app";
 
+export const COUNCIL_SESSION_V0_DEMO_PATH =
+  "/convocazioni/demo-consiglio-comunale-v0" as const;
+
+export type V0RouteStatus =
+  | "pubblicabile"
+  | "sperimentale"
+  | "in-preparazione"
+  | "riservata"
+  | "static-marker";
+
+export type PublicV0CivicSectionId =
+  | "home"
+  | "council-sessions"
+  | "contracts"
+  | "pnrr-projects"
+  | "data-sources"
+  | "method"
+  | "legal-notes"
+  | "editorial-area"
+  | "static-health";
+
+export type PublicV0RouteContract = {
+  path: `/${string}`;
+  civicSectionId: PublicV0CivicSectionId;
+  status: V0RouteStatus;
+  title: string;
+  note: string;
+  rationale: string;
+};
+
+export const V0_ROUTE_STATUS_LABELS: Record<V0RouteStatus, string> = {
+  pubblicabile: "Consultabile nella v0",
+  sperimentale: "In verifica guidata",
+  "in-preparazione": "In preparazione dati",
+  riservata: "Area non pubblica",
+  "static-marker": "Verifica tecnica",
+};
+
+export const PUBLIC_V0_ROUTE_CONTRACT = [
+  {
+    path: "/",
+    civicSectionId: "home",
+    status: "pubblicabile",
+    title: "Home page pubblica",
+    note: "Ingresso pubblico alla v0: orientamento, limiti e percorsi principali.",
+    rationale: "Home page pubblica.",
+  },
+  {
+    path: "/convocazioni",
+    civicSectionId: "council-sessions",
+    status: "pubblicabile",
+    title: "Sedute e ordini del giorno",
+    note: "Indice consultabile: se la fonte non restituisce convocazioni, la pagina lo dichiara come limite informativo della v0.",
+    rationale: "Indice pubblico delle convocazioni.",
+  },
+  {
+    path: COUNCIL_SESSION_V0_DEMO_PATH,
+    civicSectionId: "council-sessions",
+    status: "sperimentale",
+    title: "Scheda demo convocazione v0",
+    note: "Fixture dichiarata: verifica struttura, fonti e limiti senza rappresentare una seduta reale.",
+    rationale:
+      "Scheda demo v0 dichiarata per verificare il percorso pubblico minimo senza dati reali.",
+  },
+  {
+    path: "/contratti",
+    civicSectionId: "contracts",
+    status: "pubblicabile",
+    title: "Contratti pubblici",
+    note: "Consultazione civica di contratti e affidamenti con cautele su fonti, importi, CUP/CIG e dati non ancora disponibili.",
+    rationale: "Indice pubblico dei contratti.",
+  },
+  {
+    path: "/pnrr",
+    civicSectionId: "pnrr-projects",
+    status: "sperimentale",
+    title: "Progetti e informazioni PNRR",
+    note: "Sezione in verifica guidata: mostra collegamenti e schede disponibili, da riscontrare sulle fonti richiamate.",
+    rationale: "Pagina pubblica di monitoraggio PNRR.",
+  },
+  {
+    path: "/redazione",
+    civicSectionId: "editorial-area",
+    status: "riservata",
+    title: "Area redazione",
+    note: "Percorso riservato: senza Clerk deve mostrare il fallback dedicato, non l'error boundary pubblico.",
+    rationale: "Area editoriale protetta esclusa dal sitemap pubblico.",
+  },
+  {
+    path: "/healthz.json",
+    civicSectionId: "static-health",
+    status: "static-marker",
+    title: "Health check statico",
+    note: "Marker JSON statico della preview; non esegue verifiche su API, worker o dati live.",
+    rationale: "Marker statico pubblico per smoke test della fallback v0.",
+  },
+  {
+    path: "/fonti-dati",
+    civicSectionId: "data-sources",
+    status: "pubblicabile",
+    title: "Fonti dati",
+    note: "Indice delle fonti con stato del collegamento, frequenze attese, limiti e assunzioni pubbliche.",
+    rationale: "Pagina pubblica sulle fonti dati.",
+  },
+  {
+    path: "/metodologia",
+    civicSectionId: "method",
+    status: "pubblicabile",
+    title: "Metodologia",
+    note: "Criteri e cautele per leggere indicatori, assenze informative e ricorrenze come segnali documentali da verificare.",
+    rationale: "Pagina pubblica sulla metodologia.",
+  },
+  {
+    path: "/note-legali",
+    civicSectionId: "legal-notes",
+    status: "pubblicabile",
+    title: "Note legali",
+    note: "Avvertenze e limiti d'uso da preservare senza modifiche sostanziali in questa issue.",
+    rationale: "Pagina pubblica delle note legali.",
+  },
+] as const satisfies readonly PublicV0RouteContract[];
+
+export const PUBLIC_V0_ROUTE_PATHS = PUBLIC_V0_ROUTE_CONTRACT.map(
+  (route) => route.path,
+);
+
+export function getPublicV0RouteContract(path: string) {
+  return PUBLIC_V0_ROUTE_CONTRACT.find((route) => route.path === path) ?? null;
+}
+
 export type PublicIndexableRoute = {
   /** Static router path that may be listed in the public sitemap. */
   path: `/${string}`;
   /** Short maintenance note for reviewers comparing Router.tsx and sitemap.xml. */
   rationale: string;
 };
-
-export const COUNCIL_SESSION_V0_DEMO_PATH =
-  "/convocazioni/demo-consiglio-comunale-v0" as const;
 
 /**
  * Static inventory for public, indexable routes.
@@ -85,7 +212,10 @@ export const PUBLIC_INDEXABLE_ROUTES = [
     rationale:
       "Pagina pubblica su capacità amministrativa, organico e stato delle fonti.",
   },
-  { path: "/pnrr", rationale: "Pagina pubblica di monitoraggio PNRR." },
+  {
+    path: "/pnrr",
+    rationale: "Pagina pubblica di monitoraggio PNRR.",
+  },
   { path: "/opendata", rationale: "Catalogo pubblico open data." },
   { path: "/feeds", rationale: "Pagina pubblica dei feed di aggiornamento." },
   {

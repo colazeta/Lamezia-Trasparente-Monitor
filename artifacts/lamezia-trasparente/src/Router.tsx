@@ -101,240 +101,240 @@ export function Router() {
         <PublicErrorBoundary>
           <MainLayout>
             <Switch>
-            <Route path="/" component={Home} />
-            <PublicRouteWithMeta
-              path="/domande"
-              component={Domande}
-              title="Domande civiche"
-              description="Risposte e percorsi di consultazione per orientarsi tra atti, dati e servizi del monitoraggio civico."
-            />
-            <PublicRouteWithMeta
-              path="/temi"
-              component={Themes}
-              title="Temi monitorati"
-              description="Raccolta di temi civici che aggregano documenti, atti e contratti per facilitare la consultazione pubblica."
-            />
-            <Route path="/temi/:id" component={ThemeDetail} />
-            <PublicRouteWithMeta
-              path="/contratti"
-              component={Contracts}
-              title="Contratti pubblici"
-              description="Consultazione civica di contratti, CIG, importi e indicatori di monitoraggio da leggere con verifica sulle fonti."
-            />
-            <Route path="/incarichimetro" component={Incarichimetro} />
-            <Route path="/contratti/:id" component={ContractStoryline} />
-            <Route path="/albo" component={Albo} />
-            <Route path="/albo/:id" component={AlboDetail} />
-            <PublicRouteWithMeta
-              path="/atti-fondamentali"
-              component={AttiFondamentali}
-              title="Atti fondamentali"
-              description="Documenti di programmazione e atti fondamentali raccolti per agevolare la consultazione pubblica."
-            />
-            <PublicRouteWithMeta
-              path="/bandi"
-              component={Bandi}
-              title="Bandi e avvisi"
-              description="Elenco civico di bandi e avvisi pubblici con collegamenti alle fonti disponibili e informazioni da verificare sugli atti."
-            />
-            <Route path="/bandi/:slug" component={BandoDetail} />
-            <PublicRouteWithMeta
-              path="/beni-confiscati"
-              component={BeniConfiscati}
-              title="Beni confiscati"
-              description="Schede e mappe informative sui beni confiscati, con cautele di lettura e rinvio alle fonti pubbliche."
-            />
-            <Route
-              path="/beni-confiscati/:slug"
-              component={BeneConfiscatoDetail}
-            />
-            <Route path="/accesso-civico" component={AccessoCivico} />
-            <PublicRouteWithMeta
-              path="/monitoraggio"
-              component={Monitoraggio}
-              title="Monitor civico"
-              description="Hub documentale che collega criticità pubbliche, programma sotto verifica, atti, PNRR, incarichi, accesso civico e legalità senza formulare accuse autonome."
-            />
-            <PublicRouteWithMeta
-              path="/monitoraggio/nuovo"
-              component={MonitoraggioNuovo}
-              title="Nuova segnalazione civica"
-              description="Modulo per proporre un elemento di monitoraggio civico da valutare con cautele, fonti e verifiche successive."
-            />
-            <PublicRouteWithMeta
-              path="/promessometro"
-              component={Promessometro}
-              title="Promessometro amministrativo"
-              description="Modulo civico per collegare promesse programmatiche e atti amministrativi con cautele documentali e senza scoring politico."
-            />
-            <PublicRouteWithMeta
-              path="/archivio-proposte"
-              component={PropostePubbliche}
-              title="Archivio delle proposte pubbliche"
-              description="Archivio documentale e neutro delle proposte di valore pubblico censite come memoria civica verificabile."
-            />
-            <PublicRouteWithMeta
-              path="/macchina-comunale"
-              component={MacchinaComunale}
-              title="Macchina comunale"
-              description="Modulo prudente sulla capacità amministrativa, organico, scoperture e stato delle fonti, senza valutazioni individuali."
-            />
-            <Route path="/monitoraggio/:id" component={MonitoraggioDetail} />
-            <PublicRouteWithMeta
-              path="/legalita/timeline"
-              component={LegalitaTimeline}
-              title="Timeline legalità e memoria civica"
-              description="Struttura pubblica per eventi documentati su legalità, antimafia e memoria istituzionale, con fonti, status e cautele esplicite."
-            />
-            <PublicRouteWithMeta
-              path="/legalita"
-              component={Legalita}
-              title="Legalità e beni confiscati"
-              description="Percorsi informativi su legalità, riuso civico e fonti pubbliche, con linguaggio prudente e non accusatorio."
-            />
-            <PublicRouteWithMeta
-              path="/delibere"
-              component={Delibere}
-              title="Delibere"
-              description="Consultazione civica delle delibere pubblicate, con ricerca e rinvio alla documentazione disponibile."
-            />
-            <PublicRouteWithMeta
-              path="/convocazioni"
-              component={Convocazioni}
-              title="Convocazioni"
-              description="Calendario e schede delle convocazioni pubbliche, organizzate per facilitare orientamento e verifica."
-            />
-            <Route path="/convocazioni/:id" component={SedutaDetail} />
-            <PublicRouteWithMeta
-              path="/organi"
-              component={Organi}
-              title="Organi istituzionali"
-              description="Indice civico degli organi e delle informazioni pubbliche disponibili per orientare la consultazione."
-            />
-            <Route path="/organi/:slug" component={OrganoDetail} />
-            <PublicRouteWithMeta
-              path="/amministratori"
-              component={Amministratori}
-              title="Amministratori"
-              description="Schede pubbliche e incarichi amministrativi consultabili come dati informativi da verificare sulle fonti."
-            />
-            <Route
-              path="/amministratori/:id"
-              component={AmministratoreDetail}
-            />
-            <PublicRouteWithMeta
-              path="/pnrr"
-              component={Pnrr}
-              title="PNRR"
-              description="Sezione informativa sui contenuti PNRR disponibili nel monitoraggio civico, da consultare insieme alle fonti e ai relativi limiti."
-            />
-            <PublicRouteWithMeta
-              path="/opendata"
-              component={Opendata}
-              title="Open data"
-              description="Catalogo civico dei dataset disponibili, con risorse, aggiornamenti e limiti da leggere insieme alle fonti."
-            />
-            <Route path="/opendata/:id" component={OpendataDetail} />
-            <PublicRouteWithMeta
-              path="/feeds"
-              component={Feeds}
-              title="Feed e aggiornamenti"
-              description="Canali di aggiornamento per seguire pubblicazioni e novità del monitoraggio civico in modo trasparente."
-            />
-            <PublicRouteWithMeta
-              path="/sviluppatori"
-              component={Sviluppatori}
-              title="Sviluppatori"
-              description="Informazioni tecniche per consultare API, feed e risorse aperte del progetto civico."
-            />
-            <PublicRouteWithMeta
-              path="/performance"
-              component={Performance}
-              title="Performance amministrativa"
-              description="Indicatori e confronti di performance da leggere come segnali di monitoraggio, non come conclusioni automatiche."
-            />
-            <PublicRouteWithMeta
-              path="/performance/confronta"
-              component={PerformanceCompare}
-              title="Confronto performance"
-              description="Strumento di confronto tra indicatori amministrativi per osservare pattern e differenze da verificare nel contesto."
-            />
-            <Route path="/performance/:id" component={PerformanceDetail} />
-            <PublicRouteWithMeta
-              path="/pareri"
-              component={PareriVigilanza}
-              title="Pareri e vigilanza"
-              description="Raccolta informativa di pareri e documenti di vigilanza, organizzata con cautele e collegamenti alle fonti."
-            />
-            <Route path="/pareri/:id" component={PareriVigilanzaDetail} />
-            <PublicRouteWithMeta
-              path="/criticita-pubbliche"
-              component={Reports}
-              title="Registro delle criticità pubbliche"
-              description="Registro civico per distinguere segnalazioni, fonti, atti, risposte istituzionali e dati mancanti senza presentare accuse come fatti."
-            />
-            <PublicRouteWithMeta
-              path="/segnalazioni"
-              component={Reports}
-              title="Segnalazioni e criticità pubbliche"
-              description="Area unica per inviare segnalazioni civiche e consultarle come criticità pubbliche da verificare, non accuse."
-            />
-            <PublicRouteWithMeta
-              path="/statistiche"
-              component={Statistics}
-              title="Statistiche"
-              description="Sintesi statistiche del monitoraggio civico, utili per orientare lettura, verifica e approfondimento delle fonti."
-            />
-            <PublicRouteWithMeta
-              path="/fonti-dati"
-              component={FontiDati}
-              title="Fonti dati"
-              description="Indice tecnico delle fonti pubbliche considerate dal monitoraggio civico, con riferimenti e limiti di lettura."
-            />
-            <PublicRouteWithMeta
-              path="/stato-monitoraggio"
-              component={StatoMonitoraggio}
-              title="Stato del monitoraggio"
-              description="Dashboard prudente sulla freschezza e copertura operativa delle fonti censite dal monitoraggio civico."
-            />
-            <PublicRouteWithMeta
-              path="/metodologia"
-              component={Metodologia}
-              title="Metodologia"
-              description="Criteri, cautele e limiti del monitoraggio civico per leggere dati e indicatori in modo documentale."
-            />
-            <Route path="/roadmap" component={Roadmap} />
-            <PublicRouteWithMeta
-              path="/note-legali"
-              component={NoteLegali}
-              title="Note legali"
-              description="Informazioni legali, avvertenze e limiti d’uso delle risorse pubblicate dal progetto civico."
-            />
-            <PublicRouteWithMeta
-              path="/chi-siamo"
-              component={ChiSiamo}
-              title="Chi siamo"
-              description="Presentazione del progetto, dei suoi obiettivi civici e dell’approccio documentale alla trasparenza pubblica."
-            />
-            <PublicRouteWithMeta
-              path="/contatti"
-              component={Contatti}
-              title="Contatti"
-              description="Canali di contatto per informazioni, segnalazioni civiche e richieste relative al monitoraggio documentale."
-            />
-            <PublicRouteWithMeta
-              path="/iscrizioni"
-              component={Subscriptions}
-              title="Iscrizioni agli aggiornamenti"
-              description="Gestione delle preferenze per ricevere aggiornamenti civici e seguire le novità del progetto."
-            />
-            <PublicRouteWithMeta
-              path="/guida"
-              component={Guida}
-              title="Guida"
-              description="Guida pratica per orientarsi tra sezioni, fonti e strumenti del monitoraggio civico."
-            />
-            <Route component={NotFound} />
+              <Route path="/" component={Home} />
+              <PublicRouteWithMeta
+                path="/domande"
+                component={Domande}
+                title="Domande civiche"
+                description="Risposte e percorsi di consultazione per orientarsi tra atti, dati e servizi del monitoraggio civico."
+              />
+              <PublicRouteWithMeta
+                path="/temi"
+                component={Themes}
+                title="Temi monitorati"
+                description="Raccolta di temi civici che aggregano documenti, atti e contratti per facilitare la consultazione pubblica."
+              />
+              <Route path="/temi/:id" component={ThemeDetail} />
+              <PublicRouteWithMeta
+                path="/contratti"
+                component={Contracts}
+                title="Contratti pubblici sotto osservazione"
+                description="Consultazione civica di contratti, CIG, importi e indicatori disponibili, da leggere con verifica sulle fonti e senza promessa di copertura completa."
+              />
+              <Route path="/incarichimetro" component={Incarichimetro} />
+              <Route path="/contratti/:id" component={ContractStoryline} />
+              <Route path="/albo" component={Albo} />
+              <Route path="/albo/:id" component={AlboDetail} />
+              <PublicRouteWithMeta
+                path="/atti-fondamentali"
+                component={AttiFondamentali}
+                title="Atti fondamentali"
+                description="Documenti di programmazione e atti fondamentali raccolti per agevolare la consultazione pubblica."
+              />
+              <PublicRouteWithMeta
+                path="/bandi"
+                component={Bandi}
+                title="Bandi e avvisi"
+                description="Elenco civico di bandi e avvisi pubblici con collegamenti alle fonti disponibili e informazioni da verificare sugli atti."
+              />
+              <Route path="/bandi/:slug" component={BandoDetail} />
+              <PublicRouteWithMeta
+                path="/beni-confiscati"
+                component={BeniConfiscati}
+                title="Beni confiscati"
+                description="Schede e mappe informative sui beni confiscati, con cautele di lettura e rinvio alle fonti pubbliche."
+              />
+              <Route
+                path="/beni-confiscati/:slug"
+                component={BeneConfiscatoDetail}
+              />
+              <Route path="/accesso-civico" component={AccessoCivico} />
+              <PublicRouteWithMeta
+                path="/monitoraggio"
+                component={Monitoraggio}
+                title="Monitor civico"
+                description="Hub documentale che collega criticità pubbliche, programma sotto verifica, atti, PNRR, incarichi, accesso civico e legalità senza formulare accuse autonome."
+              />
+              <PublicRouteWithMeta
+                path="/monitoraggio/nuovo"
+                component={MonitoraggioNuovo}
+                title="Nuova segnalazione civica"
+                description="Modulo per proporre un elemento di monitoraggio civico da valutare con cautele, fonti e verifiche successive."
+              />
+              <PublicRouteWithMeta
+                path="/promessometro"
+                component={Promessometro}
+                title="Promessometro amministrativo"
+                description="Modulo civico per collegare promesse programmatiche e atti amministrativi con cautele documentali e senza scoring politico."
+              />
+              <PublicRouteWithMeta
+                path="/archivio-proposte"
+                component={PropostePubbliche}
+                title="Archivio delle proposte pubbliche"
+                description="Archivio documentale e neutro delle proposte di valore pubblico censite come memoria civica verificabile."
+              />
+              <PublicRouteWithMeta
+                path="/macchina-comunale"
+                component={MacchinaComunale}
+                title="Macchina comunale"
+                description="Modulo prudente sulla capacità amministrativa, organico, scoperture e stato delle fonti, senza valutazioni individuali."
+              />
+              <Route path="/monitoraggio/:id" component={MonitoraggioDetail} />
+              <PublicRouteWithMeta
+                path="/legalita/timeline"
+                component={LegalitaTimeline}
+                title="Timeline legalità e memoria civica"
+                description="Struttura pubblica per eventi documentati su legalità, antimafia e memoria istituzionale, con fonti, status e cautele esplicite."
+              />
+              <PublicRouteWithMeta
+                path="/legalita"
+                component={Legalita}
+                title="Legalità e beni confiscati"
+                description="Percorsi informativi su legalità, riuso civico e fonti pubbliche, con linguaggio prudente e non accusatorio."
+              />
+              <PublicRouteWithMeta
+                path="/delibere"
+                component={Delibere}
+                title="Delibere"
+                description="Consultazione civica delle delibere pubblicate, con ricerca e rinvio alla documentazione disponibile."
+              />
+              <PublicRouteWithMeta
+                path="/convocazioni"
+                component={Convocazioni}
+                title="Sedute e ordini del giorno"
+                description="Calendario e schede di Consiglio e commissioni, organizzate per orientare la consultazione e distinguere fonte, stato e limiti della v0."
+              />
+              <Route path="/convocazioni/:id" component={SedutaDetail} />
+              <PublicRouteWithMeta
+                path="/organi"
+                component={Organi}
+                title="Organi istituzionali"
+                description="Indice civico degli organi e delle informazioni pubbliche disponibili per orientare la consultazione."
+              />
+              <Route path="/organi/:slug" component={OrganoDetail} />
+              <PublicRouteWithMeta
+                path="/amministratori"
+                component={Amministratori}
+                title="Amministratori"
+                description="Schede pubbliche e incarichi amministrativi consultabili come dati informativi da verificare sulle fonti."
+              />
+              <Route
+                path="/amministratori/:id"
+                component={AmministratoreDetail}
+              />
+              <PublicRouteWithMeta
+                path="/pnrr"
+                component={Pnrr}
+                title="Progetti e informazioni PNRR"
+                description="Sezione informativa sui contenuti PNRR disponibili nel monitoraggio civico, con collegamenti da verificare sulle fonti e limiti espliciti."
+              />
+              <PublicRouteWithMeta
+                path="/opendata"
+                component={Opendata}
+                title="Open data"
+                description="Catalogo civico dei dataset disponibili, con risorse, aggiornamenti e limiti da leggere insieme alle fonti."
+              />
+              <Route path="/opendata/:id" component={OpendataDetail} />
+              <PublicRouteWithMeta
+                path="/feeds"
+                component={Feeds}
+                title="Feed e aggiornamenti"
+                description="Canali di aggiornamento per seguire pubblicazioni e novità del monitoraggio civico in modo trasparente."
+              />
+              <PublicRouteWithMeta
+                path="/sviluppatori"
+                component={Sviluppatori}
+                title="Sviluppatori"
+                description="Informazioni tecniche per consultare API, feed e risorse aperte del progetto civico."
+              />
+              <PublicRouteWithMeta
+                path="/performance"
+                component={Performance}
+                title="Performance amministrativa"
+                description="Indicatori e confronti di performance da leggere come segnali di monitoraggio, non come conclusioni automatiche."
+              />
+              <PublicRouteWithMeta
+                path="/performance/confronta"
+                component={PerformanceCompare}
+                title="Confronto performance"
+                description="Strumento di confronto tra indicatori amministrativi per osservare pattern e differenze da verificare nel contesto."
+              />
+              <Route path="/performance/:id" component={PerformanceDetail} />
+              <PublicRouteWithMeta
+                path="/pareri"
+                component={PareriVigilanza}
+                title="Pareri e vigilanza"
+                description="Raccolta informativa di pareri e documenti di vigilanza, organizzata con cautele e collegamenti alle fonti."
+              />
+              <Route path="/pareri/:id" component={PareriVigilanzaDetail} />
+              <PublicRouteWithMeta
+                path="/criticita-pubbliche"
+                component={Reports}
+                title="Registro delle criticità pubbliche"
+                description="Registro civico per distinguere segnalazioni, fonti, atti, risposte istituzionali e dati mancanti senza presentare accuse come fatti."
+              />
+              <PublicRouteWithMeta
+                path="/segnalazioni"
+                component={Reports}
+                title="Segnalazioni e criticità pubbliche"
+                description="Area unica per inviare segnalazioni civiche e consultarle come criticità pubbliche da verificare, non accuse."
+              />
+              <PublicRouteWithMeta
+                path="/statistiche"
+                component={Statistics}
+                title="Statistiche"
+                description="Sintesi statistiche del monitoraggio civico, utili per orientare lettura, verifica e approfondimento delle fonti."
+              />
+              <PublicRouteWithMeta
+                path="/fonti-dati"
+                component={FontiDati}
+                title="Fonti dati"
+                description="Indice delle fonti pubbliche considerate dalla v0, con stato del collegamento, riferimenti, frequenze attese e limiti di lettura."
+              />
+              <PublicRouteWithMeta
+                path="/stato-monitoraggio"
+                component={StatoMonitoraggio}
+                title="Stato del monitoraggio"
+                description="Dashboard prudente sulla freschezza e copertura operativa delle fonti censite dal monitoraggio civico."
+              />
+              <PublicRouteWithMeta
+                path="/metodologia"
+                component={Metodologia}
+                title="Metodologia"
+                description="Criteri, cautele e limiti per leggere dati, indicatori, ricorrenze e assenze informative come segnali documentali da verificare."
+              />
+              <Route path="/roadmap" component={Roadmap} />
+              <PublicRouteWithMeta
+                path="/note-legali"
+                component={NoteLegali}
+                title="Note legali"
+                description="Informazioni legali, avvertenze e limiti d’uso per consultare le risorse pubblicate senza dedurre responsabilità o completezza dai dati."
+              />
+              <PublicRouteWithMeta
+                path="/chi-siamo"
+                component={ChiSiamo}
+                title="Chi siamo"
+                description="Presentazione del progetto, dei suoi obiettivi civici e dell’approccio documentale alla trasparenza pubblica."
+              />
+              <PublicRouteWithMeta
+                path="/contatti"
+                component={Contatti}
+                title="Contatti"
+                description="Canali di contatto per informazioni, segnalazioni civiche e richieste relative al monitoraggio documentale."
+              />
+              <PublicRouteWithMeta
+                path="/iscrizioni"
+                component={Subscriptions}
+                title="Iscrizioni agli aggiornamenti"
+                description="Gestione delle preferenze per ricevere aggiornamenti civici e seguire le novità del progetto."
+              />
+              <PublicRouteWithMeta
+                path="/guida"
+                component={Guida}
+                title="Guida"
+                description="Guida pratica per orientarsi tra sezioni, fonti e strumenti del monitoraggio civico."
+              />
+              <Route component={NotFound} />
             </Switch>
           </MainLayout>
         </PublicErrorBoundary>

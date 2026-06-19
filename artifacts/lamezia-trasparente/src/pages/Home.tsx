@@ -45,31 +45,33 @@ const _basePath = import.meta.env.BASE_URL.replace(/\/$/, "");
 function formatDate(value: string | null | undefined) {
   if (!value) return "—";
   const d = new Date(value);
-  return Number.isNaN(d.getTime()) ? "—" : format(d, "dd MMM yyyy", { locale: it });
+  return Number.isNaN(d.getTime())
+    ? "—"
+    : format(d, "dd MMM yyyy", { locale: it });
 }
 
 const SECTION_COLORS: Record<string, { color: string; bg: string }> = {
-  "/albo":              { color: "text-blue-500",    bg: "bg-blue-500/10" },
-  "/atti-fondamentali": { color: "text-sky-500",     bg: "bg-sky-500/10" },
-  "/delibere":          { color: "text-amber-500",   bg: "bg-amber-500/10" },
-  "/convocazioni":      { color: "text-cyan-500",    bg: "bg-cyan-500/10" },
-  "/pareri":            { color: "text-indigo-400",  bg: "bg-indigo-400/10" },
-  "/legalita":          { color: "text-teal-500",    bg: "bg-teal-500/10" },
-  "/contratti":         { color: "text-emerald-500", bg: "bg-emerald-500/10" },
-  "/bandi":             { color: "text-lime-500",    bg: "bg-lime-500/10" },
-  "/pnrr":              { color: "text-violet-500",  bg: "bg-violet-500/10" },
-  "/beni-confiscati":   { color: "text-green-600",   bg: "bg-green-600/10" },
-  "/organi":            { color: "text-slate-500",   bg: "bg-slate-500/10" },
-  "/amministratori":    { color: "text-indigo-500",  bg: "bg-indigo-500/10" },
-  "/temi":              { color: "text-fuchsia-500", bg: "bg-fuchsia-500/10" },
-  "/monitoraggio":      { color: "text-rose-500",    bg: "bg-rose-500/10" },
-  "/accesso-civico":    { color: "text-red-500",     bg: "bg-red-500/10" },
-  "/segnalazioni":      { color: "text-orange-400",  bg: "bg-orange-400/10" },
-  "/performance":       { color: "text-orange-500",  bg: "bg-orange-500/10" },
-  "/statistiche":       { color: "text-pink-500",    bg: "bg-pink-500/10" },
-  "/opendata":          { color: "text-purple-500",  bg: "bg-purple-500/10" },
-  "/feeds":             { color: "text-blue-400",    bg: "bg-blue-400/10" },
-  "/sviluppatori":      { color: "text-gray-500",    bg: "bg-gray-500/10" },
+  "/albo": { color: "text-blue-500", bg: "bg-blue-500/10" },
+  "/atti-fondamentali": { color: "text-sky-500", bg: "bg-sky-500/10" },
+  "/delibere": { color: "text-amber-500", bg: "bg-amber-500/10" },
+  "/convocazioni": { color: "text-cyan-500", bg: "bg-cyan-500/10" },
+  "/pareri": { color: "text-indigo-400", bg: "bg-indigo-400/10" },
+  "/legalita": { color: "text-teal-500", bg: "bg-teal-500/10" },
+  "/contratti": { color: "text-emerald-500", bg: "bg-emerald-500/10" },
+  "/bandi": { color: "text-lime-500", bg: "bg-lime-500/10" },
+  "/pnrr": { color: "text-violet-500", bg: "bg-violet-500/10" },
+  "/beni-confiscati": { color: "text-green-600", bg: "bg-green-600/10" },
+  "/organi": { color: "text-slate-500", bg: "bg-slate-500/10" },
+  "/amministratori": { color: "text-indigo-500", bg: "bg-indigo-500/10" },
+  "/temi": { color: "text-fuchsia-500", bg: "bg-fuchsia-500/10" },
+  "/monitoraggio": { color: "text-rose-500", bg: "bg-rose-500/10" },
+  "/accesso-civico": { color: "text-red-500", bg: "bg-red-500/10" },
+  "/segnalazioni": { color: "text-orange-400", bg: "bg-orange-400/10" },
+  "/performance": { color: "text-orange-500", bg: "bg-orange-500/10" },
+  "/statistiche": { color: "text-pink-500", bg: "bg-pink-500/10" },
+  "/opendata": { color: "text-purple-500", bg: "bg-purple-500/10" },
+  "/feeds": { color: "text-blue-400", bg: "bg-blue-400/10" },
+  "/sviluppatori": { color: "text-gray-500", bg: "bg-gray-500/10" },
 };
 
 // ---------------------------------------------------------------------------
@@ -90,7 +92,9 @@ function usePublishedBlocks(pageSlug: string) {
   return useQuery<PageBlock[]>({
     queryKey: ["published-blocks", pageSlug],
     queryFn: async () => {
-      const res = await fetch(`${_basePath}/api/redazione/pages/${pageSlug}/blocks`);
+      const res = await fetch(
+        `${_basePath}/api/redazione/pages/${pageSlug}/blocks`,
+      );
       if (!res.ok) return [];
       return asApiList<PageBlock>(await res.json());
     },
@@ -153,12 +157,8 @@ function BlockCtaBanner({ content }: { content: Record<string, unknown> }) {
   const ctaLabel = getStringContent(content, "ctaLabel");
   return (
     <section className="bg-brand/10 border-y border-brand/20 py-10 px-6 text-center">
-      {title && (
-        <h2 className="font-display text-2xl font-bold">{title}</h2>
-      )}
-      {subtitle && (
-        <p className="mt-2 text-muted-foreground">{subtitle}</p>
-      )}
+      {title && <h2 className="font-display text-2xl font-bold">{title}</h2>}
+      {subtitle && <p className="mt-2 text-muted-foreground">{subtitle}</p>}
       {ctaLabel && ctaHref && (
         <div className="mt-6">
           <Button asChild variant="default">
@@ -178,7 +178,9 @@ function BlockQuickLinks({ content }: { content: Record<string, unknown> }) {
   return (
     <section className="py-10 px-6 max-w-5xl mx-auto">
       {getStringContent(content, "title") && (
-        <h2 className="font-display text-xl font-bold mb-4">{getStringContent(content, "title")}</h2>
+        <h2 className="font-display text-xl font-bold mb-4">
+          {getStringContent(content, "title")}
+        </h2>
       )}
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
         {links.map((link, i) => (
@@ -197,7 +199,9 @@ function BlockRichText({ content }: { content: Record<string, unknown> }) {
   return (
     <section className="py-10 px-6 max-w-3xl mx-auto">
       {getStringContent(content, "title") && (
-        <h2 className="font-display text-xl font-bold mb-4">{getStringContent(content, "title")}</h2>
+        <h2 className="font-display text-xl font-bold mb-4">
+          {getStringContent(content, "title")}
+        </h2>
       )}
       {getStringContent(content, "body") && (
         <div className="prose prose-sm max-w-none text-foreground">
@@ -215,11 +219,13 @@ function BlockCallToAction({ content }: { content: Record<string, unknown> }) {
   return (
     <section className="py-10 px-6 text-center">
       {getStringContent(content, "title") && (
-        <h2 className="font-display text-xl font-bold mb-4">{getStringContent(content, "title")}</h2>
+        <h2 className="font-display text-xl font-bold mb-4">
+          {getStringContent(content, "title")}
+        </h2>
       )}
       <Button asChild size="lg" variant="brand">
         <Link href={ctaHref}>
-          {ctaLabel} <ArrowRight className="ml-1 h-4 w-4"  aria-hidden="true"/>
+          {ctaLabel} <ArrowRight className="ml-1 h-4 w-4" aria-hidden="true" />
         </Link>
       </Button>
     </section>
@@ -260,14 +266,17 @@ function BlockSectionEmbed({ content }: { content: Record<string, unknown> }) {
         className="flex items-center justify-between rounded-xl border border-border bg-card p-5 hover:border-primary/40 hover:bg-muted/40 transition-colors group"
       >
         <div>
-          {title && (
-            <p className="font-semibold text-foreground">{title}</p>
-          )}
+          {title && <p className="font-semibold text-foreground">{title}</p>}
           {description && (
-            <p className="text-sm text-muted-foreground mt-0.5">{description}</p>
+            <p className="text-sm text-muted-foreground mt-0.5">
+              {description}
+            </p>
           )}
         </div>
-        <ArrowUpRight className="h-5 w-5 text-muted-foreground group-hover:text-primary transition-colors shrink-0"  aria-hidden="true"/>
+        <ArrowUpRight
+          className="h-5 w-5 text-muted-foreground group-hover:text-primary transition-colors shrink-0"
+          aria-hidden="true"
+        />
       </Link>
     </section>
   );
@@ -281,12 +290,34 @@ function BlockStats() {
     <section className="border-b border-border bg-card">
       <div className="container mx-auto px-4 md:px-6">
         <div className="grid grid-cols-2 md:grid-cols-4 divide-x divide-y md:divide-y-0 divide-border">
-          <StatCard title="Atti Pubblicati" value={stats?.acts} loading={statsLoading} href="/albo" icon={FileSearch} />
-          <StatCard title="Appalti" value={stats?.contracts} loading={statsLoading} href="/contratti" icon={FileText} />
-          <StatCard title="Progetti PNRR" value={pnrrProjectCount} loading={!pnrrProjects} href="/pnrr" icon={Landmark} />
           <StatCard
-            title="Valore Monitorato"
-            value={stats ? `€ ${(stats.monitoredAmount / 1000000).toFixed(1)}M` : undefined}
+            title="Atti dalla fonte"
+            value={stats?.acts}
+            loading={statsLoading}
+            href="/albo"
+            icon={FileSearch}
+          />
+          <StatCard
+            title="Contratti censiti"
+            value={stats?.contracts}
+            loading={statsLoading}
+            href="/contratti"
+            icon={FileText}
+          />
+          <StatCard
+            title="Progetti PNRR"
+            value={pnrrProjectCount}
+            loading={!pnrrProjects}
+            href="/pnrr"
+            icon={Landmark}
+          />
+          <StatCard
+            title="Importi disponibili"
+            value={
+              stats
+                ? `€ ${(stats.monitoredAmount / 1000000).toFixed(1)}M`
+                : undefined
+            }
             loading={statsLoading}
             href="/statistiche"
             icon={CheckCircle2}
@@ -305,7 +336,9 @@ function BlockThemesGrid({ content }: { content: Record<string, unknown> }) {
         <div className="mb-10">
           <span className="eyebrow text-primary mb-2">Accesso rapido</span>
           <h2 className="mt-2 font-display text-2xl font-bold tracking-tight md:text-3xl">
-            {content.title ? String(content.title) : "Dove vuoi andare?"}
+            {content.title
+              ? String(content.title)
+              : "Scegli un percorso civico"}
           </h2>
         </div>
         <div className="space-y-10">
@@ -320,7 +353,10 @@ function BlockThemesGrid({ content }: { content: Record<string, unknown> }) {
               <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
                 {group.items.map((item) => {
                   const Icon = item.icon;
-                  const colors = SECTION_COLORS[item.href] ?? { color: "text-primary", bg: "bg-primary/10" };
+                  const colors = SECTION_COLORS[item.href] ?? {
+                    color: "text-primary",
+                    bg: "bg-primary/10",
+                  };
                   return (
                     <Link
                       key={item.href}
@@ -328,8 +364,13 @@ function BlockThemesGrid({ content }: { content: Record<string, unknown> }) {
                       className="group flex flex-col items-center gap-3 rounded-xl border border-border bg-card p-4 text-center transition-all hover-elevate hover:border-primary/30 hover:shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
                       aria-label={item.label}
                     >
-                      <div className={`rounded-xl p-3 ${colors.bg} transition-transform group-hover:scale-105`}>
-                        <Icon className={`h-6 w-6 ${colors.color}`} aria-hidden="true" />
+                      <div
+                        className={`rounded-xl p-3 ${colors.bg} transition-transform group-hover:scale-105`}
+                      >
+                        <Icon
+                          className={`h-6 w-6 ${colors.color}`}
+                          aria-hidden="true"
+                        />
                       </div>
                       <div>
                         <div className="text-sm font-bold leading-tight text-foreground">
@@ -356,7 +397,10 @@ function BlockQuestionsFeatured() {
 
   const { featured, topics } = useMemo(() => {
     const list = asApiList<Question>(questions);
-    const featured = list.filter((q) => q.featured).sort((a, b) => a.sortOrder - b.sortOrder).slice(0, 6);
+    const featured = list
+      .filter((q) => q.featured)
+      .sort((a, b) => a.sortOrder - b.sortOrder)
+      .slice(0, 6);
     const topicMap = new Map<string, Question[]>();
     for (const q of list) {
       const arr = topicMap.get(q.topic);
@@ -374,7 +418,7 @@ function BlockQuestionsFeatured() {
       <div className="container mx-auto px-4 md:px-6">
         <div className="mx-auto max-w-3xl text-center">
           <span className="eyebrow justify-center text-primary">
-            <HelpCircle className="h-3.5 w-3.5"  aria-hidden="true"/>
+            <HelpCircle className="h-3.5 w-3.5" aria-hidden="true" />
             Parti da una domanda
           </span>
           <h2 className="mt-3 font-display text-3xl font-bold tracking-tight md:text-5xl">
@@ -382,7 +426,8 @@ function BlockQuestionsFeatured() {
           </h2>
           <p className="mt-4 text-lg text-muted-foreground text-balance">
             Abbiamo organizzato i dati pubblici del Comune attorno alle domande
-            che contano. Scegli un punto di partenza e ti guidiamo alle risposte.
+            che contano. Scegli un punto di partenza e ti guidiamo alle
+            risposte.
           </p>
         </div>
         {topics.length > 0 && (
@@ -397,7 +442,9 @@ function BlockQuestionsFeatured() {
                 >
                   <Icon className="h-4 w-4 text-brand" aria-hidden="true" />
                   {t.topic}
-                  <span className="text-xs text-muted-foreground tabular-nums">{t.count}</span>
+                  <span className="text-xs text-muted-foreground tabular-nums">
+                    {t.count}
+                  </span>
                 </Link>
               );
             })}
@@ -405,13 +452,18 @@ function BlockQuestionsFeatured() {
         )}
         <div className="mt-10 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
           {questionsLoading
-            ? Array(6).fill(0).map((_, i) => <Skeleton key={i} className="h-48 w-full rounded-xl" />)
+            ? Array(6)
+                .fill(0)
+                .map((_, i) => (
+                  <Skeleton key={i} className="h-48 w-full rounded-xl" />
+                ))
             : featured.map((q) => <QuestionCard key={q.id} question={q} />)}
         </div>
         <div className="mt-10 flex justify-center">
           <Link href="/domande">
             <Button variant="brand" size="lg" className="h-12 px-7 font-bold">
-              Esplora tutte le domande <ArrowRight className="ml-1 h-4 w-4"  aria-hidden="true"/>
+              Esplora tutte le domande{" "}
+              <ArrowRight className="ml-1 h-4 w-4" aria-hidden="true" />
             </Button>
           </Link>
         </div>
@@ -427,14 +479,21 @@ function BlockRecentActivity() {
       <div className="container mx-auto px-4 md:px-6 max-w-2xl">
         <div className="mb-6">
           <span className="eyebrow text-primary mb-2">In tempo reale</span>
-          <h2 className="text-2xl md:text-3xl font-display font-bold tracking-tight mt-2">Attività Recente</h2>
-          <p className="text-muted-foreground mt-1">Ultimi aggiornamenti dalla piattaforma.</p>
+          <h2 className="text-2xl md:text-3xl font-display font-bold tracking-tight mt-2">
+            Aggiornamenti disponibili
+          </h2>
+          <p className="text-muted-foreground mt-1">
+            Movimenti pubblicati dalla piattaforma quando le fonti o i dati
+            consultati li rendono disponibili.
+          </p>
         </div>
         <Card className="overflow-hidden">
           <CardContent className="p-0">
             <div className="divide-y divide-border">
-              {activityLoading
-                ? Array(5).fill(0).map((_, i) => (
+              {activityLoading ? (
+                Array(5)
+                  .fill(0)
+                  .map((_, i) => (
                     <div key={i} className="p-4 flex gap-4">
                       <Skeleton className="h-10 w-10 rounded-full shrink-0" />
                       <div className="space-y-2 w-full">
@@ -443,19 +502,26 @@ function BlockRecentActivity() {
                       </div>
                     </div>
                   ))
-                : Array.isArray(activity) && activity.length > 0
-                ? activity.slice(0, 6).map((item) => <ActivityRow key={item.id} item={item} />)
-                : (
-                    <div className="p-8 text-center text-muted-foreground">
-                      Nessuna attività recente.
-                    </div>
-                  )}
+              ) : Array.isArray(activity) && activity.length > 0 ? (
+                activity
+                  .slice(0, 6)
+                  .map((item) => <ActivityRow key={item.id} item={item} />)
+              ) : (
+                <div className="p-8 text-center text-muted-foreground">
+                  Non risultano aggiornamenti recenti dalla fonte consultata o
+                  dal fallback statico della v0.
+                </div>
+              )}
             </div>
           </CardContent>
           <CardHeader className="p-3 border-t border-border bg-muted/30">
             <Link href="/albo" className="w-full">
-              <Button variant="ghost" className="w-full justify-between font-semibold text-muted-foreground hover:text-foreground">
-                Vai all'Albo Pretorio <ArrowUpRight className="h-4 w-4"  aria-hidden="true"/>
+              <Button
+                variant="ghost"
+                className="w-full justify-between font-semibold text-muted-foreground hover:text-foreground"
+              >
+                Vai all'Albo Pretorio{" "}
+                <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
               </Button>
             </Link>
           </CardHeader>
@@ -466,29 +532,50 @@ function BlockRecentActivity() {
 }
 
 function BlockConvocazioni() {
-  const { data: consiglio, isLoading: consiglioLoading } = useListConvocazioni({ tipo: "consiglio" });
-  const { data: commissioni, isLoading: commissioniLoading } = useListConvocazioni({ tipo: "commissione" });
+  const { data: consiglio, isLoading: consiglioLoading } = useListConvocazioni({
+    tipo: "consiglio",
+  });
+  const { data: commissioni, isLoading: commissioniLoading } =
+    useListConvocazioni({ tipo: "commissione" });
   return (
     <section className="py-12 md:py-16">
       <div className="container mx-auto px-4 md:px-6">
         <div className="flex items-end justify-between gap-4 mb-8">
           <div>
             <span className="eyebrow text-primary mb-2">Agenda pubblica</span>
-            <h2 className="text-2xl md:text-3xl font-display font-bold tracking-tight mt-2">Prossime Convocazioni</h2>
-            <p className="text-muted-foreground mt-1">Sedute del Consiglio Comunale e delle Commissioni Consiliari.</p>
+            <h2 className="text-2xl md:text-3xl font-display font-bold tracking-tight mt-2">
+              Sedute e ordini del giorno
+            </h2>
+            <p className="text-muted-foreground mt-1">
+              Avvisi, date e ordini del giorno disponibili per Consiglio
+              comunale e commissioni, con stato della fonte e limiti della v0.
+            </p>
           </div>
           <Link href="/convocazioni" className="hidden md:flex shrink-0">
             <Button variant="ghost" className="gap-2 font-semibold">
-              Vedi tutte <ArrowRight className="h-4 w-4"  aria-hidden="true"/>
+              Vedi la sezione{" "}
+              <ArrowRight className="h-4 w-4" aria-hidden="true" />
             </Button>
           </Link>
         </div>
         <div className="grid md:grid-cols-2 gap-6">
-          <ConvocazioniColumn title="Consiglio Comunale" icon={Users} items={consiglio} loading={consiglioLoading} />
-          <ConvocazioniColumn title="Commissioni Consiliari" icon={CalendarClock} items={commissioni} loading={commissioniLoading} />
+          <ConvocazioniColumn
+            title="Consiglio Comunale"
+            icon={Users}
+            items={consiglio}
+            loading={consiglioLoading}
+          />
+          <ConvocazioniColumn
+            title="Commissioni Consiliari"
+            icon={CalendarClock}
+            items={commissioni}
+            loading={commissioniLoading}
+          />
         </div>
         <Link href="/convocazioni" className="md:hidden block mt-6">
-          <Button variant="outline" className="w-full font-semibold">Vedi tutte le convocazioni</Button>
+          <Button variant="outline" className="w-full font-semibold">
+            Vedi tutte le sedute
+          </Button>
         </Link>
       </div>
     </section>
@@ -501,18 +588,18 @@ const BLOCK_RENDERERS: Record<
   string,
   React.ComponentType<{ content: Record<string, unknown> }>
 > = {
-  hero:                BlockHero,
-  cta_banner:          BlockCtaBanner,
-  quick_links:         BlockQuickLinks,
-  rich_text:           BlockRichText,
-  call_to_action:      BlockCallToAction,
-  image:               BlockImage,
-  section_embed:       BlockSectionEmbed,
-  stats:               () => <BlockStats />,
-  themes_grid:         BlockThemesGrid,
-  questions_featured:  () => <BlockQuestionsFeatured />,
-  recent_activity:     () => <BlockRecentActivity />,
-  convocazioni:        () => <BlockConvocazioni />,
+  hero: BlockHero,
+  cta_banner: BlockCtaBanner,
+  quick_links: BlockQuickLinks,
+  rich_text: BlockRichText,
+  call_to_action: BlockCallToAction,
+  image: BlockImage,
+  section_embed: BlockSectionEmbed,
+  stats: () => <BlockStats />,
+  themes_grid: BlockThemesGrid,
+  questions_featured: () => <BlockQuestionsFeatured />,
+  recent_activity: () => <BlockRecentActivity />,
+  convocazioni: () => <BlockConvocazioni />,
 };
 
 function PublishedBlocks({ blocks }: { blocks: PageBlock[] }) {
@@ -536,8 +623,11 @@ function StaticHomeLayout() {
   const { data: activity, isLoading: activityLoading } = useGetRecentActivity();
   const { data: pnrrProjects } = useListPnrrProjects();
   const { data: questions, isLoading: questionsLoading } = useListQuestions();
-  const { data: consiglio, isLoading: consiglioLoading } = useListConvocazioni({ tipo: "consiglio" });
-  const { data: commissioni, isLoading: commissioniLoading } = useListConvocazioni({ tipo: "commissione" });
+  const { data: consiglio, isLoading: consiglioLoading } = useListConvocazioni({
+    tipo: "consiglio",
+  });
+  const { data: commissioni, isLoading: commissioniLoading } =
+    useListConvocazioni({ tipo: "commissione" });
   const pnrrProjectCount = asApiList(pnrrProjects?.projects).length;
 
   const { featured, topics } = useMemo(() => {
@@ -561,7 +651,10 @@ function StaticHomeLayout() {
   return (
     <>
       {/* Hero Section */}
-      <section data-tour="home-hero" className="relative bg-sidebar text-sidebar-foreground overflow-hidden">
+      <section
+        data-tour="home-hero"
+        className="relative bg-sidebar text-sidebar-foreground overflow-hidden"
+      >
         <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1518398046578-8cca57782e17?q=80&w=2000&auto=format&fit=crop')] bg-cover bg-center opacity-[0.07] pointer-events-none" />
         <div
           className="absolute inset-0 pointer-events-none opacity-[0.5]"
@@ -581,25 +674,35 @@ function StaticHomeLayout() {
         <div className="container relative z-10 mx-auto px-4 md:px-6 py-20 md:py-28 flex flex-col items-start max-w-4xl">
           <div className="eyebrow rounded-full border border-brand/40 bg-brand/10 px-3.5 py-1.5 text-brand">
             <ShieldAlert className="h-3.5 w-3.5" />
-            Osservatorio Civico Indipendente
+            Piattaforma civica documentale
           </div>
 
           <h1 className="font-display text-5xl md:text-7xl lg:text-[5.25rem] font-bold tracking-[-0.03em] text-white mt-7 mb-6 leading-[0.95]">
-            La trasparenza<br className="hidden sm:inline" /> è un diritto.
+            Atti, sedute e progetti pubblici
+            <br className="hidden sm:inline" /> in un percorso leggibile.
             <br />
-            <span className="text-gradient-brand">Il controllo è un dovere.</span>
+            <span className="text-gradient-brand">
+              Una v0 pronta a spiegarsi.
+            </span>
           </h1>
 
           <p className="text-lg md:text-xl text-sidebar-foreground/75 mb-9 max-w-2xl text-balance">
-            Organizziamo informazioni amministrative di interesse pubblico con un
-            approccio documentale e prudente. Nella v0 il percorso principale parte
-            dalle convocazioni del Consiglio comunale e dai relativi limiti di verifica.
+            Lamezia Trasparente Monitor organizza informazioni amministrative di
+            interesse pubblico in modo documentale, prudente e non accusatorio.
+            Nella v0 puoi orientarti tra sedute, contratti, PNRR, fonti e
+            metodologia: alcune sezioni sono consultabili, altre attendono
+            alimentazione dati verificata.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
             <Link href="/convocazioni" className="w-full sm:w-auto">
-              <Button variant="brand" size="lg" className="w-full text-base h-12 px-7 font-bold">
-                Apri il percorso v0 <ArrowRight className="ml-1 h-4 w-4"  aria-hidden="true"/>
+              <Button
+                variant="brand"
+                size="lg"
+                className="w-full text-base h-12 px-7 font-bold"
+              >
+                Consulta le sedute v0{" "}
+                <ArrowRight className="ml-1 h-4 w-4" aria-hidden="true" />
               </Button>
             </Link>
             <Link href="/fonti-dati" className="w-full sm:w-auto">
@@ -608,8 +711,8 @@ function StaticHomeLayout() {
                 size="lg"
                 className="w-full text-base h-12 px-7 font-bold bg-white/5 text-white border-white/25 hover:bg-white/10"
               >
-                <Info className="mr-1 h-4 w-4"  aria-hidden="true"/>
-                Fonti e limiti
+                <Info className="mr-1 h-4 w-4" aria-hidden="true" />
+                Capisci fonti e limiti
               </Button>
             </Link>
             <Link href="/segnalazioni" className="w-full sm:w-auto">
@@ -618,8 +721,8 @@ function StaticHomeLayout() {
                 size="lg"
                 className="w-full text-base h-12 px-7 font-bold bg-white/5 text-white border-white/25 hover:bg-white/10"
               >
-                <Megaphone className="mr-1 h-4 w-4"  aria-hidden="true"/>
-                Invia una Segnalazione
+                <Megaphone className="mr-1 h-4 w-4" aria-hidden="true" />
+                Segnala un dato da verificare
               </Button>
             </Link>
           </div>
@@ -627,15 +730,40 @@ function StaticHomeLayout() {
       </section>
 
       {/* Stats Section */}
-      <section data-tour="home-stats" className="border-b border-border bg-card">
+      <section
+        data-tour="home-stats"
+        className="border-b border-border bg-card"
+      >
         <div className="container mx-auto px-4 md:px-6">
           <div className="grid grid-cols-2 md:grid-cols-4 divide-x divide-y md:divide-y-0 divide-border">
-            <StatCard title="Atti Pubblicati" value={stats?.acts} loading={statsLoading} href="/albo" icon={FileSearch} />
-            <StatCard title="Appalti" value={stats?.contracts} loading={statsLoading} href="/contratti" icon={FileText} />
-            <StatCard title="Progetti PNRR" value={pnrrProjectCount} loading={!pnrrProjects} href="/pnrr" icon={Landmark} />
             <StatCard
-              title="Valore Monitorato"
-              value={stats ? `€ ${(stats.monitoredAmount / 1000000).toFixed(1)}M` : undefined}
+              title="Atti dalla fonte"
+              value={stats?.acts}
+              loading={statsLoading}
+              href="/albo"
+              icon={FileSearch}
+            />
+            <StatCard
+              title="Contratti censiti"
+              value={stats?.contracts}
+              loading={statsLoading}
+              href="/contratti"
+              icon={FileText}
+            />
+            <StatCard
+              title="Progetti PNRR"
+              value={pnrrProjectCount}
+              loading={!pnrrProjects}
+              href="/pnrr"
+              icon={Landmark}
+            />
+            <StatCard
+              title="Importi disponibili"
+              value={
+                stats
+                  ? `€ ${(stats.monitoredAmount / 1000000).toFixed(1)}M`
+                  : undefined
+              }
               loading={statsLoading}
               href="/statistiche"
               icon={CheckCircle2}
@@ -646,12 +774,15 @@ function StaticHomeLayout() {
       </section>
 
       {/* Quick Access Grid — grouped by nav category */}
-      <section data-tour="home-themes" className="border-b border-border bg-background py-12 md:py-16">
+      <section
+        data-tour="home-themes"
+        className="border-b border-border bg-background py-12 md:py-16"
+      >
         <div className="container mx-auto px-4 md:px-6">
           <div className="mb-10">
             <span className="eyebrow text-primary mb-2">Accesso rapido</span>
             <h2 className="mt-2 font-display text-2xl font-bold tracking-tight md:text-3xl">
-              Dove vuoi andare?
+              Scegli un percorso civico
             </h2>
           </div>
 
@@ -667,7 +798,10 @@ function StaticHomeLayout() {
                 <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
                   {group.items.map((item) => {
                     const Icon = item.icon;
-                    const colors = SECTION_COLORS[item.href] ?? { color: "text-primary", bg: "bg-primary/10" };
+                    const colors = SECTION_COLORS[item.href] ?? {
+                      color: "text-primary",
+                      bg: "bg-primary/10",
+                    };
                     return (
                       <Link
                         key={item.href}
@@ -675,8 +809,13 @@ function StaticHomeLayout() {
                         className="group flex flex-col items-center gap-3 rounded-xl border border-border bg-card p-4 text-center transition-all hover-elevate hover:border-primary/30 hover:shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
                         aria-label={item.label}
                       >
-                        <div className={`rounded-xl p-3 ${colors.bg} transition-transform group-hover:scale-105`}>
-                          <Icon className={`h-6 w-6 ${colors.color}`} aria-hidden="true" />
+                        <div
+                          className={`rounded-xl p-3 ${colors.bg} transition-transform group-hover:scale-105`}
+                        >
+                          <Icon
+                            className={`h-6 w-6 ${colors.color}`}
+                            aria-hidden="true"
+                          />
                         </div>
                         <div>
                           <div className="text-sm font-bold leading-tight text-foreground">
@@ -701,15 +840,16 @@ function StaticHomeLayout() {
         <div className="container mx-auto px-4 md:px-6">
           <div className="mx-auto max-w-3xl text-center">
             <span className="eyebrow justify-center text-primary">
-              <HelpCircle className="h-3.5 w-3.5"  aria-hidden="true"/>
+              <HelpCircle className="h-3.5 w-3.5" aria-hidden="true" />
               Parti da una domanda
             </span>
             <h2 className="mt-3 font-display text-3xl font-bold tracking-tight md:text-5xl">
               Cosa vuoi scoprire?
             </h2>
             <p className="mt-4 text-lg text-muted-foreground text-balance">
-              Abbiamo organizzato i dati pubblici del Comune attorno alle domande
-              che contano. Scegli un punto di partenza e ti guidiamo alle risposte.
+              Abbiamo organizzato le informazioni pubbliche attorno a domande
+              civiche: cosa è già consultabile, quale fonte è richiamata e quali
+              limiti richiedono verifica.
             </p>
           </div>
 
@@ -725,7 +865,9 @@ function StaticHomeLayout() {
                   >
                     <Icon className="h-4 w-4 text-brand" aria-hidden="true" />
                     {t.topic}
-                    <span className="text-xs text-muted-foreground tabular-nums">{t.count}</span>
+                    <span className="text-xs text-muted-foreground tabular-nums">
+                      {t.count}
+                    </span>
                   </Link>
                 );
               })}
@@ -734,14 +876,19 @@ function StaticHomeLayout() {
 
           <div className="mt-10 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
             {questionsLoading
-              ? Array(6).fill(0).map((_, i) => <Skeleton key={i} className="h-48 w-full rounded-xl" />)
+              ? Array(6)
+                  .fill(0)
+                  .map((_, i) => (
+                    <Skeleton key={i} className="h-48 w-full rounded-xl" />
+                  ))
               : featured.map((q) => <QuestionCard key={q.id} question={q} />)}
           </div>
 
           <div className="mt-10 flex justify-center">
             <Link href="/domande">
               <Button variant="brand" size="lg" className="h-12 px-7 font-bold">
-                Esplora tutte le domande <ArrowRight className="ml-1 h-4 w-4"  aria-hidden="true"/>
+                Esplora tutte le domande{" "}
+                <ArrowRight className="ml-1 h-4 w-4" aria-hidden="true" />
               </Button>
             </Link>
           </div>
@@ -756,29 +903,44 @@ function StaticHomeLayout() {
             <div className="lg:col-span-2 space-y-8">
               <div className="flex items-end justify-between gap-4">
                 <div>
-                  <span className="eyebrow text-primary mb-2">Agenda pubblica</span>
+                  <span className="eyebrow text-primary mb-2">
+                    Agenda pubblica
+                  </span>
                   <h2 className="text-3xl md:text-4xl font-display font-bold tracking-tight mt-2">
-                    Prossime Convocazioni
+                    Sedute e ordini del giorno
                   </h2>
                   <p className="text-muted-foreground mt-2">
-                    Sedute del Consiglio Comunale e delle Commissioni Consiliari.
+                    Avvisi, date e ordini del giorno disponibili per Consiglio
+                    comunale e commissioni, con stato della fonte e limiti della
+                    v0.
                   </p>
                 </div>
                 <Link href="/convocazioni" className="hidden md:flex shrink-0">
                   <Button variant="ghost" className="gap-2 font-semibold">
-                    Vedi tutte <ArrowRight className="h-4 w-4"  aria-hidden="true"/>
+                    Vedi la sezione{" "}
+                    <ArrowRight className="h-4 w-4" aria-hidden="true" />
                   </Button>
                 </Link>
               </div>
 
               <div className="grid md:grid-cols-2 gap-6">
-                <ConvocazioniColumn title="Consiglio Comunale" icon={Users} items={consiglio} loading={consiglioLoading} />
-                <ConvocazioniColumn title="Commissioni Consiliari" icon={CalendarClock} items={commissioni} loading={commissioniLoading} />
+                <ConvocazioniColumn
+                  title="Consiglio Comunale"
+                  icon={Users}
+                  items={consiglio}
+                  loading={consiglioLoading}
+                />
+                <ConvocazioniColumn
+                  title="Commissioni Consiliari"
+                  icon={CalendarClock}
+                  items={commissioni}
+                  loading={commissioniLoading}
+                />
               </div>
 
               <Link href="/convocazioni" className="md:hidden block mt-6">
                 <Button variant="outline" className="w-full font-semibold">
-                  Vedi tutte le convocazioni
+                  Vedi tutte le sedute
                 </Button>
               </Link>
             </div>
@@ -786,39 +948,55 @@ function StaticHomeLayout() {
             {/* Sidebar Activity */}
             <div className="space-y-8">
               <div>
-                <span className="eyebrow text-primary mb-2">In tempo reale</span>
+                <span className="eyebrow text-primary mb-2">
+                  In tempo reale
+                </span>
                 <h2 className="text-3xl md:text-4xl font-display font-bold tracking-tight mt-2">
-                  Attività Recente
+                  Aggiornamenti disponibili
                 </h2>
-                <p className="text-muted-foreground mt-2">Ultimi aggiornamenti dalla piattaforma.</p>
+                <p className="text-muted-foreground mt-2">
+                  Movimenti pubblicati dalla piattaforma quando le fonti o i
+                  dati consultati li rendono disponibili.
+                </p>
               </div>
 
               <Card className="overflow-hidden">
                 <CardContent className="p-0">
                   <div className="divide-y divide-border">
                     {activityLoading ? (
-                      Array(5).fill(0).map((_, i) => (
-                        <div key={i} className="p-4 flex gap-4">
-                          <Skeleton className="h-10 w-10 rounded-full shrink-0" />
-                          <div className="space-y-2 w-full">
-                            <Skeleton className="h-4 w-full" />
-                            <Skeleton className="h-3 w-24" />
+                      Array(5)
+                        .fill(0)
+                        .map((_, i) => (
+                          <div key={i} className="p-4 flex gap-4">
+                            <Skeleton className="h-10 w-10 rounded-full shrink-0" />
+                            <div className="space-y-2 w-full">
+                              <Skeleton className="h-4 w-full" />
+                              <Skeleton className="h-3 w-24" />
+                            </div>
                           </div>
-                        </div>
-                      ))
+                        ))
                     ) : Array.isArray(activity) && activity.length > 0 ? (
-                      activity.slice(0, 6).map((item) => <ActivityRow key={item.id} item={item} />)
+                      activity
+                        .slice(0, 6)
+                        .map((item) => (
+                          <ActivityRow key={item.id} item={item} />
+                        ))
                     ) : (
                       <div className="p-8 text-center text-muted-foreground">
-                        Nessuna attività recente.
+                        Non risultano aggiornamenti recenti dalla fonte
+                        consultata o dal fallback statico della v0.
                       </div>
                     )}
                   </div>
                 </CardContent>
                 <CardHeader className="p-3 border-t border-border bg-muted/30">
                   <Link href="/albo" className="w-full">
-                    <Button variant="ghost" className="w-full justify-between font-semibold text-muted-foreground hover:text-foreground">
-                      Vai all'Albo Pretorio <ArrowUpRight className="h-4 w-4"  aria-hidden="true"/>
+                    <Button
+                      variant="ghost"
+                      className="w-full justify-between font-semibold text-muted-foreground hover:text-foreground"
+                    >
+                      Vai all'Albo Pretorio{" "}
+                      <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
                     </Button>
                   </Link>
                 </CardHeader>
@@ -839,17 +1017,24 @@ function StaticHomeLayout() {
           }}
         />
         <div className="container relative mx-auto px-4 md:px-6 py-20 text-center max-w-3xl">
-          <Megaphone className="h-12 w-12 mx-auto mb-6"  aria-hidden="true"/>
+          <Megaphone className="h-12 w-12 mx-auto mb-6" aria-hidden="true" />
           <h2 className="text-3xl md:text-5xl font-display font-bold mb-4 tracking-tight">
-            Hai notato una criticità da verificare?
+            Hai notato un elemento documentale da verificare?
           </h2>
           <p className="text-brand-foreground/85 text-lg mb-8 text-balance">
-            La trasparenza si costruisce insieme. Segnala lavori interrotti, documentazione mancante o
-            possibili incoerenze documentali. Il nostro team verificherà la segnalazione.
+            La trasparenza si costruisce distinguendo fatti, fonti e
+            interpretazioni. Puoi indicare documentazione mancante, lavori da
+            riscontrare o possibili incoerenze informative: saranno trattate
+            come segnalazioni da verificare.
           </p>
           <Link href="/segnalazioni">
-            <Button size="lg" variant="secondary" className="text-base h-12 px-8 font-bold">
-              Invia una Segnalazione <ArrowRight className="ml-1 h-4 w-4"  aria-hidden="true"/>
+            <Button
+              size="lg"
+              variant="secondary"
+              className="text-base h-12 px-8 font-bold"
+            >
+              Segnala un dato da verificare{" "}
+              <ArrowRight className="ml-1 h-4 w-4" aria-hidden="true" />
             </Button>
           </Link>
         </div>
@@ -858,31 +1043,38 @@ function StaticHomeLayout() {
   );
 }
 
-
 function V0PublicPathBanner() {
   return (
-    <section className="border-b border-brand/20 bg-brand/5 py-6" aria-labelledby="v0-public-path-title">
+    <section
+      className="border-b border-brand/20 bg-brand/5 py-6"
+      aria-labelledby="v0-public-path-title"
+    >
       <div className="container mx-auto flex flex-col gap-4 px-4 md:flex-row md:items-center md:justify-between md:px-6">
         <div className="max-w-3xl">
           <span className="eyebrow text-primary">
             <CalendarClock className="h-3.5 w-3.5" aria-hidden="true" />
             Percorso pubblico minimo v0
           </span>
-          <h2 id="v0-public-path-title" className="mt-2 font-display text-2xl font-bold tracking-tight">
-            Il primo output civico consultabile sono le convocazioni del Consiglio comunale.
+          <h2
+            id="v0-public-path-title"
+            className="mt-2 font-display text-2xl font-bold tracking-tight"
+          >
+            La v0 è una mappa civica consultabile, con sedute come primo
+            percorso guidato.
           </h2>
           <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-            Segui il percorso Home → Convocazioni → scheda seduta → fonti e limiti.
-            Dove mancano dati verificati, eventuali esempi sono dichiarati come fixture
-            dimostrative e non come informazioni ufficiali complete.
+            Segui il percorso Home → Sedute e ordini del giorno → scheda seduta
+            → fonti e limiti. Le sezioni senza alimentazione completa non
+            promettono copertura totale: indicano cosa è pronto, cosa è
+            dimostrativo e cosa richiede dati verificati.
           </p>
         </div>
         <div className="flex flex-col gap-2 sm:flex-row md:shrink-0">
           <Button asChild>
-            <Link href="/convocazioni">Vai alle convocazioni</Link>
+            <Link href="/convocazioni">Vai a sedute e ordini del giorno</Link>
           </Button>
           <Button asChild variant="outline">
-            <Link href="/fonti-dati">Fonti e limiti</Link>
+            <Link href="/fonti-dati">Capisci fonti e limiti</Link>
           </Button>
         </div>
       </div>
@@ -895,7 +1087,8 @@ function V0PublicPathBanner() {
 // ---------------------------------------------------------------------------
 
 export function Home() {
-  const { data: publishedBlocksData, isLoading: blocksLoading } = usePublishedBlocks("home");
+  const { data: publishedBlocksData, isLoading: blocksLoading } =
+    usePublishedBlocks("home");
   const publishedBlocks = asApiList<PageBlock>(publishedBlocksData);
 
   // While loading we render nothing (avoids layout flash between states).
@@ -916,9 +1109,11 @@ export function Home() {
         path="/"
       />
       <V0PublicPathBanner />
-      {publishedBlocks.length > 0
-        ? <PublishedBlocks blocks={publishedBlocks} />
-        : <StaticHomeLayout />}
+      {publishedBlocks.length > 0 ? (
+        <PublishedBlocks blocks={publishedBlocks} />
+      ) : (
+        <StaticHomeLayout />
+      )}
     </div>
   );
 }
@@ -935,10 +1130,22 @@ function ConvocazioniColumn({
 }: {
   title: string;
   icon: React.ElementType;
-  items: { id: number; oggetto: string; dataAtto?: string | null; pubStart?: string | null }[] | undefined;
+  items:
+    | {
+        id: number;
+        oggetto: string;
+        dataAtto?: string | null;
+        pubStart?: string | null;
+      }[]
+    | undefined;
   loading: boolean;
 }) {
-  const safeItems = asApiList<{ id: number; oggetto: string; dataAtto?: string | null; pubStart?: string | null }>(items);
+  const safeItems = asApiList<{
+    id: number;
+    oggetto: string;
+    dataAtto?: string | null;
+    pubStart?: string | null;
+  }>(items);
 
   return (
     <Card className="overflow-hidden">
@@ -946,30 +1153,42 @@ function ConvocazioniColumn({
         <div className="p-1.5 rounded-md bg-primary/10 text-primary">
           <Icon className="h-4 w-4" aria-hidden="true" />
         </div>
-        <h3 className="font-display font-bold text-sm tracking-tight">{title}</h3>
+        <h3 className="font-display font-bold text-sm tracking-tight">
+          {title}
+        </h3>
       </CardHeader>
       <CardContent className="p-0">
         <div className="divide-y divide-border">
           {loading ? (
-            Array(3).fill(0).map((_, i) => (
-              <div key={i} className="p-4 space-y-2">
-                <Skeleton className="h-3 w-24" />
-                <Skeleton className="h-4 w-full" />
-              </div>
-            ))
+            Array(3)
+              .fill(0)
+              .map((_, i) => (
+                <div key={i} className="p-4 space-y-2">
+                  <Skeleton className="h-3 w-24" />
+                  <Skeleton className="h-4 w-full" />
+                </div>
+              ))
           ) : safeItems.length > 0 ? (
             safeItems.slice(0, 3).map((c) => (
-              <Link key={c.id} href={`/convocazioni/${c.id}`} className="block p-4 hover-elevate transition-colors">
+              <Link
+                key={c.id}
+                href={`/convocazioni/${c.id}`}
+                className="block p-4 hover-elevate transition-colors"
+              >
                 <div className="flex items-center gap-1.5 text-xs font-bold text-brand mb-1.5">
-                  <Calendar className="h-3.5 w-3.5"  aria-hidden="true"/>
+                  <Calendar className="h-3.5 w-3.5" aria-hidden="true" />
                   {formatDate(c.dataAtto ?? c.pubStart)}
                 </div>
-                <p className="text-sm font-medium leading-snug line-clamp-2">{c.oggetto}</p>
+                <p className="text-sm font-medium leading-snug line-clamp-2">
+                  {c.oggetto}
+                </p>
               </Link>
             ))
           ) : (
             <div className="p-6 text-center text-sm text-muted-foreground">
-              Nessuna convocazione disponibile.
+              Non risultano sedute disponibili nella fonte consultata. La
+              struttura è pronta a ricevere dati verificati quando il
+              collegamento sarà alimentato.
             </div>
           )}
         </div>
@@ -994,10 +1213,17 @@ function StatCard({
   highlight?: boolean;
 }) {
   return (
-    <Link href={href} className={`relative block p-6 md:p-8 transition-colors hover-elevate ${highlight ? "bg-primary/5" : ""}`}>
-      {highlight && <span className="absolute left-0 top-0 h-full w-1 bg-brand" />}
+    <Link
+      href={href}
+      className={`relative block p-6 md:p-8 transition-colors hover-elevate ${highlight ? "bg-primary/5" : ""}`}
+    >
+      {highlight && (
+        <span className="absolute left-0 top-0 h-full w-1 bg-brand" />
+      )}
       <div className="flex items-center gap-3 mb-3">
-        <div className={`p-2 rounded-lg ${highlight ? "bg-brand/15 text-brand" : "bg-muted text-muted-foreground"}`}>
+        <div
+          className={`p-2 rounded-lg ${highlight ? "bg-brand/15 text-brand" : "bg-muted text-muted-foreground"}`}
+        >
           <Icon className="h-5 w-5" aria-hidden="true" />
         </div>
         <h3 className="eyebrow text-muted-foreground">{title}</h3>
@@ -1006,7 +1232,9 @@ function StatCard({
         {loading ? (
           <Skeleton className="h-9 w-24" />
         ) : (
-          <div className={`text-4xl font-display font-bold tracking-tight tabular-nums ${highlight ? "text-brand" : "text-foreground"}`}>
+          <div
+            className={`text-4xl font-display font-bold tracking-tight tabular-nums ${highlight ? "text-brand" : "text-foreground"}`}
+          >
             {value ?? 0}
           </div>
         )}
@@ -1018,48 +1246,66 @@ function StatCard({
 function ActivityRow({ item }: { item: any }) {
   const getHref = () => {
     switch (item.type) {
-      case "act": return "/albo";
+      case "act":
+        return "/albo";
       case "contract": {
         const numericId = String(item.id).replace(/^contract-/, "");
         return `/contratti/${numericId}`;
       }
-      case "report": return "/segnalazioni";
-      default: return "/statistiche";
+      case "report":
+        return "/segnalazioni";
+      default:
+        return "/statistiche";
     }
   };
 
   const getIcon = () => {
     switch (item.type) {
-      case "act": return <FileSearch className="h-4 w-4"  aria-hidden="true"/>;
-      case "contract": return <FileText className="h-4 w-4"  aria-hidden="true"/>;
-      case "report": return <AlertTriangle className="h-4 w-4"  aria-hidden="true"/>;
-      default: return <Info className="h-4 w-4"  aria-hidden="true"/>;
+      case "act":
+        return <FileSearch className="h-4 w-4" aria-hidden="true" />;
+      case "contract":
+        return <FileText className="h-4 w-4" aria-hidden="true" />;
+      case "report":
+        return <AlertTriangle className="h-4 w-4" aria-hidden="true" />;
+      default:
+        return <Info className="h-4 w-4" aria-hidden="true" />;
     }
   };
 
   const getLabel = () => {
     switch (item.type) {
-      case "act": return "Nuovo Atto";
-      case "contract": return "Nuovo Appalto";
-      case "report": return "Nuova Segnalazione";
-      default: return "Aggiornamento";
+      case "act":
+        return "Nuovo Atto";
+      case "contract":
+        return "Nuovo Appalto";
+      case "report":
+        return "Nuova Segnalazione";
+      default:
+        return "Aggiornamento";
     }
   };
 
   return (
-    <Link href={getHref()} className="block p-4 flex gap-4 hover-elevate transition-colors group">
+    <Link
+      href={getHref()}
+      className="block p-4 flex gap-4 hover-elevate transition-colors group"
+    >
       <div className="mt-0.5 bg-background border border-border p-2 rounded-full h-9 w-9 flex items-center justify-center shrink-0 text-muted-foreground group-hover:text-brand group-hover:border-brand/40 transition-colors">
         {getIcon()}
       </div>
       <div className="min-w-0">
         <div className="flex items-center gap-2 mb-1">
-          <span className="text-[10px] font-bold uppercase tracking-wider text-brand">{getLabel()}</span>
+          <span className="text-[10px] font-bold uppercase tracking-wider text-brand">
+            {getLabel()}
+          </span>
           <span className="text-[10px] text-muted-foreground/60">•</span>
           <span className="text-[10px] text-muted-foreground">
             {format(new Date(item.date), "dd MMM", { locale: it })}
           </span>
         </div>
-        <p className="text-sm font-medium leading-snug line-clamp-2">{item.title}</p>
+        <p className="text-sm font-medium leading-snug line-clamp-2">
+          {item.title}
+        </p>
       </div>
     </Link>
   );

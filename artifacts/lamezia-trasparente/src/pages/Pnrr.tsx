@@ -39,6 +39,7 @@ import { AlboLink } from "@/components/AlboLink";
 import { MonitoringReportsSection } from "@/components/MonitoringReportsSection";
 import { PageMeta } from "@/components/seo/PageMeta";
 import { CivicMonitorReturn } from "@/components/CivicMonitorReturn";
+import { V0SectionLanding } from "@/components/launch/V0SectionLanding";
 import {
   buildCantieriometroCards,
   defaultCantieriometroFilters,
@@ -132,7 +133,11 @@ function sourceLabelForUrl(url: string | null | undefined, fallback: string) {
 function dataStatus(project: PnrrProject) {
   if (project.aggiornamentoVecchio)
     return "da verificare sulla fonte ufficiale";
-  if (project.documentsCount > 0 || asApiList<PnrrProject["attachments"][number]>(project.attachments).length > 0)
+  if (
+    project.documentsCount > 0 ||
+    asApiList<PnrrProject["attachments"][number]>(project.attachments).length >
+      0
+  )
     return "arricchito con collegamenti rilevati";
   if (project.trasparenzaCompleta) return "ufficiale (Comune rilevato)";
   return "ufficiale (censimento Italia Domani)";
@@ -294,83 +299,75 @@ export function Pnrr() {
         path="/pnrr"
       />
       <div className="container mx-auto max-w-6xl px-4 py-8 md:py-12">
-        <header className="mb-8">
-          <span className="eyebrow text-primary">
-            <Landmark className="h-3.5 w-3.5" aria-hidden="true" />
-            Piano Nazionale di Ripresa e Resilienza
-          </span>
-          <h1 className="mt-2 text-3xl font-display font-bold tracking-tight md:text-4xl">
-            PNRR Tracker civico
-          </h1>
-          <p className="mt-3 max-w-3xl text-lg text-muted-foreground">
-            Schede pubbliche dei progetti PNRR localizzati a Lamezia Terme,
-            basate sul censimento ufficiale{" "}
-            <a
-              href={ITALIA_DOMANI_PROJECTS_DATASET_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="font-medium text-primary hover:underline"
-            >
-              Italia Domani — dataset Progetti PNRR
-            </a>{" "}
-            e sul dataset di{" "}
-            <a
-              href={ITALIA_DOMANI_LOCATION_DATASET_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="font-medium text-primary hover:underline"
-            >
-              localizzazione dei progetti PNRR
-            </a>
-            {". "}
-            Quando disponibili, la pagina collega la scheda comunale{" "}
-            <a
-              href={COMUNE_PNRR_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="font-medium text-primary hover:underline"
-            >
-              Attuazione Misure PNRR
-            </a>
-            {", "}i documenti dell'Albo Pretorio e i contratti/affidamenti
-            collegati tramite CUP, senza dedurre ritardi o criticità non
-            documentate dalle fonti.
-          </p>
+        <V0SectionLanding
+          eyebrow="Piano Nazionale di Ripresa e Resilienza"
+          icon={Landmark}
+          title="PNRR e progetti finanziati"
+          subtitle={
+            <>
+              Schede pubbliche dei progetti PNRR localizzati a Lamezia Terme,
+              con importi, stati e collegamenti alle fonti disponibili. La
+              lettura resta documentale: non deduce ritardi o criticità non
+              presenti nelle fonti.
+            </>
+          }
+          stateLabel="Pubblicabile v0"
+          stateDescription="Sezione consultabile con fonti, limiti e stato di verifica esplicitati."
+          findItems={[
+            "Progetti censiti, importi, missioni, CUP e stato informativo disponibile.",
+            "Collegamenti a schede comunali, Albo Pretorio, contratti e allegati quando rilevati.",
+            "Filtri del Cantieriometro per individuare dati presenti, mancanti o da aggiornare.",
+          ]}
+          missingItems={[
+            "Stabilizzazione del perimetro fonti e degli aggiornamenti automatici.",
+            "Verifica completa dei collegamenti tra progetti, atti e affidamenti.",
+            "Conferma manuale dei casi con localizzazione o documentazione da verificare.",
+          ]}
+          sourceLimit={
+            <>
+              La base richiama dataset Italia Domani e fonti comunali quando
+              disponibili. I collegamenti e gli aggiornamenti vanno controllati
+              sulle fonti originarie prima di qualsiasi uso sensibile.
+            </>
+          }
+          cta={{ label: "Consulta lo stato PNRR", href: "#pnrr-elenco" }}
+          secondaryLink={{ label: "Note legali", href: "/note-legali" }}
+        />
+        <div className="mb-8 space-y-2 text-xs text-muted-foreground">
           <CivicMonitorReturn context="I progetti PNRR possono essere collegati a report civici, atti, affidamenti e richieste di accesso civico come elementi documentali da verificare." />
-          <div className="mt-2 space-y-1 text-xs text-muted-foreground">
-            {importSourceLabel && (
-              <p className="flex flex-wrap items-center gap-1.5">
-                <ExternalLink className="h-3 w-3" aria-hidden="true" />
-                Fonte dati usata dall'ultima importazione:{" "}
-                {importSourceUrl ? (
-                  <a
-                    href={importSourceUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="font-medium text-primary hover:underline"
-                  >
-                    {importSourceLabel}
-                  </a>
-                ) : (
-                  <span className="font-medium text-foreground">
-                    {importSourceLabel}
-                  </span>
-                )}
-                {importSourceStatus && importSourceStatus !== "ok" ? (
-                  <span>· stato importazione: {importSourceStatus}</span>
-                ) : null}
-              </p>
-            )}
-            {censusLastUpdatedAt && (
-              <p className="flex items-center gap-1.5">
-                <RefreshCw className="h-3 w-3" aria-hidden="true" />
-                Ultimo aggiornamento dati rilevato:{" "}
-                {formatDate(censusLastUpdatedAt)}
-              </p>
-            )}
-          </div>
-        </header>
+          {importSourceLabel && (
+            <p className="flex flex-wrap items-center gap-1.5">
+              <ExternalLink className="h-3 w-3" aria-hidden="true" />
+              Fonte dati usata dall'ultima importazione:{" "}
+              {importSourceUrl ? (
+                <a
+                  href={importSourceUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="font-medium text-primary hover:underline"
+                >
+                  {importSourceLabel}
+                </a>
+              ) : (
+                <span className="font-medium text-foreground">
+                  {importSourceLabel}
+                </span>
+              )}
+              {importSourceStatus && importSourceStatus !== "ok" ? (
+                <span>· stato importazione: {importSourceStatus}</span>
+              ) : null}
+            </p>
+          )}
+          {censusLastUpdatedAt && (
+            <p className="flex items-center gap-1.5">
+              <RefreshCw className="h-3 w-3" aria-hidden="true" />
+              Ultimo aggiornamento dati rilevato:{" "}
+              {formatDate(censusLastUpdatedAt)}
+            </p>
+          )}
+        </div>
 
+        <div id="pnrr-elenco" />
         {isLoading ? (
           <div className="mb-8 grid grid-cols-2 gap-4 lg:grid-cols-4">
             {Array(4)
@@ -1069,7 +1066,8 @@ function PnrrCard({ project }: { project: PnrrProject }) {
           pnrrProjectId={project.id}
         />
 
-        {asApiList<PnrrProject["attachments"][number]>(project.attachments).length > 0 && (
+        {asApiList<PnrrProject["attachments"][number]>(project.attachments)
+          .length > 0 && (
           <section
             className="mt-4 border-t border-border/60 pt-4"
             aria-labelledby={`pnrr-attachments-${project.id}`}
@@ -1082,7 +1080,9 @@ function PnrrCard({ project }: { project: PnrrProject }) {
               Allegati ufficiali Comune
             </h4>
             <ul className="space-y-1.5">
-              {asApiList<PnrrProject["attachments"][number]>(project.attachments).map((att) => (
+              {asApiList<PnrrProject["attachments"][number]>(
+                project.attachments,
+              ).map((att) => (
                 <li key={att.url}>
                   <a
                     href={att.url}
@@ -1116,9 +1116,12 @@ function PnrrCard({ project }: { project: PnrrProject }) {
               {project.documentsCount}
             </span>
           </h4>
-          {asApiList<PnrrProject["documents"][number]>(project.documents).length > 0 ? (
+          {asApiList<PnrrProject["documents"][number]>(project.documents)
+            .length > 0 ? (
             <div className="space-y-2">
-              {asApiList<PnrrProject["documents"][number]>(project.documents).map((doc) => (
+              {asApiList<PnrrProject["documents"][number]>(
+                project.documents,
+              ).map((doc) => (
                 <div key={doc.id} className="rounded-lg bg-muted/30 p-3">
                   <div className="flex items-start gap-3">
                     <FileText
@@ -1270,7 +1273,9 @@ function SourceTraceability({ project }: { project: PnrrProject }) {
 }
 
 function LinkedContractsSection({ project }: { project: PnrrProject }) {
-  const linkedContracts = asApiList<PnrrProject["linkedContracts"][number]>(project.linkedContracts);
+  const linkedContracts = asApiList<PnrrProject["linkedContracts"][number]>(
+    project.linkedContracts,
+  );
 
   return (
     <section

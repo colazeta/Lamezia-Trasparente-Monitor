@@ -5,6 +5,13 @@ import path from "node:path";
 import process from "node:process";
 
 const DEFAULT_DIST_DIR = "artifacts/lamezia-trasparente/dist/public";
+const STATIC_HEALTHZ_MARKER = "healthz.json";
+const EXPECTED_HEALTHZ_NOT_CHECKED = [
+  "api",
+  "worker",
+  "liveData",
+  "sourceCompleteness",
+];
 const REQUIRED_ROUTES = [
   "/",
   "/convocazioni",
@@ -77,6 +84,61 @@ async function assertReadableFile(filePath, label) {
   }
 }
 
+function assertHealthzMarker(healthz, healthzPath) {
+  if (!healthz || typeof healthz !== "object" || Array.isArray(healthz)) {
+    throw new Error(`Static healthz marker must be a JSON object: ${healthzPath}`);
+  }
+
+  if (healthz.status !== "static-fallback-available") {
+    throw new Error(
+      `Static healthz marker has unexpected status: ${String(healthz.status)}`,
+    );
+  }
+
+  if (healthz.scope !== "v0-public-fallback") {
+    throw new Error(
+      `Static healthz marker has unexpected scope: ${String(healthz.scope)}`,
+    );
+  }
+
+  const checks = healthz.checks;
+  if (!checks || typeof checks !== "object" || Array.isArray(checks)) {
+    throw new Error(`Static healthz marker checks must be a JSON object: ${healthzPath}`);
+  }
+
+  if (checks.staticFrontendReachability !== true) {
+    throw new Error(
+      "Static healthz marker must report checks.staticFrontendReachability as true.",
+    );
+  }
+
+  for (const checkName of EXPECTED_HEALTHZ_NOT_CHECKED) {
+    if (checks[checkName] !== "not-checked") {
+      throw new Error(
+        `Static healthz marker must report checks.${checkName} as "not-checked".`,
+      );
+    }
+  }
+
+  if (!Array.isArray(healthz.limitations) || healthz.limitations.length === 0) {
+    throw new Error("Static healthz marker limitations must be a non-empty array.");
+  }
+}
+
+async function readJsonFile(filePath, label) {
+  await assertReadableFile(filePath, label);
+  const raw = await readFile(filePath, "utf8");
+  try {
+    return JSON.parse(raw);
+  } catch (error) {
+    throw new Error(
+      `${label} is not valid JSON: ${filePath} (${
+        error instanceof Error ? error.message : String(error)
+      })`,
+    );
+  }
+}
+
 async function assertDirectory(dirPath, label) {
   let info;
   try {
@@ -86,6 +148,66 @@ async function assertDirectory(dirPath, label) {
   }
   if (!info.isDirectory()) {
     throw new Error(`${label} is not a directory: ${dirPath}`);
+  }
+}
+
+function assertHealthzMarker(healthz, healthzPath) {
+  if (!healthz || typeof healthz !== "object" || Array.isArray(healthz)) {
+    throw new Error(`Static healthz marker must be a JSON object: ${healthzPath}`);
+  }
+
+  if (healthz.status !== "static-fallback-available") {
+    throw new Error(
+      `Static healthz marker has unexpected status: ${String(healthz.status)}`,
+    );
+  }
+
+  if (healthz.scope !== "v0-public-fallback") {
+    throw new Error(
+      `Static healthz marker has unexpected scope: ${String(healthz.scope)}`,
+    );
+  }
+
+  const checks = healthz.checks;
+  if (!checks || typeof checks !== "object" || Array.isArray(checks)) {
+    throw new Error(`Static healthz marker checks must be a JSON object: ${healthzPath}`);
+  }
+
+  if (checks.staticFrontendReachability !== true) {
+    throw new Error(
+      "Static healthz marker must explicitly confirm staticFrontendReachability: true",
+    );
+  }
+
+  for (const key of EXPECTED_HEALTHZ_NOT_CHECKED) {
+    if (checks[key] !== "not-checked") {
+      throw new Error(
+        `Static healthz marker checks.${key} must remain not-checked for the static fallback smoke.`,
+      );
+    }
+  }
+
+  if (!Array.isArray(healthz.limitations) || healthz.limitations.length === 0) {
+    throw new Error("Static healthz marker must declare non-empty limitations.");
+  }
+
+  for (const [index, limitation] of healthz.limitations.entries()) {
+    if (typeof limitation !== "string" || limitation.trim().length === 0) {
+      throw new Error(
+        `Static healthz marker limitations[${index}] must be a non-empty string.`,
+      );
+    }
+  }
+}
+
+async function readJsonFile(filePath, label) {
+  const content = await readFile(filePath, "utf8");
+  try {
+    return JSON.parse(content);
+  } catch (error) {
+    throw new Error(
+      `${label} is not valid JSON: ${error instanceof Error ? error.message : String(error)}`,
+    );
   }
 }
 
@@ -118,9 +240,18 @@ async function main() {
   const { distDir, routes } = parseArgs(process.argv.slice(2));
   const absoluteDistDir = path.resolve(distDir);
   const indexPath = path.join(absoluteDistDir, "index.html");
+  const healthzPath = path.join(absoluteDistDir, STATIC_HEALTHZ_MARKER);
 
   await assertDirectory(absoluteDistDir, "Static build directory");
   await assertReadableFile(indexPath, "Static fallback index.html");
+  await assertReadableFile(healthzPath, "Static fallback healthz.json");
+
+  const healthz = await readJsonFile(healthzPath, "Static fallback healthz.json");
+  assertHealthzMarker(healthz, healthzPath);
+
+  const healthzPath = path.join(absoluteDistDir, STATIC_HEALTHZ_MARKER);
+  const healthz = await readJsonFile(healthzPath, "Static healthz marker");
+  assertHealthzMarker(healthz, healthzPath);
 
   const indexHtml = await readFile(indexPath, "utf8");
   for (const expectedText of REQUIRED_PUBLIC_TEXT) {
@@ -158,6 +289,7 @@ async function main() {
     mode: "static-fallback",
     distDir: absoluteDistDir,
     index: indexPath,
+    staticHealthz: healthzPath,
     assetsChecked: assets.length,
     routes: routeResults,
     note:
