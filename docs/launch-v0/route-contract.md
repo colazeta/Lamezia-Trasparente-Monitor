@@ -4,6 +4,8 @@ Questo contratto definisce le route minime da controllare prima della pubblicazi
 
 Fonte machine-readable: `docs/launch-v0/v0-routes.json`.
 
+Guardrail copy: `docs/launch-v0/civic-copy-style-guide.md` definisce formule prudenti, parole consigliate e parole da evitare per route, detector/readiness e QA manuale v0.
+
 ## Stati ammessi
 
 - `pubblicabile`: route pubblica candidabile alla v0, con limiti e fonti espliciti.
