@@ -1,0 +1,2 @@
+election_id,year,election_type,election_date_first_round,election_date_second_round,municipality_name,municipality_istat_code,province,region,ordinary_or_special,notes,primary_source_status,eligendo_validation_status
+comunali_lamezia_2025,2025,comunali,2025-05-25,,Lamezia Terme,079160,Catanzaro,Calabria,ordinaria,Maggioli XML uses COMUNE_ISTAT=79160; processed code normalizes to six-digit ISTAT 079160.,comune_maggioli_xml_downloaded,pending
