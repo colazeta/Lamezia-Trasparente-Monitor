@@ -5,6 +5,7 @@ import path from "node:path";
 const root = process.cwd();
 const contractPath = path.join(root, "docs/launch-v0/v0-routes.json");
 const reportPath = path.join(root, "docs/launch-v0/current-readiness.md");
+const uxCopyGatePath = path.join(root, "docs/launch-v0/ux-copy-qa-gate.md");
 const jsonPath = path.join(root, "artifacts/v0-readiness.json");
 const routerPath = path.join(root, "artifacts/lamezia-trasparente/src/Router.tsx");
 const appPath = path.join(root, "artifacts/lamezia-trasparente/src/App.tsx");
@@ -26,6 +27,14 @@ const requiredRoutes = [
 ];
 const allowedStatuses = new Set(["pubblicabile", "sperimentale", "in-preparazione", "riservata", "static-marker"]);
 const allowedDataModes = new Set(["real", "fixture", "manual", "none", "mixed"]);
+const uxCopyGateChecks = [
+  "Label pubblica chiara",
+  "Stato v0 comunicato",
+  "Nota fonti/limiti",
+  "CTA non fuorviante",
+  "Linguaggio dati mancanti",
+  "Guardrail copy cauto",
+];
 
 function read(file) {
   return readFileSync(file, "utf8");
@@ -47,6 +56,16 @@ function routePattern(pathname) {
 }
 
 const issues = [];
+const uxCopyGate = existsSync(uxCopyGatePath) ? read(uxCopyGatePath) : "";
+if (!uxCopyGate) {
+  issues.push(issue("P1", "ux-copy-gate-missing", "Checklist QA UX/copy v0 mancante.", "Creare docs/launch-v0/ux-copy-qa-gate.md con controlli manuali specifici."));
+} else {
+  for (const check of uxCopyGateChecks) {
+    if (!uxCopyGate.includes(check)) {
+      issues.push(issue("P1", "ux-copy-gate-incomplete", `Checklist QA UX/copy non contiene il controllo: ${check}.`, "Aggiornare docs/launch-v0/ux-copy-qa-gate.md."));
+    }
+  }
+}
 if (!existsSync(contractPath)) {
   issues.push(issue("P0", "contract-missing", "Contratto route v0 mancante.", "Creare docs/launch-v0/v0-routes.json."));
 }
@@ -97,8 +116,9 @@ const routeResults = contract.map((route) => {
   }
   if (route.requiresSourceAndLimits || route.humanCheckRequired) {
     checks.push({ name: "source/limits human review", result: route.humanCheckRequired ? "MANUAL" : "PASS" });
+    checks.push({ name: "UX/copy QA gate", result: route.humanCheckRequired ? "MANUAL" : "PASS" });
     if (route.humanCheckRequired) {
-      issues.push(issue("P1", "manual-source-limit-review", `${route.path} richiede revisione umana di fonti, limiti, stato verifica e copy prudente.`, "Confermare in review che la pagina non usa claim definitivi o accusatori.", route.path));
+      issues.push(issue("P1", "ux-copy-human-review", `${route.path} richiede QA UX/copy: label pubblica, stato v0, fonti/limiti, CTA, dati mancanti e guardrail cauti.`, "Eseguire docs/launch-v0/ux-copy-qa-gate.md e registrare eventuali follow-up puntuali.", route.path));
     }
   }
   return { ...route, checks, result: checks.some((check) => check.result === "FAIL") ? "FAIL" : checks.some((check) => check.result === "WARN" || check.result === "MANUAL") ? "LIMITED" : "PASS" };
@@ -142,11 +162,11 @@ const p1 = countBySeverity(issues, "P1");
 const p2 = countBySeverity(issues, "P2");
 const outcome = p0 > 0 ? "NO_GO" : p1 > 0 || p2 > 0 ? "GO_WITH_LIMITS" : "GO";
 const generatedAt = new Date().toISOString();
-const payload = { schemaVersion: "v0-readiness/1", generatedAt, outcome, counts: { P0: p0, P1: p1, P2: p2, INFO: countBySeverity(issues, "INFO") }, reportPath: path.relative(root, reportPath), routeContractPath: path.relative(root, contractPath), routeResults, issues };
+const payload = { schemaVersion: "v0-readiness/1", generatedAt, outcome, counts: { P0: p0, P1: p1, P2: p2, INFO: countBySeverity(issues, "INFO") }, reportPath: path.relative(root, reportPath), routeContractPath: path.relative(root, contractPath), uxCopyGatePath: path.relative(root, uxCopyGatePath), uxCopyGateChecks, routeResults, issues };
 
 const table = routeResults.map((route) => `| \`${route.path}\` | ${route.status} | ${route.result} | ${route.checks.map((check) => `${check.name}: ${check.result}`).join("<br>")} |`).join("\n");
 const issueTable = issues.map((item) => `| ${item.severity} | ${item.route ? `\`${item.route}\`` : "—"} | ${item.code} | ${item.message} | ${item.action} |`).join("\n");
-const report = `# V0 readiness corrente\n\nGenerato: ${generatedAt}\n\n## Esito\n\n**V0 readiness: ${outcome}**\n\n- P0 blockers: ${p0}\n- P1 issues: ${p1}\n- P2 notes: ${p2}\n- INFO: ${payload.counts.INFO}\n\nIl detector è un controllo locale e versionato. Non introduce nuovi dati civici, non effettua scraping, non contatta backend/worker/provider e non pubblica automaticamente.\n\n## Tabella route → stato → risultato\n\n| Route | Stato | Risultato | Controlli |\n| --- | --- | --- | --- |\n${table}\n\n## Issue e azioni consigliate\n\n| Severità | Route | Codice | Evidenza | Azione |\n| --- | --- | --- | --- | --- |\n${issueTable}\n\n## Politiche v0 registrate\n\n- **Error boundary:** ammesso come safety net; una route critica che finisce nel fallback generico è un blocco P0.\n- **Dati mancanti:** una pagina pubblica deve mostrare stato vuoto prudente o messaggio di dato non disponibile/non ancora verificato/fonte non rilevata.\n- **Fonti, limiti e copy:** le route con revisione umana richiesta devono preservare fonti, limiti, stato di verifica e linguaggio non accusatorio.\n- **Deploy/static fallback:** _redirects e healthz.json sono controlli statici; API, worker, live data, DNS e segreti restano fuori scope v0.\n\n## Output machine-readable\n\nJSON: \`${path.relative(root, jsonPath)}\`\n`;
+const report = `# V0 readiness corrente\n\nGenerato: ${generatedAt}\n\n## Esito\n\n**V0 readiness: ${outcome}**\n\n- P0 blockers: ${p0}\n- P1 issues: ${p1}\n- P2 notes: ${p2}\n- INFO: ${payload.counts.INFO}\n\nIl detector è un controllo locale e versionato. Non introduce nuovi dati civici, non effettua scraping, non contatta backend/worker/provider e non pubblica automaticamente.\n\n## Tabella route → stato → risultato\n\n| Route | Stato | Risultato | Controlli |\n| --- | --- | --- | --- |\n${table}\n\n## Issue e azioni consigliate\n\n| Severità | Route | Codice | Evidenza | Azione |\n| --- | --- | --- | --- | --- |\n${issueTable}\n\n## Politiche v0 registrate\n\n- **Error boundary:** ammesso come safety net; una route critica che finisce nel fallback generico è un blocco P0.\n- **Dati mancanti:** una pagina pubblica deve mostrare stato vuoto prudente o messaggio di dato non disponibile/non ancora verificato/fonte non rilevata.\n- **Fonti, limiti e copy:** le route con revisione umana richiesta devono preservare fonti, limiti, stato di verifica e linguaggio non accusatorio.\n- **QA UX/copy:** per ogni route con revisione umana eseguire ${path.relative(root, uxCopyGatePath)} su label pubblica, stato v0, fonti/limiti, CTA, dati mancanti e guardrail cauti.\n- **Deploy/static fallback:** _redirects e healthz.json sono controlli statici; API, worker, live data, DNS e segreti restano fuori scope v0.\n\n## Output machine-readable\n\nJSON: \`${path.relative(root, jsonPath)}\`\n`;
 
 mkdirSync(path.dirname(reportPath), { recursive: true });
 mkdirSync(path.dirname(jsonPath), { recursive: true });
