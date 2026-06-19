@@ -1,6 +1,6 @@
 {
   "schemaVersion": "v0-readiness/1",
-  "generatedAt": "2026-06-16T10:57:55.328Z",
+  "generatedAt": "2026-06-17T04:19:48.930Z",
   "outcome": "GO_WITH_LIMITS",
   "counts": {
     "P0": 0,
@@ -10,6 +10,15 @@
   },
   "reportPath": "docs/launch-v0/current-readiness.md",
   "routeContractPath": "docs/launch-v0/v0-routes.json",
+  "uxCopyGatePath": "docs/launch-v0/ux-copy-qa-gate.md",
+  "uxCopyManualChecks": [
+    "public label clarity",
+    "v0 state communication",
+    "source/limit note",
+    "non-misleading CTA",
+    "missing-data language",
+    "cautious-copy guardrails"
+  ],
   "routeResults": [
     {
       "path": "/",
@@ -31,6 +40,30 @@
         },
         {
           "name": "source/limits human review",
+          "result": "MANUAL"
+        },
+        {
+          "name": "UX/copy QA: public label clarity",
+          "result": "MANUAL"
+        },
+        {
+          "name": "UX/copy QA: v0 state communication",
+          "result": "MANUAL"
+        },
+        {
+          "name": "UX/copy QA: source/limit note",
+          "result": "MANUAL"
+        },
+        {
+          "name": "UX/copy QA: non-misleading CTA",
+          "result": "MANUAL"
+        },
+        {
+          "name": "UX/copy QA: missing-data language",
+          "result": "MANUAL"
+        },
+        {
+          "name": "UX/copy QA: cautious-copy guardrails",
           "result": "MANUAL"
         }
       ],
@@ -57,6 +90,30 @@
         {
           "name": "source/limits human review",
           "result": "MANUAL"
+        },
+        {
+          "name": "UX/copy QA: public label clarity",
+          "result": "MANUAL"
+        },
+        {
+          "name": "UX/copy QA: v0 state communication",
+          "result": "MANUAL"
+        },
+        {
+          "name": "UX/copy QA: source/limit note",
+          "result": "MANUAL"
+        },
+        {
+          "name": "UX/copy QA: non-misleading CTA",
+          "result": "MANUAL"
+        },
+        {
+          "name": "UX/copy QA: missing-data language",
+          "result": "MANUAL"
+        },
+        {
+          "name": "UX/copy QA: cautious-copy guardrails",
+          "result": "MANUAL"
         }
       ],
       "result": "LIMITED"
@@ -81,6 +138,30 @@
         },
         {
           "name": "source/limits human review",
+          "result": "MANUAL"
+        },
+        {
+          "name": "UX/copy QA: public label clarity",
+          "result": "MANUAL"
+        },
+        {
+          "name": "UX/copy QA: v0 state communication",
+          "result": "MANUAL"
+        },
+        {
+          "name": "UX/copy QA: source/limit note",
+          "result": "MANUAL"
+        },
+        {
+          "name": "UX/copy QA: non-misleading CTA",
+          "result": "MANUAL"
+        },
+        {
+          "name": "UX/copy QA: missing-data language",
+          "result": "MANUAL"
+        },
+        {
+          "name": "UX/copy QA: cautious-copy guardrails",
           "result": "MANUAL"
         }
       ],
@@ -107,6 +188,30 @@
         {
           "name": "source/limits human review",
           "result": "MANUAL"
+        },
+        {
+          "name": "UX/copy QA: public label clarity",
+          "result": "MANUAL"
+        },
+        {
+          "name": "UX/copy QA: v0 state communication",
+          "result": "MANUAL"
+        },
+        {
+          "name": "UX/copy QA: source/limit note",
+          "result": "MANUAL"
+        },
+        {
+          "name": "UX/copy QA: non-misleading CTA",
+          "result": "MANUAL"
+        },
+        {
+          "name": "UX/copy QA: missing-data language",
+          "result": "MANUAL"
+        },
+        {
+          "name": "UX/copy QA: cautious-copy guardrails",
+          "result": "MANUAL"
         }
       ],
       "result": "LIMITED"
@@ -131,6 +236,30 @@
         },
         {
           "name": "source/limits human review",
+          "result": "MANUAL"
+        },
+        {
+          "name": "UX/copy QA: public label clarity",
+          "result": "MANUAL"
+        },
+        {
+          "name": "UX/copy QA: v0 state communication",
+          "result": "MANUAL"
+        },
+        {
+          "name": "UX/copy QA: source/limit note",
+          "result": "MANUAL"
+        },
+        {
+          "name": "UX/copy QA: non-misleading CTA",
+          "result": "MANUAL"
+        },
+        {
+          "name": "UX/copy QA: missing-data language",
+          "result": "MANUAL"
+        },
+        {
+          "name": "UX/copy QA: cautious-copy guardrails",
           "result": "MANUAL"
         }
       ],
@@ -160,6 +289,30 @@
         },
         {
           "name": "source/limits human review",
+          "result": "MANUAL"
+        },
+        {
+          "name": "UX/copy QA: public label clarity",
+          "result": "MANUAL"
+        },
+        {
+          "name": "UX/copy QA: v0 state communication",
+          "result": "MANUAL"
+        },
+        {
+          "name": "UX/copy QA: source/limit note",
+          "result": "MANUAL"
+        },
+        {
+          "name": "UX/copy QA: non-misleading CTA",
+          "result": "MANUAL"
+        },
+        {
+          "name": "UX/copy QA: missing-data language",
+          "result": "MANUAL"
+        },
+        {
+          "name": "UX/copy QA: cautious-copy guardrails",
           "result": "MANUAL"
         }
       ],
@@ -211,6 +364,30 @@
         {
           "name": "source/limits human review",
           "result": "MANUAL"
+        },
+        {
+          "name": "UX/copy QA: public label clarity",
+          "result": "MANUAL"
+        },
+        {
+          "name": "UX/copy QA: v0 state communication",
+          "result": "MANUAL"
+        },
+        {
+          "name": "UX/copy QA: source/limit note",
+          "result": "MANUAL"
+        },
+        {
+          "name": "UX/copy QA: non-misleading CTA",
+          "result": "MANUAL"
+        },
+        {
+          "name": "UX/copy QA: missing-data language",
+          "result": "MANUAL"
+        },
+        {
+          "name": "UX/copy QA: cautious-copy guardrails",
+          "result": "MANUAL"
         }
       ],
       "result": "LIMITED"
@@ -235,6 +412,30 @@
         },
         {
           "name": "source/limits human review",
+          "result": "MANUAL"
+        },
+        {
+          "name": "UX/copy QA: public label clarity",
+          "result": "MANUAL"
+        },
+        {
+          "name": "UX/copy QA: v0 state communication",
+          "result": "MANUAL"
+        },
+        {
+          "name": "UX/copy QA: source/limit note",
+          "result": "MANUAL"
+        },
+        {
+          "name": "UX/copy QA: non-misleading CTA",
+          "result": "MANUAL"
+        },
+        {
+          "name": "UX/copy QA: missing-data language",
+          "result": "MANUAL"
+        },
+        {
+          "name": "UX/copy QA: cautious-copy guardrails",
           "result": "MANUAL"
         }
       ],
@@ -261,6 +462,30 @@
         {
           "name": "source/limits human review",
           "result": "MANUAL"
+        },
+        {
+          "name": "UX/copy QA: public label clarity",
+          "result": "MANUAL"
+        },
+        {
+          "name": "UX/copy QA: v0 state communication",
+          "result": "MANUAL"
+        },
+        {
+          "name": "UX/copy QA: source/limit note",
+          "result": "MANUAL"
+        },
+        {
+          "name": "UX/copy QA: non-misleading CTA",
+          "result": "MANUAL"
+        },
+        {
+          "name": "UX/copy QA: missing-data language",
+          "result": "MANUAL"
+        },
+        {
+          "name": "UX/copy QA: cautious-copy guardrails",
+          "result": "MANUAL"
         }
       ],
       "result": "LIMITED"
@@ -269,66 +494,66 @@
   "issues": [
     {
       "severity": "P1",
-      "code": "manual-source-limit-review",
+      "code": "manual-ux-copy-qa",
       "route": "/",
-      "message": "/ richiede revisione umana di fonti, limiti, stato verifica e copy prudente.",
-      "action": "Confermare in review che la pagina non usa claim definitivi o accusatori."
+      "message": "/ richiede gate QA UX/copy: label pubblica, stato v0, fonte/limiti, CTA, dati mancanti e guardrail cauti.",
+      "action": "Compilare docs/launch-v0/ux-copy-qa-gate.md per la route e correggere copy fuorviante o accusatorio prima della pubblicazione."
     },
     {
       "severity": "P1",
-      "code": "manual-source-limit-review",
+      "code": "manual-ux-copy-qa",
       "route": "/convocazioni",
-      "message": "/convocazioni richiede revisione umana di fonti, limiti, stato verifica e copy prudente.",
-      "action": "Confermare in review che la pagina non usa claim definitivi o accusatori."
+      "message": "/convocazioni richiede gate QA UX/copy: label pubblica, stato v0, fonte/limiti, CTA, dati mancanti e guardrail cauti.",
+      "action": "Compilare docs/launch-v0/ux-copy-qa-gate.md per la route e correggere copy fuorviante o accusatorio prima della pubblicazione."
     },
     {
       "severity": "P1",
-      "code": "manual-source-limit-review",
+      "code": "manual-ux-copy-qa",
       "route": "/convocazioni/demo-consiglio-comunale-v0",
-      "message": "/convocazioni/demo-consiglio-comunale-v0 richiede revisione umana di fonti, limiti, stato verifica e copy prudente.",
-      "action": "Confermare in review che la pagina non usa claim definitivi o accusatori."
+      "message": "/convocazioni/demo-consiglio-comunale-v0 richiede gate QA UX/copy: label pubblica, stato v0, fonte/limiti, CTA, dati mancanti e guardrail cauti.",
+      "action": "Compilare docs/launch-v0/ux-copy-qa-gate.md per la route e correggere copy fuorviante o accusatorio prima della pubblicazione."
     },
     {
       "severity": "P1",
-      "code": "manual-source-limit-review",
+      "code": "manual-ux-copy-qa",
       "route": "/contratti",
-      "message": "/contratti richiede revisione umana di fonti, limiti, stato verifica e copy prudente.",
-      "action": "Confermare in review che la pagina non usa claim definitivi o accusatori."
+      "message": "/contratti richiede gate QA UX/copy: label pubblica, stato v0, fonte/limiti, CTA, dati mancanti e guardrail cauti.",
+      "action": "Compilare docs/launch-v0/ux-copy-qa-gate.md per la route e correggere copy fuorviante o accusatorio prima della pubblicazione."
     },
     {
       "severity": "P1",
-      "code": "manual-source-limit-review",
+      "code": "manual-ux-copy-qa",
       "route": "/pnrr",
-      "message": "/pnrr richiede revisione umana di fonti, limiti, stato verifica e copy prudente.",
-      "action": "Confermare in review che la pagina non usa claim definitivi o accusatori."
+      "message": "/pnrr richiede gate QA UX/copy: label pubblica, stato v0, fonte/limiti, CTA, dati mancanti e guardrail cauti.",
+      "action": "Compilare docs/launch-v0/ux-copy-qa-gate.md per la route e correggere copy fuorviante o accusatorio prima della pubblicazione."
     },
     {
       "severity": "P1",
-      "code": "manual-source-limit-review",
+      "code": "manual-ux-copy-qa",
       "route": "/redazione",
-      "message": "/redazione richiede revisione umana di fonti, limiti, stato verifica e copy prudente.",
-      "action": "Confermare in review che la pagina non usa claim definitivi o accusatori."
+      "message": "/redazione richiede gate QA UX/copy: label pubblica, stato v0, fonte/limiti, CTA, dati mancanti e guardrail cauti.",
+      "action": "Compilare docs/launch-v0/ux-copy-qa-gate.md per la route e correggere copy fuorviante o accusatorio prima della pubblicazione."
     },
     {
       "severity": "P1",
-      "code": "manual-source-limit-review",
+      "code": "manual-ux-copy-qa",
       "route": "/fonti-dati",
-      "message": "/fonti-dati richiede revisione umana di fonti, limiti, stato verifica e copy prudente.",
-      "action": "Confermare in review che la pagina non usa claim definitivi o accusatori."
+      "message": "/fonti-dati richiede gate QA UX/copy: label pubblica, stato v0, fonte/limiti, CTA, dati mancanti e guardrail cauti.",
+      "action": "Compilare docs/launch-v0/ux-copy-qa-gate.md per la route e correggere copy fuorviante o accusatorio prima della pubblicazione."
     },
     {
       "severity": "P1",
-      "code": "manual-source-limit-review",
+      "code": "manual-ux-copy-qa",
       "route": "/metodologia",
-      "message": "/metodologia richiede revisione umana di fonti, limiti, stato verifica e copy prudente.",
-      "action": "Confermare in review che la pagina non usa claim definitivi o accusatori."
+      "message": "/metodologia richiede gate QA UX/copy: label pubblica, stato v0, fonte/limiti, CTA, dati mancanti e guardrail cauti.",
+      "action": "Compilare docs/launch-v0/ux-copy-qa-gate.md per la route e correggere copy fuorviante o accusatorio prima della pubblicazione."
     },
     {
       "severity": "P1",
-      "code": "manual-source-limit-review",
+      "code": "manual-ux-copy-qa",
       "route": "/note-legali",
-      "message": "/note-legali richiede revisione umana di fonti, limiti, stato verifica e copy prudente.",
-      "action": "Confermare in review che la pagina non usa claim definitivi o accusatori."
+      "message": "/note-legali richiede gate QA UX/copy: label pubblica, stato v0, fonte/limiti, CTA, dati mancanti e guardrail cauti.",
+      "action": "Compilare docs/launch-v0/ux-copy-qa-gate.md per la route e correggere copy fuorviante o accusatorio prima della pubblicazione."
     },
     {
       "severity": "INFO",
