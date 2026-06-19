@@ -455,7 +455,7 @@ function BlockRecentActivity() {
           <CardHeader className="p-3 border-t border-border bg-muted/30">
             <Link href="/albo" className="w-full">
               <Button variant="ghost" className="w-full justify-between font-semibold text-muted-foreground hover:text-foreground">
-                Vai all'Albo Pretorio <ArrowUpRight className="h-4 w-4"  aria-hidden="true"/>
+                Consulta gli atti pubblicati <ArrowUpRight className="h-4 w-4"  aria-hidden="true"/>
               </Button>
             </Link>
           </CardHeader>
@@ -474,8 +474,8 @@ function BlockConvocazioni() {
         <div className="flex items-end justify-between gap-4 mb-8">
           <div>
             <span className="eyebrow text-primary mb-2">Agenda pubblica</span>
-            <h2 className="text-2xl md:text-3xl font-display font-bold tracking-tight mt-2">Prossime Convocazioni</h2>
-            <p className="text-muted-foreground mt-1">Sedute del Consiglio Comunale e delle Commissioni Consiliari.</p>
+            <h2 className="text-2xl md:text-3xl font-display font-bold tracking-tight mt-2">Sedute e ordini del giorno del Consiglio</h2>
+            <p className="text-muted-foreground mt-1">Il percorso oggi più maturo della v0: date, oggetti e schede delle sedute, con attenzione a fonti disponibili e limiti di verifica.</p>
           </div>
           <Link href="/convocazioni" className="hidden md:flex shrink-0">
             <Button variant="ghost" className="gap-2 font-semibold">
@@ -581,25 +581,26 @@ function StaticHomeLayout() {
         <div className="container relative z-10 mx-auto px-4 md:px-6 py-20 md:py-28 flex flex-col items-start max-w-4xl">
           <div className="eyebrow rounded-full border border-brand/40 bg-brand/10 px-3.5 py-1.5 text-brand">
             <ShieldAlert className="h-3.5 w-3.5" />
-            Osservatorio Civico Indipendente
+            Osservatorio civico documentale
           </div>
 
           <h1 className="font-display text-5xl md:text-7xl lg:text-[5.25rem] font-bold tracking-[-0.03em] text-white mt-7 mb-6 leading-[0.95]">
-            La trasparenza<br className="hidden sm:inline" /> è un diritto.
+            Capire gli atti pubblici
             <br />
-            <span className="text-gradient-brand">Il controllo è un dovere.</span>
+            <span className="text-gradient-brand">senza perdere il contesto.</span>
           </h1>
 
           <p className="text-lg md:text-xl text-sidebar-foreground/75 mb-9 max-w-2xl text-balance">
-            Organizziamo informazioni amministrative di interesse pubblico con un
-            approccio documentale e prudente. Nella v0 il percorso principale parte
-            dalle convocazioni del Consiglio comunale e dai relativi limiti di verifica.
+            Lamezia Trasparente Monitor raccoglie e spiega informazioni amministrative
+            di interesse pubblico con un metodo prudente, documentale e verificabile.
+            La v0 rende consultabili i primi percorsi civici e indica con chiarezza
+            dove i dati sono disponibili, incompleti o ancora in preparazione.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
             <Link href="/convocazioni" className="w-full sm:w-auto">
               <Button variant="brand" size="lg" className="w-full text-base h-12 px-7 font-bold">
-                Apri il percorso v0 <ArrowRight className="ml-1 h-4 w-4"  aria-hidden="true"/>
+                Consulta le sedute del Consiglio <ArrowRight className="ml-1 h-4 w-4"  aria-hidden="true"/>
               </Button>
             </Link>
             <Link href="/fonti-dati" className="w-full sm:w-auto">
@@ -619,7 +620,7 @@ function StaticHomeLayout() {
                 className="w-full text-base h-12 px-7 font-bold bg-white/5 text-white border-white/25 hover:bg-white/10"
               >
                 <Megaphone className="mr-1 h-4 w-4"  aria-hidden="true"/>
-                Invia una Segnalazione
+                Segnala un dato da verificare
               </Button>
             </Link>
           </div>
@@ -649,10 +650,47 @@ function StaticHomeLayout() {
       <section data-tour="home-themes" className="border-b border-border bg-background py-12 md:py-16">
         <div className="container mx-auto px-4 md:px-6">
           <div className="mb-10">
-            <span className="eyebrow text-primary mb-2">Accesso rapido</span>
+            <span className="eyebrow text-primary mb-2">Mappa civica della v0</span>
             <h2 className="mt-2 font-display text-2xl font-bold tracking-tight md:text-3xl">
-              Dove vuoi andare?
+              Quattro modi per orientarsi nelle informazioni pubbliche
             </h2>
+            <p className="mt-3 max-w-3xl text-muted-foreground">
+              Le sezioni combinano consultazione documentale, spiegazione del contesto
+              e note sui limiti delle fonti. Alcuni percorsi sono già consultabili,
+              altri sono predisposti e saranno alimentati quando le connessioni verificate
+              alle fonti pubbliche saranno consolidate.
+            </p>
+          </div>
+
+          <div className="mb-10 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+            <CivicAreaCard
+              title="Sedute e ordini del giorno del Consiglio"
+              status="Percorso v0 consultabile"
+              description="Raccoglie convocazioni, date, oggetti e rinvii alle fonti disponibili per seguire il lavoro degli organi consiliari senza dichiarare copertura completa."
+              href="/convocazioni"
+              cta="Apri le convocazioni"
+            />
+            <CivicAreaCard
+              title="Contratti pubblici sotto osservazione documentale"
+              status="Struttura pronta, dati da verificare"
+              description="Aiuta a leggere importi, procedure e documenti quando le fonti sono collegate; eventuali assenze sono trattate come bisogni di monitoraggio, non come conclusioni."
+              href="/contratti"
+              cta="Vedi la sezione contratti"
+            />
+            <CivicAreaCard
+              title="Progetti PNRR e stato delle informazioni disponibili"
+              status="Quadro in preparazione"
+              description="Organizza progetti, stati informativi e aggiornamenti verificabili, distinguendo tra dati disponibili, campi mancanti e contenuti dimostrativi."
+              href="/pnrr"
+              cta="Consulta il quadro PNRR"
+            />
+            <CivicAreaCard
+              title="Fonti, limiti e metodo del monitoraggio"
+              status="Nota metodologica permanente"
+              description="Spiega provenienza dei dati, limiti di aggiornamento e cautele interpretative: ogni indicatore è un punto di orientamento, non una prova di responsabilità."
+              href="/fonti-dati"
+              cta="Leggi metodo e limiti"
+            />
           </div>
 
           <div className="space-y-10">
@@ -708,8 +746,9 @@ function StaticHomeLayout() {
               Cosa vuoi scoprire?
             </h2>
             <p className="mt-4 text-lg text-muted-foreground text-balance">
-              Abbiamo organizzato i dati pubblici del Comune attorno alle domande
-              che contano. Scegli un punto di partenza e ti guidiamo alle risposte.
+              Le domande aiutano a leggere documenti e percorsi disponibili con linguaggio
+              non tecnico. Quando una risposta dipende da dati mancanti o fixture
+              dimostrative, il contesto deve restare esplicito.
             </p>
           </div>
 
@@ -758,10 +797,10 @@ function StaticHomeLayout() {
                 <div>
                   <span className="eyebrow text-primary mb-2">Agenda pubblica</span>
                   <h2 className="text-3xl md:text-4xl font-display font-bold tracking-tight mt-2">
-                    Prossime Convocazioni
+                    Sedute e ordini del giorno del Consiglio
                   </h2>
                   <p className="text-muted-foreground mt-2">
-                    Sedute del Consiglio Comunale e delle Commissioni Consiliari.
+                    Il percorso oggi più maturo della v0: date, oggetti e schede delle sedute, con attenzione a fonti disponibili e limiti di verifica.
                   </p>
                 </div>
                 <Link href="/convocazioni" className="hidden md:flex shrink-0">
@@ -786,11 +825,11 @@ function StaticHomeLayout() {
             {/* Sidebar Activity */}
             <div className="space-y-8">
               <div>
-                <span className="eyebrow text-primary mb-2">In tempo reale</span>
+                <span className="eyebrow text-primary mb-2">Aggiornamenti documentali</span>
                 <h2 className="text-3xl md:text-4xl font-display font-bold tracking-tight mt-2">
-                  Attività Recente
+                  Attività recente
                 </h2>
-                <p className="text-muted-foreground mt-2">Ultimi aggiornamenti dalla piattaforma.</p>
+                <p className="text-muted-foreground mt-2">Ultimi elementi registrati dalla piattaforma, da leggere nel perimetro delle fonti collegate.</p>
               </div>
 
               <Card className="overflow-hidden">
@@ -818,7 +857,7 @@ function StaticHomeLayout() {
                 <CardHeader className="p-3 border-t border-border bg-muted/30">
                   <Link href="/albo" className="w-full">
                     <Button variant="ghost" className="w-full justify-between font-semibold text-muted-foreground hover:text-foreground">
-                      Vai all'Albo Pretorio <ArrowUpRight className="h-4 w-4"  aria-hidden="true"/>
+                      Consulta gli atti pubblicati <ArrowUpRight className="h-4 w-4"  aria-hidden="true"/>
                     </Button>
                   </Link>
                 </CardHeader>
@@ -841,15 +880,16 @@ function StaticHomeLayout() {
         <div className="container relative mx-auto px-4 md:px-6 py-20 text-center max-w-3xl">
           <Megaphone className="h-12 w-12 mx-auto mb-6"  aria-hidden="true"/>
           <h2 className="text-3xl md:text-5xl font-display font-bold mb-4 tracking-tight">
-            Hai notato una criticità da verificare?
+            Vuoi contribuire a migliorare la qualità delle informazioni?
           </h2>
           <p className="text-brand-foreground/85 text-lg mb-8 text-balance">
-            La trasparenza si costruisce insieme. Segnala lavori interrotti, documentazione mancante o
-            possibili incoerenze documentali. Il nostro team verificherà la segnalazione.
+            Puoi indicare documentazione mancante, collegamenti non aggiornati o possibili
+            incoerenze da verificare. Le segnalazioni servono ad arricchire il monitoraggio
+            documentale e non attribuiscono responsabilità.
           </p>
           <Link href="/segnalazioni">
             <Button size="lg" variant="secondary" className="text-base h-12 px-8 font-bold">
-              Invia una Segnalazione <ArrowRight className="ml-1 h-4 w-4"  aria-hidden="true"/>
+              Segnala un dato da verificare <ArrowRight className="ml-1 h-4 w-4"  aria-hidden="true"/>
             </Button>
           </Link>
         </div>
@@ -869,12 +909,12 @@ function V0PublicPathBanner() {
             Percorso pubblico minimo v0
           </span>
           <h2 id="v0-public-path-title" className="mt-2 font-display text-2xl font-bold tracking-tight">
-            Il primo output civico consultabile sono le convocazioni del Consiglio comunale.
+            La v0 parte dalle sedute del Consiglio e dichiara i limiti delle fonti.
           </h2>
           <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
             Segui il percorso Home → Convocazioni → scheda seduta → fonti e limiti.
-            Dove mancano dati verificati, eventuali esempi sono dichiarati come fixture
-            dimostrative e non come informazioni ufficiali complete.
+            Le altre aree sono presentate come sezioni strutturalmente pronte o in preparazione
+            quando dipendono da connessioni verificate non ancora complete.
           </p>
         </div>
         <div className="flex flex-col gap-2 sm:flex-row md:shrink-0">
@@ -926,6 +966,38 @@ export function Home() {
 // ---------------------------------------------------------------------------
 // Shared sub-components
 // ---------------------------------------------------------------------------
+
+
+function CivicAreaCard({
+  title,
+  status,
+  description,
+  href,
+  cta,
+}: {
+  title: string;
+  status: string;
+  description: string;
+  href: string;
+  cta: string;
+}) {
+  return (
+    <Card className="flex h-full flex-col border-border bg-card/80">
+      <CardHeader className="space-y-3 pb-3">
+        <span className="w-fit rounded-full border border-primary/20 bg-primary/5 px-2.5 py-1 text-[11px] font-bold uppercase tracking-wider text-primary">
+          {status}
+        </span>
+        <h3 className="font-display text-lg font-bold leading-tight tracking-tight">{title}</h3>
+      </CardHeader>
+      <CardContent className="flex flex-1 flex-col gap-4 pt-0">
+        <p className="text-sm leading-relaxed text-muted-foreground">{description}</p>
+        <Link href={href} className="mt-auto inline-flex items-center text-sm font-semibold text-primary hover:underline">
+          {cta} <ArrowRight className="ml-1 h-3.5 w-3.5" aria-hidden="true" />
+        </Link>
+      </CardContent>
+    </Card>
+  );
+}
 
 function ConvocazioniColumn({
   title,
