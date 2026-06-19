@@ -44,7 +44,7 @@ Thumbs.db
 .cursor/rules/nx-rules.mdc
 .github/instructions/nx.instructions.md
 
-# Secrets — never commit real env values
+# Secrets â€” never commit real env values
 .env
 .env.local
 .env.*.local
@@ -52,3 +52,8 @@ Thumbs.db
 # Replit
 .cache/
 .local/
+
+# Reproducible raw/generated GIS data. Keep metadata and scripts in Git.
+data/raw/territorio/zornade/sezioni_urbane_catasto/*.gpkg
+data/raw/territorio/zornade/sezioni_urbane_catasto/*.geojson
+data/processed/territorio/zornade_sezioni_urbane_catasto*.geojson

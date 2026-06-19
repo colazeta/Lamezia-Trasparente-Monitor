@@ -25,9 +25,14 @@ describe("formatPublicTimeField", () => {
   });
 
   it("renders timestamps with an explicit public timestamp pattern", () => {
-    expect(
-      formatPublicTimeField("2026-06-08T06:20:00.000Z", "dd MMM yyyy, HH:mm"),
-    ).toBe("08 giu 2026, 06:20");
+    withTimezone("UTC", () => {
+      expect(
+        formatPublicTimeField(
+          "2026-06-08T06:20:00.000Z",
+          "dd MMM yyyy, HH:mm",
+        ),
+      ).toBe("08 giu 2026, 06:20");
+    });
   });
 
   it("normalizes absent or invalid values to the existing placeholder", () => {

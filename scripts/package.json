@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "hello": "tsx ./src/hello.ts",
+    "fetch:zornade-sezioni-urbane-catasto": "tsx ./territorio/zornade-sezioni-urbane-catasto.ts",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "check-source-health": "tsx ./check-source-health.ts",
     "test": "node --import tsx --test ./check-source-health.test.ts ./production-smoke-plan.test.ts ./civic-source-registry.test.ts",
