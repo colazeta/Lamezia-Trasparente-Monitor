@@ -43,6 +43,7 @@ import { PerformanceCompare } from "./pages/PerformanceCompare";
 import { PerformanceDetail } from "./pages/PerformanceDetail";
 import { Reports } from "./pages/Reports";
 import { FontiDati } from "./pages/FontiDati";
+import { AtlanteTerritoriale } from "./pages/AtlanteTerritoriale";
 import { StatoMonitoraggio } from "./pages/StatoMonitoraggio";
 import { Metodologia } from "./pages/Metodologia";
 import { Roadmap } from "./pages/Roadmap";
@@ -290,6 +291,12 @@ export function Router() {
                 component={FontiDati}
                 title="Fonti dati"
                 description="Indice delle fonti pubbliche considerate dalla versione pubblica, con stato del collegamento, riferimenti, frequenze attese e limiti di lettura."
+              />
+              <PublicRouteWithMeta
+                path="/atlante-territoriale"
+                component={AtlanteTerritoriale}
+                title="Atlante territoriale"
+                description="Mappa pubblica di Lamezia Terme per sezioni censuarie ISTAT, con indicatori, fonte, anno, livello territoriale e limiti di lettura."
               />
               <PublicRouteWithMeta
                 path="/stato-monitoraggio"
