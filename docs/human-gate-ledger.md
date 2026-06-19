@@ -27,6 +27,25 @@ Giovanni must review whether this governance layer is acceptable as the P0 opera
 
 Produce a reviewable #545 implementation path that introduces a reusable prototype/status/source/verification/limits pattern without changing sensitive public copy beyond the smallest safe surface.
 
+## Albo Pretorio Tranche B operational gate
+
+Issue linkage: #578, follow-up to merged PR #584. This gate records the operational posture for the Albo Pretorio ingestion pipeline without authorising broader publication, PDF parsing, attachment mirroring or generative analysis.
+
+| Field | Value |
+| --- | --- |
+| Source | Albo Pretorio Comune di Lamezia Terme / Tinnvision |
+| Source URL | https://albo.tinnvision.cloud/?ente=00301390795 |
+| Last run time | Recorded by `data/public/albo/status.json` after each workflow run; seed status is `verification_required` until the first scheduled/manual run commits outputs |
+| Method | `pnpm albo:fetch` tries XML and CSV exports first, then controlled print/HTML fallback only if structured exports are unavailable |
+| Counts ledger | `data/public/albo/status.json` records acquired, new, changed, removed, unchanged, publishable, minimised, metadata-only and excluded counts |
+| Warnings | `data/public/albo/status.json` records runtime warnings and known limits; the seed warns that no official workflow run has been recorded yet |
+| Next scheduled check | Calculated in `data/public/albo/status.json`; workflow cron is UTC and guarded by `TZ=Europe/Rome` for the 08:00-20:00 civic monitoring window |
+| Zero-cost automation posture | Standard GitHub-hosted `ubuntu-latest` runner only; no larger, GPU or self-hosted runner |
+| Verification status | Operational pipeline configured; each run remains source-acquired/automatically normalised and may require human verification, especially after fallback parsing |
+| Residual risk | Tinnvision exports can omit attachments or direct document URLs; historical completeness is not certified; privacy classification is conservative and automatic |
+
+Safeguards: no PDFs or attachments are parsed, no generative summaries are produced, no ranking or accusation language is introduced, and the public layer remains limited to publishable, minimised, metadata-only or excluded records. Lamezia Trasparente Monitor does not replace the official Albo Pretorio.
+
 ## Blockers
 
 | Blocker | Type | Owner | Required action |

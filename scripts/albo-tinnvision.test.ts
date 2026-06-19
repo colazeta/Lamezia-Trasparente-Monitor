@@ -120,11 +120,25 @@ test("run command writes snapshots and public outputs without mirroring sensitiv
   assert.equal(result.publicLatest.counts.minimised, 1);
   assert.equal(result.publicLatest.counts.metadata_only, 1);
   assert.equal(result.publicLatest.counts.excluded, 1);
+  assert.equal(result.publicStatus.source, ALBO_PRETORIO_LAMEZIA_SOURCE.source);
+  assert.equal(result.publicStatus.last_update, FIXTURE_RETRIEVED_AT);
+  assert.equal(result.publicStatus.method, "xml");
+  assert.equal(result.publicStatus.verification_status, "official_source_acquired");
+  assert.equal(result.publicStatus.counts.acquired, 4);
+  assert.ok(result.publicStatus.known_limits.length > 0);
+  assert.match(
+    String(result.publicStatus.official_albo_disclaimer),
+    /non sostituisce l'Albo Pretorio ufficiale/,
+  );
 
   const publicLatest = await readFile(result.paths.publicLatest, "utf8");
+  const publicStatus = await readFile(result.paths.publicStatus, "utf8");
   assert.doesNotMatch(publicLatest, /ROSSI MARIO|BIANCHI LUCIA|VERDI ANNA/i);
+  assert.doesNotMatch(publicStatus, /ROSSI MARIO|BIANCHI LUCIA|VERDI ANNA/i);
   assert.match(publicLatest, /Oggetto minimizzato per prudenza privacy/);
   assert.match(publicLatest, /Metadato minimo/);
+  assert.match(publicStatus, /08:00-20:00 Europe\/Rome/);
+  assert.match(publicStatus, /ubuntu-latest/);
 
   for (const publicRecord of [
     ...result.publicLatest.items,

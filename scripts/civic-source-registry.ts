@@ -153,11 +153,13 @@ export const INITIAL_CIVIC_SOURCE_REGISTRY: CivicSourceRegistryEntry[] = [
       topics: ["atti in pubblicazione", "avvisi", "determine", "delibere"],
       completeness: "partial",
       notes: [
-        "Copertura parziale: il connettore Tranche A acquisisce il solo elenco corrente Tinnvision e non certifica l'esaustivita' storica degli atti.",
+        "Copertura parziale: il connettore Albo acquisisce il solo elenco corrente Tinnvision e non certifica l'esaustivita' storica degli atti.",
       ],
     },
     pollingPolicy: {
       cadence: "hourly",
+      nextCheckHint:
+        "GitHub Actions controlla la finestra 08:00-20:00 Europe/Rome con cron UTC e guardia TZ=Europe/Rome.",
       requiresLiveNetwork: true,
     },
     lastCheckedAt: "2026-06-01T08:00:00.000Z",
@@ -174,7 +176,7 @@ export const INITIAL_CIVIC_SOURCE_REGISTRY: CivicSourceRegistryEntry[] = [
         severity: "monitoring_need",
       },
       {
-        code: "pdf-not-parsed-tranche-a",
+        code: "pdf-not-parsed-tranche-b",
         note: ALBO_PRETORIO_LAMEZIA_SOURCE.knownLimits[1],
         severity: "info",
       },

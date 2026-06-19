@@ -111,13 +111,26 @@ type PublicRecord = Record<string, unknown> & {
 };
 type PublicLatest = Record<string, unknown> & { counts: RunCounts; items: PublicRecord[]; excluded: PublicRecord[] };
 type PublicDiff = Record<string, unknown> & { counts: RunCounts };
+export type AlboPublicStatus = Record<string, unknown> & {
+  source: string;
+  source_url: string;
+  last_run_at: string;
+  last_update: string;
+  method: AlboFetchMethod;
+  counts: RunCounts;
+  warnings: string[];
+  next_scheduled_check: string | null;
+  verification_status: VerificationStatus;
+  known_limits: string[];
+};
 
-interface RunResult {
+export interface RunResult {
   snapshot: AlboRawSnapshot;
   items: AlboItem[];
   diff: AlboDiff;
   publicLatest: PublicLatest;
   publicDiff: PublicDiff;
+  publicStatus: AlboPublicStatus;
   runLog: string;
   paths: Record<
     | "currentSnapshot"
@@ -125,6 +138,7 @@ interface RunResult {
     | "processedItems"
     | "publicLatest"
     | "publicDiff"
+    | "publicStatus"
     | "runLog",
     string
   >;
@@ -136,6 +150,16 @@ const FALLBACK_LIMIT =
   "Acquisizione effettuata da fallback HTML/print per indisponibilita' degli export strutturati.";
 const MINIMISED_LIMIT =
   "Oggetto non ripubblicato integralmente nel layer pubblico per prudenza privacy.";
+const ROME_TIME_ZONE = "Europe/Rome";
+const ROME_MONITORING_WINDOW = "08:00-20:00 Europe/Rome";
+const GITHUB_ACTIONS_CRON_UTC = "10 6-19 * * *";
+const OFFICIAL_ALBO_DISCLAIMER =
+  "Lamezia Trasparente Monitor non sostituisce l'Albo Pretorio ufficiale: pubblicazioni, termini, allegati e contenuti vanno verificati sulla fonte istituzionale.";
+const CIVIC_SAFEGUARDS = [
+  "Nessun PDF o allegato viene scaricato o analizzato in questa tranche.",
+  "Nessuna sintesi generativa, classifica, accusa o valutazione sostanziale viene prodotta.",
+  "Il layer pubblico espone solo metadati minimizzati secondo le classi publishable, publishable_with_minimisation, metadata_only e do_not_publish.",
+];
 
 const DO_NOT_PUBLISH_TERMS = [
   "minore",
@@ -204,9 +228,10 @@ export async function runAlboIngestion(options: CliOptions): Promise<RunResult> 
   const counts = countRun(items, diff);
   const publicLatest = buildPublicLatest(snapshot, items, counts);
   const publicDiff = buildPublicDiff(snapshot, diff, counts);
+  const publicStatus = buildPublicStatus(snapshot, counts);
   const runLog = renderRunLog(snapshot, counts);
-  const paths = await writeArtifacts(options.outDir, snapshot, items, publicLatest, publicDiff, runLog);
-  return { snapshot, items, diff, publicLatest, publicDiff, runLog, paths };
+  const paths = await writeArtifacts(options.outDir, snapshot, items, publicLatest, publicDiff, publicStatus, runLog);
+  return { snapshot, items, diff, publicLatest, publicDiff, publicStatus, runLog, paths };
 }
 
 async function acquireAlboSnapshot(options: CliOptions): Promise<AlboRawSnapshot> {
@@ -471,6 +496,7 @@ export function diffAlboItems(previous: AlboItem[], next: AlboItem[]): AlboDiff 
 
 export function renderRunLog(snapshot: AlboRawSnapshot, counts: RunCounts): string {
   const warnings = snapshot.warnings.length ? snapshot.warnings.join("; ") : "nessuno";
+  const nextCheck = nextScheduledCheck(snapshot.retrieved_at);
   return [
     `Run: ${romeTime(snapshot.retrieved_at)}`,
     `Fonte: ${snapshot.source}`,
@@ -486,7 +512,7 @@ export function renderRunLog(snapshot: AlboRawSnapshot, counts: RunCounts): stri
     `Solo metadato: ${counts.metadata_only}`,
     `Esclusi dal public layer: ${counts.excluded}`,
     `Errori/warning: ${warnings}`,
-    "Next check: manuale o schedulato dal runner esterno; Tranche A espone il comando di acquisizione.",
+    `Next check: ${nextCheck ?? "non calcolabile"} (${ROME_MONITORING_WINDOW}; cron UTC ${GITHUB_ACTIONS_CRON_UTC}).`,
     "",
     "Limiti noti:",
     ...snapshot.known_limits.map((limit) => `- ${limit}`),
@@ -552,6 +578,34 @@ function buildPublicDiff(snapshot: AlboRawSnapshot, diff: AlboDiff, counts: RunC
   };
 }
 
+function buildPublicStatus(snapshot: AlboRawSnapshot, counts: RunCounts): AlboPublicStatus {
+  return {
+    generated_at: snapshot.retrieved_at,
+    source: snapshot.source,
+    source_url: snapshot.source_url,
+    provider: snapshot.provider,
+    last_run_at: snapshot.retrieved_at,
+    last_update: snapshot.retrieved_at,
+    method: snapshot.fetch_method,
+    raw_format: snapshot.raw_format,
+    counts,
+    warnings: snapshot.warnings,
+    next_scheduled_check: nextScheduledCheck(snapshot.retrieved_at),
+    schedule: {
+      monitoring_window: ROME_MONITORING_WINDOW,
+      timezone: ROME_TIME_ZONE,
+      github_actions_cron_utc: GITHUB_ACTIONS_CRON_UTC,
+      utc_handling:
+        "GitHub cron usa UTC; il workflow calcola l'ora Europe/Rome e salta le esecuzioni fuori dalla finestra civica.",
+      zero_cost_runner: "ubuntu-latest",
+    },
+    verification_status: verificationStatus(snapshot.fetch_method),
+    known_limits: snapshot.known_limits,
+    official_albo_disclaimer: OFFICIAL_ALBO_DISCLAIMER,
+    civic_safeguards: CIVIC_SAFEGUARDS,
+  };
+}
+
 function publicItem(item: AlboItem): PublicRecord {
   const base = {
     id: item.id,
@@ -614,6 +668,7 @@ async function writeArtifacts(
   items: AlboItem[],
   publicLatest: PublicLatest,
   publicDiff: PublicDiff,
+  publicStatus: AlboPublicStatus,
   runLog: string,
 ): Promise<RunResult["paths"]> {
   const paths = {
@@ -628,6 +683,7 @@ async function writeArtifacts(
     processedItems: path.join(outDir, "processed", "albo", "albo_items.json"),
     publicLatest: path.join(outDir, "public", "albo", "latest.json"),
     publicDiff: path.join(outDir, "public", "albo", "diff-latest.json"),
+    publicStatus: path.join(outDir, "public", "albo", "status.json"),
     runLog: path.join(outDir, "public", "albo", "run-latest.md"),
   };
   await Promise.all(Object.values(paths).map((filePath) => mkdir(path.dirname(filePath), { recursive: true })));
@@ -642,6 +698,7 @@ async function writeArtifacts(
   });
   await writeJson(paths.publicLatest, publicLatest);
   await writeJson(paths.publicDiff, publicDiff);
+  await writeJson(paths.publicStatus, publicStatus);
   await writeFile(paths.runLog, runLog, "utf8");
   return paths;
 }
@@ -903,10 +960,36 @@ function romeTime(iso: string): string {
   const date = new Date(iso);
   if (Number.isNaN(date.getTime())) return iso;
   return new Intl.DateTimeFormat("it-IT", {
-    timeZone: "Europe/Rome",
+    timeZone: ROME_TIME_ZONE,
     dateStyle: "short",
     timeStyle: "medium",
   }).format(date);
+}
+
+function nextScheduledCheck(iso: string): string | null {
+  const start = new Date(iso);
+  if (Number.isNaN(start.getTime())) return null;
+
+  const candidate = new Date(start.getTime() + 60_000);
+  candidate.setUTCMinutes(10, 0, 0);
+  if (candidate <= start) candidate.setUTCHours(candidate.getUTCHours() + 1);
+
+  for (let index = 0; index < 72; index += 1) {
+    if (isInsideRomeMonitoringWindow(candidate)) return candidate.toISOString();
+    candidate.setUTCHours(candidate.getUTCHours() + 1);
+  }
+
+  return null;
+}
+
+function isInsideRomeMonitoringWindow(date: Date): boolean {
+  const hourPart = new Intl.DateTimeFormat("en-GB", {
+    timeZone: ROME_TIME_ZONE,
+    hour: "2-digit",
+    hourCycle: "h23",
+  }).format(date);
+  const hour = Number.parseInt(hourPart, 10);
+  return hour >= 8 && hour <= 20;
 }
 
 function isSnapshot(value: unknown): value is AlboRawSnapshot {
