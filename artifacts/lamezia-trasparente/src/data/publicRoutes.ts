@@ -20,11 +20,11 @@ export type PublicV0RouteContract = {
 };
 
 export const V0_ROUTE_STATUS_LABELS: Record<V0RouteStatus, string> = {
-  pubblicabile: "Pubblicabile v0",
-  sperimentale: "Sperimentale",
-  "in-preparazione": "In preparazione",
-  riservata: "Riservata",
-  "static-marker": "Marker tecnico",
+  pubblicabile: "Consultabile nella v0",
+  sperimentale: "In verifica guidata",
+  "in-preparazione": "In preparazione dati",
+  riservata: "Area non pubblica",
+  "static-marker": "Verifica tecnica",
 };
 
 export const PUBLIC_V0_ROUTE_CONTRACT = [
@@ -38,8 +38,8 @@ export const PUBLIC_V0_ROUTE_CONTRACT = [
   {
     path: "/convocazioni",
     status: "pubblicabile",
-    title: "Convocazioni",
-    note: "Indice pubblico con stati vuoti se le convocazioni non sono disponibili.",
+    title: "Sedute e ordini del giorno",
+    note: "Indice consultabile: se la fonte non restituisce convocazioni, la pagina lo dichiara come limite informativo della v0.",
     rationale: "Indice pubblico delle convocazioni.",
   },
   {
@@ -54,14 +54,14 @@ export const PUBLIC_V0_ROUTE_CONTRACT = [
     path: "/contratti",
     status: "pubblicabile",
     title: "Contratti pubblici",
-    note: "Consultazione civica con cautele su fonti, importi e dati mancanti.",
+    note: "Consultazione civica di contratti e affidamenti con cautele su fonti, importi, CUP/CIG e dati non ancora disponibili.",
     rationale: "Indice pubblico dei contratti.",
   },
   {
     path: "/pnrr",
     status: "sperimentale",
-    title: "PNRR",
-    note: "Sezione in consolidamento: collegamenti e dati vanno verificati sulle fonti richiamate.",
+    title: "Progetti e informazioni PNRR",
+    note: "Sezione in verifica guidata: mostra collegamenti e schede disponibili, da riscontrare sulle fonti richiamate.",
     rationale: "Pagina pubblica di monitoraggio PNRR.",
   },
   {
@@ -82,14 +82,14 @@ export const PUBLIC_V0_ROUTE_CONTRACT = [
     path: "/fonti-dati",
     status: "pubblicabile",
     title: "Fonti dati",
-    note: "Indice delle fonti con limiti, frequenze e assunzioni pubbliche.",
+    note: "Indice delle fonti con stato del collegamento, frequenze attese, limiti e assunzioni pubbliche.",
     rationale: "Pagina pubblica sulle fonti dati.",
   },
   {
     path: "/metodologia",
     status: "pubblicabile",
     title: "Metodologia",
-    note: "Criteri e cautele per leggere indicatori e dati come segnali da verificare.",
+    note: "Criteri e cautele per leggere indicatori, assenze informative e ricorrenze come segnali documentali da verificare.",
     rationale: "Pagina pubblica sulla metodologia.",
   },
   {
@@ -190,7 +190,10 @@ export const PUBLIC_INDEXABLE_ROUTES = [
     rationale:
       "Pagina pubblica su capacità amministrativa, organico e stato delle fonti.",
   },
-  { path: "/pnrr", rationale: "Pagina pubblica di monitoraggio PNRR." },
+  {
+    path: "/pnrr",
+    rationale: "Pagina pubblica di monitoraggio PNRR.",
+  },
   { path: "/opendata", rationale: "Catalogo pubblico open data." },
   { path: "/feeds", rationale: "Pagina pubblica dei feed di aggiornamento." },
   {
