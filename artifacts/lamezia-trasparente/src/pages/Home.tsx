@@ -548,7 +548,8 @@ function BlockConvocazioni() {
             </h2>
             <p className="text-muted-foreground mt-1">
               Avvisi, date e ordini del giorno disponibili per Consiglio
-              comunale e commissioni, con stato della fonte e limiti della versione pubblica.
+              comunale e commissioni, con stato della fonte e limiti della
+              versione pubblica.
             </p>
           </div>
           <Link href="/convocazioni" className="hidden md:flex shrink-0">
@@ -689,20 +690,30 @@ function StaticHomeLayout() {
           <p className="text-lg md:text-xl text-sidebar-foreground/75 mb-9 max-w-2xl text-balance">
             Lamezia Trasparente Monitor organizza informazioni amministrative di
             interesse pubblico in modo documentale, prudente e non accusatorio.
-            Nella versione pubblica puoi orientarti tra sedute, contratti, PNRR, fonti e
-            metodologia: alcune sezioni sono consultabili, altre attendono
-            alimentazione dati verificata.
+            Nella versione pubblica puoi orientarti tra sedute, contratti, PNRR,
+            fonti e metodologia: alcune sezioni sono consultabili, altre
+            attendono alimentazione dati verificata.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
-            <Link href="/convocazioni" className="w-full sm:w-auto">
+            <Link href="/domande" className="w-full sm:w-auto">
               <Button
                 variant="brand"
                 size="lg"
                 className="w-full text-base h-12 px-7 font-bold"
               >
-                Consulta le sedute{" "}
+                Esplora le domande{" "}
                 <ArrowRight className="ml-1 h-4 w-4" aria-hidden="true" />
+              </Button>
+            </Link>
+            <Link href="/convocazioni" className="w-full sm:w-auto">
+              <Button
+                variant="outline"
+                size="lg"
+                className="w-full text-base h-12 px-7 font-bold bg-white/5 text-white border-white/25 hover:bg-white/10"
+              >
+                <Calendar className="mr-1 h-4 w-4" aria-hidden="true" />
+                Consulta le sedute
               </Button>
             </Link>
             <Link href="/fonti-dati" className="w-full sm:w-auto">
@@ -713,16 +724,6 @@ function StaticHomeLayout() {
               >
                 <Info className="mr-1 h-4 w-4" aria-hidden="true" />
                 Capisci fonti e limiti
-              </Button>
-            </Link>
-            <Link href="/segnalazioni" className="w-full sm:w-auto">
-              <Button
-                variant="outline"
-                size="lg"
-                className="w-full text-base h-12 px-7 font-bold bg-white/5 text-white border-white/25 hover:bg-white/10"
-              >
-                <Megaphone className="mr-1 h-4 w-4" aria-hidden="true" />
-                Segnala un dato da verificare
               </Button>
             </Link>
           </div>
@@ -884,14 +885,10 @@ function StaticHomeLayout() {
               : featured.map((q) => <QuestionCard key={q.id} question={q} />)}
           </div>
 
-          <div className="mt-10 flex justify-center">
-            <Link href="/domande">
-              <Button variant="brand" size="lg" className="h-12 px-7 font-bold">
-                Esplora tutte le domande{" "}
-                <ArrowRight className="ml-1 h-4 w-4" aria-hidden="true" />
-              </Button>
-            </Link>
-          </div>
+          <p className="mt-10 text-center text-sm text-muted-foreground">
+            Il percorso completo delle domande civiche è ora raggiungibile dal
+            banner principale della pagina.
+          </p>
         </div>
       </section>
 
@@ -984,7 +981,8 @@ function StaticHomeLayout() {
                     ) : (
                       <div className="p-8 text-center text-muted-foreground">
                         Non risultano aggiornamenti recenti dalla fonte
-                        consultata o dal fallback statico della versione pubblica.
+                        consultata o dal fallback statico della versione
+                        pubblica.
                       </div>
                     )}
                   </div>
@@ -1059,8 +1057,8 @@ function V0PublicPathBanner() {
             id="v0-public-path-title"
             className="mt-2 font-display text-2xl font-bold tracking-tight"
           >
-            La versione pubblica è una mappa civica consultabile, con sedute come primo
-            percorso guidato.
+            La versione pubblica è una mappa civica consultabile, con sedute
+            come primo percorso guidato.
           </h2>
           <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
             Segui il percorso Home → Sedute e ordini del giorno → scheda seduta
