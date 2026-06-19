@@ -84,12 +84,24 @@ const RAW_NAV_GROUPS: NavSection[] = [
           "Controlli e pareri dei revisori e degli organi di vigilanza.",
         icon: ShieldCheck,
       },
+    ],
+  },
+  {
+    label: "Legalità",
+    items: [
       {
         href: "/legalita",
         label: "Legalità e Trasparenza",
         description:
           "Impegni, prevenzione della corruzione e obblighi di trasparenza.",
         icon: Scale,
+      },
+      {
+        href: "/beni-confiscati",
+        label: "Beni Confiscati",
+        description:
+          "Patrimoni confiscati e percorsi di riuso sociale documentati con cautele e fonti.",
+        icon: ShieldOff,
       },
     ],
   },
@@ -122,13 +134,6 @@ const RAW_NAV_GROUPS: NavSection[] = [
         description:
           "Schede PNRR e collegamenti disponibili, da leggere con stato di verifica e fonte richiamata.",
         icon: Landmark,
-      },
-      {
-        href: "/beni-confiscati",
-        label: "Beni Confiscati",
-        description:
-          "Patrimoni sottratti alla criminalità e riassegnati alla collettività.",
-        icon: ShieldOff,
       },
     ],
   },
