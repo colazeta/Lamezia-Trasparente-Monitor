@@ -6,6 +6,8 @@ type PublicErrorBoundaryProps = {
   children: ReactNode;
 };
 
+const publicHomePath = import.meta.env.BASE_URL || "/";
+
 type PublicErrorBoundaryState = {
   hasError: boolean;
 };
@@ -45,7 +47,7 @@ export class PublicErrorBoundary extends Component<
               className="mt-6"
               onClick={() => {
                 this.setState({ hasError: false });
-                window.location.assign("/");
+                window.location.assign(publicHomePath);
               }}
             >
               Torna alla homepage
