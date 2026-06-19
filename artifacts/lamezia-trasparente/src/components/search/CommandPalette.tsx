@@ -77,9 +77,12 @@ const ALL_ITEMS: NavItem[] = [
   { href: "/amministratori", label: "Amministratori", icon: Users, group: "Organi & Persone", keywords: "sindaco assessori consiglieri" },
   { href: "/macchina-comunale", label: "Macchina comunale", icon: Network, group: "Organi & Persone", keywords: "organico dotazione personale scoperture capacità amministrativa fonti" },
 
+  { href: "/monitoraggio", label: "Monitoraggio Civico", icon: Telescope, group: "Monitoraggio civico", keywords: "monithon cantieri lavori verifiche segnalazioni" },
+  { href: "/stato-monitoraggio", label: "Stato monitoraggio", icon: Gauge, group: "Monitoraggio civico", keywords: "copertura freschezza fonti controllo operativo" },
+  { href: "/promessometro", label: "Promessometro", icon: BookOpenCheck, group: "Monitoraggio civico", keywords: "programma promesse atti indirizzo attuazione stato documentale" },
+  { href: "/roadmap", label: "Roadmap", icon: CircleDotDashed, group: "Monitoraggio civico", keywords: "stato moduli priorità limiti pianificato sviluppo sperimentale" },
+
   { href: "/temi", label: "Temi", icon: FileSearch, group: "Partecipazione", keywords: "argomenti categorie" },
-  { href: "/monitoraggio", label: "Monitoraggio Civico", icon: Telescope, group: "Partecipazione", keywords: "monithon cantieri lavori" },
-  { href: "/promessometro", label: "Promessometro", icon: BookOpenCheck, group: "Partecipazione", keywords: "programma promesse atti indirizzo attuazione stato documentale" },
   { href: "/accesso-civico", label: "Accesso Civico", icon: FileSearch, group: "Partecipazione", keywords: "foia istanza richiesta" },
   { href: "/segnalazioni", label: "Segnalazioni", icon: Megaphone, group: "Partecipazione", keywords: "segnale civico verifica accesso civico richiesta formale" },
 
@@ -88,7 +91,6 @@ const ALL_ITEMS: NavItem[] = [
   { href: "/opendata", label: "Open Data", icon: Database, group: "Dati & Analisi", keywords: "dataset csv download" },
   { href: "/fonti-dati", label: "Fonti dati", icon: BookOpen, group: "Dati & Analisi", keywords: "fonti ufficiali estratti arricchiti limiti aggiornamento" },
   { href: "/metodologia", label: "Metodologia", icon: FileSearch, group: "Dati & Analisi", keywords: "metodo indicatori cautela verifiche" },
-  { href: "/roadmap", label: "Roadmap", icon: CircleDotDashed, group: "Dati & Analisi", keywords: "stato moduli priorità limiti pianificato sviluppo sperimentale" },
   { href: "/note-legali", label: "Note legali", icon: Scale3D, group: "Dati & Analisi", keywords: "cautele indicatori interpretazione legalità" },
 
   { href: "/feeds", label: "Feed e Abbonamenti", icon: Rss, group: "Strumenti", keywords: "rss atom notifiche" },
@@ -101,6 +103,7 @@ const GROUPS = [
   "Trasparenza & Atti",
   "Spesa & Contratti",
   "Organi & Persone",
+  "Monitoraggio civico",
   "Partecipazione",
   "Dati & Analisi",
   "Strumenti",
