@@ -21,9 +21,15 @@
       "const": "ISTAT"
     },
     "sourceDataset": {
+      "type": "string"
+    },
+    "sourceDatasetDetails": {
       "type": "object"
     },
     "sourceYear": {
+      "type": "string"
+    },
+    "sourceYearDetails": {
       "type": "object"
     },
     "territorialLevel": {
