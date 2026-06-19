@@ -21,7 +21,7 @@ const STATUS_STYLES = {
     "border-violet-200 bg-violet-50 text-violet-800 dark:border-violet-900/60 dark:bg-violet-950/40 dark:text-violet-200",
   "in sviluppo":
     "border-amber-200 bg-amber-50 text-amber-800 dark:border-amber-900/60 dark:bg-amber-950/40 dark:text-amber-200",
-  "v0 disponibile":
+  "Disponibile":
     "border-emerald-200 bg-emerald-50 text-emerald-800 dark:border-emerald-900/60 dark:bg-emerald-950/40 dark:text-emerald-200",
   sperimentale:
     "border-sky-200 bg-sky-50 text-sky-800 dark:border-sky-900/60 dark:bg-sky-950/40 dark:text-sky-200",
@@ -51,7 +51,7 @@ export function Roadmap() {
         <header className="space-y-5">
           <div className="inline-flex items-center gap-2 rounded-full border border-border bg-muted/40 px-3 py-1 text-xs font-medium text-muted-foreground">
             <CircleDotDashed className="h-3.5 w-3.5" aria-hidden="true" />
-            Roadmap pubblica v0 · issue #42
+            Roadmap pubblica · issue #42
           </div>
           <div className="max-w-3xl space-y-4">
             <h1 className="font-display text-4xl font-bold tracking-tight md:text-5xl">
@@ -220,7 +220,7 @@ export function Roadmap() {
             id="limiti-roadmap"
             className="font-display text-2xl font-semibold tracking-tight"
           >
-            Limiti e moduli esclusi dalla roadmap v0
+            Limiti e moduli esclusi dalla roadmap pubblica
           </h2>
           <div className="mt-4 grid gap-4 text-sm leading-6 text-muted-foreground md:grid-cols-3">
             {ROADMAP_LIMIT_NOTES.map((note, index) => {

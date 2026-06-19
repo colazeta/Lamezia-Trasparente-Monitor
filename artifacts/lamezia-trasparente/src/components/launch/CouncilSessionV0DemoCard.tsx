@@ -74,7 +74,7 @@ export function CouncilSessionV0DemoNotice({
           <p className="font-semibold">Fallback dimostrativo dichiarato</p>
           <p>
             Questa scheda usa una fixture tecnica perché dati/API verificati non
-            sono disponibili in modo affidabile nel percorso v0. Non rappresenta
+            sono disponibili in modo affidabile nel percorso pubblico. Non rappresenta
             una convocazione reale e non va usata come fonte civica.
           </p>
           {!compact && (
@@ -97,7 +97,7 @@ export function CouncilSessionV0DemoSummaryCard() {
     <Card className="border-amber-300/50 bg-amber-50/70 p-5 dark:border-amber-500/40 dark:bg-amber-500/10">
       <div className="mb-3 flex flex-wrap items-center gap-2">
         <Badge variant="outline">Fixture dimostrativa</Badge>
-        <Badge variant="secondary">Primo output civico v0</Badge>
+        <Badge variant="secondary">Primo output civico</Badge>
       </div>
       <h2 className="font-display text-xl font-bold tracking-tight">
         {session.title.value}
@@ -147,7 +147,7 @@ export function CouncilSessionV0DemoDetail({
         <span className="block h-1.5 w-full bg-amber-500" />
         <div className="p-6 md:p-8">
           <div className="mb-4 flex flex-wrap items-center gap-2">
-            <Badge variant="outline">Scheda demo v0</Badge>
+            <Badge variant="outline">Scheda demo</Badge>
             <Badge variant="secondary">
               {
                 councilSessionV0StatusLabels[
@@ -208,7 +208,7 @@ export function CouncilSessionV0DemoDetail({
             id="fonti-limiti-v0-title"
             className="font-display text-xl font-bold tracking-tight"
           >
-            Fonti, limiti e cautele v0
+            Fonti, limiti e cautele
           </h2>
         </div>
         <ul className="space-y-2 text-sm leading-relaxed text-muted-foreground">

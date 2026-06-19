@@ -509,7 +509,7 @@ function BlockRecentActivity() {
               ) : (
                 <div className="p-8 text-center text-muted-foreground">
                   Non risultano aggiornamenti recenti dalla fonte consultata o
-                  dal fallback statico della v0.
+                  dal fallback statico della versione pubblica.
                 </div>
               )}
             </div>
@@ -548,7 +548,7 @@ function BlockConvocazioni() {
             </h2>
             <p className="text-muted-foreground mt-1">
               Avvisi, date e ordini del giorno disponibili per Consiglio
-              comunale e commissioni, con stato della fonte e limiti della v0.
+              comunale e commissioni, con stato della fonte e limiti della versione pubblica.
             </p>
           </div>
           <Link href="/convocazioni" className="hidden md:flex shrink-0">
@@ -682,14 +682,14 @@ function StaticHomeLayout() {
             <br className="hidden sm:inline" /> in un percorso leggibile.
             <br />
             <span className="text-gradient-brand">
-              Una v0 pronta a spiegarsi.
+              Una versione pubblica pronta a spiegarsi.
             </span>
           </h1>
 
           <p className="text-lg md:text-xl text-sidebar-foreground/75 mb-9 max-w-2xl text-balance">
             Lamezia Trasparente Monitor organizza informazioni amministrative di
             interesse pubblico in modo documentale, prudente e non accusatorio.
-            Nella v0 puoi orientarti tra sedute, contratti, PNRR, fonti e
+            Nella versione pubblica puoi orientarti tra sedute, contratti, PNRR, fonti e
             metodologia: alcune sezioni sono consultabili, altre attendono
             alimentazione dati verificata.
           </p>
@@ -701,7 +701,7 @@ function StaticHomeLayout() {
                 size="lg"
                 className="w-full text-base h-12 px-7 font-bold"
               >
-                Consulta le sedute v0{" "}
+                Consulta le sedute{" "}
                 <ArrowRight className="ml-1 h-4 w-4" aria-hidden="true" />
               </Button>
             </Link>
@@ -912,7 +912,7 @@ function StaticHomeLayout() {
                   <p className="text-muted-foreground mt-2">
                     Avvisi, date e ordini del giorno disponibili per Consiglio
                     comunale e commissioni, con stato della fonte e limiti della
-                    v0.
+                    versione pubblica.
                   </p>
                 </div>
                 <Link href="/convocazioni" className="hidden md:flex shrink-0">
@@ -984,7 +984,7 @@ function StaticHomeLayout() {
                     ) : (
                       <div className="p-8 text-center text-muted-foreground">
                         Non risultano aggiornamenti recenti dalla fonte
-                        consultata o dal fallback statico della v0.
+                        consultata o dal fallback statico della versione pubblica.
                       </div>
                     )}
                   </div>
@@ -1053,13 +1053,13 @@ function V0PublicPathBanner() {
         <div className="max-w-3xl">
           <span className="eyebrow text-primary">
             <CalendarClock className="h-3.5 w-3.5" aria-hidden="true" />
-            Percorso pubblico minimo v0
+            Percorso pubblico minimo
           </span>
           <h2
             id="v0-public-path-title"
             className="mt-2 font-display text-2xl font-bold tracking-tight"
           >
-            La v0 è una mappa civica consultabile, con sedute come primo
+            La versione pubblica è una mappa civica consultabile, con sedute come primo
             percorso guidato.
           </h2>
           <p className="mt-2 text-sm leading-relaxed text-muted-foreground">

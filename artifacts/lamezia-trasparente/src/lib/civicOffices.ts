@@ -41,7 +41,7 @@ export type CivicOfficeNormalizationResult =
   | CivicOfficeUnknownMatch;
 
 const CIVIC_OFFICE_DATASET_NOTE =
-  "Tassonomia v0 prudente costruita da etichette aggregate già presenti nei moduli dimostrativi del repository; non è un organigramma ufficiale completo e richiede confronto con fonti comunali aggiornate prima di usi informativi esterni.";
+  "Tassonomia prudente costruita da etichette aggregate già presenti nei moduli dimostrativi del repository; non è un organigramma ufficiale completo e richiede confronto con fonti comunali aggiornate prima di usi informativi esterni.";
 
 export const CIVIC_OFFICES: readonly CivicOfficeRecord[] = [
   {

@@ -77,7 +77,7 @@ export function Metodologia() {
           icon={Info}
           title="Metodo del monitoraggio civico"
           subtitle="Criteri, cautele e regole di lettura per organizzare fonti pubbliche, estrazioni tecniche e indicatori senza trasformarli in conclusioni accusatorie."
-          stateLabel="Pubblicabile v0"
+          stateLabel="Pubblicabile"
           stateDescription="Sezione manuale/documentale: descrive il metodo e le cautele prima dell’uso dei dati."
           findItems={[
             "Processo di raccolta, normalizzazione, estrazione e arricchimento civico.",

@@ -135,7 +135,7 @@ export const civicDemoDatasetManifest = [
     ],
     linkedDatasetNotes: [
       "Descrizione tecnica per schede patrimoniali simulate.",
-      "Fonti operative e logiche di aggiornamento non definite in questa v0.",
+      "Fonti operative e logiche di aggiornamento non definite in questa versione pubblica.",
     ],
   },
 ] as const satisfies readonly CivicDemoDatasetManifestEntry[];

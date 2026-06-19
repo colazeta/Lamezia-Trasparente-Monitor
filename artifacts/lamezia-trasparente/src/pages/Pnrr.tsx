@@ -311,7 +311,7 @@ export function Pnrr() {
               presenti nelle fonti.
             </>
           }
-          stateLabel="Pubblicabile v0"
+          stateLabel="Pubblicabile"
           stateDescription="Sezione consultabile con fonti, limiti e stato di verifica esplicitati."
           findItems={[
             "Progetti censiti, importi, missioni, CUP e stato informativo disponibile.",
@@ -703,7 +703,7 @@ function CantieriometroSection({
             id="cantieriometro-bridge"
             className="text-xl font-display font-bold tracking-tight"
           >
-            Cantieriometro bridge v0
+            Cantieriometro bridge
           </h2>
         </div>
         <p className="max-w-4xl text-sm text-muted-foreground">

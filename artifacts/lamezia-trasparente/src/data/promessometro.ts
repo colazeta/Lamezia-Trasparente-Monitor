@@ -105,7 +105,7 @@ export const PROGRAMME_PROMISES: ProgrammePromise[] = [
     documentedPriority: "Non applicabile al modello",
     implementationStatus: "non_verificabile",
     editorialSummary:
-      "La v0 espone la struttura del Promessometro senza inventare promesse o atti collegati non presenti nelle fonti locali già censite dal progetto.",
+      "La versione pubblica espone la struttura del Promessometro senza inventare promesse o atti collegati non presenti nelle fonti locali già censite dal progetto.",
     cautionNote:
       "Record dimostrativo escluso dai conteggi documentali: non descrive una promessa dell'amministrazione e non va letto come evidenza di avanzamento o mancata attuazione.",
     lastVerification: "2026-06-07",

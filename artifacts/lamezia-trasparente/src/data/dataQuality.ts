@@ -100,7 +100,7 @@ const DATA_QUALITY_NOTES = [
   {
     sourceName: "Promessometro amministrativo — seed manuale",
     lastKnownUpdate:
-      "Documentato/manuale: seed redazionale v0 aggiornabile solo dopo verifica di fonte programmatica, data, mandato di riferimento e nota di cautela.",
+      "Documentato/manuale: seed redazionale aggiornabile solo dopo verifica di fonte programmatica, data, mandato di riferimento e nota di cautela.",
     identifierCoverage:
       "Documentato/manuale: eventuali promesse reali richiedono fonte e atto pertinente verificati; nessuna copertura aggregata è calcolata da questa matrice.",
     attachmentAvailability:

@@ -123,7 +123,7 @@ export function SedutaDetail() {
       {isDemoRoute ? (
         <>
           <PageMeta
-            title="Scheda demo v0 convocazione"
+            title="Scheda demo convocazione"
             description="Fixture dimostrativa per verificare il formato minimo di una scheda seduta: fonti, limiti del dato e stato di verifica. Non rappresenta una convocazione reale."
             path={`/convocazioni/${councilSessionV0DemoFixture.id}`}
             type="article"

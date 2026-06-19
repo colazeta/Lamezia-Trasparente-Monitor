@@ -72,7 +72,7 @@ describe("LegalitaTimeline", () => {
     expect(screen.getByText("Fonti aggiuntive")).toBeInTheDocument();
     expect(screen.getByText("Fonte aggiuntiva verificata")).toBeInTheDocument();
     expect(
-      screen.queryByText("Nessun evento pubblicato nella v0"),
+      screen.queryByText("Nessun evento pubblicato nella versione pubblica"),
     ).not.toBeInTheDocument();
   });
 });

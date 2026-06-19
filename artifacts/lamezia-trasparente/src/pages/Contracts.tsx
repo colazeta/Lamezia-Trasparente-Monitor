@@ -241,8 +241,8 @@ export function Contracts() {
             con fonti e limiti espliciti.
           </>
         }
-        stateLabel="Pubblicabile v0"
-        stateDescription="Sezione consultabile nella v0, con copertura e aggiornamenti da verificare sulle fonti."
+        stateLabel="Pubblicabile"
+        stateDescription="Sezione consultabile nella versione pubblica, con copertura e aggiornamenti da verificare sulle fonti."
         findItems={[
           "Elenco, filtri e mappe dei contratti disponibili nel perimetro locale.",
           "Importi, oggetti, operatori economici e collegamenti documentali quando presenti.",

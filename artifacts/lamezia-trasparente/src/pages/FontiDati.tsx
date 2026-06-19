@@ -63,7 +63,7 @@ export function FontiDati() {
           icon={Database}
           title="Fonti e limiti dei dati"
           subtitle="Registro narrativo delle fonti pubbliche, delle frequenze attese, dei perimetri e dei limiti informativi usati dal portale civico."
-          stateLabel="Pubblicabile v0"
+          stateLabel="Pubblicabile"
           stateDescription="Sezione manuale/documentale: aiuta a capire cosa può e non può dimostrare ogni base informativa."
           findItems={[
             "Principali fonti censite e loro stato informativo.",

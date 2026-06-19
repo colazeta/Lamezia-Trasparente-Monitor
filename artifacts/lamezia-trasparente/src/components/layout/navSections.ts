@@ -231,7 +231,7 @@ const RAW_NAV_GROUPS: NavSection[] = [
         href: "/fonti-dati",
         label: "Fonti dati",
         description:
-          "Quali fonti alimentano la v0, con stato del collegamento, frequenza attesa e limiti informativi.",
+          "Quali fonti alimentano la versione pubblica, con stato del collegamento, frequenza attesa e limiti informativi.",
         icon: BookOpen,
       },
       {
