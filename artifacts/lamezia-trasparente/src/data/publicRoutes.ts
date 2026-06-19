@@ -189,11 +189,11 @@ export const PUBLIC_INDEXABLE_ROUTES = [
   },
   {
     path: "/legalita/timeline",
-    rationale: "Timeline pubblica su legalita e memoria civica.",
+    rationale: "Timeline pubblica su legalità e memoria civica.",
   },
   {
     path: "/legalita",
-    rationale: "Pagina pubblica su legalita e beni confiscati.",
+    rationale: "Pagina pubblica su legalità e beni confiscati.",
   },
   { path: "/delibere", rationale: "Indice pubblico delle delibere." },
   { path: "/convocazioni", rationale: "Indice pubblico delle convocazioni." },
@@ -210,7 +210,7 @@ export const PUBLIC_INDEXABLE_ROUTES = [
   {
     path: "/macchina-comunale",
     rationale:
-      "Pagina pubblica su capacita amministrativa, organico e stato delle fonti.",
+      "Pagina pubblica su capacità amministrativa, organico e stato delle fonti.",
   },
   {
     path: "/pnrr",
@@ -233,7 +233,7 @@ export const PUBLIC_INDEXABLE_ROUTES = [
   { path: "/pareri", rationale: "Indice pubblico di pareri e vigilanza." },
   {
     path: "/criticita-pubbliche",
-    rationale: "Registro pubblico delle criticita civiche da verificare.",
+    rationale: "Registro pubblico delle criticità civiche da verificare.",
   },
   {
     path: "/segnalazioni",
