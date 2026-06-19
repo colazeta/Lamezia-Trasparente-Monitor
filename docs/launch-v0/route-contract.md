@@ -2,7 +2,7 @@
 
 Questo contratto definisce le route minime da controllare prima della pubblicazione v0. È un controllo di readiness, non una fonte civica e non introduce nuovi dati.
 
-Fonte machine-readable: `docs/launch-v0/v0-routes.json`.
+Fonte machine-readable: `docs/launch-v0/v0-routes.json`. Tassonomia civica collegata: `docs/launch-v0/section-taxonomy-v0.md`.
 
 ## Stati ammessi
 

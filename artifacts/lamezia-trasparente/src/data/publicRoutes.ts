@@ -11,8 +11,20 @@ export type V0RouteStatus =
   | "riservata"
   | "static-marker";
 
+export type PublicV0CivicSectionId =
+  | "home"
+  | "council-sessions"
+  | "contracts"
+  | "pnrr-projects"
+  | "data-sources"
+  | "method"
+  | "legal-notes"
+  | "editorial-area"
+  | "static-health";
+
 export type PublicV0RouteContract = {
   path: `/${string}`;
+  civicSectionId: PublicV0CivicSectionId;
   status: V0RouteStatus;
   title: string;
   note: string;
@@ -30,6 +42,7 @@ export const V0_ROUTE_STATUS_LABELS: Record<V0RouteStatus, string> = {
 export const PUBLIC_V0_ROUTE_CONTRACT = [
   {
     path: "/",
+    civicSectionId: "home",
     status: "pubblicabile",
     title: "Home page pubblica",
     note: "Ingresso pubblico alla v0: orientamento, limiti e percorsi principali.",
@@ -37,6 +50,7 @@ export const PUBLIC_V0_ROUTE_CONTRACT = [
   },
   {
     path: "/convocazioni",
+    civicSectionId: "council-sessions",
     status: "pubblicabile",
     title: "Convocazioni",
     note: "Indice pubblico con stati vuoti se le convocazioni non sono disponibili.",
@@ -44,6 +58,7 @@ export const PUBLIC_V0_ROUTE_CONTRACT = [
   },
   {
     path: COUNCIL_SESSION_V0_DEMO_PATH,
+    civicSectionId: "council-sessions",
     status: "sperimentale",
     title: "Scheda demo convocazione v0",
     note: "Fixture dichiarata: verifica struttura, fonti e limiti senza rappresentare una seduta reale.",
@@ -52,6 +67,7 @@ export const PUBLIC_V0_ROUTE_CONTRACT = [
   },
   {
     path: "/contratti",
+    civicSectionId: "contracts",
     status: "pubblicabile",
     title: "Contratti pubblici",
     note: "Consultazione civica con cautele su fonti, importi e dati mancanti.",
@@ -59,6 +75,7 @@ export const PUBLIC_V0_ROUTE_CONTRACT = [
   },
   {
     path: "/pnrr",
+    civicSectionId: "pnrr-projects",
     status: "sperimentale",
     title: "PNRR",
     note: "Sezione in consolidamento: collegamenti e dati vanno verificati sulle fonti richiamate.",
@@ -66,6 +83,7 @@ export const PUBLIC_V0_ROUTE_CONTRACT = [
   },
   {
     path: "/redazione",
+    civicSectionId: "editorial-area",
     status: "riservata",
     title: "Area redazione",
     note: "Percorso riservato: senza Clerk deve mostrare il fallback dedicato, non l'error boundary pubblico.",
@@ -73,6 +91,7 @@ export const PUBLIC_V0_ROUTE_CONTRACT = [
   },
   {
     path: "/healthz.json",
+    civicSectionId: "static-health",
     status: "static-marker",
     title: "Health check statico",
     note: "Marker JSON statico della preview; non esegue verifiche su API, worker o dati live.",
@@ -80,6 +99,7 @@ export const PUBLIC_V0_ROUTE_CONTRACT = [
   },
   {
     path: "/fonti-dati",
+    civicSectionId: "data-sources",
     status: "pubblicabile",
     title: "Fonti dati",
     note: "Indice delle fonti con limiti, frequenze e assunzioni pubbliche.",
@@ -87,6 +107,7 @@ export const PUBLIC_V0_ROUTE_CONTRACT = [
   },
   {
     path: "/metodologia",
+    civicSectionId: "method",
     status: "pubblicabile",
     title: "Metodologia",
     note: "Criteri e cautele per leggere indicatori e dati come segnali da verificare.",
@@ -94,6 +115,7 @@ export const PUBLIC_V0_ROUTE_CONTRACT = [
   },
   {
     path: "/note-legali",
+    civicSectionId: "legal-notes",
     status: "pubblicabile",
     title: "Note legali",
     note: "Avvertenze e limiti d'uso da preservare senza modifiche sostanziali in questa issue.",
