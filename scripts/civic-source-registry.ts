@@ -1,3 +1,5 @@
+import { ALBO_PRETORIO_LAMEZIA_SOURCE } from "./albo-source-config";
+
 export const CIVIC_SOURCE_TYPES = [
   "institutional_website",
   "albo_pretorio",
@@ -139,23 +141,23 @@ export const INITIAL_CIVIC_SOURCE_REGISTRY: CivicSourceRegistryEntry[] = [
   },
   {
     id: "albo-pretorio",
-    name: "Albo Pretorio",
+    name: "Albo Pretorio Comune di Lamezia Terme / Tinnvision",
     type: "albo_pretorio",
     channel: {
       kind: "url",
-      label: "Canale Albo Pretorio",
-      url: "https://www.comune.lamezia-terme.cz.it/albo-pretorio/",
+      label: "Canale Albo Pretorio Tinnvision",
+      url: ALBO_PRETORIO_LAMEZIA_SOURCE.sourceUrl,
     },
     coverage: {
       jurisdiction: "Comune di Lamezia Terme",
-      topics: ["atti in pubblicazione", "avvisi"],
+      topics: ["atti in pubblicazione", "avvisi", "determine", "delibere"],
       completeness: "partial",
       notes: [
-        "Copertura parziale: il registro descrive solo la raggiungibilità tecnica e non certifica l'esaustività degli atti.",
+        "Copertura parziale: il connettore Tranche A acquisisce il solo elenco corrente Tinnvision e non certifica l'esaustivita' storica degli atti.",
       ],
     },
     pollingPolicy: {
-      cadence: "daily",
+      cadence: "hourly",
       requiresLiveNetwork: true,
     },
     lastCheckedAt: "2026-06-01T08:00:00.000Z",
@@ -165,6 +167,16 @@ export const INITIAL_CIVIC_SOURCE_REGISTRY: CivicSourceRegistryEntry[] = [
         code: "partial-coverage",
         note: "Sono possibili differenze fra elenco monitorato, allegati e storico disponibile sul canale ufficiale.",
         severity: "monitoring_need",
+      },
+      {
+        code: "tinnvision-current-export",
+        note: ALBO_PRETORIO_LAMEZIA_SOURCE.knownLimits[0],
+        severity: "monitoring_need",
+      },
+      {
+        code: "pdf-not-parsed-tranche-a",
+        note: ALBO_PRETORIO_LAMEZIA_SOURCE.knownLimits[1],
+        severity: "info",
       },
     ],
   },
