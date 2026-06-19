@@ -23,7 +23,7 @@ import {
   Calendar,
   HelpCircle,
 } from "lucide-react";
-import { NAV_GROUPS } from "@/components/layout/navSections";
+import { NAV_GROUPS, isNavItemUnavailable } from "@/components/layout/navSections";
 import { useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
@@ -357,13 +357,9 @@ function BlockThemesGrid({ content }: { content: Record<string, unknown> }) {
                     color: "text-primary",
                     bg: "bg-primary/10",
                   };
-                  return (
-                    <Link
-                      key={item.href}
-                      href={item.href}
-                      className="group flex flex-col items-center gap-3 rounded-xl border border-border bg-card p-4 text-center transition-all hover-elevate hover:border-primary/30 hover:shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-                      aria-label={item.label}
-                    >
+                  const unavailable = isNavItemUnavailable(item);
+                  const cardContent = (
+                    <>
                       <div
                         className={`rounded-xl p-3 ${colors.bg} transition-transform group-hover:scale-105`}
                       >
@@ -379,7 +375,31 @@ function BlockThemesGrid({ content }: { content: Record<string, unknown> }) {
                         <div className="mt-0.5 hidden text-[11px] leading-snug text-muted-foreground lg:block">
                           {item.description}
                         </div>
+                        {unavailable && item.v0StatusLabel ? (
+                          <div className="mt-2 inline-flex rounded-full border border-border bg-background/70 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
+                            {item.v0StatusLabel}
+                          </div>
+                        ) : null}
                       </div>
+                    </>
+                  );
+                  return unavailable ? (
+                    <div
+                      key={item.href}
+                      className="group flex flex-col items-center gap-3 rounded-xl border border-dashed border-border bg-muted/40 p-4 text-center opacity-75 grayscale cursor-not-allowed"
+                      aria-disabled="true"
+                      aria-label={`${item.label}: ${item.v0StatusLabel ?? "in preparazione"}`}
+                    >
+                      {cardContent}
+                    </div>
+                  ) : (
+                    <Link
+                      key={item.href}
+                      href={item.href}
+                      className="group flex flex-col items-center gap-3 rounded-xl border border-border bg-card p-4 text-center transition-all hover-elevate hover:border-primary/30 hover:shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                      aria-label={item.label}
+                    >
+                      {cardContent}
                     </Link>
                   );
                 })}
