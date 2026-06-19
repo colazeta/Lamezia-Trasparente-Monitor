@@ -433,7 +433,7 @@ function GeneratorSection({
         <CardHeader>
           <CardTitle className="flex items-center gap-2 font-display text-xl">
             <FileQuestion className="h-5 w-5 text-brand" aria-hidden="true" />
-            Generatore guidato FOIA Machine v0
+            Generatore guidato FOIA Machine
           </CardTitle>
           <CardDescription>
             Scegli il problema, completa i campi personalizzabili e copia la
@@ -622,7 +622,7 @@ function GeneratorSection({
               onClick={addDraftToRegister}
             >
               <ClipboardList className="h-4 w-4" aria-hidden="true" />
-              Aggiungi bozza al registro v0
+              Aggiungi bozza al registro
             </Button>
           </div>
         </CardContent>
@@ -1024,7 +1024,7 @@ export function AccessoCivico() {
   return (
     <>
       <PageMeta
-        title="FOIA Machine v0 — accesso civico e registro richieste"
+        title="FOIA Machine — accesso civico e registro richieste"
         description="Generatore guidato di bozze per accesso civico semplice, accesso civico generalizzato e richieste di integrazione, con registro di sessione delle richieste."
         path="/accesso-civico"
       />
@@ -1037,7 +1037,7 @@ export function AccessoCivico() {
             </span>
           </div>
           <h1 className="font-display text-3xl font-bold tracking-tight md:text-4xl">
-            FOIA Machine v0: generatore di accessi civici
+            FOIA Machine: generatore di accessi civici
           </h1>
           <p className="text-muted-foreground">
             Uno strumento civico per preparare bozze copiabili di richieste di
@@ -1111,7 +1111,7 @@ export function AccessoCivico() {
               id="rispostometro-title"
               className="font-display text-xl font-semibold"
             >
-              Rispostometro civico v0
+              Rispostometro civico
             </h2>
           </div>
           <p className="mb-6 max-w-4xl text-sm text-muted-foreground">
@@ -1130,7 +1130,7 @@ export function AccessoCivico() {
               id="registro-title"
               className="font-display text-xl font-semibold"
             >
-              Registro richieste v0
+              Registro richieste
             </h2>
           </div>
           <p className="mb-6 max-w-4xl text-sm text-muted-foreground">
@@ -1175,7 +1175,7 @@ export function AccessoCivico() {
                 </h3>
                 <p>
                   Il registro visualizza solo campi pubblicabili. Nome e
-                  contatto servono a comporre la bozza e, in questa v0, restano
+                  contatto servono a comporre la bozza e, in questa versione pubblica, restano
                   fuori dalla tabella pubblica e da qualsiasi persistenza reale
                   non ancora configurata.
                 </p>

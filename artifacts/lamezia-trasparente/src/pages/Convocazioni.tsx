@@ -249,13 +249,13 @@ export function Convocazioni() {
         eyebrow="Sedute e ordini del giorno"
         icon={CalendarClock}
         title="Sedute e ordini del giorno del Consiglio"
-        subtitle="Percorso civico v0 per orientarsi tra convocazioni, sedute, ordini del giorno e documenti collegati, distinguendo dati presenti, dati da verificare e contenuti dimostrativi."
-        stateLabel="Pubblicabile v0"
+        subtitle="Percorso civico per orientarsi tra convocazioni, sedute, ordini del giorno e documenti collegati, distinguendo dati presenti, dati da verificare e contenuti dimostrativi."
+        stateLabel="Pubblicabile"
         stateDescription="Indice consultabile con stati del dato e limiti dichiarati vicino ai contenuti."
         findItems={[
           "Sedute caricate, filtri per organo e macrotema e copertura documentale disponibile.",
           "Ordini del giorno, resoconti, votazioni e atti collegati quando rilevati.",
-          "Demo v0 dichiarata per mostrare il percorso senza sostituire sedute reali.",
+          "Demo dichiarata per mostrare il percorso senza sostituire sedute reali.",
         ]}
         missingItems={[
           "Sincronizzazione stabile e verificata con tutte le fonti istituzionali delle sedute.",
@@ -276,7 +276,7 @@ export function Convocazioni() {
           <div className="max-w-3xl">
             <span className="eyebrow text-primary">
               <Info className="h-3.5 w-3.5" aria-hidden="true" />
-              Percorso pubblico minimo v0
+              Percorso pubblico minimo
             </span>
             <h2
               id="convocazioni-v0-path-title"
@@ -296,7 +296,7 @@ export function Convocazioni() {
               href={`/convocazioni/${councilSessionV0DemoFixture.id}`}
               className="inline-flex text-sm font-semibold text-primary underline-offset-4 hover:underline"
             >
-              Apri scheda demo v0
+              Apri scheda demo
             </Link>
             <Link
               href="/fonti-dati"

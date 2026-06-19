@@ -137,7 +137,7 @@ export function MacchinaComunale() {
               Macchina comunale
             </h1>
             <p className="mt-4 max-w-3xl text-lg leading-8 text-muted-foreground">
-              Una v0 pubblica per leggere settore, servizio, organico previsto,
+              Una versione pubblica per leggere settore, servizio, organico previsto,
               personale disponibile, scoperture e stato delle fonti. Gli
               indicatori sono segnali di monitoraggio aggregato e non valutano
               produttività individuale, responsabilità personali o correttezza

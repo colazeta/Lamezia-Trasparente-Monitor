@@ -187,7 +187,7 @@ export function Incarichimetro() {
   return (
     <>
       <PageMeta
-        title="Incarichimetro v0"
+        title="Incarichimetro"
         description="Dashboard civica prudente su concentrazione, ricorrenza e rotazione di incarichi, consulenze, servizi professionali e affidamenti ricorrenti."
         path="/incarichimetro"
       />
@@ -199,7 +199,7 @@ export function Incarichimetro() {
             Monitoraggio civico sperimentale
           </div>
           <h1 className="font-display text-4xl font-bold tracking-tight md:text-5xl">
-            Incarichimetro v0
+            Incarichimetro
           </h1>
           <p className="mt-4 text-lg text-muted-foreground">
             Una vista pubblica e prudente per osservare concentrazione,
@@ -597,7 +597,7 @@ export function Incarichimetro() {
             ) : (
               <Card className="p-8 text-center text-muted-foreground">
                 Nessun incarico o affidamento professionale rilevato con le
-                regole v0.
+                regole di lettura.
               </Card>
             )}
           </div>
@@ -616,7 +616,7 @@ export function Incarichimetro() {
                 className="h-5 w-5 text-primary"
                 aria-hidden="true"
               />
-              Metodo v0
+              Metodo
             </h2>
             <ul className="mt-3 list-disc space-y-2 pl-5 text-sm text-muted-foreground">
               <li>

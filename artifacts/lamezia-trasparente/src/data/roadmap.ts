@@ -1,7 +1,7 @@
 export const ROADMAP_STATUSES = [
   "pianificato",
   "in sviluppo",
-  "v0 disponibile",
+  "Disponibile",
   "sperimentale",
   "da validare",
 ] as const;
@@ -40,7 +40,7 @@ export const ROADMAP_STATUS_SUMMARY: RoadmapStatusSummary[] = [
       "Area in lavorazione o refinement, da pubblicare solo con fonti, limiti e verifiche adeguati.",
   },
   {
-    status: "v0 disponibile",
+    status: "Disponibile",
     description:
       "Prima versione pubblica raggiungibile, utile alla consultazione ma ancora soggetta a miglioramenti.",
   },
@@ -59,7 +59,7 @@ export const ROADMAP_STATUS_SUMMARY: RoadmapStatusSummary[] = [
 export const ROADMAP_MODULES: RoadmapModule[] = [
   {
     name: "Albo Monitor",
-    status: "v0 disponibile",
+    status: "Disponibile",
     description:
       "Indice pubblico degli atti dell'Albo Pretorio pensato per orientare ricerca, lettura e verifica sui documenti disponibili.",
     sources:
@@ -101,7 +101,7 @@ export const ROADMAP_MODULES: RoadmapModule[] = [
   },
   {
     name: "FOIA Machine / Accesso civico",
-    status: "v0 disponibile",
+    status: "Disponibile",
     description:
       "Area di orientamento per richieste di accesso civico e raccolta di elementi utili a una domanda documentata.",
     sources:
@@ -130,7 +130,7 @@ export const ROADMAP_MODULES: RoadmapModule[] = [
   },
   {
     name: "Trasparenza organizzativa",
-    status: "v0 disponibile",
+    status: "Disponibile",
     description:
       "Percorsi di consultazione su organi, amministratori e informazioni organizzative pubbliche già presenti nel sito.",
     sources:
@@ -162,7 +162,7 @@ export const ROADMAP_MODULES: RoadmapModule[] = [
   },
   {
     name: "Beni confiscati",
-    status: "v0 disponibile",
+    status: "Disponibile",
     description:
       "Schede e mappe informative sui beni confiscati, con lettura civica orientata a riuso, stato informativo e fonti disponibili.",
     sources:
@@ -175,7 +175,7 @@ export const ROADMAP_MODULES: RoadmapModule[] = [
   },
   {
     name: "Open Data",
-    status: "v0 disponibile",
+    status: "Disponibile",
     description:
       "Catalogo e strumenti per il riuso civico dei dati disponibili, inclusi dataset, risorse e documentazione tecnica.",
     sources:
@@ -191,7 +191,7 @@ export const ROADMAP_MODULES: RoadmapModule[] = [
   },
   {
     name: "Convocazioni e delibere",
-    status: "v0 disponibile",
+    status: "Disponibile",
     description:
       "Percorsi di consultazione su sedute, convocazioni e delibere per seguire l'attività degli organi istituzionali.",
     sources:
@@ -207,7 +207,7 @@ export const ROADMAP_MODULES: RoadmapModule[] = [
   },
   {
     name: "Contratti, bandi e pareri",
-    status: "v0 disponibile",
+    status: "Disponibile",
     description:
       "Aree pubbliche già navigabili per orientarsi tra contratti, bandi, finanziamenti e documenti di vigilanza.",
     sources:

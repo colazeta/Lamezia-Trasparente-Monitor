@@ -127,7 +127,7 @@ export const foiaRegisterAdapter: FoiaRegisterAdapter = {
   name: "foia-register-adapter-v0",
   persistence: "not-configured",
   description:
-    "Punto di integrazione per collegare il registro FOIA a uno storage applicativo verificato. In questa v0 pubblica la pagina usa dati seed e bozze nella sola sessione React, senza localStorage e senza invio PEC/email.",
+    "Punto di integrazione per collegare il registro FOIA a uno storage applicativo verificato. In questa versione pubblica pubblica la pagina usa dati seed e bozze nella sola sessione React, senza localStorage e senza invio PEC/email.",
   async list() {
     return seedFoiaRegisterEntries;
   },

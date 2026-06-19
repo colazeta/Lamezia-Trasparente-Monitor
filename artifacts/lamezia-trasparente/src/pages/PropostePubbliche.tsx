@@ -103,7 +103,7 @@ export function PropostePubbliche() {
                 Archivio delle proposte pubbliche
               </h1>
               <p className="mt-3 max-w-3xl text-lg leading-relaxed text-muted-foreground">
-                Una v0 data-driven per raccogliere proposte di interesse pubblico
+                Una sezione data-driven per raccogliere proposte di interesse pubblico
                 e pratiche replicabili in modo ordinato, consultabile e prudente.
                 La presenza in questo archivio indica rilevanza civica e
                 verificabilità documentale, non adesione politica o valutazione di
@@ -142,7 +142,7 @@ export function PropostePubbliche() {
             {
               icon: FileText,
               title: "Fonti e limiti",
-              text: "La v0 usa manifest tipizzati locali. Fonti social, screenshot o stampa servono solo allo scouting finché non sono riscontrate da fonti primarie.",
+              text: "La versione pubblica usa manifest tipizzati locali. Fonti social, screenshot o stampa servono solo allo scouting finché non sono riscontrate da fonti primarie.",
             },
             {
               icon: Landmark,
@@ -394,7 +394,7 @@ export function PropostePubbliche() {
                     <dd className="mt-1 leading-relaxed text-muted-foreground">
                       {proposal.linkedActs.length > 0
                         ? proposal.linkedActs.join(", ")
-                        : "Nessun atto collegato nella v0"}
+                        : "Nessun atto collegato nella versione pubblica"}
                     </dd>
                   </div>
                   <div>

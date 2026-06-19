@@ -69,7 +69,7 @@ const HUB_MODULES = [
     title: "Cosa è stato segnalato",
     label: "Criticità pubbliche",
     links: [{ href: "/criticita-pubbliche", label: "Apri registro" }],
-    status: "v0 manuale + redazionale",
+    status: "Manuale + redazionale",
     description:
       "Segnali civici e bisogni di verifica raccolti come punti di attenzione, non come conclusioni autonome.",
     icon: MessageSquareWarning,
@@ -119,7 +119,7 @@ const HUB_MODULES = [
       { href: "/legalita", label: "Legalità" },
       { href: "/beni-confiscati", label: "Beni confiscati" },
     ],
-    status: "v0 redazionale + fonti",
+    status: "Redazionale + fonti",
     description:
       "Percorsi su legalità, requisiti di trasparenza, riuso civico e memoria istituzionale con cautele esplicite.",
     icon: ShieldCheck,
@@ -275,7 +275,7 @@ export function Monitoraggio() {
             </h2>
           </div>
           <p className="mt-2 text-sm text-muted-foreground">
-            La v0 usa collegamenti manuali e percorsi di navigazione. Le
+            La versione pubblica usa collegamenti manuali e percorsi di navigazione. Le
             relazioni dati restano predisposte come tracce di lavoro per
             collegare criticità, promesse, atti, incarichi, PNRR, accesso civico
             e memoria istituzionale.

@@ -142,9 +142,9 @@ export const DATA_SOURCES = [
       "Collegamento generico di contesto; non identifica una promessa, un atto o una fonte programmatica specifica.",
     dataType: "Da verificare",
     updateFrequency:
-      "Aggiornamento manuale nella v0: ogni promessa reale richiede fonte programmatica, data, mandato di riferimento, nota di cautela e ultima verifica.",
+      "Aggiornamento manuale nella versione pubblica: ogni promessa reale richiede fonte programmatica, data, mandato di riferimento, nota di cautela e ultima verifica.",
     limitations:
-      "La v0 contiene un record modello non conteggiato quando non sono disponibili promesse verificate nel repository. I collegamenti ad atti non equivalgono automaticamente a completamento o realizzazione osservabile.",
+      "La versione pubblica contiene un record modello non conteggiato quando non sono disponibili promesse verificate nel repository. I collegamenti ad atti non equivalgono automaticamente a completamento o realizzazione osservabile.",
   },
   {
     name: "Atti fondamentali, performance, legalità e pareri",

@@ -123,7 +123,7 @@ export const TIMELINE_SOURCE_KIND_LABELS: Record<
   altro: "Altra fonte documentale",
 };
 
-// v0: no real events are published until the editorial team records a primary
+// No real events are published until the editorial team records a primary
 // source, status, caution note and last verification for each item.
 export const legalityTimelineEvents: LegalityTimelineEvent[] = [];
 

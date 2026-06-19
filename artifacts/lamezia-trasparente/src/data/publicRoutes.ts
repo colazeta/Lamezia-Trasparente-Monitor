@@ -32,7 +32,7 @@ export type PublicV0RouteContract = {
 };
 
 export const V0_ROUTE_STATUS_LABELS: Record<V0RouteStatus, string> = {
-  pubblicabile: "Consultabile nella v0",
+  pubblicabile: "Consultabile nella versione pubblica",
   sperimentale: "In verifica guidata",
   "in-preparazione": "In preparazione dati",
   riservata: "Area non pubblica",
@@ -45,7 +45,7 @@ export const PUBLIC_V0_ROUTE_CONTRACT = [
     civicSectionId: "home",
     status: "pubblicabile",
     title: "Home page pubblica",
-    note: "Ingresso pubblico alla v0: orientamento, limiti e percorsi principali.",
+    note: "Ingresso pubblico alla versione pubblica: orientamento, limiti e percorsi principali.",
     rationale: "Home page pubblica.",
   },
   {
@@ -53,17 +53,17 @@ export const PUBLIC_V0_ROUTE_CONTRACT = [
     civicSectionId: "council-sessions",
     status: "pubblicabile",
     title: "Sedute e ordini del giorno",
-    note: "Indice consultabile: se la fonte non restituisce convocazioni, la pagina lo dichiara come limite informativo della v0.",
+    note: "Indice consultabile: se la fonte non restituisce convocazioni, la pagina lo dichiara come limite informativo della versione pubblica.",
     rationale: "Indice pubblico delle convocazioni.",
   },
   {
     path: COUNCIL_SESSION_V0_DEMO_PATH,
     civicSectionId: "council-sessions",
     status: "sperimentale",
-    title: "Scheda demo convocazione v0",
+    title: "Scheda demo convocazione",
     note: "Fixture dichiarata: verifica struttura, fonti e limiti senza rappresentare una seduta reale.",
     rationale:
-      "Scheda demo v0 dichiarata per verificare il percorso pubblico minimo senza dati reali.",
+      "Scheda demo dichiarata per verificare il percorso pubblico minimo senza dati reali.",
   },
   {
     path: "/contratti",
@@ -95,7 +95,7 @@ export const PUBLIC_V0_ROUTE_CONTRACT = [
     status: "static-marker",
     title: "Health check statico",
     note: "Marker JSON statico della preview; non esegue verifiche su API, worker o dati live.",
-    rationale: "Marker statico pubblico per smoke test della fallback v0.",
+    rationale: "Marker statico pubblico per smoke test del fallback statico.",
   },
   {
     path: "/fonti-dati",
@@ -200,7 +200,7 @@ export const PUBLIC_INDEXABLE_ROUTES = [
   {
     path: COUNCIL_SESSION_V0_DEMO_PATH,
     rationale:
-      "Scheda demo v0 dichiarata per verificare il percorso pubblico minimo senza dati reali.",
+      "Scheda demo dichiarata per verificare il percorso pubblico minimo senza dati reali.",
   },
   { path: "/organi", rationale: "Indice pubblico degli organi istituzionali." },
   {

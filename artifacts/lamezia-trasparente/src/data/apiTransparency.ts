@@ -330,7 +330,7 @@ export const TRANSPARENCY_DATASETS: TransparencyDataset[] = [
     access:
       "Sito/API di servizio: /opendata, /api/opendata/catalog.jsonld, /api/3/action/package_search e endpoint CKAN/DCAT elencati sotto.",
     knownLimits:
-      "Non è incluso nella REST /api/public/v1 né nel MCP v0; le trasformazioni locali vanno confrontate con la scheda ufficiale del dataset.",
+      "Non è incluso nella REST /api/public/v1 né nel MCP iniziale; le trasformazioni locali vanno confrontate con la scheda ufficiale del dataset.",
     reuseExamples: [
       "riuso dei metadati DCAT-AP_IT",
       "ricerca CKAN delle risorse tabellari disponibili",
@@ -348,7 +348,7 @@ export const TRANSPARENCY_DATASETS: TransparencyDataset[] = [
     fields:
       "stato fonte, conteggi, ultime acquisizioni o link a feed secondo la sezione consultata.",
     access:
-      "Pagina pubblica: /feeds. Non documentato come risorsa /api/public/v1 o tool MCP v0.",
+      "Pagina pubblica: /feeds. Non documentato come risorsa /api/public/v1 o tool MCP iniziale.",
     knownLimits:
       "Da usare come supporto alla verifica operativa, non come attestazione di completezza dei dati.",
     reuseExamples: [
@@ -369,7 +369,7 @@ export const TRANSPARENCY_DATASETS: TransparencyDataset[] = [
     fields:
       "Variabili a seconda della sezione: richieste, schede, documenti, scadenze, soggetti pubblici o riferimenti amministrativi.",
     access:
-      "Non esposti nella REST pubblica /api/public/v1 né nel MCP v0 sulla base della documentazione presente.",
+      "Non esposti nella REST pubblica /api/public/v1 né nel MCP iniziale sulla base della documentazione presente.",
     knownLimits:
       "Possibile esclusione o rinvio per privacy, qualità dati, carico applicativo o prudenza civica; non vengono aggiunti nuovi endpoint in questa issue.",
     reuseExamples: [

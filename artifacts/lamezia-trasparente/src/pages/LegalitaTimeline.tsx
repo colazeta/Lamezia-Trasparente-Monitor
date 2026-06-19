@@ -162,7 +162,7 @@ export function LegalitaTimeline() {
             <AlertTriangle className="mt-0.5 h-5 w-5 shrink-0 text-warning" />
             <div className="space-y-2">
               <h2 className="font-display text-lg font-semibold">
-                Stato della v0
+                Stato della versione pubblica
               </h2>
               <p className="text-sm leading-relaxed text-muted-foreground">
                 {publishedEventsCount === 0
@@ -252,7 +252,7 @@ export function LegalitaTimeline() {
             <EmptyMedia variant="icon" className="bg-brand/10 text-brand">
               <Scale className="h-6 w-6" />
             </EmptyMedia>
-            <EmptyTitle>Nessun evento pubblicato nella v0</EmptyTitle>
+            <EmptyTitle>Nessun evento pubblicato nella versione pubblica</EmptyTitle>
             <EmptyDescription>
               La struttura è pronta per schede verificate, ma non mostra eventi
               non confermati o esempi fittizi come se fossero fatti reali.

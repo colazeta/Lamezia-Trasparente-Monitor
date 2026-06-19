@@ -43,7 +43,7 @@ export function NoteLegali() {
           icon={Scale}
           title="Note legali e cautele d’uso"
           subtitle="Avvertenze su natura indipendente del progetto, limiti d’uso, fonti e interpretazione non accusatoria di dati, sintesi e indicatori civici."
-          stateLabel="Pubblicabile v0"
+          stateLabel="Pubblicabile"
           stateDescription="Sezione manuale/documentale: protegge da promesse eccessive e letture improprie."
           findItems={[
             "Principi di uso responsabile delle informazioni pubblicate.",

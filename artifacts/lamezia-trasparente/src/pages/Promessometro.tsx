@@ -146,7 +146,7 @@ export function Promessometro() {
                 Promessometro amministrativo
               </h1>
               <p className="mt-3 max-w-3xl text-lg leading-relaxed text-muted-foreground">
-                Una v0 descrittiva per mappare promesse programmatiche e atti
+                Una versione descrittiva per mappare promesse programmatiche e atti
                 amministrativi collegati. La pagina non assegna voti politici:
                 distingue fonte della promessa, atto di indirizzo, atto
                 attuativo/gestionale e realizzazione osservabile.

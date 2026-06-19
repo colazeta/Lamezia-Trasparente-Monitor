@@ -173,7 +173,7 @@ export const councilSessionV0DemoFixture: CouncilSessionV0 = {
       "Ogni campo deve esporre stato fonte, limite e data di verifica quando sarà collegato a fonti effettive.",
     ],
     sourceStatus: "fixture_dimostrativa",
-    limit: "I limiti descrivono il comportamento atteso della v0, non la copertura effettiva del Comune.",
+    limit: "I limiti descrivono il comportamento atteso della versione pubblica, non la copertura effettiva del Comune.",
   },
 };
 

@@ -202,7 +202,7 @@ export function Router() {
                 path="/convocazioni"
                 component={Convocazioni}
                 title="Sedute e ordini del giorno"
-                description="Calendario e schede di Consiglio e commissioni, organizzate per orientare la consultazione e distinguere fonte, stato e limiti della v0."
+                description="Calendario e schede di Consiglio e commissioni, organizzate per orientare la consultazione e distinguere fonte, stato e limiti della versione pubblica."
               />
               <Route path="/convocazioni/:id" component={SedutaDetail} />
               <PublicRouteWithMeta
@@ -289,7 +289,7 @@ export function Router() {
                 path="/fonti-dati"
                 component={FontiDati}
                 title="Fonti dati"
-                description="Indice delle fonti pubbliche considerate dalla v0, con stato del collegamento, riferimenti, frequenze attese e limiti di lettura."
+                description="Indice delle fonti pubbliche considerate dalla versione pubblica, con stato del collegamento, riferimenti, frequenze attese e limiti di lettura."
               />
               <PublicRouteWithMeta
                 path="/stato-monitoraggio"
