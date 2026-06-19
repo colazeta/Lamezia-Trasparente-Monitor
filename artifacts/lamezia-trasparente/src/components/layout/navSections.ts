@@ -162,14 +162,8 @@ const RAW_NAV_GROUPS: NavSection[] = [
     ],
   },
   {
-    label: "Partecipazione",
+    label: "Monitoraggio civico",
     items: [
-      {
-        href: "/temi",
-        label: "Temi",
-        description: "Esplora gli argomenti che attraversano i dati pubblici.",
-        icon: FileSearch,
-      },
       {
         href: "/monitoraggio",
         label: "Monitor civico",
@@ -178,11 +172,36 @@ const RAW_NAV_GROUPS: NavSection[] = [
         icon: Telescope,
       },
       {
+        href: "/stato-monitoraggio",
+        label: "Stato monitoraggio",
+        description:
+          "Copertura e freschezza delle fonti censite, da leggere come controllo operativo e non come valutazione sostanziale.",
+        icon: Gauge,
+      },
+      {
         href: "/promessometro",
         label: "Promessometro",
         description:
           "Collega promesse programmatiche, atti e stati documentali senza scoring politico.",
         icon: BookOpenCheck,
+      },
+      {
+        href: "/roadmap",
+        label: "Roadmap",
+        description:
+          "Stato pubblico, limiti e priorità prudenti dei moduli civici.",
+        icon: CircleDotDashed,
+      },
+    ],
+  },
+  {
+    label: "Partecipazione",
+    items: [
+      {
+        href: "/temi",
+        label: "Temi",
+        description: "Esplora gli argomenti che attraversano i dati pubblici.",
+        icon: FileSearch,
       },
       {
         href: "/archivio-proposte",
@@ -240,13 +259,6 @@ const RAW_NAV_GROUPS: NavSection[] = [
         description:
           "Come leggere dati, indicatori e assenze informative come segnali documentali da verificare.",
         icon: FileSearch,
-      },
-      {
-        href: "/roadmap",
-        label: "Roadmap",
-        description:
-          "Stato pubblico, limiti e priorità prudenti dei moduli civici.",
-        icon: CircleDotDashed,
       },
       {
         href: "/note-legali",
