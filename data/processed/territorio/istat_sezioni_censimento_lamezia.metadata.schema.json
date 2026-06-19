@@ -1,0 +1,59 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://lamezia-trasparente.local/schemas/istat_sezioni_censimento_lamezia.metadata.schema.json",
+  "title": "ISTAT Lamezia census-section layer metadata",
+  "type": "object",
+  "required": [
+    "sourceInstitution",
+    "sourceDataset",
+    "sourceYear",
+    "territorialLevel",
+    "municipality",
+    "istatMunicipalCode",
+    "processingDate",
+    "verificationStatus",
+    "knownLimits",
+    "publicLabel",
+    "warning"
+  ],
+  "properties": {
+    "sourceInstitution": {
+      "const": "ISTAT"
+    },
+    "sourceDataset": {
+      "type": "object"
+    },
+    "sourceYear": {
+      "type": "object"
+    },
+    "territorialLevel": {
+      "const": "sezione di censimento"
+    },
+    "municipality": {
+      "const": "Lamezia Terme"
+    },
+    "istatMunicipalCode": {
+      "const": "079160"
+    },
+    "processingDate": {
+      "type": "string"
+    },
+    "verificationStatus": {
+      "type": "string"
+    },
+    "knownLimits": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "publicLabel": {
+      "const": "Dato ufficiale ISTAT per sezione censuaria"
+    },
+    "warning": {
+      "type": "string",
+      "pattern": "catastali|catastale|censuari|censuarie"
+    }
+  },
+  "additionalProperties": true
+}

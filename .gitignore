@@ -57,3 +57,10 @@ Thumbs.db
 data/raw/territorio/zornade/sezioni_urbane_catasto/*.gpkg
 data/raw/territorio/zornade/sezioni_urbane_catasto/*.geojson
 data/processed/territorio/zornade_sezioni_urbane_catasto*.geojson
+
+# Official ISTAT census-section source files are reproducible and heavy.
+data/raw/territorio/istat/basi_territoriali_2021_calabria/*
+!data/raw/territorio/istat/basi_territoriali_2021_calabria/README.md
+data/raw/territorio/istat/censimento_2023_sezioni_calabria/*
+!data/raw/territorio/istat/censimento_2023_sezioni_calabria/README.md
+data/processed/territorio/istat_sezioni_censimento_lamezia.geojson
