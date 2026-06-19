@@ -548,7 +548,8 @@ function BlockConvocazioni() {
             </h2>
             <p className="text-muted-foreground mt-1">
               Avvisi, date e ordini del giorno disponibili per Consiglio
-              comunale e commissioni, con stato della fonte e limiti della versione pubblica.
+              comunale e commissioni, con stato della fonte e limiti della
+              versione pubblica.
             </p>
           </div>
           <Link href="/convocazioni" className="hidden md:flex shrink-0">
@@ -689,9 +690,9 @@ function StaticHomeLayout() {
           <p className="text-lg md:text-xl text-sidebar-foreground/75 mb-9 max-w-2xl text-balance">
             Lamezia Trasparente Monitor organizza informazioni amministrative di
             interesse pubblico in modo documentale, prudente e non accusatorio.
-            Nella versione pubblica puoi orientarti tra sedute, contratti, PNRR, fonti e
-            metodologia: alcune sezioni sono consultabili, altre attendono
-            alimentazione dati verificata.
+            Nella versione pubblica puoi orientarti tra sedute, contratti, PNRR,
+            fonti e metodologia: alcune sezioni sono consultabili, altre
+            attendono alimentazione dati verificata.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
@@ -984,7 +985,8 @@ function StaticHomeLayout() {
                     ) : (
                       <div className="p-8 text-center text-muted-foreground">
                         Non risultano aggiornamenti recenti dalla fonte
-                        consultata o dal fallback statico della versione pubblica.
+                        consultata o dal fallback statico della versione
+                        pubblica.
                       </div>
                     )}
                   </div>
@@ -1043,45 +1045,6 @@ function StaticHomeLayout() {
   );
 }
 
-function V0PublicPathBanner() {
-  return (
-    <section
-      className="border-b border-brand/20 bg-brand/5 py-6"
-      aria-labelledby="v0-public-path-title"
-    >
-      <div className="container mx-auto flex flex-col gap-4 px-4 md:flex-row md:items-center md:justify-between md:px-6">
-        <div className="max-w-3xl">
-          <span className="eyebrow text-primary">
-            <CalendarClock className="h-3.5 w-3.5" aria-hidden="true" />
-            Percorso pubblico minimo
-          </span>
-          <h2
-            id="v0-public-path-title"
-            className="mt-2 font-display text-2xl font-bold tracking-tight"
-          >
-            La versione pubblica è una mappa civica consultabile, con sedute come primo
-            percorso guidato.
-          </h2>
-          <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-            Segui il percorso Home → Sedute e ordini del giorno → scheda seduta
-            → fonti e limiti. Le sezioni senza alimentazione completa non
-            promettono copertura totale: indicano cosa è pronto, cosa è
-            dimostrativo e cosa richiede dati verificati.
-          </p>
-        </div>
-        <div className="flex flex-col gap-2 sm:flex-row md:shrink-0">
-          <Button asChild>
-            <Link href="/convocazioni">Vai a sedute e ordini del giorno</Link>
-          </Button>
-          <Button asChild variant="outline">
-            <Link href="/fonti-dati">Capisci fonti e limiti</Link>
-          </Button>
-        </div>
-      </div>
-    </section>
-  );
-}
-
 // ---------------------------------------------------------------------------
 // Home page entry point
 // ---------------------------------------------------------------------------
@@ -1108,7 +1071,6 @@ export function Home() {
         description="Osservatorio civico indipendente per consultare atti, contratti, delibere, convocazioni, open data e progetti PNRR del Comune di Lamezia Terme."
         path="/"
       />
-      <V0PublicPathBanner />
       {publishedBlocks.length > 0 ? (
         <PublishedBlocks blocks={publishedBlocks} />
       ) : (
