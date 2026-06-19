@@ -306,6 +306,10 @@ export function isSectionActive(href: string, location: string): boolean {
   return location === href || (href !== "/" && location.startsWith(`${href}/`));
 }
 
+export function isNavItemUnavailable(item: NavItem): boolean {
+  return Boolean(item.v0Status && item.v0Status !== "pubblicabile");
+}
+
 export interface ActiveSection {
   group: NavSection;
   item: NavItem;

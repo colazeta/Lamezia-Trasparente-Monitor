@@ -30,7 +30,7 @@ import {
   useCommandPalette,
 } from "@/components/search/CommandPalette";
 import { asApiList } from "@/lib/apiList";
-import { NAV_GROUPS, isSectionActive } from "./navSections";
+import { NAV_GROUPS, isNavItemUnavailable, isSectionActive } from "./navSections";
 
 function useTopics(): string[] {
   const { data: questions } = useListQuestions();
@@ -149,6 +149,27 @@ export function Navbar() {
                     {group.items.map((item) => {
                       const Icon = item.icon;
                       const active = isActive(item.href);
+                      const unavailable = isNavItemUnavailable(item);
+                      if (unavailable) {
+                        return (
+                          <DropdownMenuItem key={item.href} disabled>
+                            <span
+                              className="flex w-full cursor-not-allowed items-center gap-2 opacity-70 grayscale"
+                              aria-disabled="true"
+                            >
+                              <Icon className="h-4 w-4 text-muted-foreground" aria-hidden="true" />
+                              <span className="flex min-w-0 flex-1 items-center justify-between gap-2">
+                                <span className="truncate">{item.label}</span>
+                                {item.v0StatusLabel ? (
+                                  <span className="rounded-full border border-border bg-muted px-1.5 py-0.5 text-[9px] font-semibold uppercase tracking-wide text-muted-foreground">
+                                    {item.v0StatusLabel}
+                                  </span>
+                                ) : null}
+                              </span>
+                            </span>
+                          </DropdownMenuItem>
+                        );
+                      }
                       return (
                         <DropdownMenuItem key={item.href} asChild>
                           <Link
@@ -282,6 +303,7 @@ export function Navbar() {
                         icon={item.icon}
                         active={isActive(item.href)}
                         onClick={() => setIsOpen(false)}
+                        disabled={isNavItemUnavailable(item)}
                         statusLabel={
                           item.v0Status !== "pubblicabile"
                             ? item.v0StatusLabel
@@ -307,6 +329,7 @@ function MobileLink({
   active,
   onClick,
   statusLabel,
+  disabled = false,
 }: {
   href: string;
   label: string;
@@ -314,18 +337,10 @@ function MobileLink({
   active: boolean;
   onClick: () => void;
   statusLabel?: string;
+  disabled?: boolean;
 }) {
-  return (
-    <Link
-      href={href}
-      onClick={onClick}
-      className={cn(
-        "flex items-center gap-3 rounded-md border p-3 text-sm font-semibold transition-colors hover-elevate",
-        active
-          ? "border-primary/20 bg-primary/10 text-primary"
-          : "border-transparent text-muted-foreground",
-      )}
-    >
+  const content = (
+    <>
       <Icon className="h-5 w-5 shrink-0" aria-hidden="true" />
       <span className="min-w-0 flex-1">
         <span className="block truncate">{label}</span>
@@ -335,6 +350,23 @@ function MobileLink({
           </span>
         ) : null}
       </span>
+    </>
+  );
+  const className = cn(
+    "flex items-center gap-3 rounded-md border p-3 text-sm font-semibold transition-colors hover-elevate",
+    active
+      ? "border-primary/20 bg-primary/10 text-primary"
+      : "border-transparent text-muted-foreground",
+    disabled && "cursor-not-allowed border-dashed bg-muted/40 opacity-70 grayscale",
+  );
+
+  return disabled ? (
+    <div className={className} aria-disabled="true">
+      {content}
+    </div>
+  ) : (
+    <Link href={href} onClick={onClick} className={className}>
+      {content}
     </Link>
   );
 }
