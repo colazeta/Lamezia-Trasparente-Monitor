@@ -11,7 +11,10 @@ import {
   FileSearch,
   Home,
   Info,
+  ListChecks,
+  Route,
   ShieldCheck,
+  SlidersHorizontal,
 } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
@@ -129,6 +132,8 @@ export function SectionScaffold() {
             <RelatedNavigationBlock section={section} />
           </div>
         </div>
+
+        <PageImplementationPanel section={section} />
       </div>
     </section>
   );
@@ -198,6 +203,104 @@ function WhatThisHelpsBlock({ items }: { items: readonly string[] }) {
           </li>
         ))}
       </ul>
+    </div>
+  );
+}
+
+function PageImplementationPanel({
+  section,
+}: {
+  section: SectionArchitecture;
+}) {
+  const blueprint = section.pageImplementation;
+
+  if (!blueprint.isPriorityPage) return null;
+
+  return (
+    <div
+      className="mt-5 grid gap-3 lg:grid-cols-[minmax(0,1.05fr)_minmax(16rem,0.95fr)_minmax(16rem,0.85fr)]"
+      aria-label={`Struttura operativa della sezione ${section.title}`}
+    >
+      <div className="rounded-lg border border-border bg-background/75 p-4">
+        <p className="flex items-center gap-1.5 text-[11px] font-bold uppercase text-primary">
+          <Database className="h-3.5 w-3.5" aria-hidden="true" />
+          Oggetto primario
+        </p>
+        <p className="mt-2 text-sm leading-6 text-foreground">
+          {blueprint.primaryDataObject}
+        </p>
+        <dl className="mt-3 grid gap-3 text-sm sm:grid-cols-2">
+          <div>
+            <dt className="text-[11px] font-bold uppercase text-muted-foreground">
+              Fonte, stato e limiti
+            </dt>
+            <dd className="mt-1 leading-5 text-muted-foreground">
+              {blueprint.sourceStatusPlacement}
+            </dd>
+          </div>
+          <div>
+            <dt className="text-[11px] font-bold uppercase text-muted-foreground">
+              Azione cittadino
+            </dt>
+            <dd className="mt-1 leading-5 text-muted-foreground">
+              {blueprint.citizenAction}
+            </dd>
+          </div>
+        </dl>
+      </div>
+
+      <div className="rounded-lg border border-border bg-background/75 p-4">
+        <p className="flex items-center gap-1.5 text-[11px] font-bold uppercase text-primary">
+          <ListChecks className="h-3.5 w-3.5" aria-hidden="true" />
+          Gerarchia pagina
+        </p>
+        <ol className="mt-3 space-y-2 text-sm leading-5 text-muted-foreground">
+          {blueprint.contentHierarchy.map((item, index) => (
+            <li key={item} className="flex gap-2">
+              <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-primary/10 text-[11px] font-bold text-primary">
+                {index + 1}
+              </span>
+              <span>{item}</span>
+            </li>
+          ))}
+        </ol>
+      </div>
+
+      <div className="rounded-lg border border-border bg-background/75 p-4">
+        <p className="flex items-center gap-1.5 text-[11px] font-bold uppercase text-primary">
+          <SlidersHorizontal className="h-3.5 w-3.5" aria-hidden="true" />
+          Controlli e postura
+        </p>
+        <div className="mt-3 flex flex-wrap gap-1.5">
+          {blueprint.usefulControls.map((control) => (
+            <span
+              key={control}
+              className="rounded-full border border-border bg-muted/35 px-2 py-1 text-xs font-semibold text-muted-foreground"
+            >
+              {control}
+            </span>
+          ))}
+        </div>
+        <dl className="mt-4 space-y-3 text-sm">
+          <div>
+            <dt className="flex items-center gap-1.5 text-[11px] font-bold uppercase text-muted-foreground">
+              <Route className="h-3.5 w-3.5" aria-hidden="true" />
+              Lancio pubblico
+            </dt>
+            <dd className="mt-1 leading-5 text-foreground">
+              {blueprint.launchPosture}
+            </dd>
+          </div>
+          <div>
+            <dt className="text-[11px] font-bold uppercase text-muted-foreground">
+              Dato ancora necessario
+            </dt>
+            <dd className="mt-1 leading-5 text-muted-foreground">
+              {blueprint.remainingDataDependency}
+            </dd>
+          </div>
+        </dl>
+      </div>
     </div>
   );
 }
