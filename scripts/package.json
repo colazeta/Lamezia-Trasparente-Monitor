@@ -10,7 +10,7 @@
     "etl:istat-sezioni-censimento-lamezia": "tsx ./territorio/istat-sezioni-censimento-lamezia.ts",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "check-source-health": "tsx ./check-source-health.ts",
-    "test": "node --import tsx --test ./check-source-health.test.ts ./production-smoke-plan.test.ts ./civic-source-registry.test.ts ./territorio/istat-sezioni-censimento-lamezia.test.ts ./albo-tinnvision.test.ts",
+    "test": "node --import tsx --test ./check-source-health.test.ts ./production-smoke-plan.test.ts ./civic-source-registry.test.ts ./territorio/istat-sezioni-censimento-lamezia.test.ts ./albo-tinnvision.test.ts ./albo-workflow-guard.test.ts",
     "production-smoke-plan": "tsx ./production-smoke-plan.ts"
   },
   "devDependencies": {
