@@ -120,6 +120,7 @@ export type PdfPreservationStatus =
 export type PdfPreservationReason =
   | "eligible_low_risk_publishable_pdf"
   | "no_document_url"
+  | "non_https_document_url"
   | "non_official_document_url"
   | "privacy_excluded"
   | "human_review_required"
@@ -132,7 +133,7 @@ export interface PdfPreservationDecision {
   source: string;
   source_url: string;
   retrieved_at: string;
-  document_url: string | null;
+  document_url?: string;
   public_visibility: PublicVisibility;
   privacy_risk: PrivacyRisk;
   verification_status: VerificationStatus;
@@ -157,6 +158,7 @@ export interface AlboDocumentsManifest {
   policy: {
     eligibility: string;
     official_url_host: string;
+    requires_https: true;
     content_type: "application/pdf";
     max_size_bytes: number;
     storage_path_template: "data/public/albo/documents/<year>/<sha>.pdf";
@@ -175,6 +177,7 @@ export interface AlboDocumentsManifest {
     excluded: number;
     human_review_required: number;
   };
+  warnings: string[];
   documents: ArchivedPdfDocument[];
   decisions: PdfPreservationDecision[];
 }
@@ -790,15 +793,14 @@ async function archivePublicPdfs(
   const documents: ArchivedPdfDocument[] = [];
   const decisions: PdfPreservationDecision[] = [];
   const written = new Set<string>();
+  const warnings: string[] = [];
 
   for (const item of items) {
     const base = pdfDecisionBase(item);
-    const officialUrl = resolveOfficialDocumentUrl(item.document_url);
 
     if (item.public_visibility === "publishable_with_minimisation" || item.privacy_risk === "medium") {
       decisions.push({
         ...base,
-        document_url: officialUrl,
         preservation_status: "human_review_required",
         reason: "human_review_required",
       });
@@ -808,24 +810,28 @@ async function archivePublicPdfs(
     if (item.public_visibility !== "publishable" || item.privacy_risk !== "low") {
       decisions.push({
         ...base,
-        document_url: null,
         preservation_status: "excluded",
         reason: "privacy_excluded",
       });
       continue;
     }
 
-    if (!officialUrl) {
+    const officialDocument = resolveOfficialDocumentUrl(item.document_url);
+    if (!officialDocument.href) {
+      if (officialDocument.reason === "non_https_document_url") {
+        warnings.push(
+          `PDF archival skipped for ${item.id}: official document URL is not HTTPS.`,
+        );
+      }
       decisions.push({
         ...base,
-        document_url: null,
         preservation_status: "skipped",
-        reason: item.document_url ? "non_official_document_url" : "no_document_url",
+        reason: officialDocument.reason,
       });
       continue;
     }
 
-    const archived = await fetchAndStorePdf(outDir, item, officialUrl, pdfFetch, written);
+    const archived = await fetchAndStorePdf(outDir, item, officialDocument.href, pdfFetch, written);
     decisions.push(archived);
     if (isArchivedPdfDocument(archived)) {
       documents.push(archived);
@@ -849,8 +855,9 @@ async function archivePublicPdfs(
     verification_status: verificationStatus(snapshot.fetch_method),
     policy: {
       eligibility:
-        "Archive only official PDFs for records classified public_visibility=publishable and privacy_risk=low.",
+        "Archive only HTTPS official PDFs for records classified public_visibility=publishable and privacy_risk=low.",
       official_url_host: officialAlboHost(),
+      requires_https: true,
       content_type: "application/pdf",
       max_size_bytes: MAX_PUBLIC_PDF_BYTES,
       storage_path_template: "data/public/albo/documents/<year>/<sha>.pdf",
@@ -862,6 +869,7 @@ async function archivePublicPdfs(
       paid_storage: false,
     },
     counts,
+    warnings: unique(warnings),
     documents,
     decisions,
   };
@@ -881,7 +889,6 @@ async function fetchAndStorePdf(
     if (!response.ok) {
       return {
         ...base,
-        document_url: documentUrl,
         preservation_status: "skipped",
         reason: "fetch_failed",
       };
@@ -891,7 +898,6 @@ async function fetchAndStorePdf(
     if (contentType !== "application/pdf") {
       return {
         ...base,
-        document_url: documentUrl,
         preservation_status: "skipped",
         reason: "content_type_not_pdf",
       };
@@ -901,7 +907,6 @@ async function fetchAndStorePdf(
     if (declaredSize !== null && declaredSize > MAX_PUBLIC_PDF_BYTES) {
       return {
         ...base,
-        document_url: documentUrl,
         preservation_status: "skipped",
         reason: "size_limit_exceeded",
       };
@@ -911,7 +916,6 @@ async function fetchAndStorePdf(
     if (bytes.byteLength > MAX_PUBLIC_PDF_BYTES) {
       return {
         ...base,
-        document_url: documentUrl,
         preservation_status: "skipped",
         reason: "size_limit_exceeded",
       };
@@ -940,7 +944,6 @@ async function fetchAndStorePdf(
   } catch {
     return {
       ...base,
-      document_url: documentUrl,
       preservation_status: "skipped",
       reason: "fetch_failed",
     };
@@ -1235,14 +1238,16 @@ function countVisibility(items: AlboItem[], visibility: PublicVisibility): numbe
   return items.filter((item) => item.public_visibility === visibility).length;
 }
 
-function resolveOfficialDocumentUrl(value: string | null): string | null {
-  if (!value) return null;
+function resolveOfficialDocumentUrl(value: string | null): { href: string | null; reason: PdfPreservationReason } {
+  if (!value) return { href: null, reason: "no_document_url" };
   try {
     const url = new URL(value, ALBO_PRETORIO_LAMEZIA_SOURCE.sourceUrl);
-    if (url.protocol !== "https:" && url.protocol !== "http:") return null;
-    return url.host === officialAlboHost() ? url.href : null;
+    if (url.host !== officialAlboHost()) return { href: null, reason: "non_official_document_url" };
+    if (url.protocol === "https:") return { href: url.href, reason: "eligible_low_risk_publishable_pdf" };
+    if (url.protocol === "http:") return { href: null, reason: "non_https_document_url" };
+    return { href: null, reason: "non_official_document_url" };
   } catch {
-    return null;
+    return { href: null, reason: "non_official_document_url" };
   }
 }
 

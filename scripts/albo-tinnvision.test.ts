@@ -250,7 +250,9 @@ test("archives only official low-risk publishable PDFs into public documents sto
   assert.deepEqual(fetchCalls, [documentUrl]);
   assert.equal(result.documentsManifest.counts.archived, 1);
   assert.equal(result.documentsManifest.counts.eligible, 1);
+  assert.equal(result.documentsManifest.policy.requires_https, true);
   assert.equal(result.documentsManifest.documents[0].sha256, expectedSha);
+  assert.equal(result.documentsManifest.documents[0].document_url, documentUrl);
   assert.equal(
     result.documentsManifest.documents[0].storage_path,
     `data/public/albo/documents/2026/${expectedSha}.pdf`,
@@ -267,10 +269,12 @@ test("archives only official low-risk publishable PDFs into public documents sto
   assert.doesNotMatch(manifest, /Affidamento servizio verde pubblico/i);
 });
 
-test("excludes metadata-only and high-risk records from PDF archiving without fetching", async () => {
+test("excludes metadata-only and high-risk records from PDF archiving without exposing document URLs", async () => {
   const tmp = await mkdtemp(path.join(tmpdir(), "albo-tinnvision-pdf-excluded-"));
   const fixturePath = path.join(tmp, "albo.xml");
   const outDir = path.join(tmp, "data");
+  const metadataOnlyUrl = "https://albo.tinnvision.cloud/documenti/2026/2001.pdf";
+  const highRiskUrl = "https://albo.tinnvision.cloud/documenti/2026/2002.pdf";
   await writeFile(
     fixturePath,
     [
@@ -280,7 +284,7 @@ test("excludes metadata-only and high-risk records from PDF archiving without fe
         "SERVIZI DEMOGRAFICI",
         "PUBBLICAZIONE DI MATRIMONIO DEI SIG.RI ROSSI MARIO E BIANCHI LUCIA",
         "",
-        "https://albo.tinnvision.cloud/documenti/2026/2001.pdf",
+        metadataOnlyUrl,
       ),
       xmlRecord(
         "2026/2002",
@@ -288,7 +292,7 @@ test("excludes metadata-only and high-risk records from PDF archiving without fe
         "SERVIZI SOCIALI",
         "Contributo economico straordinario per nucleo con minore",
         "2",
-        "https://albo.tinnvision.cloud/documenti/2026/2002.pdf",
+        highRiskUrl,
       ),
     ].join("\n"),
     "utf8",
@@ -312,9 +316,14 @@ test("excludes metadata-only and high-risk records from PDF archiving without fe
   );
   assert.ok(
     result.documentsManifest.decisions.every(
-      (decision) => decision.preservation_status === "excluded" && decision.document_url === null,
+      (decision) => decision.preservation_status === "excluded" && !("document_url" in decision),
     ),
   );
+
+  const manifest = await readFile(result.paths.documentsManifest, "utf8");
+  assert.equal(manifest.includes(metadataOnlyUrl), false);
+  assert.equal(manifest.includes(highRiskUrl), false);
+  assert.equal(manifest.includes("original_document_url"), false);
 });
 
 test("skips otherwise eligible PDFs when content type or size limit fails", async () => {
@@ -358,9 +367,12 @@ test("skips otherwise eligible PDFs when content type or size limit fails", asyn
     result.documentsManifest.decisions.map((decision) => decision.reason),
     ["content_type_not_pdf", "size_limit_exceeded"],
   );
+  assert.ok(
+    result.documentsManifest.decisions.every((decision) => !("document_url" in decision)),
+  );
 });
 
-test("marks medium-risk minimised records as human_review_required without downloading", async () => {
+test("marks medium-risk minimised records as human_review_required without downloading or exposing the URL", async () => {
   const tmp = await mkdtemp(path.join(tmpdir(), "albo-tinnvision-pdf-review-"));
   const fixturePath = path.join(tmp, "albo.xml");
   const outDir = path.join(tmp, "data");
@@ -393,7 +405,53 @@ test("marks medium-risk minimised records as human_review_required without downl
   assert.equal(result.documentsManifest.counts.human_review_required, 1);
   assert.equal(result.documentsManifest.decisions[0].preservation_status, "human_review_required");
   assert.equal(result.documentsManifest.decisions[0].reason, "human_review_required");
-  assert.equal(result.documentsManifest.decisions[0].document_url, documentUrl);
+  assert.ok(!("document_url" in result.documentsManifest.decisions[0]));
+
+  const manifest = await readFile(result.paths.documentsManifest, "utf8");
+  assert.equal(manifest.includes(documentUrl), false);
+  assert.equal(manifest.includes("original_document_url"), false);
+});
+
+test("rejects official HTTP document URLs with a warning and without fetching", async () => {
+  const tmp = await mkdtemp(path.join(tmpdir(), "albo-tinnvision-pdf-http-"));
+  const fixturePath = path.join(tmp, "albo.xml");
+  const outDir = path.join(tmp, "data");
+  const documentUrl = "http://albo.tinnvision.cloud/documenti/2026/4001.pdf";
+  await writeFile(
+    fixturePath,
+    xmlRecord(
+      "2026/4001",
+      "AVVISO PUBBLICO",
+      "SEGRETERIA",
+      "Avviso pubblico ordinario",
+      "",
+      documentUrl,
+    ),
+    "utf8",
+  );
+
+  const result = await runAlboIngestion({
+    outDir,
+    fromFile: fixturePath,
+    inputFormat: "xml",
+    retrievedAt: FIXTURE_RETRIEVED_AT,
+    pdfFetch: async () => {
+      throw new Error("HTTP document URLs must not be fetched");
+    },
+  });
+
+  assert.equal(result.items[0].public_visibility, "publishable");
+  assert.equal(result.items[0].privacy_risk, "low");
+  assert.equal(result.documentsManifest.counts.archived, 0);
+  assert.equal(result.documentsManifest.counts.skipped, 1);
+  assert.equal(result.documentsManifest.decisions[0].preservation_status, "skipped");
+  assert.equal(result.documentsManifest.decisions[0].reason, "non_https_document_url");
+  assert.ok(!("document_url" in result.documentsManifest.decisions[0]));
+  assert.match(result.documentsManifest.warnings.join("\n"), /not HTTPS/);
+
+  const manifest = await readFile(result.paths.documentsManifest, "utf8");
+  assert.equal(manifest.includes(documentUrl), false);
+  assert.match(manifest, /official document URL is not HTTPS/);
 });
 
 function snapshot(records: ReturnType<typeof parseTinnvisionXml>): AlboRawSnapshot {
