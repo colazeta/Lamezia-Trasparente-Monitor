@@ -1,32 +1,32 @@
 import {
-  ShieldAlert,
+  Archive,
   BarChart3,
-  FileText,
-  ClipboardList,
-  FileSearch,
-  Megaphone,
-  Gavel,
-  CalendarClock,
-  Landmark,
-  Users,
-  Network,
+  BookOpen,
+  BookOpenCheck,
   Building2,
-  ShieldCheck,
+  CalendarClock,
+  CircleDotDashed,
+  ClipboardList,
+  Code2,
   Database,
+  FileSearch,
+  FileText,
   Gauge,
-  ScrollText,
-  Scale,
+  Gavel,
   HandCoins,
+  Landmark,
+  MapPinned,
+  Megaphone,
+  Network,
+  Rss,
+  Scale,
+  Scale3D,
+  ScrollText,
+  ShieldAlert,
+  ShieldCheck,
   ShieldOff,
   Telescope,
-  BookOpenCheck,
-  Archive,
-  Rss,
-  Code2,
-  BookOpen,
-  CircleDotDashed,
-  Scale3D,
-  MapPinned,
+  Users,
 } from "lucide-react";
 import {
   getPublicV0RouteContract,
@@ -50,8 +50,22 @@ export interface NavSection {
 
 const RAW_NAV_GROUPS: NavSection[] = [
   {
-    label: "Atti e trasparenza",
+    label: "Cosa decide il Comune",
     items: [
+      {
+        href: "/convocazioni",
+        label: "Sedute e ordini del giorno",
+        description:
+          "Agenda di Consiglio e commissioni con avvisi, documenti, fonte e campi da verificare.",
+        icon: CalendarClock,
+      },
+      {
+        href: "/delibere",
+        label: "Delibere",
+        description:
+          "Decisioni di Giunta e Consiglio con documenti, allegati e limiti della fonte.",
+        icon: Gavel,
+      },
       {
         href: "/albo",
         label: "Albo Pretorio",
@@ -66,21 +80,8 @@ const RAW_NAV_GROUPS: NavSection[] = [
         icon: ScrollText,
       },
       {
-        href: "/delibere",
-        label: "Delibere",
-        description: "Decisioni di Giunta e Consiglio con voti e allegati.",
-        icon: Gavel,
-      },
-      {
-        href: "/convocazioni",
-        label: "Sedute",
-        description:
-          "Agenda di Consiglio e commissioni con avvisi, ordini del giorno e limiti della fonte consultata.",
-        icon: CalendarClock,
-      },
-      {
         href: "/pareri",
-        label: "Pareri",
+        label: "Pareri e vigilanza",
         description:
           "Controlli e pareri dei revisori e degli organi di vigilanza.",
         icon: ShieldCheck,
@@ -88,33 +89,66 @@ const RAW_NAV_GROUPS: NavSection[] = [
     ],
   },
   {
-    label: "LegalitÃ ",
+    label: "Chi partecipa e come vota",
     items: [
       {
-        href: "/legalita",
-        label: "LegalitÃ ",
+        href: "/organi",
+        label: "Organi istituzionali",
         description:
-          "Impegni, prevenzione della corruzione e obblighi di trasparenza.",
-        icon: Scale,
+          "Consiglio, Giunta, commissioni e composizione con fonte e ultimo controllo.",
+        icon: Building2,
       },
       {
-        href: "/beni-confiscati",
-        label: "Beni confiscati",
+        href: "/amministratori",
+        label: "Amministratori",
         description:
-          "Patrimoni confiscati e percorsi di riuso sociale documentati con cautele e fonti.",
-        icon: ShieldOff,
+          "Sindaco, assessori e consiglieri con ruoli pubblici e dati da verificare.",
+        icon: Users,
       },
       {
-        href: "/legalita/trame-festival",
-        label: "Trame - Festival",
+        href: "/macchina-comunale",
+        label: "Macchina comunale",
         description:
-          "Raccolta selettiva di idee e analisi da Trame, pubblicate solo con fonte, minuto e verifica.",
-        icon: BookOpenCheck,
+          "Capacità amministrativa, organico, scoperture e stato delle fonti.",
+        icon: Network,
       },
     ],
   },
   {
-    label: "Spesa e contratti",
+    label: "Cosa viene finanziato e realizzato",
+    items: [
+      {
+        href: "/pnrr",
+        label: "PNRR",
+        description:
+          "Progetti finanziati, luoghi, CUP e collegamenti da verificare sulle fonti.",
+        icon: Landmark,
+      },
+      {
+        href: "/bandi",
+        label: "Bandi e avvisi",
+        description:
+          "Contributi, fondi, avvisi e opportunità con stato, fonte e scadenze da verificare.",
+        icon: HandCoins,
+      },
+      {
+        href: "/performance",
+        label: "Performance",
+        description:
+          "Indicatori amministrativi come segnali documentali, non giudizi automatici.",
+        icon: Gauge,
+      },
+      {
+        href: "/performance/confronta",
+        label: "Confronto performance",
+        description:
+          "Confronta indicatori solo quando fonte, periodo e metodo sono dichiarati.",
+        icon: BarChart3,
+      },
+    ],
+  },
+  {
+    label: "Come vengono spesi soldi e incarichi",
     items: [
       {
         href: "/contratti",
@@ -127,51 +161,21 @@ const RAW_NAV_GROUPS: NavSection[] = [
         href: "/incarichimetro",
         label: "Incarichimetro",
         description:
-          "Concentrazione, ricorrenza e rotazione negli incarichi esterni.",
+          "Concentrazione, ricorrenza e rotazione negli incarichi come segnali da verificare.",
         icon: ClipboardList,
       },
-      {
-        href: "/bandi",
-        label: "Bandi",
-        description: "Contributi, fondi e opportunitÃ  di finanziamento.",
-        icon: HandCoins,
-      },
-      {
-        href: "/pnrr",
-        label: "PNRR",
-        description:
-          "Schede PNRR e collegamenti disponibili, da leggere con stato di verifica e fonte richiamata.",
-        icon: Landmark,
-      },
     ],
   },
   {
-    label: "Organi e persone",
+    label: "Cosa succede nei luoghi della città",
     items: [
       {
-        href: "/organi",
-        label: "Organi istituzionali",
-        description: "Consiglio, Giunta e commissioni del Comune.",
-        icon: Building2,
-      },
-      {
-        href: "/amministratori",
-        label: "Amministratori",
-        description: "Sindaco, assessori e consiglieri in carica.",
-        icon: Users,
-      },
-      {
-        href: "/macchina-comunale",
-        label: "Macchina comunale",
+        href: "/beni-confiscati",
+        label: "Beni confiscati",
         description:
-          "CapacitÃ  amministrativa, organico, scoperture e stato delle fonti.",
-        icon: Network,
+          "Patrimoni confiscati, geografie e riuso sociale con cautele e fonti.",
+        icon: ShieldOff,
       },
-    ],
-  },
-  {
-    label: "Monitoraggio civico",
-    items: [
       {
         href: "/monitoraggio",
         label: "Monitor civico",
@@ -180,31 +184,50 @@ const RAW_NAV_GROUPS: NavSection[] = [
         icon: Telescope,
       },
       {
-        href: "/stato-monitoraggio",
-        label: "Stato monitoraggio",
+        href: "/criticita-pubbliche",
+        label: "Criticità pubbliche",
         description:
-          "Copertura e freschezza delle fonti censite, da leggere come controllo operativo e non come valutazione sostanziale.",
-        icon: Gauge,
-      },
-      {
-        href: "/promessometro",
-        label: "Promessometro",
-        description:
-          "Collega promesse programmatiche, atti e stati documentali senza scoring politico.",
-        icon: BookOpenCheck,
-      },
-      {
-        href: "/roadmap",
-        label: "Roadmap",
-        description:
-          "Stato pubblico, limiti e prioritÃ  prudenti dei moduli civici.",
-        icon: CircleDotDashed,
+          "Registro di criticità documentali con fonte, stato di verifica e dati mancanti.",
+        icon: ShieldAlert,
       },
     ],
   },
   {
-    label: "Partecipazione",
+    label: "Memoria civica e antimafia",
     items: [
+      {
+        href: "/legalita",
+        label: "Legalità",
+        description:
+          "Percorsi su legalità, prevenzione, riuso civico e fonti pubbliche con linguaggio prudente.",
+        icon: Scale,
+      },
+      {
+        href: "/legalita/timeline",
+        label: "Timeline legalità",
+        description:
+          "Memoria civica e antimafia con eventi pubblicabili solo dopo verifica fonte.",
+        icon: Archive,
+      },
+      {
+        href: "/legalita/trame-festival",
+        label: "Trame - Festival",
+        description:
+          "Idee e analisi da Trame pubblicabili solo con fonte, minuto video e verifica redazionale.",
+        icon: BookOpenCheck,
+      },
+    ],
+  },
+  {
+    label: "Partecipazione e proposte",
+    items: [
+      {
+        href: "/domande",
+        label: "Domande civiche",
+        description:
+          "Percorsi guidati dalle domande concrete dei cittadini verso dati e fonti.",
+        icon: BookOpenCheck,
+      },
       {
         href: "/temi",
         label: "Temi",
@@ -219,6 +242,13 @@ const RAW_NAV_GROUPS: NavSection[] = [
         icon: Archive,
       },
       {
+        href: "/promessometro",
+        label: "Promessometro",
+        description:
+          "Collega promesse programmatiche, atti e stati documentali senza scoring politico.",
+        icon: BookOpenCheck,
+      },
+      {
         href: "/accesso-civico",
         label: "Accesso civico",
         description: "Richiedi documenti e dati con l'accesso civico (FOIA).",
@@ -231,29 +261,31 @@ const RAW_NAV_GROUPS: NavSection[] = [
           "Segnala una trasparenza da verificare o un disservizio documentato, distinguendo fatti e interpretazioni.",
         icon: Megaphone,
       },
+      {
+        href: "/monitoraggio/nuovo",
+        label: "Nuova segnalazione",
+        description:
+          "Proponi un elemento di monitoraggio con fatti, fonti e dati mancanti distinti.",
+        icon: Megaphone,
+      },
     ],
   },
   {
-    label: "Dati e analisi",
+    label: "Stato delle fonti e del monitoraggio",
     items: [
       {
-        href: "/performance",
-        label: "Performance",
-        description: "Indicatori e obiettivi di rendimento dell'ente.",
-        icon: Gauge,
-      },
-      {
-        href: "/statistiche",
-        label: "Statistiche",
-        description: "Numeri e grafici che sintetizzano i dati pubblici.",
-        icon: BarChart3,
-      },
-      {
-        href: "/atlante-territoriale",
-        label: "Atlante territoriale",
+        href: "/fonti-dati",
+        label: "Fonti dati",
         description:
-          "Mappa di Lamezia Terme per sezioni censuarie ISTAT, con fonti e limiti sempre visibili.",
-        icon: MapPinned,
+          "Quali fonti alimentano la versione pubblica, con stato del collegamento, frequenza attesa e limiti informativi.",
+        icon: BookOpen,
+      },
+      {
+        href: "/stato-monitoraggio",
+        label: "Stato monitoraggio",
+        description:
+          "Copertura e freschezza delle fonti censite, da leggere come controllo operativo.",
+        icon: Gauge,
       },
       {
         href: "/opendata",
@@ -262,11 +294,39 @@ const RAW_NAV_GROUPS: NavSection[] = [
         icon: Database,
       },
       {
-        href: "/fonti-dati",
-        label: "Fonti dati",
+        href: "/statistiche",
+        label: "Statistiche",
         description:
-          "Quali fonti alimentano la versione pubblica, con stato del collegamento, frequenza attesa e limiti informativi.",
-        icon: BookOpen,
+          "Numeri e grafici che sintetizzano il perimetro dati disponibile, non fonti complete.",
+        icon: BarChart3,
+      },
+      {
+        href: "/atlante-territoriale",
+        label: "Atlante territoriale",
+        description:
+          "Mappa per sezioni censuarie ISTAT con indicatori, fonte, anno e limiti sempre visibili.",
+        icon: MapPinned,
+      },
+      {
+        href: "/feeds",
+        label: "Feed",
+        description:
+          "Canali di aggiornamento del monitor, con frequenza e limiti dichiarati.",
+        icon: Rss,
+      },
+      {
+        href: "/iscrizioni",
+        label: "Iscrizioni",
+        description:
+          "Preferenze per aggiornamenti civici quando i canali saranno configurati.",
+        icon: Rss,
+      },
+      {
+        href: "/sviluppatori",
+        label: "API",
+        description:
+          "Accedi ai dati tramite API pubbliche, dataset e documentazione tecnica.",
+        icon: Code2,
       },
       {
         href: "/metodologia",
@@ -276,28 +336,39 @@ const RAW_NAV_GROUPS: NavSection[] = [
         icon: FileSearch,
       },
       {
+        href: "/roadmap",
+        label: "Roadmap",
+        description:
+          "Stato pubblico, limiti e priorità prudenti dei moduli civici.",
+        icon: CircleDotDashed,
+      },
+      {
         href: "/note-legali",
         label: "Note legali",
         description:
-          "Avvertenze per consultare la piattaforma senza dedurre responsabilitÃ  o completezza dai dati pubblicati.",
+          "Avvertenze per consultare la piattaforma senza dedurre responsabilità o completezza dai dati pubblicati.",
         icon: Scale3D,
       },
-    ],
-  },
-  {
-    label: "Strumenti",
-    items: [
       {
-        href: "/feeds",
-        label: "Feed",
-        description: "Iscriviti agli aggiornamenti via RSS ed email.",
-        icon: Rss,
+        href: "/guida",
+        label: "Guida",
+        description:
+          "Percorso pratico per usare sezioni, stati e fonti senza perdere le cautele.",
+        icon: BookOpen,
       },
       {
-        href: "/sviluppatori",
-        label: "API",
-        description: "Accedi ai dati tramite API pubbliche e documentazione.",
-        icon: Code2,
+        href: "/chi-siamo",
+        label: "Chi siamo",
+        description:
+          "Natura civica del progetto, limiti e rapporto con le fonti ufficiali.",
+        icon: Users,
+      },
+      {
+        href: "/contatti",
+        label: "Contatti",
+        description:
+          "Canali per proporre correzioni, richieste e contributi verificabili.",
+        icon: Megaphone,
       },
     ],
   },
@@ -322,7 +393,9 @@ export function isSectionActive(href: string, location: string): boolean {
 }
 
 export function isNavItemUnavailable(item: NavItem): boolean {
-  return Boolean(item.v0Status && item.v0Status !== "pubblicabile");
+  return Boolean(
+    item.v0Status && !["pubblicabile", "sperimentale"].includes(item.v0Status),
+  );
 }
 
 export interface ActiveSection {
