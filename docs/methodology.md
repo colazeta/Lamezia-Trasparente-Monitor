@@ -17,6 +17,36 @@ Per il 2025 la pagina comunale "Elezioni comunali del 25 e 26 maggio 2025" colle
 
 Questi endpoint sono quindi censiti come fonti comunali collegate, con publisher `Maggioli / Comune di Lamezia Terme`.
 
+## Current analytical scope: 2025 complete dataset only
+
+L'ambito analitico corrente e' limitato alla tornata `comunali_lamezia_2025`.
+Questa e' l'unica tornata per cui il repository contiene, al momento, un dataset
+processed completo e verificabile per:
+
+- sezioni elettorali;
+- candidati sindaco;
+- liste;
+- candidati consiglieri;
+- affluenza per sezione;
+- voti ai candidati sindaco per sezione;
+- voti di lista per sezione;
+- preferenze per sezione, lista e candidato consigliere.
+
+Le altre tornate non vengono estese in questa fase, anche quando esistono pagine
+o allegati censiti. Lo storico sara' integrato solo quando saranno disponibili
+fonti ufficiali complete, verificabili e modellabili con la stessa granularita'.
+
+La rinnovazione 2021 resta documentata come evento parziale collegato al 2019,
+ma non entra nell'analisi comparativa processed. Eligendo resta una fonte
+istituzionale futura di validazione/completamento e non viene ampliato da questo
+audit.
+
+L'audit di completezza 2025 e' generato da
+`scripts/audit_electoral_2025_completeness.py`, che produce:
+
+- `data/interim/qa/electoral_2025_completeness_report.md`;
+- `data/interim/qa/electoral_2025_coverage_matrix.csv`.
+
 ## Estrazione
 
 Il flusso operativo e':
