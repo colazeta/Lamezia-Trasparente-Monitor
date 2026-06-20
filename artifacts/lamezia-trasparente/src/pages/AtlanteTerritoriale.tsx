@@ -1,11 +1,14 @@
 import { useEffect, useMemo, useState } from "react";
 import {
   AlertTriangle,
+  BookOpen,
   CalendarDays,
+  CheckCircle2,
   Database,
   Info,
   Layers3,
   MapPinned,
+  ShieldCheck,
 } from "lucide-react";
 import {
   ATLANTE_EXPECTED_GEOJSON_PATH,
@@ -146,33 +149,39 @@ export function AtlanteTerritoriale() {
       : null;
 
   return (
-    <main className="bg-slate-50">
+    <main className="bg-slate-50 text-slate-950">
       <section className="border-b border-slate-200 bg-card">
-        <div className="container mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-          <div className="max-w-4xl space-y-4">
-            <p className="text-sm font-semibold uppercase tracking-wide text-teal-700">
-              Dati territoriali
-            </p>
-            <h1 className="text-3xl font-bold text-slate-950 sm:text-4xl">
-              Atlante territoriale
-            </h1>
-            <p className="text-base leading-7 text-slate-700 sm:text-lg">
-              L'Atlante territoriale legge Lamezia Terme per sezioni censuarie,
-              la piu' piccola unita' territoriale statistica pubblicata da
-              ISTAT. Ogni indicatore mostra fonte, anno, livello territoriale e
-              limiti di interpretazione, distinguendo i dati ufficiali da
-              eventuali stime o livelli accessori.
-            </p>
-            <p className="max-w-3xl text-sm leading-6 text-slate-600">
-              Una sezione censuaria e' una porzione molto piccola del territorio
-              usata per leggere fenomeni statistici locali. Non coincide con
-              quartieri, CAP, zone catastali o aree fiscali.
-            </p>
+        <div className="container mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8 lg:py-12">
+          <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_360px] lg:items-end">
+            <div className="max-w-4xl space-y-5">
+              <p className="text-sm font-semibold uppercase tracking-wide text-teal-700">
+                Dati territoriali
+              </p>
+              <div className="space-y-4">
+                <h1 className="text-4xl font-bold leading-tight text-slate-950 sm:text-5xl">
+                  Atlante territoriale
+                </h1>
+                <p className="max-w-3xl text-lg leading-8 text-slate-700">
+                  L'Atlante territoriale permette di leggere Lamezia Terme per
+                  sezioni censuarie, la piu' piccola unita' statistica
+                  pubblicata da ISTAT. Qui puoi esplorare come cambia il
+                  territorio tra quartieri e micro-aree, con dati pubblici,
+                  limiti dichiarati e fonti sempre visibili.
+                </p>
+              </div>
+              <TrustChips />
+            </div>
+            <HeroStatusCard
+              activeIndicator={activeIndicator}
+              dataStatus={layer?.dataStatus ?? null}
+              featureCount={features.length}
+              metadata={metadata}
+            />
           </div>
         </div>
       </section>
 
-      <section className="container mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+      <section className="container mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
         {loadState.status === "loading" ? (
           <LoadingState />
         ) : loadState.status === "error" ? (
@@ -180,19 +189,14 @@ export function AtlanteTerritoriale() {
         ) : !layer || features.length === 0 || !metadata ? (
           <EmptyState />
         ) : (
-          <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_380px]">
-            <div className="space-y-5">
-              <DataNotice
-                metadata={metadata}
-                dataStatus={layer.dataStatus}
-                loadedFrom={layer.loadedFrom}
-              />
-              <IndicatorSelector
-                activeIndicator={activeIndicator}
-                availableIndicators={availableIndicators}
-                collection={collection}
-                onSelect={setSelectedIndicatorId}
-              />
+          <div className="space-y-6">
+            <IndicatorSelector
+              activeIndicator={activeIndicator}
+              availableIndicators={availableIndicators}
+              collection={collection}
+              onSelect={setSelectedIndicatorId}
+            />
+            <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_360px] xl:items-start">
               <MapSurface
                 activeFeature={activeFeature}
                 activeIndicator={activeIndicator}
@@ -205,18 +209,22 @@ export function AtlanteTerritoriale() {
                 setHoveredSectionId={setHoveredSectionId}
                 setSelectedSectionId={setSelectedSectionId}
               />
-              <Legend
+              <DetailPanel
+                activeFeature={activeFeature}
                 activeIndicator={activeIndicator}
-                legendBins={legendBins}
+                activeValue={activeValue}
+                dataStatus={layer.dataStatus}
+                metadata={metadata}
               />
             </div>
-            <DetailPanel
-              activeFeature={activeFeature}
+            <MethodologyPanel
               activeIndicator={activeIndicator}
-              activeValue={activeValue}
+              collection={collection}
               dataStatus={layer.dataStatus}
+              loadedFrom={layer.loadedFrom}
               metadata={metadata}
             />
+            <FutureLayers />
           </div>
         )}
       </section>
@@ -224,63 +232,95 @@ export function AtlanteTerritoriale() {
   );
 }
 
-function DataNotice({
+function TrustChips() {
+  const chips = [
+    { icon: Database, label: "Fonte ISTAT" },
+    { icon: MapPinned, label: "Sezioni censuarie" },
+    { icon: ShieldCheck, label: "Limiti dichiarati" },
+  ];
+
+  return (
+    <div className="flex flex-wrap gap-2">
+      {chips.map(({ icon: Icon, label }) => (
+        <span
+          className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-card px-3 py-1.5 text-sm font-medium text-slate-700 shadow-sm"
+          key={label}
+        >
+          <Icon className="h-4 w-4 text-teal-700" />
+          {label}
+        </span>
+      ))}
+    </div>
+  );
+}
+
+function HeroStatusCard({
+  activeIndicator,
   dataStatus,
-  loadedFrom,
+  featureCount,
   metadata,
 }: {
-  dataStatus: AtlanteLoadedLayer["dataStatus"];
-  loadedFrom: string;
-  metadata: AtlanteLayerMetadata;
+  activeIndicator: AtlanteIndicatorDefinition | null;
+  dataStatus: AtlanteLoadedLayer["dataStatus"] | null;
+  featureCount: number;
+  metadata: AtlanteLayerMetadata | null;
 }) {
   const isDemo = dataStatus === "demo";
-  const coverage = metadata.qa?.populationValueCoverage;
+  const coverage = metadata?.qa?.populationValueCoverage;
+
   return (
-    <div
-      className={`rounded-lg border p-4 ${
-        isDemo
-          ? "border-amber-300 bg-amber-50 text-amber-950"
-          : "border-teal-200 bg-teal-50 text-teal-950"
-      }`}
-    >
+    <aside className="rounded-lg border border-slate-200 bg-card p-4 shadow-sm">
       <div className="flex items-start gap-3">
         {isDemo ? (
-          <AlertTriangle className="mt-0.5 h-5 w-5 flex-none" />
+          <AlertTriangle className="mt-0.5 h-5 w-5 flex-none text-amber-700" />
         ) : (
-          <Database className="mt-0.5 h-5 w-5 flex-none" />
+          <CheckCircle2 className="mt-0.5 h-5 w-5 flex-none text-teal-700" />
         )}
-        <div className="space-y-2">
-          <p className="font-semibold">{metadata.publicLabel}</p>
-          <p className="text-sm leading-6">
-            Percorso dati atteso:{" "}
-            <span className="font-mono text-xs">{ATLANTE_EXPECTED_GEOJSON_PATH}</span>.
-            File caricato: <span className="font-mono text-xs">{loadedFrom}</span>.
-          </p>
-          <p className="text-sm leading-6">
-            Dizionario indicatori:{" "}
-            <span className="font-mono text-xs">
-              {metadata.qa?.indicatorDictionaryPath ??
-                ATLANTE_EXPECTED_INDICATOR_DICTIONARY_PATH}
-            </span>
-            .
-          </p>
-          {!isDemo && coverage ? (
-            <p className="text-sm leading-6">
+        <div className="space-y-3">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+              Stato del livello
+            </p>
+            <p className="mt-1 font-semibold leading-6 text-slate-950">
+              {metadata?.publicLabel ?? "Caricamento fonte territoriale"}
+            </p>
+          </div>
+          <div className="grid gap-2 text-sm text-slate-700">
+            <p>
+              <span className="font-medium text-slate-950">Fonte:</span>{" "}
+              {metadata?.sourceInstitution ?? "ISTAT"}
+            </p>
+            <p>
+              <span className="font-medium text-slate-950">Livello:</span>{" "}
+              {metadata?.territorialLevel ?? "sezione di censimento"}
+            </p>
+            <p>
+              <span className="font-medium text-slate-950">Indicatore:</span>{" "}
+              {activeIndicator?.label ?? "in preparazione"}
+            </p>
+            {featureCount > 0 ? (
+              <p>
+                <span className="font-medium text-slate-950">Sezioni:</span>{" "}
+                {featureCount}
+              </p>
+            ) : null}
+          </div>
+          {coverage ? (
+            <p className="rounded-md bg-teal-50 px-3 py-2 text-sm leading-6 text-teal-950">
               QA popolazione residente: {coverage.availableCount} sezioni su{" "}
               {coverage.totalFeatures} hanno valore 2023; {coverage.nullCount}{" "}
-              sezioni restano "dato non disponibile" e non sono trattate come
-              zero.
+              restano "dato non disponibile" e non sono trattate come zero.
             </p>
           ) : null}
           {isDemo ? (
-            <p className="text-sm leading-6">
-              Questa visualizzazione usa dati dimostrativi per non bloccare la
-              pagina quando il GeoJSON ISTAT processato non e' ancora presente.
+            <p className="rounded-md bg-amber-50 px-3 py-2 text-sm leading-6 text-amber-950">
+              Dato dimostrativo: non contiene sezioni censuarie reali e non va
+              usato per analisi.
             </p>
           ) : null}
         </div>
       </div>
-    </div>
+    </aside>
   );
 }
 
@@ -307,22 +347,38 @@ function IndicatorSelector({
       : 0;
 
   return (
-    <section className="rounded-lg border border-slate-200 bg-card p-4 shadow-sm">
-      <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <h2 className="text-base font-semibold text-slate-950">
+    <section className="rounded-lg border border-slate-200 bg-card p-4 shadow-sm sm:p-5">
+      <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_280px] lg:items-start">
+        <div className="space-y-2">
+          <p className="text-xs font-semibold uppercase tracking-wide text-teal-700">
             Indicatore
+          </p>
+          <h2 className="text-xl font-semibold text-slate-950">
+            Scegli cosa osservare sulla mappa
           </h2>
-          <p className="text-sm text-slate-600">
-            Sono attivi solo gli indicatori presenti nel contratto dati.
+          <p className="max-w-3xl text-sm leading-6 text-slate-600">
+            Oggi e' pubblicabile solo la popolazione residente. Le altre
+            categorie restano visibili per chiarezza, ma saranno attivate solo
+            dopo verifica dei campi ISTAT.
           </p>
         </div>
-        <div className="flex items-center gap-2 rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-slate-700">
-          <Layers3 className="h-4 w-4" />
-          Sezioni censuarie ISTAT
+        <div className="rounded-md border border-teal-200 bg-teal-50 p-3 text-sm leading-6 text-teal-950">
+          <p className="font-semibold">
+            {activeIndicator?.label ?? "Indicatore in preparazione"}
+          </p>
+          {collection && activeIndicator ? (
+            <p className="mt-1">
+              {availableCount} sezioni con valore disponibile.{" "}
+              {unavailableCount > 0
+                ? `${unavailableCount} sezioni mostrano "dato non disponibile"; non sono conteggiate come zero.`
+                : "Nessuna sezione senza valore."}
+            </p>
+          ) : (
+            <p className="mt-1">In attesa del contratto dati validato.</p>
+          )}
         </div>
       </div>
-      <div className="mt-4 grid gap-2 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="mt-5 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
         {ATLANTE_INDICATOR_CATEGORIES.map((category) => {
           const indicator = availableIndicators.find(
             (candidate) => candidate.categoryId === category.id,
@@ -332,21 +388,30 @@ function IndicatorSelector({
           return (
             <button
               key={category.id}
-              className={`min-h-20 rounded-md border p-3 text-left transition ${
+              className={`min-h-24 rounded-md border p-3 text-left transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-600 focus-visible:ring-offset-2 ${
                 isActive
-                  ? "border-teal-600 bg-teal-50 text-teal-950"
+                  ? "border-teal-600 bg-teal-50 text-teal-950 shadow-sm"
                   : isEnabled
-                    ? "border-slate-200 bg-card text-slate-800 hover:border-teal-300"
+                    ? "border-slate-200 bg-card text-slate-800 hover:border-teal-300 hover:bg-teal-50/40"
                     : "border-slate-200 bg-slate-50 text-slate-500"
               }`}
               disabled={!isEnabled || !indicator}
               onClick={() => indicator && onSelect(indicator.id)}
               type="button"
             >
-              <span className="block text-sm font-semibold">
-                {category.label}
+              <span className="flex items-center justify-between gap-2">
+                <span className="text-sm font-semibold">{category.label}</span>
+                <span
+                  className={`rounded-full px-2 py-0.5 text-[11px] font-semibold ${
+                    isEnabled
+                      ? "bg-teal-100 text-teal-800"
+                      : "bg-slate-200 text-slate-600"
+                  }`}
+                >
+                  {isEnabled ? "attivo" : "presto"}
+                </span>
               </span>
-              <span className="mt-1 block text-xs leading-5">
+              <span className="mt-3 block text-xs leading-5">
                 {indicator
                   ? indicator.label
                   : "Indicatore in preparazione"}
@@ -355,15 +420,6 @@ function IndicatorSelector({
           );
         })}
       </div>
-      {collection && activeIndicator ? (
-        <p className="mt-3 text-xs leading-5 text-slate-500">
-          {availableCount} sezioni con valore disponibile per l'indicatore
-          selezionato.{" "}
-          {unavailableCount > 0
-            ? `${unavailableCount} sezioni mostrano "dato non disponibile"; non sono conteggiate come zero.`
-            : "Nessuna sezione senza valore."}
-        </p>
-      ) : null}
     </section>
   );
 }
@@ -393,25 +449,30 @@ function MapSurface({
 }) {
   return (
     <section className="rounded-lg border border-slate-200 bg-card shadow-sm">
-      <div className="flex flex-col gap-3 border-b border-slate-200 p-4 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <h2 className="flex items-center gap-2 text-base font-semibold text-slate-950">
-            <MapPinned className="h-5 w-5 text-teal-700" />
-            Mappa per sezioni censuarie
+      <div className="flex flex-col gap-4 border-b border-slate-200 p-4 sm:p-5 lg:flex-row lg:items-start lg:justify-between">
+        <div className="max-w-2xl">
+          <p className="text-xs font-semibold uppercase tracking-wide text-teal-700">
+            Mappa
+          </p>
+          <h2 className="mt-1 flex items-center gap-2 text-2xl font-semibold text-slate-950">
+            <MapPinned className="h-6 w-6 text-teal-700" />
+            Lamezia per sezioni censuarie
           </h2>
-          <p className="mt-1 text-sm text-slate-600">
-            Base territoriale primaria: sezione di censimento ISTAT.
+          <p className="mt-2 text-sm leading-6 text-slate-600">
+            Ogni poligono rappresenta una sezione di censimento ISTAT. Le aree
+            senza variabile 2023 restano visibili, ma sono indicate come dato
+            non disponibile.
           </p>
         </div>
-        <div className="rounded-md bg-slate-100 px-3 py-2 text-xs leading-5 text-slate-700">
-          <span className="font-semibold">{metadata.sourceInstitution}</span> ·{" "}
-          {metadata.sourceYear} · {metadata.territorialLevel}
+        <div className="rounded-md border border-slate-200 bg-slate-50 px-3 py-2 text-xs leading-5 text-slate-700">
+          <span className="font-semibold">{metadata.sourceInstitution}</span>{" "}
+          - {metadata.sourceYear} - {metadata.territorialLevel}
         </div>
       </div>
 
-      <div className="p-3 sm:p-4">
+      <div className="p-3 sm:p-5">
         {!bounds || !activeIndicator ? (
-          <div className="flex min-h-80 items-center justify-center rounded-md bg-slate-100 p-6 text-center text-sm text-slate-600">
+          <div className="flex min-h-96 items-center justify-center rounded-md bg-slate-100 p-6 text-center text-sm text-slate-600">
             La mappa sara' disponibile quando almeno un indicatore censuario
             sara' presente nel file dati.
           </div>
@@ -419,12 +480,12 @@ function MapSurface({
           <div className="overflow-hidden rounded-md border border-slate-200 bg-slate-100">
             <svg
               aria-label="Mappa delle sezioni censuarie di Lamezia Terme"
-              className="block h-[360px] w-full sm:h-[520px]"
+              className="block h-[420px] w-full sm:h-[600px]"
               role="img"
               viewBox={`0 0 ${MAP_WIDTH} ${MAP_HEIGHT}`}
             >
               <rect
-                fill="hsl(var(--background))"
+                fill="hsl(var(--card))"
                 height={MAP_HEIGHT}
                 rx="0"
                 width={MAP_WIDTH}
@@ -469,6 +530,7 @@ function MapSurface({
                     }
                     strokeLinejoin="round"
                     strokeWidth={isActive ? 4 : 2}
+                    className="cursor-pointer transition-opacity hover:opacity-90"
                     tabIndex={0}
                   />
                 );
@@ -476,26 +538,33 @@ function MapSurface({
             </svg>
           </div>
         )}
-        <div className="mt-3 flex flex-col gap-2 text-xs text-slate-600 sm:flex-row sm:items-center sm:justify-between">
-          <p>
-            Sezione selezionata:{" "}
-            <span className="font-semibold text-slate-900">
-              {activeFeature ? getSectionId(activeFeature) : "nessuna"}
-            </span>
-          </p>
-          <p>
-            Valore:{" "}
-            <span className="font-semibold text-slate-900">
-              {activeIndicator
-                ? formatAtlanteValue(
-                    activeFeature
-                      ? readIndicatorValue(activeFeature, activeIndicator)
-                      : null,
-                    activeIndicator.unitLabel,
-                  )
-                : "dato non disponibile"}
-            </span>
-          </p>
+        <div className="mt-4 grid gap-4 border-t border-slate-200 pt-4 lg:grid-cols-[minmax(0,1fr)_320px] lg:items-start">
+          <div className="grid gap-3 text-sm text-slate-700 sm:grid-cols-2">
+            <p>
+              <span className="block text-xs font-semibold uppercase tracking-wide text-slate-500">
+                Sezione selezionata
+              </span>
+              <span className="mt-1 block font-semibold text-slate-950">
+                {activeFeature ? getSectionId(activeFeature) : "nessuna"}
+              </span>
+            </p>
+            <p>
+              <span className="block text-xs font-semibold uppercase tracking-wide text-slate-500">
+                Valore
+              </span>
+              <span className="mt-1 block font-semibold text-slate-950">
+                {activeIndicator
+                  ? formatAtlanteValue(
+                      activeFeature
+                        ? readIndicatorValue(activeFeature, activeIndicator)
+                        : null,
+                      activeIndicator.unitLabel,
+                    )
+                  : "dato non disponibile"}
+              </span>
+            </p>
+          </div>
+          <Legend activeIndicator={activeIndicator} legendBins={legendBins} />
         </div>
       </div>
     </section>
@@ -510,14 +579,14 @@ function Legend({
   legendBins: LegendBin[];
 }) {
   return (
-    <section className="rounded-lg border border-slate-200 bg-card p-4 shadow-sm">
-      <h2 className="text-base font-semibold text-slate-950">Legenda</h2>
+    <div className="rounded-md border border-slate-200 bg-slate-50 p-3">
+      <h3 className="text-sm font-semibold text-slate-950">Legenda</h3>
       {!activeIndicator || legendBins.length === 0 ? (
         <p className="mt-2 text-sm text-slate-600">
           Nessun valore disponibile per costruire la legenda.
         </p>
       ) : (
-        <div className="mt-3 grid gap-2 sm:grid-cols-2 lg:grid-cols-5">
+        <div className="mt-3 grid gap-2">
           {legendBins.map((bin) => (
             <div
               className="flex items-center gap-2 text-xs text-slate-700"
@@ -541,7 +610,7 @@ function Legend({
           </div>
         </div>
       )}
-    </section>
+    </div>
   );
 }
 
@@ -558,6 +627,15 @@ function DetailPanel({
   dataStatus: AtlanteLoadedLayer["dataStatus"];
   metadata: AtlanteLayerMetadata;
 }) {
+  const sectionId = activeFeature ? getSectionId(activeFeature) : "nessuna sezione";
+  const valueLabel = activeIndicator
+    ? formatAtlanteValue(activeValue, activeIndicator.unitLabel)
+    : "dato non disponibile";
+  const interpretation = activeIndicator
+    ? activeValue === null
+      ? "Per questa sezione il valore non e' disponibile nel join ISTAT 2023; non viene conteggiato come zero."
+      : `Il valore indica le ${activeIndicator.unitLabel} associate alla sezione nel dataset ISTAT 2023.`
+    : "Gli indicatori saranno mostrati solo dopo verifica dei campi disponibili.";
   const rows = [
     ["Fonte istituzionale", metadata.sourceInstitution],
     ["Dataset", metadata.sourceDataset],
@@ -568,17 +646,31 @@ function DetailPanel({
   ];
 
   return (
-    <aside className="rounded-lg border border-slate-200 bg-card p-4 shadow-sm lg:sticky lg:top-24 lg:self-start">
+    <aside className="rounded-lg border border-slate-200 bg-card p-4 shadow-sm sm:p-5 xl:sticky xl:top-24 xl:self-start">
       <div className="flex items-start gap-3">
         <Info className="mt-0.5 h-5 w-5 flex-none text-teal-700" />
         <div>
-          <h2 className="text-base font-semibold text-slate-950">
-            Fonti e dettagli
-          </h2>
-          <p className="mt-1 text-sm leading-6 text-slate-600">
-            Le informazioni seguono la sezione selezionata sulla mappa.
+          <p className="text-xs font-semibold uppercase tracking-wide text-teal-700">
+            Sezione selezionata
           </p>
+          <h2 className="mt-1 break-words text-xl font-semibold text-slate-950">
+            {sectionId}
+          </h2>
         </div>
+      </div>
+
+      <div className="mt-5 rounded-md border border-slate-200 bg-slate-50 p-4">
+        <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+          {activeIndicator ? activeIndicator.label : "Indicatore in preparazione"}
+        </p>
+        <p
+          className={`mt-2 break-words text-3xl font-bold leading-tight ${
+            activeValue === null ? "text-slate-700" : "text-slate-950"
+          }`}
+        >
+          {valueLabel}
+        </p>
+        <p className="mt-3 text-sm leading-6 text-slate-600">{interpretation}</p>
       </div>
 
       <div
@@ -591,42 +683,13 @@ function DetailPanel({
         {metadata.publicLabel}
       </div>
 
-      <dl className="mt-4 space-y-3 text-sm">
-        <div>
-          <dt className="text-xs font-semibold uppercase tracking-wide text-slate-500">
-            Sezione
-          </dt>
-          <dd className="mt-1 font-semibold text-slate-950">
-            {activeFeature ? getSectionId(activeFeature) : "nessuna sezione"}
-          </dd>
-        </div>
-        <div>
-          <dt className="text-xs font-semibold uppercase tracking-wide text-slate-500">
-            Indicatore selezionato
-          </dt>
-          <dd className="mt-1 text-slate-900">
-            {activeIndicator ? activeIndicator.label : "Indicatore in preparazione"}
-          </dd>
-        </div>
-        <div>
-          <dt className="text-xs font-semibold uppercase tracking-wide text-slate-500">
-            Valore
-          </dt>
-          <dd className="mt-1 text-slate-900">
-            {activeIndicator
-              ? formatAtlanteValue(activeValue, activeIndicator.unitLabel)
-              : "dato non disponibile"}
-          </dd>
-        </div>
-      </dl>
-
       <div className="mt-5 border-t border-slate-200 pt-4">
         <h3 className="flex items-center gap-2 text-sm font-semibold text-slate-950">
           <CalendarDays className="h-4 w-4 text-slate-500" />
-          Metadati pubblici
+          Contesto del dato
         </h3>
-        <dl className="mt-3 space-y-3 text-sm">
-          {rows.map(([label, value]) => (
+        <dl className="mt-3 grid gap-3 text-sm">
+          {rows.slice(0, 4).map(([label, value]) => (
             <div key={label}>
               <dt className="text-xs font-semibold uppercase tracking-wide text-slate-500">
                 {label}
@@ -639,15 +702,165 @@ function DetailPanel({
 
       <div className="mt-5 border-t border-slate-200 pt-4">
         <h3 className="text-sm font-semibold text-slate-950">
-          Limiti noti
+          Cautela principale
         </h3>
-        <ul className="mt-2 space-y-2 text-sm leading-6 text-slate-700">
-          {metadata.knownLimits.map((limit) => (
-            <li key={limit}>{limit}</li>
-          ))}
-        </ul>
+        <p className="mt-2 text-sm leading-6 text-slate-700">
+          {metadata.knownLimits[0] ??
+            "Interpretare il dato insieme a fonte, anno e livello territoriale."}
+        </p>
       </div>
     </aside>
+  );
+}
+
+function MethodologyPanel({
+  activeIndicator,
+  collection,
+  dataStatus,
+  loadedFrom,
+  metadata,
+}: {
+  activeIndicator: AtlanteIndicatorDefinition | null;
+  collection: AtlanteFeatureCollection | null;
+  dataStatus: AtlanteLoadedLayer["dataStatus"];
+  loadedFrom: string;
+  metadata: AtlanteLayerMetadata;
+}) {
+  const coverage = metadata.qa?.populationValueCoverage;
+  const isDemo = dataStatus === "demo";
+  const rows = [
+    ["Fonte istituzionale", metadata.sourceInstitution],
+    ["Dataset", metadata.sourceDataset],
+    ["Anno", metadata.sourceYear],
+    ["Livello territoriale", metadata.territorialLevel],
+    ["Stato verifica", metadata.verificationStatus],
+    ["Ultimo aggiornamento", metadata.processingDate ?? "non indicato"],
+  ];
+
+  return (
+    <section className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_360px]">
+      <div className="rounded-lg border border-slate-200 bg-card p-4 shadow-sm sm:p-5">
+        <div className="flex items-start gap-3">
+          <BookOpen className="mt-0.5 h-5 w-5 flex-none text-teal-700" />
+          <div>
+            <h2 className="text-xl font-semibold text-slate-950">
+              Fonti e metodologia
+            </h2>
+            <p className="mt-2 max-w-3xl text-sm leading-6 text-slate-600">
+              I dati sono pubblici e vanno letti con fonte, anno, livello
+              territoriale e limiti sempre visibili. La sezione censuaria non e'
+              un quartiere, un CAP o una zona catastale.
+            </p>
+          </div>
+        </div>
+
+        <dl className="mt-5 grid gap-4 text-sm sm:grid-cols-2 lg:grid-cols-3">
+          {rows.map(([label, value]) => (
+            <div key={label}>
+              <dt className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+                {label}
+              </dt>
+              <dd className="mt-1 leading-6 text-slate-800">{value}</dd>
+            </div>
+          ))}
+        </dl>
+
+        <details className="mt-5 rounded-md border border-slate-200 bg-slate-50 p-3">
+          <summary className="cursor-pointer text-sm font-semibold text-slate-950">
+            Percorsi tecnici e limiti completi
+          </summary>
+          <div className="mt-3 space-y-4 text-sm leading-6 text-slate-700">
+            <div>
+              <p>
+                File atteso:{" "}
+                <span className="font-mono text-xs">
+                  {ATLANTE_EXPECTED_GEOJSON_PATH}
+                </span>
+              </p>
+              <p>
+                File caricato:{" "}
+                <span className="font-mono text-xs">{loadedFrom}</span>
+              </p>
+              <p>
+                Dizionario indicatori:{" "}
+                <span className="font-mono text-xs">
+                  {metadata.qa?.indicatorDictionaryPath ??
+                    ATLANTE_EXPECTED_INDICATOR_DICTIONARY_PATH}
+                </span>
+              </p>
+            </div>
+            <ul className="space-y-2">
+              {metadata.knownLimits.map((limit) => (
+                <li key={limit}>{limit}</li>
+              ))}
+            </ul>
+          </div>
+        </details>
+      </div>
+
+      <aside
+        className={`rounded-lg border p-4 shadow-sm sm:p-5 ${
+          isDemo
+            ? "border-amber-300 bg-amber-50 text-amber-950"
+            : "border-teal-200 bg-teal-50 text-teal-950"
+        }`}
+      >
+        <div className="flex items-start gap-3">
+          {isDemo ? (
+            <AlertTriangle className="mt-0.5 h-5 w-5 flex-none" />
+          ) : (
+            <ShieldCheck className="mt-0.5 h-5 w-5 flex-none" />
+          )}
+          <div className="space-y-3">
+            <h3 className="font-semibold">Cosa sapere prima di usare i dati</h3>
+            {coverage ? (
+              <p className="text-sm leading-6">
+                {coverage.availableCount} sezioni su {coverage.totalFeatures}{" "}
+                hanno valore per {activeIndicator?.label ?? "l'indicatore"};{" "}
+                {coverage.nullCount} restano "dato non disponibile".
+              </p>
+            ) : null}
+            <p className="text-sm leading-6">
+              {collection?.features.length ?? 0} geometrie sono mostrate come
+              base territoriale. Le sezioni urbane catastali Zornade non sono
+              sezioni censuarie e restano fuori da questa base.
+            </p>
+            {isDemo ? (
+              <p className="text-sm leading-6">
+                Questa visualizzazione usa dati dimostrativi per non bloccare la
+                pagina quando il GeoJSON ISTAT processato non e' disponibile.
+              </p>
+            ) : null}
+          </div>
+        </div>
+      </aside>
+    </section>
+  );
+}
+
+function FutureLayers() {
+  return (
+    <section className="rounded-lg border border-slate-200 bg-card p-4 shadow-sm sm:p-5">
+      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+        <div className="max-w-3xl">
+          <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+            Prossimi passi
+          </p>
+          <h2 className="mt-1 text-xl font-semibold text-slate-950">
+            Altri indicatori arriveranno solo dopo revisione
+          </h2>
+          <p className="mt-2 text-sm leading-6 text-slate-600">
+            Eta', cittadinanza, famiglie, abitazioni, mobilita', istruzione e
+            lavoro restano in preparazione finche' campi, numeratori,
+            denominatori e cautele non saranno verificati.
+          </p>
+        </div>
+        <div className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-slate-50 px-3 py-2 text-sm font-medium text-slate-700">
+          <Layers3 className="h-4 w-4 text-slate-500" />
+          Layer accessorio/non censuario separato
+        </div>
+      </div>
+    </section>
   );
 }
 

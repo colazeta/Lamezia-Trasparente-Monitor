@@ -214,13 +214,15 @@ describe("Atlante territoriale", () => {
       0,
     );
     expect(
-      screen.getByText(/non contiene sezioni censuarie reali/i),
-    ).toBeInTheDocument();
+      screen.getAllByText(/non contiene sezioni censuarie reali/i).length,
+    ).toBeGreaterThan(0);
     expect(screen.getByText("popolazione")).toBeInTheDocument();
     expect(
       screen.getAllByText("Indicatore in preparazione").length,
     ).toBeGreaterThan(0);
-    expect(screen.getByText("Fonte istituzionale")).toBeInTheDocument();
+    expect(screen.getAllByText("Fonte istituzionale").length).toBeGreaterThan(
+      0,
+    );
     expect(
       screen.getByText(
         "Layer Zornade resta un livello accessorio/non censuario",
