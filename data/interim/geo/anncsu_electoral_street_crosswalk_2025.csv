@@ -1,0 +1,1229 @@
+street_name_normalised,electoral_street_name_raw,electoral_rule_count,electoral_section_numbers,anncsu_street_name_normalised,anncsu_odonimo,anncsu_progressivo_nazionale,anncsu_total_accesses,crosswalk_status,match_method,confidence,notes
+CASE CIMINO,CASE CIMINO,1,50,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+CASE RASO,CASE RASO,1,47,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+CASE REALE,CASE REALE,1,49,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+CONTRADA ACQUADAUZANO,C.DA ACQUADAUZANO,1,46,CONTRADA ACQUADAUZANO,CONTRADA ACQUADAUZANO,1244978,77,matched,normalized_exact,high,
+CONTRADA ADDURI,C.DA ADDURI,1,29,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+CONTRADA AGLI,C.DA AGLI,1,30,CONTRADA AGLI,CONTRADA AGLI,1244988,16,matched,normalized_exact,high,
+CONTRADA ANNUNZIATA,C.DA ANNUNZIATA,1,24,CONTRADA ANNUNZIATA,CONTRADA ANNUNZIATA,1245003; 1245702,41,matched,normalized_exact,high,
+CONTRADA ANTONELLI,C.DA ANTONELLI,1,50,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+CONTRADA ANZARO,C.DA ANZARO,1,33,CONTRADA ANZARO,CONTRADA ANZARO,1245014,5,matched,normalized_exact,high,
+CONTRADA ARENACCHIO,C.DA ARENACCHIO,1,73,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+CONTRADA BARBUTO,C.DA BARBUTO,1,61,CONTRADA BARBUTO,CONTRADA BARBUTO,1245036,4,matched,normalized_exact,high,
+CONTRADA BARISCO,C.DA BARISCO,1,28,CONTRADA BARISCO,CONTRADA BARISCO,1245037,0,matched,normalized_exact,high,
+CONTRADA BARONE,C.DA BARONE,1,77,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+CONTRADA BASTIA,C.DA BASTIA,1,28,CONTRADA BASTIA,CONTRADA BASTIA,1245042,0,matched,normalized_exact,high,
+CONTRADA BENEFICIO,C.DA BENEFICIO,1,20,CONTRADA BENEFICIO,CONTRADA BENEFICIO,1245051,10,matched,normalized_exact,high,
+CONTRADA BUCOLIA DI SOPRA E DI SOTTO,C.DA BUCOLIA DI SOPRA E DI SOTTO,1,44,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+CONTRADA BUFALO,C.DA BUFALO,1,56,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+CONTRADA CALABRIA,C.DA CALABRIA,1,45,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+CONTRADA CANNETO COLA,C.DA CANNETO COLA,1,18,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+CONTRADA CANNETO FRAGALE,C.DA CANNETO FRAGALE,1,44,CONTRADA CANNETO FRAGALE,CONTRADA CANNETO FRAGALE,1246213,2,matched,normalized_exact,high,
+CONTRADA CANNETO MORELLI,C.DA CANNETO MORELLI,1,18,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+CONTRADA CANNITELLO,C.DA CANNITELLO,1,18,CONTRADA CANNITELLO,CONTRADA CANNITELLO,1245100,5,matched,normalized_exact,high,
+CONTRADA CANTARELLE,C.DA CANTARELLE,1,48,CONTRADA CANTARELLE,CONTRADA CANTARELLE,1245101,28,matched,normalized_exact,high,
+CONTRADA CAPITOLO COLACINO,C.DA CAPITOLO COLACINO,1,69,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+CONTRADA CAPIZZAGLIE,C.DA CAPIZZAGLIE,1,71,CONTRADA CAPIZZAGLIE,CONTRADA CAPIZZAGLIE,1245106,7,matched,normalized_exact,high,
+CONTRADA CARBONARA,C.DA CARBONARA,1,45,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+CONTRADA CARIA,C.DA CARIA,1,46,CONTRADA CARIA,CONTRADA CARIA,1245114,13,matched,normalized_exact,high,
+CONTRADA CARIA NICASTRO,C.DA CARIA NICASTRO,1,24,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+CONTRADA CARONTE,C.DA CARONTE,1,50,CONTRADA CARONTE,CONTRADA CARONTE,1245122,70,matched,normalized_exact,high,
+CONTRADA CARRA,C.DA CARRA',1,62,CONTRADA CARRA,CONTRADA CARRA',1245124,1,matched,normalized_exact,high,
+CONTRADA CARRA COLA,C.DA CARRA' COLA,1,62,CONTRADA CARRA COLA,CONTRADA CARRA' COLA,1246216,1,matched,normalized_exact,high,
+CONTRADA CARRA COSENTINO,C.DA CARRA' COSENTINO,1,62,CONTRADA CARRA COSENTINO,CONTRADA CARRA' COSENTINO,1245125,7,matched,normalized_exact,high,
+CONTRADA CARRA FORNACE,C.DA CARRA' FORNACE,1,62,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+CONTRADA CARRA FOSSE,C.DA CARRA' FOSSE,1,62,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+CONTRADA CARRA GALICE,C.DA CARRA' GALICE,1,62,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+CONTRADA CARRA LEONE,C.DA CARRA' LEONE,1,62,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+CONTRADA CARRA MARCHESE,C.DA CARRA' MARCHESE,1,62,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+CONTRADA CARRA PANE,C.DA CARRA' PANE,1,62,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+CONTRADA CARRA TEODOSIO,C.DA CARRA' TEODOSIO,1,62,CONTRADA CARRA TEODOSIO,CONTRADA CARRA' TEODOSIO,1245131,0,matched,normalized_exact,high,
+CONTRADA CARRA VATALARO,C.DA CARRA' VATALARO,1,62,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+CONTRADA CARRA VOLPE,C.DA CARRA' VOLPE,1,62,CONTRADA CARRA VOLPE,CONTRADA CARRA' VOLPE,1246179,8,matched,normalized_exact,high,
+CONTRADA CARRELLO,C.DA CARRELLO,1,50,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+CONTRADA CARRERA,C.DA CARRERA,1,30,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+CONTRADA CARUSO,C.DA CARUSO,1,65,CONTRADA CARUSO,CONTRADA CARUSO,1245136,0,matched,normalized_exact,high,
+CONTRADA CASE SPARSE TALARICO,C.DA CASE SPARSE TALARICO,1,50,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+CONTRADA CASELLA MORTILLA,C.DA CASELLA MORTILLA,1,56,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+CONTRADA CASSINO,C.DA CASSINO,1,27,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+CONTRADA CASTAGNELLA,C.DA CASTAGNELLA,1,30,CONTRADA CASTAGNELLA,CONTRADA CASTAGNELLA,1246262,0,matched,normalized_exact,high,
+CONTRADA CASTURI,C.DA CASTURI,1,24,CONTRADA CASTURI,CONTRADA CASTURI,1245142,28,matched,normalized_exact,high,
+CONTRADA CENSI,C.DA CENSI,1,29,CONTRADA CENSI,CONTRADA CENSI,1245150,20,matched,normalized_exact,high,
+CONTRADA CERAMIDIO,C.DA CERAMIDIO,1,77,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+CONTRADA CERNATOLO,C.DA CERNATOLO,1,31,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+CONTRADA CHIANTA,C.DA CHIANTA,1,31,CONTRADA CHIANTA,CONTRADA CHIANTA,1245158,9,matched,normalized_exact,high,
+CONTRADA CHIANTELLA,C.DA CHIANTELLA,1,7,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+CONTRADA CHIUSA,C.DA CHIUSA,2,29; 50,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+CONTRADA CHIUSA NICOTERA,C.DA CHIUSA NICOTERA,1,58,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+CONTRADA COLADARCI,C.DA COLADARCI,1,17,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+CONTRADA COLLA,C.DA COLLA,1,30,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+CONTRADA CORONA,C.DA CORONA,1,65,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+CONTRADA COSCHINO,C.DA COSCHINO,1,25,CONTRADA COSCHINO,CONTRADA COSCHINO,1246212,0,matched,normalized_exact,high,
+CONTRADA CROCCHIA,C.DA CROCCHIA,1,29,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+CONTRADA CROZZANELLO,C.DA CROZZANELLO,1,44,CONTRADA CROZZANELLO,CONTRADA CROZZANELLO,1245195,0,matched,normalized_exact,high,
+CONTRADA CROZZANO SUPERIORE E INFERIORE,C.DA CROZZANO SUPERIORE E INFERIORE,1,44,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+CONTRADA CRUPIO,C.DA CRUPIO,1,29,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+CONTRADA CUTURA,C.DA CUTURA,1,77,CONTRADA CUTURA,CONTRADA CUTURA,1245202,1,matched,normalized_exact,high,
+CONTRADA CUTURELLA,C.DA CUTURELLA,1,77,CONTRADA CUTURELLA,CONTRADA CUTURELLA,1245204,1,matched,normalized_exact,high,
+CONTRADA D AUDINO,C.DA D'AUDINO,1,35,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+CONTRADA DANIELE,C.DA DANIELE,1,52,CONTRADA DANIELE,CONTRADA DANIELE,1245207,0,matched,normalized_exact,high,
+CONTRADA DONNAMAZZA,C.DA DONNAMAZZA,1,59,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+CONTRADA DONNASANTA,C.DA DONNASANTA,1,38,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+CONTRADA DROGO,C.DA DROGO,1,53,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+CONTRADA E LOCALITAFERRANTAZZO,C.DA E LOC.FERRANTAZZO,1,58,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+CONTRADA E RIONE TERRAVECCHIA,C.DA E RIONE TERRAVECCHIA,1,29,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+CONTRADA E VIA ACQUAFREDDA,C.DA E VIA ACQUAFREDDA,1,49,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+CONTRADA FAMULARO,C.DA FAMULARO,1,50,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+CONTRADA FELICETTA,C.DA FELICETTA,1,32,CONTRADA FELICETTA,CONTRADA FELICETTA,1245312,7,matched,normalized_exact,high,
+CONTRADA FEUDO DE MEDICI,C.DA FEUDO DE MEDICI,1,35,CONTRADA FEUDO DE MEDICI,CONTRADA FEUDO DE MEDICI,1246248,0,matched,normalized_exact,high,
+CONTRADA FEUDO NICOTERA,C.DA FEUDO NICOTERA,1,35,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+CONTRADA FONTANELLA,C.DA FONTANELLA,1,26,CONTRADA FONTANELLA,CONTRADA FONTANELLA,1245334,6,matched,normalized_exact,high,
+CONTRADA FORESTA,C.DA FORESTA,1,28,CONTRADA FORESTA,CONTRADA FORESTA,1245336,1,matched,normalized_exact,high,
+CONTRADA FOSSE NICOTERA,C.DA FOSSE NICOTERA,1,62,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+CONTRADA FRASSO BRAGO,C.DA FRASSO BRAGO',1,65,CONTRADA FRASSO BRAGO,CONTRADA FRASSO BRAGO,1246244,0,matched,normalized_exact,high,
+CONTRADA GABELLA,C.DA GABELLA,2,29; 45,CONTRADA GABELLA,CONTRADA GABELLA,1245364,89,matched,normalized_exact,high,
+CONTRADA GABELLA CARDOLO,C.DA GABELLA CARDOLO,1,29,CONTRADA GABELLA CARDOLO,CONTRADA GABELLA CARDOLO,1245365,5,matched,normalized_exact,high,
+CONTRADA GABELLA NICOTERA,C.DA GABELLA NICOTERA,1,66,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+CONTRADA GABELLA VITALE,C.DA GABELLA VITALE,1,29,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+CONTRADA GACCIA,C.DA GACCIA,1,66,CONTRADA GACCIA,CONTRADA GACCIA,1245368,25,matched,normalized_exact,high,
+CONTRADA GALASSIO,C.DA GALASSIO,1,29,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+CONTRADA GIABBA,C.DA GIABBA,1,28,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+CONTRADA GUERRIERI,C.DA GUERRIERI,1,24,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+CONTRADA GUERRIERI SERRA,C.DA GUERRIERI SERRA,1,24,CONTRADA GUERRIERI SERRA,CONTRADA GUERRIERI SERRA,1245458,22,matched,normalized_exact,high,
+CONTRADA IACINO,C.DA IACINO,1,52,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+CONTRADA IUNCARACE,C.DA IUNCARACE,1,67,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+CONTRADA LAGANI,C.DA LAGANI,1,67,CONTRADA LAGANI,CONTRADA LAGANI,1245564,11,matched,normalized_exact,high,
+CONTRADA LENTI STATTI,C.DA LENTI STATTI,1,65,CONTRADA LENTI STATTI,CONTRADA LENTI STATTI,1245569,0,matched,normalized_exact,high,
+CONTRADA LENZA,C.DA LENZA,1,52,CONTRADA LENZA,CONTRADA LENZA,1245570,0,matched,normalized_exact,high,
+CONTRADA MACERA,C.DA MACERA,1,27,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+CONTRADA MADDAMMA,C.DA MADDAMMA,1,77,CONTRADA MADDAMMA,CONTRADA MADDAMMA,1246252,0,matched,normalized_exact,high,
+CONTRADA MAGOLA,C.DA MAGOLA',1,28,CONTRADA MAGOLA,CONTRADA MAGOLA',1245598,11,matched,normalized_exact,high,
+CONTRADA MALASPINA,C.DA MALASPINA,1,67,CONTRADA MALASPINA,CONTRADA MALASPINA,1245600,0,matched,normalized_exact,high,
+CONTRADA MANISTALLA,C.DA MANISTALLA,1,65,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+CONTRADA MARCHIONE,C.DA MARCHIONE,1,29,CONTRADA MARCHIONE,CONTRADA MARCHIONE,1245609,0,matched,normalized_exact,high,
+CONTRADA MARGI,C.DA MARGI,1,52,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+CONTRADA MARRANO,C.DA MARRANO,1,44,CONTRADA MARRANO,CONTRADA MARRANO,1245614,10,matched,normalized_exact,high,
+CONTRADA MARUCA,C.DA MARUCA,1,57,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+CONTRADA MARZOMIGLIO,C.DA MARZOMIGLIO,1,65,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+CONTRADA MASTROBRUNO,CONTRADA MASTROBRUNO,1,52,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+CONTRADA MATACCA,C.DA MATACCA,1,45,CONTRADA MATACCA,CONTRADA MATACCA,1245625,8,matched,normalized_exact,high,
+CONTRADA MAZZEO,C.DA MAZZEO,1,71,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+CONTRADA MIGLIERINA,C.DA MIGLIERINA,1,48,CONTRADA MIGLIERINA,CONTRADA MIGLIERINA,1245642,9,matched,normalized_exact,high,
+CONTRADA MILETO,C.DA MILETO,1,52,CONTRADA MILETO,CONTRADA MILETO,1246219,1,matched,normalized_exact,high,
+CONTRADA MISA,C.DA MISA',1,66,CONTRADA MISA,CONTRADA MISA',1245648,16,matched,normalized_exact,high,
+CONTRADA MISIANO,C.DA MISIANO,1,65,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+CONTRADA MITOIO,C.DA MITOIO,1,49,CONTRADA MITOIO,CONTRADA MITOIO,1245649,29,matched,normalized_exact,high,
+CONTRADA MONACHELLE,C.DA MONACHELLE,1,58,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+CONTRADA MONACI,C.DA MONACI,1,38,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+CONTRADA MONTAGNOLA,C.DA MONTAGNOLA,1,30,CONTRADA MONTAGNOLA,CONTRADA MONTAGNOLA,1245659,2,matched,normalized_exact,high,
+CONTRADA MONTEROSSO,C.DA MONTEROSSO,1,33,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+CONTRADA MONTESANTI,C.DA MONTESANTI,1,52,CONTRADA MONTESANTI,CONTRADA MONTESANTI,1245678,0,matched,normalized_exact,high,
+CONTRADA MUNISATTI,C.DA MUNISATTI,1,29,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+CONTRADA MUNIZZA,C.DA MUNIZZA,1,67,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+CONTRADA MURETTO,C.DA MURETTO,1,44,CONTRADA MURETTO,CONTRADA MURETTO,1245682,14,matched,normalized_exact,high,
+CONTRADA MUZIO,C.DA MUZIO,1,65,CONTRADA MUZIO,CONTRADA MUZIO,1245684,3,matched,normalized_exact,high,
+CONTRADA NARDELLI,C.DA NARDELLI,1,30,CONTRADA NARDELLI,CONTRADA NARDELLI,1246253,2,matched,normalized_exact,high,
+CONTRADA NDINI,C.DA NDINI,1,67,CONTRADA NDINI,CONTRADA NDINI,1246250,0,matched,normalized_exact,high,
+CONTRADA NICOTERA,C.DA NICOTERA,1,50,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+CONTRADA NOCE,C.DA NOCE,1,20,CONTRADA NOCE,CONTRADA NOCE,1245699,4,matched,normalized_exact,high,
+CONTRADA OPPOLESE,C.DA OPPOLESE,1,38,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+CONTRADA OSPEDALE,C.DA OSPEDALE,1,41,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+CONTRADA PACE,C.DA PACE,1,32,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+CONTRADA PALADINA,C.DA PALADINA,1,35,CONTRADA PALADINA,CONTRADA PALADINA,1246211,1,matched,normalized_exact,high,
+CONTRADA PALAZZO,C.DA PALAZZO,1,52,CONTRADA PALAZZO,CONTRADA PALAZZO,1245716,4,matched,normalized_exact,high,
+CONTRADA PALMIERI,C.DA PALMIERI,1,24,CONTRADA PALMIERI,CONTRADA PALMIERI,1245719,2,matched,normalized_exact,high,
+CONTRADA PANE,C.DA PANE,1,65,CONTRADA PANE,CONTRADA PANE,1245723,0,matched,normalized_exact,high,
+CONTRADA PAPAZZO,C.DA PAPAZZO,1,70,CONTRADA PAPAZZO,CONTRADA PAPAZZO,1245728,14,matched,normalized_exact,high,
+CONTRADA PASTORIZIA,C.DA PASTORIZIA,1,52,CONTRADA PASTORIZIA,CONTRADA PASTORIZIA,1246187,0,matched,normalized_exact,high,
+CONTRADA PERITO,C.DA PERITO,1,32,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+CONTRADA PERNAZZO,C.DA PERNAZZO,1,38,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+CONTRADA PETRAPPA,C.DA PETRAPPA,1,67,CONTRADA PETRAPPA,CONTRADA PETRAPPA,1245739,0,matched,normalized_exact,high,
+CONTRADA PIANO DEL DUCA,C.DA PIANO DEL DUCA,1,67,CONTRADA PIANO DEL DUCA,CONTRADA PIANO DEL DUCA,1245741,0,matched,normalized_exact,high,
+CONTRADA PIANO LUPPINO,C.DA PIANO LUPPINO,1,44,CONTRADA PIANO LUPPINO,CONTRADA PIANO LUPPINO,1245743,33,matched,normalized_exact,high,
+CONTRADA PICERNO,C.DA PICERNO,1,30,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+CONTRADA PIGNA MAZZEI,C.DA PIGNA MAZZEI,1,50,CONTRADA PIGNA MAZZEI,CONTRADA PIGNA MAZZEI,1246215,6,matched,normalized_exact,high,
+CONTRADA PILLI,C.DA PILLI,2,72; 74,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+CONTRADA PILLI CALIGIURI,C.DA PILLI CALIGIURI,1,62,CONTRADA PILLI CALIGIURI,CONTRADA PILLI CALIGIURI,1246188,6,matched,normalized_exact,high,
+CONTRADA PILLI CAPIZZAGLIE,C.DA PILLI CAPIZZAGLIE,1,71,CONTRADA PILLI CAPIZZAGLIE,CONTRADA PILLI CAPIZZAGLIE,1245756,5,matched,normalized_exact,high,
+CONTRADA PILLI COOPERATIVA ASTRA,C.DA PILLI COOPERATIVA ASTRA,1,74,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+CONTRADA PILLI COOPERATIVE,C.DA PILLI COOPERATIVE,1,72,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+CONTRADA PILLI FRANCICA,C.DA PILLI FRANCICA,1,72,CONTRADA PILLI FRANCICA,CONTRADA PILLI FRANCICA,1246155,0,matched,normalized_exact,high,
+CONTRADA PIOMBO,C.DA PIOMBO,1,29,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+CONTRADA PIRAINO,C.DA PIRAINO,1,65,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+CONTRADA PITTACROPIO,C.DA PITTACROPIO,1,29,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+CONTRADA PROCESSIONE STOCCO,C.DA PROCESSIONE STOCCO,1,60,CONTRADA PROCESSIONE STOCCO,CONTRADA PROCESSIONE STOCCO,1245779,7,matched,normalized_exact,high,
+CONTRADA PUCCIO,C.DA PUCCIO,1,35,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+CONTRADA PUGLIANO,C.DA PUGLIANO,1,67,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+CONTRADA PUPONE,C.DA PUPONE,1,73,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+CONTRADA QUADRATI,C.DA QUADRATI,1,52,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+CONTRADA QUATTROCCHI,C.DA QUATTROCCHI,1,29,CONTRADA QUATTROCCHI,CONTRADA QUATTROCCHI,1245788,27,matched,normalized_exact,high,
+CONTRADA RENDA,C.DA RENDA,1,67,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+CONTRADA RICHETTI,C.DA RICHETTI,1,29,CONTRADA RICHETTI,CONTRADA RICHETTI,1245801,2,matched,normalized_exact,high,
+CONTRADA RIFORMA CALVARIO,C.DA RIFORMA CALVARIO,1,25,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+CONTRADA RITO,C.DA RITO,1,65,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+CONTRADA ROMEO,C.DA ROMEO,1,24,CONTRADA ROMEO,CONTRADA ROMEO,1245813,0,matched,normalized_exact,high,
+CONTRADA ROMEO SALADINI,C.DA ROMEO SALADINI,1,24,CONTRADA ROMEO SALADINI,CONTRADA ROMEO SALADINI,1246162,2,matched,normalized_exact,high,
+CONTRADA ROTOLI,C.DA ROTOLI,1,52,CONTRADA ROTOLI,CONTRADA ROTOLI,1245815,0,matched,normalized_exact,high,
+CONTRADA S ERMIA,C.DA S. ERMIA,1,51,CONTRADA SANT ERMIA,CONTRADA SANT'ERMIA,1245892,14,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+CONTRADA S GIULIANO,C.DA S. GIULIANO,1,65,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+CONTRADA S IANNI,C.DA S. IANNI,1,27,CONTRADA SAN IANNI,CONTRADA SAN IANNI,1246259,0,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+CONTRADA S MARIA,C.DA S. MARIA,1,44,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+CONTRADA S MINA SUPERIORE E INFERIORE,C.DA S. MINA' SUPERIORE E INFERIORE,1,51,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+CONTRADA S NICOLA,C.DA S. NICOLA,1,50,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+CONTRADA S PIETRO,C.DA S. PIETRO,1,50,LOCALITA SAN PIETRO,LOCALITA' SAN PIETRO,1245856,0,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+CONTRADA S VENERE,C.DA S. VENERE,1,50,CONTRADA SANTA VENERE,CONTRADA SANTA VENERE,1245887,33,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+CONTRADA SACCO,C.DA SACCO,1,65,CONTRADA SACCO,CONTRADA SACCO,1245819,0,matched,normalized_exact,high,
+CONTRADA SACRESTIA,C.DA SACRESTIA,1,30,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+CONTRADA SAMONTE,C.DA SAMONTE,1,70,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+CONTRADA SAN SIDERO,C.DA SAN SIDERO,1,50,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+CONTRADA SAVUTANO,C.DA SAVUTANO,1,76,CONTRADA SAVUTANO,CONTRADA SAVUTANO,1245904,0,matched,normalized_exact,high,
+CONTRADA SCHIENO VIESTE,C.DA SCHIENO VIESTE,1,47,CONTRADA SCHIENO VIESTE,CONTRADA SCHIENO VIESTE,1245913,5,matched,normalized_exact,high,
+CONTRADA SCHIPANI,C.DA SCHIPANI,1,58,CONTRADA SCHIPANI,CONTRADA SCHIPANI,1245914,5,matched,normalized_exact,high,
+CONTRADA SCINA,C.DA SCINA',2,68; 69,CONTRADA SCINA,CONTRADA SCINA',1245916,32,matched,normalized_exact,high,
+CONTRADA SCINI,C.DA SCINI,1,67,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+CONTRADA SCORDOVILLO,C.DA SCORDOVILLO,1,58,CONTRADA SCORDOVILLO,CONTRADA SCORDOVILLO,1245918,0,matched,normalized_exact,high,
+CONTRADA SCROTONAGGI,C.DA SCROTONAGGI,1,38,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+CONTRADA SERRA,C.DA SERRA,1,24,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+CONTRADA SERRA CASTAGNA,C.DA SERRA CASTAGNA,1,47,CONTRADA SERRA CASTAGNA,CONTRADA SERRA CASTAGNA,1245926,22,matched,normalized_exact,high,
+CONTRADA SERRA SALADINI,C.DA SERRA SALADINI,1,24,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+CONTRADA SGARANO,C.DA SGARANO,1,25,CONTRADA SGARANO,CONTRADA SGARANO,1245928,29,matched,normalized_exact,high,
+CONTRADA SOCCORSO,C.DA SOCCORSO,1,28,CONTRADA SOCCORSO,CONTRADA SOCCORSO,1245935,1,matched,normalized_exact,high,
+CONTRADA SORBELLO,C.DA SORBELLO,1,51,CONTRADA SORBELLO,CONTRADA SORBELLO,1245937,14,matched,normalized_exact,high,
+CONTRADA SPAGNUOLO,C.DA SPAGNUOLO,1,29,CONTRADA SPAGNUOLO,CONTRADA SPAGNUOLO,1245939,0,matched,normalized_exact,high,
+CONTRADA SPANO,C.DA SPANO',1,73,CONTRADA SPANO,CONTRADA SPANO',1245940,9,matched,normalized_exact,high,
+CONTRADA SPINETO,C.DA SPINETO,1,25,CONTRADA SPINETO,CONTRADA SPINETO,1245945,16,matched,normalized_exact,high,
+CONTRADA STELLA,C.DA STELLA,1,50,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+CONTRADA STIGLIOLA,C.DA STIGLIOLA,1,65,CONTRADA STIGLIOLA,CONTRADA STIGLIOLA,1246185,0,matched,normalized_exact,high,
+CONTRADA STRAZZAVESTE,C.DA STRAZZAVESTE,1,67,CONTRADA STRAZZAVESTE,CONTRADA STRAZZAVESTE,1245954,1,matched,normalized_exact,high,
+CONTRADA STRETTO,C.DA STRETTO,1,65,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+CONTRADA SUGHERO,C.DA SUGHERO,1,29,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+CONTRADA TALARICO,C.DA TALARICO,1,67,CONTRADA TALARICO,CONTRADA TALARICO,1245957,0,matched,normalized_exact,high,
+CONTRADA TELARA,C.DA TELARA,1,47,CONTRADA TELARA,CONTRADA TELARA,1245959,10,matched,normalized_exact,high,
+CONTRADA TIMPEROSSE,C.DA TIMPEROSSE,1,67,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+CONTRADA TOCCI,C.DA TOCCI,1,30,CONTRADA TOCCI,CONTRADA TOCCI,1245971,3,matched,normalized_exact,high,
+CONTRADA TORRICELLI,C.DA TORRICELLI,1,14,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+CONTRADA TRAZZA,C.DA TRAZZA,1,50,CONTRADA TRAZZA,CONTRADA TRAZZA,1246233,1,matched,normalized_exact,high,
+CONTRADA VACCARO,C.DA VACCARO,1,50,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+CONTRADA VALLE MONACI,C.DA VALLE MONACI,1,65,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+CONTRADA VALLERICCIARDI INFERIORE,C.DA VALLERICCIARDI INFERIORE,1,48,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+CONTRADA VALLERICCIARDI SUPERIORE,C.DA VALLERICCIARDI SUPERIORE,1,47,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+CONTRADA VECCHIO,C.DA VECCHIO,1,52,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+CONTRADA VELATI RAMETTA,C.DA VELATI RAMETTA,1,25,CONTRADA VELATI RAMETTA,CONTRADA VELATI RAMETTA,1246214,8,matched,normalized_exact,high,
+CONTRADA VERITA,C.DA VERITA',1,65,CONTRADA VERITA,CONTRADA VERITA',1246030,4,matched,normalized_exact,high,
+CONTRADA VETRANA,C.DA VETRANA,1,27,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+CONTRADA VISCARDI,C.DA VISCARDI,1,52,CONTRADA VISCARDI,CONTRADA VISCARDI,1246207,1,matched,normalized_exact,high,
+CONTRADA VITUSELLA,C.DA VITUSELLA,1,62,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+CONTRADA VOLPE,C.DA VOLPE,1,73,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+CONTRADA VONIO,C.DA VONIO,1,51,CONTRADA VONIO,CONTRADA VONIO,1246059,16,matched,normalized_exact,high,
+CONTRADA ZAMBRO,C.DA ZAMBRO,1,30,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+CONTRADA ZAPPANOTTI,C.DA ZAPPANOTTI,1,29,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+CONTRADA ZINNAVO,C.DA ZINNAVO,1,50,CONTRADA ZINNAVO,CONTRADA ZINNAVO,1246076,2,matched,normalized_exact,high,
+CONTRADA ZOCCA,C.DA ZOCCA,1,35,CONTRADA ZOCCA,CONTRADA ZOCCA,1246077,0,matched,normalized_exact,high,
+CONTRADA ZUPELLO,C.DA ZUPELLO,1,32,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+CORSO E ATRIO DELLA REPUBBLICA,CORSO E ATRIO DELLA REPUBBLICA,1,33,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+CORSO EROI DI SAPRI,CORSO EROI DI SAPRI,1,43,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+CORSO G NICOTERA,CORSO G. NICOTERA,1,1,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+CORSO NUMISTRANO,CORSO NUMISTRANO,1,8,CORSO NUMISTRANO,CORSO NUMISTRANO,1245701,57,matched,normalized_exact,high,
+INA CASA,INA CASA,1,33,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+LARGHETTO BRUZIO,LARGHETTO BRUZIO,1,22,LARGHETTO BRUZIO,LARGHETTO BRUZIO,1245070,4,matched,normalized_exact,high,
+LARGHETTO CROCEFISSO,LARGHETTO CROCEFISSO,1,6,LARGHETTO CROCEFISSO,LARGHETTO CROCEFISSO,1245194,1,matched,normalized_exact,high,
+LARGHETTO E VICHI BLASCHI,LARGHETTO E VICHI BLASCHI,1,3,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+LARGHETTO E VICHI S ANTONIO,LARGHETTO E VICHI S. ANTONIO,1,7,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+LARGHETTO STRANO,LARGHETTO STRANO,1,26,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+LARGO ANGOTTI,LARGO ANGOTTI,1,6,LARGO ANGOTTI,LARGO ANGOTTI,1245002,5,matched,normalized_exact,high,
+LARGO CAPORALE,LARGO CAPORALE,1,8,LARGO CAPORALE,LARGO CAPORALE,1245108,9,matched,normalized_exact,high,
+LARGO D STATTI,LARGO D. STATTI,1,26,LARGO DAMIANO STATTI,LARGO DAMIANO STATTI,1245206,8,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+LARGO DANO,LARGO DANO,1,26,LARGO DANO,LARGO DANO,1245210,8,matched,normalized_exact,high,
+LARGO E VIA SCARAMUZZINO,LARGO E VIA SCARAMUZZINO,1,3,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+LARGO E VICO MERCURIO,LARGO E VICO MERCURIO,1,27,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+LARGO E VICO NETTUNO,LARGO E VICO NETTUNO,1,27,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+LARGO G GUALTIERI,LARGO G. GUALTIERI,1,8,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+LARGO GALLO,LARGO GALLO,1,27,LARGO GALLO,LARGO GALLO,1245373,4,matched,normalized_exact,high,
+LARGO GESU,LARGO GESU',1,27,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+LARGO GREGORACI,LARGO GREGORACI,1,8,LARGO GREGORACI,LARGO GREGORACI,1245451,6,matched,normalized_exact,high,
+LARGO MANCUSO,LARGO MANCUSO,1,27,LARGO MANCUSO,LARGO MANCUSO,1245603,6,matched,normalized_exact,high,
+LARGO S MARIA,LARGO S. MARIA,1,27,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+LARGO SCORPIONE,LARGO SCORPIONE,1,26,LARGO SCORPIONE,LARGO SCORPIONE,1245919,4,matched,normalized_exact,high,
+LARGO STELLA,LARGO STELLA,1,27,LARGO STELLA,LARGO STELLA,1245949,5,matched,normalized_exact,high,
+LARGO VANONI,LARGO VANONI,1,32,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+LARGO VERITA,LARGO VERITA',1,27,LARGO VERITA,LARGO VERITA',1246031,5,matched,normalized_exact,high,
+LOC ADRIANO,LOC. ADRIANO,1,45,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+LOC AGRUMALORI,LOC. AGRUMALORI,1,56,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+LOC ALLIOCA,LOC. ALLIOCA,1,56,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+LOC ANGILLITO,LOC. ANGILLITO,1,54,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+LOC ANGITOLA,LOC. ANGITOLA,1,53,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+LOC ARICELLA,LOC. ARICELLA,1,38,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+LOC BAGNI,LOC. BAGNI,1,53,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+LOC BARONIELLO,LOC. BARONIELLO,1,56,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+LOC BASTIONE DI MALTA,LOC. BASTIONE DI MALTA,1,57,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+LOC BELLAFEMMINA,LOC. BELLAFEMMINA,1,53,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+LOC BOSCO AMATELLO,LOC. BOSCO AMATELLO,1,54,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+LOC BOSCO FRANCICA,LOC. BOSCO FRANCICA,1,53,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+LOC BRESCIA,LOC. BRESCIA,1,56,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+LOC CAFARELLO,LOC. CAFARELLO,1,45,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+LOC CAFARONE,LOC. CAFARONE,1,53,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+LOC CAMPAGNA,LOC. CAMPAGNA,1,57,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+LOC CAMPANE DI VOTTA,LOC. CAMPANE DI VOTTA,1,56,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+LOC CAMPOLONGO,LOC. CAMPOLONGO,1,56,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+LOC CANCELLO,LOC. CANCELLO,1,56,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+LOC CANNISTRALI,LOC. CANNISTRALI,1,32,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+LOC CASE AMENDOLA,LOC. CASE AMENDOLA,1,33,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+LOC CASE GALLO,LOC. CASE GALLO,1,48,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+LOC CASE GUALTIERI,LOC. CASE GUALTIERI,1,47,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+LOC CASE SPARSE OSPEDALE,LOC. CASE SPARSE OSPEDALE,1,41,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+LOC CASINO DI SCALZO,LOC. CASINO DI SCALZO,1,30,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+LOC CASSIENE,LOC. CASSIENE,1,25,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+LOC CELLE,LOC. CELLE,1,50,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+LOC CERASIA,LOC. CERASIA,1,53,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+LOC CIALAMPO,LOC. CIALAMPO,1,53,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+LOC CONCA,LOC. CONCA,1,56,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+LOC ELEMOSINA,LOC. ELEMOSINA,1,57,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+LOC FABIANO,LOC. FABIANO,1,56,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+LOC FERLAINO,LOC. FERLAINO,1,53,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+LOC FIALA,LOC. FIALA',1,56,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+LOC FICARELLA,LOC. FICARELLA,1,56,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+LOC FONTANELLA,LOC. FONTANELLA,1,53,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+LOC GATTOIRA,LOC. GATTOIRA,1,53,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+LOC GENERALE,LOC. GENERALE,1,53,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+LOC GIARDINO DI RENDA,LOC. GIARDINO DI RENDA,1,57,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+LOC GINEPRI,LOC. GINEPRI,1,53,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+LOC IMPARI,LOC. IMPARI,1,53,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+LOC JELA,LOC. JELA',1,56,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+LOC LAMEZIA GOLFO,LOC. LAMEZIA GOLFO,1,53,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+LOC LAURO,LOC. LAURO,1,56,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+LOC LE MUSE,LOC. LE MUSE,1,56,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+LOC LENZA GRANDE,LOC. LENZA GRANDE,1,56,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+LOC LICCIARDI,LOC. LICCIARDI,1,56,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+LOC MAIORANA,LOC. MAIORANA,1,56,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+LOC MALATESTA,LOC. MALATESTA,1,56,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+LOC MARGHETT,LOC. MARGHETT,1,53,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+LOC MARINA DI MAIDA,LOC. MARINA DI MAIDA,1,56,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+LOC MARINELLA,LOC. MARINELLA,1,53,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+LOC MARTA,LOC. MARTA',1,53,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+LOC MASCARELLO,LOC. MASCARELLO,1,53,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+LOC MENDICINO,LOC. MENDICINO,1,50,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+LOC METE,LOC. METE,1,47,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+LOC MORLANDA,LOC. MORLANDA,1,56,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+LOC MUCATA,LOC. MUCATA,1,56,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+LOC MURA DI GRASSO,LOC. MURA DI GRASSO,1,56,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+LOC PAGLIARONE,LOC. PAGLIARONE,1,56,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+LOC PARADISO,LOC. PARADISO,1,53,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+LOC PASSORELIA,LOC. PASSORELIA,1,53,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+LOC PERSICARA,LOC. PERSICARA,1,56,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+LOC PIANO VITALE,LOC. PIANO VITALE,1,65,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+LOC PITIZZANNI,LOC. PITIZZANNI,1,53,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+LOC POZZO,LOC. POZZO,1,53,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+LOC PRAIA A MARE,LOC. PRAIA A MARE,1,56,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+LOC PRATO CONDO,LOC. PRATO CONDO,1,56,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+LOC PRATO FABIANO,LOC. PRATO FABIANO,1,56,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+LOC PRIANO,LOC. PRIANO,1,57,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+LOC PULLO,LOC. PULLO,1,54,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+LOC RENDA,LOC. RENDA,1,50,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+LOC RISI,LOC. RISI,1,53,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+LOC S ANTONIO,LOC. S. ANTONIO,1,35,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+LOC S CATERINA,LOC. S. CATERINA,1,53,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+LOC S DOMENICA,LOC. S. DOMENICA,1,53,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+LOC S EUFEMIA VETERE,LOC. S. EUFEMIA VETERE,1,57,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+LOC S MARTINO,LOC. S. MARTINO,1,56,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+LOC S NICOLA,LOC. S. NICOLA,1,56,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+LOC SAVUTANO,LOC. SAVUTANO,1,76,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+LOC SCAFFO,LOC. SCAFFO,1,53,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+LOC SCALA,LOC. SCALA,1,56,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+LOC SCANNAGATTI,LOC. SCANNAGATTI,1,53,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+LOC SCORDOVILLO,LOC. SCORDOVILLO,1,56,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+LOC SEMINARIO,LOC. SEMINARIO,1,65,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+LOC SPARTA,LOC. SPARTA',1,33,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+LOC TERRAVECCHIA,LOC. TERRAVECCHIA,1,57,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+LOC TRE TERZI,LOC. TRE TERZI,1,56,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+LOC TRIGNA,LOC. TRIGNA,1,53,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+LOC UMBRIA,LOC. UMBRIA,1,56,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+LOC VACCARIZZO,LOC. VACCARIZZO,1,55,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+LOC VARRA,LOC. VARRA,1,53,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+LOC VIOLA,LOC. VIOLA,1,57,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+LOC VRUCA,LOC. VRUCA,1,56,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+LOCALITA CAPANNONE VOTTA,LOCALITA' CAPANNONE VOTTA,1,56,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+LOCALITA SAN NICOLA FIALA,LOCALITA' SAN NICOLA FIALA',2,56,LOCALITA SAN NICOLA FIALA,LOCALITA' SAN NICOLA FIALA',1245855,0,matched,normalized_exact,high,
+OSPEDALE CIVILE,OSPEDALE CIVILE,1,78,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+PIAZZA B CROCE,PIAZZA B. CROCE,1,33,PIAZZA BENEDETTO CROCE,PIAZZA BENEDETTO CROCE,1245049,0,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+PIAZZA BOTTICELLI,PIAZZA BOTTICELLI,1,39,PIAZZA BOTTICELLI,PIAZZA BOTTICELLI,1245064,0,matched,normalized_exact,high,
+PIAZZA BOVIO,PIAZZA BOVIO,1,6,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+PIAZZA DELLA REPUBBLICA,PIAZZA DELLA REPUBBLICA,1,9,PIAZZA DELLA REPUBBLICA,PIAZZA DELLA REPUBBLICA,1245257,11,matched,normalized_exact,high,
+PIAZZA DIAZ,PIAZZA DIAZ,1,33,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+PIAZZA E BORELLI MED D ORO,PIAZZA E. BORELLI (MED. D'ORO),1,9,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+PIAZZA E LARGO S DOMENICO,PIAZZA E LARGO S. DOMENICO,1,6,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+PIAZZA E SCESA F SACCHI,PIAZZA E SCESA F. SACCHI,1,6,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+PIAZZA E SCESA MERCATO VECCHIO,PIAZZA E SCESA MERCATO VECCHIO,1,6,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+PIAZZA F A D IPPOLITO,PIAZZA F. A. D'IPPOLITO,1,8,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+PIAZZA F RENDE,PIAZZA F. RENDE,1,8,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+PIAZZA G AMENDOLA,PIAZZA G. AMENDOLA,1,3,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+PIAZZA G FEROLETO,PIAZZA G. FEROLETO,1,8,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+PIAZZA G MAMELI,PIAZZA G. MAMELI,1,57,PIAZZA GOFFREDO MAMELI,PIAZZA GOFFREDO MAMELI,1245444,0,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+PIAZZA GARIBALDI,PIAZZA GARIBALDI,1,41,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+PIAZZA GATTINARA,PIAZZA GATTINARA,1,57,PIAZZA GATTINARA,PIAZZA GATTINARA,1245381,9,matched,normalized_exact,high,
+PIAZZA ITALIA,PIAZZA ITALIA,1,52,PIAZZA ITALIA,PIAZZA ITALIA,1245549,17,matched,normalized_exact,high,
+PIAZZA KENNEDY,PIAZZA KENNEDY,1,35,PIAZZA KENNEDY,PIAZZA KENNEDY,1245563,13,matched,normalized_exact,high,
+PIAZZA LAMEZIA,PIAZZA LAMEZIA,1,54,PIAZZA LAMEZIA,PIAZZA LAMEZIA,1245566,4,matched,normalized_exact,high,
+PIAZZA M CONTI,PIAZZA M. CONTI,1,56,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+PIAZZA MARTIRI DI THIENAMMEN,PIAZZA MARTIRI DI THIENAMMEN,1,31,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+PIAZZA MAZZINI,PIAZZA MAZZINI,1,4,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+PIAZZA MED D ORO FRATELLI PORCELLI,PIAZZA MED. D'ORO F.LLI PORCELLI,1,9,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+PIAZZA MERCATO NUOVO,PIAZZA MERCATO NUOVO,1,6,PIAZZA MERCATO NUOVO,PIAZZA MERCATO NUOVO,1245634,0,matched,normalized_exact,high,
+PIAZZA P ARDITO,PIAZZA P.ARDITO,1,3,PIAZZA PIETRO ARDITO,PIAZZA PIETRO ARDITO,1245751,4,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+PIAZZA RISORGIMENTO,PIAZZA RISORGIMENTO,1,57,PIAZZA RISORGIMENTO,PIAZZA RISORGIMENTO,1245803,2,matched,normalized_exact,high,
+PIAZZA ROMA,PIAZZA ROMA,1,23,PIAZZA ROMA,PIAZZA ROMA,1245811,17,matched,normalized_exact,high,
+PIAZZA ROMAGNA,PIAZZA ROMAGNA,1,29,PIAZZA ROMAGNA,PIAZZA ROMAGNA,1245812,3,matched,normalized_exact,high,
+PIAZZA ROTONDA,PIAZZA ROTONDA,1,3,PIAZZA ROTONDA,PIAZZA ROTONDA,1245816,3,matched,normalized_exact,high,
+PIAZZA S ANTONIO DI PADOVA,PIAZZA S. ANTONIO DI PADOVA,1,6,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+PIAZZA SALVO D ACQUISTO,PIAZZA SALVO D'ACQUISTO,1,8,PIAZZA SALVO D ACQUISTO,PIAZZA SALVO D'ACQUISTO,1245834,6,matched,normalized_exact,high,
+PIAZZA SAMBIASE,PIAZZA SAMBIASE,1,77,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+PIAZZA SANTA MARIA DELLE GRAZIE,PIAZZA SANTA MARIA DELLE GRAZIE,1,29,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+PIAZZA SANTA MARIA MAGGIORE,PIAZZA SANTA MARIA MAGGIORE,1,9,PIAZZA SANTA MARIA MAGGIORE,PIAZZA SANTA MARIA MAGGIORE,1245883,22,matched,normalized_exact,high,
+PIAZZA STOCCO,PIAZZA STOCCO,1,8,PIAZZA STOCCO,PIAZZA STOCCO,1245284; 1245950,8,matched,normalized_exact,high,
+PIAZZA T CAMPANELLA,PIAZZA T. CAMPANELLA,1,6,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+PIAZZETTA NICASTRO,PIAZZETTA NICASTRO,1,14,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+PIAZZETTA SAN FRANCESCO DI PAOLA,PIAZZETTA SAN FRANCESCO DI PAOLA,1,39,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+PRESSO AEROPORTO,PRESSO AEROPORTO,1,55,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+RIONE CARUSO,RIONE CARUSO,1,29,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+RIONE CASINO,RIONE CASINO,1,30,RIONE CASINO,RIONE CASINO,1245139,6,matched,normalized_exact,high,
+SALITA E LARGHETTO S CATERINA,SALITA E LARGHETTO S. CATERINA,1,8,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+SALITA E RAMPA MANCINI,SALITA E RAMPA MANCINI,1,10,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+SALITA FRATELLI MARUCA,SALITA F. LLI MARUCA,1,8,SALITA FRATELLI MARUCA,SALITA FRATELLI MARUCA,1245358,26,matched,normalized_exact,high,
+SALITA MAZZEI,SALITA MAZZEI,1,8,SALITA MAZZEI,SALITA MAZZEI,1246135,9,matched,normalized_exact,high,
+STAZIONE S PIETRO LAMETINO,STAZIONE S. PIETRO LAMETINO,1,56,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+TRAV LATO DESTRO VIA G MARCONI,TRAV. LATO DESTRO VIA G. MARCONI,1,18,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+TRAV LATO SINISTRO VIA G MARCONI,TRAV. LATO SINISTRO VIA G. MARCONI,1,19,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+TRAVERSE DI VIA BIZANTINI,TRAVERSE DI VIA BIZANTINI,1,58,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+TRAVERSE E VIA GINEPRI,TRAVERSE E VIA GINEPRI,1,53,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA A ANILE,VIA A. ANILE,1,9,VIA ANTONINO ANILE,VIA ANTONINO ANILE,1245005,10,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VIA A CANOVA,VIA A. CANOVA,1,76,VIA ANTONIO CANOVA,VIA ANTONIO CANOVA,1245006,17,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VIA A CAPPELLI,VIA A. CAPPELLI,4,50; 57,VIA ANTONIO CAPPELLI,VIA ANTONIO CAPPELLI,1245007,87,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VIA A COLAVITA,VIA A. COLAVITA,1,31,VIA AMALIA COLAVITA,VIA AMALIA COLAVITA,1246292,15,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VIA A COSTA,VIA A. COSTA,1,43,VIA ANDREA COSTA,VIA ANDREA COSTA,1244998,14,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VIA A D IPPOLITO,VIA A. D'IPPOLITO,1,10,VIA ANTONIO D IPPOLITO,VIA ANTONIO D'IPPOLITO,1244986,47,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VIA A DE GASPERI,VIA A. DE GASPERI,1,39,VIA ALCIDE DE GASPERI,VIA ALCIDE DE GASPERI,1244991,11,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VIA A DIAZ,VIA A. DIAZ,1,4,VIA ARMANDO DIAZ,VIA ARMANDO DIAZ,1245020,6,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VIA A E A PETRONIO,VIA A. E . A. PETRONIO,1,37,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA A GENOVESE,VIA A. GENOVESE,1,41,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA A GRANDI,VIA A. GRANDI,1,32,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA A MEUCCI,VIA A. MEUCCI,1,20,VIA ANTONIO MEUCCI,VIA ANTONIO MEUCCI,1246293,12,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VIA A MISIANI,VIA A. MISIANI,1,12,VIA ANTONIO MISIANI,VIA ANTONIO MISIANI,1245011,44,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VIA A MORO,VIA A. MORO,1,19,VIA ALDO MORO,VIA ALDO MORO,1244992,69,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VIA A NUCIFERO,VIA A.NUCIFERO,1,53,VIA ALIDA NUCIFERO,VIA ALIDA NUCIFERO,1246161,61,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VIA A PACINOTTI,VIA A. PACINOTTI,1,9,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA A PERUGINI EX NICASTRO,VIA A. PERUGINI EX NICASTRO,2,58; 72,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA A PERUGINI EX SAMBIASE,VIA A. PERUGINI EX SAMBIASE,1,77,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA A REILLO,VIA A. REILLO,1,61,VIA ANTONIO REILLO,VIA ANTONIO REILLO,1245012,41,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VIA A RENDE,VIA A. RENDE,1,3,VIA ANTONIO RENDE,VIA ANTONIO RENDE,1245017,3,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VIA A SCARPINO,VIA A. SCARPINO,1,63,VIA ARMANDO SCARPINO,VIA ARMANDO SCARPINO,1245023,4,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VIA A SEGNI,VIA A. SEGNI,1,68,VIA ANTONIO SEGNI,VIA ANTONIO SEGNI,1245013,4,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VIA A VESPUCCI,VIA A. VESPUCCI,1,38,VIA AMERIGO VESPUCCI,VIA AMERIGO VESPUCCI,1244997,7,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VIA A VOLTA,VIA A. VOLTA,1,13,VIA ALESSANDRO VOLTA,VIA ALESSANDRO VOLTA,1244995,42,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VIA ABATE ROBERTO DI GRANDMESNIL,VIA ABATE ROBERTO DI GRANDMESNIL,1,64,VIA ABATE ROBERTO DI GRANDMESNIL,VIA ABATE ROBERTO DI GRANDMESNIL,1245807,28,matched,normalized_exact,high,
+VIA ABRUZZI,VIA ABRUZZI,1,22,VIA ABRUZZI,VIA ABRUZZI,1244976,15,matched,normalized_exact,high,
+VIA ACCARIA,VIA ACCARIA,1,29,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA ADAMELLO,VIA ADAMELLO,1,42,VIA ADAMELLO,VIA ADAMELLO,1244980,50,matched,normalized_exact,high,
+VIA ADDA,VIA ADDA,1,13,VIA ADDA,VIA ADDA,1244981,122,matched,normalized_exact,high,
+VIA ADDURI EX CONTRADA ADDURI,VIA ADDURI ( EX CONTRADA ADDURI),1,29,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA ADELINA MORACA,VIA ADELINA MORACA,1,28,VIA ADELINA MORACA,VIA ADELINA MORACA,1246198,1,matched,normalized_exact,high,
+VIA ADIGE,VIA ADIGE,1,13,VIA ADIGE,VIA ADIGE,1244985,12,matched,normalized_exact,high,
+VIA AEROPORTO,VIA AEROPORTO,1,55,VIA AEROPORTO,VIA AEROPORTO,1244987,0,matched,normalized_exact,high,
+VIA AFRICA,VIA AFRICA,1,55,VIA AFRICA,VIA AFRICA,1246134,29,matched,normalized_exact,high,
+VIA ALBERT EINSTEIN,VIA ALBERT EINSTEIN,1,40,VIA ALBERT EINSTEIN,VIA ALBERT EINSTEIN,1244989,12,matched,normalized_exact,high,
+VIA ALDO PERONACI,VIA ALDO PERONACI,1,69,VIA ALDO PERONACI,VIA ALDO PERONACI,1244993,11,matched,normalized_exact,high,
+VIA ALIGHIERI DANTE,VIA ALIGHIERI DANTE,1,39,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA ALISEI,VIA ALISEI,1,49,VIA ALISEI,VIA ALISEI,1246153,2,matched,normalized_exact,high,
+VIA AMALFI,VIA AMALFI,1,53,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA ANDREA CEFALY,VIA ANDREA CEFALY,1,55,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA ANDREA MANTEGNA,VIA ANDREA MANTEGNA,1,76,VIA ANDREA MANTEGNA,VIA ANDREA MANTEGNA,1244999,33,matched,normalized_exact,high,
+VIA ANNUNZIATA,VIA ANNUNZIATA,1,24,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA ANTONELLO DA MESSINA,VIA ANTONELLO DA MESSINA,1,76,VIA ANTONELLO DA MESSINA,VIA ANTONELLO DA MESSINA,1245004,52,matched,normalized_exact,high,
+VIA ANTONINO DI FIORE,VIA ANTONINO DI FIORE,1,41,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA ANTONIO DE GRAZIA,VIA ANTONIO DE GRAZIA,1,66,VIA ANTONIO DE GRAZIA,VIA ANTONIO DE GRAZIA,1246108,7,matched,normalized_exact,high,
+VIA ANTONIO MARASCO,VIA ANTONIO MARASCO,1,55,VIA ANTONIO MARASCO,VIA ANTONIO MARASCO,1246199,2,matched,normalized_exact,high,
+VIA ANTONIO MORELLI,VIA ANTONIO MORELLI,1,31,VIA ANTONIO MORELLI,VIA ANTONIO MORELLI,1246098,20,matched,normalized_exact,high,
+VIA ARCHIMEDE,VIA ARCHIMEDE,1,38,VIA ARCHIMEDE,VIA ARCHIMEDE,1245015,2,matched,normalized_exact,high,
+VIA ARIOSTO,VIA ARIOSTO,1,40,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA ARISTOTELE,VIA ARISTOTELE,1,67,VIA ARISTOTELE,VIA ARISTOTELE,1245018,27,matched,normalized_exact,high,
+VIA ARNO,VIA ARNO,1,1,VIA ARNO,VIA ARNO,1245021,15,matched,normalized_exact,high,
+VIA ARTURO TOSCANINI,VIA ARTURO TOSCANINI,1,76,VIA ARTURO TOSCANINI,VIA ARTURO TOSCANINI,1245022,2,matched,normalized_exact,high,
+VIA ASIA,VIA ASIA,1,53,VIA ASIA,VIA ASIA,1245024,5,matched,normalized_exact,high,
+VIA ASPROMONTE,VIA ASPROMONTE,1,8,VIA ASPROMONTE,VIA ASPROMONTE,1245025,5,matched,normalized_exact,high,
+VIA AURELIO CASSIODORO,VIA AURELIO CASSIODORO,1,67,VIA AURELIO CASSIODORO,VIA AURELIO CASSIODORO,1245031,44,matched,normalized_exact,high,
+VIA AUSTRALIA,VIA AUSTRALIA,1,52,VIA AUSTRALIA,VIA AUSTRALIA,1245032,4,matched,normalized_exact,high,
+VIA B BUOZZI,VIA B. BUOZZI,1,32,VIA BRUNO BUOZZI,VIA BRUNO BUOZZI,1245069,12,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VIA B MUSOLINO,VIA B. MUSOLINO,1,17,VIA BENEDETTO MUSOLINO,VIA BENEDETTO MUSOLINO,1245050,20,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VIA B SPOSATO,VIA B. SPOSATO,1,43,VIA BASILIO SPOSATO,VIA BASILIO SPOSATO,1245041,33,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VIA BACHELET,VIA BACHELET,1,13,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA BAGNI,VIA BAGNI,1,35,VIA BAGNI,VIA BAGNI,1245033,2,matched,normalized_exact,high,
+VIA BARACCA,VIA BARACCA,1,34,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA BAROLO,VIA BAROLO,1,62,VIA BAROLO,VIA BAROLO,1245038,5,matched,normalized_exact,high,
+VIA BASILICATA,VIA BASILICATA,1,22,VIA BASILICATA,VIA BASILICATA,1245040,20,matched,normalized_exact,high,
+VIA BASILIO DE FAZIO,VIA BASILIO DE FAZIO,1,28,VIA BASILIO DE FAZIO,VIA BASILIO DE FAZIO,1246171,51,matched,normalized_exact,high,
+VIA BATTAGLIA DI MAIDA,VIA BATTAGLIA DI MAIDA,1,62,VIA BATTAGLIA DI MAIDA,VIA BATTAGLIA DI MAIDA,1246173,9,matched,normalized_exact,high,
+VIA BEATO ANGELICO,VIA BEATO ANGELICO,1,77,VIA BEATO ANGELICO,VIA BEATO ANGELICO,1245044,28,matched,normalized_exact,high,
+VIA BENEVENTO,VIA BENEVENTO,1,68,VIA BENEVENTO,VIA BENEVENTO,1245052,29,matched,normalized_exact,high,
+VIA BERNARDINO BENINCASA,VIA BERNARDINO BENINCASA,1,77,VIA BERNARDINO BENINCASA,VIA BERNARDINO BENINCASA,1246163,25,matched,normalized_exact,high,
+VIA BEZZECCA,VIA BEZZECCA,1,68,VIA BEZZECCA,VIA BEZZECCA,1245054,17,matched,normalized_exact,high,
+VIA BOCCACCIO,VIA BOCCACCIO,1,38,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA BOLZANO,VIA BOLZANO,1,36,VIA BOLZANO,VIA BOLZANO,1245059,38,matched,normalized_exact,high,
+VIA BORBONI DI NAPOLI,VIA BORBONI DI NAPOLI,1,32,VIA BORBONI DI NAPOLI,VIA BORBONI DI NAPOLI,1245060,6,matched,normalized_exact,high,
+VIA BOSCO AMATELLO,VIA BOSCO AMATELLO,1,54,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA BOSCO S ANTONIO,VIA BOSCO S. ANTONIO,1,6,VIA BOSCO SANT ANTONIO,VIA BOSCO SANT'ANTONIO,1245063,2,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VIA BRENTA,VIA BRENTA,1,36,VIA BRENTA,VIA BRENTA,1245066,42,matched,normalized_exact,high,
+VIA BREZIA,VIA BREZIA,1,34,VIA BREZIA,VIA BREZIA,1245068,5,matched,normalized_exact,high,
+VIA BREZZA,VIA BREZZA,1,49,VIA BREZZA,VIA BREZZA,1246154,1,matched,normalized_exact,high,
+VIA BUSENTO,VIA BUSENTO,1,36,VIA BUSENTO,VIA BUSENTO,1245074,41,matched,normalized_exact,high,
+VIA C ALVARO,VIA C. ALVARO,1,39,VIA CORRADO ALVARO,VIA CORRADO ALVARO,1245182,17,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VIA C ARDITO,VIA C. ARDITO,1,9,VIA CARLO ARDITO,VIA CARLO ARDITO,1245115,8,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VIA C BATTISTI,VIA C. BATTISTI,1,34,VIA CESARE BATTISTI,VIA CESARE BATTISTI,1245155,9,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VIA C CASSOLI,VIA C. CASSOLI,1,3,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA C COLOMBO,VIA C. COLOMBO,1,13,VIA CRISTOFORO COLOMBO,VIA CRISTOFORO COLOMBO,1245192,72,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VIA C DE CADORNA,VIA C. DE CADORNA,1,21,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA C FIORE,VIA C. FIORE,1,42,VIA CAIO FIORE,VIA CAIO FIORE,1245085,25,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VIA C LORIEDO,VIA C. LORIEDO,1,3,VIA CAMILLO LORIEDO,VIA CAMILLO LORIEDO,1245579,10,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VIA C PETRONIO,VIA C. PETRONIO,1,35,VIA CARLO PETRONIO,VIA CARLO PETRONIO,1245740,2,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VIA C T MERCURI,VIA C. T. MERCURI,1,76,VIA CESARE TEODORO MERCURI,VIA CESARE TEODORO MERCURI,1245157,4,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VIA C TREVES,VIA C. TREVES,1,32,VIA CARLO TREVES,VIA CARLO TREVES,1245118,9,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VIA CADORE,VIA CADORE,1,22,VIA CADORE,VIA CADORE,1245075,18,matched,normalized_exact,high,
+VIA CADUTI DEL PONTE DELLE GRAZIE,VIA CADUTI DEL PONTE DELLE GRAZIE,1,65,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA CAGLIARI,VIA CAGLIARI,1,22,VIA CAGLIARI,VIA CAGLIARI,1245084,3,matched,normalized_exact,high,
+VIA CAIROLI,VIA CAIROLI,1,40,VIA CAIROLI,VIA CAIROLI,1245086,15,matched,normalized_exact,high,
+VIA CALABRIA,VIA CALABRIA,1,22,VIA CALABRIA,VIA CALABRIA,1245087,74,matched,normalized_exact,high,
+VIA CALATAFIMI,VIA CALATAFIMI,1,17,VIA CALATAFIMI,VIA CALATAFIMI,1245088,24,matched,normalized_exact,high,
+VIA CALLERI,VIA CALLERI,1,52,VIA CALLERI,VIA CALLERI,1245092,4,matched,normalized_exact,high,
+VIA CAMPANIA,VIA CAMPANIA,1,22,VIA CAMPANIA,VIA CAMPANIA,1245094,65,matched,normalized_exact,high,
+VIA CANE,VIA CANE,1,26,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA CARAVAGGIO,VIA CARAVAGGIO,1,39,VIA CARAVAGGIO,VIA CARAVAGGIO,1245109,16,matched,normalized_exact,high,
+VIA CARDINALE G SIRLETO,VIA CARDINALE G. SIRLETO,1,71,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA CARDUCCI,VIA CARDUCCI,1,3,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA CARLA MARIA TALARICO,VIA CARLA MARIA TALARICO,1,13,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA CARLO GOLDONI,VIA CARLO GOLDONI,1,37,VIA CARLO GOLDONI,VIA CARLO GOLDONI,1245116,14,matched,normalized_exact,high,
+VIA CARLO TUCCI,VIA CARLO TUCCI,1,37,VIA CARLO TUCCI,VIA CARLO TUCCI,1245119,18,matched,normalized_exact,high,
+VIA CARMELINA TROPEA,VIA CARMELINA TROPEA,1,28,VIA CARMELINA TROPEA,VIA CARMELINA TROPEA,1246167,51,matched,normalized_exact,high,
+VIA CARNIA,VIA CARNIA,1,22,VIA CARNIA,VIA CARNIA,1245121,30,matched,normalized_exact,high,
+VIA CARONTE,VIA CARONTE,1,35,VIA CARONTE,VIA CARONTE,1245123,8,matched,normalized_exact,high,
+VIA CARRICELLO,VIA CARRICELLO,1,32,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA CARSO,VIA CARSO,1,35,VIA CARSO,VIA CARSO,1245135,4,matched,normalized_exact,high,
+VIA CASTELFIDARDO,VIA CASTELFIDARDO,1,8,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA CASTURI,VIA CASTURI,1,24,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA CATALDI,VIA CATALDI,1,33,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA CATANIA,VIA CATANIA,1,53,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA CATERINA DE MARCO,VIA CATERINA DE MARCO,3,53; 57,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA CATERINA MOLINARO,VIA CATERINA MOLINARO,1,28,VIA CATERINA MOLINARO,VIA CATERINA MOLINARO,1246224,16,matched,normalized_exact,high,
+VIA CAV AZZARITO NICOLA,VIA CAV. AZZARITO NICOLA,1,56,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA CAVA,VIA CAVA,1,27,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA CAVALIERI DI MALTA,VIA CAVALIERI DI MALTA,1,57,VIA CAVALIERI DI MALTA,VIA CAVALIERI DI MALTA,1245145,13,matched,normalized_exact,high,
+VIA CENSI,VIA CENSI,1,29,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA CESARE PAVESE,VIA CESARE PAVESE,1,52,VIA CESARE PAVESE,VIA CESARE PAVESE,1245156,9,matched,normalized_exact,high,
+VIA CHIUSA,VIA CHIUSA,2,32; 50,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA CHIUSARELLA,VIA CHIUSARELLA,1,32,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA CIALDINI,VIA CIALDINI,1,40,VIA CIALDINI,VIA CIALDINI,1245160,9,matched,normalized_exact,high,
+VIA CIMABUE,VIA CIMABUE,1,76,VIA CIMABUE,VIA CIMABUE,1245161,19,matched,normalized_exact,high,
+VIA CIRILLO,VIA CIRILLO,1,38,VIA CIRILLO,VIA CIRILLO,1245162,34,matched,normalized_exact,high,
+VIA CLEARCO DI REGGIO,VIA CLEARCO DI REGGIO,1,35,VIA CLEARCO DI REGGIO,VIA CLEARCO DI REGGIO,1245165,8,matched,normalized_exact,high,
+VIA COLADARCI,VIA COLADARCI,1,23,VIA COLADARCI,VIA COLADARCI,1245166,17,matched,normalized_exact,high,
+VIA COLONNA DI SERRA,VIA COLONNA DI SERRA,1,26,VIA COLONNA DI SERRA,VIA COLONNA DI SERRA,1245168,8,matched,normalized_exact,high,
+VIA COMMERCIO,VIA COMMERCIO,1,40,VIA COMMERCIO,VIA COMMERCIO,1245172,31,matched,normalized_exact,high,
+VIA CONCETTA FLORO,VIA CONCETTA FLORO,1,28,VIA CONCETTA FLORO,VIA CONCETTA FLORO,1246202,15,matched,normalized_exact,high,
+VIA CONTE GIUSEPPE,VIA CONTE GIUSEPPE,1,29,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA CONTRADA E RIONE CAFOSSI,VIA - C.DA E RIONE CAFOSSI,1,30,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA CORSO E VICHI VITTORIO EMANUELE,VIA- CORSO E VICHI VITTORIO EMANUELE,1,33,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA CRATI,VIA CRATI,1,1,VIA CRATI,VIA CRATI,1245191,32,matched,normalized_exact,high,
+VIA CROCEFISSO,VIA CROCEFISSO,1,6,VIA CROCEFISSO,VIA CROCEFISSO,1245193,69,matched,normalized_exact,high,
+VIA CRUCICCHIA FIRRUZZA,VIA CRUCICCHIA FIRRUZZA,1,32,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA CURTATONE,VIA CURTATONE,1,32,VIA CURTATONE,VIA CURTATONE,1245201,2,matched,normalized_exact,high,
+VIA D CHIESA,VIA D. CHIESA,1,4,VIA DAMIANO CHIESA,VIA DAMIANO CHIESA,1245205,16,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VIA D ELIA,VIA D'ELIA,1,34,VIA D ELIA,VIA D'ELIA,1245252,23,matched,normalized_exact,high,
+VIA D PALADINO,VIA D. PALADINO,1,58,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA DANTE,VIA DANTE,1,54,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA DARIO GALLI,VIA DARIO GALLI,1,28,VIA DARIO GALLI,VIA DARIO GALLI,1246200,18,matched,normalized_exact,high,
+VIA DARIO LEONE,VIA DARIO LEONE,3,29; 66,VIA DARIO LEONE,VIA DARIO LEONE,1246122,100,matched,normalized_exact,high,
+VIA DE A CURTIS,VIA DE A.CURTIS,1,59,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA DE MEDICI ANTONIO,VIA DE MEDICI ANTONIO,4,32; 50,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA DE PRETIS,VIA DE PRETIS,1,36,VIA DE PRETIS,VIA DE PRETIS,1245270,24,matched,normalized_exact,high,
+VIA DE SENATORE SAC GIOVANNI,VIA DE SENATORE SAC. GIOVANNI,1,41,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA DEGLI ABETI,VIA DEGLI ABETI,1,73,VIA DEGLI ABETI,VIA DEGLI ABETI,1246157,8,matched,normalized_exact,high,
+VIA DEGLI ACERI,VIA DEGLI ACERI,1,70,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA DEGLI ALLORI,VIA DEGLI ALLORI,1,65,VIA DEGLI ALLORI,VIA DEGLI ALLORI,1246102,2,matched,normalized_exact,high,
+VIA DEGLI APULI,VIA DEGLI APULI,1,71,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA DEGLI AUSONI,VIA DEGLI AUSONI,1,77,VIA DEGLI AUSONI,VIA DEGLI AUSONI,1246176,24,matched,normalized_exact,high,
+VIA DEGLI EMIGRANTI,VIA DEGLI EMIGRANTI,1,77,VIA DEGLI EMIGRANTI,VIA DEGLI EMIGRANTI,1245215,20,matched,normalized_exact,high,
+VIA DEGLI ENOTRI,VIA DEGLI ENOTRI,1,61,VIA DEGLI ENOTRI,VIA DEGLI ENOTRI,1245216,48,matched,normalized_exact,high,
+VIA DEGLI EQUI,VIA DEGLI EQUI,1,71,VIA DEGLI EQUI,VIA DEGLI EQUI,1246288,14,matched,normalized_exact,high,
+VIA DEGLI ETRUSCHI,VIA DEGLI ETRUSCHI,1,72,VIA DEGLI ETRUSCHI,VIA DEGLI ETRUSCHI,1245217,24,matched,normalized_exact,high,
+VIA DEGLI EUCALIPTI,VIA DEGLI EUCALIPTI,1,65,VIA DEGLI EUCALIPTI,VIA DEGLI EUCALIPTI,1246101,28,matched,normalized_exact,high,
+VIA DEGLI IRPINI,VIA DEGLI IRPINI,1,72,VIA DEGLI IRPINI,VIA DEGLI IRPINI,1245218,2,matched,normalized_exact,high,
+VIA DEGLI ITALI,VIA DEGLI ITALI,4,71; 74,VIA DEGLI ITALI,VIA DEGLI ITALI,1245219,134,matched,normalized_exact,high,
+VIA DEGLI OLEANDRI,VIA DEGLI OLEANDRI,1,64,VIA DEGLI OLEANDRI,VIA DEGLI OLEANDRI,1245220,3,matched,normalized_exact,high,
+VIA DEGLI OLMI,VIA DEGLI OLMI,1,71,VIA DEGLI OLMI,VIA DEGLI OLMI,1246129,6,matched,normalized_exact,high,
+VIA DEGLI ONTANI,VIA DEGLI ONTANI,1,71,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA DEGLI SVEVI,VIA DEGLI SVEVI,1,71,VIA DEGLI SVEVI,VIA DEGLI SVEVI,1245221,50,matched,normalized_exact,high,
+VIA DEGLI ULIVETI,VIA DEGLI ULIVETI,1,62,VIA DEGLI ULIVETI,VIA DEGLI ULIVETI,1245222,44,matched,normalized_exact,high,
+VIA DEGLI UMBRI,VIA DEGLI UMBRI,1,72,VIA DEGLI UMBRI,VIA DEGLI UMBRI,1246116,8,matched,normalized_exact,high,
+VIA DEI BIZANTINI,VIA DEI BIZANTINI,4,60; 62,VIA DEI BIZANTINI,VIA DEI BIZANTINI,1245223,361,matched,normalized_exact,high,
+VIA DEI BRUTII,VIA DEI BRUTII,4,71; 73,VIA DEI BRUTII,VIA DEI BRUTII,1245224,153,matched,normalized_exact,high,
+VIA DEI CAMPANI,VIA DEI CAMPANI,4,52; 62,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA DEI CAMPIONI,VIA DEI CAMPIONI,1,2,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA DEI CAROLINGI,VIA DEI CAROLINGI,1,72,VIA DEI CAROLINGI,VIA DEI CAROLINGI,1245225,8,matched,normalized_exact,high,
+VIA DEI CASTAGNI,VIA DEI CASTAGNI,1,73,VIA DEI CASTAGNI,VIA DEI CASTAGNI,1246156,3,matched,normalized_exact,high,
+VIA DEI CEDRI,VIA DEI CEDRI,1,67,VIA DEI CEDRI,VIA DEI CEDRI,1246181,3,matched,normalized_exact,high,
+VIA DEI CELTI,VIA DEI CELTI,1,72,VIA DEI CELTI,VIA DEI CELTI,1246192,2,matched,normalized_exact,high,
+VIA DEI CERRI,VIA DEI CERRI,1,66,VIA DEI CERRI,VIA DEI CERRI,1246170,3,matched,normalized_exact,high,
+VIA DEI CICLAMINI,VIA DEI CICLAMINI,1,64,VIA DEI CICLAMINI,VIA DEI CICLAMINI,1245226,29,matched,normalized_exact,high,
+VIA DEI CORSI,VIA DEI CORSI,1,72,VIA DEI CORSI,VIA DEI CORSI,1246148,3,matched,normalized_exact,high,
+VIA DEI FAGGI,VIA DEI FAGGI,1,71,VIA DEI FAGGI,VIA DEI FAGGI,1246120,6,matched,normalized_exact,high,
+VIA DEI FALEGNAMI,VIA DEI FALEGNAMI,1,32,VIA DEI FALEGNAMI,VIA DEI FALEGNAMI,1245227,25,matched,normalized_exact,high,
+VIA DEI FENICI,VIA DEI FENICI,1,72,VIA DEI FENICI,VIA DEI FENICI,1246117,4,matched,normalized_exact,high,
+VIA DEI FRASSINI,VIA DEI FRASSINI,1,73,VIA DEI FRASSINI,VIA DEI FRASSINI,1246131,5,matched,normalized_exact,high,
+VIA DEI FRENTANI,VIA DEI FRENTANI,1,72,VIA DEI FRENTANI,VIA DEI FRENTANI,1246149,5,matched,normalized_exact,high,
+VIA DEI GAROFANI,VIA DEI GAROFANI,1,64,VIA DEI GAROFANI,VIA DEI GAROFANI,1245228,9,matched,normalized_exact,high,
+VIA DEI GELSI,VIA DEI GELSI,1,71,VIA DEI GELSI,VIA DEI GELSI,1246142,8,matched,normalized_exact,high,
+VIA DEI GELSOMINI,VIA DEI GELSOMINI,1,64,VIA DEI GELSOMINI,VIA DEI GELSOMINI,1245229,30,matched,normalized_exact,high,
+VIA DEI GIARDINI,VIA DEI GIARDINI,1,4,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA DEI GIGLI,VIA DEI GIGLI,1,68,VIA DEI GIGLI,VIA DEI GIGLI,1245232,14,matched,normalized_exact,high,
+VIA DEI GLADIOLI,VIA DEI GLADIOLI,1,64,VIA DEI GLADIOLI,VIA DEI GLADIOLI,1246106,9,matched,normalized_exact,high,
+VIA DEI GLICINI,VIA DEI GLICINI,1,64,VIA DEI GLICINI,VIA DEI GLICINI,1245233,19,matched,normalized_exact,high,
+VIA DEI GRECI,VIA DEI GRECI,1,71,VIA DEI GRECI,VIA DEI GRECI,1246105,39,matched,normalized_exact,high,
+VIA DEI LATINI,VIA DEI LATINI,1,60,VIA DEI LATINI,VIA DEI LATINI,1245234,19,matched,normalized_exact,high,
+VIA DEI LECCI,VIA DEI LECCI,1,67,VIA DEI LECCI,VIA DEI LECCI,1246230,13,matched,normalized_exact,high,
+VIA DEI LIGURI,VIA DEI LIGURI,1,76,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA DEI LUCANI,VIA DEI LUCANI,1,71,VIA DEI LUCANI,VIA DEI LUCANI,1246182,2,matched,normalized_exact,high,
+VIA DEI LUCERI,VIA DEI LUCERI,1,62,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA DEI MARRUCINI,VIA DEI MARRUCINI,1,62,VIA DEI MARRUCINI,VIA DEI MARRUCINI,1246238,2,matched,normalized_exact,high,
+VIA DEI MONACI BASILIANI,VIA DEI MONACI BASILIANI,1,37,VIA DEI MONACI BASILIANI,VIA DEI MONACI BASILIANI,1245237,3,matched,normalized_exact,high,
+VIA DEI MORGETI,VIA DEI MORGETI,1,73,VIA DEI MORGETI,VIA DEI MORGETI,1245238,65,matched,normalized_exact,high,
+VIA DEI NARCISI,VIA DEI NARCISI,1,69,VIA DEI NARCISI,VIA DEI NARCISI,1246193,13,matched,normalized_exact,high,
+VIA DEI NOCI,VIA DEI NOCI,1,73,VIA DEI NOCI,VIA DEI NOCI,1246196,7,matched,normalized_exact,high,
+VIA DEI PATRIOTI NICASTRESI,VIA DEI PATRIOTI NICASTRESI,1,15,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA DEI PATRIOTI SAMBIASINI 1848,VIA DEI PATRIOTI SAMBIASINI 1848,1,37,VIA DEI PATRIOTI SAMBIASINI 1848,VIA DEI PATRIOTI SAMBIASINI 1848,1245243,109,matched,normalized_exact,high,
+VIA DEI PICENI,VIA DEI PICENI,1,62,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA DEI PINI,VIA DEI PINI,1,76,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA DEI PIOPPI,VIA DEI PIOPPI,1,73,VIA DEI PIOPPI,VIA DEI PIOPPI,1246132,6,matched,normalized_exact,high,
+VIA DEI PLATANI,VIA DEI PLATANI,1,73,VIA DEI PLATANI,VIA DEI PLATANI,1246177,0,matched,normalized_exact,high,
+VIA DEI ROMANI,VIA DEI ROMANI,1,72,VIA DEI ROMANI,VIA DEI ROMANI,1245244,33,matched,normalized_exact,high,
+VIA DEI ROVERI,VIA DEI ROVERI,1,56,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA DEI SABELLI,VIA DEI SABELLI,1,72,VIA DEI SABELLI,VIA DEI SABELLI,1246143,5,matched,normalized_exact,high,
+VIA DEI SALENTINI,VIA DEI SALENTINI,1,62,VIA DEI SALENTINI,VIA DEI SALENTINI,1246251,3,matched,normalized_exact,high,
+VIA DEI SALICI,VIA DEI SALICI,1,73,VIA DEI SALICI,VIA DEI SALICI,1245245,21,matched,normalized_exact,high,
+VIA DEI SANNITI,VIA DEI SANNITI,1,60,VIA DEI SANNITI,VIA DEI SANNITI,1246123,29,matched,normalized_exact,high,
+VIA DEI SARDI,VIA DEI SARDI,1,71,VIA DEI SARDI,VIA DEI SARDI,1246137,2,matched,normalized_exact,high,
+VIA DEI SICULI,VIA DEI SICULI,1,72,VIA DEI SICULI,VIA DEI SICULI,1246150,3,matched,normalized_exact,high,
+VIA DEI TAURINI,VIA DEI TAURINI,1,71,VIA DEI TAURINI,VIA DEI TAURINI,1246204,7,matched,normalized_exact,high,
+VIA DEI TIGLI,VIA DEI TIGLI,1,73,VIA DEI TIGLI,VIA DEI TIGLI,1245246,8,matched,normalized_exact,high,
+VIA DEI TULIPANI,VIA DEI TULIPANI,1,64,VIA DEI TULIPANI,VIA DEI TULIPANI,1246002,7,matched,normalized_exact,high,
+VIA DEI VOLSCI,VIA DEI VOLSCI,1,72,VIA DEI VOLSCI,VIA DEI VOLSCI,1246241,6,matched,normalized_exact,high,
+VIA DEL LAVORO,VIA DEL LAVORO,1,43,VIA DEL LAVORO,VIA DEL LAVORO,1245248,11,matched,normalized_exact,high,
+VIA DEL MULINO,VIA DEL MULINO,1,27,VIA DEL MULINO,VIA DEL MULINO,1245250,2,matched,normalized_exact,high,
+VIA DEL PROGRESSO,VIA DEL PROGRESSO,2,63; 64,VIA DEL PROGRESSO,VIA DEL PROGRESSO,1245251,503,matched,normalized_exact,high,
+VIA DEL SOCCORSO,VIA DEL SOCCORSO,1,28,VIA DEL SOCCORSO,VIA DEL SOCCORSO,1246140,18,matched,normalized_exact,high,
+VIA DELLA CASA COMUNALE,VIA DELLA CASA COMUNALE,1,77,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA DELLA PACE,VIA DELLA PACE,1,33,VIA DELLA PACE,VIA DELLA PACE,1245255,4,matched,normalized_exact,high,
+VIA DELLA QUERCIA ANTICA,VIA DELLA QUERCIA ANTICA,1,69,VIA DELLA QUERCIA ANTICA,VIA DELLA QUERCIA ANTICA,1245256,11,matched,normalized_exact,high,
+VIA DELLA VITTORIA,VIA DELLA VITTORIA,2,68; 69,VIA DELLA VITTORIA,VIA DELLA VITTORIA,1245261,80,matched,normalized_exact,high,
+VIA DELLE BETULLE,VIA DELLE BETULLE,1,71,VIA DELLE BETULLE,VIA DELLE BETULLE,1246130,0,matched,normalized_exact,high,
+VIA DELLE GINESTRE,VIA DELLE GINESTRE,1,64,VIA DELLE GINESTRE,VIA DELLE GINESTRE,1245262,17,matched,normalized_exact,high,
+VIA DELLE IMPRESE,VIA DELLE IMPRESE,1,65,VIA DELLE IMPRESE,VIA DELLE IMPRESE,1245263,35,matched,normalized_exact,high,
+VIA DELLE PALME,VIA DELLE PALME,1,65,VIA DELLE PALME,VIA DELLE PALME,1245265,26,matched,normalized_exact,high,
+VIA DELLE QUERCE,VIA DELLE QUERCE,1,71,VIA DELLE QUERCE,VIA DELLE QUERCE,1246277,8,matched,normalized_exact,high,
+VIA DELLE ROSE,VIA DELLE ROSE,1,35,VIA DELLE ROSE,VIA DELLE ROSE,1245266,35,matched,normalized_exact,high,
+VIA DELLE SEQUOIE,VIA DELLE SEQUOIE,1,34,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA DELLE TAMERICI,VIA DELLE TAMERICI,1,65,VIA DELLE TAMERICI,VIA DELLE TAMERICI,1246121,7,matched,normalized_exact,high,
+VIA DELLE TERME,VIA DELLE TERME,1,34,VIA DELLE TERME,VIA DELLE TERME,1245267,103,matched,normalized_exact,high,
+VIA DELLE VIGNE,VIA DELLE VIGNE,1,62,VIA DELLE VIGNE,VIA DELLE VIGNE,1245268,6,matched,normalized_exact,high,
+VIA DELLE VIOLE,VIA DELLE VIOLE,1,69,VIA DELLE VIOLE,VIA DELLE VIOLE,1245269,15,matched,normalized_exact,high,
+VIA DOMENICO CURCIO,VIA DOMENICO CURCIO,1,28,VIA DOMENICO CURCIO,VIA DOMENICO CURCIO,1246180,8,matched,normalized_exact,high,
+VIA DOMENICO FRANZI,VIA DOMENICO FRANZI',1,37,VIA DOMENICO FRANZI,VIA DOMENICO FRANZI',1245353,14,matched,normalized_exact,high,
+VIA DOMENICO PETRUZZA,VIA DOMENICO PETRUZZA,1,72,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA DOMENICO RUBINO,VIA DOMENICO RUBINO,1,37,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA DON GIUSEPPE CERRA,VIA DON GIUSEPPE CERRA,1,24,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA DON LORENZO MILANI,VIA DON LORENZO MILANI,1,41,VIA DON LORENZO MILANI,VIA DON LORENZO MILANI,1246283,2,matched,normalized_exact,high,
+VIA DON STURZO,VIA DON STURZO,1,43,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA DUCA D AOSTA,VIA DUCA D'AOSTA,1,21,VIA DUCA D AOSTA,VIA DUCA D'AOSTA,1245279,59,matched,normalized_exact,high,
+VIA DUCA DEGLI ABRUZZI,VIA DUCA DEGLI ABRUZZI,1,42,VIA DUCA DEGLI ABRUZZI,VIA DUCA DEGLI ABRUZZI,1245280,27,matched,normalized_exact,high,
+VIA DUCA DI GENOVA,VIA DUCA DI GENOVA,1,40,VIA DUCA DI GENOVA,VIA DUCA DI GENOVA,1245281,22,matched,normalized_exact,high,
+VIA DUCCIO DA BONINSEGNA,VIA DUCCIO DA BONINSEGNA,1,37,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA E ATRIO D PORCHIO,VIA E ATRIO D. PORCHIO,1,38,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA E ATRIO LEOPARDI,VIA E ATRIO LEOPARDI,1,41,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA E BARBERIO,VIA E. BARBERIO,1,27,VIA EMILIO BARBERIO,VIA EMILIO BARBERIO,1245283,13,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VIA E BERLINGUER,VIA E. BERLINGUER,1,72,VIA ENRICO BERLINGUER,VIA ENRICO BERLINGUER,1245293,2,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VIA E BORRELLO,VIA E. BORRELLO,1,37,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA E COLOSIMO,VIA E. COLOSIMO,1,3,VIA ENRICO COLOSIMO,VIA ENRICO COLOSIMO,1245171,32,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VIA E CONTRADA CANNETO,VIA E C.DA CANNETO,1,31,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA E CONTRADA CAPITOLO,VIA E C.DA CAPITOLO,1,27,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA E CONTRADA CAVALLERIZZA,VIA E C.DA CAVALLERIZZA,1,14,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA E CONTRADA FILIPPA,VIA E C.DA FILIPPA,1,29,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA E CONTRADA PIRO,VIA E C.DA PIRO,1,20,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA E CONTRADA PRUNIA,VIA E C.DA PRUNIA,1,37,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA E CONTRADA VIGNOLA STATTI,VIA E C.DA VIGNOLA STATTI,1,7,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA E CORSO GRAMSCI,VIA E CORSO GRAMSCI,1,75,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA E D NICOTERA,VIA E. D. NICOTERA,1,39,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA E DE FILIPPO,VIA E. DE FILIPPO,1,31,VIA EDUARDO DE FILIPPO,VIA EDUARDO DE FILIPPO,1245287,11,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VIA E DE NICOLA,VIA E. DE NICOLA,1,72,VIA ENRICO DE NICOLA,VIA ENRICO DE NICOLA,1245214,8,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VIA E FERMI,VIA E. FERMI,1,9,VIA ENRICO FERMI,VIA ENRICO FERMI,1245294,6,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VIA E FILIBERTO,VIA E. FILIBERTO,1,40,VIA EMANUELE FILIBERTO,VIA EMANUELE FILIBERTO,1245290,7,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VIA E GRANDE,VIA E. GRANDE,1,3,VIA EMANUELE GRANDE,VIA EMANUELE GRANDE,1245288,4,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VIA E LARGHETTO OSPEDALE,VIA E LARGHETTO OSPEDALE,1,7,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA E LARGO GIARDINETTO,VIA E LARGO GIARDINETTO,1,27,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA E LARGO GINNASIO,VIA E LARGO GINNASIO,1,8,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA E LOC CERASOLO,VIA E LOC. CERASOLO,1,77,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA E LOC COSCHI,VIA E LOC. COSCHI,1,77,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA E LOC SPARTIVENTO,VIA E LOC. SPARTIVENTO,1,32,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA E MAIORANA,VIA E. MAIORANA,1,37,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA E MONTESANTI,VIA E. MONTESANTI,1,36,VIA EDOARDO MONTESANTI,VIA EDOARDO MONTESANTI,1245286,8,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VIA E R DE MEDICI,VIA E. R. DE MEDICI,1,3,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA E RAMPA PEDICHIUSA,VIA E RAMPA PEDICHIUSA,1,26,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA E RIONE ARCURI,VIA E RIONE ARCURI,1,30,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA E RIONE CASE NOVE,VIA E RIONE CASE NOVE,1,30,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA E RIONE GRANDINETTI,VIA E RIONE GRANDINETTI,1,30,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA E RIONE MANDONI,VIA E RIONE MANDONI,1,30,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA E SALITA CARCERI,VIA E SALITA CARCERI,1,10,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA E TRAV CANNETO MORELLI,VIA E TRAV. CANNETO MORELLI,1,31,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA E TRAV L EINAUDI,VIA E TRAV. L. EINAUDI,1,42,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA E TRAV MADONNA DELLA SPINA,VIA E TRAV. MADONNA DELLA SPINA,1,24,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA E TRAV S D IPPOLITO,VIA E TRAV. S. D'IPPOLITO,1,61,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA E TRAVERSE DEL MARE,VIA E TRAVERSE DEL MARE,1,52,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA E TRAVERSE DELLE NAZIONI,VIA E TRAVERSE DELLE NAZIONI,1,55,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA E TRAVERSE G AMENDOLA,VIA E TRAVERSE G. AMENDOLA,1,59,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA E TRAVERSE G CIANFLONE,VIA E TRAVERSE G. CIANFLONE,1,75,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA E TRAVERSE G DELEDDA,VIA E TRAVERSE G. DELEDDA,1,37,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA E TRAVERSE PITAGORA,VIA E TRAVERSE PITAGORA,1,31,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA E VICHI CAFALDO,VIA E VICHI CAFALDO,1,38,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA E VICHI CAVOUR,VIA E VICHI CAVOUR,1,34,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA E VICHI CONCIAPELLE,VIA E VICHI CONCIAPELLE,1,26,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA E VICHI CORTESE,VIA E VICHI CORTESE,1,29,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA E VICHI FIMIANI,VIA E VICHI FIMIANI,1,29,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA E VICHI FONTANA S NICOLA,VIA E VICHI FONTANA S. NICOLA,1,29,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA E VICHI GARIBALDI,VIA E VICHI GARIBALDI,1,26,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA E VICHI M PAOLA,VIA E VICHI M. PAOLA,1,3,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA E VICHI MAZZINI,VIA E VICHI MAZZINI,1,38,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA E VICHI NICOTERA,VIA E VICHI NICOTERA,1,29,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA E VICHI POERIO,VIA E VICHI POERIO,1,40,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA E VICHI S LUCIA,VIA E VICHI S. LUCIA,1,26,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA E VICHI SS SALVATORE,VIA E VICHI SS. SALVATORE,1,27,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA E VICHI TIMPONE,VIA E VICHI TIMPONE,1,26,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA E VICO CALIA,VIA E VICO CALIA,1,10,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA E VICO CALVARIO,VIA E VICO CALVARIO,1,25,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA E VICO CAP MANFREDI,VIA E VICO CAP. MANFREDI,1,9,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA E VICO CONFORTI,VIA E VICO CONFORTI,1,25,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA E VICO FRATELLI BANDIERA,VIA E VICO F. LLI BANDIERA,1,34,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA E VICO G SALADINI,VIA E VICO G.SALADINI,1,22,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA E VICO GARDONE,VIA E VICO GARDONE,1,8,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA E VICO GIUDECA,VIA E VICO GIUDECA,1,29,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA E VICO LAZIO,VIA E VICO LAZIO,1,23,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA E VICO MARASCO,VIA E VICO MARASCO,1,27,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA E VICO PARTENOPE,VIA E VICO PARTENOPE,1,38,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA E VICO S MARIA,VIA E VICO S. MARIA,1,9,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA E VICO SERRA,VIA E VICO SERRA,1,27,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA E VICO TRE PONTI,VIA E VICO TRE PONTI,1,38,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA E VICO U DE MEDICI,VIA E VICO U. DE MEDICI,1,10,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA EDOARDO E FELICE FIORE,VIA EDOARDO E FELICE FIORE,1,55,VIA EDOARDO E FELICE FIORE,VIA EDOARDO E FELICE FIORE,1245285,52,matched,normalized_exact,high,
+VIA EMILIA,VIA EMILIA,1,22,VIA EMILIA,VIA EMILIA,1245291,61,matched,normalized_exact,high,
+VIA EMILIO LA SCALA,VIA EMILIO LA SCALA,1,67,VIA EMILIO LA SCALA,VIA EMILIO LA SCALA,1246191,47,matched,normalized_exact,high,
+VIA EMILIO LUSSU,VIA EMILIO LUSSU,1,59,VIA EMILIO LUSSU,VIA EMILIO LUSSU,1245292,1,matched,normalized_exact,high,
+VIA EMILIO SEGRE,VIA EMILIO SEGRE,1,37,VIA EMILIO SEGRE,VIA EMILIO SEGRE,1245300,17,matched,normalized_exact,high,
+VIA ERNESTO PONTIERI,VIA ERNESTO PONTIERI,1,64,VIA ERNESTO PONTIERI,VIA ERNESTO PONTIERI,1245298,8,matched,normalized_exact,high,
+VIA EROI DI SAPRI,VIA EROI DI SAPRI,1,43,VIA EROI DI SAPRI,VIA EROI DI SAPRI,1245299,167,matched,normalized_exact,high,
+VIA EUCLIDE,VIA EUCLIDE,1,41,VIA EUCLIDE,VIA EUCLIDE,1246100,12,matched,normalized_exact,high,
+VIA EUGENIO MONTALE,VIA EUGENIO MONTALE,1,52,VIA EUGENIO MONTALE,VIA EUGENIO MONTALE,1245302,26,matched,normalized_exact,high,
+VIA EUROPA,VIA EUROPA,1,52,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA F ANTONIO E LEOPOLDO FUNARO,VIA F. ANTONIO E LEOPOLDO FUNARO,1,37,VIA FRANCESCO ANTONIO E LEOPOLDO FUNARO,VIA FRANCESCO ANTONIO E LEOPOLDO FUNARO,1245341,22,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VIA F BLAGANO,VIA F. BLAGANO',1,66,VIA FRANCESCO BLAGANO,VIA FRANCESCO BLAGANO',1246225,20,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VIA F BORRELLO,VIA F. BORRELLO,1,61,VIA FRANCESCO BORRELLO,VIA FRANCESCO BORRELLO,1245342,18,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VIA F CAPARELLO,VIA F. CAPARELLO,1,33,VIA FRANCESCO CAPARELLO,VIA FRANCESCO CAPARELLO,1245343,21,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VIA F CILEA,VIA F. CILEA,1,75,VIA FRANCESCO CILEA,VIA FRANCESCO CILEA,1245344,21,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VIA F COLELLI,VIA F. COLELLI,1,11,VIA FRANCESCO COLELLI,VIA FRANCESCO COLELLI,1245345,90,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VIA F CORRIDONI,VIA F. CORRIDONI,1,4,VIA FILIPPO CORRIDONI,VIA FILIPPO CORRIDONI,1245323,17,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VIA F COSTABILE,VIA F. COSTABILE,1,36,VIA FRANCESCO COSTABILE,VIA FRANCESCO COSTABILE,1245187,27,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VIA F CUPIRAGGI,VIA F. CUPIRAGGI,1,33,VIA FRANCESCO CUPIRAGGI,VIA FRANCESCO CUPIRAGGI,1245200,6,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VIA F D IPPOLITO,VIA F. D'IPPOLITO,1,3,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA F FILZI,VIA F. FILZI,1,4,VIA FABIO FILZI,VIA FABIO FILZI,1245305,15,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VIA F JERACE,VIA F. JERACE,1,35,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA F LENORMANT,VIA F. LENORMANT,1,64,VIA FRANCESCO LENORMANT,VIA FRANCESCO LENORMANT,1245331,29,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VIA F RENDA,VIA F. RENDA,1,34,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA F RISMONDI,VIA F. RISMONDI,1,4,VIA FRANCESCO RISMONDI,VIA FRANCESCO RISMONDI,1245351,9,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VIA F TETRO,VIA F. TETRO,1,52,VIA FRANCESCO TETRO,VIA FRANCESCO TETRO,1245362,3,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VIA F TRAMONTE E P CRISTIANO,VIA F. TRAMONTE E P. CRISTIANO,1,22,VIA FRANCESCO TRAMONTE E PASQUALE CRISTIANO,VIA FRANCESCO TRAMONTE E PASQUALE CRISTIANO,1246284,0,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VIA F TURATI,VIA F. TURATI,1,3,VIA FILIPPO TURATI,VIA FILIPPO TURATI,1245324,5,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VIA F VIRGILLO,VIA F. VIRGILLO,1,11,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA FALERNO,VIA FALERNO,1,62,VIA FALERNO,VIA FALERNO,1246227,2,matched,normalized_exact,high,
+VIA FAVONIO,VIA FAVONIO,1,49,VIA FAVONIO,VIA FAVONIO,1246141,0,matched,normalized_exact,high,
+VIA FEDERICO II,VIA FEDERICO II,1,26,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA FEDERICO MONTESANTI,VIA FEDERICO MONTESANTI,1,65,VIA FEDERICO MONTESANTI,VIA FEDERICO MONTESANTI,1246209,9,matched,normalized_exact,high,
+VIA FEDERICO NICOTERA,VIA FEDERICO NICOTERA,1,14,VIA FEDERICO NICOTERA,VIA FEDERICO NICOTERA,1245310,69,matched,normalized_exact,high,
+VIA FELICE MONTESANTI,VIA FELICE MONTESANTI,1,65,VIA FELICE MONTESANTI,VIA FELICE MONTESANTI,1246099,26,matched,normalized_exact,high,
+VIA FELICETTA,VIA FELICETTA,1,32,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA FERRARA,VIA FERRARA,1,40,VIA FERRARA,VIA FERRARA,1245314,1,matched,normalized_exact,high,
+VIA FIDIA,VIA FIDIA,1,35,VIA FIDIA,VIA FIDIA,1245321,22,matched,normalized_exact,high,
+VIA FIRENZE,VIA FIRENZE,1,42,VIA FIRENZE,VIA FIRENZE,1245328,17,matched,normalized_exact,high,
+VIA FIUME,VIA FIUME,1,36,VIA FIUME,VIA FIUME,1245329,55,matched,normalized_exact,high,
+VIA FONTE,VIA FONTE,1,8,VIA FONTE,VIA FONTE,1246127,2,matched,normalized_exact,high,
+VIA FORMITI,VIA FORMITI,1,21,VIA FORMITI,VIA FORMITI,1245337,15,matched,normalized_exact,high,
+VIA FORTINA,VIA FORTINA,1,3,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA FOSSE ARDEATINE,VIA FOSSE ARDEATINE,1,33,VIA FOSSE ARDEATINE,VIA FOSSE ARDEATINE,1245339,12,matched,normalized_exact,high,
+VIA FRANCESCO ACRI,VIA FRANCESCO ACRI,1,67,VIA FRANCESCO ACRI,VIA FRANCESCO ACRI,1245340,10,matched,normalized_exact,high,
+VIA FRANCESCO FERLAINO,VIA FRANCESCO FERLAINO,2,5; 17,VIA FRANCESCO FERLAINO,VIA FRANCESCO FERLAINO,1245346,38,matched,normalized_exact,high,
+VIA FRANCESCO GIOVANNI RUBINO,VIA FRANCESCO GIOVANNI RUBINO,1,37,VIA FRANCESCO GIOVANNI RUBINO,VIA FRANCESCO GIOVANNI RUBINO,1245348,5,matched,normalized_exact,high,
+VIA FRANCESCO TURCO,VIA FRANCESCO TURCO,1,37,VIA FRANCESCO TURCO,VIA FRANCESCO TURCO,1245352,25,matched,normalized_exact,high,
+VIA FRANZI,VIA FRANZI',1,34,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA FRATE NICOLA DA SAMBIASE,VIA FRATE NICOLA DA SAMBIASE,1,41,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA FRATELLI CERVI,VIA F. lli CERVI,1,32,VIA FRATELLI CERVI,VIA FRATELLI CERVI,1245357,24,matched,normalized_exact,high,
+VIA FRATELLI PONZIO,VIA F. LLI PONZIO,1,3,VIA FRATELLI PONZIO,VIA FRATELLI PONZIO,1245359,14,matched,normalized_exact,high,
+VIA FRATELLI ROSSELLI,VIA F. LLI ROSSELLI,1,58,VIA FRATELLI ROSSELLI,VIA FRATELLI ROSSELLI,1246111,3,matched,normalized_exact,high,
+VIA FRIULI,VIA FRIULI,1,22,VIA FRIULI,VIA FRIULI,1245361,10,matched,normalized_exact,high,
+VIA FRONTERA TOMMASO,VIA FRONTERA TOMMASO,1,24,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA G B CAPUTI,VIA G. B. CAPUTI,1,37,VIA GIOVAN BATTISTA CAPUTI,VIA GIOVAN BATTISTA CAPUTI,1245407,12,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VIA G B PARRACOCCHIA,VIA G. B. PARRACOCCHIA,1,61,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA G BERCHET,VIA G. BERCHET,1,32,VIA GIOVANNI BERCHET,VIA GIOVANNI BERCHET,1245412,3,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VIA G BRUNO,VIA G. BRUNO,1,40,VIA GIORDANO BRUNO,VIA GIORDANO BRUNO,1245403,28,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VIA G BUDERA,VIA G. BUDERA,1,37,VIA GIUSEPPE BUDERA,VIA GIUSEPPE BUDERA,1245426,25,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VIA G CASTALDI,VIA G. CASTALDI,1,32,VIA GIUSEPPE CASTALDI,VIA GIUSEPPE CASTALDI,1245427,8,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VIA G D ANNUNZIO,VIA G. D'ANNUNZIO,1,38,VIA GABRIELE D ANNUNZIO,VIA GABRIELE D'ANNUNZIO,1245208,25,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VIA G DA FIORE,VIA G. DA FIORE,1,18,VIA GIOACCHINO DA FIORE,VIA GIOACCHINO DA FIORE,1245399,46,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VIA G DE SENSI,VIA G. DE SENSI,1,31,VIA GIOVANNI DE SENSI,VIA GIOVANNI DE SENSI,1246097,4,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VIA G DI VITTORIO,VIA G. DI VITTORIO,1,32,VIA GIUSEPPE DI VITTORIO,VIA GIUSEPPE DI VITTORIO,1245428,11,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VIA G DONIZETTI,VIA G. DONIZETTI,1,76,VIA GAETANO DONIZETTI,VIA GAETANO DONIZETTI,1245369,11,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VIA G FIORE,VIA G. FIORE,1,33,VIA GENERALE FIORE,VIA GENERALE FIORE,1245384,5,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VIA G GALILEI,VIA G. GALILEI,1,38,VIA GALILEO GALILEI,VIA GALILEO GALILEI,1245371,11,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VIA G GENTILE,VIA G. GENTILE,1,32,VIA GIOVANNI GENTILE,VIA GIOVANNI GENTILE,1245415,5,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VIA G GIOLITTI,VIA G. GIOLITTI,1,68,VIA GIOVANNI GIOLITTI,VIA GIOVANNI GIOLITTI,1245416,13,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VIA G GRONCHI,VIA G. GRONCHI,1,68,VIA GIOVANNI GRONCHI,VIA GIOVANNI GRONCHI,1245417,8,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VIA G LA PIRA,VIA G. LA PIRA,1,59,VIA GIORGIO LA PIRA,VIA GIORGIO LA PIRA,1245404,67,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VIA G MAIONE,VIA G. MAIONE,1,38,VIA GIUSEPPE MAIONE,VIA GIUSEPPE MAIONE,1245432,5,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VIA G MARCONI,VIA G. MARCONI,4,18; 19; 40; 41,VIALE GUGLIELMO MARCONI,VIALE GUGLIELMO MARCONI,1245459,283,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VIA G MATTEOTTI,VIA G. MATTEOTTI,1,39,VIA GIACOMO MATTEOTTI,VIA GIACOMO MATTEOTTI,1245390,26,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VIA G MURAT,VIA G. MURAT,4,65; 70,VIA GIOACCHINO MURAT,VIA GIOACCHINO MURAT,1245400,127,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VIA G PASCOLI,VIA G. PASCOLI,1,43,VIA GIOVANNI PASCOLI,VIA GIOVANNI PASCOLI,1245419,51,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VIA G PORCHIO,VIA G. PORCHIO,1,35,VIA GIUSTINIANO PORCHIO,VIA GIUSTINIANO PORCHIO,1245440,14,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VIA G PUCCINI,VIA G. PUCCINI,1,75,VIA GIACOMO PUCCINI,VIA GIACOMO PUCCINI,1245391,5,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VIA G RHOLFS,VIA G. RHOLFS,1,32,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA G ROSSINI,VIA G. ROSSINI,1,76,VIA GIOACHINO ROSSINI,VIA GIOACHINO ROSSINI,1245401,8,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VIA G SARAGAT,VIA G. SARAGAT,1,72,VIA GIUSEPPE SARAGAT,VIA GIUSEPPE SARAGAT,1245436,17,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VIA G SCARDAMAGLIA,VIA G. SCARDAMAGLIA,1,13,VIA GESUALDO SCARDAMAGLIA,VIA GESUALDO SCARDAMAGLIA,1245388,21,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VIA G SCIREA,VIA G. SCIREA,1,31,VIA GAETANO SCIREA,VIA GAETANO SCIREA,1246276,8,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VIA G TOMAINO,VIA G. TOMAINO,1,19,VIA GIUSEPPE TOMAINO,VIA GIUSEPPE TOMAINO,1245456,6,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VIA G VERGA,VIA G. VERGA,1,34,VIA GIOVANNI VERGA,VIA GIOVANNI VERGA,1245422,4,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VIA G ZANELLATI,VIA G. ZANELLATI,1,52,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA GACCIA,VIA GACCIA,1,66,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA GAGARIN,VIA GAGARIN,1,52,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA GALATI,VIA GALATI,1,35,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA GALLI,VIA GALLI,1,12,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA GALLIANO,VIA GALLIANO,1,40,VIA GALLIANO,VIA GALLIANO,1245372,20,matched,normalized_exact,high,
+VIA GALLUPPI,VIA GALLUPPI,1,40,VIA GALLUPPI,VIA GALLUPPI,1245374,37,matched,normalized_exact,high,
+VIA GALVANI,VIA GALVANI,1,9,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA GARCIA LORCA,VIA GARCIA LORCA,1,52,VIA GARCIA LORCA,VIA GARCIA LORCA,1245377,21,matched,normalized_exact,high,
+VIA GASPARE MAZZEI,VIA GASPARE MAZZEI,1,75,VIA GASPARE MAZZEI,VIA GASPARE MAZZEI,1245379,9,matched,normalized_exact,high,
+VIA GEN C A DALLA CHIESA,VIA GEN. C. A. DALLA CHIESA,1,14,VIA GENERALE CARLO ALBERTO DALLA CHIESA,VIA GENERALE CARLO ALBERTO DALLA CHIESA,1246266,17,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VIA GEN P CRISTAUDO,VIA GEN. P. CRISTAUDO,1,37,VIA GENERALE PIETRO CRISTAUDO,VIA GENERALE PIETRO CRISTAUDO,1245385,9,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VIA GENERALE SCALZO FELICE,VIA GENERALE SCALZO FELICE,1,67,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA GENNARO E LORENZO ZAFFINA,VIA GENNARO E LORENZO ZAFFINA,1,43,VIA GENNARO E LORENZO ZAFFINA,VIA GENNARO E LORENZO ZAFFINA,1245386,13,matched,normalized_exact,high,
+VIA GIARDINO DI RENDA,VIA GIARDINO DI RENDA,1,57,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA GIO BERARDINO VESCIO,VIA GIO' BERARDINO VESCIO,1,31,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA GIOBERTI,VIA GIOBERTI,1,40,VIA GIOBERTI,VIA GIOBERTI,1245402,39,matched,normalized_exact,high,
+VIA GIORGIO PINNA,VIA GIORGIO PINNA,1,55,VIA GIORGIO PINNA,VIA GIORGIO PINNA,1245405,72,matched,normalized_exact,high,
+VIA GIOVANNI ALDINI,VIA GIOVANNI ALDINI,1,20,VIA GIOVANNI ALDINI,VIA GIOVANNI ALDINI,1246242,4,matched,normalized_exact,high,
+VIA GIOVANNI MACRI,VIA GIOVANNI MACRI',1,35,VIA GIOVANNI MACRI,VIA GIOVANNI MACRI',1246139,4,matched,normalized_exact,high,
+VIA GIOVANNI XXIII,VIA GIOVANNI XXIII,1,54,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA GIULIA,VIA GIULIA,1,23,VIA GIULIA,VIA GIULIA,1245425,5,matched,normalized_exact,high,
+VIA GIUSEPPE CONTE,VIA GIUSEPPE CONTE,2,66,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA GIUSEPPE LAZZATI,VIA GIUSEPPE LAZZATI,1,69,VIA GIUSEPPE LAZZATI,VIA GIUSEPPE LAZZATI,1246289,3,matched,normalized_exact,high,
+VIA GIUSEPPINA DE STEFANI,VIA GIUSEPPINA DE STEFANI,1,28,VIA GIUSEPPINA DE STEFANI,VIA GIUSEPPINA DE STEFANI,1246203,21,matched,normalized_exact,high,
+VIA GIUSTINO FORTUNATO,VIA GIUSTINO FORTUNATO,1,66,VIA GIUSTINO FORTUNATO,VIA GIUSTINO FORTUNATO,1245441,20,matched,normalized_exact,high,
+VIA GOFFREDO MALATERRA,VIA GOFFREDO MALATERRA,1,68,VIA GOFFREDO MALATERRA,VIA GOFFREDO MALATERRA,1245443,67,matched,normalized_exact,high,
+VIA GOITO,VIA GOITO,1,69,VIA GOITO,VIA GOITO,1246147,27,matched,normalized_exact,high,
+VIA GORIZIA,VIA GORIZIA,1,36,VIA GORIZIA,VIA GORIZIA,1245445,62,matched,normalized_exact,high,
+VIA GOVERNA,VIA GOVERNA,1,40,VIA GOVERNA,VIA GOVERNA,1245446,15,matched,normalized_exact,high,
+VIA GRANDE,VIA GRANDE,1,26,VIA GRANDE,VIA GRANDE,1245447,3,matched,normalized_exact,high,
+VIA GRAPPA,VIA GRAPPA,1,10,VIA GRAPPA,VIA GRAPPA,1246267,29,matched,normalized_exact,high,
+VIA GRECALE,VIA GRECALE,1,49,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA GRIMALDI,VIA GRIMALDI,1,40,VIA GRIMALDI,VIA GRIMALDI,1245454,25,matched,normalized_exact,high,
+VIA GUIDO DORSO,VIA GUIDO DORSO,1,66,VIA GUIDO DORSO,VIA GUIDO DORSO,1245462,41,matched,normalized_exact,high,
+VIA I D IPPOLITO,VIA I. D'IPPOLITO,1,10,VIA IPPOLITO D IPPOLITO,VIA IPPOLITO D'IPPOLITO,1245544,8,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VIA IDA FALVO D URSO,VIA IDA FALVO D'URSO,1,28,VIA IDA FALVO D URSO,VIA IDA FALVO D'URSO,1246169,29,matched,normalized_exact,high,
+VIA ING BUTERA,VIA ING. BUTERA,1,32,VIA INGEGNERE BUTERA,VIA INGEGNERE BUTERA,1245541,11,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VIA ING G D AUDINO,VIA ING. G. D'AUDINO,1,75,VIA INGEGNERE GIUSEPPE D AUDINO,VIA INGEGNERE GIUSEPPE D'AUDINO,1245542,5,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VIA INNOCENZO IX,VIA INNOCENZO IX,1,19,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA ISAAC NEWTON,VIA ISAAC NEWTON,1,20,VIA ISAAC NEWTON,VIA ISAAC NEWTON,1245545,51,matched,normalized_exact,high,
+VIA ISNARDI,VIA ISNARDI,1,36,VIA ISNARDI,VIA ISNARDI,1245546,7,matched,normalized_exact,high,
+VIA ISONZO,VIA ISONZO,1,6,VIA ISONZO,VIA ISONZO,1245547,91,matched,normalized_exact,high,
+VIA ISTRIA,VIA ISTRIA,1,23,VIA ISTRIA,VIA ISTRIA,1245548,39,matched,normalized_exact,high,
+VIA ITALIA GENTILE,VIA ITALIA GENTILE,1,28,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA JAN PALACH,VIA JAN PALACH,1,53,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA JEAN HENRY DUNANT,VIA JEAN HENRY DUNANT,1,61,VIA JEAN HENRY DUNANT,VIA JEAN HENRY DUNANT,1245561,20,matched,normalized_exact,high,
+VIA L CALOGERO,VIA L. CALOGERO,1,52,VIA LORENZO CALOGERO,VIA LORENZO CALOGERO,1245578,2,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VIA L DA VINCI,VIA L. DA VINCI,1,9,VIA LEONARDO DA VINCI,VIA LEONARDO DA VINCI,1245572,55,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VIA L LONGO,VIA L. LONGO,1,59,VIA LUIGI LONGO,VIA LUIGI LONGO,1245585,12,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VIA L PULLIA,VIA L. PULLIA,1,57,VIA LUIGI PULLIA,VIA LUIGI PULLIA,1246184,1,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VIA L RIZZO,VIA L. RIZZO,1,33,VIA LUIGI RIZZO,VIA LUIGI RIZZO,1245804,11,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VIA L SETTEMBRINI,VIA L. SETTEMBRINI,1,43,VIA LUIGI SETTEMBRINI,VIA LUIGI SETTEMBRINI,1245587,115,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VIA L SIGNORELLI,VIA L. SIGNORELLI,1,32,VIA LUCA SIGNORELLI,VIA LUCA SIGNORELLI,1245580,10,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VIA L STELLA,VIA L. STELLA,1,35,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA LAMARMORA,VIA LAMARMORA,1,38,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA LAMBRUSCO,VIA LAMBRUSCO,1,62,VIA LAMBRUSCO,VIA LAMBRUSCO,1245565,3,matched,normalized_exact,high,
+VIA LIGURIA,VIA LIGURIA,1,23,VIA LIGURIA,VIA LIGURIA,1245574,41,matched,normalized_exact,high,
+VIA LIPARI,VIA LIPARI,1,22,VIA LIPARI,VIA LIPARI,1245575,9,matched,normalized_exact,high,
+VIA LISSANIA,VIA LISSANIA,1,8,VIA LISSANIA,VIA LISSANIA,1245576,18,matched,normalized_exact,high,
+VIA LOMBARDIA,VIA LOMBARDIA,1,23,VIA LOMBARDIA,VIA LOMBARDIA,1245577,37,matched,normalized_exact,high,
+VIA LUIGI DI SARRO,VIA LUIGI DI SARRO,1,18,VIA LUIGI DI SARRO,VIA LUIGI DI SARRO,1245582,18,matched,normalized_exact,high,
+VIA LUIGI PIRANDELLO,VIA LUIGI PIRANDELLO,1,37,VIA LUIGI PIRANDELLO,VIA LUIGI PIRANDELLO,1245586,19,matched,normalized_exact,high,
+VIA LUPIA,VIA LUPIA,1,23,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA M BIAGI,VIA M. BIAGI,1,53,VIA MARCO BIAGI,VIA MARCO BIAGI,1246222,3,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VIA M BUONARROTI,VIA M. BUONARROTI,1,31,VIA MICHELANGELO BUONARROTI,VIA MICHELANGELO BUONARROTI,1245639,48,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VIA M DANTONA,VIA M. DANTONA,1,53,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA M DE BIASE,VIA M. DE BIASE,1,32,VIA MATTEO DE BIASE,VIA MATTEO DE BIASE,1245626,8,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VIA M K GANDHI,VIA M. K. GANDHI,1,58,VIA MOHANDAS KARAMCHAND GANDHI,VIA MOHANDAS KARAMCHAND GANDHI,1245376,31,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VIA M PANE,VIA M. PANE,1,43,VIA MICHELE PANE,VIA MICHELE PANE,1245722,17,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VIA MACELLO VECCHIO,VIA MACELLO VECCHIO,1,7,VIA MACELLO VECCHIO,VIA MACELLO VECCHIO,1246138,19,matched,normalized_exact,high,
+VIA MADONNA DEL CARMINE,VIA MADONNA DEL CARMINE,1,39,VIA MADONNA DEL CARMINE,VIA MADONNA DEL CARMINE,1245593,17,matched,normalized_exact,high,
+VIA MAESTRALE,VIA MAESTRALE,1,49,VIA MAESTRALE,VIA MAESTRALE,1246240,0,matched,normalized_exact,high,
+VIA MAGENTA,VIA MAGENTA,1,39,VIA MAGENTA,VIA MAGENTA,1245594,51,matched,normalized_exact,high,
+VIA MAGG TOSELLI,VIA MAGG. TOSELLI,1,38,VIA MAGGIORE TOSELLI,VIA MAGGIORE TOSELLI,1245596,20,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VIA MAGGIORDOMO,VIA MAGGIORDOMO,1,8,VIA MAGGIORDOMO,VIA MAGGIORDOMO,1245595,25,matched,normalized_exact,high,
+VIA MAGNA GRECIA,VIA MAGNA GRECIA,1,60,VIA MAGNA GRECIA,VIA MAGNA GRECIA,1245597,9,matched,normalized_exact,high,
+VIA MALVASIA,VIA MALVASIA,1,62,VIA MALVASIA,VIA MALVASIA,1245601,0,matched,normalized_exact,high,
+VIA MANLIO ROSSI DORIA,VIA MANLIO ROSSI DORIA,1,35,VIA MANLIO ROSSI DORIA,VIA MANLIO ROSSI DORIA,1246136,10,matched,normalized_exact,high,
+VIA MANZONI,VIA MANZONI,1,39,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA MARCELLO II PAPA,VIA MARCELLO II (PAPA),1,19,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA MARCHE,VIA MARCHE,1,22,VIA MARCHE,VIA MARCHE,1245608,23,matched,normalized_exact,high,
+VIA MARIA LUZZO,VIA MARIA LUZZO,1,41,VIA MARIA LUZZO,VIA MARIA LUZZO,1246107,46,matched,normalized_exact,high,
+VIA MARSALA,VIA MARSALA,1,10,VIA MARSALA,VIA MARSALA,1245615,6,matched,normalized_exact,high,
+VIA MARTE,VIA MARTE,1,27,VIA MARTE,VIA MARTE,1245618,5,matched,normalized_exact,high,
+VIA MARTIN LUTER KING,VIA MARTIN LUTER KING,1,52,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA MARTIRI DELLE FOIBE,VIA MARTIRI DELLE FOIBE,1,52,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA MARTIRI DI NASSIRIYA,VIA MARTIRI DI NASSIRIYA,1,35,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA MARZABOTTO,VIA MARZABOTTO,1,32,VIA MARZABOTTO,VIA MARZABOTTO,1245623,6,matched,normalized_exact,high,
+VIA MASSIMO CAMPIGLI,VIA MASSIMO CAMPIGLI,1,55,VIA MASSIMO CAMPIGLI,VIA MASSIMO CAMPIGLI,1245624,8,matched,normalized_exact,high,
+VIA MASTROIANNI GIUSEPPE,VIA MASTROIANNI GIUSEPPE,1,24,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA MATARAZZO,VIA MATARAZZO,1,39,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA MATTIA PRETI,VIA MATTIA PRETI,1,75,VIA MATTIA PRETI,VIA MATTIA PRETI,1245627,6,matched,normalized_exact,high,
+VIA MEDAGLIE D ORO,VIA MEDAGLIE D'ORO,1,42,VIA MEDAGLIE D ORO,VIA MEDAGLIE D'ORO,1245631,12,matched,normalized_exact,high,
+VIA MESSINA,VIA MESSINA,1,53,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA METAURO,VIA METAURO,1,14,VIA METAURO,VIA METAURO,1245638,8,matched,normalized_exact,high,
+VIA MICHELE NICOTERA,VIA MICHELE NICOTERA,1,75,VIA MICHELE NICOTERA,VIA MICHELE NICOTERA,1245641,18,matched,normalized_exact,high,
+VIA MILANO,VIA MILANO,1,41,VIA MILANO,VIA MILANO,1245643,70,matched,normalized_exact,high,
+VIA MILAZZO,VIA MILAZZO,1,69,VIA MILAZZO,VIA MILAZZO,1246197,12,matched,normalized_exact,high,
+VIA MILITE IGNOTO,VIA MILITE IGNOTO,1,4,VIA MILITE IGNOTO,VIA MILITE IGNOTO,1245645,94,matched,normalized_exact,high,
+VIA MINERVA,VIA MINERVA,1,52,VIA MINERVA,VIA MINERVA,1245647,3,matched,normalized_exact,high,
+VIA MIRELLA STAGLIANO,VIA MIRELLA STAGLIANO',1,77,VIA MIRELLA STAGLIANO,VIA MIRELLA STAGLIANO',1246208,12,matched,normalized_exact,high,
+VIA MISASI,VIA MISASI,1,34,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA MOLISE,VIA MOLISE,1,23,VIA MOLISE,VIA MOLISE,1245651,24,matched,normalized_exact,high,
+VIA MONACI,VIA MONACI,1,3,VIA MONACI,VIA MONACI,1245652,14,matched,normalized_exact,high,
+VIA MONS A DAVOLI,VIA MONS. A. DAVOLI,3,66; 67,VIA MONSIGNOR AZIO DAVOLI,VIA MONSIGNOR AZIO DAVOLI,1245783,172,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VIA MONS COSTANZO,VIA MONS. COSTANZO,1,41,VIA MONSIGNOR COSTANZO,VIA MONSIGNOR COSTANZO,1245654,11,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VIA MONS E GIAMBRO,VIA MONS. E. GIAMBRO,1,18,VIA MONSIGNORE EUGENIO GIAMBRO,VIA MONSIGNORE EUGENIO GIAMBRO',1245655,4,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VIA MONS G T PERRONE,VIA MONS. G. T. PERRONE,1,18,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA MONS GATTI,VIA MONS. GATTI,1,21,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA MONS MAIOLO,VIA MONS. MAIOLO,1,21,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA MONS MOIETTA,VIA MONS. MOIETTA,1,8,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA MONS R LUISI,VIA MONS. R. LUISI,1,18,VIA MONSIGNORE RENATO LUISI,VIA MONSIGNORE RENATO LUISI,1245657,36,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VIA MONSIGNORA DAVOLI,VIA MONS.A. DAVOLI,1,67,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA MONTALTO,VIA MONTALTO,1,30,VIA MONTALTO,VIA MONTALTO,1245660,2,matched,normalized_exact,high,
+VIA MONTANARA,VIA MONTANARA,1,32,VIA MONTANARA,VIA MONTANARA,1245661,15,matched,normalized_exact,high,
+VIA MONTE BOTTE DONATO,VIA MONTE BOTTE DONATO,1,30,VIA MONTE BOTTE DONATO,VIA MONTE BOTTE DONATO,1246095,11,matched,normalized_exact,high,
+VIA MONTE CARDONETO,VIA MONTE CARDONETO,1,30,VIA MONTE CARDONETO,VIA MONTE CARDONETO,1246291,16,matched,normalized_exact,high,
+VIA MONTE CARRUMANGO,VIA MONTE CARRUMANGO,1,30,VIA MONTE CARRUMANGO,VIA MONTE CARRUMANGO,1245662,3,matched,normalized_exact,high,
+VIA MONTE CASTELLUZZO,VIA MONTE CASTELLUZZO,1,30,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA MONTE COCUZZO,VIA MONTE COCUZZO,1,30,VIA MONTE COCUZZO,VIA MONTE COCUZZO,1245663,6,matched,normalized_exact,high,
+VIA MONTE COMUNELLI,VIA MONTE COMUNELLI,1,30,VIA MONTE COMUNELLI,VIA MONTE COMUNELLI,1246194,4,matched,normalized_exact,high,
+VIA MONTE CONTRO,VIA MONTE CONTRO',1,30,VIA MONTE CONTRO,VIA MONTE CONTRO',1246119,5,matched,normalized_exact,high,
+VIA MONTE COVELLO,VIA MONTE COVELLO,1,30,VIA MONTE COVELLO,VIA MONTE COVELLO,1245664,2,matched,normalized_exact,high,
+VIA MONTE CRISTO,VIA MONTE CRISTO,1,30,VIA MONTE CRISTO,VIA MONTE CRISTO,1245665,13,matched,normalized_exact,high,
+VIA MONTE FAETO,VIA MONTE FAETO,1,30,VIA MONTE FAETO,VIA MONTE FAETO,1246093,2,matched,normalized_exact,high,
+VIA MONTE GARIGLIONE,VIA MONTE GARIGLIONE,1,30,VIA MONTE GARIGLIONE,VIA MONTE GARIGLIONE,1246096,10,matched,normalized_exact,high,
+VIA MONTE GIOVE,VIA MONTE GIOVE,1,30,VIA MONTE GIOVE,VIA MONTE GIOVE,1246092,2,matched,normalized_exact,high,
+VIA MONTE GRAPPA,VIA MONTE GRAPPA,1,56,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA MONTE MANCUSO,VIA MONTE MANCUSO,1,30,VIA MONTE MANCUSO,VIA MONTE MANCUSO,1246152,6,matched,normalized_exact,high,
+VIA MONTE PELLEGRINO,VIA MONTE PELLEGRINO,1,30,VIA MONTE PELLEGRINO,VIA MONTE PELLEGRINO,1245666,9,matched,normalized_exact,high,
+VIA MONTE PIZZUTO,VIA MONTE PIZZUTO,1,30,VIA MONTE PIZZUTO,VIA MONTE PIZZUTO,1245667,10,matched,normalized_exact,high,
+VIA MONTE PORTELLA,VIA MONTE PORTELLA,1,30,VIA MONTE PORTELLA,VIA MONTE PORTELLA,1245668,2,matched,normalized_exact,high,
+VIA MONTE REVENTINO,VIA MONTE REVENTINO,1,30,VIA MONTE REVENTINO,VIA MONTE REVENTINO,1245669,25,matched,normalized_exact,high,
+VIA MONTE RUGGIERO,VIA MONTE RUGGIERO,1,30,VIA MONTE RUGGIERO,VIA MONTE RUGGIERO,1245670,3,matched,normalized_exact,high,
+VIA MONTE S NICOLA,VIA MONTE S. NICOLA,1,30,VIA MONTE SAN NICOLA,VIA MONTE SAN NICOLA,1246151,4,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VIA MONTE SANT ELIA,VIA MONTE SANT'ELIA,1,30,VIA MONTE SANT ELIA,VIA MONTE SANT'ELIA,1246091,6,matched,normalized_exact,high,
+VIA MONTE SANTA MARIA,VIA MONTE SANTA MARIA,1,30,VIA MONTE SANTA MARIA,VIA MONTE SANTA MARIA,1246094,4,matched,normalized_exact,high,
+VIA MONTE SANTO,VIA MONTE SANTO,1,30,VIA MONTE SANTO,VIA MONTE SANTO,1246128,1,matched,normalized_exact,high,
+VIA MONTE SCUDIERO,VIA MONTE SCUDIERO,1,30,VIA MONTE SCUDIERO,VIA MONTE SCUDIERO,1245671,3,matched,normalized_exact,high,
+VIA MONTE SCURO,VIA MONTE SCURO,1,30,VIA MONTE SCURO,VIA MONTE SCURO,1246118,12,matched,normalized_exact,high,
+VIA MONTE SORBELLO,VIA MONTE SORBELLO,1,30,VIA MONTE SORBELLO,VIA MONTE SORBELLO,1246178,1,matched,normalized_exact,high,
+VIA MONTE SPINA,VIA MONTE SPINA,1,30,VIA MONTE SPINA,VIA MONTE SPINA,1246239,31,matched,normalized_exact,high,
+VIA MONTE TIRIOLO,VIA MONTE TIRIOLO,1,30,VIA MONTE TIRIOLO,VIA MONTE TIRIOLO,1245672,10,matched,normalized_exact,high,
+VIA MONTEBELLO,VIA MONTEBELLO,1,68,VIA MONTEBELLO,VIA MONTEBELLO,1245673,42,matched,normalized_exact,high,
+VIA MONTELLO,VIA MONTELLO,1,52,VIA MONTELLO,VIA MONTELLO,1245675,8,matched,normalized_exact,high,
+VIA MONTELUNGO,VIA MONTELUNGO,1,3,VIA MONTELUNGO,VIA MONTELUNGO,1245676,3,matched,normalized_exact,high,
+VIA MONTENERO,VIA MONTENERO,1,9,VIA MONTENERO,VIA MONTENERO,1245677,9,matched,normalized_exact,high,
+VIA MONZABANO,VIA MONZABANO,1,68,VIA MONZABANO,VIA MONZABANO,1245679,18,matched,normalized_exact,high,
+VIA MOSCONA,VIA MOSCONA',1,27,VIA MOSCONA,VIA MOSCONA',1245680,8,matched,normalized_exact,high,
+VIA MULINO DEL PRETE,VIA MULINO DEL PRETE,1,27,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA N SAURO,VIA N. SAURO,1,4,VIA NAZARIO SAURO,VIA NAZARIO SAURO,1245686,18,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VIA N SPOSATO,VIA N. SPOSATO,1,36,VIA NICOLA SPOSATO,VIA NICOLA SPOSATO,1245700,86,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VIA NAPOLEONE BRUNO RUBERTO,VIA NAPOLEONE BRUNO RUBERTO,1,76,VIA NAPOLEONE BRUNO RUBERTO,VIA NAPOLEONE BRUNO RUBERTO,1246165,13,matched,normalized_exact,high,
+VIA NAPOLI,VIA NAPOLI,1,42,VIA NAPOLI,VIA NAPOLI,1245685,17,matched,normalized_exact,high,
+VIA NATUZZA EVOLO,VIA NATUZZA EVOLO,1,54,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA NICCOLO PAGANINI,VIA NICCOLO' PAGANINI,1,76,VIA NICCOLO PAGANINI,VIA NICCOLO' PAGANINI,1245690,18,matched,normalized_exact,high,
+VIA NICE GARGANO,VIA NICE GARGANO,1,28,VIA NICE GARGANO,VIA NICE GARGANO,1246183,16,matched,normalized_exact,high,
+VIA NICOLA FRANZI,VIA NICOLA FRANZI',1,31,VIA NICOLA FRANZI,VIA NICOLA FRANZI',1245692,4,matched,normalized_exact,high,
+VIA NICOLA NICOTERA,VIA NICOLA NICOTERA,1,69,VIA NICOLA NICOTERA,VIA NICOLA NICOTERA,1245693,32,matched,normalized_exact,high,
+VIA NINFA GIUSTI NICOTERA,VIA NINFA GIUSTI NICOTERA,1,55,VIA NINFA GIUSTI NICOTERA,VIA NINFA GIUSTI NICOTERA,1246146,3,matched,normalized_exact,high,
+VIA NINO BIXIO,VIA NINO BIXIO,1,41,VIA NINO BIXIO,VIA NINO BIXIO,1245694,11,matched,normalized_exact,high,
+VIA NOBILE,VIA NOBILE,1,39,VIA NOBILE,VIA NOBILE,1245698,35,matched,normalized_exact,high,
+VIA NUNZIO,VIA NUNZIO,1,34,VIA NUNZIO,VIA NUNZIO,1245703,14,matched,normalized_exact,high,
+VIA OBERDAN,VIA OBERDAN,1,4,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA OCINARO,VIA OCINARO,1,21,VIA OCINARO,VIA OCINARO,1245704,7,matched,normalized_exact,high,
+VIA OSLAVIA,VIA OSLAVIA,1,39,VIA OSLAVIA,VIA OSLAVIA,1245707,14,matched,normalized_exact,high,
+VIA OSVALDO CERMINARA,VIA OSVALDO CERMINARA,1,67,VIA OSVALDO CERMINARA,VIA OSVALDO CERMINARA,1246260,12,matched,normalized_exact,high,
+VIA P BADOGLIO,VIA P. BADOGLIO,1,42,VIA PIETRO BADOGLIO,VIA PIETRO BADOGLIO,1245752,35,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VIA P CELLI,VIA P. CELLI,1,8,VIA PASQUALE CELLI,VIA PASQUALE CELLI,1245732,18,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VIA P GIULIANI,VIA P. GIULIANI,1,3,VIA PASQUALE GIULIANI,VIA PASQUALE GIULIANI,1245733,11,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VIA P MATTARELLA,VIA P. MATTARELLA,1,15,VIA PIERSANTI MATTARELLA,VIA PIERSANTI MATTARELLA,1245749,25,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VIA P NENNI,VIA P. NENNI,1,74,VIA PIETRO NENNI,VIA PIETRO NENNI,1245754,60,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VIA P PALADINO,VIA P. PALADINO,1,32,VIA PASQUALE PALADINO,VIA PASQUALE PALADINO,1246206,6,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VIA PADRE A DA OLIVADI,VIA PADRE A. DA OLIVADI,1,41,VIA PADRE ANTONIO DA OLIVADI,VIA PADRE ANTONIO DA OLIVADI,1246217,1,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VIA PADRE ALFONSO DI BARTOLO,VIA PADRE ALFONSO DI BARTOLO,2,29; 66,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA PADRE ELIA IANNAZZO,VIA PADRE ELIA IANNAZZO,1,38,VIA PADRE ELIA IANNAZZO,VIA PADRE ELIA IANNAZZO,1245289,32,matched,normalized_exact,high,
+VIA PADRE F LONGO,VIA PADRE F. LONGO,1,41,VIA PADRE FRANCESCO LONGO,VIA PADRE FRANCESCO LONGO,1245712,26,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VIA PADRE F TROMBETTA,VIA PADRE F. TROMBETTA,1,41,VIA PADRE FRANCESCO TROMBETTA,VIA PADRE FRANCESCO TROMBETTA,1245713,8,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VIA PADRE G MELACRINO,VIA PADRE G. MELACRINO',1,41,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA PADRE ILARIONE DA FEROLETO,VIA PADRE ILARIONE DA FEROLETO,1,41,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA PADRE L ALLEVATO,VIA PADRE L. ALLEVATO,1,41,VIA PADRE LUIGI ALLEVATO,VIA PADRE LUIGI ALLEVATO,1245714,20,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VIA PADRE M F GATTO,VIA PADRE M. F. GATTO,1,35,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA PADRE MICHELE DA SAMBIASE,VIA PADRE MICHELE DA SAMBIASE,1,41,VIA PADRE MICHELE DA SAMBIASE,VIA PADRE MICHELE DA SAMBIASE,1245640,35,matched,normalized_exact,high,
+VIA PADRE PIO DA PIETRALCINA,VIA PADRE PIO DA PIETRALCINA,1,6,VIA PADRE PIO DA PIETRALCINA,VIA PADRE PIO DA PIETRALCINA,1246247,0,matched,normalized_exact,high,
+VIA PALBO NERUDA,VIA PALBO NERUDA,1,52,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA PALERMO,VIA PALERMO,1,36,VIA PALERMO,VIA PALERMO,1245717,37,matched,normalized_exact,high,
+VIA PALESTRO,VIA PALESTRO,1,39,VIA PALESTRO,VIA PALESTRO,1245718,53,matched,normalized_exact,high,
+VIA PALMIERI,VIA PALMIERI,1,10,VIA PALMIERI,VIA PALMIERI,1245720,14,matched,normalized_exact,high,
+VIA PAOLINI CERRA,VIA PAOLINI CERRA,1,40,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA PAOLO ORSI,VIA PAOLO ORSI,1,64,VIA PAOLO ORSI,VIA PAOLO ORSI,1245725,8,matched,normalized_exact,high,
+VIA PAOLO VI,VIA PAOLO VI,1,18,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA PASQUALE CERRA,VIA PASQUALE CERRA,1,77,VIA PASQUALE CERRA,VIA PASQUALE CERRA,1246205,5,matched,normalized_exact,high,
+VIA PASQUALE D AMICO,VIA PASQUALE D'AMICO,1,42,VIA PASQUALE D AMICO,VIA PASQUALE D'AMICO,1245745,6,matched,normalized_exact,high,
+VIA PASQUALE STANCATI,VIA PASQUALE STANCATI,1,25,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA PAUL HARRIS,VIA PAUL HARRIS,1,58,VIA PAUL HARRIS,VIA PAUL HARRIS,1246281,13,matched,normalized_exact,high,
+VIA PER CATANZARO,VIA PER CATANZARO,1,67,VIA PER CATANZARO,VIA PER CATANZARO,1245143,1,matched,normalized_exact,high,
+VIA PER PIANO LUPPINO,VIA PER PIANO LUPPINO,1,40,VIA PER PIANO LUPPINO,VIA PER PIANO LUPPINO,1245742,12,matched,normalized_exact,high,
+VIA PERSICARA,VIA PERSICARA,1,56,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA PESCHIERA,VIA PESCHIERA,1,69,VIA PESCHIERA,VIA PESCHIERA,1245738,15,matched,normalized_exact,high,
+VIA PETER BENENSON,VIA PETER BENENSON,1,66,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA PETRARCA,VIA PETRARCA,1,39,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA PIAVE,VIA PIAVE,1,6,VIA PIAVE,VIA PIAVE,1245744,52,matched,normalized_exact,high,
+VIA PIEMONTE,VIA PIEMONTE,1,23,VIA PIEMONTE,VIA PIEMONTE,1245748,20,matched,normalized_exact,high,
+VIA PIERO GOBETTI,VIA PIERO GOBETTI,1,35,VIA PIERO GOBETTI,VIA PIERO GOBETTI,1246189,6,matched,normalized_exact,high,
+VIA PIETRO ANTONIO MARASCO,VIA PIETRO ANTONIO MARASCO,1,37,VIA PIETRO ANTONIO MARASCO,VIA PIETRO ANTONIO MARASCO,1245750,20,matched,normalized_exact,high,
+VIA PIETRO CALIGIURI,VIA PIETRO CALIGIURI,1,62,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA PIETRO MANCINI,VIA PIETRO MANCINI,1,67,VIA PIETRO MANCINI,VIA PIETRO MANCINI,1246231,17,matched,normalized_exact,high,
+VIA PIETRO MASCAGNI,VIA PIETRO MASCAGNI,1,75,VIA PIETRO MASCAGNI,VIA PIETRO MASCAGNI,1245753,13,matched,normalized_exact,high,
+VIA PIETRO MENNEA 6,"VIA PIETRO MENNEA, 6",1,52,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA PIO XII,VIA PIO XII,1,18,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA PISA,VIA PISA,1,42,VIA PISA,VIA PISA,1245760,33,matched,normalized_exact,high,
+VIA PISANELLI,VIA PISANELLI,1,41,VIA PISANELLI,VIA PISANELLI,1245761,38,matched,normalized_exact,high,
+VIA PO,VIA PO,1,6,VIA PO,VIA PO,1245764,44,matched,normalized_exact,high,
+VIA PODGORA,VIA PODGORA,1,36,VIA PODGORA,VIA PODGORA,1245765,5,matched,normalized_exact,high,
+VIA PONENTINO,VIA PONENTINO,1,49,VIA PONENTINO,VIA PONENTINO,1246195,1,matched,normalized_exact,high,
+VIA PONTE BAGNI,VIA PONTE BAGNI,1,53,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA PONTE S ANTONIO,VIA PONTE S.ANTONIO,1,6,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA POSITANO,VIA POSITANO,1,53,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA PROVINCIALE,VIA PROVINCIALE,1,30,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA PUGLIE,VIA PUGLIE,1,22,VIA PUGLIE,VIA PUGLIE,1245784,27,matched,normalized_exact,high,
+VIA QUARTO,VIA QUARTO,1,36,VIA QUARTO,VIA QUARTO,1245787,2,matched,normalized_exact,high,
+VIA R D ALTAVILLA,VIA R. D' ALTAVILLA,1,69,VIA RUGGERO D ALTAVILLA,VIA RUGGERO D'ALTAVILLA,1245817,11,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VIA R DE SANDO,VIA R. DE SANDO,1,40,VIA ROSALBINO DE SANDO,VIA ROSALBINO DE SANDO,1246223,1,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VIA R IL GUISCARDO,VIA R. IL GUISCARDO,4,65; 70,VIA ROBERTO IL GUISCARDO,VIA ROBERTO IL GUISCARDO,1245808,236,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VIA R LANZINO,VIA R. LANZINO,1,69,VIA ROBERTA LANZINO,VIA ROBERTA LANZINO,1245806,102,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VIA R LOMBARDI,VIA R. LOMBARDI,1,59,VIA RICCARDO LOMBARDI,VIA RICCARDO LOMBARDI,1245800,59,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VIA R LONGO,VIA R. LONGO,1,70,VIA RAFFAELE LONGO,VIA RAFFAELE LONGO,1246280,20,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VIA R MATARAZZO,VIA R. MATARAZZO,1,10,VIA RAFFAELE MATARAZZO,VIA RAFFAELE MATARAZZO,1245805,41,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VIA R SANZIO,VIA R. SANZIO,1,41,VIA RAFFAELLO SANZIO,VIA RAFFAELLO SANZIO,1245790,2,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VIA R SCOTELLARO,VIA R. SCOTELLARO,1,52,VIA ROCCO SCOTELLARO,VIA ROCCO SCOTELLARO,1245809,17,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VIA RAFFAELE CUPARO,VIA RAFFAELE CUPARO,1,61,VIA RAFFAELE CUPARO,VIA RAFFAELE CUPARO,1245789,7,matched,normalized_exact,high,
+VIA RAFFAELE TETI,VIA RAFFAELE TETI,1,65,VIA RAFFAELE TETI,VIA RAFFAELE TETI,1246201,26,matched,normalized_exact,high,
+VIA RAOUL MORELLI,VIA RAOUL MORELLI,4,52; 62,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA REDIPUGLIA,VIA REDIPUGLIA,1,33,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA REGGIO CALABRIA,VIA REGGIO CALABRIA,1,38,VIA REGGIO CALABRIA,VIA REGGIO CALABRIA,1245794,2,matched,normalized_exact,high,
+VIA REGINA ELENA,VIA REGINA ELENA,1,36,VIA REGINA ELENA,VIA REGINA ELENA,1245795,90,matched,normalized_exact,high,
+VIA REGINA MARGHERITA,VIA REGINA MARGHERITA,1,36,VIA REGINA MARGHERITA,VIA REGINA MARGHERITA,1245796,82,matched,normalized_exact,high,
+VIA RENDA GIOVANNA,VIA RENDA GIOVANNA,1,50,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA RENO,VIA RENO,1,1,VIA RENO,VIA RENO,1245798,9,matched,normalized_exact,high,
+VIA RINALDO MICELI,VIA RINALDO MICELI,1,53,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA RIONE E CONTRADA RAZIONALE,VIA - RIONE E C.DA RAZIONALE,1,20,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA RISI,VIA RISI,1,53,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA ROBERT BADEN POWELL,VIA ROBERT BADEN POWELL,1,31,VIA ROBERT BADEN POWELL,VIA ROBERT BADEN POWELL,1246164,27,matched,normalized_exact,high,
+VIA ROMA,VIA ROMA,1,39,VIA ROMA,VIA ROMA,1245810,23,matched,normalized_exact,high,
+VIA ROMANO ANGELINA,VIA ROMANO ANGELINA,1,40,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA ROSARIO LIVATINO EX CONTRADA GACCIA,VIA ROSARIO LIVATINO ( EX CONTRADA GACCIA,1,66,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA ROSARIO LIVATINO EX VIA E CONTRADA VI,VIA ROSARIO LIVATINO ( EX VIA E CONTRADA VI,1,7,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA S BOEZIO,VIA S. BOEZIO,1,64,VIA SEVERINO BOEZIO,VIA SEVERINO BOEZIO,1245927,41,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VIA S D AUDINO,VIA S. D'AUDINO,1,33,VIA SILVESTRO D AUDINO,VIA SILVESTRO D'AUDINO,1245213,19,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VIA S FODERARO,VIA S. FODERARO,7,65; 68; 70; 71; 73,VIA SALVATORE FODERARO,VIA SALVATORE FODERARO,1245827,228,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VIA S GIUSTO,VIA S. GIUSTO,1,36,VIA SAN GIUSTO,VIA SAN GIUSTO,1245848,53,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VIA S GUZZI,VIA S. GUZZI,1,21,VIA SEBASTIANO GUZZI,VIA SEBASTIANO GUZZI,1245920,18,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VIA S MARIA DELLE GRAZIE,VIA S. MARIA DELLE GRAZIE,1,23,VIA SANTA MARIA DELLE GRAZIE,VIA SANTA MARIA DELLE GRAZIE,1245882,19,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VIA S MICELI,VIA S. MICELI; VIA S.MICELI,2,15; 16,VIA SALVATORE MICELI,VIA SALVATORE MICELI,1245828,194,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VIA S MICHELE,VIA S. MICHELE,1,33,VIA SAN MICHELE,VIA SAN MICHELE,1245851,22,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VIA S QUASIMODO,VIA S. QUASIMODO,1,37,VIA SALVATORE QUASIMODO,VIA SALVATORE QUASIMODO,1245829,13,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VIA S RENDA,VIA S. RENDA,1,58,VIA SALVATORE RENDA,VIA SALVATORE RENDA,1245830,1,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VIA S ROCCO,VIA S. ROCCO,1,33,VIA SAN ROCCO,VIA SAN ROCCO,1245858,1,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VIA S ROSA,VIA S. ROSA,1,33,VIA SALVATOR ROSA,VIA SALVATOR ROSA,1246088,12,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VIA S SCILLIA,VIA S. SCILLIA,1,61,VIA SALVATORE SCILLIA,VIA SALVATORE SCILLIA,1245831,14,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VIA S SIDERO,VIA S. SIDERO,1,35,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA S SOFIA,VIA S. SOFIA,1,38,VIA SANTA SOFIA,VIA SANTA SOFIA,1245885,9,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VIA S T NOTARO,VIA S. T. NOTARO,1,6,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA S TROPEA,VIA S. TROPEA,1,33,VIA SALVATORE TROPEA,VIA SALVATORE TROPEA,1245832,12,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VIA SABOTINO,VIA SABOTINO,1,56,VIA SABOTINO,VIA SABOTINO,1245818,1,matched,normalized_exact,high,
+VIA SACERDOTE A GRASSO,VIA SACERDOTE A. GRASSO,1,41,VIA SACERDOTE ANTONIO GRASSO,VIA SACERDOTE ANTONIO GRASSO,1245823,20,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VIA SACERDOTE A VESCIO,VIA SACERDOTE A. VESCIO,1,41,VIA SACERDOTE ANDREA VESCIO,VIA SACERDOTE ANDREA VESCIO,1245821,25,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VIA SALERNO,VIA SALERNO,1,53,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA SALV AVERSA E L PRECENZANO,VIA SALV. AVERSA E L. PRECENZANO,1,2,VIA SALVATORE AVERSA E LUCIA PRECENZANO,VIA SALVATORE AVERSA E LUCIA PRECENZANO,1246083,42,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VIA SALVATORE FIMIANI,VIA SALVATORE FIMIANI,1,67,VIA SALVATORE FIMIANI,VIA SALVATORE FIMIANI,1245325,23,matched,normalized_exact,high,
+VIA SALVATORE GASPERONI,VIA SALVATORE GASPERONI,1,67,VIA SALVATORE GASPERONI,VIA SALVATORE GASPERONI,1246172,19,matched,normalized_exact,high,
+VIA SAN DOMENICO,VIA SAN DOMENICO,1,3,VIA SAN DOMENICO,VIA SAN DOMENICO,1245838,39,matched,normalized_exact,high,
+VIA SAN FERMO,VIA SAN FERMO,1,69,VIA SAN FERMO,VIA SAN FERMO,1246145,19,matched,normalized_exact,high,
+VIA SAN MARTINO,VIA SAN MARTINO,1,69,VIA SAN MARTINO,VIA SAN MARTINO,1245850,18,matched,normalized_exact,high,
+VIA SANDRO PERTINI,VIA SANDRO PERTINI,1,75,VIA SANDRO PERTINI,VIA SANDRO PERTINI,1245869,2,matched,normalized_exact,high,
+VIA SANT ISIDORO,VIA SANT' ISIDORO,1,50,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA SANT UMILE DI BISIGNANO,VIA SANT' UMILE DI BISIGNANO,1,31,VIA SANT UMILE DI BISIGNANO,VIA SANT'UMILE DI BISIGNANO,1245898,21,matched,normalized_exact,high,
+VIA SANTA BERNADETTE,VIA SANTA BERNADETTE,1,9,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA SAPRI,VIA SAPRI,1,8,VIA SAPRI,VIA SAPRI,1245899,25,matched,normalized_exact,high,
+VIA SARDEGNA,VIA SARDEGNA,1,22,VIA SARDEGNA,VIA SARDEGNA,1245900,13,matched,normalized_exact,high,
+VIA SARNO,VIA SARNO,1,14,VIA SARNO,VIA SARNO,1245901,16,matched,normalized_exact,high,
+VIA SATURNO,VIA SATURNO,1,27,VIA SATURNO,VIA SATURNO,1245902,14,matched,normalized_exact,high,
+VIA SAVUTANO,VIA SAVUTANO,4,62; 76,VIA SAVUTANO,VIA SAVUTANO,1245905,77,matched,normalized_exact,high,
+VIA SCALFARO,VIA SCALFARO,1,34,VIA SCALFARO,VIA SCALFARO,1245907,10,matched,normalized_exact,high,
+VIA SCIALLIS,VIA SCIALLIS,1,29,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA SCIROCCO,VIA SCIROCCO,1,49,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA SELE,VIA SELE,1,1,VIA SELE,VIA SELE,1245921,26,matched,normalized_exact,high,
+VIA SEN PRIMERANO,VIA SEN. PRIMERANO,1,35,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA SICILIA,VIA SICILIA,1,22,VIA SICILIA,VIA SICILIA,1245929,6,matched,normalized_exact,high,
+VIA SINOPOLI,VIA SINOPOLI,1,39,VIA SINOPOLI,VIA SINOPOLI,1245455,62,matched,normalized_exact,high,
+VIA SOLFERINO,VIA SOLFERINO,1,69,VIA SOLFERINO,VIA SOLFERINO,1245936,29,matched,normalized_exact,high,
+VIA SPAVENTA,VIA SPAVENTA,1,34,VIA SPAVENTA,VIA SPAVENTA,1245943,5,matched,normalized_exact,high,
+VIA SS ROSARIO,VIA SS. ROSARIO,1,9,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA STOCCO,VIA STOCCO,1,40,VIA STOCCO,VIA STOCCO,1245951,9,matched,normalized_exact,high,
+VIA T CAMPANELLA,VIA T. CAMPANELLA,1,40,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA T M FUSCO,VIA T. M. FUSCO,1,12,VIA TOMMASO MARIA FUSCO,VIA TOMMASO MARIA FUSCO,1245975,66,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VIA TAGLIAMENTO,VIA TAGLIAMENTO,1,14,VIA TAGLIAMENTO,VIA TAGLIAMENTO,1245956,28,matched,normalized_exact,high,
+VIA TALETE,VIA TALETE,3,20; 31,VIA TALETE,VIA TALETE,1245958,29,matched,normalized_exact,high,
+VIA TASSO,VIA TASSO,1,38,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA TELESIO,VIA TELESIO,1,43,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA TERINA,VIA TERINA,1,21,VIA TERINA,VIA TERINA,1245960,25,matched,normalized_exact,high,
+VIA TEVERE,VIA TEVERE,1,3,VIA TEVERE,VIA TEVERE,1245965,18,matched,normalized_exact,high,
+VIA THOMAS EDISON,VIA THOMAS EDISON,1,20,VIA THOMAS EDISON,VIA THOMAS EDISON,1246269,23,matched,normalized_exact,high,
+VIA TICINO,VIA TICINO,1,3,VIA TICINO,VIA TICINO,1245966,15,matched,normalized_exact,high,
+VIA TIMAVO,VIA TIMAVO,1,14,VIA TIMAVO,VIA TIMAVO,1245967,37,matched,normalized_exact,high,
+VIA TIZIANO,VIA TIZIANO,1,39,VIA TIZIANO,VIA TIZIANO,1245970,4,matched,normalized_exact,high,
+VIA TOGLIATTI,VIA TOGLIATTI,1,39,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA TOMMASEO,VIA TOMMASEO,1,40,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA TOMMASO COLLOCA,VIA TOMMASO COLLOCA,1,77,VIA TOMMASO COLLOCA,VIA TOMMASO COLLOCA,1246159,30,matched,normalized_exact,high,
+VIA TORINO,VIA TORINO,1,39,VIA TORINO,VIA TORINO,1245976,27,matched,normalized_exact,high,
+VIA TOSCANA,VIA TOSCANA,1,22,VIA TOSCANA,VIA TOSCANA,1245987,61,matched,normalized_exact,high,
+VIA TRAMONTANA,VIA TRAMONTANA,1,49,VIA TRAMONTANA,VIA TRAMONTANA,1246125,1,matched,normalized_exact,high,
+VIA TRANI,VIA TRANI,1,53,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA TRAVERSE E ATRIO G VERDI,VIA - TRAVERSE E ATRIO G. VERDI,1,33,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA TRAVERSE E CONTRADA SCIRO,VIA - TRAVERSE E C.DA SCIRO',1,18,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA TRAVERSE E VICHI E TOTI,VIA - TRAVERSE E VICHI E. TOTI,1,5,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA TRENTINO,VIA TRENTINO,1,23,VIA TRENTINO,VIA TRENTINO,1245997,1,matched,normalized_exact,high,
+VIA TRENTO,VIA TRENTO,1,9,VIA TRENTO,VIA TRENTO,1245998,87,matched,normalized_exact,high,
+VIA TRIESTE,VIA TRIESTE,1,4,VIA TRIESTE,VIA TRIESTE,1246000,7,matched,normalized_exact,high,
+VIA TROPEA,VIA TROPEA,1,53,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA U FOSCOLO,VIA U. FOSCOLO,1,54,VIA UGO FOSCOLO,VIA UGO FOSCOLO,1246005,10,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VIA UGO AMALDI,VIA UGO AMALDI,1,20,VIA UGO AMALDI,VIA UGO AMALDI,1246221,2,matched,normalized_exact,high,
+VIA UGO LA MALFA,VIA UGO LA MALFA,1,59,VIA UGO LA MALFA,VIA UGO LA MALFA,1246006,13,matched,normalized_exact,high,
+VIA UMBERTO BOCCIONI,VIA UMBERTO BOCCIONI,1,55,VIA UMBERTO BOCCIONI,VIA UMBERTO BOCCIONI,1246007,66,matched,normalized_exact,high,
+VIA UMBERTO I,VIA UMBERTO I,1,42,VIA UMBERTO I,VIA UMBERTO I,1246008,20,matched,normalized_exact,high,
+VIA UMBERTO SABA,VIA UMBERTO SABA,1,52,VIA UMBERTO SABA,VIA UMBERTO SABA,1246009,19,matched,normalized_exact,high,
+VIA UMBRIA,VIA UMBRIA,1,22,VIA UMBRIA,VIA UMBRIA,1246011,38,matched,normalized_exact,high,
+VIA V BELLINI,VIA V. BELLINI,1,40,VIA VINCENZO BELLINI,VIA VINCENZO BELLINI,1245046,2,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VIA V BILOTTA,VIA V. BILOTTA,1,76,VIA VINCENZO BILOTTA,VIA VINCENZO BILOTTA,1246044,9,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VIA V MAIONE,VIA V. MAIONE,1,33,VIA VINCENZO MAIONE,VIA VINCENZO MAIONE,1246045,14,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VIA V PADULA,VIA V. PADULA,1,52,VIA VINCENZO PADULA,VIA VINCENZO PADULA,1246046,10,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VIA VELATI RAMETTA,VIA VELATI RAMETTA,1,25,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA VENETO,VIA VENETO,1,23,VIA VENETO,VIA VENETO,1246028,16,matched,normalized_exact,high,
+VIA VENEZIA,VIA VENEZIA,1,43,VIA VENEZIA,VIA VENEZIA,1246029,35,matched,normalized_exact,high,
+VIA VICHI E ATRIO FERRUCCIO,VIA - VICHI E ATRIO FERRUCCIO,1,40,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA VICHI E LARGHETTO SILA,VIA - VICHI E LARGHETTO SILA,1,27,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA VICHI E LARGHETTO TORRE,VIA - VICHI E LARGHETTO TORRE,1,8,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA VICHI E LARGHETTO TREMPA,VIA - VICHI E LARGHETTO TREMPA,1,10,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA VICHI E LARGO BELVEDERE,VIA - VICHI E LARGO BELVEDERE,1,8,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA VICHI E LARGO INDIPENDENZA,VIA VICHI E LARGO INDIPENDENZA,1,7,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA VICHI E LARGO S TEODORO,VIA - VICHI E LARGO S. TEODORO,1,27,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA VICHI E LARGO SCAVELLO,VIA - VICHI E LARGO SCAVELLO,1,29,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA VICHI E PIAZZA S GIOVANNI,VIA - VICHI E PIAZZA S. GIOVANNI,1,6,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA VICO E ATRIO ADDOLORATA,VIA - VICO E ATRIO ADDOLORATA,1,34,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA VICO E ATRIO CITTADELLA,VIA - VICO E ATRIO CITTADELLA,1,34,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA VICO E CONTRADA NIOLA,VIA - VICO E C.DA NIOLA,1,27,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA VICO E LARGO DEI NORMANNI,VIA VICO E LARGO DEI NORMANNI,1,27,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA VICO E PIAZZA FIORENTINO,VIA - VICO E PIAZZA FIORENTINO,1,39,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA VICO E PIAZZA TERRAVECCHIA,VIA - VICO E PIAZZA TERRAVECCHIA,1,29,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA VIGNOLA STELLA,VIA VIGNOLA STELLA,1,8,VIA VIGNOLA STELLA,VIA VIGNOLA STELLA,1246038,31,matched,normalized_exact,high,
+VIA VINCENZINA DE MARIA,VIA VINCENZINA DE MARIA,1,41,VIA VINCENZINA DE MARIA,VIA VINCENZINA DE MARIA,1246109,22,matched,normalized_exact,high,
+VIA VINCENZO DE FILIPPIS,VIA VINCENZO DE FILIPPIS,1,64,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA VINCENZO SMIRNE,VIA VINCENZO SMIRNE,1,65,VIA VINCENZO SMIRNE,VIA VINCENZO SMIRNE,1246174,30,matched,normalized_exact,high,
+VIA VINCENZO TUCCI,VIA VINCENZO TUCCI,1,61,VIA VINCENZO TUCCI,VIA VINCENZO TUCCI,1246047,13,matched,normalized_exact,high,
+VIA VINICIO CORTESE,VIA VINICIO CORTESE,1,72,VIA VINICIO CORTESE,VIA VINICIO CORTESE,1246048,17,matched,normalized_exact,high,
+VIA VIRGILIO MARONE PUBLIO,VIA VIRGILIO MARONE PUBLIO,1,54,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA VIRGILLO GIANFRANCO,VIA VIRGILLO GIANFRANCO,1,54,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA VITTORIO VENETO,VIA VITTORIO VENETO,1,33,VIA VITTORIO VENETO,VIA VITTORIO VENETO,1246056,1,matched,normalized_exact,high,
+VIA VOLTURNO,VIA VOLTURNO,1,8,VIA VOLTURNO,VIA VOLTURNO,1246058,32,matched,normalized_exact,high,
+VIA XX SETTEMBRE,VIA XX SETTEMBRE,1,2,VIA XX SETTEMBRE,VIA XX SETTEMBRE,1246068,128,matched,normalized_exact,high,
+VIA XXIV MAGGIO,VIA XXIV MAGGIO,1,33,VIA XXIV MAGGIO,VIA XXIV MAGGIO,1246069,6,matched,normalized_exact,high,
+VIA XXV APRILE,VIA XXV APRILE,1,43,VIA XXV APRILE,VIA XXV APRILE,1246070,4,matched,normalized_exact,high,
+VIA ZALEUCO DI LOCRI,VIA ZALEUCO DI LOCRI,1,64,VIA ZALEUCO DI LOCRI,VIA ZALEUCO DI LOCRI,1246071,16,matched,normalized_exact,high,
+VIA ZANGARI VINCENZO,VIA ZANGARI VINCENZO,1,20,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIA ZANOTTI BIANCO,VIA ZANOTTI BIANCO,1,35,VIA ZANOTTI BIANCO,VIA ZANOTTI BIANCO,1246073,12,matched,normalized_exact,high,
+VIA ZARA,VIA ZARA,1,36,VIA ZARA,VIA ZARA,1246075,36,matched,normalized_exact,high,
+VIA ZUCCHERIFICIO,VIA ZUCCHERIFICIO,1,54,VIA ZUCCHERIFICIO,VIA ZUCCHERIFICIO,1246079,5,matched,normalized_exact,high,
+VIA ZUPELLO,VIA ZUPELLO,1,54,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIALE DELLA LIBERTA,VIALE DELLA LIBERTA',1,33,VIALE DELLA LIBERTA,VIALE DELLA LIBERTA',1245254,18,matched,normalized_exact,high,
+VIALE E TRAVERSE DEI MILLE,VIALE E TRAVERSE DEI MILLE,1,17,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIALE E TRAVERSE I MAGGIO,VIALE E TRAVERSE I MAGGIO,1,11,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIALE MICHELANGELO,VIALE MICHELANGELO,1,13,VIALE MICHELANGELO,VIALE MICHELANGELO,1246258,5,matched,normalized_exact,high,
+VIALE RAFFAELE S,VIALE RAFFAELE S.,4,62; 65,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VIALE SALVEMINI,VIALE SALVEMINI,1,32,VIALE SALVEMINI,VIALE SALVEMINI,1245773,0,matched,normalized_exact,high,
+VIALE SAN BRUNO,VIALE SAN BRUNO,4,34; 54,VIALE SAN BRUNO,VIALE SAN BRUNO,1245330,90,matched,normalized_exact,high,
+VIALE SAN FRANCESCO DI PAOLA,VIALE SAN FRANCESCO DI PAOLA,1,50,VIALE SAN FRANCESCO DI PAOLA,VIALE SAN FRANCESCO DI PAOLA,1246246,1,matched,normalized_exact,high,
+VIALE STAZIONE,VIALE STAZIONE,1,56,VIALE STAZIONE,VIALE STAZIONE,1245948,8,matched,normalized_exact,high,
+VICHI DELLA REPUBBLICA,VICHI DELLA REPUBBLICA,1,33,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VICHI E LARGHETTO COSTANZO,VICHI E LARGHETTO COSTANZO,1,8,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VICHI SEGGIO,VICHI SEGGIO,1,27,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VICO ALIGHIERI,VICO ALIGHIERI,1,39,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VICO BARBARO,VICO BARBARO,1,27,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VICO BERNARDI,VICO BERNARDI,1,38,VICO BERNARDI,VICO BERNARDI,1245149,0,matched,normalized_exact,high,
+VICO CANNE,VICO CANNE,1,26,VICO CANNE,VICO CANNE,1245097,1,matched,normalized_exact,high,
+VICO CERASO,VICO CERASO,1,8,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VICO COLONNA,VICO COLONNA,1,26,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VICO DELLA VITE,VICO DELLA VITE,1,8,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VICO E LARGHETTO SAN FRANCESCO,VICO E LARGHETTO SAN FRANCESCO,1,10,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VICO GALLUZZO,VICO GALLUZZO,1,27,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VICO GIGLIO,VICO GIGLIO,1,8,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VICO GIOVE,VICO GIOVE,1,27,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VICO LEONE,VICO LEONE,1,6,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VICO LUNA,VICO LUNA,1,27,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VICO LUPA,VICO LUPA,1,27,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VICO MILAZZO,VICO MILAZZO,1,8,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VICO ORTO,VICO ORTO,1,27,VICO ORTO,VICO ORTO,1245706,1,matched,normalized_exact,high,
+VICO PERILLO,VICO PERILLO,1,6,VICO PERILLO,VICO PERILLO,1245735,24,matched,normalized_exact,high,
+VICO PESCE,VICO PESCE,1,27,VICO PESCE,VICO PESCE,1245737,5,matched,normalized_exact,high,
+VICO PONTE,VICO PONTE,1,27,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VICO PRETE,VICO PRETE,1,26,VICO PRETE,VICO PRETE,1245775,5,matched,normalized_exact,high,
+VICO RAGNO,VICO RAGNO,1,27,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VICO ROSETTA,VICO ROSETTA,1,8,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VICO S CROCE,VICO S. CROCE,1,27,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VICO S GIACOMO,VICO S. GIACOMO,1,6,VICO SAN GIACOMO,VICO SAN GIACOMO,1245842,2,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VICO S GIUSEPPE,VICO S. GIUSEPPE,1,27,VICO SAN GIUSEPPE,VICO SAN GIUSEPPE,1245847,4,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VICO S MARCO,VICO S. MARCO,1,27,VICO SAN MARCO,VICO SAN MARCO,1245849,3,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VICO S NICOLA,VICO S. NICOLA,1,27,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VICO S RITA,VICO S. RITA,1,27,VICO SANTA RITA,VICO SANTA RITA,1245884,6,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VICO S TERESA,VICO S. TERESA,1,27,VICO SANTA TERESA,VICO SANTA TERESA,1245886,5,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VICO S VINCENZO,VICO S. VINCENZO,1,27,VICO SAN VINCENZO,VICO SAN VINCENZO,1245867,1,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VICO S VITTORIO,VICO S. VITTORIO,1,27,VICO SAN VITTORIO,VICO SAN VITTORIO,1245868,0,matched_abbreviation_unique,abbreviation_signature_unique,medium,unique ANNCSU odonym match by final token plus preceding initials
+VICO SORTO,VICO SORTO,1,26,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VICO SPINA,VICO SPINA,1,27,VICO SPINA,VICO SPINA,1245944,3,matched,normalized_exact,high,
+VICO STOCCO,VICO STOCCO,1,26,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VICO TERRA,VICO TERRA,1,27,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VICO TRASIMENO,VICO TRASIMENO,1,22,VICO TRASIMENO,VICO TRASIMENO,1245988,1,matched,normalized_exact,high,
+VICO TRIBUNALE,VICO TRIBUNALE,1,26,VICO TRIBUNALE,VICO TRIBUNALE,1245999,6,matched,normalized_exact,high,
+VICO TULIPANO,VICO TULIPANO,1,6,VICO TULIPANO,VICO TULIPANO,1246237,1,matched,normalized_exact,high,
+VICO URANO,VICO URANO,1,27,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VICO VATALARO,VICO VATALARO,1,6,VICO VATALARO,VICO VATALARO,1246024,3,matched,normalized_exact,high,
+VICO VENERE,VICO VENERE,1,27,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match
+VICO VETRIERA,VICO VETRIERA,1,6,VICO VETRIERA,VICO VETRIERA,1246032,8,matched,normalized_exact,high,
+VICO VIOLETTA,VICO VIOLETTA,1,8,VICO VIOLETTA,VICO VIOLETTA,1246050,0,matched,normalized_exact,high,
+VICO VOLPE,VICO VOLPE,1,27,,,,,unmatched,normalized_exact,review,no exact normalized ANNCSU odonym match

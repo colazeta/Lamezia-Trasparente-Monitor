@@ -1,2 +1,6 @@
 data/raw/comune_lamezia/** -text -diff
 data/raw/eligendo/** -text -diff
+data/raw/geo/**/*.zip -text -diff
+data/raw/geo/**/*.pdf -text -diff
+data/processed/geo/**/*.gpkg -text -diff
+data/interim/qa/**/*.gpkg -text -diff
