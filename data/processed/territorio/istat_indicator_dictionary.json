@@ -1,0 +1,197 @@
+{
+  "$schema": "https://lamezia-trasparente.local/schemas/istat_indicator_dictionary.schema.json",
+  "id": "istat-atlante-indicator-dictionary-lamezia",
+  "sourceInstitution": "ISTAT",
+  "sourceDataset": "Dati per sezioni di censimento - Censimento permanente della popolazione e delle abitazioni 2023",
+  "sourceYear": "2023",
+  "territorialLevel": "sezione di censimento",
+  "municipality": "Lamezia Terme",
+  "istatMunicipalCode": "079160",
+  "generatedFrom": "data/processed/territorio/istat_sezioni_censimento_lamezia.geojson",
+  "metadataPath": "data/processed/territorio/istat_sezioni_censimento_lamezia.metadata.json",
+  "qaReportPath": "docs/data-sources/istat-sezioni-censimento-lamezia-qa.md",
+  "lastUpdated": "2026-06-20",
+  "verificationStatus": "Dizionario iniziale: solo P1/popolazione residente e' abilitato; gli altri indicatori sono candidati da verificare sul tracciato ISTAT 2023 prima della pubblicazione.",
+  "indicators": [
+    {
+      "id": "popolazione-residente",
+      "istatSourceField": "P1",
+      "publicField": "popolazione_totale",
+      "publicLabel": "Popolazione residente",
+      "category": "popolazione",
+      "unitOfMeasure": "persone",
+      "numerator": "P1",
+      "denominator": null,
+      "enabled": true,
+      "status": "enabled",
+      "sourceYear": "2023",
+      "territorialLevel": "sezione di censimento",
+      "publicInterpretation": "Numero di persone residenti nella sezione censuaria secondo il dato ISTAT 2023 agganciato alla geometria ufficiale.",
+      "knownCaveats": [
+        "Disponibile per 246 sezioni su 317; le 71 sezioni senza aggancio alle variabili 2023 restano null.",
+        "I valori null non sono zero e sono mostrati come dato non disponibile.",
+        "Le sezioni censuarie non coincidono con sezioni urbane catastali, CAP, OMI o altre zonizzazioni non censuarie."
+      ]
+    },
+    {
+      "id": "quota-minori",
+      "istatSourceField": null,
+      "publicField": null,
+      "publicLabel": "Quota minori",
+      "category": "eta",
+      "unitOfMeasure": "percentuale",
+      "numerator": null,
+      "denominator": "P1",
+      "enabled": false,
+      "status": "in-preparazione",
+      "sourceYear": "2023",
+      "territorialLevel": "sezione di censimento",
+      "sourceFieldStatus": "Da verificare nel tracciato ISTAT 2023 prima dell'attivazione pubblica.",
+      "publicInterpretation": "Quota di residenti minorenni sul totale della popolazione residente, se il tracciato ISTAT disponibile consente il calcolo.",
+      "knownCaveats": [
+        "Non pubblicare finche' campi per eta' e denominatore non sono verificati.",
+        "Non calcolare da stime o layer non censuari."
+      ]
+    },
+    {
+      "id": "quota-anziani",
+      "istatSourceField": null,
+      "publicField": null,
+      "publicLabel": "Quota anziani",
+      "category": "eta",
+      "unitOfMeasure": "percentuale",
+      "numerator": null,
+      "denominator": "P1",
+      "enabled": false,
+      "status": "in-preparazione",
+      "sourceYear": "2023",
+      "territorialLevel": "sezione di censimento",
+      "sourceFieldStatus": "Da verificare nel tracciato ISTAT 2023 prima dell'attivazione pubblica.",
+      "publicInterpretation": "Quota di residenti anziani sul totale della popolazione residente, se il tracciato ISTAT disponibile consente il calcolo.",
+      "knownCaveats": [
+        "Definire e documentare la soglia di eta' prima dell'uso pubblico.",
+        "Non pubblicare se il numeratore non e' disponibile come dato ISTAT censuario."
+      ]
+    },
+    {
+      "id": "quota-stranieri",
+      "istatSourceField": null,
+      "publicField": null,
+      "publicLabel": "Quota stranieri",
+      "category": "cittadinanza",
+      "unitOfMeasure": "percentuale",
+      "numerator": null,
+      "denominator": "P1",
+      "enabled": false,
+      "status": "in-preparazione",
+      "sourceYear": "2023",
+      "territorialLevel": "sezione di censimento",
+      "sourceFieldStatus": "Da verificare nel tracciato ISTAT 2023 prima dell'attivazione pubblica.",
+      "publicInterpretation": "Quota di residenti con cittadinanza straniera sul totale della popolazione residente, se il tracciato ISTAT disponibile consente il calcolo.",
+      "knownCaveats": [
+        "Richiede controllo dei campi ISTAT su cittadinanza e popolazione totale.",
+        "Non calcolare da fonti anagrafiche comunali non allineate alla sezione censuaria."
+      ]
+    },
+    {
+      "id": "famiglie",
+      "istatSourceField": null,
+      "publicField": null,
+      "publicLabel": "Famiglie",
+      "category": "famiglie",
+      "unitOfMeasure": "famiglie",
+      "numerator": null,
+      "denominator": null,
+      "enabled": false,
+      "status": "in-preparazione",
+      "sourceYear": "2023",
+      "territorialLevel": "sezione di censimento",
+      "sourceFieldStatus": "Da verificare nel tracciato ISTAT 2023 prima dell'attivazione pubblica.",
+      "publicInterpretation": "Numero di famiglie residenti nella sezione censuaria, se il campo ISTAT corrispondente e' confermato.",
+      "knownCaveats": [
+        "Non attivo finche' il campo sorgente non viene validato.",
+        "Non sostituire con aggregazioni comunali o catastali."
+      ]
+    },
+    {
+      "id": "abitazioni",
+      "istatSourceField": null,
+      "publicField": null,
+      "publicLabel": "Abitazioni",
+      "category": "abitazioni",
+      "unitOfMeasure": "abitazioni",
+      "numerator": null,
+      "denominator": null,
+      "enabled": false,
+      "status": "in-preparazione",
+      "sourceYear": "2023",
+      "territorialLevel": "sezione di censimento",
+      "sourceFieldStatus": "Da verificare nel tracciato ISTAT 2023 prima dell'attivazione pubblica.",
+      "publicInterpretation": "Numero di abitazioni o un indicatore abitativo censuario, se il tracciato ISTAT disponibile conferma il campo.",
+      "knownCaveats": [
+        "Serve distinguere abitazioni, edifici e unita' immobiliari prima della pubblicazione.",
+        "Non usare dati catastali come sostituto di indicatori censuari ISTAT."
+      ]
+    },
+    {
+      "id": "auto",
+      "istatSourceField": null,
+      "publicField": null,
+      "publicLabel": "Auto",
+      "category": "mobilita-auto",
+      "unitOfMeasure": "valore",
+      "numerator": null,
+      "denominator": null,
+      "enabled": false,
+      "status": "in-preparazione",
+      "sourceYear": "2023",
+      "territorialLevel": "sezione di censimento",
+      "sourceFieldStatus": "Da verificare nel tracciato ISTAT 2023 prima dell'attivazione pubblica.",
+      "publicInterpretation": "Indicatore su disponibilita' o uso dell'auto, solo se presente come dato ISTAT per sezione censuaria.",
+      "knownCaveats": [
+        "Non introdurre dati ACI, fiscali o comunali in questo layer prima di una metodologia separata.",
+        "Non attivo nel frontend pubblico."
+      ]
+    },
+    {
+      "id": "istruzione",
+      "istatSourceField": null,
+      "publicField": null,
+      "publicLabel": "Istruzione",
+      "category": "istruzione",
+      "unitOfMeasure": "valore",
+      "numerator": null,
+      "denominator": null,
+      "enabled": false,
+      "status": "in-preparazione",
+      "sourceYear": "2023",
+      "territorialLevel": "sezione di censimento",
+      "sourceFieldStatus": "Da verificare nel tracciato ISTAT 2023 prima dell'attivazione pubblica.",
+      "publicInterpretation": "Indicatore sul titolo di studio o sulla distribuzione per istruzione, solo dopo verifica del campo ISTAT 2023.",
+      "knownCaveats": [
+        "Il tracciato e le classi devono essere documentati prima dell'uso.",
+        "Non pubblicare categorie accorpate senza nota metodologica."
+      ]
+    },
+    {
+      "id": "lavoro-occupazione",
+      "istatSourceField": null,
+      "publicField": null,
+      "publicLabel": "Lavoro/occupazione",
+      "category": "lavoro",
+      "unitOfMeasure": "valore",
+      "numerator": null,
+      "denominator": null,
+      "enabled": false,
+      "status": "in-preparazione",
+      "sourceYear": "2023",
+      "territorialLevel": "sezione di censimento",
+      "sourceFieldStatus": "Da verificare nel tracciato ISTAT 2023 prima dell'attivazione pubblica.",
+      "publicInterpretation": "Indicatore su condizione professionale o occupazione, solo se il campo ISTAT 2023 e' presente e documentato per sezione censuaria.",
+      "knownCaveats": [
+        "Non introdurre indicatori economici o finanziari in questa fase.",
+        "Richiede revisione metodologica prima dell'attivazione."
+      ]
+    }
+  ]
+}

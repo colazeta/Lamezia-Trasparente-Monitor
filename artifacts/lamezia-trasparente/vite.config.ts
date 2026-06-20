@@ -18,6 +18,7 @@ const repoRoot = path.resolve(import.meta.dirname, "..", "..");
 const atlantePublicDataFiles = [
   "data/processed/territorio/istat_sezioni_censimento_lamezia.geojson",
   "data/processed/territorio/istat_sezioni_censimento_lamezia.metadata.json",
+  "data/processed/territorio/istat_indicator_dictionary.json",
 ];
 
 function atlantePublicDataPlugin(): Plugin {

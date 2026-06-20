@@ -59,6 +59,43 @@
     "warning": {
       "type": "string",
       "pattern": "catastali|catastale|censuari|censuarie"
+    },
+    "qa": {
+      "type": "object",
+      "properties": {
+        "reportPath": {
+          "type": "string"
+        },
+        "indicatorDictionaryPath": {
+          "type": "string"
+        },
+        "populationValueCoverage": {
+          "type": "object",
+          "required": ["totalFeatures", "availableCount", "nullCount"],
+          "properties": {
+            "totalFeatures": {
+              "const": 317
+            },
+            "availableCount": {
+              "const": 246
+            },
+            "availableShare": {
+              "type": "number"
+            },
+            "nullCount": {
+              "const": 71
+            },
+            "nullShare": {
+              "type": "number"
+            },
+            "zeroCount": {
+              "type": "number"
+            }
+          },
+          "additionalProperties": true
+        }
+      },
+      "additionalProperties": true
     }
   },
   "additionalProperties": true

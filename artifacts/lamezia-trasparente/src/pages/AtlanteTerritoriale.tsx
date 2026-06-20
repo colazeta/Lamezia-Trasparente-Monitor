@@ -9,6 +9,7 @@ import {
 } from "lucide-react";
 import {
   ATLANTE_EXPECTED_GEOJSON_PATH,
+  ATLANTE_EXPECTED_INDICATOR_DICTIONARY_PATH,
   ATLANTE_INDICATOR_CATEGORIES,
   type AtlanteFeature,
   type AtlanteFeatureCollection,
@@ -233,6 +234,7 @@ function DataNotice({
   metadata: AtlanteLayerMetadata;
 }) {
   const isDemo = dataStatus === "demo";
+  const coverage = metadata.qa?.populationValueCoverage;
   return (
     <div
       className={`rounded-lg border p-4 ${
@@ -254,6 +256,22 @@ function DataNotice({
             <span className="font-mono text-xs">{ATLANTE_EXPECTED_GEOJSON_PATH}</span>.
             File caricato: <span className="font-mono text-xs">{loadedFrom}</span>.
           </p>
+          <p className="text-sm leading-6">
+            Dizionario indicatori:{" "}
+            <span className="font-mono text-xs">
+              {metadata.qa?.indicatorDictionaryPath ??
+                ATLANTE_EXPECTED_INDICATOR_DICTIONARY_PATH}
+            </span>
+            .
+          </p>
+          {!isDemo && coverage ? (
+            <p className="text-sm leading-6">
+              QA popolazione residente: {coverage.availableCount} sezioni su{" "}
+              {coverage.totalFeatures} hanno valore 2023; {coverage.nullCount}{" "}
+              sezioni restano "dato non disponibile" e non sono trattate come
+              zero.
+            </p>
+          ) : null}
           {isDemo ? (
             <p className="text-sm leading-6">
               Questa visualizzazione usa dati dimostrativi per non bloccare la
@@ -277,6 +295,17 @@ function IndicatorSelector({
   collection: AtlanteFeatureCollection | null;
   onSelect: (indicatorId: string) => void;
 }) {
+  const availableCount =
+    collection && activeIndicator
+      ? collection.features.filter((feature) =>
+          featureHasIndicator(feature, activeIndicator),
+        ).length
+      : 0;
+  const unavailableCount =
+    collection && activeIndicator
+      ? collection.features.length - availableCount
+      : 0;
+
   return (
     <section className="rounded-lg border border-slate-200 bg-card p-4 shadow-sm">
       <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
@@ -328,8 +357,11 @@ function IndicatorSelector({
       </div>
       {collection && activeIndicator ? (
         <p className="mt-3 text-xs leading-5 text-slate-500">
-          {collection.features.filter((feature) => featureHasIndicator(feature, activeIndicator)).length}{" "}
-          sezioni con valore disponibile per l'indicatore selezionato.
+          {availableCount} sezioni con valore disponibile per l'indicatore
+          selezionato.{" "}
+          {unavailableCount > 0
+            ? `${unavailableCount} sezioni mostrano "dato non disponibile"; non sono conteggiate come zero.`
+            : "Nessuna sezione senza valore."}
         </p>
       ) : null}
     </section>
@@ -461,7 +493,7 @@ function MapSurface({
                       : null,
                     activeIndicator.unitLabel,
                   )
-                : "non disponibile"}
+                : "dato non disponibile"}
             </span>
           </p>
         </div>
@@ -505,7 +537,7 @@ function Legend({
               className="h-4 w-8 rounded-sm border border-slate-200"
               style={{ backgroundColor: EMPTY_COLOR }}
             />
-            <span>non disponibile</span>
+            <span>dato non disponibile</span>
           </div>
         </div>
       )}
@@ -583,7 +615,7 @@ function DetailPanel({
           <dd className="mt-1 text-slate-900">
             {activeIndicator
               ? formatAtlanteValue(activeValue, activeIndicator.unitLabel)
-              : "non disponibile"}
+              : "dato non disponibile"}
           </dd>
         </div>
       </dl>

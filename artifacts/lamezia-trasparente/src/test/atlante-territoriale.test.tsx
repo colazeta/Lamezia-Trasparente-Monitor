@@ -4,6 +4,7 @@ import { AtlanteTerritoriale } from "../pages/AtlanteTerritoriale";
 import {
   ATLANTE_EXPECTED_GEOJSON_PATH,
   ATLANTE_EXPECTED_METADATA_PATH,
+  formatAtlanteValue,
   loadAtlanteLayer,
 } from "../data/atlanteTerritoriale";
 
@@ -57,9 +58,18 @@ describe("Atlante territoriale", () => {
                   verificationStatus:
                     "Processato da fonti ufficiali ISTAT; indicatore popolazione validato sul campo P1.",
                   knownLimits: [
+                    "Il file ISTAT 2023 aggancia variabili a 246 sezioni su 317; le 71 sezioni rimanenti restano geometrie ufficiali senza valore indicatore.",
                     "Le sezioni urbane catastali Zornade non sono sezioni censuarie.",
                   ],
                   processingDate: "2026-06-20",
+                  qa: {
+                    populationValueCoverage: {
+                      totalFeatures: 317,
+                      availableCount: 246,
+                      nullCount: 71,
+                      zeroCount: 22,
+                    },
+                  },
                 },
           ),
       }),
@@ -72,10 +82,117 @@ describe("Atlante territoriale", () => {
     expect(layer.dataStatus).toBe("official");
     expect(layer.loadedFrom).toBe(ATLANTE_EXPECTED_GEOJSON_PATH);
     expect(layer.metadata.verificationStatus).toContain("P1");
-    expect(layer.metadata.knownLimits[0]).toContain("Zornade");
+    expect(layer.metadata.knownLimits[0]).toContain("246");
+    expect(layer.metadata.knownLimits[1]).toContain("Zornade");
+    expect(layer.metadata.qa?.populationValueCoverage?.nullCount).toBe(71);
     expect(fetchMock).toHaveBeenCalledWith(ATLANTE_EXPECTED_METADATA_PATH, {
       cache: "no-store",
     });
+  });
+
+  it("shows official QA coverage and keeps null values distinct from zero", async () => {
+    const officialCollection = {
+      type: "FeatureCollection",
+      features: [
+        {
+          type: "Feature",
+          properties: {
+            sezione_censimento_id: "0791600000198",
+            matched_istat_2023_variables: true,
+            indicators_istat_2023: {
+              p1: 0,
+              popolazione_totale: 0,
+            },
+          },
+          geometry: {
+            type: "Polygon",
+            coordinates: [
+              [
+                [16.3, 38.9],
+                [16.31, 38.9],
+                [16.31, 38.91],
+                [16.3, 38.91],
+                [16.3, 38.9],
+              ],
+            ],
+          },
+        },
+        {
+          type: "Feature",
+          properties: {
+            sezione_censimento_id: "0791600000204",
+            matched_istat_2023_variables: false,
+            indicators_istat_2023: {
+              p1: null,
+              popolazione_totale: null,
+            },
+          },
+          geometry: {
+            type: "Polygon",
+            coordinates: [
+              [
+                [16.31, 38.9],
+                [16.32, 38.9],
+                [16.32, 38.91],
+                [16.31, 38.91],
+                [16.31, 38.9],
+              ],
+            ],
+          },
+        },
+      ],
+    };
+
+    vi.stubGlobal(
+      "fetch",
+      vi.fn((url: string) =>
+        Promise.resolve({
+          ok: true,
+          json: () =>
+            Promise.resolve(
+              url === ATLANTE_EXPECTED_GEOJSON_PATH
+                ? officialCollection
+                : {
+                    publicLabel: "Dato ufficiale ISTAT per sezione censuaria",
+                    sourceInstitution: "ISTAT",
+                    sourceDataset:
+                      "Basi territoriali 2021 e dati per sezioni di censimento 2023",
+                    sourceYear: "geometrie 2021, indicatori 2023",
+                    territorialLevel: "sezione di censimento",
+                    verificationStatus:
+                      "Processato da fonti ufficiali ISTAT; indicatore popolazione validato sul campo P1.",
+                    knownLimits: [
+                      "Il file ISTAT 2023 aggancia variabili a 1 sezioni su 2; 1 sezione resta geometria ufficiale senza valore indicatore.",
+                    ],
+                    processingDate: "2026-06-20",
+                    qa: {
+                      indicatorDictionaryPath:
+                        "data/processed/territorio/istat_indicator_dictionary.json",
+                      populationValueCoverage: {
+                        totalFeatures: 2,
+                        availableCount: 1,
+                        nullCount: 1,
+                        zeroCount: 1,
+                      },
+                    },
+                  },
+            ),
+        }),
+      ),
+    );
+
+    render(<AtlanteTerritoriale />);
+
+    expect(await screen.findByText(/QA popolazione residente: 1 sezioni su 2/))
+      .toBeInTheDocument();
+    expect(
+      screen.getByText(/1 sezioni con valore disponibile/i),
+    ).toBeInTheDocument();
+    expect(screen.getAllByText(/dato non disponibile/i).length).toBeGreaterThan(
+      0,
+    );
+    expect(formatAtlanteValue(null, "persone")).toBe("dato non disponibile");
+    expect(formatAtlanteValue(0, "persone")).toBe("0 persone");
   });
 
   it("renders an explicit demo fallback when the processed ISTAT file is missing", async () => {

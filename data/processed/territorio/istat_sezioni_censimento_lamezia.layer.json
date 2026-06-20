@@ -32,11 +32,14 @@
   "processedOutputPath": "data/processed/territorio/istat_sezioni_censimento_lamezia.geojson",
   "generatedMetadataPath": "data/processed/territorio/istat_sezioni_censimento_lamezia.metadata.json",
   "metadataSchemaPath": "data/processed/territorio/istat_sezioni_censimento_lamezia.metadata.schema.json",
+  "qaReportPath": "docs/data-sources/istat-sezioni-censimento-lamezia-qa.md",
+  "indicatorDictionaryPath": "data/processed/territorio/istat_indicator_dictionary.json",
   "knownLimits": [
     "Raw ISTAT ZIPs are intentionally not committed because they are reproducible and heavy.",
     "The web-ready processed GeoJSON is intentionally committed because it is about 0.2 MiB.",
     "The public geometry is generalized for browser delivery; raw ISTAT files remain the source of full-detail geometry.",
-    "The 2023 variables join covers 246 sections out of 317 Lamezia census-section geometries; the remaining geometries keep null indicator values.",
+    "The 2023 variables join covers 246 sections out of 317 Lamezia census-section geometries; the remaining 71 geometries keep null indicator values.",
+    "Null indicator values are preserved as null and are separate from 22 sections where P1 is a true zero.",
     "Fictitious sections 888888x and 999999x are excluded by default or reported separately.",
     "Only the population indicator mapped from ISTAT field P1 is enabled; other indicator families remain in preparation.",
     "This layer must not be confused with Zornade cadastral urban sections."
