@@ -6,12 +6,17 @@ import {
   CheckCircle2,
   Clock3,
   Database,
+  ExternalLink,
   Info,
   ShieldCheck,
   Signal,
   XCircle,
 } from "lucide-react";
 
+import {
+  ALBO_OPERATIONAL_STATUS,
+  ALBO_VERIFICATION_LABELS,
+} from "@/data/alboStatus";
 import {
   MOCK_SOURCE_HEALTH,
   SOURCE_PRIORITY_LABELS,
@@ -103,6 +108,116 @@ function SummaryCard({
         {detail}
       </p>
     </article>
+  );
+}
+
+function AlboMetric({ label, value }: { label: string; value: number }) {
+  return (
+    <div className="rounded-xl border border-border bg-background/70 px-4 py-3">
+      <dt className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+        {label}
+      </dt>
+      <dd className="mt-1 text-2xl font-display font-bold">{value}</dd>
+    </div>
+  );
+}
+
+function AlboStatusPanel() {
+  const status = ALBO_OPERATIONAL_STATUS;
+  const counts = status.counts;
+
+  return (
+    <section
+      aria-labelledby="albo-pretorio-stato"
+      className="mt-8 rounded-2xl border border-border bg-card p-5 shadow-sm"
+    >
+      <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+        <div>
+          <span className="eyebrow text-primary">
+            <Database className="h-3.5 w-3.5" aria-hidden="true" />
+            Fonte operativa
+          </span>
+          <h2
+            id="albo-pretorio-stato"
+            className="mt-2 font-display text-2xl font-bold"
+          >
+            Albo Pretorio — stato fonte
+          </h2>
+          <dl className="mt-4 grid gap-3 text-sm sm:grid-cols-2">
+            <div>
+              <dt className="font-semibold text-foreground">Fonte</dt>
+              <dd className="mt-1 text-muted-foreground">{status.source}</dd>
+            </div>
+            <div>
+              <dt className="font-semibold text-foreground">Ultimo aggiornamento</dt>
+              <dd className="mt-1 text-muted-foreground">
+                {formatDateTime(status.last_update)}
+              </dd>
+            </div>
+            <div>
+              <dt className="font-semibold text-foreground">Verifica</dt>
+              <dd className="mt-1 text-muted-foreground">
+                {ALBO_VERIFICATION_LABELS[status.verification_status]}
+              </dd>
+            </div>
+            <div>
+              <dt className="font-semibold text-foreground">Metodo</dt>
+              <dd className="mt-1 text-muted-foreground">
+                {status.method ?? "In attesa della prima esecuzione"}
+              </dd>
+            </div>
+            <div>
+              <dt className="font-semibold text-foreground">Prossimo controllo</dt>
+              <dd className="mt-1 text-muted-foreground">
+                {formatDateTime(status.next_scheduled_check)}
+              </dd>
+            </div>
+          </dl>
+        </div>
+        <a
+          href={status.source_url}
+          target="_blank"
+          rel="noreferrer"
+          className="inline-flex items-center gap-2 rounded-xl border border-border px-4 py-2 text-sm font-semibold text-primary hover:bg-muted"
+        >
+          Fonte ufficiale
+          <ExternalLink className="h-4 w-4" aria-hidden="true" />
+        </a>
+      </div>
+
+      <dl className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        <AlboMetric label="Acquisiti" value={counts.acquired} />
+        <AlboMetric label="Nuovi" value={counts.new} />
+        <AlboMetric label="Modificati" value={counts.changed} />
+        <AlboMetric label="Rimossi" value={counts.removed} />
+        <AlboMetric label="Pubblicabili" value={counts.publishable} />
+        <AlboMetric label="Minimizzati" value={counts.minimised} />
+        <AlboMetric label="Solo metadato" value={counts.metadata_only} />
+        <AlboMetric label="Esclusi" value={counts.excluded} />
+      </dl>
+
+      <div className="mt-5 grid gap-4 lg:grid-cols-2">
+        <div className="rounded-xl border border-border bg-muted/30 p-4">
+          <h3 className="font-display text-lg font-bold">Limiti noti</h3>
+          <ul className="mt-3 space-y-2 text-sm leading-relaxed text-muted-foreground">
+            {status.known_limits.map((limit) => (
+              <li key={limit}>{limit}</li>
+            ))}
+          </ul>
+        </div>
+        <div className="rounded-xl border border-amber-200 bg-amber-50 p-4 text-amber-950 dark:border-amber-900/60 dark:bg-amber-950/20 dark:text-amber-100">
+          <h3 className="font-display text-lg font-bold">Nota pubblica</h3>
+          <p className="mt-3 text-sm leading-relaxed">
+            {status.official_albo_disclaimer}
+          </p>
+          {status.warnings.length > 0 ? (
+            <p className="mt-3 text-sm leading-relaxed">
+              {status.warnings[0]}
+            </p>
+          ) : null}
+        </div>
+      </div>
+    </section>
   );
 }
 
@@ -208,6 +323,8 @@ export function StatoMonitoraggio() {
           icon={ShieldCheck}
         />
       </section>
+
+      <AlboStatusPanel />
 
       <section
         aria-labelledby="legenda-stati"

@@ -1,0 +1,44 @@
+{
+  "generated_at": "2026-06-19T00:00:00.000Z",
+  "source": "Albo Pretorio Comune di Lamezia Terme",
+  "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
+  "provider": "Tinnvision",
+  "last_run_at": null,
+  "last_update": null,
+  "method": null,
+  "raw_format": null,
+  "counts": {
+    "acquired": 0,
+    "new": 0,
+    "changed": 0,
+    "removed": 0,
+    "unchanged": 0,
+    "publishable": 0,
+    "minimised": 0,
+    "metadata_only": 0,
+    "excluded": 0
+  },
+  "warnings": [
+    "Pipeline configurata; nessuna esecuzione ufficiale registrata nel repository al momento del seed Tranche B."
+  ],
+  "next_scheduled_check": null,
+  "schedule": {
+    "monitoring_window": "08:00-20:00 Europe/Rome",
+    "timezone": "Europe/Rome",
+    "github_actions_cron_utc": "10 6-19 * * *",
+    "utc_handling": "GitHub cron usa UTC; il workflow calcola l'ora Europe/Rome e salta le esecuzioni fuori dalla finestra civica.",
+    "zero_cost_runner": "ubuntu-latest"
+  },
+  "verification_status": "verification_required",
+  "known_limits": [
+    "Tranche B rende operativa la pipeline ma non certifica completezza storica dell'Albo Pretorio.",
+    "Gli allegati e i PDF non sono scaricati o analizzati in Tranche B.",
+    "Il layer pubblico espone solo metadati minimizzati o aggregati quando le regole prudenziali lo richiedono."
+  ],
+  "official_albo_disclaimer": "Lamezia Trasparente Monitor non sostituisce l'Albo Pretorio ufficiale: pubblicazioni, termini, allegati e contenuti vanno verificati sulla fonte istituzionale.",
+  "civic_safeguards": [
+    "Nessun PDF o allegato viene scaricato o analizzato in questa tranche.",
+    "Nessuna sintesi generativa, classifica, accusa o valutazione sostanziale viene prodotta.",
+    "Il layer pubblico espone solo metadati minimizzati secondo le classi publishable, publishable_with_minimisation, metadata_only e do_not_publish."
+  ]
+}
