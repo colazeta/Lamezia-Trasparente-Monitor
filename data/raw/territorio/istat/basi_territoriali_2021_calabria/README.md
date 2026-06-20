@@ -52,6 +52,12 @@ pnpm --filter @workspace/scripts run etl:istat-sezioni-censimento-lamezia -- --d
 
 The helper tries `ogr2ogr` when available and otherwise uses the built-in ISTAT shapefile converter. You can still provide a reviewed GeoJSON converted from `SHP/R18_21_WGS84.shp` and pass it with `--geometry-geojson <path> --prepare`.
 
+The public Atlante layer can then be materialized with:
+
+```bash
+pnpm --filter @workspace/scripts run materialize:istat-sezioni-censimento-lamezia
+```
+
 ## Known limits
 
 This folder is for official ISTAT census-section geometries only. Do not substitute the Zornade `sezioni urbane catastali` layer here: cadastral urban sections are an accessory cadastral layer and are not the basis for ISTAT census-section demographic, social, housing or territorial indicators.
