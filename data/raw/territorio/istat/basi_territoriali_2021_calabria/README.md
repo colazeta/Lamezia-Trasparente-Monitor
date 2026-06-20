@@ -18,7 +18,7 @@ Place the official ZIP here as:
 R18_21.zip
 ```
 
-The ZIP index inspected on 2026-06-19 exposed these relevant entries:
+The ZIP index inspected on 2026-06-20 exposed these relevant entries:
 
 ```text
 SHP/R18_21_WGS84.shp
@@ -36,7 +36,7 @@ The ISTAT legal notes state that, unless otherwise indicated, site contents are 
 
 ## Repository policy
 
-Do not commit the raw ZIP or extracted shapefile components. The direct ZIP was checked on 2026-06-19 and reported `33,874,230` bytes. Keep only this README, scripts, metadata and lightweight derived outputs that have been intentionally reviewed.
+Do not commit the raw ZIP or extracted shapefile components. The direct ZIP was checked on 2026-06-20 and reported `33,874,230` bytes. Keep only this README, scripts, metadata and lightweight derived outputs that have been intentionally reviewed.
 
 Use the repository helper from the repo root:
 
@@ -44,13 +44,19 @@ Use the repository helper from the repo root:
 pnpm --filter @workspace/scripts run etl:istat-sezioni-censimento-lamezia -- --download --extract
 ```
 
-To also convert the official shapefile to WGS84 GeoJSON and prepare the Lamezia output, install GDAL/ogr2ogr locally and run:
+To also convert the official shapefile to web-ready GeoJSON and prepare the Lamezia output, run:
 
 ```bash
 pnpm --filter @workspace/scripts run etl:istat-sezioni-censimento-lamezia -- --download --extract --convert-geometry --prepare
 ```
 
-If GDAL is not available, provide a reviewed GeoJSON converted from `SHP/R18_21_WGS84.shp` and pass it with `--geometry-geojson <path> --prepare`.
+The helper tries `ogr2ogr` when available and otherwise uses the built-in ISTAT shapefile converter. You can still provide a reviewed GeoJSON converted from `SHP/R18_21_WGS84.shp` and pass it with `--geometry-geojson <path> --prepare`.
+
+The public Atlante layer can then be materialized with:
+
+```bash
+pnpm --filter @workspace/scripts run materialize:istat-sezioni-censimento-lamezia
+```
 
 ## Known limits
 

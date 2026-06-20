@@ -2,6 +2,8 @@ import { ATLANTE_DEMO_GEOJSON } from "./atlanteTerritorialeDemo";
 
 export const ATLANTE_EXPECTED_GEOJSON_PATH =
   "/data/processed/territorio/istat_sezioni_censimento_lamezia.geojson";
+export const ATLANTE_EXPECTED_METADATA_PATH =
+  "/data/processed/territorio/istat_sezioni_censimento_lamezia.metadata.json";
 
 export type AtlanteDataStatus = "official" | "demo";
 
@@ -114,8 +116,7 @@ export const ATLANTE_INDICATORS: AtlanteIndicatorDefinition[] = [
 export const ATLANTE_DEFAULT_METADATA: AtlanteLayerMetadata = {
   publicLabel: "Dato ufficiale ISTAT per sezione censuaria",
   sourceInstitution: "ISTAT",
-  sourceDataset:
-    "Basi territoriali 2021 e dati per sezioni di censimento 2023",
+  sourceDataset: "Basi territoriali 2021 e dati per sezioni di censimento 2023",
   sourceYear: "geometrie 2021, indicatori 2023",
   territorialLevel: "sezione di censimento",
   verificationStatus:
@@ -150,24 +151,52 @@ export function isAtlanteFeatureCollection(
   value: unknown,
 ): value is AtlanteFeatureCollection {
   const candidate = value as Partial<AtlanteFeatureCollection> | null;
-  return candidate?.type === "FeatureCollection" && Array.isArray(candidate.features);
+  return (
+    candidate?.type === "FeatureCollection" && Array.isArray(candidate.features)
+  );
 }
 
 export function normalizeAtlanteMetadata(
   collection: AtlanteFeatureCollection,
   dataStatus: AtlanteDataStatus,
+  externalMetadata?: Partial<AtlanteLayerMetadata>,
 ): AtlanteLayerMetadata {
   if (dataStatus === "demo") {
     return ATLANTE_DEMO_METADATA;
   }
 
-  const metadata = collection.metadata ?? {};
+  const metadata = {
+    ...(collection.metadata ?? {}),
+    ...(externalMetadata ?? {}),
+  };
   return {
     ...ATLANTE_DEFAULT_METADATA,
     ...metadata,
     datasetStatus: "official",
-    publicLabel:
-      metadata.publicLabel ?? ATLANTE_DEFAULT_METADATA.publicLabel,
+    publicLabel: coerceMetadataString(
+      metadata.publicLabel,
+      ATLANTE_DEFAULT_METADATA.publicLabel,
+    ),
+    sourceInstitution: coerceMetadataString(
+      metadata.sourceInstitution,
+      ATLANTE_DEFAULT_METADATA.sourceInstitution,
+    ),
+    sourceDataset: coerceMetadataString(
+      metadata.sourceDataset,
+      ATLANTE_DEFAULT_METADATA.sourceDataset,
+    ),
+    sourceYear: coerceMetadataString(
+      metadata.sourceYear,
+      ATLANTE_DEFAULT_METADATA.sourceYear,
+    ),
+    territorialLevel: coerceMetadataString(
+      metadata.territorialLevel,
+      ATLANTE_DEFAULT_METADATA.territorialLevel,
+    ),
+    verificationStatus: coerceMetadataString(
+      metadata.verificationStatus,
+      ATLANTE_DEFAULT_METADATA.verificationStatus,
+    ),
     knownLimits:
       metadata.knownLimits && metadata.knownLimits.length > 0
         ? metadata.knownLimits
@@ -177,6 +206,28 @@ export function normalizeAtlanteMetadata(
         ? metadata.processingDate
         : ATLANTE_DEFAULT_METADATA.processingDate,
   };
+}
+
+function coerceMetadataString(value: unknown, fallback: string) {
+  return typeof value === "string" && value.trim() ? value : fallback;
+}
+
+async function loadAtlanteMetadata() {
+  try {
+    const response = await fetch(ATLANTE_EXPECTED_METADATA_PATH, {
+      cache: "no-store",
+    });
+    if (!response.ok) {
+      return undefined;
+    }
+    const parsed: unknown = await response.json();
+    if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) {
+      return undefined;
+    }
+    return parsed as Partial<AtlanteLayerMetadata>;
+  } catch {
+    return undefined;
+  }
 }
 
 export async function loadAtlanteLayer(): Promise<AtlanteLoadedLayer> {
@@ -198,10 +249,12 @@ export async function loadAtlanteLayer(): Promise<AtlanteLoadedLayer> {
       return buildDemoLayer();
     }
 
+    const metadata = await loadAtlanteMetadata();
+
     return {
       collection: parsed,
       dataStatus: "official",
-      metadata: normalizeAtlanteMetadata(parsed, "official"),
+      metadata: normalizeAtlanteMetadata(parsed, "official", metadata),
       loadedFrom: ATLANTE_EXPECTED_GEOJSON_PATH,
     };
   } catch {
@@ -278,7 +331,9 @@ export function featureHasIndicator(
 
 export function getAvailableIndicators(collection: AtlanteFeatureCollection) {
   return ATLANTE_INDICATORS.filter((definition) =>
-    collection.features.some((feature) => featureHasIndicator(feature, definition)),
+    collection.features.some((feature) =>
+      featureHasIndicator(feature, definition),
+    ),
   );
 }
 

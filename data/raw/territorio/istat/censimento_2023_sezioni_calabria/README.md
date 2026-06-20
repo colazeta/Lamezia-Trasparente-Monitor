@@ -17,7 +17,7 @@ Place the full official ZIP here as:
 Dati_regionali_2023.zip
 ```
 
-The ZIP index inspected on 2026-06-19 exposed the Calabria workbook as:
+The ZIP index inspected on 2026-06-20 exposed the Calabria workbook as:
 
 ```text
 Dati_regionali_2023/R18_Calabria_2023_sezioni.xlsx
@@ -29,7 +29,7 @@ The helper script can extract it locally as:
 R18_Calabria_2023_sezioni.xlsx
 ```
 
-The expected municipal filter for Lamezia Terme is ISTAT code `079160`. The ETL detects the available section key and municipality fields, with expected candidates such as `PRO_COM`, `COD_COM`, `SEZ`, `SEZ21` or equivalent identifiers. If ISTAT changes the workbook schema, inspect the header row and pass an already-cleaned table only after documenting the change in this README.
+The expected municipal filter for Lamezia Terme is ISTAT code `079160`. The ETL detects the available section key and municipality fields, with expected candidates such as `PROCOM`, `PRO_COM`, `SEZ`, `SEZ21`, `SEZ21_ID` or equivalent identifiers. The 2023 workbook stores examples such as `SEZ21_ID=791600000001`, so the helper normalizes the missing leading zero before joining to geometry key `0791600000001`. If ISTAT changes the workbook schema, inspect the header row and pass an already-cleaned table only after documenting the change in this README.
 
 ## Licence and attribution
 
@@ -37,7 +37,7 @@ The ISTAT legal notes state that, unless otherwise indicated, site contents are 
 
 ## Repository policy
 
-Do not commit the raw ZIP or extracted workbook. The direct ZIP was checked on 2026-06-19 and reported `261,295,722` bytes. Keep only this README, scripts, metadata and intentionally reviewed lightweight derived outputs.
+Do not commit the raw ZIP or extracted workbook. The direct ZIP was checked on 2026-06-20 and reported `261,295,722` bytes. Keep only this README, scripts, metadata and intentionally reviewed lightweight derived outputs.
 
 Use the repository helper from the repo root:
 
@@ -48,7 +48,7 @@ pnpm --filter @workspace/scripts run etl:istat-sezioni-censimento-lamezia -- --d
 To produce the processed Lamezia layer, provide or convert the official geometry GeoJSON and run:
 
 ```bash
-pnpm --filter @workspace/scripts run etl:istat-sezioni-censimento-lamezia -- --extract --prepare --geometry-geojson <path-to-official-geometry.geojson>
+pnpm --filter @workspace/scripts run materialize:istat-sezioni-censimento-lamezia -- --geometry-geojson <path-to-official-geometry.geojson>
 ```
 
 ## Known limits

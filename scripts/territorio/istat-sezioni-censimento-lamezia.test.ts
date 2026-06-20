@@ -8,7 +8,7 @@ import {
   detectColumns,
   normalizeMunicipalityCode,
   normalizeSectionSuffix,
-} from "./istat-sezioni-censimento-lamezia";
+} from "./istat-sezioni-censimento-lamezia-materialize";
 
 test("normalizes Lamezia municipal codes", () => {
   assert.equal(normalizeMunicipalityCode("79160"), "079160");
@@ -29,6 +29,32 @@ test("builds stable section join keys from municipality plus section suffix", ()
   assert.equal(parts.joinKey, "079160|12");
   assert.equal(parts.displaySectionId, "0791600000012");
   assert.equal(normalizeSectionSuffix("0791600000012", "079160"), "12");
+});
+
+test("handles ISTAT 2023 workbook keys that omit the leading zero in SEZ21_ID", () => {
+  const columns = detectColumns([
+    "CODREG",
+    "CODCOM",
+    "PROCOM",
+    "SEZ21_ID",
+    "P1",
+  ]);
+  const parts = buildJoinParts(
+    {
+      CODREG: "18",
+      CODCOM: "160",
+      PROCOM: "079160",
+      SEZ21_ID: "791600000001",
+      P1: "284",
+    },
+    columns,
+  );
+
+  assert.equal(columns.municipality, "PROCOM");
+  assert.equal(columns.section, "SEZ21_ID");
+  assert.equal(parts.joinKey, "079160|1");
+  assert.equal(parts.displaySectionId, "0791600000001");
+  assert.equal(normalizeSectionSuffix("791600000001", "079160"), "1");
 });
 
 test("classifies ISTAT fictitious census sections", () => {
