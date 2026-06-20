@@ -1,0 +1,113 @@
+{
+  "id": "istat-sezioni-censimento-lamezia",
+  "datasetStatus": "official",
+  "publicLabel": "Dato ufficiale ISTAT per sezione censuaria",
+  "sourceInstitution": "ISTAT",
+  "sourceDataset": "Basi territoriali 2021 e dati per sezioni di censimento 2023",
+  "sourceYear": "geometrie 2021, indicatori 2023",
+  "territorialLevel": "sezione di censimento",
+  "municipality": "Lamezia Terme",
+  "istatMunicipalCode": "079160",
+  "processingDate": "2026-06-20T07:27:51.602Z",
+  "verificationStatus": "Processato da fonti ufficiali ISTAT; indicatore popolazione validato sul campo P1 per 246 sezioni su 317.",
+  "knownLimits": [
+    "Le sezioni fittizie ISTAT 888888x e 999999x sono escluse dall'output pubblico predefinito.",
+    "Il file ISTAT 2023 aggancia variabili a 246 sezioni su 317; le sezioni rimanenti restano geometrie ufficiali senza valore indicatore.",
+    "Le geometrie pubbliche sono generalizzate per la mappa web con precisione 5 decimali e tolleranza 0.0003 gradi; i raw ISTAT restano la fonte di dettaglio.",
+    "Gli indicatori diversi dalla popolazione residente restano in preparazione finche' non viene controllato il tracciato ISTAT.",
+    "Le sezioni urbane catastali Zornade non sono sezioni censuarie e non sono usate come base di questa mappa."
+  ],
+  "source": "ISTAT",
+  "sourceDatasetDetails": {
+    "geometries": "Basi territoriali 2021 - Calabria, sezioni di censimento",
+    "variables": "Dati per sezioni di censimento - Censimento permanente della popolazione e delle abitazioni 2023"
+  },
+  "sourceYearDetails": {
+    "geometries": 2021,
+    "variables": 2023
+  },
+  "sourcePages": {
+    "geometries": "https://www.istat.it/notizia/basi-territoriali-e-variabili-censuarie/",
+    "variables": "https://www.istat.it/notizia/dati-per-sezioni-di-censimento/",
+    "legalNotes": "https://www.istat.it/note-legali/"
+  },
+  "downloadUrls": {
+    "geometryZipUrl": "https://www.istat.it/storage/cartografia/basi_territoriali/2021/R18_21.zip",
+    "variablesZipUrl": "https://esploradati.istat.it/databrowser/DWL/PERMPOP/SUBCOM/Dati_regionali_2023.zip"
+  },
+  "licence": "CC BY 4.0 unless otherwise indicated by ISTAT",
+  "publicMapRole": "primary census-section base for Atlante territoriale",
+  "warning": "Non usare per indicatori censuari ISTAT dati catastali, OMI, CAP, fiscali o comunali non nativi delle sezioni censuarie.",
+  "inputs": {
+    "geometryGeoJsonPath": "data/raw/territorio/istat/basi_territoriali_2021_calabria/R18_21_WGS84_lamezia.geojson",
+    "variablesXlsxPath": "data/raw/territorio/istat/censimento_2023_sezioni_calabria/R18_Calabria_2023_sezioni.xlsx",
+    "geometrySourceUrl": "https://www.istat.it/storage/cartografia/basi_territoriali/2021/R18_21.zip",
+    "variablesSourceUrl": "https://esploradati.istat.it/databrowser/DWL/PERMPOP/SUBCOM/Dati_regionali_2023.zip"
+  },
+  "counts": {
+    "outputFeatures": 317,
+    "matchedVariables": 246,
+    "missingVariables": 71,
+    "skippedNonLamezia": 29557,
+    "skippedFictitious": 1,
+    "variableRowsForLamezia": 247,
+    "variableFictitiousRows": 1
+  },
+  "webGeometry": {
+    "precisionDecimals": 5,
+    "simplifyToleranceDegrees": 0.0003
+  },
+  "indicatorColumns": [
+    "P1",
+    "P2",
+    "P3",
+    "P14",
+    "P15",
+    "P16",
+    "P17",
+    "P18",
+    "P19",
+    "P20",
+    "P21",
+    "P22",
+    "P23",
+    "P24",
+    "P25",
+    "P26",
+    "P27",
+    "P28",
+    "P29",
+    "P30",
+    "P31",
+    "P32",
+    "P33",
+    "P34",
+    "P35",
+    "P36",
+    "P37",
+    "P38",
+    "P39",
+    "P40",
+    "P41",
+    "P42",
+    "P43",
+    "P44",
+    "P45",
+    "P67",
+    "P68",
+    "P69",
+    "P70",
+    "P71"
+  ],
+  "enabledIndicators": [
+    {
+      "id": "popolazione-residente",
+      "label": "Popolazione residente",
+      "category": "popolazione",
+      "sourceField": "P1",
+      "publicField": "popolazione_totale",
+      "unit": "persone"
+    }
+  ],
+  "outputPath": "data/processed/territorio/istat_sezioni_censimento_lamezia.geojson"
+}
