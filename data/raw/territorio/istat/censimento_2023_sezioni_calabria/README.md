@@ -48,7 +48,7 @@ pnpm --filter @workspace/scripts run etl:istat-sezioni-censimento-lamezia -- --d
 To produce the processed Lamezia layer, provide or convert the official geometry GeoJSON and run:
 
 ```bash
-pnpm --filter @workspace/scripts run etl:istat-sezioni-censimento-lamezia -- --extract --prepare --geometry-geojson <path-to-official-geometry.geojson>
+pnpm --filter @workspace/scripts run materialize:istat-sezioni-censimento-lamezia -- --geometry-geojson <path-to-official-geometry.geojson>
 ```
 
 ## Known limits
