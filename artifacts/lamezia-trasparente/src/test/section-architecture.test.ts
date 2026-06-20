@@ -2,8 +2,10 @@ import { describe, expect, it } from "vitest";
 
 import { PUBLIC_INDEXABLE_PATHS } from "../data/publicRoutes";
 import {
+  PRIORITY_PAGE_PATHS,
   SECTION_ARCHITECTURES,
   assertEveryPublicSectionHasSafeguards,
+  getPriorityPageArchitectures,
   getSectionArchitecture,
 } from "../data/sectionArchitecture";
 
@@ -27,6 +29,34 @@ describe("section architecture registry", () => {
       expect(section.filters.length).toBeGreaterThan(0);
       expect(section.primaryContent.trim()).not.toBe("");
       expect(section.auditNotes.structuralWeaknesses.trim()).not.toBe("");
+      expect(section.pageImplementation.primaryDataObject.trim()).not.toBe("");
+      expect(section.pageImplementation.sourceStatusPlacement).toMatch(
+        /fonte/i,
+      );
+    }
+  });
+
+  it("defines page-level implementation blueprints for every priority page", () => {
+    const priority = getPriorityPageArchitectures();
+
+    expect(priority.map((section) => section.path)).toEqual(
+      expect.arrayContaining([...PRIORITY_PAGE_PATHS]),
+    );
+    expect(priority).toHaveLength(PRIORITY_PAGE_PATHS.length);
+
+    for (const section of priority) {
+      const blueprint = section.pageImplementation;
+
+      expect(blueprint.isPriorityPage).toBe(true);
+      expect(blueprint.primaryDataObject.trim()).not.toBe("");
+      expect(blueprint.contentHierarchy.length).toBeGreaterThanOrEqual(3);
+      expect(blueprint.sourceStatusPlacement).toMatch(/fonte/i);
+      expect(blueprint.sourceStatusPlacement).toMatch(/stato|limit/i);
+      expect(blueprint.usefulControls.length).toBeGreaterThan(0);
+      expect(blueprint.citizenAction.trim()).not.toBe("");
+      expect(blueprint.remainingDataDependency.trim()).not.toBe("");
+      expect(blueprint.launchPosture.trim()).not.toBe("");
+      expect(blueprint.furtherWorkBeforeLaunch.trim()).not.toBe("");
     }
   });
 
