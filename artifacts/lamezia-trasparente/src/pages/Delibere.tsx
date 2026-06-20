@@ -1,5 +1,8 @@
 import { useEffect, useState } from "react";
-import { useListDelibere } from "@workspace/api-client-react";
+import {
+  useListDelibere,
+  type Publication,
+} from "@workspace/api-client-react";
 import { Search, Gavel, Calendar } from "lucide-react";
 import { format } from "date-fns";
 import { it } from "date-fns/locale";
@@ -19,6 +22,7 @@ import { AlboLink } from "@/components/AlboLink";
 import { cn } from "@/lib/utils";
 import { MacrotemaBadge } from "@/lib/macrotema";
 import { CivicMonitorReturn } from "@/components/CivicMonitorReturn";
+import { asApiList } from "@/lib/apiList";
 
 const TABS = [
   { value: "all", label: "Tutte" },
@@ -44,10 +48,11 @@ export function Delibere() {
     return () => clearTimeout(handler);
   }, [search]);
 
-  const { data: delibere, isLoading } = useListDelibere({
+  const { data: delibereData, isLoading } = useListDelibere({
     tipo: tipo !== "all" ? tipo : undefined,
     q: debouncedSearch || undefined,
   });
+  const delibere = asApiList<Publication>(delibereData);
 
   return (
     <div className="container mx-auto px-4 py-8 md:py-12 max-w-5xl">
@@ -105,7 +110,7 @@ export function Delibere() {
                 <Skeleton className="h-5 w-full" />
               </Card>
             ))
-        ) : delibere && delibere.length > 0 ? (
+        ) : delibere.length > 0 ? (
           delibere.map((d) => (
             <Card
               key={d.id}

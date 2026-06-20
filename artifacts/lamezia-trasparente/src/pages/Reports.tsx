@@ -60,6 +60,7 @@ import {
   EmptyTitle,
   EmptyDescription,
 } from "@/components/ui/empty";
+import { asApiList } from "@/lib/apiList";
 
 export const formSchema = z.object({
   title: z.string().min(5, "Il titolo deve avere almeno 5 caratteri").max(100),
@@ -235,7 +236,7 @@ export function buildReportSubmission(data: FormValues) {
 export function Reports() {
   const queryClient = useQueryClient();
   const createReport = useCreateReport();
-  const { data: reports, isLoading } = useListReports();
+  const { data: reportsData, isLoading } = useListReports();
   const [categoryFilter, setCategoryFilter] = useState("all");
   const [locationFilter, setLocationFilter] = useState("all");
   const [officeFilter, setOfficeFilter] = useState("all");
@@ -260,14 +261,14 @@ export function Reports() {
   });
 
   const registryReports = useMemo<CriticalReport[]>(() => {
-    return (reports ?? []).map((report) => ({
+    return asApiList<Report>(reportsData).map((report) => ({
       ...report,
       outcome: report.outcome ?? "aperta",
       verificationStatus: report.verificationStatus ?? "non_verificata",
       interpretiveCaution: report.interpretiveCaution ?? DEFAULT_CAUTION,
       updatedAt: report.updatedAt ?? report.createdAt,
     }));
-  }, [reports]);
+  }, [reportsData]);
 
   const locations = useMemo(
     () =>

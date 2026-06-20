@@ -84,8 +84,10 @@ function formatDateTime(value: string | null | undefined) {
 export function Legalita() {
   const { data, isLoading } = useGetLegalitySection();
 
-  const areas = data?.areas ?? [];
-  const hasContent = areas.length > 0 || Boolean(data?.overallJudgment.trim());
+  const areas = Array.isArray(data?.areas) ? data.areas : [];
+  const overallJudgment =
+    typeof data?.overallJudgment === "string" ? data.overallJudgment : "";
+  const hasContent = areas.length > 0 || Boolean(overallJudgment.trim());
   const updatedAt = formatDateTime(data?.updatedAt);
 
   return (
@@ -160,9 +162,9 @@ export function Legalita() {
         </Empty>
       ) : (
         <div data-tour="legality-areas" className="space-y-12">
-          {data?.overallJudgment.trim() ? (
+          {overallJudgment.trim() ? (
             <OverallJudgment
-              text={data.overallJudgment}
+              text={overallJudgment}
               updatedAt={updatedAt}
             />
           ) : null}

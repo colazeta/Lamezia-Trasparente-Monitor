@@ -181,7 +181,7 @@ function MacroAreaBand({
 
 export function HomeCivicSystemMap({
   title = "Scegli un percorso civico",
-  subtitle = "Otto macro-aree ordinano le sezioni civiche: poche schede per fascia, stati chiari e meno rumore operativo.",
+  subtitle = "Otto macro-aree distinguono sezioni consultabili, in lavorazione e previste senza promettere copertura completa.",
   className,
 }: {
   title?: string;

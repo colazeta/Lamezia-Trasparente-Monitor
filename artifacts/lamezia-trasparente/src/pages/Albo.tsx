@@ -4,7 +4,11 @@ import {
   useGetFeedStatus,
   useGetPublicationsCategories,
 } from "@workspace/api-client-react";
-import type { MacrotemaKey } from "@workspace/api-client-react";
+import type {
+  MacrotemaKey,
+  Publication,
+  PublicationCategoryStat,
+} from "@workspace/api-client-react";
 import {
   Search,
   Filter,
@@ -52,6 +56,7 @@ import {
   MacrotemaBadge,
 } from "@/lib/macrotema";
 import { PageMeta } from "@/components/seo/PageMeta";
+import { asApiList } from "@/lib/apiList";
 
 const CATEGORY_LABELS: Record<string, string> = {
   albo: "Albo",
@@ -84,15 +89,17 @@ export function Albo() {
   }, [search]);
 
   const { data: feed } = useGetFeedStatus();
-  const { data: categoryStats } = useGetPublicationsCategories();
+  const { data: categoryStatsData } = useGetPublicationsCategories();
 
-  const { data: publications, isLoading } = useListPublications({
+  const { data: publicationsData, isLoading } = useListPublications({
     category: category !== "all" ? category : undefined,
     tipologia: tipologia !== "all" ? tipologia : undefined,
     macrotema: macrotema !== "all" ? (macrotema as MacrotemaKey) : undefined,
     from: from || undefined,
     to: to || undefined,
   });
+  const publications = asApiList<Publication>(publicationsData);
+  const categoryStats = asApiList<PublicationCategoryStat>(categoryStatsData);
 
   const uniqueTipologie = useMemo(
     () =>
@@ -118,7 +125,7 @@ export function Albo() {
 
   const filteredPublications = useMemo(() => {
     const normalizedSearch = debouncedSearch.trim().toLowerCase();
-    return (publications ?? []).filter((p) => {
+    return publications.filter((p) => {
       const searchable = [p.oggetto, p.brief, p.provenienza, p.tipologia, p.category]
         .filter(Boolean)
         .join(" ")
@@ -261,7 +268,7 @@ export function Albo() {
       </div>
 
       <div data-tour="albo-filter" className="flex flex-col md:flex-row flex-wrap gap-4 mb-8 p-4 bg-muted/40 rounded-xl border border-border shadow-sm">
-        <div className="relative flex-1 min-w-[200px]">
+        <div className="relative min-w-0 flex-1">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" aria-hidden="true" />
           <Input
             placeholder="Cerca in oggetto, descrizione, tipologia o ufficio..."
@@ -374,11 +381,11 @@ export function Albo() {
           ))}
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="grid w-full grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-2 md:w-auto">
           <Input
             type="date"
             aria-label="Data inizio"
-            className="h-11 bg-background w-full md:w-[150px]"
+            className="h-11 min-w-0 bg-background md:w-[150px]"
             value={from}
             max={to || undefined}
             onChange={(e) => setFrom(e.target.value)}
@@ -387,7 +394,7 @@ export function Albo() {
           <Input
             type="date"
             aria-label="Data fine"
-            className="h-11 bg-background w-full md:w-[150px]"
+            className="h-11 min-w-0 bg-background md:w-[150px]"
             value={to}
             min={from || undefined}
             onChange={(e) => setTo(e.target.value)}
