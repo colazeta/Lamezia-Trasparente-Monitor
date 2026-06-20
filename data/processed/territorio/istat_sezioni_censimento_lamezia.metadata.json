@@ -12,7 +12,8 @@
   "verificationStatus": "Processato da fonti ufficiali ISTAT; indicatore popolazione validato sul campo P1 per 246 sezioni su 317.",
   "knownLimits": [
     "Le sezioni fittizie ISTAT 888888x e 999999x sono escluse dall'output pubblico predefinito.",
-    "Il file ISTAT 2023 aggancia variabili a 246 sezioni su 317; le sezioni rimanenti restano geometrie ufficiali senza valore indicatore.",
+    "Il file ISTAT 2023 aggancia variabili a 246 sezioni su 317; le 71 sezioni rimanenti restano geometrie ufficiali senza valore indicatore.",
+    "Il controllo QA distingue valori null da valori zero: 71 sezioni senza aggancio 2023 restano null, mentre 22 sezioni con P1 pari a 0 restano zero.",
     "Le geometrie pubbliche sono generalizzate per la mappa web con precisione 5 decimali e tolleranza 0.0003 gradi; i raw ISTAT restano la fonte di dettaglio.",
     "Gli indicatori diversi dalla popolazione residente restano in preparazione finche' non viene controllato il tracciato ISTAT.",
     "Le sezioni urbane catastali Zornade non sono sezioni censuarie e non sono usate come base di questa mappa."
@@ -109,5 +110,31 @@
       "unit": "persone"
     }
   ],
+  "qa": {
+    "reportPath": "docs/data-sources/istat-sezioni-censimento-lamezia-qa.md",
+    "indicatorDictionaryPath": "data/processed/territorio/istat_indicator_dictionary.json",
+    "populationValueCoverage": {
+      "totalFeatures": 317,
+      "availableCount": 246,
+      "availableShare": 0.776,
+      "nullCount": 71,
+      "nullShare": 0.224,
+      "zeroCount": 22
+    },
+    "geometryCheck": {
+      "geometryTypes": {
+        "Polygon": 317
+      },
+      "ringsChecked": 366,
+      "invalidGeometryCount": 0,
+      "webRenderingStatus": "valid enough for current SVG web rendering gate"
+    },
+    "censusBaseCheck": {
+      "expectedMunicipalCode": "079160",
+      "allFeaturesRetainMunicipalCode": true,
+      "zornadeOrCadastralFeaturesDetected": false,
+      "fictitiousSectionIdsInOutput": 0
+    }
+  },
   "outputPath": "data/processed/territorio/istat_sezioni_censimento_lamezia.geojson"
 }

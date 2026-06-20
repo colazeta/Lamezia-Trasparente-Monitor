@@ -4,6 +4,8 @@ export const ATLANTE_EXPECTED_GEOJSON_PATH =
   "/data/processed/territorio/istat_sezioni_censimento_lamezia.geojson";
 export const ATLANTE_EXPECTED_METADATA_PATH =
   "/data/processed/territorio/istat_sezioni_censimento_lamezia.metadata.json";
+export const ATLANTE_EXPECTED_INDICATOR_DICTIONARY_PATH =
+  "/data/processed/territorio/istat_indicator_dictionary.json";
 
 export type AtlanteDataStatus = "official" | "demo";
 
@@ -55,6 +57,18 @@ export type AtlanteLayerMetadata = {
   verificationStatus: string;
   knownLimits: string[];
   processingDate: string | null;
+  qa?: {
+    reportPath?: string;
+    indicatorDictionaryPath?: string;
+    populationValueCoverage?: {
+      totalFeatures: number;
+      availableCount: number;
+      availableShare?: number;
+      nullCount: number;
+      nullShare?: number;
+      zeroCount?: number;
+    };
+  };
 };
 
 export type AtlanteFeatureCollection = {
@@ -339,7 +353,7 @@ export function getAvailableIndicators(collection: AtlanteFeatureCollection) {
 
 export function formatAtlanteValue(value: number | null, unitLabel: string) {
   if (value === null) {
-    return "non disponibile";
+    return "dato non disponibile";
   }
 
   return `${new Intl.NumberFormat("it-IT", {
