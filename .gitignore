@@ -64,3 +64,8 @@ data/raw/territorio/istat/basi_territoriali_2021_calabria/*
 data/raw/territorio/istat/censimento_2023_sezioni_calabria/*
 !data/raw/territorio/istat/censimento_2023_sezioni_calabria/README.md
 data/processed/territorio/istat_sezioni_censimento_lamezia.geojson
+
+# Albo Pretorio raw snapshots and full processed records may contain
+# non-minimised source data. Only data/public/albo/** is commit-safe.
+data/snapshots/albo/
+data/processed/albo/
