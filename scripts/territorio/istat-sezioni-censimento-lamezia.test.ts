@@ -8,7 +8,7 @@ import {
   detectColumns,
   normalizeMunicipalityCode,
   normalizeSectionSuffix,
-} from "./istat-sezioni-censimento-lamezia";
+} from "./istat-sezioni-censimento-lamezia-materialize";
 
 test("normalizes Lamezia municipal codes", () => {
   assert.equal(normalizeMunicipalityCode("79160"), "079160");
