@@ -8,7 +8,7 @@
   "territorialLevel": "sezione di censimento",
   "municipality": "Lamezia Terme",
   "istatMunicipalCode": "079160",
-  "processingDate": "2026-06-20T07:27:51.602Z",
+  "processingDate": "2026-06-20T07:42:52.613Z",
   "verificationStatus": "Processato da fonti ufficiali ISTAT; indicatore popolazione validato sul campo P1 per 246 sezioni su 317.",
   "knownLimits": [
     "Le sezioni fittizie ISTAT 888888x e 999999x sono escluse dall'output pubblico predefinito.",
