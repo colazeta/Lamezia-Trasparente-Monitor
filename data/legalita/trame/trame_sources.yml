@@ -1,0 +1,53 @@
+trame_official_site:
+  name: "Trame Festival - sito ufficiale"
+  url: "https://www.tramefestival.it/"
+  source_type: "official_site"
+  source_status: "official"
+  last_checked: "2026-06-19"
+  known_limits: "Sito dinamico; alcuni contenuti possono cambiare durante lo svolgimento dell'edizione."
+  notes: "Il sito ufficiale mostra Trame.15 e il programma 16-21 giugno 2026."
+
+trame15_program_2026:
+  name: "Trame.15 - programma ufficiale 2026"
+  url: "https://www.tramefestival.it/"
+  source_type: "official_program"
+  source_status: "official"
+  last_checked: "2026-06-19"
+  known_limits: "Le pagine programma non indicano necessariamente video, durata, transcript o materiali post-evento."
+  notes: "Le giornate censite sono 16, 17, 18, 19, 20 e 21 giugno 2026."
+
+trame15_youtube_playlist:
+  name: "Trame.15 - playlist YouTube incorporata nel sito ufficiale"
+  url: "https://www.youtube.com/playlist?list=PLC9oIvsXy4uFd-aXGDR8zMfYsSdBMh7q7"
+  source_type: "official_youtube_playlist"
+  source_status: "official"
+  last_checked: "2026-06-19"
+  known_limits: "Metadata YouTube instabili; durata, transcript e timestamp devono essere verificati per singolo video."
+  notes: "Playlist ricavata dall'embed YouTube presente nella home ufficiale Trame."
+
+trame_youtube_channel:
+  name: "Trame Festival - canale YouTube"
+  url: "https://www.youtube.com/@tramefestival"
+  source_type: "youtube_channel"
+  source_status: "official_to_verify"
+  last_checked: "2026-06-19"
+  known_limits: "Il canale risulta proprietario della playlist incorporata, ma va confermato manualmente prima di usarlo come unica fonte."
+  notes: "Channel ID rilevato dalla playlist: UCg6SbJEkGRwA-nU2ivjaE5A."
+
+trame_youtube_search:
+  name: "YouTube search fallback - Trame Festival"
+  url: "https://www.youtube.com/results?search_query=Trame+Festival"
+  source_type: "youtube_search"
+  source_status: "derived"
+  last_checked: "2026-06-19"
+  known_limits: "Risultati ordinati da YouTube, non autorevoli per il censimento."
+  notes: "Da usare solo per individuare possibili video da verificare contro playlist/canale ufficiale."
+
+transcript_availability_probe:
+  name: "YouTube timedtext caption probe"
+  url: "https://www.youtube.com/api/timedtext?type=list&v=<video_id>"
+  source_type: "caption_probe"
+  source_status: "blocked_source_access"
+  last_checked: "2026-06-19"
+  known_limits: "Accesso a sottotitoli e transcript dipendente da disponibilita' YouTube, lingua, permessi e markup non stabile."
+  notes: "La pipeline e' predisposta, ma nessun transcript automatico viene pubblicato o considerato verificato."

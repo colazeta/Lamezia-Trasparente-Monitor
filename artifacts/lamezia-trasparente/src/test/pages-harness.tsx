@@ -123,6 +123,7 @@ import { Incarichimetro } from "@/pages/Incarichimetro";
 import { MacchinaComunale } from "@/pages/MacchinaComunale";
 import { Promessometro } from "@/pages/Promessometro";
 import { PropostePubbliche } from "@/pages/PropostePubbliche";
+import { TrameFestival } from "@/pages/TrameFestival";
 import { Albo } from "@/pages/Albo";
 import { AlboDetail } from "@/pages/AlboDetail";
 import { AttiFondamentali } from "@/pages/AttiFondamentali";
@@ -159,6 +160,7 @@ export const PAGES: Array<[string, PageComponent]> = [
   ["MacchinaComunale", MacchinaComunale],
   ["Promessometro", Promessometro],
   ["PropostePubbliche", PropostePubbliche],
+  ["TrameFestival", TrameFestival],
   ["Albo", Albo],
   ["AlboDetail", AlboDetail],
   ["AttiFondamentali", AttiFondamentali],

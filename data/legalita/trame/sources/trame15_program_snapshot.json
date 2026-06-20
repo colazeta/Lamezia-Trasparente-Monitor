@@ -1,0 +1,44 @@
+{
+  "last_checked": "2026-06-19",
+  "source_status": "official",
+  "days": [
+    {
+      "date": "2026-06-16",
+      "label": "martedi-16-giugno-2026",
+      "url": "https://www.tramefestival.it/marted%C3%AC-16-giugno-2026",
+      "articles_found": 9
+    },
+    {
+      "date": "2026-06-17",
+      "label": "mercoledi-17-giugno-2026",
+      "url": "https://www.tramefestival.it/mercoled%C3%AC-17-giugno-2026",
+      "articles_found": 15
+    },
+    {
+      "date": "2026-06-18",
+      "label": "giovedi-18-giugno-2026",
+      "url": "https://www.tramefestival.it/gioved%C3%AC-18-giugno-2026",
+      "articles_found": 14
+    },
+    {
+      "date": "2026-06-19",
+      "label": "venerdi-19-giugno-2026",
+      "url": "https://www.tramefestival.it/venerd%C3%AC-19-giugno-2026",
+      "articles_found": 14
+    },
+    {
+      "date": "2026-06-20",
+      "label": "sabato-20-giugno-2026",
+      "url": "https://www.tramefestival.it/sabato-20-giugno-2026",
+      "articles_found": 16
+    },
+    {
+      "date": "2026-06-21",
+      "label": "domenica-21-giugno-2026",
+      "url": "https://www.tramefestival.it/domenica-21-giugno-2026",
+      "articles_found": 14
+    }
+  ],
+  "events_count": 76,
+  "people_count": 162
+}
