@@ -32,12 +32,13 @@
   "verification_status": "verification_required",
   "known_limits": [
     "Tranche B rende operativa la pipeline ma non certifica completezza storica dell'Albo Pretorio.",
-    "Gli allegati e i PDF non sono scaricati o analizzati in Tranche B.",
+    "I PDF sono archiviati solo per record pubblicabili a basso rischio; allegati e PDF non sono analizzati, interpretati o sottoposti a OCR.",
     "Il layer pubblico espone solo metadati minimizzati o aggregati quando le regole prudenziali lo richiedono."
   ],
   "official_albo_disclaimer": "Lamezia Trasparente Monitor non sostituisce l'Albo Pretorio ufficiale: pubblicazioni, termini, allegati e contenuti vanno verificati sulla fonte istituzionale.",
   "civic_safeguards": [
-    "Nessun PDF o allegato viene scaricato o analizzato in questa tranche.",
+    "I PDF sono archiviati solo per record pubblicabili a basso rischio, con URL ufficiale, content-type application/pdf e limite dimensionale.",
+    "Nessun PDF o allegato viene analizzato, interpretato, sottoposto a OCR o riassunto.",
     "Nessuna sintesi generativa, classifica, accusa o valutazione sostanziale viene prodotta.",
     "Il layer pubblico espone solo metadati minimizzati secondo le classi publishable, publishable_with_minimisation, metadata_only e do_not_publish."
   ]

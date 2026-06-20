@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { createHash } from "node:crypto";
 import { mkdtemp, readFile, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
@@ -207,6 +208,194 @@ test("run command compares against the previous current snapshot", async () => {
   assert.match(publicDiff, /"unchanged"/);
 });
 
+test("archives only official low-risk publishable PDFs into public documents storage", async () => {
+  const tmp = await mkdtemp(path.join(tmpdir(), "albo-tinnvision-pdf-"));
+  const fixturePath = path.join(tmp, "albo.xml");
+  const outDir = path.join(tmp, "data");
+  const documentUrl = "https://albo.tinnvision.cloud/documenti/2026/1001.pdf";
+  const pdfBytes = new TextEncoder().encode("%PDF-1.7\npublic test pdf\n");
+  const expectedSha = createHash("sha256").update(pdfBytes).digest("hex");
+  const fetchCalls: string[] = [];
+
+  await writeFile(
+    fixturePath,
+    xmlRecord(
+      "2026/1001",
+      "DETERMINAZIONE DIRIGENZIALE",
+      "SETTORE TECNICO",
+      "Affidamento servizio verde pubblico CIG ABC1234567",
+      "1",
+      documentUrl,
+    ),
+    "utf8",
+  );
+
+  const result = await runAlboIngestion({
+    outDir,
+    fromFile: fixturePath,
+    inputFormat: "xml",
+    retrievedAt: FIXTURE_RETRIEVED_AT,
+    pdfFetch: async (url) => {
+      fetchCalls.push(String(url));
+      return new Response(pdfBytes, {
+        status: 200,
+        headers: {
+          "content-type": "application/pdf",
+          "content-length": String(pdfBytes.byteLength),
+        },
+      });
+    },
+  });
+
+  assert.deepEqual(fetchCalls, [documentUrl]);
+  assert.equal(result.documentsManifest.counts.archived, 1);
+  assert.equal(result.documentsManifest.counts.eligible, 1);
+  assert.equal(result.documentsManifest.documents[0].sha256, expectedSha);
+  assert.equal(
+    result.documentsManifest.documents[0].storage_path,
+    `data/public/albo/documents/2026/${expectedSha}.pdf`,
+  );
+
+  const archivedPdf = await readFile(
+    path.join(outDir, "public", "albo", "documents", "2026", `${expectedSha}.pdf`),
+  );
+  assert.deepEqual(new Uint8Array(archivedPdf), pdfBytes);
+
+  const manifest = await readFile(result.paths.documentsManifest, "utf8");
+  assert.match(manifest, /"no_pdf_parsing": true/);
+  assert.match(manifest, /"paid_storage": false/);
+  assert.doesNotMatch(manifest, /Affidamento servizio verde pubblico/i);
+});
+
+test("excludes metadata-only and high-risk records from PDF archiving without fetching", async () => {
+  const tmp = await mkdtemp(path.join(tmpdir(), "albo-tinnvision-pdf-excluded-"));
+  const fixturePath = path.join(tmp, "albo.xml");
+  const outDir = path.join(tmp, "data");
+  await writeFile(
+    fixturePath,
+    [
+      xmlRecord(
+        "2026/2001",
+        "PUBBLICAZIONE DI MATRIMONIO",
+        "SERVIZI DEMOGRAFICI",
+        "PUBBLICAZIONE DI MATRIMONIO DEI SIG.RI ROSSI MARIO E BIANCHI LUCIA",
+        "",
+        "https://albo.tinnvision.cloud/documenti/2026/2001.pdf",
+      ),
+      xmlRecord(
+        "2026/2002",
+        "DETERMINAZIONE DIRIGENZIALE",
+        "SERVIZI SOCIALI",
+        "Contributo economico straordinario per nucleo con minore",
+        "2",
+        "https://albo.tinnvision.cloud/documenti/2026/2002.pdf",
+      ),
+    ].join("\n"),
+    "utf8",
+  );
+
+  const result = await runAlboIngestion({
+    outDir,
+    fromFile: fixturePath,
+    inputFormat: "xml",
+    retrievedAt: FIXTURE_RETRIEVED_AT,
+    pdfFetch: async () => {
+      throw new Error("excluded records must not be fetched");
+    },
+  });
+
+  assert.equal(result.documentsManifest.counts.archived, 0);
+  assert.equal(result.documentsManifest.counts.excluded, 2);
+  assert.deepEqual(
+    result.documentsManifest.decisions.map((decision) => decision.reason),
+    ["privacy_excluded", "privacy_excluded"],
+  );
+  assert.ok(
+    result.documentsManifest.decisions.every(
+      (decision) => decision.preservation_status === "excluded" && decision.document_url === null,
+    ),
+  );
+});
+
+test("skips otherwise eligible PDFs when content type or size limit fails", async () => {
+  const tmp = await mkdtemp(path.join(tmpdir(), "albo-tinnvision-pdf-content-"));
+  const fixturePath = path.join(tmp, "albo.xml");
+  const outDir = path.join(tmp, "data");
+  const htmlUrl = "https://albo.tinnvision.cloud/documenti/2026/2501.pdf";
+  const oversizeUrl = "https://albo.tinnvision.cloud/documenti/2026/2502.pdf";
+  await writeFile(
+    fixturePath,
+    [
+      xmlRecord("2026/2501", "AVVISO PUBBLICO", "SEGRETERIA", "Avviso pubblico ordinario", "", htmlUrl),
+      xmlRecord("2026/2502", "AVVISO PUBBLICO", "SEGRETERIA", "Avviso pubblico ordinario bis", "", oversizeUrl),
+    ].join("\n"),
+    "utf8",
+  );
+
+  const result = await runAlboIngestion({
+    outDir,
+    fromFile: fixturePath,
+    inputFormat: "xml",
+    retrievedAt: FIXTURE_RETRIEVED_AT,
+    pdfFetch: async (url) =>
+      String(url) === htmlUrl
+        ? new Response("<html></html>", {
+            status: 200,
+            headers: { "content-type": "text/html" },
+          })
+        : new Response("", {
+            status: 200,
+            headers: {
+              "content-type": "application/pdf",
+              "content-length": String(10 * 1024 * 1024 + 1),
+            },
+          }),
+  });
+
+  assert.equal(result.documentsManifest.counts.archived, 0);
+  assert.equal(result.documentsManifest.counts.skipped, 2);
+  assert.deepEqual(
+    result.documentsManifest.decisions.map((decision) => decision.reason),
+    ["content_type_not_pdf", "size_limit_exceeded"],
+  );
+});
+
+test("marks medium-risk minimised records as human_review_required without downloading", async () => {
+  const tmp = await mkdtemp(path.join(tmpdir(), "albo-tinnvision-pdf-review-"));
+  const fixturePath = path.join(tmp, "albo.xml");
+  const outDir = path.join(tmp, "data");
+  const documentUrl = "https://albo.tinnvision.cloud/documenti/2026/3001.pdf";
+  await writeFile(
+    fixturePath,
+    xmlRecord(
+      "2026/3001",
+      "DETERMINAZIONE DIRIGENZIALE",
+      "SETTORE AVVOCATURA",
+      "Proposta transattiva risarcimento danni VERDI ANNA",
+      "3",
+      documentUrl,
+    ),
+    "utf8",
+  );
+
+  const result = await runAlboIngestion({
+    outDir,
+    fromFile: fixturePath,
+    inputFormat: "xml",
+    retrievedAt: FIXTURE_RETRIEVED_AT,
+    pdfFetch: async () => {
+      throw new Error("review-required records must not be fetched");
+    },
+  });
+
+  assert.equal(result.items[0].public_visibility, "publishable_with_minimisation");
+  assert.equal(result.items[0].privacy_risk, "medium");
+  assert.equal(result.documentsManifest.counts.human_review_required, 1);
+  assert.equal(result.documentsManifest.decisions[0].preservation_status, "human_review_required");
+  assert.equal(result.documentsManifest.decisions[0].reason, "human_review_required");
+  assert.equal(result.documentsManifest.decisions[0].document_url, documentUrl);
+});
+
 function snapshot(records: ReturnType<typeof parseTinnvisionXml>): AlboRawSnapshot {
   return {
     source: ALBO_PRETORIO_LAMEZIA_SOURCE.source,
@@ -261,6 +450,7 @@ function xmlRecord(
   provenienza: string,
   oggetto: string,
   numRegGen: string,
+  documentUrl = "",
 ): string {
   return `
     <pubblicazione>
@@ -273,6 +463,7 @@ function xmlRecord(
       <num-reg-gen>${numRegGen}</num-reg-gen>
       <data-reg-gen>19/06/2026</data-reg-gen>
       <oggetto>${oggetto}</oggetto>
+      ${documentUrl ? `<document-url>${documentUrl}</document-url>` : ""}
     </pubblicazione>
   `;
 }

@@ -13,7 +13,7 @@ export const ALBO_PRETORIO_LAMEZIA_SOURCE = {
   },
   knownLimits: [
     "Tranche A acquisisce l'elenco degli atti correnti esposto dalla fonte ufficiale, senza dichiarare completezza storica.",
-    "Gli allegati e i PDF non sono scaricati o analizzati in Tranche A.",
+    "I PDF sono archiviati solo per record pubblicabili a basso rischio; allegati e PDF non sono analizzati, interpretati o sottoposti a OCR.",
     "Gli export Tinnvision possono non includere URL diretti agli allegati; il record pubblico rimanda alla fonte ufficiale.",
     "La classificazione privacy e' prudenziale e automatica; i casi sensibili richiedono revisione umana prima di esposizioni piu' ricche.",
   ],
