@@ -1,0 +1,30 @@
+section_number,census_cells_used,total_civics,deterministic_civics,spatially_resolved_civics,review_civics_inside,conflict_cells_count,no_evidence_cells_count,area_sq_km,perimeter_km,polygon_count,geometry_confidence,needs_manual_review,notes
+8,2,220,44,82,94,4,0,1.304529,10.515093,2,low,true,nearby or suggested census cells remain conflicted
+16,1,1,1,0,0,1,0,0.010574,0.423427,1,low,true,very few census cells assigned; very few supporting assigned civics; nearby or suggested census cells remain conflicted
+18,2,11,2,0,9,1,0,0.2066,2.42649,2,low,true,very few supporting assigned civics; nearby or suggested census cells remain conflicted; review civics exceed assigned civic support inside used cells
+20,1,13,1,0,12,1,0,0.020335,0.685495,1,low,true,very few census cells assigned; very few supporting assigned civics; nearby or suggested census cells remain conflicted; review civics exceed assigned civic support inside used cells
+24,3,23,22,0,1,2,0,0.139501,3.146661,3,medium,true,multi-part census aggregate; nearby or suggested census cells remain conflicted
+25,1,1,1,0,0,0,0,0.020333,0.712604,1,low,true,very few census cells assigned; very few supporting assigned civics
+29,4,49,33,1,15,2,0,3.233028,17.040493,3,medium,true,multi-part census aggregate; nearby or suggested census cells remain conflicted
+30,2,20,17,0,3,2,0,0.03187,1.120074,2,medium,true,nearby or suggested census cells remain conflicted
+32,1,7,7,0,0,0,0,0.042491,1.06914,1,low,true,very few census cells assigned
+34,1,5,3,0,2,0,0,0.026247,0.733937,1,low,true,very few census cells assigned; very few supporting assigned civics
+36,1,1,1,0,0,7,0,0.040534,2.082366,1,low,true,very few census cells assigned; very few supporting assigned civics; nearby or suggested census cells remain conflicted
+38,1,1,0,1,0,1,0,0.167817,1.941037,1,low,true,very few census cells assigned; very few supporting assigned civics; nearby or suggested census cells remain conflicted
+43,1,17,11,0,6,3,0,0.102157,1.552436,1,low,true,very few census cells assigned; nearby or suggested census cells remain conflicted
+44,4,108,43,3,62,2,0,6.824294,27.063177,2,medium,true,nearby or suggested census cells remain conflicted; review civics exceed assigned civic support inside used cells
+46,1,74,73,1,0,0,0,0.284516,3.606195,1,low,true,very few census cells assigned
+48,5,54,29,11,14,1,0,5.222103,28.119058,2,medium,true,nearby or suggested census cells remain conflicted
+49,2,20,20,0,0,0,0,0.046556,1.540796,2,high,false,
+50,5,121,94,14,13,2,0,3.759239,15.873267,1,medium,true,nearby or suggested census cells remain conflicted
+53,1,5,5,0,0,1,0,0.107078,1.520264,1,low,true,very few census cells assigned; nearby or suggested census cells remain conflicted
+54,3,78,50,25,3,4,0,0.239789,3.509234,2,low,true,nearby or suggested census cells remain conflicted
+55,1,4,2,0,2,3,0,5.01214,11.740496,1,low,true,very few census cells assigned; very few supporting assigned civics; nearby or suggested census cells remain conflicted
+57,8,119,60,21,38,2,0,3.666059,15.298156,4,medium,true,multi-part census aggregate; nearby or suggested census cells remain conflicted
+60,1,2,2,0,0,2,0,0.003597,0.246025,1,low,true,very few census cells assigned; very few supporting assigned civics; nearby or suggested census cells remain conflicted
+62,3,26,14,0,12,2,0,0.107182,2.158592,3,medium,true,multi-part census aggregate; nearby or suggested census cells remain conflicted
+63,2,2,2,0,0,4,0,0.017746,0.982656,2,low,true,very few supporting assigned civics; nearby or suggested census cells remain conflicted
+64,1,1,1,0,0,1,0,0.011625,0.626558,1,low,true,very few census cells assigned; very few supporting assigned civics; nearby or suggested census cells remain conflicted
+70,1,27,12,6,9,2,0,0.141119,2.530726,1,low,true,very few census cells assigned; nearby or suggested census cells remain conflicted
+76,2,25,3,0,22,2,0,0.126186,2.590881,2,low,true,very few supporting assigned civics; nearby or suggested census cells remain conflicted; review civics exceed assigned civic support inside used cells
+77,2,7,5,0,2,2,0,4.362938,16.582055,1,medium,true,nearby or suggested census cells remain conflicted
