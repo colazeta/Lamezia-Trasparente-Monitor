@@ -2,7 +2,7 @@ import { Component, type ErrorInfo, type ReactNode } from "react";
 
 import { Button } from "@/components/ui/button";
 
-const basePath = import.meta.env.BASE_URL.replace(/\/$/, "") || "/";
+const publicHomePath = import.meta.env.BASE_URL || "/";
 
 type PublicErrorBoundaryProps = {
   children: ReactNode;
@@ -47,7 +47,7 @@ export class PublicErrorBoundary extends Component<
               className="mt-6"
               onClick={() => {
                 this.setState({ hasError: false });
-                window.location.assign(basePath);
+                window.location.assign(publicHomePath);
               }}
             >
               Torna alla homepage
