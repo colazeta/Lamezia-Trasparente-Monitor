@@ -1,3 +1,5 @@
+import publicAlboStatus from "../../../../data/public/albo/status.json";
+
 export type AlboStatusCounts = {
   acquired: number;
   new: number;
@@ -23,34 +25,29 @@ export type AlboOperationalStatus = {
   official_albo_disclaimer: string;
 };
 
+function isVerificationStatus(
+  value: string,
+): value is AlboOperationalStatus["verification_status"] {
+  return (
+    value === "verification_required" ||
+    value === "official_source_acquired" ||
+    value === "normalised_automatically"
+  );
+}
+
 export const ALBO_OPERATIONAL_STATUS: AlboOperationalStatus = {
-  source: "Albo Pretorio Comune di Lamezia Terme",
-  source_url: "https://albo.tinnvision.cloud/?ente=00301390795",
-  last_update: null,
-  method: null,
-  counts: {
-    acquired: 0,
-    new: 0,
-    changed: 0,
-    removed: 0,
-    unchanged: 0,
-    publishable: 0,
-    minimised: 0,
-    metadata_only: 0,
-    excluded: 0,
-  },
-  warnings: [
-    "Pipeline configurata; nessuna esecuzione ufficiale registrata nel bundle pubblico statico.",
-  ],
-  next_scheduled_check: null,
-  verification_status: "verification_required",
-  known_limits: [
-    "Tranche B rende operativa la pipeline ma non certifica completezza storica dell'Albo Pretorio.",
-    "Gli allegati e i PDF non sono scaricati o analizzati in Tranche B.",
-    "Il layer pubblico espone solo metadati minimizzati o aggregati quando le regole prudenziali lo richiedono.",
-  ],
-  official_albo_disclaimer:
-    "Lamezia Trasparente Monitor non sostituisce l'Albo Pretorio ufficiale: pubblicazioni, termini, allegati e contenuti vanno verificati sulla fonte istituzionale.",
+  source: publicAlboStatus.source,
+  source_url: publicAlboStatus.source_url,
+  last_update: publicAlboStatus.last_update,
+  method: publicAlboStatus.method,
+  counts: publicAlboStatus.counts,
+  warnings: publicAlboStatus.warnings,
+  next_scheduled_check: publicAlboStatus.next_scheduled_check,
+  verification_status: isVerificationStatus(publicAlboStatus.verification_status)
+    ? publicAlboStatus.verification_status
+    : "verification_required",
+  known_limits: publicAlboStatus.known_limits,
+  official_albo_disclaimer: publicAlboStatus.official_albo_disclaimer,
 };
 
 export const ALBO_VERIFICATION_LABELS: Record<

@@ -73,14 +73,7 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-          git add \
-            data/snapshots/albo/current.json \
-            data/snapshots/albo/history \
-            data/processed/albo/albo_items.json \
-            data/public/albo/latest.json \
-            data/public/albo/diff-latest.json \
-            data/public/albo/run-latest.md \
-            data/public/albo/status.json
+          git add data/public/albo
 
           if git diff --cached --quiet; then
             echo "No Albo output changes to commit."
