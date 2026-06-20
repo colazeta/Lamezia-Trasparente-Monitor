@@ -1,0 +1,30 @@
+{
+  "generated_at": "2026-06-19T00:00:00.000Z",
+  "source": "Albo Pretorio Comune di Lamezia Terme",
+  "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
+  "retrieved_at": "2026-06-19T00:00:00.000Z",
+  "verification_status": "verification_required",
+  "policy": {
+    "eligibility": "Archive only official PDFs for records classified public_visibility=publishable and privacy_risk=low.",
+    "official_url_host": "albo.tinnvision.cloud",
+    "content_type": "application/pdf",
+    "max_size_bytes": 10485760,
+    "storage_path_template": "data/public/albo/documents/<year>/<sha>.pdf",
+    "sha256_deduplication": true,
+    "no_ocr": true,
+    "no_pdf_parsing": true,
+    "no_summaries": true,
+    "no_rankings": true,
+    "paid_storage": false
+  },
+  "counts": {
+    "considered": 0,
+    "eligible": 0,
+    "archived": 0,
+    "skipped": 0,
+    "excluded": 0,
+    "human_review_required": 0
+  },
+  "documents": [],
+  "decisions": []
+}

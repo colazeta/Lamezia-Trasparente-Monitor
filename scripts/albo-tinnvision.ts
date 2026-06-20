@@ -101,6 +101,7 @@ export interface CliOptions {
   fromFile?: string;
   inputFormat?: "xml" | "csv" | "html" | "print";
   retrievedAt?: string;
+  pdfFetch?: typeof fetch;
 }
 
 type PublicRecord = Record<string, unknown> & {
@@ -111,6 +112,72 @@ type PublicRecord = Record<string, unknown> & {
 };
 type PublicLatest = Record<string, unknown> & { counts: RunCounts; items: PublicRecord[]; excluded: PublicRecord[] };
 type PublicDiff = Record<string, unknown> & { counts: RunCounts };
+export type PdfPreservationStatus =
+  | "archived"
+  | "excluded"
+  | "human_review_required"
+  | "skipped";
+export type PdfPreservationReason =
+  | "eligible_low_risk_publishable_pdf"
+  | "no_document_url"
+  | "non_official_document_url"
+  | "privacy_excluded"
+  | "human_review_required"
+  | "content_type_not_pdf"
+  | "size_limit_exceeded"
+  | "fetch_failed";
+export interface PdfPreservationDecision {
+  id: string;
+  publication_number: string;
+  source: string;
+  source_url: string;
+  retrieved_at: string;
+  document_url: string | null;
+  public_visibility: PublicVisibility;
+  privacy_risk: PrivacyRisk;
+  verification_status: VerificationStatus;
+  preservation_status: PdfPreservationStatus;
+  reason: PdfPreservationReason;
+}
+export interface ArchivedPdfDocument extends PdfPreservationDecision {
+  preservation_status: "archived";
+  reason: "eligible_low_risk_publishable_pdf";
+  document_url: string;
+  storage_path: string;
+  sha256: string;
+  size_bytes: number;
+  content_type: string;
+}
+export interface AlboDocumentsManifest {
+  generated_at: string;
+  source: string;
+  source_url: string;
+  retrieved_at: string;
+  verification_status: VerificationStatus;
+  policy: {
+    eligibility: string;
+    official_url_host: string;
+    content_type: "application/pdf";
+    max_size_bytes: number;
+    storage_path_template: "data/public/albo/documents/<year>/<sha>.pdf";
+    sha256_deduplication: true;
+    no_ocr: true;
+    no_pdf_parsing: true;
+    no_summaries: true;
+    no_rankings: true;
+    paid_storage: false;
+  };
+  counts: {
+    considered: number;
+    eligible: number;
+    archived: number;
+    skipped: number;
+    excluded: number;
+    human_review_required: number;
+  };
+  documents: ArchivedPdfDocument[];
+  decisions: PdfPreservationDecision[];
+}
 export type AlboPublicStatus = Record<string, unknown> & {
   source: string;
   source_url: string;
@@ -130,6 +197,7 @@ export interface RunResult {
   diff: AlboDiff;
   publicLatest: PublicLatest;
   publicDiff: PublicDiff;
+  documentsManifest: AlboDocumentsManifest;
   publicStatus: AlboPublicStatus;
   runLog: string;
   paths: Record<
@@ -138,6 +206,7 @@ export interface RunResult {
     | "processedItems"
     | "publicLatest"
     | "publicDiff"
+    | "documentsManifest"
     | "publicStatus"
     | "runLog",
     string
@@ -156,10 +225,12 @@ const GITHUB_ACTIONS_CRON_UTC = "10 6-19 * * *";
 const OFFICIAL_ALBO_DISCLAIMER =
   "Lamezia Trasparente Monitor non sostituisce l'Albo Pretorio ufficiale: pubblicazioni, termini, allegati e contenuti vanno verificati sulla fonte istituzionale.";
 const CIVIC_SAFEGUARDS = [
-  "Nessun PDF o allegato viene scaricato o analizzato in questa tranche.",
+  "I PDF sono archiviati solo per record pubblicabili a basso rischio, con URL ufficiale, content-type application/pdf e limite dimensionale.",
+  "Nessun PDF o allegato viene analizzato, interpretato, sottoposto a OCR o riassunto.",
   "Nessuna sintesi generativa, classifica, accusa o valutazione sostanziale viene prodotta.",
   "Il layer pubblico espone solo metadati minimizzati secondo le classi publishable, publishable_with_minimisation, metadata_only e do_not_publish.",
 ];
+const MAX_PUBLIC_PDF_BYTES = 10 * 1024 * 1024;
 
 const DO_NOT_PUBLISH_TERMS = [
   "minore",
@@ -228,10 +299,30 @@ export async function runAlboIngestion(options: CliOptions): Promise<RunResult> 
   const counts = countRun(items, diff);
   const publicLatest = buildPublicLatest(snapshot, items, counts);
   const publicDiff = buildPublicDiff(snapshot, diff, counts);
+  const documentsManifest = await archivePublicPdfs(options.outDir, snapshot, items, options.pdfFetch ?? fetch);
   const publicStatus = buildPublicStatus(snapshot, counts);
   const runLog = renderRunLog(snapshot, counts);
-  const paths = await writeArtifacts(options.outDir, snapshot, items, publicLatest, publicDiff, publicStatus, runLog);
-  return { snapshot, items, diff, publicLatest, publicDiff, publicStatus, runLog, paths };
+  const paths = await writeArtifacts(
+    options.outDir,
+    snapshot,
+    items,
+    publicLatest,
+    publicDiff,
+    documentsManifest,
+    publicStatus,
+    runLog,
+  );
+  return {
+    snapshot,
+    items,
+    diff,
+    publicLatest,
+    publicDiff,
+    documentsManifest,
+    publicStatus,
+    runLog,
+    paths,
+  };
 }
 
 async function acquireAlboSnapshot(options: CliOptions): Promise<AlboRawSnapshot> {
@@ -335,6 +426,19 @@ export function parseTinnvisionXml(xml: string): RawAlboRecord[] {
     const dataRegGen = clean(xmlTag(block, "data-reg-gen"));
     const office = nullable(xmlTag(block, "provenienza"));
     const subject = nullable(xmlTag(block, "oggetto"));
+    const documentUrl = nullable(
+      firstXmlTag(block, [
+        "document-url",
+        "document_url",
+        "url-documento",
+        "url_documento",
+        "allegato-url",
+        "allegato_url",
+        "link",
+        "url",
+        "pdf",
+      ]),
+    );
     return [
       {
         publication_number: publicationNumber,
@@ -345,7 +449,7 @@ export function parseTinnvisionXml(xml: string): RawAlboRecord[] {
         act_number: registryNumber(regGen) ?? registryNumber(regSet),
         act_date: italianDate(dataAtto) ?? italianDate(dataRegGen),
         subject,
-        document_url: null,
+        document_url: documentUrl,
         source_row: {
           progressivo: publicationNumber,
           tipologia: typology,
@@ -356,6 +460,7 @@ export function parseTinnvisionXml(xml: string): RawAlboRecord[] {
           num_reg_gen: regGen,
           data_reg_gen: dataRegGen,
           oggetto: subject,
+          document_url: documentUrl,
         },
       },
     ];
@@ -377,6 +482,16 @@ export function parseTinnvisionCsv(csv: string): RawAlboRecord[] {
     const typology = value(row, "Tipologia");
     const regSet = value(row, "Num.Reg.Set");
     const regGen = value(row, "Num.Reg.Gen");
+    const documentUrl = firstCsvValue(row, headers, [
+      "URL Documento",
+      "Url Documento",
+      "Document URL",
+      "document_url",
+      "Allegato",
+      "URL Allegato",
+      "Link",
+      "PDF",
+    ]);
     return [
       {
         publication_number: publicationNumber,
@@ -387,7 +502,7 @@ export function parseTinnvisionCsv(csv: string): RawAlboRecord[] {
         act_number: registryNumber(regGen) ?? registryNumber(regSet),
         act_date: italianDate(value(row, "Data atto")) ?? italianDate(value(row, "Data Reg.Gen")),
         subject: value(row, "Oggetto"),
-        document_url: null,
+        document_url: documentUrl,
         source_row: {
           num_pubblicazione: publicationNumber,
           provenienza: value(row, "Provenienza"),
@@ -398,6 +513,7 @@ export function parseTinnvisionCsv(csv: string): RawAlboRecord[] {
           num_reg_gen: regGen,
           data_reg_gen: value(row, "Data Reg.Gen"),
           oggetto: value(row, "Oggetto"),
+          document_url: documentUrl,
         },
       },
     ];
@@ -407,7 +523,8 @@ export function parseTinnvisionCsv(csv: string): RawAlboRecord[] {
 export function parseTinnvisionHtml(html: string): RawAlboRecord[] {
   const tbody = /<tbody[^>]*>([\s\S]*?)<\/tbody>/i.exec(html)?.[1] ?? html;
   return [...tbody.matchAll(/<tr[^>]*>([\s\S]*?)<\/tr>/gi)].flatMap((row) => {
-    const cells = [...(row[1] ?? "").matchAll(/<td[^>]*>([\s\S]*?)<\/td>/gi)].map((cell) => stripHtml(cell[1] ?? ""));
+    const rawCells = [...(row[1] ?? "").matchAll(/<td[^>]*>([\s\S]*?)<\/td>/gi)].map((cell) => cell[1] ?? "");
+    const cells = rawCells.map((cell) => stripHtml(cell));
     if (cells.length < 9) return [];
     const publicationNumber = nullable(cells[1]);
     if (!publicationNumber) return [];
@@ -415,6 +532,7 @@ export function parseTinnvisionHtml(html: string): RawAlboRecord[] {
     const period = parsePeriod(cells[8]);
     const regGen = nullable(cells[5]);
     const regSet = nullable(cells[6]);
+    const documentUrl = rawCells.map((cell) => hrefValue(cell)).find((href): href is string => Boolean(href)) ?? null;
     return [
       {
         publication_number: publicationNumber,
@@ -425,7 +543,7 @@ export function parseTinnvisionHtml(html: string): RawAlboRecord[] {
         act_number: registryNumber(regGen) ?? registryNumber(regSet) ?? actNumber(typology),
         act_date: italianDate(typology),
         subject: nullable(cells[4]),
-        document_url: null,
+        document_url: documentUrl,
         source_row: {
           publication_number: publicationNumber,
           office: nullable(cells[2]),
@@ -434,6 +552,7 @@ export function parseTinnvisionHtml(html: string): RawAlboRecord[] {
           num_reg_gen: regGen,
           num_reg_set: regSet,
           publication_period: cells[8],
+          document_url: documentUrl,
         },
       },
     ];
@@ -662,12 +781,196 @@ function publicExcludedItem(item: AlboItem): PublicRecord {
   };
 }
 
+async function archivePublicPdfs(
+  outDir: string,
+  snapshot: AlboRawSnapshot,
+  items: AlboItem[],
+  pdfFetch: typeof fetch,
+): Promise<AlboDocumentsManifest> {
+  const documents: ArchivedPdfDocument[] = [];
+  const decisions: PdfPreservationDecision[] = [];
+  const written = new Set<string>();
+
+  for (const item of items) {
+    const base = pdfDecisionBase(item);
+    const officialUrl = resolveOfficialDocumentUrl(item.document_url);
+
+    if (item.public_visibility === "publishable_with_minimisation" || item.privacy_risk === "medium") {
+      decisions.push({
+        ...base,
+        document_url: officialUrl,
+        preservation_status: "human_review_required",
+        reason: "human_review_required",
+      });
+      continue;
+    }
+
+    if (item.public_visibility !== "publishable" || item.privacy_risk !== "low") {
+      decisions.push({
+        ...base,
+        document_url: null,
+        preservation_status: "excluded",
+        reason: "privacy_excluded",
+      });
+      continue;
+    }
+
+    if (!officialUrl) {
+      decisions.push({
+        ...base,
+        document_url: null,
+        preservation_status: "skipped",
+        reason: item.document_url ? "non_official_document_url" : "no_document_url",
+      });
+      continue;
+    }
+
+    const archived = await fetchAndStorePdf(outDir, item, officialUrl, pdfFetch, written);
+    decisions.push(archived);
+    if (isArchivedPdfDocument(archived)) {
+      documents.push(archived);
+    }
+  }
+
+  const counts = {
+    considered: items.length,
+    eligible: decisions.filter((decision) => decision.reason === "eligible_low_risk_publishable_pdf").length,
+    archived: documents.length,
+    skipped: decisions.filter((decision) => decision.preservation_status === "skipped").length,
+    excluded: decisions.filter((decision) => decision.preservation_status === "excluded").length,
+    human_review_required: decisions.filter((decision) => decision.preservation_status === "human_review_required").length,
+  };
+
+  return {
+    generated_at: snapshot.retrieved_at,
+    source: snapshot.source,
+    source_url: snapshot.source_url,
+    retrieved_at: snapshot.retrieved_at,
+    verification_status: verificationStatus(snapshot.fetch_method),
+    policy: {
+      eligibility:
+        "Archive only official PDFs for records classified public_visibility=publishable and privacy_risk=low.",
+      official_url_host: officialAlboHost(),
+      content_type: "application/pdf",
+      max_size_bytes: MAX_PUBLIC_PDF_BYTES,
+      storage_path_template: "data/public/albo/documents/<year>/<sha>.pdf",
+      sha256_deduplication: true,
+      no_ocr: true,
+      no_pdf_parsing: true,
+      no_summaries: true,
+      no_rankings: true,
+      paid_storage: false,
+    },
+    counts,
+    documents,
+    decisions,
+  };
+}
+
+async function fetchAndStorePdf(
+  outDir: string,
+  item: AlboItem,
+  documentUrl: string,
+  pdfFetch: typeof fetch,
+  written: Set<string>,
+): Promise<PdfPreservationDecision | ArchivedPdfDocument> {
+  const base = pdfDecisionBase(item);
+
+  try {
+    const response = await pdfFetch(documentUrl);
+    if (!response.ok) {
+      return {
+        ...base,
+        document_url: documentUrl,
+        preservation_status: "skipped",
+        reason: "fetch_failed",
+      };
+    }
+
+    const contentType = normalizeContentType(response.headers.get("content-type"));
+    if (contentType !== "application/pdf") {
+      return {
+        ...base,
+        document_url: documentUrl,
+        preservation_status: "skipped",
+        reason: "content_type_not_pdf",
+      };
+    }
+
+    const declaredSize = parseContentLength(response.headers.get("content-length"));
+    if (declaredSize !== null && declaredSize > MAX_PUBLIC_PDF_BYTES) {
+      return {
+        ...base,
+        document_url: documentUrl,
+        preservation_status: "skipped",
+        reason: "size_limit_exceeded",
+      };
+    }
+
+    const bytes = new Uint8Array(await response.arrayBuffer());
+    if (bytes.byteLength > MAX_PUBLIC_PDF_BYTES) {
+      return {
+        ...base,
+        document_url: documentUrl,
+        preservation_status: "skipped",
+        reason: "size_limit_exceeded",
+      };
+    }
+
+    const digest = sha256Bytes(bytes);
+    const year = publicationYear(item);
+    const storagePath = `data/public/albo/documents/${year}/${digest}.pdf`;
+    const absoluteStoragePath = path.join(outDir, "public", "albo", "documents", year, `${digest}.pdf`);
+    if (!written.has(absoluteStoragePath)) {
+      await mkdir(path.dirname(absoluteStoragePath), { recursive: true });
+      await writeFile(absoluteStoragePath, bytes);
+      written.add(absoluteStoragePath);
+    }
+
+    return {
+      ...base,
+      document_url: documentUrl,
+      preservation_status: "archived",
+      reason: "eligible_low_risk_publishable_pdf",
+      storage_path: storagePath,
+      sha256: digest,
+      size_bytes: bytes.byteLength,
+      content_type: contentType,
+    };
+  } catch {
+    return {
+      ...base,
+      document_url: documentUrl,
+      preservation_status: "skipped",
+      reason: "fetch_failed",
+    };
+  }
+}
+
+function pdfDecisionBase(item: AlboItem): Omit<PdfPreservationDecision, "document_url" | "preservation_status" | "reason"> {
+  return {
+    id: item.id,
+    publication_number: item.publication_number,
+    source: item.source,
+    source_url: item.source_url,
+    retrieved_at: item.retrieved_at,
+    public_visibility: item.public_visibility,
+    privacy_risk: item.privacy_risk,
+    verification_status: item.verification_status,
+  };
+}
+
+function isArchivedPdfDocument(decision: PdfPreservationDecision | ArchivedPdfDocument): decision is ArchivedPdfDocument {
+  return decision.preservation_status === "archived";
+}
+
 async function writeArtifacts(
   outDir: string,
   snapshot: AlboRawSnapshot,
   items: AlboItem[],
   publicLatest: PublicLatest,
   publicDiff: PublicDiff,
+  documentsManifest: AlboDocumentsManifest,
   publicStatus: AlboPublicStatus,
   runLog: string,
 ): Promise<RunResult["paths"]> {
@@ -683,6 +986,7 @@ async function writeArtifacts(
     processedItems: path.join(outDir, "processed", "albo", "albo_items.json"),
     publicLatest: path.join(outDir, "public", "albo", "latest.json"),
     publicDiff: path.join(outDir, "public", "albo", "diff-latest.json"),
+    documentsManifest: path.join(outDir, "public", "albo", "documents-manifest.json"),
     publicStatus: path.join(outDir, "public", "albo", "status.json"),
     runLog: path.join(outDir, "public", "albo", "run-latest.md"),
   };
@@ -698,6 +1002,7 @@ async function writeArtifacts(
   });
   await writeJson(paths.publicLatest, publicLatest);
   await writeJson(paths.publicDiff, publicDiff);
+  await writeJson(paths.documentsManifest, documentsManifest);
   await writeJson(paths.publicStatus, publicStatus);
   await writeFile(paths.runLog, runLog, "utf8");
   return paths;
@@ -829,6 +1134,14 @@ function xmlTag(block: string, tagName: string): string | null {
   return new RegExp(`<${tagName}>([\\s\\S]*?)<\\/${tagName}>`, "i").exec(block)?.[1] ?? null;
 }
 
+function firstXmlTag(block: string, tagNames: string[]): string | null {
+  for (const tagName of tagNames) {
+    const value = xmlTag(block, tagName);
+    if (nullable(value)) return value;
+  }
+  return null;
+}
+
 function cleanActType(value: string | null): string | null {
   return nullable(clean(value).replace(/\s+NR\.?\s+.*$/i, ""));
 }
@@ -844,6 +1157,20 @@ function actNumber(value: string | null): string | null {
 
 function headerKey(value: string): string {
   return clean(value).toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
+}
+
+function firstCsvValue(row: string[], headers: string[], names: string[]): string | null {
+  for (const name of names) {
+    const index = headers.indexOf(headerKey(name));
+    const value = index >= 0 ? nullable(row[index]) : null;
+    if (value) return value;
+  }
+  return null;
+}
+
+function hrefValue(value: string): string | null {
+  const match = /\bhref\s*=\s*(?:"([^"]+)"|'([^']+)'|([^\s>]+))/i.exec(value);
+  return nullable(match?.[1] ?? match?.[2] ?? match?.[3]);
 }
 
 function stripHtml(value: string): string {
@@ -908,6 +1235,38 @@ function countVisibility(items: AlboItem[], visibility: PublicVisibility): numbe
   return items.filter((item) => item.public_visibility === visibility).length;
 }
 
+function resolveOfficialDocumentUrl(value: string | null): string | null {
+  if (!value) return null;
+  try {
+    const url = new URL(value, ALBO_PRETORIO_LAMEZIA_SOURCE.sourceUrl);
+    if (url.protocol !== "https:" && url.protocol !== "http:") return null;
+    return url.host === officialAlboHost() ? url.href : null;
+  } catch {
+    return null;
+  }
+}
+
+function officialAlboHost(): string {
+  return new URL(ALBO_PRETORIO_LAMEZIA_SOURCE.sourceUrl).host;
+}
+
+function normalizeContentType(value: string | null): string {
+  return (value ?? "").split(";")[0]?.trim().toLowerCase() ?? "";
+}
+
+function parseContentLength(value: string | null): number | null {
+  if (!value) return null;
+  const parsed = Number.parseInt(value, 10);
+  return Number.isFinite(parsed) && parsed >= 0 ? parsed : null;
+}
+
+function publicationYear(item: AlboItem): string {
+  const candidate = [item.publication_start, item.act_date, item.retrieved_at]
+    .map((value) => /^(\d{4})/.exec(value ?? "")?.[1])
+    .find((value): value is string => Boolean(value));
+  return candidate ?? "unknown";
+}
+
 function inferInputFormat(filePath: string): NonNullable<CliOptions["inputFormat"]> {
   const extension = path.extname(filePath).toLowerCase();
   if (extension === ".xml") return "xml";
@@ -942,6 +1301,10 @@ async function writeJson(filePath: string, value: unknown): Promise<void> {
 
 function sha256(value: unknown): string {
   return createHash("sha256").update(stableStringify(value)).digest("hex");
+}
+
+function sha256Bytes(value: Uint8Array): string {
+  return createHash("sha256").update(value).digest("hex");
 }
 
 function stableStringify(value: unknown): string {
@@ -1018,6 +1381,7 @@ async function main(): Promise<void> {
   console.log(`Snapshot storico: ${result.paths.historySnapshot}`);
   console.log(`Output pubblico: ${result.paths.publicLatest}`);
   console.log(`Diff pubblico: ${result.paths.publicDiff}`);
+  console.log(`Manifest documenti pubblici: ${result.paths.documentsManifest}`);
 }
 
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
