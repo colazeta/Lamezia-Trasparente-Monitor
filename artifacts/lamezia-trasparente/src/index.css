@@ -273,6 +273,13 @@
     color: transparent;
   }
 
+  details .font-mono.text-xs {
+    display: block;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+    line-height: 1.25rem;
+  }
+
   .toggle-elevate::before,
   .toggle-elevate-2::before {
     content: "";
