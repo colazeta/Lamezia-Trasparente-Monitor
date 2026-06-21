@@ -96,6 +96,14 @@ export interface RunCounts {
   excluded: number;
 }
 
+export type DiffBaselineStatus = "public_safe" | "baseline_unavailable";
+export interface DiffBaseline {
+  status: DiffBaselineStatus;
+  public_safe: boolean;
+  previous_retrieved_at: string | null;
+  note: string;
+}
+
 export interface CliOptions {
   outDir: string;
   fromFile?: string;
@@ -111,7 +119,7 @@ type PublicRecord = Record<string, unknown> & {
   known_limits: string[];
 };
 type PublicLatest = Record<string, unknown> & { counts: RunCounts; items: PublicRecord[]; excluded: PublicRecord[] };
-type PublicDiff = Record<string, unknown> & { counts: RunCounts };
+type PublicDiff = Record<string, unknown> & { counts: RunCounts; diff_baseline: DiffBaseline };
 export type PdfPreservationStatus =
   | "archived"
   | "excluded"
@@ -188,6 +196,7 @@ export type AlboPublicStatus = Record<string, unknown> & {
   last_update: string;
   method: AlboFetchMethod;
   counts: RunCounts;
+  diff_baseline: DiffBaseline;
   warnings: string[];
   next_scheduled_check: string | null;
   verification_status: VerificationStatus;
@@ -300,10 +309,11 @@ export async function runAlboIngestion(options: CliOptions): Promise<RunResult> 
   const items = normalizeAlboRecords(snapshot);
   const diff = diffAlboItems(previousItems, items);
   const counts = countRun(items, diff);
+  const diffBaseline = buildDiffBaseline(previous);
   const publicLatest = buildPublicLatest(snapshot, items, counts);
-  const publicDiff = buildPublicDiff(snapshot, diff, counts);
+  const publicDiff = buildPublicDiff(snapshot, diff, counts, diffBaseline);
   const documentsManifest = await archivePublicPdfs(options.outDir, snapshot, items, options.pdfFetch ?? fetch);
-  const publicStatus = buildPublicStatus(snapshot, counts);
+  const publicStatus = buildPublicStatus(snapshot, counts, diffBaseline);
   const runLog = renderRunLog(snapshot, counts);
   const paths = await writeArtifacts(
     options.outDir,
@@ -680,7 +690,30 @@ function buildPublicLatest(snapshot: AlboRawSnapshot, items: AlboItem[], counts:
   };
 }
 
-function buildPublicDiff(snapshot: AlboRawSnapshot, diff: AlboDiff, counts: RunCounts): PublicDiff {
+function buildDiffBaseline(previous: AlboRawSnapshot | null): DiffBaseline {
+  if (!previous) {
+    return {
+      status: "baseline_unavailable",
+      public_safe: false,
+      previous_retrieved_at: null,
+      note: "No previous Albo snapshot was available; this diff is the first public-safe run baseline.",
+    };
+  }
+
+  return {
+    status: "public_safe",
+    public_safe: true,
+    previous_retrieved_at: previous.retrieved_at,
+    note: "Previous Albo snapshot was normalised through the public-safe minimisation rules before writing diff-latest.json.",
+  };
+}
+
+function buildPublicDiff(
+  snapshot: AlboRawSnapshot,
+  diff: AlboDiff,
+  counts: RunCounts,
+  diffBaseline: DiffBaseline,
+): PublicDiff {
   const safe = (item: AlboItem): PublicRecord =>
     item.public_visibility === "do_not_publish" ? publicExcludedItem(item) : publicItem(item);
   return {
@@ -691,6 +724,7 @@ function buildPublicDiff(snapshot: AlboRawSnapshot, diff: AlboDiff, counts: RunC
     verification_status: verificationStatus(snapshot.fetch_method),
     known_limits: snapshot.known_limits,
     counts,
+    diff_baseline: diffBaseline,
     diff: {
       new: diff.new.map(safe),
       changed: diff.changed.map((entry) => ({ before: safe(entry.before), after: safe(entry.after) })),
@@ -700,7 +734,7 @@ function buildPublicDiff(snapshot: AlboRawSnapshot, diff: AlboDiff, counts: RunC
   };
 }
 
-function buildPublicStatus(snapshot: AlboRawSnapshot, counts: RunCounts): AlboPublicStatus {
+function buildPublicStatus(snapshot: AlboRawSnapshot, counts: RunCounts, diffBaseline: DiffBaseline): AlboPublicStatus {
   return {
     generated_at: snapshot.retrieved_at,
     source: snapshot.source,
@@ -711,6 +745,7 @@ function buildPublicStatus(snapshot: AlboRawSnapshot, counts: RunCounts): AlboPu
     method: snapshot.fetch_method,
     raw_format: snapshot.raw_format,
     counts,
+    diff_baseline: diffBaseline,
     warnings: snapshot.warnings,
     next_scheduled_check: nextScheduledCheck(snapshot.retrieved_at),
     schedule: {

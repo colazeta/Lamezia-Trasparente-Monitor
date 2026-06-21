@@ -126,6 +126,9 @@ test("run command writes snapshots and public outputs without mirroring sensitiv
   assert.equal(result.publicStatus.method, "xml");
   assert.equal(result.publicStatus.verification_status, "official_source_acquired");
   assert.equal(result.publicStatus.counts.acquired, 4);
+  assert.equal(result.publicStatus.diff_baseline.status, "baseline_unavailable");
+  assert.equal(result.publicStatus.diff_baseline.public_safe, false);
+  assert.equal(result.publicDiff.diff_baseline.status, "baseline_unavailable");
   assert.ok(result.publicStatus.known_limits.length > 0);
   assert.match(
     String(result.publicStatus.official_albo_disclaimer),
@@ -200,12 +203,17 @@ test("run command compares against the previous current snapshot", async () => {
   assert.equal(result.publicDiff.counts.changed, 1);
   assert.equal(result.publicDiff.counts.removed, 1);
   assert.equal(result.publicDiff.counts.unchanged, 1);
+  assert.equal(result.publicStatus.diff_baseline.status, "public_safe");
+  assert.equal(result.publicStatus.diff_baseline.public_safe, true);
+  assert.equal(result.publicStatus.diff_baseline.previous_retrieved_at, "2026-06-19T08:00:00.000Z");
+  assert.equal(result.publicDiff.diff_baseline.status, "public_safe");
 
   const publicDiff = await readFile(result.paths.publicDiff, "utf8");
   assert.match(publicDiff, /"new"/);
   assert.match(publicDiff, /"changed"/);
   assert.match(publicDiff, /"removed"/);
   assert.match(publicDiff, /"unchanged"/);
+  assert.match(publicDiff, /"diff_baseline"/);
 });
 
 test("archives only official low-risk publishable PDFs into public documents storage", async () => {
