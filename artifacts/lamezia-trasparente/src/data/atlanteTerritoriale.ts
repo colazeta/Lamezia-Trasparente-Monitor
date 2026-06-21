@@ -94,6 +94,24 @@ export type AtlanteLoadedLayer = {
   loadedFrom: string;
 };
 
+export type AtlanteDistributionBin = {
+  index: number;
+  min: number;
+  max: number;
+  count: number;
+  label: string;
+};
+
+export type AtlanteDistributionSummary = {
+  bins: AtlanteDistributionBin[];
+  totalCount: number;
+  availableCount: number;
+  missingCount: number;
+  zeroCount: number;
+  min: number | null;
+  max: number | null;
+};
+
 export const ATLANTE_INDICATOR_CATEGORIES: Array<{
   id: AtlanteIndicatorCategoryId;
   label: string;
@@ -154,7 +172,7 @@ const ATLANTE_DEMO_METADATA: AtlanteLayerMetadata = {
   sourceYear: "demo",
   territorialLevel: "sezione censuaria dimostrativa",
   verificationStatus:
-    "Dimostrativo: il file ISTAT processato non e' ancora disponibile nella versione pubblica.",
+    "Dimostrativo: il file ISTAT processato non è ancora disponibile nella versione pubblica.",
   knownLimits:
     ATLANTE_DEMO_GEOJSON.metadata?.knownLimits ??
     ATLANTE_DEFAULT_METADATA.knownLimits,
@@ -334,6 +352,149 @@ export function parseNumericValue(value: unknown): number | null {
   }
 
   return null;
+}
+
+export function buildAtlanteDistribution(
+  values: Array<number | null>,
+  requestedBinCount = 5,
+): AtlanteDistributionSummary {
+  const numericValues = values.filter(
+    (value): value is number => value !== null && Number.isFinite(value),
+  );
+  const totalCount = values.length;
+  const missingCount = totalCount - numericValues.length;
+  const zeroCount = numericValues.filter((value) => value === 0).length;
+
+  if (numericValues.length === 0) {
+    return {
+      bins: [],
+      totalCount,
+      availableCount: 0,
+      missingCount,
+      zeroCount,
+      min: null,
+      max: null,
+    };
+  }
+
+  const min = Math.min(...numericValues);
+  const max = Math.max(...numericValues);
+
+  if (min === max) {
+    return {
+      bins: [
+        {
+          index: 0,
+          min,
+          max,
+          count: numericValues.length,
+          label: formatDistributionRange(min, max),
+        },
+      ],
+      totalCount,
+      availableCount: numericValues.length,
+      missingCount,
+      zeroCount,
+      min,
+      max,
+    };
+  }
+
+  const distinctValues = new Set(numericValues).size;
+  const binCount = Math.max(
+    1,
+    Math.min(requestedBinCount, distinctValues, numericValues.length),
+  );
+  const range = max - min;
+  const bins = Array.from({ length: binCount }, (_, index) => {
+    const binMin = min + (range / binCount) * index;
+    const binMax =
+      index === binCount - 1 ? max : min + (range / binCount) * (index + 1);
+    return {
+      index,
+      min: binMin,
+      max: binMax,
+      count: 0,
+      label: formatDistributionRange(binMin, binMax),
+    };
+  });
+
+  for (const value of numericValues) {
+    const binIndex =
+      value === max
+        ? binCount - 1
+        : Math.max(
+            0,
+            Math.min(
+              binCount - 1,
+              Math.floor(((value - min) / range) * binCount),
+            ),
+          );
+    bins[binIndex].count += 1;
+  }
+
+  return {
+    bins,
+    totalCount,
+    availableCount: numericValues.length,
+    missingCount,
+    zeroCount,
+    min,
+    max,
+  };
+}
+
+export function findAtlanteDistributionBin(
+  value: number | null,
+  bins: AtlanteDistributionBin[],
+) {
+  if (value === null) {
+    return null;
+  }
+
+  const match = bins.find((bin, index) =>
+    index === bins.length - 1
+      ? value >= bin.min && value <= bin.max
+      : value >= bin.min && value < bin.max,
+  );
+
+  return match?.index ?? null;
+}
+
+export function describeAtlanteDistributionPosition(
+  value: number | null,
+  bins: AtlanteDistributionBin[],
+) {
+  if (value === null) {
+    return "Dato non disponibile per questa sezione.";
+  }
+
+  const binIndex = findAtlanteDistributionBin(value, bins);
+  if (binIndex === null) {
+    return "Valore fuori dalle fasce calcolate.";
+  }
+
+  if (bins.length <= 1) {
+    return "Questa sezione ha lo stesso valore delle sezioni con dato disponibile.";
+  }
+
+  const position = (binIndex + 0.5) / bins.length;
+  const band = position < 0.34 ? "bassa" : position < 0.67 ? "media" : "alta";
+  return `Questa sezione rientra nella fascia ${band} della distribuzione tra le sezioni con dato disponibile.`;
+}
+
+function formatDistributionRange(min: number, max: number) {
+  const formatter = new Intl.NumberFormat("it-IT", {
+    maximumFractionDigits: 0,
+  });
+
+  if (min === max) {
+    return formatter.format(min);
+  }
+
+  return `${formatter.format(Math.ceil(min))} - ${formatter.format(
+    Math.floor(max),
+  )}`;
 }
 
 export function featureHasIndicator(

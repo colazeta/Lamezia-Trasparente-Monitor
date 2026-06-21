@@ -4,6 +4,8 @@ import { AtlanteTerritoriale } from "../pages/AtlanteTerritoriale";
 import {
   ATLANTE_EXPECTED_GEOJSON_PATH,
   ATLANTE_EXPECTED_METADATA_PATH,
+  buildAtlanteDistribution,
+  describeAtlanteDistributionPosition,
   formatAtlanteValue,
   loadAtlanteLayer,
 } from "../data/atlanteTerritoriale";
@@ -90,7 +92,24 @@ describe("Atlante territoriale", () => {
     });
   });
 
-  it("shows official QA coverage and keeps null values distinct from zero", async () => {
+  it("computes distribution bins while keeping null and zero distinct", () => {
+    const summary = buildAtlanteDistribution([0, 10, 20, null, 20], 3);
+
+    expect(summary.totalCount).toBe(5);
+    expect(summary.availableCount).toBe(4);
+    expect(summary.missingCount).toBe(1);
+    expect(summary.zeroCount).toBe(1);
+    expect(summary.bins.reduce((total, bin) => total + bin.count, 0)).toBe(4);
+    expect(summary.bins[0].count).toBeGreaterThan(0);
+    expect(describeAtlanteDistributionPosition(null, summary.bins)).toBe(
+      "Dato non disponibile per questa sezione.",
+    );
+    expect(describeAtlanteDistributionPosition(20, summary.bins)).toContain(
+      "fascia alta",
+    );
+  });
+
+  it("shows the distribution-first explorer and keeps null values distinct from zero", async () => {
     const officialCollection = {
       type: "FeatureCollection",
       features: [
@@ -183,14 +202,19 @@ describe("Atlante territoriale", () => {
 
     render(<AtlanteTerritoriale />);
 
-    expect(await screen.findByText(/QA popolazione residente: 1 sezioni su 2/))
-      .toBeInTheDocument();
     expect(
-      screen.getByText(/1 sezioni con valore disponibile/i),
+      await screen.findByRole("heading", { name: "Popolazione residente" }),
+    ).toBeInTheDocument();
+    expect(screen.getByText("Distribuzione")).toBeInTheDocument();
+    expect(screen.getByText("Mappa")).toBeInTheDocument();
+    expect(
+      screen.getByText(/1 sezioni con dato/i),
     ).toBeInTheDocument();
     expect(screen.getAllByText(/dato non disponibile/i).length).toBeGreaterThan(
       0,
     );
+    expect(screen.getByText("0 persone")).toBeInTheDocument();
+    expect(screen.getByText("Fonti e limiti")).toBeInTheDocument();
     expect(formatAtlanteValue(null, "persone")).toBe("dato non disponibile");
     expect(formatAtlanteValue(0, "persone")).toBe("0 persone");
   });
@@ -220,12 +244,10 @@ describe("Atlante territoriale", () => {
     expect(
       screen.getAllByText("Indicatore in preparazione").length,
     ).toBeGreaterThan(0);
-    expect(screen.getAllByText("Fonte istituzionale").length).toBeGreaterThan(
-      0,
-    );
+    expect(screen.getByText("Fonti e limiti")).toBeInTheDocument();
     expect(
       screen.getByText(
-        "Layer Zornade resta un livello accessorio/non censuario",
+        "Le sezioni urbane catastali Zornade non sono sezioni censuarie e restano fuori da questa base.",
         {
           exact: false,
         },

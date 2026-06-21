@@ -1,19 +1,19 @@
 import { useEffect, useMemo, useState } from "react";
 import {
   AlertTriangle,
+  BarChart3,
   BookOpen,
-  CalendarDays,
-  CheckCircle2,
   Database,
-  Info,
-  Layers3,
   MapPinned,
-  ShieldCheck,
 } from "lucide-react";
 import {
   ATLANTE_EXPECTED_GEOJSON_PATH,
   ATLANTE_EXPECTED_INDICATOR_DICTIONARY_PATH,
   ATLANTE_INDICATOR_CATEGORIES,
+  buildAtlanteDistribution,
+  describeAtlanteDistributionPosition,
+  findAtlanteDistributionBin,
+  type AtlanteDistributionBin,
   type AtlanteFeature,
   type AtlanteFeatureCollection,
   type AtlanteGeometry,
@@ -21,7 +21,6 @@ import {
   type AtlanteLayerMetadata,
   type AtlanteLoadedLayer,
   type AtlantePosition,
-  featureHasIndicator,
   formatAtlanteValue,
   getAvailableIndicators,
   getSectionId,
@@ -48,17 +47,14 @@ type Bounds = {
   maxY: number;
 };
 
-type LegendBin = {
-  min: number;
-  max: number;
-  color: string;
-  label: string;
-};
-
 type LoadState =
   | { status: "loading"; layer: null; message: null }
   | { status: "ready"; layer: AtlanteLoadedLayer; message: null }
   | { status: "error"; layer: null; message: string };
+
+type ColoredDistributionBin = AtlanteDistributionBin & {
+  color: string;
+};
 
 export function AtlanteTerritoriale() {
   const [loadState, setLoadState] = useState<LoadState>({
@@ -89,7 +85,7 @@ export function AtlanteTerritoriale() {
             status: "error",
             layer: null,
             message:
-              "Non e' stato possibile caricare il livello territoriale. Riprovare piu' tardi.",
+              "Non è stato possibile caricare il livello territoriale. Riprovare più tardi.",
           });
         }
       });
@@ -127,13 +123,15 @@ export function AtlanteTerritoriale() {
   const values = useMemo(
     () =>
       activeIndicator
-        ? features
-            .map((feature) => readIndicatorValue(feature, activeIndicator))
-            .filter((value): value is number => value !== null)
+        ? features.map((feature) => readIndicatorValue(feature, activeIndicator))
         : [],
     [activeIndicator, features],
   );
-  const legendBins = useMemo(() => buildLegendBins(values), [values]);
+  const distribution = useMemo(() => buildAtlanteDistribution(values), [values]);
+  const coloredBins = useMemo(
+    () => colorDistributionBins(distribution.bins),
+    [distribution.bins],
+  );
   const bounds = useMemo(
     () => (collection ? computeBounds(collection) : null),
     [collection],
@@ -147,41 +145,16 @@ export function AtlanteTerritoriale() {
     activeFeature && activeIndicator
       ? readIndicatorValue(activeFeature, activeIndicator)
       : null;
+  const activeBinIndex = findAtlanteDistributionBin(
+    activeValue,
+    distribution.bins,
+  );
 
   return (
     <main className="bg-slate-50 text-slate-950">
-      <section className="border-b border-slate-200 bg-card">
-        <div className="container mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8 lg:py-12">
-          <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_360px] lg:items-end">
-            <div className="max-w-4xl space-y-5">
-              <p className="text-sm font-semibold uppercase tracking-wide text-teal-700">
-                Dati territoriali
-              </p>
-              <div className="space-y-4">
-                <h1 className="text-4xl font-bold leading-tight text-slate-950 sm:text-5xl">
-                  Atlante territoriale
-                </h1>
-                <p className="max-w-3xl text-lg leading-8 text-slate-700">
-                  L'Atlante territoriale permette di leggere Lamezia Terme per
-                  sezioni censuarie, la piu' piccola unita' statistica
-                  pubblicata da ISTAT. Qui puoi esplorare come cambia il
-                  territorio tra quartieri e micro-aree, con dati pubblici,
-                  limiti dichiarati e fonti sempre visibili.
-                </p>
-              </div>
-              <TrustChips />
-            </div>
-            <HeroStatusCard
-              activeIndicator={activeIndicator}
-              dataStatus={layer?.dataStatus ?? null}
-              featureCount={features.length}
-              metadata={metadata}
-            />
-          </div>
-        </div>
-      </section>
+      <Header activeIndicator={activeIndicator} metadata={metadata} />
 
-      <section className="container mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+      <section className="container mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
         {loadState.status === "loading" ? (
           <LoadingState />
         ) : loadState.status === "error" ? (
@@ -189,42 +162,44 @@ export function AtlanteTerritoriale() {
         ) : !layer || features.length === 0 || !metadata ? (
           <EmptyState />
         ) : (
-          <div className="space-y-6">
-            <IndicatorSelector
+          <div className="space-y-5">
+            {layer.dataStatus === "demo" ? <DemoNotice /> : null}
+            <IndicatorControl
               activeIndicator={activeIndicator}
               availableIndicators={availableIndicators}
-              collection={collection}
               onSelect={setSelectedIndicatorId}
             />
-            <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_360px] xl:items-start">
+            <div className="grid gap-5 xl:grid-cols-[minmax(320px,0.9fr)_minmax(0,1.1fr)] xl:items-start">
+              <DistributionChart
+                activeBinIndex={activeBinIndex}
+                activeIndicator={activeIndicator}
+                selectedValue={activeValue}
+                summary={distribution}
+              />
               <MapSurface
-                activeFeature={activeFeature}
                 activeIndicator={activeIndicator}
                 bounds={bounds}
+                coloredBins={coloredBins}
                 features={features}
                 hoveredSectionId={hoveredSectionId}
-                legendBins={legendBins}
-                metadata={metadata}
                 selectedSectionId={selectedSectionId}
                 setHoveredSectionId={setHoveredSectionId}
                 setSelectedSectionId={setSelectedSectionId}
               />
-              <DetailPanel
-                activeFeature={activeFeature}
-                activeIndicator={activeIndicator}
-                activeValue={activeValue}
-                dataStatus={layer.dataStatus}
-                metadata={metadata}
-              />
             </div>
-            <MethodologyPanel
+            <SelectedSectionCard
+              activeFeature={activeFeature}
               activeIndicator={activeIndicator}
-              collection={collection}
+              activeValue={activeValue}
+              bins={distribution.bins}
+              metadata={metadata}
+            />
+            <MethodologyDisclosure
               dataStatus={layer.dataStatus}
               loadedFrom={layer.loadedFrom}
               metadata={metadata}
+              summary={distribution}
             />
-            <FutureLayers />
           </div>
         )}
       </section>
@@ -232,189 +207,106 @@ export function AtlanteTerritoriale() {
   );
 }
 
-function TrustChips() {
+function Header({
+  activeIndicator,
+  metadata,
+}: {
+  activeIndicator: AtlanteIndicatorDefinition | null;
+  metadata: AtlanteLayerMetadata | null;
+}) {
   const chips = [
-    { icon: Database, label: "Fonte ISTAT" },
-    { icon: MapPinned, label: "Sezioni censuarie" },
-    { icon: ShieldCheck, label: "Limiti dichiarati" },
+    ["Fonte", metadata?.sourceInstitution ?? "ISTAT"],
+    ["Livello", "sezioni censuarie"],
+    ["Indicatore", activeIndicator?.label ?? "in preparazione"],
   ];
 
   return (
-    <div className="flex flex-wrap gap-2">
-      {chips.map(({ icon: Icon, label }) => (
-        <span
-          className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-card px-3 py-1.5 text-sm font-medium text-slate-700 shadow-sm"
-          key={label}
-        >
-          <Icon className="h-4 w-4 text-teal-700" />
-          {label}
-        </span>
-      ))}
+    <section className="border-b border-slate-200 bg-card">
+      <div className="container mx-auto max-w-7xl px-4 py-7 sm:px-6 lg:px-8">
+        <div className="max-w-4xl">
+          <h1 className="text-3xl font-bold leading-tight text-slate-950 sm:text-4xl">
+            Atlante territoriale
+          </h1>
+          <p className="mt-3 max-w-3xl text-base leading-7 text-slate-700">
+            Esplora come la popolazione si distribuisce nelle sezioni censuarie
+            di Lamezia Terme. Scegli un indicatore, guarda la distribuzione e
+            confronta le diverse aree della città.
+          </p>
+          <div className="mt-4 flex flex-wrap gap-2">
+            {chips.map(([label, value]) => (
+              <span
+                className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-slate-50 px-3 py-1.5 text-sm text-slate-700"
+                key={`${label}-${value}`}
+              >
+                <span className="font-semibold text-slate-950">{label}:</span>
+                {value}
+              </span>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function DemoNotice() {
+  return (
+    <div className="flex items-start gap-3 rounded-lg border border-amber-300 bg-amber-50 p-4 text-sm leading-6 text-amber-950">
+      <AlertTriangle className="mt-0.5 h-5 w-5 flex-none" />
+      <p>
+        Dato dimostrativo: non contiene sezioni censuarie reali e non va usato
+        per analisi.
+      </p>
     </div>
   );
 }
 
-function HeroStatusCard({
-  activeIndicator,
-  dataStatus,
-  featureCount,
-  metadata,
-}: {
-  activeIndicator: AtlanteIndicatorDefinition | null;
-  dataStatus: AtlanteLoadedLayer["dataStatus"] | null;
-  featureCount: number;
-  metadata: AtlanteLayerMetadata | null;
-}) {
-  const isDemo = dataStatus === "demo";
-  const coverage = metadata?.qa?.populationValueCoverage;
-
-  return (
-    <aside className="rounded-lg border border-slate-200 bg-card p-4 shadow-sm">
-      <div className="flex items-start gap-3">
-        {isDemo ? (
-          <AlertTriangle className="mt-0.5 h-5 w-5 flex-none text-amber-700" />
-        ) : (
-          <CheckCircle2 className="mt-0.5 h-5 w-5 flex-none text-teal-700" />
-        )}
-        <div className="space-y-3">
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
-              Stato del livello
-            </p>
-            <p className="mt-1 font-semibold leading-6 text-slate-950">
-              {metadata?.publicLabel ?? "Caricamento fonte territoriale"}
-            </p>
-          </div>
-          <div className="grid gap-2 text-sm text-slate-700">
-            <p>
-              <span className="font-medium text-slate-950">Fonte:</span>{" "}
-              {metadata?.sourceInstitution ?? "ISTAT"}
-            </p>
-            <p>
-              <span className="font-medium text-slate-950">Livello:</span>{" "}
-              {metadata?.territorialLevel ?? "sezione di censimento"}
-            </p>
-            <p>
-              <span className="font-medium text-slate-950">Indicatore:</span>{" "}
-              {activeIndicator?.label ?? "in preparazione"}
-            </p>
-            {featureCount > 0 ? (
-              <p>
-                <span className="font-medium text-slate-950">Sezioni:</span>{" "}
-                {featureCount}
-              </p>
-            ) : null}
-          </div>
-          {coverage ? (
-            <p className="rounded-md bg-teal-50 px-3 py-2 text-sm leading-6 text-teal-950">
-              QA popolazione residente: {coverage.availableCount} sezioni su{" "}
-              {coverage.totalFeatures} hanno valore 2023; {coverage.nullCount}{" "}
-              restano "dato non disponibile" e non sono trattate come zero.
-            </p>
-          ) : null}
-          {isDemo ? (
-            <p className="rounded-md bg-amber-50 px-3 py-2 text-sm leading-6 text-amber-950">
-              Dato dimostrativo: non contiene sezioni censuarie reali e non va
-              usato per analisi.
-            </p>
-          ) : null}
-        </div>
-      </div>
-    </aside>
-  );
-}
-
-function IndicatorSelector({
+function IndicatorControl({
   activeIndicator,
   availableIndicators,
-  collection,
   onSelect,
 }: {
   activeIndicator: AtlanteIndicatorDefinition | null;
   availableIndicators: AtlanteIndicatorDefinition[];
-  collection: AtlanteFeatureCollection | null;
   onSelect: (indicatorId: string) => void;
 }) {
-  const availableCount =
-    collection && activeIndicator
-      ? collection.features.filter((feature) =>
-          featureHasIndicator(feature, activeIndicator),
-        ).length
-      : 0;
-  const unavailableCount =
-    collection && activeIndicator
-      ? collection.features.length - availableCount
-      : 0;
+  const entries = ATLANTE_INDICATOR_CATEGORIES.map((category) => ({
+    category,
+    indicator: availableIndicators.find(
+      (candidate) => candidate.categoryId === category.id,
+    ),
+  }));
+  const orderedEntries = [
+    ...entries.filter((entry) => entry.indicator),
+    ...entries.filter((entry) => !entry.indicator),
+  ];
 
   return (
-    <section className="rounded-lg border border-slate-200 bg-card p-4 shadow-sm sm:p-5">
-      <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_280px] lg:items-start">
-        <div className="space-y-2">
-          <p className="text-xs font-semibold uppercase tracking-wide text-teal-700">
-            Indicatore
-          </p>
-          <h2 className="text-xl font-semibold text-slate-950">
-            Scegli cosa osservare sulla mappa
-          </h2>
-          <p className="max-w-3xl text-sm leading-6 text-slate-600">
-            Oggi e' pubblicabile solo la popolazione residente. Le altre
-            categorie restano visibili per chiarezza, ma saranno attivate solo
-            dopo verifica dei campi ISTAT.
-          </p>
-        </div>
-        <div className="rounded-md border border-teal-200 bg-teal-50 p-3 text-sm leading-6 text-teal-950">
-          <p className="font-semibold">
-            {activeIndicator?.label ?? "Indicatore in preparazione"}
-          </p>
-          {collection && activeIndicator ? (
-            <p className="mt-1">
-              {availableCount} sezioni con valore disponibile.{" "}
-              {unavailableCount > 0
-                ? `${unavailableCount} sezioni mostrano "dato non disponibile"; non sono conteggiate come zero.`
-                : "Nessuna sezione senza valore."}
-            </p>
-          ) : (
-            <p className="mt-1">In attesa del contratto dati validato.</p>
-          )}
-        </div>
+    <section className="rounded-lg border border-slate-200 bg-card p-4 shadow-sm">
+      <div className="mb-3 flex items-center gap-2 text-sm font-semibold text-slate-950">
+        <Database className="h-4 w-4 text-teal-700" />
+        Indicatore
       </div>
-      <div className="mt-5 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-        {ATLANTE_INDICATOR_CATEGORIES.map((category) => {
-          const indicator = availableIndicators.find(
-            (candidate) => candidate.categoryId === category.id,
-          );
-          const isEnabled = Boolean(indicator);
+      <div className="flex gap-2 overflow-x-auto pb-1">
+        {orderedEntries.map(({ category, indicator }) => {
           const isActive = indicator?.id === activeIndicator?.id;
           return (
             <button
-              key={category.id}
-              className={`min-h-24 rounded-md border p-3 text-left transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-600 focus-visible:ring-offset-2 ${
+              className={`min-w-40 rounded-md border px-3 py-2 text-left text-sm transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-600 focus-visible:ring-offset-2 ${
                 isActive
-                  ? "border-teal-600 bg-teal-50 text-teal-950 shadow-sm"
-                  : isEnabled
-                    ? "border-slate-200 bg-card text-slate-800 hover:border-teal-300 hover:bg-teal-50/40"
+                  ? "border-teal-600 bg-teal-50 text-teal-950"
+                  : indicator
+                    ? "border-slate-200 bg-card text-slate-800 hover:border-teal-300"
                     : "border-slate-200 bg-slate-50 text-slate-500"
               }`}
-              disabled={!isEnabled || !indicator}
+              disabled={!indicator}
+              key={category.id}
               onClick={() => indicator && onSelect(indicator.id)}
               type="button"
             >
-              <span className="flex items-center justify-between gap-2">
-                <span className="text-sm font-semibold">{category.label}</span>
-                <span
-                  className={`rounded-full px-2 py-0.5 text-[11px] font-semibold ${
-                    isEnabled
-                      ? "bg-teal-100 text-teal-800"
-                      : "bg-slate-200 text-slate-600"
-                  }`}
-                >
-                  {isEnabled ? "attivo" : "presto"}
-                </span>
-              </span>
-              <span className="mt-3 block text-xs leading-5">
-                {indicator
-                  ? indicator.label
-                  : "Indicatore in preparazione"}
+              <span className="block font-semibold">{category.label}</span>
+              <span className="mt-1 block text-xs leading-5">
+                {indicator ? indicator.label : "Indicatore in preparazione"}
               </span>
             </button>
           );
@@ -424,443 +316,379 @@ function IndicatorSelector({
   );
 }
 
-function MapSurface({
-  activeFeature,
+function DistributionChart({
+  activeBinIndex,
   activeIndicator,
-  bounds,
-  features,
-  hoveredSectionId,
-  legendBins,
-  metadata,
-  selectedSectionId,
-  setHoveredSectionId,
-  setSelectedSectionId,
+  selectedValue,
+  summary,
 }: {
-  activeFeature: AtlanteFeature | null;
+  activeBinIndex: number | null;
   activeIndicator: AtlanteIndicatorDefinition | null;
-  bounds: Bounds | null;
-  features: AtlanteFeature[];
-  hoveredSectionId: string | null;
-  legendBins: LegendBin[];
-  metadata: AtlanteLayerMetadata;
-  selectedSectionId: string | null;
-  setHoveredSectionId: (sectionId: string | null) => void;
-  setSelectedSectionId: (sectionId: string) => void;
+  selectedValue: number | null;
+  summary: ReturnType<typeof buildAtlanteDistribution>;
 }) {
+  const maxCount = Math.max(
+    1,
+    ...summary.bins.map((bin) => bin.count),
+    summary.missingCount,
+  );
+
   return (
-    <section className="rounded-lg border border-slate-200 bg-card shadow-sm">
-      <div className="flex flex-col gap-4 border-b border-slate-200 p-4 sm:p-5 lg:flex-row lg:items-start lg:justify-between">
-        <div className="max-w-2xl">
-          <p className="text-xs font-semibold uppercase tracking-wide text-teal-700">
-            Mappa
+    <section className="rounded-lg border border-slate-200 bg-card p-4 shadow-sm sm:p-5">
+      <div className="flex items-start justify-between gap-4">
+        <div>
+          <p className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-teal-700">
+            <BarChart3 className="h-4 w-4" />
+            Distribuzione
           </p>
-          <h2 className="mt-1 flex items-center gap-2 text-2xl font-semibold text-slate-950">
-            <MapPinned className="h-6 w-6 text-teal-700" />
-            Lamezia per sezioni censuarie
+          <h2 className="mt-1 text-xl font-semibold text-slate-950">
+            {activeIndicator?.label ?? "Indicatore in preparazione"}
           </h2>
-          <p className="mt-2 text-sm leading-6 text-slate-600">
-            Ogni poligono rappresenta una sezione di censimento ISTAT. Le aree
-            senza variabile 2023 restano visibili, ma sono indicate come dato
-            non disponibile.
-          </p>
         </div>
-        <div className="rounded-md border border-slate-200 bg-slate-50 px-3 py-2 text-xs leading-5 text-slate-700">
-          <span className="font-semibold">{metadata.sourceInstitution}</span>{" "}
-          - {metadata.sourceYear} - {metadata.territorialLevel}
-        </div>
+        <p className="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-600">
+          {summary.availableCount} sezioni con dato
+        </p>
       </div>
 
-      <div className="p-3 sm:p-5">
-        {!bounds || !activeIndicator ? (
-          <div className="flex min-h-96 items-center justify-center rounded-md bg-slate-100 p-6 text-center text-sm text-slate-600">
-            La mappa sara' disponibile quando almeno un indicatore censuario
-            sara' presente nel file dati.
-          </div>
-        ) : (
-          <div className="overflow-hidden rounded-md border border-slate-200 bg-slate-100">
-            <svg
-              aria-label="Mappa delle sezioni censuarie di Lamezia Terme"
-              className="block h-[420px] w-full sm:h-[600px]"
-              role="img"
-              viewBox={`0 0 ${MAP_WIDTH} ${MAP_HEIGHT}`}
-            >
-              <rect
-                fill="hsl(var(--card))"
-                height={MAP_HEIGHT}
-                rx="0"
-                width={MAP_WIDTH}
-              />
-              {features.map((feature) => {
-                const sectionId = getSectionId(feature);
-                const value = readIndicatorValue(feature, activeIndicator);
-                const isActive =
-                  sectionId === hoveredSectionId ||
-                  sectionId === selectedSectionId;
-                const path = feature.geometry
-                  ? geometryToPath(feature.geometry, bounds)
-                  : "";
-
-                if (!path) {
-                  return null;
-                }
-
-                return (
-                  <path
-                    aria-label={`${sectionId}: ${formatAtlanteValue(
-                      value,
-                      activeIndicator.unitLabel,
-                    )}`}
-                    d={path}
-                    fill={getChoroplethColor(value, legendBins)}
-                    key={sectionId}
-                    onBlur={() => setHoveredSectionId(null)}
-                    onClick={() => setSelectedSectionId(sectionId)}
-                    onFocus={() => setHoveredSectionId(sectionId)}
-                    onKeyDown={(event) => {
-                      if (event.key === "Enter" || event.key === " ") {
-                        event.preventDefault();
-                        setSelectedSectionId(sectionId);
-                      }
+      <div className="mt-5 space-y-3">
+        {summary.bins.length > 0 ? (
+          summary.bins.map((bin) => {
+            const isSelected = activeBinIndex === bin.index;
+            return (
+              <div
+                className="grid grid-cols-[72px_minmax(0,1fr)_42px] items-center gap-2 text-sm"
+                key={bin.index}
+              >
+                <span className="text-xs font-medium text-slate-600">
+                  {bin.label}
+                </span>
+                <div
+                  aria-label={`Fascia ${bin.label}: ${bin.count} sezioni`}
+                  className={`h-8 overflow-hidden rounded-md border bg-slate-100 ${
+                    isSelected ? "border-slate-950" : "border-slate-200"
+                  }`}
+                >
+                  <div
+                    className={`h-full rounded-sm ${
+                      isSelected ? "bg-teal-700" : "bg-teal-500"
+                    }`}
+                    style={{
+                      width: `${Math.max(4, (bin.count / maxCount) * 100)}%`,
                     }}
-                    onMouseEnter={() => setHoveredSectionId(sectionId)}
-                    onMouseLeave={() => setHoveredSectionId(null)}
-                    role="button"
-                    stroke={
-                      isActive ? "hsl(var(--foreground))" : "hsl(var(--card))"
-                    }
-                    strokeLinejoin="round"
-                    strokeWidth={isActive ? 4 : 2}
-                    className="cursor-pointer transition-opacity hover:opacity-90"
-                    tabIndex={0}
                   />
-                );
-              })}
-            </svg>
-          </div>
+                </div>
+                <span className="text-right font-semibold text-slate-950">
+                  {bin.count}
+                </span>
+              </div>
+            );
+          })
+        ) : (
+          <p className="rounded-md bg-slate-50 p-3 text-sm text-slate-600">
+            Nessun valore numerico disponibile per costruire la distribuzione.
+          </p>
         )}
-        <div className="mt-4 grid gap-4 border-t border-slate-200 pt-4 lg:grid-cols-[minmax(0,1fr)_320px] lg:items-start">
-          <div className="grid gap-3 text-sm text-slate-700 sm:grid-cols-2">
-            <p>
-              <span className="block text-xs font-semibold uppercase tracking-wide text-slate-500">
-                Sezione selezionata
-              </span>
-              <span className="mt-1 block font-semibold text-slate-950">
-                {activeFeature ? getSectionId(activeFeature) : "nessuna"}
-              </span>
-            </p>
-            <p>
-              <span className="block text-xs font-semibold uppercase tracking-wide text-slate-500">
-                Valore
-              </span>
-              <span className="mt-1 block font-semibold text-slate-950">
-                {activeIndicator
-                  ? formatAtlanteValue(
-                      activeFeature
-                        ? readIndicatorValue(activeFeature, activeIndicator)
-                        : null,
-                      activeIndicator.unitLabel,
-                    )
-                  : "dato non disponibile"}
-              </span>
-            </p>
+
+        {summary.missingCount > 0 ? (
+          <div className="grid grid-cols-[72px_minmax(0,1fr)_42px] items-center gap-2 text-sm">
+            <span className="text-xs font-medium text-slate-600">n.d.</span>
+            <div
+              className={`h-8 overflow-hidden rounded-md border bg-slate-100 ${
+                selectedValue === null ? "border-slate-950" : "border-slate-200"
+              }`}
+            >
+              <div
+                className="h-full rounded-sm bg-slate-300"
+                style={{
+                  width: `${Math.max(
+                    4,
+                    (summary.missingCount / maxCount) * 100,
+                  )}%`,
+                }}
+              />
+            </div>
+            <span className="text-right font-semibold text-slate-950">
+              {summary.missingCount}
+            </span>
           </div>
-          <Legend activeIndicator={activeIndicator} legendBins={legendBins} />
-        </div>
+        ) : null}
+      </div>
+
+      <div className="mt-5 grid gap-2 text-sm leading-6 text-slate-600">
+        <p>
+          I valori mancanti sono separati dai valori numerici. Zero resta zero.
+        </p>
+        {summary.zeroCount > 0 ? (
+          <p>{summary.zeroCount} sezioni hanno valore 0.</p>
+        ) : null}
       </div>
     </section>
   );
 }
 
-function Legend({
+function MapSurface({
   activeIndicator,
-  legendBins,
+  bounds,
+  coloredBins,
+  features,
+  hoveredSectionId,
+  selectedSectionId,
+  setHoveredSectionId,
+  setSelectedSectionId,
 }: {
   activeIndicator: AtlanteIndicatorDefinition | null;
-  legendBins: LegendBin[];
+  bounds: Bounds | null;
+  coloredBins: ColoredDistributionBin[];
+  features: AtlanteFeature[];
+  hoveredSectionId: string | null;
+  selectedSectionId: string | null;
+  setHoveredSectionId: (sectionId: string | null) => void;
+  setSelectedSectionId: (sectionId: string) => void;
 }) {
   return (
-    <div className="rounded-md border border-slate-200 bg-slate-50 p-3">
-      <h3 className="text-sm font-semibold text-slate-950">Legenda</h3>
-      {!activeIndicator || legendBins.length === 0 ? (
-        <p className="mt-2 text-sm text-slate-600">
-          Nessun valore disponibile per costruire la legenda.
+    <section className="rounded-lg border border-slate-200 bg-card p-4 shadow-sm sm:p-5">
+      <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
+        <div>
+          <p className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-teal-700">
+            <MapPinned className="h-4 w-4" />
+            Mappa
+          </p>
+          <h2 className="mt-1 text-xl font-semibold text-slate-950">
+            Sezioni censuarie
+          </h2>
+        </div>
+        <p className="text-sm text-slate-600">
+          {activeIndicator?.label ?? "Indicatore in preparazione"}
         </p>
+      </div>
+
+      {!bounds || !activeIndicator ? (
+        <div className="flex min-h-80 items-center justify-center rounded-md bg-slate-100 p-6 text-center text-sm text-slate-600">
+          La mappa sarà disponibile quando almeno un indicatore censuario sarà
+          presente nel file dati.
+        </div>
       ) : (
-        <div className="mt-3 grid gap-2">
-          {legendBins.map((bin) => (
-            <div
-              className="flex items-center gap-2 text-xs text-slate-700"
-              key={`${bin.min}-${bin.max}-${bin.color}`}
-            >
-              <span
-                aria-hidden="true"
-                className="h-4 w-8 rounded-sm border border-slate-200"
-                style={{ backgroundColor: bin.color }}
-              />
-              <span>{bin.label}</span>
-            </div>
-          ))}
-          <div className="flex items-center gap-2 text-xs text-slate-700">
-            <span
-              aria-hidden="true"
-              className="h-4 w-8 rounded-sm border border-slate-200"
-              style={{ backgroundColor: EMPTY_COLOR }}
+        <div className="overflow-hidden rounded-md border border-slate-200 bg-slate-100">
+          <svg
+            aria-label="Mappa delle sezioni censuarie di Lamezia Terme"
+            className="block h-[360px] w-full sm:h-[520px]"
+            role="img"
+            viewBox={`0 0 ${MAP_WIDTH} ${MAP_HEIGHT}`}
+          >
+            <rect
+              fill="hsl(var(--card))"
+              height={MAP_HEIGHT}
+              rx="0"
+              width={MAP_WIDTH}
             />
-            <span>dato non disponibile</span>
-          </div>
+            {features.map((feature) => {
+              const sectionId = getSectionId(feature);
+              const value = readIndicatorValue(feature, activeIndicator);
+              const isActive =
+                sectionId === hoveredSectionId || sectionId === selectedSectionId;
+              const path = feature.geometry
+                ? geometryToPath(feature.geometry, bounds)
+                : "";
+
+              if (!path) {
+                return null;
+              }
+
+              return (
+                <path
+                  aria-label={`${sectionId}: ${formatAtlanteValue(
+                    value,
+                    activeIndicator.unitLabel,
+                  )}`}
+                  className="cursor-pointer transition-opacity hover:opacity-90"
+                  d={path}
+                  fill={getChoroplethColor(value, coloredBins)}
+                  key={sectionId}
+                  onBlur={() => setHoveredSectionId(null)}
+                  onClick={() => setSelectedSectionId(sectionId)}
+                  onFocus={() => setHoveredSectionId(sectionId)}
+                  onKeyDown={(event) => {
+                    if (event.key === "Enter" || event.key === " ") {
+                      event.preventDefault();
+                      setSelectedSectionId(sectionId);
+                    }
+                  }}
+                  onMouseEnter={() => setHoveredSectionId(sectionId)}
+                  onMouseLeave={() => setHoveredSectionId(null)}
+                  role="button"
+                  stroke={
+                    isActive ? "hsl(var(--foreground))" : "hsl(var(--card))"
+                  }
+                  strokeLinejoin="round"
+                  strokeWidth={isActive ? 4 : 2}
+                  tabIndex={0}
+                />
+              );
+            })}
+          </svg>
         </div>
       )}
+
+      <MapLegend bins={coloredBins} />
+    </section>
+  );
+}
+
+function MapLegend({ bins }: { bins: ColoredDistributionBin[] }) {
+  return (
+    <div className="mt-4 flex flex-wrap gap-3 text-xs text-slate-600">
+      {bins.map((bin) => (
+        <span className="inline-flex items-center gap-1.5" key={bin.index}>
+          <span
+            aria-hidden="true"
+            className="h-3 w-5 rounded-sm border border-slate-200"
+            style={{ backgroundColor: bin.color }}
+          />
+          {bin.label}
+        </span>
+      ))}
+      <span className="inline-flex items-center gap-1.5">
+        <span
+          aria-hidden="true"
+          className="h-3 w-5 rounded-sm border border-slate-200"
+          style={{ backgroundColor: EMPTY_COLOR }}
+        />
+        dato non disponibile
+      </span>
     </div>
   );
 }
 
-function DetailPanel({
+function SelectedSectionCard({
   activeFeature,
   activeIndicator,
   activeValue,
-  dataStatus,
+  bins,
   metadata,
 }: {
   activeFeature: AtlanteFeature | null;
   activeIndicator: AtlanteIndicatorDefinition | null;
   activeValue: number | null;
-  dataStatus: AtlanteLoadedLayer["dataStatus"];
+  bins: AtlanteDistributionBin[];
   metadata: AtlanteLayerMetadata;
 }) {
-  const sectionId = activeFeature ? getSectionId(activeFeature) : "nessuna sezione";
+  const sectionId = activeFeature ? getSectionId(activeFeature) : "nessuna";
   const valueLabel = activeIndicator
     ? formatAtlanteValue(activeValue, activeIndicator.unitLabel)
     : "dato non disponibile";
-  const interpretation = activeIndicator
-    ? activeValue === null
-      ? "Per questa sezione il valore non e' disponibile nel join ISTAT 2023; non viene conteggiato come zero."
-      : `Il valore indica le ${activeIndicator.unitLabel} associate alla sezione nel dataset ISTAT 2023.`
-    : "Gli indicatori saranno mostrati solo dopo verifica dei campi disponibili.";
-  const rows = [
-    ["Fonte istituzionale", metadata.sourceInstitution],
-    ["Dataset", metadata.sourceDataset],
-    ["Anno", metadata.sourceYear],
-    ["Livello territoriale", metadata.territorialLevel],
-    ["Stato verifica", metadata.verificationStatus],
-    ["Ultimo aggiornamento", metadata.processingDate ?? "non indicato"],
-  ];
+  const context = describeAtlanteDistributionPosition(activeValue, bins);
 
   return (
-    <aside className="rounded-lg border border-slate-200 bg-card p-4 shadow-sm sm:p-5 xl:sticky xl:top-24 xl:self-start">
-      <div className="flex items-start gap-3">
-        <Info className="mt-0.5 h-5 w-5 flex-none text-teal-700" />
+    <section className="rounded-lg border border-slate-200 bg-card p-4 shadow-sm sm:p-5">
+      <div className="grid gap-4 md:grid-cols-[220px_180px_minmax(0,1fr)] md:items-center">
         <div>
-          <p className="text-xs font-semibold uppercase tracking-wide text-teal-700">
+          <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
             Sezione selezionata
           </p>
           <h2 className="mt-1 break-words text-xl font-semibold text-slate-950">
             {sectionId}
           </h2>
         </div>
+        <div>
+          <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+            Valore
+          </p>
+          <p className="mt-1 text-2xl font-bold leading-tight text-slate-950">
+            {valueLabel}
+          </p>
+        </div>
+        <div className="rounded-md border border-slate-200 bg-slate-50 p-3 text-sm leading-6 text-slate-700">
+          <p>{context}</p>
+          {activeValue === 0 ? (
+            <p className="mt-2">Zero è mostrato come 0, non come dato mancante.</p>
+          ) : null}
+          <p className="mt-2 font-semibold text-teal-800">
+            {metadata.publicLabel}
+          </p>
+        </div>
       </div>
-
-      <div className="mt-5 rounded-md border border-slate-200 bg-slate-50 p-4">
-        <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
-          {activeIndicator ? activeIndicator.label : "Indicatore in preparazione"}
-        </p>
-        <p
-          className={`mt-2 break-words text-3xl font-bold leading-tight ${
-            activeValue === null ? "text-slate-700" : "text-slate-950"
-          }`}
-        >
-          {valueLabel}
-        </p>
-        <p className="mt-3 text-sm leading-6 text-slate-600">{interpretation}</p>
-      </div>
-
-      <div
-        className={`mt-4 rounded-md border p-3 text-sm font-semibold ${
-          dataStatus === "demo"
-            ? "border-amber-300 bg-amber-50 text-amber-950"
-            : "border-teal-200 bg-teal-50 text-teal-950"
-        }`}
-      >
-        {metadata.publicLabel}
-      </div>
-
-      <div className="mt-5 border-t border-slate-200 pt-4">
-        <h3 className="flex items-center gap-2 text-sm font-semibold text-slate-950">
-          <CalendarDays className="h-4 w-4 text-slate-500" />
-          Contesto del dato
-        </h3>
-        <dl className="mt-3 grid gap-3 text-sm">
-          {rows.slice(0, 4).map(([label, value]) => (
-            <div key={label}>
-              <dt className="text-xs font-semibold uppercase tracking-wide text-slate-500">
-                {label}
-              </dt>
-              <dd className="mt-1 leading-6 text-slate-800">{value}</dd>
-            </div>
-          ))}
-        </dl>
-      </div>
-
-      <div className="mt-5 border-t border-slate-200 pt-4">
-        <h3 className="text-sm font-semibold text-slate-950">
-          Cautela principale
-        </h3>
-        <p className="mt-2 text-sm leading-6 text-slate-700">
-          {metadata.knownLimits[0] ??
-            "Interpretare il dato insieme a fonte, anno e livello territoriale."}
-        </p>
-      </div>
-    </aside>
+    </section>
   );
 }
 
-function MethodologyPanel({
-  activeIndicator,
-  collection,
+function MethodologyDisclosure({
   dataStatus,
   loadedFrom,
   metadata,
+  summary,
 }: {
-  activeIndicator: AtlanteIndicatorDefinition | null;
-  collection: AtlanteFeatureCollection | null;
   dataStatus: AtlanteLoadedLayer["dataStatus"];
   loadedFrom: string;
   metadata: AtlanteLayerMetadata;
+  summary: ReturnType<typeof buildAtlanteDistribution>;
 }) {
-  const coverage = metadata.qa?.populationValueCoverage;
-  const isDemo = dataStatus === "demo";
   const rows = [
-    ["Fonte istituzionale", metadata.sourceInstitution],
+    ["Fonte", metadata.sourceInstitution],
     ["Dataset", metadata.sourceDataset],
     ["Anno", metadata.sourceYear],
-    ["Livello territoriale", metadata.territorialLevel],
-    ["Stato verifica", metadata.verificationStatus],
-    ["Ultimo aggiornamento", metadata.processingDate ?? "non indicato"],
+    ["Livello", metadata.territorialLevel],
+    ["Verifica", metadata.verificationStatus],
+    ["Aggiornamento", metadata.processingDate ?? "non indicato"],
   ];
 
   return (
-    <section className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_360px]">
-      <div className="rounded-lg border border-slate-200 bg-card p-4 shadow-sm sm:p-5">
-        <div className="flex items-start gap-3">
-          <BookOpen className="mt-0.5 h-5 w-5 flex-none text-teal-700" />
-          <div>
-            <h2 className="text-xl font-semibold text-slate-950">
-              Fonti e metodologia
-            </h2>
-            <p className="mt-2 max-w-3xl text-sm leading-6 text-slate-600">
-              I dati sono pubblici e vanno letti con fonte, anno, livello
-              territoriale e limiti sempre visibili. La sezione censuaria non e'
-              un quartiere, un CAP o una zona catastale.
-            </p>
-          </div>
-        </div>
-
-        <dl className="mt-5 grid gap-4 text-sm sm:grid-cols-2 lg:grid-cols-3">
+    <details className="rounded-lg border border-slate-200 bg-card p-4 shadow-sm sm:p-5">
+      <summary className="flex cursor-pointer items-center gap-2 text-base font-semibold text-slate-950">
+        <BookOpen className="h-5 w-5 text-teal-700" />
+        Fonti e limiti
+      </summary>
+      <div className="mt-5 space-y-5 text-sm leading-6 text-slate-700">
+        <dl className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {rows.map(([label, value]) => (
             <div key={label}>
               <dt className="text-xs font-semibold uppercase tracking-wide text-slate-500">
                 {label}
               </dt>
-              <dd className="mt-1 leading-6 text-slate-800">{value}</dd>
+              <dd className="mt-1 text-slate-800">{value}</dd>
             </div>
           ))}
         </dl>
 
-        <details className="mt-5 rounded-md border border-slate-200 bg-slate-50 p-3">
-          <summary className="cursor-pointer text-sm font-semibold text-slate-950">
-            Percorsi tecnici e limiti completi
-          </summary>
-          <div className="mt-3 space-y-4 text-sm leading-6 text-slate-700">
-            <div>
-              <p>
-                File atteso:{" "}
-                <span className="font-mono text-xs">
-                  {ATLANTE_EXPECTED_GEOJSON_PATH}
-                </span>
-              </p>
-              <p>
-                File caricato:{" "}
-                <span className="font-mono text-xs">{loadedFrom}</span>
-              </p>
-              <p>
-                Dizionario indicatori:{" "}
-                <span className="font-mono text-xs">
-                  {metadata.qa?.indicatorDictionaryPath ??
-                    ATLANTE_EXPECTED_INDICATOR_DICTIONARY_PATH}
-                </span>
-              </p>
-            </div>
-            <ul className="space-y-2">
-              {metadata.knownLimits.map((limit) => (
-                <li key={limit}>{limit}</li>
-              ))}
-            </ul>
-          </div>
-        </details>
-      </div>
-
-      <aside
-        className={`rounded-lg border p-4 shadow-sm sm:p-5 ${
-          isDemo
-            ? "border-amber-300 bg-amber-50 text-amber-950"
-            : "border-teal-200 bg-teal-50 text-teal-950"
-        }`}
-      >
-        <div className="flex items-start gap-3">
-          {isDemo ? (
-            <AlertTriangle className="mt-0.5 h-5 w-5 flex-none" />
-          ) : (
-            <ShieldCheck className="mt-0.5 h-5 w-5 flex-none" />
-          )}
-          <div className="space-y-3">
-            <h3 className="font-semibold">Cosa sapere prima di usare i dati</h3>
-            {coverage ? (
-              <p className="text-sm leading-6">
-                {coverage.availableCount} sezioni su {coverage.totalFeatures}{" "}
-                hanno valore per {activeIndicator?.label ?? "l'indicatore"};{" "}
-                {coverage.nullCount} restano "dato non disponibile".
-              </p>
-            ) : null}
-            <p className="text-sm leading-6">
-              {collection?.features.length ?? 0} geometrie sono mostrate come
-              base territoriale. Le sezioni urbane catastali Zornade non sono
-              sezioni censuarie e restano fuori da questa base.
-            </p>
-            {isDemo ? (
-              <p className="text-sm leading-6">
-                Questa visualizzazione usa dati dimostrativi per non bloccare la
-                pagina quando il GeoJSON ISTAT processato non e' disponibile.
-              </p>
-            ) : null}
-          </div>
-        </div>
-      </aside>
-    </section>
-  );
-}
-
-function FutureLayers() {
-  return (
-    <section className="rounded-lg border border-slate-200 bg-card p-4 shadow-sm sm:p-5">
-      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-        <div className="max-w-3xl">
-          <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
-            Prossimi passi
+        <div className="grid gap-3 rounded-md border border-slate-200 bg-slate-50 p-3">
+          <p>
+            {summary.availableCount} sezioni hanno un valore numerico;{" "}
+            {summary.missingCount} restano "dato non disponibile".
           </p>
-          <h2 className="mt-1 text-xl font-semibold text-slate-950">
-            Altri indicatori arriveranno solo dopo revisione
-          </h2>
-          <p className="mt-2 text-sm leading-6 text-slate-600">
-            Eta', cittadinanza, famiglie, abitazioni, mobilita', istruzione e
-            lavoro restano in preparazione finche' campi, numeratori,
-            denominatori e cautele non saranno verificati.
+          <p>
+            Le sezioni urbane catastali Zornade non sono sezioni censuarie e
+            restano fuori da questa base.
+          </p>
+          {dataStatus === "demo" ? (
+            <p>Dato dimostrativo: non contiene sezioni censuarie reali.</p>
+          ) : null}
+        </div>
+
+        <div>
+          <p>
+            File atteso:{" "}
+            <span className="font-mono text-xs">
+              {ATLANTE_EXPECTED_GEOJSON_PATH}
+            </span>
+          </p>
+          <p>
+            File caricato: <span className="font-mono text-xs">{loadedFrom}</span>
+          </p>
+          <p>
+            Dizionario indicatori:{" "}
+            <span className="font-mono text-xs">
+              {metadata.qa?.indicatorDictionaryPath ??
+                ATLANTE_EXPECTED_INDICATOR_DICTIONARY_PATH}
+            </span>
           </p>
         </div>
-        <div className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-slate-50 px-3 py-2 text-sm font-medium text-slate-700">
-          <Layers3 className="h-4 w-4 text-slate-500" />
-          Layer accessorio/non censuario separato
-        </div>
+
+        <ul className="list-disc space-y-2 pl-5">
+          {metadata.knownLimits.map((limit) => (
+            <li key={limit}>{limit}</li>
+          ))}
+        </ul>
       </div>
-    </section>
+    </details>
   );
 }
 
@@ -889,65 +717,31 @@ function EmptyState() {
   );
 }
 
-function buildLegendBins(values: number[]): LegendBin[] {
-  if (values.length === 0) {
-    return [];
-  }
-
-  const min = Math.min(...values);
-  const max = Math.max(...values);
-
-  if (min === max) {
-    return [
-      {
-        min,
-        max,
-        color: CHOROPLETH_COLORS[CHOROPLETH_COLORS.length - 1],
-        label: formatRange(min, max),
-      },
-    ];
-  }
-
-  const steps = Math.min(CHOROPLETH_COLORS.length, new Set(values).size);
-  const range = max - min;
-
-  return Array.from({ length: steps }, (_, index) => {
-    const binMin = min + (range / steps) * index;
-    const binMax = index === steps - 1 ? max : min + (range / steps) * (index + 1);
+function colorDistributionBins(
+  bins: AtlanteDistributionBin[],
+): ColoredDistributionBin[] {
+  return bins.map((bin, index) => {
+    const colorIndex =
+      bins.length <= 1
+        ? CHOROPLETH_COLORS.length - 1
+        : Math.round((index / (bins.length - 1)) * (CHOROPLETH_COLORS.length - 1));
     return {
-      min: binMin,
-      max: binMax,
-      color: CHOROPLETH_COLORS[index],
-      label: formatRange(binMin, binMax),
+      ...bin,
+      color: CHOROPLETH_COLORS[colorIndex],
     };
   });
 }
 
-function getChoroplethColor(value: number | null, bins: LegendBin[]) {
+function getChoroplethColor(
+  value: number | null,
+  bins: ColoredDistributionBin[],
+) {
   if (value === null || bins.length === 0) {
     return EMPTY_COLOR;
   }
 
-  const match =
-    bins.find((bin, index) =>
-      index === bins.length - 1
-        ? value >= bin.min && value <= bin.max
-        : value >= bin.min && value < bin.max,
-    ) ?? bins[bins.length - 1];
-
-  return match.color;
-}
-
-function formatRange(min: number, max: number) {
-  const formatter = new Intl.NumberFormat("it-IT", {
-    maximumFractionDigits: 0,
-  });
-
-  if (min === max) {
-    return formatter.format(min);
-  }
-
-  return `${formatter.format(Math.ceil(min))} - ${formatter.format(Math.floor(max))}`;
+  const binIndex = findAtlanteDistributionBin(value, bins);
+  return binIndex === null ? EMPTY_COLOR : (bins[binIndex]?.color ?? EMPTY_COLOR);
 }
 
 function computeBounds(collection: AtlanteFeatureCollection): Bounds | null {
