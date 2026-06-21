@@ -32,13 +32,13 @@ const MAP_WIDTH = 1000;
 const MAP_HEIGHT = 680;
 const MAP_PADDING = 32;
 const CHOROPLETH_COLORS = [
-  "hsl(var(--chart-1) / 0.18)",
-  "hsl(var(--chart-1) / 0.34)",
-  "hsl(var(--chart-1) / 0.52)",
-  "hsl(var(--chart-1) / 0.72)",
-  "hsl(var(--chart-1))",
+  "hsl(var(--primary) / 0.14)",
+  "hsl(var(--primary) / 0.28)",
+  "hsl(var(--primary) / 0.44)",
+  "hsl(var(--primary) / 0.62)",
+  "hsl(var(--primary) / 0.82)",
 ];
-const EMPTY_COLOR = "hsl(var(--muted))";
+const EMPTY_COLOR = "hsl(var(--muted-foreground) / 0.24)";
 
 type Bounds = {
   minX: number;
@@ -151,7 +151,7 @@ export function AtlanteTerritoriale() {
   );
 
   return (
-    <main className="bg-slate-50 text-slate-950">
+    <main className="bg-background text-foreground">
       <Header activeIndicator={activeIndicator} metadata={metadata} />
 
       <section className="container mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
@@ -221,13 +221,13 @@ function Header({
   ];
 
   return (
-    <section className="border-b border-slate-200 bg-card">
+    <section className="border-b border-border bg-card">
       <div className="container mx-auto max-w-7xl px-4 py-7 sm:px-6 lg:px-8">
         <div className="max-w-4xl">
-          <h1 className="text-3xl font-bold leading-tight text-slate-950 sm:text-4xl">
+          <h1 className="text-3xl font-display font-bold leading-tight text-foreground sm:text-4xl">
             Atlante territoriale
           </h1>
-          <p className="mt-3 max-w-3xl text-base leading-7 text-slate-700">
+          <p className="mt-3 max-w-3xl text-base leading-7 text-muted-foreground">
             Esplora come la popolazione si distribuisce nelle sezioni censuarie
             di Lamezia Terme. Scegli un indicatore, guarda la distribuzione e
             confronta le diverse aree della città.
@@ -235,10 +235,10 @@ function Header({
           <div className="mt-4 flex flex-wrap gap-2">
             {chips.map(([label, value]) => (
               <span
-                className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-slate-50 px-3 py-1.5 text-sm text-slate-700"
+                className="inline-flex items-center gap-2 rounded-full border border-border bg-muted/40 px-3 py-1.5 text-sm text-muted-foreground"
                 key={`${label}-${value}`}
               >
-                <span className="font-semibold text-slate-950">{label}:</span>
+                <span className="font-semibold text-foreground">{label}:</span>
                 {value}
               </span>
             ))}
@@ -251,8 +251,8 @@ function Header({
 
 function DemoNotice() {
   return (
-    <div className="flex items-start gap-3 rounded-lg border border-amber-300 bg-amber-50 p-4 text-sm leading-6 text-amber-950">
-      <AlertTriangle className="mt-0.5 h-5 w-5 flex-none" />
+    <div className="flex items-start gap-3 rounded-lg border border-warning/40 bg-warning/10 p-4 text-sm leading-6 text-foreground">
+      <AlertTriangle className="mt-0.5 h-5 w-5 flex-none text-warning" />
       <p>
         Dato dimostrativo: non contiene sezioni censuarie reali e non va usato
         per analisi.
@@ -282,9 +282,9 @@ function IndicatorControl({
   ];
 
   return (
-    <section className="rounded-lg border border-slate-200 bg-card p-4 shadow-sm">
-      <div className="mb-3 flex items-center gap-2 text-sm font-semibold text-slate-950">
-        <Database className="h-4 w-4 text-teal-700" />
+    <section className="rounded-lg border border-border bg-card p-4 shadow-sm">
+      <div className="mb-3 flex items-center gap-2 text-sm font-semibold text-foreground">
+        <Database className="h-4 w-4 text-primary" />
         Indicatore
       </div>
       <div className="flex gap-2 overflow-x-auto pb-1">
@@ -292,12 +292,12 @@ function IndicatorControl({
           const isActive = indicator?.id === activeIndicator?.id;
           return (
             <button
-              className={`min-w-40 rounded-md border px-3 py-2 text-left text-sm transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-600 focus-visible:ring-offset-2 ${
+              className={`min-w-40 rounded-md border px-3 py-2 text-left text-sm transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 ${
                 isActive
-                  ? "border-teal-600 bg-teal-50 text-teal-950"
+                  ? "border-primary bg-primary/10 text-foreground"
                   : indicator
-                    ? "border-slate-200 bg-card text-slate-800 hover:border-teal-300"
-                    : "border-slate-200 bg-slate-50 text-slate-500"
+                    ? "border-border bg-card text-foreground hover:border-primary/40 hover:bg-primary/5"
+                    : "border-border bg-muted/40 text-muted-foreground"
               }`}
               disabled={!indicator}
               key={category.id}
@@ -334,18 +334,18 @@ function DistributionChart({
   );
 
   return (
-    <section className="rounded-lg border border-slate-200 bg-card p-4 shadow-sm sm:p-5">
+    <section className="rounded-lg border border-border bg-card p-4 shadow-sm sm:p-5">
       <div className="flex items-start justify-between gap-4">
         <div>
-          <p className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-teal-700">
+          <p className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-primary">
             <BarChart3 className="h-4 w-4" />
             Distribuzione
           </p>
-          <h2 className="mt-1 text-xl font-semibold text-slate-950">
+          <h2 className="mt-1 text-xl font-semibold text-foreground">
             {activeIndicator?.label ?? "Indicatore in preparazione"}
           </h2>
         </div>
-        <p className="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-600">
+        <p className="rounded-full bg-muted px-3 py-1 text-xs font-semibold text-muted-foreground">
           {summary.availableCount} sezioni con dato
         </p>
       </div>
@@ -359,46 +359,46 @@ function DistributionChart({
                 className="grid grid-cols-[72px_minmax(0,1fr)_42px] items-center gap-2 text-sm"
                 key={bin.index}
               >
-                <span className="text-xs font-medium text-slate-600">
+                <span className="text-xs font-medium text-muted-foreground">
                   {bin.label}
                 </span>
                 <div
                   aria-label={`Fascia ${bin.label}: ${bin.count} sezioni`}
-                  className={`h-8 overflow-hidden rounded-md border bg-slate-100 ${
-                    isSelected ? "border-slate-950" : "border-slate-200"
+                  className={`h-8 overflow-hidden rounded-md border bg-muted ${
+                    isSelected ? "border-brand" : "border-border"
                   }`}
                 >
                   <div
                     className={`h-full rounded-sm ${
-                      isSelected ? "bg-teal-700" : "bg-teal-500"
+                      isSelected ? "bg-brand" : "bg-primary"
                     }`}
                     style={{
                       width: `${Math.max(4, (bin.count / maxCount) * 100)}%`,
                     }}
                   />
                 </div>
-                <span className="text-right font-semibold text-slate-950">
+                <span className="text-right font-semibold text-foreground">
                   {bin.count}
                 </span>
               </div>
             );
           })
         ) : (
-          <p className="rounded-md bg-slate-50 p-3 text-sm text-slate-600">
+          <p className="rounded-md bg-muted/40 p-3 text-sm text-muted-foreground">
             Nessun valore numerico disponibile per costruire la distribuzione.
           </p>
         )}
 
         {summary.missingCount > 0 ? (
           <div className="grid grid-cols-[72px_minmax(0,1fr)_42px] items-center gap-2 text-sm">
-            <span className="text-xs font-medium text-slate-600">n.d.</span>
+            <span className="text-xs font-medium text-muted-foreground">n.d.</span>
             <div
-              className={`h-8 overflow-hidden rounded-md border bg-slate-100 ${
-                selectedValue === null ? "border-slate-950" : "border-slate-200"
+              className={`h-8 overflow-hidden rounded-md border bg-muted ${
+                selectedValue === null ? "border-brand" : "border-border"
               }`}
             >
               <div
-                className="h-full rounded-sm bg-slate-300"
+                className="h-full rounded-sm bg-muted-foreground/35"
                 style={{
                   width: `${Math.max(
                     4,
@@ -407,14 +407,14 @@ function DistributionChart({
                 }}
               />
             </div>
-            <span className="text-right font-semibold text-slate-950">
+            <span className="text-right font-semibold text-foreground">
               {summary.missingCount}
             </span>
           </div>
         ) : null}
       </div>
 
-      <div className="mt-5 grid gap-2 text-sm leading-6 text-slate-600">
+      <div className="mt-5 grid gap-2 text-sm leading-6 text-muted-foreground">
         <p>
           I valori mancanti sono separati dai valori numerici. Zero resta zero.
         </p>
@@ -446,29 +446,29 @@ function MapSurface({
   setSelectedSectionId: (sectionId: string) => void;
 }) {
   return (
-    <section className="rounded-lg border border-slate-200 bg-card p-4 shadow-sm sm:p-5">
+    <section className="rounded-lg border border-border bg-card p-4 shadow-sm sm:p-5">
       <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
         <div>
-          <p className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-teal-700">
+          <p className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-primary">
             <MapPinned className="h-4 w-4" />
             Mappa
           </p>
-          <h2 className="mt-1 text-xl font-semibold text-slate-950">
+          <h2 className="mt-1 text-xl font-semibold text-foreground">
             Sezioni censuarie
           </h2>
         </div>
-        <p className="text-sm text-slate-600">
+        <p className="text-sm text-muted-foreground">
           {activeIndicator?.label ?? "Indicatore in preparazione"}
         </p>
       </div>
 
       {!bounds || !activeIndicator ? (
-        <div className="flex min-h-80 items-center justify-center rounded-md bg-slate-100 p-6 text-center text-sm text-slate-600">
+        <div className="flex min-h-80 items-center justify-center rounded-md bg-muted p-6 text-center text-sm text-muted-foreground">
           La mappa sarà disponibile quando almeno un indicatore censuario sarà
           presente nel file dati.
         </div>
       ) : (
-        <div className="overflow-hidden rounded-md border border-slate-200 bg-slate-100">
+        <div className="overflow-hidden rounded-md border border-border bg-muted">
           <svg
             aria-label="Mappa delle sezioni censuarie di Lamezia Terme"
             className="block h-[360px] w-full sm:h-[520px]"
@@ -476,7 +476,7 @@ function MapSurface({
             viewBox={`0 0 ${MAP_WIDTH} ${MAP_HEIGHT}`}
           >
             <rect
-              fill="hsl(var(--card))"
+              fill="hsl(var(--background))"
               height={MAP_HEIGHT}
               rx="0"
               width={MAP_WIDTH}
@@ -517,7 +517,7 @@ function MapSurface({
                   onMouseLeave={() => setHoveredSectionId(null)}
                   role="button"
                   stroke={
-                    isActive ? "hsl(var(--foreground))" : "hsl(var(--card))"
+                    isActive ? "hsl(var(--brand))" : "hsl(var(--card))"
                   }
                   strokeLinejoin="round"
                   strokeWidth={isActive ? 4 : 2}
@@ -536,12 +536,12 @@ function MapSurface({
 
 function MapLegend({ bins }: { bins: ColoredDistributionBin[] }) {
   return (
-    <div className="mt-4 flex flex-wrap gap-3 text-xs text-slate-600">
+    <div className="mt-4 flex flex-wrap gap-3 text-xs text-muted-foreground">
       {bins.map((bin) => (
         <span className="inline-flex items-center gap-1.5" key={bin.index}>
           <span
             aria-hidden="true"
-            className="h-3 w-5 rounded-sm border border-slate-200"
+            className="h-3 w-5 rounded-sm border border-border"
             style={{ backgroundColor: bin.color }}
           />
           {bin.label}
@@ -550,7 +550,7 @@ function MapLegend({ bins }: { bins: ColoredDistributionBin[] }) {
       <span className="inline-flex items-center gap-1.5">
         <span
           aria-hidden="true"
-          className="h-3 w-5 rounded-sm border border-slate-200"
+          className="h-3 w-5 rounded-sm border border-border"
           style={{ backgroundColor: EMPTY_COLOR }}
         />
         dato non disponibile
@@ -579,30 +579,30 @@ function SelectedSectionCard({
   const context = describeAtlanteDistributionPosition(activeValue, bins);
 
   return (
-    <section className="rounded-lg border border-slate-200 bg-card p-4 shadow-sm sm:p-5">
+    <section className="rounded-lg border border-border bg-card p-4 shadow-sm sm:p-5">
       <div className="grid gap-4 md:grid-cols-[220px_180px_minmax(0,1fr)] md:items-center">
         <div>
-          <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+          <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
             Sezione selezionata
           </p>
-          <h2 className="mt-1 break-words text-xl font-semibold text-slate-950">
+          <h2 className="mt-1 break-words text-xl font-semibold text-foreground">
             {sectionId}
           </h2>
         </div>
         <div>
-          <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+          <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
             Valore
           </p>
-          <p className="mt-1 text-2xl font-bold leading-tight text-slate-950">
+          <p className="mt-1 text-2xl font-bold leading-tight text-foreground">
             {valueLabel}
           </p>
         </div>
-        <div className="rounded-md border border-slate-200 bg-slate-50 p-3 text-sm leading-6 text-slate-700">
+        <div className="rounded-md border border-border bg-muted/40 p-3 text-sm leading-6 text-foreground">
           <p>{context}</p>
           {activeValue === 0 ? (
             <p className="mt-2">Zero è mostrato come 0, non come dato mancante.</p>
           ) : null}
-          <p className="mt-2 font-semibold text-teal-800">
+          <p className="mt-2 font-semibold text-brand">
             {metadata.publicLabel}
           </p>
         </div>
@@ -632,24 +632,24 @@ function MethodologyDisclosure({
   ];
 
   return (
-    <details className="rounded-lg border border-slate-200 bg-card p-4 shadow-sm sm:p-5">
-      <summary className="flex cursor-pointer items-center gap-2 text-base font-semibold text-slate-950">
-        <BookOpen className="h-5 w-5 text-teal-700" />
+    <details className="rounded-lg border border-border bg-card p-4 shadow-sm sm:p-5">
+      <summary className="flex cursor-pointer items-center gap-2 text-base font-semibold text-foreground">
+        <BookOpen className="h-5 w-5 text-primary" />
         Fonti e limiti
       </summary>
-      <div className="mt-5 space-y-5 text-sm leading-6 text-slate-700">
+      <div className="mt-5 space-y-5 text-sm leading-6 text-muted-foreground">
         <dl className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {rows.map(([label, value]) => (
             <div key={label}>
-              <dt className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+              <dt className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
                 {label}
               </dt>
-              <dd className="mt-1 text-slate-800">{value}</dd>
+              <dd className="mt-1 text-foreground">{value}</dd>
             </div>
           ))}
         </dl>
 
-        <div className="grid gap-3 rounded-md border border-slate-200 bg-slate-50 p-3">
+        <div className="grid gap-3 rounded-md border border-border bg-muted/40 p-3">
           <p>
             {summary.availableCount} sezioni hanno un valore numerico;{" "}
             {summary.missingCount} restano "dato non disponibile".
@@ -694,7 +694,7 @@ function MethodologyDisclosure({
 
 function LoadingState() {
   return (
-    <div className="rounded-lg border border-slate-200 bg-card p-6 text-sm text-slate-700 shadow-sm">
+    <div className="rounded-lg border border-border bg-card p-6 text-sm text-muted-foreground shadow-sm">
       Caricamento del livello territoriale in corso.
     </div>
   );
@@ -702,7 +702,7 @@ function LoadingState() {
 
 function ErrorState({ message }: { message: string }) {
   return (
-    <div className="rounded-lg border border-red-200 bg-red-50 p-6 text-sm text-red-900 shadow-sm">
+    <div className="rounded-lg border border-destructive/30 bg-destructive/10 p-6 text-sm text-foreground shadow-sm">
       {message}
     </div>
   );
@@ -710,7 +710,7 @@ function ErrorState({ message }: { message: string }) {
 
 function EmptyState() {
   return (
-    <div className="rounded-lg border border-slate-200 bg-card p-6 text-sm text-slate-700 shadow-sm">
+    <div className="rounded-lg border border-border bg-card p-6 text-sm text-muted-foreground shadow-sm">
       Nessuna sezione censuaria disponibile. La pagina resta pronta per il file
       ISTAT processato atteso.
     </div>
