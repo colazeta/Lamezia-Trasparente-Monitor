@@ -7,7 +7,6 @@ import { MigrationStatusBanner } from "@/components/admin/MigrationStatusBanner"
 import { CivicHelperFAB } from "@/components/helper/CivicHelperFAB";
 import { CivicAssistant } from "@/components/helper/CivicAssistant";
 import { CivicWelcome } from "@/components/helper/CivicWelcome";
-import { HomeCivicSystemMap } from "@/components/civic-section/HomeCivicSystemMap";
 
 interface MainLayoutProps {
   children: ReactNode;
@@ -15,7 +14,6 @@ interface MainLayoutProps {
 
 export function MainLayout({ children }: MainLayoutProps) {
   const [location] = useLocation();
-  const showHomeCivicSystemMap = location === "/";
   const showSectionHeader = location !== "/atlante-territoriale";
 
   return (
@@ -25,7 +23,6 @@ export function MainLayout({ children }: MainLayoutProps) {
       <MigrationStatusBanner />
       <main className="flex-1 bg-background">
         {children}
-        {showHomeCivicSystemMap ? <HomeCivicSystemMap /> : null}
       </main>
       <Footer />
       <CivicHelperFAB />
