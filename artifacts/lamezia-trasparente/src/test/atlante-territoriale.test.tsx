@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { AtlanteTerritoriale } from "../pages/AtlanteTerritoriale";
 import {
@@ -99,6 +99,8 @@ describe("Atlante territoriale", () => {
     expect(summary.availableCount).toBe(4);
     expect(summary.missingCount).toBe(1);
     expect(summary.zeroCount).toBe(1);
+    expect(summary.mean).toBe(12.5);
+    expect(summary.median).toBe(15);
     expect(summary.bins.reduce((total, bin) => total + bin.count, 0)).toBe(4);
     expect(summary.bins[0].count).toBeGreaterThan(0);
     expect(describeAtlanteDistributionPosition(null, summary.bins)).toBe(
@@ -109,7 +111,7 @@ describe("Atlante territoriale", () => {
     );
   });
 
-  it("shows the distribution-first explorer and keeps null values distinct from zero", async () => {
+  it("shows the map-first explorer and keeps null values distinct from zero", async () => {
     const officialCollection = {
       type: "FeatureCollection",
       features: [
@@ -202,18 +204,38 @@ describe("Atlante territoriale", () => {
 
     render(<AtlanteTerritoriale />);
 
+    const mapHeading = await screen.findByRole("heading", {
+      name: "Sezioni censuarie",
+    });
+    const summaryHeading = screen.getByRole("heading", {
+      name: /Sintesi citt/i,
+    });
+
     expect(
-      await screen.findByRole("heading", { name: "Popolazione residente" }),
-    ).toBeInTheDocument();
-    expect(screen.getByText("Distribuzione")).toBeInTheDocument();
-    expect(screen.getByText("Mappa")).toBeInTheDocument();
-    expect(
-      screen.getByText(/1 sezioni con dato/i),
-    ).toBeInTheDocument();
+      mapHeading.compareDocumentPosition(summaryHeading) &
+        Node.DOCUMENT_POSITION_FOLLOWING,
+    ).toBeTruthy();
+    expect(screen.queryByText("Distribuzione")).not.toBeInTheDocument();
+    expect(screen.getByText("Popolazione")).toBeInTheDocument();
+    expect(screen.getAllByText("Popolazione residente").length).toBeGreaterThan(
+      0,
+    );
+    expect(screen.getByText("Sezioni con dato")).toBeInTheDocument();
+    expect(screen.getAllByText("1").length).toBeGreaterThan(0);
     expect(screen.getAllByText(/dato non disponibile/i).length).toBeGreaterThan(
       0,
     );
-    expect(screen.getByText("0 persone")).toBeInTheDocument();
+    expect(screen.getAllByText("0 persone").length).toBeGreaterThan(0);
+    expect(screen.getByText("Media")).toBeInTheDocument();
+    expect(screen.getByText("Mediana")).toBeInTheDocument();
+    fireEvent.click(
+      screen.getByRole("button", {
+        name: /0791600000204: dato non disponibile/i,
+      }),
+    );
+    expect(
+      screen.getByRole("heading", { name: "0791600000204" }),
+    ).toBeInTheDocument();
     expect(screen.getByText("Fonti e limiti")).toBeInTheDocument();
     expect(formatAtlanteValue(null, "persone")).toBe("dato non disponibile");
     expect(formatAtlanteValue(0, "persone")).toBe("0 persone");
@@ -240,14 +262,14 @@ describe("Atlante territoriale", () => {
     expect(
       screen.getAllByText(/non contiene sezioni censuarie reali/i).length,
     ).toBeGreaterThan(0);
-    expect(screen.getByText("popolazione")).toBeInTheDocument();
+    expect(screen.getByText("Popolazione")).toBeInTheDocument();
     expect(
       screen.getAllByText("Indicatore in preparazione").length,
     ).toBeGreaterThan(0);
     expect(screen.getByText("Fonti e limiti")).toBeInTheDocument();
     expect(
       screen.getByText(
-        "Le sezioni urbane catastali Zornade non sono sezioni censuarie e restano fuori da questa base.",
+        "Le sezioni urbane catastali Zornade non sono sezioni censuarie e restano un livello accessorio/non censuario, non usato come base della mappa.",
         {
           exact: false,
         },
