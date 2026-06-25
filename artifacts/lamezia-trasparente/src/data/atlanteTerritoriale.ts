@@ -110,27 +110,29 @@ export type AtlanteDistributionSummary = {
   zeroCount: number;
   min: number | null;
   max: number | null;
+  mean: number | null;
+  median: number | null;
 };
 
 export const ATLANTE_INDICATOR_CATEGORIES: Array<{
   id: AtlanteIndicatorCategoryId;
   label: string;
 }> = [
-  { id: "popolazione", label: "popolazione" },
-  { id: "eta", label: "eta" },
-  { id: "cittadinanza", label: "cittadinanza" },
-  { id: "istruzione", label: "istruzione" },
-  { id: "lavoro", label: "lavoro" },
-  { id: "famiglie", label: "famiglie" },
-  { id: "abitazioni", label: "abitazioni" },
-  { id: "mobilita-auto", label: "mobilita/auto" },
+  { id: "popolazione", label: "Popolazione" },
+  { id: "eta", label: "Età" },
+  { id: "cittadinanza", label: "Cittadinanza" },
+  { id: "istruzione", label: "Istruzione" },
+  { id: "lavoro", label: "Lavoro" },
+  { id: "famiglie", label: "Famiglie" },
+  { id: "abitazioni", label: "Abitazioni" },
+  { id: "mobilita-auto", label: "Mobilità/auto" },
 ];
 
 export const ATLANTE_INDICATORS: AtlanteIndicatorDefinition[] = [
   {
     id: "popolazione-residente",
     categoryId: "popolazione",
-    categoryLabel: "popolazione",
+    categoryLabel: "Popolazione",
     label: "Popolazione residente",
     sourceKeys: [
       "popolazione_totale",
@@ -374,11 +376,18 @@ export function buildAtlanteDistribution(
       zeroCount,
       min: null,
       max: null,
+      mean: null,
+      median: null,
     };
   }
 
-  const min = Math.min(...numericValues);
-  const max = Math.max(...numericValues);
+  const sortedValues = [...numericValues].sort((a, b) => a - b);
+  const min = sortedValues[0];
+  const max = sortedValues[sortedValues.length - 1];
+  const mean =
+    sortedValues.reduce((total, value) => total + value, 0) /
+    sortedValues.length;
+  const median = calculateMedian(sortedValues);
 
   if (min === max) {
     return {
@@ -397,6 +406,8 @@ export function buildAtlanteDistribution(
       zeroCount,
       min,
       max,
+      mean,
+      median,
     };
   }
 
@@ -441,7 +452,16 @@ export function buildAtlanteDistribution(
     zeroCount,
     min,
     max,
+    mean,
+    median,
   };
+}
+
+function calculateMedian(sortedValues: number[]) {
+  const midpoint = Math.floor(sortedValues.length / 2);
+  return sortedValues.length % 2 === 0
+    ? (sortedValues[midpoint - 1] + sortedValues[midpoint]) / 2
+    : sortedValues[midpoint];
 }
 
 export function findAtlanteDistributionBin(
