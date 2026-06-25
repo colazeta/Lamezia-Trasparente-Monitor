@@ -32,10 +32,6 @@ vi.mock("@/components/helper/CivicWelcome", () => ({
   CivicWelcome: () => null,
 }));
 
-vi.mock("@/components/civic-section/HomeCivicSystemMap", () => ({
-  HomeCivicSystemMap: () => null,
-}));
-
 function renderLayoutAt(path: string) {
   window.history.pushState({}, "", path);
 
