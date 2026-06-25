@@ -111,7 +111,7 @@ describe("Atlante territoriale", () => {
     );
   });
 
-  it("shows the map-first explorer and keeps null values distinct from zero", async () => {
+  it("shows the clean map explorer and keeps null values distinct from zero", async () => {
     const officialCollection = {
       type: "FeatureCollection",
       features: [
@@ -205,7 +205,7 @@ describe("Atlante territoriale", () => {
     render(<AtlanteTerritoriale />);
 
     const mapHeading = await screen.findByRole("heading", {
-      name: "Sezioni censuarie",
+      name: "Mappa",
     });
     const summaryHeading = screen.getByRole("heading", {
       name: /Sintesi citt/i,
@@ -216,10 +216,19 @@ describe("Atlante territoriale", () => {
         Node.DOCUMENT_POSITION_FOLLOWING,
     ).toBeTruthy();
     expect(screen.queryByText("Distribuzione")).not.toBeInTheDocument();
-    expect(screen.getByText("Popolazione")).toBeInTheDocument();
+    expect(screen.queryByText("Fonti e limiti")).not.toBeInTheDocument();
+    expect(screen.queryByText(/File atteso/i)).not.toBeInTheDocument();
+    expect(screen.getByLabelText("Indicatore")).toBeInTheDocument();
+    expect(screen.getAllByText("Popolazione").length).toBeGreaterThan(0);
     expect(screen.getAllByText("Popolazione residente").length).toBeGreaterThan(
       0,
     );
+    expect(
+      screen.getByRole("button", { name: /Età in preparazione/i }),
+    ).toBeDisabled();
+    expect(
+      screen.getByRole("button", { name: /Cittadinanza in preparazione/i }),
+    ).toBeDisabled();
     expect(screen.getByText("Sezioni con dato")).toBeInTheDocument();
     expect(screen.getAllByText("1").length).toBeGreaterThan(0);
     expect(screen.getAllByText(/dato non disponibile/i).length).toBeGreaterThan(
@@ -236,7 +245,9 @@ describe("Atlante territoriale", () => {
     expect(
       screen.getByRole("heading", { name: "0791600000204" }),
     ).toBeInTheDocument();
-    expect(screen.getByText("Fonti e limiti")).toBeInTheDocument();
+    expect(screen.getByText("Fonte dati")).toBeInTheDocument();
+    expect(screen.getByText("Come leggere")).toBeInTheDocument();
+    expect(screen.getByText("Cosa non mostra")).toBeInTheDocument();
     expect(formatAtlanteValue(null, "persone")).toBe("dato non disponibile");
     expect(formatAtlanteValue(0, "persone")).toBe("0 persone");
   });
@@ -262,14 +273,12 @@ describe("Atlante territoriale", () => {
     expect(
       screen.getAllByText(/non contiene sezioni censuarie reali/i).length,
     ).toBeGreaterThan(0);
-    expect(screen.getByText("Popolazione")).toBeInTheDocument();
-    expect(
-      screen.getAllByText("Indicatore in preparazione").length,
-    ).toBeGreaterThan(0);
-    expect(screen.getByText("Fonti e limiti")).toBeInTheDocument();
+    expect(screen.getAllByText("Popolazione").length).toBeGreaterThan(0);
+    expect(screen.getAllByText(/in preparazione/i).length).toBeGreaterThan(0);
+    expect(screen.getByText("Fonte dati")).toBeInTheDocument();
     expect(
       screen.getByText(
-        "Le sezioni urbane catastali Zornade non sono sezioni censuarie e restano un livello accessorio/non censuario, non usato come base della mappa.",
+        "Le sezioni catastali Zornade restano un livello accessorio/non censuario e non sono usate come base della mappa.",
         {
           exact: false,
         },
