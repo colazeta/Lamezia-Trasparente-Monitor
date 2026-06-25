@@ -57,6 +57,11 @@ export type AtlanteLayerMetadata = {
   verificationStatus: string;
   knownLimits: string[];
   processingDate: string | null;
+  sourcePages?: {
+    geometries?: string;
+    variables?: string;
+    legalNotes?: string;
+  };
   qa?: {
     reportPath?: string;
     indicatorDictionaryPath?: string;
