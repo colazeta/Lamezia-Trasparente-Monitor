@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { type ReactNode, useEffect, useMemo, useState } from "react";
 import {
   AlertTriangle,
   BarChart3,
@@ -11,7 +11,6 @@ import {
   ATLANTE_EXPECTED_INDICATOR_DICTIONARY_PATH,
   ATLANTE_INDICATOR_CATEGORIES,
   buildAtlanteDistribution,
-  describeAtlanteDistributionPosition,
   findAtlanteDistributionBin,
   type AtlanteDistributionBin,
   type AtlanteFeature,
@@ -104,7 +103,9 @@ export function AtlanteTerritoriale() {
     [collection],
   );
   const activeIndicator =
-    availableIndicators.find((indicator) => indicator.id === selectedIndicatorId) ??
+    availableIndicators.find(
+      (indicator) => indicator.id === selectedIndicatorId,
+    ) ??
     availableIndicators[0] ??
     null;
 
@@ -123,11 +124,16 @@ export function AtlanteTerritoriale() {
   const values = useMemo(
     () =>
       activeIndicator
-        ? features.map((feature) => readIndicatorValue(feature, activeIndicator))
+        ? features.map((feature) =>
+            readIndicatorValue(feature, activeIndicator),
+          )
         : [],
     [activeIndicator, features],
   );
-  const distribution = useMemo(() => buildAtlanteDistribution(values), [values]);
+  const distribution = useMemo(
+    () => buildAtlanteDistribution(values),
+    [values],
+  );
   const coloredBins = useMemo(
     () => colorDistributionBins(distribution.bins),
     [distribution.bins],
@@ -145,10 +151,6 @@ export function AtlanteTerritoriale() {
     activeFeature && activeIndicator
       ? readIndicatorValue(activeFeature, activeIndicator)
       : null;
-  const activeBinIndex = findAtlanteDistributionBin(
-    activeValue,
-    distribution.bins,
-  );
 
   return (
     <main className="bg-background text-foreground">
@@ -169,13 +171,7 @@ export function AtlanteTerritoriale() {
               availableIndicators={availableIndicators}
               onSelect={setSelectedIndicatorId}
             />
-            <div className="grid gap-5 xl:grid-cols-[minmax(320px,0.9fr)_minmax(0,1.1fr)] xl:items-start">
-              <DistributionChart
-                activeBinIndex={activeBinIndex}
-                activeIndicator={activeIndicator}
-                selectedValue={activeValue}
-                summary={distribution}
-              />
+            <div className="grid gap-5 xl:grid-cols-[minmax(0,1fr)_340px] xl:items-start">
               <MapSurface
                 activeIndicator={activeIndicator}
                 bounds={bounds}
@@ -186,14 +182,20 @@ export function AtlanteTerritoriale() {
                 setHoveredSectionId={setHoveredSectionId}
                 setSelectedSectionId={setSelectedSectionId}
               />
+              <div className="space-y-5">
+                <SectionProfileCard
+                  activeFeature={activeFeature}
+                  activeIndicator={activeIndicator}
+                  activeValue={activeValue}
+                  availableIndicators={availableIndicators}
+                  metadata={metadata}
+                />
+                <CitySummaryCard
+                  activeIndicator={activeIndicator}
+                  summary={distribution}
+                />
+              </div>
             </div>
-            <SelectedSectionCard
-              activeFeature={activeFeature}
-              activeIndicator={activeIndicator}
-              activeValue={activeValue}
-              bins={distribution.bins}
-              metadata={metadata}
-            />
             <MethodologyDisclosure
               dataStatus={layer.dataStatus}
               loadedFrom={layer.loadedFrom}
@@ -217,7 +219,10 @@ function Header({
   const chips = [
     ["Fonte", metadata?.sourceInstitution ?? "ISTAT"],
     ["Livello", "sezioni censuarie"],
-    ["Indicatore", activeIndicator?.label ?? "in preparazione"],
+    [
+      "Dato",
+      activeIndicator?.label.toLocaleLowerCase("it-IT") ?? "in preparazione",
+    ],
   ];
 
   return (
@@ -228,9 +233,8 @@ function Header({
             Atlante territoriale
           </h1>
           <p className="mt-3 max-w-3xl text-base leading-7 text-muted-foreground">
-            Esplora come la popolazione si distribuisce nelle sezioni censuarie
-            di Lamezia Terme. Scegli un indicatore, guarda la distribuzione e
-            confronta le diverse aree della città.
+            Leggi Lamezia Terme attraverso le sezioni censuarie ISTAT e i dati
+            ufficiali disponibili.
           </p>
           <div className="mt-4 flex flex-wrap gap-2">
             {chips.map(([label, value]) => (
@@ -316,110 +320,57 @@ function IndicatorControl({
   );
 }
 
-function DistributionChart({
-  activeBinIndex,
+function CitySummaryCard({
   activeIndicator,
-  selectedValue,
   summary,
 }: {
-  activeBinIndex: number | null;
   activeIndicator: AtlanteIndicatorDefinition | null;
-  selectedValue: number | null;
   summary: ReturnType<typeof buildAtlanteDistribution>;
 }) {
-  const maxCount = Math.max(
-    1,
-    ...summary.bins.map((bin) => bin.count),
-    summary.missingCount,
-  );
+  const unitLabel = activeIndicator?.unitLabel ?? "";
+  const metrics = [
+    ["Sezioni con dato", formatInteger(summary.availableCount)],
+    ["Dato non disponibile", formatInteger(summary.missingCount)],
+    ["Minimo", formatSummaryValue(summary.min, unitLabel)],
+    ["Massimo", formatSummaryValue(summary.max, unitLabel)],
+    ["Media", formatSummaryValue(summary.mean, unitLabel)],
+    ["Mediana", formatSummaryValue(summary.median, unitLabel)],
+  ];
 
   return (
-    <section className="rounded-lg border border-border bg-card p-4 shadow-sm sm:p-5">
-      <div className="flex items-start justify-between gap-4">
+    <section className="rounded-lg border border-border bg-card p-4 shadow-sm">
+      <div className="flex items-start gap-2">
+        <BarChart3 className="mt-0.5 h-4 w-4 flex-none text-primary" />
         <div>
-          <p className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-primary">
-            <BarChart3 className="h-4 w-4" />
-            Distribuzione
-          </p>
-          <h2 className="mt-1 text-xl font-semibold text-foreground">
-            {activeIndicator?.label ?? "Indicatore in preparazione"}
+          <h2 className="text-base font-semibold text-foreground">
+            Sintesi città
           </h2>
-        </div>
-        <p className="rounded-full bg-muted px-3 py-1 text-xs font-semibold text-muted-foreground">
-          {summary.availableCount} sezioni con dato
-        </p>
-      </div>
-
-      <div className="mt-5 space-y-3">
-        {summary.bins.length > 0 ? (
-          summary.bins.map((bin) => {
-            const isSelected = activeBinIndex === bin.index;
-            return (
-              <div
-                className="grid grid-cols-[72px_minmax(0,1fr)_42px] items-center gap-2 text-sm"
-                key={bin.index}
-              >
-                <span className="text-xs font-medium text-muted-foreground">
-                  {bin.label}
-                </span>
-                <div
-                  aria-label={`Fascia ${bin.label}: ${bin.count} sezioni`}
-                  className={`h-8 overflow-hidden rounded-md border bg-muted ${
-                    isSelected ? "border-brand" : "border-border"
-                  }`}
-                >
-                  <div
-                    className={`h-full rounded-sm ${
-                      isSelected ? "bg-brand" : "bg-primary"
-                    }`}
-                    style={{
-                      width: `${Math.max(4, (bin.count / maxCount) * 100)}%`,
-                    }}
-                  />
-                </div>
-                <span className="text-right font-semibold text-foreground">
-                  {bin.count}
-                </span>
-              </div>
-            );
-          })
-        ) : (
-          <p className="rounded-md bg-muted/40 p-3 text-sm text-muted-foreground">
-            Nessun valore numerico disponibile per costruire la distribuzione.
+          <p className="mt-1 text-sm leading-6 text-muted-foreground">
+            Valori calcolati solo sulle sezioni con dato disponibile.
           </p>
-        )}
-
-        {summary.missingCount > 0 ? (
-          <div className="grid grid-cols-[72px_minmax(0,1fr)_42px] items-center gap-2 text-sm">
-            <span className="text-xs font-medium text-muted-foreground">n.d.</span>
-            <div
-              className={`h-8 overflow-hidden rounded-md border bg-muted ${
-                selectedValue === null ? "border-brand" : "border-border"
-              }`}
-            >
-              <div
-                className="h-full rounded-sm bg-muted-foreground/35"
-                style={{
-                  width: `${Math.max(
-                    4,
-                    (summary.missingCount / maxCount) * 100,
-                  )}%`,
-                }}
-              />
-            </div>
-            <span className="text-right font-semibold text-foreground">
-              {summary.missingCount}
-            </span>
-          </div>
-        ) : null}
+        </div>
       </div>
 
-      <div className="mt-5 grid gap-2 text-sm leading-6 text-muted-foreground">
-        <p>
-          I valori mancanti sono separati dai valori numerici. Zero resta zero.
-        </p>
+      <dl className="mt-4 grid grid-cols-2 gap-3">
+        {metrics.map(([label, value]) => (
+          <div
+            className="rounded-md border border-border bg-muted/35 p-3"
+            key={label}
+          >
+            <dt className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+              {label}
+            </dt>
+            <dd className="mt-1 text-sm font-semibold text-foreground">
+              {value}
+            </dd>
+          </div>
+        ))}
+      </dl>
+
+      <div className="mt-4 space-y-2 text-sm leading-6 text-muted-foreground">
+        <p>Valori mancanti e valori zero restano separati.</p>
         {summary.zeroCount > 0 ? (
-          <p>{summary.zeroCount} sezioni hanno valore 0.</p>
+          <p>{formatInteger(summary.zeroCount)} sezioni hanno valore 0.</p>
         ) : null}
       </div>
     </section>
@@ -446,7 +397,7 @@ function MapSurface({
   setSelectedSectionId: (sectionId: string) => void;
 }) {
   return (
-    <section className="rounded-lg border border-border bg-card p-4 shadow-sm sm:p-5">
+    <section className="rounded-lg border border-border bg-card p-3 shadow-sm sm:p-5">
       <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
         <div>
           <p className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-primary">
@@ -456,6 +407,9 @@ function MapSurface({
           <h2 className="mt-1 text-xl font-semibold text-foreground">
             Sezioni censuarie
           </h2>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Il colore segue l'indicatore selezionato.
+          </p>
         </div>
         <p className="text-sm text-muted-foreground">
           {activeIndicator?.label ?? "Indicatore in preparazione"}
@@ -471,7 +425,7 @@ function MapSurface({
         <div className="overflow-hidden rounded-md border border-border bg-muted">
           <svg
             aria-label="Mappa delle sezioni censuarie di Lamezia Terme"
-            className="block h-[360px] w-full sm:h-[520px]"
+            className="block h-[430px] w-full sm:h-[620px] xl:h-[680px]"
             role="img"
             viewBox={`0 0 ${MAP_WIDTH} ${MAP_HEIGHT}`}
           >
@@ -485,7 +439,8 @@ function MapSurface({
               const sectionId = getSectionId(feature);
               const value = readIndicatorValue(feature, activeIndicator);
               const isActive =
-                sectionId === hoveredSectionId || sectionId === selectedSectionId;
+                sectionId === hoveredSectionId ||
+                sectionId === selectedSectionId;
               const path = feature.geometry
                 ? geometryToPath(feature.geometry, bounds)
                 : "";
@@ -516,9 +471,7 @@ function MapSurface({
                   onMouseEnter={() => setHoveredSectionId(sectionId)}
                   onMouseLeave={() => setHoveredSectionId(null)}
                   role="button"
-                  stroke={
-                    isActive ? "hsl(var(--brand))" : "hsl(var(--card))"
-                  }
+                  stroke={isActive ? "hsl(var(--brand))" : "hsl(var(--card))"}
                   strokeLinejoin="round"
                   strokeWidth={isActive ? 4 : 2}
                   tabIndex={0}
@@ -559,53 +512,86 @@ function MapLegend({ bins }: { bins: ColoredDistributionBin[] }) {
   );
 }
 
-function SelectedSectionCard({
+function SectionProfileCard({
   activeFeature,
   activeIndicator,
   activeValue,
-  bins,
+  availableIndicators,
   metadata,
 }: {
   activeFeature: AtlanteFeature | null;
   activeIndicator: AtlanteIndicatorDefinition | null;
   activeValue: number | null;
-  bins: AtlanteDistributionBin[];
+  availableIndicators: AtlanteIndicatorDefinition[];
   metadata: AtlanteLayerMetadata;
 }) {
-  const sectionId = activeFeature ? getSectionId(activeFeature) : "nessuna";
+  const sectionId = activeFeature
+    ? getSectionId(activeFeature)
+    : "nessuna sezione";
   const valueLabel = activeIndicator
-    ? formatAtlanteValue(activeValue, activeIndicator.unitLabel)
-    : "dato non disponibile";
-  const context = describeAtlanteDistributionPosition(activeValue, bins);
+    ? formatProfileValue(activeValue, activeIndicator.unitLabel)
+    : "Dato non disponibile";
+  const profileRows = availableIndicators.map((indicator) => ({
+    id: indicator.id,
+    label: indicator.label,
+    value: activeFeature
+      ? formatProfileValue(
+          readIndicatorValue(activeFeature, indicator),
+          indicator.unitLabel,
+        )
+      : "Dato non disponibile",
+  }));
 
   return (
-    <section className="rounded-lg border border-border bg-card p-4 shadow-sm sm:p-5">
-      <div className="grid gap-4 md:grid-cols-[220px_180px_minmax(0,1fr)] md:items-center">
-        <div>
-          <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-            Sezione selezionata
-          </p>
-          <h2 className="mt-1 break-words text-xl font-semibold text-foreground">
-            {sectionId}
-          </h2>
-        </div>
-        <div>
-          <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-            Valore
-          </p>
-          <p className="mt-1 text-2xl font-bold leading-tight text-foreground">
-            {valueLabel}
-          </p>
-        </div>
-        <div className="rounded-md border border-border bg-muted/40 p-3 text-sm leading-6 text-foreground">
-          <p>{context}</p>
-          {activeValue === 0 ? (
-            <p className="mt-2">Zero è mostrato come 0, non come dato mancante.</p>
-          ) : null}
-          <p className="mt-2 font-semibold text-brand">
-            {metadata.publicLabel}
-          </p>
-        </div>
+    <section className="rounded-lg border border-border bg-card p-4 shadow-sm">
+      <div>
+        <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+          Sezione selezionata
+        </p>
+        <h2 className="mt-1 break-words text-xl font-semibold text-foreground">
+          {sectionId}
+        </h2>
+      </div>
+
+      <div className="mt-4 rounded-md border border-primary/30 bg-primary/10 p-3">
+        <p className="text-xs font-semibold uppercase tracking-wide text-primary">
+          Dato mappa
+        </p>
+        <p className="mt-1 text-2xl font-bold leading-tight text-foreground">
+          {valueLabel}
+        </p>
+        <p className="mt-1 text-sm text-muted-foreground">
+          {activeIndicator?.label ?? "Indicatore in preparazione"}
+        </p>
+      </div>
+
+      <dl className="mt-4 divide-y divide-border rounded-md border border-border">
+        {profileRows.length > 0 ? (
+          profileRows.map((row) => (
+            <div className="grid gap-1 p-3" key={row.id}>
+              <dt className="text-sm font-medium text-muted-foreground">
+                {row.label}
+              </dt>
+              <dd className="text-sm font-semibold text-foreground">
+                {row.value}
+              </dd>
+            </div>
+          ))
+        ) : (
+          <div className="p-3 text-sm text-muted-foreground">
+            Nessun indicatore disponibile per questa sezione.
+          </div>
+        )}
+      </dl>
+
+      <div className="mt-4 space-y-2 text-sm leading-6 text-muted-foreground">
+        {activeValue === 0 ? (
+          <p>Zero è mostrato come 0, non come dato mancante.</p>
+        ) : null}
+        <p className="font-semibold text-brand">{metadata.publicLabel}</p>
+        <p>
+          {metadata.sourceInstitution}, {metadata.sourceYear}.
+        </p>
       </div>
     </section>
   );
@@ -622,7 +608,7 @@ function MethodologyDisclosure({
   metadata: AtlanteLayerMetadata;
   summary: ReturnType<typeof buildAtlanteDistribution>;
 }) {
-  const rows = [
+  const technicalRows = [
     ["Fonte", metadata.sourceInstitution],
     ["Dataset", metadata.sourceDataset],
     ["Anno", metadata.sourceYear],
@@ -638,57 +624,105 @@ function MethodologyDisclosure({
         Fonti e limiti
       </summary>
       <div className="mt-5 space-y-5 text-sm leading-6 text-muted-foreground">
-        <dl className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {rows.map(([label, value]) => (
-            <div key={label}>
-              <dt className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                {label}
-              </dt>
-              <dd className="mt-1 text-foreground">{value}</dd>
-            </div>
-          ))}
-        </dl>
+        <div className="grid gap-4 md:grid-cols-2">
+          <PlainLanguageNote title="Da dove vengono i dati">
+            I confini delle sezioni e il dato sulla popolazione provengono da{" "}
+            {metadata.sourceInstitution}. L'anno indicato è{" "}
+            {metadata.sourceYear}.
+          </PlainLanguageNote>
+          <PlainLanguageNote title="Che cosa mostra la mappa">
+            Ogni area è una sezione censuaria. Il colore cambia in base
+            all'indicatore selezionato.
+          </PlainLanguageNote>
+          <PlainLanguageNote title="Che cosa significa dato non disponibile">
+            Alcune sezioni hanno il confine geografico, ma non hanno un valore
+            associato nei dati 2023.
+          </PlainLanguageNote>
+          <PlainLanguageNote title="Cosa non bisogna dedurre">
+            La mappa non assegna giudizi, punteggi o classifiche alle aree.
+          </PlainLanguageNote>
+        </div>
 
-        <div className="grid gap-3 rounded-md border border-border bg-muted/40 p-3">
+        <div className="rounded-md border border-border bg-muted/40 p-3">
           <p>
-            {summary.availableCount} sezioni hanno un valore numerico;{" "}
-            {summary.missingCount} restano "dato non disponibile".
+            {formatInteger(summary.availableCount)} sezioni hanno un valore
+            numerico; {formatInteger(summary.missingCount)} restano "Dato non
+            disponibile".
           </p>
-          <p>
+          <p className="mt-2">
             Le sezioni urbane catastali Zornade non sono sezioni censuarie e
-            restano fuori da questa base.
+            restano un livello accessorio/non censuario, non usato come base
+            della mappa.
           </p>
           {dataStatus === "demo" ? (
-            <p>Dato dimostrativo: non contiene sezioni censuarie reali.</p>
+            <p className="mt-2">
+              Dato dimostrativo: non contiene sezioni censuarie reali.
+            </p>
           ) : null}
         </div>
 
         <div>
-          <p>
-            File atteso:{" "}
-            <span className="font-mono text-xs">
-              {ATLANTE_EXPECTED_GEOJSON_PATH}
-            </span>
-          </p>
-          <p>
-            File caricato: <span className="font-mono text-xs">{loadedFrom}</span>
-          </p>
-          <p>
-            Dizionario indicatori:{" "}
-            <span className="font-mono text-xs">
-              {metadata.qa?.indicatorDictionaryPath ??
-                ATLANTE_EXPECTED_INDICATOR_DICTIONARY_PATH}
-            </span>
-          </p>
+          <h3 className="font-semibold text-foreground">Limiti noti</h3>
+          <ul className="mt-2 list-disc space-y-2 pl-5">
+            {metadata.knownLimits.map((limit) => (
+              <li key={limit}>{limit}</li>
+            ))}
+          </ul>
         </div>
 
-        <ul className="list-disc space-y-2 pl-5">
-          {metadata.knownLimits.map((limit) => (
-            <li key={limit}>{limit}</li>
-          ))}
-        </ul>
+        <details className="rounded-md border border-border bg-background p-3">
+          <summary className="cursor-pointer font-semibold text-foreground">
+            Dettagli tecnici
+          </summary>
+          <div className="mt-4 space-y-4">
+            <dl className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {technicalRows.map(([label, value]) => (
+                <div key={label}>
+                  <dt className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                    {label}
+                  </dt>
+                  <dd className="mt-1 text-foreground">{value}</dd>
+                </div>
+              ))}
+            </dl>
+            <div className="space-y-1">
+              <p>
+                File atteso:{" "}
+                <span className="font-mono text-xs">
+                  {ATLANTE_EXPECTED_GEOJSON_PATH}
+                </span>
+              </p>
+              <p>
+                File caricato:{" "}
+                <span className="font-mono text-xs">{loadedFrom}</span>
+              </p>
+              <p>
+                Dizionario indicatori:{" "}
+                <span className="font-mono text-xs">
+                  {metadata.qa?.indicatorDictionaryPath ??
+                    ATLANTE_EXPECTED_INDICATOR_DICTIONARY_PATH}
+                </span>
+              </p>
+            </div>
+          </div>
+        </details>
       </div>
     </details>
+  );
+}
+
+function PlainLanguageNote({
+  children,
+  title,
+}: {
+  children: ReactNode;
+  title: string;
+}) {
+  return (
+    <section className="rounded-md border border-border bg-muted/35 p-3">
+      <h3 className="font-semibold text-foreground">{title}</h3>
+      <p className="mt-1">{children}</p>
+    </section>
   );
 }
 
@@ -717,6 +751,24 @@ function EmptyState() {
   );
 }
 
+function formatInteger(value: number) {
+  return new Intl.NumberFormat("it-IT", {
+    maximumFractionDigits: 0,
+  }).format(value);
+}
+
+function formatProfileValue(value: number | null, unitLabel: string) {
+  return value === null
+    ? "Dato non disponibile"
+    : formatAtlanteValue(value, unitLabel);
+}
+
+function formatSummaryValue(value: number | null, unitLabel: string) {
+  return value === null
+    ? "Dato non disponibile"
+    : formatAtlanteValue(value, unitLabel);
+}
+
 function colorDistributionBins(
   bins: AtlanteDistributionBin[],
 ): ColoredDistributionBin[] {
@@ -724,7 +776,9 @@ function colorDistributionBins(
     const colorIndex =
       bins.length <= 1
         ? CHOROPLETH_COLORS.length - 1
-        : Math.round((index / (bins.length - 1)) * (CHOROPLETH_COLORS.length - 1));
+        : Math.round(
+            (index / (bins.length - 1)) * (CHOROPLETH_COLORS.length - 1),
+          );
     return {
       ...bin,
       color: CHOROPLETH_COLORS[colorIndex],
@@ -741,7 +795,9 @@ function getChoroplethColor(
   }
 
   const binIndex = findAtlanteDistributionBin(value, bins);
-  return binIndex === null ? EMPTY_COLOR : (bins[binIndex]?.color ?? EMPTY_COLOR);
+  return binIndex === null
+    ? EMPTY_COLOR
+    : (bins[binIndex]?.color ?? EMPTY_COLOR);
 }
 
 function computeBounds(collection: AtlanteFeatureCollection): Bounds | null {
