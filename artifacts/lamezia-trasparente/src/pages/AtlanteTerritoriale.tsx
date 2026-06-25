@@ -19,9 +19,9 @@ import {
   readIndicatorValue,
 } from "@/data/atlanteTerritoriale";
 
-const MAP_WIDTH = 1000;
-const MAP_HEIGHT = 680;
-const MAP_PADDING = 32;
+const MAP_WIDTH = 1200;
+const MAP_HEIGHT = 760;
+const MAP_PADDING = 10;
 const CHOROPLETH_COLORS = [
   "hsl(var(--primary) / 0.14)",
   "hsl(var(--primary) / 0.28)",
@@ -148,7 +148,7 @@ export function AtlanteTerritoriale() {
     <main className="bg-background text-foreground">
       <Header />
 
-      <section className="container mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+      <section className="mx-auto w-full max-w-[1800px] px-3 py-5 sm:px-5 lg:px-6 2xl:px-8">
         {loadState.status === "loading" ? (
           <LoadingState />
         ) : loadState.status === "error" ? (
@@ -158,7 +158,7 @@ export function AtlanteTerritoriale() {
         ) : (
           <div className="space-y-5">
             {layer.dataStatus === "demo" ? <DemoNotice /> : null}
-            <div className="grid gap-4 lg:grid-cols-[200px_minmax(0,1fr)_310px] xl:grid-cols-[220px_minmax(0,1fr)_330px] xl:items-start">
+            <div className="grid gap-4 lg:grid-cols-[170px_minmax(0,1fr)] xl:grid-cols-[180px_minmax(0,1fr)_270px] 2xl:grid-cols-[190px_minmax(0,1fr)_280px] xl:items-start">
               <IndicatorControl
                 activeIndicator={activeIndicator}
                 availableIndicators={availableIndicators}
@@ -174,7 +174,7 @@ export function AtlanteTerritoriale() {
                 setHoveredSectionId={setHoveredSectionId}
                 setSelectedSectionId={setSelectedSectionId}
               />
-              <div className="space-y-5">
+              <div className="space-y-5 lg:col-start-2 xl:col-start-auto">
                 <SectionProfileCard
                   activeFeature={activeFeature}
                   activeIndicator={activeIndicator}
@@ -254,7 +254,7 @@ function IndicatorControl({
   ];
 
   return (
-    <section className="rounded-lg border border-border bg-card p-3 shadow-sm lg:sticky lg:top-4">
+    <section className="rounded-lg border border-border/80 bg-card/80 p-2.5 shadow-sm lg:sticky lg:top-4">
       <label
         className="mb-2 flex items-center gap-2 text-sm font-semibold text-foreground"
         htmlFor="atlante-indicator-select"
@@ -286,9 +286,9 @@ function IndicatorControl({
           const isActive = indicator?.id === activeIndicator?.id;
           return (
             <button
-              className={`flex w-full items-center justify-between gap-3 rounded-md px-3 py-2 text-left text-sm transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 ${
+              className={`flex w-full items-center justify-between gap-2 rounded-md px-2.5 py-2 text-left text-sm transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 ${
                 isActive
-                  ? "bg-primary/10 text-foreground"
+                  ? "bg-primary text-primary-foreground shadow-sm"
                   : indicator
                     ? "text-foreground hover:bg-primary/5"
                     : "text-muted-foreground"
@@ -299,7 +299,11 @@ function IndicatorControl({
               type="button"
             >
               <span className="font-medium">{category.label}</span>
-              <span className="text-xs text-muted-foreground">
+              <span
+                className={`text-xs ${
+                  isActive ? "text-primary-foreground/80" : "text-muted-foreground"
+                }`}
+              >
                 {indicator ? "attivo" : "in preparazione"}
               </span>
             </button>
@@ -328,7 +332,7 @@ function CitySummaryCard({
   ];
 
   return (
-    <section className="rounded-lg border border-border bg-card p-3 shadow-sm">
+    <section className="rounded-lg border border-border/80 bg-card/80 p-3 shadow-sm">
       <div className="flex items-start gap-2">
         <BarChart3 className="mt-0.5 h-4 w-4 flex-none text-primary" />
         <div>
@@ -377,15 +381,15 @@ function MapSurface({
   setSelectedSectionId: (sectionId: string) => void;
 }) {
   return (
-    <section className="rounded-lg border border-border bg-card p-3 shadow-sm sm:p-4">
-      <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
+    <section className="rounded-xl border border-primary/20 bg-card p-2 shadow-md ring-1 ring-primary/10 sm:p-3">
+      <div className="mb-2 flex flex-col gap-1 px-1 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h2 className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-primary">
             <MapPinned className="h-4 w-4" />
             Mappa
           </h2>
         </div>
-        <p className="text-sm font-medium text-foreground">
+        <p className="text-sm font-semibold text-foreground">
           {activeIndicator?.label ?? "Indicatore in preparazione"}
         </p>
       </div>
@@ -396,10 +400,11 @@ function MapSurface({
           presente nel file dati.
         </div>
       ) : (
-        <div className="overflow-hidden rounded-md border border-border bg-muted">
+        <div className="overflow-hidden rounded-lg border border-border bg-background">
           <svg
             aria-label="Mappa delle sezioni censuarie di Lamezia Terme"
-            className="block h-[430px] w-full sm:h-[620px] xl:h-[680px]"
+            className="block h-[440px] w-full sm:h-[620px] lg:h-[min(72vh,780px)] lg:min-h-[660px] 2xl:h-[800px]"
+            preserveAspectRatio="xMidYMid meet"
             role="img"
             viewBox={`0 0 ${MAP_WIDTH} ${MAP_HEIGHT}`}
           >
@@ -515,7 +520,7 @@ function SectionProfileCard({
   }));
 
   return (
-    <section className="rounded-lg border border-border bg-card p-3 shadow-sm">
+    <section className="rounded-lg border border-border/80 bg-card/80 p-3 shadow-sm xl:sticky xl:top-4">
       <div>
         <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
           Sezione selezionata
