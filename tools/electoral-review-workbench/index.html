@@ -3,191 +3,56 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Electoral Review Workbench 2025</title>
+    <title>Electoral Review Workbench V2</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <link rel="stylesheet" href="./styles.css" />
   </head>
   <body>
     <header class="topbar">
-      <div>
-        <p class="eyebrow">Local review only</p>
-        <h1>Electoral section candidate review workbench</h1>
+      <div class="identity">
+        <span class="scope-badge">LOCAL REVIEW ONLY</span>
+        <div>
+          <p class="eyebrow">Lamezia Terme 2025</p>
+          <h1>Electoral section review workbench V2</h1>
+        </div>
       </div>
-      <div class="status-strip" id="summaryStrip" aria-live="polite">
+      <div class="summary-strip" id="summaryStrip" aria-live="polite">
         <span>Loading datasets...</span>
+      </div>
+      <div class="header-actions">
+        <input id="importDecisionFile" class="file-input" type="file" accept=".json,.csv,application/json,text/csv" />
+        <button id="importDecisionButton" type="button">Import</button>
+        <button id="exportJsonButton" type="button">Export JSON</button>
+        <button id="exportCsvButton" type="button">Export CSV</button>
       </div>
     </header>
 
-    <main class="workspace">
-      <section class="map-panel" aria-label="Review map">
-        <div class="map-toolbar">
-          <label class="toggle">
-            <input id="toggleV3" type="checkbox" checked />
-            <span>V3 sections</span>
-          </label>
-          <label class="toggle">
-            <input id="toggleV2" type="checkbox" />
-            <span>V2 reference</span>
-          </label>
-          <label class="toggle">
-            <input id="toggleCells" type="checkbox" checked />
-            <span>Review cells</span>
-          </label>
-          <label class="toggle">
-            <input id="toggleReviewPoints" type="checkbox" checked />
-            <span>Review civics</span>
-          </label>
-          <label class="toggle">
-            <input id="toggleResolvedPoints" type="checkbox" />
-            <span>Spatially resolved</span>
-          </label>
-          <label class="toggle">
-            <input id="toggleDeterministicPoints" type="checkbox" />
-            <span>Deterministic sample</span>
-          </label>
+    <main class="workbench-shell">
+      <aside class="task-panel" aria-label="Review tasks">
+        <div class="panel-heading">
+          <div>
+            <p class="eyebrow">Review tasks</p>
+            <h2>Prioritized queue</h2>
+          </div>
+          <span id="taskCountBadge" class="count-badge">0</span>
         </div>
-        <div class="map-wrap">
-          <svg id="mapSvg" role="img" aria-label="Candidate electoral sections and review cases"></svg>
-          <div class="map-empty" id="mapEmpty">Loading map...</div>
-        </div>
-      </section>
 
-      <aside class="side-panel" aria-label="Selected case">
-        <section class="panel-section selected-case">
-          <div class="section-heading">
-            <p class="eyebrow">Selected case</p>
-            <h2 id="caseTitle">No case selected</h2>
-          </div>
-          <dl class="facts" id="caseFacts"></dl>
-        </section>
-
-        <section class="panel-section">
-          <div class="section-heading">
-            <p class="eyebrow">Decision</p>
-            <h2>Manual review record</h2>
-          </div>
-          <form id="decisionForm" class="decision-form">
-            <label>
-              <span>Decision type</span>
-              <select name="decision_type" required>
-                <option value="">Choose...</option>
-                <option value="confirm_current_assignment">Confirm current assignment</option>
-                <option value="assign_to_section">Assign to section</option>
-                <option value="keep_unassigned">Keep unassigned</option>
-                <option value="keep_conflict">Keep conflict</option>
-                <option value="split_required">Split required</option>
-                <option value="needs_external_source">Needs external source</option>
-                <option value="exclude_from_section_geometry">Exclude from section geometry</option>
-              </select>
-            </label>
-            <label>
-              <span>Proposed section</span>
-              <input name="proposed_section_number" type="text" inputmode="numeric" placeholder="e.g. 27" />
-            </label>
-            <label>
-              <span>Confidence</span>
-              <select name="decision_confidence" required>
-                <option value="">Choose...</option>
-                <option value="high">High</option>
-                <option value="medium">Medium</option>
-                <option value="low">Low</option>
-              </select>
-            </label>
-            <label>
-              <span>Reviewed by</span>
-              <input name="reviewed_by" type="text" autocomplete="name" required />
-            </label>
-            <label>
-              <span>Review date</span>
-              <input name="review_date" type="date" required />
-            </label>
-            <label class="wide">
-              <span>Reason</span>
-              <textarea name="reason" rows="3" required></textarea>
-            </label>
-            <label class="wide">
-              <span>QGIS observation</span>
-              <textarea name="qgis_observation" rows="3"></textarea>
-            </label>
-            <label class="wide">
-              <span>Notes</span>
-              <textarea name="notes" rows="3"></textarea>
-            </label>
-            <label class="toggle wide">
-              <input name="requires_follow_up" type="checkbox" />
-              <span>Requires follow-up before V4</span>
-            </label>
-            <div class="form-actions">
-              <button type="submit">Save decision</button>
-              <button type="button" id="clearDecisionButton">Clear</button>
-            </div>
-          </form>
-        </section>
-
-        <section class="panel-section">
-          <div class="section-heading">
-            <p class="eyebrow">Context</p>
-            <h2>Civics and street rules</h2>
-          </div>
-          <div class="tabs" role="tablist" aria-label="Case context tables">
-            <button id="tabCivics" class="active" type="button">Civics</button>
-            <button id="tabRules" type="button">Rules</button>
-          </div>
-          <div id="contextTable" class="context-table"></div>
-        </section>
-      </aside>
-
-      <section class="queue-panel" aria-label="Review queue">
         <div class="filters">
+          <label class="full">
+            <span>Search</span>
+            <input id="searchFilter" type="search" placeholder="street, civic, section, reason" />
+          </label>
           <label>
-            <span>Case type</span>
-            <select id="caseTypeFilter">
-              <option value="">All</option>
-            </select>
+            <span>Task type</span>
+            <select id="taskTypeFilter"><option value="">All</option></select>
           </label>
           <label>
             <span>Priority</span>
-            <select id="priorityFilter">
-              <option value="">All</option>
-            </select>
-          </label>
-          <label>
-            <span>Suggested section</span>
-            <select id="sectionFilter">
-              <option value="">All</option>
-            </select>
-          </label>
-          <label>
-            <span>Method</span>
-            <select id="methodFilter">
-              <option value="">All</option>
-            </select>
-          </label>
-          <label>
-            <span>Confidence</span>
-            <select id="confidenceFilter">
-              <option value="">All</option>
-            </select>
-          </label>
-          <label>
-            <span>Needs review</span>
-            <select id="needsReviewFilter">
-              <option value="">All</option>
-              <option value="true">Yes</option>
-              <option value="false">No</option>
-            </select>
-          </label>
-          <label>
-            <span>Focus</span>
-            <select id="focusFilter">
-              <option value="">All cases</option>
-              <option value="conflicts">Only conflicts</option>
-              <option value="no_assigned">Only no assigned civics</option>
-              <option value="boundary">Only boundary points</option>
-            </select>
+            <select id="priorityFilter"><option value="">All</option></select>
           </label>
           <label>
             <span>Status</span>
-            <select id="decisionFilter">
+            <select id="statusFilter">
               <option value="">All</option>
               <option value="undecided">Undecided</option>
               <option value="decided">Decided</option>
@@ -195,43 +60,164 @@
             </select>
           </label>
           <label>
-            <span>Involved section</span>
-            <input id="involvedSectionFilter" type="search" inputmode="numeric" placeholder="current, suggested, competing" />
+            <span>Suggested section</span>
+            <select id="suggestedSectionFilter"><option value="">All</option></select>
           </label>
-          <label class="search-field">
-            <span>Search</span>
-            <input id="searchFilter" type="search" placeholder="street, cell, review id, section" />
+          <label>
+            <span>Competing section</span>
+            <select id="competingSectionFilter"><option value="">All</option></select>
           </label>
-          <div class="queue-actions">
-            <input id="importDecisionFile" class="file-input" type="file" accept=".json,.csv,application/json,text/csv" />
-            <button id="importDecisionButton" type="button">Import</button>
-            <button id="exportJsonButton" type="button">Export JSON</button>
-            <button id="exportCsvButton" type="button">Export CSV</button>
-          </div>
+          <label>
+            <span>Street</span>
+            <select id="streetFilter"><option value="">All</option></select>
+          </label>
+          <label>
+            <span>Reason</span>
+            <select id="reasonFilter"><option value="">All</option></select>
+          </label>
+          <label>
+            <span>Street evidence</span>
+            <select id="streetEvidenceFilter">
+              <option value="">All</option>
+              <option value="has">Has evidence</option>
+              <option value="multiple">Multiple sections</option>
+              <option value="none">No match</option>
+            </select>
+          </label>
+          <label>
+            <span>Decision type</span>
+            <select id="decisionTypeFilter"><option value="">All</option></select>
+          </label>
+          <label class="full">
+            <span>Sort</span>
+            <select id="sortSelect">
+              <option value="priority">Priority</option>
+              <option value="civic_count_desc">Civic count descending</option>
+              <option value="evidence_strength">Evidence strength</option>
+              <option value="dominant_share_asc">Dominant share ascending</option>
+              <option value="suggested_section">Suggested section</option>
+              <option value="unresolved_reason">Unresolved reason</option>
+            </select>
+          </label>
+          <label class="check">
+            <input id="highOnlyFilter" type="checkbox" />
+            <span>High priority</span>
+          </label>
+          <label class="check">
+            <input id="manyCivicsFilter" type="checkbox" />
+            <span>Many civics</span>
+          </label>
+          <label class="check">
+            <input id="visibleExtentFilter" type="checkbox" />
+            <span>Visible extent</span>
+          </label>
         </div>
-        <div class="queue-meta" id="queueMeta"></div>
-        <div class="queue-table-wrap">
-          <table class="queue-table">
-            <thead>
-              <tr>
-                <th>Case</th>
-                <th>Type</th>
-                <th>Priority</th>
-                <th>Suggested</th>
-                <th>Current</th>
-                <th>Status</th>
-              </tr>
-            </thead>
-            <tbody id="queueBody"></tbody>
-          </table>
+
+        <div id="taskListMeta" class="task-meta"></div>
+        <div id="taskList" class="task-list"></div>
+      </aside>
+
+      <section class="map-panel" aria-label="Review map">
+        <div class="map-toolbar">
+          <label class="toggle"><input id="toggleOsm" type="checkbox" checked /><span>OSM</span></label>
+          <label class="toggle"><input id="toggleV3" type="checkbox" checked /><span>V3</span></label>
+          <label class="toggle"><input id="toggleV2" type="checkbox" /><span>V2</span></label>
+          <label class="toggle"><input id="toggleCells" type="checkbox" checked /><span>Cells</span></label>
+          <label class="toggle"><input id="toggleReviewPoints" type="checkbox" checked /><span>Review civics</span></label>
+          <label class="toggle"><input id="toggleBoundaryPoints" type="checkbox" checked /><span>Boundary</span></label>
+          <label class="toggle"><input id="toggleResolvedPoints" type="checkbox" /><span>Resolved</span></label>
+          <label class="toggle"><input id="toggleDeterministicPoints" type="checkbox" /><span>Deterministic</span></label>
+          <button id="zoomSelectedButton" type="button">Zoom selected</button>
+          <button id="showNearbyButton" type="button">Nearby deterministic</button>
+          <button id="showCompetingButton" type="button">Competing sections</button>
+        </div>
+        <div class="map-frame">
+          <div id="mapCanvas" class="leaflet-host"></div>
+          <svg id="fallbackMap" class="fallback-map" role="img" aria-label="Local geometry fallback map"></svg>
+          <div id="mapStatus" class="map-status">Loading map...</div>
         </div>
       </section>
+
+      <aside class="cockpit-panel" aria-label="Decision cockpit">
+        <div class="selected-heading">
+          <p class="eyebrow">Decision cockpit</p>
+          <h2 id="taskTitle">No task selected</h2>
+          <div id="taskBadges" class="badge-row"></div>
+        </div>
+
+        <nav class="tabs" aria-label="Decision context">
+          <button class="active" type="button" data-tab="summary">Summary</button>
+          <button type="button" data-tab="civics">Civics</button>
+          <button type="button" data-tab="street">Street register</button>
+          <button type="button" data-tab="sections">Candidate sections</button>
+          <button type="button" data-tab="nearby">Nearby evidence</button>
+          <button type="button" data-tab="decision">Decision</button>
+        </nav>
+
+        <section id="tabPanel" class="tab-panel"></section>
+      </aside>
     </main>
 
-    <template id="emptyTableTemplate">
-      <p class="muted">No rows for this case.</p>
+    <template id="decisionFormTemplate">
+      <form id="decisionForm" class="decision-form">
+        <label>
+          <span>Decision type</span>
+          <select name="decision_type" required>
+            <option value="">Choose...</option>
+            <option value="confirm_suggested_section">Confirm suggested section</option>
+            <option value="assign_to_alternative_section">Assign alternative section</option>
+            <option value="keep_unassigned">Keep unassigned</option>
+            <option value="keep_conflict">Keep conflict</option>
+            <option value="split_required">Split required</option>
+            <option value="needs_external_source">Needs external source</option>
+            <option value="needs_qgis_review">Needs QGIS review</option>
+          </select>
+        </label>
+        <label>
+          <span>Proposed section</span>
+          <input name="proposed_section_number" type="text" inputmode="numeric" placeholder="e.g. 27" />
+        </label>
+        <label>
+          <span>Confidence</span>
+          <select name="decision_confidence" required>
+            <option value="">Choose...</option>
+            <option value="high">High</option>
+            <option value="medium">Medium</option>
+            <option value="low">Low</option>
+          </select>
+        </label>
+        <label>
+          <span>Reviewed by</span>
+          <input name="reviewed_by" type="text" autocomplete="name" required />
+        </label>
+        <label>
+          <span>Review date</span>
+          <input name="review_date" type="date" required />
+        </label>
+        <label class="wide">
+          <span>Reason</span>
+          <textarea name="reason" rows="3" required></textarea>
+        </label>
+        <label class="wide">
+          <span>QGIS observation</span>
+          <textarea name="qgis_observation" rows="3"></textarea>
+        </label>
+        <label class="wide">
+          <span>Notes</span>
+          <textarea name="notes" rows="3"></textarea>
+        </label>
+        <label class="check wide">
+          <input name="requires_follow_up" type="checkbox" />
+          <span>Requires follow-up before any V4 work</span>
+        </label>
+        <div class="form-actions wide">
+          <button type="submit">Save decision</button>
+          <button id="clearDecisionButton" type="button">Clear</button>
+        </div>
+      </form>
     </template>
 
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="./app.js"></script>
   </body>
 </html>
