@@ -23,6 +23,8 @@ import {
   Hash,
   Building2,
   Calendar,
+  CheckCircle2,
+  ClipboardList,
   X,
   Leaf,
   GraduationCap,
@@ -86,10 +88,13 @@ import { FeedSubscribeButton } from "@/components/FeedSubscribeButton";
 import { V0SectionLanding } from "@/components/launch/V0SectionLanding";
 import { quartiereLabel } from "@/lib/gis";
 import { asApiList } from "@/lib/apiList";
+import { BDNCP_APPALTI_URL, preferredBdncpUrl } from "@/lib/bdncp";
+import {
+  buildContractDossier,
+  summarizeContractDossiers,
+  type ContractDossier,
+} from "@/lib/contractDossier";
 import { MapPin } from "lucide-react";
-
-const ANAC_PORTAL_URL =
-  "https://dati.anticorruzione.it/superset/dashboard/appalti/";
 
 const CHART_COLORS = [
   "hsl(var(--chart-1))",
@@ -97,6 +102,39 @@ const CHART_COLORS = [
   "hsl(var(--chart-3))",
   "hsl(var(--chart-4))",
   "hsl(var(--chart-5))",
+];
+
+const BDNCP_FLOW_STEPS = [
+  {
+    label: "Programmazione",
+    detail: "bisogno pubblico, CUP e atti preliminari quando presenti",
+    icon: ClipboardList,
+  },
+  {
+    label: "Progettazione",
+    detail: "quadro tecnico, importi, luogo e documenti collegabili",
+    icon: HardHat,
+  },
+  {
+    label: "Gara / pubblicazione",
+    detail: "CIG, pubblicita legale e scheda nazionale BDNCP",
+    icon: Landmark,
+  },
+  {
+    label: "Affidamento",
+    detail: "aggiudicatario, procedura, importo e stazione appaltante",
+    icon: Gavel,
+  },
+  {
+    label: "Esecuzione",
+    detail: "contratto, varianti, liquidazioni e avanzamento documentale",
+    icon: RefreshCw,
+  },
+  {
+    label: "Valutazione",
+    detail: "collaudo, chiusura, dati mancanti e verifica civica",
+    icon: CheckCircle2,
+  },
 ];
 
 function formatEuro(value: number, compact = false): string {
@@ -135,6 +173,9 @@ export function Contracts() {
   const [from, setFrom] = useState("");
   const [to, setTo] = useState("");
   const [quartiere, setQuartiere] = useState("all");
+  const [lifecycleFilter, setLifecycleFilter] = useState("all");
+  const [identifierFilter, setIdentifierFilter] = useState("all");
+  const [sourceFilter, setSourceFilter] = useState("all");
   const [selected, setSelected] = useState<Contract | null>(null);
   const [, navigate] = useLocation();
 
@@ -177,6 +218,33 @@ export function Contracts() {
   const { data: analytics, isLoading: analyticsLoading } =
     useGetContractsAnalytics(filters);
   const { data: feedStatus } = useGetContractsFeedStatus();
+  const dossierByContractId = useMemo(
+    () =>
+      new Map(
+        contracts.map((contract) => [
+          contract.id,
+          buildContractDossier({ contract }),
+        ]),
+      ),
+    [contracts],
+  );
+  const visibleContracts = useMemo(
+    () =>
+      contracts.filter((contract) =>
+        matchesDossierFilters(contract, dossierByContractId.get(contract.id), {
+          lifecycleFilter,
+          identifierFilter,
+          sourceFilter,
+        }),
+      ),
+    [
+      contracts,
+      dossierByContractId,
+      lifecycleFilter,
+      identifierFilter,
+      sourceFilter,
+    ],
+  );
 
   // Build distinct option lists from the full (unfiltered) list is not available;
   // derive options from the current data plus known seed values.
@@ -202,7 +270,10 @@ export function Contracts() {
     maxAmount ||
     from ||
     to ||
-    quartiere !== "all";
+    quartiere !== "all" ||
+    lifecycleFilter !== "all" ||
+    identifierFilter !== "all" ||
+    sourceFilter !== "all";
 
   const resetFilters = () => {
     setSearch("");
@@ -214,15 +285,18 @@ export function Contracts() {
     setFrom("");
     setTo("");
     setQuartiere("all");
+    setLifecycleFilter("all");
+    setIdentifierFilter("all");
+    setSourceFilter("all");
   };
 
   const locatedContracts = useMemo(
     () =>
-      contracts.filter(
+      visibleContracts.filter(
         (c) =>
           typeof c.latitude === "number" && typeof c.longitude === "number",
       ),
-    [contracts],
+    [visibleContracts],
   );
 
   return (
@@ -289,13 +363,13 @@ export function Contracts() {
           </span>
         </div>
         <a
-          href={feedStatus?.url || ANAC_PORTAL_URL}
+          href={feedStatus?.url || BDNCP_APPALTI_URL}
           target="_blank"
           rel="noopener noreferrer"
           className="inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:underline"
         >
           <Landmark className="h-4 w-4" />
-          Portale ANAC – Dati Appalti
+          Portale BDNCP ANAC - dati appalti
           <ExternalLink className="h-3.5 w-3.5" />
         </a>
       </div>
@@ -315,6 +389,12 @@ export function Contracts() {
       </div>
 
       {/* In cosa spende il Comune — spesa per macrotemi */}
+      <BdncpBridge
+        contracts={contracts}
+        loading={isLoading}
+        portalUrl={feedStatus?.url || BDNCP_APPALTI_URL}
+      />
+
       <SpendingByMacrotema contracts={contracts} loading={isLoading} />
 
       {/* Analytics */}
@@ -431,6 +511,91 @@ export function Contracts() {
           </SelectContent>
         </Select>
 
+        <Select value={lifecycleFilter} onValueChange={setLifecycleFilter}>
+          <SelectTrigger
+            className="h-11 bg-background"
+            aria-label="Filtra per ciclo di vita"
+          >
+            <div className="flex items-center gap-2 truncate">
+              <ClipboardList className="h-4 w-4 text-muted-foreground shrink-0" />
+              <span className="truncate">
+                {lifecycleFilter === "all"
+                  ? "Tutte le fasi"
+                  : lifecycleFilter === "missing-execution"
+                    ? "Esecuzione da integrare"
+                    : lifecycleFilter === "missing-evaluation"
+                      ? "Valutazione da integrare"
+                      : lifecycleFilter === "complete"
+                        ? "Lifecycle completo"
+                        : "Da verificare"}
+              </span>
+            </div>
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">Tutte le fasi</SelectItem>
+            <SelectItem value="complete">Lifecycle completo</SelectItem>
+            <SelectItem value="needs-review">Da verificare</SelectItem>
+            <SelectItem value="missing-execution">
+              Esecuzione da integrare
+            </SelectItem>
+            <SelectItem value="missing-evaluation">
+              Valutazione da integrare
+            </SelectItem>
+          </SelectContent>
+        </Select>
+
+        <Select value={identifierFilter} onValueChange={setIdentifierFilter}>
+          <SelectTrigger
+            className="h-11 bg-background"
+            aria-label="Filtra per identificativo"
+          >
+            <div className="flex items-center gap-2 truncate">
+              <Hash className="h-4 w-4 text-muted-foreground shrink-0" />
+              <span className="truncate">
+                {identifierFilter === "all"
+                  ? "Tutti gli identificativi"
+                  : identifierFilter === "with-cig"
+                    ? "Con CIG"
+                    : identifierFilter === "without-cig"
+                      ? "Senza CIG"
+                      : identifierFilter === "with-cup"
+                        ? "Con CUP"
+                        : "Senza CUP"}
+              </span>
+            </div>
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">Tutti gli identificativi</SelectItem>
+            <SelectItem value="with-cig">Con CIG</SelectItem>
+            <SelectItem value="without-cig">Senza CIG</SelectItem>
+            <SelectItem value="with-cup">Con CUP</SelectItem>
+            <SelectItem value="without-cup">Senza CUP</SelectItem>
+          </SelectContent>
+        </Select>
+
+        <Select value={sourceFilter} onValueChange={setSourceFilter}>
+          <SelectTrigger
+            className="h-11 bg-background"
+            aria-label="Filtra per stato fonte"
+          >
+            <div className="flex items-center gap-2 truncate">
+              <Landmark className="h-4 w-4 text-muted-foreground shrink-0" />
+              <span className="truncate">
+                {sourceFilter === "all"
+                  ? "Tutte le fonti"
+                  : sourceFilter === "bdncp-bridge"
+                    ? "Ponte BDNCP"
+                    : "Fonte mancante"}
+              </span>
+            </div>
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">Tutte le fonti</SelectItem>
+            <SelectItem value="bdncp-bridge">Ponte BDNCP</SelectItem>
+            <SelectItem value="missing-source">Fonte mancante</SelectItem>
+          </SelectContent>
+        </Select>
+
         <div className="flex items-center gap-2">
           <Input
             type="number"
@@ -487,12 +652,12 @@ export function Contracts() {
 
         <div className="flex items-center justify-between gap-2">
           <span className="text-sm text-muted-foreground">
-            {contracts ? (
+            {visibleContracts ? (
               <>
                 <span className="font-display font-bold text-foreground tabular-nums">
-                  {contracts.length}
+                  {visibleContracts.length}
                 </span>{" "}
-                {contracts.length === 1 ? "risultato" : "risultati"}
+                {visibleContracts.length === 1 ? "risultato" : "risultati"}
               </>
             ) : (
               "—"
@@ -522,7 +687,7 @@ export function Contracts() {
             </h3>
           </div>
           <span className="text-xs text-muted-foreground">
-            {locatedContracts.length} su {contracts.length} appalti
+            {locatedContracts.length} su {visibleContracts.length} appalti
             geolocalizzati
           </span>
         </div>
@@ -606,8 +771,8 @@ export function Contracts() {
                       </TableCell>
                     </TableRow>
                   ))
-              ) : contracts.length > 0 ? (
-                contracts.map((contract) => (
+              ) : visibleContracts.length > 0 ? (
+                visibleContracts.map((contract) => (
                   <TableRow
                     key={contract.id}
                     className="group hover-elevate cursor-pointer"
@@ -625,6 +790,32 @@ export function Contracts() {
                           >
                             CIG {contract.cig}
                           </Badge>
+                        ) : null}
+                        {contract.cup ? (
+                          <Badge
+                            variant="outline"
+                            className="font-mono text-[10px] shadow-none"
+                          >
+                            CUP {contract.cup}
+                          </Badge>
+                        ) : null}
+                        {preferredBdncpUrl(contract.anacUrl, contract.cig) ? (
+                          <a
+                            href={
+                              preferredBdncpUrl(
+                                contract.anacUrl,
+                                contract.cig,
+                              ) ?? undefined
+                            }
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-1 rounded-full border border-primary/30 px-2 py-0.5 text-[10px] font-medium text-primary transition-colors hover:border-primary hover:bg-primary/5"
+                            onClick={(e) => e.stopPropagation()}
+                            aria-label={`Apri ricerca BDNCP per il contratto ${contract.title}`}
+                          >
+                            BDNCP/PVL
+                            <ExternalLink className="h-3 w-3" />
+                          </a>
                         ) : null}
                         {contract.withoutTender ? (
                           <Badge className="border-transparent bg-amber-100 text-amber-800 text-[10px] shadow-none dark:bg-amber-500/20 dark:text-amber-300">
@@ -703,6 +894,212 @@ export function Contracts() {
       />
     </div>
   );
+}
+
+function BdncpBridge({
+  contracts,
+  loading,
+  portalUrl,
+}: {
+  contracts: Contract[] | undefined;
+  loading: boolean;
+  portalUrl: string;
+}) {
+  const list = asApiList<Contract>(contracts);
+  const summary = summarizeContractDossiers(list);
+
+  return (
+    <section className="mb-10 rounded-2xl border border-card-border bg-card p-5 shadow-sm md:p-6">
+      <div className="grid gap-6 lg:grid-cols-[0.9fr_1.2fr]">
+        <div className="space-y-4">
+          <span className="eyebrow text-primary">
+            <Landmark className="h-3.5 w-3.5" />
+            Ponte BDNCP
+          </span>
+          <div>
+            <h2 className="font-display text-2xl font-bold tracking-tight md:text-3xl">
+              Fascicoli civici CIG/CUP
+            </h2>
+            <p className="mt-2 text-sm text-muted-foreground">
+              Il CIG apre il ponte verso BDNCP/PCP, mentre il CUP rende
+              leggibile l'asse opera/progetto per i lavori pubblici. La
+              piattaforma locale affianca questi identificativi con atti Albo,
+              localizzazione e stato del ciclo di vita quando le fonti sono
+              disponibili.
+            </p>
+          </div>
+
+          {loading ? (
+            <div className="grid gap-3 sm:grid-cols-3 lg:grid-cols-1">
+              {Array.from({ length: 6 }).map((_, index) => (
+                <Skeleton key={index} className="h-20 rounded-xl" />
+              ))}
+            </div>
+          ) : (
+            <div className="grid gap-3 sm:grid-cols-3 lg:grid-cols-1">
+              <BdncpMetric
+                icon={Hash}
+                label="Contratti con CIG"
+                value={`${summary.withCig}/${summary.total}`}
+                sub="chiave procedura da verificare in BDNCP"
+              />
+              <BdncpMetric
+                icon={FileText}
+                label="Contratti con CUP"
+                value={`${summary.withCup}/${summary.total}`}
+                sub="asse progetto/opera quando disponibile"
+              />
+              <BdncpMetric
+                icon={ExternalLink}
+                label="Ponti BDNCP"
+                value={`${summary.withBdncpSearchBridge}/${summary.total}`}
+                sub="link/search bridge, non sync diretto"
+              />
+              <BdncpMetric
+                icon={HardHat}
+                label="Lavori pubblici nel perimetro"
+                value={String(summary.publicWorks)}
+                sub="contratti con ambito o testo compatibile"
+              />
+              <BdncpMetric
+                icon={RefreshCw}
+                label="Esecuzione da integrare"
+                value={String(summary.missingExecutionEvidence)}
+                sub="fase non documentata o solo parziale"
+              />
+              <BdncpMetric
+                icon={CheckCircle2}
+                label="Valutazione da integrare"
+                value={String(summary.missingEvaluationEvidence)}
+                sub="collaudo/esito non documentati"
+              />
+            </div>
+          )}
+
+          <a
+            href={portalUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 text-sm font-semibold text-primary hover:underline"
+          >
+            Apri il cruscotto BDNCP ANAC
+            <ExternalLink className="h-4 w-4" />
+          </a>
+        </div>
+
+        <ol className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+          {BDNCP_FLOW_STEPS.map((step, index) => {
+            const Icon = step.icon;
+            return (
+              <li
+                key={step.label}
+                className="rounded-xl border border-border bg-muted/25 p-4"
+              >
+                <div className="flex items-start gap-3">
+                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-brand/10 text-brand">
+                    <Icon className="h-5 w-5" />
+                  </div>
+                  <div>
+                    <div className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
+                      Fase {index + 1}
+                    </div>
+                    <div className="mt-0.5 font-display font-bold tracking-tight text-foreground">
+                      {step.label}
+                    </div>
+                    <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
+                      {step.detail}
+                    </p>
+                  </div>
+                </div>
+              </li>
+            );
+          })}
+        </ol>
+      </div>
+    </section>
+  );
+}
+
+function BdncpMetric({
+  icon: Icon,
+  label,
+  value,
+  sub,
+}: {
+  icon: React.ComponentType<{ className?: string }>;
+  label: string;
+  value: string;
+  sub: string;
+}) {
+  return (
+    <div className="flex items-center gap-3 rounded-xl border border-border bg-background p-3">
+      <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-muted text-muted-foreground">
+        <Icon className="h-4 w-4" />
+      </div>
+      <div className="min-w-0">
+        <div className="text-xs uppercase tracking-wide text-muted-foreground">
+          {label}
+        </div>
+        <div className="font-display text-xl font-bold tracking-tight text-foreground">
+          {value}
+        </div>
+        <div className="text-xs text-muted-foreground">{sub}</div>
+      </div>
+    </div>
+  );
+}
+
+function matchesDossierFilters(
+  _contract: Contract,
+  dossier: ContractDossier | undefined,
+  filters: {
+    lifecycleFilter: string;
+    identifierFilter: string;
+    sourceFilter: string;
+  },
+): boolean {
+  if (!dossier) {
+    return true;
+  }
+
+  if (filters.lifecycleFilter === "complete") {
+    if (dossier.lifecycleCompleteness !== "complete") return false;
+  } else if (filters.lifecycleFilter === "needs-review") {
+    if (dossier.lifecycleCompleteness !== "needs-review") return false;
+  } else if (filters.lifecycleFilter === "missing-execution") {
+    if (!dossier.missingExecutionEvidence) return false;
+  } else if (filters.lifecycleFilter === "missing-evaluation") {
+    if (!dossier.missingEvaluationEvidence) return false;
+  }
+
+  const cig = dossier.identifiers.find(
+    (identifier) => identifier.kind === "cig",
+  );
+  const cup = dossier.identifiers.find(
+    (identifier) => identifier.kind === "cup",
+  );
+  const hasCig = cig?.formalStatus === "formal-only";
+  const hasCup = cup?.formalStatus === "formal-only";
+
+  if (filters.identifierFilter === "with-cig" && !hasCig) return false;
+  if (filters.identifierFilter === "without-cig" && hasCig) return false;
+  if (filters.identifierFilter === "with-cup" && !hasCup) return false;
+  if (filters.identifierFilter === "without-cup" && hasCup) return false;
+
+  const hasBdncpBridge = dossier.evidence.some(
+    (evidence) =>
+      evidence.sourceKind === "bdncp" &&
+      evidence.sourceStatus === "search-bridge",
+  );
+  const hasMissingSource = dossier.evidence.some(
+    (evidence) => evidence.sourceStatus === "missing-source",
+  );
+
+  if (filters.sourceFilter === "bdncp-bridge" && !hasBdncpBridge) return false;
+  if (filters.sourceFilter === "missing-source" && !hasMissingSource)
+    return false;
+
+  return true;
 }
 
 function Analytics({

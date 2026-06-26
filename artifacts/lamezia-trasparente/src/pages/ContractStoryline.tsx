@@ -8,6 +8,7 @@ import {
   type LifecyclePhase,
   type StorylineStatus,
   type Publication,
+  type Contract,
 } from "@workspace/api-client-react";
 import {
   ArrowLeft,
@@ -44,8 +45,16 @@ import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { AlboLink } from "@/components/AlboLink";
 import { MonitoringReportsSection } from "@/components/MonitoringReportsSection";
+import {
+  ContractEvidencePanel,
+  ContractIdentifiersCard,
+  ContractLifecycleRail,
+  ContractPublicLimitsBox,
+  ContractWorkAxisCard,
+} from "@/components/contracts";
 import { quartiereLabel } from "@/lib/gis";
 import { MACROTEMA_LABELS } from "@/lib/macrotema";
+import { buildContractDossier } from "@/lib/contractDossier";
 import {
   Empty,
   EmptyHeader,
@@ -171,19 +180,21 @@ function StorylineContent({
   timeline,
   indicators,
 }: {
-  contract: import("@workspace/api-client-react").Contract;
+  contract: Contract;
   timeline: StorylineEvent[];
   indicators: StorylineIndicators;
 }) {
   const status = STATUS_META[indicators.status];
   const macrotemaLabel = contract.macrotema
-    ? MACROTEMA_LABELS[contract.macrotema] ?? null
+    ? (MACROTEMA_LABELS[contract.macrotema] ?? null)
     : null;
   const locationLabel = contract.geoAddress
     ? contract.geoAddress
     : contract.geoQuartiere
       ? quartiereLabel(contract.geoQuartiere)
       : null;
+  const dossier = buildContractDossier({ contract, timeline, indicators });
+  const primaryOfficialLink = dossier.officialLinks[0] ?? null;
 
   return (
     <div className="space-y-8">
@@ -227,15 +238,15 @@ function StorylineContent({
         ) : null}
 
         <div className="mt-6 flex flex-wrap items-center gap-4">
-          {contract.anacUrl ? (
+          {primaryOfficialLink ? (
             <a
-              href={contract.anacUrl}
+              href={primaryOfficialLink.href}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:underline"
             >
               <ExternalLink className="h-4 w-4" />
-              Scheda ufficiale su ANAC
+              Apri fonte ufficiale / ricerca
             </a>
           ) : null}
           <Link
@@ -248,6 +259,17 @@ function StorylineContent({
           </Link>
         </div>
       </header>
+
+      <ContractLifecycleRail dossier={dossier} />
+
+      <div className="grid gap-4 lg:grid-cols-2">
+        <ContractIdentifiersCard dossier={dossier} />
+        <ContractWorkAxisCard dossier={dossier} />
+      </div>
+
+      <ContractEvidencePanel dossier={dossier} />
+
+      <ContractPublicLimitsBox limits={dossier.publicLimits} />
 
       {/* Caratteristiche dell'appalto */}
       <section>
@@ -299,7 +321,11 @@ function StorylineContent({
               label="Ambito di spesa"
               value={macrotemaLabel}
             />
-            <MetaRow icon={MapPin} label="Localizzazione" value={locationLabel} />
+            <MetaRow
+              icon={MapPin}
+              label="Localizzazione"
+              value={locationLabel}
+            />
           </dl>
         </div>
       </section>
@@ -396,8 +422,8 @@ function StorylineContent({
               <EmptyTitle>Nessun atto collegato</EmptyTitle>
               <EmptyDescription>
                 Non sono state trovate pubblicazioni dell'Albo Pretorio
-                collegabili a questo appalto tramite CIG o CUP. La cronistoria si
-                arricchirà con le nuove pubblicazioni.
+                collegabili a questo appalto tramite CIG o CUP. La cronistoria
+                si arricchirà con le nuove pubblicazioni.
               </EmptyDescription>
             </EmptyHeader>
           </Empty>
@@ -544,7 +570,9 @@ function PhaseStepper({ indicators }: { indicators: StorylineIndicators }) {
             </div>
             <span
               className={`text-[11px] leading-tight ${
-                reached ? "font-medium text-foreground" : "text-muted-foreground"
+                reached
+                  ? "font-medium text-foreground"
+                  : "text-muted-foreground"
               }`}
             >
               {meta.label}
@@ -662,7 +690,9 @@ function FundProgress({
   return (
     <div className="mt-4 rounded-xl border border-card-border bg-card p-5 shadow-sm">
       <div className="flex items-baseline justify-between gap-2">
-        <span className="eyebrow text-muted-foreground">Avanzamento dei pagamenti</span>
+        <span className="eyebrow text-muted-foreground">
+          Avanzamento dei pagamenti
+        </span>
         <span className="text-sm font-semibold tabular-nums text-foreground">
           {pct}%
         </span>
