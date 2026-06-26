@@ -1,117 +1,133 @@
-# Electoral Review Workbench 2025
+# Electoral Review Workbench V2
 
 This is a local-only manual review tool for the Lamezia Terme 2025 electoral
-section candidate geometry work. It supports QGIS-assisted review of the V3
-census-aggregated candidate polygons and the unresolved ANNCSU civic cases.
+section candidate geometry work. V2 is organized around decision tasks rather
+than a flat list of unresolved technical records.
 
-It does not publish a map, create a public app route, generate V4 geometry, or
-apply decisions back to the electoral dataset.
+It does not publish a public route, create V4 geometry, apply decisions back to
+GPKG files, modify processed electoral results, or treat candidate sections as
+official boundaries.
 
-## Inputs
+## Run Locally
 
-The web datasets are generated from repository inputs already present on
-`main`:
-
-- `data/interim/geo/electoral_section_census_cells_assignment_2025.gpkg`
-- `data/processed/geo/electoral_sections_candidate_2025_v3_census_aggregated.gpkg`
-- `data/interim/qa/electoral_sections_qgis_review_layers_2025_v3.gpkg`
-- `data/processed/geo/anncsu_lamezia_civics_with_electoral_section_2025_v2.csv`
-- `data/interim/qa/anncsu_electoral_assignment_review_queue_2025.csv`
-- `data/interim/geo/electoral_street_rules_2025.csv`
-- `data/interim/geo/anncsu_electoral_street_crosswalk_2025.csv`
-- `data/interim/qa/electoral_sections_candidate_v3_census_metrics_2025.csv`
-- `data/interim/qa/electoral_sections_boundary_uncertainty_points_2025.csv`
-
-## Generate Review Data
-
-From the repository root:
+Generate the web payloads from the repository root:
 
 ```powershell
 python scripts/build_electoral_review_workbench_data.py
 ```
 
-Generated browser data is written to:
-
-```text
-tools/electoral-review-workbench/public/data/
-```
-
-The generator exports only web-friendly JSON and GeoJSON. It does not modify
-the source GPKG files.
-
-## Run Locally
-
-Serve the directory with any local static server. For example:
+Serve the static workbench:
 
 ```powershell
 python -m http.server 4177 --directory tools/electoral-review-workbench
 ```
 
-Then open:
+Open:
 
 ```text
 http://127.0.0.1:4177/
 ```
 
-Using a local server is required because the browser loads JSON and GeoJSON
-through `fetch`.
+Use a local HTTP server because the page loads JSON and GeoJSON through
+`fetch`.
 
-## Review Flow
+## V2 Review Tasks
 
-1. Open the workbench and choose a case from the queue.
-2. Use the map to compare V3 candidate sections, V2 reference geometry, review
-   cells, unresolved civics, spatially resolved civics, and a deterministic
-   civic sample.
-3. Inspect the case facts, related civics, and electoral street rules.
-4. Record a decision in the decision panel.
-5. Export decisions as CSV or JSON for later QA and controlled application.
-6. To continue a previous session, choose the exported CSV/JSON file in the
-   import control and press `Import`.
+The main queue loads `public/data/review_tasks.json`. Each task is an
+aggregated review unit with a title, priority, suggested section, competing
+sections, civic range, reason for unresolved status, evidence strength, map
+focus bbox, and source files.
 
-Decision records are stored in browser `localStorage` until exported. Clearing
-site data clears unsaved decisions.
+Task types are:
 
-## Decision Types
+- `unresolved_civic_group`
+- `census_cell_conflict`
+- `no_assigned_civics_cell`
+- `boundary_uncertainty_cluster`
+- `section_low_confidence`
+- `section_needs_manual_review`
 
-- `confirm_current_assignment`
-- `assign_to_section`
-- `keep_unassigned`
-- `keep_conflict`
-- `split_required`
-- `needs_external_source`
-- `exclude_from_section_geometry`
+Use filters for type, priority, decision status, suggested section, competing
+section, street, unresolved reason, street-register evidence, high-priority
+only, many-civic tasks, and current map extent.
 
-Each decision can include a proposed section, confidence, reason, QGIS
-observation, reviewer name, review date, follow-up flag, and notes.
+## Map
 
-## Outputs
+The map uses Leaflet with OpenStreetMap tiles when the browser can reach them.
+OSM is visual context only. It is not an official source for section assignment
+and must not be used as a proximity-based assignment rule.
 
-The generated datasets include:
+If Leaflet or OSM tiles are unavailable, the workbench still draws local
+GeoJSON geometries in the fallback SVG map.
 
-- `review_summary.json`
-- `review_cases.json`
-- `review_cells.geojson`
-- `candidate_sections_v3.geojson`
-- `candidate_sections_v2.geojson`
-- `review_points.geojson`
-- `spatially_resolved_points.geojson`
-- `deterministic_points_sample.geojson`
-- `civics_by_case.json`
-- `street_rules_by_case.json`
+Map layers include:
 
-The browser export produces:
+- V3 candidate sections;
+- optional V2 reference geometry;
+- review census cells;
+- review civics;
+- boundary uncertainty points;
+- spatially resolved points;
+- deterministic civic sample;
+- selected task civics;
+- optional nearby deterministic points and competing sections.
 
-- `electoral_sections_v3_manual_review_decisions.csv`
-- `electoral_sections_v3_manual_review_decisions.json`
+## Street Register Evidence
 
-The exported decision fields are:
+`public/data/street_register_evidence_by_task.json` links each task to parsed
+rules from `data/interim/geo/electoral_street_rules_2025.csv`.
+
+The panel distinguishes:
+
+- direct rule matches from civic assignments;
+- same-street rules for the suggested section;
+- same-street rules for competing sections;
+- same-street rules in other sections;
+- tasks with no clear parsed rule match.
+
+When the source PDF is small enough, the generator copies it to:
+
+```text
+tools/electoral-review-workbench/public/source/Stradario_elettorale.pdf
+```
+
+The evidence panel links to `#page=N` for the parsed source page when available.
+
+## Decision Cockpit
+
+The right panel contains:
+
+- Summary;
+- Civics;
+- Street register evidence;
+- Candidate sections;
+- Nearby evidence;
+- Decision.
+
+The Civics tab shows access id, street, civic number, locality, current and
+suggested section, assignment method/confidence, rule id, review flag,
+boundary distance, and notes. Clicking a civic highlights it on the map.
+
+The Candidate sections tab summarizes suggested and competing sections, civic
+support, street-register rule counts, nearby deterministic counts, and boundary
+warnings.
+
+## Decisions
+
+Decisions are stored in browser `localStorage` until exported. The page warns
+before leaving when saved decisions have not been exported.
+
+Exports are available as JSON and CSV with these fields:
 
 - `review_id`
-- `census_cell_id`
+- `task_id`
 - `case_type`
+- `census_cell_id`
+- `involved_streets`
 - `current_assignment_method`
 - `current_assigned_section`
 - `suggested_section_number`
+- `competing_sections`
 - `proposed_section_number`
 - `decision_type`
 - `decision_confidence`
@@ -121,24 +137,29 @@ The exported decision fields are:
 - `review_date`
 - `requires_follow_up`
 - `notes`
+- `evidence_snapshot`
 
-## Future V4 Use
+Previous JSON or CSV exports can be imported to resume local work.
 
-The exported decisions are an input for a later V4 candidate-geometry phase.
-Before that phase, the decision file should be validated with:
+## Generated Data
 
-```powershell
-python scripts/apply_electoral_review_decisions_stub.py electoral_sections_v3_manual_review_decisions.csv
-```
+Primary V2 payloads:
 
-The current stub validates required fields and reports what would be prepared
-for a later application step. It intentionally does not write V4 geometry.
+- `review_tasks.json`
+- `civics_by_task.json`
+- `street_register_evidence_by_task.json`
+- `candidate_sections_by_task.json`
+- `nearby_deterministic_by_task.json`
+
+Compatibility payloads from V1 remain generated under `public/data/`, but the
+V2 interface uses the task-oriented files above.
 
 ## Guardrails
 
-- The V3 candidate geometry remains non-official.
-- The workbench is not linked from the public app.
-- No deploy configuration is changed.
-- No proximity-only assignment is introduced.
-- No polygon output is generated.
-- Decisions require downstream QA before any V4 work.
+- Do not link this workbench from the public app.
+- Do not change public routing, deploy, Cloudflare, homepage, or navigation.
+- Do not create V4 in this PR.
+- Do not apply decisions to GPKG files in this PR.
+- Do not modify processed electoral result values.
+- Do not use OSM or proximity alone as assignment evidence.
+- Treat all candidate geometries as non-official QA artifacts.
