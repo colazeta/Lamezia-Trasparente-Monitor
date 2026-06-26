@@ -16,7 +16,6 @@ import {
   RefreshCw,
   Building2,
   Layers,
-  GitCompare,
 } from "lucide-react";
 import { format } from "date-fns";
 import { it } from "date-fns/locale";
@@ -96,12 +95,6 @@ export function Performance() {
             analizzane la serie storica.
           </p>
         </div>
-        <Link href="/performance/confronta" className="shrink-0">
-          <Button variant="outline" className="gap-2">
-            <GitCompare className="h-4 w-4" />
-            Confronta indicatori
-          </Button>
-        </Link>
       </div>
 
       {/* Last updated */}

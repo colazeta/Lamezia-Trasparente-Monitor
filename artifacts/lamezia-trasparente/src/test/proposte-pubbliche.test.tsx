@@ -10,7 +10,7 @@ import {
 } from "@/data/propostePubbliche";
 import { PropostePubbliche } from "@/pages/PropostePubbliche";
 
-function renderArchive() {
+function renderProposteCiviche() {
   return render(
     <WouterRouter>
       <PropostePubbliche />
@@ -18,7 +18,7 @@ function renderArchive() {
   );
 }
 
-describe("archivio proposte pubbliche", () => {
+describe("proposte civiche", () => {
   it("espone i quattro seed demo come iniziative popolari neutrali", () => {
     expect(PUBLIC_PROPOSALS).toHaveLength(4);
     expect(
@@ -61,11 +61,11 @@ describe("archivio proposte pubbliche", () => {
   });
 
   it("renderizza criteri metodologici, filtri minimi e cards delle proposte", () => {
-    renderArchive();
+    renderProposteCiviche();
 
     expect(
       screen.getByRole("heading", {
-        name: "Archivio delle proposte pubbliche",
+        name: "Proposte civiche",
       }),
     ).toBeInTheDocument();
     expect(
@@ -89,7 +89,7 @@ describe("archivio proposte pubbliche", () => {
   });
 
   it("aggiorna il conteggio quando un filtro non contiene risultati", () => {
-    renderArchive();
+    renderProposteCiviche();
 
     fireEvent.change(screen.getByLabelText("Stato"), {
       target: { value: "discussa" },

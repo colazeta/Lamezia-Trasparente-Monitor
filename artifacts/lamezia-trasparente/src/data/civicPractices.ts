@@ -157,7 +157,7 @@ export const CIVIC_PRACTICES = [
       ],
     },
     relatedInternalRoutes: [
-      "/archivio-proposte",
+      "/proposte-civiche",
       "/monitoraggio",
       "/accesso-civico",
       "/legalita",

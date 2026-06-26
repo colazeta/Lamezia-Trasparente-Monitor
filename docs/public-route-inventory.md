@@ -16,8 +16,9 @@ Una route può essere inclusa nella sitemap quando:
 
 Restano escluse:
 
-- le route dinamiche di dettaglio, per esempio `/contratti/:id`, `/bandi/:slug`, `/monitoraggio/:id`, `/performance/:id` e pattern analoghi;
+- le route dinamiche di dettaglio, per esempio `/contratti/:id`, `/monitoraggio/:id`, `/performance/:id` e pattern analoghi;
 - le superfici redazionali o di amministrazione, incluse `/redazione`, `/redazione/*`, `/admin` e `/admin/*`;
+- i percorsi legacy reindirizzati, inclusi `/bandi`, `/archivio-proposte`, `/legalita/timeline` e `/performance/confronta`;
 - route di fallback, pagine 404 e pattern non enumerabili;
 - qualunque route che richieda un lavoro di generazione dinamica della sitemap, fuori dallo scope di #93.
 
@@ -32,13 +33,12 @@ Le route incluse sono mantenute in `PUBLIC_INDEXABLE_ROUTES` e verificate dal te
 - `/incarichimetro`
 - `/albo`
 - `/atti-fondamentali`
-- `/bandi`
 - `/beni-confiscati`
 - `/accesso-civico`
 - `/monitoraggio`
-- `/monitoraggio/nuovo`
 - `/promessometro`
-- `/legalita/timeline`
+- `/proposte-civiche`
+- `/legalita/trame-festival`
 - `/legalita`
 - `/delibere`
 - `/convocazioni`
@@ -51,11 +51,11 @@ Le route incluse sono mantenute in `PUBLIC_INDEXABLE_ROUTES` e verificate dal te
 - `/feeds`
 - `/sviluppatori`
 - `/performance`
-- `/performance/confronta`
 - `/pareri`
 - `/criticita-pubbliche`
 - `/segnalazioni`
 - `/statistiche`
+- `/atlante-territoriale`
 - `/fonti-dati`
 - `/stato-monitoraggio`
 - `/metodologia`

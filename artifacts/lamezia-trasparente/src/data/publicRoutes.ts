@@ -147,8 +147,8 @@ export type PublicIndexableRoute = {
  * - the URL does not depend on runtime data, user input, authentication, or redirects.
  *
  * Exclusion criteria:
- * - dynamic detail patterns such as /contratti/:id or /bandi/:slug;
- * - editorial/admin surfaces and legacy redirects (/redazione, /admin);
+ * - dynamic detail patterns such as /contratti/:id;
+ * - editorial/admin surfaces and legacy redirects (/redazione, /admin, /bandi);
  * - catch-all and not-found routes.
  */
 export const PUBLIC_INDEXABLE_ROUTES = [
@@ -165,7 +165,6 @@ export const PUBLIC_INDEXABLE_ROUTES = [
     path: "/atti-fondamentali",
     rationale: "Pagina pubblica degli atti fondamentali.",
   },
-  { path: "/bandi", rationale: "Indice pubblico dei bandi e avvisi." },
   {
     path: "/beni-confiscati",
     rationale: "Indice pubblico dei beni confiscati.",
@@ -176,20 +175,12 @@ export const PUBLIC_INDEXABLE_ROUTES = [
     rationale: "Indice pubblico del monitoraggio civico.",
   },
   {
-    path: "/monitoraggio/nuovo",
-    rationale: "Modulo pubblico per nuove segnalazioni civiche.",
-  },
-  {
     path: "/promessometro",
     rationale: "Modulo pubblico sulle promesse programmatiche monitorate.",
   },
   {
-    path: "/archivio-proposte",
-    rationale: "Archivio pubblico delle proposte civiche documentate.",
-  },
-  {
-    path: "/legalita/timeline",
-    rationale: "Timeline pubblica su legalità e memoria civica.",
+    path: "/proposte-civiche",
+    rationale: "Raccolta pubblica delle proposte civiche documentate.",
   },
   {
     path: "/legalita/trame-festival",
@@ -230,10 +221,6 @@ export const PUBLIC_INDEXABLE_ROUTES = [
   {
     path: "/performance",
     rationale: "Indice pubblico degli indicatori di performance.",
-  },
-  {
-    path: "/performance/confronta",
-    rationale: "Strumento pubblico di confronto performance.",
   },
   { path: "/pareri", rationale: "Indice pubblico di pareri e vigilanza." },
   {

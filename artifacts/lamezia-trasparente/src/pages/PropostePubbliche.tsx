@@ -87,9 +87,9 @@ export function PropostePubbliche() {
   return (
     <>
       <PageMeta
-        title="Archivio delle proposte pubbliche"
-        description="Archivio documentale e metodologicamente neutro delle proposte di valore pubblico censite come memoria civica verificabile, senza endorsement politico."
-        path="/archivio-proposte"
+        title="Proposte civiche"
+        description="Raccolta documentale e metodologicamente neutra delle proposte civiche di valore pubblico censite come memoria verificabile, senza endorsement politico."
+        path="/proposte-civiche"
       />
       <div className="container mx-auto max-w-6xl px-4 py-8 md:py-12">
         <header className="space-y-6">
@@ -100,12 +100,12 @@ export function PropostePubbliche() {
           <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_22rem] lg:items-end">
             <div>
               <h1 className="font-display text-3xl font-bold tracking-tight md:text-4xl">
-                Archivio delle proposte pubbliche
+                Proposte civiche
               </h1>
               <p className="mt-3 max-w-3xl text-lg leading-relaxed text-muted-foreground">
                 Una sezione data-driven per raccogliere proposte di interesse pubblico
                 e pratiche replicabili in modo ordinato, consultabile e prudente.
-                La presenza in questo archivio indica rilevanza civica e
+                La presenza in questa raccolta indica rilevanza civica e
                 verificabilità documentale, non adesione politica o valutazione di
                 merito.
               </p>

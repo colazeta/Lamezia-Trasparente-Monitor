@@ -218,7 +218,7 @@ export const ROADMAP_MODULES: RoadmapModule[] = [
       "Tenere allineate note di fonte, limiti e linguaggio prudente nelle schede pubbliche.",
     hrefs: [
       { href: "/contratti", label: "Contratti" },
-      { href: "/bandi", label: "Bandi" },
+      { href: "/contratti", label: "Contratti pubblici" },
       { href: "/pareri", label: "Pareri" },
     ],
   },

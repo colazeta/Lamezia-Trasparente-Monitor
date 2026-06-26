@@ -1,5 +1,12 @@
 # Cloudflare Pages SPA fallbacks for known public app routes only.
 # Keep generated assets, API endpoints, feeds, robots.txt, sitemap.xml and other real files untouched.
+/bandi    /contratti   301
+/bandi/*    /contratti   301
+/archivio-proposte    /proposte-civiche   301
+/legalita/timeline    /legalita   301
+/legalita/timeline/*    /legalita   301
+/performance/confronta    /performance   301
+/performance/confronta/*    /performance   301
 /domande    /index.html   200
 /temi    /index.html   200
 /temi/*    /index.html   200
@@ -9,16 +16,13 @@
 /albo    /index.html   200
 /albo/*    /index.html   200
 /atti-fondamentali    /index.html   200
-/bandi    /index.html   200
-/bandi/*    /index.html   200
 /beni-confiscati    /index.html   200
 /accesso-civico    /index.html   200
 /monitoraggio    /index.html   200
 /monitoraggio/*    /index.html   200
 /promessometro    /index.html   200
-/archivio-proposte    /index.html   200
+/proposte-civiche    /index.html   200
 /legalita    /index.html   200
-/legalita/timeline    /index.html   200
 /legalita/trame-festival    /index.html   200
 /delibere    /index.html   200
 /convocazioni    /index.html   200
