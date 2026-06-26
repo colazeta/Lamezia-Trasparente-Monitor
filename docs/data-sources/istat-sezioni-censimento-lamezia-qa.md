@@ -1,6 +1,7 @@
 # QA ISTAT sezioni censuarie - Lamezia Terme
 
 Data controllo: 2026-06-20.
+Aggiornamento audit pubblico: 2026-06-26.
 
 ## File controllati
 
@@ -14,6 +15,7 @@ Data controllo: 2026-06-20.
 - Sezioni con valore `P1` / popolazione residente disponibile: 246, pari al 77,60%.
 - Sezioni con valore indicatore `null`: 71, pari al 22,40%.
 - Sezioni con `P1` uguale a zero reale: 22. Questi valori restano `0` e non vanno confusi con `null`.
+- Popolazione totale sommata sulle sole sezioni con `P1` disponibile: 67.240 residenti.
 - Tutte le feature mantengono `istat_municipal_code` uguale a `079160`.
 - Tutte le geometrie sono `Polygon`; il controllo tecnico non rileva anelli aperti, coordinate non finite o geometrie mancanti.
 
@@ -26,6 +28,24 @@ Nel file processato la differenza e' intenzionale:
 - `0`: il valore e' presente e pari a zero. Nel frontend deve apparire come `0`, non come dato assente.
 
 Per l'indicatore pubblico iniziale `popolazione-residente`, i campi controllati sono `indicators_istat_2023.p1` e `indicators_istat_2023.popolazione_totale`.
+
+## Audit 2021/2023 delle 71 sezioni null
+
+Il controllo pubblico confronta due passaggi distinti della materializzazione:
+
+- base geometrica ISTAT 2021 filtrata sul Comune di Lamezia Terme (`istat_municipal_code: 079160`): 317 sezioni censuarie ufficiali;
+- join con le variabili ISTAT 2023 per sezione: 246 sezioni con `matched_istat_2023_variables: true` e valore `P1` disponibile, 71 sezioni con `matched_istat_2023_variables: false` e valore `P1` mantenuto a `null`.
+
+Le 71 sezioni null non sono rimosse dal layer perche' la loro geometria censuaria 2021 resta ufficiale e utile alla lettura territoriale. La mancanza riguarda il valore 2023 agganciato all'indicatore, non la presenza della geometria. Nel GeoJSON pubblico queste sezioni mantengono:
+
+- identificativo di sezione censuaria ISTAT;
+- codice comunale ISTAT `079160`;
+- geometria `Polygon` valida per il rendering web;
+- campi indicatore `p1` / `popolazione_totale` pari a `null`.
+
+Questo audit non attribuisce una causa ai null. Dal solo output pubblico non si puo' stabilire se la mancata corrispondenza derivi da differenze di tracciato, aggiornamenti territoriali, modalita' di pubblicazione delle variabili 2023 o altre scelte statistiche ufficiali. Ogni causa dovra' essere verificata sui file raw ISTAT e, se necessario, con documentazione metodologica ISTAT.
+
+Le 22 sezioni con `P1 = 0` sono un caso diverso: hanno un valore numerico presente e pari a zero. Nel frontend devono apparire come `0`, mentre le 71 sezioni null devono apparire come "dato non disponibile". Null non significa zero.
 
 ## Distribuzione delle sezioni senza valore 2023
 

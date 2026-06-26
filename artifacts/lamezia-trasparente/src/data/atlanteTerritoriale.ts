@@ -113,6 +113,7 @@ export type AtlanteDistributionSummary = {
   availableCount: number;
   missingCount: number;
   zeroCount: number;
+  sum: number | null;
   min: number | null;
   max: number | null;
   mean: number | null;
@@ -379,6 +380,7 @@ export function buildAtlanteDistribution(
       availableCount: 0,
       missingCount,
       zeroCount,
+      sum: null,
       min: null,
       max: null,
       mean: null,
@@ -389,9 +391,8 @@ export function buildAtlanteDistribution(
   const sortedValues = [...numericValues].sort((a, b) => a - b);
   const min = sortedValues[0];
   const max = sortedValues[sortedValues.length - 1];
-  const mean =
-    sortedValues.reduce((total, value) => total + value, 0) /
-    sortedValues.length;
+  const sum = sortedValues.reduce((total, value) => total + value, 0);
+  const mean = sum / sortedValues.length;
   const median = calculateMedian(sortedValues);
 
   if (min === max) {
@@ -409,6 +410,7 @@ export function buildAtlanteDistribution(
       availableCount: numericValues.length,
       missingCount,
       zeroCount,
+      sum,
       min,
       max,
       mean,
@@ -455,6 +457,7 @@ export function buildAtlanteDistribution(
     availableCount: numericValues.length,
     missingCount,
     zeroCount,
+    sum,
     min,
     max,
     mean,

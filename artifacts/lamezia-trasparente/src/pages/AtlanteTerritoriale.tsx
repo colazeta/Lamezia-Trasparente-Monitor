@@ -301,7 +301,9 @@ function IndicatorControl({
               <span className="font-medium">{category.label}</span>
               <span
                 className={`text-xs ${
-                  isActive ? "text-primary-foreground/80" : "text-muted-foreground"
+                  isActive
+                    ? "text-primary-foreground/80"
+                    : "text-muted-foreground"
                 }`}
               >
                 {indicator ? "attivo" : "in preparazione"}
@@ -322,14 +324,34 @@ function CitySummaryCard({
   summary: ReturnType<typeof buildAtlanteDistribution>;
 }) {
   const unitLabel = activeIndicator?.unitLabel ?? "";
-  const metrics = [
-    ["Sezioni con dato", formatInteger(summary.availableCount)],
-    ["Dato non disponibile", formatInteger(summary.missingCount)],
-    ["Minimo", formatSummaryValue(summary.min, unitLabel)],
-    ["Massimo", formatSummaryValue(summary.max, unitLabel)],
-    ["Media", formatSummaryValue(summary.mean, unitLabel)],
-    ["Mediana", formatSummaryValue(summary.median, unitLabel)],
-  ];
+  const isPopulationIndicator = activeIndicator?.id === "popolazione-residente";
+  const metrics = isPopulationIndicator
+    ? [
+        [
+          "Sezioni totali",
+          formatCountWithShare(summary.totalCount, summary.totalCount),
+        ],
+        [
+          "Con dato P1",
+          formatCountWithShare(summary.availableCount, summary.totalCount),
+        ],
+        [
+          "Dato non disponibile",
+          formatCountWithShare(summary.missingCount, summary.totalCount),
+        ],
+        [
+          "Valore 0",
+          formatCountWithShare(summary.zeroCount, summary.totalCount),
+        ],
+      ]
+    : [
+        ["Sezioni con dato", formatInteger(summary.availableCount)],
+        ["Dato non disponibile", formatInteger(summary.missingCount)],
+        ["Minimo", formatSummaryValue(summary.min, unitLabel)],
+        ["Massimo", formatSummaryValue(summary.max, unitLabel)],
+        ["Media", formatSummaryValue(summary.mean, unitLabel)],
+        ["Mediana", formatSummaryValue(summary.median, unitLabel)],
+      ];
 
   return (
     <section className="rounded-lg border border-border/80 bg-card/80 p-3 shadow-sm">
@@ -342,6 +364,17 @@ function CitySummaryCard({
         </div>
       </div>
 
+      {isPopulationIndicator ? (
+        <div className="mt-3 rounded-md bg-background p-3">
+          <p className="text-xs font-medium text-muted-foreground">
+            Popolazione totale nelle sezioni con P1 disponibile
+          </p>
+          <p className="mt-1 text-2xl font-bold leading-tight text-foreground">
+            {formatSummaryValue(summary.sum, unitLabel)}
+          </p>
+        </div>
+      ) : null}
+
       <dl className="mt-3 grid grid-cols-2 gap-x-3 gap-y-2">
         {metrics.map(([label, value]) => (
           <div key={label}>
@@ -351,8 +384,31 @@ function CitySummaryCard({
         ))}
       </dl>
 
+      {isPopulationIndicator && summary.bins.length > 0 ? (
+        <div className="mt-4">
+          <h3 className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+            Fasce di popolazione
+          </h3>
+          <ul className="mt-2 space-y-1.5 text-xs leading-5 text-muted-foreground">
+            {summary.bins.map((bin) => (
+              <li
+                className="flex items-center justify-between gap-3"
+                key={bin.index}
+              >
+                <span>{bin.label}</span>
+                <span className="font-medium text-foreground">
+                  {formatSectionCount(bin.count)} (
+                  {formatPercentage(bin.count, summary.availableCount)} con
+                  dato)
+                </span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ) : null}
+
       <div className="mt-3 space-y-1 text-xs leading-5 text-muted-foreground">
-        <p>Valori null esclusi dai calcoli; zero resta zero.</p>
+        <p>Valori null esclusi da somma e fasce; zero resta zero.</p>
         {summary.zeroCount > 0 ? (
           <p>{formatInteger(summary.zeroCount)} sezioni hanno valore 0.</p>
         ) : null}
@@ -505,19 +561,24 @@ function SectionProfileCard({
   const sectionId = activeFeature
     ? getSectionId(activeFeature)
     : "nessuna sezione";
+  const sectionLabel = activeFeature
+    ? formatSectionCivicLabel(sectionId)
+    : "Area censuaria non identificata";
   const valueLabel = activeIndicator
     ? formatProfileValue(activeValue, activeIndicator.unitLabel)
     : "Dato non disponibile";
-  const profileRows = availableIndicators.map((indicator) => ({
-    id: indicator.id,
-    label: indicator.label,
-    value: activeFeature
-      ? formatProfileValue(
-          readIndicatorValue(activeFeature, indicator),
-          indicator.unitLabel,
-        )
-      : "Dato non disponibile",
-  }));
+  const profileRows = availableIndicators
+    .filter((indicator) => indicator.id !== activeIndicator?.id)
+    .map((indicator) => ({
+      id: indicator.id,
+      label: indicator.label,
+      value: activeFeature
+        ? formatProfileValue(
+            readIndicatorValue(activeFeature, indicator),
+            indicator.unitLabel,
+          )
+        : "Dato non disponibile",
+    }));
 
   return (
     <section className="rounded-lg border border-border/80 bg-card/80 p-3 shadow-sm xl:sticky xl:top-4">
@@ -526,8 +587,13 @@ function SectionProfileCard({
           Sezione selezionata
         </p>
         <h2 className="mt-1 break-words text-xl font-semibold text-foreground">
-          {sectionId}
+          {sectionLabel}
         </h2>
+        {activeFeature ? (
+          <p className="mt-1 break-words text-xs text-muted-foreground">
+            Codice ISTAT: {sectionId}
+          </p>
+        ) : null}
       </div>
 
       <div className="mt-4 rounded-md bg-primary/10 p-3">
@@ -553,7 +619,7 @@ function SectionProfileCard({
           ))
         ) : (
           <div className="p-3 text-sm text-muted-foreground">
-            Nessun indicatore disponibile per questa sezione.
+            Nessun altro indicatore disponibile per questa sezione.
           </div>
         )}
       </dl>
@@ -676,6 +742,35 @@ function formatInteger(value: number) {
   return new Intl.NumberFormat("it-IT", {
     maximumFractionDigits: 0,
   }).format(value);
+}
+
+function formatCountWithShare(count: number, total: number) {
+  return `${formatInteger(count)} (${formatPercentage(count, total)})`;
+}
+
+function formatPercentage(count: number, total: number) {
+  if (total <= 0) {
+    return "0%";
+  }
+
+  return `${new Intl.NumberFormat("it-IT", {
+    maximumFractionDigits: 1,
+  }).format((count / total) * 100)}%`;
+}
+
+function formatSectionCount(count: number) {
+  return `${formatInteger(count)} ${count === 1 ? "sezione" : "sezioni"}`;
+}
+
+function formatSectionCivicLabel(sectionId: string) {
+  const trimmed = sectionId.trim();
+  if (!trimmed || trimmed === "sezione non identificata") {
+    return "Area censuaria non identificata";
+  }
+
+  const numericId = trimmed.replace(/\D/g, "");
+  const shortId = numericId ? numericId.slice(-4) : trimmed.slice(-6);
+  return `Area censuaria ${shortId}`;
 }
 
 function formatProfileValue(value: number | null, unitLabel: string) {

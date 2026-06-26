@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from "@testing-library/react";
+import { fireEvent, render, screen, within } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { AtlanteTerritoriale } from "../pages/AtlanteTerritoriale";
 import {
@@ -99,6 +99,7 @@ describe("Atlante territoriale", () => {
     expect(summary.availableCount).toBe(4);
     expect(summary.missingCount).toBe(1);
     expect(summary.zeroCount).toBe(1);
+    expect(summary.sum).toBe(50);
     expect(summary.mean).toBe(12.5);
     expect(summary.median).toBe(15);
     expect(summary.bins.reduce((total, bin) => total + bin.count, 0)).toBe(4);
@@ -134,6 +135,29 @@ describe("Atlante territoriale", () => {
                 [16.31, 38.91],
                 [16.3, 38.91],
                 [16.3, 38.9],
+              ],
+            ],
+          },
+        },
+        {
+          type: "Feature",
+          properties: {
+            sezione_censimento_id: "0791600000199",
+            matched_istat_2023_variables: true,
+            indicators_istat_2023: {
+              p1: 10,
+              popolazione_totale: 10,
+            },
+          },
+          geometry: {
+            type: "Polygon",
+            coordinates: [
+              [
+                [16.32, 38.9],
+                [16.33, 38.9],
+                [16.33, 38.91],
+                [16.32, 38.91],
+                [16.32, 38.9],
               ],
             ],
           },
@@ -183,15 +207,15 @@ describe("Atlante territoriale", () => {
                     verificationStatus:
                       "Processato da fonti ufficiali ISTAT; indicatore popolazione validato sul campo P1.",
                     knownLimits: [
-                      "Il file ISTAT 2023 aggancia variabili a 1 sezioni su 2; 1 sezione resta geometria ufficiale senza valore indicatore.",
+                      "Il file ISTAT 2023 aggancia variabili a 2 sezioni su 3; 1 sezione resta geometria ufficiale senza valore indicatore.",
                     ],
                     processingDate: "2026-06-20",
                     qa: {
                       indicatorDictionaryPath:
                         "data/processed/territorio/istat_indicator_dictionary.json",
                       populationValueCoverage: {
-                        totalFeatures: 2,
-                        availableCount: 1,
+                        totalFeatures: 3,
+                        availableCount: 2,
                         nullCount: 1,
                         zeroCount: 1,
                       },
@@ -229,21 +253,43 @@ describe("Atlante territoriale", () => {
     expect(
       screen.getByRole("button", { name: /Cittadinanza in preparazione/i }),
     ).toBeDisabled();
-    expect(screen.getByText("Sezioni con dato")).toBeInTheDocument();
-    expect(screen.getAllByText("1").length).toBeGreaterThan(0);
+    expect(
+      screen.getByText("Popolazione totale nelle sezioni con P1 disponibile"),
+    ).toBeInTheDocument();
+    expect(screen.getByText("10 persone")).toBeInTheDocument();
+    expect(screen.getByText("Sezioni totali")).toBeInTheDocument();
+    expect(screen.getByText("3 (100%)")).toBeInTheDocument();
+    expect(screen.getByText("Con dato P1")).toBeInTheDocument();
+    expect(screen.getByText("2 (66,7%)")).toBeInTheDocument();
+    expect(screen.getAllByText("Dato non disponibile").length).toBeGreaterThan(
+      0,
+    );
+    expect(screen.getAllByText("1 (33,3%)").length).toBe(2);
+    expect(screen.getByText("Valore 0")).toBeInTheDocument();
+    expect(screen.getByText("Fasce di popolazione")).toBeInTheDocument();
+    expect(screen.getAllByText(/1 sezione \(50% con dato\)/).length).toBe(2);
     expect(screen.getAllByText(/dato non disponibile/i).length).toBeGreaterThan(
       0,
     );
     expect(screen.getAllByText("0 persone").length).toBeGreaterThan(0);
-    expect(screen.getByText("Media")).toBeInTheDocument();
-    expect(screen.getByText("Mediana")).toBeInTheDocument();
     fireEvent.click(
       screen.getByRole("button", {
         name: /0791600000204: dato non disponibile/i,
       }),
     );
+    const profile = screen.getByText("Sezione selezionata").closest("section");
+    expect(profile).not.toBeNull();
     expect(
-      screen.getByRole("heading", { name: "0791600000204" }),
+      screen.getByRole("heading", { name: "Area censuaria 0204" }),
+    ).toBeInTheDocument();
+    expect(screen.getByText("Codice ISTAT: 0791600000204")).toBeInTheDocument();
+    expect(
+      within(profile as HTMLElement).getAllByText("Popolazione residente"),
+    ).toHaveLength(1);
+    expect(
+      within(profile as HTMLElement).getByText(
+        "Nessun altro indicatore disponibile per questa sezione.",
+      ),
     ).toBeInTheDocument();
     expect(screen.getByText("Fonte dati")).toBeInTheDocument();
     expect(screen.getByText("Come leggere")).toBeInTheDocument();
