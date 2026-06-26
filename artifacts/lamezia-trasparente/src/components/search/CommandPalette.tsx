@@ -1,40 +1,11 @@
 import { useEffect, useState, useCallback } from "react";
 import { useLocation } from "wouter";
+import { BookOpen, Clock, Home, Search } from "lucide-react";
 import {
-  ShieldAlert,
-  FileText,
-  ClipboardList,
-  FileSearch,
-  Megaphone,
-  Gavel,
-  CalendarClock,
-  Landmark,
-  Users,
-  Network,
-  Building2,
-  ShieldCheck,
-  HandCoins,
-  ShieldOff,
-  Telescope,
-  Rss,
-  Code2,
-  Database,
-  Gauge,
-  BarChart3,
-  ScrollText,
-  Scale,
-  HelpCircle,
-  Home,
-  Search,
-  Clock,
-  BookOpen,
-  BookOpenCheck,
-  Scale3D,
-  Info,
-  Mail,
-  MailQuestion,
-  CircleDotDashed,
-} from "lucide-react";
+  COMMAND_PALETTE_GROUPS,
+  getNavItemStateLabel,
+  type NavItem,
+} from "@/components/layout/navSections";
 import {
   CommandDialog,
   CommandEmpty,
@@ -45,70 +16,44 @@ import {
   CommandSeparator,
 } from "@/components/ui/command";
 
-interface NavItem {
+interface PaletteItem {
   href: string;
   label: string;
   icon: React.ElementType;
   group: string;
   keywords?: string;
+  statusLabel?: string;
 }
 
-const ALL_ITEMS: NavItem[] = [
+const SUPPORT_ITEMS: PaletteItem[] = [
   { href: "/", label: "Home", icon: Home, group: "Navigazione" },
-  { href: "/domande", label: "Domande & Risposte", icon: HelpCircle, group: "Navigazione" },
-  { href: "/guida", label: "Centro Guida", icon: BookOpen, group: "Navigazione", keywords: "tour assistente aiuto guida storia progetto" },
-  { href: "/chi-siamo", label: "Chi siamo", icon: Info, group: "Navigazione", keywords: "progetto indipendente natura civica governance fonti comune" },
-  { href: "/contatti", label: "Contatti", icon: Mail, group: "Navigazione", keywords: "contatti segnalazioni accesso civico canale redazionale" },
-
-  { href: "/albo", label: "Albo Pretorio", icon: ShieldAlert, group: "Trasparenza & Atti", keywords: "pubblicazioni atti ufficiali" },
-  { href: "/atti-fondamentali", label: "Atti Fondamentali", icon: ScrollText, group: "Trasparenza & Atti", keywords: "statuto regolamenti" },
-  { href: "/delibere", label: "Delibere", icon: Gavel, group: "Trasparenza & Atti", keywords: "consiglio giunta votazione" },
-  { href: "/convocazioni", label: "Convocazioni", icon: CalendarClock, group: "Trasparenza & Atti", keywords: "sedute agenda calendario" },
-  { href: "/pareri", label: "Pareri di Vigilanza", icon: ShieldCheck, group: "Trasparenza & Atti", keywords: "revisori controllo" },
-  { href: "/legalita", label: "Legalità e Trasparenza", icon: Scale, group: "Trasparenza & Atti", keywords: "anticorruzione trasparenza" },
-  { href: "/legalita/trame-festival", label: "Trame - Festival", icon: BookOpenCheck, group: "Trasparenza & Atti", keywords: "trame antimafia festival legalita lamezia idee proposte" },
-
-  { href: "/contratti", label: "Contratti & Appalti", icon: FileText, group: "Spesa & Contratti", keywords: "gare fornitori cig" },
-  { href: "/incarichimetro", label: "Incarichimetro", icon: ClipboardList, group: "Spesa & Contratti", keywords: "incarichi consulenze ricorrenza rotazione operatori beneficiari cig cup" },
-  { href: "/bandi", label: "Bandi e Finanziamenti", icon: HandCoins, group: "Spesa & Contratti", keywords: "contributi fondi europei" },
-  { href: "/pnrr", label: "PNRR", icon: Landmark, group: "Spesa & Contratti", keywords: "piano ripresa resilienza cup" },
-  { href: "/beni-confiscati", label: "Beni Confiscati", icon: ShieldOff, group: "Spesa & Contratti", keywords: "anbsc mafia patrimonio" },
-
-  { href: "/organi", label: "Organi Istituzionali", icon: Building2, group: "Organi & Persone", keywords: "consiglio giunta commissioni" },
-  { href: "/amministratori", label: "Amministratori", icon: Users, group: "Organi & Persone", keywords: "sindaco assessori consiglieri" },
-  { href: "/macchina-comunale", label: "Macchina comunale", icon: Network, group: "Organi & Persone", keywords: "organico dotazione personale scoperture capacità amministrativa fonti" },
-
-  { href: "/monitoraggio", label: "Monitoraggio Civico", icon: Telescope, group: "Monitoraggio civico", keywords: "monithon cantieri lavori verifiche segnalazioni" },
-  { href: "/stato-monitoraggio", label: "Stato monitoraggio", icon: Gauge, group: "Monitoraggio civico", keywords: "copertura freschezza fonti controllo operativo" },
-  { href: "/promessometro", label: "Promessometro", icon: BookOpenCheck, group: "Monitoraggio civico", keywords: "programma promesse atti indirizzo attuazione stato documentale" },
-  { href: "/roadmap", label: "Roadmap", icon: CircleDotDashed, group: "Monitoraggio civico", keywords: "stato moduli priorità limiti pianificato sviluppo sperimentale" },
-
-  { href: "/temi", label: "Temi", icon: FileSearch, group: "Partecipazione", keywords: "argomenti categorie" },
-  { href: "/accesso-civico", label: "Accesso Civico", icon: FileSearch, group: "Partecipazione", keywords: "foia istanza richiesta" },
-  { href: "/segnalazioni", label: "Segnalazioni", icon: Megaphone, group: "Partecipazione", keywords: "segnale civico verifica accesso civico richiesta formale" },
-
-  { href: "/performance", label: "Performance", icon: Gauge, group: "Dati & Analisi", keywords: "indicatori kpi misurazione" },
-  { href: "/statistiche", label: "Statistiche", icon: BarChart3, group: "Dati & Analisi", keywords: "grafici numeri dati" },
-  { href: "/opendata", label: "Open Data", icon: Database, group: "Dati & Analisi", keywords: "dataset csv download" },
-  { href: "/fonti-dati", label: "Fonti dati", icon: BookOpen, group: "Dati & Analisi", keywords: "fonti ufficiali estratti arricchiti limiti aggiornamento" },
-  { href: "/metodologia", label: "Metodologia", icon: FileSearch, group: "Dati & Analisi", keywords: "metodo indicatori cautela verifiche" },
-  { href: "/note-legali", label: "Note legali", icon: Scale3D, group: "Dati & Analisi", keywords: "cautele indicatori interpretazione legalità" },
-
-  { href: "/feeds", label: "Feed e Abbonamenti", icon: Rss, group: "Strumenti", keywords: "rss atom notifiche" },
-  { href: "/sviluppatori", label: "API e Sviluppatori", icon: Code2, group: "Strumenti", keywords: "json rest endpoint" },
-  { href: "/iscrizioni", label: "Centro Iscrizioni", icon: Rss, group: "Strumenti", keywords: "email newsletter" },
+  {
+    href: "/guida",
+    label: "Centro guida",
+    icon: BookOpen,
+    group: "Navigazione",
+    keywords: "guida aiuto metodo uso sito",
+  },
 ];
 
-const GROUPS = [
-  "Navigazione",
-  "Trasparenza & Atti",
-  "Spesa & Contratti",
-  "Organi & Persone",
-  "Monitoraggio civico",
-  "Partecipazione",
-  "Dati & Analisi",
-  "Strumenti",
-];
+function toPaletteItem(item: NavItem, group: string): PaletteItem {
+  return {
+    href: item.href,
+    label: item.label,
+    icon: item.icon,
+    group,
+    keywords: item.keywords,
+    statusLabel:
+      item.state === "available" ? undefined : getNavItemStateLabel(item),
+  };
+}
+
+const SECTION_ITEMS: PaletteItem[] = COMMAND_PALETTE_GROUPS.flatMap((group) =>
+  group.items.map((item) => toPaletteItem(item, group.label)),
+);
+
+const ALL_ITEMS: PaletteItem[] = [...SUPPORT_ITEMS, ...SECTION_ITEMS];
+const GROUPS = Array.from(new Set(ALL_ITEMS.map((item) => item.group)));
 
 const RECENTS_STORAGE_KEY = "lt-command-palette-recents";
 const RECENTS_MAX = 5;
@@ -191,11 +136,11 @@ export function CommandPalette({ open, onOpenChange }: CommandPaletteProps) {
 
   const recentItems = recents
     .map((entry) => ALL_ITEMS.find((item) => item.href === entry.href))
-    .filter((item): item is NavItem => item != null);
+    .filter((item): item is PaletteItem => item != null);
 
   return (
     <CommandDialog open={open} onOpenChange={onOpenChange}>
-      <CommandInput placeholder="Cerca una sezione o funzione…" />
+      <CommandInput placeholder="Cerca una sezione o funzione..." />
       <CommandList className="max-h-[420px]">
         <CommandEmpty>Nessun risultato trovato.</CommandEmpty>
         {recentItems.length > 0 && (
@@ -207,7 +152,14 @@ export function CommandPalette({ open, onOpenChange }: CommandPaletteProps) {
                 onSelect={() => runCommand(item.href)}
               >
                 <Clock className="h-4 w-4 text-muted-foreground" />
-                {item.label}
+                <span className="flex min-w-0 flex-1 items-center justify-between gap-2">
+                  <span className="truncate">{item.label}</span>
+                  {item.statusLabel ? (
+                    <span className="text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
+                      {item.statusLabel}
+                    </span>
+                  ) : null}
+                </span>
               </CommandItem>
             ))}
           </CommandGroup>
@@ -228,7 +180,14 @@ export function CommandPalette({ open, onOpenChange }: CommandPaletteProps) {
                       onSelect={() => runCommand(item.href)}
                     >
                       <Icon className="h-4 w-4 text-muted-foreground" />
-                      {item.label}
+                      <span className="flex min-w-0 flex-1 items-center justify-between gap-2">
+                        <span className="truncate">{item.label}</span>
+                        {item.statusLabel ? (
+                          <span className="text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
+                            {item.statusLabel}
+                          </span>
+                        ) : null}
+                      </span>
                     </CommandItem>
                   );
                 })}
@@ -265,10 +224,10 @@ export function SearchTrigger({ onClick }: { onClick: () => void }) {
     <button
       onClick={onClick}
       aria-label="Cerca (Ctrl+K)"
-      className="hidden md:flex items-center gap-2 rounded-md border border-border bg-muted/50 px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+      className="hidden items-center gap-2 rounded-md border border-border bg-muted/50 px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground md:flex"
     >
       <Search className="h-3.5 w-3.5" />
-      <span>Cerca…</span>
+      <span>Cerca...</span>
       <kbd className="ml-1 hidden items-center gap-0.5 rounded border border-border bg-background px-1.5 py-0.5 font-mono text-[10px] font-medium lg:flex">
         <span>Ctrl</span>
         <span>K</span>

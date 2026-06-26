@@ -23,13 +23,13 @@ import {
   Calendar,
   HelpCircle,
 } from "lucide-react";
-import { NAV_GROUPS, isNavItemUnavailable } from "@/components/layout/navSections";
 import { useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { QuestionCard } from "@/components/questions/QuestionCard";
+import { HomeCivicSystemMap } from "@/components/home/HomeCivicSystemMap";
 import { iconForTopic } from "@/lib/questionTopics";
 import { format } from "date-fns";
 import { it } from "date-fns/locale";
@@ -49,30 +49,6 @@ function formatDate(value: string | null | undefined) {
     ? "—"
     : format(d, "dd MMM yyyy", { locale: it });
 }
-
-const SECTION_COLORS: Record<string, { color: string; bg: string }> = {
-  "/albo": { color: "text-blue-500", bg: "bg-blue-500/10" },
-  "/atti-fondamentali": { color: "text-sky-500", bg: "bg-sky-500/10" },
-  "/delibere": { color: "text-amber-500", bg: "bg-amber-500/10" },
-  "/convocazioni": { color: "text-cyan-500", bg: "bg-cyan-500/10" },
-  "/pareri": { color: "text-indigo-400", bg: "bg-indigo-400/10" },
-  "/legalita": { color: "text-teal-500", bg: "bg-teal-500/10" },
-  "/contratti": { color: "text-emerald-500", bg: "bg-emerald-500/10" },
-  "/bandi": { color: "text-lime-500", bg: "bg-lime-500/10" },
-  "/pnrr": { color: "text-violet-500", bg: "bg-violet-500/10" },
-  "/beni-confiscati": { color: "text-green-600", bg: "bg-green-600/10" },
-  "/organi": { color: "text-slate-500", bg: "bg-slate-500/10" },
-  "/amministratori": { color: "text-indigo-500", bg: "bg-indigo-500/10" },
-  "/temi": { color: "text-fuchsia-500", bg: "bg-fuchsia-500/10" },
-  "/monitoraggio": { color: "text-rose-500", bg: "bg-rose-500/10" },
-  "/accesso-civico": { color: "text-red-500", bg: "bg-red-500/10" },
-  "/segnalazioni": { color: "text-orange-400", bg: "bg-orange-400/10" },
-  "/performance": { color: "text-orange-500", bg: "bg-orange-500/10" },
-  "/statistiche": { color: "text-pink-500", bg: "bg-pink-500/10" },
-  "/opendata": { color: "text-purple-500", bg: "bg-purple-500/10" },
-  "/feeds": { color: "text-blue-400", bg: "bg-blue-400/10" },
-  "/sviluppatori": { color: "text-gray-500", bg: "bg-gray-500/10" },
-};
 
 // ---------------------------------------------------------------------------
 // Published page-block system
@@ -331,84 +307,9 @@ function BlockStats() {
 
 function BlockThemesGrid({ content }: { content: Record<string, unknown> }) {
   return (
-    <section className="border-b border-border bg-background py-12 md:py-16">
-      <div className="container mx-auto px-4 md:px-6">
-        <div className="mb-10">
-          <span className="eyebrow text-primary mb-2">Accesso rapido</span>
-          <h2 className="mt-2 font-display text-2xl font-bold tracking-tight md:text-3xl">
-            {content.title
-              ? String(content.title)
-              : "Scegli un percorso civico"}
-          </h2>
-        </div>
-        <div className="space-y-10">
-          {NAV_GROUPS.map((group) => (
-            <div key={group.label}>
-              <div className="mb-4 flex items-center gap-3">
-                <span className="text-[11px] font-bold uppercase tracking-widest text-muted-foreground whitespace-nowrap">
-                  {group.label}
-                </span>
-                <div className="flex-1 h-px bg-border" />
-              </div>
-              <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
-                {group.items.map((item) => {
-                  const Icon = item.icon;
-                  const colors = SECTION_COLORS[item.href] ?? {
-                    color: "text-primary",
-                    bg: "bg-primary/10",
-                  };
-                  const unavailable = isNavItemUnavailable(item);
-                  const cardContent = (
-                    <>
-                      <div
-                        className={`rounded-xl p-3 ${colors.bg} transition-transform group-hover:scale-105`}
-                      >
-                        <Icon
-                          className={`h-6 w-6 ${colors.color}`}
-                          aria-hidden="true"
-                        />
-                      </div>
-                      <div>
-                        <div className="text-sm font-bold leading-tight text-foreground">
-                          {item.label}
-                        </div>
-                        <div className="mt-0.5 hidden text-[11px] leading-snug text-muted-foreground lg:block">
-                          {item.description}
-                        </div>
-                        {unavailable && item.v0StatusLabel ? (
-                          <div className="mt-2 inline-flex rounded-full border border-border bg-background/70 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
-                            {item.v0StatusLabel}
-                          </div>
-                        ) : null}
-                      </div>
-                    </>
-                  );
-                  return unavailable ? (
-                    <div
-                      key={item.href}
-                      className="group flex flex-col items-center gap-3 rounded-xl border border-dashed border-border bg-muted/40 p-4 text-center opacity-75 grayscale cursor-not-allowed"
-                      aria-disabled="true"
-                      aria-label={`${item.label}: ${item.v0StatusLabel ?? "in preparazione"}`}
-                    >
-                      {cardContent}
-                    </div>
-                  ) : (
-                    <Link
-                      key={item.href}
-                      href={item.href}
-                      className="group flex flex-col items-center gap-3 rounded-xl border border-border bg-card p-4 text-center transition-all hover-elevate hover:border-primary/30 hover:shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-                      aria-label={item.label}
-                    >
-                      {cardContent}
-                    </Link>
-                  );
-                })}
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
+    <HomeCivicSystemMap
+      title={content.title ? String(content.title) : "Scegli un percorso civico"}
+    />
   );
 }
 
@@ -794,67 +695,7 @@ function StaticHomeLayout() {
         </div>
       </section>
 
-      {/* Quick Access Grid — grouped by nav category */}
-      <section
-        data-tour="home-themes"
-        className="border-b border-border bg-background py-12 md:py-16"
-      >
-        <div className="container mx-auto px-4 md:px-6">
-          <div className="mb-10">
-            <span className="eyebrow text-primary mb-2">Accesso rapido</span>
-            <h2 className="mt-2 font-display text-2xl font-bold tracking-tight md:text-3xl">
-              Scegli un percorso civico
-            </h2>
-          </div>
-
-          <div className="space-y-10">
-            {NAV_GROUPS.map((group) => (
-              <div key={group.label}>
-                <div className="mb-4 flex items-center gap-3">
-                  <span className="text-[11px] font-bold uppercase tracking-widest text-muted-foreground whitespace-nowrap">
-                    {group.label}
-                  </span>
-                  <div className="flex-1 h-px bg-border" />
-                </div>
-                <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
-                  {group.items.map((item) => {
-                    const Icon = item.icon;
-                    const colors = SECTION_COLORS[item.href] ?? {
-                      color: "text-primary",
-                      bg: "bg-primary/10",
-                    };
-                    return (
-                      <Link
-                        key={item.href}
-                        href={item.href}
-                        className="group flex flex-col items-center gap-3 rounded-xl border border-border bg-card p-4 text-center transition-all hover-elevate hover:border-primary/30 hover:shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-                        aria-label={item.label}
-                      >
-                        <div
-                          className={`rounded-xl p-3 ${colors.bg} transition-transform group-hover:scale-105`}
-                        >
-                          <Icon
-                            className={`h-6 w-6 ${colors.color}`}
-                            aria-hidden="true"
-                          />
-                        </div>
-                        <div>
-                          <div className="text-sm font-bold leading-tight text-foreground">
-                            {item.label}
-                          </div>
-                          <div className="mt-0.5 hidden text-[11px] leading-snug text-muted-foreground lg:block">
-                            {item.description}
-                          </div>
-                        </div>
-                      </Link>
-                    );
-                  })}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+      <HomeCivicSystemMap />
 
       {/* Questions Section — Cosa vuoi scoprire? */}
       <section className="border-b border-border bg-muted/30 py-16 md:py-24">

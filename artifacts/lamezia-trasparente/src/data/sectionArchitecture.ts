@@ -113,12 +113,12 @@ export const PRIORITY_PAGE_PATHS = [
   "/monitoraggio",
   "/criticita-pubbliche",
   "/segnalazioni",
+  "/proposte-civiche",
   "/fonti-dati",
   "/stato-monitoraggio",
   "/metodologia",
   "/atlante-territoriale",
   "/legalita",
-  "/legalita/timeline",
   "/legalita/trame-festival",
 ] as const satisfies readonly PublicPath[];
 
@@ -163,10 +163,9 @@ const titleOverrides: Partial<Record<PublicPath, string>> = {
   "/atti-fondamentali": "Atti fondamentali",
   "/beni-confiscati": "Beni confiscati",
   "/legalita": "Legalita",
-  "/legalita/timeline": "Timeline legalita",
   "/legalita/trame-festival": "Trame - Festival",
+  "/proposte-civiche": "Proposte civiche",
   "/convocazioni/demo-consiglio-comunale-v0": "Demo convocazione",
-  "/performance/confronta": "Confronta performance",
 };
 
 const demoPaths = new Set<PublicPath>([
@@ -175,7 +174,6 @@ const demoPaths = new Set<PublicPath>([
   "/macchina-comunale",
 ]);
 const missingPaths = new Set<PublicPath>([
-  "/monitoraggio/nuovo",
   "/contatti",
   "/iscrizioni",
   "/feeds",
@@ -484,6 +482,30 @@ const priorityPageImplementations: Record<
     implementationNote:
       "La sezione deve impedire che una segnalazione diventi accusa non verificata.",
   },
+  "/proposte-civiche": {
+    isPriorityPage: true,
+    primaryDataObject:
+      "Proposta civica: tema, promotore, fonte, stato documentale, canale pubblico e limiti di lettura.",
+    contentHierarchy: [
+      "raccolta delle proposte",
+      "criteri editoriali e fonti",
+      "filtri per tema, anno, stato e canale",
+      "rinvio ad accesso civico, segnalazioni e metodo",
+    ],
+    sourceStatusPlacement:
+      "Fonte, stato documentale e cautela devono stare vicino a ogni proposta.",
+    usefulControls: ["Tema", "Promotore", "Anno", "Stato", "Canale"],
+    citizenAction:
+      "Consultare una proposta, verificarne la fonte o usarla per formulare una richiesta civica.",
+    remainingDataDependency:
+      "Consolidare import, revisione e mapping delle proposte prima di ampliarne la copertura.",
+    launchPosture:
+      "Pubblicabile come archivio prudente se non implica endorsement o valutazioni di merito.",
+    furtherWorkBeforeLaunch:
+      "Mantenere criteri di inclusione, stato e fonte visibili su ogni scheda.",
+    implementationNote:
+      "La sezione sostituisce l'etichetta legacy Archivio proposte e assorbe riferimenti DEMI se presenti.",
+  },
   "/fonti-dati": {
     isPriorityPage: true,
     primaryDataObject:
@@ -604,30 +626,6 @@ const priorityPageImplementations: Record<
     implementationNote:
       "La sezione coordina memoria civica senza produrre claims non supportati.",
   },
-  "/legalita/timeline": {
-    isPriorityPage: true,
-    primaryDataObject:
-      "Evento timeline: data, titolo, fonte, luogo, stato verifica, contesto e nota di cautela.",
-    contentHierarchy: [
-      "eventi ordinati nel tempo",
-      "fonte e stato verifica",
-      "contesto essenziale",
-      "rinvio a legalita, beni e metodo",
-    ],
-    sourceStatusPlacement:
-      "Fonte, data, stato verifica e limiti devono stare nella stessa scheda evento.",
-    usefulControls: ["Anno", "Tema", "Luogo", "Fonte", "Verifica"],
-    citizenAction:
-      "Consultare eventi documentati e distinguere memoria pubblica da ricostruzioni non verificate.",
-    remainingDataDependency:
-      "Pubblicare eventi solo con fonte puntuale e verifica redazionale.",
-    launchPosture:
-      "Pubblicabile solo con eventi source-first.",
-    furtherWorkBeforeLaunch:
-      "Aggiungere audit trail della fonte per ogni evento.",
-    implementationNote:
-      "La timeline deve evitare eventi non attribuiti o formulazioni sensazionalistiche.",
-  },
   "/legalita/trame-festival": {
     isPriorityPage: true,
     primaryDataObject:
@@ -722,13 +720,13 @@ function groupFor(path: PublicPath) {
   }
   if (/^\/(organi|amministratori)/.test(path)) return GROUPS.people;
   if (/^\/(contratti|incarichimetro)/.test(path)) return GROUPS.money;
-  if (/^\/(pnrr|bandi|performance|macchina-comunale)/.test(path)) {
+  if (/^\/(pnrr|performance|macchina-comunale)/.test(path)) {
     return GROUPS.works;
   }
   if (path === "/atlante-territoriale") return GROUPS.places;
   if (/^\/(beni-confiscati|legalita)/.test(path)) return GROUPS.memory;
   if (
-    /^\/(accesso-civico|monitoraggio|promessometro|archivio-proposte|criticita-pubbliche|segnalazioni|iscrizioni)/.test(
+    /^\/(accesso-civico|monitoraggio|promessometro|proposte-civiche|criticita-pubbliche|segnalazioni|iscrizioni)/.test(
       path,
     )
   ) {
@@ -753,7 +751,7 @@ function sourceTypeFor(path: PublicPath): SectionSourceType {
 function statusFor(path: PublicPath): SectionStatus {
   if (demoPaths.has(path)) return "demo";
   if (path === "/feeds" || path === "/contatti") return "needs-source";
-  if (path === "/monitoraggio/nuovo" || path === "/iscrizioni") {
+  if (path === "/iscrizioni") {
     return "under-construction";
   }
   return "partial";
@@ -787,8 +785,9 @@ function relatedFor(path: PublicPath) {
   const local: Partial<Record<PublicPath, readonly PublicPath[]>> = {
     "/convocazioni": ["/delibere", "/organi", "/fonti-dati"],
     "/contratti": ["/incarichimetro", "/pnrr", "/fonti-dati"],
-    "/beni-confiscati": ["/legalita", "/legalita/timeline", "/fonti-dati"],
-    "/legalita/trame-festival": ["/legalita", "/legalita/timeline", "/fonti-dati"],
+    "/beni-confiscati": ["/legalita", "/legalita/trame-festival", "/fonti-dati"],
+    "/legalita/trame-festival": ["/legalita", "/beni-confiscati", "/fonti-dati"],
+    "/proposte-civiche": ["/segnalazioni", "/accesso-civico", "/metodologia"],
     "/monitoraggio": ["/segnalazioni", "/accesso-civico", "/criticita-pubbliche"],
     "/atlante-territoriale": ["/fonti-dati", "/opendata", "/metodologia"],
     "/fonti-dati": ["/stato-monitoraggio", "/metodologia", "/opendata"],

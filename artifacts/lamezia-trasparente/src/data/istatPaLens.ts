@@ -145,8 +145,8 @@ export const ISTAT_PA_DIMENSIONS = [
       "Co-progettazioni, patti, partenariati, avvisi e iniziative con valore pubblico e sociale.",
     localEvidence: ["bandi", "avvisi", "archivio proposte", "atti di co-progettazione"],
     routes: [
-      { href: "/bandi", label: "Bandi" },
-      { href: "/archivio-proposte", label: "Archivio proposte" },
+      { href: "/contratti", label: "Contratti pubblici" },
+      { href: "/proposte-civiche", label: "Proposte civiche" },
       { href: "/monitoraggio", label: "Monitor civico" },
     ],
     iconName: "network",

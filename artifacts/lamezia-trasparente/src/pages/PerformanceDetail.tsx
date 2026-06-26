@@ -15,7 +15,6 @@ import {
   Layers,
   CalendarRange,
   AlertTriangle,
-  GitCompare,
 } from "lucide-react";
 import {
   Area,
@@ -98,14 +97,6 @@ export function PerformanceDetail() {
           <ChevronLeft className="h-4 w-4" />
           Torna agli indicatori
         </Link>
-        {indicator ? (
-          <Link href={`/performance/confronta?ids=${indicator.id}`}>
-            <Button variant="outline" size="sm" className="gap-2">
-              <GitCompare className="h-4 w-4" />
-              Confronta
-            </Button>
-          </Link>
-        ) : null}
       </div>
 
       {isLoading ? (

@@ -1,5 +1,11 @@
 import { describe, expect, it } from "vitest";
-import { isSectionActive, NAV_GROUPS } from "../components/layout/navSections";
+import {
+  ALL_NAV_GROUPS,
+  COMMAND_PALETTE_GROUPS,
+  NAV_GROUPS,
+  isNavItemNavigable,
+  isSectionActive,
+} from "../components/layout/navSections";
 
 describe("isSectionActive", () => {
   it("keeps exact section matches active", () => {
@@ -39,11 +45,69 @@ describe("NAV_GROUPS invariants", () => {
   it("keeps labels and descriptions populated", () => {
     for (const group of NAV_GROUPS) {
       expect(group.label.trim()).not.toBe("");
+      expect(group.description.trim()).not.toBe("");
 
       for (const item of group.items) {
         expect(item.label.trim()).not.toBe("");
         expect(item.description.trim()).not.toBe("");
+        expect(item.state).toMatch(/^(available|in_progress|planned)$/);
       }
+    }
+  });
+
+  it("keeps the primary civic macro-areas explicit and ordered", () => {
+    expect(NAV_GROUPS.map((group) => group.label)).toEqual([
+      "Cosa decide il Comune",
+      "Chi governa e come vota",
+      "Cosa viene finanziato e realizzato",
+      "Criticità e luoghi della città",
+      "Memoria civica e antimafia",
+      "Partecipazione e proposte",
+      "Dati pubblici e territorio",
+      "Stato delle fonti e monitoraggio",
+    ]);
+  });
+
+  it("keeps hidden legacy sections out of the primary nav", () => {
+    const allItems = ALL_NAV_GROUPS.flatMap((group) => group.items);
+    const visibleHrefs = navItems.map((item) => item.href);
+
+    expect(
+      allItems.filter((item) => item.state === "hidden").map((item) => item.href),
+    ).toEqual(
+      expect.arrayContaining([
+        "/bandi",
+        "/archivio-proposte",
+        "/monitoraggio/nuovo",
+        "/legalita/timeline",
+        "/performance/confronta",
+      ]),
+    );
+    expect(visibleHrefs).not.toEqual(expect.arrayContaining([
+      "/bandi",
+      "/archivio-proposte",
+      "/monitoraggio/nuovo",
+      "/legalita/timeline",
+      "/performance/confronta",
+    ]));
+  });
+
+  it("keeps planned sections visible but not navigable or searchable", () => {
+    const planned = navItems.filter((item) => item.state === "planned");
+    const commandPaletteHrefs = COMMAND_PALETTE_GROUPS.flatMap((group) =>
+      group.items.map((item) => item.href),
+    );
+
+    expect(planned.map((item) => item.href)).toEqual(
+      expect.arrayContaining([
+        "/elezioni-voti",
+        "/dati-elettorali",
+        "/dataset-scaricabili",
+      ]),
+    );
+    for (const item of planned) {
+      expect(isNavItemNavigable(item)).toBe(false);
+      expect(commandPaletteHrefs).not.toContain(item.href);
     }
   });
 });

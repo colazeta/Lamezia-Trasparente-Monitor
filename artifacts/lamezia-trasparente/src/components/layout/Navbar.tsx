@@ -5,12 +5,10 @@ import {
   FileText,
   FileSearch,
   Home,
-  HelpCircle,
   ChevronDown,
   BookOpen,
 } from "lucide-react";
 import { useState } from "react";
-import { useListQuestions } from "@workspace/api-client-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Logo } from "@/components/brand/Logo";
@@ -23,26 +21,21 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { iconForTopic } from "@/lib/questionTopics";
 import {
   CommandPalette,
   SearchTrigger,
   useCommandPalette,
 } from "@/components/search/CommandPalette";
-import { asApiList } from "@/lib/apiList";
-import { NAV_GROUPS, isNavItemUnavailable, isSectionActive } from "./navSections";
-
-function useTopics(): string[] {
-  const { data: questions } = useListQuestions();
-  const set = new Set<string>();
-  for (const q of asApiList<{ topic: string }>(questions)) set.add(q.topic);
-  return Array.from(set).sort((a, b) => a.localeCompare(b, "it"));
-}
+import {
+  NAV_GROUPS,
+  getNavItemStateLabel,
+  isNavItemUnavailable,
+  isSectionActive,
+} from "./navSections";
 
 export function Navbar() {
   const [location] = useLocation();
   const [isOpen, setIsOpen] = useState(false);
-  const topics = useTopics();
   const { open: paletteOpen, setOpen: setPaletteOpen } = useCommandPalette();
 
   const isActive = (href: string) => isSectionActive(href, location);
@@ -77,14 +70,6 @@ export function Navbar() {
               )}
             </Link>
 
-            <Link href="/domande" className={linkClass(isActive("/domande"))}>
-              <HelpCircle className="h-4 w-4" aria-hidden="true" />
-              Domande
-              {isActive("/domande") && (
-                <span className="absolute inset-x-2.5 -bottom-px h-0.5 rounded-full bg-primary" />
-              )}
-            </Link>
-
             <Link href="/guida" className={linkClass(isActive("/guida"))}>
               <BookOpen className="h-4 w-4" aria-hidden="true" />
               Guida
@@ -92,39 +77,6 @@ export function Navbar() {
                 <span className="absolute inset-x-2.5 -bottom-px h-0.5 rounded-full bg-primary" />
               )}
             </Link>
-
-            {/* Argomenti */}
-            {topics.length > 0 && (
-              <DropdownMenu modal={false}>
-                <DropdownMenuTrigger className={linkClass(false)}>
-                  <FileSearch className="h-4 w-4" aria-hidden="true" />
-                  Argomenti
-                  <ChevronDown
-                    className="h-3.5 w-3.5 opacity-70"
-                    aria-hidden="true"
-                  />
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="start" className="w-64">
-                  {topics.map((topic) => {
-                    const Icon = iconForTopic(topic);
-                    return (
-                      <DropdownMenuItem key={topic} asChild>
-                        <Link
-                          href={`/domande?topic=${encodeURIComponent(topic)}`}
-                          className="flex cursor-pointer items-center gap-2"
-                        >
-                          <Icon
-                            className="h-4 w-4 text-primary"
-                            aria-hidden="true"
-                          />
-                          {topic}
-                        </Link>
-                      </DropdownMenuItem>
-                    );
-                  })}
-                </DropdownMenuContent>
-              </DropdownMenu>
-            )}
 
             {/* Sezioni — grouped mega-menu */}
             <DropdownMenu modal={false}>
@@ -160,9 +112,9 @@ export function Navbar() {
                               <Icon className="h-4 w-4 text-muted-foreground" aria-hidden="true" />
                               <span className="flex min-w-0 flex-1 items-center justify-between gap-2">
                                 <span className="truncate">{item.label}</span>
-                                {item.v0StatusLabel ? (
+                                {item.state !== "available" ? (
                                   <span className="rounded-full border border-border bg-muted px-1.5 py-0.5 text-[9px] font-semibold uppercase tracking-wide text-muted-foreground">
-                                    {item.v0StatusLabel}
+                                    {getNavItemStateLabel(item)}
                                   </span>
                                 ) : null}
                               </span>
@@ -190,10 +142,9 @@ export function Navbar() {
                             />
                             <span className="flex min-w-0 flex-1 items-center justify-between gap-2">
                               <span className="truncate">{item.label}</span>
-                              {item.v0StatusLabel &&
-                              item.v0Status !== "pubblicabile" ? (
+                              {item.state !== "available" ? (
                                 <span className="rounded-full border border-border bg-muted px-1.5 py-0.5 text-[9px] font-semibold uppercase tracking-wide text-muted-foreground">
-                                  {item.v0StatusLabel}
+                                  {getNavItemStateLabel(item)}
                                 </span>
                               ) : null}
                             </span>
@@ -254,13 +205,6 @@ export function Navbar() {
                   onClick={() => setIsOpen(false)}
                 />
                 <MobileLink
-                  href="/domande"
-                  label="Domande"
-                  icon={HelpCircle}
-                  active={isActive("/domande")}
-                  onClick={() => setIsOpen(false)}
-                />
-                <MobileLink
                   href="/guida"
                   label="Guida"
                   icon={BookOpen}
@@ -268,26 +212,6 @@ export function Navbar() {
                   onClick={() => setIsOpen(false)}
                 />
               </div>
-
-              {topics.length > 0 && (
-                <div>
-                  <div className="mb-2 px-1 text-[11px] font-bold uppercase tracking-wider text-muted-foreground">
-                    Argomenti
-                  </div>
-                  <div className="grid grid-cols-1 gap-2">
-                    {topics.map((topic) => (
-                      <MobileLink
-                        key={topic}
-                        href={`/domande?topic=${encodeURIComponent(topic)}`}
-                        label={topic}
-                        icon={iconForTopic(topic)}
-                        active={false}
-                        onClick={() => setIsOpen(false)}
-                      />
-                    ))}
-                  </div>
-                </div>
-              )}
 
               {NAV_GROUPS.map((group) => (
                 <div key={group.label}>
@@ -305,8 +229,8 @@ export function Navbar() {
                         onClick={() => setIsOpen(false)}
                         disabled={isNavItemUnavailable(item)}
                         statusLabel={
-                          item.v0Status !== "pubblicabile"
-                            ? item.v0StatusLabel
+                          item.state !== "available"
+                            ? getNavItemStateLabel(item)
                             : undefined
                         }
                       />

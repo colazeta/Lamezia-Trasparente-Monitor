@@ -16,7 +16,6 @@ import {
   FileText,
   Quote,
   RefreshCw,
-  BookOpenCheck,
   ArrowRight,
 } from "lucide-react";
 import { format } from "date-fns";
@@ -115,14 +114,6 @@ export function Legalita() {
           punteggio calcolato automaticamente.
         </p>
         <div className="mt-5 flex flex-wrap gap-3">
-          <Link
-            href="/legalita/timeline"
-            className="inline-flex items-center gap-2 rounded-full border border-brand/30 bg-brand/5 px-4 py-2 text-sm font-semibold text-brand transition-colors hover:border-brand/60 hover:bg-brand/10"
-          >
-            <BookOpenCheck className="h-4 w-4" />
-            Timeline legalità e memoria civica
-            <ArrowRight className="h-4 w-4" />
-          </Link>
           <Link
             href="/legalita/trame-festival"
             className="inline-flex items-center gap-2 rounded-full border border-brand/30 bg-brand/5 px-4 py-2 text-sm font-semibold text-brand transition-colors hover:border-brand/60 hover:bg-brand/10"

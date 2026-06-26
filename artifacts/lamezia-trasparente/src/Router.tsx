@@ -25,8 +25,6 @@ import { OpendataDetail } from "./pages/OpendataDetail";
 import { Feeds } from "./pages/Feeds";
 import { Sviluppatori } from "./pages/Sviluppatori";
 import { AttiFondamentali } from "./pages/AttiFondamentali";
-import { Bandi } from "./pages/Bandi";
-import { BandoDetail } from "./pages/BandoDetail";
 import { BeniConfiscati } from "./pages/BeniConfiscati";
 import { BeneConfiscatoDetail } from "./pages/BeneConfiscatoDetail";
 import { AccessoCivico } from "./pages/AccessoCivico";
@@ -37,10 +35,8 @@ import { Promessometro } from "./pages/Promessometro";
 import { PropostePubbliche } from "./pages/PropostePubbliche";
 import { MacchinaComunale } from "./pages/MacchinaComunale";
 import { Legalita } from "./pages/Legalita";
-import { LegalitaTimeline } from "./pages/LegalitaTimeline";
 import { TrameFestival } from "./pages/TrameFestival";
 import { Performance } from "./pages/Performance";
-import { PerformanceCompare } from "./pages/PerformanceCompare";
 import { PerformanceDetail } from "./pages/PerformanceDetail";
 import { Reports } from "./pages/Reports";
 import { FontiDati } from "./pages/FontiDati";
@@ -64,6 +60,22 @@ import { Redirect } from "wouter";
 
 function AdminRedirect() {
   return <Redirect to="/redazione" />;
+}
+
+function BandiRedirect() {
+  return <Redirect to="/contratti" />;
+}
+
+function ProposteLegacyRedirect() {
+  return <Redirect to="/proposte-civiche" />;
+}
+
+function LegalitaTimelineRedirect() {
+  return <Redirect to="/legalita" />;
+}
+
+function PerformanceCompareRedirect() {
+  return <Redirect to="/performance" />;
 }
 
 type PublicRouteWithMetaProps = {
@@ -133,13 +145,8 @@ export function Router() {
                 title="Atti fondamentali"
                 description="Documenti di programmazione e atti fondamentali raccolti per agevolare la consultazione pubblica."
               />
-              <PublicRouteWithMeta
-                path="/bandi"
-                component={Bandi}
-                title="Bandi e avvisi"
-                description="Elenco civico di bandi e avvisi pubblici con collegamenti alle fonti disponibili e informazioni da verificare sugli atti."
-              />
-              <Route path="/bandi/:slug" component={BandoDetail} />
+              <Route path="/bandi" component={BandiRedirect} />
+              <Route path="/bandi/:slug" component={BandiRedirect} />
               <PublicRouteWithMeta
                 path="/beni-confiscati"
                 component={BeniConfiscati}
@@ -170,10 +177,14 @@ export function Router() {
                 description="Modulo civico per collegare promesse programmatiche e atti amministrativi con cautele documentali e senza scoring politico."
               />
               <PublicRouteWithMeta
-                path="/archivio-proposte"
+                path="/proposte-civiche"
                 component={PropostePubbliche}
-                title="Archivio delle proposte pubbliche"
-                description="Archivio documentale e neutro delle proposte di valore pubblico censite come memoria civica verificabile."
+                title="Proposte civiche"
+                description="Archivio documentale e neutro delle proposte civiche di valore pubblico censite come memoria verificabile."
+              />
+              <Route
+                path="/archivio-proposte"
+                component={ProposteLegacyRedirect}
               />
               <PublicRouteWithMeta
                 path="/macchina-comunale"
@@ -184,7 +195,7 @@ export function Router() {
               <Route path="/monitoraggio/:id" component={MonitoraggioDetail} />
               <PublicRouteWithMeta
                 path="/legalita/timeline"
-                component={LegalitaTimeline}
+                component={LegalitaTimelineRedirect}
                 title="Timeline legalitÃ  e memoria civica"
                 description="Struttura pubblica per eventi documentati su legalitÃ , antimafia e memoria istituzionale, con fonti, status e cautele esplicite."
               />
@@ -263,7 +274,7 @@ export function Router() {
               />
               <PublicRouteWithMeta
                 path="/performance/confronta"
-                component={PerformanceCompare}
+                component={PerformanceCompareRedirect}
                 title="Confronto performance"
                 description="Strumento di confronto tra indicatori amministrativi per osservare pattern e differenze da verificare nel contesto."
               />

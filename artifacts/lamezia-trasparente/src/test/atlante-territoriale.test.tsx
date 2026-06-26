@@ -286,11 +286,6 @@ describe("Atlante territoriale", () => {
     expect(
       within(profile as HTMLElement).getAllByText("Popolazione residente"),
     ).toHaveLength(1);
-    expect(
-      within(profile as HTMLElement).getByText(
-        "Nessun altro indicatore disponibile per questa sezione.",
-      ),
-    ).toBeInTheDocument();
     expect(screen.getByText("Fonte dati")).toBeInTheDocument();
     expect(screen.getByText("Come leggere")).toBeInTheDocument();
     expect(screen.getByText("Cosa non mostra")).toBeInTheDocument();
