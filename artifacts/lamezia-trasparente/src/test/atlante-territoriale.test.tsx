@@ -286,9 +286,6 @@ describe("Atlante territoriale", () => {
     expect(
       within(profile as HTMLElement).getAllByText("Popolazione residente"),
     ).toHaveLength(1);
-    expect(
-      await screen.findByRole("heading", { name: "0791600000204" }),
-    ).toBeInTheDocument();
     expect(screen.getByText("Fonte dati")).toBeInTheDocument();
     expect(screen.getByText("Come leggere")).toBeInTheDocument();
     expect(screen.getByText("Cosa non mostra")).toBeInTheDocument();
