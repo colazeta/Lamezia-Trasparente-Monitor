@@ -243,7 +243,7 @@ describe("Atlante territoriale", () => {
       }),
     );
     expect(
-      screen.getByRole("heading", { name: "0791600000204" }),
+      await screen.findByRole("heading", { name: "0791600000204" }),
     ).toBeInTheDocument();
     expect(screen.getByText("Fonte dati")).toBeInTheDocument();
     expect(screen.getByText("Come leggere")).toBeInTheDocument();
