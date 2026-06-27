@@ -267,11 +267,21 @@ const RAW_NAV_GROUPS: NavSection[] = [
         href: "/monitoraggio",
         label: "Monitor civico",
         description:
-          "Hub legacy tenuto raggiungibile ma non mostrato come macro-sezione primaria.",
+          "Collega luoghi, atti, segnalazioni e verifiche in un percorso di monitoraggio.",
         icon: Telescope,
-        state: "hidden",
-        canonicalHref: "/criticita-pubbliche",
+        state: "in_progress",
+        hasUsefulPage: true,
         keywords: "monitoraggio civico monithon verifiche",
+      },
+      {
+        href: "/segnalazioni",
+        label: "Segnalazioni / luoghi",
+        description:
+          "Punti e casi da segnalare o seguire come elementi da verificare, non come accuse.",
+        icon: Megaphone,
+        state: "in_progress",
+        hasUsefulPage: true,
+        keywords: "segnalazioni luoghi criticita nuova segnalazione fonte verifica",
       },
     ],
   },
@@ -345,16 +355,6 @@ const RAW_NAV_GROUPS: NavSection[] = [
         state: "in_progress",
         hasUsefulPage: true,
         keywords: "accesso civico foia richiesta documenti dati",
-      },
-      {
-        href: "/segnalazioni",
-        label: "Segnalazioni",
-        description:
-          "Segnala un dato da verificare o consulta criticita pubbliche distinguendo fatti e interpretazioni.",
-        icon: Megaphone,
-        state: "in_progress",
-        hasUsefulPage: true,
-        keywords: "segnalazioni criticita nuova segnalazione fonte verifica",
       },
       {
         href: "/domande",

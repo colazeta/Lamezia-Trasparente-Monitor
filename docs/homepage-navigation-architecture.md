@@ -11,13 +11,27 @@ La homepage espone poche macro-aree civiche, non una lista piatta di moduli con 
 | Cosa decide il Comune | Sedute e ordini del giorno; Delibere e atti; Albo Pretorio; Atti fondamentali |
 | Chi governa e come vota | Organi istituzionali; Amministratori; Macchina comunale; Elezioni e voti |
 | Cosa viene finanziato e realizzato | Contratti pubblici; PNRR; Incarichi e consulenze; Performance |
-| Criticita e luoghi della citta | Criticita pubbliche |
+| Criticita e luoghi della citta | Criticita pubbliche; Monitor civico; Segnalazioni / luoghi |
 | Memoria civica e antimafia | Beni confiscati; Legalita e memoria; Trame - Festival |
-| Partecipazione e proposte | Proposte civiche; Accesso civico; Segnalazioni |
+| Partecipazione e proposte | Proposte civiche; Accesso civico |
 | Dati pubblici e territorio | Atlante territoriale; Open data; Dati elettorali; Dataset scaricabili |
 | Stato delle fonti e monitoraggio | Stato delle fonti; Metodologia; Promessometro; Incarichimetro; Roadmap |
 
 Le sezioni tecniche o di supporto, come API, feed, note legali, contatti, guida, fonti dati di dettaglio e statistiche, restano raggiungibili dove utile ma non competono con le macro-aree civiche nella homepage.
+
+## Rendering homepage
+
+La mappa civica in homepage deve leggere come una sequenza di bande orizzontali, non come un catalogo uniforme di card.
+
+- ogni macro-area occupa una riga;
+- titolo e descrizione della macro-area stanno a sinistra;
+- le sezioni della macro-area stanno a destra in card compatte e scansionabili;
+- le sezioni `available` restano piu forti;
+- le sezioni `in_progress` sono neutre/grigie con badge esplicito;
+- le sezioni `planned` sono attenuate e non devono sembrare gia disponibili;
+- la banda "Stato delle fonti e monitoraggio" e piu neutra delle aree civiche principali.
+
+La riga "Criticita e luoghi della citta" puo mostrare Criticita pubbliche, Monitor civico e Segnalazioni / luoghi. L'azione "Nuova segnalazione" resta interna ai percorsi di segnalazione o monitoraggio e non torna come card primaria della homepage.
 
 ## Stati delle sezioni
 
