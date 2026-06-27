@@ -354,7 +354,8 @@ h3 {
 
 .badge.low,
 .badge.decided,
-.badge.strong {
+.badge.strong,
+.badge.ok {
   background: var(--green-soft);
   color: var(--green);
 }
@@ -370,6 +371,19 @@ h3 {
 .badge.section {
   background: var(--blue-soft);
   color: var(--blue);
+}
+
+.badge.multi_street_task,
+.badge.street_label_ambiguous,
+.badge.needs_label_review {
+  background: var(--orange-soft);
+  color: var(--orange);
+}
+
+.badge.missing_source_record,
+.badge.coordinate_outlier {
+  background: var(--red-soft);
+  color: var(--red);
 }
 
 .map-panel {
@@ -453,6 +467,10 @@ h3 {
   stroke-width: 1.5;
 }
 
+.fallback-point.focused {
+  stroke-width: 2.2;
+}
+
 .tabs {
   border-bottom: 1px solid var(--line);
   display: flex;
@@ -517,6 +535,55 @@ h3 {
   margin: 10px 0;
 }
 
+.compact-list,
+.integrity-list {
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.4;
+  margin: 0 0 12px;
+  padding-left: 18px;
+}
+
+.source-record-panel {
+  border-top: 1px solid var(--line);
+  display: grid;
+  gap: 12px;
+  margin-top: 14px;
+  padding-top: 13px;
+}
+
+.source-record-head {
+  align-items: start;
+  display: flex;
+  gap: 10px;
+  justify-content: space-between;
+}
+
+.source-record-head p,
+.source-context-note,
+.popup-subtitle,
+.popup-note {
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.35;
+  margin: 0;
+}
+
+.source-record-block {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 9px;
+}
+
+.source-record-block h4 {
+  font-size: 12px;
+  margin: 0 0 8px;
+}
+
+.source-record-block .fact-grid {
+  margin-bottom: 0;
+}
+
 .table-wrap {
   border: 1px solid var(--line);
   border-radius: 8px;
@@ -555,6 +622,16 @@ tr[data-access-id] {
 
 tr[data-access-id]:hover {
   background: #eef7f3;
+}
+
+tr.focused-row {
+  background: #e4eef8;
+}
+
+.street-group-row th {
+  background: #e7ece9;
+  color: #43504b;
+  position: static;
 }
 
 .inline-toolbar {
@@ -680,6 +757,17 @@ tr[data-access-id]:hover {
 .popup-facts dd {
   font-size: 12px;
   margin: 0 0 4px;
+}
+
+.source-popup {
+  display: grid;
+  gap: 7px;
+  min-width: 220px;
+}
+
+.source-popup .fact-grid {
+  grid-template-columns: 1fr;
+  margin: 0;
 }
 
 @media (max-width: 1320px) {

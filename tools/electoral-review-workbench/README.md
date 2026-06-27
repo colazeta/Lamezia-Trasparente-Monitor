@@ -32,6 +32,12 @@ http://127.0.0.1:4177/
 Use a local HTTP server because the page loads JSON and GeoJSON through
 `fetch`.
 
+Run the label-integrity audit after regenerating data:
+
+```powershell
+python scripts/audit_electoral_workbench_label_integrity.py
+```
+
 ## Why Civic-first
 
 The V2 task model was useful, but still too census-cell oriented. Census cells
@@ -68,6 +74,45 @@ Map layers include V3 candidate sections, optional V2 reference geometry,
 diagnostic census cells, review civics, boundary uncertainty points, spatially
 resolved points, deterministic civic samples, selected task civics, nearby
 deterministic points, and competing sections.
+
+Every civic marker is labelled from the ANNCSU source record, not from the task
+title, OpenStreetMap, or a representative street name. The popup title uses:
+
+```text
+ANNCSU: [odonimo_raw] [civico/esponente]
+```
+
+The popup also shows `access_id`, source coordinates, current/proposed section,
+task id, linked street-register rule where present, and the note that OSM is
+visual background only.
+
+## Label Integrity
+
+The workbench separates three labels that must not be conflated:
+
+- `ANNCSU address`: source record for the civic point, including odonimo,
+  locality, civic number, exponent, coordinates, and `access_id`.
+- `Electoral street-register rule`: normative rule used to reason about
+  section assignment, including street rule, civic interval/parity/SNC, section,
+  and PDF page.
+- `OpenStreetMap visual context`: background map only. OSM street names are not
+  official ANNCSU labels and are not assignment evidence.
+
+The `Show label integrity` toggle opens a source-record panel for the selected
+civic. It compares source payload values, GeoJSON properties, task metadata, and
+street-register evidence. The `label_integrity_status` filter can isolate:
+
+- `ok`
+- `multi_street_task`
+- `missing_source_record`
+- `coordinate_outlier`
+- `street_label_ambiguous`
+- `needs_label_review`
+
+For multi-street tasks, the title is intentionally representative. The Summary
+tab lists the ANNCSU streets in the task, and the Civics tab groups rows by the
+specific ANNCSU street so reviewers do not apply one street label to every
+civic in the group.
 
 ## Street Register Evidence
 
@@ -150,6 +195,11 @@ Primary civic-first payloads:
 Compatibility payloads from earlier workbench versions may remain generated
 under `public/data/`, but the interface uses the civic-first files above.
 
+Label-integrity QA outputs are written to:
+
+- `data/interim/qa/electoral_workbench_label_integrity_report.md`
+- `data/interim/qa/electoral_workbench_label_integrity_sample.csv`
+
 ## Process Boundary
 
 The in-app process panel records the intended sequence:
@@ -173,4 +223,6 @@ This PR does not create V4.
 - Do not apply decisions to GPKG files in this PR.
 - Do not modify processed electoral result values.
 - Do not use OSM or proximity alone as assignment evidence.
+- Do not make manual decisions when `access_id`, label, and coordinates are not
+  coherent.
 - Treat all candidate geometries as non-official QA artifacts.

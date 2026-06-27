@@ -85,6 +85,18 @@
             </select>
           </label>
           <label>
+            <span>Label integrity</span>
+            <select id="labelIntegrityFilter">
+              <option value="">All</option>
+              <option value="ok">OK</option>
+              <option value="multi_street_task">Multi-street task</option>
+              <option value="missing_source_record">Missing source record</option>
+              <option value="coordinate_outlier">Coordinate outlier</option>
+              <option value="street_label_ambiguous">Street label ambiguous</option>
+              <option value="needs_label_review">Needs label review</option>
+            </select>
+          </label>
+          <label>
             <span>Parity/SNC</span>
             <select id="parityFilter">
               <option value="">All</option>
@@ -142,6 +154,7 @@
           <label class="toggle"><input id="toggleBoundaryPoints" type="checkbox" checked /><span>Boundary</span></label>
           <label class="toggle"><input id="toggleResolvedPoints" type="checkbox" /><span>Resolved</span></label>
           <label class="toggle"><input id="toggleDeterministicPoints" type="checkbox" /><span>Deterministic</span></label>
+          <label class="toggle"><input id="toggleLabelIntegrity" type="checkbox" /><span>Show label integrity</span></label>
           <button id="zoomSelectedButton" type="button">Zoom selected</button>
           <button id="showNearbyButton" type="button">Nearby deterministic</button>
           <button id="showCompetingButton" type="button">Competing sections</button>
