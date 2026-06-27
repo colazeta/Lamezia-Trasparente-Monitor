@@ -33,6 +33,50 @@ problem in QGIS, but they do not authorize assignment by themselves. OpenStreetM
 is also only visual context. The electoral street register remains the primary
 normative source.
 
+## Label Integrity Contract
+
+Before a manual decision can be trusted, each displayed civic marker must remain
+tied to its ANNCSU source `access_id`. The workbench therefore distinguishes
+three different records:
+
+- ANNCSU address: the source civic/access record, including raw odonimo,
+  locality, civic number, exponent, source coordinates, `access_id`, and the
+  current/proposed electoral section values carried in the civic assignment
+  dataset.
+- Electoral street-register rule: the normative source for assigning streets,
+  civic intervals, parity/SNC subsets, polling places, and sections.
+- OpenStreetMap visual context: basemap only. OSM labels can help orientation,
+  but differences between OSM names and ANNCSU odonimi are not automatically
+  source-record errors.
+
+Marker labels must use the ANNCSU address for the individual point. A task title
+may summarize a cluster, especially in multi-street cases, but it must not be
+used as the label for every point in that task.
+
+The generator emits explicit task metadata for label interpretation:
+
+- `is_multi_street_task`
+- `street_count`
+- `display_title_is_representative`
+- `civic_interval_count`
+- `candidate_section_count`
+- `label_integrity_status`
+
+When `is_multi_street_task` is true, reviewers should read the Summary street
+list and the Civics tab grouping before deciding. The point popup remains the
+authoritative display for the selected civic's ANNCSU street and civic number.
+
+`scripts/audit_electoral_workbench_label_integrity.py` checks source CSV,
+workbench JSON payloads, and GeoJSON layers end to end. It classifies:
+
+- P0: access_id, coordinates, section, or marker label do not match the source
+  civic CSV.
+- P1: task-level multi-street/range/parity metadata is missing or misleading.
+- P2: visual OSM/ANNCSU name differences only.
+
+If the audit reports P0 or P1, the workbench must not be used for manual
+assignment until the mismatch is corrected.
+
 ## Evidence Chain
 
 The local review workflow connects four evidence layers:

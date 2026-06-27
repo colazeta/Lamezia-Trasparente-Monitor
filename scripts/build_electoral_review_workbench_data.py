@@ -76,6 +76,14 @@ def as_float(value: Any, default: float = 0.0) -> float:
         return default
 
 
+def decimal_text(value: Any) -> str:
+    text = as_text(value).strip()
+    if not text:
+        return ""
+    parsed = as_float(text, math.nan)
+    return "" if math.isnan(parsed) else f"{parsed:.7f}".rstrip("0").rstrip(".")
+
+
 def as_bool(value: Any) -> bool:
     if isinstance(value, bool):
         return value
@@ -255,6 +263,33 @@ def civic_label(row: dict[str, Any]) -> str:
     return "SNC" if is_snc_civic(row) else ""
 
 
+def anncsu_address_label(row: dict[str, Any]) -> str:
+    street = as_text(row.get("ODONIMO") or row.get("anncsu_odonimo") or row.get("odonimo_raw"))
+    civic = civic_label(row)
+    suffix = f" {civic}" if civic else ""
+    return f"ANNCSU: {street}{suffix}".strip()
+
+
+def source_coord_lon(row: dict[str, Any]) -> str:
+    return decimal_text(row.get("COORD_X_COMUNE") or row.get("coord_x") or row.get("source_coord_x"))
+
+
+def source_coord_lat(row: dict[str, Any]) -> str:
+    return decimal_text(row.get("COORD_Y_COMUNE") or row.get("coord_y") or row.get("source_coord_y"))
+
+
+def coordinate_status(row: dict[str, Any]) -> str:
+    lon = as_float(source_coord_lon(row), math.nan)
+    lat = as_float(source_coord_lat(row), math.nan)
+    if math.isnan(lon) or math.isnan(lat):
+        return "coordinate_outlier"
+    if not (16.0 <= lon <= 16.6 and 38.75 <= lat <= 39.15):
+        return "coordinate_outlier"
+    if 38.75 <= lon <= 39.15 and 16.0 <= lat <= 16.6:
+        return "coordinate_outlier"
+    return "ok"
+
+
 def civic_min_max(rows: list[dict[str, Any]]) -> tuple[Any, Any]:
     values = [value for value in (civic_numeric_value(row) for row in rows) if value is not None]
     if not values:
@@ -355,7 +390,49 @@ def point_collection(gdf, columns: list[str]) -> dict[str, Any]:
     return json.loads(out.to_json(drop_id=True))
 
 
+def enrich_point_label_columns(frame, source_records: dict[str, dict[str, Any]] | None = None) -> Any:
+    out = frame.copy()
+    source_records = source_records or {}
+
+    def value(row: Any, *keys: str) -> str:
+        for key in keys:
+            if key in row and as_text(row.get(key)):
+                return as_text(row.get(key))
+        return ""
+
+    records = []
+    for _idx, row in out.iterrows():
+        record = row.to_dict()
+        source = source_records.get(as_text(record.get("access_id")))
+        if source:
+            merged = dict(source)
+            merged.update({key: value for key, value in record.items() if as_text(value)})
+            record = merged
+        records.append(record)
+    out["odonimo_raw"] = [value(row, "ODONIMO", "anncsu_odonimo", "odonimo_raw") for row in records]
+    out["localita"] = [value(row, "LOCALITA'", "localita") for row in records]
+    out["civico"] = [value(row, "CIVICO", "civico") for row in records]
+    out["esponente"] = [value(row, "ESPONENTE", "esponente") for row in records]
+    out["anncsu_address_label"] = [anncsu_address_label(row) for row in records]
+    out["map_popup_title"] = out["anncsu_address_label"]
+    out["source_record_access_id"] = [value(row, "access_id", "PROGRESSIVO_ACCESSO") for row in records]
+    out["source_coord_x"] = [value(row, "COORD_X_COMUNE", "source_coord_x", "coord_x") for row in records]
+    out["source_coord_y"] = [value(row, "COORD_Y_COMUNE", "source_coord_y", "coord_y") for row in records]
+    out["source_coord_lon"] = [source_coord_lon(row) for row in records]
+    out["source_coord_lat"] = [source_coord_lat(row) for row in records]
+    statuses = [coordinate_status(row) for row in records]
+    out["label_integrity_status"] = statuses
+    out["label_integrity_notes"] = [
+        "" if status == "ok" else "Coordinate sorgente mancanti, fuori range Lamezia o potenzialmente invertite."
+        for status in statuses
+    ]
+    return out
+
+
 def civic_record(row: dict[str, Any]) -> dict[str, Any]:
+    lon = source_coord_lon(row)
+    lat = source_coord_lat(row)
+    status = coordinate_status(row)
     return {
         "access_id": as_text(row.get("access_id") or row.get("PROGRESSIVO_ACCESSO")),
         "odonimo_raw": as_text(row.get("ODONIMO") or row.get("anncsu_odonimo")),
@@ -375,6 +452,15 @@ def civic_record(row: dict[str, Any]) -> dict[str, Any]:
         "is_snc": is_snc_civic(row),
         "coord_x": as_text(row.get("COORD_X_COMUNE") or row.get("coord_x")),
         "coord_y": as_text(row.get("COORD_Y_COMUNE") or row.get("coord_y")),
+        "source_coord_x": as_text(row.get("COORD_X_COMUNE") or row.get("source_coord_x") or row.get("coord_x")),
+        "source_coord_y": as_text(row.get("COORD_Y_COMUNE") or row.get("source_coord_y") or row.get("coord_y")),
+        "source_coord_lon": lon,
+        "source_coord_lat": lat,
+        "anncsu_address_label": anncsu_address_label(row),
+        "map_popup_title": anncsu_address_label(row),
+        "source_record_access_id": as_text(row.get("access_id") or row.get("PROGRESSIVO_ACCESSO")),
+        "label_integrity_status": status,
+        "label_integrity_notes": "" if status == "ok" else "Coordinate sorgente mancanti, fuori range Lamezia o potenzialmente invertite.",
         "distance_to_boundary_m": as_text(row.get("distance_to_boundary_m") or row.get("distance_to_candidate_boundary_m")),
         "problem_type": as_text(row.get("problem_type")),
         "notes": as_text(row.get("assignment_notes") or row.get("notes") or row.get("review_notes")),
@@ -901,7 +987,8 @@ def main() -> int:
         task_geoms = [geom for geom in geoms if geom is not None and not getattr(geom, "is_empty", True)]
         if task_geom is None and task_geoms:
             task_geom = _shapely.union_all(task_geoms)
-        streets = unique_texts([street_value(row) for row in civic_rows], MAX_STREETS_PER_TASK)
+        all_streets = unique_texts([street_value(row) for row in civic_rows])
+        streets = all_streets
         current_sections = current_sections_for_rows(civic_rows)
         street_register_sections = street_register_sections_for_rows(civic_rows)
         suggested = as_text(task.get("suggested_section_number"))
@@ -934,17 +1021,43 @@ def main() -> int:
             street_match_status = "multiple_sections"
         elif evidence_rows:
             street_match_status = "same_street_match"
+        interval_count = sum(1 for row in evidence_rows if as_text(row.get("civic_from")) or as_text(row.get("civic_to")))
+        parity_mix = parity_mix_for_rows(civic_rows)
+        status_values = {coordinate_status(row) for row in civic_rows}
+        task_label_status = "coordinate_outlier" if "coordinate_outlier" in status_values else "ok"
+        if len(streets) > 1 and task_label_status == "ok":
+            task_label_status = "multi_street_task"
+        display_title_is_representative = len(streets) > 1
+        if len(all_streets) > 1:
+            task["title"] = f"Gruppo civici multi-via - {len(all_streets)} odonimi, {len(civic_rows)} civici"
+        elif streets:
+            range_label = f"{civic_min}-{civic_max}" if civic_min != "" and civic_max != "" else f"{len(civic_rows)} civici"
+            parity_label = "/".join(key for key in ["even", "odd", "snc"] if parity_mix.get(key))
+            suffix = f" ({parity_label})" if parity_label else ""
+            task["title"] = f"{streets[0]} - civici {range_label}{suffix}"
         task.update(
             {
                 "task_id": task_id,
                 "competing_sections": competing,
                 "involved_streets": streets,
                 "street_name_normalised": streets[0] if len(streets) == 1 else "",
+                "is_multi_street_task": len(all_streets) > 1,
+                "street_count": len(all_streets),
+                "representative_streets": all_streets[:MAX_STREETS_PER_TASK],
+                "display_title_is_representative": display_title_is_representative,
+                "civic_interval_count": interval_count,
+                "has_parity_subset": bool(parity_mix.get("even") and parity_mix.get("odd")),
+                "has_snc_subset": bool(parity_mix.get("snc")),
+                "candidate_section_count": len(set(competing) | set(street_register_sections) | set(current_sections)),
+                "label_integrity_status": task_label_status,
+                "label_integrity_notes": "Task multi-via: il titolo riassume piu odonimi; usare la tab Civics e i popup ANNCSU per il singolo punto."
+                if len(streets) > 1
+                else "",
                 "civic_count": len(civic_rows) if civic_rows else as_int(task.get("civic_count")),
                 "civic_min": civic_min,
                 "civic_max": civic_max,
                 "civic_values_sample": civic_values_sample(civic_rows),
-                "parity_mix": parity_mix_for_rows(civic_rows),
+                "parity_mix": parity_mix,
                 "snc_count": snc_count_for_rows(civic_rows),
                 "current_assigned_sections": current_sections,
                 "suggested_section_number": suggested,
@@ -1420,12 +1533,15 @@ def main() -> int:
         lambda access_id: as_text(boundary_by_access.get(access_id, {}).get("distance_to_candidate_boundary_m"))
     )
     review_points["task_id"] = review_points["access_id"].astype(str).map(lambda access_id: point_task_by_access.get(access_id, ""))
+    review_points = enrich_point_label_columns(review_points, civics_by_access)
 
     deterministic = deterministic_points.copy().sort_values("access_id")
     if len(deterministic) > MAX_DETERMINISTIC_SAMPLE:
         step = len(deterministic) / MAX_DETERMINISTIC_SAMPLE
         sample_indexes = sorted({int(i * step) for i in range(MAX_DETERMINISTIC_SAMPLE)})
         deterministic = deterministic.iloc[sample_indexes].copy()
+    spatially_resolved_points = enrich_point_label_columns(spatially_resolved_points, civics_by_access)
+    deterministic = enrich_point_label_columns(deterministic, civics_by_access)
 
     public_pdf_path = ""
     if RAW_STREET_REGISTER_PDF.exists() and RAW_STREET_REGISTER_PDF.stat().st_size <= 2_000_000:
@@ -1451,6 +1567,7 @@ def main() -> int:
             "total_civic_review_tasks": len(civic_review_tasks),
             "review_tasks_by_type": dict(Counter(task["task_type"] for task in review_tasks)),
             "civic_review_tasks_by_type": dict(Counter(task["task_type"] for task in civic_review_tasks)),
+            "civic_review_tasks_by_label_integrity_status": dict(Counter(task["label_integrity_status"] for task in civic_review_tasks)),
             "high_priority_review_tasks": sum(1 for task in review_tasks if task.get("priority") == "high"),
             "high_priority_civic_review_tasks": sum(1 for task in civic_review_tasks if task.get("priority") == "high"),
             "tasks_with_street_register_evidence": sum(1 for task in civic_review_tasks if task.get("has_street_register_evidence")),
@@ -1564,9 +1681,20 @@ def main() -> int:
                 "review_id",
                 "point_type",
                 "access_id",
+                "source_record_access_id",
+                "anncsu_address_label",
+                "map_popup_title",
+                "odonimo_raw",
+                "localita",
+                "civico",
+                "esponente",
                 "ODONIMO",
                 "CIVICO",
                 "ESPONENTE",
+                "source_coord_x",
+                "source_coord_y",
+                "source_coord_lon",
+                "source_coord_lat",
                 "section_number",
                 "assignment_method",
                 "assignment_confidence",
@@ -1575,6 +1703,8 @@ def main() -> int:
                 "distance_to_candidate_boundary_m",
                 "competing_sections",
                 "task_id",
+                "label_integrity_status",
+                "label_integrity_notes",
             ],
         ),
     )
@@ -1582,14 +1712,56 @@ def main() -> int:
         OUT_DIR / "spatially_resolved_points.geojson",
         point_collection(
             spatially_resolved_points,
-            ["access_id", "ODONIMO", "CIVICO", "ESPONENTE", "section_number", "assignment_method", "assignment_confidence"],
+            [
+                "access_id",
+                "source_record_access_id",
+                "anncsu_address_label",
+                "map_popup_title",
+                "odonimo_raw",
+                "localita",
+                "civico",
+                "esponente",
+                "ODONIMO",
+                "CIVICO",
+                "ESPONENTE",
+                "source_coord_x",
+                "source_coord_y",
+                "source_coord_lon",
+                "source_coord_lat",
+                "section_number",
+                "assignment_method",
+                "assignment_confidence",
+                "label_integrity_status",
+                "label_integrity_notes",
+            ],
         ),
     )
     write_json(
         OUT_DIR / "deterministic_points_sample.geojson",
         point_collection(
             deterministic,
-            ["access_id", "ODONIMO", "CIVICO", "ESPONENTE", "section_number", "assignment_method", "assignment_confidence"],
+            [
+                "access_id",
+                "source_record_access_id",
+                "anncsu_address_label",
+                "map_popup_title",
+                "odonimo_raw",
+                "localita",
+                "civico",
+                "esponente",
+                "ODONIMO",
+                "CIVICO",
+                "ESPONENTE",
+                "source_coord_x",
+                "source_coord_y",
+                "source_coord_lon",
+                "source_coord_lat",
+                "section_number",
+                "assignment_method",
+                "assignment_confidence",
+                "label_integrity_status",
+                "label_integrity_notes",
+            ],
         ),
     )
 

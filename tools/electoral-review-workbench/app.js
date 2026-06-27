@@ -54,6 +54,7 @@ const state = {
   fallbackBBox: null,
   showNearby: false,
   showCompeting: false,
+  showLabelIntegrity: false,
 };
 
 const el = {
@@ -81,6 +82,7 @@ const el = {
     street: document.getElementById("streetFilter"),
     reason: document.getElementById("reasonFilter"),
     streetEvidence: document.getElementById("streetEvidenceFilter"),
+    labelIntegrity: document.getElementById("labelIntegrityFilter"),
     parity: document.getElementById("parityFilter"),
     decisionType: document.getElementById("decisionTypeFilter"),
     sort: document.getElementById("sortSelect"),
@@ -98,6 +100,7 @@ const el = {
     boundaryPoints: document.getElementById("toggleBoundaryPoints"),
     resolvedPoints: document.getElementById("toggleResolvedPoints"),
     deterministicPoints: document.getElementById("toggleDeterministicPoints"),
+    labelIntegrity: document.getElementById("toggleLabelIntegrity"),
   },
   zoomSelectedButton: document.getElementById("zoomSelectedButton"),
   showNearbyButton: document.getElementById("showNearbyButton"),
@@ -131,8 +134,13 @@ function asArray(value) {
 }
 
 function asNumber(value, fallback = 0) {
-  const parsed = Number(value);
+  const parsed = Number(asString(value).replace(",", "."));
   return Number.isFinite(parsed) ? parsed : fallback;
+}
+
+function parseCoordinate(value) {
+  const parsed = Number(asString(value).replace(",", "."));
+  return Number.isFinite(parsed) ? parsed : NaN;
 }
 
 function asBool(value) {
@@ -235,6 +243,12 @@ function evidenceBadge(task) {
   return badge("No rule match", "none");
 }
 
+function labelIntegrityBadge(status) {
+  const value = asString(status || "ok");
+  if (!value || value === "ok") return badge("Label OK", "ok");
+  return badge(titleCase(value), value);
+}
+
 function taskByTypeCounts() {
   const counts = {};
   for (const task of state.tasks) {
@@ -276,6 +290,14 @@ function populateSelect(select, values, formatter = titleCase) {
 }
 
 function populateFilters() {
+  const labelStatuses = [
+    "ok",
+    "multi_street_task",
+    "missing_source_record",
+    "coordinate_outlier",
+    "street_label_ambiguous",
+    "needs_label_review",
+  ];
   populateSelect(el.filters.taskType, [...new Set(state.tasks.map((task) => task.task_type))].sort(), titleCase);
   populateSelect(el.filters.priority, [...new Set(state.tasks.map((task) => task.priority).filter(Boolean))].sort(), titleCase);
   populateSelect(
@@ -299,6 +321,7 @@ function populateFilters() {
     titleCase,
   );
   populateSelect(el.filters.decisionType, DECISION_TYPES, titleCase);
+  populateSelect(el.filters.labelIntegrity, labelStatuses, titleCase);
 }
 
 function currentFilters() {
@@ -312,6 +335,7 @@ function currentFilters() {
     street: el.filters.street.value,
     reason: el.filters.reason.value,
     streetEvidence: el.filters.streetEvidence.value,
+    labelIntegrity: el.filters.labelIntegrity.value,
     parity: el.filters.parity.value,
     decisionType: el.filters.decisionType.value,
     sort: el.filters.sort.value,
@@ -349,6 +373,7 @@ function taskMatchesFilters(task, filters) {
   if (filters.streetEvidence === "direct" && !task.has_direct_street_register_rule) return false;
   if (filters.streetEvidence === "multiple" && !task.has_multiple_street_register_rules) return false;
   if (filters.streetEvidence === "none" && !task.has_no_street_register_rule) return false;
+  if (filters.labelIntegrity && asString(task.label_integrity_status || "ok") !== filters.labelIntegrity) return false;
   if (filters.parity && !Object.prototype.hasOwnProperty.call(task.parity_mix || {}, filters.parity)) return false;
   if (filters.nearBoundary && task.task_type !== "boundary_civic_cluster") return false;
   const decision = taskDecision(task.task_id);
@@ -364,11 +389,14 @@ function taskMatchesFilters(task, filters) {
     task.suggested_section_number,
     asArray(task.competing_sections).join(" "),
     asArray(task.involved_streets).join(" "),
+    asArray(task.representative_streets).join(" "),
     asArray(task.civic_values_sample).join(" "),
     asArray(task.representative_census_cells).join(" "),
     task.civic_min,
     task.civic_max,
     task.unresolved_reason,
+    task.label_integrity_status,
+    task.label_integrity_notes,
     task.notes,
   ].join(" ").toLowerCase();
   return haystack.includes(filters.search);
@@ -427,6 +455,7 @@ function renderTaskList() {
           ${badge(titleCase(task.priority || "none"), task.priority || "none")}
           ${task.suggested_section_number ? badge(`Sec ${task.suggested_section_number}`, "section") : ""}
           ${evidenceBadge(task)}
+          ${labelIntegrityBadge(task.label_integrity_status)}
         </span>
         <span class="task-card-foot">
           <span>${numberLabel(task.civic_count)} civics</span>
@@ -465,6 +494,7 @@ function renderSelectedTask() {
     task.suggested_section_number ? badge(`Suggested ${task.suggested_section_number}`, "section") : "",
     taskStatusBadge(task.task_id),
     evidenceBadge(task),
+    labelIntegrityBadge(task.label_integrity_status),
   ].join("");
   renderActiveTab();
 }
@@ -476,8 +506,193 @@ function factGrid(rows) {
     .join("")}</dl>`;
 }
 
+function civicStreet(civic) {
+  return asString(civic?.odonimo_raw || civic?.ODONIMO || civic?.anncsu_odonimo || civic?.street_name_normalised);
+}
+
+function civicNumberLabel(civic) {
+  const civicNumber = asString(civic?.civico || civic?.CIVICO);
+  const exponent = asString(civic?.esponente || civic?.ESPONENTE);
+  if (civicNumber && exponent) return `${civicNumber}/${exponent}`;
+  if (civicNumber) return civicNumber;
+  return asBool(civic?.is_snc) ? "SNC" : "";
+}
+
+function anncsuPointTitle(civic) {
+  const stored = asString(civic?.map_popup_title || civic?.anncsu_address_label);
+  if (stored) return stored;
+  const street = civicStreet(civic);
+  const civicNumber = civicNumberLabel(civic);
+  if (!street && !civicNumber) return "";
+  return `ANNCSU: ${street}${civicNumber ? ` ${civicNumber}` : ""}`.trim();
+}
+
+function formatSourceCoords(civic) {
+  const lon = asString(civic?.source_coord_lon || civic?.coord_x);
+  const lat = asString(civic?.source_coord_lat || civic?.coord_y);
+  return lon && lat ? `${lon}, ${lat}` : "";
+}
+
+function geoFeatureForAccessId(accessId) {
+  return state.data.geoFeatureByAccessId?.[asString(accessId)] || null;
+}
+
+function indexGeoJsonByAccessId(...collections) {
+  const out = {};
+  for (const collection of collections) {
+    for (const feature of collection?.features || []) {
+      const accessId = asString(feature.properties?.access_id);
+      if (accessId && !out[accessId]) out[accessId] = feature;
+    }
+  }
+  return out;
+}
+
+function selectedDebugCivic(task) {
+  const rows = state.data.civicsByTask[task.task_id] || [];
+  if (!rows.length) return null;
+  if (state.selectedCivicAccessId) {
+    const focused = rows.find((row) => asString(row.access_id) === asString(state.selectedCivicAccessId));
+    if (focused) return focused;
+  }
+  const selected = rows.find((row) => state.selectedAccessIds.has(asString(row.access_id)));
+  return selected || rows[0];
+}
+
+function sourceRecordForCopy(civic, task) {
+  return {
+    access_id: asString(civic.access_id),
+    odonimo_raw: civicStreet(civic),
+    localita: asString(civic.localita),
+    civico: asString(civic.civico),
+    esponente: asString(civic.esponente),
+    source_coord_lon: asString(civic.source_coord_lon || civic.coord_x),
+    source_coord_lat: asString(civic.source_coord_lat || civic.coord_y),
+    current_section_number: asString(civic.current_section_number || civic.section_number),
+    suggested_section_number: asString(civic.suggested_section_number || task.suggested_section_number),
+    task_id: asString(task.task_id),
+    rule_id: asString(civic.rule_id),
+    label_integrity_status: asString(civic.label_integrity_status || task.label_integrity_status || "ok"),
+  };
+}
+
+function firstStreetRuleForTask(task, civic) {
+  const rows = state.data.streetEvidenceByTask[task.task_id] || [];
+  const ruleId = asString(civic?.rule_id);
+  return rows.find((row) => ruleId && asString(row.rule_id) === ruleId) || rows[0] || {};
+}
+
+function sourceRecordMismatches(civic, task) {
+  const mismatches = [];
+  const accessId = asString(civic.access_id);
+  const geo = geoFeatureForAccessId(accessId);
+  const geoProps = geo?.properties || {};
+  const geoCoords = geo?.geometry?.coordinates || [];
+  const sourceLon = parseCoordinate(civic.source_coord_lon || civic.coord_x);
+  const sourceLat = parseCoordinate(civic.source_coord_lat || civic.coord_y);
+  const geoLon = parseCoordinate(geoCoords[0]);
+  const geoLat = parseCoordinate(geoCoords[1]);
+
+  if (asString(civic.source_record_access_id) && asString(civic.source_record_access_id) !== accessId) {
+    mismatches.push("Task payload source_record_access_id differs from access_id.");
+  }
+  if (!geo) {
+    mismatches.push("No GeoJSON feature found for this access_id.");
+  } else {
+    if (asString(geoProps.access_id) !== accessId) mismatches.push("GeoJSON access_id differs from selected access_id.");
+    if (civicStreet(geoProps) && civicStreet(geoProps) !== civicStreet(civic)) mismatches.push("GeoJSON odonimo differs from source payload.");
+    if (asString(geoProps.civico || geoProps.CIVICO) && asString(geoProps.civico || geoProps.CIVICO) !== asString(civic.civico)) {
+      mismatches.push("GeoJSON civico differs from source payload.");
+    }
+    if (Number.isFinite(sourceLon) && Number.isFinite(geoLon) && Math.abs(sourceLon - geoLon) > 0.0000015) {
+      mismatches.push("GeoJSON longitude differs from source coordinate.");
+    }
+    if (Number.isFinite(sourceLat) && Number.isFinite(geoLat) && Math.abs(sourceLat - geoLat) > 0.0000015) {
+      mismatches.push("GeoJSON latitude differs from source coordinate.");
+    }
+  }
+  if (anncsuPointTitle(civic).toLowerCase().includes(asString(task.title).toLowerCase())) {
+    mismatches.push("Marker label appears to reuse the task title.");
+  }
+  return mismatches;
+}
+
+function renderSourceRecordBlock(title, rows) {
+  return `
+    <section class="source-record-block">
+      <h4>${escapeHtml(title)}</h4>
+      ${factGrid(rows)}
+    </section>
+  `;
+}
+
+function renderLabelIntegrityPanel(task) {
+  const civic = selectedDebugCivic(task);
+  if (!civic) return `<div class="source-record-panel"><p class="empty-state">No civic source record for this task.</p></div>`;
+  const accessId = asString(civic.access_id);
+  const geo = geoFeatureForAccessId(accessId);
+  const geoProps = geo?.properties || {};
+  const geoCoords = geo?.geometry?.coordinates || [];
+  const rule = firstStreetRuleForTask(task, civic);
+  const mismatches = sourceRecordMismatches(civic, task);
+  const status = asString(civic.label_integrity_status || task.label_integrity_status || "ok");
+
+  return `
+    <div class="source-record-panel">
+      <div class="source-record-head">
+        <div>
+          <h3>Source record</h3>
+          <p>${escapeHtml(anncsuPointTitle(civic))}</p>
+        </div>
+        <div class="inline-toolbar">
+          <button type="button" data-copy-access-id>Copy access_id</button>
+          <button type="button" data-copy-source-record>Copy source record</button>
+        </div>
+      </div>
+      <div class="badge-row">
+        ${labelIntegrityBadge(status)}
+        ${mismatches.length ? badge(`${mismatches.length} mismatch`, "high") : badge("Debug checks OK", "ok")}
+      </div>
+      ${mismatches.length ? `<ul class="integrity-list">${mismatches.map((item) => `<li>${escapeHtml(item)}</li>`).join("")}</ul>` : ""}
+      ${renderSourceRecordBlock("Source CSV values", [
+        ["access_id", accessId],
+        ["ANNCSU address", `${civicStreet(civic)} ${civicNumberLabel(civic)}`.trim()],
+        ["Localita", civic.localita],
+        ["Source coords", formatSourceCoords(civic)],
+        ["Current section", civic.current_section_number || civic.section_number],
+        ["Proposed section", civic.suggested_section_number || task.suggested_section_number],
+      ])}
+      ${renderSourceRecordBlock("GeoJSON properties", [
+        ["access_id", geoProps.access_id],
+        ["ANNCSU address", anncsuPointTitle(geoProps)],
+        ["Localita", geoProps.localita],
+        ["GeoJSON coords", geoCoords.length >= 2 ? `${geoCoords[0]}, ${geoCoords[1]}` : ""],
+        ["Section", geoProps.section_number],
+        ["Task id", geoProps.task_id],
+      ])}
+      ${renderSourceRecordBlock("Task payload values", [
+        ["Task id", task.task_id],
+        ["Task title", task.title],
+        ["Multi-street task", asBool(task.is_multi_street_task) ? "yes" : "no"],
+        ["Street count", task.street_count],
+        ["Representative title", asBool(task.display_title_is_representative) ? "yes" : "no"],
+        ["Candidate sections", task.candidate_section_count],
+      ])}
+      ${renderSourceRecordBlock("Electoral street-register rule", [
+        ["rule_id", rule.rule_id || civic.rule_id],
+        ["section_number", rule.section_number],
+        ["street_rule_raw", rule.street_rule_raw || rule.street_name_raw],
+        ["civic_rule_raw", rule.civic_rule_raw],
+        ["source_page", rule.source_page],
+      ])}
+      <p class="source-context-note">OpenStreetMap visual context: OSM \u00e8 solo sfondo visivo.</p>
+    </div>
+  `;
+}
+
 function renderSummaryTab(task) {
   const parityMix = Object.entries(task.parity_mix || {}).map(([key, value]) => `${key}: ${value}`).join(", ");
+  const streets = asArray(task.representative_streets?.length ? task.representative_streets : task.involved_streets);
   return `
     ${factGrid([
       ["Task id", task.task_id],
@@ -493,19 +708,28 @@ function renderSummaryTab(task) {
       ["Civic sample", asArray(task.civic_values_sample).join(", ")],
       ["Parity mix", parityMix],
       ["SNC count", task.snc_count],
+      ["Multi-street task", asBool(task.is_multi_street_task) ? "yes" : "no"],
+      ["Street count", task.street_count],
+      ["Representative title", asBool(task.display_title_is_representative) ? "yes" : "no"],
+      ["Civic intervals", task.civic_interval_count],
+      ["Candidate section count", task.candidate_section_count],
+      ["Label integrity", titleCase(task.label_integrity_status || "ok")],
       ["Reason", titleCase(task.unresolved_reason)],
       ["Evidence strength", titleCase(task.evidence_strength)],
       ["Street-register status", titleCase(task.street_register_match_status)],
     ])}
     <div class="narrative-block">
+      ${streets.length ? `<h3>ANNCSU streets in task</h3><ul class="compact-list">${streets.map((street) => `<li>${escapeHtml(street)}</li>`).join("")}</ul>` : ""}
       <h3>Why it needs review</h3>
       <p>${escapeHtml(task.why_needs_review || "")}</p>
       <h3>Suggested action</h3>
       <p>${escapeHtml(task.suggested_action || "")}</p>
       <h3>Method guardrails</h3>
-      <p>Le celle censuarie sono supporto geometrico. La decisione primaria riguarda civici, gruppi di civici o regole dello stradario. OpenStreetMap è solo contesto visivo. Lo stradario elettorale resta la fonte primaria.</p>
+      <p>ANNCSU address is the source for each point label and coordinate. Electoral street-register rule is the normative source for section assignment. OpenStreetMap visual context: OSM \u00e8 solo sfondo visivo.</p>
       ${task.notes ? `<h3>Notes</h3><p>${escapeHtml(task.notes)}</p>` : ""}
+      ${task.label_integrity_notes ? `<h3>Label integrity notes</h3><p>${escapeHtml(task.label_integrity_notes)}</p>` : ""}
     </div>
+    ${state.showLabelIntegrity ? renderLabelIntegrityPanel(task) : ""}
   `;
 }
 
@@ -532,29 +756,46 @@ function civicMatchesPanelFilter(civic, task) {
 function civicRowHtml(civic) {
   const accessId = asString(civic.access_id);
   const checked = state.selectedAccessIds.has(accessId) ? " checked" : "";
+  const focused = asString(state.selectedCivicAccessId) === accessId ? " class=\"focused-row\"" : "";
   return `
-    <tr data-access-id="${escapeHtml(accessId)}">
+    <tr data-access-id="${escapeHtml(accessId)}"${focused}>
       <td><input class="civic-select" type="checkbox" data-access-id="${escapeHtml(accessId)}"${checked} /></td>
       <td>${escapeHtml(accessId)}</td>
-      <td>${escapeHtml(civic.odonimo_raw)}</td>
-      <td>${escapeHtml(civic.civico)}</td>
-      <td>${escapeHtml(civic.esponente)}</td>
+      <td>${escapeHtml(civicStreet(civic))}</td>
+      <td>${escapeHtml(civic.localita)}</td>
+      <td>${escapeHtml(civicNumberLabel(civic))}</td>
       <td>${escapeHtml(civicParity(civic))}</td>
+      <td>${escapeHtml(formatSourceCoords(civic))}</td>
       <td>${escapeHtml(civic.current_section_number)}</td>
       <td>${escapeHtml(civic.suggested_section_number)}</td>
-      <td>${escapeHtml(civic.assignment_method)}</td>
-      <td>${escapeHtml(civic.assignment_confidence)}</td>
       <td>${escapeHtml(civic.rule_id)}</td>
-      <td>${escapeHtml(civic.distance_to_boundary_m)}</td>
+      <td>${escapeHtml(civic.label_integrity_status || "ok")}</td>
       <td>${escapeHtml(civic.notes)}</td>
     </tr>
   `;
 }
 
+function groupedCivicRowsHtml(rows) {
+  let currentStreet = "";
+  return rows.map((civic) => {
+    const street = civicStreet(civic) || "Unknown ANNCSU street";
+    const header = street !== currentStreet
+      ? `<tr class="street-group-row"><th colspan="12">ANNCSU address: ${escapeHtml(street)}</th></tr>`
+      : "";
+    currentStreet = street;
+    return `${header}${civicRowHtml(civic)}`;
+  }).join("");
+}
+
 function renderCivicsTab(task) {
   const allRows = currentTaskCivics();
   const rows = allRows.filter((civic) => civicMatchesPanelFilter(civic, task));
-  const limited = rows.slice(0, MAX_TABLE_ROWS);
+  const sortedRows = [...rows].sort((a, b) => {
+    const street = civicStreet(a).localeCompare(civicStreet(b), "it");
+    if (street !== 0) return street;
+    return asNumber(civicNumeric(a), 999999) - asNumber(civicNumeric(b), 999999);
+  });
+  const limited = sortedRows.slice(0, MAX_TABLE_ROWS);
   const selectedCount = selectedCivicsForTask().length;
   const controls = `
     <div class="inline-toolbar">
@@ -588,20 +829,19 @@ function renderCivicsTab(task) {
           <tr>
             <th>Select</th>
             <th>Access id</th>
-            <th>Street</th>
+            <th>ANNCSU street</th>
+            <th>Localita</th>
             <th>Civic</th>
-            <th>Exp.</th>
             <th>Parity</th>
+            <th>Source coords</th>
             <th>Current section</th>
             <th>Suggested section</th>
-            <th>Method</th>
-            <th>Confidence</th>
             <th>Rule id</th>
-            <th>Boundary m</th>
+            <th>Label status</th>
             <th>Notes</th>
           </tr>
         </thead>
-        <tbody>${limited.map(civicRowHtml).join("")}</tbody>
+        <tbody>${groupedCivicRowsHtml(limited)}</tbody>
       </table>
     </div>
   `;
@@ -639,6 +879,7 @@ function renderStreetTab(task) {
       ${evidenceBadge(task)}
       <span>${numberLabel(rows.length)} relevant parsed rules</span>
     </div>
+    <p class="table-note">Electoral street-register rule: normative section evidence from the parsed street register. It is separate from the ANNCSU address shown on each civic marker.</p>
     ${renderTable(fields, enriched, null, { allowHtmlFields: new Set(["pdf"]) })}
   `;
 }
@@ -720,9 +961,10 @@ function renderProcessTab() {
       </ol>
       <div class="narrative-block">
         <p>Le celle censuarie sono supporto geometrico.</p>
+        <p>ANNCSU address is the source record for every civic marker.</p>
         <p>La decisione primaria riguarda civici, gruppi di civici o regole dello stradario.</p>
         <p>Le decisioni verranno applicate in una futura V4 solo dopo controllo.</p>
-        <p>OpenStreetMap è solo contesto visivo.</p>
+        <p>OpenStreetMap visual context: OSM \u00e8 solo sfondo visivo.</p>
         <p>Lo stradario elettorale resta la fonte primaria.</p>
       </div>
     </div>
@@ -926,6 +1168,40 @@ function wireTabPanelEvents() {
       refreshMap();
     });
   }
+  const copyAccessButton = el.tabPanel.querySelector("[data-copy-access-id]");
+  if (copyAccessButton) {
+    copyAccessButton.addEventListener("click", () => {
+      const task = selectedTask();
+      const civic = task ? selectedDebugCivic(task) : null;
+      if (civic) copyText(asString(civic.access_id));
+    });
+  }
+  const copySourceButton = el.tabPanel.querySelector("[data-copy-source-record]");
+  if (copySourceButton) {
+    copySourceButton.addEventListener("click", () => {
+      const task = selectedTask();
+      const civic = task ? selectedDebugCivic(task) : null;
+      if (task && civic) copyText(JSON.stringify(sourceRecordForCopy(civic, task), null, 2));
+    });
+  }
+}
+
+async function copyText(value) {
+  const text = asString(value);
+  if (!text) return;
+  try {
+    await navigator.clipboard.writeText(text);
+  } catch {
+    const area = document.createElement("textarea");
+    area.value = text;
+    area.setAttribute("readonly", "readonly");
+    area.style.position = "fixed";
+    area.style.left = "-9999px";
+    document.body.appendChild(area);
+    area.select();
+    document.execCommand("copy");
+    area.remove();
+  }
 }
 
 function downloadFile(name, mime, content) {
@@ -1104,6 +1380,36 @@ function popupForProperties(properties) {
   return `<dl class="popup-facts">${rows}</dl>`;
 }
 
+function taskForId(taskId) {
+  return state.tasks.find((task) => task.task_id === taskId) || null;
+}
+
+function popupForCivic(properties, task = null) {
+  const taskRecord = task || taskForId(asString(properties?.task_id));
+  const currentSection = asString(properties?.current_section_number || properties?.section_number);
+  const proposedSection = asString(properties?.suggested_section_number || taskRecord?.suggested_section_number);
+  const rule = taskRecord ? firstStreetRuleForTask(taskRecord, properties) : {};
+  const ruleId = asString(properties?.rule_id || rule.rule_id);
+  const facts = [
+    ["Current section", currentSection],
+    ["Proposed section", proposedSection],
+    ["Task", taskRecord?.task_id || properties?.task_id],
+    ["Electoral street-register rule", ruleId],
+    ["Rule section", rule.section_number],
+    ["Rule page", rule.source_page],
+    ["Source coords", formatSourceCoords(properties)],
+    ["Label status", properties?.label_integrity_status || taskRecord?.label_integrity_status || "ok"],
+  ];
+  return `
+    <div class="source-popup">
+      <strong>${escapeHtml(anncsuPointTitle(properties))}</strong>
+      <p class="popup-subtitle">${escapeHtml(asString(properties?.access_id))}</p>
+      ${factGrid(facts)}
+      <p class="popup-note">OSM \u00e8 solo sfondo visivo</p>
+    </div>
+  `;
+}
+
 function sectionStyle(feature) {
   const section = asString(feature.properties?.section_number);
   const task = selectedTask();
@@ -1189,10 +1495,11 @@ function drawLeafletBaseLayers() {
     }),
     onEachFeature: (feature, layer) => {
       const props = feature.properties || {};
-      layer.bindTooltip(`${props.ODONIMO || ""} ${props.CIVICO || ""} sec ${props.section_number || ""}`);
-      layer.bindPopup(popupForProperties(props));
+      layer.bindTooltip(`${anncsuPointTitle(props)} sec ${props.section_number || ""}`);
+      layer.bindPopup(popupForCivic(props));
       layer.on("click", () => {
-        if (props.task_id) selectTask(props.task_id);
+        if (props.task_id) selectTask(props.task_id, { zoom: false });
+        if (props.access_id) focusCivic(asString(props.access_id), { zoom: false });
       });
     },
   });
@@ -1204,7 +1511,10 @@ function drawLeafletBaseLayers() {
       fillColor: "#3273a8",
       fillOpacity: 0.55,
     }),
-    onEachFeature: (feature, layer) => layer.bindTooltip(`Resolved ${feature.properties?.ODONIMO || ""} ${feature.properties?.CIVICO || ""}`),
+    onEachFeature: (feature, layer) => {
+      layer.bindTooltip(`Resolved ${anncsuPointTitle(feature.properties || {})}`);
+      layer.bindPopup(popupForCivic(feature.properties || {}));
+    },
   });
   addGeoJsonLayer(state.leafletLayers.deterministicPoints, state.data.deterministicPoints, {
     pointToLayer: (_feature, latlng) => window.L.circleMarker(latlng, {
@@ -1214,7 +1524,10 @@ function drawLeafletBaseLayers() {
       fillColor: "#25865f",
       fillOpacity: 0.48,
     }),
-    onEachFeature: (feature, layer) => layer.bindTooltip(`Deterministic sec ${feature.properties?.section_number || ""}`),
+    onEachFeature: (feature, layer) => {
+      layer.bindTooltip(`${anncsuPointTitle(feature.properties || {})} sec ${feature.properties?.section_number || ""}`);
+      layer.bindPopup(popupForCivic(feature.properties || {}));
+    },
   });
   setLayerVisibility("sectionsV3", el.toggles.v3.checked);
   setLayerVisibility("sectionsV2", el.toggles.v2.checked);
@@ -1233,8 +1546,8 @@ function selectTaskForSection(sectionNumber) {
 }
 
 function civicLatLng(civic) {
-  const lon = Number(civic.coord_x);
-  const lat = Number(civic.coord_y);
+  const lon = parseCoordinate(civic.source_coord_lon || civic.coord_x);
+  const lat = parseCoordinate(civic.source_coord_lat || civic.coord_y);
   if (!Number.isFinite(lon) || !Number.isFinite(lat)) return null;
   return [lat, lon];
 }
@@ -1251,7 +1564,7 @@ function renderSelectedLeaflet() {
     const latlng = civicLatLng(civic);
     if (!latlng) continue;
     const selected = state.selectedAccessIds.has(asString(civic.access_id));
-    const focused = civic.access_id === state.selectedCivicAccessId;
+    const focused = asString(civic.access_id) === asString(state.selectedCivicAccessId);
     const marker = window.L.circleMarker(latlng, {
       radius: focused ? 8 : selected ? 6.5 : 5,
       color: focused ? "#111827" : selected ? "#244f8f" : "#ffffff",
@@ -1259,8 +1572,8 @@ function renderSelectedLeaflet() {
       fillColor: selected ? "#7fb0ff" : "#f05a45",
       fillOpacity: 0.9,
     });
-    marker.bindTooltip(`${civic.odonimo_raw || ""} ${civic.civico || ""}`);
-    marker.bindPopup(popupForProperties(civic));
+    marker.bindTooltip(anncsuPointTitle(civic));
+    marker.bindPopup(popupForCivic(civic, task));
     marker.on("click", () => focusCivic(civic.access_id, { zoom: false }));
     marker.addTo(state.leafletLayers.selected);
   }
@@ -1274,7 +1587,7 @@ function renderSelectedLeaflet() {
         weight: 1,
         fillColor: "#278260",
         fillOpacity: 0.7,
-      }).bindTooltip(`Nearby deterministic sec ${civic.section_number || ""}`).addTo(state.leafletLayers.nearby);
+      }).bindTooltip(`${anncsuPointTitle(civic)} sec ${civic.section_number || ""}`).bindPopup(popupForCivic(civic)).addTo(state.leafletLayers.nearby);
     }
     setLayerVisibility("nearby", true);
   } else {
@@ -1308,8 +1621,8 @@ function zoomToSelectedTask() {
 }
 
 function focusCivic(accessId, options = {}) {
-  state.selectedCivicAccessId = accessId;
-  const civic = currentTaskCivics().find((row) => row.access_id === accessId);
+  state.selectedCivicAccessId = asString(accessId);
+  const civic = currentTaskCivics().find((row) => asString(row.access_id) === asString(accessId));
   renderActiveTab();
   refreshMap();
   if (options.zoom === false || !civic || !state.map) return;
@@ -1321,7 +1634,7 @@ function refreshMap() {
   if (state.mapMode === "leaflet") {
     drawLeafletBaseLayers();
     renderSelectedLeaflet();
-    el.mapStatus.textContent = el.toggles.osm.checked ? "OpenStreetMap basemap is visual context only." : "OSM hidden; local geometries remain visible.";
+    el.mapStatus.textContent = el.toggles.osm.checked ? "OSM \u00e8 solo sfondo visivo." : "OSM hidden; local geometries remain visible.";
     window.setTimeout(() => { el.mapStatus.textContent = ""; }, 1600);
     return;
   }
@@ -1432,8 +1745,9 @@ function renderFallbackMap() {
     if (!feature.geometry || feature.geometry.type !== "Point") continue;
     if (feature.properties?.task_id !== state.selectedTaskId && !el.toggles.reviewPoints.checked) continue;
     const [x, y] = project(feature.geometry.coordinates);
-    const selected = feature.properties?.task_id === state.selectedTaskId;
-    paths.push(`<circle class="fallback-point${selected ? " selected" : ""}" cx="${x.toFixed(2)}" cy="${y.toFixed(2)}" r="${selected ? 5 : 2.8}"></circle>`);
+    const focused = asString(feature.properties?.access_id) === asString(state.selectedCivicAccessId);
+    const selected = focused || feature.properties?.task_id === state.selectedTaskId;
+    paths.push(`<circle class="fallback-point${selected ? " selected" : ""}${focused ? " focused" : ""}" cx="${x.toFixed(2)}" cy="${y.toFixed(2)}" r="${focused ? 7 : selected ? 5 : 2.8}"></circle>`);
   }
   el.fallbackMap.setAttribute("viewBox", `0 0 ${width} ${height}`);
   el.fallbackMap.innerHTML = paths.join("");
@@ -1450,7 +1764,11 @@ function wireEvents() {
     filter.addEventListener(eventName, () => applyFilters({ keepSelection: true }));
   }
   for (const toggle of Object.values(el.toggles)) {
-    toggle.addEventListener("change", refreshMap);
+    toggle.addEventListener("change", () => {
+      state.showLabelIntegrity = Boolean(el.toggles.labelIntegrity?.checked);
+      renderActiveTab();
+      refreshMap();
+    });
   }
   document.querySelectorAll(".tabs [data-tab]").forEach((button) => {
     button.addEventListener("click", () => {
@@ -1520,6 +1838,7 @@ async function boot() {
     streetEvidenceByTask,
     candidateSectionsByTask,
     nearbyByTask,
+    geoFeatureByAccessId: indexGeoJsonByAccessId(reviewPoints, resolvedPoints, deterministicPoints),
   };
   state.tasks = tasks;
   state.filteredTasks = tasks;
