@@ -1,0 +1,313 @@
+{
+  "schema_version": "contracts-source-manifest.v1",
+  "updated_at": "2026-06-27",
+  "scope": "Source-family discovery manifest for public contracts and public-works links. This catalogue does not contain production records and does not declare a live synchronisation.",
+  "manual_verification_phrase": "URL ufficiale da verificare manualmente prima dell'ingestione",
+  "sources": [
+    {
+      "id": "anac-bdncp-pcp",
+      "label": "ANAC BDNCP / Piattaforma Contratti Pubblici",
+      "authority": "ANAC",
+      "official_url": "https://dati.anticorruzione.it/superset/dashboard/appalti/",
+      "access_type": "portal_search",
+      "source_axis": "mixed",
+      "primary_identifiers": ["CIG", "CUP", "procedure_id", "lot_id"],
+      "expected_formats": ["html_search", "unknown"],
+      "update_mode": "unknown",
+      "lifecycle_coverage": {
+        "programmazione": false,
+        "progettazione": false,
+        "gara_pubblicazione": true,
+        "affidamento": true,
+        "esecuzione": false,
+        "valutazione_collaudo_esito": false
+      },
+      "ingestion_status": "link_bridge",
+      "public_claim_level": "linked_only",
+      "limitations": [
+        "Usare come ponte di ricerca ufficiale basato su CIG quando disponibile.",
+        "Il link non certifica una scheda BDNCP sincronizzata nella piattaforma locale.",
+        "Esecuzione, SAL, liquidazioni, collaudo ed esito restano da documentare con fonti esplicite."
+      ],
+      "next_action": "Mantenere il link bridge; censire separatamente dataset strutturati BDNCP/PCP prima di qualsiasi parser reale."
+    },
+    {
+      "id": "anac-pvl",
+      "label": "ANAC Pubblicita a Valore Legale",
+      "authority": "ANAC",
+      "official_url": "https://pubblicitalegale.anticorruzione.it/",
+      "access_type": "portal_search",
+      "source_axis": "publication",
+      "primary_identifiers": ["CIG", "publication_id", "procedure_id"],
+      "expected_formats": ["html_search"],
+      "update_mode": "daily",
+      "lifecycle_coverage": {
+        "programmazione": false,
+        "progettazione": false,
+        "gara_pubblicazione": true,
+        "affidamento": true,
+        "esecuzione": false,
+        "valutazione_collaudo_esito": false
+      },
+      "ingestion_status": "link_bridge",
+      "public_claim_level": "linked_only",
+      "limitations": [
+        "Punto ufficiale di consultazione per pubblicita legale, bandi, avvisi ed esiti quando presenti.",
+        "Non viene raschiato e non produce record locali in questa PR.",
+        "Non dedurre affidamento o completezza lifecycle senza record strutturato ingerito."
+      ],
+      "next_action": "Conservare come collegamento ufficiale; valutare solo API o dataset documentati, non scraping della pagina dinamica."
+    },
+    {
+      "id": "anac-open-data-cig-annual",
+      "label": "ANAC open data CIG annual datasets",
+      "authority": "ANAC",
+      "official_url": null,
+      "access_type": "unknown",
+      "source_axis": "lot",
+      "primary_identifiers": ["CIG", "procedure_id", "lot_id"],
+      "expected_formats": ["csv", "json", "zip", "unknown"],
+      "update_mode": "full_dump",
+      "lifecycle_coverage": {
+        "programmazione": false,
+        "progettazione": false,
+        "gara_pubblicazione": true,
+        "affidamento": true,
+        "esecuzione": false,
+        "valutazione_collaudo_esito": false
+      },
+      "ingestion_status": "not_implemented",
+      "public_claim_level": "fixture_only",
+      "limitations": [
+        "URL ufficiale da verificare manualmente prima dell'ingestione",
+        "Lo skeleton attuale legge solo fixture JSON locali e false per test.",
+        "Nessun dump annuale ANAC reale e scaricato, salvato o pubblicato in questa PR."
+      ],
+      "next_action": "Identificare pacchetto annuale ufficiale, versione, licenza, campi CIG/lotto e data di pubblicazione prima del parser reale."
+    },
+    {
+      "id": "anac-open-data-cig-delta",
+      "label": "ANAC open data CIG delta/update datasets",
+      "authority": "ANAC",
+      "official_url": null,
+      "access_type": "unknown",
+      "source_axis": "lot",
+      "primary_identifiers": ["CIG", "procedure_id", "lot_id"],
+      "expected_formats": ["csv", "json", "zip", "unknown"],
+      "update_mode": "delta",
+      "lifecycle_coverage": {
+        "programmazione": false,
+        "progettazione": false,
+        "gara_pubblicazione": true,
+        "affidamento": true,
+        "esecuzione": false,
+        "valutazione_collaudo_esito": false
+      },
+      "ingestion_status": "not_implemented",
+      "public_claim_level": "none",
+      "limitations": [
+        "URL ufficiale da verificare manualmente prima dell'ingestione",
+        "Serve una strategia di deduplica, versionamento e freshness prima di leggere aggiornamenti incrementali.",
+        "Non dichiarare aggiornamento periodico finche non esiste una pipeline documentata."
+      ],
+      "next_action": "Verificare se ANAC pubblica pacchetti delta stabili o solo snapshot; disegnare mapping idempotente CIG/lotto."
+    },
+    {
+      "id": "anac-open-data-aggiudicazioni",
+      "label": "ANAC open data aggiudicazioni/esiti datasets",
+      "authority": "ANAC",
+      "official_url": null,
+      "access_type": "unknown",
+      "source_axis": "lot",
+      "primary_identifiers": ["CIG", "lot_id", "award_id", "operator_id"],
+      "expected_formats": ["csv", "json", "zip", "unknown"],
+      "update_mode": "unknown",
+      "lifecycle_coverage": {
+        "programmazione": false,
+        "progettazione": false,
+        "gara_pubblicazione": false,
+        "affidamento": true,
+        "esecuzione": false,
+        "valutazione_collaudo_esito": false
+      },
+      "ingestion_status": "not_implemented",
+      "public_claim_level": "none",
+      "limitations": [
+        "URL ufficiale da verificare manualmente prima dell'ingestione",
+        "Puo documentare affidamento solo se campi award/esito e operatori sono espliciti.",
+        "Non documenta esecuzione, liquidazioni, SAL, collaudo o regolarita del contratto."
+      ],
+      "next_action": "Individuare dataset ufficiale, schema campi aggiudicazione e chiavi di join con CIG/lotto."
+    },
+    {
+      "id": "anac-ocds-bdncp",
+      "label": "ANAC OCDS / OCDS-style BDNCP publication layer",
+      "authority": "ANAC",
+      "official_url": null,
+      "access_type": "unknown",
+      "source_axis": "mixed",
+      "primary_identifiers": [
+        "ocid",
+        "procedure_id",
+        "lot_id",
+        "award_id",
+        "contract_id",
+        "CIG",
+        "CUP"
+      ],
+      "expected_formats": ["ocds_json", "json", "zip", "unknown"],
+      "update_mode": "unknown",
+      "lifecycle_coverage": {
+        "programmazione": true,
+        "progettazione": false,
+        "gara_pubblicazione": true,
+        "affidamento": true,
+        "esecuzione": true,
+        "valutazione_collaudo_esito": false
+      },
+      "ingestion_status": "not_implemented",
+      "public_claim_level": "none",
+      "limitations": [
+        "URL ufficiale da verificare manualmente prima dell'ingestione",
+        "Layer OCDS/OCDS-style da identificare senza assumere completezza lifecycle.",
+        "CIG e CUP restano chiavi distinte anche quando compaiono nello stesso package."
+      ],
+      "next_action": "Verificare endpoint o pacchetti ufficiali, versione OCDS, policy delta/full e campi implementation prima di creare il parser."
+    },
+    {
+      "id": "opencup",
+      "label": "OpenCUP",
+      "authority": "DIPE / OpenCUP",
+      "official_url": "https://www.opencup.gov.it/portale/web/opencup/home",
+      "access_type": "portal_search",
+      "source_axis": "project_work",
+      "primary_identifiers": ["CUP", "project_id"],
+      "expected_formats": ["html_search", "unknown"],
+      "update_mode": "unknown",
+      "lifecycle_coverage": {
+        "programmazione": true,
+        "progettazione": true,
+        "gara_pubblicazione": false,
+        "affidamento": false,
+        "esecuzione": false,
+        "valutazione_collaudo_esito": false
+      },
+      "ingestion_status": "not_implemented",
+      "public_claim_level": "none",
+      "limitations": [
+        "Fonte per asse progetto/investimento, non sostituisce CIG, gara o affidamento.",
+        "Nessun record OpenCUP viene acquisito o pubblicato in questa PR.",
+        "Usare solo per collegare CUP a progetto/opera quando fonte strutturata o pagina verificata e disponibile."
+      ],
+      "next_action": "Censire eventuali dataset o API documentate e disegnare parser separato da ANAC/BDNCP."
+    },
+    {
+      "id": "mop-monitoraggio-opere-pubbliche",
+      "label": "MOP / Monitoraggio Opere Pubbliche",
+      "authority": "Ragioneria Generale dello Stato / BDAP",
+      "official_url": null,
+      "access_type": "unknown",
+      "source_axis": "project_work",
+      "primary_identifiers": ["CUP", "work_id", "project_id"],
+      "expected_formats": ["csv", "json", "zip", "unknown"],
+      "update_mode": "periodic",
+      "lifecycle_coverage": {
+        "programmazione": true,
+        "progettazione": true,
+        "gara_pubblicazione": false,
+        "affidamento": false,
+        "esecuzione": true,
+        "valutazione_collaudo_esito": true
+      },
+      "ingestion_status": "not_implemented",
+      "public_claim_level": "none",
+      "limitations": [
+        "URL ufficiale da verificare manualmente prima dell'ingestione",
+        "Potenziale fonte per avanzamento opere, ma il dataset preciso non e fissato in questo manifesto.",
+        "Non usare per dichiarare stato lavori o collaudo senza record MOP ingerito e verificabile."
+      ],
+      "next_action": "Verificare catalogo OpenBDAP/MOP, campi CUP/opera, frequenza e licenza prima del parser separato."
+    },
+    {
+      "id": "comune-lamezia-albo-pretorio",
+      "label": "Comune di Lamezia Terme Albo Pretorio",
+      "authority": "Comune di Lamezia Terme",
+      "official_url": "https://albo.tinnvision.cloud/?ente=00301390795",
+      "access_type": "open_data",
+      "source_axis": "publication",
+      "primary_identifiers": ["publication_id", "CIG", "CUP"],
+      "expected_formats": ["xml", "csv", "html_search"],
+      "update_mode": "daily",
+      "lifecycle_coverage": {
+        "programmazione": false,
+        "progettazione": true,
+        "gara_pubblicazione": true,
+        "affidamento": true,
+        "esecuzione": true,
+        "valutazione_collaudo_esito": true
+      },
+      "ingestion_status": "implemented",
+      "public_claim_level": "ingested",
+      "limitations": [
+        "Fonte locale ufficiale gia collegata nel perimetro Albo, non sostituisce ANAC/BDNCP.",
+        "La presenza dell'atto non dimostra completezza del fascicolo contratto/opera.",
+        "Allegati mancanti o non analizzati restano limite informativo."
+      ],
+      "next_action": "Continuare a collegare atti Albo a CIG/CUP e mantenere caveat su allegati, date e completezza storica."
+    },
+    {
+      "id": "comune-lamezia-amministrazione-trasparente",
+      "label": "Comune di Lamezia Terme Amministrazione Trasparente",
+      "authority": "Comune di Lamezia Terme",
+      "official_url": "https://trasparenza.tinnvision.cloud/traspamm/00301390795/2/home.html",
+      "access_type": "portal_search",
+      "source_axis": "publication",
+      "primary_identifiers": ["publication_id", "CIG", "CUP"],
+      "expected_formats": ["html_search", "unknown"],
+      "update_mode": "manual",
+      "lifecycle_coverage": {
+        "programmazione": true,
+        "progettazione": true,
+        "gara_pubblicazione": true,
+        "affidamento": true,
+        "esecuzione": true,
+        "valutazione_collaudo_esito": true
+      },
+      "ingestion_status": "not_implemented",
+      "public_claim_level": "none",
+      "limitations": [
+        "Usare con URL, sezione e data di acquisizione quando una pagina specifica viene collegata.",
+        "Non inferire completezza o assenza di atti da una pagina non ancora parserizzata.",
+        "Parser contratti non implementato in questa PR."
+      ],
+      "next_action": "Mappare sezioni rilevanti di Amministrazione Trasparente e definire parser documentale prudente."
+    },
+    {
+      "id": "lmt-local-derived-contract-data",
+      "label": "Lamezia Trasparente local derived contract data",
+      "authority": "Lamezia Trasparente Monitor",
+      "official_url": null,
+      "access_type": "manual_download",
+      "source_axis": "mixed",
+      "primary_identifiers": ["internal_id", "CIG", "CUP", "publication_id"],
+      "expected_formats": ["json"],
+      "update_mode": "manual",
+      "lifecycle_coverage": {
+        "programmazione": false,
+        "progettazione": false,
+        "gara_pubblicazione": true,
+        "affidamento": true,
+        "esecuzione": true,
+        "valutazione_collaudo_esito": true
+      },
+      "ingestion_status": "implemented",
+      "public_claim_level": "linked_only",
+      "limitations": [
+        "URL ufficiale da verificare manualmente prima dell'ingestione",
+        "Dataset locale derivato, non fonte ufficiale primaria e non certificazione di completezza.",
+        "Serve sempre traccia verso fonti ufficiali, atti o limiti informativi."
+      ],
+      "next_action": "Usare come superficie civica locale e collegare progressivamente fonti ufficiali verificate senza presentarle come gia sincronizzate."
+    }
+  ]
+}

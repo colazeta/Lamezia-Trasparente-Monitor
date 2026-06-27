@@ -32,6 +32,13 @@ Ogni fase espone uno stato pubblico prudente:
 - Albo Pretorio: fonte locale collegabile agli eventi di affidamento, esecuzione e collaudo quando gli atti citano CIG o CUP.
 - Dataset locale: dato derivato dalla base applicativa, da non confondere con verifica sostanziale.
 
+## Stato attuale
+
+- Fondazione BDNCP/CUP lifecycle: implementata come dossier civico con CIG, CUP, fasi, evidenze e limiti informativi.
+- Parser skeleton ANAC/OCDS: implementato solo con fixture false locali di test; non scarica e non pubblica record reali.
+- Manifesto fonti ufficiali: introdotto come catalogo in `data/sources/contracts/contracts-source-manifest.json`.
+- Ingestione produzione: non attiva per ANAC, BDNCP/PCP, PVL, OpenCUP, MOP o Amministrazione Trasparente.
+
 ## Limiti pubblici
 
 La UI usa formule come `da verificare`, `ponte di ricerca`, `fonte ufficiale collegata`, `fonte ufficiale ingerita`, `dato derivato` e `limite informativo`. Non usa il collegamento BDNCP per dichiarare regolarita, completezza o sincronizzazione completa.
