@@ -179,9 +179,26 @@ async function startMetro(expoPublicDomain, expoPublicReplId) {
     console.log(`Setting EXPO_PUBLIC_REPL_ID=${expoPublicReplId}`);
   }
 
+  const pnpmExecPath =
+    process.env.npm_execpath && process.env.npm_execpath.includes("pnpm")
+      ? process.env.npm_execpath
+      : null;
+  const pnpmCommand = pnpmExecPath ? process.execPath : "pnpm";
+  const pnpmArgs = pnpmExecPath
+    ? [
+        pnpmExecPath,
+        "exec",
+        "expo",
+        "start",
+        "--no-dev",
+        "--minify",
+        "--localhost",
+      ]
+    : ["exec", "expo", "start", "--no-dev", "--minify", "--localhost"];
+
   metroProcess = spawn(
-    "pnpm",
-    ["exec", "expo", "start", "--no-dev", "--minify", "--localhost"],
+    pnpmCommand,
+    pnpmArgs,
     {
       stdio: ["ignore", "pipe", "pipe"],
       detached: false,
