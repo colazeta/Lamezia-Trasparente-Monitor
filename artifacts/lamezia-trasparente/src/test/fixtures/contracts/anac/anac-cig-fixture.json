@@ -1,0 +1,53 @@
+{
+  "fixture_label": "TEST FIXTURE ONLY - fake ANAC CIG records",
+  "fixture_note": "Synthetic records for parser tests. Do not expose in production pages.",
+  "records": [
+    {
+      "source_record_id": "test-valid-cig-only",
+      "cig": "1234567CE7",
+      "oggetto": "TEST FIXTURE - servizio civico senza dati di esecuzione",
+      "procedura": "TEST - affidamento non dedotto",
+      "data_pubblicazione": "2026-01-10",
+      "dataset_published_at": "2026-01-11"
+    },
+    {
+      "source_record_id": "test-valid-cig-cup-work",
+      "cig": "x123456789",
+      "cup": "h12b123456789ab",
+      "oggetto": "TEST FIXTURE - lavori pubblici con asse CUP",
+      "importo": "125000,50",
+      "operatore": "TEST OPERATORE NON REALE",
+      "procedura": "TEST - procedura aperta",
+      "data_pubblicazione": "2026-02-01"
+    },
+    {
+      "source_record_id": "test-award-fields",
+      "cig": "A12BCD34EF",
+      "cup": "H12B123456789AB",
+      "oggetto": "TEST FIXTURE - affidamento con aggiudicazione",
+      "importo": 44000,
+      "aggiudicazione": "TEST aggiudicazione documentata da campo fixture",
+      "aggiudicatario": "TEST AGGIUDICATARIO NON REALE",
+      "data_aggiudicazione": "2026-03-15",
+      "procedura": "TEST - procedura negoziata"
+    },
+    {
+      "source_record_id": "test-missing-cig",
+      "oggetto": "TEST FIXTURE - record senza CIG",
+      "importo": 12000,
+      "operatore": "TEST OPERATORE NON REALE"
+    },
+    {
+      "source_record_id": "test-malformed-cig",
+      "cig": "1234567ABC",
+      "oggetto": "TEST FIXTURE - record con CIG malformato",
+      "importo": 9000,
+      "operatore": "TEST OPERATORE NON REALE"
+    },
+    {
+      "source_record_id": "test-missing-amount-operator-date",
+      "cig": "Z123456789",
+      "oggetto": "TEST FIXTURE - record con importo operatore e data mancanti"
+    }
+  ]
+}
