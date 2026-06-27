@@ -43,7 +43,7 @@ const STATIC_FEEDS: StaticFeed[] = [
     path: "/feeds/contratti.xml",
     title: "Appalti e contratti",
     description:
-      "I contratti e gli affidamenti pubblici più recenti della stazione appaltante Comune di Lamezia Terme (dati ANAC).",
+      "Contratti e affidamenti pubblici nel perimetro locale dichiarato, con limiti di fonte e collegamenti documentali.",
     icon: FileText,
   },
 ];
@@ -162,10 +162,9 @@ export function Feeds() {
           visitare ogni giorno. Copia l'indirizzo di un feed e incollalo in un
           lettore RSS (come Feedly, NetNewsWire, Thunderbird o le estensioni del
           browser): vedrai comparire le nuove pubblicazioni appena escono. In
-          alternativa, il pulsante <span className="font-medium">
-            «Abbonati al feed»
-          </span>{" "}
-          apre il feed direttamente nel browser.
+          alternativa, il pulsante{" "}
+          <span className="font-medium">«Abbonati al feed»</span> apre il feed
+          direttamente nel browser.
         </div>
       </div>
 

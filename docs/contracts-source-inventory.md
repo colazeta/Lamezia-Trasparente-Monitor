@@ -8,6 +8,24 @@ Questa inventory descrive le famiglie di fonte utili al modulo contratti/opere. 
 - Il `CUP` segue l'asse investimento/progetto/opera: programmazione, progetto, localizzazione dell'intervento e monitoraggio opera quando disponibili.
 - CIG e CUP non sono intercambiabili. Per lavori pubblici il CIG non basta a ricostruire l'opera; il CUP non basta a ricostruire gara, affidamento e lotto.
 
+## Manifesto delle fonti ufficiali
+
+Il manifesto machine-readable e in `data/sources/contracts/contracts-source-manifest.json`. Descrive famiglie di fonte, non record di contratto: non contiene dump ANAC, BDNCP, PVL, OpenCUP, MOP o Amministrazione Trasparente e non dichiara alcuna sincronizzazione attiva con quelle basi dati.
+
+La discovery delle fonti resta separata dall'ingestione dei record per tre ragioni:
+
+- prima si fissano URL ufficiali, identificativi, formati, update mode e limiti pubblici;
+- poi si progettano parser separati per ANAC CIG annuali, delta/update, aggiudicazioni, layer OCDS/OCDS-style, OpenCUP e MOP;
+- solo dopo una fonte strutturata, verificata e versionabile puo alimentare dati reali nella piattaforma.
+
+Finche una fonte non e parserizzata da un endpoint o pacchetto ufficiale stabile, la UI pubblica deve usare formule come `catalogo fonti`, `ponte di ricerca`, `fonte collegata`, `parser skeleton`, `non ancora ingerito`, `limite informativo` e `verifica manuale richiesta`. Non deve presentare il manifesto come prova di completezza BDNCP, ricostruzione lifecycle completa o sincronizzazione periodica.
+
+Il manifesto mantiene separati gli assi CIG e CUP:
+
+- `CIG`: asse gara/procedura/lotto/contratto per BDNCP, PVL, dataset CIG, aggiudicazioni e operatori;
+- `CUP`: asse progetto/investimento/opera per OpenCUP e MOP;
+- fonti miste come OCDS-style o dataset locali possono contenerli entrambi, ma non li rendono intercambiabili.
+
 ## Famiglie di fonte
 
 | Fonte                                               | Identificativi primari                                                | Asse fonte                                                    | Fasi supportabili                                                                                                       | Update atteso                                                              | Stato attuale                                                        | Limiti e copy pubblica                                                                                                                             |
@@ -41,6 +59,7 @@ Questa inventory descrive le famiglie di fonte utili al modulo contratti/opere. 
 
 ## Stato dopo questa PR
 
+- Il manifesto JSON ufficializza il catalogo iniziale delle famiglie fonte e marca come `not_implemented` i dataset con URL puntuale non ancora verificato.
 - Il parser skeleton legge solo fixture JSON locali e produce dossier compatibili con metadata di ingestione.
 - Nessun dato reale ANAC, OpenCUP o MOP viene scaricato o pubblicato.
 - `fonte ufficiale ingerita` e consentito solo per evidenze costruite da record fixture parserizzati nei test.

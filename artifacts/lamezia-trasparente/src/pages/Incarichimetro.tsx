@@ -234,10 +234,10 @@ export function Incarichimetro() {
                 CIG/CUP/procedura comparativa non rilevati automaticamente.
               </p>
               <p className="text-muted-foreground">
-                I dati dei contratti sono trattati come fonte ufficiale ANAC
-                esposta dal progetto; le informazioni estratte dagli atti
-                dell'Albo sono da leggere come arricchimenti automatici o
-                elementi da verificare nel documento.
+                I dati dei contratti sono trattati come dataset locale e fonte
+                collegata, non come sincronizzazione ANAC completa; le
+                informazioni estratte dagli atti dell'Albo sono da leggere come
+                arricchimenti automatici o elementi da verificare nel documento.
               </p>
             </div>
           </div>
@@ -316,9 +316,7 @@ export function Incarichimetro() {
               id="incarichimetro-direct-filter"
               label="Affidamento diretto rilevato"
               value={filters.directProcedure}
-              onValueChange={(value) =>
-                updateFilter("directProcedure", value)
-              }
+              onValueChange={(value) => updateFilter("directProcedure", value)}
               options={[
                 { value: "all", label: "Tutti" },
                 { value: "present", label: "Segnale presente" },

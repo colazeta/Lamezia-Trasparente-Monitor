@@ -323,15 +323,16 @@ export function Contracts() {
           "Indicatori di lettura trattati come segnali documentali, non come conclusioni.",
         ]}
         missingItems={[
-          "Copertura esaustiva e sincronizzazione definitiva di tutte le fonti contrattuali.",
-          "Schede di dettaglio consolidate per ogni affidamento e aggiornamento storico completo.",
+          "Dichiarazioni di sincronizzazione con tutte le fonti contrattuali.",
+          "Schede di dettaglio consolidate da dataset ufficiali per ogni affidamento e storico.",
           "Verifica puntuale dei dati mancanti sui documenti originari.",
         ]}
         sourceLimit={
           <>
-            La base usa dati ANAC e collegamenti disponibili nel sistema. Dati
-            mancanti o incompleti indicano una necessità di verifica documentale
-            e non implicano irregolarità.
+            La base usa dataset locale, collegamenti ANAC/BDNCP e atti
+            disponibili nel sistema. Non dichiara una sincronizzazione ANAC:
+            dati mancanti o incompleti indicano una necessita di verifica
+            documentale e non implicano irregolarita.
           </>
         }
         cta={{ label: "Consulta i contratti", href: "#contratti-elenco" }}
