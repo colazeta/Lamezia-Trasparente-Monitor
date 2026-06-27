@@ -1,21 +1,23 @@
 const DATA_DIR = "./public/data";
-const STORAGE_KEY = "electoral-review-workbench-decisions-v2";
+const STORAGE_KEY = "electoral-review-workbench-decisions-civic-first-v1";
 const MAX_TASK_CARDS = 700;
 const MAX_TABLE_ROWS = 350;
 const EXPORT_FIELDS = [
-  "review_id",
+  "decision_id",
   "task_id",
-  "case_type",
-  "census_cell_id",
-  "involved_streets",
-  "current_assignment_method",
-  "current_assigned_section",
-  "suggested_section_number",
-  "competing_sections",
+  "decision_scope",
+  "selected_access_ids",
+  "odonimo_raw",
+  "civic_from",
+  "civic_to",
+  "civic_parity",
+  "includes_snc",
   "proposed_section_number",
   "decision_type",
   "decision_confidence",
   "reason",
+  "street_register_rule_ids_used",
+  "street_register_pages_used",
   "qgis_observation",
   "reviewed_by",
   "review_date",
@@ -25,13 +27,13 @@ const EXPORT_FIELDS = [
 ];
 
 const DECISION_TYPES = [
-  "confirm_suggested_section",
-  "assign_to_alternative_section",
-  "keep_unassigned",
-  "keep_conflict",
+  "assign_civics_to_section",
+  "confirm_existing_assignment",
+  "keep_unresolved",
   "split_required",
   "needs_external_source",
-  "needs_qgis_review",
+  "exclude_from_geometry",
+  "mark_as_non_residential_or_special",
 ];
 
 const state = {
@@ -41,6 +43,7 @@ const state = {
   decisions: {},
   selectedTaskId: "",
   selectedCivicAccessId: "",
+  selectedAccessIds: new Set(),
   activeTab: "summary",
   civicFilter: "all",
   dirtySinceExport: false,
@@ -78,11 +81,13 @@ const el = {
     street: document.getElementById("streetFilter"),
     reason: document.getElementById("reasonFilter"),
     streetEvidence: document.getElementById("streetEvidenceFilter"),
+    parity: document.getElementById("parityFilter"),
     decisionType: document.getElementById("decisionTypeFilter"),
     sort: document.getElementById("sortSelect"),
     highOnly: document.getElementById("highOnlyFilter"),
     manyCivics: document.getElementById("manyCivicsFilter"),
     visibleExtent: document.getElementById("visibleExtentFilter"),
+    nearBoundary: document.getElementById("nearBoundaryFilter"),
   },
   toggles: {
     osm: document.getElementById("toggleOsm"),
@@ -130,6 +135,10 @@ function asNumber(value, fallback = 0) {
   return Number.isFinite(parsed) ? parsed : fallback;
 }
 
+function asBool(value) {
+  return value === true || value === "true" || value === "1";
+}
+
 function numberLabel(value, digits = 0) {
   if (value === "" || value === null || value === undefined) return "";
   const parsed = Number(value);
@@ -167,6 +176,18 @@ function splitList(value) {
     .split(";")
     .map((part) => part.trim())
     .filter(Boolean);
+}
+
+function civicParity(civic) {
+  if (asBool(civic.is_snc) || !asString(civic.civico)) return "snc";
+  const match = asString(civic.civico).match(/\d+/);
+  if (!match) return "unknown";
+  return Number(match[0]) % 2 === 0 ? "even" : "odd";
+}
+
+function civicNumeric(civic) {
+  const match = asString(civic.civico).match(/\d+/);
+  return match ? Number(match[0]) : NaN;
 }
 
 function selectedTask() {
@@ -230,7 +251,7 @@ function renderSummaryStrip() {
   const followUp = decisions.filter((decision) => decision.requires_follow_up === true || decision.requires_follow_up === "true").length;
   const highOpen = state.tasks.filter((task) => task.priority === "high" && decisionStatus(task.task_id) === "undecided").length;
   el.summaryStrip.innerHTML = [
-    `<span>${numberLabel(total)} tasks</span>`,
+    `<span>${numberLabel(total)} civic tasks</span>`,
     `<span>${numberLabel(visible)} visible</span>`,
     `<span>${numberLabel(decisions.length)} decided</span>`,
     `<span>${numberLabel(highOpen)} high open</span>`,
@@ -291,11 +312,13 @@ function currentFilters() {
     street: el.filters.street.value,
     reason: el.filters.reason.value,
     streetEvidence: el.filters.streetEvidence.value,
+    parity: el.filters.parity.value,
     decisionType: el.filters.decisionType.value,
     sort: el.filters.sort.value,
     highOnly: el.filters.highOnly.checked,
     manyCivics: el.filters.manyCivics.checked,
     visibleExtent: el.filters.visibleExtent.checked,
+    nearBoundary: el.filters.nearBoundary.checked,
   };
 }
 
@@ -323,9 +346,11 @@ function taskMatchesFilters(task, filters) {
   if (filters.competingSection && !asArray(task.competing_sections).includes(filters.competingSection)) return false;
   if (filters.street && !asArray(task.involved_streets).includes(filters.street)) return false;
   if (filters.reason && task.unresolved_reason !== filters.reason) return false;
-  if (filters.streetEvidence === "has" && !task.has_street_register_evidence) return false;
-  if (filters.streetEvidence === "multiple" && !task.has_multiple_candidate_sections) return false;
-  if (filters.streetEvidence === "none" && !task.has_no_street_register_match) return false;
+  if (filters.streetEvidence === "direct" && !task.has_direct_street_register_rule) return false;
+  if (filters.streetEvidence === "multiple" && !task.has_multiple_street_register_rules) return false;
+  if (filters.streetEvidence === "none" && !task.has_no_street_register_rule) return false;
+  if (filters.parity && !Object.prototype.hasOwnProperty.call(task.parity_mix || {}, filters.parity)) return false;
+  if (filters.nearBoundary && task.task_type !== "boundary_civic_cluster") return false;
   const decision = taskDecision(task.task_id);
   if (filters.decisionType && (!decision || decision.decision_type !== filters.decisionType)) return false;
   if (filters.visibleExtent && !taskVisibleInCurrentExtent(task)) return false;
@@ -339,8 +364,10 @@ function taskMatchesFilters(task, filters) {
     task.suggested_section_number,
     asArray(task.competing_sections).join(" "),
     asArray(task.involved_streets).join(" "),
-    task.civic_range_summary,
-    task.census_cell_id,
+    asArray(task.civic_values_sample).join(" "),
+    asArray(task.representative_census_cells).join(" "),
+    task.civic_min,
+    task.civic_max,
     task.unresolved_reason,
     task.notes,
   ].join(" ").toLowerCase();
@@ -354,9 +381,11 @@ function sortTasks(tasks, sortMode) {
   copy.sort((a, b) => {
     if (sortMode === "civic_count_desc") return asNumber(b.civic_count) - asNumber(a.civic_count);
     if (sortMode === "evidence_strength") return (strengthRank[a.evidence_strength] ?? 9) - (strengthRank[b.evidence_strength] ?? 9);
-    if (sortMode === "dominant_share_asc") return asNumber(a.dominant_section_share, 1) - asNumber(b.dominant_section_share, 1);
+    if (sortMode === "direct_rule_first") return Number(!a.has_direct_street_register_rule) - Number(!b.has_direct_street_register_rule);
+    if (sortMode === "no_rule_first") return Number(!b.has_no_street_register_rule) - Number(!a.has_no_street_register_rule);
+    if (sortMode === "competing_sections_desc") return asArray(b.competing_sections).length - asArray(a.competing_sections).length;
+    if (sortMode === "street") return asString(a.street_name_normalised || asArray(a.involved_streets)[0]).localeCompare(asString(b.street_name_normalised || asArray(b.involved_streets)[0]), "it");
     if (sortMode === "suggested_section") return sectionSort(a.suggested_section_number, b.suggested_section_number);
-    if (sortMode === "unresolved_reason") return asString(a.unresolved_reason).localeCompare(asString(b.unresolved_reason), "it");
     const priority = (priorityRank[a.priority] ?? 9) - (priorityRank[b.priority] ?? 9);
     if (priority !== 0) return priority;
     return asNumber(b.civic_count) - asNumber(a.civic_count);
@@ -412,6 +441,7 @@ function selectTask(taskId, { zoom = true } = {}) {
   if (!taskId || !state.tasks.some((task) => task.task_id === taskId)) return;
   state.selectedTaskId = taskId;
   state.selectedCivicAccessId = "";
+  state.selectedAccessIds = new Set();
   state.showNearby = false;
   state.showCompeting = false;
   renderTaskList();
@@ -447,9 +477,7 @@ function factGrid(rows) {
 }
 
 function renderSummaryTab(task) {
-  const dominant = task.dominant_section_share !== "" && task.dominant_section_share !== null
-    ? `${numberLabel(asNumber(task.dominant_section_share) * 100, 1)}%`
-    : "";
+  const parityMix = Object.entries(task.parity_mix || {}).map(([key, value]) => `${key}: ${value}`).join(", ");
   return `
     ${factGrid([
       ["Task id", task.task_id],
@@ -457,10 +485,14 @@ function renderSummaryTab(task) {
       ["Priority", titleCase(task.priority)],
       ["Suggested section", task.suggested_section_number],
       ["Competing sections", asArray(task.competing_sections).join(", ")],
-      ["Dominant share", dominant],
-      ["Census cell", task.census_cell_id],
+      ["Street register sections", asArray(task.street_register_sections).join(", ")],
+      ["Representative census cells", asArray(task.representative_census_cells).join(", ")],
       ["Civics", numberLabel(task.civic_count)],
-      ["Civic range", task.civic_range_summary],
+      ["Civic min", task.civic_min],
+      ["Civic max", task.civic_max],
+      ["Civic sample", asArray(task.civic_values_sample).join(", ")],
+      ["Parity mix", parityMix],
+      ["SNC count", task.snc_count],
       ["Reason", titleCase(task.unresolved_reason)],
       ["Evidence strength", titleCase(task.evidence_strength)],
       ["Street-register status", titleCase(task.street_register_match_status)],
@@ -470,6 +502,8 @@ function renderSummaryTab(task) {
       <p>${escapeHtml(task.why_needs_review || "")}</p>
       <h3>Suggested action</h3>
       <p>${escapeHtml(task.suggested_action || "")}</p>
+      <h3>Method guardrails</h3>
+      <p>Le celle censuarie sono supporto geometrico. La decisione primaria riguarda civici, gruppi di civici o regole dello stradario. OpenStreetMap è solo contesto visivo. Lo stradario elettorale resta la fonte primaria.</p>
       ${task.notes ? `<h3>Notes</h3><p>${escapeHtml(task.notes)}</p>` : ""}
     </div>
   `;
@@ -477,6 +511,10 @@ function renderSummaryTab(task) {
 
 function currentTaskCivics() {
   return state.data.civicsByTask[state.selectedTaskId] || [];
+}
+
+function selectedCivicsForTask() {
+  return currentTaskCivics().filter((civic) => state.selectedAccessIds.has(asString(civic.access_id)));
 }
 
 function civicMatchesPanelFilter(civic, task) {
@@ -491,39 +529,81 @@ function civicMatchesPanelFilter(civic, task) {
   return true;
 }
 
+function civicRowHtml(civic) {
+  const accessId = asString(civic.access_id);
+  const checked = state.selectedAccessIds.has(accessId) ? " checked" : "";
+  return `
+    <tr data-access-id="${escapeHtml(accessId)}">
+      <td><input class="civic-select" type="checkbox" data-access-id="${escapeHtml(accessId)}"${checked} /></td>
+      <td>${escapeHtml(accessId)}</td>
+      <td>${escapeHtml(civic.odonimo_raw)}</td>
+      <td>${escapeHtml(civic.civico)}</td>
+      <td>${escapeHtml(civic.esponente)}</td>
+      <td>${escapeHtml(civicParity(civic))}</td>
+      <td>${escapeHtml(civic.current_section_number)}</td>
+      <td>${escapeHtml(civic.suggested_section_number)}</td>
+      <td>${escapeHtml(civic.assignment_method)}</td>
+      <td>${escapeHtml(civic.assignment_confidence)}</td>
+      <td>${escapeHtml(civic.rule_id)}</td>
+      <td>${escapeHtml(civic.distance_to_boundary_m)}</td>
+      <td>${escapeHtml(civic.notes)}</td>
+    </tr>
+  `;
+}
+
 function renderCivicsTab(task) {
   const allRows = currentTaskCivics();
   const rows = allRows.filter((civic) => civicMatchesPanelFilter(civic, task));
   const limited = rows.slice(0, MAX_TABLE_ROWS);
+  const selectedCount = selectedCivicsForTask().length;
   const controls = `
     <div class="inline-toolbar">
       <button class="${state.civicFilter === "all" ? "active" : ""}" type="button" data-civic-filter="all">All</button>
       <button class="${state.civicFilter === "unassigned" ? "active" : ""}" type="button" data-civic-filter="unassigned">Unassigned</button>
       <button class="${state.civicFilter === "competing" ? "active" : ""}" type="button" data-civic-filter="competing">Competing</button>
+      <button type="button" data-select-civics="all">Select all</button>
+      <button type="button" data-select-civics="even">Even</button>
+      <button type="button" data-select-civics="odd">Odd</button>
+      <button type="button" data-select-civics="snc">SNC</button>
+      <button type="button" data-select-civics="range">Range</button>
+      <button type="button" data-select-civics="unassigned">Unassigned</button>
+      <button type="button" data-select-civics="competing">Competing</button>
+      <button type="button" data-select-civics="clear">Clear</button>
+    </div>
+    <div class="range-toolbar">
+      <label><span>From</span><input id="civicRangeFrom" type="text" inputmode="numeric" /></label>
+      <label><span>To</span><input id="civicRangeTo" type="text" inputmode="numeric" /></label>
+      <span>${numberLabel(selectedCount)} selected civics</span>
     </div>
   `;
   if (!rows.length) {
     return `${controls}<p class="empty-state">No civics for this filter.</p>`;
   }
-  const fields = [
-    "access_id",
-    "odonimo_raw",
-    "civico",
-    "esponente",
-    "localita",
-    "current_section_number",
-    "suggested_section_number",
-    "assignment_method",
-    "assignment_confidence",
-    "rule_id",
-    "human_review_required",
-    "distance_to_boundary_m",
-    "notes",
-  ];
   return `
     ${controls}
     <p class="table-note">Showing ${numberLabel(limited.length)} of ${numberLabel(rows.length)} civics. ${escapeHtml(task.civic_range_summary || "")}</p>
-    ${renderTable(fields, limited, (row) => `data-access-id="${escapeHtml(row.access_id)}"`)}
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Select</th>
+            <th>Access id</th>
+            <th>Street</th>
+            <th>Civic</th>
+            <th>Exp.</th>
+            <th>Parity</th>
+            <th>Current section</th>
+            <th>Suggested section</th>
+            <th>Method</th>
+            <th>Confidence</th>
+            <th>Rule id</th>
+            <th>Boundary m</th>
+            <th>Notes</th>
+          </tr>
+        </thead>
+        <tbody>${limited.map(civicRowHtml).join("")}</tbody>
+      </table>
+    </div>
   `;
 }
 
@@ -543,6 +623,7 @@ function renderStreetTab(task) {
     "section_number",
     "street_name_raw",
     "civic_rule_raw",
+    "compatibility_with_task",
     "source_page",
     "extraction_confidence",
     "match_reason",
@@ -615,8 +696,37 @@ function renderDecisionTab(task) {
   } else {
     form.elements.review_date.valueAsDate = new Date();
     form.elements.proposed_section_number.value = task.suggested_section_number || "";
+    form.elements.civic_from.value = task.civic_min || "";
+    form.elements.civic_to.value = task.civic_max || "";
+    form.elements.includes_snc.checked = asNumber(task.snc_count) > 0;
   }
   return wrapper.innerHTML;
+}
+
+function renderProcessTab() {
+  const phases = [
+    "Review civici",
+    "Export decisioni",
+    "PR decisioni manuali",
+    "Audit decisioni",
+    "Generazione V4 candidata",
+    "QGIS check V4",
+    "Eventuale pubblicazione solo dopo human gate",
+  ];
+  return `
+    <div class="process-panel">
+      <ol>
+        ${phases.map((phase) => `<li>${escapeHtml(phase)}</li>`).join("")}
+      </ol>
+      <div class="narrative-block">
+        <p>Le celle censuarie sono supporto geometrico.</p>
+        <p>La decisione primaria riguarda civici, gruppi di civici o regole dello stradario.</p>
+        <p>Le decisioni verranno applicate in una futura V4 solo dopo controllo.</p>
+        <p>OpenStreetMap è solo contesto visivo.</p>
+        <p>Lo stradario elettorale resta la fonte primaria.</p>
+      </div>
+    </div>
+  `;
 }
 
 function renderActiveTab() {
@@ -627,6 +737,7 @@ function renderActiveTab() {
   if (state.activeTab === "street") el.tabPanel.innerHTML = renderStreetTab(task);
   if (state.activeTab === "sections") el.tabPanel.innerHTML = renderSectionsTab(task);
   if (state.activeTab === "nearby") el.tabPanel.innerHTML = renderNearbyTab(task);
+  if (state.activeTab === "process") el.tabPanel.innerHTML = renderProcessTab(task);
   if (state.activeTab === "decision") el.tabPanel.innerHTML = renderDecisionTab(task);
   wireTabPanelEvents();
 }
@@ -650,19 +761,59 @@ function decisionSnapshot(task) {
     rule_id: row.rule_id,
     section_number: row.section_number,
     source_page: row.source_page,
+    compatibility_with_task: row.compatibility_with_task,
     match_reason: row.match_reason,
     relevance_score: row.relevance_score,
   }));
   const candidates = (state.data.candidateSectionsByTask[task.task_id] || []).slice(0, 12);
   return JSON.stringify({
     task_title: task.title,
+    task_type: task.task_type,
     evidence_strength: task.evidence_strength,
     street_register_match_status: task.street_register_match_status,
     civic_count: task.civic_count,
-    civic_range_summary: task.civic_range_summary,
+    civic_min: task.civic_min,
+    civic_max: task.civic_max,
+    parity_mix: task.parity_mix,
+    representative_census_cells: task.representative_census_cells,
     street_rules: rules,
     candidate_sections: candidates,
   });
+}
+
+function selectedAccessIdsForDecision(task, data) {
+  const scope = asString(data.get("decision_scope"));
+  if (scope === "selected_civics") {
+    return [...state.selectedAccessIds].sort().join(";");
+  }
+  if (scope === "civic_range") {
+    const from = asNumber(data.get("civic_from"), -Infinity);
+    const to = asNumber(data.get("civic_to"), Infinity);
+    return currentTaskCivics()
+      .filter((civic) => {
+        const numeric = civicNumeric(civic);
+        return Number.isFinite(numeric) && numeric >= from && numeric <= to;
+      })
+      .map((civic) => asString(civic.access_id))
+      .sort()
+      .join(";");
+  }
+  if (scope === "parity_subset") {
+    const parity = asString(data.get("civic_parity"));
+    return currentTaskCivics()
+      .filter((civic) => parity && civicParity(civic) === parity)
+      .map((civic) => asString(civic.access_id))
+      .sort()
+      .join(";");
+  }
+  if (scope === "snc_only") {
+    return currentTaskCivics()
+      .filter((civic) => civicParity(civic) === "snc")
+      .map((civic) => asString(civic.access_id))
+      .sort()
+      .join(";");
+  }
+  return currentTaskCivics().map((civic) => asString(civic.access_id)).sort().join(";");
 }
 
 function saveDecision(event) {
@@ -671,20 +822,23 @@ function saveDecision(event) {
   if (!task) return;
   const form = event.currentTarget;
   const data = new FormData(form);
+  const rules = state.data.streetEvidenceByTask[task.task_id] || [];
   const decision = {
-    review_id: task.task_id,
+    decision_id: `${task.task_id}:${Date.now()}`,
     task_id: task.task_id,
-    case_type: task.task_type,
-    census_cell_id: asString(task.census_cell_id),
-    involved_streets: asArray(task.involved_streets).join(";"),
-    current_assignment_method: asString(task.unresolved_reason),
-    current_assigned_section: "",
-    suggested_section_number: asString(task.suggested_section_number),
-    competing_sections: asArray(task.competing_sections).join(";"),
+    decision_scope: asString(data.get("decision_scope")),
+    selected_access_ids: selectedAccessIdsForDecision(task, data),
+    odonimo_raw: asArray(task.involved_streets).join(";"),
+    civic_from: asString(data.get("civic_from")),
+    civic_to: asString(data.get("civic_to")),
+    civic_parity: asString(data.get("civic_parity")),
+    includes_snc: form.elements.includes_snc.checked,
     proposed_section_number: asString(data.get("proposed_section_number")),
     decision_type: asString(data.get("decision_type")),
     decision_confidence: asString(data.get("decision_confidence")),
     reason: asString(data.get("reason")),
+    street_register_rule_ids_used: rules.map((row) => row.rule_id).filter(Boolean).join(";"),
+    street_register_pages_used: [...new Set(rules.map((row) => row.source_page).filter(Boolean))].join(";"),
     qgis_observation: asString(data.get("qgis_observation")),
     reviewed_by: asString(data.get("reviewed_by")),
     review_date: asString(data.get("review_date")),
@@ -708,6 +862,37 @@ function clearDecision() {
   renderSummaryStrip();
 }
 
+function setSelectedCivics(mode) {
+  const task = selectedTask();
+  if (!task) return;
+  const rows = currentTaskCivics().filter((civic) => civicMatchesPanelFilter(civic, task));
+  if (mode === "clear") {
+    state.selectedAccessIds = new Set();
+  } else {
+    let selected = rows;
+    if (mode === "even" || mode === "odd" || mode === "snc") {
+      selected = rows.filter((civic) => civicParity(civic) === mode);
+    }
+    if (mode === "unassigned" || mode === "competing") {
+      const previous = state.civicFilter;
+      state.civicFilter = mode;
+      selected = currentTaskCivics().filter((civic) => civicMatchesPanelFilter(civic, task));
+      state.civicFilter = previous;
+    }
+    if (mode === "range") {
+      const from = asNumber(el.tabPanel.querySelector("#civicRangeFrom")?.value, -Infinity);
+      const to = asNumber(el.tabPanel.querySelector("#civicRangeTo")?.value, Infinity);
+      selected = rows.filter((civic) => {
+        const numeric = civicNumeric(civic);
+        return Number.isFinite(numeric) && numeric >= from && numeric <= to;
+      });
+    }
+    state.selectedAccessIds = new Set(selected.map((civic) => asString(civic.access_id)).filter(Boolean));
+  }
+  renderActiveTab();
+  refreshMap();
+}
+
 function wireTabPanelEvents() {
   const form = el.tabPanel.querySelector("#decisionForm");
   if (form) form.addEventListener("submit", saveDecision);
@@ -717,6 +902,18 @@ function wireTabPanelEvents() {
     button.addEventListener("click", () => {
       state.civicFilter = button.dataset.civicFilter;
       renderActiveTab();
+    });
+  }
+  for (const button of el.tabPanel.querySelectorAll("[data-select-civics]")) {
+    button.addEventListener("click", () => setSelectedCivics(button.dataset.selectCivics));
+  }
+  for (const input of el.tabPanel.querySelectorAll(".civic-select")) {
+    input.addEventListener("click", (event) => event.stopPropagation());
+    input.addEventListener("change", () => {
+      if (input.checked) state.selectedAccessIds.add(input.dataset.accessId);
+      else state.selectedAccessIds.delete(input.dataset.accessId);
+      renderActiveTab();
+      refreshMap();
     });
   }
   for (const row of el.tabPanel.querySelectorAll("tr[data-access-id]")) {
@@ -756,11 +953,11 @@ function exportJson() {
   const payload = {
     exported_at: new Date().toISOString(),
     source_commit: state.data.summary?.source_commit || "",
-    decision_model_version: "v2-task-oriented",
+    decision_model_version: "civic-first-local-review-v1",
     decision_count: decisions.length,
     decisions,
   };
-  downloadFile("electoral_sections_v3_manual_review_decisions_v2.json", "application/json", JSON.stringify(payload, null, 2));
+  downloadFile("electoral_sections_civic_review_decisions_v1.json", "application/json", JSON.stringify(payload, null, 2));
   state.dirtySinceExport = false;
 }
 
@@ -775,7 +972,7 @@ function exportCsv() {
     const exported = exportDecision(decision);
     return EXPORT_FIELDS.map((field) => csvEscape(exported[field])).join(",");
   });
-  downloadFile("electoral_sections_v3_manual_review_decisions_v2.csv", "text/csv", `${EXPORT_FIELDS.join(",")}\n${rows.join("\n")}\n`);
+  downloadFile("electoral_sections_civic_review_decisions_v1.csv", "text/csv", `${EXPORT_FIELDS.join(",")}\n${rows.join("\n")}\n`);
   state.dirtySinceExport = false;
 }
 
@@ -1029,8 +1226,8 @@ function drawLeafletBaseLayers() {
 
 function selectTaskForSection(sectionNumber) {
   const task = state.tasks.find((item) => {
-    if (item.task_type !== "section_low_confidence" && item.task_type !== "section_needs_manual_review") return false;
-    return asString(item.suggested_section_number) === asString(sectionNumber);
+    if (asString(item.suggested_section_number) === asString(sectionNumber)) return true;
+    return asArray(item.competing_sections).includes(asString(sectionNumber));
   });
   if (task) selectTask(task.task_id);
 }
@@ -1053,11 +1250,13 @@ function renderSelectedLeaflet() {
   for (const civic of civics) {
     const latlng = civicLatLng(civic);
     if (!latlng) continue;
+    const selected = state.selectedAccessIds.has(asString(civic.access_id));
+    const focused = civic.access_id === state.selectedCivicAccessId;
     const marker = window.L.circleMarker(latlng, {
-      radius: civic.access_id === state.selectedCivicAccessId ? 8 : 5,
-      color: civic.access_id === state.selectedCivicAccessId ? "#111827" : "#ffffff",
-      weight: civic.access_id === state.selectedCivicAccessId ? 2 : 1,
-      fillColor: "#f05a45",
+      radius: focused ? 8 : selected ? 6.5 : 5,
+      color: focused ? "#111827" : selected ? "#244f8f" : "#ffffff",
+      weight: focused || selected ? 2 : 1,
+      fillColor: selected ? "#7fb0ff" : "#f05a45",
       fillOpacity: 0.9,
     });
     marker.bindTooltip(`${civic.odonimo_raw || ""} ${civic.civico || ""}`);
@@ -1297,7 +1496,7 @@ async function boot() {
     nearbyByTask,
   ] = await Promise.all([
     fetchJson("review_summary.json"),
-    fetchJson("review_tasks.json"),
+    fetchJson("civic_review_tasks.json"),
     fetchJson("review_cells.geojson"),
     fetchJson("candidate_sections_v3.geojson"),
     fetchJson("candidate_sections_v2.geojson"),

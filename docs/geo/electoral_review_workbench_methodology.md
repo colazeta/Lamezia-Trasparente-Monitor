@@ -4,33 +4,34 @@
 
 The electoral review workbench supports manual review of the Lamezia Terme
 2025 candidate electoral section geometry. It is a local QA tool for the V3
-census-aggregated candidate polygons and related ANNCSU civic assignment
-evidence.
+census-aggregated candidate polygons, ANNCSU civic assignment evidence, and the
+parsed electoral street register.
 
 The workbench does not create official boundaries, public maps, V4 geometry, or
 new electoral results. Its purpose is to collect structured human review
 decisions that can be audited before any later geometry update.
 
-## V2 Decision Orientation
+## Current Orientation: Civic-first
 
-V2 reorganizes the local workbench around review tasks rather than a flat list
-of unresolved records. A task is the smallest useful decision unit for human
-review: a conflicting census cell, a no-evidence cell, a grouped set of
-unresolved civics on the same street/problem pattern, a boundary uncertainty
-cluster, or a fragile section-level geometry prompt.
+The current workbench replaces the V2 census-cell-first review posture with a
+civic-first model. V2 grouped many questions around census cells or section
+metrics. That was useful for diagnosing geometry, but insufficient for manual
+resolution because a census cell is not an electoral section and is not the
+normative unit described by the electoral street register.
 
-The task model is intended to help the reviewer answer:
+The civic-first model treats these as primary review units:
 
-- what needs review;
-- why automatic assignment stopped;
-- which section is suggested;
-- which sections remain plausible alternatives;
-- which parsed street-register rules support or conflict with that suggestion;
-- where the task sits on the local map;
-- whether a decision can be made now or should remain in review.
+- individual civics;
+- grouped civics on the same street/problem pattern;
+- civic-number ranges;
+- even/odd parity subsets;
+- SNC subsets where present;
+- street-register rules and competing street-register sections.
 
-The exported decision file is an input for a future V4 workflow. V2 does not
-apply decisions and does not create V4.
+Census cells remain available only as support geometry. They help locate a
+problem in QGIS, but they do not authorize assignment by themselves. OpenStreetMap
+is also only visual context. The electoral street register remains the primary
+normative source.
 
 ## Evidence Chain
 
@@ -44,19 +45,13 @@ The local review workflow connects four evidence layers:
 - census cells, which provide small areal units used to aggregate civic
   evidence without inventing section polygons directly from proximity;
 - candidate V1/V2/V3 polygons, which are inferred QA geometries derived from
-  the available civic and cell evidence and remain non-official.
+  available civic and cell evidence and remain non-official.
 
-OpenStreetMap may appear in the V2 workbench as an optional Leaflet basemap for
-local orientation only. OSM is not part of the assignment evidence chain, is not
-an official source for electoral sections, and must not be used to assign a
-section by proximity. If OSM is unavailable, local repository geometries remain
-available through the fallback map.
-
-Manual review is necessary because some census cells contain evidence for
-multiple sections, some cells have no assigned civic evidence, some civics remain
-unresolved after deterministic matching, and some candidate section geometries
-are marked low-confidence by the V3 metrics. These cases require a human review
-of the underlying street rules and QGIS layers before any later geometry update.
+Manual review is necessary because some civics remain unresolved after
+deterministic matching, some streets have no parsed street-register match, some
+streets have competing section evidence, and some V3 geometry context remains
+low-confidence. These cases require human review of the underlying street rules
+and QGIS layers before any later geometry update.
 
 ## Source Inputs
 
@@ -94,85 +89,77 @@ The conversion exports JSON and GeoJSON for display and triage. Source GPKG
 files remain unchanged. No polygon dissolve, buffering, proximity assignment,
 or geometry repair is performed by the workbench generator.
 
-Primary V2 payloads are:
+Primary civic-first payloads are:
 
-- `review_tasks.json`
+- `civic_review_tasks.json`
 - `civics_by_task.json`
 - `street_register_evidence_by_task.json`
 - `candidate_sections_by_task.json`
 - `nearby_deterministic_by_task.json`
 
-Legacy V1 payloads can remain present for compatibility, but V2 uses the
-task-oriented files as its primary browser data model.
+`review_tasks.json` may remain available as an earlier diagnostic artifact, but
+the browser queue uses `civic_review_tasks.json`.
 
-## Review Task Types
+## Civic Review Task Types
 
-The V2 review queue contains these task families:
+The civic-first taxonomy supports:
 
-- `census_cell_conflict`: a census cell contains deterministic evidence for
-  multiple sections and no dominant section reaches the V3 assignment
-  threshold.
-- `no_assigned_civics_cell`: a census cell is present in the review layer but lacks
-  assigned civic evidence sufficient for candidate geometry assignment.
-- `unresolved_civic_group`: unresolved ANNCSU civics are grouped by street,
-  unresolved reason, current section, and competing section context.
-- `boundary_uncertainty_cluster`: unresolved civics near a candidate boundary
-  are grouped by street, reason, and nearest candidate section so they can be
-  reviewed as a geographic pattern rather than one point at a time.
-- `section_low_confidence`: a V3 candidate section is present, but V3 metrics
-  mark the section as low confidence.
-- `section_needs_manual_review`: a V3 candidate section is not low-confidence
-  but still has review flags in the V3 metrics.
+- `unassigned_civic_group`: unresolved civics that need a grouped decision.
+- `multi_section_street_conflict`: civics whose local evidence points toward
+  multiple plausible sections.
+- `civic_range_conflict`: numbered civics that need interval/range review
+  against the street register.
+- `parity_rule_review`: even/odd rules that need reviewer confirmation.
+- `snc_review`: SNC civics that need reviewer confirmation.
+- `street_register_no_match`: streets without a parsed street-register match.
+- `street_register_multiple_matches`: streets with multiple parsed
+  street-register matches.
+- `boundary_civic_cluster`: civics near candidate boundaries that cannot be
+  assigned by proximity alone.
+- `census_cell_context`: retained only when a diagnostic cell has no smaller
+  civic task.
 
-These tasks are review prompts, not automatic corrections.
+Task types are emitted only when the current data contains matching cases.
 
-## Street Register Evidence in V2
+## Street Register Evidence
 
-The electoral street register remains the primary normative source. V2 exposes
-parsed rule evidence per task from
-`data/interim/geo/electoral_street_rules_2025.csv`, including rule id, section,
-polling place, raw street rule, civic range/parity/SNC rule, extraction
-confidence, match reason, relevance score, and source PDF page.
+The electoral street register remains the primary normative source. The
+workbench exposes parsed rule evidence per task from
+`data/interim/geo/electoral_street_rules_2025.csv`.
 
-The workbench distinguishes direct civic-rule matches, same-street rules for
-the suggested section, same-street rules for competing sections, same-street
-rules in other sections, and tasks with no clear parsed street-register match.
-When the PDF is copied into the local workbench, links use `#page=N` for the
-parsed source page.
+Each evidence row includes `compatibility_with_task`, using these values where
+applicable:
 
-## Candidate Inferred Meaning
+- `direct_compatible_rule`
+- `possible_variant_match`
+- `competing_rule`
+- `interval_overlap`
+- `parity_match`
+- `parity_conflict`
+- `snc_match`
+- `no_compatible_rule`
 
-`candidate_inferred` means that a geometry or assignment is an analytical
-candidate inferred from documented source evidence. It is not an official
-municipal electoral boundary. A candidate-inferred object can support review,
-comparison, and internal QA, but it must not be presented as authoritative or
-published as an official section map.
-
-## Section 78
-
-Section 78 is excluded from the candidate polygon workflow as a
-special/hospital section. It is tracked as an electoral-administrative fact, but
-it is not polygonized by the V3 census-aggregated candidate process and should
-not be forced into the local geometry review interface as an ordinary territorial
-section.
+This classification is a review aid, not an automatic correction.
 
 ## Manual Decision Fields
 
-Each V2 exported decision record includes:
+Each exported decision record includes:
 
-- `review_id`
+- `decision_id`
 - `task_id`
-- `case_type`
-- `census_cell_id`
-- `involved_streets`
-- `current_assignment_method`
-- `current_assigned_section`
-- `suggested_section_number`
-- `competing_sections`
-- `decision_type`
+- `decision_scope`
+- `selected_access_ids`
+- `odonimo_raw`
+- `civic_from`
+- `civic_to`
+- `civic_parity`
+- `includes_snc`
 - `proposed_section_number`
+- `decision_type`
 - `decision_confidence`
 - `reason`
+- `street_register_rule_ids_used`
+- `street_register_pages_used`
 - `qgis_observation`
 - `reviewed_by`
 - `review_date`
@@ -180,17 +167,26 @@ Each V2 exported decision record includes:
 - `notes`
 - `evidence_snapshot`
 
+Allowed decision scopes are:
+
+- `entire_task`
+- `selected_civics`
+- `civic_range`
+- `parity_subset`
+- `snc_only`
+- `keep_task_unresolved`
+
 Allowed decision types are:
 
-- `confirm_suggested_section`
-- `assign_to_alternative_section`
-- `keep_unassigned`
-- `keep_conflict`
+- `assign_civics_to_section`
+- `confirm_existing_assignment`
+- `keep_unresolved`
 - `split_required`
 - `needs_external_source`
-- `needs_qgis_review`
+- `exclude_from_geometry`
+- `mark_as_non_residential_or_special`
 
-## Governance Rules
+## Future V4 Boundary
 
 Manual decisions exported from the workbench are intermediate QA evidence.
 They are not authoritative until reviewed, validated, and applied through a
@@ -200,14 +196,14 @@ Before any V4 candidate geometry can be produced, exported decisions should be
 checked for:
 
 - missing required fields;
-- conflicting decisions for the same review case;
+- conflicting decisions for the same civic or task;
 - low-confidence decisions affecting section boundaries;
 - decisions that require external evidence;
-- changes that would alter processed electoral values;
-- consistency with the original electoral street register rules.
+- consistency with the original electoral street register rules;
+- absence of changes to processed electoral values.
 
 The workbench therefore separates decision capture from decision application.
-It helps reviewers record the evidence-backed judgement, while any later V4
+It helps reviewers record an evidence-backed judgement, while any later V4
 pipeline must remain a separate, auditable step that can be reviewed on its own.
 
 ## Publication Boundary
@@ -218,3 +214,11 @@ be linked from public navigation, deploy previews, or map routes.
 
 Any future public representation requires a separate review step, explicit
 methodological approval, and clear caveats.
+
+## Section 78
+
+Section 78 is excluded from the candidate polygon workflow as a
+special/hospital section. It is tracked as an electoral-administrative fact, but
+it is not polygonized by the V3 census-aggregated candidate process and should
+not be forced into the local geometry review interface as an ordinary
+territorial section.

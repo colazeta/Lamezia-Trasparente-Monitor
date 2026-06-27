@@ -223,6 +223,102 @@ def evidence_strength_for_task(
     return "none"
 
 
+def civic_numeric_value(row: dict[str, Any]) -> int | None:
+    match = re.search(r"\d+", civic_number_value(row))
+    return int(match.group(0)) if match else None
+
+
+def is_snc_civic(row: dict[str, Any]) -> bool:
+    return (
+        as_bool(row.get("anncsu_is_snc"))
+        or bool(as_text(row.get("PROGRESSIVO_SNC") or row.get("progressivo_snc")))
+        or not civic_number_value(row)
+    )
+
+
+def civic_parity_value(row: dict[str, Any]) -> str:
+    if is_snc_civic(row):
+        return "snc"
+    numeric = civic_numeric_value(row)
+    if numeric is None:
+        return "unknown"
+    return "even" if numeric % 2 == 0 else "odd"
+
+
+def civic_label(row: dict[str, Any]) -> str:
+    civic = civic_number_value(row)
+    exponent = as_text(row.get("ESPONENTE") or row.get("esponente"))
+    if civic and exponent:
+        return f"{civic}/{exponent}"
+    if civic:
+        return civic
+    return "SNC" if is_snc_civic(row) else ""
+
+
+def civic_min_max(rows: list[dict[str, Any]]) -> tuple[Any, Any]:
+    values = [value for value in (civic_numeric_value(row) for row in rows) if value is not None]
+    if not values:
+        return "", ""
+    return min(values), max(values)
+
+
+def civic_values_sample(rows: list[dict[str, Any]], limit: int = 24) -> list[str]:
+    ordered = sorted(rows, key=lambda row: (street_value(row), civic_sort_value(row), as_text(row.get("access_id"))))
+    return unique_texts([civic_label(row) for row in ordered], limit)
+
+
+def parity_mix_for_rows(rows: list[dict[str, Any]]) -> dict[str, int]:
+    counts = Counter(civic_parity_value(row) for row in rows)
+    return {key: counts.get(key, 0) for key in ["even", "odd", "snc", "unknown"] if counts.get(key, 0)}
+
+
+def snc_count_for_rows(rows: list[dict[str, Any]]) -> int:
+    return sum(1 for row in rows if is_snc_civic(row))
+
+
+def normalised_rule_parity(rule: dict[str, Any]) -> str:
+    value = as_text(rule.get("civic_parity")).lower()
+    if value in {"even", "pari"}:
+        return "even"
+    if value in {"odd", "dispari"}:
+        return "odd"
+    if value in {"any", "all", "both", "tutti"}:
+        return "any"
+    return ""
+
+
+def rule_numeric_range(rule: dict[str, Any]) -> tuple[int | None, int | None]:
+    civic_from = as_text(rule.get("civic_from"))
+    civic_to = as_text(rule.get("civic_to"))
+    start = as_int(civic_from, -1) if civic_from else None
+    end = as_int(civic_to, -1) if civic_to else None
+    if start == -1:
+        start = None
+    if end == -1:
+        end = None
+    if start is not None and end is not None and start > end:
+        start, end = end, start
+    return start, end
+
+
+def rule_overlaps_civics(rule: dict[str, Any], rows: list[dict[str, Any]]) -> bool:
+    start, end = rule_numeric_range(rule)
+    numbers = [value for value in (civic_numeric_value(row) for row in rows) if value is not None]
+    if start is None and end is None:
+        return bool(numbers)
+    for value in numbers:
+        if start is not None and value < start:
+            continue
+        if end is not None and value > end:
+            continue
+        return True
+    return False
+
+
+def rule_includes_snc(rule: dict[str, Any]) -> bool:
+    return as_bool(rule.get("includes_snc"))
+
+
 def map_bbox_for_geometries(gpd, geoms: list[Any]) -> list[float]:
     valid = [geom for geom in geoms if geom is not None and not getattr(geom, "is_empty", True)]
     if not valid:
@@ -275,6 +371,8 @@ def civic_record(row: dict[str, Any]) -> dict[str, Any]:
         "assignment_confidence": as_text(row.get("assignment_confidence")),
         "human_review_required": as_bool(row.get("human_review_required")),
         "rule_id": as_text(row.get("rule_id")),
+        "civic_parity": civic_parity_value(row),
+        "is_snc": is_snc_civic(row),
         "coord_x": as_text(row.get("COORD_X_COMUNE") or row.get("coord_x")),
         "coord_y": as_text(row.get("COORD_Y_COMUNE") or row.get("coord_y")),
         "distance_to_boundary_m": as_text(row.get("distance_to_boundary_m") or row.get("distance_to_candidate_boundary_m")),
@@ -411,6 +509,14 @@ def main() -> int:
     point_task_by_access: dict[str, str] = {}
     cell_task_map: dict[str, list[str]] = defaultdict(list)
     section_task_map: dict[str, list[str]] = defaultdict(list)
+    civic_review_tasks: list[dict[str, Any]] = []
+    civic_task_civics: dict[str, list[dict[str, Any]]] = {}
+    civic_task_evidence: dict[str, list[dict[str, Any]]] = {}
+    civic_task_candidate_sections: dict[str, list[dict[str, Any]]] = {}
+    civic_nearby_deterministic_by_task: dict[str, list[dict[str, Any]]] = {}
+    civic_cell_task_map: dict[str, list[str]] = defaultdict(list)
+    civic_section_task_map: dict[str, list[str]] = defaultdict(list)
+    used_civic_task_ids: set[str] = set()
 
     def street_register_evidence_for_task(
         task_id: str,
@@ -606,6 +712,280 @@ def main() -> int:
                 access_id = as_text(row.get("access_id"))
                 if access_id:
                     point_task_by_access[access_id] = task_id
+
+    def current_sections_for_rows(civic_rows: list[dict[str, Any]]) -> list[str]:
+        return unique_texts(
+            [
+                row.get("current_section_number") or row.get("section_number")
+                for row in civic_rows
+                if as_text(row.get("current_section_number") or row.get("section_number"))
+            ]
+        )
+
+    def street_rules_for_rows(civic_rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
+        selected: dict[str, dict[str, Any]] = {}
+        for street in unique_texts([street_value(row) for row in civic_rows]):
+            for rule in rules_by_street.get(street, []):
+                rule_id = as_text(rule.get("rule_id"))
+                if rule_id:
+                    selected[rule_id] = rule
+        return list(selected.values())
+
+    def street_register_sections_for_rows(civic_rows: list[dict[str, Any]]) -> list[str]:
+        return sorted(
+            unique_texts([rule.get("section_number") for rule in street_rules_for_rows(civic_rows)]),
+            key=section_sort_key,
+        )
+
+    def rule_compatibility_with_civic_task(
+        rule: dict[str, Any],
+        civic_rows: list[dict[str, Any]],
+        suggested_section: str,
+        competing_sections: list[str],
+    ) -> str:
+        rule_id = as_text(rule.get("rule_id"))
+        direct_rule_ids = {as_text(row.get("rule_id")) for row in civic_rows if as_text(row.get("rule_id"))}
+        if rule_id and rule_id in direct_rule_ids:
+            return "direct_compatible_rule"
+        parities = {civic_parity_value(row) for row in civic_rows}
+        if "snc" in parities and rule_includes_snc(rule):
+            return "snc_match"
+        rule_parity = normalised_rule_parity(rule)
+        if rule_parity in {"even", "odd"}:
+            if rule_parity in parities:
+                return "parity_match"
+            if "even" in parities or "odd" in parities:
+                return "parity_conflict"
+        if rule_overlaps_civics(rule, civic_rows):
+            return "interval_overlap"
+        section = as_text(rule.get("section_number"))
+        task_sections = set(current_sections_for_rows(civic_rows)) | set(competing_sections)
+        if suggested_section:
+            task_sections.add(suggested_section)
+        if suggested_section and section == suggested_section:
+            return "direct_compatible_rule"
+        if section in set(competing_sections):
+            return "competing_rule"
+        if section in task_sections:
+            return "possible_variant_match"
+        return "no_compatible_rule"
+
+    def street_register_evidence_for_civic_task(
+        task_id: str,
+        civic_rows: list[dict[str, Any]],
+        suggested_section: str,
+        competing_sections: list[str],
+    ) -> list[dict[str, Any]]:
+        selected: dict[str, dict[str, Any]] = {}
+
+        def score_for_compatibility(compatibility: str) -> int:
+            return {
+                "direct_compatible_rule": 100,
+                "snc_match": 92,
+                "parity_match": 88,
+                "interval_overlap": 82,
+                "possible_variant_match": 70,
+                "competing_rule": 66,
+                "parity_conflict": 44,
+                "no_compatible_rule": 20,
+            }.get(compatibility, 10)
+
+        def add_rule(row: dict[str, Any], reason: str) -> None:
+            rule_id = as_text(row.get("rule_id"))
+            if not rule_id:
+                return
+            compatibility = rule_compatibility_with_civic_task(row, civic_rows, suggested_section, competing_sections)
+            score = score_for_compatibility(compatibility)
+            existing = selected.get(rule_id)
+            if existing and as_int(existing.get("relevance_score")) >= score:
+                return
+            selected[rule_id] = {
+                "task_id": task_id,
+                "rule_id": rule_id,
+                "source_page": as_text(row.get("source_page")),
+                "section_number": as_text(row.get("section_number")),
+                "polling_place": as_text(row.get("polling_place")),
+                "street_rule_raw": as_text(row.get("street_rule_raw")),
+                "street_name_raw": as_text(row.get("street_name_raw")),
+                "street_name_normalised": as_text(row.get("street_name_normalised")),
+                "civic_rule_raw": as_text(row.get("civic_rule_raw")),
+                "civic_from": as_text(row.get("civic_from")),
+                "civic_to": as_text(row.get("civic_to")),
+                "civic_parity": as_text(row.get("civic_parity")),
+                "includes_snc": as_text(row.get("includes_snc")),
+                "extraction_confidence": as_text(row.get("extraction_confidence")),
+                "match_reason": reason,
+                "compatibility_with_task": compatibility,
+                "relevance_score": score,
+                "notes": as_text(row.get("notes")),
+            }
+
+        for civic in civic_rows:
+            rule_id = as_text(civic.get("rule_id"))
+            if rule_id and rule_id in rules_by_id:
+                add_rule(rules_by_id[rule_id], "direct_rule_id_from_civic_assignment")
+
+        task_sections = set(current_sections_for_rows(civic_rows)) | set(competing_sections)
+        if suggested_section:
+            task_sections.add(suggested_section)
+        for rule in street_rules_for_rows(civic_rows):
+            section = as_text(rule.get("section_number"))
+            compatibility = rule_compatibility_with_civic_task(rule, civic_rows, suggested_section, competing_sections)
+            if (
+                compatibility != "no_compatible_rule"
+                or section in task_sections
+                or len(selected) < MAX_RULES_PER_TASK // 2
+            ):
+                add_rule(rule, "same_street_civic_rule_context")
+            if len(selected) >= MAX_RULES_PER_TASK:
+                break
+
+        return sorted(
+            selected.values(),
+            key=lambda item: (
+                -as_int(item.get("relevance_score")),
+                section_sort_key(item.get("section_number")),
+                as_text(item.get("rule_id")),
+            ),
+        )
+
+    def civic_task_type_for_rows(civic_rows: list[dict[str, Any]], *, boundary: bool = False) -> str:
+        if boundary:
+            return "boundary_civic_cluster"
+        street_rules = street_rules_for_rows(civic_rows)
+        reason = ";".join(unique_texts([row.get("problem_type") for row in civic_rows])).lower()
+        if snc_count_for_rows(civic_rows) and any(rule_includes_snc(rule) for rule in street_rules):
+            return "snc_review"
+        if "no_civic_rule_match" in reason:
+            return "civic_range_conflict"
+        if "ambiguous_multiple_rules" in reason:
+            if any(normalised_rule_parity(rule) in {"even", "odd"} for rule in street_rules):
+                return "parity_rule_review"
+            return "street_register_multiple_matches"
+        competing = set()
+        for row in civic_rows:
+            competing.update(parse_competing_sections(row.get("competing_sections")))
+        if not street_rules and len(competing) > 1:
+            return "multi_section_street_conflict"
+        if not street_rules:
+            return "street_register_no_match"
+        if any(normalised_rule_parity(rule) in {"even", "odd"} for rule in street_rules):
+            return "parity_rule_review"
+        if len(street_register_sections_for_rows(civic_rows)) > 1:
+            return "street_register_multiple_matches"
+        if any(rule_numeric_range(rule) != (None, None) for rule in street_rules):
+            return "civic_range_conflict"
+        if len(competing) > 1:
+            return "multi_section_street_conflict"
+        return "unassigned_civic_group"
+
+    def unique_civic_task_id(base: str) -> str:
+        task_id = base
+        suffix = 2
+        while task_id in used_civic_task_ids:
+            task_id = f"{base}-{suffix}"
+            suffix += 1
+        used_civic_task_ids.add(task_id)
+        return task_id
+
+    def add_civic_task(
+        task: dict[str, Any],
+        civic_rows: list[dict[str, Any]],
+        geoms: list[Any],
+        *,
+        section_counts: dict[str, int] | None = None,
+        task_geom: Any | None = None,
+    ) -> None:
+        task_id = unique_civic_task_id(as_text(task["task_id"]))
+        civic_rows = sorted(civic_rows, key=lambda row: (street_value(row), civic_sort_value(row), as_text(row.get("access_id"))))
+        task_geoms = [geom for geom in geoms if geom is not None and not getattr(geom, "is_empty", True)]
+        if task_geom is None and task_geoms:
+            task_geom = _shapely.union_all(task_geoms)
+        streets = unique_texts([street_value(row) for row in civic_rows], MAX_STREETS_PER_TASK)
+        current_sections = current_sections_for_rows(civic_rows)
+        street_register_sections = street_register_sections_for_rows(civic_rows)
+        suggested = as_text(task.get("suggested_section_number"))
+        if not suggested and len(street_register_sections) == 1:
+            suggested = street_register_sections[0]
+        competing = unique_texts(task.get("competing_sections") or [])
+        for section in current_sections:
+            if section and section not in competing and section != suggested:
+                competing.append(section)
+        for row in civic_rows:
+            for section in parse_competing_sections(row.get("competing_sections")):
+                if section and section not in competing and section != suggested:
+                    competing.append(section)
+        evidence_rows = street_register_evidence_for_civic_task(task_id, civic_rows, suggested, competing)
+        direct_compatible_count = sum(
+            1 for row in evidence_rows if row.get("compatibility_with_task") == "direct_compatible_rule"
+        )
+        has_multiple_rules = len(street_register_sections) > 1 or len(street_rules_for_rows(civic_rows)) > 1
+        representative_cells = unique_texts([row.get("census_cell_id") for row in civic_rows], 12)
+        civic_min, civic_max = civic_min_max(civic_rows)
+        nearby_rows = (
+            deterministic_context(task_geom)
+            if task.get("priority") in {"high", "medium"} or len(civic_rows) >= 6
+            else []
+        )
+        street_match_status = "no_match"
+        if direct_compatible_count:
+            street_match_status = "direct_match"
+        elif len(street_register_sections) > 1:
+            street_match_status = "multiple_sections"
+        elif evidence_rows:
+            street_match_status = "same_street_match"
+        task.update(
+            {
+                "task_id": task_id,
+                "competing_sections": competing,
+                "involved_streets": streets,
+                "street_name_normalised": streets[0] if len(streets) == 1 else "",
+                "civic_count": len(civic_rows) if civic_rows else as_int(task.get("civic_count")),
+                "civic_min": civic_min,
+                "civic_max": civic_max,
+                "civic_values_sample": civic_values_sample(civic_rows),
+                "parity_mix": parity_mix_for_rows(civic_rows),
+                "snc_count": snc_count_for_rows(civic_rows),
+                "current_assigned_sections": current_sections,
+                "suggested_section_number": suggested,
+                "street_register_sections": street_register_sections,
+                "street_register_rule_count": len(street_rules_for_rows(civic_rows)),
+                "has_direct_street_register_rule": direct_compatible_count > 0,
+                "has_multiple_street_register_rules": has_multiple_rules,
+                "has_no_street_register_rule": len(street_rules_for_rows(civic_rows)) == 0,
+                "representative_census_cells": representative_cells,
+                "representative_access_ids": unique_texts([row.get("access_id") for row in civic_rows], 20),
+                "map_focus_bbox": map_bbox_for_geometries(gpd, task_geoms) if task_geoms else task.get("map_focus_bbox", []),
+                "civic_range_summary": civic_range_summary(civic_rows),
+                "evidence_strength": task.get("evidence_strength")
+                or evidence_strength_for_task(
+                    direct_rule_count=direct_compatible_count,
+                    street_rule_count=len(evidence_rows),
+                    dominant_share=0.0,
+                    competing_count=len(competing),
+                ),
+                "street_register_match_status": street_match_status,
+                "has_street_register_evidence": bool(evidence_rows),
+                "has_multiple_candidate_sections": len(set(competing) | set(street_register_sections)) > 1,
+                "has_no_street_register_match": not bool(evidence_rows),
+                "source_files": task.get("source_files") or [],
+            }
+        )
+        civic_review_tasks.append(task)
+        civic_task_civics[task_id] = [civic_record(row) for row in civic_rows[:MAX_CIVICS_PER_TASK_PAYLOAD]]
+        if len(civic_rows) > MAX_CIVICS_PER_TASK_PAYLOAD:
+            task["notes"] = (as_text(task.get("notes")) + f" Civics payload limited to {MAX_CIVICS_PER_TASK_PAYLOAD} rows.").strip()
+        civic_task_evidence[task_id] = evidence_rows
+        civic_nearby_deterministic_by_task[task_id] = nearby_rows
+        civic_task_candidate_sections[task_id] = candidate_sections_for_task(task, civic_rows, evidence_rows, nearby_rows, section_counts)
+        for row in civic_rows:
+            access_id = as_text(row.get("access_id"))
+            if access_id:
+                point_task_by_access[access_id] = task_id
+        for cell_id in representative_cells:
+            civic_cell_task_map[cell_id].append(task_id)
+        for section in unique_texts([suggested] + competing + current_sections):
+            civic_section_task_map[section].append(task_id)
 
     for _idx, row in cells.iterrows():
         method = as_text(row.get("assignment_method"))
@@ -881,6 +1261,102 @@ def main() -> int:
             section_counts={current_section: len(rows)} if current_section else None,
         )
 
+    civic_source_common = [
+        relpath(CIVICS_V2_CSV),
+        relpath(REVIEW_QUEUE_CSV),
+        relpath(STREET_RULES_CSV),
+        relpath(CROSSWALK_CSV),
+    ]
+    civic_review_note = (
+        "Census cells are geometric context only. The primary decision concerns civics, civic groups, "
+        "or electoral street-register rules and can feed a future auditable V4 only after human review."
+    )
+
+    for (street, problem, nearest_section), rows in boundary_groups.items():
+        competing = []
+        for civic in rows:
+            for section in parse_competing_sections(civic.get("competing_sections")):
+                if section not in competing:
+                    competing.append(section)
+        if nearest_section and nearest_section not in competing:
+            competing = [nearest_section, *competing]
+        distances = [as_float(row.get("distance_to_candidate_boundary_m"), 9999) for row in rows]
+        min_distance = min(distances) if distances else None
+        add_civic_task(
+            {
+                "task_id": f"civic-task:boundary:{slugify(street)}:{slugify(nearest_section)}:{slugify(problem)}",
+                "task_type": "boundary_civic_cluster",
+                "priority": priority_for_group(len(rows), min_distance_m=min_distance, competing_count=len(competing)),
+                "title": f"Boundary civic cluster on {street or 'unknown street'}",
+                "short_description": f"{len(rows)} civics near candidate section {nearest_section or 'unknown'} boundary context",
+                "why_needs_review": "These civics are close to candidate boundaries, but proximity alone is not a valid assignment criterion.",
+                "suggested_section_number": nearest_section,
+                "competing_sections": competing,
+                "suggested_action": "Select the civics, inspect the street-register rule and QGIS context, then assign only the reviewed group or keep it unresolved.",
+                "unresolved_reason": problem or "boundary_uncertainty",
+                "source_files": [relpath(BOUNDARY_UNCERTAINTY_CSV), *civic_source_common, relpath(QGIS_GPKG)],
+                "notes": f"{civic_review_note} Closest point is {round(min_distance, 2) if min_distance is not None else 'unknown'} m from a candidate boundary.",
+            },
+            rows,
+            [row.get("geometry") for row in rows],
+        )
+
+    for (street, problem, current_section, competing_raw), rows in unresolved_groups.items():
+        competing = parse_competing_sections(competing_raw)
+        task_type = civic_task_type_for_rows(rows)
+        civic_min, civic_max = civic_min_max(rows)
+        range_label = f"{civic_min}-{civic_max}" if civic_min != "" and civic_max != "" else "unknown range"
+        add_civic_task(
+            {
+                "task_id": f"civic-task:{slugify(task_type)}:{slugify(street)}:{slugify(current_section or 'none')}:{slugify(problem)}:{slugify(competing_raw)}",
+                "task_type": task_type,
+                "priority": priority_for_group(len(rows), competing_count=len(competing)),
+                "title": f"{task_type.replace('_', ' ').title()} on {street or 'unknown street'}",
+                "short_description": f"{len(rows)} civics, range {range_label}, current section {current_section or 'none'}",
+                "why_needs_review": "The unresolved unit is a group of civics, not a census cell. Review should select civics, a range, a parity subset, or SNC records.",
+                "suggested_section_number": current_section,
+                "competing_sections": competing,
+                "suggested_action": "Use the civics table and street-register evidence to choose an auditable assignment scope or keep the task unresolved.",
+                "unresolved_reason": problem or "remaining_review",
+                "source_files": civic_source_common,
+                "notes": civic_review_note,
+            },
+            rows,
+            [row.get("geometry") for row in rows],
+            section_counts={current_section: len(rows)} if current_section else None,
+        )
+
+    for _idx, row in cells.iterrows():
+        method = as_text(row.get("assignment_method"))
+        if method not in {"census_cell_conflict", "no_assigned_civics"}:
+            continue
+        cell_id = as_text(row.get("census_cell_id"))
+        if not cell_id or civic_cell_task_map.get(cell_id):
+            continue
+        civic_rows = civics_by_cell.get(cell_id, [])
+        suggested = as_text(row.get("suggested_section_number"))
+        competing_counts = parse_section_counts(row.get("competing_sections"))
+        add_civic_task(
+            {
+                "task_id": f"civic-task:census-cell-context:{cell_id}",
+                "task_type": "census_cell_context",
+                "priority": priority_for_cell(row.to_dict()),
+                "title": f"Census cell context {cell_id}",
+                "short_description": f"{as_int(row.get('total_civics'))} civics in diagnostic census-cell context",
+                "why_needs_review": "This is retained only as geometric diagnostic context where no smaller civic task was generated.",
+                "suggested_section_number": suggested,
+                "competing_sections": sorted(competing_counts, key=section_sort_key),
+                "suggested_action": "Use this only to orient QGIS review; do not assign sections by census-cell geometry alone.",
+                "unresolved_reason": method,
+                "source_files": [relpath(CELLS_GPKG), *civic_source_common],
+                "notes": "Le celle censuarie sono supporto geometrico. La decisione primaria riguarda civici, gruppi di civici o regole dello stradario.",
+            },
+            civic_rows,
+            [row.geometry],
+            section_counts=competing_counts,
+            task_geom=row.geometry,
+        )
+
     priority_order = {"high": 0, "medium": 1, "low": 2}
     strength_order = {"strong": 0, "medium": 1, "weak": 2, "none": 3}
     review_tasks.sort(
@@ -889,6 +1365,16 @@ def main() -> int:
             strength_order.get(as_text(item.get("evidence_strength")), 9),
             -as_int(item.get("civic_count")),
             as_text(item.get("task_type")),
+            as_text(item.get("task_id")),
+        )
+    )
+    civic_review_tasks.sort(
+        key=lambda item: (
+            priority_order.get(as_text(item.get("priority")), 9),
+            strength_order.get(as_text(item.get("evidence_strength")), 9),
+            0 if as_bool(item.get("has_direct_street_register_rule")) else 1,
+            -as_int(item.get("civic_count")),
+            as_text(item.get("street_name_normalised") or ",".join(item.get("involved_streets") or [])),
             as_text(item.get("task_id")),
         )
     )
@@ -908,7 +1394,10 @@ def main() -> int:
     review_cells["review_task_ids"] = review_cells.apply(
         lambda row: ";".join(
             unique_texts(
-                cell_task_map.get(as_text(row.get("census_cell_id")), [])
+                civic_cell_task_map.get(as_text(row.get("census_cell_id")), [])
+                + civic_section_task_map.get(as_text(row.get("assigned_section_number")), [])
+                + civic_section_task_map.get(as_text(row.get("suggested_section_number")), [])
+                + cell_task_map.get(as_text(row.get("census_cell_id")), [])
                 + section_task_map.get(as_text(row.get("assigned_section_number")), [])
                 + section_task_map.get(as_text(row.get("suggested_section_number")), [])
             )
@@ -949,19 +1438,23 @@ def main() -> int:
     write_json(OUT_DIR / "civics_by_case.json", case_civics)
     write_json(OUT_DIR / "street_rules_by_case.json", case_rules)
     write_json(OUT_DIR / "review_tasks.json", review_tasks)
-    write_json(OUT_DIR / "civics_by_task.json", task_civics)
-    write_json(OUT_DIR / "street_register_evidence_by_task.json", task_evidence)
-    write_json(OUT_DIR / "candidate_sections_by_task.json", task_candidate_sections)
-    write_json(OUT_DIR / "nearby_deterministic_by_task.json", nearby_deterministic_by_task)
+    write_json(OUT_DIR / "civic_review_tasks.json", civic_review_tasks)
+    write_json(OUT_DIR / "civics_by_task.json", civic_task_civics)
+    write_json(OUT_DIR / "street_register_evidence_by_task.json", civic_task_evidence)
+    write_json(OUT_DIR / "candidate_sections_by_task.json", civic_task_candidate_sections)
+    write_json(OUT_DIR / "nearby_deterministic_by_task.json", civic_nearby_deterministic_by_task)
     write_json(
         OUT_DIR / "review_summary.json",
         {
             "total_cases": len(cases),
             "total_review_tasks": len(review_tasks),
+            "total_civic_review_tasks": len(civic_review_tasks),
             "review_tasks_by_type": dict(Counter(task["task_type"] for task in review_tasks)),
+            "civic_review_tasks_by_type": dict(Counter(task["task_type"] for task in civic_review_tasks)),
             "high_priority_review_tasks": sum(1 for task in review_tasks if task.get("priority") == "high"),
-            "tasks_with_street_register_evidence": sum(1 for task in review_tasks if task.get("has_street_register_evidence")),
-            "tasks_without_street_register_match": sum(1 for task in review_tasks if task.get("has_no_street_register_match")),
+            "high_priority_civic_review_tasks": sum(1 for task in civic_review_tasks if task.get("priority") == "high"),
+            "tasks_with_street_register_evidence": sum(1 for task in civic_review_tasks if task.get("has_street_register_evidence")),
+            "tasks_without_street_register_match": sum(1 for task in civic_review_tasks if task.get("has_no_street_register_match")),
             "census_cell_conflict": sum(1 for case in cases if case["case_type"] == "census_cell_conflict"),
             "no_assigned_civics": sum(1 for case in cases if case["case_type"] == "no_assigned_civics"),
             "low_confidence_sections": len(low_metrics),
@@ -971,7 +1464,9 @@ def main() -> int:
             "excluded_sections": ["78"],
             "excluded_section_notes": "Section 78 is excluded from candidate polygons as a special/hospital section.",
             "street_register_pdf": public_pdf_path,
-            "decision_model_version": "v2-task-oriented",
+            "decision_model_version": "v3-civic-first-local-review",
+            "civic_first_scope": "Manual decisions are about civics, civic groups, civic ranges, parity/SNC subsets, or electoral street-register rules. Census cells are diagnostic geometry only.",
+            "future_v4_note": "Exported decisions are inputs for a future auditable V4 after human review. This script does not generate V4 geometry.",
             "sections_involved": sorted(
                 {
                     value
@@ -993,7 +1488,7 @@ def main() -> int:
                 relpath(CROSSWALK_CSV),
                 relpath(V3_METRICS_CSV),
             ],
-            "notes": "Local review workbench data only. OSM is an optional visual basemap; no V4 geometry is generated.",
+            "notes": "Local review workbench data only. OSM is an optional visual basemap; census cells are support context; no V4 geometry is generated.",
         },
     )
 
@@ -1102,6 +1597,7 @@ def main() -> int:
     print(f"output_dir={relpath(OUT_DIR)}")
     print(f"review_cases={len(cases)}")
     print(f"review_tasks={len(review_tasks)}")
+    print(f"civic_review_tasks={len(civic_review_tasks)}")
     print(f"review_cells={len(review_cells)}")
     print(f"review_points={len(review_points)}")
     print(f"deterministic_sample={len(deterministic)}")
