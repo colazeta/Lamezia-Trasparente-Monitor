@@ -561,6 +561,46 @@ tr[data-access-id]:hover {
   margin-bottom: 10px;
 }
 
+.range-toolbar {
+  align-items: end;
+  display: grid;
+  gap: 8px;
+  grid-template-columns: repeat(2, minmax(0, 110px)) 1fr;
+  margin-bottom: 10px;
+}
+
+.range-toolbar label {
+  display: grid;
+  gap: 4px;
+}
+
+.range-toolbar label > span {
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 850;
+  text-transform: uppercase;
+}
+
+.range-toolbar input {
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  min-height: 32px;
+  padding: 6px 8px;
+}
+
+.range-toolbar > span {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 800;
+  padding-bottom: 8px;
+}
+
+.civic-select {
+  accent-color: var(--blue);
+  block-size: 15px;
+  inline-size: 15px;
+}
+
 .register-status {
   align-items: center;
   display: flex;
@@ -589,6 +629,23 @@ tr[data-access-id]:hover {
 
 .section-card-head strong {
   font-size: 15px;
+}
+
+.process-panel ol {
+  counter-reset: phase;
+  display: grid;
+  gap: 8px;
+  list-style: none;
+  margin: 0 0 14px;
+  padding: 0;
+}
+
+.process-panel li {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 800;
+  padding: 9px 10px;
 }
 
 .decision-form {

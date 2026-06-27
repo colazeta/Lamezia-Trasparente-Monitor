@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Electoral Review Workbench V2</title>
+    <title>Electoral Review Workbench Civic-first</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <link rel="stylesheet" href="./styles.css" />
   </head>
@@ -13,7 +13,7 @@
         <span class="scope-badge">LOCAL REVIEW ONLY</span>
         <div>
           <p class="eyebrow">Lamezia Terme 2025</p>
-          <h1>Electoral section review workbench V2</h1>
+          <h1>Civic-first electoral review workbench</h1>
         </div>
       </div>
       <div class="summary-strip" id="summaryStrip" aria-live="polite">
@@ -28,11 +28,11 @@
     </header>
 
     <main class="workbench-shell">
-      <aside class="task-panel" aria-label="Review tasks">
+      <aside class="task-panel" aria-label="Civici da risolvere">
         <div class="panel-heading">
           <div>
-            <p class="eyebrow">Review tasks</p>
-            <h2>Prioritized queue</h2>
+            <p class="eyebrow">Civici da risolvere</p>
+            <h2>Prioritized civic queue</h2>
           </div>
           <span id="taskCountBadge" class="count-badge">0</span>
         </div>
@@ -79,9 +79,18 @@
             <span>Street evidence</span>
             <select id="streetEvidenceFilter">
               <option value="">All</option>
-              <option value="has">Has evidence</option>
-              <option value="multiple">Multiple sections</option>
-              <option value="none">No match</option>
+              <option value="direct">Direct rule</option>
+              <option value="multiple">Multiple rules</option>
+              <option value="none">No street rule</option>
+            </select>
+          </label>
+          <label>
+            <span>Parity/SNC</span>
+            <select id="parityFilter">
+              <option value="">All</option>
+              <option value="even">Even civics</option>
+              <option value="odd">Odd civics</option>
+              <option value="snc">SNC</option>
             </select>
           </label>
           <label>
@@ -94,9 +103,11 @@
               <option value="priority">Priority</option>
               <option value="civic_count_desc">Civic count descending</option>
               <option value="evidence_strength">Evidence strength</option>
-              <option value="dominant_share_asc">Dominant share ascending</option>
+              <option value="direct_rule_first">Direct rule first</option>
+              <option value="no_rule_first">No rule first</option>
+              <option value="competing_sections_desc">Competing section count descending</option>
+              <option value="street">Street</option>
               <option value="suggested_section">Suggested section</option>
-              <option value="unresolved_reason">Unresolved reason</option>
             </select>
           </label>
           <label class="check">
@@ -111,6 +122,10 @@
             <input id="visibleExtentFilter" type="checkbox" />
             <span>Visible extent</span>
           </label>
+          <label class="check">
+            <input id="nearBoundaryFilter" type="checkbox" />
+            <span>Near boundary</span>
+          </label>
         </div>
 
         <div id="taskListMeta" class="task-meta"></div>
@@ -119,7 +134,7 @@
 
       <section class="map-panel" aria-label="Review map">
         <div class="map-toolbar">
-          <label class="toggle"><input id="toggleOsm" type="checkbox" checked /><span>OSM</span></label>
+          <label class="toggle"><input id="toggleOsm" type="checkbox" checked /><span>OSM context</span></label>
           <label class="toggle"><input id="toggleV3" type="checkbox" checked /><span>V3</span></label>
           <label class="toggle"><input id="toggleV2" type="checkbox" /><span>V2</span></label>
           <label class="toggle"><input id="toggleCells" type="checkbox" checked /><span>Cells</span></label>
@@ -140,7 +155,7 @@
 
       <aside class="cockpit-panel" aria-label="Decision cockpit">
         <div class="selected-heading">
-          <p class="eyebrow">Decision cockpit</p>
+          <p class="eyebrow">Decision target</p>
           <h2 id="taskTitle">No task selected</h2>
           <div id="taskBadges" class="badge-row"></div>
         </div>
@@ -151,6 +166,7 @@
           <button type="button" data-tab="street">Street register</button>
           <button type="button" data-tab="sections">Candidate sections</button>
           <button type="button" data-tab="nearby">Nearby evidence</button>
+          <button type="button" data-tab="process">Processo</button>
           <button type="button" data-tab="decision">Decision</button>
         </nav>
 
@@ -164,18 +180,46 @@
           <span>Decision type</span>
           <select name="decision_type" required>
             <option value="">Choose...</option>
-            <option value="confirm_suggested_section">Confirm suggested section</option>
-            <option value="assign_to_alternative_section">Assign alternative section</option>
-            <option value="keep_unassigned">Keep unassigned</option>
-            <option value="keep_conflict">Keep conflict</option>
+            <option value="assign_civics_to_section">Assign civics to section</option>
+            <option value="confirm_existing_assignment">Confirm existing assignment</option>
+            <option value="keep_unresolved">Keep unresolved</option>
             <option value="split_required">Split required</option>
             <option value="needs_external_source">Needs external source</option>
-            <option value="needs_qgis_review">Needs QGIS review</option>
+            <option value="exclude_from_geometry">Exclude from geometry</option>
+            <option value="mark_as_non_residential_or_special">Mark non-residential or special</option>
+          </select>
+        </label>
+        <label>
+          <span>Decision scope</span>
+          <select name="decision_scope" required>
+            <option value="entire_task">Entire task</option>
+            <option value="selected_civics">Selected civics</option>
+            <option value="civic_range">Civic range</option>
+            <option value="parity_subset">Parity subset</option>
+            <option value="snc_only">SNC only</option>
+            <option value="keep_task_unresolved">Keep task unresolved</option>
           </select>
         </label>
         <label>
           <span>Proposed section</span>
           <input name="proposed_section_number" type="text" inputmode="numeric" placeholder="e.g. 27" />
+        </label>
+        <label>
+          <span>Civic from</span>
+          <input name="civic_from" type="text" inputmode="numeric" />
+        </label>
+        <label>
+          <span>Civic to</span>
+          <input name="civic_to" type="text" inputmode="numeric" />
+        </label>
+        <label>
+          <span>Civic parity</span>
+          <select name="civic_parity">
+            <option value="">Not specified</option>
+            <option value="even">Even</option>
+            <option value="odd">Odd</option>
+            <option value="any">Any numbered civic</option>
+          </select>
         </label>
         <label>
           <span>Confidence</span>
@@ -207,8 +251,12 @@
           <textarea name="notes" rows="3"></textarea>
         </label>
         <label class="check wide">
+          <input name="includes_snc" type="checkbox" />
+          <span>Includes SNC civics</span>
+        </label>
+        <label class="check wide">
           <input name="requires_follow_up" type="checkbox" />
-          <span>Requires follow-up before any V4 work</span>
+          <span>Requires follow-up before future V4 work</span>
         </label>
         <div class="form-actions wide">
           <button type="submit">Save decision</button>

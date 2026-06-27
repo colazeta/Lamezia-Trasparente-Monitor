@@ -1,8 +1,9 @@
-# Electoral Review Workbench V2
+# Electoral Review Workbench: Civic-first
 
 This is a local-only manual review tool for the Lamezia Terme 2025 electoral
-section candidate geometry work. V2 is organized around decision tasks rather
-than a flat list of unresolved technical records.
+section candidate geometry workflow. The current workbench is civic-first:
+the primary review object is a civic, a group of civics, a civic range, a
+parity/SNC subset, or an electoral street-register rule.
 
 It does not publish a public route, create V4 geometry, apply decisions back to
 GPKG files, modify processed electoral results, or treat candidate sections as
@@ -31,107 +32,93 @@ http://127.0.0.1:4177/
 Use a local HTTP server because the page loads JSON and GeoJSON through
 `fetch`.
 
-## V2 Review Tasks
+## Why Civic-first
 
-The main queue loads `public/data/review_tasks.json`. Each task is an
-aggregated review unit with a title, priority, suggested section, competing
-sections, civic range, reason for unresolved status, evidence strength, map
-focus bbox, and source files.
+The V2 task model was useful, but still too census-cell oriented. Census cells
+are diagnostic geometry: they help orient review in QGIS, but they are not
+electoral sections and should not be treated as the unit of manual assignment.
 
-Task types are:
+The new queue loads `public/data/civic_review_tasks.json`. Each task contains
+the civics to resolve, street-register context, suggested and competing
+sections, representative census cells, map focus bbox, and the scope needed for
+an auditable manual decision.
 
-- `unresolved_civic_group`
-- `census_cell_conflict`
-- `no_assigned_civics_cell`
-- `boundary_uncertainty_cluster`
-- `section_low_confidence`
-- `section_needs_manual_review`
+Supported task types are:
 
-Use filters for type, priority, decision status, suggested section, competing
-section, street, unresolved reason, street-register evidence, high-priority
-only, many-civic tasks, and current map extent.
+- `unassigned_civic_group`
+- `multi_section_street_conflict`
+- `civic_range_conflict`
+- `parity_rule_review`
+- `snc_review`
+- `street_register_no_match`
+- `street_register_multiple_matches`
+- `boundary_civic_cluster`
+- `census_cell_context`
+
+Some task types may not appear in a generated run when the current data has no
+matching cases. For example, the current review queue has no SNC civics.
 
 ## Map
 
 The map uses Leaflet with OpenStreetMap tiles when the browser can reach them.
-OSM is visual context only. It is not an official source for section assignment
-and must not be used as a proximity-based assignment rule.
+OpenStreetMap is visual context only. It is not an official source for section
+assignment and must not be used as a proximity-based assignment rule.
 
-If Leaflet or OSM tiles are unavailable, the workbench still draws local
-GeoJSON geometries in the fallback SVG map.
-
-Map layers include:
-
-- V3 candidate sections;
-- optional V2 reference geometry;
-- review census cells;
-- review civics;
-- boundary uncertainty points;
-- spatially resolved points;
-- deterministic civic sample;
-- selected task civics;
-- optional nearby deterministic points and competing sections.
+Map layers include V3 candidate sections, optional V2 reference geometry,
+diagnostic census cells, review civics, boundary uncertainty points, spatially
+resolved points, deterministic civic samples, selected task civics, nearby
+deterministic points, and competing sections.
 
 ## Street Register Evidence
 
-`public/data/street_register_evidence_by_task.json` links each task to parsed
-rules from `data/interim/geo/electoral_street_rules_2025.csv`.
+`public/data/street_register_evidence_by_task.json` links each civic task to
+parsed rules from `data/interim/geo/electoral_street_rules_2025.csv`.
 
-The panel distinguishes:
+Each rule carries `compatibility_with_task`, using these values where
+applicable:
 
-- direct rule matches from civic assignments;
-- same-street rules for the suggested section;
-- same-street rules for competing sections;
-- same-street rules in other sections;
-- tasks with no clear parsed rule match.
+- `direct_compatible_rule`
+- `possible_variant_match`
+- `competing_rule`
+- `interval_overlap`
+- `parity_match`
+- `parity_conflict`
+- `snc_match`
+- `no_compatible_rule`
 
-When the source PDF is small enough, the generator copies it to:
+The electoral street register remains the primary normative source. Census
+cells and OSM are context only.
 
-```text
-tools/electoral-review-workbench/public/source/Stradario_elettorale.pdf
-```
+## Civic Decisions
 
-The evidence panel links to `#page=N` for the parsed source page when available.
+The Civics tab lets a reviewer select all civics, even civics, odd civics, SNC
+civics, a typed civic range, unassigned civics, or competing civics. The
+Decision tab records the decision scope:
 
-## Decision Cockpit
-
-The right panel contains:
-
-- Summary;
-- Civics;
-- Street register evidence;
-- Candidate sections;
-- Nearby evidence;
-- Decision.
-
-The Civics tab shows access id, street, civic number, locality, current and
-suggested section, assignment method/confidence, rule id, review flag,
-boundary distance, and notes. Clicking a civic highlights it on the map.
-
-The Candidate sections tab summarizes suggested and competing sections, civic
-support, street-register rule counts, nearby deterministic counts, and boundary
-warnings.
-
-## Decisions
-
-Decisions are stored in browser `localStorage` until exported. The page warns
-before leaving when saved decisions have not been exported.
+- `entire_task`
+- `selected_civics`
+- `civic_range`
+- `parity_subset`
+- `snc_only`
+- `keep_task_unresolved`
 
 Exports are available as JSON and CSV with these fields:
 
-- `review_id`
+- `decision_id`
 - `task_id`
-- `case_type`
-- `census_cell_id`
-- `involved_streets`
-- `current_assignment_method`
-- `current_assigned_section`
-- `suggested_section_number`
-- `competing_sections`
+- `decision_scope`
+- `selected_access_ids`
+- `odonimo_raw`
+- `civic_from`
+- `civic_to`
+- `civic_parity`
+- `includes_snc`
 - `proposed_section_number`
 - `decision_type`
 - `decision_confidence`
 - `reason`
+- `street_register_rule_ids_used`
+- `street_register_pages_used`
 - `qgis_observation`
 - `reviewed_by`
 - `review_date`
@@ -139,20 +126,44 @@ Exports are available as JSON and CSV with these fields:
 - `notes`
 - `evidence_snapshot`
 
-Previous JSON or CSV exports can be imported to resume local work.
+Allowed decision types are:
+
+- `assign_civics_to_section`
+- `confirm_existing_assignment`
+- `keep_unresolved`
+- `split_required`
+- `needs_external_source`
+- `exclude_from_geometry`
+- `mark_as_non_residential_or_special`
 
 ## Generated Data
 
-Primary V2 payloads:
+Primary civic-first payloads:
 
-- `review_tasks.json`
+- `civic_review_tasks.json`
 - `civics_by_task.json`
 - `street_register_evidence_by_task.json`
 - `candidate_sections_by_task.json`
 - `nearby_deterministic_by_task.json`
+- `review_summary.json`
 
-Compatibility payloads from V1 remain generated under `public/data/`, but the
-V2 interface uses the task-oriented files above.
+Compatibility payloads from earlier workbench versions may remain generated
+under `public/data/`, but the interface uses the civic-first files above.
+
+## Process Boundary
+
+The in-app process panel records the intended sequence:
+
+1. Review civici
+2. Export decisioni
+3. PR decisioni manuali
+4. Audit decisioni
+5. Generazione V4 candidata
+6. QGIS check V4
+7. Eventuale pubblicazione solo dopo human gate
+
+The decisions captured here are inputs for a future auditable V4 workflow.
+This PR does not create V4.
 
 ## Guardrails
 
