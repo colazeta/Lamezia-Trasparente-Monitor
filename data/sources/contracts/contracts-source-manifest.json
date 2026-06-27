@@ -81,9 +81,28 @@
       "limitations": [
         "URL ufficiale da verificare manualmente prima dell'ingestione",
         "Lo skeleton attuale legge solo fixture JSON locali e false per test.",
-        "Nessun dump annuale ANAC reale e scaricato, salvato o pubblicato in questa PR."
+        "Nessun dump annuale ANAC reale e scaricato, salvato o pubblicato in questa PR.",
+        "Discovery spike 2026-06-27: landing open data raggiungibile, ma pacchetto/API CIG annuale non verificato come endpoint stabile in questo ambiente."
       ],
-      "next_action": "Identificare pacchetto annuale ufficiale, versione, licenza, campi CIG/lotto e data di pubblicazione prima del parser reale."
+      "next_action": "Verificare manualmente il pacchetto annuale ufficiale, versione, licenza, campi CIG/lotto e data di pubblicazione prima del parser reale.",
+      "discovery_metadata": {
+        "discovery_status": "needs_manual_verification",
+        "checked_at": "2026-06-27T20:50:00.000Z",
+        "checked_by": "codex",
+        "verified_url": null,
+        "landing_page_url": "https://dati.anticorruzione.it/opendata/",
+        "package_url": null,
+        "sample_file_url": null,
+        "detected_format": "html",
+        "freshness_label": "annual",
+        "version_hint": null,
+        "notes": [
+          "Landing ufficiale open data ANAC raggiungibile con richiesta metadata leggera.",
+          "La query metadata al catalogo/pacchetto CIG annuale non ha verificato un endpoint strutturato stabile in questo ambiente.",
+          "URL ufficiale da verificare manualmente prima dell'ingestione",
+          "Discovery separata da ingestione: nessun record reale ANAC e stato scritto in directory pubbliche o dati applicativi."
+        ]
+      }
     },
     {
       "id": "anac-open-data-cig-delta",

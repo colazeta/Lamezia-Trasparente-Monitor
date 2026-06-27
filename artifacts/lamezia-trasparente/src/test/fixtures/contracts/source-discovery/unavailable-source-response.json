@@ -1,0 +1,14 @@
+{
+  "fixture_label": "unavailable source metadata response",
+  "fixture_note": "Unavailable metadata-only response; contains no real procurement records.",
+  "probe": {
+    "url": "https://dati.anticorruzione.it/opendata/api/3/action/package_search?q=CIG",
+    "method": "GET",
+    "ok": false,
+    "status": 404,
+    "content_type": "text/html; charset=UTF-8",
+    "content_length": 128,
+    "detected_format": "html",
+    "body_preview": "Not Found"
+  }
+}
