@@ -526,14 +526,14 @@ export function Contracts() {
                     : lifecycleFilter === "missing-evaluation"
                       ? "Valutazione da integrare"
                       : lifecycleFilter === "complete"
-                        ? "Lifecycle completo"
+                        ? "Fasi documentate"
                         : "Da verificare"}
               </span>
             </div>
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">Tutte le fasi</SelectItem>
-            <SelectItem value="complete">Lifecycle completo</SelectItem>
+            <SelectItem value="complete">Fasi documentate</SelectItem>
             <SelectItem value="needs-review">Da verificare</SelectItem>
             <SelectItem value="missing-execution">
               Esecuzione da integrare
@@ -953,7 +953,7 @@ function BdncpBridge({
                 icon={ExternalLink}
                 label="Ponti BDNCP"
                 value={`${summary.withBdncpSearchBridge}/${summary.total}`}
-                sub="link/search bridge, non sync diretto"
+                sub="ponte di ricerca, non ingestione diretta"
               />
               <BdncpMetric
                 icon={HardHat}
@@ -1757,7 +1757,7 @@ function ContractDetail({
                   className="inline-flex items-center gap-1.5 text-sm font-semibold text-primary hover:underline"
                 >
                   <FileText className="h-4 w-4" />
-                  Vedi la storyline completa
+                  Vedi il fascicolo
                 </Link>
                 {contract.anacUrl ? (
                   <a

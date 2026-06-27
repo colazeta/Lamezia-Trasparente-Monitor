@@ -178,4 +178,46 @@ describe("contract dossier lifecycle", () => {
       ),
     ).toBe(false);
   });
+
+  it("keeps ingestion metadata separate from public source labels", () => {
+    const ingestionMetadata = {
+      source_dataset_id: "test-dataset",
+      source_dataset_label: "TEST dataset",
+      source_record_id: "record-1",
+      source_downloaded_at: "2026-06-27T00:00:00.000Z",
+      source_published_at: "2026-06-26",
+      source_update_kind: "full" as const,
+      parser_version: "test-parser-v0",
+      ingestion_status: "parsed" as const,
+      mapping_notes: ["fixture only"],
+    };
+    const dossier = buildContractDossier({
+      contract: baseContract,
+      sourceEvidence: [
+        {
+          id: "ingested-gara",
+          phaseKey: "gara_pubblicazione",
+          title: "Fixture fonte ingerita",
+          description: "Record test-only ingerito da fixture.",
+          sourceKind: "bdncp",
+          sourceStatus: "official-ingested-source",
+          sourceLabel: "TEST dataset",
+          identifier: "1234567CE7",
+          isOfficialSourceEvidence: true,
+          ingestionMetadata,
+        },
+      ],
+    });
+
+    expect(dossier.ingestionMetadata).toEqual([ingestionMetadata]);
+    expect(getLifecyclePhase(dossier, "gara_pubblicazione").status).toBe(
+      "documented",
+    );
+    expect(dossier.evidence).toContainEqual(
+      expect.objectContaining({
+        sourceStatus: "official-ingested-source",
+        ingestionMetadata,
+      }),
+    );
+  });
 });

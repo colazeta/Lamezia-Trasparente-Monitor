@@ -56,10 +56,32 @@ export interface ContractLifecyclePhase {
 
 export type ContractSourceStatus =
   | "official-source"
+  | "official-ingested-source"
   | "derived-data"
   | "search-bridge"
+  | "manual-review"
   | "missing-source"
   | "information-limit";
+
+export type ContractSourceUpdateKind = "full" | "delta" | "manual" | "unknown";
+
+export type ContractIngestionStatus =
+  | "parsed"
+  | "skipped"
+  | "needs_mapping"
+  | "failed";
+
+export interface ContractIngestionMetadata {
+  source_dataset_id: string;
+  source_dataset_label: string;
+  source_record_id: string;
+  source_downloaded_at: string | null;
+  source_published_at: string | null;
+  source_update_kind: ContractSourceUpdateKind;
+  parser_version: string;
+  ingestion_status: ContractIngestionStatus;
+  mapping_notes: string[];
+}
 
 export type ContractEvidenceSourceKind =
   | "bdncp"
@@ -79,6 +101,7 @@ export interface ContractEvidence {
   sourceUrl?: string;
   identifier?: string;
   isOfficialSourceEvidence: boolean;
+  ingestionMetadata?: ContractIngestionMetadata;
 }
 
 export interface ContractOfficialLink {
@@ -103,6 +126,7 @@ export interface ContractDossier {
   identifiers: ContractIdentifier[];
   phases: ContractLifecyclePhase[];
   evidence: ContractEvidence[];
+  ingestionMetadata: ContractIngestionMetadata[];
   officialLinks: ContractOfficialLink[];
   publicLimits: string[];
   workAxis: ContractWorkAxis;
@@ -144,6 +168,8 @@ export function buildContractDossier(input: {
   contract: Contract;
   timeline?: readonly StorylineEvent[];
   indicators?: StorylineIndicators;
+  sourceEvidence?: readonly ContractEvidence[];
+  ingestionMetadata?: readonly ContractIngestionMetadata[];
 }): ContractDossier {
   const { contract } = input;
   const timeline = input.timeline ?? [];
@@ -155,7 +181,7 @@ export function buildContractDossier(input: {
     contract,
     timeline,
     bdncpBridge.formallyValidCig,
-  );
+  ).concat(input.sourceEvidence ?? []);
   const publicLimits = buildPublicLimits(
     contract,
     cigClassification,
@@ -194,6 +220,10 @@ export function buildContractDossier(input: {
     ),
     phases,
     evidence,
+    ingestionMetadata: mergeIngestionMetadata(
+      input.ingestionMetadata ?? [],
+      evidence,
+    ),
     officialLinks,
     publicLimits,
     workAxis,
@@ -458,23 +488,32 @@ function buildPhase(input: {
     const hasCig =
       input.cigClassification.type === "cig" &&
       input.cigClassification.formallyValid;
+    const hasIngestedSource = evidenceForPhase.some(
+      (evidence) => evidence.sourceStatus === "official-ingested-source",
+    );
     return {
       key: phaseKey,
       label: PHASE_LABELS[phaseKey],
-      status: input.bdncpBridgeAvailable
-        ? "partial"
-        : hasCig
+      status: hasIngestedSource
+        ? "documented"
+        : input.bdncpBridgeAvailable
           ? "partial"
-          : "missing",
-      summary: input.bdncpBridgeAvailable
-        ? "CIG con collegamento parziale al punto di ricerca BDNCP/PVL."
-        : hasCig
-          ? "CIG presente, collegamento BDNCP da verificare."
-          : "Fase non documentata nelle fonti disponibili: CIG non rilevato.",
+          : hasCig
+            ? "partial"
+            : "missing",
+      summary: hasIngestedSource
+        ? "Gara/pubblicazione documentata da fonte ufficiale ingerita."
+        : input.bdncpBridgeAvailable
+          ? "CIG con collegamento parziale al punto di ricerca BDNCP/PVL."
+          : hasCig
+            ? "CIG presente, collegamento BDNCP da verificare."
+            : "Fase non documentata nelle fonti disponibili: CIG non rilevato.",
       evidenceIds: evidenceForPhase.map((evidence) => evidence.id),
-      missing: input.bdncpBridgeAvailable
-        ? ["Sincronizzazione scheda BDNCP"]
-        : ["CIG o link BDNCP"],
+      missing: hasIngestedSource
+        ? []
+        : input.bdncpBridgeAvailable
+          ? ["Sincronizzazione scheda BDNCP"]
+          : ["CIG o link BDNCP"],
     };
   }
 
@@ -701,4 +740,30 @@ function phaseStatus(
   phaseKey: ContractLifecyclePhaseKey,
 ): ContractLifecycleStatus {
   return phases.find((phase) => phase.key === phaseKey)?.status ?? "missing";
+}
+
+function mergeIngestionMetadata(
+  explicitMetadata: readonly ContractIngestionMetadata[],
+  evidence: readonly ContractEvidence[],
+): ContractIngestionMetadata[] {
+  const metadataByKey = new Map<string, ContractIngestionMetadata>();
+
+  for (const item of explicitMetadata) {
+    metadataByKey.set(ingestionMetadataKey(item), item);
+  }
+
+  for (const item of evidence) {
+    if (item.ingestionMetadata) {
+      metadataByKey.set(
+        ingestionMetadataKey(item.ingestionMetadata),
+        item.ingestionMetadata,
+      );
+    }
+  }
+
+  return [...metadataByKey.values()];
+}
+
+function ingestionMetadataKey(metadata: ContractIngestionMetadata): string {
+  return `${metadata.source_dataset_id}:${metadata.source_record_id}:${metadata.parser_version}`;
 }

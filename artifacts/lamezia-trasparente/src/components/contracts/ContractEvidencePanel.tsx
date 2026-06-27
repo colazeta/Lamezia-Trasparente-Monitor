@@ -82,6 +82,12 @@ function EvidenceItem({ evidence }: { evidence: ContractEvidence }) {
       <div className="mt-3 flex flex-wrap items-center gap-3 text-xs text-muted-foreground">
         <span>{evidence.sourceLabel}</span>
         {evidence.identifier ? <span>via {evidence.identifier}</span> : null}
+        {evidence.ingestionMetadata ? (
+          <span>
+            dataset {evidence.ingestionMetadata.source_dataset_label} · parser{" "}
+            {evidence.ingestionMetadata.parser_version}
+          </span>
+        ) : null}
         {evidence.sourceUrl ? (
           <a
             href={evidence.sourceUrl}

@@ -2,8 +2,10 @@
   "extends": "../tsconfig.base.json",
   "compilerOptions": {
     "outDir": "dist",
-    "rootDir": ".",
-    "types": ["node"]
+    "rootDir": "..",
+    "types": ["node"],
+    "lib": ["es2022", "dom", "dom.iterable"]
   },
-  "include": ["src", "*.ts", "territorio/**/*.ts"]
+  "include": ["src", "*.ts", "territorio/**/*.ts", "contracts/**/*.ts"],
+  "exclude": ["**/*.test.ts"]
 }
