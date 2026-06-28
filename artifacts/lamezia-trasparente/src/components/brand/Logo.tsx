@@ -50,19 +50,19 @@ export function Logo({
   subtitle?: boolean;
 }) {
   return (
-    <span className={cn("flex items-center gap-2.5", className)}>
+    <span className={cn("flex min-w-0 items-center gap-2.5", className)}>
       <LogoMark className="h-9 w-9 shrink-0" />
-      <span className="flex flex-col leading-none">
+      <span className="flex min-w-0 flex-col leading-none">
         <span
           className={cn(
-            "font-display font-bold tracking-tight text-foreground",
+            "whitespace-nowrap font-display font-bold tracking-tight text-foreground",
             textClassName,
           )}
         >
           rendiamo<span className="text-brand">Lamezia</span>Trasparente
         </span>
         {subtitle && (
-          <span className="mt-1 text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground">
+          <span className="mt-1 hidden text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground sm:block">
             Osservatorio Civico Indipendente
           </span>
         )}

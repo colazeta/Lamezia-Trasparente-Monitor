@@ -201,7 +201,7 @@ const priorityPageImplementations: Record<
     contentHierarchy: [
       "cosa puoi controllare",
       "dati consultabili con cautele e dati parziali",
-      "fonti mancanti, demo e moduli pronti per ingestion",
+      "fonti mancanti, demo e moduli pronti per alimentazione dati",
       "azioni concrete: consultare, verificare, segnalare, richiedere accesso civico",
     ],
     sourceStatusPlacement:
@@ -214,7 +214,7 @@ const priorityPageImplementations: Record<
     launchPosture:
       "Pubblicabile come mappa civica se non promette copertura completa.",
     furtherWorkBeforeLaunch:
-      "Raffinare i conteggi quando le ingestion automatiche diventano stabili.",
+      "Raffinare i conteggi quando le alimentazioni automatiche diventano stabili.",
     implementationNote:
       "La home e trattata come sistema di orientamento, non come semplice collezione di card.",
   },
@@ -522,7 +522,7 @@ const priorityPageImplementations: Record<
     citizenAction:
       "Capire da dove arriva un dato e quando serve tornare alla fonte ufficiale.",
     remainingDataDependency:
-      "Mantenere registro sincronizzato con ingestion, sitemap e moduli pubblici.",
+      "Mantenere registro sincronizzato con alimentazioni dati, sitemap e moduli pubblici.",
     launchPosture:
       "Pubblicabile come ancora metodologica del sito.",
     furtherWorkBeforeLaunch:
@@ -546,7 +546,7 @@ const priorityPageImplementations: Record<
     citizenAction:
       "Capire se un dato mancante dipende dalla fonte, dall'import o dalla copertura.",
     remainingDataDependency:
-      "Aggiornare il payload health quando nuove ingestion diventano operative.",
+      "Aggiornare il payload health quando nuove alimentazioni dati diventano operative.",
     launchPosture:
       "Pubblicabile come dashboard tecnica, non come valutazione sostanziale.",
     furtherWorkBeforeLaunch:
@@ -815,9 +815,9 @@ function buildSection(route: (typeof PUBLIC_INDEXABLE_ROUTES)[number]) {
     path,
     group,
     title,
-    publicExplanation: `${route.rationale} La sezione dichiara fonte, stato dei dati, limiti e prossimi passi prima di mostrare o interpretare record.`,
+    publicExplanation: `${route.rationale} Prima dei record mette in chiaro fonti, stato, limiti e prossimi passi.`,
     helpsUnderstand: [
-      "quale bisogno civico affronta la sezione",
+      "a quale bisogno civico risponde",
       "quali fonti e campi sono disponibili o mancanti",
       "quali cautele servono prima di riusare i dati",
     ],
@@ -875,7 +875,7 @@ function buildSection(route: (typeof PUBLIC_INDEXABLE_ROUTES)[number]) {
       missingEmptyStates:
         "Stato vuoto per fonte assente, record mancanti, demo o servizio non attivo.",
       missingSourceIndicators:
-        "Fonte prevista, tipo fonte, ultimo controllo, livello verifica e stato ingestion.",
+        "Fonte prevista, tipo fonte, ultimo controllo, livello verifica e stato alimentazione dati.",
       missingFilters: filters.join(", "),
       missingCrossLinks: related.map(titleFor).join(", "),
       mobileReadability:

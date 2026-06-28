@@ -2,6 +2,8 @@ import { useMemo, useState } from "react";
 import {
   useListContracts,
   useListPublications,
+  type Contract,
+  type Publication,
 } from "@workspace/api-client-react";
 import {
   AlertTriangle,
@@ -51,6 +53,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { asApiList } from "@/lib/apiList";
 
 function formatDate(value: string | null | undefined) {
   if (!value) return "—";
@@ -132,9 +135,11 @@ function FilterSelect<TValue extends string>({
 }
 
 export function Incarichimetro() {
-  const { data: contracts, isLoading: contractsLoading } = useListContracts();
-  const { data: publications, isLoading: publicationsLoading } =
+  const { data: contractsData, isLoading: contractsLoading } = useListContracts();
+  const { data: publicationsData, isLoading: publicationsLoading } =
     useListPublications();
+  const contracts = asApiList<Contract>(contractsData);
+  const publications = asApiList<Publication>(publicationsData);
   const [filters, setFilters] = useState<IncarichimetroFilters>(
     DEFAULT_INCARICHIMETRO_FILTERS,
   );
@@ -147,10 +152,10 @@ export function Incarichimetro() {
   };
 
   const records = useMemo(() => {
-    const contractRecords = (contracts ?? [])
+    const contractRecords = contracts
       .map(buildContractRecord)
       .filter((record): record is MonitoredRecord => record != null);
-    const publicationRecords = (publications ?? [])
+    const publicationRecords = publications
       .map(buildPublicationRecord)
       .filter((record): record is MonitoredRecord => record != null);
     return [...contractRecords, ...publicationRecords].sort((a, b) => {

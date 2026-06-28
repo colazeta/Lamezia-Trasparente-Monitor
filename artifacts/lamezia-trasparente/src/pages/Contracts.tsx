@@ -1132,7 +1132,38 @@ function Analytics({
     );
   }
 
-  if (!analytics || analytics.totalCount === 0) {
+  if (!analytics || typeof analytics !== "object") {
+    return null;
+  }
+
+  const totalCount =
+    typeof analytics.totalCount === "number" ? analytics.totalCount : 0;
+  const totalAmount =
+    typeof analytics.totalAmount === "number" ? analytics.totalAmount : 0;
+  const withoutTenderPct =
+    typeof analytics.withoutTenderPct === "number"
+      ? analytics.withoutTenderPct
+      : 0;
+  const withoutTenderCount =
+    typeof analytics.withoutTenderCount === "number"
+      ? analytics.withoutTenderCount
+      : 0;
+  const withoutMepaPct =
+    typeof analytics.withoutMepaPct === "number"
+      ? analytics.withoutMepaPct
+      : 0;
+  const withoutMepaCount =
+    typeof analytics.withoutMepaCount === "number"
+      ? analytics.withoutMepaCount
+      : 0;
+  const mostRecurrentBeneficiary =
+    analytics.mostRecurrentBeneficiary &&
+    typeof analytics.mostRecurrentBeneficiary.name === "string" &&
+    typeof analytics.mostRecurrentBeneficiary.count === "number"
+      ? analytics.mostRecurrentBeneficiary
+      : null;
+
+  if (totalCount === 0) {
     return null;
   }
 
@@ -1182,31 +1213,31 @@ function Analytics({
       <div className="grid gap-4 grid-cols-2 lg:grid-cols-4">
         <StatCard
           label="Valore totale (filtrato)"
-          value={formatEuro(analytics.totalAmount, true)}
+          value={formatEuro(totalAmount, true)}
           icon={Euro}
           highlight
         />
         <StatCard
           label="Contratti"
-          value={String(analytics.totalCount)}
+          value={String(totalCount)}
           icon={FileText}
         />
         <StatCard
           label="Affidati senza gara"
-          value={`${analytics.withoutTenderPct.toFixed(0)}%`}
-          sub={`${analytics.withoutTenderCount} contratti`}
+          value={`${withoutTenderPct.toFixed(0)}%`}
+          sub={`${withoutTenderCount} contratti`}
           icon={Gavel}
         />
         <StatCard
           label="Fuori dal MePA"
-          value={`${analytics.withoutMepaPct.toFixed(0)}%`}
-          sub={`${analytics.withoutMepaCount} contratti`}
+          value={`${withoutMepaPct.toFixed(0)}%`}
+          sub={`${withoutMepaCount} contratti`}
           icon={ShoppingCart}
         />
       </div>
 
       {/* Recurrent beneficiary highlight */}
-      {analytics.mostRecurrentBeneficiary ? (
+      {mostRecurrentBeneficiary ? (
         <div className="flex items-center gap-3 rounded-xl border border-card-border bg-card p-4 shadow-sm">
           <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-brand/15 text-brand">
             <Repeat className="h-5 w-5" />
@@ -1216,9 +1247,9 @@ function Analytics({
               Beneficiario più ricorrente
             </div>
             <div className="font-display font-bold text-foreground">
-              {analytics.mostRecurrentBeneficiary.name}{" "}
+              {mostRecurrentBeneficiary.name}{" "}
               <span className="text-sm font-normal text-muted-foreground">
-                · {analytics.mostRecurrentBeneficiary.count} contratti
+                · {mostRecurrentBeneficiary.count} contratti
               </span>
             </div>
           </div>

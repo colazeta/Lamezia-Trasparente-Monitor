@@ -55,9 +55,9 @@ export function Navbar() {
       <CommandPalette open={paletteOpen} onOpenChange={setPaletteOpen} />
 
       <header className="sticky top-0 z-50 w-full border-b border-border bg-background/85 backdrop-blur supports-[backdrop-filter]:bg-background/70">
-        <div className="container mx-auto flex h-16 items-center justify-between gap-4 px-4 md:px-6">
-          <Link href="/" className="shrink-0">
-            <Logo textClassName="text-base sm:text-lg leading-none" subtitle />
+        <div className="container mx-auto flex h-16 items-center justify-between gap-2 px-3 sm:px-4 md:gap-4 md:px-6">
+          <Link href="/" className="min-w-0 shrink">
+            <Logo textClassName="text-sm leading-none sm:text-lg" subtitle />
           </Link>
 
           {/* Desktop Nav */}
@@ -158,7 +158,7 @@ export function Navbar() {
             </DropdownMenu>
           </nav>
 
-          <div className="flex items-center gap-2">
+          <div className="flex shrink-0 items-center gap-1 sm:gap-2">
             {/* Search trigger */}
             <SearchTrigger onClick={() => setPaletteOpen(true)} />
             <ThemeToggle />
