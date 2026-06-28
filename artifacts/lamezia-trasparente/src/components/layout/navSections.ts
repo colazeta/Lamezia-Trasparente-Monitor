@@ -88,11 +88,11 @@ const RAW_NAV_GROUPS: NavSection[] = [
     ],
   },
   {
-    label: "LegalitÃ ",
+    label: "Legalità",
     items: [
       {
         href: "/legalita",
-        label: "LegalitÃ ",
+        label: "Legalità",
         description:
           "Impegni, prevenzione della corruzione e obblighi di trasparenza.",
         icon: Scale,
@@ -133,7 +133,7 @@ const RAW_NAV_GROUPS: NavSection[] = [
       {
         href: "/bandi",
         label: "Bandi",
-        description: "Contributi, fondi e opportunitÃ  di finanziamento.",
+        description: "Contributi, fondi e opportunità di finanziamento.",
         icon: HandCoins,
       },
       {
@@ -164,7 +164,7 @@ const RAW_NAV_GROUPS: NavSection[] = [
         href: "/macchina-comunale",
         label: "Macchina comunale",
         description:
-          "CapacitÃ  amministrativa, organico, scoperture e stato delle fonti.",
+          "Capacità amministrativa, organico, scoperture e stato delle fonti.",
         icon: Network,
       },
     ],
@@ -197,7 +197,7 @@ const RAW_NAV_GROUPS: NavSection[] = [
         href: "/roadmap",
         label: "Roadmap",
         description:
-          "Stato pubblico, limiti e prioritÃ  prudenti dei moduli civici.",
+          "Stato pubblico, limiti e priorità prudenti dei moduli civici.",
         icon: CircleDotDashed,
       },
     ],
@@ -279,7 +279,7 @@ const RAW_NAV_GROUPS: NavSection[] = [
         href: "/note-legali",
         label: "Note legali",
         description:
-          "Avvertenze per consultare la piattaforma senza dedurre responsabilitÃ  o completezza dai dati pubblicati.",
+          "Avvertenze per consultare la piattaforma senza dedurre responsabilità o completezza dai dati pubblicati.",
         icon: Scale3D,
       },
     ],
