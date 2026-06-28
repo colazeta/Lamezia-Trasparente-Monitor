@@ -44,17 +44,35 @@ function renderLayoutAt(path: string) {
   );
 }
 
-describe("MainLayout Atlante route", () => {
-  it("lets Atlante territoriale start from its explorer instead of the diagnostic scaffold", () => {
-    renderLayoutAt("/atlante-territoriale");
+const INTERNAL_PUBLIC_ROUTES = [
+  "/convocazioni",
+  "/delibere",
+  "/albo",
+  "/contratti",
+  "/incarichimetro",
+  "/pnrr",
+  "/organi",
+  "/amministratori",
+  "/monitoraggio",
+  "/criticita-pubbliche",
+  "/segnalazioni",
+  "/fonti-dati",
+  "/stato-monitoraggio",
+  "/metodologia",
+  "/atlante-territoriale",
+  "/legalita",
+  "/legalita/timeline",
+  "/legalita/trame-festival",
+] as const;
 
-    expect(screen.queryByTestId("section-scaffold")).not.toBeInTheDocument();
-    expect(screen.getByText("Pagina pubblica")).toBeInTheDocument();
-  });
+describe("MainLayout public route content", () => {
+  it.each(INTERNAL_PUBLIC_ROUTES)(
+    "lets %s start from its own page body",
+    (route) => {
+      renderLayoutAt(route);
 
-  it("keeps the civic scaffold on ordinary public routes", () => {
-    renderLayoutAt("/contratti");
-
-    expect(screen.getByTestId("section-scaffold")).toBeInTheDocument();
-  });
+      expect(screen.queryByTestId("section-scaffold")).not.toBeInTheDocument();
+      expect(screen.getByText("Pagina pubblica")).toBeInTheDocument();
+    },
+  );
 });
