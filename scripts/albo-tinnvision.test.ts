@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
-import { mkdtemp, readFile, writeFile } from "node:fs/promises";
+import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import test from "node:test";
@@ -40,6 +40,59 @@ test("parses Tinnvision XML export and normalises minimal albo_item fields", () 
   assert.equal(items[2].privacy_risk, "medium");
   assert.equal(items[3].public_visibility, "do_not_publish");
   assert.equal(items[3].privacy_risk, "high");
+});
+
+test("does not classify personal-service welfare records as low-risk publishable", async () => {
+  const tmp = await mkdtemp(path.join(tmpdir(), "albo-tinnvision-privacy-"));
+  const fixturePath = path.join(tmp, "albo.xml");
+  const outDir = path.join(tmp, "data");
+  await writeFile(
+    fixturePath,
+    [
+      xmlRecord(
+        "2026/3001",
+        "DETERMINAZIONE DIRIGENZIALE",
+        "SETTORE WELFARE",
+        "Approvazione delle domande di concessione dell' assegno di maternit&#224; - elenco n. 3 del 2026",
+        "31",
+      ),
+      xmlRecord(
+        "2026/3002",
+        "DETERMINAZIONE DIRIGENZIALE",
+        "SERVIZI ALLA PERSONA",
+        "Servizio di assistenza domiciliare a valere sul FNA 2019/2020. Liquidazione periodo 01/03/2026 - 30/04/2026",
+        "32",
+      ),
+      xmlRecord(
+        "2026/3003",
+        "DETERMINAZIONE DIRIGENZIALE",
+        "SETTORE WELFARE",
+        "Concessione contributo economico a favore di persona fisica",
+        "33",
+      ),
+    ].join("\n"),
+    "utf8",
+  );
+
+  const result = await runAlboIngestion({
+    outDir,
+    fromFile: fixturePath,
+    inputFormat: "xml",
+    retrievedAt: FIXTURE_RETRIEVED_AT,
+  });
+
+  assert.deepEqual(
+    result.items.map((item) => item.public_visibility),
+    ["metadata_only", "metadata_only", "publishable_with_minimisation"],
+  );
+  assert.equal(result.publicLatest.counts.publishable, 0);
+  assert.equal(result.publicLatest.counts.metadata_only, 2);
+  assert.equal(result.publicLatest.counts.minimised, 1);
+
+  const publicLatest = await readFile(result.paths.publicLatest, "utf8");
+  assert.doesNotMatch(publicLatest, /assegno di matern|assistenza domiciliare|persona fisica/i);
+  assert.match(publicLatest, /Metadato minimo/);
+  assert.match(publicLatest, /Oggetto minimizzato per prudenza privacy/);
 });
 
 test("parses controlled print HTML fallback table", () => {
@@ -126,6 +179,10 @@ test("run command writes snapshots and public outputs without mirroring sensitiv
   assert.equal(result.publicStatus.method, "xml");
   assert.equal(result.publicStatus.verification_status, "official_source_acquired");
   assert.equal(result.publicStatus.counts.acquired, 4);
+  assert.equal(result.publicStatus.diff_baseline.status, "baseline_unavailable");
+  assert.equal(result.publicStatus.diff_baseline.public_safe, false);
+  assert.equal(result.publicDiff.diff_baseline.status, "baseline_unavailable");
+  assert.ok(result.publicStatus.known_limits.includes(result.publicStatus.diff_baseline.note));
   assert.ok(result.publicStatus.known_limits.length > 0);
   assert.match(
     String(result.publicStatus.official_albo_disclaimer),
@@ -200,12 +257,166 @@ test("run command compares against the previous current snapshot", async () => {
   assert.equal(result.publicDiff.counts.changed, 1);
   assert.equal(result.publicDiff.counts.removed, 1);
   assert.equal(result.publicDiff.counts.unchanged, 1);
+  assert.equal(result.publicStatus.diff_baseline.status, "public_safe");
+  assert.equal(result.publicStatus.diff_baseline.public_safe, true);
+  assert.equal(result.publicStatus.diff_baseline.previous_retrieved_at, "2026-06-19T08:00:00.000Z");
+  assert.equal(result.publicDiff.diff_baseline.status, "public_safe");
 
   const publicDiff = await readFile(result.paths.publicDiff, "utf8");
   assert.match(publicDiff, /"new"/);
   assert.match(publicDiff, /"changed"/);
   assert.match(publicDiff, /"removed"/);
   assert.match(publicDiff, /"unchanged"/);
+  assert.match(publicDiff, /"diff_baseline"/);
+});
+
+test("current snapshot baseline ignores raw-derived hashes for minimised records", async () => {
+  const tmp = await mkdtemp(path.join(tmpdir(), "albo-tinnvision-redacted-snapshot-baseline-"));
+  const previousPath = path.join(tmp, "previous.xml");
+  const nextPath = path.join(tmp, "next.xml");
+  const outDir = path.join(tmp, "data");
+
+  await writeFile(
+    previousPath,
+    xmlRecord(
+      "2026/5",
+      "DETERMINAZIONE DIRIGENZIALE",
+      "SETTORE WELFARE",
+      "Concessione contributo economico a favore di persona fisica A",
+      "5",
+    ),
+    "utf8",
+  );
+  await writeFile(
+    nextPath,
+    xmlRecord(
+      "2026/5",
+      "DETERMINAZIONE DIRIGENZIALE",
+      "SETTORE WELFARE",
+      "Concessione contributo economico a favore di persona fisica B",
+      "5",
+    ),
+    "utf8",
+  );
+
+  const previous = await runAlboIngestion({
+    outDir,
+    fromFile: previousPath,
+    inputFormat: "xml",
+    retrievedAt: "2026-06-19T08:00:00.000Z",
+  });
+  const result = await runAlboIngestion({
+    outDir,
+    fromFile: nextPath,
+    inputFormat: "xml",
+    retrievedAt: "2026-06-19T09:00:00.000Z",
+  });
+
+  assert.notEqual(previous.items[0].content_hash, result.items[0].content_hash);
+  assert.equal(result.publicLatest.items[0].public_visibility, "publishable_with_minimisation");
+  assert.equal(result.publicDiff.counts.changed, 0);
+  assert.equal(result.publicDiff.counts.unchanged, 1);
+  assert.equal(result.publicStatus.diff_baseline.status, "public_safe");
+});
+
+test("run command can compare against committed public latest without raw snapshots", async () => {
+  const tmp = await mkdtemp(path.join(tmpdir(), "albo-tinnvision-public-baseline-"));
+  const previousPath = path.join(tmp, "previous.xml");
+  const nextPath = path.join(tmp, "next.xml");
+  const outDir = path.join(tmp, "data");
+
+  await writeFile(
+    previousPath,
+    [
+      xmlRecord("2026/1", "DETERMINAZIONE DIRIGENZIALE", "SETTORE TECNICO", "Affidamento servizio A", "1"),
+      xmlRecord("2026/2", "AVVISO PUBBLICO", "SEGRETERIA", "Avviso stabile", ""),
+      xmlRecord("2026/4", "AVVISO PUBBLICO", "SEGRETERIA", "Avviso non piu presente", ""),
+    ].join("\n"),
+    "utf8",
+  );
+  await writeFile(
+    nextPath,
+    [
+      xmlRecord("2026/1", "DETERMINAZIONE DIRIGENZIALE", "SETTORE TECNICO", "Affidamento servizio A aggiornato", "1"),
+      xmlRecord("2026/2", "AVVISO PUBBLICO", "SEGRETERIA", "Avviso stabile", ""),
+      xmlRecord("2026/3", "AVVISO PUBBLICO", "SEGRETERIA", "Nuovo avviso", ""),
+    ].join("\n"),
+    "utf8",
+  );
+
+  await runAlboIngestion({
+    outDir,
+    fromFile: previousPath,
+    inputFormat: "xml",
+    retrievedAt: "2026-06-19T08:00:00.000Z",
+  });
+  await rm(path.join(outDir, "snapshots"), { recursive: true, force: true });
+
+  const result = await runAlboIngestion({
+    outDir,
+    fromFile: nextPath,
+    inputFormat: "xml",
+    retrievedAt: "2026-06-19T09:00:00.000Z",
+  });
+
+  assert.equal(result.publicDiff.counts.new, 1);
+  assert.equal(result.publicDiff.counts.changed, 1);
+  assert.equal(result.publicDiff.counts.removed, 1);
+  assert.equal(result.publicDiff.counts.unchanged, 1);
+  assert.equal(result.publicStatus.diff_baseline.status, "public_safe");
+  assert.equal(result.publicStatus.diff_baseline.previous_retrieved_at, "2026-06-19T08:00:00.000Z");
+  assert.match(result.publicStatus.diff_baseline.note, /committed public\/albo\/latest\.json/);
+});
+
+test("public latest baseline ignores raw-derived hashes for minimised records", async () => {
+  const tmp = await mkdtemp(path.join(tmpdir(), "albo-tinnvision-redacted-baseline-"));
+  const previousPath = path.join(tmp, "previous.xml");
+  const nextPath = path.join(tmp, "next.xml");
+  const outDir = path.join(tmp, "data");
+
+  await writeFile(
+    previousPath,
+    xmlRecord(
+      "2026/5",
+      "DETERMINAZIONE DIRIGENZIALE",
+      "SETTORE WELFARE",
+      "Concessione contributo economico a favore di persona fisica A",
+      "5",
+    ),
+    "utf8",
+  );
+  await writeFile(
+    nextPath,
+    xmlRecord(
+      "2026/5",
+      "DETERMINAZIONE DIRIGENZIALE",
+      "SETTORE WELFARE",
+      "Concessione contributo economico a favore di persona fisica B",
+      "5",
+    ),
+    "utf8",
+  );
+
+  const previous = await runAlboIngestion({
+    outDir,
+    fromFile: previousPath,
+    inputFormat: "xml",
+    retrievedAt: "2026-06-19T08:00:00.000Z",
+  });
+  await rm(path.join(outDir, "snapshots"), { recursive: true, force: true });
+
+  const result = await runAlboIngestion({
+    outDir,
+    fromFile: nextPath,
+    inputFormat: "xml",
+    retrievedAt: "2026-06-19T09:00:00.000Z",
+  });
+
+  assert.notEqual(previous.publicLatest.items[0].content_hash, result.publicLatest.items[0].content_hash);
+  assert.equal(result.publicLatest.items[0].public_visibility, "publishable_with_minimisation");
+  assert.equal(result.publicDiff.counts.changed, 0);
+  assert.equal(result.publicDiff.counts.unchanged, 1);
+  assert.equal(result.publicStatus.diff_baseline.status, "public_safe");
 });
 
 test("archives only official low-risk publishable PDFs into public documents storage", async () => {

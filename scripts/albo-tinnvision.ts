@@ -96,6 +96,14 @@ export interface RunCounts {
   excluded: number;
 }
 
+export type DiffBaselineStatus = "public_safe" | "baseline_unavailable";
+export interface DiffBaseline {
+  status: DiffBaselineStatus;
+  public_safe: boolean;
+  previous_retrieved_at: string | null;
+  note: string;
+}
+
 export interface CliOptions {
   outDir: string;
   fromFile?: string;
@@ -105,13 +113,25 @@ export interface CliOptions {
 }
 
 type PublicRecord = Record<string, unknown> & {
+  id: string;
   source: string;
   retrieved_at: string;
   verification_status: VerificationStatus;
   known_limits: string[];
 };
-type PublicLatest = Record<string, unknown> & { counts: RunCounts; items: PublicRecord[]; excluded: PublicRecord[] };
-type PublicDiff = Record<string, unknown> & { counts: RunCounts };
+type PublicLatest = Record<string, unknown> & {
+  retrieved_at: string;
+  counts: RunCounts;
+  items: PublicRecord[];
+  excluded: PublicRecord[];
+};
+interface PublicRecordDiff {
+  new: PublicRecord[];
+  changed: Array<{ before: PublicRecord; after: PublicRecord }>;
+  removed: PublicRecord[];
+  unchanged: PublicRecord[];
+}
+type PublicDiff = Record<string, unknown> & { counts: RunCounts; diff_baseline: DiffBaseline };
 export type PdfPreservationStatus =
   | "archived"
   | "excluded"
@@ -188,6 +208,7 @@ export type AlboPublicStatus = Record<string, unknown> & {
   last_update: string;
   method: AlboFetchMethod;
   counts: RunCounts;
+  diff_baseline: DiffBaseline;
   warnings: string[];
   next_scheduled_check: string | null;
   verification_status: VerificationStatus;
@@ -240,15 +261,28 @@ const DO_NOT_PUBLISH_TERMS = [
   "minori",
   "adozione",
   "affido",
-  "sanitari",
+  "sanitar",
   "disabil",
   "handicap",
   "invalid",
-  "servizi sociali",
   "tutela",
   "amministratore di sostegno",
 ];
 const METADATA_ONLY_TERMS = [
+  "assegno di maternita",
+  "assegno maternita",
+  "maternita",
+  "beneficiari",
+  "elenco benefici",
+  "elenco dei benefici",
+  "graduatoria benefici",
+  "assistenza domiciliare",
+  "assistenza sociale",
+  "servizi sociali",
+  "servizio sociale",
+  "non autosufficien",
+  "fragil",
+  "fna ",
   "pubblicazione di matrimonio",
   "matrimonio",
   "notifica",
@@ -262,6 +296,17 @@ const METADATA_ONLY_TERMS = [
 const MINIMISE_TERMS = [
   "benefici",
   "contribut",
+  "assegno",
+  "sussidio",
+  "sussidi",
+  "bonus sociale",
+  "welfare",
+  "sostegno economico",
+  "sostegno al reddito",
+  "supporto familiare",
+  "nucleo familiare",
+  "nuclei familiari",
+  "servizi alla persona",
   "allogg",
   "graduatori",
   "contenzioso",
@@ -294,16 +339,27 @@ export function parseArgs(argv: string[]): CliOptions {
 
 export async function runAlboIngestion(options: CliOptions): Promise<RunResult> {
   const currentPath = path.join(options.outDir, "snapshots", "albo", "current.json");
+  const publicLatestPath = path.join(options.outDir, "public", "albo", "latest.json");
   const previous = await readSnapshot(currentPath);
+  const previousPublicLatest = previous ? null : await readPublicLatest(publicLatestPath);
   const snapshot = await acquireAlboSnapshot(options);
   const previousItems = previous ? normalizeAlboRecords(previous) : [];
   const items = normalizeAlboRecords(snapshot);
   const diff = diffAlboItems(previousItems, items);
-  const counts = countRun(items, diff);
+  const diffBaseline = buildDiffBaseline(previous, previousPublicLatest);
+  const previousPublicRecords = previous
+    ? publicRecordsFromItems(previousItems)
+    : previousPublicLatest
+      ? publicRecordsFromLatest(previousPublicLatest)
+      : null;
+  const publicRecordDiff = previousPublicRecords
+    ? diffPublicRecords(previousPublicRecords, publicRecordsFromItems(items))
+    : publicRecordDiffFromAlboDiff(diff);
+  const counts = countRun(items, publicRecordDiff);
   const publicLatest = buildPublicLatest(snapshot, items, counts);
-  const publicDiff = buildPublicDiff(snapshot, diff, counts);
+  const publicDiff = buildPublicDiff(snapshot, publicRecordDiff, counts, diffBaseline);
   const documentsManifest = await archivePublicPdfs(options.outDir, snapshot, items, options.pdfFetch ?? fetch);
-  const publicStatus = buildPublicStatus(snapshot, counts);
+  const publicStatus = buildPublicStatus(snapshot, counts, diffBaseline);
   const runLog = renderRunLog(snapshot, counts);
   const paths = await writeArtifacts(
     options.outDir,
@@ -680,9 +736,39 @@ function buildPublicLatest(snapshot: AlboRawSnapshot, items: AlboItem[], counts:
   };
 }
 
-function buildPublicDiff(snapshot: AlboRawSnapshot, diff: AlboDiff, counts: RunCounts): PublicDiff {
-  const safe = (item: AlboItem): PublicRecord =>
-    item.public_visibility === "do_not_publish" ? publicExcludedItem(item) : publicItem(item);
+function buildDiffBaseline(previous: AlboRawSnapshot | null, previousPublicLatest: PublicLatest | null): DiffBaseline {
+  if (previous) {
+    return {
+      status: "public_safe",
+      public_safe: true,
+      previous_retrieved_at: previous.retrieved_at,
+      note: "Previous Albo snapshot was normalised through the public-safe minimisation rules before writing diff-latest.json.",
+    };
+  }
+
+  if (previousPublicLatest) {
+    return {
+      status: "public_safe",
+      public_safe: true,
+      previous_retrieved_at: previousPublicLatest.retrieved_at,
+      note: "Diff derived from committed public/albo/latest.json; safe for scheduled public runs and limited to public-safe fields.",
+    };
+  }
+
+  return {
+    status: "baseline_unavailable",
+    public_safe: false,
+    previous_retrieved_at: null,
+    note: "No previous raw snapshot or committed public latest baseline was available; this first-run diff must not be interpreted as a comparison against a prior monitor run.",
+  };
+}
+
+function buildPublicDiff(
+  snapshot: AlboRawSnapshot,
+  diff: PublicRecordDiff,
+  counts: RunCounts,
+  diffBaseline: DiffBaseline,
+): PublicDiff {
   return {
     generated_at: snapshot.retrieved_at,
     source: snapshot.source,
@@ -691,16 +777,17 @@ function buildPublicDiff(snapshot: AlboRawSnapshot, diff: AlboDiff, counts: RunC
     verification_status: verificationStatus(snapshot.fetch_method),
     known_limits: snapshot.known_limits,
     counts,
+    diff_baseline: diffBaseline,
     diff: {
-      new: diff.new.map(safe),
-      changed: diff.changed.map((entry) => ({ before: safe(entry.before), after: safe(entry.after) })),
-      removed: diff.removed.map(safe),
-      unchanged: diff.unchanged.map(safe),
+      new: diff.new,
+      changed: diff.changed,
+      removed: diff.removed,
+      unchanged: diff.unchanged,
     },
   };
 }
 
-function buildPublicStatus(snapshot: AlboRawSnapshot, counts: RunCounts): AlboPublicStatus {
+function buildPublicStatus(snapshot: AlboRawSnapshot, counts: RunCounts, diffBaseline: DiffBaseline): AlboPublicStatus {
   return {
     generated_at: snapshot.retrieved_at,
     source: snapshot.source,
@@ -711,6 +798,7 @@ function buildPublicStatus(snapshot: AlboRawSnapshot, counts: RunCounts): AlboPu
     method: snapshot.fetch_method,
     raw_format: snapshot.raw_format,
     counts,
+    diff_baseline: diffBaseline,
     warnings: snapshot.warnings,
     next_scheduled_check: nextScheduledCheck(snapshot.retrieved_at),
     schedule: {
@@ -722,10 +810,17 @@ function buildPublicStatus(snapshot: AlboRawSnapshot, counts: RunCounts): AlboPu
       zero_cost_runner: "ubuntu-latest",
     },
     verification_status: verificationStatus(snapshot.fetch_method),
-    known_limits: snapshot.known_limits,
+    known_limits: publicStatusKnownLimits(snapshot, diffBaseline),
     official_albo_disclaimer: OFFICIAL_ALBO_DISCLAIMER,
     civic_safeguards: CIVIC_SAFEGUARDS,
   };
+}
+
+function publicStatusKnownLimits(snapshot: AlboRawSnapshot, diffBaseline: DiffBaseline): string[] {
+  return unique([
+    ...snapshot.known_limits,
+    ...(diffBaseline.status === "baseline_unavailable" ? [diffBaseline.note] : []),
+  ]);
 }
 
 function publicItem(item: AlboItem): PublicRecord {
@@ -782,6 +877,56 @@ function publicExcludedItem(item: AlboItem): PublicRecord {
     known_limits: item.known_limits,
     exclusion_reason: "Record escluso dal layer pubblico per prudenza privacy automatica.",
   };
+}
+
+function publicRecordsFromItems(items: AlboItem[]): PublicRecord[] {
+  return [
+    ...items.filter((item) => item.public_visibility !== "do_not_publish").map(publicItem),
+    ...items.filter((item) => item.public_visibility === "do_not_publish").map(publicExcludedItem),
+  ];
+}
+
+function publicRecordsFromLatest(latest: PublicLatest): PublicRecord[] {
+  return [...latest.items, ...latest.excluded];
+}
+
+function publicRecordDiffFromAlboDiff(diff: AlboDiff): PublicRecordDiff {
+  const safe = (item: AlboItem): PublicRecord =>
+    item.public_visibility === "do_not_publish" ? publicExcludedItem(item) : publicItem(item);
+  return {
+    new: diff.new.map(safe),
+    changed: diff.changed.map((entry) => ({ before: safe(entry.before), after: safe(entry.after) })),
+    removed: diff.removed.map(safe),
+    unchanged: diff.unchanged.map(safe),
+  };
+}
+
+function diffPublicRecords(previous: PublicRecord[], next: PublicRecord[]): PublicRecordDiff {
+  const previousById = new Map(previous.map((record) => [record.id, record]));
+  const nextById = new Map(next.map((record) => [record.id, record]));
+  const result: PublicRecordDiff = { new: [], changed: [], removed: [], unchanged: [] };
+
+  for (const item of next) {
+    const before = previousById.get(item.id);
+    if (!before) {
+      result.new.push(item);
+    } else if (publicRecordComparableHash(before) !== publicRecordComparableHash(item)) {
+      result.changed.push({ before, after: item });
+    } else {
+      result.unchanged.push(item);
+    }
+  }
+
+  for (const item of previous) {
+    if (!nextById.has(item.id)) result.removed.push(item);
+  }
+
+  return result;
+}
+
+function publicRecordComparableHash(record: PublicRecord): string {
+  const { retrieved_at: _retrievedAt, content_hash: _contentHash, ...stablePublicRecord } = record;
+  return sha256(stablePublicRecord);
 }
 
 async function archivePublicPdfs(
@@ -1011,7 +1156,10 @@ async function writeArtifacts(
   return paths;
 }
 
-function countRun(items: AlboItem[], diff: AlboDiff): RunCounts {
+function countRun(
+  items: AlboItem[],
+  diff: { new: unknown[]; changed: unknown[]; removed: unknown[]; unchanged: unknown[] },
+): RunCounts {
   return {
     acquired: items.length,
     new: diff.new.length,
@@ -1029,6 +1177,15 @@ async function readSnapshot(filePath: string): Promise<AlboRawSnapshot | null> {
   try {
     const value = JSON.parse(await readFile(filePath, "utf8")) as unknown;
     return isSnapshot(value) ? value : null;
+  } catch {
+    return null;
+  }
+}
+
+async function readPublicLatest(filePath: string): Promise<PublicLatest | null> {
+  try {
+    const value = JSON.parse(await readFile(filePath, "utf8")) as unknown;
+    return isPublicLatest(value) ? value : null;
   } catch {
     return null;
   }
@@ -1052,7 +1209,7 @@ function classify(record: RawAlboRecord): {
   publicVisibility: PublicVisibility;
   reason: string | null;
 } {
-  const text = [record.subject, record.act_type, record.office].filter(Boolean).join(" ").toLowerCase();
+  const text = privacySearchText(record);
   if (DO_NOT_PUBLISH_TERMS.some((term) => text.includes(term))) {
     return {
       privacyRisk: "high",
@@ -1075,6 +1232,15 @@ function classify(record: RawAlboRecord): {
     };
   }
   return { privacyRisk: "low", publicVisibility: "publishable", reason: null };
+}
+
+function privacySearchText(record: RawAlboRecord): string {
+  return [record.subject, record.act_type, record.office]
+    .filter(Boolean)
+    .join(" ")
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "");
 }
 
 function itemLimits(snapshot: AlboRawSnapshot, record: RawAlboRecord, reason: string | null): string[] {
@@ -1368,6 +1534,30 @@ function isSnapshot(value: unknown): value is AlboRawSnapshot {
     typeof (value as { source?: unknown }).source === "string" &&
     typeof (value as { source_url?: unknown }).source_url === "string" &&
     typeof (value as { retrieved_at?: unknown }).retrieved_at === "string"
+  );
+}
+
+function isPublicLatest(value: unknown): value is PublicLatest {
+  return (
+    typeof value === "object" &&
+    value !== null &&
+    typeof (value as { retrieved_at?: unknown }).retrieved_at === "string" &&
+    Array.isArray((value as { items?: unknown }).items) &&
+    Array.isArray((value as { excluded?: unknown }).excluded) &&
+    (value as { items: unknown[] }).items.every(isPublicRecord) &&
+    (value as { excluded: unknown[] }).excluded.every(isPublicRecord)
+  );
+}
+
+function isPublicRecord(value: unknown): value is PublicRecord {
+  return (
+    typeof value === "object" &&
+    value !== null &&
+    typeof (value as { id?: unknown }).id === "string" &&
+    typeof (value as { source?: unknown }).source === "string" &&
+    typeof (value as { retrieved_at?: unknown }).retrieved_at === "string" &&
+    typeof (value as { verification_status?: unknown }).verification_status === "string" &&
+    Array.isArray((value as { known_limits?: unknown }).known_limits)
   );
 }
 

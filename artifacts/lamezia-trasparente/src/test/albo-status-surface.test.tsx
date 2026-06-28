@@ -22,7 +22,7 @@ describe("Albo Pretorio source status surface", () => {
     expect(panel.getByText(ALBO_OPERATIONAL_STATUS.source)).toBeInTheDocument();
     expect(panel.getByText("Ultimo aggiornamento")).toBeInTheDocument();
     expect(panel.getByText("Verifica")).toBeInTheDocument();
-    expect(panel.getByText("Verifica richiesta")).toBeInTheDocument();
+    expect(panel.getByText("Fonte ufficiale acquisita")).toBeInTheDocument();
     expect(panel.getByRole("link", { name: /Fonte ufficiale/i })).toHaveAttribute(
       "href",
       ALBO_OPERATIONAL_STATUS.source_url,
