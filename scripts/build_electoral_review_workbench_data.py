@@ -308,6 +308,15 @@ def exclude_from_geometry_candidate(row: dict[str, Any]) -> bool:
     return coordinate_quality_flag(row) != "ok"
 
 
+def civic_validated_for_heading(row: dict[str, Any]) -> bool:
+    return (
+        bool(street_value(row))
+        and coordinate_status(row) == "ok"
+        and coordinate_quality_flag(row) == "ok"
+        and not exclude_from_geometry_candidate(row)
+    )
+
+
 def civic_min_max(rows: list[dict[str, Any]]) -> tuple[Any, Any]:
     values = [value for value in (civic_numeric_value(row) for row in rows) if value is not None]
     if not values:
@@ -442,6 +451,9 @@ def enrich_point_label_columns(frame, source_records: dict[str, dict[str, Any]] 
     out["source_coord_lat"] = [source_coord_lat(row) for row in records]
     out["coordinate_quality_flag"] = [coordinate_quality_flag(row) for row in records]
     out["coordinate_suspect_reason"] = [value(row, "coordinate_suspect_reason") for row in records]
+    out["nearest_validated_street_context"] = [value(row, "nearest_validated_street_context") for row in records]
+    out["nearest_validated_street_context_count"] = [value(row, "nearest_validated_street_context_count") for row in records]
+    out["distance_to_nearest_different_street_m"] = [value(row, "distance_to_nearest_different_street_m") for row in records]
     out["suggested_coordinate_action"] = [suggested_coordinate_action(row) for row in records]
     out["exclude_from_geometry_candidate"] = [exclude_from_geometry_candidate(row) for row in records]
     statuses = [coordinate_status(row) for row in records]
@@ -488,6 +500,9 @@ def civic_record(row: dict[str, Any]) -> dict[str, Any]:
         "label_integrity_notes": "" if status == "ok" else "Coordinate sorgente mancanti, fuori range Lamezia o potenzialmente invertite.",
         "coordinate_quality_flag": coordinate_quality_flag(row),
         "coordinate_suspect_reason": as_text(row.get("coordinate_suspect_reason")),
+        "nearest_validated_street_context": as_text(row.get("nearest_validated_street_context")),
+        "nearest_validated_street_context_count": as_text(row.get("nearest_validated_street_context_count")),
+        "distance_to_nearest_different_street_m": as_text(row.get("distance_to_nearest_different_street_m")),
         "suggested_coordinate_action": suggested_coordinate_action(row),
         "exclude_from_geometry_candidate": exclude_from_geometry_candidate(row),
         "distance_to_boundary_m": as_text(row.get("distance_to_boundary_m") or row.get("distance_to_candidate_boundary_m")),
@@ -574,6 +589,15 @@ def main() -> int:
     )
     joined["coordinate_suspect_reason"] = joined["access_id"].astype(str).map(
         lambda access_id: as_text(coordinate_quality_by_access.get(access_id, {}).get("coordinate_suspect_reason"))
+    )
+    joined["nearest_validated_street_context"] = joined["access_id"].astype(str).map(
+        lambda access_id: as_text(coordinate_quality_by_access.get(access_id, {}).get("nearest_validated_street_context"))
+    )
+    joined["nearest_validated_street_context_count"] = joined["access_id"].astype(str).map(
+        lambda access_id: as_text(coordinate_quality_by_access.get(access_id, {}).get("nearest_validated_street_context_count"))
+    )
+    joined["distance_to_nearest_different_street_m"] = joined["access_id"].astype(str).map(
+        lambda access_id: as_text(coordinate_quality_by_access.get(access_id, {}).get("distance_to_nearest_different_street_m"))
     )
     joined["suggested_coordinate_action"] = joined["access_id"].astype(str).map(coordinate_action_for_access)
     joined["exclude_from_geometry_candidate"] = joined["coordinate_quality_flag"].map(lambda flag: as_text(flag) != "ok")
@@ -1037,7 +1061,14 @@ def main() -> int:
         if task_geom is None and task_geoms:
             task_geom = _shapely.union_all(task_geoms)
         all_streets = unique_texts([street_value(row) for row in civic_rows])
-        streets = all_streets
+        validated_heading_rows = [row for row in civic_rows if civic_validated_for_heading(row)]
+        heading_streets = unique_texts([street_value(row) for row in validated_heading_rows], MAX_STREETS_PER_TASK)
+        unvalidated_streets = unique_texts(
+            [street for street in all_streets if street and street not in set(heading_streets)],
+            MAX_STREETS_PER_TASK,
+        )
+        heading_source = "validated_civics" if heading_streets else "no_validated_civic_heading"
+        streets = heading_streets
         current_sections = current_sections_for_rows(civic_rows)
         street_register_sections = street_register_sections_for_rows(civic_rows)
         suggested = as_text(task.get("suggested_section_number"))
@@ -1077,24 +1108,38 @@ def main() -> int:
         exclude_candidate_count = sum(1 for row in civic_rows if exclude_from_geometry_candidate(row))
         status_values = {coordinate_status(row) for row in civic_rows}
         task_label_status = "coordinate_outlier" if "coordinate_outlier" in status_values else "ok"
-        if len(streets) > 1 and task_label_status == "ok":
+        if len(all_streets) > 1 and task_label_status == "ok":
             task_label_status = "multi_street_task"
-        display_title_is_representative = len(streets) > 1
-        if len(all_streets) > 1:
-            task["title"] = f"Gruppo civici multi-via - {len(all_streets)} odonimi, {len(civic_rows)} civici"
-        elif streets:
-            range_label = f"{civic_min}-{civic_max}" if civic_min != "" and civic_max != "" else f"{len(civic_rows)} civici"
-            parity_label = "/".join(key for key in ["even", "odd", "snc"] if parity_mix.get(key))
-            suffix = f" ({parity_label})" if parity_label else ""
+        display_title_is_representative = len(heading_streets) != 1 or len(all_streets) > 1
+        range_label = f"{civic_min}-{civic_max}" if civic_min != "" and civic_max != "" else f"{len(civic_rows)} civici"
+        parity_label = "/".join(key for key in ["even", "odd", "snc"] if parity_mix.get(key))
+        suffix = f" ({parity_label})" if parity_label else ""
+        if len(heading_streets) > 1:
+            task["title"] = f"Gruppo civici validati multi-via - {len(heading_streets)} odonimi validati, {len(civic_rows)} civici"
+        elif heading_streets:
             task["title"] = f"{streets[0]} - civici {range_label}{suffix}"
+        elif len(all_streets) > 1:
+            task["title"] = f"Civici da validare - {len(all_streets)} odonimi, {len(civic_rows)} civici"
+        else:
+            task["title"] = f"Civici da validare - {len(civic_rows)} civici"
+        street_register_context_streets = unique_texts(
+            [row.get("street_name_normalised") for row in street_rules_for_rows(civic_rows)],
+            MAX_STREETS_PER_TASK,
+        )
         task.update(
             {
                 "task_id": task_id,
                 "competing_sections": competing,
-                "involved_streets": streets,
-                "street_name_normalised": streets[0] if len(streets) == 1 else "",
+                "involved_streets": all_streets,
+                "street_name_normalised": heading_streets[0] if len(heading_streets) == 1 else "",
                 "is_multi_street_task": len(all_streets) > 1,
                 "street_count": len(all_streets),
+                "heading_source": heading_source,
+                "heading_streets": heading_streets,
+                "unvalidated_heading_streets": unvalidated_streets,
+                "street_register_context_streets": street_register_context_streets,
+                "validated_civic_count": len(validated_heading_rows),
+                "unvalidated_civic_count": max(0, len(civic_rows) - len(validated_heading_rows)),
                 "representative_streets": all_streets[:MAX_STREETS_PER_TASK],
                 "display_title_is_representative": display_title_is_representative,
                 "civic_interval_count": interval_count,
@@ -1106,9 +1151,11 @@ def main() -> int:
                 "exclude_from_geometry_candidate_count": exclude_candidate_count,
                 "has_coordinate_suspect": coordinate_suspect_count > 0,
                 "label_integrity_status": task_label_status,
-                "label_integrity_notes": "Task multi-via: il titolo riassume piu odonimi; usare la tab Civics e i popup ANNCSU per il singolo punto."
-                if len(streets) > 1
-                else "",
+                "label_integrity_notes": (
+                    "Il titolo usa solo civici con coordinate affidabili; gli odonimi non validati restano nella tab Civics e nei popup ANNCSU."
+                    if heading_streets
+                    else "Nessun civico con coordinate affidabili disponibile per costruire il titolo; usare la tab Civics, il contesto-via e lo stradario prima di decidere."
+                ),
                 "civic_count": len(civic_rows) if civic_rows else as_int(task.get("civic_count")),
                 "civic_min": civic_min,
                 "civic_max": civic_max,
@@ -1541,7 +1588,7 @@ def main() -> int:
             {
                 "task_id": f"civic-task:coordinate-quality:{slugify(street)}:{slugify(flag)}:{slugify(current_section or 'none')}",
                 "task_type": "coordinate_quality_review",
-                "priority": "high" if flag in {"outside_boundary", "missing_coordinate", "possible_xy_swap", "implausible_coordinate"} else "medium",
+                "priority": "high" if flag in {"outside_boundary", "missing_coordinate", "possible_xy_swap", "implausible_coordinate", "street_context_mismatch"} else "medium",
                 "title": f"Coordinate suspect - {street or 'unknown street'}",
                 "short_description": f"{len(rows)} civics with coordinate quality flag {flag}",
                 "why_needs_review": "These ANNCSU civics may be correct as addresses but unreliable as geometric points. The section decision remains grounded in the electoral street register.",
@@ -1667,6 +1714,7 @@ def main() -> int:
             "review_tasks_by_type": dict(Counter(task["task_type"] for task in review_tasks)),
             "civic_review_tasks_by_type": dict(Counter(task["task_type"] for task in civic_review_tasks)),
             "civic_review_tasks_by_label_integrity_status": dict(Counter(task["label_integrity_status"] for task in civic_review_tasks)),
+            "civic_review_tasks_by_heading_source": dict(Counter(as_text(task.get("heading_source")) or "unknown" for task in civic_review_tasks)),
             "civic_review_tasks_with_coordinate_suspects": sum(1 for task in civic_review_tasks if task.get("has_coordinate_suspect")),
             "coordinate_suspect_points": len(coordinate_suspect_records),
             "coordinate_suspects_by_flag": dict(Counter(row["coordinate_quality_flag"] for row in coordinate_suspect_records)),
@@ -1813,6 +1861,9 @@ def main() -> int:
                 "label_integrity_notes",
                 "coordinate_quality_flag",
                 "coordinate_suspect_reason",
+                "nearest_validated_street_context",
+                "nearest_validated_street_context_count",
+                "distance_to_nearest_different_street_m",
                 "suggested_coordinate_action",
                 "exclude_from_geometry_candidate",
             ],
@@ -1845,6 +1896,9 @@ def main() -> int:
                 "label_integrity_notes",
                 "coordinate_quality_flag",
                 "coordinate_suspect_reason",
+                "nearest_validated_street_context",
+                "nearest_validated_street_context_count",
+                "distance_to_nearest_different_street_m",
                 "suggested_coordinate_action",
                 "exclude_from_geometry_candidate",
             ],
@@ -1877,6 +1931,9 @@ def main() -> int:
                 "label_integrity_notes",
                 "coordinate_quality_flag",
                 "coordinate_suspect_reason",
+                "nearest_validated_street_context",
+                "nearest_validated_street_context_count",
+                "distance_to_nearest_different_street_m",
                 "suggested_coordinate_action",
                 "exclude_from_geometry_candidate",
             ],
@@ -1910,6 +1967,9 @@ def main() -> int:
                 "label_integrity_notes",
                 "coordinate_quality_flag",
                 "coordinate_suspect_reason",
+                "nearest_validated_street_context",
+                "nearest_validated_street_context_count",
+                "distance_to_nearest_different_street_m",
                 "suggested_coordinate_action",
                 "exclude_from_geometry_candidate",
             ],

@@ -23,6 +23,7 @@ from electoral_geo_utils import (
 
 
 SOURCE_CSV = PROCESSED_GEO_DIR / "anncsu_lamezia_civics_with_electoral_section_2025_v2.csv"
+ANNCSU_STREET_REGISTER_CSV = ROOT / "data" / "raw" / "geo" / "anncsu_lamezia_stradario_20260602.csv"
 CELLS_GPKG = INTERIM_GEO_DIR / "electoral_section_census_cells_assignment_2025.gpkg"
 CELLS_LAYER = "electoral_section_census_cells_assignment_2025"
 DATA_DIR = ROOT / "tools" / "electoral-review-workbench" / "public" / "data"
@@ -43,6 +44,10 @@ SAME_STREET_ISOLATED_M = 500.0
 CLUSTER_OUTLIER_MIN_M = 1000.0
 PROGRESSIVE_OUTLIER_MIN_M = 500.0
 PROGRESSIVE_NEAREST_MIN_M = 250.0
+STREET_CONTEXT_RADIUS_M = 120.0
+STREET_CONTEXT_MIN_NEIGHBOURS = 4
+STREET_CONTEXT_DOMINANT_SHARE = 0.60
+STREET_CONTEXT_SAME_STREET_NEAR_M = 150.0
 
 CSV_FIELDS = [
     "access_id",
@@ -59,6 +64,9 @@ CSV_FIELDS = [
     "same_street_neighbour_count",
     "distance_to_same_street_cluster_m",
     "distance_to_nearest_same_street_m",
+    "nearest_validated_street_context",
+    "nearest_validated_street_context_count",
+    "distance_to_nearest_different_street_m",
     "census_cell_id",
     "suggested_action",
     "notes",
@@ -88,6 +96,17 @@ def civic_numeric(value: Any) -> float:
 
 def street_value(row: dict[str, Any]) -> str:
     return as_text(row.get("street_name_normalised") or row.get("ODONIMO") or row.get("odonimo_raw"))
+
+
+def load_anncsu_street_register_labels() -> set[str]:
+    if not ANNCSU_STREET_REGISTER_CSV.exists():
+        return set()
+    with ANNCSU_STREET_REGISTER_CSV.open(encoding="utf-8", newline="") as handle:
+        return {
+            street
+            for row in csv.DictReader(handle, delimiter=";")
+            if (street := as_text(row.get("ODONIMO")))
+        }
 
 
 def load_json(path: Path) -> Any:
@@ -160,6 +179,7 @@ def flag_priority(flag: str) -> int:
     order = {
         "ok": 0,
         "needs_manual_coordinate_review": 1,
+        "street_context_mismatch": 2,
         "isolated_point": 2,
         "same_street_outlier": 3,
         "outside_boundary": 4,
@@ -211,6 +231,7 @@ def write_report(
         "## Sources",
         "",
         f"- Source CSV: `{relpath(SOURCE_CSV)}`",
+        f"- ANNCSU street register: `{relpath(ANNCSU_STREET_REGISTER_CSV)}`",
         f"- Census cells: `{relpath(CELLS_GPKG)}` layer `{CELLS_LAYER}`",
         f"- Boundary source: `{source_context.get('boundary_source', 'missing')}`",
         "",
@@ -233,6 +254,7 @@ def write_report(
             "- Same-street cluster outliers using robust distance thresholds.",
             f"- Isolated same-street points with no same-street neighbour within {SAME_STREET_NEAR_M:.0f} m and nearest same-street distance above {SAME_STREET_ISOLATED_M:.0f} m.",
             "- Rare census-cell placement for a street when combined with a spatial outlier signal.",
+            f"- Street-context mismatch against nearby validated ANNCSU civics within {STREET_CONTEXT_RADIUS_M:.0f} m, using ANNCSU street-register labels rather than OSM labels.",
             f"- Progressive civic-number anomalies only when adjacent civic numbers are spatially distant and the nearest same-street civic is above {PROGRESSIVE_NEAREST_MIN_M:.0f} m.",
             "",
             "## Interpretation",
@@ -260,6 +282,7 @@ def main() -> int:
     cells = gpd.read_file(CELLS_GPKG, layer=CELLS_LAYER).to_crs("EPSG:32633")
     civics = civics_to_geodataframe(SOURCE_CSV, read_review_by_access_id())
     civics["access_id"] = civics["access_id"].astype(str)
+    official_streets = load_anncsu_street_register_labels()
     joined = gpd.sjoin(
         civics,
         cells[["census_cell_id", "geometry"]],
@@ -279,6 +302,12 @@ def main() -> int:
             "neighbour_count": 0,
             "cluster_distance": math.nan,
             "nearest_same_street": math.nan,
+            "nearest_validated_street_context": "",
+            "nearest_validated_street_context_count": 0,
+            "nearest_validated_street_context_share": 0.0,
+            "nearest_different_street": math.nan,
+            "nearest_same_context_street": math.nan,
+            "same_context_street_count": 0,
             "progressive_distance": math.nan,
             "rare_cell": False,
         }
@@ -344,8 +373,70 @@ def main() -> int:
                 }
             )
 
-    suspect_rows: list[dict[str, Any]] = []
     buffered_boundary = boundary.buffer(BOUNDARY_BUFFER_M) if boundary is not None else None
+    validated_context_rows: list[dict[str, Any]] = []
+    for row in records:
+        geom = row.get("geometry")
+        street = street_value(row)
+        lon = as_float(row.get("COORD_X_COMUNE"))
+        lat = as_float(row.get("COORD_Y_COMUNE"))
+        if not street or (official_streets and street not in official_streets):
+            continue
+        if plausible_lon_lat(lon, lat) != "ok":
+            continue
+        if geom is None or geom.is_empty:
+            continue
+        if buffered_boundary is not None and not buffered_boundary.covers(geom):
+            continue
+        validated_context_rows.append(row)
+
+    if len(validated_context_rows) >= 2:
+        context_coords = [(row["geometry"].x, row["geometry"].y) for row in validated_context_rows]
+        context_tree = cKDTree(context_coords)
+        for index, row in enumerate(validated_context_rows):
+            access_id = as_text(row.get("access_id"))
+            street = street_value(row)
+            neighbour_indexes = [
+                neighbour_index
+                for neighbour_index in context_tree.query_ball_point(context_coords[index], STREET_CONTEXT_RADIUS_M)
+                if neighbour_index != index
+            ]
+            if not neighbour_indexes:
+                continue
+            neighbour_distances = {
+                neighbour_index: float(row["geometry"].distance(validated_context_rows[neighbour_index]["geometry"]))
+                for neighbour_index in neighbour_indexes
+            }
+            different = [
+                neighbour_index
+                for neighbour_index in neighbour_indexes
+                if street_value(validated_context_rows[neighbour_index]) != street
+            ]
+            same = [
+                neighbour_index
+                for neighbour_index in neighbour_indexes
+                if street_value(validated_context_rows[neighbour_index]) == street
+            ]
+            counts = Counter(street_value(validated_context_rows[neighbour_index]) for neighbour_index in different)
+            dominant_street, dominant_count = ("", 0)
+            if counts:
+                dominant_street, dominant_count = counts.most_common(1)[0]
+            nearest_different = min((neighbour_distances[idx] for idx in different), default=math.nan)
+            nearest_same = min((neighbour_distances[idx] for idx in same), default=math.nan)
+            denominator = len(neighbour_indexes)
+            share = dominant_count / denominator if denominator else 0.0
+            metrics_by_access[access_id].update(
+                {
+                    "nearest_validated_street_context": dominant_street,
+                    "nearest_validated_street_context_count": dominant_count,
+                    "nearest_validated_street_context_share": share,
+                    "nearest_different_street": nearest_different,
+                    "nearest_same_context_street": nearest_same,
+                    "same_context_street_count": len(same),
+                }
+            )
+
+    suspect_rows: list[dict[str, Any]] = []
     for row in records:
         access_id = as_text(row.get("access_id"))
         lon = as_float(row.get("COORD_X_COMUNE"))
@@ -371,8 +462,27 @@ def main() -> int:
         nearest_same_street = float(metrics.get("nearest_same_street", math.nan))
         progressive_distance = float(metrics.get("progressive_distance", math.nan))
         progressive_threshold = float(metrics.get("progressive_threshold", math.inf))
+        street_context = as_text(metrics.get("nearest_validated_street_context"))
+        street_context_count = int(metrics.get("nearest_validated_street_context_count", 0) or 0)
+        street_context_share = float(metrics.get("nearest_validated_street_context_share", 0.0) or 0.0)
+        nearest_different_street = float(metrics.get("nearest_different_street", math.nan))
+        nearest_same_context_street = float(metrics.get("nearest_same_context_street", math.nan))
+        same_context_street_count = int(metrics.get("same_context_street_count", 0) or 0)
         cluster_far = street_count >= 5 and not math.isnan(cluster_distance) and cluster_distance > threshold
         nearest_far = not math.isnan(nearest_same_street) and nearest_same_street > SAME_STREET_ISOLATED_M
+        street_context_mismatch = (
+            bool(street_context)
+            and street_context != street_value(row)
+            and street_context_count >= STREET_CONTEXT_MIN_NEIGHBOURS
+            and street_context_share >= STREET_CONTEXT_DOMINANT_SHARE
+            and (
+                same_context_street_count == 0
+                or (
+                    not math.isnan(nearest_same_context_street)
+                    and nearest_same_context_street > STREET_CONTEXT_SAME_STREET_NEAR_M
+                )
+            )
+        )
         progressive_far = (
             street_count >= 5
             and not math.isnan(progressive_distance)
@@ -394,6 +504,12 @@ def main() -> int:
         if metrics.get("rare_cell"):
             flags.add("needs_manual_coordinate_review")
             reasons.append("rare census-cell placement for same-street civics")
+        if street_context_mismatch:
+            flags.add("street_context_mismatch")
+            reasons.append(
+                f"point is near validated ANNCSU civics labelled {street_context} "
+                f"({street_context_count} of nearby context within {STREET_CONTEXT_RADIUS_M:.0f} m)"
+            )
         if progressive_far:
             flags.add("same_street_outlier")
             reasons.append(f"progressive civic-number neighbour is {progressive_distance:.1f} m away")
@@ -417,6 +533,9 @@ def main() -> int:
                 "same_street_neighbour_count": metrics.get("neighbour_count", 0),
                 "distance_to_same_street_cluster_m": metres(cluster_distance),
                 "distance_to_nearest_same_street_m": metres(nearest_same_street),
+                "nearest_validated_street_context": street_context,
+                "nearest_validated_street_context_count": street_context_count,
+                "distance_to_nearest_different_street_m": metres(nearest_different_street),
                 "census_cell_id": as_text(row.get("census_cell_id")),
                 "suggested_action": suggested_action(flag),
                 "notes": "Coordinate suspect is a geometry-quality signal only; do not modify ANNCSU raw.",

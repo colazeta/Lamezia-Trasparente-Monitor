@@ -3,9 +3,9 @@
 ## Result
 
 - Source civics checked: 22757
-- Suspect civic coordinates: 301
-- Civic review tasks loaded: 2304
-- Workbench point access_ids observed: 11548
+- Suspect civic coordinates: 345
+- Civic review tasks loaded: 2329
+- Workbench point access_ids observed: 11566
 - Suspect points missing from `civics_by_task`: 0
 - Suspect CSV: `data/interim/qa/anncsu_coordinate_suspect_points_2025.csv`
 
@@ -15,6 +15,7 @@ It flags coordinates that need manual coordinate review before they are used as 
 ## Sources
 
 - Source CSV: `data/processed/geo/anncsu_lamezia_civics_with_electoral_section_2025_v2.csv`
+- ANNCSU street register: `data/raw/geo/anncsu_lamezia_stradario_20260602.csv`
 - Census cells: `data/interim/geo/electoral_section_census_cells_assignment_2025.gpkg` layer `electoral_section_census_cells_assignment_2025`
 - Boundary source: `data/processed/territorio/istat_sezioni_censimento_lamezia.geojson`
 
@@ -24,6 +25,7 @@ It flags coordinates that need manual coordinate review before they are used as 
 - `needs_manual_coordinate_review`: 9
 - `outside_boundary`: 15
 - `same_street_outlier`: 261
+- `street_context_mismatch`: 44
 
 ## Checks Performed
 
@@ -33,6 +35,7 @@ It flags coordinates that need manual coordinate review before they are used as 
 - Same-street cluster outliers using robust distance thresholds.
 - Isolated same-street points with no same-street neighbour within 150 m and nearest same-street distance above 500 m.
 - Rare census-cell placement for a street when combined with a spatial outlier signal.
+- Street-context mismatch against nearby validated ANNCSU civics within 120 m, using ANNCSU street-register labels rather than OSM labels.
 - Progressive civic-number anomalies only when adjacent civic numbers are spatially distant and the nearest same-street civic is above 250 m.
 
 ## Interpretation
@@ -65,7 +68,7 @@ It flags coordinates that need manual coordinate review before they are used as 
 - `3525993` CONTRADA ANNUNZIATA 23: `same_street_outlier`; nearest same-street civic is 2407.0 m away; progressive civic-number neighbour is 3322.9 m away
 - `3526021` CONTRADA ANNUNZIATA 77: `same_street_outlier`; 6911.6 m from same-street cluster centroid; nearest same-street civic is 624.1 m away; progressive civic-number neighbour is 624.1 m away
 - `3526022` CONTRADA ANNUNZIATA 79: `same_street_outlier`; nearest same-street civic is 1400.9 m away; progressive civic-number neighbour is 2131.0 m away
-- `3593842` CONTRADA BENEFICIO 8: `same_street_outlier`; 2576.3 m from same-street cluster centroid; nearest same-street civic is 2763.5 m away; rare census-cell placement for same-street civics; progressive civic-number neighbour is 2763.5 m away
+- `3593842` CONTRADA BENEFICIO 8: `same_street_outlier`; 2576.3 m from same-street cluster centroid; nearest same-street civic is 2763.5 m away; rare census-cell placement for same-street civics; point is near validated ANNCSU civics labelled CONTRADA BUCOLIA DI SOTTO (22 of nearby context within 120 m); progressive civic-number neighbour is 2763.5 m away
 - `3528302` CONTRADA BUCOLIA DI SOTTO 56: `same_street_outlier`; 3104.8 m from same-street cluster centroid; nearest same-street civic is 2588.2 m away; progressive civic-number neighbour is 2676.2 m away
 - `3579202` CONTRADA CANTARELLE 130: `same_street_outlier`; progressive civic-number neighbour is 4391.2 m away
 - `3579209` CONTRADA CANTARELLE 83: `same_street_outlier`; progressive civic-number neighbour is 3543.3 m away

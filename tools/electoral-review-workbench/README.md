@@ -122,6 +122,13 @@ tab lists the ANNCSU streets in the task, and the Civics tab groups rows by the
 specific ANNCSU street so reviewers do not apply one street label to every
 civic in the group.
 
+Task headings are built from civics whose source coordinates are currently
+usable as geometry evidence. When no civic in a task has reliable coordinates,
+the heading must not promote the raw odonym as if it were validated; it uses a
+`Civici da validare` heading and leaves the raw ANNCSU streets, street-register
+labels, and coordinate context in the Summary, Civics, popup, and Decision
+support panels.
+
 ## Coordinate Quality
 
 Coordinate quality is separate from label integrity. A civic can have the
@@ -146,6 +153,7 @@ Coordinate flags are review signals only:
 
 - `missing_coordinate`
 - `outside_boundary`
+- `street_context_mismatch`
 - `same_street_outlier`
 - `isolated_point`
 - `implausible_coordinate`
@@ -170,6 +178,9 @@ The support panel records:
 - proposed lon/lat;
 - movement distance in metres;
 - candidate V3 section containing the proposed point, when any;
+- original and proposed nearby ANNCSU street context from validated civic
+  samples;
+- electoral street-register labels available for the selected civic task;
 - nearest deterministic civic samples;
 - nearest deterministic samples on the same ANNCSU street.
 

@@ -332,6 +332,7 @@ function populateFilters() {
     "ok",
     "missing_coordinate",
     "outside_boundary",
+    "street_context_mismatch",
     "same_street_outlier",
     "isolated_point",
     "implausible_coordinate",
@@ -640,6 +641,7 @@ function deterministicPointRows(lon, lat, civic) {
     rows.push({
       access_id: asString(props.access_id),
       anncsu_address: anncsuPointTitle(props),
+      street_name: civicStreet(props),
       section_number: asString(props.section_number),
       assignment_method: asString(props.assignment_method),
       distance_m: distance,
@@ -647,6 +649,37 @@ function deterministicPointRows(lon, lat, civic) {
     });
   }
   return rows.sort((a, b) => a.distance_m - b.distance_m);
+}
+
+function streetContextSummary(rows, selectedStreet, radiusM = 120) {
+  const nearby = rows.filter((row) => row.distance_m <= radiusM && row.street_name);
+  const counts = {};
+  for (const row of nearby) counts[row.street_name] = (counts[row.street_name] || 0) + 1;
+  const dominant = Object.entries(counts).sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0], "it"))[0] || ["", 0];
+  const sameStreetCount = nearby.filter((row) => row.street_name === selectedStreet).length;
+  return {
+    radius_m: radiusM,
+    dominant_street: dominant[0],
+    dominant_count: dominant[1],
+    nearby_count: nearby.length,
+    same_street_count: sameStreetCount,
+    mismatch: Boolean(dominant[0] && selectedStreet && dominant[0] !== selectedStreet && dominant[1] >= 3 && sameStreetCount === 0),
+  };
+}
+
+function streetContextLabel(context) {
+  if (!context?.nearby_count) return "no nearby validated deterministic civics";
+  return `${context.dominant_street || "unknown"} (${context.dominant_count}/${context.nearby_count} within ${context.radius_m} m)`;
+}
+
+function streetRegisterLabelsForTask(task, civic) {
+  const selectedStreet = civicStreet(civic);
+  const rows = state.data.streetEvidenceByTask[task?.task_id || ""] || [];
+  const labels = rows
+    .filter((row) => !selectedStreet || asString(row.street_name_normalised) === selectedStreet)
+    .map((row) => asString(row.street_name_normalised || row.street_name_raw))
+    .filter(Boolean);
+  return [...new Set(labels)].sort((a, b) => a.localeCompare(b, "it"));
 }
 
 function relocationKey(task, civic) {
@@ -690,23 +723,39 @@ function relocationSupportModel(task, civic, draft) {
   const proposedLon = parseCoordinate(draft?.lon);
   const proposedLat = parseCoordinate(draft?.lat);
   if (!Number.isFinite(proposedLon) || !Number.isFinite(proposedLat)) {
+    const originalRows = Number.isFinite(originalLon) && Number.isFinite(originalLat)
+      ? deterministicPointRows(originalLon, originalLat, civic)
+      : [];
+    const originalContext = streetContextSummary(originalRows, civicStreet(civic));
     return {
       has_proposal: false,
       access_id: asString(civic?.access_id),
+      anncsu_street: civicStreet(civic),
       original_lon: Number.isFinite(originalLon) ? originalLon : "",
       original_lat: Number.isFinite(originalLat) ? originalLat : "",
       coordinate_quality_flag: coordinateQualityFlag(civic),
       coordinate_suspect_reason: asString(civic?.coordinate_suspect_reason),
+      nearest_validated_street_context: asString(civic?.nearest_validated_street_context),
+      original_street_context: originalContext,
+      original_street_context_label: streetContextLabel(originalContext),
+      street_register_labels: streetRegisterLabelsForTask(task, civic),
     };
   }
   const neighbours = deterministicPointRows(proposedLon, proposedLat, civic);
+  const originalNeighbours = Number.isFinite(originalLon) && Number.isFinite(originalLat)
+    ? deterministicPointRows(originalLon, originalLat, civic)
+    : [];
   const nearest = neighbours.slice(0, 6);
   const sameStreet = neighbours.filter((row) => row.same_street).slice(0, 6);
+  const selectedStreet = civicStreet(civic);
+  const originalContext = streetContextSummary(originalNeighbours, selectedStreet);
+  const proposedContext = streetContextSummary(neighbours, selectedStreet);
   const v3Sections = sectionsAtCoordinate(proposedLon, proposedLat);
   return {
     has_proposal: true,
     access_id: asString(civic?.access_id),
     anncsu_address: anncsuPointTitle(civic),
+    anncsu_street: selectedStreet,
     original_lon: originalLon,
     original_lat: originalLat,
     proposed_lon: proposedLon,
@@ -715,6 +764,15 @@ function relocationSupportModel(task, civic, draft) {
     v3_candidate_sections_at_proposed_point: v3Sections,
     task_suggested_section: asString(task?.suggested_section_number),
     current_section: asString(civic?.current_section_number || civic?.section_number),
+    nearest_validated_street_context: asString(civic?.nearest_validated_street_context),
+    original_street_context: originalContext,
+    original_street_context_label: streetContextLabel(originalContext),
+    proposed_street_context: proposedContext,
+    proposed_street_context_label: streetContextLabel(proposedContext),
+    street_context_warning: originalContext.mismatch || proposedContext.mismatch
+      ? "The civic label and nearby validated ANNCSU street context differ. Treat relocation as a traced coordinate decision, not a raw correction."
+      : "",
+    street_register_labels: streetRegisterLabelsForTask(task, civic),
     nearest_deterministic_points: nearest,
     nearest_same_street_deterministic_points: sameStreet,
     support_warning: "Supporto informativo: non modifica ANNCSU raw e non assegna sezioni per prossimita.",
@@ -728,7 +786,7 @@ function relocationSupportSnapshot(task, civic, draft) {
 function renderRelocationRows(rows) {
   if (!rows.length) return `<p class="empty-state">No deterministic support points in the sample.</p>`;
   return renderTable(
-    ["anncsu_address", "section_number", "distance_m", "assignment_method"],
+    ["anncsu_address", "street_name", "section_number", "distance_m", "assignment_method"],
     rows.map((row) => ({ ...row, distance_m: numberLabel(row.distance_m, 1) })),
   );
 }
@@ -742,8 +800,12 @@ function renderRelocationSupportHtml(task, civic, draft) {
         <p>Select a civic, then click "Pick proposed point on map" or type proposed coordinates. Support appears here before export.</p>
         ${factGrid([
           ["Selected access_id", support.access_id],
+          ["ANNCSU street", support.anncsu_street],
           ["Coordinate quality", support.coordinate_quality_flag],
           ["Suspect reason", support.coordinate_suspect_reason],
+          ["Audit street context", support.nearest_validated_street_context],
+          ["Original nearby street context", support.original_street_context_label],
+          ["Street-register labels", asArray(support.street_register_labels).join(", ")],
         ])}
       </div>
     `;
@@ -753,12 +815,17 @@ function renderRelocationSupportHtml(task, civic, draft) {
       <strong>Relocation support</strong>
       ${factGrid([
         ["Selected access_id", support.access_id],
+        ["ANNCSU street", support.anncsu_street],
         ["Original lon/lat", `${support.original_lon}, ${support.original_lat}`],
         ["Proposed lon/lat", `${support.proposed_lon.toFixed(7)}, ${support.proposed_lat.toFixed(7)}`],
         ["Move distance", `${numberLabel(support.move_distance_m, 1)} m`],
         ["V3 section at proposed point", support.v3_candidate_sections_at_proposed_point.join(", ") || "none"],
         ["Current/task section", [support.current_section, support.task_suggested_section].filter(Boolean).join(" / ")],
+        ["Original nearby street context", support.original_street_context_label],
+        ["Proposed nearby street context", support.proposed_street_context_label],
+        ["Street-register labels", asArray(support.street_register_labels).join(", ")],
       ])}
+      ${support.street_context_warning ? `<p class="coordinate-warning">${escapeHtml(support.street_context_warning)}</p>` : ""}
       <p class="form-note">Supporto informativo: non modifica ANNCSU raw e non assegna sezioni per prossimita.</p>
       <h4>Nearest deterministic civics</h4>
       ${renderRelocationRows(support.nearest_deterministic_points)}
@@ -910,6 +977,8 @@ function sourceRecordForCopy(civic, task) {
     task_id: asString(task.task_id),
     rule_id: asString(civic.rule_id),
     label_integrity_status: asString(civic.label_integrity_status || task.label_integrity_status || "ok"),
+    nearest_validated_street_context: asString(civic.nearest_validated_street_context),
+    distance_to_nearest_different_street_m: asString(civic.distance_to_nearest_different_street_m),
   };
 }
 
@@ -1010,6 +1079,8 @@ function renderLabelIntegrityPanel(task) {
       ${renderSourceRecordBlock("Task payload values", [
         ["Task id", task.task_id],
         ["Task title", task.title],
+        ["Heading source", task.heading_source],
+        ["Validated civics for heading", task.validated_civic_count],
         ["Multi-street task", asBool(task.is_multi_street_task) ? "yes" : "no"],
         ["Street count", task.street_count],
         ["Representative title", asBool(task.display_title_is_representative) ? "yes" : "no"],
@@ -1018,6 +1089,9 @@ function renderLabelIntegrityPanel(task) {
       ${renderSourceRecordBlock("Coordinate quality", [
         ["coordinate_quality_flag", civic.coordinate_quality_flag || "ok"],
         ["coordinate_suspect_reason", civic.coordinate_suspect_reason],
+        ["nearest_validated_street_context", civic.nearest_validated_street_context],
+        ["nearest_validated_street_context_count", civic.nearest_validated_street_context_count],
+        ["distance_to_nearest_different_street_m", civic.distance_to_nearest_different_street_m],
         ["suggested_coordinate_action", civic.suggested_coordinate_action],
         ["exclude_from_geometry_candidate", asBool(civic.exclude_from_geometry_candidate) ? "yes" : "no"],
       ])}
@@ -1051,6 +1125,9 @@ function renderSummaryTab(task) {
       ["Civic sample", asArray(task.civic_values_sample).join(", ")],
       ["Parity mix", parityMix],
       ["SNC count", task.snc_count],
+      ["Heading source", titleCase(task.heading_source || "unknown")],
+      ["Validated civics for heading", task.validated_civic_count],
+      ["Unvalidated civics", task.unvalidated_civic_count],
       ["Multi-street task", asBool(task.is_multi_street_task) ? "yes" : "no"],
       ["Street count", task.street_count],
       ["Representative title", asBool(task.display_title_is_representative) ? "yes" : "no"],
@@ -1066,6 +1143,9 @@ function renderSummaryTab(task) {
     ])}
     <div class="narrative-block">
       ${streets.length ? `<h3>ANNCSU streets in task</h3><ul class="compact-list">${streets.map((street) => `<li>${escapeHtml(street)}</li>`).join("")}</ul>` : ""}
+      ${asArray(task.heading_streets).length ? `<h3>Heading built from validated civics</h3><ul class="compact-list">${asArray(task.heading_streets).map((street) => `<li>${escapeHtml(street)}</li>`).join("")}</ul>` : ""}
+      ${asArray(task.unvalidated_heading_streets).length ? `<h3>Street labels needing coordinate validation</h3><ul class="compact-list">${asArray(task.unvalidated_heading_streets).map((street) => `<li>${escapeHtml(street)}</li>`).join("")}</ul>` : ""}
+      ${asArray(task.street_register_context_streets).length ? `<h3>Street-register labels in evidence</h3><ul class="compact-list">${asArray(task.street_register_context_streets).map((street) => `<li>${escapeHtml(street)}</li>`).join("")}</ul>` : ""}
       <h3>Why it needs review</h3>
       <p>${escapeHtml(task.why_needs_review || "")}</p>
       <h3>Suggested action</h3>
@@ -1119,6 +1199,7 @@ function civicRowHtml(civic) {
       <td>${escapeHtml(civic.label_integrity_status || "ok")}</td>
       <td>${escapeHtml(civic.coordinate_quality_flag || "ok")}</td>
       <td>${escapeHtml(civic.coordinate_suspect_reason)}</td>
+      <td>${escapeHtml(civic.nearest_validated_street_context)}</td>
       <td>${escapeHtml(civic.notes)}</td>
     </tr>
   `;
@@ -1129,7 +1210,7 @@ function groupedCivicRowsHtml(rows) {
   return rows.map((civic) => {
     const street = civicStreet(civic) || "Unknown ANNCSU street";
     const header = street !== currentStreet
-      ? `<tr class="street-group-row"><th colspan="14">ANNCSU address: ${escapeHtml(street)}</th></tr>`
+      ? `<tr class="street-group-row"><th colspan="15">ANNCSU address: ${escapeHtml(street)}</th></tr>`
       : "";
     currentStreet = street;
     return `${header}${civicRowHtml(civic)}`;
@@ -1189,6 +1270,7 @@ function renderCivicsTab(task) {
             <th>Label status</th>
             <th>Coordinate quality</th>
             <th>Coordinate reason</th>
+            <th>Nearby validated street</th>
             <th>Notes</th>
           </tr>
         </thead>
@@ -1404,6 +1486,8 @@ function decisionSnapshot(task) {
       access_id: selectedCivic.access_id,
       coordinate_quality_flag: selectedCivic.coordinate_quality_flag || "ok",
       coordinate_suspect_reason: selectedCivic.coordinate_suspect_reason || "",
+      nearest_validated_street_context: selectedCivic.nearest_validated_street_context || "",
+      distance_to_nearest_different_street_m: selectedCivic.distance_to_nearest_different_street_m || "",
       source_coord_lon: selectedCivic.source_coord_lon || selectedCivic.coord_x || "",
       source_coord_lat: selectedCivic.source_coord_lat || selectedCivic.coord_y || "",
     } : null,
@@ -1874,6 +1958,7 @@ function popupForCivic(properties, task = null) {
     ["Label status", properties?.label_integrity_status || taskRecord?.label_integrity_status || "ok"],
     ["Coordinate quality", properties?.coordinate_quality_flag || "ok"],
     ["Coordinate reason", properties?.coordinate_suspect_reason],
+    ["Nearby validated street", properties?.nearest_validated_street_context],
     ["Coordinate action", properties?.suggested_coordinate_action],
   ];
   return `

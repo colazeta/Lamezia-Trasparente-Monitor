@@ -6,15 +6,17 @@ Static and payload audit for the local civic-first workbench relocation support.
 
 ## Summary
 
-- task_count: 2304
-- civic_rows: 8227
-- coordinate_suspect_records: 301
-- coordinate_suspect_features: 301
-- coordinate_suspect_tasks: 239
+- task_count: 2329
+- civic_rows: 8257
+- coordinate_suspect_records: 345
+- coordinate_suspect_features: 345
+- coordinate_suspect_tasks: 277
+- street_context_mismatch_records: 44
+- heading_source_counts: {'no_validated_civic_heading': 359, 'validated_civics': 1970}
 - deterministic_support_features: 3000
 - v3_section_features: 29
-- app_contract_checks: 17
-- app_contract_total: 17
+- app_contract_checks: 21
+- app_contract_total: 21
 
 ## UI Contract
 
@@ -27,10 +29,14 @@ Static and payload audit for the local civic-first workbench relocation support.
 - map_pick_state: ok
 - support_model: ok
 - support_snapshot: ok
+- street_context_summary: ok
+- street_register_labels: ok
 - leaflet_render: ok
 - map_click_handler: ok
 - drag_handler: ok
 - manual_override_validation: ok
+- street_context_filter: ok
+- heading_source_ui: ok
 - fallback_render: ok
 - relocation_styles: ok
 - readme_docs: ok
