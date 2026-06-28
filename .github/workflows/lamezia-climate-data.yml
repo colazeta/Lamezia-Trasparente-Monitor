@@ -1,0 +1,71 @@
+name: Lamezia climate data refresh
+
+on:
+  workflow_dispatch:
+  schedule:
+    # GitHub cron is UTC: 05:15 UTC is 06:15 CET and 07:15 CEST in Europe/Rome.
+    - cron: "15 5 * * *"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: lamezia-climate-data-refresh
+  cancel-in-progress: false
+
+jobs:
+  refresh-lamezia-climate:
+    name: Refresh Lamezia climate JSON
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+
+    steps:
+      - name: Check early Rome morning
+        id: rome_morning
+        shell: bash
+        run: |
+          if [ "${{ github.event_name }}" != "schedule" ]; then
+            echo "should_run=true" >> "$GITHUB_OUTPUT"
+            echo "Manual dispatch: running outside the scheduled-window guard."
+            exit 0
+          fi
+
+          rome_hour="$(TZ=Europe/Rome date +%H)"
+          if [ "$rome_hour" -ge 6 ] && [ "$rome_hour" -le 8 ]; then
+            echo "should_run=true" >> "$GITHUB_OUTPUT"
+            echo "Scheduled run accepted for Europe/Rome hour $rome_hour."
+          else
+            echo "should_run=false" >> "$GITHUB_OUTPUT"
+            echo "Scheduled run skipped for Europe/Rome hour $rome_hour."
+          fi
+
+      - name: Checkout
+        if: steps.rome_morning.outputs.should_run == 'true'
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        if: steps.rome_morning.outputs.should_run == 'true'
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Build static climate dataset
+        if: steps.rome_morning.outputs.should_run == 'true'
+        run: node scripts/build-lamezia-climate-data.mjs
+
+      - name: Commit updated climate dataset
+        if: steps.rome_morning.outputs.should_run == 'true'
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add artifacts/lamezia-trasparente/src/data/generated/lameziaClimateDaily.json
+
+          if git diff --cached --quiet; then
+            echo "No Lamezia climate data changes to commit."
+            exit 0
+          fi
+
+          git commit -m "Update Lamezia climate data"
+          git push

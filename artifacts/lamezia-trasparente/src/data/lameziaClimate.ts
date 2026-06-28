@@ -36,9 +36,18 @@ export interface LameziaClimateDataset {
   metadata: {
     source: string;
     source_url: string;
+    source_recent_url?: string | null;
     source_documentation_url?: string;
+    source_recent_documentation_url?: string;
     source_request_count?: number;
+    source_archive_request_count?: number;
+    source_recent_request_count?: number;
     source_query_strategy?: string;
+    source_update_mode?: "incremental" | "full";
+    source_fetch_start_date?: string | null;
+    source_recent_fetch_start_date?: string | null;
+    requested_end_date?: string;
+    data_lag_days?: number;
     coordinates: {
       name: string;
       latitude: number;
@@ -48,6 +57,7 @@ export interface LameziaClimateDataset {
     baseline_period: string;
     generated_at: string;
     latest_complete_date: string;
+    update_policy?: string;
     licence_or_terms_note: string;
     caveat: string;
     leap_day_policy?: string;

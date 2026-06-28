@@ -88,15 +88,21 @@ export function Opendata() {
     return f;
   }, [debouncedSearch, category]);
 
-  const { data: datasets, isLoading } = useListOpendataDatasets(filters);
+  const { data: datasetResponse, isLoading } = useListOpendataDatasets(filters);
+  const datasets: OpendataDataset[] = Array.isArray(datasetResponse)
+    ? datasetResponse
+    : [];
   const { data: feedStatus } = useGetOpendataFeedStatus();
 
   // Derive the full category list from an unfiltered fetch so the dropdown is
   // stable regardless of the current search/category selection.
-  const { data: allDatasets } = useListOpendataDatasets({});
+  const { data: allDatasetResponse } = useListOpendataDatasets({});
+  const allDatasets: OpendataDataset[] = Array.isArray(allDatasetResponse)
+    ? allDatasetResponse
+    : [];
   const categories = useMemo(() => {
     const set = new Set<string>();
-    (allDatasets ?? []).forEach((d) => {
+    allDatasets.forEach((d) => {
       if (d.category) set.add(d.category);
     });
     return Array.from(set).sort((a, b) => a.localeCompare(b));
@@ -110,7 +116,7 @@ export function Opendata() {
     return Number.isFinite(changed) && changed > lastVisit;
   };
 
-  const updatedCount = (datasets ?? []).filter(isUpdatedSinceLastVisit).length;
+  const updatedCount = datasets.filter(isUpdatedSinceLastVisit).length;
 
   const resetFilters = () => {
     setSearch("");
@@ -263,7 +269,7 @@ export function Opendata() {
 
       {/* Result count */}
       <div className="mb-4 flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
-        {datasets ? (
+        {!isLoading ? (
           <>
             <span>
               <span className="font-display font-bold text-foreground tabular-nums">
@@ -301,7 +307,7 @@ export function Opendata() {
               </div>
             ))}
         </div>
-      ) : datasets && datasets.length > 0 ? (
+      ) : datasets.length > 0 ? (
         <div data-tour="opendata-catalog" className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {datasets.map((d) => (
             <DatasetCard
@@ -341,7 +347,7 @@ function DatasetCard({
 }) {
   const formats = useMemo(() => {
     const set = new Set<string>();
-    dataset.resources.forEach((r) => {
+    (dataset.resources ?? []).forEach((r) => {
       if (r.format) set.add(r.format.toUpperCase());
     });
     return Array.from(set).sort();

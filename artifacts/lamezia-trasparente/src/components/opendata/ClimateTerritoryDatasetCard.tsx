@@ -208,10 +208,18 @@ export function ClimateTerritoryDatasetCard() {
 
         <div className="mt-5 grid overflow-hidden rounded-lg border border-border text-sm leading-6 md:grid-cols-3 md:divide-x md:divide-border">
           <MethodBox title="Metodologia">
-            La normale giornaliera e calcolata sul periodo 1991–2020 per giorno
-            dell'anno. L'anomalia e la differenza tra temperatura media
-            giornaliera e normale climatica; il 29 febbraio ha una regola
-            esplicita nella pipeline.
+            <>
+              La normale giornaliera e calcolata sul periodo 1991–2020 per
+              giorno dell'anno. L'anomalia e la differenza tra temperatura
+              media giornaliera e normale climatica; il 29 febbraio ha una
+              regola esplicita nella pipeline.
+              {metadata.update_policy ? (
+                <>
+                  {" "}
+                  {metadata.update_policy}
+                </>
+              ) : null}
+            </>
           </MethodBox>
           <MethodBox title="Limiti del dato">
             {metadata.caveat}
