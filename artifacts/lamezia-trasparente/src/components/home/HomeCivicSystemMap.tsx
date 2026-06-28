@@ -30,9 +30,9 @@ const STATE_META: Record<
     icon: CheckCircle2,
     badgeClassName:
       "border-primary/25 bg-primary/10 text-primary dark:bg-primary/15",
-    iconClassName: "bg-primary text-primary-foreground shadow-sm",
+    iconClassName: "bg-primary/10 text-primary",
     itemClassName:
-      "border-primary/30 bg-primary/10 text-foreground ring-1 ring-primary/10 hover:border-primary/45 hover:bg-primary/15",
+      "border-card-border bg-card text-foreground shadow-[var(--shadow-card)] hover:border-primary/35 hover:bg-primary/5",
   },
   in_progress: {
     icon: Clock3,
@@ -40,7 +40,7 @@ const STATE_META: Record<
       "border-border bg-muted text-muted-foreground",
     iconClassName: "bg-muted text-muted-foreground",
     itemClassName:
-      "border-border bg-muted/35 text-muted-foreground hover:border-border hover:bg-muted/55",
+      "border-border bg-muted/30 text-muted-foreground hover:border-border hover:bg-muted/50",
   },
   planned: {
     icon: CircleDotDashed,
@@ -48,7 +48,7 @@ const STATE_META: Record<
       "border-dashed border-border bg-background text-muted-foreground",
     iconClassName: "bg-background text-muted-foreground",
     itemClassName:
-      "border-dashed border-border bg-muted/20 text-muted-foreground opacity-75",
+      "border-dashed border-border bg-background/70 text-muted-foreground opacity-80",
   },
 };
 
@@ -94,7 +94,7 @@ function SectionItem({ item }: { item: NavItem }) {
             </span>
           ) : null}
         </span>
-        <span className="mt-1 block text-xs leading-relaxed text-muted-foreground">
+        <span className="mt-1 block text-xs leading-relaxed text-muted-foreground line-clamp-2 sm:line-clamp-none">
           {item.description}
         </span>
       </span>
@@ -108,7 +108,7 @@ function SectionItem({ item }: { item: NavItem }) {
   );
 
   const className = cn(
-    "group flex min-h-[5.25rem] items-start gap-3 rounded-lg border p-3 text-left transition-colors sm:p-3.5",
+    "group flex min-h-[4.75rem] items-start gap-3 rounded-md border p-3 text-left transition-colors sm:min-h-[5.25rem] sm:p-3.5",
     meta.itemClassName,
     navigable
       ? "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
@@ -138,15 +138,15 @@ function MacroAreaBand({
   return (
     <section
       className={cn(
-        "grid gap-5 border-t border-border py-7 lg:grid-cols-[minmax(12rem,18rem)_1fr] lg:gap-8",
-        isTechnicalBand && "bg-muted/20 px-4 sm:-mx-4 sm:px-4",
+        "grid gap-4 border-t border-border py-6 md:py-7 lg:grid-cols-[minmax(12rem,18rem)_1fr] lg:gap-8",
+        isTechnicalBand && "border-dashed bg-muted/15 px-3 sm:-mx-3 sm:px-3",
       )}
       aria-labelledby={`home-civic-area-${index + 1}`}
     >
       <div className="lg:pt-1">
         <div
           className={cn(
-            "mb-3 inline-flex h-8 w-8 items-center justify-center rounded-full border text-xs font-bold",
+            "mb-3 inline-flex h-8 w-8 items-center justify-center rounded-md border text-xs font-bold",
             isTechnicalBand
               ? "border-border bg-background text-muted-foreground"
               : "border-primary/30 bg-primary/10 text-primary",
@@ -156,18 +156,18 @@ function MacroAreaBand({
         </div>
         <h3
           id={`home-civic-area-${index + 1}`}
-          className="font-display text-xl font-bold tracking-tight text-foreground"
+          className="font-display text-lg font-bold tracking-tight text-foreground md:text-xl"
         >
           {group.label}
         </h3>
-        <p className="mt-2 max-w-sm text-sm leading-relaxed text-muted-foreground">
+        <p className="mt-2 max-w-lg text-sm leading-relaxed text-muted-foreground">
           {group.description}
         </p>
       </div>
 
       <div
         className={cn(
-          "grid gap-2.5 sm:grid-cols-2",
+          "grid gap-2 sm:grid-cols-2 lg:gap-2.5",
           group.items.length >= 4 ? "xl:grid-cols-4" : "xl:grid-cols-3",
         )}
       >
@@ -198,7 +198,7 @@ export function HomeCivicSystemMap({
       aria-labelledby="home-civic-system-map"
     >
       <div className="container mx-auto px-4 md:px-6">
-        <div className="mb-7 flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
+        <div className="mb-6 flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
           <div className="max-w-3xl">
             <span className="eyebrow text-primary">Mappa civica</span>
             <h2
@@ -211,7 +211,7 @@ export function HomeCivicSystemMap({
               {subtitle}
             </p>
           </div>
-          <div className="flex flex-wrap gap-2">
+          <div className="flex max-w-full flex-wrap gap-2">
             {(["available", "in_progress", "planned"] as const).map((state) => {
               const meta = STATE_META[state];
               const Icon = meta.icon;

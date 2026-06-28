@@ -224,7 +224,7 @@ export function SearchTrigger({ onClick }: { onClick: () => void }) {
     <button
       onClick={onClick}
       aria-label="Cerca (Ctrl+K)"
-      className="hidden items-center gap-2 rounded-md border border-border bg-muted/50 px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground md:flex"
+      className="hidden items-center gap-2 rounded-md border border-card-border bg-card px-3 py-1.5 text-sm font-medium text-muted-foreground shadow-[var(--shadow-card)] transition-colors hover:bg-muted/45 hover:text-foreground md:flex"
     >
       <Search className="h-3.5 w-3.5" />
       <span>Cerca...</span>
