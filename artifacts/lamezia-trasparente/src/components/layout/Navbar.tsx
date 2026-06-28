@@ -47,16 +47,21 @@ export function Navbar() {
   const linkClass = (active: boolean) =>
     cn(
       "relative flex items-center gap-1.5 rounded-md px-2.5 py-2 text-[13px] font-semibold transition-colors hover-elevate",
-      active ? "text-primary" : "text-muted-foreground hover:text-foreground",
+      active
+        ? "bg-primary/10 text-primary"
+        : "text-muted-foreground hover:bg-muted/50 hover:text-foreground",
     );
 
   return (
     <>
       <CommandPalette open={paletteOpen} onOpenChange={setPaletteOpen} />
 
-      <header className="sticky top-0 z-50 w-full border-b border-border bg-background/85 backdrop-blur supports-[backdrop-filter]:bg-background/70">
+      <header className="sticky top-0 z-50 w-full border-b border-border/80 bg-background/92 shadow-[var(--shadow-nav)] backdrop-blur supports-[backdrop-filter]:bg-background/78">
         <div className="container mx-auto flex h-16 items-center justify-between gap-2 px-3 sm:px-4 md:gap-4 md:px-6">
-          <Link href="/" className="min-w-0 shrink">
+          <Link
+            href="/"
+            className="min-w-0 shrink rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+          >
             <Logo textClassName="text-sm leading-none sm:text-lg" subtitle />
           </Link>
 
@@ -91,7 +96,10 @@ export function Navbar() {
                   <span className="absolute inset-x-2.5 -bottom-px h-0.5 rounded-full bg-primary" />
                 )}
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="start" className="w-56">
+              <DropdownMenuContent
+                align="start"
+                className="max-h-[min(80vh,42rem)] w-72 overflow-y-auto"
+              >
                 {NAV_GROUPS.map((group, gi) => (
                   <div key={group.label}>
                     {gi > 0 && <DropdownMenuSeparator />}
@@ -181,7 +189,7 @@ export function Navbar() {
 
         {/* Mobile Nav */}
         {isOpen && (
-          <div className="border-t border-border bg-background xl:hidden max-h-[calc(100dvh-4rem)] overflow-y-auto">
+          <div className="max-h-[calc(100dvh-4rem)] overflow-y-auto border-t border-border bg-background/98 shadow-[var(--shadow-nav)] xl:hidden">
             <nav className="container mx-auto space-y-5 px-4 py-4">
               {/* Search shortcut on mobile */}
               <button
@@ -189,14 +197,14 @@ export function Navbar() {
                   setIsOpen(false);
                   setPaletteOpen(true);
                 }}
-                className="flex w-full items-center gap-2 rounded-md border border-border bg-muted/50 px-3 py-2.5 text-sm text-muted-foreground"
+                className="flex w-full items-center gap-2 rounded-md border border-card-border bg-card px-3 py-2.5 text-sm font-medium text-foreground shadow-[var(--shadow-card)] transition-colors hover:bg-muted/45"
                 aria-label="Cerca"
               >
                 <FileSearch className="h-4 w-4" aria-hidden="true" />
                 Cerca una sezione…
               </button>
 
-              <div className="grid grid-cols-2 gap-2">
+              <div className="grid grid-cols-1 gap-2 min-[420px]:grid-cols-2">
                 <MobileLink
                   href="/"
                   label="Home"
@@ -218,7 +226,7 @@ export function Navbar() {
                   <div className="mb-2 px-1 text-[11px] font-bold uppercase tracking-wider text-muted-foreground">
                     {group.label}
                   </div>
-                  <div className="grid grid-cols-2 gap-2">
+                  <div className="grid grid-cols-1 gap-2 min-[420px]:grid-cols-2">
                     {group.items.map((item) => (
                       <MobileLink
                         key={item.href}
@@ -279,8 +287,8 @@ function MobileLink({
   const className = cn(
     "flex items-center gap-3 rounded-md border p-3 text-sm font-semibold transition-colors hover-elevate",
     active
-      ? "border-primary/20 bg-primary/10 text-primary"
-      : "border-transparent text-muted-foreground",
+      ? "border-primary/30 bg-primary/10 text-primary"
+      : "border-card-border bg-card/80 text-foreground",
     disabled && "cursor-not-allowed border-dashed bg-muted/40 opacity-70 grayscale",
   );
 
