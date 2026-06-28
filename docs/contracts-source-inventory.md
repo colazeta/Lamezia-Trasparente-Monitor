@@ -41,6 +41,17 @@ Il report machine-readable dello spike e in `data/interim/contracts/source-disco
 
 Questa discovery non e ingestione: prima di esporre record in `/contratti` o `/contratti/:id` servono endpoint ufficiale stabile, schema campi, versione/freshness, parser reale, deduplica, persistenza e gate di revisione umana. Fino ad allora la UI pubblica deve parlare di `source discovery`, `endpoint non ancora verificato`, `parser da preparare` e `limite informativo`.
 
+## Ingestion dry-run
+
+Il dry-run ANAC CIG esegue la pipeline tecnica senza superare il gate pubblico:
+
+- legge il report di discovery `data/interim/contracts/source-discovery/anac-open-data-cig-annual.discovery.json`;
+- esegue il parser solo sulla fixture sintetica `artifacts/lamezia-trasparente/src/test/fixtures/contracts/anac/anac-cig-fixture.json`;
+- produce un report interim in `data/interim/contracts/ingestion/`;
+- mantiene `production_ingestion_allowed: false`, `production_records_written: false`, `public_app_data_written: false` e `database_writes: false`.
+
+Con lo stato attuale (`discovery_status: needs_manual_verification`) il gate resta `blocked_by_source_discovery`. Il dry-run dimostra che il contratto tecnico parser/report funziona, non che ANAC o BDNCP siano sincronizzati. Prima di qualsiasi dato reale servono verifica manuale dell'endpoint ufficiale, parser reale, persistenza, deduplica e revisione umana esplicita.
+
 ## Famiglie di fonte
 
 | Fonte                                               | Identificativi primari                                                | Asse fonte                                                    | Fasi supportabili                                                                                                       | Update atteso                                                              | Stato attuale                                                        | Limiti e copy pubblica                                                                                                                             |
@@ -76,6 +87,7 @@ Questa discovery non e ingestione: prima di esporre record in `/contratti` o `/c
 
 - Il manifesto JSON ufficializza il catalogo iniziale delle famiglie fonte e marca come `not_implemented` i dataset con URL puntuale non ancora verificato.
 - `anac-open-data-cig-annual` ha metadata di discovery e report interim, ma resta `needs_manual_verification`.
+- La pipeline di ingestion dry-run ANAC CIG produce solo un report fixture-only e mantiene il gate produzione bloccato dalla discovery.
 - Il parser skeleton legge solo fixture JSON locali e produce dossier compatibili con metadata di ingestione.
 - Nessun dato reale ANAC, OpenCUP o MOP viene scaricato o pubblicato.
 - `fonte ufficiale ingerita` e consentito solo per evidenze costruite da record fixture parserizzati nei test.

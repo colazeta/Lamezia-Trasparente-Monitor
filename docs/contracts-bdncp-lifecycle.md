@@ -38,6 +38,7 @@ Ogni fase espone uno stato pubblico prudente:
 - Parser skeleton ANAC/OCDS: implementato solo con fixture false locali di test; non scarica e non pubblica record reali.
 - Manifesto fonti ufficiali: introdotto come catalogo in `data/sources/contracts/contracts-source-manifest.json`.
 - Discovery metadata: `anac-open-data-cig-annual` ha un report interim, ma l'endpoint package ufficiale resta da verificare manualmente.
+- Ingestion dry-run ANAC CIG: esegue il parser fixture-only e scrive solo un report interim; produzione, database e UI pubblica restano bloccati.
 - Ingestione produzione: non attiva per ANAC, BDNCP/PCP, PVL, OpenCUP, MOP o Amministrazione Trasparente.
 - Pubblicazione futura: qualsiasi record reale richiede parser, persistenza e gate di revisione umana prima della UI pubblica.
 
@@ -58,6 +59,8 @@ Dopo questa PR il modulo distingue tre livelli:
 Lo skeleton in `scripts/contracts/` legge solo fixture JSON locali, normalizza record ANAC CIG/open-data style, allega metadata `ContractIngestionMetadata` e produce oggetti compatibili con il dossier. Le fixture sono esclusivamente test-only e non alimentano pagine pubbliche.
 
 Lo skeleton non scarica dataset, non interroga API live, non fa scraping, non scrive nel database e non dichiara sincronizzazione BDNCP. Serve a fissare il contratto tecnico per parser futuri: identificativi, evidenze, metadata, stati di mapping e limiti pubblici.
+
+Il dry-run `scripts/contracts/runAnacCigIngestionDryRun.ts` collega discovery report e parser fixture in un unico report controllato. Il suo esito resta `blocked_by_source_discovery` finche il dataset ANAC CIG annuale non ha endpoint stabile verificato; anche dopo la verifica servira un gate umano prima di scaricare, persistere o mostrare record reali.
 
 L'ingestione parte da open data o layer OCDS-style perche sono fonti strutturate, versionabili e verificabili. Le pagine dinamiche ANAC/PVL restano punti di consultazione o ricerca: non devono essere raschiate e non devono essere trattate come dataset locale.
 
