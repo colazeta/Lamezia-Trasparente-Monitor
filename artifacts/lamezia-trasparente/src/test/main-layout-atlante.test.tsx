@@ -21,15 +21,15 @@ vi.mock("@/components/admin/MigrationStatusBanner", () => ({
 }));
 
 vi.mock("@/components/helper/CivicHelperFAB", () => ({
-  CivicHelperFAB: () => null,
+  CivicHelperFAB: () => <div data-testid="civic-helper-fab" />,
 }));
 
 vi.mock("@/components/helper/CivicAssistant", () => ({
-  CivicAssistant: () => null,
+  CivicAssistant: () => <div data-testid="civic-assistant" />,
 }));
 
 vi.mock("@/components/helper/CivicWelcome", () => ({
-  CivicWelcome: () => null,
+  CivicWelcome: () => <div data-testid="civic-welcome" />,
 }));
 
 function renderLayoutAt(path: string) {
@@ -49,6 +49,9 @@ describe("MainLayout Atlante route", () => {
     renderLayoutAt("/atlante-territoriale");
 
     expect(screen.queryByTestId("section-scaffold")).not.toBeInTheDocument();
+    expect(screen.queryByTestId("civic-helper-fab")).not.toBeInTheDocument();
+    expect(screen.queryByTestId("civic-assistant")).not.toBeInTheDocument();
+    expect(screen.queryByTestId("civic-welcome")).not.toBeInTheDocument();
     expect(screen.getByText("Pagina pubblica")).toBeInTheDocument();
   });
 
@@ -56,5 +59,8 @@ describe("MainLayout Atlante route", () => {
     renderLayoutAt("/contratti");
 
     expect(screen.getByTestId("section-scaffold")).toBeInTheDocument();
+    expect(screen.getByTestId("civic-helper-fab")).toBeInTheDocument();
+    expect(screen.getByTestId("civic-assistant")).toBeInTheDocument();
+    expect(screen.getByTestId("civic-welcome")).toBeInTheDocument();
   });
 });

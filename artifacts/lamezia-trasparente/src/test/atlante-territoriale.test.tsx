@@ -1,4 +1,5 @@
 import { fireEvent, render, screen, within } from "@testing-library/react";
+import type { ReactNode } from "react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { AtlanteTerritoriale } from "../pages/AtlanteTerritoriale";
 import {
@@ -9,6 +10,95 @@ import {
   formatAtlanteValue,
   loadAtlanteLayer,
 } from "../data/atlanteTerritoriale";
+
+vi.mock("react-leaflet", () => {
+  const stripHtml = (value: string) => value.replace(/<[^>]+>/g, "");
+
+  return {
+    MapContainer: ({
+      children,
+      className,
+    }: {
+      children?: ReactNode;
+      className?: string;
+    }) => (
+      <div className={className} data-testid="atlante-leaflet-map">
+        {children}
+      </div>
+    ),
+    TileLayer: ({
+      attribution,
+      opacity,
+      url,
+    }: {
+      attribution?: string;
+      opacity?: number;
+      url?: string;
+    }) => (
+      <div
+        data-opacity={opacity}
+        data-testid="atlante-osm-tile-layer"
+        data-url={url}
+      >
+        {stripHtml(attribution ?? "")}
+      </div>
+    ),
+    GeoJSON: ({
+      data,
+      onEachFeature,
+    }: {
+      data?: { features?: Array<Record<string, unknown>> };
+      onEachFeature?: (
+        feature: Record<string, unknown>,
+        layer: {
+          bindTooltip: (content: string) => unknown;
+          on: (handlers: Record<string, () => void> | string) => unknown;
+        },
+      ) => void;
+    }) => (
+      <div data-testid="atlante-istat-overlay">
+        {(data?.features ?? []).map((feature) => {
+          const handlers: Record<string, () => void> = {};
+          const sectionId = String(
+            (feature.properties as { sezione_censimento_id?: string })
+              ?.sezione_censimento_id ?? "sezione non identificata",
+          );
+          let tooltip = sectionId;
+          const layer = {
+            bindTooltip: (content: string) => {
+              tooltip = content;
+              return layer;
+            },
+            on: (eventHandlers: Record<string, () => void> | string) => {
+              if (typeof eventHandlers === "object") {
+                Object.assign(handlers, eventHandlers);
+              }
+              return layer;
+            },
+          };
+          onEachFeature?.(feature, layer);
+
+          return (
+            <button
+              aria-label={stripHtml(tooltip)}
+              key={sectionId}
+              onClick={() => handlers.click?.()}
+              onMouseEnter={() => handlers.mouseover?.()}
+              onMouseLeave={() => handlers.mouseout?.()}
+              type="button"
+            >
+              {sectionId}
+            </button>
+          );
+        })}
+      </div>
+    ),
+    useMap: () => ({
+      fitBounds: vi.fn(),
+      invalidateSize: vi.fn(),
+    }),
+  };
+});
 
 afterEach(() => {
   vi.unstubAllGlobals();
@@ -242,6 +332,28 @@ describe("Atlante territoriale", () => {
     expect(screen.queryByText("Distribuzione")).not.toBeInTheDocument();
     expect(screen.queryByText("Fonti e limiti")).not.toBeInTheDocument();
     expect(screen.queryByText(/File atteso/i)).not.toBeInTheDocument();
+    expect(screen.getByTestId("atlante-leaflet-map")).toBeInTheDocument();
+    expect(screen.getByTestId("atlante-istat-overlay")).toBeInTheDocument();
+    expect(screen.getByTestId("atlante-osm-tile-layer")).toHaveAttribute(
+      "data-url",
+      "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+    );
+    expect(screen.getByTestId("atlante-osm-tile-layer")).toHaveTextContent(
+      "OpenStreetMap contributors",
+    );
+    expect(
+      screen.getByRole("button", { name: /Reimposta vista/i }),
+    ).toBeInTheDocument();
+    const basemapToggle = screen.getByRole("checkbox", {
+      name: /Sfondo mappa/i,
+    });
+    expect(basemapToggle).toBeChecked();
+    fireEvent.click(basemapToggle);
+    expect(basemapToggle).not.toBeChecked();
+    expect(
+      screen.queryByTestId("atlante-osm-tile-layer"),
+    ).not.toBeInTheDocument();
+    expect(screen.getByTestId("atlante-istat-overlay")).toBeInTheDocument();
     expect(screen.getByLabelText("Indicatore")).toBeInTheDocument();
     expect(screen.getAllByText("Popolazione").length).toBeGreaterThan(0);
     expect(screen.getAllByText("Popolazione residente").length).toBeGreaterThan(
@@ -271,13 +383,34 @@ describe("Atlante territoriale", () => {
     expect(screen.getAllByText(/dato non disponibile/i).length).toBeGreaterThan(
       0,
     );
+    expect(
+      screen.getByRole("heading", { name: "Nessuna sezione selezionata" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        "Seleziona una sezione sulla mappa per vedere i dati disponibili.",
+      ),
+    ).toBeInTheDocument();
+
+    fireEvent.click(
+      screen.getByRole("button", {
+        name: /0791600000198: 0 persone/i,
+      }),
+    );
+    let profile = screen.getByText("Sezione selezionata").closest("section");
+    expect(profile).not.toBeNull();
+    expect(
+      screen.getByRole("heading", { name: "Area censuaria 0198" }),
+    ).toBeInTheDocument();
     expect(screen.getAllByText("0 persone").length).toBeGreaterThan(0);
+    expect(screen.getByText(/Zero .* valore reale/)).toBeInTheDocument();
+
     fireEvent.click(
       screen.getByRole("button", {
         name: /0791600000204: dato non disponibile/i,
       }),
     );
-    const profile = screen.getByText("Sezione selezionata").closest("section");
+    profile = screen.getByText("Sezione selezionata").closest("section");
     expect(profile).not.toBeNull();
     expect(
       screen.getByRole("heading", { name: "Area censuaria 0204" }),
