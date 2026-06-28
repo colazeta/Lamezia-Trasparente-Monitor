@@ -1,0 +1,44 @@
+import { screen, within } from "@testing-library/react";
+import { describe, expect, it } from "vitest";
+
+import {
+  ALBO_PUBLIC_RUN_ITEMS,
+  ALBO_PUBLIC_RUN_SUMMARY,
+} from "@/data/alboPublicRun";
+import { Albo } from "@/pages/Albo";
+import { renderPage } from "./pages-harness";
+
+describe("Albo public run surface", () => {
+  it("renders the public-safe Albo run on the civic Albo page", () => {
+    renderPage(Albo);
+
+    const heading = screen.getByRole("heading", {
+      name: /Atti correnti dal layer pubblico Albo/i,
+    });
+    const section = heading.closest("section");
+
+    expect(section).not.toBeNull();
+    const panel = within(section as HTMLElement);
+
+    expect(panel.getByText("Fonte ufficiale acquisita")).toBeInTheDocument();
+    expect(panel.getByText("Acquisiti")).toBeInTheDocument();
+    expect(panel.getByText(String(ALBO_PUBLIC_RUN_SUMMARY.counts.acquired))).toBeInTheDocument();
+    expect(panel.getByText(`${ALBO_PUBLIC_RUN_ITEMS.length} record pubblici mostrati`)).toBeInTheDocument();
+    expect(panel.getByText(/non sostituisce l'Albo Pretorio ufficiale/i)).toBeInTheDocument();
+    expect(panel.getByRole("link", { name: /Fonte ufficiale/i })).toHaveAttribute(
+      "href",
+      ALBO_PUBLIC_RUN_SUMMARY.source_url,
+    );
+
+    expect(screen.getAllByText(/Oggetto minimizzato per prudenza privacy/i).length).toBeGreaterThan(0);
+    expect(screen.getAllByText(/Metadato minimo/i).length).toBeGreaterThan(0);
+    expect(screen.queryByText(/assegno di matern|assistenza domiciliare|persona fisica/i)).toBeNull();
+  });
+
+  it("does not expose direct document URLs through the app adapter", () => {
+    expect(ALBO_PUBLIC_RUN_ITEMS.length).toBeGreaterThan(0);
+    for (const item of ALBO_PUBLIC_RUN_ITEMS) {
+      expect("document_url" in item).toBe(false);
+    }
+  });
+});
