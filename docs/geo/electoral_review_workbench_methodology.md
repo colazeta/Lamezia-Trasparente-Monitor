@@ -155,6 +155,58 @@ OpenStreetMap remains visual context only. It can help a reviewer orient the map
 but it is not an official coordinate correction source and is not used by the
 audit as automatic evidence of error.
 
+### External coordinate recovery candidates
+
+When many ANNCSU civic points appear spatially misplaced, the first step is to
+diagnose whether the suspicious coordinate was introduced by the local pipeline
+or was already present in the original ANNCSU indirizzario bytes.
+`scripts/diagnose_anncsu_coordinate_corruption.py` compares the raw Calabria
+indirizzario zip, the Lamezia extract, the processed civic assignment CSV, and
+the coordinate-suspect queue. It writes:
+
+- `data/interim/qa/anncsu_coordinate_corruption_diagnostic_report_2025.md`
+- `data/interim/qa/anncsu_coordinate_corruption_diagnostic_2025.csv`
+
+If the local pipeline copied the coordinate faithfully from the raw source, the
+coordinate may still be unsuitable for geometry, but the raw field must remain
+unchanged. Corrections are handled as reviewed replacement evidence, not as
+edits to `COORD_X_COMUNE` or `COORD_Y_COMUNE`.
+
+`scripts/geocode_anncsu_coordinate_candidates.py` can generate a request plan
+and, when explicitly run with `--execute`, call a geocoder such as Nominatim for
+small cached batches of suspect addresses. It writes:
+
+- `data/interim/qa/anncsu_coordinate_geocode_request_plan_2025.csv`
+- `data/interim/qa/anncsu_coordinate_geocode_candidates_2025.csv`
+- `data/interim/qa/anncsu_coordinate_geocode_candidates_report_2025.md`
+
+Public Nominatim must not be used as a bulk geocoding backend. Use it only for
+small, cached, rate-limited QA batches with an identifiable User-Agent, or point
+the same script pattern at a dedicated provider/internal instance. A geocoder
+result is only a candidate: it must be checked against the electoral street
+register, ANNCSU street context, boundary context, and then exported from the
+workbench as an explicit `manual_coordinate_override`.
+
+`scripts/build_anncsu_coordinate_recovery_layer.py` then materializes the
+separate recovery layer. Without decisions it keeps source coordinates as the
+effective coordinates and classifies suspect records as requiring review. With
+an exported workbench decisions file, it applies only accepted
+`manual_coordinate_override` records to `effective_lon` and `effective_lat` and
+writes:
+
+- `data/interim/geo/anncsu_lamezia_coordinate_recovery_candidates_2025.csv`
+- `data/interim/qa/anncsu_coordinate_recovery_training_set_2025.csv`
+- `data/interim/qa/anncsu_coordinate_recovery_layer_report_2025.md`
+
+The retraining path is therefore review-first:
+
+- collect accepted manual coordinate overrides and rejected candidates;
+- build a correction/training set from reviewed decisions only;
+- re-run coordinate-quality diagnostics using the reviewed replacements as
+  trusted anchors;
+- generate any future V4 candidate geometry only after the corrected coordinate
+  layer is auditable.
+
 ## Evidence Chain
 
 The local review workflow connects four evidence layers:

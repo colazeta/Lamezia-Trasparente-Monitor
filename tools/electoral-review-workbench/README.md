@@ -46,6 +46,36 @@ python scripts/audit_anncsu_coordinate_quality.py
 python scripts/build_electoral_review_workbench_data.py
 ```
 
+Diagnose whether suspicious coordinates were introduced locally or already
+exist in the original ANNCSU indirizzario bytes:
+
+```powershell
+python scripts/diagnose_anncsu_coordinate_corruption.py
+```
+
+Prepare external geocoder recovery candidates without modifying raw ANNCSU
+coordinates:
+
+```powershell
+python scripts/geocode_anncsu_coordinate_candidates.py
+python scripts/geocode_anncsu_coordinate_candidates.py --execute --limit 10 --user-agent "Lamezia-Trasparente-Monitor/anncsu-coordinate-qa contact@example.org"
+```
+
+Use the first command for a request plan. Use `--execute` only for small,
+cached, rate-limited QA batches, or with a dedicated provider/internal geocoder
+that allows bulk use.
+
+Build the auditable recovery layer and training set:
+
+```powershell
+python scripts/build_anncsu_coordinate_recovery_layer.py
+python scripts/build_anncsu_coordinate_recovery_layer.py --decisions .\electoral_sections_civic_review_decisions_v1.json
+```
+
+The first command creates a no-overwrite recovery layer. The second command
+uses exported workbench decisions and applies only accepted
+`manual_coordinate_override` records to `effective_lon`/`effective_lat`.
+
 ## Why Civic-first
 
 The V2 task model was useful, but still too census-cell oriented. Census cells
