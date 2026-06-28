@@ -9,6 +9,7 @@ import {
   listSourcesByIdentifier,
   listSourcesByLifecyclePhase,
   summariseSourceManifest,
+  validateContractSourceManifest,
 } from "./contractsSourceManifest";
 
 describe("contracts source manifest", () => {
@@ -116,6 +117,91 @@ describe("contracts source manifest", () => {
     }
   });
 
+  it("validates source-level discovery metadata separately from ingestion metadata", () => {
+    const annualCigSource = getContractSourceById("anac-open-data-cig-annual");
+
+    expect(annualCigSource?.discovery_metadata).toMatchObject({
+      discovery_status: "needs_manual_verification",
+      checked_by: "codex",
+      landing_page_url: "https://dati.anticorruzione.it/opendata/",
+      package_url: null,
+      detected_format: "html",
+      freshness_label: "annual",
+    });
+    expect(annualCigSource?.ingestion_status).toBe("not_implemented");
+    expect(annualCigSource?.public_claim_level).toBe("fixture_only");
+  });
+
+  it("allows ready_for_parser only after verified discovery, without marking it ingested", () => {
+    const annualCigSource = getContractSourceById("anac-open-data-cig-annual");
+    expect(annualCigSource).toBeDefined();
+    if (!annualCigSource) {
+      throw new Error("Missing annual CIG source fixture");
+    }
+
+    const verifiedManifest = validateContractSourceManifest({
+      ...contractsSourceManifest,
+      sources: [
+        {
+          ...annualCigSource,
+          official_url:
+            "https://dati.anticorruzione.it/opendata/download/anac-cig-annual-metadata-fixture.zip",
+          access_type: "open_data",
+          ingestion_status: "ready_for_parser",
+          public_claim_level: "linked_only",
+          discovery_metadata: {
+            discovery_status: "verified",
+            checked_at: "2026-06-27T20:50:00.000Z",
+            checked_by: "codex",
+            verified_url:
+              "https://dati.anticorruzione.it/opendata/download/anac-cig-annual-metadata-fixture.zip",
+            landing_page_url: "https://dati.anticorruzione.it/opendata/",
+            package_url:
+              "https://dati.anticorruzione.it/opendata/api/3/action/package_search?q=CIG",
+            sample_file_url:
+              "https://dati.anticorruzione.it/opendata/download/anac-cig-annual-metadata-fixture.zip",
+            detected_format: "zip",
+            freshness_label: "annual",
+            version_hint: "metadata-fixture-v1",
+            notes: ["Metadata verificato per test: non contiene record reali."],
+          },
+        },
+      ],
+    });
+
+    expect(verifiedManifest.sources[0]).toMatchObject({
+      ingestion_status: "ready_for_parser",
+      public_claim_level: "linked_only",
+      discovery_metadata: {
+        discovery_status: "verified",
+      },
+    });
+    expect(verifiedManifest.sources[0].public_claim_level).not.toBe("ingested");
+  });
+
+  it("rejects ready_for_parser when discovery still needs manual verification", () => {
+    const annualCigSource = getContractSourceById("anac-open-data-cig-annual");
+    expect(annualCigSource).toBeDefined();
+    if (!annualCigSource) {
+      throw new Error("Missing annual CIG source fixture");
+    }
+
+    expect(() =>
+      validateContractSourceManifest({
+        ...contractsSourceManifest,
+        sources: [
+          {
+            ...annualCigSource,
+            official_url:
+              "https://dati.anticorruzione.it/opendata/download/anac-cig-annual-metadata-fixture.zip",
+            access_type: "open_data",
+            ingestion_status: "ready_for_parser",
+          },
+        ],
+      }),
+    ).toThrow(/ready_for_parser without verified discovery metadata/);
+  });
+
   it("exposes helper functions for source groups and summaries", () => {
     expect(getContractSourceById("anac-bdncp-pcp")).toMatchObject({
       access_type: "portal_search",
@@ -140,6 +226,9 @@ describe("contracts source manifest", () => {
 
     expect(summary.totalSources).toBe(contractsSourceManifest.sources.length);
     expect(summary.byIngestionStatus.not_implemented).toBeGreaterThan(0);
+    expect(summary.byDiscoveryStatus.needs_manual_verification).toBeGreaterThan(
+      0,
+    );
     expect(summary.byIdentifier.CIG).toBeGreaterThan(summary.byIdentifier.CUP);
     expect(summary.manualDiscoveryRequired).toEqual(
       expect.arrayContaining([

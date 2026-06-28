@@ -79,6 +79,38 @@ export const CONTRACT_SOURCE_PUBLIC_CLAIM_LEVELS = [
   "ingested",
 ] as const;
 
+export const CONTRACT_SOURCE_DISCOVERY_STATUSES = [
+  "not_checked",
+  "verified",
+  "needs_manual_verification",
+  "unavailable",
+  "failed",
+] as const;
+
+export const CONTRACT_SOURCE_DISCOVERY_CHECKED_BY = [
+  "codex",
+  "manual",
+  "ci",
+] as const;
+
+export const CONTRACT_SOURCE_DISCOVERY_FORMATS = [
+  "csv",
+  "json",
+  "xml",
+  "zip",
+  "ocds_json",
+  "html",
+  "unknown",
+] as const;
+
+export const CONTRACT_SOURCE_DISCOVERY_FRESHNESS_LABELS = [
+  "daily",
+  "periodic",
+  "annual",
+  "delta",
+  "unknown",
+] as const;
+
 export const CONTRACT_SOURCE_MANUAL_VERIFICATION_LIMIT =
   "URL ufficiale da verificare manualmente prima dell'ingestione";
 
@@ -96,11 +128,33 @@ export type ContractSourceIngestionStatus =
   (typeof CONTRACT_SOURCE_INGESTION_STATUSES)[number];
 export type ContractSourcePublicClaimLevel =
   (typeof CONTRACT_SOURCE_PUBLIC_CLAIM_LEVELS)[number];
+export type ContractSourceDiscoveryStatus =
+  (typeof CONTRACT_SOURCE_DISCOVERY_STATUSES)[number];
+export type ContractSourceDiscoveryCheckedBy =
+  (typeof CONTRACT_SOURCE_DISCOVERY_CHECKED_BY)[number];
+export type ContractSourceDiscoveryFormat =
+  (typeof CONTRACT_SOURCE_DISCOVERY_FORMATS)[number];
+export type ContractSourceDiscoveryFreshnessLabel =
+  (typeof CONTRACT_SOURCE_DISCOVERY_FRESHNESS_LABELS)[number];
 
 export type ContractSourceLifecycleCoverage = Record<
   ContractSourceLifecyclePhase,
   boolean
 >;
+
+export interface ContractSourceDiscoveryMetadata {
+  discovery_status: ContractSourceDiscoveryStatus;
+  checked_at: string | null;
+  checked_by: ContractSourceDiscoveryCheckedBy;
+  verified_url: string | null;
+  landing_page_url: string | null;
+  package_url: string | null;
+  sample_file_url: string | null;
+  detected_format: ContractSourceDiscoveryFormat;
+  freshness_label: ContractSourceDiscoveryFreshnessLabel;
+  version_hint: string | null;
+  notes: string[];
+}
 
 export interface ContractSourceFamily {
   id: string;
@@ -117,6 +171,7 @@ export interface ContractSourceFamily {
   public_claim_level: ContractSourcePublicClaimLevel;
   limitations: string[];
   next_action: string;
+  discovery_metadata?: ContractSourceDiscoveryMetadata;
 }
 
 export interface ContractSourceManifest {
@@ -134,6 +189,7 @@ export interface ContractSourceManifestSummary {
   bySourceAxis: Record<ContractSourceAxis, number>;
   byIdentifier: Record<ContractSourceIdentifier, number>;
   byLifecyclePhase: Record<ContractSourceLifecyclePhase, number>;
+  byDiscoveryStatus: Record<ContractSourceDiscoveryStatus, number>;
   manualDiscoveryRequired: string[];
 }
 
@@ -210,6 +266,7 @@ export function summariseSourceManifest(
     bySourceAxis: emptyCounter(CONTRACT_SOURCE_AXES),
     byIdentifier: emptyCounter(CONTRACT_SOURCE_IDENTIFIERS),
     byLifecyclePhase: emptyCounter(CONTRACT_SOURCE_LIFECYCLE_PHASES),
+    byDiscoveryStatus: emptyCounter(CONTRACT_SOURCE_DISCOVERY_STATUSES),
     manualDiscoveryRequired: [],
   };
 
@@ -228,7 +285,18 @@ export function summariseSourceManifest(
       }
     }
 
-    if (source.official_url === null) {
+    if (source.discovery_metadata) {
+      summary.byDiscoveryStatus[source.discovery_metadata.discovery_status] +=
+        1;
+    } else {
+      summary.byDiscoveryStatus.not_checked += 1;
+    }
+
+    if (
+      source.official_url === null ||
+      source.discovery_metadata?.discovery_status ===
+        "needs_manual_verification"
+    ) {
       summary.manualDiscoveryRequired.push(source.id);
     }
   }
@@ -263,6 +331,10 @@ function validateContractSourceFamily(
   const limitations = requireStringArray(
     source.limitations,
     `${path}.limitations`,
+  );
+  const discoveryMetadata = validateOptionalDiscoveryMetadata(
+    source.discovery_metadata,
+    `${path}.discovery_metadata`,
   );
 
   if (
@@ -301,6 +373,15 @@ function validateContractSourceFamily(
     );
   }
 
+  if (
+    ingestionStatus === "ready_for_parser" &&
+    discoveryMetadata?.discovery_status !== "verified"
+  ) {
+    throw new Error(
+      `${path}.ingestion_status cannot be ready_for_parser without verified discovery metadata`,
+    );
+  }
+
   return {
     id: requireString(source.id, `${path}.id`),
     label: requireString(source.label, `${path}.label`),
@@ -335,6 +416,88 @@ function validateContractSourceFamily(
     public_claim_level: publicClaimLevel,
     limitations,
     next_action: requireString(source.next_action, `${path}.next_action`),
+    ...(discoveryMetadata ? { discovery_metadata: discoveryMetadata } : {}),
+  };
+}
+
+function validateOptionalDiscoveryMetadata(
+  rawValue: unknown,
+  path: string,
+): ContractSourceDiscoveryMetadata | undefined {
+  if (rawValue === undefined) {
+    return undefined;
+  }
+
+  const metadata = requireRecord(rawValue, path);
+  const discoveryStatus = requireEnum(
+    metadata.discovery_status,
+    `${path}.discovery_status`,
+    CONTRACT_SOURCE_DISCOVERY_STATUSES,
+  );
+  const verifiedUrl = requireNullableUrl(
+    metadata.verified_url,
+    `${path}.verified_url`,
+  );
+  const packageUrl = requireNullableUrl(
+    metadata.package_url,
+    `${path}.package_url`,
+  );
+  const sampleFileUrl = requireNullableUrl(
+    metadata.sample_file_url,
+    `${path}.sample_file_url`,
+  );
+  const notes = requireStringArray(metadata.notes, `${path}.notes`);
+
+  if (discoveryStatus === "verified" && !verifiedUrl && !packageUrl) {
+    throw new Error(
+      `${path}.verified discovery requires a verified_url or package_url`,
+    );
+  }
+
+  if (
+    discoveryStatus === "needs_manual_verification" &&
+    !notes.some(
+      (note) =>
+        note.toLowerCase().includes("manual") ||
+        note.toLowerCase().includes("verific"),
+    )
+  ) {
+    throw new Error(`${path}.notes must explain the manual verification need`);
+  }
+
+  return {
+    discovery_status: discoveryStatus,
+    checked_at: requireNullableString(
+      metadata.checked_at,
+      `${path}.checked_at`,
+    ),
+    checked_by: requireEnum(
+      metadata.checked_by,
+      `${path}.checked_by`,
+      CONTRACT_SOURCE_DISCOVERY_CHECKED_BY,
+    ),
+    verified_url: verifiedUrl,
+    landing_page_url: requireNullableUrl(
+      metadata.landing_page_url,
+      `${path}.landing_page_url`,
+    ),
+    package_url: packageUrl,
+    sample_file_url: sampleFileUrl,
+    detected_format: requireEnum(
+      metadata.detected_format,
+      `${path}.detected_format`,
+      CONTRACT_SOURCE_DISCOVERY_FORMATS,
+    ),
+    freshness_label: requireEnum(
+      metadata.freshness_label,
+      `${path}.freshness_label`,
+      CONTRACT_SOURCE_DISCOVERY_FRESHNESS_LABELS,
+    ),
+    version_hint: requireNullableString(
+      metadata.version_hint,
+      `${path}.version_hint`,
+    ),
+    notes,
   };
 }
 
@@ -373,6 +536,14 @@ function requireString(rawValue: unknown, path: string): string {
   return rawValue;
 }
 
+function requireNullableString(rawValue: unknown, path: string): string | null {
+  if (rawValue === null) {
+    return null;
+  }
+
+  return requireString(rawValue, path);
+}
+
 function requireOfficialUrl(rawValue: unknown, path: string): string | null {
   if (rawValue === null) {
     return null;
@@ -380,6 +551,24 @@ function requireOfficialUrl(rawValue: unknown, path: string): string | null {
 
   const url = requireString(rawValue, path);
 
+  validateHttpsUrl(url, path);
+
+  return url;
+}
+
+function requireNullableUrl(rawValue: unknown, path: string): string | null {
+  if (rawValue === null) {
+    return null;
+  }
+
+  const url = requireString(rawValue, path);
+
+  validateHttpsUrl(url, path);
+
+  return url;
+}
+
+function validateHttpsUrl(url: string, path: string): void {
   try {
     const parsed = new URL(url);
     if (parsed.protocol !== "https:") {
@@ -388,8 +577,6 @@ function requireOfficialUrl(rawValue: unknown, path: string): string | null {
   } catch (error) {
     throw new Error(`${path} must be a valid https URL: ${String(error)}`);
   }
-
-  return url;
 }
 
 function requireStringArray(rawValue: unknown, path: string): string[] {

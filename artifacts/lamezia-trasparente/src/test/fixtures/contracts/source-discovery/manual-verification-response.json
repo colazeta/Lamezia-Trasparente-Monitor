@@ -1,0 +1,15 @@
+{
+  "fixture_label": "manual verification metadata response",
+  "fixture_note": "Gateway/manual-verification response; contains no real procurement records.",
+  "probe": {
+    "url": "https://dati.anticorruzione.it/opendata/api/3/action/package_search?q=CIG",
+    "method": "GET",
+    "ok": true,
+    "status": 200,
+    "content_type": "text/html; charset=UTF-8",
+    "content_length": 269,
+    "detected_format": "html",
+    "body_preview": "<html><head><title>Request Rejected</title></head><body>The requested URL was rejected. Please consult with your administrator. Support ID: fixture</body></html>",
+    "rejected_by_gateway": true
+  }
+}

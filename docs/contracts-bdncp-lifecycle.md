@@ -37,7 +37,9 @@ Ogni fase espone uno stato pubblico prudente:
 - Fondazione BDNCP/CUP lifecycle: implementata come dossier civico con CIG, CUP, fasi, evidenze e limiti informativi.
 - Parser skeleton ANAC/OCDS: implementato solo con fixture false locali di test; non scarica e non pubblica record reali.
 - Manifesto fonti ufficiali: introdotto come catalogo in `data/sources/contracts/contracts-source-manifest.json`.
+- Discovery metadata: `anac-open-data-cig-annual` ha un report interim, ma l'endpoint package ufficiale resta da verificare manualmente.
 - Ingestione produzione: non attiva per ANAC, BDNCP/PCP, PVL, OpenCUP, MOP o Amministrazione Trasparente.
+- Pubblicazione futura: qualsiasi record reale richiede parser, persistenza e gate di revisione umana prima della UI pubblica.
 
 ## Limiti pubblici
 

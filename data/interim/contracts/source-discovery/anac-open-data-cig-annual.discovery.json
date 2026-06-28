@@ -1,0 +1,70 @@
+{
+  "schema_version": "contracts-source-discovery-report.v1",
+  "source_id": "anac-open-data-cig-annual",
+  "checked_at": "2026-06-27T21:05:32.089Z",
+  "checked_by": "codex",
+  "official_url_used": null,
+  "landing_page_url": "https://dati.anticorruzione.it/opendata/",
+  "package_url": null,
+  "sample_file_url": null,
+  "verification_result": "needs_manual_verification",
+  "detected_content_type": "text/html; charset=UTF-8",
+  "detected_format": "html",
+  "freshness_label": "annual",
+  "version_hint": null,
+  "suitable_for_parser": false,
+  "production_records_written": false,
+  "public_app_data_written": false,
+  "limitations": [
+    "Discovery spike limitato a metadata e disponibilita, senza download di record reali.",
+    "Endpoint/pacchetto annuale CIG da confermare su fonte ufficiale prima del parser.",
+    "URL ufficiale da verificare manualmente prima dell'ingestione",
+    "La discovery non ha verificato un endpoint strutturato stabile per parser reale.",
+    "Nessun record ANAC reale e stato scritto in directory pubbliche o dati applicativi.",
+    "Il gateway del portale ANAC ha respinto la query metadata leggera in questo ambiente."
+  ],
+  "next_parser_action": "Verificare manualmente il pacchetto annuale ufficiale, quindi fissare schema, versione e fixture metadata-only prima del parser reale.",
+  "discovery_metadata": {
+    "discovery_status": "needs_manual_verification",
+    "checked_at": "2026-06-27T21:05:32.089Z",
+    "checked_by": "codex",
+    "verified_url": null,
+    "landing_page_url": "https://dati.anticorruzione.it/opendata/",
+    "package_url": null,
+    "sample_file_url": null,
+    "detected_format": "html",
+    "freshness_label": "annual",
+    "version_hint": null,
+    "notes": [
+      "Discovery spike limitato a metadata e disponibilita, senza download di record reali.",
+      "Endpoint/pacchetto annuale CIG da confermare su fonte ufficiale prima del parser.",
+      "URL ufficiale da verificare manualmente prima dell'ingestione",
+      "La discovery non ha verificato un endpoint strutturato stabile per parser reale.",
+      "Nessun record ANAC reale e stato scritto in directory pubbliche o dati applicativi.",
+      "Il gateway del portale ANAC ha respinto la query metadata leggera in questo ambiente."
+    ]
+  },
+  "probes": [
+    {
+      "url": "https://dati.anticorruzione.it/opendata/",
+      "method": "HEAD",
+      "ok": true,
+      "status": 200,
+      "content_type": "text/html; charset=UTF-8",
+      "content_length": 269,
+      "detected_format": "html",
+      "rejected_by_gateway": false
+    },
+    {
+      "url": "https://dati.anticorruzione.it/opendata/api/3/action/package_search?q=CIG",
+      "method": "GET",
+      "ok": true,
+      "status": 200,
+      "content_type": "text/html; charset=UTF-8",
+      "content_length": 269,
+      "detected_format": "html",
+      "body_preview": "Request Rejected by gateway",
+      "rejected_by_gateway": true
+    }
+  ]
+}

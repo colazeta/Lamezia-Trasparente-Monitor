@@ -1,0 +1,14 @@
+{
+  "fixture_label": "successful metadata discovery without records",
+  "fixture_note": "Metadata-only response used to test parser readiness; contains no real CIG, CUP, operator, amount or award record.",
+  "probe": {
+    "url": "https://dati.anticorruzione.it/opendata/api/3/action/package_search?q=CIG",
+    "method": "GET",
+    "ok": true,
+    "status": 200,
+    "content_type": "application/json; charset=utf-8",
+    "content_length": 512,
+    "detected_format": "json",
+    "body_preview": "{\"success\":true,\"result\":{\"results\":[{\"name\":\"anac-cig-annual-metadata-fixture\",\"version\":\"metadata-fixture-v1\",\"resources\":[{\"name\":\"annual-package-metadata-only\",\"format\":\"ZIP\",\"mimetype\":\"application/zip\",\"url\":\"https://dati.anticorruzione.it/opendata/download/anac-cig-annual-metadata-fixture.zip\"}]}]}}"
+  }
+}
