@@ -83,16 +83,81 @@ test("does not classify personal-service welfare records as low-risk publishable
 
   assert.deepEqual(
     result.items.map((item) => item.public_visibility),
-    ["metadata_only", "metadata_only", "publishable_with_minimisation"],
+    ["metadata_only", "metadata_only", "metadata_only"],
   );
   assert.equal(result.publicLatest.counts.publishable, 0);
-  assert.equal(result.publicLatest.counts.metadata_only, 2);
-  assert.equal(result.publicLatest.counts.minimised, 1);
+  assert.equal(result.publicLatest.counts.metadata_only, 3);
+  assert.equal(result.publicLatest.counts.minimised, 0);
 
   const publicLatest = await readFile(result.paths.publicLatest, "utf8");
   assert.doesNotMatch(publicLatest, /assegno di matern|assistenza domiciliare|persona fisica/i);
   assert.match(publicLatest, /Metadato minimo/);
-  assert.match(publicLatest, /Oggetto minimizzato per prudenza privacy/);
+});
+
+test("keeps ordinary administrative records publishable when broad words are not sensitive by themselves", async () => {
+  const tmp = await mkdtemp(path.join(tmpdir(), "albo-tinnvision-ordinary-"));
+  const fixturePath = path.join(tmp, "albo.xml");
+  const outDir = path.join(tmp, "data");
+  await writeFile(
+    fixturePath,
+    [
+      xmlRecord(
+        "2026/3101",
+        "DETERMINAZIONE DIRIGENZIALE",
+        "SETTORE AVVOCATURA",
+        "Autorita Nazionale Anticorruzione: liquidazione contributi A.N.A.C.",
+        "41",
+      ),
+      xmlRecord(
+        "2026/3102",
+        "DETERMINAZIONE DIRIGENZIALE",
+        "SETTORE TECNICO",
+        "Liquidazione contributo A.N.A.C. per procedura di gara lavori pubblici",
+        "42",
+      ),
+      xmlRecord(
+        "2026/3103",
+        "DETERMINAZIONE DIRIGENZIALE",
+        "SETTORE SERVIZI AL CITTADINO AFFARI GENERALI",
+        "Liquidazioni spese postali mese di maggio a favore della ditta SIPOSTA SRL Unipersonale",
+        "43",
+      ),
+      xmlRecord(
+        "2026/3104",
+        "DETERMINAZIONE DIRIGENZIALE",
+        "SETTORE GESTIONE E VALORIZZAZIONE DEL PATRIMONIO E DEL TERRITORIO COMUNALE",
+        "Supporto al RUP per pratiche di aggiornamento edilizio e catastale di immobili comunali. Liquidazione rata al professionista incaricato.",
+        "44",
+      ),
+      xmlRecord(
+        "2026/3105",
+        "DETERMINAZIONE DIRIGENZIALE",
+        "SETTORE SERVIZI ALLA PERSONA",
+        "Fornitura di pasti caldi nelle scuole dell'Infanzia e Primarie. Liquidazione periodo maggio 2026 alla ditta Scamar srl",
+        "45",
+      ),
+    ].join("\n"),
+    "utf8",
+  );
+
+  const result = await runAlboIngestion({
+    outDir,
+    fromFile: fixturePath,
+    inputFormat: "xml",
+    retrievedAt: FIXTURE_RETRIEVED_AT,
+  });
+
+  assert.deepEqual(
+    result.items.map((item) => item.public_visibility),
+    ["publishable_with_minimisation", "publishable", "publishable", "publishable", "publishable"],
+  );
+  assert.equal(result.items[0].privacy_risk, "medium");
+  assert.equal(result.items[1].privacy_risk, "low");
+  assert.equal(result.items[2].privacy_risk, "low");
+  assert.equal(result.items[3].privacy_risk, "low");
+  assert.equal(result.items[4].privacy_risk, "low");
+  assert.equal(result.publicLatest.counts.publishable, 4);
+  assert.equal(result.publicLatest.counts.minimised, 1);
 });
 
 test("parses controlled print HTML fallback table", () => {
@@ -313,7 +378,7 @@ test("current snapshot baseline ignores raw-derived hashes for minimised records
   });
 
   assert.notEqual(previous.items[0].content_hash, result.items[0].content_hash);
-  assert.equal(result.publicLatest.items[0].public_visibility, "publishable_with_minimisation");
+  assert.equal(result.publicLatest.items[0].public_visibility, "metadata_only");
   assert.equal(result.publicDiff.counts.changed, 0);
   assert.equal(result.publicDiff.counts.unchanged, 1);
   assert.equal(result.publicStatus.diff_baseline.status, "public_safe");
@@ -413,7 +478,7 @@ test("public latest baseline ignores raw-derived hashes for minimised records", 
   });
 
   assert.notEqual(previous.publicLatest.items[0].content_hash, result.publicLatest.items[0].content_hash);
-  assert.equal(result.publicLatest.items[0].public_visibility, "publishable_with_minimisation");
+  assert.equal(result.publicLatest.items[0].public_visibility, "metadata_only");
   assert.equal(result.publicDiff.counts.changed, 0);
   assert.equal(result.publicDiff.counts.unchanged, 1);
   assert.equal(result.publicStatus.diff_baseline.status, "public_safe");
