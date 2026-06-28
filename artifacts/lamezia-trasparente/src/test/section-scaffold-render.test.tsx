@@ -18,10 +18,11 @@ describe("SectionScaffold page-level implementation", () => {
   it("shows source, status and limits structure for a priority public route", () => {
     renderAt("/contratti");
 
-    expect(screen.getByText("Oggetto primario")).toBeInTheDocument();
+    expect(screen.getByText("Struttura della pagina")).toBeInTheDocument();
+    expect(screen.getByText("Dato letto")).toBeInTheDocument();
     expect(screen.getByText("Fonte, stato e limiti")).toBeInTheDocument();
-    expect(screen.getByText("Gerarchia pagina")).toBeInTheDocument();
-    expect(screen.getByText("Controlli e postura")).toBeInTheDocument();
+    expect(screen.getByText("Ordine di lettura")).toBeInTheDocument();
+    expect(screen.getByText("Filtri e cautele")).toBeInTheDocument();
     expect(screen.getAllByText(/CIG/).length).toBeGreaterThan(0);
     expect(screen.getAllByText(/fonte ANAC/i).length).toBeGreaterThan(0);
   });

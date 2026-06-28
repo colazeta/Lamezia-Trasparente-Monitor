@@ -1,0 +1,41 @@
+{
+  "schema_version": "contracts-anac-cig-ingestion-dry-run.v1",
+  "source_id": "anac-open-data-cig-annual",
+  "source_label": "ANAC open data CIG annual datasets",
+  "generated_at": "2026-06-28T09:03:21.306Z",
+  "checked_by": "codex",
+  "mode": "fixture_only",
+  "parser_version": "anac-cig-fixture-v0",
+  "fixture_path": "artifacts/lamezia-trasparente/src/test/fixtures/contracts/anac/anac-cig-fixture.json",
+  "discovery_report_path": "data/interim/contracts/source-discovery/anac-open-data-cig-annual.discovery.json",
+  "discovery_verification_result": "needs_manual_verification",
+  "discovery_suitable_for_parser": false,
+  "manifest_ingestion_status": "not_implemented",
+  "manifest_public_claim_level": "fixture_only",
+  "dry_run_status": "completed",
+  "production_gate_status": "blocked_by_source_discovery",
+  "production_ingestion_allowed": false,
+  "production_records_written": false,
+  "public_app_data_written": false,
+  "database_writes": false,
+  "fixture_records_total": 6,
+  "parser_results": {
+    "parsed": 4,
+    "needs_review": 2,
+    "skipped": 0,
+    "failed": 0
+  },
+  "limitations": [
+    "Dry-run fixture-only: nessun record ANAC reale e stato scaricato, salvato o pubblicato.",
+    "Il report verifica il contratto tecnico del parser, non abilita l'ingestione produzione.",
+    "Nessuna scrittura in database, public app data, /contratti o /contratti/:id.",
+    "Discovery spike limitato a metadata e disponibilita, senza download di record reali.",
+    "Endpoint/pacchetto annuale CIG da confermare su fonte ufficiale prima del parser.",
+    "URL ufficiale da verificare manualmente prima dell'ingestione",
+    "La discovery non ha verificato un endpoint strutturato stabile per parser reale.",
+    "Nessun record ANAC reale e stato scritto in directory pubbliche o dati applicativi.",
+    "Il gateway del portale ANAC ha respinto la query metadata leggera in questo ambiente.",
+    "La fonte ANAC resta da verificare manualmente prima di qualsiasi parser reale."
+  ],
+  "next_action": "Verificare manualmente il pacchetto annuale ufficiale, quindi fissare schema, versione e fixture metadata-only prima del parser reale."
+}

@@ -35,6 +35,7 @@ import { format } from "date-fns";
 import { it } from "date-fns/locale";
 import { PageMeta } from "@/components/seo/PageMeta";
 import { asApiList } from "@/lib/apiList";
+import { PUBLIC_NUMBER_PLACEHOLDER } from "@/lib/publicNumbers";
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -48,6 +49,14 @@ function formatDate(value: string | null | undefined) {
   return Number.isNaN(d.getTime())
     ? "—"
     : format(d, "dd MMM yyyy", { locale: it });
+}
+
+function formatMonitoredAmount(value: number | null | undefined) {
+  if (typeof value !== "number" || !Number.isFinite(value)) {
+    return PUBLIC_NUMBER_PLACEHOLDER;
+  }
+
+  return `€ ${(value / 1000000).toFixed(1)}M`;
 }
 
 // ---------------------------------------------------------------------------
@@ -289,11 +298,7 @@ function BlockStats() {
           />
           <StatCard
             title="Importi disponibili"
-            value={
-              stats
-                ? `€ ${(stats.monitoredAmount / 1000000).toFixed(1)}M`
-                : undefined
-            }
+            value={stats ? formatMonitoredAmount(stats.monitoredAmount) : undefined}
             loading={statsLoading}
             href="/statistiche"
             icon={CheckCircle2}
@@ -593,27 +598,31 @@ function StaticHomeLayout() {
             backgroundSize: "64px 64px",
           }}
         />
-        <div className="container relative z-10 mx-auto px-4 md:px-6 py-20 md:py-28 flex flex-col items-start max-w-4xl">
-          <div className="eyebrow rounded-full border border-brand/40 bg-brand/10 px-3.5 py-1.5 text-brand">
+        <div className="container relative z-10 mx-auto flex max-w-4xl flex-col items-start px-4 py-12 sm:py-16 md:px-6 md:py-28">
+          <div className="eyebrow rounded-full border border-brand/40 bg-brand/10 px-3 py-1.5 text-[10px] text-brand sm:px-3.5 sm:text-[11px]">
             <ShieldAlert className="h-3.5 w-3.5" />
-            Piattaforma civica documentale
+            <span className="sm:hidden">Piattaforma civica</span>
+            <span className="hidden sm:inline">Piattaforma civica documentale</span>
           </div>
 
-          <h1 className="font-display text-5xl md:text-7xl lg:text-[5.25rem] font-bold tracking-[-0.03em] text-white mt-7 mb-6 leading-[0.95]">
+          <h1 className="mt-5 mb-4 font-display text-4xl font-bold leading-[1.02] text-white sm:mt-7 sm:mb-6 sm:text-5xl sm:leading-[0.95] md:text-7xl lg:text-[5.25rem]">
             Atti, sedute e progetti pubblici
-            <br className="hidden sm:inline" /> in un percorso leggibile.
+            <br className="hidden sm:inline" /> in un percorso{" "}
+            <br className="sm:hidden" />
+            leggibile.
             <br />
             <span className="text-gradient-brand">
-              Una versione pubblica pronta a spiegarsi.
+              Una versione pubblica{" "}
+              <br className="sm:hidden" />
+              pronta a spiegarsi.
             </span>
           </h1>
 
-          <p className="text-lg md:text-xl text-sidebar-foreground/75 mb-9 max-w-2xl text-balance">
-            Lamezia Trasparente Monitor organizza informazioni amministrative di
-            interesse pubblico in modo documentale, prudente e non accusatorio.
-            Nella versione pubblica puoi orientarti tra sedute, contratti, PNRR,
-            fonti e metodologia: alcune sezioni sono consultabili, altre
-            attendono alimentazione dati verificata.
+          <p className="mb-6 max-w-2xl text-base leading-7 text-sidebar-foreground/75 text-balance sm:mb-9 md:text-xl">
+            Organizza informazioni amministrative in modo documentale, prudente
+            e non accusatorio. Puoi orientarti tra sedute, contratti, PNRR,
+            fonti e metodo, distinguendo sezioni consultabili da dati ancora da
+            alimentare.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
@@ -621,7 +630,7 @@ function StaticHomeLayout() {
               <Button
                 variant="brand"
                 size="lg"
-                className="w-full text-base h-12 px-7 font-bold"
+                className="h-11 w-full px-5 text-sm font-bold sm:h-12 sm:px-7 sm:text-base"
               >
                 Esplora le domande{" "}
                 <ArrowRight className="ml-1 h-4 w-4" aria-hidden="true" />
@@ -631,7 +640,7 @@ function StaticHomeLayout() {
               <Button
                 variant="outline"
                 size="lg"
-                className="w-full text-base h-12 px-7 font-bold bg-white/5 text-white border-white/25 hover:bg-white/10"
+                className="h-11 w-full border-white/25 bg-white/5 px-5 text-sm font-bold text-white hover:bg-white/10 sm:h-12 sm:px-7 sm:text-base"
               >
                 <Calendar className="mr-1 h-4 w-4" aria-hidden="true" />
                 Consulta le sedute
@@ -641,7 +650,7 @@ function StaticHomeLayout() {
               <Button
                 variant="outline"
                 size="lg"
-                className="w-full text-base h-12 px-7 font-bold bg-white/5 text-white border-white/25 hover:bg-white/10"
+                className="h-11 w-full border-white/25 bg-white/5 px-5 text-sm font-bold text-white hover:bg-white/10 sm:h-12 sm:px-7 sm:text-base"
               >
                 <Info className="mr-1 h-4 w-4" aria-hidden="true" />
                 Capisci fonti e limiti
@@ -681,11 +690,7 @@ function StaticHomeLayout() {
             />
             <StatCard
               title="Importi disponibili"
-              value={
-                stats
-                  ? `€ ${(stats.monitoredAmount / 1000000).toFixed(1)}M`
-                  : undefined
-              }
+              value={stats ? formatMonitoredAmount(stats.monitoredAmount) : undefined}
               loading={statsLoading}
               href="/statistiche"
               icon={CheckCircle2}
@@ -1045,7 +1050,9 @@ function StatCard({
         >
           <Icon className="h-5 w-5" aria-hidden="true" />
         </div>
-        <h3 className="eyebrow text-muted-foreground">{title}</h3>
+        <h3 className="eyebrow max-w-full min-w-0 flex-wrap leading-4 text-muted-foreground">
+          <span className="min-w-0 break-words">{title}</span>
+        </h3>
       </div>
       <div>
         {loading ? (

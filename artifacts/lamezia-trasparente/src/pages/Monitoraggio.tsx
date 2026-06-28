@@ -38,6 +38,7 @@ import {
   EmptyTitle,
   EmptyDescription,
 } from "@/components/ui/empty";
+import { asApiList } from "@/lib/apiList";
 
 const ASSESSMENT_META: Record<
   MonitoringReport["overallAssessment"],
@@ -156,7 +157,7 @@ export function Monitoraggio() {
     query: { queryKey: getListMonitoringReportsQueryKey() },
   });
 
-  const reports = useMemo(() => data ?? [], [data]);
+  const reports = useMemo(() => asApiList<MonitoringReport>(data), [data]);
 
   return (
     <div className="container mx-auto max-w-6xl px-4 py-8 md:py-12">

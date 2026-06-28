@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "wouter";
-import { useListOfficials } from "@workspace/api-client-react";
+import { useListOfficials, type Official } from "@workspace/api-client-react";
 import { Search, Users, ChevronRight } from "lucide-react";
 
 import { Input } from "@/components/ui/input";
@@ -14,6 +14,7 @@ import {
   EmptyDescription,
 } from "@/components/ui/empty";
 import { cn } from "@/lib/utils";
+import { asApiList } from "@/lib/apiList";
 
 const TABS = [
   { value: "all", label: "Tutti" },
@@ -50,10 +51,11 @@ export function Amministratori() {
     return () => clearTimeout(handler);
   }, [search]);
 
-  const { data: officials, isLoading } = useListOfficials({
+  const { data: officialsData, isLoading } = useListOfficials({
     role: role !== "all" ? role : undefined,
     q: debouncedSearch || undefined,
   });
+  const officials = asApiList<Official>(officialsData);
 
   return (
     <div className="container mx-auto px-4 py-8 md:py-12 max-w-5xl">
@@ -118,7 +120,7 @@ export function Amministratori() {
                 </div>
               </div>
             ))
-        ) : officials && officials.length > 0 ? (
+        ) : officials.length > 0 ? (
           officials.map((o) => (
             <Link
               key={o.id}

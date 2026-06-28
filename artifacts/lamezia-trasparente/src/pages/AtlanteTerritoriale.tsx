@@ -1,4 +1,12 @@
 import { useEffect, useMemo, useState } from "react";
+import {
+  GeoJSON,
+  MapContainer,
+  TileLayer,
+  useMap,
+} from "react-leaflet";
+import { type LatLngBoundsExpression } from "leaflet";
+import "leaflet/dist/leaflet.css";
 import { AlertTriangle, BarChart3, Database, MapPinned } from "lucide-react";
 import {
   ATLANTE_INDICATOR_CATEGORIES,
@@ -19,23 +27,38 @@ import {
   readIndicatorValue,
 } from "@/data/atlanteTerritoriale";
 
-const MAP_WIDTH = 1200;
-const MAP_HEIGHT = 760;
-const MAP_PADDING = 10;
+const OSM_TILE_PROVIDER = {
+  id: "openstreetmap-standard",
+  label: "OpenStreetMap",
+  urlTemplate: "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+  attribution:
+    '<a href="https://www.openstreetmap.org/copyright">© OpenStreetMap contributors</a>',
+  opacity: 0.58,
+  maxZoom: 18,
+};
 const CHOROPLETH_COLORS = [
-  "hsl(var(--primary) / 0.14)",
-  "hsl(var(--primary) / 0.28)",
-  "hsl(var(--primary) / 0.44)",
-  "hsl(var(--primary) / 0.62)",
-  "hsl(var(--primary) / 0.82)",
+  "hsl(var(--primary) / 0.32)",
+  "hsl(var(--primary) / 0.46)",
+  "hsl(var(--primary) / 0.6)",
+  "hsl(var(--primary) / 0.74)",
+  "hsl(var(--primary) / 0.9)",
 ];
-const EMPTY_COLOR = "hsl(var(--muted-foreground) / 0.24)";
+const EMPTY_COLOR = "hsl(var(--muted-foreground) / 0.34)";
 
-type Bounds = {
-  minX: number;
-  minY: number;
-  maxX: number;
-  maxY: number;
+type GeographicBounds = {
+  minLng: number;
+  minLat: number;
+  maxLng: number;
+  maxLat: number;
+};
+
+type SectionLayer = {
+  bindTooltip?: (
+    content: string,
+    options?: { direction?: "top"; sticky?: boolean },
+  ) => unknown;
+  getElement?: () => Element | null;
+  on: (...args: unknown[]) => unknown;
 };
 
 type LoadState =
@@ -108,8 +131,11 @@ export function AtlanteTerritoriale() {
   }, [activeIndicator, availableIndicators]);
 
   useEffect(() => {
-    if (!selectedSectionId && features.length > 0) {
-      setSelectedSectionId(getSectionId(features[0]));
+    if (
+      selectedSectionId &&
+      !features.some((feature) => getSectionId(feature) === selectedSectionId)
+    ) {
+      setSelectedSectionId(null);
     }
   }, [features, selectedSectionId]);
 
@@ -135,10 +161,10 @@ export function AtlanteTerritoriale() {
     [collection],
   );
   const activeSectionId = hoveredSectionId ?? selectedSectionId;
-  const activeFeature =
-    features.find((feature) => getSectionId(feature) === activeSectionId) ??
-    features[0] ??
-    null;
+  const activeFeature = activeSectionId
+    ? features.find((feature) => getSectionId(feature) === activeSectionId) ??
+      null
+    : null;
   const activeValue =
     activeFeature && activeIndicator
       ? readIndicatorValue(activeFeature, activeIndicator)
@@ -286,7 +312,7 @@ function IndicatorControl({
           const isActive = indicator?.id === activeIndicator?.id;
           return (
             <button
-              className={`flex w-full items-center justify-between gap-2 rounded-md px-2.5 py-2 text-left text-sm transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 ${
+              className={`flex min-h-11 w-full flex-col items-start justify-center gap-1 rounded-md px-2.5 py-2 text-left text-sm transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 ${
                 isActive
                   ? "bg-primary text-primary-foreground shadow-sm"
                   : indicator
@@ -300,10 +326,12 @@ function IndicatorControl({
             >
               <span className="font-medium">{category.label}</span>
               <span
-                className={`text-xs ${
+                className={`rounded-full px-2 py-0.5 text-[11px] leading-none ${
                   isActive
-                    ? "text-primary-foreground/80"
-                    : "text-muted-foreground"
+                    ? "bg-primary-foreground/15 text-primary-foreground/90"
+                    : indicator
+                      ? "bg-primary/10 text-primary"
+                      : "bg-muted text-muted-foreground"
                 }`}
               >
                 {indicator ? "attivo" : "in preparazione"}
@@ -428,7 +456,7 @@ function MapSurface({
   setSelectedSectionId,
 }: {
   activeIndicator: AtlanteIndicatorDefinition | null;
-  bounds: Bounds | null;
+  bounds: GeographicBounds | null;
   coloredBins: ColoredDistributionBin[];
   features: AtlanteFeature[];
   hoveredSectionId: string | null;
@@ -436,95 +464,167 @@ function MapSurface({
   setHoveredSectionId: (sectionId: string | null) => void;
   setSelectedSectionId: (sectionId: string) => void;
 }) {
+  const [basemapEnabled, setBasemapEnabled] = useState(true);
+  const [resetSignal, setResetSignal] = useState(0);
+  const leafletBounds = useMemo(
+    () => (bounds ? toLeafletBounds(bounds) : null),
+    [bounds],
+  );
+  const mapData = useMemo<AtlanteFeatureCollection>(
+    () => ({
+      type: "FeatureCollection",
+      features,
+    }),
+    [features],
+  );
+
   return (
     <section className="rounded-xl border border-primary/20 bg-card p-2 shadow-md ring-1 ring-primary/10 sm:p-3">
-      <div className="mb-2 flex flex-col gap-1 px-1 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <h2 className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-primary">
-            <MapPinned className="h-4 w-4" />
-            Mappa
-          </h2>
-        </div>
-        <p className="text-sm font-semibold text-foreground">
-          {activeIndicator?.label ?? "Indicatore in preparazione"}
-        </p>
-      </div>
-
-      {!bounds || !activeIndicator ? (
+      {!leafletBounds || !activeIndicator ? (
         <div className="flex min-h-80 items-center justify-center rounded-md bg-muted p-6 text-center text-sm text-muted-foreground">
           La mappa sarà disponibile quando almeno un indicatore censuario sarà
           presente nel file dati.
         </div>
       ) : (
-        <div className="overflow-hidden rounded-lg border border-border bg-background">
-          <svg
-            aria-label="Mappa delle sezioni censuarie di Lamezia Terme"
-            className="block h-[440px] w-full sm:h-[620px] lg:h-[min(72vh,780px)] lg:min-h-[660px] 2xl:h-[800px]"
-            preserveAspectRatio="xMidYMid meet"
-            role="img"
-            viewBox={`0 0 ${MAP_WIDTH} ${MAP_HEIGHT}`}
+        <div className="relative overflow-hidden rounded-lg border border-border bg-background">
+          <MapContainer
+            attributionControl={basemapEnabled}
+            bounds={leafletBounds}
+            className="h-[520px] w-full sm:h-[640px] lg:h-[min(78vh,860px)] lg:min-h-[700px] 2xl:min-h-[760px]"
+            maxZoom={OSM_TILE_PROVIDER.maxZoom}
+            scrollWheelZoom
+            style={{ background: "hsl(var(--background))" }}
+            zoomControl
           >
-            <rect
-              fill="hsl(var(--background))"
-              height={MAP_HEIGHT}
-              rx="0"
-              width={MAP_WIDTH}
-            />
-            {features.map((feature) => {
-              const sectionId = getSectionId(feature);
-              const value = readIndicatorValue(feature, activeIndicator);
-              const isActive =
-                sectionId === hoveredSectionId ||
-                sectionId === selectedSectionId;
-              const path = feature.geometry
-                ? geometryToPath(feature.geometry, bounds)
-                : "";
-
-              if (!path) {
-                return null;
+            <MapViewResetter bounds={leafletBounds} resetSignal={resetSignal} />
+            {basemapEnabled ? (
+              <TileLayer
+                attribution={OSM_TILE_PROVIDER.attribution}
+                opacity={OSM_TILE_PROVIDER.opacity}
+                url={OSM_TILE_PROVIDER.urlTemplate}
+              />
+            ) : null}
+            <GeoJSON
+              key={[
+                activeIndicator.id,
+                selectedSectionId ?? "none",
+                hoveredSectionId ?? "none",
+              ].join(":")}
+              data={mapData as unknown as GeoJSON.GeoJsonObject}
+              onEachFeature={(geoFeature, layer) => {
+                bindSectionLayer({
+                  activeIndicator,
+                  feature: geoFeature as unknown as AtlanteFeature,
+                  layer,
+                  setHoveredSectionId,
+                  setSelectedSectionId,
+                });
+              }}
+              style={(geoFeature) =>
+                getLeafletFeatureStyle({
+                  activeIndicator,
+                  bins: coloredBins,
+                  feature: geoFeature as unknown as AtlanteFeature,
+                  hoveredSectionId,
+                  selectedSectionId,
+                })
               }
+            />
+          </MapContainer>
 
-              return (
-                <path
-                  aria-label={`${sectionId}: ${formatAtlanteValue(
-                    value,
-                    activeIndicator.unitLabel,
-                  )}`}
-                  className="cursor-pointer transition-opacity hover:opacity-90"
-                  d={path}
-                  fill={getChoroplethColor(value, coloredBins)}
-                  key={sectionId}
-                  onBlur={() => setHoveredSectionId(null)}
-                  onClick={() => setSelectedSectionId(sectionId)}
-                  onFocus={() => setHoveredSectionId(sectionId)}
-                  onKeyDown={(event) => {
-                    if (event.key === "Enter" || event.key === " ") {
-                      event.preventDefault();
-                      setSelectedSectionId(sectionId);
-                    }
-                  }}
-                  onMouseEnter={() => setHoveredSectionId(sectionId)}
-                  onMouseLeave={() => setHoveredSectionId(null)}
-                  role="button"
-                  stroke={isActive ? "hsl(var(--brand))" : "hsl(var(--card))"}
-                  strokeLinejoin="round"
-                  strokeWidth={isActive ? 4 : 2}
-                  tabIndex={0}
+          <div className="pointer-events-none absolute inset-x-2 top-2 z-[500] flex flex-col gap-2 sm:inset-x-3 sm:top-3 sm:flex-row sm:items-start sm:justify-between">
+            <div className="pointer-events-auto ml-11 max-w-[calc(100%-2.75rem)] rounded-lg border border-border/90 bg-card/95 px-3 py-2 shadow-sm backdrop-blur sm:ml-0 sm:max-w-sm">
+              <h2
+                className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-primary"
+                id="atlante-map-title"
+              >
+                <MapPinned className="h-4 w-4" />
+                Mappa
+              </h2>
+              <p className="mt-1 text-sm font-semibold text-foreground">
+                {activeIndicator.label}
+              </p>
+            </div>
+
+            <div className="pointer-events-auto flex flex-wrap items-center gap-2 rounded-lg border border-border/90 bg-card/95 p-2 text-xs shadow-sm backdrop-blur">
+              <label className="inline-flex items-center gap-2 font-medium text-foreground">
+                <span>Sfondo mappa</span>
+                <input
+                  checked={basemapEnabled}
+                  className="sr-only peer"
+                  onChange={(event) => setBasemapEnabled(event.target.checked)}
+                  type="checkbox"
                 />
-              );
-            })}
-          </svg>
+                <span
+                  aria-hidden="true"
+                  className="relative h-5 w-9 rounded-full bg-muted-foreground/30 transition peer-checked:bg-primary"
+                >
+                  <span
+                    className={`absolute left-0.5 top-0.5 h-4 w-4 rounded-full bg-card shadow transition ${
+                      basemapEnabled ? "translate-x-4" : ""
+                    }`}
+                  />
+                </span>
+                <span className="text-muted-foreground">
+                  {basemapEnabled ? "on" : "off"}
+                </span>
+              </label>
+              <button
+                className="rounded-md border border-border bg-background px-2.5 py-1.5 font-medium text-foreground transition hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                onClick={() => setResetSignal((current) => current + 1)}
+                type="button"
+              >
+                Reimposta vista
+              </button>
+            </div>
+          </div>
+
+          <MapLegend
+            bins={coloredBins}
+            className="pointer-events-auto absolute bottom-3 left-3 z-[500] max-w-[calc(100%-1.5rem)]"
+          />
         </div>
       )}
 
-      <MapLegend bins={coloredBins} />
     </section>
   );
 }
 
-function MapLegend({ bins }: { bins: ColoredDistributionBin[] }) {
+function MapViewResetter({
+  bounds,
+  resetSignal,
+}: {
+  bounds: LatLngBoundsExpression;
+  resetSignal: number;
+}) {
+  const map = useMap();
+
+  useEffect(() => {
+    map.fitBounds(bounds, { animate: false, padding: [18, 18] });
+    const timeout = window.setTimeout(() => map.invalidateSize(), 0);
+    return () => window.clearTimeout(timeout);
+  }, [bounds, map]);
+
+  useEffect(() => {
+    if (resetSignal > 0) {
+      map.fitBounds(bounds, { animate: true, padding: [18, 18] });
+    }
+  }, [bounds, map, resetSignal]);
+
+  return null;
+}
+
+function MapLegend({
+  bins,
+  className,
+}: {
+  bins: ColoredDistributionBin[];
+  className?: string;
+}) {
   return (
-    <div className="mt-4 flex flex-wrap gap-3 text-xs text-muted-foreground">
+    <div
+      className={`flex flex-wrap gap-2 rounded-lg border border-border/90 bg-card/95 p-2 text-xs text-muted-foreground shadow-sm backdrop-blur ${className ?? ""}`}
+    >
       {bins.map((bin) => (
         <span className="inline-flex items-center gap-1.5" key={bin.index}>
           <span
@@ -558,12 +658,24 @@ function SectionProfileCard({
   activeValue: number | null;
   availableIndicators: AtlanteIndicatorDefinition[];
 }) {
-  const sectionId = activeFeature
-    ? getSectionId(activeFeature)
-    : "nessuna sezione";
-  const sectionLabel = activeFeature
-    ? formatSectionCivicLabel(sectionId)
-    : "Area censuaria non identificata";
+  if (!activeFeature) {
+    return (
+      <section className="rounded-lg border border-border/80 bg-card/80 p-3 shadow-sm xl:sticky xl:top-4">
+        <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+          Sezione selezionata
+        </p>
+        <h2 className="mt-1 text-xl font-semibold text-foreground">
+          Nessuna sezione selezionata
+        </h2>
+        <p className="mt-3 text-sm leading-6 text-muted-foreground">
+          Seleziona una sezione sulla mappa per vedere i dati disponibili.
+        </p>
+      </section>
+    );
+  }
+
+  const sectionId = getSectionId(activeFeature);
+  const sectionLabel = formatSectionCivicLabel(sectionId);
   const valueLabel = activeIndicator
     ? formatProfileValue(activeValue, activeIndicator.unitLabel)
     : "Dato non disponibile";
@@ -572,12 +684,10 @@ function SectionProfileCard({
     .map((indicator) => ({
       id: indicator.id,
       label: indicator.label,
-      value: activeFeature
-        ? formatProfileValue(
-            readIndicatorValue(activeFeature, indicator),
-            indicator.unitLabel,
-          )
-        : "Dato non disponibile",
+      value: formatProfileValue(
+        readIndicatorValue(activeFeature, indicator),
+        indicator.unitLabel,
+      ),
     }));
 
   return (
@@ -589,11 +699,9 @@ function SectionProfileCard({
         <h2 className="mt-1 break-words text-xl font-semibold text-foreground">
           {sectionLabel}
         </h2>
-        {activeFeature ? (
-          <p className="mt-1 break-words text-xs text-muted-foreground">
-            Codice ISTAT: {sectionId}
-          </p>
-        ) : null}
+        <p className="mt-1 break-words text-xs text-muted-foreground">
+          Codice ISTAT: {sectionId}
+        </p>
       </div>
 
       <div className="mt-4 rounded-md bg-primary/10 p-3">
@@ -816,7 +924,99 @@ function getChoroplethColor(
     : (bins[binIndex]?.color ?? EMPTY_COLOR);
 }
 
-function computeBounds(collection: AtlanteFeatureCollection): Bounds | null {
+function toLeafletBounds(bounds: GeographicBounds): LatLngBoundsExpression {
+  return [
+    [bounds.minLat, bounds.minLng],
+    [bounds.maxLat, bounds.maxLng],
+  ];
+}
+
+function getLeafletFeatureStyle({
+  activeIndicator,
+  bins,
+  feature,
+  hoveredSectionId,
+  selectedSectionId,
+}: {
+  activeIndicator: AtlanteIndicatorDefinition;
+  bins: ColoredDistributionBin[];
+  feature: AtlanteFeature;
+  hoveredSectionId: string | null;
+  selectedSectionId: string | null;
+}) {
+  const sectionId = getSectionId(feature);
+  const value = readIndicatorValue(feature, activeIndicator);
+  const isHovered = sectionId === hoveredSectionId;
+  const isSelected = sectionId === selectedSectionId;
+  const isActive = isHovered || isSelected;
+  const isMissing = value === null;
+
+  return {
+    color: isActive ? "hsl(var(--brand))" : "hsl(var(--card))",
+    dashArray: isMissing ? "5 4" : undefined,
+    fillColor: getChoroplethColor(value, bins),
+    fillOpacity: isMissing ? 0.56 : 0.82,
+    lineJoin: "round" as const,
+    opacity: 1,
+    weight: isSelected ? 4 : isHovered ? 3 : 1.4,
+  };
+}
+
+function bindSectionLayer({
+  activeIndicator,
+  feature,
+  layer,
+  setHoveredSectionId,
+  setSelectedSectionId,
+}: {
+  activeIndicator: AtlanteIndicatorDefinition;
+  feature: AtlanteFeature;
+  layer: SectionLayer;
+  setHoveredSectionId: (sectionId: string | null) => void;
+  setSelectedSectionId: (sectionId: string) => void;
+}) {
+  const sectionId = getSectionId(feature);
+  const value = readIndicatorValue(feature, activeIndicator);
+  const label = `${sectionId}: ${formatAtlanteValue(
+    value,
+    activeIndicator.unitLabel,
+  )}`;
+  const interactiveLayer = layer;
+
+  interactiveLayer.bindTooltip?.(label, {
+    direction: "top",
+    sticky: true,
+  });
+  interactiveLayer.on({
+    click: () => setSelectedSectionId(sectionId),
+    mouseout: () => setHoveredSectionId(null),
+    mouseover: () => setHoveredSectionId(sectionId),
+  });
+  interactiveLayer.on("add", () => {
+    const element = interactiveLayer.getElement?.();
+    if (!element) {
+      return;
+    }
+
+    element.setAttribute("aria-label", label);
+    element.setAttribute("role", "button");
+    element.setAttribute("tabindex", "0");
+    element.addEventListener("blur", () => setHoveredSectionId(null));
+    element.addEventListener("focus", () => setHoveredSectionId(sectionId));
+    element.addEventListener("keydown", (event) => {
+      if (event instanceof KeyboardEvent) {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          setSelectedSectionId(sectionId);
+        }
+      }
+    });
+  });
+}
+
+function computeBounds(
+  collection: AtlanteFeatureCollection,
+): GeographicBounds | null {
   const positions: AtlantePosition[] = [];
   for (const feature of collection.features) {
     if (feature.geometry) {
@@ -828,18 +1028,18 @@ function computeBounds(collection: AtlanteFeatureCollection): Bounds | null {
     return null;
   }
 
-  return positions.reduce<Bounds>(
+  return positions.reduce<GeographicBounds>(
     (bounds, position) => ({
-      minX: Math.min(bounds.minX, position[0]),
-      minY: Math.min(bounds.minY, position[1]),
-      maxX: Math.max(bounds.maxX, position[0]),
-      maxY: Math.max(bounds.maxY, position[1]),
+      minLng: Math.min(bounds.minLng, position[0]),
+      minLat: Math.min(bounds.minLat, position[1]),
+      maxLng: Math.max(bounds.maxLng, position[0]),
+      maxLat: Math.max(bounds.maxLat, position[1]),
     }),
     {
-      minX: positions[0][0],
-      minY: positions[0][1],
-      maxX: positions[0][0],
-      maxY: positions[0][1],
+      minLng: positions[0][0],
+      minLat: positions[0][1],
+      maxLng: positions[0][0],
+      maxLat: positions[0][1],
     },
   );
 }
@@ -860,42 +1060,4 @@ function collectPositions(
       positions.push(...ring);
     }
   }
-}
-
-function geometryToPath(geometry: AtlanteGeometry, bounds: Bounds) {
-  if (geometry.type === "Polygon") {
-    return polygonToPath(geometry.coordinates, bounds);
-  }
-
-  return geometry.coordinates
-    .map((polygon) => polygonToPath(polygon, bounds))
-    .join(" ");
-}
-
-function polygonToPath(rings: AtlantePosition[][], bounds: Bounds) {
-  return rings
-    .map((ring) =>
-      ring
-        .map((position, index) => {
-          const [x, y] = project(position, bounds);
-          return `${index === 0 ? "M" : "L"} ${x.toFixed(2)} ${y.toFixed(2)}`;
-        })
-        .join(" ")
-        .concat(" Z"),
-    )
-    .join(" ");
-}
-
-function project(position: AtlantePosition, bounds: Bounds): [number, number] {
-  const width = Math.max(bounds.maxX - bounds.minX, Number.EPSILON);
-  const height = Math.max(bounds.maxY - bounds.minY, Number.EPSILON);
-  const x =
-    MAP_PADDING +
-    ((position[0] - bounds.minX) / width) * (MAP_WIDTH - MAP_PADDING * 2);
-  const y =
-    MAP_HEIGHT -
-    MAP_PADDING -
-    ((position[1] - bounds.minY) / height) * (MAP_HEIGHT - MAP_PADDING * 2);
-
-  return [x, y];
 }

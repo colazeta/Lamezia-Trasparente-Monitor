@@ -14,7 +14,9 @@ interface MainLayoutProps {
 
 export function MainLayout({ children }: MainLayoutProps) {
   const [location] = useLocation();
-  const showSectionHeader = location !== "/atlante-territoriale";
+  const isAtlanteExplorer = location === "/atlante-territoriale";
+  const showSectionHeader = !isAtlanteExplorer;
+  const showCivicHelper = !isAtlanteExplorer;
 
   return (
     <div className="min-h-[100dvh] flex flex-col">
@@ -25,9 +27,13 @@ export function MainLayout({ children }: MainLayoutProps) {
         {children}
       </main>
       <Footer />
-      <CivicHelperFAB />
-      <CivicAssistant />
-      <CivicWelcome />
+      {showCivicHelper ? (
+        <>
+          <CivicHelperFAB />
+          <CivicAssistant />
+          <CivicWelcome />
+        </>
+      ) : null}
     </div>
   );
 }

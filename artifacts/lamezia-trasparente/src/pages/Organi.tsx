@@ -1,5 +1,5 @@
 import { Link } from "wouter";
-import { useListOrgani } from "@workspace/api-client-react";
+import { useListOrgani, type Organo } from "@workspace/api-client-react";
 import { Landmark, Users, CalendarClock, ChevronRight } from "lucide-react";
 
 import { Card } from "@/components/ui/card";
@@ -11,9 +11,11 @@ import {
   EmptyTitle,
   EmptyDescription,
 } from "@/components/ui/empty";
+import { asApiList } from "@/lib/apiList";
 
 export function Organi() {
-  const { data: organi, isLoading } = useListOrgani();
+  const { data: organiData, isLoading } = useListOrgani();
+  const organi = asApiList<Organo>(organiData);
 
   return (
     <div className="container mx-auto px-4 py-8 md:py-12 max-w-5xl">
@@ -42,7 +44,7 @@ export function Organi() {
                 <Skeleton className="h-4 w-3/4" />
               </Card>
             ))
-        ) : organi && organi.length > 0 ? (
+        ) : organi.length > 0 ? (
           organi.map((o) => (
             <Link key={o.id} href={`/organi/${o.slug}`} className="block">
               <Card className="group h-full p-6 transition-all hover:shadow-lg hover:-translate-y-0.5 hover:border-brand/40">

@@ -110,19 +110,14 @@ function matchesVisited(visited: string[], route: string): boolean {
 
 export function CivicHelperProvider({ children }: { children: ReactNode }) {
   const [assistantOpen, setAssistantOpen] = useState(false);
-  const [guideContents, setGuideContents] = useState<GuideContents | null>(null);
+  const [guideContents, setGuideContents] = useState<GuideContents | null>(
+    null,
+  );
   const [guideLoading, setGuideLoading] = useState(false);
   const [introSeen, setIntroSeen] = useState<boolean>(readIntroSeen);
   const [welcomeOpen, setWelcomeOpen] = useState(false);
   const [visitedRoutes, setVisitedRoutes] = useState<string[]>(readVisited);
   const [location] = useLocation();
-
-  useEffect(() => {
-    const seen = readIntroSeen();
-    if (seen) return;
-    const timer = setTimeout(() => setWelcomeOpen(true), 800);
-    return () => clearTimeout(timer);
-  }, []);
 
   useEffect(() => {
     if (!location) return;
