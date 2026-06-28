@@ -7,7 +7,14 @@ import {
 } from "react-leaflet";
 import { type LatLngBoundsExpression } from "leaflet";
 import "leaflet/dist/leaflet.css";
-import { AlertTriangle, BarChart3, Database, MapPinned } from "lucide-react";
+import {
+  AlertTriangle,
+  BarChart3,
+  Database,
+  Download,
+  Layers,
+  MapPinned,
+} from "lucide-react";
 import {
   ATLANTE_INDICATOR_CATEGORIES,
   buildAtlanteDistribution,
@@ -23,27 +30,45 @@ import {
   formatAtlanteValue,
   getAvailableIndicators,
   getSectionId,
+  getSectionPublicLabel,
   loadAtlanteLayer,
   readIndicatorValue,
 } from "@/data/atlanteTerritoriale";
 
-const OSM_TILE_PROVIDER = {
-  id: "openstreetmap-standard",
-  label: "OpenStreetMap",
-  urlTemplate: "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
-  attribution:
-    '<a href="https://www.openstreetmap.org/copyright">© OpenStreetMap contributors</a>',
-  opacity: 0.58,
-  maxZoom: 18,
-};
+const NO_BASEMAP_ID = "none";
+const BASEMAP_PROVIDERS = [
+  {
+    id: "openstreetmap-standard",
+    label: "Strade",
+    description: "OpenStreetMap",
+    urlTemplate: "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+    attribution:
+      '<a href="https://www.openstreetmap.org/copyright">© OpenStreetMap contributors</a>',
+    opacity: 0.52,
+    maxZoom: 18,
+  },
+  {
+    id: "esri-world-imagery",
+    label: "Aerea",
+    description: "Immagini satellitari",
+    urlTemplate:
+      "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+    attribution:
+      "Tiles © Esri - Source: Esri, Maxar, Earthstar Geographics, and the GIS User Community",
+    opacity: 0.72,
+    maxZoom: 18,
+  },
+] as const;
 const CHOROPLETH_COLORS = [
-  "hsl(var(--primary) / 0.32)",
-  "hsl(var(--primary) / 0.46)",
-  "hsl(var(--primary) / 0.6)",
-  "hsl(var(--primary) / 0.74)",
-  "hsl(var(--primary) / 0.9)",
+  "hsl(45 100% 88%)",
+  "hsl(142 76% 84%)",
+  "hsl(187 92% 69%)",
+  "hsl(199 89% 58%)",
+  "hsl(224 76% 48%)",
 ];
-const EMPTY_COLOR = "hsl(var(--muted-foreground) / 0.34)";
+const EMPTY_COLOR = "hsl(220 13% 82%)";
+
+type BasemapId = (typeof BASEMAP_PROVIDERS)[number]["id"] | typeof NO_BASEMAP_ID;
 
 type GeographicBounds = {
   minLng: number;
@@ -194,11 +219,14 @@ export function AtlanteTerritoriale() {
                 activeIndicator={activeIndicator}
                 bounds={bounds}
                 coloredBins={coloredBins}
+                dataStatus={layer.dataStatus}
                 features={features}
                 hoveredSectionId={hoveredSectionId}
+                metadata={metadata}
                 selectedSectionId={selectedSectionId}
                 setHoveredSectionId={setHoveredSectionId}
                 setSelectedSectionId={setSelectedSectionId}
+                summary={distribution}
               />
               <div className="space-y-5 lg:col-start-2 xl:col-start-auto">
                 <SectionProfileCard
@@ -209,6 +237,7 @@ export function AtlanteTerritoriale() {
                 />
                 <CitySummaryCard
                   activeIndicator={activeIndicator}
+                  coloredBins={coloredBins}
                   summary={distribution}
                 />
               </div>
@@ -346,9 +375,11 @@ function IndicatorControl({
 
 function CitySummaryCard({
   activeIndicator,
+  coloredBins,
   summary,
 }: {
   activeIndicator: AtlanteIndicatorDefinition | null;
+  coloredBins: ColoredDistributionBin[];
   summary: ReturnType<typeof buildAtlanteDistribution>;
 }) {
   const unitLabel = activeIndicator?.unitLabel ?? "";
@@ -412,27 +443,8 @@ function CitySummaryCard({
         ))}
       </dl>
 
-      {isPopulationIndicator && summary.bins.length > 0 ? (
-        <div className="mt-4">
-          <h3 className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-            Fasce di popolazione
-          </h3>
-          <ul className="mt-2 space-y-1.5 text-xs leading-5 text-muted-foreground">
-            {summary.bins.map((bin) => (
-              <li
-                className="flex items-center justify-between gap-3"
-                key={bin.index}
-              >
-                <span>{bin.label}</span>
-                <span className="font-medium text-foreground">
-                  {formatSectionCount(bin.count)} (
-                  {formatPercentage(bin.count, summary.availableCount)} con
-                  dato)
-                </span>
-              </li>
-            ))}
-          </ul>
-        </div>
+      {isPopulationIndicator && coloredBins.length > 0 ? (
+        <DistributionBands bins={coloredBins} summary={summary} />
       ) : null}
 
       <div className="mt-3 space-y-1 text-xs leading-5 text-muted-foreground">
@@ -445,27 +457,94 @@ function CitySummaryCard({
   );
 }
 
+function DistributionBands({
+  bins,
+  summary,
+}: {
+  bins: ColoredDistributionBin[];
+  summary: ReturnType<typeof buildAtlanteDistribution>;
+}) {
+  return (
+    <div className="mt-4">
+      <h3 className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+        Distribuzione per fasce
+      </h3>
+      <div
+        aria-label="Distribuzione delle sezioni per fascia"
+        className="mt-2 flex h-3 overflow-hidden rounded-full border border-border bg-muted"
+      >
+        {bins.map((bin) => (
+          <span
+            aria-hidden="true"
+            key={bin.index}
+            style={{
+              backgroundColor: bin.color,
+              width: `${Math.max(
+                4,
+                (bin.count / Math.max(1, summary.availableCount)) * 100,
+              )}%`,
+            }}
+          />
+        ))}
+      </div>
+      <ul className="mt-3 space-y-2 text-xs leading-5">
+        {bins.map((bin) => (
+          <li className="grid grid-cols-[auto_1fr] gap-x-2" key={bin.index}>
+            <span
+              aria-hidden="true"
+              className="mt-1 h-3 w-3 rounded-sm border border-border"
+              style={{ backgroundColor: bin.color }}
+            />
+            <span>
+              <span className="font-semibold text-foreground">
+                {formatDistributionBandName(bin.index, bins.length)}
+              </span>
+              <span className="text-muted-foreground"> · {bin.label}</span>
+              <span className="block text-muted-foreground">
+                {formatSectionCount(bin.count)} ·{" "}
+                {formatPercentage(bin.count, summary.availableCount)} delle
+                sezioni con dato
+              </span>
+            </span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
 function MapSurface({
   activeIndicator,
   bounds,
   coloredBins,
+  dataStatus,
   features,
   hoveredSectionId,
+  metadata,
   selectedSectionId,
   setHoveredSectionId,
   setSelectedSectionId,
+  summary,
 }: {
   activeIndicator: AtlanteIndicatorDefinition | null;
   bounds: GeographicBounds | null;
   coloredBins: ColoredDistributionBin[];
+  dataStatus: AtlanteLoadedLayer["dataStatus"];
   features: AtlanteFeature[];
   hoveredSectionId: string | null;
+  metadata: AtlanteLayerMetadata;
   selectedSectionId: string | null;
   setHoveredSectionId: (sectionId: string | null) => void;
   setSelectedSectionId: (sectionId: string) => void;
+  summary: ReturnType<typeof buildAtlanteDistribution>;
 }) {
-  const [basemapEnabled, setBasemapEnabled] = useState(true);
+  const [selectedBasemapId, setSelectedBasemapId] = useState<BasemapId>(
+    "openstreetmap-standard",
+  );
   const [resetSignal, setResetSignal] = useState(0);
+  const selectedBasemap =
+    BASEMAP_PROVIDERS.find((provider) => provider.id === selectedBasemapId) ??
+    null;
   const leafletBounds = useMemo(
     () => (bounds ? toLeafletBounds(bounds) : null),
     [bounds],
@@ -488,20 +567,20 @@ function MapSurface({
       ) : (
         <div className="relative overflow-hidden rounded-lg border border-border bg-background">
           <MapContainer
-            attributionControl={basemapEnabled}
+            attributionControl={!!selectedBasemap}
             bounds={leafletBounds}
             className="h-[520px] w-full sm:h-[640px] lg:h-[min(78vh,860px)] lg:min-h-[700px] 2xl:min-h-[760px]"
-            maxZoom={OSM_TILE_PROVIDER.maxZoom}
+            maxZoom={selectedBasemap?.maxZoom ?? 18}
             scrollWheelZoom
             style={{ background: "hsl(var(--background))" }}
             zoomControl
           >
             <MapViewResetter bounds={leafletBounds} resetSignal={resetSignal} />
-            {basemapEnabled ? (
+            {selectedBasemap ? (
               <TileLayer
-                attribution={OSM_TILE_PROVIDER.attribution}
-                opacity={OSM_TILE_PROVIDER.opacity}
-                url={OSM_TILE_PROVIDER.urlTemplate}
+                attribution={selectedBasemap.attribution}
+                opacity={selectedBasemap.opacity}
+                url={selectedBasemap.urlTemplate}
               />
             ) : null}
             <GeoJSON
@@ -548,26 +627,23 @@ function MapSurface({
 
             <div className="pointer-events-auto flex flex-wrap items-center gap-2 rounded-lg border border-border/90 bg-card/95 p-2 text-xs shadow-sm backdrop-blur">
               <label className="inline-flex items-center gap-2 font-medium text-foreground">
+                <Layers className="h-4 w-4 text-primary" />
                 <span>Sfondo mappa</span>
-                <input
-                  checked={basemapEnabled}
-                  className="sr-only peer"
-                  onChange={(event) => setBasemapEnabled(event.target.checked)}
-                  type="checkbox"
-                />
-                <span
-                  aria-hidden="true"
-                  className="relative h-5 w-9 rounded-full bg-muted-foreground/30 transition peer-checked:bg-primary"
+                <select
+                  aria-label="Sfondo mappa"
+                  className="rounded-md border border-border bg-background px-2 py-1 text-xs text-foreground"
+                  onChange={(event) =>
+                    setSelectedBasemapId(event.target.value as BasemapId)
+                  }
+                  value={selectedBasemapId}
                 >
-                  <span
-                    className={`absolute left-0.5 top-0.5 h-4 w-4 rounded-full bg-card shadow transition ${
-                      basemapEnabled ? "translate-x-4" : ""
-                    }`}
-                  />
-                </span>
-                <span className="text-muted-foreground">
-                  {basemapEnabled ? "on" : "off"}
-                </span>
+                  <option value={NO_BASEMAP_ID}>Nessuno</option>
+                  {BASEMAP_PROVIDERS.map((provider) => (
+                    <option key={provider.id} value={provider.id}>
+                      {provider.label}
+                    </option>
+                  ))}
+                </select>
               </label>
               <button
                 className="rounded-md border border-border bg-background px-2.5 py-1.5 font-medium text-foreground transition hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
@@ -575,6 +651,24 @@ function MapSurface({
                 type="button"
               >
                 Reimposta vista
+              </button>
+              <button
+                className="inline-flex items-center gap-1.5 rounded-md border border-border bg-background px-2.5 py-1.5 font-medium text-foreground transition hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                onClick={() =>
+                  downloadAtlanteMapSvg({
+                    activeIndicator,
+                    bounds: bounds as GeographicBounds,
+                    coloredBins,
+                    dataStatus,
+                    features,
+                    metadata,
+                    summary,
+                  })
+                }
+                type="button"
+              >
+                <Download className="h-3.5 w-3.5" />
+                Scarica mappa
               </button>
             </div>
           </div>
@@ -632,7 +726,8 @@ function MapLegend({
             className="h-3 w-5 rounded-sm border border-border"
             style={{ backgroundColor: bin.color }}
           />
-          {bin.label}
+          {formatDistributionBandName(bin.index, bins.length)}
+          <span className="text-muted-foreground/80">· {bin.label}</span>
         </span>
       ))}
       <span className="inline-flex items-center gap-1.5">
@@ -675,7 +770,7 @@ function SectionProfileCard({
   }
 
   const sectionId = getSectionId(activeFeature);
-  const sectionLabel = formatSectionCivicLabel(sectionId);
+  const sectionLabel = getSectionPublicLabel(activeFeature);
   const valueLabel = activeIndicator
     ? formatProfileValue(activeValue, activeIndicator.unitLabel)
     : "Dato non disponibile";
@@ -700,7 +795,7 @@ function SectionProfileCard({
           {sectionLabel}
         </h2>
         <p className="mt-1 break-words text-xs text-muted-foreground">
-          Codice ISTAT: {sectionId}
+          Sezione censuaria ISTAT: {sectionId}
         </p>
       </div>
 
@@ -870,15 +965,23 @@ function formatSectionCount(count: number) {
   return `${formatInteger(count)} ${count === 1 ? "sezione" : "sezioni"}`;
 }
 
-function formatSectionCivicLabel(sectionId: string) {
-  const trimmed = sectionId.trim();
-  if (!trimmed || trimmed === "sezione non identificata") {
-    return "Area censuaria non identificata";
+function formatDistributionBandName(index: number, total: number) {
+  if (total <= 1) {
+    return "Fascia unica";
   }
 
-  const numericId = trimmed.replace(/\D/g, "");
-  const shortId = numericId ? numericId.slice(-4) : trimmed.slice(-6);
-  return `Area censuaria ${shortId}`;
+  const labels = [
+    "Fascia bassa",
+    "Fascia medio-bassa",
+    "Fascia media",
+    "Fascia medio-alta",
+    "Fascia alta",
+  ];
+  if (total === labels.length) {
+    return labels[index] ?? `Fascia ${index + 1}`;
+  }
+
+  return `Fascia ${index + 1}`;
 }
 
 function formatProfileValue(value: number | null, unitLabel: string) {
@@ -908,6 +1011,200 @@ function colorDistributionBins(
       color: CHOROPLETH_COLORS[colorIndex],
     };
   });
+}
+
+function downloadAtlanteMapSvg({
+  activeIndicator,
+  bounds,
+  coloredBins,
+  dataStatus,
+  features,
+  metadata,
+  summary,
+}: {
+  activeIndicator: AtlanteIndicatorDefinition;
+  bounds: GeographicBounds;
+  coloredBins: ColoredDistributionBin[];
+  dataStatus: AtlanteLoadedLayer["dataStatus"];
+  features: AtlanteFeature[];
+  metadata: AtlanteLayerMetadata;
+  summary: ReturnType<typeof buildAtlanteDistribution>;
+}) {
+  const svg = buildAtlanteMapExportSvg({
+    activeIndicator,
+    bounds,
+    coloredBins,
+    dataStatus,
+    features,
+    metadata,
+    summary,
+  });
+  const blob = new Blob([svg], { type: "image/svg+xml;charset=utf-8" });
+  const url = window.URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = `atlante-territoriale-lamezia-${activeIndicator.id}.svg`;
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  window.URL.revokeObjectURL(url);
+}
+
+function buildAtlanteMapExportSvg({
+  activeIndicator,
+  bounds,
+  coloredBins,
+  dataStatus,
+  features,
+  metadata,
+  summary,
+}: {
+  activeIndicator: AtlanteIndicatorDefinition;
+  bounds: GeographicBounds;
+  coloredBins: ColoredDistributionBin[];
+  dataStatus: AtlanteLoadedLayer["dataStatus"];
+  features: AtlanteFeature[];
+  metadata: AtlanteLayerMetadata;
+  summary: ReturnType<typeof buildAtlanteDistribution>;
+}) {
+  const width = 1400;
+  const height = 980;
+  const mapHeight = 690;
+  const padding = 56;
+  const lngRange = Math.max(0.000001, bounds.maxLng - bounds.minLng);
+  const latRange = Math.max(0.000001, bounds.maxLat - bounds.minLat);
+  const scale = Math.min(
+    (width - padding * 2) / lngRange,
+    (mapHeight - padding * 2) / latRange,
+  );
+  const drawWidth = lngRange * scale;
+  const drawHeight = latRange * scale;
+  const offsetX = (width - drawWidth) / 2;
+  const offsetY = padding + (mapHeight - padding * 2 - drawHeight) / 2;
+  const project = (position: AtlantePosition) => {
+    const x = offsetX + (position[0] - bounds.minLng) * scale;
+    const y = offsetY + (bounds.maxLat - position[1]) * scale;
+    return `${roundSvgNumber(x)},${roundSvgNumber(y)}`;
+  };
+  const paths = features
+    .map((feature) => {
+      if (!feature.geometry) {
+        return "";
+      }
+      const value = readIndicatorValue(feature, activeIndicator);
+      const sectionId = getSectionId(feature);
+      return `<path d="${geometryToSvgPath(
+        feature.geometry,
+        project,
+      )}" fill="${getChoroplethColor(
+        value,
+        coloredBins,
+      )}" fill-opacity="${value === null ? "0.58" : "0.9"}" stroke="hsl(0 0% 100%)" stroke-width="1.4"><title>${escapeXml(
+        `${getSectionPublicLabel(feature)} - ${sectionId}: ${formatAtlanteValue(
+          value,
+          activeIndicator.unitLabel,
+        )}`,
+      )}</title></path>`;
+    })
+    .join("");
+  const legendItems = coloredBins
+    .map(
+      (bin, index) => `
+        <g transform="translate(${padding + index * 210}, 794)">
+          <rect width="24" height="16" rx="3" fill="${bin.color}" stroke="hsl(215 25% 27%)" stroke-opacity="0.2" />
+          <text x="34" y="13" font-size="18" fill="hsl(215 25% 27%)">${escapeXml(
+            formatDistributionBandName(index, coloredBins.length),
+          )}</text>
+          <text x="34" y="38" font-size="15" fill="hsl(215 16% 47%)">${escapeXml(
+            `${bin.label} · ${formatSectionCount(bin.count)}`,
+          )}</text>
+        </g>`,
+    )
+    .join("");
+  const statusLabel =
+    dataStatus === "demo"
+      ? "Dato dimostrativo - non usare per analisi"
+      : metadata.publicLabel;
+
+  return `<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" role="img" aria-labelledby="title desc">
+  <title id="title">Atlante territoriale - Lamezia Terme</title>
+  <desc id="desc">Mappa tematica per sezioni censuarie ISTAT con legenda e statistiche essenziali.</desc>
+  <rect width="100%" height="100%" fill="hsl(210 40% 98%)" />
+  <text x="${padding}" y="54" font-family="Inter, Arial, sans-serif" font-size="34" font-weight="700" fill="hsl(222 47% 11%)">Atlante territoriale - Lamezia Terme</text>
+  <text x="${padding}" y="88" font-family="Inter, Arial, sans-serif" font-size="18" fill="hsl(215 16% 35%)">${escapeXml(
+    activeIndicator.label,
+  )} · ${escapeXml(statusLabel)}</text>
+  <g font-family="Inter, Arial, sans-serif">${paths}</g>
+  <rect x="${padding}" y="728" width="${width - padding * 2}" height="1" fill="hsl(213 27% 84%)" />
+  <g font-family="Inter, Arial, sans-serif">
+    <text x="${padding}" y="764" font-size="20" font-weight="700" fill="hsl(222 47% 11%)">Fasce di popolazione</text>
+    ${legendItems}
+    <g transform="translate(${padding}, 900)">
+      <text font-size="18" font-weight="700" fill="hsl(222 47% 11%)">${escapeXml(
+        formatSummaryValue(summary.sum, activeIndicator.unitLabel),
+      )}</text>
+      <text y="28" font-size="15" fill="hsl(215 16% 47%)">Totale sezioni con dato disponibile</text>
+    </g>
+    <g transform="translate(440, 900)">
+      <text font-size="18" font-weight="700" fill="hsl(222 47% 11%)">${escapeXml(
+        formatCountWithShare(summary.availableCount, summary.totalCount),
+      )}</text>
+      <text y="28" font-size="15" fill="hsl(215 16% 47%)">Sezioni con dato</text>
+    </g>
+    <g transform="translate(760, 900)">
+      <text font-size="18" font-weight="700" fill="hsl(222 47% 11%)">${escapeXml(
+        formatCountWithShare(summary.missingCount, summary.totalCount),
+      )}</text>
+      <text y="28" font-size="15" fill="hsl(215 16% 47%)">Dato non disponibile</text>
+    </g>
+    <text x="${padding}" y="956" font-size="13" fill="hsl(215 16% 47%)">Fonte: ${escapeXml(
+      `${metadata.sourceInstitution}, ${metadata.sourceDataset}, ${metadata.sourceYear}`,
+    )}. Sfondo cartografico escluso dall'esportazione.</text>
+  </g>
+</svg>`;
+}
+
+function geometryToSvgPath(
+  geometry: AtlanteGeometry,
+  project: (position: AtlantePosition) => string,
+) {
+  if (geometry.type === "Polygon") {
+    return polygonToSvgPath(geometry.coordinates, project);
+  }
+
+  return geometry.coordinates
+    .map((polygon) => polygonToSvgPath(polygon, project))
+    .join(" ");
+}
+
+function polygonToSvgPath(
+  rings: AtlantePosition[][],
+  project: (position: AtlantePosition) => string,
+) {
+  return rings
+    .map((ring) =>
+      ring.length > 0
+        ? `M ${project(ring[0])} ${ring
+            .slice(1)
+            .map((position) => `L ${project(position)}`)
+            .join(" ")} Z`
+        : "",
+    )
+    .join(" ");
+}
+
+function roundSvgNumber(value: number) {
+  return Number(value.toFixed(2));
+}
+
+function escapeXml(value: string) {
+  return value
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&apos;");
 }
 
 function getChoroplethColor(
@@ -976,8 +1273,9 @@ function bindSectionLayer({
   setSelectedSectionId: (sectionId: string) => void;
 }) {
   const sectionId = getSectionId(feature);
+  const sectionLabel = getSectionPublicLabel(feature);
   const value = readIndicatorValue(feature, activeIndicator);
-  const label = `${sectionId}: ${formatAtlanteValue(
+  const label = `${sectionLabel} (${sectionId}): ${formatAtlanteValue(
     value,
     activeIndicator.unitLabel,
   )}`;

@@ -101,6 +101,7 @@ vi.mock("react-leaflet", () => {
 });
 
 afterEach(() => {
+  vi.restoreAllMocks();
   vi.unstubAllGlobals();
 });
 
@@ -203,6 +204,16 @@ describe("Atlante territoriale", () => {
   });
 
   it("shows the clean map explorer and keeps null values distinct from zero", async () => {
+    const createObjectURL = vi.fn(() => "blob:atlante-map");
+    const revokeObjectURL = vi.fn();
+    const clickSpy = vi
+      .spyOn(HTMLAnchorElement.prototype, "click")
+      .mockImplementation(() => {});
+    vi.stubGlobal("URL", {
+      createObjectURL,
+      revokeObjectURL,
+    });
+
     const officialCollection = {
       type: "FeatureCollection",
       features: [
@@ -210,6 +221,7 @@ describe("Atlante territoriale", () => {
           type: "Feature",
           properties: {
             sezione_censimento_id: "0791600000198",
+            area_territoriale: "Nicastro centro",
             matched_istat_2023_variables: true,
             indicators_istat_2023: {
               p1: 0,
@@ -344,16 +356,29 @@ describe("Atlante territoriale", () => {
     expect(
       screen.getByRole("button", { name: /Reimposta vista/i }),
     ).toBeInTheDocument();
-    const basemapToggle = screen.getByRole("checkbox", {
+    const basemapSelect = screen.getByRole("combobox", {
       name: /Sfondo mappa/i,
     });
-    expect(basemapToggle).toBeChecked();
-    fireEvent.click(basemapToggle);
-    expect(basemapToggle).not.toBeChecked();
+    expect(basemapSelect).toHaveValue("openstreetmap-standard");
+    fireEvent.change(basemapSelect, {
+      target: { value: "esri-world-imagery" },
+    });
+    expect(screen.getByTestId("atlante-osm-tile-layer")).toHaveAttribute(
+      "data-url",
+      "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+    );
+    expect(screen.getByTestId("atlante-osm-tile-layer")).toHaveTextContent(
+      "Esri",
+    );
+    fireEvent.change(basemapSelect, { target: { value: "none" } });
     expect(
       screen.queryByTestId("atlante-osm-tile-layer"),
     ).not.toBeInTheDocument();
     expect(screen.getByTestId("atlante-istat-overlay")).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: /Scarica mappa/i }));
+    expect(createObjectURL).toHaveBeenCalled();
+    expect(clickSpy).toHaveBeenCalled();
+    expect(revokeObjectURL).toHaveBeenCalledWith("blob:atlante-map");
     expect(screen.getByLabelText("Indicatore")).toBeInTheDocument();
     expect(screen.getAllByText("Popolazione").length).toBeGreaterThan(0);
     expect(screen.getAllByText("Popolazione residente").length).toBeGreaterThan(
@@ -378,8 +403,8 @@ describe("Atlante territoriale", () => {
     );
     expect(screen.getAllByText("1 (33,3%)").length).toBe(2);
     expect(screen.getByText("Valore 0")).toBeInTheDocument();
-    expect(screen.getByText("Fasce di popolazione")).toBeInTheDocument();
-    expect(screen.getAllByText(/1 sezione \(50% con dato\)/).length).toBe(2);
+    expect(screen.getByText("Distribuzione per fasce")).toBeInTheDocument();
+    expect(screen.getAllByText(/1 sezione · 50%/).length).toBe(2);
     expect(screen.getAllByText(/dato non disponibile/i).length).toBeGreaterThan(
       0,
     );
@@ -394,20 +419,23 @@ describe("Atlante territoriale", () => {
 
     fireEvent.click(
       screen.getByRole("button", {
-        name: /0791600000198: 0 persone/i,
+        name: /Nicastro centro .*0791600000198.*0 persone/i,
       }),
     );
     let profile = screen.getByText("Sezione selezionata").closest("section");
     expect(profile).not.toBeNull();
     expect(
-      screen.getByRole("heading", { name: "Area censuaria 0198" }),
+      screen.getByRole("heading", { name: "Nicastro centro" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText("Sezione censuaria ISTAT: 0791600000198"),
     ).toBeInTheDocument();
     expect(screen.getAllByText("0 persone").length).toBeGreaterThan(0);
     expect(screen.getByText(/Zero .* valore reale/)).toBeInTheDocument();
 
     fireEvent.click(
       screen.getByRole("button", {
-        name: /0791600000204: dato non disponibile/i,
+        name: /Area censuaria 0204 .*0791600000204.*dato non disponibile/i,
       }),
     );
     profile = screen.getByText("Sezione selezionata").closest("section");
@@ -415,7 +443,9 @@ describe("Atlante territoriale", () => {
     expect(
       screen.getByRole("heading", { name: "Area censuaria 0204" }),
     ).toBeInTheDocument();
-    expect(screen.getByText("Codice ISTAT: 0791600000204")).toBeInTheDocument();
+    expect(
+      screen.getByText("Sezione censuaria ISTAT: 0791600000204"),
+    ).toBeInTheDocument();
     expect(
       within(profile as HTMLElement).getAllByText("Popolazione residente"),
     ).toHaveLength(1);

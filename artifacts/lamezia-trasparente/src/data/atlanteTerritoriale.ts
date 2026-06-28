@@ -327,6 +327,36 @@ export function getSectionId(feature: AtlanteFeature | null | undefined) {
   );
 }
 
+export function getSectionPublicLabel(
+  feature: AtlanteFeature | null | undefined,
+) {
+  const properties = getFeatureProperties(feature);
+  const label =
+    properties.area_territoriale ??
+    properties.nome_area ??
+    properties.quartiere ??
+    properties.localita ??
+    properties.toponimo_prevalente ??
+    properties.label_public;
+
+  if (typeof label === "string" && label.trim()) {
+    return label.trim();
+  }
+
+  return formatSectionFallbackLabel(getSectionId(feature));
+}
+
+function formatSectionFallbackLabel(sectionId: string) {
+  const trimmed = sectionId.trim();
+  if (!trimmed || trimmed === "sezione non identificata") {
+    return "Area censuaria non identificata";
+  }
+
+  const numericId = trimmed.replace(/\D/g, "");
+  const shortId = numericId ? numericId.slice(-4) : trimmed.slice(-6);
+  return `Area censuaria ${shortId}`;
+}
+
 export function readIndicatorValue(
   feature: AtlanteFeature,
   definition: AtlanteIndicatorDefinition,
@@ -418,38 +448,7 @@ export function buildAtlanteDistribution(
     };
   }
 
-  const distinctValues = new Set(numericValues).size;
-  const binCount = Math.max(
-    1,
-    Math.min(requestedBinCount, distinctValues, numericValues.length),
-  );
-  const range = max - min;
-  const bins = Array.from({ length: binCount }, (_, index) => {
-    const binMin = min + (range / binCount) * index;
-    const binMax =
-      index === binCount - 1 ? max : min + (range / binCount) * (index + 1);
-    return {
-      index,
-      min: binMin,
-      max: binMax,
-      count: 0,
-      label: formatDistributionRange(binMin, binMax),
-    };
-  });
-
-  for (const value of numericValues) {
-    const binIndex =
-      value === max
-        ? binCount - 1
-        : Math.max(
-            0,
-            Math.min(
-              binCount - 1,
-              Math.floor(((value - min) / range) * binCount),
-            ),
-          );
-    bins[binIndex].count += 1;
-  }
+  const bins = buildQuantileBins(sortedValues, requestedBinCount);
 
   return {
     bins,
@@ -463,6 +462,59 @@ export function buildAtlanteDistribution(
     mean,
     median,
   };
+}
+
+function buildQuantileBins(sortedValues: number[], requestedBinCount: number) {
+  const targetBinCount = Math.max(
+    1,
+    Math.min(requestedBinCount, new Set(sortedValues).size, sortedValues.length),
+  );
+  const thresholds: number[] = [];
+
+  for (let index = 1; index <= targetBinCount; index += 1) {
+    const thresholdIndex =
+      index === targetBinCount
+        ? sortedValues.length - 1
+        : Math.max(
+            0,
+            Math.ceil((index / targetBinCount) * sortedValues.length) - 1,
+          );
+    const threshold = sortedValues[thresholdIndex];
+    const previousThreshold = thresholds[thresholds.length - 1];
+    if (
+      thresholds.length === 0 ||
+      threshold > previousThreshold ||
+      index === targetBinCount
+    ) {
+      thresholds.push(threshold);
+    }
+  }
+
+  thresholds[thresholds.length - 1] = sortedValues[sortedValues.length - 1];
+
+  const bins = thresholds.map<AtlanteDistributionBin>((threshold, index) => ({
+    index,
+    min: Number.POSITIVE_INFINITY,
+    max: Number.NEGATIVE_INFINITY,
+    count: 0,
+    label: "",
+  }));
+
+  for (const value of sortedValues) {
+    const targetIndex = thresholds.findIndex((threshold) => value <= threshold);
+    const bin = bins[Math.max(0, targetIndex)];
+    bin.count += 1;
+    bin.min = Math.min(bin.min, value);
+    bin.max = Math.max(bin.max, value);
+  }
+
+  return bins
+    .filter((bin) => bin.count > 0)
+    .map((bin, index) => ({
+      ...bin,
+      index,
+      label: formatDistributionRange(bin.min, bin.max),
+    }));
 }
 
 function calculateMedian(sortedValues: number[]) {
