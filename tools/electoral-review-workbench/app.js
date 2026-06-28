@@ -31,6 +31,7 @@ const EXPORT_FIELDS = [
   "coordinate_reason",
   "exclude_from_geometry",
   "requires_external_coordinate_check",
+  "relocation_support_snapshot",
   "notes",
   "evidence_snapshot",
 ];
@@ -64,6 +65,8 @@ const state = {
   showNearby: false,
   showCompeting: false,
   showLabelIntegrity: false,
+  relocationDrafts: {},
+  relocationPickActive: false,
 };
 
 const el = {
@@ -583,6 +586,275 @@ function coordinateFlagsLabel(task) {
     .join(", ");
 }
 
+function distanceMetersBetween(lonA, latA, lonB, latB) {
+  if (![lonA, latA, lonB, latB].every(Number.isFinite)) return NaN;
+  const radius = 6371008.8;
+  const toRad = (value) => value * Math.PI / 180;
+  const dLat = toRad(latB - latA);
+  const dLon = toRad(lonB - lonA);
+  const a = Math.sin(dLat / 2) ** 2
+    + Math.cos(toRad(latA)) * Math.cos(toRad(latB)) * Math.sin(dLon / 2) ** 2;
+  return 2 * radius * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+}
+
+function pointInRing(lon, lat, ring) {
+  let inside = false;
+  for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) {
+    const xi = Number(ring[i][0]);
+    const yi = Number(ring[i][1]);
+    const xj = Number(ring[j][0]);
+    const yj = Number(ring[j][1]);
+    const intersects = ((yi > lat) !== (yj > lat)) && (lon < ((xj - xi) * (lat - yi)) / ((yj - yi) || 1e-12) + xi);
+    if (intersects) inside = !inside;
+  }
+  return inside;
+}
+
+function pointInPolygon(lon, lat, polygon) {
+  if (!polygon?.length || !pointInRing(lon, lat, polygon[0])) return false;
+  return !polygon.slice(1).some((hole) => pointInRing(lon, lat, hole));
+}
+
+function sectionsAtCoordinate(lon, lat) {
+  const sections = [];
+  for (const feature of state.data.sectionsV3?.features || []) {
+    const geometry = feature.geometry || {};
+    const coords = geometry.coordinates || [];
+    const contains = geometry.type === "Polygon"
+      ? pointInPolygon(lon, lat, coords)
+      : geometry.type === "MultiPolygon" && coords.some((polygon) => pointInPolygon(lon, lat, polygon));
+    if (contains) sections.push(asString(feature.properties?.section_number));
+  }
+  return [...new Set(sections.filter(Boolean))].sort(sectionSort);
+}
+
+function deterministicPointRows(lon, lat, civic) {
+  const rows = [];
+  const street = civicStreet(civic);
+  for (const feature of state.data.deterministicPoints?.features || []) {
+    if (feature.geometry?.type !== "Point") continue;
+    const [pointLon, pointLat] = feature.geometry.coordinates || [];
+    const distance = distanceMetersBetween(lon, lat, parseCoordinate(pointLon), parseCoordinate(pointLat));
+    if (!Number.isFinite(distance)) continue;
+    const props = feature.properties || {};
+    rows.push({
+      access_id: asString(props.access_id),
+      anncsu_address: anncsuPointTitle(props),
+      section_number: asString(props.section_number),
+      assignment_method: asString(props.assignment_method),
+      distance_m: distance,
+      same_street: civicStreet(props) === street,
+    });
+  }
+  return rows.sort((a, b) => a.distance_m - b.distance_m);
+}
+
+function relocationKey(task, civic) {
+  return `${task?.task_id || ""}:${asString(civic?.access_id)}`;
+}
+
+function relocationDraftFor(task, civic) {
+  return state.relocationDrafts[relocationKey(task, civic)] || null;
+}
+
+function selectedCoordinateCivic(task) {
+  return selectedDebugCivic(task);
+}
+
+function setRelocationDraft(task, civic, lon, lat, source = "manual") {
+  const parsedLon = parseCoordinate(lon);
+  const parsedLat = parseCoordinate(lat);
+  if (!task || !civic || !Number.isFinite(parsedLon) || !Number.isFinite(parsedLat)) return;
+  state.relocationDrafts[relocationKey(task, civic)] = {
+    access_id: asString(civic.access_id),
+    lon: parsedLon,
+    lat: parsedLat,
+    source,
+    updated_at: new Date().toISOString(),
+  };
+  updateCoordinateDecisionFields(task, civic);
+  renderRelocationSupportPanel(task, civic);
+  refreshMap();
+}
+
+function clearRelocationDraft(task, civic) {
+  if (task && civic) delete state.relocationDrafts[relocationKey(task, civic)];
+  updateCoordinateDecisionFields(task, civic, { clearProposed: true });
+  renderRelocationSupportPanel(task, civic);
+  refreshMap();
+}
+
+function relocationSupportModel(task, civic, draft) {
+  const originalLon = parseCoordinate(civic?.source_coord_lon || civic?.coord_x);
+  const originalLat = parseCoordinate(civic?.source_coord_lat || civic?.coord_y);
+  const proposedLon = parseCoordinate(draft?.lon);
+  const proposedLat = parseCoordinate(draft?.lat);
+  if (!Number.isFinite(proposedLon) || !Number.isFinite(proposedLat)) {
+    return {
+      has_proposal: false,
+      access_id: asString(civic?.access_id),
+      original_lon: Number.isFinite(originalLon) ? originalLon : "",
+      original_lat: Number.isFinite(originalLat) ? originalLat : "",
+      coordinate_quality_flag: coordinateQualityFlag(civic),
+      coordinate_suspect_reason: asString(civic?.coordinate_suspect_reason),
+    };
+  }
+  const neighbours = deterministicPointRows(proposedLon, proposedLat, civic);
+  const nearest = neighbours.slice(0, 6);
+  const sameStreet = neighbours.filter((row) => row.same_street).slice(0, 6);
+  const v3Sections = sectionsAtCoordinate(proposedLon, proposedLat);
+  return {
+    has_proposal: true,
+    access_id: asString(civic?.access_id),
+    anncsu_address: anncsuPointTitle(civic),
+    original_lon: originalLon,
+    original_lat: originalLat,
+    proposed_lon: proposedLon,
+    proposed_lat: proposedLat,
+    move_distance_m: distanceMetersBetween(originalLon, originalLat, proposedLon, proposedLat),
+    v3_candidate_sections_at_proposed_point: v3Sections,
+    task_suggested_section: asString(task?.suggested_section_number),
+    current_section: asString(civic?.current_section_number || civic?.section_number),
+    nearest_deterministic_points: nearest,
+    nearest_same_street_deterministic_points: sameStreet,
+    support_warning: "Supporto informativo: non modifica ANNCSU raw e non assegna sezioni per prossimita.",
+  };
+}
+
+function relocationSupportSnapshot(task, civic, draft) {
+  return JSON.stringify(relocationSupportModel(task, civic, draft));
+}
+
+function renderRelocationRows(rows) {
+  if (!rows.length) return `<p class="empty-state">No deterministic support points in the sample.</p>`;
+  return renderTable(
+    ["anncsu_address", "section_number", "distance_m", "assignment_method"],
+    rows.map((row) => ({ ...row, distance_m: numberLabel(row.distance_m, 1) })),
+  );
+}
+
+function renderRelocationSupportHtml(task, civic, draft) {
+  const support = relocationSupportModel(task, civic, draft);
+  if (!support.has_proposal) {
+    return `
+      <div class="support-empty">
+        <strong>Relocation support</strong>
+        <p>Select a civic, then click "Pick proposed point on map" or type proposed coordinates. Support appears here before export.</p>
+        ${factGrid([
+          ["Selected access_id", support.access_id],
+          ["Coordinate quality", support.coordinate_quality_flag],
+          ["Suspect reason", support.coordinate_suspect_reason],
+        ])}
+      </div>
+    `;
+  }
+  return `
+    <div class="relocation-support-panel">
+      <strong>Relocation support</strong>
+      ${factGrid([
+        ["Selected access_id", support.access_id],
+        ["Original lon/lat", `${support.original_lon}, ${support.original_lat}`],
+        ["Proposed lon/lat", `${support.proposed_lon.toFixed(7)}, ${support.proposed_lat.toFixed(7)}`],
+        ["Move distance", `${numberLabel(support.move_distance_m, 1)} m`],
+        ["V3 section at proposed point", support.v3_candidate_sections_at_proposed_point.join(", ") || "none"],
+        ["Current/task section", [support.current_section, support.task_suggested_section].filter(Boolean).join(" / ")],
+      ])}
+      <p class="form-note">Supporto informativo: non modifica ANNCSU raw e non assegna sezioni per prossimita.</p>
+      <h4>Nearest deterministic civics</h4>
+      ${renderRelocationRows(support.nearest_deterministic_points)}
+      <h4>Nearest deterministic civics on same ANNCSU street</h4>
+      ${renderRelocationRows(support.nearest_same_street_deterministic_points)}
+    </div>
+  `;
+}
+
+function draftFromForm(form, source = "form") {
+  const lon = parseCoordinate(form?.elements?.proposed_lon?.value);
+  const lat = parseCoordinate(form?.elements?.proposed_lat?.value);
+  if (!Number.isFinite(lon) || !Number.isFinite(lat)) return null;
+  return { lon, lat, source, updated_at: new Date().toISOString() };
+}
+
+function updateCoordinateDecisionFields(task, civic, options = {}) {
+  const form = el.tabPanel.querySelector("#decisionForm");
+  if (!form || !civic) return;
+  form.elements.original_lon.value = asString(civic.source_coord_lon || civic.coord_x);
+  form.elements.original_lat.value = asString(civic.source_coord_lat || civic.coord_y);
+  if (options.clearProposed) {
+    form.elements.proposed_lon.value = "";
+    form.elements.proposed_lat.value = "";
+    return;
+  }
+  const draft = relocationDraftFor(task, civic);
+  if (!draft) return;
+  form.elements.proposed_lon.value = Number(draft.lon).toFixed(7);
+  form.elements.proposed_lat.value = Number(draft.lat).toFixed(7);
+  if (form.elements.coordinate_decision_type.value === "keep_as_is" && draft.source !== "reset_to_original") {
+    form.elements.coordinate_decision_type.value = "manual_coordinate_override";
+  }
+}
+
+function renderRelocationSupportPanel(task, civic) {
+  const panel = el.tabPanel.querySelector("#coordinateRelocationSupport");
+  if (!panel) return;
+  const draft = civic ? relocationDraftFor(task, civic) : null;
+  panel.innerHTML = renderRelocationSupportHtml(task, civic, draft);
+}
+
+function syncRelocationDraftFromForm(form, source = "typed") {
+  const task = selectedTask();
+  const civic = task ? selectedCoordinateCivic(task) : null;
+  const lonText = asString(form?.elements?.proposed_lon?.value);
+  const latText = asString(form?.elements?.proposed_lat?.value);
+  const draft = draftFromForm(form, source);
+  if (!task || !civic) return null;
+  if (!lonText && !latText) {
+    delete state.relocationDrafts[relocationKey(task, civic)];
+    renderRelocationSupportPanel(task, civic);
+    refreshMap();
+    return null;
+  }
+  if (!draft) {
+    renderRelocationSupportPanel(task, civic);
+    return null;
+  }
+  state.relocationDrafts[relocationKey(task, civic)] = {
+    access_id: asString(civic.access_id),
+    ...draft,
+  };
+  renderRelocationSupportPanel(task, civic);
+  refreshMap();
+  return draft;
+}
+
+function setMapStatus(message, timeoutMs = 0) {
+  el.mapStatus.textContent = message;
+  if (timeoutMs > 0) {
+    window.setTimeout(() => {
+      if (el.mapStatus.textContent === message) el.mapStatus.textContent = "";
+    }, timeoutMs);
+  }
+}
+
+function handleRelocationMapPick(latlng) {
+  if (!state.relocationPickActive) return;
+  const task = selectedTask();
+  const civic = task ? selectedCoordinateCivic(task) : null;
+  if (!task || !civic) {
+    state.relocationPickActive = false;
+    setMapStatus("Select a civic before picking a proposed coordinate.", 2400);
+    return;
+  }
+  state.relocationPickActive = false;
+  setRelocationDraft(task, civic, latlng.lng, latlng.lat, "map_click");
+  state.activeTab = "decision";
+  document.querySelectorAll(".tabs [data-tab]").forEach((item) => {
+    item.classList.toggle("active", item.dataset.tab === "decision");
+  });
+  renderActiveTab();
+  setMapStatus("Proposed coordinate captured. Review support evidence before saving.", 2600);
+}
+
 function geoFeatureForAccessId(accessId) {
   return state.data.geoFeatureByAccessId?.[asString(accessId)] || null;
 }
@@ -1031,6 +1303,24 @@ function renderDecisionTab(task) {
       form.elements.requires_external_coordinate_check.checked = asString(coordinateCivic.suggested_coordinate_action).includes("external");
     }
   }
+  if (coordinateCivic) {
+    if (!form.elements.original_lon.value) form.elements.original_lon.value = asString(coordinateCivic.source_coord_lon || coordinateCivic.coord_x);
+    if (!form.elements.original_lat.value) form.elements.original_lat.value = asString(coordinateCivic.source_coord_lat || coordinateCivic.coord_y);
+    const savedDraft = draftFromForm(form, "saved_decision");
+    if (savedDraft && !relocationDraftFor(task, coordinateCivic)) {
+      state.relocationDrafts[relocationKey(task, coordinateCivic)] = {
+        access_id: asString(coordinateCivic.access_id),
+        ...savedDraft,
+      };
+    }
+    const draft = relocationDraftFor(task, coordinateCivic);
+    if (draft) {
+      form.elements.proposed_lon.value = Number(draft.lon).toFixed(7);
+      form.elements.proposed_lat.value = Number(draft.lat).toFixed(7);
+    }
+    const support = form.querySelector("#coordinateRelocationSupport");
+    if (support) support.innerHTML = renderRelocationSupportHtml(task, coordinateCivic, draft || savedDraft);
+  }
   return wrapper.innerHTML;
 }
 
@@ -1165,11 +1455,20 @@ function saveDecision(event) {
   const form = event.currentTarget;
   const data = new FormData(form);
   const coordinateDecisionType = asString(data.get("coordinate_decision_type"));
+  const coordinateCivic = selectedCoordinateCivic(task);
+  const typedRelocationDraft = draftFromForm(form, "save_form");
+  if (coordinateCivic && typedRelocationDraft) {
+    state.relocationDrafts[relocationKey(task, coordinateCivic)] = {
+      access_id: asString(coordinateCivic.access_id),
+      ...typedRelocationDraft,
+    };
+  }
+  const relocationDraft = coordinateCivic ? relocationDraftFor(task, coordinateCivic) || typedRelocationDraft : null;
   if (
     coordinateDecisionType === "manual_coordinate_override"
-    && (!asString(data.get("proposed_lon")) || !asString(data.get("proposed_lat")))
+    && (!coordinateCivic || !typedRelocationDraft)
   ) {
-    window.alert("manual_coordinate_override requires proposed_lon and proposed_lat.");
+    window.alert("manual_coordinate_override requires a selected civic plus valid proposed_lon and proposed_lat.");
     return;
   }
   const rules = state.data.streetEvidenceByTask[task.task_id] || [];
@@ -1202,6 +1501,7 @@ function saveDecision(event) {
     coordinate_reason: asString(data.get("coordinate_reason")),
     exclude_from_geometry: form.elements.exclude_from_geometry.checked,
     requires_external_coordinate_check: form.elements.requires_external_coordinate_check.checked,
+    relocation_support_snapshot: coordinateCivic ? relocationSupportSnapshot(task, coordinateCivic, relocationDraft) : "",
     notes: asString(data.get("notes")),
     evidence_snapshot: decisionSnapshot(task),
     saved_at: new Date().toISOString(),
@@ -1254,7 +1554,60 @@ function setSelectedCivics(mode) {
 
 function wireTabPanelEvents() {
   const form = el.tabPanel.querySelector("#decisionForm");
-  if (form) form.addEventListener("submit", saveDecision);
+  if (form) {
+    const task = selectedTask();
+    const civic = task ? selectedCoordinateCivic(task) : null;
+    form.addEventListener("submit", saveDecision);
+    for (const fieldName of ["proposed_lon", "proposed_lat"]) {
+      form.elements[fieldName].addEventListener("input", () => syncRelocationDraftFromForm(form, "typed"));
+      form.elements[fieldName].addEventListener("change", () => syncRelocationDraftFromForm(form, "typed"));
+    }
+    form.elements.coordinate_decision_type.addEventListener("change", () => {
+      const type = form.elements.coordinate_decision_type.value;
+      form.elements.proposed_lon.required = type === "manual_coordinate_override";
+      form.elements.proposed_lat.required = type === "manual_coordinate_override";
+      if (type === "exclude_from_geometry") form.elements.exclude_from_geometry.checked = true;
+      if (type === "needs_external_verification") form.elements.requires_external_coordinate_check.checked = true;
+      if (type === "manual_coordinate_override" && !draftFromForm(form)) {
+        setMapStatus("Pick a proposed coordinate on the map or type lon/lat before saving.", 3200);
+      }
+    });
+    const pickButton = form.querySelector("[data-coordinate-pick]");
+    if (pickButton) {
+      pickButton.addEventListener("click", () => {
+        if (!task || !civic) {
+          setMapStatus("Select a civic before picking a proposed coordinate.", 2600);
+          return;
+        }
+        state.relocationPickActive = true;
+        form.elements.coordinate_decision_type.value = "manual_coordinate_override";
+        form.elements.proposed_lon.required = true;
+        form.elements.proposed_lat.required = true;
+        setMapStatus("Click the map where this civic should be reviewed as a proposed coordinate.");
+      });
+    }
+    const useOriginalButton = form.querySelector("[data-coordinate-use-original]");
+    if (useOriginalButton) {
+      useOriginalButton.addEventListener("click", () => {
+        const latlng = civic ? civicLatLng(civic) : null;
+        if (!task || !civic || !latlng) return;
+        form.elements.coordinate_decision_type.value = "keep_as_is";
+        form.elements.proposed_lon.required = false;
+        form.elements.proposed_lat.required = false;
+        setRelocationDraft(task, civic, latlng[1], latlng[0], "reset_to_original");
+      });
+    }
+    const clearCoordinateButton = form.querySelector("[data-coordinate-clear]");
+    if (clearCoordinateButton) {
+      clearCoordinateButton.addEventListener("click", () => {
+        if (!task || !civic) return;
+        state.relocationPickActive = false;
+        form.elements.proposed_lon.required = false;
+        form.elements.proposed_lat.required = false;
+        clearRelocationDraft(task, civic);
+      });
+    }
+  }
   const clearButton = el.tabPanel.querySelector("#clearDecisionButton");
   if (clearButton) clearButton.addEventListener("click", clearDecision);
   for (const button of el.tabPanel.querySelectorAll("[data-civic-filter]")) {
@@ -1467,12 +1820,14 @@ function initMap() {
     deterministicPoints: window.L.layerGroup(),
     coordinateSuspects: window.L.layerGroup().addTo(state.map),
     selected: window.L.layerGroup().addTo(state.map),
+    relocation: window.L.layerGroup().addTo(state.map),
     nearby: window.L.layerGroup(),
     competing: window.L.layerGroup(),
   };
   state.map.on("moveend", () => {
     if (el.filters.visibleExtent.checked) applyFilters({ keepSelection: true });
   });
+  state.map.on("click", (event) => handleRelocationMapPick(event.latlng));
   fitInitialMap();
   refreshMap();
 }
@@ -1584,7 +1939,10 @@ function drawLeafletBaseLayers() {
     onEachFeature: (feature, layer) => {
       layer.bindTooltip(`V3 section ${feature.properties?.section_number || ""}`);
       layer.bindPopup(popupForProperties(feature.properties));
-      layer.on("click", () => selectTaskForSection(feature.properties?.section_number));
+      layer.on("click", () => {
+        if (state.relocationPickActive) return;
+        selectTaskForSection(feature.properties?.section_number);
+      });
     },
   });
   addGeoJsonLayer(state.leafletLayers.sectionsV2, state.data.sectionsV2, {
@@ -1597,6 +1955,7 @@ function drawLeafletBaseLayers() {
       layer.bindTooltip(`Cell ${feature.properties?.census_cell_id || ""}`);
       layer.bindPopup(popupForProperties(feature.properties));
       layer.on("click", () => {
+        if (state.relocationPickActive) return;
         const taskId = splitList(feature.properties?.review_task_ids)[0];
         if (taskId) selectTask(taskId);
       });
@@ -1621,6 +1980,7 @@ function drawLeafletBaseLayers() {
       layer.bindTooltip(`${anncsuPointTitle(props)} sec ${props.section_number || ""}`);
       layer.bindPopup(popupForCivic(props));
       layer.on("click", () => {
+        if (state.relocationPickActive) return;
         if (props.task_id) selectTask(props.task_id, { zoom: false });
         if (props.access_id) focusCivic(asString(props.access_id), { zoom: false });
       });
@@ -1665,6 +2025,7 @@ function drawLeafletBaseLayers() {
       layer.bindTooltip(`${anncsuPointTitle(props)} - ${props.coordinate_quality_flag || "coordinate suspect"}`);
       layer.bindPopup(popupForCivic(props));
       layer.on("click", () => {
+        if (state.relocationPickActive) return;
         const taskId = taskIdForAccessId(asString(props.access_id));
         if (taskId) selectTask(taskId, { zoom: false });
         if (props.access_id) focusCivic(asString(props.access_id), { zoom: false });
@@ -1695,9 +2056,58 @@ function civicLatLng(civic) {
   return [lat, lon];
 }
 
+function renderRelocationLeaflet(task) {
+  const layer = state.leafletLayers.relocation;
+  const civic = task ? selectedCoordinateCivic(task) : null;
+  const draft = civic ? relocationDraftFor(task, civic) : null;
+  if (!layer || !civic || !draft || !Number.isFinite(draft.lon) || !Number.isFinite(draft.lat)) return;
+  const proposedLatLng = [draft.lat, draft.lon];
+  const originalLatLng = civicLatLng(civic);
+  if (originalLatLng) {
+    window.L.polyline([originalLatLng, proposedLatLng], {
+      color: "#9b3f8f",
+      dashArray: "7 7",
+      opacity: 0.86,
+      weight: 3,
+    }).bindTooltip("ANNCSU original to proposed coordinate").addTo(layer);
+    window.L.circleMarker(originalLatLng, {
+      radius: 6,
+      color: "#ffffff",
+      fillColor: "#111827",
+      fillOpacity: 0.85,
+      weight: 1.5,
+    }).bindTooltip("Original ANNCSU coordinate").addTo(layer);
+  }
+  const marker = window.L.marker(proposedLatLng, {
+    draggable: true,
+    autoPan: true,
+    title: "Proposed coordinate override",
+  }).addTo(layer);
+  marker.bindTooltip("Proposed coordinate override", { permanent: false });
+  marker.bindPopup(`
+    <div class="source-popup">
+      <strong>Proposed coordinate override</strong>
+      ${factGrid([
+        ["Access ID", civic.access_id],
+        ["Proposed lon", Number(draft.lon).toFixed(7)],
+        ["Proposed lat", Number(draft.lat).toFixed(7)],
+        ["Source", draft.source],
+      ])}
+      <p class="popup-note">Drag to refine. This does not modify ANNCSU raw.</p>
+    </div>
+  `);
+  marker.on("dragend", (event) => {
+    const next = event.target.getLatLng();
+    setRelocationDraft(task, civic, next.lng, next.lat, "marker_drag");
+    renderActiveTab();
+    setMapStatus("Proposed coordinate updated from dragged marker.", 2200);
+  });
+}
+
 function renderSelectedLeaflet() {
   if (!state.map) return;
   state.leafletLayers.selected.clearLayers();
+  state.leafletLayers.relocation.clearLayers();
   state.leafletLayers.nearby.clearLayers();
   state.leafletLayers.competing.clearLayers();
   const task = selectedTask();
@@ -1750,6 +2160,7 @@ function renderSelectedLeaflet() {
   } else {
     setLayerVisibility("competing", false);
   }
+  renderRelocationLeaflet(task);
 }
 
 function zoomToSelectedTask() {
@@ -1899,6 +2310,17 @@ function renderFallbackMap() {
       const focused = asString(feature.properties?.access_id) === asString(state.selectedCivicAccessId);
       paths.push(`<circle class="fallback-point coordinate-suspect${focused ? " focused" : ""}" cx="${x.toFixed(2)}" cy="${y.toFixed(2)}" r="${focused ? 7 : 4.8}"></circle>`);
     }
+  }
+  const relocationCivic = task ? selectedCoordinateCivic(task) : null;
+  const relocationDraft = relocationCivic ? relocationDraftFor(task, relocationCivic) : null;
+  if (relocationCivic && relocationDraft && Number.isFinite(relocationDraft.lon) && Number.isFinite(relocationDraft.lat)) {
+    const originalLatLng = civicLatLng(relocationCivic);
+    const [px, py] = project([relocationDraft.lon, relocationDraft.lat]);
+    if (originalLatLng) {
+      const [ox, oy] = project([originalLatLng[1], originalLatLng[0]]);
+      paths.push(`<line class="fallback-relocation-line" x1="${ox.toFixed(2)}" y1="${oy.toFixed(2)}" x2="${px.toFixed(2)}" y2="${py.toFixed(2)}"></line>`);
+    }
+    paths.push(`<circle class="fallback-relocation-proposed" cx="${px.toFixed(2)}" cy="${py.toFixed(2)}" r="8"></circle>`);
   }
   el.fallbackMap.setAttribute("viewBox", `0 0 ${width} ${height}`);
   el.fallbackMap.innerHTML = paths.join("");

@@ -157,6 +157,27 @@ section is wrong. The section should still be reviewed against the electoral
 street register. Future geometry generation may exclude or override a point only
 through a traced coordinate decision.
 
+### Civic Relocation Support
+
+When a selected civic appears georeferenced in the wrong place, the Decision tab
+can record a proposed coordinate without changing ANNCSU raw data. Use `Pick
+proposed point on map` to click a candidate position, or type `proposed_lon` and
+`proposed_lat` manually. The proposed marker can be dragged on the Leaflet map.
+
+The support panel records:
+
+- original ANNCSU lon/lat;
+- proposed lon/lat;
+- movement distance in metres;
+- candidate V3 section containing the proposed point, when any;
+- nearest deterministic civic samples;
+- nearest deterministic samples on the same ANNCSU street.
+
+This support is evidence for review only. It does not create V4 geometry, does
+not correct ANNCSU, and does not assign sections by proximity. The exported
+decision includes `relocation_support_snapshot` so the proposed relocation can
+be audited later.
+
 ## Street Register Evidence
 
 `public/data/street_register_evidence_by_task.json` links each civic task to
@@ -220,6 +241,7 @@ Exports are available as JSON and CSV with these fields:
 - `coordinate_reason`
 - `exclude_from_geometry`
 - `requires_external_coordinate_check`
+- `relocation_support_snapshot`
 - `notes`
 - `evidence_snapshot`
 

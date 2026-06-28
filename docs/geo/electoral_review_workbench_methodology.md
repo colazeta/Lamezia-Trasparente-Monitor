@@ -129,6 +129,18 @@ Manual coordinate decisions are exported separately from section decisions:
 does not require alternative coordinates. Neither decision changes ANNCSU raw
 data; both are review evidence for a later auditable geometry workflow.
 
+The workbench can also capture a proposed civic relocation for the selected
+`access_id`. This is a separate review aid: the reviewer may pick a point on the
+map, drag the proposed marker, or type lon/lat manually. The UI then records the
+original ANNCSU coordinates, the proposed coordinates, movement distance,
+candidate V3 section context, and nearby deterministic civic samples in
+`relocation_support_snapshot`.
+
+That snapshot does not correct ANNCSU, does not create a V4 geometry, and does
+not assign a section by proximity. It only preserves the evidence used when a
+reviewer believes a coordinate should be excluded or overridden in a future
+auditable geometry workflow.
+
 OpenStreetMap remains visual context only. It can help a reviewer orient the map,
 but it is not an official coordinate correction source and is not used by the
 audit as automatic evidence of error.
@@ -264,6 +276,16 @@ Each exported decision record includes:
 - `reviewed_by`
 - `review_date`
 - `requires_follow_up`
+- `coordinate_decision_type`
+- `original_lon`
+- `original_lat`
+- `proposed_lon`
+- `proposed_lat`
+- `coordinate_decision_confidence`
+- `coordinate_reason`
+- `exclude_from_geometry`
+- `requires_external_coordinate_check`
+- `relocation_support_snapshot`
 - `notes`
 - `evidence_snapshot`
 

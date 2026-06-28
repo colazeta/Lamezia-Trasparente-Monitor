@@ -315,6 +315,12 @@
             <span>Proposed lat</span>
             <input name="proposed_lat" type="text" inputmode="decimal" />
           </label>
+          <div class="coordinate-relocation-tools wide">
+            <button type="button" data-coordinate-pick>Pick proposed point on map</button>
+            <button type="button" data-coordinate-use-original>Reset to original point</button>
+            <button type="button" data-coordinate-clear>Clear proposed point</button>
+          </div>
+          <div id="coordinateRelocationSupport" class="coordinate-support wide"></div>
           <label>
             <span>Coordinate confidence</span>
             <select name="coordinate_decision_confidence">
