@@ -92,30 +92,6 @@ describe("NAV_GROUPS invariants", () => {
     ]));
   });
 
-  it("keeps the criticita row useful without promoting new-report actions", () => {
-    const criticitaGroup = NAV_GROUPS.find((group) =>
-      group.label.startsWith("Criticit"),
-    );
-    const visibleHrefs = navItems.map((item) => item.href);
-    const newReport = ALL_NAV_GROUPS.flatMap((group) => group.items).find(
-      (item) => item.href === "/monitoraggio/nuovo",
-    );
-
-    expect(criticitaGroup?.items.map((item) => item.href)).toEqual([
-      "/criticita-pubbliche",
-      "/monitoraggio",
-      "/segnalazioni",
-    ]);
-    expect(criticitaGroup?.items.map((item) => item.label)).toEqual([
-      "Criticità pubbliche",
-      "Monitor civico",
-      "Segnalazioni / luoghi",
-    ]);
-    expect(visibleHrefs).not.toContain("/monitoraggio/nuovo");
-    expect(newReport?.state).toBe("hidden");
-    expect(newReport?.canonicalHref).toBe("/segnalazioni");
-  });
-
   it("keeps planned sections visible but not navigable or searchable", () => {
     const planned = navItems.filter((item) => item.state === "planned");
     const commandPaletteHrefs = COMMAND_PALETTE_GROUPS.flatMap((group) =>
@@ -125,6 +101,7 @@ describe("NAV_GROUPS invariants", () => {
     expect(planned.map((item) => item.href)).toEqual(
       expect.arrayContaining([
         "/elezioni-voti",
+        "/segnalazioni-luoghi",
         "/dati-elettorali",
         "/dataset-scaricabili",
       ]),

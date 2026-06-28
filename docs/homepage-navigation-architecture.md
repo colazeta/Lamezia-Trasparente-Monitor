@@ -13,25 +13,11 @@ La homepage espone poche macro-aree civiche, non una lista piatta di moduli con 
 | Cosa viene finanziato e realizzato | Contratti pubblici; PNRR; Incarichi e consulenze; Performance |
 | Criticita e luoghi della citta | Criticita pubbliche; Monitor civico; Segnalazioni / luoghi |
 | Memoria civica e antimafia | Beni confiscati; Legalita e memoria; Trame - Festival |
-| Partecipazione e proposte | Proposte civiche; Accesso civico |
+| Partecipazione e proposte | Proposte civiche; Accesso civico; Segnalazioni |
 | Dati pubblici e territorio | Atlante territoriale; Open data; Dati elettorali; Dataset scaricabili |
 | Stato delle fonti e monitoraggio | Stato delle fonti; Metodologia; Promessometro; Incarichimetro; Roadmap |
 
 Le sezioni tecniche o di supporto, come API, feed, note legali, contatti, guida, fonti dati di dettaglio e statistiche, restano raggiungibili dove utile ma non competono con le macro-aree civiche nella homepage.
-
-## Rendering homepage
-
-La mappa civica in homepage deve leggere come una sequenza di bande orizzontali, non come un catalogo uniforme di card.
-
-- ogni macro-area occupa una riga;
-- titolo e descrizione della macro-area stanno a sinistra;
-- le sezioni della macro-area stanno a destra in card compatte e scansionabili;
-- le sezioni `available` restano piu forti;
-- le sezioni `in_progress` sono neutre/grigie con badge esplicito;
-- le sezioni `planned` sono attenuate e non devono sembrare gia disponibili;
-- la banda "Stato delle fonti e monitoraggio" e piu neutra delle aree civiche principali.
-
-La riga "Criticita e luoghi della citta" puo mostrare Criticita pubbliche, Monitor civico e Segnalazioni / luoghi. L'azione "Nuova segnalazione" resta interna ai percorsi di segnalazione o monitoraggio e non torna come card primaria della homepage.
 
 ## Stati delle sezioni
 
@@ -53,6 +39,7 @@ La command palette deriva dalla stessa registry della navigazione e mostra solo 
 | Bandi e avvisi `/bandi` | Contratti pubblici `/contratti` | Redirect 301 e voce `hidden` nella registry |
 | Confronto performance `/performance/confronta` | Performance `/performance` | Redirect/alias e rimozione dalle CTA primarie |
 | Nuova segnalazione `/monitoraggio/nuovo` | Segnalazioni `/segnalazioni` | Azione non primaria; il percorso resta supportato per compatibilita dei flussi contestuali |
+| Segnalazioni / luoghi `/segnalazioni-luoghi` | Criticita e luoghi della citta | Voce prevista e non navigabile finche non esiste una vista territoriale utile |
 | Archivio proposte `/archivio-proposte` | Proposte civiche `/proposte-civiche` | Redirect 301 e nuova route canonica |
 | DEMI | Proposte civiche `/proposte-civiche` | Da trattare come contenuto o fonte interna della sezione, non come card autonoma |
 | Timeline legalita `/legalita/timeline` | Legalita e memoria `/legalita` | Redirect/alias e rimozione come card autonoma |
