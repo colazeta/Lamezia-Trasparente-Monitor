@@ -30,13 +30,14 @@ const STATE_META: Record<
     icon: CheckCircle2,
     badgeClassName:
       "border-primary/25 bg-primary/10 text-primary dark:bg-primary/15",
-    iconClassName: "bg-primary/10 text-primary",
+    iconClassName: "bg-primary text-primary-foreground shadow-sm",
     itemClassName:
-      "border-border bg-card text-foreground shadow-sm hover:border-primary/35 hover:bg-primary/5",
+      "border-primary/30 bg-primary/10 text-foreground ring-1 ring-primary/10 hover:border-primary/45 hover:bg-primary/15",
   },
   in_progress: {
     icon: Clock3,
-    badgeClassName: "border-border bg-muted text-muted-foreground",
+    badgeClassName:
+      "border-border bg-muted text-muted-foreground",
     iconClassName: "bg-muted text-muted-foreground",
     itemClassName:
       "border-border bg-muted/35 text-muted-foreground hover:border-border hover:bg-muted/55",
@@ -55,13 +56,7 @@ function stateMeta(item: NavItem) {
   return STATE_META[item.state === "hidden" ? "planned" : item.state];
 }
 
-function SectionItem({
-  item,
-  mutedArea,
-}: {
-  item: NavItem;
-  mutedArea?: boolean;
-}) {
+function SectionItem({ item }: { item: NavItem }) {
   const Icon = item.icon;
   const navigable = isNavItemNavigable(item);
   const muted = isNavItemMuted(item);
@@ -71,20 +66,17 @@ function SectionItem({
     <>
       <span
         className={cn(
-          "flex h-8 w-8 shrink-0 items-center justify-center rounded-md",
+          "flex h-9 w-9 shrink-0 items-center justify-center rounded-md",
           meta.iconClassName,
-          mutedArea && item.state === "available"
-            ? "bg-muted text-muted-foreground"
-            : null,
         )}
       >
         <Icon className="h-4 w-4" aria-hidden="true" />
       </span>
       <span className="min-w-0 flex-1">
-        <span className="flex flex-wrap items-center gap-1.5">
+        <span className="flex flex-wrap items-center gap-2">
           <span
             className={cn(
-              "text-sm font-semibold leading-tight",
+              "text-sm font-semibold leading-snug",
               muted ? "text-foreground/80" : "text-foreground",
             )}
           >
@@ -93,7 +85,7 @@ function SectionItem({
           {item.state !== "available" ? (
             <span
               className={cn(
-                "inline-flex items-center gap-1 whitespace-nowrap rounded-full border px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide",
+                "inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide",
                 meta.badgeClassName,
               )}
             >
@@ -102,7 +94,7 @@ function SectionItem({
             </span>
           ) : null}
         </span>
-        <span className="mt-1 block line-clamp-3 text-[11px] leading-4 text-muted-foreground">
+        <span className="mt-1 block text-xs leading-relaxed text-muted-foreground">
           {item.description}
         </span>
       </span>
@@ -116,9 +108,8 @@ function SectionItem({
   );
 
   const className = cn(
-    "group flex min-h-[4.25rem] items-start gap-2.5 rounded-md border px-3 py-2.5 text-left transition-colors",
+    "group flex min-h-[5.25rem] items-start gap-3 rounded-lg border p-3 text-left transition-colors sm:p-3.5",
     meta.itemClassName,
-    mutedArea ? "shadow-none" : null,
     navigable
       ? "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
       : "cursor-not-allowed",
@@ -135,9 +126,62 @@ function SectionItem({
   );
 }
 
+function MacroAreaBand({
+  group,
+  index,
+}: {
+  group: (typeof NAV_GROUPS)[number];
+  index: number;
+}) {
+  const isTechnicalBand = group.label === "Stato delle fonti e monitoraggio";
+
+  return (
+    <section
+      className={cn(
+        "grid gap-5 border-t border-border py-7 lg:grid-cols-[minmax(12rem,18rem)_1fr] lg:gap-8",
+        isTechnicalBand && "bg-muted/20 px-4 sm:-mx-4 sm:px-4",
+      )}
+      aria-labelledby={`home-civic-area-${index + 1}`}
+    >
+      <div className="lg:pt-1">
+        <div
+          className={cn(
+            "mb-3 inline-flex h-8 w-8 items-center justify-center rounded-full border text-xs font-bold",
+            isTechnicalBand
+              ? "border-border bg-background text-muted-foreground"
+              : "border-primary/30 bg-primary/10 text-primary",
+          )}
+        >
+          {index + 1}
+        </div>
+        <h3
+          id={`home-civic-area-${index + 1}`}
+          className="font-display text-xl font-bold tracking-tight text-foreground"
+        >
+          {group.label}
+        </h3>
+        <p className="mt-2 max-w-sm text-sm leading-relaxed text-muted-foreground">
+          {group.description}
+        </p>
+      </div>
+
+      <div
+        className={cn(
+          "grid gap-2.5 sm:grid-cols-2",
+          group.items.length >= 4 ? "xl:grid-cols-4" : "xl:grid-cols-3",
+        )}
+      >
+        {group.items.map((item) => (
+          <SectionItem key={item.href} item={item} />
+        ))}
+      </div>
+    </section>
+  );
+}
+
 export function HomeCivicSystemMap({
   title = "Scegli un percorso civico",
-  subtitle = "Le aree gia consultabili, quelle in lavorazione e quelle previste hanno peso visivo diverso.",
+  subtitle = "Otto macro-aree ordinano le sezioni civiche: poche schede per fascia, stati chiari e meno rumore operativo.",
   className,
 }: {
   title?: string;
@@ -147,11 +191,14 @@ export function HomeCivicSystemMap({
   return (
     <section
       data-tour="home-themes"
-      className={cn("border-b border-border bg-background py-12 md:py-16", className)}
+      className={cn(
+        "border-b border-border bg-background py-10 md:py-14",
+        className,
+      )}
       aria-labelledby="home-civic-system-map"
     >
       <div className="container mx-auto px-4 md:px-6">
-        <div className="mb-8 flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
+        <div className="mb-7 flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
           <div className="max-w-3xl">
             <span className="eyebrow text-primary">Mappa civica</span>
             <h2
@@ -184,45 +231,11 @@ export function HomeCivicSystemMap({
           </div>
         </div>
 
-        <div className="space-y-3">
-          {NAV_GROUPS.map((group) => (
-            <HomeCivicBand key={group.label} group={group} />
+        <div>
+          {NAV_GROUPS.map((group, index) => (
+            <MacroAreaBand group={group} index={index} key={group.label} />
           ))}
         </div>
-      </div>
-    </section>
-  );
-}
-
-function HomeCivicBand({ group }: { group: (typeof NAV_GROUPS)[number] }) {
-  const isMetaArea = group.label === "Stato delle fonti e monitoraggio";
-
-  return (
-    <section
-      className={cn(
-        "rounded-lg border border-border bg-card/70 p-4",
-        "lg:grid lg:grid-cols-[minmax(12rem,0.82fr)_minmax(0,2.18fr)] lg:items-start lg:gap-6",
-        isMetaArea ? "bg-muted/20" : null,
-      )}
-      aria-label={group.label}
-    >
-      <div>
-        <h3
-          className={cn(
-            "font-display text-lg font-bold tracking-tight",
-            isMetaArea ? "text-foreground/80" : "text-foreground",
-          )}
-        >
-          {group.label}
-        </h3>
-        <p className="mt-1 max-w-2xl text-sm leading-relaxed text-muted-foreground">
-          {group.description}
-        </p>
-      </div>
-      <div className="mt-4 grid gap-2 sm:grid-cols-2 xl:grid-cols-4 lg:mt-0">
-        {group.items.map((item) => (
-          <SectionItem key={item.href} item={item} mutedArea={isMetaArea} />
-        ))}
       </div>
     </section>
   );
