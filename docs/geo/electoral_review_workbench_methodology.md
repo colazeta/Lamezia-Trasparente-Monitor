@@ -53,6 +53,13 @@ Marker labels must use the ANNCSU address for the individual point. A task title
 may summarize a cluster, especially in multi-street cases, but it must not be
 used as the label for every point in that task.
 
+Task headings are generated from civics whose coordinates remain usable as
+geometry evidence (`coordinate_quality_flag=ok`, plausible lon/lat, and not
+excluded from future geometry). If no civic in the task meets that condition,
+the heading must not present the raw odonym as validated. It uses a
+`Civici da validare` heading and exposes the raw ANNCSU streets, stradario
+labels, and street-context evidence separately.
+
 The generator emits explicit task metadata for label interpretation:
 
 - `is_multi_street_task`
@@ -89,6 +96,8 @@ without modifying ANNCSU raw data. It checks for:
 - missing coordinates;
 - implausible lon/lat values and possible X/Y swaps;
 - points outside the municipal boundary candidate;
+- points whose ANNCSU coordinate sits in a nearby validated civic context
+  dominated by a different ANNCSU street label from the stradario;
 - same-street outliers using conservative cluster and nearest-neighbour tests;
 - isolated points relative to civics on the same ANNCSU odonimo;
 - rare census-cell placement for the same street when combined with spatial
@@ -133,8 +142,9 @@ The workbench can also capture a proposed civic relocation for the selected
 `access_id`. This is a separate review aid: the reviewer may pick a point on the
 map, drag the proposed marker, or type lon/lat manually. The UI then records the
 original ANNCSU coordinates, the proposed coordinates, movement distance,
-candidate V3 section context, and nearby deterministic civic samples in
-`relocation_support_snapshot`.
+candidate V3 section context, nearby deterministic civic samples, original and
+proposed nearby ANNCSU street context, and available electoral street-register
+labels in `relocation_support_snapshot`.
 
 That snapshot does not correct ANNCSU, does not create a V4 geometry, and does
 not assign a section by proximity. It only preserves the evidence used when a

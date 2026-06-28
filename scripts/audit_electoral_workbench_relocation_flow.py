@@ -74,10 +74,14 @@ def main() -> int:
         "map_pick_state": "relocationPickActive" in app_js,
         "support_model": "function relocationSupportModel" in app_js,
         "support_snapshot": "function relocationSupportSnapshot" in app_js,
+        "street_context_summary": "function streetContextSummary" in app_js,
+        "street_register_labels": "function streetRegisterLabelsForTask" in app_js,
         "leaflet_render": "function renderRelocationLeaflet" in app_js,
         "map_click_handler": "handleRelocationMapPick" in app_js,
         "drag_handler": "marker_drag" in app_js,
         "manual_override_validation": "manual_coordinate_override requires" in app_js,
+        "street_context_filter": "street_context_mismatch" in app_js,
+        "heading_source_ui": "Heading source" in app_js,
         "fallback_render": "fallback-relocation-proposed" in app_js,
         "relocation_styles": "fallback-relocation-proposed" in styles_css,
         "readme_docs": "Civic Relocation Support" in readme,
@@ -95,6 +99,36 @@ def main() -> int:
     deterministic_features = deterministic_geojson.get("features", [])
     section_features = sections_v3.get("features", [])
     suspect_task_count = sum(1 for task in tasks if task.get("has_coordinate_suspect") or int(task.get("coordinate_suspect_count") or 0) > 0)
+    heading_source_counts: dict[str, int] = {}
+    for task in tasks:
+        source = str(task.get("heading_source") or "missing")
+        heading_source_counts[source] = heading_source_counts.get(source, 0) + 1
+
+    missing_heading_metadata = [str(task.get("task_id", "")) for task in tasks if not task.get("heading_source")]
+    if missing_heading_metadata:
+        findings.append(("P1", "missing-heading-source", ", ".join(missing_heading_metadata[:10])))
+
+    unsafe_titles = []
+    for task in tasks:
+        if task.get("heading_source") != "no_validated_civic_heading":
+            continue
+        title = str(task.get("title", ""))
+        raw_streets = [str(street) for street in task.get("involved_streets") or [] if street]
+        if any(street and street in title for street in raw_streets):
+            unsafe_titles.append(str(task.get("task_id", "")))
+    if unsafe_titles:
+        findings.append(("P1", "unvalidated-street-used-in-heading", ", ".join(unsafe_titles[:10])))
+
+    street_context_mismatch_records = [
+        row for row in suspect_records if row.get("coordinate_quality_flag") == "street_context_mismatch"
+    ]
+    bad_street_context_records = [
+        str(row.get("access_id", ""))
+        for row in street_context_mismatch_records
+        if not row.get("nearest_validated_street_context")
+    ]
+    if bad_street_context_records:
+        findings.append(("P1", "street-context-mismatch-without-context-label", ", ".join(bad_street_context_records[:10])))
 
     missing_suspect_civics = sorted(suspect_access_ids - civic_access_ids)
     if missing_suspect_civics:
@@ -125,6 +159,8 @@ def main() -> int:
         "coordinate_suspect_records": len(suspect_records),
         "coordinate_suspect_features": len(suspect_features),
         "coordinate_suspect_tasks": suspect_task_count,
+        "street_context_mismatch_records": len(street_context_mismatch_records),
+        "heading_source_counts": heading_source_counts,
         "deterministic_support_features": len(deterministic_features),
         "v3_section_features": len(section_features),
         "app_contract_checks": sum(1 for ok in app_contract.values() if ok),
