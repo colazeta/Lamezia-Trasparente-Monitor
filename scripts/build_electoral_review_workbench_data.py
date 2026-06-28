@@ -41,6 +41,7 @@ STREET_RULES_CSV = INTERIM_GEO_DIR / "electoral_street_rules_2025.csv"
 CROSSWALK_CSV = INTERIM_GEO_DIR / "anncsu_electoral_street_crosswalk_2025.csv"
 V3_METRICS_CSV = QA_DIR / "electoral_sections_candidate_v3_census_metrics_2025.csv"
 BOUNDARY_UNCERTAINTY_CSV = QA_DIR / "electoral_sections_boundary_uncertainty_points_2025.csv"
+COORDINATE_SUSPECT_CSV = QA_DIR / "anncsu_coordinate_suspect_points_2025.csv"
 RAW_STREET_REGISTER_PDF = ROOT / "data" / "raw" / "geo" / "Stradario_elettorale.pdf"
 
 MAX_DETERMINISTIC_SAMPLE = 3000
@@ -290,6 +291,23 @@ def coordinate_status(row: dict[str, Any]) -> str:
     return "ok"
 
 
+def coordinate_quality_flag(row: dict[str, Any]) -> str:
+    return as_text(row.get("coordinate_quality_flag")) or "ok"
+
+
+def suggested_coordinate_action(row: dict[str, Any]) -> str:
+    value = as_text(row.get("suggested_coordinate_action") or row.get("suggested_action"))
+    if value:
+        return value
+    return "keep_as_is" if coordinate_quality_flag(row) == "ok" else "exclude_from_future_geometry_until_reviewed"
+
+
+def exclude_from_geometry_candidate(row: dict[str, Any]) -> bool:
+    if "exclude_from_geometry_candidate" in row:
+        return as_bool(row.get("exclude_from_geometry_candidate"))
+    return coordinate_quality_flag(row) != "ok"
+
+
 def civic_min_max(rows: list[dict[str, Any]]) -> tuple[Any, Any]:
     values = [value for value in (civic_numeric_value(row) for row in rows) if value is not None]
     if not values:
@@ -375,17 +393,19 @@ def map_bbox_for_geometries(gpd, geoms: list[Any]) -> list[float]:
 def feature_collection(gdf, columns: list[str], *, simplify_m: float | None = None) -> dict[str, Any]:
     gpd, _pd, shapely, _tree = require_geospatial_dependencies()
     out = gdf.copy()
+    out = out.loc[:, ~out.columns.duplicated()]
     if simplify_m and out.crs and str(out.crs).upper() != "EPSG:4326":
         out["geometry"] = out.geometry.apply(lambda geom: shapely.make_valid(geom).simplify(simplify_m, preserve_topology=True))
     out = out.to_crs("EPSG:4326")
-    keep = [col for col in columns if col in out.columns] + ["geometry"]
+    keep = list(dict.fromkeys([col for col in columns if col in out.columns] + ["geometry"]))
     out = out[keep].copy()
     return json.loads(out.to_json(drop_id=True))
 
 
 def point_collection(gdf, columns: list[str]) -> dict[str, Any]:
     out = gdf.copy().to_crs("EPSG:4326")
-    keep = [col for col in columns if col in out.columns] + ["geometry"]
+    out = out.loc[:, ~out.columns.duplicated()]
+    keep = list(dict.fromkeys([col for col in columns if col in out.columns] + ["geometry"]))
     out = out[keep].copy()
     return json.loads(out.to_json(drop_id=True))
 
@@ -420,6 +440,10 @@ def enrich_point_label_columns(frame, source_records: dict[str, dict[str, Any]] 
     out["source_coord_y"] = [value(row, "COORD_Y_COMUNE", "source_coord_y", "coord_y") for row in records]
     out["source_coord_lon"] = [source_coord_lon(row) for row in records]
     out["source_coord_lat"] = [source_coord_lat(row) for row in records]
+    out["coordinate_quality_flag"] = [coordinate_quality_flag(row) for row in records]
+    out["coordinate_suspect_reason"] = [value(row, "coordinate_suspect_reason") for row in records]
+    out["suggested_coordinate_action"] = [suggested_coordinate_action(row) for row in records]
+    out["exclude_from_geometry_candidate"] = [exclude_from_geometry_candidate(row) for row in records]
     statuses = [coordinate_status(row) for row in records]
     out["label_integrity_status"] = statuses
     out["label_integrity_notes"] = [
@@ -434,6 +458,7 @@ def civic_record(row: dict[str, Any]) -> dict[str, Any]:
     lat = source_coord_lat(row)
     status = coordinate_status(row)
     return {
+        "task_id": as_text(row.get("task_id")),
         "access_id": as_text(row.get("access_id") or row.get("PROGRESSIVO_ACCESSO")),
         "odonimo_raw": as_text(row.get("ODONIMO") or row.get("anncsu_odonimo")),
         "localita": as_text(row.get("LOCALITA'") or row.get("localita")),
@@ -461,6 +486,10 @@ def civic_record(row: dict[str, Any]) -> dict[str, Any]:
         "source_record_access_id": as_text(row.get("access_id") or row.get("PROGRESSIVO_ACCESSO")),
         "label_integrity_status": status,
         "label_integrity_notes": "" if status == "ok" else "Coordinate sorgente mancanti, fuori range Lamezia o potenzialmente invertite.",
+        "coordinate_quality_flag": coordinate_quality_flag(row),
+        "coordinate_suspect_reason": as_text(row.get("coordinate_suspect_reason")),
+        "suggested_coordinate_action": suggested_coordinate_action(row),
+        "exclude_from_geometry_candidate": exclude_from_geometry_candidate(row),
         "distance_to_boundary_m": as_text(row.get("distance_to_boundary_m") or row.get("distance_to_candidate_boundary_m")),
         "problem_type": as_text(row.get("problem_type")),
         "notes": as_text(row.get("assignment_notes") or row.get("notes") or row.get("review_notes")),
@@ -528,6 +557,26 @@ def main() -> int:
     )
     joined["census_cell_id"] = joined["census_cell_id"].fillna("")
     joined = joined.sort_values(["access_id", "census_cell_id"]).drop_duplicates(subset=["access_id"], keep="first")
+    coordinate_quality_by_access = {
+        as_text(row.get("access_id")): row for row in read_csv_rows(COORDINATE_SUSPECT_CSV) if as_text(row.get("access_id"))
+    }
+
+    def coordinate_action_for_access(access_id: str) -> str:
+        quality = coordinate_quality_by_access.get(access_id, {})
+        action = as_text(quality.get("suggested_action"))
+        if action:
+            return action
+        flag = as_text(quality.get("coordinate_quality_flag")) or "ok"
+        return "keep_as_is" if flag == "ok" else "exclude_from_future_geometry_until_reviewed"
+
+    joined["coordinate_quality_flag"] = joined["access_id"].astype(str).map(
+        lambda access_id: as_text(coordinate_quality_by_access.get(access_id, {}).get("coordinate_quality_flag")) or "ok"
+    )
+    joined["coordinate_suspect_reason"] = joined["access_id"].astype(str).map(
+        lambda access_id: as_text(coordinate_quality_by_access.get(access_id, {}).get("coordinate_suspect_reason"))
+    )
+    joined["suggested_coordinate_action"] = joined["access_id"].astype(str).map(coordinate_action_for_access)
+    joined["exclude_from_geometry_candidate"] = joined["coordinate_quality_flag"].map(lambda flag: as_text(flag) != "ok")
     joined_records = [row.to_dict() for _idx, row in joined.iterrows()]
     civics_by_access = {as_text(row.get("access_id")): row for row in joined_records}
     civics_by_cell: dict[str, list[dict[str, Any]]] = defaultdict(list)
@@ -1023,6 +1072,9 @@ def main() -> int:
             street_match_status = "same_street_match"
         interval_count = sum(1 for row in evidence_rows if as_text(row.get("civic_from")) or as_text(row.get("civic_to")))
         parity_mix = parity_mix_for_rows(civic_rows)
+        coordinate_flags = Counter(coordinate_quality_flag(row) for row in civic_rows)
+        coordinate_suspect_count = sum(count for flag, count in coordinate_flags.items() if flag != "ok")
+        exclude_candidate_count = sum(1 for row in civic_rows if exclude_from_geometry_candidate(row))
         status_values = {coordinate_status(row) for row in civic_rows}
         task_label_status = "coordinate_outlier" if "coordinate_outlier" in status_values else "ok"
         if len(streets) > 1 and task_label_status == "ok":
@@ -1049,6 +1101,10 @@ def main() -> int:
                 "has_parity_subset": bool(parity_mix.get("even") and parity_mix.get("odd")),
                 "has_snc_subset": bool(parity_mix.get("snc")),
                 "candidate_section_count": len(set(competing) | set(street_register_sections) | set(current_sections)),
+                "coordinate_quality_flags": dict(sorted(coordinate_flags.items())),
+                "coordinate_suspect_count": coordinate_suspect_count,
+                "exclude_from_geometry_candidate_count": exclude_candidate_count,
+                "has_coordinate_suspect": coordinate_suspect_count > 0,
                 "label_integrity_status": task_label_status,
                 "label_integrity_notes": "Task multi-via: il titolo riassume piu odonimi; usare la tab Civics e i popup ANNCSU per il singolo punto."
                 if len(streets) > 1
@@ -1470,6 +1526,37 @@ def main() -> int:
             task_geom=row.geometry,
         )
 
+    coordinate_groups: dict[tuple[str, str, str], list[dict[str, Any]]] = defaultdict(list)
+    for row in joined_records:
+        access_id = as_text(row.get("access_id"))
+        if coordinate_quality_flag(row) == "ok" or access_id in point_task_by_access:
+            continue
+        key = (street_value(row), coordinate_quality_flag(row), as_text(row.get("section_number")))
+        coordinate_groups[key].append(row)
+
+    for (street, flag, current_section), rows in coordinate_groups.items():
+        task_reason = "coordinate_quality_review"
+        reasons = unique_texts([row.get("coordinate_suspect_reason") for row in rows], 6)
+        add_civic_task(
+            {
+                "task_id": f"civic-task:coordinate-quality:{slugify(street)}:{slugify(flag)}:{slugify(current_section or 'none')}",
+                "task_type": "coordinate_quality_review",
+                "priority": "high" if flag in {"outside_boundary", "missing_coordinate", "possible_xy_swap", "implausible_coordinate"} else "medium",
+                "title": f"Coordinate suspect - {street or 'unknown street'}",
+                "short_description": f"{len(rows)} civics with coordinate quality flag {flag}",
+                "why_needs_review": "These ANNCSU civics may be correct as addresses but unreliable as geometric points. The section decision remains grounded in the electoral street register.",
+                "suggested_section_number": current_section,
+                "competing_sections": parse_competing_sections(";".join(as_text(row.get("competing_sections")) for row in rows)),
+                "suggested_action": "Review the source coordinate separately from the street-register section decision. Exclude from future geometry or record a manual coordinate override only with traced evidence.",
+                "unresolved_reason": task_reason,
+                "source_files": [relpath(COORDINATE_SUSPECT_CSV), relpath(CIVICS_V2_CSV), relpath(STREET_RULES_CSV)],
+                "notes": "Coordinate suspect does not imply a wrong civic label or wrong section. Reasons: " + "; ".join(reasons),
+            },
+            rows,
+            [row.get("geometry") for row in rows],
+            section_counts={current_section: len(rows)} if current_section else None,
+        )
+
     priority_order = {"high": 0, "medium": 1, "low": 2}
     strength_order = {"strong": 0, "medium": 1, "weak": 2, "none": 3}
     review_tasks.sort(
@@ -1542,6 +1629,17 @@ def main() -> int:
         deterministic = deterministic.iloc[sample_indexes].copy()
     spatially_resolved_points = enrich_point_label_columns(spatially_resolved_points, civics_by_access)
     deterministic = enrich_point_label_columns(deterministic, civics_by_access)
+    coordinate_suspect_points = joined[joined["coordinate_quality_flag"].astype(str) != "ok"].copy()
+    coordinate_suspect_points["task_id"] = coordinate_suspect_points["access_id"].astype(str).map(
+        lambda access_id: point_task_by_access.get(access_id, "")
+    )
+    coordinate_suspect_points = enrich_point_label_columns(coordinate_suspect_points, civics_by_access)
+    coordinate_suspect_records = [
+        civic_record(row.to_dict()) for _idx, row in coordinate_suspect_points.sort_values(["ODONIMO", "CIVICO", "access_id"]).iterrows()
+    ]
+    coordinate_suspect_geo = coordinate_suspect_points[
+        coordinate_suspect_points.geometry.notna() & ~coordinate_suspect_points.geometry.is_empty
+    ].copy()
 
     public_pdf_path = ""
     if RAW_STREET_REGISTER_PDF.exists() and RAW_STREET_REGISTER_PDF.stat().st_size <= 2_000_000:
@@ -1559,6 +1657,7 @@ def main() -> int:
     write_json(OUT_DIR / "street_register_evidence_by_task.json", civic_task_evidence)
     write_json(OUT_DIR / "candidate_sections_by_task.json", civic_task_candidate_sections)
     write_json(OUT_DIR / "nearby_deterministic_by_task.json", civic_nearby_deterministic_by_task)
+    write_json(OUT_DIR / "coordinate_suspect_points.json", coordinate_suspect_records)
     write_json(
         OUT_DIR / "review_summary.json",
         {
@@ -1568,6 +1667,11 @@ def main() -> int:
             "review_tasks_by_type": dict(Counter(task["task_type"] for task in review_tasks)),
             "civic_review_tasks_by_type": dict(Counter(task["task_type"] for task in civic_review_tasks)),
             "civic_review_tasks_by_label_integrity_status": dict(Counter(task["label_integrity_status"] for task in civic_review_tasks)),
+            "civic_review_tasks_with_coordinate_suspects": sum(1 for task in civic_review_tasks if task.get("has_coordinate_suspect")),
+            "coordinate_suspect_points": len(coordinate_suspect_records),
+            "coordinate_suspects_by_flag": dict(Counter(row["coordinate_quality_flag"] for row in coordinate_suspect_records)),
+            "coordinate_quality_report": relpath(QA_DIR / "anncsu_coordinate_quality_report_2025.md"),
+            "coordinate_suspect_csv": relpath(COORDINATE_SUSPECT_CSV),
             "high_priority_review_tasks": sum(1 for task in review_tasks if task.get("priority") == "high"),
             "high_priority_civic_review_tasks": sum(1 for task in civic_review_tasks if task.get("priority") == "high"),
             "tasks_with_street_register_evidence": sum(1 for task in civic_review_tasks if task.get("has_street_register_evidence")),
@@ -1604,6 +1708,7 @@ def main() -> int:
                 relpath(STREET_RULES_CSV),
                 relpath(CROSSWALK_CSV),
                 relpath(V3_METRICS_CSV),
+                relpath(COORDINATE_SUSPECT_CSV),
             ],
             "notes": "Local review workbench data only. OSM is an optional visual basemap; census cells are support context; no V4 geometry is generated.",
         },
@@ -1681,6 +1786,7 @@ def main() -> int:
                 "review_id",
                 "point_type",
                 "access_id",
+                "task_id",
                 "source_record_access_id",
                 "anncsu_address_label",
                 "map_popup_title",
@@ -1705,6 +1811,10 @@ def main() -> int:
                 "task_id",
                 "label_integrity_status",
                 "label_integrity_notes",
+                "coordinate_quality_flag",
+                "coordinate_suspect_reason",
+                "suggested_coordinate_action",
+                "exclude_from_geometry_candidate",
             ],
         ),
     )
@@ -1733,6 +1843,10 @@ def main() -> int:
                 "assignment_confidence",
                 "label_integrity_status",
                 "label_integrity_notes",
+                "coordinate_quality_flag",
+                "coordinate_suspect_reason",
+                "suggested_coordinate_action",
+                "exclude_from_geometry_candidate",
             ],
         ),
     )
@@ -1761,6 +1875,43 @@ def main() -> int:
                 "assignment_confidence",
                 "label_integrity_status",
                 "label_integrity_notes",
+                "coordinate_quality_flag",
+                "coordinate_suspect_reason",
+                "suggested_coordinate_action",
+                "exclude_from_geometry_candidate",
+            ],
+        ),
+    )
+    write_json(
+        OUT_DIR / "coordinate_suspect_points.geojson",
+        point_collection(
+            coordinate_suspect_geo,
+            [
+                "access_id",
+                "task_id",
+                "source_record_access_id",
+                "anncsu_address_label",
+                "map_popup_title",
+                "odonimo_raw",
+                "localita",
+                "civico",
+                "esponente",
+                "ODONIMO",
+                "CIVICO",
+                "ESPONENTE",
+                "source_coord_x",
+                "source_coord_y",
+                "source_coord_lon",
+                "source_coord_lat",
+                "section_number",
+                "assignment_method",
+                "assignment_confidence",
+                "label_integrity_status",
+                "label_integrity_notes",
+                "coordinate_quality_flag",
+                "coordinate_suspect_reason",
+                "suggested_coordinate_action",
+                "exclude_from_geometry_candidate",
             ],
         ),
     )
@@ -1772,6 +1923,7 @@ def main() -> int:
     print(f"civic_review_tasks={len(civic_review_tasks)}")
     print(f"review_cells={len(review_cells)}")
     print(f"review_points={len(review_points)}")
+    print(f"coordinate_suspect_points={len(coordinate_suspect_records)}")
     print(f"deterministic_sample={len(deterministic)}")
     print(f"street_rules={len(rules)}")
     print(f"street_register_pdf={public_pdf_path or 'not copied'}")

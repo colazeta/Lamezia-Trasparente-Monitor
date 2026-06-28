@@ -97,6 +97,20 @@
             </select>
           </label>
           <label>
+            <span>Coordinate quality</span>
+            <select id="coordinateQualityFilter">
+              <option value="">All</option>
+              <option value="ok">OK</option>
+              <option value="missing_coordinate">Missing coordinate</option>
+              <option value="outside_boundary">Outside boundary</option>
+              <option value="same_street_outlier">Same-street outlier</option>
+              <option value="isolated_point">Isolated point</option>
+              <option value="implausible_coordinate">Implausible coordinate</option>
+              <option value="possible_xy_swap">Possible X/Y swap</option>
+              <option value="needs_manual_coordinate_review">Needs manual review</option>
+            </select>
+          </label>
+          <label>
             <span>Parity/SNC</span>
             <select id="parityFilter">
               <option value="">All</option>
@@ -154,6 +168,7 @@
           <label class="toggle"><input id="toggleBoundaryPoints" type="checkbox" checked /><span>Boundary</span></label>
           <label class="toggle"><input id="toggleResolvedPoints" type="checkbox" /><span>Resolved</span></label>
           <label class="toggle"><input id="toggleDeterministicPoints" type="checkbox" /><span>Deterministic</span></label>
+          <label class="toggle"><input id="toggleCoordinateSuspects" type="checkbox" checked /><span>Coordinate suspects</span></label>
           <label class="toggle"><input id="toggleLabelIntegrity" type="checkbox" /><span>Show label integrity</span></label>
           <button id="zoomSelectedButton" type="button">Zoom selected</button>
           <button id="showNearbyButton" type="button">Nearby deterministic</button>
@@ -271,6 +286,57 @@
           <input name="requires_follow_up" type="checkbox" />
           <span>Requires follow-up before future V4 work</span>
         </label>
+        <fieldset class="coordinate-decision wide">
+          <legend>Coordinate decision</legend>
+          <p class="form-note">Coordinate ANNCSU suspect: il civico puo essere corretto come indirizzo ma non affidabile come punto geometrico. La sezione va decisa sullo stradario; la geometria futura puo escludere o correggere il punto solo con decisione tracciata.</p>
+          <label>
+            <span>Coordinate decision type</span>
+            <select name="coordinate_decision_type">
+              <option value="keep_as_is">Keep as is</option>
+              <option value="flag_coordinate_suspect">Flag coordinate suspect</option>
+              <option value="exclude_from_geometry">Exclude from geometry</option>
+              <option value="manual_coordinate_override">Manual coordinate override</option>
+              <option value="needs_external_verification">Needs external verification</option>
+            </select>
+          </label>
+          <label>
+            <span>Original lon</span>
+            <input name="original_lon" type="text" inputmode="decimal" readonly />
+          </label>
+          <label>
+            <span>Original lat</span>
+            <input name="original_lat" type="text" inputmode="decimal" readonly />
+          </label>
+          <label>
+            <span>Proposed lon</span>
+            <input name="proposed_lon" type="text" inputmode="decimal" />
+          </label>
+          <label>
+            <span>Proposed lat</span>
+            <input name="proposed_lat" type="text" inputmode="decimal" />
+          </label>
+          <label>
+            <span>Coordinate confidence</span>
+            <select name="coordinate_decision_confidence">
+              <option value="">Not specified</option>
+              <option value="high">High</option>
+              <option value="medium">Medium</option>
+              <option value="low">Low</option>
+            </select>
+          </label>
+          <label class="wide">
+            <span>Coordinate reason</span>
+            <textarea name="coordinate_reason" rows="3"></textarea>
+          </label>
+          <label class="check wide">
+            <input name="exclude_from_geometry" type="checkbox" />
+            <span>Exclude from future geometry candidate unless reviewed</span>
+          </label>
+          <label class="check wide">
+            <input name="requires_external_coordinate_check" type="checkbox" />
+            <span>Requires external coordinate check</span>
+          </label>
+        </fieldset>
         <div class="form-actions wide">
           <button type="submit">Save decision</button>
           <button id="clearDecisionButton" type="button">Clear</button>

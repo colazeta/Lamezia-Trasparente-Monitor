@@ -381,7 +381,8 @@ h3 {
 }
 
 .badge.missing_source_record,
-.badge.coordinate_outlier {
+.badge.coordinate_outlier,
+.badge.coordinate-suspect {
   background: var(--red-soft);
   color: var(--red);
 }
@@ -469,6 +470,13 @@ h3 {
 
 .fallback-point.focused {
   stroke-width: 2.2;
+}
+
+.fallback-point.coordinate-suspect {
+  fill: #b13b30;
+  opacity: 0.9;
+  stroke: #111916;
+  stroke-width: 1.5;
 }
 
 .tabs {
@@ -562,11 +570,24 @@ h3 {
 .source-record-head p,
 .source-context-note,
 .popup-subtitle,
-.popup-note {
+.popup-note,
+.form-note {
   color: var(--muted);
   font-size: 12px;
   line-height: 1.35;
   margin: 0;
+}
+
+.coordinate-warning {
+  background: var(--red-soft);
+  border: 1px solid rgba(177, 59, 48, 0.28);
+  border-radius: 6px;
+  color: var(--red);
+  font-size: 12px;
+  font-weight: 750;
+  line-height: 1.35;
+  margin: 0;
+  padding: 7px 8px;
 }
 
 .source-record-block {
@@ -733,6 +754,28 @@ tr.focused-row {
 
 .decision-form .wide,
 .form-actions {
+  grid-column: 1 / -1;
+}
+
+.coordinate-decision {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin: 4px 0 0;
+  padding: 10px;
+}
+
+.coordinate-decision legend {
+  color: var(--ink);
+  font-size: 12px;
+  font-weight: 850;
+  padding: 0 4px;
+}
+
+.coordinate-decision .wide,
+.coordinate-decision .form-note {
   grid-column: 1 / -1;
 }
 

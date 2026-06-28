@@ -77,6 +77,62 @@ workbench JSON payloads, and GeoJSON layers end to end. It classifies:
 If the audit reports P0 or P1, the workbench must not be used for manual
 assignment until the mismatch is corrected.
 
+## Coordinate Quality Review
+
+Coordinate quality is a separate concern from label integrity. A civic can have
+the correct ANNCSU odonimo, civic number, `access_id`, and street-register
+assignment evidence while still being unreliable as a geometric point.
+
+`scripts/audit_anncsu_coordinate_quality.py` flags suspicious coordinates
+without modifying ANNCSU raw data. It checks for:
+
+- missing coordinates;
+- implausible lon/lat values and possible X/Y swaps;
+- points outside the municipal boundary candidate;
+- same-street outliers using conservative cluster and nearest-neighbour tests;
+- isolated points relative to civics on the same ANNCSU odonimo;
+- rare census-cell placement for the same street when combined with spatial
+  outlier evidence;
+- anomalous civic-number progression only when the point is also spatially
+  isolated from same-street civics.
+
+The audit writes:
+
+- `data/interim/qa/anncsu_coordinate_quality_report_2025.md`
+- `data/interim/qa/anncsu_coordinate_suspect_points_2025.csv`
+
+The workbench consumes that QA file and marks civics with:
+
+- `coordinate_quality_flag`
+- `coordinate_suspect_reason`
+- `suggested_coordinate_action`
+- `exclude_from_geometry_candidate`
+
+Coordinate-suspect status does not imply that the electoral section is wrong.
+The section decision remains grounded in the electoral street register. The
+coordinate flag means only that the point should be treated cautiously as future
+geometry evidence.
+
+Manual coordinate decisions are exported separately from section decisions:
+
+- `coordinate_decision_type`
+- `original_lon`
+- `original_lat`
+- `proposed_lon`
+- `proposed_lat`
+- `coordinate_decision_confidence`
+- `coordinate_reason`
+- `exclude_from_geometry`
+- `requires_external_coordinate_check`
+
+`manual_coordinate_override` requires proposed coordinates. `exclude_from_geometry`
+does not require alternative coordinates. Neither decision changes ANNCSU raw
+data; both are review evidence for a later auditable geometry workflow.
+
+OpenStreetMap remains visual context only. It can help a reviewer orient the map,
+but it is not an official coordinate correction source and is not used by the
+audit as automatic evidence of error.
+
 ## Evidence Chain
 
 The local review workflow connects four evidence layers:
