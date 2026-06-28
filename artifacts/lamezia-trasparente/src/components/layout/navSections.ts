@@ -251,7 +251,7 @@ const RAW_NAV_GROUPS: NavSection[] = [
   {
     label: "Criticità e luoghi della città",
     description:
-      "Elementi civici da verificare e leggere senza trasformare segnali in accuse.",
+      "Criticità documentali, monitoraggio civico e lettura dei luoghi da verificare.",
     items: [
       {
         href: "/criticita-pubbliche",
@@ -267,21 +267,21 @@ const RAW_NAV_GROUPS: NavSection[] = [
         href: "/monitoraggio",
         label: "Monitor civico",
         description:
-          "Collega luoghi, atti, segnalazioni e verifiche in un percorso di monitoraggio.",
+          "Percorsi di monitoraggio e verifiche civiche collegati a criticità, atti e progetti.",
         icon: Telescope,
         state: "in_progress",
         hasUsefulPage: true,
         keywords: "monitoraggio civico monithon verifiche",
       },
       {
-        href: "/segnalazioni",
+        href: "/segnalazioni-luoghi",
         label: "Segnalazioni / luoghi",
         description:
-          "Punti e casi da segnalare o seguire come elementi da verificare, non come accuse.",
-        icon: Megaphone,
-        state: "in_progress",
-        hasUsefulPage: true,
-        keywords: "segnalazioni luoghi criticita nuova segnalazione fonte verifica",
+          "Vista prevista per collegare segnalazioni, luoghi e stato di verifica territoriale.",
+        icon: MapPinned,
+        state: "planned",
+        hasUsefulPage: false,
+        keywords: "segnalazioni luoghi mappa territorio criticita",
       },
     ],
   },
@@ -355,6 +355,16 @@ const RAW_NAV_GROUPS: NavSection[] = [
         state: "in_progress",
         hasUsefulPage: true,
         keywords: "accesso civico foia richiesta documenti dati",
+      },
+      {
+        href: "/segnalazioni",
+        label: "Segnalazioni",
+        description:
+          "Segnala un dato da verificare o consulta criticita pubbliche distinguendo fatti e interpretazioni.",
+        icon: Megaphone,
+        state: "in_progress",
+        hasUsefulPage: true,
+        keywords: "segnalazioni criticita nuova segnalazione fonte verifica",
       },
       {
         href: "/domande",
