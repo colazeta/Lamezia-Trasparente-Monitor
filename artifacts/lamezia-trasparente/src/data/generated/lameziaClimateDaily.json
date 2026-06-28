@@ -1,11 +1,20 @@
 {
   "schema_version": 1,
   "metadata": {
-    "source": "Open-Meteo Historical Weather API (ERA5 seamless)",
-    "source_url": "https://archive-api.open-meteo.com/v1/archive?latitude=38.9629&longitude=16.3092&start_date=1991-01-01&end_date=2026-06-22&daily=temperature_2m_mean%2Ctemperature_2m_min%2Ctemperature_2m_max%2Cprecipitation_sum&timezone=Europe%2FRome&temperature_unit=celsius&precipitation_unit=mm&models=era5_seamless",
+    "source": "Open-Meteo Historical Weather API (ERA5 seamless) e Open-Meteo past-days per aggiornamento recente",
+    "source_url": "https://archive-api.open-meteo.com/v1/archive?latitude=38.9629&longitude=16.3092&start_date=1991-01-01&end_date=2026-06-27&daily=temperature_2m_mean%2Ctemperature_2m_min%2Ctemperature_2m_max%2Cprecipitation_sum&timezone=Europe%2FRome&temperature_unit=celsius&precipitation_unit=mm&models=era5_seamless",
+    "source_recent_url": "https://api.open-meteo.com/v1/forecast?latitude=38.9629&longitude=16.3092&start_date=2026-06-23&end_date=2026-06-27&daily=temperature_2m_mean%2Ctemperature_2m_min%2Ctemperature_2m_max%2Cprecipitation_sum&timezone=Europe%2FRome&temperature_unit=celsius&precipitation_unit=mm",
     "source_documentation_url": "https://open-meteo.com/en/docs/historical-weather-api",
-    "source_request_count": 426,
-    "source_query_strategy": "Lo script interroga l'API per mese e suddivide automaticamente gli intervalli che ricevono timeout o errori temporanei.",
+    "source_recent_documentation_url": "https://open-meteo.com/en/docs",
+    "source_request_count": 2,
+    "source_archive_request_count": 1,
+    "source_recent_request_count": 1,
+    "source_query_strategy": "La pipeline riusa il JSON statico esistente, interroga l'API storica per i giorni mancanti e colma il tratto più recente con il parametro past-days della Forecast API quando ERA5-Seamless non ha ancora pubblicato il giorno precedente. Con LAMEZIA_CLIMATE_FULL_REFRESH=1 ricostruisce l'intera serie. Le richieste storiche sono mensili e vengono suddivise automaticamente se ricevono timeout o errori temporanei.",
+    "source_update_mode": "incremental",
+    "source_fetch_start_date": "2026-06-23",
+    "source_recent_fetch_start_date": "2026-06-23",
+    "requested_end_date": "2026-06-27",
+    "data_lag_days": 1,
     "coordinates": {
       "name": "Lamezia Terme",
       "latitude": 38.9629,
@@ -13,8 +22,9 @@
       "timezone": "Europe/Rome"
     },
     "baseline_period": "1991–2020",
-    "generated_at": "2026-06-27T20:56:55.743Z",
-    "latest_complete_date": "2026-06-21",
+    "generated_at": "2026-06-28T09:34:26.441Z",
+    "latest_complete_date": "2026-06-27",
+    "update_policy": "Aggiornamento giornaliero pianificato al mattino presto (Europe/Rome): la pipeline richiede il giorno precedente e pubblica il JSON statico solo se la fonte restituisce nuovi dati completi.",
     "licence_or_terms_note": "Dati recuperati da Open-Meteo; verificare i termini aggiornati su https://open-meteo.com/en/terms.",
     "caveat": "Dati di reanalisi meteorologica su griglia: utili per analisi civiche e tendenze locali, non sostituiscono misurazioni certificate di stazione né allerte meteo ufficiali.",
     "leap_day_policy": "Il 29 febbraio usa i valori disponibili nel periodo 1991–2020; se assenti, lo script interpola la normale tra 28 febbraio e 1 marzo."
@@ -12975,7 +12985,13 @@
     {"date":"2026-06-18","year":2026,"month":6,"dayOfYear":169,"tMean":23.7,"tMin":21.6,"tMax":26.3,"precipitation":0.2,"normalTMean":22.4,"anomalyTMean":1.3,"normalRange":{"p10":19.9,"p90":25.4}},
     {"date":"2026-06-19","year":2026,"month":6,"dayOfYear":170,"tMean":24.4,"tMin":20,"tMax":27.7,"precipitation":0,"normalTMean":22.2,"anomalyTMean":2.2,"normalRange":{"p10":20.1,"p90":25.7}},
     {"date":"2026-06-20","year":2026,"month":6,"dayOfYear":171,"tMean":25.6,"tMin":22.5,"tMax":28.6,"precipitation":0.8,"normalTMean":22.3,"anomalyTMean":3.3,"normalRange":{"p10":19.7,"p90":25.2}},
-    {"date":"2026-06-21","year":2026,"month":6,"dayOfYear":172,"tMean":26.1,"tMin":21.4,"tMax":29.8,"precipitation":0,"normalTMean":22.1,"anomalyTMean":4,"normalRange":{"p10":19.7,"p90":25}}
+    {"date":"2026-06-21","year":2026,"month":6,"dayOfYear":172,"tMean":26.1,"tMin":21.4,"tMax":29.8,"precipitation":0,"normalTMean":22.1,"anomalyTMean":4,"normalRange":{"p10":19.7,"p90":25}},
+    {"date":"2026-06-22","year":2026,"month":6,"dayOfYear":173,"tMean":26.2,"tMin":21.7,"tMax":29.8,"precipitation":0.1,"normalTMean":22.7,"anomalyTMean":3.5,"normalRange":{"p10":20.1,"p90":26.1}},
+    {"date":"2026-06-23","year":2026,"month":6,"dayOfYear":174,"tMean":25.8,"tMin":22.3,"tMax":30.3,"precipitation":0.9,"normalTMean":22.9,"anomalyTMean":2.9,"normalRange":{"p10":20.5,"p90":25.8}},
+    {"date":"2026-06-24","year":2026,"month":6,"dayOfYear":175,"tMean":25.7,"tMin":22.7,"tMax":28.8,"precipitation":1,"normalTMean":22.8,"anomalyTMean":2.9,"normalRange":{"p10":20.5,"p90":24.9}},
+    {"date":"2026-06-25","year":2026,"month":6,"dayOfYear":176,"tMean":25.6,"tMin":22.7,"tMax":28.9,"precipitation":1.4,"normalTMean":23.2,"anomalyTMean":2.4,"normalRange":{"p10":20.6,"p90":25}},
+    {"date":"2026-06-26","year":2026,"month":6,"dayOfYear":177,"tMean":25.6,"tMin":21.7,"tMax":29.3,"precipitation":1.1,"normalTMean":23.1,"anomalyTMean":2.5,"normalRange":{"p10":20.1,"p90":25.3}},
+    {"date":"2026-06-27","year":2026,"month":6,"dayOfYear":178,"tMean":26.5,"tMin":23,"tMax":30.5,"precipitation":0.2,"normalTMean":23.2,"anomalyTMean":3.3,"normalRange":{"p10":20.5,"p90":25.5}}
   ],
   "annual": [
     {"year":1991,"days":365,"averageTMean":15.9,"meanAnomalyTMean":-0.8,"warmDaysOver30C":4,"tropicalNights":61,"precipitationTotal":775.2,"latestDate":"1991-12-31"},
@@ -13013,6 +13029,6 @@
     {"year":2023,"days":365,"averageTMean":17.8,"meanAnomalyTMean":1.1,"warmDaysOver30C":26,"tropicalNights":89,"precipitationTotal":1042.9,"latestDate":"2023-12-31"},
     {"year":2024,"days":366,"averageTMean":18.5,"meanAnomalyTMean":1.8,"warmDaysOver30C":57,"tropicalNights":95,"precipitationTotal":1001.9,"latestDate":"2024-12-31"},
     {"year":2025,"days":365,"averageTMean":18.1,"meanAnomalyTMean":1.4,"warmDaysOver30C":33,"tropicalNights":105,"precipitationTotal":748.7,"latestDate":"2025-12-31"},
-    {"year":2026,"days":172,"averageTMean":15,"meanAnomalyTMean":1.4,"warmDaysOver30C":0,"tropicalNights":8,"precipitationTotal":792.5,"latestDate":"2026-06-21"}
+    {"year":2026,"days":178,"averageTMean":15.4,"meanAnomalyTMean":1.4,"warmDaysOver30C":2,"tropicalNights":14,"precipitationTotal":797.2,"latestDate":"2026-06-27"}
   ]
 }

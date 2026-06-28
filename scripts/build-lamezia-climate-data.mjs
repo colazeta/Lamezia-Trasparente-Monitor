@@ -1,13 +1,15 @@
-import { mkdir, writeFile } from "node:fs/promises";
+import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import {
   BASELINE_PERIOD_LABEL,
   CLIMATE_DATA_CAVEAT,
+  DEFAULT_CLIMATE_UPDATE_TIMEZONE,
   DEFAULT_BASELINE_PERIOD,
   buildAnnualClimateMetrics,
   buildClimateNormals,
   enrichClimateDailyRecords,
+  getLatestCompleteLocalDate,
 } from "./climate/lameziaClimateCore.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -18,16 +20,27 @@ const outputPath = path.join(
 );
 
 const OPEN_METEO_ARCHIVE_URL = "https://archive-api.open-meteo.com/v1/archive";
+const OPEN_METEO_RECENT_URL = "https://api.open-meteo.com/v1/forecast";
 const OPEN_METEO_DOCS_URL = "https://open-meteo.com/en/docs/historical-weather-api";
+const OPEN_METEO_RECENT_DOCS_URL = "https://open-meteo.com/en/docs";
 const OPEN_METEO_TERMS_URL = "https://open-meteo.com/en/terms";
 const OPEN_METEO_MODEL = "era5_seamless";
-const DATA_LAG_DAYS = 5;
+const DATA_LAG_DAYS = Number.parseInt(
+  process.env.LAMEZIA_CLIMATE_LAG_DAYS ?? "1",
+  10,
+);
+if (!Number.isInteger(DATA_LAG_DAYS) || DATA_LAG_DAYS < 0) {
+  throw new Error(`Invalid LAMEZIA_CLIMATE_LAG_DAYS: ${DATA_LAG_DAYS}`);
+}
+
 const COORDINATES = {
   name: "Lamezia Terme",
   latitude: 38.9629,
   longitude: 16.3092,
-  timezone: "Europe/Rome",
+  timezone: DEFAULT_CLIMATE_UPDATE_TIMEZONE,
 };
+const UPDATE_POLICY =
+  "Aggiornamento giornaliero pianificato al mattino presto (Europe/Rome): la pipeline richiede il giorno precedente e pubblica il JSON statico solo se la fonte restituisce nuovi dati completi.";
 
 const dailyVariables = [
   "temperature_2m_mean",
@@ -40,19 +53,60 @@ const startDate =
   process.env.LAMEZIA_CLIMATE_START_DATE ??
   `${DEFAULT_BASELINE_PERIOD.startYear}-01-01`;
 const requestedEndDate =
-  process.env.LAMEZIA_CLIMATE_END_DATE ?? getLatestCompleteDate();
+  process.env.LAMEZIA_CLIMATE_END_DATE ??
+  getLatestCompleteLocalDate(new Date(), {
+    timeZone: COORDINATES.timezone,
+    lagDays: DATA_LAG_DAYS,
+  });
 
 const sourceUrl = buildOpenMeteoUrl(startDate, requestedEndDate);
-const chunks = buildMonthChunks(startDate, requestedEndDate);
-const fetchStats = { successfulRequests: 0 };
-const rawRecords = [];
+const existingRecords = await readExistingRawRecords(outputPath);
+const canUseExistingRecords =
+  process.env.LAMEZIA_CLIMATE_FULL_REFRESH !== "1" &&
+  existingRecords.length > 0 &&
+  existingRecords[0].date <= startDate;
+const baseRecords = canUseExistingRecords
+  ? existingRecords.filter(
+      (record) => record.date >= startDate && record.date <= requestedEndDate,
+    )
+  : [];
+const latestBaseDate = baseRecords[baseRecords.length - 1]?.date ?? null;
+const fetchStartDate =
+  canUseExistingRecords && latestBaseDate
+    ? nextIsoDate(latestBaseDate)
+    : startDate;
+const chunks =
+  fetchStartDate <= requestedEndDate
+    ? buildMonthChunks(fetchStartDate, requestedEndDate)
+    : [];
+const fetchStats = { archiveRequests: 0, recentRequests: 0 };
+const fetchedRecords = [];
 
 for (const chunk of chunks) {
-  rawRecords.push(
+  fetchedRecords.push(
     ...(await fetchDailyRecordsForRange(chunk.start, chunk.end, fetchStats)),
   );
 }
 
+const archiveRecords = mergeDailyRecords(baseRecords, fetchedRecords);
+const latestArchiveDate =
+  archiveRecords[archiveRecords.length - 1]?.date ?? null;
+const recentFetchStartDate =
+  latestArchiveDate && latestArchiveDate < requestedEndDate
+    ? nextIsoDate(latestArchiveDate)
+    : null;
+const recentSourceUrl = recentFetchStartDate
+  ? buildOpenMeteoRecentUrl(recentFetchStartDate, requestedEndDate)
+  : null;
+const recentRecords = recentFetchStartDate
+  ? await fetchRecentDailyRecordsForRange(
+      recentFetchStartDate,
+      requestedEndDate,
+      fetchStats,
+    )
+  : [];
+
+const rawRecords = mergeDailyRecords(archiveRecords, recentRecords);
 if (rawRecords.length === 0) {
   throw new Error("Open-Meteo response did not contain daily climate records.");
 }
@@ -65,16 +119,27 @@ const latestCompleteDate = daily[daily.length - 1]?.date ?? requestedEndDate;
 const generated = {
   schema_version: 1,
   metadata: {
-    source: "Open-Meteo Historical Weather API (ERA5 seamless)",
+    source:
+      "Open-Meteo Historical Weather API (ERA5 seamless) e Open-Meteo past-days per aggiornamento recente",
     source_url: sourceUrl,
+    source_recent_url: recentSourceUrl,
     source_documentation_url: OPEN_METEO_DOCS_URL,
-    source_request_count: fetchStats.successfulRequests,
+    source_recent_documentation_url: OPEN_METEO_RECENT_DOCS_URL,
+    source_request_count: fetchStats.archiveRequests + fetchStats.recentRequests,
+    source_archive_request_count: fetchStats.archiveRequests,
+    source_recent_request_count: fetchStats.recentRequests,
     source_query_strategy:
-      "Lo script interroga l'API per mese e suddivide automaticamente gli intervalli che ricevono timeout o errori temporanei.",
+      "La pipeline riusa il JSON statico esistente, interroga l'API storica per i giorni mancanti e colma il tratto più recente con il parametro past-days della Forecast API quando ERA5-Seamless non ha ancora pubblicato il giorno precedente. Con LAMEZIA_CLIMATE_FULL_REFRESH=1 ricostruisce l'intera serie. Le richieste storiche sono mensili e vengono suddivise automaticamente se ricevono timeout o errori temporanei.",
+    source_update_mode: canUseExistingRecords ? "incremental" : "full",
+    source_fetch_start_date: chunks[0]?.start ?? null,
+    source_recent_fetch_start_date: recentFetchStartDate,
+    requested_end_date: requestedEndDate,
+    data_lag_days: DATA_LAG_DAYS,
     coordinates: COORDINATES,
     baseline_period: BASELINE_PERIOD_LABEL,
     generated_at: new Date().toISOString(),
     latest_complete_date: latestCompleteDate,
+    update_policy: UPDATE_POLICY,
     licence_or_terms_note: `Dati recuperati da Open-Meteo; verificare i termini aggiornati su ${OPEN_METEO_TERMS_URL}.`,
     caveat: CLIMATE_DATA_CAVEAT,
     leap_day_policy:
@@ -106,6 +171,77 @@ function buildOpenMeteoUrl(start, end) {
   url.searchParams.set("precipitation_unit", "mm");
   url.searchParams.set("models", OPEN_METEO_MODEL);
   return url.toString();
+}
+
+function buildOpenMeteoRecentUrl(start, end) {
+  const url = new URL(OPEN_METEO_RECENT_URL);
+  url.searchParams.set("latitude", String(COORDINATES.latitude));
+  url.searchParams.set("longitude", String(COORDINATES.longitude));
+  url.searchParams.set("start_date", start);
+  url.searchParams.set("end_date", end);
+  url.searchParams.set("daily", dailyVariables.join(","));
+  url.searchParams.set("timezone", COORDINATES.timezone);
+  url.searchParams.set("temperature_unit", "celsius");
+  url.searchParams.set("precipitation_unit", "mm");
+  return url.toString();
+}
+
+async function readExistingRawRecords(filePath) {
+  try {
+    const dataset = JSON.parse(await readFile(filePath, "utf8"));
+    if (!Array.isArray(dataset.daily)) {
+      return [];
+    }
+
+    return dataset.daily
+      .map(toRawRecordFromExisting)
+      .filter(isCompleteRawRecord)
+      .sort((a, b) => a.date.localeCompare(b.date));
+  } catch (error) {
+    if (error?.code === "ENOENT") {
+      return [];
+    }
+    throw error;
+  }
+}
+
+function toRawRecordFromExisting(record) {
+  return {
+    date: record.date,
+    tMean: numericValue(record.tMean),
+    tMin: numericValue(record.tMin),
+    tMax: numericValue(record.tMax),
+    precipitation: numericValue(record.precipitation),
+  };
+}
+
+function isCompleteRawRecord(record) {
+  return (
+    typeof record.date === "string" &&
+    Number.isFinite(record.tMean) &&
+    Number.isFinite(record.tMin) &&
+    Number.isFinite(record.tMax)
+  );
+}
+
+function mergeDailyRecords(...recordSets) {
+  const byDate = new Map();
+  for (const records of recordSets) {
+    for (const record of records) {
+      if (isCompleteRawRecord(record)) {
+        byDate.set(record.date, record);
+      }
+    }
+  }
+
+  return Array.from(byDate.values()).sort((a, b) =>
+    a.date.localeCompare(b.date),
+  );
+}
+
+function nextIsoDate(date) {
+  const parsed = Date.parse(`${date}T00:00:00Z`);
+  return new Date(parsed + 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
 }
 
 function buildMonthChunks(start, end) {
@@ -200,7 +336,7 @@ async function fetchDailyRecordsForRange(start, end, fetchStats) {
 
   try {
     const payload = await fetchOpenMeteoJson(url);
-    fetchStats.successfulRequests += 1;
+    fetchStats.archiveRequests += 1;
     return toDailyRecords(payload.daily);
   } catch (error) {
     if (start >= end) {
@@ -217,6 +353,13 @@ async function fetchDailyRecordsForRange(start, end, fetchStats) {
       )),
     ];
   }
+}
+
+async function fetchRecentDailyRecordsForRange(start, end, fetchStats) {
+  const url = buildOpenMeteoRecentUrl(start, end);
+  const payload = await fetchOpenMeteoJson(url);
+  fetchStats.recentRequests += 1;
+  return toDailyRecords(payload.daily);
 }
 
 function splitDateRange(start, end) {
@@ -241,14 +384,6 @@ function splitDateRange(start, end) {
 
 function delay(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
-}
-
-function getLatestCompleteDate(now = new Date()) {
-  const date = new Date(
-    Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()),
-  );
-  date.setUTCDate(date.getUTCDate() - DATA_LAG_DAYS);
-  return date.toISOString().slice(0, 10);
 }
 
 function toDailyRecords(daily) {

@@ -7,6 +7,7 @@ import {
   buildAnnualClimateMetrics,
   buildClimateNormals,
   enrichClimateDailyRecords,
+  getLatestCompleteLocalDate,
 } from "./lameziaClimateCore.mjs";
 
 test("calcola la normale climatica 1991-2020 per giorno dell'anno", () => {
@@ -48,6 +49,21 @@ test("gestisce esplicitamente il 29 febbraio", () => {
   assert.equal(record.dayOfYear, 60);
   assert.equal(record.normalTMean, 11);
   assert.equal(record.anomalyTMean, 4);
+});
+
+test("calcola l'ultimo giorno completo come giorno precedente in Europe/Rome", () => {
+  assert.equal(
+    getLatestCompleteLocalDate(new Date("2026-06-28T05:15:00Z"), {
+      timeZone: "Europe/Rome",
+    }),
+    "2026-06-27",
+  );
+  assert.equal(
+    getLatestCompleteLocalDate(new Date("2026-01-02T05:15:00Z"), {
+      timeZone: "Europe/Rome",
+    }),
+    "2026-01-01",
+  );
 });
 
 test("calcola metriche annuali da temperature e precipitazioni giornaliere", () => {
@@ -105,8 +121,19 @@ test("il JSON statico espone metadati e record giornalieri richiesti", async () 
   assert.equal(typeof json.metadata.source_url, "string");
   assert.equal(typeof json.metadata.generated_at, "string");
   assert.equal(typeof json.metadata.latest_complete_date, "string");
+  assert.match(json.metadata.source_update_mode, /^(incremental|full)$/);
+  assert.equal(typeof json.metadata.source_archive_request_count, "number");
+  assert.equal(typeof json.metadata.source_recent_request_count, "number");
+  assert.ok(
+    json.metadata.source_recent_url === null ||
+      typeof json.metadata.source_recent_url === "string",
+  );
+  assert.equal(typeof json.metadata.requested_end_date, "string");
+  assert.equal(typeof json.metadata.data_lag_days, "number");
+  assert.equal(typeof json.metadata.update_policy, "string");
   assert.equal(typeof json.metadata.licence_or_terms_note, "string");
   assert.equal(typeof json.metadata.coordinates.latitude, "number");
+  assert.equal(json.metadata.coordinates.timezone, "Europe/Rome");
   assert.ok(Array.isArray(json.daily));
   assert.ok(json.daily.length > 0);
   assert.deepEqual(Object.keys(json.daily[0].normalRange), ["p10", "p90"]);

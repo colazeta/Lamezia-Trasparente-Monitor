@@ -6,6 +6,8 @@ export const DEFAULT_BASELINE_PERIOD = Object.freeze({
   label: BASELINE_PERIOD_LABEL,
 });
 
+export const DEFAULT_CLIMATE_UPDATE_TIMEZONE = "Europe/Rome";
+
 export const CLIMATE_DATA_CAVEAT =
   "Dati di reanalisi meteorologica su griglia: utili per analisi civiche e tendenze locali, non sostituiscono misurazioni certificate di stazione né allerte meteo ufficiali.";
 
@@ -41,6 +43,40 @@ export function getDayOfYear(date) {
 
 export function isLeapDay(date) {
   return getDayKey(date) === LEAP_DAY_KEY;
+}
+
+export function getLatestCompleteLocalDate(
+  now = new Date(),
+  { timeZone = DEFAULT_CLIMATE_UPDATE_TIMEZONE, lagDays = 1 } = {},
+) {
+  if (!Number.isInteger(lagDays) || lagDays < 0) {
+    throw new Error(`Invalid climate data lag: ${lagDays}`);
+  }
+
+  const localParts = new Intl.DateTimeFormat("en-US", {
+    timeZone,
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  })
+    .formatToParts(now)
+    .reduce((parts, part) => {
+      if (part.type !== "literal") {
+        parts[part.type] = part.value;
+      }
+      return parts;
+    }, {});
+
+  const localDateAtNoonUtc = new Date(
+    Date.UTC(
+      Number(localParts.year),
+      Number(localParts.month) - 1,
+      Number(localParts.day),
+      12,
+    ),
+  );
+  localDateAtNoonUtc.setUTCDate(localDateAtNoonUtc.getUTCDate() - lagDays);
+  return localDateAtNoonUtc.toISOString().slice(0, 10);
 }
 
 export function roundNumber(value, digits = 1) {
