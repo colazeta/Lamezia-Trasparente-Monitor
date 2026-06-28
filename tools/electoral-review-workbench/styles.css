@@ -479,6 +479,19 @@ h3 {
   stroke-width: 1.5;
 }
 
+.fallback-relocation-line {
+  stroke: #9b3f8f;
+  stroke-dasharray: 8 7;
+  stroke-width: 4;
+}
+
+.fallback-relocation-proposed {
+  fill: #ffffff;
+  opacity: 0.95;
+  stroke: #9b3f8f;
+  stroke-width: 4;
+}
+
 .tabs {
   border-bottom: 1px solid var(--line);
   display: flex;
@@ -777,6 +790,46 @@ tr.focused-row {
 .coordinate-decision .wide,
 .coordinate-decision .form-note {
   grid-column: 1 / -1;
+}
+
+.coordinate-relocation-tools {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.coordinate-relocation-tools button {
+  background: #ffffff;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  color: var(--ink);
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 800;
+  padding: 8px 10px;
+}
+
+.coordinate-relocation-tools button:hover {
+  border-color: var(--green);
+  box-shadow: 0 0 0 2px rgba(22, 118, 95, 0.12);
+}
+
+.coordinate-support {
+  background: #f8faf8;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 10px;
+}
+
+.support-empty,
+.relocation-support-panel {
+  display: grid;
+  gap: 9px;
+}
+
+.relocation-support-panel h4 {
+  font-size: 12px;
+  margin: 4px 0 0;
 }
 
 .form-actions {
