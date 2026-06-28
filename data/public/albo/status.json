@@ -1,27 +1,31 @@
 {
-  "generated_at": "2026-06-19T00:00:00.000Z",
+  "generated_at": "2026-06-21T08:42:39.274Z",
   "source": "Albo Pretorio Comune di Lamezia Terme",
   "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
   "provider": "Tinnvision",
-  "last_run_at": null,
-  "last_update": null,
-  "method": null,
-  "raw_format": null,
+  "last_run_at": "2026-06-21T08:42:39.274Z",
+  "last_update": "2026-06-21T08:42:39.274Z",
+  "method": "xml",
+  "raw_format": "xml",
   "counts": {
-    "acquired": 0,
-    "new": 0,
+    "acquired": 143,
+    "new": 143,
     "changed": 0,
     "removed": 0,
     "unchanged": 0,
-    "publishable": 0,
-    "minimised": 0,
-    "metadata_only": 0,
-    "excluded": 0
+    "publishable": 91,
+    "minimised": 27,
+    "metadata_only": 23,
+    "excluded": 2
   },
-  "warnings": [
-    "Pipeline configurata; nessuna esecuzione ufficiale registrata nel repository al momento del seed Tranche B."
-  ],
-  "next_scheduled_check": null,
+  "diff_baseline": {
+    "status": "baseline_unavailable",
+    "public_safe": false,
+    "previous_retrieved_at": null,
+    "note": "No previous Albo snapshot was available; this diff is the first public-safe run baseline."
+  },
+  "warnings": [],
+  "next_scheduled_check": "2026-06-21T09:10:00.000Z",
   "schedule": {
     "monitoring_window": "08:00-20:00 Europe/Rome",
     "timezone": "Europe/Rome",
@@ -29,11 +33,12 @@
     "utc_handling": "GitHub cron usa UTC; il workflow calcola l'ora Europe/Rome e salta le esecuzioni fuori dalla finestra civica.",
     "zero_cost_runner": "ubuntu-latest"
   },
-  "verification_status": "verification_required",
+  "verification_status": "official_source_acquired",
   "known_limits": [
-    "Tranche B rende operativa la pipeline ma non certifica completezza storica dell'Albo Pretorio.",
+    "Tranche A acquisisce l'elenco degli atti correnti esposto dalla fonte ufficiale, senza dichiarare completezza storica.",
     "I PDF sono archiviati solo per record pubblicabili a basso rischio; allegati e PDF non sono analizzati, interpretati o sottoposti a OCR.",
-    "Il layer pubblico espone solo metadati minimizzati o aggregati quando le regole prudenziali lo richiedono."
+    "Gli export Tinnvision possono non includere URL diretti agli allegati; il record pubblico rimanda alla fonte ufficiale.",
+    "La classificazione privacy e' prudenziale e automatica; i casi sensibili richiedono revisione umana prima di esposizioni piu' ricche."
   ],
   "official_albo_disclaimer": "Lamezia Trasparente Monitor non sostituisce l'Albo Pretorio ufficiale: pubblicazioni, termini, allegati e contenuti vanno verificati sulla fonte istituzionale.",
   "civic_safeguards": [
