@@ -8,6 +8,8 @@ type PublicErrorBoundaryProps = {
   children: ReactNode;
 };
 
+const publicHomePath = import.meta.env.BASE_URL || "/";
+
 type PublicErrorBoundaryState = {
   hasError: boolean;
 };
