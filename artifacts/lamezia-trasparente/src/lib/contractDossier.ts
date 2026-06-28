@@ -39,6 +39,7 @@ export type ContractLifecyclePhaseKey =
   | "programmazione"
   | "progettazione"
   | "gara_pubblicazione"
+  | "svolgimento_gara"
   | "affidamento"
   | "esecuzione"
   | "valutazione";
@@ -150,6 +151,7 @@ export const CONTRACT_LIFECYCLE_PHASE_ORDER: readonly ContractLifecyclePhaseKey[
     "programmazione",
     "progettazione",
     "gara_pubblicazione",
+    "svolgimento_gara",
     "affidamento",
     "esecuzione",
     "valutazione",
@@ -159,9 +161,10 @@ const PHASE_LABELS: Record<ContractLifecyclePhaseKey, string> = {
   programmazione: "Programmazione",
   progettazione: "Progettazione",
   gara_pubblicazione: "Gara / pubblicazione",
+  svolgimento_gara: "Esecuzione della gara",
   affidamento: "Affidamento",
-  esecuzione: "Esecuzione",
-  valutazione: "Valutazione",
+  esecuzione: "Esecuzione del contratto",
+  valutazione: "Conclusione, collaudi e verifiche",
 };
 
 export function buildContractDossier(input: {
@@ -514,6 +517,36 @@ function buildPhase(input: {
         : input.bdncpBridgeAvailable
           ? ["Sincronizzazione scheda BDNCP"]
           : ["CIG o link BDNCP"],
+    };
+  }
+
+  if (phaseKey === "svolgimento_gara") {
+    const hasCig =
+      input.cigClassification.type === "cig" &&
+      input.cigClassification.formallyValid;
+    const status = officialEvidence.length
+      ? "documented"
+      : evidenceForPhase.length || input.bdncpBridgeAvailable || hasCig
+        ? "partial"
+        : "missing";
+    return {
+      key: phaseKey,
+      label: PHASE_LABELS[phaseKey],
+      status,
+      summary: officialEvidence.length
+        ? `${officialEvidence.length} evidenza/e sullo svolgimento della gara con fonte disponibile.`
+        : evidenceForPhase.length
+          ? "Evidenze sullo svolgimento della gara rilevate, fonte da completare."
+          : input.bdncpBridgeAvailable
+            ? "CIG con ponte di ricerca BDNCP/PVL; verbali, offerte o esiti di gara restano da collegare."
+            : hasCig
+              ? "CIG presente, ma svolgimento della gara da documentare con fonte esplicita."
+              : "Fase non documentata nelle fonti disponibili.",
+      evidenceIds: evidenceForPhase.map((evidence) => evidence.id),
+      missing:
+        status === "documented"
+          ? []
+          : ["Verbali di gara, offerte, graduatoria o esiti"],
     };
   }
 
