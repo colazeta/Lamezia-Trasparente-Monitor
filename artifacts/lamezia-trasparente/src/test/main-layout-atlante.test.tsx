@@ -44,21 +44,49 @@ function renderLayoutAt(path: string) {
   );
 }
 
-describe("MainLayout Atlante route", () => {
-  it("lets Atlante territoriale start from its explorer instead of the diagnostic scaffold", () => {
+const INTERNAL_PUBLIC_ROUTES = [
+  "/convocazioni",
+  "/delibere",
+  "/albo",
+  "/contratti",
+  "/incarichimetro",
+  "/pnrr",
+  "/organi",
+  "/amministratori",
+  "/monitoraggio",
+  "/criticita-pubbliche",
+  "/segnalazioni",
+  "/fonti-dati",
+  "/stato-monitoraggio",
+  "/metodologia",
+  "/atlante-territoriale",
+  "/legalita",
+  "/legalita/timeline",
+  "/legalita/trame-festival",
+] as const;
+
+describe("MainLayout public route content", () => {
+  it.each(INTERNAL_PUBLIC_ROUTES)(
+    "lets %s start from its own page body",
+    (route) => {
+      renderLayoutAt(route);
+
+      expect(screen.queryByTestId("section-scaffold")).not.toBeInTheDocument();
+      expect(screen.getByText("Pagina pubblica")).toBeInTheDocument();
+    },
+  );
+
+  it("keeps the civic helper off the Atlante explorer viewport", () => {
     renderLayoutAt("/atlante-territoriale");
 
-    expect(screen.queryByTestId("section-scaffold")).not.toBeInTheDocument();
     expect(screen.queryByTestId("civic-helper-fab")).not.toBeInTheDocument();
     expect(screen.queryByTestId("civic-assistant")).not.toBeInTheDocument();
     expect(screen.queryByTestId("civic-welcome")).not.toBeInTheDocument();
-    expect(screen.getByText("Pagina pubblica")).toBeInTheDocument();
   });
 
-  it("keeps the civic scaffold on ordinary public routes", () => {
-    renderLayoutAt("/contratti");
+  it("keeps the civic helper available on ordinary public routes", () => {
+    renderLayoutAt("/albo");
 
-    expect(screen.getByTestId("section-scaffold")).toBeInTheDocument();
     expect(screen.getByTestId("civic-helper-fab")).toBeInTheDocument();
     expect(screen.getByTestId("civic-assistant")).toBeInTheDocument();
     expect(screen.getByTestId("civic-welcome")).toBeInTheDocument();
