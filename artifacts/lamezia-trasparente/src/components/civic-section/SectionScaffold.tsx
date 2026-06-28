@@ -84,7 +84,7 @@ export function SectionScaffold() {
   const Icon = active?.item.icon ?? Database;
 
   return (
-    <section className="border-b border-border bg-muted/25">
+    <section className="border-b border-border bg-card/45">
       <div className="container mx-auto px-4 py-5 md:px-6 md:py-7">
         <nav
           aria-label="Percorso di navigazione"
@@ -109,13 +109,13 @@ export function SectionScaffold() {
           </span>
         </nav>
 
-        <div className="mt-4 grid gap-5 lg:grid-cols-[minmax(0,1.1fr)_minmax(19rem,0.9fr)]">
+        <div className="mt-4 grid gap-5 lg:grid-cols-[minmax(0,1.15fr)_minmax(18rem,0.85fr)] lg:gap-7">
           <div className="min-w-0">
             <div className="flex flex-wrap gap-2">
               <SectionStatusBadge status={section.status} />
               <LaunchReadinessBadge readiness={section.launchReadiness} />
             </div>
-            <h1 className="mt-3 font-display text-2xl font-bold text-foreground md:text-3xl">
+            <h1 className="mt-3 max-w-3xl font-display text-2xl font-bold leading-tight text-foreground md:text-3xl">
               {section.title}
             </h1>
             <p className="mt-2 max-w-3xl text-sm leading-6 text-muted-foreground md:text-base">
@@ -178,7 +178,7 @@ function LaunchReadinessBadge({
 
 export function CivicQuestionBlock({ question }: { question: string }) {
   return (
-    <div className="rounded-lg border border-border bg-background/75 p-4">
+    <div className="rounded-md border border-card-border bg-card/85 p-4 shadow-[var(--shadow-card)]">
       <p className="text-[11px] font-bold uppercase text-primary">
         Domanda civica
       </p>
@@ -191,7 +191,7 @@ export function CivicQuestionBlock({ question }: { question: string }) {
 
 function WhatThisHelpsBlock({ items }: { items: readonly string[] }) {
   return (
-    <div className="rounded-lg border border-border bg-background/75 p-4">
+    <div className="rounded-md border border-card-border bg-card/85 p-4 shadow-[var(--shadow-card)]">
       <p className="text-[11px] font-bold uppercase text-primary">
         Aiuta a capire
       </p>
@@ -218,7 +218,7 @@ function PageImplementationPanel({
 
   return (
     <details
-      className="mt-5 rounded-lg border border-border bg-background/75 p-4 [&>summary::-webkit-details-marker]:hidden"
+      className="group mt-5 rounded-md border border-card-border bg-card/85 p-4 shadow-[var(--shadow-card)] [&>summary::-webkit-details-marker]:hidden"
       aria-label={`Struttura operativa della sezione ${section.title}`}
     >
       <summary className="flex cursor-pointer list-none items-start justify-between gap-4">
@@ -231,13 +231,13 @@ function PageImplementationPanel({
           </span>
         </span>
         <ChevronRight
-          className="mt-1 h-4 w-4 shrink-0 text-muted-foreground"
+          className="mt-1 h-4 w-4 shrink-0 text-muted-foreground transition-transform group-open:rotate-90"
           aria-hidden="true"
         />
       </summary>
 
       <div className="mt-4 grid gap-3 lg:grid-cols-[minmax(0,1.05fr)_minmax(16rem,0.95fr)_minmax(16rem,0.85fr)]">
-        <div className="rounded-lg border border-border bg-muted/20 p-4">
+        <div className="rounded-md border border-border bg-muted/20 p-4">
           <p className="flex items-center gap-1.5 text-[11px] font-bold uppercase text-primary">
             <Database className="h-3.5 w-3.5" aria-hidden="true" />
             Dato letto
@@ -265,7 +265,7 @@ function PageImplementationPanel({
           </dl>
         </div>
 
-        <div className="rounded-lg border border-border bg-muted/20 p-4">
+        <div className="rounded-md border border-border bg-muted/20 p-4">
           <p className="flex items-center gap-1.5 text-[11px] font-bold uppercase text-primary">
             <ListChecks className="h-3.5 w-3.5" aria-hidden="true" />
             Ordine di lettura
@@ -282,7 +282,7 @@ function PageImplementationPanel({
           </ol>
         </div>
 
-        <div className="rounded-lg border border-border bg-muted/20 p-4">
+        <div className="rounded-md border border-border bg-muted/20 p-4">
           <p className="flex items-center gap-1.5 text-[11px] font-bold uppercase text-primary">
             <SlidersHorizontal className="h-3.5 w-3.5" aria-hidden="true" />
             Filtri e cautele
@@ -332,7 +332,7 @@ export function DataReadinessPanel({
   const readiness = section.dataReadiness;
 
   return (
-    <div className="rounded-lg border border-border bg-background/75 p-4">
+    <div className="rounded-md border border-card-border bg-card/85 p-4 shadow-[var(--shadow-card)]">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
           <p className="text-[11px] font-bold uppercase text-primary">
@@ -394,7 +394,7 @@ export function EmptyDataState({
   return (
     <div
       className={cn(
-        "mt-4 rounded-md border border-dashed border-border bg-muted/35 p-3",
+        "mt-4 rounded-md border border-dashed border-border bg-muted/30 p-3",
         !compact && "md:col-span-2",
       )}
     >
@@ -421,7 +421,7 @@ export function RelatedNavigationBlock({
   if (related.length === 0) return null;
 
   return (
-    <div className="rounded-lg border border-border bg-background/75 p-4">
+    <div className="rounded-md border border-card-border bg-card/85 p-4 shadow-[var(--shadow-card)]">
       <p className="text-[11px] font-bold uppercase text-primary">
         Prossimi passi
       </p>
