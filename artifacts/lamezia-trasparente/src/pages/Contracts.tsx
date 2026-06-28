@@ -86,6 +86,7 @@ import {
 import { InterventionsMap } from "@/components/InterventionsMap";
 import { FeedSubscribeButton } from "@/components/FeedSubscribeButton";
 import { V0SectionLanding } from "@/components/launch/V0SectionLanding";
+import { ContractSourcePipelinePanel } from "@/components/contracts";
 import { quartiereLabel } from "@/lib/gis";
 import { asApiList } from "@/lib/apiList";
 import { BDNCP_APPALTI_URL, preferredBdncpUrl } from "@/lib/bdncp";
@@ -390,6 +391,8 @@ export function Contracts() {
       </div>
 
       {/* In cosa spende il Comune — spesa per macrotemi */}
+      <ContractSourcePipelinePanel />
+
       <BdncpBridge
         contracts={contracts}
         loading={isLoading}
