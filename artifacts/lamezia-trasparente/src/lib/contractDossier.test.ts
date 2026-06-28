@@ -95,6 +95,7 @@ describe("contract dossier lifecycle", () => {
       "programmazione",
       "progettazione",
       "gara_pubblicazione",
+      "svolgimento_gara",
       "affidamento",
       "esecuzione",
       "valutazione",
@@ -116,9 +117,21 @@ describe("contract dossier lifecycle", () => {
     expect(getLifecyclePhase(dossier, "gara_pubblicazione").status).toBe(
       "partial",
     );
+    expect(getLifecyclePhase(dossier, "svolgimento_gara").status).toBe(
+      "partial",
+    );
     expect(getLifecyclePhase(dossier, "affidamento").status).toBe("documented");
     expect(getLifecyclePhase(dossier, "esecuzione").status).toBe("documented");
     expect(getLifecyclePhase(dossier, "valutazione").status).toBe("documented");
+    expect(dossier.phases.map((phase) => phase.label)).toEqual([
+      "Programmazione",
+      "Progettazione",
+      "Gara / pubblicazione",
+      "Esecuzione della gara",
+      "Affidamento",
+      "Esecuzione del contratto",
+      "Conclusione, collaudi e verifiche",
+    ]);
   });
 
   it("surfaces missing CIG and CUP without inventing links or public-work completeness", () => {

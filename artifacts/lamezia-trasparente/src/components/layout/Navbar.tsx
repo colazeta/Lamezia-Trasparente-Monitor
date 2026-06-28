@@ -7,6 +7,7 @@ import {
   Home,
   ChevronDown,
   BookOpen,
+  Layers,
 } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
@@ -41,7 +42,9 @@ export function Navbar() {
   const isActive = (href: string) => isSectionActive(href, location);
 
   const sezioniActive = NAV_GROUPS.some((group) =>
-    group.items.some((item) => isActive(item.href)),
+    group.items.some(
+      (item) => item.href !== "/contratti" && isActive(item.href),
+    ),
   );
 
   const linkClass = (active: boolean) =>
@@ -61,7 +64,7 @@ export function Navbar() {
           </Link>
 
           {/* Desktop Nav */}
-          <nav className="hidden items-center gap-1 xl:flex">
+          <nav className="hidden items-center gap-1 lg:flex">
             <Link href="/" className={linkClass(location === "/")}>
               <Home className="h-4 w-4" aria-hidden="true" />
               Home
@@ -78,10 +81,21 @@ export function Navbar() {
               )}
             </Link>
 
+            <Link
+              href="/contratti"
+              className={linkClass(isActive("/contratti"))}
+            >
+              <FileText className="h-4 w-4" aria-hidden="true" />
+              Contratti
+              {isActive("/contratti") && (
+                <span className="absolute inset-x-2.5 -bottom-px h-0.5 rounded-full bg-primary" />
+              )}
+            </Link>
+
             {/* Sezioni — grouped mega-menu */}
             <DropdownMenu modal={false}>
               <DropdownMenuTrigger className={linkClass(sezioniActive)}>
-                <FileText className="h-4 w-4" aria-hidden="true" />
+                <Layers className="h-4 w-4" aria-hidden="true" />
                 Sezioni
                 <ChevronDown
                   className="h-3.5 w-3.5 opacity-70"
@@ -109,7 +123,10 @@ export function Navbar() {
                               className="flex w-full cursor-not-allowed items-center gap-2 opacity-70 grayscale"
                               aria-disabled="true"
                             >
-                              <Icon className="h-4 w-4 text-muted-foreground" aria-hidden="true" />
+                              <Icon
+                                className="h-4 w-4 text-muted-foreground"
+                                aria-hidden="true"
+                              />
                               <span className="flex min-w-0 flex-1 items-center justify-between gap-2">
                                 <span className="truncate">{item.label}</span>
                                 {item.state !== "available" ? (
@@ -166,7 +183,7 @@ export function Navbar() {
             <Button
               variant="outline"
               size="icon"
-              className="xl:hidden"
+              className="lg:hidden"
               onClick={() => setIsOpen(!isOpen)}
               aria-label="Menu"
             >
@@ -181,7 +198,7 @@ export function Navbar() {
 
         {/* Mobile Nav */}
         {isOpen && (
-          <div className="border-t border-border bg-background xl:hidden max-h-[calc(100dvh-4rem)] overflow-y-auto">
+          <div className="border-t border-border bg-background lg:hidden max-h-[calc(100dvh-4rem)] overflow-y-auto">
             <nav className="container mx-auto space-y-5 px-4 py-4">
               {/* Search shortcut on mobile */}
               <button
@@ -196,7 +213,7 @@ export function Navbar() {
                 Cerca una sezione…
               </button>
 
-              <div className="grid grid-cols-2 gap-2">
+              <div className="grid grid-cols-3 gap-2">
                 <MobileLink
                   href="/"
                   label="Home"
@@ -209,6 +226,13 @@ export function Navbar() {
                   label="Guida"
                   icon={BookOpen}
                   active={isActive("/guida")}
+                  onClick={() => setIsOpen(false)}
+                />
+                <MobileLink
+                  href="/contratti"
+                  label="Contratti"
+                  icon={FileText}
+                  active={isActive("/contratti")}
                   onClick={() => setIsOpen(false)}
                 />
               </div>
@@ -281,7 +305,8 @@ function MobileLink({
     active
       ? "border-primary/20 bg-primary/10 text-primary"
       : "border-transparent text-muted-foreground",
-    disabled && "cursor-not-allowed border-dashed bg-muted/40 opacity-70 grayscale",
+    disabled &&
+      "cursor-not-allowed border-dashed bg-muted/40 opacity-70 grayscale",
   );
 
   return disabled ? (

@@ -15,9 +15,10 @@ Ordine canonico usato in UI e test:
 1. Programmazione
 2. Progettazione
 3. Gara / pubblicazione
-4. Affidamento
-5. Esecuzione
-6. Valutazione / collaudo / esito
+4. Esecuzione della gara
+5. Affidamento
+6. Esecuzione del contratto
+7. Conclusione, collaudi e verifiche
 
 Ogni fase espone uno stato pubblico prudente:
 
@@ -64,7 +65,7 @@ Il dry-run `scripts/contracts/runAnacCigIngestionDryRun.ts` collega discovery re
 
 L'ingestione parte da open data o layer OCDS-style perche sono fonti strutturate, versionabili e verificabili. Le pagine dinamiche ANAC/PVL restano punti di consultazione o ricerca: non devono essere raschiate e non devono essere trattate come dataset locale.
 
-BDNCP/ANAC non completa automaticamente esecuzione e collaudo. Un record CIG puo sostenere gara/pubblicazione e, se contiene campi significativi di aggiudicazione, affidamento; esecuzione, SAL, liquidazioni, collaudo o esito restano `non documentato nelle fonti disponibili` finche non esiste una fonte esplicita.
+BDNCP/ANAC non completa automaticamente esecuzione e collaudo. Un CIG o un ponte BDNCP/PVL puo sostenere gara/pubblicazione e rendere visibile lo svolgimento della gara come fase da verificare; servono comunque fonti esplicite per documentare verbali, offerte, esiti, affidamento, esecuzione, SAL, liquidazioni, collaudo o chiusura.
 
 CUP, OpenCUP e MOP restano un asse separato opera/progetto. Per lavori pubblici il CUP collega programmazione/progetto/investimento; MOP potra sostenere avanzamento e collaudo solo quando una pipeline documentata lo ingerira.
 
