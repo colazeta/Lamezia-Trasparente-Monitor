@@ -38,6 +38,14 @@ Run the label-integrity audit after regenerating data:
 python scripts/audit_electoral_workbench_label_integrity.py
 ```
 
+Run the coordinate-quality audit before regenerating data when coordinate
+suspects need to be refreshed:
+
+```powershell
+python scripts/audit_anncsu_coordinate_quality.py
+python scripts/build_electoral_review_workbench_data.py
+```
+
 ## Why Civic-first
 
 The V2 task model was useful, but still too census-cell oriented. Census cells
@@ -114,6 +122,41 @@ tab lists the ANNCSU streets in the task, and the Civics tab groups rows by the
 specific ANNCSU street so reviewers do not apply one street label to every
 civic in the group.
 
+## Coordinate Quality
+
+Coordinate quality is separate from label integrity. A civic can have the
+correct ANNCSU address and `access_id`, while its coordinate remains suspicious
+as geometry evidence.
+
+`scripts/audit_anncsu_coordinate_quality.py` writes:
+
+- `data/interim/qa/anncsu_coordinate_quality_report_2025.md`
+- `data/interim/qa/anncsu_coordinate_suspect_points_2025.csv`
+
+The builder then emits:
+
+- `public/data/coordinate_suspect_points.json`
+- `public/data/coordinate_suspect_points.geojson`
+
+The workbench exposes a `Coordinate quality` filter, coordinate-suspect badges,
+a dedicated coordinate-suspect map layer, popup warnings, and coordinate fields
+in the source-record debug panel.
+
+Coordinate flags are review signals only:
+
+- `missing_coordinate`
+- `outside_boundary`
+- `same_street_outlier`
+- `isolated_point`
+- `implausible_coordinate`
+- `possible_xy_swap`
+- `needs_manual_coordinate_review`
+
+They do not modify ANNCSU raw data. They do not automatically mean the electoral
+section is wrong. The section should still be reviewed against the electoral
+street register. Future geometry generation may exclude or override a point only
+through a traced coordinate decision.
+
 ## Street Register Evidence
 
 `public/data/street_register_evidence_by_task.json` links each civic task to
@@ -168,6 +211,15 @@ Exports are available as JSON and CSV with these fields:
 - `reviewed_by`
 - `review_date`
 - `requires_follow_up`
+- `coordinate_decision_type`
+- `original_lon`
+- `original_lat`
+- `proposed_lon`
+- `proposed_lat`
+- `coordinate_decision_confidence`
+- `coordinate_reason`
+- `exclude_from_geometry`
+- `requires_external_coordinate_check`
 - `notes`
 - `evidence_snapshot`
 
@@ -181,6 +233,17 @@ Allowed decision types are:
 - `exclude_from_geometry`
 - `mark_as_non_residential_or_special`
 
+Allowed coordinate decision types are:
+
+- `keep_as_is`
+- `flag_coordinate_suspect`
+- `exclude_from_geometry`
+- `manual_coordinate_override`
+- `needs_external_verification`
+
+`manual_coordinate_override` requires `proposed_lon` and `proposed_lat`.
+`exclude_from_geometry` can be saved without alternative coordinates.
+
 ## Generated Data
 
 Primary civic-first payloads:
@@ -191,6 +254,8 @@ Primary civic-first payloads:
 - `candidate_sections_by_task.json`
 - `nearby_deterministic_by_task.json`
 - `review_summary.json`
+- `coordinate_suspect_points.json`
+- `coordinate_suspect_points.geojson`
 
 Compatibility payloads from earlier workbench versions may remain generated
 under `public/data/`, but the interface uses the civic-first files above.
@@ -222,6 +287,7 @@ This PR does not create V4.
 - Do not create V4 in this PR.
 - Do not apply decisions to GPKG files in this PR.
 - Do not modify processed electoral result values.
+- Do not modify ANNCSU raw coordinates in this workbench.
 - Do not use OSM or proximity alone as assignment evidence.
 - Do not make manual decisions when `access_id`, label, and coordinates are not
   coherent.

@@ -18,15 +18,15 @@ OpenStreetMap is not audited as an address source because it is visual context o
 
 ## Task Integrity
 
-- multi_street_task=9, single_street_task=2150, tasks=2159
+- multi_street_task=9, single_street_task=2295, tasks=2304
 
 ## Civic Payload Integrity
 
-- ok=8028, rows=8028
+- ok=8227, rows=8227
 
 ## Street Register Evidence
 
-- direct_compatible_rule=44, interval_overlap=34, parity_conflict=5, parity_match=22
+- direct_compatible_rule=184, interval_overlap=35, parity_conflict=11, parity_match=25
 
 ## Findings
 

@@ -22,6 +22,15 @@ const EXPORT_FIELDS = [
   "reviewed_by",
   "review_date",
   "requires_follow_up",
+  "coordinate_decision_type",
+  "original_lon",
+  "original_lat",
+  "proposed_lon",
+  "proposed_lat",
+  "coordinate_decision_confidence",
+  "coordinate_reason",
+  "exclude_from_geometry",
+  "requires_external_coordinate_check",
   "notes",
   "evidence_snapshot",
 ];
@@ -83,6 +92,7 @@ const el = {
     reason: document.getElementById("reasonFilter"),
     streetEvidence: document.getElementById("streetEvidenceFilter"),
     labelIntegrity: document.getElementById("labelIntegrityFilter"),
+    coordinateQuality: document.getElementById("coordinateQualityFilter"),
     parity: document.getElementById("parityFilter"),
     decisionType: document.getElementById("decisionTypeFilter"),
     sort: document.getElementById("sortSelect"),
@@ -100,6 +110,7 @@ const el = {
     boundaryPoints: document.getElementById("toggleBoundaryPoints"),
     resolvedPoints: document.getElementById("toggleResolvedPoints"),
     deterministicPoints: document.getElementById("toggleDeterministicPoints"),
+    coordinateSuspects: document.getElementById("toggleCoordinateSuspects"),
     labelIntegrity: document.getElementById("toggleLabelIntegrity"),
   },
   zoomSelectedButton: document.getElementById("zoomSelectedButton"),
@@ -249,6 +260,21 @@ function labelIntegrityBadge(status) {
   return badge(titleCase(value), value);
 }
 
+function coordinateQualityFlag(record) {
+  return asString(record?.coordinate_quality_flag || "ok") || "ok";
+}
+
+function hasCoordinateSuspect(record) {
+  return coordinateQualityFlag(record) !== "ok" || asBool(record?.has_coordinate_suspect);
+}
+
+function coordinateQualityBadge(record) {
+  const flag = coordinateQualityFlag(record);
+  if (flag === "ok") return badge("Coord OK", "ok");
+  if (flag === "coordinate_suspect") return badge("Coordinate suspect", "coordinate-suspect");
+  return badge(`Coordinate ${titleCase(flag)}`, "coordinate-suspect");
+}
+
 function taskByTypeCounts() {
   const counts = {};
   for (const task of state.tasks) {
@@ -270,6 +296,7 @@ function renderSummaryStrip() {
     `<span>${numberLabel(decisions.length)} decided</span>`,
     `<span>${numberLabel(highOpen)} high open</span>`,
     `<span>${numberLabel(followUp)} follow-up</span>`,
+    `<span>${numberLabel(summary.coordinate_suspect_points || 0)} coordinate suspects</span>`,
     `<span>${numberLabel(summary.tasks_with_street_register_evidence)} with street evidence</span>`,
     `<span>${numberLabel(summary.tasks_without_street_register_match)} no street match</span>`,
   ].join("");
@@ -298,6 +325,16 @@ function populateFilters() {
     "street_label_ambiguous",
     "needs_label_review",
   ];
+  const coordinateQualityStatuses = [
+    "ok",
+    "missing_coordinate",
+    "outside_boundary",
+    "same_street_outlier",
+    "isolated_point",
+    "implausible_coordinate",
+    "possible_xy_swap",
+    "needs_manual_coordinate_review",
+  ];
   populateSelect(el.filters.taskType, [...new Set(state.tasks.map((task) => task.task_type))].sort(), titleCase);
   populateSelect(el.filters.priority, [...new Set(state.tasks.map((task) => task.priority).filter(Boolean))].sort(), titleCase);
   populateSelect(
@@ -322,6 +359,7 @@ function populateFilters() {
   );
   populateSelect(el.filters.decisionType, DECISION_TYPES, titleCase);
   populateSelect(el.filters.labelIntegrity, labelStatuses, titleCase);
+  populateSelect(el.filters.coordinateQuality, coordinateQualityStatuses, titleCase);
 }
 
 function currentFilters() {
@@ -336,6 +374,7 @@ function currentFilters() {
     reason: el.filters.reason.value,
     streetEvidence: el.filters.streetEvidence.value,
     labelIntegrity: el.filters.labelIntegrity.value,
+    coordinateQuality: el.filters.coordinateQuality.value,
     parity: el.filters.parity.value,
     decisionType: el.filters.decisionType.value,
     sort: el.filters.sort.value,
@@ -374,6 +413,7 @@ function taskMatchesFilters(task, filters) {
   if (filters.streetEvidence === "multiple" && !task.has_multiple_street_register_rules) return false;
   if (filters.streetEvidence === "none" && !task.has_no_street_register_rule) return false;
   if (filters.labelIntegrity && asString(task.label_integrity_status || "ok") !== filters.labelIntegrity) return false;
+  if (filters.coordinateQuality && !Object.prototype.hasOwnProperty.call(task.coordinate_quality_flags || {}, filters.coordinateQuality)) return false;
   if (filters.parity && !Object.prototype.hasOwnProperty.call(task.parity_mix || {}, filters.parity)) return false;
   if (filters.nearBoundary && task.task_type !== "boundary_civic_cluster") return false;
   const decision = taskDecision(task.task_id);
@@ -397,6 +437,8 @@ function taskMatchesFilters(task, filters) {
     task.unresolved_reason,
     task.label_integrity_status,
     task.label_integrity_notes,
+    Object.keys(task.coordinate_quality_flags || {}).join(" "),
+    task.coordinate_suspect_count,
     task.notes,
   ].join(" ").toLowerCase();
   return haystack.includes(filters.search);
@@ -456,6 +498,7 @@ function renderTaskList() {
           ${task.suggested_section_number ? badge(`Sec ${task.suggested_section_number}`, "section") : ""}
           ${evidenceBadge(task)}
           ${labelIntegrityBadge(task.label_integrity_status)}
+          ${task.has_coordinate_suspect ? coordinateQualityBadge({ coordinate_quality_flag: "coordinate_suspect" }) : ""}
         </span>
         <span class="task-card-foot">
           <span>${numberLabel(task.civic_count)} civics</span>
@@ -495,6 +538,7 @@ function renderSelectedTask() {
     taskStatusBadge(task.task_id),
     evidenceBadge(task),
     labelIntegrityBadge(task.label_integrity_status),
+    task.has_coordinate_suspect ? coordinateQualityBadge({ coordinate_quality_flag: "coordinate_suspect" }) : "",
   ].join("");
   renderActiveTab();
 }
@@ -533,8 +577,18 @@ function formatSourceCoords(civic) {
   return lon && lat ? `${lon}, ${lat}` : "";
 }
 
+function coordinateFlagsLabel(task) {
+  return Object.entries(task.coordinate_quality_flags || {})
+    .map(([flag, count]) => `${flag}: ${count}`)
+    .join(", ");
+}
+
 function geoFeatureForAccessId(accessId) {
   return state.data.geoFeatureByAccessId?.[asString(accessId)] || null;
+}
+
+function taskIdForAccessId(accessId) {
+  return state.data.taskIdByAccessId?.[asString(accessId)] || "";
 }
 
 function indexGeoJsonByAccessId(...collections) {
@@ -543,6 +597,17 @@ function indexGeoJsonByAccessId(...collections) {
     for (const feature of collection?.features || []) {
       const accessId = asString(feature.properties?.access_id);
       if (accessId && !out[accessId]) out[accessId] = feature;
+    }
+  }
+  return out;
+}
+
+function indexTaskIdsByAccessId(civicsByTask) {
+  const out = {};
+  for (const [taskId, rows] of Object.entries(civicsByTask || {})) {
+    for (const row of rows || []) {
+      const accessId = asString(row.access_id);
+      if (accessId && !out[accessId]) out[accessId] = taskId;
     }
   }
   return out;
@@ -678,6 +743,12 @@ function renderLabelIntegrityPanel(task) {
         ["Representative title", asBool(task.display_title_is_representative) ? "yes" : "no"],
         ["Candidate sections", task.candidate_section_count],
       ])}
+      ${renderSourceRecordBlock("Coordinate quality", [
+        ["coordinate_quality_flag", civic.coordinate_quality_flag || "ok"],
+        ["coordinate_suspect_reason", civic.coordinate_suspect_reason],
+        ["suggested_coordinate_action", civic.suggested_coordinate_action],
+        ["exclude_from_geometry_candidate", asBool(civic.exclude_from_geometry_candidate) ? "yes" : "no"],
+      ])}
       ${renderSourceRecordBlock("Electoral street-register rule", [
         ["rule_id", rule.rule_id || civic.rule_id],
         ["section_number", rule.section_number],
@@ -714,6 +785,9 @@ function renderSummaryTab(task) {
       ["Civic intervals", task.civic_interval_count],
       ["Candidate section count", task.candidate_section_count],
       ["Label integrity", titleCase(task.label_integrity_status || "ok")],
+      ["Coordinate suspects", task.coordinate_suspect_count],
+      ["Coordinate flags", coordinateFlagsLabel(task)],
+      ["Exclude from geometry candidates", task.exclude_from_geometry_candidate_count],
       ["Reason", titleCase(task.unresolved_reason)],
       ["Evidence strength", titleCase(task.evidence_strength)],
       ["Street-register status", titleCase(task.street_register_match_status)],
@@ -726,6 +800,7 @@ function renderSummaryTab(task) {
       <p>${escapeHtml(task.suggested_action || "")}</p>
       <h3>Method guardrails</h3>
       <p>ANNCSU address is the source for each point label and coordinate. Electoral street-register rule is the normative source for section assignment. OpenStreetMap visual context: OSM \u00e8 solo sfondo visivo.</p>
+      ${task.has_coordinate_suspect ? `<h3>Coordinate caution</h3><p>Coordinate ANNCSU suspect: il civico puo essere corretto come indirizzo ma non affidabile come punto geometrico. La sezione va decisa sullo stradario; la geometria futura puo escludere o correggere il punto solo con decisione tracciata.</p>` : ""}
       ${task.notes ? `<h3>Notes</h3><p>${escapeHtml(task.notes)}</p>` : ""}
       ${task.label_integrity_notes ? `<h3>Label integrity notes</h3><p>${escapeHtml(task.label_integrity_notes)}</p>` : ""}
     </div>
@@ -770,6 +845,8 @@ function civicRowHtml(civic) {
       <td>${escapeHtml(civic.suggested_section_number)}</td>
       <td>${escapeHtml(civic.rule_id)}</td>
       <td>${escapeHtml(civic.label_integrity_status || "ok")}</td>
+      <td>${escapeHtml(civic.coordinate_quality_flag || "ok")}</td>
+      <td>${escapeHtml(civic.coordinate_suspect_reason)}</td>
       <td>${escapeHtml(civic.notes)}</td>
     </tr>
   `;
@@ -780,7 +857,7 @@ function groupedCivicRowsHtml(rows) {
   return rows.map((civic) => {
     const street = civicStreet(civic) || "Unknown ANNCSU street";
     const header = street !== currentStreet
-      ? `<tr class="street-group-row"><th colspan="12">ANNCSU address: ${escapeHtml(street)}</th></tr>`
+      ? `<tr class="street-group-row"><th colspan="14">ANNCSU address: ${escapeHtml(street)}</th></tr>`
       : "";
     currentStreet = street;
     return `${header}${civicRowHtml(civic)}`;
@@ -838,6 +915,8 @@ function renderCivicsTab(task) {
             <th>Suggested section</th>
             <th>Rule id</th>
             <th>Label status</th>
+            <th>Coordinate quality</th>
+            <th>Coordinate reason</th>
             <th>Notes</th>
           </tr>
         </thead>
@@ -927,6 +1006,7 @@ function renderDecisionTab(task) {
   wrapper.appendChild(template.content.cloneNode(true));
   const form = wrapper.querySelector("form");
   const decision = taskDecision(task.task_id);
+  const coordinateCivic = selectedDebugCivic(task);
   if (decision) {
     for (const [key, value] of Object.entries(decision)) {
       const field = form.elements[key];
@@ -940,6 +1020,16 @@ function renderDecisionTab(task) {
     form.elements.civic_from.value = task.civic_min || "";
     form.elements.civic_to.value = task.civic_max || "";
     form.elements.includes_snc.checked = asNumber(task.snc_count) > 0;
+    if (coordinateCivic) {
+      const suspect = hasCoordinateSuspect(coordinateCivic);
+      form.elements.coordinate_decision_type.value = suspect ? "flag_coordinate_suspect" : "keep_as_is";
+      form.elements.original_lon.value = asString(coordinateCivic.source_coord_lon || coordinateCivic.coord_x);
+      form.elements.original_lat.value = asString(coordinateCivic.source_coord_lat || coordinateCivic.coord_y);
+      form.elements.coordinate_decision_confidence.value = suspect ? "medium" : "";
+      form.elements.coordinate_reason.value = asString(coordinateCivic.coordinate_suspect_reason);
+      form.elements.exclude_from_geometry.checked = asBool(coordinateCivic.exclude_from_geometry_candidate);
+      form.elements.requires_external_coordinate_check.checked = asString(coordinateCivic.suggested_coordinate_action).includes("external");
+    }
   }
   return wrapper.innerHTML;
 }
@@ -999,6 +1089,7 @@ function renderTable(fields, rows, rowAttrs = null, options = {}) {
 }
 
 function decisionSnapshot(task) {
+  const selectedCivic = selectedDebugCivic(task);
   const rules = (state.data.streetEvidenceByTask[task.task_id] || []).slice(0, 8).map((row) => ({
     rule_id: row.rule_id,
     section_number: row.section_number,
@@ -1017,6 +1108,15 @@ function decisionSnapshot(task) {
     civic_min: task.civic_min,
     civic_max: task.civic_max,
     parity_mix: task.parity_mix,
+    coordinate_quality_flags: task.coordinate_quality_flags,
+    coordinate_suspect_count: task.coordinate_suspect_count,
+    selected_civic_coordinate_quality: selectedCivic ? {
+      access_id: selectedCivic.access_id,
+      coordinate_quality_flag: selectedCivic.coordinate_quality_flag || "ok",
+      coordinate_suspect_reason: selectedCivic.coordinate_suspect_reason || "",
+      source_coord_lon: selectedCivic.source_coord_lon || selectedCivic.coord_x || "",
+      source_coord_lat: selectedCivic.source_coord_lat || selectedCivic.coord_y || "",
+    } : null,
     representative_census_cells: task.representative_census_cells,
     street_rules: rules,
     candidate_sections: candidates,
@@ -1064,6 +1164,14 @@ function saveDecision(event) {
   if (!task) return;
   const form = event.currentTarget;
   const data = new FormData(form);
+  const coordinateDecisionType = asString(data.get("coordinate_decision_type"));
+  if (
+    coordinateDecisionType === "manual_coordinate_override"
+    && (!asString(data.get("proposed_lon")) || !asString(data.get("proposed_lat")))
+  ) {
+    window.alert("manual_coordinate_override requires proposed_lon and proposed_lat.");
+    return;
+  }
   const rules = state.data.streetEvidenceByTask[task.task_id] || [];
   const decision = {
     decision_id: `${task.task_id}:${Date.now()}`,
@@ -1085,6 +1193,15 @@ function saveDecision(event) {
     reviewed_by: asString(data.get("reviewed_by")),
     review_date: asString(data.get("review_date")),
     requires_follow_up: form.elements.requires_follow_up.checked,
+    coordinate_decision_type: coordinateDecisionType,
+    original_lon: asString(data.get("original_lon")),
+    original_lat: asString(data.get("original_lat")),
+    proposed_lon: asString(data.get("proposed_lon")),
+    proposed_lat: asString(data.get("proposed_lat")),
+    coordinate_decision_confidence: asString(data.get("coordinate_decision_confidence")),
+    coordinate_reason: asString(data.get("coordinate_reason")),
+    exclude_from_geometry: form.elements.exclude_from_geometry.checked,
+    requires_external_coordinate_check: form.elements.requires_external_coordinate_check.checked,
     notes: asString(data.get("notes")),
     evidence_snapshot: decisionSnapshot(task),
     saved_at: new Date().toISOString(),
@@ -1348,6 +1465,7 @@ function initMap() {
     reviewPoints: window.L.layerGroup().addTo(state.map),
     resolvedPoints: window.L.layerGroup(),
     deterministicPoints: window.L.layerGroup(),
+    coordinateSuspects: window.L.layerGroup().addTo(state.map),
     selected: window.L.layerGroup().addTo(state.map),
     nearby: window.L.layerGroup(),
     competing: window.L.layerGroup(),
@@ -1399,11 +1517,15 @@ function popupForCivic(properties, task = null) {
     ["Rule page", rule.source_page],
     ["Source coords", formatSourceCoords(properties)],
     ["Label status", properties?.label_integrity_status || taskRecord?.label_integrity_status || "ok"],
+    ["Coordinate quality", properties?.coordinate_quality_flag || "ok"],
+    ["Coordinate reason", properties?.coordinate_suspect_reason],
+    ["Coordinate action", properties?.suggested_coordinate_action],
   ];
   return `
     <div class="source-popup">
       <strong>${escapeHtml(anncsuPointTitle(properties))}</strong>
       <p class="popup-subtitle">${escapeHtml(asString(properties?.access_id))}</p>
+      ${hasCoordinateSuspect(properties) ? `<p class="coordinate-warning">Coordinate ANNCSU suspect: il civico puo essere corretto come indirizzo ma non affidabile come punto geometrico.</p>` : ""}
       ${factGrid(facts)}
       <p class="popup-note">OSM \u00e8 solo sfondo visivo</p>
     </div>
@@ -1439,6 +1561,7 @@ function cellStyle(feature) {
 }
 
 function pointColor(feature) {
+  if (hasCoordinateSuspect(feature.properties || {})) return "#b13b30";
   const pointType = asString(feature.properties?.point_type);
   if (pointType === "boundary_uncertainty_point") return "#d9573f";
   return "#6d7480";
@@ -1529,12 +1652,32 @@ function drawLeafletBaseLayers() {
       layer.bindPopup(popupForCivic(feature.properties || {}));
     },
   });
+  addGeoJsonLayer(state.leafletLayers.coordinateSuspects, state.data.coordinateSuspectPoints, {
+    pointToLayer: (feature, latlng) => window.L.circleMarker(latlng, {
+      radius: feature.properties?.access_id === state.selectedCivicAccessId ? 8 : 5.8,
+      color: "#111916",
+      weight: 1.4,
+      fillColor: "#b13b30",
+      fillOpacity: 0.86,
+    }),
+    onEachFeature: (feature, layer) => {
+      const props = feature.properties || {};
+      layer.bindTooltip(`${anncsuPointTitle(props)} - ${props.coordinate_quality_flag || "coordinate suspect"}`);
+      layer.bindPopup(popupForCivic(props));
+      layer.on("click", () => {
+        const taskId = taskIdForAccessId(asString(props.access_id));
+        if (taskId) selectTask(taskId, { zoom: false });
+        if (props.access_id) focusCivic(asString(props.access_id), { zoom: false });
+      });
+    },
+  });
   setLayerVisibility("sectionsV3", el.toggles.v3.checked);
   setLayerVisibility("sectionsV2", el.toggles.v2.checked);
   setLayerVisibility("cells", el.toggles.cells.checked);
   setLayerVisibility("reviewPoints", el.toggles.reviewPoints.checked || el.toggles.boundaryPoints.checked);
   setLayerVisibility("resolvedPoints", el.toggles.resolvedPoints.checked);
   setLayerVisibility("deterministicPoints", el.toggles.deterministicPoints.checked);
+  setLayerVisibility("coordinateSuspects", el.toggles.coordinateSuspects.checked);
 }
 
 function selectTaskForSection(sectionNumber) {
@@ -1569,7 +1712,7 @@ function renderSelectedLeaflet() {
       radius: focused ? 8 : selected ? 6.5 : 5,
       color: focused ? "#111827" : selected ? "#244f8f" : "#ffffff",
       weight: focused || selected ? 2 : 1,
-      fillColor: selected ? "#7fb0ff" : "#f05a45",
+      fillColor: hasCoordinateSuspect(civic) ? "#b13b30" : selected ? "#7fb0ff" : "#f05a45",
       fillOpacity: 0.9,
     });
     marker.bindTooltip(anncsuPointTitle(civic));
@@ -1680,7 +1823,7 @@ function mergeBBox(a, b) {
 
 function calculateFallbackBBox() {
   let bbox = null;
-  for (const collection of [state.data.sectionsV3, state.data.reviewCells, state.data.reviewPoints]) {
+  for (const collection of [state.data.sectionsV3, state.data.reviewCells, state.data.reviewPoints, state.data.coordinateSuspectPoints]) {
     for (const feature of collection.features || []) bbox = mergeBBox(bbox, bboxForFeature(feature));
   }
   if (!bbox) return null;
@@ -1749,6 +1892,14 @@ function renderFallbackMap() {
     const selected = focused || feature.properties?.task_id === state.selectedTaskId;
     paths.push(`<circle class="fallback-point${selected ? " selected" : ""}${focused ? " focused" : ""}" cx="${x.toFixed(2)}" cy="${y.toFixed(2)}" r="${focused ? 7 : selected ? 5 : 2.8}"></circle>`);
   }
+  if (el.toggles.coordinateSuspects.checked) {
+    for (const feature of state.data.coordinateSuspectPoints.features || []) {
+      if (!feature.geometry || feature.geometry.type !== "Point") continue;
+      const [x, y] = project(feature.geometry.coordinates);
+      const focused = asString(feature.properties?.access_id) === asString(state.selectedCivicAccessId);
+      paths.push(`<circle class="fallback-point coordinate-suspect${focused ? " focused" : ""}" cx="${x.toFixed(2)}" cy="${y.toFixed(2)}" r="${focused ? 7 : 4.8}"></circle>`);
+    }
+  }
   el.fallbackMap.setAttribute("viewBox", `0 0 ${width} ${height}`);
   el.fallbackMap.innerHTML = paths.join("");
   el.mapStatus.textContent = "Local geometry fallback. OSM basemap is not active.";
@@ -1808,6 +1959,8 @@ async function boot() {
     reviewPoints,
     resolvedPoints,
     deterministicPoints,
+    coordinateSuspectPoints,
+    coordinateSuspectRecords,
     civicsByTask,
     streetEvidenceByTask,
     candidateSectionsByTask,
@@ -1821,6 +1974,8 @@ async function boot() {
     fetchJson("review_points.geojson"),
     fetchJson("spatially_resolved_points.geojson"),
     fetchJson("deterministic_points_sample.geojson"),
+    fetchJson("coordinate_suspect_points.geojson"),
+    fetchJson("coordinate_suspect_points.json"),
     fetchJson("civics_by_task.json"),
     fetchJson("street_register_evidence_by_task.json"),
     fetchJson("candidate_sections_by_task.json"),
@@ -1834,11 +1989,14 @@ async function boot() {
     reviewPoints,
     resolvedPoints,
     deterministicPoints,
+    coordinateSuspectPoints,
+    coordinateSuspectRecords,
     civicsByTask,
     streetEvidenceByTask,
     candidateSectionsByTask,
     nearbyByTask,
-    geoFeatureByAccessId: indexGeoJsonByAccessId(reviewPoints, resolvedPoints, deterministicPoints),
+    geoFeatureByAccessId: indexGeoJsonByAccessId(reviewPoints, resolvedPoints, deterministicPoints, coordinateSuspectPoints),
+    taskIdByAccessId: indexTaskIdsByAccessId(civicsByTask),
   };
   state.tasks = tasks;
   state.filteredTasks = tasks;
