@@ -94,15 +94,17 @@
 
   --elevate-1: rgba(2, 12, 27, .04);
   --elevate-2: rgba(2, 12, 27, .09);
+  --shadow-card: 0 1px 2px hsl(var(--foreground) / 0.04), 0 12px 32px hsl(var(--foreground) / 0.035);
+  --shadow-nav: 0 1px 0 hsl(var(--border) / 0.85), 0 14px 32px hsl(var(--foreground) / 0.04);
 
-  --background: 220 24% 98%;
+  --background: 220 27% 98%;
   --foreground: 222 47% 11%;
 
-  --border: 220 16% 91%;
+  --border: 220 18% 89%;
 
   --card: 0 0% 100%;
   --card-foreground: 222 47% 11%;
-  --card-border: 220 16% 92%;
+  --card-border: 220 18% 90%;
 
   --sidebar: 222 47% 9%;
   --sidebar-foreground: 210 33% 96%;
@@ -124,7 +126,7 @@
   --secondary-foreground: 222 47% 13%;
 
   --muted: 220 18% 96%;
-  --muted-foreground: 218 14% 40%;
+  --muted-foreground: 218 14% 36%;
 
   --accent: 216 84% 95%;
   --accent-foreground: 219 89% 40%;
@@ -154,7 +156,7 @@
   --app-font-display: 'Space Grotesk', 'Inter', system-ui, sans-serif;
   --app-font-mono: 'Space Grotesk', Menlo, monospace;
 
-  --radius: 0.75rem;
+  --radius: 0.5rem;
   --tracking-normal: 0em;
   --spacing: 0.25rem;
 
@@ -177,6 +179,8 @@
 
   --elevate-1: rgba(255, 255, 255, .05);
   --elevate-2: rgba(255, 255, 255, .10);
+  --shadow-card: 0 1px 2px hsl(0 0% 0% / 0.32), 0 18px 36px hsl(0 0% 0% / 0.2);
+  --shadow-nav: 0 1px 0 hsl(var(--border) / 0.9), 0 18px 36px hsl(0 0% 0% / 0.28);
 
   --background: 224 44% 8%;
   --foreground: 210 33% 96%;
@@ -239,8 +243,14 @@
     @apply border-border;
   }
 
+  html {
+    scroll-padding-top: 5rem;
+  }
+
   body {
     @apply font-sans antialiased leading-relaxed bg-background text-foreground selection:bg-brand/25 selection:text-foreground;
+    background-image: linear-gradient(180deg, hsl(var(--background)) 0%, hsl(var(--muted) / 0.45) 100%);
+    min-height: 100dvh;
   }
 
   h1, h2, h3, h4, h5, h6 {
@@ -271,6 +281,12 @@
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
+  }
+  .civic-hero-grid {
+    background-image:
+      linear-gradient(hsl(var(--sidebar-foreground) / 0.08) 1px, transparent 1px),
+      linear-gradient(90deg, hsl(var(--sidebar-foreground) / 0.08) 1px, transparent 1px);
+    background-size: 56px 56px;
   }
 
   details .font-mono.text-xs {
