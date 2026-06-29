@@ -6,6 +6,7 @@ import type {
 } from "@workspace/api-client-react";
 
 import {
+  CONTRACT_LIFECYCLE_PHASE_LABELS,
   CONTRACT_LIFECYCLE_PHASE_ORDER,
   buildContractDossier,
   getLifecyclePhase,
@@ -99,6 +100,19 @@ describe("contract dossier lifecycle", () => {
       "affidamento",
       "esecuzione",
       "valutazione",
+    ]);
+    expect(
+      CONTRACT_LIFECYCLE_PHASE_ORDER.map(
+        (phaseKey) => CONTRACT_LIFECYCLE_PHASE_LABELS[phaseKey],
+      ),
+    ).toEqual([
+      "Programmazione",
+      "Progettazione",
+      "Gara / pubblicazione",
+      "Esecuzione della gara",
+      "Affidamento",
+      "Esecuzione del contratto",
+      "Conclusione, collaudi e verifiche",
     ]);
   });
 
