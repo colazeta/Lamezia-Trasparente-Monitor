@@ -1,4 +1,4 @@
-import { mkdtempSync, readFileSync, rmSync } from "node:fs";
+import { mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
@@ -49,5 +49,27 @@ describe("production SEO asset generation", () => {
     );
     expect(sitemap).not.toContain("http://localhost:5173");
     expect(robots).not.toContain("http://localhost:5173");
+  });
+
+  it("writes physical index fallbacks for sitemap routes", () => {
+    const outputDir = mkdtempSync(path.join(os.tmpdir(), "seo-route-assets-"));
+    tempDirs.push(outputDir);
+
+    writeFileSync(path.join(outputDir, "index.html"), "<html>app shell</html>");
+    process.env.VITE_PUBLIC_SITE_URL = "https://prod.example";
+    writeSeoAssets(outputDir);
+
+    expect(readFileSync(path.join(outputDir, "albo", "index.html"), "utf8")).toBe(
+      "<html>app shell</html>",
+    );
+    expect(
+      readFileSync(path.join(outputDir, "contratti", "index.html"), "utf8"),
+    ).toBe("<html>app shell</html>");
+    expect(
+      readFileSync(
+        path.join(outputDir, "legalita", "trame-festival", "index.html"),
+        "utf8",
+      ),
+    ).toBe("<html>app shell</html>");
   });
 });
