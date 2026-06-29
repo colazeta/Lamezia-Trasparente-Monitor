@@ -65,7 +65,7 @@ function AlboPublicItemCard({ item }: { item: AlboPublicRunItem }) {
           href={item.source_url}
           target="_blank"
           rel="noreferrer"
-          className="inline-flex shrink-0 items-center gap-1 rounded-md border border-border px-2.5 py-1.5 text-xs font-semibold text-foreground transition-colors hover:border-brand/40 hover:text-brand"
+          className="inline-flex w-full items-center justify-center gap-1 rounded-md border border-border px-2.5 py-1.5 text-xs font-semibold text-foreground transition-colors hover:border-brand/40 hover:text-brand sm:w-auto sm:shrink-0"
         >
           Verifica fonte
           <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
@@ -97,14 +97,14 @@ export function Albo() {
             </span>
             <h1 className="mt-2 font-display text-3xl font-bold tracking-tight md:text-4xl">Albo Pretorio Civico</h1>
             <p className="mt-3 max-w-3xl text-lg text-muted-foreground">
-              Atti correnti acquisiti dal layer pubblico Albo, mostrati con minimizzazione prudente e rinvio alla fonte
+              Atti correnti acquisiti dalla fonte pubblica Albo, mostrati con minimizzazione prudente e rinvio alla fonte
               ufficiale per la verifica.
             </p>
           </div>
           <FeedSubscribeButton
             feedPath="/feeds/albo.xml"
             title="Albo Pretorio Civico - Lamezia Trasparente"
-            className="shrink-0"
+            className="w-full justify-center md:w-auto md:shrink-0"
           />
         </div>
 
@@ -143,7 +143,7 @@ export function Albo() {
                 Fonte ufficiale acquisita
               </span>
               <h2 id="albo-run-ufficiale" className="mt-2 font-display text-xl font-bold tracking-tight">
-                Atti correnti dal layer pubblico Albo
+                Atti correnti dalla fonte pubblica Albo
               </h2>
               <p className="mt-2 max-w-3xl text-sm leading-relaxed text-muted-foreground">
                 {ALBO_PUBLIC_RUN_SUMMARY.official_albo_disclaimer}

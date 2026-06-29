@@ -13,7 +13,7 @@ describe("Albo public run surface", () => {
     renderPage(Albo);
 
     const heading = screen.getByRole("heading", {
-      name: /Atti correnti dal layer pubblico Albo/i,
+      name: /Atti correnti dalla fonte pubblica Albo/i,
     });
     const section = heading.closest("section");
 
