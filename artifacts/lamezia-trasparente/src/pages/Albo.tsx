@@ -125,28 +125,15 @@ function AlboPublicItemCard({ item }: { item: AlboPublicRunItem }) {
           )}
         </div>
 
-        <div className="flex shrink-0 flex-col items-stretch gap-2">
-          {archivedDocument && (
-            <a
-              href={archivedDocument.platform_path}
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex items-center justify-center gap-1 rounded-md border border-sky-200 bg-sky-50 px-2.5 py-1.5 text-xs font-semibold text-sky-800 transition-colors hover:border-sky-300 hover:bg-sky-100"
-            >
-              Apri PDF interno
-              <FileArchive className="h-3.5 w-3.5" aria-hidden="true" />
-            </a>
-          )}
-          <a
-            href={item.source_url}
-            target="_blank"
-            rel="noreferrer"
-            className="inline-flex items-center justify-center gap-1 rounded-md border border-border px-2.5 py-1.5 text-xs font-semibold text-foreground transition-colors hover:border-brand/40 hover:text-brand"
-          >
-            Verifica fonte
-            <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
-          </a>
-        </div>
+        <a
+          href={item.source_url}
+          target="_blank"
+          rel="noreferrer"
+          className="inline-flex w-full items-center justify-center gap-1 rounded-md border border-border px-2.5 py-1.5 text-xs font-semibold text-foreground transition-colors hover:border-brand/40 hover:text-brand sm:w-auto sm:shrink-0"
+        >
+          Verifica fonte
+          <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
+        </a>
       </div>
     </Card>
   );
@@ -214,14 +201,14 @@ export function Albo() {
             </span>
             <h1 className="mt-2 font-display text-3xl font-bold tracking-tight md:text-4xl">Albo Pretorio Civico</h1>
             <p className="mt-3 max-w-3xl text-lg text-muted-foreground">
-              Atti correnti acquisiti dal layer pubblico Albo, con minimizzazione mirata, stato di aggiornamento e copie
-              documentali interne quando disponibili.
+              Atti correnti acquisiti dalla fonte pubblica Albo, mostrati con minimizzazione prudente e rinvio alla fonte
+              ufficiale per la verifica.
             </p>
           </div>
           <FeedSubscribeButton
             feedPath="/feeds/albo.xml"
             title="Albo Pretorio Civico - Lamezia Trasparente"
-            className="shrink-0"
+            className="w-full justify-center md:w-auto md:shrink-0"
           />
         </div>
 
@@ -297,7 +284,7 @@ export function Albo() {
                 Layer pubblico
               </span>
               <h2 id="albo-run-ufficiale" className="mt-2 font-display text-xl font-bold tracking-tight">
-                Atti correnti dal layer pubblico Albo
+                Atti correnti dalla fonte pubblica Albo
               </h2>
               <p className="mt-2 max-w-3xl text-sm leading-relaxed text-muted-foreground">
                 {ALBO_PUBLIC_RUN_SUMMARY.official_albo_disclaimer}

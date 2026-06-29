@@ -212,38 +212,48 @@ export function Incarichimetro() {
             servizi professionali, negli affidamenti tecnici, legali e di
             consulenza.
           </p>
-          <CivicMonitorReturn context="Gli indicatori su incarichi e affidamenti rientrano nel Monitor civico come segnali da collegare a fonti, atti e bisogni di verifica." />
         </div>
 
         <section
           aria-labelledby="incarichimetro-avvertenza"
-          className="mt-8 rounded-2xl border border-amber-500/30 bg-amber-500/10 p-5 text-sm"
+          className="mt-6 rounded-lg border border-amber-500/30 bg-amber-500/10 p-4 text-sm"
         >
-          <div className="flex gap-3">
+          <div className="flex items-start gap-3">
             <AlertTriangle
               className="mt-0.5 h-5 w-5 shrink-0 text-amber-600"
               aria-hidden="true"
             />
-            <div className="space-y-2">
+            <div className="min-w-0">
               <h2
                 id="incarichimetro-avvertenza"
                 className="font-semibold text-foreground"
               >
                 Avvertenza metodologica
               </h2>
-              <p className="text-muted-foreground">
+              <p className="mt-1 text-muted-foreground">
                 Gli indicatori non sono prove di irregolarità, favoritismi o
                 illeciti. Mostrano soltanto pattern documentali da verificare
-                sulle fonti: concentrazione, ricorrenza, rotazione
-                potenzialmente debole, documentazione mancante o riferimenti
-                CIG/CUP/procedura comparativa non rilevati automaticamente.
+                sulle fonti.
               </p>
-              <p className="text-muted-foreground">
-                I dati dei contratti sono trattati come dataset locale e fonte
-                collegata, non come sincronizzazione ANAC completa; le
-                informazioni estratte dagli atti dell'Albo sono da leggere come
-                arricchimenti automatici o elementi da verificare nel documento.
-              </p>
+              <details className="mt-2 text-muted-foreground">
+                <summary className="cursor-pointer font-semibold text-foreground">
+                  Dettagli sui limiti di lettura
+                </summary>
+                <div className="mt-2 space-y-2">
+                  <p>
+                    La pagina segnala concentrazione, ricorrenza, rotazione
+                    potenzialmente debole, documentazione mancante o riferimenti
+                    CIG/CUP/procedura comparativa non rilevati automaticamente.
+                  </p>
+                  <p>
+                    I dati dei contratti sono trattati come dataset locale e
+                    fonte collegata, non come sincronizzazione ANAC completa; le
+                    informazioni estratte dagli atti dell'Albo sono da leggere
+                    come arricchimenti automatici o elementi da verificare nel
+                    documento.
+                  </p>
+                </div>
+              </details>
             </div>
           </div>
         </section>
@@ -393,6 +403,8 @@ export function Incarichimetro() {
             </>
           )}
         </section>
+
+        <CivicMonitorReturn context="Gli indicatori su incarichi e affidamenti rientrano nel Monitor civico come segnali da collegare a fonti, atti e bisogni di verifica." />
 
         <section aria-labelledby="aggregazioni-operatori" className="mt-10">
           <div className="mb-4 flex flex-col gap-2 md:flex-row md:items-end md:justify-between">

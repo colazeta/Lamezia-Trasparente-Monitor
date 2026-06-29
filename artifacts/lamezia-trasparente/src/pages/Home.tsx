@@ -272,9 +272,9 @@ function BlockStats() {
   const { data: pnrrProjects } = useListPnrrProjects();
   const pnrrProjectCount = asApiList(pnrrProjects?.projects).length;
   return (
-    <section className="border-b border-border bg-card">
-      <div className="container mx-auto px-4 md:px-6">
-        <div className="grid grid-cols-2 md:grid-cols-4 divide-x divide-y md:divide-y-0 divide-border">
+    <section className="border-b border-border bg-background">
+      <div className="container mx-auto px-4 py-4 md:px-6">
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
           <StatCard
             title="Atti dalla fonte"
             value={stats?.acts}
@@ -582,43 +582,30 @@ function StaticHomeLayout() {
         data-tour="home-hero"
         className="relative bg-sidebar text-sidebar-foreground overflow-hidden"
       >
-        <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1518398046578-8cca57782e17?q=80&w=2000&auto=format&fit=crop')] bg-cover bg-center opacity-[0.07] pointer-events-none" />
-        <div
-          className="absolute inset-0 pointer-events-none opacity-[0.5]"
-          style={{
-            backgroundImage:
-              "radial-gradient(circle at 15% 10%, hsl(216 92% 58% / 0.22), transparent 45%), radial-gradient(circle at 90% 90%, hsl(14 88% 52% / 0.18), transparent 45%)",
-          }}
-        />
-        <div
-          className="absolute inset-0 pointer-events-none opacity-[0.04]"
-          style={{
-            backgroundImage:
-              "linear-gradient(hsl(0 0% 100%) 1px, transparent 1px), linear-gradient(90deg, hsl(0 0% 100%) 1px, transparent 1px)",
-            backgroundSize: "64px 64px",
-          }}
-        />
-        <div className="container relative z-10 mx-auto flex max-w-4xl flex-col items-start px-4 py-12 sm:py-16 md:px-6 md:py-28">
-          <div className="eyebrow rounded-full border border-brand/40 bg-brand/10 px-3 py-1.5 text-[10px] text-brand sm:px-3.5 sm:text-[11px]">
+        <div className="absolute inset-0 pointer-events-none bg-[url('https://images.unsplash.com/photo-1518398046578-8cca57782e17?q=80&w=2000&auto=format&fit=crop')] bg-cover bg-center opacity-[0.14]" />
+        <div className="absolute inset-0 pointer-events-none bg-sidebar/80" />
+        <div className="absolute inset-0 pointer-events-none civic-hero-grid opacity-45" />
+        <div className="container relative z-10 mx-auto flex max-w-5xl flex-col items-start px-4 py-12 sm:py-16 md:px-6 md:py-24">
+          <div className="eyebrow rounded-md border border-brand/40 bg-brand/10 px-3 py-1.5 text-[10px] text-brand sm:px-3.5 sm:text-[11px]">
             <ShieldAlert className="h-3.5 w-3.5" />
             <span className="sm:hidden">Piattaforma civica</span>
             <span className="hidden sm:inline">Piattaforma civica documentale</span>
           </div>
 
-          <h1 className="mt-5 mb-4 font-display text-4xl font-bold leading-[1.02] text-white sm:mt-7 sm:mb-6 sm:text-5xl sm:leading-[0.95] md:text-7xl lg:text-[5.25rem]">
+          <h1 className="mt-5 mb-4 max-w-4xl font-display text-4xl font-bold leading-[1.02] text-white sm:mt-7 sm:mb-6 sm:text-5xl sm:leading-[0.98] md:text-6xl lg:text-7xl">
             Atti, sedute e progetti pubblici
             <br className="hidden sm:inline" /> in un percorso{" "}
             <br className="sm:hidden" />
             leggibile.
             <br />
             <span className="text-gradient-brand">
-              Una versione pubblica{" "}
+              Un monitor civico{" "}
               <br className="sm:hidden" />
-              pronta a spiegarsi.
+              senza scorciatoie.
             </span>
           </h1>
 
-          <p className="mb-6 max-w-2xl text-base leading-7 text-sidebar-foreground/75 text-balance sm:mb-9 md:text-xl">
+          <p className="mb-6 max-w-2xl text-base leading-7 text-sidebar-foreground/78 text-balance sm:mb-9 md:text-xl">
             Organizza informazioni amministrative in modo documentale, prudente
             e non accusatorio. Puoi orientarti tra sedute, contratti, PNRR,
             fonti e metodo, distinguendo sezioni consultabili da dati ancora da
@@ -663,10 +650,10 @@ function StaticHomeLayout() {
       {/* Stats Section */}
       <section
         data-tour="home-stats"
-        className="border-b border-border bg-card"
+        className="border-b border-border bg-background"
       >
-        <div className="container mx-auto px-4 md:px-6">
-          <div className="grid grid-cols-2 md:grid-cols-4 divide-x divide-y md:divide-y-0 divide-border">
+        <div className="container mx-auto px-4 py-4 md:px-6">
+          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
             <StatCard
               title="Atti dalla fonte"
               value={stats?.acts}
@@ -1039,14 +1026,14 @@ function StatCard({
   return (
     <Link
       href={href}
-      className={`relative block p-6 md:p-8 transition-colors hover-elevate ${highlight ? "bg-primary/5" : ""}`}
+      className={`relative block overflow-hidden rounded-lg border border-card-border bg-card p-5 shadow-[var(--shadow-card)] transition-colors hover:border-primary/35 hover:bg-primary/5 md:p-6 ${highlight ? "ring-1 ring-brand/20" : ""}`}
     >
       {highlight && (
         <span className="absolute left-0 top-0 h-full w-1 bg-brand" />
       )}
       <div className="flex items-center gap-3 mb-3">
         <div
-          className={`p-2 rounded-lg ${highlight ? "bg-brand/15 text-brand" : "bg-muted text-muted-foreground"}`}
+          className={`rounded-md p-2 ${highlight ? "bg-brand/15 text-brand" : "bg-muted text-muted-foreground"}`}
         >
           <Icon className="h-5 w-5" aria-hidden="true" />
         </div>
