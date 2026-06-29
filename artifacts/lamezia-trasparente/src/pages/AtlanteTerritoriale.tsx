@@ -60,13 +60,13 @@ const BASEMAP_PROVIDERS = [
   },
 ] as const;
 const CHOROPLETH_COLORS = [
-  "hsl(45 100% 88%)",
-  "hsl(142 76% 84%)",
-  "hsl(187 92% 69%)",
-  "hsl(199 89% 58%)",
-  "hsl(224 76% 48%)",
+  "hsl(48 94% 86%)",
+  "hsl(152 52% 76%)",
+  "hsl(190 58% 66%)",
+  "hsl(211 64% 54%)",
+  "hsl(244 45% 42%)",
 ];
-const EMPTY_COLOR = "hsl(220 13% 82%)";
+const EMPTY_COLOR = "hsl(220 12% 84%)";
 
 type BasemapId = (typeof BASEMAP_PROVIDERS)[number]["id"] | typeof NO_BASEMAP_ID;
 
@@ -108,6 +108,9 @@ export function AtlanteTerritoriale() {
     null,
   );
   const [hoveredSectionId, setHoveredSectionId] = useState<string | null>(null);
+  const [selectedBasemapId, setSelectedBasemapId] = useState<BasemapId>(
+    "openstreetmap-standard",
+  );
 
   useEffect(() => {
     let cancelled = false;
@@ -209,6 +212,14 @@ export function AtlanteTerritoriale() {
         ) : (
           <div className="space-y-5">
             {layer.dataStatus === "demo" ? <DemoNotice /> : null}
+            <ActiveContextStrip
+              activeFeature={activeFeature}
+              activeIndicator={activeIndicator}
+              dataStatus={layer.dataStatus}
+              metadata={metadata}
+              selectedBasemapId={selectedBasemapId}
+              summary={distribution}
+            />
             <div className="grid gap-4 lg:grid-cols-[170px_minmax(0,1fr)] xl:grid-cols-[180px_minmax(0,1fr)_270px] 2xl:grid-cols-[190px_minmax(0,1fr)_280px] xl:items-start">
               <IndicatorControl
                 activeIndicator={activeIndicator}
@@ -223,7 +234,9 @@ export function AtlanteTerritoriale() {
                 features={features}
                 hoveredSectionId={hoveredSectionId}
                 metadata={metadata}
+                selectedBasemapId={selectedBasemapId}
                 selectedSectionId={selectedSectionId}
+                setSelectedBasemapId={setSelectedBasemapId}
                 setHoveredSectionId={setHoveredSectionId}
                 setSelectedSectionId={setSelectedSectionId}
                 summary={distribution}
@@ -285,6 +298,95 @@ function DemoNotice() {
         per analisi.
       </p>
     </div>
+  );
+}
+
+function ActiveContextStrip({
+  activeFeature,
+  activeIndicator,
+  dataStatus,
+  metadata,
+  selectedBasemapId,
+  summary,
+}: {
+  activeFeature: AtlanteFeature | null;
+  activeIndicator: AtlanteIndicatorDefinition | null;
+  dataStatus: AtlanteLoadedLayer["dataStatus"];
+  metadata: AtlanteLayerMetadata;
+  selectedBasemapId: BasemapId;
+  summary: ReturnType<typeof buildAtlanteDistribution>;
+}) {
+  const sectionLabel = activeFeature
+    ? getSectionPublicLabel(activeFeature)
+    : "Nessuna area selezionata";
+  const coverageLabel =
+    summary.totalCount > 0
+      ? `${formatSectionCount(summary.availableCount)} con dato`
+      : "Nessun dato disponibile";
+  const missingLabel =
+    summary.totalCount > 0
+      ? `${formatSectionCount(summary.missingCount)} senza dato`
+      : "";
+
+  const items = [
+    {
+      label: "Base",
+      value:
+        dataStatus === "demo"
+          ? "demo esplicito"
+          : `${formatInteger(summary.totalCount)} sezioni ISTAT`,
+    },
+    {
+      label: "Indicatore",
+      value: activeIndicator?.label ?? "Indicatore in preparazione",
+    },
+    {
+      label: "Copertura dati",
+      value: missingLabel ? `${coverageLabel} · ${missingLabel}` : coverageLabel,
+    },
+    {
+      label: "Selezione",
+      value: sectionLabel,
+    },
+    {
+      label: "Sfondo",
+      value: getBasemapDisplayName(selectedBasemapId),
+    },
+    {
+      label: "Fonte",
+      value: `${metadata.sourceInstitution} · ${metadata.sourceYear}`,
+    },
+  ];
+
+  return (
+    <section
+      aria-label="Contesto mappa"
+      className="overflow-hidden rounded-xl border border-border/80 bg-card/80 shadow-sm"
+    >
+      <div className="flex items-center justify-between gap-3 border-b border-border/70 px-3 py-2 sm:px-4">
+        <h2 className="text-sm font-semibold text-foreground">
+          Contesto mappa
+        </h2>
+        <span className="rounded-full bg-primary/10 px-2.5 py-1 text-xs font-medium text-primary">
+          Esplora e confronta
+        </span>
+      </div>
+      <dl className="flex gap-2 overflow-x-auto px-3 py-3 sm:px-4">
+        {items.map((item) => (
+          <div
+            className="min-w-[160px] rounded-lg border border-border/70 bg-background px-3 py-2 sm:min-w-[180px]"
+            key={item.label}
+          >
+            <dt className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
+              {item.label}
+            </dt>
+            <dd className="mt-1 truncate text-sm font-semibold text-foreground">
+              {item.value}
+            </dd>
+          </div>
+        ))}
+      </dl>
+    </section>
   );
 }
 
@@ -466,30 +568,38 @@ function DistributionBands({
 }) {
   return (
     <div className="mt-4">
-      <h3 className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-        Distribuzione per fasce
-      </h3>
+      <div className="flex items-center justify-between gap-2">
+        <h3 className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+          Distribuzione per fasce
+        </h3>
+        <span className="text-[11px] font-medium text-muted-foreground">
+          {formatInteger(bins.length)} classi
+        </span>
+      </div>
       <div
         aria-label="Distribuzione delle sezioni per fascia"
-        className="mt-2 flex h-3 overflow-hidden rounded-full border border-border bg-muted"
+        className="mt-2 grid h-4 overflow-hidden rounded-lg border border-border bg-muted"
+        style={{
+          gridTemplateColumns: `repeat(${Math.max(1, bins.length)}, minmax(0, 1fr))`,
+        }}
       >
         {bins.map((bin) => (
           <span
             aria-hidden="true"
+            className="border-r border-background/80 last:border-r-0"
             key={bin.index}
             style={{
               backgroundColor: bin.color,
-              width: `${Math.max(
-                4,
-                (bin.count / Math.max(1, summary.availableCount)) * 100,
-              )}%`,
             }}
           />
         ))}
       </div>
-      <ul className="mt-3 space-y-2 text-xs leading-5">
+      <ol className="mt-3 grid gap-2 text-xs leading-5">
         {bins.map((bin) => (
-          <li className="grid grid-cols-[auto_1fr] gap-x-2" key={bin.index}>
+          <li
+            className="grid grid-cols-[auto_1fr] gap-x-2 rounded-md border border-border/70 bg-background px-2.5 py-2"
+            key={bin.index}
+          >
             <span
               aria-hidden="true"
               className="mt-1 h-3 w-3 rounded-sm border border-border"
@@ -508,7 +618,7 @@ function DistributionBands({
             </span>
           </li>
         ))}
-      </ul>
+      </ol>
     </div>
   );
 }
@@ -521,7 +631,9 @@ function MapSurface({
   features,
   hoveredSectionId,
   metadata,
+  selectedBasemapId,
   selectedSectionId,
+  setSelectedBasemapId,
   setHoveredSectionId,
   setSelectedSectionId,
   summary,
@@ -533,14 +645,13 @@ function MapSurface({
   features: AtlanteFeature[];
   hoveredSectionId: string | null;
   metadata: AtlanteLayerMetadata;
+  selectedBasemapId: BasemapId;
   selectedSectionId: string | null;
+  setSelectedBasemapId: (basemapId: BasemapId) => void;
   setHoveredSectionId: (sectionId: string | null) => void;
   setSelectedSectionId: (sectionId: string) => void;
   summary: ReturnType<typeof buildAtlanteDistribution>;
 }) {
-  const [selectedBasemapId, setSelectedBasemapId] = useState<BasemapId>(
-    "openstreetmap-standard",
-  );
   const [resetSignal, setResetSignal] = useState(0);
   const selectedBasemap =
     BASEMAP_PROVIDERS.find((provider) => provider.id === selectedBasemapId) ??
@@ -945,6 +1056,17 @@ function formatInteger(value: number) {
   return new Intl.NumberFormat("it-IT", {
     maximumFractionDigits: 0,
   }).format(value);
+}
+
+function getBasemapDisplayName(basemapId: BasemapId) {
+  if (basemapId === NO_BASEMAP_ID) {
+    return "Senza sfondo";
+  }
+
+  const provider = BASEMAP_PROVIDERS.find(
+    (candidate) => candidate.id === basemapId,
+  );
+  return provider ? `${provider.label} · ${provider.description}` : "Sfondo";
 }
 
 function formatCountWithShare(count: number, total: number) {

@@ -346,6 +346,14 @@ describe("Atlante territoriale", () => {
     expect(screen.queryByText(/File atteso/i)).not.toBeInTheDocument();
     expect(screen.getByTestId("atlante-leaflet-map")).toBeInTheDocument();
     expect(screen.getByTestId("atlante-istat-overlay")).toBeInTheDocument();
+    expect(screen.getByText("Contesto mappa")).toBeInTheDocument();
+    expect(screen.getByText("Esplora e confronta")).toBeInTheDocument();
+    expect(screen.getByText("Copertura dati")).toBeInTheDocument();
+    expect(
+      screen.getByText("2 sezioni con dato · 1 sezione senza dato"),
+    ).toBeInTheDocument();
+    expect(screen.getByText("Nessuna area selezionata")).toBeInTheDocument();
+    expect(screen.getByText("Strade · OpenStreetMap")).toBeInTheDocument();
     expect(screen.getByTestId("atlante-osm-tile-layer")).toHaveAttribute(
       "data-url",
       "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
@@ -363,6 +371,9 @@ describe("Atlante territoriale", () => {
     fireEvent.change(basemapSelect, {
       target: { value: "esri-world-imagery" },
     });
+    expect(
+      screen.getByText("Aerea · Immagini satellitari"),
+    ).toBeInTheDocument();
     expect(screen.getByTestId("atlante-osm-tile-layer")).toHaveAttribute(
       "data-url",
       "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
@@ -371,6 +382,7 @@ describe("Atlante territoriale", () => {
       "Esri",
     );
     fireEvent.change(basemapSelect, { target: { value: "none" } });
+    expect(screen.getByText("Senza sfondo")).toBeInTheDocument();
     expect(
       screen.queryByTestId("atlante-osm-tile-layer"),
     ).not.toBeInTheDocument();
@@ -404,6 +416,7 @@ describe("Atlante territoriale", () => {
     expect(screen.getAllByText("1 (33,3%)").length).toBe(2);
     expect(screen.getByText("Valore 0")).toBeInTheDocument();
     expect(screen.getByText("Distribuzione per fasce")).toBeInTheDocument();
+    expect(screen.getByText("2 classi")).toBeInTheDocument();
     expect(screen.getAllByText(/1 sezione · 50%/).length).toBe(2);
     expect(screen.getAllByText(/dato non disponibile/i).length).toBeGreaterThan(
       0,
@@ -427,6 +440,7 @@ describe("Atlante territoriale", () => {
     expect(
       screen.getByRole("heading", { name: "Nicastro centro" }),
     ).toBeInTheDocument();
+    expect(screen.getAllByText("Nicastro centro").length).toBeGreaterThan(1);
     expect(
       screen.getByText("Sezione censuaria ISTAT: 0791600000198"),
     ).toBeInTheDocument();
