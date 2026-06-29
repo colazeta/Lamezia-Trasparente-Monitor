@@ -157,7 +157,10 @@ export const CONTRACT_LIFECYCLE_PHASE_ORDER: readonly ContractLifecyclePhaseKey[
     "valutazione",
   ];
 
-const PHASE_LABELS: Record<ContractLifecyclePhaseKey, string> = {
+export const CONTRACT_LIFECYCLE_PHASE_LABELS: Record<
+  ContractLifecyclePhaseKey,
+  string
+> = {
   programmazione: "Programmazione",
   progettazione: "Progettazione",
   gara_pubblicazione: "Gara / pubblicazione",
@@ -456,7 +459,7 @@ function buildPhase(input: {
       input.cupClassification.formallyValid;
     return {
       key: phaseKey,
-      label: PHASE_LABELS[phaseKey],
+      label: CONTRACT_LIFECYCLE_PHASE_LABELS[phaseKey],
       status: hasCup ? "partial" : "missing",
       summary: hasCup
         ? `CUP ${input.cupClassification.normalized} presente come asse progetto, fonte progetto da integrare.`
@@ -475,7 +478,7 @@ function buildPhase(input: {
     );
     return {
       key: phaseKey,
-      label: PHASE_LABELS[phaseKey],
+      label: CONTRACT_LIFECYCLE_PHASE_LABELS[phaseKey],
       status: hasDesignContext ? "partial" : "missing",
       summary: hasDesignContext
         ? "Contesto tecnico o territoriale presente, documenti progettuali da collegare."
@@ -496,7 +499,7 @@ function buildPhase(input: {
     );
     return {
       key: phaseKey,
-      label: PHASE_LABELS[phaseKey],
+      label: CONTRACT_LIFECYCLE_PHASE_LABELS[phaseKey],
       status: hasIngestedSource
         ? "documented"
         : input.bdncpBridgeAvailable
@@ -531,7 +534,7 @@ function buildPhase(input: {
         : "missing";
     return {
       key: phaseKey,
-      label: PHASE_LABELS[phaseKey],
+      label: CONTRACT_LIFECYCLE_PHASE_LABELS[phaseKey],
       status,
       summary: officialEvidence.length
         ? `${officialEvidence.length} evidenza/e sullo svolgimento della gara con fonte disponibile.`
@@ -561,7 +564,7 @@ function buildPhase(input: {
         : "missing";
     return {
       key: phaseKey,
-      label: PHASE_LABELS[phaseKey],
+      label: CONTRACT_LIFECYCLE_PHASE_LABELS[phaseKey],
       status,
       summary: officialEvidence.length
         ? `${officialEvidence.length} atto/i di affidamento con fonte disponibile.`
@@ -588,7 +591,7 @@ function buildPhase(input: {
         : "missing";
     return {
       key: phaseKey,
-      label: PHASE_LABELS[phaseKey],
+      label: CONTRACT_LIFECYCLE_PHASE_LABELS[phaseKey],
       status,
       summary: officialEvidence.length
         ? `${officialEvidence.length} evidenza/e di esecuzione con fonte disponibile.`
@@ -614,7 +617,7 @@ function buildPhase(input: {
 
   return {
     key: phaseKey,
-    label: PHASE_LABELS[phaseKey],
+    label: CONTRACT_LIFECYCLE_PHASE_LABELS[phaseKey],
     status,
     summary: officialEvidence.length
       ? `${officialEvidence.length} evidenza/e di collaudo o chiusura con fonte disponibile.`
