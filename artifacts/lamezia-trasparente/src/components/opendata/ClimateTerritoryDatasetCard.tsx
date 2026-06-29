@@ -1,16 +1,20 @@
 import { useMemo, useState, type ReactNode } from "react";
 import {
+  Activity,
   CalendarDays,
   CloudRain,
   Database,
   Download,
   ExternalLink,
   FileJson,
+  Flame,
   Info,
   LineChart,
   MapPin,
   Moon,
+  Snowflake,
   Thermometer,
+  TrendingUp,
 } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
@@ -22,12 +26,15 @@ import {
   LAMEZIA_CLIMATE_YEARS,
   getLameziaClimateAnnualMetrics,
   getLameziaClimateRecordsForYear,
+  type LameziaClimateAnnualMetrics,
   type LameziaClimateDailyRecord,
 } from "@/data/lameziaClimate";
 
-const CHART_WIDTH = 980;
-const CHART_HEIGHT = 360;
-const PLOT = { left: 58, right: 24, top: 28, bottom: 54 };
+const CHART_WIDTH = 1040;
+const CHART_HEIGHT = 456;
+const PLOT = { left: 72, right: 34, top: 34, bottom: 62 };
+const ANOMALY_PANEL = { top: 42, height: 136 };
+const TEMPERATURE_PANEL = { top: 226, height: 150 };
 const MONTH_LABELS = [
   "Gen",
   "Feb",
@@ -55,6 +62,7 @@ export function ClimateTerritoryDatasetCard() {
   );
   const annualMetrics = getLameziaClimateAnnualMetrics(selectedYear);
   const latestRecord = records[records.length - 1] ?? null;
+  const anomalySummary = useMemo(() => summarizeAnomalies(records), [records]);
   const metadata = LAMEZIA_CLIMATE_DATA.metadata;
   const latestAvailableYear = Number(metadata.latest_complete_date.slice(0, 4));
   const isLatestYear = selectedYear === latestAvailableYear;
@@ -149,7 +157,13 @@ export function ClimateTerritoryDatasetCard() {
           </label>
         </div>
 
+        <AnomalySummaryPanel
+          annualMetrics={annualMetrics}
+          summary={anomalySummary}
+        />
+
         <ClimateAnomalyChart
+          anomalySummary={anomalySummary}
           isLatestYear={isLatestYear}
           latestCompleteDate={metadata.latest_complete_date}
           records={records}
@@ -157,10 +171,11 @@ export function ClimateTerritoryDatasetCard() {
         />
 
         <p className="mt-3 text-sm leading-6 text-muted-foreground">
-          Nel grafico ogni barra verticale rappresenta un giorno: il colore
-          indica l'anomalia rispetto alla normale, mentre le linee mostrano
-          temperatura media osservata e normale climatica. La fascia chiara
-          indica l'intervallo p10-p90 del periodo 1991–2020.
+          La fascia superiore mette in evidenza lo scarto dalla normale:
+          barre sopra lo zero indicano giornate piu calde, barre sotto lo zero
+          giornate piu fresche. La parte inferiore conserva il confronto tra
+          temperatura media osservata, normale climatica e intervallo p10-p90
+          del periodo 1991–2020.
         </p>
 
         <dl className="mt-5 grid overflow-hidden rounded-lg border border-border text-sm sm:grid-cols-2 lg:grid-cols-3">
@@ -235,45 +250,130 @@ export function ClimateTerritoryDatasetCard() {
   );
 }
 
+function AnomalySummaryPanel({
+  annualMetrics,
+  summary,
+}: {
+  annualMetrics: LameziaClimateAnnualMetrics | null;
+  summary: ClimateAnomalySummary;
+}) {
+  return (
+    <dl className="mt-5 grid overflow-hidden rounded-xl border border-border bg-muted/20 text-sm md:grid-cols-4">
+      <SummaryItem
+        detail="media delle anomalie giornaliere"
+        icon={<Activity className="h-4 w-4" />}
+        label="Bilancio anomalie"
+        tone={
+          (annualMetrics?.meanAnomalyTMean ?? 0) > 0
+            ? "warm"
+            : (annualMetrics?.meanAnomalyTMean ?? 0) < 0
+              ? "cool"
+              : "neutral"
+        }
+        value={formatSignedCelsius(annualMetrics?.meanAnomalyTMean ?? null)}
+      />
+      <SummaryItem
+        detail={`${formatInteger(summary.positiveDays)} su ${formatInteger(
+          summary.validDays,
+        )} giorni con dato valido`}
+        icon={<TrendingUp className="h-4 w-4" />}
+        label="Giorni sopra la normale"
+        tone="warm"
+        value={formatPercent(summary.warmShare)}
+      />
+      <SummaryItem
+        detail={
+          summary.strongestWarm
+            ? formatDate(summary.strongestWarm.date)
+            : "n.d."
+        }
+        icon={<Flame className="h-4 w-4" />}
+        label="Picco caldo"
+        tone="warm"
+        value={formatSignedCelsius(summary.strongestWarm?.anomalyTMean ?? null)}
+      />
+      <SummaryItem
+        detail={
+          summary.strongestCold
+            ? formatDate(summary.strongestCold.date)
+            : "n.d."
+        }
+        icon={<Snowflake className="h-4 w-4" />}
+        label="Picco fresco"
+        tone="cool"
+        value={formatSignedCelsius(summary.strongestCold?.anomalyTMean ?? null)}
+      />
+    </dl>
+  );
+}
+
 function ClimateAnomalyChart({
   records,
   year,
   latestCompleteDate,
   isLatestYear,
+  anomalySummary,
 }: {
   records: LameziaClimateDailyRecord[];
   year: number;
   latestCompleteDate: string;
   isLatestYear: boolean;
+  anomalySummary: ClimateAnomalySummary;
 }) {
   const daysInSelectedYear = daysInYear(year);
   const plotWidth = CHART_WIDTH - PLOT.left - PLOT.right;
-  const plotHeight = CHART_HEIGHT - PLOT.top - PLOT.bottom;
   const latestMarkerRecord = isLatestYear
     ? records.find((record) => record.date === latestCompleteDate)
     : null;
-  const domain = getTemperatureDomain(records);
+  const temperatureDomain = getTemperatureDomain(records);
+  const anomalyMagnitude = getAnomalyMagnitude(records);
+  const anomalyTicks = buildAnomalyGridValues(anomalyMagnitude);
   const xForDay = (dayOfYear: number) =>
     PLOT.left + ((dayOfYear - 1) / (daysInSelectedYear - 1)) * plotWidth;
-  const yForValue = (value: number) =>
-    PLOT.top + ((domain.max - value) / (domain.max - domain.min)) * plotHeight;
-  const stripeWidth = Math.max(1, plotWidth / daysInSelectedYear + 0.3);
-  const observedPath = buildLinePath(records, "tMean", xForDay, yForValue);
+  const yForTemperature = (value: number) =>
+    TEMPERATURE_PANEL.top +
+    ((temperatureDomain.max - value) /
+      (temperatureDomain.max - temperatureDomain.min)) *
+      TEMPERATURE_PANEL.height;
+  const yForAnomaly = (value: number) =>
+    ANOMALY_PANEL.top +
+    ((anomalyMagnitude - value) / (anomalyMagnitude * 2)) *
+      ANOMALY_PANEL.height;
+  const zeroY = yForAnomaly(0);
+  const stripeWidth = Math.max(1.4, (plotWidth / daysInSelectedYear) * 0.76);
+  const observedPath = buildLinePath(
+    records,
+    "tMean",
+    xForDay,
+    yForTemperature,
+  );
   const normalPath = buildLinePath(
     records,
     "normalTMean",
     xForDay,
-    yForValue,
+    yForTemperature,
   );
-  const rangePath = buildRangePath(records, xForDay, yForValue);
-  const gridValues = buildGridValues(domain);
+  const anomalyPath = buildAnomalyLinePath(records, xForDay, yForAnomaly);
+  const rangePath = buildRangePath(records, xForDay, yForTemperature);
+  const gridValues = buildGridValues(temperatureDomain);
+  const latestMarkerX = latestMarkerRecord
+    ? xForDay(latestMarkerRecord.dayOfYear)
+    : null;
+  const markerTextAnchor =
+    latestMarkerX && latestMarkerX > CHART_WIDTH - 250 ? "end" : "start";
+  const markerTextX =
+    latestMarkerX === null
+      ? 0
+      : markerTextAnchor === "end"
+        ? latestMarkerX - 10
+        : latestMarkerX + 10;
 
   return (
-    <div className="mt-5 overflow-x-auto rounded-lg border border-border bg-background p-3">
+    <div className="mt-5 overflow-x-auto rounded-xl border border-border bg-background p-3 shadow-sm">
       <svg
         aria-describedby="climate-chart-desc"
         aria-labelledby="climate-chart-title"
-        className="block min-w-[760px] w-full"
+        className="block min-w-[820px] w-full"
         role="img"
         viewBox={`0 0 ${CHART_WIDTH} ${CHART_HEIGHT}`}
       >
@@ -281,33 +381,102 @@ function ClimateAnomalyChart({
           Grafico delle anomalie climatiche giornaliere di Lamezia Terme
         </title>
         <desc id="climate-chart-desc">
-          Anno {year}: barre blu e rosse per anomalie negative e positive,
-          linea della temperatura media, linea della normale climatica e fascia
-          p10-p90 del periodo 1991-2020.
+          Anno {year}: in alto barre divergenti sopra e sotto lo zero mostrano
+          lo scarto dalla normale 1991-2020; in basso sono presenti la
+          temperatura media giornaliera, la normale climatica, la fascia p10-p90
+          e il marker dell'ultimo giorno completo disponibile.
         </desc>
+        <defs>
+          <linearGradient id="climate-anomaly-warm" x1="0" x2="0" y1="1" y2="0">
+            <stop offset="0%" stopColor="hsl(var(--chart-2) / 0.42)" />
+            <stop offset="100%" stopColor="hsl(var(--chart-2) / 0.96)" />
+          </linearGradient>
+          <linearGradient id="climate-anomaly-cool" x1="0" x2="0" y1="0" y2="1">
+            <stop offset="0%" stopColor="hsl(var(--chart-1) / 0.42)" />
+            <stop offset="100%" stopColor="hsl(var(--chart-1) / 0.96)" />
+          </linearGradient>
+          <filter id="climate-line-glow" x="-8%" y="-35%" width="116%" height="170%">
+            <feGaussianBlur stdDeviation="2.4" />
+            <feColorMatrix
+              values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 .22 0"
+            />
+            <feMerge>
+              <feMergeNode />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
+          </filter>
+        </defs>
         <rect
           fill="hsl(var(--background))"
           height={CHART_HEIGHT}
           width={CHART_WIDTH}
         />
-        {gridValues.map((value) => (
-          <g key={value}>
+        <rect
+          fill="hsl(var(--chart-2) / 0.045)"
+          height={zeroY - ANOMALY_PANEL.top}
+          rx="10"
+          width={plotWidth}
+          x={PLOT.left}
+          y={ANOMALY_PANEL.top}
+        />
+        <rect
+          fill="hsl(var(--chart-1) / 0.055)"
+          height={ANOMALY_PANEL.top + ANOMALY_PANEL.height - zeroY}
+          rx="10"
+          width={plotWidth}
+          x={PLOT.left}
+          y={zeroY}
+        />
+        <rect
+          fill="hsl(var(--muted) / 0.18)"
+          height={TEMPERATURE_PANEL.height}
+          rx="10"
+          width={plotWidth}
+          x={PLOT.left}
+          y={TEMPERATURE_PANEL.top}
+        />
+        <text
+          fill="hsl(var(--foreground))"
+          fontSize="13"
+          fontWeight="700"
+          x={PLOT.left}
+          y={24}
+        >
+          Scarto dalla normale 1991-2020
+        </text>
+        <text
+          fill="hsl(var(--muted-foreground))"
+          fontSize="12"
+          textAnchor="end"
+          x={CHART_WIDTH - PLOT.right}
+          y={24}
+        >
+          sopra zero = piu caldo, sotto zero = piu fresco
+        </text>
+        {anomalyTicks.map((value) => (
+          <g key={`anomaly-${value}`}>
             <line
-              stroke="hsl(var(--border))"
-              strokeDasharray="4 5"
-              strokeWidth="1"
+              stroke={
+                value === 0
+                  ? "hsl(var(--foreground) / 0.52)"
+                  : "hsl(var(--border))"
+              }
+              strokeDasharray={value === 0 ? undefined : "4 5"}
+              strokeWidth={value === 0 ? "1.5" : "1"}
               x1={PLOT.left}
               x2={CHART_WIDTH - PLOT.right}
-              y1={yForValue(value)}
-              y2={yForValue(value)}
+              y1={yForAnomaly(value)}
+              y2={yForAnomaly(value)}
             />
             <text
               fill="hsl(var(--muted-foreground))"
               fontSize="12"
+              fontWeight={value === 0 ? "700" : "500"}
               textAnchor="end"
               x={PLOT.left - 10}
-              y={yForValue(value) + 4}
+              y={yForAnomaly(value) + 4}
             >
+              {value > 0 ? "+" : ""}
               {formatNumber.format(value)} °C
             </text>
           </g>
@@ -315,16 +484,17 @@ function ClimateAnomalyChart({
         {monthStartTicks(year).map((tick) => (
           <g key={tick.month}>
             <line
-              stroke="hsl(var(--border))"
+              stroke="hsl(var(--border) / 0.72)"
               strokeWidth="1"
               x1={xForDay(tick.dayOfYear)}
               x2={xForDay(tick.dayOfYear)}
-              y1={PLOT.top}
-              y2={CHART_HEIGHT - PLOT.bottom}
+              y1={ANOMALY_PANEL.top}
+              y2={TEMPERATURE_PANEL.top + TEMPERATURE_PANEL.height}
             />
             <text
               fill="hsl(var(--muted-foreground))"
               fontSize="12"
+              fontWeight="600"
               textAnchor="middle"
               x={xForDay(tick.dayOfYear)}
               y={CHART_HEIGHT - 24}
@@ -334,24 +504,102 @@ function ClimateAnomalyChart({
           </g>
         ))}
         <g aria-hidden="true">
-          {records.map((record) =>
-            record.anomalyTMean === null ? null : (
+          {records.map((record) => {
+            if (record.anomalyTMean === null) {
+              return null;
+            }
+            const anomalyY = yForAnomaly(record.anomalyTMean);
+            const height = Math.max(1.2, Math.abs(anomalyY - zeroY));
+            const isWarm = record.anomalyTMean >= 0;
+            return (
               <rect
-                fill={anomalyColor(record.anomalyTMean)}
-                height={plotHeight}
+                fill={
+                  isWarm
+                    ? "url(#climate-anomaly-warm)"
+                    : "url(#climate-anomaly-cool)"
+                }
+                height={height}
                 key={record.date}
+                opacity={anomalyOpacity(record.anomalyTMean)}
+                rx="1.4"
                 width={stripeWidth}
                 x={xForDay(record.dayOfYear) - stripeWidth / 2}
-                y={PLOT.top}
+                y={Math.min(anomalyY, zeroY)}
               />
-            ),
-          )}
+            );
+          })}
         </g>
+        {anomalyPath ? (
+          <path
+            d={anomalyPath}
+            fill="none"
+            filter="url(#climate-line-glow)"
+            stroke="hsl(var(--foreground) / 0.7)"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="1.8"
+          />
+        ) : null}
+        <ExtremeAnnotation
+          label="picco caldo"
+          record={anomalySummary.strongestWarm}
+          tone="warm"
+          xForDay={xForDay}
+          yForAnomaly={yForAnomaly}
+        />
+        <ExtremeAnnotation
+          label="picco fresco"
+          record={anomalySummary.strongestCold}
+          tone="cool"
+          xForDay={xForDay}
+          yForAnomaly={yForAnomaly}
+        />
+        <text
+          fill="hsl(var(--foreground))"
+          fontSize="13"
+          fontWeight="700"
+          x={PLOT.left}
+          y={TEMPERATURE_PANEL.top - 24}
+        >
+          Temperatura media giornaliera
+        </text>
+        <text
+          fill="hsl(var(--muted-foreground))"
+          fontSize="12"
+          textAnchor="end"
+          x={CHART_WIDTH - PLOT.right}
+          y={TEMPERATURE_PANEL.top - 24}
+        >
+          fascia storica p10-p90 e normale climatica
+        </text>
+        {gridValues.map((value) => (
+          <g key={`temperature-${value}`}>
+            <line
+              stroke="hsl(var(--border))"
+              strokeDasharray="4 5"
+              strokeWidth="1"
+              x1={PLOT.left}
+              x2={CHART_WIDTH - PLOT.right}
+              y1={yForTemperature(value)}
+              y2={yForTemperature(value)}
+            />
+            <text
+              fill="hsl(var(--muted-foreground))"
+              fontSize="12"
+              textAnchor="end"
+              x={PLOT.left - 10}
+              y={yForTemperature(value) + 4}
+            >
+              {formatNumber.format(value)} °C
+            </text>
+          </g>
+        ))}
         {rangePath ? (
           <path
             d={rangePath}
-            fill="hsl(var(--primary) / 0.12)"
-            stroke="none"
+            fill="hsl(var(--chart-3) / 0.16)"
+            stroke="hsl(var(--chart-3) / 0.22)"
+            strokeWidth="1"
           />
         ) : null}
         {normalPath ? (
@@ -359,65 +607,81 @@ function ClimateAnomalyChart({
             d={normalPath}
             fill="none"
             stroke="hsl(var(--muted-foreground))"
-            strokeDasharray="5 5"
+            strokeDasharray="6 6"
             strokeLinecap="round"
-            strokeWidth="2.5"
+            strokeWidth="2.4"
           />
         ) : null}
         {observedPath ? (
           <path
             d={observedPath}
             fill="none"
+            filter="url(#climate-line-glow)"
             stroke="hsl(var(--foreground))"
             strokeLinecap="round"
-            strokeWidth="2.8"
+            strokeLinejoin="round"
+            strokeWidth="3.2"
           />
         ) : null}
-        {latestMarkerRecord && latestMarkerRecord.tMean !== null ? (
+        {latestMarkerRecord ? (
           <g>
             <line
               stroke="hsl(var(--brand))"
+              strokeDasharray="5 5"
               strokeWidth="2"
               x1={xForDay(latestMarkerRecord.dayOfYear)}
               x2={xForDay(latestMarkerRecord.dayOfYear)}
-              y1={PLOT.top}
-              y2={CHART_HEIGHT - PLOT.bottom}
+              y1={ANOMALY_PANEL.top}
+              y2={TEMPERATURE_PANEL.top + TEMPERATURE_PANEL.height}
             />
-            <circle
-              cx={xForDay(latestMarkerRecord.dayOfYear)}
-              cy={yForValue(latestMarkerRecord.tMean)}
-              fill="hsl(var(--brand))"
-              r="5"
-              stroke="hsl(var(--background))"
-              strokeWidth="2"
-            />
+            {latestMarkerRecord.anomalyTMean !== null ? (
+              <circle
+                cx={xForDay(latestMarkerRecord.dayOfYear)}
+                cy={yForAnomaly(latestMarkerRecord.anomalyTMean)}
+                fill="hsl(var(--brand))"
+                r="5.5"
+                stroke="hsl(var(--background))"
+                strokeWidth="2"
+              />
+            ) : null}
+            {latestMarkerRecord.tMean !== null ? (
+              <circle
+                cx={xForDay(latestMarkerRecord.dayOfYear)}
+                cy={yForTemperature(latestMarkerRecord.tMean)}
+                fill="hsl(var(--foreground))"
+                r="5"
+                stroke="hsl(var(--background))"
+                strokeWidth="2"
+              />
+            ) : null}
             <text
               fill="hsl(var(--foreground))"
               fontSize="12"
-              fontWeight="600"
-              textAnchor="end"
-              x={Math.min(
-                CHART_WIDTH - PLOT.right,
-                xForDay(latestMarkerRecord.dayOfYear) + 172,
-              )}
-              y={PLOT.top + 16}
+              fontWeight="700"
+              textAnchor={markerTextAnchor}
+              x={markerTextX}
+              y={ANOMALY_PANEL.top + ANOMALY_PANEL.height + 22}
             >
               ultimo giorno completo disponibile
             </text>
           </g>
         ) : null}
       </svg>
-      <div className="mt-3 flex flex-wrap items-center gap-x-5 gap-y-2 text-xs text-muted-foreground">
+      <div className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-2 text-xs text-muted-foreground">
         <LegendItem
           color="hsl(var(--chart-1))"
-          label="Anomalia negativa"
-          value="-4 °C"
+          label="Giorni piu freschi della normale"
+          value="< 0 °C"
         />
-        <LegendItem color="hsl(var(--muted))" label="Normale" value="0 °C" />
+        <LegendItem
+          color="hsl(var(--muted))"
+          label="Linea zero"
+          value="0 °C"
+        />
         <LegendItem
           color="hsl(var(--chart-2))"
-          label="Anomalia positiva"
-          value="+4 °C"
+          label="Giorni piu caldi della normale"
+          value="> 0 °C"
         />
         <LegendLine
           className="border-foreground"
@@ -425,14 +689,114 @@ function ClimateAnomalyChart({
         />
         <LegendLine
           className="border-muted-foreground border-dashed"
-          label="Normale 1991–2020"
+          label="Normale 1991-2020"
         />
         <span className="inline-flex items-center gap-2">
-          <span className="h-3 w-6 rounded-sm bg-primary/15" />
+          <span className="h-3 w-6 rounded-sm bg-chart-3/20 ring-1 ring-chart-3/30" />
           fascia p10-p90
         </span>
       </div>
     </div>
+  );
+}
+
+function SummaryItem({
+  icon,
+  label,
+  value,
+  detail,
+  tone,
+}: {
+  icon: ReactNode;
+  label: string;
+  value: string;
+  detail: string;
+  tone: "warm" | "cool" | "neutral";
+}) {
+  const toneClasses = {
+    cool: "bg-primary/10 text-primary ring-primary/20",
+    neutral: "bg-muted text-muted-foreground ring-border",
+    warm: "bg-brand/10 text-brand ring-brand/20",
+  };
+
+  return (
+    <div className="border-b border-border p-4 last:border-b-0 md:border-b-0 md:border-r md:last:border-r-0">
+      <dt className="flex items-center gap-2 text-xs font-medium text-muted-foreground">
+        <span
+          className={`inline-flex h-7 w-7 items-center justify-center rounded-md ring-1 ${toneClasses[tone]}`}
+        >
+          {icon}
+        </span>
+        {label}
+      </dt>
+      <dd className="mt-2 text-2xl font-display font-bold tabular-nums text-foreground">
+        {value}
+      </dd>
+      <dd className="mt-1 text-xs leading-5 text-muted-foreground">
+        {detail}
+      </dd>
+    </div>
+  );
+}
+
+function ExtremeAnnotation({
+  record,
+  label,
+  tone,
+  xForDay,
+  yForAnomaly,
+}: {
+  record: LameziaClimateDailyRecord | null;
+  label: string;
+  tone: "warm" | "cool";
+  xForDay: (dayOfYear: number) => number;
+  yForAnomaly: (value: number) => number;
+}) {
+  if (!record || record.anomalyTMean === null) {
+    return null;
+  }
+
+  const x = xForDay(record.dayOfYear);
+  const y = yForAnomaly(record.anomalyTMean);
+  const anchor = x > CHART_WIDTH - 220 ? "end" : "start";
+  const labelX = anchor === "end" ? x - 10 : x + 10;
+  const labelY =
+    tone === "warm"
+      ? Math.max(ANOMALY_PANEL.top + 16, y - 10)
+      : Math.min(ANOMALY_PANEL.top + ANOMALY_PANEL.height - 8, y + 18);
+  const color =
+    tone === "warm" ? "hsl(var(--chart-2))" : "hsl(var(--chart-1))";
+
+  return (
+    <g>
+      <circle
+        cx={x}
+        cy={y}
+        fill={color}
+        r="5.5"
+        stroke="hsl(var(--background))"
+        strokeWidth="2"
+      />
+      <text
+        fill="hsl(var(--foreground))"
+        fontSize="12"
+        fontWeight="700"
+        textAnchor={anchor}
+        x={labelX}
+        y={labelY}
+      >
+        {label} {formatSignedCelsius(record.anomalyTMean)}
+      </text>
+      <text
+        fill="hsl(var(--muted-foreground))"
+        fontSize="11"
+        textAnchor={anchor}
+        x={labelX}
+        y={labelY + 14}
+      >
+        {formatDate(record.date)}
+      </text>
+    </g>
   );
 }
 
@@ -553,6 +917,58 @@ function LegendLine({
   );
 }
 
+interface ClimateAnomalySummary {
+  validDays: number;
+  positiveDays: number;
+  negativeDays: number;
+  warmShare: number | null;
+  strongestWarm: LameziaClimateDailyRecord | null;
+  strongestCold: LameziaClimateDailyRecord | null;
+}
+
+function summarizeAnomalies(
+  records: LameziaClimateDailyRecord[],
+): ClimateAnomalySummary {
+  const validRecords = records.filter((record) =>
+    Number.isFinite(record.anomalyTMean),
+  );
+  let strongestWarm: LameziaClimateDailyRecord | null = null;
+  let strongestCold: LameziaClimateDailyRecord | null = null;
+  let positiveDays = 0;
+  let negativeDays = 0;
+
+  for (const record of validRecords) {
+    const anomaly = record.anomalyTMean as number;
+    if (anomaly > 0) {
+      positiveDays += 1;
+      if (
+        !strongestWarm ||
+        anomaly > (strongestWarm.anomalyTMean as number)
+      ) {
+        strongestWarm = record;
+      }
+    } else if (anomaly < 0) {
+      negativeDays += 1;
+      if (
+        !strongestCold ||
+        anomaly < (strongestCold.anomalyTMean as number)
+      ) {
+        strongestCold = record;
+      }
+    }
+  }
+
+  return {
+    validDays: validRecords.length,
+    positiveDays,
+    negativeDays,
+    warmShare:
+      validRecords.length === 0 ? null : positiveDays / validRecords.length,
+    strongestWarm,
+    strongestCold,
+  };
+}
+
 function getTemperatureDomain(records: LameziaClimateDailyRecord[]) {
   const values = records.flatMap((record) => [
     record.tMean,
@@ -579,6 +995,21 @@ function buildLinePath(
     .map((record) => ({
       x: xForDay(record.dayOfYear),
       y: yForValue(record[key] as number),
+    }));
+
+  return pointsToPath(points);
+}
+
+function buildAnomalyLinePath(
+  records: LameziaClimateDailyRecord[],
+  xForDay: (dayOfYear: number) => number,
+  yForValue: (value: number) => number,
+) {
+  const points = records
+    .filter((record) => Number.isFinite(record.anomalyTMean))
+    .map((record) => ({
+      x: xForDay(record.dayOfYear),
+      y: yForValue(record.anomalyTMean as number),
     }));
 
   return pointsToPath(points);
@@ -636,16 +1067,24 @@ function buildGridValues(domain: { min: number; max: number }) {
   return values;
 }
 
-function anomalyColor(value: number) {
-  const capped = Math.min(5, Math.abs(value));
-  const opacity = 0.22 + capped * 0.11;
-  if (value > 0) {
-    return `hsl(var(--chart-2) / ${opacity.toFixed(2)})`;
-  }
-  if (value < 0) {
-    return `hsl(var(--chart-1) / ${opacity.toFixed(2)})`;
-  }
-  return "hsl(var(--muted-foreground) / 0.28)";
+function buildAnomalyGridValues(magnitude: number) {
+  const half = Math.max(1, Math.round(magnitude / 2));
+  return [-magnitude, -half, 0, half, magnitude];
+}
+
+function getAnomalyMagnitude(records: LameziaClimateDailyRecord[]) {
+  const maxAbs = records.reduce((max, record) => {
+    if (!Number.isFinite(record.anomalyTMean)) {
+      return max;
+    }
+    return Math.max(max, Math.abs(record.anomalyTMean as number));
+  }, 0);
+  return Math.max(4, Math.ceil(maxAbs));
+}
+
+function anomalyOpacity(value: number) {
+  const capped = Math.min(7, Math.abs(value));
+  return Number((0.46 + capped * 0.07).toFixed(2));
 }
 
 function daysInYear(year: number) {
@@ -687,6 +1126,15 @@ function formatSignedCelsius(value: number | null) {
 
 function formatMillimeters(value: number | null) {
   return value === null ? "n.d." : `${formatNumber.format(value)} mm`;
+}
+
+function formatPercent(value: number | null) {
+  return value === null
+    ? "n.d."
+    : new Intl.NumberFormat("it-IT", {
+        maximumFractionDigits: 0,
+        style: "percent",
+      }).format(value);
 }
 
 function formatInteger(value: number | null) {

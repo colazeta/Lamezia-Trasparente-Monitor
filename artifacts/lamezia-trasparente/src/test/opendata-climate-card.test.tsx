@@ -58,6 +58,14 @@ describe("OpenData climate territory card", () => {
         name: /Grafico delle anomalie climatiche giornaliere/i,
       }),
     ).toBeInTheDocument();
+    expect(section.getByText("Bilancio anomalie")).toBeInTheDocument();
+    expect(section.getByText("Giorni sopra la normale")).toBeInTheDocument();
+    expect(section.getByText("Picco caldo")).toBeInTheDocument();
+    expect(section.getByText("Picco fresco")).toBeInTheDocument();
+    expect(
+      section.getByText("Scarto dalla normale 1991-2020"),
+    ).toBeInTheDocument();
+    expect(section.getByText("Linea zero")).toBeInTheDocument();
     expect(
       section.getAllByText(/ultimo giorno completo disponibile/i).length,
     ).toBeGreaterThan(0);
