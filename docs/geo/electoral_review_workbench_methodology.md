@@ -198,6 +198,15 @@ writes:
 - `data/interim/qa/anncsu_coordinate_recovery_training_set_2025.csv`
 - `data/interim/qa/anncsu_coordinate_recovery_layer_report_2025.md`
 
+Because public geocoders can miss local contrade and may return only
+street-level results, `scripts/generate_anncsu_local_anchor_coordinate_candidates.py`
+also creates local candidates from non-suspect ANNCSU civics on the same street.
+It can interpolate between numeric civic anchors or provide weaker same-street
+anchor candidates for human review:
+
+- `data/interim/qa/anncsu_coordinate_local_anchor_candidates_2025.csv`
+- `data/interim/qa/anncsu_coordinate_local_anchor_candidates_report_2025.md`
+
 The retraining path is therefore review-first:
 
 - collect accepted manual coordinate overrides and rejected candidates;

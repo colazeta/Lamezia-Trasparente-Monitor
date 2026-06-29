@@ -65,6 +65,16 @@ Use the first command for a request plan. Use `--execute` only for small,
 cached, rate-limited QA batches, or with a dedicated provider/internal geocoder
 that allows bulk use.
 
+Generate local ANNCSU anchor candidates for suspect coordinates:
+
+```powershell
+python scripts/generate_anncsu_local_anchor_coordinate_candidates.py
+```
+
+These candidates use non-suspect same-street ANNCSU civics as review anchors.
+They are not applied automatically and must still be confirmed through a
+`manual_coordinate_override` decision.
+
 Build the auditable recovery layer and training set:
 
 ```powershell
