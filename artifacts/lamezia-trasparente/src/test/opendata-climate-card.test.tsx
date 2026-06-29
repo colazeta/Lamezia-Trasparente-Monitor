@@ -27,28 +27,31 @@ describe("OpenData climate territory card", () => {
     } as ReturnType<typeof useListOpendataDatasets>);
   });
 
-  it("renders the dataset-first climate card inside OpenData", () => {
+  it("renders the dataset dashboard and climate card inside OpenData", () => {
     render(<Opendata />);
 
     expect(
       screen.getByRole("heading", { level: 1, name: "Opendata" }),
     ).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: "Dataset con lettura visuale" }),
+    ).toBeInTheDocument();
+    expect(screen.getByText("Prossimi dataset")).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /Apri scheda/i })).toHaveAttribute(
+      "href",
+      "#clima-territorio",
+    );
 
     const climateSection = screen
-      .getByRole("heading", { name: "Clima e territorio" })
+      .getByRole("heading", {
+        name: /Anomalie climatiche.*Lamezia Terme/,
+      })
       .closest("section");
     expect(climateSection).not.toBeNull();
 
     const section = within(climateSection as HTMLElement);
     expect(
-      section.getByRole("heading", {
-        name: "Anomalie climatiche · Lamezia Terme",
-      }),
-    ).toBeInTheDocument();
-    expect(
-      section.getByText(
-        "Temperatura media giornaliera rispetto alla normale 1991–2020",
-      ),
+      section.getByText(/Temperatura media giornaliera rispetto alla normale/),
     ).toBeInTheDocument();
     expect(section.getByLabelText("Anno del dataset climatico")).toHaveValue(
       String(LAMEZIA_CLIMATE_LATEST_YEAR),
@@ -58,10 +61,13 @@ describe("OpenData climate territory card", () => {
         name: /Grafico delle anomalie climatiche giornaliere/i,
       }),
     ).toBeInTheDocument();
-    expect(section.getByText("Bilancio anomalie")).toBeInTheDocument();
-    expect(section.getByText("Giorni sopra la normale")).toBeInTheDocument();
-    expect(section.getByText("Picco caldo")).toBeInTheDocument();
-    expect(section.getByText("Picco fresco")).toBeInTheDocument();
+    expect(section.getByText("Ultimo giorno completo")).toBeInTheDocument();
+    expect(section.getByText("Bilancio dell'anno")).toBeInTheDocument();
+    expect(section.getByText("Quota sopra normale")).toBeInTheDocument();
+    expect(section.getByText("Stress termico")).toBeInTheDocument();
+    expect(
+      section.getByText("Distribuzione delle anomalie"),
+    ).toBeInTheDocument();
     expect(
       section.getByText("Scarto dalla normale 1991-2020"),
     ).toBeInTheDocument();
@@ -78,9 +84,9 @@ describe("OpenData climate territory card", () => {
     expect(
       section.getByText(/Aggiornamento giornaliero pianificato/i),
     ).toBeInTheDocument();
-    expect(section.getByText("Metodologia")).toBeInTheDocument();
-    expect(section.getByText("Limiti del dato")).toBeInTheDocument();
-    expect(section.getByText("Riuso civico")).toBeInTheDocument();
+    expect(
+      section.getByText("Fonte, metodo e limiti del dato"),
+    ).toBeInTheDocument();
   });
 
   it("keeps the static climate dataset visible when the remote catalog payload is unavailable", () => {
@@ -92,11 +98,11 @@ describe("OpenData climate territory card", () => {
     render(<Opendata />);
 
     expect(
-      screen.getByRole("heading", { name: "Clima e territorio" }),
+      screen.getByRole("heading", { name: "Dataset con lettura visuale" }),
     ).toBeInTheDocument();
     expect(
       screen.getByRole("heading", {
-        name: "Anomalie climatiche · Lamezia Terme",
+        name: /Anomalie climatiche.*Lamezia Terme/,
       }),
     ).toBeInTheDocument();
     expect(screen.getByRole("link", { name: /Scarica JSON/i })).toHaveAttribute(

@@ -70,6 +70,7 @@ export function ClimateTerritoryDatasetCard() {
   return (
     <section
       aria-labelledby="clima-territorio-title"
+      id="clima-territorio"
       className="mb-8 overflow-hidden rounded-xl border border-card-border bg-card shadow-sm"
     >
       <div className="border-b border-border p-5 md:p-6">
@@ -90,6 +91,11 @@ export function ClimateTerritoryDatasetCard() {
               storica e continuita del dato climatico locale come materiale di
               analisi civica, non come servizio meteo.
             </p>
+            <ClimateQuickFacts
+              baseline={metadata.baseline_period}
+              latestDate={metadata.latest_complete_date}
+              sourceUrl={metadata.source_documentation_url ?? metadata.source_url}
+            />
           </div>
           <a href={LAMEZIA_CLIMATE_DATA_URL} download>
             <Button variant="outline" size="sm" className="w-full md:w-auto">
@@ -99,33 +105,6 @@ export function ClimateTerritoryDatasetCard() {
             </Button>
           </a>
         </div>
-
-        <dl className="mt-5 grid overflow-hidden rounded-lg border border-border text-sm md:grid-cols-4">
-          <MetadataItem
-            icon={<ExternalLink className="h-4 w-4" />}
-            label="Fonte"
-            value={metadata.source}
-            href={metadata.source_documentation_url ?? metadata.source_url}
-          />
-          <MetadataItem
-            icon={<MapPin className="h-4 w-4" />}
-            label="Griglia"
-            value={`${metadata.coordinates.latitude}, ${metadata.coordinates.longitude}`}
-            detail={metadata.coordinates.timezone}
-          />
-          <MetadataItem
-            icon={<CalendarDays className="h-4 w-4" />}
-            label="Normale climatica"
-            value={metadata.baseline_period}
-            detail="temperatura media giornaliera"
-          />
-          <MetadataItem
-            icon={<Info className="h-4 w-4" />}
-            label="Dato fino a"
-            value={formatDate(metadata.latest_complete_date)}
-            detail="ultimo giorno completo disponibile"
-          />
-        </dl>
       </div>
 
       <div className="p-5 md:p-6">
@@ -157,8 +136,10 @@ export function ClimateTerritoryDatasetCard() {
           </label>
         </div>
 
-        <AnomalySummaryPanel
+        <ClimateInsightBoard
           annualMetrics={annualMetrics}
+          latestRecord={latestRecord}
+          isLatestYear={isLatestYear}
           summary={anomalySummary}
         />
 
@@ -178,132 +159,152 @@ export function ClimateTerritoryDatasetCard() {
           del periodo 1991–2020.
         </p>
 
-        <dl className="mt-5 grid overflow-hidden rounded-lg border border-border text-sm sm:grid-cols-2 lg:grid-cols-3">
-          <MetricItem
-            icon={<Thermometer className="h-4 w-4" />}
-            label="Temperatura media ultimo giorno"
-            value={formatCelsius(latestRecord?.tMean ?? null)}
-            detail={latestRecord ? formatDate(latestRecord.date) : "n.d."}
-          />
-          <MetricItem
-            icon={<LineChart className="h-4 w-4" />}
-            label="Anomalia ultimo giorno"
-            value={formatSignedCelsius(latestRecord?.anomalyTMean ?? null)}
-            detail={
-              isLatestYear
-                ? "ultimo giorno completo disponibile"
-                : "ultimo giorno dell'anno selezionato"
-            }
-          />
-          <MetricItem
-            icon={<Thermometer className="h-4 w-4" />}
-            label="Giorni oltre 30 °C"
-            value={formatInteger(annualMetrics?.warmDaysOver30C ?? null)}
-            detail="temperatura massima giornaliera"
-          />
-          <MetricItem
-            icon={<Moon className="h-4 w-4" />}
-            label="Notti tropicali"
-            value={formatInteger(annualMetrics?.tropicalNights ?? null)}
-            detail="temperatura minima almeno 20 °C"
-          />
-          <MetricItem
-            icon={<CloudRain className="h-4 w-4" />}
-            label="Precipitazione cumulata annua"
-            value={formatMillimeters(annualMetrics?.precipitationTotal ?? null)}
-            detail={`${annualMetrics?.days ?? 0} giorni nel dataset`}
-          />
-          <MetricItem
-            icon={<CalendarDays className="h-4 w-4" />}
-            label="Ultimo aggiornamento"
-            value={formatDate(metadata.generated_at.slice(0, 10))}
-            detail={`dato fino a ${formatDate(metadata.latest_complete_date)}`}
-          />
-        </dl>
-
-        <div className="mt-5 grid overflow-hidden rounded-lg border border-border text-sm leading-6 md:grid-cols-3 md:divide-x md:divide-border">
-          <MethodBox title="Metodologia">
-            <>
-              La normale giornaliera e calcolata sul periodo 1991–2020 per
-              giorno dell'anno. L'anomalia e la differenza tra temperatura
-              media giornaliera e normale climatica; il 29 febbraio ha una
-              regola esplicita nella pipeline.
-              {metadata.update_policy ? (
-                <>
-                  {" "}
-                  {metadata.update_policy}
-                </>
-              ) : null}
-            </>
-          </MethodBox>
-          <MethodBox title="Limiti del dato">
-            {metadata.caveat}
-          </MethodBox>
-          <MethodBox title="Riuso civico">
-            Il JSON statico puo essere usato per confronti, note metodologiche,
-            richieste di accesso civico e analisi su tendenze locali, mantenendo
-            fonte, periodo baseline e caveat accanto ai numeri.
-          </MethodBox>
-        </div>
+        <MethodDisclosure metadata={metadata} />
       </div>
     </section>
   );
 }
 
-function AnomalySummaryPanel({
+function ClimateQuickFacts({
+  baseline,
+  latestDate,
+  sourceUrl,
+}: {
+  baseline: string;
+  latestDate: string;
+  sourceUrl: string;
+}) {
+  return (
+    <div className="mt-4 flex flex-wrap gap-2 text-xs text-muted-foreground">
+      <a
+        className="inline-flex items-center gap-1 rounded-md border border-border bg-background px-2.5 py-1.5 font-medium text-foreground hover:border-primary/50 hover:text-primary"
+        href={sourceUrl}
+        rel="noreferrer"
+        target="_blank"
+      >
+        <ExternalLink className="h-3.5 w-3.5" />
+        Open-Meteo
+      </a>
+      <span className="inline-flex items-center gap-1 rounded-md border border-border bg-background px-2.5 py-1.5">
+        <CalendarDays className="h-3.5 w-3.5" />
+        Normale {baseline}
+      </span>
+      <span className="inline-flex items-center gap-1 rounded-md border border-border bg-background px-2.5 py-1.5">
+        <Info className="h-3.5 w-3.5" />
+        Dato fino a {formatDate(latestDate)}
+      </span>
+    </div>
+  );
+}
+
+function ClimateInsightBoard({
   annualMetrics,
+  latestRecord,
+  isLatestYear,
   summary,
 }: {
   annualMetrics: LameziaClimateAnnualMetrics | null;
+  latestRecord: LameziaClimateDailyRecord | null;
+  isLatestYear: boolean;
   summary: ClimateAnomalySummary;
 }) {
   return (
-    <dl className="mt-5 grid overflow-hidden rounded-xl border border-border bg-muted/20 text-sm md:grid-cols-4">
-      <SummaryItem
-        detail="media delle anomalie giornaliere"
-        icon={<Activity className="h-4 w-4" />}
-        label="Bilancio anomalie"
-        tone={
-          (annualMetrics?.meanAnomalyTMean ?? 0) > 0
-            ? "warm"
-            : (annualMetrics?.meanAnomalyTMean ?? 0) < 0
-              ? "cool"
-              : "neutral"
+    <div className="mt-5 grid gap-3 lg:grid-cols-6">
+      <InsightItem
+        className="lg:col-span-2"
+        detail={
+          latestRecord
+            ? `${formatCelsius(latestRecord.tMean)} il ${formatDate(
+                latestRecord.date,
+              )}`
+            : "n.d."
         }
+        icon={<Thermometer className="h-4 w-4" />}
+        label={
+          isLatestYear
+            ? "Ultimo giorno completo"
+            : "Ultimo giorno dell'anno"
+        }
+        tone={toneForValue(latestRecord?.anomalyTMean ?? null)}
+        value={formatSignedCelsius(latestRecord?.anomalyTMean ?? null)}
+      />
+      <InsightItem
+        className="lg:col-span-2"
+        detail={`${formatInteger(summary.positiveDays)} giorni sopra norma su ${formatInteger(
+          summary.validDays,
+        )}`}
+        icon={<Activity className="h-4 w-4" />}
+        label="Bilancio dell'anno"
+        tone={toneForValue(annualMetrics?.meanAnomalyTMean ?? null)}
         value={formatSignedCelsius(annualMetrics?.meanAnomalyTMean ?? null)}
       />
-      <SummaryItem
-        detail={`${formatInteger(summary.positiveDays)} su ${formatInteger(
-          summary.validDays,
-        )} giorni con dato valido`}
+      <InsightItem
+        className="lg:col-span-2"
+        detail={`sequenza piu lunga: ${formatInteger(
+          summary.longestWarmRun,
+        )} giorni`}
         icon={<TrendingUp className="h-4 w-4" />}
-        label="Giorni sopra la normale"
+        label="Quota sopra normale"
         tone="warm"
         value={formatPercent(summary.warmShare)}
       />
-      <SummaryItem
-        detail={
-          summary.strongestWarm
-            ? formatDate(summary.strongestWarm.date)
-            : "n.d."
-        }
+      <InsightItem
+        className="lg:col-span-2"
+        detail={`${formatInteger(
+          annualMetrics?.warmDaysOver30C ?? null,
+        )} giorni oltre 30 °C`}
         icon={<Flame className="h-4 w-4" />}
-        label="Picco caldo"
+        label="Stress termico"
         tone="warm"
-        value={formatSignedCelsius(summary.strongestWarm?.anomalyTMean ?? null)}
+        value={`${formatInteger(annualMetrics?.tropicalNights ?? null)} notti tropicali`}
       />
-      <SummaryItem
+      <InsightItem
+        className="lg:col-span-2"
+        detail={`${formatInteger(annualMetrics?.days ?? null)} giorni nel dataset`}
+        icon={<CloudRain className="h-4 w-4" />}
+        label="Pioggia cumulata"
+        tone="neutral"
+        value={formatMillimeters(annualMetrics?.precipitationTotal ?? null)}
+      />
+      <InsightItem
+        className="lg:col-span-2"
         detail={
           summary.strongestCold
-            ? formatDate(summary.strongestCold.date)
+            ? `fresco ${formatSignedCelsius(
+                summary.strongestCold.anomalyTMean,
+              )} il ${formatDate(summary.strongestCold.date)}`
             : "n.d."
         }
-        icon={<Snowflake className="h-4 w-4" />}
-        label="Picco fresco"
-        tone="cool"
-        value={formatSignedCelsius(summary.strongestCold?.anomalyTMean ?? null)}
+        icon={<LineChart className="h-4 w-4" />}
+        label="Estremi dell'anno"
+        tone="neutral"
+        value={
+          summary.strongestWarm
+            ? `caldo ${formatSignedCelsius(summary.strongestWarm.anomalyTMean)}`
+            : "n.d."
+        }
       />
-    </dl>
+      <div className="rounded-lg border border-border bg-background p-4 lg:col-span-6">
+        <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+          <div>
+            <h4 className="text-sm font-semibold text-foreground">
+              Distribuzione delle anomalie
+            </h4>
+            <p className="mt-1 text-xs text-muted-foreground">
+              Giorni piu freschi, vicini alla normale e piu caldi nell'anno
+              selezionato.
+            </p>
+          </div>
+          <div className="text-xs text-muted-foreground">
+            <span className="font-semibold text-foreground">
+              {formatInteger(summary.validDays)}
+            </span>{" "}
+            giorni con anomalia calcolata
+          </div>
+        </div>
+        <DistributionBar summary={summary} />
+      </div>
+    </div>
   );
 }
 
@@ -700,13 +701,15 @@ function ClimateAnomalyChart({
   );
 }
 
-function SummaryItem({
+function InsightItem({
+  className = "",
   icon,
   label,
   value,
   detail,
   tone,
 }: {
+  className?: string;
   icon: ReactNode;
   label: string;
   value: string;
@@ -720,7 +723,9 @@ function SummaryItem({
   };
 
   return (
-    <div className="border-b border-border p-4 last:border-b-0 md:border-b-0 md:border-r md:last:border-r-0">
+    <dl
+      className={`rounded-lg border border-border bg-background p-4 shadow-sm ${className}`}
+    >
       <dt className="flex items-center gap-2 text-xs font-medium text-muted-foreground">
         <span
           className={`inline-flex h-7 w-7 items-center justify-center rounded-md ring-1 ${toneClasses[tone]}`}
@@ -735,6 +740,60 @@ function SummaryItem({
       <dd className="mt-1 text-xs leading-5 text-muted-foreground">
         {detail}
       </dd>
+    </dl>
+  );
+}
+
+function DistributionBar({ summary }: { summary: ClimateAnomalySummary }) {
+  const segments = [
+    {
+      count: summary.coolDays,
+      icon: <Snowflake className="h-3.5 w-3.5" />,
+      label: "freschi",
+      color: "hsl(var(--chart-1))",
+    },
+    {
+      count: summary.nearNormalDays,
+      icon: <Activity className="h-3.5 w-3.5" />,
+      label: "vicini alla normale",
+      color: "hsl(var(--muted-foreground) / 0.55)",
+    },
+    {
+      count: summary.warmDays,
+      icon: <Flame className="h-3.5 w-3.5" />,
+      label: "caldi",
+      color: "hsl(var(--chart-2))",
+    },
+  ];
+
+  return (
+    <div className="mt-4">
+      <div className="flex h-4 overflow-hidden rounded-full bg-muted">
+        {segments.map((segment) => (
+          <span
+            aria-hidden="true"
+            key={segment.label}
+            style={{
+              backgroundColor: segment.color,
+              width:
+                summary.validDays === 0
+                  ? "0%"
+                  : `${(segment.count / summary.validDays) * 100}%`,
+            }}
+          />
+        ))}
+      </div>
+      <div className="mt-3 flex flex-wrap gap-x-5 gap-y-2 text-xs text-muted-foreground">
+        {segments.map((segment) => (
+          <span className="inline-flex items-center gap-1.5" key={segment.label}>
+            {segment.icon}
+            <span className="font-semibold text-foreground">
+              {formatInteger(segment.count)}
+            </span>
+            {segment.label}
+          </span>
+        ))}
+      </div>
     </div>
   );
 }
@@ -800,67 +859,39 @@ function ExtremeAnnotation({
   );
 }
 
-function MetadataItem({
-  icon,
-  label,
-  value,
-  detail,
-  href,
+function MethodDisclosure({
+  metadata,
 }: {
-  icon: ReactNode;
-  label: string;
-  value: string;
-  detail?: string;
-  href?: string;
-}) {
-  const content = href ? (
-    <a
-      className="inline-flex items-center gap-1 text-primary underline-offset-4 hover:underline"
-      href={href}
-      rel="noreferrer"
-      target="_blank"
-    >
-      {value}
-      <ExternalLink className="h-3 w-3" />
-    </a>
-  ) : (
-    value
-  );
-
-  return (
-    <div className="border-b border-border p-4 last:border-b-0 md:border-b-0 md:border-r md:last:border-r-0">
-      <dt className="flex items-center gap-2 text-xs font-medium text-muted-foreground">
-        {icon}
-        {label}
-      </dt>
-      <dd className="mt-1 font-semibold text-foreground">{content}</dd>
-      {detail ? <dd className="mt-1 text-xs text-muted-foreground">{detail}</dd> : null}
-    </div>
-  );
-}
-
-function MetricItem({
-  icon,
-  label,
-  value,
-  detail,
-}: {
-  icon: ReactNode;
-  label: string;
-  value: string;
-  detail: string;
+  metadata: typeof LAMEZIA_CLIMATE_DATA.metadata;
 }) {
   return (
-    <div className="border-b border-border p-4 last:border-b-0 sm:odd:border-r lg:border-r lg:[&:nth-child(3n)]:border-r-0 lg:[&:nth-last-child(-n+3)]:border-b-0">
-      <dt className="flex items-center gap-2 text-xs font-medium text-muted-foreground">
-        {icon}
-        {label}
-      </dt>
-      <dd className="mt-1 text-xl font-display font-bold text-foreground">
-        {value}
-      </dd>
-      <dd className="mt-1 text-xs text-muted-foreground">{detail}</dd>
-    </div>
+    <details className="mt-5 rounded-lg border border-border bg-muted/20 text-sm leading-6">
+      <summary className="cursor-pointer list-none px-4 py-3 font-semibold text-foreground marker:hidden">
+        Fonte, metodo e limiti del dato
+      </summary>
+      <div className="grid border-t border-border md:grid-cols-3 md:divide-x md:divide-border">
+        <MethodBox title="Fonte">
+          <span className="inline-flex items-start gap-2">
+            <MapPin className="mt-1 h-4 w-4 shrink-0" />
+            <span>
+              {metadata.source}. Griglia {metadata.coordinates.latitude},{" "}
+              {metadata.coordinates.longitude}, timezone{" "}
+              {metadata.coordinates.timezone}.
+            </span>
+          </span>
+        </MethodBox>
+        <MethodBox title="Metodo">
+          La normale giornaliera e calcolata sul periodo 1991-2020.
+          L'anomalia e la differenza tra temperatura media giornaliera e
+          normale climatica; il 29 febbraio ha una regola esplicita nella
+          pipeline.
+          {metadata.update_policy ? <> {metadata.update_policy}</> : null}
+        </MethodBox>
+        <MethodBox title="Limiti">
+          {metadata.caveat}
+        </MethodBox>
+      </div>
+    </details>
   );
 }
 
@@ -921,6 +952,10 @@ interface ClimateAnomalySummary {
   validDays: number;
   positiveDays: number;
   negativeDays: number;
+  coolDays: number;
+  nearNormalDays: number;
+  warmDays: number;
+  longestWarmRun: number;
   warmShare: number | null;
   strongestWarm: LameziaClimateDailyRecord | null;
   strongestCold: LameziaClimateDailyRecord | null;
@@ -936,11 +971,18 @@ function summarizeAnomalies(
   let strongestCold: LameziaClimateDailyRecord | null = null;
   let positiveDays = 0;
   let negativeDays = 0;
+  let coolDays = 0;
+  let nearNormalDays = 0;
+  let warmDays = 0;
+  let currentWarmRun = 0;
+  let longestWarmRun = 0;
 
   for (const record of validRecords) {
     const anomaly = record.anomalyTMean as number;
     if (anomaly > 0) {
       positiveDays += 1;
+      currentWarmRun += 1;
+      longestWarmRun = Math.max(longestWarmRun, currentWarmRun);
       if (
         !strongestWarm ||
         anomaly > (strongestWarm.anomalyTMean as number)
@@ -949,12 +991,23 @@ function summarizeAnomalies(
       }
     } else if (anomaly < 0) {
       negativeDays += 1;
+      currentWarmRun = 0;
       if (
         !strongestCold ||
         anomaly < (strongestCold.anomalyTMean as number)
       ) {
         strongestCold = record;
       }
+    } else {
+      currentWarmRun = 0;
+    }
+
+    if (anomaly < -1) {
+      coolDays += 1;
+    } else if (anomaly > 1) {
+      warmDays += 1;
+    } else {
+      nearNormalDays += 1;
     }
   }
 
@@ -962,6 +1015,10 @@ function summarizeAnomalies(
     validDays: validRecords.length,
     positiveDays,
     negativeDays,
+    coolDays,
+    nearNormalDays,
+    warmDays,
+    longestWarmRun,
     warmShare:
       validRecords.length === 0 ? null : positiveDays / validRecords.length,
     strongestWarm,
@@ -1085,6 +1142,13 @@ function getAnomalyMagnitude(records: LameziaClimateDailyRecord[]) {
 function anomalyOpacity(value: number) {
   const capped = Math.min(7, Math.abs(value));
   return Number((0.46 + capped * 0.07).toFixed(2));
+}
+
+function toneForValue(value: number | null): "warm" | "cool" | "neutral" {
+  if (value === null || value === 0) {
+    return "neutral";
+  }
+  return value > 0 ? "warm" : "cool";
 }
 
 function daysInYear(year: number) {
