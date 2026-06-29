@@ -2,6 +2,12 @@ name: GitHub Pages static fallback
 
 on:
   workflow_dispatch:
+    inputs:
+      deploy_to_pages:
+        description: "Deploy to GitHub Pages. Requires Pages to be enabled for this repository."
+        required: false
+        default: false
+        type: boolean
   push:
     branches:
       - main
@@ -63,6 +69,7 @@ jobs:
   deploy:
     name: Deploy static fallback
     needs: build
+    if: ${{ github.event_name == 'workflow_dispatch' && inputs.deploy_to_pages }}
     runs-on: ubuntu-latest
     environment:
       name: github-pages
