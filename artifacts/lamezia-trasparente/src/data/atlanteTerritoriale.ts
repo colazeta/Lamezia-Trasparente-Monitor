@@ -151,6 +151,86 @@ export const ATLANTE_INDICATORS: AtlanteIndicatorDefinition[] = [
     sourceDatasetLabel:
       "Dati per sezioni di censimento - Censimento permanente 2023",
   },
+  {
+    id: "quota-0-14",
+    categoryId: "eta",
+    categoryLabel: "Età",
+    label: "Quota 0-14 anni",
+    sourceKeys: ["quota_0_14"],
+    unitLabel: "%",
+    sourceDatasetLabel:
+      "Dati per sezioni di censimento - Censimento permanente 2023",
+  },
+  {
+    id: "quota-anziani",
+    categoryId: "eta",
+    categoryLabel: "Età",
+    label: "Quota 65 anni e più",
+    sourceKeys: ["quota_65_piu", "quota_anziani"],
+    unitLabel: "%",
+    sourceDatasetLabel:
+      "Dati per sezioni di censimento - Censimento permanente 2023",
+  },
+  {
+    id: "quota-stranieri",
+    categoryId: "cittadinanza",
+    categoryLabel: "Cittadinanza",
+    label: "Quota residenti stranieri",
+    sourceKeys: ["quota_stranieri"],
+    unitLabel: "%",
+    sourceDatasetLabel:
+      "Dati per sezioni di censimento - Censimento permanente 2023",
+  },
+  {
+    id: "quota-titoli-terziari",
+    categoryId: "istruzione",
+    categoryLabel: "Istruzione",
+    label: "Quota titoli terziari",
+    sourceKeys: ["quota_titoli_terziari"],
+    unitLabel: "%",
+    sourceDatasetLabel:
+      "Dati per sezioni di censimento - Censimento permanente 2023",
+  },
+  {
+    id: "occupati-15-64",
+    categoryId: "lavoro",
+    categoryLabel: "Lavoro",
+    label: "Occupati 15-64 anni",
+    sourceKeys: ["occupati_15_64", "p101"],
+    unitLabel: "persone",
+    sourceDatasetLabel:
+      "Dati per sezioni di censimento - Censimento permanente 2023",
+  },
+  {
+    id: "famiglie",
+    categoryId: "famiglie",
+    categoryLabel: "Famiglie",
+    label: "Famiglie residenti",
+    sourceKeys: ["famiglie_totale", "pf1"],
+    unitLabel: "famiglie",
+    sourceDatasetLabel:
+      "Dati per sezioni di censimento - Censimento permanente 2023",
+  },
+  {
+    id: "abitazioni",
+    categoryId: "abitazioni",
+    categoryLabel: "Abitazioni",
+    label: "Abitazioni totali",
+    sourceKeys: ["abitazioni_totali", "a8"],
+    unitLabel: "abitazioni",
+    sourceDatasetLabel:
+      "Dati per sezioni di censimento - Censimento permanente 2023",
+  },
+  {
+    id: "automobili",
+    categoryId: "mobilita-auto",
+    categoryLabel: "Mobilità/auto",
+    label: "Automobili",
+    sourceKeys: ["automobili_totale", "na1"],
+    unitLabel: "automobili",
+    sourceDatasetLabel:
+      "Dati per sezioni di censimento - Censimento permanente 2023",
+  },
 ];
 
 export const ATLANTE_DEFAULT_METADATA: AtlanteLayerMetadata = {
@@ -467,7 +547,11 @@ export function buildAtlanteDistribution(
 function buildQuantileBins(sortedValues: number[], requestedBinCount: number) {
   const targetBinCount = Math.max(
     1,
-    Math.min(requestedBinCount, new Set(sortedValues).size, sortedValues.length),
+    Math.min(
+      requestedBinCount,
+      new Set(sortedValues).size,
+      sortedValues.length,
+    ),
   );
   const thresholds: number[] = [];
 
@@ -597,7 +681,9 @@ export function formatAtlanteValue(value: number | null, unitLabel: string) {
     return "dato non disponibile";
   }
 
-  return `${new Intl.NumberFormat("it-IT", {
-    maximumFractionDigits: 2,
-  }).format(value)} ${unitLabel}`;
+  const formatted = new Intl.NumberFormat("it-IT", {
+    maximumFractionDigits: unitLabel === "%" ? 1 : 2,
+  }).format(value);
+
+  return unitLabel === "%" ? `${formatted}%` : `${formatted} ${unitLabel}`;
 }

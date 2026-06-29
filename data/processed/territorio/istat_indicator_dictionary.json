@@ -10,188 +10,260 @@
   "generatedFrom": "data/processed/territorio/istat_sezioni_censimento_lamezia.geojson",
   "metadataPath": "data/processed/territorio/istat_sezioni_censimento_lamezia.metadata.json",
   "qaReportPath": "docs/data-sources/istat-sezioni-censimento-lamezia-qa.md",
-  "lastUpdated": "2026-06-20",
-  "verificationStatus": "Dizionario iniziale: solo P1/popolazione residente e' abilitato; gli altri indicatori sono candidati da verificare sul tracciato ISTAT 2023 prima della pubblicazione.",
+  "lastUpdated": "2026-06-29",
+  "verificationStatus": "Indicatori pubblici abilitati solo se derivati da campi presenti nel tracciato ufficiale ISTAT 2023.",
   "indicators": [
     {
       "id": "popolazione-residente",
       "istatSourceField": "P1",
+      "istatSourceDefinitions": {
+        "P1": "Popolazione residente - totale"
+      },
       "publicField": "popolazione_totale",
       "publicLabel": "Popolazione residente",
       "category": "popolazione",
       "unitOfMeasure": "persone",
       "numerator": "P1",
       "denominator": null,
+      "formula": "P1",
       "enabled": true,
       "status": "enabled",
       "sourceYear": "2023",
       "territorialLevel": "sezione di censimento",
-      "publicInterpretation": "Numero di persone residenti nella sezione censuaria secondo il dato ISTAT 2023 agganciato alla geometria ufficiale.",
+      "missingnessCount": 71,
+      "publicInterpretation": "Numero di persone residenti nella sezione censuaria.",
       "knownCaveats": [
-        "Disponibile per 246 sezioni su 317; le 71 sezioni senza aggancio alle variabili 2023 restano null.",
+        "Le sezioni senza aggancio alle variabili ISTAT 2023 restano null.",
         "I valori null non sono zero e sono mostrati come dato non disponibile.",
         "Le sezioni censuarie non coincidono con sezioni urbane catastali, CAP, OMI o altre zonizzazioni non censuarie."
       ]
     },
     {
-      "id": "quota-minori",
-      "istatSourceField": null,
-      "publicField": null,
-      "publicLabel": "Quota minori",
+      "id": "quota-0-14",
+      "istatSourceField": "P14 + P15 + P16 + P1",
+      "istatSourceDefinitions": {
+        "P14": "Popolazione residente - eta' < 5 anni",
+        "P15": "Popolazione residente - eta' 5 - 9 anni",
+        "P16": "Popolazione residente - eta' 10 - 14 anni",
+        "P1": "Popolazione residente - totale"
+      },
+      "publicField": "quota_0_14",
+      "publicLabel": "Quota 0-14 anni",
       "category": "eta",
       "unitOfMeasure": "percentuale",
-      "numerator": null,
+      "numerator": [
+        "P14",
+        "P15",
+        "P16"
+      ],
       "denominator": "P1",
-      "enabled": false,
-      "status": "in-preparazione",
+      "formula": "(P14 + P15 + P16) / P1 * 100",
+      "enabled": true,
+      "status": "enabled",
       "sourceYear": "2023",
       "territorialLevel": "sezione di censimento",
-      "sourceFieldStatus": "Da verificare nel tracciato ISTAT 2023 prima dell'attivazione pubblica.",
-      "publicInterpretation": "Quota di residenti minorenni sul totale della popolazione residente, se il tracciato ISTAT disponibile consente il calcolo.",
+      "missingnessCount": 93,
+      "publicInterpretation": "Quota di popolazione residente fino a 14 anni sul totale dei residenti.",
       "knownCaveats": [
-        "Non pubblicare finche' campi per eta' e denominatore non sono verificati.",
-        "Non calcolare da stime o layer non censuari."
+        "Non e' una quota minori <18: il tracciato pubblica classi quinquennali e non isola 15-17 anni.",
+        "Se P1 e' zero o mancante, la percentuale resta null.",
+        "I valori null non sono zero e sono mostrati come dato non disponibile.",
+        "Le sezioni censuarie non coincidono con sezioni urbane catastali, CAP, OMI o altre zonizzazioni non censuarie."
       ]
     },
     {
       "id": "quota-anziani",
-      "istatSourceField": null,
-      "publicField": null,
-      "publicLabel": "Quota anziani",
+      "istatSourceField": "P27 + P28 + P29 + P1",
+      "istatSourceDefinitions": {
+        "P27": "Popolazione residente - eta' 65 - 69 anni",
+        "P28": "Popolazione residente - eta' 70 - 74 anni",
+        "P29": "Popolazione residente - eta' > 74 anni",
+        "P1": "Popolazione residente - totale"
+      },
+      "publicField": "quota_65_piu",
+      "publicLabel": "Quota 65 anni e piu'",
       "category": "eta",
       "unitOfMeasure": "percentuale",
-      "numerator": null,
+      "numerator": [
+        "P27",
+        "P28",
+        "P29"
+      ],
       "denominator": "P1",
-      "enabled": false,
-      "status": "in-preparazione",
+      "formula": "(P27 + P28 + P29) / P1 * 100",
+      "enabled": true,
+      "status": "enabled",
       "sourceYear": "2023",
       "territorialLevel": "sezione di censimento",
-      "sourceFieldStatus": "Da verificare nel tracciato ISTAT 2023 prima dell'attivazione pubblica.",
-      "publicInterpretation": "Quota di residenti anziani sul totale della popolazione residente, se il tracciato ISTAT disponibile consente il calcolo.",
+      "missingnessCount": 93,
+      "publicInterpretation": "Quota di popolazione residente di 65 anni e piu' sul totale dei residenti.",
       "knownCaveats": [
-        "Definire e documentare la soglia di eta' prima dell'uso pubblico.",
-        "Non pubblicare se il numeratore non e' disponibile come dato ISTAT censuario."
+        "Se P1 e' zero o mancante, la percentuale resta null.",
+        "I valori null non sono zero e sono mostrati come dato non disponibile.",
+        "Le sezioni censuarie non coincidono con sezioni urbane catastali, CAP, OMI o altre zonizzazioni non censuarie."
       ]
     },
     {
       "id": "quota-stranieri",
-      "istatSourceField": null,
-      "publicField": null,
-      "publicLabel": "Quota stranieri",
+      "istatSourceField": "ST1 + P1",
+      "istatSourceDefinitions": {
+        "ST1": "Stranieri e apolidi residenti in Italia - totale",
+        "P1": "Popolazione residente - totale"
+      },
+      "publicField": "quota_stranieri",
+      "publicLabel": "Quota residenti stranieri",
       "category": "cittadinanza",
       "unitOfMeasure": "percentuale",
-      "numerator": null,
+      "numerator": "ST1",
       "denominator": "P1",
-      "enabled": false,
-      "status": "in-preparazione",
+      "formula": "ST1 / P1 * 100",
+      "enabled": true,
+      "status": "enabled",
       "sourceYear": "2023",
       "territorialLevel": "sezione di censimento",
-      "sourceFieldStatus": "Da verificare nel tracciato ISTAT 2023 prima dell'attivazione pubblica.",
-      "publicInterpretation": "Quota di residenti con cittadinanza straniera sul totale della popolazione residente, se il tracciato ISTAT disponibile consente il calcolo.",
+      "missingnessCount": 93,
+      "publicInterpretation": "Quota di stranieri e apolidi residenti sul totale della popolazione residente.",
       "knownCaveats": [
-        "Richiede controllo dei campi ISTAT su cittadinanza e popolazione totale.",
-        "Non calcolare da fonti anagrafiche comunali non allineate alla sezione censuaria."
+        "Se P1 e' zero o mancante, la percentuale resta null.",
+        "I valori null non sono zero e sono mostrati come dato non disponibile.",
+        "Le sezioni censuarie non coincidono con sezioni urbane catastali, CAP, OMI o altre zonizzazioni non censuarie."
       ]
     },
     {
       "id": "famiglie",
-      "istatSourceField": null,
-      "publicField": null,
-      "publicLabel": "Famiglie",
+      "istatSourceField": "PF1",
+      "istatSourceDefinitions": {
+        "PF1": "Famiglie residenti - totale"
+      },
+      "publicField": "famiglie_totale",
+      "publicLabel": "Famiglie residenti",
       "category": "famiglie",
       "unitOfMeasure": "famiglie",
-      "numerator": null,
+      "numerator": "PF1",
       "denominator": null,
-      "enabled": false,
-      "status": "in-preparazione",
+      "formula": "PF1",
+      "enabled": true,
+      "status": "enabled",
       "sourceYear": "2023",
       "territorialLevel": "sezione di censimento",
-      "sourceFieldStatus": "Da verificare nel tracciato ISTAT 2023 prima dell'attivazione pubblica.",
-      "publicInterpretation": "Numero di famiglie residenti nella sezione censuaria, se il campo ISTAT corrispondente e' confermato.",
+      "missingnessCount": 71,
+      "publicInterpretation": "Numero di famiglie residenti nella sezione censuaria.",
       "knownCaveats": [
-        "Non attivo finche' il campo sorgente non viene validato.",
-        "Non sostituire con aggregazioni comunali o catastali."
+        "Non sostituisce dati catastali o anagrafici comunali.",
+        "I valori null non sono zero e sono mostrati come dato non disponibile.",
+        "Le sezioni censuarie non coincidono con sezioni urbane catastali, CAP, OMI o altre zonizzazioni non censuarie."
       ]
     },
     {
       "id": "abitazioni",
-      "istatSourceField": null,
-      "publicField": null,
-      "publicLabel": "Abitazioni",
+      "istatSourceField": "A8",
+      "istatSourceDefinitions": {
+        "A8": "Abitazioni totali"
+      },
+      "publicField": "abitazioni_totali",
+      "publicLabel": "Abitazioni totali",
       "category": "abitazioni",
       "unitOfMeasure": "abitazioni",
-      "numerator": null,
+      "numerator": "A8",
       "denominator": null,
-      "enabled": false,
-      "status": "in-preparazione",
+      "formula": "A8",
+      "enabled": true,
+      "status": "enabled",
       "sourceYear": "2023",
       "territorialLevel": "sezione di censimento",
-      "sourceFieldStatus": "Da verificare nel tracciato ISTAT 2023 prima dell'attivazione pubblica.",
-      "publicInterpretation": "Numero di abitazioni o un indicatore abitativo censuario, se il tracciato ISTAT disponibile conferma il campo.",
+      "missingnessCount": 71,
+      "publicInterpretation": "Numero totale di abitazioni secondo il tracciato ISTAT per sezione.",
       "knownCaveats": [
-        "Serve distinguere abitazioni, edifici e unita' immobiliari prima della pubblicazione.",
-        "Non usare dati catastali come sostituto di indicatori censuari ISTAT."
+        "Non e' un dato catastale e non va letto come unita' immobiliare catastale.",
+        "I valori null non sono zero e sono mostrati come dato non disponibile.",
+        "Le sezioni censuarie non coincidono con sezioni urbane catastali, CAP, OMI o altre zonizzazioni non censuarie."
       ]
     },
     {
-      "id": "auto",
-      "istatSourceField": null,
-      "publicField": null,
-      "publicLabel": "Auto",
+      "id": "automobili",
+      "istatSourceField": "NA1",
+      "istatSourceDefinitions": {
+        "NA1": "Automobili di proprieta'"
+      },
+      "publicField": "automobili_totale",
+      "publicLabel": "Automobili",
       "category": "mobilita-auto",
-      "unitOfMeasure": "valore",
-      "numerator": null,
+      "unitOfMeasure": "automobili",
+      "numerator": "NA1",
       "denominator": null,
-      "enabled": false,
-      "status": "in-preparazione",
+      "formula": "NA1",
+      "enabled": true,
+      "status": "enabled",
       "sourceYear": "2023",
       "territorialLevel": "sezione di censimento",
-      "sourceFieldStatus": "Da verificare nel tracciato ISTAT 2023 prima dell'attivazione pubblica.",
-      "publicInterpretation": "Indicatore su disponibilita' o uso dell'auto, solo se presente come dato ISTAT per sezione censuaria.",
+      "missingnessCount": 71,
+      "publicInterpretation": "Numero di automobili di proprieta' rilevate nel tracciato ISTAT.",
       "knownCaveats": [
-        "Non introdurre dati ACI, fiscali o comunali in questo layer prima di una metodologia separata.",
-        "Non attivo nel frontend pubblico."
+        "Non introduce dati ACI, fiscali o altre fonti non ISTAT.",
+        "I valori null non sono zero e sono mostrati come dato non disponibile.",
+        "Le sezioni censuarie non coincidono con sezioni urbane catastali, CAP, OMI o altre zonizzazioni non censuarie."
       ]
     },
     {
-      "id": "istruzione",
-      "istatSourceField": null,
-      "publicField": null,
-      "publicLabel": "Istruzione",
+      "id": "quota-titoli-terziari",
+      "istatSourceField": "P90 + P83",
+      "istatSourceDefinitions": {
+        "P90": "Popolazione residente - totale di 9 anni e piu' con titoli terziari di primo o secondo livello",
+        "P83": "Popolazione residente - totale di 9 anni e piu'"
+      },
+      "publicField": "quota_titoli_terziari",
+      "publicLabel": "Quota titoli terziari",
       "category": "istruzione",
-      "unitOfMeasure": "valore",
-      "numerator": null,
-      "denominator": null,
-      "enabled": false,
-      "status": "in-preparazione",
+      "unitOfMeasure": "percentuale",
+      "numerator": "P90",
+      "denominator": "P83",
+      "formula": "P90 / P83 * 100",
+      "enabled": true,
+      "status": "enabled",
       "sourceYear": "2023",
       "territorialLevel": "sezione di censimento",
-      "sourceFieldStatus": "Da verificare nel tracciato ISTAT 2023 prima dell'attivazione pubblica.",
-      "publicInterpretation": "Indicatore sul titolo di studio o sulla distribuzione per istruzione, solo dopo verifica del campo ISTAT 2023.",
+      "missingnessCount": 93,
+      "publicInterpretation": "Quota di residenti di 9 anni e piu' con titolo terziario sul totale dei residenti di 9 anni e piu'.",
       "knownCaveats": [
-        "Il tracciato e le classi devono essere documentati prima dell'uso.",
-        "Non pubblicare categorie accorpate senza nota metodologica."
+        "Il denominatore non e' P1 ma la popolazione residente di 9 anni e piu'.",
+        "I valori null non sono zero e sono mostrati come dato non disponibile.",
+        "Le sezioni censuarie non coincidono con sezioni urbane catastali, CAP, OMI o altre zonizzazioni non censuarie."
       ]
     },
     {
-      "id": "lavoro-occupazione",
-      "istatSourceField": null,
-      "publicField": null,
-      "publicLabel": "Lavoro/occupazione",
+      "id": "occupati-15-64",
+      "istatSourceField": "P101",
+      "istatSourceDefinitions": {
+        "P101": "Popolazione residente - totale occupati di 15-64 anni"
+      },
+      "publicField": "occupati_15_64",
+      "publicLabel": "Occupati 15-64 anni",
       "category": "lavoro",
-      "unitOfMeasure": "valore",
-      "numerator": null,
+      "unitOfMeasure": "persone",
+      "numerator": "P101",
       "denominator": null,
-      "enabled": false,
-      "status": "in-preparazione",
+      "formula": "P101",
+      "enabled": true,
+      "status": "enabled",
       "sourceYear": "2023",
       "territorialLevel": "sezione di censimento",
-      "sourceFieldStatus": "Da verificare nel tracciato ISTAT 2023 prima dell'attivazione pubblica.",
-      "publicInterpretation": "Indicatore su condizione professionale o occupazione, solo se il campo ISTAT 2023 e' presente e documentato per sezione censuaria.",
+      "missingnessCount": 71,
+      "publicInterpretation": "Numero di residenti occupati tra 15 e 64 anni.",
       "knownCaveats": [
-        "Non introdurre indicatori economici o finanziari in questa fase.",
-        "Richiede revisione metodologica prima dell'attivazione."
+        "E' un conteggio, non un tasso di occupazione.",
+        "I valori null non sono zero e sono mostrati come dato non disponibile.",
+        "Le sezioni censuarie non coincidono con sezioni urbane catastali, CAP, OMI o altre zonizzazioni non censuarie."
       ]
+    }
+  ],
+  "disabledCandidates": [
+    {
+      "id": "quota-minori",
+      "publicLabel": "Quota minori (<18)",
+      "category": "eta",
+      "enabled": false,
+      "status": "not-directly-available",
+      "reason": "Il tracciato ISTAT 2023 disponibile espone classi quinquennali e non isola 15-17 anni."
     }
   ]
 }

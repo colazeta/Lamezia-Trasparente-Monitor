@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, within } from "@testing-library/react";
+﻿import { fireEvent, render, screen, within } from "@testing-library/react";
 import type { ReactNode } from "react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { AtlanteTerritoriale } from "../pages/AtlanteTerritoriale";
@@ -226,6 +226,14 @@ describe("Atlante territoriale", () => {
             indicators_istat_2023: {
               p1: 0,
               popolazione_totale: 0,
+              quota_0_14: null,
+              quota_65_piu: null,
+              quota_stranieri: null,
+              famiglie_totale: 0,
+              abitazioni_totali: 2,
+              automobili_totale: 0,
+              quota_titoli_terziari: null,
+              occupati_15_64: 0,
             },
           },
           geometry: {
@@ -249,6 +257,14 @@ describe("Atlante territoriale", () => {
             indicators_istat_2023: {
               p1: 10,
               popolazione_totale: 10,
+              quota_0_14: 30,
+              quota_65_piu: 20,
+              quota_stranieri: 10,
+              famiglie_totale: 4,
+              abitazioni_totali: 8,
+              automobili_totale: 5,
+              quota_titoli_terziari: 25,
+              occupati_15_64: 3,
             },
           },
           geometry: {
@@ -272,6 +288,14 @@ describe("Atlante territoriale", () => {
             indicators_istat_2023: {
               p1: null,
               popolazione_totale: null,
+              quota_0_14: null,
+              quota_65_piu: null,
+              quota_stranieri: null,
+              famiglie_totale: null,
+              abitazioni_totali: null,
+              automobili_totale: null,
+              quota_titoli_terziari: null,
+              occupati_15_64: null,
             },
           },
           geometry: {
@@ -307,7 +331,7 @@ describe("Atlante territoriale", () => {
                     sourceYear: "geometrie 2021, indicatori 2023",
                     territorialLevel: "sezione di censimento",
                     verificationStatus:
-                      "Processato da fonti ufficiali ISTAT; indicatore popolazione validato sul campo P1.",
+                      "Processato da fonti ufficiali ISTAT; indicatori pubblici validati contro il tracciato 2023.",
                     knownLimits: [
                       "Il file ISTAT 2023 aggancia variabili a 2 sezioni su 3; 1 sezione resta geometria ufficiale senza valore indicatore.",
                     ],
@@ -315,6 +339,18 @@ describe("Atlante territoriale", () => {
                     qa: {
                       indicatorDictionaryPath:
                         "data/processed/territorio/istat_indicator_dictionary.json",
+                      indicatorCoverage: {
+                        "popolazione-residente": {
+                          availableCount: 2,
+                          nullCount: 1,
+                          zeroCount: 1,
+                        },
+                        "quota-stranieri": {
+                          availableCount: 1,
+                          nullCount: 2,
+                          zeroCount: 0,
+                        },
+                      },
                       populationValueCoverage: {
                         totalFeatures: 3,
                         availableCount: 2,
@@ -350,10 +386,10 @@ describe("Atlante territoriale", () => {
     expect(screen.getByText("Esplora e confronta")).toBeInTheDocument();
     expect(screen.getByText("Copertura dati")).toBeInTheDocument();
     expect(
-      screen.getByText("2 sezioni con dato · 1 sezione senza dato"),
+      screen.getByText(/2 sezioni con dato .* 1 sezione senza dato/),
     ).toBeInTheDocument();
     expect(screen.getByText("Nessuna area selezionata")).toBeInTheDocument();
-    expect(screen.getByText("Strade · OpenStreetMap")).toBeInTheDocument();
+    expect(screen.getByText(/Strade .* OpenStreetMap/)).toBeInTheDocument();
     expect(screen.getByTestId("atlante-osm-tile-layer")).toHaveAttribute(
       "data-url",
       "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
@@ -372,7 +408,7 @@ describe("Atlante territoriale", () => {
       target: { value: "esri-world-imagery" },
     });
     expect(
-      screen.getByText("Aerea · Immagini satellitari"),
+      screen.getByText(/Aerea .* Immagini satellitari/),
     ).toBeInTheDocument();
     expect(screen.getByTestId("atlante-osm-tile-layer")).toHaveAttribute(
       "data-url",
@@ -397,15 +433,28 @@ describe("Atlante territoriale", () => {
       0,
     );
     expect(
-      screen.getByRole("button", { name: /Età in preparazione/i }),
-    ).toBeDisabled();
+      screen.getAllByRole("button", { name: /Quota 0-14 anni/i }).length,
+    ).toBeGreaterThan(0);
     expect(
-      screen.getByRole("button", { name: /Cittadinanza in preparazione/i }),
-    ).toBeDisabled();
+      screen.getAllByRole("button", { name: /Quota 65 anni/i }).length,
+    ).toBeGreaterThan(0);
+    expect(
+      screen.getAllByRole("button", { name: /Quota residenti stranieri/i })
+        .length,
+    ).toBeGreaterThan(0);
+    expect(
+      screen.getAllByRole("button", { name: /Famiglie residenti/i }).length,
+    ).toBeGreaterThan(0);
+    expect(
+      screen.getAllByRole("button", { name: /Abitazioni totali/i }).length,
+    ).toBeGreaterThan(0);
+    expect(
+      screen.getAllByRole("button", { name: /Automobili/i }).length,
+    ).toBeGreaterThan(0);
     expect(
       screen.getByText("Popolazione totale nelle sezioni con P1 disponibile"),
     ).toBeInTheDocument();
-    expect(screen.getByText("10 persone")).toBeInTheDocument();
+    expect(screen.getAllByText("10 persone").length).toBeGreaterThan(0);
     expect(screen.getByText("Sezioni totali")).toBeInTheDocument();
     expect(screen.getByText("3 (100%)")).toBeInTheDocument();
     expect(screen.getByText("Con dato P1")).toBeInTheDocument();
@@ -417,7 +466,10 @@ describe("Atlante territoriale", () => {
     expect(screen.getByText("Valore 0")).toBeInTheDocument();
     expect(screen.getByText("Distribuzione per fasce")).toBeInTheDocument();
     expect(screen.getByText("2 classi")).toBeInTheDocument();
-    expect(screen.getAllByText(/1 sezione · 50%/).length).toBe(2);
+    expect(screen.getAllByText(/1 sezione .* 50%/).length).toBe(2);
+    expect(screen.getByText("Scala continua")).toBeInTheDocument();
+    expect(screen.getByText(/Valore minimo/)).toBeInTheDocument();
+    expect(screen.getByText(/Valore massimo/)).toBeInTheDocument();
     expect(screen.getAllByText(/dato non disponibile/i).length).toBeGreaterThan(
       0,
     );
@@ -446,6 +498,19 @@ describe("Atlante territoriale", () => {
     ).toBeInTheDocument();
     expect(screen.getAllByText("0 persone").length).toBeGreaterThan(0);
     expect(screen.getByText(/Zero .* valore reale/)).toBeInTheDocument();
+
+    fireEvent.click(
+      screen.getAllByRole("button", {
+        name: /Quota residenti stranieri/i,
+      })[0],
+    );
+    expect(
+      screen.getAllByText("Quota residenti stranieri").length,
+    ).toBeGreaterThan(0);
+    expect(screen.getAllByText("10%").length).toBeGreaterThan(0);
+    expect(
+      screen.getByText(/1 sezione con dato .* 2 sezioni senza dato/),
+    ).toBeInTheDocument();
 
     fireEvent.click(
       screen.getByRole("button", {

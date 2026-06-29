@@ -8,14 +8,14 @@
   "territorialLevel": "sezione di censimento",
   "municipality": "Lamezia Terme",
   "istatMunicipalCode": "079160",
-  "processingDate": "2026-06-20T07:42:52.613Z",
-  "verificationStatus": "Processato da fonti ufficiali ISTAT; indicatore popolazione validato sul campo P1 per 246 sezioni su 317.",
+  "processingDate": "2026-06-29T12:45:59.829Z",
+  "verificationStatus": "Processato da fonti ufficiali ISTAT; 9 indicatori pubblici validati contro il tracciato 2023 per 246 sezioni su 317.",
   "knownLimits": [
     "Le sezioni fittizie ISTAT 888888x e 999999x sono escluse dall'output pubblico predefinito.",
-    "Il file ISTAT 2023 aggancia variabili a 246 sezioni su 317; le 71 sezioni rimanenti restano geometrie ufficiali senza valore indicatore.",
-    "Il controllo QA distingue valori null da valori zero: 71 sezioni senza aggancio 2023 restano null, mentre 22 sezioni con P1 pari a 0 restano zero.",
+    "Il file ISTAT 2023 aggancia variabili a 246 sezioni su 317; le sezioni rimanenti restano geometrie ufficiali senza valore indicatore.",
     "Le geometrie pubbliche sono generalizzate per la mappa web con precisione 5 decimali e tolleranza 0.0003 gradi; i raw ISTAT restano la fonte di dettaglio.",
-    "Gli indicatori diversi dalla popolazione residente restano in preparazione finche' non viene controllato il tracciato ISTAT.",
+    "La quota 0-14 anni non e' una quota minori <18: il tracciato ISTAT non isola 15-17 anni.",
+    "Le percentuali restano null quando il denominatore e' nullo, zero o mancante.",
     "Le sezioni urbane catastali Zornade non sono sezioni censuarie e non sono usate come base di questa mappa."
   ],
   "source": "ISTAT",
@@ -40,7 +40,7 @@
   "publicMapRole": "primary census-section base for Atlante territoriale",
   "warning": "Non usare per indicatori censuari ISTAT dati catastali, OMI, CAP, fiscali o comunali non nativi delle sezioni censuarie.",
   "inputs": {
-    "geometryGeoJsonPath": "data/raw/territorio/istat/basi_territoriali_2021_calabria/R18_21_WGS84_lamezia.geojson",
+    "geometryGeoJsonPath": "data/processed/territorio/istat_sezioni_censimento_lamezia.geojson",
     "variablesXlsxPath": "data/raw/territorio/istat/censimento_2023_sezioni_calabria/R18_Calabria_2023_sezioni.xlsx",
     "geometrySourceUrl": "https://www.istat.it/storage/cartografia/basi_territoriali/2021/R18_21.zip",
     "variablesSourceUrl": "https://esploradati.istat.it/databrowser/DWL/PERMPOP/SUBCOM/Dati_regionali_2023.zip"
@@ -49,8 +49,8 @@
     "outputFeatures": 317,
     "matchedVariables": 246,
     "missingVariables": 71,
-    "skippedNonLamezia": 29557,
-    "skippedFictitious": 1,
+    "skippedNonLamezia": 0,
+    "skippedFictitious": 0,
     "variableRowsForLamezia": 247,
     "variableFictitiousRows": 1
   },
@@ -60,80 +60,187 @@
   },
   "indicatorColumns": [
     "P1",
-    "P2",
-    "P3",
     "P14",
     "P15",
     "P16",
-    "P17",
-    "P18",
-    "P19",
-    "P20",
-    "P21",
-    "P22",
-    "P23",
-    "P24",
-    "P25",
-    "P26",
     "P27",
     "P28",
     "P29",
-    "P30",
-    "P31",
-    "P32",
-    "P33",
-    "P34",
-    "P35",
-    "P36",
-    "P37",
-    "P38",
-    "P39",
-    "P40",
-    "P41",
-    "P42",
-    "P43",
-    "P44",
-    "P45",
-    "P67",
-    "P68",
-    "P69",
-    "P70",
-    "P71"
+    "ST1",
+    "PF1",
+    "A8",
+    "NA1",
+    "P90",
+    "P83",
+    "P101"
   ],
+  "missingRequiredSourceFields": [],
   "enabledIndicators": [
     {
       "id": "popolazione-residente",
       "label": "Popolazione residente",
       "category": "popolazione",
-      "sourceField": "P1",
+      "sourceFields": [
+        "P1"
+      ],
       "publicField": "popolazione_totale",
-      "unit": "persone"
+      "unit": "persone",
+      "formula": "P1"
+    },
+    {
+      "id": "quota-0-14",
+      "label": "Quota 0-14 anni",
+      "category": "eta",
+      "sourceFields": [
+        "P14",
+        "P15",
+        "P16",
+        "P1"
+      ],
+      "publicField": "quota_0_14",
+      "unit": "percentuale",
+      "formula": "(P14 + P15 + P16) / P1 * 100"
+    },
+    {
+      "id": "quota-anziani",
+      "label": "Quota 65 anni e piu'",
+      "category": "eta",
+      "sourceFields": [
+        "P27",
+        "P28",
+        "P29",
+        "P1"
+      ],
+      "publicField": "quota_65_piu",
+      "unit": "percentuale",
+      "formula": "(P27 + P28 + P29) / P1 * 100"
+    },
+    {
+      "id": "quota-stranieri",
+      "label": "Quota residenti stranieri",
+      "category": "cittadinanza",
+      "sourceFields": [
+        "ST1",
+        "P1"
+      ],
+      "publicField": "quota_stranieri",
+      "unit": "percentuale",
+      "formula": "ST1 / P1 * 100"
+    },
+    {
+      "id": "famiglie",
+      "label": "Famiglie residenti",
+      "category": "famiglie",
+      "sourceFields": [
+        "PF1"
+      ],
+      "publicField": "famiglie_totale",
+      "unit": "famiglie",
+      "formula": "PF1"
+    },
+    {
+      "id": "abitazioni",
+      "label": "Abitazioni totali",
+      "category": "abitazioni",
+      "sourceFields": [
+        "A8"
+      ],
+      "publicField": "abitazioni_totali",
+      "unit": "abitazioni",
+      "formula": "A8"
+    },
+    {
+      "id": "automobili",
+      "label": "Automobili",
+      "category": "mobilita-auto",
+      "sourceFields": [
+        "NA1"
+      ],
+      "publicField": "automobili_totale",
+      "unit": "automobili",
+      "formula": "NA1"
+    },
+    {
+      "id": "quota-titoli-terziari",
+      "label": "Quota titoli terziari",
+      "category": "istruzione",
+      "sourceFields": [
+        "P90",
+        "P83"
+      ],
+      "publicField": "quota_titoli_terziari",
+      "unit": "percentuale",
+      "formula": "P90 / P83 * 100"
+    },
+    {
+      "id": "occupati-15-64",
+      "label": "Occupati 15-64 anni",
+      "category": "lavoro",
+      "sourceFields": [
+        "P101"
+      ],
+      "publicField": "occupati_15_64",
+      "unit": "persone",
+      "formula": "P101"
     }
   ],
   "qa": {
     "reportPath": "docs/data-sources/istat-sezioni-censimento-lamezia-qa.md",
     "indicatorDictionaryPath": "data/processed/territorio/istat_indicator_dictionary.json",
+    "indicatorCoverage": {
+      "popolazione-residente": {
+        "availableCount": 246,
+        "nullCount": 71,
+        "zeroCount": 22
+      },
+      "quota-0-14": {
+        "availableCount": 224,
+        "nullCount": 93,
+        "zeroCount": 33
+      },
+      "quota-anziani": {
+        "availableCount": 224,
+        "nullCount": 93,
+        "zeroCount": 16
+      },
+      "quota-stranieri": {
+        "availableCount": 224,
+        "nullCount": 93,
+        "zeroCount": 71
+      },
+      "famiglie": {
+        "availableCount": 246,
+        "nullCount": 71,
+        "zeroCount": 25
+      },
+      "abitazioni": {
+        "availableCount": 246,
+        "nullCount": 71,
+        "zeroCount": 4
+      },
+      "automobili": {
+        "availableCount": 246,
+        "nullCount": 71,
+        "zeroCount": 28
+      },
+      "quota-titoli-terziari": {
+        "availableCount": 224,
+        "nullCount": 93,
+        "zeroCount": 35
+      },
+      "occupati-15-64": {
+        "availableCount": 246,
+        "nullCount": 71,
+        "zeroCount": 32
+      }
+    },
     "populationValueCoverage": {
       "totalFeatures": 317,
       "availableCount": 246,
-      "availableShare": 0.776,
+      "availableShare": 0.78,
       "nullCount": 71,
-      "nullShare": 0.224,
+      "nullShare": 0.22,
       "zeroCount": 22
-    },
-    "geometryCheck": {
-      "geometryTypes": {
-        "Polygon": 317
-      },
-      "ringsChecked": 366,
-      "invalidGeometryCount": 0,
-      "webRenderingStatus": "valid enough for current SVG web rendering gate"
-    },
-    "censusBaseCheck": {
-      "expectedMunicipalCode": "079160",
-      "allFeaturesRetainMunicipalCode": true,
-      "zornadeOrCadastralFeaturesDetected": false,
-      "fictitiousSectionIdsInOutput": 0
     }
   },
   "outputPath": "data/processed/territorio/istat_sezioni_censimento_lamezia.geojson"
