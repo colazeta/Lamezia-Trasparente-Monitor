@@ -39,7 +39,8 @@ This layer does not overwrite ANNCSU raw coordinates. `source_lon/source_lat` re
 3. Export decisions from the workbench as JSON or CSV.
 4. Run `scripts/audit_anncsu_coordinate_decisions.py --decisions <exported file>` and resolve any P0/P1 findings.
 5. Re-run this script with `--decisions <exported file>`.
-6. Use only `accepted_reviewed_override` rows as a correction/training set for future coordinate-quality passes.
+6. Re-run `scripts/audit_anncsu_coordinate_quality.py --use-recovery-layer` to verify the reviewed replacements.
+7. Use only `accepted_reviewed_override` rows as a correction/training set for future coordinate-quality passes.
 
 ## Guardrails
 

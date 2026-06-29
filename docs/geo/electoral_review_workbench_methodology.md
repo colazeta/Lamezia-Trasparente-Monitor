@@ -220,8 +220,10 @@ The retraining path is therefore review-first:
 
 - collect accepted manual coordinate overrides and rejected candidates;
 - build a correction/training set from reviewed decisions only;
-- re-run coordinate-quality diagnostics using the reviewed replacements as
-  trusted anchors;
+- re-run coordinate-quality diagnostics with
+  `scripts/audit_anncsu_coordinate_quality.py --use-recovery-layer`, which uses
+  only accepted reviewed `manual_coordinate_override` coordinates from the
+  recovery layer as trusted replacements;
 - generate any future V4 candidate geometry only after the corrected coordinate
   layer is auditable.
 

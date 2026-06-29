@@ -7,6 +7,7 @@
 - Civic review tasks loaded: 2329
 - Workbench point access_ids observed: 11566
 - Suspect points missing from `civics_by_task`: 0
+- Reviewed recovery coordinates applied for this audit: 0
 - Suspect CSV: `data/interim/qa/anncsu_coordinate_suspect_points_2025.csv`
 
 This audit does not alter ANNCSU raw data and does not assign sections by OpenStreetMap or proximity.
@@ -18,6 +19,8 @@ It flags coordinates that need manual coordinate review before they are used as 
 - ANNCSU street register: `data/raw/geo/anncsu_lamezia_stradario_20260602.csv`
 - Census cells: `data/interim/geo/electoral_section_census_cells_assignment_2025.gpkg` layer `electoral_section_census_cells_assignment_2025`
 - Boundary source: `data/processed/territorio/istat_sezioni_censimento_lamezia.geojson`
+- Recovery layer used: `data/interim/geo/anncsu_lamezia_coordinate_recovery_candidates_2025.csv`
+- Recovery layer accepted overrides available: 0
 
 ## Flag Counts
 
@@ -44,6 +47,7 @@ It flags coordinates that need manual coordinate review before they are used as 
 - `coordinate suspect` does not by itself mean the electoral section is wrong.
 - The electoral section should still be reviewed against the electoral street register.
 - Future geometry generation may exclude or override these points only through a traced manual decision.
+- When run with `--use-recovery-layer`, only accepted reviewed `manual_coordinate_override` coordinates replace source coordinates for this QA pass.
 - OpenStreetMap remains visual context only.
 
 ## Sample Suspects
