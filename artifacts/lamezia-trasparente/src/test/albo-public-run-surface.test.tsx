@@ -1,4 +1,4 @@
-import { screen, within } from "@testing-library/react";
+import { fireEvent, screen, within } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 
 import {
@@ -20,7 +20,7 @@ describe("Albo public run surface", () => {
     expect(section).not.toBeNull();
     const panel = within(section as HTMLElement);
 
-    expect(panel.getByText("Fonte ufficiale acquisita")).toBeInTheDocument();
+    expect(panel.getByText("Layer pubblico")).toBeInTheDocument();
     expect(panel.getByText("Acquisiti")).toBeInTheDocument();
     expect(panel.getByText(String(ALBO_PUBLIC_RUN_SUMMARY.counts.acquired))).toBeInTheDocument();
     expect(panel.getByText(`${ALBO_PUBLIC_RUN_ITEMS.length} record pubblici mostrati`)).toBeInTheDocument();
@@ -32,7 +32,25 @@ describe("Albo public run surface", () => {
 
     expect(screen.getAllByText(/Oggetto minimizzato per prudenza privacy/i).length).toBeGreaterThan(0);
     expect(screen.getAllByText(/Metadato minimo/i).length).toBeGreaterThan(0);
+    expect(screen.getByRole("heading", { name: /PDF preservati nella piattaforma/i })).toBeInTheDocument();
+    expect(screen.getByText(/Prossimo controllo/i)).toBeInTheDocument();
     expect(screen.queryByText(/assegno di matern|assistenza domiciliare|persona fisica/i)).toBeNull();
+  });
+
+  it("filters public records with the search field", () => {
+    renderPage(Albo);
+
+    const firstPublicationNumber = ALBO_PUBLIC_RUN_ITEMS[0]?.publication_number;
+    if (!firstPublicationNumber) {
+      throw new Error("Expected the public Albo fixture to expose a publication number.");
+    }
+
+    fireEvent.change(screen.getByLabelText("Cerca atti Albo"), {
+      target: { value: firstPublicationNumber },
+    });
+
+    expect(screen.getByText(`1 di ${ALBO_PUBLIC_RUN_ITEMS.length} record`)).toBeInTheDocument();
+    expect(screen.getByText(`Pubbl. ${firstPublicationNumber}`)).toBeInTheDocument();
   });
 
   it("does not expose direct document URLs through the app adapter", () => {

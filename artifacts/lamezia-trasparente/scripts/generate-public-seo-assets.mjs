@@ -1,4 +1,4 @@
-import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -105,21 +105,44 @@ function buildSeoAssets({ siteUrl = process.env.VITE_PUBLIC_SITE_URL } = {}) {
     `Sitemap: ${normalizedSiteUrl}/sitemap.xml`,
   );
 
-  return { robots, sitemap };
+  return { publicPaths, robots, sitemap };
+}
+
+function writeRouteFallbackIndexes(outputDir, publicPaths) {
+  const indexPath = path.join(outputDir, "index.html");
+  if (!existsSync(indexPath)) return;
+
+  const indexHtml = readFileSync(indexPath, "utf8");
+
+  for (const publicPath of publicPaths) {
+    const cleanPath = publicPath.replace(/^\/+/, "").replace(/\/+$/, "");
+    if (!cleanPath || cleanPath.includes("..") || path.isAbsolute(cleanPath)) {
+      continue;
+    }
+    if (path.extname(cleanPath)) continue;
+
+    const routeIndexPath = path.join(outputDir, cleanPath, "index.html");
+    mkdirSync(path.dirname(routeIndexPath), { recursive: true });
+    writeFileSync(routeIndexPath, indexHtml);
+  }
 }
 
 function writeSeoAssets(outputDir = defaultOutputDir) {
-  const { robots, sitemap } = buildSeoAssets();
+  const { publicPaths, robots, sitemap } = buildSeoAssets();
   mkdirSync(outputDir, { recursive: true });
   writeFileSync(path.join(outputDir, "robots.txt"), robots);
   writeFileSync(path.join(outputDir, "sitemap.xml"), sitemap);
+  writeRouteFallbackIndexes(outputDir, publicPaths);
 }
 
 function checkSeoAssets() {
   buildSeoAssets();
 }
 
-if (import.meta.url === `file://${process.argv[1]}`) {
+if (
+  process.argv[1] &&
+  path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)
+) {
   const [, , commandOrOutputDir] = process.argv;
 
   if (commandOrOutputDir === "--check") {
@@ -131,4 +154,9 @@ if (import.meta.url === `file://${process.argv[1]}`) {
   }
 }
 
-export { buildSeoAssets, checkSeoAssets, writeSeoAssets };
+export {
+  buildSeoAssets,
+  checkSeoAssets,
+  writeRouteFallbackIndexes,
+  writeSeoAssets,
+};

@@ -24,6 +24,7 @@ import {
   Building2,
   Calendar,
   CheckCircle2,
+  ClipboardCheck,
   ClipboardList,
   X,
   Leaf,
@@ -91,9 +92,11 @@ import { quartiereLabel } from "@/lib/gis";
 import { asApiList } from "@/lib/apiList";
 import { BDNCP_APPALTI_URL, preferredBdncpUrl } from "@/lib/bdncp";
 import {
+  CONTRACT_LIFECYCLE_PHASE_LABELS,
   buildContractDossier,
   summarizeContractDossiers,
   type ContractDossier,
+  type ContractLifecyclePhaseKey,
 } from "@/lib/contractDossier";
 import { MapPin } from "lucide-react";
 
@@ -105,35 +108,45 @@ const CHART_COLORS = [
   "hsl(var(--chart-5))",
 ];
 
-const BDNCP_FLOW_STEPS = [
+const BDNCP_FLOW_STEPS: Array<{
+  phaseKey: ContractLifecyclePhaseKey;
+  detail: string;
+  icon: React.ComponentType<{ className?: string }>;
+}> = [
   {
-    label: "Programmazione",
-    detail: "bisogno pubblico, CUP e atti preliminari quando presenti",
+    phaseKey: "programmazione",
+    detail:
+      "bisogno pubblico, CUP, programma e atti preliminari quando presenti",
     icon: ClipboardList,
   },
   {
-    label: "Progettazione",
-    detail: "quadro tecnico, importi, luogo e documenti collegabili",
+    phaseKey: "progettazione",
+    detail: "progetto, quadro tecnico, importi, luogo e documenti collegabili",
     icon: HardHat,
   },
   {
-    label: "Gara / pubblicazione",
-    detail: "CIG, pubblicita legale e scheda nazionale BDNCP",
+    phaseKey: "gara_pubblicazione",
+    detail: "CIG, avviso, pubblicita legale e scheda nazionale BDNCP",
     icon: Landmark,
   },
   {
-    label: "Affidamento",
+    phaseKey: "svolgimento_gara",
+    detail: "offerte, verbali, graduatoria, esclusioni o esiti di gara",
+    icon: ClipboardCheck,
+  },
+  {
+    phaseKey: "affidamento",
     detail: "aggiudicatario, procedura, importo e stazione appaltante",
     icon: Gavel,
   },
   {
-    label: "Esecuzione",
-    detail: "contratto, varianti, liquidazioni e avanzamento documentale",
+    phaseKey: "esecuzione",
+    detail: "contratto, SAL, varianti, liquidazioni e avanzamento documentale",
     icon: RefreshCw,
   },
   {
-    label: "Valutazione",
-    detail: "collaudo, chiusura, dati mancanti e verifica civica",
+    phaseKey: "valutazione",
+    detail: "collaudo, CRE, chiusura, esito e verifiche civiche",
     icon: CheckCircle2,
   },
 ];
@@ -935,9 +948,11 @@ function BdncpBridge({
 
           {loading ? (
             <div className="grid gap-3 sm:grid-cols-3 lg:grid-cols-1">
-              {Array.from({ length: 6 }).map((_, index) => (
-                <Skeleton key={index} className="h-20 rounded-xl" />
-              ))}
+              {Array.from({ length: BDNCP_FLOW_STEPS.length }).map(
+                (_, index) => (
+                  <Skeleton key={index} className="h-20 rounded-xl" />
+                ),
+              )}
             </div>
           ) : (
             <div className="grid gap-3 sm:grid-cols-3 lg:grid-cols-1">
@@ -996,7 +1011,7 @@ function BdncpBridge({
             const Icon = step.icon;
             return (
               <li
-                key={step.label}
+                key={step.phaseKey}
                 className="rounded-xl border border-border bg-muted/25 p-4"
               >
                 <div className="flex items-start gap-3">
@@ -1008,7 +1023,7 @@ function BdncpBridge({
                       Fase {index + 1}
                     </div>
                     <div className="mt-0.5 font-display font-bold tracking-tight text-foreground">
-                      {step.label}
+                      {CONTRACT_LIFECYCLE_PHASE_LABELS[step.phaseKey]}
                     </div>
                     <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
                       {step.detail}

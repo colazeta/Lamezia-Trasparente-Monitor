@@ -220,11 +220,17 @@ async function main() {
   const routeResults = [];
   for (const route of routes) {
     const fallback = routeFallbackPath(absoluteDistDir, route);
+    if (route === "/") {
+      routeResults.push({ route, mode: "root-index", path: indexPath });
+      continue;
+    }
     try {
       await assertReadableFile(fallback, `Route-specific fallback for ${route}`);
       routeResults.push({ route, mode: "route-index", path: fallback });
     } catch {
-      routeResults.push({ route, mode: "spa-index", path: indexPath });
+      throw new Error(
+        `Route-specific fallback for ${route} is required for static hosting: ${fallback}`,
+      );
     }
   }
 
