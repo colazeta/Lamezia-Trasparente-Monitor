@@ -37,8 +37,9 @@ This layer does not overwrite ANNCSU raw coordinates. `source_lon/source_lat` re
 1. Run `scripts/diagnose_anncsu_coordinate_corruption.py`, `scripts/geocode_anncsu_coordinate_candidates.py`, and `scripts/generate_anncsu_local_anchor_coordinate_candidates.py`.
 2. Review candidate or manually picked coordinates in the local workbench.
 3. Export decisions from the workbench as JSON or CSV.
-4. Re-run this script with `--decisions <exported file>`.
-5. Use only `accepted_reviewed_override` rows as a correction/training set for future coordinate-quality passes.
+4. Run `scripts/audit_anncsu_coordinate_decisions.py --decisions <exported file>` and resolve any P0/P1 findings.
+5. Re-run this script with `--decisions <exported file>`.
+6. Use only `accepted_reviewed_override` rows as a correction/training set for future coordinate-quality passes.
 
 ## Guardrails
 

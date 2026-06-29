@@ -78,13 +78,17 @@ They are not applied automatically and must still be confirmed through a
 Build the auditable recovery layer and training set:
 
 ```powershell
+python scripts/audit_anncsu_coordinate_decisions.py --decisions .\electoral_sections_civic_review_decisions_v1.json
 python scripts/build_anncsu_coordinate_recovery_layer.py
 python scripts/build_anncsu_coordinate_recovery_layer.py --decisions .\electoral_sections_civic_review_decisions_v1.json
 ```
 
-The first command creates a no-overwrite recovery layer. The second command
-uses exported workbench decisions and applies only accepted
-`manual_coordinate_override` records to `effective_lon`/`effective_lat`.
+Run the audit before applying any reviewed coordinate decision. P0/P1 findings
+mean the decision export is not ready to become an effective coordinate or a
+training-set row. The no-argument recovery command creates a no-overwrite
+recovery layer. The `--decisions` command uses exported workbench decisions and
+applies only accepted `manual_coordinate_override` records to
+`effective_lon`/`effective_lat`.
 
 ## Why Civic-first
 

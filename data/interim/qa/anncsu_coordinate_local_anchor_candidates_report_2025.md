@@ -1,6 +1,6 @@
 # ANNCSU Local Anchor Coordinate Candidates 2025
 
-Date: 2026-06-28
+Date: 2026-06-29
 
 ## Result
 
