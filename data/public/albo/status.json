@@ -1,31 +1,31 @@
 {
-  "generated_at": "2026-06-25T14:07:05.864Z",
+  "generated_at": "2026-06-28T20:57:47.809Z",
   "source": "Albo Pretorio Comune di Lamezia Terme",
   "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
   "provider": "Tinnvision",
-  "last_run_at": "2026-06-25T14:07:05.864Z",
-  "last_update": "2026-06-25T14:07:05.864Z",
+  "last_run_at": "2026-06-28T20:57:47.809Z",
+  "last_update": "2026-06-28T20:57:47.809Z",
   "method": "xml",
   "raw_format": "xml",
   "counts": {
-    "acquired": 175,
-    "new": 175,
-    "changed": 0,
-    "removed": 0,
-    "unchanged": 0,
-    "publishable": 114,
-    "minimised": 29,
-    "metadata_only": 27,
-    "excluded": 5
+    "acquired": 161,
+    "new": 26,
+    "changed": 19,
+    "removed": 40,
+    "unchanged": 116,
+    "publishable": 120,
+    "minimised": 8,
+    "metadata_only": 26,
+    "excluded": 7
   },
   "diff_baseline": {
-    "status": "baseline_unavailable",
-    "public_safe": false,
-    "previous_retrieved_at": null,
-    "note": "No previous raw snapshot or committed public latest baseline was available; this first-run diff must not be interpreted as a comparison against a prior monitor run."
+    "status": "public_safe",
+    "public_safe": true,
+    "previous_retrieved_at": "2026-06-25T14:07:05.864Z",
+    "note": "Diff derived from committed public/albo/latest.json; safe for scheduled public runs and limited to public-safe fields."
   },
   "warnings": [],
-  "next_scheduled_check": "2026-06-25T14:10:00.000Z",
+  "next_scheduled_check": "2026-06-29T06:10:00.000Z",
   "schedule": {
     "monitoring_window": "08:00-20:00 Europe/Rome",
     "timezone": "Europe/Rome",
@@ -38,8 +38,7 @@
     "Tranche A acquisisce l'elenco degli atti correnti esposto dalla fonte ufficiale, senza dichiarare completezza storica.",
     "I PDF sono archiviati solo per record pubblicabili a basso rischio; allegati e PDF non sono analizzati, interpretati o sottoposti a OCR.",
     "Gli export Tinnvision possono non includere URL diretti agli allegati; il record pubblico rimanda alla fonte ufficiale.",
-    "La classificazione privacy e' prudenziale e automatica; i casi sensibili richiedono revisione umana prima di esposizioni piu' ricche.",
-    "No previous raw snapshot or committed public latest baseline was available; this first-run diff must not be interpreted as a comparison against a prior monitor run."
+    "La classificazione privacy e' prudenziale e automatica; i casi sensibili richiedono revisione umana prima di esposizioni piu' ricche."
   ],
   "official_albo_disclaimer": "Lamezia Trasparente Monitor non sostituisce l'Albo Pretorio ufficiale: pubblicazioni, termini, allegati e contenuti vanno verificati sulla fonte istituzionale.",
   "civic_safeguards": [

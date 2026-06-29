@@ -276,8 +276,12 @@ const METADATA_ONLY_TERMS = [
   "elenco benefici",
   "elenco dei benefici",
   "graduatoria benefici",
+  "contributo economico a favore di persona fisica",
+  "contributi economici straordinari",
   "assistenza domiciliare",
   "assistenza sociale",
+  "assistenti sociali",
+  "fondo poverta",
   "servizi sociali",
   "servizio sociale",
   "non autosufficien",
@@ -295,7 +299,6 @@ const METADATA_ONLY_TERMS = [
 ];
 const MINIMISE_TERMS = [
   "benefici",
-  "contribut",
   "assegno",
   "sussidio",
   "sussidi",
@@ -306,16 +309,12 @@ const MINIMISE_TERMS = [
   "supporto familiare",
   "nucleo familiare",
   "nuclei familiari",
-  "servizi alla persona",
-  "allogg",
   "graduatori",
   "contenzioso",
   "risarc",
   "transatt",
   "sinistro",
   "avvocatura",
-  "personale",
-  "incaric",
 ];
 
 export function parseArgs(argv: string[]): CliOptions {
