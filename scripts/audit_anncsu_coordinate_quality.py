@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import argparse
 import csv
 import json
 import math
@@ -16,6 +17,7 @@ from electoral_geo_utils import (
     ROOT,
     civics_to_geodataframe,
     load_boundary_32633,
+    read_csv_rows,
     read_review_by_access_id,
     relpath,
     require_geospatial_dependencies,
@@ -23,6 +25,7 @@ from electoral_geo_utils import (
 
 
 SOURCE_CSV = PROCESSED_GEO_DIR / "anncsu_lamezia_civics_with_electoral_section_2025_v2.csv"
+RECOVERY_LAYER_CSV = INTERIM_GEO_DIR / "anncsu_lamezia_coordinate_recovery_candidates_2025.csv"
 ANNCSU_STREET_REGISTER_CSV = ROOT / "data" / "raw" / "geo" / "anncsu_lamezia_stradario_20260602.csv"
 CELLS_GPKG = INTERIM_GEO_DIR / "electoral_section_census_cells_assignment_2025.gpkg"
 CELLS_LAYER = "electoral_section_census_cells_assignment_2025"
@@ -194,6 +197,50 @@ def choose_flag(flags: set[str]) -> str:
     return max(flags or {"ok"}, key=flag_priority)
 
 
+def accepted_recovery_coordinates(path: Path) -> dict[str, dict[str, str]]:
+    accepted: dict[str, dict[str, str]] = {}
+    for row in read_csv_rows(path):
+        access_id = as_text(row.get("access_id"))
+        if not access_id:
+            continue
+        if as_text(row.get("effective_coordinate_source")) != "manual_coordinate_override":
+            continue
+        if as_text(row.get("coordinate_recovery_status")) != "accepted_reviewed_override":
+            continue
+        lon = as_float(row.get("effective_lon"))
+        lat = as_float(row.get("effective_lat"))
+        if plausible_lon_lat(lon, lat) != "ok":
+            continue
+        accepted[access_id] = row
+    return accepted
+
+
+def apply_recovery_coordinates(civics, recovery_by_access: dict[str, dict[str, str]], gpd) -> int:
+    if not recovery_by_access:
+        civics["coordinate_audit_coordinate_source"] = "anncsu_source_coordinate"
+        return 0
+    civics["coordinate_audit_coordinate_source"] = "anncsu_source_coordinate"
+    applied = 0
+    for index, row in civics.iterrows():
+        access_id = as_text(row.get("access_id"))
+        recovery = recovery_by_access.get(access_id)
+        if not recovery:
+            continue
+        lon = as_float(recovery.get("effective_lon"))
+        lat = as_float(recovery.get("effective_lat"))
+        if plausible_lon_lat(lon, lat) != "ok":
+            continue
+        geometry = gpd.GeoSeries(gpd.points_from_xy([lon], [lat], crs="EPSG:4326"), crs="EPSG:4326").to_crs(civics.crs).iloc[0]
+        civics.at[index, "geometry"] = geometry
+        civics.at[index, "COORD_X_COMUNE"] = f"{lon:.7f}".rstrip("0").rstrip(".")
+        civics.at[index, "COORD_Y_COMUNE"] = f"{lat:.7f}".rstrip("0").rstrip(".")
+        civics.at[index, "coord_x"] = lon
+        civics.at[index, "coord_y"] = lat
+        civics.at[index, "coordinate_audit_coordinate_source"] = "reviewed_recovery_coordinate"
+        applied += 1
+    return applied
+
+
 def write_csv(rows: list[dict[str, Any]]) -> None:
     SUSPECT_CSV.parent.mkdir(parents=True, exist_ok=True)
     with SUSPECT_CSV.open("w", encoding="utf-8", newline="") as handle:
@@ -210,6 +257,7 @@ def write_report(
     task_count: int,
     workbench_access_count: int,
     missing_task_count: int,
+    recovery_context: dict[str, Any],
 ) -> None:
     counts = Counter(row["coordinate_quality_flag"] for row in rows)
     REPORT_PATH.parent.mkdir(parents=True, exist_ok=True)
@@ -223,6 +271,7 @@ def write_report(
         f"- Civic review tasks loaded: {task_count}",
         f"- Workbench point access_ids observed: {workbench_access_count}",
         f"- Suspect points missing from `civics_by_task`: {missing_task_count}",
+        f"- Reviewed recovery coordinates applied for this audit: {recovery_context.get('applied_recovery_coordinates', 0)}",
         f"- Suspect CSV: `{relpath(SUSPECT_CSV)}`",
         "",
         "This audit does not alter ANNCSU raw data and does not assign sections by OpenStreetMap or proximity.",
@@ -234,6 +283,8 @@ def write_report(
         f"- ANNCSU street register: `{relpath(ANNCSU_STREET_REGISTER_CSV)}`",
         f"- Census cells: `{relpath(CELLS_GPKG)}` layer `{CELLS_LAYER}`",
         f"- Boundary source: `{source_context.get('boundary_source', 'missing')}`",
+        f"- Recovery layer used: `{recovery_context.get('recovery_layer', 'none')}`",
+        f"- Recovery layer accepted overrides available: {recovery_context.get('accepted_recovery_coordinates', 0)}",
         "",
         "## Flag Counts",
         "",
@@ -263,6 +314,7 @@ def write_report(
             "- `coordinate suspect` does not by itself mean the electoral section is wrong.",
             "- The electoral section should still be reviewed against the electoral street register.",
             "- Future geometry generation may exclude or override these points only through a traced manual decision.",
+            "- When run with `--use-recovery-layer`, only accepted reviewed `manual_coordinate_override` coordinates replace source coordinates for this QA pass.",
             "- OpenStreetMap remains visual context only.",
         ]
     )
@@ -276,12 +328,37 @@ def write_report(
     REPORT_PATH.write_text("\n".join(lines) + "\n", encoding="utf-8")
 
 
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(description="Audit ANNCSU civic coordinate quality.")
+    parser.add_argument(
+        "--use-recovery-layer",
+        action="store_true",
+        help="Use accepted reviewed effective coordinates from the recovery layer for this audit pass.",
+    )
+    parser.add_argument(
+        "--recovery-layer",
+        type=Path,
+        default=RECOVERY_LAYER_CSV,
+        help="Recovery layer CSV produced by build_anncsu_coordinate_recovery_layer.py.",
+    )
+    return parser.parse_args()
+
+
 def main() -> int:
+    args = parse_args()
     gpd, pd, shapely, cKDTree = require_geospatial_dependencies()
     boundary, boundary_source = load_boundary_32633()
     cells = gpd.read_file(CELLS_GPKG, layer=CELLS_LAYER).to_crs("EPSG:32633")
     civics = civics_to_geodataframe(SOURCE_CSV, read_review_by_access_id())
     civics["access_id"] = civics["access_id"].astype(str)
+    recovery_by_access: dict[str, dict[str, str]] = {}
+    applied_recovery_coordinates = 0
+    if args.use_recovery_layer:
+        if not args.recovery_layer.exists():
+            print(f"missing_recovery_layer={args.recovery_layer}", file=sys.stderr)
+            return 1
+        recovery_by_access = accepted_recovery_coordinates(args.recovery_layer)
+        applied_recovery_coordinates = apply_recovery_coordinates(civics, recovery_by_access, gpd)
     official_streets = load_anncsu_street_register_labels()
     joined = gpd.sjoin(
         civics,
@@ -571,11 +648,18 @@ def main() -> int:
         len(task_payload),
         len(workbench_access),
         len(missing_task_access),
+        {
+            "recovery_layer": relpath(args.recovery_layer) if args.use_recovery_layer else "none",
+            "accepted_recovery_coordinates": len(recovery_by_access),
+            "applied_recovery_coordinates": applied_recovery_coordinates,
+        },
     )
 
     print(f"coordinate_quality_report={REPORT_PATH}")
     print(f"coordinate_suspect_csv={SUSPECT_CSV}")
     print(f"source_civics={len(records)}")
+    print(f"accepted_recovery_coordinates={len(recovery_by_access)}")
+    print(f"applied_recovery_coordinates={applied_recovery_coordinates}")
     print(f"suspect_points={len(suspect_rows)}")
     print(f"suspect_points_missing_from_civics_by_task={len(missing_task_access)}")
     return 1 if missing_task_access else 0

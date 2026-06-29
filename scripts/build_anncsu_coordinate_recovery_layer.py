@@ -17,6 +17,7 @@ CIVICS_V2_CSV = ROOT / "data" / "processed" / "geo" / "anncsu_lamezia_civics_wit
 SUSPECT_CSV = QA_DIR / "anncsu_coordinate_suspect_points_2025.csv"
 DIAGNOSTIC_CSV = QA_DIR / "anncsu_coordinate_corruption_diagnostic_2025.csv"
 GEOCODE_CANDIDATES_CSV = QA_DIR / "anncsu_coordinate_geocode_candidates_2025.csv"
+LOCAL_ANCHOR_CANDIDATES_CSV = QA_DIR / "anncsu_coordinate_local_anchor_candidates_2025.csv"
 
 RECOVERY_LAYER_CSV = INTERIM_GEO_DIR / "anncsu_lamezia_coordinate_recovery_candidates_2025.csv"
 TRAINING_SET_CSV = QA_DIR / "anncsu_coordinate_recovery_training_set_2025.csv"
@@ -47,6 +48,14 @@ OUTPUT_FIELDS = [
     "best_geocode_status",
     "best_geocode_has_house_number",
     "best_geocode_distance_from_source_m",
+    "best_local_anchor_method",
+    "best_local_anchor_lon",
+    "best_local_anchor_lat",
+    "best_local_anchor_confidence",
+    "best_local_anchor_status",
+    "best_local_anchor_distance_from_source_m",
+    "best_local_anchor_count",
+    "best_local_anchor_explanation",
     "manual_decision_id",
     "manual_decision_type",
     "manual_decision_confidence",
@@ -224,11 +233,45 @@ def best_geocode_by_access(rows: list[dict[str, str]]) -> dict[str, dict[str, st
     return out
 
 
+def local_anchor_rank_key(row: dict[str, str]) -> tuple[int, float, int]:
+    confidence_order = {"medium": 0, "low": 1, "": 9}
+    method_order = {
+        "same_street_same_civic_number_anchor": 0,
+        "same_street_civic_number_interpolation": 1,
+        "nearest_same_street_numeric_anchor": 2,
+        "same_street_anchor_median": 3,
+        "no_local_anchor_candidate": 9,
+    }
+    distance = as_float(row.get("distance_from_source_m"))
+    if math.isnan(distance):
+        distance = 999_999_999.0
+    return (
+        0 if as_text(row.get("candidate_status")) == "candidate_requires_human_review" else 9,
+        confidence_order.get(as_text(row.get("candidate_confidence")), 8),
+        method_order.get(as_text(row.get("candidate_method")), 8),
+        distance,
+    )
+
+
+def best_local_anchor_by_access(rows: list[dict[str, str]]) -> dict[str, dict[str, str]]:
+    grouped: dict[str, list[dict[str, str]]] = {}
+    for row in rows:
+        access_id = as_text(row.get("access_id"))
+        if not access_id:
+            continue
+        grouped.setdefault(access_id, []).append(row)
+    out: dict[str, dict[str, str]] = {}
+    for access_id, candidates in grouped.items():
+        out[access_id] = sorted(candidates, key=local_anchor_rank_key)[0]
+    return out
+
+
 def coord_source_status(
     *,
     source_flag: str,
     decision: dict[str, Any] | None,
     geocode: dict[str, str] | None,
+    local_anchor: dict[str, str] | None,
     diagnostic: dict[str, str] | None,
 ) -> tuple[str, str, str, str]:
     if decision is not None:
@@ -242,7 +285,11 @@ def coord_source_status(
     geocode_confidence = as_text((geocode or {}).get("provider_confidence"))
     geocode_house = as_bool((geocode or {}).get("candidate_has_house_number"))
     if geocode_status == "candidate_requires_human_review" and geocode_house and geocode_confidence in {"medium", "low"}:
-        return ("", "", "external_geocoder_candidate", "candidate_requires_human_review")
+        return ("", "", "anncsu_source_coordinate", "candidate_requires_human_review")
+    local_status = as_text((local_anchor or {}).get("candidate_status"))
+    local_confidence = as_text((local_anchor or {}).get("candidate_confidence"))
+    if local_status == "candidate_requires_human_review" and local_confidence in {"medium", "low"}:
+        return ("", "", "anncsu_source_coordinate", "candidate_requires_human_review")
     if source_flag and source_flag != "ok":
         diagnosis = as_text((diagnostic or {}).get("source_diagnosis"))
         if diagnosis in {"pipeline_extract_coordinate_mismatch", "processed_coordinate_mismatch"}:
@@ -267,6 +314,7 @@ def write_report(
     source_counts: Counter[str],
     status_counts: Counter[str],
     geocode_counts: Counter[str],
+    local_anchor_counts: Counter[str],
 ) -> None:
     lines = [
         "# ANNCSU Coordinate Recovery Layer 2025",
@@ -297,16 +345,24 @@ def write_report(
             lines.append(f"- `{key}`: {value}")
     else:
         lines.append("- No external geocoder candidates available.")
+    lines.extend(["", "## Local ANNCSU Anchor Candidate Counts", ""])
+    if local_anchor_counts:
+        for key, value in sorted(local_anchor_counts.items()):
+            lines.append(f"- `{key}`: {value}")
+    else:
+        lines.append("- No local ANNCSU anchor candidates available.")
     lines.extend(
         [
             "",
             "## How To Use",
             "",
-            "1. Run `scripts/diagnose_anncsu_coordinate_corruption.py` and `scripts/geocode_anncsu_coordinate_candidates.py`.",
+            "1. Run `scripts/diagnose_anncsu_coordinate_corruption.py`, `scripts/geocode_anncsu_coordinate_candidates.py`, and `scripts/generate_anncsu_local_anchor_coordinate_candidates.py`.",
             "2. Review candidate or manually picked coordinates in the local workbench.",
             "3. Export decisions from the workbench as JSON or CSV.",
-            "4. Re-run this script with `--decisions <exported file>`.",
-            "5. Use only `accepted_reviewed_override` rows as a correction/training set for future coordinate-quality passes.",
+            "4. Run `scripts/audit_anncsu_coordinate_decisions.py --decisions <exported file>` and resolve any P0/P1 findings.",
+            "5. Re-run this script with `--decisions <exported file>`.",
+            "6. Re-run `scripts/audit_anncsu_coordinate_quality.py --use-recovery-layer` to verify the reviewed replacements.",
+            "7. Use only `accepted_reviewed_override` rows as a correction/training set for future coordinate-quality passes.",
             "",
             "## Guardrails",
             "",
@@ -337,6 +393,7 @@ def main() -> int:
     suspects_by_access = {as_text(row.get("access_id")): row for row in read_csv_rows(SUSPECT_CSV)}
     diagnostics_by_access = {as_text(row.get("access_id")): row for row in read_csv_rows(DIAGNOSTIC_CSV)}
     geocode_by_access = best_geocode_by_access(read_csv_rows(GEOCODE_CANDIDATES_CSV))
+    local_anchor_by_access = best_local_anchor_by_access(read_csv_rows(LOCAL_ANCHOR_CANDIDATES_CSV))
     decisions = load_decisions(args.decisions)
     accepted_decisions = accepted_coordinate_decisions(decisions)
 
@@ -347,12 +404,14 @@ def main() -> int:
         suspect = suspects_by_access.get(access_id, {})
         diagnostic = diagnostics_by_access.get(access_id, {})
         geocode = geocode_by_access.get(access_id, {})
+        local_anchor = local_anchor_by_access.get(access_id, {})
         decision = accepted_decisions.get(access_id)
         flag = as_text(suspect.get("coordinate_quality_flag")) or "ok"
         effective_lon, effective_lat, effective_source, recovery_status = coord_source_status(
             source_flag=flag,
             decision=decision,
             geocode=geocode,
+            local_anchor=local_anchor,
             diagnostic=diagnostic,
         )
         original_lon = source_lon(civic)
@@ -412,6 +471,14 @@ def main() -> int:
                 "best_geocode_status": as_text(geocode.get("candidate_status")),
                 "best_geocode_has_house_number": as_text(geocode.get("candidate_has_house_number")),
                 "best_geocode_distance_from_source_m": as_text(geocode.get("distance_from_source_m")),
+                "best_local_anchor_method": as_text(local_anchor.get("candidate_method")),
+                "best_local_anchor_lon": decimal_text(local_anchor.get("candidate_lon")),
+                "best_local_anchor_lat": decimal_text(local_anchor.get("candidate_lat")),
+                "best_local_anchor_confidence": as_text(local_anchor.get("candidate_confidence")),
+                "best_local_anchor_status": as_text(local_anchor.get("candidate_status")),
+                "best_local_anchor_distance_from_source_m": as_text(local_anchor.get("distance_from_source_m")),
+                "best_local_anchor_count": as_text(local_anchor.get("anchor_count")),
+                "best_local_anchor_explanation": as_text(local_anchor.get("candidate_explanation")),
                 "manual_decision_id": as_text((decision or {}).get("decision_id")),
                 "manual_decision_type": as_text((decision or {}).get("coordinate_decision_type")),
                 "manual_decision_confidence": as_text((decision or {}).get("coordinate_decision_confidence")),
@@ -430,6 +497,9 @@ def main() -> int:
     source_counts = Counter(row["effective_coordinate_source"] for row in recovery_rows)
     status_counts = Counter(row["coordinate_recovery_status"] for row in recovery_rows)
     geocode_counts = Counter(as_text(row.get("best_geocode_status")) for row in recovery_rows if as_text(row.get("best_geocode_status")))
+    local_anchor_counts = Counter(
+        as_text(row.get("best_local_anchor_status")) for row in recovery_rows if as_text(row.get("best_local_anchor_status"))
+    )
     write_report(
         recovery_rows=recovery_rows,
         training_rows=training_rows,
@@ -437,6 +507,7 @@ def main() -> int:
         source_counts=source_counts,
         status_counts=status_counts,
         geocode_counts=geocode_counts,
+        local_anchor_counts=local_anchor_counts,
     )
 
     print(f"recovery_layer_csv={RECOVERY_LAYER_CSV}")

@@ -43,6 +43,7 @@ V3_METRICS_CSV = QA_DIR / "electoral_sections_candidate_v3_census_metrics_2025.c
 BOUNDARY_UNCERTAINTY_CSV = QA_DIR / "electoral_sections_boundary_uncertainty_points_2025.csv"
 COORDINATE_SUSPECT_CSV = QA_DIR / "anncsu_coordinate_suspect_points_2025.csv"
 COORDINATE_GEOCODE_CANDIDATES_CSV = QA_DIR / "anncsu_coordinate_geocode_candidates_2025.csv"
+COORDINATE_LOCAL_ANCHOR_CANDIDATES_CSV = QA_DIR / "anncsu_coordinate_local_anchor_candidates_2025.csv"
 RAW_STREET_REGISTER_PDF = ROOT / "data" / "raw" / "geo" / "Stradario_elettorale.pdf"
 
 MAX_DETERMINISTIC_SAMPLE = 3000
@@ -1710,6 +1711,26 @@ def main() -> int:
                 "candidate_status": as_text(row.get("candidate_status")),
             }
         )
+    coordinate_local_anchor_candidates_by_access: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    for row in read_csv_rows(COORDINATE_LOCAL_ANCHOR_CANDIDATES_CSV):
+        access_id = as_text(row.get("access_id"))
+        if not access_id:
+            continue
+        coordinate_local_anchor_candidates_by_access[access_id].append(
+            {
+                "provider": as_text(row.get("provider")),
+                "candidate_method": as_text(row.get("candidate_method")),
+                "candidate_status": as_text(row.get("candidate_status")),
+                "candidate_lon": as_text(row.get("candidate_lon")),
+                "candidate_lat": as_text(row.get("candidate_lat")),
+                "candidate_confidence": as_text(row.get("candidate_confidence")),
+                "candidate_explanation": as_text(row.get("candidate_explanation")),
+                "distance_from_source_m": as_text(row.get("distance_from_source_m")),
+                "anchor_count": as_text(row.get("anchor_count")),
+                "numeric_anchor_count": as_text(row.get("numeric_anchor_count")),
+                "nearest_anchor_distance_m": as_text(row.get("nearest_anchor_distance_m")),
+            }
+        )
 
     public_pdf_path = ""
     if RAW_STREET_REGISTER_PDF.exists() and RAW_STREET_REGISTER_PDF.stat().st_size <= 2_000_000:
@@ -1729,6 +1750,7 @@ def main() -> int:
     write_json(OUT_DIR / "nearby_deterministic_by_task.json", civic_nearby_deterministic_by_task)
     write_json(OUT_DIR / "coordinate_suspect_points.json", coordinate_suspect_records)
     write_json(OUT_DIR / "coordinate_geocode_candidates_by_access.json", coordinate_geocode_candidates_by_access)
+    write_json(OUT_DIR / "coordinate_local_anchor_candidates_by_access.json", coordinate_local_anchor_candidates_by_access)
     write_json(
         OUT_DIR / "review_summary.json",
         {
@@ -1752,10 +1774,23 @@ def main() -> int:
                     if as_text(row.get("candidate_status"))
                 )
             ),
+            "coordinate_local_anchor_candidate_access_ids": len(coordinate_local_anchor_candidates_by_access),
+            "coordinate_local_anchor_candidate_rows": sum(len(rows) for rows in coordinate_local_anchor_candidates_by_access.values()),
+            "coordinate_local_anchor_candidate_statuses": dict(
+                Counter(
+                    as_text(row.get("candidate_status"))
+                    for rows in coordinate_local_anchor_candidates_by_access.values()
+                    for row in rows
+                    if as_text(row.get("candidate_status"))
+                )
+            ),
             "coordinate_quality_report": relpath(QA_DIR / "anncsu_coordinate_quality_report_2025.md"),
             "coordinate_suspect_csv": relpath(COORDINATE_SUSPECT_CSV),
             "coordinate_geocode_candidates_csv": relpath(COORDINATE_GEOCODE_CANDIDATES_CSV)
             if COORDINATE_GEOCODE_CANDIDATES_CSV.exists()
+            else "",
+            "coordinate_local_anchor_candidates_csv": relpath(COORDINATE_LOCAL_ANCHOR_CANDIDATES_CSV)
+            if COORDINATE_LOCAL_ANCHOR_CANDIDATES_CSV.exists()
             else "",
             "high_priority_review_tasks": sum(1 for task in review_tasks if task.get("priority") == "high"),
             "high_priority_civic_review_tasks": sum(1 for task in civic_review_tasks if task.get("priority") == "high"),
@@ -1795,6 +1830,7 @@ def main() -> int:
                 relpath(V3_METRICS_CSV),
                 relpath(COORDINATE_SUSPECT_CSV),
                 relpath(COORDINATE_GEOCODE_CANDIDATES_CSV) if COORDINATE_GEOCODE_CANDIDATES_CSV.exists() else "",
+                relpath(COORDINATE_LOCAL_ANCHOR_CANDIDATES_CSV) if COORDINATE_LOCAL_ANCHOR_CANDIDATES_CSV.exists() else "",
             ],
             "notes": "Local review workbench data only. OSM is an optional visual basemap; census cells are support context; no V4 geometry is generated.",
         },
@@ -2023,6 +2059,7 @@ def main() -> int:
     print(f"review_points={len(review_points)}")
     print(f"coordinate_suspect_points={len(coordinate_suspect_records)}")
     print(f"coordinate_geocode_candidate_rows={sum(len(rows) for rows in coordinate_geocode_candidates_by_access.values())}")
+    print(f"coordinate_local_anchor_candidate_rows={sum(len(rows) for rows in coordinate_local_anchor_candidates_by_access.values())}")
     print(f"deterministic_sample={len(deterministic)}")
     print(f"street_rules={len(rules)}")
     print(f"street_register_pdf={public_pdf_path or 'not copied'}")

@@ -198,12 +198,32 @@ writes:
 - `data/interim/qa/anncsu_coordinate_recovery_training_set_2025.csv`
 - `data/interim/qa/anncsu_coordinate_recovery_layer_report_2025.md`
 
+Before running the recovery layer with decisions,
+`scripts/audit_anncsu_coordinate_decisions.py --decisions <workbench-json-export>`
+checks that each manual coordinate override has one civic `access_id`, plausible
+lon/lat, reviewer metadata, structured evidence snapshots, and no blocking
+P0/P1 findings. It writes:
+
+- `data/interim/qa/anncsu_coordinate_decisions_audit_report_2025.md`
+- `data/interim/qa/anncsu_coordinate_decisions_audit_findings_2025.csv`
+
+Because public geocoders can miss local contrade and may return only
+street-level results, `scripts/generate_anncsu_local_anchor_coordinate_candidates.py`
+also creates local candidates from non-suspect ANNCSU civics on the same street.
+It can interpolate between numeric civic anchors or provide weaker same-street
+anchor candidates for human review:
+
+- `data/interim/qa/anncsu_coordinate_local_anchor_candidates_2025.csv`
+- `data/interim/qa/anncsu_coordinate_local_anchor_candidates_report_2025.md`
+
 The retraining path is therefore review-first:
 
 - collect accepted manual coordinate overrides and rejected candidates;
 - build a correction/training set from reviewed decisions only;
-- re-run coordinate-quality diagnostics using the reviewed replacements as
-  trusted anchors;
+- re-run coordinate-quality diagnostics with
+  `scripts/audit_anncsu_coordinate_quality.py --use-recovery-layer`, which uses
+  only accepted reviewed `manual_coordinate_override` coordinates from the
+  recovery layer as trusted replacements;
 - generate any future V4 candidate geometry only after the corrected coordinate
   layer is auditable.
 

@@ -699,6 +699,11 @@ function coordinateGeocodeCandidatesForCivic(civic) {
   return accessId ? asArray(state.data.coordinateGeocodeCandidatesByAccess?.[accessId]) : [];
 }
 
+function coordinateLocalAnchorCandidatesForCivic(civic) {
+  const accessId = asString(civic?.access_id);
+  return accessId ? asArray(state.data.coordinateLocalAnchorCandidatesByAccess?.[accessId]) : [];
+}
+
 function setRelocationDraft(task, civic, lon, lat, source = "manual") {
   const parsedLon = parseCoordinate(lon);
   const parsedLat = parseCoordinate(lat);
@@ -745,6 +750,7 @@ function relocationSupportModel(task, civic, draft) {
       original_street_context_label: streetContextLabel(originalContext),
       street_register_labels: streetRegisterLabelsForTask(task, civic),
       external_geocode_candidates: coordinateGeocodeCandidatesForCivic(civic),
+      local_anchor_candidates: coordinateLocalAnchorCandidatesForCivic(civic),
     };
   }
   const neighbours = deterministicPointRows(proposedLon, proposedLat, civic);
@@ -780,6 +786,7 @@ function relocationSupportModel(task, civic, draft) {
       : "",
     street_register_labels: streetRegisterLabelsForTask(task, civic),
     external_geocode_candidates: coordinateGeocodeCandidatesForCivic(civic),
+    local_anchor_candidates: coordinateLocalAnchorCandidatesForCivic(civic),
     nearest_deterministic_points: nearest,
     nearest_same_street_deterministic_points: sameStreet,
     support_warning: "Supporto informativo: non modifica ANNCSU raw e non assegna sezioni per prossimita.",
@@ -809,6 +816,17 @@ function renderGeocodeCandidateRows(rows) {
   );
 }
 
+function renderLocalAnchorCandidateRows(rows) {
+  if (!rows.length) return `<p class="empty-state">No local ANNCSU anchor candidate was exported for this civic.</p>`;
+  return renderTable(
+    ["candidate_method", "candidate_status", "candidate_confidence", "candidate_lon", "candidate_lat", "distance_from_source_m", "anchor_count", "numeric_anchor_count", "candidate_explanation"],
+    rows.map((row) => ({
+      ...row,
+      distance_from_source_m: numberLabel(row.distance_from_source_m, 1),
+    })),
+  );
+}
+
 function renderRelocationSupportHtml(task, civic, draft) {
   const support = relocationSupportModel(task, civic, draft);
   if (!support.has_proposal) {
@@ -825,6 +843,8 @@ function renderRelocationSupportHtml(task, civic, draft) {
           ["Original nearby street context", support.original_street_context_label],
           ["Street-register labels", asArray(support.street_register_labels).join(", ")],
         ])}
+        <h4>Local ANNCSU anchor candidates</h4>
+        ${renderLocalAnchorCandidateRows(support.local_anchor_candidates)}
         <h4>External geocoder candidates</h4>
         ${renderGeocodeCandidateRows(support.external_geocode_candidates)}
       </div>
@@ -847,6 +867,8 @@ function renderRelocationSupportHtml(task, civic, draft) {
       ])}
       ${support.street_context_warning ? `<p class="coordinate-warning">${escapeHtml(support.street_context_warning)}</p>` : ""}
       <p class="form-note">Supporto informativo: non modifica ANNCSU raw e non assegna sezioni per prossimita.</p>
+      <h4>Local ANNCSU anchor candidates</h4>
+      ${renderLocalAnchorCandidateRows(support.local_anchor_candidates)}
       <h4>External geocoder candidates</h4>
       ${renderGeocodeCandidateRows(support.external_geocode_candidates)}
       <h4>Nearest deterministic civics</h4>
@@ -1513,6 +1535,7 @@ function decisionSnapshot(task) {
       source_coord_lon: selectedCivic.source_coord_lon || selectedCivic.coord_x || "",
       source_coord_lat: selectedCivic.source_coord_lat || selectedCivic.coord_y || "",
       external_geocode_candidates: coordinateGeocodeCandidatesForCivic(selectedCivic).slice(0, 3),
+      local_anchor_candidates: coordinateLocalAnchorCandidatesForCivic(selectedCivic).slice(0, 3),
     } : null,
     representative_census_cells: task.representative_census_cells,
     street_rules: rules,
@@ -2496,6 +2519,7 @@ async function boot() {
     candidateSectionsByTask,
     nearbyByTask,
     coordinateGeocodeCandidatesByAccess,
+    coordinateLocalAnchorCandidatesByAccess,
   ] = await Promise.all([
     fetchJson("review_summary.json"),
     fetchJson("civic_review_tasks.json"),
@@ -2512,6 +2536,7 @@ async function boot() {
     fetchJson("candidate_sections_by_task.json"),
     fetchJson("nearby_deterministic_by_task.json"),
     fetchJson("coordinate_geocode_candidates_by_access.json"),
+    fetchJson("coordinate_local_anchor_candidates_by_access.json"),
   ]);
   state.data = {
     summary,
@@ -2528,6 +2553,7 @@ async function boot() {
     candidateSectionsByTask,
     nearbyByTask,
     coordinateGeocodeCandidatesByAccess,
+    coordinateLocalAnchorCandidatesByAccess,
     geoFeatureByAccessId: indexGeoJsonByAccessId(reviewPoints, resolvedPoints, deterministicPoints, coordinateSuspectPoints),
     taskIdByAccessId: indexTaskIdsByAccessId(civicsByTask),
   };
