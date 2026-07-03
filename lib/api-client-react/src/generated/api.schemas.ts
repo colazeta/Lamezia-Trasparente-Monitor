@@ -1717,7 +1717,10 @@ export type Organo = OrganoRef & ({
   /** @nullable */
   description: string | null;
   position: number;
+  /** Componenti correnti rilevati nella composizione attiva. */
   memberCount: number;
+  /** Righe di composizione presenti nello storico dell'organo. */
+  historyCount: number;
   sedutaCount: number;
 });
 
@@ -1733,6 +1736,43 @@ export interface OrganoMember {
   status: string;
   /** @nullable */
   membershipRole: string | null;
+  /** @nullable */
+  termLabel: string | null;
+  /** @nullable */
+  startDate: string | null;
+  /** @nullable */
+  endDate: string | null;
+  /** @nullable */
+  sourceLabel: string | null;
+  /** @nullable */
+  sourceUrl: string | null;
+  /** @nullable */
+  notes: string | null;
+  isCurrent: boolean;
+}
+
+export type OrganoTermStatus = typeof OrganoTermStatus[keyof typeof OrganoTermStatus];
+
+
+export const OrganoTermStatus = {
+  current: 'current',
+  historical: 'historical',
+} as const;
+
+export interface OrganoTerm {
+  label: string;
+  /** @nullable */
+  startDate: string | null;
+  /** @nullable */
+  endDate: string | null;
+  status: OrganoTermStatus;
+  /** @nullable */
+  sourceLabel: string | null;
+  /** @nullable */
+  sourceUrl: string | null;
+  /** @nullable */
+  notes: string | null;
+  members: OrganoMember[];
 }
 
 export interface Seduta {
@@ -1758,6 +1798,7 @@ export interface Seduta {
 
 export type OrganoDetail = Organo & {
   members: OrganoMember[];
+  terms: OrganoTerm[];
   sedute: Seduta[];
 };
 
@@ -2166,6 +2207,19 @@ export interface OfficialOrgano {
   slug: string;
   /** @nullable */
   membershipRole: string | null;
+  /** @nullable */
+  termLabel: string | null;
+  /** @nullable */
+  startDate: string | null;
+  /** @nullable */
+  endDate: string | null;
+  /** @nullable */
+  sourceLabel: string | null;
+  /** @nullable */
+  sourceUrl: string | null;
+  /** @nullable */
+  notes: string | null;
+  isCurrent: boolean;
 }
 
 export type OfficialProfile = Official & {

@@ -11,6 +11,9 @@ export type Organo = OrganoRef & ({
   /** @nullable */
   description: string | null;
   position: number;
+  /** Componenti correnti rilevati nella composizione attiva. */
   memberCount: number;
+  /** Righe di composizione presenti nello storico dell'organo. */
+  historyCount: number;
   sedutaCount: number;
 });

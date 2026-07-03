@@ -6431,7 +6431,7 @@ components:
       allOf:
         - $ref: "#/components/schemas/OrganoRef"
         - type: object
-          required: [description, position, memberCount, sedutaCount]
+          required: [description, position, memberCount, historyCount, sedutaCount]
           properties:
             description:
               type: ["string", "null"]
@@ -6439,12 +6439,31 @@ components:
               type: integer
             memberCount:
               type: integer
+              description: Componenti correnti rilevati nella composizione attiva.
+            historyCount:
+              type: integer
+              description: Righe di composizione presenti nello storico dell'organo.
             sedutaCount:
               type: integer
 
     OrganoMember:
       type: object
-      required: [officialId, name, slug, role, status, membershipRole]
+      required:
+        [
+          officialId,
+          name,
+          slug,
+          role,
+          status,
+          membershipRole,
+          termLabel,
+          startDate,
+          endDate,
+          sourceLabel,
+          sourceUrl,
+          notes,
+          isCurrent,
+        ]
       properties:
         officialId:
           type: integer
@@ -6462,17 +6481,60 @@ components:
           type: string
         membershipRole:
           type: ["string", "null"]
+        termLabel:
+          type: ["string", "null"]
+        startDate:
+          type: ["string", "null"]
+        endDate:
+          type: ["string", "null"]
+        sourceLabel:
+          type: ["string", "null"]
+        sourceUrl:
+          type: ["string", "null"]
+        notes:
+          type: ["string", "null"]
+        isCurrent:
+          type: boolean
+
+    OrganoTerm:
+      type: object
+      required:
+        [label, startDate, endDate, status, sourceLabel, sourceUrl, notes, members]
+      properties:
+        label:
+          type: string
+        startDate:
+          type: ["string", "null"]
+        endDate:
+          type: ["string", "null"]
+        status:
+          type: string
+          enum: [current, historical]
+        sourceLabel:
+          type: ["string", "null"]
+        sourceUrl:
+          type: ["string", "null"]
+        notes:
+          type: ["string", "null"]
+        members:
+          type: array
+          items:
+            $ref: "#/components/schemas/OrganoMember"
 
     OrganoDetail:
       allOf:
         - $ref: "#/components/schemas/Organo"
         - type: object
-          required: [members, sedute]
+          required: [members, terms, sedute]
           properties:
             members:
               type: array
               items:
                 $ref: "#/components/schemas/OrganoMember"
+            terms:
+              type: array
+              items:
+                $ref: "#/components/schemas/OrganoTerm"
             sedute:
               type: array
               items:
@@ -7040,7 +7102,21 @@ components:
 
     OfficialOrgano:
       type: object
-      required: [id, type, name, slug, membershipRole]
+      required:
+        [
+          id,
+          type,
+          name,
+          slug,
+          membershipRole,
+          termLabel,
+          startDate,
+          endDate,
+          sourceLabel,
+          sourceUrl,
+          notes,
+          isCurrent,
+        ]
       properties:
         id:
           type: integer
@@ -7053,6 +7129,20 @@ components:
           type: string
         membershipRole:
           type: ["string", "null"]
+        termLabel:
+          type: ["string", "null"]
+        startDate:
+          type: ["string", "null"]
+        endDate:
+          type: ["string", "null"]
+        sourceLabel:
+          type: ["string", "null"]
+        sourceUrl:
+          type: ["string", "null"]
+        notes:
+          type: ["string", "null"]
+        isCurrent:
+          type: boolean
 
     OfficialProfile:
       allOf:

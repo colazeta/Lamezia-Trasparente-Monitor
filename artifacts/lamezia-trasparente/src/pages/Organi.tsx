@@ -1,8 +1,16 @@
 import { Link } from "wouter";
 import { useListOrgani, type Organo } from "@workspace/api-client-react";
-import { Landmark, Users, CalendarClock, ChevronRight } from "lucide-react";
+import {
+  Landmark,
+  Users,
+  CalendarClock,
+  ChevronRight,
+  History,
+  UserRound,
+} from "lucide-react";
 
 import { Card } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
   Empty,
@@ -13,9 +21,18 @@ import {
 } from "@/components/ui/empty";
 import { asApiList } from "@/lib/apiList";
 
+const ORGANO_LABELS: Record<string, string> = {
+  consiglio: "Consiglio",
+  giunta: "Giunta",
+  commissione: "Commissione",
+};
+
 export function Organi() {
   const { data: organiData, isLoading } = useListOrgani();
   const organi = asApiList<Organo>(organiData);
+  const totalCurrentMembers = organi.reduce((sum, o) => sum + o.memberCount, 0);
+  const totalHistoryRows = organi.reduce((sum, o) => sum + o.historyCount, 0);
+  const totalSedute = organi.reduce((sum, o) => sum + o.sedutaCount, 0);
 
   return (
     <div className="container mx-auto px-4 py-8 md:py-12 max-w-5xl">
@@ -29,8 +46,39 @@ export function Organi() {
         </h1>
         <p className="mt-3 text-muted-foreground text-lg max-w-3xl">
           Il Consiglio Comunale, la Giunta e le Commissioni Consiliari: chi ne
-          fa parte e quali sedute hanno tenuto.
+          fa parte oggi, quali composizioni sono già storicizzate e quali
+          sedute sono collegate alle fonti pubbliche disponibili.
         </p>
+      </div>
+
+      <div className="mb-8 grid gap-3 sm:grid-cols-3">
+        <Card className="p-4">
+          <div className="flex items-center gap-2 text-sm font-semibold text-muted-foreground">
+            <Users className="h-4 w-4 text-primary" />
+            Componenti correnti
+          </div>
+          <p className="mt-2 text-2xl font-display font-bold">
+            {isLoading ? "..." : totalCurrentMembers}
+          </p>
+        </Card>
+        <Card className="p-4">
+          <div className="flex items-center gap-2 text-sm font-semibold text-muted-foreground">
+            <History className="h-4 w-4 text-primary" />
+            Righe storiche
+          </div>
+          <p className="mt-2 text-2xl font-display font-bold">
+            {isLoading ? "..." : totalHistoryRows}
+          </p>
+        </Card>
+        <Card className="p-4">
+          <div className="flex items-center gap-2 text-sm font-semibold text-muted-foreground">
+            <CalendarClock className="h-4 w-4 text-primary" />
+            Sedute collegate
+          </div>
+          <p className="mt-2 text-2xl font-display font-bold">
+            {isLoading ? "..." : totalSedute}
+          </p>
+        </Card>
       </div>
 
       <div data-tour="organi-list" className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -48,6 +96,15 @@ export function Organi() {
           organi.map((o) => (
             <Link key={o.id} href={`/organi/${o.slug}`} className="block">
               <Card className="group h-full p-6 transition-all hover:shadow-lg hover:-translate-y-0.5 hover:border-brand/40">
+                <div className="mb-3 flex items-center justify-between gap-2">
+                  <Badge variant="secondary" className="capitalize">
+                    {ORGANO_LABELS[o.type] ?? o.type}
+                  </Badge>
+                  <span className="inline-flex items-center gap-1 text-xs text-muted-foreground">
+                    <UserRound className="h-3.5 w-3.5" />
+                    Profili
+                  </span>
+                </div>
                 <h3 className="font-display text-lg font-bold leading-snug mb-2 group-hover:text-brand transition-colors">
                   {o.name}
                 </h3>
@@ -60,6 +117,10 @@ export function Organi() {
                   <span className="inline-flex items-center gap-1.5">
                     <Users className="h-3.5 w-3.5" />
                     {o.memberCount} component{o.memberCount === 1 ? "e" : "i"}
+                  </span>
+                  <span className="inline-flex items-center gap-1.5">
+                    <History className="h-3.5 w-3.5" />
+                    {o.historyCount} storic{o.historyCount === 1 ? "o" : "i"}
                   </span>
                   <span className="inline-flex items-center gap-1.5">
                     <CalendarClock className="h-3.5 w-3.5" />

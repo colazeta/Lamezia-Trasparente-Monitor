@@ -71,6 +71,13 @@
       "when": 1780891200000,
       "tag": "0009_reports_published_at",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1782729000000,
+      "tag": "0010_organi_members_history",
+      "breakpoints": true
     }
   ]
 }

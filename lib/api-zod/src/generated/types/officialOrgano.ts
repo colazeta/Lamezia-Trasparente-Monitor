@@ -14,4 +14,17 @@ export interface OfficialOrgano {
   slug: string;
   /** @nullable */
   membershipRole: string | null;
+  /** @nullable */
+  termLabel: string | null;
+  /** @nullable */
+  startDate: string | null;
+  /** @nullable */
+  endDate: string | null;
+  /** @nullable */
+  sourceLabel: string | null;
+  /** @nullable */
+  sourceUrl: string | null;
+  /** @nullable */
+  notes: string | null;
+  isCurrent: boolean;
 }

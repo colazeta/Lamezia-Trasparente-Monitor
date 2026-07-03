@@ -1464,7 +1464,8 @@ export const ListOrganiResponseItem = zod.object({
 }).and(zod.object({
   "description": zod.string().nullable(),
   "position": zod.number(),
-  "memberCount": zod.number(),
+  "memberCount": zod.number().describe('Componenti correnti rilevati nella composizione attiva.'),
+  "historyCount": zod.number().describe('Righe di composizione presenti nello storico dell\'organo.'),
   "sedutaCount": zod.number()
 }))
 export const ListOrganiResponse = zod.array(ListOrganiResponseItem)
@@ -1485,7 +1486,8 @@ export const GetOrganoResponse = zod.object({
 }).and(zod.object({
   "description": zod.string().nullable(),
   "position": zod.number(),
-  "memberCount": zod.number(),
+  "memberCount": zod.number().describe('Componenti correnti rilevati nella composizione attiva.'),
+  "historyCount": zod.number().describe('Righe di composizione presenti nello storico dell\'organo.'),
   "sedutaCount": zod.number()
 })).and(zod.object({
   "members": zod.array(zod.object({
@@ -1496,7 +1498,40 @@ export const GetOrganoResponse = zod.object({
   "roleTitle": zod.string().nullish(),
   "group": zod.string().nullish(),
   "status": zod.string(),
-  "membershipRole": zod.string().nullable()
+  "membershipRole": zod.string().nullable(),
+  "termLabel": zod.string().nullable(),
+  "startDate": zod.string().nullable(),
+  "endDate": zod.string().nullable(),
+  "sourceLabel": zod.string().nullable(),
+  "sourceUrl": zod.string().nullable(),
+  "notes": zod.string().nullable(),
+  "isCurrent": zod.boolean()
+})),
+  "terms": zod.array(zod.object({
+  "label": zod.string(),
+  "startDate": zod.string().nullable(),
+  "endDate": zod.string().nullable(),
+  "status": zod.enum(['current', 'historical']),
+  "sourceLabel": zod.string().nullable(),
+  "sourceUrl": zod.string().nullable(),
+  "notes": zod.string().nullable(),
+  "members": zod.array(zod.object({
+  "officialId": zod.number(),
+  "name": zod.string(),
+  "slug": zod.string(),
+  "role": zod.string(),
+  "roleTitle": zod.string().nullish(),
+  "group": zod.string().nullish(),
+  "status": zod.string(),
+  "membershipRole": zod.string().nullable(),
+  "termLabel": zod.string().nullable(),
+  "startDate": zod.string().nullable(),
+  "endDate": zod.string().nullable(),
+  "sourceLabel": zod.string().nullable(),
+  "sourceUrl": zod.string().nullable(),
+  "notes": zod.string().nullable(),
+  "isCurrent": zod.boolean()
+}))
 })),
   "sedute": zod.array(zod.object({
   "id": zod.number(),
@@ -1804,7 +1839,14 @@ export const GetOfficialResponse = zod.object({
   "type": zod.string().describe('consiglio | giunta | commissione'),
   "name": zod.string(),
   "slug": zod.string(),
-  "membershipRole": zod.string().nullable()
+  "membershipRole": zod.string().nullable(),
+  "termLabel": zod.string().nullable(),
+  "startDate": zod.string().nullable(),
+  "endDate": zod.string().nullable(),
+  "sourceLabel": zod.string().nullable(),
+  "sourceUrl": zod.string().nullable(),
+  "notes": zod.string().nullable(),
+  "isCurrent": zod.boolean()
 }))
 }))
 
@@ -1898,7 +1940,14 @@ export const UpdateOfficialResponse = zod.object({
   "type": zod.string().describe('consiglio | giunta | commissione'),
   "name": zod.string(),
   "slug": zod.string(),
-  "membershipRole": zod.string().nullable()
+  "membershipRole": zod.string().nullable(),
+  "termLabel": zod.string().nullable(),
+  "startDate": zod.string().nullable(),
+  "endDate": zod.string().nullable(),
+  "sourceLabel": zod.string().nullable(),
+  "sourceUrl": zod.string().nullable(),
+  "notes": zod.string().nullable(),
+  "isCurrent": zod.boolean()
 }))
 }))
 

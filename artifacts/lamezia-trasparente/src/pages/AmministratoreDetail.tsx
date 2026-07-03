@@ -14,6 +14,7 @@ import {
   ExternalLink,
   Building2,
   ChevronRight,
+  History,
 } from "lucide-react";
 import { format } from "date-fns";
 import { it } from "date-fns/locale";
@@ -53,6 +54,18 @@ function formatDate(value: string | null | undefined) {
   return Number.isNaN(d.getTime())
     ? "—"
     : format(d, "dd MMMM yyyy", { locale: it });
+}
+
+function formatDateRange(
+  startDate: string | null | undefined,
+  endDate: string | null | undefined,
+) {
+  if (startDate && endDate) {
+    return `${formatDate(startDate)} - ${formatDate(endDate)}`;
+  }
+  if (startDate) return `dal ${formatDate(startDate)}`;
+  if (endDate) return `fino al ${formatDate(endDate)}`;
+  return "Periodo da documentare";
 }
 
 function formatAmount(value: number | null | undefined) {
@@ -194,23 +207,53 @@ export function AmministratoreDetail() {
 
           <div className="space-y-5">
             {official.organi.length > 0 && (
-              <Section icon={Building2} title="Appartenenza agli organi">
-                <ul className="grid gap-3 sm:grid-cols-2">
+              <Section icon={History} title="Incarichi negli organi">
+                <ul className="grid gap-3">
                   {official.organi.map((o) => (
-                    <li key={o.id}>
+                    <li key={`${o.id}-${o.termLabel ?? "term"}`}>
                       <Link href={`/organi/${o.slug}`} className="block">
-                        <div className="group flex items-center justify-between gap-3 rounded-lg border border-border/60 p-3 transition-colors hover:border-brand/40">
+                        <div className="group flex flex-col gap-3 rounded-lg border border-border/60 p-3 transition-colors hover:border-brand/40 sm:flex-row sm:items-start sm:justify-between">
                           <div className="min-w-0">
-                            <p className="font-medium text-foreground truncate group-hover:text-brand transition-colors">
-                              {o.name}
-                            </p>
+                            <div className="flex flex-wrap items-center gap-2">
+                              <p className="font-medium text-foreground group-hover:text-brand transition-colors">
+                                {o.name}
+                              </p>
+                              <Badge
+                                variant={o.isCurrent ? "brand" : "outline"}
+                                className="text-[10px]"
+                              >
+                                {o.isCurrent ? "Corrente" : "Storico"}
+                              </Badge>
+                            </div>
                             {o.membershipRole && (
-                              <p className="text-xs text-muted-foreground truncate">
+                              <p className="mt-1 text-xs text-muted-foreground">
                                 {o.membershipRole}
                               </p>
                             )}
+                            <p className="mt-1 text-xs text-muted-foreground">
+                              {o.termLabel ?? "Mandato non classificato"} ·{" "}
+                              {formatDateRange(o.startDate, o.endDate)}
+                            </p>
+                            {o.sourceUrl ? (
+                              <span className="mt-2 inline-flex items-center gap-1 text-xs font-medium text-primary">
+                                <ExternalLink className="h-3.5 w-3.5" />
+                                Fonte collegata
+                              </span>
+                            ) : o.sourceLabel ? (
+                              <p className="mt-2 text-xs text-muted-foreground">
+                                {o.sourceLabel}
+                              </p>
+                            ) : null}
+                            {o.notes && (
+                              <p className="mt-2 text-xs text-muted-foreground">
+                                {o.notes}
+                              </p>
+                            )}
                           </div>
-                          <ChevronRight className="h-4 w-4 shrink-0 text-primary transition-transform group-hover:translate-x-0.5" />
+                          <div className="flex shrink-0 items-center gap-2 text-xs text-muted-foreground">
+                            <Building2 className="h-3.5 w-3.5" />
+                            <ChevronRight className="h-4 w-4 text-primary transition-transform group-hover:translate-x-0.5" />
+                          </div>
                         </div>
                       </Link>
                     </li>
