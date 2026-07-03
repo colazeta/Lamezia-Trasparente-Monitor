@@ -216,6 +216,14 @@ anchor candidates for human review:
 - `data/interim/qa/anncsu_coordinate_local_anchor_candidates_2025.csv`
 - `data/interim/qa/anncsu_coordinate_local_anchor_candidates_report_2025.md`
 
+`scripts/prepare_anncsu_coordinate_review_batch.py` then prepares a practical
+manual-review worklist from those candidates. It writes a full ordered queue and
+an initial high-signal batch:
+
+- `data/interim/qa/anncsu_coordinate_review_priority_queue_2025.csv`
+- `data/interim/qa/anncsu_coordinate_review_batch_1_2025.csv`
+- `data/interim/qa/anncsu_coordinate_review_batch_1_report_2025.md`
+
 The retraining path is therefore review-first:
 
 - collect accepted manual coordinate overrides and rejected candidates;
