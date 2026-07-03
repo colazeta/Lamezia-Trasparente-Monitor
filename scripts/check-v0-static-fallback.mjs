@@ -5,6 +5,7 @@ import path from "node:path";
 import process from "node:process";
 
 const DEFAULT_DIST_DIR = "artifacts/lamezia-trasparente/dist/public";
+const CLOUDFLARE_REDIRECTS_FILE = "_redirects";
 const STATIC_HEALTHZ_MARKER = "healthz.json";
 const EXPECTED_HEALTHZ_NOT_CHECKED = [
   "api",
@@ -184,18 +185,73 @@ function routeFallbackPath(distDir, route) {
   return path.join(distDir, clean, "index.html");
 }
 
+function parseRedirectRules(redirectsText) {
+  return redirectsText
+    .split(/\r?\n/)
+    .map((line) => line.trim())
+    .filter((line) => line && !line.startsWith("#"))
+    .map((line) => {
+      const [source, target, status] = line.split(/\s+/);
+      return { source, target, status };
+    });
+}
+
+function assertAlboRedirectPolicy(redirectsText, redirectsPath) {
+  const rules = parseRedirectRules(redirectsText);
+  const alboRule = rules.find((rule) => rule.source === "/albo");
+
+  if (!alboRule) {
+    throw new Error(
+      `Cloudflare _redirects must declare an exact /albo rule: ${redirectsPath}`,
+    );
+  }
+
+  if (alboRule.target === "/index.html" && alboRule.status === "200") {
+    throw new Error(
+      "Cloudflare redirects /albo to / when /albo rewrites to /index.html; use /albo -> /albo/ instead.",
+    );
+  }
+
+  if (
+    alboRule.target !== "/albo/" ||
+    !["301", "302", "307", "308"].includes(alboRule.status)
+  ) {
+    throw new Error(
+      `Cloudflare _redirects must canonicalize /albo to /albo/: ${redirectsPath}`,
+    );
+  }
+
+  const alboFallbackRule = rules.find(
+    (rule) =>
+      rule.source === "/albo/*" &&
+      rule.target === "/index.html" &&
+      rule.status === "200",
+  );
+  if (!alboFallbackRule) {
+    throw new Error(
+      `Cloudflare _redirects must keep /albo/* as an SPA fallback: ${redirectsPath}`,
+    );
+  }
+}
+
 async function main() {
   const { distDir, routes } = parseArgs(process.argv.slice(2));
   const absoluteDistDir = path.resolve(distDir);
   const indexPath = path.join(absoluteDistDir, "index.html");
   const healthzPath = path.join(absoluteDistDir, STATIC_HEALTHZ_MARKER);
+  const redirectsPath = path.join(absoluteDistDir, CLOUDFLARE_REDIRECTS_FILE);
 
   await assertDirectory(absoluteDistDir, "Static build directory");
   await assertReadableFile(indexPath, "Static fallback index.html");
   await assertReadableFile(healthzPath, "Static fallback healthz.json");
+  await assertReadableFile(redirectsPath, "Cloudflare Pages _redirects");
 
   const healthz = await readJsonFile(healthzPath, "Static fallback healthz.json");
   assertHealthzMarker(healthz, healthzPath);
+  assertAlboRedirectPolicy(
+    await readFile(redirectsPath, "utf8"),
+    redirectsPath,
+  );
 
   const indexHtml = await readFile(indexPath, "utf8");
   for (const expectedText of REQUIRED_PUBLIC_TEXT) {
@@ -240,6 +296,7 @@ async function main() {
     distDir: absoluteDistDir,
     index: indexPath,
     staticHealthz: healthzPath,
+    redirects: redirectsPath,
     assetsChecked: assets.length,
     routes: routeResults,
     note:
