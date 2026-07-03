@@ -91,25 +91,60 @@ export async function ensureOrgani(): Promise<void> {
 function membershipsForOfficial(
   official: Official,
   bySlug: Map<string, Organo>,
-): { organoId: number; membershipRole: string | null }[] {
-  const out: { organoId: number; membershipRole: string | null }[] = [];
+): {
+  organoId: number;
+  membershipRole: string | null;
+  termLabel: string;
+  startDate: Date | null;
+  endDate: Date | null;
+  sourceLabel: string;
+  sourceUrl: string | null;
+  notes: string;
+}[] {
+  const out: {
+    organoId: number;
+    membershipRole: string | null;
+    termLabel: string;
+    startDate: Date | null;
+    endDate: Date | null;
+    sourceLabel: string;
+    sourceUrl: string | null;
+    notes: string;
+  }[] = [];
   const consiglio = bySlug.get("consiglio-comunale");
   const giunta = bySlug.get("giunta-comunale");
   const title = official.roleTitle ?? null;
+  const termLabel =
+    official.status === "in_carica"
+      ? "Mandato corrente"
+      : "Incarico cessato o mandato precedente";
+  const startDate = official.appointmentDate ?? null;
+  const endDate = null;
+  const sourceLabel = "Scheda soggetto nel registro civico";
+  const sourceUrl = null;
+  const notes =
+    "Membership derivata dal ruolo registrato nel profilo soggetto; da verificare con atti di proclamazione, nomina o composizione dell'organo.";
+  const membership = (organoId: number, membershipRole: string | null) => ({
+    organoId,
+    membershipRole,
+    termLabel,
+    startDate,
+    endDate,
+    sourceLabel,
+    sourceUrl,
+    notes,
+  });
 
   switch (official.role) {
     case "sindaco":
       if (giunta)
-        out.push({
-          organoId: giunta.id,
-          membershipRole: "Sindaco (Presidente)",
-        });
+        out.push(membership(giunta.id, "Sindaco (Presidente)"));
       if (consiglio)
-        out.push({ organoId: consiglio.id, membershipRole: "Sindaco" });
+        out.push(membership(consiglio.id, "Sindaco"));
       break;
     case "assessore":
       if (giunta)
-        out.push({ organoId: giunta.id, membershipRole: title ?? "Assessore" });
+        out.push(membership(giunta.id, title ?? "Assessore"));
       break;
     case "consigliere":
       if (consiglio) {
@@ -119,7 +154,7 @@ function membershipsForOfficial(
         } else if (title && /capogruppo/i.test(title)) {
           membershipRole = title;
         }
-        out.push({ organoId: consiglio.id, membershipRole });
+        out.push(membership(consiglio.id, membershipRole));
       }
       break;
     default:
@@ -138,15 +173,26 @@ export async function syncOrganoMemberships(): Promise<void> {
     organoId: number;
     officialId: number;
     membershipRole: string | null;
+    termLabel: string;
+    startDate: Date | null;
+    endDate: Date | null;
+    sourceLabel: string;
+    sourceUrl: string | null;
+    notes: string;
     position: number;
   }[] = [];
   for (const official of officials) {
-    if (official.status !== "in_carica") continue;
     for (const m of membershipsForOfficial(official, bySlug)) {
       rows.push({
         organoId: m.organoId,
         officialId: official.id,
         membershipRole: m.membershipRole,
+        termLabel: m.termLabel,
+        startDate: m.startDate,
+        endDate: m.endDate,
+        sourceLabel: m.sourceLabel,
+        sourceUrl: m.sourceUrl,
+        notes: m.notes,
         position: rows.length,
       });
     }

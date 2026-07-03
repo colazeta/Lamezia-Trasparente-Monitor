@@ -145,6 +145,8 @@ export * from './organo';
 export * from './organoDetail';
 export * from './organoMember';
 export * from './organoRef';
+export * from './organoTerm';
+export * from './organoTermStatus';
 export * from './oversightOpinion';
 export * from './oversightOpinionDetail';
 export * from './oversightOpinionDocument';

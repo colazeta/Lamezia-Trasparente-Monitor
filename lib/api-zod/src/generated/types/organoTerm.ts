@@ -5,30 +5,21 @@
  * API specification
  * OpenAPI spec version: 0.1.0
  */
+import type { OrganoMember } from './organoMember';
+import type { OrganoTermStatus } from './organoTermStatus';
 
-export interface OrganoMember {
-  officialId: number;
-  name: string;
-  slug: string;
-  role: string;
-  /** @nullable */
-  roleTitle?: string | null;
-  /** @nullable */
-  group?: string | null;
-  status: string;
-  /** @nullable */
-  membershipRole: string | null;
-  /** @nullable */
-  termLabel: string | null;
+export interface OrganoTerm {
+  label: string;
   /** @nullable */
   startDate: string | null;
   /** @nullable */
   endDate: string | null;
+  status: OrganoTermStatus;
   /** @nullable */
   sourceLabel: string | null;
   /** @nullable */
   sourceUrl: string | null;
   /** @nullable */
   notes: string | null;
-  isCurrent: boolean;
+  members: OrganoMember[];
 }

@@ -18,8 +18,98 @@ import { computeOdgMacrotemi } from "./publications";
 
 const router: IRouter = Router();
 
+type MemberRow = {
+  officialId: number;
+  name: string;
+  slug: string;
+  role: string;
+  roleTitle: string | null;
+  group: string | null;
+  status: string;
+  membershipRole: string | null;
+  termLabel: string | null;
+  startDate: Date | null;
+  endDate: Date | null;
+  sourceLabel: string | null;
+  sourceUrl: string | null;
+  notes: string | null;
+  position: number;
+};
+
 function organoRef(o: Pick<Organo, "id" | "type" | "name" | "slug">) {
   return { id: o.id, type: o.type, name: o.name, slug: o.slug };
+}
+
+function toIsoDate(value: Date | null): string | null {
+  return value ? value.toISOString() : null;
+}
+
+function isCurrentMember(member: Pick<MemberRow, "status" | "endDate">): boolean {
+  return member.status === "in_carica" && member.endDate === null;
+}
+
+function mapMember(member: MemberRow) {
+  return {
+    officialId: member.officialId,
+    name: member.name,
+    slug: member.slug,
+    role: member.role,
+    roleTitle: member.roleTitle,
+    group: member.group,
+    status: member.status,
+    membershipRole: member.membershipRole,
+    termLabel: member.termLabel,
+    startDate: toIsoDate(member.startDate),
+    endDate: toIsoDate(member.endDate),
+    sourceLabel: member.sourceLabel,
+    sourceUrl: member.sourceUrl,
+    notes: member.notes,
+    isCurrent: isCurrentMember(member),
+  };
+}
+
+function buildTerms(members: MemberRow[]) {
+  const terms = new Map<
+    string,
+    {
+      label: string;
+      startDate: string | null;
+      endDate: string | null;
+      status: "current" | "historical";
+      sourceLabel: string | null;
+      sourceUrl: string | null;
+      notes: string | null;
+      members: ReturnType<typeof mapMember>[];
+    }
+  >();
+
+  for (const member of members) {
+    const label = member.termLabel ?? "Mandato non classificato";
+    const startDate = toIsoDate(member.startDate);
+    const endDate = toIsoDate(member.endDate);
+    const key = `${label}|${startDate ?? ""}|${endDate ?? ""}`;
+    const current = isCurrentMember(member);
+    const existing =
+      terms.get(key) ??
+      {
+        label,
+        startDate,
+        endDate,
+        status: current ? "current" : "historical",
+        sourceLabel: member.sourceLabel,
+        sourceUrl: member.sourceUrl,
+        notes: member.notes,
+        members: [],
+      };
+    if (current) existing.status = "current";
+    existing.members.push(mapMember(member));
+    terms.set(key, existing);
+  }
+
+  return Array.from(terms.values()).sort((a, b) => {
+    if (a.status !== b.status) return a.status === "current" ? -1 : 1;
+    return (b.startDate ?? "").localeCompare(a.startDate ?? "");
+  });
 }
 
 /**
@@ -95,6 +185,23 @@ router.get("/organi", async (_req, res) => {
       count: sql<number>`count(*)::int`,
     })
     .from(organiMembersTable)
+    .innerJoin(
+      officialsTable,
+      eq(organiMembersTable.officialId, officialsTable.id),
+    )
+    .where(
+      and(
+        eq(officialsTable.status, "in_carica"),
+        sql`${organiMembersTable.endDate} is null`,
+      ),
+    )
+    .groupBy(organiMembersTable.organoId);
+  const historyCounts = await db
+    .select({
+      organoId: organiMembersTable.organoId,
+      count: sql<number>`count(*)::int`,
+    })
+    .from(organiMembersTable)
     .groupBy(organiMembersTable.organoId);
   const sedutaCounts = await db
     .select({
@@ -105,6 +212,7 @@ router.get("/organi", async (_req, res) => {
     .groupBy(seduteTable.organoId);
 
   const memberMap = new Map(memberCounts.map((m) => [m.organoId, m.count]));
+  const historyMap = new Map(historyCounts.map((m) => [m.organoId, m.count]));
   const sedutaMap = new Map(
     sedutaCounts.map((s) => [s.organoId, s.count]),
   );
@@ -115,6 +223,7 @@ router.get("/organi", async (_req, res) => {
       description: o.description,
       position: o.position,
       memberCount: memberMap.get(o.id) ?? 0,
+      historyCount: historyMap.get(o.id) ?? 0,
       sedutaCount: sedutaMap.get(o.id) ?? 0,
     })),
   );
@@ -141,6 +250,12 @@ router.get("/organi/:slug", async (req, res) => {
       group: officialsTable.group,
       status: officialsTable.status,
       membershipRole: organiMembersTable.membershipRole,
+      termLabel: organiMembersTable.termLabel,
+      startDate: organiMembersTable.startDate,
+      endDate: organiMembersTable.endDate,
+      sourceLabel: organiMembersTable.sourceLabel,
+      sourceUrl: organiMembersTable.sourceUrl,
+      notes: organiMembersTable.notes,
       position: organiMembersTable.position,
     })
     .from(organiMembersTable)
@@ -149,7 +264,12 @@ router.get("/organi/:slug", async (req, res) => {
       eq(organiMembersTable.officialId, officialsTable.id),
     )
     .where(eq(organiMembersTable.organoId, organo.id))
-    .orderBy(asc(organiMembersTable.position), asc(officialsTable.name));
+    .orderBy(
+      asc(organiMembersTable.endDate),
+      desc(organiMembersTable.startDate),
+      asc(organiMembersTable.position),
+      asc(officialsTable.name),
+    );
 
   const sedute = await db
     .select()
@@ -159,23 +279,17 @@ router.get("/organi/:slug", async (req, res) => {
 
   const reportSet = await sedutaIdsWithReport(sedute.map((s) => s.id));
   const pubMap = await publicationsForSedute(sedute);
+  const currentMembers = members.filter(isCurrentMember);
 
   res.json({
     ...organoRef(organo),
     description: organo.description,
     position: organo.position,
-    memberCount: members.length,
+    memberCount: currentMembers.length,
+    historyCount: members.length,
     sedutaCount: sedute.length,
-    members: members.map((m) => ({
-      officialId: m.officialId,
-      name: m.name,
-      slug: m.slug,
-      role: m.role,
-      roleTitle: m.roleTitle,
-      group: m.group,
-      status: m.status,
-      membershipRole: m.membershipRole,
-    })),
+    members: currentMembers.map(mapMember),
+    terms: buildTerms(members),
     sedute: sedute.map((s) =>
       mapSeduta(
         s,

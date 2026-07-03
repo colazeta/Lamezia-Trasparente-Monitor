@@ -7,9 +7,11 @@
  */
 import type { Organo } from './organo';
 import type { OrganoMember } from './organoMember';
+import type { OrganoTerm } from './organoTerm';
 import type { Seduta } from './seduta';
 
 export type OrganoDetail = Organo & {
   members: OrganoMember[];
+  terms: OrganoTerm[];
   sedute: Seduta[];
 };

@@ -141,6 +141,10 @@ function mapOfficial(o: Official) {
   };
 }
 
+function toIsoDate(value: Date | null): string | null {
+  return value ? value.toISOString() : null;
+}
+
 function mapActivity(a: OfficialActivity) {
   return {
     id: a.id,
@@ -228,6 +232,12 @@ async function buildProfile(official: Official) {
         name: organiTable.name,
         slug: organiTable.slug,
         membershipRole: organiMembersTable.membershipRole,
+        termLabel: organiMembersTable.termLabel,
+        startDate: organiMembersTable.startDate,
+        endDate: organiMembersTable.endDate,
+        sourceLabel: organiMembersTable.sourceLabel,
+        sourceUrl: organiMembersTable.sourceUrl,
+        notes: organiMembersTable.notes,
         position: organiTable.position,
       })
       .from(organiMembersTable)
@@ -259,6 +269,13 @@ async function buildProfile(official: Official) {
       name: o.name,
       slug: o.slug,
       membershipRole: o.membershipRole,
+      termLabel: o.termLabel,
+      startDate: toIsoDate(o.startDate),
+      endDate: toIsoDate(o.endDate),
+      sourceLabel: o.sourceLabel,
+      sourceUrl: o.sourceUrl,
+      notes: o.notes,
+      isCurrent: official.status === "in_carica" && o.endDate === null,
     })),
   };
 }
