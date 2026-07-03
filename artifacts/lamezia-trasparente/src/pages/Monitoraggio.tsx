@@ -91,7 +91,7 @@ const HUB_MODULES = [
     label: "Delibere e Albo",
     links: [
       { href: "/delibere", label: "Delibere" },
-      { href: "/albo", label: "Albo Pretorio" },
+      { href: "/albo/", label: "Albo Pretorio" },
     ],
     status: "automatico da fonti pubbliche",
     description:

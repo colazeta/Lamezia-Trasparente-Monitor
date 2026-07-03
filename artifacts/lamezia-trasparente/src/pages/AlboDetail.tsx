@@ -153,7 +153,7 @@ export function AlboDetail() {
   return (
     <div className="container mx-auto px-4 py-8 md:py-12 max-w-4xl">
       <Link
-        href="/albo"
+        href="/albo/"
         className="inline-flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-primary transition-colors mb-6"
       >
         <ArrowLeft className="h-4 w-4" aria-hidden="true" />

@@ -160,7 +160,7 @@ export const PUBLIC_INDEXABLE_ROUTES = [
     path: "/incarichimetro",
     rationale: "Pagina pubblica di sintesi sugli incarichi.",
   },
-  { path: "/albo", rationale: "Indice pubblico dell'albo." },
+  { path: "/albo/", rationale: "Indice pubblico dell'albo." },
   {
     path: "/atti-fondamentali",
     rationale: "Pagina pubblica degli atti fondamentali.",

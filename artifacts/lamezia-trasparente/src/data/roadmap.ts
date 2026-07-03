@@ -68,7 +68,7 @@ export const ROADMAP_MODULES: RoadmapModule[] = [
       "Non sostituisce l'Albo ufficiale; pubblicazioni, date, allegati e contenuti devono essere verificati sulla fonte primaria.",
     priority:
       "Mantenere tracciabilità dei rinvii, leggibilità mobile e cautele sui metadati parziali.",
-    hrefs: [{ href: "/albo", label: "Apri Albo" }],
+    hrefs: [{ href: "/albo/", label: "Apri Albo" }],
   },
   {
     name: "PNRR Tracker",
