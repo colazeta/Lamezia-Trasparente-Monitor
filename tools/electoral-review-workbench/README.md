@@ -69,11 +69,14 @@ Generate local ANNCSU anchor candidates for suspect coordinates:
 
 ```powershell
 python scripts/generate_anncsu_local_anchor_coordinate_candidates.py
+python scripts/prepare_anncsu_coordinate_review_batch.py
 ```
 
 These candidates use non-suspect same-street ANNCSU civics as review anchors.
 They are not applied automatically and must still be confirmed through a
-`manual_coordinate_override` decision.
+`manual_coordinate_override` decision. The review-batch script turns the
+candidate list into a full priority queue plus a first batch of 50 high-signal
+cases for manual workbench review.
 
 Build the auditable recovery layer and training set:
 
