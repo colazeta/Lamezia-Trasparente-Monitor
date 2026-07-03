@@ -20,23 +20,23 @@ jobs:
     timeout-minutes: 25
 
     steps:
-      - name: Check early Rome morning
+      - name: Note Rome refresh window
         id: rome_morning
         shell: bash
         run: |
+          echo "should_run=true" >> "$GITHUB_OUTPUT"
+
           if [ "${{ github.event_name }}" != "schedule" ]; then
-            echo "should_run=true" >> "$GITHUB_OUTPUT"
-            echo "Manual dispatch: running outside the scheduled-window guard."
+            echo "Manual dispatch: running outside the scheduled-window note."
             exit 0
           fi
 
           rome_hour="$(TZ=Europe/Rome date +%H)"
           if [ "$rome_hour" -ge 6 ] && [ "$rome_hour" -le 8 ]; then
-            echo "should_run=true" >> "$GITHUB_OUTPUT"
             echo "Scheduled run accepted for Europe/Rome hour $rome_hour."
           else
-            echo "should_run=false" >> "$GITHUB_OUTPUT"
-            echo "Scheduled run skipped for Europe/Rome hour $rome_hour."
+            echo "GitHub Actions started the daily run at Europe/Rome hour $rome_hour."
+            echo "Continuing anyway so a delayed scheduler does not leave the previous-day dataset stale."
           fi
 
       - name: Checkout
