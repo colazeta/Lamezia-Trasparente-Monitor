@@ -2,6 +2,7 @@
 
 Data controllo: 2026-06-20.
 Aggiornamento audit pubblico: 2026-06-26.
+Aggiornamento indicatori: 2026-06-29.
 
 ## File controllati
 
@@ -18,6 +19,7 @@ Aggiornamento audit pubblico: 2026-06-26.
 - Popolazione totale sommata sulle sole sezioni con `P1` disponibile: 67.240 residenti.
 - Tutte le feature mantengono `istat_municipal_code` uguale a `079160`.
 - Tutte le geometrie sono `Polygon`; il controllo tecnico non rileva anelli aperti, coordinate non finite o geometrie mancanti.
+- Il dizionario indicatori abilita 9 indicatori pubblici ricavati da campi verificati nel tracciato ufficiale ISTAT 2023. Le percentuali restano `null` quando il denominatore e' zero, nullo o mancante.
 
 ## Null, missing e zero
 
@@ -27,7 +29,7 @@ Nel file processato la differenza e' intenzionale:
 - missing: il campo atteso non esiste nel contratto dati. Questa condizione deve essere trattata come errore di struttura o indicatore non attivabile.
 - `0`: il valore e' presente e pari a zero. Nel frontend deve apparire come `0`, non come dato assente.
 
-Per l'indicatore pubblico iniziale `popolazione-residente`, i campi controllati sono `indicators_istat_2023.p1` e `indicators_istat_2023.popolazione_totale`.
+Per l'indicatore pubblico `popolazione-residente`, i campi controllati sono `indicators_istat_2023.p1` e `indicators_istat_2023.popolazione_totale`. Per gli indicatori percentuali, `null` puo' derivare anche da denominatore pari a zero: in quel caso il numeratore puo' essere presente, ma la quota non viene calcolata.
 
 ## Audit 2021/2023 delle 71 sezioni null
 
@@ -77,11 +79,19 @@ Il GeoJSON ISTAT controllato non contiene proprieta' o riferimenti a Zornade, ca
 
 ## Stato indicatori
 
-Il solo indicatore abilitato e':
+Indicatori abilitati nel dizionario pubblico:
 
-- `popolazione-residente`, campo ISTAT `P1`, campo pubblico `popolazione_totale`, unita' `persone`.
+- `popolazione-residente`: campo ISTAT `P1`, campo pubblico `popolazione_totale`, unita' `persone`, 246 valori disponibili e 71 `null`.
+- `quota-0-14`: formula `(P14 + P15 + P16) / P1 * 100`, campo pubblico `quota_0_14`, unita' `percentuale`, 224 valori disponibili e 93 `null`.
+- `quota-anziani`: formula `(P27 + P28 + P29) / P1 * 100`, campo pubblico `quota_65_piu`, unita' `percentuale`, 224 valori disponibili e 93 `null`.
+- `quota-stranieri`: formula `ST1 / P1 * 100`, campo pubblico `quota_stranieri`, unita' `percentuale`, 224 valori disponibili e 93 `null`.
+- `famiglie`: campo ISTAT `PF1`, campo pubblico `famiglie_totale`, unita' `famiglie`, 246 valori disponibili e 71 `null`.
+- `abitazioni`: campo ISTAT `A8`, campo pubblico `abitazioni_totali`, unita' `abitazioni`, 246 valori disponibili e 71 `null`.
+- `automobili`: campo ISTAT `NA1`, campo pubblico `automobili_totale`, unita' `automobili`, 246 valori disponibili e 71 `null`.
+- `quota-titoli-terziari`: formula `P90 / P83 * 100`, campo pubblico `quota_titoli_terziari`, unita' `percentuale`, 224 valori disponibili e 93 `null`.
+- `occupati-15-64`: campo ISTAT `P101`, campo pubblico `occupati_15_64`, unita' `persone`, 246 valori disponibili e 71 `null`.
 
-I candidati `quota-minori`, `quota-anziani`, `quota-stranieri`, `famiglie`, `abitazioni`, `auto`, `istruzione` e `lavoro-occupazione` restano in preparazione nel dizionario indicatori. Non vanno abilitati finche' campo sorgente, numeratore, denominatore e caveat non sono verificati contro il tracciato ISTAT.
+Il candidato `quota-minori` resta disabilitato: il tracciato ISTAT 2023 usato espone classi quinquennali e non isola la fascia 15-17 anni, quindi una quota minori `<18` non e' materializzata. La quota pubblicata come sicura e' `quota-0-14`.
 
 ## Esito per rendering web
 

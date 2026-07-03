@@ -60,6 +60,14 @@ type Metadata = {
     variableFictitiousRows: number;
   };
   qa?: {
+    indicatorCoverage?: Record<
+      string,
+      {
+        availableCount: number;
+        nullCount: number;
+        zeroCount: number;
+      }
+    >;
     populationValueCoverage?: {
       totalFeatures: number;
       availableCount: number;
@@ -73,17 +81,26 @@ type IndicatorDictionary = {
   indicators: Array<{
     id: string;
     istatSourceField: string | null;
+    istatSourceDefinitions?: Record<string, string>;
     publicField: string | null;
     publicLabel: string;
     category: string;
     unitOfMeasure: string;
-    numerator: string | null;
+    numerator: string | string[] | null;
     denominator: string | null;
+    formula?: string;
     enabled: boolean;
+    status?: string;
     sourceYear: string;
     territorialLevel: string;
+    missingnessCount?: number;
     publicInterpretation: string;
     knownCaveats: string[];
+  }>;
+  disabledCandidates?: Array<{
+    id: string;
+    enabled: boolean;
+    reason: string;
   }>;
 };
 
@@ -110,7 +127,9 @@ const dictionary = readJson<IndicatorDictionary>(
 );
 
 function getPolygons(geometry: Geometry): Position[][][] {
-  return geometry.type === "Polygon" ? [geometry.coordinates] : geometry.coordinates;
+  return geometry.type === "Polygon"
+    ? [geometry.coordinates]
+    : geometry.coordinates;
 }
 
 function validateGeometry(feature: Feature): string[] {
@@ -123,7 +142,9 @@ function validateGeometry(feature: Feature): string[] {
   for (const polygon of getPolygons(feature.geometry)) {
     for (const ring of polygon) {
       if (ring.length < 4) {
-        problems.push(`${feature.properties.sezione_censimento_id}: short ring`);
+        problems.push(
+          `${feature.properties.sezione_censimento_id}: short ring`,
+        );
         continue;
       }
 
@@ -151,7 +172,9 @@ test("processed ISTAT layer keeps only Lamezia census sections", () => {
   assert.equal(collection.features.length, 317);
 
   const municipalCodes = new Set(
-    collection.features.map((feature) => feature.properties.istat_municipal_code),
+    collection.features.map(
+      (feature) => feature.properties.istat_municipal_code,
+    ),
   );
   assert.deepEqual([...municipalCodes], ["079160"]);
 
@@ -236,35 +259,103 @@ test("null population values are preserved and not coerced to zero", () => {
   assert.ok(nullFeature);
   assert.ok(zeroFeature);
   assert.equal(nullFeature.properties.indicators_istat_2023.p1, null);
-  assert.equal(nullFeature.properties.indicators_istat_2023.popolazione_totale, null);
+  assert.equal(
+    nullFeature.properties.indicators_istat_2023.popolazione_totale,
+    null,
+  );
   assert.equal(zeroFeature.properties.indicators_istat_2023.p1, 0);
-  assert.equal(zeroFeature.properties.indicators_istat_2023.popolazione_totale, 0);
+  assert.equal(
+    zeroFeature.properties.indicators_istat_2023.popolazione_totale,
+    0,
+  );
+});
+
+test("enabled derived indicators preserve formulas, nulls and zero denominators", () => {
+  const formulaFeature = collection.features.find(
+    (feature) => feature.properties.sezione_censimento_id === "0791600000001",
+  );
+  const zeroDenominatorFeature = collection.features.find(
+    (feature) => feature.properties.sezione_censimento_id === "0791600000198",
+  );
+  const nullFeature = collection.features.find(
+    (feature) => feature.properties.sezione_censimento_id === "0791600000204",
+  );
+
+  assert.ok(formulaFeature);
+  assert.ok(zeroDenominatorFeature);
+  assert.ok(nullFeature);
+
+  const indicators = formulaFeature.properties.indicators_istat_2023;
+  assert.equal(indicators.popolazione_0_14, 36);
+  assert.equal(indicators.quota_0_14, 12.68);
+  assert.equal(indicators.popolazione_65_piu, 91);
+  assert.equal(indicators.quota_65_piu, 32.04);
+  assert.equal(indicators.stranieri_totale, 22);
+  assert.equal(indicators.quota_stranieri, 7.75);
+  assert.equal(indicators.famiglie_totale, 124);
+  assert.equal(indicators.abitazioni_totali, 253);
+  assert.equal(indicators.automobili_totale, 173);
+  assert.equal(indicators.quota_titoli_terziari, 8.37);
+  assert.equal(indicators.occupati_15_64, 77);
+
+  const zeroDenominatorIndicators =
+    zeroDenominatorFeature.properties.indicators_istat_2023;
+  assert.equal(zeroDenominatorIndicators.p1, 0);
+  assert.equal(zeroDenominatorIndicators.popolazione_0_14, 0);
+  assert.equal(zeroDenominatorIndicators.quota_0_14, null);
+  assert.equal(zeroDenominatorIndicators.quota_65_piu, null);
+  assert.equal(zeroDenominatorIndicators.quota_stranieri, null);
+
+  const nullIndicators = nullFeature.properties.indicators_istat_2023;
+  assert.equal(nullIndicators.famiglie_totale, null);
+  assert.equal(nullIndicators.abitazioni_totali, null);
+  assert.equal(nullIndicators.automobili_totale, null);
+  assert.equal(nullIndicators.quota_titoli_terziari, null);
 });
 
 test("metadata records source attribution, known limits and QA coverage", () => {
   assert.equal(metadata.sourceInstitution, "ISTAT");
-  assert.equal(metadata.publicLabel, "Dato ufficiale ISTAT per sezione censuaria");
+  assert.equal(
+    metadata.publicLabel,
+    "Dato ufficiale ISTAT per sezione censuaria",
+  );
   assert.equal(metadata.territorialLevel, "sezione di censimento");
   assert.equal(metadata.municipality, "Lamezia Terme");
   assert.equal(metadata.istatMunicipalCode, "079160");
   assert.match(metadata.sourceDataset, /Basi territoriali 2021/);
   assert.match(metadata.sourceYear, /2023/);
-  assert.match(metadata.verificationStatus, /P1/);
+  assert.match(metadata.verificationStatus, /9 indicatori pubblici/);
   assert.equal(metadata.counts.outputFeatures, 317);
   assert.equal(metadata.counts.matchedVariables, 246);
   assert.equal(metadata.counts.missingVariables, 71);
-  assert.equal(metadata.counts.skippedFictitious, 1);
+  assert.equal(metadata.counts.skippedFictitious, 0);
   assert.equal(metadata.counts.variableFictitiousRows, 1);
   assert.ok(
     metadata.knownLimits.some(
       (limit) => limit.includes("246") && limit.includes("317"),
     ),
   );
-  assert.ok(metadata.knownLimits.some((limit) => /Zornade|catastali/.test(limit)));
+  assert.ok(
+    metadata.knownLimits.some((limit) => /Zornade|catastali/.test(limit)),
+  );
+  assert.ok(
+    metadata.knownLimits.some(
+      (limit) => limit.includes("0-14") && limit.includes("minori <18"),
+    ),
+  );
+  assert.ok(metadata.knownLimits.some((limit) => /denominatore/.test(limit)));
   assert.equal(metadata.qa?.populationValueCoverage?.totalFeatures, 317);
   assert.equal(metadata.qa?.populationValueCoverage?.availableCount, 246);
   assert.equal(metadata.qa?.populationValueCoverage?.nullCount, 71);
   assert.equal(metadata.qa?.populationValueCoverage?.zeroCount, 22);
+  assert.equal(
+    metadata.qa?.indicatorCoverage?.["quota-stranieri"]?.availableCount,
+    224,
+  );
+  assert.equal(
+    metadata.qa?.indicatorCoverage?.["quota-stranieri"]?.nullCount,
+    93,
+  );
 });
 
 test("processed geometries pass the current web rendering gate", () => {
@@ -277,33 +368,60 @@ test("processed geometries pass the current web rendering gate", () => {
   assert.deepEqual(problems, []);
 });
 
-test("indicator dictionary enables only the validated population indicator", () => {
-  const enabled = dictionary.indicators.filter((indicator) => indicator.enabled);
+test("indicator dictionary enables only fields verified against the ISTAT 2023 layout", () => {
+  const enabled = dictionary.indicators.filter(
+    (indicator) => indicator.enabled,
+  );
   assert.deepEqual(
     enabled.map((indicator) => indicator.id),
-    ["popolazione-residente"],
+    [
+      "popolazione-residente",
+      "quota-0-14",
+      "quota-anziani",
+      "quota-stranieri",
+      "famiglie",
+      "abitazioni",
+      "automobili",
+      "quota-titoli-terziari",
+      "occupati-15-64",
+    ],
   );
-  assert.equal(enabled[0].istatSourceField, "P1");
-  assert.equal(enabled[0].publicField, "popolazione_totale");
-  assert.equal(enabled[0].unitOfMeasure, "persone");
 
-  for (const expectedId of [
-    "quota-minori",
-    "quota-anziani",
-    "quota-stranieri",
-    "famiglie",
-    "abitazioni",
-    "auto",
-    "istruzione",
-    "lavoro-occupazione",
-  ]) {
-    const indicator = dictionary.indicators.find(
-      (candidate) => candidate.id === expectedId,
-    );
-    assert.ok(indicator, `missing candidate indicator ${expectedId}`);
-    assert.equal(indicator.enabled, false);
-    assert.equal(indicator.istatSourceField, null);
-    assert.equal(indicator.territorialLevel, "sezione di censimento");
-    assert.ok(indicator.knownCaveats.length > 0);
-  }
+  const byId = new Map(
+    dictionary.indicators.map((indicator) => [indicator.id, indicator]),
+  );
+  const population = byId.get("popolazione-residente");
+  const age014 = byId.get("quota-0-14");
+  const elderly = byId.get("quota-anziani");
+  const foreignResidents = byId.get("quota-stranieri");
+  const education = byId.get("quota-titoli-terziari");
+  const employment = byId.get("occupati-15-64");
+
+  assert.equal(population?.istatSourceField, "P1");
+  assert.equal(population?.publicField, "popolazione_totale");
+  assert.equal(population?.unitOfMeasure, "persone");
+  assert.equal(age014?.formula, "(P14 + P15 + P16) / P1 * 100");
+  assert.deepEqual(age014?.numerator, ["P14", "P15", "P16"]);
+  assert.equal(age014?.denominator, "P1");
+  assert.equal(age014?.unitOfMeasure, "percentuale");
+  assert.equal(age014?.missingnessCount, 93);
+  assert.ok(
+    age014?.knownCaveats.some((caveat) => caveat.includes("minori <18")),
+  );
+  assert.equal(elderly?.formula, "(P27 + P28 + P29) / P1 * 100");
+  assert.equal(foreignResidents?.istatSourceField, "ST1 + P1");
+  assert.equal(foreignResidents?.formula, "ST1 / P1 * 100");
+  assert.equal(foreignResidents?.missingnessCount, 93);
+  assert.equal(education?.denominator, "P83");
+  assert.equal(employment?.formula, "P101");
+  assert.ok(
+    employment?.knownCaveats.some((caveat) => /conteggio/.test(caveat)),
+  );
+
+  const disabledMinorShare = dictionary.disabledCandidates?.find(
+    (candidate) => candidate.id === "quota-minori",
+  );
+  assert.ok(disabledMinorShare);
+  assert.equal(disabledMinorShare.enabled, false);
+  assert.match(disabledMinorShare.reason, /15-17/);
 });

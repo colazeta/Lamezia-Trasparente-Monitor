@@ -1,10 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import {
-  GeoJSON,
-  MapContainer,
-  TileLayer,
-  useMap,
-} from "react-leaflet";
+import { GeoJSON, MapContainer, TileLayer, useMap } from "react-leaflet";
 import { type LatLngBoundsExpression } from "leaflet";
 import "leaflet/dist/leaflet.css";
 import {
@@ -18,7 +13,6 @@ import {
 import {
   ATLANTE_INDICATOR_CATEGORIES,
   buildAtlanteDistribution,
-  findAtlanteDistributionBin,
   type AtlanteDistributionBin,
   type AtlanteFeature,
   type AtlanteFeatureCollection,
@@ -60,15 +54,17 @@ const BASEMAP_PROVIDERS = [
   },
 ] as const;
 const CHOROPLETH_COLORS = [
-  "hsl(48 94% 86%)",
-  "hsl(152 52% 76%)",
-  "hsl(190 58% 66%)",
-  "hsl(211 64% 54%)",
-  "hsl(244 45% 42%)",
+  "rgb(255 244 188)",
+  "rgb(173 220 190)",
+  "rgb(101 183 202)",
+  "rgb(63 128 190)",
+  "rgb(77 67 142)",
 ];
 const EMPTY_COLOR = "hsl(220 12% 84%)";
 
-type BasemapId = (typeof BASEMAP_PROVIDERS)[number]["id"] | typeof NO_BASEMAP_ID;
+type BasemapId =
+  | (typeof BASEMAP_PROVIDERS)[number]["id"]
+  | typeof NO_BASEMAP_ID;
 
 type GeographicBounds = {
   minLng: number;
@@ -181,8 +177,8 @@ export function AtlanteTerritoriale() {
     [values],
   );
   const coloredBins = useMemo(
-    () => colorDistributionBins(distribution.bins),
-    [distribution.bins],
+    () => colorDistributionBins(distribution.bins, distribution),
+    [distribution],
   );
   const bounds = useMemo(
     () => (collection ? computeBounds(collection) : null),
@@ -190,8 +186,8 @@ export function AtlanteTerritoriale() {
   );
   const activeSectionId = hoveredSectionId ?? selectedSectionId;
   const activeFeature = activeSectionId
-    ? features.find((feature) => getSectionId(feature) === activeSectionId) ??
-      null
+    ? (features.find((feature) => getSectionId(feature) === activeSectionId) ??
+      null)
     : null;
   const activeValue =
     activeFeature && activeIndicator
@@ -342,7 +338,9 @@ function ActiveContextStrip({
     },
     {
       label: "Copertura dati",
-      value: missingLabel ? `${coverageLabel} · ${missingLabel}` : coverageLabel,
+      value: missingLabel
+        ? `${coverageLabel} · ${missingLabel}`
+        : coverageLabel,
     },
     {
       label: "Selezione",
@@ -401,13 +399,13 @@ function IndicatorControl({
 }) {
   const entries = ATLANTE_INDICATOR_CATEGORIES.map((category) => ({
     category,
-    indicator: availableIndicators.find(
+    indicators: availableIndicators.filter(
       (candidate) => candidate.categoryId === category.id,
     ),
   }));
   const orderedEntries = [
-    ...entries.filter((entry) => entry.indicator),
-    ...entries.filter((entry) => !entry.indicator),
+    ...entries.filter((entry) => entry.indicators.length > 0),
+    ...entries.filter((entry) => entry.indicators.length === 0),
   ];
 
   return (
@@ -425,49 +423,65 @@ function IndicatorControl({
         onChange={(event) => onSelect(event.target.value)}
         value={activeIndicator?.id ?? ""}
       >
-        {orderedEntries.map(({ category, indicator }) => (
-          <option
-            disabled={!indicator}
-            key={category.id}
-            value={indicator?.id ?? category.id}
-          >
-            {indicator
-              ? `${category.label} - ${indicator.label}`
-              : `${category.label} - in preparazione`}
-          </option>
-        ))}
+        {orderedEntries.flatMap(({ category, indicators }) =>
+          indicators.length > 0
+            ? indicators.map((indicator) => (
+                <option key={indicator.id} value={indicator.id}>
+                  {category.label} - {indicator.label}
+                </option>
+              ))
+            : [
+                <option disabled key={category.id} value={category.id}>
+                  {category.label} - in preparazione
+                </option>,
+              ],
+        )}
       </select>
 
       <div className="hidden space-y-1 lg:block">
-        {orderedEntries.map(({ category, indicator }) => {
-          const isActive = indicator?.id === activeIndicator?.id;
+        {orderedEntries.map(({ category, indicators }) => {
+          const hasIndicators = indicators.length > 0;
           return (
-            <button
-              className={`flex min-h-11 w-full flex-col items-start justify-center gap-1 rounded-md px-2.5 py-2 text-left text-sm transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 ${
-                isActive
-                  ? "bg-primary text-primary-foreground shadow-sm"
-                  : indicator
-                    ? "text-foreground hover:bg-primary/5"
-                    : "text-muted-foreground"
+            <div
+              className={`rounded-md border px-2 py-2 ${
+                hasIndicators
+                  ? "border-border/70 bg-background"
+                  : "border-border/50 bg-muted/40 text-muted-foreground"
               }`}
-              disabled={!indicator}
               key={category.id}
-              onClick={() => indicator && onSelect(indicator.id)}
-              type="button"
             >
-              <span className="font-medium">{category.label}</span>
-              <span
-                className={`rounded-full px-2 py-0.5 text-[11px] leading-none ${
-                  isActive
-                    ? "bg-primary-foreground/15 text-primary-foreground/90"
-                    : indicator
-                      ? "bg-primary/10 text-primary"
-                      : "bg-muted text-muted-foreground"
-                }`}
-              >
-                {indicator ? "attivo" : "in preparazione"}
-              </span>
-            </button>
+              <div className="flex items-center justify-between gap-2">
+                <span className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                  {category.label}
+                </span>
+                {!hasIndicators ? (
+                  <span className="rounded-full bg-muted px-2 py-0.5 text-[11px] leading-none text-muted-foreground">
+                    in preparazione
+                  </span>
+                ) : null}
+              </div>
+              {hasIndicators ? (
+                <div className="mt-1 space-y-1">
+                  {indicators.map((indicator) => {
+                    const isActive = indicator.id === activeIndicator?.id;
+                    return (
+                      <button
+                        className={`w-full rounded-md px-2 py-1.5 text-left text-sm font-medium transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 ${
+                          isActive
+                            ? "bg-primary text-primary-foreground shadow-sm"
+                            : "text-foreground hover:bg-primary/5"
+                        }`}
+                        key={indicator.id}
+                        onClick={() => onSelect(indicator.id)}
+                        type="button"
+                      >
+                        {indicator.label}
+                      </button>
+                    );
+                  })}
+                </div>
+              ) : null}
+            </div>
           );
         })}
       </div>
@@ -545,7 +559,7 @@ function CitySummaryCard({
         ))}
       </dl>
 
-      {isPopulationIndicator && coloredBins.length > 0 ? (
+      {coloredBins.length > 0 ? (
         <DistributionBands bins={coloredBins} summary={summary} />
       ) : null}
 
@@ -713,10 +727,10 @@ function MapSurface({
               style={(geoFeature) =>
                 getLeafletFeatureStyle({
                   activeIndicator,
-                  bins: coloredBins,
                   feature: geoFeature as unknown as AtlanteFeature,
                   hoveredSectionId,
                   selectedSectionId,
+                  summary,
                 })
               }
             />
@@ -785,12 +799,13 @@ function MapSurface({
           </div>
 
           <MapLegend
+            activeIndicator={activeIndicator}
             bins={coloredBins}
             className="pointer-events-auto absolute bottom-3 left-3 z-[500] max-w-[calc(100%-1.5rem)]"
+            summary={summary}
           />
         </div>
       )}
-
     </section>
   );
 }
@@ -820,27 +835,54 @@ function MapViewResetter({
 }
 
 function MapLegend({
+  activeIndicator,
   bins,
   className,
+  summary,
 }: {
+  activeIndicator: AtlanteIndicatorDefinition;
   bins: ColoredDistributionBin[];
   className?: string;
+  summary: ReturnType<typeof buildAtlanteDistribution>;
 }) {
   return (
     <div
-      className={`flex flex-wrap gap-2 rounded-lg border border-border/90 bg-card/95 p-2 text-xs text-muted-foreground shadow-sm backdrop-blur ${className ?? ""}`}
+      className={`grid gap-2 rounded-lg border border-border/90 bg-card/95 p-2 text-xs text-muted-foreground shadow-sm backdrop-blur ${className ?? ""}`}
     >
-      {bins.map((bin) => (
-        <span className="inline-flex items-center gap-1.5" key={bin.index}>
-          <span
-            aria-hidden="true"
-            className="h-3 w-5 rounded-sm border border-border"
-            style={{ backgroundColor: bin.color }}
-          />
-          {formatDistributionBandName(bin.index, bins.length)}
-          <span className="text-muted-foreground/80">· {bin.label}</span>
-        </span>
-      ))}
+      <div>
+        <p className="mb-1 text-[11px] font-semibold uppercase tracking-wide text-foreground">
+          Scala continua
+        </p>
+        <div
+          aria-label="Scala cromatica continua"
+          className="h-3 w-56 max-w-full rounded-full border border-border"
+          style={{
+            background: `linear-gradient(to right, ${CHOROPLETH_COLORS.join(", ")})`,
+          }}
+        />
+        <div className="mt-1 flex justify-between gap-3 text-[11px]">
+          <span>
+            Valore minimo{" "}
+            {formatSummaryValue(summary.min, activeIndicator.unitLabel)}
+          </span>
+          <span>
+            Valore massimo{" "}
+            {formatSummaryValue(summary.max, activeIndicator.unitLabel)}
+          </span>
+        </div>
+      </div>
+      <div className="flex flex-wrap gap-2">
+        {bins.map((bin) => (
+          <span className="inline-flex items-center gap-1.5" key={bin.index}>
+            <span
+              aria-hidden="true"
+              className="h-3 w-5 rounded-sm border border-border"
+              style={{ backgroundColor: bin.color }}
+            />
+            {formatDistributionBandName(bin.index, bins.length)}
+          </span>
+        ))}
+      </div>
       <span className="inline-flex items-center gap-1.5">
         <span
           aria-hidden="true"
@@ -1120,19 +1162,53 @@ function formatSummaryValue(value: number | null, unitLabel: string) {
 
 function colorDistributionBins(
   bins: AtlanteDistributionBin[],
+  summary: ReturnType<typeof buildAtlanteDistribution>,
 ): ColoredDistributionBin[] {
-  return bins.map((bin, index) => {
-    const colorIndex =
-      bins.length <= 1
-        ? CHOROPLETH_COLORS.length - 1
-        : Math.round(
-            (index / (bins.length - 1)) * (CHOROPLETH_COLORS.length - 1),
-          );
+  return bins.map((bin) => {
     return {
       ...bin,
-      color: CHOROPLETH_COLORS[colorIndex],
+      color: getContinuousChoroplethColor((bin.min + bin.max) / 2, summary),
     };
   });
+}
+
+function parseRgbColor(color: string) {
+  const match = color.match(/\d+/g)?.map(Number) ?? [0, 0, 0];
+  return [match[0] ?? 0, match[1] ?? 0, match[2] ?? 0] as const;
+}
+
+function interpolateColor(start: string, end: string, amount: number) {
+  const [sr, sg, sb] = parseRgbColor(start);
+  const [er, eg, eb] = parseRgbColor(end);
+  const mix = (from: number, to: number) =>
+    Math.round(from + (to - from) * amount);
+  return `rgb(${mix(sr, er)} ${mix(sg, eg)} ${mix(sb, eb)})`;
+}
+
+function getContinuousChoroplethColor(
+  value: number | null,
+  summary: ReturnType<typeof buildAtlanteDistribution>,
+) {
+  if (value === null || summary.min === null || summary.max === null) {
+    return EMPTY_COLOR;
+  }
+
+  if (summary.min === summary.max) {
+    return CHOROPLETH_COLORS[CHOROPLETH_COLORS.length - 1];
+  }
+
+  const normalized = Math.max(
+    0,
+    Math.min(1, (value - summary.min) / (summary.max - summary.min)),
+  );
+  const scaled = normalized * (CHOROPLETH_COLORS.length - 1);
+  const lowerIndex = Math.floor(scaled);
+  const upperIndex = Math.min(CHOROPLETH_COLORS.length - 1, lowerIndex + 1);
+  return interpolateColor(
+    CHOROPLETH_COLORS[lowerIndex],
+    CHOROPLETH_COLORS[upperIndex],
+    scaled - lowerIndex,
+  );
 }
 
 function downloadAtlanteMapSvg({
@@ -1218,10 +1294,10 @@ function buildAtlanteMapExportSvg({
       return `<path d="${geometryToSvgPath(
         feature.geometry,
         project,
-      )}" fill="${getChoroplethColor(
+      )}" fill="${getContinuousChoroplethColor(
         value,
-        coloredBins,
-      )}" fill-opacity="${value === null ? "0.58" : "0.9"}" stroke="hsl(0 0% 100%)" stroke-width="1.4"><title>${escapeXml(
+        summary,
+      )}" fill-opacity="${value === null ? "0.34" : "0.76"}" stroke="hsl(0 0% 100%)" stroke-width="1.4"><title>${escapeXml(
         `${getSectionPublicLabel(feature)} - ${sectionId}: ${formatAtlanteValue(
           value,
           activeIndicator.unitLabel,
@@ -1247,6 +1323,12 @@ function buildAtlanteMapExportSvg({
     dataStatus === "demo"
       ? "Dato dimostrativo - non usare per analisi"
       : metadata.publicLabel;
+  const primarySummaryValue =
+    activeIndicator.unitLabel === "%" ? summary.mean : summary.sum;
+  const primarySummaryLabel =
+    activeIndicator.unitLabel === "%"
+      ? "Media sezioni con dato disponibile"
+      : "Totale sezioni con dato disponibile";
 
   return `<?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" role="img" aria-labelledby="title desc">
@@ -1260,13 +1342,13 @@ function buildAtlanteMapExportSvg({
   <g font-family="Inter, Arial, sans-serif">${paths}</g>
   <rect x="${padding}" y="728" width="${width - padding * 2}" height="1" fill="hsl(213 27% 84%)" />
   <g font-family="Inter, Arial, sans-serif">
-    <text x="${padding}" y="764" font-size="20" font-weight="700" fill="hsl(222 47% 11%)">Fasce di popolazione</text>
+    <text x="${padding}" y="764" font-size="20" font-weight="700" fill="hsl(222 47% 11%)">Fasce indicatore</text>
     ${legendItems}
     <g transform="translate(${padding}, 900)">
       <text font-size="18" font-weight="700" fill="hsl(222 47% 11%)">${escapeXml(
-        formatSummaryValue(summary.sum, activeIndicator.unitLabel),
+        formatSummaryValue(primarySummaryValue, activeIndicator.unitLabel),
       )}</text>
-      <text y="28" font-size="15" fill="hsl(215 16% 47%)">Totale sezioni con dato disponibile</text>
+      <text y="28" font-size="15" fill="hsl(215 16% 47%)">${escapeXml(primarySummaryLabel)}</text>
     </g>
     <g transform="translate(440, 900)">
       <text font-size="18" font-weight="700" fill="hsl(222 47% 11%)">${escapeXml(
@@ -1329,20 +1411,6 @@ function escapeXml(value: string) {
     .replace(/'/g, "&apos;");
 }
 
-function getChoroplethColor(
-  value: number | null,
-  bins: ColoredDistributionBin[],
-) {
-  if (value === null || bins.length === 0) {
-    return EMPTY_COLOR;
-  }
-
-  const binIndex = findAtlanteDistributionBin(value, bins);
-  return binIndex === null
-    ? EMPTY_COLOR
-    : (bins[binIndex]?.color ?? EMPTY_COLOR);
-}
-
 function toLeafletBounds(bounds: GeographicBounds): LatLngBoundsExpression {
   return [
     [bounds.minLat, bounds.minLng],
@@ -1352,16 +1420,16 @@ function toLeafletBounds(bounds: GeographicBounds): LatLngBoundsExpression {
 
 function getLeafletFeatureStyle({
   activeIndicator,
-  bins,
   feature,
   hoveredSectionId,
   selectedSectionId,
+  summary,
 }: {
   activeIndicator: AtlanteIndicatorDefinition;
-  bins: ColoredDistributionBin[];
   feature: AtlanteFeature;
   hoveredSectionId: string | null;
   selectedSectionId: string | null;
+  summary: ReturnType<typeof buildAtlanteDistribution>;
 }) {
   const sectionId = getSectionId(feature);
   const value = readIndicatorValue(feature, activeIndicator);
@@ -1373,8 +1441,8 @@ function getLeafletFeatureStyle({
   return {
     color: isActive ? "hsl(var(--brand))" : "hsl(var(--card))",
     dashArray: isMissing ? "5 4" : undefined,
-    fillColor: getChoroplethColor(value, bins),
-    fillOpacity: isMissing ? 0.56 : 0.82,
+    fillColor: getContinuousChoroplethColor(value, summary),
+    fillOpacity: isMissing ? 0.34 : isActive ? 0.78 : 0.64,
     lineJoin: "round" as const,
     opacity: 1,
     weight: isSelected ? 4 : isHovered ? 3 : 1.4,
