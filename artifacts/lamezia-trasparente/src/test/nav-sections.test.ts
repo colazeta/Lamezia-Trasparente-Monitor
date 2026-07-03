@@ -9,15 +9,16 @@ import {
 
 describe("isSectionActive", () => {
   it("keeps exact section matches active", () => {
-    expect(isSectionActive("/albo", "/albo")).toBe(true);
+    expect(isSectionActive("/albo/", "/albo")).toBe(true);
+    expect(isSectionActive("/albo/", "/albo/")).toBe(true);
   });
 
   it("keeps hierarchical child routes active", () => {
-    expect(isSectionActive("/albo", "/albo/atto-123")).toBe(true);
+    expect(isSectionActive("/albo/", "/albo/atto-123")).toBe(true);
   });
 
   it("does not activate sections for non-hierarchical prefix matches", () => {
-    expect(isSectionActive("/albo", "/albo-extra")).toBe(false);
+    expect(isSectionActive("/albo/", "/albo-extra")).toBe(false);
   });
 
   it("preserves root-only matching for the homepage", () => {

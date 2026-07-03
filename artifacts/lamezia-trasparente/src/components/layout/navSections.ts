@@ -106,7 +106,7 @@ const RAW_NAV_GROUPS: NavSection[] = [
         keywords: "delibere atti giunta consiglio decisioni",
       },
       {
-        href: "/albo",
+        href: "/albo/",
         label: "Albo Pretorio",
         description:
           "Archivio permanente e navigabile degli atti pubblicati dal Comune.",
@@ -621,7 +621,17 @@ export const COMMAND_PALETTE_GROUPS: NavSection[] = NAV_GROUPS.map((group) => ({
 })).filter((group) => group.items.length > 0);
 
 export function isSectionActive(href: string, location: string): boolean {
-  return location === href || (href !== "/" && location.startsWith(`${href}/`));
+  const normalizedHref = normalizeSectionPath(href);
+  const normalizedLocation = normalizeSectionPath(location);
+  return (
+    normalizedLocation === normalizedHref ||
+    (normalizedHref !== "/" && normalizedLocation.startsWith(`${normalizedHref}/`))
+  );
+}
+
+function normalizeSectionPath(path: string): string {
+  if (path === "/") return path;
+  return path.replace(/\/+$/, "") || "/";
 }
 
 export function isNavItemNavigable(item: NavItem): boolean {

@@ -279,7 +279,7 @@ function BlockStats() {
             title="Atti dalla fonte"
             value={stats?.acts}
             loading={statsLoading}
-            href="/albo"
+            href="/albo/"
             icon={FileSearch}
           />
           <StatCard
@@ -441,7 +441,7 @@ function BlockRecentActivity() {
             </div>
           </CardContent>
           <CardHeader className="p-3 border-t border-border bg-muted/30">
-            <Link href="/albo" className="w-full">
+            <Link href="/albo/" className="w-full">
               <Button
                 variant="ghost"
                 className="w-full justify-between font-semibold text-muted-foreground hover:text-foreground"
@@ -658,7 +658,7 @@ function StaticHomeLayout() {
               title="Atti dalla fonte"
               value={stats?.acts}
               loading={statsLoading}
-              href="/albo"
+              href="/albo/"
               icon={FileSearch}
             />
             <StatCard
@@ -841,7 +841,7 @@ function StaticHomeLayout() {
                   </div>
                 </CardContent>
                 <CardHeader className="p-3 border-t border-border bg-muted/30">
-                  <Link href="/albo" className="w-full">
+                  <Link href="/albo/" className="w-full">
                     <Button
                       variant="ghost"
                       className="w-full justify-between font-semibold text-muted-foreground hover:text-foreground"
@@ -1060,7 +1060,7 @@ function ActivityRow({ item }: { item: any }) {
   const getHref = () => {
     switch (item.type) {
       case "act":
-        return "/albo";
+        return "/albo/";
       case "contract": {
         const numericId = String(item.id).replace(/^contract-/, "");
         return `/contratti/${numericId}`;

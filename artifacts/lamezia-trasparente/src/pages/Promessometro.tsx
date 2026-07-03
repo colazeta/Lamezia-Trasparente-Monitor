@@ -301,7 +301,7 @@ export function Promessometro() {
               <div className="mt-4 flex flex-wrap gap-2">
                 {[
                   ["Delibere", "/delibere"],
-                  ["Albo", "/albo"],
+                  ["Albo", "/albo/"],
                   ["Contratti", "/contratti"],
                   ["PNRR", "/pnrr"],
                   ["Incarichimetro", "/incarichimetro"],

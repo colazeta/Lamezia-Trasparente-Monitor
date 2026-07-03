@@ -50,7 +50,7 @@ export function Themes() {
             tutti gli atti pubblicati in tempo reale.
           </p>
           <div className="flex flex-wrap items-center justify-center gap-3">
-            <Link href="/albo">
+            <Link href="/albo/">
               <Button className="gap-2">
                 <FileSearch className="h-4 w-4" aria-hidden="true" />
                 Esplora l'Albo Pretorio

@@ -104,7 +104,7 @@ export const PRIORITY_PAGE_PATHS = [
   "/",
   "/convocazioni",
   "/delibere",
-  "/albo",
+  "/albo/",
   "/contratti",
   "/incarichimetro",
   "/pnrr",
@@ -266,7 +266,7 @@ const priorityPageImplementations: Record<
     implementationNote:
       "Il focus e l'atto documentale, non un giudizio sulla decisione.",
   },
-  "/albo": {
+  "/albo/": {
     isPriorityPage: true,
     primaryDataObject:
       "Pubblicazione Albo: numero, categoria, oggetto, date pubblicazione, allegati, fonte puntuale o fallback portale.",
