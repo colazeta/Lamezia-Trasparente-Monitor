@@ -408,14 +408,35 @@ describe("Atlante territoriale", () => {
     expect(screen.queryByText(/File atteso/i)).not.toBeInTheDocument();
     expect(screen.getByTestId("atlante-leaflet-map")).toBeInTheDocument();
     expect(screen.getByTestId("atlante-istat-overlay")).toBeInTheDocument();
-    expect(screen.getByText("Contesto mappa")).toBeInTheDocument();
-    expect(screen.getByText("Esplora e confronta")).toBeInTheDocument();
-    expect(screen.getByText("Copertura dati")).toBeInTheDocument();
     expect(
-      screen.getByText(/2 sezioni con dato .* 1 sezione senza dato/),
+      screen.getByRole("complementary", {
+        name: /Indicatori Atlante territoriale/i,
+      }),
     ).toBeInTheDocument();
+    expect(screen.getByText("Scegli cosa leggere")).toBeInTheDocument();
+    expect(screen.getByText("Copertura")).toBeInTheDocument();
+    expect(
+      screen.getByText("2 sezioni con dato"),
+    ).toBeInTheDocument();
+    expect(screen.getByText(/1 sezione senza dato/)).toBeInTheDocument();
     expect(screen.getByText("Nessuna area selezionata")).toBeInTheDocument();
     expect(screen.getByText(/Strade .* OpenStreetMap/)).toBeInTheDocument();
+    fireEvent.click(
+      screen.getByRole("button", { name: /Chiudi barra indicatori/i }),
+    );
+    expect(
+      screen.queryByRole("complementary", {
+        name: /Indicatori Atlante territoriale/i,
+      }),
+    ).not.toBeInTheDocument();
+    fireEvent.click(
+      screen.getByRole("button", { name: /Apri barra indicatori/i }),
+    );
+    expect(
+      screen.getByRole("complementary", {
+        name: /Indicatori Atlante territoriale/i,
+      }),
+    ).toBeInTheDocument();
     expect(screen.getByTestId("atlante-osm-tile-layer")).toHaveAttribute(
       "data-url",
       "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
@@ -444,7 +465,7 @@ describe("Atlante territoriale", () => {
       "Esri",
     );
     fireEvent.change(basemapSelect, { target: { value: "none" } });
-    expect(screen.getByText("Senza sfondo")).toBeInTheDocument();
+    expect(screen.getByText(/Sfondo: Senza sfondo/)).toBeInTheDocument();
     expect(
       screen.queryByTestId("atlante-osm-tile-layer"),
     ).not.toBeInTheDocument();
@@ -453,7 +474,6 @@ describe("Atlante territoriale", () => {
     expect(createObjectURL).toHaveBeenCalled();
     expect(clickSpy).toHaveBeenCalled();
     expect(revokeObjectURL).toHaveBeenCalledWith("blob:atlante-map");
-    expect(screen.getByLabelText("Indicatore")).toBeInTheDocument();
     expect(screen.getAllByText("Popolazione").length).toBeGreaterThan(0);
     expect(screen.getAllByText("Popolazione residente").length).toBeGreaterThan(
       0,
@@ -542,8 +562,11 @@ describe("Atlante territoriale", () => {
     ).toBeGreaterThan(0);
     expect(screen.getAllByText("10%").length).toBeGreaterThan(0);
     expect(
-      screen.getByText(/1 sezione con dato .* 2 sezioni senza dato/),
-    ).toBeInTheDocument();
+      screen.getAllByText("1 sezione con dato").length,
+    ).toBeGreaterThan(0);
+    expect(
+      screen.getAllByText(/2 sezioni senza dato/).length,
+    ).toBeGreaterThan(0);
 
     fireEvent.click(
       screen.getByRole("button", {

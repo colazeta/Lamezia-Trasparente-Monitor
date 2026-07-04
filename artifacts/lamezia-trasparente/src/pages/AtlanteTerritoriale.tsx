@@ -8,7 +8,9 @@ import {
   Database,
   Download,
   Layers,
-  MapPinned,
+  PanelLeftClose,
+  PanelLeftOpen,
+  X,
 } from "lucide-react";
 import {
   ATLANTE_INDICATOR_CATEGORIES,
@@ -104,6 +106,12 @@ export function AtlanteTerritoriale() {
     null,
   );
   const [hoveredSectionId, setHoveredSectionId] = useState<string | null>(null);
+  const [isIndicatorSidebarOpen, setIndicatorSidebarOpen] = useState(() => {
+    if (typeof window !== "undefined") {
+      return window.innerWidth >= 900;
+    }
+    return true;
+  });
   const [selectedBasemapId, setSelectedBasemapId] = useState<BasemapId>(
     "openstreetmap-standard",
   );
@@ -210,29 +218,21 @@ export function AtlanteTerritoriale() {
             {layer.dataStatus === "demo" ? <DemoNotice /> : null}
             <div className="grid gap-3 xl:grid-cols-[minmax(0,1fr)_320px] 2xl:grid-cols-[minmax(0,1fr)_340px] xl:items-start">
               <div className="min-w-0 space-y-3">
-                <ActiveContextStrip
-                  activeFeature={activeFeature}
-                  activeIndicator={activeIndicator}
-                  dataStatus={layer.dataStatus}
-                  metadata={metadata}
-                  selectedBasemapId={selectedBasemapId}
-                  summary={distribution}
-                />
-                <IndicatorControl
-                  activeIndicator={activeIndicator}
-                  availableIndicators={availableIndicators}
-                  onSelect={setSelectedIndicatorId}
-                />
                 <MapSurface
                   activeIndicator={activeIndicator}
+                  activeFeature={activeFeature}
+                  availableIndicators={availableIndicators}
                   bounds={bounds}
                   coloredBins={coloredBins}
                   dataStatus={layer.dataStatus}
                   features={features}
                   hoveredSectionId={hoveredSectionId}
+                  isIndicatorSidebarOpen={isIndicatorSidebarOpen}
                   metadata={metadata}
+                  onIndicatorSelect={setSelectedIndicatorId}
                   selectedBasemapId={selectedBasemapId}
                   selectedSectionId={selectedSectionId}
+                  setIndicatorSidebarOpen={setIndicatorSidebarOpen}
                   setSelectedBasemapId={setSelectedBasemapId}
                   setHoveredSectionId={setHoveredSectionId}
                   setSelectedSectionId={setSelectedSectionId}
@@ -390,14 +390,26 @@ function ActiveContextStrip({
   );
 }
 
-function IndicatorControl({
+function IndicatorSidebar({
+  activeFeature,
   activeIndicator,
   availableIndicators,
+  dataStatus,
+  metadata,
+  onClose,
   onSelect,
+  selectedBasemapId,
+  summary,
 }: {
+  activeFeature: AtlanteFeature | null;
   activeIndicator: AtlanteIndicatorDefinition | null;
   availableIndicators: AtlanteIndicatorDefinition[];
+  dataStatus: AtlanteLoadedLayer["dataStatus"];
+  metadata: AtlanteLayerMetadata;
+  onClose: () => void;
   onSelect: (indicatorId: string) => void;
+  selectedBasemapId: BasemapId;
+  summary: ReturnType<typeof buildAtlanteDistribution>;
 }) {
   const entries = ATLANTE_INDICATOR_CATEGORIES.map((category) => ({
     category,
@@ -409,44 +421,87 @@ function IndicatorControl({
     ...entries.filter((entry) => entry.indicators.length > 0),
     ...entries.filter((entry) => entry.indicators.length === 0),
   ];
+  const sectionLabel = activeFeature
+    ? getSectionPublicLabel(activeFeature)
+    : "Nessuna area selezionata";
+  const coverageLabel =
+    summary.totalCount > 0
+      ? `${formatSectionCount(summary.availableCount)} con dato`
+      : "Nessun dato disponibile";
+  const missingLabel =
+    summary.totalCount > 0
+      ? `${formatSectionCount(summary.missingCount)} senza dato`
+      : "";
 
   return (
-    <section className="rounded-xl border border-border/80 bg-card/80 p-3 shadow-sm">
-      <div className="flex flex-col gap-3 lg:flex-row lg:items-start">
-        <label
-          className="flex shrink-0 items-center gap-2 text-sm font-semibold text-foreground lg:min-w-32"
-          htmlFor="atlante-indicator-select"
+    <aside
+      aria-label="Indicatori Atlante territoriale"
+      className="absolute inset-y-3 left-3 z-[650] flex w-[min(370px,calc(100%-1.5rem))] flex-col overflow-hidden rounded-2xl border border-border/90 bg-card/95 shadow-xl ring-1 ring-primary/10 backdrop-blur"
+    >
+      <div className="flex items-start justify-between gap-3 border-b border-border/70 px-4 py-3">
+        <div>
+          <p className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-primary">
+            <Database className="h-4 w-4" />
+            Indicatori
+          </p>
+          <h2 className="mt-1 text-lg font-semibold leading-tight text-foreground">
+            Scegli cosa leggere
+          </h2>
+        </div>
+        <button
+          aria-label="Chiudi barra indicatori"
+          className="rounded-md border border-border bg-background p-2 text-muted-foreground transition hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+          onClick={onClose}
+          type="button"
         >
-          <Database className="h-4 w-4 text-primary" />
-          Indicatore
-        </label>
-        <select
-          className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground md:hidden"
-          id="atlante-indicator-select"
-          onChange={(event) => onSelect(event.target.value)}
-          value={activeIndicator?.id ?? ""}
-        >
-          {orderedEntries.flatMap(({ category, indicators }) =>
-            indicators.length > 0
-              ? indicators.map((indicator) => (
-                  <option key={indicator.id} value={indicator.id}>
-                    {category.label} - {indicator.label}
-                  </option>
-                ))
-              : [
-                  <option disabled key={category.id} value={category.id}>
-                    {category.label} - in preparazione
-                  </option>,
-                ],
-          )}
-        </select>
+          <X className="h-4 w-4" />
+        </button>
+      </div>
 
-        <div className="hidden min-w-0 flex-1 gap-2 overflow-x-auto pb-1 md:flex">
+      <div className="border-b border-border/70 bg-background/75 px-4 py-3">
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="rounded-full bg-primary px-2.5 py-1 text-xs font-semibold text-primary-foreground">
+            {activeIndicator
+              ? getIndicatorKindLabel(activeIndicator)
+              : "indicatore"}
+          </span>
+          {dataStatus === "demo" ? (
+            <span className="rounded-full bg-warning/20 px-2.5 py-1 text-xs font-semibold text-warning">
+              demo
+            </span>
+          ) : null}
+        </div>
+        <p className="mt-2 text-sm font-semibold text-foreground">
+          {activeIndicator?.label ?? "Indicatore in preparazione"}
+        </p>
+        {activeIndicator ? (
+          <p className="mt-1 text-xs leading-5 text-muted-foreground">
+            {activeIndicator.publicHint}
+          </p>
+        ) : null}
+        <dl className="mt-3 grid grid-cols-2 gap-2 text-xs">
+          <div className="rounded-lg border border-border/60 bg-card px-2.5 py-2">
+            <dt className="font-semibold text-muted-foreground">Copertura</dt>
+            <dd className="mt-0.5 font-semibold text-foreground">
+              {coverageLabel}
+            </dd>
+          </div>
+          <div className="rounded-lg border border-border/60 bg-card px-2.5 py-2">
+            <dt className="font-semibold text-muted-foreground">Selezione</dt>
+            <dd className="mt-0.5 truncate font-semibold text-foreground">
+              {sectionLabel}
+            </dd>
+          </div>
+        </dl>
+      </div>
+
+      <div className="min-h-0 flex-1 overflow-y-auto px-3 py-3">
+        <div className="space-y-2">
           {orderedEntries.map(({ category, indicators }) => {
             const hasIndicators = indicators.length > 0;
             return (
-              <div
-                className={`min-w-[210px] rounded-lg border px-2.5 py-2 ${
+              <section
+                className={`rounded-xl border px-3 py-2.5 ${
                   hasIndicators
                     ? "border-border/70 bg-background/90"
                     : "border-border/50 bg-muted/35 text-muted-foreground"
@@ -454,9 +509,9 @@ function IndicatorControl({
                 key={category.id}
               >
                 <div className="flex items-center justify-between gap-2">
-                  <span className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
+                  <h3 className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
                     {category.label}
-                  </span>
+                  </h3>
                   {!hasIndicators ? (
                     <span className="rounded-full bg-muted px-2 py-0.5 text-[11px] leading-none text-muted-foreground">
                       in preparazione
@@ -464,12 +519,13 @@ function IndicatorControl({
                   ) : null}
                 </div>
                 {hasIndicators ? (
-                  <div className="mt-2 flex flex-wrap gap-1.5">
+                  <div className="mt-2 grid gap-1.5">
                     {indicators.map((indicator) => {
                       const isActive = indicator.id === activeIndicator?.id;
                       return (
                         <button
-                          className={`inline-flex min-h-9 items-center gap-1.5 rounded-md border px-2 py-1.5 text-left text-xs font-semibold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 ${
+                          aria-pressed={isActive}
+                          className={`grid min-h-11 grid-cols-[1fr_auto] items-center gap-2 rounded-lg border px-3 py-2 text-left text-sm font-semibold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 ${
                             isActive
                               ? "border-primary bg-primary text-primary-foreground shadow-sm"
                               : "border-border bg-card text-foreground hover:border-primary/50 hover:bg-primary/5"
@@ -481,7 +537,7 @@ function IndicatorControl({
                         >
                           <span>{indicator.label}</span>
                           <span
-                            className={`rounded-full px-1.5 py-0.5 text-[10px] leading-none ${
+                            className={`rounded-full px-2 py-1 text-[10px] leading-none ${
                               isActive
                                 ? "bg-primary-foreground/20 text-primary-foreground"
                                 : "bg-muted text-muted-foreground"
@@ -494,12 +550,23 @@ function IndicatorControl({
                     })}
                   </div>
                 ) : null}
-              </div>
+              </section>
             );
           })}
         </div>
       </div>
-    </section>
+
+      <div className="border-t border-border/70 bg-background/75 px-4 py-3 text-xs leading-5 text-muted-foreground">
+        <p>
+          {metadata.sourceInstitution} / {metadata.sourceYear} /{" "}
+          {metadata.territorialLevel}
+        </p>
+        <p className="mt-1">
+          Sfondo: {getBasemapDisplayName(selectedBasemapId)}.{" "}
+          {missingLabel ? `${missingLabel}.` : ""}
+        </p>
+      </div>
+    </aside>
   );
 }
 
@@ -653,28 +720,38 @@ function DistributionBands({
 
 function MapSurface({
   activeIndicator,
+  activeFeature,
+  availableIndicators,
   bounds,
   coloredBins,
   dataStatus,
   features,
   hoveredSectionId,
+  isIndicatorSidebarOpen,
   metadata,
+  onIndicatorSelect,
   selectedBasemapId,
   selectedSectionId,
+  setIndicatorSidebarOpen,
   setSelectedBasemapId,
   setHoveredSectionId,
   setSelectedSectionId,
   summary,
 }: {
   activeIndicator: AtlanteIndicatorDefinition | null;
+  activeFeature: AtlanteFeature | null;
+  availableIndicators: AtlanteIndicatorDefinition[];
   bounds: GeographicBounds | null;
   coloredBins: ColoredDistributionBin[];
   dataStatus: AtlanteLoadedLayer["dataStatus"];
   features: AtlanteFeature[];
   hoveredSectionId: string | null;
+  isIndicatorSidebarOpen: boolean;
   metadata: AtlanteLayerMetadata;
+  onIndicatorSelect: (indicatorId: string) => void;
   selectedBasemapId: BasemapId;
   selectedSectionId: string | null;
+  setIndicatorSidebarOpen: (isOpen: boolean) => void;
   setSelectedBasemapId: (basemapId: BasemapId) => void;
   setHoveredSectionId: (sectionId: string | null) => void;
   setSelectedSectionId: (sectionId: string) => void;
@@ -697,7 +774,13 @@ function MapSurface({
   );
 
   return (
-    <section className="overflow-hidden rounded-2xl border border-primary/20 bg-card shadow-lg ring-1 ring-primary/10">
+    <section
+      aria-labelledby="atlante-map-title"
+      className="overflow-hidden rounded-2xl border border-primary/20 bg-card shadow-lg ring-1 ring-primary/10"
+    >
+      <h2 className="sr-only" id="atlante-map-title">
+        Mappa
+      </h2>
       {!leafletBounds || !activeIndicator ? (
         <div className="flex min-h-80 items-center justify-center rounded-md bg-muted p-6 text-center text-sm text-muted-foreground">
           La mappa sarà disponibile quando almeno un indicatore censuario sarà
@@ -708,7 +791,7 @@ function MapSurface({
           <MapContainer
             attributionControl={!!selectedBasemap}
             bounds={leafletBounds}
-            className="h-[68svh] min-h-[520px] w-full sm:h-[72svh] lg:h-[calc(100svh-250px)] lg:min-h-[660px] 2xl:min-h-[760px]"
+            className="h-[72svh] min-h-[540px] w-full sm:h-[76svh] lg:h-[calc(100svh-150px)] lg:min-h-[700px] 2xl:min-h-[800px]"
             maxZoom={selectedBasemap?.maxZoom ?? 18}
             scrollWheelZoom
             style={{ background: "hsl(var(--background))" }}
@@ -750,21 +833,33 @@ function MapSurface({
             />
           </MapContainer>
 
-          <div className="pointer-events-none absolute inset-x-2 top-2 z-[500] flex flex-col gap-2 sm:inset-x-3 sm:top-3 sm:flex-row sm:items-start sm:justify-between">
-            <div className="pointer-events-auto ml-11 max-w-[calc(100%-2.75rem)] rounded-lg border border-border/90 bg-card/95 px-3 py-2 shadow-sm backdrop-blur sm:ml-0 sm:max-w-sm">
-              <h2
-                className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-primary"
-                id="atlante-map-title"
-              >
-                <MapPinned className="h-4 w-4" />
-                Mappa
-              </h2>
-              <p className="mt-1 text-sm font-semibold text-foreground">
-                {activeIndicator.label}
-              </p>
-            </div>
+          {isIndicatorSidebarOpen ? (
+            <IndicatorSidebar
+              activeFeature={activeFeature}
+              activeIndicator={activeIndicator}
+              availableIndicators={availableIndicators}
+              dataStatus={dataStatus}
+              metadata={metadata}
+              onClose={() => setIndicatorSidebarOpen(false)}
+              onSelect={onIndicatorSelect}
+              selectedBasemapId={selectedBasemapId}
+              summary={summary}
+            />
+          ) : (
+            <button
+              aria-expanded="false"
+              aria-label="Apri barra indicatori"
+              className="absolute left-3 top-3 z-[650] inline-flex items-center gap-2 rounded-lg border border-border/90 bg-card/95 px-3 py-2 text-sm font-semibold text-foreground shadow-sm backdrop-blur transition hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+              onClick={() => setIndicatorSidebarOpen(true)}
+              type="button"
+            >
+              <PanelLeftOpen className="h-4 w-4 text-primary" />
+              <span aria-hidden="true">Indicatori</span>
+            </button>
+          )}
 
-            <div className="pointer-events-auto flex flex-wrap items-center gap-2 rounded-lg border border-border/90 bg-card/95 p-2 text-xs shadow-sm backdrop-blur">
+          <div className="pointer-events-none absolute inset-x-2 top-2 z-[500] flex justify-end sm:inset-x-3 sm:top-3">
+            <div className="pointer-events-auto ml-28 flex flex-wrap items-center justify-end gap-2 rounded-lg border border-border/90 bg-card/95 p-2 text-xs shadow-sm backdrop-blur">
               <label className="inline-flex items-center gap-2 font-medium text-foreground">
                 <Layers className="h-4 w-4 text-primary" />
                 <span>Sfondo mappa</span>
@@ -792,6 +887,28 @@ function MapSurface({
                 Reimposta vista
               </button>
               <button
+                aria-expanded={isIndicatorSidebarOpen}
+                aria-label={
+                  isIndicatorSidebarOpen
+                    ? "Nascondi barra indicatori"
+                    : "Mostra barra indicatori"
+                }
+                className="hidden rounded-md border border-border bg-background px-2.5 py-1.5 font-medium text-foreground transition hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary lg:inline-flex lg:items-center lg:gap-1.5"
+                onClick={() =>
+                  setIndicatorSidebarOpen(!isIndicatorSidebarOpen)
+                }
+                type="button"
+              >
+                {isIndicatorSidebarOpen ? (
+                  <PanelLeftClose className="h-3.5 w-3.5" />
+                ) : (
+                  <PanelLeftOpen className="h-3.5 w-3.5" />
+                )}
+                <span aria-hidden="true">
+                  {isIndicatorSidebarOpen ? "Nascondi indicatori" : "Indicatori"}
+                </span>
+              </button>
+              <button
                 className="inline-flex items-center gap-1.5 rounded-md border border-border bg-background px-2.5 py-1.5 font-medium text-foreground transition hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
                 onClick={() =>
                   downloadAtlanteMapSvg({
@@ -815,7 +932,7 @@ function MapSurface({
           <MapLegend
             activeIndicator={activeIndicator}
             bins={coloredBins}
-            className="pointer-events-auto absolute bottom-3 left-3 z-[500] max-w-[calc(100%-1.5rem)]"
+            className="pointer-events-auto absolute bottom-3 right-3 z-[500] max-w-[calc(100%-1.5rem)]"
             summary={summary}
           />
         </div>
