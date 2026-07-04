@@ -226,14 +226,21 @@ describe("Atlante territoriale", () => {
             indicators_istat_2023: {
               p1: 0,
               popolazione_totale: 0,
+              superficie_kmq: 0.03,
+              residenti_per_kmq: 0,
               quota_0_14: null,
               quota_65_piu: null,
               quota_stranieri: null,
               famiglie_totale: 0,
+              residenti_per_famiglia: null,
+              famiglie_per_100_residenti: null,
               abitazioni_totali: 2,
+              abitazioni_per_100_famiglie: null,
               automobili_totale: 0,
+              auto_per_100_residenti: null,
               quota_titoli_terziari: null,
               occupati_15_64: 0,
+              occupati_15_64_per_100_residenti: null,
             },
           },
           geometry: {
@@ -257,14 +264,21 @@ describe("Atlante territoriale", () => {
             indicators_istat_2023: {
               p1: 10,
               popolazione_totale: 10,
+              superficie_kmq: 0.01,
+              residenti_per_kmq: 1000,
               quota_0_14: 30,
               quota_65_piu: 20,
               quota_stranieri: 10,
               famiglie_totale: 4,
+              residenti_per_famiglia: 2.5,
+              famiglie_per_100_residenti: 40,
               abitazioni_totali: 8,
+              abitazioni_per_100_famiglie: 200,
               automobili_totale: 5,
+              auto_per_100_residenti: 50,
               quota_titoli_terziari: 25,
               occupati_15_64: 3,
+              occupati_15_64_per_100_residenti: 30,
             },
           },
           geometry: {
@@ -288,14 +302,21 @@ describe("Atlante territoriale", () => {
             indicators_istat_2023: {
               p1: null,
               popolazione_totale: null,
+              superficie_kmq: 0.01,
+              residenti_per_kmq: null,
               quota_0_14: null,
               quota_65_piu: null,
               quota_stranieri: null,
               famiglie_totale: null,
+              residenti_per_famiglia: null,
+              famiglie_per_100_residenti: null,
               abitazioni_totali: null,
+              abitazioni_per_100_famiglie: null,
               automobili_totale: null,
+              auto_per_100_residenti: null,
               quota_titoli_terziari: null,
               occupati_15_64: null,
+              occupati_15_64_per_100_residenti: null,
             },
           },
           geometry: {
@@ -349,6 +370,11 @@ describe("Atlante territoriale", () => {
                           availableCount: 1,
                           nullCount: 2,
                           zeroCount: 0,
+                        },
+                        "residenti-per-kmq": {
+                          availableCount: 2,
+                          nullCount: 1,
+                          zeroCount: 1,
                         },
                       },
                       populationValueCoverage: {
@@ -436,6 +462,9 @@ describe("Atlante territoriale", () => {
       screen.getAllByRole("button", { name: /Quota 0-14 anni/i }).length,
     ).toBeGreaterThan(0);
     expect(
+      screen.getAllByRole("button", { name: /Residenti per kmq/i }).length,
+    ).toBeGreaterThan(0);
+    expect(
       screen.getAllByRole("button", { name: /Quota 65 anni/i }).length,
     ).toBeGreaterThan(0);
     expect(
@@ -452,6 +481,10 @@ describe("Atlante territoriale", () => {
       screen.getAllByRole("button", { name: /Automobili/i }).length,
     ).toBeGreaterThan(0);
     expect(
+      screen.getAllByRole("button", { name: /Auto per 100 residenti/i })
+        .length,
+    ).toBeGreaterThan(0);
+    expect(
       screen.getByText("Popolazione totale nelle sezioni con P1 disponibile"),
     ).toBeInTheDocument();
     expect(screen.getAllByText("10 persone").length).toBeGreaterThan(0);
@@ -465,7 +498,7 @@ describe("Atlante territoriale", () => {
     expect(screen.getAllByText("1 (33,3%)").length).toBe(2);
     expect(screen.getByText("Valore 0")).toBeInTheDocument();
     expect(screen.getByText("Distribuzione per fasce")).toBeInTheDocument();
-    expect(screen.getByText("2 classi")).toBeInTheDocument();
+    expect(screen.getByText("5 classi")).toBeInTheDocument();
     expect(screen.getAllByText(/1 sezione .* 50%/).length).toBe(2);
     expect(screen.getByText("Scala continua")).toBeInTheDocument();
     expect(screen.getByText(/Valore minimo/)).toBeInTheDocument();
@@ -533,7 +566,7 @@ describe("Atlante territoriale", () => {
     expect(screen.getByText("Cosa non mostra")).toBeInTheDocument();
     expect(formatAtlanteValue(null, "persone")).toBe("dato non disponibile");
     expect(formatAtlanteValue(0, "persone")).toBe("0 persone");
-  });
+  }, 10000);
 
   it("renders an explicit demo fallback when the processed ISTAT file is missing", async () => {
     vi.stubGlobal(

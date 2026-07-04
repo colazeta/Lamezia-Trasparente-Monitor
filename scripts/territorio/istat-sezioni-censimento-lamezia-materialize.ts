@@ -99,6 +99,7 @@ const populationTotalSourceColumn = "P1";
 const populationTotalProperty = "popolazione_totale";
 const webGeometryPrecision = 5;
 const webGeometrySimplifyTolerance = 0.0003;
+const earthRadiusMeters = 6_371_008.8;
 
 type EnabledIndicatorSpec = {
   id: string;
@@ -106,7 +107,16 @@ type EnabledIndicatorSpec = {
   category: string;
   sourceFields: string[];
   publicField: string;
-  unit: "persone" | "percentuale" | "famiglie" | "abitazioni" | "automobili";
+  unit:
+    | "persone"
+    | "percentuale"
+    | "famiglie"
+    | "abitazioni"
+    | "automobili"
+    | "residenti/kmq"
+    | "residenti/famiglia"
+    | "per 100 residenti"
+    | "per 100 famiglie";
   numerator: string | string[];
   denominator: string | null;
   formula: string;
@@ -145,6 +155,23 @@ const enabledIndicatorSpecs: EnabledIndicatorSpec[] = [
     interpretation: "Numero di persone residenti nella sezione censuaria.",
     caveats: [
       "Le sezioni senza aggancio alle variabili ISTAT 2023 restano null.",
+    ],
+  },
+  {
+    id: "residenti-per-kmq",
+    label: "Residenti per kmq",
+    category: "densita",
+    sourceFields: ["P1"],
+    publicField: "residenti_per_kmq",
+    unit: "residenti/kmq",
+    numerator: "P1",
+    denominator: "superficie_kmq",
+    formula: "P1 / superficie_kmq",
+    interpretation:
+      "Densita' cartografica dei residenti nella sezione censuaria.",
+    caveats: [
+      "La superficie e' calcolata dalla geometria ISTAT per uso cartografico web, non da una misura catastale o amministrativa.",
+      "Se la superficie non e' calcolabile o P1 e' mancante, il valore resta null.",
     ],
   },
   {
@@ -206,6 +233,40 @@ const enabledIndicatorSpecs: EnabledIndicatorSpec[] = [
     caveats: ["Non sostituisce dati catastali o anagrafici comunali."],
   },
   {
+    id: "residenti-per-famiglia",
+    label: "Residenti per famiglia",
+    category: "famiglie",
+    sourceFields: ["P1", "PF1"],
+    publicField: "residenti_per_famiglia",
+    unit: "residenti/famiglia",
+    numerator: "P1",
+    denominator: "PF1",
+    formula: "P1 / PF1",
+    interpretation:
+      "Rapporto tra residenti e famiglie nella sezione censuaria.",
+    caveats: [
+      "E' un rapporto statistico di sezione, non una dimensione media familiare certificata per nucleo.",
+      "Se PF1 e' zero o mancante, il valore resta null.",
+    ],
+  },
+  {
+    id: "famiglie-per-100-residenti",
+    label: "Famiglie per 100 residenti",
+    category: "famiglie",
+    sourceFields: ["PF1", "P1"],
+    publicField: "famiglie_per_100_residenti",
+    unit: "per 100 residenti",
+    numerator: "PF1",
+    denominator: "P1",
+    formula: "PF1 / P1 * 100",
+    interpretation:
+      "Numero di famiglie ogni 100 residenti nella sezione censuaria.",
+    caveats: [
+      "E' un rapporto di lettura territoriale; non sostituisce indicatori anagrafici comunali.",
+      "Se P1 e' zero o mancante, il valore resta null.",
+    ],
+  },
+  {
     id: "abitazioni",
     label: "Abitazioni totali",
     category: "abitazioni",
@@ -222,6 +283,23 @@ const enabledIndicatorSpecs: EnabledIndicatorSpec[] = [
     ],
   },
   {
+    id: "abitazioni-per-100-famiglie",
+    label: "Abitazioni per 100 famiglie",
+    category: "abitazioni",
+    sourceFields: ["A8", "PF1"],
+    publicField: "abitazioni_per_100_famiglie",
+    unit: "per 100 famiglie",
+    numerator: "A8",
+    denominator: "PF1",
+    formula: "A8 / PF1 * 100",
+    interpretation:
+      "Rapporto tra abitazioni totali e famiglie residenti nella sezione censuaria.",
+    caveats: [
+      "Non e' un indicatore catastale e non descrive proprieta' o disponibilita' effettiva delle abitazioni.",
+      "Se PF1 e' zero o mancante, il valore resta null.",
+    ],
+  },
+  {
     id: "automobili",
     label: "Automobili",
     category: "mobilita-auto",
@@ -234,6 +312,23 @@ const enabledIndicatorSpecs: EnabledIndicatorSpec[] = [
     interpretation:
       "Numero di automobili di proprieta' rilevate nel tracciato ISTAT.",
     caveats: ["Non introduce dati ACI, fiscali o altre fonti non ISTAT."],
+  },
+  {
+    id: "auto-per-100-residenti",
+    label: "Auto per 100 residenti",
+    category: "mobilita-auto",
+    sourceFields: ["NA1", "P1"],
+    publicField: "auto_per_100_residenti",
+    unit: "per 100 residenti",
+    numerator: "NA1",
+    denominator: "P1",
+    formula: "NA1 / P1 * 100",
+    interpretation:
+      "Rapporto tra automobili di proprieta' e residenti nella sezione censuaria.",
+    caveats: [
+      "Non introduce dati ACI, fiscali o altre fonti non ISTAT.",
+      "Se P1 e' zero o mancante, il valore resta null.",
+    ],
   },
   {
     id: "quota-titoli-terziari",
@@ -263,6 +358,23 @@ const enabledIndicatorSpecs: EnabledIndicatorSpec[] = [
     formula: "P101",
     interpretation: "Numero di residenti occupati tra 15 e 64 anni.",
     caveats: ["E' un conteggio, non un tasso di occupazione."],
+  },
+  {
+    id: "occupati-15-64-per-100-residenti",
+    label: "Occupati 15-64 per 100 residenti",
+    category: "lavoro",
+    sourceFields: ["P101", "P1"],
+    publicField: "occupati_15_64_per_100_residenti",
+    unit: "per 100 residenti",
+    numerator: "P101",
+    denominator: "P1",
+    formula: "P101 / P1 * 100",
+    interpretation:
+      "Rapporto tra residenti occupati di 15-64 anni e popolazione residente totale della sezione.",
+    caveats: [
+      "Non e' un tasso di occupazione: il denominatore e' la popolazione totale, non la sola popolazione 15-64.",
+      "Se P1 e' zero o mancante, il valore resta null.",
+    ],
   },
 ];
 
@@ -676,6 +788,10 @@ function roundIndicator(value: number): number {
   return Number(value.toFixed(2));
 }
 
+function roundSurfaceSquareKm(value: number): number {
+  return Number(value.toFixed(4));
+}
+
 function getSourceValue(
   variables: DatasetRow | undefined,
   sourceColumnByField: Map<string, string>,
@@ -708,9 +824,20 @@ function percentage(
   return roundIndicator((numerator / denominator) * 100);
 }
 
+function ratio(
+  numerator: number | null,
+  denominator: number | null,
+  multiplier = 1,
+): number | null {
+  if (numerator === null || denominator === null || denominator <= 0)
+    return null;
+  return roundIndicator((numerator / denominator) * multiplier);
+}
+
 function buildPublicIndicators(
   variables: DatasetRow | undefined,
   sourceColumnByField: Map<string, string>,
+  surfaceSquareKm: number | null,
 ): Record<string, number | null> {
   const p1 = getSourceValue(variables, sourceColumnByField, "P1");
   const p0To14 = sumSourceValues(variables, sourceColumnByField, [
@@ -734,6 +861,8 @@ function buildPublicIndicators(
   return {
     p1,
     [populationTotalProperty]: p1,
+    superficie_kmq: surfaceSquareKm,
+    residenti_per_kmq: ratio(p1, surfaceSquareKm),
     p14: getSourceValue(variables, sourceColumnByField, "P14"),
     p15: getSourceValue(variables, sourceColumnByField, "P15"),
     p16: getSourceValue(variables, sourceColumnByField, "P16"),
@@ -754,12 +883,17 @@ function buildPublicIndicators(
     stranieri_totale: stranieri,
     quota_stranieri: percentage(stranieri, p1),
     famiglie_totale: famiglie,
+    residenti_per_famiglia: ratio(p1, famiglie),
+    famiglie_per_100_residenti: ratio(famiglie, p1, 100),
     abitazioni_totali: abitazioni,
+    abitazioni_per_100_famiglie: ratio(abitazioni, famiglie, 100),
     automobili_totale: automobili,
+    auto_per_100_residenti: ratio(automobili, p1, 100),
     popolazione_9_piu: popolazione9Piu,
     titoli_terziari: titoliTerziari,
     quota_titoli_terziari: percentage(titoliTerziari, popolazione9Piu),
     occupati_15_64: occupati,
+    occupati_15_64_per_100_residenti: ratio(occupati, p1, 100),
   };
 }
 
@@ -889,6 +1023,60 @@ function simplifyGeometryForWeb(geometry: unknown): unknown {
   return geometry;
 }
 
+function degreesToRadians(value: number): number {
+  return (value * Math.PI) / 180;
+}
+
+function ringAreaSquareMeters(ring: GeoJsonPosition[]): number {
+  if (ring.length < 4) return 0;
+  let area = 0;
+  for (let index = 0; index < ring.length - 1; index += 1) {
+    const current = ring[index];
+    const next = ring[index + 1];
+    area +=
+      (degreesToRadians(next[0]) - degreesToRadians(current[0])) *
+      (2 +
+        Math.sin(degreesToRadians(current[1])) +
+        Math.sin(degreesToRadians(next[1])));
+  }
+  return (area * earthRadiusMeters * earthRadiusMeters) / 2;
+}
+
+function polygonAreaSquareMeters(polygon: GeoJsonPosition[][]): number {
+  if (polygon.length === 0) return 0;
+  const [outerRing, ...holes] = polygon;
+  const outerArea = Math.abs(ringAreaSquareMeters(outerRing));
+  const holeArea = holes.reduce(
+    (total, ring) => total + Math.abs(ringAreaSquareMeters(ring)),
+    0,
+  );
+  return Math.max(0, outerArea - holeArea);
+}
+
+function geometryAreaSquareKm(geometry: unknown): number | null {
+  const candidate = geometry as { type?: string; coordinates?: unknown };
+  let areaSquareMeters = 0;
+
+  if (candidate?.type === "Polygon" && Array.isArray(candidate.coordinates)) {
+    areaSquareMeters = polygonAreaSquareMeters(
+      candidate.coordinates as GeoJsonPosition[][],
+    );
+  } else if (
+    candidate?.type === "MultiPolygon" &&
+    Array.isArray(candidate.coordinates)
+  ) {
+    areaSquareMeters = (candidate.coordinates as GeoJsonPosition[][][]).reduce(
+      (total, polygon) => total + polygonAreaSquareMeters(polygon),
+      0,
+    );
+  }
+
+  if (!Number.isFinite(areaSquareMeters) || areaSquareMeters <= 0) {
+    return null;
+  }
+  return roundSurfaceSquareKm(areaSquareMeters / 1_000_000);
+}
+
 function isFeatureCollection(
   value: unknown,
 ): value is GeoJsonFeatureCollection {
@@ -993,7 +1181,11 @@ export async function materialize(argv = process.argv.slice(2)): Promise<void> {
       : undefined;
     if (variables) matchedVariables += 1;
     else missingVariables += 1;
-    const indicators = buildPublicIndicators(variables, sourceColumnByField);
+    const indicators = buildPublicIndicators(
+      variables,
+      sourceColumnByField,
+      geometryAreaSquareKm(feature.geometry),
+    );
     outputFeatures.push({
       type: "Feature",
       geometry: simplifyGeometryForWeb(feature.geometry),
@@ -1054,6 +1246,8 @@ export async function materialize(argv = process.argv.slice(2)): Promise<void> {
       `Le geometrie pubbliche sono generalizzate per la mappa web con precisione ${webGeometryPrecision} decimali e tolleranza ${webGeometrySimplifyTolerance} gradi; i raw ISTAT restano la fonte di dettaglio.`,
       "La quota 0-14 anni non e' una quota minori <18: il tracciato ISTAT non isola 15-17 anni.",
       "Le percentuali restano null quando il denominatore e' nullo, zero o mancante.",
+      "Gli indicatori di densita' usano una superficie calcolata dalla geometria ISTAT per uso cartografico web; non sono misure catastali o amministrative di superficie.",
+      "I rapporti per 100 residenti o per 100 famiglie sono indicatori divulgativi derivati dai campi ISTAT pubblicati e non introducono fonti esterne.",
       "Le sezioni urbane catastali Zornade non sono sezioni censuarie e non sono usate come base di questa mappa.",
     ],
   };

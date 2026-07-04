@@ -38,7 +38,7 @@ const BASEMAP_PROVIDERS = [
     urlTemplate: "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
     attribution:
       '<a href="https://www.openstreetmap.org/copyright">© OpenStreetMap contributors</a>',
-    opacity: 0.52,
+    opacity: 0.42,
     maxZoom: 18,
   },
   {
@@ -49,18 +49,18 @@ const BASEMAP_PROVIDERS = [
       "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
     attribution:
       "Tiles © Esri - Source: Esri, Maxar, Earthstar Geographics, and the GIS User Community",
-    opacity: 0.72,
+    opacity: 0.58,
     maxZoom: 18,
   },
 ] as const;
 const CHOROPLETH_COLORS = [
-  "rgb(255 244 188)",
-  "rgb(173 220 190)",
-  "rgb(101 183 202)",
-  "rgb(63 128 190)",
-  "rgb(77 67 142)",
+  "rgb(247 252 245)",
+  "rgb(203 232 208)",
+  "rgb(126 203 193)",
+  "rgb(52 148 174)",
+  "rgb(35 74 138)",
 ];
-const EMPTY_COLOR = "hsl(220 12% 84%)";
+const EMPTY_COLOR = "hsl(215 12% 82%)";
 
 type BasemapId =
   | (typeof BASEMAP_PROVIDERS)[number]["id"]
@@ -195,10 +195,10 @@ export function AtlanteTerritoriale() {
       : null;
 
   return (
-    <main className="bg-background text-foreground">
+    <main className="min-h-screen bg-background text-foreground">
       <Header />
 
-      <section className="mx-auto w-full max-w-[1800px] px-3 py-5 sm:px-5 lg:px-6 2xl:px-8">
+      <section className="mx-auto w-full max-w-none px-2 py-3 sm:px-4 lg:px-5 2xl:px-6">
         {loadState.status === "loading" ? (
           <LoadingState />
         ) : loadState.status === "error" ? (
@@ -206,38 +206,40 @@ export function AtlanteTerritoriale() {
         ) : !layer || features.length === 0 || !metadata ? (
           <EmptyState />
         ) : (
-          <div className="space-y-5">
+          <div className="space-y-3">
             {layer.dataStatus === "demo" ? <DemoNotice /> : null}
-            <ActiveContextStrip
-              activeFeature={activeFeature}
-              activeIndicator={activeIndicator}
-              dataStatus={layer.dataStatus}
-              metadata={metadata}
-              selectedBasemapId={selectedBasemapId}
-              summary={distribution}
-            />
-            <div className="grid gap-4 lg:grid-cols-[170px_minmax(0,1fr)] xl:grid-cols-[180px_minmax(0,1fr)_270px] 2xl:grid-cols-[190px_minmax(0,1fr)_280px] xl:items-start">
-              <IndicatorControl
-                activeIndicator={activeIndicator}
-                availableIndicators={availableIndicators}
-                onSelect={setSelectedIndicatorId}
-              />
-              <MapSurface
-                activeIndicator={activeIndicator}
-                bounds={bounds}
-                coloredBins={coloredBins}
-                dataStatus={layer.dataStatus}
-                features={features}
-                hoveredSectionId={hoveredSectionId}
-                metadata={metadata}
-                selectedBasemapId={selectedBasemapId}
-                selectedSectionId={selectedSectionId}
-                setSelectedBasemapId={setSelectedBasemapId}
-                setHoveredSectionId={setHoveredSectionId}
-                setSelectedSectionId={setSelectedSectionId}
-                summary={distribution}
-              />
-              <div className="space-y-5 lg:col-start-2 xl:col-start-auto">
+            <div className="grid gap-3 xl:grid-cols-[minmax(0,1fr)_320px] 2xl:grid-cols-[minmax(0,1fr)_340px] xl:items-start">
+              <div className="min-w-0 space-y-3">
+                <ActiveContextStrip
+                  activeFeature={activeFeature}
+                  activeIndicator={activeIndicator}
+                  dataStatus={layer.dataStatus}
+                  metadata={metadata}
+                  selectedBasemapId={selectedBasemapId}
+                  summary={distribution}
+                />
+                <IndicatorControl
+                  activeIndicator={activeIndicator}
+                  availableIndicators={availableIndicators}
+                  onSelect={setSelectedIndicatorId}
+                />
+                <MapSurface
+                  activeIndicator={activeIndicator}
+                  bounds={bounds}
+                  coloredBins={coloredBins}
+                  dataStatus={layer.dataStatus}
+                  features={features}
+                  hoveredSectionId={hoveredSectionId}
+                  metadata={metadata}
+                  selectedBasemapId={selectedBasemapId}
+                  selectedSectionId={selectedSectionId}
+                  setSelectedBasemapId={setSelectedBasemapId}
+                  setHoveredSectionId={setHoveredSectionId}
+                  setSelectedSectionId={setSelectedSectionId}
+                  summary={distribution}
+                />
+              </div>
+              <div className="space-y-3 xl:sticky xl:top-3 xl:max-h-[calc(100svh-1.5rem)] xl:overflow-y-auto xl:pr-1">
                 <SectionProfileCard
                   activeFeature={activeFeature}
                   activeIndicator={activeIndicator}
@@ -265,21 +267,21 @@ export function AtlanteTerritoriale() {
 
 function Header() {
   return (
-    <section className="border-b border-border bg-card">
-      <div className="container mx-auto max-w-7xl px-4 py-7 sm:px-6 lg:px-8">
-        <div className="max-w-4xl">
-          <h1 className="text-3xl font-display font-bold leading-tight text-foreground sm:text-4xl">
+    <section className="border-b border-border bg-card/95">
+      <div className="mx-auto flex w-full max-w-none flex-col gap-2 px-3 py-3 sm:px-5 lg:px-6 xl:flex-row xl:items-end xl:justify-between 2xl:px-8">
+        <div className="max-w-5xl">
+          <h1 className="text-2xl font-display font-bold leading-tight text-foreground sm:text-3xl">
             Atlante territoriale
           </h1>
-          <p className="mt-3 max-w-3xl text-base leading-7 text-muted-foreground">
+          <p className="mt-1 max-w-4xl text-sm leading-6 text-muted-foreground sm:text-base">
             Esplora il territorio di Lamezia attraverso una mappa interattiva.
             Scegli un indicatore e confronta le diverse aree della città.
           </p>
-          <p className="mt-2 max-w-3xl text-sm leading-6 text-muted-foreground">
+        </div>
+        <p className="max-w-2xl text-xs leading-5 text-muted-foreground sm:text-sm xl:text-right">
             Le sezioni censuarie sono piccole aree statistiche usate per leggere
             il territorio in modo più dettagliato del livello comunale.
           </p>
-        </div>
       </div>
     </section>
   );
@@ -359,9 +361,9 @@ function ActiveContextStrip({
   return (
     <section
       aria-label="Contesto mappa"
-      className="overflow-hidden rounded-xl border border-border/80 bg-card/80 shadow-sm"
+      className="overflow-hidden rounded-xl border border-border/80 bg-card/75 shadow-sm"
     >
-      <div className="flex items-center justify-between gap-3 border-b border-border/70 px-3 py-2 sm:px-4">
+      <div className="flex items-center justify-between gap-3 px-3 py-2 sm:px-4">
         <h2 className="text-sm font-semibold text-foreground">
           Contesto mappa
         </h2>
@@ -369,10 +371,10 @@ function ActiveContextStrip({
           Esplora e confronta
         </span>
       </div>
-      <dl className="flex gap-2 overflow-x-auto px-3 py-3 sm:px-4">
+      <dl className="grid grid-cols-2 gap-2 px-3 pb-3 sm:grid-cols-3 sm:px-4 xl:grid-cols-6">
         {items.map((item) => (
           <div
-            className="min-w-[160px] rounded-lg border border-border/70 bg-background px-3 py-2 sm:min-w-[180px]"
+            className="rounded-lg border border-border/60 bg-background/85 px-3 py-2"
             key={item.label}
           >
             <dt className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
@@ -409,81 +411,93 @@ function IndicatorControl({
   ];
 
   return (
-    <section className="rounded-lg border border-border/80 bg-card/80 p-2.5 shadow-sm lg:sticky lg:top-4">
-      <label
-        className="mb-2 flex items-center gap-2 text-sm font-semibold text-foreground"
-        htmlFor="atlante-indicator-select"
-      >
-        <Database className="h-4 w-4 text-primary" />
-        Indicatore
-      </label>
-      <select
-        className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground lg:hidden"
-        id="atlante-indicator-select"
-        onChange={(event) => onSelect(event.target.value)}
-        value={activeIndicator?.id ?? ""}
-      >
-        {orderedEntries.flatMap(({ category, indicators }) =>
-          indicators.length > 0
-            ? indicators.map((indicator) => (
-                <option key={indicator.id} value={indicator.id}>
-                  {category.label} - {indicator.label}
-                </option>
-              ))
-            : [
-                <option disabled key={category.id} value={category.id}>
-                  {category.label} - in preparazione
-                </option>,
-              ],
-        )}
-      </select>
+    <section className="rounded-xl border border-border/80 bg-card/80 p-3 shadow-sm">
+      <div className="flex flex-col gap-3 lg:flex-row lg:items-start">
+        <label
+          className="flex shrink-0 items-center gap-2 text-sm font-semibold text-foreground lg:min-w-32"
+          htmlFor="atlante-indicator-select"
+        >
+          <Database className="h-4 w-4 text-primary" />
+          Indicatore
+        </label>
+        <select
+          className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground md:hidden"
+          id="atlante-indicator-select"
+          onChange={(event) => onSelect(event.target.value)}
+          value={activeIndicator?.id ?? ""}
+        >
+          {orderedEntries.flatMap(({ category, indicators }) =>
+            indicators.length > 0
+              ? indicators.map((indicator) => (
+                  <option key={indicator.id} value={indicator.id}>
+                    {category.label} - {indicator.label}
+                  </option>
+                ))
+              : [
+                  <option disabled key={category.id} value={category.id}>
+                    {category.label} - in preparazione
+                  </option>,
+                ],
+          )}
+        </select>
 
-      <div className="hidden space-y-1 lg:block">
-        {orderedEntries.map(({ category, indicators }) => {
-          const hasIndicators = indicators.length > 0;
-          return (
-            <div
-              className={`rounded-md border px-2 py-2 ${
-                hasIndicators
-                  ? "border-border/70 bg-background"
-                  : "border-border/50 bg-muted/40 text-muted-foreground"
-              }`}
-              key={category.id}
-            >
-              <div className="flex items-center justify-between gap-2">
-                <span className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                  {category.label}
-                </span>
-                {!hasIndicators ? (
-                  <span className="rounded-full bg-muted px-2 py-0.5 text-[11px] leading-none text-muted-foreground">
-                    in preparazione
+        <div className="hidden min-w-0 flex-1 gap-2 overflow-x-auto pb-1 md:flex">
+          {orderedEntries.map(({ category, indicators }) => {
+            const hasIndicators = indicators.length > 0;
+            return (
+              <div
+                className={`min-w-[210px] rounded-lg border px-2.5 py-2 ${
+                  hasIndicators
+                    ? "border-border/70 bg-background/90"
+                    : "border-border/50 bg-muted/35 text-muted-foreground"
+                }`}
+                key={category.id}
+              >
+                <div className="flex items-center justify-between gap-2">
+                  <span className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
+                    {category.label}
                   </span>
+                  {!hasIndicators ? (
+                    <span className="rounded-full bg-muted px-2 py-0.5 text-[11px] leading-none text-muted-foreground">
+                      in preparazione
+                    </span>
+                  ) : null}
+                </div>
+                {hasIndicators ? (
+                  <div className="mt-2 flex flex-wrap gap-1.5">
+                    {indicators.map((indicator) => {
+                      const isActive = indicator.id === activeIndicator?.id;
+                      return (
+                        <button
+                          className={`inline-flex min-h-9 items-center gap-1.5 rounded-md border px-2 py-1.5 text-left text-xs font-semibold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 ${
+                            isActive
+                              ? "border-primary bg-primary text-primary-foreground shadow-sm"
+                              : "border-border bg-card text-foreground hover:border-primary/50 hover:bg-primary/5"
+                          }`}
+                          key={indicator.id}
+                          onClick={() => onSelect(indicator.id)}
+                          title={indicator.publicHint}
+                          type="button"
+                        >
+                          <span>{indicator.label}</span>
+                          <span
+                            className={`rounded-full px-1.5 py-0.5 text-[10px] leading-none ${
+                              isActive
+                                ? "bg-primary-foreground/20 text-primary-foreground"
+                                : "bg-muted text-muted-foreground"
+                            }`}
+                          >
+                            {getIndicatorKindLabel(indicator)}
+                          </span>
+                        </button>
+                      );
+                    })}
+                  </div>
                 ) : null}
               </div>
-              {hasIndicators ? (
-                <div className="mt-1 space-y-1">
-                  {indicators.map((indicator) => {
-                    const isActive = indicator.id === activeIndicator?.id;
-                    return (
-                      <button
-                        className={`w-full rounded-md px-2 py-1.5 text-left text-sm font-medium transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 ${
-                          isActive
-                            ? "bg-primary text-primary-foreground shadow-sm"
-                            : "text-foreground hover:bg-primary/5"
-                        }`}
-                        key={indicator.id}
-                        onClick={() => onSelect(indicator.id)}
-                        type="button"
-                      >
-                        {indicator.label}
-                      </button>
-                    );
-                  })}
-                </div>
-              ) : null}
-            </div>
-          );
-        })}
+            );
+          })}
+        </div>
       </div>
     </section>
   );
@@ -683,18 +697,18 @@ function MapSurface({
   );
 
   return (
-    <section className="rounded-xl border border-primary/20 bg-card p-2 shadow-md ring-1 ring-primary/10 sm:p-3">
+    <section className="overflow-hidden rounded-2xl border border-primary/20 bg-card shadow-lg ring-1 ring-primary/10">
       {!leafletBounds || !activeIndicator ? (
         <div className="flex min-h-80 items-center justify-center rounded-md bg-muted p-6 text-center text-sm text-muted-foreground">
           La mappa sarà disponibile quando almeno un indicatore censuario sarà
           presente nel file dati.
         </div>
       ) : (
-        <div className="relative overflow-hidden rounded-lg border border-border bg-background">
+        <div className="relative overflow-hidden bg-background">
           <MapContainer
             attributionControl={!!selectedBasemap}
             bounds={leafletBounds}
-            className="h-[520px] w-full sm:h-[640px] lg:h-[min(78vh,860px)] lg:min-h-[700px] 2xl:min-h-[760px]"
+            className="h-[68svh] min-h-[520px] w-full sm:h-[72svh] lg:h-[calc(100svh-250px)] lg:min-h-[660px] 2xl:min-h-[760px]"
             maxZoom={selectedBasemap?.maxZoom ?? 18}
             scrollWheelZoom
             style={{ background: "hsl(var(--background))" }}
@@ -820,14 +834,14 @@ function MapViewResetter({
   const map = useMap();
 
   useEffect(() => {
-    map.fitBounds(bounds, { animate: false, padding: [18, 18] });
+    map.fitBounds(bounds, { animate: false, padding: [8, 8] });
     const timeout = window.setTimeout(() => map.invalidateSize(), 0);
     return () => window.clearTimeout(timeout);
   }, [bounds, map]);
 
   useEffect(() => {
     if (resetSignal > 0) {
-      map.fitBounds(bounds, { animate: true, padding: [18, 18] });
+      map.fitBounds(bounds, { animate: true, padding: [8, 8] });
     }
   }, [bounds, map, resetSignal]);
 
@@ -1109,6 +1123,19 @@ function getBasemapDisplayName(basemapId: BasemapId) {
     (candidate) => candidate.id === basemapId,
   );
   return provider ? `${provider.label} · ${provider.description}` : "Sfondo";
+}
+
+function getIndicatorKindLabel(indicator: AtlanteIndicatorDefinition) {
+  if (indicator.valueKind === "densita") {
+    return "densita";
+  }
+  if (indicator.valueKind === "quota") {
+    return "quota";
+  }
+  if (indicator.valueKind === "rapporto") {
+    return "rapporto";
+  }
+  return "conteggio";
 }
 
 function formatCountWithShare(count: number, total: number) {
@@ -1439,13 +1466,13 @@ function getLeafletFeatureStyle({
   const isMissing = value === null;
 
   return {
-    color: isActive ? "hsl(var(--brand))" : "hsl(var(--card))",
+    color: isActive ? "hsl(18 88% 48%)" : "hsl(var(--card))",
     dashArray: isMissing ? "5 4" : undefined,
     fillColor: getContinuousChoroplethColor(value, summary),
-    fillOpacity: isMissing ? 0.34 : isActive ? 0.78 : 0.64,
+    fillOpacity: isMissing ? 0.4 : isActive ? 0.84 : 0.7,
     lineJoin: "round" as const,
     opacity: 1,
-    weight: isSelected ? 4 : isHovered ? 3 : 1.4,
+    weight: isSelected ? 4.5 : isHovered ? 3.2 : 1.2,
   };
 }
 
