@@ -28,6 +28,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ClimateTerritoryDatasetCard } from "@/components/opendata/ClimateTerritoryDatasetCard";
 import { OpenDataDashboard } from "@/components/opendata/OpenDataDashboard";
+import { OpenDataTypeLibrary } from "@/components/opendata/OpenDataTypeLibrary";
 import {
   Select,
   SelectContent,
@@ -147,6 +148,8 @@ export function Opendata() {
       </div>
 
       <OpenDataDashboard />
+
+      <OpenDataTypeLibrary />
 
       <ClimateTerritoryDatasetCard />
 
