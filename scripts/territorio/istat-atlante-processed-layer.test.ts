@@ -287,16 +287,23 @@ test("enabled derived indicators preserve formulas, nulls and zero denominators"
 
   const indicators = formulaFeature.properties.indicators_istat_2023;
   assert.equal(indicators.popolazione_0_14, 36);
+  assert.equal(indicators.superficie_kmq, 0.0752);
+  assert.equal(indicators.residenti_per_kmq, 3776.6);
   assert.equal(indicators.quota_0_14, 12.68);
   assert.equal(indicators.popolazione_65_piu, 91);
   assert.equal(indicators.quota_65_piu, 32.04);
   assert.equal(indicators.stranieri_totale, 22);
   assert.equal(indicators.quota_stranieri, 7.75);
   assert.equal(indicators.famiglie_totale, 124);
+  assert.equal(indicators.residenti_per_famiglia, 2.29);
+  assert.equal(indicators.famiglie_per_100_residenti, 43.66);
   assert.equal(indicators.abitazioni_totali, 253);
+  assert.equal(indicators.abitazioni_per_100_famiglie, 204.03);
   assert.equal(indicators.automobili_totale, 173);
+  assert.equal(indicators.auto_per_100_residenti, 60.92);
   assert.equal(indicators.quota_titoli_terziari, 8.37);
   assert.equal(indicators.occupati_15_64, 77);
+  assert.equal(indicators.occupati_15_64_per_100_residenti, 27.11);
 
   const zeroDenominatorIndicators =
     zeroDenominatorFeature.properties.indicators_istat_2023;
@@ -305,12 +312,23 @@ test("enabled derived indicators preserve formulas, nulls and zero denominators"
   assert.equal(zeroDenominatorIndicators.quota_0_14, null);
   assert.equal(zeroDenominatorIndicators.quota_65_piu, null);
   assert.equal(zeroDenominatorIndicators.quota_stranieri, null);
+  assert.equal(zeroDenominatorIndicators.residenti_per_kmq, 0);
+  assert.equal(zeroDenominatorIndicators.residenti_per_famiglia, null);
+  assert.equal(zeroDenominatorIndicators.famiglie_per_100_residenti, null);
+  assert.equal(zeroDenominatorIndicators.abitazioni_per_100_famiglie, null);
+  assert.equal(zeroDenominatorIndicators.auto_per_100_residenti, null);
+  assert.equal(
+    zeroDenominatorIndicators.occupati_15_64_per_100_residenti,
+    null,
+  );
 
   const nullIndicators = nullFeature.properties.indicators_istat_2023;
   assert.equal(nullIndicators.famiglie_totale, null);
   assert.equal(nullIndicators.abitazioni_totali, null);
   assert.equal(nullIndicators.automobili_totale, null);
   assert.equal(nullIndicators.quota_titoli_terziari, null);
+  assert.equal(nullIndicators.residenti_per_kmq, null);
+  assert.equal(nullIndicators.auto_per_100_residenti, null);
 });
 
 test("metadata records source attribution, known limits and QA coverage", () => {
@@ -324,11 +342,11 @@ test("metadata records source attribution, known limits and QA coverage", () => 
   assert.equal(metadata.istatMunicipalCode, "079160");
   assert.match(metadata.sourceDataset, /Basi territoriali 2021/);
   assert.match(metadata.sourceYear, /2023/);
-  assert.match(metadata.verificationStatus, /9 indicatori pubblici/);
+  assert.match(metadata.verificationStatus, /15 indicatori pubblici/);
   assert.equal(metadata.counts.outputFeatures, 317);
   assert.equal(metadata.counts.matchedVariables, 246);
   assert.equal(metadata.counts.missingVariables, 71);
-  assert.equal(metadata.counts.skippedFictitious, 0);
+  assert.equal(metadata.counts.skippedFictitious, 1);
   assert.equal(metadata.counts.variableFictitiousRows, 1);
   assert.ok(
     metadata.knownLimits.some(
@@ -344,6 +362,8 @@ test("metadata records source attribution, known limits and QA coverage", () => 
     ),
   );
   assert.ok(metadata.knownLimits.some((limit) => /denominatore/.test(limit)));
+  assert.ok(metadata.knownLimits.some((limit) => /densita/.test(limit)));
+  assert.ok(metadata.knownLimits.some((limit) => /rapporti/.test(limit)));
   assert.equal(metadata.qa?.populationValueCoverage?.totalFeatures, 317);
   assert.equal(metadata.qa?.populationValueCoverage?.availableCount, 246);
   assert.equal(metadata.qa?.populationValueCoverage?.nullCount, 71);
@@ -355,6 +375,14 @@ test("metadata records source attribution, known limits and QA coverage", () => 
   assert.equal(
     metadata.qa?.indicatorCoverage?.["quota-stranieri"]?.nullCount,
     93,
+  );
+  assert.equal(
+    metadata.qa?.indicatorCoverage?.["residenti-per-kmq"]?.availableCount,
+    246,
+  );
+  assert.equal(
+    metadata.qa?.indicatorCoverage?.["residenti-per-famiglia"]?.nullCount,
+    96,
   );
 });
 
@@ -376,14 +404,20 @@ test("indicator dictionary enables only fields verified against the ISTAT 2023 l
     enabled.map((indicator) => indicator.id),
     [
       "popolazione-residente",
+      "residenti-per-kmq",
       "quota-0-14",
       "quota-anziani",
       "quota-stranieri",
       "famiglie",
+      "residenti-per-famiglia",
+      "famiglie-per-100-residenti",
       "abitazioni",
+      "abitazioni-per-100-famiglie",
       "automobili",
+      "auto-per-100-residenti",
       "quota-titoli-terziari",
       "occupati-15-64",
+      "occupati-15-64-per-100-residenti",
     ],
   );
 
@@ -394,8 +428,12 @@ test("indicator dictionary enables only fields verified against the ISTAT 2023 l
   const age014 = byId.get("quota-0-14");
   const elderly = byId.get("quota-anziani");
   const foreignResidents = byId.get("quota-stranieri");
+  const density = byId.get("residenti-per-kmq");
+  const residentsPerFamily = byId.get("residenti-per-famiglia");
+  const carsPerResidents = byId.get("auto-per-100-residenti");
   const education = byId.get("quota-titoli-terziari");
   const employment = byId.get("occupati-15-64");
+  const employmentRatio = byId.get("occupati-15-64-per-100-residenti");
 
   assert.equal(population?.istatSourceField, "P1");
   assert.equal(population?.publicField, "popolazione_totale");
@@ -412,10 +450,26 @@ test("indicator dictionary enables only fields verified against the ISTAT 2023 l
   assert.equal(foreignResidents?.istatSourceField, "ST1 + P1");
   assert.equal(foreignResidents?.formula, "ST1 / P1 * 100");
   assert.equal(foreignResidents?.missingnessCount, 93);
+  assert.equal(density?.formula, "P1 / superficie_kmq");
+  assert.equal(density?.denominator, "superficie_kmq");
+  assert.equal(density?.unitOfMeasure, "residenti/kmq");
+  assert.ok(
+    density?.knownCaveats.some((caveat) => /geometria ISTAT/.test(caveat)),
+  );
+  assert.equal(residentsPerFamily?.formula, "P1 / PF1");
+  assert.equal(residentsPerFamily?.missingnessCount, 96);
+  assert.equal(carsPerResidents?.formula, "NA1 / P1 * 100");
+  assert.equal(carsPerResidents?.unitOfMeasure, "per 100 residenti");
   assert.equal(education?.denominator, "P83");
   assert.equal(employment?.formula, "P101");
   assert.ok(
     employment?.knownCaveats.some((caveat) => /conteggio/.test(caveat)),
+  );
+  assert.equal(employmentRatio?.formula, "P101 / P1 * 100");
+  assert.ok(
+    employmentRatio?.knownCaveats.some((caveat) =>
+      /tasso di occupazione/.test(caveat),
+    ),
   );
 
   const disabledMinorShare = dictionary.disabledCandidates?.find(

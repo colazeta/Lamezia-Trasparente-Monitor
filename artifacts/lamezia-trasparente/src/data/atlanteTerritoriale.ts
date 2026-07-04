@@ -11,6 +11,7 @@ export type AtlanteDataStatus = "official" | "demo";
 
 export type AtlanteIndicatorCategoryId =
   | "popolazione"
+  | "densita"
   | "eta"
   | "cittadinanza"
   | "istruzione"
@@ -90,6 +91,8 @@ export type AtlanteIndicatorDefinition = {
   sourceKeys: string[];
   unitLabel: string;
   sourceDatasetLabel: string;
+  valueKind: "conteggio" | "quota" | "rapporto" | "densita";
+  publicHint: string;
 };
 
 export type AtlanteLoadedLayer = {
@@ -125,6 +128,7 @@ export const ATLANTE_INDICATOR_CATEGORIES: Array<{
   label: string;
 }> = [
   { id: "popolazione", label: "Popolazione" },
+  { id: "densita", label: "Densità" },
   { id: "eta", label: "Età" },
   { id: "cittadinanza", label: "Cittadinanza" },
   { id: "istruzione", label: "Istruzione" },
@@ -150,6 +154,21 @@ export const ATLANTE_INDICATORS: AtlanteIndicatorDefinition[] = [
     unitLabel: "persone",
     sourceDatasetLabel:
       "Dati per sezioni di censimento - Censimento permanente 2023",
+    valueKind: "conteggio",
+    publicHint: "Numero assoluto di residenti nella sezione.",
+  },
+  {
+    id: "residenti-per-kmq",
+    categoryId: "densita",
+    categoryLabel: "Densità",
+    label: "Residenti per kmq",
+    sourceKeys: ["residenti_per_kmq"],
+    unitLabel: "residenti/kmq",
+    sourceDatasetLabel:
+      "Dati per sezioni di censimento - Censimento permanente 2023",
+    valueKind: "densita",
+    publicHint:
+      "Rapporto tra residenti e superficie della sezione calcolata dalla geometria ISTAT.",
   },
   {
     id: "quota-0-14",
@@ -160,6 +179,8 @@ export const ATLANTE_INDICATORS: AtlanteIndicatorDefinition[] = [
     unitLabel: "%",
     sourceDatasetLabel:
       "Dati per sezioni di censimento - Censimento permanente 2023",
+    valueKind: "quota",
+    publicHint: "Quota sul totale dei residenti della sezione.",
   },
   {
     id: "quota-anziani",
@@ -170,6 +191,8 @@ export const ATLANTE_INDICATORS: AtlanteIndicatorDefinition[] = [
     unitLabel: "%",
     sourceDatasetLabel:
       "Dati per sezioni di censimento - Censimento permanente 2023",
+    valueKind: "quota",
+    publicHint: "Quota sul totale dei residenti della sezione.",
   },
   {
     id: "quota-stranieri",
@@ -180,6 +203,8 @@ export const ATLANTE_INDICATORS: AtlanteIndicatorDefinition[] = [
     unitLabel: "%",
     sourceDatasetLabel:
       "Dati per sezioni di censimento - Censimento permanente 2023",
+    valueKind: "quota",
+    publicHint: "Quota sul totale dei residenti della sezione.",
   },
   {
     id: "quota-titoli-terziari",
@@ -190,6 +215,9 @@ export const ATLANTE_INDICATORS: AtlanteIndicatorDefinition[] = [
     unitLabel: "%",
     sourceDatasetLabel:
       "Dati per sezioni di censimento - Censimento permanente 2023",
+    valueKind: "quota",
+    publicHint:
+      "Quota calcolata sulla popolazione residente di 9 anni e più.",
   },
   {
     id: "occupati-15-64",
@@ -200,6 +228,21 @@ export const ATLANTE_INDICATORS: AtlanteIndicatorDefinition[] = [
     unitLabel: "persone",
     sourceDatasetLabel:
       "Dati per sezioni di censimento - Censimento permanente 2023",
+    valueKind: "conteggio",
+    publicHint: "Numero assoluto di occupati residenti tra 15 e 64 anni.",
+  },
+  {
+    id: "occupati-15-64-per-100-residenti",
+    categoryId: "lavoro",
+    categoryLabel: "Lavoro",
+    label: "Occupati 15-64 per 100 residenti",
+    sourceKeys: ["occupati_15_64_per_100_residenti"],
+    unitLabel: "per 100 residenti",
+    sourceDatasetLabel:
+      "Dati per sezioni di censimento - Censimento permanente 2023",
+    valueKind: "rapporto",
+    publicHint:
+      "Rapporto divulgativo sui residenti totali: non è un tasso di occupazione.",
   },
   {
     id: "famiglie",
@@ -210,6 +253,32 @@ export const ATLANTE_INDICATORS: AtlanteIndicatorDefinition[] = [
     unitLabel: "famiglie",
     sourceDatasetLabel:
       "Dati per sezioni di censimento - Censimento permanente 2023",
+    valueKind: "conteggio",
+    publicHint: "Numero assoluto di famiglie residenti.",
+  },
+  {
+    id: "residenti-per-famiglia",
+    categoryId: "famiglie",
+    categoryLabel: "Famiglie",
+    label: "Residenti per famiglia",
+    sourceKeys: ["residenti_per_famiglia"],
+    unitLabel: "residenti/famiglia",
+    sourceDatasetLabel:
+      "Dati per sezioni di censimento - Censimento permanente 2023",
+    valueKind: "rapporto",
+    publicHint: "Rapporto tra residenti e famiglie della sezione.",
+  },
+  {
+    id: "famiglie-per-100-residenti",
+    categoryId: "famiglie",
+    categoryLabel: "Famiglie",
+    label: "Famiglie per 100 residenti",
+    sourceKeys: ["famiglie_per_100_residenti"],
+    unitLabel: "per 100 residenti",
+    sourceDatasetLabel:
+      "Dati per sezioni di censimento - Censimento permanente 2023",
+    valueKind: "rapporto",
+    publicHint: "Rapporto tra famiglie residenti e popolazione residente.",
   },
   {
     id: "abitazioni",
@@ -220,6 +289,21 @@ export const ATLANTE_INDICATORS: AtlanteIndicatorDefinition[] = [
     unitLabel: "abitazioni",
     sourceDatasetLabel:
       "Dati per sezioni di censimento - Censimento permanente 2023",
+    valueKind: "conteggio",
+    publicHint: "Numero assoluto di abitazioni nel tracciato ISTAT.",
+  },
+  {
+    id: "abitazioni-per-100-famiglie",
+    categoryId: "abitazioni",
+    categoryLabel: "Abitazioni",
+    label: "Abitazioni per 100 famiglie",
+    sourceKeys: ["abitazioni_per_100_famiglie"],
+    unitLabel: "per 100 famiglie",
+    sourceDatasetLabel:
+      "Dati per sezioni di censimento - Censimento permanente 2023",
+    valueKind: "rapporto",
+    publicHint:
+      "Rapporto tra abitazioni totali e famiglie residenti; non è un dato catastale.",
   },
   {
     id: "automobili",
@@ -230,6 +314,20 @@ export const ATLANTE_INDICATORS: AtlanteIndicatorDefinition[] = [
     unitLabel: "automobili",
     sourceDatasetLabel:
       "Dati per sezioni di censimento - Censimento permanente 2023",
+    valueKind: "conteggio",
+    publicHint: "Numero assoluto di automobili nel tracciato ISTAT.",
+  },
+  {
+    id: "auto-per-100-residenti",
+    categoryId: "mobilita-auto",
+    categoryLabel: "Mobilità/auto",
+    label: "Auto per 100 residenti",
+    sourceKeys: ["auto_per_100_residenti"],
+    unitLabel: "per 100 residenti",
+    sourceDatasetLabel:
+      "Dati per sezioni di censimento - Censimento permanente 2023",
+    valueKind: "rapporto",
+    publicHint: "Rapporto tra automobili e residenti della sezione.",
   },
 ];
 
@@ -528,7 +626,7 @@ export function buildAtlanteDistribution(
     };
   }
 
-  const bins = buildQuantileBins(sortedValues, requestedBinCount);
+  const bins = buildClearIntervalBins(sortedValues, requestedBinCount);
 
   return {
     bins,
@@ -544,61 +642,59 @@ export function buildAtlanteDistribution(
   };
 }
 
-function buildQuantileBins(sortedValues: number[], requestedBinCount: number) {
-  const targetBinCount = Math.max(
-    1,
-    Math.min(
-      requestedBinCount,
-      new Set(sortedValues).size,
-      sortedValues.length,
-    ),
-  );
-  const thresholds: number[] = [];
-
-  for (let index = 1; index <= targetBinCount; index += 1) {
-    const thresholdIndex =
-      index === targetBinCount
-        ? sortedValues.length - 1
-        : Math.max(
-            0,
-            Math.ceil((index / targetBinCount) * sortedValues.length) - 1,
-          );
-    const threshold = sortedValues[thresholdIndex];
-    const previousThreshold = thresholds[thresholds.length - 1];
-    if (
-      thresholds.length === 0 ||
-      threshold > previousThreshold ||
-      index === targetBinCount
-    ) {
-      thresholds.push(threshold);
-    }
-  }
-
-  thresholds[thresholds.length - 1] = sortedValues[sortedValues.length - 1];
-
-  const bins = thresholds.map<AtlanteDistributionBin>((threshold, index) => ({
-    index,
-    min: Number.POSITIVE_INFINITY,
-    max: Number.NEGATIVE_INFINITY,
-    count: 0,
-    label: "",
-  }));
+function buildClearIntervalBins(
+  sortedValues: number[],
+  requestedBinCount: number,
+) {
+  const min = sortedValues[0];
+  const max = sortedValues[sortedValues.length - 1];
+  const targetBinCount = Math.max(1, Math.min(requestedBinCount, 6));
+  const startsAtZero = min >= 0;
+  const rawStart = startsAtZero ? 0 : min;
+  const step = getNiceIntervalStep((max - rawStart) / targetBinCount);
+  const start = startsAtZero ? 0 : Math.floor(min / step) * step;
+  const end = Math.ceil(max / step) * step;
+  const binCount = Math.max(1, Math.round((end - start) / step));
+  const bins = Array.from({ length: binCount }, (_, index) => {
+    const binMin = normalizeDisplayNumber(start + index * step);
+    const binMax = normalizeDisplayNumber(
+      index === binCount - 1 ? end : start + (index + 1) * step,
+    );
+    return {
+      index,
+      min: binMin,
+      max: binMax,
+      count: 0,
+      label: formatDistributionRange(binMin, binMax),
+    };
+  });
 
   for (const value of sortedValues) {
-    const targetIndex = thresholds.findIndex((threshold) => value <= threshold);
-    const bin = bins[Math.max(0, targetIndex)];
+    const targetIndex =
+      value >= end
+        ? bins.length - 1
+        : Math.max(0, Math.floor((value - start) / step));
+    const bin = bins[Math.min(bins.length - 1, targetIndex)];
     bin.count += 1;
-    bin.min = Math.min(bin.min, value);
-    bin.max = Math.max(bin.max, value);
   }
 
-  return bins
-    .filter((bin) => bin.count > 0)
-    .map((bin, index) => ({
-      ...bin,
-      index,
-      label: formatDistributionRange(bin.min, bin.max),
-    }));
+  return bins;
+}
+
+function getNiceIntervalStep(rawStep: number) {
+  if (!Number.isFinite(rawStep) || rawStep <= 0) {
+    return 1;
+  }
+  const magnitude = 10 ** Math.floor(Math.log10(rawStep));
+  const normalized = rawStep / magnitude;
+  const multiplier =
+    normalized <= 1 ? 1 : normalized <= 2 ? 2 : normalized <= 5 ? 5 : 10;
+  return multiplier * magnitude;
+}
+
+function normalizeDisplayNumber(value: number) {
+  const rounded = Number(value.toFixed(6));
+  return Object.is(rounded, -0) ? 0 : rounded;
 }
 
 function calculateMedian(sortedValues: number[]) {
@@ -648,17 +744,19 @@ export function describeAtlanteDistributionPosition(
 }
 
 function formatDistributionRange(min: number, max: number) {
+  const needsDecimals =
+    !Number.isInteger(min) ||
+    !Number.isInteger(max) ||
+    Math.abs(max - min) < 10;
   const formatter = new Intl.NumberFormat("it-IT", {
-    maximumFractionDigits: 0,
+    maximumFractionDigits: needsDecimals ? 1 : 0,
   });
 
   if (min === max) {
     return formatter.format(min);
   }
 
-  return `${formatter.format(Math.ceil(min))} - ${formatter.format(
-    Math.floor(max),
-  )}`;
+  return `${formatter.format(min)} - ${formatter.format(max)}`;
 }
 
 export function featureHasIndicator(
