@@ -49,7 +49,11 @@ export const KEYSTONE_ORGANI: KeystoneOrgano[] = [
     slug: "commissioni-consiliari",
     name: "Commissioni Consiliari",
     description:
-      "Commissioni permanenti del Consiglio Comunale incaricate dell'istruttoria degli atti.",
+      [
+        "Commissioni permanenti del Consiglio Comunale incaricate",
+        "dell'istruttoria degli atti. La composizione sara' popolata quando",
+        "sara' disponibile una fonte ufficiale corrente e verificabile.",
+      ].join(" "),
     position: 2,
   },
 ];

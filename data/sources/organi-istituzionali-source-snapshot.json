@@ -2,8 +2,8 @@
   "checkedAt": "2026-07-04",
   "sources": {
     "politici": "https://www.comune.lamezia-terme.cz.it/it/page/politici",
-    "consiglio": "https://www.comune.lamezia-terme.cz.it/it/organizational_unit/consiglio-comunale",
-    "giunta": "https://www.comune.lamezia-terme.cz.it/it/organizational_unit/giunta-comunale"
+    "consiglio": "https://www.comune.lamezia-terme.cz.it/it/unita_organizzative/consiglio-comunale",
+    "giunta": "https://www.comune.lamezia-terme.cz.it/it/unita_organizzative/giunta-comunale"
   },
   "politici": [
     {

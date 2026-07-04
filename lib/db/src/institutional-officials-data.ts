@@ -41,13 +41,13 @@ export const INSTITUTIONAL_POLITICI_SOURCE: InstitutionalSource = {
 
 export const CURRENT_COUNCIL_SOURCE: InstitutionalSource = {
   label: "Comune di Lamezia Terme - Consiglio Comunale",
-  url: `${COMUNE_BASE_URL}/it/organizational_unit/consiglio-comunale`,
+  url: `${COMUNE_BASE_URL}/it/unita_organizzative/consiglio-comunale`,
   checkedAt: "2026-07-04",
 };
 
 export const CURRENT_GIUNTA_SOURCE: InstitutionalSource = {
   label: "Comune di Lamezia Terme - Giunta Comunale",
-  url: `${COMUNE_BASE_URL}/it/organizational_unit/giunta-comunale`,
+  url: `${COMUNE_BASE_URL}/it/unita_organizzative/giunta-comunale`,
   checkedAt: "2026-07-04",
 };
 

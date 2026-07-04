@@ -326,6 +326,30 @@ async function main(): Promise<void> {
     console.log(
       `Using institutional roster source snapshot from ${snapshot.checkedAt}.`,
     );
+    if (
+      normalizeUrl(snapshot.sources.politici) !==
+      normalizeUrl(INSTITUTIONAL_POLITICI_SOURCE.url)
+    ) {
+      failures.push(
+        "Snapshot Politici source URL does not match dataset source URL.",
+      );
+    }
+    if (
+      normalizeUrl(snapshot.sources.consiglio) !==
+      normalizeUrl(CURRENT_COUNCIL_SOURCE.url)
+    ) {
+      failures.push(
+        "Snapshot Consiglio source URL does not match dataset source URL.",
+      );
+    }
+    if (
+      normalizeUrl(snapshot.sources.giunta) !==
+      normalizeUrl(CURRENT_GIUNTA_SOURCE.url)
+    ) {
+      failures.push(
+        "Snapshot Giunta source URL does not match dataset source URL.",
+      );
+    }
   }
 
   await checkPolitici(failures);

@@ -45,6 +45,17 @@ function formatDateRange(
   return "Periodo da documentare";
 }
 
+function missingCompositionText(type: string) {
+  if (type === "commissione") {
+    return [
+      "Non e' stata individuata una fonte ufficiale corrente e verificabile",
+      "sulla composizione delle commissioni consiliari. La sezione resta",
+      "predisposta per il caricamento appena la fonte sara' disponibile.",
+    ].join(" ");
+  }
+  return "Non risultano componenti registrati per questo organo.";
+}
+
 export function OrganoDetail() {
   const [, params] = useRoute("/organi/:slug");
   const slug = params?.slug ?? "";
@@ -179,7 +190,7 @@ export function OrganoDetail() {
                   Composizione non disponibile
                 </EmptyTitle>
                 <EmptyDescription>
-                  Non risultano componenti registrati per questo organo.
+                  {missingCompositionText(organo.type)}
                 </EmptyDescription>
               </EmptyHeader>
             </Empty>
