@@ -25,6 +25,8 @@ REQUEST_PLAN_CSV = QA_DIR / "anncsu_coordinate_geocode_request_plan_2025.csv"
 CANDIDATES_CSV = QA_DIR / "anncsu_coordinate_geocode_candidates_2025.csv"
 REPORT_PATH = QA_DIR / "anncsu_coordinate_geocode_candidates_report_2025.md"
 CACHE_DIR = ROOT / ".cache" / "anncsu-geocode" / "nominatim"
+WORKBENCH_DATA_DIR = ROOT / "tools" / "electoral-review-workbench" / "public" / "data"
+WORKBENCH_CANDIDATES_JSON = WORKBENCH_DATA_DIR / "coordinate_geocode_candidates_by_access.json"
 
 NOMINATIM_SEARCH_URL = "https://nominatim.openstreetmap.org/search"
 NOMINATIM_POLICY_URL = "https://operations.osmfoundation.org/policies/nominatim/"
@@ -106,6 +108,37 @@ def write_csv(path: Path, rows: list[dict[str, Any]], headers: list[str]) -> Non
         writer.writeheader()
         for row in rows:
             writer.writerow({header: row.get(header, "") for header in headers})
+
+
+def write_json(path: Path, payload: Any) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(payload, ensure_ascii=False, separators=(",", ":")) + "\n", encoding="utf-8")
+
+
+def workbench_payload(rows: list[dict[str, Any]]) -> dict[str, list[dict[str, str]]]:
+    grouped: dict[str, list[dict[str, str]]] = {}
+    for row in rows:
+        access_id = as_text(row.get("access_id"))
+        if not access_id:
+            continue
+        grouped.setdefault(access_id, []).append(
+            {
+                "provider": as_text(row.get("provider")),
+                "query": as_text(row.get("query")),
+                "query_variant": as_text(row.get("query_variant")),
+                "candidate_rank": as_text(row.get("candidate_rank")),
+                "candidate_lon": as_text(row.get("candidate_lon")),
+                "candidate_lat": as_text(row.get("candidate_lat")),
+                "candidate_display_name": as_text(row.get("candidate_display_name")),
+                "candidate_type": as_text(row.get("candidate_type")),
+                "candidate_has_house_number": as_text(row.get("candidate_has_house_number")),
+                "within_lamezia_bbox": as_text(row.get("within_lamezia_bbox")),
+                "distance_from_source_m": as_text(row.get("distance_from_source_m")),
+                "provider_confidence": as_text(row.get("provider_confidence")),
+                "candidate_status": as_text(row.get("candidate_status")),
+            }
+        )
+    return grouped
 
 
 def address_query(row: dict[str, str]) -> str:
@@ -328,6 +361,7 @@ def write_report(
         f"- Rate limit sleep seconds: {sleep_seconds}",
         f"- Request plan CSV: `{relpath(REQUEST_PLAN_CSV)}`",
         f"- Candidate CSV: `{relpath(CANDIDATES_CSV)}`",
+        f"- Workbench candidate JSON: `{relpath(WORKBENCH_CANDIDATES_JSON)}`",
         f"- Cache directory: `{relpath(CACHE_DIR)}`",
         "",
         "This script creates coordinate candidates only. It does not overwrite ANNCSU raw coordinates, processed civic assignments, GPKG files, polygons, or public UI.",
@@ -442,6 +476,7 @@ def main() -> int:
                 else:
                     candidate_rows.extend(candidate_rows_for(row, [], as_text(row.get("address_query")), "all_variants"))
     write_csv(CANDIDATES_CSV, candidate_rows, CANDIDATE_FIELDS)
+    write_json(WORKBENCH_CANDIDATES_JSON, workbench_payload(candidate_rows))
     write_report(
         planned_count=len(planned),
         requested_count=requested_count,
@@ -463,6 +498,7 @@ def main() -> int:
 
     print(f"request_plan_csv={REQUEST_PLAN_CSV}")
     print(f"candidate_csv={CANDIDATES_CSV}")
+    print(f"workbench_candidate_json={WORKBENCH_CANDIDATES_JSON}")
     print(f"candidate_report={REPORT_PATH}")
     print(f"planned_rows={len(planned)}")
     print(f"provider_requests={requested_count}")

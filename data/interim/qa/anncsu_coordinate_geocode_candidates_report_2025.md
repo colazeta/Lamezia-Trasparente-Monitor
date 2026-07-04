@@ -1,19 +1,20 @@
 # ANNCSU Coordinate External Geocode Candidates 2025
 
-Date: 2026-06-28
+Date: 2026-07-04
 
 ## Result
 
 - Request plan rows: 345
 - Requests attempted in this run: 0
-- Cached provider responses reused: 8
-- Candidate rows written: 5
+- Cached provider responses reused: 27
+- Candidate rows written: 26
 - Dry run: no
-- Limit: 5
+- Limit: 20
 - Selection filter: street_prefix=VIA
 - Rate limit sleep seconds: 1.2
 - Request plan CSV: `data/interim/qa/anncsu_coordinate_geocode_request_plan_2025.csv`
 - Candidate CSV: `data/interim/qa/anncsu_coordinate_geocode_candidates_2025.csv`
+- Workbench candidate JSON: `tools/electoral-review-workbench/public/data/coordinate_geocode_candidates_by_access.json`
 - Cache directory: `.cache/anncsu-geocode/nominatim`
 
 This script creates coordinate candidates only. It does not overwrite ANNCSU raw coordinates, processed civic assignments, GPKG files, polygons, or public UI.
@@ -27,12 +28,12 @@ This script creates coordinate candidates only. It does not overwrite ANNCSU raw
 
 ## Candidate Status Counts
 
-- `candidate_requires_human_review`: 2
-- `no_candidate_returned`: 3
+- `candidate_requires_human_review`: 19
+- `no_candidate_returned`: 7
 
 ## Provider Confidence Counts
 
-- `low_street_level`: 2
+- `low_street_level`: 19
 
 ## Next Review Step
 
