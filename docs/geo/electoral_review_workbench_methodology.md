@@ -224,6 +224,12 @@ an initial high-signal batch:
 - `data/interim/qa/anncsu_coordinate_review_batch_1_2025.csv`
 - `data/interim/qa/anncsu_coordinate_review_batch_1_report_2025.md`
 
+The workbench builder also publishes
+`tools/electoral-review-workbench/public/data/coordinate_review_batch_by_access.json`.
+The local interface uses it for the `Coordinate batch` filter and for the
+selected civic's relocation-support evidence. This remains review evidence only:
+batch membership does not approve or apply a coordinate.
+
 The retraining path is therefore review-first:
 
 - collect accepted manual coordinate overrides and rejected candidates;

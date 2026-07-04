@@ -76,7 +76,9 @@ These candidates use non-suspect same-street ANNCSU civics as review anchors.
 They are not applied automatically and must still be confirmed through a
 `manual_coordinate_override` decision. The review-batch script turns the
 candidate list into a full priority queue plus a first batch of 50 high-signal
-cases for manual workbench review.
+cases for manual workbench review. After rebuilding the workbench payloads, the
+local interface exposes a `Coordinate batch` filter and shows the selected
+civic's batch rank/status in the relocation support panel.
 
 Build the auditable recovery layer and training set:
 
@@ -339,6 +341,9 @@ Primary civic-first payloads:
 - `review_summary.json`
 - `coordinate_suspect_points.json`
 - `coordinate_suspect_points.geojson`
+- `coordinate_geocode_candidates_by_access.json`
+- `coordinate_local_anchor_candidates_by_access.json`
+- `coordinate_review_batch_by_access.json`
 
 Compatibility payloads from earlier workbench versions may remain generated
 under `public/data/`, but the interface uses the civic-first files above.
