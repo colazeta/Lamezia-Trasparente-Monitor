@@ -6,6 +6,8 @@ import app from "../app";
 import {
   db,
   pool,
+  CURRENT_INSTITUTIONAL_OFFICIALS,
+  INSTITUTIONAL_POLITICI_SOURCE,
   organiTable,
   organiMembersTable,
   officialsTable,
@@ -37,6 +39,45 @@ afterEach(async () => {
 });
 
 describe("organi historical memberships", () => {
+  it("includes the verified current institutional roster", () => {
+    expect(INSTITUTIONAL_POLITICI_SOURCE.url).toBe(
+      "https://www.comune.lamezia-terme.cz.it/it/page/politici",
+    );
+    expect(CURRENT_INSTITUTIONAL_OFFICIALS).toHaveLength(31);
+    expect(
+      CURRENT_INSTITUTIONAL_OFFICIALS.filter((o) => o.role === "sindaco"),
+    ).toHaveLength(1);
+    expect(
+      CURRENT_INSTITUTIONAL_OFFICIALS.filter((o) => o.role === "assessore"),
+    ).toHaveLength(7);
+    expect(
+      CURRENT_INSTITUTIONAL_OFFICIALS.filter((o) => o.role === "consigliere"),
+    ).toHaveLength(23);
+    expect(CURRENT_INSTITUTIONAL_OFFICIALS).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          name: "Mario Murone",
+          role: "sindaco",
+          roleTitle: "Sindaco",
+        }),
+        expect.objectContaining({
+          name: "Maria Grandinetti",
+          role: "consigliere",
+          roleTitle: "Presidente del Consiglio Comunale",
+        }),
+        expect.objectContaining({
+          name: "Michelangelo Cardamone",
+          role: "assessore",
+          roleTitle: "Vicesindaco",
+        }),
+        expect.objectContaining({
+          name: "Tranquillo Paradiso",
+          role: "assessore",
+        }),
+      ]),
+    );
+  });
+
   it("separates current composition from historical terms", async () => {
     const unique = `${Date.now()}-${Math.random().toString(36).slice(2)}`;
     const [organo] = await db

@@ -1,5 +1,6 @@
 import { and, asc, desc, eq, sql } from "drizzle-orm";
 import { db, pool } from "./client";
+import { ensureInstitutionalOfficials } from "./institutional-officials";
 import { runOrganiSedutaSync } from "./organi-sync";
 import {
   contractsTable,
@@ -666,12 +667,16 @@ function pickVote(bias: VoteValue, index: number): VoteValue {
 }
 
 async function seedOfficials() {
+  await ensureInstitutionalOfficials();
+
   const [{ count }] = await db
     .select({ count: sql<number>`count(*)::int` })
     .from(officialsTable);
 
   if (count > 0) {
-    console.log("Officials seed skipped: officials already exist.");
+    console.log(
+      "Officials seed skipped: institutional public roster already exists.",
+    );
     return;
   }
 
