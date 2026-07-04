@@ -63,7 +63,10 @@ python scripts/geocode_anncsu_coordinate_candidates.py --execute --limit 10 --us
 
 Use the first command for a request plan. Use `--execute` only for small,
 cached, rate-limited QA batches, or with a dedicated provider/internal geocoder
-that allows bulk use.
+that allows bulk use. The command writes both
+`data/interim/qa/anncsu_coordinate_geocode_candidates_2025.csv` and the
+workbench payload
+`tools/electoral-review-workbench/public/data/coordinate_geocode_candidates_by_access.json`.
 
 Generate local ANNCSU anchor candidates for suspect coordinates:
 
