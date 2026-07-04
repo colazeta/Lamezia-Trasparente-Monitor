@@ -14,6 +14,7 @@ const EXPECTED_HEALTHZ_NOT_CHECKED = [
 ];
 const REQUIRED_ROUTES = [
   "/",
+  "/contratti",
   "/convocazioni",
   "/convocazioni/demo-consiglio-comunale-v0",
   "/fonti-dati",
@@ -22,6 +23,17 @@ const REQUIRED_ROUTES = [
 const REQUIRED_PUBLIC_TEXT = [
   "rendiamoLameziaTrasparente",
   "Osservatorio Civico Indipendente",
+];
+const REQUIRED_CONTRACT_BUNDLE_TEXT = [
+  "Contratti pubblici sotto osservazione",
+  "Ponte BDNCP",
+  "Programmazione",
+  "Progettazione",
+  "Gara / pubblicazione",
+  "Esecuzione della gara",
+  "Affidamento",
+  "Esecuzione del contratto",
+  "Conclusione, collaudi e verifiche",
 ];
 
 function usage() {
@@ -178,6 +190,37 @@ function toDistPath(distDir, assetPath) {
   return path.join(distDir, clean);
 }
 
+async function assertGeneratedBundleText(distDir, assetPaths, requiredText) {
+  const jsAssetPaths = assetPaths
+    .filter(
+      (assetPath) =>
+        assetPath.startsWith("/assets/") || assetPath.startsWith("assets/"),
+    )
+    .filter((assetPath) => assetPath.endsWith(".js"));
+
+  if (jsAssetPaths.length === 0) {
+    throw new Error(
+      "index.html does not reference any generated JavaScript assets.",
+    );
+  }
+
+  const bundleText = (
+    await Promise.all(
+      jsAssetPaths.map(async (assetPath) =>
+        readFile(toDistPath(distDir, assetPath), "utf8"),
+      ),
+    )
+  ).join("\n");
+
+  for (const expectedText of requiredText) {
+    if (!bundleText.includes(expectedText)) {
+      throw new Error(
+        `Generated bundle does not contain expected contract marker: ${expectedText}`,
+      );
+    }
+  }
+}
+
 function routeFallbackPath(distDir, route) {
   const clean = route.replace(/^\/+/, "").replace(/\/+$/, "");
   if (!clean) return path.join(distDir, "index.html");
@@ -216,6 +259,11 @@ async function main() {
   for (const assetPath of assets) {
     await assertReadableFile(toDistPath(absoluteDistDir, assetPath), "Static asset");
   }
+  await assertGeneratedBundleText(
+    absoluteDistDir,
+    assets,
+    REQUIRED_CONTRACT_BUNDLE_TEXT,
+  );
 
   const routeResults = [];
   for (const route of routes) {
