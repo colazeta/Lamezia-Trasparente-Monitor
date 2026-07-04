@@ -1,12 +1,13 @@
 # ANNCSU Coordinate Recovery Layer 2025
 
-Date: 2026-06-29
+Date: 2026-07-04
 
 ## Result
 
 - Recovery rows: 22757
 - Training rows accepted from manual overrides: 0
 - Decisions input: none
+- Decision audit gate: not applicable without decisions input
 - Recovery CSV: `data/interim/geo/anncsu_lamezia_coordinate_recovery_candidates_2025.csv`
 - Training-set CSV: `data/interim/qa/anncsu_coordinate_recovery_training_set_2025.csv`
 
@@ -38,7 +39,7 @@ This layer does not overwrite ANNCSU raw coordinates. `source_lon/source_lat` re
 2. Review candidate or manually picked coordinates in the local workbench.
 3. Export decisions from the workbench as JSON or CSV.
 4. Run `scripts/audit_anncsu_coordinate_decisions.py --decisions <exported file>` and resolve any P0/P1 findings.
-5. Re-run this script with `--decisions <exported file>`.
+5. Re-run this script with `--decisions <exported file>`. The script enforces the same P0/P1 audit gate before applying overrides.
 6. Re-run `scripts/audit_anncsu_coordinate_quality.py --use-recovery-layer` to verify the reviewed replacements.
 7. Use only `accepted_reviewed_override` rows as a correction/training set for future coordinate-quality passes.
 
