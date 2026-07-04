@@ -1,0 +1,297 @@
+{
+  "checkedAt": "2026-07-04",
+  "sources": {
+    "politici": "https://www.comune.lamezia-terme.cz.it/it/page/politici",
+    "consiglio": "https://www.comune.lamezia-terme.cz.it/it/organizational_unit/consiglio-comunale",
+    "giunta": "https://www.comune.lamezia-terme.cz.it/it/organizational_unit/giunta-comunale"
+  },
+  "politici": [
+    {
+      "name": "Adelaide Colosimo",
+      "roleTitle": "Consigliere comunale",
+      "profileUrl": "https://www.comune.lamezia-terme.cz.it/it/person/colosimo-adelaide"
+    },
+    {
+      "name": "Alessandro Saullo",
+      "roleTitle": "Consigliere Comunale",
+      "profileUrl": "https://www.comune.lamezia-terme.cz.it/it/person/saullo-alessandro"
+    },
+    {
+      "name": "Annalisa Spinelli",
+      "roleTitle": "Assessore comunale",
+      "profileUrl": "https://www.comune.lamezia-terme.cz.it/it/person/spinelli-annalisa"
+    },
+    {
+      "name": "Annita Vitale",
+      "roleTitle": "Consigliere comunale",
+      "profileUrl": "https://www.comune.lamezia-terme.cz.it/it/person/vitale-annita"
+    },
+    {
+      "name": "Antonio Lorena",
+      "roleTitle": "Consigliere Comunale",
+      "profileUrl": "https://www.comune.lamezia-terme.cz.it/it/person/lorena-antonio"
+    },
+    {
+      "name": "Antonio Mastroianni",
+      "roleTitle": "Consigliere Comunale",
+      "profileUrl": "https://www.comune.lamezia-terme.cz.it/it/person/mastroianni-antonio"
+    },
+    {
+      "name": "Bernadette Serratore",
+      "roleTitle": "Consigliere comunale",
+      "profileUrl": "https://www.comune.lamezia-terme.cz.it/it/person/serratore-bernadette"
+    },
+    {
+      "name": "Carmelina Isa Muraca",
+      "roleTitle": "Consigliere comunale",
+      "profileUrl": "https://www.comune.lamezia-terme.cz.it/it/person/muraca-carmelina-isa"
+    },
+    {
+      "name": "Carmine Villella",
+      "roleTitle": "Consigliere comunale",
+      "profileUrl": "https://www.comune.lamezia-terme.cz.it/it/person/villella-carmine"
+    },
+    {
+      "name": "Davide Mastroianni",
+      "roleTitle": "Consigliere Comunale",
+      "profileUrl": "https://www.comune.lamezia-terme.cz.it/it/person/mastroianni-davide"
+    },
+    {
+      "name": "Donatella Amicarelli",
+      "roleTitle": "Assessore comunale",
+      "profileUrl": "https://www.comune.lamezia-terme.cz.it/it/person/amicarelli-donatella"
+    },
+    {
+      "name": "Doris Lo Moro",
+      "roleTitle": "Consigliere comunale",
+      "profileUrl": "https://www.comune.lamezia-terme.cz.it/it/person/lo-moro-doris"
+    },
+    {
+      "name": "Fabrizio Muraca",
+      "roleTitle": "Consigliere comunale",
+      "profileUrl": "https://www.comune.lamezia-terme.cz.it/it/person/muraca-fabrizio"
+    },
+    {
+      "name": "Francesco Caruso",
+      "roleTitle": "Consigliere comunale",
+      "profileUrl": "https://www.comune.lamezia-terme.cz.it/it/person/caruso-francesco"
+    },
+    {
+      "name": "Gennarino Masi",
+      "roleTitle": "Consigliere comunale",
+      "profileUrl": "https://www.comune.lamezia-terme.cz.it/it/person/masi-gennarino"
+    },
+    {
+      "name": "Gennaro Gianturco",
+      "roleTitle": "Assessore comunale",
+      "profileUrl": "https://www.comune.lamezia-terme.cz.it/it/person/gianturco-gennaro"
+    },
+    {
+      "name": "Giancarlo Nicotera",
+      "roleTitle": "Consigliere comunale",
+      "profileUrl": "https://www.comune.lamezia-terme.cz.it/it/person/nicotera-giancarlo"
+    },
+    {
+      "name": "Giovanni Manuel Raso",
+      "roleTitle": "Consigliere comunale",
+      "profileUrl": "https://www.comune.lamezia-terme.cz.it/it/person/raso-giovanni-manuel"
+    },
+    {
+      "name": "Lidia Vescio",
+      "roleTitle": "Consigliere comunale",
+      "profileUrl": "https://www.comune.lamezia-terme.cz.it/it/person/vescio-lidia"
+    },
+    {
+      "name": "Maria Grandinetti",
+      "roleTitle": "Presidente del Consiglio Comunale",
+      "profileUrl": "https://www.comune.lamezia-terme.cz.it/it/person/grandinetti-maria"
+    },
+    {
+      "name": "Maria Lucia Raso",
+      "roleTitle": "Consigliere comunale",
+      "profileUrl": "https://www.comune.lamezia-terme.cz.it/it/person/raso-maria-lucia"
+    },
+    {
+      "name": "Maria Nardo",
+      "roleTitle": "Assessore comunale",
+      "profileUrl": "https://www.comune.lamezia-terme.cz.it/it/person/nardo-maria"
+    },
+    {
+      "name": "Mario Murone",
+      "roleTitle": "Sindaco",
+      "profileUrl": "https://www.comune.lamezia-terme.cz.it/it/person/murone-mario"
+    },
+    {
+      "name": "Massimo Cristiano",
+      "roleTitle": "Consigliere comunale",
+      "profileUrl": "https://www.comune.lamezia-terme.cz.it/it/person/cristiano-massimo"
+    },
+    {
+      "name": "Matteo Folino",
+      "roleTitle": "Consigliere Comunale",
+      "profileUrl": "https://www.comune.lamezia-terme.cz.it/it/person/folino-matteo"
+    },
+    {
+      "name": "Michelangelo Cardamone",
+      "roleTitle": "Vicesindaco",
+      "profileUrl": "https://www.comune.lamezia-terme.cz.it/it/person/cardamone-michelangelo"
+    },
+    {
+      "name": "Michele Rosato",
+      "roleTitle": "Consigliere comunale",
+      "profileUrl": "https://www.comune.lamezia-terme.cz.it/it/person/rosato-michele"
+    },
+    {
+      "name": "Oscar Branca",
+      "roleTitle": "Consigliere comunale",
+      "profileUrl": "https://www.comune.lamezia-terme.cz.it/it/person/branca-oscar"
+    },
+    {
+      "name": "Salvatore Pirelli",
+      "roleTitle": "Assessore comunale",
+      "profileUrl": "https://www.comune.lamezia-terme.cz.it/it/person/pirelli-salvatore"
+    },
+    {
+      "name": "Titina Caruso",
+      "roleTitle": "Consigliere comunale",
+      "profileUrl": "https://www.comune.lamezia-terme.cz.it/it/person/caruso-titina"
+    },
+    {
+      "name": "Tranquillo Paradiso",
+      "roleTitle": "Assessore comunale",
+      "profileUrl": "https://www.comune.lamezia-terme.cz.it/it/person/paradiso-tranquillo-56341"
+    }
+  ],
+  "consiglio": [
+    {
+      "name": "Mario Murone",
+      "profileUrl": "https://www.comune.lamezia-terme.cz.it/it/person/murone-mario"
+    },
+    {
+      "name": "Alessandro Saullo",
+      "profileUrl": "https://www.comune.lamezia-terme.cz.it/it/person/saullo-alessandro"
+    },
+    {
+      "name": "Annita Vitale",
+      "profileUrl": "https://www.comune.lamezia-terme.cz.it/it/person/vitale-annita"
+    },
+    {
+      "name": "Antonio Lorena",
+      "profileUrl": "https://www.comune.lamezia-terme.cz.it/it/person/lorena-antonio"
+    },
+    {
+      "name": "Antonio Mastroianni",
+      "profileUrl": "https://www.comune.lamezia-terme.cz.it/it/person/mastroianni-antonio"
+    },
+    {
+      "name": "Bernadette Serratore",
+      "profileUrl": "https://www.comune.lamezia-terme.cz.it/it/person/serratore-bernadette"
+    },
+    {
+      "name": "Doris Lo Moro",
+      "profileUrl": "https://www.comune.lamezia-terme.cz.it/it/person/lo-moro-doris"
+    },
+    {
+      "name": "Fabrizio Muraca",
+      "profileUrl": "https://www.comune.lamezia-terme.cz.it/it/person/muraca-fabrizio"
+    },
+    {
+      "name": "Francesco Caruso",
+      "profileUrl": "https://www.comune.lamezia-terme.cz.it/it/person/caruso-francesco"
+    },
+    {
+      "name": "Gennarino Masi",
+      "profileUrl": "https://www.comune.lamezia-terme.cz.it/it/person/masi-gennarino"
+    },
+    {
+      "name": "Giancarlo Nicotera",
+      "profileUrl": "https://www.comune.lamezia-terme.cz.it/it/person/nicotera-giancarlo"
+    },
+    {
+      "name": "Giovanni Manuel Raso",
+      "profileUrl": "https://www.comune.lamezia-terme.cz.it/it/person/raso-giovanni-manuel"
+    },
+    {
+      "name": "Lidia Vescio",
+      "profileUrl": "https://www.comune.lamezia-terme.cz.it/it/person/vescio-lidia"
+    },
+    {
+      "name": "Maria Grandinetti",
+      "profileUrl": "https://www.comune.lamezia-terme.cz.it/it/person/grandinetti-maria"
+    },
+    {
+      "name": "Maria Lucia Raso",
+      "profileUrl": "https://www.comune.lamezia-terme.cz.it/it/person/raso-maria-lucia"
+    },
+    {
+      "name": "Massimo Cristiano",
+      "profileUrl": "https://www.comune.lamezia-terme.cz.it/it/person/cristiano-massimo"
+    },
+    {
+      "name": "Matteo Folino",
+      "profileUrl": "https://www.comune.lamezia-terme.cz.it/it/person/folino-matteo"
+    },
+    {
+      "name": "Michele Rosato",
+      "profileUrl": "https://www.comune.lamezia-terme.cz.it/it/person/rosato-michele"
+    },
+    {
+      "name": "Oscar Branca",
+      "profileUrl": "https://www.comune.lamezia-terme.cz.it/it/person/branca-oscar"
+    },
+    {
+      "name": "Titina Caruso",
+      "profileUrl": "https://www.comune.lamezia-terme.cz.it/it/person/caruso-titina"
+    },
+    {
+      "name": "Davide Mastroianni",
+      "profileUrl": "https://www.comune.lamezia-terme.cz.it/it/person/mastroianni-davide"
+    },
+    {
+      "name": "Carmine Villella",
+      "profileUrl": "https://www.comune.lamezia-terme.cz.it/it/person/villella-carmine"
+    },
+    {
+      "name": "Adelaide Colosimo",
+      "profileUrl": "https://www.comune.lamezia-terme.cz.it/it/person/colosimo-adelaide"
+    },
+    {
+      "name": "Carmelina Isa Muraca",
+      "profileUrl": "https://www.comune.lamezia-terme.cz.it/it/person/muraca-carmelina-isa"
+    }
+  ],
+  "giunta": [
+    {
+      "name": "Mario Murone",
+      "profileUrl": "https://www.comune.lamezia-terme.cz.it/it/person/murone-mario"
+    },
+    {
+      "name": "Michelangelo Cardamone",
+      "profileUrl": "https://www.comune.lamezia-terme.cz.it/it/person/cardamone-michelangelo"
+    },
+    {
+      "name": "Tranquillo Paradiso",
+      "profileUrl": "https://www.comune.lamezia-terme.cz.it/it/person/paradiso-tranquillo-56341"
+    },
+    {
+      "name": "Salvatore Pirelli",
+      "profileUrl": "https://www.comune.lamezia-terme.cz.it/it/person/pirelli-salvatore"
+    },
+    {
+      "name": "Annalisa Spinelli",
+      "profileUrl": "https://www.comune.lamezia-terme.cz.it/it/person/spinelli-annalisa"
+    },
+    {
+      "name": "Donatella Amicarelli",
+      "profileUrl": "https://www.comune.lamezia-terme.cz.it/it/person/amicarelli-donatella"
+    },
+    {
+      "name": "Maria Nardo",
+      "profileUrl": "https://www.comune.lamezia-terme.cz.it/it/person/nardo-maria"
+    },
+    {
+      "name": "Gennaro Gianturco",
+      "profileUrl": "https://www.comune.lamezia-terme.cz.it/it/person/gianturco-gennaro"
+    }
+  ]
+}
