@@ -17,7 +17,6 @@ import {
   TrendingUp,
 } from "lucide-react";
 
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   LAMEZIA_CLIMATE_DATA,
@@ -74,46 +73,19 @@ export function ClimateTerritoryDatasetCard() {
       className="mb-8 overflow-hidden rounded-xl border border-card-border bg-card shadow-sm"
     >
       <div className="border-b border-border p-5 md:p-6">
-        <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+        <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
           <div className="max-w-3xl">
-            <Badge variant="brand" className="mb-3 shadow-none">
-              <Database className="mr-1 h-3 w-3" />
-              Dataset statico
-            </Badge>
+            <span className="eyebrow text-primary">
+              <Database className="h-3.5 w-3.5" />
+              Clima e territorio
+            </span>
             <h2
               id="clima-territorio-title"
-              className="text-2xl font-display font-bold text-foreground"
+              className="mt-2 text-2xl font-display font-bold text-foreground"
             >
-              Clima e territorio
+              Anomalie climatiche · Lamezia Terme
             </h2>
             <p className="mt-2 text-sm leading-6 text-muted-foreground">
-              Serie giornaliera per leggere scostamenti termici, variabilita
-              storica e continuita del dato climatico locale come materiale di
-              analisi civica, non come servizio meteo.
-            </p>
-            <ClimateQuickFacts
-              baseline={metadata.baseline_period}
-              latestDate={metadata.latest_complete_date}
-              sourceUrl={metadata.source_documentation_url ?? metadata.source_url}
-            />
-          </div>
-          <a href={LAMEZIA_CLIMATE_DATA_URL} download>
-            <Button variant="outline" size="sm" className="w-full md:w-auto">
-              <FileJson className="h-4 w-4" />
-              Scarica JSON
-              <Download className="h-4 w-4 opacity-70" />
-            </Button>
-          </a>
-        </div>
-      </div>
-
-      <div className="p-5 md:p-6">
-        <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
-          <div>
-            <h3 className="text-xl font-display font-bold text-foreground">
-              Anomalie climatiche · Lamezia Terme
-            </h3>
-            <p className="mt-1 text-sm leading-6 text-muted-foreground">
               Temperatura media giornaliera rispetto alla normale 1991–2020
             </p>
           </div>
@@ -135,14 +107,9 @@ export function ClimateTerritoryDatasetCard() {
             </select>
           </label>
         </div>
+      </div>
 
-        <ClimateInsightBoard
-          annualMetrics={annualMetrics}
-          latestRecord={latestRecord}
-          isLatestYear={isLatestYear}
-          summary={anomalySummary}
-        />
-
+      <div className="p-5 md:p-6">
         <ClimateAnomalyChart
           anomalySummary={anomalySummary}
           isLatestYear={isLatestYear}
@@ -159,7 +126,36 @@ export function ClimateTerritoryDatasetCard() {
           del periodo 1991–2020.
         </p>
 
-        <MethodDisclosure metadata={metadata} />
+        <details className="mt-5 rounded-lg border border-border bg-muted/20 text-sm leading-6">
+          <summary className="cursor-pointer list-none px-4 py-3 font-semibold text-foreground marker:hidden">
+            Dettagli del dataset
+          </summary>
+          <div className="border-t border-border p-4">
+            <ClimateInsightBoard
+              annualMetrics={annualMetrics}
+              latestRecord={latestRecord}
+              isLatestYear={isLatestYear}
+              summary={anomalySummary}
+            />
+            <div className="mt-4 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+              <ClimateQuickFacts
+                baseline={metadata.baseline_period}
+                latestDate={metadata.latest_complete_date}
+                sourceUrl={
+                  metadata.source_documentation_url ?? metadata.source_url
+                }
+              />
+              <a href={LAMEZIA_CLIMATE_DATA_URL} download>
+                <Button variant="outline" size="sm" className="w-full md:w-auto">
+                  <FileJson className="h-4 w-4" />
+                  Scarica JSON
+                  <Download className="h-4 w-4 opacity-70" />
+                </Button>
+              </a>
+            </div>
+            <MethodDisclosure metadata={metadata} />
+          </div>
+        </details>
       </div>
     </section>
   );
