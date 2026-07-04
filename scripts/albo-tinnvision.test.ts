@@ -4,10 +4,12 @@ import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import test from "node:test";
+import { fileURLToPath } from "node:url";
 
 import {
   diffAlboItems,
   normalizeAlboRecords,
+  parseArgs,
   parseTinnvisionHtml,
   parseTinnvisionXml,
   runAlboIngestion,
@@ -16,6 +18,11 @@ import {
 import { ALBO_PRETORIO_LAMEZIA_SOURCE } from "./albo-source-config";
 
 const FIXTURE_RETRIEVED_AT = "2026-06-19T10:00:00.000Z";
+
+test("defaults CLI output to repository data directory", () => {
+  const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
+  assert.equal(parseArgs([]).outDir, path.join(repoRoot, "data"));
+});
 
 test("parses Tinnvision XML export and normalises minimal albo_item fields", () => {
   const records = parseTinnvisionXml(xmlFixture());

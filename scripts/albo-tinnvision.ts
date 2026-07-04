@@ -3,9 +3,13 @@ import { createHash } from "node:crypto";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import process from "node:process";
-import { pathToFileURL } from "node:url";
+import { fileURLToPath, pathToFileURL } from "node:url";
 
 import { ALBO_PRETORIO_LAMEZIA_SOURCE } from "./albo-source-config";
+
+const SCRIPT_DIR = path.dirname(fileURLToPath(import.meta.url));
+const REPO_ROOT = path.resolve(SCRIPT_DIR, "..");
+const DEFAULT_OUT_DIR = path.join(REPO_ROOT, "data");
 
 export type AlboFetchMethod = "xml" | "csv" | "print-fallback" | "html-fallback";
 export type VerificationStatus =
@@ -318,7 +322,7 @@ const MINIMISE_TERMS = [
 ];
 
 export function parseArgs(argv: string[]): CliOptions {
-  const options: CliOptions = { outDir: "data" };
+  const options: CliOptions = { outDir: DEFAULT_OUT_DIR };
   for (let index = 0; index < argv.length; index += 1) {
     const arg = argv[index];
     if (arg === "--") continue;
