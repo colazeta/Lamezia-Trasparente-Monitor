@@ -41,6 +41,19 @@ describe("OpenData climate territory card", () => {
       "href",
       "#clima-territorio",
     );
+    expect(
+      screen.getByRole("heading", { name: "Tipi di dati disponibili" }),
+    ).toBeInTheDocument();
+    expect(screen.getByText("Serie temporali giornaliere")).toBeInTheDocument();
+    expect(screen.getByText("Dataset tabellari")).toBeInTheDocument();
+    expect(screen.getByText("Layer territoriali")).toBeInTheDocument();
+    expect(
+      screen.getByText("Indicatori civici aggregati"),
+    ).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /Apri dato/i })).toHaveAttribute(
+      "href",
+      "#clima-territorio",
+    );
 
     const climateSection = screen
       .getByRole("heading", {
