@@ -137,21 +137,22 @@ export function Opendata() {
           Opendata
         </h1>
         <p className="mt-3 text-muted-foreground text-lg max-w-3xl">
-          Il catalogo dei dataset pubblicati dal{" "}
-          <span className="font-medium text-foreground">
-            Comune di Lamezia Terme
-          </span>{" "}
-          sul portale Opendata ufficiale. Esplora, cerca e consulta i dati
-          aperti — con anteprima tabellare e grafici automatici per i file
-          CSV e JSON, e download diretto delle risorse originali.
+          Scegli un dataset, consulta la visualizzazione e scarica la serie
+          statica quando serve riusare il dato.
         </p>
       </div>
 
-      <OpenDataDashboard />
-
-      <OpenDataTypeLibrary />
-
       <ClimateTerritoryDatasetCard />
+
+      <details className="mb-8 rounded-xl border border-card-border bg-muted/20">
+        <summary className="cursor-pointer list-none px-4 py-3 font-semibold text-foreground marker:hidden">
+          Catalogo e modelli dati
+        </summary>
+        <div className="border-t border-border p-4">
+          <OpenDataDashboard />
+          <OpenDataTypeLibrary />
+        </div>
+      </details>
 
       {/* Last updated + portal link */}
       <div className="mb-8 flex flex-col gap-3 rounded-xl border border-card-border bg-muted/30 p-4 sm:flex-row sm:items-center sm:justify-between">
