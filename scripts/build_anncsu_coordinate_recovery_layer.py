@@ -10,6 +10,7 @@ from datetime import date
 from pathlib import Path
 from typing import Any
 
+from audit_anncsu_coordinate_decisions import audit_decisions
 from electoral_geo_utils import INTERIM_GEO_DIR, QA_DIR, ROOT, relpath
 
 
@@ -197,6 +198,11 @@ def accepted_coordinate_decisions(decisions: list[dict[str, Any]]) -> dict[str, 
     return accepted
 
 
+def blocking_decision_findings(decisions: list[dict[str, Any]]) -> list[dict[str, str]]:
+    findings, _summary = audit_decisions(decisions)
+    return [row for row in findings if row["severity"] in {"P0", "P1"}]
+
+
 def geocode_rank_key(row: dict[str, str]) -> tuple[int, float, int]:
     confidence_order = {
         "medium": 0,
@@ -326,6 +332,7 @@ def write_report(
         f"- Recovery rows: {len(recovery_rows)}",
         f"- Training rows accepted from manual overrides: {len(training_rows)}",
         f"- Decisions input: `{relpath(decisions_path)}`" if decisions_path else "- Decisions input: none",
+        "- Decision audit gate: enforced before applying overrides" if decisions_path else "- Decision audit gate: not applicable without decisions input",
         f"- Recovery CSV: `{relpath(RECOVERY_LAYER_CSV)}`",
         f"- Training-set CSV: `{relpath(TRAINING_SET_CSV)}`",
         "",
@@ -360,7 +367,7 @@ def write_report(
             "2. Review candidate or manually picked coordinates in the local workbench.",
             "3. Export decisions from the workbench as JSON or CSV.",
             "4. Run `scripts/audit_anncsu_coordinate_decisions.py --decisions <exported file>` and resolve any P0/P1 findings.",
-            "5. Re-run this script with `--decisions <exported file>`.",
+            "5. Re-run this script with `--decisions <exported file>`. The script enforces the same P0/P1 audit gate before applying overrides.",
             "6. Re-run `scripts/audit_anncsu_coordinate_quality.py --use-recovery-layer` to verify the reviewed replacements.",
             "7. Use only `accepted_reviewed_override` rows as a correction/training set for future coordinate-quality passes.",
             "",
@@ -395,6 +402,22 @@ def main() -> int:
     geocode_by_access = best_geocode_by_access(read_csv_rows(GEOCODE_CANDIDATES_CSV))
     local_anchor_by_access = best_local_anchor_by_access(read_csv_rows(LOCAL_ANCHOR_CANDIDATES_CSV))
     decisions = load_decisions(args.decisions)
+    if args.decisions:
+        blocking_findings = blocking_decision_findings(decisions)
+        if blocking_findings:
+            print(f"decision_audit_blocking_findings={len(blocking_findings)}", file=sys.stderr)
+            for row in blocking_findings[:50]:
+                print(
+                    f"{row['severity']} {row['code']} {row['access_id']} {row['task_id']} {row['detail']}",
+                    file=sys.stderr,
+                )
+            if len(blocking_findings) > 50:
+                print(f"... {len(blocking_findings) - 50} more blocking findings", file=sys.stderr)
+            print(
+                f"Run scripts/audit_anncsu_coordinate_decisions.py --decisions {args.decisions} and resolve P0/P1 findings.",
+                file=sys.stderr,
+            )
+            return 1
     accepted_decisions = accepted_coordinate_decisions(decisions)
 
     recovery_rows: list[dict[str, Any]] = []
