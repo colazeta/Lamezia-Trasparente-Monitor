@@ -13,6 +13,7 @@ on:
     paths:
       - '.github/workflows/deploy-smoke.yml'
       - 'artifacts/lamezia-trasparente/**'
+      - 'data/public/albo/**'
       - 'package.json'
       - 'pnpm-lock.yaml'
       - 'pnpm-workspace.yaml'
