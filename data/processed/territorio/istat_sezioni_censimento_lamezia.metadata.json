@@ -8,14 +8,16 @@
   "territorialLevel": "sezione di censimento",
   "municipality": "Lamezia Terme",
   "istatMunicipalCode": "079160",
-  "processingDate": "2026-06-29T12:45:59.829Z",
-  "verificationStatus": "Processato da fonti ufficiali ISTAT; 9 indicatori pubblici validati contro il tracciato 2023 per 246 sezioni su 317.",
+  "processingDate": "2026-07-04T06:20:33.687Z",
+  "verificationStatus": "Processato da fonti ufficiali ISTAT; 15 indicatori pubblici validati contro il tracciato 2023 per 246 sezioni su 317.",
   "knownLimits": [
     "Le sezioni fittizie ISTAT 888888x e 999999x sono escluse dall'output pubblico predefinito.",
     "Il file ISTAT 2023 aggancia variabili a 246 sezioni su 317; le sezioni rimanenti restano geometrie ufficiali senza valore indicatore.",
     "Le geometrie pubbliche sono generalizzate per la mappa web con precisione 5 decimali e tolleranza 0.0003 gradi; i raw ISTAT restano la fonte di dettaglio.",
     "La quota 0-14 anni non e' una quota minori <18: il tracciato ISTAT non isola 15-17 anni.",
     "Le percentuali restano null quando il denominatore e' nullo, zero o mancante.",
+    "Gli indicatori di densita' usano una superficie calcolata dalla geometria ISTAT per uso cartografico web; non sono misure catastali o amministrative di superficie.",
+    "I rapporti per 100 residenti o per 100 famiglie sono indicatori divulgativi derivati dai campi ISTAT pubblicati e non introducono fonti esterne.",
     "Le sezioni urbane catastali Zornade non sono sezioni censuarie e non sono usate come base di questa mappa."
   ],
   "source": "ISTAT",
@@ -40,7 +42,7 @@
   "publicMapRole": "primary census-section base for Atlante territoriale",
   "warning": "Non usare per indicatori censuari ISTAT dati catastali, OMI, CAP, fiscali o comunali non nativi delle sezioni censuarie.",
   "inputs": {
-    "geometryGeoJsonPath": "data/processed/territorio/istat_sezioni_censimento_lamezia.geojson",
+    "geometryGeoJsonPath": "data/raw/territorio/istat/basi_territoriali_2021_calabria/R18_21_WGS84_lamezia.geojson",
     "variablesXlsxPath": "data/raw/territorio/istat/censimento_2023_sezioni_calabria/R18_Calabria_2023_sezioni.xlsx",
     "geometrySourceUrl": "https://www.istat.it/storage/cartografia/basi_territoriali/2021/R18_21.zip",
     "variablesSourceUrl": "https://esploradati.istat.it/databrowser/DWL/PERMPOP/SUBCOM/Dati_regionali_2023.zip"
@@ -49,8 +51,8 @@
     "outputFeatures": 317,
     "matchedVariables": 246,
     "missingVariables": 71,
-    "skippedNonLamezia": 0,
-    "skippedFictitious": 0,
+    "skippedNonLamezia": 29557,
+    "skippedFictitious": 1,
     "variableRowsForLamezia": 247,
     "variableFictitiousRows": 1
   },
@@ -86,6 +88,17 @@
       "publicField": "popolazione_totale",
       "unit": "persone",
       "formula": "P1"
+    },
+    {
+      "id": "residenti-per-kmq",
+      "label": "Residenti per kmq",
+      "category": "densita",
+      "sourceFields": [
+        "P1"
+      ],
+      "publicField": "residenti_per_kmq",
+      "unit": "residenti/kmq",
+      "formula": "P1 / superficie_kmq"
     },
     {
       "id": "quota-0-14",
@@ -139,6 +152,30 @@
       "formula": "PF1"
     },
     {
+      "id": "residenti-per-famiglia",
+      "label": "Residenti per famiglia",
+      "category": "famiglie",
+      "sourceFields": [
+        "P1",
+        "PF1"
+      ],
+      "publicField": "residenti_per_famiglia",
+      "unit": "residenti/famiglia",
+      "formula": "P1 / PF1"
+    },
+    {
+      "id": "famiglie-per-100-residenti",
+      "label": "Famiglie per 100 residenti",
+      "category": "famiglie",
+      "sourceFields": [
+        "PF1",
+        "P1"
+      ],
+      "publicField": "famiglie_per_100_residenti",
+      "unit": "per 100 residenti",
+      "formula": "PF1 / P1 * 100"
+    },
+    {
       "id": "abitazioni",
       "label": "Abitazioni totali",
       "category": "abitazioni",
@@ -150,6 +187,18 @@
       "formula": "A8"
     },
     {
+      "id": "abitazioni-per-100-famiglie",
+      "label": "Abitazioni per 100 famiglie",
+      "category": "abitazioni",
+      "sourceFields": [
+        "A8",
+        "PF1"
+      ],
+      "publicField": "abitazioni_per_100_famiglie",
+      "unit": "per 100 famiglie",
+      "formula": "A8 / PF1 * 100"
+    },
+    {
       "id": "automobili",
       "label": "Automobili",
       "category": "mobilita-auto",
@@ -159,6 +208,18 @@
       "publicField": "automobili_totale",
       "unit": "automobili",
       "formula": "NA1"
+    },
+    {
+      "id": "auto-per-100-residenti",
+      "label": "Auto per 100 residenti",
+      "category": "mobilita-auto",
+      "sourceFields": [
+        "NA1",
+        "P1"
+      ],
+      "publicField": "auto_per_100_residenti",
+      "unit": "per 100 residenti",
+      "formula": "NA1 / P1 * 100"
     },
     {
       "id": "quota-titoli-terziari",
@@ -182,6 +243,18 @@
       "publicField": "occupati_15_64",
       "unit": "persone",
       "formula": "P101"
+    },
+    {
+      "id": "occupati-15-64-per-100-residenti",
+      "label": "Occupati 15-64 per 100 residenti",
+      "category": "lavoro",
+      "sourceFields": [
+        "P101",
+        "P1"
+      ],
+      "publicField": "occupati_15_64_per_100_residenti",
+      "unit": "per 100 residenti",
+      "formula": "P101 / P1 * 100"
     }
   ],
   "qa": {
@@ -189,6 +262,11 @@
     "indicatorDictionaryPath": "data/processed/territorio/istat_indicator_dictionary.json",
     "indicatorCoverage": {
       "popolazione-residente": {
+        "availableCount": 246,
+        "nullCount": 71,
+        "zeroCount": 22
+      },
+      "residenti-per-kmq": {
         "availableCount": 246,
         "nullCount": 71,
         "zeroCount": 22
@@ -213,15 +291,35 @@
         "nullCount": 71,
         "zeroCount": 25
       },
+      "residenti-per-famiglia": {
+        "availableCount": 221,
+        "nullCount": 96,
+        "zeroCount": 0
+      },
+      "famiglie-per-100-residenti": {
+        "availableCount": 224,
+        "nullCount": 93,
+        "zeroCount": 3
+      },
       "abitazioni": {
         "availableCount": 246,
         "nullCount": 71,
         "zeroCount": 4
       },
+      "abitazioni-per-100-famiglie": {
+        "availableCount": 221,
+        "nullCount": 96,
+        "zeroCount": 1
+      },
       "automobili": {
         "availableCount": 246,
         "nullCount": 71,
         "zeroCount": 28
+      },
+      "auto-per-100-residenti": {
+        "availableCount": 224,
+        "nullCount": 93,
+        "zeroCount": 6
       },
       "quota-titoli-terziari": {
         "availableCount": 224,
@@ -232,6 +330,11 @@
         "availableCount": 246,
         "nullCount": 71,
         "zeroCount": 32
+      },
+      "occupati-15-64-per-100-residenti": {
+        "availableCount": 224,
+        "nullCount": 93,
+        "zeroCount": 10
       }
     },
     "populationValueCoverage": {

@@ -10,7 +10,7 @@
   "generatedFrom": "data/processed/territorio/istat_sezioni_censimento_lamezia.geojson",
   "metadataPath": "data/processed/territorio/istat_sezioni_censimento_lamezia.metadata.json",
   "qaReportPath": "docs/data-sources/istat-sezioni-censimento-lamezia-qa.md",
-  "lastUpdated": "2026-06-29",
+  "lastUpdated": "2026-07-04",
   "verificationStatus": "Indicatori pubblici abilitati solo se derivati da campi presenti nel tracciato ufficiale ISTAT 2023.",
   "indicators": [
     {
@@ -34,6 +34,32 @@
       "publicInterpretation": "Numero di persone residenti nella sezione censuaria.",
       "knownCaveats": [
         "Le sezioni senza aggancio alle variabili ISTAT 2023 restano null.",
+        "I valori null non sono zero e sono mostrati come dato non disponibile.",
+        "Le sezioni censuarie non coincidono con sezioni urbane catastali, CAP, OMI o altre zonizzazioni non censuarie."
+      ]
+    },
+    {
+      "id": "residenti-per-kmq",
+      "istatSourceField": "P1",
+      "istatSourceDefinitions": {
+        "P1": "Popolazione residente - totale"
+      },
+      "publicField": "residenti_per_kmq",
+      "publicLabel": "Residenti per kmq",
+      "category": "densita",
+      "unitOfMeasure": "residenti/kmq",
+      "numerator": "P1",
+      "denominator": "superficie_kmq",
+      "formula": "P1 / superficie_kmq",
+      "enabled": true,
+      "status": "enabled",
+      "sourceYear": "2023",
+      "territorialLevel": "sezione di censimento",
+      "missingnessCount": 71,
+      "publicInterpretation": "Densita' cartografica dei residenti nella sezione censuaria.",
+      "knownCaveats": [
+        "La superficie e' calcolata dalla geometria ISTAT per uso cartografico web, non da una misura catastale o amministrativa.",
+        "Se la superficie non e' calcolabile o P1 e' mancante, il valore resta null.",
         "I valori null non sono zero e sono mostrati come dato non disponibile.",
         "Le sezioni censuarie non coincidono con sezioni urbane catastali, CAP, OMI o altre zonizzazioni non censuarie."
       ]
@@ -155,6 +181,60 @@
       ]
     },
     {
+      "id": "residenti-per-famiglia",
+      "istatSourceField": "P1 + PF1",
+      "istatSourceDefinitions": {
+        "P1": "Popolazione residente - totale",
+        "PF1": "Famiglie residenti - totale"
+      },
+      "publicField": "residenti_per_famiglia",
+      "publicLabel": "Residenti per famiglia",
+      "category": "famiglie",
+      "unitOfMeasure": "residenti/famiglia",
+      "numerator": "P1",
+      "denominator": "PF1",
+      "formula": "P1 / PF1",
+      "enabled": true,
+      "status": "enabled",
+      "sourceYear": "2023",
+      "territorialLevel": "sezione di censimento",
+      "missingnessCount": 96,
+      "publicInterpretation": "Rapporto tra residenti e famiglie nella sezione censuaria.",
+      "knownCaveats": [
+        "E' un rapporto statistico di sezione, non una dimensione media familiare certificata per nucleo.",
+        "Se PF1 e' zero o mancante, il valore resta null.",
+        "I valori null non sono zero e sono mostrati come dato non disponibile.",
+        "Le sezioni censuarie non coincidono con sezioni urbane catastali, CAP, OMI o altre zonizzazioni non censuarie."
+      ]
+    },
+    {
+      "id": "famiglie-per-100-residenti",
+      "istatSourceField": "PF1 + P1",
+      "istatSourceDefinitions": {
+        "PF1": "Famiglie residenti - totale",
+        "P1": "Popolazione residente - totale"
+      },
+      "publicField": "famiglie_per_100_residenti",
+      "publicLabel": "Famiglie per 100 residenti",
+      "category": "famiglie",
+      "unitOfMeasure": "per 100 residenti",
+      "numerator": "PF1",
+      "denominator": "P1",
+      "formula": "PF1 / P1 * 100",
+      "enabled": true,
+      "status": "enabled",
+      "sourceYear": "2023",
+      "territorialLevel": "sezione di censimento",
+      "missingnessCount": 93,
+      "publicInterpretation": "Numero di famiglie ogni 100 residenti nella sezione censuaria.",
+      "knownCaveats": [
+        "E' un rapporto di lettura territoriale; non sostituisce indicatori anagrafici comunali.",
+        "Se P1 e' zero o mancante, il valore resta null.",
+        "I valori null non sono zero e sono mostrati come dato non disponibile.",
+        "Le sezioni censuarie non coincidono con sezioni urbane catastali, CAP, OMI o altre zonizzazioni non censuarie."
+      ]
+    },
+    {
       "id": "abitazioni",
       "istatSourceField": "A8",
       "istatSourceDefinitions": {
@@ -180,6 +260,33 @@
       ]
     },
     {
+      "id": "abitazioni-per-100-famiglie",
+      "istatSourceField": "A8 + PF1",
+      "istatSourceDefinitions": {
+        "A8": "Abitazioni totali",
+        "PF1": "Famiglie residenti - totale"
+      },
+      "publicField": "abitazioni_per_100_famiglie",
+      "publicLabel": "Abitazioni per 100 famiglie",
+      "category": "abitazioni",
+      "unitOfMeasure": "per 100 famiglie",
+      "numerator": "A8",
+      "denominator": "PF1",
+      "formula": "A8 / PF1 * 100",
+      "enabled": true,
+      "status": "enabled",
+      "sourceYear": "2023",
+      "territorialLevel": "sezione di censimento",
+      "missingnessCount": 96,
+      "publicInterpretation": "Rapporto tra abitazioni totali e famiglie residenti nella sezione censuaria.",
+      "knownCaveats": [
+        "Non e' un indicatore catastale e non descrive proprieta' o disponibilita' effettiva delle abitazioni.",
+        "Se PF1 e' zero o mancante, il valore resta null.",
+        "I valori null non sono zero e sono mostrati come dato non disponibile.",
+        "Le sezioni censuarie non coincidono con sezioni urbane catastali, CAP, OMI o altre zonizzazioni non censuarie."
+      ]
+    },
+    {
       "id": "automobili",
       "istatSourceField": "NA1",
       "istatSourceDefinitions": {
@@ -200,6 +307,33 @@
       "publicInterpretation": "Numero di automobili di proprieta' rilevate nel tracciato ISTAT.",
       "knownCaveats": [
         "Non introduce dati ACI, fiscali o altre fonti non ISTAT.",
+        "I valori null non sono zero e sono mostrati come dato non disponibile.",
+        "Le sezioni censuarie non coincidono con sezioni urbane catastali, CAP, OMI o altre zonizzazioni non censuarie."
+      ]
+    },
+    {
+      "id": "auto-per-100-residenti",
+      "istatSourceField": "NA1 + P1",
+      "istatSourceDefinitions": {
+        "NA1": "Automobili di proprieta'",
+        "P1": "Popolazione residente - totale"
+      },
+      "publicField": "auto_per_100_residenti",
+      "publicLabel": "Auto per 100 residenti",
+      "category": "mobilita-auto",
+      "unitOfMeasure": "per 100 residenti",
+      "numerator": "NA1",
+      "denominator": "P1",
+      "formula": "NA1 / P1 * 100",
+      "enabled": true,
+      "status": "enabled",
+      "sourceYear": "2023",
+      "territorialLevel": "sezione di censimento",
+      "missingnessCount": 93,
+      "publicInterpretation": "Rapporto tra automobili di proprieta' e residenti nella sezione censuaria.",
+      "knownCaveats": [
+        "Non introduce dati ACI, fiscali o altre fonti non ISTAT.",
+        "Se P1 e' zero o mancante, il valore resta null.",
         "I valori null non sono zero e sono mostrati come dato non disponibile.",
         "Le sezioni censuarie non coincidono con sezioni urbane catastali, CAP, OMI o altre zonizzazioni non censuarie."
       ]
@@ -251,6 +385,33 @@
       "publicInterpretation": "Numero di residenti occupati tra 15 e 64 anni.",
       "knownCaveats": [
         "E' un conteggio, non un tasso di occupazione.",
+        "I valori null non sono zero e sono mostrati come dato non disponibile.",
+        "Le sezioni censuarie non coincidono con sezioni urbane catastali, CAP, OMI o altre zonizzazioni non censuarie."
+      ]
+    },
+    {
+      "id": "occupati-15-64-per-100-residenti",
+      "istatSourceField": "P101 + P1",
+      "istatSourceDefinitions": {
+        "P101": "Popolazione residente - totale occupati di 15-64 anni",
+        "P1": "Popolazione residente - totale"
+      },
+      "publicField": "occupati_15_64_per_100_residenti",
+      "publicLabel": "Occupati 15-64 per 100 residenti",
+      "category": "lavoro",
+      "unitOfMeasure": "per 100 residenti",
+      "numerator": "P101",
+      "denominator": "P1",
+      "formula": "P101 / P1 * 100",
+      "enabled": true,
+      "status": "enabled",
+      "sourceYear": "2023",
+      "territorialLevel": "sezione di censimento",
+      "missingnessCount": 93,
+      "publicInterpretation": "Rapporto tra residenti occupati di 15-64 anni e popolazione residente totale della sezione.",
+      "knownCaveats": [
+        "Non e' un tasso di occupazione: il denominatore e' la popolazione totale, non la sola popolazione 15-64.",
+        "Se P1 e' zero o mancante, il valore resta null.",
         "I valori null non sono zero e sono mostrati come dato non disponibile.",
         "Le sezioni censuarie non coincidono con sezioni urbane catastali, CAP, OMI o altre zonizzazioni non censuarie."
       ]
