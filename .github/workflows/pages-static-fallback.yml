@@ -61,6 +61,9 @@ jobs:
         shell: bash
         run: cp artifacts/lamezia-trasparente/dist/public/index.html artifacts/lamezia-trasparente/dist/public/404.html
 
+      - name: Smoke static fallback
+        run: pnpm run smoke:v0-static-fallback
+
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
