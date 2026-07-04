@@ -73,7 +73,7 @@ jobs:
   deploy:
     name: Deploy static fallback
     needs: build
-    if: ${{ github.event_name == 'workflow_dispatch' && inputs.deploy_to_pages }}
+    if: ${{ github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.deploy_to_pages) }}
     runs-on: ubuntu-latest
     environment:
       name: github-pages
