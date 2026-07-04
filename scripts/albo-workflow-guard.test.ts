@@ -6,6 +6,14 @@ const workflow = readFileSync(
   new URL("../.github/workflows/albo-ingestion.yml", import.meta.url),
   "utf8",
 );
+const deploySmokeWorkflow = readFileSync(
+  new URL("../.github/workflows/deploy-smoke.yml", import.meta.url),
+  "utf8",
+);
+const pagesStaticFallbackWorkflow = readFileSync(
+  new URL("../.github/workflows/pages-static-fallback.yml", import.meta.url),
+  "utf8",
+);
 
 function stagedPathsFromGitAddBlocks(contents: string) {
   const paths: string[] = [];
@@ -61,6 +69,24 @@ test("Albo ingestion workflow stages only public-safe Albo outputs", () => {
         (prefix) => path === prefix || path.startsWith(`${prefix}/`),
       ),
       `workflow must not stage non-minimised Albo artifact path: ${path}`,
+    );
+  }
+});
+
+test("Albo public output commits are eligible for frontend rebuilds", () => {
+  assert.ok(
+    !workflow.includes("[skip ci]"),
+    "Albo output commits must not skip CI/deploy; the frontend embeds public Albo data at build time",
+  );
+
+  for (const [name, contents] of [
+    ["deploy smoke", deploySmokeWorkflow],
+    ["GitHub Pages static fallback", pagesStaticFallbackWorkflow],
+  ] as const) {
+    assert.match(
+      contents,
+      /data\/public\/albo\/\*\*/,
+      `${name} workflow should rebuild when public Albo outputs change`,
     );
   }
 });

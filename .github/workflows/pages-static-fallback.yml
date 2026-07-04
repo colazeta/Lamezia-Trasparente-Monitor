@@ -14,6 +14,7 @@ on:
     paths:
       - ".github/workflows/pages-static-fallback.yml"
       - "artifacts/lamezia-trasparente/**"
+      - "data/public/albo/**"
       - "data/processed/territorio/**"
       - "package.json"
       - "pnpm-lock.yaml"
