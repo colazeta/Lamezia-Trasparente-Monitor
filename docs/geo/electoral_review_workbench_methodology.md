@@ -224,6 +224,15 @@ an initial high-signal batch:
 - `data/interim/qa/anncsu_coordinate_review_batch_1_2025.csv`
 - `data/interim/qa/anncsu_coordinate_review_batch_1_report_2025.md`
 
+`scripts/prepare_anncsu_coordinate_review_pack.py` joins the coordinate
+diagnostic, local ANNCSU anchor candidate, and external geocoder candidate for
+each suspect `access_id`. It does not apply coordinates; it gives the reviewer a
+single decision table with evidence agreement, recommended review track, and a
+candidate coordinate to inspect in the local workbench:
+
+- `data/interim/qa/anncsu_coordinate_review_pack_2025.csv`
+- `data/interim/qa/anncsu_coordinate_review_pack_report_2025.md`
+
 The retraining path is therefore review-first:
 
 - collect accepted manual coordinate overrides and rejected candidates;
