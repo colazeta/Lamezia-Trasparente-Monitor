@@ -13,7 +13,7 @@
 /contratti    /index.html   200
 /contratti/*    /index.html   200
 /incarichimetro    /index.html   200
-/albo    /index.html   200
+/albo    /albo/   301
 /albo/*    /index.html   200
 /atti-fondamentali    /index.html   200
 /beni-confiscati    /index.html   200
