@@ -10,6 +10,12 @@ import {
   type Official,
   type Organo,
 } from "./schema";
+import {
+  INSTITUTIONAL_POLITICI_SOURCE,
+  currentInstitutionalOfficialPosition,
+  ensureInstitutionalOfficials,
+  isCurrentInstitutionalOfficialSlug,
+} from "./institutional-officials";
 
 export const ORGANO_TYPES = ["consiglio", "giunta", "commissione"] as const;
 export type OrganoType = (typeof ORGANO_TYPES)[number];
@@ -120,10 +126,23 @@ function membershipsForOfficial(
       : "Incarico cessato o mandato precedente";
   const startDate = official.appointmentDate ?? null;
   const endDate = null;
-  const sourceLabel = "Scheda soggetto nel registro civico";
-  const sourceUrl = null;
-  const notes =
-    "Membership derivata dal ruolo registrato nel profilo soggetto; da verificare con atti di proclamazione, nomina o composizione dell'organo.";
+  const usesInstitutionalSource = isCurrentInstitutionalOfficialSlug(
+    official.slug,
+  );
+  const sourceLabel = usesInstitutionalSource
+    ? INSTITUTIONAL_POLITICI_SOURCE.label
+    : "Scheda soggetto nel registro civico";
+  const sourceUrl = usesInstitutionalSource
+    ? INSTITUTIONAL_POLITICI_SOURCE.url
+    : null;
+  const notes = usesInstitutionalSource
+    ? [
+        "Composizione corrente derivata dall'elenco Politici del sito comunale,",
+        `consultato il ${INSTITUTIONAL_POLITICI_SOURCE.checkedAt};`,
+        "deleghe, gruppi e atti di nomina vanno collegati a fonti specifiche",
+        "quando disponibili.",
+      ].join(" ")
+    : "Membership derivata dal ruolo registrato nel profilo soggetto; da verificare con atti di proclamazione, nomina o composizione dell'organo.";
   const membership = (organoId: number, membershipRole: string | null) => ({
     organoId,
     membershipRole,
@@ -168,6 +187,13 @@ export async function syncOrganoMemberships(): Promise<void> {
   const organi = await db.select().from(organiTable);
   const bySlug = new Map(organi.map((o) => [o.slug, o]));
   const officials = await db.select().from(officialsTable);
+  officials.sort((a, b) => {
+    const sourceOrder =
+      currentInstitutionalOfficialPosition(a.slug) -
+      currentInstitutionalOfficialPosition(b.slug);
+    if (sourceOrder !== 0) return sourceOrder;
+    return a.name.localeCompare(b.name, "it");
+  });
 
   const rows: {
     organoId: number;
@@ -254,6 +280,7 @@ export async function syncSedute(): Promise<void> {
 /** Full organi/sedute synchronisation. Safe to call repeatedly. */
 export async function runOrganiSedutaSync(): Promise<void> {
   await ensureOrgani();
+  await ensureInstitutionalOfficials();
   await syncOrganoMemberships();
   await syncSedute();
 }
