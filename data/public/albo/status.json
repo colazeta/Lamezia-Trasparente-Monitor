@@ -1,18 +1,18 @@
 {
-  "generated_at": "2026-07-04T16:14:19.967Z",
+  "generated_at": "2026-07-04T18:12:42.999Z",
   "source": "Albo Pretorio Comune di Lamezia Terme",
   "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
   "provider": "Tinnvision",
-  "last_run_at": "2026-07-04T16:14:19.967Z",
-  "last_update": "2026-07-04T16:14:19.967Z",
+  "last_run_at": "2026-07-04T18:12:42.999Z",
+  "last_update": "2026-07-04T18:12:42.999Z",
   "method": "xml",
   "raw_format": "xml",
   "counts": {
     "acquired": 189,
     "new": 0,
-    "changed": 0,
+    "changed": 189,
     "removed": 0,
-    "unchanged": 189,
+    "unchanged": 0,
     "publishable": 142,
     "minimised": 11,
     "metadata_only": 28,
@@ -21,11 +21,11 @@
   "diff_baseline": {
     "status": "public_safe",
     "public_safe": true,
-    "previous_retrieved_at": "2026-07-04T14:44:17.066Z",
+    "previous_retrieved_at": "2026-07-04T16:14:19.967Z",
     "note": "Diff derived from committed public/albo/latest.json; safe for scheduled public runs and limited to public-safe fields."
   },
   "warnings": [],
-  "next_scheduled_check": "2026-07-04T17:10:00.000Z",
+  "next_scheduled_check": "2026-07-05T06:10:00.000Z",
   "schedule": {
     "monitoring_window": "08:00-20:00 Europe/Rome",
     "timezone": "Europe/Rome",
@@ -37,8 +37,9 @@
   "known_limits": [
     "Tranche A acquisisce l'elenco degli atti correnti esposto dalla fonte ufficiale, senza dichiarare completezza storica.",
     "I PDF sono archiviati solo per record pubblicabili a basso rischio; allegati e PDF non sono analizzati, interpretati o sottoposti a OCR.",
-    "Gli export Tinnvision possono non includere URL diretti agli allegati; il record pubblico rimanda alla fonte ufficiale.",
-    "La classificazione privacy e' prudenziale e automatica; i casi sensibili richiedono revisione umana prima di esposizioni piu' ricche."
+    "Gli export Tinnvision possono non includere URL diretti agli allegati; quando disponibile, il monitor usa il dettaglio ufficiale Tinnvision solo per individuare PDF HTTPS a basso rischio.",
+    "La classificazione privacy e' prudenziale e automatica; i casi sensibili richiedono revisione umana prima di esposizioni piu' ricche.",
+    "Quando gli export strutturati non includono URL diretti, il monitor prova il dettaglio ufficiale Tinnvision solo per record pubblicabili a basso rischio."
   ],
   "official_albo_disclaimer": "Lamezia Trasparente Monitor non sostituisce l'Albo Pretorio ufficiale: pubblicazioni, termini, allegati e contenuti vanno verificati sulla fonte istituzionale.",
   "civic_safeguards": [
