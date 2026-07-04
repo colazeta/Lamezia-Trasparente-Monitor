@@ -63,12 +63,22 @@ jobs:
 
           echo "Checking $PUBLIC_SITE_URL"
           for attempt in 1 2 3 4 5 6; do
-            if curl -fsSL --max-time 20 "$PUBLIC_SITE_URL" >/tmp/ltm-home.html; then
-              if grep -Eiq "rendiamoLameziaTrasparente|Osservatorio Civico Indipendente|Lamezia" /tmp/ltm-home.html; then
-                echo "Production URL smoke passed."
-                exit 0
+            failed=0
+            for path in "/" "/contratti"; do
+              target="${PUBLIC_SITE_URL%/}${path}"
+              if ! curl -fsSL --max-time 20 "$target" >/tmp/ltm-public.html; then
+                echo "URL smoke attempt $attempt failed for $target."
+                failed=1
+                continue
               fi
-              echo "URL reachable but expected public marker not found."
+              if ! grep -Eiq "rendiamoLameziaTrasparente|Osservatorio Civico Indipendente|Lamezia" /tmp/ltm-public.html; then
+                echo "URL reachable but expected public marker not found for $target."
+                failed=1
+              fi
+            done
+            if [ "$failed" -eq 0 ]; then
+              echo "Production URL smoke passed."
+              exit 0
             else
               echo "URL smoke attempt $attempt failed."
             fi
