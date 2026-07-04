@@ -1,6 +1,6 @@
 #!/usr/bin/env tsx
 import { createHash } from "node:crypto";
-import { mkdir, readFile, writeFile } from "node:fs/promises";
+import { mkdir, readFile, stat, writeFile } from "node:fs/promises";
 import path from "node:path";
 import process from "node:process";
 import { fileURLToPath, pathToFileURL } from "node:url";
@@ -113,7 +113,9 @@ export interface CliOptions {
   fromFile?: string;
   inputFormat?: "xml" | "csv" | "html" | "print";
   retrievedAt?: string;
+  detailFetch?: typeof fetch;
   pdfFetch?: typeof fetch;
+  documentDiscovery?: boolean;
 }
 
 type PublicRecord = Record<string, unknown> & {
@@ -242,7 +244,9 @@ export interface RunResult {
 }
 
 const DOCUMENT_URL_LIMIT =
-  "Allegato/documento non incluso negli export Tinnvision acquisiti da Tranche A.";
+  "Allegato/documento non incluso negli export strutturati Tinnvision o non disponibile tramite dettaglio ufficiale.";
+const DOCUMENT_DISCOVERY_LIMIT =
+  "Quando gli export strutturati non includono URL diretti, il monitor prova il dettaglio ufficiale Tinnvision solo per record pubblicabili a basso rischio.";
 const FALLBACK_LIMIT =
   "Acquisizione effettuata da fallback HTML/print per indisponibilita' degli export strutturati.";
 const MINIMISED_LIMIT =
@@ -345,7 +349,8 @@ export async function runAlboIngestion(options: CliOptions): Promise<RunResult> 
   const publicLatestPath = path.join(options.outDir, "public", "albo", "latest.json");
   const previous = await readSnapshot(currentPath);
   const previousPublicLatest = previous ? null : await readPublicLatest(publicLatestPath);
-  const snapshot = await acquireAlboSnapshot(options);
+  const acquiredSnapshot = await acquireAlboSnapshot(options);
+  const snapshot = await enrichSnapshotDocumentUrls(acquiredSnapshot, options);
   const previousItems = previous ? normalizeAlboRecords(previous) : [];
   const items = normalizeAlboRecords(snapshot);
   const diff = diffAlboItems(previousItems, items);
@@ -384,6 +389,67 @@ export async function runAlboIngestion(options: CliOptions): Promise<RunResult> 
     publicStatus,
     runLog,
     paths,
+  };
+}
+
+async function enrichSnapshotDocumentUrls(
+  snapshot: AlboRawSnapshot,
+  options: CliOptions,
+): Promise<AlboRawSnapshot> {
+  const shouldDiscover = options.documentDiscovery ?? !options.fromFile;
+  if (!shouldDiscover) return snapshot;
+  return discoverTinnvisionDocumentUrls(snapshot, options.detailFetch ?? fetch);
+}
+
+export async function discoverTinnvisionDocumentUrls(
+  snapshot: AlboRawSnapshot,
+  detailFetch: typeof fetch,
+): Promise<AlboRawSnapshot> {
+  let discovered = 0;
+  let failed = 0;
+  const records: RawAlboRecord[] = [];
+
+  for (const record of snapshot.records) {
+    if (record.document_url) {
+      records.push(record);
+      continue;
+    }
+
+    const classification = classify(record);
+    if (classification.publicVisibility !== "publishable" || classification.privacyRisk !== "low") {
+      records.push(record);
+      continue;
+    }
+
+    const result = await fetchTinnvisionDocumentUrl(record, detailFetch);
+    if (result.status === "found") {
+      discovered += 1;
+      records.push({
+        ...record,
+        document_url: result.documentUrl,
+        source_row: {
+          ...record.source_row,
+          document_url: result.documentUrl,
+          detail_api_url: result.detailUrl,
+          attachment_name: result.attachmentName,
+        },
+      });
+    } else {
+      if (result.status === "failed") failed += 1;
+      records.push(record);
+    }
+  }
+
+  return {
+    ...snapshot,
+    records,
+    warnings: unique([
+      ...snapshot.warnings,
+      ...(failed ? [`Official Tinnvision detail document discovery failed for ${failed} publishable Albo record(s).`] : []),
+    ]),
+    known_limits: discovered
+      ? unique([...snapshot.known_limits, DOCUMENT_DISCOVERY_LIMIT])
+      : snapshot.known_limits,
   };
 }
 
@@ -473,6 +539,125 @@ async function tryFetch(
   } catch (error) {
     return { records: [], attempt: { method: candidate.method, url: candidate.url, ok: false, reason: formatError(error) } };
   }
+}
+
+type TinnvisionDocumentDiscoveryResult =
+  | {
+      status: "found";
+      documentUrl: string;
+      detailUrl: string;
+      attachmentName: string;
+    }
+  | { status: "not_found" }
+  | { status: "failed" };
+
+interface TinnvisionAttachmentCandidate {
+  name: string;
+  description: string;
+  progressivo: string;
+  tipoAllegato: string;
+}
+
+async function fetchTinnvisionDocumentUrl(
+  record: RawAlboRecord,
+  detailFetch: typeof fetch,
+): Promise<TinnvisionDocumentDiscoveryResult> {
+  const publicationId = tinnvisionDetailId(record.publication_number);
+  if (!publicationId) return { status: "not_found" };
+
+  const detailUrl = new URL(`/api/pubblicazioni/${publicationId}`, ALBO_PRETORIO_LAMEZIA_SOURCE.sourceUrl);
+  detailUrl.searchParams.set("ente", ALBO_PRETORIO_LAMEZIA_SOURCE.ente);
+
+  try {
+    const response = await detailFetch(detailUrl.href, {
+      headers: {
+        accept: "application/json",
+        "user-agent": "Lamezia-Trasparente-Monitor/Albo-document-discovery",
+      },
+      redirect: "follow",
+    });
+    if (!response.ok) return { status: "failed" };
+
+    const detail = (await response.json()) as unknown;
+    const publication = objectValue(objectValue(detail, "pubblicazioneAlbo"));
+    const year = stringValue(publication?.ANNO) ?? publicationId.split("-")[0] ?? null;
+    const progressivo = stringValue(publication?.PROGRESSIVO) ?? publicationId.split("-")[1] ?? null;
+    if (!year || !progressivo) return { status: "not_found" };
+
+    const attachments = arrayValue(objectValue(objectValue(detail, "allegati"))?.items)
+      .map(tinnvisionAttachmentCandidate)
+      .filter((attachment): attachment is TinnvisionAttachmentCandidate => attachment !== null);
+    const selected = selectTinnvisionPdfAttachment(attachments);
+    if (!selected) return { status: "not_found" };
+
+    const documentUrl = new URL(
+      `/allegati/${encodeURIComponent(year)}_${encodeURIComponent(progressivo)}_${encodeURIComponent(
+        selected.progressivo,
+      )}_${encodeURIComponent(selected.tipoAllegato)}`,
+      ALBO_PRETORIO_LAMEZIA_SOURCE.sourceUrl,
+    );
+    documentUrl.searchParams.set("ente", ALBO_PRETORIO_LAMEZIA_SOURCE.ente);
+
+    return {
+      status: "found",
+      documentUrl: documentUrl.href,
+      detailUrl: detailUrl.href,
+      attachmentName: selected.name,
+    };
+  } catch {
+    return { status: "failed" };
+  }
+}
+
+function tinnvisionAttachmentCandidate(value: unknown): TinnvisionAttachmentCandidate | null {
+  const attachment = objectValue(value);
+  if (!attachment) return null;
+  const name = stringValue(attachment.NOMEALLEGATO);
+  const progressivo = stringValue(attachment.PROGRESSIVO);
+  const tipoAllegato = stringValue(attachment.tipoAllegato);
+  if (!name || !progressivo || !tipoAllegato) return null;
+  return {
+    name,
+    description: stringValue(attachment.DESCALLEGATO) ?? "",
+    progressivo,
+    tipoAllegato,
+  };
+}
+
+function selectTinnvisionPdfAttachment(
+  attachments: TinnvisionAttachmentCandidate[],
+): TinnvisionAttachmentCandidate | null {
+  const pdfs = attachments.filter((attachment) => isDirectPdfAttachment(attachment.name));
+  if (!pdfs.length) return null;
+
+  return [...pdfs].sort((left, right) => {
+    const score = scoreTinnvisionAttachment(right) - scoreTinnvisionAttachment(left);
+    if (score !== 0) return score;
+    return Number.parseInt(left.progressivo, 10) - Number.parseInt(right.progressivo, 10);
+  })[0] ?? null;
+}
+
+function isDirectPdfAttachment(name: string): boolean {
+  const normalized = name.trim().toLowerCase();
+  return normalized.endsWith(".pdf") && !normalized.endsWith(".pdf.p7m");
+}
+
+function scoreTinnvisionAttachment(attachment: TinnvisionAttachmentCandidate): number {
+  const text = `${attachment.description} ${attachment.name}`.toLowerCase();
+  let score = 100;
+  if (/\b(princ|p)\b/i.test(attachment.tipoAllegato)) score += 20;
+  if (/versione non firmata|copia_/i.test(text)) score += 10;
+  if (/atto|determin|ordinanza|delibera|decreto|documento di protocollo|convocazione|avviso|permesso/i.test(text)) {
+    score += 30;
+  }
+  if (/nota di pubblicazione|notapubblicazione/i.test(text)) score -= 40;
+  if (/omissis/i.test(text)) score -= 10;
+  return score;
+}
+
+function tinnvisionDetailId(publicationNumber: string): string | null {
+  const [year, number] = publicationNumber.split("/").map((value) => value.trim());
+  return year && number ? `${year}-${number}` : null;
 }
 
 export function parseTinnvisionXml(xml: string): RawAlboRecord[] {
@@ -942,6 +1127,7 @@ async function archivePublicPdfs(
   const decisions: PdfPreservationDecision[] = [];
   const written = new Set<string>();
   const warnings: string[] = [];
+  const previousDocuments = await readReusableArchivedDocuments(outDir);
 
   for (const item of items) {
     const base = pdfDecisionBase(item);
@@ -976,6 +1162,13 @@ async function archivePublicPdfs(
         preservation_status: "skipped",
         reason: officialDocument.reason,
       });
+      continue;
+    }
+
+    const reusable = await reusableArchivedDocument(outDir, item, officialDocument.href, previousDocuments);
+    if (reusable) {
+      decisions.push(reusable);
+      documents.push(reusable);
       continue;
     }
 
@@ -1021,6 +1214,69 @@ async function archivePublicPdfs(
     documents,
     decisions,
   };
+}
+
+async function readReusableArchivedDocuments(outDir: string): Promise<Map<string, ArchivedPdfDocument>> {
+  try {
+    const manifestPath = path.join(outDir, "public", "albo", "documents-manifest.json");
+    const manifest = JSON.parse(await readFile(manifestPath, "utf8")) as Partial<AlboDocumentsManifest>;
+    const documents = Array.isArray(manifest.documents) ? manifest.documents : [];
+    return new Map(
+      documents
+        .filter(isReusableArchivedPdfDocument)
+        .map((document) => [document.document_url, document]),
+    );
+  } catch {
+    return new Map();
+  }
+}
+
+async function reusableArchivedDocument(
+  outDir: string,
+  item: AlboItem,
+  documentUrl: string,
+  previousDocuments: Map<string, ArchivedPdfDocument>,
+): Promise<ArchivedPdfDocument | null> {
+  const previous = previousDocuments.get(documentUrl);
+  if (!previous) return null;
+  try {
+    await stat(absoluteArchivedPdfPath(outDir, previous.storage_path));
+  } catch {
+    return null;
+  }
+  return {
+    ...pdfDecisionBase(item),
+    document_url: documentUrl,
+    preservation_status: "archived",
+    reason: "eligible_low_risk_publishable_pdf",
+    storage_path: previous.storage_path,
+    sha256: previous.sha256,
+    size_bytes: previous.size_bytes,
+    content_type: previous.content_type,
+  };
+}
+
+function isReusableStoragePath(storagePath: string): boolean {
+  return /^data\/public\/albo\/documents\/[0-9]{4}\/[a-f0-9]{64}\.pdf$/i.test(storagePath);
+}
+
+function isReusableArchivedPdfDocument(value: unknown): value is ArchivedPdfDocument {
+  const document = objectValue(value);
+  if (!document) return false;
+  return (
+    document.preservation_status === "archived" &&
+    document.reason === "eligible_low_risk_publishable_pdf" &&
+    typeof document.document_url === "string" &&
+    typeof document.storage_path === "string" &&
+    typeof document.sha256 === "string" &&
+    typeof document.size_bytes === "number" &&
+    typeof document.content_type === "string" &&
+    isReusableStoragePath(document.storage_path)
+  );
+}
+
+function absoluteArchivedPdfPath(outDir: string, storagePath: string): string {
+  return path.join(outDir, ...storagePath.replace(/^data\//, "").split("/"));
 }
 
 async function fetchAndStorePdf(
@@ -1358,6 +1614,25 @@ function stripHtml(value: string): string {
 function nullable(value: string | null | undefined): string | null {
   const normalized = clean(value ?? null);
   return normalized ? normalized : null;
+}
+
+function objectValue(value: unknown, key?: string): Record<string, unknown> | null {
+  const candidate = key && value && typeof value === "object"
+    ? (value as Record<string, unknown>)[key]
+    : value;
+  return candidate && typeof candidate === "object" && !Array.isArray(candidate)
+    ? (candidate as Record<string, unknown>)
+    : null;
+}
+
+function arrayValue(value: unknown): unknown[] {
+  return Array.isArray(value) ? value : [];
+}
+
+function stringValue(value: unknown): string | null {
+  if (typeof value === "string") return nullable(value);
+  if (typeof value === "number" && Number.isFinite(value)) return String(value);
+  return null;
 }
 
 function clean(value: string | null | undefined): string {
