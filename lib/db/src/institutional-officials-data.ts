@@ -69,6 +69,9 @@ export type InstitutionalOfficialSeed = {
   source: InstitutionalSource;
   appointmentDate?: string | null;
   biographyNote?: string;
+  deleghe?: string;
+  contactEmail?: string;
+  contactPhone?: string;
 };
 
 export type InstitutionalMembershipSeed = {
@@ -356,6 +359,39 @@ const currentOfficialRows: OfficialRow[] = [
   ],
 ];
 
+export const CURRENT_PROFILE_DETAILS = {
+  "mario-murone": {
+    deleghe:
+      "Opere pubbliche, Servizi cimiteriali, Manutenzione straordinaria, Programmazione strategica e programmi complessi, Mobilita' urbana, Protezione Civile, Affari Legali, Partecipate e controllo analogo, Polizia municipale, Programmazione nazionale e comunitaria, Rapporti con enti sovraordinati.",
+    contactEmail: "m.murone@comune.lamezia-terme.cz.it",
+    contactPhone: "09682071",
+  },
+  "michelangelo-cardamone": {
+    deleghe:
+      "Cooperazione internazionale e Internazionalizzazione, Patrimonio, Urbanistica",
+  },
+  "tranquillo-paradiso": {
+    deleghe: "Rapporti con il Consiglio, Sistemi informativi e transizione al Digitale",
+  },
+  "salvatore-pirelli": {
+    deleghe: "Sport, Attivita' produttive",
+  },
+  "annalisa-spinelli": {
+    deleghe:
+      "Cultura, Turismo, Politiche giovanili, Pari opportunita', Pubblica istruzione, Spettacolo e promozione del territorio, Comunicazione istituzionale, Musei e Biblioteche",
+  },
+  "donatella-amicarelli": {
+    deleghe:
+      "Verde pubblico e parchi, Ambiente e Sicurezza Ambientale, Agricoltura, Riqualificazione periferie, Manutenzione ordinaria, Randagismo",
+  },
+  "maria-nardo": {
+    deleghe: "Bilancio e Programmazione Finanziaria, Tributi e Personale",
+  },
+  "gennaro-gianturco": {
+    deleghe: "Welfare e politiche sociali, Politiche abitative e social housing",
+  },
+} as const;
+
 export const CURRENT_COUNCIL_MEMBER_SLUGS = [
   "mario-murone",
   "alessandro-saullo",
@@ -403,6 +439,7 @@ export const CURRENT_INSTITUTIONAL_OFFICIALS: InstitutionalOfficialSeed[] =
     profileUrl: `${COMUNE_BASE_URL}/it/persone/${personPath}`,
     status: "in_carica",
     source: INSTITUTIONAL_POLITICI_SOURCE,
+    ...CURRENT_PROFILE_DETAILS[slug as keyof typeof CURRENT_PROFILE_DETAILS],
   }));
 
 export const HISTORICAL_2019_ELECTED_CANDIDATES = [

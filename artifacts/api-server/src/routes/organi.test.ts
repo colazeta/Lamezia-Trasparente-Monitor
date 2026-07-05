@@ -12,6 +12,7 @@ import {
   CURRENT_GIUNTA_SOURCE,
   CURRENT_INSTITUTIONAL_OFFICIALS,
   CURRENT_INSTITUTIONAL_MEMBERSHIPS,
+  CURRENT_PROFILE_DETAILS,
   COMMISSION_2025_SOURCE,
   ELIGENDO_2019_LAMEZIA_SOURCE,
   HISTORICAL_2019_INSTITUTIONAL_MEMBERSHIPS,
@@ -72,6 +73,22 @@ describe("organi historical memberships", () => {
     expect(CURRENT_COUNCIL_MEMBER_SLUGS).toHaveLength(24);
     expect(CURRENT_GIUNTA_MEMBER_SLUGS).toHaveLength(8);
     expect(CURRENT_INSTITUTIONAL_MEMBERSHIPS).toHaveLength(32);
+    expect(Object.keys(CURRENT_PROFILE_DETAILS)).toHaveLength(8);
+    expect(
+      CURRENT_GIUNTA_MEMBER_SLUGS.every(
+        (slug) => slug in CURRENT_PROFILE_DETAILS,
+      ),
+    ).toBe(true);
+    expect(CURRENT_PROFILE_DETAILS["mario-murone"]).toMatchObject({
+      contactEmail: "m.murone@comune.lamezia-terme.cz.it",
+      contactPhone: "09682071",
+    });
+    expect(CURRENT_PROFILE_DETAILS["mario-murone"].deleghe).toContain(
+      "Opere pubbliche",
+    );
+    expect(CURRENT_PROFILE_DETAILS["annalisa-spinelli"].deleghe).toContain(
+      "Politiche giovanili",
+    );
 
     const officialSlugs = new Set(
       CURRENT_INSTITUTIONAL_OFFICIALS.map((o) => o.slug),
