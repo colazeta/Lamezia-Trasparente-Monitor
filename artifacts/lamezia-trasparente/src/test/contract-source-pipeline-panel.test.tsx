@@ -108,6 +108,23 @@ describe("ContractSourcePipelinePanel", () => {
     expect(
       within(phaseStrip).getByText("Esecuzione del contratto: mancante"),
     ).toBeInTheDocument();
+
+    expect(screen.getByText("Copertura fasi")).toBeInTheDocument();
+    const phaseCoverage = screen.getByRole("list", {
+      name: "Copertura stato fasi dei fascicoli",
+    });
+
+    expect(within(phaseCoverage).getByText("Programmazione")).toBeInTheDocument();
+    expect(
+      within(phaseCoverage).getByRole("img", {
+        name: "Programmazione: 0 documentate, 0 parziali, 1 mancanti",
+      }),
+    ).toBeInTheDocument();
+    expect(
+      within(phaseCoverage).getByRole("img", {
+        name: "Progettazione: 0 documentate, 1 parziali, 0 mancanti",
+      }),
+    ).toBeInTheDocument();
   });
 
   it("keeps the public production gate closed from the dry-run report", () => {
