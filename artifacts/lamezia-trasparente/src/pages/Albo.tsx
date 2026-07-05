@@ -64,6 +64,7 @@ const ALL_OFFICES = "all";
 const ALL_SECTORS = "all";
 const ALL_ACT_CATEGORIES = "all";
 const RECENT_CONTEXT_LIMIT = 6;
+const CIVIC_TIMEZONE = "Europe/Rome";
 
 type ClassificationStat = {
   id: string;
@@ -101,6 +102,18 @@ const CLASSIFICATION_BASIS_LABELS: Record<ClassificationBasis, string> = {
   fallback: "fallback prudente",
 };
 
+const ROME_DATE_PART_FORMATTER = new Intl.DateTimeFormat("en-US", {
+  timeZone: CIVIC_TIMEZONE,
+  year: "numeric",
+  month: "2-digit",
+  day: "2-digit",
+});
+
+const ROME_WEEKDAY_FORMATTER = new Intl.DateTimeFormat("en-US", {
+  timeZone: CIVIC_TIMEZONE,
+  weekday: "short",
+});
+
 function shortDate(value: string | null): string {
   return value ? formatPublicTimeField(value, "dd/MM/yyyy") : "Data non disponibile";
 }
@@ -124,6 +137,31 @@ function compactHash(value: string | null | undefined): string {
   if (!value) return "Non disponibile";
   if (value.length <= 24) return value;
   return `${value.slice(0, 12)}...${value.slice(-8)}`;
+}
+
+function dateKeyInRome(value: string | null | undefined): string | null {
+  if (!value) return null;
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return null;
+  const parts = ROME_DATE_PART_FORMATTER.formatToParts(date);
+  const year = parts.find((part) => part.type === "year")?.value;
+  const month = parts.find((part) => part.type === "month")?.value;
+  const day = parts.find((part) => part.type === "day")?.value;
+  return year && month && day ? `${year}-${month}-${day}` : null;
+}
+
+function isWorkingDayInRome(value: string | null | undefined): boolean {
+  if (!value) return false;
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return false;
+  const weekday = ROME_WEEKDAY_FORMATTER.format(date);
+  return weekday !== "Sat" && weekday !== "Sun";
+}
+
+function nextScheduledCheckLabel(value: string | null | undefined): string {
+  if (!value) return "Non disponibile";
+  if (!isWorkingDayInRome(value)) return "Nessun aggiornamento previsto nel fine settimana";
+  return fullDateTime(value);
 }
 
 function formatBytes(value: number): string {
@@ -232,6 +270,15 @@ function DetailField({ label, value, mono = false }: { label: string; value: str
   );
 }
 
+function EssentialMetadataField({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="rounded-lg border border-border bg-background p-3">
+      <div className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">{label}</div>
+      <div className="mt-1 text-sm font-semibold leading-snug text-foreground">{value}</div>
+    </div>
+  );
+}
+
 function AlboRecordDetailDialog({ item, onClose }: { item: AlboPublicRunItem | null; onClose: () => void }) {
   const archivedDocument = item ? ALBO_ARCHIVED_DOCUMENTS_BY_ID.get(item.id) : null;
 
@@ -280,17 +327,37 @@ function AlboRecordDetailDialog({ item, onClose }: { item: AlboPublicRunItem | n
             {item.public_note && <p className="mt-2 text-xs text-muted-foreground">{item.public_note}</p>}
           </section>
 
+          <section className="rounded-lg border border-dashed border-primary/30 bg-primary/5 p-4">
+            <div className="mb-2 flex items-center gap-2 text-sm font-bold text-foreground">
+              <Sparkles className="h-4 w-4 text-primary" aria-hidden="true" />
+              Sintesi documento
+            </div>
+            <p className="text-sm leading-relaxed text-muted-foreground">
+              Placeholder: la descrizione sara compilata da un modello OCR open source dedicato e verificabile. In questa
+              tranche non viene generata alcuna sintesi automatica del PDF.
+            </p>
+          </section>
+
           <section>
-            <h3 className="mb-3 text-sm font-bold text-foreground">Metadati principali</h3>
+            <h3 className="mb-3 text-sm font-bold text-foreground">Metadati essenziali</h3>
             <div className="grid gap-2 sm:grid-cols-2">
-              <DetailField label="Numero pubblicazione" value={displayValue(item.publication_number)} mono />
-              <DetailField label="Periodo pubblicazione" value={`${shortDate(item.publication_start)} - ${shortDate(item.publication_end)}`} />
-              <DetailField label="Tipo atto" value={displayValue(item.act_type)} />
-              <DetailField label="Numero atto" value={displayValue(item.act_number)} mono />
-              <DetailField label="Data atto" value={shortDate(item.act_date)} />
-              <DetailField label="Ufficio" value={displayValue(item.office)} />
-              <DetailField label="Verifica" value={verificationLabel(item.verification_status)} />
-              <DetailField label="Hash contenuto" value={compactHash(item.content_hash)} mono />
+              <EssentialMetadataField
+                label="Pubblicazione"
+                value={item.publication_number ? `n. ${item.publication_number}` : "Non disponibile"}
+              />
+              <EssentialMetadataField
+                label="Periodo"
+                value={`${shortDate(item.publication_start)} - ${shortDate(item.publication_end)}`}
+              />
+              <EssentialMetadataField
+                label="Atto"
+                value={[
+                  displayValue(item.act_type),
+                  item.act_number ? `n. ${item.act_number}` : null,
+                  item.act_date ? `del ${shortDate(item.act_date)}` : null,
+                ].filter(Boolean).join(" ")}
+              />
+              <EssentialMetadataField label="Ufficio" value={displayValue(item.office)} />
             </div>
           </section>
 
@@ -363,12 +430,20 @@ function AlboRecordDetailDialog({ item, onClose }: { item: AlboPublicRunItem | n
           <section className="rounded-lg border border-border bg-background p-4">
             <div className="mb-2 flex items-center gap-2 text-sm font-bold text-foreground">
               <Hash className="h-4 w-4 text-primary" aria-hidden="true" />
-              Limiti dichiarati
+              Verifica e limiti
             </div>
             <p className="text-sm leading-relaxed text-muted-foreground">
               Il contenuto del PDF non viene analizzato, sottoposto a OCR o riassunto. La scheda espone solo metadati
               pubblici, stato di verifica e limiti del run.
             </p>
+            <div className="mt-3 flex flex-wrap gap-2 text-xs">
+              <span className="rounded-full border border-border bg-muted/40 px-2 py-1 font-semibold text-foreground">
+                Verifica: {verificationLabel(item.verification_status)}
+              </span>
+              <span className="rounded-full border border-border bg-muted/40 px-2 py-1 font-mono text-muted-foreground">
+                Hash {compactHash(item.content_hash)}
+              </span>
+            </div>
             {item.known_limits.length > 0 && (
               <ul className="mt-3 space-y-1 text-sm text-muted-foreground">
                 {item.known_limits.map((limit) => (
@@ -500,6 +575,93 @@ function AlboNewsOverview({
           </div>
         )}
       </div>
+    </section>
+  );
+}
+
+function AlboDailyDigest({ items, onSelect }: { items: AlboPublicRunItem[]; onSelect: (item: AlboPublicRunItem) => void }) {
+  const referenceDate = ALBO_PUBLIC_RUN_SUMMARY.retrieved_at;
+  const referenceKey = dateKeyInRome(referenceDate);
+  const isWorkingDay = isWorkingDayInRome(referenceDate);
+  const dailyItems = referenceKey
+    ? items.filter((item) => dateKeyInRome(item.publication_start) === referenceKey)
+    : [];
+  const sectorStats = classificationStats(dailyItems, (item) => item.classification.sector);
+  const categoryStats = classificationStats(dailyItems, (item) => item.classification.act_category);
+  const previewItems = dailyItems.slice(0, 5);
+
+  return (
+    <section
+      aria-labelledby="albo-daily-digest-heading"
+      className="mb-8 rounded-xl border border-border bg-background p-4 shadow-sm md:p-5"
+    >
+      <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+        <div>
+          <span className="eyebrow text-primary">
+            <FileText className="h-3.5 w-3.5" aria-hidden="true" />
+            Sintesi documenti
+          </span>
+          <h2 id="albo-daily-digest-heading" className="mt-2 font-display text-xl font-bold tracking-tight">
+            Sintesi documenti di giornata
+          </h2>
+          <p className="mt-2 max-w-3xl text-sm leading-relaxed text-muted-foreground">
+            Placeholder per la sintesi OCR dei documenti pubblicati nella giornata lavorativa. La descrizione verra
+            compilata dal modello open source dedicato; per ora questa sezione mostra solo conteggio e contesto.
+          </p>
+        </div>
+        <div className={`rounded-lg border p-3 text-right ${isWorkingDay ? "border-primary/20 bg-primary/5" : "border-slate-200 bg-slate-50"}`}>
+          <div className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Cadenza</div>
+          <div className="mt-1 text-sm font-bold text-foreground">Lunedi-venerdi</div>
+        </div>
+      </div>
+
+      <div className="mt-5 grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
+        {[
+          ["Giornata", shortDate(referenceDate)],
+          ["Documenti del giorno", dailyItems.length],
+          ["Settori", sectorStats.length],
+          ["Tipologie", categoryStats.length],
+        ].map(([label, value]) => (
+          <div key={label} className="rounded-lg border border-border bg-muted/30 p-3">
+            <div className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">{label}</div>
+            <div className="mt-1 text-sm font-bold text-foreground">{value}</div>
+          </div>
+        ))}
+      </div>
+
+      {!isWorkingDay ? (
+        <p className="mt-4 rounded-lg border border-slate-200 bg-slate-50 p-3 text-sm text-muted-foreground">
+          Nessuna sintesi di giornata e prevista sabato o domenica. Lo snapshot resta consultabile, ma la sintesi OCR
+          viene trattata solo nel primo giorno lavorativo utile.
+        </p>
+      ) : previewItems.length > 0 ? (
+        <div className="mt-4 space-y-2">
+          {previewItems.map((item) => (
+            <div key={item.id} className="flex flex-col gap-2 rounded-lg border border-border bg-muted/30 p-3 sm:flex-row sm:items-center sm:justify-between">
+              <div className="min-w-0">
+                <div className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                  {item.classification.sector.label}
+                </div>
+                <div className="mt-1 text-sm font-semibold leading-snug text-foreground">{item.subject}</div>
+              </div>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => onSelect(item)}
+                className="shrink-0 text-xs"
+              >
+                Apri scheda
+                <FileText className="h-3.5 w-3.5" aria-hidden="true" />
+              </Button>
+            </div>
+          ))}
+        </div>
+      ) : (
+        <p className="mt-4 rounded-lg border border-border bg-muted/30 p-3 text-sm text-muted-foreground">
+          Nessun documento con inizio pubblicazione nella giornata lavorativa dello snapshot.
+        </p>
+      )}
     </section>
   );
 }
@@ -706,7 +868,7 @@ export function Albo() {
                 Prossimo controllo
               </div>
               <div className="mt-1 text-sm font-bold text-foreground">
-                {fullDateTime(ALBO_OPERATIONAL_STATUS.next_scheduled_check)}
+                {nextScheduledCheckLabel(ALBO_OPERATIONAL_STATUS.next_scheduled_check)}
               </div>
             </div>
             <div>
@@ -717,6 +879,7 @@ export function Albo() {
               <div className="mt-1 text-sm font-bold text-foreground">
                 {ALBO_OPERATIONAL_STATUS.schedule?.monitoring_window ?? "Finestra non disponibile"}
               </div>
+              <div className="mt-1 text-xs text-muted-foreground">Solo giorni lavorativi</div>
               {ALBO_OPERATIONAL_STATUS.schedule?.github_actions_cron_utc && (
                 <div className="mt-1 text-xs text-muted-foreground">
                   Cron UTC {ALBO_OPERATIONAL_STATUS.schedule.github_actions_cron_utc}
@@ -806,6 +969,8 @@ export function Albo() {
         </section>
 
         <AlboNewsOverview recentItems={recentItems} onSelect={setSelectedItem} />
+
+        <AlboDailyDigest items={ALBO_PUBLIC_RUN_ITEMS} onSelect={setSelectedItem} />
 
         <section
           aria-labelledby="albo-documents-heading"
