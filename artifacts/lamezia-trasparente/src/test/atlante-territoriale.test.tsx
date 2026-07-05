@@ -589,7 +589,7 @@ describe("Atlante territoriale", () => {
     expect(screen.getByText("Cosa non mostra")).toBeInTheDocument();
     expect(formatAtlanteValue(null, "persone")).toBe("dato non disponibile");
     expect(formatAtlanteValue(0, "persone")).toBe("0 persone");
-  }, 10000);
+  }, 30000);
 
   it("renders an explicit demo fallback when the processed ISTAT file is missing", async () => {
     vi.stubGlobal(

@@ -2,7 +2,7 @@
 
 Issue linkage: #242, under the infrastructure track #238.
 
-This note documents the current provider-neutral path for deploying the public React/Vite frontend as a separate static web service. It is intentionally documentation-only: it records commands, build output and environment assumptions already visible in the repository without changing runtime code, routing, metadata, generated API clients, database schema, GitHub Actions, package scripts or provider configuration.
+This note documents the current Cloudflare Pages target for deploying the public React/Vite frontend as a separate static web service, together with the provider-neutral build settings already visible in the repository. It records commands, build output and environment assumptions without changing API routing, generated clients, database schema, package scripts or server deployment behavior.
 
 ## Scope and service boundaries
 
@@ -20,6 +20,12 @@ Keep these deploy units separate:
 3. **Ingestion worker service**: runs `@workspace/ingestion-worker` on a schedule or job runner; it is not part of the static frontend deploy.
 
 Do not place API server secrets, database credentials or ingestion credentials in the static frontend environment.
+
+## Selected public frontend target
+
+Current public frontend target: `https://lamezia-trasparente.pages.dev/` (Cloudflare Pages).
+
+Use root hosting for this target (`BASE_PATH=/` or unset). Public route metadata, `robots.txt`, `sitemap.xml` and Cloudflare Pages redirects should stay aligned with this origin.
 
 ## Build and validation commands
 
@@ -52,11 +58,9 @@ test -d artifacts/lamezia-trasparente/dist/public
 find artifacts/lamezia-trasparente/dist/public -maxdepth 2 -type f | sort | head
 ```
 
-## Provider-neutral static hosting settings
+## Static hosting settings
 
-The frontend can be configured on static hosting providers such as Cloudflare Pages, Netlify or Vercel as equivalent targets. This note does not select or require a provider.
-
-Use these settings unless a future provider-specific deploy file intentionally overrides them:
+Use these settings for the selected Cloudflare Pages frontend target unless a future provider-specific deploy file intentionally overrides them:
 
 | Setting | Value |
 | --- | --- |
@@ -66,7 +70,7 @@ Use these settings unless a future provider-specific deploy file intentionally o
 | Framework preset | Vite/React/static site, if the provider asks |
 | Node package manager | `pnpm` |
 
-For single-page app history fallback, configure the hosting provider to serve `index.html` for frontend routes that do not match a real static file. Keep API paths routed to the separate API server instead of the static fallback.
+For single-page app history fallback on Cloudflare Pages, keep `artifacts/lamezia-trasparente/public/_redirects` aligned with the public route inventory so frontend routes such as `/contratti` resolve to `index.html`. Keep API paths routed to the separate API server instead of the static fallback.
 
 ## Public frontend configuration
 
@@ -100,4 +104,4 @@ Before publishing a frontend build:
 
 ## Residual decisions and non-goals
 
-This note deliberately leaves provider selection, automatic deployment wiring, production domain names, CDN/cache policy, API edge routing details and secret provisioning as operational decisions for follow-up work. It does not introduce new dependencies, scripts, workflows or runtime behavior.
+This note deliberately leaves automatic deployment wiring, production custom domains, CDN/cache policy, API edge routing details and secret provisioning as operational decisions for follow-up work. It does not introduce new dependencies, scripts, workflows or runtime behavior.

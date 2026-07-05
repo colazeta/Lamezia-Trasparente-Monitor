@@ -56,7 +56,7 @@ describe("Albo public run surface", () => {
 
     expect(
       await screen.findByText(
-        new RegExp(`${expectedMatches} di ${ALBO_PUBLIC_RUN_ITEMS.length} record`),
+        new RegExp(`^${expectedMatches} di ${ALBO_PUBLIC_RUN_ITEMS.length} record`),
       ),
     ).toBeInTheDocument();
     expect(screen.getByText(`Pubbl. ${firstPublicationNumber}`)).toBeInTheDocument();
