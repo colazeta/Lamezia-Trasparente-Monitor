@@ -81,40 +81,35 @@ jobs:
       - name: Smoke generated static fallback
         run: node scripts/check-v0-static-fallback.mjs
 
-      - name: Check Cloudflare deployment credentials
-        id: cloudflare
+      - name: Verify Cloudflare deployment credentials
         shell: bash
         run: |
           missing=0
           if [ -z "$(printf '%s' "$CLOUDFLARE_API_TOKEN" | tr -d '[:space:]')" ]; then
-            echo "Missing CLOUDFLARE_API_TOKEN secret."
+            echo "::error::Missing CLOUDFLARE_API_TOKEN secret."
             missing=1
           else
             echo "::add-mask::$CLOUDFLARE_API_TOKEN"
           fi
 
           if [ -z "$(printf '%s' "$CLOUDFLARE_ACCOUNT_ID" | tr -d '[:space:]')" ]; then
-            echo "Missing CLOUDFLARE_ACCOUNT_ID secret or variable."
+            echo "::error::Missing CLOUDFLARE_ACCOUNT_ID secret or variable."
             missing=1
           else
             echo "::add-mask::$CLOUDFLARE_ACCOUNT_ID"
           fi
 
           if [ "$missing" -eq 1 ]; then
-            echo "enabled=false" >> "$GITHUB_OUTPUT"
-            echo "Cloudflare Pages deploy skipped because credentials are not configured."
-            exit 0
+            echo "Cloudflare Pages deploy cannot continue because required credentials are not configured."
+            echo "Configure CLOUDFLARE_API_TOKEN and CLOUDFLARE_ACCOUNT_ID, then rerun this workflow."
+            exit 1
           fi
 
-          echo "enabled=true" >> "$GITHUB_OUTPUT"
-
       - name: Deploy to Cloudflare Pages
-        if: ${{ steps.cloudflare.outputs.enabled == 'true' }}
         run: |
           pnpm dlx wrangler@latest pages deploy artifacts/lamezia-trasparente/dist/public \
             --project-name "$CLOUDFLARE_PROJECT_NAME" \
             --branch main
 
       - name: Smoke public contracts route
-        if: ${{ steps.cloudflare.outputs.enabled == 'true' }}
         run: node scripts/check-public-contracts-page.mjs --url "$PUBLIC_SITE_URL" --attempts 12 --delay-ms 10000
