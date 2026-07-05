@@ -30,6 +30,10 @@ import { ClimateTerritoryDatasetCard } from "@/components/opendata/ClimateTerrit
 import { OpenDataDashboard } from "@/components/opendata/OpenDataDashboard";
 import { OpenDataTypeLibrary } from "@/components/opendata/OpenDataTypeLibrary";
 import {
+  OPEN_DATA_TYPE_LIBRARY,
+  type OpenDataTypeDefinition,
+} from "@/data/opendataDataTypes";
+import {
   Select,
   SelectContent,
   SelectItem,
@@ -48,6 +52,7 @@ import { formatPublicTimeField } from "@/lib/time";
 const PORTAL_URL = "https://opendata.comune.lamezia-terme.cz.it";
 
 const LAST_VISIT_KEY = "opendata:lastVisit";
+const DEFAULT_DATA_TYPE_ID = "daily-time-series";
 
 function readLastVisit(): number | null {
   try {
@@ -61,6 +66,9 @@ function readLastVisit(): number | null {
 }
 
 export function Opendata() {
+  const [selectedDataTypeId, setSelectedDataTypeId] = useState(
+    DEFAULT_DATA_TYPE_ID,
+  );
   const [search, setSearch] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
   const [category, setCategory] = useState("all");
@@ -125,6 +133,10 @@ export function Opendata() {
     setCategory("all");
   };
 
+  const selectedDataType =
+    OPEN_DATA_TYPE_LIBRARY.find((type) => type.id === selectedDataTypeId) ??
+    OPEN_DATA_TYPE_LIBRARY[0];
+
   return (
     <div className="container mx-auto px-4 py-8 md:py-12 max-w-6xl">
       {/* Header */}
@@ -137,20 +149,49 @@ export function Opendata() {
           Opendata
         </h1>
         <p className="mt-3 text-muted-foreground text-lg max-w-3xl">
-          Scegli un dataset, consulta la visualizzazione e scarica la serie
-          statica quando serve riusare il dato.
+          Categorie dati, modelli riusabili e visualizzazioni pubblicate per
+          leggere le serie prima del riuso.
         </p>
       </div>
 
-      <ClimateTerritoryDatasetCard />
+      <OpenDataTypeLibrary
+        onSelectType={setSelectedDataTypeId}
+        selectedTypeId={selectedDataType.id}
+      />
+
+      <section
+        aria-labelledby="opendata-selected-type-title"
+        className="mb-8"
+      >
+        <div className="mb-4">
+          <span className="eyebrow text-primary">
+            <Layers className="h-3.5 w-3.5" />
+            Categoria selezionata
+          </span>
+          <h2
+            className="mt-2 text-2xl font-display font-bold text-foreground"
+            id="opendata-selected-type-title"
+          >
+            {selectedDataType.label}
+          </h2>
+          <p className="mt-2 max-w-3xl text-sm leading-6 text-muted-foreground">
+            {selectedDataType.description}
+          </p>
+        </div>
+
+        {selectedDataType.id === "daily-time-series" ? (
+          <ClimateTerritoryDatasetCard />
+        ) : (
+          <DataTypeModelPanel type={selectedDataType} />
+        )}
+      </section>
 
       <details className="mb-8 rounded-xl border border-card-border bg-muted/20">
         <summary className="cursor-pointer list-none px-4 py-3 font-semibold text-foreground marker:hidden">
-          Catalogo e modelli dati
+          Altre visualizzazioni
         </summary>
         <div className="border-t border-border p-4">
           <OpenDataDashboard />
-          <OpenDataTypeLibrary />
         </div>
       </details>
 
@@ -341,6 +382,45 @@ export function Opendata() {
           </EmptyHeader>
         </Empty>
       )}
+    </div>
+  );
+}
+
+function DataTypeModelPanel({ type }: { type: OpenDataTypeDefinition }) {
+  return (
+    <div className="rounded-xl border border-card-border bg-card p-5 shadow-sm">
+      <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
+        <div>
+          <h3 className="font-display text-xl font-bold text-foreground">
+            Visualizzazione non ancora pubblicata
+          </h3>
+          <p className="mt-2 max-w-3xl text-sm leading-6 text-muted-foreground">
+            Il modello dati è disponibile per catalogare nuove serie, ma questa
+            categoria non ha ancora una scheda grafica pubblicata nella pagina
+            OpenData.
+          </p>
+        </div>
+        <Badge variant="outline" className="w-fit shadow-none">
+          {type.statusLabel}
+        </Badge>
+      </div>
+
+      <dl className="mt-4 grid gap-3 text-sm md:grid-cols-2">
+        <div className="rounded-lg border border-border bg-muted/20 p-3">
+          <dt className="text-xs font-medium text-muted-foreground">
+            Modello
+          </dt>
+          <dd className="mt-1 leading-6 text-foreground">{type.model}</dd>
+        </div>
+        <div className="rounded-lg border border-border bg-muted/20 p-3">
+          <dt className="text-xs font-medium text-muted-foreground">
+            Aggiornamento
+          </dt>
+          <dd className="mt-1 leading-6 text-foreground">
+            {type.updateCadence}
+          </dd>
+        </div>
+      </dl>
     </div>
   );
 }

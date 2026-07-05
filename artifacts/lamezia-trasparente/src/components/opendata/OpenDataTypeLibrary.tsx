@@ -2,6 +2,7 @@ import {
   Activity,
   ArrowRight,
   CalendarDays,
+  Check,
   Database,
   Map,
   Table2,
@@ -21,7 +22,15 @@ const TYPE_ICONS: Record<string, ReactNode> = {
   "civic-indicators": <Activity className="h-4 w-4" />,
 };
 
-export function OpenDataTypeLibrary() {
+interface OpenDataTypeLibraryProps {
+  selectedTypeId: string;
+  onSelectType: (typeId: string) => void;
+}
+
+export function OpenDataTypeLibrary({
+  selectedTypeId,
+  onSelectType,
+}: OpenDataTypeLibraryProps) {
   return (
     <section aria-labelledby="opendata-type-library-title" className="mb-8">
       <div className="mb-4 flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
@@ -38,28 +47,60 @@ export function OpenDataTypeLibrary() {
           </h2>
         </div>
         <p className="max-w-2xl text-sm leading-6 text-muted-foreground">
-          Modelli riusabili per pubblicare altri dataset senza cambiare la
-          struttura della pagina.
+          Categorie riusabili per leggere i dataset prima di aprire una
+          visualizzazione o un download.
         </p>
       </div>
 
-      <div className="divide-y divide-border overflow-hidden rounded-lg border border-border bg-card">
+      <div
+        className="divide-y divide-border overflow-hidden rounded-lg border border-border bg-card"
+        role="list"
+      >
         {OPEN_DATA_TYPE_LIBRARY.map((type) => (
-          <DataTypeCard key={type.id} type={type} />
+          <DataTypeCard
+            isSelected={selectedTypeId === type.id}
+            key={type.id}
+            onSelect={() => onSelectType(type.id)}
+            type={type}
+          />
         ))}
       </div>
     </section>
   );
 }
 
-function DataTypeCard({ type }: { type: OpenDataTypeDefinition }) {
+function DataTypeCard({
+  isSelected,
+  onSelect,
+  type,
+}: {
+  isSelected: boolean;
+  onSelect: () => void;
+  type: OpenDataTypeDefinition;
+}) {
   const isPublished = type.status === "published";
 
   return (
-    <article className="p-4">
-      <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
+    <article
+      className={`p-4 transition-colors ${
+        isSelected ? "bg-primary/5" : "bg-card"
+      }`}
+      role="listitem"
+    >
+      <button
+        aria-pressed={isSelected}
+        className="flex w-full flex-col gap-3 text-left md:flex-row md:items-start md:justify-between"
+        onClick={onSelect}
+        type="button"
+      >
         <div className="flex gap-3">
-          <span className="mt-0.5 inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-primary/10 text-primary ring-1 ring-primary/20">
+          <span
+            className={`mt-0.5 inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-md ring-1 ${
+              isSelected
+                ? "bg-primary text-primary-foreground ring-primary"
+                : "bg-primary/10 text-primary ring-primary/20"
+            }`}
+          >
             {TYPE_ICONS[type.id] ?? <Database className="h-4 w-4" />}
           </span>
           <div>
@@ -80,18 +121,32 @@ function DataTypeCard({ type }: { type: OpenDataTypeDefinition }) {
             <p className="mt-2 text-sm leading-6 text-muted-foreground">
               {type.description}
             </p>
+            <p className="mt-2 text-xs font-medium text-muted-foreground">
+              Superficie:{" "}
+              <span className="text-foreground">{type.currentSurface}</span>
+            </p>
           </div>
         </div>
-        {type.href ? (
-          <a
-            className="inline-flex shrink-0 items-center gap-1.5 text-sm font-semibold text-primary"
-            href={type.href}
-          >
-            Apri dato
-            <ArrowRight className="h-4 w-4" />
-          </a>
-        ) : null}
-      </div>
+        <span
+          className={`inline-flex shrink-0 items-center gap-1.5 rounded-md px-2.5 py-1.5 text-sm font-semibold ${
+            isSelected
+              ? "bg-primary text-primary-foreground"
+              : "text-primary"
+          }`}
+        >
+          {isSelected ? (
+            <>
+              <Check className="h-4 w-4" />
+              Categoria selezionata
+            </>
+          ) : (
+            <>
+              Seleziona
+              <ArrowRight className="h-4 w-4" />
+            </>
+          )}
+        </span>
+      </button>
 
       <details className="mt-3 rounded-md border border-border bg-muted/20">
         <summary className="cursor-pointer list-none px-3 py-2 text-sm font-semibold text-foreground marker:hidden">
