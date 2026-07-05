@@ -71,6 +71,13 @@ jobs:
           CI: "true"
         run: pnpm --filter @workspace/lamezia-trasparente run build
 
+      - name: Check deploy provenance artifact
+        shell: bash
+        run: |
+          test -f artifacts/lamezia-trasparente/dist/public/deploy-provenance.json
+          grep -Fq 'contracts-protagonists-state-v1' artifacts/lamezia-trasparente/dist/public/deploy-provenance.json
+          grep -Fq 'colazeta/Lamezia-Trasparente-Monitor' artifacts/lamezia-trasparente/dist/public/deploy-provenance.json
+
       - name: Smoke generated static fallback
         run: node scripts/check-v0-static-fallback.mjs
 

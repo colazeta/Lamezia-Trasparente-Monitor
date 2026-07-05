@@ -4,6 +4,8 @@ import process from "node:process";
 const DEFAULT_PUBLIC_URL = "https://lamezia-trasparente.pages.dev";
 const DEFAULT_ATTEMPTS = 1;
 const DEFAULT_DELAY_MS = 10_000;
+const DEPLOY_PROVENANCE_PATH = "/deploy-provenance.json";
+const REQUIRED_DEPLOYMENT_CONTRACT = "contracts-protagonists-state-v1";
 const REQUIRED_PUBLIC_TEXT = [
   "rendiamoLameziaTrasparente",
   "Osservatorio Civico Indipendente",
@@ -103,6 +105,22 @@ async function fetchText(url, label) {
   };
 }
 
+async function fetchJson(url, label) {
+  const result = await fetchText(url, label);
+  try {
+    return {
+      finalUrl: result.finalUrl,
+      value: JSON.parse(result.text),
+    };
+  } catch (error) {
+    throw new Error(
+      `${label} is not valid JSON at ${result.finalUrl}: ${
+        error instanceof Error ? error.message : String(error)
+      }`,
+    );
+  }
+}
+
 function normalizeRouteForCompare(url) {
   const parsed = new URL(url);
   return `${parsed.origin}${parsed.pathname.replace(/\/+$/, "")}`;
@@ -122,6 +140,42 @@ function assertPublicText(html, label) {
   );
   if (!hasAnyMarker) {
     throw new Error(`${label} does not contain an expected public site marker.`);
+  }
+}
+
+function assertDeployProvenance(provenance) {
+  if (!provenance || typeof provenance !== "object" || Array.isArray(provenance)) {
+    throw new Error("Deploy provenance marker must be a JSON object.");
+  }
+  if (provenance.repository !== "colazeta/Lamezia-Trasparente-Monitor") {
+    throw new Error(
+      `Deploy provenance has unexpected repository: ${String(provenance.repository)}`,
+    );
+  }
+  if (provenance.deploymentContract !== REQUIRED_DEPLOYMENT_CONTRACT) {
+    throw new Error(
+      `Deploy provenance has unexpected deploymentContract: ${String(
+        provenance.deploymentContract,
+      )}`,
+    );
+  }
+  if (provenance.requiredRoute !== "/contratti") {
+    throw new Error(
+      `Deploy provenance has unexpected requiredRoute: ${String(provenance.requiredRoute)}`,
+    );
+  }
+  const requiredMarkers = Array.isArray(provenance.requiredMarkers)
+    ? provenance.requiredMarkers
+    : [];
+  for (const marker of [
+    "Contratti protagonisti",
+    "Stato dei fascicoli contrattuali",
+    "Copertura fasi",
+    "Copertura stato fasi dei fascicoli",
+  ]) {
+    if (!requiredMarkers.includes(marker)) {
+      throw new Error(`Deploy provenance is missing required marker: ${marker}`);
+    }
   }
 }
 
@@ -164,15 +218,19 @@ function assertBundleMarkers(bundleText) {
 async function checkPublicContractsPage(publicUrl) {
   const rootUrl = routeUrl(publicUrl, "/");
   const contractsUrl = routeUrl(publicUrl, "/contratti");
+  const provenanceUrl = routeUrl(publicUrl, DEPLOY_PROVENANCE_PATH);
   const root = await fetchText(rootUrl, "Root route");
   const contracts = await fetchText(contractsUrl, "Contracts route");
+  const provenance = await fetchJson(provenanceUrl, "Deploy provenance marker");
 
   console.log(`Fetched ${rootUrl} -> ${root.finalUrl}`);
   console.log(`Fetched ${contractsUrl} -> ${contracts.finalUrl}`);
+  console.log(`Fetched ${provenanceUrl} -> ${provenance.finalUrl}`);
 
   assertContractsRoute(publicUrl, contracts.finalUrl);
   assertPublicText(root.text, "Root route");
   assertPublicText(contracts.text, "Contracts route");
+  assertDeployProvenance(provenance.value);
 
   const scriptPaths = extractScriptPaths(root.text, contracts.text);
   console.log(`Found ${scriptPaths.length} public JavaScript asset(s).`);

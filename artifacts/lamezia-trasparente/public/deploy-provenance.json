@@ -1,0 +1,14 @@
+{
+  "app": "lamezia-trasparente",
+  "repository": "colazeta/Lamezia-Trasparente-Monitor",
+  "publicUrl": "https://lamezia-trasparente.pages.dev",
+  "deploymentContract": "contracts-protagonists-state-v1",
+  "requiredRoute": "/contratti",
+  "requiredMarkers": [
+    "Contratti protagonisti",
+    "Stato dei fascicoli contrattuali",
+    "Copertura fasi",
+    "Copertura stato fasi dei fascicoli"
+  ],
+  "createdAt": "2026-07-05"
+}
