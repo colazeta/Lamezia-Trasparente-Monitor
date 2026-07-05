@@ -49,7 +49,7 @@ describe("Albo public run surface", () => {
       target: { value: firstPublicationNumber },
     });
 
-    expect(screen.getByText(`1 di ${ALBO_PUBLIC_RUN_ITEMS.length} record`)).toBeInTheDocument();
+    expect(screen.getByText(new RegExp(`^1 di ${ALBO_PUBLIC_RUN_ITEMS.length} record`))).toBeInTheDocument();
     expect(screen.getByText(`Pubbl. ${firstPublicationNumber}`)).toBeInTheDocument();
   });
 
