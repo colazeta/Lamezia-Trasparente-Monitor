@@ -77,7 +77,7 @@ describe("Contracts page lifecycle rendering", () => {
       "Esecuzione del contratto",
       "Conclusione, collaudi e verifiche",
     ]) {
-      expect(screen.getByText(phase)).toBeInTheDocument();
+      expect(screen.getAllByText(phase).length).toBeGreaterThan(0);
     }
   });
 });
