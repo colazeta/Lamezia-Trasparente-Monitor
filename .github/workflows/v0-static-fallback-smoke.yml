@@ -44,6 +44,9 @@ jobs:
       - name: Typecheck
         run: pnpm run typecheck
 
+      - name: Check public smoke script syntax
+        run: node --check scripts/check-public-contracts-page.mjs
+
       - name: Build static fallback
         run: pnpm --filter @workspace/lamezia-trasparente run build
 
