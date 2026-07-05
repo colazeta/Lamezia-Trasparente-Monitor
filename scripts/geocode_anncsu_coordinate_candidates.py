@@ -115,6 +115,35 @@ def write_json(path: Path, payload: Any) -> None:
     path.write_text(json.dumps(payload, ensure_ascii=False, separators=(",", ":")) + "\n", encoding="utf-8")
 
 
+def candidate_row_key(row: dict[str, Any]) -> tuple[str, str, str, str, str, str, str, str]:
+    return (
+        as_text(row.get("access_id")),
+        as_text(row.get("provider")),
+        as_text(row.get("query_variant")),
+        as_text(row.get("cache_key")),
+        as_text(row.get("candidate_rank")),
+        as_text(row.get("candidate_lon")),
+        as_text(row.get("candidate_lat")),
+        as_text(row.get("candidate_status")),
+    )
+
+
+def merge_candidate_rows(existing_rows: list[dict[str, Any]], new_rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    merged: list[dict[str, Any]] = []
+    seen: set[tuple[str, str, str, str, str, str, str, str]] = set()
+    for row in [*existing_rows, *new_rows]:
+        key = candidate_row_key(row)
+        if key in seen:
+            continue
+        seen.add(key)
+        merged.append(row)
+    return merged
+
+
+def candidate_access_ids(rows: list[dict[str, Any]]) -> set[str]:
+    return {as_text(row.get("access_id")) for row in rows if as_text(row.get("access_id"))}
+
+
 def workbench_payload(rows: list[dict[str, Any]]) -> dict[str, list[dict[str, str]]]:
     grouped: dict[str, list[dict[str, str]]] = {}
     for row in rows:
@@ -333,8 +362,13 @@ def candidate_rows_for(row: dict[str, str], payload: list[dict[str, Any]], query
 def write_report(
     *,
     planned_count: int,
+    selected_count: int,
     requested_count: int,
     cache_hits: int,
+    existing_candidate_rows: int,
+    existing_candidate_access_ids: int,
+    skipped_existing_access_ids: int,
+    new_candidate_rows: int,
     candidate_rows: list[dict[str, Any]],
     dry_run: bool,
     limit: int,
@@ -352,8 +386,13 @@ def write_report(
         "## Result",
         "",
         f"- Request plan rows: {planned_count}",
+        f"- Selected rows for this run: {selected_count}",
+        f"- Existing candidate access_ids before this run: {existing_candidate_access_ids}",
+        f"- Existing candidate rows preserved: {existing_candidate_rows}",
+        f"- Access_ids skipped because candidates already exist: {skipped_existing_access_ids}",
         f"- Requests attempted in this run: {requested_count}",
         f"- Cached provider responses reused: {cache_hits}",
+        f"- New candidate rows from this run: {new_candidate_rows}",
         f"- Candidate rows written: {len(candidate_rows)}",
         f"- Dry run: {'yes' if dry_run else 'no'}",
         f"- Limit: {limit}",
@@ -411,6 +450,16 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--user-agent", default=DEFAULT_USER_AGENT, help="Identifiable User-Agent for Nominatim requests.")
     parser.add_argument("--only-priority", default="", help="Optional exact priority value from the request plan.")
     parser.add_argument("--street-prefix", default="", help="Optional street-name prefix filter, e.g. VIA.")
+    parser.add_argument(
+        "--include-existing",
+        action="store_true",
+        help="Include access_ids that already have candidate rows. Default skips them for incremental batches.",
+    )
+    parser.add_argument(
+        "--replace-existing",
+        action="store_true",
+        help="Replace the candidate CSV instead of preserving and merging existing candidate rows.",
+    )
     return parser.parse_args()
 
 
@@ -423,27 +472,39 @@ def main() -> int:
         print(f"missing_input={SUSPECT_CSV}", file=sys.stderr)
         return 1
 
+    existing_candidate_rows = [] if args.replace_existing else read_csv(CANDIDATES_CSV)
+    existing_access_ids = candidate_access_ids(existing_candidate_rows)
     planned = merge_suspect_diagnostics()
     for row in planned:
         row["street"] = as_text(row.get("odonimo_raw"))
         row["civic"] = as_text(row.get("civico"))
-        row["request_status"] = "planned"
-        row["request_notes"] = "execute with --execute after confirming provider terms/rate limits"
+        access_id = as_text(row.get("access_id"))
+        if access_id in existing_access_ids and not args.include_existing:
+            row["request_status"] = "already_has_candidate"
+            row["request_notes"] = "skipped by default; use --include-existing or --replace-existing to refresh"
+        else:
+            row["request_status"] = "planned"
+            row["request_notes"] = "execute with --execute after confirming provider terms/rate limits"
     write_csv(REQUEST_PLAN_CSV, planned, REQUEST_FIELDS)
 
     street_prefix = as_text(args.street_prefix).upper()
-    selected = [
+    matching = [
         row
         for row in planned
         if (not args.only_priority or row.get("priority") == args.only_priority)
         and (not street_prefix or as_text(row.get("odonimo_raw")).upper().startswith(street_prefix))
+    ]
+    selected = [
+        row
+        for row in matching
+        if args.include_existing or as_text(row.get("access_id")) not in existing_access_ids
     ]
     if args.limit:
         selected = selected[: args.limit]
     else:
         selected = []
 
-    candidate_rows: list[dict[str, Any]] = []
+    new_candidate_rows: list[dict[str, Any]] = []
     failures: list[str] = []
     requested_count = 0
     cache_hits = 0
@@ -468,19 +529,25 @@ def main() -> int:
                         continue
                 if payload:
                     found_payload = True
-                    candidate_rows.extend(candidate_rows_for(row, payload, query, query_variant))
+                    new_candidate_rows.extend(candidate_rows_for(row, payload, query, query_variant))
                     break
             if not found_payload:
                 if row_failures:
                     failures.append(f"{row['access_id']}: {'; '.join(row_failures)}")
                 else:
-                    candidate_rows.extend(candidate_rows_for(row, [], as_text(row.get("address_query")), "all_variants"))
+                    new_candidate_rows.extend(candidate_rows_for(row, [], as_text(row.get("address_query")), "all_variants"))
+    candidate_rows = merge_candidate_rows(existing_candidate_rows, new_candidate_rows)
     write_csv(CANDIDATES_CSV, candidate_rows, CANDIDATE_FIELDS)
     write_json(WORKBENCH_CANDIDATES_JSON, workbench_payload(candidate_rows))
     write_report(
         planned_count=len(planned),
+        selected_count=len(selected),
         requested_count=requested_count,
         cache_hits=cache_hits,
+        existing_candidate_rows=len(existing_candidate_rows),
+        existing_candidate_access_ids=len(existing_access_ids),
+        skipped_existing_access_ids=len([row for row in matching if as_text(row.get("access_id")) in existing_access_ids and not args.include_existing]),
+        new_candidate_rows=len(new_candidate_rows),
         candidate_rows=candidate_rows,
         dry_run=not args.execute,
         limit=args.limit,
@@ -501,7 +568,10 @@ def main() -> int:
     print(f"workbench_candidate_json={WORKBENCH_CANDIDATES_JSON}")
     print(f"candidate_report={REPORT_PATH}")
     print(f"planned_rows={len(planned)}")
+    print(f"selected_rows={len(selected)}")
+    print(f"existing_candidate_access_ids={len(existing_access_ids)}")
     print(f"provider_requests={requested_count}")
+    print(f"new_candidate_rows={len(new_candidate_rows)}")
     print(f"candidate_rows={len(candidate_rows)}")
     if failures:
         print(f"failures={len(failures)}", file=sys.stderr)

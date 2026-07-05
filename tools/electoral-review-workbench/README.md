@@ -67,6 +67,9 @@ that allows bulk use. The command writes both
 `data/interim/qa/anncsu_coordinate_geocode_candidates_2025.csv` and the
 workbench payload
 `tools/electoral-review-workbench/public/data/coordinate_geocode_candidates_by_access.json`.
+Geocoder batches are incremental by default: existing candidate access IDs are
+preserved and skipped unless `--include-existing` or `--replace-existing` is
+passed explicitly.
 
 Generate local ANNCSU anchor candidates for suspect coordinates:
 
