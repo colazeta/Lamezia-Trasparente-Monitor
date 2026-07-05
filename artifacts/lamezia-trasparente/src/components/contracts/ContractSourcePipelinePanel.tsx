@@ -94,7 +94,7 @@ export function ContractSourcePipelinePanel() {
   const priorityDossiers = sortedDossiers
     .filter((dossier) => dossier.lifecycleCompleteness !== "complete")
     .slice(0, 3);
-  const featuredDossiers = sortedDossiers.slice(0, 6);
+  const completeDossiers = sortedDossiers;
 
   return (
     <section className="mb-10 rounded-2xl border border-card-border bg-card p-5 shadow-sm md:p-6">
@@ -252,14 +252,14 @@ export function ContractSourcePipelinePanel() {
         <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <div className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-              Fascicoli contrattuali in primo piano
+              Lista completa dei fascicoli contrattuali
             </div>
             <h3 className="mt-1 font-display text-xl font-bold tracking-tight text-foreground">
-              Ogni contratto espone il proprio stato
+              Tutti i contratti espongono il proprio stato
             </h3>
           </div>
           <p className="max-w-xl text-xs leading-relaxed text-muted-foreground">
-            La vista mette davanti i fascicoli con lacune informative, poi quelli
+            La vista ordina tutti i fascicoli con lacune informative, poi quelli
             parziali e infine quelli completi, mantenendo CIG, CUP e ponte BDNCP
             accanto allo stato del contratto.
           </p>
@@ -274,9 +274,9 @@ export function ContractSourcePipelinePanel() {
               />
             ))}
           </div>
-        ) : featuredDossiers.length > 0 ? (
+        ) : completeDossiers.length > 0 ? (
           <ul className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
-            {featuredDossiers.map((dossier) => (
+            {completeDossiers.map((dossier) => (
               <ContractDossierCard key={dossier.contractId} dossier={dossier} />
             ))}
           </ul>
