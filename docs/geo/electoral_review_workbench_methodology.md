@@ -257,6 +257,15 @@ JSON decisions only from rows explicitly marked `accept_candidate` or
 - `data/interim/qa/anncsu_coordinate_reviewed_decisions_batch_1_2025.json`
 - `data/interim/qa/anncsu_coordinate_reviewed_decisions_batch_1_report_2025.md`
 
+`scripts/audit_anncsu_coordinate_recovery_readiness.py` provides the final
+pre-recovery gate for this workflow. It does not accept coordinates or build
+geometry; it summarizes raw-source diagnosis, candidate coverage, worksheet
+progress, decision audit status, recovery-layer state, training-set rows, and
+remaining P0/P1/P2 findings:
+
+- `data/interim/qa/anncsu_coordinate_recovery_readiness_report_2025.md`
+- `data/interim/qa/anncsu_coordinate_recovery_readiness_findings_2025.csv`
+
 The retraining path is therefore review-first:
 
 - collect accepted manual coordinate overrides and rejected candidates;
