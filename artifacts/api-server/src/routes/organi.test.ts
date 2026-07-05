@@ -12,9 +12,15 @@ import {
   CURRENT_GIUNTA_SOURCE,
   CURRENT_INSTITUTIONAL_OFFICIALS,
   CURRENT_INSTITUTIONAL_MEMBERSHIPS,
+  COMMISSION_2025_SOURCE,
   ELIGENDO_2019_LAMEZIA_SOURCE,
   HISTORICAL_2019_INSTITUTIONAL_MEMBERSHIPS,
+  HISTORICAL_2019_INSTITUTIONAL_OFFICIALS,
+  HISTORICAL_2025_COMMISSION_COMPOSITIONS,
+  HISTORICAL_2025_COMMISSION_MEMBERSHIPS,
+  HISTORICAL_2025_COMMISSION_OFFICIALS,
   HISTORICAL_INSTITUTIONAL_OFFICIALS,
+  INSTITUTIONAL_COMMISSION_ORGANI,
   INSTITUTIONAL_POLITICI_SOURCE,
   currentInstitutionalMembershipsForOfficial,
   institutionalMembershipsForOfficial,
@@ -82,7 +88,7 @@ describe("organi historical memberships", () => {
           role: "sindaco",
           roleTitle: "Sindaco",
           profileUrl:
-            "https://www.comune.lamezia-terme.cz.it/it/person/murone-mario",
+            "https://www.comune.lamezia-terme.cz.it/it/persone/murone-mario",
         }),
         expect.objectContaining({
           name: "Maria Grandinetti",
@@ -128,13 +134,13 @@ describe("organi historical memberships", () => {
     expect(ELIGENDO_2019_LAMEZIA_SOURCE.url).toContain(
       "dtel=10%2F11%2F2019",
     );
-    expect(HISTORICAL_INSTITUTIONAL_OFFICIALS).toHaveLength(4);
+    expect(HISTORICAL_2019_INSTITUTIONAL_OFFICIALS).toHaveLength(4);
     expect(
-      HISTORICAL_INSTITUTIONAL_OFFICIALS.every(
+      HISTORICAL_2019_INSTITUTIONAL_OFFICIALS.every(
         (official) => official.status === "cessato",
       ),
     ).toBe(true);
-    expect(HISTORICAL_INSTITUTIONAL_OFFICIALS).toEqual(
+    expect(HISTORICAL_2019_INSTITUTIONAL_OFFICIALS).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
           name: "Paolo Mascaro",
@@ -183,6 +189,70 @@ describe("organi historical memberships", () => {
           organoSlug: "giunta-comunale",
           membershipRole: "Sindaco (Presidente)",
           sourceUrl: ELIGENDO_2019_LAMEZIA_SOURCE.url,
+        }),
+      ]),
+    );
+  });
+
+  it("adds the source-limited 2025 permanent commission compositions", () => {
+    expect(COMMISSION_2025_SOURCE.url).toContain(
+      "commissioni-consiliari-permanenti-prot-7264",
+    );
+    expect(INSTITUTIONAL_COMMISSION_ORGANI).toHaveLength(7);
+    expect(HISTORICAL_2025_COMMISSION_COMPOSITIONS).toHaveLength(7);
+    expect(HISTORICAL_2025_COMMISSION_MEMBERSHIPS).toHaveLength(84);
+    expect(HISTORICAL_2025_COMMISSION_OFFICIALS).toHaveLength(12);
+    expect(HISTORICAL_INSTITUTIONAL_OFFICIALS.length).toBeGreaterThan(4);
+    expect(
+      HISTORICAL_2025_COMMISSION_OFFICIALS.every(
+        (official) =>
+          official.status === "cessato" && official.profileUrl === null,
+      ),
+    ).toBe(true);
+
+    for (const composition of HISTORICAL_2025_COMMISSION_COMPOSITIONS) {
+      expect(composition.members).toHaveLength(12);
+    }
+    expect(
+      HISTORICAL_2025_COMMISSION_MEMBERSHIPS.every(
+        (membership) =>
+          membership.sourceUrl === COMMISSION_2025_SOURCE.url &&
+          membership.startDate === "2025-01-27" &&
+          membership.endDate === null &&
+          membership.termLabel !== "Mandato corrente" &&
+          /non certifica una data di cessazione/i.test(membership.notes),
+      ),
+    ).toBe(true);
+    expect(HISTORICAL_2025_COMMISSION_MEMBERSHIPS).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          organoSlug: "commissione-affari-generali-istituzionali",
+          officialSlug: "dario-arcieri-2025",
+          membershipRole: "Componente (Gruppo Misto)",
+          position: 0,
+        }),
+        expect.objectContaining({
+          organoSlug: "commissione-politiche-occupazionali-giovanili",
+          officialSlug: "matteo-folino",
+          membershipRole: "Componente (Forza Italia)",
+        }),
+        expect.objectContaining({
+          organoSlug: "commissione-sviluppo-economico-attivita-produttive",
+          officialSlug: "ruggero-pegna",
+          membershipRole: "Componente (UDC - Nuovo CDU)",
+        }),
+      ]),
+    );
+    expect(institutionalMembershipsForOfficial("matteo-folino")).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          organoSlug: "consiglio-comunale",
+          termLabel: "Mandato corrente",
+        }),
+        expect.objectContaining({
+          organoSlug: "commissione-politiche-occupazionali-giovanili",
+          termLabel:
+            "Commissioni consiliari permanenti 2025 - amministrazione precedente",
         }),
       ]),
     );
@@ -244,16 +314,26 @@ describe("organi historical memberships", () => {
         notes: "Riga storica di test.",
         position: 1,
       },
+      {
+        organoId: organo.id,
+        officialId: current.id,
+        membershipRole: "Componente commissione",
+        termLabel: "Commissione precedente",
+        startDate: new Date("2025-01-27T00:00:00.000Z"),
+        sourceLabel: "Fonte test commissione storica",
+        notes: "Riga storica senza data fine esplicita.",
+        position: 2,
+      },
     ]);
 
     const res = await request(app).get(`/api/organi/${organo.slug}`);
 
     expect(res.status).toBe(200);
     expect(res.body.memberCount).toBe(1);
-    expect(res.body.historyCount).toBe(2);
+    expect(res.body.historyCount).toBe(3);
     expect(res.body.members).toHaveLength(1);
     expect(res.body.members[0].officialId).toBe(current.id);
-    expect(res.body.terms).toHaveLength(2);
+    expect(res.body.terms).toHaveLength(3);
     expect(
       res.body.terms.some(
         (term: { label: string; status: string }) =>
@@ -267,6 +347,18 @@ describe("organi historical memberships", () => {
     expect(profileRes.body.organi[0]).toMatchObject({
       id: organo.id,
       termLabel: "Mandato precedente",
+      isCurrent: false,
+    });
+
+    const currentProfileRes = await request(app).get(`/api/officials/${current.id}`);
+    expect(currentProfileRes.status).toBe(200);
+    expect(
+      currentProfileRes.body.organi.find(
+        (o: { termLabel: string }) => o.termLabel === "Commissione precedente",
+      ),
+    ).toMatchObject({
+      id: organo.id,
+      termLabel: "Commissione precedente",
       isCurrent: false,
     });
 

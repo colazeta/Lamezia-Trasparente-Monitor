@@ -48,9 +48,9 @@ function formatDateRange(
 function missingCompositionText(type: string) {
   if (type === "commissione") {
     return [
-      "Non e' stata individuata una fonte ufficiale corrente e verificabile",
-      "sulla composizione delle commissioni consiliari. La sezione resta",
-      "predisposta per il caricamento appena la fonte sara' disponibile.",
+      "Non risultano componenti correnti registrati per questa commissione.",
+      "Le eventuali composizioni storiche disponibili restano consultabili",
+      "nella sezione dei mandati e delle fonti.",
     ].join(" ");
   }
   return "Non risultano componenti registrati per questo organo.";

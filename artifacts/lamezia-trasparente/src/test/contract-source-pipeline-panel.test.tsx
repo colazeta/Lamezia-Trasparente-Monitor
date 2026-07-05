@@ -1,4 +1,5 @@
 import { render, screen, within } from "@testing-library/react";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { Contract } from "@workspace/api-client-react";
 
@@ -22,13 +23,25 @@ vi.mock("@workspace/api-client-react", async (importOriginal) => {
   };
 });
 
+function renderPanel() {
+  const queryClient = new QueryClient({
+    defaultOptions: { queries: { retry: false } },
+  });
+
+  return render(
+    <QueryClientProvider client={queryClient}>
+      <ContractSourcePipelinePanel />
+    </QueryClientProvider>,
+  );
+}
+
 describe("ContractSourcePipelinePanel", () => {
   beforeEach(() => {
     contractListMock.contracts = [];
   });
 
   it("renders the source pipeline without public ingestion claims", () => {
-    render(<ContractSourcePipelinePanel />);
+    renderPanel();
 
     expect(screen.getByText("Contratti protagonisti")).toBeInTheDocument();
     expect(
@@ -42,11 +55,12 @@ describe("ContractSourcePipelinePanel", () => {
     expect(
       screen.getByText("0 record produzione, 0 scritture pubbliche"),
     ).toBeInTheDocument();
+    expect(screen.getByText("Lettura immediata dello stato")).toBeInTheDocument();
     expect(screen.queryByText(/ANAC sincronizzata/i)).not.toBeInTheDocument();
   });
 
   it("exposes dossier status controls on the complete contract list", () => {
-    render(<ContractSourcePipelinePanel />);
+    renderPanel();
 
     expect(screen.getByText("Stato fascicoli")).toBeInTheDocument();
     expect(
@@ -78,7 +92,7 @@ describe("ContractSourcePipelinePanel", () => {
       }),
     ];
 
-    render(<ContractSourcePipelinePanel />);
+    renderPanel();
 
     expect(screen.getByText("Flusso fasi")).toBeInTheDocument();
     const phaseStrip = screen.getByLabelText(

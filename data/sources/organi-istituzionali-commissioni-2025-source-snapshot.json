@@ -1,0 +1,143 @@
+{
+  "checkedAt": "2026-07-05",
+  "scope": "commissioni-consiliari-lamezia-2025",
+  "coverageNote": "Provvedimento comunale prot. 7264 del 27/01/2025: composizione delle Commissioni consiliari permanenti alla data del provvedimento. La fonte non certifica una data di cessazione e non va presentata come composizione corrente 2026.",
+  "sources": {
+    "documentPage": "https://www.comune.lamezia-terme.cz.it/it/documenti_pubblici/commissioni-consiliari-permanenti-prot-7264-del-27-1-2025",
+    "documentFile": "https://lamezia-terme-api.municipiumapp.it/s3/3458/allegati/commiss-cons-perm-prot-7264-27-01-2025.pdf"
+  },
+  "document": {
+    "protocol": "7264",
+    "date": "2025-01-27",
+    "title": "Commissioni consiliari permanenti prot.7264 del 27.1.2025",
+    "issuer": "Presidente del Consiglio Comunale"
+  },
+  "commissions": [
+    {
+      "organoSlug": "commissione-affari-generali-istituzionali",
+      "sourceTitle": "I Affari Generali ed Istituzionali, decentramento, personale",
+      "members": [
+        { "sourceName": "ARCIERI DARIO", "group": "Gruppo Misto", "sourceNumber": 2 },
+        { "sourceName": "CARUSO ANNA", "group": "Forza Azzurri", "sourceNumber": 2 },
+        { "sourceName": "CITTADINO LUCIA ALESSANDRA", "group": "Una Nuova Era", "sourceNumber": 2 },
+        { "sourceName": "COSTANTINO ENRICO", "group": "Assieme Mascaro Sindaco", "sourceNumber": 1 },
+        { "sourceName": "D'AMICO ANTONIETTA", "group": "Lega Salvini Premier", "sourceNumber": 2 },
+        { "sourceName": "FOLINO MATTEO", "group": "Forza Italia", "sourceNumber": 3 },
+        { "sourceName": "PEGNA RUGGERO", "group": "UDC - Nuovo CDU", "sourceNumber": 2 },
+        { "sourceName": "PICCIONI ROSARIO", "group": "Lamezia Bene Comune", "sourceNumber": 1 },
+        { "sourceName": "PULICE GIOVANNI", "group": "Lamezia Responsabile", "sourceNumber": 2 },
+        { "sourceName": "RUBINO ROSY", "group": "Noi Moderati", "sourceNumber": 3 },
+        { "sourceName": "SAULLO ALESSANDRO", "group": "Fratelli d'Italia", "sourceNumber": 3 },
+        { "sourceName": "ZAFFINA PEPPINO", "group": "Orgoglio Lamezia", "sourceNumber": 1 }
+      ]
+    },
+    {
+      "organoSlug": "commissione-servizi-economici-finanziari",
+      "sourceTitle": "II Servizi economici e finanziari",
+      "members": [
+        { "sourceName": "CITTADINO LUCIA ALESSANDRA", "group": "Una Nuova Era", "sourceNumber": 2 },
+        { "sourceName": "COSTANTINO ENRICO", "group": "Assieme Mascaro Sindaco", "sourceNumber": 1 },
+        { "sourceName": "GIANTURCO GENNARO", "group": "Gruppo Misto", "sourceNumber": 2 },
+        { "sourceName": "GRANDINETTI MARIA", "group": "Forza Azzurri", "sourceNumber": 2 },
+        { "sourceName": "LORENA ANTONIO", "group": "Fratelli d'Italia", "sourceNumber": 3 },
+        { "sourceName": "MASTROIANNI ANTONIO", "group": "Lega Salvini Premier", "sourceNumber": 2 },
+        { "sourceName": "PARADISO TRANQUILLO", "group": "Forza Italia", "sourceNumber": 3 },
+        { "sourceName": "PEGNA RUGGERO", "group": "UDC - Nuovo CDU", "sourceNumber": 2 },
+        { "sourceName": "PICCIONI ROSARIO", "group": "Lamezia Bene Comune", "sourceNumber": 1 },
+        { "sourceName": "PULICE GIOVANNI", "group": "Lamezia Responsabile", "sourceNumber": 2 },
+        { "sourceName": "RASO ALESSANDRO SANTO", "group": "Noi Moderati", "sourceNumber": 3 },
+        { "sourceName": "ZAFFINA PEPPINO", "group": "Orgoglio Lamezia", "sourceNumber": 1 }
+      ]
+    },
+    {
+      "organoSlug": "commissione-servizi-sociali-sanita-ambiente",
+      "sourceTitle": "III Servizi sociali, sanita', ambiente",
+      "members": [
+        { "sourceName": "CITTADINO LUCIA ALESSANDRA", "group": "Una Nuova Era", "sourceNumber": 2 },
+        { "sourceName": "COSTANTINO ENRICO", "group": "Assieme Mascaro Sindaco", "sourceNumber": 1 },
+        { "sourceName": "D'AMICO ANTONIETTA", "group": "Lega Salvini Premier", "sourceNumber": 2 },
+        { "sourceName": "GATTO DANILO", "group": "Lamezia Responsabile", "sourceNumber": 2 },
+        { "sourceName": "GIANTURCO GENNARO", "group": "Gruppo Misto", "sourceNumber": 2 },
+        { "sourceName": "GRANDINETTI MARIA", "group": "Forza Azzurri", "sourceNumber": 3 },
+        { "sourceName": "MASTROIANNI DAVIDE", "group": "Forza Italia", "sourceNumber": 3 },
+        { "sourceName": "PEGNA RUGGERO", "group": "UDC - Nuovo CDU", "sourceNumber": 2 },
+        { "sourceName": "PICCIONI ROSARIO", "group": "Lamezia Bene Comune", "sourceNumber": 1 },
+        { "sourceName": "SALADINI GIOVANNI", "group": "Noi Moderati", "sourceNumber": 3 },
+        { "sourceName": "SAULLO ALESSANDRO", "group": "Fratelli d'Italia", "sourceNumber": 3 },
+        { "sourceName": "ZAFFINA PEPPINO", "group": "Orgoglio Lamezia", "sourceNumber": 1 }
+      ]
+    },
+    {
+      "organoSlug": "commissione-educazione-cultura-sport",
+      "sourceTitle": "IV Servizi all'educazione, cultura e sport",
+      "members": [
+        { "sourceName": "CITTADINO LUCIA ALESSANDRA", "group": "Una Nuova Era", "sourceNumber": 2 },
+        { "sourceName": "COSTANTINO ENRICO", "group": "Assieme Mascaro Sindaco", "sourceNumber": 1 },
+        { "sourceName": "D'AMICO ANTONIETTA", "group": "Lega Salvini Premier", "sourceNumber": 2 },
+        { "sourceName": "GATTO DANILO", "group": "Lamezia Responsabile", "sourceNumber": 2 },
+        { "sourceName": "GIANTURCO GENNARO", "group": "Gruppo Misto", "sourceNumber": 2 },
+        { "sourceName": "GRANDINETTI MARIA", "group": "Forza Azzurri", "sourceNumber": 2 },
+        { "sourceName": "LORENA ANTONIO", "group": "Fratelli d'Italia", "sourceNumber": 3 },
+        { "sourceName": "MASTROIANNI DAVIDE", "group": "Forza Italia", "sourceNumber": 3 },
+        { "sourceName": "PEGNA RUGGERO", "group": "UDC - Nuovo CDU", "sourceNumber": 2 },
+        { "sourceName": "PICCIONI ROSARIO", "group": "Lamezia Bene Comune", "sourceNumber": 1 },
+        { "sourceName": "SALADINI GIOVANNI", "group": "Noi Moderati", "sourceNumber": 3 },
+        { "sourceName": "ZAFFINA PEPPINO", "group": "Orgoglio Lamezia", "sourceNumber": 1 }
+      ]
+    },
+    {
+      "organoSlug": "commissione-pianificazione-territorio",
+      "sourceTitle": "V Pianificazione, sviluppo e governo del territorio",
+      "members": [
+        { "sourceName": "ARCIERI DARIO", "group": "Gruppo Misto", "sourceNumber": 2 },
+        { "sourceName": "CARUSO ANNA", "group": "Forza Azzurri", "sourceNumber": 2 },
+        { "sourceName": "CITTADINO LUCIA ALESSANDRA", "group": "Una Nuova Era", "sourceNumber": 2 },
+        { "sourceName": "COSTANTINO ENRICO", "group": "Assieme Mascaro Sindaco", "sourceNumber": 1 },
+        { "sourceName": "FOLINO MATTEO", "group": "Forza Italia", "sourceNumber": 3 },
+        { "sourceName": "GALLO PIETRO", "group": "Fratelli d'Italia", "sourceNumber": 3 },
+        { "sourceName": "MASTROIANNI ANTONIO", "group": "Lega Salvini Premier", "sourceNumber": 2 },
+        { "sourceName": "PEGNA RUGGERO", "group": "UDC - Nuovo CDU", "sourceNumber": 2 },
+        { "sourceName": "PICCIONI ROSARIO", "group": "Lamezia Bene Comune", "sourceNumber": 1 },
+        { "sourceName": "PULICE GIOVANNI", "group": "Lamezia Responsabile", "sourceNumber": 2 },
+        { "sourceName": "RASO ALESSANDRO SANTO", "group": "Noi Moderati", "sourceNumber": 3 },
+        { "sourceName": "ZAFFINA PEPPINO", "group": "Orgoglio Lamezia", "sourceNumber": 1 }
+      ]
+    },
+    {
+      "organoSlug": "commissione-sviluppo-economico-attivita-produttive",
+      "sourceTitle": "VI Sviluppo economico ed attivita' produttive",
+      "members": [
+        { "sourceName": "CARUSO ANNA", "group": "Forza Azzurri", "sourceNumber": 2 },
+        { "sourceName": "CITTADINO LUCIA ALESSANDRA", "group": "Una Nuova Era", "sourceNumber": 2 },
+        { "sourceName": "COSTANTINO ENRICO", "group": "Assieme per Mascaro Sindaco", "sourceNumber": 1 },
+        { "sourceName": "GALLO PIETRO", "group": "Fratelli d'Italia", "sourceNumber": 3 },
+        { "sourceName": "GATTO DANILO", "group": "Lamezia Responsabile", "sourceNumber": 2 },
+        { "sourceName": "GIANTURCO GENNARO", "group": "Gruppo Misto", "sourceNumber": 2 },
+        { "sourceName": "MASTROIANNI ANTONIO", "group": "Lega Salvini Premier", "sourceNumber": 2 },
+        { "sourceName": "PARADISO TRANQUILLO", "group": "Forza Italia", "sourceNumber": 3 },
+        { "sourceName": "PEGNA RUGGERO", "group": "UDC - Nuovo CDU", "sourceNumber": 2 },
+        { "sourceName": "PICCIONI ROSARIO", "group": "Lamezia Bene Comune", "sourceNumber": 1 },
+        { "sourceName": "RUBINO ROSY", "group": "Noi Moderati", "sourceNumber": 3 },
+        { "sourceName": "ZAFFINA PEPPINO", "group": "Orgoglio Lamezia", "sourceNumber": 1 }
+      ]
+    },
+    {
+      "organoSlug": "commissione-politiche-occupazionali-giovanili",
+      "sourceTitle": "VII Politiche occupazionali e politiche giovanili",
+      "members": [
+        { "sourceName": "ARCIERI DARIO", "group": "Gruppo Misto", "sourceNumber": 2 },
+        { "sourceName": "CARUSO ANNA", "group": "Forza Azzurri", "sourceNumber": 2 },
+        { "sourceName": "CITTADINO LUCIA ALESSANDRA", "group": "Una Nuova Era", "sourceNumber": 2 },
+        { "sourceName": "COSTANTINO ENRICO", "group": "Assieme per Mascaro Sindaco", "sourceNumber": 1 },
+        { "sourceName": "D'AMICO ANTONIETTA", "group": "Lega Salvini Premier", "sourceNumber": 2 },
+        { "sourceName": "GATTO DANILO", "group": "Lamezia Responsabile", "sourceNumber": 2 },
+        { "sourceName": "LORENA ANTONIO", "group": "Fratelli d'Italia", "sourceNumber": 3 },
+        { "sourceName": "FOLINO MATTEO", "group": "Forza Italia", "sourceNumber": 3 },
+        { "sourceName": "PEGNA RUGGERO", "group": "UDC - Nuovo CDU", "sourceNumber": 2 },
+        { "sourceName": "PICCIONI ROSARIO", "group": "Lamezia Bene Comune", "sourceNumber": 1 },
+        { "sourceName": "RUBINO ROSY", "group": "Noi Moderati", "sourceNumber": 3 },
+        { "sourceName": "ZAFFINA PEPPINO", "group": "Orgoglio Lamezia", "sourceNumber": 1 }
+      ]
+    }
+  ]
+}

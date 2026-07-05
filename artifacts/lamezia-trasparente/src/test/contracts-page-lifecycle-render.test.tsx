@@ -65,7 +65,7 @@ describe("Contracts page lifecycle rendering", () => {
         name: "Contratti pubblici sotto osservazione",
       }),
     ).toBeInTheDocument();
-    expect(screen.getAllByText("Ponte BDNCP")[0]).toBeInTheDocument();
+    expect(screen.getAllByText("Ponte BDNCP").length).toBeGreaterThan(0);
     expect(screen.getByText("Fascicoli civici CIG/CUP")).toBeInTheDocument();
 
     for (const phase of [

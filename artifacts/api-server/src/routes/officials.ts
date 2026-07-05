@@ -275,7 +275,10 @@ async function buildProfile(official: Official) {
       sourceLabel: o.sourceLabel,
       sourceUrl: o.sourceUrl,
       notes: o.notes,
-      isCurrent: official.status === "in_carica" && o.endDate === null,
+      isCurrent:
+        official.status === "in_carica" &&
+        o.endDate === null &&
+        o.termLabel === "Mandato corrente",
     })),
   };
 }

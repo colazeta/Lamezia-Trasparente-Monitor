@@ -44,8 +44,14 @@ function toIsoDate(value: Date | null): string | null {
   return value ? value.toISOString() : null;
 }
 
-function isCurrentMember(member: Pick<MemberRow, "status" | "endDate">): boolean {
-  return member.status === "in_carica" && member.endDate === null;
+function isCurrentMember(
+  member: Pick<MemberRow, "status" | "endDate" | "termLabel">,
+): boolean {
+  return (
+    member.status === "in_carica" &&
+    member.endDate === null &&
+    member.termLabel === "Mandato corrente"
+  );
 }
 
 function mapMember(member: MemberRow) {
@@ -193,6 +199,7 @@ router.get("/organi", async (_req, res) => {
       and(
         eq(officialsTable.status, "in_carica"),
         sql`${organiMembersTable.endDate} is null`,
+        eq(organiMembersTable.termLabel, "Mandato corrente"),
       ),
     )
     .groupBy(organiMembersTable.organoId);
