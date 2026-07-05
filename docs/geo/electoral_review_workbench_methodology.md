@@ -238,6 +238,14 @@ candidate coordinate to inspect in the local workbench:
 - `data/interim/qa/anncsu_coordinate_review_pack_2025.csv`
 - `data/interim/qa/anncsu_coordinate_review_pack_report_2025.md`
 
+`scripts/prepare_anncsu_coordinate_decision_drafts.py` can then prefill a JSON
+draft for the first review batch. The draft intentionally remains
+audit-blocking: it keeps follow-up flags enabled, reviewer metadata blank, and
+`coordinate_decision_confidence=draft` until a human reviewer accepts each row:
+
+- `data/interim/qa/anncsu_coordinate_decision_drafts_batch_1_2025.json`
+- `data/interim/qa/anncsu_coordinate_decision_drafts_batch_1_report_2025.md`
+
 The retraining path is therefore review-first:
 
 - collect accepted manual coordinate overrides and rejected candidates;
