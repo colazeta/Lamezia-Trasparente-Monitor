@@ -31,7 +31,7 @@ Configure these repository settings before relying on the direct deploy job:
 - Optional variable: `CLOUDFLARE_PROJECT_NAME` (defaults to `lamezia-trasparente`)
 - Optional variable: `PUBLIC_SITE_URL` (defaults to `https://lamezia-trasparente.pages.dev`)
 
-If the Cloudflare credentials are missing, the workflow builds and smokes the static output but skips the external deploy step rather than failing with a missing-secret error.
+If the Cloudflare credentials are missing, the workflow now fails before the deploy step. A green `Cloudflare Pages deploy` run means the credentials were present, Wrangler attempted the production publish, and the live public contracts smoke passed.
 
 ## Deploy provenance marker
 
