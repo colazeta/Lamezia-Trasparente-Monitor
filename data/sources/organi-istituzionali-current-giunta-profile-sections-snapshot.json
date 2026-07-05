@@ -1,0 +1,75 @@
+{
+  "checkedAt": "2026-07-05",
+  "scope": "giunta-current-profile-sections",
+  "coverageNote": "Sezioni Incarichi, Organizzazioni e ultimo aggiornamento estratte dalle schede personali istituzionali correnti di Sindaco e Giunta. La PEC generale dell'ente e il centralino presenti nelle pagine non vengono trattati come contatti personali.",
+  "sources": {
+    "politici": "https://www.comune.lamezia-terme.cz.it/it/page/politici",
+    "giunta": "https://www.comune.lamezia-terme.cz.it/it/unita_organizzative/giunta-comunale"
+  },
+  "profiles": [
+    {
+      "slug": "mario-murone",
+      "name": "Mario Murone",
+      "profileUrl": "https://www.comune.lamezia-terme.cz.it/it/persone/murone-mario",
+      "incarichi": ["Sindaco"],
+      "organizations": [],
+      "lastUpdated": "12 giugno 2026, 11:24"
+    },
+    {
+      "slug": "michelangelo-cardamone",
+      "name": "Michelangelo Cardamone",
+      "profileUrl": "https://www.comune.lamezia-terme.cz.it/it/persone/cardamone-michelangelo",
+      "incarichi": ["Vice Sindaco"],
+      "organizations": ["Giunta Comunale"],
+      "lastUpdated": "16 luglio 2025, 11:25"
+    },
+    {
+      "slug": "tranquillo-paradiso",
+      "name": "Tranquillo Paradiso",
+      "profileUrl": "https://www.comune.lamezia-terme.cz.it/it/persone/paradiso-tranquillo-56341",
+      "incarichi": [],
+      "organizations": ["Giunta Comunale"],
+      "lastUpdated": "18 novembre 2025, 08:30"
+    },
+    {
+      "slug": "salvatore-pirelli",
+      "name": "Salvatore Pirelli",
+      "profileUrl": "https://www.comune.lamezia-terme.cz.it/it/persone/pirelli-salvatore",
+      "incarichi": [],
+      "organizations": ["Giunta Comunale"],
+      "lastUpdated": "16 luglio 2025, 11:34"
+    },
+    {
+      "slug": "annalisa-spinelli",
+      "name": "Annalisa Spinelli",
+      "profileUrl": "https://www.comune.lamezia-terme.cz.it/it/persone/spinelli-annalisa",
+      "incarichi": [],
+      "organizations": ["Giunta Comunale"],
+      "lastUpdated": "16 luglio 2025, 11:37"
+    },
+    {
+      "slug": "donatella-amicarelli",
+      "name": "Donatella Amicarelli",
+      "profileUrl": "https://www.comune.lamezia-terme.cz.it/it/persone/amicarelli-donatella",
+      "incarichi": [],
+      "organizations": ["Giunta Comunale"],
+      "lastUpdated": "27 marzo 2026, 12:21"
+    },
+    {
+      "slug": "maria-nardo",
+      "name": "Maria Nardo",
+      "profileUrl": "https://www.comune.lamezia-terme.cz.it/it/persone/nardo-maria",
+      "incarichi": [],
+      "organizations": ["Giunta Comunale"],
+      "lastUpdated": "22 maggio 2026, 09:50"
+    },
+    {
+      "slug": "gennaro-gianturco",
+      "name": "Gennaro Gianturco",
+      "profileUrl": "https://www.comune.lamezia-terme.cz.it/it/persone/gianturco-gennaro",
+      "incarichi": [],
+      "organizations": ["Giunta Comunale"],
+      "lastUpdated": "1 giugno 2026, 14:41"
+    }
+  ]
+}

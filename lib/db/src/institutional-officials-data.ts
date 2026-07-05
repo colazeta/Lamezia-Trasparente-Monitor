@@ -495,6 +495,42 @@ export const CURRENT_COUNCIL_PROFILE_SECTIONS = {
   },
 } as const;
 
+export const CURRENT_GIUNTA_PROFILE_SECTIONS = {
+  "mario-murone": {
+    profileIncarichi: ["Sindaco"],
+    profileLastUpdated: "12 giugno 2026, 11:24",
+  },
+  "michelangelo-cardamone": {
+    profileIncarichi: ["Vice Sindaco"],
+    profileOrganizations: ["Giunta Comunale"],
+    profileLastUpdated: "16 luglio 2025, 11:25",
+  },
+  "tranquillo-paradiso": {
+    profileOrganizations: ["Giunta Comunale"],
+    profileLastUpdated: "18 novembre 2025, 08:30",
+  },
+  "salvatore-pirelli": {
+    profileOrganizations: ["Giunta Comunale"],
+    profileLastUpdated: "16 luglio 2025, 11:34",
+  },
+  "annalisa-spinelli": {
+    profileOrganizations: ["Giunta Comunale"],
+    profileLastUpdated: "16 luglio 2025, 11:37",
+  },
+  "donatella-amicarelli": {
+    profileOrganizations: ["Giunta Comunale"],
+    profileLastUpdated: "27 marzo 2026, 12:21",
+  },
+  "maria-nardo": {
+    profileOrganizations: ["Giunta Comunale"],
+    profileLastUpdated: "22 maggio 2026, 09:50",
+  },
+  "gennaro-gianturco": {
+    profileOrganizations: ["Giunta Comunale"],
+    profileLastUpdated: "1 giugno 2026, 14:41",
+  },
+} as const;
+
 export const CURRENT_COUNCIL_MEMBER_SLUGS = [
   "mario-murone",
   "alessandro-saullo",
@@ -545,6 +581,9 @@ export const CURRENT_INSTITUTIONAL_OFFICIALS: InstitutionalOfficialSeed[] =
     ...CURRENT_PROFILE_DETAILS[slug as keyof typeof CURRENT_PROFILE_DETAILS],
     ...CURRENT_COUNCIL_PROFILE_SECTIONS[
       slug as keyof typeof CURRENT_COUNCIL_PROFILE_SECTIONS
+    ],
+    ...CURRENT_GIUNTA_PROFILE_SECTIONS[
+      slug as keyof typeof CURRENT_GIUNTA_PROFILE_SECTIONS
     ],
   }));
 
