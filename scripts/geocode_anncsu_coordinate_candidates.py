@@ -330,16 +330,45 @@ def candidate_rows_for(row: dict[str, str], payload: list[dict[str, Any]], query
     return out
 
 
+def candidate_key(row: dict[str, Any]) -> tuple[str, str, str, str, str, str, str, str]:
+    return (
+        as_text(row.get("access_id")),
+        as_text(row.get("provider")),
+        as_text(row.get("query_variant")),
+        as_text(row.get("cache_key")),
+        as_text(row.get("candidate_rank")),
+        as_text(row.get("candidate_lon")),
+        as_text(row.get("candidate_lat")),
+        as_text(row.get("candidate_status")),
+    )
+
+
+def merge_candidates(existing_rows: list[dict[str, Any]], new_rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    merged: list[dict[str, Any]] = []
+    seen: set[tuple[str, str, str, str, str, str, str, str]] = set()
+    for row in [*existing_rows, *new_rows]:
+        key = candidate_key(row)
+        if key in seen:
+            continue
+        seen.add(key)
+        merged.append(row)
+    return merged
+
+
 def write_report(
     *,
     planned_count: int,
     requested_count: int,
     cache_hits: int,
+    new_candidate_rows: list[dict[str, Any]],
+    existing_candidate_count: int,
+    skipped_existing_access_ids: int,
     candidate_rows: list[dict[str, Any]],
     dry_run: bool,
     limit: int,
     sleep_seconds: float,
     selection_filter: str,
+    merge_existing: bool,
     failures: list[str],
 ) -> None:
     counts = Counter(as_text(row.get("candidate_status")) for row in candidate_rows)
@@ -354,8 +383,12 @@ def write_report(
         f"- Request plan rows: {planned_count}",
         f"- Requests attempted in this run: {requested_count}",
         f"- Cached provider responses reused: {cache_hits}",
+        f"- Existing candidate rows preserved: {existing_candidate_count if merge_existing else 0}",
+        f"- Planned rows skipped because access_id already has geocoder evidence: {skipped_existing_access_ids}",
+        f"- New candidate rows produced: {len(new_candidate_rows)}",
         f"- Candidate rows written: {len(candidate_rows)}",
         f"- Dry run: {'yes' if dry_run else 'no'}",
+        f"- Merge existing candidates: {'yes' if merge_existing else 'no'}",
         f"- Limit: {limit}",
         f"- Selection filter: {selection_filter or 'none'}",
         f"- Rate limit sleep seconds: {sleep_seconds}",
@@ -411,6 +444,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--user-agent", default=DEFAULT_USER_AGENT, help="Identifiable User-Agent for Nominatim requests.")
     parser.add_argument("--only-priority", default="", help="Optional exact priority value from the request plan.")
     parser.add_argument("--street-prefix", default="", help="Optional street-name prefix filter, e.g. VIA.")
+    parser.add_argument("--merge-existing", action="store_true", help="Preserve existing geocoder candidate rows and append newly generated rows.")
+    parser.add_argument("--skip-existing", action="store_true", help="Skip planned rows whose access_id is already present in the candidate CSV.")
     return parser.parse_args()
 
 
@@ -431,6 +466,8 @@ def main() -> int:
         row["request_notes"] = "execute with --execute after confirming provider terms/rate limits"
     write_csv(REQUEST_PLAN_CSV, planned, REQUEST_FIELDS)
 
+    existing_rows = read_csv(CANDIDATES_CSV) if args.merge_existing or args.skip_existing else []
+    existing_access_ids = {as_text(row.get("access_id")) for row in existing_rows if as_text(row.get("access_id"))}
     street_prefix = as_text(args.street_prefix).upper()
     selected = [
         row
@@ -438,12 +475,17 @@ def main() -> int:
         if (not args.only_priority or row.get("priority") == args.only_priority)
         and (not street_prefix or as_text(row.get("odonimo_raw")).upper().startswith(street_prefix))
     ]
+    skipped_existing_access_ids = 0
+    if args.skip_existing:
+        before_skip_count = len(selected)
+        selected = [row for row in selected if as_text(row.get("access_id")) not in existing_access_ids]
+        skipped_existing_access_ids = before_skip_count - len(selected)
     if args.limit:
         selected = selected[: args.limit]
     else:
         selected = []
 
-    candidate_rows: list[dict[str, Any]] = []
+    new_candidate_rows: list[dict[str, Any]] = []
     failures: list[str] = []
     requested_count = 0
     cache_hits = 0
@@ -468,28 +510,34 @@ def main() -> int:
                         continue
                 if payload:
                     found_payload = True
-                    candidate_rows.extend(candidate_rows_for(row, payload, query, query_variant))
+                    new_candidate_rows.extend(candidate_rows_for(row, payload, query, query_variant))
                     break
             if not found_payload:
                 if row_failures:
                     failures.append(f"{row['access_id']}: {'; '.join(row_failures)}")
                 else:
-                    candidate_rows.extend(candidate_rows_for(row, [], as_text(row.get("address_query")), "all_variants"))
+                    new_candidate_rows.extend(candidate_rows_for(row, [], as_text(row.get("address_query")), "all_variants"))
+    candidate_rows = merge_candidates(existing_rows, new_candidate_rows) if args.merge_existing else new_candidate_rows
     write_csv(CANDIDATES_CSV, candidate_rows, CANDIDATE_FIELDS)
     write_json(WORKBENCH_CANDIDATES_JSON, workbench_payload(candidate_rows))
     write_report(
         planned_count=len(planned),
         requested_count=requested_count,
         cache_hits=cache_hits,
+        new_candidate_rows=new_candidate_rows,
+        existing_candidate_count=len(existing_rows),
+        skipped_existing_access_ids=skipped_existing_access_ids,
         candidate_rows=candidate_rows,
         dry_run=not args.execute,
         limit=args.limit,
         sleep_seconds=args.sleep_seconds,
+        merge_existing=args.merge_existing,
         selection_filter="; ".join(
             part
             for part in [
                 f"priority={args.only_priority}" if args.only_priority else "",
                 f"street_prefix={args.street_prefix}" if args.street_prefix else "",
+                "skip_existing=yes" if args.skip_existing else "",
             ]
             if part
         ),
@@ -502,6 +550,8 @@ def main() -> int:
     print(f"candidate_report={REPORT_PATH}")
     print(f"planned_rows={len(planned)}")
     print(f"provider_requests={requested_count}")
+    print(f"skipped_existing_access_ids={skipped_existing_access_ids}")
+    print(f"new_candidate_rows={len(new_candidate_rows)}")
     print(f"candidate_rows={len(candidate_rows)}")
     if failures:
         print(f"failures={len(failures)}", file=sys.stderr)

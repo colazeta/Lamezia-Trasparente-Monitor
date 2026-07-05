@@ -6,11 +6,15 @@ Date: 2026-07-05
 
 - Request plan rows: 345
 - Requests attempted in this run: 0
-- Cached provider responses reused: 33
-- Candidate rows written: 31
+- Cached provider responses reused: 10
+- Existing candidate rows preserved: 36
+- Planned rows skipped because access_id already has geocoder evidence: 5
+- New candidate rows produced: 5
+- Candidate rows written: 41
 - Dry run: no
-- Limit: 25
-- Selection filter: street_prefix=VIA
+- Merge existing candidates: yes
+- Limit: 5
+- Selection filter: street_prefix=CONTRADA; skip_existing=yes
 - Rate limit sleep seconds: 1.2
 - Request plan CSV: `data/interim/qa/anncsu_coordinate_geocode_request_plan_2025.csv`
 - Candidate CSV: `data/interim/qa/anncsu_coordinate_geocode_candidates_2025.csv`
@@ -29,7 +33,7 @@ This script creates coordinate candidates only. It does not overwrite ANNCSU raw
 ## Candidate Status Counts
 
 - `candidate_requires_human_review`: 23
-- `no_candidate_returned`: 8
+- `no_candidate_returned`: 18
 
 ## Provider Confidence Counts
 

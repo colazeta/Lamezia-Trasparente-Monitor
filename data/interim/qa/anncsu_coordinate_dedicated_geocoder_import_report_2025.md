@@ -11,7 +11,7 @@ Date: 2026-07-05
 - Blank provider-result rows skipped: 100
 - Incomplete or invalid provider-result rows skipped: 0
 - Imported candidate rows: 0
-- Candidate access_ids after import: 25
+- Candidate access_ids after import: 35
 - Candidate CSV: `data/interim/qa/anncsu_coordinate_geocode_candidates_2025.csv`
 - Workbench candidate JSON: `tools/electoral-review-workbench/public/data/coordinate_geocode_candidates_by_access.json`
 
