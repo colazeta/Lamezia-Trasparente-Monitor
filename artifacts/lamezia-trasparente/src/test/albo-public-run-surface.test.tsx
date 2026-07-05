@@ -59,7 +59,23 @@ describe("Albo public run surface", () => {
         new RegExp(`^${expectedMatches} di ${ALBO_PUBLIC_RUN_ITEMS.length} record`),
       ),
     ).toBeInTheDocument();
-    expect(screen.getByText(`Pubbl. ${firstPublicationNumber}`)).toBeInTheDocument();
+    expect(screen.getAllByText(`Pubbl. ${firstPublicationNumber}`).length).toBeGreaterThan(0);
+  });
+
+  it("opens a connected metadata sheet for a public Albo record", async () => {
+    renderPage(Albo);
+
+    fireEvent.click(screen.getAllByRole("button", { name: /Apri scheda/i })[0]);
+
+    const dialog = await screen.findByRole("dialog");
+    const sheet = within(dialog);
+
+    expect(sheet.getByText("Quadro dai metadati")).toBeInTheDocument();
+    expect(sheet.getByText("Metadati principali")).toBeInTheDocument();
+    expect(sheet.getByText("Documento e fonte")).toBeInTheDocument();
+    expect(sheet.getByRole("link", { name: /Verifica fonte ufficiale/i })).toBeInTheDocument();
+    expect(sheet.getByText(/Il contenuto del PDF non viene analizzato/i)).toBeInTheDocument();
+    expect(sheet.queryByText(/document_url/i)).toBeNull();
   });
 
   it("does not expose direct document URLs through the app adapter", () => {
