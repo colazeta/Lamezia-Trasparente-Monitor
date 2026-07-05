@@ -420,7 +420,7 @@ describe("Atlante territoriale", () => {
     ).toBeInTheDocument();
     expect(screen.getByText(/1 sezione senza dato/)).toBeInTheDocument();
     expect(screen.getByText("Nessuna area selezionata")).toBeInTheDocument();
-    expect(screen.getByText(/Strade .* OpenStreetMap/)).toBeInTheDocument();
+    expect(screen.getByText(/Senza sfondo/)).toBeInTheDocument();
     fireEvent.click(
       screen.getByRole("button", { name: /Chiudi barra indicatori/i }),
     );
@@ -437,13 +437,9 @@ describe("Atlante territoriale", () => {
         name: /Indicatori Atlante territoriale/i,
       }),
     ).toBeInTheDocument();
-    expect(screen.getByTestId("atlante-osm-tile-layer")).toHaveAttribute(
-      "data-url",
-      "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
-    );
-    expect(screen.getByTestId("atlante-osm-tile-layer")).toHaveTextContent(
-      "OpenStreetMap contributors",
-    );
+    expect(
+      screen.queryByTestId("atlante-osm-tile-layer"),
+    ).not.toBeInTheDocument();
     expect(
       screen.getByRole("button", { name: /Reimposta vista/i }),
     ).toBeInTheDocument();
@@ -503,7 +499,20 @@ describe("Atlante territoriale", () => {
     const basemapSelect = screen.getByRole("combobox", {
       name: /Sfondo mappa/i,
     });
-    expect(basemapSelect).toHaveValue("openstreetmap-standard");
+    expect(basemapSelect).toHaveValue("none");
+    fireEvent.change(basemapSelect, {
+      target: { value: "openstreetmap-standard" },
+    });
+    expect(
+      screen.getByText(/Strade .* OpenStreetMap/),
+    ).toBeInTheDocument();
+    expect(screen.getByTestId("atlante-osm-tile-layer")).toHaveAttribute(
+      "data-url",
+      "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+    );
+    expect(screen.getByTestId("atlante-osm-tile-layer")).toHaveTextContent(
+      "OpenStreetMap contributors",
+    );
     fireEvent.change(basemapSelect, {
       target: { value: "esri-world-imagery" },
     });
@@ -573,7 +582,7 @@ describe("Atlante territoriale", () => {
     expect(screen.getByText("Distribuzione per fasce")).toBeInTheDocument();
     expect(screen.getByText("5 classi")).toBeInTheDocument();
     expect(screen.getAllByText(/1 sezione .* 50%/).length).toBe(2);
-    expect(screen.getByText("Scala continua")).toBeInTheDocument();
+    expect(screen.getByText("Fasce indicatore")).toBeInTheDocument();
     expect(screen.getByText(/Valore minimo/)).toBeInTheDocument();
     expect(screen.getByText(/Valore massimo/)).toBeInTheDocument();
     expect(screen.getAllByText(/dato non disponibile/i).length).toBeGreaterThan(
