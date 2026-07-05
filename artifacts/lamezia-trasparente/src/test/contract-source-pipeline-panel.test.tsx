@@ -33,6 +33,30 @@ describe("ContractSourcePipelinePanel", () => {
     expect(screen.queryByText(/ANAC sincronizzata/i)).not.toBeInTheDocument();
   });
 
+  it("exposes dossier status controls on the complete contract list", () => {
+    render(<ContractSourcePipelinePanel />);
+
+    expect(screen.getByText("Stato fascicoli")).toBeInTheDocument();
+    expect(
+      screen.getByRole("group", {
+        name: "Filtra fascicoli contrattuali per stato",
+      }),
+    ).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Tutti 0" })).toHaveAttribute(
+      "aria-pressed",
+      "true",
+    );
+    expect(
+      screen.getByRole("button", { name: "Da verificare 0" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: "Parziale 0" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: "Completo 0" }),
+    ).toBeInTheDocument();
+  });
+
   it("keeps the public production gate closed from the dry-run report", () => {
     const snapshot = buildContractPipelineSnapshot();
 
