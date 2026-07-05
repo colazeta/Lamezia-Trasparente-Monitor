@@ -5,7 +5,7 @@ import {
   ELIGENDO_2019_OPEN_DATA_SOURCE,
   HISTORICAL_2019_ELECTED_CANDIDATES,
   HISTORICAL_2019_INSTITUTIONAL_MEMBERSHIPS,
-  HISTORICAL_INSTITUTIONAL_OFFICIALS,
+  HISTORICAL_2019_INSTITUTIONAL_OFFICIALS,
 } from "../lib/db/src/institutional-officials-data";
 
 type HistoricalSnapshot = {
@@ -123,12 +123,12 @@ assertSameSet(
 assertSameSet(
   "2019 historical officials",
   HISTORICAL_2019_ELECTED_CANDIDATES.map((candidate) => candidate.slug),
-  HISTORICAL_INSTITUTIONAL_OFFICIALS.map((official) => official.slug),
+  HISTORICAL_2019_INSTITUTIONAL_OFFICIALS.map((official) => official.slug),
   failures,
 );
 
 const historicalOfficialStatuses = new Set(
-  HISTORICAL_INSTITUTIONAL_OFFICIALS.map((official) => official.status),
+  HISTORICAL_2019_INSTITUTIONAL_OFFICIALS.map((official) => official.status),
 );
 if (
   historicalOfficialStatuses.size !== 1 ||
@@ -177,7 +177,7 @@ if (failures.length) {
   console.log(
     [
       "Institutional history QA passed:",
-      `${HISTORICAL_INSTITUTIONAL_OFFICIALS.length} historical profiles`,
+      `${HISTORICAL_2019_INSTITUTIONAL_OFFICIALS.length} historical profiles`,
       `${HISTORICAL_2019_INSTITUTIONAL_MEMBERSHIPS.length} memberships`,
       "checked against Eligendo 2019 partial snapshot.",
     ].join(" "),

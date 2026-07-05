@@ -1,5 +1,56 @@
 const COMUNE_BASE_URL = "https://www.comune.lamezia-terme.cz.it";
 
+export const INSTITUTIONAL_COMMISSION_ORGANI = [
+  {
+    slug: "commissione-affari-generali-istituzionali",
+    name: "I Commissione - Affari Generali ed Istituzionali",
+    description:
+      "Commissione consiliare permanente su affari generali, istituzionali, decentramento e personale.",
+  },
+  {
+    slug: "commissione-servizi-economici-finanziari",
+    name: "II Commissione - Servizi economici e finanziari",
+    description:
+      "Commissione consiliare permanente sui servizi economici e finanziari.",
+  },
+  {
+    slug: "commissione-servizi-sociali-sanita-ambiente",
+    name: "III Commissione - Servizi sociali, sanita' e ambiente",
+    description:
+      "Commissione consiliare permanente su servizi sociali, sanita' e ambiente.",
+  },
+  {
+    slug: "commissione-educazione-cultura-sport",
+    name: "IV Commissione - Educazione, cultura e sport",
+    description:
+      "Commissione consiliare permanente su educazione, cultura e sport.",
+  },
+  {
+    slug: "commissione-pianificazione-territorio",
+    name: "V Commissione - Pianificazione e governo del territorio",
+    description:
+      "Commissione consiliare permanente su pianificazione, sviluppo e governo del territorio.",
+  },
+  {
+    slug: "commissione-sviluppo-economico-attivita-produttive",
+    name: "VI Commissione - Sviluppo economico e attivita' produttive",
+    description:
+      "Commissione consiliare permanente su sviluppo economico e attivita' produttive.",
+  },
+  {
+    slug: "commissione-politiche-occupazionali-giovanili",
+    name: "VII Commissione - Politiche occupazionali e giovanili",
+    description:
+      "Commissione consiliare permanente su politiche occupazionali e politiche giovanili.",
+  },
+] as const;
+
+export type InstitutionalOrganoSlug =
+  | "consiglio-comunale"
+  | "giunta-comunale"
+  | "commissioni-consiliari"
+  | (typeof INSTITUTIONAL_COMMISSION_ORGANI)[number]["slug"];
+
 export type InstitutionalSource = {
   label: string;
   url: string;
@@ -22,7 +73,7 @@ export type InstitutionalOfficialSeed = {
 
 export type InstitutionalMembershipSeed = {
   officialSlug: string;
-  organoSlug: "consiglio-comunale" | "giunta-comunale";
+  organoSlug: InstitutionalOrganoSlug;
   membershipRole: string;
   termLabel: string;
   startDate?: string | null;
@@ -58,6 +109,16 @@ export const CURRENT_GIUNTA_SOURCE: InstitutionalSource = {
   url: `${COMUNE_BASE_URL}/it/unita_organizzative/giunta-comunale`,
   checkedAt: "2026-07-04",
 };
+
+export const COMMISSION_2025_SOURCE: InstitutionalSource = {
+  label:
+    "Comune di Lamezia Terme - Commissioni consiliari permanenti prot. 7264 del 27.1.2025",
+  url: `${COMUNE_BASE_URL}/it/documenti_pubblici/commissioni-consiliari-permanenti-prot-7264-del-27-1-2025`,
+  checkedAt: "2026-07-05",
+};
+
+export const COMMISSION_2025_DOCUMENT_URL =
+  "https://lamezia-terme-api.municipiumapp.it/s3/3458/allegati/commiss-cons-perm-prot-7264-27-01-2025.pdf";
 
 export const ELIGENDO_2019_LAMEZIA_SOURCE: InstitutionalSource = {
   label: "Ministero dell'Interno - Eligendo comunali Lamezia Terme 2019",
@@ -339,7 +400,7 @@ export const CURRENT_INSTITUTIONAL_OFFICIALS: InstitutionalOfficialSeed[] =
     slug,
     role,
     roleTitle,
-    profileUrl: `${COMUNE_BASE_URL}/it/person/${personPath}`,
+    profileUrl: `${COMUNE_BASE_URL}/it/persone/${personPath}`,
     status: "in_carica",
     source: INSTITUTIONAL_POLITICI_SOURCE,
   }));
@@ -379,7 +440,7 @@ export const HISTORICAL_2019_ELECTED_CANDIDATES = [
   },
 ] as const;
 
-export const HISTORICAL_INSTITUTIONAL_OFFICIALS: InstitutionalOfficialSeed[] =
+export const HISTORICAL_2019_INSTITUTIONAL_OFFICIALS: InstitutionalOfficialSeed[] =
   HISTORICAL_2019_ELECTED_CANDIDATES.map((candidate) => ({
     name: candidate.name,
     slug: candidate.slug,
@@ -394,6 +455,41 @@ export const HISTORICAL_INSTITUTIONAL_OFFICIALS: InstitutionalOfficialSeed[] =
       "risulta nel registro corrente dei politici comunali.",
     ].join(" "),
   }));
+
+export const HISTORICAL_2025_COMMISSION_OFFICIALS: InstitutionalOfficialSeed[] =
+  [
+    ["Dario Arcieri", "dario-arcieri-2025"],
+    ["Anna Caruso", "anna-caruso-2025"],
+    ["Lucia Alessandra Cittadino", "lucia-alessandra-cittadino-2025"],
+    ["Enrico Costantino", "enrico-costantino-2025"],
+    ["Antonietta D'Amico", "antonietta-damico-2025"],
+    ["Pietro Gallo", "pietro-gallo-2025"],
+    ["Danilo Gatto", "danilo-gatto-2025"],
+    ["Giovanni Pulice", "giovanni-pulice-2025"],
+    ["Alessandro Santo Raso", "alessandro-santo-raso-2025"],
+    ["Rosy Rubino", "rosy-rubino-2025"],
+    ["Giovanni Saladini", "giovanni-saladini-2025"],
+    ["Peppino Zaffina", "peppino-zaffina-2025"],
+  ].map(([name, slug]) => ({
+    name,
+    slug,
+    role: "consigliere",
+    roleTitle: "Consigliere comunale - commissioni permanenti 2025",
+    profileUrl: null,
+    status: "cessato",
+    source: COMMISSION_2025_SOURCE,
+    biographyNote: [
+      "Anagrafica storica minima derivata dal provvedimento comunale",
+      "sulle Commissioni consiliari permanenti prot. 7264 del 27/01/2025.",
+      "La scheda personale istituzionale non risulta nel registro corrente",
+      "dei politici comunali.",
+    ].join(" "),
+  }));
+
+export const HISTORICAL_INSTITUTIONAL_OFFICIALS: InstitutionalOfficialSeed[] = [
+  ...HISTORICAL_2019_INSTITUTIONAL_OFFICIALS,
+  ...HISTORICAL_2025_COMMISSION_OFFICIALS,
+];
 
 export const INSTITUTIONAL_OFFICIALS: InstitutionalOfficialSeed[] = [
   ...CURRENT_INSTITUTIONAL_OFFICIALS,
@@ -555,9 +651,357 @@ export const HISTORICAL_2019_INSTITUTIONAL_MEMBERSHIPS: InstitutionalMembershipS
     sourceUrl: ELIGENDO_2019_LAMEZIA_SOURCE.url,
   }));
 
+const commission2025TermLabel =
+  "Commissioni consiliari permanenti 2025 - amministrazione precedente";
+
+const commission2025OfficialSlugBySourceName: Record<string, string> = {
+  "ARCIERI DARIO": "dario-arcieri-2025",
+  "CARUSO ANNA": "anna-caruso-2025",
+  "CITTADINO LUCIA ALESSANDRA": "lucia-alessandra-cittadino-2025",
+  "COSTANTINO ENRICO": "enrico-costantino-2025",
+  "D'AMICO ANTONIETTA": "antonietta-damico-2025",
+  "FOLINO MATTEO": "matteo-folino",
+  "GALLO PIETRO": "pietro-gallo-2025",
+  "GATTO DANILO": "danilo-gatto-2025",
+  "GIANTURCO GENNARO": "gennaro-gianturco",
+  "GRANDINETTI MARIA": "maria-grandinetti",
+  "LORENA ANTONIO": "antonio-lorena",
+  "MASTROIANNI ANTONIO": "antonio-mastroianni",
+  "MASTROIANNI DAVIDE": "davide-mastroianni",
+  "PARADISO TRANQUILLO": "tranquillo-paradiso",
+  "PEGNA RUGGERO": "ruggero-pegna",
+  "PICCIONI ROSARIO": "rosario-piccioni",
+  "PULICE GIOVANNI": "giovanni-pulice-2025",
+  "RASO ALESSANDRO SANTO": "alessandro-santo-raso-2025",
+  "RUBINO ROSY": "rosy-rubino-2025",
+  "SALADINI GIOVANNI": "giovanni-saladini-2025",
+  "SAULLO ALESSANDRO": "alessandro-saullo",
+  "ZAFFINA PEPPINO": "peppino-zaffina-2025",
+};
+
+type Commission2025Member = {
+  sourceName: keyof typeof commission2025OfficialSlugBySourceName;
+  group: string;
+  sourceNumber: number;
+};
+
+export const HISTORICAL_2025_COMMISSION_COMPOSITIONS: Array<{
+  organoSlug: (typeof INSTITUTIONAL_COMMISSION_ORGANI)[number]["slug"];
+  sourceTitle: string;
+  members: Commission2025Member[];
+}> = [
+  {
+    organoSlug: "commissione-affari-generali-istituzionali",
+    sourceTitle:
+      "I Affari Generali ed Istituzionali, decentramento, personale",
+    members: [
+      { sourceName: "ARCIERI DARIO", group: "Gruppo Misto", sourceNumber: 2 },
+      { sourceName: "CARUSO ANNA", group: "Forza Azzurri", sourceNumber: 2 },
+      {
+        sourceName: "CITTADINO LUCIA ALESSANDRA",
+        group: "Una Nuova Era",
+        sourceNumber: 2,
+      },
+      {
+        sourceName: "COSTANTINO ENRICO",
+        group: "Assieme Mascaro Sindaco",
+        sourceNumber: 1,
+      },
+      {
+        sourceName: "D'AMICO ANTONIETTA",
+        group: "Lega Salvini Premier",
+        sourceNumber: 2,
+      },
+      { sourceName: "FOLINO MATTEO", group: "Forza Italia", sourceNumber: 3 },
+      { sourceName: "PEGNA RUGGERO", group: "UDC - Nuovo CDU", sourceNumber: 2 },
+      {
+        sourceName: "PICCIONI ROSARIO",
+        group: "Lamezia Bene Comune",
+        sourceNumber: 1,
+      },
+      {
+        sourceName: "PULICE GIOVANNI",
+        group: "Lamezia Responsabile",
+        sourceNumber: 2,
+      },
+      { sourceName: "RUBINO ROSY", group: "Noi Moderati", sourceNumber: 3 },
+      {
+        sourceName: "SAULLO ALESSANDRO",
+        group: "Fratelli d'Italia",
+        sourceNumber: 3,
+      },
+      { sourceName: "ZAFFINA PEPPINO", group: "Orgoglio Lamezia", sourceNumber: 1 },
+    ],
+  },
+  {
+    organoSlug: "commissione-servizi-economici-finanziari",
+    sourceTitle: "II Servizi economici e finanziari",
+    members: [
+      {
+        sourceName: "CITTADINO LUCIA ALESSANDRA",
+        group: "Una Nuova Era",
+        sourceNumber: 2,
+      },
+      {
+        sourceName: "COSTANTINO ENRICO",
+        group: "Assieme Mascaro Sindaco",
+        sourceNumber: 1,
+      },
+      { sourceName: "GIANTURCO GENNARO", group: "Gruppo Misto", sourceNumber: 2 },
+      { sourceName: "GRANDINETTI MARIA", group: "Forza Azzurri", sourceNumber: 2 },
+      {
+        sourceName: "LORENA ANTONIO",
+        group: "Fratelli d'Italia",
+        sourceNumber: 3,
+      },
+      {
+        sourceName: "MASTROIANNI ANTONIO",
+        group: "Lega Salvini Premier",
+        sourceNumber: 2,
+      },
+      { sourceName: "PARADISO TRANQUILLO", group: "Forza Italia", sourceNumber: 3 },
+      { sourceName: "PEGNA RUGGERO", group: "UDC - Nuovo CDU", sourceNumber: 2 },
+      {
+        sourceName: "PICCIONI ROSARIO",
+        group: "Lamezia Bene Comune",
+        sourceNumber: 1,
+      },
+      {
+        sourceName: "PULICE GIOVANNI",
+        group: "Lamezia Responsabile",
+        sourceNumber: 2,
+      },
+      { sourceName: "RASO ALESSANDRO SANTO", group: "Noi Moderati", sourceNumber: 3 },
+      { sourceName: "ZAFFINA PEPPINO", group: "Orgoglio Lamezia", sourceNumber: 1 },
+    ],
+  },
+  {
+    organoSlug: "commissione-servizi-sociali-sanita-ambiente",
+    sourceTitle: "III Servizi sociali, sanita', ambiente",
+    members: [
+      {
+        sourceName: "CITTADINO LUCIA ALESSANDRA",
+        group: "Una Nuova Era",
+        sourceNumber: 2,
+      },
+      {
+        sourceName: "COSTANTINO ENRICO",
+        group: "Assieme Mascaro Sindaco",
+        sourceNumber: 1,
+      },
+      {
+        sourceName: "D'AMICO ANTONIETTA",
+        group: "Lega Salvini Premier",
+        sourceNumber: 2,
+      },
+      { sourceName: "GATTO DANILO", group: "Lamezia Responsabile", sourceNumber: 2 },
+      { sourceName: "GIANTURCO GENNARO", group: "Gruppo Misto", sourceNumber: 2 },
+      { sourceName: "GRANDINETTI MARIA", group: "Forza Azzurri", sourceNumber: 3 },
+      { sourceName: "MASTROIANNI DAVIDE", group: "Forza Italia", sourceNumber: 3 },
+      { sourceName: "PEGNA RUGGERO", group: "UDC - Nuovo CDU", sourceNumber: 2 },
+      {
+        sourceName: "PICCIONI ROSARIO",
+        group: "Lamezia Bene Comune",
+        sourceNumber: 1,
+      },
+      { sourceName: "SALADINI GIOVANNI", group: "Noi Moderati", sourceNumber: 3 },
+      {
+        sourceName: "SAULLO ALESSANDRO",
+        group: "Fratelli d'Italia",
+        sourceNumber: 3,
+      },
+      { sourceName: "ZAFFINA PEPPINO", group: "Orgoglio Lamezia", sourceNumber: 1 },
+    ],
+  },
+  {
+    organoSlug: "commissione-educazione-cultura-sport",
+    sourceTitle: "IV Servizi all'educazione, cultura e sport",
+    members: [
+      {
+        sourceName: "CITTADINO LUCIA ALESSANDRA",
+        group: "Una Nuova Era",
+        sourceNumber: 2,
+      },
+      {
+        sourceName: "COSTANTINO ENRICO",
+        group: "Assieme Mascaro Sindaco",
+        sourceNumber: 1,
+      },
+      {
+        sourceName: "D'AMICO ANTONIETTA",
+        group: "Lega Salvini Premier",
+        sourceNumber: 2,
+      },
+      { sourceName: "GATTO DANILO", group: "Lamezia Responsabile", sourceNumber: 2 },
+      { sourceName: "GIANTURCO GENNARO", group: "Gruppo Misto", sourceNumber: 2 },
+      { sourceName: "GRANDINETTI MARIA", group: "Forza Azzurri", sourceNumber: 2 },
+      {
+        sourceName: "LORENA ANTONIO",
+        group: "Fratelli d'Italia",
+        sourceNumber: 3,
+      },
+      { sourceName: "MASTROIANNI DAVIDE", group: "Forza Italia", sourceNumber: 3 },
+      { sourceName: "PEGNA RUGGERO", group: "UDC - Nuovo CDU", sourceNumber: 2 },
+      {
+        sourceName: "PICCIONI ROSARIO",
+        group: "Lamezia Bene Comune",
+        sourceNumber: 1,
+      },
+      { sourceName: "SALADINI GIOVANNI", group: "Noi Moderati", sourceNumber: 3 },
+      { sourceName: "ZAFFINA PEPPINO", group: "Orgoglio Lamezia", sourceNumber: 1 },
+    ],
+  },
+  {
+    organoSlug: "commissione-pianificazione-territorio",
+    sourceTitle: "V Pianificazione, sviluppo e governo del territorio",
+    members: [
+      { sourceName: "ARCIERI DARIO", group: "Gruppo Misto", sourceNumber: 2 },
+      { sourceName: "CARUSO ANNA", group: "Forza Azzurri", sourceNumber: 2 },
+      {
+        sourceName: "CITTADINO LUCIA ALESSANDRA",
+        group: "Una Nuova Era",
+        sourceNumber: 2,
+      },
+      {
+        sourceName: "COSTANTINO ENRICO",
+        group: "Assieme Mascaro Sindaco",
+        sourceNumber: 1,
+      },
+      { sourceName: "FOLINO MATTEO", group: "Forza Italia", sourceNumber: 3 },
+      {
+        sourceName: "GALLO PIETRO",
+        group: "Fratelli d'Italia",
+        sourceNumber: 3,
+      },
+      {
+        sourceName: "MASTROIANNI ANTONIO",
+        group: "Lega Salvini Premier",
+        sourceNumber: 2,
+      },
+      { sourceName: "PEGNA RUGGERO", group: "UDC - Nuovo CDU", sourceNumber: 2 },
+      {
+        sourceName: "PICCIONI ROSARIO",
+        group: "Lamezia Bene Comune",
+        sourceNumber: 1,
+      },
+      {
+        sourceName: "PULICE GIOVANNI",
+        group: "Lamezia Responsabile",
+        sourceNumber: 2,
+      },
+      { sourceName: "RASO ALESSANDRO SANTO", group: "Noi Moderati", sourceNumber: 3 },
+      { sourceName: "ZAFFINA PEPPINO", group: "Orgoglio Lamezia", sourceNumber: 1 },
+    ],
+  },
+  {
+    organoSlug: "commissione-sviluppo-economico-attivita-produttive",
+    sourceTitle: "VI Sviluppo economico ed attivita' produttive",
+    members: [
+      { sourceName: "CARUSO ANNA", group: "Forza Azzurri", sourceNumber: 2 },
+      {
+        sourceName: "CITTADINO LUCIA ALESSANDRA",
+        group: "Una Nuova Era",
+        sourceNumber: 2,
+      },
+      {
+        sourceName: "COSTANTINO ENRICO",
+        group: "Assieme per Mascaro Sindaco",
+        sourceNumber: 1,
+      },
+      {
+        sourceName: "GALLO PIETRO",
+        group: "Fratelli d'Italia",
+        sourceNumber: 3,
+      },
+      { sourceName: "GATTO DANILO", group: "Lamezia Responsabile", sourceNumber: 2 },
+      { sourceName: "GIANTURCO GENNARO", group: "Gruppo Misto", sourceNumber: 2 },
+      {
+        sourceName: "MASTROIANNI ANTONIO",
+        group: "Lega Salvini Premier",
+        sourceNumber: 2,
+      },
+      { sourceName: "PARADISO TRANQUILLO", group: "Forza Italia", sourceNumber: 3 },
+      { sourceName: "PEGNA RUGGERO", group: "UDC - Nuovo CDU", sourceNumber: 2 },
+      {
+        sourceName: "PICCIONI ROSARIO",
+        group: "Lamezia Bene Comune",
+        sourceNumber: 1,
+      },
+      { sourceName: "RUBINO ROSY", group: "Noi Moderati", sourceNumber: 3 },
+      { sourceName: "ZAFFINA PEPPINO", group: "Orgoglio Lamezia", sourceNumber: 1 },
+    ],
+  },
+  {
+    organoSlug: "commissione-politiche-occupazionali-giovanili",
+    sourceTitle: "VII Politiche occupazionali e politiche giovanili",
+    members: [
+      { sourceName: "ARCIERI DARIO", group: "Gruppo Misto", sourceNumber: 2 },
+      { sourceName: "CARUSO ANNA", group: "Forza Azzurri", sourceNumber: 2 },
+      {
+        sourceName: "CITTADINO LUCIA ALESSANDRA",
+        group: "Una Nuova Era",
+        sourceNumber: 2,
+      },
+      {
+        sourceName: "COSTANTINO ENRICO",
+        group: "Assieme per Mascaro Sindaco",
+        sourceNumber: 1,
+      },
+      {
+        sourceName: "D'AMICO ANTONIETTA",
+        group: "Lega Salvini Premier",
+        sourceNumber: 2,
+      },
+      { sourceName: "GATTO DANILO", group: "Lamezia Responsabile", sourceNumber: 2 },
+      {
+        sourceName: "LORENA ANTONIO",
+        group: "Fratelli d'Italia",
+        sourceNumber: 3,
+      },
+      { sourceName: "FOLINO MATTEO", group: "Forza Italia", sourceNumber: 3 },
+      { sourceName: "PEGNA RUGGERO", group: "UDC - Nuovo CDU", sourceNumber: 2 },
+      {
+        sourceName: "PICCIONI ROSARIO",
+        group: "Lamezia Bene Comune",
+        sourceNumber: 1,
+      },
+      { sourceName: "RUBINO ROSY", group: "Noi Moderati", sourceNumber: 3 },
+      { sourceName: "ZAFFINA PEPPINO", group: "Orgoglio Lamezia", sourceNumber: 1 },
+    ],
+  },
+];
+
+function commission2025Notes(member: Commission2025Member): string {
+  return [
+    "Composizione storica della commissione permanente riportata nel",
+    "provvedimento comunale prot. 7264 del 27/01/2025.",
+    `Gruppo indicato dalla fonte: ${member.group}.`,
+    `Ultima colonna della fonte: ${member.sourceNumber}.`,
+    "Il provvedimento prova la composizione alla data indicata e non",
+    "certifica una data di cessazione.",
+  ].join(" ");
+}
+
+export const HISTORICAL_2025_COMMISSION_MEMBERSHIPS: InstitutionalMembershipSeed[] =
+  HISTORICAL_2025_COMMISSION_COMPOSITIONS.flatMap((commission) =>
+    commission.members.map((member, index) => ({
+      officialSlug: commission2025OfficialSlugBySourceName[member.sourceName],
+      organoSlug: commission.organoSlug,
+      membershipRole: `Componente (${member.group})`,
+      termLabel: commission2025TermLabel,
+      startDate: "2025-01-27",
+      endDate: null,
+      sourceLabel: COMMISSION_2025_SOURCE.label,
+      sourceUrl: COMMISSION_2025_SOURCE.url,
+      notes: commission2025Notes(member),
+      position: index,
+    })),
+  );
+
 export const INSTITUTIONAL_MEMBERSHIPS: InstitutionalMembershipSeed[] = [
   ...CURRENT_INSTITUTIONAL_MEMBERSHIPS,
   ...HISTORICAL_2019_INSTITUTIONAL_MEMBERSHIPS,
+  ...HISTORICAL_2025_COMMISSION_MEMBERSHIPS,
 ];
 
 const currentMembershipsByOfficialSlug = new Map<

@@ -11,6 +11,7 @@ import {
   type Organo,
 } from "./schema";
 import {
+  INSTITUTIONAL_COMMISSION_ORGANI,
   currentInstitutionalOfficialPosition,
   ensureInstitutionalOfficials,
   institutionalMembershipsForOfficial,
@@ -50,12 +51,19 @@ export const KEYSTONE_ORGANI: KeystoneOrgano[] = [
     name: "Commissioni Consiliari",
     description:
       [
-        "Commissioni permanenti del Consiglio Comunale incaricate",
-        "dell'istruttoria degli atti. La composizione sara' popolata quando",
-        "sara' disponibile una fonte ufficiale corrente e verificabile.",
+        "Quadro generale delle Commissioni permanenti del Consiglio Comunale.",
+        "Le singole commissioni storicizzate sono esposte come organi",
+        "dedicati quando e' disponibile una fonte ufficiale verificabile.",
       ].join(" "),
     position: 2,
   },
+  ...INSTITUTIONAL_COMMISSION_ORGANI.map((commission, index) => ({
+    type: "commissione" as const,
+    slug: commission.slug,
+    name: commission.name,
+    description: commission.description,
+    position: 3 + index,
+  })),
 ];
 
 /** Maps a convocazione subcategory to the slug of its organo. */
