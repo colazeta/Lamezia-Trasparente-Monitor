@@ -59,7 +59,7 @@ coordinates:
 ```powershell
 python scripts/geocode_anncsu_coordinate_candidates.py
 python scripts/geocode_anncsu_coordinate_candidates.py --execute --limit 10 --user-agent "Lamezia-Trasparente-Monitor/anncsu-coordinate-qa contact@example.org"
-python scripts/geocode_anncsu_coordinate_candidates.py --execute --limit 5 --street-prefix CONTRADA --sleep-seconds 1.2 --merge-existing
+python scripts/geocode_anncsu_coordinate_candidates.py --execute --limit 5 --street-prefix CONTRADA --sleep-seconds 1.2 --merge-existing --skip-existing
 ```
 
 Use the first command for a request plan. Use `--execute` only for small,
@@ -68,8 +68,9 @@ that allows bulk use. The command writes both
 `data/interim/qa/anncsu_coordinate_geocode_candidates_2025.csv` and the
 workbench payload
 `tools/electoral-review-workbench/public/data/coordinate_geocode_candidates_by_access.json`.
-Use `--merge-existing` for follow-up micro-batches so previously reviewed or
-cached candidate evidence is preserved instead of replacing the candidate file.
+Use `--merge-existing --skip-existing` for follow-up micro-batches so previously
+reviewed or cached candidate evidence is preserved and the next batch advances
+to access_ids not already present in the candidate file.
 
 For larger coverage, prepare a provider-agnostic handoff for a dedicated
 geocoder or an internal Nominatim instance with explicit bulk terms:
