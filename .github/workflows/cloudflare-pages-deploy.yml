@@ -1,0 +1,113 @@
+name: Cloudflare Pages deploy
+
+on:
+  workflow_dispatch:
+    inputs:
+      public_url:
+        description: "Public URL to smoke-check after deployment"
+        required: false
+        default: "https://lamezia-trasparente.pages.dev"
+        type: string
+      project_name:
+        description: "Cloudflare Pages project name"
+        required: false
+        default: "lamezia-trasparente"
+        type: string
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/cloudflare-pages-deploy.yml'
+      - 'artifacts/lamezia-trasparente/**'
+      - 'data/public/albo/**'
+      - 'data/processed/territorio/**'
+      - 'package.json'
+      - 'pnpm-lock.yaml'
+      - 'pnpm-workspace.yaml'
+      - 'scripts/check-public-contracts-page.mjs'
+      - 'scripts/check-v0-static-fallback.mjs'
+      - 'wrangler.toml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: cloudflare-pages-production
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    name: Build, deploy and smoke Cloudflare Pages
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      PUBLIC_SITE_URL: ${{ inputs.public_url || vars.PUBLIC_SITE_URL || 'https://lamezia-trasparente.pages.dev' }}
+      CLOUDFLARE_PROJECT_NAME: ${{ inputs.project_name || vars.CLOUDFLARE_PROJECT_NAME || 'lamezia-trasparente' }}
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID || vars.CLOUDFLARE_ACCOUNT_ID }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.28.1
+          run_install: false
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build static frontend
+        env:
+          BASE_PATH: /
+          CI: "true"
+        run: pnpm --filter @workspace/lamezia-trasparente run build
+
+      - name: Smoke generated static fallback
+        run: node scripts/check-v0-static-fallback.mjs
+
+      - name: Check Cloudflare deployment credentials
+        id: cloudflare
+        shell: bash
+        run: |
+          missing=0
+          if [ -z "$(printf '%s' "$CLOUDFLARE_API_TOKEN" | tr -d '[:space:]')" ]; then
+            echo "Missing CLOUDFLARE_API_TOKEN secret."
+            missing=1
+          else
+            echo "::add-mask::$CLOUDFLARE_API_TOKEN"
+          fi
+
+          if [ -z "$(printf '%s' "$CLOUDFLARE_ACCOUNT_ID" | tr -d '[:space:]')" ]; then
+            echo "Missing CLOUDFLARE_ACCOUNT_ID secret or variable."
+            missing=1
+          else
+            echo "::add-mask::$CLOUDFLARE_ACCOUNT_ID"
+          fi
+
+          if [ "$missing" -eq 1 ]; then
+            echo "enabled=false" >> "$GITHUB_OUTPUT"
+            echo "Cloudflare Pages deploy skipped because credentials are not configured."
+            exit 0
+          fi
+
+          echo "enabled=true" >> "$GITHUB_OUTPUT"
+
+      - name: Deploy to Cloudflare Pages
+        if: ${{ steps.cloudflare.outputs.enabled == 'true' }}
+        run: |
+          pnpm dlx wrangler@latest pages deploy artifacts/lamezia-trasparente/dist/public \
+            --project-name "$CLOUDFLARE_PROJECT_NAME" \
+            --branch main
+
+      - name: Smoke public contracts route
+        if: ${{ steps.cloudflare.outputs.enabled == 'true' }}
+        run: node scripts/check-public-contracts-page.mjs --url "$PUBLIC_SITE_URL" --attempts 12 --delay-ms 10000
