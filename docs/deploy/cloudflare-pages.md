@@ -16,6 +16,8 @@ Use these settings when the Cloudflare Pages project is connected to the GitHub 
 - Root directory: repository root, unless the dashboard separately supports the package directory without changing the output directory above
 - Environment variable: `BASE_PATH=/`
 
+The root `wrangler.toml` also declares `pages_build_output_dir = "artifacts/lamezia-trasparente/dist/public"` for Cloudflare Pages and Wrangler-based deployments. The dashboard settings must remain aligned with that path.
+
 The Vite app also copies `artifacts/lamezia-trasparente/public/_redirects` into the build output. Cloudflare Pages must publish that output directory so direct SPA routes such as `/contratti` are served by `index.html` without redirecting to `/`.
 
 ## Contracts route smoke
