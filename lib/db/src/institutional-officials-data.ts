@@ -716,10 +716,18 @@ const commission2025OfficialSlugBySourceName: Record<string, string> = {
   "ZAFFINA PEPPINO": "peppino-zaffina-2025",
 };
 
+export const COMMISSION_2025_OFFICIAL_SLUG_BY_SOURCE_NAME =
+  commission2025OfficialSlugBySourceName;
+
 type Commission2025Member = {
   sourceName: keyof typeof commission2025OfficialSlugBySourceName;
   group: string;
   sourceNumber: number;
+};
+
+type Historical2025CouncilMember = {
+  sourceName: keyof typeof commission2025OfficialSlugBySourceName;
+  groups: string[];
 };
 
 export const HISTORICAL_2025_COMMISSION_COMPOSITIONS: Array<{
@@ -1035,9 +1043,57 @@ export const HISTORICAL_2025_COMMISSION_MEMBERSHIPS: InstitutionalMembershipSeed
     })),
   );
 
+const historical2025CouncilTermLabel =
+  "Consiglio comunale 2025 - amministrazione precedente (da commissioni permanenti)";
+
+function uniqueHistorical2025CouncilMembers(): Historical2025CouncilMember[] {
+  const bySourceName = new Map<
+    keyof typeof commission2025OfficialSlugBySourceName,
+    Set<string>
+  >();
+  for (const commission of HISTORICAL_2025_COMMISSION_COMPOSITIONS) {
+    for (const member of commission.members) {
+      const groups = bySourceName.get(member.sourceName) ?? new Set<string>();
+      groups.add(member.group);
+      bySourceName.set(member.sourceName, groups);
+    }
+  }
+  return Array.from(bySourceName, ([sourceName, groups]) => ({
+    sourceName,
+    groups: Array.from(groups),
+  }));
+}
+
+function historical2025CouncilNotes(member: Historical2025CouncilMember): string {
+  return [
+    "Appartenenza storica al Consiglio desunta dalla presenza nel",
+    "provvedimento comunale prot. 7264 del 27/01/2025 sulle Commissioni",
+    "consiliari permanenti.",
+    `Gruppo/i indicati dalla fonte: ${member.groups.join("; ")}.`,
+    "Copertura fonte-limitata: il provvedimento prova la presenza del",
+    "consigliere nelle commissioni alla data indicata, ma non certifica",
+    "la composizione completa del Consiglio ne' una data di cessazione.",
+  ].join(" ");
+}
+
+export const HISTORICAL_2025_COUNCIL_MEMBERSHIPS: InstitutionalMembershipSeed[] =
+  uniqueHistorical2025CouncilMembers().map((member, index) => ({
+    officialSlug: commission2025OfficialSlugBySourceName[member.sourceName],
+    organoSlug: "consiglio-comunale",
+    membershipRole: `Consigliere comunale (${member.groups.join("; ")})`,
+    termLabel: historical2025CouncilTermLabel,
+    startDate: "2025-01-27",
+    endDate: null,
+    sourceLabel: COMMISSION_2025_SOURCE.label,
+    sourceUrl: COMMISSION_2025_SOURCE.url,
+    notes: historical2025CouncilNotes(member),
+    position: index,
+  }));
+
 export const INSTITUTIONAL_MEMBERSHIPS: InstitutionalMembershipSeed[] = [
   ...CURRENT_INSTITUTIONAL_MEMBERSHIPS,
   ...HISTORICAL_2019_INSTITUTIONAL_MEMBERSHIPS,
+  ...HISTORICAL_2025_COUNCIL_MEMBERSHIPS,
   ...HISTORICAL_2025_COMMISSION_MEMBERSHIPS,
 ];
 

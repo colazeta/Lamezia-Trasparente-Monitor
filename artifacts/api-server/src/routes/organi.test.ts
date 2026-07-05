@@ -17,6 +17,7 @@ import {
   ELIGENDO_2019_LAMEZIA_SOURCE,
   HISTORICAL_2019_INSTITUTIONAL_MEMBERSHIPS,
   HISTORICAL_2019_INSTITUTIONAL_OFFICIALS,
+  HISTORICAL_2025_COUNCIL_MEMBERSHIPS,
   HISTORICAL_2025_COMMISSION_COMPOSITIONS,
   HISTORICAL_2025_COMMISSION_MEMBERSHIPS,
   HISTORICAL_2025_COMMISSION_OFFICIALS,
@@ -217,6 +218,7 @@ describe("organi historical memberships", () => {
     );
     expect(INSTITUTIONAL_COMMISSION_ORGANI).toHaveLength(7);
     expect(HISTORICAL_2025_COMMISSION_COMPOSITIONS).toHaveLength(7);
+    expect(HISTORICAL_2025_COUNCIL_MEMBERSHIPS).toHaveLength(22);
     expect(HISTORICAL_2025_COMMISSION_MEMBERSHIPS).toHaveLength(84);
     expect(HISTORICAL_2025_COMMISSION_OFFICIALS).toHaveLength(12);
     expect(HISTORICAL_INSTITUTIONAL_OFFICIALS.length).toBeGreaterThan(4);
@@ -260,6 +262,38 @@ describe("organi historical memberships", () => {
         }),
       ]),
     );
+    expect(HISTORICAL_2025_COUNCIL_MEMBERSHIPS).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          organoSlug: "consiglio-comunale",
+          officialSlug: "dario-arcieri-2025",
+          membershipRole: "Consigliere comunale (Gruppo Misto)",
+          sourceUrl: COMMISSION_2025_SOURCE.url,
+        }),
+        expect.objectContaining({
+          organoSlug: "consiglio-comunale",
+          officialSlug: "enrico-costantino-2025",
+          membershipRole:
+            "Consigliere comunale (Assieme Mascaro Sindaco; Assieme per Mascaro Sindaco)",
+        }),
+        expect.objectContaining({
+          organoSlug: "consiglio-comunale",
+          officialSlug: "ruggero-pegna",
+          membershipRole: "Consigliere comunale (UDC - Nuovo CDU)",
+        }),
+      ]),
+    );
+    expect(
+      HISTORICAL_2025_COUNCIL_MEMBERSHIPS.every(
+        (membership) =>
+          membership.sourceUrl === COMMISSION_2025_SOURCE.url &&
+          membership.startDate === "2025-01-27" &&
+          membership.endDate === null &&
+          /non certifica.+composizione completa del Consiglio/i.test(
+            membership.notes,
+          ),
+      ),
+    ).toBe(true);
     expect(institutionalMembershipsForOfficial("matteo-folino")).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
@@ -270,6 +304,15 @@ describe("organi historical memberships", () => {
           organoSlug: "commissione-politiche-occupazionali-giovanili",
           termLabel:
             "Commissioni consiliari permanenti 2025 - amministrazione precedente",
+        }),
+      ]),
+    );
+    expect(institutionalMembershipsForOfficial("ruggero-pegna")).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          organoSlug: "consiglio-comunale",
+          termLabel:
+            "Consiglio comunale 2025 - amministrazione precedente (da commissioni permanenti)",
         }),
       ]),
     );

@@ -1,8 +1,10 @@
 import { readFile } from "node:fs/promises";
 
 import {
+  COMMISSION_2025_OFFICIAL_SLUG_BY_SOURCE_NAME,
   COMMISSION_2025_DOCUMENT_URL,
   COMMISSION_2025_SOURCE,
+  HISTORICAL_2025_COUNCIL_MEMBERSHIPS,
   HISTORICAL_2025_COMMISSION_COMPOSITIONS,
   HISTORICAL_2025_COMMISSION_MEMBERSHIPS,
   HISTORICAL_2025_COMMISSION_OFFICIALS,
@@ -24,6 +26,10 @@ type CommissionSnapshot = {
     title: string;
     issuer: string;
   };
+  sourceLimitedCouncilMembers: {
+    sourceName: string;
+    groups: string[];
+  }[];
   commissions: {
     organoSlug: string;
     sourceTitle: string;
@@ -57,6 +63,13 @@ function memberKey(member: {
     member.group,
     String(member.sourceNumber),
   ].join("|");
+}
+
+function councilMemberKey(member: {
+  sourceName: string;
+  groups: string[];
+}): string {
+  return [member.sourceName, member.groups.join(";")].join("|");
 }
 
 function assertSameSet(
@@ -95,6 +108,13 @@ if (snapshot.scope !== "commissioni-consiliari-lamezia-2025") {
 }
 if (!/non va presentata come composizione corrente 2026/i.test(snapshot.coverageNote)) {
   failures.push("Commission snapshot must keep the historical coverage note.");
+}
+if (
+  !/non certifica.+composizione completa del Consiglio/i.test(
+    snapshot.coverageNote,
+  )
+) {
+  failures.push("Commission snapshot must state the council coverage limit.");
 }
 if (
   normalizeUrl(snapshot.sources.documentPage) !==
@@ -146,6 +166,41 @@ assertSameSet(
   failures,
 );
 
+const sourceLimitedCouncilMembersByName = new Map<string, Set<string>>();
+for (const row of snapshotRows) {
+  const groups =
+    sourceLimitedCouncilMembersByName.get(row.sourceName) ?? new Set<string>();
+  groups.add(row.group);
+  sourceLimitedCouncilMembersByName.set(row.sourceName, groups);
+}
+const councilMembersFromCommissions = Array.from(
+  sourceLimitedCouncilMembersByName,
+  ([sourceName, groups]) => ({
+    sourceName,
+    groups: Array.from(groups),
+  }),
+);
+
+assertSameSet(
+  "source-limited council members",
+  councilMembersFromCommissions.map(councilMemberKey),
+  snapshot.sourceLimitedCouncilMembers.map(councilMemberKey),
+  failures,
+);
+
+if (
+  snapshot.sourceLimitedCouncilMembers.length !== 22 ||
+  HISTORICAL_2025_COUNCIL_MEMBERSHIPS.length !== 22
+) {
+  failures.push(
+    [
+      "Expected 22 source-limited 2025 council memberships",
+      `snapshot=${snapshot.sourceLimitedCouncilMembers.length}`,
+      `seed=${HISTORICAL_2025_COUNCIL_MEMBERSHIPS.length}`,
+    ].join(", "),
+  );
+}
+
 for (const commission of snapshot.commissions) {
   if (commission.members.length !== 12) {
     failures.push(
@@ -182,6 +237,49 @@ for (const membership of HISTORICAL_2025_COMMISSION_MEMBERSHIPS) {
   }
 }
 
+for (const sourceMember of snapshot.sourceLimitedCouncilMembers) {
+  const officialSlug =
+    COMMISSION_2025_OFFICIAL_SLUG_BY_SOURCE_NAME[sourceMember.sourceName];
+  if (!officialSlug) {
+    failures.push(
+      `${sourceMember.sourceName}: council source member has no slug mapping.`,
+    );
+    continue;
+  }
+  const membership = HISTORICAL_2025_COUNCIL_MEMBERSHIPS.find(
+    (candidate) => candidate.officialSlug === officialSlug,
+  );
+  if (!membership) {
+    failures.push(`${officialSlug}: missing source-limited council membership.`);
+    continue;
+  }
+  const groupsLabel = sourceMember.groups.join("; ");
+  if (
+    membership.organoSlug !== "consiglio-comunale" ||
+    membership.sourceUrl !== COMMISSION_2025_SOURCE.url ||
+    membership.startDate !== "2025-01-27" ||
+    membership.endDate !== null ||
+    membership.termLabel === "Mandato corrente"
+  ) {
+    failures.push(
+      `${officialSlug}: unexpected source-limited council membership bounds.`,
+    );
+  }
+  if (
+    !membership.membershipRole.includes(groupsLabel) ||
+    !membership.notes.includes(groupsLabel)
+  ) {
+    failures.push(
+      `${officialSlug}: council membership does not preserve source group labels.`,
+    );
+  }
+  if (!/non certifica.+composizione completa del Consiglio/i.test(membership.notes)) {
+    failures.push(
+      `${officialSlug}: council membership must state complete-council limit.`,
+    );
+  }
+}
+
 if (HISTORICAL_2025_COMMISSION_OFFICIALS.length !== 12) {
   failures.push(
     `Expected 12 new historical commission profiles, got ${HISTORICAL_2025_COMMISSION_OFFICIALS.length}.`,
@@ -206,6 +304,7 @@ if (failures.length) {
     [
       "Institutional commission QA passed:",
       `${INSTITUTIONAL_COMMISSION_ORGANI.length} commission organi`,
+      `${HISTORICAL_2025_COUNCIL_MEMBERSHIPS.length} source-limited council memberships`,
       `${HISTORICAL_2025_COMMISSION_MEMBERSHIPS.length} memberships`,
       "checked against Comune prot. 7264/2025 snapshot.",
     ].join(" "),

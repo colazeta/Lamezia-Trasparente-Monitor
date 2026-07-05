@@ -1,7 +1,7 @@
 {
   "checkedAt": "2026-07-05",
   "scope": "commissioni-consiliari-lamezia-2025",
-  "coverageNote": "Provvedimento comunale prot. 7264 del 27/01/2025: composizione delle Commissioni consiliari permanenti alla data del provvedimento. La fonte non certifica una data di cessazione e non va presentata come composizione corrente 2026.",
+  "coverageNote": "Provvedimento comunale prot. 7264 del 27/01/2025: composizione delle Commissioni consiliari permanenti alla data del provvedimento. La fonte consente anche una lista fonte-limitata dei consiglieri presenti nelle commissioni, ma non certifica una data di cessazione ne' la composizione completa del Consiglio e non va presentata come composizione corrente 2026.",
   "sources": {
     "documentPage": "https://www.comune.lamezia-terme.cz.it/it/documenti_pubblici/commissioni-consiliari-permanenti-prot-7264-del-27-1-2025",
     "documentFile": "https://lamezia-terme-api.municipiumapp.it/s3/3458/allegati/commiss-cons-perm-prot-7264-27-01-2025.pdf"
@@ -12,6 +12,30 @@
     "title": "Commissioni consiliari permanenti prot.7264 del 27.1.2025",
     "issuer": "Presidente del Consiglio Comunale"
   },
+  "sourceLimitedCouncilMembers": [
+    { "sourceName": "ARCIERI DARIO", "groups": ["Gruppo Misto"] },
+    { "sourceName": "CARUSO ANNA", "groups": ["Forza Azzurri"] },
+    { "sourceName": "CITTADINO LUCIA ALESSANDRA", "groups": ["Una Nuova Era"] },
+    { "sourceName": "COSTANTINO ENRICO", "groups": ["Assieme Mascaro Sindaco", "Assieme per Mascaro Sindaco"] },
+    { "sourceName": "D'AMICO ANTONIETTA", "groups": ["Lega Salvini Premier"] },
+    { "sourceName": "FOLINO MATTEO", "groups": ["Forza Italia"] },
+    { "sourceName": "PEGNA RUGGERO", "groups": ["UDC - Nuovo CDU"] },
+    { "sourceName": "PICCIONI ROSARIO", "groups": ["Lamezia Bene Comune"] },
+    { "sourceName": "PULICE GIOVANNI", "groups": ["Lamezia Responsabile"] },
+    { "sourceName": "RUBINO ROSY", "groups": ["Noi Moderati"] },
+    { "sourceName": "SAULLO ALESSANDRO", "groups": ["Fratelli d'Italia"] },
+    { "sourceName": "ZAFFINA PEPPINO", "groups": ["Orgoglio Lamezia"] },
+    { "sourceName": "GIANTURCO GENNARO", "groups": ["Gruppo Misto"] },
+    { "sourceName": "GRANDINETTI MARIA", "groups": ["Forza Azzurri"] },
+    { "sourceName": "LORENA ANTONIO", "groups": ["Fratelli d'Italia"] },
+    { "sourceName": "MASTROIANNI ANTONIO", "groups": ["Lega Salvini Premier"] },
+    { "sourceName": "PARADISO TRANQUILLO", "groups": ["Forza Italia"] },
+    { "sourceName": "RASO ALESSANDRO SANTO", "groups": ["Noi Moderati"] },
+    { "sourceName": "GATTO DANILO", "groups": ["Lamezia Responsabile"] },
+    { "sourceName": "MASTROIANNI DAVIDE", "groups": ["Forza Italia"] },
+    { "sourceName": "SALADINI GIOVANNI", "groups": ["Noi Moderati"] },
+    { "sourceName": "GALLO PIETRO", "groups": ["Fratelli d'Italia"] }
+  ],
   "commissions": [
     {
       "organoSlug": "commissione-affari-generali-istituzionali",
