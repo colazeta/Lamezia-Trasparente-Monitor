@@ -8,8 +8,15 @@ import {
   Database,
   Download,
   Layers,
+  Map as MapIcon,
+  Maximize2,
+  Minimize2,
   PanelLeftClose,
   PanelLeftOpen,
+  PanelRightClose,
+  PanelRightOpen,
+  Search,
+  Table2,
   X,
 } from "lucide-react";
 import {
@@ -93,6 +100,8 @@ type ColoredDistributionBin = AtlanteDistributionBin & {
   color: string;
 };
 
+type DetailView = "profile" | "data";
+
 export function AtlanteTerritoriale() {
   const [loadState, setLoadState] = useState<LoadState>({
     status: "loading",
@@ -112,6 +121,13 @@ export function AtlanteTerritoriale() {
     }
     return true;
   });
+  const [isDetailPanelOpen, setDetailPanelOpen] = useState(() => {
+    if (typeof window !== "undefined") {
+      return window.innerWidth >= 900;
+    }
+    return true;
+  });
+  const [detailView, setDetailView] = useState<DetailView>("profile");
   const [selectedBasemapId, setSelectedBasemapId] = useState<BasemapId>(
     "openstreetmap-standard",
   );
@@ -203,10 +219,10 @@ export function AtlanteTerritoriale() {
       : null;
 
   return (
-    <main className="min-h-screen bg-background text-foreground">
+    <main className="min-h-screen w-[100vw] max-w-[100vw] overflow-x-hidden bg-background text-foreground">
       <Header />
 
-      <section className="mx-auto w-full max-w-none px-2 py-3 sm:px-4 lg:px-5 2xl:px-6">
+      <section className="mx-auto min-w-0 w-full max-w-[100vw] px-2 py-3 sm:px-4 lg:px-5 2xl:px-6">
         {loadState.status === "loading" ? (
           <LoadingState />
         ) : loadState.status === "error" ? (
@@ -216,43 +232,31 @@ export function AtlanteTerritoriale() {
         ) : (
           <div className="space-y-3">
             {layer.dataStatus === "demo" ? <DemoNotice /> : null}
-            <div className="grid gap-3 xl:grid-cols-[minmax(0,1fr)_320px] 2xl:grid-cols-[minmax(0,1fr)_340px] xl:items-start">
-              <div className="min-w-0 space-y-3">
-                <MapSurface
-                  activeIndicator={activeIndicator}
-                  activeFeature={activeFeature}
-                  availableIndicators={availableIndicators}
-                  bounds={bounds}
-                  coloredBins={coloredBins}
-                  dataStatus={layer.dataStatus}
-                  features={features}
-                  hoveredSectionId={hoveredSectionId}
-                  isIndicatorSidebarOpen={isIndicatorSidebarOpen}
-                  metadata={metadata}
-                  onIndicatorSelect={setSelectedIndicatorId}
-                  selectedBasemapId={selectedBasemapId}
-                  selectedSectionId={selectedSectionId}
-                  setIndicatorSidebarOpen={setIndicatorSidebarOpen}
-                  setSelectedBasemapId={setSelectedBasemapId}
-                  setHoveredSectionId={setHoveredSectionId}
-                  setSelectedSectionId={setSelectedSectionId}
-                  summary={distribution}
-                />
-              </div>
-              <div className="space-y-3 xl:sticky xl:top-3 xl:max-h-[calc(100svh-1.5rem)] xl:overflow-y-auto xl:pr-1">
-                <SectionProfileCard
-                  activeFeature={activeFeature}
-                  activeIndicator={activeIndicator}
-                  activeValue={activeValue}
-                  availableIndicators={availableIndicators}
-                />
-                <CitySummaryCard
-                  activeIndicator={activeIndicator}
-                  coloredBins={coloredBins}
-                  summary={distribution}
-                />
-              </div>
-            </div>
+            <MapSurface
+              activeIndicator={activeIndicator}
+              activeFeature={activeFeature}
+              activeValue={activeValue}
+              availableIndicators={availableIndicators}
+              bounds={bounds}
+              coloredBins={coloredBins}
+              dataStatus={layer.dataStatus}
+              detailView={detailView}
+              features={features}
+              hoveredSectionId={hoveredSectionId}
+              isDetailPanelOpen={isDetailPanelOpen}
+              isIndicatorSidebarOpen={isIndicatorSidebarOpen}
+              metadata={metadata}
+              onDetailViewChange={setDetailView}
+              onIndicatorSelect={setSelectedIndicatorId}
+              selectedBasemapId={selectedBasemapId}
+              selectedSectionId={selectedSectionId}
+              setDetailPanelOpen={setDetailPanelOpen}
+              setIndicatorSidebarOpen={setIndicatorSidebarOpen}
+              setSelectedBasemapId={setSelectedBasemapId}
+              setHoveredSectionId={setHoveredSectionId}
+              setSelectedSectionId={setSelectedSectionId}
+              summary={distribution}
+            />
             <SourceReference
               dataStatus={layer.dataStatus}
               metadata={metadata}
@@ -267,18 +271,18 @@ export function AtlanteTerritoriale() {
 
 function Header() {
   return (
-    <section className="border-b border-border bg-card/95">
-      <div className="mx-auto flex w-full max-w-none flex-col gap-2 px-3 py-3 sm:px-5 lg:px-6 xl:flex-row xl:items-end xl:justify-between 2xl:px-8">
-        <div className="max-w-5xl">
+    <section className="w-full max-w-[100vw] overflow-x-hidden border-b border-border bg-card/95">
+      <div className="mx-auto flex w-full min-w-0 max-w-none flex-col gap-2 px-3 py-3 sm:px-5 lg:px-6 xl:flex-row xl:items-end xl:justify-between 2xl:px-8">
+        <div className="min-w-0 max-w-5xl">
           <h1 className="text-2xl font-display font-bold leading-tight text-foreground sm:text-3xl">
             Atlante territoriale
           </h1>
-          <p className="mt-1 max-w-4xl text-sm leading-6 text-muted-foreground sm:text-base">
+          <p className="mt-1 max-w-4xl break-words text-sm leading-6 text-muted-foreground sm:text-base">
             Esplora il territorio di Lamezia attraverso una mappa interattiva.
             Scegli un indicatore e confronta le diverse aree della città.
           </p>
         </div>
-        <p className="max-w-2xl text-xs leading-5 text-muted-foreground sm:text-sm xl:text-right">
+        <p className="min-w-0 max-w-2xl break-words text-xs leading-5 text-muted-foreground sm:text-sm xl:text-right">
             Le sezioni censuarie sono piccole aree statistiche usate per leggere
             il territorio in modo più dettagliato del livello comunale.
           </p>
@@ -436,21 +440,21 @@ function IndicatorSidebar({
   return (
     <aside
       aria-label="Indicatori Atlante territoriale"
-      className="absolute inset-y-3 left-3 z-[650] flex w-[min(370px,calc(100%-1.5rem))] flex-col overflow-hidden rounded-2xl border border-border/90 bg-card/95 shadow-xl ring-1 ring-primary/10 backdrop-blur"
+      className="absolute inset-y-3 left-3 z-[650] flex w-[min(370px,calc(100%-1.5rem))] flex-col overflow-hidden rounded-2xl border border-background/15 bg-slate-950/92 text-background shadow-2xl ring-1 ring-emerald-300/20 backdrop-blur-xl"
     >
-      <div className="flex items-start justify-between gap-3 border-b border-border/70 px-4 py-3">
+      <div className="flex items-start justify-between gap-3 border-b border-background/10 px-4 py-3">
         <div>
-          <p className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-primary">
+          <p className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-emerald-200">
             <Database className="h-4 w-4" />
             Indicatori
           </p>
-          <h2 className="mt-1 text-lg font-semibold leading-tight text-foreground">
+          <h2 className="mt-1 text-lg font-semibold leading-tight text-background">
             Scegli cosa leggere
           </h2>
         </div>
         <button
           aria-label="Chiudi barra indicatori"
-          className="rounded-md border border-border bg-background p-2 text-muted-foreground transition hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+          className="rounded-md border border-background/15 bg-background/10 p-2 text-slate-100 transition hover:bg-background/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
           onClick={onClose}
           type="button"
         >
@@ -458,9 +462,9 @@ function IndicatorSidebar({
         </button>
       </div>
 
-      <div className="border-b border-border/70 bg-background/75 px-4 py-3">
+      <div className="border-b border-background/10 bg-foreground/20 px-4 py-3">
         <div className="flex flex-wrap items-center gap-2">
-          <span className="rounded-full bg-primary px-2.5 py-1 text-xs font-semibold text-primary-foreground">
+          <span className="rounded-full bg-emerald-300 px-2.5 py-1 text-xs font-semibold text-slate-950">
             {activeIndicator
               ? getIndicatorKindLabel(activeIndicator)
               : "indicatore"}
@@ -471,24 +475,24 @@ function IndicatorSidebar({
             </span>
           ) : null}
         </div>
-        <p className="mt-2 text-sm font-semibold text-foreground">
+        <p className="mt-2 text-sm font-semibold text-background">
           {activeIndicator?.label ?? "Indicatore in preparazione"}
         </p>
         {activeIndicator ? (
-          <p className="mt-1 text-xs leading-5 text-muted-foreground">
+          <p className="mt-1 text-xs leading-5 text-slate-300">
             {activeIndicator.publicHint}
           </p>
         ) : null}
         <dl className="mt-3 grid grid-cols-2 gap-2 text-xs">
-          <div className="rounded-lg border border-border/60 bg-card px-2.5 py-2">
-            <dt className="font-semibold text-muted-foreground">Copertura</dt>
-            <dd className="mt-0.5 font-semibold text-foreground">
+          <div className="rounded-lg border border-background/10 bg-background/10 px-2.5 py-2">
+            <dt className="font-semibold text-slate-300">Copertura</dt>
+            <dd className="mt-0.5 font-semibold text-background">
               {coverageLabel}
             </dd>
           </div>
-          <div className="rounded-lg border border-border/60 bg-card px-2.5 py-2">
-            <dt className="font-semibold text-muted-foreground">Selezione</dt>
-            <dd className="mt-0.5 truncate font-semibold text-foreground">
+          <div className="rounded-lg border border-background/10 bg-background/10 px-2.5 py-2">
+            <dt className="font-semibold text-slate-300">Selezione</dt>
+            <dd className="mt-0.5 truncate font-semibold text-background">
               {sectionLabel}
             </dd>
           </div>
@@ -503,17 +507,17 @@ function IndicatorSidebar({
               <section
                 className={`rounded-xl border px-3 py-2.5 ${
                   hasIndicators
-                    ? "border-border/70 bg-background/90"
-                    : "border-border/50 bg-muted/35 text-muted-foreground"
+                    ? "border-background/10 bg-background/10"
+                    : "border-background/10 bg-background/5 text-slate-400"
                 }`}
                 key={category.id}
               >
                 <div className="flex items-center justify-between gap-2">
-                  <h3 className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                  <h3 className="text-xs font-semibold uppercase tracking-wide text-slate-300">
                     {category.label}
                   </h3>
                   {!hasIndicators ? (
-                    <span className="rounded-full bg-muted px-2 py-0.5 text-[11px] leading-none text-muted-foreground">
+                    <span className="rounded-full bg-background/10 px-2 py-0.5 text-[11px] leading-none text-slate-300">
                       in preparazione
                     </span>
                   ) : null}
@@ -527,8 +531,8 @@ function IndicatorSidebar({
                           aria-pressed={isActive}
                           className={`grid min-h-11 grid-cols-[1fr_auto] items-center gap-2 rounded-lg border px-3 py-2 text-left text-sm font-semibold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 ${
                             isActive
-                              ? "border-primary bg-primary text-primary-foreground shadow-sm"
-                              : "border-border bg-card text-foreground hover:border-primary/50 hover:bg-primary/5"
+                              ? "border-emerald-300 bg-emerald-300 text-slate-950 shadow-sm"
+                              : "border-background/10 bg-foreground/20 text-slate-100 hover:border-emerald-300/50 hover:bg-background/10"
                           }`}
                           key={indicator.id}
                           onClick={() => onSelect(indicator.id)}
@@ -539,8 +543,8 @@ function IndicatorSidebar({
                           <span
                             className={`rounded-full px-2 py-1 text-[10px] leading-none ${
                               isActive
-                                ? "bg-primary-foreground/20 text-primary-foreground"
-                                : "bg-muted text-muted-foreground"
+                                ? "bg-slate-950/10 text-slate-950"
+                                : "bg-background/10 text-slate-300"
                             }`}
                           >
                             {getIndicatorKindLabel(indicator)}
@@ -556,7 +560,7 @@ function IndicatorSidebar({
         </div>
       </div>
 
-      <div className="border-t border-border/70 bg-background/75 px-4 py-3 text-xs leading-5 text-muted-foreground">
+      <div className="border-t border-background/10 bg-foreground/20 px-4 py-3 text-xs leading-5 text-slate-300">
         <p>
           {metadata.sourceInstitution} / {metadata.sourceYear} /{" "}
           {metadata.territorialLevel}
@@ -574,11 +578,19 @@ function CitySummaryCard({
   activeIndicator,
   coloredBins,
   summary,
+  surface = "light",
 }: {
   activeIndicator: AtlanteIndicatorDefinition | null;
   coloredBins: ColoredDistributionBin[];
   summary: ReturnType<typeof buildAtlanteDistribution>;
+  surface?: "light" | "dark";
 }) {
+  const isDark = surface === "dark";
+  const cardClass = isDark
+    ? "rounded-xl border border-background/10 bg-background/10 p-3 shadow-sm"
+    : "rounded-lg border border-border/80 bg-card/80 p-3 shadow-sm";
+  const mutedClass = isDark ? "text-slate-300" : "text-muted-foreground";
+  const strongClass = isDark ? "text-background" : "text-foreground";
   const unitLabel = activeIndicator?.unitLabel ?? "";
   const isPopulationIndicator = activeIndicator?.id === "popolazione-residente";
   const metrics = isPopulationIndicator
@@ -610,22 +622,30 @@ function CitySummaryCard({
       ];
 
   return (
-    <section className="rounded-lg border border-border/80 bg-card/80 p-3 shadow-sm">
+    <section className={cardClass}>
       <div className="flex items-start gap-2">
-        <BarChart3 className="mt-0.5 h-4 w-4 flex-none text-primary" />
+        <BarChart3
+          className={`mt-0.5 h-4 w-4 flex-none ${
+            isDark ? "text-emerald-200" : "text-primary"
+          }`}
+        />
         <div>
-          <h2 className="text-base font-semibold text-foreground">
+          <h2 className={`text-base font-semibold ${strongClass}`}>
             Sintesi città
           </h2>
         </div>
       </div>
 
       {isPopulationIndicator ? (
-        <div className="mt-3 rounded-md bg-background p-3">
-          <p className="text-xs font-medium text-muted-foreground">
+        <div
+          className={`mt-3 rounded-md p-3 ${
+            isDark ? "bg-foreground/20" : "bg-background"
+          }`}
+        >
+          <p className={`text-xs font-medium ${mutedClass}`}>
             Popolazione totale nelle sezioni con P1 disponibile
           </p>
-          <p className="mt-1 text-2xl font-bold leading-tight text-foreground">
+          <p className={`mt-1 text-2xl font-bold leading-tight ${strongClass}`}>
             {formatSummaryValue(summary.sum, unitLabel)}
           </p>
         </div>
@@ -634,17 +654,21 @@ function CitySummaryCard({
       <dl className="mt-3 grid grid-cols-2 gap-x-3 gap-y-2">
         {metrics.map(([label, value]) => (
           <div key={label}>
-            <dt className="text-xs text-muted-foreground">{label}</dt>
-            <dd className="text-sm font-semibold text-foreground">{value}</dd>
+            <dt className={`text-xs ${mutedClass}`}>{label}</dt>
+            <dd className={`text-sm font-semibold ${strongClass}`}>{value}</dd>
           </div>
         ))}
       </dl>
 
       {coloredBins.length > 0 ? (
-        <DistributionBands bins={coloredBins} summary={summary} />
+        <DistributionBands
+          bins={coloredBins}
+          summary={summary}
+          surface={surface}
+        />
       ) : null}
 
-      <div className="mt-3 space-y-1 text-xs leading-5 text-muted-foreground">
+      <div className={`mt-3 space-y-1 text-xs leading-5 ${mutedClass}`}>
         <p>Valori null esclusi da somma e fasce; zero resta zero.</p>
         {summary.zeroCount > 0 ? (
           <p>{formatInteger(summary.zeroCount)} sezioni hanno valore 0.</p>
@@ -657,23 +681,33 @@ function CitySummaryCard({
 function DistributionBands({
   bins,
   summary,
+  surface = "light",
 }: {
   bins: ColoredDistributionBin[];
   summary: ReturnType<typeof buildAtlanteDistribution>;
+  surface?: "light" | "dark";
 }) {
+  const isDark = surface === "dark";
+  const mutedClass = isDark ? "text-slate-300" : "text-muted-foreground";
+  const strongClass = isDark ? "text-background" : "text-foreground";
+
   return (
     <div className="mt-4">
       <div className="flex items-center justify-between gap-2">
-        <h3 className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+        <h3
+          className={`text-xs font-semibold uppercase tracking-wide ${mutedClass}`}
+        >
           Distribuzione per fasce
         </h3>
-        <span className="text-[11px] font-medium text-muted-foreground">
+        <span className={`text-[11px] font-medium ${mutedClass}`}>
           {formatInteger(bins.length)} classi
         </span>
       </div>
       <div
         aria-label="Distribuzione delle sezioni per fascia"
-        className="mt-2 grid h-4 overflow-hidden rounded-lg border border-border bg-muted"
+        className={`mt-2 grid h-4 overflow-hidden rounded-lg border ${
+          isDark ? "border-background/10 bg-background/10" : "border-border bg-muted"
+        }`}
         style={{
           gridTemplateColumns: `repeat(${Math.max(1, bins.length)}, minmax(0, 1fr))`,
         }}
@@ -692,7 +726,11 @@ function DistributionBands({
       <ol className="mt-3 grid gap-2 text-xs leading-5">
         {bins.map((bin) => (
           <li
-            className="grid grid-cols-[auto_1fr] gap-x-2 rounded-md border border-border/70 bg-background px-2.5 py-2"
+            className={`grid grid-cols-[auto_1fr] gap-x-2 rounded-md border px-2.5 py-2 ${
+              isDark
+                ? "border-background/10 bg-foreground/20"
+                : "border-border/70 bg-background"
+            }`}
             key={bin.index}
           >
             <span
@@ -701,11 +739,11 @@ function DistributionBands({
               style={{ backgroundColor: bin.color }}
             />
             <span>
-              <span className="font-semibold text-foreground">
+              <span className={`font-semibold ${strongClass}`}>
                 {formatDistributionBandName(bin.index, bins.length)}
               </span>
-              <span className="text-muted-foreground"> · {bin.label}</span>
-              <span className="block text-muted-foreground">
+              <span className={mutedClass}> · {bin.label}</span>
+              <span className={`block ${mutedClass}`}>
                 {formatSectionCount(bin.count)} ·{" "}
                 {formatPercentage(bin.count, summary.availableCount)} delle
                 sezioni con dato
@@ -721,17 +759,22 @@ function DistributionBands({
 function MapSurface({
   activeIndicator,
   activeFeature,
+  activeValue,
   availableIndicators,
   bounds,
   coloredBins,
   dataStatus,
+  detailView,
   features,
   hoveredSectionId,
+  isDetailPanelOpen,
   isIndicatorSidebarOpen,
   metadata,
+  onDetailViewChange,
   onIndicatorSelect,
   selectedBasemapId,
   selectedSectionId,
+  setDetailPanelOpen,
   setIndicatorSidebarOpen,
   setSelectedBasemapId,
   setHoveredSectionId,
@@ -740,17 +783,22 @@ function MapSurface({
 }: {
   activeIndicator: AtlanteIndicatorDefinition | null;
   activeFeature: AtlanteFeature | null;
+  activeValue: number | null;
   availableIndicators: AtlanteIndicatorDefinition[];
   bounds: GeographicBounds | null;
   coloredBins: ColoredDistributionBin[];
   dataStatus: AtlanteLoadedLayer["dataStatus"];
+  detailView: DetailView;
   features: AtlanteFeature[];
   hoveredSectionId: string | null;
+  isDetailPanelOpen: boolean;
   isIndicatorSidebarOpen: boolean;
   metadata: AtlanteLayerMetadata;
+  onDetailViewChange: (view: DetailView) => void;
   onIndicatorSelect: (indicatorId: string) => void;
   selectedBasemapId: BasemapId;
   selectedSectionId: string | null;
+  setDetailPanelOpen: (isOpen: boolean) => void;
   setIndicatorSidebarOpen: (isOpen: boolean) => void;
   setSelectedBasemapId: (basemapId: BasemapId) => void;
   setHoveredSectionId: (sectionId: string | null) => void;
@@ -758,6 +806,7 @@ function MapSurface({
   summary: ReturnType<typeof buildAtlanteDistribution>;
 }) {
   const [resetSignal, setResetSignal] = useState(0);
+  const [isFullPageMap, setFullPageMap] = useState(false);
   const selectedBasemap =
     BASEMAP_PROVIDERS.find((provider) => provider.id === selectedBasemapId) ??
     null;
@@ -776,7 +825,11 @@ function MapSurface({
   return (
     <section
       aria-labelledby="atlante-map-title"
-      className="overflow-hidden rounded-2xl border border-primary/20 bg-card shadow-lg ring-1 ring-primary/10"
+      className={`w-full min-w-0 max-w-full overflow-hidden border border-primary/20 bg-slate-950 shadow-xl ring-1 ring-primary/10 transition-all ${
+        isFullPageMap
+          ? "fixed inset-0 z-[80] rounded-none"
+          : "rounded-2xl"
+      }`}
     >
       <h2 className="sr-only" id="atlante-map-title">
         Mappa
@@ -787,14 +840,18 @@ function MapSurface({
           presente nel file dati.
         </div>
       ) : (
-        <div className="relative overflow-hidden bg-background">
+        <div className="relative w-full max-w-full overflow-hidden bg-slate-950">
           <MapContainer
             attributionControl={!!selectedBasemap}
             bounds={leafletBounds}
-            className="h-[72svh] min-h-[540px] w-full sm:h-[76svh] lg:h-[calc(100svh-150px)] lg:min-h-[700px] 2xl:min-h-[800px]"
+            className={`w-full ${
+              isFullPageMap
+                ? "h-[100svh]"
+                : "h-[78svh] min-h-[560px] sm:h-[82svh] lg:h-[calc(100svh-132px)] lg:min-h-[740px] 2xl:min-h-[860px]"
+            }`}
             maxZoom={selectedBasemap?.maxZoom ?? 18}
             scrollWheelZoom
-            style={{ background: "hsl(var(--background))" }}
+            style={{ background: "hsl(222 47% 8%)" }}
             zoomControl
           >
             <MapViewResetter bounds={leafletBounds} resetSignal={resetSignal} />
@@ -849,23 +906,25 @@ function MapSurface({
             <button
               aria-expanded="false"
               aria-label="Apri barra indicatori"
-              className="absolute left-3 top-3 z-[650] inline-flex items-center gap-2 rounded-lg border border-border/90 bg-card/95 px-3 py-2 text-sm font-semibold text-foreground shadow-sm backdrop-blur transition hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+              className="absolute left-3 top-3 z-[650] inline-flex items-center gap-2 rounded-lg border border-background/15 bg-slate-950/88 px-3 py-2 text-sm font-semibold text-background shadow-lg backdrop-blur transition hover:bg-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
               onClick={() => setIndicatorSidebarOpen(true)}
               type="button"
             >
-              <PanelLeftOpen className="h-4 w-4 text-primary" />
+              <PanelLeftOpen className="h-4 w-4 text-emerald-300" />
               <span aria-hidden="true">Indicatori</span>
             </button>
           )}
 
-          <div className="pointer-events-none absolute inset-x-2 top-2 z-[500] flex justify-end sm:inset-x-3 sm:top-3">
-            <div className="pointer-events-auto ml-28 flex flex-wrap items-center justify-end gap-2 rounded-lg border border-border/90 bg-card/95 p-2 text-xs shadow-sm backdrop-blur">
-              <label className="inline-flex items-center gap-2 font-medium text-foreground">
-                <Layers className="h-4 w-4 text-primary" />
-                <span>Sfondo mappa</span>
+          <div className="pointer-events-none absolute left-3 top-16 z-[500] w-[calc(100vw-1.5rem)] max-w-[calc(100%-1.5rem)] sm:left-auto sm:right-3 sm:top-3 sm:w-auto">
+            <div className="pointer-events-auto grid w-full min-w-0 grid-cols-2 gap-2 rounded-xl border border-background/15 bg-slate-950/88 p-2 text-xs text-background shadow-xl backdrop-blur sm:flex sm:w-auto sm:flex-wrap sm:items-center sm:justify-end">
+              <label className="col-span-2 grid min-w-0 grid-cols-[auto_1fr] items-center gap-2 font-medium text-background sm:col-span-1 sm:inline-flex">
+                <span className="inline-flex min-w-0 items-center gap-2">
+                  <Layers className="h-4 w-4 flex-none text-emerald-300" />
+                  <span className="hidden sm:inline">Sfondo mappa</span>
+                </span>
                 <select
                   aria-label="Sfondo mappa"
-                  className="rounded-md border border-border bg-background px-2 py-1 text-xs text-foreground"
+                  className="min-w-0 rounded-md border border-background/15 bg-slate-900 px-2 py-1 text-xs text-background sm:w-auto"
                   onChange={(event) =>
                     setSelectedBasemapId(event.target.value as BasemapId)
                   }
@@ -880,11 +939,38 @@ function MapSurface({
                 </select>
               </label>
               <button
-                className="rounded-md border border-border bg-background px-2.5 py-1.5 font-medium text-foreground transition hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                aria-label="Reimposta vista"
+                className="min-w-0 rounded-md border border-background/15 bg-background/10 px-2.5 py-1.5 text-center font-medium text-background transition hover:bg-background/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
                 onClick={() => setResetSignal((current) => current + 1)}
                 type="button"
               >
-                Reimposta vista
+                <span className="sm:hidden">Reset</span>
+                <span className="hidden sm:inline">Reimposta vista</span>
+              </button>
+              <button
+                aria-label={
+                  isFullPageMap
+                    ? "Esci dalla pagina intera"
+                    : "Pagina intera"
+                }
+                aria-pressed={isFullPageMap}
+                className="inline-flex min-w-0 items-center justify-center gap-1.5 rounded-md border border-background/15 bg-background/10 px-2.5 py-1.5 font-medium text-background transition hover:bg-background/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                onClick={() => setFullPageMap(!isFullPageMap)}
+                type="button"
+              >
+                {isFullPageMap ? (
+                  <Minimize2 className="h-3.5 w-3.5" />
+                ) : (
+                  <Maximize2 className="h-3.5 w-3.5" />
+                )}
+                <span className="sm:hidden">
+                  {isFullPageMap ? "Esci" : "Piena"}
+                </span>
+                <span className="hidden sm:inline">
+                  {isFullPageMap
+                    ? "Esci dalla pagina intera"
+                    : "Pagina intera"}
+                </span>
               </button>
               <button
                 aria-expanded={isIndicatorSidebarOpen}
@@ -893,7 +979,7 @@ function MapSurface({
                     ? "Nascondi barra indicatori"
                     : "Mostra barra indicatori"
                 }
-                className="hidden rounded-md border border-border bg-background px-2.5 py-1.5 font-medium text-foreground transition hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary lg:inline-flex lg:items-center lg:gap-1.5"
+                className="hidden rounded-md border border-background/15 bg-background/10 px-2.5 py-1.5 font-medium text-background transition hover:bg-background/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary lg:inline-flex lg:items-center lg:gap-1.5"
                 onClick={() =>
                   setIndicatorSidebarOpen(!isIndicatorSidebarOpen)
                 }
@@ -909,7 +995,26 @@ function MapSurface({
                 </span>
               </button>
               <button
-                className="inline-flex items-center gap-1.5 rounded-md border border-border bg-background px-2.5 py-1.5 font-medium text-foreground transition hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                aria-expanded={isDetailPanelOpen}
+                aria-label={
+                  isDetailPanelOpen
+                    ? "Nascondi dettaglio area"
+                    : "Mostra dettaglio area"
+                }
+                className="inline-flex min-w-0 items-center justify-center gap-1.5 rounded-md border border-background/15 bg-background/10 px-2.5 py-1.5 font-medium text-background transition hover:bg-background/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                onClick={() => setDetailPanelOpen(!isDetailPanelOpen)}
+                type="button"
+              >
+                {isDetailPanelOpen ? (
+                  <PanelRightClose className="h-3.5 w-3.5" />
+                ) : (
+                  <PanelRightOpen className="h-3.5 w-3.5" />
+                )}
+                <span aria-hidden="true">Dettaglio</span>
+              </button>
+              <button
+                aria-label="Scarica mappa"
+                className="inline-flex min-w-0 items-center justify-center gap-1.5 rounded-md border border-background/15 bg-background/10 px-2.5 py-1.5 font-medium text-background transition hover:bg-background/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
                 onClick={() =>
                   downloadAtlanteMapSvg({
                     activeIndicator,
@@ -924,15 +1029,57 @@ function MapSurface({
                 type="button"
               >
                 <Download className="h-3.5 w-3.5" />
-                Scarica mappa
+                <span className="hidden sm:inline">Scarica mappa</span>
               </button>
             </div>
+          </div>
+
+          {isDetailPanelOpen ? (
+            <DetailDrawer
+              activeFeature={activeFeature}
+              activeIndicator={activeIndicator}
+              activeValue={activeValue}
+              availableIndicators={availableIndicators}
+              coloredBins={coloredBins}
+              detailView={detailView}
+              features={features}
+              onClose={() => setDetailPanelOpen(false)}
+              onDetailViewChange={onDetailViewChange}
+              onSectionSelect={setSelectedSectionId}
+              selectedSectionId={selectedSectionId}
+              summary={summary}
+            />
+          ) : (
+            <button
+              aria-label="Apri pannello dettaglio area"
+              className="absolute bottom-3 left-3 right-3 z-[650] inline-flex items-center justify-center gap-2 rounded-xl border border-background/15 bg-slate-950/88 px-3 py-2 text-center text-sm font-semibold text-background shadow-xl backdrop-blur transition hover:bg-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary sm:left-auto sm:w-auto sm:max-w-[min(360px,calc(100%-1.5rem))] sm:text-left"
+              onClick={() => setDetailPanelOpen(true)}
+              type="button"
+            >
+              <PanelRightOpen className="h-4 w-4 flex-none text-emerald-300" />
+              <span>
+                {activeFeature
+                  ? `Dettaglio: ${getSectionPublicLabel(activeFeature)}`
+                  : "Apri dettaglio area"}
+              </span>
+            </button>
+          )}
+
+          <div className="pointer-events-none absolute bottom-3 left-3 z-[500] max-w-[min(420px,calc(100%-1.5rem))] rounded-xl border border-background/15 bg-slate-950/82 px-3 py-2 text-xs leading-5 text-slate-100 shadow-xl backdrop-blur">
+            <span className="font-semibold text-background">
+              {metadata.sourceInstitution}
+            </span>{" "}
+            / {metadata.sourceYear} / {metadata.territorialLevel}
           </div>
 
           <MapLegend
             activeIndicator={activeIndicator}
             bins={coloredBins}
-            className="pointer-events-auto absolute bottom-3 right-3 z-[500] max-w-[calc(100%-1.5rem)]"
+            className={`pointer-events-auto absolute z-[500] w-[min(320px,calc(100vw-2rem))] max-w-[calc(100%-1.5rem)] ${
+              isDetailPanelOpen
+                ? "bottom-3 left-3 mb-16 sm:left-auto sm:right-[410px] sm:mb-0"
+                : "bottom-16 left-3 sm:left-auto sm:right-3"
+            }`}
             summary={summary}
           />
         </div>
@@ -991,7 +1138,7 @@ function MapLegend({
             background: `linear-gradient(to right, ${CHOROPLETH_COLORS.join(", ")})`,
           }}
         />
-        <div className="mt-1 flex justify-between gap-3 text-[11px]">
+        <div className="mt-1 grid gap-1 text-[11px] sm:flex sm:justify-between sm:gap-3">
           <span>
             Valore minimo{" "}
             {formatSummaryValue(summary.min, activeIndicator.unitLabel)}
@@ -1025,28 +1172,291 @@ function MapLegend({
     </div>
   );
 }
+function DetailDrawer({
+  activeFeature,
+  activeIndicator,
+  activeValue,
+  availableIndicators,
+  coloredBins,
+  detailView,
+  features,
+  onClose,
+  onDetailViewChange,
+  onSectionSelect,
+  selectedSectionId,
+  summary,
+}: {
+  activeFeature: AtlanteFeature | null;
+  activeIndicator: AtlanteIndicatorDefinition | null;
+  activeValue: number | null;
+  availableIndicators: AtlanteIndicatorDefinition[];
+  coloredBins: ColoredDistributionBin[];
+  detailView: DetailView;
+  features: AtlanteFeature[];
+  onClose: () => void;
+  onDetailViewChange: (view: DetailView) => void;
+  onSectionSelect: (sectionId: string) => void;
+  selectedSectionId: string | null;
+  summary: ReturnType<typeof buildAtlanteDistribution>;
+}) {
+  const views: Array<{
+    id: DetailView;
+    label: string;
+    icon: typeof MapIcon;
+  }> = [
+    { id: "profile", label: "Scheda", icon: MapIcon },
+    { id: "data", label: "Dati", icon: Table2 },
+  ];
+
+  return (
+    <aside
+      aria-label="Dettaglio area Atlante"
+      className="absolute bottom-3 left-3 z-[660] flex w-[calc(100vw-1.5rem)] max-w-[calc(100%-1.5rem)] max-h-[62svh] flex-col overflow-hidden rounded-2xl border border-background/15 bg-slate-950/92 text-background shadow-2xl ring-1 ring-emerald-300/20 backdrop-blur-xl sm:left-auto sm:right-3 sm:top-3 sm:w-[390px] sm:max-h-[calc(100%-1.5rem)]"
+    >
+      <div className="border-b border-background/10 px-4 py-3">
+        <div className="flex items-start justify-between gap-3">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-wide text-emerald-200">
+              Console Atlante
+            </p>
+            <h2 className="mt-1 text-lg font-semibold leading-tight text-background">
+              Dettaglio area
+            </h2>
+          </div>
+          <button
+            aria-label="Chiudi pannello dettaglio area"
+            className="rounded-md border border-background/15 bg-background/10 p-2 text-slate-100 transition hover:bg-background/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+            onClick={onClose}
+            type="button"
+          >
+            <X className="h-4 w-4" />
+          </button>
+        </div>
+
+        <div
+          aria-label="Viste dettaglio Atlante"
+          className="mt-3 grid grid-cols-2 gap-1 rounded-lg border border-background/10 bg-foreground/20 p-1"
+          role="tablist"
+        >
+          {views.map((view) => {
+            const Icon = view.icon;
+            const isActive = detailView === view.id;
+            return (
+              <button
+                aria-selected={isActive}
+                className={`inline-flex items-center justify-center gap-2 rounded-md px-3 py-2 text-sm font-semibold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
+                  isActive
+                    ? "bg-emerald-300 text-slate-950"
+                    : "text-slate-200 hover:bg-background/10"
+                }`}
+                key={view.id}
+                onClick={() => onDetailViewChange(view.id)}
+                role="tab"
+                type="button"
+              >
+                <Icon className="h-4 w-4" />
+                {view.label}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      <div className="min-h-0 flex-1 overflow-y-auto p-3">
+        {detailView === "profile" ? (
+          <div className="space-y-3">
+            <SectionProfileCard
+              activeFeature={activeFeature}
+              activeIndicator={activeIndicator}
+              activeValue={activeValue}
+              availableIndicators={availableIndicators}
+              surface="dark"
+            />
+            <CitySummaryCard
+              activeIndicator={activeIndicator}
+              coloredBins={coloredBins}
+              summary={summary}
+              surface="dark"
+            />
+          </div>
+        ) : (
+          <SectionDataBrowser
+            activeIndicator={activeIndicator}
+            features={features}
+            onSectionSelect={onSectionSelect}
+            selectedSectionId={selectedSectionId}
+            summary={summary}
+          />
+        )}
+      </div>
+    </aside>
+  );
+}
+
+function SectionDataBrowser({
+  activeIndicator,
+  features,
+  onSectionSelect,
+  selectedSectionId,
+  summary,
+}: {
+  activeIndicator: AtlanteIndicatorDefinition | null;
+  features: AtlanteFeature[];
+  onSectionSelect: (sectionId: string) => void;
+  selectedSectionId: string | null;
+  summary: ReturnType<typeof buildAtlanteDistribution>;
+}) {
+  const [query, setQuery] = useState("");
+  const normalizedQuery = query.trim().toLowerCase();
+  const visibleFeatures = useMemo(
+    () =>
+      features.filter((feature) => {
+        if (!normalizedQuery) {
+          return true;
+        }
+        return `${getSectionPublicLabel(feature)} ${getSectionId(feature)}`
+          .toLowerCase()
+          .includes(normalizedQuery);
+      }),
+    [features, normalizedQuery],
+  );
+  const maxValue = summary.max ?? 0;
+
+  if (!activeIndicator) {
+    return (
+      <p className="rounded-xl border border-background/10 bg-background/10 p-3 text-sm leading-6 text-slate-200">
+        La vista dati sara disponibile quando un indicatore censuario sara
+        attivo.
+      </p>
+    );
+  }
+
+  return (
+    <section aria-label="Vista dati sezioni" className="space-y-3">
+      <div>
+        <h3 className="text-sm font-semibold text-background">Vista dati</h3>
+        <p className="mt-1 text-xs leading-5 text-slate-300">
+          Righe leggibili per sezione censuaria, nello stesso ordine del livello
+          ISTAT. I valori mancanti restano separati da zero.
+        </p>
+      </div>
+
+      <label className="relative block">
+        <Search
+          aria-hidden="true"
+          className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400"
+        />
+        <span className="sr-only">Cerca sezione censuaria</span>
+        <input
+          className="w-full rounded-lg border border-background/15 bg-background/10 py-2 pl-9 pr-3 text-sm text-background outline-none placeholder:text-slate-400 focus:border-emerald-300 focus:ring-2 focus:ring-emerald-300/25"
+          onChange={(event) => setQuery(event.target.value)}
+          placeholder="Cerca area o codice"
+          type="search"
+          value={query}
+        />
+      </label>
+
+      <div className="rounded-xl border border-background/10 bg-foreground/20">
+        <div className="grid grid-cols-[1fr_auto] gap-2 border-b border-background/10 px-3 py-2 text-[11px] font-semibold uppercase tracking-wide text-slate-300">
+          <span>{formatSectionCount(visibleFeatures.length)}</span>
+          <span>{activeIndicator.label}</span>
+        </div>
+        <div className="max-h-[46svh] overflow-y-auto">
+          {visibleFeatures.length > 0 ? (
+            visibleFeatures.map((feature) => {
+              const sectionId = getSectionId(feature);
+              const value = readIndicatorValue(feature, activeIndicator);
+              const label = getSectionPublicLabel(feature);
+              const isSelected = sectionId === selectedSectionId;
+              const barWidth =
+                value !== null && maxValue > 0
+                  ? Math.max(2, Math.min(100, (value / maxValue) * 100))
+                  : 0;
+
+              return (
+                <button
+                  aria-label={`Seleziona ${label}`}
+                  className={`grid w-full gap-2 border-b border-background/10 px-3 py-2 text-left transition last:border-b-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
+                    isSelected ? "bg-emerald-300/18" : "hover:bg-background/10"
+                  }`}
+                  key={sectionId}
+                  onClick={() => onSectionSelect(sectionId)}
+                  type="button"
+                >
+                  <span className="flex items-start justify-between gap-3">
+                    <span className="min-w-0">
+                      <span className="block truncate text-sm font-semibold text-background">
+                        {label}
+                      </span>
+                      <span className="block truncate text-[11px] text-slate-400">
+                        {sectionId}
+                      </span>
+                    </span>
+                    <span className="shrink-0 text-sm font-semibold text-emerald-100">
+                      {formatProfileValue(value, activeIndicator.unitLabel)}
+                    </span>
+                  </span>
+                  <span
+                    aria-hidden="true"
+                    className="block h-1.5 overflow-hidden rounded-full bg-background/10"
+                  >
+                    <span
+                      className={`block h-full rounded-full ${
+                        value === null ? "bg-transparent" : "bg-emerald-300"
+                      }`}
+                      style={{ width: `${barWidth}%` }}
+                    />
+                  </span>
+                </button>
+              );
+            })
+          ) : (
+            <p className="p-3 text-sm text-slate-300">
+              Nessuna sezione corrisponde alla ricerca.
+            </p>
+          )}
+        </div>
+      </div>
+    </section>
+  );
+}
 
 function SectionProfileCard({
   activeFeature,
   activeIndicator,
   activeValue,
   availableIndicators,
+  surface = "light",
 }: {
   activeFeature: AtlanteFeature | null;
   activeIndicator: AtlanteIndicatorDefinition | null;
   activeValue: number | null;
   availableIndicators: AtlanteIndicatorDefinition[];
+  surface?: "light" | "dark";
 }) {
+  const isDark = surface === "dark";
+  const cardClass = isDark
+    ? "rounded-xl border border-background/10 bg-background/10 p-3 shadow-sm"
+    : "rounded-lg border border-border/80 bg-card/80 p-3 shadow-sm xl:sticky xl:top-4";
+  const eyebrowClass = isDark
+    ? "text-xs font-semibold uppercase tracking-wide text-emerald-200"
+    : "text-xs font-semibold uppercase tracking-wide text-muted-foreground";
+  const titleClass = isDark
+    ? "mt-1 break-words text-xl font-semibold text-background"
+    : "mt-1 break-words text-xl font-semibold text-foreground";
+  const mutedClass = isDark ? "text-slate-300" : "text-muted-foreground";
+  const strongClass = isDark ? "text-background" : "text-foreground";
+
   if (!activeFeature) {
     return (
-      <section className="rounded-lg border border-border/80 bg-card/80 p-3 shadow-sm xl:sticky xl:top-4">
-        <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+      <section className={cardClass}>
+        <p className={eyebrowClass}>
           Sezione selezionata
         </p>
-        <h2 className="mt-1 text-xl font-semibold text-foreground">
+        <h2 className={titleClass}>
           Nessuna sezione selezionata
         </h2>
-        <p className="mt-3 text-sm leading-6 text-muted-foreground">
+        <p className={`mt-3 text-sm leading-6 ${mutedClass}`}>
           Seleziona una sezione sulla mappa per vedere i dati disponibili.
         </p>
       </section>
@@ -1070,48 +1480,60 @@ function SectionProfileCard({
     }));
 
   return (
-    <section className="rounded-lg border border-border/80 bg-card/80 p-3 shadow-sm xl:sticky xl:top-4">
+    <section className={cardClass}>
       <div>
-        <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+        <p className={eyebrowClass}>
           Sezione selezionata
         </p>
-        <h2 className="mt-1 break-words text-xl font-semibold text-foreground">
+        <h2 className={titleClass}>
           {sectionLabel}
         </h2>
-        <p className="mt-1 break-words text-xs text-muted-foreground">
+        <p className={`mt-1 break-words text-xs ${mutedClass}`}>
           Sezione censuaria ISTAT: {sectionId}
         </p>
       </div>
 
-      <div className="mt-4 rounded-md bg-primary/10 p-3">
-        <p className="text-xs font-semibold text-primary">
+      <div
+        className={`mt-4 rounded-md p-3 ${
+          isDark ? "bg-emerald-300/12" : "bg-primary/10"
+        }`}
+      >
+        <p
+          className={`text-xs font-semibold ${
+            isDark ? "text-emerald-200" : "text-primary"
+          }`}
+        >
           {activeIndicator?.label ?? "Indicatore in preparazione"}
         </p>
-        <p className="mt-1 text-2xl font-bold leading-tight text-foreground">
+        <p className={`mt-1 text-2xl font-bold leading-tight ${strongClass}`}>
           {valueLabel}
         </p>
       </div>
 
-      <dl className="mt-4 divide-y divide-border">
+      <dl
+        className={`mt-4 divide-y ${
+          isDark ? "divide-white/10" : "divide-border"
+        }`}
+      >
         {profileRows.length > 0 ? (
           profileRows.map((row) => (
             <div className="grid gap-1 py-2" key={row.id}>
-              <dt className="text-sm font-medium text-muted-foreground">
+              <dt className={`text-sm font-medium ${mutedClass}`}>
                 {row.label}
               </dt>
-              <dd className="text-sm font-semibold text-foreground">
+              <dd className={`text-sm font-semibold ${strongClass}`}>
                 {row.value}
               </dd>
             </div>
           ))
         ) : (
-          <div className="p-3 text-sm text-muted-foreground">
+          <div className={`p-3 text-sm ${mutedClass}`}>
             Nessun altro indicatore disponibile per questa sezione.
           </div>
         )}
       </dl>
 
-      <div className="mt-3 text-xs leading-5 text-muted-foreground">
+      <div className={`mt-3 text-xs leading-5 ${mutedClass}`}>
         {activeValue === 0 ? (
           <p>Zero è un valore reale, non un dato mancante.</p>
         ) : null}
@@ -1124,21 +1546,37 @@ function SourceReference({
   dataStatus,
   metadata,
   summary,
+  surface = "light",
 }: {
   dataStatus: AtlanteLoadedLayer["dataStatus"];
   metadata: AtlanteLayerMetadata;
   summary: ReturnType<typeof buildAtlanteDistribution>;
+  surface?: "light" | "dark";
 }) {
+  const isDark = surface === "dark";
+  const sectionClass = isDark
+    ? "rounded-xl border border-background/10 bg-background/10 p-3 text-xs leading-5 text-slate-300"
+    : "border-t border-border pt-4 text-sm leading-6 text-muted-foreground";
+  const titleClass = isDark
+    ? "font-semibold text-background"
+    : "font-semibold text-foreground";
+  const linkClass = isDark
+    ? "text-emerald-200 underline-offset-4 hover:underline"
+    : "text-primary underline-offset-4 hover:underline";
+  const gridClass = isDark
+    ? "grid gap-3"
+    : "grid gap-4 md:grid-cols-[1.2fr_1fr_1fr]";
+
   return (
-    <section className="border-t border-border pt-4 text-sm leading-6 text-muted-foreground">
-      <div className="grid gap-4 md:grid-cols-[1.2fr_1fr_1fr]">
+    <section className={sectionClass}>
+      <div className={gridClass}>
         <div>
-          <h2 className="font-semibold text-foreground">Fonte dati</h2>
+          <h2 className={titleClass}>Fonte dati</h2>
           <ul className="mt-1 space-y-1">
             <li>
               {metadata.sourcePages?.geometries ? (
                 <a
-                  className="text-primary underline-offset-4 hover:underline"
+                  className={linkClass}
                   href={metadata.sourcePages.geometries}
                   rel="noreferrer"
                   target="_blank"
@@ -1152,7 +1590,7 @@ function SourceReference({
             <li>
               {metadata.sourcePages?.variables ? (
                 <a
-                  className="text-primary underline-offset-4 hover:underline"
+                  className={linkClass}
                   href={metadata.sourcePages.variables}
                   rel="noreferrer"
                   target="_blank"
@@ -1171,21 +1609,21 @@ function SourceReference({
           ) : null}
         </div>
         <div>
-          <h2 className="font-semibold text-foreground">Come leggere</h2>
+          <h2 className={titleClass}>Come leggere</h2>
           <p className="mt-1">
             Il colore evidenzia l'indicatore scelto. "Dato non disponibile" non
             significa zero.
           </p>
         </div>
         <div>
-          <h2 className="font-semibold text-foreground">Cosa non mostra</h2>
+          <h2 className={titleClass}>Cosa non mostra</h2>
           <p className="mt-1">
             La mappa non assegna punteggi, classifiche o giudizi alle aree.
           </p>
         </div>
       </div>
       <details className="mt-3 text-xs leading-5">
-        <summary className="cursor-pointer font-medium text-foreground">
+        <summary className={`cursor-pointer font-medium ${isDark ? "text-background" : "text-foreground"}`}>
           Dettagli tecnici
         </summary>
         <p className="mt-2">
