@@ -12,8 +12,8 @@ import {
 } from "./schema";
 import {
   currentInstitutionalOfficialPosition,
-  currentInstitutionalMembershipsForOfficial,
   ensureInstitutionalOfficials,
+  institutionalMembershipsForOfficial,
 } from "./institutional-officials";
 
 export const ORGANO_TYPES = ["consiglio", "giunta", "commissione"] as const;
@@ -124,20 +124,20 @@ function membershipsForOfficial(
   }[] = [];
   const startDate = official.appointmentDate ?? null;
   const endDate = null;
-  const currentSourceMemberships = currentInstitutionalMembershipsForOfficial(
+  const sourceMemberships = institutionalMembershipsForOfficial(
     official.slug,
   );
 
-  if (currentSourceMemberships.length) {
-    for (const m of currentSourceMemberships) {
+  if (sourceMemberships.length) {
+    for (const m of sourceMemberships) {
       const organo = bySlug.get(m.organoSlug);
       if (!organo) continue;
       out.push({
         organoId: organo.id,
         membershipRole: m.membershipRole,
         termLabel: m.termLabel,
-        startDate,
-        endDate,
+        startDate: m.startDate ? new Date(m.startDate) : startDate,
+        endDate: m.endDate ? new Date(m.endDate) : endDate,
         sourceLabel: m.sourceLabel,
         sourceUrl: m.sourceUrl,
         notes: m.notes,

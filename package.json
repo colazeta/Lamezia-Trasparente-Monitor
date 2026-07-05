@@ -16,6 +16,7 @@
     "hook:source-metadata": "node scripts/hooks/source-metadata-check.mjs",
     "hook:zero-cost": "node scripts/hooks/zero-cost-policy-check.mjs",
     "organi:qa": "pnpm --filter @workspace/scripts run check:organi",
+    "organi:qa:history": "pnpm --filter @workspace/scripts run check:organi:history",
     "organi:qa:live": "pnpm --filter @workspace/scripts run check:organi:live",
     "trame:discover": "node scripts/legalita/trame/discover_trame_program.mjs && node scripts/legalita/trame/discover_trame_videos.mjs",
     "trame:transcripts:probe": "node scripts/legalita/trame/fetch_trame_transcripts.mjs",

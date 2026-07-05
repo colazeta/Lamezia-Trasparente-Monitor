@@ -12,8 +12,12 @@ import {
   CURRENT_GIUNTA_SOURCE,
   CURRENT_INSTITUTIONAL_OFFICIALS,
   CURRENT_INSTITUTIONAL_MEMBERSHIPS,
+  ELIGENDO_2019_LAMEZIA_SOURCE,
+  HISTORICAL_2019_INSTITUTIONAL_MEMBERSHIPS,
+  HISTORICAL_INSTITUTIONAL_OFFICIALS,
   INSTITUTIONAL_POLITICI_SOURCE,
   currentInstitutionalMembershipsForOfficial,
+  institutionalMembershipsForOfficial,
   organiTable,
   organiMembersTable,
   officialsTable,
@@ -118,6 +122,70 @@ describe("organi historical memberships", () => {
       membershipRole: "Presidente del Consiglio",
       sourceUrl: CURRENT_COUNCIL_SOURCE.url,
     });
+  });
+
+  it("adds a source-limited historical 2019 administration nucleus", () => {
+    expect(ELIGENDO_2019_LAMEZIA_SOURCE.url).toContain(
+      "dtel=10%2F11%2F2019",
+    );
+    expect(HISTORICAL_INSTITUTIONAL_OFFICIALS).toHaveLength(4);
+    expect(
+      HISTORICAL_INSTITUTIONAL_OFFICIALS.every(
+        (official) => official.status === "cessato",
+      ),
+    ).toBe(true);
+    expect(HISTORICAL_INSTITUTIONAL_OFFICIALS).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          name: "Paolo Mascaro",
+          role: "sindaco",
+          roleTitle: "Sindaco eletto nel 2019",
+          profileUrl: null,
+        }),
+        expect.objectContaining({
+          name: "Ruggero Pegna",
+          role: "consigliere",
+        }),
+        expect.objectContaining({
+          name: "Eugenio Guarascio",
+          slug: "eugenio-guarascio-2019",
+        }),
+        expect.objectContaining({
+          name: "Rosario Piccioni",
+          roleTitle: "Candidato sindaco eletto consigliere comunale",
+        }),
+      ]),
+    );
+    expect(HISTORICAL_2019_INSTITUTIONAL_MEMBERSHIPS).toHaveLength(5);
+    expect(
+      HISTORICAL_2019_INSTITUTIONAL_MEMBERSHIPS.filter(
+        (membership) => membership.organoSlug === "consiglio-comunale",
+      ),
+    ).toHaveLength(4);
+    expect(
+      HISTORICAL_2019_INSTITUTIONAL_MEMBERSHIPS.filter(
+        (membership) => membership.organoSlug === "giunta-comunale",
+      ),
+    ).toHaveLength(1);
+    expect(
+      HISTORICAL_2019_INSTITUTIONAL_MEMBERSHIPS.every((membership) =>
+        /copertura parziale/i.test(membership.notes),
+      ),
+    ).toBe(true);
+    expect(institutionalMembershipsForOfficial("paolo-mascaro")).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          organoSlug: "consiglio-comunale",
+          membershipRole: "Sindaco",
+          sourceUrl: ELIGENDO_2019_LAMEZIA_SOURCE.url,
+        }),
+        expect.objectContaining({
+          organoSlug: "giunta-comunale",
+          membershipRole: "Sindaco (Presidente)",
+          sourceUrl: ELIGENDO_2019_LAMEZIA_SOURCE.url,
+        }),
+      ]),
+    );
   });
 
   it("separates current composition from historical terms", async () => {

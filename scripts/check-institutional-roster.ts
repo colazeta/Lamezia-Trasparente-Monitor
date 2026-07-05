@@ -170,10 +170,19 @@ function parseOrganoMembers(html: string): RemoteOrganoMember[] {
 
 const expectedByProfileUrl = new Map(
   CURRENT_INSTITUTIONAL_OFFICIALS.map((official) => [
-    normalizeUrl(official.profileUrl),
+    normalizeUrl(requiredProfileUrl(official)),
     official,
   ]),
 );
+
+function requiredProfileUrl(
+  official: (typeof CURRENT_INSTITUTIONAL_OFFICIALS)[number],
+): string {
+  if (!official.profileUrl) {
+    throw new Error(`Current official ${official.slug} has no profile URL.`);
+  }
+  return official.profileUrl;
+}
 
 function expectedSlugForProfileUrl(profileUrl: string): string | null {
   return expectedByProfileUrl.get(normalizeUrl(profileUrl))?.slug ?? null;
@@ -230,7 +239,7 @@ async function checkPolitici(failures: string[]): Promise<void> {
   );
 
   const { missing, extra } = diffSets(
-    expected.map((official) => normalizeUrl(official.profileUrl)),
+    expected.map((official) => normalizeUrl(requiredProfileUrl(official))),
     remote.map((official) => normalizeUrl(official.profileUrl)),
   );
   if (missing.length || extra.length) {
@@ -245,7 +254,7 @@ async function checkPolitici(failures: string[]): Promise<void> {
 
   for (const expectedOfficial of expected) {
     const remoteOfficial = remoteByProfileUrl.get(
-      normalizeUrl(expectedOfficial.profileUrl),
+      normalizeUrl(requiredProfileUrl(expectedOfficial)),
     );
     if (!remoteOfficial) continue;
     if (

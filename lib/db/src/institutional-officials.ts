@@ -2,30 +2,44 @@ import { sql } from "drizzle-orm";
 import { db } from "./client";
 import { officialsTable } from "./schema";
 import {
-  CURRENT_INSTITUTIONAL_OFFICIALS,
-  INSTITUTIONAL_POLITICI_SOURCE,
+  INSTITUTIONAL_OFFICIALS,
   type InstitutionalOfficialSeed,
 } from "./institutional-officials-data";
 
 export * from "./institutional-officials-data";
 
 function profileNote(official: InstitutionalOfficialSeed): string {
-  return [
+  const lines = [
     `Anagrafica minima: ${official.name}, ${official.roleTitle}.`,
-    `Scheda personale istituzionale: ${official.profileUrl}.`,
+  ];
+  if (official.profileUrl) {
+    lines.push(`Scheda personale istituzionale: ${official.profileUrl}.`);
+  } else {
+    lines.push(
+      [
+        "Scheda personale istituzionale non disponibile nel registro",
+        "corrente; anagrafica collegata alla fonte storica indicata.",
+      ].join(" "),
+    );
+  }
+  lines.push(
     [
-      `Fonte registro: ${INSTITUTIONAL_POLITICI_SOURCE.label},`,
-      `consultata il ${INSTITUTIONAL_POLITICI_SOURCE.checkedAt}.`,
+      `Fonte registro: ${official.source.label},`,
+      `consultata il ${official.source.checkedAt}.`,
     ].join(" "),
+  );
+  if (official.biographyNote) lines.push(official.biographyNote);
+  lines.push(
     [
       "Deleghe, gruppi consiliari, compensi e dichiarazioni restano da",
       "collegare a fonti pubbliche specifiche.",
     ].join(" "),
-  ].join("\n");
+  );
+  return lines.join("\n");
 }
 
 export async function ensureInstitutionalOfficials(): Promise<void> {
-  for (const official of CURRENT_INSTITUTIONAL_OFFICIALS) {
+  for (const official of INSTITUTIONAL_OFFICIALS) {
     const biography = profileNote(official);
     await db
       .insert(officialsTable)
@@ -35,8 +49,10 @@ export async function ensureInstitutionalOfficials(): Promise<void> {
         role: official.role,
         roleTitle: official.roleTitle,
         group: null,
-        status: "in_carica",
-        appointmentDate: null,
+        status: official.status,
+        appointmentDate: official.appointmentDate
+          ? new Date(official.appointmentDate)
+          : null,
         biography,
       })
       .onConflictDoUpdate({
@@ -45,7 +61,10 @@ export async function ensureInstitutionalOfficials(): Promise<void> {
           name: official.name,
           role: official.role,
           roleTitle: official.roleTitle,
-          status: "in_carica",
+          status: official.status,
+          appointmentDate: official.appointmentDate
+            ? new Date(official.appointmentDate)
+            : null,
           biography: sql`case
             when ${officialsTable.biography} is null
               or ${officialsTable.biography} like 'Anagrafica minima:%'
