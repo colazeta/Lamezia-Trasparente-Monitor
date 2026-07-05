@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
   AlertTriangle,
   CheckCircle2,
@@ -23,6 +24,8 @@ import {
   buildContractPipelineSnapshot,
   type ContractPipelineStageState,
 } from "@/lib/contractsPipelineVisualization";
+
+type DossierStatusFilter = "all" | ContractDossier["lifecycleCompleteness"];
 
 const STATE_META: Record<
   ContractPipelineStageState,
@@ -74,6 +77,16 @@ const DOSSIER_STATUS_META: Record<
   },
 };
 
+const DOSSIER_STATUS_FILTERS: ReadonlyArray<{
+  value: DossierStatusFilter;
+  label: string;
+}> = [
+  { value: "all", label: "Tutti" },
+  { value: "needs-review", label: DOSSIER_STATUS_META["needs-review"].label },
+  { value: "partial", label: DOSSIER_STATUS_META.partial.label },
+  { value: "complete", label: DOSSIER_STATUS_META.complete.label },
+];
+
 const DOSSIER_STATUS_WEIGHT: Record<
   ContractDossier["lifecycleCompleteness"],
   number
@@ -84,6 +97,8 @@ const DOSSIER_STATUS_WEIGHT: Record<
 };
 
 export function ContractSourcePipelinePanel() {
+  const [statusFilter, setStatusFilter] =
+    useState<DossierStatusFilter>("all");
   const snapshot = buildContractPipelineSnapshot();
   const { data, isLoading } = useListContracts({});
   const contracts = asApiList<Contract>(data);
@@ -94,7 +109,16 @@ export function ContractSourcePipelinePanel() {
   const priorityDossiers = sortedDossiers
     .filter((dossier) => dossier.lifecycleCompleteness !== "complete")
     .slice(0, 3);
-  const completeDossiers = sortedDossiers;
+  const listedDossiers =
+    statusFilter === "all"
+      ? sortedDossiers
+      : sortedDossiers.filter(
+          (dossier) => dossier.lifecycleCompleteness === statusFilter,
+        );
+  const selectedStatusLabel =
+    statusFilter === "all"
+      ? "tutti gli stati"
+      : DOSSIER_STATUS_META[statusFilter].label.toLowerCase();
 
   return (
     <section className="mb-10 rounded-2xl border border-card-border bg-card p-5 shadow-sm md:p-6">
@@ -265,6 +289,57 @@ export function ContractSourcePipelinePanel() {
           </p>
         </div>
 
+        <div className="mb-4 rounded-xl border border-border bg-muted/20 p-3">
+          <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
+            <div className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+              Stato fascicoli
+            </div>
+            <Badge variant="outline" className="shadow-none">
+              {isLoading
+                ? "..."
+                : `${listedDossiers.length}/${sortedDossiers.length} ${selectedStatusLabel}`}
+            </Badge>
+          </div>
+          <div
+            role="group"
+            aria-label="Filtra fascicoli contrattuali per stato"
+            className="grid gap-2 sm:grid-cols-4"
+          >
+            {DOSSIER_STATUS_FILTERS.map((filter) => {
+              const active = statusFilter === filter.value;
+              const count =
+                filter.value === "all"
+                  ? sortedDossiers.length
+                  : statusCounts[filter.value];
+
+              return (
+                <button
+                  key={filter.value}
+                  type="button"
+                  aria-pressed={active}
+                  onClick={() => setStatusFilter(filter.value)}
+                  className={`flex min-h-12 items-center justify-between gap-2 rounded-lg border px-3 py-2 text-left text-sm font-semibold transition-colors ${
+                    active
+                      ? "border-primary bg-primary text-primary-foreground"
+                      : "border-border bg-background text-foreground hover:bg-muted"
+                  }`}
+                >
+                  <span>{filter.label}</span>
+                  <span
+                    className={`rounded-full px-2 py-0.5 text-[10px] tabular-nums ${
+                      active
+                        ? "bg-primary-foreground/20 text-primary-foreground"
+                        : "bg-muted text-muted-foreground"
+                    }`}
+                  >
+                    {isLoading ? "..." : count}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
         {isLoading ? (
           <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
             {Array.from({ length: 6 }).map((_, index) => (
@@ -274,15 +349,17 @@ export function ContractSourcePipelinePanel() {
               />
             ))}
           </div>
-        ) : completeDossiers.length > 0 ? (
+        ) : listedDossiers.length > 0 ? (
           <ul className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
-            {completeDossiers.map((dossier) => (
+            {listedDossiers.map((dossier) => (
               <ContractDossierCard key={dossier.contractId} dossier={dossier} />
             ))}
           </ul>
         ) : (
           <div className="rounded-xl border border-dashed border-border px-4 py-6 text-sm text-muted-foreground">
-            Nessun fascicolo contrattuale disponibile nei dati attuali.
+            {statusFilter === "all"
+              ? "Nessun fascicolo contrattuale disponibile nei dati attuali."
+              : `Nessun fascicolo con stato ${selectedStatusLabel} nei dati attuali.`}
           </div>
         )}
       </div>
