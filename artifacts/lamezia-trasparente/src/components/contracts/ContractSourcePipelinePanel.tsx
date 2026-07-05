@@ -26,6 +26,7 @@ import {
 } from "@/lib/contractsPipelineVisualization";
 
 type DossierStatusFilter = "all" | ContractDossier["lifecycleCompleteness"];
+type DossierPhase = ContractDossier["phases"][number];
 
 const STATE_META: Record<
   ContractPipelineStageState,
@@ -94,6 +95,34 @@ const DOSSIER_STATUS_WEIGHT: Record<
   "needs-review": 0,
   partial: 1,
   complete: 2,
+};
+
+const PHASE_STATUS_META: Record<
+  DossierPhase["status"],
+  { label: string; className: string }
+> = {
+  documented: {
+    label: "documentata",
+    className: "bg-emerald-500",
+  },
+  partial: {
+    label: "parziale",
+    className: "bg-sky-500",
+  },
+  missing: {
+    label: "mancante",
+    className: "bg-amber-400",
+  },
+};
+
+const PHASE_SHORT_LABELS: Record<DossierPhase["key"], string> = {
+  programmazione: "Prog",
+  progettazione: "Proj",
+  gara_pubblicazione: "Pub",
+  svolgimento_gara: "Gara",
+  affidamento: "Aff",
+  esecuzione: "Esec",
+  valutazione: "Val",
 };
 
 export function ContractSourcePipelinePanel() {
@@ -508,6 +537,13 @@ function ContractDossierCard({ dossier }: { dossier: ContractDossier }) {
         />
       </dl>
 
+      <div className="mt-4">
+        <div className="mb-2 text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
+          Flusso fasi
+        </div>
+        <DossierPhaseStrip dossier={dossier} />
+      </div>
+
       <div className="mt-3 flex flex-wrap gap-1.5">
         {cig?.value ? (
           <Badge variant="outline" className="font-mono text-[10px] shadow-none">
@@ -543,6 +579,37 @@ function ContractDossierCard({ dossier }: { dossier: ContractDossier }) {
         <ChevronRight className="h-3.5 w-3.5" />
       </Link>
     </li>
+  );
+}
+
+function DossierPhaseStrip({ dossier }: { dossier: ContractDossier }) {
+  return (
+    <ol
+      aria-label={`Stato fasi del fascicolo ${dossier.title}`}
+      className="grid grid-cols-7 gap-1"
+    >
+      {dossier.phases.map((phase) => {
+        const meta = PHASE_STATUS_META[phase.status];
+
+        return (
+          <li key={phase.key} className="min-w-0">
+            <span
+              className={`block h-2 rounded-full ${meta.className}`}
+              title={`${phase.label}: ${meta.label}`}
+            />
+            <span
+              aria-hidden="true"
+              className="mt-1 block truncate text-center text-[9px] font-medium text-muted-foreground"
+            >
+              {PHASE_SHORT_LABELS[phase.key]}
+            </span>
+            <span className="sr-only">
+              {phase.label}: {meta.label}
+            </span>
+          </li>
+        );
+      })}
+    </ol>
   );
 }
 
