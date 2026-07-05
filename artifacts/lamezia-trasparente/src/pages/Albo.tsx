@@ -125,15 +125,28 @@ function AlboPublicItemCard({ item }: { item: AlboPublicRunItem }) {
           )}
         </div>
 
-        <a
-          href={item.source_url}
-          target="_blank"
-          rel="noreferrer"
-          className="inline-flex w-full items-center justify-center gap-1 rounded-md border border-border px-2.5 py-1.5 text-xs font-semibold text-foreground transition-colors hover:border-brand/40 hover:text-brand sm:w-auto sm:shrink-0"
-        >
-          Verifica fonte
-          <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
-        </a>
+        <div className="flex w-full flex-wrap gap-2 sm:w-auto sm:shrink-0">
+          {archivedDocument && (
+            <a
+              href={archivedDocument.platform_path}
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex flex-1 items-center justify-center gap-1 rounded-md border border-sky-200 bg-sky-50 px-2.5 py-1.5 text-xs font-semibold text-sky-800 transition-colors hover:border-sky-300 hover:bg-sky-100 sm:flex-none"
+            >
+              Apri PDF interno
+              <FileArchive className="h-3.5 w-3.5" aria-hidden="true" />
+            </a>
+          )}
+          <a
+            href={item.source_url}
+            target="_blank"
+            rel="noreferrer"
+            className="inline-flex flex-1 items-center justify-center gap-1 rounded-md border border-border px-2.5 py-1.5 text-xs font-semibold text-foreground transition-colors hover:border-brand/40 hover:text-brand sm:flex-none"
+          >
+            Verifica fonte
+            <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
+          </a>
+        </div>
       </div>
     </Card>
   );

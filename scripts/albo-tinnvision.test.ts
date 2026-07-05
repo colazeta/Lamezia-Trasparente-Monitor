@@ -550,6 +550,117 @@ test("archives only official low-risk publishable PDFs into public documents sto
   assert.match(manifest, /"no_pdf_parsing": true/);
   assert.match(manifest, /"paid_storage": false/);
   assert.doesNotMatch(manifest, /Affidamento servizio verde pubblico/i);
+
+  const reused = await runAlboIngestion({
+    outDir,
+    fromFile: fixturePath,
+    inputFormat: "xml",
+    retrievedAt: "2026-06-19T11:00:00.000Z",
+    pdfFetch: async (url) => {
+      fetchCalls.push(`unexpected:${String(url)}`);
+      throw new Error("archived PDF should be reused");
+    },
+  });
+
+  assert.equal(reused.documentsManifest.counts.archived, 1);
+  assert.equal(reused.documentsManifest.documents[0].sha256, expectedSha);
+  assert.deepEqual(fetchCalls, [documentUrl]);
+});
+
+test("discovers official Tinnvision PDF attachments only for low-risk publishable records", async () => {
+  const tmp = await mkdtemp(path.join(tmpdir(), "albo-tinnvision-detail-pdf-"));
+  const fixturePath = path.join(tmp, "albo.xml");
+  const outDir = path.join(tmp, "data");
+  const pdfBytes = new TextEncoder().encode("%PDF-1.7\npublic detail pdf\n");
+  const expectedDocumentUrl =
+    "https://albo.tinnvision.cloud/allegati/2026_1001_3_ALLEG?ente=00301390795";
+  const detailCalls: string[] = [];
+  const pdfCalls: string[] = [];
+
+  await writeFile(
+    fixturePath,
+    [
+      xmlRecord(
+        "2026/1001",
+        "DETERMINAZIONE DIRIGENZIALE",
+        "SETTORE TECNICO",
+        "Affidamento servizio manutenzione verde pubblico CIG ABC1234567",
+        "966",
+      ),
+      xmlRecord(
+        "2026/1002",
+        "PUBBLICAZIONE DI MATRIMONIO",
+        "SERVIZI DEMOGRAFICI",
+        "PUBBLICAZIONE DI MATRIMONIO DEI SIG.RI ROSSI MARIO E BIANCHI LUCIA",
+        "",
+      ),
+    ].join("\n"),
+    "utf8",
+  );
+
+  const result = await runAlboIngestion({
+    outDir,
+    fromFile: fixturePath,
+    inputFormat: "xml",
+    retrievedAt: FIXTURE_RETRIEVED_AT,
+    documentDiscovery: true,
+    detailFetch: async (url) => {
+      detailCalls.push(String(url));
+      return new Response(
+        JSON.stringify({
+          pubblicazioneAlbo: { ANNO: 2026, PROGRESSIVO: 1001 },
+          allegati: {
+            totalItems: 3,
+            items: [
+              {
+                DESCALLEGATO: "Nota di Pubblicazione",
+                NOMEALLEGATO: "copia_NotaPubblicazione_n_1001.pdf",
+                PROGRESSIVO: 7,
+                tipoAllegato: "ALLEG",
+              },
+              {
+                DESCALLEGATO: "Atto Esecutivo",
+                NOMEALLEGATO: "AttoEsecutivo_n_1001.pdf.p7m",
+                PROGRESSIVO: 4,
+                tipoAllegato: "ALLEG",
+              },
+              {
+                DESCALLEGATO: "Versione non Firmata - Atto Esecutivo",
+                NOMEALLEGATO: "copia_AttoEsecutivo_n_1001.pdf",
+                PROGRESSIVO: 3,
+                tipoAllegato: "ALLEG",
+              },
+            ],
+          },
+        }),
+        { status: 200, headers: { "content-type": "application/json" } },
+      );
+    },
+    pdfFetch: async (url) => {
+      pdfCalls.push(String(url));
+      return new Response(pdfBytes, {
+        status: 200,
+        headers: {
+          "content-type": "application/pdf",
+          "content-length": String(pdfBytes.byteLength),
+        },
+      });
+    },
+  });
+
+  assert.deepEqual(detailCalls, [
+    "https://albo.tinnvision.cloud/api/pubblicazioni/2026-1001?ente=00301390795",
+  ]);
+  assert.deepEqual(pdfCalls, [expectedDocumentUrl]);
+  assert.equal(result.items[0].document_url, expectedDocumentUrl);
+  assert.equal(result.publicLatest.items[0].document_url, expectedDocumentUrl);
+  assert.equal(result.publicLatest.items[1].document_url, null);
+  assert.equal(result.documentsManifest.counts.archived, 1);
+  assert.equal(result.documentsManifest.documents[0].document_url, expectedDocumentUrl);
+  assert.match(
+    result.snapshot.known_limits.join("\n"),
+    /dettaglio ufficiale Tinnvision solo per record pubblicabili a basso rischio/,
+  );
 });
 
 test("excludes metadata-only and high-risk records from PDF archiving without exposing document URLs", async () => {

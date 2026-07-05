@@ -190,7 +190,8 @@ workbench as an explicit `manual_coordinate_override`.
 `scripts/build_anncsu_coordinate_recovery_layer.py` then materializes the
 separate recovery layer. Without decisions it keeps source coordinates as the
 effective coordinates and classifies suspect records as requiring review. With
-an exported workbench decisions file, it applies only accepted
+an exported workbench decisions file, it first enforces the coordinate-decision
+audit gate and refuses P0/P1 findings. Only then does it apply accepted
 `manual_coordinate_override` records to `effective_lon` and `effective_lat` and
 writes:
 
@@ -206,6 +207,10 @@ P0/P1 findings. It writes:
 
 - `data/interim/qa/anncsu_coordinate_decisions_audit_report_2025.md`
 - `data/interim/qa/anncsu_coordinate_decisions_audit_findings_2025.csv`
+
+The separate audit command remains the reviewer-facing report, while the
+recovery-layer script repeats the P0/P1 gate internally so invalid exported
+decisions cannot silently become effective coordinates or training rows.
 
 Because public geocoders can miss local contrade and may return only
 street-level results, `scripts/generate_anncsu_local_anchor_coordinate_candidates.py`
@@ -223,6 +228,15 @@ an initial high-signal batch:
 - `data/interim/qa/anncsu_coordinate_review_priority_queue_2025.csv`
 - `data/interim/qa/anncsu_coordinate_review_batch_1_2025.csv`
 - `data/interim/qa/anncsu_coordinate_review_batch_1_report_2025.md`
+
+`scripts/prepare_anncsu_coordinate_review_pack.py` joins the coordinate
+diagnostic, local ANNCSU anchor candidate, and external geocoder candidate for
+each suspect `access_id`. It does not apply coordinates; it gives the reviewer a
+single decision table with evidence agreement, recommended review track, and a
+candidate coordinate to inspect in the local workbench:
+
+- `data/interim/qa/anncsu_coordinate_review_pack_2025.csv`
+- `data/interim/qa/anncsu_coordinate_review_pack_report_2025.md`
 
 The retraining path is therefore review-first:
 

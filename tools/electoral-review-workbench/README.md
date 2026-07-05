@@ -63,20 +63,27 @@ python scripts/geocode_anncsu_coordinate_candidates.py --execute --limit 10 --us
 
 Use the first command for a request plan. Use `--execute` only for small,
 cached, rate-limited QA batches, or with a dedicated provider/internal geocoder
-that allows bulk use.
+that allows bulk use. The command writes both
+`data/interim/qa/anncsu_coordinate_geocode_candidates_2025.csv` and the
+workbench payload
+`tools/electoral-review-workbench/public/data/coordinate_geocode_candidates_by_access.json`.
 
 Generate local ANNCSU anchor candidates for suspect coordinates:
 
 ```powershell
 python scripts/generate_anncsu_local_anchor_coordinate_candidates.py
 python scripts/prepare_anncsu_coordinate_review_batch.py
+python scripts/prepare_anncsu_coordinate_review_pack.py
 ```
 
 These candidates use non-suspect same-street ANNCSU civics as review anchors.
 They are not applied automatically and must still be confirmed through a
 `manual_coordinate_override` decision. The review-batch script turns the
 candidate list into a full priority queue plus a first batch of 50 high-signal
-cases for manual workbench review.
+cases for manual workbench review. The review-pack script joins the suspect
+diagnostic, local anchor, and external geocoder evidence into one CSV so a
+reviewer can open each `access_id` in the workbench with a recommended review
+track.
 
 Build the auditable recovery layer and training set:
 
@@ -91,10 +98,11 @@ Run the audit before applying any reviewed coordinate decision. P0/P1 findings
 mean the decision export is not ready to become an effective coordinate or a
 training-set row. The no-argument recovery command creates a no-overwrite
 recovery layer. The `--decisions` command uses exported workbench decisions and
-applies only accepted `manual_coordinate_override` records to
-`effective_lon`/`effective_lat`. The recovery-layer quality audit reruns the
-coordinate diagnostics with only accepted reviewed replacements applied, so the
-result can be used as retraining evidence without rewriting ANNCSU raw data.
+enforces the same P0/P1 audit gate before applying accepted
+`manual_coordinate_override` records to `effective_lon`/`effective_lat`. The
+recovery-layer quality audit reruns the coordinate diagnostics with only
+accepted reviewed replacements applied, so the result can be used as retraining
+evidence without rewriting ANNCSU raw data.
 
 ## Why Civic-first
 
