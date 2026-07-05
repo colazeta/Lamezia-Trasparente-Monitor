@@ -27,34 +27,56 @@ describe("OpenData climate territory card", () => {
     } as ReturnType<typeof useListOpendataDatasets>);
   });
 
-  it("renders the data type library before the secondary climate chart", () => {
+  it("renders the thematic data library before datasets and secondary climate chart", () => {
     render(<Opendata />);
 
     expect(
       screen.getByRole("heading", { level: 1, name: "Opendata" }),
     ).toBeInTheDocument();
     const libraryHeading = screen.getByRole("heading", {
-      name: "Tipi di dati disponibili",
+      name: "Categorie tematiche dei dati",
     });
     expect(libraryHeading).toBeInTheDocument();
+    expect(screen.getAllByText("Clima e territorio").length).toBeGreaterThan(
+      0,
+    );
+    expect(screen.getByText("Contratti e spesa pubblica")).toBeInTheDocument();
+    expect(screen.getByText("Amministrazione e atti")).toBeInTheDocument();
     expect(
-      screen.getAllByText("Serie temporali giornaliere").length,
-    ).toBeGreaterThan(0);
-    expect(screen.getByText("Dataset tabellari")).toBeInTheDocument();
-    expect(screen.getByText("Layer territoriali")).toBeInTheDocument();
-    expect(
-      screen.getByText("Indicatori civici aggregati"),
+      screen.getByText("Patrimonio e beni confiscati"),
     ).toBeInTheDocument();
     expect(
-      screen.getByRole("button", { name: /Serie temporali giornaliere/i }),
+      screen.getByText("Partecipazione e accesso civico"),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: /Clima e territorio/i }),
     ).toHaveAttribute("aria-pressed", "true");
 
-    const climateHeading = screen.getByRole("heading", {
+    const datasetHeading = screen.getByRole("heading", {
+      name: "Dataset pubblicati nel tema",
+    });
+    expect(datasetHeading).toBeInTheDocument();
+    expect(
+      screen.getAllByText(/Anomalie climatiche.*Lamezia Terme/).length,
+    ).toBeGreaterThan(0);
+    expect(screen.getByText("Serie temporale giornaliera")).toBeInTheDocument();
+    expect(
+      screen.getByRole("link", { name: /Vai alla visualizzazione/i }),
+    ).toHaveAttribute("href", "#clima-territorio");
+
+    const climateHeadings = screen.getAllByRole("heading", {
       name: /Anomalie climatiche.*Lamezia Terme/,
     });
+    const climateHeading = climateHeadings[climateHeadings.length - 1];
     expect(
       Boolean(
         libraryHeading.compareDocumentPosition(climateHeading) &
+          Node.DOCUMENT_POSITION_FOLLOWING,
+      ),
+    ).toBe(true);
+    expect(
+      Boolean(
+        datasetHeading.compareDocumentPosition(climateHeading) &
           Node.DOCUMENT_POSITION_FOLLOWING,
       ),
     ).toBe(true);
@@ -104,10 +126,17 @@ describe("OpenData climate territory card", () => {
       section.getByText("Fonte, metodo e limiti del dato"),
     ).toBeInTheDocument();
 
-    fireEvent.click(screen.getByRole("button", { name: /Dataset tabellari/i }));
+    fireEvent.click(
+      screen.getByRole("button", { name: /Contratti e spesa pubblica/i }),
+    );
     expect(
       screen.getByRole("heading", {
-        name: "Visualizzazione non ancora pubblicata",
+        name: "Nessun dataset pubblicato in questa categoria tematica",
+      }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", {
+        name: "Nessuna visualizzazione pubblicata per questo tema",
       }),
     ).toBeInTheDocument();
     expect(
@@ -137,10 +166,10 @@ describe("OpenData climate territory card", () => {
     render(<Opendata />);
 
     expect(
-      screen.getByRole("heading", {
+      screen.getAllByRole("heading", {
         name: /Anomalie climatiche.*Lamezia Terme/,
-      }),
-    ).toBeInTheDocument();
+      }).length,
+    ).toBeGreaterThan(0);
     expect(
       screen.getByRole("img", {
         name: /Grafico delle anomalie climatiche giornaliere/i,

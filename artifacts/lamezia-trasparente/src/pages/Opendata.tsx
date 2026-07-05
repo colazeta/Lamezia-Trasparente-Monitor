@@ -28,11 +28,13 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ClimateTerritoryDatasetCard } from "@/components/opendata/ClimateTerritoryDatasetCard";
 import { OpenDataDashboard } from "@/components/opendata/OpenDataDashboard";
-import { OpenDataTypeLibrary } from "@/components/opendata/OpenDataTypeLibrary";
+import { OpenDataThemeLibrary } from "@/components/opendata/OpenDataThemeLibrary";
 import {
-  OPEN_DATA_TYPE_LIBRARY,
-  type OpenDataTypeDefinition,
-} from "@/data/opendataDataTypes";
+  DEFAULT_OPEN_DATA_THEME_ID,
+  OPEN_DATA_THEME_LIBRARY,
+  type OpenDataThemeCategory,
+  type OpenDataThemeDataset,
+} from "@/data/opendataThemeCategories";
 import {
   Select,
   SelectContent,
@@ -52,7 +54,6 @@ import { formatPublicTimeField } from "@/lib/time";
 const PORTAL_URL = "https://opendata.comune.lamezia-terme.cz.it";
 
 const LAST_VISIT_KEY = "opendata:lastVisit";
-const DEFAULT_DATA_TYPE_ID = "daily-time-series";
 
 function readLastVisit(): number | null {
   try {
@@ -66,8 +67,8 @@ function readLastVisit(): number | null {
 }
 
 export function Opendata() {
-  const [selectedDataTypeId, setSelectedDataTypeId] = useState(
-    DEFAULT_DATA_TYPE_ID,
+  const [selectedThemeId, setSelectedThemeId] = useState(
+    DEFAULT_OPEN_DATA_THEME_ID,
   );
   const [search, setSearch] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
@@ -133,9 +134,9 @@ export function Opendata() {
     setCategory("all");
   };
 
-  const selectedDataType =
-    OPEN_DATA_TYPE_LIBRARY.find((type) => type.id === selectedDataTypeId) ??
-    OPEN_DATA_TYPE_LIBRARY[0];
+  const selectedTheme =
+    OPEN_DATA_THEME_LIBRARY.find((theme) => theme.id === selectedThemeId) ??
+    OPEN_DATA_THEME_LIBRARY[0];
 
   return (
     <div className="container mx-auto px-4 py-8 md:py-12 max-w-6xl">
@@ -149,40 +150,53 @@ export function Opendata() {
           Opendata
         </h1>
         <p className="mt-3 text-muted-foreground text-lg max-w-3xl">
-          Categorie dati, modelli riusabili e visualizzazioni pubblicate per
-          leggere le serie prima del riuso.
+          Scegli un tema civico, consulta i dataset disponibili e apri grafici
+          o download solo come passaggio successivo.
         </p>
       </div>
 
-      <OpenDataTypeLibrary
-        onSelectType={setSelectedDataTypeId}
-        selectedTypeId={selectedDataType.id}
+      <OpenDataThemeLibrary
+        onSelectTheme={setSelectedThemeId}
+        selectedThemeId={selectedTheme.id}
       />
 
       <section
-        aria-labelledby="opendata-selected-type-title"
+        aria-labelledby="opendata-selected-theme-title"
         className="mb-8"
       >
         <div className="mb-4">
           <span className="eyebrow text-primary">
             <Layers className="h-3.5 w-3.5" />
-            Categoria selezionata
+            Categoria tematica selezionata
           </span>
           <h2
             className="mt-2 text-2xl font-display font-bold text-foreground"
-            id="opendata-selected-type-title"
+            id="opendata-selected-theme-title"
           >
-            {selectedDataType.label}
+            {selectedTheme.label}
           </h2>
           <p className="mt-2 max-w-3xl text-sm leading-6 text-muted-foreground">
-            {selectedDataType.description}
+            {selectedTheme.description}
           </p>
         </div>
 
-        {selectedDataType.id === "daily-time-series" ? (
-          <ClimateTerritoryDatasetCard />
+        <ThemeDatasetShelf theme={selectedTheme} />
+
+        {selectedTheme.id === DEFAULT_OPEN_DATA_THEME_ID ? (
+          <div className="mt-6">
+            <div className="mb-4">
+              <span className="eyebrow text-primary">
+                <FileSpreadsheet className="h-3.5 w-3.5" />
+                Visualizzazione secondaria
+              </span>
+              <h3 className="mt-2 text-xl font-display font-bold text-foreground">
+                Grafico e scheda del dataset selezionato
+              </h3>
+            </div>
+            <ClimateTerritoryDatasetCard />
+          </div>
         ) : (
-          <DataTypeModelPanel type={selectedDataType} />
+          <ThemePreparationPanel theme={selectedTheme} />
         )}
       </section>
 
@@ -386,38 +400,141 @@ export function Opendata() {
   );
 }
 
-function DataTypeModelPanel({ type }: { type: OpenDataTypeDefinition }) {
+function ThemeDatasetShelf({ theme }: { theme: OpenDataThemeCategory }) {
+  if (theme.datasets.length === 0) {
+    return (
+      <div className="rounded-xl border border-dashed border-border bg-muted/20 p-5">
+        <Badge variant="outline" className="shadow-none">
+          Dataset in preparazione
+        </Badge>
+        <h3 className="mt-3 font-display text-lg font-bold text-foreground">
+          Nessun dataset pubblicato in questa categoria tematica
+        </h3>
+        <p className="mt-2 max-w-3xl text-sm leading-6 text-muted-foreground">
+          La categoria resta disponibile nella libreria per ordinare future
+          pubblicazioni, ma non espone ancora una scheda dataset-first con
+          download o visualizzazione.
+        </p>
+      </div>
+    );
+  }
+
+  return (
+    <div
+      aria-labelledby="opendata-theme-datasets-title"
+      className="rounded-xl border border-card-border bg-card p-5 shadow-sm"
+    >
+      <div className="mb-4">
+        <h3
+          className="font-display text-xl font-bold text-foreground"
+          id="opendata-theme-datasets-title"
+        >
+          Dataset pubblicati nel tema
+        </h3>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">
+          La scelta del dato viene prima della sua rappresentazione grafica.
+        </p>
+      </div>
+      <div className="grid gap-3">
+        {theme.datasets.map((dataset) => (
+          <ThemeDatasetCard dataset={dataset} key={dataset.id} />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function ThemeDatasetCard({ dataset }: { dataset: OpenDataThemeDataset }) {
+  return (
+    <article className="rounded-lg border border-border bg-background p-4">
+      <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+        <div>
+          <div className="flex flex-wrap items-center gap-2">
+            <Badge variant="success" className="shadow-none">
+              {dataset.statusLabel}
+            </Badge>
+            <Badge variant="outline" className="shadow-none">
+              {dataset.dataType}
+            </Badge>
+          </div>
+          <h4 className="mt-3 font-display text-lg font-bold text-foreground">
+            {dataset.label}
+          </h4>
+          <p className="mt-2 max-w-3xl text-sm leading-6 text-muted-foreground">
+            {dataset.description}
+          </p>
+        </div>
+        {dataset.href ? (
+          <a
+            className="inline-flex shrink-0 items-center gap-1.5 rounded-md border border-primary/30 px-3 py-2 text-sm font-semibold text-primary hover:bg-primary/5"
+            href={dataset.href}
+          >
+            Vai alla visualizzazione
+            <ChevronRight className="h-4 w-4" />
+          </a>
+        ) : null}
+      </div>
+      <dl className="mt-4 grid gap-3 text-sm md:grid-cols-2">
+        <div className="rounded-md border border-border bg-muted/20 p-3">
+          <dt className="text-xs font-medium text-muted-foreground">Fonte</dt>
+          <dd className="mt-1 leading-6 text-foreground">
+            {dataset.sourceLabel}
+          </dd>
+        </div>
+        <div className="rounded-md border border-border bg-muted/20 p-3">
+          <dt className="text-xs font-medium text-muted-foreground">
+            Aggiornamento
+          </dt>
+          <dd className="mt-1 leading-6 text-foreground">
+            {dataset.updateCadence}
+          </dd>
+        </div>
+      </dl>
+    </article>
+  );
+}
+
+function ThemePreparationPanel({ theme }: { theme: OpenDataThemeCategory }) {
   return (
     <div className="rounded-xl border border-card-border bg-card p-5 shadow-sm">
       <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
         <div>
           <h3 className="font-display text-xl font-bold text-foreground">
-            Visualizzazione non ancora pubblicata
+            Nessuna visualizzazione pubblicata per questo tema
           </h3>
           <p className="mt-2 max-w-3xl text-sm leading-6 text-muted-foreground">
-            Il modello dati è disponibile per catalogare nuove serie, ma questa
-            categoria non ha ancora una scheda grafica pubblicata nella pagina
-            OpenData.
+            Il tema e gia presente nella libreria per ordinare i dataset futuri.
+            La pagina non mostra grafici finche non esiste almeno un dataset
+            pubblicato e documentato per questa categoria.
           </p>
         </div>
         <Badge variant="outline" className="w-fit shadow-none">
-          {type.statusLabel}
+          {theme.statusLabel}
         </Badge>
       </div>
 
       <dl className="mt-4 grid gap-3 text-sm md:grid-cols-2">
         <div className="rounded-lg border border-border bg-muted/20 p-3">
           <dt className="text-xs font-medium text-muted-foreground">
-            Modello
+            Domanda civica
           </dt>
-          <dd className="mt-1 leading-6 text-foreground">{type.model}</dd>
+          <dd className="mt-1 leading-6 text-foreground">
+            {theme.civicQuestion}
+          </dd>
         </div>
         <div className="rounded-lg border border-border bg-muted/20 p-3">
           <dt className="text-xs font-medium text-muted-foreground">
-            Aggiornamento
+            Tipi di dato previsti
           </dt>
-          <dd className="mt-1 leading-6 text-foreground">
-            {type.updateCadence}
+          <dd className="mt-2 flex flex-wrap gap-2">
+            {theme.dataTypes.map((dataType) => (
+              <span
+                className="rounded-md border border-border bg-background px-2.5 py-1 text-xs font-medium text-foreground"
+                key={dataType}
+              >
+                {dataType}
+              </span>
+            ))}
           </dd>
         </div>
       </dl>
