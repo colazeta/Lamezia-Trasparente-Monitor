@@ -47,7 +47,7 @@ const BASEMAP_PROVIDERS = [
     urlTemplate: "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
     attribution:
       '<a href="https://www.openstreetmap.org/copyright">© OpenStreetMap contributors</a>',
-    opacity: 0.42,
+    opacity: 0.18,
     maxZoom: 18,
   },
   {
@@ -58,18 +58,21 @@ const BASEMAP_PROVIDERS = [
       "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
     attribution:
       "Tiles © Esri - Source: Esri, Maxar, Earthstar Geographics, and the GIS User Community",
-    opacity: 0.58,
+    opacity: 0.26,
     maxZoom: 18,
   },
 ] as const;
 const CHOROPLETH_COLORS = [
-  "rgb(247 252 245)",
-  "rgb(203 232 208)",
-  "rgb(126 203 193)",
-  "rgb(52 148 174)",
-  "rgb(35 74 138)",
+  "rgb(239 246 234)",
+  "rgb(205 225 197)",
+  "rgb(153 194 160)",
+  "rgb(85 146 113)",
+  "rgb(30 91 72)",
 ];
-const EMPTY_COLOR = "hsl(215 12% 82%)";
+const EMPTY_COLOR = "hsl(82 9% 78%)";
+const MAP_CANVAS_COLOR = "hsl(78 26% 94%)";
+const MAP_SELECTED_STROKE = "hsl(24 74% 42%)";
+const MAP_SECTION_STROKE = "hsl(96 18% 88%)";
 
 type BasemapId =
   | (typeof BASEMAP_PROVIDERS)[number]["id"]
@@ -129,7 +132,7 @@ export function AtlanteTerritoriale() {
   });
   const [detailView, setDetailView] = useState<DetailView>("profile");
   const [selectedBasemapId, setSelectedBasemapId] = useState<BasemapId>(
-    "openstreetmap-standard",
+    NO_BASEMAP_ID,
   );
 
   useEffect(() => {
@@ -440,21 +443,21 @@ function IndicatorSidebar({
   return (
     <aside
       aria-label="Indicatori Atlante territoriale"
-      className="absolute inset-y-3 left-3 z-[650] flex w-[min(370px,calc(100%-1.5rem))] flex-col overflow-hidden rounded-2xl border border-background/15 bg-slate-950/92 text-background shadow-2xl ring-1 ring-emerald-300/20 backdrop-blur-xl"
+      className="absolute inset-y-3 left-3 z-[650] flex w-[min(370px,calc(100%-1.5rem))] flex-col overflow-hidden rounded-2xl border border-border/80 bg-card/95 text-foreground shadow-2xl ring-1 ring-border/60 backdrop-blur-xl"
     >
-      <div className="flex items-start justify-between gap-3 border-b border-background/10 px-4 py-3">
+      <div className="flex items-start justify-between gap-3 border-b border-border/80 px-4 py-3">
         <div>
-          <p className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-emerald-200">
+          <p className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
             <Database className="h-4 w-4" />
             Indicatori
           </p>
-          <h2 className="mt-1 text-lg font-semibold leading-tight text-background">
+          <h2 className="mt-1 text-lg font-semibold leading-tight text-foreground">
             Scegli cosa leggere
           </h2>
         </div>
         <button
           aria-label="Chiudi barra indicatori"
-          className="rounded-md border border-background/15 bg-background/10 p-2 text-slate-100 transition hover:bg-background/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+          className="rounded-md border border-border/80 bg-background p-2 text-foreground transition hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
           onClick={onClose}
           type="button"
         >
@@ -462,9 +465,9 @@ function IndicatorSidebar({
         </button>
       </div>
 
-      <div className="border-b border-background/10 bg-foreground/20 px-4 py-3">
+      <div className="border-b border-border/80 bg-muted/45 px-4 py-3">
         <div className="flex flex-wrap items-center gap-2">
-          <span className="rounded-full bg-emerald-300 px-2.5 py-1 text-xs font-semibold text-slate-950">
+          <span className="rounded-full bg-primary px-2.5 py-1 text-xs font-semibold text-primary-foreground">
             {activeIndicator
               ? getIndicatorKindLabel(activeIndicator)
               : "indicatore"}
@@ -475,24 +478,24 @@ function IndicatorSidebar({
             </span>
           ) : null}
         </div>
-        <p className="mt-2 text-sm font-semibold text-background">
+        <p className="mt-2 text-sm font-semibold text-foreground">
           {activeIndicator?.label ?? "Indicatore in preparazione"}
         </p>
         {activeIndicator ? (
-          <p className="mt-1 text-xs leading-5 text-slate-300">
+          <p className="mt-1 text-xs leading-5 text-muted-foreground">
             {activeIndicator.publicHint}
           </p>
         ) : null}
         <dl className="mt-3 grid grid-cols-2 gap-2 text-xs">
-          <div className="rounded-lg border border-background/10 bg-background/10 px-2.5 py-2">
-            <dt className="font-semibold text-slate-300">Copertura</dt>
-            <dd className="mt-0.5 font-semibold text-background">
+          <div className="rounded-lg border border-border/70 bg-background px-2.5 py-2">
+            <dt className="font-semibold text-muted-foreground">Copertura</dt>
+            <dd className="mt-0.5 font-semibold text-foreground">
               {coverageLabel}
             </dd>
           </div>
-          <div className="rounded-lg border border-background/10 bg-background/10 px-2.5 py-2">
-            <dt className="font-semibold text-slate-300">Selezione</dt>
-            <dd className="mt-0.5 truncate font-semibold text-background">
+          <div className="rounded-lg border border-border/70 bg-background px-2.5 py-2">
+            <dt className="font-semibold text-muted-foreground">Selezione</dt>
+            <dd className="mt-0.5 truncate font-semibold text-foreground">
               {sectionLabel}
             </dd>
           </div>
@@ -507,17 +510,17 @@ function IndicatorSidebar({
               <section
                 className={`rounded-xl border px-3 py-2.5 ${
                   hasIndicators
-                    ? "border-background/10 bg-background/10"
-                    : "border-background/10 bg-background/5 text-slate-400"
+                    ? "border-border/70 bg-background/85"
+                    : "border-border/60 bg-muted/45 text-muted-foreground"
                 }`}
                 key={category.id}
               >
                 <div className="flex items-center justify-between gap-2">
-                  <h3 className="text-xs font-semibold uppercase tracking-wide text-slate-300">
+                  <h3 className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
                     {category.label}
                   </h3>
                   {!hasIndicators ? (
-                    <span className="rounded-full bg-background/10 px-2 py-0.5 text-[11px] leading-none text-slate-300">
+                    <span className="rounded-full bg-background px-2 py-0.5 text-[11px] leading-none text-muted-foreground">
                       in preparazione
                     </span>
                   ) : null}
@@ -531,8 +534,8 @@ function IndicatorSidebar({
                           aria-pressed={isActive}
                           className={`grid min-h-11 grid-cols-[1fr_auto] items-center gap-2 rounded-lg border px-3 py-2 text-left text-sm font-semibold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 ${
                             isActive
-                              ? "border-emerald-300 bg-emerald-300 text-slate-950 shadow-sm"
-                              : "border-background/10 bg-foreground/20 text-slate-100 hover:border-emerald-300/50 hover:bg-background/10"
+                              ? "border-primary bg-primary text-primary-foreground shadow-sm"
+                              : "border-border/70 bg-card text-foreground hover:border-primary/40 hover:bg-muted"
                           }`}
                           key={indicator.id}
                           onClick={() => onSelect(indicator.id)}
@@ -543,8 +546,8 @@ function IndicatorSidebar({
                           <span
                             className={`rounded-full px-2 py-1 text-[10px] leading-none ${
                               isActive
-                                ? "bg-slate-950/10 text-slate-950"
-                                : "bg-background/10 text-slate-300"
+                                ? "bg-primary-foreground/20 text-primary-foreground"
+                                : "bg-muted text-muted-foreground"
                             }`}
                           >
                             {getIndicatorKindLabel(indicator)}
@@ -560,7 +563,7 @@ function IndicatorSidebar({
         </div>
       </div>
 
-      <div className="border-t border-background/10 bg-foreground/20 px-4 py-3 text-xs leading-5 text-slate-300">
+      <div className="border-t border-border/80 bg-muted/45 px-4 py-3 text-xs leading-5 text-muted-foreground">
         <p>
           {metadata.sourceInstitution} / {metadata.sourceYear} /{" "}
           {metadata.territorialLevel}
@@ -825,7 +828,7 @@ function MapSurface({
   return (
     <section
       aria-labelledby="atlante-map-title"
-      className={`w-full min-w-0 max-w-full overflow-hidden border border-primary/20 bg-slate-950 shadow-xl ring-1 ring-primary/10 transition-all ${
+      className={`w-full min-w-0 max-w-full overflow-hidden border border-border/80 bg-card shadow-xl ring-1 ring-border/60 transition-all ${
         isFullPageMap
           ? "fixed inset-0 z-[80] rounded-none"
           : "rounded-2xl"
@@ -840,7 +843,10 @@ function MapSurface({
           presente nel file dati.
         </div>
       ) : (
-        <div className="relative w-full max-w-full overflow-hidden bg-slate-950">
+        <div
+          className="relative w-full max-w-full overflow-hidden"
+          style={{ background: MAP_CANVAS_COLOR }}
+        >
           <MapContainer
             attributionControl={!!selectedBasemap}
             bounds={leafletBounds}
@@ -849,9 +855,11 @@ function MapSurface({
                 ? "h-[100svh]"
                 : "h-[78svh] min-h-[560px] sm:h-[82svh] lg:h-[calc(100svh-132px)] lg:min-h-[740px] 2xl:min-h-[860px]"
             }`}
+            maxBounds={leafletBounds}
+            maxBoundsViscosity={1}
             maxZoom={selectedBasemap?.maxZoom ?? 18}
             scrollWheelZoom
-            style={{ background: "hsl(222 47% 8%)" }}
+            style={{ background: MAP_CANVAS_COLOR }}
             zoomControl
           >
             <MapViewResetter bounds={leafletBounds} resetSignal={resetSignal} />
@@ -906,25 +914,25 @@ function MapSurface({
             <button
               aria-expanded="false"
               aria-label="Apri barra indicatori"
-              className="absolute left-3 top-3 z-[650] inline-flex items-center gap-2 rounded-lg border border-background/15 bg-slate-950/88 px-3 py-2 text-sm font-semibold text-background shadow-lg backdrop-blur transition hover:bg-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+              className="absolute left-3 top-3 z-[650] inline-flex items-center gap-2 rounded-lg border border-border/80 bg-card/95 px-3 py-2 text-sm font-semibold text-foreground shadow-lg backdrop-blur transition hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
               onClick={() => setIndicatorSidebarOpen(true)}
               type="button"
             >
-              <PanelLeftOpen className="h-4 w-4 text-emerald-300" />
+              <PanelLeftOpen className="h-4 w-4 text-primary" />
               <span aria-hidden="true">Indicatori</span>
             </button>
           )}
 
           <div className="pointer-events-none absolute left-3 top-16 z-[500] w-[calc(100vw-1.5rem)] max-w-[calc(100%-1.5rem)] sm:left-auto sm:right-3 sm:top-3 sm:w-auto">
-            <div className="pointer-events-auto grid w-full min-w-0 grid-cols-2 gap-2 rounded-xl border border-background/15 bg-slate-950/88 p-2 text-xs text-background shadow-xl backdrop-blur sm:flex sm:w-auto sm:flex-wrap sm:items-center sm:justify-end">
-              <label className="col-span-2 grid min-w-0 grid-cols-[auto_1fr] items-center gap-2 font-medium text-background sm:col-span-1 sm:inline-flex">
+            <div className="pointer-events-auto grid w-full min-w-0 grid-cols-2 gap-2 rounded-xl border border-border/80 bg-card/95 p-2 text-xs text-foreground shadow-xl backdrop-blur sm:flex sm:w-auto sm:flex-wrap sm:items-center sm:justify-end">
+              <label className="col-span-2 grid min-w-0 grid-cols-[auto_1fr] items-center gap-2 font-medium text-foreground sm:col-span-1 sm:inline-flex">
                 <span className="inline-flex min-w-0 items-center gap-2">
-                  <Layers className="h-4 w-4 flex-none text-emerald-300" />
+                  <Layers className="h-4 w-4 flex-none text-primary" />
                   <span className="hidden sm:inline">Sfondo mappa</span>
                 </span>
                 <select
                   aria-label="Sfondo mappa"
-                  className="min-w-0 rounded-md border border-background/15 bg-slate-900 px-2 py-1 text-xs text-background sm:w-auto"
+                  className="min-w-0 rounded-md border border-border/80 bg-background px-2 py-1 text-xs text-foreground sm:w-auto"
                   onChange={(event) =>
                     setSelectedBasemapId(event.target.value as BasemapId)
                   }
@@ -940,7 +948,7 @@ function MapSurface({
               </label>
               <button
                 aria-label="Reimposta vista"
-                className="min-w-0 rounded-md border border-background/15 bg-background/10 px-2.5 py-1.5 text-center font-medium text-background transition hover:bg-background/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                className="min-w-0 rounded-md border border-border/80 bg-background px-2.5 py-1.5 text-center font-medium text-foreground transition hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
                 onClick={() => setResetSignal((current) => current + 1)}
                 type="button"
               >
@@ -954,7 +962,7 @@ function MapSurface({
                     : "Pagina intera"
                 }
                 aria-pressed={isFullPageMap}
-                className="inline-flex min-w-0 items-center justify-center gap-1.5 rounded-md border border-background/15 bg-background/10 px-2.5 py-1.5 font-medium text-background transition hover:bg-background/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                className="inline-flex min-w-0 items-center justify-center gap-1.5 rounded-md border border-border/80 bg-background px-2.5 py-1.5 font-medium text-foreground transition hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
                 onClick={() => setFullPageMap(!isFullPageMap)}
                 type="button"
               >
@@ -979,7 +987,7 @@ function MapSurface({
                     ? "Nascondi barra indicatori"
                     : "Mostra barra indicatori"
                 }
-                className="hidden rounded-md border border-background/15 bg-background/10 px-2.5 py-1.5 font-medium text-background transition hover:bg-background/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary lg:inline-flex lg:items-center lg:gap-1.5"
+                className="hidden rounded-md border border-border/80 bg-background px-2.5 py-1.5 font-medium text-foreground transition hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary lg:inline-flex lg:items-center lg:gap-1.5"
                 onClick={() =>
                   setIndicatorSidebarOpen(!isIndicatorSidebarOpen)
                 }
@@ -1001,7 +1009,7 @@ function MapSurface({
                     ? "Nascondi dettaglio area"
                     : "Mostra dettaglio area"
                 }
-                className="inline-flex min-w-0 items-center justify-center gap-1.5 rounded-md border border-background/15 bg-background/10 px-2.5 py-1.5 font-medium text-background transition hover:bg-background/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                className="inline-flex min-w-0 items-center justify-center gap-1.5 rounded-md border border-border/80 bg-background px-2.5 py-1.5 font-medium text-foreground transition hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
                 onClick={() => setDetailPanelOpen(!isDetailPanelOpen)}
                 type="button"
               >
@@ -1014,7 +1022,7 @@ function MapSurface({
               </button>
               <button
                 aria-label="Scarica mappa"
-                className="inline-flex min-w-0 items-center justify-center gap-1.5 rounded-md border border-background/15 bg-background/10 px-2.5 py-1.5 font-medium text-background transition hover:bg-background/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                className="inline-flex min-w-0 items-center justify-center gap-1.5 rounded-md border border-border/80 bg-background px-2.5 py-1.5 font-medium text-foreground transition hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
                 onClick={() =>
                   downloadAtlanteMapSvg({
                     activeIndicator,
@@ -1052,11 +1060,11 @@ function MapSurface({
           ) : (
             <button
               aria-label="Apri pannello dettaglio area"
-              className="absolute bottom-3 left-3 right-3 z-[650] inline-flex items-center justify-center gap-2 rounded-xl border border-background/15 bg-slate-950/88 px-3 py-2 text-center text-sm font-semibold text-background shadow-xl backdrop-blur transition hover:bg-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary sm:left-auto sm:w-auto sm:max-w-[min(360px,calc(100%-1.5rem))] sm:text-left"
+              className="absolute bottom-3 left-3 right-3 z-[650] inline-flex items-center justify-center gap-2 rounded-xl border border-border/80 bg-card/95 px-3 py-2 text-center text-sm font-semibold text-foreground shadow-xl backdrop-blur transition hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary sm:left-auto sm:w-auto sm:max-w-[min(360px,calc(100%-1.5rem))] sm:text-left"
               onClick={() => setDetailPanelOpen(true)}
               type="button"
             >
-              <PanelRightOpen className="h-4 w-4 flex-none text-emerald-300" />
+              <PanelRightOpen className="h-4 w-4 flex-none text-primary" />
               <span>
                 {activeFeature
                   ? `Dettaglio: ${getSectionPublicLabel(activeFeature)}`
@@ -1065,8 +1073,8 @@ function MapSurface({
             </button>
           )}
 
-          <div className="pointer-events-none absolute bottom-3 left-3 z-[500] max-w-[min(420px,calc(100%-1.5rem))] rounded-xl border border-background/15 bg-slate-950/82 px-3 py-2 text-xs leading-5 text-slate-100 shadow-xl backdrop-blur">
-            <span className="font-semibold text-background">
+          <div className="pointer-events-none absolute bottom-3 left-3 z-[500] max-w-[min(420px,calc(100%-1.5rem))] rounded-xl border border-border/80 bg-card/90 px-3 py-2 text-xs leading-5 text-muted-foreground shadow-xl backdrop-blur">
+            <span className="font-semibold text-foreground">
               {metadata.sourceInstitution}
             </span>{" "}
             / {metadata.sourceYear} / {metadata.territorialLevel}
@@ -1129,15 +1137,24 @@ function MapLegend({
     >
       <div>
         <p className="mb-1 text-[11px] font-semibold uppercase tracking-wide text-foreground">
-          Scala continua
+          Fasce indicatore
         </p>
         <div
-          aria-label="Scala cromatica continua"
-          className="h-3 w-56 max-w-full rounded-full border border-border"
+          aria-label="Fasce cromatiche indicatore"
+          className="grid h-3 w-56 max-w-full overflow-hidden rounded-full border border-border"
           style={{
-            background: `linear-gradient(to right, ${CHOROPLETH_COLORS.join(", ")})`,
+            gridTemplateColumns: `repeat(${Math.max(1, bins.length)}, minmax(0, 1fr))`,
           }}
-        />
+        >
+          {bins.map((bin) => (
+            <span
+              aria-hidden="true"
+              className="border-r border-background/80 last:border-r-0"
+              key={bin.index}
+              style={{ backgroundColor: bin.color }}
+            />
+          ))}
+        </div>
         <div className="mt-1 grid gap-1 text-[11px] sm:flex sm:justify-between sm:gap-3">
           <span>
             Valore minimo{" "}
@@ -1211,21 +1228,21 @@ function DetailDrawer({
   return (
     <aside
       aria-label="Dettaglio area Atlante"
-      className="absolute bottom-3 left-3 z-[660] flex w-[calc(100vw-1.5rem)] max-w-[calc(100%-1.5rem)] max-h-[62svh] flex-col overflow-hidden rounded-2xl border border-background/15 bg-slate-950/92 text-background shadow-2xl ring-1 ring-emerald-300/20 backdrop-blur-xl sm:left-auto sm:right-3 sm:top-3 sm:w-[390px] sm:max-h-[calc(100%-1.5rem)]"
+      className="absolute bottom-3 left-3 z-[660] flex w-[calc(100vw-1.5rem)] max-w-[calc(100%-1.5rem)] max-h-[62svh] flex-col overflow-hidden rounded-2xl border border-border/80 bg-card/95 text-foreground shadow-2xl ring-1 ring-border/60 backdrop-blur-xl sm:left-auto sm:right-3 sm:top-3 sm:w-[390px] sm:max-h-[calc(100%-1.5rem)]"
     >
-      <div className="border-b border-background/10 px-4 py-3">
+      <div className="border-b border-border/80 px-4 py-3">
         <div className="flex items-start justify-between gap-3">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-wide text-emerald-200">
-              Console Atlante
+            <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+              Atlante
             </p>
-            <h2 className="mt-1 text-lg font-semibold leading-tight text-background">
+            <h2 className="mt-1 text-lg font-semibold leading-tight text-foreground">
               Dettaglio area
             </h2>
           </div>
           <button
             aria-label="Chiudi pannello dettaglio area"
-            className="rounded-md border border-background/15 bg-background/10 p-2 text-slate-100 transition hover:bg-background/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+            className="rounded-md border border-border/80 bg-background p-2 text-foreground transition hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
             onClick={onClose}
             type="button"
           >
@@ -1235,7 +1252,7 @@ function DetailDrawer({
 
         <div
           aria-label="Viste dettaglio Atlante"
-          className="mt-3 grid grid-cols-2 gap-1 rounded-lg border border-background/10 bg-foreground/20 p-1"
+          className="mt-3 grid grid-cols-2 gap-1 rounded-lg border border-border/80 bg-muted/50 p-1"
           role="tablist"
         >
           {views.map((view) => {
@@ -1246,8 +1263,8 @@ function DetailDrawer({
                 aria-selected={isActive}
                 className={`inline-flex items-center justify-center gap-2 rounded-md px-3 py-2 text-sm font-semibold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
                   isActive
-                    ? "bg-emerald-300 text-slate-950"
-                    : "text-slate-200 hover:bg-background/10"
+                    ? "bg-primary text-primary-foreground"
+                    : "text-muted-foreground hover:bg-background"
                 }`}
                 key={view.id}
                 onClick={() => onDetailViewChange(view.id)}
@@ -1270,13 +1287,11 @@ function DetailDrawer({
               activeIndicator={activeIndicator}
               activeValue={activeValue}
               availableIndicators={availableIndicators}
-              surface="dark"
             />
             <CitySummaryCard
               activeIndicator={activeIndicator}
               coloredBins={coloredBins}
               summary={summary}
-              surface="dark"
             />
           </div>
         ) : (
@@ -1324,7 +1339,7 @@ function SectionDataBrowser({
 
   if (!activeIndicator) {
     return (
-      <p className="rounded-xl border border-background/10 bg-background/10 p-3 text-sm leading-6 text-slate-200">
+      <p className="rounded-xl border border-border/70 bg-muted/45 p-3 text-sm leading-6 text-muted-foreground">
         La vista dati sara disponibile quando un indicatore censuario sara
         attivo.
       </p>
@@ -1334,8 +1349,8 @@ function SectionDataBrowser({
   return (
     <section aria-label="Vista dati sezioni" className="space-y-3">
       <div>
-        <h3 className="text-sm font-semibold text-background">Vista dati</h3>
-        <p className="mt-1 text-xs leading-5 text-slate-300">
+        <h3 className="text-sm font-semibold text-foreground">Vista dati</h3>
+        <p className="mt-1 text-xs leading-5 text-muted-foreground">
           Righe leggibili per sezione censuaria, nello stesso ordine del livello
           ISTAT. I valori mancanti restano separati da zero.
         </p>
@@ -1344,11 +1359,11 @@ function SectionDataBrowser({
       <label className="relative block">
         <Search
           aria-hidden="true"
-          className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400"
+          className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground"
         />
         <span className="sr-only">Cerca sezione censuaria</span>
         <input
-          className="w-full rounded-lg border border-background/15 bg-background/10 py-2 pl-9 pr-3 text-sm text-background outline-none placeholder:text-slate-400 focus:border-emerald-300 focus:ring-2 focus:ring-emerald-300/25"
+          className="w-full rounded-lg border border-border/80 bg-background py-2 pl-9 pr-3 text-sm text-foreground outline-none placeholder:text-muted-foreground focus:border-primary focus:ring-2 focus:ring-primary/20"
           onChange={(event) => setQuery(event.target.value)}
           placeholder="Cerca area o codice"
           type="search"
@@ -1356,8 +1371,8 @@ function SectionDataBrowser({
         />
       </label>
 
-      <div className="rounded-xl border border-background/10 bg-foreground/20">
-        <div className="grid grid-cols-[1fr_auto] gap-2 border-b border-background/10 px-3 py-2 text-[11px] font-semibold uppercase tracking-wide text-slate-300">
+      <div className="rounded-xl border border-border/80 bg-card">
+        <div className="grid grid-cols-[1fr_auto] gap-2 border-b border-border/80 px-3 py-2 text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
           <span>{formatSectionCount(visibleFeatures.length)}</span>
           <span>{activeIndicator.label}</span>
         </div>
@@ -1376,8 +1391,8 @@ function SectionDataBrowser({
               return (
                 <button
                   aria-label={`Seleziona ${label}`}
-                  className={`grid w-full gap-2 border-b border-background/10 px-3 py-2 text-left transition last:border-b-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
-                    isSelected ? "bg-emerald-300/18" : "hover:bg-background/10"
+                  className={`grid w-full gap-2 border-b border-border/70 px-3 py-2 text-left transition last:border-b-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
+                    isSelected ? "bg-primary/10" : "hover:bg-muted/60"
                   }`}
                   key={sectionId}
                   onClick={() => onSectionSelect(sectionId)}
@@ -1385,24 +1400,24 @@ function SectionDataBrowser({
                 >
                   <span className="flex items-start justify-between gap-3">
                     <span className="min-w-0">
-                      <span className="block truncate text-sm font-semibold text-background">
+                      <span className="block truncate text-sm font-semibold text-foreground">
                         {label}
                       </span>
-                      <span className="block truncate text-[11px] text-slate-400">
+                      <span className="block truncate text-[11px] text-muted-foreground">
                         {sectionId}
                       </span>
                     </span>
-                    <span className="shrink-0 text-sm font-semibold text-emerald-100">
+                    <span className="shrink-0 text-sm font-semibold text-foreground">
                       {formatProfileValue(value, activeIndicator.unitLabel)}
                     </span>
                   </span>
                   <span
                     aria-hidden="true"
-                    className="block h-1.5 overflow-hidden rounded-full bg-background/10"
+                    className="block h-1.5 overflow-hidden rounded-full bg-muted"
                   >
                     <span
                       className={`block h-full rounded-full ${
-                        value === null ? "bg-transparent" : "bg-emerald-300"
+                        value === null ? "bg-transparent" : "bg-primary"
                       }`}
                       style={{ width: `${barWidth}%` }}
                     />
@@ -1411,7 +1426,7 @@ function SectionDataBrowser({
               );
             })
           ) : (
-            <p className="p-3 text-sm text-slate-300">
+            <p className="p-3 text-sm text-muted-foreground">
               Nessuna sezione corrisponde alla ricerca.
             </p>
           )}
@@ -2021,13 +2036,13 @@ function getLeafletFeatureStyle({
   const isMissing = value === null;
 
   return {
-    color: isActive ? "hsl(18 88% 48%)" : "hsl(var(--card))",
+    color: isActive ? MAP_SELECTED_STROKE : MAP_SECTION_STROKE,
     dashArray: isMissing ? "5 4" : undefined,
     fillColor: getContinuousChoroplethColor(value, summary),
-    fillOpacity: isMissing ? 0.4 : isActive ? 0.84 : 0.7,
+    fillOpacity: isMissing ? 0.48 : isActive ? 0.86 : 0.78,
     lineJoin: "round" as const,
     opacity: 1,
-    weight: isSelected ? 4.5 : isHovered ? 3.2 : 1.2,
+    weight: isSelected ? 4.2 : isHovered ? 3 : 1.1,
   };
 }
 
