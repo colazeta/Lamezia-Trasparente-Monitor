@@ -447,6 +447,59 @@ describe("Atlante territoriale", () => {
     expect(
       screen.getByRole("button", { name: /Reimposta vista/i }),
     ).toBeInTheDocument();
+    expect(
+      screen.getByRole("complementary", {
+        name: /Dettaglio area Atlante/i,
+      }),
+    ).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: /Pagina intera/i }));
+    expect(
+      screen.getByRole("button", { name: /Esci dalla pagina intera/i }),
+    ).toHaveAttribute("aria-pressed", "true");
+    fireEvent.click(
+      screen.getByRole("button", { name: /Esci dalla pagina intera/i }),
+    );
+    expect(
+      screen.getByRole("button", { name: /Pagina intera/i }),
+    ).toHaveAttribute("aria-pressed", "false");
+    fireEvent.click(
+      screen.getByRole("button", { name: /Nascondi dettaglio area/i }),
+    );
+    expect(
+      screen.queryByRole("complementary", {
+        name: /Dettaglio area Atlante/i,
+      }),
+    ).not.toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: /Apri pannello dettaglio area/i }),
+    ).toBeInTheDocument();
+    fireEvent.click(
+      screen.getByRole("button", { name: /Mostra dettaglio area/i }),
+    );
+    expect(
+      screen.getByRole("complementary", {
+        name: /Dettaglio area Atlante/i,
+      }),
+    ).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("tab", { name: /Dati/i }));
+    expect(
+      screen.getByRole("region", { name: /Vista dati sezioni/i }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("searchbox", { name: /Cerca sezione censuaria/i }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: "Seleziona Nicastro centro" }),
+    ).toBeInTheDocument();
+    fireEvent.change(
+      screen.getByRole("searchbox", { name: /Cerca sezione censuaria/i }),
+      { target: { value: "0204" } },
+    );
+    expect(screen.getByText("1 sezione")).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: "Seleziona Area censuaria 0204" }),
+    ).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("tab", { name: /Scheda/i }));
     const basemapSelect = screen.getByRole("combobox", {
       name: /Sfondo mappa/i,
     });
