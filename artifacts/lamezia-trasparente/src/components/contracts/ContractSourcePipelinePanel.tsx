@@ -2,14 +2,11 @@ import {
   AlertTriangle,
   CheckCircle2,
   ChevronRight,
-  Database,
-  FileJson,
   FileText,
   Landmark,
   LockKeyhole,
   RefreshCw,
   ShieldCheck,
-  Workflow,
   type LucideIcon,
 } from "lucide-react";
 import { Link } from "wouter";
