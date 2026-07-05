@@ -54,7 +54,7 @@ describe("OpenData climate territory card", () => {
     expect(
       screen.getByRole("button", { name: /Tutti i dataset/i }),
     ).toHaveAttribute("aria-pressed", "true");
-    expect(screen.getByText("Clima")).toBeInTheDocument();
+    expect(screen.getAllByText("Clima").length).toBeGreaterThan(0);
     expect(screen.getByText("Contratti")).toBeInTheDocument();
     expect(screen.getByText("Atti")).toBeInTheDocument();
     expect(screen.getByText("Patrimonio")).toBeInTheDocument();
@@ -68,9 +68,7 @@ describe("OpenData climate territory card", () => {
       screen.getAllByText(/Anomalie climatiche.*Lamezia Terme/).length,
     ).toBeGreaterThan(0);
     expect(screen.getByText("Serie temporale giornaliera")).toBeInTheDocument();
-    expect(
-      screen.getByText("Grafico, metodo e JSON scaricabile."),
-    ).toBeInTheDocument();
+    expect(screen.getByText("Disponibile")).toBeInTheDocument();
     expect(
       screen.getByRole("button", {
         name: /Apri scheda dataset Anomalie climatiche/i,
@@ -178,10 +176,25 @@ describe("OpenData climate territory card", () => {
       }),
     ).toBeInTheDocument();
     expect(
+      screen.getByRole("button", { name: "Mostra dataset disponibili" }),
+    ).toBeInTheDocument();
+    expect(
       screen.queryByRole("heading", {
         name: /Anomalie climatiche.*Lamezia Terme/,
       }),
     ).not.toBeInTheDocument();
+
+    fireEvent.click(
+      screen.getByRole("button", { name: "Mostra dataset disponibili" }),
+    );
+    expect(
+      screen.getByRole("button", {
+        name: /Apri scheda dataset Anomalie climatiche/i,
+      }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: /Tutti i dataset/i }),
+    ).toHaveAttribute("aria-pressed", "true");
   });
 
   it("keeps the static climate dataset visible when the remote catalog payload is unavailable", () => {
