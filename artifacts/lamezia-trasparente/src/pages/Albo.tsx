@@ -11,6 +11,7 @@ import {
   RefreshCw,
   Search,
   ShieldAlert,
+  Sparkles,
 } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
@@ -30,6 +31,10 @@ import {
   ALBO_ARCHIVED_DOCUMENTS_BY_ID,
   ALBO_DOCUMENTS_MANIFEST,
   ALBO_PRIVACY_RISK_LABELS,
+  ALBO_PUBLIC_DIFF_CHANGED_ITEMS,
+  ALBO_PUBLIC_DIFF_NEW_ITEMS,
+  ALBO_PUBLIC_DIFF_REMOVED_ITEMS,
+  ALBO_PUBLIC_DIFF_SUMMARY,
   ALBO_PUBLIC_RUN_ITEMS,
   ALBO_PUBLIC_RUN_SUMMARY,
   ALBO_PUBLIC_VISIBILITY_LABELS,
@@ -47,6 +52,29 @@ type RiskFilter = AlboPrivacyRisk | "all";
 type DocumentFilter = "all" | "archived" | "without_archive";
 
 const ALL_OFFICES = "all";
+const ALL_SECTORS = "all";
+const ALL_ACT_CATEGORIES = "all";
+const RECENT_CONTEXT_LIMIT = 6;
+
+type ClassificationStat = {
+  id: string;
+  label: string;
+  count: number;
+};
+
+type NewsActivityKind = "new" | "changed" | "removed" | "context";
+
+type NewsActivityItem = {
+  kind: NewsActivityKind;
+  item: AlboPublicRunItem;
+};
+
+const NEWS_ACTIVITY_LABELS: Record<NewsActivityKind, string> = {
+  new: "Nuovo",
+  changed: "Aggiornato",
+  removed: "Rimosso",
+  context: "Contesto recente",
+};
 
 function shortDate(value: string | null): string {
   return value ? formatPublicTimeField(value, "dd/MM/yyyy") : "Data non disponibile";
@@ -77,6 +105,181 @@ function visibilityClass(visibility: AlboPublicVisibility): string {
   return "bg-slate-100 text-slate-700 border-slate-200";
 }
 
+function publicationSortValue(item: AlboPublicRunItem): string {
+  return [
+    item.publication_start ?? "",
+    item.publication_number ?? "",
+  ].join(" ");
+}
+
+function mostRecentItems(items: AlboPublicRunItem[], limit = RECENT_CONTEXT_LIMIT): AlboPublicRunItem[] {
+  return [...items]
+    .sort((a, b) => publicationSortValue(b).localeCompare(publicationSortValue(a), "it"))
+    .slice(0, limit);
+}
+
+function classificationStats<TItem>(
+  items: TItem[],
+  selector: (item: TItem) => { id: string; label: string },
+): ClassificationStat[] {
+  const stats = new Map<string, ClassificationStat>();
+  for (const item of items) {
+    const selected = selector(item);
+    const current = stats.get(selected.id);
+    if (current) {
+      current.count += 1;
+    } else {
+      stats.set(selected.id, { ...selected, count: 1 });
+    }
+  }
+  return [...stats.values()].sort((a, b) => b.count - a.count || a.label.localeCompare(b.label, "it"));
+}
+
+function newsStatusClass(kind: NewsActivityKind): string {
+  if (kind === "new") return "border-emerald-200 bg-emerald-50 text-emerald-800";
+  if (kind === "changed") return "border-amber-200 bg-amber-50 text-amber-800";
+  if (kind === "removed") return "border-slate-300 bg-slate-100 text-slate-700";
+  return "border-sky-200 bg-sky-50 text-sky-800";
+}
+
+function diffActivityItems(recentItems: AlboPublicRunItem[]): NewsActivityItem[] {
+  const activity: NewsActivityItem[] = [
+    ...ALBO_PUBLIC_DIFF_NEW_ITEMS.map((item) => ({ kind: "new" as const, item })),
+    ...ALBO_PUBLIC_DIFF_CHANGED_ITEMS.map((entry) => ({ kind: "changed" as const, item: entry.after })),
+    ...ALBO_PUBLIC_DIFF_REMOVED_ITEMS.map((item) => ({ kind: "removed" as const, item })),
+  ];
+
+  if (activity.length > 0) return activity.slice(0, RECENT_CONTEXT_LIMIT);
+
+  return recentItems.map((item) => ({ kind: "context" as const, item }));
+}
+
+function StatBars({ stats, total }: { stats: ClassificationStat[]; total: number }) {
+  if (!stats.length || total <= 0) {
+    return <p className="text-sm text-muted-foreground">Nessun dato classificabile nello snapshot corrente.</p>;
+  }
+
+  return (
+    <div className="space-y-2">
+      {stats.map((stat) => {
+        const width = `${Math.max(8, Math.round((stat.count / total) * 100))}%`;
+        return (
+          <div key={stat.id}>
+            <div className="mb-1 flex items-center justify-between gap-3 text-xs">
+              <span className="min-w-0 truncate font-semibold text-foreground">{stat.label}</span>
+              <span className="font-mono text-muted-foreground">{stat.count}</span>
+            </div>
+            <div className="h-2 rounded-full bg-muted">
+              <div className="h-2 rounded-full bg-primary" style={{ width }} />
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+function AlboNewsItem({ activity }: { activity: NewsActivityItem }) {
+  const { item, kind } = activity;
+
+  return (
+    <div className="rounded-lg border border-border bg-background p-3">
+      <div className="mb-2 flex flex-wrap items-center gap-2">
+        <span className={`rounded-full border px-2 py-0.5 text-xs font-semibold ${newsStatusClass(kind)}`}>
+          {NEWS_ACTIVITY_LABELS[kind]}
+        </span>
+        <Badge variant="secondary" className="text-xs">
+          {item.classification.act_category.label}
+        </Badge>
+        <span className="rounded-full border border-border bg-muted/50 px-2 py-0.5 text-xs font-semibold text-foreground">
+          {item.classification.sector.label}
+        </span>
+      </div>
+      <h3 className="text-sm font-bold leading-snug text-foreground">{item.subject}</h3>
+      <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted-foreground">
+        {item.publication_number && <span className="font-mono">Pubbl. {item.publication_number}</span>}
+        {item.act_type && <span>{item.act_type}</span>}
+        <span>Dal {shortDate(item.publication_start)}</span>
+      </div>
+    </div>
+  );
+}
+
+function AlboNewsOverview({ recentItems }: { recentItems: AlboPublicRunItem[] }) {
+  const activityItems = diffActivityItems(recentItems);
+  const hasDiffActivity = activityItems.some((activity) => activity.kind !== "context");
+  const sectorStats = classificationStats(activityItems, (activity) => activity.item.classification.sector);
+  const actCategoryStats = classificationStats(activityItems, (activity) => activity.item.classification.act_category);
+  const total = activityItems.length;
+
+  return (
+    <section
+      aria-labelledby="albo-news-heading"
+      className="mb-8 rounded-xl border border-border bg-background p-4 shadow-sm md:p-5"
+    >
+      <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+        <div>
+          <span className="eyebrow text-primary">
+            <Sparkles className="h-3.5 w-3.5" aria-hidden="true" />
+            Novita Albo
+          </span>
+          <h2 id="albo-news-heading" className="mt-2 font-display text-xl font-bold tracking-tight">
+            Appena pubblicate, per settore e tipologia
+          </h2>
+          <p className="mt-2 max-w-3xl text-sm leading-relaxed text-muted-foreground">
+            {hasDiffActivity
+              ? "Record nuovi, aggiornati o rimossi rispetto allo snapshot pubblico precedente, classificati con il dizionario civico Albo."
+              : "Nell'ultimo confronto pubblico non risultano nuove pubblicazioni o variazioni; sotto sono mostrati gli ultimi atti correnti come contesto operativo."}
+          </p>
+        </div>
+        <div className="rounded-lg border border-border bg-muted/30 p-3 text-right">
+          <div className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Nuovi</div>
+          <div className="mt-1 font-display text-2xl font-bold tabular-nums text-foreground">
+            {ALBO_PUBLIC_DIFF_SUMMARY.counts.new}
+          </div>
+        </div>
+      </div>
+
+      <div className="mt-5 grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
+        {[
+          ["Cambiati", ALBO_PUBLIC_DIFF_SUMMARY.counts.changed],
+          ["Rimossi", ALBO_PUBLIC_DIFF_SUMMARY.counts.removed],
+          ["Invariati", ALBO_PUBLIC_DIFF_SUMMARY.counts.unchanged],
+          ["Confronto", fullDateTime(ALBO_PUBLIC_DIFF_SUMMARY.retrieved_at)],
+        ].map(([label, value]) => (
+          <div key={label} className="rounded-lg border border-border bg-muted/30 p-3">
+            <div className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">{label}</div>
+            <div className="mt-1 text-sm font-bold text-foreground">{value}</div>
+          </div>
+        ))}
+      </div>
+
+      <div className="mt-5 grid gap-4 lg:grid-cols-2">
+        <div className="rounded-lg border border-border bg-muted/30 p-3">
+          <h3 className="mb-3 text-sm font-bold text-foreground">Distribuzione per settore</h3>
+          <StatBars stats={sectorStats} total={total} />
+        </div>
+        <div className="rounded-lg border border-border bg-muted/30 p-3">
+          <h3 className="mb-3 text-sm font-bold text-foreground">Distribuzione per tipologia</h3>
+          <StatBars stats={actCategoryStats} total={total} />
+        </div>
+      </div>
+
+      <div className="mt-5 space-y-2">
+        {activityItems.length > 0 ? (
+          activityItems.map((activity) => (
+            <AlboNewsItem key={`${activity.kind}-${activity.item.id}`} activity={activity} />
+          ))
+        ) : (
+          <div className="rounded-lg border border-border bg-muted/30 p-3 text-sm text-muted-foreground">
+            Nessun record pubblico disponibile per costruire il riepilogo delle novita.
+          </div>
+        )}
+      </div>
+    </section>
+  );
+}
+
 function AlboPublicItemCard({ item }: { item: AlboPublicRunItem }) {
   const archivedDocument = ALBO_ARCHIVED_DOCUMENTS_BY_ID.get(item.id);
 
@@ -86,8 +289,11 @@ function AlboPublicItemCard({ item }: { item: AlboPublicRunItem }) {
         <div className="min-w-0 flex-1">
           <div className="mb-2 flex flex-wrap items-center gap-2">
             <Badge variant="secondary" className="text-xs">
-              {item.act_type ?? "Atto Albo"}
+              {item.classification.act_category.label}
             </Badge>
+            <span className="rounded-full border border-border bg-muted/50 px-2 py-0.5 text-xs font-semibold text-foreground">
+              {item.classification.sector.label}
+            </span>
             <span className={`rounded-full border px-2 py-0.5 text-xs font-semibold ${visibilityClass(item.public_visibility)}`}>
               {ALBO_PUBLIC_VISIBILITY_LABELS[item.public_visibility]}
             </span>
@@ -104,6 +310,7 @@ function AlboPublicItemCard({ item }: { item: AlboPublicRunItem }) {
           <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-muted-foreground">
             {item.publication_number && <span className="font-mono">Pubbl. {item.publication_number}</span>}
             {item.act_number && <span className="font-mono">Atto {item.act_number}</span>}
+            {item.act_type && <span>{item.act_type}</span>}
             {item.office && (
               <span className="inline-flex items-center gap-1">
                 <Landmark className="h-3.5 w-3.5" aria-hidden="true" />
@@ -157,6 +364,8 @@ export function Albo() {
   const [visibilityFilter, setVisibilityFilter] = useState<VisibilityFilter>("all");
   const [riskFilter, setRiskFilter] = useState<RiskFilter>("all");
   const [officeFilter, setOfficeFilter] = useState(ALL_OFFICES);
+  const [sectorFilter, setSectorFilter] = useState(ALL_SECTORS);
+  const [actCategoryFilter, setActCategoryFilter] = useState(ALL_ACT_CATEGORIES);
   const [documentFilter, setDocumentFilter] = useState<DocumentFilter>("all");
 
   const firstLimit = ALBO_PUBLIC_RUN_SUMMARY.known_limits[0];
@@ -170,6 +379,19 @@ export function Albo() {
         .sort((a, b) => a.localeCompare(b, "it")),
     [],
   );
+  const sectorOptions = useMemo(
+    () =>
+      classificationStats(ALBO_PUBLIC_RUN_ITEMS, (item) => item.classification.sector)
+        .map((stat) => ({ id: stat.id, label: stat.label })),
+    [],
+  );
+  const actCategoryOptions = useMemo(
+    () =>
+      classificationStats(ALBO_PUBLIC_RUN_ITEMS, (item) => item.classification.act_category)
+        .map((stat) => ({ id: stat.id, label: stat.label })),
+    [],
+  );
+  const recentItems = useMemo(() => mostRecentItems(ALBO_PUBLIC_RUN_ITEMS), []);
 
   const filteredItems = useMemo(() => {
     const normalizedQuery = normalizeQuery(query);
@@ -181,12 +403,14 @@ export function Albo() {
         (visibilityFilter === "all" || item.public_visibility === visibilityFilter) &&
         (riskFilter === "all" || item.privacy_risk === riskFilter) &&
         (officeFilter === ALL_OFFICES || item.office === officeFilter) &&
+        (sectorFilter === ALL_SECTORS || item.classification.sector.id === sectorFilter) &&
+        (actCategoryFilter === ALL_ACT_CATEGORIES || item.classification.act_category.id === actCategoryFilter) &&
         (documentFilter === "all" ||
           (documentFilter === "archived" && hasArchivedDocument) ||
           (documentFilter === "without_archive" && !hasArchivedDocument))
       );
     });
-  }, [documentFilter, officeFilter, query, riskFilter, visibilityFilter]);
+  }, [actCategoryFilter, documentFilter, officeFilter, query, riskFilter, sectorFilter, visibilityFilter]);
 
   const archivedInFilteredItems = filteredItems.filter((item) =>
     ALBO_ARCHIVED_DOCUMENTS_BY_ID.has(item.id),
@@ -196,6 +420,8 @@ export function Albo() {
     visibilityFilter !== "all" ||
     riskFilter !== "all" ||
     officeFilter !== ALL_OFFICES ||
+    sectorFilter !== ALL_SECTORS ||
+    actCategoryFilter !== ALL_ACT_CATEGORIES ||
     documentFilter !== "all";
 
   return (
@@ -344,6 +570,8 @@ export function Albo() {
           </div>
         </section>
 
+        <AlboNewsOverview recentItems={recentItems} />
+
         <section
           aria-labelledby="albo-documents-heading"
           className="mb-8 rounded-xl border border-border bg-background p-4 shadow-sm md:p-5"
@@ -428,8 +656,8 @@ export function Albo() {
             </div>
           </div>
 
-          <div className="grid gap-3 lg:grid-cols-[minmax(0,1.6fr)_repeat(4,minmax(0,1fr))_auto]">
-            <div className="relative">
+          <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
+            <div className="relative md:col-span-2">
               <Search className="pointer-events-none absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" aria-hidden="true" />
               <Input
                 aria-label="Cerca atti Albo"
@@ -461,6 +689,34 @@ export function Albo() {
                 <SelectItem value="low">Rischio basso</SelectItem>
                 <SelectItem value="medium">Rischio medio</SelectItem>
                 <SelectItem value="high">Rischio alto</SelectItem>
+              </SelectContent>
+            </Select>
+
+            <Select value={sectorFilter} onValueChange={setSectorFilter}>
+              <SelectTrigger aria-label="Filtra per settore">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value={ALL_SECTORS}>Tutti i settori</SelectItem>
+                {sectorOptions.map((sector) => (
+                  <SelectItem key={sector.id} value={sector.id}>
+                    {sector.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+
+            <Select value={actCategoryFilter} onValueChange={setActCategoryFilter}>
+              <SelectTrigger aria-label="Filtra per tipologia">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value={ALL_ACT_CATEGORIES}>Tutte le tipologie</SelectItem>
+                {actCategoryOptions.map((category) => (
+                  <SelectItem key={category.id} value={category.id}>
+                    {category.label}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
 
@@ -498,6 +754,8 @@ export function Albo() {
                 setVisibilityFilter("all");
                 setRiskFilter("all");
                 setOfficeFilter(ALL_OFFICES);
+                setSectorFilter(ALL_SECTORS);
+                setActCategoryFilter(ALL_ACT_CATEGORIES);
                 setDocumentFilter("all");
               }}
             >

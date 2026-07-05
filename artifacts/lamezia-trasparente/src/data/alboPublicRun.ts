@@ -1,5 +1,10 @@
 import publicAlboLatest from "../../../../data/public/albo/latest.json";
+import publicAlboDiff from "../../../../data/public/albo/diff-latest.json";
 import publicAlboDocumentsManifest from "../../../../data/public/albo/documents-manifest.json";
+import {
+  ALBO_CLASSIFICATION_DICTIONARY,
+  classifyAlboRecordCategory,
+} from "../../../../scripts/albo-classification-dictionary";
 import { ALBO_OPERATIONAL_STATUS, type AlboStatusCounts } from "@/data/alboStatus";
 
 export type AlboPublicVisibility =
@@ -47,6 +52,11 @@ export type AlboPublicRunItem = {
   public_note: string | null;
 };
 
+export type AlboPublicDiffChangedItem = {
+  before: AlboPublicRunItem | null;
+  after: AlboPublicRunItem;
+};
+
 type RawAlboPublicRunItem = Partial<AlboPublicRunItem> & {
   public_visibility?: string;
   privacy_risk?: string;
@@ -62,6 +72,23 @@ type RawAlboPublicLatest = {
   known_limits: string[];
   classification_dictionary?: unknown;
   items: RawAlboPublicRunItem[];
+};
+
+type RawAlboPublicDiff = {
+  source?: unknown;
+  source_url?: unknown;
+  retrieved_at?: unknown;
+  verification_status?: unknown;
+  counts?: Partial<AlboStatusCounts>;
+  known_limits?: unknown;
+  diff_baseline?: unknown;
+  classification_dictionary?: unknown;
+  diff?: {
+    new?: RawAlboPublicRunItem[];
+    changed?: Array<{ before?: RawAlboPublicRunItem; after?: RawAlboPublicRunItem }>;
+    removed?: RawAlboPublicRunItem[];
+    unchanged?: RawAlboPublicRunItem[];
+  };
 };
 
 type RawArchivedAlboDocument = {
@@ -208,6 +235,24 @@ function normalizeItemClassification(value: unknown): AlboItemClassification {
   };
 }
 
+function classifyFallbackFromRecord(item: RawAlboPublicRunItem): AlboItemClassification {
+  return classifyAlboRecordCategory({
+    office: nullableText(item.office),
+    act_type: nullableText(item.act_type),
+    subject: nullableText(item.subject),
+  });
+}
+
+function normalizeItemClassificationForRecord(
+  value: unknown,
+  item: RawAlboPublicRunItem,
+): AlboItemClassification {
+  const normalized = normalizeItemClassification(value);
+  return normalized.dictionary_version === FALLBACK_CLASSIFICATION.dictionary_version
+    ? classifyFallbackFromRecord(item)
+    : normalized;
+}
+
 function normalizePublicRunItem(item: RawAlboPublicRunItem): AlboPublicRunItem | null {
   if (
     typeof item.id !== "string" ||
@@ -238,7 +283,7 @@ function normalizePublicRunItem(item: RawAlboPublicRunItem): AlboPublicRunItem |
     verification_status: item.verification_status,
     privacy_risk: item.privacy_risk,
     public_visibility: item.public_visibility,
-    classification: normalizeItemClassification(item.classification),
+    classification: normalizeItemClassificationForRecord(item.classification, item),
     known_limits: arrayOfText(item.known_limits),
     public_note: nullableText(item.public_note),
   };
@@ -283,6 +328,7 @@ function normalizeArchivedDocument(document: RawArchivedAlboDocument): AlboArchi
 }
 
 const latest = publicAlboLatest as RawAlboPublicLatest;
+const latestDiff = publicAlboDiff as RawAlboPublicDiff;
 const documentsManifest = publicAlboDocumentsManifest as RawAlboDocumentsManifest;
 
 export const ALBO_PUBLIC_RUN_ITEMS: AlboPublicRunItem[] = latest.items
@@ -302,19 +348,55 @@ export const ALBO_PUBLIC_RUN_SUMMARY = {
 const classificationDictionary = (latest.classification_dictionary ?? {}) as RawAlboClassificationDictionary;
 
 export const ALBO_PUBLIC_CLASSIFICATION_DICTIONARY = {
-  version: nullableText(classificationDictionary.version) ?? FALLBACK_CLASSIFICATION.dictionary_version,
-  known_limits: arrayOfText(classificationDictionary.known_limits),
+  version: nullableText(classificationDictionary.version) ?? ALBO_CLASSIFICATION_DICTIONARY.version,
+  known_limits: arrayOfText(classificationDictionary.known_limits).length
+    ? arrayOfText(classificationDictionary.known_limits)
+    : ALBO_CLASSIFICATION_DICTIONARY.known_limits,
   sectors: Array.isArray(classificationDictionary.sectors)
     ? classificationDictionary.sectors
         .map(normalizeClassificationDictionaryEntry)
         .filter((entry): entry is Pick<AlboClassificationTag, "id" | "label" | "description"> => entry !== null)
-    : [],
+    : ALBO_CLASSIFICATION_DICTIONARY.sectors,
   act_categories: Array.isArray(classificationDictionary.act_categories)
     ? classificationDictionary.act_categories
         .map(normalizeClassificationDictionaryEntry)
         .filter((entry): entry is Pick<AlboClassificationTag, "id" | "label" | "description"> => entry !== null)
-    : [],
+    : ALBO_CLASSIFICATION_DICTIONARY.act_categories,
 };
+
+export const ALBO_PUBLIC_DIFF_SUMMARY = {
+  source: nullableText(latestDiff.source) ?? latest.source,
+  source_url: nullableText(latestDiff.source_url) ?? latest.source_url,
+  retrieved_at: nullableText(latestDiff.retrieved_at) ?? latest.retrieved_at,
+  verification_status: nullableText(latestDiff.verification_status) ?? latest.verification_status,
+  counts: {
+    acquired: numberValue(latestDiff.counts?.acquired),
+    new: numberValue(latestDiff.counts?.new),
+    changed: numberValue(latestDiff.counts?.changed),
+    removed: numberValue(latestDiff.counts?.removed),
+    unchanged: numberValue(latestDiff.counts?.unchanged),
+    publishable: numberValue(latestDiff.counts?.publishable),
+    minimised: numberValue(latestDiff.counts?.minimised),
+    metadata_only: numberValue(latestDiff.counts?.metadata_only),
+    excluded: numberValue(latestDiff.counts?.excluded),
+  },
+  known_limits: arrayOfText(latestDiff.known_limits),
+};
+
+export const ALBO_PUBLIC_DIFF_NEW_ITEMS: AlboPublicRunItem[] = (latestDiff.diff?.new ?? [])
+  .map(normalizePublicRunItem)
+  .filter((item): item is AlboPublicRunItem => item !== null);
+
+export const ALBO_PUBLIC_DIFF_CHANGED_ITEMS: AlboPublicDiffChangedItem[] = (latestDiff.diff?.changed ?? [])
+  .map((entry) => ({
+    before: entry.before ? normalizePublicRunItem(entry.before) : null,
+    after: entry.after ? normalizePublicRunItem(entry.after) : null,
+  }))
+  .filter((entry): entry is AlboPublicDiffChangedItem => entry.after !== null);
+
+export const ALBO_PUBLIC_DIFF_REMOVED_ITEMS: AlboPublicRunItem[] = (latestDiff.diff?.removed ?? [])
+  .map(normalizePublicRunItem)
+  .filter((item): item is AlboPublicRunItem => item !== null);
 
 export const ALBO_DOCUMENTS_MANIFEST = {
   generated_at: nullableText(documentsManifest.generated_at),
