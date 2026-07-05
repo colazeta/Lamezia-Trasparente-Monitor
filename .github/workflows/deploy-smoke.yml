@@ -6,6 +6,7 @@ on:
       public_url:
         description: "Optional public site URL to smoke-check after the local build"
         required: false
+        default: "https://lamezia-trasparente.pages.dev"
         type: string
   push:
     branches:
@@ -77,6 +78,42 @@ jobs:
                 failed=1
               fi
             done
+
+            root_target="${PUBLIC_SITE_URL%/}/"
+            if curl -fsSL --max-time 20 "$root_target" >/tmp/ltm-public-root.html; then
+              grep -oE 'src="[^"]+\.js[^""]*"' /tmp/ltm-public-root.html \
+                | sed -E 's/^src="//; s/"$//' \
+                | sort -u >/tmp/ltm-public-scripts.txt || true
+            else
+              : >/tmp/ltm-public-scripts.txt
+            fi
+
+            if [ ! -s /tmp/ltm-public-scripts.txt ]; then
+              echo "No generated JavaScript assets found on public URL."
+              failed=1
+            else
+              : >/tmp/ltm-public-bundle.txt
+              while IFS= read -r script_path; do
+                case "$script_path" in
+                  http://*|https://*) script_url="$script_path" ;;
+                  /*) script_url="${PUBLIC_SITE_URL%/}${script_path}" ;;
+                  *) script_url="${PUBLIC_SITE_URL%/}/${script_path}" ;;
+                esac
+                if ! curl -fsSL --max-time 20 "$script_url" >>/tmp/ltm-public-bundle.txt; then
+                  echo "Could not fetch public JavaScript asset: $script_url"
+                  failed=1
+                fi
+                printf '\n' >>/tmp/ltm-public-bundle.txt
+              done </tmp/ltm-public-scripts.txt
+
+              for marker in "Contratti protagonisti" "Stato dei fascicoli contrattuali" "Copertura fasi"; do
+                if ! grep -Fq "$marker" /tmp/ltm-public-bundle.txt; then
+                  echo "Public JavaScript bundle is missing contract state marker: $marker"
+                  failed=1
+                fi
+              done
+            fi
+
             if [ "$failed" -eq 0 ]; then
               echo "Production URL smoke passed."
               exit 0
