@@ -1,5 +1,5 @@
 export const PUBLIC_SITE_ORIGIN =
-  "https://lamezia-trasparente-monitor.replit.app";
+  "https://lamezia-trasparente.pages.dev";
 
 export const COUNCIL_SESSION_V0_DEMO_PATH =
   "/convocazioni/demo-consiglio-comunale-v0" as const;
