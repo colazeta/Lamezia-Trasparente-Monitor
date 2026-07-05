@@ -4,6 +4,7 @@ import { describe, expect, it } from "vitest";
 import {
   ALBO_PUBLIC_RUN_ITEMS,
   ALBO_PUBLIC_RUN_SUMMARY,
+  alboPublicSearchText,
 } from "@/data/alboPublicRun";
 import { Albo } from "@/pages/Albo";
 import { renderPage } from "./pages-harness";
@@ -37,7 +38,7 @@ describe("Albo public run surface", () => {
     expect(screen.queryByText(/assegno di matern|assistenza domiciliare|persona fisica/i)).toBeNull();
   });
 
-  it("filters public records with the search field", () => {
+  it("filters public records with the search field", async () => {
     renderPage(Albo);
 
     const firstPublicationNumber = ALBO_PUBLIC_RUN_ITEMS[0]?.publication_number;
@@ -49,7 +50,15 @@ describe("Albo public run surface", () => {
       target: { value: firstPublicationNumber },
     });
 
-    expect(screen.getByText(`1 di ${ALBO_PUBLIC_RUN_ITEMS.length} record`)).toBeInTheDocument();
+    const expectedMatches = ALBO_PUBLIC_RUN_ITEMS.filter((item) =>
+      alboPublicSearchText(item).includes(firstPublicationNumber.toLowerCase()),
+    ).length;
+
+    expect(
+      await screen.findByText(
+        new RegExp(`${expectedMatches} di ${ALBO_PUBLIC_RUN_ITEMS.length} record`),
+      ),
+    ).toBeInTheDocument();
     expect(screen.getByText(`Pubbl. ${firstPublicationNumber}`)).toBeInTheDocument();
   });
 

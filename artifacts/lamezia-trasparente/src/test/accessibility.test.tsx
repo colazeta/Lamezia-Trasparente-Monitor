@@ -54,9 +54,9 @@ afterEach(() => {
   document.documentElement.classList.remove("dark");
 });
 
-describe("pages have no serious/critical accessibility violations", () => {
+describe.sequential("pages have no serious/critical accessibility violations", () => {
   for (const theme of ["light", "dark"] as const) {
-    describe(`${theme} mode`, () => {
+    describe.sequential(`${theme} mode`, () => {
       for (const [name, Page] of PAGES) {
         it(`${name} is accessible`, async () => {
           applyTheme(theme);
