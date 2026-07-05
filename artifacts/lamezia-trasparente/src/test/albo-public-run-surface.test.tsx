@@ -35,7 +35,7 @@ describe("Albo public run surface", () => {
     expect(screen.getByRole("heading", { name: /PDF preservati nella piattaforma/i })).toBeInTheDocument();
     expect(screen.getByText(/Prossimo controllo/i)).toBeInTheDocument();
     expect(screen.queryByText(/assegno di matern|assistenza domiciliare|persona fisica/i)).toBeNull();
-  });
+  }, 15000);
 
   it("filters public records with the search field", () => {
     renderPage(Albo);

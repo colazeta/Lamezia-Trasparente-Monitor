@@ -1,0 +1,76 @@
+{
+  "checkedAt": "2026-07-05",
+  "scope": "comunali-lamezia-2019",
+  "coverageNote": "Copertura parziale per lo storico organi: lo snapshot registra sindaco eletto e candidati sindaco eletti consiglieri, ma non contiene i nominativi completi dei consiglieri assegnati dalle liste ne' la composizione nominativa della Giunta.",
+  "sources": {
+    "eligendoArchive": "https://elezionistorico.interno.gov.it/index.php?dtel=10%2F11%2F2019&es0=S&es1=S&es2=S&es3=N&lev0=0&lev1=18&lev2=22&lev3=641&levsut0=0&levsut1=1&levsut2=2&levsut3=3&ms=S&ne1=18&ne2=22&ne3=220641&tpa=I&tpe=C&tpel=G",
+    "eligendoOpenData": "https://elezionistorico.interno.gov.it/daithome/documenti/opendata/comunali/comunali-20191110.zip"
+  },
+  "election": {
+    "date": "2019-11-10",
+    "region": "CALABRIA",
+    "province": "CATANZARO",
+    "municipality": "LAMEZIA TERME",
+    "registeredVoters": 62214,
+    "firstRoundVoters": 34209,
+    "runoffVoters": 18654
+  },
+  "electedCandidates": [
+    {
+      "name": "Paolo Mascaro",
+      "slug": "paolo-mascaro",
+      "electedCode": "S",
+      "electedLabel": "Sindaco eletto"
+    },
+    {
+      "name": "Ruggero Pegna",
+      "slug": "ruggero-pegna",
+      "electedCode": "C",
+      "electedLabel": "Candidato sindaco eletto consigliere"
+    },
+    {
+      "name": "Eugenio Guarascio",
+      "slug": "eugenio-guarascio-2019",
+      "electedCode": "C",
+      "electedLabel": "Candidato sindaco eletto consigliere"
+    },
+    {
+      "name": "Rosario Piccioni",
+      "slug": "rosario-piccioni",
+      "electedCode": "C",
+      "electedLabel": "Candidato sindaco eletto consigliere"
+    }
+  ],
+  "listSeats": [
+    {
+      "candidate": "Paolo Mascaro",
+      "list": "ASSIEME MASCARO SINDACO",
+      "seats": 8
+    },
+    {
+      "candidate": "Paolo Mascaro",
+      "list": "ORGOGLIO LAMEZIA",
+      "seats": 7
+    },
+    {
+      "candidate": "Ruggero Pegna",
+      "list": "FRATELLI D'ITALIA",
+      "seats": 2
+    },
+    {
+      "candidate": "Ruggero Pegna",
+      "list": "FORZA ITALIA",
+      "seats": 2
+    },
+    {
+      "candidate": "Eugenio Guarascio",
+      "list": "PARTITO DEMOCRATICO",
+      "seats": 1
+    },
+    {
+      "candidate": "Eugenio Guarascio",
+      "list": "GUARASCIO SINDACO",
+      "seats": 1
+    }
+  ]
+}
