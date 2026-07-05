@@ -246,6 +246,17 @@ audit-blocking: it keeps follow-up flags enabled, reviewer metadata blank, and
 - `data/interim/qa/anncsu_coordinate_decision_drafts_batch_1_2025.json`
 - `data/interim/qa/anncsu_coordinate_decision_drafts_batch_1_report_2025.md`
 
+`scripts/prepare_anncsu_coordinate_review_worksheet.py` creates a
+human-editable worksheet for the first review-ready rows, and
+`scripts/build_anncsu_coordinate_decisions_from_worksheet.py` exports reviewed
+JSON decisions only from rows explicitly marked `accept_candidate` or
+`edit_coordinate` by a reviewer:
+
+- `data/interim/qa/anncsu_coordinate_review_worksheet_batch_1_2025.csv`
+- `data/interim/qa/anncsu_coordinate_review_worksheet_batch_1_report_2025.md`
+- `data/interim/qa/anncsu_coordinate_reviewed_decisions_batch_1_2025.json`
+- `data/interim/qa/anncsu_coordinate_reviewed_decisions_batch_1_report_2025.md`
+
 The retraining path is therefore review-first:
 
 - collect accepted manual coordinate overrides and rejected candidates;

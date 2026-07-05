@@ -75,6 +75,8 @@ python scripts/generate_anncsu_local_anchor_coordinate_candidates.py
 python scripts/prepare_anncsu_coordinate_review_batch.py
 python scripts/prepare_anncsu_coordinate_review_pack.py
 python scripts/prepare_anncsu_coordinate_decision_drafts.py
+python scripts/prepare_anncsu_coordinate_review_worksheet.py
+python scripts/build_anncsu_coordinate_decisions_from_worksheet.py
 ```
 
 These candidates use non-suspect same-street ANNCSU civics as review anchors.
@@ -87,7 +89,10 @@ reviewer can open each `access_id` in the workbench with a recommended review
 track. The decision-drafts script turns the first review batch into a
 non-applicable JSON draft with proposed coordinates prefilled, but keeps
 audit-blocking follow-up flags and blank reviewer metadata until a human
-reviewer accepts each row.
+reviewer accepts each row. The worksheet script creates a human-editable CSV
+for the first 50 review-ready rows, and the builder exports reviewed JSON
+decisions only from rows explicitly marked `accept_candidate` or
+`edit_coordinate`.
 
 Build the auditable recovery layer and training set:
 
