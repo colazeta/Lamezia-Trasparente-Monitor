@@ -1,39 +1,40 @@
 # ANNCSU Coordinate Review Pack 2025
 
-Date: 2026-07-04
+Date: 2026-07-05
 
 ## Result
 
 - Review pack rows: 345
-- Manual-review-ready rows: 220
+- Manual-review-ready rows: 221
 - Review pack CSV: `data/interim/qa/anncsu_coordinate_review_pack_2025.csv`
 
 This review pack does not overwrite ANNCSU raw coordinates, processed civic assignments, GPKG files, polygons, or public UI. It only joins existing diagnostics, local ANNCSU anchors, and external geocoder candidates into one review table.
 
 ## Decision Readiness
 
-- `manual_review_ready`: 220
-- `needs_manual_map_check`: 110
+- `manual_review_ready`: 221
+- `needs_manual_map_check`: 109
 - `not_ready`: 15
 
 ## Recommended Candidate Source
 
-- `local_anncsu_anchor`: 330
-- `none`: 15
+- `local_anncsu_anchor`: 329
+- `none`: 16
 
 ## Evidence Agreement
 
-- `local_anchor_only`: 328
-- `local_and_geocoder_agree_within_150m`: 1
-- `local_geocoder_conflict_over_500m`: 1
+- `local_anchor_only`: 313
+- `local_and_geocoder_agree_within_150m`: 5
+- `local_geocoder_conflict_over_500m`: 12
 - `no_review_candidate`: 15
 
 ## Recommended Review Tracks
 
 - `needs_dedicated_provider_or_manual_lookup`: 15
-- `review_local_anchor_with_external_support`: 1
-- `review_low_local_anchor`: 110
-- `review_medium_local_anchor`: 219
+- `resolve_local_geocoder_conflict`: 1
+- `review_local_anchor_with_external_support`: 5
+- `review_low_local_anchor`: 108
+- `review_medium_local_anchor`: 216
 
 ## First Manual-Review-Ready Rows
 
