@@ -21,6 +21,16 @@ WORKBENCH_CANDIDATES_JSON = WORKBENCH_DATA_DIR / "coordinate_geocode_candidates_
 
 LAMEZIA_BBOX = (16.0, 38.75, 16.6, 39.15)
 CONFIDENCE_VALUES = {"medium", "low", "low_street_level", "very_low", "reject_outside_context"}
+RESULT_FIELDS = [
+    "result_lon",
+    "result_lat",
+    "result_accuracy_m",
+    "result_confidence",
+    "result_match_type",
+    "result_provider",
+    "result_raw_id",
+    "result_notes",
+]
 
 CANDIDATE_FIELDS = [
     "access_id",
@@ -95,6 +105,14 @@ def candidate_key(row: dict[str, Any]) -> tuple[str, str, str, str, str, str, st
         as_text(row.get("candidate_lat")),
         as_text(row.get("candidate_status")),
     )
+
+
+def has_provider_result(row: dict[str, str]) -> bool:
+    return any(as_text(row.get(field)) for field in RESULT_FIELDS)
+
+
+def has_importable_coordinate(row: dict[str, str]) -> bool:
+    return not math.isnan(as_float(row.get("result_lon"))) and not math.isnan(as_float(row.get("result_lat")))
 
 
 def merge_candidates(existing: list[dict[str, Any]], new_rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
@@ -192,10 +210,20 @@ def imported_candidate_for(row: dict[str, str], candidate_rank: int) -> dict[str
     }
 
 
-def write_report(input_path: Path, imported_rows: list[dict[str, str]], candidate_rows: list[dict[str, Any]]) -> None:
+def write_report(
+    input_path: Path,
+    input_rows: list[dict[str, str]],
+    imported_rows: list[dict[str, str]],
+    candidate_rows: list[dict[str, Any]],
+) -> None:
     status_counts = Counter(as_text(row.get("candidate_status")) for row in imported_rows)
     confidence_counts = Counter(as_text(row.get("provider_confidence")) for row in imported_rows)
+    provider_counts = Counter(as_text(row.get("provider")) or "blank" for row in imported_rows)
     access_ids = {as_text(row.get("access_id")) for row in candidate_rows if as_text(row.get("access_id"))}
+    input_with_any_result = [row for row in input_rows if has_provider_result(row)]
+    input_with_importable_coordinate = [row for row in input_rows if has_importable_coordinate(row)]
+    blank_result_rows = len(input_rows) - len(input_with_any_result)
+    incomplete_or_invalid_rows = len(input_with_any_result) - len(input_with_importable_coordinate)
     lines = [
         "# ANNCSU Dedicated Geocoder Import 2025",
         "",
@@ -204,6 +232,11 @@ def write_report(input_path: Path, imported_rows: list[dict[str, str]], candidat
         "## Result",
         "",
         f"- Input CSV: `{relpath(input_path)}`",
+        f"- Input rows: {len(input_rows)}",
+        f"- Rows with provider result fields present: {len(input_with_any_result)}",
+        f"- Rows with importable result coordinates: {len(input_with_importable_coordinate)}",
+        f"- Blank provider-result rows skipped: {blank_result_rows}",
+        f"- Incomplete or invalid provider-result rows skipped: {incomplete_or_invalid_rows}",
         f"- Imported candidate rows: {len(imported_rows)}",
         f"- Candidate access_ids after import: {len(access_ids)}",
         f"- Candidate CSV: `{relpath(CANDIDATES_CSV)}`",
@@ -225,6 +258,12 @@ def write_report(input_path: Path, imported_rows: list[dict[str, str]], candidat
             lines.append(f"- `{key}`: {value}")
     else:
         lines.append("- No provider confidence values imported.")
+    lines.extend(["", "## Imported Provider Counts", ""])
+    if provider_counts:
+        for key, value in sorted(provider_counts.items()):
+            lines.append(f"- `{key}`: {value}")
+    else:
+        lines.append("- No provider rows imported.")
     lines.extend(
         [
             "",
@@ -259,7 +298,7 @@ def main() -> int:
     if imported_rows:
         write_csv_rows(CANDIDATES_CSV, candidate_rows, CANDIDATE_FIELDS)
         write_json(WORKBENCH_CANDIDATES_JSON, workbench_payload(candidate_rows))
-    write_report(args.input, imported_rows, candidate_rows)
+    write_report(args.input, input_rows, imported_rows, candidate_rows)
 
     print(f"dedicated_geocoder_import_report={REPORT_PATH}")
     print(f"imported_candidate_rows={len(imported_rows)}")

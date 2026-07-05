@@ -5,6 +5,11 @@ Date: 2026-07-05
 ## Result
 
 - Input CSV: `data/interim/qa/anncsu_coordinate_dedicated_geocoder_batch_1_2025.csv`
+- Input rows: 100
+- Rows with provider result fields present: 0
+- Rows with importable result coordinates: 0
+- Blank provider-result rows skipped: 100
+- Incomplete or invalid provider-result rows skipped: 0
 - Imported candidate rows: 0
 - Candidate access_ids after import: 20
 - Candidate CSV: `data/interim/qa/anncsu_coordinate_geocode_candidates_2025.csv`
@@ -19,6 +24,10 @@ Imported rows are provider candidates only. They do not overwrite ANNCSU raw coo
 ## Imported Provider Confidence Counts
 
 - No provider confidence values imported.
+
+## Imported Provider Counts
+
+- No provider rows imported.
 
 ## Next Step
 
