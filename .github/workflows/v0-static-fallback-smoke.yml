@@ -4,6 +4,7 @@ on:
   workflow_dispatch:
   pull_request:
     paths:
+      - '.github/workflows/deploy-smoke.yml'
       - '.github/workflows/v0-static-fallback-smoke.yml'
       - 'artifacts/lamezia-trasparente/**'
       - 'package.json'
