@@ -38,24 +38,23 @@ export function OpenDataThemeLibrary({
   );
 
   return (
-    <section aria-labelledby="opendata-theme-library-title" className="mb-6">
-      <div className="mb-4 flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
+    <section aria-labelledby="opendata-theme-library-title" className="mb-5">
+      <div className="mb-3 flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
         <div>
           <span className="eyebrow text-primary">
             <Library className="h-3.5 w-3.5" />
-            Archivio OpenData
+            Passaggio 1
           </span>
           <h2
             id="opendata-theme-library-title"
             className="mt-2 text-2xl font-display font-bold text-foreground"
           >
-            Categorie tematiche dei dati
+            Scegli categoria
           </h2>
         </div>
-        <p className="max-w-2xl text-sm leading-6 text-muted-foreground">
-          Le categorie filtrano l'archivio. Il grafico o la scheda completa si
-          aprono solo dopo la scelta di un dataset.
-        </p>
+        <Badge variant="outline" className="w-fit shadow-none">
+          Filtra l'elenco
+        </Badge>
       </div>
 
       <div
@@ -67,16 +66,18 @@ export function OpenDataThemeLibrary({
           count={totalDatasets}
           icon={<Database className="h-4 w-4" />}
           isSelected={selectedThemeId === null}
-          label="Tutti i dataset"
+          label="Tutti"
+          accessibleLabel="Tutti i dataset"
           onSelect={() => onSelectTheme(null)}
         />
         {OPEN_DATA_THEME_LIBRARY.map((theme) => (
           <ThemeFilterButton
+            accessibleLabel={theme.label}
             count={theme.datasets.length}
             icon={THEME_ICONS[theme.id] ?? <Database className="h-4 w-4" />}
             isSelected={selectedThemeId === theme.id}
             key={theme.id}
-            label={theme.label}
+            label={theme.shortLabel}
             onSelect={() => onSelectTheme(theme.id)}
             statusLabel={theme.statusLabel}
           />
@@ -87,6 +88,7 @@ export function OpenDataThemeLibrary({
 }
 
 function ThemeFilterButton({
+  accessibleLabel,
   count,
   icon,
   isSelected,
@@ -94,6 +96,7 @@ function ThemeFilterButton({
   onSelect,
   statusLabel,
 }: {
+  accessibleLabel?: string;
   count: number;
   icon: ReactNode;
   isSelected: boolean;
@@ -103,8 +106,11 @@ function ThemeFilterButton({
 }) {
   return (
     <button
+      aria-label={`${accessibleLabel ?? label}: ${count} ${
+        count === 1 ? "dataset" : "dataset"
+      }${statusLabel ? `, ${statusLabel}` : ""}`}
       aria-pressed={isSelected}
-      className={`inline-flex min-h-11 items-center gap-2 rounded-md border px-3 py-2 text-sm font-semibold transition-colors ${
+      className={`inline-flex min-h-12 items-center gap-2 rounded-lg border px-4 py-2 text-sm font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 ${
         isSelected
           ? "border-primary bg-primary text-primary-foreground"
           : "border-border bg-card text-foreground hover:border-primary/50"
