@@ -16,9 +16,12 @@ import { useListContracts, type Contract } from "@workspace/api-client-react";
 import { Badge } from "@/components/ui/badge";
 import { asApiList } from "@/lib/apiList";
 import {
+  CONTRACT_LIFECYCLE_PHASE_LABELS,
+  CONTRACT_LIFECYCLE_PHASE_ORDER,
   buildContractDossier,
   summarizeContractDossiers,
   type ContractDossier,
+  type ContractLifecyclePhaseKey,
 } from "@/lib/contractDossier";
 import {
   buildContractPipelineSnapshot,
@@ -27,6 +30,15 @@ import {
 
 type DossierStatusFilter = "all" | ContractDossier["lifecycleCompleteness"];
 type DossierPhase = ContractDossier["phases"][number];
+
+type PhaseCoverageItem = {
+  key: ContractLifecyclePhaseKey;
+  label: string;
+  documented: number;
+  partial: number;
+  missing: number;
+  total: number;
+};
 
 const STATE_META: Record<
   ContractPipelineStageState,
@@ -132,6 +144,7 @@ export function ContractSourcePipelinePanel() {
   const { data, isLoading } = useListContracts({});
   const contracts = asApiList<Contract>(data);
   const dossiers = contracts.map((contract) => buildContractDossier({ contract }));
+  const phaseCoverage = summarizePhaseCoverage(dossiers);
   const summary = summarizeContractDossiers(contracts);
   const statusCounts = countDossierStatuses(dossiers);
   const sortedDossiers = [...dossiers].sort(compareDossiersByStatusPriority);
@@ -207,6 +220,29 @@ export function ContractSourcePipelinePanel() {
                 count={statusCounts["needs-review"]}
               />
             </div>
+          </div>
+
+          <div className="rounded-xl border border-border bg-muted/25 px-4 py-3">
+            <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
+              <div className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                Copertura fasi
+              </div>
+              <Badge variant="outline" className="shadow-none">
+                {isLoading ? "..." : `${summary.total} fascicoli`}
+              </Badge>
+            </div>
+            <ul
+              aria-label="Copertura stato fasi dei fascicoli"
+              className="space-y-2"
+            >
+              {phaseCoverage.map((item) => (
+                <PhaseCoverageRow
+                  key={item.key}
+                  item={item}
+                  loading={isLoading}
+                />
+              ))}
+            </ul>
           </div>
         </div>
 
@@ -409,6 +445,38 @@ function countDossierStatuses(dossiers: readonly ContractDossier[]) {
   );
 }
 
+function summarizePhaseCoverage(
+  dossiers: readonly ContractDossier[],
+): PhaseCoverageItem[] {
+  const coverage = new Map<ContractLifecyclePhaseKey, PhaseCoverageItem>(
+    CONTRACT_LIFECYCLE_PHASE_ORDER.map((key) => [
+      key,
+      {
+        key,
+        label: CONTRACT_LIFECYCLE_PHASE_LABELS[key],
+        documented: 0,
+        partial: 0,
+        missing: 0,
+        total: 0,
+      },
+    ]),
+  );
+
+  for (const dossier of dossiers) {
+    for (const phase of dossier.phases) {
+      const item = coverage.get(phase.key);
+      if (!item) continue;
+
+      item[phase.status] += 1;
+      item.total += 1;
+    }
+  }
+
+  return CONTRACT_LIFECYCLE_PHASE_ORDER.map((key) => coverage.get(key)).filter(
+    (item): item is PhaseCoverageItem => Boolean(item),
+  );
+}
+
 function compareDossiersByStatusPriority(
   a: ContractDossier,
   b: ContractDossier,
@@ -440,6 +508,68 @@ function StatusCountBadge({
     <Badge className={`shadow-none ${meta.className}`}>
       {count} {meta.label.toLowerCase()}
     </Badge>
+  );
+}
+
+function PhaseCoverageRow({
+  item,
+  loading,
+}: {
+  item: PhaseCoverageItem;
+  loading: boolean;
+}) {
+  const denominator = Math.max(item.total, 1);
+  const segments: ReadonlyArray<{
+    key: DossierPhase["status"];
+    value: number;
+    className: string;
+    label: string;
+  }> = [
+    {
+      key: "documented",
+      value: item.documented,
+      className: PHASE_STATUS_META.documented.className,
+      label: "documentate",
+    },
+    {
+      key: "partial",
+      value: item.partial,
+      className: PHASE_STATUS_META.partial.className,
+      label: "parziali",
+    },
+    {
+      key: "missing",
+      value: item.missing,
+      className: PHASE_STATUS_META.missing.className,
+      label: "mancanti",
+    },
+  ];
+
+  return (
+    <li className="rounded-lg border border-border bg-background px-3 py-2">
+      <div className="mb-2 flex items-center justify-between gap-3">
+        <span className="truncate text-xs font-semibold text-foreground">
+          {item.label}
+        </span>
+        <span className="shrink-0 font-mono text-[10px] text-muted-foreground">
+          {loading ? "..." : `${item.documented}/${item.total} doc.`}
+        </span>
+      </div>
+      <div
+        role="img"
+        aria-label={`${item.label}: ${item.documented} documentate, ${item.partial} parziali, ${item.missing} mancanti`}
+        className="flex h-2 overflow-hidden rounded-full bg-muted"
+      >
+        {segments.map((segment) => (
+          <span
+            key={segment.key}
+            className={segment.className}
+            style={{ width: `${(segment.value / denominator) * 100}%` }}
+            title={`${segment.value} ${segment.label}`}
+          />
+        ))}
+      </div>
+    </li>
   );
 }
 
