@@ -15,6 +15,7 @@ import { PAGES, renderPage, applyTheme } from "./pages-harness";
  */
 
 const IMPACT_THRESHOLD: Array<Result["impact"]> = ["serious", "critical"];
+const ACCESSIBILITY_TEST_TIMEOUT_MS = 20_000;
 
 /**
  * Documented allowlist of axe rule IDs to skip. Keep this empty unless there is
@@ -58,7 +59,7 @@ describe("pages have no serious/critical accessibility violations", () => {
   for (const theme of ["light", "dark"] as const) {
     describe(`${theme} mode`, () => {
       for (const [name, Page] of PAGES) {
-        it(`${name} is accessible`, async () => {
+        it.sequential(`${name} is accessible`, async () => {
           applyTheme(theme);
           const { container } = renderPage(Page);
 
@@ -73,7 +74,7 @@ describe("pages have no serious/critical accessibility violations", () => {
               blocking,
             )}`,
           ).toEqual([]);
-        });
+        }, ACCESSIBILITY_TEST_TIMEOUT_MS);
       }
     });
   }

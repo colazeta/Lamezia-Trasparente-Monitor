@@ -6,8 +6,14 @@ import app from "../app";
 import {
   db,
   pool,
+  CURRENT_COUNCIL_MEMBER_SLUGS,
+  CURRENT_COUNCIL_SOURCE,
+  CURRENT_GIUNTA_MEMBER_SLUGS,
+  CURRENT_GIUNTA_SOURCE,
   CURRENT_INSTITUTIONAL_OFFICIALS,
+  CURRENT_INSTITUTIONAL_MEMBERSHIPS,
   INSTITUTIONAL_POLITICI_SOURCE,
+  currentInstitutionalMembershipsForOfficial,
   organiTable,
   organiMembersTable,
   officialsTable,
@@ -53,12 +59,26 @@ describe("organi historical memberships", () => {
     expect(
       CURRENT_INSTITUTIONAL_OFFICIALS.filter((o) => o.role === "consigliere"),
     ).toHaveLength(23);
+    expect(CURRENT_COUNCIL_MEMBER_SLUGS).toHaveLength(24);
+    expect(CURRENT_GIUNTA_MEMBER_SLUGS).toHaveLength(8);
+    expect(CURRENT_INSTITUTIONAL_MEMBERSHIPS).toHaveLength(32);
+
+    const officialSlugs = new Set(
+      CURRENT_INSTITUTIONAL_OFFICIALS.map((o) => o.slug),
+    );
+    expect(
+      CURRENT_INSTITUTIONAL_MEMBERSHIPS.every((m) =>
+        officialSlugs.has(m.officialSlug),
+      ),
+    ).toBe(true);
     expect(CURRENT_INSTITUTIONAL_OFFICIALS).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
           name: "Mario Murone",
           role: "sindaco",
           roleTitle: "Sindaco",
+          profileUrl:
+            "https://www.comune.lamezia-terme.cz.it/it/person/murone-mario",
         }),
         expect.objectContaining({
           name: "Maria Grandinetti",
@@ -76,6 +96,28 @@ describe("organi historical memberships", () => {
         }),
       ]),
     );
+
+    expect(currentInstitutionalMembershipsForOfficial("mario-murone")).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          organoSlug: "consiglio-comunale",
+          membershipRole: "Sindaco",
+          sourceUrl: CURRENT_COUNCIL_SOURCE.url,
+        }),
+        expect.objectContaining({
+          organoSlug: "giunta-comunale",
+          membershipRole: "Sindaco (Presidente)",
+          sourceUrl: CURRENT_GIUNTA_SOURCE.url,
+        }),
+      ]),
+    );
+    expect(
+      currentInstitutionalMembershipsForOfficial("maria-grandinetti")[0],
+    ).toMatchObject({
+      organoSlug: "consiglio-comunale",
+      membershipRole: "Presidente del Consiglio",
+      sourceUrl: CURRENT_COUNCIL_SOURCE.url,
+    });
   });
 
   it("separates current composition from historical terms", async () => {

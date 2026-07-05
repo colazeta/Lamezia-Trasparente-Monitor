@@ -11,10 +11,9 @@ import {
   type Organo,
 } from "./schema";
 import {
-  INSTITUTIONAL_POLITICI_SOURCE,
   currentInstitutionalOfficialPosition,
+  currentInstitutionalMembershipsForOfficial,
   ensureInstitutionalOfficials,
-  isCurrentInstitutionalOfficialSlug,
 } from "./institutional-officials";
 
 export const ORGANO_TYPES = ["consiglio", "giunta", "commissione"] as const;
@@ -50,7 +49,11 @@ export const KEYSTONE_ORGANI: KeystoneOrgano[] = [
     slug: "commissioni-consiliari",
     name: "Commissioni Consiliari",
     description:
-      "Commissioni permanenti del Consiglio Comunale incaricate dell'istruttoria degli atti.",
+      [
+        "Commissioni permanenti del Consiglio Comunale incaricate",
+        "dell'istruttoria degli atti. La composizione sara' popolata quando",
+        "sara' disponibile una fonte ufficiale corrente e verificabile.",
+      ].join(" "),
     position: 2,
   },
 ];
@@ -106,6 +109,7 @@ function membershipsForOfficial(
   sourceLabel: string;
   sourceUrl: string | null;
   notes: string;
+  position: number | null;
 }[] {
   const out: {
     organoId: number;
@@ -116,7 +120,33 @@ function membershipsForOfficial(
     sourceLabel: string;
     sourceUrl: string | null;
     notes: string;
+    position: number | null;
   }[] = [];
+  const startDate = official.appointmentDate ?? null;
+  const endDate = null;
+  const currentSourceMemberships = currentInstitutionalMembershipsForOfficial(
+    official.slug,
+  );
+
+  if (currentSourceMemberships.length) {
+    for (const m of currentSourceMemberships) {
+      const organo = bySlug.get(m.organoSlug);
+      if (!organo) continue;
+      out.push({
+        organoId: organo.id,
+        membershipRole: m.membershipRole,
+        termLabel: m.termLabel,
+        startDate,
+        endDate,
+        sourceLabel: m.sourceLabel,
+        sourceUrl: m.sourceUrl,
+        notes: m.notes,
+        position: m.position,
+      });
+    }
+    return out;
+  }
+
   const consiglio = bySlug.get("consiglio-comunale");
   const giunta = bySlug.get("giunta-comunale");
   const title = official.roleTitle ?? null;
@@ -124,25 +154,10 @@ function membershipsForOfficial(
     official.status === "in_carica"
       ? "Mandato corrente"
       : "Incarico cessato o mandato precedente";
-  const startDate = official.appointmentDate ?? null;
-  const endDate = null;
-  const usesInstitutionalSource = isCurrentInstitutionalOfficialSlug(
-    official.slug,
-  );
-  const sourceLabel = usesInstitutionalSource
-    ? INSTITUTIONAL_POLITICI_SOURCE.label
-    : "Scheda soggetto nel registro civico";
-  const sourceUrl = usesInstitutionalSource
-    ? INSTITUTIONAL_POLITICI_SOURCE.url
-    : null;
-  const notes = usesInstitutionalSource
-    ? [
-        "Composizione corrente derivata dall'elenco Politici del sito comunale,",
-        `consultato il ${INSTITUTIONAL_POLITICI_SOURCE.checkedAt};`,
-        "deleghe, gruppi e atti di nomina vanno collegati a fonti specifiche",
-        "quando disponibili.",
-      ].join(" ")
-    : "Membership derivata dal ruolo registrato nel profilo soggetto; da verificare con atti di proclamazione, nomina o composizione dell'organo.";
+  const sourceLabel = "Scheda soggetto nel registro civico";
+  const sourceUrl = null;
+  const notes =
+    "Membership derivata dal ruolo registrato nel profilo soggetto; da verificare con atti di proclamazione, nomina o composizione dell'organo.";
   const membership = (organoId: number, membershipRole: string | null) => ({
     organoId,
     membershipRole,
@@ -152,6 +167,7 @@ function membershipsForOfficial(
     sourceLabel,
     sourceUrl,
     notes,
+    position: null,
   });
 
   switch (official.role) {
@@ -219,7 +235,7 @@ export async function syncOrganoMemberships(): Promise<void> {
         sourceLabel: m.sourceLabel,
         sourceUrl: m.sourceUrl,
         notes: m.notes,
-        position: rows.length,
+        position: m.position ?? rows.length,
       });
     }
   }
