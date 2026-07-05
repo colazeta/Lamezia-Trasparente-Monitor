@@ -1,14 +1,30 @@
 import { render, screen } from "@testing-library/react";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 
 import { ContractSourcePipelinePanel } from "@/components/contracts";
 import { buildContractPipelineSnapshot } from "@/lib/contractsPipelineVisualization";
+
+vi.mock("@workspace/api-client-react", async (importOriginal) => {
+  const actual =
+    await importOriginal<typeof import("@workspace/api-client-react")>();
+
+  return {
+    ...actual,
+    useListContracts: () => ({ data: [], isLoading: false }),
+  };
+});
 
 describe("ContractSourcePipelinePanel", () => {
   it("renders the source pipeline without public ingestion claims", () => {
     render(<ContractSourcePipelinePanel />);
 
-    expect(screen.getByText("Pipeline fonti")).toBeInTheDocument();
+    expect(screen.getByText("Contratti protagonisti")).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", {
+        name: "Stato dei fascicoli contrattuali",
+      }),
+    ).toBeInTheDocument();
+    expect(screen.getByText("Gate fonti e pubblicazione")).toBeInTheDocument();
     expect(screen.getByText("Dry-run ingestion")).toBeInTheDocument();
     expect(screen.getByText("Produzione chiusa")).toBeInTheDocument();
     expect(
