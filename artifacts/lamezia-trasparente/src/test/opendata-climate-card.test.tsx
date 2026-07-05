@@ -34,23 +34,31 @@ describe("OpenData climate territory card", () => {
       screen.getByRole("heading", { level: 1, name: "Opendata" }),
     ).toBeInTheDocument();
     const libraryHeading = screen.getByRole("heading", {
-      name: "Categorie tematiche dei dati",
+      name: "Scegli categoria",
     });
     expect(libraryHeading).toBeInTheDocument();
-    expect(screen.getAllByText("Clima e territorio").length).toBeGreaterThan(
-      0,
-    );
-    expect(screen.getByText("Contratti e spesa pubblica")).toBeInTheDocument();
-    expect(screen.getByText("Amministrazione e atti")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /Clima e territorio/i }))
+      .toBeInTheDocument();
     expect(
-      screen.getByText("Patrimonio e beni confiscati"),
+      screen.getByRole("button", { name: /Contratti e spesa pubblica/i }),
     ).toBeInTheDocument();
     expect(
-      screen.getByText("Partecipazione e accesso civico"),
+      screen.getByRole("button", { name: /Amministrazione e atti/i }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: /Patrimonio e beni confiscati/i }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: /Partecipazione e accesso civico/i }),
     ).toBeInTheDocument();
     expect(
       screen.getByRole("button", { name: /Tutti i dataset/i }),
     ).toHaveAttribute("aria-pressed", "true");
+    expect(screen.getByText("Clima")).toBeInTheDocument();
+    expect(screen.getByText("Contratti")).toBeInTheDocument();
+    expect(screen.getByText("Atti")).toBeInTheDocument();
+    expect(screen.getByText("Patrimonio")).toBeInTheDocument();
+    expect(screen.getByText("Accesso")).toBeInTheDocument();
 
     const archiveHeading = screen.getByRole("heading", {
       name: "Archivio dataset",
@@ -61,7 +69,12 @@ describe("OpenData climate territory card", () => {
     ).toBeGreaterThan(0);
     expect(screen.getByText("Serie temporale giornaliera")).toBeInTheDocument();
     expect(
-      screen.getByRole("button", { name: /Apri dataset/i }),
+      screen.getByText("Grafico, metodo e JSON scaricabile."),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", {
+        name: /Apri scheda dataset Anomalie climatiche/i,
+      }),
     ).toBeInTheDocument();
     expect(
       screen.queryByRole("img", {
@@ -79,7 +92,11 @@ describe("OpenData climate territory card", () => {
       ),
     ).toBe(true);
 
-    fireEvent.click(screen.getByRole("button", { name: /Apri dataset/i }));
+    fireEvent.click(
+      screen.getByRole("button", {
+        name: /Apri scheda dataset Anomalie climatiche/i,
+      }),
+    );
 
     expect(
       screen.getByRole("button", { name: /Torna all'archivio dataset/i }),
@@ -157,7 +174,7 @@ describe("OpenData climate territory card", () => {
     );
     expect(
       screen.getByRole("heading", {
-        name: "Nessun dataset pubblicato in questa categoria tematica",
+        name: "Nessun dataset pubblicato",
       }),
     ).toBeInTheDocument();
     expect(
@@ -184,7 +201,11 @@ describe("OpenData climate territory card", () => {
       }),
     ).not.toBeInTheDocument();
 
-    fireEvent.click(screen.getByRole("button", { name: /Apri dataset/i }));
+    fireEvent.click(
+      screen.getByRole("button", {
+        name: /Apri scheda dataset Anomalie climatiche/i,
+      }),
+    );
 
     fireEvent.click(screen.getByText("Dettagli del dataset"));
 

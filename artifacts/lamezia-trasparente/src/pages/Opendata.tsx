@@ -22,7 +22,6 @@ import {
   Braces,
   Code2,
   Sparkles,
-  Eye,
 } from "lucide-react";
 
 import { Input } from "@/components/ui/input";
@@ -174,8 +173,7 @@ export function Opendata() {
           Opendata
         </h1>
         <p className="mt-3 text-muted-foreground text-lg max-w-3xl">
-          Archivio essenziale dei dataset pubblicati: prima si sceglie il dato,
-          poi si apre la scheda con grafici, metadati e download.
+          Scegli una categoria, poi apri la scheda del dataset.
         </p>
       </div>
 
@@ -420,11 +418,10 @@ function ThemeDatasetArchive({
           className="mt-3 font-display text-lg font-bold text-foreground"
           id="opendata-archive-title"
         >
-          Nessun dataset pubblicato in questa categoria tematica
+          Nessun dataset pubblicato
         </h2>
         <p className="mt-2 max-w-3xl text-sm leading-6 text-muted-foreground">
-          La categoria resta disponibile per ordinare future pubblicazioni, ma
-          l'archivio mostra solo dataset gia selezionabili.
+          Scegli un'altra categoria.
         </p>
       </section>
     );
@@ -440,7 +437,7 @@ function ThemeDatasetArchive({
           <div>
             <span className="eyebrow text-primary">
               <Database className="h-3.5 w-3.5" />
-              Elenco dataset
+              Passaggio 2
             </span>
             <h2
               className="mt-2 font-display text-xl font-bold text-foreground"
@@ -449,8 +446,7 @@ function ThemeDatasetArchive({
               Archivio dataset
             </h2>
             <p className="mt-2 max-w-3xl text-sm leading-6 text-muted-foreground">
-              Lista essenziale dei dataset pubblicati. Apri un dataset per
-              vedere scheda, grafico, metodologia e file scaricabile.
+              Clicca una scheda per aprire grafico, metodo e download.
             </p>
           </div>
           <Badge variant="outline" className="w-fit shadow-none">
@@ -459,11 +455,16 @@ function ThemeDatasetArchive({
         </div>
       </div>
 
-      <ul className="divide-y divide-border" role="list">
+      <ul className="grid gap-3 p-4" role="list">
         {items.map((item) => (
           <li key={item.dataset.id}>
-            <article className="p-5">
-              <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+            <button
+              aria-label={`Apri scheda dataset ${item.dataset.label}`}
+              className="group w-full rounded-lg border border-border bg-background p-4 text-left transition-colors hover:border-primary hover:bg-primary/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+              onClick={() => onOpenDataset(item.dataset.id)}
+              type="button"
+            >
+              <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
                 <div className="min-w-0">
                   <div className="flex flex-wrap items-center gap-2">
                     <Badge variant="brand" className="shadow-none">
@@ -479,40 +480,19 @@ function ThemeDatasetArchive({
                   <h3 className="mt-3 font-display text-lg font-bold text-foreground">
                     {item.dataset.label}
                   </h3>
-                  <p className="mt-2 max-w-3xl text-sm leading-6 text-muted-foreground">
-                    {item.dataset.description}
+                  <p className="mt-1 text-sm text-muted-foreground">
+                    Grafico, metodo e JSON scaricabile.
                   </p>
                 </div>
-                <Button
-                  className="w-full shrink-0 md:w-auto"
-                  onClick={() => onOpenDataset(item.dataset.id)}
-                  type="button"
-                  variant="outline"
+                <span
+                  aria-hidden="true"
+                  className="inline-flex min-h-11 w-full shrink-0 items-center justify-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground transition-colors group-hover:bg-primary/90 md:w-auto"
                 >
-                  <Eye className="h-4 w-4" />
-                  Apri dataset
+                  Apri scheda
                   <ChevronRight className="h-4 w-4" />
-                </Button>
+                </span>
               </div>
-              <dl className="mt-4 grid gap-3 text-sm md:grid-cols-2">
-                <div className="rounded-md border border-border bg-muted/20 p-3">
-                  <dt className="text-xs font-medium text-muted-foreground">
-                    Fonte
-                  </dt>
-                  <dd className="mt-1 leading-6 text-foreground">
-                    {item.dataset.sourceLabel}
-                  </dd>
-                </div>
-                <div className="rounded-md border border-border bg-muted/20 p-3">
-                  <dt className="text-xs font-medium text-muted-foreground">
-                    Aggiornamento
-                  </dt>
-                  <dd className="mt-1 leading-6 text-foreground">
-                    {item.dataset.updateCadence}
-                  </dd>
-                </div>
-              </dl>
-            </article>
+            </button>
           </li>
         ))}
       </ul>
