@@ -20,6 +20,7 @@ on:
       - "pnpm-lock.yaml"
       - "pnpm-workspace.yaml"
       - "scripts/check-v0-static-fallback.mjs"
+      - "wrangler.toml"
 
 permissions:
   contents: read
