@@ -27,6 +27,10 @@ const REQUIRED_PUBLIC_TEXT = [
 ];
 const REQUIRED_CONTRACT_BUNDLE_TEXT = [
   "Contratti pubblici sotto osservazione",
+  "Contratti protagonisti",
+  "Stato dei fascicoli contrattuali",
+  "Copertura fasi",
+  "Copertura stato fasi dei fascicoli",
   "Ponte BDNCP",
   "Programmazione",
   "Progettazione",
