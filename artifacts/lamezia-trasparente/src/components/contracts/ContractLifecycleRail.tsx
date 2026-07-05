@@ -1,9 +1,11 @@
 import {
+  AlertTriangle,
   CheckCircle2,
   Circle,
   ClipboardList,
   ClipboardCheck,
   DraftingCompass,
+  FileSearch,
   Gavel,
   Landmark,
   RefreshCw,
@@ -13,6 +15,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import type {
   ContractDossier,
+  ContractLifecyclePhase,
   ContractLifecyclePhaseKey,
   ContractLifecycleStatus,
 } from "@/lib/contractDossier";
@@ -50,28 +53,130 @@ const STATUS_META: Record<
   },
 };
 
+const DOSSIER_STATUS_META: Record<
+  ContractDossier["lifecycleCompleteness"],
+  {
+    label: string;
+    description: string;
+    className: string;
+    icon: LucideIcon;
+  }
+> = {
+  complete: {
+    label: "Fascicolo completo",
+    description:
+      "Tutte le fasi del percorso risultano documentate nel dossier civico.",
+    className:
+      "border-transparent bg-emerald-100 text-emerald-800 dark:bg-emerald-500/20 dark:text-emerald-300",
+    icon: CheckCircle2,
+  },
+  partial: {
+    label: "Fascicolo parziale",
+    description:
+      "Le fasi principali sono presenti, ma restano passaggi da verificare o collegare meglio.",
+    className:
+      "border-transparent bg-sky-100 text-sky-800 dark:bg-sky-500/20 dark:text-sky-300",
+    icon: FileSearch,
+  },
+  "needs-review": {
+    label: "Stato da verificare",
+    description:
+      "Una o più fasi non sono documentate nelle fonti disponibili e diventano priorità di integrazione.",
+    className:
+      "border-transparent bg-amber-100 text-amber-800 dark:bg-amber-500/20 dark:text-amber-300",
+    icon: AlertTriangle,
+  },
+};
+
 export function ContractLifecycleRail({
   dossier,
 }: {
   dossier: ContractDossier;
 }) {
+  const counts = countPhaseStatuses(dossier.phases);
+  const statusMeta = DOSSIER_STATUS_META[dossier.lifecycleCompleteness];
+  const StatusIcon = statusMeta.icon;
+  const priorityPhase = getPriorityPhase(dossier.phases);
+  const priorityMeta = priorityPhase ? STATUS_META[priorityPhase.status] : null;
+
   return (
     <section className="rounded-2xl border border-card-border bg-card p-5 shadow-sm md:p-6">
-      <div className="mb-5">
-        <span className="eyebrow text-primary">
-          <Circle className="h-3.5 w-3.5" />
-          Ciclo di vita
-        </span>
-        <h2 className="mt-2 font-display text-xl font-bold tracking-tight">
-          Fascicolo civico del contratto/opera
-        </h2>
-        <p className="mt-2 max-w-2xl text-sm text-muted-foreground">
-          Ogni fase mostra il dato disponibile e quello ancora da collegare alle
-          fonti ufficiali o agli atti locali.
-        </p>
+      <div className="grid gap-5 lg:grid-cols-[1fr_18rem]">
+        <div>
+          <span className="eyebrow text-primary">
+            <Circle className="h-3.5 w-3.5" />
+            Stato del contratto
+          </span>
+          <h2 className="mt-2 font-display text-xl font-bold tracking-tight md:text-2xl">
+            Il fascicolo civico segue il contratto, fase per fase
+          </h2>
+          <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted-foreground">
+            Qui il contratto è il protagonista: lo stato non è solo una voce
+            amministrativa, ma la lettura del suo percorso da programmazione e
+            progettazione fino a esecuzione, collaudo e verifiche.
+          </p>
+          <p className="mt-3 max-w-2xl text-sm font-medium leading-relaxed text-foreground">
+            {dossier.title}
+          </p>
+        </div>
+
+        <div className="rounded-xl border border-border bg-muted/25 p-4">
+          <div className="flex items-start gap-3">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-background text-primary">
+              <StatusIcon className="h-5 w-5" />
+            </div>
+            <div className="min-w-0">
+              <Badge className={`shadow-none ${statusMeta.className}`}>
+                {statusMeta.label}
+              </Badge>
+              <p className="mt-2 text-xs leading-relaxed text-muted-foreground">
+                {statusMeta.description}
+              </p>
+            </div>
+          </div>
+        </div>
       </div>
 
-      <ol className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+      <dl className="mt-5 grid gap-3 sm:grid-cols-3">
+        <StatusMetric
+          label="Fasi documentate"
+          value={counts.documented}
+          tone="text-emerald-700 dark:text-emerald-300"
+        />
+        <StatusMetric
+          label="Fasi da verificare"
+          value={counts.partial}
+          tone="text-sky-700 dark:text-sky-300"
+        />
+        <StatusMetric
+          label="Fasi non documentate"
+          value={counts.missing}
+          tone="text-amber-700 dark:text-amber-300"
+        />
+      </dl>
+
+      {priorityPhase && priorityMeta ? (
+        <div className="mt-4 rounded-xl border border-border bg-muted/25 px-4 py-3">
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+              Prossima priorità del dossier
+            </span>
+            <Badge className={`text-[10px] shadow-none ${priorityMeta.className}`}>
+              {priorityMeta.label}
+            </Badge>
+          </div>
+          <div className="mt-1 font-display font-bold tracking-tight text-foreground">
+            {priorityPhase.label}
+          </div>
+          <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
+            {priorityPhase.missing.length > 0
+              ? `Da integrare: ${priorityPhase.missing.join(", ")}.`
+              : priorityPhase.summary}
+          </p>
+        </div>
+      ) : null}
+
+      <ol className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
         {dossier.phases.map((phase, index) => {
           const Icon = PHASE_ICONS[phase.key];
           const meta = STATUS_META[phase.status];
@@ -116,5 +221,49 @@ export function ContractLifecycleRail({
         })}
       </ol>
     </section>
+  );
+}
+
+function countPhaseStatuses(phases: readonly ContractLifecyclePhase[]) {
+  return phases.reduce(
+    (acc, phase) => {
+      acc[phase.status] += 1;
+      return acc;
+    },
+    { documented: 0, partial: 0, missing: 0 } satisfies Record<
+      ContractLifecycleStatus,
+      number
+    >,
+  );
+}
+
+function getPriorityPhase(phases: readonly ContractLifecyclePhase[]) {
+  const fallbackPhase = phases.length > 0 ? phases[phases.length - 1] : null;
+
+  return (
+    phases.find((phase) => phase.status === "missing") ??
+    phases.find((phase) => phase.status === "partial") ??
+    fallbackPhase
+  );
+}
+
+function StatusMetric({
+  label,
+  value,
+  tone,
+}: {
+  label: string;
+  value: number;
+  tone: string;
+}) {
+  return (
+    <div className="rounded-xl border border-border bg-muted/25 px-4 py-3">
+      <dt className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
+        {label}
+      </dt>
+      <dd className={`mt-1 font-display text-2xl font-bold tabular-nums ${tone}`}>
+        {value}
+      </dd>
+    </div>
   );
 }
