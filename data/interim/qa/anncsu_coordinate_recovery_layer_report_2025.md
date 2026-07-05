@@ -25,8 +25,8 @@ This layer does not overwrite ANNCSU raw coordinates. `source_lon/source_lat` re
 
 ## Geocoder Candidate Counts
 
-- `candidate_requires_human_review`: 13
-- `no_candidate_returned`: 7
+- `candidate_requires_human_review`: 17
+- `no_candidate_returned`: 8
 
 ## Local ANNCSU Anchor Candidate Counts
 

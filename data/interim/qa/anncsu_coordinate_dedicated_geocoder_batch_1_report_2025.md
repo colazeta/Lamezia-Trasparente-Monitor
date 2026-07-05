@@ -7,7 +7,7 @@ Date: 2026-07-05
 - Batch ID: `anncsu_dedicated_geocoder_batch_1_2025`
 - Eligible suspect rows inspected: 345
 - Exported rows: 100
-- Skipped rows with existing reviewable geocoder candidate: 13
+- Skipped rows with existing reviewable geocoder candidate: 17
 - Batch CSV: `data/interim/qa/anncsu_coordinate_dedicated_geocoder_batch_1_2025.csv`
 
 This file is a provider handoff template. It does not call a provider and does not modify ANNCSU raw coordinates, processed civic assignments, GPKG files, polygons, or public UI.
@@ -20,14 +20,14 @@ This file is a provider handoff template. It does not call a provider and does n
 
 ## Requested Provider Instruction Counts
 
-- `P2_dedicated_provider_high_value`: 58
-- `P2_dedicated_provider_useful`: 42
+- `P2_dedicated_provider_high_value`: 55
+- `P2_dedicated_provider_useful`: 45
 
 ## Coordinate Quality Flags
 
 - `outside_boundary`: 15
-- `same_street_outlier`: 42
-- `street_context_mismatch`: 43
+- `same_street_outlier`: 45
+- `street_context_mismatch`: 40
 
 ## Next Step
 

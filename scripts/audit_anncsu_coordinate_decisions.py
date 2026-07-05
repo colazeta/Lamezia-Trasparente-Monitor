@@ -377,6 +377,8 @@ def write_report(decisions_path: Path | None, meta: dict[str, Any], summary: dic
                     lines.append(f"  - `{subkey}`: {subvalue}")
             elif isinstance(value, float):
                 lines.append(f"- {key}: {value:.1f}")
+            elif value == "":
+                lines.append(f"- {key}: ``")
             else:
                 lines.append(f"- {key}: {value}")
     else:

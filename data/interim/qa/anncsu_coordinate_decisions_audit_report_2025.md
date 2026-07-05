@@ -1,6 +1,6 @@
 # ANNCSU Coordinate Decisions Audit 2025
 
-Date: 2026-06-29
+Date: 2026-07-05
 
 ## Scope
 
@@ -10,7 +10,7 @@ Raw ANNCSU coordinates remain immutable. A coordinate replacement is acceptable 
 
 ## Inputs
 
-- Decisions file: `none`
+- Decisions file: `data/interim/qa/anncsu_coordinate_reviewed_decisions_batch_1_2025.json`
 - Processed civics: `data/processed/geo/anncsu_lamezia_civics_with_electoral_section_2025_v2.csv`
 - Coordinate suspects: `data/interim/qa/anncsu_coordinate_suspect_points_2025.csv`
 - External geocoder candidates: `data/interim/qa/anncsu_coordinate_geocode_candidates_2025.csv`
@@ -18,7 +18,20 @@ Raw ANNCSU coordinates remain immutable. A coordinate replacement is acceptable 
 
 ## Summary
 
-- No decisions file supplied. Run this script with `--decisions <workbench-json-export>` before applying reviewed coordinate overrides.
+### Export Metadata
+
+- exported_at: ``
+- export_format: `anncsu_coordinate_reviewed_decisions_v1`
+- source_csv: `data/interim/qa/anncsu_coordinate_review_worksheet_batch_1_2025.csv`
+
+- decision_rows: 0
+- coordinate_decision_type_counts:
+- manual_coordinate_override_rows: 0
+- training_ready_manual_overrides: 0
+- manual_override_candidate_matches_within_5m: 0
+- manual_override_distance_min_m: ``
+- manual_override_distance_max_m: ``
+- manual_override_distance_avg_m: ``
 
 ## Findings
 
