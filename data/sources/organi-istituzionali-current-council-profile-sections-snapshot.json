@@ -1,0 +1,203 @@
+{
+  "checkedAt": "2026-07-05",
+  "scope": "council-current-profile-sections",
+  "coverageNote": "Sezioni Incarichi, Organizzazioni e ultimo aggiornamento estratte dalle schede personali istituzionali correnti dei componenti del Consiglio Comunale. La PEC generale dell'ente e il centralino presenti nelle pagine non vengono trattati come contatti personali.",
+  "sources": {
+    "politici": "https://www.comune.lamezia-terme.cz.it/it/page/politici",
+    "consiglio": "https://www.comune.lamezia-terme.cz.it/it/unita_organizzative/consiglio-comunale"
+  },
+  "profiles": [
+    {
+      "slug": "mario-murone",
+      "name": "Mario Murone",
+      "profileUrl": "https://www.comune.lamezia-terme.cz.it/it/persone/murone-mario",
+      "incarichi": ["Sindaco"],
+      "organizations": [],
+      "lastUpdated": "12 giugno 2026, 11:24"
+    },
+    {
+      "slug": "alessandro-saullo",
+      "name": "Alessandro Saullo",
+      "profileUrl": "https://www.comune.lamezia-terme.cz.it/it/persone/saullo-alessandro",
+      "incarichi": [],
+      "organizations": ["Consiglio Comunale"],
+      "lastUpdated": "23 giugno 2025, 13:29"
+    },
+    {
+      "slug": "annita-vitale",
+      "name": "Annita Vitale",
+      "profileUrl": "https://www.comune.lamezia-terme.cz.it/it/persone/vitale-annita",
+      "incarichi": [],
+      "organizations": ["Consiglio Comunale"],
+      "lastUpdated": "23 giugno 2025, 13:32"
+    },
+    {
+      "slug": "antonio-lorena",
+      "name": "Antonio Lorena",
+      "profileUrl": "https://www.comune.lamezia-terme.cz.it/it/persone/lorena-antonio",
+      "incarichi": [],
+      "organizations": ["Consiglio Comunale"],
+      "lastUpdated": "23 giugno 2025, 13:28"
+    },
+    {
+      "slug": "antonio-mastroianni",
+      "name": "Antonio Mastroianni",
+      "profileUrl": "https://www.comune.lamezia-terme.cz.it/it/persone/mastroianni-antonio",
+      "incarichi": [],
+      "organizations": ["Consiglio Comunale"],
+      "lastUpdated": "23 giugno 2025, 13:28"
+    },
+    {
+      "slug": "bernadette-serratore",
+      "name": "Bernadette Serratore",
+      "profileUrl": "https://www.comune.lamezia-terme.cz.it/it/persone/serratore-bernadette",
+      "incarichi": [],
+      "organizations": ["Consiglio Comunale"],
+      "lastUpdated": "23 giugno 2025, 13:29"
+    },
+    {
+      "slug": "doris-lo-moro",
+      "name": "Doris Lo Moro",
+      "profileUrl": "https://www.comune.lamezia-terme.cz.it/it/persone/lo-moro-doris",
+      "incarichi": [],
+      "organizations": ["Consiglio Comunale"],
+      "lastUpdated": "23 giugno 2025, 13:28"
+    },
+    {
+      "slug": "fabrizio-muraca",
+      "name": "Fabrizio Muraca",
+      "profileUrl": "https://www.comune.lamezia-terme.cz.it/it/persone/muraca-fabrizio",
+      "incarichi": [],
+      "organizations": ["Consiglio Comunale"],
+      "lastUpdated": "23 giugno 2025, 13:28"
+    },
+    {
+      "slug": "francesco-caruso",
+      "name": "Francesco Caruso",
+      "profileUrl": "https://www.comune.lamezia-terme.cz.it/it/persone/caruso-francesco",
+      "incarichi": [],
+      "organizations": ["Consiglio Comunale"],
+      "lastUpdated": "23 giugno 2025, 14:31"
+    },
+    {
+      "slug": "gennarino-masi",
+      "name": "Gennarino Masi",
+      "profileUrl": "https://www.comune.lamezia-terme.cz.it/it/persone/masi-gennarino",
+      "incarichi": [],
+      "organizations": ["Consiglio Comunale"],
+      "lastUpdated": "23 giugno 2025, 13:28"
+    },
+    {
+      "slug": "giancarlo-nicotera",
+      "name": "Giancarlo Nicotera",
+      "profileUrl": "https://www.comune.lamezia-terme.cz.it/it/persone/nicotera-giancarlo",
+      "incarichi": [],
+      "organizations": ["Consiglio Comunale"],
+      "lastUpdated": "23 giugno 2025, 13:29"
+    },
+    {
+      "slug": "giovanni-manuel-raso",
+      "name": "Giovanni Manuel Raso",
+      "profileUrl": "https://www.comune.lamezia-terme.cz.it/it/persone/raso-giovanni-manuel",
+      "incarichi": [],
+      "organizations": ["Consiglio Comunale"],
+      "lastUpdated": "23 giugno 2025, 13:29"
+    },
+    {
+      "slug": "lidia-vescio",
+      "name": "Lidia Vescio",
+      "profileUrl": "https://www.comune.lamezia-terme.cz.it/it/persone/vescio-lidia",
+      "incarichi": [],
+      "organizations": ["Consiglio Comunale"],
+      "lastUpdated": "23 giugno 2025, 13:32"
+    },
+    {
+      "slug": "maria-grandinetti",
+      "name": "Maria Grandinetti",
+      "profileUrl": "https://www.comune.lamezia-terme.cz.it/it/persone/grandinetti-maria",
+      "incarichi": ["Presidente del Consiglio Comunale"],
+      "organizations": ["Consiglio Comunale"],
+      "lastUpdated": "18 novembre 2025, 13:06"
+    },
+    {
+      "slug": "maria-lucia-raso",
+      "name": "Maria Lucia Raso",
+      "profileUrl": "https://www.comune.lamezia-terme.cz.it/it/persone/raso-maria-lucia",
+      "incarichi": [],
+      "organizations": ["Consiglio Comunale"],
+      "lastUpdated": "23 giugno 2025, 13:29"
+    },
+    {
+      "slug": "massimo-cristiano",
+      "name": "Massimo Cristiano",
+      "profileUrl": "https://www.comune.lamezia-terme.cz.it/it/persone/cristiano-massimo",
+      "incarichi": [],
+      "organizations": ["Consiglio Comunale"],
+      "lastUpdated": "23 giugno 2025, 13:27"
+    },
+    {
+      "slug": "matteo-folino",
+      "name": "Matteo Folino",
+      "profileUrl": "https://www.comune.lamezia-terme.cz.it/it/persone/folino-matteo",
+      "incarichi": [],
+      "organizations": ["Consiglio Comunale"],
+      "lastUpdated": "23 giugno 2025, 13:27"
+    },
+    {
+      "slug": "michele-rosato",
+      "name": "Michele Rosato",
+      "profileUrl": "https://www.comune.lamezia-terme.cz.it/it/persone/rosato-michele",
+      "incarichi": [],
+      "organizations": ["Consiglio Comunale"],
+      "lastUpdated": "23 giugno 2025, 13:29"
+    },
+    {
+      "slug": "oscar-branca",
+      "name": "Oscar Branca",
+      "profileUrl": "https://www.comune.lamezia-terme.cz.it/it/persone/branca-oscar",
+      "incarichi": [],
+      "organizations": ["Consiglio Comunale"],
+      "lastUpdated": "23 giugno 2025, 13:26"
+    },
+    {
+      "slug": "titina-caruso",
+      "name": "Titina Caruso",
+      "profileUrl": "https://www.comune.lamezia-terme.cz.it/it/persone/caruso-titina",
+      "incarichi": [],
+      "organizations": ["Consiglio Comunale"],
+      "lastUpdated": "23 giugno 2025, 13:31"
+    },
+    {
+      "slug": "davide-mastroianni",
+      "name": "Davide Mastroianni",
+      "profileUrl": "https://www.comune.lamezia-terme.cz.it/it/persone/mastroianni-davide",
+      "incarichi": [],
+      "organizations": ["Consiglio Comunale"],
+      "lastUpdated": "16 luglio 2025, 12:30"
+    },
+    {
+      "slug": "carmine-villella",
+      "name": "Carmine Villella",
+      "profileUrl": "https://www.comune.lamezia-terme.cz.it/it/persone/villella-carmine",
+      "incarichi": [],
+      "organizations": ["Consiglio Comunale"],
+      "lastUpdated": "16 luglio 2025, 12:24"
+    },
+    {
+      "slug": "adelaide-colosimo",
+      "name": "Adelaide Colosimo",
+      "profileUrl": "https://www.comune.lamezia-terme.cz.it/it/persone/colosimo-adelaide",
+      "incarichi": [],
+      "organizations": ["Consiglio Comunale"],
+      "lastUpdated": "16 luglio 2025, 12:26"
+    },
+    {
+      "slug": "carmelina-isa-muraca",
+      "name": "Carmelina Isa Muraca",
+      "profileUrl": "https://www.comune.lamezia-terme.cz.it/it/persone/muraca-carmelina-isa",
+      "incarichi": [],
+      "organizations": ["Consiglio Comunale"],
+      "lastUpdated": "25 febbraio 2026, 11:20"
+    }
+  ]
+}

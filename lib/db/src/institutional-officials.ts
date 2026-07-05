@@ -28,6 +28,21 @@ function profileNote(official: InstitutionalOfficialSeed): string {
       `consultata il ${official.source.checkedAt}.`,
     ].join(" "),
   );
+  if (official.profileIncarichi?.length) {
+    lines.push(
+      `Incarichi dichiarati nella scheda personale istituzionale: ${official.profileIncarichi.join("; ")}.`,
+    );
+  }
+  if (official.profileOrganizations?.length) {
+    lines.push(
+      `Organizzazioni dichiarate nella scheda personale istituzionale: ${official.profileOrganizations.join("; ")}.`,
+    );
+  }
+  if (official.profileLastUpdated) {
+    lines.push(
+      `Ultimo aggiornamento dichiarato nella scheda personale istituzionale: ${official.profileLastUpdated}.`,
+    );
+  }
   if (official.deleghe) {
     lines.push(
       `Deleghe dichiarate nella scheda personale istituzionale: ${official.deleghe}`,

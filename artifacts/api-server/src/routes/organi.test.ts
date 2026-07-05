@@ -7,6 +7,7 @@ import {
   db,
   pool,
   CURRENT_COUNCIL_MEMBER_SLUGS,
+  CURRENT_COUNCIL_PROFILE_SECTIONS,
   CURRENT_COUNCIL_SOURCE,
   CURRENT_GIUNTA_MEMBER_SLUGS,
   CURRENT_GIUNTA_SOURCE,
@@ -75,15 +76,36 @@ describe("organi historical memberships", () => {
     expect(CURRENT_GIUNTA_MEMBER_SLUGS).toHaveLength(8);
     expect(CURRENT_INSTITUTIONAL_MEMBERSHIPS).toHaveLength(32);
     expect(Object.keys(CURRENT_PROFILE_DETAILS)).toHaveLength(8);
+    expect(Object.keys(CURRENT_COUNCIL_PROFILE_SECTIONS)).toHaveLength(24);
     expect(
       CURRENT_GIUNTA_MEMBER_SLUGS.every(
         (slug) => slug in CURRENT_PROFILE_DETAILS,
+      ),
+    ).toBe(true);
+    expect(
+      CURRENT_COUNCIL_MEMBER_SLUGS.every(
+        (slug) => slug in CURRENT_COUNCIL_PROFILE_SECTIONS,
       ),
     ).toBe(true);
     expect(CURRENT_PROFILE_DETAILS["mario-murone"]).toMatchObject({
       contactEmail: "m.murone@comune.lamezia-terme.cz.it",
       contactPhone: "09682071",
     });
+    expect(CURRENT_COUNCIL_PROFILE_SECTIONS["mario-murone"]).toMatchObject({
+      profileIncarichi: ["Sindaco"],
+      profileLastUpdated: "12 giugno 2026, 11:24",
+    });
+    expect(CURRENT_COUNCIL_PROFILE_SECTIONS["maria-grandinetti"]).toMatchObject({
+      profileIncarichi: ["Presidente del Consiglio Comunale"],
+      profileOrganizations: ["Consiglio Comunale"],
+      profileLastUpdated: "18 novembre 2025, 13:06",
+    });
+    expect(
+      Object.values(CURRENT_COUNCIL_PROFILE_SECTIONS).filter((section) =>
+        "profileOrganizations" in section &&
+        section.profileOrganizations.includes("Consiglio Comunale"),
+      ),
+    ).toHaveLength(23);
     expect(CURRENT_PROFILE_DETAILS["mario-murone"].deleghe).toContain(
       "Opere pubbliche",
     );
