@@ -5,18 +5,18 @@ Date: 2026-07-05
 ## Result
 
 - Request plan rows: 345
-- Selected rows for this run: 25
-- Existing candidate access_ids before this run: 20
-- Existing candidate rows preserved: 26
+- Selected rows for this run: 5
+- Existing candidate access_ids before this run: 25
+- Existing candidate rows preserved: 31
 - Access_ids skipped because candidates already exist: 20
-- Requests attempted in this run: 0
-- Cached provider responses reused: 0
-- New candidate rows from this run: 0
-- Candidate rows written: 26
-- Dry run: yes
-- Limit: 25
-- Selection filter: none
-- Rate limit sleep seconds: 1.1
+- Requests attempted in this run: 5
+- Cached provider responses reused: 1
+- New candidate rows from this run: 5
+- Candidate rows written: 36
+- Dry run: no
+- Limit: 5
+- Selection filter: street_prefix=VIA
+- Rate limit sleep seconds: 1.2
 - Request plan CSV: `data/interim/qa/anncsu_coordinate_geocode_request_plan_2025.csv`
 - Candidate CSV: `data/interim/qa/anncsu_coordinate_geocode_candidates_2025.csv`
 - Workbench candidate JSON: `tools/electoral-review-workbench/public/data/coordinate_geocode_candidates_by_access.json`
@@ -33,12 +33,12 @@ This script creates coordinate candidates only. It does not overwrite ANNCSU raw
 
 ## Candidate Status Counts
 
-- `candidate_requires_human_review`: 19
-- `no_candidate_returned`: 7
+- `candidate_requires_human_review`: 23
+- `no_candidate_returned`: 13
 
 ## Provider Confidence Counts
 
-- `low_street_level`: 19
+- `low_street_level`: 23
 
 ## Next Review Step
 
