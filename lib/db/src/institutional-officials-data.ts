@@ -69,6 +69,9 @@ export type InstitutionalOfficialSeed = {
   source: InstitutionalSource;
   appointmentDate?: string | null;
   biographyNote?: string;
+  profileIncarichi?: readonly string[];
+  profileOrganizations?: readonly string[];
+  profileLastUpdated?: string;
   deleghe?: string;
   contactEmail?: string;
   contactPhone?: string;
@@ -392,6 +395,106 @@ export const CURRENT_PROFILE_DETAILS = {
   },
 } as const;
 
+export const CURRENT_COUNCIL_PROFILE_SECTIONS = {
+  "mario-murone": {
+    profileIncarichi: ["Sindaco"],
+    profileLastUpdated: "12 giugno 2026, 11:24",
+  },
+  "alessandro-saullo": {
+    profileOrganizations: ["Consiglio Comunale"],
+    profileLastUpdated: "23 giugno 2025, 13:29",
+  },
+  "annita-vitale": {
+    profileOrganizations: ["Consiglio Comunale"],
+    profileLastUpdated: "23 giugno 2025, 13:32",
+  },
+  "antonio-lorena": {
+    profileOrganizations: ["Consiglio Comunale"],
+    profileLastUpdated: "23 giugno 2025, 13:28",
+  },
+  "antonio-mastroianni": {
+    profileOrganizations: ["Consiglio Comunale"],
+    profileLastUpdated: "23 giugno 2025, 13:28",
+  },
+  "bernadette-serratore": {
+    profileOrganizations: ["Consiglio Comunale"],
+    profileLastUpdated: "23 giugno 2025, 13:29",
+  },
+  "doris-lo-moro": {
+    profileOrganizations: ["Consiglio Comunale"],
+    profileLastUpdated: "23 giugno 2025, 13:28",
+  },
+  "fabrizio-muraca": {
+    profileOrganizations: ["Consiglio Comunale"],
+    profileLastUpdated: "23 giugno 2025, 13:28",
+  },
+  "francesco-caruso": {
+    profileOrganizations: ["Consiglio Comunale"],
+    profileLastUpdated: "23 giugno 2025, 14:31",
+  },
+  "gennarino-masi": {
+    profileOrganizations: ["Consiglio Comunale"],
+    profileLastUpdated: "23 giugno 2025, 13:28",
+  },
+  "giancarlo-nicotera": {
+    profileOrganizations: ["Consiglio Comunale"],
+    profileLastUpdated: "23 giugno 2025, 13:29",
+  },
+  "giovanni-manuel-raso": {
+    profileOrganizations: ["Consiglio Comunale"],
+    profileLastUpdated: "23 giugno 2025, 13:29",
+  },
+  "lidia-vescio": {
+    profileOrganizations: ["Consiglio Comunale"],
+    profileLastUpdated: "23 giugno 2025, 13:32",
+  },
+  "maria-grandinetti": {
+    profileIncarichi: ["Presidente del Consiglio Comunale"],
+    profileOrganizations: ["Consiglio Comunale"],
+    profileLastUpdated: "18 novembre 2025, 13:06",
+  },
+  "maria-lucia-raso": {
+    profileOrganizations: ["Consiglio Comunale"],
+    profileLastUpdated: "23 giugno 2025, 13:29",
+  },
+  "massimo-cristiano": {
+    profileOrganizations: ["Consiglio Comunale"],
+    profileLastUpdated: "23 giugno 2025, 13:27",
+  },
+  "matteo-folino": {
+    profileOrganizations: ["Consiglio Comunale"],
+    profileLastUpdated: "23 giugno 2025, 13:27",
+  },
+  "michele-rosato": {
+    profileOrganizations: ["Consiglio Comunale"],
+    profileLastUpdated: "23 giugno 2025, 13:29",
+  },
+  "oscar-branca": {
+    profileOrganizations: ["Consiglio Comunale"],
+    profileLastUpdated: "23 giugno 2025, 13:26",
+  },
+  "titina-caruso": {
+    profileOrganizations: ["Consiglio Comunale"],
+    profileLastUpdated: "23 giugno 2025, 13:31",
+  },
+  "davide-mastroianni": {
+    profileOrganizations: ["Consiglio Comunale"],
+    profileLastUpdated: "16 luglio 2025, 12:30",
+  },
+  "carmine-villella": {
+    profileOrganizations: ["Consiglio Comunale"],
+    profileLastUpdated: "16 luglio 2025, 12:24",
+  },
+  "adelaide-colosimo": {
+    profileOrganizations: ["Consiglio Comunale"],
+    profileLastUpdated: "16 luglio 2025, 12:26",
+  },
+  "carmelina-isa-muraca": {
+    profileOrganizations: ["Consiglio Comunale"],
+    profileLastUpdated: "25 febbraio 2026, 11:20",
+  },
+} as const;
+
 export const CURRENT_COUNCIL_MEMBER_SLUGS = [
   "mario-murone",
   "alessandro-saullo",
@@ -440,6 +543,9 @@ export const CURRENT_INSTITUTIONAL_OFFICIALS: InstitutionalOfficialSeed[] =
     status: "in_carica",
     source: INSTITUTIONAL_POLITICI_SOURCE,
     ...CURRENT_PROFILE_DETAILS[slug as keyof typeof CURRENT_PROFILE_DETAILS],
+    ...CURRENT_COUNCIL_PROFILE_SECTIONS[
+      slug as keyof typeof CURRENT_COUNCIL_PROFILE_SECTIONS
+    ],
   }));
 
 export const HISTORICAL_2019_ELECTED_CANDIDATES = [
