@@ -19,6 +19,7 @@ on:
       - "package.json"
       - "pnpm-lock.yaml"
       - "pnpm-workspace.yaml"
+      - "scripts/check-public-contracts-page.mjs"
       - "scripts/check-v0-static-fallback.mjs"
       - "wrangler.toml"
 
