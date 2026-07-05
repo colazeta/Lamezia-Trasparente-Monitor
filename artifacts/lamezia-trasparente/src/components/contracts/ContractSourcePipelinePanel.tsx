@@ -1,15 +1,24 @@
 import {
   AlertTriangle,
   CheckCircle2,
-  Database,
-  FileJson,
+  ChevronRight,
+  FileText,
+  Landmark,
   LockKeyhole,
+  RefreshCw,
   ShieldCheck,
-  Workflow,
   type LucideIcon,
 } from "lucide-react";
+import { Link } from "wouter";
+import { useListContracts, type Contract } from "@workspace/api-client-react";
 
 import { Badge } from "@/components/ui/badge";
+import { asApiList } from "@/lib/apiList";
+import {
+  buildContractDossier,
+  summarizeContractDossiers,
+  type ContractDossier,
+} from "@/lib/contractDossier";
 import {
   buildContractPipelineSnapshot,
   type ContractPipelineStageState,
@@ -44,64 +53,138 @@ const STATE_META: Record<
   },
 };
 
+const DOSSIER_STATUS_META: Record<
+  ContractDossier["lifecycleCompleteness"],
+  { label: string; className: string }
+> = {
+  complete: {
+    label: "Completo",
+    className:
+      "border-transparent bg-emerald-100 text-emerald-800 dark:bg-emerald-500/20 dark:text-emerald-300",
+  },
+  partial: {
+    label: "Parziale",
+    className:
+      "border-transparent bg-sky-100 text-sky-800 dark:bg-sky-500/20 dark:text-sky-300",
+  },
+  "needs-review": {
+    label: "Da verificare",
+    className:
+      "border-transparent bg-amber-100 text-amber-800 dark:bg-amber-500/20 dark:text-amber-300",
+  },
+};
+
 export function ContractSourcePipelinePanel() {
   const snapshot = buildContractPipelineSnapshot();
+  const { data, isLoading } = useListContracts({});
+  const contracts = asApiList<Contract>(data);
+  const dossiers = contracts.map((contract) => buildContractDossier({ contract }));
+  const summary = summarizeContractDossiers(contracts);
+  const statusCounts = countDossierStatuses(dossiers);
+  const priorityDossiers = dossiers
+    .filter((dossier) => dossier.lifecycleCompleteness !== "complete")
+    .slice(0, 3);
 
   return (
     <section className="mb-10 rounded-2xl border border-card-border bg-card p-5 shadow-sm md:p-6">
-      <div className="grid gap-6 lg:grid-cols-[0.85fr_1.25fr]">
+      <div className="grid gap-6 lg:grid-cols-[0.95fr_1.15fr]">
         <div className="space-y-4">
           <span className="eyebrow text-primary">
-            <Workflow className="h-3.5 w-3.5" />
-            Pipeline fonti
+            <FileText className="h-3.5 w-3.5" />
+            Contratti protagonisti
           </span>
           <div>
             <h2 className="font-display text-2xl font-bold tracking-tight md:text-3xl">
-              Dalla fonte nazionale al fascicolo civico
+              Stato dei fascicoli contrattuali
             </h2>
             <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-              Lo stato operativo distingue catalogo fonti, discovery ANAC,
-              dry-run tecnico e gate pubblico. La piattaforma mostra il percorso
-              di ingestion senza trattare il dry-run come record ufficiale
-              pubblicato.
+              La sezione parte dai singoli contratti: per ogni fascicolo conta
+              quali fasi sono documentate, quali restano parziali e dove serve
+              un collegamento piu forte a BDNCP, CUP o atti locali.
             </p>
           </div>
 
           <div className="grid gap-3 sm:grid-cols-2">
-            <PipelineMetric
-              icon={FileJson}
-              label="Manifesto fonti"
-              value={String(snapshot.manifestSourcesTotal)}
-              sub="famiglie censite"
+            <PanelMetric
+              icon={FileText}
+              label="Contratti"
+              value={isLoading ? "..." : String(summary.total)}
+              sub="fascicoli monitorati"
             />
-            <PipelineMetric
+            <PanelMetric
               icon={AlertTriangle}
-              label="Discovery manuale"
-              value={String(snapshot.manualDiscoveryRequired)}
-              sub="fonti da verificare"
+              label="Stato da verificare"
+              value={isLoading ? "..." : String(statusCounts["needs-review"])}
+              sub="fascicoli con fasi mancanti"
             />
-            <PipelineMetric
-              icon={Workflow}
-              label="Fixture dry-run"
-              value={`${snapshot.parsedFixtureRecords}/${snapshot.fixtureRecordsTotal}`}
-              sub="record sintetici parsed"
+            <PanelMetric
+              icon={Landmark}
+              label="Ponte BDNCP"
+              value={isLoading ? "..." : String(summary.withBdncpSearchBridge)}
+              sub="contratti con ricerca ufficiale"
             />
-            <PipelineMetric
-              icon={Database}
-              label="Scritture pubbliche"
-              value={
-                snapshot.productionRecordsWritten ||
-                snapshot.publicAppDataWritten ||
-                snapshot.databaseWrites
-                  ? "attive"
-                  : "0"
-              }
-              sub="DB, public data, UI"
+            <PanelMetric
+              icon={RefreshCw}
+              label="Esecuzione da integrare"
+              value={isLoading ? "..." : String(summary.missingExecutionEvidence)}
+              sub="SAL, varianti o liquidazioni"
             />
+          </div>
+
+          <div className="rounded-xl border border-border bg-muted/25 px-4 py-3">
+            <div className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+              Lettura immediata dello stato
+            </div>
+            <div className="flex flex-wrap gap-2">
+              <StatusCountBadge status="complete" count={statusCounts.complete} />
+              <StatusCountBadge status="partial" count={statusCounts.partial} />
+              <StatusCountBadge
+                status="needs-review"
+                count={statusCounts["needs-review"]}
+              />
+            </div>
           </div>
         </div>
 
         <div className="space-y-4">
+          <div className="rounded-xl border border-border bg-muted/25 p-4">
+            <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
+              <div>
+                <div className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                  Contratti da guardare per primi
+                </div>
+                <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
+                  Priorita basata sullo stato del dossier: prima fasi mancanti,
+                  poi fascicoli parziali.
+                </p>
+              </div>
+              <Badge
+                className={`shadow-none ${DOSSIER_STATUS_META["needs-review"].className}`}
+              >
+                {isLoading ? "..." : `${statusCounts["needs-review"]} da verificare`}
+              </Badge>
+            </div>
+
+            {isLoading ? (
+              <div className="rounded-lg border border-dashed border-border px-3 py-4 text-sm text-muted-foreground">
+                Calcolo dello stato dei contratti in corso...
+              </div>
+            ) : priorityDossiers.length > 0 ? (
+              <ul className="space-y-2">
+                {priorityDossiers.map((dossier) => (
+                  <PriorityContractItem
+                    key={dossier.contractId}
+                    dossier={dossier}
+                  />
+                ))}
+              </ul>
+            ) : (
+              <div className="rounded-lg border border-dashed border-border px-3 py-4 text-sm text-muted-foreground">
+                Nessun fascicolo con stato critico nei dati attuali.
+              </div>
+            )}
+          </div>
+
           <ol className="grid gap-3 sm:grid-cols-2">
             {snapshot.stages.map((stage, index) => {
               const meta = STATE_META[stage.state];
@@ -121,7 +204,7 @@ export function ContractSourcePipelinePanel() {
                     <div className="min-w-0">
                       <div className="flex flex-wrap items-center gap-2">
                         <span className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
-                          Passo {index + 1}
+                          Fonte {index + 1}
                         </span>
                         <Badge
                           className={`text-[10px] shadow-none ${meta.badgeClassName}`}
@@ -146,7 +229,7 @@ export function ContractSourcePipelinePanel() {
           </ol>
 
           <div className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900 dark:border-amber-500/30 dark:bg-amber-500/10 dark:text-amber-200">
-            <div className="font-semibold">Gate produzione</div>
+            <div className="font-semibold">Gate fonti e pubblicazione</div>
             <p className="mt-1 text-xs leading-relaxed">
               {snapshot.nextAction}
             </p>
@@ -157,7 +240,75 @@ export function ContractSourcePipelinePanel() {
   );
 }
 
-function PipelineMetric({
+function countDossierStatuses(dossiers: readonly ContractDossier[]) {
+  return dossiers.reduce(
+    (acc, dossier) => {
+      acc[dossier.lifecycleCompleteness] += 1;
+      return acc;
+    },
+    { complete: 0, partial: 0, "needs-review": 0 } satisfies Record<
+      ContractDossier["lifecycleCompleteness"],
+      number
+    >,
+  );
+}
+
+function StatusCountBadge({
+  status,
+  count,
+}: {
+  status: ContractDossier["lifecycleCompleteness"];
+  count: number;
+}) {
+  const meta = DOSSIER_STATUS_META[status];
+
+  return (
+    <Badge className={`shadow-none ${meta.className}`}>
+      {count} {meta.label.toLowerCase()}
+    </Badge>
+  );
+}
+
+function PriorityContractItem({ dossier }: { dossier: ContractDossier }) {
+  const meta = DOSSIER_STATUS_META[dossier.lifecycleCompleteness];
+  const missingLabels = dossier.phases
+    .filter((phase) => phase.status === "missing")
+    .map((phase) => phase.label);
+  const priorityText = missingLabels.length
+    ? `Da integrare: ${missingLabels.slice(0, 2).join(", ")}`
+    : dossier.missingExecutionEvidence
+      ? "Esecuzione da integrare"
+      : dossier.missingEvaluationEvidence
+        ? "Valutazione da integrare"
+        : "Fasi parziali da verificare";
+
+  return (
+    <li className="rounded-lg border border-border bg-background px-3 py-3">
+      <div className="flex items-start justify-between gap-3">
+        <div className="min-w-0">
+          <div className="line-clamp-2 text-sm font-semibold leading-snug text-foreground">
+            {dossier.title}
+          </div>
+          <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
+            {priorityText}
+          </p>
+        </div>
+        <Badge className={`shrink-0 text-[10px] shadow-none ${meta.className}`}>
+          {meta.label}
+        </Badge>
+      </div>
+      <Link
+        href={`/contratti/${dossier.contractId}`}
+        className="mt-2 inline-flex items-center gap-1 text-xs font-semibold text-primary hover:underline"
+      >
+        Vedi stato del contratto
+        <ChevronRight className="h-3.5 w-3.5" />
+      </Link>
+    </li>
+  );
+}
+
+function PanelMetric({
   icon: Icon,
   label,
   value,
