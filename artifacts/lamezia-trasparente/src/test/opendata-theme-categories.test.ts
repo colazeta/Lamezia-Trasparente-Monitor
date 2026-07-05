@@ -44,7 +44,7 @@ describe("OpenData thematic category library", () => {
     expect(climateTheme?.datasets[0]).toMatchObject({
       id: "lamezia-climate-daily",
       dataType: "Serie temporale giornaliera",
-      href: "#clima-territorio",
+      detailKind: "climate-daily",
     });
   });
 });

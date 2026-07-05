@@ -6,6 +6,7 @@ import {
   type OpendataDataset,
 } from "@workspace/api-client-react";
 import {
+  ArrowLeft,
   Search,
   Filter,
   Database,
@@ -21,16 +22,15 @@ import {
   Braces,
   Code2,
   Sparkles,
+  Eye,
 } from "lucide-react";
 
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ClimateTerritoryDatasetCard } from "@/components/opendata/ClimateTerritoryDatasetCard";
-import { OpenDataDashboard } from "@/components/opendata/OpenDataDashboard";
 import { OpenDataThemeLibrary } from "@/components/opendata/OpenDataThemeLibrary";
 import {
-  DEFAULT_OPEN_DATA_THEME_ID,
   OPEN_DATA_THEME_LIBRARY,
   type OpenDataThemeCategory,
   type OpenDataThemeDataset,
@@ -55,6 +55,11 @@ const PORTAL_URL = "https://opendata.comune.lamezia-terme.cz.it";
 
 const LAST_VISIT_KEY = "opendata:lastVisit";
 
+interface OpenDataArchiveItem {
+  theme: OpenDataThemeCategory;
+  dataset: OpenDataThemeDataset;
+}
+
 function readLastVisit(): number | null {
   try {
     const v = localStorage.getItem(LAST_VISIT_KEY);
@@ -67,8 +72,9 @@ function readLastVisit(): number | null {
 }
 
 export function Opendata() {
-  const [selectedThemeId, setSelectedThemeId] = useState(
-    DEFAULT_OPEN_DATA_THEME_ID,
+  const [selectedThemeId, setSelectedThemeId] = useState<string | null>(null);
+  const [selectedDatasetId, setSelectedDatasetId] = useState<string | null>(
+    null,
   );
   const [search, setSearch] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
@@ -134,9 +140,27 @@ export function Opendata() {
     setCategory("all");
   };
 
-  const selectedTheme =
-    OPEN_DATA_THEME_LIBRARY.find((theme) => theme.id === selectedThemeId) ??
-    OPEN_DATA_THEME_LIBRARY[0];
+  const archiveItems = useMemo<OpenDataArchiveItem[]>(
+    () =>
+      OPEN_DATA_THEME_LIBRARY.flatMap((theme) =>
+        theme.datasets.map((dataset) => ({ theme, dataset })),
+      ),
+    [],
+  );
+  const selectedTheme = selectedThemeId
+    ? OPEN_DATA_THEME_LIBRARY.find((theme) => theme.id === selectedThemeId) ??
+      null
+    : null;
+  const filteredArchiveItems = selectedThemeId
+    ? archiveItems.filter((item) => item.theme.id === selectedThemeId)
+    : archiveItems;
+  const selectedArchiveItem =
+    archiveItems.find((item) => item.dataset.id === selectedDatasetId) ?? null;
+
+  const selectTheme = (themeId: string | null) => {
+    setSelectedThemeId(themeId);
+    setSelectedDatasetId(null);
+  };
 
   return (
     <div className="container mx-auto px-4 py-8 md:py-12 max-w-6xl">
@@ -150,64 +174,34 @@ export function Opendata() {
           Opendata
         </h1>
         <p className="mt-3 text-muted-foreground text-lg max-w-3xl">
-          Scegli un tema civico, consulta i dataset disponibili e apri grafici
-          o download solo come passaggio successivo.
+          Archivio essenziale dei dataset pubblicati: prima si sceglie il dato,
+          poi si apre la scheda con grafici, metadati e download.
         </p>
       </div>
 
-      <OpenDataThemeLibrary
-        onSelectTheme={setSelectedThemeId}
-        selectedThemeId={selectedTheme.id}
-      />
+      {selectedArchiveItem ? (
+        <DatasetDetailView
+          item={selectedArchiveItem}
+          onBack={() => setSelectedDatasetId(null)}
+        />
+      ) : (
+        <>
+          <OpenDataThemeLibrary
+            onSelectTheme={selectTheme}
+            selectedThemeId={selectedThemeId}
+          />
 
-      <section
-        aria-labelledby="opendata-selected-theme-title"
-        className="mb-8"
-      >
-        <div className="mb-4">
-          <span className="eyebrow text-primary">
-            <Layers className="h-3.5 w-3.5" />
-            Categoria tematica selezionata
-          </span>
-          <h2
-            className="mt-2 text-2xl font-display font-bold text-foreground"
-            id="opendata-selected-theme-title"
-          >
-            {selectedTheme.label}
-          </h2>
-          <p className="mt-2 max-w-3xl text-sm leading-6 text-muted-foreground">
-            {selectedTheme.description}
-          </p>
-        </div>
+          <ThemeDatasetArchive
+            items={filteredArchiveItems}
+            onOpenDataset={setSelectedDatasetId}
+            selectedTheme={selectedTheme}
+          />
 
-        <ThemeDatasetShelf theme={selectedTheme} />
-
-        {selectedTheme.id === DEFAULT_OPEN_DATA_THEME_ID ? (
-          <div className="mt-6">
-            <div className="mb-4">
-              <span className="eyebrow text-primary">
-                <FileSpreadsheet className="h-3.5 w-3.5" />
-                Visualizzazione secondaria
-              </span>
-              <h3 className="mt-2 text-xl font-display font-bold text-foreground">
-                Grafico e scheda del dataset selezionato
-              </h3>
-            </div>
-            <ClimateTerritoryDatasetCard />
-          </div>
-        ) : (
-          <ThemePreparationPanel theme={selectedTheme} />
-        )}
-      </section>
-
-      <details className="mb-8 rounded-xl border border-card-border bg-muted/20">
-        <summary className="cursor-pointer list-none px-4 py-3 font-semibold text-foreground marker:hidden">
-          Altre visualizzazioni
-        </summary>
-        <div className="border-t border-border p-4">
-          <OpenDataDashboard />
-        </div>
-      </details>
+          <details className="mb-8 rounded-xl border border-card-border bg-muted/20">
+            <summary className="cursor-pointer list-none px-4 py-3 font-semibold text-foreground marker:hidden">
+              Catalogo comunale sincronizzato
+            </summary>
+            <div className="border-t border-border p-4">
 
       {/* Last updated + portal link */}
       <div className="mb-8 flex flex-col gap-3 rounded-xl border border-card-border bg-muted/30 p-4 sm:flex-row sm:items-center sm:justify-between">
@@ -396,149 +390,209 @@ export function Opendata() {
           </EmptyHeader>
         </Empty>
       )}
+            </div>
+          </details>
+        </>
+      )}
     </div>
   );
 }
 
-function ThemeDatasetShelf({ theme }: { theme: OpenDataThemeCategory }) {
-  if (theme.datasets.length === 0) {
+function ThemeDatasetArchive({
+  items,
+  onOpenDataset,
+  selectedTheme,
+}: {
+  items: OpenDataArchiveItem[];
+  onOpenDataset: (datasetId: string) => void;
+  selectedTheme: OpenDataThemeCategory | null;
+}) {
+  if (items.length === 0) {
     return (
-      <div className="rounded-xl border border-dashed border-border bg-muted/20 p-5">
+      <section
+        aria-labelledby="opendata-archive-title"
+        className="mb-8 rounded-xl border border-dashed border-border bg-muted/20 p-5"
+      >
         <Badge variant="outline" className="shadow-none">
-          Dataset in preparazione
+          {selectedTheme?.statusLabel ?? "Archivio"}
         </Badge>
-        <h3 className="mt-3 font-display text-lg font-bold text-foreground">
+        <h2
+          className="mt-3 font-display text-lg font-bold text-foreground"
+          id="opendata-archive-title"
+        >
           Nessun dataset pubblicato in questa categoria tematica
-        </h3>
+        </h2>
         <p className="mt-2 max-w-3xl text-sm leading-6 text-muted-foreground">
-          La categoria resta disponibile nella libreria per ordinare future
-          pubblicazioni, ma non espone ancora una scheda dataset-first con
-          download o visualizzazione.
+          La categoria resta disponibile per ordinare future pubblicazioni, ma
+          l'archivio mostra solo dataset gia selezionabili.
         </p>
-      </div>
+      </section>
     );
   }
 
   return (
-    <div
-      aria-labelledby="opendata-theme-datasets-title"
-      className="rounded-xl border border-card-border bg-card p-5 shadow-sm"
+    <section
+      aria-labelledby="opendata-archive-title"
+      className="mb-8 rounded-xl border border-card-border bg-card shadow-sm"
     >
-      <div className="mb-4">
-        <h3
-          className="font-display text-xl font-bold text-foreground"
-          id="opendata-theme-datasets-title"
-        >
-          Dataset pubblicati nel tema
-        </h3>
-        <p className="mt-2 text-sm leading-6 text-muted-foreground">
-          La scelta del dato viene prima della sua rappresentazione grafica.
-        </p>
-      </div>
-      <div className="grid gap-3">
-        {theme.datasets.map((dataset) => (
-          <ThemeDatasetCard dataset={dataset} key={dataset.id} />
-        ))}
-      </div>
-    </div>
-  );
-}
-
-function ThemeDatasetCard({ dataset }: { dataset: OpenDataThemeDataset }) {
-  return (
-    <article className="rounded-lg border border-border bg-background p-4">
-      <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
-        <div>
-          <div className="flex flex-wrap items-center gap-2">
-            <Badge variant="success" className="shadow-none">
-              {dataset.statusLabel}
-            </Badge>
-            <Badge variant="outline" className="shadow-none">
-              {dataset.dataType}
-            </Badge>
+      <div className="border-b border-border p-5">
+        <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
+          <div>
+            <span className="eyebrow text-primary">
+              <Database className="h-3.5 w-3.5" />
+              Elenco dataset
+            </span>
+            <h2
+              className="mt-2 font-display text-xl font-bold text-foreground"
+              id="opendata-archive-title"
+            >
+              Archivio dataset
+            </h2>
+            <p className="mt-2 max-w-3xl text-sm leading-6 text-muted-foreground">
+              Lista essenziale dei dataset pubblicati. Apri un dataset per
+              vedere scheda, grafico, metodologia e file scaricabile.
+            </p>
           </div>
-          <h4 className="mt-3 font-display text-lg font-bold text-foreground">
-            {dataset.label}
-          </h4>
-          <p className="mt-2 max-w-3xl text-sm leading-6 text-muted-foreground">
-            {dataset.description}
-          </p>
+          <Badge variant="outline" className="w-fit shadow-none">
+            {items.length === 1 ? "1 dataset" : `${items.length} dataset`}
+          </Badge>
         </div>
-        {dataset.href ? (
-          <a
-            className="inline-flex shrink-0 items-center gap-1.5 rounded-md border border-primary/30 px-3 py-2 text-sm font-semibold text-primary hover:bg-primary/5"
-            href={dataset.href}
-          >
-            Vai alla visualizzazione
-            <ChevronRight className="h-4 w-4" />
-          </a>
-        ) : null}
       </div>
-      <dl className="mt-4 grid gap-3 text-sm md:grid-cols-2">
-        <div className="rounded-md border border-border bg-muted/20 p-3">
-          <dt className="text-xs font-medium text-muted-foreground">Fonte</dt>
-          <dd className="mt-1 leading-6 text-foreground">
-            {dataset.sourceLabel}
-          </dd>
-        </div>
-        <div className="rounded-md border border-border bg-muted/20 p-3">
-          <dt className="text-xs font-medium text-muted-foreground">
-            Aggiornamento
-          </dt>
-          <dd className="mt-1 leading-6 text-foreground">
-            {dataset.updateCadence}
-          </dd>
-        </div>
-      </dl>
-    </article>
+
+      <ul className="divide-y divide-border" role="list">
+        {items.map((item) => (
+          <li key={item.dataset.id}>
+            <article className="p-5">
+              <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+                <div className="min-w-0">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <Badge variant="brand" className="shadow-none">
+                      {item.theme.label}
+                    </Badge>
+                    <Badge variant="success" className="shadow-none">
+                      {item.dataset.statusLabel}
+                    </Badge>
+                    <Badge variant="outline" className="shadow-none">
+                      {item.dataset.dataType}
+                    </Badge>
+                  </div>
+                  <h3 className="mt-3 font-display text-lg font-bold text-foreground">
+                    {item.dataset.label}
+                  </h3>
+                  <p className="mt-2 max-w-3xl text-sm leading-6 text-muted-foreground">
+                    {item.dataset.description}
+                  </p>
+                </div>
+                <Button
+                  className="w-full shrink-0 md:w-auto"
+                  onClick={() => onOpenDataset(item.dataset.id)}
+                  type="button"
+                  variant="outline"
+                >
+                  <Eye className="h-4 w-4" />
+                  Apri dataset
+                  <ChevronRight className="h-4 w-4" />
+                </Button>
+              </div>
+              <dl className="mt-4 grid gap-3 text-sm md:grid-cols-2">
+                <div className="rounded-md border border-border bg-muted/20 p-3">
+                  <dt className="text-xs font-medium text-muted-foreground">
+                    Fonte
+                  </dt>
+                  <dd className="mt-1 leading-6 text-foreground">
+                    {item.dataset.sourceLabel}
+                  </dd>
+                </div>
+                <div className="rounded-md border border-border bg-muted/20 p-3">
+                  <dt className="text-xs font-medium text-muted-foreground">
+                    Aggiornamento
+                  </dt>
+                  <dd className="mt-1 leading-6 text-foreground">
+                    {item.dataset.updateCadence}
+                  </dd>
+                </div>
+              </dl>
+            </article>
+          </li>
+        ))}
+      </ul>
+    </section>
   );
 }
 
-function ThemePreparationPanel({ theme }: { theme: OpenDataThemeCategory }) {
+function DatasetDetailView({
+  item,
+  onBack,
+}: {
+  item: OpenDataArchiveItem;
+  onBack: () => void;
+}) {
   return (
-    <div className="rounded-xl border border-card-border bg-card p-5 shadow-sm">
-      <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
-        <div>
-          <h3 className="font-display text-xl font-bold text-foreground">
-            Nessuna visualizzazione pubblicata per questo tema
+    <section
+      aria-labelledby="opendata-dataset-detail-title"
+      className="space-y-5"
+      id="clima-territorio"
+    >
+      <Button onClick={onBack} type="button" variant="ghost">
+        <ArrowLeft className="h-4 w-4" />
+        Torna all'archivio dataset
+      </Button>
+
+      <div className="rounded-xl border border-card-border bg-card p-5 shadow-sm">
+        <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
+          <div>
+            <span className="eyebrow text-primary">
+              <FileSpreadsheet className="h-3.5 w-3.5" />
+              Dataset selezionato
+            </span>
+            <h2
+              className="mt-2 font-display text-2xl font-bold text-foreground"
+              id="opendata-dataset-detail-title"
+            >
+              {item.dataset.label}
+            </h2>
+            <p className="mt-2 max-w-3xl text-sm leading-6 text-muted-foreground">
+              {item.dataset.description}
+            </p>
+          </div>
+          <Badge variant="brand" className="w-fit shadow-none">
+            {item.theme.label}
+          </Badge>
+        </div>
+        <dl className="mt-4 grid gap-3 text-sm md:grid-cols-2">
+          <div className="rounded-md border border-border bg-muted/20 p-3">
+            <dt className="text-xs font-medium text-muted-foreground">
+              Fonte
+            </dt>
+            <dd className="mt-1 leading-6 text-foreground">
+              {item.dataset.sourceLabel}
+            </dd>
+          </div>
+          <div className="rounded-md border border-border bg-muted/20 p-3">
+            <dt className="text-xs font-medium text-muted-foreground">
+              Aggiornamento
+            </dt>
+            <dd className="mt-1 leading-6 text-foreground">
+              {item.dataset.updateCadence}
+            </dd>
+          </div>
+        </dl>
+      </div>
+
+      {item.dataset.detailKind === "climate-daily" ? (
+        <ClimateTerritoryDatasetCard />
+      ) : (
+        <div className="rounded-xl border border-dashed border-border bg-muted/20 p-5">
+          <h3 className="font-display text-lg font-bold text-foreground">
+            Scheda dataset in preparazione
           </h3>
           <p className="mt-2 max-w-3xl text-sm leading-6 text-muted-foreground">
-            Il tema e gia presente nella libreria per ordinare i dataset futuri.
-            La pagina non mostra grafici finche non esiste almeno un dataset
-            pubblicato e documentato per questa categoria.
+            Questo dataset e presente nell'archivio, ma non ha ancora una
+            visualizzazione pubblicata.
           </p>
         </div>
-        <Badge variant="outline" className="w-fit shadow-none">
-          {theme.statusLabel}
-        </Badge>
-      </div>
-
-      <dl className="mt-4 grid gap-3 text-sm md:grid-cols-2">
-        <div className="rounded-lg border border-border bg-muted/20 p-3">
-          <dt className="text-xs font-medium text-muted-foreground">
-            Domanda civica
-          </dt>
-          <dd className="mt-1 leading-6 text-foreground">
-            {theme.civicQuestion}
-          </dd>
-        </div>
-        <div className="rounded-lg border border-border bg-muted/20 p-3">
-          <dt className="text-xs font-medium text-muted-foreground">
-            Tipi di dato previsti
-          </dt>
-          <dd className="mt-2 flex flex-wrap gap-2">
-            {theme.dataTypes.map((dataType) => (
-              <span
-                className="rounded-md border border-border bg-background px-2.5 py-1 text-xs font-medium text-foreground"
-                key={dataType}
-              >
-                {dataType}
-              </span>
-            ))}
-          </dd>
-        </div>
-      </dl>
-    </div>
+      )}
+    </section>
   );
 }
 

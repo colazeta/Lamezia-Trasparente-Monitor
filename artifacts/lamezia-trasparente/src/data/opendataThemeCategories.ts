@@ -8,7 +8,7 @@ export interface OpenDataThemeDataset {
   description: string;
   updateCadence: string;
   sourceLabel: string;
-  href?: string;
+  detailKind?: "climate-daily";
 }
 
 export interface OpenDataThemeCategory {
@@ -48,7 +48,7 @@ export const OPEN_DATA_THEME_LIBRARY = [
         updateCadence:
           "Aggiornamento giornaliero pianificato al mattino quando la fonte espone il giorno precedente completo.",
         sourceLabel: "Open-Meteo Historical Weather API",
-        href: "#clima-territorio",
+        detailKind: "climate-daily",
       },
     ],
     dataTypes: [
