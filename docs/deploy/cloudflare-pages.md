@@ -20,6 +20,19 @@ The root `wrangler.toml` also declares `pages_build_output_dir = "artifacts/lame
 
 The Vite app also copies `artifacts/lamezia-trasparente/public/_redirects` into the build output. Cloudflare Pages must publish that output directory so direct SPA routes such as `/contratti` are served by `index.html` without redirecting to `/`.
 
+## Direct deployment workflow
+
+The `Cloudflare Pages deploy` GitHub Actions workflow builds the static frontend, checks the generated fallback, deploys `artifacts/lamezia-trasparente/dist/public` with Wrangler, then runs the public contracts smoke against `https://lamezia-trasparente.pages.dev`.
+
+Configure these repository settings before relying on the direct deploy job:
+
+- Secret: `CLOUDFLARE_API_TOKEN`
+- Secret or variable: `CLOUDFLARE_ACCOUNT_ID`
+- Optional variable: `CLOUDFLARE_PROJECT_NAME` (defaults to `lamezia-trasparente`)
+- Optional variable: `PUBLIC_SITE_URL` (defaults to `https://lamezia-trasparente.pages.dev`)
+
+If the Cloudflare credentials are missing, the workflow builds and smokes the static output but skips the external deploy step rather than failing with a missing-secret error.
+
 ## Contracts route smoke
 
 After a deployment, the live URL must satisfy both checks:
@@ -27,4 +40,4 @@ After a deployment, the live URL must satisfy both checks:
 - `https://lamezia-trasparente.pages.dev/contratti` remains on `/contratti` when loaded directly.
 - The generated JavaScript bundle contains the contract-state markers `Contratti protagonisti`, `Stato dei fascicoli contrattuali`, `Copertura fasi`, and `Copertura stato fasi dei fascicoli`.
 
-The `deploy smoke` GitHub Actions workflow checks these markers against `https://lamezia-trasparente.pages.dev` by default. If it fails after a main push, the likely issue is Cloudflare Pages publishing an old build, a wrong output directory, or a deployment that did not include the `_redirects` file.
+The shared script `scripts/check-public-contracts-page.mjs` enforces this public smoke. The `deploy smoke` workflow and the direct Cloudflare deploy workflow both use it.
