@@ -5,6 +5,12 @@ import path from "node:path";
 import process from "node:process";
 import { fileURLToPath, pathToFileURL } from "node:url";
 
+import {
+  ALBO_CLASSIFICATION_DICTIONARY,
+  ALBO_CLASSIFICATION_KNOWN_LIMIT,
+  classifyAlboRecordCategory,
+  type AlboRecordClassification,
+} from "./albo-classification-dictionary";
 import { ALBO_PRETORIO_LAMEZIA_SOURCE } from "./albo-source-config";
 
 const SCRIPT_DIR = path.dirname(fileURLToPath(import.meta.url));
@@ -78,6 +84,7 @@ export interface AlboItem {
   verification_status: VerificationStatus;
   privacy_risk: PrivacyRisk;
   public_visibility: PublicVisibility;
+  classification: AlboRecordClassification;
   known_limits: string[];
 }
 
@@ -123,10 +130,12 @@ type PublicRecord = Record<string, unknown> & {
   source: string;
   retrieved_at: string;
   verification_status: VerificationStatus;
+  classification?: AlboRecordClassification;
   known_limits: string[];
 };
 type PublicLatest = Record<string, unknown> & {
   retrieved_at: string;
+  classification_dictionary: typeof ALBO_CLASSIFICATION_DICTIONARY;
   counts: RunCounts;
   items: PublicRecord[];
   excluded: PublicRecord[];
@@ -137,7 +146,11 @@ interface PublicRecordDiff {
   removed: PublicRecord[];
   unchanged: PublicRecord[];
 }
-type PublicDiff = Record<string, unknown> & { counts: RunCounts; diff_baseline: DiffBaseline };
+type PublicDiff = Record<string, unknown> & {
+  counts: RunCounts;
+  diff_baseline: DiffBaseline;
+  classification_dictionary: typeof ALBO_CLASSIFICATION_DICTIONARY;
+};
 export type PdfPreservationStatus =
   | "archived"
   | "excluded"
@@ -219,6 +232,7 @@ export type AlboPublicStatus = Record<string, unknown> & {
   next_scheduled_check: string | null;
   verification_status: VerificationStatus;
   known_limits: string[];
+  classification_dictionary: typeof ALBO_CLASSIFICATION_DICTIONARY;
 };
 
 export interface RunResult {
@@ -811,6 +825,7 @@ export function normalizeAlboRecords(snapshot: AlboRawSnapshot): AlboItem[] {
     .filter((record) => record.publication_number.trim())
     .map((record) => {
       const classification = classify(record);
+      const recordClassification = classifyAlboRecordCategory(record);
       const content_hash = sha256({
         publication_number: record.publication_number,
         publication_start: record.publication_start,
@@ -841,6 +856,7 @@ export function normalizeAlboRecords(snapshot: AlboRawSnapshot): AlboItem[] {
         verification_status: verificationStatus(snapshot.fetch_method),
         privacy_risk: classification.privacyRisk,
         public_visibility: classification.publicVisibility,
+        classification: recordClassification,
         known_limits: itemLimits(snapshot, record, classification.reason),
       };
     });
@@ -917,7 +933,8 @@ function buildPublicLatest(snapshot: AlboRawSnapshot, items: AlboItem[], counts:
     source_url: snapshot.source_url,
     retrieved_at: snapshot.retrieved_at,
     verification_status: verificationStatus(snapshot.fetch_method),
-    known_limits: snapshot.known_limits,
+    known_limits: unique([...snapshot.known_limits, ALBO_CLASSIFICATION_KNOWN_LIMIT]),
+    classification_dictionary: ALBO_CLASSIFICATION_DICTIONARY,
     counts,
     items: items.filter((item) => item.public_visibility !== "do_not_publish").map(publicItem),
     excluded: items.filter((item) => item.public_visibility === "do_not_publish").map(publicExcludedItem),
@@ -963,7 +980,8 @@ function buildPublicDiff(
     source_url: snapshot.source_url,
     retrieved_at: snapshot.retrieved_at,
     verification_status: verificationStatus(snapshot.fetch_method),
-    known_limits: snapshot.known_limits,
+    known_limits: unique([...snapshot.known_limits, ALBO_CLASSIFICATION_KNOWN_LIMIT]),
+    classification_dictionary: ALBO_CLASSIFICATION_DICTIONARY,
     counts,
     diff_baseline: diffBaseline,
     diff: {
@@ -999,6 +1017,7 @@ function buildPublicStatus(snapshot: AlboRawSnapshot, counts: RunCounts, diffBas
     },
     verification_status: verificationStatus(snapshot.fetch_method),
     known_limits: publicStatusKnownLimits(snapshot, diffBaseline),
+    classification_dictionary: ALBO_CLASSIFICATION_DICTIONARY,
     official_albo_disclaimer: OFFICIAL_ALBO_DISCLAIMER,
     civic_safeguards: CIVIC_SAFEGUARDS,
   };
@@ -1007,6 +1026,7 @@ function buildPublicStatus(snapshot: AlboRawSnapshot, counts: RunCounts, diffBas
 function publicStatusKnownLimits(snapshot: AlboRawSnapshot, diffBaseline: DiffBaseline): string[] {
   return unique([
     ...snapshot.known_limits,
+    ALBO_CLASSIFICATION_KNOWN_LIMIT,
     ...(diffBaseline.status === "baseline_unavailable" ? [diffBaseline.note] : []),
   ]);
 }
@@ -1028,6 +1048,7 @@ function publicItem(item: AlboItem): PublicRecord {
     verification_status: item.verification_status,
     privacy_risk: item.privacy_risk,
     public_visibility: item.public_visibility,
+    classification: item.classification,
     known_limits: item.known_limits,
   };
   if (item.public_visibility === "publishable") {
@@ -1113,7 +1134,12 @@ function diffPublicRecords(previous: PublicRecord[], next: PublicRecord[]): Publ
 }
 
 function publicRecordComparableHash(record: PublicRecord): string {
-  const { retrieved_at: _retrievedAt, content_hash: _contentHash, ...stablePublicRecord } = record;
+  const {
+    retrieved_at: _retrievedAt,
+    content_hash: _contentHash,
+    classification: _classification,
+    ...stablePublicRecord
+  } = record;
   return sha256(stablePublicRecord);
 }
 
@@ -1503,7 +1529,7 @@ function privacySearchText(record: RawAlboRecord): string {
 }
 
 function itemLimits(snapshot: AlboRawSnapshot, record: RawAlboRecord, reason: string | null): string[] {
-  const limits = [...snapshot.known_limits];
+  const limits = [...snapshot.known_limits, ALBO_CLASSIFICATION_KNOWN_LIMIT];
   if (!record.document_url) limits.push(DOCUMENT_URL_LIMIT);
   if (reason) limits.push(MINIMISED_LIMIT, reason);
   return unique(limits);
