@@ -1,15 +1,15 @@
 # ANNCSU Coordinate External Geocode Candidates 2025
 
-Date: 2026-07-04
+Date: 2026-07-05
 
 ## Result
 
 - Request plan rows: 345
 - Requests attempted in this run: 0
-- Cached provider responses reused: 27
-- Candidate rows written: 26
+- Cached provider responses reused: 33
+- Candidate rows written: 31
 - Dry run: no
-- Limit: 20
+- Limit: 25
 - Selection filter: street_prefix=VIA
 - Rate limit sleep seconds: 1.2
 - Request plan CSV: `data/interim/qa/anncsu_coordinate_geocode_request_plan_2025.csv`
@@ -28,12 +28,12 @@ This script creates coordinate candidates only. It does not overwrite ANNCSU raw
 
 ## Candidate Status Counts
 
-- `candidate_requires_human_review`: 19
-- `no_candidate_returned`: 7
+- `candidate_requires_human_review`: 23
+- `no_candidate_returned`: 8
 
 ## Provider Confidence Counts
 
-- `low_street_level`: 19
+- `low_street_level`: 23
 
 ## Next Review Step
 

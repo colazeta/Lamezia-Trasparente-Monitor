@@ -68,6 +68,18 @@ that allows bulk use. The command writes both
 workbench payload
 `tools/electoral-review-workbench/public/data/coordinate_geocode_candidates_by_access.json`.
 
+For larger coverage, prepare a provider-agnostic handoff for a dedicated
+geocoder or an internal Nominatim instance with explicit bulk terms:
+
+```powershell
+python scripts/prepare_anncsu_dedicated_geocoder_batch.py
+python scripts/import_anncsu_dedicated_geocoder_results.py --input data/interim/qa/anncsu_coordinate_dedicated_geocoder_batch_1_2025.csv
+```
+
+The export includes blank `result_*` columns for the provider to fill. The
+importer adds filled results only as review candidates; it still does not apply
+coordinate overrides or create training rows.
+
 Generate local ANNCSU anchor candidates for suspect coordinates:
 
 ```powershell

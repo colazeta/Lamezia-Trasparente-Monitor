@@ -1,6 +1,6 @@
 # ANNCSU Coordinate Recovery Layer 2025
 
-Date: 2026-07-04
+Date: 2026-07-05
 
 ## Result
 
@@ -25,8 +25,8 @@ This layer does not overwrite ANNCSU raw coordinates. `source_lon/source_lat` re
 
 ## Geocoder Candidate Counts
 
-- `candidate_requires_human_review`: 2
-- `no_candidate_returned`: 3
+- `candidate_requires_human_review`: 17
+- `no_candidate_returned`: 8
 
 ## Local ANNCSU Anchor Candidate Counts
 
