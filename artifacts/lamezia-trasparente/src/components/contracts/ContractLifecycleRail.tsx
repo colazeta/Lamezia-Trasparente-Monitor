@@ -32,24 +32,27 @@ const PHASE_ICONS: Record<ContractLifecyclePhaseKey, LucideIcon> = {
 
 const STATUS_META: Record<
   ContractLifecycleStatus,
-  { label: string; className: string; dotClassName: string }
+  { label: string; className: string; dotClassName: string; stripClassName: string }
 > = {
   documented: {
     label: "Documentata",
     className:
       "border-transparent bg-emerald-100 text-emerald-800 dark:bg-emerald-500/20 dark:text-emerald-300",
     dotClassName: "border-brand/30 bg-brand/10 text-brand",
+    stripClassName: "bg-emerald-500",
   },
   partial: {
     label: "Da verificare",
     className:
       "border-transparent bg-sky-100 text-sky-800 dark:bg-sky-500/20 dark:text-sky-300",
     dotClassName: "border-sky-300 bg-sky-100 text-sky-700",
+    stripClassName: "bg-sky-500",
   },
   missing: {
     label: "Non documentata",
     className: "border-border bg-muted text-muted-foreground",
     dotClassName: "border-border bg-muted/40 text-muted-foreground",
+    stripClassName: "bg-amber-400",
   },
 };
 
@@ -86,6 +89,16 @@ const DOSSIER_STATUS_META: Record<
       "border-transparent bg-amber-100 text-amber-800 dark:bg-amber-500/20 dark:text-amber-300",
     icon: AlertTriangle,
   },
+};
+
+const PHASE_SHORT_LABELS: Record<ContractLifecyclePhaseKey, string> = {
+  programmazione: "Prog",
+  progettazione: "Proj",
+  gara_pubblicazione: "Pub",
+  svolgimento_gara: "Gara",
+  affidamento: "Aff",
+  esecuzione: "Esec",
+  valutazione: "Val",
 };
 
 export function ContractLifecycleRail({
@@ -154,6 +167,20 @@ export function ContractLifecycleRail({
           tone="text-amber-700 dark:text-amber-300"
         />
       </dl>
+
+      <div className="mt-5 rounded-xl border border-border bg-muted/20 p-4">
+        <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
+          <div className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+            Stato grafico delle fasi
+          </div>
+          <div className="flex flex-wrap gap-2 text-[10px] text-muted-foreground">
+            <PhaseLegendItem status="documented" />
+            <PhaseLegendItem status="partial" />
+            <PhaseLegendItem status="missing" />
+          </div>
+        </div>
+        <DossierPhaseStrip dossier={dossier} />
+      </div>
 
       {priorityPhase && priorityMeta ? (
         <div className="mt-4 rounded-xl border border-border bg-muted/25 px-4 py-3">
@@ -244,6 +271,48 @@ function getPriorityPhase(phases: readonly ContractLifecyclePhase[]) {
     phases.find((phase) => phase.status === "missing") ??
     phases.find((phase) => phase.status === "partial") ??
     fallbackPhase
+  );
+}
+
+function DossierPhaseStrip({ dossier }: { dossier: ContractDossier }) {
+  return (
+    <ol
+      aria-label={`Stato fasi del fascicolo ${dossier.title}`}
+      className="grid grid-cols-7 gap-1.5"
+    >
+      {dossier.phases.map((phase) => {
+        const meta = STATUS_META[phase.status];
+
+        return (
+          <li key={phase.key} className="min-w-0">
+            <span
+              className={`block h-2.5 rounded-full ${meta.stripClassName}`}
+              title={`${phase.label}: ${meta.label}`}
+            />
+            <span
+              aria-hidden="true"
+              className="mt-1 block truncate text-center text-[10px] font-medium text-muted-foreground"
+            >
+              {PHASE_SHORT_LABELS[phase.key]}
+            </span>
+            <span className="sr-only">
+              {phase.label}: {meta.label}
+            </span>
+          </li>
+        );
+      })}
+    </ol>
+  );
+}
+
+function PhaseLegendItem({ status }: { status: ContractLifecycleStatus }) {
+  const meta = STATUS_META[status];
+
+  return (
+    <span className="inline-flex items-center gap-1.5">
+      <span className={`h-2 w-2 rounded-full ${meta.stripClassName}`} />
+      {meta.label}
+    </span>
   );
 }
 
