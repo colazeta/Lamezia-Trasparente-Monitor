@@ -35,6 +35,11 @@ describe("Albo public run surface", () => {
     expect(screen.getAllByText(/Metadato minimo/i).length).toBeGreaterThan(0);
     expect(screen.getByRole("heading", { name: /PDF preservati nella piattaforma/i })).toBeInTheDocument();
     expect(screen.getByText(/Prossimo controllo/i)).toBeInTheDocument();
+    expect(screen.getByText(/Nessun aggiornamento previsto nel fine settimana/i)).toBeInTheDocument();
+    expect(screen.getByText(/Solo giorni lavorativi/i)).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: /Sintesi documenti di giornata/i })).toBeInTheDocument();
+    expect(screen.getByText(/Placeholder per la sintesi OCR/i)).toBeInTheDocument();
+    expect(screen.getByText(/Nessuna sintesi di giornata e prevista sabato o domenica/i)).toBeInTheDocument();
     expect(screen.queryByText(/assegno di matern|assistenza domiciliare|persona fisica/i)).toBeNull();
   }, 15000);
 
@@ -59,7 +64,25 @@ describe("Albo public run surface", () => {
         new RegExp(`^${expectedMatches} di ${ALBO_PUBLIC_RUN_ITEMS.length} record`),
       ),
     ).toBeInTheDocument();
-    expect(screen.getByText(`Pubbl. ${firstPublicationNumber}`)).toBeInTheDocument();
+    expect(screen.getAllByText(`Pubbl. ${firstPublicationNumber}`).length).toBeGreaterThan(0);
+  });
+
+  it("opens a connected metadata sheet for a public Albo record", async () => {
+    renderPage(Albo);
+
+    fireEvent.click(screen.getAllByRole("button", { name: /Apri scheda/i })[0]);
+
+    const dialog = await screen.findByRole("dialog");
+    const sheet = within(dialog);
+
+    expect(sheet.getByText("Quadro dai metadati")).toBeInTheDocument();
+    expect(sheet.getByText("Sintesi documento")).toBeInTheDocument();
+    expect(sheet.getByText(/Placeholder: la descrizione sara compilata/i)).toBeInTheDocument();
+    expect(sheet.getByText("Metadati essenziali")).toBeInTheDocument();
+    expect(sheet.getByText("Documento e fonte")).toBeInTheDocument();
+    expect(sheet.getByRole("link", { name: /Verifica fonte ufficiale/i })).toBeInTheDocument();
+    expect(sheet.getByText(/Il contenuto del PDF non viene analizzato/i)).toBeInTheDocument();
+    expect(sheet.queryByText(/document_url/i)).toBeNull();
   });
 
   it("does not expose direct document URLs through the app adapter", () => {
