@@ -1,0 +1,68 @@
+{
+  "checkedAt": "2026-07-05",
+  "scope": "giunta-current-profile-details",
+  "coverageNote": "Dettagli anagrafici e funzionali estratti dalle schede personali istituzionali correnti di Sindaco e Giunta. Questa tranche materializza deleghe, telefono ed email solo quando specifici della scheda personale; la PEC generale dell'ente ripetuta sulle schede non viene trattata come contatto personale.",
+  "sources": {
+    "politici": "https://www.comune.lamezia-terme.cz.it/it/page/politici"
+  },
+  "profiles": [
+    {
+      "slug": "mario-murone",
+      "name": "Mario Murone",
+      "profileUrl": "https://www.comune.lamezia-terme.cz.it/it/persone/murone-mario",
+      "incarichi": ["Sindaco"],
+      "deleghe": "Opere pubbliche, Servizi cimiteriali, Manutenzione straordinaria, Programmazione strategica e programmi complessi, Mobilita' urbana, Protezione Civile, Affari Legali, Partecipate e controllo analogo, Polizia municipale, Programmazione nazionale e comunitaria, Rapporti con enti sovraordinati.",
+      "contactPhone": "09682071",
+      "contactEmail": "m.murone@comune.lamezia-terme.cz.it"
+    },
+    {
+      "slug": "michelangelo-cardamone",
+      "name": "Michelangelo Cardamone",
+      "profileUrl": "https://www.comune.lamezia-terme.cz.it/it/persone/cardamone-michelangelo",
+      "incarichi": ["Vice Sindaco"],
+      "deleghe": "Cooperazione internazionale e Internazionalizzazione, Patrimonio, Urbanistica"
+    },
+    {
+      "slug": "tranquillo-paradiso",
+      "name": "Tranquillo Paradiso",
+      "profileUrl": "https://www.comune.lamezia-terme.cz.it/it/persone/paradiso-tranquillo-56341",
+      "incarichi": [],
+      "deleghe": "Rapporti con il Consiglio, Sistemi informativi e transizione al Digitale"
+    },
+    {
+      "slug": "salvatore-pirelli",
+      "name": "Salvatore Pirelli",
+      "profileUrl": "https://www.comune.lamezia-terme.cz.it/it/persone/pirelli-salvatore",
+      "incarichi": [],
+      "deleghe": "Sport, Attivita' produttive"
+    },
+    {
+      "slug": "annalisa-spinelli",
+      "name": "Annalisa Spinelli",
+      "profileUrl": "https://www.comune.lamezia-terme.cz.it/it/persone/spinelli-annalisa",
+      "incarichi": [],
+      "deleghe": "Cultura, Turismo, Politiche giovanili, Pari opportunita', Pubblica istruzione, Spettacolo e promozione del territorio, Comunicazione istituzionale, Musei e Biblioteche"
+    },
+    {
+      "slug": "donatella-amicarelli",
+      "name": "Donatella Amicarelli",
+      "profileUrl": "https://www.comune.lamezia-terme.cz.it/it/persone/amicarelli-donatella",
+      "incarichi": [],
+      "deleghe": "Verde pubblico e parchi, Ambiente e Sicurezza Ambientale, Agricoltura, Riqualificazione periferie, Manutenzione ordinaria, Randagismo"
+    },
+    {
+      "slug": "maria-nardo",
+      "name": "Maria Nardo",
+      "profileUrl": "https://www.comune.lamezia-terme.cz.it/it/persone/nardo-maria",
+      "incarichi": [],
+      "deleghe": "Bilancio e Programmazione Finanziaria, Tributi e Personale"
+    },
+    {
+      "slug": "gennaro-gianturco",
+      "name": "Gennaro Gianturco",
+      "profileUrl": "https://www.comune.lamezia-terme.cz.it/it/persone/gianturco-gennaro",
+      "incarichi": [],
+      "deleghe": "Welfare e politiche sociali, Politiche abitative e social housing"
+    }
+  ]
+}

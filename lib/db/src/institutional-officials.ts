@@ -28,11 +28,25 @@ function profileNote(official: InstitutionalOfficialSeed): string {
       `consultata il ${official.source.checkedAt}.`,
     ].join(" "),
   );
+  if (official.deleghe) {
+    lines.push(
+      `Deleghe dichiarate nella scheda personale istituzionale: ${official.deleghe}`,
+    );
+  }
+  const contacts = [
+    official.contactPhone ? `telefono ${official.contactPhone}` : null,
+    official.contactEmail ? `email ${official.contactEmail}` : null,
+  ].filter((contact): contact is string => contact !== null);
+  if (contacts.length) {
+    lines.push(
+      `Punti di contatto dichiarati nella scheda personale istituzionale: ${contacts.join("; ")}.`,
+    );
+  }
   if (official.biographyNote) lines.push(official.biographyNote);
   lines.push(
     [
-      "Deleghe, gruppi consiliari, compensi e dichiarazioni restano da",
-      "collegare a fonti pubbliche specifiche.",
+      "Gruppi consiliari, compensi e dichiarazioni restano da collegare",
+      "a fonti pubbliche specifiche.",
     ].join(" "),
   );
   return lines.join("\n");
