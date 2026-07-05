@@ -74,6 +74,7 @@ Generate local ANNCSU anchor candidates for suspect coordinates:
 python scripts/generate_anncsu_local_anchor_coordinate_candidates.py
 python scripts/prepare_anncsu_coordinate_review_batch.py
 python scripts/prepare_anncsu_coordinate_review_pack.py
+python scripts/prepare_anncsu_coordinate_decision_drafts.py
 ```
 
 These candidates use non-suspect same-street ANNCSU civics as review anchors.
@@ -83,7 +84,10 @@ candidate list into a full priority queue plus a first batch of 50 high-signal
 cases for manual workbench review. The review-pack script joins the suspect
 diagnostic, local anchor, and external geocoder evidence into one CSV so a
 reviewer can open each `access_id` in the workbench with a recommended review
-track.
+track. The decision-drafts script turns the first review batch into a
+non-applicable JSON draft with proposed coordinates prefilled, but keeps
+audit-blocking follow-up flags and blank reviewer metadata until a human
+reviewer accepts each row.
 
 Build the auditable recovery layer and training set:
 
