@@ -19,6 +19,7 @@
     "organi:qa": "pnpm --filter @workspace/scripts run check:organi",
     "organi:qa:profiles": "pnpm --filter @workspace/scripts run check:organi:profiles",
     "organi:qa:council-profiles": "pnpm --filter @workspace/scripts run check:organi:council-profiles",
+    "organi:qa:giunta-profiles": "pnpm --filter @workspace/scripts run check:organi:giunta-profiles",
     "organi:qa:history": "pnpm --filter @workspace/scripts run check:organi:history",
     "organi:qa:commissions": "pnpm --filter @workspace/scripts run check:organi:commissions",
     "organi:qa:live": "pnpm --filter @workspace/scripts run check:organi:live",

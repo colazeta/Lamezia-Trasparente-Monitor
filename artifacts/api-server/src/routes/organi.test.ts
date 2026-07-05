@@ -10,6 +10,7 @@ import {
   CURRENT_COUNCIL_PROFILE_SECTIONS,
   CURRENT_COUNCIL_SOURCE,
   CURRENT_GIUNTA_MEMBER_SLUGS,
+  CURRENT_GIUNTA_PROFILE_SECTIONS,
   CURRENT_GIUNTA_SOURCE,
   CURRENT_INSTITUTIONAL_OFFICIALS,
   CURRENT_INSTITUTIONAL_MEMBERSHIPS,
@@ -77,9 +78,15 @@ describe("organi historical memberships", () => {
     expect(CURRENT_INSTITUTIONAL_MEMBERSHIPS).toHaveLength(32);
     expect(Object.keys(CURRENT_PROFILE_DETAILS)).toHaveLength(8);
     expect(Object.keys(CURRENT_COUNCIL_PROFILE_SECTIONS)).toHaveLength(24);
+    expect(Object.keys(CURRENT_GIUNTA_PROFILE_SECTIONS)).toHaveLength(8);
     expect(
       CURRENT_GIUNTA_MEMBER_SLUGS.every(
         (slug) => slug in CURRENT_PROFILE_DETAILS,
+      ),
+    ).toBe(true);
+    expect(
+      CURRENT_GIUNTA_MEMBER_SLUGS.every(
+        (slug) => slug in CURRENT_GIUNTA_PROFILE_SECTIONS,
       ),
     ).toBe(true);
     expect(
@@ -100,12 +107,23 @@ describe("organi historical memberships", () => {
       profileOrganizations: ["Consiglio Comunale"],
       profileLastUpdated: "18 novembre 2025, 13:06",
     });
+    expect(CURRENT_GIUNTA_PROFILE_SECTIONS["michelangelo-cardamone"]).toMatchObject({
+      profileIncarichi: ["Vice Sindaco"],
+      profileOrganizations: ["Giunta Comunale"],
+      profileLastUpdated: "16 luglio 2025, 11:25",
+    });
     expect(
       Object.values(CURRENT_COUNCIL_PROFILE_SECTIONS).filter((section) =>
         "profileOrganizations" in section &&
         section.profileOrganizations.includes("Consiglio Comunale"),
       ),
     ).toHaveLength(23);
+    expect(
+      Object.values(CURRENT_GIUNTA_PROFILE_SECTIONS).filter((section) =>
+        "profileOrganizations" in section &&
+        section.profileOrganizations.includes("Giunta Comunale"),
+      ),
+    ).toHaveLength(7);
     expect(CURRENT_PROFILE_DETAILS["mario-murone"].deleghe).toContain(
       "Opere pubbliche",
     );
