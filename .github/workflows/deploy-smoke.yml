@@ -56,37 +56,56 @@ jobs:
 
       - name: Optional production URL smoke
         env:
-          PUBLIC_SITE_URL: ${{ inputs.public_url || vars.PUBLIC_SITE_URL }}
+          PUBLIC_SITE_URL: ${{ inputs.public_url || vars.PUBLIC_SITE_URL || 'https://lamezia-trasparente.pages.dev' }}
         run: |
-          if [ -z "$(printf '%s' "$PUBLIC_SITE_URL" | tr -d '[:space:]')" ]; then
-            echo "No PUBLIC_SITE_URL variable or workflow_dispatch public_url input configured; skipping live URL smoke."
+          PUBLIC_SITE_URL="$(printf '%s' "$PUBLIC_SITE_URL" | tr -d '[:space:]')"
+          if [ -z "$PUBLIC_SITE_URL" ]; then
+            echo "No public site URL configured; skipping live URL smoke."
             exit 0
           fi
 
-          echo "Checking $PUBLIC_SITE_URL"
-          for attempt in 1 2 3 4 5 6; do
-            failed=0
-            for path in "/" "/contratti"; do
-              target="${PUBLIC_SITE_URL%/}${path}"
-              if ! curl -fsSL --max-time 20 "$target" >/tmp/ltm-public.html; then
-                echo "URL smoke attempt $attempt failed for $target."
-                failed=1
-                continue
+          check_public_route() {
+            path="$1"
+            output_file="$2"
+            target="${PUBLIC_SITE_URL%/}${path}"
+
+            if ! effective_url=$(curl -fsSL --max-time 20 -o "$output_file" -w '%{url_effective}' "$target"); then
+              echo "Could not fetch public route: $target"
+              return 1
+            fi
+
+            echo "Fetched $target -> $effective_url"
+
+            if [ "$path" = "/contratti" ]; then
+              expected_url="${PUBLIC_SITE_URL%/}/contratti"
+              if [ "${effective_url%/}" != "${expected_url%/}" ]; then
+                echo "Direct /contratti must stay on /contratti, not resolve to: $effective_url"
+                return 1
               fi
-              if ! grep -Eiq "rendiamoLameziaTrasparente|Osservatorio Civico Indipendente|Lamezia" /tmp/ltm-public.html; then
-                echo "URL reachable but expected public marker not found for $target."
-                failed=1
+            fi
+
+            if ! grep -Eiq "rendiamoLameziaTrasparente|Osservatorio Civico Indipendente|Lamezia" "$output_file"; then
+              echo "URL reachable but expected public marker not found for $target."
+              return 1
+            fi
+          }
+
+          echo "Checking $PUBLIC_SITE_URL"
+          for attempt in 1 2 3 4 5 6 7 8 9 10 11 12; do
+            failed=0
+
+            check_public_route "/" /tmp/ltm-public-root.html || failed=1
+            check_public_route "/contratti" /tmp/ltm-public-contracts.html || failed=1
+
+            : >/tmp/ltm-public-scripts.txt
+            for html_file in /tmp/ltm-public-root.html /tmp/ltm-public-contracts.html; do
+              if [ -s "$html_file" ]; then
+                grep -oE 'src="[^"]+\.js[^"]*"' "$html_file" \
+                  | sed -E 's/^src="//; s/"$//' \
+                  >>/tmp/ltm-public-scripts.txt || true
               fi
             done
-
-            root_target="${PUBLIC_SITE_URL%/}/"
-            if curl -fsSL --max-time 20 "$root_target" >/tmp/ltm-public-root.html; then
-              grep -oE 'src="[^"]+\.js[^""]*"' /tmp/ltm-public-root.html \
-                | sed -E 's/^src="//; s/"$//' \
-                | sort -u >/tmp/ltm-public-scripts.txt || true
-            else
-              : >/tmp/ltm-public-scripts.txt
-            fi
+            sort -u /tmp/ltm-public-scripts.txt -o /tmp/ltm-public-scripts.txt
 
             if [ ! -s /tmp/ltm-public-scripts.txt ]; then
               echo "No generated JavaScript assets found on public URL."
@@ -106,7 +125,18 @@ jobs:
                 printf '\n' >>/tmp/ltm-public-bundle.txt
               done </tmp/ltm-public-scripts.txt
 
-              for marker in "Contratti protagonisti" "Stato dei fascicoli contrattuali" "Copertura fasi"; do
+              for marker in \
+                "Contratti protagonisti" \
+                "Stato dei fascicoli contrattuali" \
+                "Copertura fasi" \
+                "Copertura stato fasi dei fascicoli" \
+                "Programmazione" \
+                "Progettazione" \
+                "Gara / pubblicazione" \
+                "Esecuzione della gara" \
+                "Affidamento" \
+                "Esecuzione del contratto" \
+                "Conclusione, collaudi e verifiche"; do
                 if ! grep -Fq "$marker" /tmp/ltm-public-bundle.txt; then
                   echo "Public JavaScript bundle is missing contract state marker: $marker"
                   failed=1
