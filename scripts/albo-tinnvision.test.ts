@@ -15,6 +15,11 @@ import {
   runAlboIngestion,
   type AlboRawSnapshot,
 } from "./albo-tinnvision";
+import {
+  ALBO_CLASSIFICATION_DICTIONARY_VERSION,
+  ALBO_CLASSIFICATION_KNOWN_LIMIT,
+  classifyAlboRecordCategory,
+} from "./albo-classification-dictionary";
 import { ALBO_PRETORIO_LAMEZIA_SOURCE } from "./albo-source-config";
 
 const FIXTURE_RETRIEVED_AT = "2026-06-19T10:00:00.000Z";
@@ -39,14 +44,63 @@ test("parses Tinnvision XML export and normalises minimal albo_item fields", () 
   assert.equal(items[0].source_url, ALBO_PRETORIO_LAMEZIA_SOURCE.sourceUrl);
   assert.equal(items[0].verification_status, "official_source_acquired");
   assert.equal(items[0].public_visibility, "publishable");
+  assert.equal(items[0].classification.dictionary_version, ALBO_CLASSIFICATION_DICTIONARY_VERSION);
+  assert.equal(items[0].classification.sector.id, "governo_territorio");
+  assert.equal(items[0].classification.act_category.id, "determinazioni");
   assert.match(items[0].content_hash, /^[a-f0-9]{64}$/);
 
   assert.equal(items[1].public_visibility, "metadata_only");
   assert.equal(items[1].privacy_risk, "high");
+  assert.equal(items[1].classification.sector.id, "servizi_cittadino_demografici");
+  assert.equal(items[1].classification.act_category.id, "stato_civile");
   assert.equal(items[2].public_visibility, "publishable_with_minimisation");
   assert.equal(items[2].privacy_risk, "medium");
   assert.equal(items[3].public_visibility, "do_not_publish");
   assert.equal(items[3].privacy_risk, "high");
+});
+
+test("classifies Albo records by civic sector and act category dictionary", () => {
+  assert.deepEqual(
+    pickClassificationIds(
+      classifyAlboRecordCategory({
+        office: "SETTORE VIGILANZA E SICUREZZA URBANA",
+        act_type: "ORDINANZA",
+        subject: "Ordinanza temporanea di viabilita",
+      }),
+    ),
+    {
+      sector: "vigilanza_sicurezza",
+      act_category: "ordinanze",
+    },
+  );
+
+  assert.deepEqual(
+    pickClassificationIds(
+      classifyAlboRecordCategory({
+        office: null,
+        act_type: "ART.143 CPC (CODICE PROCEDURA CIVILE)",
+        subject: null,
+      }),
+    ),
+    {
+      sector: "notifiche_depositi",
+      act_category: "notifiche_depositi",
+    },
+  );
+
+  assert.deepEqual(
+    pickClassificationIds(
+      classifyAlboRecordCategory({
+        office: "PREFETTURA DI CATANZARO UFFICIO TERRITORIALE DEL GOVERNO",
+        act_type: "AVVISO",
+        subject: "Comunicazione pubblica",
+      }),
+    ),
+    {
+      sector: "altri_enti",
+      act_category: "avvisi",
+    },
+  );
 });
 
 test("does not classify personal-service welfare records as low-risk publishable", async () => {
@@ -253,6 +307,8 @@ test("run command writes snapshots and public outputs without mirroring sensitiv
   assert.equal(result.publicStatus.counts.acquired, 4);
   assert.equal(result.publicStatus.diff_baseline.status, "baseline_unavailable");
   assert.equal(result.publicStatus.diff_baseline.public_safe, false);
+  assert.equal(result.publicStatus.classification_dictionary.version, ALBO_CLASSIFICATION_DICTIONARY_VERSION);
+  assert.ok(result.publicStatus.known_limits.includes(ALBO_CLASSIFICATION_KNOWN_LIMIT));
   assert.equal(result.publicDiff.diff_baseline.status, "baseline_unavailable");
   assert.ok(result.publicStatus.known_limits.includes(result.publicStatus.diff_baseline.note));
   assert.ok(result.publicStatus.known_limits.length > 0);
@@ -267,8 +323,14 @@ test("run command writes snapshots and public outputs without mirroring sensitiv
   assert.doesNotMatch(publicStatus, /ROSSI MARIO|BIANCHI LUCIA|VERDI ANNA/i);
   assert.match(publicLatest, /Oggetto minimizzato per prudenza privacy/);
   assert.match(publicLatest, /Metadato minimo/);
+  assert.match(publicLatest, /Governo del territorio e urbanistica/);
+  assert.match(publicLatest, /Determinazioni dirigenziali/);
   assert.match(publicStatus, /08:00-20:00 Europe\/Rome/);
   assert.match(publicStatus, /ubuntu-latest/);
+  assert.equal(result.publicLatest.classification_dictionary.version, ALBO_CLASSIFICATION_DICTIONARY_VERSION);
+  assert.equal(result.publicLatest.items[0].classification.sector.id, "governo_territorio");
+  assert.equal(result.publicLatest.items[0].classification.act_category.id, "determinazioni");
+  assert.equal(result.publicLatest.excluded[0].classification, undefined);
 
   for (const publicRecord of [
     ...result.publicLatest.items,
@@ -286,6 +348,16 @@ test("run command writes snapshots and public outputs without mirroring sensitiv
   assert.match(runLog, /Solo metadato: 1/);
   assert.match(runLog, /Esclusi dal public layer: 1/);
 });
+
+function pickClassificationIds(classification: ReturnType<typeof classifyAlboRecordCategory>): {
+  sector: string;
+  act_category: string;
+} {
+  return {
+    sector: classification.sector.id,
+    act_category: classification.act_category.id,
+  };
+}
 
 test("run command compares against the previous current snapshot", async () => {
   const tmp = await mkdtemp(path.join(tmpdir(), "albo-tinnvision-diff-"));

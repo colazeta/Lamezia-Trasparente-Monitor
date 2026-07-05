@@ -8,6 +8,22 @@ export type AlboPublicVisibility =
   | "metadata_only";
 
 export type AlboPrivacyRisk = "low" | "medium" | "high";
+export type AlboClassificationConfidence = "high" | "medium" | "low";
+export type AlboClassificationBasis = "office" | "act_type" | "office_and_act_type" | "fallback";
+
+export type AlboClassificationTag = {
+  id: string;
+  label: string;
+  description: string;
+  confidence: AlboClassificationConfidence;
+  basis: AlboClassificationBasis;
+};
+
+export type AlboItemClassification = {
+  dictionary_version: string;
+  sector: AlboClassificationTag;
+  act_category: AlboClassificationTag;
+};
 
 export type AlboPublicRunItem = {
   id: string;
@@ -26,6 +42,7 @@ export type AlboPublicRunItem = {
   verification_status: string;
   privacy_risk: AlboPrivacyRisk;
   public_visibility: AlboPublicVisibility;
+  classification: AlboItemClassification;
   known_limits: string[];
   public_note: string | null;
 };
@@ -33,6 +50,7 @@ export type AlboPublicRunItem = {
 type RawAlboPublicRunItem = Partial<AlboPublicRunItem> & {
   public_visibility?: string;
   privacy_risk?: string;
+  classification?: unknown;
 };
 
 type RawAlboPublicLatest = {
@@ -42,6 +60,7 @@ type RawAlboPublicLatest = {
   verification_status: string;
   counts: AlboStatusCounts;
   known_limits: string[];
+  classification_dictionary?: unknown;
   items: RawAlboPublicRunItem[];
 };
 
@@ -80,6 +99,21 @@ type RawAlboDocumentsManifest = {
   warnings?: unknown;
 };
 
+type RawAlboClassificationTag = Partial<AlboClassificationTag>;
+
+type RawAlboItemClassification = {
+  dictionary_version?: unknown;
+  sector?: unknown;
+  act_category?: unknown;
+};
+
+type RawAlboClassificationDictionary = {
+  version?: unknown;
+  known_limits?: unknown;
+  sectors?: unknown;
+  act_categories?: unknown;
+};
+
 export type AlboArchivedDocument = {
   id: string;
   publication_number: string;
@@ -90,6 +124,20 @@ export type AlboArchivedDocument = {
   size_bytes: number;
   content_type: string;
   verification_status: string;
+};
+
+const FALLBACK_CLASSIFICATION_TAG: AlboClassificationTag = {
+  id: "non_classificato",
+  label: "Non classificato",
+  description: "Record non ancora classificato dal dizionario Albo.",
+  confidence: "low",
+  basis: "fallback",
+};
+
+const FALLBACK_CLASSIFICATION: AlboItemClassification = {
+  dictionary_version: "unavailable",
+  sector: FALLBACK_CLASSIFICATION_TAG,
+  act_category: FALLBACK_CLASSIFICATION_TAG,
 };
 
 function nullableText(value: unknown): string | null {
@@ -112,6 +160,52 @@ function isPublicVisibility(value: unknown): value is AlboPublicVisibility {
 
 function isPrivacyRisk(value: unknown): value is AlboPrivacyRisk {
   return value === "low" || value === "medium" || value === "high";
+}
+
+function isClassificationConfidence(value: unknown): value is AlboClassificationConfidence {
+  return value === "high" || value === "medium" || value === "low";
+}
+
+function isClassificationBasis(value: unknown): value is AlboClassificationBasis {
+  return value === "office" || value === "act_type" || value === "office_and_act_type" || value === "fallback";
+}
+
+function normalizeClassificationTag(value: unknown): AlboClassificationTag | null {
+  if (!value || typeof value !== "object") return null;
+  const tag = value as RawAlboClassificationTag;
+  if (
+    typeof tag.id !== "string" ||
+    typeof tag.label !== "string" ||
+    typeof tag.description !== "string" ||
+    !isClassificationConfidence(tag.confidence) ||
+    !isClassificationBasis(tag.basis)
+  ) {
+    return null;
+  }
+
+  return {
+    id: tag.id,
+    label: tag.label,
+    description: tag.description,
+    confidence: tag.confidence,
+    basis: tag.basis,
+  };
+}
+
+function normalizeItemClassification(value: unknown): AlboItemClassification {
+  if (!value || typeof value !== "object") return FALLBACK_CLASSIFICATION;
+  const classification = value as RawAlboItemClassification;
+  const sector = normalizeClassificationTag(classification.sector);
+  const actCategory = normalizeClassificationTag(classification.act_category);
+  const dictionaryVersion = nullableText(classification.dictionary_version);
+
+  if (!sector || !actCategory || !dictionaryVersion) return FALLBACK_CLASSIFICATION;
+
+  return {
+    dictionary_version: dictionaryVersion,
+    sector,
+    act_category: actCategory,
+  };
 }
 
 function normalizePublicRunItem(item: RawAlboPublicRunItem): AlboPublicRunItem | null {
@@ -144,6 +238,7 @@ function normalizePublicRunItem(item: RawAlboPublicRunItem): AlboPublicRunItem |
     verification_status: item.verification_status,
     privacy_risk: item.privacy_risk,
     public_visibility: item.public_visibility,
+    classification: normalizeItemClassification(item.classification),
     known_limits: arrayOfText(item.known_limits),
     public_note: nullableText(item.public_note),
   };
@@ -202,6 +297,23 @@ export const ALBO_PUBLIC_RUN_SUMMARY = {
   counts: latest.counts,
   known_limits: latest.known_limits,
   official_albo_disclaimer: ALBO_OPERATIONAL_STATUS.official_albo_disclaimer,
+};
+
+const classificationDictionary = (latest.classification_dictionary ?? {}) as RawAlboClassificationDictionary;
+
+export const ALBO_PUBLIC_CLASSIFICATION_DICTIONARY = {
+  version: nullableText(classificationDictionary.version) ?? FALLBACK_CLASSIFICATION.dictionary_version,
+  known_limits: arrayOfText(classificationDictionary.known_limits),
+  sectors: Array.isArray(classificationDictionary.sectors)
+    ? classificationDictionary.sectors
+        .map(normalizeClassificationDictionaryEntry)
+        .filter((entry): entry is Pick<AlboClassificationTag, "id" | "label" | "description"> => entry !== null)
+    : [],
+  act_categories: Array.isArray(classificationDictionary.act_categories)
+    ? classificationDictionary.act_categories
+        .map(normalizeClassificationDictionaryEntry)
+        .filter((entry): entry is Pick<AlboClassificationTag, "id" | "label" | "description"> => entry !== null)
+    : [],
 };
 
 export const ALBO_DOCUMENTS_MANIFEST = {
@@ -263,9 +375,24 @@ export function alboPublicSearchText(item: AlboPublicRunItem): string {
     item.act_number,
     item.act_date,
     item.subject,
+    item.classification.sector.label,
+    item.classification.act_category.label,
     item.public_visibility,
     item.privacy_risk,
   ]
     .filter(Boolean)
     .join(" "));
+}
+
+function normalizeClassificationDictionaryEntry(value: unknown): Pick<AlboClassificationTag, "id" | "label" | "description"> | null {
+  if (!value || typeof value !== "object") return null;
+  const entry = value as Partial<Pick<AlboClassificationTag, "id" | "label" | "description">>;
+  if (typeof entry.id !== "string" || typeof entry.label !== "string" || typeof entry.description !== "string") {
+    return null;
+  }
+  return {
+    id: entry.id,
+    label: entry.label,
+    description: entry.description,
+  };
 }
