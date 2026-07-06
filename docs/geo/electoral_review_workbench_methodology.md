@@ -187,6 +187,22 @@ result is only a candidate: it must be checked against the electoral street
 register, ANNCSU street context, boundary context, and then exported from the
 workbench as an explicit `manual_coordinate_override`.
 
+For larger handoff work, `scripts/prepare_anncsu_dedicated_geocoder_batch.py`
+exports provider-agnostic CSV templates without calling any service and without
+changing ANNCSU or electoral data. Later batches should exclude earlier handoff
+CSVs with `--skip-batch-csv`, for example:
+
+```powershell
+python scripts/prepare_anncsu_dedicated_geocoder_batch.py --batch-id anncsu_dedicated_geocoder_batch_2_2025 --skip-batch-csv data/interim/qa/anncsu_coordinate_dedicated_geocoder_batch_1_2025.csv
+```
+
+The current handoff outputs are:
+
+- `data/interim/qa/anncsu_coordinate_dedicated_geocoder_batch_1_2025.csv`
+- `data/interim/qa/anncsu_coordinate_dedicated_geocoder_batch_1_report_2025.md`
+- `data/interim/qa/anncsu_coordinate_dedicated_geocoder_batch_2_2025.csv`
+- `data/interim/qa/anncsu_coordinate_dedicated_geocoder_batch_2_report_2025.md`
+
 `scripts/build_anncsu_coordinate_recovery_layer.py` then materializes the
 separate recovery layer. Without decisions it keeps source coordinates as the
 effective coordinates and classifies suspect records as requiring review. With
