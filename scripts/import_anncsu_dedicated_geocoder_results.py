@@ -215,6 +215,8 @@ def write_report(
     input_rows: list[dict[str, str]],
     imported_rows: list[dict[str, str]],
     candidate_rows: list[dict[str, Any]],
+    report_path: Path,
+    dry_run: bool,
 ) -> None:
     status_counts = Counter(as_text(row.get("candidate_status")) for row in imported_rows)
     confidence_counts = Counter(as_text(row.get("provider_confidence")) for row in imported_rows)
@@ -238,9 +240,10 @@ def write_report(
         f"- Blank provider-result rows skipped: {blank_result_rows}",
         f"- Incomplete or invalid provider-result rows skipped: {incomplete_or_invalid_rows}",
         f"- Imported candidate rows: {len(imported_rows)}",
-        f"- Candidate access_ids after import: {len(access_ids)}",
+        f"- Candidate access_ids after import or simulation: {len(access_ids)}",
         f"- Candidate CSV: `{relpath(CANDIDATES_CSV)}`",
         f"- Workbench candidate JSON: `{relpath(WORKBENCH_CANDIDATES_JSON)}`",
+        f"- Dry run: {'true' if dry_run else 'false'}",
         "",
         "Imported rows are provider candidates only. They do not overwrite ANNCSU raw coordinates, processed civic assignments, GPKG files, polygons, public UI, or training rows.",
         "",
@@ -272,12 +275,15 @@ def write_report(
             "Run `scripts/prepare_anncsu_coordinate_review_pack.py` and review imported provider candidates in the local workbench. Accepted replacements must still be exported as explicit `manual_coordinate_override` decisions.",
         ]
     )
-    REPORT_PATH.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    report_path.parent.mkdir(parents=True, exist_ok=True)
+    report_path.write_text("\n".join(lines) + "\n", encoding="utf-8")
 
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Import provider-filled dedicated geocoder results as review candidates.")
     parser.add_argument("--input", type=Path, default=DEFAULT_INPUT_CSV, help="Provider-filled CSV from prepare_anncsu_dedicated_geocoder_batch.py.")
+    parser.add_argument("--report", type=Path, default=REPORT_PATH, help="Output import report markdown.")
+    parser.add_argument("--dry-run", action="store_true", help="Validate and report importable rows without writing candidate CSV or workbench JSON.")
     return parser.parse_args()
 
 
@@ -295,14 +301,15 @@ def main() -> int:
 
     existing_rows = read_csv_rows(CANDIDATES_CSV)
     candidate_rows = merge_candidates(existing_rows, imported_rows)
-    if imported_rows:
+    if imported_rows and not args.dry_run:
         write_csv_rows(CANDIDATES_CSV, candidate_rows, CANDIDATE_FIELDS)
         write_json(WORKBENCH_CANDIDATES_JSON, workbench_payload(candidate_rows))
-    write_report(args.input, input_rows, imported_rows, candidate_rows)
+    write_report(args.input, input_rows, imported_rows, candidate_rows, args.report, args.dry_run)
 
-    print(f"dedicated_geocoder_import_report={REPORT_PATH}")
+    print(f"dedicated_geocoder_import_report={args.report}")
     print(f"imported_candidate_rows={len(imported_rows)}")
     print(f"candidate_rows={len(candidate_rows)}")
+    print(f"dry_run={'true' if args.dry_run else 'false'}")
     return 0
 
 
