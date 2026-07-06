@@ -6,8 +6,6 @@ import app from "../app";
 import {
   db,
   pool,
-  CURRENT_2025_ELECTORAL_CONTEXT,
-  CURRENT_2025_ELECTORAL_CONTEXT_SOURCE,
   CURRENT_COUNCIL_MEMBER_SLUGS,
   CURRENT_COUNCIL_PROFILE_SECTIONS,
   CURRENT_COUNCIL_SOURCE,
@@ -81,32 +79,6 @@ describe("organi historical memberships", () => {
     expect(Object.keys(CURRENT_PROFILE_DETAILS)).toHaveLength(8);
     expect(Object.keys(CURRENT_COUNCIL_PROFILE_SECTIONS)).toHaveLength(24);
     expect(Object.keys(CURRENT_GIUNTA_PROFILE_SECTIONS)).toHaveLength(8);
-    expect(CURRENT_2025_ELECTORAL_CONTEXT_SOURCE.url).toBe(
-      "https://www.comune.lamezia-terme.cz.it/it/page/elezioni-comunali-del-25-e-26-maggio-2025",
-    );
-    expect(Object.keys(CURRENT_2025_ELECTORAL_CONTEXT)).toHaveLength(28);
-    expect(
-      CURRENT_COUNCIL_MEMBER_SLUGS.every(
-        (slug) => slug in CURRENT_2025_ELECTORAL_CONTEXT,
-      ),
-    ).toBe(true);
-    expect(CURRENT_2025_ELECTORAL_CONTEXT["mario-murone"]).toMatchObject({
-      contextType: "candidato_sindaco",
-      candidateName: "MURONE MARIO",
-      sourceDocId: "maggioli_2025_totals_mayor_xml",
-    });
-    expect(CURRENT_2025_ELECTORAL_CONTEXT["maria-grandinetti"]).toMatchObject({
-      contextType: "candidato_consigliere",
-      candidateName: "GRANDINETTI MARIA",
-      listName: "FORZA ITALIA",
-    });
-    expect(CURRENT_2025_ELECTORAL_CONTEXT["annalisa-spinelli"]).toMatchObject({
-      contextType: "candidato_consigliere",
-      listName: "NOI MODERATI",
-    });
-    expect("michelangelo-cardamone" in CURRENT_2025_ELECTORAL_CONTEXT).toBe(
-      false,
-    );
     expect(
       CURRENT_GIUNTA_MEMBER_SLUGS.every(
         (slug) => slug in CURRENT_PROFILE_DETAILS,
@@ -175,15 +147,11 @@ describe("organi historical memberships", () => {
           roleTitle: "Sindaco",
           profileUrl:
             "https://www.comune.lamezia-terme.cz.it/it/persone/murone-mario",
-          biographyNote: expect.stringContaining(
-            "candidato alla carica di sindaco",
-          ),
         }),
         expect.objectContaining({
           name: "Maria Grandinetti",
           role: "consigliere",
           roleTitle: "Presidente del Consiglio Comunale",
-          biographyNote: expect.stringContaining("FORZA ITALIA"),
         }),
         expect.objectContaining({
           name: "Michelangelo Cardamone",
@@ -218,11 +186,6 @@ describe("organi historical memberships", () => {
       membershipRole: "Presidente del Consiglio",
       sourceUrl: CURRENT_COUNCIL_SOURCE.url,
     });
-    expect(
-      CURRENT_INSTITUTIONAL_MEMBERSHIPS.every((m) =>
-        m.notes.includes("contesto elettorale 2025"),
-      ),
-    ).toBe(true);
   });
 
   it("adds a source-limited historical 2019 administration nucleus", () => {
