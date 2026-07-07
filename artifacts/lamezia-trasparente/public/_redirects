@@ -10,7 +10,7 @@
 /domande    /index.html   200
 /temi    /index.html   200
 /temi/*    /index.html   200
-/contratti    /index.html   200
+/contratti    /contratti/   301
 /contratti/*    /index.html   200
 /incarichimetro    /index.html   200
 /albo    /albo/   301
@@ -27,9 +27,9 @@
 /delibere    /index.html   200
 /convocazioni    /index.html   200
 /convocazioni/*    /index.html   200
-/organi    /index.html   200
+/organi    /organi/   301
 /organi/*    /index.html   200
-/amministratori    /index.html   200
+/amministratori    /amministratori/   301
 /amministratori/*    /index.html   200
 /macchina-comunale    /index.html   200
 /pnrr    /index.html   200
