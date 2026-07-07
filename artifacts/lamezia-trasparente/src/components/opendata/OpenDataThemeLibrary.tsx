@@ -53,12 +53,12 @@ export function OpenDataThemeLibrary({
           </h2>
         </div>
         <Badge variant="outline" className="w-fit shadow-none">
-          Filtra l'elenco
+          {totalDatasets === 1 ? "1 dataset" : `${totalDatasets} dataset`}
         </Badge>
       </div>
 
       <div
-        className="flex flex-wrap gap-2"
+        className="grid gap-2 sm:grid-cols-2 lg:grid-cols-6"
         role="group"
         aria-label="Filtri per categoria tematica OpenData"
       >
@@ -106,29 +106,33 @@ function ThemeFilterButton({
 }) {
   return (
     <button
-      aria-label={`${accessibleLabel ?? label}: ${count} ${
-        count === 1 ? "dataset" : "dataset"
-      }${statusLabel ? `, ${statusLabel}` : ""}`}
+      aria-label={`${accessibleLabel ?? label}: ${count} dataset${
+        statusLabel ? `, ${statusLabel}` : ""
+      }`}
       aria-pressed={isSelected}
-      className={`inline-flex min-h-12 items-center gap-2 rounded-lg border px-4 py-2 text-sm font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 ${
+      className={`inline-flex min-h-14 items-center justify-between gap-2 rounded-lg border px-3 py-2 text-sm font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 ${
         isSelected
           ? "border-primary bg-primary text-primary-foreground"
-          : "border-border bg-card text-foreground hover:border-primary/50"
+          : "border-border bg-card text-foreground hover:border-primary/50 hover:bg-primary/5"
       }`}
       onClick={onSelect}
       type="button"
     >
-      <span
-        className={`inline-flex h-7 w-7 items-center justify-center rounded-md ${
-          isSelected ? "bg-primary-foreground/15" : "bg-primary/10 text-primary"
-        }`}
-      >
-        {icon}
+      <span className="flex min-w-0 items-center gap-2">
+        <span
+          className={`inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-md ${
+            isSelected
+              ? "bg-primary-foreground/15"
+              : "bg-primary/10 text-primary"
+          }`}
+        >
+          {icon}
+        </span>
+        <span className="truncate">{label}</span>
       </span>
-      <span>{label}</span>
       <Badge
         variant={isSelected ? "secondary" : "outline"}
-        className="ml-1 shadow-none"
+        className="shrink-0 shadow-none"
       >
         {count}
       </Badge>

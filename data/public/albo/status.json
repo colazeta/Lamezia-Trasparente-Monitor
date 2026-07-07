@@ -1,33 +1,31 @@
 {
-  "generated_at": "2026-07-05T17:30:55.123Z",
+  "generated_at": "2026-07-07T15:49:26.136Z",
   "source": "Albo Pretorio Comune di Lamezia Terme",
   "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
   "provider": "Tinnvision",
-  "last_run_at": "2026-07-05T17:30:55.123Z",
-  "last_update": "2026-07-05T17:30:55.123Z",
+  "last_run_at": "2026-07-07T15:49:26.136Z",
+  "last_update": "2026-07-07T15:49:26.136Z",
   "method": "xml",
   "raw_format": "xml",
   "counts": {
-    "acquired": 174,
-    "new": 0,
+    "acquired": 198,
+    "new": 12,
     "changed": 1,
     "removed": 0,
-    "unchanged": 173,
-    "publishable": 135,
+    "unchanged": 185,
+    "publishable": 155,
     "minimised": 11,
-    "metadata_only": 20,
+    "metadata_only": 24,
     "excluded": 8
   },
   "diff_baseline": {
     "status": "public_safe",
     "public_safe": true,
-    "previous_retrieved_at": "2026-07-05T15:34:03.773Z",
+    "previous_retrieved_at": "2026-07-07T12:37:46.531Z",
     "note": "Diff derived from committed public/albo/latest.json; safe for scheduled public runs and limited to public-safe fields."
   },
-  "warnings": [
-    "Official Tinnvision detail document discovery failed for 1 publishable Albo record(s)."
-  ],
-  "next_scheduled_check": "2026-07-05T18:10:00.000Z",
+  "warnings": [],
+  "next_scheduled_check": "2026-07-07T16:10:00.000Z",
   "schedule": {
     "monitoring_window": "08:00-20:00 Europe/Rome",
     "timezone": "Europe/Rome",
@@ -41,8 +39,139 @@
     "I PDF sono archiviati solo per record pubblicabili a basso rischio; allegati e PDF non sono analizzati, interpretati o sottoposti a OCR.",
     "Gli export Tinnvision possono non includere URL diretti agli allegati; quando disponibile, il monitor usa il dettaglio ufficiale Tinnvision solo per individuare PDF HTTPS a basso rischio.",
     "La classificazione privacy e' prudenziale e automatica; i casi sensibili richiedono revisione umana prima di esposizioni piu' ricche.",
-    "Quando gli export strutturati non includono URL diretti, il monitor prova il dettaglio ufficiale Tinnvision solo per record pubblicabili a basso rischio."
+    "Quando gli export strutturati non includono URL diretti, il monitor prova il dettaglio ufficiale Tinnvision solo per record pubblicabili a basso rischio.",
+    "Classificazione civica automatica basata su dizionario: settore e tipologia sono derivati da ufficio/provenienza e tipo atto, senza interpretare il contenuto dei PDF."
   ],
+  "classification_dictionary": {
+    "version": "2026-07-05-a",
+    "known_limits": [
+      "Classificazione civica automatica basata su dizionario: settore e tipologia sono derivati da ufficio/provenienza e tipo atto, senza interpretare il contenuto dei PDF."
+    ],
+    "sectors": [
+      {
+        "id": "governo_territorio",
+        "label": "Governo del territorio e urbanistica",
+        "description": "Urbanistica, pianificazione territoriale, edilizia e atti tecnici collegati al territorio."
+      },
+      {
+        "id": "patrimonio_territorio",
+        "label": "Patrimonio e territorio comunale",
+        "description": "Gestione e valorizzazione del patrimonio comunale e del territorio comunale."
+      },
+      {
+        "id": "manutenzioni",
+        "label": "Manutenzioni e servizi tecnici",
+        "description": "Manutenzioni, lavori e servizi tecnici operativi."
+      },
+      {
+        "id": "vigilanza_sicurezza",
+        "label": "Vigilanza e sicurezza urbana",
+        "description": "Polizia locale, sicurezza urbana, viabilita e ordinanze di vigilanza."
+      },
+      {
+        "id": "bilancio_finanze",
+        "label": "Bilancio, finanze e tributi",
+        "description": "Contabilita, bilancio, finanze, tributi e gestione economica."
+      },
+      {
+        "id": "avvocatura_contenzioso",
+        "label": "Avvocatura e contenzioso",
+        "description": "Atti dell'avvocatura, contenzioso, liti e procedimenti legali dell'ente."
+      },
+      {
+        "id": "servizi_persona",
+        "label": "Servizi alla persona",
+        "description": "Servizi sociali, welfare e interventi rivolti alla persona."
+      },
+      {
+        "id": "servizi_cittadino_demografici",
+        "label": "Servizi al cittadino e demografici",
+        "description": "Anagrafe, stato civile, leva, elettorale e servizi demografici al cittadino."
+      },
+      {
+        "id": "organi_istituzionali",
+        "label": "Organi istituzionali e segreteria",
+        "description": "Segreteria generale, giunta, commissioni, attivita istituzionali e organi politici."
+      },
+      {
+        "id": "elettorale",
+        "label": "Elettorale",
+        "description": "Atti e comunicazioni riferiti a procedimenti elettorali."
+      },
+      {
+        "id": "altri_enti",
+        "label": "Altri enti e soggetti esterni",
+        "description": "Pubblicazioni provenienti da altri enti pubblici o soggetti esterni al Comune."
+      },
+      {
+        "id": "notifiche_depositi",
+        "label": "Notifiche e depositi",
+        "description": "Notifiche, depositi e pubblicazioni con ufficio comunale non chiaramente classificabile."
+      },
+      {
+        "id": "non_classificato",
+        "label": "Non classificato",
+        "description": "Record non ricondotto con sufficiente certezza a un settore del dizionario."
+      }
+    ],
+    "act_categories": [
+      {
+        "id": "determinazioni",
+        "label": "Determinazioni dirigenziali",
+        "description": "Determinazioni, liquidazioni, affidamenti e altri atti gestionali dirigenziali."
+      },
+      {
+        "id": "deliberazioni",
+        "label": "Deliberazioni",
+        "description": "Deliberazioni di giunta o di altri organi deliberativi."
+      },
+      {
+        "id": "ordinanze",
+        "label": "Ordinanze",
+        "description": "Ordinanze e provvedimenti ordinatori."
+      },
+      {
+        "id": "edilizia_urbanistica",
+        "label": "Edilizia e urbanistica",
+        "description": "Permessi di costruire, avvisi edilizi e atti urbanistici."
+      },
+      {
+        "id": "avvisi",
+        "label": "Avvisi",
+        "description": "Avvisi pubblici e comunicazioni pubblicate all'Albo."
+      },
+      {
+        "id": "convocazioni_istituzionali",
+        "label": "Convocazioni istituzionali",
+        "description": "Convocazioni di commissioni, sedute e organismi istituzionali."
+      },
+      {
+        "id": "notifiche_depositi",
+        "label": "Notifiche e depositi",
+        "description": "Notifiche, depositi, avvisi di deposito e pubblicazioni ex codice di procedura civile."
+      },
+      {
+        "id": "stato_civile",
+        "label": "Stato civile",
+        "description": "Pubblicazioni di matrimonio, cambio nome o cognome e atti di stato civile."
+      },
+      {
+        "id": "elettorale",
+        "label": "Elettorale",
+        "description": "Atti dell'ufficio elettorale e pubblicazioni collegate alle elezioni."
+      },
+      {
+        "id": "atti_diversi",
+        "label": "Atti diversi",
+        "description": "Atti non riconducibili alle famiglie principali del dizionario."
+      },
+      {
+        "id": "non_classificato",
+        "label": "Non classificato",
+        "description": "Tipologia non ricondotta con sufficiente certezza a una famiglia del dizionario."
+      }
+    ]
+  },
   "official_albo_disclaimer": "Lamezia Trasparente Monitor non sostituisce l'Albo Pretorio ufficiale: pubblicazioni, termini, allegati e contenuti vanno verificati sulla fonte istituzionale.",
   "civic_safeguards": [
     "I PDF sono archiviati solo per record pubblicabili a basso rischio, con URL ufficiale, content-type application/pdf e limite dimensionale.",
