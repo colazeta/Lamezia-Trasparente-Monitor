@@ -5,7 +5,7 @@ const DEFAULT_PUBLIC_URL = "https://lamezia-trasparente.pages.dev";
 const DEFAULT_ATTEMPTS = 1;
 const DEFAULT_DELAY_MS = 10_000;
 const DEPLOY_PROVENANCE_PATH = "/deploy-provenance.json";
-const REQUIRED_DEPLOYMENT_CONTRACT = "contracts-protagonists-state-v1";
+const REQUIRED_DEPLOYMENT_CONTRACT = "public-routes-contracts-organi-v2";
 const REQUIRED_PUBLIC_TEXT = [
   "rendiamoLameziaTrasparente",
   "Osservatorio Civico Indipendente",
@@ -25,12 +25,19 @@ const REQUIRED_CONTRACT_BUNDLE_TEXT = [
   "Esecuzione del contratto",
   "Conclusione, collaudi e verifiche",
 ];
+const REQUIRED_ORGANI_BUNDLE_TEXT = [
+  "Organi del Comune",
+  "Componenti correnti",
+  "Righe storiche",
+  "Commissioni Consiliari",
+];
+const REQUIRED_DEPLOY_ROUTES = ["/contratti", "/organi", "/amministratori"];
 
 function usage() {
   return [
     "Usage: node scripts/check-public-contracts-page.mjs [--url <public-url>] [--attempts <n>] [--delay-ms <ms>]",
     "",
-    "Checks the production/public contracts route and generated bundle markers.",
+    "Checks the production/public contracts and organi routes plus generated bundle markers.",
     "Defaults to https://lamezia-trasparente.pages.dev.",
   ].join("\n");
 }
@@ -126,11 +133,11 @@ function normalizeRouteForCompare(url) {
   return `${parsed.origin}${parsed.pathname.replace(/\/+$/, "")}`;
 }
 
-function assertContractsRoute(publicUrl, finalUrl) {
-  const expected = normalizeRouteForCompare(routeUrl(publicUrl, "/contratti"));
+function assertRoute(publicUrl, route, finalUrl) {
+  const expected = normalizeRouteForCompare(routeUrl(publicUrl, route));
   const actual = normalizeRouteForCompare(finalUrl);
   if (actual !== expected) {
-    throw new Error(`Direct /contratti resolved to ${finalUrl}; expected ${expected}.`);
+    throw new Error(`Direct ${route} resolved to ${finalUrl}; expected ${expected}.`);
   }
 }
 
@@ -164,6 +171,14 @@ function assertDeployProvenance(provenance) {
       `Deploy provenance has unexpected requiredRoute: ${String(provenance.requiredRoute)}`,
     );
   }
+  const requiredRoutes = Array.isArray(provenance.requiredRoutes)
+    ? provenance.requiredRoutes
+    : [];
+  for (const route of REQUIRED_DEPLOY_ROUTES) {
+    if (!requiredRoutes.includes(route)) {
+      throw new Error(`Deploy provenance is missing required route: ${route}`);
+    }
+  }
   const requiredMarkers = Array.isArray(provenance.requiredMarkers)
     ? provenance.requiredMarkers
     : [];
@@ -172,6 +187,7 @@ function assertDeployProvenance(provenance) {
     "Stato dei fascicoli contrattuali",
     "Copertura fasi",
     "Copertura stato fasi dei fascicoli",
+    ...REQUIRED_ORGANI_BUNDLE_TEXT,
   ]) {
     if (!requiredMarkers.includes(marker)) {
       throw new Error(`Deploy provenance is missing required marker: ${marker}`);
@@ -213,26 +229,40 @@ function assertBundleMarkers(bundleText) {
       `Public JavaScript bundle is missing contract markers: ${missing.join(", ")}`,
     );
   }
+
+  const missingOrgani = REQUIRED_ORGANI_BUNDLE_TEXT.filter(
+    (marker) => !bundleText.includes(marker),
+  );
+  if (missingOrgani.length > 0) {
+    throw new Error(
+      `Public JavaScript bundle is missing organi markers: ${missingOrgani.join(", ")}`,
+    );
+  }
 }
 
 async function checkPublicContractsPage(publicUrl) {
   const rootUrl = routeUrl(publicUrl, "/");
   const contractsUrl = routeUrl(publicUrl, "/contratti");
+  const organiUrl = routeUrl(publicUrl, "/organi");
   const provenanceUrl = routeUrl(publicUrl, DEPLOY_PROVENANCE_PATH);
   const root = await fetchText(rootUrl, "Root route");
   const contracts = await fetchText(contractsUrl, "Contracts route");
+  const organi = await fetchText(organiUrl, "Organi route");
   const provenance = await fetchJson(provenanceUrl, "Deploy provenance marker");
 
   console.log(`Fetched ${rootUrl} -> ${root.finalUrl}`);
   console.log(`Fetched ${contractsUrl} -> ${contracts.finalUrl}`);
+  console.log(`Fetched ${organiUrl} -> ${organi.finalUrl}`);
   console.log(`Fetched ${provenanceUrl} -> ${provenance.finalUrl}`);
 
-  assertContractsRoute(publicUrl, contracts.finalUrl);
+  assertRoute(publicUrl, "/contratti", contracts.finalUrl);
+  assertRoute(publicUrl, "/organi", organi.finalUrl);
   assertPublicText(root.text, "Root route");
   assertPublicText(contracts.text, "Contracts route");
+  assertPublicText(organi.text, "Organi route");
   assertDeployProvenance(provenance.value);
 
-  const scriptPaths = extractScriptPaths(root.text, contracts.text);
+  const scriptPaths = extractScriptPaths(root.text, contracts.text, organi.text);
   console.log(`Found ${scriptPaths.length} public JavaScript asset(s).`);
   const bundleText = await fetchBundleText(publicUrl, scriptPaths);
   assertBundleMarkers(bundleText);

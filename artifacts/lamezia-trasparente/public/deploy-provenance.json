@@ -2,13 +2,22 @@
   "app": "lamezia-trasparente",
   "repository": "colazeta/Lamezia-Trasparente-Monitor",
   "publicUrl": "https://lamezia-trasparente.pages.dev",
-  "deploymentContract": "contracts-protagonists-state-v1",
+  "deploymentContract": "public-routes-contracts-organi-v2",
   "requiredRoute": "/contratti",
+  "requiredRoutes": [
+    "/contratti",
+    "/organi",
+    "/amministratori"
+  ],
   "requiredMarkers": [
     "Contratti protagonisti",
     "Stato dei fascicoli contrattuali",
     "Copertura fasi",
-    "Copertura stato fasi dei fascicoli"
+    "Copertura stato fasi dei fascicoli",
+    "Organi del Comune",
+    "Componenti correnti",
+    "Righe storiche",
+    "Commissioni Consiliari"
   ],
-  "createdAt": "2026-07-05"
+  "createdAt": "2026-07-07"
 }

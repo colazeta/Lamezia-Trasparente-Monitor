@@ -40,6 +40,26 @@
     "notes": "Sezione data-driven con indicatori da leggere come segnali e non come conclusioni."
   },
   {
+    "path": "/organi",
+    "status": "pubblicabile",
+    "v0Critical": true,
+    "expectedDataMode": "mixed",
+    "mustNotErrorBoundary": true,
+    "requiresSourceAndLimits": true,
+    "humanCheckRequired": true,
+    "notes": "Indice data-driven di organi istituzionali, composizioni correnti e storico fonte-limitato."
+  },
+  {
+    "path": "/amministratori",
+    "status": "pubblicabile",
+    "v0Critical": true,
+    "expectedDataMode": "mixed",
+    "mustNotErrorBoundary": true,
+    "requiresSourceAndLimits": true,
+    "humanCheckRequired": true,
+    "notes": "Profili pubblici collegati agli incarichi negli organi e allo storico dei ruoli disponibili."
+  },
+  {
     "path": "/pnrr",
     "status": "pubblicabile",
     "v0Critical": true,

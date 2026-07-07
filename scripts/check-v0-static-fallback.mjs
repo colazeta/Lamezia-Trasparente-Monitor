@@ -18,6 +18,8 @@ const REQUIRED_ROUTES = [
   "/contratti",
   "/convocazioni",
   "/convocazioni/demo-consiglio-comunale-v0",
+  "/organi",
+  "/amministratori",
   "/fonti-dati",
   "/metodologia",
 ];
@@ -39,6 +41,12 @@ const REQUIRED_CONTRACT_BUNDLE_TEXT = [
   "Affidamento",
   "Esecuzione del contratto",
   "Conclusione, collaudi e verifiche",
+];
+const REQUIRED_ORGANI_BUNDLE_TEXT = [
+  "Organi del Comune",
+  "Componenti correnti",
+  "Righe storiche",
+  "Commissioni Consiliari",
 ];
 
 function usage() {
@@ -322,7 +330,7 @@ async function main() {
   await assertGeneratedBundleText(
     absoluteDistDir,
     assets,
-    REQUIRED_CONTRACT_BUNDLE_TEXT,
+    [...REQUIRED_CONTRACT_BUNDLE_TEXT, ...REQUIRED_ORGANI_BUNDLE_TEXT],
   );
 
   const routeResults = [];

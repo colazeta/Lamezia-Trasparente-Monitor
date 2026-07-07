@@ -35,6 +35,8 @@ Documenti collegati:
 | `/convocazioni` | pubblicabile | mixed | sì | `council-sessions` | Empty state prudente per dati mancanti. |
 | `/convocazioni/demo-consiglio-comunale-v0` | sperimentale | fixture | no | `council-sessions` | Demo da marcare come sperimentale/non definitiva. |
 | `/contratti` | pubblicabile | mixed | sì | `contracts` | Indicatori come segnali, non conclusioni. |
+| `/organi` | pubblicabile | mixed | sì | `institutional-bodies` | Indice data-driven di organi istituzionali, composizioni correnti e storico fonte-limitato. |
+| `/amministratori` | pubblicabile | mixed | sì | `institutional-bodies` | Profili pubblici collegati agli incarichi negli organi e allo storico dei ruoli disponibili. |
 | `/pnrr` | pubblicabile | mixed | sì | `pnrr-projects` | Fonti, limiti e stato di verifica. |
 | `/redazione` | riservata | none | sì | `editorial-area` | Non deve esporre contenuto ordinario in preview non autenticata. |
 | `/healthz.json` | static-marker | none | sì | `static-health` | Marker statico, non controllo live data. |
