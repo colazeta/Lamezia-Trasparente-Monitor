@@ -1,0 +1,238 @@
+{
+  "checkedAt": "2026-07-06",
+  "scope": "current-electoral-context-2025",
+  "coverageNote": "Contesto elettorale 2025 per 28 amministratori correnti: tutti i componenti correnti del Consiglio comunale hanno un riferimento di candidatura sindaco o consigliere; tre componenti correnti della Giunta non risultano nelle righe candidato Maggioli elaborate. Il dato e' contesto di candidatura/lista, non gruppo consiliare, proclamazione o atto di nomina.",
+  "sources": {
+    "comunePage": "https://www.comune.lamezia-terme.cz.it/it/page/elezioni-comunali-del-25-e-26-maggio-2025",
+    "sourceDocumentsCsv": "data/processed/source_documents.csv"
+  },
+  "contexts": [
+    {
+      "slug": "adelaide-colosimo",
+      "name": "Adelaide Colosimo",
+      "contextType": "candidato_consigliere",
+      "candidateName": "COLOSIMO ADELAIDE",
+      "listName": "NOI MODERATI",
+      "sourceDocId": "maggioli_2025_preferences_section_l10_xml"
+    },
+    {
+      "slug": "alessandro-saullo",
+      "name": "Alessandro Saullo",
+      "contextType": "candidato_consigliere",
+      "candidateName": "SAULLO ALESSANDRO",
+      "listName": "FRATELLI D'ITALIA",
+      "sourceDocId": "maggioli_2025_preferences_section_l14_xml"
+    },
+    {
+      "slug": "annalisa-spinelli",
+      "name": "Annalisa Spinelli",
+      "contextType": "candidato_consigliere",
+      "candidateName": "SPINELLI ANNALISA",
+      "listName": "NOI MODERATI",
+      "sourceDocId": "maggioli_2025_preferences_section_l10_xml"
+    },
+    {
+      "slug": "annita-vitale",
+      "name": "Annita Vitale",
+      "contextType": "candidato_consigliere",
+      "candidateName": "VITALE ANNITA",
+      "listName": "AZIONE",
+      "sourceDocId": "maggioli_2025_preferences_section_l03_xml"
+    },
+    {
+      "slug": "antonio-lorena",
+      "name": "Antonio Lorena",
+      "contextType": "candidato_consigliere",
+      "candidateName": "LORENA ANTONIO",
+      "listName": "FRATELLI D'ITALIA",
+      "sourceDocId": "maggioli_2025_preferences_section_l14_xml"
+    },
+    {
+      "slug": "antonio-mastroianni",
+      "name": "Antonio Mastroianni",
+      "contextType": "candidato_consigliere",
+      "candidateName": "MASTROIANNI ANTONIO detto TONINO",
+      "listName": "LEGA SALVINI CALABRIA",
+      "sourceDocId": "maggioli_2025_preferences_section_l13_xml"
+    },
+    {
+      "slug": "bernadette-serratore",
+      "name": "Bernadette Serratore",
+      "contextType": "candidato_consigliere",
+      "candidateName": "SERRATORE BERNADETTE",
+      "listName": "PER VIVERE BENE",
+      "sourceDocId": "maggioli_2025_preferences_section_l04_xml"
+    },
+    {
+      "slug": "carmelina-isa-muraca",
+      "name": "Carmelina Isa Muraca",
+      "contextType": "candidato_consigliere",
+      "candidateName": "MURACA CARMELINA ISA",
+      "listName": "GIANPAOLO BEVILACQUA SINDACO DEL POPOLO",
+      "sourceDocId": "maggioli_2025_preferences_section_l06_xml"
+    },
+    {
+      "slug": "carmine-villella",
+      "name": "Carmine Villella",
+      "contextType": "candidato_consigliere",
+      "candidateName": "VILLELLA CARMINE",
+      "listName": "LEGA SALVINI CALABRIA",
+      "sourceDocId": "maggioli_2025_preferences_section_l13_xml"
+    },
+    {
+      "slug": "davide-mastroianni",
+      "name": "Davide Mastroianni",
+      "contextType": "candidato_consigliere",
+      "candidateName": "MASTROIANNI DAVIDE",
+      "listName": "FORZA ITALIA",
+      "sourceDocId": "maggioli_2025_preferences_section_l12_xml"
+    },
+    {
+      "slug": "donatella-amicarelli",
+      "name": "Donatella Amicarelli",
+      "contextType": "candidato_consigliere",
+      "candidateName": "AMICARELLI DONATELLA detta MICARELLI",
+      "listName": "LEGA SALVINI CALABRIA",
+      "sourceDocId": "maggioli_2025_preferences_section_l13_xml"
+    },
+    {
+      "slug": "doris-lo-moro",
+      "name": "Doris Lo Moro",
+      "contextType": "candidato_sindaco",
+      "candidateName": "LO MORO DORIS",
+      "sourceDocId": "maggioli_2025_totals_mayor_xml"
+    },
+    {
+      "slug": "fabrizio-muraca",
+      "name": "Fabrizio Muraca",
+      "contextType": "candidato_consigliere",
+      "candidateName": "MURACA FABRIZIO",
+      "listName": "PARTITO DEMOCRATICO",
+      "sourceDocId": "maggioli_2025_preferences_section_l01_xml"
+    },
+    {
+      "slug": "francesco-caruso",
+      "name": "Francesco Caruso",
+      "contextType": "candidato_consigliere",
+      "candidateName": "CARUSO FRANCESCO",
+      "listName": "LAMEZIA DOMANI",
+      "sourceDocId": "maggioli_2025_preferences_section_l09_xml"
+    },
+    {
+      "slug": "gennarino-masi",
+      "name": "Gennarino Masi",
+      "contextType": "candidato_consigliere",
+      "candidateName": "MASI GENNARINO",
+      "listName": "PARTITO DEMOCRATICO",
+      "sourceDocId": "maggioli_2025_preferences_section_l01_xml"
+    },
+    {
+      "slug": "gennaro-gianturco",
+      "name": "Gennaro Gianturco",
+      "contextType": "candidato_consigliere",
+      "candidateName": "GIANTURCO GENNARO detto MIMMO",
+      "listName": "LAMEZIA DOMANI",
+      "sourceDocId": "maggioli_2025_preferences_section_l09_xml"
+    },
+    {
+      "slug": "giancarlo-nicotera",
+      "name": "Giancarlo Nicotera",
+      "contextType": "candidato_consigliere",
+      "candidateName": "NICOTERA GIANCARLO",
+      "listName": "CALABRIA AZZURRA",
+      "sourceDocId": "maggioli_2025_preferences_section_l11_xml"
+    },
+    {
+      "slug": "giovanni-manuel-raso",
+      "name": "Giovanni Manuel Raso",
+      "contextType": "candidato_consigliere",
+      "candidateName": "RASO GIOVANNI MANUEL",
+      "listName": "FRATELLI D'ITALIA",
+      "sourceDocId": "maggioli_2025_preferences_section_l14_xml"
+    },
+    {
+      "slug": "lidia-vescio",
+      "name": "Lidia Vescio",
+      "contextType": "candidato_consigliere",
+      "candidateName": "VESCIO LIDIA",
+      "listName": "PARTITO DEMOCRATICO",
+      "sourceDocId": "maggioli_2025_preferences_section_l01_xml"
+    },
+    {
+      "slug": "maria-grandinetti",
+      "name": "Maria Grandinetti",
+      "contextType": "candidato_consigliere",
+      "candidateName": "GRANDINETTI MARIA",
+      "listName": "FORZA ITALIA",
+      "sourceDocId": "maggioli_2025_preferences_section_l12_xml"
+    },
+    {
+      "slug": "maria-lucia-raso",
+      "name": "Maria Lucia Raso",
+      "contextType": "candidato_consigliere",
+      "candidateName": "RASO MARIALUCIA",
+      "listName": "GIANPAOLO BEVILACQUA SINDACO DEL POPOLO",
+      "sourceDocId": "maggioli_2025_preferences_section_l06_xml"
+    },
+    {
+      "slug": "mario-murone",
+      "name": "Mario Murone",
+      "contextType": "candidato_sindaco",
+      "candidateName": "MURONE MARIO",
+      "sourceDocId": "maggioli_2025_totals_mayor_xml"
+    },
+    {
+      "slug": "massimo-cristiano",
+      "name": "Massimo Cristiano",
+      "contextType": "candidato_consigliere",
+      "candidateName": "CRISTIANO MASSIMO",
+      "listName": "LEGA SALVINI CALABRIA",
+      "sourceDocId": "maggioli_2025_preferences_section_l13_xml"
+    },
+    {
+      "slug": "matteo-folino",
+      "name": "Matteo Folino",
+      "contextType": "candidato_consigliere",
+      "candidateName": "FOLINO MATTEO",
+      "listName": "NOI MODERATI",
+      "sourceDocId": "maggioli_2025_preferences_section_l10_xml"
+    },
+    {
+      "slug": "michele-rosato",
+      "name": "Michele Rosato",
+      "contextType": "candidato_consigliere",
+      "candidateName": "ROSATO MICHELE",
+      "listName": "NOI MODERATI",
+      "sourceDocId": "maggioli_2025_preferences_section_l10_xml"
+    },
+    {
+      "slug": "oscar-branca",
+      "name": "Oscar Branca",
+      "contextType": "candidato_consigliere",
+      "candidateName": "BRANCA OSCAR",
+      "listName": "GIANPAOLO BEVILACQUA SINDACO DEL POPOLO",
+      "sourceDocId": "maggioli_2025_preferences_section_l06_xml"
+    },
+    {
+      "slug": "titina-caruso",
+      "name": "Titina Caruso",
+      "contextType": "candidato_consigliere",
+      "candidateName": "CARUSO TITINA detta CAROLINA",
+      "listName": "FORZA ITALIA",
+      "sourceDocId": "maggioli_2025_preferences_section_l12_xml"
+    },
+    {
+      "slug": "tranquillo-paradiso",
+      "name": "Tranquillo Paradiso",
+      "contextType": "candidato_consigliere",
+      "candidateName": "PARADISO TRANQUILLO",
+      "listName": "FORZA ITALIA",
+      "sourceDocId": "maggioli_2025_preferences_section_l12_xml"
+    }
+  ],
+  "unmatchedCurrentGiuntaSlugs": [
+    "maria-nardo",
+    "michelangelo-cardamone",
+    "salvatore-pirelli"
+  ]
+}

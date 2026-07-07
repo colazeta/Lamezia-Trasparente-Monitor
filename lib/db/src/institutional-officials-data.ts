@@ -98,6 +98,13 @@ type OfficialRow = [
   personPath: string,
 ];
 
+export type Current2025ElectoralContext = {
+  contextType: "candidato_sindaco" | "candidato_consigliere";
+  candidateName: string;
+  listName?: string;
+  sourceDocId: string;
+};
+
 export const INSTITUTIONAL_POLITICI_SOURCE: InstitutionalSource = {
   label: "Comune di Lamezia Terme - Politici",
   url: `${COMUNE_BASE_URL}/it/page/politici`,
@@ -114,6 +121,13 @@ export const CURRENT_GIUNTA_SOURCE: InstitutionalSource = {
   label: "Comune di Lamezia Terme - Giunta Comunale",
   url: `${COMUNE_BASE_URL}/it/unita_organizzative/giunta-comunale`,
   checkedAt: "2026-07-04",
+};
+
+export const CURRENT_2025_ELECTORAL_CONTEXT_SOURCE: InstitutionalSource = {
+  label:
+    "Comune/Maggioli - Elezioni comunali Lamezia Terme 25-26 maggio 2025",
+  url: `${COMUNE_BASE_URL}/it/page/elezioni-comunali-del-25-e-26-maggio-2025`,
+  checkedAt: "2026-07-06",
 };
 
 export const COMMISSION_2025_SOURCE: InstitutionalSource = {
@@ -147,6 +161,192 @@ export const ELIGENDO_2019_OPEN_DATA_SOURCE: InstitutionalSource = {
   ].join(""),
   checkedAt: "2026-07-05",
 };
+
+export const CURRENT_2025_ELECTORAL_CONTEXT = {
+  "adelaide-colosimo": {
+    contextType: "candidato_consigliere",
+    candidateName: "COLOSIMO ADELAIDE",
+    listName: "NOI MODERATI",
+    sourceDocId: "maggioli_2025_preferences_section_l10_xml",
+  },
+  "alessandro-saullo": {
+    contextType: "candidato_consigliere",
+    candidateName: "SAULLO ALESSANDRO",
+    listName: "FRATELLI D'ITALIA",
+    sourceDocId: "maggioli_2025_preferences_section_l14_xml",
+  },
+  "annalisa-spinelli": {
+    contextType: "candidato_consigliere",
+    candidateName: "SPINELLI ANNALISA",
+    listName: "NOI MODERATI",
+    sourceDocId: "maggioli_2025_preferences_section_l10_xml",
+  },
+  "annita-vitale": {
+    contextType: "candidato_consigliere",
+    candidateName: "VITALE ANNITA",
+    listName: "AZIONE",
+    sourceDocId: "maggioli_2025_preferences_section_l03_xml",
+  },
+  "antonio-lorena": {
+    contextType: "candidato_consigliere",
+    candidateName: "LORENA ANTONIO",
+    listName: "FRATELLI D'ITALIA",
+    sourceDocId: "maggioli_2025_preferences_section_l14_xml",
+  },
+  "antonio-mastroianni": {
+    contextType: "candidato_consigliere",
+    candidateName: "MASTROIANNI ANTONIO detto TONINO",
+    listName: "LEGA SALVINI CALABRIA",
+    sourceDocId: "maggioli_2025_preferences_section_l13_xml",
+  },
+  "bernadette-serratore": {
+    contextType: "candidato_consigliere",
+    candidateName: "SERRATORE BERNADETTE",
+    listName: "PER VIVERE BENE",
+    sourceDocId: "maggioli_2025_preferences_section_l04_xml",
+  },
+  "carmelina-isa-muraca": {
+    contextType: "candidato_consigliere",
+    candidateName: "MURACA CARMELINA ISA",
+    listName: "GIANPAOLO BEVILACQUA SINDACO DEL POPOLO",
+    sourceDocId: "maggioli_2025_preferences_section_l06_xml",
+  },
+  "carmine-villella": {
+    contextType: "candidato_consigliere",
+    candidateName: "VILLELLA CARMINE",
+    listName: "LEGA SALVINI CALABRIA",
+    sourceDocId: "maggioli_2025_preferences_section_l13_xml",
+  },
+  "davide-mastroianni": {
+    contextType: "candidato_consigliere",
+    candidateName: "MASTROIANNI DAVIDE",
+    listName: "FORZA ITALIA",
+    sourceDocId: "maggioli_2025_preferences_section_l12_xml",
+  },
+  "donatella-amicarelli": {
+    contextType: "candidato_consigliere",
+    candidateName: "AMICARELLI DONATELLA detta MICARELLI",
+    listName: "LEGA SALVINI CALABRIA",
+    sourceDocId: "maggioli_2025_preferences_section_l13_xml",
+  },
+  "doris-lo-moro": {
+    contextType: "candidato_sindaco",
+    candidateName: "LO MORO DORIS",
+    sourceDocId: "maggioli_2025_totals_mayor_xml",
+  },
+  "fabrizio-muraca": {
+    contextType: "candidato_consigliere",
+    candidateName: "MURACA FABRIZIO",
+    listName: "PARTITO DEMOCRATICO",
+    sourceDocId: "maggioli_2025_preferences_section_l01_xml",
+  },
+  "francesco-caruso": {
+    contextType: "candidato_consigliere",
+    candidateName: "CARUSO FRANCESCO",
+    listName: "LAMEZIA DOMANI",
+    sourceDocId: "maggioli_2025_preferences_section_l09_xml",
+  },
+  "gennarino-masi": {
+    contextType: "candidato_consigliere",
+    candidateName: "MASI GENNARINO",
+    listName: "PARTITO DEMOCRATICO",
+    sourceDocId: "maggioli_2025_preferences_section_l01_xml",
+  },
+  "gennaro-gianturco": {
+    contextType: "candidato_consigliere",
+    candidateName: "GIANTURCO GENNARO detto MIMMO",
+    listName: "LAMEZIA DOMANI",
+    sourceDocId: "maggioli_2025_preferences_section_l09_xml",
+  },
+  "giancarlo-nicotera": {
+    contextType: "candidato_consigliere",
+    candidateName: "NICOTERA GIANCARLO",
+    listName: "CALABRIA AZZURRA",
+    sourceDocId: "maggioli_2025_preferences_section_l11_xml",
+  },
+  "giovanni-manuel-raso": {
+    contextType: "candidato_consigliere",
+    candidateName: "RASO GIOVANNI MANUEL",
+    listName: "FRATELLI D'ITALIA",
+    sourceDocId: "maggioli_2025_preferences_section_l14_xml",
+  },
+  "lidia-vescio": {
+    contextType: "candidato_consigliere",
+    candidateName: "VESCIO LIDIA",
+    listName: "PARTITO DEMOCRATICO",
+    sourceDocId: "maggioli_2025_preferences_section_l01_xml",
+  },
+  "maria-grandinetti": {
+    contextType: "candidato_consigliere",
+    candidateName: "GRANDINETTI MARIA",
+    listName: "FORZA ITALIA",
+    sourceDocId: "maggioli_2025_preferences_section_l12_xml",
+  },
+  "maria-lucia-raso": {
+    contextType: "candidato_consigliere",
+    candidateName: "RASO MARIALUCIA",
+    listName: "GIANPAOLO BEVILACQUA SINDACO DEL POPOLO",
+    sourceDocId: "maggioli_2025_preferences_section_l06_xml",
+  },
+  "mario-murone": {
+    contextType: "candidato_sindaco",
+    candidateName: "MURONE MARIO",
+    sourceDocId: "maggioli_2025_totals_mayor_xml",
+  },
+  "massimo-cristiano": {
+    contextType: "candidato_consigliere",
+    candidateName: "CRISTIANO MASSIMO",
+    listName: "LEGA SALVINI CALABRIA",
+    sourceDocId: "maggioli_2025_preferences_section_l13_xml",
+  },
+  "matteo-folino": {
+    contextType: "candidato_consigliere",
+    candidateName: "FOLINO MATTEO",
+    listName: "NOI MODERATI",
+    sourceDocId: "maggioli_2025_preferences_section_l10_xml",
+  },
+  "michele-rosato": {
+    contextType: "candidato_consigliere",
+    candidateName: "ROSATO MICHELE",
+    listName: "NOI MODERATI",
+    sourceDocId: "maggioli_2025_preferences_section_l10_xml",
+  },
+  "oscar-branca": {
+    contextType: "candidato_consigliere",
+    candidateName: "BRANCA OSCAR",
+    listName: "GIANPAOLO BEVILACQUA SINDACO DEL POPOLO",
+    sourceDocId: "maggioli_2025_preferences_section_l06_xml",
+  },
+  "titina-caruso": {
+    contextType: "candidato_consigliere",
+    candidateName: "CARUSO TITINA detta CAROLINA",
+    listName: "FORZA ITALIA",
+    sourceDocId: "maggioli_2025_preferences_section_l12_xml",
+  },
+  "tranquillo-paradiso": {
+    contextType: "candidato_consigliere",
+    candidateName: "PARADISO TRANQUILLO",
+    listName: "FORZA ITALIA",
+    sourceDocId: "maggioli_2025_preferences_section_l12_xml",
+  },
+} as const satisfies Record<string, Current2025ElectoralContext>;
+
+function currentElectoralBiographyNote(slug: string): string | undefined {
+  const context =
+    CURRENT_2025_ELECTORAL_CONTEXT[
+      slug as keyof typeof CURRENT_2025_ELECTORAL_CONTEXT
+    ];
+  if (!context) return undefined;
+  const contextNote =
+    context.contextType === "candidato_sindaco"
+      ? `Dato elettorale di contesto: nella raccolta dati comunali/Maggioli 2025 risulta candidato alla carica di sindaco come ${context.candidateName}.`
+      : `Dato elettorale di contesto: nella raccolta dati comunali/Maggioli 2025 risulta candidato alla carica di consigliere nella lista ${context.listName} come ${context.candidateName}.`;
+  return [
+    contextNote,
+    `Fonte elettorale: ${CURRENT_2025_ELECTORAL_CONTEXT_SOURCE.label}, documento ${context.sourceDocId}, consultata il ${CURRENT_2025_ELECTORAL_CONTEXT_SOURCE.checkedAt}.`,
+    "Il dato elettorale e' riportato come contesto di candidatura e non sostituisce gruppo consiliare, proclamazione o atto di nomina.",
+  ].join(" ");
+}
 
 const currentOfficialRows: OfficialRow[] = [
   [
@@ -585,6 +785,7 @@ export const CURRENT_INSTITUTIONAL_OFFICIALS: InstitutionalOfficialSeed[] =
     ...CURRENT_GIUNTA_PROFILE_SECTIONS[
       slug as keyof typeof CURRENT_GIUNTA_PROFILE_SECTIONS
     ],
+    biographyNote: currentElectoralBiographyNote(slug),
   }));
 
 export const HISTORICAL_2019_ELECTED_CANDIDATES = [
@@ -700,6 +901,8 @@ function sourceNotes(source: InstitutionalSource): string {
   return [
     `Composizione corrente derivata dalla pagina ${source.label},`,
     `consultata il ${source.checkedAt}.`,
+    "Il contesto elettorale 2025, quando presente nelle anagrafiche,",
+    "e' riportato come candidatura/lista e non come gruppo consiliare.",
     "Deleghe, gruppi e atti di nomina vanno collegati a fonti specifiche",
     "quando disponibili.",
   ].join(" ");
