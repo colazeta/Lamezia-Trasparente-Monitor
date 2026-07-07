@@ -6,8 +6,61 @@ import {
   ALBO_PUBLIC_RUN_SUMMARY,
   alboPublicSearchText,
 } from "@/data/alboPublicRun";
+import { ALBO_OPERATIONAL_STATUS } from "@/data/alboStatus";
+import { formatPublicTimeField } from "@/lib/time";
 import { Albo } from "@/pages/Albo";
 import { renderPage } from "./pages-harness";
+
+const ROME_WEEKDAY_FORMATTER = new Intl.DateTimeFormat("en-US", {
+  timeZone: "Europe/Rome",
+  weekday: "short",
+});
+
+const ROME_DATE_PART_FORMATTER = new Intl.DateTimeFormat("en-US", {
+  timeZone: "Europe/Rome",
+  year: "numeric",
+  month: "2-digit",
+  day: "2-digit",
+});
+
+function dateKeyInRome(value: string | null | undefined): string | null {
+  if (!value) return null;
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return null;
+  const parts = ROME_DATE_PART_FORMATTER.formatToParts(date);
+  const year = parts.find((part) => part.type === "year")?.value;
+  const month = parts.find((part) => part.type === "month")?.value;
+  const day = parts.find((part) => part.type === "day")?.value;
+  return year && month && day ? `${year}-${month}-${day}` : null;
+}
+
+function isWorkingDayInRome(value: string | null | undefined): boolean {
+  if (!value) return false;
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return false;
+  const weekday = ROME_WEEKDAY_FORMATTER.format(date);
+  return weekday !== "Sat" && weekday !== "Sun";
+}
+
+function expectedNextScheduledCheckLabel(value: string | null | undefined): string {
+  if (!value) return "Non disponibile";
+  if (!isWorkingDayInRome(value)) {
+    return "Nessun aggiornamento previsto nel fine settimana";
+  }
+  return formatPublicTimeField(value, "dd MMMM yyyy 'alle' HH:mm");
+}
+
+function dailyDigestEvidenceText(): string {
+  const referenceDate = ALBO_PUBLIC_RUN_SUMMARY.retrieved_at;
+  const referenceKey = dateKeyInRome(referenceDate);
+  if (!isWorkingDayInRome(referenceDate)) {
+    return "Nessuna sintesi di giornata e prevista sabato o domenica";
+  }
+  const dailyItem = referenceKey
+    ? ALBO_PUBLIC_RUN_ITEMS.find((item) => dateKeyInRome(item.publication_start) === referenceKey)
+    : undefined;
+  return dailyItem?.subject ?? "Nessun documento con inizio pubblicazione nella giornata lavorativa dello snapshot";
+}
 
 describe("Albo public run surface", () => {
   it("renders the public-safe Albo run on the civic Albo page", () => {
@@ -35,11 +88,15 @@ describe("Albo public run surface", () => {
     expect(screen.getAllByText(/Metadato minimo/i).length).toBeGreaterThan(0);
     expect(screen.getByRole("heading", { name: /PDF preservati nella piattaforma/i })).toBeInTheDocument();
     expect(screen.getByText(/Prossimo controllo/i)).toBeInTheDocument();
-    expect(screen.getByText(/Nessun aggiornamento previsto nel fine settimana/i)).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        expectedNextScheduledCheckLabel(ALBO_OPERATIONAL_STATUS.next_scheduled_check),
+      ),
+    ).toBeInTheDocument();
     expect(screen.getByText(/Solo giorni lavorativi/i)).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: /Sintesi documenti di giornata/i })).toBeInTheDocument();
     expect(screen.getByText(/Placeholder per la sintesi OCR/i)).toBeInTheDocument();
-    expect(screen.getByText(/Nessuna sintesi di giornata e prevista sabato o domenica/i)).toBeInTheDocument();
+    expect(screen.getByText(dailyDigestEvidenceText())).toBeInTheDocument();
     expect(screen.queryByText(/assegno di matern|assistenza domiciliare|persona fisica/i)).toBeNull();
   }, 15000);
 
