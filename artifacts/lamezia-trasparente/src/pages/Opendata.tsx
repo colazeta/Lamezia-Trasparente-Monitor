@@ -29,6 +29,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { AirTrafficDatasetCard } from "@/components/opendata/AirTrafficDatasetCard";
 import { ClimateTerritoryDatasetCard } from "@/components/opendata/ClimateTerritoryDatasetCard";
+import { DemographicTrendDatasetCard } from "@/components/opendata/DemographicTrendDatasetCard";
 import { OpenDataThemeLibrary } from "@/components/opendata/OpenDataThemeLibrary";
 import {
   OPEN_DATA_THEME_LIBRARY,
@@ -569,6 +570,8 @@ function DatasetDetailView({
         <ClimateTerritoryDatasetCard />
       ) : item.dataset.detailKind === "air-traffic-monthly" ? (
         <AirTrafficDatasetCard />
+      ) : item.dataset.detailKind === "demographic-trend" ? (
+        <DemographicTrendDatasetCard />
       ) : (
         <div className="rounded-xl border border-dashed border-border bg-muted/20 p-5">
           <h3 className="font-display text-lg font-bold text-foreground">
@@ -587,6 +590,9 @@ function DatasetDetailView({
 function getDatasetDetailId(detailKind: OpenDataThemeDataset["detailKind"]) {
   if (detailKind === "air-traffic-monthly") {
     return "trasporto-aereo-lamezia";
+  }
+  if (detailKind === "demographic-trend") {
+    return "trend-demografico-lamezia";
   }
   return "clima-territorio";
 }

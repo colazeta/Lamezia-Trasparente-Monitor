@@ -68,6 +68,11 @@ data/processed/territorio/istat_sezioni_censimento_lamezia.geojson.tmp
 # Assaeroporti monthly Excel exports are reproducible source cache.
 data/raw/air-traffic/assaeroporti/*.xlsx
 
+# Comune di Lamezia Terme OpenData source cache is reproducible from the
+# public portal and should not be committed.
+data/raw/comune-lamezia-opendata/*.csv
+data/raw/comune-lamezia-opendata/*.json
+
 # Albo Pretorio raw snapshots and full processed records may contain
 # non-minimised source data. Only data/public/albo/** is commit-safe.
 data/snapshots/albo/

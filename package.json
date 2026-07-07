@@ -12,6 +12,7 @@
     "albo:fetch": "pnpm --filter @workspace/scripts run fetch:albo",
     "air:lamezia": "node scripts/build-lamezia-air-traffic-data.mjs",
     "climate:lamezia": "node scripts/build-lamezia-climate-data.mjs",
+    "demography:lamezia": "node scripts/build-lamezia-demographic-trend-data.mjs",
     "smoke:v0-static-fallback": "pnpm --filter @workspace/lamezia-trasparente run build && node scripts/check-v0-static-fallback.mjs",
     "smoke:public-contracts": "node scripts/check-public-contracts-page.mjs",
     "hook:pr-guard": "node scripts/hooks/pr-guard.mjs",

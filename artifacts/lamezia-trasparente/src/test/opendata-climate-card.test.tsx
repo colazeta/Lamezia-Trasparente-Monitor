@@ -42,6 +42,8 @@ describe("OpenData climate territory card", () => {
       .toBeInTheDocument();
     expect(screen.getByRole("button", { name: /Mobilita e collegamenti/i }))
       .toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /Popolazione e societa/i }))
+      .toBeInTheDocument();
     expect(
       screen.getByRole("button", { name: /Contratti e spesa pubblica/i }),
     ).toBeInTheDocument();
@@ -59,6 +61,7 @@ describe("OpenData climate territory card", () => {
     ).toHaveAttribute("aria-pressed", "true");
     expect(screen.getAllByText("Clima").length).toBeGreaterThan(0);
     expect(screen.getAllByText("Mobilita").length).toBeGreaterThan(0);
+    expect(screen.getAllByText("Popolazione").length).toBeGreaterThan(0);
     expect(screen.getByText("Contratti")).toBeInTheDocument();
     expect(screen.getByText("Atti")).toBeInTheDocument();
     expect(screen.getByText("Patrimonio")).toBeInTheDocument();
@@ -73,6 +76,7 @@ describe("OpenData climate territory card", () => {
     ).toBeGreaterThan(0);
     expect(screen.getByText("Serie temporale giornaliera")).toBeInTheDocument();
     expect(screen.getByText("Serie temporale mensile")).toBeInTheDocument();
+    expect(screen.getByText("Serie temporale annuale")).toBeInTheDocument();
     expect(screen.getAllByText("Disponibile").length).toBeGreaterThan(0);
     expect(
       screen.getByRole("button", {
@@ -82,6 +86,11 @@ describe("OpenData climate territory card", () => {
     expect(
       screen.getByRole("button", {
         name: /Apri scheda dataset Traffico aeroportuale mensile/i,
+      }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", {
+        name: /Apri scheda dataset Trend demografico/i,
       }),
     ).toBeInTheDocument();
     expect(
@@ -275,6 +284,45 @@ describe("OpenData climate territory card", () => {
     );
     expect(screen.getByRole("link", { name: /Scarica JSON/i })).toHaveAttribute(
       "download",
+    );
+  });
+
+  it("opens the municipal demographic trend dataset detail from the OpenData archive", () => {
+    render(<Opendata />);
+
+    fireEvent.click(
+      screen.getByRole("button", {
+        name: /Apri scheda dataset Trend demografico/i,
+      }),
+    );
+
+    expect(
+      screen.getAllByRole("heading", {
+        name: /Trend demografico - Lamezia Terme/i,
+      }).length,
+    ).toBeGreaterThan(0);
+    expect(
+      screen.getByRole("img", {
+        name: /Grafico del trend demografico di Lamezia Terme/i,
+      }),
+    ).toBeInTheDocument();
+
+    fireEvent.click(screen.getByText("Dettagli del dataset"));
+
+    expect(screen.getByText("Popolazione residente")).toBeInTheDocument();
+    expect(screen.getByText("Saldo sulla serie")).toBeInTheDocument();
+    expect(screen.getByText("Scarto dal massimo")).toBeInTheDocument();
+    expect(screen.getByText("Variazione ultimo anno")).toBeInTheDocument();
+    expect(
+      screen.getByText(/Serie aggregata pubblicata dal portale comunale/i),
+    ).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /Scarica JSON/i })).toHaveAttribute(
+      "href",
+      expect.stringContaining("lameziaDemographicTrend"),
+    );
+    expect(screen.getByRole("link", { name: /CSV sorgente/i })).toHaveAttribute(
+      "href",
+      expect.stringContaining("trend-demografico.csv"),
     );
   });
 });

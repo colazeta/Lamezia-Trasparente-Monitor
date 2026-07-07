@@ -8,7 +8,7 @@ export interface OpenDataThemeDataset {
   description: string;
   updateCadence: string;
   sourceLabel: string;
-  detailKind?: "air-traffic-monthly" | "climate-daily";
+  detailKind?: "air-traffic-monthly" | "climate-daily" | "demographic-trend";
 }
 
 export interface OpenDataThemeCategory {
@@ -95,6 +95,41 @@ export const OPEN_DATA_THEME_LIBRARY = [
       "lettura dei flussi dello scalo aeroportuale",
       "confronto tra anni e stagioni",
       "supporto a note civiche su collegamenti e accessibilita",
+    ],
+  },
+  {
+    id: "population-society",
+    label: "Popolazione e societa",
+    shortLabel: "Popolazione",
+    status: "published",
+    statusLabel: "Dataset pubblicato",
+    description:
+      "Serie demografiche comunali aggregate per leggere popolazione, famiglie e struttura sociale senza esporre elenchi individuali.",
+    civicQuestion:
+      "Come cambia nel tempo la popolazione residente indicata dal portale OpenData comunale?",
+    datasets: [
+      {
+        id: "lamezia-demographic-trend",
+        label: "Trend demografico - Lamezia Terme",
+        statusLabel: "Disponibile",
+        dataType: "Serie temporale annuale",
+        description:
+          "Popolazione residente annua 2001-2025 acquisita dal CSV del Portale OpenData del Comune e pubblicata come JSON statico.",
+        updateCadence:
+          "Aggiornamento settimanale quando il portale OpenData comunale modifica la risorsa CSV.",
+        sourceLabel: "Comune di Lamezia Terme - Portale OpenData",
+        detailKind: "demographic-trend",
+      },
+    ],
+    dataTypes: [
+      "serie temporali annuali",
+      "indicatori demografici",
+      "dataset comunali aggregati",
+    ],
+    civicUses: [
+      "lettura delle tendenze demografiche",
+      "confronto con servizi e quartieri",
+      "supporto a note civiche su popolazione e bisogni locali",
     ],
   },
   {

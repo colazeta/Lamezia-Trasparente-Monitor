@@ -12,6 +12,7 @@ describe("OpenData thematic category library", () => {
     expect(new Set(ids).size).toBe(ids.length);
     expect(ids).toContain("climate-territory");
     expect(ids).toContain("mobility-connections");
+    expect(ids).toContain("population-society");
     expect(ids).toContain("contracts-spending");
     expect(ids).toContain("administration-acts");
     expect(ids).toContain("assets-confiscated-property");
@@ -39,6 +40,9 @@ describe("OpenData thematic category library", () => {
     const mobilityTheme = OPEN_DATA_THEME_LIBRARY.find(
       (theme) => theme.id === "mobility-connections",
     );
+    const populationTheme = OPEN_DATA_THEME_LIBRARY.find(
+      (theme) => theme.id === "population-society",
+    );
 
     expect(OPEN_DATA_THEME_LIBRARY_SUMMARY.total).toBe(
       OPEN_DATA_THEME_LIBRARY.length,
@@ -55,6 +59,12 @@ describe("OpenData thematic category library", () => {
       id: "lamezia-air-traffic-monthly",
       dataType: "Serie temporale mensile",
       detailKind: "air-traffic-monthly",
+    });
+    expect(populationTheme?.datasets).toHaveLength(1);
+    expect(populationTheme?.datasets[0]).toMatchObject({
+      id: "lamezia-demographic-trend",
+      dataType: "Serie temporale annuale",
+      detailKind: "demographic-trend",
     });
   });
 });
