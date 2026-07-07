@@ -11,6 +11,7 @@ describe("OpenData thematic category library", () => {
 
     expect(new Set(ids).size).toBe(ids.length);
     expect(ids).toContain("climate-territory");
+    expect(ids).toContain("mobility-connections");
     expect(ids).toContain("contracts-spending");
     expect(ids).toContain("administration-acts");
     expect(ids).toContain("assets-confiscated-property");
@@ -28,12 +29,15 @@ describe("OpenData thematic category library", () => {
     }
   });
 
-  it("places the climate dataset inside the Clima e territorio theme", () => {
+  it("places published visual datasets inside their thematic categories", () => {
     const published = OPEN_DATA_THEME_LIBRARY.filter(
       (theme) => theme.status === "published",
     );
     const climateTheme = OPEN_DATA_THEME_LIBRARY.find(
       (theme) => theme.id === "climate-territory",
+    );
+    const mobilityTheme = OPEN_DATA_THEME_LIBRARY.find(
+      (theme) => theme.id === "mobility-connections",
     );
 
     expect(OPEN_DATA_THEME_LIBRARY_SUMMARY.total).toBe(
@@ -45,6 +49,12 @@ describe("OpenData thematic category library", () => {
       id: "lamezia-climate-daily",
       dataType: "Serie temporale giornaliera",
       detailKind: "climate-daily",
+    });
+    expect(mobilityTheme?.datasets).toHaveLength(1);
+    expect(mobilityTheme?.datasets[0]).toMatchObject({
+      id: "lamezia-air-traffic-monthly",
+      dataType: "Serie temporale mensile",
+      detailKind: "air-traffic-monthly",
     });
   });
 });

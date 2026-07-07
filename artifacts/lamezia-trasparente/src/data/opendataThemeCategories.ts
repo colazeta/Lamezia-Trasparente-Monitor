@@ -8,7 +8,7 @@ export interface OpenDataThemeDataset {
   description: string;
   updateCadence: string;
   sourceLabel: string;
-  detailKind?: "climate-daily";
+  detailKind?: "air-traffic-monthly" | "climate-daily";
 }
 
 export interface OpenDataThemeCategory {
@@ -60,6 +60,41 @@ export const OPEN_DATA_THEME_LIBRARY = [
       "lettura di tendenze locali",
       "confronto tra anni",
       "supporto a note civiche e richieste di accesso",
+    ],
+  },
+  {
+    id: "mobility-connections",
+    label: "Mobilita e collegamenti",
+    shortLabel: "Mobilita",
+    status: "published",
+    statusLabel: "Dataset pubblicato",
+    description:
+      "Serie su accessibilita, infrastrutture e collegamenti che incidono sulla vita quotidiana e sull'economia locale.",
+    civicQuestion:
+      "Come cambiano nel tempo i flussi di mobilita che collegano Lamezia Terme al resto del territorio?",
+    datasets: [
+      {
+        id: "lamezia-air-traffic-monthly",
+        label: "Traffico aeroportuale mensile - Lamezia Terme",
+        statusLabel: "Disponibile",
+        dataType: "Serie temporale mensile",
+        description:
+          "Passeggeri, movimenti e cargo dello scalo SUF, estratti dai file mensili Assaeroporti e pubblicati come JSON statico.",
+        updateCadence:
+          "Aggiornamento mensile quando Assaeroporti pubblica il nuovo file Excel di traffico aeroportuale.",
+        sourceLabel: "Assaeroporti - Dati di traffico aeroportuale",
+        detailKind: "air-traffic-monthly",
+      },
+    ],
+    dataTypes: [
+      "serie temporali mensili",
+      "indicatori di mobilita",
+      "dataset infrastrutturali",
+    ],
+    civicUses: [
+      "lettura dei flussi dello scalo aeroportuale",
+      "confronto tra anni e stagioni",
+      "supporto a note civiche su collegamenti e accessibilita",
     ],
   },
   {

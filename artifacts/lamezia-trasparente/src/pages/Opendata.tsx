@@ -27,6 +27,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { AirTrafficDatasetCard } from "@/components/opendata/AirTrafficDatasetCard";
 import { ClimateTerritoryDatasetCard } from "@/components/opendata/ClimateTerritoryDatasetCard";
 import { OpenDataThemeLibrary } from "@/components/opendata/OpenDataThemeLibrary";
 import {
@@ -516,7 +517,7 @@ function DatasetDetailView({
     <section
       aria-labelledby="opendata-dataset-detail-title"
       className="space-y-5"
-      id="clima-territorio"
+      id={getDatasetDetailId(item.dataset.detailKind)}
     >
       <Button onClick={onBack} type="button" variant="ghost">
         <ArrowLeft className="h-4 w-4" />
@@ -566,6 +567,8 @@ function DatasetDetailView({
 
       {item.dataset.detailKind === "climate-daily" ? (
         <ClimateTerritoryDatasetCard />
+      ) : item.dataset.detailKind === "air-traffic-monthly" ? (
+        <AirTrafficDatasetCard />
       ) : (
         <div className="rounded-xl border border-dashed border-border bg-muted/20 p-5">
           <h3 className="font-display text-lg font-bold text-foreground">
@@ -579,6 +582,13 @@ function DatasetDetailView({
       )}
     </section>
   );
+}
+
+function getDatasetDetailId(detailKind: OpenDataThemeDataset["detailKind"]) {
+  if (detailKind === "air-traffic-monthly") {
+    return "trasporto-aereo-lamezia";
+  }
+  return "clima-territorio";
 }
 
 function DatasetCard({

@@ -6,6 +6,7 @@ import {
   Handshake,
   Landmark,
   Library,
+  Plane,
 } from "lucide-react";
 import type { ReactNode } from "react";
 
@@ -17,6 +18,7 @@ import {
 
 const THEME_ICONS: Record<string, ReactNode> = {
   "climate-territory": <CloudSun className="h-4 w-4" />,
+  "mobility-connections": <Plane className="h-4 w-4" />,
   "contracts-spending": <Landmark className="h-4 w-4" />,
   "administration-acts": <FileText className="h-4 w-4" />,
   "assets-confiscated-property": <Building2 className="h-4 w-4" />,
@@ -58,7 +60,7 @@ export function OpenDataThemeLibrary({
       </div>
 
       <div
-        className="grid gap-2 sm:grid-cols-2 lg:grid-cols-6"
+        className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-7"
         role="group"
         aria-label="Filtri per categoria tematica OpenData"
       >

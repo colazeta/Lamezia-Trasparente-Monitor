@@ -3,6 +3,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { useListOpendataDatasets } from "@workspace/api-client-react";
 import { Opendata } from "../pages/Opendata";
 import { LAMEZIA_CLIMATE_LATEST_YEAR } from "../data/lameziaClimate";
+import { LAMEZIA_AIR_TRAFFIC_LATEST_YEAR } from "../data/lameziaAirTraffic";
 
 vi.mock("@workspace/api-client-react", () => ({
   useListOpendataDatasets: vi.fn(() => ({
@@ -39,6 +40,8 @@ describe("OpenData climate territory card", () => {
     expect(libraryHeading).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /Clima e territorio/i }))
       .toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /Mobilita e collegamenti/i }))
+      .toBeInTheDocument();
     expect(
       screen.getByRole("button", { name: /Contratti e spesa pubblica/i }),
     ).toBeInTheDocument();
@@ -55,6 +58,7 @@ describe("OpenData climate territory card", () => {
       screen.getByRole("button", { name: /Tutti i dataset/i }),
     ).toHaveAttribute("aria-pressed", "true");
     expect(screen.getAllByText("Clima").length).toBeGreaterThan(0);
+    expect(screen.getAllByText("Mobilita").length).toBeGreaterThan(0);
     expect(screen.getByText("Contratti")).toBeInTheDocument();
     expect(screen.getByText("Atti")).toBeInTheDocument();
     expect(screen.getByText("Patrimonio")).toBeInTheDocument();
@@ -68,10 +72,16 @@ describe("OpenData climate territory card", () => {
       screen.getAllByText(/Anomalie climatiche.*Lamezia Terme/).length,
     ).toBeGreaterThan(0);
     expect(screen.getByText("Serie temporale giornaliera")).toBeInTheDocument();
-    expect(screen.getByText("Disponibile")).toBeInTheDocument();
+    expect(screen.getByText("Serie temporale mensile")).toBeInTheDocument();
+    expect(screen.getAllByText("Disponibile").length).toBeGreaterThan(0);
     expect(
       screen.getByRole("button", {
         name: /Apri scheda dataset Anomalie climatiche/i,
+      }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", {
+        name: /Apri scheda dataset Traffico aeroportuale mensile/i,
       }),
     ).toBeInTheDocument();
     expect(
@@ -222,6 +232,47 @@ describe("OpenData climate territory card", () => {
 
     fireEvent.click(screen.getByText("Dettagli del dataset"));
 
+    expect(screen.getByRole("link", { name: /Scarica JSON/i })).toHaveAttribute(
+      "download",
+    );
+  });
+
+  it("opens the monthly air traffic dataset detail from the OpenData archive", () => {
+    render(<Opendata />);
+
+    fireEvent.click(
+      screen.getByRole("button", {
+        name: /Apri scheda dataset Traffico aeroportuale mensile/i,
+      }),
+    );
+
+    expect(
+      screen.getAllByRole("heading", {
+        name: /Traffico aeroportuale mensile - Lamezia Terme/i,
+      }).length,
+    ).toBeGreaterThan(0);
+    expect(
+      screen.getByLabelText("Anno del dataset sul traffico aeroportuale"),
+    ).toHaveValue(String(LAMEZIA_AIR_TRAFFIC_LATEST_YEAR));
+    expect(
+      screen.getByRole("img", {
+        name: /Grafico del traffico aeroportuale mensile/i,
+      }),
+    ).toBeInTheDocument();
+
+    fireEvent.click(screen.getByText("Dettagli del dataset"));
+
+    expect(screen.getByText("Ultimo mese completo")).toBeInTheDocument();
+    expect(screen.getByText("Passeggeri da gennaio")).toBeInTheDocument();
+    expect(screen.getByText("Quota internazionale")).toBeInTheDocument();
+    expect(screen.getByText("Mese piu trafficato")).toBeInTheDocument();
+    expect(
+      screen.getByText(/La fonte misura traffico aeroportuale mensile/i),
+    ).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /Scarica JSON/i })).toHaveAttribute(
+      "href",
+      expect.stringContaining("lameziaAirTrafficMonthly"),
+    );
     expect(screen.getByRole("link", { name: /Scarica JSON/i })).toHaveAttribute(
       "download",
     );
