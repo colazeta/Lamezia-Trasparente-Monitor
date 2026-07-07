@@ -6,8 +6,26 @@ import {
   ALBO_PUBLIC_RUN_SUMMARY,
   alboPublicSearchText,
 } from "@/data/alboPublicRun";
+import { ALBO_OPERATIONAL_STATUS } from "@/data/alboStatus";
+import { formatPublicTimeField } from "@/lib/time";
 import { Albo } from "@/pages/Albo";
 import { renderPage } from "./pages-harness";
+
+const ROME_WEEKDAY_FORMATTER = new Intl.DateTimeFormat("en-US", {
+  timeZone: "Europe/Rome",
+  weekday: "short",
+});
+
+function expectedNextScheduledCheckLabel(value: string | null): string {
+  if (!value) return "Non disponibile";
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "Non disponibile";
+  const weekday = ROME_WEEKDAY_FORMATTER.format(date);
+  if (weekday === "Sat" || weekday === "Sun") {
+    return "Nessun aggiornamento previsto nel fine settimana";
+  }
+  return formatPublicTimeField(value, "dd MMMM yyyy 'alle' HH:mm");
+}
 
 describe("Albo public run surface", () => {
   it("renders the public-safe Albo run on the civic Albo page", () => {
@@ -35,7 +53,9 @@ describe("Albo public run surface", () => {
     expect(screen.getAllByText(/Metadato minimo/i).length).toBeGreaterThan(0);
     expect(screen.getByRole("heading", { name: /PDF preservati nella piattaforma/i })).toBeInTheDocument();
     expect(screen.getByText(/Prossimo controllo/i)).toBeInTheDocument();
-    expect(screen.getByText(/Nessun aggiornamento previsto nel fine settimana/i)).toBeInTheDocument();
+    expect(
+      screen.getByText(expectedNextScheduledCheckLabel(ALBO_OPERATIONAL_STATUS.next_scheduled_check)),
+    ).toBeInTheDocument();
     expect(screen.getByText(/Solo giorni lavorativi/i)).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: /Sintesi documenti di giornata/i })).toBeInTheDocument();
     expect(screen.getByText(/Placeholder per la sintesi OCR/i)).toBeInTheDocument();
