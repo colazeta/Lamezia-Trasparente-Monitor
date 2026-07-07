@@ -15,6 +15,7 @@ export type PublicV0CivicSectionId =
   | "home"
   | "council-sessions"
   | "contracts"
+  | "institutional-bodies"
   | "pnrr-projects"
   | "data-sources"
   | "method"
@@ -72,6 +73,22 @@ export const PUBLIC_V0_ROUTE_CONTRACT = [
     title: "Contratti pubblici",
     note: "Consultazione civica di contratti e affidamenti con cautele su fonti, importi, CUP/CIG e dati non ancora disponibili.",
     rationale: "Indice pubblico dei contratti.",
+  },
+  {
+    path: "/organi",
+    civicSectionId: "institutional-bodies",
+    status: "pubblicabile",
+    title: "Organi istituzionali",
+    note: "Indice data-driven di Consiglio, Giunta, commissioni, composizioni correnti e righe storiche, con fonti e limiti espliciti.",
+    rationale: "Indice pubblico degli organi istituzionali.",
+  },
+  {
+    path: "/amministratori",
+    civicSectionId: "institutional-bodies",
+    status: "pubblicabile",
+    title: "Amministratori",
+    note: "Profili pubblici collegati agli incarichi negli organi, con storico dei ruoli quando le fonti lo permettono.",
+    rationale: "Indice pubblico degli amministratori.",
   },
   {
     path: "/pnrr",

@@ -21,6 +21,8 @@ const requiredRoutes = [
   '/convocazioni',
   '/convocazioni/demo-consiglio-comunale-v0',
   '/contratti',
+  '/organi',
+  '/amministratori',
   '/pnrr',
   '/redazione',
   '/healthz.json',

@@ -13,12 +13,18 @@ on:
       - main
     paths:
       - ".github/workflows/pages-static-fallback.yml"
+      - "artifacts/api-server/src/routes/organi.ts"
+      - "artifacts/api-server/src/routes/organi.test.ts"
       - "artifacts/lamezia-trasparente/**"
       - "data/public/albo/**"
       - "data/processed/territorio/**"
+      - "data/sources/organi-istituzionali-*.json"
+      - "lib/db/src/institutional-officials*.ts"
+      - "lib/db/src/organi-sync.ts"
       - "package.json"
       - "pnpm-lock.yaml"
       - "pnpm-workspace.yaml"
+      - "scripts/check-institutional-*.ts"
       - "scripts/check-public-contracts-page.mjs"
       - "scripts/check-v0-static-fallback.mjs"
       - "wrangler.toml"

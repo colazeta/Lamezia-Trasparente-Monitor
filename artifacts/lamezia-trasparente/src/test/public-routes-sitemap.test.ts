@@ -57,6 +57,8 @@ describe("v0 public route structural contract", () => {
       "/convocazioni",
       "/convocazioni/demo-consiglio-comunale-v0",
       "/contratti",
+      "/organi",
+      "/amministratori",
       "/pnrr",
       "/redazione",
       "/healthz.json",

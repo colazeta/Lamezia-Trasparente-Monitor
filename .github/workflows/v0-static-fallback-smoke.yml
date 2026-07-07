@@ -7,10 +7,16 @@ on:
       - '.github/workflows/cloudflare-pages-deploy.yml'
       - '.github/workflows/deploy-smoke.yml'
       - '.github/workflows/v0-static-fallback-smoke.yml'
+      - 'artifacts/api-server/src/routes/organi.ts'
+      - 'artifacts/api-server/src/routes/organi.test.ts'
       - 'artifacts/lamezia-trasparente/**'
+      - 'data/sources/organi-istituzionali-*.json'
+      - 'lib/db/src/institutional-officials*.ts'
+      - 'lib/db/src/organi-sync.ts'
       - 'package.json'
       - 'pnpm-lock.yaml'
       - 'pnpm-workspace.yaml'
+      - 'scripts/check-institutional-*.ts'
       - 'scripts/check-public-contracts-page.mjs'
       - 'scripts/check-v0-static-fallback.mjs'
       - 'wrangler.toml'
@@ -54,8 +60,9 @@ jobs:
         shell: bash
         run: |
           test -f artifacts/lamezia-trasparente/dist/public/deploy-provenance.json
-          grep -Fq 'contracts-protagonists-state-v1' artifacts/lamezia-trasparente/dist/public/deploy-provenance.json
+          grep -Fq 'public-routes-contracts-organi-v2' artifacts/lamezia-trasparente/dist/public/deploy-provenance.json
           grep -Fq 'colazeta/Lamezia-Trasparente-Monitor' artifacts/lamezia-trasparente/dist/public/deploy-provenance.json
+          grep -Fq '/organi' artifacts/lamezia-trasparente/dist/public/deploy-provenance.json
 
       - name: Smoke static fallback
         run: pnpm run smoke:v0-static-fallback
