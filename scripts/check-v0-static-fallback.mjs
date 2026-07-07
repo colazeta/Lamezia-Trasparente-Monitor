@@ -48,6 +48,12 @@ const REQUIRED_ORGANI_BUNDLE_TEXT = [
   "Righe storiche",
   "Commissioni Consiliari",
 ];
+const REQUIRED_CANONICAL_DIRECTORY_ROUTES = [
+  "/albo",
+  "/contratti",
+  "/organi",
+  "/amministratori",
+];
 
 function usage() {
   return [
@@ -251,40 +257,41 @@ function parseRedirectRules(redirectsText) {
     });
 }
 
-function assertAlboRedirectPolicy(redirectsText, redirectsPath) {
+function assertDirectoryRouteRedirectPolicy(redirectsText, redirectsPath, route) {
   const rules = parseRedirectRules(redirectsText);
-  const alboRule = rules.find((rule) => rule.source === "/albo");
+  const exactRule = rules.find((rule) => rule.source === route);
+  const canonicalTarget = `${route}/`;
 
-  if (!alboRule) {
+  if (!exactRule) {
     throw new Error(
-      `Cloudflare _redirects must declare an exact /albo rule: ${redirectsPath}`,
+      `Cloudflare _redirects must declare an exact ${route} rule: ${redirectsPath}`,
     );
   }
 
-  if (alboRule.target === "/index.html" && alboRule.status === "200") {
+  if (exactRule.target === "/index.html" && exactRule.status === "200") {
     throw new Error(
-      "Cloudflare redirects /albo to / when /albo rewrites to /index.html; use /albo -> /albo/ instead.",
+      `Cloudflare redirects ${route} to / when ${route} rewrites to /index.html; use ${route} -> ${canonicalTarget} instead.`,
     );
   }
 
   if (
-    alboRule.target !== "/albo/" ||
-    !["301", "302", "307", "308"].includes(alboRule.status)
+    exactRule.target !== canonicalTarget ||
+    !["301", "302", "307", "308"].includes(exactRule.status)
   ) {
     throw new Error(
-      `Cloudflare _redirects must canonicalize /albo to /albo/: ${redirectsPath}`,
+      `Cloudflare _redirects must canonicalize ${route} to ${canonicalTarget}: ${redirectsPath}`,
     );
   }
 
-  const alboFallbackRule = rules.find(
+  const fallbackRule = rules.find(
     (rule) =>
-      rule.source === "/albo/*" &&
+      rule.source === `${route}/*` &&
       rule.target === "/index.html" &&
       rule.status === "200",
   );
-  if (!alboFallbackRule) {
+  if (!fallbackRule) {
     throw new Error(
-      `Cloudflare _redirects must keep /albo/* as an SPA fallback: ${redirectsPath}`,
+      `Cloudflare _redirects must keep ${route}/* as an SPA fallback: ${redirectsPath}`,
     );
   }
 }
@@ -303,10 +310,10 @@ async function main() {
 
   const healthz = await readJsonFile(healthzPath, "Static fallback healthz.json");
   assertHealthzMarker(healthz, healthzPath);
-  assertAlboRedirectPolicy(
-    await readFile(redirectsPath, "utf8"),
-    redirectsPath,
-  );
+  const redirectsText = await readFile(redirectsPath, "utf8");
+  for (const route of REQUIRED_CANONICAL_DIRECTORY_ROUTES) {
+    assertDirectoryRouteRedirectPolicy(redirectsText, redirectsPath, route);
+  }
 
   const indexHtml = await readFile(indexPath, "utf8");
   for (const expectedText of REQUIRED_PUBLIC_TEXT) {
