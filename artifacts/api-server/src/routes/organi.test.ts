@@ -430,7 +430,7 @@ describe("organi historical memberships", () => {
 
     expect(res.status).toBe(200);
     expect(res.body.memberCount).toBe(1);
-    expect(res.body.historyCount).toBe(3);
+    expect(res.body.historyCount).toBe(2);
     expect(res.body.members).toHaveLength(1);
     expect(res.body.members[0].officialId).toBe(current.id);
     expect(res.body.terms).toHaveLength(3);
@@ -462,6 +462,17 @@ describe("organi historical memberships", () => {
       isCurrent: false,
     });
 
-    await db.delete(organiMembersTable).where(eq(organiMembersTable.organoId, organo.id));
+    const listRes = await request(app).get("/api/organi");
+    expect(listRes.status).toBe(200);
+    expect(
+      listRes.body.find((o: { id: number }) => o.id === organo.id),
+    ).toMatchObject({
+      memberCount: 1,
+      historyCount: 2,
+    });
+
+    await db
+      .delete(organiMembersTable)
+      .where(eq(organiMembersTable.organoId, organo.id));
   });
 });

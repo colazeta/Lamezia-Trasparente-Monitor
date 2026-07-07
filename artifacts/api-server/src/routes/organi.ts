@@ -206,9 +206,17 @@ router.get("/organi", async (_req, res) => {
   const historyCounts = await db
     .select({
       organoId: organiMembersTable.organoId,
-      count: sql<number>`count(*)::int`,
+      count: sql<number>`count(*) filter (
+        where ${officialsTable.status} is distinct from 'in_carica'
+          or ${organiMembersTable.endDate} is not null
+          or ${organiMembersTable.termLabel} is distinct from 'Mandato corrente'
+      )::int`,
     })
     .from(organiMembersTable)
+    .innerJoin(
+      officialsTable,
+      eq(organiMembersTable.officialId, officialsTable.id),
+    )
     .groupBy(organiMembersTable.organoId);
   const sedutaCounts = await db
     .select({
@@ -287,13 +295,16 @@ router.get("/organi/:slug", async (req, res) => {
   const reportSet = await sedutaIdsWithReport(sedute.map((s) => s.id));
   const pubMap = await publicationsForSedute(sedute);
   const currentMembers = members.filter(isCurrentMember);
+  const historicalMembers = members.filter(
+    (member) => !isCurrentMember(member),
+  );
 
   res.json({
     ...organoRef(organo),
     description: organo.description,
     position: organo.position,
     memberCount: currentMembers.length,
-    historyCount: members.length,
+    historyCount: historicalMembers.length,
     sedutaCount: sedute.length,
     members: currentMembers.map(mapMember),
     terms: buildTerms(members),
