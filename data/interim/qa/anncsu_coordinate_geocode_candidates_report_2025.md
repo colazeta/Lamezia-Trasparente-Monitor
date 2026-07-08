@@ -1,16 +1,16 @@
 # ANNCSU Coordinate External Geocode Candidates 2025
 
-Date: 2026-07-05
+Date: 2026-07-07
 
 ## Result
 
 - Request plan rows: 345
 - Requests attempted in this run: 0
 - Cached provider responses reused: 10
-- Existing candidate rows preserved: 36
-- Planned rows skipped because access_id already has geocoder evidence: 5
+- Existing candidate rows preserved: 41
+- Planned rows skipped because access_id already has geocoder evidence: 10
 - New candidate rows produced: 5
-- Candidate rows written: 41
+- Candidate rows written: 46
 - Dry run: no
 - Merge existing candidates: yes
 - Limit: 5
@@ -33,7 +33,7 @@ This script creates coordinate candidates only. It does not overwrite ANNCSU raw
 ## Candidate Status Counts
 
 - `candidate_requires_human_review`: 23
-- `no_candidate_returned`: 18
+- `no_candidate_returned`: 23
 
 ## Provider Confidence Counts
 
