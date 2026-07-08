@@ -19,7 +19,10 @@ import {
   EmptyTitle,
   EmptyDescription,
 } from "@/components/ui/empty";
-import { asApiList } from "@/lib/apiList";
+import {
+  isOrganoList,
+  listStaticOrgani,
+} from "@/lib/institutionalStaticData";
 
 const ORGANO_LABELS: Record<string, string> = {
   consiglio: "Consiglio",
@@ -29,7 +32,10 @@ const ORGANO_LABELS: Record<string, string> = {
 
 export function Organi() {
   const { data: organiData, isLoading } = useListOrgani();
-  const organi = asApiList<Organo>(organiData);
+  const organi: Organo[] = isOrganoList(organiData)
+    ? organiData
+    : listStaticOrgani();
+  const showLoading = isLoading && organi.length === 0;
   const totalCurrentMembers = organi.reduce((sum, o) => sum + o.memberCount, 0);
   const totalHistoryRows = organi.reduce((sum, o) => sum + o.historyCount, 0);
   const totalSedute = organi.reduce((sum, o) => sum + o.sedutaCount, 0);
@@ -58,7 +64,7 @@ export function Organi() {
             Componenti correnti
           </div>
           <p className="mt-2 text-2xl font-display font-bold">
-            {isLoading ? "..." : totalCurrentMembers}
+            {showLoading ? "..." : totalCurrentMembers}
           </p>
         </Card>
         <Card className="p-4">
@@ -67,7 +73,7 @@ export function Organi() {
             Righe storiche
           </div>
           <p className="mt-2 text-2xl font-display font-bold">
-            {isLoading ? "..." : totalHistoryRows}
+            {showLoading ? "..." : totalHistoryRows}
           </p>
         </Card>
         <Card className="p-4">
@@ -76,13 +82,13 @@ export function Organi() {
             Sedute collegate
           </div>
           <p className="mt-2 text-2xl font-display font-bold">
-            {isLoading ? "..." : totalSedute}
+            {showLoading ? "..." : totalSedute}
           </p>
         </Card>
       </div>
 
       <div data-tour="organi-list" className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {isLoading ? (
+        {showLoading ? (
           Array(3)
             .fill(0)
             .map((_, i) => (

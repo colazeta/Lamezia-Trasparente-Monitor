@@ -29,6 +29,10 @@ import {
   EmptyTitle,
   EmptyDescription,
 } from "@/components/ui/empty";
+import {
+  getStaticOfficial,
+  isOfficialProfile,
+} from "@/lib/institutionalStaticData";
 
 const ROLE_LABELS: Record<string, string> = {
   sindaco: "Sindaco",
@@ -117,18 +121,25 @@ function EmptyState({ children }: { children: React.ReactNode }) {
 
 export function AmministratoreDetail() {
   const [, params] = useRoute("/amministratori/:id");
-  const id = params?.id ? Number(params.id) : NaN;
+  const routeId = params?.id ?? "";
+  const id = routeId ? Number(routeId) : NaN;
+  const apiEnabled = routeId !== "" && !Number.isNaN(id);
 
   const {
-    data: official,
+    data: officialData,
     isLoading,
     isError,
   } = useGetOfficial(id, {
     query: {
-      enabled: !Number.isNaN(id),
+      enabled: apiEnabled,
       queryKey: getGetOfficialQueryKey(id),
     },
   });
+  const fallbackOfficial = getStaticOfficial(routeId);
+  const official = isOfficialProfile(officialData)
+    ? officialData
+    : fallbackOfficial;
+  const showLoading = isLoading && !official;
 
   const showVotes =
     official?.role === "consigliere" || official?.role === "assessore" ||
@@ -144,7 +155,7 @@ export function AmministratoreDetail() {
         Torna agli amministratori
       </Link>
 
-      {isLoading ? (
+      {showLoading ? (
         <div className="rounded-2xl border border-border bg-muted/30 p-6 md:p-8">
           <div className="flex flex-col sm:flex-row sm:items-start gap-5">
             <Skeleton className="h-16 w-16 rounded-full" />
@@ -155,7 +166,7 @@ export function AmministratoreDetail() {
             </div>
           </div>
         </div>
-      ) : isError || !official ? (
+      ) : (isError && !official) || !official ? (
         <Empty className="border bg-muted/20">
           <EmptyHeader>
             <EmptyMedia variant="icon">

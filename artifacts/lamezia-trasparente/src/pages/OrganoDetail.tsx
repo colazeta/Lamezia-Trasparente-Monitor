@@ -24,6 +24,10 @@ import {
   EmptyTitle,
   EmptyDescription,
 } from "@/components/ui/empty";
+import {
+  getStaticOrgano,
+  isOrganoDetail,
+} from "@/lib/institutionalStaticData";
 
 function formatDate(value: string | null | undefined) {
   if (!value) return "—";
@@ -61,7 +65,7 @@ export function OrganoDetail() {
   const slug = params?.slug ?? "";
 
   const {
-    data: organo,
+    data: organoData,
     isLoading,
     isError,
   } = useGetOrgano(slug, {
@@ -70,6 +74,9 @@ export function OrganoDetail() {
       queryKey: getGetOrganoQueryKey(slug),
     },
   });
+  const fallbackOrgano = getStaticOrgano(slug);
+  const organo = isOrganoDetail(organoData) ? organoData : fallbackOrgano;
+  const showLoading = isLoading && !organo;
 
   return (
     <div className="container mx-auto px-4 py-8 md:py-12 max-w-4xl">
@@ -81,13 +88,13 @@ export function OrganoDetail() {
         Torna agli organi
       </Link>
 
-      {isLoading ? (
+      {showLoading ? (
         <div className="rounded-2xl border border-border bg-muted/30 p-6 md:p-8 space-y-4">
           <Skeleton className="h-5 w-40" />
           <Skeleton className="h-9 w-3/4" />
           <Skeleton className="h-4 w-1/2" />
         </div>
-      ) : isError || !organo ? (
+      ) : (isError && !organo) || !organo ? (
         <Empty className="border bg-muted/20">
           <EmptyHeader>
             <EmptyMedia variant="icon">
