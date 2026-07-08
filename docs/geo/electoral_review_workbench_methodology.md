@@ -234,6 +234,12 @@ The separate audit command remains the reviewer-facing report, while the
 recovery-layer script repeats the P0/P1 gate internally so invalid exported
 decisions cannot silently become effective coordinates or training rows.
 
+For reviewed exports, `scripts/intake_anncsu_coordinate_overrides.py --decisions
+<workbench-json-export>` is the preferred intake gate. It runs the decision
+audit, builds the recovery layer and training set only if the audit passes,
+reruns coordinate-quality QA with the recovery layer, and writes
+`data/interim/qa/anncsu_coordinate_override_intake_report_2025.md`.
+
 Because public geocoders can miss local contrade and may return only
 street-level results, `scripts/generate_anncsu_local_anchor_coordinate_candidates.py`
 also creates local candidates from non-suspect ANNCSU civics on the same street.
