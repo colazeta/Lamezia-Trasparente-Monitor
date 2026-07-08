@@ -14,7 +14,10 @@ import {
   EmptyDescription,
 } from "@/components/ui/empty";
 import { cn } from "@/lib/utils";
-import { asApiList } from "@/lib/apiList";
+import {
+  isOfficialList,
+  listStaticOfficials,
+} from "@/lib/institutionalStaticData";
 
 const TABS = [
   { value: "all", label: "Tutti" },
@@ -55,7 +58,14 @@ export function Amministratori() {
     role: role !== "all" ? role : undefined,
     q: debouncedSearch || undefined,
   });
-  const officials = asApiList<Official>(officialsData);
+  const fallbackOfficials = listStaticOfficials({
+    role: role !== "all" ? role : undefined,
+    q: debouncedSearch || undefined,
+  });
+  const officials: Official[] = isOfficialList(officialsData)
+    ? officialsData
+    : fallbackOfficials;
+  const showLoading = isLoading && officials.length === 0;
 
   return (
     <div className="container mx-auto px-4 py-8 md:py-12 max-w-5xl">
@@ -105,7 +115,7 @@ export function Amministratori() {
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2">
-        {isLoading ? (
+        {showLoading ? (
           Array(6)
             .fill(0)
             .map((_, i) => (

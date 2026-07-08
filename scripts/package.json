@@ -11,7 +11,7 @@
     "materialize:istat-sezioni-censimento-lamezia": "tsx ./territorio/istat-sezioni-censimento-lamezia-materialize.ts",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "check-source-health": "tsx ./check-source-health.ts",
-    "check:organi": "pnpm run check:organi:current && pnpm run check:organi:profiles && pnpm run check:organi:council-profiles && pnpm run check:organi:giunta-profiles && pnpm run check:organi:electoral-context && pnpm run check:organi:history && pnpm run check:organi:commissions",
+    "check:organi": "pnpm run check:organi:current && pnpm run check:organi:profiles && pnpm run check:organi:council-profiles && pnpm run check:organi:giunta-profiles && pnpm run check:organi:electoral-context && pnpm run check:organi:history && pnpm run check:organi:commissions && pnpm run check:organi:static-fallback",
     "check:organi:current": "tsx ./check-institutional-roster.ts --snapshot ../data/sources/organi-istituzionali-source-snapshot.json",
     "check:organi:profiles": "tsx ./check-institutional-profile-details.ts --snapshot ../data/sources/organi-istituzionali-current-profile-details-snapshot.json",
     "check:organi:council-profiles": "tsx ./check-institutional-council-profile-sections.ts --snapshot ../data/sources/organi-istituzionali-current-council-profile-sections-snapshot.json",
@@ -19,6 +19,7 @@
     "check:organi:electoral-context": "tsx ./check-institutional-electoral-context.ts --snapshot ../data/sources/organi-istituzionali-current-electoral-context-snapshot.json",
     "check:organi:history": "tsx ./check-institutional-history.ts --snapshot ../data/sources/organi-istituzionali-historical-source-snapshot.json",
     "check:organi:commissions": "tsx ./check-institutional-commissions.ts --snapshot ../data/sources/organi-istituzionali-commissioni-2025-source-snapshot.json",
+    "check:organi:static-fallback": "node --experimental-strip-types ./check-institutional-static-fallback.mjs",
     "check:organi:live": "tsx ./check-institutional-roster.ts",
     "test": "node --import tsx --test ./check-source-health.test.ts ./production-smoke-plan.test.ts ./civic-source-registry.test.ts ./territorio/istat-sezioni-censimento-lamezia.test.ts ./territorio/istat-atlante-processed-layer.test.ts ./albo-tinnvision.test.ts ./albo-workflow-guard.test.ts ./climate/lameziaClimateCore.test.mjs",
     "production-smoke-plan": "tsx ./production-smoke-plan.ts"
