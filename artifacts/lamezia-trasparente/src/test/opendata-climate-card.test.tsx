@@ -4,6 +4,7 @@ import { useListOpendataDatasets } from "@workspace/api-client-react";
 import { Opendata } from "../pages/Opendata";
 import { LAMEZIA_CLIMATE_LATEST_YEAR } from "../data/lameziaClimate";
 import { LAMEZIA_AIR_TRAFFIC_LATEST_YEAR } from "../data/lameziaAirTraffic";
+import { LAMEZIA_FOREIGN_RESIDENTS_LATEST_YEAR } from "../data/lameziaForeignResidents";
 
 vi.mock("@workspace/api-client-react", () => ({
   useListOpendataDatasets: vi.fn(() => ({
@@ -38,12 +39,15 @@ describe("OpenData climate territory card", () => {
       name: "Scegli categoria",
     });
     expect(libraryHeading).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: /Clima e territorio/i }))
-      .toBeInTheDocument();
-    expect(screen.getByRole("button", { name: /Mobilita e collegamenti/i }))
-      .toBeInTheDocument();
-    expect(screen.getByRole("button", { name: /Popolazione e societa/i }))
-      .toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: /Clima e territorio/i }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: /Mobilita e collegamenti/i }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: /Popolazione e societa/i }),
+    ).toBeInTheDocument();
     expect(
       screen.getByRole("button", { name: /Contratti e spesa pubblica/i }),
     ).toBeInTheDocument();
@@ -77,6 +81,9 @@ describe("OpenData climate territory card", () => {
     expect(screen.getByText("Serie temporale giornaliera")).toBeInTheDocument();
     expect(screen.getByText("Serie temporale mensile")).toBeInTheDocument();
     expect(screen.getByText("Serie temporale annuale")).toBeInTheDocument();
+    expect(
+      screen.getByText("Distribuzione per classi d'eta"),
+    ).toBeInTheDocument();
     expect(screen.getAllByText("Disponibile").length).toBeGreaterThan(0);
     expect(
       screen.getByRole("button", {
@@ -94,6 +101,11 @@ describe("OpenData climate territory card", () => {
       }),
     ).toBeInTheDocument();
     expect(
+      screen.getByRole("button", {
+        name: /Apri scheda dataset Stranieri per sesso ed eta/i,
+      }),
+    ).toBeInTheDocument();
+    expect(
       screen.queryByRole("img", {
         name: /Grafico delle anomalie climatiche giornaliere/i,
       }),
@@ -105,7 +117,7 @@ describe("OpenData climate territory card", () => {
     expect(
       Boolean(
         libraryHeading.compareDocumentPosition(archiveHeading) &
-          Node.DOCUMENT_POSITION_FOLLOWING,
+        Node.DOCUMENT_POSITION_FOLLOWING,
       ),
     ).toBe(true);
 
@@ -127,9 +139,8 @@ describe("OpenData climate territory card", () => {
     });
     const climateHeading = climateHeadings[climateHeadings.length - 1];
     expect(
-      screen.getAllByText(
-        /Temperatura media giornaliera rispetto alla normale/,
-      ).length,
+      screen.getAllByText(/Temperatura media giornaliera rispetto alla normale/)
+        .length,
     ).toBeGreaterThan(0);
     expect(screen.getByLabelText("Anno del dataset climatico")).toHaveValue(
       String(LAMEZIA_CLIMATE_LATEST_YEAR),
@@ -323,6 +334,47 @@ describe("OpenData climate territory card", () => {
     expect(screen.getByRole("link", { name: /CSV sorgente/i })).toHaveAttribute(
       "href",
       expect.stringContaining("trend-demografico.csv"),
+    );
+  });
+
+  it("opens the municipal foreign residents age-sex dataset detail from the OpenData archive", () => {
+    render(<Opendata />);
+
+    fireEvent.click(
+      screen.getByRole("button", {
+        name: /Apri scheda dataset Stranieri per sesso ed eta/i,
+      }),
+    );
+
+    expect(
+      screen.getAllByRole("heading", {
+        name: /Stranieri per sesso ed eta - Lamezia Terme/i,
+      }).length,
+    ).toBeGreaterThan(0);
+    expect(
+      screen.getByRole("img", {
+        name: /Piramide per eta e sesso dei residenti stranieri/i,
+      }),
+    ).toBeInTheDocument();
+
+    fireEvent.click(screen.getByText("Dettagli del dataset"));
+
+    expect(screen.getByText("Residenti stranieri")).toBeInTheDocument();
+    expect(screen.getByText("Classe piu numerosa")).toBeInTheDocument();
+    expect(screen.getByText("Eta 15-64")).toBeInTheDocument();
+    expect(
+      screen.getAllByText(String(LAMEZIA_FOREIGN_RESIDENTS_LATEST_YEAR)).length,
+    ).toBeGreaterThan(0);
+    expect(
+      screen.getByText(/Distribuzione aggregata per sesso e classi d'eta/i),
+    ).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /Scarica JSON/i })).toHaveAttribute(
+      "href",
+      expect.stringContaining("lameziaForeignResidentsAgeSex"),
+    );
+    expect(screen.getByRole("link", { name: /CSV sorgente/i })).toHaveAttribute(
+      "href",
+      expect.stringContaining("stranieri-per-sesso-ed-eta.csv"),
     );
   });
 });

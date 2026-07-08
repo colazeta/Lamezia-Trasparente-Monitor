@@ -60,11 +60,20 @@ describe("OpenData thematic category library", () => {
       dataType: "Serie temporale mensile",
       detailKind: "air-traffic-monthly",
     });
-    expect(populationTheme?.datasets).toHaveLength(1);
-    expect(populationTheme?.datasets[0]).toMatchObject({
-      id: "lamezia-demographic-trend",
-      dataType: "Serie temporale annuale",
-      detailKind: "demographic-trend",
-    });
+    expect(populationTheme?.datasets).toHaveLength(2);
+    expect(populationTheme?.datasets).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          id: "lamezia-demographic-trend",
+          dataType: "Serie temporale annuale",
+          detailKind: "demographic-trend",
+        }),
+        expect.objectContaining({
+          id: "lamezia-foreign-residents-age-sex",
+          dataType: "Distribuzione per classi d'eta",
+          detailKind: "foreign-residents-age-sex",
+        }),
+      ]),
+    );
   });
 });

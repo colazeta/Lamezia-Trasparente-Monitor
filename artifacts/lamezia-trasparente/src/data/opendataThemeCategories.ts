@@ -8,7 +8,11 @@ export interface OpenDataThemeDataset {
   description: string;
   updateCadence: string;
   sourceLabel: string;
-  detailKind?: "air-traffic-monthly" | "climate-daily" | "demographic-trend";
+  detailKind?:
+    | "air-traffic-monthly"
+    | "climate-daily"
+    | "demographic-trend"
+    | "foreign-residents-age-sex";
 }
 
 export interface OpenDataThemeCategory {
@@ -106,7 +110,7 @@ export const OPEN_DATA_THEME_LIBRARY = [
     description:
       "Serie demografiche comunali aggregate per leggere popolazione, famiglie e struttura sociale senza esporre elenchi individuali.",
     civicQuestion:
-      "Come cambia nel tempo la popolazione residente indicata dal portale OpenData comunale?",
+      "Come leggere popolazione, famiglie e struttura sociale attraverso dataset comunali aggregati?",
     datasets: [
       {
         id: "lamezia-demographic-trend",
@@ -120,9 +124,22 @@ export const OPEN_DATA_THEME_LIBRARY = [
         sourceLabel: "Comune di Lamezia Terme - Portale OpenData",
         detailKind: "demographic-trend",
       },
+      {
+        id: "lamezia-foreign-residents-age-sex",
+        label: "Stranieri per sesso ed eta - Lamezia Terme",
+        statusLabel: "Disponibile",
+        dataType: "Distribuzione per classi d'eta",
+        description:
+          "Residenti stranieri 2025 per sesso e classi d'eta, acquisiti dal CSV del Portale OpenData del Comune e pubblicati come JSON statico.",
+        updateCadence:
+          "Aggiornamento settimanale quando il portale OpenData comunale modifica la risorsa CSV.",
+        sourceLabel: "Comune di Lamezia Terme - Portale OpenData",
+        detailKind: "foreign-residents-age-sex",
+      },
     ],
     dataTypes: [
       "serie temporali annuali",
+      "distribuzioni per eta e sesso",
       "indicatori demografici",
       "dataset comunali aggregati",
     ],
