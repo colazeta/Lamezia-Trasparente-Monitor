@@ -60,7 +60,7 @@ describe("OpenData thematic category library", () => {
       dataType: "Serie temporale mensile",
       detailKind: "air-traffic-monthly",
     });
-    expect(populationTheme?.datasets).toHaveLength(2);
+    expect(populationTheme?.datasets).toHaveLength(3);
     expect(populationTheme?.datasets).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
@@ -72,6 +72,11 @@ describe("OpenData thematic category library", () => {
           id: "lamezia-foreign-residents-age-sex",
           dataType: "Distribuzione per classi d'eta",
           detailKind: "foreign-residents-age-sex",
+        }),
+        expect.objectContaining({
+          id: "lamezia-families-children",
+          dataType: "Distribuzione familiare aggregata",
+          detailKind: "families-children",
         }),
       ]),
     );

@@ -84,6 +84,9 @@ describe("OpenData climate territory card", () => {
     expect(
       screen.getByText("Distribuzione per classi d'eta"),
     ).toBeInTheDocument();
+    expect(
+      screen.getByText("Distribuzione familiare aggregata"),
+    ).toBeInTheDocument();
     expect(screen.getAllByText("Disponibile").length).toBeGreaterThan(0);
     expect(
       screen.getByRole("button", {
@@ -103,6 +106,11 @@ describe("OpenData climate territory card", () => {
     expect(
       screen.getByRole("button", {
         name: /Apri scheda dataset Stranieri per sesso ed eta/i,
+      }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", {
+        name: /Apri scheda dataset Famiglie per numero di figli/i,
       }),
     ).toBeInTheDocument();
     expect(
@@ -375,6 +383,47 @@ describe("OpenData climate territory card", () => {
     expect(screen.getByRole("link", { name: /CSV sorgente/i })).toHaveAttribute(
       "href",
       expect.stringContaining("stranieri-per-sesso-ed-eta.csv"),
+    );
+  });
+
+  it("opens the municipal families by children count dataset detail from the OpenData archive", () => {
+    render(<Opendata />);
+
+    fireEvent.click(
+      screen.getByRole("button", {
+        name: /Apri scheda dataset Famiglie per numero di figli/i,
+      }),
+    );
+
+    expect(
+      screen.getAllByRole("heading", {
+        name: /Famiglie per numero di figli - Lamezia Terme/i,
+      }).length,
+    ).toBeGreaterThan(0);
+    expect(
+      screen.getByRole("img", {
+        name: /Grafico delle famiglie per numero di figli/i,
+      }),
+    ).toBeInTheDocument();
+
+    fireEvent.click(screen.getByText("Dettagli del dataset"));
+
+    expect(
+      screen.getByText("Famiglie nella distribuzione"),
+    ).toBeInTheDocument();
+    expect(screen.getByText("Con 1 figlio")).toBeInTheDocument();
+    expect(screen.getByText("Con 2 figli")).toBeInTheDocument();
+    expect(screen.getByText("Con 3 o piu figli")).toBeInTheDocument();
+    expect(
+      screen.getByText(/non espone l'anno di riferimento/i),
+    ).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /Scarica JSON/i })).toHaveAttribute(
+      "href",
+      expect.stringContaining("lameziaFamiliesChildren"),
+    );
+    expect(screen.getByRole("link", { name: /CSV sorgente/i })).toHaveAttribute(
+      "href",
+      expect.stringContaining("famiglie-per-numero-figli.csv"),
     );
   });
 });

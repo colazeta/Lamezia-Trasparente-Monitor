@@ -30,6 +30,7 @@ import { Badge } from "@/components/ui/badge";
 import { AirTrafficDatasetCard } from "@/components/opendata/AirTrafficDatasetCard";
 import { ClimateTerritoryDatasetCard } from "@/components/opendata/ClimateTerritoryDatasetCard";
 import { DemographicTrendDatasetCard } from "@/components/opendata/DemographicTrendDatasetCard";
+import { FamiliesChildrenDatasetCard } from "@/components/opendata/FamiliesChildrenDatasetCard";
 import { ForeignResidentsDatasetCard } from "@/components/opendata/ForeignResidentsDatasetCard";
 import { OpenDataThemeLibrary } from "@/components/opendata/OpenDataThemeLibrary";
 import {
@@ -575,6 +576,8 @@ function DatasetDetailView({
         <DemographicTrendDatasetCard />
       ) : item.dataset.detailKind === "foreign-residents-age-sex" ? (
         <ForeignResidentsDatasetCard />
+      ) : item.dataset.detailKind === "families-children" ? (
+        <FamiliesChildrenDatasetCard />
       ) : (
         <div className="rounded-xl border border-dashed border-border bg-muted/20 p-5">
           <h3 className="font-display text-lg font-bold text-foreground">
@@ -599,6 +602,9 @@ function getDatasetDetailId(detailKind: OpenDataThemeDataset["detailKind"]) {
   }
   if (detailKind === "foreign-residents-age-sex") {
     return "stranieri-eta-sesso-lamezia";
+  }
+  if (detailKind === "families-children") {
+    return "famiglie-figli-lamezia";
   }
   return "clima-territorio";
 }

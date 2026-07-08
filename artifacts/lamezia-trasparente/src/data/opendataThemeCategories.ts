@@ -12,6 +12,7 @@ export interface OpenDataThemeDataset {
     | "air-traffic-monthly"
     | "climate-daily"
     | "demographic-trend"
+    | "families-children"
     | "foreign-residents-age-sex";
 }
 
@@ -136,10 +137,23 @@ export const OPEN_DATA_THEME_LIBRARY = [
         sourceLabel: "Comune di Lamezia Terme - Portale OpenData",
         detailKind: "foreign-residents-age-sex",
       },
+      {
+        id: "lamezia-families-children",
+        label: "Famiglie per numero di figli - Lamezia Terme",
+        statusLabel: "Disponibile",
+        dataType: "Distribuzione familiare aggregata",
+        description:
+          "Famiglie per numero di figli acquisite dal CSV del Portale OpenData del Comune e pubblicate come JSON statico.",
+        updateCadence:
+          "Aggiornamento settimanale quando il portale OpenData comunale modifica la risorsa CSV.",
+        sourceLabel: "Comune di Lamezia Terme - Portale OpenData",
+        detailKind: "families-children",
+      },
     ],
     dataTypes: [
       "serie temporali annuali",
       "distribuzioni per eta e sesso",
+      "distribuzioni familiari aggregate",
       "indicatori demografici",
       "dataset comunali aggregati",
     ],
