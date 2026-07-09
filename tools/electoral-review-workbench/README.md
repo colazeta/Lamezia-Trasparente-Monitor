@@ -92,6 +92,7 @@ python scripts/prepare_anncsu_coordinate_review_batch.py
 python scripts/prepare_anncsu_coordinate_review_pack.py
 python scripts/prepare_anncsu_coordinate_decision_drafts.py
 python scripts/prepare_anncsu_coordinate_review_worksheet.py
+python scripts/prepare_anncsu_coordinate_review_handoff.py
 python scripts/build_anncsu_coordinate_decisions_from_worksheet.py
 ```
 
@@ -108,7 +109,9 @@ audit-blocking follow-up flags and blank reviewer metadata until a human
 reviewer accepts each row. The worksheet script creates a human-editable CSV
 for the first 50 review-ready rows, and the builder exports reviewed JSON
 decisions only from rows explicitly marked `accept_candidate` or
-`edit_coordinate`.
+`edit_coordinate`. The handoff script creates a reviewer-facing CSV and report
+from the worksheet so the first 50 rows can be inspected one `access_id` at a
+time before any accepted override is exported.
 
 Build the auditable recovery layer and training set:
 
