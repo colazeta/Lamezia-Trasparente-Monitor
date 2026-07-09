@@ -282,8 +282,15 @@ JSON decisions only from rows explicitly marked `accept_candidate` or
 
 - `data/interim/qa/anncsu_coordinate_review_worksheet_batch_1_2025.csv`
 - `data/interim/qa/anncsu_coordinate_review_worksheet_batch_1_report_2025.md`
+- `data/interim/qa/anncsu_coordinate_review_handoff_batch_1_2025.csv`
+- `data/interim/qa/anncsu_coordinate_review_handoff_batch_1_report_2025.md`
 - `data/interim/qa/anncsu_coordinate_reviewed_decisions_batch_1_2025.json`
 - `data/interim/qa/anncsu_coordinate_reviewed_decisions_batch_1_report_2025.md`
+
+`scripts/prepare_anncsu_coordinate_review_handoff.py` turns the worksheet into a
+reviewer-facing queue with the workbench filter, candidate movement, required
+reviewer fields, and post-review commands. It still does not accept or apply
+coordinates.
 
 The retraining path is therefore review-first:
 
