@@ -107,6 +107,20 @@ jobs:
           fi
 
           if [ "$missing" -eq 1 ]; then
+            {
+              echo "### Cloudflare Pages deploy blocked"
+              echo ""
+              echo "The static build and local fallback checks completed, but the production deploy cannot start without Cloudflare credentials."
+              echo ""
+              echo "Configure these repository settings, then rerun this workflow:"
+              echo ""
+              echo "- GitHub Actions secret: \`CLOUDFLARE_API_TOKEN\`"
+              echo "- GitHub Actions secret or variable: \`CLOUDFLARE_ACCOUNT_ID\`"
+              echo "- Optional GitHub Actions variable: \`CLOUDFLARE_PROJECT_NAME\` (defaults to \`lamezia-trasparente\`)"
+              echo "- Optional GitHub Actions variable: \`PUBLIC_SITE_URL\` (defaults to \`https://lamezia-trasparente.pages.dev\`)"
+              echo ""
+              echo "Runbook: \`docs/deploy/cloudflare-pages.md\`"
+            } >> "$GITHUB_STEP_SUMMARY"
             echo "Cloudflare Pages deploy cannot continue because required credentials are not configured."
             echo "Configure CLOUDFLARE_API_TOKEN and CLOUDFLARE_ACCOUNT_ID, then rerun this workflow."
             exit 1

@@ -31,17 +31,29 @@ Configure these repository settings before relying on the direct deploy job:
 - Optional variable: `CLOUDFLARE_PROJECT_NAME` (defaults to `lamezia-trasparente`)
 - Optional variable: `PUBLIC_SITE_URL` (defaults to `https://lamezia-trasparente.pages.dev`)
 
-If the Cloudflare credentials are missing, the workflow now fails before the deploy step. A green `Cloudflare Pages deploy` run means the credentials were present, Wrangler attempted the production publish, and the live public contracts smoke passed.
+Create the two required values in GitHub at `Settings -> Secrets and variables -> Actions`. Keep the API token as a secret. The account ID may be a secret or a repository variable because the workflow accepts both.
+
+If the Cloudflare credentials are missing, the workflow fails before the deploy step and writes a short remediation checklist to the GitHub Actions step summary. A green `Cloudflare Pages deploy` run means the credentials were present, Wrangler attempted the production publish, and the live public contracts smoke passed.
+
+The other workflows have different jobs:
+
+- `CI` verifies install, typecheck, build and tests.
+- `deploy smoke` builds locally and smoke-checks the currently configured public URL.
+- `GitHub Pages static fallback` verifies the static fallback artifact.
+
+Those workflows can be green while production Cloudflare deployment is still blocked. The deploy signal for `https://lamezia-trasparente.pages.dev` is the `Cloudflare Pages deploy` workflow.
+
+After adding or fixing the credentials, rerun the failed `Cloudflare Pages deploy` workflow from GitHub Actions, or dispatch it manually on branch `main`.
 
 ## Deploy provenance marker
 
-The public build includes `/deploy-provenance.json` with `deploymentContract = "contracts-protagonists-state-v1"`. The public contracts smoke requires that marker before checking bundle strings. If `pages.dev` serves a new JavaScript asset but not this JSON marker, Cloudflare is publishing a source or output that is not the current `artifacts/lamezia-trasparente/dist/public` build.
+The public build includes `/deploy-provenance.json` with `deploymentContract = "public-routes-contracts-organi-v2"`. The public contracts smoke requires that marker before checking bundle strings. If `pages.dev` serves a new JavaScript asset but not this JSON marker, Cloudflare is publishing a source or output that is not the current `artifacts/lamezia-trasparente/dist/public` build.
 
 ## Contracts route smoke
 
 After a deployment, the live URL must satisfy all checks:
 
-- `https://lamezia-trasparente.pages.dev/deploy-provenance.json` exposes `contracts-protagonists-state-v1`.
+- `https://lamezia-trasparente.pages.dev/deploy-provenance.json` exposes `public-routes-contracts-organi-v2`.
 - `https://lamezia-trasparente.pages.dev/contratti` remains on `/contratti` when loaded directly.
 - The generated JavaScript bundle contains the contract-state markers `Contratti protagonisti`, `Stato dei fascicoli contrattuali`, `Copertura fasi`, and `Copertura stato fasi dei fascicoli`.
 
