@@ -118,6 +118,7 @@ python scripts/intake_anncsu_coordinate_overrides.py --decisions .\electoral_sec
 python scripts/build_anncsu_coordinate_recovery_layer.py
 python scripts/build_anncsu_coordinate_recovery_layer.py --decisions .\electoral_sections_civic_review_decisions_v1.json
 python scripts/audit_anncsu_coordinate_quality.py --use-recovery-layer
+python scripts/audit_anncsu_coordinate_recovery_readiness.py
 ```
 
 Run the audit before applying any reviewed coordinate decision. P0/P1 findings
@@ -128,7 +129,10 @@ enforces the same P0/P1 audit gate before applying accepted
 `manual_coordinate_override` records to `effective_lon`/`effective_lat`. The
 recovery-layer quality audit reruns the coordinate diagnostics with only
 accepted reviewed replacements applied, so the result can be used as retraining
-evidence without rewriting ANNCSU raw data.
+evidence without rewriting ANNCSU raw data. The readiness audit summarizes the
+whole gate in one report: raw-vs-processed diagnosis, candidate coverage,
+worksheet progress, decision audit status, recovery-layer state, and remaining
+P0/P1/P2 actions.
 
 `scripts/intake_anncsu_coordinate_overrides.py` is the safer one-command gate
 for reviewed decisions. It runs the decision audit, builds the recovery layer

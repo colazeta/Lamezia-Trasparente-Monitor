@@ -1,0 +1,4 @@
+severity,code,detail,next_action
+P2,source-coordinate-suspects-come-from-raw-anncsu,All current suspect coordinates are already present in the original ANNCSU indirizzario bytes.,Treat replacements as reviewed effective coordinates; do not overwrite raw source fields.
+P2,no-reviewed-coordinate-overrides-yet,The current worksheet has no accepted or edited coordinate rows.,Human review must mark rows before any recovery/training set can be populated.
+P2,not-all-suspects-have-review-ready-candidate,125 suspect row(s) are not manual-review-ready in the current review pack.,Use dedicated geocoder/manual lookup for rows without a local or external candidate.
