@@ -18,7 +18,7 @@ import {
   ALBO_VERIFICATION_LABELS,
 } from "@/data/alboStatus";
 import {
-  MOCK_SOURCE_HEALTH,
+  SOURCE_HEALTH,
   SOURCE_PRIORITY_LABELS,
   SOURCE_STATUS_LABELS,
   SOURCE_TYPE_LABELS,
@@ -252,16 +252,40 @@ function SourceMobileCard({ source }: { source: SourceHealthItem }) {
             {source.coverageScore}%
           </dd>
         </div>
+        <div className="grid gap-1">
+          <dt className="font-semibold text-foreground">Evidenza disponibile</dt>
+          <dd className="text-muted-foreground">{source.metricLabel}</dd>
+        </div>
       </dl>
       <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
+        {source.evidenceLabel}
+      </p>
+      <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
         {source.cautionNote}
       </p>
+      <div className="mt-4 flex flex-wrap gap-3 text-sm font-semibold">
+        <Link
+          href={source.route}
+          className="text-primary underline underline-offset-4 hover:text-primary/80"
+        >
+          Apri nella piattaforma
+        </Link>
+        <a
+          href={source.sourceUrl}
+          target="_blank"
+          rel="noreferrer"
+          className="inline-flex items-center gap-1 text-primary underline underline-offset-4 hover:text-primary/80"
+        >
+          Fonte
+          <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
+        </a>
+      </div>
     </article>
   );
 }
 
 export function StatoMonitoraggio() {
-  const payload = MOCK_SOURCE_HEALTH;
+  const payload = SOURCE_HEALTH;
   const statusCounts = payload.sources.reduce<Record<SourceHealthStatus, number>>(
     (acc, source) => ({ ...acc, [source.status]: acc[source.status] + 1 }),
     { ok: 0, warning: 0, stale: 0, error: 0, missing: 0 },
@@ -280,14 +304,18 @@ export function StatoMonitoraggio() {
           Stato del monitoraggio
         </h1>
         <p className="mt-4 text-lg leading-relaxed text-muted-foreground">
-          Una vista prudente sullo stato tecnico delle fonti censite: controlli,
-          freschezza, copertura operativa e note di cautela. I segnali mostrati
-          aiutano a orientare verifiche documentali, non costituiscono valutazioni
-          sull'operato dell'ente o sulla completezza assoluta degli atti pubblici.
+          Una vista verificabile sulle evidenze dati realmente integrate nella
+          piattaforma: acquisizioni, snapshot versionati, copertura documentata,
+          freschezza e limiti. Gli stati descrivono il monitor, non l'operato
+          dell'ente e non certificano la completezza assoluta delle fonti esterne.
         </p>
         <p className="mt-3 text-sm text-muted-foreground">
-          Generato da dataset mock tipizzato compatibile con il futuro payload di{" "}
-          <code className="rounded bg-muted px-1.5 py-0.5 text-xs">/healthz/sources</code>: {formatDateTime(payload.generatedAt)}.
+          Registro costruito da manifesti e snapshot versionati. Ultima evidenza
+          integrata:{" "}
+          <strong className="font-semibold text-foreground">
+            {formatDateTime(payload.generatedAt)}
+          </strong>
+          .
         </p>
       </header>
 
@@ -299,27 +327,27 @@ export function StatoMonitoraggio() {
           Riepilogo aggregato del monitoraggio
         </h2>
         <SummaryCard
-          label="Fonti censite"
+          label="Fonti integrate"
           value={String(payload.sources.length)}
-          detail="Numero di fonti presenti nel registro operativo mock in attesa dell'endpoint pubblico."
+          detail="Acquisizioni e dataset collegati a un'evidenza versionata, una fonte e un percorso pubblico."
           icon={Database}
         />
         <SummaryCard
           label="Copertura operativa"
           value={`${payload.coverageScore}%`}
-          detail="Quota sintetica dei controlli censiti con dati disponibili e tracciabili nel runtime."
+          detail="Quota media di record o unità territoriali documentate nei manifesti integrati."
           icon={BarChart3}
         />
         <SummaryCard
           label="Freschezza controlli"
           value={`${payload.freshnessScore}%`}
-          detail="Indicatore tecnico sulla vicinanza tra ultimo controllo e soglia attesa per ogni fonte."
+          detail="Indicatore tecnico derivato dal timestamp dell'evidenza e dalla cadenza attesa per ciascun flusso."
           icon={Clock3}
         />
         <SummaryCard
           label="Da verificare"
           value={String(needsReview)}
-          detail="Fonti con warning, stale, errore tecnico o tracciamento runtime non ancora disponibile."
+          detail="Flussi con copertura parziale, avvisi, evidenza oltre soglia o controlli non disponibili."
           icon={ShieldCheck}
         />
       </section>
@@ -349,9 +377,9 @@ export function StatoMonitoraggio() {
               Dettaglio per fonte
             </h2>
             <p className="mt-2 max-w-3xl text-sm leading-relaxed text-muted-foreground">
-              La tabella espone tipo, priorità, stato, ultimo controllo, ultimo
-              aggiornamento e copertura operativa. Su schermi piccoli gli stessi
-              dati sono presentati come schede compatte.
+              La tabella espone tipo, priorità, stato, timestamp dell'evidenza,
+              aggiornamento della fonte, copertura documentata e limiti. Su
+              schermi piccoli gli stessi dati sono presentati come schede compatte.
             </p>
           </div>
           <Link
@@ -375,8 +403,8 @@ export function StatoMonitoraggio() {
                 <th scope="col" className="px-4 py-3 font-bold">Stato</th>
                 <th scope="col" className="px-4 py-3 font-bold">Ultimo controllo</th>
                 <th scope="col" className="px-4 py-3 font-bold">Ultimo aggiornamento</th>
-                <th scope="col" className="px-4 py-3 font-bold">Copertura operativa</th>
-                <th scope="col" className="px-4 py-3 font-bold">Note</th>
+                <th scope="col" className="px-4 py-3 font-bold">Copertura documentata</th>
+                <th scope="col" className="px-4 py-3 font-bold">Evidenza e limiti</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-border">
@@ -402,9 +430,30 @@ export function StatoMonitoraggio() {
                   </td>
                   <td className={cn("px-4 py-4 font-bold", scoreTone(source.coverageScore))}>
                     {source.coverageScore}%
+                    <span className="mt-1 block text-xs font-medium leading-relaxed text-muted-foreground">
+                      {source.metricLabel}
+                    </span>
                   </td>
-                  <td className="max-w-xs px-4 py-4 leading-relaxed text-muted-foreground">
-                    {source.cautionNote}
+                  <td className="max-w-sm px-4 py-4 leading-relaxed text-muted-foreground">
+                    <p>{source.evidenceLabel}</p>
+                    <p className="mt-2">{source.cautionNote}</p>
+                    <div className="mt-3 flex flex-wrap gap-3 text-xs font-semibold">
+                      <Link
+                        href={source.route}
+                        className="text-primary underline underline-offset-4 hover:text-primary/80"
+                      >
+                        Apri nella piattaforma
+                      </Link>
+                      <a
+                        href={source.sourceUrl}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="inline-flex items-center gap-1 text-primary underline underline-offset-4 hover:text-primary/80"
+                      >
+                        Fonte
+                        <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
+                      </a>
+                    </div>
                   </td>
                 </tr>
               ))}
