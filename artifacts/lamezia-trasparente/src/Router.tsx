@@ -1,156 +1,64 @@
 import { lazy, Suspense, type ComponentType } from "react";
 import { Switch, Route } from "wouter";
 import { MainLayout } from "./components/layout/MainLayout";
-const Home = lazy(() =>
-  import("./pages/Home").then((module) => ({ default: module.Home })),
-);
-const Domande = lazy(() =>
-  import("./pages/Domande").then((module) => ({ default: module.Domande })),
-);
-const Themes = lazy(() =>
-  import("./pages/Themes").then((module) => ({ default: module.Themes })),
-);
-const ThemeDetail = lazy(() =>
-  import("./pages/ThemeDetail").then((module) => ({ default: module.ThemeDetail })),
-);
-const Contracts = lazy(() =>
-  import("./pages/Contracts").then((module) => ({ default: module.Contracts })),
-);
-const Incarichimetro = lazy(() =>
-  import("./pages/Incarichimetro").then((module) => ({ default: module.Incarichimetro })),
-);
-const ContractStoryline = lazy(() =>
-  import("./pages/ContractStoryline").then((module) => ({ default: module.ContractStoryline })),
-);
-const Albo = lazy(() =>
-  import("./pages/Albo").then((module) => ({ default: module.Albo })),
-);
-const AlboDetail = lazy(() =>
-  import("./pages/AlboDetail").then((module) => ({ default: module.AlboDetail })),
-);
-const Delibere = lazy(() =>
-  import("./pages/Delibere").then((module) => ({ default: module.Delibere })),
-);
-const Convocazioni = lazy(() =>
-  import("./pages/Convocazioni").then((module) => ({ default: module.Convocazioni })),
-);
-const SedutaDetail = lazy(() =>
-  import("./pages/SedutaDetail").then((module) => ({ default: module.SedutaDetail })),
-);
-const Organi = lazy(() =>
-  import("./pages/Organi").then((module) => ({ default: module.Organi })),
-);
-const OrganoDetail = lazy(() =>
-  import("./pages/OrganoDetail").then((module) => ({ default: module.OrganoDetail })),
-);
-const Amministratori = lazy(() =>
-  import("./pages/Amministratori").then((module) => ({ default: module.Amministratori })),
-);
-const AmministratoreDetail = lazy(() =>
-  import("./pages/AmministratoreDetail").then((module) => ({ default: module.AmministratoreDetail })),
-);
-const Pnrr = lazy(() =>
-  import("./pages/Pnrr").then((module) => ({ default: module.Pnrr })),
-);
-const PareriVigilanza = lazy(() =>
-  import("./pages/PareriVigilanza").then((module) => ({ default: module.PareriVigilanza })),
-);
-const PareriVigilanzaDetail = lazy(() =>
-  import("./pages/PareriVigilanzaDetail").then((module) => ({ default: module.PareriVigilanzaDetail })),
-);
-const Opendata = lazy(() =>
-  import("./pages/Opendata").then((module) => ({ default: module.Opendata })),
-);
-const OpendataDetail = lazy(() =>
-  import("./pages/OpendataDetail").then((module) => ({ default: module.OpendataDetail })),
-);
-const Feeds = lazy(() =>
-  import("./pages/Feeds").then((module) => ({ default: module.Feeds })),
-);
-const Sviluppatori = lazy(() =>
-  import("./pages/Sviluppatori").then((module) => ({ default: module.Sviluppatori })),
-);
-const AttiFondamentali = lazy(() =>
-  import("./pages/AttiFondamentali").then((module) => ({ default: module.AttiFondamentali })),
-);
-const BeniConfiscati = lazy(() =>
-  import("./pages/BeniConfiscati").then((module) => ({ default: module.BeniConfiscati })),
-);
-const BeneConfiscatoDetail = lazy(() =>
-  import("./pages/BeneConfiscatoDetail").then((module) => ({ default: module.BeneConfiscatoDetail })),
-);
-const AccessoCivico = lazy(() =>
-  import("./pages/AccessoCivico").then((module) => ({ default: module.AccessoCivico })),
-);
-const Monitoraggio = lazy(() =>
-  import("./pages/Monitoraggio").then((module) => ({ default: module.Monitoraggio })),
-);
-const MonitoraggioDetail = lazy(() =>
-  import("./pages/MonitoraggioDetail").then((module) => ({ default: module.MonitoraggioDetail })),
-);
-const MonitoraggioNuovo = lazy(() =>
-  import("./pages/MonitoraggioNuovo").then((module) => ({ default: module.MonitoraggioNuovo })),
-);
-const Promessometro = lazy(() =>
-  import("./pages/Promessometro").then((module) => ({ default: module.Promessometro })),
-);
-const PropostePubbliche = lazy(() =>
-  import("./pages/PropostePubbliche").then((module) => ({ default: module.PropostePubbliche })),
-);
-const MacchinaComunale = lazy(() =>
-  import("./pages/MacchinaComunale").then((module) => ({ default: module.MacchinaComunale })),
-);
-const Legalita = lazy(() =>
-  import("./pages/Legalita").then((module) => ({ default: module.Legalita })),
-);
-const TrameFestival = lazy(() =>
-  import("./pages/TrameFestival").then((module) => ({ default: module.TrameFestival })),
-);
-const Performance = lazy(() =>
-  import("./pages/Performance").then((module) => ({ default: module.Performance })),
-);
-const PerformanceDetail = lazy(() =>
-  import("./pages/PerformanceDetail").then((module) => ({ default: module.PerformanceDetail })),
-);
-const Reports = lazy(() =>
-  import("./pages/Reports").then((module) => ({ default: module.Reports })),
-);
-const FontiDati = lazy(() =>
-  import("./pages/FontiDati").then((module) => ({ default: module.FontiDati })),
-);
-const AtlanteTerritoriale = lazy(() =>
-  import("./pages/AtlanteTerritoriale").then((module) => ({ default: module.AtlanteTerritoriale })),
-);
-const StatoMonitoraggio = lazy(() =>
-  import("./pages/StatoMonitoraggio").then((module) => ({ default: module.StatoMonitoraggio })),
-);
-const Metodologia = lazy(() =>
-  import("./pages/Metodologia").then((module) => ({ default: module.Metodologia })),
-);
-const Roadmap = lazy(() =>
-  import("./pages/Roadmap").then((module) => ({ default: module.Roadmap })),
-);
-const NoteLegali = lazy(() =>
-  import("./pages/NoteLegali").then((module) => ({ default: module.NoteLegali })),
-);
-const ChiSiamo = lazy(() =>
-  import("./pages/ChiSiamo").then((module) => ({ default: module.ChiSiamo })),
-);
-const Contatti = lazy(() =>
-  import("./pages/Contatti").then((module) => ({ default: module.Contatti })),
-);
-const Statistics = lazy(() =>
-  import("./pages/Statistics").then((module) => ({ default: module.Statistics })),
-);
-const Subscriptions = lazy(() =>
-  import("./pages/Subscriptions").then((module) => ({ default: module.Subscriptions })),
-);
-const Guida = lazy(() =>
-  import("./pages/Guida").then((module) => ({ default: module.Guida })),
-);
-const Redazione = lazy(() =>
-  import("./pages/Redazione").then((module) => ({ default: module.Redazione })),
-);
+
+function lazyNamed(loader: () => Promise<object>, exportName: string) {
+  return lazy(async () => {
+    const module = (await loader()) as Record<string, ComponentType>;
+    return { default: module[exportName] };
+  });
+}
+
+const Home = lazyNamed(() => import("./pages/Home"), "Home");
+const Domande = lazyNamed(() => import("./pages/Domande"), "Domande");
+const Themes = lazyNamed(() => import("./pages/Themes"), "Themes");
+const ThemeDetail = lazyNamed(() => import("./pages/ThemeDetail"), "ThemeDetail");
+const Contracts = lazyNamed(() => import("./pages/Contracts"), "Contracts");
+const Incarichimetro = lazyNamed(() => import("./pages/Incarichimetro"), "Incarichimetro");
+const ContractStoryline = lazyNamed(() => import("./pages/ContractStoryline"), "ContractStoryline");
+const Albo = lazyNamed(() => import("./pages/Albo"), "Albo");
+const AlboDetail = lazyNamed(() => import("./pages/AlboDetail"), "AlboDetail");
+const Delibere = lazyNamed(() => import("./pages/Delibere"), "Delibere");
+const Convocazioni = lazyNamed(() => import("./pages/Convocazioni"), "Convocazioni");
+const SedutaDetail = lazyNamed(() => import("./pages/SedutaDetail"), "SedutaDetail");
+const Organi = lazyNamed(() => import("./pages/Organi"), "Organi");
+const OrganoDetail = lazyNamed(() => import("./pages/OrganoDetail"), "OrganoDetail");
+const Amministratori = lazyNamed(() => import("./pages/Amministratori"), "Amministratori");
+const AmministratoreDetail = lazyNamed(() => import("./pages/AmministratoreDetail"), "AmministratoreDetail");
+const Pnrr = lazyNamed(() => import("./pages/Pnrr"), "Pnrr");
+const PareriVigilanza = lazyNamed(() => import("./pages/PareriVigilanza"), "PareriVigilanza");
+const PareriVigilanzaDetail = lazyNamed(() => import("./pages/PareriVigilanzaDetail"), "PareriVigilanzaDetail");
+const Opendata = lazyNamed(() => import("./pages/Opendata"), "Opendata");
+const OpendataDetail = lazyNamed(() => import("./pages/OpendataDetail"), "OpendataDetail");
+const Feeds = lazyNamed(() => import("./pages/Feeds"), "Feeds");
+const Sviluppatori = lazyNamed(() => import("./pages/Sviluppatori"), "Sviluppatori");
+const AttiFondamentali = lazyNamed(() => import("./pages/AttiFondamentali"), "AttiFondamentali");
+const BeniConfiscati = lazyNamed(() => import("./pages/BeniConfiscati"), "BeniConfiscati");
+const BeneConfiscatoDetail = lazyNamed(() => import("./pages/BeneConfiscatoDetail"), "BeneConfiscatoDetail");
+const AccessoCivico = lazyNamed(() => import("./pages/AccessoCivico"), "AccessoCivico");
+const Monitoraggio = lazyNamed(() => import("./pages/Monitoraggio"), "Monitoraggio");
+const MonitoraggioDetail = lazyNamed(() => import("./pages/MonitoraggioDetail"), "MonitoraggioDetail");
+const MonitoraggioNuovo = lazyNamed(() => import("./pages/MonitoraggioNuovo"), "MonitoraggioNuovo");
+const Promessometro = lazyNamed(() => import("./pages/Promessometro"), "Promessometro");
+const PropostePubbliche = lazyNamed(() => import("./pages/PropostePubbliche"), "PropostePubbliche");
+const MacchinaComunale = lazyNamed(() => import("./pages/MacchinaComunale"), "MacchinaComunale");
+const Legalita = lazyNamed(() => import("./pages/Legalita"), "Legalita");
+const TrameFestival = lazyNamed(() => import("./pages/TrameFestival"), "TrameFestival");
+const Performance = lazyNamed(() => import("./pages/Performance"), "Performance");
+const PerformanceDetail = lazyNamed(() => import("./pages/PerformanceDetail"), "PerformanceDetail");
+const Reports = lazyNamed(() => import("./pages/Reports"), "Reports");
+const FontiDati = lazyNamed(() => import("./pages/FontiDati"), "FontiDati");
+const AtlanteTerritoriale = lazyNamed(() => import("./pages/AtlanteTerritoriale"), "AtlanteTerritoriale");
+const StatoMonitoraggio = lazyNamed(() => import("./pages/StatoMonitoraggio"), "StatoMonitoraggio");
+const Metodologia = lazyNamed(() => import("./pages/Metodologia"), "Metodologia");
+const Roadmap = lazyNamed(() => import("./pages/Roadmap"), "Roadmap");
+const NoteLegali = lazyNamed(() => import("./pages/NoteLegali"), "NoteLegali");
+const ChiSiamo = lazyNamed(() => import("./pages/ChiSiamo"), "ChiSiamo");
+const Contatti = lazyNamed(() => import("./pages/Contatti"), "Contatti");
+const Statistics = lazyNamed(() => import("./pages/Statistics"), "Statistics");
+const Subscriptions = lazyNamed(() => import("./pages/Subscriptions"), "Subscriptions");
+const Guida = lazyNamed(() => import("./pages/Guida"), "Guida");
+const Redazione = lazyNamed(() => import("./pages/Redazione"), "Redazione");
 const NotFound = lazy(() => import("./pages/not-found"));
 import { PageMeta } from "./components/seo/PageMeta";
 import { PublicErrorBoundary } from "./components/PublicErrorBoundary";
