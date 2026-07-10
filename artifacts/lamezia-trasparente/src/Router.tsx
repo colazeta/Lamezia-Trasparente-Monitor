@@ -1,59 +1,177 @@
-import type { ComponentType } from "react";
+import { lazy, Suspense, type ComponentType } from "react";
 import { Switch, Route } from "wouter";
 import { MainLayout } from "./components/layout/MainLayout";
-import { Home } from "./pages/Home";
-import { Domande } from "./pages/Domande";
-import { Themes } from "./pages/Themes";
-import { ThemeDetail } from "./pages/ThemeDetail";
-import { Contracts } from "./pages/Contracts";
-import { Incarichimetro } from "./pages/Incarichimetro";
-import { ContractStoryline } from "./pages/ContractStoryline";
-import { Albo } from "./pages/Albo";
-import { AlboDetail } from "./pages/AlboDetail";
-import { Delibere } from "./pages/Delibere";
-import { Convocazioni } from "./pages/Convocazioni";
-import { SedutaDetail } from "./pages/SedutaDetail";
-import { Organi } from "./pages/Organi";
-import { OrganoDetail } from "./pages/OrganoDetail";
-import { Amministratori } from "./pages/Amministratori";
-import { AmministratoreDetail } from "./pages/AmministratoreDetail";
-import { Pnrr } from "./pages/Pnrr";
-import { PareriVigilanza } from "./pages/PareriVigilanza";
-import { PareriVigilanzaDetail } from "./pages/PareriVigilanzaDetail";
-import { Opendata } from "./pages/Opendata";
-import { OpendataDetail } from "./pages/OpendataDetail";
-import { Feeds } from "./pages/Feeds";
-import { Sviluppatori } from "./pages/Sviluppatori";
-import { AttiFondamentali } from "./pages/AttiFondamentali";
-import { BeniConfiscati } from "./pages/BeniConfiscati";
-import { BeneConfiscatoDetail } from "./pages/BeneConfiscatoDetail";
-import { AccessoCivico } from "./pages/AccessoCivico";
-import { Monitoraggio } from "./pages/Monitoraggio";
-import { MonitoraggioDetail } from "./pages/MonitoraggioDetail";
-import { MonitoraggioNuovo } from "./pages/MonitoraggioNuovo";
-import { Promessometro } from "./pages/Promessometro";
-import { PropostePubbliche } from "./pages/PropostePubbliche";
-import { MacchinaComunale } from "./pages/MacchinaComunale";
-import { Legalita } from "./pages/Legalita";
-import { TrameFestival } from "./pages/TrameFestival";
-import { Performance } from "./pages/Performance";
-import { PerformanceDetail } from "./pages/PerformanceDetail";
-import { Reports } from "./pages/Reports";
-import { FontiDati } from "./pages/FontiDati";
-import { AtlanteTerritoriale } from "./pages/AtlanteTerritoriale";
-import { StatoMonitoraggio } from "./pages/StatoMonitoraggio";
-import { Metodologia } from "./pages/Metodologia";
-import { Roadmap } from "./pages/Roadmap";
-import { NoteLegali } from "./pages/NoteLegali";
-import { ChiSiamo } from "./pages/ChiSiamo";
-import { Contatti } from "./pages/Contatti";
-import { Statistics } from "./pages/Statistics";
-import { Subscriptions } from "./pages/Subscriptions";
-import { Guida } from "./pages/Guida";
-import { Redazione } from "./pages/Redazione";
-import NotFound from "./pages/not-found";
+const Home = lazy(() =>
+  import("./pages/Home").then((module) => ({ default: module.Home })),
+);
+const Domande = lazy(() =>
+  import("./pages/Domande").then((module) => ({ default: module.Domande })),
+);
+const Themes = lazy(() =>
+  import("./pages/Themes").then((module) => ({ default: module.Themes })),
+);
+const ThemeDetail = lazy(() =>
+  import("./pages/ThemeDetail").then((module) => ({ default: module.ThemeDetail })),
+);
+const Contracts = lazy(() =>
+  import("./pages/Contracts").then((module) => ({ default: module.Contracts })),
+);
+const Incarichimetro = lazy(() =>
+  import("./pages/Incarichimetro").then((module) => ({ default: module.Incarichimetro })),
+);
+const ContractStoryline = lazy(() =>
+  import("./pages/ContractStoryline").then((module) => ({ default: module.ContractStoryline })),
+);
+const Albo = lazy(() =>
+  import("./pages/Albo").then((module) => ({ default: module.Albo })),
+);
+const AlboDetail = lazy(() =>
+  import("./pages/AlboDetail").then((module) => ({ default: module.AlboDetail })),
+);
+const Delibere = lazy(() =>
+  import("./pages/Delibere").then((module) => ({ default: module.Delibere })),
+);
+const Convocazioni = lazy(() =>
+  import("./pages/Convocazioni").then((module) => ({ default: module.Convocazioni })),
+);
+const SedutaDetail = lazy(() =>
+  import("./pages/SedutaDetail").then((module) => ({ default: module.SedutaDetail })),
+);
+const Organi = lazy(() =>
+  import("./pages/Organi").then((module) => ({ default: module.Organi })),
+);
+const OrganoDetail = lazy(() =>
+  import("./pages/OrganoDetail").then((module) => ({ default: module.OrganoDetail })),
+);
+const Amministratori = lazy(() =>
+  import("./pages/Amministratori").then((module) => ({ default: module.Amministratori })),
+);
+const AmministratoreDetail = lazy(() =>
+  import("./pages/AmministratoreDetail").then((module) => ({ default: module.AmministratoreDetail })),
+);
+const Pnrr = lazy(() =>
+  import("./pages/Pnrr").then((module) => ({ default: module.Pnrr })),
+);
+const PareriVigilanza = lazy(() =>
+  import("./pages/PareriVigilanza").then((module) => ({ default: module.PareriVigilanza })),
+);
+const PareriVigilanzaDetail = lazy(() =>
+  import("./pages/PareriVigilanzaDetail").then((module) => ({ default: module.PareriVigilanzaDetail })),
+);
+const Opendata = lazy(() =>
+  import("./pages/Opendata").then((module) => ({ default: module.Opendata })),
+);
+const OpendataDetail = lazy(() =>
+  import("./pages/OpendataDetail").then((module) => ({ default: module.OpendataDetail })),
+);
+const Feeds = lazy(() =>
+  import("./pages/Feeds").then((module) => ({ default: module.Feeds })),
+);
+const Sviluppatori = lazy(() =>
+  import("./pages/Sviluppatori").then((module) => ({ default: module.Sviluppatori })),
+);
+const AttiFondamentali = lazy(() =>
+  import("./pages/AttiFondamentali").then((module) => ({ default: module.AttiFondamentali })),
+);
+const BeniConfiscati = lazy(() =>
+  import("./pages/BeniConfiscati").then((module) => ({ default: module.BeniConfiscati })),
+);
+const BeneConfiscatoDetail = lazy(() =>
+  import("./pages/BeneConfiscatoDetail").then((module) => ({ default: module.BeneConfiscatoDetail })),
+);
+const AccessoCivico = lazy(() =>
+  import("./pages/AccessoCivico").then((module) => ({ default: module.AccessoCivico })),
+);
+const Monitoraggio = lazy(() =>
+  import("./pages/Monitoraggio").then((module) => ({ default: module.Monitoraggio })),
+);
+const MonitoraggioDetail = lazy(() =>
+  import("./pages/MonitoraggioDetail").then((module) => ({ default: module.MonitoraggioDetail })),
+);
+const MonitoraggioNuovo = lazy(() =>
+  import("./pages/MonitoraggioNuovo").then((module) => ({ default: module.MonitoraggioNuovo })),
+);
+const Promessometro = lazy(() =>
+  import("./pages/Promessometro").then((module) => ({ default: module.Promessometro })),
+);
+const PropostePubbliche = lazy(() =>
+  import("./pages/PropostePubbliche").then((module) => ({ default: module.PropostePubbliche })),
+);
+const MacchinaComunale = lazy(() =>
+  import("./pages/MacchinaComunale").then((module) => ({ default: module.MacchinaComunale })),
+);
+const Legalita = lazy(() =>
+  import("./pages/Legalita").then((module) => ({ default: module.Legalita })),
+);
+const TrameFestival = lazy(() =>
+  import("./pages/TrameFestival").then((module) => ({ default: module.TrameFestival })),
+);
+const Performance = lazy(() =>
+  import("./pages/Performance").then((module) => ({ default: module.Performance })),
+);
+const PerformanceDetail = lazy(() =>
+  import("./pages/PerformanceDetail").then((module) => ({ default: module.PerformanceDetail })),
+);
+const Reports = lazy(() =>
+  import("./pages/Reports").then((module) => ({ default: module.Reports })),
+);
+const FontiDati = lazy(() =>
+  import("./pages/FontiDati").then((module) => ({ default: module.FontiDati })),
+);
+const AtlanteTerritoriale = lazy(() =>
+  import("./pages/AtlanteTerritoriale").then((module) => ({ default: module.AtlanteTerritoriale })),
+);
+const StatoMonitoraggio = lazy(() =>
+  import("./pages/StatoMonitoraggio").then((module) => ({ default: module.StatoMonitoraggio })),
+);
+const Metodologia = lazy(() =>
+  import("./pages/Metodologia").then((module) => ({ default: module.Metodologia })),
+);
+const Roadmap = lazy(() =>
+  import("./pages/Roadmap").then((module) => ({ default: module.Roadmap })),
+);
+const NoteLegali = lazy(() =>
+  import("./pages/NoteLegali").then((module) => ({ default: module.NoteLegali })),
+);
+const ChiSiamo = lazy(() =>
+  import("./pages/ChiSiamo").then((module) => ({ default: module.ChiSiamo })),
+);
+const Contatti = lazy(() =>
+  import("./pages/Contatti").then((module) => ({ default: module.Contatti })),
+);
+const Statistics = lazy(() =>
+  import("./pages/Statistics").then((module) => ({ default: module.Statistics })),
+);
+const Subscriptions = lazy(() =>
+  import("./pages/Subscriptions").then((module) => ({ default: module.Subscriptions })),
+);
+const Guida = lazy(() =>
+  import("./pages/Guida").then((module) => ({ default: module.Guida })),
+);
+const Redazione = lazy(() =>
+  import("./pages/Redazione").then((module) => ({ default: module.Redazione })),
+);
+const NotFound = lazy(() => import("./pages/not-found"));
 import { PageMeta } from "./components/seo/PageMeta";
 import { PublicErrorBoundary } from "./components/PublicErrorBoundary";
+
+function RouteLoading() {
+  return (
+    <div
+      className="flex min-h-[40vh] items-center justify-center px-4 py-16"
+      role="status"
+      aria-live="polite"
+    >
+      <div className="flex items-center gap-3 rounded-xl border border-border bg-card px-4 py-3 text-sm font-semibold text-muted-foreground shadow-sm">
+        <span
+          className="h-4 w-4 animate-spin rounded-full border-2 border-primary/25 border-t-primary"
+          aria-hidden="true"
+        />
+        Caricamento sezione…
+      </div>
+    </div>
+  );
+}
 
 // Legacy /admin/* â†’ redirect to /redazione
 import { Redirect } from "wouter";
@@ -101,7 +219,8 @@ function PublicRouteWithMeta({
 
 export function Router() {
   return (
-    <Switch>
+    <Suspense fallback={<RouteLoading />}>
+      <Switch>
       {/* /redazione â€” no MainLayout (has its own full layout) */}
       <Route path="/redazione" component={Redazione} />
       <Route path="/redazione/*" component={Redazione} />
@@ -364,6 +483,7 @@ export function Router() {
           </MainLayout>
         </PublicErrorBoundary>
       </Route>
-    </Switch>
+      </Switch>
+    </Suspense>
   );
 }
