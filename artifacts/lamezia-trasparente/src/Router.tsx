@@ -2,11 +2,11 @@ import { lazy, Suspense, type ComponentType } from "react";
 import { Switch, Route } from "wouter";
 import { MainLayout } from "./components/layout/MainLayout";
 
-function lazyNamed(loader: () => Promise<object>, exportName: string) {
-  return lazy(async () => {
-    const module = (await loader()) as Record<string, ComponentType>;
-    return { default: module[exportName] };
-  });
+function lazyNamed<
+  TName extends string,
+  TModule extends Record<TName, ComponentType>,
+>(loader: () => Promise<TModule>, exportName: TName) {
+  return lazy(async () => ({ default: (await loader())[exportName] }));
 }
 
 const Home = lazyNamed(() => import("./pages/Home"), "Home");
