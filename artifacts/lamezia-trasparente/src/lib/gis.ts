@@ -1,4 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
+import { apiFetch } from "@/lib/apiBaseUrl";
 
 // Livelli GIS di base serviti dall'API (dati aperti OpenStreetMap).
 // Il client API orval usa baseUrl "/api"; usiamo la stessa convenzione qui.
@@ -16,7 +17,7 @@ export type GeoJsonFeatureCollection = {
 };
 
 async function fetchGeoJson(path: string): Promise<GeoJsonFeatureCollection> {
-  const res = await fetch(`/api${path}`, {
+  const res = await apiFetch(`/api${path}`, {
     headers: { Accept: "application/json" },
   });
   if (!res.ok) {

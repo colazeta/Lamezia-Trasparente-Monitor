@@ -82,10 +82,11 @@ Known frontend/public configuration points in the current repo:
 | --- | --- | --- |
 | `BASE_PATH` | The frontend is hosted below a subpath instead of `/` | Read by Vite config and emitted as `import.meta.env.BASE_URL`. Defaults to `/`. Use this only for the static asset/router base path, not for API routing. |
 | `PORT` | Local `vite dev` or `vite preview` needs a non-default port | Read by Vite dev/preview config. Defaults to `8081`. Static hosting providers usually ignore this for published assets. |
+| `VITE_API_BASE_URL` | The static frontend and API server use different origins | Public API origin or root-relative proxy prefix, without `/api`, query or fragment. Empty/unset preserves same-origin requests. Never place credentials or secrets in this value. |
 | `VITE_CLERK_PUBLISHABLE_KEY` | Clerk-backed browser sign-in/editor flows are enabled | Public Clerk publishable key consumed by the React app. Do not substitute server secrets. |
 | `VITE_CLERK_PROXY_URL` | Clerk is routed through a configured proxy | Optional public proxy URL consumed by the React app. |
 
-Current frontend API calls use repository conventions such as `/api` and `/api/public/v1`. In a split deployment, decide at the edge/proxy layer how those paths reach the separate API server. Do not hard-code a provider-specific API origin in this note unless a future issue chooses that architecture and documents the migration path.
+Current frontend API calls use repository conventions such as `/api` and `/api/public/v1`. The web app applies `VITE_API_BASE_URL` to the generated API client and to the migrated public surfaces: home blocks, site strings, assistant chat, migration health, GIS, feeds, OpenData interoperability, public storage links and the developer hub. For example, `VITE_API_BASE_URL=https://api.example.test` turns `/api/healthz` into `https://api.example.test/api/healthz`. A root-relative value such as `/backend` remains available for reverse-proxy deployments. Invalid or unsafe values are ignored with an explicit console error and the app remains in same-origin mode. The API server must allow the public frontend origin through its reviewed CORS policy.
 
 ## Pre-deploy checklist
 
@@ -99,9 +100,10 @@ Before publishing a frontend build:
 - Confirm the static host has no server-only secrets such as `DATABASE_URL` or ingestion credentials.
 - Confirm any public Clerk values are publishable/browser-safe values.
 - Confirm `/api` and `/api/public/v1` requests are routed to the separate API service, not swallowed by the SPA fallback.
+- For split deployments, confirm `VITE_API_BASE_URL` identifies the reviewed public API origin and does not contain credentials, query parameters or fragments.
 - Confirm the API service health and migration checks separately, following `docs/backend-deployment.md`.
 - Confirm ingestion jobs are scheduled and monitored separately from the frontend deploy when ingestion is in scope.
 
 ## Residual decisions and non-goals
 
-This note deliberately leaves automatic deployment wiring, production custom domains, CDN/cache policy, API edge routing details and secret provisioning as operational decisions for follow-up work. It does not introduce new dependencies, scripts, workflows or runtime behavior.
+This note deliberately leaves automatic deployment wiring, production custom domains, CDN/cache policy, API edge routing details and secret provisioning as operational decisions for follow-up work. The optional `/api/helper/guide` request and direct protected-editor fetches still use same-origin routing; keep a reviewed proxy for those paths until their credentialed cross-origin behavior is migrated and verified separately. No new dependency, workflow or server runtime is introduced here.

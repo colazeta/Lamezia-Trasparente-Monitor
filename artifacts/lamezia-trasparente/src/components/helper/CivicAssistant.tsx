@@ -12,6 +12,7 @@ import {
 import ReactMarkdown from "react-markdown";
 import { useCivicHelper } from "./CivicHelperContext";
 import { Button } from "@/components/ui/button";
+import { apiFetch } from "@/lib/apiBaseUrl";
 import { cn } from "@/lib/utils";
 
 type Message = {
@@ -156,7 +157,7 @@ export function CivicAssistant() {
       abortRef.current = controller;
 
       try {
-        const res = await fetch("/api/helper/ask", {
+        const res = await apiFetch("/api/helper/ask", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ question: q, currentRoute: location }),

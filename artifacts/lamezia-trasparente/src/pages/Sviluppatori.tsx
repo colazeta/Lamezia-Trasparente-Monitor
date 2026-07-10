@@ -20,6 +20,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
+import { absoluteApiUrl, apiUrl } from "@/lib/apiBaseUrl";
 import { cn } from "@/lib/utils";
 import {
   CKAN_ENDPOINTS,
@@ -32,8 +33,8 @@ import {
 } from "@/data/apiTransparency";
 
 const PUBLIC_API_BASE = "/api/public/v1";
-const OPENAPI_URL = `${PUBLIC_API_BASE}/openapi.json`;
-const MCP_ENDPOINT = "/api/mcp";
+const OPENAPI_URL = apiUrl(`${PUBLIC_API_BASE}/openapi.json`);
+const MCP_ENDPOINT = apiUrl("/api/mcp");
 
 type OpenApiParam = {
   name: string;
@@ -70,11 +71,6 @@ type OpenApiSpec = {
     >
   >;
 };
-
-function absoluteUrl(path: string): string {
-  if (typeof window === "undefined") return path;
-  return `${window.location.origin}${path}`;
-}
 
 function useCopy(): [boolean, (text: string) => void] {
   const [copied, setCopied] = useState(false);
@@ -182,10 +178,12 @@ function EndpointCard({ endpoint }: { endpoint: Endpoint }) {
         (param) =>
           `${encodeURIComponent(param.name)}=${encodeURIComponent(values[param.name].trim())}`,
       );
-    return `${PUBLIC_API_BASE}${p}${query.length ? `?${query.join("&")}` : ""}`;
+    return apiUrl(
+      `${PUBLIC_API_BASE}${p}${query.length ? `?${query.join("&")}` : ""}`,
+    );
   }, [endpoint, values]);
 
-  const fullUrl = absoluteUrl(builtPath);
+  const fullUrl = absoluteApiUrl(builtPath);
 
   const run = async () => {
     setLoading(true);
@@ -427,7 +425,7 @@ function CkanCard({ ep }: { ep: CkanEndpoint }) {
         )}
       </div>
       <p className="text-sm text-muted-foreground">{ep.description}</p>
-      <UrlBox url={absoluteUrl(ep.example)} />
+      <UrlBox url={absoluteApiUrl(ep.example)} />
     </div>
   );
 }
@@ -539,7 +537,7 @@ export function Sviluppatori() {
           <p className="text-xs text-muted-foreground">
             Definizione OpenAPI 3.1 leggibile dalle macchine.
           </p>
-          <UrlBox url={absoluteUrl(OPENAPI_URL)} />
+          <UrlBox url={absoluteApiUrl(OPENAPI_URL)} />
         </div>
         <div className="flex flex-col gap-2 rounded-xl border border-card-border bg-muted/30 p-4">
           <div className="flex items-center gap-2 text-sm font-semibold text-foreground">
@@ -550,7 +548,7 @@ export function Sviluppatori() {
             Gli endpoint REST pubblici documentati sono relativi a questo
             indirizzo.
           </p>
-          <UrlBox url={absoluteUrl(PUBLIC_API_BASE)} />
+          <UrlBox url={absoluteApiUrl(PUBLIC_API_BASE)} />
         </div>
         <div className="flex flex-col gap-2 rounded-xl border border-card-border bg-muted/30 p-4">
           <div className="flex items-center gap-2 text-sm font-semibold text-foreground">
@@ -560,7 +558,7 @@ export function Sviluppatori() {
           <p className="text-xs text-muted-foreground">
             Endpoint compatibile MCP per assistenti AI (POST).
           </p>
-          <UrlBox url={absoluteUrl(MCP_ENDPOINT)} />
+          <UrlBox url={absoluteApiUrl(MCP_ENDPOINT)} />
         </div>
       </div>
 
