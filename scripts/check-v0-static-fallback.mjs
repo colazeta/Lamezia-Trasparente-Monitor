@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import { access, readFile, stat } from "node:fs/promises";
+import { access, readFile, readdir, stat } from "node:fs/promises";
 import { constants } from "node:fs";
 import path from "node:path";
 import process from "node:process";
@@ -210,18 +210,26 @@ function toDistPath(distDir, assetPath) {
 }
 
 async function assertGeneratedBundleText(distDir, assetPaths, requiredText) {
-  const jsAssetPaths = assetPaths
+  const referencedJsAssetPaths = assetPaths
     .filter(
       (assetPath) =>
         assetPath.startsWith("/assets/") || assetPath.startsWith("assets/"),
     )
     .filter((assetPath) => assetPath.endsWith(".js"));
 
-  if (jsAssetPaths.length === 0) {
+  if (referencedJsAssetPaths.length === 0) {
     throw new Error(
       "index.html does not reference any generated JavaScript assets.",
     );
   }
+
+  const assetsDir = path.join(distDir, "assets");
+  const emittedJsAssetPaths = (await readdir(assetsDir, { withFileTypes: true }))
+    .filter((entry) => entry.isFile() && entry.name.endsWith(".js"))
+    .map((entry) => `/assets/${entry.name}`);
+  const jsAssetPaths = [
+    ...new Set([...referencedJsAssetPaths, ...emittedJsAssetPaths]),
+  ];
 
   const bundleText = (
     await Promise.all(
@@ -238,6 +246,8 @@ async function assertGeneratedBundleText(distDir, assetPaths, requiredText) {
       );
     }
   }
+
+  return jsAssetPaths.length;
 }
 
 function routeFallbackPath(distDir, route) {
@@ -334,7 +344,7 @@ async function main() {
   for (const assetPath of assets) {
     await assertReadableFile(toDistPath(absoluteDistDir, assetPath), "Static asset");
   }
-  await assertGeneratedBundleText(
+  const bundleAssetsChecked = await assertGeneratedBundleText(
     absoluteDistDir,
     assets,
     [...REQUIRED_CONTRACT_BUNDLE_TEXT, ...REQUIRED_ORGANI_BUNDLE_TEXT],
@@ -365,6 +375,7 @@ async function main() {
     staticHealthz: healthzPath,
     redirects: redirectsPath,
     assetsChecked: assets.length,
+    bundleAssetsChecked,
     routes: routeResults,
     note:
       "This smoke check validates a local static artifact only. It does not choose a provider, call live APIs, run workers or certify civic data as current.",
