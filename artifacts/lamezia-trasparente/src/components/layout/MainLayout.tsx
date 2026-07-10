@@ -58,7 +58,7 @@ function HomePriorityAccess() {
               </p>
               <p className="text-xs leading-relaxed text-muted-foreground">
                 {SOURCE_HEALTH.sources.length} flussi reali integrati ·{" "}
-                {SOURCE_HEALTH.coverageScore}% copertura documentata media
+                {SOURCE_HEALTH.traceabilityScore}% tracciabilità tecnica
               </p>
             </div>
           </div>
