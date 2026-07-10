@@ -8,7 +8,6 @@ import { CivicHelperFAB } from "@/components/helper/CivicHelperFAB";
 import { CivicAssistant } from "@/components/helper/CivicAssistant";
 import { CivicWelcome } from "@/components/helper/CivicWelcome";
 import { Button } from "@/components/ui/button";
-import { SOURCE_HEALTH } from "@/data/sourceHealth";
 
 interface MainLayoutProps {
   children: ReactNode;
@@ -57,8 +56,8 @@ function HomePriorityAccess() {
                 Evidenze dati della piattaforma
               </p>
               <p className="text-xs leading-relaxed text-muted-foreground">
-                {SOURCE_HEALTH.sources.length} flussi reali integrati ·{" "}
-                {SOURCE_HEALTH.traceabilityScore}% tracciabilità tecnica
+                Registro di evidenze reali e versionate, con fonti, timestamp,
+                cadenze e limiti visibili
               </p>
             </div>
           </div>
