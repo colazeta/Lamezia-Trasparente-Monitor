@@ -16,7 +16,7 @@ export type SourceHealthItem = {
   status: SourceHealthStatus;
   lastCheckedAt: string | null;
   lastUpdatedAt: string | null;
-  coverageScore: number;
+  traceabilityScore: number;
   freshnessScore: number;
   metricLabel: string;
   evidenceLabel: string;
@@ -28,7 +28,7 @@ export type SourceHealthItem = {
 
 export type SourceHealthPayload = {
   generatedAt: string | null;
-  coverageScore: number;
+  traceabilityScore: number;
   freshnessScore: number;
   sources: SourceHealthItem[];
   methodologyNote: string;
@@ -60,6 +60,17 @@ function clampScore(value: number) {
   return Math.max(0, Math.min(100, Math.round(value)));
 }
 
+function evidenceCompleteness(values: unknown[]) {
+  if (values.length === 0) return 0;
+  const available = values.filter((value) => {
+    if (value === null || value === undefined || value === "") return false;
+    if (Array.isArray(value)) return value.length > 0;
+    return true;
+  }).length;
+
+  return clampScore((available / values.length) * 100);
+}
+
 function freshnessScore(value: string | null, expectedDays: number) {
   if (!value) return 0;
   const timestamp = new Date(value).getTime();
@@ -72,23 +83,23 @@ function freshnessScore(value: string | null, expectedDays: number) {
 function deriveStatus({
   value,
   expectedDays,
-  coverage,
+  traceability,
   hasWarnings = false,
 }: {
   value: string | null;
   expectedDays: number;
-  coverage: number;
+  traceability: number;
   hasWarnings?: boolean;
 }): SourceHealthStatus {
   if (!value || !Number.isFinite(new Date(value).getTime())) return "missing";
 
   const freshness = freshnessScore(value, expectedDays);
   if (freshness < 25) return "stale";
-  if (freshness < 60 || coverage < 85 || hasWarnings) return "warning";
+  if (freshness < 60 || traceability < 85 || hasWarnings) return "warning";
   return "ok";
 }
 
-function average(items: SourceHealthItem[], key: "coverageScore" | "freshnessScore") {
+function average(items: SourceHealthItem[], key: "traceabilityScore" | "freshnessScore") {
   if (items.length === 0) return 0;
   return clampScore(
     items.reduce((total, item) => total + item[key], 0) / items.length,
@@ -106,15 +117,22 @@ function latestTimestamp(values: Array<string | null>) {
 
 const alboLastChecked =
   ALBO_OPERATIONAL_STATUS.last_run_at ?? ALBO_OPERATIONAL_STATUS.last_update;
-const alboCoverage = ALBO_OPERATIONAL_STATUS.counts.acquired > 0 ? 100 : 0;
-const atlanteCoverage =
-  atlanteMetadata.counts.outputFeatures > 0
-    ? clampScore(
-        (atlanteMetadata.counts.matchedVariables /
-          atlanteMetadata.counts.outputFeatures) *
-          100,
-      )
-    : 0;
+const alboTraceability = evidenceCompleteness([
+  alboLastChecked,
+  ALBO_OPERATIONAL_STATUS.source_url,
+  ALBO_OPERATIONAL_STATUS.method,
+  ALBO_OPERATIONAL_STATUS.counts,
+  ALBO_OPERATIONAL_STATUS.schedule,
+  ALBO_OPERATIONAL_STATUS.verification_status,
+]);
+const atlanteTraceability = evidenceCompleteness([
+  atlanteMetadata.processingDate,
+  atlanteMetadata.sourcePages.variables,
+  atlanteMetadata.counts.outputFeatures,
+  atlanteMetadata.counts.matchedVariables,
+  atlanteMetadata.verificationStatus,
+  atlanteMetadata.knownLimits,
+]);
 
 const openDataItems = [
   {
@@ -142,7 +160,14 @@ const openDataItems = [
       "Dato aggregato, privo di elenchi nominativi: non sostituisce una validazione statistica indipendente della risorsa comunale.",
   },
 ].map<SourceHealthItem>(({ id, name, metadata, metricLabel, cautionNote }) => {
-  const coverage = metadata.rows > 0 ? 100 : 0;
+  const traceability = evidenceCompleteness([
+    metadata.source_url,
+    metadata.generated_at,
+    metadata.resource_last_modified,
+    metadata.rows,
+    metadata.update_policy,
+    metadata.caveat,
+  ]);
   const checkedAt = metadata.generated_at;
   const expectedDays = 14;
 
@@ -154,11 +179,11 @@ const openDataItems = [
     status: deriveStatus({
       value: checkedAt,
       expectedDays,
-      coverage,
+      traceability,
     }),
     lastCheckedAt: checkedAt,
     lastUpdatedAt: metadata.resource_last_modified,
-    coverageScore: coverage,
+    traceabilityScore: traceability,
     freshnessScore: freshnessScore(checkedAt, expectedDays),
     metricLabel,
     evidenceLabel: "Snapshot JSON generato dalla pipeline locale e collegato alla risorsa Open Data comunale.",
@@ -178,12 +203,12 @@ const sources: SourceHealthItem[] = [
     status: deriveStatus({
       value: alboLastChecked,
       expectedDays: 1,
-      coverage: alboCoverage,
+      traceability: alboTraceability,
       hasWarnings: ALBO_OPERATIONAL_STATUS.warnings.length > 0,
     }),
     lastCheckedAt: alboLastChecked,
     lastUpdatedAt: ALBO_OPERATIONAL_STATUS.last_update,
-    coverageScore: alboCoverage,
+    traceabilityScore: alboTraceability,
     freshnessScore: freshnessScore(alboLastChecked, 1),
     metricLabel: `${ALBO_OPERATIONAL_STATUS.counts.acquired} acquisiti; ${ALBO_OPERATIONAL_STATUS.counts.publishable} pubblicabili`,
     evidenceLabel:
@@ -205,11 +230,12 @@ const sources: SourceHealthItem[] = [
     status: deriveStatus({
       value: atlanteMetadata.processingDate,
       expectedDays: 365,
-      coverage: atlanteCoverage,
+      traceability: atlanteTraceability,
+      hasWarnings: atlanteMetadata.counts.missingVariables > 0,
     }),
     lastCheckedAt: atlanteMetadata.processingDate,
     lastUpdatedAt: atlanteMetadata.processingDate,
-    coverageScore: atlanteCoverage,
+    traceabilityScore: atlanteTraceability,
     freshnessScore: freshnessScore(atlanteMetadata.processingDate, 365),
     metricLabel: `${atlanteMetadata.counts.matchedVariables}/${atlanteMetadata.counts.outputFeatures} sezioni con indicatori`,
     evidenceLabel:
@@ -225,9 +251,9 @@ const sources: SourceHealthItem[] = [
 
 export const SOURCE_HEALTH: SourceHealthPayload = {
   generatedAt: latestTimestamp(sources.map((source) => source.lastCheckedAt)),
-  coverageScore: average(sources, "coverageScore"),
+  traceabilityScore: average(sources, "traceabilityScore"),
   freshnessScore: average(sources, "freshnessScore"),
   sources,
   methodologyNote:
-    "Il registro deriva esclusivamente da manifesti e snapshot versionati nel repository. Copertura e freschezza descrivono l'evidenza tecnica disponibile nella piattaforma: non certificano la completezza assoluta delle fonti esterne e non sostituiscono la verifica sui documenti originali.",
+    "Il registro deriva esclusivamente da manifesti e snapshot versionati nel repository. Tracciabilità e freschezza descrivono l'evidenza tecnica disponibile nella piattaforma; le coperture reali restano espresse nelle metriche proprie di ogni dataset. Nessuno di questi valori certifica la completezza assoluta delle fonti esterne o sostituisce la verifica sui documenti originali.",
 };
