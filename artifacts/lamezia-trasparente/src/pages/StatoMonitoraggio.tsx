@@ -256,6 +256,10 @@ function SourceMobileCard({ source }: { source: SourceHealthItem }) {
           <dt className="font-semibold text-foreground">Evidenza disponibile</dt>
           <dd className="text-muted-foreground">{source.metricLabel}</dd>
         </div>
+        <div className="grid gap-1">
+          <dt className="font-semibold text-foreground">Cadenza attesa</dt>
+          <dd className="text-muted-foreground">{source.expectedRefresh}</dd>
+        </div>
       </dl>
       <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
         {source.evidenceLabel}
@@ -436,6 +440,10 @@ export function StatoMonitoraggio() {
                   </td>
                   <td className="max-w-sm px-4 py-4 leading-relaxed text-muted-foreground">
                     <p>{source.evidenceLabel}</p>
+                    <p className="mt-2">
+                      <strong className="font-semibold text-foreground">Cadenza:</strong>{" "}
+                      {source.expectedRefresh}
+                    </p>
                     <p className="mt-2">{source.cautionNote}</p>
                     <div className="mt-3 flex flex-wrap gap-3 text-xs font-semibold">
                       <Link
