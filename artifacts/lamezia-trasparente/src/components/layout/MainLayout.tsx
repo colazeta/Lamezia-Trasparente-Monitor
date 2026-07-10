@@ -86,7 +86,7 @@ function HomePriorityAccess() {
           </div>
           <Link href="/contratti" className="w-full sm:w-auto">
             <Button variant="outline" size="sm" className="w-full sm:w-auto">
-              Apri contratti
+              Apri sezione contratti
             </Button>
           </Link>
         </article>
