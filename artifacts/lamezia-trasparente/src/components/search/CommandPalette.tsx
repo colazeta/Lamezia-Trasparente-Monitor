@@ -1,6 +1,15 @@
 import { useEffect, useState, useCallback } from "react";
 import { useLocation } from "wouter";
-import { BookOpen, Clock, Home, Search } from "lucide-react";
+import {
+  BookOpen,
+  Clock,
+  Database,
+  Home,
+  Landmark,
+  LoaderCircle,
+  Search,
+  UserRound,
+} from "lucide-react";
 import {
   COMMAND_PALETTE_GROUPS,
   getNavItemStateLabel,
@@ -15,6 +24,8 @@ import {
   CommandList,
   CommandSeparator,
 } from "@/components/ui/command";
+import { DialogDescription, DialogTitle } from "@/components/ui/dialog";
+import type { CivicSearchResult } from "@/lib/civicSearchIndex";
 
 interface PaletteItem {
   href: string;
@@ -58,6 +69,15 @@ const GROUPS = Array.from(new Set(ALL_ITEMS.map((item) => item.group)));
 const RECENTS_STORAGE_KEY = "lt-command-palette-recents";
 const RECENTS_MAX = 5;
 const RECENTS_MAX_AGE_MS = 30 * 24 * 60 * 60 * 1000;
+const MIN_CIVIC_QUERY_LENGTH = 2;
+const CIVIC_SEARCH_LIMIT = 12;
+
+const CIVIC_RESULT_ICONS: Record<CivicSearchResult["kind"], React.ElementType> =
+  {
+    dataset: Database,
+    organo: Landmark,
+    persona: UserRound,
+  };
 
 interface RecentEntry {
   href: string;
@@ -84,10 +104,7 @@ function readRecents(): RecentEntry[] {
       .slice(0, RECENTS_MAX);
     if (valid.length !== parsed.length) {
       try {
-        window.localStorage.setItem(
-          RECENTS_STORAGE_KEY,
-          JSON.stringify(valid),
-        );
+        window.localStorage.setItem(RECENTS_STORAGE_KEY, JSON.stringify(valid));
       } catch {
         // ignore storage errors (private mode, quota, etc.)
       }
@@ -120,10 +137,55 @@ interface CommandPaletteProps {
 export function CommandPalette({ open, onOpenChange }: CommandPaletteProps) {
   const [, navigate] = useLocation();
   const [recents, setRecents] = useState<RecentEntry[]>([]);
+  const [query, setQuery] = useState("");
+  const [civicResults, setCivicResults] = useState<CivicSearchResult[]>([]);
+  const [civicSearchStatus, setCivicSearchStatus] = useState<
+    "idle" | "loading" | "ready" | "error"
+  >("idle");
 
   useEffect(() => {
-    if (open) setRecents(readRecents());
+    if (open) {
+      setRecents(readRecents());
+      return;
+    }
+
+    setQuery("");
+    setCivicResults([]);
+    setCivicSearchStatus("idle");
   }, [open]);
+
+  useEffect(() => {
+    const normalizedQuery = query.trim();
+    if (!open || normalizedQuery.length < MIN_CIVIC_QUERY_LENGTH) {
+      setCivicResults([]);
+      setCivicSearchStatus("idle");
+      return;
+    }
+
+    let active = true;
+    setCivicSearchStatus("loading");
+
+    const timeout = window.setTimeout(() => {
+      import("@/lib/civicSearchIndex")
+        .then(({ searchCivicIndex }) => {
+          if (!active) return;
+          setCivicResults(
+            searchCivicIndex(normalizedQuery, CIVIC_SEARCH_LIMIT),
+          );
+          setCivicSearchStatus("ready");
+        })
+        .catch(() => {
+          if (!active) return;
+          setCivicResults([]);
+          setCivicSearchStatus("error");
+        });
+    }, 120);
+
+    return () => {
+      active = false;
+      window.clearTimeout(timeout);
+    };
+  }, [open, query]);
 
   const runCommand = useCallback(
     (href: string) => {
@@ -137,12 +199,106 @@ export function CommandPalette({ open, onOpenChange }: CommandPaletteProps) {
   const recentItems = recents
     .map((entry) => ALL_ITEMS.find((item) => item.href === entry.href))
     .filter((item): item is PaletteItem => item != null);
+  const hasCivicQuery = query.trim().length >= MIN_CIVIC_QUERY_LENGTH;
+  const civicLiveMessage =
+    civicSearchStatus === "loading"
+      ? "Ricerca nei dati pubblici in corso"
+      : civicSearchStatus === "ready"
+        ? `${civicResults.length} risultati nei dati pubblici`
+        : civicSearchStatus === "error"
+          ? "Ricerca nei dati pubblici non disponibile"
+          : "";
 
   return (
     <CommandDialog open={open} onOpenChange={onOpenChange}>
-      <CommandInput placeholder="Cerca una sezione o funzione..." />
+      <DialogTitle className="sr-only">Ricerca globale</DialogTitle>
+      <DialogDescription className="sr-only">
+        Cerca nelle sezioni, negli organi, nei profili istituzionali e nei
+        dataset pubblicati.
+      </DialogDescription>
+      <CommandInput
+        onValueChange={setQuery}
+        placeholder="Cerca persone, organi, dataset o sezioni..."
+        value={query}
+      />
+      <p aria-live="polite" className="sr-only">
+        {civicLiveMessage}
+      </p>
       <CommandList className="max-h-[420px]">
-        <CommandEmpty>Nessun risultato trovato.</CommandEmpty>
+        {!hasCivicQuery ? (
+          <CommandEmpty>
+            {query.trim().length === 1
+              ? "Scrivi almeno due caratteri per cercare nei dati pubblici."
+              : "Nessun risultato trovato."}
+          </CommandEmpty>
+        ) : null}
+        {hasCivicQuery ? (
+          <CommandGroup
+            className="border-b border-border pb-2"
+            forceMount
+            heading="Dati e profili pubblici"
+          >
+            {civicSearchStatus === "loading" ? (
+              <CommandItem disabled forceMount value="ricerca dati in corso">
+                <LoaderCircle className="h-4 w-4 animate-spin text-primary" />
+                <span className="text-muted-foreground">
+                  Ricerca nell'indice civico...
+                </span>
+              </CommandItem>
+            ) : null}
+            {civicSearchStatus === "error" ? (
+              <CommandItem
+                disabled
+                forceMount
+                value="ricerca dati non disponibile"
+              >
+                <Search className="h-4 w-4 text-muted-foreground" />
+                <span className="text-muted-foreground">
+                  Indice dati non disponibile. La ricerca nelle sezioni resta
+                  attiva.
+                </span>
+              </CommandItem>
+            ) : null}
+            {civicSearchStatus === "ready" && civicResults.length === 0 ? (
+              <CommandItem
+                disabled
+                forceMount
+                value="nessun dato pubblico trovato"
+              >
+                <Search className="h-4 w-4 text-muted-foreground" />
+                <span className="text-muted-foreground">
+                  Nessun profilo, organo o dataset corrispondente.
+                </span>
+              </CommandItem>
+            ) : null}
+            {civicResults.map((result) => {
+              const Icon = CIVIC_RESULT_ICONS[result.kind];
+              return (
+                <CommandItem
+                  forceMount
+                  key={result.id}
+                  onSelect={() => runCommand(result.href)}
+                  value={`${result.label} ${result.detail} ${result.keywords}`}
+                >
+                  <Icon className="h-4 w-4 text-primary" />
+                  <span className="flex min-w-0 flex-1 items-start justify-between gap-3">
+                    <span className="min-w-0">
+                      <span className="block truncate font-medium">
+                        {result.label}
+                      </span>
+                      <span className="block truncate text-xs text-muted-foreground">
+                        {result.detail}
+                      </span>
+                    </span>
+                    <span className="shrink-0 pt-0.5 text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
+                      {result.statusLabel}
+                    </span>
+                  </span>
+                </CommandItem>
+              );
+            })}
+          </CommandGroup>
+        ) : null}
         {recentItems.length > 0 && (
           <CommandGroup heading="Recenti">
             {recentItems.map((item) => (
@@ -235,3 +391,4 @@ export function SearchTrigger({ onClick }: { onClick: () => void }) {
     </button>
   );
 }
+
