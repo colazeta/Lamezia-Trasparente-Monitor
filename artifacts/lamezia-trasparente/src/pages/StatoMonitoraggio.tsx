@@ -247,9 +247,9 @@ function SourceMobileCard({ source }: { source: SourceHealthItem }) {
           </dd>
         </div>
         <div className="flex justify-between gap-4">
-          <dt className="font-semibold text-foreground">Copertura operativa</dt>
-          <dd className={cn("font-bold", scoreTone(source.coverageScore))}>
-            {source.coverageScore}%
+          <dt className="font-semibold text-foreground">Tracciabilità tecnica</dt>
+          <dd className={cn("font-bold", scoreTone(source.traceabilityScore))}>
+            {source.traceabilityScore}%
           </dd>
         </div>
         <div className="grid gap-1">
@@ -305,7 +305,7 @@ export function StatoMonitoraggio() {
         </h1>
         <p className="mt-4 text-lg leading-relaxed text-muted-foreground">
           Una vista verificabile sulle evidenze dati realmente integrate nella
-          piattaforma: acquisizioni, snapshot versionati, copertura documentata,
+          piattaforma: acquisizioni, snapshot versionati, tracciabilità tecnica,
           freschezza e limiti. Gli stati descrivono il monitor, non l'operato
           dell'ente e non certificano la completezza assoluta delle fonti esterne.
         </p>
@@ -333,9 +333,9 @@ export function StatoMonitoraggio() {
           icon={Database}
         />
         <SummaryCard
-          label="Copertura operativa"
-          value={`${payload.coverageScore}%`}
-          detail="Quota media di record o unità territoriali documentate nei manifesti integrati."
+          label="Tracciabilità evidenze"
+          value={`${payload.traceabilityScore}%`}
+          detail="Quota di campi minimi di fonte, timestamp, cadenza e limiti presenti nelle evidenze integrate."
           icon={BarChart3}
         />
         <SummaryCard
@@ -378,7 +378,7 @@ export function StatoMonitoraggio() {
             </h2>
             <p className="mt-2 max-w-3xl text-sm leading-relaxed text-muted-foreground">
               La tabella espone tipo, priorità, stato, timestamp dell'evidenza,
-              aggiornamento della fonte, copertura documentata e limiti. Su
+              aggiornamento della fonte, tracciabilità tecnica e copertura nella metrica propria. Su
               schermi piccoli gli stessi dati sono presentati come schede compatte.
             </p>
           </div>
@@ -403,7 +403,7 @@ export function StatoMonitoraggio() {
                 <th scope="col" className="px-4 py-3 font-bold">Stato</th>
                 <th scope="col" className="px-4 py-3 font-bold">Ultimo controllo</th>
                 <th scope="col" className="px-4 py-3 font-bold">Ultimo aggiornamento</th>
-                <th scope="col" className="px-4 py-3 font-bold">Copertura documentata</th>
+                <th scope="col" className="px-4 py-3 font-bold">Tracciabilità tecnica</th>
                 <th scope="col" className="px-4 py-3 font-bold">Evidenza e limiti</th>
               </tr>
             </thead>
@@ -428,8 +428,8 @@ export function StatoMonitoraggio() {
                   <td className="px-4 py-4 text-muted-foreground">
                     {formatDateTime(source.lastUpdatedAt)}
                   </td>
-                  <td className={cn("px-4 py-4 font-bold", scoreTone(source.coverageScore))}>
-                    {source.coverageScore}%
+                  <td className={cn("px-4 py-4 font-bold", scoreTone(source.traceabilityScore))}>
+                    {source.traceabilityScore}%
                     <span className="mt-1 block text-xs font-medium leading-relaxed text-muted-foreground">
                       {source.metricLabel}
                     </span>
