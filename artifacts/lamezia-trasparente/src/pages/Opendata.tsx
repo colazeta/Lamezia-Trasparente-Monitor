@@ -589,7 +589,6 @@ function DatasetDetailView({
     <section
       aria-labelledby="opendata-dataset-detail-title"
       className="space-y-5"
-      id={getDatasetDetailId(item.dataset.detailKind)}
     >
       <Button onClick={onBack} type="button" variant="ghost">
         <ArrowLeft className="h-4 w-4" />
@@ -660,22 +659,6 @@ function DatasetDetailView({
       )}
     </section>
   );
-}
-
-function getDatasetDetailId(detailKind: OpenDataThemeDataset["detailKind"]) {
-  if (detailKind === "air-traffic-monthly") {
-    return "trasporto-aereo-lamezia";
-  }
-  if (detailKind === "demographic-trend") {
-    return "trend-demografico-lamezia";
-  }
-  if (detailKind === "foreign-residents-age-sex") {
-    return "stranieri-eta-sesso-lamezia";
-  }
-  if (detailKind === "families-children") {
-    return "famiglie-figli-lamezia";
-  }
-  return "clima-territorio";
 }
 
 function DatasetCard({

@@ -44,6 +44,9 @@ describe("OpenData climate territory card", () => {
         name: /Trend demografico - Lamezia Terme/i,
       }).length,
     ).toBeGreaterThan(0);
+    expect(
+      document.querySelectorAll("#trend-demografico-lamezia"),
+    ).toHaveLength(1);
     expect(window.location.search).toContain(
       "dataset=lamezia-demographic-trend",
     );
