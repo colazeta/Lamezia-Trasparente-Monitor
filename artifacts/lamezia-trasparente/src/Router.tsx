@@ -81,6 +81,14 @@ function RouteLoading() {
   );
 }
 
+function RedazioneRoute() {
+  return (
+    <Suspense fallback={<RouteLoading />}>
+      <Redazione />
+    </Suspense>
+  );
+}
+
 // Legacy /admin/* â†’ redirect to /redazione
 import { Redirect } from "wouter";
 
@@ -127,11 +135,10 @@ function PublicRouteWithMeta({
 
 export function Router() {
   return (
-    <Suspense fallback={<RouteLoading />}>
-      <Switch>
+    <Switch>
       {/* /redazione â€” no MainLayout (has its own full layout) */}
-      <Route path="/redazione" component={Redazione} />
-      <Route path="/redazione/*" component={Redazione} />
+      <Route path="/redazione" component={RedazioneRoute} />
+      <Route path="/redazione/*" component={RedazioneRoute} />
 
       {/* Legacy /admin/* redirects to /redazione */}
       <Route path="/admin" component={AdminRedirect} />
@@ -141,7 +148,8 @@ export function Router() {
       <Route>
         <PublicErrorBoundary>
           <MainLayout>
-            <Switch>
+            <Suspense fallback={<RouteLoading />}>
+              <Switch>
               <Route path="/" component={Home} />
               <PublicRouteWithMeta
                 path="/domande"
@@ -387,11 +395,11 @@ export function Router() {
                 description="Guida pratica per orientarsi tra sezioni, fonti e strumenti del monitoraggio civico."
               />
               <Route component={NotFound} />
-            </Switch>
+              </Switch>
+            </Suspense>
           </MainLayout>
         </PublicErrorBoundary>
       </Route>
-      </Switch>
-    </Suspense>
+    </Switch>
   );
 }
