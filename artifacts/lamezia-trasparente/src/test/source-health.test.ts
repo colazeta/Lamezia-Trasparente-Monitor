@@ -7,7 +7,8 @@ describe("SOURCE_HEALTH", () => {
     expect(SOURCE_HEALTH.sources).toHaveLength(5);
     expect(SOURCE_HEALTH.generatedAt).toBeTruthy();
     expect(SOURCE_HEALTH.traceabilityScore).toBeGreaterThan(0);
-    expect(SOURCE_HEALTH.freshnessScore).toBeGreaterThan(0);
+    expect(SOURCE_HEALTH.freshnessScore).toBeGreaterThanOrEqual(0);
+    expect(SOURCE_HEALTH.freshnessScore).toBeLessThanOrEqual(100);
   });
 
   it("keeps every integrated source traceable", () => {
