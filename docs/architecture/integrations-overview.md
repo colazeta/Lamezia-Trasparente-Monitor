@@ -91,6 +91,14 @@ Ogni fonte deve avere controlli proporzionati:
 
 Il sistema deve preferire errori espliciti e monitorabili a fallback silenziosi.
 
+Per i dataset statici di grandi dimensioni, la pipeline genera anche un sidecar
+leggero di source health con identificativo del dataset, fonte, timestamp,
+ultimo punto dati, numero di record, cadenza e limite informativo. Il registro
+pubblico usa il sidecar invece del dataset completo e un test di contratto ne
+verifica l'allineamento dopo ogni refresh. La copertura del registro è inoltre
+confrontata con l'elenco dei dataset pubblicati: una nuova pubblicazione priva
+di metadati di monitoraggio deve emergere come scopertura verificabile.
+
 ### 5. Normalizzazione dominio
 
 La normalizzazione trasforma fonti eterogenee in domini civici comprensibili: atti, contratti, PNRR, performance, bandi, beni confiscati, dataset open data, segnalazioni civiche, contesto territoriale.

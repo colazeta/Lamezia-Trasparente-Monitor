@@ -18,10 +18,15 @@ const outputPath = path.join(
   repoRoot,
   "artifacts/lamezia-trasparente/src/data/generated/lameziaClimateDaily.json",
 );
+const metadataOutputPath = path.join(
+  repoRoot,
+  "artifacts/lamezia-trasparente/src/data/generated/lameziaClimateDaily.metadata.json",
+);
 
 const OPEN_METEO_ARCHIVE_URL = "https://archive-api.open-meteo.com/v1/archive";
 const OPEN_METEO_RECENT_URL = "https://api.open-meteo.com/v1/forecast";
-const OPEN_METEO_DOCS_URL = "https://open-meteo.com/en/docs/historical-weather-api";
+const OPEN_METEO_DOCS_URL =
+  "https://open-meteo.com/en/docs/historical-weather-api";
 const OPEN_METEO_RECENT_DOCS_URL = "https://open-meteo.com/en/docs";
 const OPEN_METEO_TERMS_URL = "https://open-meteo.com/en/terms";
 const OPEN_METEO_MODEL = "era5_seamless";
@@ -125,7 +130,8 @@ const generated = {
     source_recent_url: recentSourceUrl,
     source_documentation_url: OPEN_METEO_DOCS_URL,
     source_recent_documentation_url: OPEN_METEO_RECENT_DOCS_URL,
-    source_request_count: fetchStats.archiveRequests + fetchStats.recentRequests,
+    source_request_count:
+      fetchStats.archiveRequests + fetchStats.recentRequests,
     source_archive_request_count: fetchStats.archiveRequests,
     source_recent_request_count: fetchStats.recentRequests,
     source_query_strategy:
@@ -151,6 +157,26 @@ const generated = {
 
 await mkdir(path.dirname(outputPath), { recursive: true });
 await writeFile(outputPath, stringifyClimateDataset(generated), "utf8");
+await writeFile(
+  metadataOutputPath,
+  `${JSON.stringify(
+    {
+      schema_version: 1,
+      dataset_id: "lamezia-climate-daily",
+      source: generated.metadata.source,
+      source_url: generated.metadata.source_url,
+      generated_at: generated.metadata.generated_at,
+      latest_data_point: generated.metadata.latest_complete_date,
+      record_count: generated.daily.length,
+      update_policy: generated.metadata.update_policy,
+      caveat: generated.metadata.caveat,
+      licence_or_terms_note: generated.metadata.licence_or_terms_note,
+    },
+    null,
+    2,
+  )}\n`,
+  "utf8",
+);
 
 console.log(
   `Wrote ${daily.length} daily climate records through ${latestCompleteDate} to ${path.relative(
@@ -366,7 +392,8 @@ function splitDateRange(start, end) {
   const startTime = Date.parse(`${start}T00:00:00Z`);
   const endTime = Date.parse(`${end}T00:00:00Z`);
   const midTime =
-    startTime + Math.floor((endTime - startTime) / (2 * 24 * 60 * 60 * 1000)) *
+    startTime +
+    Math.floor((endTime - startTime) / (2 * 24 * 60 * 60 * 1000)) *
       24 *
       60 *
       60 *

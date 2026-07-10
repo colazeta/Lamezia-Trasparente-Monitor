@@ -23,10 +23,9 @@ describe("Albo Pretorio source status surface", () => {
     expect(panel.getByText("Ultimo aggiornamento")).toBeInTheDocument();
     expect(panel.getByText("Verifica")).toBeInTheDocument();
     expect(panel.getByText("Fonte ufficiale acquisita")).toBeInTheDocument();
-    expect(panel.getByRole("link", { name: /Fonte ufficiale/i })).toHaveAttribute(
-      "href",
-      ALBO_OPERATIONAL_STATUS.source_url,
-    );
+    expect(
+      panel.getByRole("link", { name: /Fonte ufficiale/i }),
+    ).toHaveAttribute("href", ALBO_OPERATIONAL_STATUS.source_url);
 
     for (const label of [
       "Acquisiti",
@@ -48,5 +47,29 @@ describe("Albo Pretorio source status surface", () => {
     expect(
       panel.getByText(/non sostituisce l'Albo Pretorio ufficiale/i),
     ).toBeInTheDocument();
+  });
+
+  it("shows complete Open Data coverage, status reasons and evidence history", () => {
+    renderPage(StatoMonitoraggio);
+
+    const coverageHeading = screen.getByRole("heading", {
+      name: "Copertura del catalogo Open Data",
+    });
+    const coverage = coverageHeading.closest("section");
+    expect(coverage).not.toBeNull();
+
+    const panel = within(coverage as HTMLElement);
+    expect(panel.getByText(/5 dei 5 dataset pubblicati/i)).toBeInTheDocument();
+    expect(panel.getByRole("progressbar")).toHaveAttribute(
+      "aria-valuenow",
+      "100",
+    );
+
+    expect(
+      screen.getAllByText(/cadenza tecnica|manifest versionato/i).length,
+    ).toBeGreaterThan(0);
+    expect(
+      screen.getAllByText(/Cronologia evidenze \(/i).length,
+    ).toBeGreaterThan(0);
   });
 });

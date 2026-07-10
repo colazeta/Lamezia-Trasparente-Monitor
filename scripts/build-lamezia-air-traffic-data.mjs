@@ -10,10 +10,11 @@ const OUTPUT_PATH = path.join(
   REPO_ROOT,
   "artifacts/lamezia-trasparente/src/data/generated/lameziaAirTrafficMonthly.json",
 );
-const CACHE_DIR = path.join(
+const METADATA_OUTPUT_PATH = path.join(
   REPO_ROOT,
-  "data/raw/air-traffic/assaeroporti",
+  "artifacts/lamezia-trasparente/src/data/generated/lameziaAirTrafficMonthly.metadata.json",
 );
+const CACHE_DIR = path.join(REPO_ROOT, "data/raw/air-traffic/assaeroporti");
 
 const START_YEAR = 2000;
 const AIRPORT_NAME = "Lamezia Terme";
@@ -97,6 +98,26 @@ async function main() {
   };
 
   await writeFile(OUTPUT_PATH, `${JSON.stringify(dataset)}\n`);
+  await writeFile(
+    METADATA_OUTPUT_PATH,
+    `${JSON.stringify(
+      {
+        schema_version: 1,
+        dataset_id: "lamezia-air-traffic-monthly",
+        source: dataset.metadata.source,
+        source_url: dataset.metadata.source_url,
+        generated_at: dataset.metadata.generated_at,
+        latest_data_point: dataset.metadata.latest_complete_month,
+        record_count: dataset.metadata.months,
+        update_policy: dataset.metadata.update_policy,
+        caveat: dataset.metadata.caveat,
+        licence_or_terms_note: dataset.metadata.licence_or_terms_note,
+      },
+      null,
+      2,
+    )}\n`,
+    "utf8",
+  );
   console.log(
     `Wrote ${records.length} monthly air traffic records through ${latestRecord.month} to ${path.relative(
       REPO_ROOT,
@@ -468,8 +489,10 @@ function fetchUrl(url, encoding) {
           response.headers.location
         ) {
           response.resume();
-          fetchUrl(new URL(response.headers.location, url).toString(), encoding)
-            .then(resolve, reject);
+          fetchUrl(
+            new URL(response.headers.location, url).toString(),
+            encoding,
+          ).then(resolve, reject);
           return;
         }
 

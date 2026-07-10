@@ -7,6 +7,7 @@ import {
   Clock3,
   Database,
   ExternalLink,
+  History,
   Info,
   ShieldCheck,
   Signal,
@@ -22,6 +23,7 @@ import {
   SOURCE_PRIORITY_LABELS,
   SOURCE_STATUS_LABELS,
   SOURCE_TYPE_LABELS,
+  type OpenDataHealthCoverage,
   type SourceHealthItem,
   type SourceHealthStatus,
 } from "@/data/sourceHealth";
@@ -77,6 +79,94 @@ function StatusBadge({ status }: { status: SourceHealthStatus }) {
       <Icon className="h-3.5 w-3.5" aria-hidden="true" />
       {SOURCE_STATUS_LABELS[status]}
     </span>
+  );
+}
+
+function SourceHistory({ source }: { source: SourceHealthItem }) {
+  return (
+    <details className="mt-3 rounded-lg border border-border bg-muted/30 px-3 py-2 text-xs">
+      <summary className="cursor-pointer font-semibold text-foreground marker:text-primary">
+        <span className="inline-flex items-center gap-1.5">
+          <History className="h-3.5 w-3.5" aria-hidden="true" />
+          Cronologia evidenze ({source.history.length})
+        </span>
+      </summary>
+      <ol className="mt-3 space-y-3 border-l border-border pl-3 text-muted-foreground">
+        {source.history.map((event) => (
+          <li key={`${event.kind}-${event.at}`}>
+            <p className="font-semibold text-foreground">{event.label}</p>
+            <time dateTime={event.at}>{formatDateTime(event.at)}</time>
+          </li>
+        ))}
+      </ol>
+    </details>
+  );
+}
+
+function OpenDataCoveragePanel({ coverage }: { coverage: OpenDataHealthCoverage }) {
+  const complete = coverage.missingDatasetIds.length === 0;
+
+  return (
+    <section
+      aria-labelledby="copertura-opendata"
+      className={cn(
+        "mt-8 rounded-2xl border p-5 shadow-sm",
+        complete
+          ? "border-emerald-200 bg-emerald-50/70 dark:border-emerald-900/60 dark:bg-emerald-950/20"
+          : "border-amber-200 bg-amber-50/70 dark:border-amber-900/60 dark:bg-amber-950/20",
+      )}
+    >
+      <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+        <div className="flex gap-3">
+          <span className="mt-0.5 rounded-xl bg-background/80 p-2 text-primary">
+            {complete ? (
+              <CheckCircle2 className="h-5 w-5" aria-hidden="true" />
+            ) : (
+              <AlertTriangle className="h-5 w-5" aria-hidden="true" />
+            )}
+          </span>
+          <div>
+            <h2 id="copertura-opendata" className="font-display text-xl font-bold">
+              Copertura del catalogo Open Data
+            </h2>
+            <p className="mt-2 max-w-3xl text-sm leading-relaxed text-muted-foreground">
+              {coverage.monitored} dei {coverage.published} dataset pubblicati
+              hanno una voce nel registro tecnico, con fonte, timestamp, cadenza
+              e limite informativo verificabili.
+            </p>
+            {!complete ? (
+              <p className="mt-2 text-sm font-semibold text-amber-900 dark:text-amber-100">
+                Da integrare: {coverage.missingDatasetIds.join(", ")}.
+              </p>
+            ) : null}
+          </div>
+        </div>
+        <div className="min-w-44">
+          <p className="text-right text-2xl font-display font-bold">
+            {coverage.percentage}%
+          </p>
+          <div
+            aria-label={`Copertura Open Data ${coverage.percentage}%`}
+            aria-valuemax={100}
+            aria-valuemin={0}
+            aria-valuenow={coverage.percentage}
+            className="mt-2 h-2 overflow-hidden rounded-full bg-background/80"
+            role="progressbar"
+          >
+            <div
+              className="h-full rounded-full bg-primary"
+              style={{ width: `${coverage.percentage}%` }}
+            />
+          </div>
+          <Link
+            href="/opendata"
+            className="mt-3 block text-right text-sm font-semibold text-primary underline underline-offset-4"
+          >
+            Apri il catalogo
+          </Link>
+        </div>
+      </div>
+    </section>
   );
 }
 
@@ -232,6 +322,9 @@ function SourceMobileCard({ source }: { source: SourceHealthItem }) {
           </p>
         </div>
         <StatusBadge status={source.status} />
+        <p className="text-sm leading-relaxed text-muted-foreground">
+          {source.statusReason}
+        </p>
       </div>
       <dl className="mt-4 grid gap-3 text-sm">
         <div className="flex justify-between gap-4">
@@ -267,6 +360,7 @@ function SourceMobileCard({ source }: { source: SourceHealthItem }) {
       <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
         {source.cautionNote}
       </p>
+      <SourceHistory source={source} />
       <div className="mt-4 flex flex-wrap gap-3 text-sm font-semibold">
         <Link
           href={source.route}
@@ -356,6 +450,8 @@ export function StatoMonitoraggio() {
         />
       </section>
 
+      <OpenDataCoveragePanel coverage={payload.openDataCoverage} />
+
       <AlboStatusPanel />
 
       <section
@@ -425,6 +521,9 @@ export function StatoMonitoraggio() {
                   </td>
                   <td className="px-4 py-4">
                     <StatusBadge status={source.status} />
+                    <p className="mt-2 max-w-xs text-xs leading-relaxed text-muted-foreground">
+                      {source.statusReason}
+                    </p>
                   </td>
                   <td className="px-4 py-4 text-muted-foreground">
                     {formatDateTime(source.lastCheckedAt)}
@@ -445,6 +544,7 @@ export function StatoMonitoraggio() {
                       {source.expectedRefresh}
                     </p>
                     <p className="mt-2">{source.cautionNote}</p>
+                    <SourceHistory source={source} />
                     <div className="mt-3 flex flex-wrap gap-3 text-xs font-semibold">
                       <Link
                         href={source.route}
