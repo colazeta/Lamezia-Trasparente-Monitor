@@ -42,7 +42,7 @@ export function MainLayout({ children }: MainLayoutProps) {
 function HomePriorityAccess() {
   return (
     <section
-      data-tour="home-priority-access"
+      data-tour="home-contracts-entry"
       className="border-b border-border bg-background"
       aria-label="Accessi prioritari"
     >
