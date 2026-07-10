@@ -62,6 +62,57 @@ interface OpenDataArchiveItem {
   theme: OpenDataThemeCategory;
   dataset: OpenDataThemeDataset;
 }
+interface OpenDataArchiveSelection {
+  themeId: string | null;
+  datasetId: string | null;
+}
+
+function readOpenDataArchiveSelection(): OpenDataArchiveSelection {
+  if (typeof window === "undefined") {
+    return { themeId: null, datasetId: null };
+  }
+
+  const params = new URLSearchParams(window.location.search);
+  const requestedDatasetId = params.get("dataset");
+  const requestedThemeId = params.get("tema");
+  const datasetMatch = OPEN_DATA_THEME_LIBRARY.flatMap((theme) =>
+    theme.datasets.map((dataset) => ({ theme, dataset })),
+  ).find((item) => item.dataset.id === requestedDatasetId);
+
+  if (datasetMatch) {
+    return {
+      themeId: datasetMatch.theme.id,
+      datasetId: datasetMatch.dataset.id,
+    };
+  }
+
+  const themeMatch = OPEN_DATA_THEME_LIBRARY.find(
+    (theme) => theme.id === requestedThemeId,
+  );
+  return {
+    themeId: themeMatch?.id ?? null,
+    datasetId: null,
+  };
+}
+
+function writeOpenDataArchiveSelection(
+  themeId: string | null,
+  datasetId: string | null,
+): void {
+  if (typeof window === "undefined") return;
+
+  const url = new URL(window.location.href);
+  if (themeId) url.searchParams.set("tema", themeId);
+  else url.searchParams.delete("tema");
+  if (datasetId) url.searchParams.set("dataset", datasetId);
+  else url.searchParams.delete("dataset");
+
+  window.history.replaceState(
+    window.history.state,
+    "",
+    `${url.pathname}${url.search}${url.hash}`,
+  );
+}
 
 function readLastVisit(): number | null {
   try {
@@ -75,9 +126,12 @@ function readLastVisit(): number | null {
 }
 
 export function Opendata() {
-  const [selectedThemeId, setSelectedThemeId] = useState<string | null>(null);
+  const [initialArchiveSelection] = useState(readOpenDataArchiveSelection);
+  const [selectedThemeId, setSelectedThemeId] = useState<string | null>(
+    initialArchiveSelection.themeId,
+  );
   const [selectedDatasetId, setSelectedDatasetId] = useState<string | null>(
-    null,
+    initialArchiveSelection.datasetId,
   );
   const [search, setSearch] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
@@ -163,6 +217,21 @@ export function Opendata() {
   const selectTheme = (themeId: string | null) => {
     setSelectedThemeId(themeId);
     setSelectedDatasetId(null);
+    writeOpenDataArchiveSelection(themeId, null);
+  };
+
+  const selectDataset = (datasetId: string) => {
+    const item = archiveItems.find((entry) => entry.dataset.id === datasetId);
+    if (!item) return;
+
+    setSelectedThemeId(item.theme.id);
+    setSelectedDatasetId(item.dataset.id);
+    writeOpenDataArchiveSelection(item.theme.id, item.dataset.id);
+  };
+
+  const closeDataset = () => {
+    setSelectedDatasetId(null);
+    writeOpenDataArchiveSelection(selectedThemeId, null);
   };
 
   return (
@@ -184,7 +253,7 @@ export function Opendata() {
       {selectedArchiveItem ? (
         <DatasetDetailView
           item={selectedArchiveItem}
-          onBack={() => setSelectedDatasetId(null)}
+          onBack={closeDataset}
         />
       ) : (
         <>
@@ -195,7 +264,7 @@ export function Opendata() {
 
           <ThemeDatasetArchive
             items={filteredArchiveItems}
-            onOpenDataset={setSelectedDatasetId}
+            onOpenDataset={selectDataset}
             onResetTheme={() => selectTheme(null)}
             selectedTheme={selectedTheme}
           />
@@ -219,7 +288,7 @@ export function Opendata() {
               )}
             </span>
             {feedStatus?.itemsTotal ? (
-              <> · {feedStatus.itemsTotal} dataset monitorati</>
+              <> Â· {feedStatus.itemsTotal} dataset monitorati</>
             ) : null}
           </span>
         </div>
@@ -235,7 +304,7 @@ export function Opendata() {
         </a>
       </div>
 
-      {/* Interoperabilità: catalogo DCAT-AP_IT + API CKAN per l'intero catalogo */}
+      {/* InteroperabilitÃ : catalogo DCAT-AP_IT + API CKAN per l'intero catalogo */}
       <div className="mb-8 flex flex-col gap-3 rounded-xl border border-card-border bg-muted/30 p-4 sm:flex-row sm:items-center sm:justify-between">
         <div className="text-sm text-muted-foreground">
           <span className="font-medium text-foreground">
@@ -344,7 +413,7 @@ export function Opendata() {
             ) : null}
           </>
         ) : (
-          "—"
+          "â€”"
         )}
       </div>
 
@@ -421,7 +490,7 @@ function ThemeDatasetArchive({
         <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
           <div>
             <Badge variant="outline" className="shadow-none">
-              {selectedTheme?.shortLabel ?? "Archivio"} · 0 dataset
+              {selectedTheme?.shortLabel ?? "Archivio"} Â· 0 dataset
             </Badge>
             <h2
               className="mt-3 font-display text-lg font-bold text-foreground"
@@ -459,7 +528,7 @@ function ThemeDatasetArchive({
           </h2>
         </div>
         <Badge variant="outline" className="w-fit shadow-none">
-          {archiveLabel} ·{" "}
+          {archiveLabel} Â·{" "}
           {items.length === 1 ? "1 dataset" : `${items.length} dataset`}
         </Badge>
       </div>
@@ -489,7 +558,7 @@ function ThemeDatasetArchive({
                       {item.theme.shortLabel}
                     </Badge>
                     <span>{item.dataset.dataType}</span>
-                    <span aria-hidden="true">·</span>
+                    <span aria-hidden="true">Â·</span>
                     <span>{item.dataset.statusLabel}</span>
                   </div>
                 </div>
@@ -680,7 +749,7 @@ function DatasetCard({
             </span>{" "}
             {dataset.resourceCount === 1 ? "risorsa" : "risorse"}
             {dataset.metadataModified ? (
-              <> · agg. {formatPublicTimeField(dataset.metadataModified)}</>
+              <> Â· agg. {formatPublicTimeField(dataset.metadataModified)}</>
             ) : null}
           </span>
           <span className="inline-flex items-center gap-0.5 font-medium text-primary group-hover:underline">
@@ -692,3 +761,4 @@ function DatasetCard({
     </Link>
   );
 }
+

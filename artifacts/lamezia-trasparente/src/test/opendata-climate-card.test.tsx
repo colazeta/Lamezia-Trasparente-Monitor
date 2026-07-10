@@ -23,10 +23,42 @@ vi.mock("@workspace/api-client-react", () => ({
 describe("OpenData climate territory card", () => {
   beforeEach(() => {
     localStorage.clear();
+    window.history.replaceState({}, "", "/opendata");
     vi.mocked(useListOpendataDatasets).mockReturnValue({
       data: [],
       isLoading: false,
     } as ReturnType<typeof useListOpendataDatasets>);
+  });
+
+  it("opens a shared dataset deep-link and preserves its theme on return", () => {
+    window.history.replaceState(
+      {},
+      "",
+      "/opendata?tema=population-society&dataset=lamezia-demographic-trend",
+    );
+
+    render(<Opendata />);
+
+    expect(
+      screen.getAllByRole("heading", {
+        name: /Trend demografico - Lamezia Terme/i,
+      }).length,
+    ).toBeGreaterThan(0);
+    expect(window.location.search).toContain(
+      "dataset=lamezia-demographic-trend",
+    );
+
+    fireEvent.click(
+      screen.getByRole("button", { name: /Torna all'archivio dataset/i }),
+    );
+
+    expect(
+      screen.getByRole("heading", { name: "Archivio dataset" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: /Popolazione e societa/i }),
+    ).toHaveAttribute("aria-pressed", "true");
+    expect(window.location.search).toBe("?tema=population-society");
   });
 
   it("renders a simple thematic dataset archive before opening the climate detail", () => {
@@ -427,3 +459,4 @@ describe("OpenData climate territory card", () => {
     );
   });
 });
+
