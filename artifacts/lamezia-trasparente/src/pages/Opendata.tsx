@@ -53,6 +53,7 @@ import {
   EmptyDescription,
 } from "@/components/ui/empty";
 import { formatPublicTimeField } from "@/lib/time";
+import { apiUrl } from "@/lib/apiBaseUrl";
 
 const PORTAL_URL = "https://opendata.comune.lamezia-terme.cz.it";
 
@@ -315,7 +316,7 @@ export function Opendata() {
         </div>
         <div className="flex flex-wrap gap-2">
           <a
-            href="/api/opendata/catalog.jsonld"
+            href={apiUrl("/api/opendata/catalog.jsonld")}
             target="_blank"
             rel="noopener noreferrer"
           >
@@ -326,7 +327,7 @@ export function Opendata() {
             </Button>
           </a>
           <a
-            href="/api/3/action/package_search"
+            href={apiUrl("/api/3/action/package_search")}
             target="_blank"
             rel="noopener noreferrer"
           >
@@ -744,4 +745,3 @@ function DatasetCard({
     </Link>
   );
 }
-

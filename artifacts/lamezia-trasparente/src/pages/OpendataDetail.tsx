@@ -36,6 +36,7 @@ import {
   EmptyDescription,
 } from "@/components/ui/empty";
 import { ResourceTable } from "@/components/opendata/ResourceTable";
+import { apiUrl } from "@/lib/apiBaseUrl";
 
 function formatDate(value: string | null | undefined) {
   if (!value) return "—";
@@ -175,10 +176,10 @@ export function OpendataDetail() {
 
           {/* Interoperabilità: metadati DCAT-AP_IT e API CKAN */}
           <InteropLinks
-            dcatUrl={`/api/opendata/datasets/${dataset.id}/dcat.jsonld`}
-            apiUrl={`/api/3/action/package_show?id=${encodeURIComponent(
-              dataset.sourceId,
-            )}`}
+            dcatUrl={apiUrl(`/api/opendata/datasets/${dataset.id}/dcat.jsonld`)}
+            apiUrl={apiUrl(
+              `/api/3/action/package_show?id=${encodeURIComponent(dataset.sourceId)}`,
+            )}
           />
 
           {/* Resources */}

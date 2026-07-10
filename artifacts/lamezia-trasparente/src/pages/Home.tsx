@@ -35,13 +35,12 @@ import { format } from "date-fns";
 import { it } from "date-fns/locale";
 import { PageMeta } from "@/components/seo/PageMeta";
 import { asApiList } from "@/lib/apiList";
+import { apiFetch } from "@/lib/apiBaseUrl";
 import { PUBLIC_NUMBER_PLACEHOLDER } from "@/lib/publicNumbers";
 
 // ---------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------
-
-const _basePath = import.meta.env.BASE_URL.replace(/\/$/, "");
 
 function formatDate(value: string | null | undefined) {
   if (!value) return "—";
@@ -77,9 +76,7 @@ function usePublishedBlocks(pageSlug: string) {
   return useQuery<PageBlock[]>({
     queryKey: ["published-blocks", pageSlug],
     queryFn: async () => {
-      const res = await fetch(
-        `${_basePath}/api/redazione/pages/${pageSlug}/blocks`,
-      );
+      const res = await apiFetch(`/api/redazione/pages/${pageSlug}/blocks`);
       if (!res.ok) return [];
       return asApiList<PageBlock>(await res.json());
     },

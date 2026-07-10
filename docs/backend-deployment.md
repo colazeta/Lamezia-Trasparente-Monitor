@@ -104,6 +104,8 @@ Configure secrets in the backend service environment only. Do not expose server 
 
 The current Express app uses `cors({ credentials: true, origin: true })`, reflecting the request origin while allowing credentials. For an independent backend deployment, configure the edge/proxy and frontend API base URL so browser requests go to the backend origin intentionally. If a stricter CORS allow-list is required, that is a runtime change and is outside this docs-only scope.
 
+The corresponding browser configuration is `VITE_API_BASE_URL`. It is a public frontend build value, not a backend secret: set it to the deployed API origin (without `/api`) when frontend and backend are separated, or leave it empty when a reviewed reverse proxy keeps API requests same-origin.
+
 ### Optional integrations and operational alerts
 
 | Variable | Required when | Notes |

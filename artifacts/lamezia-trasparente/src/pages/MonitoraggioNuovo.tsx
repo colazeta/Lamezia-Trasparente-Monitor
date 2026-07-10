@@ -48,6 +48,7 @@ import {
   EmptyTitle,
   EmptyDescription,
 } from "@/components/ui/empty";
+import { apiUrl } from "@/lib/apiBaseUrl";
 
 const ALLOWED_ATTACHMENT_TYPES = [
   "image/jpeg",
@@ -345,7 +346,7 @@ function MonitoraggioForm({
       if (!putRes.ok) {
         throw new Error(`Upload failed with status ${putRes.status}`);
       }
-      const storagePath = `/api/storage${objectPath}`;
+      const storagePath = apiUrl(`/api/storage${objectPath}`);
       setAttachments((prev) => [
         ...prev,
         { title: file.name, url: storagePath, contentType: file.type },

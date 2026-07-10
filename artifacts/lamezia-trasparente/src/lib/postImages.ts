@@ -1,3 +1,5 @@
+import { apiUrl } from "@/lib/apiBaseUrl";
+
 /**
  * Resolve an image source embedded in a Cronistoria post body.
  *
@@ -9,12 +11,12 @@
  */
 export function resolvePostImageSrc(src: string | undefined): string | null {
   if (!src) return null;
-  if (src.startsWith("/objects/")) return `/api/storage${src}`;
+  if (src.startsWith("/objects/")) return apiUrl(`/api/storage${src}`);
   if (
     src.startsWith("/api/storage/objects/") ||
     src.startsWith("/api/storage/public-objects/")
   ) {
-    return src;
+    return apiUrl(src);
   }
   return null;
 }

@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { Rss } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { apiUrl } from "@/lib/apiBaseUrl";
 
 type FeedSubscribeButtonProps = {
   /** Percorso del feed relativo all'API, es. "/feeds/albo.xml". */
@@ -19,8 +20,9 @@ type FeedSubscribeButtonProps = {
  * inserisce un tag di autodiscovery `<link rel="alternate">` nell'head della
  * pagina, così i lettori RSS rilevano automaticamente il feed.
  *
- * I feed sono serviti dall'API sotto `/api/feeds/...` sulla stessa origine del
- * sito, quindi il percorso assoluto `/api/...` è stabile e pubblico.
+ * I feed sono serviti dall'API sotto `/api/feeds/...`. `apiUrl` mantiene il
+ * percorso same-origin oppure applica l'origine API configurata per deploy
+ * separati.
  */
 export function FeedSubscribeButton({
   feedPath,
@@ -30,7 +32,9 @@ export function FeedSubscribeButton({
   size = "sm",
   className,
 }: FeedSubscribeButtonProps) {
-  const href = `/api${feedPath.startsWith("/") ? feedPath : `/${feedPath}`}`;
+  const href = apiUrl(
+    `/api${feedPath.startsWith("/") ? feedPath : `/${feedPath}`}`,
+  );
 
   useEffect(() => {
     const link = document.createElement("link");

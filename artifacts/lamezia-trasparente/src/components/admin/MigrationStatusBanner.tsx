@@ -3,6 +3,7 @@ import { useLocation } from "wouter";
 import { AlertTriangle } from "lucide-react";
 
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { apiFetch } from "@/lib/apiBaseUrl";
 
 /**
  * Shape of `GET /api/healthz/migrations`.
@@ -31,16 +32,16 @@ const POLL_INTERVAL_MS = 30_000;
 const REMEDY_COMMAND = "pnpm --filter @workspace/db run migrate";
 
 async function fetchMigrationHealth(): Promise<MigrationHealth> {
-  const response = await fetch(MIGRATION_HEALTH_URL, {
+  const response = await apiFetch(MIGRATION_HEALTH_URL, {
     headers: { Accept: "application/json" },
   });
 
   // The endpoint answers 503 with `{ status: "error", ... }` when it cannot
   // read the migration state. Parse the body either way so we can surface a
   // banner rather than silently swallowing a real problem.
-  const data = (await response.json().catch(() => null)) as
-    | MigrationHealth
-    | null;
+  const data = (await response
+    .json()
+    .catch(() => null)) as MigrationHealth | null;
 
   if (data && typeof data.status === "string") {
     return data;
@@ -105,7 +106,9 @@ export function MigrationStatusBanner() {
                   className="font-mono"
                   data-testid="text-pending-migrations"
                 >
-                  {pending.length > 0 ? pending.join(", ") : "(non disponibili)"}
+                  {pending.length > 0
+                    ? pending.join(", ")
+                    : "(non disponibili)"}
                 </span>
               </p>
             </>
