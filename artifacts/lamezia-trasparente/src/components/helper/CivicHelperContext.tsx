@@ -4,6 +4,7 @@ import {
   useState,
   useEffect,
   useCallback,
+  useRef,
   ReactNode,
 } from "react";
 import { useLocation } from "wouter";
@@ -117,6 +118,7 @@ export function CivicHelperProvider({ children }: { children: ReactNode }) {
   const [introSeen, setIntroSeen] = useState<boolean>(readIntroSeen);
   const [welcomeOpen, setWelcomeOpen] = useState(false);
   const [visitedRoutes, setVisitedRoutes] = useState<string[]>(readVisited);
+  const guideRequestRef = useRef<Promise<void> | null>(null);
   const [location] = useLocation();
 
   useEffect(() => {
@@ -135,18 +137,26 @@ export function CivicHelperProvider({ children }: { children: ReactNode }) {
     [visitedRoutes],
   );
 
-  useEffect(() => {
+  const loadGuideContents = useCallback(() => {
+    if (guideContents || guideRequestRef.current) return;
+
     setGuideLoading(true);
-    fetch("/api/helper/guide")
+    const request = fetch("/api/helper/guide")
       .then((r) => r.json())
       .then((data) => setGuideContents(data as GuideContents))
       .catch(() => {})
-      .finally(() => setGuideLoading(false));
-  }, []);
+      .finally(() => {
+        guideRequestRef.current = null;
+        setGuideLoading(false);
+      });
+
+    guideRequestRef.current = request;
+  }, [guideContents]);
 
   const openIntro = useCallback(() => {
+    loadGuideContents();
     setWelcomeOpen(true);
-  }, []);
+  }, [loadGuideContents]);
 
   const openAssistant = useCallback(() => {
     setAssistantOpen(true);

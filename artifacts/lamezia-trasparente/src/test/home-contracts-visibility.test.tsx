@@ -20,12 +20,8 @@ vi.mock("@/components/helper/CivicHelperFAB", () => ({
   CivicHelperFAB: () => null,
 }));
 
-vi.mock("@/components/helper/CivicAssistant", () => ({
-  CivicAssistant: () => null,
-}));
-
-vi.mock("@/components/helper/CivicWelcome", () => ({
-  CivicWelcome: () => null,
+vi.mock("@/components/helper/CivicHelperOverlays", () => ({
+  CivicHelperOverlays: () => null,
 }));
 
 function renderHomeLayout(path = "/") {

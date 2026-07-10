@@ -15,6 +15,7 @@
     "demography:lamezia": "node scripts/build-lamezia-demographic-trend-data.mjs",
     "families-children:lamezia": "node scripts/build-lamezia-families-children-data.mjs",
     "foreign-residents:lamezia": "node scripts/build-lamezia-foreign-residents-data.mjs",
+    "smoke:civic-helper-demand": "node scripts/check-civic-helper-demand.mjs",
     "smoke:v0-static-fallback": "pnpm --filter @workspace/lamezia-trasparente run build && node scripts/check-v0-static-fallback.mjs",
     "smoke:public-contracts": "node scripts/check-public-contracts-page.mjs",
     "hook:pr-guard": "node scripts/hooks/pr-guard.mjs",
