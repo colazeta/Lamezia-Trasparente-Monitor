@@ -6,7 +6,7 @@ describe("SOURCE_HEALTH", () => {
   it("derives the public register from versioned evidence", () => {
     expect(SOURCE_HEALTH.sources).toHaveLength(5);
     expect(SOURCE_HEALTH.generatedAt).toBeTruthy();
-    expect(SOURCE_HEALTH.coverageScore).toBeGreaterThan(0);
+    expect(SOURCE_HEALTH.traceabilityScore).toBeGreaterThan(0);
     expect(SOURCE_HEALTH.freshnessScore).toBeGreaterThan(0);
   });
 
@@ -22,8 +22,8 @@ describe("SOURCE_HEALTH", () => {
       expect(source.route).toMatch(/^\//);
       expect(source.sourceUrl).toMatch(/^https:\/\//);
       expect(source.lastCheckedAt).toBeTruthy();
-      expect(source.coverageScore).toBeGreaterThanOrEqual(0);
-      expect(source.coverageScore).toBeLessThanOrEqual(100);
+      expect(source.traceabilityScore).toBeGreaterThanOrEqual(0);
+      expect(source.traceabilityScore).toBeLessThanOrEqual(100);
       expect(source.freshnessScore).toBeGreaterThanOrEqual(0);
       expect(source.freshnessScore).toBeLessThanOrEqual(100);
     }
