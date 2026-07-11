@@ -21,7 +21,16 @@ const REQUIRED_ROUTES = [
   "/organi",
   "/amministratori",
   "/fonti-dati",
+  "/stato-monitoraggio",
   "/metodologia",
+];
+const SOURCE_HEALTH_CHUNK_PREFIX = "StatoMonitoraggio-";
+const SOURCE_HEALTH_CHUNK_MAX_BYTES = 40_000;
+const SOURCE_HEALTH_REQUIRED_TEXT = "Copertura del catalogo Open Data";
+const SOURCE_HEALTH_FORBIDDEN_TEXT = [
+  '"monthly_rows"',
+  '"passengers_national"',
+  '"tMean"',
 ];
 const REQUIRED_PUBLIC_TEXT = [
   "rendiamoLameziaTrasparente",
@@ -129,7 +138,9 @@ async function assertDirectory(dirPath, label) {
 
 function assertHealthzMarker(healthz, healthzPath) {
   if (!healthz || typeof healthz !== "object" || Array.isArray(healthz)) {
-    throw new Error(`Static healthz marker must be a JSON object: ${healthzPath}`);
+    throw new Error(
+      `Static healthz marker must be a JSON object: ${healthzPath}`,
+    );
   }
 
   if (healthz.status !== "static-fallback-available") {
@@ -146,7 +157,9 @@ function assertHealthzMarker(healthz, healthzPath) {
 
   const checks = healthz.checks;
   if (!checks || typeof checks !== "object" || Array.isArray(checks)) {
-    throw new Error(`Static healthz marker checks must be a JSON object: ${healthzPath}`);
+    throw new Error(
+      `Static healthz marker checks must be a JSON object: ${healthzPath}`,
+    );
   }
 
   if (checks.staticFrontendReachability !== true) {
@@ -164,7 +177,9 @@ function assertHealthzMarker(healthz, healthzPath) {
   }
 
   if (!Array.isArray(healthz.limitations) || healthz.limitations.length === 0) {
-    throw new Error("Static healthz marker must declare non-empty limitations.");
+    throw new Error(
+      "Static healthz marker must declare non-empty limitations.",
+    );
   }
 
   for (const [index, limitation] of healthz.limitations.entries()) {
@@ -224,7 +239,9 @@ async function assertGeneratedBundleText(distDir, assetPaths, requiredText) {
   }
 
   const assetsDir = path.join(distDir, "assets");
-  const emittedJsAssetPaths = (await readdir(assetsDir, { withFileTypes: true }))
+  const emittedJsAssetPaths = (
+    await readdir(assetsDir, { withFileTypes: true })
+  )
     .filter((entry) => entry.isFile() && entry.name.endsWith(".js"))
     .map((entry) => `/assets/${entry.name}`);
   const jsAssetPaths = [
@@ -250,6 +267,50 @@ async function assertGeneratedBundleText(distDir, assetPaths, requiredText) {
   return jsAssetPaths.length;
 }
 
+async function assertSourceHealthBundle(distDir) {
+  const assetsDir = path.join(distDir, "assets");
+  const matches = (await readdir(assetsDir, { withFileTypes: true })).filter(
+    (entry) =>
+      entry.isFile() &&
+      entry.name.startsWith(SOURCE_HEALTH_CHUNK_PREFIX) &&
+      entry.name.endsWith(".js"),
+  );
+
+  if (matches.length !== 1) {
+    throw new Error(
+      `Expected one generated source-health chunk, found ${matches.length}.`,
+    );
+  }
+
+  const chunkPath = path.join(assetsDir, matches[0].name);
+  const chunkStat = await stat(chunkPath);
+  if (chunkStat.size > SOURCE_HEALTH_CHUNK_MAX_BYTES) {
+    throw new Error(
+      `Source-health chunk exceeds ${SOURCE_HEALTH_CHUNK_MAX_BYTES} bytes: ${chunkStat.size}.`,
+    );
+  }
+
+  const chunkText = await readFile(chunkPath, "utf8");
+  if (!chunkText.includes(SOURCE_HEALTH_REQUIRED_TEXT)) {
+    throw new Error(
+      `Source-health chunk does not contain expected marker: ${SOURCE_HEALTH_REQUIRED_TEXT}`,
+    );
+  }
+  for (const forbiddenText of SOURCE_HEALTH_FORBIDDEN_TEXT) {
+    if (chunkText.includes(forbiddenText)) {
+      throw new Error(
+        `Source-health chunk contains full dataset marker: ${forbiddenText}`,
+      );
+    }
+  }
+
+  return {
+    asset: matches[0].name,
+    bytes: chunkStat.size,
+    maxBytes: SOURCE_HEALTH_CHUNK_MAX_BYTES,
+  };
+}
+
 function routeFallbackPath(distDir, route) {
   const clean = route.replace(/^\/+/, "").replace(/\/+$/, "");
   if (!clean) return path.join(distDir, "index.html");
@@ -267,7 +328,11 @@ function parseRedirectRules(redirectsText) {
     });
 }
 
-function assertDirectoryRouteRedirectPolicy(redirectsText, redirectsPath, route) {
+function assertDirectoryRouteRedirectPolicy(
+  redirectsText,
+  redirectsPath,
+  route,
+) {
   const rules = parseRedirectRules(redirectsText);
   const exactRule = rules.find((rule) => rule.source === route);
   const canonicalTarget = `${route}/`;
@@ -318,7 +383,10 @@ async function main() {
   await assertReadableFile(healthzPath, "Static fallback healthz.json");
   await assertReadableFile(redirectsPath, "Cloudflare Pages _redirects");
 
-  const healthz = await readJsonFile(healthzPath, "Static fallback healthz.json");
+  const healthz = await readJsonFile(
+    healthzPath,
+    "Static fallback healthz.json",
+  );
   assertHealthzMarker(healthz, healthzPath);
   const redirectsText = await readFile(redirectsPath, "utf8");
   for (const route of REQUIRED_CANONICAL_DIRECTORY_ROUTES) {
@@ -334,21 +402,26 @@ async function main() {
     }
   }
 
-  const assets = extractAssetPaths(indexHtml).filter((assetPath) =>
-    assetPath.startsWith("/assets/") || assetPath.startsWith("assets/"),
+  const assets = extractAssetPaths(indexHtml).filter(
+    (assetPath) =>
+      assetPath.startsWith("/assets/") || assetPath.startsWith("assets/"),
   );
   if (assets.length === 0) {
     throw new Error("index.html does not reference any generated Vite assets.");
   }
 
   for (const assetPath of assets) {
-    await assertReadableFile(toDistPath(absoluteDistDir, assetPath), "Static asset");
+    await assertReadableFile(
+      toDistPath(absoluteDistDir, assetPath),
+      "Static asset",
+    );
   }
   const bundleAssetsChecked = await assertGeneratedBundleText(
     absoluteDistDir,
     assets,
     [...REQUIRED_CONTRACT_BUNDLE_TEXT, ...REQUIRED_ORGANI_BUNDLE_TEXT],
   );
+  const sourceHealthBundle = await assertSourceHealthBundle(absoluteDistDir);
 
   const routeResults = [];
   for (const route of routes) {
@@ -358,7 +431,10 @@ async function main() {
       continue;
     }
     try {
-      await assertReadableFile(fallback, `Route-specific fallback for ${route}`);
+      await assertReadableFile(
+        fallback,
+        `Route-specific fallback for ${route}`,
+      );
       routeResults.push({ route, mode: "route-index", path: fallback });
     } catch {
       throw new Error(
@@ -376,9 +452,9 @@ async function main() {
     redirects: redirectsPath,
     assetsChecked: assets.length,
     bundleAssetsChecked,
+    sourceHealthBundle,
     routes: routeResults,
-    note:
-      "This smoke check validates a local static artifact only. It does not choose a provider, call live APIs, run workers or certify civic data as current.",
+    note: "This smoke check validates a local static artifact only. It does not choose a provider, call live APIs, run workers or certify civic data as current.",
   };
 
   console.log(JSON.stringify(result, null, 2));
