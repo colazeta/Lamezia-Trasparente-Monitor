@@ -24,12 +24,8 @@ vi.mock("@/components/helper/CivicHelperFAB", () => ({
   CivicHelperFAB: () => <div data-testid="civic-helper-fab" />,
 }));
 
-vi.mock("@/components/helper/CivicAssistant", () => ({
-  CivicAssistant: () => <div data-testid="civic-assistant" />,
-}));
-
-vi.mock("@/components/helper/CivicWelcome", () => ({
-  CivicWelcome: () => <div data-testid="civic-welcome" />,
+vi.mock("@/components/helper/CivicHelperOverlays", () => ({
+  CivicHelperOverlays: () => <div data-testid="civic-helper-overlays" />,
 }));
 
 function renderLayoutAt(path: string) {
@@ -80,15 +76,15 @@ describe("MainLayout public route content", () => {
     renderLayoutAt("/atlante-territoriale");
 
     expect(screen.queryByTestId("civic-helper-fab")).not.toBeInTheDocument();
-    expect(screen.queryByTestId("civic-assistant")).not.toBeInTheDocument();
-    expect(screen.queryByTestId("civic-welcome")).not.toBeInTheDocument();
+    expect(
+      screen.queryByTestId("civic-helper-overlays"),
+    ).not.toBeInTheDocument();
   });
 
   it("keeps the civic helper available on ordinary public routes", () => {
     renderLayoutAt("/albo");
 
     expect(screen.getByTestId("civic-helper-fab")).toBeInTheDocument();
-    expect(screen.getByTestId("civic-assistant")).toBeInTheDocument();
-    expect(screen.getByTestId("civic-welcome")).toBeInTheDocument();
+    expect(screen.getByTestId("civic-helper-overlays")).toBeInTheDocument();
   });
 });
