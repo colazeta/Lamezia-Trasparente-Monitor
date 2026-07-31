@@ -1,18 +1,18 @@
-Run: 30/07/26, 20:42:00
+Run: 31/07/26, 11:14:58
 Fonte: Albo Pretorio Comune di Lamezia Terme
 URL fonte: https://albo.tinnvision.cloud/?ente=00301390795
 Metodo: xml
-Atti acquisiti: 204
+Atti acquisiti: 189
 Nuovi atti: 0
-Modificati: 1
-Rimossi/non piu' presenti: 0
-Invariati: 203
-Pubblicabili: 153
+Modificati: 0
+Rimossi/non piu' presenti: 15
+Invariati: 189
+Pubblicabili: 138
 Minimizzati: 21
 Solo metadato: 19
 Esclusi dal public layer: 11
 Errori/warning: nessuno
-Next check: 2026-07-31T06:10:00.000Z (08:00-20:00 Europe/Rome; cron UTC 10 6-19 * * *).
+Next check: 2026-07-31T10:10:00.000Z (08:00-20:00 Europe/Rome; cron UTC 10 6-19 * * *).
 
 Limiti noti:
 - Tranche A acquisisce l'elenco degli atti correnti esposto dalla fonte ufficiale, senza dichiarare completezza storica.
