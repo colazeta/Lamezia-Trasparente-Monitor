@@ -1,13 +1,17 @@
-import { useEffect, useRef } from "react";
-import { ClerkProvider, SignIn, useClerk } from "@clerk/react";
-import { shadcn } from "@clerk/themes";
-import { Router as WouterRouter, Route, Switch, useLocation } from "wouter";
-import { QueryClient, QueryClientProvider, useQueryClient } from "@tanstack/react-query";
+import { lazy, Suspense, type ReactNode } from "react";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { Router as WouterRouter, useLocation } from "wouter";
 import { Toaster } from "sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import { ThemeProvider } from "@/components/theme/ThemeProvider";
+
 import { CivicHelperProvider } from "@/components/helper/CivicHelperContext";
+import { ThemeProvider } from "@/components/theme/ThemeProvider";
+import { TooltipProvider } from "@/components/ui/tooltip";
+import { isProtectedAppPath } from "@/lib/authRouteMode";
 import { Router } from "./Router";
+
+const ClerkProtectedRoutes = lazy(
+  () => import("@/components/auth/ClerkProtectedRoutes"),
+);
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -18,102 +22,41 @@ const queryClient = new QueryClient({
   },
 });
 
-const configuredClerkPubKey = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY?.trim() ?? "";
-const clerkPubKey = configuredClerkPubKey.length > 0 ? configuredClerkPubKey : undefined;
-
-// REQUIRED — empty in dev, auto-set in prod
+const configuredClerkPubKey =
+  import.meta.env.VITE_CLERK_PUBLISHABLE_KEY?.trim() ?? "";
+const clerkPubKey =
+  configuredClerkPubKey.length > 0 ? configuredClerkPubKey : undefined;
 const clerkProxyUrl = import.meta.env.VITE_CLERK_PROXY_URL;
-
 const basePath = import.meta.env.BASE_URL.replace(/\/$/, "");
 
-function stripBase(path: string): string {
-  return basePath && path.startsWith(basePath)
-    ? path.slice(basePath.length) || "/"
-    : path;
-}
-
-const clerkAppearance = {
-  theme: shadcn,
-  cssLayerName: "clerk",
-  options: {
-    logoPlacement: "inside" as const,
-    logoLinkUrl: basePath || "/",
-    logoImageUrl: `${window.location.origin}${basePath}/logo-wordmark.svg`,
-  },
-  variables: {
-    colorPrimary: "hsl(var(--brand))",
-    colorForeground: "hsl(var(--foreground))",
-    colorMutedForeground: "hsl(var(--muted-foreground))",
-    colorDanger: "hsl(var(--destructive))",
-    colorBackground: "hsl(var(--background))",
-    colorInput: "hsl(var(--input))",
-    colorInputForeground: "hsl(var(--foreground))",
-    colorNeutral: "hsl(var(--border))",
-    fontFamily: "Inter, sans-serif",
-    borderRadius: "0.5rem",
-  },
-  elements: {
-    rootBox: "w-full flex justify-center",
-    cardBox: "bg-card rounded-2xl w-[440px] max-w-full overflow-hidden shadow-xl border border-border",
-    card: "!shadow-none !border-0 !bg-transparent !rounded-none",
-    footer: "!shadow-none !border-0 !bg-transparent !rounded-none",
-    headerTitle: "text-foreground font-bold",
-    headerSubtitle: "text-muted-foreground",
-    socialButtonsBlockButtonText: "text-foreground font-medium",
-    formFieldLabel: "text-foreground font-medium",
-    footerActionLink: "text-brand hover:text-brand/80",
-    footerActionText: "text-muted-foreground",
-    dividerText: "text-muted-foreground",
-    identityPreviewEditButton: "text-brand",
-    formFieldSuccessText: "text-green-600",
-    alertText: "text-foreground",
-    logoBox: "flex justify-center mb-2",
-    logoImage: "h-10 w-auto",
-    socialButtonsBlockButton: "border border-border hover:bg-muted",
-    formButtonPrimary: "bg-brand hover:bg-brand/90 text-brand-foreground font-semibold",
-    formFieldInput: "border-border bg-background text-foreground",
-    footerAction: "border-t border-border bg-muted/50",
-    dividerLine: "bg-border",
-    alert: "border border-border bg-muted",
-    otpCodeFieldInput: "border-border",
-    formFieldRow: "mb-4",
-    main: "p-6",
-  },
-};
-
-// Invalidates query cache when the signed-in user changes
-function ClerkQueryClientCacheInvalidator() {
-  const { addListener } = useClerk();
-  const qc = useQueryClient();
-  const prevUserIdRef = useRef<string | null | undefined>(undefined);
-
-  useEffect(() => {
-    const unsubscribe = addListener(({ user }) => {
-      const userId = user?.id ?? null;
-      if (
-        prevUserIdRef.current !== undefined &&
-        prevUserIdRef.current !== userId
-      ) {
-        qc.clear();
-      }
-      prevUserIdRef.current = userId;
-    });
-    return unsubscribe;
-  }, [addListener, qc]);
-
-  return null;
-}
-
-function SignInPage() {
+function AppProviders({ children }: { children: ReactNode }) {
   return (
-    <div className="flex min-h-[100dvh] items-center justify-center bg-sidebar px-4">
-      <SignIn
-        routing="path"
-        path={`${basePath}/sign-in`}
-        signUpUrl={`${basePath}/sign-up`}
-        forceRedirectUrl={`${basePath}/redazione`}
-      />
-    </div>
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider>
+        <TooltipProvider>
+          <CivicHelperProvider>{children}</CivicHelperProvider>
+          <Toaster position="top-right" />
+        </TooltipProvider>
+      </ThemeProvider>
+    </QueryClientProvider>
+  );
+}
+
+function ProtectedRouteLoading() {
+  return (
+    <main
+      aria-live="polite"
+      className="flex min-h-[100dvh] items-center justify-center bg-sidebar px-4"
+      role="status"
+    >
+      <div className="flex items-center gap-3 rounded-xl border border-border bg-card px-4 py-3 text-sm font-semibold text-muted-foreground shadow-sm">
+        <span
+          aria-hidden="true"
+          className="h-4 w-4 animate-spin rounded-full border-2 border-brand/25 border-t-brand"
+        />
+        Caricamento area riservata…
+      </div>
+    </main>
   );
 }
 
@@ -143,77 +86,34 @@ function RedazioneUnavailablePage() {
   );
 }
 
-function ClerkProviderWithRoutes() {
-  const [, setLocation] = useLocation();
+function AppRoutes() {
+  const [location] = useLocation();
+
+  if (!isProtectedAppPath(location)) {
+    return <Router />;
+  }
+
+  if (!clerkPubKey) {
+    return <RedazioneUnavailablePage />;
+  }
 
   return (
-    <ClerkProvider
-      publishableKey={clerkPubKey}
-      proxyUrl={clerkProxyUrl}
-      appearance={clerkAppearance}
-      signInUrl={`${basePath}/sign-in`}
-      signUpUrl={`${basePath}/sign-up`}
-      localization={{
-        signIn: {
-          start: {
-            title: "Accedi alla Redazione",
-            subtitle: "Area riservata agli editor autorizzati",
-          },
-        },
-      }}
-      routerPush={(to) => setLocation(stripBase(to))}
-      routerReplace={(to) => setLocation(stripBase(to), { replace: true })}
-    >
-      <QueryClientProvider client={queryClient}>
-        <ClerkQueryClientCacheInvalidator />
-        <ThemeProvider>
-          <TooltipProvider>
-            <CivicHelperProvider>
-              <Switch>
-                <Route path="/sign-in/*?" component={SignInPage} />
-                <Route component={Router} />
-              </Switch>
-            </CivicHelperProvider>
-            <Toaster position="top-right" />
-          </TooltipProvider>
-        </ThemeProvider>
-      </QueryClientProvider>
-    </ClerkProvider>
+    <Suspense fallback={<ProtectedRouteLoading />}>
+      <ClerkProtectedRoutes
+        basePath={basePath}
+        proxyUrl={clerkProxyUrl}
+        publishableKey={clerkPubKey}
+      />
+    </Suspense>
   );
 }
 
 function App() {
-  if (!clerkPubKey) {
-    // Fallback when Clerk is not yet configured (dev without keys)
-    return (
-      <QueryClientProvider client={queryClient}>
-        <ThemeProvider>
-          <TooltipProvider>
-            <WouterRouter base={basePath}>
-              <CivicHelperProvider>
-                <Switch>
-                  <Route
-                    path="/redazione/*?"
-                    component={RedazioneUnavailablePage}
-                  />
-                  <Route
-                    path="/admin/*?"
-                    component={RedazioneUnavailablePage}
-                  />
-                  <Route component={Router} />
-                </Switch>
-              </CivicHelperProvider>
-              <Toaster position="top-right" />
-            </WouterRouter>
-          </TooltipProvider>
-        </ThemeProvider>
-      </QueryClientProvider>
-    );
-  }
-
   return (
     <WouterRouter base={basePath}>
-      <ClerkProviderWithRoutes />
+      <AppProviders>
+        <AppRoutes />
+      </AppProviders>
     </WouterRouter>
   );
 }
