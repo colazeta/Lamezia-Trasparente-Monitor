@@ -5,8 +5,7 @@ import { Navbar } from "./Navbar";
 import { Footer } from "./Footer";
 import { MigrationStatusBanner } from "@/components/admin/MigrationStatusBanner";
 import { CivicHelperFAB } from "@/components/helper/CivicHelperFAB";
-import { CivicAssistant } from "@/components/helper/CivicAssistant";
-import { CivicWelcome } from "@/components/helper/CivicWelcome";
+import { CivicHelperOverlays } from "@/components/helper/CivicHelperOverlays";
 import { Button } from "@/components/ui/button";
 
 interface MainLayoutProps {
@@ -23,15 +22,12 @@ export function MainLayout({ children }: MainLayoutProps) {
       <Navbar />
       {location === "/" ? <HomePriorityAccess /> : null}
       <MigrationStatusBanner />
-      <main className="flex-1 bg-background">
-        {children}
-      </main>
+      <main className="flex-1 bg-background">{children}</main>
       <Footer />
       {showCivicHelper ? (
         <>
           <CivicHelperFAB />
-          <CivicAssistant />
-          <CivicWelcome />
+          <CivicHelperOverlays />
         </>
       ) : null}
     </div>
