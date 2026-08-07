@@ -1,18 +1,18 @@
 {
-  "generated_at": "2026-08-07T07:38:32.897Z",
+  "generated_at": "2026-08-07T09:13:08.372Z",
   "source": "Albo Pretorio Comune di Lamezia Terme",
   "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
   "provider": "Tinnvision",
-  "last_run_at": "2026-08-07T07:38:32.897Z",
-  "last_update": "2026-08-07T07:38:32.897Z",
+  "last_run_at": "2026-08-07T09:13:08.372Z",
+  "last_update": "2026-08-07T09:13:08.372Z",
   "method": "xml",
   "raw_format": "xml",
   "counts": {
     "acquired": 145,
-    "new": 6,
-    "changed": 3,
-    "removed": 32,
-    "unchanged": 136,
+    "new": 0,
+    "changed": 2,
+    "removed": 0,
+    "unchanged": 143,
     "publishable": 118,
     "minimised": 4,
     "metadata_only": 18,
@@ -21,13 +21,11 @@
   "diff_baseline": {
     "status": "public_safe",
     "public_safe": true,
-    "previous_retrieved_at": "2026-08-06T14:31:51.314Z",
+    "previous_retrieved_at": "2026-08-07T07:38:32.897Z",
     "note": "Diff derived from committed public/albo/latest.json; safe for scheduled public runs and limited to public-safe fields."
   },
-  "warnings": [
-    "Official Tinnvision detail document discovery failed for 2 publishable Albo record(s)."
-  ],
-  "next_scheduled_check": "2026-08-07T08:10:00.000Z",
+  "warnings": [],
+  "next_scheduled_check": "2026-08-07T10:10:00.000Z",
   "schedule": {
     "monitoring_window": "08:00-20:00 Europe/Rome",
     "timezone": "Europe/Rome",
