@@ -26,18 +26,16 @@ describe("Albo public run surface", () => {
     expect(pulseSection).not.toBeNull();
     const pulse = within(pulseSection as HTMLElement);
 
-    expect(pulse.getByText("Nuovi")).toBeInTheDocument();
-    expect(
-      pulse.getByText(String(ALBO_PUBLIC_DIFF_SUMMARY.counts.new)),
-    ).toBeInTheDocument();
-    expect(pulse.getByText("Aggiornati")).toBeInTheDocument();
-    expect(
-      pulse.getByText(String(ALBO_PUBLIC_DIFF_SUMMARY.counts.changed)),
-    ).toBeInTheDocument();
-    expect(pulse.getByText("Non più presenti")).toBeInTheDocument();
-    expect(
-      pulse.getByText(String(ALBO_PUBLIC_DIFF_SUMMARY.counts.removed)),
-    ).toBeInTheDocument();
+    for (const [label, value] of [
+      ["Nuovi", ALBO_PUBLIC_DIFF_SUMMARY.counts.new],
+      ["Aggiornati", ALBO_PUBLIC_DIFF_SUMMARY.counts.changed],
+      ["Non più presenti", ALBO_PUBLIC_DIFF_SUMMARY.counts.removed],
+    ] as const) {
+      const labelNode = pulse.getByText(label);
+      const card = labelNode.parentElement;
+      expect(card).not.toBeNull();
+      expect(within(card as HTMLElement).getByText(String(value))).toBeInTheDocument();
+    }
 
     expect(
       screen.getByRole("heading", { name: /Oggi nell'Albo/i }),
