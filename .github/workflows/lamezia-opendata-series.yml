@@ -10,6 +10,7 @@ on:
       - ".github/workflows/lamezia-opendata-series.yml"
       - "scripts/refresh-lamezia-opendata-series.mjs"
       - "scripts/refresh-lamezia-air-traffic-data.mjs"
+      - "scripts/check-lamezia-air-traffic-delta.mjs"
       - "scripts/build-lamezia-opendata-series-status.mjs"
       - "scripts/build-lamezia-air-traffic-data.mjs"
       - "scripts/build-lamezia-demographic-trend-data.mjs"
@@ -40,6 +41,7 @@ jobs:
 
       - name: Validate refresh scripts
         run: |
+          node --check scripts/check-lamezia-air-traffic-delta.mjs
           node --check scripts/refresh-lamezia-air-traffic-data.mjs
           node --check scripts/refresh-lamezia-opendata-series.mjs
           node --check scripts/build-lamezia-opendata-series-status.mjs
