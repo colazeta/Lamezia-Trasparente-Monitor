@@ -6,9 +6,13 @@ import https from "node:https";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO_ROOT = path.resolve(__dirname, "..");
-const OUTPUT_PATH = path.join(
+const BASE_PATH = path.join(
   REPO_ROOT,
   "artifacts/lamezia-trasparente/src/data/generated/lameziaAirTrafficMonthly.json",
+);
+const DELTA_PATH = path.join(
+  REPO_ROOT,
+  "artifacts/lamezia-trasparente/src/data/generated/lameziaAirTrafficMonthly.delta.json",
 );
 const METADATA_OUTPUT_PATH = path.join(
   REPO_ROOT,
@@ -22,14 +26,18 @@ const SOURCE_DOWNLOAD_BASE_URL =
 const USER_AGENT = "Lamezia-Trasparente-Monitor data refresher";
 
 async function main() {
-  const dataset = JSON.parse(await readFile(OUTPUT_PATH, "utf8"));
+  const base = JSON.parse(await readFile(BASE_PATH, "utf8"));
+  const delta = await readOptionalJson(DELTA_PATH);
   const metadata = JSON.parse(await readFile(METADATA_OUTPUT_PATH, "utf8"));
-  const localLatest = parsePeriod(dataset?.metadata?.latest_complete_month);
+  const baseLatest = parsePeriod(base?.metadata?.latest_complete_month);
+  const localLatest = parsePeriod(
+    delta?.latest_complete_month ?? base.metadata.latest_complete_month,
+  );
   const sourceLatest = await getLatestAvailablePeriod();
 
   if (comparePeriods(localLatest, sourceLatest) >= 0) {
     console.log(
-      `Air traffic already current through ${dataset.metadata.latest_complete_month}; source latest is ${sourceLatest.id}.`,
+      `Air traffic already current through ${localLatest.id}; source latest is ${sourceLatest.id}.`,
     );
     return;
   }
@@ -54,18 +62,24 @@ async function main() {
   }
 
   const generatedAt = new Date().toISOString();
-  const existingRows = String(dataset.monthly_rows ?? "").trim();
-  dataset.monthly_rows = [existingRows, ...appendedRows].filter(Boolean).join("\n");
-  dataset.metadata.generated_at = generatedAt;
-  dataset.metadata.latest_complete_month = sourceLatest.id;
-  dataset.metadata.source_period_end = sourceLatest.id;
-  dataset.metadata.months = countRows(dataset.monthly_rows);
+  const existingDeltaRows = String(delta?.monthly_rows ?? "").trim();
+  const mergedDeltaRows = [existingDeltaRows, ...appendedRows]
+    .filter(Boolean)
+    .join("\n");
+  const nextDelta = {
+    schema_version: 1,
+    base_latest_month: baseLatest.id,
+    latest_complete_month: sourceLatest.id,
+    generated_at: generatedAt,
+    monthly_rows: mergedDeltaRows,
+  };
+  const totalRows = countRows(base.monthly_rows) + countRows(mergedDeltaRows);
 
   metadata.generated_at = generatedAt;
   metadata.latest_data_point = sourceLatest.id;
-  metadata.record_count = dataset.metadata.months;
+  metadata.record_count = totalRows;
 
-  await writeFile(OUTPUT_PATH, `${JSON.stringify(dataset)}\n`, "utf8");
+  await writeFile(DELTA_PATH, `${JSON.stringify(nextDelta, null, 2)}\n`, "utf8");
   await writeFile(
     METADATA_OUTPUT_PATH,
     `${JSON.stringify(metadata, null, 2)}\n`,
@@ -73,8 +87,17 @@ async function main() {
   );
 
   console.log(
-    `Added ${appendedRows.length} Assaeroporti month(s); air traffic now current through ${sourceLatest.id}.`,
+    `Added ${appendedRows.length} Assaeroporti month(s) to the delta; air traffic is current through ${sourceLatest.id}.`,
   );
+}
+
+async function readOptionalJson(filePath) {
+  try {
+    return JSON.parse(await readFile(filePath, "utf8"));
+  } catch (error) {
+    if (error?.code === "ENOENT") return null;
+    throw error;
+  }
 }
 
 async function getLatestAvailablePeriod() {
@@ -161,7 +184,7 @@ function stringifyMonthlyRow(record) {
 }
 
 function countRows(rows) {
-  return String(rows)
+  return String(rows ?? "")
     .split("\n")
     .filter(Boolean).length;
 }
