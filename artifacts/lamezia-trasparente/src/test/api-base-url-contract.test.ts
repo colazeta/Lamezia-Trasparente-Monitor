@@ -14,7 +14,6 @@ const PUBLIC_API_CONSUMERS = [
   "artifacts/lamezia-trasparente/src/hooks/useSiteStrings.ts",
   "artifacts/lamezia-trasparente/src/lib/gis.ts",
   "artifacts/lamezia-trasparente/src/lib/postImages.ts",
-  "artifacts/lamezia-trasparente/src/pages/Home.tsx",
   "artifacts/lamezia-trasparente/src/pages/MonitoraggioNuovo.tsx",
   "artifacts/lamezia-trasparente/src/pages/Opendata.tsx",
   "artifacts/lamezia-trasparente/src/pages/OpendataDetail.tsx",
@@ -32,6 +31,15 @@ describe("public API origin contract", () => {
       expect(readRepoFile(relativePath)).toContain("apiBaseUrl");
     },
   );
+
+  it("keeps the home on the generated shared API client", () => {
+    const home = readRepoFile(
+      "artifacts/lamezia-trasparente/src/pages/Home.tsx",
+    );
+
+    expect(home).toContain('from "@workspace/api-client-react"');
+    expect(home).not.toMatch(/fetch\s*\(/);
+  });
 
   it("documents the browser configuration in deploy and environment guidance", () => {
     expect(readRepoFile(".env.example")).toContain("VITE_API_BASE_URL=");
