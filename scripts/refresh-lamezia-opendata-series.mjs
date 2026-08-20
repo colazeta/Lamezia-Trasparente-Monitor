@@ -39,12 +39,12 @@ const MUNICIPAL_SERIES = [
 ];
 
 async function main() {
+  runNodeScript("scripts/check-lamezia-air-traffic-delta.mjs");
   runNodeScript("scripts/refresh-lamezia-air-traffic-data.mjs");
+  runNodeScript("scripts/check-lamezia-air-traffic-delta.mjs");
 
   for (const series of MUNICIPAL_SERIES) {
-    const local = JSON.parse(
-      await readFile(path.join(GENERATED_DIR, series.output), "utf8"),
-    );
+    const local = await readGeneratedJson(series.output);
     const remote = await fetchJson(series.detailUrl);
     const resource = remote.resources?.find(
       (candidate) => candidate.id === series.resourceId,
@@ -71,9 +71,38 @@ async function main() {
       `${series.id}: official resource changed (${localMetadata.resource_hash ?? "no local hash"} -> ${resource.hash ?? "no remote hash"}); rebuilding.`,
     );
     runNodeScript(series.builder);
+
+    const refreshed = await readGeneratedJson(series.output);
+    assertMunicipalOutputMatchesSource(series, refreshed.metadata ?? {}, remote, resource);
   }
 
   runNodeScript("scripts/build-lamezia-opendata-series-status.mjs");
+}
+
+function assertMunicipalOutputMatchesSource(
+  series,
+  localMetadata,
+  remote,
+  resource,
+) {
+  const mismatches = [];
+  if (localMetadata.resource_hash !== resource.hash) mismatches.push("resource hash");
+  if (localMetadata.resource_last_modified !== resource.lastModified) {
+    mismatches.push("resource lastModified");
+  }
+  if (localMetadata.metadata_modified !== remote.metadataModified) {
+    mismatches.push("dataset metadataModified");
+  }
+
+  if (mismatches.length > 0) {
+    throw new Error(
+      `${series.id}: rebuilt output does not match official source metadata (${mismatches.join(", ")}).`,
+    );
+  }
+}
+
+async function readGeneratedJson(fileName) {
+  return JSON.parse(await readFile(path.join(GENERATED_DIR, fileName), "utf8"));
 }
 
 function runNodeScript(relativePath) {
