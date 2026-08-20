@@ -51,7 +51,9 @@ jobs:
 
       - name: Build static climate dataset
         if: steps.rome_morning.outputs.should_run == 'true'
-        run: node scripts/build-lamezia-climate-data.mjs
+        run: |
+          node scripts/build-lamezia-climate-data.mjs
+          node scripts/build-lamezia-opendata-series-status.mjs
 
       - name: Commit updated climate dataset
         if: steps.rome_morning.outputs.should_run == 'true'
@@ -62,7 +64,8 @@ jobs:
 
           git add \
             artifacts/lamezia-trasparente/src/data/generated/lameziaClimateDaily.json \
-            artifacts/lamezia-trasparente/src/data/generated/lameziaClimateDaily.metadata.json
+            artifacts/lamezia-trasparente/src/data/generated/lameziaClimateDaily.metadata.json \
+            artifacts/lamezia-trasparente/src/data/generated/lameziaOpenDataSeriesStatus.json
 
           if git diff --cached --quiet; then
             echo "No Lamezia climate data changes to commit."
