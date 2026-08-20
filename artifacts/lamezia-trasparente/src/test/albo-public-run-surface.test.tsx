@@ -2,78 +2,59 @@ import { fireEvent, screen, within } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 
 import {
+  ALBO_PUBLIC_DIFF_SUMMARY,
   ALBO_PUBLIC_RUN_ITEMS,
   ALBO_PUBLIC_RUN_SUMMARY,
   alboPublicSearchText,
 } from "@/data/alboPublicRun";
 import { ALBO_OPERATIONAL_STATUS } from "@/data/alboStatus";
-import { formatPublicTimeField } from "@/lib/time";
 import { Albo } from "@/pages/Albo";
 import { renderPage } from "./pages-harness";
 
-const ROME_WEEKDAY_FORMATTER = new Intl.DateTimeFormat("en-US", {
-  timeZone: "Europe/Rome",
-  weekday: "short",
-});
-
-function isWorkingDayInRome(value: string | null | undefined): boolean {
-  if (!value) return false;
-  const date = new Date(value);
-  if (Number.isNaN(date.getTime())) return false;
-  const weekday = ROME_WEEKDAY_FORMATTER.format(date);
-  return weekday !== "Sat" && weekday !== "Sun";
-}
-
-function expectedNextScheduledCheckLabel(value: string | null): string {
-  if (!value) return "Non disponibile";
-  if (!isWorkingDayInRome(value)) {
-    return "Nessun aggiornamento previsto nel fine settimana";
-  }
-  return formatPublicTimeField(value, "dd MMMM yyyy 'alle' HH:mm");
-}
-
 describe("Albo public run surface", () => {
-  it("renders the public-safe Albo run on the civic Albo page", () => {
+  it("renders a citizen-first pulse backed by the public-safe Albo run", () => {
     renderPage(Albo);
 
-    const heading = screen.getByRole("heading", {
-      name: /Atti correnti dalla fonte pubblica Albo/i,
-    });
-    const section = heading.closest("section");
-
-    expect(section).not.toBeNull();
-    const panel = within(section as HTMLElement);
-
-    expect(panel.getByText("Layer pubblico")).toBeInTheDocument();
-    expect(panel.getByText("Acquisiti")).toBeInTheDocument();
-    expect(panel.getByText(String(ALBO_PUBLIC_RUN_SUMMARY.counts.acquired))).toBeInTheDocument();
-    expect(panel.getByText(`${ALBO_PUBLIC_RUN_ITEMS.length} record pubblici mostrati`)).toBeInTheDocument();
-    expect(panel.getByText(/non sostituisce l'Albo Pretorio ufficiale/i)).toBeInTheDocument();
-    expect(panel.getByRole("link", { name: /Fonte ufficiale/i })).toHaveAttribute(
-      "href",
-      ALBO_PUBLIC_RUN_SUMMARY.source_url,
-    );
-
-    expect(screen.getAllByText(/Oggetto minimizzato per prudenza privacy/i).length).toBeGreaterThan(0);
-    expect(screen.getAllByText(/Metadato minimo/i).length).toBeGreaterThan(0);
-    expect(screen.getByRole("heading", { name: /PDF preservati nella piattaforma/i })).toBeInTheDocument();
-    expect(screen.getByText(/Prossimo controllo/i)).toBeInTheDocument();
     expect(
-      screen.getByText(expectedNextScheduledCheckLabel(ALBO_OPERATIONAL_STATUS.next_scheduled_check)),
+      screen.getByRole("heading", { name: /Cosa è successo nell'Albo/i }),
     ).toBeInTheDocument();
-    expect(screen.getByText(/Solo giorni lavorativi/i)).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: /Sintesi documenti di giornata/i })).toBeInTheDocument();
-    expect(screen.getByText(/Placeholder per la sintesi OCR/i)).toBeInTheDocument();
-    expect(screen.getByText("Documenti del giorno")).toBeInTheDocument();
-    if (isWorkingDayInRome(ALBO_PUBLIC_RUN_SUMMARY.retrieved_at)) {
-      expect(screen.queryByText(/Nessuna sintesi di giornata e prevista sabato o domenica/i)).toBeNull();
-    } else {
-      expect(screen.getByText(/Nessuna sintesi di giornata e prevista sabato o domenica/i)).toBeInTheDocument();
-    }
+    expect(
+      screen.getByRole("heading", {
+        name: /Cosa è cambiato dall'ultimo controllo/i,
+      }),
+    ).toBeInTheDocument();
+
+    expect(screen.getByText("Nuovi")).toBeInTheDocument();
+    expect(screen.getByText(String(ALBO_PUBLIC_DIFF_SUMMARY.counts.new))).toBeInTheDocument();
+    expect(screen.getByText("Aggiornati")).toBeInTheDocument();
+    expect(screen.getByText(String(ALBO_PUBLIC_DIFF_SUMMARY.counts.changed))).toBeInTheDocument();
+    expect(screen.getByText("Non più presenti")).toBeInTheDocument();
+    expect(screen.getByText(String(ALBO_PUBLIC_DIFF_SUMMARY.counts.removed))).toBeInTheDocument();
+
+    expect(
+      screen.getByRole("heading", { name: /Oggi nell'Albo/i }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: /Cerca negli atti disponibili/i }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        `${ALBO_PUBLIC_RUN_ITEMS.length} di ${ALBO_PUBLIC_RUN_ITEMS.length} record pubblici mostrati.`,
+      ),
+    ).toBeInTheDocument();
+    expect(screen.getByText("Fonte e metodo")).toBeInTheDocument();
+    expect(
+      screen.getByRole("link", { name: /Fonte ufficiale/i }),
+    ).toHaveAttribute("href", ALBO_PUBLIC_RUN_SUMMARY.source_url);
+
+    expect(screen.queryByText("Sintesi documento")).toBeNull();
+    expect(screen.queryByText(/Placeholder.*OCR/i)).toBeNull();
+    expect(screen.queryByText(/Sintesi documenti di giornata/i)).toBeNull();
+    expect(screen.getByText(/Nessun contenuto PDF viene interpretato o riassunto/i)).toBeInTheDocument();
     expect(screen.queryByText(/assegno di matern|assistenza domiciliare|persona fisica/i)).toBeNull();
   }, 15000);
 
-  it("filters public records with the search field", async () => {
+  it("filters the current public archive with the search field", async () => {
     renderPage(Albo);
 
     const firstPublicationNumber = ALBO_PUBLIC_RUN_ITEMS[0]?.publication_number;
@@ -91,13 +72,13 @@ describe("Albo public run surface", () => {
 
     expect(
       await screen.findByText(
-        new RegExp(`^${expectedMatches} di ${ALBO_PUBLIC_RUN_ITEMS.length} record`),
+        `${expectedMatches} di ${ALBO_PUBLIC_RUN_ITEMS.length} record pubblici mostrati.`,
       ),
     ).toBeInTheDocument();
     expect(screen.getAllByText(`Pubbl. ${firstPublicationNumber}`).length).toBeGreaterThan(0);
   });
 
-  it("opens a connected metadata sheet for a public Albo record", async () => {
+  it("opens a metadata-only sheet without promising future OCR summaries", async () => {
     renderPage(Albo);
 
     fireEvent.click(screen.getAllByRole("button", { name: /Apri scheda/i })[0]);
@@ -105,20 +86,31 @@ describe("Albo public run surface", () => {
     const dialog = await screen.findByRole("dialog");
     const sheet = within(dialog);
 
-    expect(sheet.getByText("Quadro dai metadati")).toBeInTheDocument();
-    expect(sheet.getByText("Sintesi documento")).toBeInTheDocument();
-    expect(sheet.getByText(/Placeholder: la descrizione sara compilata/i)).toBeInTheDocument();
+    expect(sheet.getByText("Informazioni disponibili")).toBeInTheDocument();
     expect(sheet.getByText("Metadati essenziali")).toBeInTheDocument();
     expect(sheet.getByText("Documento e fonte")).toBeInTheDocument();
-    expect(sheet.getByRole("link", { name: /Verifica fonte ufficiale/i })).toBeInTheDocument();
-    expect(sheet.getByText(/Il contenuto del PDF non viene analizzato/i)).toBeInTheDocument();
+    expect(sheet.getByText("Come leggere questa scheda")).toBeInTheDocument();
+    expect(
+      sheet.getByRole("link", { name: /Verifica fonte ufficiale/i }),
+    ).toBeInTheDocument();
+    expect(
+      sheet.getByText(/Il contenuto del documento non viene interpretato, sottoposto a OCR o riassunto automaticamente/i),
+    ).toBeInTheDocument();
+    expect(sheet.queryByText("Sintesi documento")).toBeNull();
+    expect(sheet.queryByText(/Placeholder/i)).toBeNull();
     expect(sheet.queryByText(/document_url/i)).toBeNull();
   });
 
-  it("does not expose direct document URLs through the app adapter", () => {
+  it("keeps public adapter records free from direct document URLs", () => {
     expect(ALBO_PUBLIC_RUN_ITEMS.length).toBeGreaterThan(0);
     for (const item of ALBO_PUBLIC_RUN_ITEMS) {
       expect("document_url" in item).toBe(false);
     }
+  });
+
+  it("keeps the pulse tied to the operational source state", () => {
+    expect(ALBO_OPERATIONAL_STATUS.diff_baseline).not.toBeNull();
+    expect(ALBO_OPERATIONAL_STATUS.last_update).toBeTruthy();
+    expect(ALBO_OPERATIONAL_STATUS.source_url).toBe(ALBO_PUBLIC_RUN_SUMMARY.source_url);
   });
 });
