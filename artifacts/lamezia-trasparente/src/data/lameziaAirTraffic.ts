@@ -1,5 +1,6 @@
 import airTrafficData from "./generated/lameziaAirTrafficMonthly.json";
 import airTrafficDataUrl from "./generated/lameziaAirTrafficMonthly.json?url";
+import airTrafficDelta from "./generated/lameziaAirTrafficMonthly.delta.json";
 
 type LameziaAirTrafficMonthlyRow = [
   month: string,
@@ -87,20 +88,62 @@ interface RawLameziaAirTrafficDataset
   monthly_rows: string;
 }
 
+interface RawLameziaAirTrafficDelta {
+  schema_version: number;
+  base_latest_month: string;
+  latest_complete_month: string;
+  generated_at: string;
+  monthly_rows: string;
+}
+
 const rawAirTrafficData = airTrafficData as RawLameziaAirTrafficDataset;
-const monthlyRecords = parseMonthlyRows(rawAirTrafficData.monthly_rows);
+const rawAirTrafficDelta = airTrafficDelta as RawLameziaAirTrafficDelta;
+const mergedMonthlyRows = [
+  rawAirTrafficData.monthly_rows,
+  rawAirTrafficDelta.monthly_rows,
+]
+  .filter(Boolean)
+  .join("\n");
+const monthlyRecords = parseMonthlyRows(mergedMonthlyRows);
 
 export const LAMEZIA_AIR_TRAFFIC_DATA: LameziaAirTrafficDataset = {
   ...rawAirTrafficData,
   metadata: {
     ...rawAirTrafficData.metadata,
+    generated_at:
+      rawAirTrafficDelta.generated_at || rawAirTrafficData.metadata.generated_at,
+    latest_complete_month:
+      rawAirTrafficDelta.latest_complete_month ||
+      rawAirTrafficData.metadata.latest_complete_month,
+    months: monthlyRecords.length,
+    source_period_end:
+      rawAirTrafficDelta.latest_complete_month ||
+      rawAirTrafficData.metadata.source_period_end,
     source_periods: monthlyRecords.map((record) => record.month),
   },
   monthly: monthlyRecords,
   annual: buildAnnualMetrics(monthlyRecords),
 };
 
-export const LAMEZIA_AIR_TRAFFIC_DATA_URL = airTrafficDataUrl;
+const downloadableAirTrafficData = {
+  ...rawAirTrafficData,
+  metadata: {
+    ...rawAirTrafficData.metadata,
+    generated_at: LAMEZIA_AIR_TRAFFIC_DATA.metadata.generated_at,
+    latest_complete_month:
+      LAMEZIA_AIR_TRAFFIC_DATA.metadata.latest_complete_month,
+    months: LAMEZIA_AIR_TRAFFIC_DATA.metadata.months,
+    source_period_end: LAMEZIA_AIR_TRAFFIC_DATA.metadata.source_period_end,
+  },
+  monthly_rows: mergedMonthlyRows,
+};
+
+export const LAMEZIA_AIR_TRAFFIC_DATA_URL =
+  typeof window === "undefined"
+    ? airTrafficDataUrl
+    : `data:application/json;charset=utf-8,${encodeURIComponent(
+        JSON.stringify(downloadableAirTrafficData),
+      )}`;
 
 export const LAMEZIA_AIR_TRAFFIC_YEARS = Array.from(
   new Set(LAMEZIA_AIR_TRAFFIC_DATA.monthly.map((record) => record.year)),
