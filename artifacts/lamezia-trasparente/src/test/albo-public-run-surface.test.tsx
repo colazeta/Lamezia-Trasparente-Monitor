@@ -18,18 +18,26 @@ describe("Albo public run surface", () => {
     expect(
       screen.getByRole("heading", { name: /Cosa è successo nell'Albo/i }),
     ).toBeInTheDocument();
-    expect(
-      screen.getByRole("heading", {
-        name: /Cosa è cambiato dall'ultimo controllo/i,
-      }),
-    ).toBeInTheDocument();
 
-    expect(screen.getByText("Nuovi")).toBeInTheDocument();
-    expect(screen.getByText(String(ALBO_PUBLIC_DIFF_SUMMARY.counts.new))).toBeInTheDocument();
-    expect(screen.getByText("Aggiornati")).toBeInTheDocument();
-    expect(screen.getByText(String(ALBO_PUBLIC_DIFF_SUMMARY.counts.changed))).toBeInTheDocument();
-    expect(screen.getByText("Non più presenti")).toBeInTheDocument();
-    expect(screen.getByText(String(ALBO_PUBLIC_DIFF_SUMMARY.counts.removed))).toBeInTheDocument();
+    const pulseHeading = screen.getByRole("heading", {
+      name: /Cosa è cambiato dall'ultimo controllo/i,
+    });
+    const pulseSection = pulseHeading.closest("section");
+    expect(pulseSection).not.toBeNull();
+    const pulse = within(pulseSection as HTMLElement);
+
+    expect(pulse.getByText("Nuovi")).toBeInTheDocument();
+    expect(
+      pulse.getByText(String(ALBO_PUBLIC_DIFF_SUMMARY.counts.new)),
+    ).toBeInTheDocument();
+    expect(pulse.getByText("Aggiornati")).toBeInTheDocument();
+    expect(
+      pulse.getByText(String(ALBO_PUBLIC_DIFF_SUMMARY.counts.changed)),
+    ).toBeInTheDocument();
+    expect(pulse.getByText("Non più presenti")).toBeInTheDocument();
+    expect(
+      pulse.getByText(String(ALBO_PUBLIC_DIFF_SUMMARY.counts.removed)),
+    ).toBeInTheDocument();
 
     expect(
       screen.getByRole("heading", { name: /Oggi nell'Albo/i }),
@@ -50,8 +58,12 @@ describe("Albo public run surface", () => {
     expect(screen.queryByText("Sintesi documento")).toBeNull();
     expect(screen.queryByText(/Placeholder.*OCR/i)).toBeNull();
     expect(screen.queryByText(/Sintesi documenti di giornata/i)).toBeNull();
-    expect(screen.getByText(/Nessun contenuto PDF viene interpretato o riassunto/i)).toBeInTheDocument();
-    expect(screen.queryByText(/assegno di matern|assistenza domiciliare|persona fisica/i)).toBeNull();
+    expect(
+      screen.getByText(/Nessun contenuto PDF viene interpretato o riassunto/i),
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByText(/assegno di matern|assistenza domiciliare|persona fisica/i),
+    ).toBeNull();
   }, 15000);
 
   it("filters the current public archive with the search field", async () => {
@@ -75,7 +87,9 @@ describe("Albo public run surface", () => {
         `${expectedMatches} di ${ALBO_PUBLIC_RUN_ITEMS.length} record pubblici mostrati.`,
       ),
     ).toBeInTheDocument();
-    expect(screen.getAllByText(`Pubbl. ${firstPublicationNumber}`).length).toBeGreaterThan(0);
+    expect(
+      screen.getAllByText(`Pubbl. ${firstPublicationNumber}`).length,
+    ).toBeGreaterThan(0);
   });
 
   it("opens a metadata-only sheet without promising future OCR summaries", async () => {
@@ -94,7 +108,9 @@ describe("Albo public run surface", () => {
       sheet.getByRole("link", { name: /Verifica fonte ufficiale/i }),
     ).toBeInTheDocument();
     expect(
-      sheet.getByText(/Il contenuto del documento non viene interpretato, sottoposto a OCR o riassunto automaticamente/i),
+      sheet.getByText(
+        /Il contenuto del documento non viene interpretato, sottoposto a OCR o riassunto automaticamente/i,
+      ),
     ).toBeInTheDocument();
     expect(sheet.queryByText("Sintesi documento")).toBeNull();
     expect(sheet.queryByText(/Placeholder/i)).toBeNull();
@@ -111,6 +127,8 @@ describe("Albo public run surface", () => {
   it("keeps the pulse tied to the operational source state", () => {
     expect(ALBO_OPERATIONAL_STATUS.diff_baseline).not.toBeNull();
     expect(ALBO_OPERATIONAL_STATUS.last_update).toBeTruthy();
-    expect(ALBO_OPERATIONAL_STATUS.source_url).toBe(ALBO_PUBLIC_RUN_SUMMARY.source_url);
+    expect(ALBO_OPERATIONAL_STATUS.source_url).toBe(
+      ALBO_PUBLIC_RUN_SUMMARY.source_url,
+    );
   });
 });
