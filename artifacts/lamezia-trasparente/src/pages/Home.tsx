@@ -1,12 +1,10 @@
 import { Link } from "wouter";
 import {
-  useGetRecentActivity,
   useGetStatsOverview,
   useListConvocazioni,
   useListPnrrProjects,
 } from "@workspace/api-client-react";
 import {
-  AlertTriangle,
   ArrowRight,
   ArrowUpRight,
   Calendar,
@@ -14,9 +12,9 @@ import {
   CheckCircle2,
   FileSearch,
   FileText,
-  Info,
   Landmark,
   Megaphone,
+  RefreshCw,
   ShieldAlert,
   Users,
 } from "lucide-react";
@@ -26,21 +24,37 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { PageMeta } from "@/components/seo/PageMeta";
+import {
+  ALBO_PUBLIC_DIFF_CHANGED_ITEMS,
+  ALBO_PUBLIC_DIFF_NEW_ITEMS,
+  ALBO_PUBLIC_DIFF_REMOVED_ITEMS,
+  ALBO_PUBLIC_DIFF_SUMMARY,
+  ALBO_PUBLIC_RUN_ITEMS,
+  type AlboPublicRunItem,
+} from "@/data/alboPublicRun";
+import { ALBO_OPERATIONAL_STATUS } from "@/data/alboStatus";
 import { asApiList } from "@/lib/apiList";
 import { PUBLIC_NUMBER_PLACEHOLDER } from "@/lib/publicNumbers";
-
-type ActivityItem = {
-  id: string | number;
-  type?: string;
-  title?: string;
-  date?: string;
-};
 
 type ConvocazioneItem = {
   id: number;
   oggetto: string;
   dataAtto?: string | null;
   pubStart?: string | null;
+};
+
+type PulseKind = "new" | "changed" | "removed" | "context";
+
+type PulseItem = {
+  kind: PulseKind;
+  item: AlboPublicRunItem;
+};
+
+const PULSE_LABELS: Record<PulseKind, string> = {
+  new: "Nuovo",
+  changed: "Aggiornato",
+  removed: "Non più presente",
+  context: "Recente",
 };
 
 function formatDate(value: string | null | undefined) {
@@ -51,14 +65,6 @@ function formatDate(value: string | null | undefined) {
     : format(date, "dd MMM yyyy", { locale: it });
 }
 
-function formatActivityDate(value: string | undefined) {
-  if (!value) return "Data non disponibile";
-  const date = new Date(value);
-  return Number.isNaN(date.getTime())
-    ? "Data non disponibile"
-    : format(date, "dd MMM", { locale: it });
-}
-
 function formatMonitoredAmount(value: number | null | undefined) {
   if (typeof value !== "number" || !Number.isFinite(value)) {
     return PUBLIC_NUMBER_PLACEHOLDER;
@@ -67,13 +73,55 @@ function formatMonitoredAmount(value: number | null | undefined) {
   return `€ ${(value / 1_000_000).toFixed(1)}M`;
 }
 
+function formatCivicTime(value: string | null | undefined) {
+  if (!value) return "Non disponibile";
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "Non disponibile";
+
+  return new Intl.DateTimeFormat("it-IT", {
+    timeZone: "Europe/Rome",
+    day: "2-digit",
+    month: "short",
+    hour: "2-digit",
+    minute: "2-digit",
+  }).format(date);
+}
+
+function sortByPublication(items: AlboPublicRunItem[]) {
+  return [...items].sort((a, b) => {
+    const left = `${a.publication_start ?? ""}-${a.publication_number ?? ""}`;
+    const right = `${b.publication_start ?? ""}-${b.publication_number ?? ""}`;
+    return right.localeCompare(left, "it");
+  });
+}
+
+function buildPulseItems(): PulseItem[] {
+  const changed: PulseItem[] = [
+    ...ALBO_PUBLIC_DIFF_NEW_ITEMS.map((item) => ({ kind: "new" as const, item })),
+    ...ALBO_PUBLIC_DIFF_CHANGED_ITEMS.map((entry) => ({
+      kind: "changed" as const,
+      item: entry.after,
+    })),
+    ...ALBO_PUBLIC_DIFF_REMOVED_ITEMS.map((item) => ({
+      kind: "removed" as const,
+      item,
+    })),
+  ];
+
+  if (changed.length > 0) return changed.slice(0, 5);
+
+  return sortByPublication(ALBO_PUBLIC_RUN_ITEMS)
+    .slice(0, 5)
+    .map((item) => ({ kind: "context" as const, item }));
+}
+
 const gateways = [
   {
     title: "Cosa sta succedendo",
     description:
-      "Ultimi atti, pubblicazioni e sedute: il punto di partenza per capire cosa si muove nel Comune.",
-    href: "/albo/",
-    cta: "Vedi gli ultimi atti",
+      "Ultimi atti e variazioni dell'Albo, insieme a sedute e appuntamenti pubblici.",
+    href: "/albo",
+    cta: "Vedi cosa è cambiato",
     icon: FileSearch,
   },
   {
@@ -96,7 +144,6 @@ const gateways = [
 
 export function Home() {
   const { data: stats, isLoading: statsLoading } = useGetStatsOverview();
-  const { data: activity, isLoading: activityLoading } = useGetRecentActivity();
   const { data: pnrrProjects } = useListPnrrProjects();
   const { data: consiglio, isLoading: consiglioLoading } = useListConvocazioni({
     tipo: "consiglio",
@@ -104,8 +151,10 @@ export function Home() {
   const { data: commissioni, isLoading: commissioniLoading } =
     useListConvocazioni({ tipo: "commissione" });
 
-  const recentActivity = asApiList<ActivityItem>(activity).slice(0, 5);
   const pnrrProjectCount = asApiList(pnrrProjects?.projects).length;
+  const pulseItems = buildPulseItems();
+  const pulseCounts = ALBO_PUBLIC_DIFF_SUMMARY.counts;
+  const hasDiff = pulseCounts.new + pulseCounts.changed + pulseCounts.removed > 0;
 
   return (
     <div className="flex flex-col">
@@ -133,8 +182,8 @@ export function Home() {
 
             <p className="mt-6 max-w-3xl text-base leading-7 text-sidebar-foreground/80 sm:text-lg md:text-xl">
               Atti, sedute, contratti e progetti pubblici collegati alle fonti,
-              in un solo posto. Il monitor aiuta a orientarsi nei documenti e
-              rende visibili anche limiti e stato dei dati.
+              in un solo posto. Il monitor aiuta a capire cosa cambia e rende
+              visibili anche limiti e stato dei dati.
             </p>
 
             <div className="mt-8 flex w-full flex-col gap-3 sm:w-auto sm:flex-row">
@@ -212,56 +261,61 @@ export function Home() {
               Oggi a Lamezia
             </h2>
             <p className="mt-3 text-base leading-7 text-muted-foreground md:text-lg">
-              Le novità che le fonti collegate rendono disponibili in questo
-              momento: aggiornamenti documentali e agenda pubblica, senza
-              confondere assenza di dati con assenza di attività.
+              Cosa è cambiato nelle fonti collegate dall&apos;ultimo controllo e
+              quali appuntamenti pubblici risultano disponibili.
             </p>
           </div>
 
-          <div className="grid gap-6 lg:grid-cols-[1.05fr_0.95fr]">
+          <div className="grid gap-6 lg:grid-cols-[1.08fr_0.92fr]">
             <Card className="overflow-hidden">
               <CardHeader className="border-b border-border bg-card py-4">
-                <div className="flex items-center justify-between gap-4">
+                <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
                   <div>
                     <p className="text-sm font-semibold text-foreground">
-                      Ultimi aggiornamenti disponibili
+                      Cosa è cambiato dall&apos;ultimo controllo
                     </p>
-                    <p className="mt-1 text-xs text-muted-foreground">
-                      Atti, contratti e altri movimenti esposti dalle fonti
-                      collegate.
+                    <p className="mt-1 text-xs leading-5 text-muted-foreground">
+                      Albo Pretorio · ultimo controllo {formatCivicTime(ALBO_OPERATIONAL_STATUS.last_update)}
                     </p>
                   </div>
                   <Link
-                    href="/albo/"
+                    href="/albo"
                     className="shrink-0 text-sm font-semibold text-primary hover:underline"
                   >
-                    Albo
+                    Apri l&apos;Albo civico
                   </Link>
                 </div>
+
+                <div className="mt-3 grid grid-cols-3 gap-2">
+                  <PulseCount label="Nuovi" value={pulseCounts.new} />
+                  <PulseCount label="Aggiornati" value={pulseCounts.changed} />
+                  <PulseCount label="Non più presenti" value={pulseCounts.removed} />
+                </div>
               </CardHeader>
+
               <CardContent className="p-0">
                 <div className="divide-y divide-border">
-                  {activityLoading ? (
-                    Array.from({ length: 5 }).map((_, index) => (
-                      <div key={index} className="flex gap-4 p-4">
-                        <Skeleton className="h-9 w-9 shrink-0 rounded-full" />
-                        <div className="w-full space-y-2">
-                          <Skeleton className="h-4 w-full" />
-                          <Skeleton className="h-3 w-24" />
-                        </div>
-                      </div>
-                    ))
-                  ) : recentActivity.length > 0 ? (
-                    recentActivity.map((item) => (
-                      <ActivityRow key={item.id} item={item} />
+                  {pulseItems.length > 0 ? (
+                    pulseItems.map((pulse) => (
+                      <AlboPulseRow key={`${pulse.kind}-${pulse.item.id}`} pulse={pulse} />
                     ))
                   ) : (
                     <div className="p-8 text-sm leading-6 text-muted-foreground">
-                      Non risultano aggiornamenti recenti dalla fonte collegata.
-                      Consulta l&apos;Albo Pretorio per la fonte ufficiale e lo
-                      stato delle fonti per i limiti di copertura.
+                      Non risultano record pubblici disponibili nello snapshot corrente.
                     </div>
                   )}
+                </div>
+
+                <div className="flex flex-col gap-1 border-t border-border bg-muted/25 px-4 py-3 text-xs text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
+                  <span>
+                    {hasDiff
+                      ? "Confronto effettuato sulla baseline pubblica precedente."
+                      : "Nessuna variazione rilevata: sono mostrati gli atti correnti più recenti."}
+                  </span>
+                  <span className="inline-flex items-center gap-1.5 font-medium">
+                    <RefreshCw className="h-3.5 w-3.5" aria-hidden="true" />
+                    Prossimo controllo {formatCivicTime(ALBO_OPERATIONAL_STATUS.next_scheduled_check)}
+                  </span>
                 </div>
               </CardContent>
             </Card>
@@ -304,9 +358,9 @@ export function Home() {
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
             <StatCard
               title="Atti dalla fonte"
-              value={stats?.acts}
+              value={stats?.acts ?? ALBO_OPERATIONAL_STATUS.counts.acquired}
               loading={statsLoading}
-              href="/albo/"
+              href="/albo"
               icon={FileSearch}
             />
             <StatCard
@@ -401,6 +455,47 @@ export function Home() {
   );
 }
 
+function PulseCount({ label, value }: { label: string; value: number }) {
+  return (
+    <div className="rounded-lg border border-border bg-background px-3 py-2">
+      <div className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground">
+        {label}
+      </div>
+      <div className="mt-0.5 font-display text-xl font-bold tabular-nums text-foreground">
+        {value}
+      </div>
+    </div>
+  );
+}
+
+function AlboPulseRow({ pulse }: { pulse: PulseItem }) {
+  const { item, kind } = pulse;
+  const publication = item.publication_number
+    ? `Pubbl. ${item.publication_number}`
+    : formatDate(item.publication_start);
+
+  return (
+    <Link href="/albo" className="group block p-4 transition-colors hover:bg-muted/45">
+      <div className="mb-2 flex flex-wrap items-center gap-2">
+        <span className="rounded-full border border-primary/20 bg-primary/5 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-primary">
+          {PULSE_LABELS[kind]}
+        </span>
+        <span className="text-[10px] font-semibold text-muted-foreground">
+          {item.classification.act_category.label}
+        </span>
+      </div>
+      <p className="line-clamp-2 text-sm font-semibold leading-snug text-foreground">
+        {item.subject}
+      </p>
+      <div className="mt-2 flex flex-wrap gap-x-3 gap-y-1 text-xs text-muted-foreground">
+        <span>{item.classification.sector.label}</span>
+        <span>·</span>
+        <span>{publication}</span>
+      </div>
+    </Link>
+  );
+}
+
 function AgendaCard({
   title,
   icon: Icon,
@@ -466,74 +561,6 @@ function AgendaCard({
   );
 }
 
-function ActivityRow({ item }: { item: ActivityItem }) {
-  const href = (() => {
-    switch (item.type) {
-      case "act":
-        return "/albo/";
-      case "contract": {
-        const numericId = String(item.id).replace(/^contract-/, "");
-        return `/contratti/${numericId}`;
-      }
-      case "report":
-        return "/segnalazioni";
-      default:
-        return "/stato-monitoraggio";
-    }
-  })();
-
-  const label = (() => {
-    switch (item.type) {
-      case "act":
-        return "Atto";
-      case "contract":
-        return "Contratto";
-      case "report":
-        return "Segnalazione";
-      default:
-        return "Aggiornamento";
-    }
-  })();
-
-  const icon = (() => {
-    switch (item.type) {
-      case "act":
-        return <FileSearch className="h-4 w-4" aria-hidden="true" />;
-      case "contract":
-        return <FileText className="h-4 w-4" aria-hidden="true" />;
-      case "report":
-        return <AlertTriangle className="h-4 w-4" aria-hidden="true" />;
-      default:
-        return <Info className="h-4 w-4" aria-hidden="true" />;
-    }
-  })();
-
-  return (
-    <Link
-      href={href}
-      className="group flex gap-4 p-4 transition-colors hover:bg-muted/45"
-    >
-      <div className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-border bg-background text-muted-foreground transition-colors group-hover:border-brand/40 group-hover:text-brand">
-        {icon}
-      </div>
-      <div className="min-w-0">
-        <div className="mb-1 flex items-center gap-2">
-          <span className="text-[10px] font-bold uppercase tracking-wider text-brand">
-            {label}
-          </span>
-          <span className="text-[10px] text-muted-foreground/60">•</span>
-          <span className="text-[10px] text-muted-foreground">
-            {formatActivityDate(item.date)}
-          </span>
-        </div>
-        <p className="line-clamp-2 text-sm font-medium leading-snug">
-          {item.title || "Aggiornamento dalla fonte collegata"}
-        </p>
-      </div>
-    </Link>
-  );
-}
-
 function StatCard({
   title,
   value,
@@ -554,9 +581,7 @@ function StatCard({
       href={href}
       className={`relative block overflow-hidden rounded-lg border border-card-border bg-card p-5 shadow-[var(--shadow-card)] transition-colors hover:border-primary/35 hover:bg-primary/5 ${highlight ? "ring-1 ring-brand/20" : ""}`}
     >
-      {highlight ? (
-        <span className="absolute left-0 top-0 h-full w-1 bg-brand" />
-      ) : null}
+      {highlight ? <span className="absolute left-0 top-0 h-full w-1 bg-brand" /> : null}
       <div className="mb-3 flex items-center gap-3">
         <span
           className={`rounded-md p-2 ${highlight ? "bg-brand/15 text-brand" : "bg-muted text-muted-foreground"}`}
@@ -595,9 +620,7 @@ function ParticipationCard({
       className="group rounded-xl border border-card-border bg-card p-5 shadow-[var(--shadow-card)] transition-colors hover:border-primary/35 hover:bg-primary/5"
     >
       <h3 className="font-display text-lg font-bold">{title}</h3>
-      <p className="mt-2 text-sm leading-6 text-muted-foreground">
-        {description}
-      </p>
+      <p className="mt-2 text-sm leading-6 text-muted-foreground">{description}</p>
       <span className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-primary">
         Apri
         <ArrowUpRight className="h-4 w-4" aria-hidden="true" />

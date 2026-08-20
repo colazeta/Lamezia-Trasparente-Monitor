@@ -2,20 +2,18 @@ import { useMemo, useState } from "react";
 import {
   Calendar,
   Clock,
-  Database,
   ExternalLink,
   FileArchive,
+  FileSearch,
   FileText,
-  Filter,
-  Hash,
   Info,
   Landmark,
   RefreshCw,
   Search,
   ShieldAlert,
-  Sparkles,
 } from "lucide-react";
 
+import { FeedSubscribeButton } from "@/components/FeedSubscribeButton";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -26,9 +24,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { FeedSubscribeButton } from "@/components/FeedSubscribeButton";
 import { Input } from "@/components/ui/input";
-import { PageMeta } from "@/components/seo/PageMeta";
 import {
   Select,
   SelectContent,
@@ -36,35 +32,31 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { PageMeta } from "@/components/seo/PageMeta";
 import {
   ALBO_ARCHIVED_DOCUMENTS_BY_ID,
   ALBO_DOCUMENTS_MANIFEST,
-  ALBO_PRIVACY_RISK_LABELS,
   ALBO_PUBLIC_DIFF_CHANGED_ITEMS,
   ALBO_PUBLIC_DIFF_NEW_ITEMS,
   ALBO_PUBLIC_DIFF_REMOVED_ITEMS,
   ALBO_PUBLIC_DIFF_SUMMARY,
   ALBO_PUBLIC_RUN_ITEMS,
   ALBO_PUBLIC_RUN_SUMMARY,
-  ALBO_PUBLIC_VISIBILITY_LABELS,
   alboPublicSearchText,
   type AlboPublicRunItem,
-  type AlboPrivacyRisk,
-  type AlboPublicVisibility,
 } from "@/data/alboPublicRun";
-import { ALBO_OPERATIONAL_STATUS, ALBO_VERIFICATION_LABELS } from "@/data/alboStatus";
+import {
+  ALBO_OPERATIONAL_STATUS,
+  ALBO_VERIFICATION_LABELS,
+} from "@/data/alboStatus";
 import { MONITORING_DOCS_NOTICE } from "@/lib/monitoring";
-import { formatPublicTimeField } from "@/lib/time";
 
-type VisibilityFilter = AlboPublicVisibility | "all";
-type RiskFilter = AlboPrivacyRisk | "all";
-type DocumentFilter = "all" | "archived" | "without_archive";
+type PulseKind = "new" | "changed" | "removed" | "context";
 
-const ALL_OFFICES = "all";
-const ALL_SECTORS = "all";
-const ALL_ACT_CATEGORIES = "all";
-const RECENT_CONTEXT_LIMIT = 6;
-const CIVIC_TIMEZONE = "Europe/Rome";
+type PulseItem = {
+  kind: PulseKind;
+  item: AlboPublicRunItem;
+};
 
 type ClassificationStat = {
   id: string;
@@ -72,106 +64,19 @@ type ClassificationStat = {
   count: number;
 };
 
-type NewsActivityKind = "new" | "changed" | "removed" | "context";
+const ALL_SECTORS = "all";
+const ALL_ACT_CATEGORIES = "all";
+const CIVIC_TIMEZONE = "Europe/Rome";
+const PULSE_LIMIT = 6;
 
-type NewsActivityItem = {
-  kind: NewsActivityKind;
-  item: AlboPublicRunItem;
-};
-
-type ClassificationConfidence = AlboPublicRunItem["classification"]["sector"]["confidence"];
-type ClassificationBasis = AlboPublicRunItem["classification"]["sector"]["basis"];
-
-const NEWS_ACTIVITY_LABELS: Record<NewsActivityKind, string> = {
+const PULSE_LABELS: Record<PulseKind, string> = {
   new: "Nuovo",
   changed: "Aggiornato",
-  removed: "Rimosso",
-  context: "Contesto recente",
+  removed: "Non più presente",
+  context: "Recente",
 };
 
-const CLASSIFICATION_CONFIDENCE_LABELS: Record<ClassificationConfidence, string> = {
-  high: "Alta",
-  medium: "Media",
-  low: "Bassa",
-};
-
-const CLASSIFICATION_BASIS_LABELS: Record<ClassificationBasis, string> = {
-  office: "ufficio",
-  act_type: "tipo atto",
-  office_and_act_type: "ufficio e tipo atto",
-  fallback: "fallback prudente",
-};
-
-const ROME_DATE_PART_FORMATTER = new Intl.DateTimeFormat("en-US", {
-  timeZone: CIVIC_TIMEZONE,
-  year: "numeric",
-  month: "2-digit",
-  day: "2-digit",
-});
-
-const ROME_WEEKDAY_FORMATTER = new Intl.DateTimeFormat("en-US", {
-  timeZone: CIVIC_TIMEZONE,
-  weekday: "short",
-});
-
-function shortDate(value: string | null): string {
-  return value ? formatPublicTimeField(value, "dd/MM/yyyy") : "Data non disponibile";
-}
-
-function fullDateTime(value: string | null | undefined): string {
-  return value ? formatPublicTimeField(value, "dd MMMM yyyy 'alle' HH:mm") : "Non disponibile";
-}
-
-function displayValue(value: string | null | undefined): string {
-  return value && value.trim().length > 0 ? value : "Non disponibile";
-}
-
-function verificationLabel(value: string): string {
-  if (value in ALBO_VERIFICATION_LABELS) {
-    return ALBO_VERIFICATION_LABELS[value as keyof typeof ALBO_VERIFICATION_LABELS];
-  }
-  return value;
-}
-
-function compactHash(value: string | null | undefined): string {
-  if (!value) return "Non disponibile";
-  if (value.length <= 24) return value;
-  return `${value.slice(0, 12)}...${value.slice(-8)}`;
-}
-
-function dateKeyInRome(value: string | null | undefined): string | null {
-  if (!value) return null;
-  const date = new Date(value);
-  if (Number.isNaN(date.getTime())) return null;
-  const parts = ROME_DATE_PART_FORMATTER.formatToParts(date);
-  const year = parts.find((part) => part.type === "year")?.value;
-  const month = parts.find((part) => part.type === "month")?.value;
-  const day = parts.find((part) => part.type === "day")?.value;
-  return year && month && day ? `${year}-${month}-${day}` : null;
-}
-
-function isWorkingDayInRome(value: string | null | undefined): boolean {
-  if (!value) return false;
-  const date = new Date(value);
-  if (Number.isNaN(date.getTime())) return false;
-  const weekday = ROME_WEEKDAY_FORMATTER.format(date);
-  return weekday !== "Sat" && weekday !== "Sun";
-}
-
-function nextScheduledCheckLabel(value: string | null | undefined): string {
-  if (!value) return "Non disponibile";
-  if (!isWorkingDayInRome(value)) return "Nessun aggiornamento previsto nel fine settimana";
-  return fullDateTime(value);
-}
-
-function formatBytes(value: number): string {
-  if (!value) return "0 B";
-  if (value < 1024) return `${value} B`;
-  if (value < 1024 * 1024) return `${Math.round(value / 1024)} KB`;
-  return `${(value / (1024 * 1024)).toFixed(1)} MB`;
-}
-
-function normalizeQuery(value: string): string {
+function normalizeQuery(value: string) {
   return value
     .trim()
     .toLowerCase()
@@ -179,107 +84,120 @@ function normalizeQuery(value: string): string {
     .replace(/[\u0300-\u036f]/g, "");
 }
 
-function visibilityClass(visibility: AlboPublicVisibility): string {
-  if (visibility === "publishable") return "bg-emerald-50 text-emerald-800 border-emerald-200";
-  if (visibility === "publishable_with_minimisation") return "bg-amber-50 text-amber-800 border-amber-200";
-  return "bg-slate-100 text-slate-700 border-slate-200";
+function formatCivicDate(value: string | null | undefined) {
+  if (!value) return "Data non disponibile";
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "Data non disponibile";
+
+  return new Intl.DateTimeFormat("it-IT", {
+    timeZone: CIVIC_TIMEZONE,
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+  }).format(date);
 }
 
-function publicationSortValue(item: AlboPublicRunItem): string {
-  return [
-    item.publication_start ?? "",
-    item.publication_number ?? "",
-  ].join(" ");
+function formatCivicDateTime(value: string | null | undefined) {
+  if (!value) return "Non disponibile";
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "Non disponibile";
+
+  return new Intl.DateTimeFormat("it-IT", {
+    timeZone: CIVIC_TIMEZONE,
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  }).format(date);
 }
 
-function mostRecentItems(items: AlboPublicRunItem[], limit = RECENT_CONTEXT_LIMIT): AlboPublicRunItem[] {
-  return [...items]
-    .sort((a, b) => publicationSortValue(b).localeCompare(publicationSortValue(a), "it"))
-    .slice(0, limit);
+function civicDateKey(value: string | null | undefined) {
+  if (!value) return null;
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return null;
+
+  const parts = new Intl.DateTimeFormat("en-CA", {
+    timeZone: CIVIC_TIMEZONE,
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).formatToParts(date);
+  const year = parts.find((part) => part.type === "year")?.value;
+  const month = parts.find((part) => part.type === "month")?.value;
+  const day = parts.find((part) => part.type === "day")?.value;
+  return year && month && day ? `${year}-${month}-${day}` : null;
 }
 
-function classificationStats<TItem>(
-  items: TItem[],
-  selector: (item: TItem) => { id: string; label: string },
+function sortByPublication(items: AlboPublicRunItem[]) {
+  return [...items].sort((a, b) => {
+    const left = `${a.publication_start ?? ""}-${a.publication_number ?? ""}`;
+    const right = `${b.publication_start ?? ""}-${b.publication_number ?? ""}`;
+    return right.localeCompare(left, "it");
+  });
+}
+
+function classificationStats(
+  items: AlboPublicRunItem[],
+  selector: (item: AlboPublicRunItem) => { id: string; label: string },
 ): ClassificationStat[] {
   const stats = new Map<string, ClassificationStat>();
+
   for (const item of items) {
     const selected = selector(item);
-    const current = stats.get(selected.id);
-    if (current) {
-      current.count += 1;
+    const existing = stats.get(selected.id);
+    if (existing) {
+      existing.count += 1;
     } else {
       stats.set(selected.id, { ...selected, count: 1 });
     }
   }
-  return [...stats.values()].sort((a, b) => b.count - a.count || a.label.localeCompare(b.label, "it"));
-}
 
-function newsStatusClass(kind: NewsActivityKind): string {
-  if (kind === "new") return "border-emerald-200 bg-emerald-50 text-emerald-800";
-  if (kind === "changed") return "border-amber-200 bg-amber-50 text-amber-800";
-  if (kind === "removed") return "border-slate-300 bg-slate-100 text-slate-700";
-  return "border-sky-200 bg-sky-50 text-sky-800";
-}
-
-function diffActivityItems(recentItems: AlboPublicRunItem[]): NewsActivityItem[] {
-  const activity: NewsActivityItem[] = [
-    ...ALBO_PUBLIC_DIFF_NEW_ITEMS.map((item) => ({ kind: "new" as const, item })),
-    ...ALBO_PUBLIC_DIFF_CHANGED_ITEMS.map((entry) => ({ kind: "changed" as const, item: entry.after })),
-    ...ALBO_PUBLIC_DIFF_REMOVED_ITEMS.map((item) => ({ kind: "removed" as const, item })),
-  ];
-
-  if (activity.length > 0) return activity.slice(0, RECENT_CONTEXT_LIMIT);
-
-  return recentItems.map((item) => ({ kind: "context" as const, item }));
-}
-
-function StatBars({ stats, total }: { stats: ClassificationStat[]; total: number }) {
-  if (!stats.length || total <= 0) {
-    return <p className="text-sm text-muted-foreground">Nessun dato classificabile nello snapshot corrente.</p>;
-  }
-
-  return (
-    <div className="space-y-2">
-      {stats.map((stat) => {
-        const width = `${Math.max(8, Math.round((stat.count / total) * 100))}%`;
-        return (
-          <div key={stat.id}>
-            <div className="mb-1 flex items-center justify-between gap-3 text-xs">
-              <span className="min-w-0 truncate font-semibold text-foreground">{stat.label}</span>
-              <span className="font-mono text-muted-foreground">{stat.count}</span>
-            </div>
-            <div className="h-2 rounded-full bg-muted">
-              <div className="h-2 rounded-full bg-primary" style={{ width }} />
-            </div>
-          </div>
-        );
-      })}
-    </div>
+  return [...stats.values()].sort(
+    (a, b) => b.count - a.count || a.label.localeCompare(b.label, "it"),
   );
 }
 
-function DetailField({ label, value, mono = false }: { label: string; value: string; mono?: boolean }) {
+function buildPulseItems(): PulseItem[] {
+  const activity: PulseItem[] = [
+    ...ALBO_PUBLIC_DIFF_NEW_ITEMS.map((item) => ({ kind: "new" as const, item })),
+    ...ALBO_PUBLIC_DIFF_CHANGED_ITEMS.map((entry) => ({
+      kind: "changed" as const,
+      item: entry.after,
+    })),
+    ...ALBO_PUBLIC_DIFF_REMOVED_ITEMS.map((item) => ({
+      kind: "removed" as const,
+      item,
+    })),
+  ];
+
+  if (activity.length > 0) return activity.slice(0, PULSE_LIMIT);
+
+  return sortByPublication(ALBO_PUBLIC_RUN_ITEMS)
+    .slice(0, PULSE_LIMIT)
+    .map((item) => ({ kind: "context" as const, item }));
+}
+
+function PulseCount({ label, value }: { label: string; value: number }) {
   return (
-    <div className="rounded-lg border border-border bg-muted/30 p-3">
-      <div className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">{label}</div>
-      <div className={`mt-1 break-words text-sm font-semibold text-foreground ${mono ? "font-mono" : ""}`}>
+    <div className="rounded-xl border border-border bg-background p-4">
+      <div className="text-xs font-bold uppercase tracking-wide text-muted-foreground">
+        {label}
+      </div>
+      <div className="mt-1 font-display text-3xl font-bold tabular-nums text-foreground">
         {value}
       </div>
     </div>
   );
 }
 
-function EssentialMetadataField({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="rounded-lg border border-border bg-background p-3">
-      <div className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">{label}</div>
-      <div className="mt-1 text-sm font-semibold leading-snug text-foreground">{value}</div>
-    </div>
-  );
-}
-
-function AlboRecordDetailDialog({ item, onClose }: { item: AlboPublicRunItem | null; onClose: () => void }) {
+function AlboRecordDialog({
+  item,
+  onClose,
+}: {
+  item: AlboPublicRunItem | null;
+  onClose: () => void;
+}) {
   const archivedDocument = item ? ALBO_ARCHIVED_DOCUMENTS_BY_ID.get(item.id) : null;
 
   return (
@@ -292,9 +210,11 @@ function AlboRecordDetailDialog({ item, onClose }: { item: AlboPublicRunItem | n
       {item && (
         <DialogContent className="max-h-[90vh] max-w-3xl overflow-y-auto">
           <DialogHeader>
-            <DialogTitle className="pr-6 font-display text-xl leading-snug">{item.subject}</DialogTitle>
+            <DialogTitle className="pr-6 font-display text-xl leading-snug">
+              {item.subject}
+            </DialogTitle>
             <DialogDescription>
-              Scheda costruita dai metadati pubblici acquisiti il {fullDateTime(item.retrieved_at)}.
+              Metadati acquisiti dalla fonte pubblica il {formatCivicDateTime(item.retrieved_at)}.
             </DialogDescription>
           </DialogHeader>
 
@@ -302,104 +222,63 @@ function AlboRecordDetailDialog({ item, onClose }: { item: AlboPublicRunItem | n
             <Badge variant="secondary" className="text-xs">
               {item.classification.act_category.label}
             </Badge>
-            <span className="rounded-full border border-border bg-muted/50 px-2 py-0.5 text-xs font-semibold text-foreground">
+            <span className="rounded-full border border-border bg-muted/50 px-2 py-0.5 text-xs font-semibold">
               {item.classification.sector.label}
             </span>
-            <span className={`rounded-full border px-2 py-0.5 text-xs font-semibold ${visibilityClass(item.public_visibility)}`}>
-              {ALBO_PUBLIC_VISIBILITY_LABELS[item.public_visibility]}
-            </span>
-            <span className="text-xs text-muted-foreground">{ALBO_PRIVACY_RISK_LABELS[item.privacy_risk]}</span>
           </div>
 
-          <section className="rounded-lg border border-border bg-muted/30 p-4">
-            <div className="mb-2 flex items-center gap-2 text-sm font-bold text-foreground">
-              <FileText className="h-4 w-4 text-primary" aria-hidden="true" />
-              Quadro dai metadati
-            </div>
-            <p className="text-sm leading-relaxed text-muted-foreground">
-              {displayValue(item.act_type)}
-              {item.act_number ? ` n. ${item.act_number}` : ""}
-              {item.act_date ? ` del ${shortDate(item.act_date)}` : ""}, pubblicazione{" "}
-              {displayValue(item.publication_number)} dal {shortDate(item.publication_start)}
-              {item.publication_end ? ` al ${shortDate(item.publication_end)}` : ""}. Ufficio:{" "}
-              {displayValue(item.office)}.
+          <section className="rounded-xl border border-border bg-muted/30 p-4">
+            <h3 className="text-sm font-bold text-foreground">Informazioni disponibili</h3>
+            <p className="mt-2 text-sm leading-6 text-muted-foreground">
+              Questa scheda riporta esclusivamente i metadati acquisiti dalla fonte ufficiale.
+              Il contenuto del documento non viene interpretato, sottoposto a OCR o riassunto automaticamente.
             </p>
-            {item.public_note && <p className="mt-2 text-xs text-muted-foreground">{item.public_note}</p>}
-          </section>
-
-          <section className="rounded-lg border border-dashed border-primary/30 bg-primary/5 p-4">
-            <div className="mb-2 flex items-center gap-2 text-sm font-bold text-foreground">
-              <Sparkles className="h-4 w-4 text-primary" aria-hidden="true" />
-              Sintesi documento
-            </div>
-            <p className="text-sm leading-relaxed text-muted-foreground">
-              Placeholder: la descrizione sara compilata da un modello OCR open source dedicato e verificabile. In questa
-              tranche non viene generata alcuna sintesi automatica del PDF.
-            </p>
+            {item.public_note && (
+              <p className="mt-2 text-sm leading-6 text-muted-foreground">
+                {item.public_note}
+              </p>
+            )}
           </section>
 
           <section>
             <h3 className="mb-3 text-sm font-bold text-foreground">Metadati essenziali</h3>
-            <div className="grid gap-2 sm:grid-cols-2">
-              <EssentialMetadataField
+            <div className="grid gap-3 sm:grid-cols-2">
+              <MetadataField
                 label="Pubblicazione"
                 value={item.publication_number ? `n. ${item.publication_number}` : "Non disponibile"}
               />
-              <EssentialMetadataField
+              <MetadataField
                 label="Periodo"
-                value={`${shortDate(item.publication_start)} - ${shortDate(item.publication_end)}`}
+                value={`${formatCivicDate(item.publication_start)} – ${formatCivicDate(item.publication_end)}`}
               />
-              <EssentialMetadataField
+              <MetadataField
                 label="Atto"
                 value={[
-                  displayValue(item.act_type),
+                  item.act_type,
                   item.act_number ? `n. ${item.act_number}` : null,
-                  item.act_date ? `del ${shortDate(item.act_date)}` : null,
-                ].filter(Boolean).join(" ")}
+                  item.act_date ? `del ${formatCivicDate(item.act_date)}` : null,
+                ]
+                  .filter(Boolean)
+                  .join(" ") || "Non disponibile"}
               />
-              <EssentialMetadataField label="Ufficio" value={displayValue(item.office)} />
+              <MetadataField label="Ufficio" value={item.office ?? "Non disponibile"} />
             </div>
           </section>
 
-          <section className="grid gap-3 md:grid-cols-2">
-            <div className="rounded-lg border border-border bg-background p-3">
-              <div className="text-sm font-bold text-foreground">Settore civico</div>
-              <div className="mt-1 text-sm font-semibold text-foreground">{item.classification.sector.label}</div>
-              <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
-                {item.classification.sector.description}
-              </p>
-              <div className="mt-2 text-xs text-muted-foreground">
-                Confidenza {CLASSIFICATION_CONFIDENCE_LABELS[item.classification.sector.confidence].toLowerCase()},
-                base {CLASSIFICATION_BASIS_LABELS[item.classification.sector.basis]}.
-              </div>
-            </div>
-            <div className="rounded-lg border border-border bg-background p-3">
-              <div className="text-sm font-bold text-foreground">Tipologia atto</div>
-              <div className="mt-1 text-sm font-semibold text-foreground">{item.classification.act_category.label}</div>
-              <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
-                {item.classification.act_category.description}
-              </p>
-              <div className="mt-2 text-xs text-muted-foreground">
-                Confidenza {CLASSIFICATION_CONFIDENCE_LABELS[item.classification.act_category.confidence].toLowerCase()},
-                base {CLASSIFICATION_BASIS_LABELS[item.classification.act_category.basis]}.
-              </div>
-            </div>
-          </section>
-
-          <section className="rounded-lg border border-border bg-muted/30 p-4">
-            <div className="mb-3 flex items-center gap-2 text-sm font-bold text-foreground">
+          <section className="rounded-xl border border-border bg-background p-4">
+            <div className="flex items-center gap-2 text-sm font-bold text-foreground">
               <FileArchive className="h-4 w-4 text-primary" aria-hidden="true" />
               Documento e fonte
             </div>
-            <div className="flex flex-wrap gap-2">
+            <div className="mt-3 flex flex-col gap-2 sm:flex-row">
               {archivedDocument && (
                 <a
                   href={archivedDocument.platform_path}
                   target="_blank"
                   rel="noreferrer"
-                  className="inline-flex flex-1 items-center justify-center gap-1 rounded-md border border-sky-200 bg-sky-50 px-3 py-2 text-sm font-semibold text-sky-800 transition-colors hover:border-sky-300 hover:bg-sky-100 sm:flex-none"
+                  className="inline-flex items-center justify-center gap-2 rounded-md border border-primary/20 bg-primary/5 px-3 py-2 text-sm font-semibold text-primary hover:bg-primary/10"
                 >
-                  Apri PDF interno
+                  Apri documento archiviato
                   <FileArchive className="h-4 w-4" aria-hidden="true" />
                 </a>
               )}
@@ -407,52 +286,36 @@ function AlboRecordDetailDialog({ item, onClose }: { item: AlboPublicRunItem | n
                 href={item.source_url}
                 target="_blank"
                 rel="noreferrer"
-                className="inline-flex flex-1 items-center justify-center gap-1 rounded-md border border-border bg-background px-3 py-2 text-sm font-semibold text-foreground transition-colors hover:border-brand/40 hover:text-brand sm:flex-none"
+                className="inline-flex items-center justify-center gap-2 rounded-md border border-border bg-background px-3 py-2 text-sm font-semibold text-foreground hover:border-primary/30 hover:text-primary"
               >
                 Verifica fonte ufficiale
                 <ExternalLink className="h-4 w-4" aria-hidden="true" />
               </a>
             </div>
-            {archivedDocument ? (
-              <div className="mt-3 grid gap-2 sm:grid-cols-2">
-                <DetailField label="Tipo file" value={archivedDocument.content_type} />
-                <DetailField label="Dimensione" value={formatBytes(archivedDocument.size_bytes)} />
-                <DetailField label="Acquisito" value={fullDateTime(archivedDocument.retrieved_at)} />
-                <DetailField label="SHA-256 PDF" value={compactHash(archivedDocument.sha256)} mono />
-              </div>
-            ) : (
-              <p className="mt-3 text-sm text-muted-foreground">
-                Nessuna copia PDF interna consultabile risulta archiviata per questo record nello snapshot corrente.
+            {!archivedDocument && (
+              <p className="mt-3 text-sm leading-6 text-muted-foreground">
+                Nessuna copia interna del documento risulta archiviata per questo record nello snapshot corrente.
               </p>
             )}
           </section>
 
-          <section className="rounded-lg border border-border bg-background p-4">
-            <div className="mb-2 flex items-center gap-2 text-sm font-bold text-foreground">
-              <Hash className="h-4 w-4 text-primary" aria-hidden="true" />
-              Verifica e limiti
-            </div>
-            <p className="text-sm leading-relaxed text-muted-foreground">
-              Il contenuto del PDF non viene analizzato, sottoposto a OCR o riassunto. La scheda espone solo metadati
-              pubblici, stato di verifica e limiti del run.
+          <section className="rounded-xl border border-border bg-muted/20 p-4">
+            <h3 className="text-sm font-bold text-foreground">Come leggere questa scheda</h3>
+            <p className="mt-2 text-sm leading-6 text-muted-foreground">
+              Classificazione per settore e tipologia derivata dai metadati dell'atto. Per contenuto,
+              allegati, termini e valore legale fa fede la fonte istituzionale.
             </p>
-            <div className="mt-3 flex flex-wrap gap-2 text-xs">
-              <span className="rounded-full border border-border bg-muted/40 px-2 py-1 font-semibold text-foreground">
-                Verifica: {verificationLabel(item.verification_status)}
+            <div className="mt-3 flex flex-wrap gap-2 text-xs text-muted-foreground">
+              <span className="rounded-full border border-border bg-background px-2 py-1">
+                {ALBO_VERIFICATION_LABELS[ALBO_OPERATIONAL_STATUS.verification_status]}
               </span>
-              <span className="rounded-full border border-border bg-muted/40 px-2 py-1 font-mono text-muted-foreground">
-                Hash {compactHash(item.content_hash)}
+              <span className="rounded-full border border-border bg-background px-2 py-1">
+                {item.classification.sector.label}
+              </span>
+              <span className="rounded-full border border-border bg-background px-2 py-1">
+                {item.classification.act_category.label}
               </span>
             </div>
-            {item.known_limits.length > 0 && (
-              <ul className="mt-3 space-y-1 text-sm text-muted-foreground">
-                {item.known_limits.map((limit) => (
-                  <li key={limit} className="break-words">
-                    {limit}
-                  </li>
-                ))}
-              </ul>
-            )}
           </section>
         </DialogContent>
       )}
@@ -460,243 +323,83 @@ function AlboRecordDetailDialog({ item, onClose }: { item: AlboPublicRunItem | n
   );
 }
 
-function AlboNewsItem({ activity, onSelect }: { activity: NewsActivityItem; onSelect: (item: AlboPublicRunItem) => void }) {
-  const { item, kind } = activity;
-
+function MetadataField({ label, value }: { label: string; value: string }) {
   return (
     <div className="rounded-lg border border-border bg-background p-3">
-      <div className="mb-2 flex flex-wrap items-center gap-2">
-        <span className={`rounded-full border px-2 py-0.5 text-xs font-semibold ${newsStatusClass(kind)}`}>
-          {NEWS_ACTIVITY_LABELS[kind]}
-        </span>
-        <Badge variant="secondary" className="text-xs">
-          {item.classification.act_category.label}
-        </Badge>
-        <span className="rounded-full border border-border bg-muted/50 px-2 py-0.5 text-xs font-semibold text-foreground">
-          {item.classification.sector.label}
-        </span>
+      <div className="text-xs font-bold uppercase tracking-wide text-muted-foreground">
+        {label}
       </div>
-      <h3 className="text-sm font-bold leading-snug text-foreground">{item.subject}</h3>
-      <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted-foreground">
-        {item.publication_number && <span className="font-mono">Pubbl. {item.publication_number}</span>}
-        {item.act_type && <span>{item.act_type}</span>}
-        <span>Dal {shortDate(item.publication_start)}</span>
+      <div className="mt-1 text-sm font-semibold leading-snug text-foreground">
+        {value}
       </div>
-      <span className="mt-3 inline-flex items-center gap-1 text-xs font-semibold text-primary">
-        <Button
-          type="button"
-          variant="outline"
-          size="sm"
-          onClick={() => onSelect(item)}
-          className="px-2.5 text-xs"
-        >
-          Apri scheda
-          <FileText className="h-3.5 w-3.5" aria-hidden="true" />
-        </Button>
-      </span>
     </div>
   );
 }
 
-function AlboNewsOverview({
-  recentItems,
+function PulseItemCard({
+  pulse,
   onSelect,
 }: {
-  recentItems: AlboPublicRunItem[];
+  pulse: PulseItem;
   onSelect: (item: AlboPublicRunItem) => void;
 }) {
-  const activityItems = diffActivityItems(recentItems);
-  const hasDiffActivity = activityItems.some((activity) => activity.kind !== "context");
-  const sectorStats = classificationStats(activityItems, (activity) => activity.item.classification.sector);
-  const actCategoryStats = classificationStats(activityItems, (activity) => activity.item.classification.act_category);
-  const total = activityItems.length;
-
   return (
-    <section
-      aria-labelledby="albo-news-heading"
-      className="mb-8 rounded-xl border border-border bg-background p-4 shadow-sm md:p-5"
+    <button
+      type="button"
+      onClick={() => onSelect(pulse.item)}
+      className="w-full rounded-xl border border-border bg-background p-4 text-left transition-colors hover:border-primary/30 hover:bg-primary/5"
     >
-      <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
-        <div>
-          <span className="eyebrow text-primary">
-            <Sparkles className="h-3.5 w-3.5" aria-hidden="true" />
-            Novita Albo
-          </span>
-          <h2 id="albo-news-heading" className="mt-2 font-display text-xl font-bold tracking-tight">
-            Appena pubblicate, per settore e tipologia
-          </h2>
-          <p className="mt-2 max-w-3xl text-sm leading-relaxed text-muted-foreground">
-            {hasDiffActivity
-              ? "Record nuovi, aggiornati o rimossi rispetto allo snapshot pubblico precedente, classificati con il dizionario civico Albo."
-              : "Nell'ultimo confronto pubblico non risultano nuove pubblicazioni o variazioni; sotto sono mostrati gli ultimi atti correnti come contesto operativo."}
-          </p>
-        </div>
-        <div className="rounded-lg border border-border bg-muted/30 p-3 text-right">
-          <div className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Nuovi</div>
-          <div className="mt-1 font-display text-2xl font-bold tabular-nums text-foreground">
-            {ALBO_PUBLIC_DIFF_SUMMARY.counts.new}
-          </div>
-        </div>
+      <div className="flex flex-wrap items-center gap-2">
+        <span className="rounded-full border border-primary/20 bg-primary/5 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-primary">
+          {PULSE_LABELS[pulse.kind]}
+        </span>
+        <span className="text-xs font-semibold text-muted-foreground">
+          {pulse.item.classification.act_category.label}
+        </span>
       </div>
-
-      <div className="mt-5 grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
-        {[
-          ["Cambiati", ALBO_PUBLIC_DIFF_SUMMARY.counts.changed],
-          ["Rimossi", ALBO_PUBLIC_DIFF_SUMMARY.counts.removed],
-          ["Invariati", ALBO_PUBLIC_DIFF_SUMMARY.counts.unchanged],
-          ["Confronto", fullDateTime(ALBO_PUBLIC_DIFF_SUMMARY.retrieved_at)],
-        ].map(([label, value]) => (
-          <div key={label} className="rounded-lg border border-border bg-muted/30 p-3">
-            <div className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">{label}</div>
-            <div className="mt-1 text-sm font-bold text-foreground">{value}</div>
-          </div>
-        ))}
+      <h3 className="mt-2 text-sm font-bold leading-snug text-foreground">
+        {pulse.item.subject}
+      </h3>
+      <div className="mt-2 flex flex-wrap gap-x-3 gap-y-1 text-xs text-muted-foreground">
+        <span>{pulse.item.classification.sector.label}</span>
+        {pulse.item.publication_number && <span>Pubbl. {pulse.item.publication_number}</span>}
+        <span>Dal {formatCivicDate(pulse.item.publication_start)}</span>
       </div>
-
-      <div className="mt-5 grid gap-4 lg:grid-cols-2">
-        <div className="rounded-lg border border-border bg-muted/30 p-3">
-          <h3 className="mb-3 text-sm font-bold text-foreground">Distribuzione per settore</h3>
-          <StatBars stats={sectorStats} total={total} />
-        </div>
-        <div className="rounded-lg border border-border bg-muted/30 p-3">
-          <h3 className="mb-3 text-sm font-bold text-foreground">Distribuzione per tipologia</h3>
-          <StatBars stats={actCategoryStats} total={total} />
-        </div>
-      </div>
-
-      <div className="mt-5 space-y-2">
-        {activityItems.length > 0 ? (
-          activityItems.map((activity) => (
-            <AlboNewsItem key={`${activity.kind}-${activity.item.id}`} activity={activity} onSelect={onSelect} />
-          ))
-        ) : (
-          <div className="rounded-lg border border-border bg-muted/30 p-3 text-sm text-muted-foreground">
-            Nessun record pubblico disponibile per costruire il riepilogo delle novita.
-          </div>
-        )}
-      </div>
-    </section>
+    </button>
   );
 }
 
-function AlboDailyDigest({ items, onSelect }: { items: AlboPublicRunItem[]; onSelect: (item: AlboPublicRunItem) => void }) {
-  const referenceDate = ALBO_PUBLIC_RUN_SUMMARY.retrieved_at;
-  const referenceKey = dateKeyInRome(referenceDate);
-  const isWorkingDay = isWorkingDayInRome(referenceDate);
-  const dailyItems = referenceKey
-    ? items.filter((item) => dateKeyInRome(item.publication_start) === referenceKey)
-    : [];
-  const sectorStats = classificationStats(dailyItems, (item) => item.classification.sector);
-  const categoryStats = classificationStats(dailyItems, (item) => item.classification.act_category);
-  const previewItems = dailyItems.slice(0, 5);
-
-  return (
-    <section
-      aria-labelledby="albo-daily-digest-heading"
-      className="mb-8 rounded-xl border border-border bg-background p-4 shadow-sm md:p-5"
-    >
-      <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
-        <div>
-          <span className="eyebrow text-primary">
-            <FileText className="h-3.5 w-3.5" aria-hidden="true" />
-            Sintesi documenti
-          </span>
-          <h2 id="albo-daily-digest-heading" className="mt-2 font-display text-xl font-bold tracking-tight">
-            Sintesi documenti di giornata
-          </h2>
-          <p className="mt-2 max-w-3xl text-sm leading-relaxed text-muted-foreground">
-            Placeholder per la sintesi OCR dei documenti pubblicati nella giornata lavorativa. La descrizione verra
-            compilata dal modello open source dedicato; per ora questa sezione mostra solo conteggio e contesto.
-          </p>
-        </div>
-        <div className={`rounded-lg border p-3 text-right ${isWorkingDay ? "border-primary/20 bg-primary/5" : "border-slate-200 bg-slate-50"}`}>
-          <div className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Cadenza</div>
-          <div className="mt-1 text-sm font-bold text-foreground">Lunedi-venerdi</div>
-        </div>
-      </div>
-
-      <div className="mt-5 grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
-        {[
-          ["Giornata", shortDate(referenceDate)],
-          ["Documenti del giorno", dailyItems.length],
-          ["Settori", sectorStats.length],
-          ["Tipologie", categoryStats.length],
-        ].map(([label, value]) => (
-          <div key={label} className="rounded-lg border border-border bg-muted/30 p-3">
-            <div className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">{label}</div>
-            <div className="mt-1 text-sm font-bold text-foreground">{value}</div>
-          </div>
-        ))}
-      </div>
-
-      {!isWorkingDay ? (
-        <p className="mt-4 rounded-lg border border-slate-200 bg-slate-50 p-3 text-sm text-muted-foreground">
-          Nessuna sintesi di giornata e prevista sabato o domenica. Lo snapshot resta consultabile, ma la sintesi OCR
-          viene trattata solo nel primo giorno lavorativo utile.
-        </p>
-      ) : previewItems.length > 0 ? (
-        <div className="mt-4 space-y-2">
-          {previewItems.map((item) => (
-            <div key={item.id} className="flex flex-col gap-2 rounded-lg border border-border bg-muted/30 p-3 sm:flex-row sm:items-center sm:justify-between">
-              <div className="min-w-0">
-                <div className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                  {item.classification.sector.label}
-                </div>
-                <div className="mt-1 text-sm font-semibold leading-snug text-foreground">{item.subject}</div>
-              </div>
-              <Button
-                type="button"
-                variant="outline"
-                size="sm"
-                onClick={() => onSelect(item)}
-                className="shrink-0 text-xs"
-              >
-                Apri scheda
-                <FileText className="h-3.5 w-3.5" aria-hidden="true" />
-              </Button>
-            </div>
-          ))}
-        </div>
-      ) : (
-        <p className="mt-4 rounded-lg border border-border bg-muted/30 p-3 text-sm text-muted-foreground">
-          Nessun documento con inizio pubblicazione nella giornata lavorativa dello snapshot.
-        </p>
-      )}
-    </section>
-  );
-}
-
-function AlboPublicItemCard({ item, onSelect }: { item: AlboPublicRunItem; onSelect: (item: AlboPublicRunItem) => void }) {
-  const archivedDocument = ALBO_ARCHIVED_DOCUMENTS_BY_ID.get(item.id);
+function CurrentItemCard({
+  item,
+  onSelect,
+}: {
+  item: AlboPublicRunItem;
+  onSelect: (item: AlboPublicRunItem) => void;
+}) {
+  const archived = ALBO_ARCHIVED_DOCUMENTS_BY_ID.has(item.id);
 
   return (
     <Card className="p-4">
-      <div className="flex flex-wrap items-start justify-between gap-3">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div className="min-w-0 flex-1">
-          <div className="mb-2 flex flex-wrap items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2">
             <Badge variant="secondary" className="text-xs">
               {item.classification.act_category.label}
             </Badge>
-            <span className="rounded-full border border-border bg-muted/50 px-2 py-0.5 text-xs font-semibold text-foreground">
+            <span className="text-xs font-semibold text-muted-foreground">
               {item.classification.sector.label}
             </span>
-            <span className={`rounded-full border px-2 py-0.5 text-xs font-semibold ${visibilityClass(item.public_visibility)}`}>
-              {ALBO_PUBLIC_VISIBILITY_LABELS[item.public_visibility]}
-            </span>
-            <span className="text-xs text-muted-foreground">{ALBO_PRIVACY_RISK_LABELS[item.privacy_risk]}</span>
-            {archivedDocument && (
-              <span className="rounded-full border border-sky-200 bg-sky-50 px-2 py-0.5 text-xs font-semibold text-sky-800">
-                PDF interno
+            {archived && (
+              <span className="rounded-full border border-primary/20 bg-primary/5 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-primary">
+                Documento archiviato
               </span>
             )}
           </div>
-
-          <h3 className="font-display text-base font-bold leading-snug text-foreground">{item.subject}</h3>
-
-          <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-muted-foreground">
-            {item.publication_number && <span className="font-mono">Pubbl. {item.publication_number}</span>}
-            {item.act_number && <span className="font-mono">Atto {item.act_number}</span>}
-            {item.act_type && <span>{item.act_type}</span>}
+          <h3 className="mt-2 font-display text-base font-bold leading-snug text-foreground">
+            {item.subject}
+          </h3>
+          <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-xs text-muted-foreground">
+            {item.publication_number && <span>Pubbl. {item.publication_number}</span>}
             {item.office && (
               <span className="inline-flex items-center gap-1">
                 <Landmark className="h-3.5 w-3.5" aria-hidden="true" />
@@ -705,51 +408,25 @@ function AlboPublicItemCard({ item, onSelect }: { item: AlboPublicRunItem; onSel
             )}
             <span className="inline-flex items-center gap-1">
               <Calendar className="h-3.5 w-3.5" aria-hidden="true" />
-              Dal {shortDate(item.publication_start)}
+              Dal {formatCivicDate(item.publication_start)}
             </span>
-            {item.publication_end && <span>fino al {shortDate(item.publication_end)}</span>}
           </div>
-
-          {item.public_note && <p className="mt-2 text-xs text-muted-foreground">{item.public_note}</p>}
-          {!archivedDocument && (
-            <p className="mt-2 text-xs text-muted-foreground">
-              Nessuna copia PDF interna archiviata per questo record nello snapshot corrente.
+          {item.public_note && (
+            <p className="mt-2 text-xs leading-5 text-muted-foreground">
+              {item.public_note}
             </p>
           )}
         </div>
-
-        <div className="flex w-full flex-wrap gap-2 sm:w-auto sm:shrink-0">
-          <Button
-            type="button"
-            variant="outline"
-            size="sm"
-            onClick={() => onSelect(item)}
-            className="flex-1 text-xs sm:flex-none"
-          >
-            Apri scheda
-            <FileText className="h-3.5 w-3.5" aria-hidden="true" />
-          </Button>
-          {archivedDocument && (
-            <a
-              href={archivedDocument.platform_path}
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex flex-1 items-center justify-center gap-1 rounded-md border border-sky-200 bg-sky-50 px-2.5 py-1.5 text-xs font-semibold text-sky-800 transition-colors hover:border-sky-300 hover:bg-sky-100 sm:flex-none"
-            >
-              Apri PDF interno
-              <FileArchive className="h-3.5 w-3.5" aria-hidden="true" />
-            </a>
-          )}
-          <a
-            href={item.source_url}
-            target="_blank"
-            rel="noreferrer"
-            className="inline-flex flex-1 items-center justify-center gap-1 rounded-md border border-border px-2.5 py-1.5 text-xs font-semibold text-foreground transition-colors hover:border-brand/40 hover:text-brand sm:flex-none"
-          >
-            Verifica fonte
-            <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
-          </a>
-        </div>
+        <Button
+          type="button"
+          variant="outline"
+          size="sm"
+          onClick={() => onSelect(item)}
+          className="shrink-0"
+        >
+          Apri scheda
+          <FileText className="ml-1 h-3.5 w-3.5" aria-hidden="true" />
+        </Button>
       </div>
     </Card>
   );
@@ -757,88 +434,68 @@ function AlboPublicItemCard({ item, onSelect }: { item: AlboPublicRunItem; onSel
 
 export function Albo() {
   const [query, setQuery] = useState("");
-  const [visibilityFilter, setVisibilityFilter] = useState<VisibilityFilter>("all");
-  const [riskFilter, setRiskFilter] = useState<RiskFilter>("all");
-  const [officeFilter, setOfficeFilter] = useState(ALL_OFFICES);
   const [sectorFilter, setSectorFilter] = useState(ALL_SECTORS);
   const [actCategoryFilter, setActCategoryFilter] = useState(ALL_ACT_CATEGORIES);
-  const [documentFilter, setDocumentFilter] = useState<DocumentFilter>("all");
   const [selectedItem, setSelectedItem] = useState<AlboPublicRunItem | null>(null);
 
-  const firstLimit = ALBO_PUBLIC_RUN_SUMMARY.known_limits[0];
-  const baselineLimit = ALBO_PUBLIC_RUN_SUMMARY.known_limits.find((limit) =>
-    limit.toLowerCase().includes("first-run diff"),
+  const pulseItems = useMemo(() => buildPulseItems(), []);
+  const sortedItems = useMemo(() => sortByPublication(ALBO_PUBLIC_RUN_ITEMS), []);
+  const snapshotDay = civicDateKey(ALBO_PUBLIC_RUN_SUMMARY.retrieved_at);
+  const dailyItems = useMemo(
+    () => sortedItems.filter((item) => civicDateKey(item.publication_start) === snapshotDay),
+    [snapshotDay, sortedItems],
   );
-
-  const officeOptions = useMemo(
-    () =>
-      Array.from(new Set(ALBO_PUBLIC_RUN_ITEMS.map((item) => item.office).filter((office): office is string => Boolean(office))))
-        .sort((a, b) => a.localeCompare(b, "it")),
-    [],
+  const dailySectorStats = useMemo(
+    () => classificationStats(dailyItems, (item) => item.classification.sector),
+    [dailyItems],
   );
   const sectorOptions = useMemo(
-    () =>
-      classificationStats(ALBO_PUBLIC_RUN_ITEMS, (item) => item.classification.sector)
-        .map((stat) => ({ id: stat.id, label: stat.label })),
+    () => classificationStats(ALBO_PUBLIC_RUN_ITEMS, (item) => item.classification.sector),
     [],
   );
-  const actCategoryOptions = useMemo(
-    () =>
-      classificationStats(ALBO_PUBLIC_RUN_ITEMS, (item) => item.classification.act_category)
-        .map((stat) => ({ id: stat.id, label: stat.label })),
+  const categoryOptions = useMemo(
+    () => classificationStats(ALBO_PUBLIC_RUN_ITEMS, (item) => item.classification.act_category),
     [],
   );
-  const recentItems = useMemo(() => mostRecentItems(ALBO_PUBLIC_RUN_ITEMS), []);
 
   const filteredItems = useMemo(() => {
-    const normalizedQuery = normalizeQuery(query);
+    const normalized = normalizeQuery(query);
 
-    return ALBO_PUBLIC_RUN_ITEMS.filter((item) => {
-      const hasArchivedDocument = ALBO_ARCHIVED_DOCUMENTS_BY_ID.has(item.id);
+    return sortedItems.filter((item) => {
       return (
-        (!normalizedQuery || alboPublicSearchText(item).includes(normalizedQuery)) &&
-        (visibilityFilter === "all" || item.public_visibility === visibilityFilter) &&
-        (riskFilter === "all" || item.privacy_risk === riskFilter) &&
-        (officeFilter === ALL_OFFICES || item.office === officeFilter) &&
+        (!normalized || alboPublicSearchText(item).includes(normalized)) &&
         (sectorFilter === ALL_SECTORS || item.classification.sector.id === sectorFilter) &&
-        (actCategoryFilter === ALL_ACT_CATEGORIES || item.classification.act_category.id === actCategoryFilter) &&
-        (documentFilter === "all" ||
-          (documentFilter === "archived" && hasArchivedDocument) ||
-          (documentFilter === "without_archive" && !hasArchivedDocument))
+        (actCategoryFilter === ALL_ACT_CATEGORIES ||
+          item.classification.act_category.id === actCategoryFilter)
       );
     });
-  }, [actCategoryFilter, documentFilter, officeFilter, query, riskFilter, sectorFilter, visibilityFilter]);
+  }, [actCategoryFilter, query, sectorFilter, sortedItems]);
 
-  const archivedInFilteredItems = filteredItems.filter((item) =>
-    ALBO_ARCHIVED_DOCUMENTS_BY_ID.has(item.id),
-  ).length;
-  const canResetFilters =
-    Boolean(query) ||
-    visibilityFilter !== "all" ||
-    riskFilter !== "all" ||
-    officeFilter !== ALL_OFFICES ||
-    sectorFilter !== ALL_SECTORS ||
-    actCategoryFilter !== ALL_ACT_CATEGORIES ||
-    documentFilter !== "all";
+  const pulseCounts = ALBO_PUBLIC_DIFF_SUMMARY.counts;
+  const hasDiff = pulseCounts.new + pulseCounts.changed + pulseCounts.removed > 0;
+  const baselineIsPublicSafe = ALBO_OPERATIONAL_STATUS.diff_baseline?.public_safe === true;
 
   return (
     <>
       <PageMeta
-        title="Albo Pretorio civico navigabile"
-        description="Archivio civico consultabile degli atti pubblici dell'Albo Pretorio di Lamezia Terme, con limiti, documenti interni e fonte ufficiale dichiarati."
+        title="Albo Pretorio civico — cosa è cambiato oggi"
+        description="Ultimi atti e variazioni dell'Albo Pretorio di Lamezia Terme, organizzati per capire cosa è cambiato e risalire sempre alla fonte ufficiale."
         path="/albo"
       />
+
       <div className="container mx-auto max-w-6xl px-4 py-8 md:py-12">
-        <div className="mb-8 flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
-          <div>
+        <header className="flex flex-col gap-5 md:flex-row md:items-start md:justify-between">
+          <div className="max-w-3xl">
             <span className="eyebrow text-primary">
               <ShieldAlert className="h-3.5 w-3.5" aria-hidden="true" />
-              Fonte ufficiale acquisita
+              Albo Pretorio · fonte ufficiale acquisita
             </span>
-            <h1 className="mt-2 font-display text-3xl font-bold tracking-tight md:text-4xl">Albo Pretorio Civico</h1>
-            <p className="mt-3 max-w-3xl text-lg text-muted-foreground">
-              Atti correnti acquisiti dalla fonte pubblica Albo, mostrati con minimizzazione prudente e rinvio alla fonte
-              ufficiale per la verifica.
+            <h1 className="mt-2 font-display text-3xl font-bold tracking-tight md:text-5xl">
+              Cosa è successo nell&apos;Albo
+            </h1>
+            <p className="mt-3 text-base leading-7 text-muted-foreground md:text-lg">
+              Un punto rapido sugli atti pubblicati e sulle variazioni rilevate dal monitor.
+              Per contenuto, allegati e valore legale resta sempre disponibile la fonte istituzionale.
             </p>
           </div>
           <FeedSubscribeButton
@@ -846,251 +503,149 @@ export function Albo() {
             title="Albo Pretorio Civico - Lamezia Trasparente"
             className="w-full justify-center md:w-auto md:shrink-0"
           />
-        </div>
+        </header>
 
-        <section
-          aria-labelledby="albo-status-heading"
-          className="mb-8 rounded-xl border border-primary/20 bg-primary/5 p-4"
-        >
-          <div className="grid gap-3 md:grid-cols-4">
+        <section className="mt-8 rounded-2xl border border-primary/20 bg-primary/5 p-5 md:p-6">
+          <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
             <div>
-              <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                <RefreshCw className="h-3.5 w-3.5 text-primary" aria-hidden="true" />
-                Ultimo aggiornamento
-              </div>
-              <h2 id="albo-status-heading" className="mt-1 text-sm font-bold text-foreground">
-                {fullDateTime(ALBO_OPERATIONAL_STATUS.last_update ?? ALBO_PUBLIC_RUN_SUMMARY.retrieved_at)}
+              <span className="eyebrow text-primary">Ultimo controllo</span>
+              <h2 className="mt-2 font-display text-2xl font-bold tracking-tight md:text-3xl">
+                Cosa è cambiato dall&apos;ultimo controllo
               </h2>
+              <p className="mt-2 text-sm leading-6 text-muted-foreground">
+                Controllo del {formatCivicDateTime(ALBO_OPERATIONAL_STATUS.last_update)}.
+                {baselineIsPublicSafe
+                  ? " Confronto effettuato con la precedente baseline pubblica del monitor."
+                  : " Il confronto precedente non è disponibile: i conteggi vanno letti come primo punto osservato."}
+              </p>
             </div>
-            <div>
-              <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                <Clock className="h-3.5 w-3.5 text-primary" aria-hidden="true" />
-                Prossimo controllo
-              </div>
-              <div className="mt-1 text-sm font-bold text-foreground">
-                {nextScheduledCheckLabel(ALBO_OPERATIONAL_STATUS.next_scheduled_check)}
-              </div>
+            <div className="flex flex-col gap-1 text-sm text-muted-foreground lg:text-right">
+              <span className="inline-flex items-center gap-1.5 lg:justify-end">
+                <RefreshCw className="h-4 w-4 text-primary" aria-hidden="true" />
+                Prossimo controllo {formatCivicDateTime(ALBO_OPERATIONAL_STATUS.next_scheduled_check)}
+              </span>
+              <span>
+                {ALBO_OPERATIONAL_STATUS.schedule?.monitoring_window ?? "Finestra di monitoraggio non disponibile"}
+              </span>
             </div>
+          </div>
+
+          <div className="mt-5 grid gap-3 sm:grid-cols-3">
+            <PulseCount label="Nuovi" value={pulseCounts.new} />
+            <PulseCount label="Aggiornati" value={pulseCounts.changed} />
+            <PulseCount label="Non più presenti" value={pulseCounts.removed} />
+          </div>
+
+          <div className="mt-5 grid gap-3 md:grid-cols-2">
+            {pulseItems.map((pulse) => (
+              <PulseItemCard
+                key={`${pulse.kind}-${pulse.item.id}`}
+                pulse={pulse}
+                onSelect={setSelectedItem}
+              />
+            ))}
+          </div>
+
+          {!hasDiff && (
+            <p className="mt-4 text-sm leading-6 text-muted-foreground">
+              Nessuna variazione rilevata rispetto al controllo precedente: come contesto sono mostrati gli atti correnti più recenti.
+            </p>
+          )}
+        </section>
+
+        <section className="mt-8 rounded-2xl border border-border bg-background p-5 md:p-6">
+          <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
             <div>
-              <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                <Database className="h-3.5 w-3.5 text-primary" aria-hidden="true" />
-                Cadenza
-              </div>
-              <div className="mt-1 text-sm font-bold text-foreground">
-                {ALBO_OPERATIONAL_STATUS.schedule?.monitoring_window ?? "Finestra non disponibile"}
-              </div>
-              <div className="mt-1 text-xs text-muted-foreground">Solo giorni lavorativi</div>
-              {ALBO_OPERATIONAL_STATUS.schedule?.github_actions_cron_utc && (
-                <div className="mt-1 text-xs text-muted-foreground">
-                  Cron UTC {ALBO_OPERATIONAL_STATUS.schedule.github_actions_cron_utc}
-                </div>
-              )}
+              <span className="eyebrow text-primary">Digest documentale</span>
+              <h2 className="mt-2 font-display text-2xl font-bold tracking-tight">
+                Oggi nell&apos;Albo
+              </h2>
+              <p className="mt-2 max-w-3xl text-sm leading-6 text-muted-foreground">
+                Aggregazione dei soli metadati degli atti con inizio pubblicazione nella giornata dello snapshot.
+                Nessun contenuto PDF viene interpretato o riassunto.
+              </p>
             </div>
-            <div>
-              <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                <ShieldAlert className="h-3.5 w-3.5 text-primary" aria-hidden="true" />
-                Verifica
+            <div className="rounded-lg border border-border bg-muted/30 px-4 py-3 text-right">
+              <div className="text-xs font-bold uppercase tracking-wide text-muted-foreground">
+                Atti del giorno
               </div>
-              <div className="mt-1 text-sm font-bold text-foreground">
-                {ALBO_VERIFICATION_LABELS[ALBO_OPERATIONAL_STATUS.verification_status]}
-              </div>
-              <div className="mt-1 text-xs text-muted-foreground">
-                Metodo {ALBO_OPERATIONAL_STATUS.method ?? "n/d"}
-                {ALBO_OPERATIONAL_STATUS.raw_format ? `, formato ${ALBO_OPERATIONAL_STATUS.raw_format}` : ""}
+              <div className="mt-1 font-display text-2xl font-bold tabular-nums">
+                {dailyItems.length}
               </div>
             </div>
           </div>
+
+          {dailySectorStats.length > 0 ? (
+            <div className="mt-5 flex flex-wrap gap-2">
+              {dailySectorStats.slice(0, 5).map((stat) => (
+                <span
+                  key={stat.id}
+                  className="rounded-full border border-border bg-muted/30 px-3 py-1.5 text-xs font-semibold text-foreground"
+                >
+                  {stat.label} · {stat.count}
+                </span>
+              ))}
+            </div>
+          ) : (
+            <p className="mt-5 rounded-lg border border-border bg-muted/30 p-4 text-sm text-muted-foreground">
+              Nessun atto con inizio pubblicazione nella giornata dell&apos;ultimo snapshot.
+            </p>
+          )}
+
+          {dailyItems.length > 0 && (
+            <div className="mt-5 grid gap-3 md:grid-cols-2">
+              {dailyItems.slice(0, 4).map((item) => (
+                <button
+                  key={item.id}
+                  type="button"
+                  onClick={() => setSelectedItem(item)}
+                  className="rounded-xl border border-border bg-muted/20 p-4 text-left transition-colors hover:border-primary/30 hover:bg-primary/5"
+                >
+                  <div className="text-xs font-semibold text-primary">
+                    {item.classification.sector.label}
+                  </div>
+                  <div className="mt-1 text-sm font-bold leading-snug text-foreground">
+                    {item.subject}
+                  </div>
+                </button>
+              ))}
+            </div>
+          )}
         </section>
 
-        <div className="mb-8 flex items-start gap-3 rounded-xl border border-border bg-muted/40 px-4 py-3 text-sm text-muted-foreground">
-          <Info className="mt-0.5 h-4 w-4 shrink-0 text-brand" aria-hidden="true" />
-          <p>
-            {MONITORING_DOCS_NOTICE} Questa vista non sostituisce l'Albo Pretorio ufficiale; le copie PDF interne sono
-            mostrate solo quando risultano archiviate dalla piattaforma.
-          </p>
-        </div>
-
-        <section
-          aria-labelledby="albo-run-ufficiale"
-          className="mb-8 rounded-xl border border-border bg-background p-4 shadow-sm md:p-5"
-        >
-          <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+        <section className="mt-8" aria-labelledby="archivio-corrente-heading">
+          <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
             <div>
-              <span className="eyebrow text-primary">
-                <ShieldAlert className="h-3.5 w-3.5" aria-hidden="true" />
-                Layer pubblico
-              </span>
-              <h2 id="albo-run-ufficiale" className="mt-2 font-display text-xl font-bold tracking-tight">
-                Atti correnti dalla fonte pubblica Albo
+              <span className="eyebrow text-primary">Archivio corrente</span>
+              <h2 id="archivio-corrente-heading" className="mt-2 font-display text-2xl font-bold tracking-tight md:text-3xl">
+                Cerca negli atti disponibili
               </h2>
-              <p className="mt-2 max-w-3xl text-sm leading-relaxed text-muted-foreground">
-                {ALBO_PUBLIC_RUN_SUMMARY.official_albo_disclaimer}
+              <p className="mt-2 text-sm leading-6 text-muted-foreground">
+                {filteredItems.length} di {ALBO_PUBLIC_RUN_ITEMS.length} record pubblici mostrati.
               </p>
             </div>
             <a
               href={ALBO_PUBLIC_RUN_SUMMARY.source_url}
               target="_blank"
               rel="noreferrer"
-              className="inline-flex shrink-0 items-center justify-center gap-2 rounded-md border border-border bg-background px-3 py-2 text-sm font-semibold text-foreground transition-colors hover:border-brand/40 hover:text-brand"
+              className="inline-flex items-center gap-2 text-sm font-semibold text-primary hover:underline"
             >
               Fonte ufficiale
               <ExternalLink className="h-4 w-4" aria-hidden="true" />
             </a>
           </div>
 
-          <div className="mt-5 grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
-            {[
-              ["Acquisiti", ALBO_PUBLIC_RUN_SUMMARY.counts.acquired],
-              ["In lista pubblica", ALBO_PUBLIC_RUN_ITEMS.length],
-              ["Minimizzati", ALBO_PUBLIC_RUN_SUMMARY.counts.minimised],
-              ["Solo metadato", ALBO_PUBLIC_RUN_SUMMARY.counts.metadata_only],
-            ].map(([label, value]) => (
-              <div key={label} className="rounded-lg border border-border bg-muted/30 p-3">
-                <div className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">{label}</div>
-                <div className="mt-1 font-display text-2xl font-bold tabular-nums text-foreground">{value}</div>
-              </div>
-            ))}
-          </div>
-
-          <div className="mt-4 space-y-2 rounded-lg border border-border bg-muted/30 p-3 text-sm text-muted-foreground">
-            {firstLimit && <p>{firstLimit}</p>}
-            {baselineLimit && <p>{baselineLimit}</p>}
-            {ALBO_PUBLIC_RUN_SUMMARY.counts.excluded > 0 && (
-              <p>
-                {ALBO_PUBLIC_RUN_SUMMARY.counts.excluded} record esclusi non vengono mostrati nella lista civica per
-                prudenza privacy.
-              </p>
-            )}
-          </div>
-
-          <div className="mt-4 text-sm text-muted-foreground">
-            {ALBO_PUBLIC_RUN_ITEMS.length} record pubblici mostrati
-          </div>
-        </section>
-
-        <AlboNewsOverview recentItems={recentItems} onSelect={setSelectedItem} />
-
-        <AlboDailyDigest items={ALBO_PUBLIC_RUN_ITEMS} onSelect={setSelectedItem} />
-
-        <section
-          aria-labelledby="albo-documents-heading"
-          className="mb-8 rounded-xl border border-border bg-background p-4 shadow-sm md:p-5"
-        >
-          <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
-            <div>
-              <span className="eyebrow text-primary">
-                <FileArchive className="h-3.5 w-3.5" aria-hidden="true" />
-                Documenti interni
-              </span>
-              <h2 id="albo-documents-heading" className="mt-2 font-display text-xl font-bold tracking-tight">
-                PDF preservati nella piattaforma
-              </h2>
-              <p className="mt-2 max-w-3xl text-sm leading-relaxed text-muted-foreground">
-                {ALBO_DOCUMENTS_MANIFEST.policy.eligibility} Nessun PDF viene analizzato, sottoposto a OCR o riassunto.
-              </p>
-            </div>
-            <div className="rounded-lg border border-border bg-muted/30 p-3 text-right">
-              <div className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Archiviati</div>
-              <div className="mt-1 font-display text-2xl font-bold tabular-nums text-foreground">
-                {ALBO_DOCUMENTS_MANIFEST.counts.archived}
-              </div>
-            </div>
-          </div>
-
-          <div className="mt-5 grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
-            {[
-              ["Considerati", ALBO_DOCUMENTS_MANIFEST.counts.considered],
-              ["Senza copia interna", ALBO_DOCUMENTS_MANIFEST.counts.skipped],
-              ["Revisione richiesta", ALBO_DOCUMENTS_MANIFEST.counts.human_review_required],
-              ["Esclusi", ALBO_DOCUMENTS_MANIFEST.counts.excluded],
-            ].map(([label, value]) => (
-              <div key={label} className="rounded-lg border border-border bg-muted/30 p-3">
-                <div className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">{label}</div>
-                <div className="mt-1 font-display text-2xl font-bold tabular-nums text-foreground">{value}</div>
-              </div>
-            ))}
-          </div>
-
-          {ALBO_DOCUMENTS_MANIFEST.documents.length > 0 ? (
-            <div className="mt-4 space-y-2">
-              {ALBO_DOCUMENTS_MANIFEST.documents.map((document) => (
-                <a
-                  key={document.sha256}
-                  href={document.platform_path}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-border bg-muted/30 p-3 text-sm transition-colors hover:border-brand/40"
-                >
-                  <span className="font-semibold text-foreground">{document.publication_number}</span>
-                  <span className="text-muted-foreground">
-                    {document.content_type}, {formatBytes(document.size_bytes)}
-                  </span>
-                </a>
-              ))}
-            </div>
-          ) : (
-            <p className="mt-4 rounded-lg border border-border bg-muted/30 p-3 text-sm text-muted-foreground">
-              In questo snapshot non ci sono ancora copie PDF interne consultabili. Il manifest registra le decisioni di
-              conservazione e continuera a esporre solo copie interne quando saranno archiviate.
-            </p>
-          )}
-        </section>
-
-        <section
-          aria-labelledby="albo-search-heading"
-          className="mb-5 rounded-xl border border-border bg-background p-4 shadow-sm md:p-5"
-        >
-          <div className="mb-4 flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
-            <div>
-              <span className="eyebrow text-primary">
-                <Filter className="h-3.5 w-3.5" aria-hidden="true" />
-                Ricerca
-              </span>
-              <h2 id="albo-search-heading" className="mt-2 font-display text-xl font-bold tracking-tight">
-                Ricerca e filtri
-              </h2>
-            </div>
-            <div className="text-sm text-muted-foreground">
-              {filteredItems.length} di {ALBO_PUBLIC_RUN_ITEMS.length} record
-              {archivedInFilteredItems > 0 ? `, ${archivedInFilteredItems} con PDF interno` : ""}
-            </div>
-          </div>
-
-          <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
-            <div className="relative md:col-span-2">
-              <Search className="pointer-events-none absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" aria-hidden="true" />
+          <div className="mt-5 grid gap-3 rounded-xl border border-border bg-muted/20 p-4 md:grid-cols-[1.4fr_0.8fr_0.8fr]">
+            <div className="relative">
+              <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" aria-hidden="true" />
               <Input
                 aria-label="Cerca atti Albo"
                 value={query}
                 onChange={(event) => setQuery(event.target.value)}
-                placeholder="Cerca per oggetto, ufficio, atto, numero"
+                placeholder="Cerca oggetto, numero, ufficio…"
                 className="pl-9"
               />
             </div>
-
-            <Select value={visibilityFilter} onValueChange={(value) => setVisibilityFilter(value as VisibilityFilter)}>
-              <SelectTrigger aria-label="Filtra per visibilita">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">Tutte le visibilita</SelectItem>
-                <SelectItem value="publishable">Pubblicabili</SelectItem>
-                <SelectItem value="publishable_with_minimisation">Minimizzati</SelectItem>
-                <SelectItem value="metadata_only">Solo metadato</SelectItem>
-              </SelectContent>
-            </Select>
-
-            <Select value={riskFilter} onValueChange={(value) => setRiskFilter(value as RiskFilter)}>
-              <SelectTrigger aria-label="Filtra per rischio privacy">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">Tutti i rischi</SelectItem>
-                <SelectItem value="low">Rischio basso</SelectItem>
-                <SelectItem value="medium">Rischio medio</SelectItem>
-                <SelectItem value="high">Rischio alto</SelectItem>
-              </SelectContent>
-            </Select>
 
             <Select value={sectorFilter} onValueChange={setSectorFilter}>
               <SelectTrigger aria-label="Filtra per settore">
@@ -1112,69 +667,86 @@ export function Albo() {
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value={ALL_ACT_CATEGORIES}>Tutte le tipologie</SelectItem>
-                {actCategoryOptions.map((category) => (
+                {categoryOptions.map((category) => (
                   <SelectItem key={category.id} value={category.id}>
                     {category.label}
                   </SelectItem>
                 ))}
               </SelectContent>
             </Select>
+          </div>
 
-            <Select value={officeFilter} onValueChange={setOfficeFilter}>
-              <SelectTrigger aria-label="Filtra per ufficio">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value={ALL_OFFICES}>Tutti gli uffici</SelectItem>
-                {officeOptions.map((office) => (
-                  <SelectItem key={office} value={office}>
-                    {office}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-
-            <Select value={documentFilter} onValueChange={(value) => setDocumentFilter(value as DocumentFilter)}>
-              <SelectTrigger aria-label="Filtra per documenti interni">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">Tutti i documenti</SelectItem>
-                <SelectItem value="archived">Con PDF interno</SelectItem>
-                <SelectItem value="without_archive">Senza PDF interno</SelectItem>
-              </SelectContent>
-            </Select>
-
-            <Button
-              type="button"
-              variant="outline"
-              disabled={!canResetFilters}
-              onClick={() => {
-                setQuery("");
-                setVisibilityFilter("all");
-                setRiskFilter("all");
-                setOfficeFilter(ALL_OFFICES);
-                setSectorFilter(ALL_SECTORS);
-                setActCategoryFilter(ALL_ACT_CATEGORIES);
-                setDocumentFilter("all");
-              }}
-            >
-              Azzera
-            </Button>
+          <div className="mt-4 space-y-3">
+            {filteredItems.length > 0 ? (
+              filteredItems.map((item) => (
+                <CurrentItemCard key={item.id} item={item} onSelect={setSelectedItem} />
+              ))
+            ) : (
+              <div className="rounded-xl border border-border bg-muted/30 p-6 text-sm text-muted-foreground">
+                Nessun record corrisponde alla ricerca o ai filtri selezionati.
+              </div>
+            )}
           </div>
         </section>
 
-        <div className="space-y-3">
-          {filteredItems.length > 0 ? (
-            filteredItems.map((item) => <AlboPublicItemCard key={item.id} item={item} onSelect={setSelectedItem} />)
-          ) : (
-            <div className="rounded-xl border border-border bg-muted/30 p-6 text-sm text-muted-foreground">
-              Nessun record corrisponde ai filtri selezionati.
+        <section className="mt-8 rounded-2xl border border-border bg-muted/20 p-5 md:p-6">
+          <details>
+            <summary className="cursor-pointer font-display text-lg font-bold text-foreground">
+              Fonte e metodo
+            </summary>
+            <div className="mt-5 grid gap-5 lg:grid-cols-2">
+              <div>
+                <h3 className="text-sm font-bold text-foreground">Stato della fonte</h3>
+                <dl className="mt-3 space-y-2 text-sm">
+                  <MethodRow label="Fonte" value={ALBO_OPERATIONAL_STATUS.source} />
+                  <MethodRow label="Ultimo aggiornamento" value={formatCivicDateTime(ALBO_OPERATIONAL_STATUS.last_update)} />
+                  <MethodRow
+                    label="Verifica"
+                    value={ALBO_VERIFICATION_LABELS[ALBO_OPERATIONAL_STATUS.verification_status]}
+                  />
+                  <MethodRow label="Metodo" value={ALBO_OPERATIONAL_STATUS.method ?? "Non disponibile"} />
+                  <MethodRow
+                    label="Documenti archiviati"
+                    value={`${ALBO_DOCUMENTS_MANIFEST.counts.archived} su ${ALBO_DOCUMENTS_MANIFEST.counts.considered} considerati`}
+                  />
+                </dl>
+              </div>
+              <div>
+                <h3 className="text-sm font-bold text-foreground">Limiti da ricordare</h3>
+                <ul className="mt-3 space-y-2 text-sm leading-6 text-muted-foreground">
+                  {ALBO_OPERATIONAL_STATUS.known_limits.slice(0, 4).map((limit) => (
+                    <li key={limit}>• {limit}</li>
+                  ))}
+                </ul>
+              </div>
             </div>
-          )}
-        </div>
+
+            {ALBO_OPERATIONAL_STATUS.warnings.length > 0 && (
+              <div className="mt-5 rounded-lg border border-amber-200 bg-amber-50 p-4 text-sm leading-6 text-amber-900">
+                <strong>Avviso tecnico:</strong> {ALBO_OPERATIONAL_STATUS.warnings.join(" ")}
+              </div>
+            )}
+
+            <div className="mt-5 flex items-start gap-3 rounded-lg border border-border bg-background p-4 text-sm leading-6 text-muted-foreground">
+              <Info className="mt-0.5 h-4 w-4 shrink-0 text-primary" aria-hidden="true" />
+              <p>
+                {MONITORING_DOCS_NOTICE} {ALBO_OPERATIONAL_STATUS.official_albo_disclaimer}
+              </p>
+            </div>
+          </details>
+        </section>
       </div>
-      <AlboRecordDetailDialog item={selectedItem} onClose={() => setSelectedItem(null)} />
+
+      <AlboRecordDialog item={selectedItem} onClose={() => setSelectedItem(null)} />
     </>
+  );
+}
+
+function MethodRow({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="grid grid-cols-[9rem_1fr] gap-3 border-b border-border/70 pb-2 last:border-0">
+      <dt className="font-semibold text-muted-foreground">{label}</dt>
+      <dd className="font-medium text-foreground">{value}</dd>
+    </div>
   );
 }
