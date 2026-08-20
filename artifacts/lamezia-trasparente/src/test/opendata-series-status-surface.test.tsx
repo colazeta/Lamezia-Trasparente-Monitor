@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 
 import { OpenDataThemeLibrary } from "@/components/opendata/OpenDataThemeLibrary";
@@ -12,20 +12,30 @@ describe("Open Data freshness surface", () => {
       />,
     );
 
+    const statusRegion = screen.getByRole("region", {
+      name: "Dati disponibili e aggiornamento",
+    });
+
     expect(
-      screen.getByRole("heading", { name: "Dati disponibili e aggiornamento" }),
+      within(statusRegion).getByRole("heading", {
+        name: "Dati disponibili e aggiornamento",
+      }),
     ).toBeInTheDocument();
-    expect(screen.getByText("5 serie")).toBeInTheDocument();
+    expect(within(statusRegion).getByText("5 serie")).toBeInTheDocument();
     expect(
-      screen.getByText("Controllo automatico giornaliero"),
+      within(statusRegion).getByText("Controllo automatico giornaliero"),
     ).toBeInTheDocument();
-    expect(screen.getAllByText("Aggiornamento automatico")).toHaveLength(5);
-    expect(screen.getAllByRole("link", { name: "Apri serie" })).toHaveLength(5);
-    expect(screen.getByText("19 ago 2026")).toBeInTheDocument();
-    expect(screen.getByText("giu 2026")).toBeInTheDocument();
-    expect(screen.getByText("Risorsa corrente")).toBeInTheDocument();
     expect(
-      screen.getByText(/non espone un anno di riferimento/i),
+      within(statusRegion).getAllByText("Aggiornamento automatico"),
+    ).toHaveLength(5);
+    expect(
+      within(statusRegion).getAllByRole("link", { name: "Apri serie" }),
+    ).toHaveLength(5);
+    expect(within(statusRegion).getByText("19 ago 2026")).toBeInTheDocument();
+    expect(within(statusRegion).getByText("giu 2026")).toBeInTheDocument();
+    expect(within(statusRegion).getByText("Risorsa corrente")).toBeInTheDocument();
+    expect(
+      within(statusRegion).getByText(/non espone un anno di riferimento/i),
     ).toBeInTheDocument();
   });
 
