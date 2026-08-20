@@ -1,53 +1,62 @@
 import { Link } from "wouter";
 import {
-  useGetStatsOverview,
   useGetRecentActivity,
+  useGetStatsOverview,
   useListConvocazioni,
   useListPnrrProjects,
-  useListQuestions,
-  type Question,
 } from "@workspace/api-client-react";
 import {
-  ShieldAlert,
-  ArrowRight,
-  FileText,
-  Megaphone,
-  CheckCircle2,
   AlertTriangle,
-  FileSearch,
+  ArrowRight,
   ArrowUpRight,
+  Calendar,
+  CalendarClock,
+  CheckCircle2,
+  FileSearch,
+  FileText,
   Info,
   Landmark,
+  Megaphone,
+  ShieldAlert,
   Users,
-  CalendarClock,
-  Calendar,
-  HelpCircle,
 } from "lucide-react";
-import { useMemo } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { format } from "date-fns";
+import { it } from "date-fns/locale";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { QuestionCard } from "@/components/questions/QuestionCard";
-import { HomeCivicSystemMap } from "@/components/home/HomeCivicSystemMap";
-import { iconForTopic } from "@/lib/questionTopics";
-import { format } from "date-fns";
-import { it } from "date-fns/locale";
 import { PageMeta } from "@/components/seo/PageMeta";
 import { asApiList } from "@/lib/apiList";
-import { apiFetch } from "@/lib/apiBaseUrl";
 import { PUBLIC_NUMBER_PLACEHOLDER } from "@/lib/publicNumbers";
 
-// ---------------------------------------------------------------------------
-// Helpers
-// ---------------------------------------------------------------------------
+type ActivityItem = {
+  id: string | number;
+  type?: string;
+  title?: string;
+  date?: string;
+};
+
+type ConvocazioneItem = {
+  id: number;
+  oggetto: string;
+  dataAtto?: string | null;
+  pubStart?: string | null;
+};
 
 function formatDate(value: string | null | undefined) {
-  if (!value) return "—";
-  const d = new Date(value);
-  return Number.isNaN(d.getTime())
-    ? "—"
-    : format(d, "dd MMM yyyy", { locale: it });
+  if (!value) return "Data non disponibile";
+  const date = new Date(value);
+  return Number.isNaN(date.getTime())
+    ? "Data non disponibile"
+    : format(date, "dd MMM yyyy", { locale: it });
+}
+
+function formatActivityDate(value: string | undefined) {
+  if (!value) return "Data non disponibile";
+  const date = new Date(value);
+  return Number.isNaN(date.getTime())
+    ? "Data non disponibile"
+    : format(date, "dd MMM", { locale: it });
 }
 
 function formatMonitoredAmount(value: number | null | undefined) {
@@ -55,601 +64,243 @@ function formatMonitoredAmount(value: number | null | undefined) {
     return PUBLIC_NUMBER_PLACEHOLDER;
   }
 
-  return `€ ${(value / 1000000).toFixed(1)}M`;
+  return `€ ${(value / 1_000_000).toFixed(1)}M`;
 }
 
-// ---------------------------------------------------------------------------
-// Published page-block system
-// Fetches blocks from /api/redazione/pages/:slug/blocks (published only).
-// When blocks exist they replace the static layout entirely.
-// Falls back to the default static layout when no blocks are published.
-// ---------------------------------------------------------------------------
+const gateways = [
+  {
+    title: "Cosa sta succedendo",
+    description:
+      "Ultimi atti, pubblicazioni e sedute: il punto di partenza per capire cosa si muove nel Comune.",
+    href: "/albo/",
+    cta: "Vedi gli ultimi atti",
+    icon: FileSearch,
+  },
+  {
+    title: "Dove vanno i soldi",
+    description:
+      "Contratti, affidamenti, importi e progetti PNRR collegati alle fonti disponibili.",
+    href: "/contratti",
+    cta: "Segui la spesa pubblica",
+    icon: FileText,
+  },
+  {
+    title: "Come partecipare",
+    description:
+      "Accesso civico, proposte e segnalazioni per chiedere dati o contribuire con elementi verificabili.",
+    href: "/accesso-civico",
+    cta: "Scopri gli strumenti civici",
+    icon: Megaphone,
+  },
+] as const;
 
-type PageBlock = {
-  id: number;
-  blockType: string;
-  position: number;
-  content: Record<string, unknown>;
-};
-
-function usePublishedBlocks(pageSlug: string) {
-  return useQuery<PageBlock[]>({
-    queryKey: ["published-blocks", pageSlug],
-    queryFn: async () => {
-      const res = await apiFetch(`/api/redazione/pages/${pageSlug}/blocks`);
-      if (!res.ok) return [];
-      return asApiList<PageBlock>(await res.json());
-    },
-    staleTime: 2 * 60 * 1000,
-    retry: false,
-  });
-}
-
-// ---- Block renderers -------------------------------------------------------
-// Each renderer receives the block's `content` JSON.
-// Data-driven blocks (stats, recent_activity, etc.) self-fetch live data —
-// React Query deduplicates the requests when the same hooks run in the
-// static layout too.
-
-function getStringContent(
-  content: Record<string, unknown>,
-  ...keys: string[]
-): string | undefined {
-  for (const key of keys) {
-    const value = content[key];
-    if (typeof value === "string" && value.trim()) {
-      return value;
-    }
-  }
-  return undefined;
-}
-
-function BlockHero({ content }: { content: Record<string, unknown> }) {
-  const title = getStringContent(content, "title", "headline");
-  const subtitle = getStringContent(content, "subtitle", "subtext");
-  const ctaHref = getStringContent(content, "ctaUrl", "ctaHref");
-  const ctaLabel = getStringContent(content, "ctaLabel");
-  return (
-    <section className="bg-sidebar text-sidebar-foreground py-16 px-6 text-center">
-      {title && (
-        <h1 className="font-display text-4xl font-bold tracking-tight sm:text-5xl">
-          {title}
-        </h1>
-      )}
-      {subtitle && (
-        <p className="mt-4 max-w-2xl mx-auto text-lg text-sidebar-foreground/70">
-          {subtitle}
-        </p>
-      )}
-      {ctaLabel && ctaHref && (
-        <div className="mt-8">
-          <Button asChild size="lg">
-            <Link href={ctaHref}>{ctaLabel}</Link>
-          </Button>
-        </div>
-      )}
-    </section>
-  );
-}
-
-function BlockCtaBanner({ content }: { content: Record<string, unknown> }) {
-  const title = getStringContent(content, "title", "headline");
-  const subtitle = getStringContent(content, "subtitle", "subtext");
-  const ctaHref = getStringContent(content, "ctaUrl", "ctaHref");
-  const ctaLabel = getStringContent(content, "ctaLabel");
-  return (
-    <section className="bg-brand/10 border-y border-brand/20 py-10 px-6 text-center">
-      {title && <h2 className="font-display text-2xl font-bold">{title}</h2>}
-      {subtitle && <p className="mt-2 text-muted-foreground">{subtitle}</p>}
-      {ctaLabel && ctaHref && (
-        <div className="mt-6">
-          <Button asChild variant="default">
-            <Link href={ctaHref}>{ctaLabel}</Link>
-          </Button>
-        </div>
-      )}
-    </section>
-  );
-}
-
-function BlockQuickLinks({ content }: { content: Record<string, unknown> }) {
-  const links = Array.isArray(content.links)
-    ? (content.links as { label: string; href: string }[])
-    : [];
-  if (links.length === 0) return null;
-  return (
-    <section className="py-10 px-6 max-w-5xl mx-auto">
-      {getStringContent(content, "title") && (
-        <h2 className="font-display text-xl font-bold mb-4">
-          {getStringContent(content, "title")}
-        </h2>
-      )}
-      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-        {links.map((link, i) => (
-          <Link key={i} href={link.href}>
-            <div className="rounded-xl border border-border bg-card p-4 hover:bg-muted/50 transition-colors cursor-pointer">
-              <span className="text-sm font-medium">{link.label}</span>
-            </div>
-          </Link>
-        ))}
-      </div>
-    </section>
-  );
-}
-
-function BlockRichText({ content }: { content: Record<string, unknown> }) {
-  return (
-    <section className="py-10 px-6 max-w-3xl mx-auto">
-      {getStringContent(content, "title") && (
-        <h2 className="font-display text-xl font-bold mb-4">
-          {getStringContent(content, "title")}
-        </h2>
-      )}
-      {getStringContent(content, "body") && (
-        <div className="prose prose-sm max-w-none text-foreground">
-          <p>{getStringContent(content, "body")}</p>
-        </div>
-      )}
-    </section>
-  );
-}
-
-function BlockCallToAction({ content }: { content: Record<string, unknown> }) {
-  const ctaHref = getStringContent(content, "ctaUrl", "ctaHref");
-  const ctaLabel = getStringContent(content, "ctaLabel");
-  if (!ctaLabel || !ctaHref) return null;
-  return (
-    <section className="py-10 px-6 text-center">
-      {getStringContent(content, "title") && (
-        <h2 className="font-display text-xl font-bold mb-4">
-          {getStringContent(content, "title")}
-        </h2>
-      )}
-      <Button asChild size="lg" variant="brand">
-        <Link href={ctaHref}>
-          {ctaLabel} <ArrowRight className="ml-1 h-4 w-4" aria-hidden="true" />
-        </Link>
-      </Button>
-    </section>
-  );
-}
-
-function BlockImage({ content }: { content: Record<string, unknown> }) {
-  const src = getStringContent(content, "src");
-  const caption = getStringContent(content, "caption");
-  if (!src) return null;
-  return (
-    <section className="py-10 px-6 max-w-3xl mx-auto">
-      <figure>
-        <img
-          src={src}
-          alt={getStringContent(content, "alt") ?? ""}
-          className="rounded-xl w-full object-cover"
-        />
-        {caption && (
-          <figcaption className="mt-2 text-center text-sm text-muted-foreground">
-            {caption}
-          </figcaption>
-        )}
-      </figure>
-    </section>
-  );
-}
-
-function BlockSectionEmbed({ content }: { content: Record<string, unknown> }) {
-  const href = getStringContent(content, "href");
-  const title = getStringContent(content, "title");
-  const description = getStringContent(content, "description");
-  if (!href) return null;
-  return (
-    <section className="py-8 px-6 max-w-3xl mx-auto">
-      <Link
-        href={href}
-        className="flex items-center justify-between rounded-xl border border-border bg-card p-5 hover:border-primary/40 hover:bg-muted/40 transition-colors group"
-      >
-        <div>
-          {title && <p className="font-semibold text-foreground">{title}</p>}
-          {description && (
-            <p className="text-sm text-muted-foreground mt-0.5">
-              {description}
-            </p>
-          )}
-        </div>
-        <ArrowUpRight
-          className="h-5 w-5 text-muted-foreground group-hover:text-primary transition-colors shrink-0"
-          aria-hidden="true"
-        />
-      </Link>
-    </section>
-  );
-}
-
-function BlockStats() {
+export function Home() {
   const { data: stats, isLoading: statsLoading } = useGetStatsOverview();
-  const { data: pnrrProjects } = useListPnrrProjects();
-  const pnrrProjectCount = asApiList(pnrrProjects?.projects).length;
-  return (
-    <section className="border-b border-border bg-background">
-      <div className="container mx-auto px-4 py-4 md:px-6">
-        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-          <StatCard
-            title="Atti dalla fonte"
-            value={stats?.acts}
-            loading={statsLoading}
-            href="/albo/"
-            icon={FileSearch}
-          />
-          <StatCard
-            title="Contratti censiti"
-            value={stats?.contracts}
-            loading={statsLoading}
-            href="/contratti"
-            icon={FileText}
-          />
-          <StatCard
-            title="Progetti PNRR"
-            value={pnrrProjectCount}
-            loading={!pnrrProjects}
-            href="/pnrr"
-            icon={Landmark}
-          />
-          <StatCard
-            title="Importi disponibili"
-            value={stats ? formatMonitoredAmount(stats.monitoredAmount) : undefined}
-            loading={statsLoading}
-            href="/statistiche"
-            icon={CheckCircle2}
-            highlight
-          />
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function BlockThemesGrid({ content }: { content: Record<string, unknown> }) {
-  return (
-    <HomeCivicSystemMap
-      title={content.title ? String(content.title) : "Scegli un percorso civico"}
-    />
-  );
-}
-
-function BlockQuestionsFeatured() {
-  const { data: questions, isLoading: questionsLoading } = useListQuestions();
-
-  const { featured, topics } = useMemo(() => {
-    const list = asApiList<Question>(questions);
-    const featured = list
-      .filter((q) => q.featured)
-      .sort((a, b) => a.sortOrder - b.sortOrder)
-      .slice(0, 6);
-    const topicMap = new Map<string, Question[]>();
-    for (const q of list) {
-      const arr = topicMap.get(q.topic);
-      if (arr) arr.push(q);
-      else topicMap.set(q.topic, [q]);
-    }
-    const topics = Array.from(topicMap.entries())
-      .map(([topic, items]) => ({ topic, count: items.length }))
-      .sort((a, b) => a.topic.localeCompare(b.topic, "it"));
-    return { featured, topics };
-  }, [questions]);
-
-  return (
-    <section className="border-b border-border bg-muted/30 py-16 md:py-24">
-      <div className="container mx-auto px-4 md:px-6">
-        <div className="mx-auto max-w-3xl text-center">
-          <span className="eyebrow justify-center text-primary">
-            <HelpCircle className="h-3.5 w-3.5" aria-hidden="true" />
-            Parti da una domanda
-          </span>
-          <h2 className="mt-3 font-display text-3xl font-bold tracking-tight md:text-5xl">
-            Cosa vuoi scoprire?
-          </h2>
-          <p className="mt-4 text-lg text-muted-foreground text-balance">
-            Abbiamo organizzato i dati pubblici del Comune attorno alle domande
-            che contano. Scegli un punto di partenza e ti guidiamo alle
-            risposte.
-          </p>
-        </div>
-        {topics.length > 0 && (
-          <div className="mt-8 flex flex-wrap justify-center gap-2">
-            {topics.map((t) => {
-              const Icon = iconForTopic(t.topic);
-              return (
-                <Link
-                  key={t.topic}
-                  href={`/domande?topic=${encodeURIComponent(t.topic)}`}
-                  className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-4 py-2 text-sm font-semibold text-foreground transition-colors hover-elevate"
-                >
-                  <Icon className="h-4 w-4 text-brand" aria-hidden="true" />
-                  {t.topic}
-                  <span className="text-xs text-muted-foreground tabular-nums">
-                    {t.count}
-                  </span>
-                </Link>
-              );
-            })}
-          </div>
-        )}
-        <div className="mt-10 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-          {questionsLoading
-            ? Array(6)
-                .fill(0)
-                .map((_, i) => (
-                  <Skeleton key={i} className="h-48 w-full rounded-xl" />
-                ))
-            : featured.map((q) => <QuestionCard key={q.id} question={q} />)}
-        </div>
-        <div className="mt-10 flex justify-center">
-          <Link href="/domande">
-            <Button variant="brand" size="lg" className="h-12 px-7 font-bold">
-              Esplora tutte le domande{" "}
-              <ArrowRight className="ml-1 h-4 w-4" aria-hidden="true" />
-            </Button>
-          </Link>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function BlockRecentActivity() {
   const { data: activity, isLoading: activityLoading } = useGetRecentActivity();
-  return (
-    <section className="py-12 md:py-16">
-      <div className="container mx-auto px-4 md:px-6 max-w-2xl">
-        <div className="mb-6">
-          <span className="eyebrow text-primary mb-2">In tempo reale</span>
-          <h2 className="text-2xl md:text-3xl font-display font-bold tracking-tight mt-2">
-            Aggiornamenti disponibili
-          </h2>
-          <p className="text-muted-foreground mt-1">
-            Movimenti pubblicati dalla piattaforma quando le fonti o i dati
-            consultati li rendono disponibili.
-          </p>
-        </div>
-        <Card className="overflow-hidden">
-          <CardContent className="p-0">
-            <div className="divide-y divide-border">
-              {activityLoading ? (
-                Array(5)
-                  .fill(0)
-                  .map((_, i) => (
-                    <div key={i} className="p-4 flex gap-4">
-                      <Skeleton className="h-10 w-10 rounded-full shrink-0" />
-                      <div className="space-y-2 w-full">
-                        <Skeleton className="h-4 w-full" />
-                        <Skeleton className="h-3 w-24" />
-                      </div>
-                    </div>
-                  ))
-              ) : Array.isArray(activity) && activity.length > 0 ? (
-                activity
-                  .slice(0, 6)
-                  .map((item) => <ActivityRow key={item.id} item={item} />)
-              ) : (
-                <div className="p-8 text-center text-muted-foreground">
-                  Non risultano aggiornamenti recenti dalla fonte consultata o
-                  dal fallback statico della versione pubblica.
-                </div>
-              )}
-            </div>
-          </CardContent>
-          <CardHeader className="p-3 border-t border-border bg-muted/30">
-            <Link href="/albo/" className="w-full">
-              <Button
-                variant="ghost"
-                className="w-full justify-between font-semibold text-muted-foreground hover:text-foreground"
-              >
-                Vai all'Albo Pretorio{" "}
-                <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
-              </Button>
-            </Link>
-          </CardHeader>
-        </Card>
-      </div>
-    </section>
-  );
-}
-
-function BlockConvocazioni() {
+  const { data: pnrrProjects } = useListPnrrProjects();
   const { data: consiglio, isLoading: consiglioLoading } = useListConvocazioni({
     tipo: "consiglio",
   });
   const { data: commissioni, isLoading: commissioniLoading } =
     useListConvocazioni({ tipo: "commissione" });
-  return (
-    <section className="py-12 md:py-16">
-      <div className="container mx-auto px-4 md:px-6">
-        <div className="flex items-end justify-between gap-4 mb-8">
-          <div>
-            <span className="eyebrow text-primary mb-2">Agenda pubblica</span>
-            <h2 className="text-2xl md:text-3xl font-display font-bold tracking-tight mt-2">
-              Sedute e ordini del giorno
-            </h2>
-            <p className="text-muted-foreground mt-1">
-              Avvisi, date e ordini del giorno disponibili per Consiglio
-              comunale e commissioni, con stato della fonte e limiti della
-              versione pubblica.
-            </p>
-          </div>
-          <Link href="/convocazioni" className="hidden md:flex shrink-0">
-            <Button variant="ghost" className="gap-2 font-semibold">
-              Vedi la sezione{" "}
-              <ArrowRight className="h-4 w-4" aria-hidden="true" />
-            </Button>
-          </Link>
-        </div>
-        <div className="grid md:grid-cols-2 gap-6">
-          <ConvocazioniColumn
-            title="Consiglio Comunale"
-            icon={Users}
-            items={consiglio}
-            loading={consiglioLoading}
-          />
-          <ConvocazioniColumn
-            title="Commissioni Consiliari"
-            icon={CalendarClock}
-            items={commissioni}
-            loading={commissioniLoading}
-          />
-        </div>
-        <Link href="/convocazioni" className="md:hidden block mt-6">
-          <Button variant="outline" className="w-full font-semibold">
-            Vedi tutte le sedute
-          </Button>
-        </Link>
-      </div>
-    </section>
-  );
-}
 
-// ---- Block registry --------------------------------------------------------
+  const recentActivity = asApiList<ActivityItem>(activity).slice(0, 5);
+  const pnrrProjectCount = asApiList(pnrrProjects?.projects).length;
 
-const BLOCK_RENDERERS: Record<
-  string,
-  React.ComponentType<{ content: Record<string, unknown> }>
-> = {
-  hero: BlockHero,
-  cta_banner: BlockCtaBanner,
-  quick_links: BlockQuickLinks,
-  rich_text: BlockRichText,
-  call_to_action: BlockCallToAction,
-  image: BlockImage,
-  section_embed: BlockSectionEmbed,
-  stats: () => <BlockStats />,
-  themes_grid: BlockThemesGrid,
-  questions_featured: () => <BlockQuestionsFeatured />,
-  recent_activity: () => <BlockRecentActivity />,
-  convocazioni: () => <BlockConvocazioni />,
-};
-
-function PublishedBlocks({ blocks }: { blocks: PageBlock[] }) {
   return (
     <div className="flex flex-col">
-      {blocks.map((block) => {
-        const Renderer = BLOCK_RENDERERS[block.blockType];
-        if (!Renderer) return null;
-        return <Renderer key={block.id} content={block.content} />;
-      })}
-    </div>
-  );
-}
+      <PageMeta
+        title="Lamezia Trasparente — atti, spesa e partecipazione civica"
+        description="Capire cosa decide, spende e realizza il Comune di Lamezia Terme attraverso atti, sedute, contratti e progetti collegati alle fonti pubbliche."
+        path="/"
+      />
 
-// ---------------------------------------------------------------------------
-// Static default layout (shown as fallback when no blocks are published)
-// ---------------------------------------------------------------------------
-
-function StaticHomeLayout() {
-  const { data: stats, isLoading: statsLoading } = useGetStatsOverview();
-  const { data: activity, isLoading: activityLoading } = useGetRecentActivity();
-  const { data: pnrrProjects } = useListPnrrProjects();
-  const { data: questions, isLoading: questionsLoading } = useListQuestions();
-  const { data: consiglio, isLoading: consiglioLoading } = useListConvocazioni({
-    tipo: "consiglio",
-  });
-  const { data: commissioni, isLoading: commissioniLoading } =
-    useListConvocazioni({ tipo: "commissione" });
-  const pnrrProjectCount = asApiList(pnrrProjects?.projects).length;
-
-  const { featured, topics } = useMemo(() => {
-    const list = asApiList<Question>(questions);
-    const featured = list
-      .filter((q) => q.featured)
-      .sort((a, b) => a.sortOrder - b.sortOrder)
-      .slice(0, 6);
-    const topicMap = new Map<string, Question[]>();
-    for (const q of list) {
-      const arr = topicMap.get(q.topic);
-      if (arr) arr.push(q);
-      else topicMap.set(q.topic, [q]);
-    }
-    const topics = Array.from(topicMap.entries())
-      .map(([topic, items]) => ({ topic, count: items.length }))
-      .sort((a, b) => a.topic.localeCompare(b.topic, "it"));
-    return { featured, topics };
-  }, [questions]);
-
-  return (
-    <>
-      {/* Hero Section */}
       <section
         data-tour="home-hero"
-        className="relative bg-sidebar text-sidebar-foreground overflow-hidden"
+        className="relative overflow-hidden bg-sidebar text-sidebar-foreground"
       >
-        <div className="absolute inset-0 pointer-events-none bg-[url('https://images.unsplash.com/photo-1518398046578-8cca57782e17?q=80&w=2000&auto=format&fit=crop')] bg-cover bg-center opacity-[0.14]" />
-        <div className="absolute inset-0 pointer-events-none bg-sidebar/80" />
-        <div className="absolute inset-0 pointer-events-none civic-hero-grid opacity-45" />
-        <div className="container relative z-10 mx-auto flex max-w-5xl flex-col items-start px-4 py-12 sm:py-16 md:px-6 md:py-24">
-          <div className="eyebrow rounded-md border border-brand/40 bg-brand/10 px-3 py-1.5 text-[10px] text-brand sm:px-3.5 sm:text-[11px]">
-            <ShieldAlert className="h-3.5 w-3.5" />
-            <span className="sm:hidden">Piattaforma civica</span>
-            <span className="hidden sm:inline">Piattaforma civica documentale</span>
-          </div>
+        <div className="absolute inset-0 pointer-events-none civic-hero-grid opacity-40" />
+        <div className="container relative z-10 mx-auto max-w-6xl px-4 py-14 sm:py-18 md:px-6 md:py-24">
+          <div className="max-w-4xl">
+            <div className="eyebrow inline-flex rounded-md border border-brand/40 bg-brand/10 px-3 py-1.5 text-brand">
+              <ShieldAlert className="h-3.5 w-3.5" aria-hidden="true" />
+              Lamezia Terme · dati pubblici
+            </div>
 
-          <h1 className="mt-5 mb-4 max-w-4xl font-display text-4xl font-bold leading-[1.02] text-white sm:mt-7 sm:mb-6 sm:text-5xl sm:leading-[0.98] md:text-6xl lg:text-7xl">
-            Atti, sedute e progetti pubblici
-            <br className="hidden sm:inline" /> in un percorso{" "}
-            <br className="sm:hidden" />
-            leggibile.
-            <br />
-            <span className="text-gradient-brand">
-              Un monitor civico{" "}
-              <br className="sm:hidden" />
-              senza scorciatoie.
-            </span>
-          </h1>
+            <h1 className="mt-6 max-w-4xl font-display text-4xl font-bold leading-[1.03] text-white sm:text-5xl md:text-6xl lg:text-7xl">
+              Capire cosa decide, spende e realizza il Comune.
+            </h1>
 
-          <p className="mb-6 max-w-2xl text-base leading-7 text-sidebar-foreground/78 text-balance sm:mb-9 md:text-xl">
-            Organizza informazioni amministrative in modo documentale, prudente
-            e non accusatorio. Puoi orientarti tra sedute, contratti, PNRR,
-            fonti e metodo, distinguendo sezioni consultabili da dati ancora da
-            alimentare.
-          </p>
+            <p className="mt-6 max-w-3xl text-base leading-7 text-sidebar-foreground/80 sm:text-lg md:text-xl">
+              Atti, sedute, contratti e progetti pubblici collegati alle fonti,
+              in un solo posto. Il monitor aiuta a orientarsi nei documenti e
+              rende visibili anche limiti e stato dei dati.
+            </p>
 
-          <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
-            <Link href="/domande" className="w-full sm:w-auto">
-              <Button
-                variant="brand"
-                size="lg"
-                className="h-11 w-full px-5 text-sm font-bold sm:h-12 sm:px-7 sm:text-base"
-              >
-                Esplora le domande{" "}
-                <ArrowRight className="ml-1 h-4 w-4" aria-hidden="true" />
+            <div className="mt-8 flex w-full flex-col gap-3 sm:w-auto sm:flex-row">
+              <Button asChild variant="brand" size="lg" className="font-bold">
+                <a href="#oggi">
+                  Vedi cosa c&apos;è di nuovo
+                  <ArrowRight className="ml-1 h-4 w-4" aria-hidden="true" />
+                </a>
               </Button>
-            </Link>
-            <Link href="/convocazioni" className="w-full sm:w-auto">
               <Button
+                asChild
                 variant="outline"
                 size="lg"
-                className="h-11 w-full border-white/25 bg-white/5 px-5 text-sm font-bold text-white hover:bg-white/10 sm:h-12 sm:px-7 sm:text-base"
+                className="border-white/25 bg-white/5 font-bold text-white hover:bg-white/10"
               >
-                <Calendar className="mr-1 h-4 w-4" aria-hidden="true" />
-                Consulta le sedute
+                <Link href="/contratti">Segui la spesa pubblica</Link>
               </Button>
-            </Link>
-            <Link href="/fonti-dati" className="w-full sm:w-auto">
-              <Button
-                variant="outline"
-                size="lg"
-                className="h-11 w-full border-white/25 bg-white/5 px-5 text-sm font-bold text-white hover:bg-white/10 sm:h-12 sm:px-7 sm:text-base"
-              >
-                <Info className="mr-1 h-4 w-4" aria-hidden="true" />
-                Capisci fonti e limiti
-              </Button>
-            </Link>
+            </div>
+
+            <div className="mt-6 flex flex-wrap gap-x-5 gap-y-2 text-sm text-sidebar-foreground/65">
+              <Link href="/metodologia" className="hover:text-white">
+                Come leggiamo i dati
+              </Link>
+              <Link href="/stato-monitoraggio" className="hover:text-white">
+                Stato delle fonti
+              </Link>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Stats Section */}
-      <section
-        data-tour="home-stats"
-        className="border-b border-border bg-background"
-      >
-        <div className="container mx-auto px-4 py-4 md:px-6">
+      <section className="border-b border-border bg-background py-8 md:py-10">
+        <div className="container mx-auto px-4 md:px-6">
+          <div className="grid gap-4 md:grid-cols-3">
+            {gateways.map((gateway) => {
+              const Icon = gateway.icon;
+              return (
+                <Link
+                  key={gateway.title}
+                  href={gateway.href}
+                  className="group rounded-xl border border-card-border bg-card p-5 shadow-[var(--shadow-card)] transition-colors hover:border-primary/35 hover:bg-primary/5 md:p-6"
+                >
+                  <div className="flex items-start gap-4">
+                    <div className="rounded-lg bg-primary/10 p-2.5 text-primary">
+                      <Icon className="h-5 w-5" aria-hidden="true" />
+                    </div>
+                    <div className="min-w-0">
+                      <h2 className="font-display text-xl font-bold tracking-tight">
+                        {gateway.title}
+                      </h2>
+                      <p className="mt-2 text-sm leading-6 text-muted-foreground">
+                        {gateway.description}
+                      </p>
+                      <span className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-primary">
+                        {gateway.cta}
+                        <ArrowRight
+                          className="h-4 w-4 transition-transform group-hover:translate-x-0.5"
+                          aria-hidden="true"
+                        />
+                      </span>
+                    </div>
+                  </div>
+                </Link>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      <section id="oggi" className="scroll-mt-24 bg-muted/25 py-14 md:py-20">
+        <div className="container mx-auto px-4 md:px-6">
+          <div className="mb-8 max-w-3xl">
+            <span className="eyebrow text-primary">Il punto rapido</span>
+            <h2 className="mt-2 font-display text-3xl font-bold tracking-tight md:text-5xl">
+              Oggi a Lamezia
+            </h2>
+            <p className="mt-3 text-base leading-7 text-muted-foreground md:text-lg">
+              Le novità che le fonti collegate rendono disponibili in questo
+              momento: aggiornamenti documentali e agenda pubblica, senza
+              confondere assenza di dati con assenza di attività.
+            </p>
+          </div>
+
+          <div className="grid gap-6 lg:grid-cols-[1.05fr_0.95fr]">
+            <Card className="overflow-hidden">
+              <CardHeader className="border-b border-border bg-card py-4">
+                <div className="flex items-center justify-between gap-4">
+                  <div>
+                    <p className="text-sm font-semibold text-foreground">
+                      Ultimi aggiornamenti disponibili
+                    </p>
+                    <p className="mt-1 text-xs text-muted-foreground">
+                      Atti, contratti e altri movimenti esposti dalle fonti
+                      collegate.
+                    </p>
+                  </div>
+                  <Link
+                    href="/albo/"
+                    className="shrink-0 text-sm font-semibold text-primary hover:underline"
+                  >
+                    Albo
+                  </Link>
+                </div>
+              </CardHeader>
+              <CardContent className="p-0">
+                <div className="divide-y divide-border">
+                  {activityLoading ? (
+                    Array.from({ length: 5 }).map((_, index) => (
+                      <div key={index} className="flex gap-4 p-4">
+                        <Skeleton className="h-9 w-9 shrink-0 rounded-full" />
+                        <div className="w-full space-y-2">
+                          <Skeleton className="h-4 w-full" />
+                          <Skeleton className="h-3 w-24" />
+                        </div>
+                      </div>
+                    ))
+                  ) : recentActivity.length > 0 ? (
+                    recentActivity.map((item) => (
+                      <ActivityRow key={item.id} item={item} />
+                    ))
+                  ) : (
+                    <div className="p-8 text-sm leading-6 text-muted-foreground">
+                      Non risultano aggiornamenti recenti dalla fonte collegata.
+                      Consulta l&apos;Albo Pretorio per la fonte ufficiale e lo
+                      stato delle fonti per i limiti di copertura.
+                    </div>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+
+            <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-1">
+              <AgendaCard
+                title="Consiglio comunale"
+                icon={Users}
+                items={consiglio}
+                loading={consiglioLoading}
+              />
+              <AgendaCard
+                title="Commissioni"
+                icon={CalendarClock}
+                items={commissioni}
+                loading={commissioniLoading}
+              />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="border-y border-border bg-background py-10 md:py-12">
+        <div className="container mx-auto px-4 md:px-6">
+          <div className="mb-6 flex flex-col justify-between gap-3 md:flex-row md:items-end">
+            <div>
+              <span className="eyebrow text-primary">In numeri</span>
+              <h2 className="mt-2 font-display text-2xl font-bold tracking-tight md:text-3xl">
+                Cosa è già consultabile
+              </h2>
+            </div>
+            <Link
+              href="/stato-monitoraggio"
+              className="text-sm font-semibold text-primary hover:underline"
+            >
+              Verifica copertura e freschezza
+            </Link>
+          </div>
+
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
             <StatCard
               title="Atti dalla fonte"
@@ -676,7 +327,7 @@ function StaticHomeLayout() {
               title="Importi disponibili"
               value={stats ? formatMonitoredAmount(stats.monitoredAmount) : undefined}
               loading={statsLoading}
-              href="/statistiche"
+              href="/contratti"
               icon={CheckCircle2}
               highlight
             />
@@ -684,253 +335,73 @@ function StaticHomeLayout() {
         </div>
       </section>
 
-      <HomeCivicSystemMap />
-
-      {/* Questions Section — Cosa vuoi scoprire? */}
-      <section className="border-b border-border bg-muted/30 py-16 md:py-24">
+      <section className="bg-muted/20 py-14 md:py-20">
         <div className="container mx-auto px-4 md:px-6">
-          <div className="mx-auto max-w-3xl text-center">
-            <span className="eyebrow justify-center text-primary">
-              <HelpCircle className="h-3.5 w-3.5" aria-hidden="true" />
-              Parti da una domanda
-            </span>
-            <h2 className="mt-3 font-display text-3xl font-bold tracking-tight md:text-5xl">
-              Cosa vuoi scoprire?
+          <div className="grid gap-8 lg:grid-cols-[0.85fr_1.15fr] lg:items-start">
+            <div className="max-w-xl">
+              <span className="eyebrow text-primary">Partecipazione</span>
+              <h2 className="mt-2 font-display text-3xl font-bold tracking-tight md:text-4xl">
+                Non solo leggere: puoi anche chiedere, proporre e correggere.
+              </h2>
+              <p className="mt-4 text-base leading-7 text-muted-foreground">
+                Il progetto privilegia contributi documentati e verificabili.
+                Le segnalazioni non vengono trasformate automaticamente in
+                fatti: fonte, contesto e stato di verifica restano distinti.
+              </p>
+            </div>
+
+            <div className="grid gap-4 sm:grid-cols-3">
+              <ParticipationCard
+                title="Chiedi un dato"
+                description="Usa l'accesso civico per richiedere documenti o informazioni pubbliche."
+                href="/accesso-civico"
+              />
+              <ParticipationCard
+                title="Proponi"
+                description="Consulta o suggerisci proposte civiche con fonte e stato espliciti."
+                href="/proposte-civiche"
+              />
+              <ParticipationCard
+                title="Segnala"
+                description="Indica un dato, un atto o un elemento documentale che merita verifica."
+                href="/segnalazioni"
+              />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="bg-brand text-brand-foreground">
+        <div className="container mx-auto flex max-w-5xl flex-col gap-6 px-4 py-12 md:flex-row md:items-center md:justify-between md:px-6">
+          <div>
+            <h2 className="font-display text-2xl font-bold md:text-3xl">
+              Vuoi capire quanto è affidabile un dato?
             </h2>
-            <p className="mt-4 text-lg text-muted-foreground text-balance">
-              Abbiamo organizzato le informazioni pubbliche attorno a domande
-              civiche: cosa è già consultabile, quale fonte è richiamata e quali
-              limiti richiedono verifica.
+            <p className="mt-2 max-w-2xl text-brand-foreground/80">
+              Ogni lettura va ricondotta alla fonte, alla data di aggiornamento
+              e ai limiti dichiarati. Il metodo è parte del prodotto, non una
+              nota a margine.
             </p>
           </div>
-
-          {topics.length > 0 && (
-            <div className="mt-8 flex flex-wrap justify-center gap-2">
-              {topics.map((t) => {
-                const Icon = iconForTopic(t.topic);
-                return (
-                  <Link
-                    key={t.topic}
-                    href={`/domande?topic=${encodeURIComponent(t.topic)}`}
-                    className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-4 py-2 text-sm font-semibold text-foreground transition-colors hover-elevate"
-                  >
-                    <Icon className="h-4 w-4 text-brand" aria-hidden="true" />
-                    {t.topic}
-                    <span className="text-xs text-muted-foreground tabular-nums">
-                      {t.count}
-                    </span>
-                  </Link>
-                );
-              })}
-            </div>
-          )}
-
-          <div className="mt-10 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-            {questionsLoading
-              ? Array(6)
-                  .fill(0)
-                  .map((_, i) => (
-                    <Skeleton key={i} className="h-48 w-full rounded-xl" />
-                  ))
-              : featured.map((q) => <QuestionCard key={q.id} question={q} />)}
-          </div>
-
-          <p className="mt-10 text-center text-sm text-muted-foreground">
-            Il percorso completo delle domande civiche è ora raggiungibile dal
-            banner principale della pagina.
-          </p>
-        </div>
-      </section>
-
-      {/* Main Content */}
-      <section className="py-16 md:py-24">
-        <div className="container mx-auto px-4 md:px-6">
-          <div className="grid lg:grid-cols-3 gap-12">
-            {/* Convocazioni */}
-            <div className="lg:col-span-2 space-y-8">
-              <div className="flex items-end justify-between gap-4">
-                <div>
-                  <span className="eyebrow text-primary mb-2">
-                    Agenda pubblica
-                  </span>
-                  <h2 className="text-3xl md:text-4xl font-display font-bold tracking-tight mt-2">
-                    Sedute e ordini del giorno
-                  </h2>
-                  <p className="text-muted-foreground mt-2">
-                    Avvisi, date e ordini del giorno disponibili per Consiglio
-                    comunale e commissioni, con stato della fonte e limiti della
-                    versione pubblica.
-                  </p>
-                </div>
-                <Link href="/convocazioni" className="hidden md:flex shrink-0">
-                  <Button variant="ghost" className="gap-2 font-semibold">
-                    Vedi la sezione{" "}
-                    <ArrowRight className="h-4 w-4" aria-hidden="true" />
-                  </Button>
-                </Link>
-              </div>
-
-              <div className="grid md:grid-cols-2 gap-6">
-                <ConvocazioniColumn
-                  title="Consiglio Comunale"
-                  icon={Users}
-                  items={consiglio}
-                  loading={consiglioLoading}
-                />
-                <ConvocazioniColumn
-                  title="Commissioni Consiliari"
-                  icon={CalendarClock}
-                  items={commissioni}
-                  loading={commissioniLoading}
-                />
-              </div>
-
-              <Link href="/convocazioni" className="md:hidden block mt-6">
-                <Button variant="outline" className="w-full font-semibold">
-                  Vedi tutte le sedute
-                </Button>
-              </Link>
-            </div>
-
-            {/* Sidebar Activity */}
-            <div className="space-y-8">
-              <div>
-                <span className="eyebrow text-primary mb-2">
-                  In tempo reale
-                </span>
-                <h2 className="text-3xl md:text-4xl font-display font-bold tracking-tight mt-2">
-                  Aggiornamenti disponibili
-                </h2>
-                <p className="text-muted-foreground mt-2">
-                  Movimenti pubblicati dalla piattaforma quando le fonti o i
-                  dati consultati li rendono disponibili.
-                </p>
-              </div>
-
-              <Card className="overflow-hidden">
-                <CardContent className="p-0">
-                  <div className="divide-y divide-border">
-                    {activityLoading ? (
-                      Array(5)
-                        .fill(0)
-                        .map((_, i) => (
-                          <div key={i} className="p-4 flex gap-4">
-                            <Skeleton className="h-10 w-10 rounded-full shrink-0" />
-                            <div className="space-y-2 w-full">
-                              <Skeleton className="h-4 w-full" />
-                              <Skeleton className="h-3 w-24" />
-                            </div>
-                          </div>
-                        ))
-                    ) : Array.isArray(activity) && activity.length > 0 ? (
-                      activity
-                        .slice(0, 6)
-                        .map((item) => (
-                          <ActivityRow key={item.id} item={item} />
-                        ))
-                    ) : (
-                      <div className="p-8 text-center text-muted-foreground">
-                        Non risultano aggiornamenti recenti dalla fonte
-                        consultata o dal fallback statico della versione
-                        pubblica.
-                      </div>
-                    )}
-                  </div>
-                </CardContent>
-                <CardHeader className="p-3 border-t border-border bg-muted/30">
-                  <Link href="/albo/" className="w-full">
-                    <Button
-                      variant="ghost"
-                      className="w-full justify-between font-semibold text-muted-foreground hover:text-foreground"
-                    >
-                      Vai all'Albo Pretorio{" "}
-                      <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
-                    </Button>
-                  </Link>
-                </CardHeader>
-              </Card>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="relative overflow-hidden bg-brand text-brand-foreground">
-        <div
-          className="absolute inset-0 opacity-10 pointer-events-none"
-          style={{
-            backgroundImage:
-              "linear-gradient(hsl(0 0% 0% / 0.6) 1px, transparent 1px), linear-gradient(90deg, hsl(0 0% 0% / 0.6) 1px, transparent 1px)",
-            backgroundSize: "48px 48px",
-          }}
-        />
-        <div className="container relative mx-auto px-4 md:px-6 py-20 text-center max-w-3xl">
-          <Megaphone className="h-12 w-12 mx-auto mb-6" aria-hidden="true" />
-          <h2 className="text-3xl md:text-5xl font-display font-bold mb-4 tracking-tight">
-            Hai notato un elemento documentale da verificare?
-          </h2>
-          <p className="text-brand-foreground/85 text-lg mb-8 text-balance">
-            La trasparenza si costruisce distinguendo fatti, fonti e
-            interpretazioni. Puoi indicare documentazione mancante, lavori da
-            riscontrare o possibili incoerenze informative: saranno trattate
-            come segnalazioni da verificare.
-          </p>
-          <Link href="/segnalazioni">
-            <Button
-              size="lg"
-              variant="secondary"
-              className="text-base h-12 px-8 font-bold"
-            >
-              Segnala un dato da verificare{" "}
-              <ArrowRight className="ml-1 h-4 w-4" aria-hidden="true" />
+          <div className="flex shrink-0 flex-col gap-2 sm:flex-row">
+            <Button asChild variant="secondary">
+              <Link href="/metodologia">Leggi la metodologia</Link>
             </Button>
-          </Link>
+            <Button
+              asChild
+              variant="outline"
+              className="border-brand-foreground/30 bg-transparent text-brand-foreground hover:bg-brand-foreground/10"
+            >
+              <Link href="/stato-monitoraggio">Stato delle fonti</Link>
+            </Button>
+          </div>
         </div>
       </section>
-    </>
-  );
-}
-
-// ---------------------------------------------------------------------------
-// Home page entry point
-// ---------------------------------------------------------------------------
-
-export function Home() {
-  const { data: publishedBlocksData, isLoading: blocksLoading } =
-    usePublishedBlocks("home");
-  const publishedBlocks = asApiList<PageBlock>(publishedBlocksData);
-
-  // While loading we render nothing (avoids layout flash between states).
-  // The static layout will show immediately on next visit thanks to staleTime.
-  if (blocksLoading) {
-    return (
-      <div className="flex flex-col">
-        <div className="h-[28rem] bg-sidebar animate-pulse" />
-      </div>
-    );
-  }
-
-  return (
-    <div className="flex flex-col">
-      <PageMeta
-        title="Home — osservatorio civico su atti, appalti e PNRR"
-        description="Osservatorio civico indipendente per consultare atti, contratti, delibere, convocazioni, open data e progetti PNRR del Comune di Lamezia Terme."
-        path="/"
-      />
-      {publishedBlocks.length > 0 ? (
-        <PublishedBlocks blocks={publishedBlocks} />
-      ) : (
-        <StaticHomeLayout />
-      )}
     </div>
   );
 }
 
-// ---------------------------------------------------------------------------
-// Shared sub-components
-// ---------------------------------------------------------------------------
-
-function ConvocazioniColumn({
+function AgendaCard({
   title,
   icon: Icon,
   items,
@@ -938,70 +409,128 @@ function ConvocazioniColumn({
 }: {
   title: string;
   icon: React.ElementType;
-  items:
-    | {
-        id: number;
-        oggetto: string;
-        dataAtto?: string | null;
-        pubStart?: string | null;
-      }[]
-    | undefined;
+  items: ConvocazioneItem[] | undefined;
   loading: boolean;
 }) {
-  const safeItems = asApiList<{
-    id: number;
-    oggetto: string;
-    dataAtto?: string | null;
-    pubStart?: string | null;
-  }>(items);
+  const safeItems = asApiList<ConvocazioneItem>(items).slice(0, 2);
 
   return (
     <Card className="overflow-hidden">
-      <CardHeader className="flex flex-row items-center gap-2.5 space-y-0 border-b border-border bg-muted/30 py-3.5">
-        <div className="p-1.5 rounded-md bg-primary/10 text-primary">
-          <Icon className="h-4 w-4" aria-hidden="true" />
+      <CardHeader className="flex flex-row items-center justify-between gap-3 border-b border-border bg-card py-3.5">
+        <div className="flex items-center gap-2.5">
+          <span className="rounded-md bg-primary/10 p-1.5 text-primary">
+            <Icon className="h-4 w-4" aria-hidden="true" />
+          </span>
+          <h3 className="font-display text-sm font-bold">{title}</h3>
         </div>
-        <h3 className="font-display font-bold text-sm tracking-tight">
-          {title}
-        </h3>
+        <Link
+          href="/convocazioni"
+          className="text-xs font-semibold text-primary hover:underline"
+        >
+          Agenda
+        </Link>
       </CardHeader>
       <CardContent className="p-0">
         <div className="divide-y divide-border">
           {loading ? (
-            Array(3)
-              .fill(0)
-              .map((_, i) => (
-                <div key={i} className="p-4 space-y-2">
-                  <Skeleton className="h-3 w-24" />
-                  <Skeleton className="h-4 w-full" />
-                </div>
-              ))
+            Array.from({ length: 2 }).map((_, index) => (
+              <div key={index} className="space-y-2 p-4">
+                <Skeleton className="h-3 w-24" />
+                <Skeleton className="h-4 w-full" />
+              </div>
+            ))
           ) : safeItems.length > 0 ? (
-            safeItems.slice(0, 3).map((c) => (
+            safeItems.map((item) => (
               <Link
-                key={c.id}
-                href={`/convocazioni/${c.id}`}
-                className="block p-4 hover-elevate transition-colors"
+                key={item.id}
+                href={`/convocazioni/${item.id}`}
+                className="block p-4 transition-colors hover:bg-muted/45"
               >
-                <div className="flex items-center gap-1.5 text-xs font-bold text-brand mb-1.5">
+                <div className="mb-1.5 flex items-center gap-1.5 text-xs font-semibold text-brand">
                   <Calendar className="h-3.5 w-3.5" aria-hidden="true" />
-                  {formatDate(c.dataAtto ?? c.pubStart)}
+                  {formatDate(item.dataAtto ?? item.pubStart)}
                 </div>
-                <p className="text-sm font-medium leading-snug line-clamp-2">
-                  {c.oggetto}
+                <p className="line-clamp-2 text-sm font-medium leading-snug">
+                  {item.oggetto}
                 </p>
               </Link>
             ))
           ) : (
-            <div className="p-6 text-center text-sm text-muted-foreground">
-              Non risultano sedute disponibili nella fonte consultata. La
-              struttura è pronta a ricevere dati verificati quando il
-              collegamento sarà alimentato.
+            <div className="p-5 text-sm leading-6 text-muted-foreground">
+              Non risultano sedute disponibili nella fonte collegata.
             </div>
           )}
         </div>
       </CardContent>
     </Card>
+  );
+}
+
+function ActivityRow({ item }: { item: ActivityItem }) {
+  const href = (() => {
+    switch (item.type) {
+      case "act":
+        return "/albo/";
+      case "contract": {
+        const numericId = String(item.id).replace(/^contract-/, "");
+        return `/contratti/${numericId}`;
+      }
+      case "report":
+        return "/segnalazioni";
+      default:
+        return "/stato-monitoraggio";
+    }
+  })();
+
+  const label = (() => {
+    switch (item.type) {
+      case "act":
+        return "Atto";
+      case "contract":
+        return "Contratto";
+      case "report":
+        return "Segnalazione";
+      default:
+        return "Aggiornamento";
+    }
+  })();
+
+  const icon = (() => {
+    switch (item.type) {
+      case "act":
+        return <FileSearch className="h-4 w-4" aria-hidden="true" />;
+      case "contract":
+        return <FileText className="h-4 w-4" aria-hidden="true" />;
+      case "report":
+        return <AlertTriangle className="h-4 w-4" aria-hidden="true" />;
+      default:
+        return <Info className="h-4 w-4" aria-hidden="true" />;
+    }
+  })();
+
+  return (
+    <Link
+      href={href}
+      className="group flex gap-4 p-4 transition-colors hover:bg-muted/45"
+    >
+      <div className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-border bg-background text-muted-foreground transition-colors group-hover:border-brand/40 group-hover:text-brand">
+        {icon}
+      </div>
+      <div className="min-w-0">
+        <div className="mb-1 flex items-center gap-2">
+          <span className="text-[10px] font-bold uppercase tracking-wider text-brand">
+            {label}
+          </span>
+          <span className="text-[10px] text-muted-foreground/60">•</span>
+          <span className="text-[10px] text-muted-foreground">
+            {formatActivityDate(item.date)}
+          </span>
+        </div>
+        <p className="line-clamp-2 text-sm font-medium leading-snug">
+          {item.title || "Aggiornamento dalla fonte collegata"}
+        </p>
+      </div>
+    </Link>
   );
 }
 
@@ -1023,100 +552,56 @@ function StatCard({
   return (
     <Link
       href={href}
-      className={`relative block overflow-hidden rounded-lg border border-card-border bg-card p-5 shadow-[var(--shadow-card)] transition-colors hover:border-primary/35 hover:bg-primary/5 md:p-6 ${highlight ? "ring-1 ring-brand/20" : ""}`}
+      className={`relative block overflow-hidden rounded-lg border border-card-border bg-card p-5 shadow-[var(--shadow-card)] transition-colors hover:border-primary/35 hover:bg-primary/5 ${highlight ? "ring-1 ring-brand/20" : ""}`}
     >
-      {highlight && (
+      {highlight ? (
         <span className="absolute left-0 top-0 h-full w-1 bg-brand" />
-      )}
-      <div className="flex items-center gap-3 mb-3">
-        <div
+      ) : null}
+      <div className="mb-3 flex items-center gap-3">
+        <span
           className={`rounded-md p-2 ${highlight ? "bg-brand/15 text-brand" : "bg-muted text-muted-foreground"}`}
         >
           <Icon className="h-5 w-5" aria-hidden="true" />
+        </span>
+        <span className="text-xs font-bold uppercase tracking-wide text-muted-foreground">
+          {title}
+        </span>
+      </div>
+      {loading ? (
+        <Skeleton className="h-9 w-24" />
+      ) : (
+        <div
+          className={`font-display text-3xl font-bold tracking-tight tabular-nums ${highlight ? "text-brand" : "text-foreground"}`}
+        >
+          {value ?? 0}
         </div>
-        <h3 className="eyebrow max-w-full min-w-0 flex-wrap leading-4 text-muted-foreground">
-          <span className="min-w-0 break-words">{title}</span>
-        </h3>
-      </div>
-      <div>
-        {loading ? (
-          <Skeleton className="h-9 w-24" />
-        ) : (
-          <div
-            className={`text-4xl font-display font-bold tracking-tight tabular-nums ${highlight ? "text-brand" : "text-foreground"}`}
-          >
-            {value ?? 0}
-          </div>
-        )}
-      </div>
+      )}
     </Link>
   );
 }
 
-function ActivityRow({ item }: { item: any }) {
-  const getHref = () => {
-    switch (item.type) {
-      case "act":
-        return "/albo/";
-      case "contract": {
-        const numericId = String(item.id).replace(/^contract-/, "");
-        return `/contratti/${numericId}`;
-      }
-      case "report":
-        return "/segnalazioni";
-      default:
-        return "/statistiche";
-    }
-  };
-
-  const getIcon = () => {
-    switch (item.type) {
-      case "act":
-        return <FileSearch className="h-4 w-4" aria-hidden="true" />;
-      case "contract":
-        return <FileText className="h-4 w-4" aria-hidden="true" />;
-      case "report":
-        return <AlertTriangle className="h-4 w-4" aria-hidden="true" />;
-      default:
-        return <Info className="h-4 w-4" aria-hidden="true" />;
-    }
-  };
-
-  const getLabel = () => {
-    switch (item.type) {
-      case "act":
-        return "Nuovo Atto";
-      case "contract":
-        return "Nuovo Appalto";
-      case "report":
-        return "Nuova Segnalazione";
-      default:
-        return "Aggiornamento";
-    }
-  };
-
+function ParticipationCard({
+  title,
+  description,
+  href,
+}: {
+  title: string;
+  description: string;
+  href: string;
+}) {
   return (
     <Link
-      href={getHref()}
-      className="block p-4 flex gap-4 hover-elevate transition-colors group"
+      href={href}
+      className="group rounded-xl border border-card-border bg-card p-5 shadow-[var(--shadow-card)] transition-colors hover:border-primary/35 hover:bg-primary/5"
     >
-      <div className="mt-0.5 bg-background border border-border p-2 rounded-full h-9 w-9 flex items-center justify-center shrink-0 text-muted-foreground group-hover:text-brand group-hover:border-brand/40 transition-colors">
-        {getIcon()}
-      </div>
-      <div className="min-w-0">
-        <div className="flex items-center gap-2 mb-1">
-          <span className="text-[10px] font-bold uppercase tracking-wider text-brand">
-            {getLabel()}
-          </span>
-          <span className="text-[10px] text-muted-foreground/60">•</span>
-          <span className="text-[10px] text-muted-foreground">
-            {format(new Date(item.date), "dd MMM", { locale: it })}
-          </span>
-        </div>
-        <p className="text-sm font-medium leading-snug line-clamp-2">
-          {item.title}
-        </p>
-      </div>
+      <h3 className="font-display text-lg font-bold">{title}</h3>
+      <p className="mt-2 text-sm leading-6 text-muted-foreground">
+        {description}
+      </p>
+      <span className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-primary">
+        Apri
+        <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
+      </span>
     </Link>
   );
 }

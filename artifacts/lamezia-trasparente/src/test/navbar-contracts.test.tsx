@@ -17,16 +17,33 @@ function renderNavbar(path = "/") {
   );
 }
 
-describe("Navbar contracts access", () => {
-  it("keeps contracts visible as a primary navigation entry", () => {
+describe("Navbar public front door", () => {
+  it("keeps public spending visible as a primary navigation entry", () => {
     const { container } = renderNavbar("/contratti/42");
 
-    const contractsLink = screen.getByRole("link", { name: /^Contratti$/i });
+    const spendingLink = screen.getByRole("link", { name: /^Spesa$/i });
 
-    expect(contractsLink).toHaveAttribute("href", "/contratti");
+    expect(spendingLink).toHaveAttribute("href", "/contratti");
     expect(container.querySelector("header nav")).toHaveClass("lg:flex");
     expect(screen.getByRole("button", { name: "Menu" })).toHaveClass(
       "lg:hidden",
+    );
+  });
+
+  it("keeps the three civic entry points visible in primary navigation", () => {
+    renderNavbar("/");
+
+    expect(screen.getByRole("link", { name: /^Oggi$/i })).toHaveAttribute(
+      "href",
+      "/albo/",
+    );
+    expect(screen.getByRole("link", { name: /^Spesa$/i })).toHaveAttribute(
+      "href",
+      "/contratti",
+    );
+    expect(screen.getByRole("link", { name: /^Partecipa$/i })).toHaveAttribute(
+      "href",
+      "/accesso-civico",
     );
   });
 });
