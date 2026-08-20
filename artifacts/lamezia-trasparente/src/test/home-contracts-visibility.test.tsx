@@ -28,34 +28,35 @@ vi.mock("@/components/helper/CivicWelcome", () => ({
   CivicWelcome: () => null,
 }));
 
-function renderHomeLayout(path = "/") {
+function renderLayout(path = "/") {
   window.history.pushState({}, "", path);
 
   return render(
     <WouterRouter>
       <MainLayout>
-        <div>Pagina home</div>
+        <div>Contenuto pagina</div>
       </MainLayout>
     </WouterRouter>,
   );
 }
 
-describe("Home contracts visibility", () => {
-  it("exposes contracts from the shared home layout before page content", () => {
-    renderHomeLayout("/");
-
-    expect(
-      screen.getByRole("link", { name: /apri sezione contratti/i }),
-    ).toHaveAttribute("href", "/contratti");
-    expect(screen.getByText("Contratti pubblici")).toBeInTheDocument();
-  });
-
-  it("keeps the home contracts access out of non-home pages", () => {
-    renderHomeLayout("/contratti");
+describe("Main layout public front door", () => {
+  it("does not inject a competing contracts banner before home content", () => {
+    renderLayout("/");
 
     expect(
       screen.queryByRole("link", { name: /apri sezione contratti/i }),
     ).not.toBeInTheDocument();
-    expect(screen.getByText("Pagina home")).toBeInTheDocument();
+    expect(screen.queryByText("Evidenze dati della piattaforma")).not.toBeInTheDocument();
+    expect(screen.getByText("Contenuto pagina")).toBeInTheDocument();
+  });
+
+  it("keeps shared page content unchanged on non-home routes", () => {
+    renderLayout("/contratti");
+
+    expect(
+      screen.queryByRole("link", { name: /apri sezione contratti/i }),
+    ).not.toBeInTheDocument();
+    expect(screen.getByText("Contenuto pagina")).toBeInTheDocument();
   });
 });
