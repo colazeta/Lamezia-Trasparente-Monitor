@@ -12,30 +12,28 @@ describe("Open Data freshness surface", () => {
       />,
     );
 
-    const statusRegion = screen.getByRole("region", {
+    const statusHeading = screen.getByRole("heading", {
       name: "Dati disponibili e aggiornamento",
     });
+    const statusSection = statusHeading.closest("section");
 
+    expect(statusSection).not.toBeNull();
+    const statusScope = within(statusSection as HTMLElement);
+
+    expect(statusHeading).toBeInTheDocument();
+    expect(statusScope.getByText("5 serie")).toBeInTheDocument();
     expect(
-      within(statusRegion).getByRole("heading", {
-        name: "Dati disponibili e aggiornamento",
-      }),
+      statusScope.getByText("Controllo automatico giornaliero"),
     ).toBeInTheDocument();
-    expect(within(statusRegion).getByText("5 serie")).toBeInTheDocument();
+    expect(statusScope.getAllByText("Aggiornamento automatico")).toHaveLength(5);
     expect(
-      within(statusRegion).getByText("Controllo automatico giornaliero"),
-    ).toBeInTheDocument();
-    expect(
-      within(statusRegion).getAllByText("Aggiornamento automatico"),
+      statusScope.getAllByRole("link", { name: "Apri serie" }),
     ).toHaveLength(5);
+    expect(statusScope.getByText("19 ago 2026")).toBeInTheDocument();
+    expect(statusScope.getByText("giu 2026")).toBeInTheDocument();
+    expect(statusScope.getByText("Risorsa corrente")).toBeInTheDocument();
     expect(
-      within(statusRegion).getAllByRole("link", { name: "Apri serie" }),
-    ).toHaveLength(5);
-    expect(within(statusRegion).getByText("19 ago 2026")).toBeInTheDocument();
-    expect(within(statusRegion).getByText("giu 2026")).toBeInTheDocument();
-    expect(within(statusRegion).getByText("Risorsa corrente")).toBeInTheDocument();
-    expect(
-      within(statusRegion).getByText(/non espone un anno di riferimento/i),
+      statusScope.getByText(/non espone un anno di riferimento/i),
     ).toBeInTheDocument();
   });
 
