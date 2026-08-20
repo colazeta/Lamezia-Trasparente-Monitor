@@ -1,13 +1,13 @@
 import { Link, useLocation } from "wouter";
 import {
+  ChevronDown,
+  FileSearch,
+  FileText,
+  Home,
+  Layers,
+  Megaphone,
   Menu,
   X,
-  FileText,
-  FileSearch,
-  Home,
-  ChevronDown,
-  BookOpen,
-  Layers,
 } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
@@ -34,17 +34,21 @@ import {
   isSectionActive,
 } from "./navSections";
 
+const PRIMARY_ROUTES = new Set(["/albo/", "/contratti", "/accesso-civico"]);
+
+const SECONDARY_NAV_GROUPS = NAV_GROUPS.map((group) => ({
+  ...group,
+  items: group.items.filter((item) => !PRIMARY_ROUTES.has(item.href)),
+})).filter((group) => group.items.length > 0);
+
 export function Navbar() {
   const [location] = useLocation();
   const [isOpen, setIsOpen] = useState(false);
   const { open: paletteOpen, setOpen: setPaletteOpen } = useCommandPalette();
 
   const isActive = (href: string) => isSectionActive(href, location);
-
-  const sezioniActive = NAV_GROUPS.some((group) =>
-    group.items.some(
-      (item) => item.href !== "/contratti" && isActive(item.href),
-    ),
+  const sezioniActive = SECONDARY_NAV_GROUPS.some((group) =>
+    group.items.some((item) => isActive(item.href)),
   );
 
   const linkClass = (active: boolean) =>
@@ -68,22 +72,21 @@ export function Navbar() {
             <Logo textClassName="text-sm leading-none sm:text-lg" subtitle />
           </Link>
 
-          {/* Desktop Nav */}
-          <nav className="hidden items-center gap-1 lg:flex">
+          <nav className="hidden items-center gap-1 lg:flex" aria-label="Navigazione principale">
             <Link href="/" className={linkClass(location === "/")}>
               <Home className="h-4 w-4" aria-hidden="true" />
               Home
-              {location === "/" && (
+              {location === "/" ? (
                 <span className="absolute inset-x-2.5 -bottom-px h-0.5 rounded-full bg-primary" />
-              )}
+              ) : null}
             </Link>
 
-            <Link href="/guida" className={linkClass(isActive("/guida"))}>
-              <BookOpen className="h-4 w-4" aria-hidden="true" />
-              Guida
-              {isActive("/guida") && (
+            <Link href="/albo/" className={linkClass(isActive("/albo/"))}>
+              <FileSearch className="h-4 w-4" aria-hidden="true" />
+              Oggi
+              {isActive("/albo/") ? (
                 <span className="absolute inset-x-2.5 -bottom-px h-0.5 rounded-full bg-primary" />
-              )}
+              ) : null}
             </Link>
 
             <Link
@@ -91,39 +94,50 @@ export function Navbar() {
               className={linkClass(isActive("/contratti"))}
             >
               <FileText className="h-4 w-4" aria-hidden="true" />
-              Contratti
-              {isActive("/contratti") && (
+              Spesa
+              {isActive("/contratti") ? (
                 <span className="absolute inset-x-2.5 -bottom-px h-0.5 rounded-full bg-primary" />
-              )}
+              ) : null}
             </Link>
 
-            {/* Sezioni — grouped mega-menu */}
+            <Link
+              href="/accesso-civico"
+              className={linkClass(isActive("/accesso-civico"))}
+            >
+              <Megaphone className="h-4 w-4" aria-hidden="true" />
+              Partecipa
+              {isActive("/accesso-civico") ? (
+                <span className="absolute inset-x-2.5 -bottom-px h-0.5 rounded-full bg-primary" />
+              ) : null}
+            </Link>
+
             <DropdownMenu modal={false}>
               <DropdownMenuTrigger className={linkClass(sezioniActive)}>
                 <Layers className="h-4 w-4" aria-hidden="true" />
-                Sezioni
+                Tutte le sezioni
                 <ChevronDown
                   className="h-3.5 w-3.5 opacity-70"
                   aria-hidden="true"
                 />
-                {sezioniActive && (
+                {sezioniActive ? (
                   <span className="absolute inset-x-2.5 -bottom-px h-0.5 rounded-full bg-primary" />
-                )}
+                ) : null}
               </DropdownMenuTrigger>
               <DropdownMenuContent
                 align="start"
                 className="max-h-[min(80vh,42rem)] w-72 overflow-y-auto"
               >
-                {NAV_GROUPS.map((group, gi) => (
+                {SECONDARY_NAV_GROUPS.map((group, groupIndex) => (
                   <div key={group.label}>
-                    {gi > 0 && <DropdownMenuSeparator />}
-                    <DropdownMenuLabel className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground px-2 py-1">
+                    {groupIndex > 0 ? <DropdownMenuSeparator /> : null}
+                    <DropdownMenuLabel className="px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
                       {group.label}
                     </DropdownMenuLabel>
                     {group.items.map((item) => {
                       const Icon = item.icon;
                       const active = isActive(item.href);
                       const unavailable = isNavItemUnavailable(item);
+
                       if (unavailable) {
                         return (
                           <DropdownMenuItem key={item.href} disabled>
@@ -147,6 +161,7 @@ export function Navbar() {
                           </DropdownMenuItem>
                         );
                       }
+
                       return (
                         <DropdownMenuItem key={item.href} asChild>
                           <Link
@@ -164,6 +179,7 @@ export function Navbar() {
                                   ? "text-primary"
                                   : "text-muted-foreground",
                               )}
+                              aria-hidden="true"
                             />
                             <span className="flex min-w-0 flex-1 items-center justify-between gap-2">
                               <span className="truncate">{item.label}</span>
@@ -184,16 +200,15 @@ export function Navbar() {
           </nav>
 
           <div className="flex shrink-0 items-center gap-1 sm:gap-2">
-            {/* Search trigger */}
             <SearchTrigger onClick={() => setPaletteOpen(true)} />
             <ThemeToggle />
-            {/* Mobile Toggle */}
             <Button
               variant="outline"
               size="icon"
               className="lg:hidden"
               onClick={() => setIsOpen(!isOpen)}
               aria-label="Menu"
+              aria-expanded={isOpen}
             >
               {isOpen ? (
                 <X className="h-5 w-5" aria-hidden="true" />
@@ -204,11 +219,9 @@ export function Navbar() {
           </div>
         </div>
 
-        {/* Mobile Nav */}
-        {isOpen && (
-          <div className="max-h-[calc(100dvh-4rem)] overflow-y-auto border-t border-border bg-background/98 shadow-[var(--shadow-nav)] xl:hidden">
-            <nav className="container mx-auto space-y-5 px-4 py-4">
-              {/* Search shortcut on mobile */}
+        {isOpen ? (
+          <div className="max-h-[calc(100dvh-4rem)] overflow-y-auto border-t border-border bg-background/98 shadow-[var(--shadow-nav)] lg:hidden">
+            <nav className="container mx-auto space-y-5 px-4 py-4" aria-label="Navigazione mobile">
               <button
                 onClick={() => {
                   setIsOpen(false);
@@ -218,34 +231,46 @@ export function Navbar() {
                 aria-label="Cerca"
               >
                 <FileSearch className="h-4 w-4" aria-hidden="true" />
-                Cerca una sezione…
+                Cerca nel monitor…
               </button>
 
-              <div className="grid grid-cols-1 gap-2 min-[420px]:grid-cols-2">
-                <MobileLink
-                  href="/"
-                  label="Home"
-                  icon={Home}
-                  active={location === "/"}
-                  onClick={() => setIsOpen(false)}
-                />
-                <MobileLink
-                  href="/guida"
-                  label="Guida"
-                  icon={BookOpen}
-                  active={isActive("/guida")}
-                  onClick={() => setIsOpen(false)}
-                />
-                <MobileLink
-                  href="/contratti"
-                  label="Contratti"
-                  icon={FileText}
-                  active={isActive("/contratti")}
-                  onClick={() => setIsOpen(false)}
-                />
+              <div>
+                <div className="mb-2 px-1 text-[11px] font-bold uppercase tracking-wider text-muted-foreground">
+                  Inizia da qui
+                </div>
+                <div className="grid grid-cols-1 gap-2 min-[420px]:grid-cols-2">
+                  <MobileLink
+                    href="/"
+                    label="Home"
+                    icon={Home}
+                    active={location === "/"}
+                    onClick={() => setIsOpen(false)}
+                  />
+                  <MobileLink
+                    href="/albo/"
+                    label="Oggi"
+                    icon={FileSearch}
+                    active={isActive("/albo/")}
+                    onClick={() => setIsOpen(false)}
+                  />
+                  <MobileLink
+                    href="/contratti"
+                    label="Spesa"
+                    icon={FileText}
+                    active={isActive("/contratti")}
+                    onClick={() => setIsOpen(false)}
+                  />
+                  <MobileLink
+                    href="/accesso-civico"
+                    label="Partecipa"
+                    icon={Megaphone}
+                    active={isActive("/accesso-civico")}
+                    onClick={() => setIsOpen(false)}
+                  />
+                </div>
               </div>
 
-              {NAV_GROUPS.map((group) => (
+              {SECONDARY_NAV_GROUPS.map((group) => (
                 <div key={group.label}>
                   <div className="mb-2 px-1 text-[11px] font-bold uppercase tracking-wider text-muted-foreground">
                     {group.label}
@@ -272,7 +297,7 @@ export function Navbar() {
               ))}
             </nav>
           </div>
-        )}
+        ) : null}
       </header>
     </>
   );
@@ -308,6 +333,7 @@ function MobileLink({
       </span>
     </>
   );
+
   const className = cn(
     "flex items-center gap-3 rounded-md border p-3 text-sm font-semibold transition-colors hover-elevate",
     active
