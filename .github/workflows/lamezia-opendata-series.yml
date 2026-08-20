@@ -6,7 +6,7 @@ on:
     # 06:10 UTC follows the dedicated climate refresh and checks all other series daily.
     - cron: "10 6 * * *"
   push:
-    paths:
+    paths: &refresh_paths
       - ".github/workflows/lamezia-opendata-series.yml"
       - "scripts/refresh-lamezia-opendata-series.mjs"
       - "scripts/refresh-lamezia-air-traffic-data.mjs"
@@ -16,6 +16,8 @@ on:
       - "scripts/build-lamezia-demographic-trend-data.mjs"
       - "scripts/build-lamezia-foreign-residents-data.mjs"
       - "scripts/build-lamezia-families-children-data.mjs"
+  pull_request:
+    paths: *refresh_paths
 
 permissions:
   contents: write
@@ -88,6 +90,7 @@ jobs:
           NODE
 
       - name: Commit changed public series
+        if: github.event_name != 'pull_request'
         shell: bash
         run: |
           git config user.name "github-actions[bot]"
