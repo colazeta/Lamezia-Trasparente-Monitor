@@ -21,6 +21,11 @@ import {
   classifyAlboRecordCategory,
 } from "./albo-classification-dictionary";
 import { ALBO_PRETORIO_LAMEZIA_SOURCE } from "./albo-source-config";
+import {
+  identifyInstitutionalSessionCandidate,
+  identifyInstitutionalSessionCandidates,
+  type InstitutionalSessionCandidateInput,
+} from "./institutional-session-candidates";
 
 const FIXTURE_RETRIEVED_AT = "2026-06-19T10:00:00.000Z";
 
@@ -100,6 +105,83 @@ test("classifies Albo records by civic sector and act category dictionary", () =
       sector: "altri_enti",
       act_category: "avvisi",
     },
+  );
+
+  assert.equal(
+    classifyAlboRecordCategory({
+      office: "UOA SEGRETERIA GENERALE - ATTIVITA' ISTITUZIONALI",
+      act_type: "CONVOCAZIONE CONSIGLIO COMUNALE",
+      subject: "Avviso seduta di Consiglio Comunale.",
+    }).act_category.id,
+    "convocazioni_istituzionali",
+  );
+});
+
+test("identifies council and commission notices without inferring session dates", () => {
+  const inputs = [
+    sessionCandidateFixture({
+      id: "albo-2026-2673",
+      publication_number: "2026/2673",
+      act_type: "CONVOCAZIONE CONSIGLIO COMUNALE",
+      subject: "Avviso seduta di Consiglio Comunale.",
+      document_url: null,
+    }),
+    sessionCandidateFixture({
+      id: "albo-2026-2648",
+      publication_number: "2026/2648",
+      act_type: "CONVOCAZIONI COMMISSIONI CONSILIARI",
+      subject: "Convocazione 2° Commissione Consiliare Permanente.",
+      document_url:
+        "https://albo.tinnvision.cloud/allegati/2026_2648_2_P?ente=00301390795",
+    }),
+  ];
+
+  const candidates = identifyInstitutionalSessionCandidates(inputs);
+
+  assert.deepEqual(
+    candidates.map((candidate) => [candidate.kind, candidate.reviewStatus]),
+    [
+      ["council", "metadata_only"],
+      ["commission", "attachment_review_required"],
+    ],
+  );
+  for (const candidate of candidates) {
+    assert.deepEqual(candidate.scheduledOccurrences, []);
+    assert.deepEqual(candidate.agendaItems, []);
+    assert.match(candidate.limitations[0], /non viene interpretata/);
+  }
+});
+
+test("rejects unsafe, unsupported or untraceable session candidates", () => {
+  const safe = sessionCandidateFixture();
+
+  assert.equal(
+    identifyInstitutionalSessionCandidate({
+      ...safe,
+      public_visibility: "metadata_only",
+    }),
+    null,
+  );
+  assert.equal(
+    identifyInstitutionalSessionCandidate({
+      ...safe,
+      privacy_risk: "medium",
+    }),
+    null,
+  );
+  assert.equal(
+    identifyInstitutionalSessionCandidate({
+      ...safe,
+      act_type: "DELIBERAZIONE DI CONSIGLIO",
+    }),
+    null,
+  );
+  assert.equal(
+    identifyInstitutionalSessionCandidate({
+      ...safe,
+      source_url: "https://example.test/albo?ente=00301390795",
+    }),
+    null,
   );
 });
 
@@ -932,6 +1014,30 @@ function snapshot(records: ReturnType<typeof parseTinnvisionXml>): AlboRawSnapsh
     records,
     warnings: [],
     known_limits: [...ALBO_PRETORIO_LAMEZIA_SOURCE.knownLimits],
+  };
+}
+
+function sessionCandidateFixture(
+  overrides: Partial<InstitutionalSessionCandidateInput> = {},
+): InstitutionalSessionCandidateInput {
+  return {
+    id: "albo-2026-2648",
+    source: "Albo Pretorio Comune di Lamezia Terme",
+    source_url: ALBO_PRETORIO_LAMEZIA_SOURCE.sourceUrl,
+    retrieved_at: FIXTURE_RETRIEVED_AT,
+    publication_number: "2026/2648",
+    publication_start: "2026-08-07",
+    publication_end: "2026-08-14",
+    act_type: "CONVOCAZIONI COMMISSIONI CONSILIARI",
+    subject: "Convocazione 2° Commissione Consiliare Permanente.",
+    document_url:
+      "https://albo.tinnvision.cloud/allegati/2026_2648_2_P?ente=00301390795",
+    content_hash:
+      "f4301f15e2bfd99aecb79f25ceb4d1346a486ff1fe20e748f9bac89a818eee09",
+    verification_status: "official_source_acquired",
+    privacy_risk: "low",
+    public_visibility: "publishable",
+    ...overrides,
   };
 }
 

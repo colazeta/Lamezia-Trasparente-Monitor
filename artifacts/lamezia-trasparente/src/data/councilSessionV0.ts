@@ -7,6 +7,13 @@ export const COUNCIL_SESSION_V0_STATUSES = [
 
 export type CouncilSessionV0Status = (typeof COUNCIL_SESSION_V0_STATUSES)[number];
 
+export type CouncilSessionV0Kind = "council" | "commission";
+
+export const councilSessionV0KindLabels: Record<CouncilSessionV0Kind, string> = {
+  council: "Consiglio comunale",
+  commission: "Commissione consiliare",
+};
+
 export const COUNCIL_SESSION_V0_FIELD_STATUSES = [
   "verificato",
   "parziale",
@@ -28,7 +35,7 @@ export const councilSessionV0StatusLabels: Record<CouncilSessionV0Status, string
 export const councilSessionV0FieldStatusLabels: Record<CouncilSessionV0FieldStatus, string> = {
   verificato: "Dato verificato dalla fonte indicata",
   parziale: "Dato parziale o incompleto",
-  assente: "Dato non disponibile nella fonte consultata",
+  assente: "Dato non rilevato nella fonte consultata",
   da_verificare: "Dato da verificare prima dell'uso pubblico",
   fixture_dimostrativa: "Dato dimostrativo, non fonte reale",
 };
@@ -54,9 +61,30 @@ export interface CouncilSessionV0Field<T> {
   limit: string;
 }
 
+export type CouncilSessionV0SourceReviewStatus =
+  | "official_metadata_only"
+  | "reviewed_against_official_attachment";
+
+export interface CouncilSessionV0Provenance {
+  noticeId: string;
+  publicationNumber: string;
+  sourceLabel: string;
+  sourceUrl: string;
+  documentUrl: string | null;
+  archivedDocumentUrl: string | null;
+  sourceContentHash: string;
+  documentSha256: string | null;
+  embeddedDocumentSha256: string | null;
+  retrievedAt: string;
+  reviewedAt: string;
+  sourceReviewStatus: CouncilSessionV0SourceReviewStatus;
+}
+
 export interface CouncilSessionV0 {
   id: string;
+  kind: CouncilSessionV0Kind;
   isDemoFixture: boolean;
+  provenance?: CouncilSessionV0Provenance;
   title: CouncilSessionV0Field<string>;
   scheduledAt: CouncilSessionV0Field<string>;
   sessionStatus: CouncilSessionV0Field<CouncilSessionV0Status>;
@@ -98,6 +126,7 @@ export const councilSessionV0PublicFields: readonly CouncilSessionV0PublicFieldK
 
 export const councilSessionV0DemoFixture: CouncilSessionV0 = {
   id: "demo-consiglio-comunale-v0",
+  kind: "council",
   isDemoFixture: true,
   title: {
     key: "title",

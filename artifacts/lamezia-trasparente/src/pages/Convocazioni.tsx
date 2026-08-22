@@ -13,6 +13,7 @@ import {
   Vote,
   Link2,
   ClipboardList,
+  ShieldCheck,
 } from "lucide-react";
 import { format } from "date-fns";
 import { it } from "date-fns/locale";
@@ -44,11 +45,8 @@ import {
   type CoverageFilter,
   type SedutaPublication,
 } from "@/lib/convocazioniCoverage";
-import {
-  CouncilSessionV0DemoNotice,
-  CouncilSessionV0DemoSummaryCard,
-} from "@/components/launch/CouncilSessionV0DemoCard";
-import { councilSessionV0DemoFixture } from "@/data/councilSessionV0";
+import { CouncilSessionV0SummaryCard } from "@/components/launch/CouncilSessionV0Card";
+import { councilSessionV0ReviewedRecords } from "@/data/councilSessionV0Reviewed";
 import { asApiList } from "@/lib/apiList";
 import { V0SectionLanding } from "@/components/launch/V0SectionLanding";
 
@@ -239,7 +237,7 @@ export function Convocazioni() {
     reportFilter !== "all" ||
     votesFilter !== "all" ||
     actsFilter !== "all";
-  const shouldShowDemoFallback =
+  const shouldUseReviewedFallback =
     !isLoading && (isError || (sedute.length === 0 && !hasActiveFilters));
 
   return (
@@ -247,14 +245,14 @@ export function Convocazioni() {
       <V0SectionLanding
         eyebrow="Sedute e ordini del giorno"
         icon={CalendarClock}
-        title="Sedute e ordini del giorno del Consiglio"
-        subtitle="Percorso civico per orientarsi tra convocazioni, sedute, ordini del giorno e documenti collegati, distinguendo dati presenti, dati da verificare e contenuti dimostrativi."
+        title="Sedute di Consiglio e Commissioni"
+        subtitle="Percorso civico per orientarsi tra convocazioni, sedute, ordini del giorno e documenti collegati, distinguendo dati verificati, parziali e da verificare."
         stateLabel="Pubblicabile"
         stateDescription="Indice consultabile con stati del dato e limiti dichiarati vicino ai contenuti."
         findItems={[
           "Sedute caricate, filtri per organo e macrotema e copertura documentale disponibile.",
           "Ordini del giorno, resoconti, votazioni e atti collegati quando rilevati.",
-          "Demo dichiarata per mostrare il percorso senza sostituire sedute reali.",
+          "Prime schede fonte-centriche da avvisi ufficiali del Consiglio e delle Commissioni.",
         ]}
         missingItems={[
           "Sincronizzazione stabile e verificata con tutte le fonti istituzionali delle sedute.",
@@ -266,12 +264,35 @@ export function Convocazioni() {
         secondaryLink={{ label: "Fonti e limiti", href: "/fonti-dati" }}
       />
 
-      {shouldShowDemoFallback && (
-        <div className="mb-8 space-y-4">
-          <CouncilSessionV0DemoNotice compact />
-          <CouncilSessionV0DemoSummaryCard />
+      <section
+        className="mb-8 space-y-4"
+        aria-labelledby="reviewed-sessions-title"
+      >
+        <div className="flex items-start gap-3">
+          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-brand/10 text-brand">
+            <ShieldCheck className="h-4 w-4" aria-hidden="true" />
+          </span>
+          <div>
+            <h2
+              id="reviewed-sessions-title"
+              className="font-display text-2xl font-bold tracking-tight"
+            >
+              Prime schede da fonte ufficiale
+            </h2>
+            <p className="mt-1 max-w-3xl text-sm leading-relaxed text-muted-foreground">
+              Tranche iniziale: un avviso del Consiglio disponibile solo come
+              metadato e due sedute della II Commissione trascritte dallo stesso
+              allegato ufficiale. La selezione non costituisce una copertura
+              storica completa.
+            </p>
+          </div>
         </div>
-      )}
+        <div className="grid gap-4 lg:grid-cols-2">
+          {councilSessionV0ReviewedRecords.map((session) => (
+            <CouncilSessionV0SummaryCard key={session.id} session={session} />
+          ))}
+        </div>
+      </section>
 
       <section
         id="convocazioni-elenco"
@@ -284,7 +305,7 @@ export function Convocazioni() {
               id="convocazioni-dashboard-title"
               className="font-display text-xl font-bold tracking-tight"
             >
-              Copertura documentale delle sedute
+              Copertura documentale nella base API
             </h2>
             <p className="mt-1 text-sm text-muted-foreground">
               Indicatori calcolati sulla base locale: ordine del giorno,
@@ -520,7 +541,14 @@ export function Convocazioni() {
             </section>
           ))}
         </div>
-      ) : shouldShowDemoFallback ? null : (
+      ) : shouldUseReviewedFallback ? (
+        <p className="rounded-2xl border border-brand/20 bg-brand/5 p-4 text-sm leading-relaxed text-muted-foreground">
+          La base API non ha restituito altre sedute verificabili. Restano
+          consultabili le schede revisionate sopra; il limite riguarda la
+          copertura locale corrente e non dimostra assenza di ulteriori sedute
+          presso le fonti istituzionali.
+        </p>
+      ) : (
         <Empty className="border bg-muted/20">
           <EmptyHeader>
             <EmptyMedia variant="icon">
