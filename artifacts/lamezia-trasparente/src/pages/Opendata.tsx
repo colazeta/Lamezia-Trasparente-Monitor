@@ -1,71 +1,58 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "wouter";
 import {
-  useListOpendataDatasets,
   useGetOpendataFeedStatus,
+  useListOpendataDatasets,
   type OpendataDataset,
 } from "@workspace/api-client-react";
 import {
   ArrowLeft,
-  Search,
-  Filter,
+  Braces,
+  ChevronRight,
+  Code2,
   Database,
   ExternalLink,
-  RefreshCw,
-  Landmark,
-  FileSpreadsheet,
-  Layers,
-  Tag,
-  ChevronRight,
-  X,
   FileJson,
-  Braces,
-  Code2,
-  Sparkles,
+  FileSpreadsheet,
+  Landmark,
+  Search,
 } from "lucide-react";
 
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { AirTrafficDatasetCard } from "@/components/opendata/AirTrafficDatasetCard";
 import { ClimateTerritoryDatasetCard } from "@/components/opendata/ClimateTerritoryDatasetCard";
 import { DemographicTrendDatasetCard } from "@/components/opendata/DemographicTrendDatasetCard";
 import { FamiliesChildrenDatasetCard } from "@/components/opendata/FamiliesChildrenDatasetCard";
 import { ForeignResidentsDatasetCard } from "@/components/opendata/ForeignResidentsDatasetCard";
 import { OpenDataThemeLibrary } from "@/components/opendata/OpenDataThemeLibrary";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Skeleton } from "@/components/ui/skeleton";
+import { LAMEZIA_OPEN_DATA_SERIES_BY_ID } from "@/data/lameziaOpenDataSeriesStatus";
 import {
   OPEN_DATA_THEME_LIBRARY,
   type OpenDataThemeCategory,
   type OpenDataThemeDataset,
 } from "@/data/opendataThemeCategories";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-} from "@/components/ui/select";
-import { Skeleton } from "@/components/ui/skeleton";
-import {
-  Empty,
-  EmptyHeader,
-  EmptyMedia,
-  EmptyTitle,
-  EmptyDescription,
-} from "@/components/ui/empty";
-import { formatPublicTimeField } from "@/lib/time";
 import { apiUrl } from "@/lib/apiBaseUrl";
+import { formatPublicTimeField } from "@/lib/time";
 
 const PORTAL_URL = "https://opendata.comune.lamezia-terme.cz.it";
 
-const LAST_VISIT_KEY = "opendata:lastVisit";
-
-interface OpenDataArchiveItem {
+type OpenDataArchiveItem = {
   theme: OpenDataThemeCategory;
   dataset: OpenDataThemeDataset;
-}
-interface OpenDataArchiveSelection {
+};
+
+type OpenDataArchiveSelection = {
   themeId: string | null;
   datasetId: string | null;
+};
+
+function getArchiveItems(): OpenDataArchiveItem[] {
+  return OPEN_DATA_THEME_LIBRARY.flatMap((theme) =>
+    theme.datasets.map((dataset) => ({ theme, dataset })),
+  );
 }
 
 function readOpenDataArchiveSelection(): OpenDataArchiveSelection {
@@ -76,9 +63,10 @@ function readOpenDataArchiveSelection(): OpenDataArchiveSelection {
   const params = new URLSearchParams(window.location.search);
   const requestedDatasetId = params.get("dataset");
   const requestedThemeId = params.get("tema");
-  const datasetMatch = OPEN_DATA_THEME_LIBRARY.flatMap((theme) =>
-    theme.datasets.map((dataset) => ({ theme, dataset })),
-  ).find((item) => item.dataset.id === requestedDatasetId);
+  const archiveItems = getArchiveItems();
+  const datasetMatch = archiveItems.find(
+    (item) => item.dataset.id === requestedDatasetId,
+  );
 
   if (datasetMatch) {
     return {
@@ -99,7 +87,7 @@ function readOpenDataArchiveSelection(): OpenDataArchiveSelection {
 function writeOpenDataArchiveSelection(
   themeId: string | null,
   datasetId: string | null,
-): void {
+) {
   if (typeof window === "undefined") return;
 
   const url = new URL(window.location.href);
@@ -115,105 +103,49 @@ function writeOpenDataArchiveSelection(
   );
 }
 
-function readLastVisit(): number | null {
-  try {
-    const v = localStorage.getItem(LAST_VISIT_KEY);
-    if (!v) return null;
-    const n = Number(v);
-    return Number.isFinite(n) ? n : null;
-  } catch {
-    return null;
-  }
-}
-
 export function Opendata() {
-  const [initialArchiveSelection] = useState(readOpenDataArchiveSelection);
+  const [initialSelection] = useState(readOpenDataArchiveSelection);
   const [selectedThemeId, setSelectedThemeId] = useState<string | null>(
-    initialArchiveSelection.themeId,
+    initialSelection.themeId,
   );
   const [selectedDatasetId, setSelectedDatasetId] = useState<string | null>(
-    initialArchiveSelection.datasetId,
+    initialSelection.datasetId,
   );
-  const [search, setSearch] = useState("");
-  const [debouncedSearch, setDebouncedSearch] = useState("");
-  const [category, setCategory] = useState("all");
-
-  // Snapshot of the previous visit time, captured once on mount. Datasets whose
-  // content changed after this moment get an "Aggiornato" badge. The current
-  // visit time is written back to localStorage so the next visit compares fresh.
-  const [lastVisit] = useState<number | null>(readLastVisit);
+  const [catalogSearch, setCatalogSearch] = useState("");
+  const [debouncedCatalogSearch, setDebouncedCatalogSearch] = useState("");
 
   useEffect(() => {
-    try {
-      localStorage.setItem(LAST_VISIT_KEY, String(Date.now()));
-    } catch {
-      // Ignore storage failures (private mode, disabled storage, etc.).
-    }
-  }, []);
+    const timeout = window.setTimeout(
+      () => setDebouncedCatalogSearch(catalogSearch.trim()),
+      250,
+    );
+    return () => window.clearTimeout(timeout);
+  }, [catalogSearch]);
 
-  useEffect(() => {
-    const handler = setTimeout(() => setDebouncedSearch(search), 400);
-    return () => clearTimeout(handler);
-  }, [search]);
-
-  const filters = useMemo(() => {
-    const f: Record<string, string> = {};
-    if (debouncedSearch) f.search = debouncedSearch;
-    if (category !== "all") f.category = category;
-    return f;
-  }, [debouncedSearch, category]);
-
-  const { data: datasetResponse, isLoading } = useListOpendataDatasets(filters);
-  const datasets: OpendataDataset[] = Array.isArray(datasetResponse)
-    ? datasetResponse
-    : [];
-  const { data: feedStatus } = useGetOpendataFeedStatus();
-
-  // Derive the full category list from an unfiltered fetch so the dropdown is
-  // stable regardless of the current search/category selection.
-  const { data: allDatasetResponse } = useListOpendataDatasets({});
-  const allDatasets: OpendataDataset[] = Array.isArray(allDatasetResponse)
-    ? allDatasetResponse
-    : [];
-  const categories = useMemo(() => {
-    const set = new Set<string>();
-    allDatasets.forEach((d) => {
-      if (d.category) set.add(d.category);
-    });
-    return Array.from(set).sort((a, b) => a.localeCompare(b));
-  }, [allDatasets]);
-
-  const hasActiveFilters = Boolean(debouncedSearch) || category !== "all";
-
-  const isUpdatedSinceLastVisit = (dataset: OpendataDataset) => {
-    if (lastVisit === null || !dataset.lastChangedAt) return false;
-    const changed = new Date(dataset.lastChangedAt).getTime();
-    return Number.isFinite(changed) && changed > lastVisit;
-  };
-
-  const updatedCount = datasets.filter(isUpdatedSinceLastVisit).length;
-
-  const resetFilters = () => {
-    setSearch("");
-    setCategory("all");
-  };
-
-  const archiveItems = useMemo<OpenDataArchiveItem[]>(
-    () =>
-      OPEN_DATA_THEME_LIBRARY.flatMap((theme) =>
-        theme.datasets.map((dataset) => ({ theme, dataset })),
-      ),
-    [],
-  );
+  const archiveItems = useMemo(getArchiveItems, []);
+  const selectedArchiveItem =
+    archiveItems.find((item) => item.dataset.id === selectedDatasetId) ?? null;
   const selectedTheme = selectedThemeId
     ? OPEN_DATA_THEME_LIBRARY.find((theme) => theme.id === selectedThemeId) ??
       null
     : null;
-  const filteredArchiveItems = selectedThemeId
+  const visibleArchiveItems = selectedThemeId
     ? archiveItems.filter((item) => item.theme.id === selectedThemeId)
     : archiveItems;
-  const selectedArchiveItem =
-    archiveItems.find((item) => item.dataset.id === selectedDatasetId) ?? null;
+
+  const catalogFilters = useMemo(
+    () =>
+      debouncedCatalogSearch
+        ? { search: debouncedCatalogSearch }
+        : ({} as Record<string, string>),
+    [debouncedCatalogSearch],
+  );
+  const { data: catalogResponse, isLoading: isCatalogLoading } =
+    useListOpendataDatasets(catalogFilters);
+  const catalogDatasets: OpendataDataset[] = Array.isArray(catalogResponse)
+    ? catalogResponse
+    : [];
+  const { data: feedStatus } = useGetOpendataFeedStatus();
 
   const selectTheme = (themeId: string | null) => {
     setSelectedThemeId(themeId);
@@ -224,7 +156,6 @@ export function Opendata() {
   const selectDataset = (datasetId: string) => {
     const item = archiveItems.find((entry) => entry.dataset.id === datasetId);
     if (!item) return;
-
     setSelectedThemeId(item.theme.id);
     setSelectedDatasetId(item.dataset.id);
     writeOpenDataArchiveSelection(item.theme.id, item.dataset.id);
@@ -236,26 +167,22 @@ export function Opendata() {
   };
 
   return (
-    <div className="container mx-auto px-4 py-8 md:py-12 max-w-6xl">
-      {/* Header */}
-      <div className="mb-6">
+    <main className="container mx-auto max-w-6xl px-4 py-8 md:py-10">
+      <header className="mb-6">
         <span className="eyebrow text-primary">
           <Database className="h-3.5 w-3.5" />
-          Dati aperti del Comune
+          Dati pubblici
         </span>
-        <h1 className="mt-2 text-3xl md:text-4xl font-display font-bold tracking-tight">
-          Opendata
+        <h1 className="mt-2 font-display text-3xl font-bold tracking-tight md:text-4xl">
+          Open Data
         </h1>
-        <p className="mt-3 text-muted-foreground text-lg max-w-3xl">
-          Scegli categoria. Apri dataset.
+        <p className="mt-2 max-w-2xl text-base text-muted-foreground md:text-lg">
+          Esplora dati su popolazione, clima e mobilità.
         </p>
-      </div>
+      </header>
 
       {selectedArchiveItem ? (
-        <DatasetDetailView
-          item={selectedArchiveItem}
-          onBack={closeDataset}
-        />
+        <DatasetDetailView item={selectedArchiveItem} onBack={closeDataset} />
       ) : (
         <>
           <OpenDataThemeLibrary
@@ -263,215 +190,27 @@ export function Opendata() {
             selectedThemeId={selectedThemeId}
           />
 
-          <ThemeDatasetArchive
-            items={filteredArchiveItems}
+          <CuratedDatasetList
+            items={visibleArchiveItems}
             onOpenDataset={selectDataset}
             onResetTheme={() => selectTheme(null)}
             selectedTheme={selectedTheme}
           />
 
-          <details className="mb-8 rounded-xl border border-card-border bg-muted/20">
-            <summary className="cursor-pointer list-none px-4 py-3 font-semibold text-foreground marker:hidden">
-              Catalogo comunale sincronizzato
-            </summary>
-            <div className="border-t border-border p-4">
-
-      {/* Last updated + portal link */}
-      <div className="mb-8 flex flex-col gap-3 rounded-xl border border-card-border bg-muted/30 p-4 sm:flex-row sm:items-center sm:justify-between">
-        <div className="flex items-center gap-2 text-sm text-muted-foreground">
-          <RefreshCw className="h-4 w-4 text-brand" />
-          <span>
-            Ultimo aggiornamento:{" "}
-            <span className="font-medium text-foreground">
-              {formatPublicTimeField(
-                feedStatus?.lastUpdatedAt,
-                "dd MMM yyyy, HH:mm",
-              )}
-            </span>
-            {feedStatus?.itemsTotal ? (
-              <> Â· {feedStatus.itemsTotal} dataset monitorati</>
-            ) : null}
-          </span>
-        </div>
-        <a
-          href={feedStatus?.url || PORTAL_URL}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:underline"
-        >
-          <Landmark className="h-4 w-4" />
-          Portale Opendata del Comune
-          <ExternalLink className="h-3.5 w-3.5" />
-        </a>
-      </div>
-
-      {/* InteroperabilitÃ : catalogo DCAT-AP_IT + API CKAN per l'intero catalogo */}
-      <div className="mb-8 flex flex-col gap-3 rounded-xl border border-card-border bg-muted/30 p-4 sm:flex-row sm:items-center sm:justify-between">
-        <div className="text-sm text-muted-foreground">
-          <span className="font-medium text-foreground">
-            Catalogo interoperabile.
-          </span>{" "}
-          Metadati standard DCAT-AP_IT e API aperta in stile CKAN per il riuso
-          e la federazione con dati.gov.it.
-        </div>
-        <div className="flex flex-wrap gap-2">
-          <a
-            href={apiUrl("/api/opendata/catalog.jsonld")}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Button variant="outline" size="sm">
-              <FileJson className="mr-1.5 h-4 w-4" />
-              Catalogo DCAT-AP_IT
-              <ExternalLink className="ml-1.5 h-3.5 w-3.5 opacity-60" />
-            </Button>
-          </a>
-          <a
-            href={apiUrl("/api/3/action/package_search")}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Button variant="outline" size="sm">
-              <Braces className="mr-1.5 h-4 w-4" />
-              API CKAN
-              <ExternalLink className="ml-1.5 h-3.5 w-3.5 opacity-60" />
-            </Button>
-          </a>
-          <Link href="/sviluppatori">
-            <Button variant="outline" size="sm">
-              <Code2 className="mr-1.5 h-4 w-4" />
-              API e sviluppatori
-            </Button>
-          </Link>
-        </div>
-      </div>
-
-      {/* Filters */}
-      <div className="mb-6 grid gap-3 rounded-xl border border-border bg-muted/40 p-4 shadow-sm md:grid-cols-[1fr_auto]">
-        <div className="relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-          <Input
-            placeholder="Cerca dataset per titolo, descrizione, tema..."
-            className="pl-9 h-11 bg-background"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
+          <MunicipalCatalog
+            datasets={catalogDatasets}
+            feedStatus={feedStatus}
+            isLoading={isCatalogLoading}
+            onSearch={setCatalogSearch}
+            search={catalogSearch}
           />
-        </div>
-
-        <div className="flex items-center gap-2">
-          <div className="w-full md:w-64">
-            <Select value={category} onValueChange={setCategory}>
-              <SelectTrigger
-                className="h-11 bg-background"
-                aria-label="Filtra per categoria"
-              >
-                <div className="flex items-center gap-2 truncate">
-                  <Filter className="h-4 w-4 text-muted-foreground shrink-0" />
-                  <span className="truncate">
-                    {category === "all" ? "Tutte le categorie" : category}
-                  </span>
-                </div>
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">Tutte le categorie</SelectItem>
-                {categories.map((c) => (
-                  <SelectItem key={c} value={c}>
-                    {c}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-          {hasActiveFilters ? (
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={resetFilters}
-              aria-label="Azzera filtri"
-              className="h-11 w-11 shrink-0 text-muted-foreground"
-            >
-              <X className="h-4 w-4" />
-            </Button>
-          ) : null}
-        </div>
-      </div>
-
-      {/* Result count */}
-      <div className="mb-4 flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
-        {!isLoading ? (
-          <>
-            <span>
-              <span className="font-display font-bold text-foreground tabular-nums">
-                {datasets.length}
-              </span>{" "}
-              dataset
-            </span>
-            {updatedCount > 0 ? (
-              <Badge variant="success" className="text-[11px] shadow-none">
-                <Sparkles className="mr-1 h-3 w-3" />
-                {updatedCount} aggiornati dall'ultima visita
-              </Badge>
-            ) : null}
-          </>
-        ) : (
-          "â€”"
-        )}
-      </div>
-
-      {/* Catalog grid */}
-      {isLoading ? (
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {Array(6)
-            .fill(0)
-            .map((_, i) => (
-              <div
-                key={i}
-                className="rounded-xl border border-card-border bg-card p-5 shadow-sm"
-              >
-                <Skeleton className="h-5 w-20 mb-3" />
-                <Skeleton className="h-6 w-full mb-2" />
-                <Skeleton className="h-4 w-full mb-1" />
-                <Skeleton className="h-4 w-2/3 mb-4" />
-                <Skeleton className="h-4 w-24" />
-              </div>
-            ))}
-        </div>
-      ) : datasets.length > 0 ? (
-        <div data-tour="opendata-catalog" className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {datasets.map((d) => (
-            <DatasetCard
-              key={d.id}
-              dataset={d}
-              isUpdated={isUpdatedSinceLastVisit(d)}
-            />
-          ))}
-        </div>
-      ) : (
-        <Empty className="border border-dashed border-border bg-muted/20">
-          <EmptyHeader>
-            <EmptyMedia variant="icon" className="bg-brand/10 text-brand">
-              <Database className="h-6 w-6" />
-            </EmptyMedia>
-            <EmptyTitle className="font-display">
-              Nessun dataset trovato
-            </EmptyTitle>
-            <EmptyDescription>
-              {hasActiveFilters
-                ? "Nessun dataset corrisponde ai filtri attuali. Prova a modificare la ricerca o ad azzerare i filtri."
-                : "Al momento non risultano dataset nel catalogo. Continueremo a monitorare il portale Opendata del Comune."}
-            </EmptyDescription>
-          </EmptyHeader>
-        </Empty>
-      )}
-            </div>
-          </details>
         </>
       )}
-    </div>
+    </main>
   );
 }
 
-function ThemeDatasetArchive({
+function CuratedDatasetList({
   items,
   onOpenDataset,
   onResetTheme,
@@ -484,96 +223,74 @@ function ThemeDatasetArchive({
 }) {
   if (items.length === 0) {
     return (
-      <section
-        aria-labelledby="opendata-archive-title"
-        className="mb-8 rounded-xl border border-dashed border-border bg-muted/20 p-5"
-      >
-        <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-          <div>
-            <Badge variant="outline" className="shadow-none">
-              {selectedTheme?.shortLabel ?? "Archivio"} Â· 0 dataset
-            </Badge>
-            <h2
-              className="mt-3 font-display text-lg font-bold text-foreground"
-              id="opendata-archive-title"
-            >
-              Nessun dataset pubblicato
-            </h2>
-          </div>
-          <Button onClick={onResetTheme} type="button" variant="outline">
-            Mostra dataset disponibili
-          </Button>
-        </div>
+      <section className="mb-8 rounded-xl border border-dashed border-border bg-muted/20 p-5">
+        <h2 className="font-display text-lg font-bold text-foreground">
+          Nessun dataset pubblicato in questo tema
+        </h2>
+        <Button className="mt-3" onClick={onResetTheme} variant="outline">
+          Mostra i dataset disponibili
+        </Button>
       </section>
     );
   }
 
-  const archiveLabel = selectedTheme?.label ?? "Tutte le categorie";
-
   return (
-    <section
-      aria-labelledby="opendata-archive-title"
-      className="mb-8"
-    >
-      <div className="mb-3 flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
-        <div>
-          <span className="eyebrow text-primary">
-            <Database className="h-3.5 w-3.5" />
-            Passaggio 2
-          </span>
-          <h2
-            className="mt-2 font-display text-xl font-bold text-foreground"
-            id="opendata-archive-title"
-          >
-            Archivio dataset
-          </h2>
-        </div>
-        <Badge variant="outline" className="w-fit shadow-none">
-          {archiveLabel} Â·{" "}
-          {items.length === 1 ? "1 dataset" : `${items.length} dataset`}
-        </Badge>
+    <section aria-labelledby="opendata-datasets-title" className="mb-8">
+      <div className="mb-3 flex items-center justify-between gap-3">
+        <h2
+          className="font-display text-xl font-bold text-foreground"
+          id="opendata-datasets-title"
+        >
+          Dataset
+        </h2>
+        <span className="text-sm text-muted-foreground">
+          {selectedTheme?.shortLabel ?? "Tutti"} · {items.length}
+        </span>
       </div>
 
       <ul
-        className="divide-y divide-border overflow-hidden rounded-xl border border-card-border bg-card shadow-sm"
+        className="divide-y divide-border overflow-hidden rounded-xl border border-card-border bg-card"
         role="list"
       >
-        {items.map((item) => (
-          <li key={item.dataset.id}>
-            <button
-              aria-label={`Apri scheda dataset ${item.dataset.label}`}
-              className="group grid w-full gap-3 bg-card p-4 text-left transition-colors hover:bg-primary/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset md:grid-cols-[1fr_auto] md:items-center"
-              onClick={() => onOpenDataset(item.dataset.id)}
-              type="button"
-            >
-              <div className="flex min-w-0 gap-3">
-                <span className="mt-0.5 inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
-                  <FileSpreadsheet className="h-5 w-5" />
-                </span>
-                <div className="min-w-0">
-                  <h3 className="font-display text-base font-bold text-foreground md:text-lg">
-                    {item.dataset.label}
-                  </h3>
-                  <div className="mt-2 flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
-                    <Badge variant="brand" className="shadow-none">
-                      {item.theme.shortLabel}
-                    </Badge>
-                    <span>{item.dataset.dataType}</span>
-                    <span aria-hidden="true">Â·</span>
-                    <span>{item.dataset.statusLabel}</span>
+        {items.map((item) => {
+          const status = LAMEZIA_OPEN_DATA_SERIES_BY_ID.get(item.dataset.id);
+          return (
+            <li key={item.dataset.id}>
+              <button
+                aria-label={`Apri scheda dataset ${item.dataset.label}`}
+                className="group grid w-full gap-3 p-4 text-left transition-colors hover:bg-primary/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset sm:grid-cols-[1fr_auto] sm:items-center"
+                onClick={() => onOpenDataset(item.dataset.id)}
+                type="button"
+              >
+                <div className="flex min-w-0 items-start gap-3">
+                  <span className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                    <FileSpreadsheet className="h-4 w-4" />
+                  </span>
+                  <div className="min-w-0">
+                    <h3 className="font-display text-base font-bold text-foreground sm:text-lg">
+                      {item.dataset.label}
+                    </h3>
+                    <p className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-muted-foreground">
+                      <span>{item.theme.shortLabel}</span>
+                      {status ? (
+                        <>
+                          <span aria-hidden="true">·</span>
+                          <span>
+                            Ultimo dato: {status.latest_observation_label}
+                          </span>
+                        </>
+                      ) : null}
+                    </p>
                   </div>
                 </div>
-              </div>
-              <span
-                aria-hidden="true"
-                className="inline-flex min-h-10 w-full shrink-0 items-center justify-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground transition-colors group-hover:bg-primary/90 md:w-auto"
-              >
-                Apri
-                <ChevronRight className="h-4 w-4" />
-              </span>
-            </button>
-          </li>
-        ))}
+                <span className="inline-flex min-h-9 items-center justify-center gap-1.5 rounded-lg bg-primary px-3 py-2 text-sm font-semibold text-primary-foreground sm:w-auto">
+                  Apri
+                  <ChevronRight className="h-4 w-4" />
+                </span>
+              </button>
+            </li>
+          );
+        })}
       </ul>
     </section>
   );
@@ -586,56 +303,36 @@ function DatasetDetailView({
   item: OpenDataArchiveItem;
   onBack: () => void;
 }) {
+  const status = LAMEZIA_OPEN_DATA_SERIES_BY_ID.get(item.dataset.id);
+
   return (
-    <section
-      aria-labelledby="opendata-dataset-detail-title"
-      className="space-y-5"
-    >
+    <section aria-labelledby="opendata-dataset-detail-title" className="space-y-5">
       <Button onClick={onBack} type="button" variant="ghost">
         <ArrowLeft className="h-4 w-4" />
-        Torna all'archivio dataset
+        Torna ai dataset
       </Button>
 
-      <div className="rounded-xl border border-card-border bg-card p-5 shadow-sm">
-        <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
-          <div>
-            <span className="eyebrow text-primary">
-              <FileSpreadsheet className="h-3.5 w-3.5" />
-              Dataset selezionato
-            </span>
-            <h2
-              className="mt-2 font-display text-2xl font-bold text-foreground"
-              id="opendata-dataset-detail-title"
-            >
-              {item.dataset.label}
-            </h2>
-            <p className="mt-2 max-w-3xl text-sm leading-6 text-muted-foreground">
-              {item.dataset.description}
-            </p>
-          </div>
-          <Badge variant="brand" className="w-fit shadow-none">
-            {item.theme.label}
-          </Badge>
+      <header className="border-b border-border pb-4">
+        <p className="text-xs font-semibold uppercase tracking-wide text-primary">
+          {item.theme.shortLabel}
+        </p>
+        <h2
+          className="mt-1 font-display text-2xl font-bold text-foreground"
+          id="opendata-dataset-detail-title"
+        >
+          {item.dataset.label}
+        </h2>
+        <p className="mt-2 max-w-3xl text-sm leading-6 text-muted-foreground">
+          {item.dataset.description}
+        </p>
+        <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-xs text-muted-foreground">
+          <span>{item.dataset.sourceLabel}</span>
+          {status ? (
+            <span>Ultimo dato: {status.latest_observation_label}</span>
+          ) : null}
+          <span>{item.dataset.updateCadence}</span>
         </div>
-        <dl className="mt-4 grid gap-3 text-sm md:grid-cols-2">
-          <div className="rounded-md border border-border bg-muted/20 p-3">
-            <dt className="text-xs font-medium text-muted-foreground">
-              Fonte
-            </dt>
-            <dd className="mt-1 leading-6 text-foreground">
-              {item.dataset.sourceLabel}
-            </dd>
-          </div>
-          <div className="rounded-md border border-border bg-muted/20 p-3">
-            <dt className="text-xs font-medium text-muted-foreground">
-              Aggiornamento
-            </dt>
-            <dd className="mt-1 leading-6 text-foreground">
-              {item.dataset.updateCadence}
-            </dd>
-          </div>
-        </dl>
-      </div>
+      </header>
 
       {item.dataset.detailKind === "climate-daily" ? (
         <ClimateTerritoryDatasetCard />
@@ -648,99 +345,144 @@ function DatasetDetailView({
       ) : item.dataset.detailKind === "families-children" ? (
         <FamiliesChildrenDatasetCard />
       ) : (
-        <div className="rounded-xl border border-dashed border-border bg-muted/20 p-5">
-          <h3 className="font-display text-lg font-bold text-foreground">
-            Scheda dataset in preparazione
-          </h3>
-          <p className="mt-2 max-w-3xl text-sm leading-6 text-muted-foreground">
-            Questo dataset e presente nell'archivio, ma non ha ancora una
-            visualizzazione pubblicata.
-          </p>
+        <div className="rounded-xl border border-dashed border-border bg-muted/20 p-5 text-sm text-muted-foreground">
+          Visualizzazione non ancora disponibile per questo dataset.
         </div>
       )}
     </section>
   );
 }
 
-function DatasetCard({
-  dataset,
-  isUpdated = false,
+function MunicipalCatalog({
+  datasets,
+  feedStatus,
+  isLoading,
+  onSearch,
+  search,
 }: {
-  dataset: OpendataDataset;
-  isUpdated?: boolean;
+  datasets: OpendataDataset[];
+  feedStatus: { lastUpdatedAt?: string | null; itemsTotal?: number | null; url?: string | null } | undefined;
+  isLoading: boolean;
+  onSearch: (value: string) => void;
+  search: string;
 }) {
-  const formats = useMemo(() => {
-    const set = new Set<string>();
-    (dataset.resources ?? []).forEach((r) => {
-      if (r.format) set.add(r.format.toUpperCase());
-    });
-    return Array.from(set).sort();
-  }, [dataset.resources]);
+  return (
+    <details className="rounded-xl border border-border bg-muted/15">
+      <summary className="cursor-pointer list-none px-4 py-3 font-semibold text-foreground marker:hidden">
+        Catalogo completo del Comune
+      </summary>
+      <div className="border-t border-border p-4">
+        <div className="flex flex-col gap-2 text-sm text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
+          <span>
+            Ultima sincronizzazione:{" "}
+            <strong className="font-semibold text-foreground">
+              {formatPublicTimeField(
+                feedStatus?.lastUpdatedAt,
+                "dd MMM yyyy, HH:mm",
+              )}
+            </strong>
+            {feedStatus?.itemsTotal ? ` · ${feedStatus.itemsTotal} dataset` : ""}
+          </span>
+          <a
+            className="inline-flex items-center gap-1.5 font-medium text-primary hover:underline"
+            href={feedStatus?.url || PORTAL_URL}
+            rel="noopener noreferrer"
+            target="_blank"
+          >
+            <Landmark className="h-4 w-4" />
+            Portale comunale
+            <ExternalLink className="h-3.5 w-3.5" />
+          </a>
+        </div>
 
+        <label className="relative mt-4 block">
+          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+          <span className="sr-only">Cerca nel catalogo comunale</span>
+          <Input
+            className="h-10 bg-background pl-9"
+            onChange={(event) => onSearch(event.target.value)}
+            placeholder="Cerca nel catalogo"
+            type="search"
+            value={search}
+          />
+        </label>
+
+        {isLoading ? (
+          <div className="mt-4 grid gap-2 sm:grid-cols-2">
+            {Array.from({ length: 4 }).map((_, index) => (
+              <Skeleton className="h-20 rounded-lg" key={index} />
+            ))}
+          </div>
+        ) : datasets.length > 0 ? (
+          <div data-tour="opendata-catalog" className="mt-4 grid gap-2 sm:grid-cols-2">
+            {datasets.map((dataset) => (
+              <CatalogDatasetLink dataset={dataset} key={dataset.id} />
+            ))}
+          </div>
+        ) : (
+          <p className="mt-4 rounded-lg border border-dashed border-border p-4 text-sm text-muted-foreground">
+            Nessun dataset corrisponde alla ricerca.
+          </p>
+        )}
+
+        <details className="mt-4 border-t border-border pt-3 text-xs text-muted-foreground">
+          <summary className="cursor-pointer font-semibold text-foreground">
+            API e riuso dei dati
+          </summary>
+          <div className="mt-3 flex flex-wrap gap-2">
+            <a
+              href={apiUrl("/api/opendata/catalog.jsonld")}
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              <Button size="sm" variant="outline">
+                <FileJson className="h-4 w-4" />
+                DCAT-AP_IT
+              </Button>
+            </a>
+            <a
+              href={apiUrl("/api/3/action/package_search")}
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              <Button size="sm" variant="outline">
+                <Braces className="h-4 w-4" />
+                API CKAN
+              </Button>
+            </a>
+            <Link href="/sviluppatori">
+              <Button size="sm" variant="outline">
+                <Code2 className="h-4 w-4" />
+                Sviluppatori
+              </Button>
+            </Link>
+          </div>
+        </details>
+      </div>
+    </details>
+  );
+}
+
+function CatalogDatasetLink({ dataset }: { dataset: OpendataDataset }) {
   return (
     <Link
-      href={`/opendata/${dataset.id}`}
+      className="group rounded-lg border border-border bg-background p-3 transition-colors hover:border-primary/40 hover:bg-primary/5"
       data-tour="opendata-preview"
-      className="group flex flex-col rounded-xl border border-card-border bg-card p-5 shadow-sm transition-colors hover-elevate hover:border-brand/40"
+      href={`/opendata/${dataset.id}`}
     >
-      <div className="mb-3 flex flex-wrap items-center gap-1.5">
-        {isUpdated ? (
-          <Badge variant="success" className="text-[11px] shadow-none">
-            <Sparkles className="mr-1 h-3 w-3" />
-            Aggiornato
-          </Badge>
-        ) : null}
-        {dataset.category ? (
-          <Badge variant="brand" className="text-[11px] shadow-none">
-            <Layers className="mr-1 h-3 w-3" />
-            {dataset.category}
-          </Badge>
-        ) : null}
-        {dataset.theme ? (
-          <Badge variant="outline" className="text-[11px] shadow-none">
-            <Tag className="mr-1 h-3 w-3" />
-            {dataset.theme}
-          </Badge>
-        ) : null}
-      </div>
-
-      <h3 className="font-display font-bold leading-snug text-foreground line-clamp-2">
-        {dataset.title}
-      </h3>
-      {dataset.description ? (
-        <p className="mt-2 text-sm text-muted-foreground line-clamp-3">
-          {dataset.description}
-        </p>
-      ) : null}
-
-      <div className="mt-auto pt-4">
-        <div className="flex flex-wrap items-center gap-1.5">
-          {formats.map((f) => (
-            <Badge
-              key={f}
-              variant="outline"
-              className="font-mono text-[10px] shadow-none"
-            >
-              <FileSpreadsheet className="mr-1 h-3 w-3" />
-              {f}
-            </Badge>
-          ))}
+      <div className="flex items-start justify-between gap-3">
+        <div className="min-w-0">
+          <p className="line-clamp-2 text-sm font-semibold text-foreground">
+            {dataset.title}
+          </p>
+          <p className="mt-1 text-xs text-muted-foreground">
+            {dataset.category || dataset.theme || "Dataset comunale"}
+            {dataset.metadataModified
+              ? ` · ${formatPublicTimeField(dataset.metadataModified)}`
+              : ""}
+          </p>
         </div>
-        <div className="mt-3 flex items-center justify-between text-xs text-muted-foreground">
-          <span>
-            <span className="font-display font-bold tabular-nums text-foreground">
-              {dataset.resourceCount}
-            </span>{" "}
-            {dataset.resourceCount === 1 ? "risorsa" : "risorse"}
-            {dataset.metadataModified ? (
-              <> Â· agg. {formatPublicTimeField(dataset.metadataModified)}</>
-            ) : null}
-          </span>
-          <span className="inline-flex items-center gap-0.5 font-medium text-primary group-hover:underline">
-            Apri
-            <ChevronRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
-          </span>
-        </div>
+        <ChevronRight className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
       </div>
     </Link>
   );

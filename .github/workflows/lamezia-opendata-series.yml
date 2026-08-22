@@ -1,0 +1,113 @@
+name: Lamezia Open Data series refresh
+
+on:
+  workflow_dispatch:
+  schedule:
+    # 06:10 UTC follows the dedicated climate refresh and checks all other series daily.
+    - cron: "10 6 * * *"
+  push:
+    paths: &refresh_paths
+      - ".github/workflows/lamezia-opendata-series.yml"
+      - "scripts/refresh-lamezia-opendata-series.mjs"
+      - "scripts/refresh-lamezia-air-traffic-data.mjs"
+      - "scripts/check-lamezia-air-traffic-delta.mjs"
+      - "scripts/build-lamezia-opendata-series-status.mjs"
+      - "scripts/build-lamezia-air-traffic-data.mjs"
+      - "scripts/build-lamezia-demographic-trend-data.mjs"
+      - "scripts/build-lamezia-foreign-residents-data.mjs"
+      - "scripts/build-lamezia-families-children-data.mjs"
+  pull_request:
+    paths: *refresh_paths
+
+permissions:
+  contents: write
+
+concurrency:
+  group: lamezia-opendata-series-refresh-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  refresh-series:
+    name: Check and refresh Open Data series
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Validate refresh scripts
+        run: |
+          node --check scripts/check-lamezia-air-traffic-delta.mjs
+          node --check scripts/refresh-lamezia-air-traffic-data.mjs
+          node --check scripts/refresh-lamezia-opendata-series.mjs
+          node --check scripts/build-lamezia-opendata-series-status.mjs
+
+      - name: Check official sources and refresh changed series
+        run: node scripts/refresh-lamezia-opendata-series.mjs
+
+      - name: Validate freshness manifest
+        run: |
+          node - <<'NODE'
+          const { readFileSync } = require('node:fs');
+          const dir = 'artifacts/lamezia-trasparente/src/data/generated';
+          const manifest = JSON.parse(readFileSync(`${dir}/lameziaOpenDataSeriesStatus.json`, 'utf8'));
+          if (manifest.schema_version !== 1 || !Array.isArray(manifest.series) || manifest.series.length !== 5) {
+            throw new Error('Open Data freshness manifest must contain exactly five monitored series.');
+          }
+          const ids = new Set(manifest.series.map((series) => series.id));
+          if (ids.size !== 5) throw new Error('Open Data series IDs must be unique.');
+          if (!manifest.series.every((series) => series.monitoring_cadence === 'daily')) {
+            throw new Error('Every monitored Open Data series must declare daily source checking.');
+          }
+          if (!manifest.series.every((series) => series.automation_status === 'active')) {
+            throw new Error('Every monitored Open Data series must declare active automation.');
+          }
+          const families = manifest.series.find((series) => series.id === 'lamezia-families-children');
+          if (!families || families.latest_observation !== null) {
+            throw new Error('Families series must not invent a reference year absent from the source.');
+          }
+          const air = manifest.series.find((series) => series.id === 'lamezia-air-traffic-monthly');
+          const airMetadata = JSON.parse(readFileSync(`${dir}/lameziaAirTrafficMonthly.metadata.json`, 'utf8'));
+          const airDelta = JSON.parse(readFileSync(`${dir}/lameziaAirTrafficMonthly.delta.json`, 'utf8'));
+          const airBase = JSON.parse(readFileSync(`${dir}/lameziaAirTrafficMonthly.json`, 'utf8'));
+          if (!air || air.latest_observation !== airMetadata.latest_data_point) {
+            throw new Error('Airport freshness manifest must match airport metadata.');
+          }
+          if (airDelta.base_latest_month !== airBase.metadata.latest_complete_month) {
+            throw new Error('Airport delta must start exactly after the immutable historical snapshot.');
+          }
+          const baseRows = String(airBase.monthly_rows || '').split('\n').filter(Boolean).length;
+          const deltaRows = String(airDelta.monthly_rows || '').split('\n').filter(Boolean).length;
+          if (airMetadata.record_count !== baseRows + deltaRows) {
+            throw new Error('Airport metadata record count must equal snapshot plus delta rows.');
+          }
+          NODE
+
+      - name: Commit changed public series
+        if: github.event_name != 'pull_request'
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add \
+            artifacts/lamezia-trasparente/src/data/generated/lameziaAirTrafficMonthly.delta.json \
+            artifacts/lamezia-trasparente/src/data/generated/lameziaAirTrafficMonthly.metadata.json \
+            artifacts/lamezia-trasparente/src/data/generated/lameziaDemographicTrend.json \
+            artifacts/lamezia-trasparente/src/data/generated/lameziaForeignResidentsAgeSex.json \
+            artifacts/lamezia-trasparente/src/data/generated/lameziaFamiliesChildren.json \
+            artifacts/lamezia-trasparente/src/data/generated/lameziaOpenDataSeriesStatus.json
+
+          if git diff --cached --quiet; then
+            echo "All monitored Open Data series already match their official sources."
+            exit 0
+          fi
+
+          git commit -m "Refresh Lamezia Open Data series"
+          git push

@@ -7,8 +7,8 @@ describe("Lamezia air traffic monthly OpenData dataset", () => {
 
     expect(metadata.source).toContain("Assaeroporti");
     expect(metadata.first_month).toBe("2000-01");
-    expect(metadata.latest_complete_month).toBe("2026-05");
-    expect(monthly).toHaveLength(317);
+    expect(metadata.latest_complete_month).toBe("2026-06");
+    expect(monthly).toHaveLength(318);
     expect(metadata.source_periods).toHaveLength(monthly.length);
     expect(metadata.source_file_url_template).toContain("download-export");
 
@@ -22,27 +22,30 @@ describe("Lamezia air traffic monthly OpenData dataset", () => {
     const latestAnnual = LAMEZIA_AIR_TRAFFIC_DATA.annual.at(-1);
 
     expect(latest).toMatchObject({
-      month: "2026-05",
+      month: "2026-06",
       rank: 19,
       movements: {
-        total: 2448,
-        total_yoy_pct: 0.026,
+        total: 2912,
+        total_yoy_pct: 0.102,
       },
       passengers: {
-        total: 321679,
-        total_yoy_pct: 0.139,
+        national: 215166,
+        international: 173031,
+        direct_transits: 1396,
+        total: 389703,
+        total_yoy_pct: 0.221,
       },
       cargo_tons: {
-        total: 109.705,
-        total_yoy_pct: -0.178,
+        total: 94.7,
+        total_yoy_pct: -0.305,
       },
     });
     expect(latestAnnual).toMatchObject({
       year: 2026,
-      months: 5,
-      passengers_total: 1145171,
-      movements_total: 9149,
-      cargo_tons_total: 455.9,
+      months: 6,
+      passengers_total: 1534874,
+      movements_total: 12061,
+      cargo_tons_total: 550.6,
     });
   });
 });
