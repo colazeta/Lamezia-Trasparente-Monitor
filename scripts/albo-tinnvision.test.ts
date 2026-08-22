@@ -149,6 +149,18 @@ test("identifies council and commission notices without inferring session dates"
     assert.deepEqual(candidate.scheduledOccurrences, []);
     assert.deepEqual(candidate.agendaItems, []);
     assert.match(candidate.limitations[0], /non viene interpretata/);
+    assert.equal(candidate.contextSearch.status, "required");
+    assert.equal(candidate.contextSearch.rerunAfterOfficialEnrichment, true);
+    assert.equal(candidate.contextSearch.querySeeds.length, 2);
+    assert.ok(
+      candidate.contextSearch.querySeeds.every((query) =>
+        query.startsWith("Lamezia Terme"),
+      ),
+    );
+    assert.match(
+      candidate.contextSearch.limitations.join(" "),
+      /non possono riempire campi ufficiali mancanti/i,
+    );
   }
 });
 

@@ -14,6 +14,33 @@ export const councilSessionV0KindLabels: Record<CouncilSessionV0Kind, string> = 
   commission: "Commissione consiliare",
 };
 
+export const COUNCIL_SESSION_V0_CONTEXT_RELATIONSHIPS = [
+  "same_session",
+  "possible_same_session",
+  "agenda_item",
+] as const;
+
+export type CouncilSessionV0ContextRelationship =
+  (typeof COUNCIL_SESSION_V0_CONTEXT_RELATIONSHIPS)[number];
+
+export const councilSessionV0ContextRelationshipLabels: Record<
+  CouncilSessionV0ContextRelationship,
+  string
+> = {
+  same_session: "Stessa seduta",
+  possible_same_session: "Possibile corrispondenza",
+  agenda_item: "Tema all'ordine del giorno",
+};
+
+export const COUNCIL_SESSION_V0_CONTEXT_RESEARCH_STATUSES = [
+  "not_run",
+  "checked_no_match",
+  "reviewed_matches",
+] as const;
+
+export type CouncilSessionV0ContextResearchStatus =
+  (typeof COUNCIL_SESSION_V0_CONTEXT_RESEARCH_STATUSES)[number];
+
 export const COUNCIL_SESSION_V0_FIELD_STATUSES = [
   "verificato",
   "parziale",
@@ -80,11 +107,29 @@ export interface CouncilSessionV0Provenance {
   sourceReviewStatus: CouncilSessionV0SourceReviewStatus;
 }
 
+export interface CouncilSessionV0ContextArticle {
+  title: string;
+  url: string;
+  publisher: string;
+  publishedAt: string | null;
+  relationship: CouncilSessionV0ContextRelationship;
+  relevanceNote: string;
+  reviewedAt: string;
+}
+
+export interface CouncilSessionV0ContextResearch {
+  status: CouncilSessionV0ContextResearchStatus;
+  checkedAt: string | null;
+  searchNote: string;
+  articles: readonly CouncilSessionV0ContextArticle[];
+}
+
 export interface CouncilSessionV0 {
   id: string;
   kind: CouncilSessionV0Kind;
   isDemoFixture: boolean;
   provenance?: CouncilSessionV0Provenance;
+  contextResearch: CouncilSessionV0ContextResearch;
   title: CouncilSessionV0Field<string>;
   scheduledAt: CouncilSessionV0Field<string>;
   sessionStatus: CouncilSessionV0Field<CouncilSessionV0Status>;
@@ -128,6 +173,13 @@ export const councilSessionV0DemoFixture: CouncilSessionV0 = {
   id: "demo-consiglio-comunale-v0",
   kind: "council",
   isDemoFixture: true,
+  contextResearch: {
+    status: "not_run",
+    checkedAt: null,
+    searchNote:
+      "Ricerca di contesto non eseguita: la scheda è una fixture dimostrativa e non descrive una seduta reale.",
+    articles: [],
+  },
   title: {
     key: "title",
     label: "Titolo",

@@ -14,6 +14,14 @@ export type InstitutionalSessionCandidateReviewStatus =
   | "metadata_only"
   | "attachment_review_required";
 
+export type InstitutionalSessionContextSearch = {
+  status: "required";
+  querySeeds: readonly string[];
+  rerunAfterOfficialEnrichment: true;
+  matchingRequirements: readonly string[];
+  limitations: readonly string[];
+};
+
 export type InstitutionalSessionCandidateInput = {
   id?: string | null;
   source?: string | null;
@@ -50,6 +58,7 @@ export type InstitutionalSessionCandidate = {
     verificationStatus: "official_source_acquired";
   };
   reviewStatus: InstitutionalSessionCandidateReviewStatus;
+  contextSearch: InstitutionalSessionContextSearch;
   scheduledOccurrences: readonly [];
   agendaItems: readonly [];
   limitations: readonly string[];
@@ -88,6 +97,32 @@ function officialAlboUrl(
 
 function requiredText(value: string | null | undefined): string | null {
   return value?.trim() || null;
+}
+
+function buildContextSearch(
+  kind: InstitutionalSessionKind,
+  title: string,
+  publicationNumber: string,
+): InstitutionalSessionContextSearch {
+  const organ =
+    kind === "council" ? "Consiglio comunale" : "Commissione consiliare";
+
+  return {
+    status: "required",
+    querySeeds: [
+      `Lamezia Terme ${organ} ${title}`,
+      `Lamezia Terme ${organ} pubblicazione ${publicationNumber}`,
+    ],
+    rerunAfterOfficialEnrichment: true,
+    matchingRequirements: [
+      "Per classificare un articolo come stessa seduta servono almeno organo e data esatta, più un ulteriore riscontro distintivo come ordine del giorno o numero di convocazione.",
+      "Se manca uno dei riscontri, il collegamento resta possibile corrispondenza oppure contesto su un tema all'ordine del giorno.",
+    ],
+    limitations: [
+      "La ricerca stampa è obbligatoria per il candidato, ma i suoi risultati richiedono revisione editoriale prima della pubblicazione.",
+      "Gli articoli non possono riempire campi ufficiali mancanti né dimostrare programmazione, svolgimento o esiti della seduta.",
+    ],
+  };
 }
 
 /**
@@ -157,6 +192,7 @@ export function identifyInstitutionalSessionCandidate(
       verificationStatus: "official_source_acquired",
     },
     reviewStatus: documentUrl ? "attachment_review_required" : "metadata_only",
+    contextSearch: buildContextSearch(kind, title, publicationNumber),
     scheduledOccurrences: [],
     agendaItems: [],
     limitations: [

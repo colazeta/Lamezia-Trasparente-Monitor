@@ -6,6 +6,7 @@ import {
 
 import type {
   CouncilSessionV0,
+  CouncilSessionV0ContextResearch,
   CouncilSessionV0Provenance,
 } from "@/data/councilSessionV0";
 
@@ -15,6 +16,68 @@ const COMMISSION_NOTICE_URL =
 const COMMISSION_ARCHIVED_DOCUMENT_URL =
   "/data/public/albo/documents/2026/842702b2044b4b6f9a7b21a65eac2ab59866ee3f321872e6b28fd481598be304.pdf";
 const SOURCE_REVIEWED_AT = "2026-08-22T12:10:49Z";
+const CONTEXT_RESEARCHED_AT = "2026-08-22T15:42:23Z";
+
+const councilContextResearch: CouncilSessionV0ContextResearch = {
+  status: "reviewed_matches",
+  checkedAt: CONTEXT_RESEARCHED_AT,
+  searchNote:
+    "Due resoconti giornalistici del 13 agosto sono compatibili con l'avviso, ma l'assenza dell'allegato ufficiale impedisce di stabilire che descrivano la stessa seduta.",
+  articles: [
+    {
+      title:
+        "Consiglio comunale prima di Ferragosto con soliti stilemi politici e qualche fuoriprogramma estivo",
+      url: "https://www.lameziainforma.it/istituzione/2026/08/13/consiglio-comunale-prima-di-ferragosto-con-soliti-stilemi-politici-e-qualche-fuoriprogramma-estivo/68880/",
+      publisher: "LameziaInforma",
+      publishedAt: "2026-08-13",
+      relationship: "possible_same_session",
+      relevanceNote:
+        "Data di pubblicazione, organo e temi trattati sono compatibili con l'avviso Albo 2026/2673; manca l'allegato ufficiale per stabilire il collegamento in modo definitivo.",
+      reviewedAt: CONTEXT_RESEARCHED_AT,
+    },
+    {
+      title: "Question time politico evaso in consiglio comunale",
+      url: "https://www.lameziainforma.it/politica/2026/08/13/question-time-politico-evaso-in-consiglio-comunale/68885/",
+      publisher: "LameziaInforma",
+      publishedAt: "2026-08-13",
+      relationship: "possible_same_session",
+      relevanceNote:
+        "Il resoconto descrive question time e debiti fuori bilancio nella stessa giornata; è un indizio contestuale, non una fonte ufficiale della convocazione.",
+      reviewedAt: CONTEXT_RESEARCHED_AT,
+    },
+  ],
+};
+
+const commissionContextResearch: CouncilSessionV0ContextResearch = {
+  status: "reviewed_matches",
+  checkedAt: CONTEXT_RESEARCHED_AT,
+  searchNote:
+    "La ricerca per organo, date e temi non ha restituito articoli che nominino con sufficiente precisione le sedute della II Commissione del 10 o 11 agosto; i collegamenti riportati riguardano soltanto i temi in agenda.",
+  articles: [
+    {
+      title:
+        "Approvato in giunta l'assestamento generale di bilancio e salvaguardia degli equilibri per l'esercizio 2026",
+      url: "https://www.lameziainforma.it/istituzione/2026/08/06/approvato-in-giunta-lassestamento-generale-di-bilancio-e-salvaguardia-degli-equilibri-per-lesercizio-2026/68773/",
+      publisher: "LameziaInforma",
+      publishedAt: "2026-08-06",
+      relationship: "agenda_item",
+      relevanceNote:
+        "Approfondisce la proposta di assestamento approvata dalla Giunta il 6 agosto, poi indicata nel primo punto della convocazione; non documenta le riunioni della Commissione.",
+      reviewedAt: CONTEXT_RESEARCHED_AT,
+    },
+    {
+      title:
+        "LAMEZIA | Bilancio, la maggioranza si sfalda in Giunta: tre assessori assenti. Muraca: «È sfiducia al sindaco»",
+      url: "https://lanovitaonline.it/lamezia-bilancio-la-maggioranza-si-sfalda-in-giunta-tre-assessori-assenti-muraca-e-sfiducia-al-sindaco/",
+      publisher: "La Novità Online",
+      publishedAt: "2026-08-08",
+      relationship: "agenda_item",
+      relevanceNote:
+        "Riporta una posizione politica sulla deliberazione di Giunta relativa all'assestamento; riguarda il tema in agenda e non verifica attività o esiti della Commissione.",
+      reviewedAt: CONTEXT_RESEARCHED_AT,
+    },
+  ],
+};
 
 function requireCandidate(
   input: InstitutionalSessionCandidateInput,
@@ -112,6 +175,7 @@ function commissionSession(
     kind: "commission",
     isDemoFixture: false,
     provenance: commissionProvenance,
+    contextResearch: commissionContextResearch,
     title: {
       key: "title",
       label: "Titolo",
@@ -213,6 +277,7 @@ const councilMetadataOnlySession: CouncilSessionV0 = {
   kind: "council",
   isDemoFixture: false,
   provenance: councilProvenance,
+  contextResearch: councilContextResearch,
   title: {
     key: "title",
     label: "Titolo",

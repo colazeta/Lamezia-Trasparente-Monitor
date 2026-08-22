@@ -13,6 +13,7 @@ import {
   FileText,
   Landmark,
   Megaphone,
+  Newspaper,
   RefreshCw,
   ShieldAlert,
   Users,
@@ -468,8 +469,9 @@ export function HomeInstitutionalSessions() {
           </h2>
           <p className="mt-4 text-base leading-7 text-muted-foreground md:text-lg">
             Consulta convocazioni, date e ordini del giorno collegati alle fonti
-            istituzionali disponibili. Ogni scheda distingue i dati verificati
-            da quelli ancora da controllare.
+            istituzionali disponibili, insieme agli articoli trovati e
+            revisionati con una ricerca di contesto. Ogni scheda distingue i
+            dati verificati da quelli ancora da controllare.
           </p>
 
           <div className="mt-5 rounded-xl border border-primary/20 bg-primary/5 p-4 text-sm leading-6 text-muted-foreground">
@@ -552,6 +554,18 @@ function InstitutionalSessionsHomeCard({
         <div className="divide-y divide-border">
           {sessions.map((session) => {
             const agendaCount = session.agenda.value?.length ?? 0;
+            const contextArticleCount =
+              session.contextResearch.articles.length;
+            const contextRelationshipSummary =
+              session.contextResearch.articles.every(
+                (article) => article.relationship === "possible_same_session",
+              )
+                ? "possibili corrispondenze"
+                : session.contextResearch.articles.every(
+                      (article) => article.relationship === "agenda_item",
+                    )
+                  ? "sui temi in agenda"
+                  : "relazioni distinte in scheda";
             return (
               <Link
                 key={session.id}
@@ -572,6 +586,19 @@ function InstitutionalSessionsHomeCard({
                         ? `${agendaCount} punti all'ordine del giorno · stato della seduta non verificato`
                         : "Ordine del giorno da verificare · stato della seduta non verificato"}
                     </p>
+                    {contextArticleCount > 0 && (
+                      <p className="mt-1 flex items-center gap-1.5 text-xs font-semibold text-primary">
+                        <Newspaper
+                          className="h-3.5 w-3.5 shrink-0"
+                          aria-hidden="true"
+                        />
+                        {contextArticleCount}{" "}
+                        {contextArticleCount === 1
+                          ? "articolo di contesto"
+                          : "articoli di contesto"}{" "}
+                        · {contextRelationshipSummary}
+                      </p>
+                    )}
                   </div>
                   <ArrowRight
                     className="ml-auto mt-0.5 h-4 w-4 shrink-0 text-muted-foreground transition-transform group-hover:translate-x-0.5 group-hover:text-primary"

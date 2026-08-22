@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 
 import {
@@ -27,6 +27,9 @@ describe("CouncilSessionV0Card", () => {
     expect(screen.getByText("Data da verificare")).toBeInTheDocument();
     expect(
       screen.getByText(/data, ora e ordine del giorno restano da verificare/i),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText("2 articoli contestuali revisionati"),
     ).toBeInTheDocument();
     expect(
       screen.getByRole("link", { name: /Fonte ufficiale/i }),
@@ -61,5 +64,42 @@ describe("CouncilSessionV0Card", () => {
     expect(
       screen.getAllByText(/non prova.*seduta si sia svolta/i).length,
     ).toBeGreaterThan(0);
+    expect(
+      screen.getByRole("heading", { name: "Articoli e contesto" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(/non sostituiscono l'Albo/i),
+    ).toBeInTheDocument();
+    expect(
+      screen.getAllByText("Tema all'ordine del giorno"),
+    ).toHaveLength(2);
+    expect(
+      screen.getByRole("link", {
+        name: /Approvato in giunta l'assestamento generale di bilancio/i,
+      }),
+    ).toHaveAttribute("href", expect.stringContaining("lameziainforma.it"));
+  });
+
+  it("labels press coverage as a possible council match without completing official fields", () => {
+    const session = reviewedRecord("albo-2026-2673-consiglio-comunale");
+
+    render(<CouncilSessionV0Detail session={session} />);
+
+    expect(screen.getAllByText("Possibile corrispondenza")).toHaveLength(2);
+    expect(
+      screen.getByRole("link", {
+        name: /Consiglio comunale prima di Ferragosto/i,
+      }),
+    ).toHaveAttribute("href", expect.stringContaining("lameziainforma.it"));
+    const dateField = screen
+      .getByRole("heading", { name: "Data e ora" })
+      .parentElement?.parentElement;
+    expect(dateField).not.toBeNull();
+    expect(
+      within(dateField as HTMLElement).getByText("Non disponibile"),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(/manca l'allegato ufficiale.*collegamento/i),
+    ).toBeInTheDocument();
   });
 });

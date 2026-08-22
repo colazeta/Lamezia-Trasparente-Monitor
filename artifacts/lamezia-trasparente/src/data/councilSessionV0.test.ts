@@ -1,8 +1,11 @@
 import { describe, expect, it } from "vitest";
 
 import {
+  COUNCIL_SESSION_V0_CONTEXT_RELATIONSHIPS,
+  COUNCIL_SESSION_V0_CONTEXT_RESEARCH_STATUSES,
   COUNCIL_SESSION_V0_FIELD_STATUSES,
   COUNCIL_SESSION_V0_STATUSES,
+  councilSessionV0ContextRelationshipLabels,
   councilSessionV0DemoFixture,
   councilSessionV0FieldStatusLabels,
   councilSessionV0KindLabels,
@@ -12,6 +15,8 @@ import {
   isCouncilSessionV0DemoFixture,
   type CouncilSessionV0Field,
   type CouncilSessionV0FieldStatus,
+  type CouncilSessionV0ContextRelationship,
+  type CouncilSessionV0ContextResearchStatus,
   type CouncilSessionV0Status,
 } from "./councilSessionV0";
 import {
@@ -34,6 +39,18 @@ const expectedFieldStatuses: readonly CouncilSessionV0FieldStatus[] = [
   "fixture_dimostrativa",
 ];
 
+const expectedContextRelationships: readonly CouncilSessionV0ContextRelationship[] = [
+  "same_session",
+  "possible_same_session",
+  "agenda_item",
+];
+
+const expectedContextResearchStatuses: readonly CouncilSessionV0ContextResearchStatus[] = [
+  "not_run",
+  "checked_no_match",
+  "reviewed_matches",
+];
+
 const forbiddenAccusatoryTerms = [
   "corruzione",
   "illecito",
@@ -46,6 +63,12 @@ describe("councilSessionV0", () => {
   it("declares the required session and source states", () => {
     expect(COUNCIL_SESSION_V0_STATUSES).toEqual(expectedSessionStatuses);
     expect(COUNCIL_SESSION_V0_FIELD_STATUSES).toEqual(expectedFieldStatuses);
+    expect(COUNCIL_SESSION_V0_CONTEXT_RELATIONSHIPS).toEqual(
+      expectedContextRelationships,
+    );
+    expect(COUNCIL_SESSION_V0_CONTEXT_RESEARCH_STATUSES).toEqual(
+      expectedContextResearchStatuses,
+    );
 
     for (const status of expectedSessionStatuses) {
       expect(councilSessionV0StatusLabels[status]).toEqual(expect.any(String));
@@ -53,6 +76,12 @@ describe("councilSessionV0", () => {
 
     for (const status of expectedFieldStatuses) {
       expect(councilSessionV0FieldStatusLabels[status]).toEqual(expect.any(String));
+    }
+
+    for (const relationship of expectedContextRelationships) {
+      expect(councilSessionV0ContextRelationshipLabels[relationship]).toEqual(
+        expect.any(String),
+      );
     }
 
     expect(councilSessionV0KindLabels).toEqual({
@@ -67,6 +96,8 @@ describe("councilSessionV0", () => {
     expect(councilSessionV0DemoFixture.id).toContain("demo");
     expect(councilSessionV0DemoFixture.title.value).toContain("esempio dimostrativo");
     expect(councilSessionV0DemoFixture.sourceLink.value).toBeNull();
+    expect(councilSessionV0DemoFixture.contextResearch.status).toBe("not_run");
+    expect(councilSessionV0DemoFixture.contextResearch.articles).toEqual([]);
   });
 
   it("exposes all public fields with a source state and a data limit", () => {
@@ -137,6 +168,15 @@ describe("councilSessionV0", () => {
       expect(session.provenance?.sourceUrl).toContain("albo.tinnvision.cloud");
       expect(session.provenance?.sourceContentHash).toMatch(/^[a-f0-9]{64}$/);
       expect(session.lastCheckedAt.value).toBeTruthy();
+      expect(session.contextResearch.status).toBe("reviewed_matches");
+      expect(session.contextResearch.checkedAt).toBeTruthy();
+      expect(session.contextResearch.articles.length).toBeGreaterThan(0);
+      for (const article of session.contextResearch.articles) {
+        expect(article.url).toMatch(/^https:\/\//);
+        expect(article.publisher.length).toBeGreaterThan(0);
+        expect(article.relevanceNote.length).toBeGreaterThan(0);
+        expect(Date.parse(article.reviewedAt)).not.toBeNaN();
+      }
     }
   });
 
@@ -152,6 +192,12 @@ describe("councilSessionV0", () => {
     expect(council?.provenance?.documentUrl).toBeNull();
     expect(council?.dataLimits.value?.join(" ")).toMatch(
       /finestra di pubblicazione.*non è la data della seduta/i,
+    );
+    expect(
+      council?.contextResearch.articles.map((article) => article.relationship),
+    ).toEqual(["possible_same_session", "possible_same_session"]);
+    expect(council?.contextResearch.searchNote).toMatch(
+      /impedisce di stabilire.*stessa seduta/i,
     );
   });
 
@@ -176,6 +222,14 @@ describe("councilSessionV0", () => {
       expect(session.agenda.sourceStatus).toBe("verificato");
       expect(session.agenda.value).toHaveLength(2);
       expect(session.sessionStatus.value).toBe("non_verificata");
+      expect(
+        session.contextResearch.articles.every(
+          (article) => article.relationship === "agenda_item",
+        ),
+      ).toBe(true);
+      expect(session.contextResearch.searchNote).toMatch(
+        /non ha restituito articoli.*sedute della II Commissione/i,
+      );
     }
   });
 });

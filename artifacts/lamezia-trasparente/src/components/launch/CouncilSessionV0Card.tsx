@@ -5,6 +5,7 @@ import {
   ExternalLink,
   FileText,
   Info,
+  Newspaper,
   ShieldCheck,
 } from "lucide-react";
 
@@ -13,6 +14,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import {
   councilSessionV0DemoFixture,
+  councilSessionV0ContextRelationshipLabels,
   councilSessionV0FieldStatusLabels,
   councilSessionV0KindLabels,
   councilSessionV0PublicFields,
@@ -30,6 +32,16 @@ function formatDate(value: string | null) {
   return new Intl.DateTimeFormat("it-IT", {
     dateStyle: "long",
     timeStyle: "short",
+  }).format(date);
+}
+
+function formatPublishedDate(value: string | null) {
+  if (!value) return "Data non disponibile";
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return value;
+  return new Intl.DateTimeFormat("it-IT", {
+    dateStyle: "long",
+    timeZone: "Europe/Rome",
   }).format(date);
 }
 
@@ -204,6 +216,7 @@ export function CouncilSessionV0SummaryCard({
     "reviewed_against_official_attachment"
       ? "Allegato ufficiale controllato"
       : "Metadati ufficiali disponibili";
+  const contextArticleCount = session.contextResearch.articles.length;
 
   return (
     <Card
@@ -249,6 +262,21 @@ export function CouncilSessionV0SummaryCard({
           </dd>
         </div>
       </dl>
+      {!isDemo && (
+        <div className="mt-4 flex items-start gap-2 rounded-lg border border-border bg-muted/30 px-3 py-2 text-xs leading-relaxed text-muted-foreground">
+          <Newspaper
+            className="mt-0.5 h-3.5 w-3.5 shrink-0 text-brand"
+            aria-hidden="true"
+          />
+          <span>
+            {session.contextResearch.status === "reviewed_matches"
+              ? `${contextArticleCount} ${contextArticleCount === 1 ? "articolo contestuale revisionato" : "articoli contestuali revisionati"}`
+              : session.contextResearch.status === "checked_no_match"
+                ? "Ricerca stampa eseguita: nessuna corrispondenza sufficientemente precisa"
+                : "Ricerca stampa da eseguire"}
+          </span>
+        </div>
+      )}
       <div className="mt-5 flex flex-col gap-3 sm:flex-row">
         <Button asChild className="sm:w-auto">
           <Link href={`/convocazioni/${session.id}`}>
@@ -359,6 +387,88 @@ export function CouncilSessionV0Detail({
             </Card>
           ))}
         </div>
+      </section>
+
+      <section
+        aria-labelledby="session-context-title"
+        className="space-y-4 rounded-2xl border border-border bg-muted/20 p-5 md:p-6"
+      >
+        <div className="flex items-center gap-2.5">
+          <span className="flex h-8 w-8 items-center justify-center rounded-md bg-brand/10 text-brand">
+            <Newspaper className="h-4 w-4" aria-hidden="true" />
+          </span>
+          <h2
+            id="session-context-title"
+            className="font-display text-2xl font-bold tracking-tight"
+          >
+            Articoli e contesto
+          </h2>
+        </div>
+
+        <div className="rounded-xl border border-brand/20 bg-brand/5 p-4 text-sm leading-relaxed text-muted-foreground">
+          Questi collegamenti aiutano a leggere il contesto pubblico della
+          seduta o dei temi in agenda. Sono fonti giornalistiche: non
+          sostituiscono l&apos;Albo, non confermano lo svolgimento e non
+          completano i campi ufficiali della scheda.
+        </div>
+
+        <p className="text-sm leading-relaxed text-muted-foreground">
+          {session.contextResearch.searchNote}
+        </p>
+
+        {session.contextResearch.articles.length > 0 ? (
+          <div className="grid gap-4 lg:grid-cols-2">
+            {session.contextResearch.articles.map((article) => (
+              <article
+                key={article.url}
+                className="rounded-xl border border-border bg-card p-4"
+              >
+                <div className="mb-3 flex flex-wrap items-center gap-2">
+                  <Badge variant="secondary" className="whitespace-normal">
+                    {
+                      councilSessionV0ContextRelationshipLabels[
+                        article.relationship
+                      ]
+                    }
+                  </Badge>
+                  <span className="text-xs text-muted-foreground">
+                    {article.publisher} · {formatPublishedDate(article.publishedAt)}
+                  </span>
+                </div>
+                <h3 className="font-display text-lg font-bold leading-snug">
+                  <a
+                    href={article.url}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex items-start gap-1.5 text-foreground hover:text-brand hover:underline"
+                  >
+                    {article.title}
+                    <ExternalLink
+                      className="mt-1 h-3.5 w-3.5 shrink-0"
+                      aria-hidden="true"
+                    />
+                  </a>
+                </h3>
+                <p className="mt-3 text-xs leading-relaxed text-muted-foreground">
+                  {article.relevanceNote}
+                </p>
+              </article>
+            ))}
+          </div>
+        ) : (
+          <p className="rounded-xl border border-dashed border-border bg-card p-4 text-sm text-muted-foreground">
+            {session.contextResearch.status === "checked_no_match"
+              ? "Ricerca eseguita: nessun articolo collegabile con sufficiente precisione. Il risultato negativo descrive soltanto il controllo effettuato."
+              : "Ricerca di contesto non eseguita per questa scheda."}
+          </p>
+        )}
+
+        {session.contextResearch.checkedAt && (
+          <p className="text-xs text-muted-foreground">
+            Ricerca contestuale controllata il{" "}
+            {formatDate(session.contextResearch.checkedAt)}.
+          </p>
+        )}
       </section>
 
       <section
