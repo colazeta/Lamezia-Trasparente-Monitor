@@ -18,6 +18,7 @@
     "opendata:refresh:lamezia": "node scripts/refresh-lamezia-opendata-series.mjs",
     "opendata:status:lamezia": "node scripts/build-lamezia-opendata-series-status.mjs",
     "smoke:v0-static-fallback": "pnpm --filter @workspace/lamezia-trasparente run build && node scripts/check-v0-static-fallback.mjs",
+    "smoke:public-auth-bootstrap": "node scripts/check-public-auth-bootstrap.mjs",
     "smoke:public-contracts": "node scripts/check-public-contracts-page.mjs",
     "hook:pr-guard": "node scripts/hooks/pr-guard.mjs",
     "hook:source-metadata": "node scripts/hooks/source-metadata-check.mjs",
