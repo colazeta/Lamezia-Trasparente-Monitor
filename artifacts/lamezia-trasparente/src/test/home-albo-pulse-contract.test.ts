@@ -29,4 +29,13 @@ describe("home daily civic pulse contract", () => {
     expect(home).toContain("Prossimo controllo");
     expect(home).toContain("baseline pubblica precedente");
   });
+
+  it("gives council and commissions a clear sourced path from the homepage", () => {
+    const home = readHome();
+
+    expect(home).toContain('title: "Consiglio e Commissioni"');
+    expect(home).toContain('href: "/convocazioni"');
+    expect(home).toContain("<HomeInstitutionalSessions />");
+    expect(home).toContain("Copertura iniziale");
+  });
 });
