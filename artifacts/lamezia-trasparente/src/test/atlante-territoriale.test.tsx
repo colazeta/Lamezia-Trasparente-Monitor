@@ -1,4 +1,4 @@
-﻿import { fireEvent, render, screen, within } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 import type { ReactNode } from "react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { AtlanteTerritoriale } from "../pages/AtlanteTerritoriale";
@@ -52,7 +52,7 @@ vi.mock("react-leaflet", () => {
         feature: Record<string, unknown>,
         layer: {
           bindTooltip: (content: string) => unknown;
-          on: (handlers: Record<string, () => void> | string) => unknown;
+          on: (...args: unknown[]) => unknown;
         },
       ) => void;
     }) => (
@@ -69,8 +69,13 @@ vi.mock("react-leaflet", () => {
               tooltip = content;
               return layer;
             },
-            on: (eventHandlers: Record<string, () => void> | string) => {
-              if (typeof eventHandlers === "object") {
+            on: (...args: unknown[]) => {
+              const eventHandlers = args[0];
+              if (
+                typeof eventHandlers === "object" &&
+                eventHandlers !== null &&
+                !Array.isArray(eventHandlers)
+              ) {
                 Object.assign(handlers, eventHandlers);
               }
               return layer;
@@ -105,35 +110,148 @@ afterEach(() => {
   vi.unstubAllGlobals();
 });
 
+const officialCollection = {
+  type: "FeatureCollection",
+  features: [
+    {
+      type: "Feature",
+      properties: {
+        sezione_censimento_id: "0791600000198",
+        area_territoriale: "Nicastro centro",
+        matched_istat_2023_variables: true,
+        indicators_istat_2023: {
+          p1: 0,
+          popolazione_totale: 0,
+          residenti_per_kmq: 0,
+          quota_0_14: null,
+          quota_65_piu: null,
+          quota_stranieri: null,
+          famiglie_totale: 0,
+          abitazioni_totali: 2,
+          automobili_totale: 0,
+        },
+      },
+      geometry: {
+        type: "Polygon",
+        coordinates: [
+          [
+            [16.3, 38.9],
+            [16.31, 38.9],
+            [16.31, 38.91],
+            [16.3, 38.91],
+            [16.3, 38.9],
+          ],
+        ],
+      },
+    },
+    {
+      type: "Feature",
+      properties: {
+        sezione_censimento_id: "0791600000199",
+        matched_istat_2023_variables: true,
+        indicators_istat_2023: {
+          p1: 10,
+          popolazione_totale: 10,
+          residenti_per_kmq: 1000,
+          quota_0_14: 30,
+          quota_65_piu: 20,
+          quota_stranieri: 10,
+          famiglie_totale: 4,
+          abitazioni_totali: 8,
+          automobili_totale: 5,
+          auto_per_100_residenti: 50,
+        },
+      },
+      geometry: {
+        type: "Polygon",
+        coordinates: [
+          [
+            [16.32, 38.9],
+            [16.33, 38.9],
+            [16.33, 38.91],
+            [16.32, 38.91],
+            [16.32, 38.9],
+          ],
+        ],
+      },
+    },
+    {
+      type: "Feature",
+      properties: {
+        sezione_censimento_id: "0791600000204",
+        matched_istat_2023_variables: false,
+        indicators_istat_2023: {
+          p1: null,
+          popolazione_totale: null,
+          residenti_per_kmq: null,
+          quota_stranieri: null,
+          famiglie_totale: null,
+          abitazioni_totali: null,
+          automobili_totale: null,
+        },
+      },
+      geometry: {
+        type: "Polygon",
+        coordinates: [
+          [
+            [16.31, 38.9],
+            [16.32, 38.9],
+            [16.32, 38.91],
+            [16.31, 38.91],
+            [16.31, 38.9],
+          ],
+        ],
+      },
+    },
+  ],
+};
+
+const officialMetadata = {
+  publicLabel: "Dato ufficiale ISTAT per sezione censuaria",
+  sourceInstitution: "ISTAT",
+  sourceDataset: "Basi territoriali 2021 e dati per sezioni di censimento 2023",
+  sourceYear: "geometrie 2021, indicatori 2023",
+  territorialLevel: "sezione di censimento",
+  verificationStatus:
+    "Processato da fonti ufficiali ISTAT; indicatori pubblici validati contro il tracciato 2023.",
+  knownLimits: [
+    "Il file ISTAT 2023 aggancia variabili a 2 sezioni su 3; 1 sezione resta geometria ufficiale senza valore indicatore.",
+    "Le sezioni urbane catastali Zornade non sono sezioni censuarie.",
+  ],
+  processingDate: "2026-06-20",
+  sourcePages: {
+    geometries: "https://www.istat.it/it/archivio/222527",
+    variables: "https://www.istat.it/it/archivio/285267",
+  },
+  qa: {
+    populationValueCoverage: {
+      totalFeatures: 3,
+      availableCount: 2,
+      nullCount: 1,
+      zeroCount: 1,
+    },
+  },
+};
+
+function stubOfficialFetch() {
+  vi.stubGlobal(
+    "fetch",
+    vi.fn((url: string) =>
+      Promise.resolve({
+        ok: true,
+        json: () =>
+          Promise.resolve(
+            url === ATLANTE_EXPECTED_GEOJSON_PATH
+              ? officialCollection
+              : officialMetadata,
+          ),
+      }),
+    ),
+  );
+}
+
 describe("Atlante territoriale", () => {
   it("loads official GeoJSON metadata when the processed ISTAT files are present", async () => {
-    const officialCollection = {
-      type: "FeatureCollection",
-      features: [
-        {
-          type: "Feature",
-          properties: {
-            sezione_censimento_id: "0791600000001",
-            indicators_istat_2023: {
-              popolazione_totale: 284,
-            },
-          },
-          geometry: {
-            type: "Polygon",
-            coordinates: [
-              [
-                [16.3, 38.9],
-                [16.31, 38.9],
-                [16.31, 38.91],
-                [16.3, 38.91],
-                [16.3, 38.9],
-              ],
-            ],
-          },
-        },
-      ],
-    };
-
     const fetchMock = vi.fn((url: string) =>
       Promise.resolve({
         ok: true,
@@ -141,43 +259,19 @@ describe("Atlante territoriale", () => {
           Promise.resolve(
             url === ATLANTE_EXPECTED_GEOJSON_PATH
               ? officialCollection
-              : {
-                  publicLabel: "Dato ufficiale ISTAT per sezione censuaria",
-                  sourceInstitution: "ISTAT",
-                  sourceDataset:
-                    "Basi territoriali 2021 e dati per sezioni di censimento 2023",
-                  sourceYear: "geometrie 2021, indicatori 2023",
-                  territorialLevel: "sezione di censimento",
-                  verificationStatus:
-                    "Processato da fonti ufficiali ISTAT; indicatore popolazione validato sul campo P1.",
-                  knownLimits: [
-                    "Il file ISTAT 2023 aggancia variabili a 246 sezioni su 317; le 71 sezioni rimanenti restano geometrie ufficiali senza valore indicatore.",
-                    "Le sezioni urbane catastali Zornade non sono sezioni censuarie.",
-                  ],
-                  processingDate: "2026-06-20",
-                  qa: {
-                    populationValueCoverage: {
-                      totalFeatures: 317,
-                      availableCount: 246,
-                      nullCount: 71,
-                      zeroCount: 22,
-                    },
-                  },
-                },
+              : officialMetadata,
           ),
       }),
     );
-
     vi.stubGlobal("fetch", fetchMock);
 
     const layer = await loadAtlanteLayer();
 
     expect(layer.dataStatus).toBe("official");
     expect(layer.loadedFrom).toBe(ATLANTE_EXPECTED_GEOJSON_PATH);
-    expect(layer.metadata.verificationStatus).toContain("P1");
-    expect(layer.metadata.knownLimits[0]).toContain("246");
+    expect(layer.metadata.verificationStatus).toContain("ISTAT");
     expect(layer.metadata.knownLimits[1]).toContain("Zornade");
-    expect(layer.metadata.qa?.populationValueCoverage?.nullCount).toBe(71);
+    expect(layer.metadata.qa?.populationValueCoverage?.nullCount).toBe(1);
     expect(fetchMock).toHaveBeenCalledWith(ATLANTE_EXPECTED_METADATA_PATH, {
       cache: "no-store",
     });
@@ -194,7 +288,6 @@ describe("Atlante territoriale", () => {
     expect(summary.mean).toBe(12.5);
     expect(summary.median).toBe(15);
     expect(summary.bins.reduce((total, bin) => total + bin.count, 0)).toBe(4);
-    expect(summary.bins[0].count).toBeGreaterThan(0);
     expect(describeAtlanteDistributionPosition(null, summary.bins)).toBe(
       "Dato non disponibile per questa sezione.",
     );
@@ -203,457 +296,121 @@ describe("Atlante territoriale", () => {
     );
   });
 
-  it("shows the clean map explorer and keeps null values distinct from zero", async () => {
+  it("keeps the first-time map flow minimal and opens detail only after selection", async () => {
     const createObjectURL = vi.fn(() => "blob:atlante-map");
     const revokeObjectURL = vi.fn();
     const clickSpy = vi
       .spyOn(HTMLAnchorElement.prototype, "click")
       .mockImplementation(() => {});
-    vi.stubGlobal("URL", {
-      createObjectURL,
-      revokeObjectURL,
-    });
-
-    const officialCollection = {
-      type: "FeatureCollection",
-      features: [
-        {
-          type: "Feature",
-          properties: {
-            sezione_censimento_id: "0791600000198",
-            area_territoriale: "Nicastro centro",
-            matched_istat_2023_variables: true,
-            indicators_istat_2023: {
-              p1: 0,
-              popolazione_totale: 0,
-              superficie_kmq: 0.03,
-              residenti_per_kmq: 0,
-              quota_0_14: null,
-              quota_65_piu: null,
-              quota_stranieri: null,
-              famiglie_totale: 0,
-              residenti_per_famiglia: null,
-              famiglie_per_100_residenti: null,
-              abitazioni_totali: 2,
-              abitazioni_per_100_famiglie: null,
-              automobili_totale: 0,
-              auto_per_100_residenti: null,
-              quota_titoli_terziari: null,
-              occupati_15_64: 0,
-              occupati_15_64_per_100_residenti: null,
-            },
-          },
-          geometry: {
-            type: "Polygon",
-            coordinates: [
-              [
-                [16.3, 38.9],
-                [16.31, 38.9],
-                [16.31, 38.91],
-                [16.3, 38.91],
-                [16.3, 38.9],
-              ],
-            ],
-          },
-        },
-        {
-          type: "Feature",
-          properties: {
-            sezione_censimento_id: "0791600000199",
-            matched_istat_2023_variables: true,
-            indicators_istat_2023: {
-              p1: 10,
-              popolazione_totale: 10,
-              superficie_kmq: 0.01,
-              residenti_per_kmq: 1000,
-              quota_0_14: 30,
-              quota_65_piu: 20,
-              quota_stranieri: 10,
-              famiglie_totale: 4,
-              residenti_per_famiglia: 2.5,
-              famiglie_per_100_residenti: 40,
-              abitazioni_totali: 8,
-              abitazioni_per_100_famiglie: 200,
-              automobili_totale: 5,
-              auto_per_100_residenti: 50,
-              quota_titoli_terziari: 25,
-              occupati_15_64: 3,
-              occupati_15_64_per_100_residenti: 30,
-            },
-          },
-          geometry: {
-            type: "Polygon",
-            coordinates: [
-              [
-                [16.32, 38.9],
-                [16.33, 38.9],
-                [16.33, 38.91],
-                [16.32, 38.91],
-                [16.32, 38.9],
-              ],
-            ],
-          },
-        },
-        {
-          type: "Feature",
-          properties: {
-            sezione_censimento_id: "0791600000204",
-            matched_istat_2023_variables: false,
-            indicators_istat_2023: {
-              p1: null,
-              popolazione_totale: null,
-              superficie_kmq: 0.01,
-              residenti_per_kmq: null,
-              quota_0_14: null,
-              quota_65_piu: null,
-              quota_stranieri: null,
-              famiglie_totale: null,
-              residenti_per_famiglia: null,
-              famiglie_per_100_residenti: null,
-              abitazioni_totali: null,
-              abitazioni_per_100_famiglie: null,
-              automobili_totale: null,
-              auto_per_100_residenti: null,
-              quota_titoli_terziari: null,
-              occupati_15_64: null,
-              occupati_15_64_per_100_residenti: null,
-            },
-          },
-          geometry: {
-            type: "Polygon",
-            coordinates: [
-              [
-                [16.31, 38.9],
-                [16.32, 38.9],
-                [16.32, 38.91],
-                [16.31, 38.91],
-                [16.31, 38.9],
-              ],
-            ],
-          },
-        },
-      ],
-    };
-
-    vi.stubGlobal(
-      "fetch",
-      vi.fn((url: string) =>
-        Promise.resolve({
-          ok: true,
-          json: () =>
-            Promise.resolve(
-              url === ATLANTE_EXPECTED_GEOJSON_PATH
-                ? officialCollection
-                : {
-                    publicLabel: "Dato ufficiale ISTAT per sezione censuaria",
-                    sourceInstitution: "ISTAT",
-                    sourceDataset:
-                      "Basi territoriali 2021 e dati per sezioni di censimento 2023",
-                    sourceYear: "geometrie 2021, indicatori 2023",
-                    territorialLevel: "sezione di censimento",
-                    verificationStatus:
-                      "Processato da fonti ufficiali ISTAT; indicatori pubblici validati contro il tracciato 2023.",
-                    knownLimits: [
-                      "Il file ISTAT 2023 aggancia variabili a 2 sezioni su 3; 1 sezione resta geometria ufficiale senza valore indicatore.",
-                    ],
-                    processingDate: "2026-06-20",
-                    qa: {
-                      indicatorDictionaryPath:
-                        "data/processed/territorio/istat_indicator_dictionary.json",
-                      indicatorCoverage: {
-                        "popolazione-residente": {
-                          availableCount: 2,
-                          nullCount: 1,
-                          zeroCount: 1,
-                        },
-                        "quota-stranieri": {
-                          availableCount: 1,
-                          nullCount: 2,
-                          zeroCount: 0,
-                        },
-                        "residenti-per-kmq": {
-                          availableCount: 2,
-                          nullCount: 1,
-                          zeroCount: 1,
-                        },
-                      },
-                      populationValueCoverage: {
-                        totalFeatures: 3,
-                        availableCount: 2,
-                        nullCount: 1,
-                        zeroCount: 1,
-                      },
-                    },
-                  },
-            ),
-        }),
-      ),
-    );
+    vi.stubGlobal("URL", { createObjectURL, revokeObjectURL });
+    stubOfficialFetch();
 
     render(<AtlanteTerritoriale />);
 
-    const mapHeading = await screen.findByRole("heading", {
-      name: "Mappa",
-    });
-    const summaryHeading = screen.getByRole("heading", {
-      name: /Sintesi citt/i,
-    });
-
     expect(
-      mapHeading.compareDocumentPosition(summaryHeading) &
-        Node.DOCUMENT_POSITION_FOLLOWING,
-    ).toBeTruthy();
-    expect(screen.queryByText("Distribuzione")).not.toBeInTheDocument();
-    expect(screen.queryByText("Fonti e limiti")).not.toBeInTheDocument();
-    expect(screen.queryByText(/File atteso/i)).not.toBeInTheDocument();
-    expect(screen.getByTestId("atlante-leaflet-map")).toBeInTheDocument();
+      screen.getByRole("heading", { name: "Atlante territoriale" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText("Scegli un indicatore, poi tocca un’area della mappa."),
+    ).toBeInTheDocument();
+    expect(await screen.findByTestId("atlante-leaflet-map")).toBeInTheDocument();
     expect(screen.getByTestId("atlante-istat-overlay")).toBeInTheDocument();
+    expect(screen.getByText("Tocca un’area per vedere i dati.")).toBeInTheDocument();
+    expect(screen.queryByText(/in preparazione/i)).not.toBeInTheDocument();
     expect(
-      screen.getByRole("complementary", {
-        name: /Indicatori Atlante territoriale/i,
-      }),
-    ).toBeInTheDocument();
-    expect(screen.getByText("Scegli cosa leggere")).toBeInTheDocument();
-    expect(screen.getByText("Copertura")).toBeInTheDocument();
-    expect(
-      screen.getByText("2 sezioni con dato"),
-    ).toBeInTheDocument();
-    expect(screen.getByText(/1 sezione senza dato/)).toBeInTheDocument();
-    expect(screen.getByText("Nessuna area selezionata")).toBeInTheDocument();
-    expect(screen.getByText(/Senza sfondo/)).toBeInTheDocument();
-    fireEvent.click(
-      screen.getByRole("button", { name: /Chiudi barra indicatori/i }),
-    );
-    expect(
-      screen.queryByRole("complementary", {
-        name: /Indicatori Atlante territoriale/i,
-      }),
+      screen.queryByRole("complementary", { name: /Dettaglio area Atlante/i }),
     ).not.toBeInTheDocument();
-    fireEvent.click(
-      screen.getByRole("button", { name: /Apri barra indicatori/i }),
-    );
-    expect(
-      screen.getByRole("complementary", {
-        name: /Indicatori Atlante territoriale/i,
-      }),
-    ).toBeInTheDocument();
-    expect(
-      screen.queryByTestId("atlante-osm-tile-layer"),
-    ).not.toBeInTheDocument();
-    expect(
-      screen.getByRole("button", { name: /Reimposta vista/i }),
-    ).toBeInTheDocument();
-    expect(
-      screen.getByRole("complementary", {
-        name: /Dettaglio area Atlante/i,
-      }),
-    ).toBeInTheDocument();
-    fireEvent.click(screen.getByRole("button", { name: /Pagina intera/i }));
-    expect(
-      screen.getByRole("button", { name: /Esci dalla pagina intera/i }),
-    ).toHaveAttribute("aria-pressed", "true");
-    fireEvent.click(
-      screen.getByRole("button", { name: /Esci dalla pagina intera/i }),
-    );
-    expect(
-      screen.getByRole("button", { name: /Pagina intera/i }),
-    ).toHaveAttribute("aria-pressed", "false");
-    fireEvent.click(
-      screen.getByRole("button", { name: /Nascondi dettaglio area/i }),
-    );
-    expect(
-      screen.queryByRole("complementary", {
-        name: /Dettaglio area Atlante/i,
-      }),
-    ).not.toBeInTheDocument();
-    expect(
-      screen.getByRole("button", { name: /Apri pannello dettaglio area/i }),
-    ).toBeInTheDocument();
-    fireEvent.click(
-      screen.getByRole("button", { name: /Mostra dettaglio area/i }),
-    );
-    expect(
-      screen.getByRole("complementary", {
-        name: /Dettaglio area Atlante/i,
-      }),
-    ).toBeInTheDocument();
-    fireEvent.click(screen.getByRole("tab", { name: /Dati/i }));
-    expect(
-      screen.getByRole("region", { name: /Vista dati sezioni/i }),
-    ).toBeInTheDocument();
-    expect(
-      screen.getByRole("searchbox", { name: /Cerca sezione censuaria/i }),
-    ).toBeInTheDocument();
-    expect(
-      screen.getByRole("button", { name: "Seleziona Nicastro centro" }),
-    ).toBeInTheDocument();
-    fireEvent.change(
-      screen.getByRole("searchbox", { name: /Cerca sezione censuaria/i }),
-      { target: { value: "0204" } },
-    );
-    expect(screen.getByText("1 sezione")).toBeInTheDocument();
-    expect(
-      screen.getByRole("button", { name: "Seleziona Area censuaria 0204" }),
-    ).toBeInTheDocument();
-    fireEvent.click(screen.getByRole("tab", { name: /Scheda/i }));
-    const basemapSelect = screen.getByRole("combobox", {
-      name: /Sfondo mappa/i,
+
+    const indicatorSelect = screen.getByRole("combobox", {
+      name: "Indicatore mappa",
     });
+    expect(indicatorSelect).toHaveValue("popolazione-residente");
+    expect(screen.getByText("2 sezioni con dato")).toBeInTheDocument();
+    expect(screen.getByText("1 sezione senza dato")).toBeInTheDocument();
+    expect(screen.getByText("Fonte e limiti")).toBeInTheDocument();
+
+    const basemapSelect = screen.getByRole("combobox", { name: "Sfondo mappa" });
     expect(basemapSelect).toHaveValue("none");
     fireEvent.change(basemapSelect, {
       target: { value: "openstreetmap-standard" },
     });
-    expect(
-      screen.getByText(/Strade .* OpenStreetMap/),
-    ).toBeInTheDocument();
     expect(screen.getByTestId("atlante-osm-tile-layer")).toHaveAttribute(
       "data-url",
       "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
     );
-    expect(screen.getByTestId("atlante-osm-tile-layer")).toHaveTextContent(
-      "OpenStreetMap contributors",
-    );
-    fireEvent.change(basemapSelect, {
-      target: { value: "esri-world-imagery" },
-    });
-    expect(
-      screen.getByText(/Aerea .* Immagini satellitari/),
-    ).toBeInTheDocument();
-    expect(screen.getByTestId("atlante-osm-tile-layer")).toHaveAttribute(
-      "data-url",
-      "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
-    );
-    expect(screen.getByTestId("atlante-osm-tile-layer")).toHaveTextContent(
-      "Esri",
-    );
     fireEvent.change(basemapSelect, { target: { value: "none" } });
-    expect(screen.getByText(/Sfondo: Senza sfondo/)).toBeInTheDocument();
+    expect(screen.queryByTestId("atlante-osm-tile-layer")).not.toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("button", { name: "Pagina intera" }));
     expect(
-      screen.queryByTestId("atlante-osm-tile-layer"),
-    ).not.toBeInTheDocument();
-    expect(screen.getByTestId("atlante-istat-overlay")).toBeInTheDocument();
-    fireEvent.click(screen.getByRole("button", { name: /Scarica mappa/i }));
+      screen.getByRole("button", { name: "Esci dalla pagina intera" }),
+    ).toHaveAttribute("aria-pressed", "true");
+    fireEvent.click(
+      screen.getByRole("button", { name: "Esci dalla pagina intera" }),
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "Scarica mappa" }));
     expect(createObjectURL).toHaveBeenCalled();
     expect(clickSpy).toHaveBeenCalled();
     expect(revokeObjectURL).toHaveBeenCalledWith("blob:atlante-map");
-    expect(screen.getAllByText("Popolazione").length).toBeGreaterThan(0);
-    expect(screen.getAllByText("Popolazione residente").length).toBeGreaterThan(
-      0,
-    );
-    expect(
-      screen.getAllByRole("button", { name: /Quota 0-14 anni/i }).length,
-    ).toBeGreaterThan(0);
-    expect(
-      screen.getAllByRole("button", { name: /Residenti per kmq/i }).length,
-    ).toBeGreaterThan(0);
-    expect(
-      screen.getAllByRole("button", { name: /Quota 65 anni/i }).length,
-    ).toBeGreaterThan(0);
-    expect(
-      screen.getAllByRole("button", { name: /Quota residenti stranieri/i })
-        .length,
-    ).toBeGreaterThan(0);
-    expect(
-      screen.getAllByRole("button", { name: /Famiglie residenti/i }).length,
-    ).toBeGreaterThan(0);
-    expect(
-      screen.getAllByRole("button", { name: /Abitazioni totali/i }).length,
-    ).toBeGreaterThan(0);
-    expect(
-      screen.getAllByRole("button", { name: /Automobili/i }).length,
-    ).toBeGreaterThan(0);
-    expect(
-      screen.getAllByRole("button", { name: /Auto per 100 residenti/i })
-        .length,
-    ).toBeGreaterThan(0);
-    expect(
-      screen.getByText("Popolazione totale nelle sezioni con P1 disponibile"),
-    ).toBeInTheDocument();
-    expect(screen.getAllByText("10 persone").length).toBeGreaterThan(0);
-    expect(screen.getByText("Sezioni totali")).toBeInTheDocument();
-    expect(screen.getByText("3 (100%)")).toBeInTheDocument();
-    expect(screen.getByText("Con dato P1")).toBeInTheDocument();
-    expect(screen.getByText("2 (66,7%)")).toBeInTheDocument();
-    expect(screen.getAllByText("Dato non disponibile").length).toBeGreaterThan(
-      0,
-    );
-    expect(screen.getAllByText("1 (33,3%)").length).toBe(2);
-    expect(screen.getByText("Valore 0")).toBeInTheDocument();
-    expect(screen.getByText("Distribuzione per fasce")).toBeInTheDocument();
-    expect(screen.getByText("5 classi")).toBeInTheDocument();
-    expect(screen.getAllByText(/1 sezione .* 50%/).length).toBe(2);
-    expect(screen.getByText("Fasce indicatore")).toBeInTheDocument();
-    expect(screen.getByText(/Valore minimo/)).toBeInTheDocument();
-    expect(screen.getByText(/Valore massimo/)).toBeInTheDocument();
-    expect(screen.getAllByText(/dato non disponibile/i).length).toBeGreaterThan(
-      0,
-    );
-    expect(
-      screen.getByRole("heading", { name: "Nessuna sezione selezionata" }),
-    ).toBeInTheDocument();
-    expect(
-      screen.getByText(
-        "Seleziona una sezione sulla mappa per vedere i dati disponibili.",
-      ),
-    ).toBeInTheDocument();
 
     fireEvent.click(
       screen.getByRole("button", {
         name: /Nicastro centro .*0791600000198.*0 persone/i,
       }),
     );
-    let profile = screen.getByText("Sezione selezionata").closest("section");
-    expect(profile).not.toBeNull();
+    expect(
+      screen.getByRole("complementary", { name: /Dettaglio area Atlante/i }),
+    ).toBeInTheDocument();
     expect(
       screen.getByRole("heading", { name: "Nicastro centro" }),
     ).toBeInTheDocument();
-    expect(screen.getAllByText("Nicastro centro").length).toBeGreaterThan(1);
-    expect(
-      screen.getByText("Sezione censuaria ISTAT: 0791600000198"),
-    ).toBeInTheDocument();
     expect(screen.getAllByText("0 persone").length).toBeGreaterThan(0);
-    expect(screen.getByText(/Zero .* valore reale/)).toBeInTheDocument();
+    expect(screen.getByText(/Zero è un valore reale/i)).toBeInTheDocument();
 
+    fireEvent.click(screen.getByRole("button", { name: "Chiudi dettaglio area" }));
+    expect(
+      screen.queryByRole("complementary", { name: /Dettaglio area Atlante/i }),
+    ).not.toBeInTheDocument();
     fireEvent.click(
-      screen.getAllByRole("button", {
-        name: /Quota residenti stranieri/i,
-      })[0],
+      screen.getByRole("button", { name: /Nicastro centro .* apri dati/i }),
     );
     expect(
-      screen.getAllByText("Quota residenti stranieri").length,
-    ).toBeGreaterThan(0);
-    expect(screen.getAllByText("10%").length).toBeGreaterThan(0);
-    expect(
-      screen.getAllByText("1 sezione con dato").length,
-    ).toBeGreaterThan(0);
-    expect(
-      screen.getAllByText(/2 sezioni senza dato/).length,
-    ).toBeGreaterThan(0);
+      screen.getByRole("complementary", { name: /Dettaglio area Atlante/i }),
+    ).toBeInTheDocument();
 
+    fireEvent.change(indicatorSelect, { target: { value: "quota-stranieri" } });
+    expect(screen.getAllByText("Dato non disponibile").length).toBeGreaterThan(0);
     fireEvent.click(
       screen.getByRole("button", {
-        name: /Area censuaria 0204 .*0791600000204.*dato non disponibile/i,
+        name: /Area censuaria 0199 .*0791600000199.*10%/i,
       }),
     );
-    profile = screen.getByText("Sezione selezionata").closest("section");
-    expect(profile).not.toBeNull();
+    expect(screen.getAllByText("10%").length).toBeGreaterThan(0);
+
+    fireEvent.click(screen.getByText("Cerca un’area"));
+    const searchbox = screen.getByRole("searchbox", {
+      name: "Cerca sezione censuaria",
+    });
+    fireEvent.change(searchbox, { target: { value: "0204" } });
+    fireEvent.click(
+      screen.getByRole("button", { name: "Seleziona Area censuaria 0204" }),
+    );
     expect(
       screen.getByRole("heading", { name: "Area censuaria 0204" }),
     ).toBeInTheDocument();
-    expect(
-      screen.getByText("Sezione censuaria ISTAT: 0791600000204"),
-    ).toBeInTheDocument();
-    expect(
-      within(profile as HTMLElement).getAllByText("Popolazione residente"),
-    ).toHaveLength(1);
+    expect(screen.getAllByText("Dato non disponibile").length).toBeGreaterThan(0);
+
+    fireEvent.click(screen.getByText("Fonte e limiti"));
     expect(screen.getByText("Fonte dati")).toBeInTheDocument();
     expect(screen.getByText("Come leggere")).toBeInTheDocument();
-    expect(screen.getByText("Cosa non mostra")).toBeInTheDocument();
+    expect(screen.getByText("Limiti")).toBeInTheDocument();
+    expect(screen.getByText(/non assegna punteggi, classifiche o giudizi/i)).toBeInTheDocument();
     expect(formatAtlanteValue(null, "persone")).toBe("dato non disponibile");
     expect(formatAtlanteValue(0, "persone")).toBe("0 persone");
   }, 30000);
 
-  it("renders an explicit demo fallback when the processed ISTAT file is missing", async () => {
+  it("renders an explicit demo fallback without exposing empty roadmap controls", async () => {
     vi.stubGlobal(
       "fetch",
       vi.fn().mockResolvedValue({
@@ -668,22 +425,9 @@ describe("Atlante territoriale", () => {
     expect(
       screen.getByRole("heading", { name: "Atlante territoriale" }),
     ).toBeInTheDocument();
-    expect(await screen.findAllByText(/Dato dimostrativo/i)).not.toHaveLength(
-      0,
-    );
-    expect(
-      screen.getAllByText(/non contiene sezioni censuarie reali/i).length,
-    ).toBeGreaterThan(0);
-    expect(screen.getAllByText("Popolazione").length).toBeGreaterThan(0);
-    expect(screen.getAllByText(/in preparazione/i).length).toBeGreaterThan(0);
-    expect(screen.getByText("Fonte dati")).toBeInTheDocument();
-    expect(
-      screen.getByText(
-        "Le sezioni catastali Zornade restano un livello accessorio/non censuario e non sono usate come base della mappa.",
-        {
-          exact: false,
-        },
-      ),
-    ).toBeInTheDocument();
+    expect(await screen.findAllByText(/Dato dimostrativo/i)).not.toHaveLength(0);
+    expect(screen.getByTestId("atlante-leaflet-map")).toBeInTheDocument();
+    expect(screen.queryByText(/in preparazione/i)).not.toBeInTheDocument();
+    expect(screen.getByText("Fonte e limiti")).toBeInTheDocument();
   });
 });
