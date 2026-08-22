@@ -1,4 +1,8 @@
 import { describe, expect, it } from "vitest";
+import airTrafficMetadata from "../data/generated/lameziaAirTrafficMonthly.metadata.json";
+import climateMetadata from "../data/generated/lameziaClimateDaily.metadata.json";
+import demographicData from "../data/generated/lameziaDemographicTrend.json";
+import foreignResidentsData from "../data/generated/lameziaForeignResidentsAgeSex.json";
 import {
   LAMEZIA_OPEN_DATA_SERIES,
   LAMEZIA_OPEN_DATA_SERIES_BY_ID,
@@ -26,23 +30,23 @@ describe("Lamezia Open Data monitored series freshness", () => {
     }
   });
 
-  it("exposes the current source observations without inventing missing dates", () => {
+  it("tracks the materialised source observations without freezing updateable dates", () => {
     expect(
       LAMEZIA_OPEN_DATA_SERIES_BY_ID.get("lamezia-climate-daily")
         ?.latest_observation,
-    ).toBe("2026-08-19");
+    ).toBe(climateMetadata.latest_data_point);
     expect(
       LAMEZIA_OPEN_DATA_SERIES_BY_ID.get("lamezia-air-traffic-monthly")
         ?.latest_observation,
-    ).toBe("2026-06");
+    ).toBe(airTrafficMetadata.latest_data_point);
     expect(
       LAMEZIA_OPEN_DATA_SERIES_BY_ID.get("lamezia-demographic-trend")
         ?.latest_observation,
-    ).toBe("2025");
+    ).toBe(String(demographicData.metadata.latest_year));
     expect(
       LAMEZIA_OPEN_DATA_SERIES_BY_ID.get("lamezia-foreign-residents-age-sex")
         ?.latest_observation,
-    ).toBe("2025");
+    ).toBe(String(foreignResidentsData.metadata.latest_year));
 
     const families = LAMEZIA_OPEN_DATA_SERIES_BY_ID.get(
       "lamezia-families-children",
