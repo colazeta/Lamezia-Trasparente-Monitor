@@ -35,8 +35,9 @@ describe("Open Data discovery surface", () => {
 
     expect(screen.getByText("5 serie monitorate")).toBeInTheDocument();
     expect(screen.getByText(/fonti controllate ogni giorno/i)).toBeInTheDocument();
-    expect(screen.getByText("Aggiornamento e fonti")).toBeInTheDocument();
-    expect(screen.queryByText("19 ago 2026")).not.toBeInTheDocument();
+    const disclosure = screen.getByText("Aggiornamento e fonti").closest("details");
+    expect(disclosure).not.toBeNull();
+    expect(disclosure).not.toHaveAttribute("open");
   });
 
   it("reveals source freshness only when requested", () => {
@@ -52,6 +53,7 @@ describe("Open Data discovery surface", () => {
 
     const details = summary.closest("details");
     expect(details).not.toBeNull();
+    expect(details).toHaveAttribute("open");
     const scope = within(details as HTMLElement);
 
     expect(scope.getByText("19 ago 2026")).toBeInTheDocument();
