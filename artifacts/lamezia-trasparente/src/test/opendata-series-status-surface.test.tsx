@@ -1,10 +1,10 @@
-import { render, screen, within } from "@testing-library/react";
+import { fireEvent, render, screen, within } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 
 import { OpenDataThemeLibrary } from "@/components/opendata/OpenDataThemeLibrary";
 
-describe("Open Data freshness surface", () => {
-  it("shows source freshness before thematic browsing", () => {
+describe("Open Data discovery surface", () => {
+  it("starts with the available themes and keeps freshness secondary", () => {
     render(
       <OpenDataThemeLibrary
         onSelectTheme={vi.fn()}
@@ -12,32 +12,34 @@ describe("Open Data freshness surface", () => {
       />,
     );
 
-    const statusHeading = screen.getByRole("heading", {
-      name: "Dati disponibili e aggiornamento",
-    });
-    const statusSection = statusHeading.closest("section");
-
-    expect(statusSection).not.toBeNull();
-    const statusScope = within(statusSection as HTMLElement);
-
-    expect(statusHeading).toBeInTheDocument();
-    expect(statusScope.getByText("5 serie")).toBeInTheDocument();
     expect(
-      statusScope.getByText("Controllo automatico giornaliero"),
+      screen.getByRole("heading", { name: "Esplora i dati" }),
     ).toBeInTheDocument();
-    expect(statusScope.getAllByText("Aggiornamento automatico")).toHaveLength(5);
     expect(
-      statusScope.getAllByRole("link", { name: "Apri serie" }),
-    ).toHaveLength(5);
-    expect(statusScope.getByText("19 ago 2026")).toBeInTheDocument();
-    expect(statusScope.getByText("giu 2026")).toBeInTheDocument();
-    expect(statusScope.getByText("Risorsa corrente")).toBeInTheDocument();
+      screen.getByRole("button", { name: /tutti i dataset: 5 dataset/i }),
+    ).toHaveAttribute("aria-pressed", "true");
     expect(
-      statusScope.getByText(/non espone un anno di riferimento/i),
+      screen.getByRole("button", { name: /popolazione e societa: 3 dataset/i }),
     ).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: /clima e territorio: 1 dataset/i }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: /mobilita e collegamenti: 1 dataset/i }),
+    ).toBeInTheDocument();
+
+    expect(screen.queryByRole("button", { name: /contratti/i })).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: /atti/i })).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: /patrimonio/i })).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: /accesso/i })).not.toBeInTheDocument();
+
+    expect(screen.getByText("5 serie monitorate")).toBeInTheDocument();
+    expect(screen.getByText(/fonti controllate ogni giorno/i)).toBeInTheDocument();
+    expect(screen.getByText("Aggiornamento e fonti")).toBeInTheDocument();
+    expect(screen.queryByText("19 ago 2026")).not.toBeInTheDocument();
   });
 
-  it("keeps category exploration directly below freshness status", () => {
+  it("reveals source freshness only when requested", () => {
     render(
       <OpenDataThemeLibrary
         onSelectTheme={vi.fn()}
@@ -45,11 +47,17 @@ describe("Open Data freshness surface", () => {
       />,
     );
 
-    expect(
-      screen.getByRole("heading", { name: "Esplora per categoria" }),
-    ).toBeInTheDocument();
-    expect(
-      screen.getByRole("button", { name: /tutti i dataset/i }),
-    ).toHaveAttribute("aria-pressed", "true");
+    const summary = screen.getByText("Aggiornamento e fonti");
+    fireEvent.click(summary);
+
+    const details = summary.closest("details");
+    expect(details).not.toBeNull();
+    const scope = within(details as HTMLElement);
+
+    expect(scope.getByText("19 ago 2026")).toBeInTheDocument();
+    expect(scope.getByText("giu 2026")).toBeInTheDocument();
+    expect(scope.getByText("Risorsa corrente")).toBeInTheDocument();
+    expect(scope.getAllByRole("link", { name: "Fonte ufficiale" })).toHaveLength(5);
+    expect(scope.getByText(/non un dato in tempo reale/i)).toBeInTheDocument();
   });
 });
