@@ -247,9 +247,16 @@ describe("councilSessionV0", () => {
     );
     expect(
       council?.contextResearch.articles.map((article) => article.relationship),
-    ).toEqual(["possible_same_session", "possible_same_session"]);
+    ).toEqual([
+      "possible_same_session",
+      "possible_same_session",
+      "possible_same_session",
+    ]);
     expect(council?.contextResearch.searchNote).toMatch(
       /impedisce di stabilire.*stessa seduta/i,
+    );
+    expect(council?.contextResearch.searchNote).toMatch(
+      /video.*senza.*pagina stabile/i,
     );
   });
 
@@ -279,7 +286,7 @@ describe("councilSessionV0", () => {
         ),
       ).toBe(true);
       expect(session.contextResearch.searchNote).toMatch(
-        /non ha restituito articoli.*sedute della II Commissione/i,
+        /non ha restituito contenuti.*sedute della II Commissione/i,
       );
     }
   });

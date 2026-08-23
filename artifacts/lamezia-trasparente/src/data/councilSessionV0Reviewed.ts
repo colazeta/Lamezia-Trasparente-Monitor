@@ -16,14 +16,25 @@ const COMMISSION_NOTICE_URL =
 const COMMISSION_ARCHIVED_DOCUMENT_URL =
   "/data/public/albo/documents/2026/842702b2044b4b6f9a7b21a65eac2ab59866ee3f321872e6b28fd481598be304.pdf";
 const SOURCE_REVIEWED_AT = "2026-08-22T12:10:49Z";
-const CONTEXT_RESEARCHED_AT = "2026-08-22T15:42:23Z";
+const CONTEXT_RESEARCHED_AT = "2026-08-23T10:48:08Z";
 
 const councilContextResearch: CouncilSessionV0ContextResearch = {
   status: "reviewed_matches",
   checkedAt: CONTEXT_RESEARCHED_AT,
   searchNote:
-    "Due resoconti giornalistici del 13 agosto sono compatibili con l'avviso, ma l'assenza dell'allegato ufficiale impedisce di stabilire che descrivano la stessa seduta.",
+    "Tre articoli sono compatibili con l'avviso, ma l'assenza dell'allegato ufficiale impedisce di stabilire che descrivano la stessa seduta. City One indicizza inoltre un video del Consiglio del 13 agosto nella homepage, senza esporre una pagina stabile verificabile: per questo non è pubblicato come collegamento audiovisivo.",
   articles: [
+    {
+      title:
+        "Convocato Consiglio Comunale di Lamezia Terme in prossimità del ferragosto",
+      url: "https://www.cityonelamezia.it/convocato-consiglio-comunale-di-lamezia-terme-in-prossimita-del-ferragosto/",
+      publisher: "City One",
+      publishedAt: "2026-08-10",
+      relationship: "possible_same_session",
+      relevanceNote:
+        "Riporta Consiglio comunale, prima convocazione del 13 agosto, seconda convocazione del 14 agosto e 33 punti in agenda. I dettagli sono compatibili con l'avviso Albo 2026/2673, ma restano dati editoriali e non completano i campi ufficiali mancanti.",
+      reviewedAt: CONTEXT_RESEARCHED_AT,
+    },
     {
       title:
         "Consiglio comunale prima di Ferragosto con soliti stilemi politici e qualche fuoriprogramma estivo",
@@ -53,7 +64,7 @@ const commissionContextResearch: CouncilSessionV0ContextResearch = {
   status: "reviewed_matches",
   checkedAt: CONTEXT_RESEARCHED_AT,
   searchNote:
-    "La ricerca per organo, date e temi non ha restituito articoli che nominino con sufficiente precisione le sedute della II Commissione del 10 o 11 agosto; i collegamenti riportati riguardano soltanto i temi in agenda.",
+    "La ricerca di articoli, dirette e video per organo, date e temi non ha restituito contenuti che nominino con sufficiente precisione le sedute della II Commissione del 10 o 11 agosto; i collegamenti riportati riguardano soltanto i temi in agenda.",
   articles: [
     {
       title:

@@ -29,7 +29,7 @@ describe("CouncilSessionV0Card", () => {
       screen.getByText(/data, ora e ordine del giorno restano da verificare/i),
     ).toBeInTheDocument();
     expect(
-      screen.getByText("2 articoli contestuali revisionati"),
+      screen.getByText("3 articoli contestuali revisionati"),
     ).toBeInTheDocument();
     expect(
       screen.getByRole("link", { name: /Fonte ufficiale/i }),
@@ -99,7 +99,12 @@ describe("CouncilSessionV0Card", () => {
 
     render(<CouncilSessionV0Detail session={session} />);
 
-    expect(screen.getAllByText("Possibile corrispondenza")).toHaveLength(2);
+    expect(screen.getAllByText("Possibile corrispondenza")).toHaveLength(3);
+    expect(
+      screen.getByRole("link", {
+        name: /Convocato Consiglio Comunale di Lamezia Terme/i,
+      }),
+    ).toHaveAttribute("href", expect.stringContaining("cityonelamezia.it"));
     expect(
       screen.getByRole("link", {
         name: /Consiglio comunale prima di Ferragosto/i,
@@ -120,7 +125,7 @@ describe("CouncilSessionV0Card", () => {
         media: [
           {
             title: "Consiglio Comunale 13 Agosto 2026",
-            url: "https://www.cityonelamezia.it/",
+            url: "https://example.test/city-one-consiglio-2026-08-13",
             publisher: "City One",
             publishedAt: "2026-08-13",
             relationship: "possible_same_session" as const,
@@ -148,6 +153,9 @@ describe("CouncilSessionV0Card", () => {
       screen.getByRole("link", {
         name: /Consiglio Comunale 13 Agosto 2026/i,
       }),
-    ).toHaveAttribute("href", "https://www.cityonelamezia.it/");
+    ).toHaveAttribute(
+      "href",
+      "https://example.test/city-one-consiglio-2026-08-13",
+    );
   });
 });

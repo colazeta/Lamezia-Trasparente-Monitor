@@ -22,12 +22,15 @@ describe("HomeInstitutionalSessions", () => {
     expect(screen.getByText("Data e ora da verificare")).toBeInTheDocument();
     expect(screen.getByText(/11 agosto 2026/i)).toBeInTheDocument();
     expect(screen.getByText(/10 agosto 2026/i)).toBeInTheDocument();
-    expect(screen.getAllByText(/stato della seduta non verificato/i)).toHaveLength(
-      3,
-    );
-    expect(screen.getAllByText(/2 articoli/)).toHaveLength(3);
-    expect(screen.getByText(/possibili corrispondenze/i)).toBeInTheDocument();
-    expect(screen.getAllByText(/sui temi in agenda/i)).toHaveLength(2);
+    expect(
+      screen.getAllByText(/stato della seduta non verificato/i),
+    ).toHaveLength(3);
+    expect(
+      screen.getByText(/3 articoli · possibili corrispondenze/i),
+    ).toBeInTheDocument();
+    expect(
+      screen.getAllByText(/2 articoli · sui temi in agenda/i),
+    ).toHaveLength(2);
     expect(
       screen.getByText(/non prova che la seduta si sia svolta/i),
     ).toBeInTheDocument();
@@ -36,7 +39,9 @@ describe("HomeInstitutionalSessions", () => {
   it("links each source-reviewed occurrence to its public session sheet", () => {
     render(<HomeInstitutionalSessions />);
 
-    expect(screen.getByText("Data e ora da verificare").closest("a")).toHaveAttribute(
+    expect(
+      screen.getByText("Data e ora da verificare").closest("a"),
+    ).toHaveAttribute(
       "href",
       "/convocazioni/albo-2026-2673-consiglio-comunale",
     );
