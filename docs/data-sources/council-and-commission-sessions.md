@@ -90,7 +90,7 @@ I contenuti audiovisivi hanno inoltre un tipo dichiarato:
 | `excerpt`        | Estratto o clip della seduta                       |
 | `interview`      | Intervista collegata alla seduta o a un suo punto  |
 
-Lo stato del collegamento è registrato come `scheduled`, `live`, `replay_available` o `unavailable` al momento del controllo. Una diretta o registrazione di City One, LameziaInforma, LameziaTermeNews o di un'altra testata resta copertura editoriale: non valorizza i campi istituzionali `liveStreaming` o `recording`. La pagina pubblica usa elenchi compatti e link esterni attribuiti, senza player automatici o autoplay; motivazioni e note di ricerca restano richiudibili.
+Lo stato del collegamento è registrato come `scheduled`, `live`, `replay_available` o `unavailable` al momento del controllo. Una diretta o registrazione di City One, LameziaInforma, LameziaTermeNews o di un'altra testata resta copertura editoriale: non valorizza i campi istituzionali `liveStreaming` o `recording`. La scheda dà priorità a data e ordine del giorno; una categoria vuota non occupa una colonna dedicata ed è indicata con una sola riga. Gli elenchi usano link esterni attribuiti, senza player automatici o autoplay; motivazioni e note di ricerca restano richiudibili.
 
 Le regole non permettono di usare la stampa o la copertura audiovisiva editoriale per completare data, ora, ordine del giorno, stato, presenze, votazioni o verbali. Un articolo non dimostra che una seduta sia stata convocata, svolta o rinviata. I titoli restano attribuiti alla testata; la nota di rilevanza del monitor descrive soltanto perché il collegamento è stato proposto.
 

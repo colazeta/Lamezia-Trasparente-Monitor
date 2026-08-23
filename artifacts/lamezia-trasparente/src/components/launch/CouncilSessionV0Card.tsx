@@ -329,22 +329,29 @@ export function CouncilSessionV0Detail({
     ...followUpDocuments,
   ] as const;
   const agendaAvailable = (session.agenda.value?.length ?? 0) > 0;
+  const displayTitle =
+    session.scheduledAt.value && session.title.value
+      ? session.title.value.split(" — seduta del ")[0]
+      : (session.title.value ?? "Scheda seduta");
+  const hasContextMedia = session.contextResearch.media.length > 0;
+  const hasContextArticles = session.contextResearch.articles.length > 0;
   const contextItemCount =
     session.contextResearch.articles.length +
     session.contextResearch.media.length;
+  const hasContextItems = contextItemCount > 0;
   const contextStatusLabel =
     session.contextResearch.status === "checked_no_match"
-      ? "Ricerca eseguita: nessun risultato preciso."
+      ? "Nessun risultato"
       : session.contextResearch.status === "not_run"
-        ? "Ricerca non ancora eseguita."
+        ? "Da controllare"
         : contextItemCount === 0
-          ? "Ricerca eseguita."
+          ? "Ricerca eseguita"
           : contextItemCount === 1
-            ? "1 collegamento revisionato."
-            : `${contextItemCount} collegamenti revisionati.`;
+            ? "1 collegamento"
+            : `${contextItemCount} collegamenti`;
 
   return (
-    <div className="space-y-5 md:space-y-6">
+    <div className="space-y-4 md:space-y-5">
       <header className="overflow-hidden rounded-2xl border border-border bg-card">
         <span
           className={
@@ -352,7 +359,10 @@ export function CouncilSessionV0Detail({
           }
         />
         <div className="p-5 md:p-7">
-          <div className="mb-4 flex flex-wrap items-center gap-2">
+          <div className="mb-5 flex flex-wrap items-center gap-2">
+            <Badge variant="secondary">
+              {councilSessionV0KindLabels[session.kind]}
+            </Badge>
             <Badge variant={isDemo ? "outline" : "success"}>
               {isDemo
                 ? "Scheda demo"
@@ -361,66 +371,61 @@ export function CouncilSessionV0Detail({
                   ? "Allegato ufficiale controllato"
                   : "Metadati ufficiali"}
             </Badge>
-            <Badge variant="secondary">
-              {councilSessionV0KindLabels[session.kind]}
-            </Badge>
           </div>
 
-          <h1 className="max-w-4xl font-display text-3xl font-bold tracking-tight md:text-4xl">
-            {session.title.value ?? "Scheda seduta"}
-          </h1>
-
-          <dl className="mt-6 grid gap-4 border-t border-border pt-5 text-sm sm:grid-cols-3">
+          <div className="grid gap-5 md:grid-cols-[minmax(0,1fr)_15rem] md:items-start">
             <div>
-              <dt className="text-xs font-bold uppercase tracking-wide text-muted-foreground">
-                Data e ora
-              </dt>
-              <dd className="mt-1 font-semibold text-foreground">
+              <p className="flex items-center gap-2 text-base font-bold text-brand md:text-lg">
+                <CalendarClock
+                  className="h-5 w-5 shrink-0"
+                  aria-hidden="true"
+                />
                 {formatDate(session.scheduledAt.value)}
-              </dd>
+              </p>
+              <h1 className="mt-3 max-w-4xl font-display text-3xl font-bold tracking-tight md:text-4xl">
+                {displayTitle}
+              </h1>
             </div>
-            <div>
-              <dt className="text-xs font-bold uppercase tracking-wide text-muted-foreground">
-                Stato
-              </dt>
-              <dd className="mt-1 font-semibold text-foreground">
-                {
-                  councilSessionV0StatusLabels[
-                    session.sessionStatus.value ?? "non_verificata"
-                  ]
-                }
-              </dd>
-            </div>
-            <div>
-              <dt className="text-xs font-bold uppercase tracking-wide text-muted-foreground">
-                Fonte primaria
-              </dt>
-              <dd className="mt-1">
-                <FieldValue field={session.sourceLink} />
-              </dd>
-            </div>
-          </dl>
 
-          <p className="mt-5 flex items-start gap-2 border-t border-border pt-4 text-sm text-muted-foreground">
-            <ShieldCheck
-              className="mt-0.5 h-4 w-4 shrink-0 text-brand"
-              aria-hidden="true"
-            />
-            {isDemo
-              ? "Esempio tecnico: non descrive una seduta reale."
-              : "Fonte ufficiale acquisita. La convocazione non prova lo svolgimento della seduta."}
-          </p>
+            <dl className="rounded-xl border border-border bg-muted/35 p-4">
+              <div>
+                <dt className="text-xs font-bold uppercase tracking-wide text-muted-foreground">
+                  Stato della seduta
+                </dt>
+                <dd className="mt-1 text-base font-bold text-foreground">
+                  {
+                    councilSessionV0StatusLabels[
+                      session.sessionStatus.value ?? "non_verificata"
+                    ]
+                  }
+                </dd>
+              </div>
+            </dl>
+          </div>
+
+          <div className="mt-6 flex flex-col gap-3 border-t border-border pt-4 lg:flex-row lg:items-center lg:justify-between">
+            <FieldValue field={session.sourceLink} />
+            <p className="flex items-start gap-2 text-xs text-muted-foreground">
+              <ShieldCheck
+                className="mt-0.5 h-3.5 w-3.5 shrink-0 text-brand"
+                aria-hidden="true"
+              />
+              {isDemo
+                ? "Esempio tecnico: non descrive una seduta reale."
+                : "La convocazione non prova lo svolgimento della seduta."}
+            </p>
+          </div>
         </div>
       </header>
 
       <nav
         aria-label="Sezioni della scheda"
-        className="overflow-x-auto rounded-xl border border-border bg-card p-2"
+        className="sticky top-16 z-40 overflow-x-auto rounded-xl border border-border bg-background/95 p-1.5 shadow-sm backdrop-blur"
       >
         <div className="flex min-w-max gap-1 text-sm font-semibold">
           <a
             href="#ordine-del-giorno"
-            className="rounded-lg px-3 py-2 text-muted-foreground hover:bg-muted hover:text-foreground"
+            className="rounded-lg px-3 py-2 text-brand hover:bg-brand/10"
           >
             Ordine del giorno
           </a>
@@ -428,7 +433,7 @@ export function CouncilSessionV0Detail({
             href="#contenuti-collegati"
             className="rounded-lg px-3 py-2 text-muted-foreground hover:bg-muted hover:text-foreground"
           >
-            Contenuti
+            Articoli e video
           </a>
           <a
             href="#documenti-ufficiali"
@@ -438,7 +443,7 @@ export function CouncilSessionV0Detail({
           </a>
           <a
             href="#fonti-limiti-v0"
-            className="rounded-lg px-3 py-2 text-muted-foreground hover:bg-muted hover:text-foreground"
+            className="rounded-lg px-3 py-2 font-medium text-muted-foreground hover:bg-muted hover:text-foreground"
           >
             Fonti
           </a>
@@ -448,9 +453,9 @@ export function CouncilSessionV0Detail({
       <section
         id="ordine-del-giorno"
         aria-labelledby="session-agenda-title"
-        className="scroll-mt-24"
+        className="scroll-mt-36"
       >
-        <Card className="p-5 md:p-6">
+        <Card className="border-brand/25 p-5 shadow-sm md:p-6">
           <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
             <div className="flex items-center gap-2.5">
               <span className="flex h-8 w-8 items-center justify-center rounded-md bg-brand/10 text-brand">
@@ -477,7 +482,9 @@ export function CouncilSessionV0Detail({
             </Badge>
           </div>
           {agendaAvailable ? (
-            <FieldValue field={session.agenda} />
+            <div className="rounded-xl bg-muted/35 p-4 md:p-5">
+              <FieldValue field={session.agenda} />
+            </div>
           ) : (
             <p className="text-sm text-muted-foreground">
               Ordine del giorno non disponibile.
@@ -500,7 +507,7 @@ export function CouncilSessionV0Detail({
       <section
         id="contenuti-collegati"
         aria-labelledby="session-context-title"
-        className="scroll-mt-24 rounded-2xl border border-border bg-card p-5 md:p-6"
+        className="scroll-mt-36 rounded-2xl border border-border bg-card p-5 md:p-6"
       >
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-2.5">
@@ -509,135 +516,170 @@ export function CouncilSessionV0Detail({
             </span>
             <h2
               id="session-context-title"
-              className="font-display text-2xl font-bold tracking-tight"
+              className="font-display text-xl font-bold tracking-tight"
             >
-              Contenuti collegati
+              Articoli e video
             </h2>
           </div>
-          <span className="text-sm font-medium text-muted-foreground">
+          <Badge variant="outline" className="whitespace-normal">
             {contextStatusLabel}
-          </span>
+          </Badge>
         </div>
 
-        <div className="mt-5 grid gap-6 lg:grid-cols-2">
-          <div aria-labelledby="session-media-title">
-            <h3
-              id="session-media-title"
-              className="flex items-center gap-2 text-sm font-bold uppercase tracking-wide text-foreground"
-            >
-              <Video className="h-4 w-4 text-brand" aria-hidden="true" />
-              Video
-            </h3>
+        {hasContextItems ? (
+          <div
+            className={
+              "mt-5 grid gap-6 " +
+              (hasContextMedia && hasContextArticles
+                ? "lg:grid-cols-2"
+                : "grid-cols-1")
+            }
+          >
+            {hasContextMedia && (
+              <div aria-labelledby="session-media-title">
+                <h3
+                  id="session-media-title"
+                  className="flex items-center gap-2 text-sm font-bold uppercase tracking-wide text-foreground"
+                >
+                  <Video className="h-4 w-4 text-brand" aria-hidden="true" />
+                  Video
+                </h3>
 
-            {session.contextResearch.media.length > 0 ? (
-              <ul className="mt-3 divide-y divide-border rounded-xl border border-border">
-                {session.contextResearch.media.map((media) => (
-                  <li key={media.url} className="p-4">
-                    <a
-                      href={media.url}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="inline-flex items-start gap-1.5 font-semibold text-foreground hover:text-brand hover:underline"
-                    >
-                      {media.title}
-                      <ExternalLink
-                        className="mt-1 h-3.5 w-3.5 shrink-0"
-                        aria-hidden="true"
-                      />
-                    </a>
-                    <p className="mt-1 text-xs text-muted-foreground">
-                      {media.publisher} ·{" "}
-                      {formatPublishedDate(media.publishedAt)}
-                    </p>
-                    <p className="mt-2 text-xs text-muted-foreground">
-                      {councilSessionV0ContextMediaTypeLabels[media.mediaType]}{" "}
-                      ·{" "}
-                      {
-                        councilSessionV0ContextMediaAvailabilityLabels[
-                          media.availability
-                        ]
-                      }
-                    </p>
-                    <details className="mt-2 text-xs text-muted-foreground">
-                      <summary className="cursor-pointer font-semibold text-brand">
-                        Perché è collegato
-                      </summary>
-                      <p className="mt-2 leading-relaxed">
-                        {media.relevanceNote}
+                <ul className="mt-3 divide-y divide-border rounded-xl border border-border">
+                  {session.contextResearch.media.map((media) => (
+                    <li key={media.url} className="p-4">
+                      <a
+                        href={media.url}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="inline-flex items-start gap-1.5 font-semibold text-foreground hover:text-brand hover:underline"
+                      >
+                        {media.title}
+                        <ExternalLink
+                          className="mt-1 h-3.5 w-3.5 shrink-0"
+                          aria-hidden="true"
+                        />
+                      </a>
+                      <p className="mt-1 text-xs text-muted-foreground">
+                        {media.publisher} ·{" "}
+                        {formatPublishedDate(media.publishedAt)}
                       </p>
-                    </details>
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <p className="mt-3 text-sm text-muted-foreground">
-                Nessun video verificabile trovato.
-              </p>
-            )}
-          </div>
-
-          <div aria-labelledby="session-articles-title">
-            <h3
-              id="session-articles-title"
-              className="flex items-center gap-2 text-sm font-bold uppercase tracking-wide text-foreground"
-            >
-              <Newspaper className="h-4 w-4 text-brand" aria-hidden="true" />
-              Articoli
-            </h3>
-
-            {session.contextResearch.articles.length > 0 ? (
-              <ul className="mt-3 divide-y divide-border rounded-xl border border-border">
-                {session.contextResearch.articles.map((article) => (
-                  <li key={article.url} className="p-4">
-                    <div className="flex flex-wrap items-center gap-2">
-                      <Badge variant="secondary" className="whitespace-normal">
+                      <p className="mt-2 text-xs text-muted-foreground">
                         {
-                          councilSessionV0ContextRelationshipLabels[
-                            article.relationship
+                          councilSessionV0ContextMediaTypeLabels[
+                            media.mediaType
+                          ]
+                        }{" "}
+                        ·{" "}
+                        {
+                          councilSessionV0ContextMediaAvailabilityLabels[
+                            media.availability
                           ]
                         }
-                      </Badge>
-                      <span className="text-xs text-muted-foreground">
-                        {article.publisher} ·{" "}
-                        {formatPublishedDate(article.publishedAt)}
-                      </span>
-                    </div>
-                    <a
-                      href={article.url}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="mt-2 inline-flex items-start gap-1.5 font-semibold leading-snug text-foreground hover:text-brand hover:underline"
-                    >
-                      {article.title}
-                      <ExternalLink
-                        className="mt-1 h-3.5 w-3.5 shrink-0"
-                        aria-hidden="true"
-                      />
-                    </a>
-                    <details className="mt-2 text-xs text-muted-foreground">
-                      <summary className="cursor-pointer font-semibold text-brand">
-                        Perché è collegato
-                      </summary>
-                      <p className="mt-2 leading-relaxed">
-                        {article.relevanceNote}
                       </p>
-                    </details>
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <p className="mt-3 text-sm text-muted-foreground">
-                Nessun articolo pertinente trovato.
-              </p>
+                      <details className="mt-2 text-xs text-muted-foreground">
+                        <summary className="cursor-pointer font-semibold text-brand">
+                          Perché è collegato
+                        </summary>
+                        <p className="mt-2 leading-relaxed">
+                          {media.relevanceNote}
+                        </p>
+                      </details>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+            {hasContextArticles && (
+              <div aria-labelledby="session-articles-title">
+                <h3
+                  id="session-articles-title"
+                  className="flex items-center gap-2 text-sm font-bold uppercase tracking-wide text-foreground"
+                >
+                  <Newspaper
+                    className="h-4 w-4 text-brand"
+                    aria-hidden="true"
+                  />
+                  Articoli
+                </h3>
+
+                <ul className="mt-3 divide-y divide-border rounded-xl border border-border">
+                  {session.contextResearch.articles.map((article) => (
+                    <li key={article.url} className="p-4">
+                      <div className="flex flex-wrap items-center gap-2">
+                        <Badge
+                          variant="secondary"
+                          className="whitespace-normal"
+                        >
+                          {
+                            councilSessionV0ContextRelationshipLabels[
+                              article.relationship
+                            ]
+                          }
+                        </Badge>
+                        <span className="text-xs text-muted-foreground">
+                          {article.publisher} ·{" "}
+                          {formatPublishedDate(article.publishedAt)}
+                        </span>
+                      </div>
+                      <a
+                        href={article.url}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="mt-2 inline-flex items-start gap-1.5 font-semibold leading-snug text-foreground hover:text-brand hover:underline"
+                      >
+                        {article.title}
+                        <ExternalLink
+                          className="mt-1 h-3.5 w-3.5 shrink-0"
+                          aria-hidden="true"
+                        />
+                      </a>
+                      <details className="mt-2 text-xs text-muted-foreground">
+                        <summary className="cursor-pointer font-semibold text-brand">
+                          Perché è collegato
+                        </summary>
+                        <p className="mt-2 leading-relaxed">
+                          {article.relevanceNote}
+                        </p>
+                      </details>
+                    </li>
+                  ))}
+                </ul>
+              </div>
             )}
           </div>
-        </div>
+        ) : (
+          <p className="mt-4 text-sm text-muted-foreground">
+            {session.contextResearch.status === "not_run"
+              ? "Nessun contenuto ancora revisionato."
+              : "Nessun articolo o video pertinente trovato."}
+          </p>
+        )}
 
-        <div className="mt-5 flex flex-col gap-3 border-t border-border pt-4 text-xs text-muted-foreground sm:flex-row sm:items-start sm:justify-between">
-          <p>Articoli e video non sostituiscono le fonti ufficiali.</p>
+        {hasContextItems && !hasContextMedia && (
+          <p className="mt-3 text-xs text-muted-foreground">
+            Nessun video verificabile trovato.
+          </p>
+        )}
+        {hasContextItems && !hasContextArticles && (
+          <p className="mt-3 text-xs text-muted-foreground">
+            Nessun articolo pertinente trovato.
+          </p>
+        )}
+
+        <div
+          className={
+            "flex flex-col gap-3 text-xs text-muted-foreground sm:flex-row sm:items-start sm:justify-between " +
+            (hasContextItems ? "mt-5 border-t border-border pt-4" : "mt-3")
+          }
+        >
+          {hasContextItems && (
+            <p>Articoli e video non sostituiscono le fonti ufficiali.</p>
+          )}
           <details className="shrink-0 sm:max-w-xl">
             <summary className="cursor-pointer font-semibold text-brand">
-              Nota sulla ricerca
+              Dettagli della ricerca
             </summary>
             <p className="mt-2 leading-relaxed">
               {session.contextResearch.searchNote}
@@ -654,18 +696,38 @@ export function CouncilSessionV0Detail({
       <section
         id="documenti-ufficiali"
         aria-labelledby="session-documents-title"
-        className="scroll-mt-24 rounded-2xl border border-border bg-card p-5 md:p-6"
+        className={
+          "scroll-mt-36 rounded-2xl border border-border bg-card " +
+          (availableFollowUpDocuments.length > 0 ? "p-5 md:p-6" : "p-4")
+        }
       >
         <div className="flex items-center gap-2.5">
-          <span className="flex h-8 w-8 items-center justify-center rounded-md bg-brand/10 text-brand">
+          <span
+            className={
+              "flex items-center justify-center rounded-md bg-brand/10 text-brand " +
+              (availableFollowUpDocuments.length > 0 ? "h-8 w-8" : "h-7 w-7")
+            }
+          >
             <FileText className="h-4 w-4" aria-hidden="true" />
           </span>
-          <h2
-            id="session-documents-title"
-            className="font-display text-2xl font-bold tracking-tight"
-          >
-            Documenti e registrazioni ufficiali
-          </h2>
+          <div>
+            <h2
+              id="session-documents-title"
+              className={
+                "font-display font-bold tracking-tight " +
+                (availableFollowUpDocuments.length > 0
+                  ? "text-xl"
+                  : "text-base")
+              }
+            >
+              Documenti e registrazioni
+            </h2>
+            {availableFollowUpDocuments.length === 0 && (
+              <p className="mt-0.5 text-xs text-muted-foreground">
+                Nessun documento successivo disponibile.
+              </p>
+            )}
+          </div>
         </div>
 
         {availableFollowUpDocuments.length > 0 ? (
@@ -696,19 +758,15 @@ export function CouncilSessionV0Detail({
               </li>
             ))}
           </ul>
-        ) : (
-          <p className="mt-4 text-sm text-muted-foreground">
-            Nessun documento successivo disponibile.
-          </p>
-        )}
+        ) : null}
       </section>
 
       <details
         id="fonti-limiti-v0"
-        className="group rounded-2xl border border-border bg-card"
+        className="group scroll-mt-36 rounded-2xl border border-border bg-card"
       >
-        <summary className="flex cursor-pointer list-none items-center gap-2.5 p-5 font-display text-xl font-bold tracking-tight md:p-6">
-          <Info className="h-5 w-5 text-brand" aria-hidden="true" />
+        <summary className="flex cursor-pointer list-none items-center gap-2.5 p-4 font-display text-base font-semibold tracking-tight">
+          <Info className="h-4 w-4 text-brand" aria-hidden="true" />
           Fonti, verifiche e limiti
           <span className="ml-auto text-sm font-normal text-muted-foreground group-open:hidden">
             Mostra dettagli
@@ -822,18 +880,6 @@ export function CouncilSessionV0Detail({
           </div>
         </div>
       </details>
-
-      <div className="flex flex-col gap-3 sm:flex-row">
-        <Button asChild variant="outline">
-          <Link href="/convocazioni">
-            <CalendarClock className="mr-2 h-4 w-4" aria-hidden="true" />
-            Torna alle convocazioni
-          </Link>
-        </Button>
-        <Button asChild variant="ghost">
-          <Link href="/">Torna alla Home</Link>
-        </Button>
-      </div>
     </div>
   );
 }

@@ -46,7 +46,7 @@ describe("CouncilSessionV0Card", () => {
 
     expect(
       screen.getByRole("heading", {
-        name: "II Commissione consiliare permanente — seduta del 10 agosto 2026",
+        name: "II Commissione consiliare permanente",
       }),
     ).toBeInTheDocument();
     expect(
@@ -85,7 +85,7 @@ describe("CouncilSessionV0Card", () => {
       within(navigation).getByRole("link", { name: "Ordine del giorno" }),
     ).toHaveAttribute("href", "#ordine-del-giorno");
     expect(
-      within(navigation).getByRole("link", { name: "Contenuti" }),
+      within(navigation).getByRole("link", { name: "Articoli e video" }),
     ).toHaveAttribute("href", "#contenuti-collegati");
     expect(
       within(navigation).getByRole("link", { name: "Documenti" }),
@@ -107,14 +107,14 @@ describe("CouncilSessionV0Card", () => {
     render(<CouncilSessionV0Detail session={session} />);
 
     expect(
-      screen.getByRole("heading", { name: "Contenuti collegati" }),
+      screen.getByRole("heading", { name: "Articoli e video" }),
     ).toBeInTheDocument();
     expect(
       screen.getByText(
         /Articoli e video non sostituiscono le fonti ufficiali/i,
       ),
     ).toBeInTheDocument();
-    expect(screen.getByText("2 collegamenti revisionati.")).toBeInTheDocument();
+    expect(screen.getByText("2 collegamenti")).toBeInTheDocument();
     expect(screen.getAllByText("Tema all'ordine del giorno")).toHaveLength(2);
     expect(screen.getAllByText("Perché è collegato")).toHaveLength(2);
     expect(
@@ -209,15 +209,16 @@ describe("CouncilSessionV0Card", () => {
 
     render(<CouncilSessionV0Detail session={session} />);
 
+    expect(screen.getByText("Nessun risultato")).toBeInTheDocument();
     expect(
-      screen.getByText("Ricerca eseguita: nessun risultato preciso."),
+      screen.getByText("Nessun articolo o video pertinente trovato."),
     ).toBeInTheDocument();
     expect(
-      screen.getByText("Nessun video verificabile trovato."),
-    ).toBeInTheDocument();
+      screen.queryByRole("heading", { name: "Video" }),
+    ).not.toBeInTheDocument();
     expect(
-      screen.getByText("Nessun articolo pertinente trovato."),
-    ).toBeInTheDocument();
+      screen.queryByRole("heading", { name: "Articoli" }),
+    ).not.toBeInTheDocument();
     expect(
       screen.getByText("Nessun documento successivo disponibile."),
     ).toBeInTheDocument();
