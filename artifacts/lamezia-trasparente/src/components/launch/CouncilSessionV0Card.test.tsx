@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 
 import {
@@ -73,8 +73,32 @@ describe("CouncilSessionV0Card", () => {
       ),
     );
     expect(
-      screen.getAllByText(/non prova.*seduta si sia svolta/i).length,
-    ).toBeGreaterThan(0);
+      screen.getByText(
+        /La convocazione non prova lo svolgimento della seduta/i,
+      ),
+    ).toBeInTheDocument();
+
+    const navigation = screen.getByRole("navigation", {
+      name: "Sezioni della scheda",
+    });
+    expect(
+      within(navigation).getByRole("link", { name: "Ordine del giorno" }),
+    ).toHaveAttribute("href", "#ordine-del-giorno");
+    expect(
+      within(navigation).getByRole("link", { name: "Contenuti" }),
+    ).toHaveAttribute("href", "#contenuti-collegati");
+    expect(
+      within(navigation).getByRole("link", { name: "Documenti" }),
+    ).toHaveAttribute("href", "#documenti-ufficiali");
+    expect(
+      within(navigation).getByRole("link", { name: "Fonti" }),
+    ).toHaveAttribute("href", "#fonti-limiti-v0");
+    expect(
+      screen.getByText("Nessun video verificabile trovato."),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText("Nessun documento successivo disponibile."),
+    ).toBeInTheDocument();
   });
 
   it("keeps contextual articles separate from official session fields", () => {
@@ -83,10 +107,16 @@ describe("CouncilSessionV0Card", () => {
     render(<CouncilSessionV0Detail session={session} />);
 
     expect(
-      screen.getByRole("heading", { name: "Articoli e contesto" }),
+      screen.getByRole("heading", { name: "Contenuti collegati" }),
     ).toBeInTheDocument();
-    expect(screen.getByText(/non sostituiscono l'Albo/i)).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        /Articoli e video non sostituiscono le fonti ufficiali/i,
+      ),
+    ).toBeInTheDocument();
+    expect(screen.getByText("2 collegamenti revisionati.")).toBeInTheDocument();
     expect(screen.getAllByText("Tema all'ordine del giorno")).toHaveLength(2);
+    expect(screen.getAllByText("Perché è collegato")).toHaveLength(2);
     expect(
       screen.getByRole("link", {
         name: /Approvato in giunta l'assestamento generale di bilancio/i,
@@ -111,6 +141,9 @@ describe("CouncilSessionV0Card", () => {
       }),
     ).toHaveAttribute("href", expect.stringContaining("lameziainforma.it"));
     expect(screen.getByText("Data da verificare")).toBeInTheDocument();
+    expect(
+      screen.getByText("Ordine del giorno non disponibile."),
+    ).toBeInTheDocument();
     expect(
       screen.getByText(/manca l'allegato ufficiale.*collegamento/i),
     ).toBeInTheDocument();
@@ -141,13 +174,14 @@ describe("CouncilSessionV0Card", () => {
 
     render(<CouncilSessionV0Detail session={session} />);
 
+    expect(screen.getByRole("heading", { name: "Video" })).toBeInTheDocument();
     expect(
-      screen.getByRole("heading", { name: "Diretta e video" }),
+      screen.getByText(/Diretta editoriale.*Replay disponibile/i),
     ).toBeInTheDocument();
-    expect(screen.getByText("Diretta editoriale")).toBeInTheDocument();
-    expect(screen.getByText("Replay disponibile")).toBeInTheDocument();
     expect(
-      screen.getByText(/non equivale allo streaming istituzionale/i),
+      screen.getByText(
+        /Articoli e video non sostituiscono le fonti ufficiali/i,
+      ),
     ).toBeInTheDocument();
     expect(
       screen.getByRole("link", {
@@ -157,5 +191,35 @@ describe("CouncilSessionV0Card", () => {
       "href",
       "https://example.test/city-one-consiglio-2026-08-13",
     );
+    expect(screen.getAllByText("Perché è collegato")).toHaveLength(4);
+  });
+
+  it("uses concise one-line empty states", () => {
+    const base = reviewedRecord("albo-2026-2648-commissione-ii-2026-08-10");
+    const session = {
+      ...base,
+      contextResearch: {
+        status: "checked_no_match" as const,
+        checkedAt: "2026-08-23T10:00:00Z",
+        searchNote: "Nessuna corrispondenza precisa trovata.",
+        articles: [],
+        media: [],
+      },
+    };
+
+    render(<CouncilSessionV0Detail session={session} />);
+
+    expect(
+      screen.getByText("Ricerca eseguita: nessun risultato preciso."),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText("Nessun video verificabile trovato."),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText("Nessun articolo pertinente trovato."),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText("Nessun documento successivo disponibile."),
+    ).toBeInTheDocument();
   });
 });
