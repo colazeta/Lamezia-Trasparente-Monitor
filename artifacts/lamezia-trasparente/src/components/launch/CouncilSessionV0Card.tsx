@@ -333,6 +333,14 @@ export function CouncilSessionV0Detail({
     session.scheduledAt.value && session.title.value
       ? session.title.value.split(" — seduta del ")[0]
       : (session.title.value ?? "Scheda seduta");
+  const detailStatusLabel =
+    session.sessionStatus.value === "programmata"
+      ? "Programmata"
+      : session.sessionStatus.value === "svolta"
+        ? "Svolta"
+        : session.sessionStatus.value === "rinviata"
+          ? "Rinviata"
+          : "Non verificato";
   const hasContextMedia = session.contextResearch.media.length > 0;
   const hasContextArticles = session.contextResearch.articles.length > 0;
   const contextItemCount =
@@ -393,11 +401,7 @@ export function CouncilSessionV0Detail({
                   Stato della seduta
                 </dt>
                 <dd className="mt-1 text-base font-bold text-foreground">
-                  {
-                    councilSessionV0StatusLabels[
-                      session.sessionStatus.value ?? "non_verificata"
-                    ]
-                  }
+                  {detailStatusLabel}
                 </dd>
               </div>
             </dl>

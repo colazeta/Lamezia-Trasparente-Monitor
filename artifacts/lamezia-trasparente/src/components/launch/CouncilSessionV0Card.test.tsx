@@ -77,6 +77,10 @@ describe("CouncilSessionV0Card", () => {
         /La convocazione non prova lo svolgimento della seduta/i,
       ),
     ).toBeInTheDocument();
+    expect(screen.getByText("Non verificato")).toBeInTheDocument();
+    expect(
+      screen.queryByText("Stato della seduta non verificato"),
+    ).not.toBeInTheDocument();
 
     const navigation = screen.getByRole("navigation", {
       name: "Sezioni della scheda",
