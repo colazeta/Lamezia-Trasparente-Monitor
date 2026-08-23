@@ -25,7 +25,7 @@ describe("HomeInstitutionalSessions", () => {
     expect(screen.getAllByText(/stato della seduta non verificato/i)).toHaveLength(
       3,
     );
-    expect(screen.getAllByText(/2 articoli di contesto/)).toHaveLength(3);
+    expect(screen.getAllByText(/2 articoli/)).toHaveLength(3);
     expect(screen.getByText(/possibili corrispondenze/i)).toBeInTheDocument();
     expect(screen.getAllByText(/sui temi in agenda/i)).toHaveLength(2);
     expect(

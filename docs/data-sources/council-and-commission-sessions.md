@@ -15,14 +15,14 @@ Il passaggio 1 non autorizza inferenze sui passaggi 2 e 4; il passaggio 3 non so
 
 ## Flusso v0
 
-| Passaggio       | Implementazione                                                    | Gate                                                                                                                 |
-| --------------- | ------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------- |
-| Acquisizione    | Pipeline Albo esistente (`pnpm albo:fetch`)                        | Fonte ufficiale acquisita                                                                                            |
-| Identificazione | `identifyInstitutionalSessionCandidates(...)`                      | Tipo atto esatto, record pubblicabile, rischio privacy basso, URL Albo ufficiale, hash e data di acquisizione validi |
-| Candidato       | `council` o `commission`, con calendario e ordine del giorno vuoti | Nessuna estrazione automatica dal titolo o dalla finestra Albo                                                       |
-| Arricchimento   | Confronto con allegato ufficiale e copia archiviata                | Revisione editoriale campo per campo; hash conservati                                                                |
-| Ricerca contesto | Ricerca web per organo, data verificata e temi distintivi          | Sempre richiesta per un nuovo candidato; relazione e limiti revisionati, nessun riempimento dei campi ufficiali     |
-| Pubblicazione   | Scheda v0 con stato, fonte e limite per ogni campo                 | Review umana del PR prima del merge                                                                                  |
+| Passaggio        | Implementazione                                                    | Gate                                                                                                                 |
+| ---------------- | ------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------- |
+| Acquisizione     | Pipeline Albo esistente (`pnpm albo:fetch`)                        | Fonte ufficiale acquisita                                                                                            |
+| Identificazione  | `identifyInstitutionalSessionCandidates(...)`                      | Tipo atto esatto, record pubblicabile, rischio privacy basso, URL Albo ufficiale, hash e data di acquisizione validi |
+| Candidato        | `council` o `commission`, con calendario e ordine del giorno vuoti | Nessuna estrazione automatica dal titolo o dalla finestra Albo                                                       |
+| Arricchimento    | Confronto con allegato ufficiale e copia archiviata                | Revisione editoriale campo per campo; hash conservati                                                                |
+| Ricerca contesto | Ricerca web per organo, data verificata e temi distintivi          | Sempre richiesta per un nuovo candidato; relazione e limiti revisionati, nessun riempimento dei campi ufficiali      |
+| Pubblicazione    | Scheda v0 con stato, fonte e limite per ogni campo                 | Review umana del PR prima del merge                                                                                  |
 
 I tipi atto riconosciuti in questa tranche sono:
 
@@ -59,7 +59,7 @@ La copia esterna è un PDF Portfolio con un PDF incorporato. Il testo della sche
 
 Per unificare due fonti istituzionali sulla stessa seduta servono almeno pubblicazione, organo e data; in caso di dubbio il campo resta `da_verificare`. I collegamenti giornalistici, che non unificano né completano i dati ufficiali, seguono invece le relazioni graduate descritte sotto.
 
-## Ricerca contestuale della stampa
+## Ricerca contestuale: stampa, dirette e video
 
 Ogni candidato prodotto da `identifyInstitutionalSessionCandidates(...)` porta un piano `contextSearch` con stato `required`. La ricerca viene eseguita una prima volta sui metadati disponibili e ripetuta dopo il controllo dell'allegato, quando data e ordine del giorno consentono interrogazioni più precise.
 
@@ -71,26 +71,39 @@ La ricerca combina, senza considerarli equivalenti:
 - numero di pubblicazione Albo come chiave aggiuntiva;
 - una finestra temporale vicina alla seduta oppure, se la data manca, alla pubblicazione. Quest'ultima serve soltanto a cercare e non diventa la data della seduta.
 
+La ricerca comprende sia articoli sia copertura audiovisiva. Controlla i canali istituzionali e, come fonti editoriali separate, City One, LameziaInforma, LameziaTermeNews, il Lametino e altre testate locali pertinenti, incluse eventuali pagine YouTube o Facebook indicizzate. Per intercettare dirette annunciate all'ultimo momento e replay successivi, il controllo viene ripetuto nel passaggio più vicino a 24 ore prima, poco prima dell'orario programmato, durante o subito dopo la seduta, 24 ore dopo e alla chiusura della finestra di sette giorni.
+
 Ogni risultato revisionato riceve una delle relazioni seguenti:
 
-| Relazione                | Requisito editoriale                                                                                                                        |
-| ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------- |
-| `same_session`           | Stesso organo e data esatta, più almeno un riscontro distintivo come ordine del giorno o numero della convocazione, senza contraddizioni     |
-| `possible_same_session`  | Elementi compatibili ma insufficienti per stabilire che l'articolo descriva proprio la seduta                                                |
-| `agenda_item`            | Collegamento preciso con un tema in agenda, senza elementi sufficienti per collegare l'articolo alla riunione                                |
+| Relazione               | Requisito editoriale                                                                                                                     |
+| ----------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| `same_session`          | Stesso organo e data esatta, più almeno un riscontro distintivo come ordine del giorno o numero della convocazione, senza contraddizioni |
+| `possible_same_session` | Elementi compatibili ma insufficienti per stabilire che l'articolo descriva proprio la seduta                                            |
+| `agenda_item`           | Collegamento preciso con un tema in agenda, senza elementi sufficienti per collegare l'articolo alla riunione                            |
 
-Le regole non permettono di usare la stampa per completare data, ora, ordine del giorno, stato, presenze, votazioni o verbali. Un articolo non dimostra che una seduta sia stata convocata, svolta o rinviata. I titoli restano attribuiti alla testata; la nota di rilevanza del monitor descrive soltanto perché il collegamento è stato proposto.
+I contenuti audiovisivi hanno inoltre un tipo dichiarato:
+
+| Tipo             | Significato                                        |
+| ---------------- | -------------------------------------------------- |
+| `live_stream`    | Diretta editoriale annunciata o osservata          |
+| `full_recording` | Registrazione editoriale presentata come integrale |
+| `excerpt`        | Estratto o clip della seduta                       |
+| `interview`      | Intervista collegata alla seduta o a un suo punto  |
+
+Lo stato del collegamento è registrato come `scheduled`, `live`, `replay_available` o `unavailable` al momento del controllo. Una diretta o registrazione di City One, LameziaInforma, LameziaTermeNews o di un'altra testata resta copertura editoriale: non valorizza i campi istituzionali `liveStreaming` o `recording`. La pagina pubblica usa card e link esterni attribuiti, senza player automatici o autoplay.
+
+Le regole non permettono di usare la stampa o la copertura audiovisiva editoriale per completare data, ora, ordine del giorno, stato, presenze, votazioni o verbali. Un articolo non dimostra che una seduta sia stata convocata, svolta o rinviata. I titoli restano attribuiti alla testata; la nota di rilevanza del monitor descrive soltanto perché il collegamento è stato proposto.
 
 Se la ricerca è stata eseguita senza risultati abbastanza precisi, lo stato è `checked_no_match`. Questo documenta il controllo compiuto e non dimostra che non esistano articoli pertinenti.
 
 ### Contesto revisionato il 22 agosto 2026
 
-| Pubblicazione / seduta | Articolo | Relazione | Limite del collegamento |
-| ---------------------- | -------- | --------- | ----------------------- |
-| `2026/2673` Consiglio | [Consiglio comunale prima di Ferragosto con soliti stilemi politici e qualche fuoriprogramma estivo](https://www.lameziainforma.it/istituzione/2026/08/13/consiglio-comunale-prima-di-ferragosto-con-soliti-stilemi-politici-e-qualche-fuoriprogramma-estivo/68880/) — LameziaInforma, 13 agosto 2026 | `possible_same_session` | L'organo, la giornata di pubblicazione e i temi sono compatibili; manca l'allegato ufficiale dell'avviso |
-| `2026/2673` Consiglio | [Question time politico evaso in consiglio comunale](https://www.lameziainforma.it/politica/2026/08/13/question-time-politico-evaso-in-consiglio-comunale/68885/) — LameziaInforma, 13 agosto 2026 | `possible_same_session` | Resoconto contestuale della stessa giornata; non è una fonte ufficiale della convocazione |
-| `2026/2648` II Commissione, 10 e 11 agosto | [Approvato in giunta l'assestamento generale di bilancio e salvaguardia degli equilibri per l'esercizio 2026](https://www.lameziainforma.it/istituzione/2026/08/06/approvato-in-giunta-lassestamento-generale-di-bilancio-e-salvaguardia-degli-equilibri-per-lesercizio-2026/68773/) — LameziaInforma, 6 agosto 2026 | `agenda_item` | Approfondisce l'assestamento indicato in agenda; non documenta le riunioni della Commissione |
-| `2026/2648` II Commissione, 10 e 11 agosto | [LAMEZIA \| Bilancio, la maggioranza si sfalda in Giunta: tre assessori assenti. Muraca: «È sfiducia al sindaco»](https://lanovitaonline.it/lamezia-bilancio-la-maggioranza-si-sfalda-in-giunta-tre-assessori-assenti-muraca-e-sfiducia-al-sindaco/) — La Novità Online, 8 agosto 2026 | `agenda_item` | Riporta una posizione politica sul tema dell'assestamento; non verifica attività o esiti della Commissione |
+| Pubblicazione / seduta                     | Articolo                                                                                                                                                                                                                                                                                                             | Relazione               | Limite del collegamento                                                                                    |
+| ------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------- | ---------------------------------------------------------------------------------------------------------- |
+| `2026/2673` Consiglio                      | [Consiglio comunale prima di Ferragosto con soliti stilemi politici e qualche fuoriprogramma estivo](https://www.lameziainforma.it/istituzione/2026/08/13/consiglio-comunale-prima-di-ferragosto-con-soliti-stilemi-politici-e-qualche-fuoriprogramma-estivo/68880/) — LameziaInforma, 13 agosto 2026                | `possible_same_session` | L'organo, la giornata di pubblicazione e i temi sono compatibili; manca l'allegato ufficiale dell'avviso   |
+| `2026/2673` Consiglio                      | [Question time politico evaso in consiglio comunale](https://www.lameziainforma.it/politica/2026/08/13/question-time-politico-evaso-in-consiglio-comunale/68885/) — LameziaInforma, 13 agosto 2026                                                                                                                   | `possible_same_session` | Resoconto contestuale della stessa giornata; non è una fonte ufficiale della convocazione                  |
+| `2026/2648` II Commissione, 10 e 11 agosto | [Approvato in giunta l'assestamento generale di bilancio e salvaguardia degli equilibri per l'esercizio 2026](https://www.lameziainforma.it/istituzione/2026/08/06/approvato-in-giunta-lassestamento-generale-di-bilancio-e-salvaguardia-degli-equilibri-per-lesercizio-2026/68773/) — LameziaInforma, 6 agosto 2026 | `agenda_item`           | Approfondisce l'assestamento indicato in agenda; non documenta le riunioni della Commissione               |
+| `2026/2648` II Commissione, 10 e 11 agosto | [LAMEZIA \| Bilancio, la maggioranza si sfalda in Giunta: tre assessori assenti. Muraca: «È sfiducia al sindaco»](https://lanovitaonline.it/lamezia-bilancio-la-maggioranza-si-sfalda-in-giunta-tre-assessori-assenti-muraca-e-sfiducia-al-sindaco/) — La Novità Online, 8 agosto 2026                               | `agenda_item`           | Riporta una posizione politica sul tema dell'assestamento; non verifica attività o esiti della Commissione |
 
 Non sono emersi articoli che nominino con sufficiente precisione le sedute della II Commissione del 10 o 11 agosto. Per questo i due risultati sono presentati soltanto come contesto sui temi in agenda.
 
@@ -101,7 +114,7 @@ Non sono emersi articoli che nominino con sufficiente precisione le sedute della
 3. Deduplicare per `id` Albo e `contentHash`; un hash cambiato riapre la revisione.
 4. Se manca l'allegato, pubblicare al massimo una scheda metadata-only.
 5. Se l'allegato è presente, confrontare manualmente organo, date, orari e ordine del giorno; conservare hash, data del controllo e limiti.
-6. Eseguire la ricerca contestuale; ripeterla con data e termini distintivi dopo l'arricchimento ufficiale, classificare ogni collegamento e conservare anche l'esito negativo.
+6. Eseguire la ricerca contestuale su articoli, dirette, registrazioni, estratti e interviste; ripeterla con data, orario e termini distintivi prima, durante e dopo la seduta, classificare ogni collegamento e conservare anche l'esito negativo.
 7. Cercare separatamente eventuali registrazioni, verbali e resoconti istituzionali; “non rilevato” non significa “inesistente”.
 8. Sottoporre il diff e le schede alla review umana prima del merge.
 
@@ -110,6 +123,6 @@ Non sono emersi articoli che nominino con sufficiente precisione le sedute della
 - L'export corrente dell'Albo non è un archivio storico completo.
 - Il detector non esegue OCR e non interpreta PDF.
 - Le schede revisionate sono curate in codice e non sono ancora materializzate automaticamente nella tabella `sedute`.
-- La ricerca contestuale richiede ancora revisione editoriale: il detector prepara le query ma non pubblica automaticamente risultati web.
+- La ricerca contestuale richiede revisione editoriale: articoli e video vengono materializzati soltanto in una PR revisionabile, con relazione, tipo, stato del collegamento e limiti espliciti.
 - La convocazione non dimostra svolgimento, presenze, votazioni o esiti.
 - Streaming, registrazioni, verbali e resoconti richiedono monitoraggi distinti.

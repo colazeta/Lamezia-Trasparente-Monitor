@@ -46,6 +46,7 @@ const councilContextResearch: CouncilSessionV0ContextResearch = {
       reviewedAt: CONTEXT_RESEARCHED_AT,
     },
   ],
+  media: [],
 };
 
 const commissionContextResearch: CouncilSessionV0ContextResearch = {
@@ -77,6 +78,7 @@ const commissionContextResearch: CouncilSessionV0ContextResearch = {
       reviewedAt: CONTEXT_RESEARCHED_AT,
     },
   ],
+  media: [],
 };
 
 function requireCandidate(

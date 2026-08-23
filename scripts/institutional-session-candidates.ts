@@ -18,6 +18,9 @@ export type InstitutionalSessionContextSearch = {
   status: "required";
   querySeeds: readonly string[];
   rerunAfterOfficialEnrichment: true;
+  mediaSearchRequired: true;
+  priorityPublishers: readonly string[];
+  reviewMoments: readonly string[];
   matchingRequirements: readonly string[];
   limitations: readonly string[];
 };
@@ -112,15 +115,32 @@ function buildContextSearch(
     querySeeds: [
       `Lamezia Terme ${organ} ${title}`,
       `Lamezia Terme ${organ} pubblicazione ${publicationNumber}`,
+      `Lamezia Terme ${organ} diretta video ${title}`,
     ],
     rerunAfterOfficialEnrichment: true,
+    mediaSearchRequired: true,
+    priorityPublishers: [
+      "Comune di Lamezia Terme",
+      "City One",
+      "LameziaInforma",
+      "LameziaTermeNews",
+      "il Lametino",
+    ],
+    reviewMoments: [
+      "circa 24 ore prima della seduta",
+      "poco prima dell'orario programmato",
+      "al primo controllo durante o dopo la seduta",
+      "circa 24 ore dopo la seduta",
+      "alla chiusura della finestra di sette giorni",
+    ],
     matchingRequirements: [
-      "Per classificare un articolo come stessa seduta servono almeno organo e data esatta, più un ulteriore riscontro distintivo come ordine del giorno o numero di convocazione.",
+      "Per classificare un contenuto come stessa seduta servono almeno organo e data esatta, più un ulteriore riscontro distintivo come ordine del giorno o numero di convocazione.",
       "Se manca uno dei riscontri, il collegamento resta possibile corrispondenza oppure contesto su un tema all'ordine del giorno.",
     ],
     limitations: [
-      "La ricerca stampa è obbligatoria per il candidato, ma i suoi risultati richiedono revisione editoriale prima della pubblicazione.",
-      "Gli articoli non possono riempire campi ufficiali mancanti né dimostrare programmazione, svolgimento o esiti della seduta.",
+      "La ricerca di articoli, dirette e video è obbligatoria per il candidato, ma i risultati richiedono revisione editoriale prima della pubblicazione.",
+      "Dirette e registrazioni delle testate restano copertura editoriale e non valorizzano i campi istituzionali di streaming o registrazione.",
+      "Articoli e video editoriali non possono riempire campi ufficiali mancanti né dimostrare programmazione, svolgimento o esiti della seduta.",
     ],
   };
 }

@@ -1,10 +1,14 @@
 import { describe, expect, it } from "vitest";
 
 import {
+  COUNCIL_SESSION_V0_CONTEXT_MEDIA_AVAILABILITY,
+  COUNCIL_SESSION_V0_CONTEXT_MEDIA_TYPES,
   COUNCIL_SESSION_V0_CONTEXT_RELATIONSHIPS,
   COUNCIL_SESSION_V0_CONTEXT_RESEARCH_STATUSES,
   COUNCIL_SESSION_V0_FIELD_STATUSES,
   COUNCIL_SESSION_V0_STATUSES,
+  councilSessionV0ContextMediaAvailabilityLabels,
+  councilSessionV0ContextMediaTypeLabels,
   councilSessionV0ContextRelationshipLabels,
   councilSessionV0DemoFixture,
   councilSessionV0FieldStatusLabels,
@@ -15,6 +19,8 @@ import {
   isCouncilSessionV0DemoFixture,
   type CouncilSessionV0Field,
   type CouncilSessionV0FieldStatus,
+  type CouncilSessionV0ContextMediaAvailability,
+  type CouncilSessionV0ContextMediaType,
   type CouncilSessionV0ContextRelationship,
   type CouncilSessionV0ContextResearchStatus,
   type CouncilSessionV0Status,
@@ -39,17 +45,21 @@ const expectedFieldStatuses: readonly CouncilSessionV0FieldStatus[] = [
   "fixture_dimostrativa",
 ];
 
-const expectedContextRelationships: readonly CouncilSessionV0ContextRelationship[] = [
-  "same_session",
-  "possible_same_session",
-  "agenda_item",
+const expectedContextRelationships: readonly CouncilSessionV0ContextRelationship[] =
+  ["same_session", "possible_same_session", "agenda_item"];
+
+const expectedContextMediaTypes: readonly CouncilSessionV0ContextMediaType[] = [
+  "live_stream",
+  "full_recording",
+  "excerpt",
+  "interview",
 ];
 
-const expectedContextResearchStatuses: readonly CouncilSessionV0ContextResearchStatus[] = [
-  "not_run",
-  "checked_no_match",
-  "reviewed_matches",
-];
+const expectedContextMediaAvailability: readonly CouncilSessionV0ContextMediaAvailability[] =
+  ["scheduled", "live", "replay_available", "unavailable"];
+
+const expectedContextResearchStatuses: readonly CouncilSessionV0ContextResearchStatus[] =
+  ["not_run", "checked_no_match", "reviewed_matches"];
 
 const forbiddenAccusatoryTerms = [
   "corruzione",
@@ -69,19 +79,39 @@ describe("councilSessionV0", () => {
     expect(COUNCIL_SESSION_V0_CONTEXT_RESEARCH_STATUSES).toEqual(
       expectedContextResearchStatuses,
     );
+    expect(COUNCIL_SESSION_V0_CONTEXT_MEDIA_TYPES).toEqual(
+      expectedContextMediaTypes,
+    );
+    expect(COUNCIL_SESSION_V0_CONTEXT_MEDIA_AVAILABILITY).toEqual(
+      expectedContextMediaAvailability,
+    );
 
     for (const status of expectedSessionStatuses) {
       expect(councilSessionV0StatusLabels[status]).toEqual(expect.any(String));
     }
 
     for (const status of expectedFieldStatuses) {
-      expect(councilSessionV0FieldStatusLabels[status]).toEqual(expect.any(String));
+      expect(councilSessionV0FieldStatusLabels[status]).toEqual(
+        expect.any(String),
+      );
     }
 
     for (const relationship of expectedContextRelationships) {
       expect(councilSessionV0ContextRelationshipLabels[relationship]).toEqual(
         expect.any(String),
       );
+    }
+
+    for (const mediaType of expectedContextMediaTypes) {
+      expect(councilSessionV0ContextMediaTypeLabels[mediaType]).toEqual(
+        expect.any(String),
+      );
+    }
+
+    for (const availability of expectedContextMediaAvailability) {
+      expect(
+        councilSessionV0ContextMediaAvailabilityLabels[availability],
+      ).toEqual(expect.any(String));
     }
 
     expect(councilSessionV0KindLabels).toEqual({
@@ -91,13 +121,18 @@ describe("councilSessionV0", () => {
   });
 
   it("keeps the demo fixture explicitly marked as demonstrative", () => {
-    expect(isCouncilSessionV0DemoFixture(councilSessionV0DemoFixture)).toBe(true);
+    expect(isCouncilSessionV0DemoFixture(councilSessionV0DemoFixture)).toBe(
+      true,
+    );
     expect(councilSessionV0DemoFixture.isDemoFixture).toBe(true);
     expect(councilSessionV0DemoFixture.id).toContain("demo");
-    expect(councilSessionV0DemoFixture.title.value).toContain("esempio dimostrativo");
+    expect(councilSessionV0DemoFixture.title.value).toContain(
+      "esempio dimostrativo",
+    );
     expect(councilSessionV0DemoFixture.sourceLink.value).toBeNull();
     expect(councilSessionV0DemoFixture.contextResearch.status).toBe("not_run");
     expect(councilSessionV0DemoFixture.contextResearch.articles).toEqual([]);
+    expect(councilSessionV0DemoFixture.contextResearch.media).toEqual([]);
   });
 
   it("exposes all public fields with a source state and a data limit", () => {
@@ -114,7 +149,9 @@ describe("councilSessionV0", () => {
       "dataLimits",
     ]);
 
-    const fields = councilSessionV0PublicFields.map((fieldKey) => councilSessionV0DemoFixture[fieldKey]);
+    const fields = councilSessionV0PublicFields.map(
+      (fieldKey) => councilSessionV0DemoFixture[fieldKey],
+    );
 
     for (const field of fields) {
       expect(field.key).toEqual(expect.any(String));
@@ -135,17 +172,21 @@ describe("councilSessionV0", () => {
     for (const field of missingFields) {
       expect(field.value).toBeNull();
       expect(field.sourceStatus).not.toBe("verificato");
-      expect(getCouncilSessionV0PublicFieldNote(field)).toMatch(/non|Nessun|Informazione/);
+      expect(getCouncilSessionV0PublicFieldNote(field)).toMatch(
+        /non|Nessun|Informazione/,
+      );
     }
   });
 
   it("uses cautious public notes without accusatory language", () => {
-    const notes = [councilSessionV0DemoFixture, ...councilSessionV0ReviewedRecords]
-      .flatMap((session) =>
-        councilSessionV0PublicFields.map((fieldKey) =>
-          getCouncilSessionV0PublicFieldNote(session[fieldKey]),
-        ),
-      );
+    const notes = [
+      councilSessionV0DemoFixture,
+      ...councilSessionV0ReviewedRecords,
+    ].flatMap((session) =>
+      councilSessionV0PublicFields.map((fieldKey) =>
+        getCouncilSessionV0PublicFieldNote(session[fieldKey]),
+      ),
+    );
 
     for (const note of notes) {
       const lower = note.toLocaleLowerCase("it-IT");
@@ -157,9 +198,9 @@ describe("councilSessionV0", () => {
 
   it("publishes source-traceable records for both council and commission notices", () => {
     expect(councilSessionV0ReviewedRecords).toHaveLength(3);
-    expect(new Set(councilSessionV0ReviewedRecords.map((item) => item.kind))).toEqual(
-      new Set(["council", "commission"]),
-    );
+    expect(
+      new Set(councilSessionV0ReviewedRecords.map((item) => item.kind)),
+    ).toEqual(new Set(["council", "commission"]));
 
     for (const session of councilSessionV0ReviewedRecords) {
       expect(session.isDemoFixture).toBe(false);
@@ -176,6 +217,17 @@ describe("councilSessionV0", () => {
         expect(article.publisher.length).toBeGreaterThan(0);
         expect(article.relevanceNote.length).toBeGreaterThan(0);
         expect(Date.parse(article.reviewedAt)).not.toBeNaN();
+      }
+      for (const media of session.contextResearch.media) {
+        expect(media.url).toMatch(/^https:\/\//);
+        expect(COUNCIL_SESSION_V0_CONTEXT_MEDIA_TYPES).toContain(
+          media.mediaType,
+        );
+        expect(COUNCIL_SESSION_V0_CONTEXT_MEDIA_AVAILABILITY).toContain(
+          media.availability,
+        );
+        expect(media.relevanceNote.length).toBeGreaterThan(0);
+        expect(Date.parse(media.reviewedAt)).not.toBeNaN();
       }
     }
   });
@@ -206,10 +258,9 @@ describe("councilSessionV0", () => {
       (session) => session.kind === "commission",
     );
 
-    expect(commissionSessions.map((session) => session.scheduledAt.value)).toEqual([
-      "2026-08-11T09:30:00+02:00",
-      "2026-08-10T09:30:00+02:00",
-    ]);
+    expect(
+      commissionSessions.map((session) => session.scheduledAt.value),
+    ).toEqual(["2026-08-11T09:30:00+02:00", "2026-08-10T09:30:00+02:00"]);
     expect(
       new Set(
         commissionSessions.map(

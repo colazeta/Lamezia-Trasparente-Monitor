@@ -5,8 +5,10 @@ import {
   ExternalLink,
   FileText,
   Info,
+  ListChecks,
   Newspaper,
   ShieldCheck,
+  Video,
 } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
@@ -14,10 +16,11 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import {
   councilSessionV0DemoFixture,
+  councilSessionV0ContextMediaAvailabilityLabels,
+  councilSessionV0ContextMediaTypeLabels,
   councilSessionV0ContextRelationshipLabels,
   councilSessionV0FieldStatusLabels,
   councilSessionV0KindLabels,
-  councilSessionV0PublicFields,
   councilSessionV0StatusLabels,
   getCouncilSessionV0PublicFieldNote,
   type CouncilSessionV0,
@@ -217,6 +220,7 @@ export function CouncilSessionV0SummaryCard({
       ? "Allegato ufficiale controllato"
       : "Metadati ufficiali disponibili";
   const contextArticleCount = session.contextResearch.articles.length;
+  const contextMediaCount = session.contextResearch.media.length;
 
   return (
     <Card
@@ -270,10 +274,19 @@ export function CouncilSessionV0SummaryCard({
           />
           <span>
             {session.contextResearch.status === "reviewed_matches"
-              ? `${contextArticleCount} ${contextArticleCount === 1 ? "articolo contestuale revisionato" : "articoli contestuali revisionati"}`
+              ? [
+                  contextArticleCount > 0
+                    ? `${contextArticleCount} ${contextArticleCount === 1 ? "articolo contestuale revisionato" : "articoli contestuali revisionati"}`
+                    : null,
+                  contextMediaCount > 0
+                    ? `${contextMediaCount} ${contextMediaCount === 1 ? "video revisionato" : "video revisionati"}`
+                    : null,
+                ]
+                  .filter(Boolean)
+                  .join(" · ") || "Ricerca di contesto revisionata"
               : session.contextResearch.status === "checked_no_match"
-                ? "Ricerca stampa eseguita: nessuna corrispondenza sufficientemente precisa"
-                : "Ricerca stampa da eseguire"}
+                ? "Ricerca di contesto eseguita: nessuna corrispondenza sufficientemente precisa"
+                : "Ricerca di contesto da eseguire"}
           </span>
         </div>
       )}
@@ -313,81 +326,182 @@ export function CouncilSessionV0Detail({
 }: {
   session: CouncilSessionV0;
 }) {
-  const fields = councilSessionV0PublicFields.map((key) => session[key]);
   const isDemo = session.isDemoFixture;
+  const followUpDocuments = [
+    session.liveStreaming,
+    session.recording,
+    session.minutesOrReport,
+  ] as const;
 
   return (
-    <div className="space-y-8">
-      <CouncilSessionV0Notice session={session} />
-
-      <header className="overflow-hidden rounded-2xl border border-border bg-muted/30">
+    <div className="space-y-6 md:space-y-8">
+      <header className="overflow-hidden rounded-2xl border border-border bg-card">
         <span
-          className={`block h-1.5 w-full ${isDemo ? "bg-amber-500" : "bg-brand"}`}
+          className={
+            "block h-1.5 w-full " + (isDemo ? "bg-amber-500" : "bg-brand")
+          }
         />
-        <div className="p-6 md:p-8">
+        <div className="p-5 md:p-7">
           <div className="mb-4 flex flex-wrap items-center gap-2">
             <Badge variant={isDemo ? "outline" : "success"}>
-              {isDemo ? "Scheda demo" : "Fonte ufficiale"}
+              {isDemo
+                ? "Scheda demo"
+                : session.provenance?.sourceReviewStatus ===
+                    "reviewed_against_official_attachment"
+                  ? "Allegato ufficiale controllato"
+                  : "Metadati ufficiali"}
             </Badge>
             <Badge variant="secondary">
               {councilSessionV0KindLabels[session.kind]}
             </Badge>
-            <Badge variant="secondary">
-              {
-                councilSessionV0StatusLabels[
-                  session.sessionStatus.value ?? "non_verificata"
-                ]
-              }
-            </Badge>
           </div>
-          <h1 className="font-display text-3xl font-bold tracking-tight md:text-4xl">
+
+          <h1 className="max-w-4xl font-display text-3xl font-bold tracking-tight md:text-4xl">
             {session.title.value ?? "Scheda seduta"}
           </h1>
-          <p className="mt-3 max-w-3xl text-muted-foreground">
-            La scheda espone il formato minimo per sedute e convocazioni:
-            provenienza, stato del dato, limiti e rinvio alla fonte originaria.
-          </p>
+
+          <dl className="mt-6 grid gap-4 border-t border-border pt-5 text-sm sm:grid-cols-3">
+            <div>
+              <dt className="text-xs font-bold uppercase tracking-wide text-muted-foreground">
+                Data e ora
+              </dt>
+              <dd className="mt-1 font-semibold text-foreground">
+                {formatDate(session.scheduledAt.value)}
+              </dd>
+            </div>
+            <div>
+              <dt className="text-xs font-bold uppercase tracking-wide text-muted-foreground">
+                Stato
+              </dt>
+              <dd className="mt-1 font-semibold text-foreground">
+                {
+                  councilSessionV0StatusLabels[
+                    session.sessionStatus.value ?? "non_verificata"
+                  ]
+                }
+              </dd>
+            </div>
+            <div>
+              <dt className="text-xs font-bold uppercase tracking-wide text-muted-foreground">
+                Fonte primaria
+              </dt>
+              <dd className="mt-1">
+                <FieldValue field={session.sourceLink} />
+              </dd>
+            </div>
+          </dl>
         </div>
       </header>
 
-      <section aria-labelledby="session-fields-title" className="space-y-4">
-        <div className="flex items-center gap-2.5">
-          <span className="flex h-8 w-8 items-center justify-center rounded-md bg-brand/10 text-brand">
-            <FileText className="h-4 w-4" aria-hidden="true" />
-          </span>
-          <h2
-            id="session-fields-title"
-            className="font-display text-2xl font-bold tracking-tight"
-          >
-            Campi pubblicati e stato di verifica
-          </h2>
-        </div>
-        <div className="grid gap-4 md:grid-cols-2">
-          {fields.map((field) => (
-            <Card key={field.key} className="p-4">
-              <div className="mb-2 flex flex-wrap items-start justify-between gap-2">
-                <h3 className="font-semibold">{field.label}</h3>
-                <V0StatusBadge field={field} />
-              </div>
-              <FieldValue field={field} />
-              <p className="mt-3 text-xs leading-relaxed text-muted-foreground">
-                {getCouncilSessionV0PublicFieldNote(field)}
-              </p>
-              {field.sourceUrl && field.key !== "sourceLink" && (
-                <a
-                  href={field.sourceUrl}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="mt-3 inline-flex items-center gap-1 text-xs font-semibold text-brand hover:underline"
-                >
-                  Verifica sulla fonte
-                  <ExternalLink className="h-3 w-3" aria-hidden="true" />
-                </a>
-              )}
-            </Card>
-          ))}
-        </div>
+      <CouncilSessionV0Notice session={session} compact />
+
+      <section aria-labelledby="session-agenda-title">
+        <Card className="p-5 md:p-6">
+          <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+            <div className="flex items-center gap-2.5">
+              <span className="flex h-8 w-8 items-center justify-center rounded-md bg-brand/10 text-brand">
+                <ListChecks className="h-4 w-4" aria-hidden="true" />
+              </span>
+              <h2
+                id="session-agenda-title"
+                className="font-display text-2xl font-bold tracking-tight"
+              >
+                Ordine del giorno
+              </h2>
+            </div>
+            <V0StatusBadge field={session.agenda} />
+          </div>
+          <FieldValue field={session.agenda} />
+          <p className="mt-4 border-t border-border pt-4 text-xs leading-relaxed text-muted-foreground">
+            {getCouncilSessionV0PublicFieldNote(session.agenda)}
+          </p>
+          {session.agenda.sourceUrl && (
+            <a
+              href={session.agenda.sourceUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="mt-3 inline-flex items-center gap-1 text-xs font-semibold text-brand hover:underline"
+            >
+              Consulta l&apos;ordine del giorno ufficiale
+              <ExternalLink className="h-3 w-3" aria-hidden="true" />
+            </a>
+          )}
+        </Card>
       </section>
+
+      {session.contextResearch.media.length > 0 && (
+        <section
+          aria-labelledby="session-media-title"
+          className="space-y-4 rounded-2xl border border-border bg-muted/20 p-5 md:p-6"
+        >
+          <div className="flex items-center gap-2.5">
+            <span className="flex h-8 w-8 items-center justify-center rounded-md bg-brand/10 text-brand">
+              <Video className="h-4 w-4" aria-hidden="true" />
+            </span>
+            <h2
+              id="session-media-title"
+              className="font-display text-2xl font-bold tracking-tight"
+            >
+              Diretta e video
+            </h2>
+          </div>
+
+          <p className="text-sm leading-relaxed text-muted-foreground">
+            Copertura audiovisiva pubblicata da testate o canali esterni. Non
+            equivale allo streaming istituzionale e non certifica completezza,
+            svolgimento o risultati della seduta.
+          </p>
+
+          <div className="grid gap-4 lg:grid-cols-2">
+            {session.contextResearch.media.map((media) => (
+              <article
+                key={media.url}
+                className="rounded-xl border border-border bg-card p-4"
+              >
+                <div className="mb-3 flex flex-wrap items-center gap-2">
+                  <Badge variant="secondary" className="whitespace-normal">
+                    {councilSessionV0ContextMediaTypeLabels[media.mediaType]}
+                  </Badge>
+                  <Badge variant="outline" className="whitespace-normal">
+                    {
+                      councilSessionV0ContextMediaAvailabilityLabels[
+                        media.availability
+                      ]
+                    }
+                  </Badge>
+                  <Badge variant="outline" className="whitespace-normal">
+                    {
+                      councilSessionV0ContextRelationshipLabels[
+                        media.relationship
+                      ]
+                    }
+                  </Badge>
+                </div>
+                <h3 className="font-display text-lg font-bold leading-snug">
+                  <a
+                    href={media.url}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex items-start gap-1.5 text-foreground hover:text-brand hover:underline"
+                  >
+                    {media.title}
+                    <ExternalLink
+                      className="mt-1 h-3.5 w-3.5 shrink-0"
+                      aria-hidden="true"
+                    />
+                  </a>
+                </h3>
+                <p className="mt-2 text-xs text-muted-foreground">
+                  {media.publisher} · {formatPublishedDate(media.publishedAt)}
+                </p>
+                <p className="mt-3 text-xs leading-relaxed text-muted-foreground">
+                  {media.relevanceNote}
+                </p>
+              </article>
+            ))}
+          </div>
+        </section>
+      )}
 
       <section
         aria-labelledby="session-context-title"
@@ -405,14 +519,7 @@ export function CouncilSessionV0Detail({
           </h2>
         </div>
 
-        <div className="rounded-xl border border-brand/20 bg-brand/5 p-4 text-sm leading-relaxed text-muted-foreground">
-          Questi collegamenti aiutano a leggere il contesto pubblico della
-          seduta o dei temi in agenda. Sono fonti giornalistiche: non
-          sostituiscono l&apos;Albo, non confermano lo svolgimento e non
-          completano i campi ufficiali della scheda.
-        </div>
-
-        <p className="text-sm leading-relaxed text-muted-foreground">
+        <p className="rounded-xl border border-border bg-card p-4 text-sm leading-relaxed text-muted-foreground">
           {session.contextResearch.searchNote}
         </p>
 
@@ -432,7 +539,8 @@ export function CouncilSessionV0Detail({
                     }
                   </Badge>
                   <span className="text-xs text-muted-foreground">
-                    {article.publisher} · {formatPublishedDate(article.publishedAt)}
+                    {article.publisher} ·{" "}
+                    {formatPublishedDate(article.publishedAt)}
                   </span>
                 </div>
                 <h3 className="font-display text-lg font-bold leading-snug">
@@ -459,9 +567,17 @@ export function CouncilSessionV0Detail({
           <p className="rounded-xl border border-dashed border-border bg-card p-4 text-sm text-muted-foreground">
             {session.contextResearch.status === "checked_no_match"
               ? "Ricerca eseguita: nessun articolo collegabile con sufficiente precisione. Il risultato negativo descrive soltanto il controllo effettuato."
-              : "Ricerca di contesto non eseguita per questa scheda."}
+              : session.contextResearch.status === "reviewed_matches" &&
+                  session.contextResearch.media.length > 0
+                ? "Nessun articolo collegabile con sufficiente precisione; i contenuti audiovisivi revisionati sono presentati nella sezione precedente."
+                : "Ricerca di contesto non eseguita per questa scheda."}
           </p>
         )}
+
+        <p className="rounded-xl border border-brand/20 bg-brand/5 p-4 text-sm leading-relaxed text-muted-foreground">
+          Articoli e video aiutano a leggere il dibattito pubblico, ma non
+          sostituiscono l&apos;Albo e non completano i campi ufficiali.
+        </p>
 
         {session.contextResearch.checkedAt && (
           <p className="text-xs text-muted-foreground">
@@ -471,96 +587,146 @@ export function CouncilSessionV0Detail({
         )}
       </section>
 
-      <section
-        id="fonti-limiti-v0"
-        aria-labelledby="fonti-limiti-v0-title"
-        className="rounded-2xl border border-border bg-card p-5 md:p-6"
-      >
-        <div className="mb-3 flex items-center gap-2.5">
-          <Info className="h-5 w-5 text-brand" aria-hidden="true" />
+      <section aria-labelledby="session-documents-title" className="space-y-4">
+        <div className="flex items-center gap-2.5">
+          <span className="flex h-8 w-8 items-center justify-center rounded-md bg-brand/10 text-brand">
+            <FileText className="h-4 w-4" aria-hidden="true" />
+          </span>
           <h2
-            id="fonti-limiti-v0-title"
-            className="font-display text-xl font-bold tracking-tight"
+            id="session-documents-title"
+            className="font-display text-2xl font-bold tracking-tight"
           >
-            Fonti, provenienza e cautele
+            Documenti e registrazioni ufficiali
           </h2>
         </div>
-        {isDemo ? (
-          <ul className="space-y-2 text-sm leading-relaxed text-muted-foreground">
-            <li>La fixture non contiene una fonte reale.</li>
-            <li>Non certifica copertura storica né una seduta effettiva.</li>
-            <li>Serve esclusivamente a verificare struttura e copy.</li>
-          </ul>
-        ) : (
-          <dl className="grid gap-4 text-sm md:grid-cols-2">
-            <div>
-              <dt className="font-semibold text-foreground">
-                Pubblicazione Albo
-              </dt>
-              <dd className="mt-1 text-muted-foreground">
-                {session.provenance?.publicationNumber}
-              </dd>
-            </div>
-            <div>
-              <dt className="font-semibold text-foreground">Acquisita il</dt>
-              <dd className="mt-1 text-muted-foreground">
-                {formatDate(session.provenance?.retrievedAt ?? null)}
-              </dd>
-            </div>
-            <div>
-              <dt className="font-semibold text-foreground">Controllata il</dt>
-              <dd className="mt-1 text-muted-foreground">
-                {formatDate(session.provenance?.reviewedAt ?? null)}
-              </dd>
-            </div>
-            <div>
-              <dt className="font-semibold text-foreground">
-                Stato della fonte
-              </dt>
-              <dd className="mt-1 text-muted-foreground">
-                {session.provenance?.sourceReviewStatus ===
-                "reviewed_against_official_attachment"
-                  ? "Metadati e allegato ufficiale controllati"
-                  : "Solo metadati ufficiali; allegato non disponibile nell'export"}
-              </dd>
-            </div>
-          </dl>
-        )}
-        <p className="mt-5 text-sm leading-relaxed text-muted-foreground">
-          Un campo assente o parziale descrive la copertura delle fonti
-          monitorate. Non è una valutazione sull'ente, sulla regolarità degli
-          atti o sulla disponibilità complessiva della documentazione.
-        </p>
-        <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
-          {session.provenance?.documentUrl && (
-            <Button asChild variant="outline">
-              <a
-                href={session.provenance.documentUrl}
-                target="_blank"
-                rel="noreferrer"
-              >
-                Allegato ufficiale
-                <ExternalLink className="ml-2 h-4 w-4" aria-hidden="true" />
-              </a>
-            </Button>
-          )}
-          {session.provenance?.archivedDocumentUrl && (
-            <Button asChild variant="outline">
-              <a
-                href={session.provenance.archivedDocumentUrl}
-                target="_blank"
-                rel="noreferrer"
-              >
-                Copia archiviata
-                <ExternalLink className="ml-2 h-4 w-4" aria-hidden="true" />
-              </a>
-            </Button>
-          )}
-          <Button asChild variant="ghost">
-            <Link href="/metodologia">Leggi metodologia e cautele</Link>
-          </Button>
+
+        <div className="grid gap-3 sm:grid-cols-3">
+          {followUpDocuments.map((field) => (
+            <Card key={field.key} className="p-4">
+              <h3 className="text-sm font-semibold text-foreground">
+                {field.label}
+              </h3>
+              <div className="mt-2">
+                <FieldValue field={field} />
+              </div>
+              <p className="mt-2 text-xs text-muted-foreground">
+                {councilSessionV0FieldStatusLabels[field.sourceStatus]}
+              </p>
+            </Card>
+          ))}
         </div>
+
+        <p className="text-xs leading-relaxed text-muted-foreground">
+          Questo blocco riguarda esclusivamente fonti istituzionali. Eventuali
+          dirette o video delle testate sono presentati separatamente nella
+          copertura editoriale.
+        </p>
       </section>
+
+      <details
+        id="fonti-limiti-v0"
+        className="group rounded-2xl border border-border bg-card"
+      >
+        <summary className="flex cursor-pointer list-none items-center gap-2.5 p-5 font-display text-xl font-bold tracking-tight md:p-6">
+          <Info className="h-5 w-5 text-brand" aria-hidden="true" />
+          Fonti, verifiche e limiti
+          <span className="ml-auto text-sm font-normal text-muted-foreground group-open:hidden">
+            Mostra dettagli
+          </span>
+          <span className="ml-auto hidden text-sm font-normal text-muted-foreground group-open:inline">
+            Nascondi dettagli
+          </span>
+        </summary>
+
+        <div className="border-t border-border p-5 md:p-6">
+          {isDemo ? (
+            <ul className="space-y-2 text-sm leading-relaxed text-muted-foreground">
+              <li>La fixture non contiene una fonte reale.</li>
+              <li>Non certifica copertura storica né una seduta effettiva.</li>
+              <li>Serve esclusivamente a verificare struttura e copy.</li>
+            </ul>
+          ) : (
+            <dl className="grid gap-4 text-sm md:grid-cols-2">
+              <div>
+                <dt className="font-semibold text-foreground">
+                  Pubblicazione Albo
+                </dt>
+                <dd className="mt-1 text-muted-foreground">
+                  {session.provenance?.publicationNumber}
+                </dd>
+              </div>
+              <div>
+                <dt className="font-semibold text-foreground">Acquisita il</dt>
+                <dd className="mt-1 text-muted-foreground">
+                  {formatDate(session.provenance?.retrievedAt ?? null)}
+                </dd>
+              </div>
+              <div>
+                <dt className="font-semibold text-foreground">
+                  Ultimo controllo
+                </dt>
+                <dd className="mt-1 text-muted-foreground">
+                  {formatDate(session.lastCheckedAt.value)}
+                </dd>
+              </div>
+              <div>
+                <dt className="font-semibold text-foreground">
+                  Stato della fonte
+                </dt>
+                <dd className="mt-1 text-muted-foreground">
+                  {session.provenance?.sourceReviewStatus ===
+                  "reviewed_against_official_attachment"
+                    ? "Metadati e allegato ufficiale controllati"
+                    : "Solo metadati ufficiali; allegato non disponibile nell'export"}
+                </dd>
+              </div>
+            </dl>
+          )}
+
+          {session.dataLimits.value && (
+            <div className="mt-5 border-t border-border pt-5">
+              <h3 className="font-semibold text-foreground">Limiti del dato</h3>
+              <FieldValue field={session.dataLimits} />
+            </div>
+          )}
+
+          <p className="mt-5 text-sm leading-relaxed text-muted-foreground">
+            Un campo assente o parziale descrive la copertura delle fonti
+            monitorate. Non è una valutazione sull&apos;ente, sulla regolarità
+            degli atti o sulla disponibilità complessiva della documentazione.
+          </p>
+
+          <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+            {session.provenance?.documentUrl && (
+              <Button asChild variant="outline">
+                <a
+                  href={session.provenance.documentUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  Allegato ufficiale
+                  <ExternalLink className="ml-2 h-4 w-4" aria-hidden="true" />
+                </a>
+              </Button>
+            )}
+            {session.provenance?.archivedDocumentUrl && (
+              <Button asChild variant="outline">
+                <a
+                  href={session.provenance.archivedDocumentUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  Copia archiviata
+                  <ExternalLink className="ml-2 h-4 w-4" aria-hidden="true" />
+                </a>
+              </Button>
+            )}
+            <Button asChild variant="ghost">
+              <Link href="/metodologia">Leggi metodologia e cautele</Link>
+            </Button>
+          </div>
+        </div>
+      </details>
 
       <div className="flex flex-col gap-3 sm:flex-row">
         <Button asChild variant="outline">

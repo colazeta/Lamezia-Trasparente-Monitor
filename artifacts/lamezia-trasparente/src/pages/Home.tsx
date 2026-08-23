@@ -17,6 +17,7 @@ import {
   RefreshCw,
   ShieldAlert,
   Users,
+  Video,
 } from "lucide-react";
 import { format } from "date-fns";
 import { it } from "date-fns/locale";
@@ -104,7 +105,10 @@ function sortByPublication(items: AlboPublicRunItem[]) {
 
 function buildPulseItems(): PulseItem[] {
   const changed: PulseItem[] = [
-    ...ALBO_PUBLIC_DIFF_NEW_ITEMS.map((item) => ({ kind: "new" as const, item })),
+    ...ALBO_PUBLIC_DIFF_NEW_ITEMS.map((item) => ({
+      kind: "new" as const,
+      item,
+    })),
     ...ALBO_PUBLIC_DIFF_CHANGED_ITEMS.map((entry) => ({
       kind: "changed" as const,
       item: entry.after,
@@ -156,7 +160,8 @@ export function Home() {
   const pnrrProjectCount = asApiList(pnrrProjects?.projects).length;
   const pulseItems = buildPulseItems();
   const pulseCounts = ALBO_PUBLIC_DIFF_SUMMARY.counts;
-  const hasDiff = pulseCounts.new + pulseCounts.changed + pulseCounts.removed > 0;
+  const hasDiff =
+    pulseCounts.new + pulseCounts.changed + pulseCounts.removed > 0;
 
   return (
     <div className="flex flex-col">
@@ -279,7 +284,8 @@ export function Home() {
                       Cosa è cambiato dall&apos;ultimo controllo
                     </p>
                     <p className="mt-1 text-xs leading-5 text-muted-foreground">
-                      Albo Pretorio · Ultimo controllo {formatCivicTime(ALBO_OPERATIONAL_STATUS.last_update)}
+                      Albo Pretorio · Ultimo controllo{" "}
+                      {formatCivicTime(ALBO_OPERATIONAL_STATUS.last_update)}
                     </p>
                   </div>
                   <Link
@@ -293,7 +299,10 @@ export function Home() {
                 <div className="mt-3 grid grid-cols-3 gap-2">
                   <PulseCount label="Nuovi" value={pulseCounts.new} />
                   <PulseCount label="Aggiornati" value={pulseCounts.changed} />
-                  <PulseCount label="Non più presenti" value={pulseCounts.removed} />
+                  <PulseCount
+                    label="Non più presenti"
+                    value={pulseCounts.removed}
+                  />
                 </div>
               </CardHeader>
 
@@ -301,11 +310,15 @@ export function Home() {
                 <div className="divide-y divide-border">
                   {pulseItems.length > 0 ? (
                     pulseItems.map((pulse) => (
-                      <AlboPulseRow key={`${pulse.kind}-${pulse.item.id}`} pulse={pulse} />
+                      <AlboPulseRow
+                        key={`${pulse.kind}-${pulse.item.id}`}
+                        pulse={pulse}
+                      />
                     ))
                   ) : (
                     <div className="p-8 text-sm leading-6 text-muted-foreground">
-                      Non risultano record pubblici disponibili nello snapshot corrente.
+                      Non risultano record pubblici disponibili nello snapshot
+                      corrente.
                     </div>
                   )}
                 </div>
@@ -318,7 +331,10 @@ export function Home() {
                   </span>
                   <span className="inline-flex items-center gap-1.5 font-medium">
                     <RefreshCw className="h-3.5 w-3.5" aria-hidden="true" />
-                    Prossimo controllo {formatCivicTime(ALBO_OPERATIONAL_STATUS.next_scheduled_check)}
+                    Prossimo controllo{" "}
+                    {formatCivicTime(
+                      ALBO_OPERATIONAL_STATUS.next_scheduled_check,
+                    )}
                   </span>
                 </div>
               </CardContent>
@@ -368,7 +384,9 @@ export function Home() {
             />
             <StatCard
               title="Importi disponibili"
-              value={stats ? formatMonitoredAmount(stats.monitoredAmount) : undefined}
+              value={
+                stats ? formatMonitoredAmount(stats.monitoredAmount) : undefined
+              }
               loading={statsLoading}
               href="/contratti"
               icon={CheckCircle2}
@@ -387,9 +405,9 @@ export function Home() {
                 Non solo leggere: puoi anche chiedere, proporre e correggere.
               </h2>
               <p className="mt-4 text-base leading-7 text-muted-foreground">
-                Il progetto privilegia contributi documentati e verificabili.
-                Le segnalazioni non vengono trasformate automaticamente in
-                fatti: fonte, contesto e stato di verifica restano distinti.
+                Il progetto privilegia contributi documentati e verificabili. Le
+                segnalazioni non vengono trasformate automaticamente in fatti:
+                fonte, contesto e stato di verifica restano distinti.
               </p>
             </div>
 
@@ -469,9 +487,9 @@ export function HomeInstitutionalSessions() {
           </h2>
           <p className="mt-4 text-base leading-7 text-muted-foreground md:text-lg">
             Consulta convocazioni, date e ordini del giorno collegati alle fonti
-            istituzionali disponibili, insieme agli articoli trovati e
-            revisionati con una ricerca di contesto. Ogni scheda distingue i
-            dati verificati da quelli ancora da controllare.
+            istituzionali disponibili, insieme ad articoli, dirette e video
+            trovati e revisionati con una ricerca di contesto. Ogni scheda
+            distingue i dati verificati da quelli ancora da controllare.
           </p>
 
           <div className="mt-5 rounded-xl border border-primary/20 bg-primary/5 p-4 text-sm leading-6 text-muted-foreground">
@@ -485,7 +503,9 @@ export function HomeInstitutionalSessions() {
 
           <div className="mt-6 flex flex-col gap-3 sm:flex-row lg:flex-col xl:flex-row">
             <Button asChild>
-              <Link href="/convocazioni">Apri l&apos;archivio delle sedute</Link>
+              <Link href="/convocazioni">
+                Apri l&apos;archivio delle sedute
+              </Link>
             </Button>
             <Button asChild variant="outline">
               <Link href="/metodologia">Fonti e limiti</Link>
@@ -537,9 +557,7 @@ function InstitutionalSessionsHomeCard({
             <Icon className="h-5 w-5" aria-hidden="true" />
           </span>
           <span className="rounded-full border border-primary/20 bg-primary/5 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-primary">
-            {attachmentReviewed
-              ? "Allegato controllato"
-              : "Metadati ufficiali"}
+            {attachmentReviewed ? "Allegato controllato" : "Metadati ufficiali"}
           </span>
         </div>
         <h3 className="mt-4 font-display text-2xl font-bold tracking-tight">
@@ -554,8 +572,23 @@ function InstitutionalSessionsHomeCard({
         <div className="divide-y divide-border">
           {sessions.map((session) => {
             const agendaCount = session.agenda.value?.length ?? 0;
-            const contextArticleCount =
-              session.contextResearch.articles.length;
+            const contextArticleCount = session.contextResearch.articles.length;
+            const contextMediaCount = session.contextResearch.media.length;
+            const contextCountSummary = [
+              contextArticleCount > 0
+                ? `${contextArticleCount} ${contextArticleCount === 1 ? "articolo" : "articoli"}`
+                : null,
+              contextMediaCount > 0
+                ? `${contextMediaCount} ${contextMediaCount === 1 ? "video" : "video"}`
+                : null,
+            ]
+              .filter(Boolean)
+              .join(" · ");
+            const contextStatusSummary =
+              contextCountSummary ||
+              (session.contextResearch.status === "checked_no_match"
+                ? "Ricerca eseguita · nessun collegamento preciso"
+                : "Ricerca da completare");
             const contextRelationshipSummary =
               session.contextResearch.articles.every(
                 (article) => article.relationship === "possible_same_session",
@@ -586,19 +619,23 @@ function InstitutionalSessionsHomeCard({
                         ? `${agendaCount} punti all'ordine del giorno · stato della seduta non verificato`
                         : "Ordine del giorno da verificare · stato della seduta non verificato"}
                     </p>
-                    {contextArticleCount > 0 && (
-                      <p className="mt-1 flex items-center gap-1.5 text-xs font-semibold text-primary">
+                    <p className="mt-1 flex items-center gap-1.5 text-xs font-semibold text-primary">
+                      {contextMediaCount > 0 ? (
+                        <Video
+                          className="h-3.5 w-3.5 shrink-0"
+                          aria-hidden="true"
+                        />
+                      ) : (
                         <Newspaper
                           className="h-3.5 w-3.5 shrink-0"
                           aria-hidden="true"
                         />
-                        {contextArticleCount}{" "}
-                        {contextArticleCount === 1
-                          ? "articolo di contesto"
-                          : "articoli di contesto"}{" "}
-                        · {contextRelationshipSummary}
-                      </p>
-                    )}
+                      )}
+                      {contextStatusSummary}
+                      {contextArticleCount > 0
+                        ? ` · ${contextRelationshipSummary}`
+                        : ""}
+                    </p>
                   </div>
                   <ArrowRight
                     className="ml-auto mt-0.5 h-4 w-4 shrink-0 text-muted-foreground transition-transform group-hover:translate-x-0.5 group-hover:text-primary"
@@ -640,7 +677,10 @@ function AlboPulseRow({ pulse }: { pulse: PulseItem }) {
     : formatDate(item.publication_start);
 
   return (
-    <Link href="/albo" className="group block p-4 transition-colors hover:bg-muted/45">
+    <Link
+      href="/albo"
+      className="group block p-4 transition-colors hover:bg-muted/45"
+    >
       <div className="mb-2 flex flex-wrap items-center gap-2">
         <span className="rounded-full border border-primary/20 bg-primary/5 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-primary">
           {PULSE_LABELS[kind]}
@@ -681,7 +721,9 @@ function StatCard({
       href={href}
       className={`relative block overflow-hidden rounded-lg border border-card-border bg-card p-5 shadow-[var(--shadow-card)] transition-colors hover:border-primary/35 hover:bg-primary/5 ${highlight ? "ring-1 ring-brand/20" : ""}`}
     >
-      {highlight ? <span className="absolute left-0 top-0 h-full w-1 bg-brand" /> : null}
+      {highlight ? (
+        <span className="absolute left-0 top-0 h-full w-1 bg-brand" />
+      ) : null}
       <div className="mb-3 flex items-center gap-3">
         <span
           className={`rounded-md p-2 ${highlight ? "bg-brand/15 text-brand" : "bg-muted text-muted-foreground"}`}
@@ -720,7 +762,9 @@ function ParticipationCard({
       className="group rounded-xl border border-card-border bg-card p-5 shadow-[var(--shadow-card)] transition-colors hover:border-primary/35 hover:bg-primary/5"
     >
       <h3 className="font-display text-lg font-bold">{title}</h3>
-      <p className="mt-2 text-sm leading-6 text-muted-foreground">{description}</p>
+      <p className="mt-2 text-sm leading-6 text-muted-foreground">
+        {description}
+      </p>
       <span className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-primary">
         Apri
         <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
