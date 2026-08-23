@@ -54,6 +54,19 @@ Safeguards: no PDFs or attachments are parsed, no generative summaries are produ
 | Existing materialization debt #522/#524/#525 | materialization | Materialization governor | Recover only complete PR/diff/bundle, otherwise keep classified |
 | Open PR #162 not mergeable | PR review | PR governor | Do not merge from this lane; keep separate from P0 civic governance |
 
+## Radar sedute — gate fonte e pubblicazione
+
+Issue linkage: #740. Questa tranche propone tre schede reali e il detector per gli avvisi di Consiglio e Commissioni senza autorizzare pubblicazione automatica o dichiarare completezza.
+
+| Decisione | Stato | Evidenza | Gate umano richiesto |
+| --- | --- | --- | --- |
+| Riconoscere i due tipi atto istituzionali esatti | Proposto e coperto da test | Dizionario Albo e helper candidati | Confermare che il perimetro esatto sia sufficiente per la prima tranche |
+| Pubblicazione `2026/2673` | Metadata-only | Record Albo ufficiale, allegato non esposto dall'export | Confermare che la scheda resti pubblicabile senza data, ora e ordine del giorno |
+| Pubblicazione `2026/2648` | Trascrizione fonte-centrica proposta | Allegato ufficiale, copia e hash archiviati | Confrontare le due date, l'orario e i due punti dell'ordine del giorno prima del merge |
+| Stato delle sedute | Non verificato | Nessuna fonte successiva collegata in questa tranche | Non trasformare la convocazione in “svolta” senza nuova evidenza |
+
+Il merge del PR collegato costituisce il gate editoriale umano. Fino alla review, le schede sono una proposta revisionabile nel branch e non un'autorizzazione a inferire presenze, votazioni, esiti, responsabilità o completezza storica.
+
 ## GitHub comment template
 
 ```md

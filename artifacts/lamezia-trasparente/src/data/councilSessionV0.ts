@@ -5,7 +5,83 @@ export const COUNCIL_SESSION_V0_STATUSES = [
   "non_verificata",
 ] as const;
 
-export type CouncilSessionV0Status = (typeof COUNCIL_SESSION_V0_STATUSES)[number];
+export type CouncilSessionV0Status =
+  (typeof COUNCIL_SESSION_V0_STATUSES)[number];
+
+export type CouncilSessionV0Kind = "council" | "commission";
+
+export const councilSessionV0KindLabels: Record<CouncilSessionV0Kind, string> =
+  {
+    council: "Consiglio comunale",
+    commission: "Commissione consiliare",
+  };
+
+export const COUNCIL_SESSION_V0_CONTEXT_RELATIONSHIPS = [
+  "same_session",
+  "possible_same_session",
+  "agenda_item",
+] as const;
+
+export type CouncilSessionV0ContextRelationship =
+  (typeof COUNCIL_SESSION_V0_CONTEXT_RELATIONSHIPS)[number];
+
+export const councilSessionV0ContextRelationshipLabels: Record<
+  CouncilSessionV0ContextRelationship,
+  string
+> = {
+  same_session: "Stessa seduta",
+  possible_same_session: "Possibile corrispondenza",
+  agenda_item: "Tema all'ordine del giorno",
+};
+
+export const COUNCIL_SESSION_V0_CONTEXT_MEDIA_TYPES = [
+  "live_stream",
+  "full_recording",
+  "excerpt",
+  "interview",
+] as const;
+
+export type CouncilSessionV0ContextMediaType =
+  (typeof COUNCIL_SESSION_V0_CONTEXT_MEDIA_TYPES)[number];
+
+export const councilSessionV0ContextMediaTypeLabels: Record<
+  CouncilSessionV0ContextMediaType,
+  string
+> = {
+  live_stream: "Diretta editoriale",
+  full_recording: "Registrazione integrale editoriale",
+  excerpt: "Estratto video",
+  interview: "Intervista",
+};
+
+export const COUNCIL_SESSION_V0_CONTEXT_MEDIA_AVAILABILITY = [
+  "scheduled",
+  "live",
+  "replay_available",
+  "unavailable",
+] as const;
+
+export type CouncilSessionV0ContextMediaAvailability =
+  (typeof COUNCIL_SESSION_V0_CONTEXT_MEDIA_AVAILABILITY)[number];
+
+export const councilSessionV0ContextMediaAvailabilityLabels: Record<
+  CouncilSessionV0ContextMediaAvailability,
+  string
+> = {
+  scheduled: "Diretta annunciata",
+  live: "In diretta",
+  replay_available: "Replay disponibile",
+  unavailable: "Collegamento non disponibile",
+};
+
+export const COUNCIL_SESSION_V0_CONTEXT_RESEARCH_STATUSES = [
+  "not_run",
+  "checked_no_match",
+  "reviewed_matches",
+] as const;
+
+export type CouncilSessionV0ContextResearchStatus =
+  (typeof COUNCIL_SESSION_V0_CONTEXT_RESEARCH_STATUSES)[number];
 
 export const COUNCIL_SESSION_V0_FIELD_STATUSES = [
   "verificato",
@@ -18,17 +94,23 @@ export const COUNCIL_SESSION_V0_FIELD_STATUSES = [
 export type CouncilSessionV0FieldStatus =
   (typeof COUNCIL_SESSION_V0_FIELD_STATUSES)[number];
 
-export const councilSessionV0StatusLabels: Record<CouncilSessionV0Status, string> = {
+export const councilSessionV0StatusLabels: Record<
+  CouncilSessionV0Status,
+  string
+> = {
   programmata: "Seduta programmata",
   svolta: "Seduta svolta",
   rinviata: "Seduta rinviata",
   non_verificata: "Stato della seduta non verificato",
 };
 
-export const councilSessionV0FieldStatusLabels: Record<CouncilSessionV0FieldStatus, string> = {
+export const councilSessionV0FieldStatusLabels: Record<
+  CouncilSessionV0FieldStatus,
+  string
+> = {
   verificato: "Dato verificato dalla fonte indicata",
   parziale: "Dato parziale o incompleto",
-  assente: "Dato non disponibile nella fonte consultata",
+  assente: "Dato non rilevato nella fonte consultata",
   da_verificare: "Dato da verificare prima dell'uso pubblico",
   fixture_dimostrativa: "Dato dimostrativo, non fonte reale",
 };
@@ -54,9 +136,61 @@ export interface CouncilSessionV0Field<T> {
   limit: string;
 }
 
+export type CouncilSessionV0SourceReviewStatus =
+  | "official_metadata_only"
+  | "reviewed_against_official_attachment";
+
+export interface CouncilSessionV0Provenance {
+  noticeId: string;
+  publicationNumber: string;
+  sourceLabel: string;
+  sourceUrl: string;
+  documentUrl: string | null;
+  archivedDocumentUrl: string | null;
+  sourceContentHash: string;
+  documentSha256: string | null;
+  embeddedDocumentSha256: string | null;
+  retrievedAt: string;
+  reviewedAt: string;
+  sourceReviewStatus: CouncilSessionV0SourceReviewStatus;
+}
+
+export interface CouncilSessionV0ContextArticle {
+  title: string;
+  url: string;
+  publisher: string;
+  publishedAt: string | null;
+  relationship: CouncilSessionV0ContextRelationship;
+  relevanceNote: string;
+  reviewedAt: string;
+}
+
+export interface CouncilSessionV0ContextMedia {
+  title: string;
+  url: string;
+  publisher: string;
+  publishedAt: string | null;
+  relationship: CouncilSessionV0ContextRelationship;
+  mediaType: CouncilSessionV0ContextMediaType;
+  availability: CouncilSessionV0ContextMediaAvailability;
+  relevanceNote: string;
+  reviewedAt: string;
+}
+
+export interface CouncilSessionV0ContextResearch {
+  status: CouncilSessionV0ContextResearchStatus;
+  checkedAt: string | null;
+  searchNote: string;
+  articles: readonly CouncilSessionV0ContextArticle[];
+  media: readonly CouncilSessionV0ContextMedia[];
+}
+
 export interface CouncilSessionV0 {
   id: string;
+  kind: CouncilSessionV0Kind;
   isDemoFixture: boolean;
+  provenance?: CouncilSessionV0Provenance;
+  contextResearch: CouncilSessionV0ContextResearch;
   title: CouncilSessionV0Field<string>;
   scheduledAt: CouncilSessionV0Field<string>;
   sessionStatus: CouncilSessionV0Field<CouncilSessionV0Status>;
@@ -71,10 +205,14 @@ export interface CouncilSessionV0 {
 
 const missingFieldNotes: Record<CouncilSessionV0FieldStatus, string> = {
   verificato: "Informazione verificata rispetto alla fonte indicata.",
-  parziale: "Informazione disponibile solo in parte: leggere i limiti del dato prima di usarla.",
-  assente: "Informazione non presente nella fonte consultata o non ancora disponibile.",
-  da_verificare: "Informazione in attesa di verifica: non usarla come dato confermato.",
-  fixture_dimostrativa: "Informazione dimostrativa: serve solo a mostrare il formato della scheda.",
+  parziale:
+    "Informazione disponibile solo in parte: leggere i limiti del dato prima di usarla.",
+  assente:
+    "Informazione non presente nella fonte consultata o non ancora disponibile.",
+  da_verificare:
+    "Informazione in attesa di verifica: non usarla come dato confermato.",
+  fixture_dimostrativa:
+    "Informazione dimostrativa: serve solo a mostrare il formato della scheda.",
 };
 
 export function getCouncilSessionV0PublicFieldNote(
@@ -83,28 +221,39 @@ export function getCouncilSessionV0PublicFieldNote(
   return `${missingFieldNotes[field.sourceStatus]} ${field.limit}`;
 }
 
-export const councilSessionV0PublicFields: readonly CouncilSessionV0PublicFieldKey[] = [
-  "title",
-  "scheduledAt",
-  "sessionStatus",
-  "agenda",
-  "sourceLink",
-  "liveStreaming",
-  "recording",
-  "minutesOrReport",
-  "lastCheckedAt",
-  "dataLimits",
-] as const;
+export const councilSessionV0PublicFields: readonly CouncilSessionV0PublicFieldKey[] =
+  [
+    "title",
+    "scheduledAt",
+    "sessionStatus",
+    "agenda",
+    "sourceLink",
+    "liveStreaming",
+    "recording",
+    "minutesOrReport",
+    "lastCheckedAt",
+    "dataLimits",
+  ] as const;
 
 export const councilSessionV0DemoFixture: CouncilSessionV0 = {
   id: "demo-consiglio-comunale-v0",
+  kind: "council",
   isDemoFixture: true,
+  contextResearch: {
+    status: "not_run",
+    checkedAt: null,
+    searchNote:
+      "Ricerca di contesto non eseguita: la scheda è una fixture dimostrativa e non descrive una seduta reale.",
+    articles: [],
+    media: [],
+  },
   title: {
     key: "title",
     label: "Titolo",
     value: "Convocazione del Consiglio comunale — esempio dimostrativo",
     sourceStatus: "fixture_dimostrativa",
-    limit: "Titolo costruito per testare la scheda; non rappresenta una convocazione reale.",
+    limit:
+      "Titolo costruito per testare la scheda; non rappresenta una convocazione reale.",
   },
   scheduledAt: {
     key: "scheduledAt",
@@ -173,10 +322,13 @@ export const councilSessionV0DemoFixture: CouncilSessionV0 = {
       "Ogni campo deve esporre stato fonte, limite e data di verifica quando sarà collegato a fonti effettive.",
     ],
     sourceStatus: "fixture_dimostrativa",
-    limit: "I limiti descrivono il comportamento atteso della versione pubblica, non la copertura effettiva del Comune.",
+    limit:
+      "I limiti descrivono il comportamento atteso della versione pubblica, non la copertura effettiva del Comune.",
   },
 };
 
-export function isCouncilSessionV0DemoFixture(session: CouncilSessionV0): boolean {
+export function isCouncilSessionV0DemoFixture(
+  session: CouncilSessionV0,
+): boolean {
   return session.isDemoFixture;
 }

@@ -1,7 +1,6 @@
 import { Link } from "wouter";
 import {
   useGetStatsOverview,
-  useListConvocazioni,
   useListPnrrProjects,
 } from "@workspace/api-client-react";
 import {
@@ -14,9 +13,11 @@ import {
   FileText,
   Landmark,
   Megaphone,
+  Newspaper,
   RefreshCw,
   ShieldAlert,
   Users,
+  Video,
 } from "lucide-react";
 import { format } from "date-fns";
 import { it } from "date-fns/locale";
@@ -33,15 +34,10 @@ import {
   type AlboPublicRunItem,
 } from "@/data/alboPublicRun";
 import { ALBO_OPERATIONAL_STATUS } from "@/data/alboStatus";
+import { councilSessionV0ReviewedRecords } from "@/data/councilSessionV0Reviewed";
+import type { CouncilSessionV0 } from "@/data/councilSessionV0";
 import { asApiList } from "@/lib/apiList";
 import { PUBLIC_NUMBER_PLACEHOLDER } from "@/lib/publicNumbers";
-
-type ConvocazioneItem = {
-  id: number;
-  oggetto: string;
-  dataAtto?: string | null;
-  pubStart?: string | null;
-};
 
 type PulseKind = "new" | "changed" | "removed" | "context";
 
@@ -87,6 +83,18 @@ function formatCivicTime(value: string | null | undefined) {
   }).format(date);
 }
 
+function formatSessionDate(value: string | null) {
+  if (!value) return "Data e ora da verificare";
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "Data e ora da verificare";
+
+  return new Intl.DateTimeFormat("it-IT", {
+    timeZone: "Europe/Rome",
+    dateStyle: "long",
+    timeStyle: "short",
+  }).format(date);
+}
+
 function sortByPublication(items: AlboPublicRunItem[]) {
   return [...items].sort((a, b) => {
     const left = `${a.publication_start ?? ""}-${a.publication_number ?? ""}`;
@@ -97,7 +105,10 @@ function sortByPublication(items: AlboPublicRunItem[]) {
 
 function buildPulseItems(): PulseItem[] {
   const changed: PulseItem[] = [
-    ...ALBO_PUBLIC_DIFF_NEW_ITEMS.map((item) => ({ kind: "new" as const, item })),
+    ...ALBO_PUBLIC_DIFF_NEW_ITEMS.map((item) => ({
+      kind: "new" as const,
+      item,
+    })),
     ...ALBO_PUBLIC_DIFF_CHANGED_ITEMS.map((entry) => ({
       kind: "changed" as const,
       item: entry.after,
@@ -117,12 +128,12 @@ function buildPulseItems(): PulseItem[] {
 
 const gateways = [
   {
-    title: "Cosa sta succedendo",
+    title: "Consiglio e Commissioni",
     description:
-      "Ultimi atti e variazioni dell'Albo, insieme a sedute e appuntamenti pubblici.",
-    href: "/albo",
-    cta: "Vedi cosa è cambiato",
-    icon: FileSearch,
+      "Convocazioni, date, ordini del giorno e documenti collegati alle fonti disponibili.",
+    href: "/convocazioni",
+    cta: "Segui i lavori",
+    icon: Users,
   },
   {
     title: "Dove vanno i soldi",
@@ -145,16 +156,12 @@ const gateways = [
 export function Home() {
   const { data: stats, isLoading: statsLoading } = useGetStatsOverview();
   const { data: pnrrProjects } = useListPnrrProjects();
-  const { data: consiglio, isLoading: consiglioLoading } = useListConvocazioni({
-    tipo: "consiglio",
-  });
-  const { data: commissioni, isLoading: commissioniLoading } =
-    useListConvocazioni({ tipo: "commissione" });
 
   const pnrrProjectCount = asApiList(pnrrProjects?.projects).length;
   const pulseItems = buildPulseItems();
   const pulseCounts = ALBO_PUBLIC_DIFF_SUMMARY.counts;
-  const hasDiff = pulseCounts.new + pulseCounts.changed + pulseCounts.removed > 0;
+  const hasDiff =
+    pulseCounts.new + pulseCounts.changed + pulseCounts.removed > 0;
 
   return (
     <div className="flex flex-col">
@@ -253,6 +260,8 @@ export function Home() {
         </div>
       </section>
 
+      <HomeInstitutionalSessions />
+
       <section id="oggi" className="scroll-mt-24 bg-muted/25 py-14 md:py-20">
         <div className="container mx-auto px-4 md:px-6">
           <div className="mb-8 max-w-3xl">
@@ -266,7 +275,7 @@ export function Home() {
             </p>
           </div>
 
-          <div className="grid gap-6 lg:grid-cols-[1.08fr_0.92fr]">
+          <div className="grid gap-6">
             <Card className="overflow-hidden">
               <CardHeader className="border-b border-border bg-card py-4">
                 <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
@@ -275,7 +284,8 @@ export function Home() {
                       Cosa è cambiato dall&apos;ultimo controllo
                     </p>
                     <p className="mt-1 text-xs leading-5 text-muted-foreground">
-                      Albo Pretorio · ultimo controllo {formatCivicTime(ALBO_OPERATIONAL_STATUS.last_update)}
+                      Albo Pretorio · Ultimo controllo{" "}
+                      {formatCivicTime(ALBO_OPERATIONAL_STATUS.last_update)}
                     </p>
                   </div>
                   <Link
@@ -289,7 +299,10 @@ export function Home() {
                 <div className="mt-3 grid grid-cols-3 gap-2">
                   <PulseCount label="Nuovi" value={pulseCounts.new} />
                   <PulseCount label="Aggiornati" value={pulseCounts.changed} />
-                  <PulseCount label="Non più presenti" value={pulseCounts.removed} />
+                  <PulseCount
+                    label="Non più presenti"
+                    value={pulseCounts.removed}
+                  />
                 </div>
               </CardHeader>
 
@@ -297,11 +310,15 @@ export function Home() {
                 <div className="divide-y divide-border">
                   {pulseItems.length > 0 ? (
                     pulseItems.map((pulse) => (
-                      <AlboPulseRow key={`${pulse.kind}-${pulse.item.id}`} pulse={pulse} />
+                      <AlboPulseRow
+                        key={`${pulse.kind}-${pulse.item.id}`}
+                        pulse={pulse}
+                      />
                     ))
                   ) : (
                     <div className="p-8 text-sm leading-6 text-muted-foreground">
-                      Non risultano record pubblici disponibili nello snapshot corrente.
+                      Non risultano record pubblici disponibili nello snapshot
+                      corrente.
                     </div>
                   )}
                 </div>
@@ -314,26 +331,14 @@ export function Home() {
                   </span>
                   <span className="inline-flex items-center gap-1.5 font-medium">
                     <RefreshCw className="h-3.5 w-3.5" aria-hidden="true" />
-                    Prossimo controllo {formatCivicTime(ALBO_OPERATIONAL_STATUS.next_scheduled_check)}
+                    Prossimo controllo{" "}
+                    {formatCivicTime(
+                      ALBO_OPERATIONAL_STATUS.next_scheduled_check,
+                    )}
                   </span>
                 </div>
               </CardContent>
             </Card>
-
-            <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-1">
-              <AgendaCard
-                title="Consiglio comunale"
-                icon={Users}
-                items={consiglio}
-                loading={consiglioLoading}
-              />
-              <AgendaCard
-                title="Commissioni"
-                icon={CalendarClock}
-                items={commissioni}
-                loading={commissioniLoading}
-              />
-            </div>
           </div>
         </div>
       </section>
@@ -379,7 +384,9 @@ export function Home() {
             />
             <StatCard
               title="Importi disponibili"
-              value={stats ? formatMonitoredAmount(stats.monitoredAmount) : undefined}
+              value={
+                stats ? formatMonitoredAmount(stats.monitoredAmount) : undefined
+              }
               loading={statsLoading}
               href="/contratti"
               icon={CheckCircle2}
@@ -398,9 +405,9 @@ export function Home() {
                 Non solo leggere: puoi anche chiedere, proporre e correggere.
               </h2>
               <p className="mt-4 text-base leading-7 text-muted-foreground">
-                Il progetto privilegia contributi documentati e verificabili.
-                Le segnalazioni non vengono trasformate automaticamente in
-                fatti: fonte, contesto e stato di verifica restano distinti.
+                Il progetto privilegia contributi documentati e verificabili. Le
+                segnalazioni non vengono trasformate automaticamente in fatti:
+                fonte, contesto e stato di verifica restano distinti.
               </p>
             </div>
 
@@ -455,6 +462,201 @@ export function Home() {
   );
 }
 
+const councilHomeSessions = councilSessionV0ReviewedRecords.filter(
+  (session) => session.kind === "council",
+);
+const commissionHomeSessions = councilSessionV0ReviewedRecords.filter(
+  (session) => session.kind === "commission",
+);
+
+export function HomeInstitutionalSessions() {
+  return (
+    <section
+      id="consiglio-commissioni"
+      aria-labelledby="consiglio-commissioni-title"
+      className="scroll-mt-24 border-b border-border bg-background py-14 md:py-20"
+    >
+      <div className="container mx-auto grid gap-8 px-4 md:px-6 lg:grid-cols-[0.72fr_1.28fr] lg:items-start">
+        <div className="max-w-xl">
+          <span className="eyebrow text-primary">Lavori degli organi</span>
+          <h2
+            id="consiglio-commissioni-title"
+            className="mt-2 font-display text-3xl font-bold tracking-tight md:text-5xl"
+          >
+            Segui Consiglio comunale e Commissioni
+          </h2>
+          <p className="mt-4 text-base leading-7 text-muted-foreground md:text-lg">
+            Consulta convocazioni, date e ordini del giorno collegati alle fonti
+            istituzionali disponibili, insieme ad articoli, dirette e video
+            trovati e revisionati con una ricerca di contesto. Ogni scheda
+            distingue i dati verificati da quelli ancora da controllare.
+          </p>
+
+          <div className="mt-5 rounded-xl border border-primary/20 bg-primary/5 p-4 text-sm leading-6 text-muted-foreground">
+            <p className="font-semibold text-foreground">Copertura iniziale</p>
+            <p className="mt-1">
+              Sono mostrate le prime pubblicazioni revisionate. Una convocazione
+              documenta la programmazione o l&apos;avviso, ma non prova che la
+              seduta si sia svolta.
+            </p>
+          </div>
+
+          <div className="mt-6 flex flex-col gap-3 sm:flex-row lg:flex-col xl:flex-row">
+            <Button asChild>
+              <Link href="/convocazioni">
+                Apri l&apos;archivio delle sedute
+              </Link>
+            </Button>
+            <Button asChild variant="outline">
+              <Link href="/metodologia">Fonti e limiti</Link>
+            </Button>
+          </div>
+        </div>
+
+        <div className="grid gap-5 md:grid-cols-2">
+          <InstitutionalSessionsHomeCard
+            title="Consiglio comunale"
+            description="Un avviso ufficiale individuato nell'Albo. Data, ora e ordine del giorno restano da verificare perché l'export monitorato non espone l'allegato."
+            icon={Users}
+            sessions={councilHomeSessions}
+          />
+          <InstitutionalSessionsHomeCard
+            title="Commissioni consiliari"
+            description="Due sedute della II Commissione trascritte dallo stesso allegato ufficiale, con data, ora e ordine del giorno controllati."
+            icon={CalendarClock}
+            sessions={commissionHomeSessions}
+          />
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function InstitutionalSessionsHomeCard({
+  title,
+  description,
+  icon: Icon,
+  sessions,
+}: {
+  title: string;
+  description: string;
+  icon: React.ElementType;
+  sessions: readonly CouncilSessionV0[];
+}) {
+  const attachmentReviewed = sessions.some(
+    (session) =>
+      session.provenance?.sourceReviewStatus ===
+      "reviewed_against_official_attachment",
+  );
+
+  return (
+    <Card className="flex h-full flex-col overflow-hidden border-primary/20">
+      <CardHeader className="border-b border-border bg-muted/25 py-4">
+        <div className="flex items-start justify-between gap-3">
+          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+            <Icon className="h-5 w-5" aria-hidden="true" />
+          </span>
+          <span className="rounded-full border border-primary/20 bg-primary/5 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-primary">
+            {attachmentReviewed ? "Allegato controllato" : "Metadati ufficiali"}
+          </span>
+        </div>
+        <h3 className="mt-4 font-display text-2xl font-bold tracking-tight">
+          {title}
+        </h3>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">
+          {description}
+        </p>
+      </CardHeader>
+
+      <CardContent className="flex flex-1 flex-col p-0">
+        <div className="divide-y divide-border">
+          {sessions.map((session) => {
+            const agendaCount = session.agenda.value?.length ?? 0;
+            const contextArticleCount = session.contextResearch.articles.length;
+            const contextMediaCount = session.contextResearch.media.length;
+            const contextCountSummary = [
+              contextArticleCount > 0
+                ? `${contextArticleCount} ${contextArticleCount === 1 ? "articolo" : "articoli"}`
+                : null,
+              contextMediaCount > 0
+                ? `${contextMediaCount} ${contextMediaCount === 1 ? "video" : "video"}`
+                : null,
+            ]
+              .filter(Boolean)
+              .join(" · ");
+            const contextStatusSummary =
+              contextCountSummary ||
+              (session.contextResearch.status === "checked_no_match"
+                ? "Ricerca eseguita · nessun collegamento preciso"
+                : "Ricerca da completare");
+            const contextRelationshipSummary =
+              session.contextResearch.articles.every(
+                (article) => article.relationship === "possible_same_session",
+              )
+                ? "possibili corrispondenze"
+                : session.contextResearch.articles.every(
+                      (article) => article.relationship === "agenda_item",
+                    )
+                  ? "sui temi in agenda"
+                  : "relazioni distinte in scheda";
+            return (
+              <Link
+                key={session.id}
+                href={`/convocazioni/${session.id}`}
+                className="group block p-4 transition-colors hover:bg-muted/45"
+              >
+                <div className="flex items-start gap-3">
+                  <Calendar
+                    className="mt-0.5 h-4 w-4 shrink-0 text-primary"
+                    aria-hidden="true"
+                  />
+                  <div className="min-w-0">
+                    <p className="text-sm font-bold text-foreground group-hover:text-primary">
+                      {formatSessionDate(session.scheduledAt.value)}
+                    </p>
+                    <p className="mt-1 line-clamp-2 text-xs leading-5 text-muted-foreground">
+                      {agendaCount > 0
+                        ? `${agendaCount} punti all'ordine del giorno · stato della seduta non verificato`
+                        : "Ordine del giorno da verificare · stato della seduta non verificato"}
+                    </p>
+                    <p className="mt-1 flex items-center gap-1.5 text-xs font-semibold text-primary">
+                      {contextMediaCount > 0 ? (
+                        <Video
+                          className="h-3.5 w-3.5 shrink-0"
+                          aria-hidden="true"
+                        />
+                      ) : (
+                        <Newspaper
+                          className="h-3.5 w-3.5 shrink-0"
+                          aria-hidden="true"
+                        />
+                      )}
+                      {contextStatusSummary}
+                      {contextArticleCount > 0
+                        ? ` · ${contextRelationshipSummary}`
+                        : ""}
+                    </p>
+                  </div>
+                  <ArrowRight
+                    className="ml-auto mt-0.5 h-4 w-4 shrink-0 text-muted-foreground transition-transform group-hover:translate-x-0.5 group-hover:text-primary"
+                    aria-hidden="true"
+                  />
+                </div>
+              </Link>
+            );
+          })}
+        </div>
+
+        <div className="mt-auto border-t border-border bg-muted/20 px-4 py-3 text-xs leading-5 text-muted-foreground">
+          {sessions.length > 0
+            ? `Fonte: Albo Pretorio · pubblicazione ${sessions[0].provenance?.publicationNumber}`
+            : "Nessuna scheda revisionata disponibile."}
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
+
 function PulseCount({ label, value }: { label: string; value: number }) {
   return (
     <div className="rounded-lg border border-border bg-background px-3 py-2">
@@ -475,7 +677,10 @@ function AlboPulseRow({ pulse }: { pulse: PulseItem }) {
     : formatDate(item.publication_start);
 
   return (
-    <Link href="/albo" className="group block p-4 transition-colors hover:bg-muted/45">
+    <Link
+      href="/albo"
+      className="group block p-4 transition-colors hover:bg-muted/45"
+    >
       <div className="mb-2 flex flex-wrap items-center gap-2">
         <span className="rounded-full border border-primary/20 bg-primary/5 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-primary">
           {PULSE_LABELS[kind]}
@@ -493,71 +698,6 @@ function AlboPulseRow({ pulse }: { pulse: PulseItem }) {
         <span>{publication}</span>
       </div>
     </Link>
-  );
-}
-
-function AgendaCard({
-  title,
-  icon: Icon,
-  items,
-  loading,
-}: {
-  title: string;
-  icon: React.ElementType;
-  items: ConvocazioneItem[] | undefined;
-  loading: boolean;
-}) {
-  const safeItems = asApiList<ConvocazioneItem>(items).slice(0, 2);
-
-  return (
-    <Card className="overflow-hidden">
-      <CardHeader className="flex flex-row items-center justify-between gap-3 border-b border-border bg-card py-3.5">
-        <div className="flex items-center gap-2.5">
-          <span className="rounded-md bg-primary/10 p-1.5 text-primary">
-            <Icon className="h-4 w-4" aria-hidden="true" />
-          </span>
-          <h3 className="font-display text-sm font-bold">{title}</h3>
-        </div>
-        <Link
-          href="/convocazioni"
-          className="text-xs font-semibold text-primary hover:underline"
-        >
-          Agenda
-        </Link>
-      </CardHeader>
-      <CardContent className="p-0">
-        <div className="divide-y divide-border">
-          {loading ? (
-            Array.from({ length: 2 }).map((_, index) => (
-              <div key={index} className="space-y-2 p-4">
-                <Skeleton className="h-3 w-24" />
-                <Skeleton className="h-4 w-full" />
-              </div>
-            ))
-          ) : safeItems.length > 0 ? (
-            safeItems.map((item) => (
-              <Link
-                key={item.id}
-                href={`/convocazioni/${item.id}`}
-                className="block p-4 transition-colors hover:bg-muted/45"
-              >
-                <div className="mb-1.5 flex items-center gap-1.5 text-xs font-semibold text-brand">
-                  <Calendar className="h-3.5 w-3.5" aria-hidden="true" />
-                  {formatDate(item.dataAtto ?? item.pubStart)}
-                </div>
-                <p className="line-clamp-2 text-sm font-medium leading-snug">
-                  {item.oggetto}
-                </p>
-              </Link>
-            ))
-          ) : (
-            <div className="p-5 text-sm leading-6 text-muted-foreground">
-              Non risultano sedute disponibili nella fonte collegata.
-            </div>
-          )}
-        </div>
-      </CardContent>
-    </Card>
   );
 }
 
@@ -581,7 +721,9 @@ function StatCard({
       href={href}
       className={`relative block overflow-hidden rounded-lg border border-card-border bg-card p-5 shadow-[var(--shadow-card)] transition-colors hover:border-primary/35 hover:bg-primary/5 ${highlight ? "ring-1 ring-brand/20" : ""}`}
     >
-      {highlight ? <span className="absolute left-0 top-0 h-full w-1 bg-brand" /> : null}
+      {highlight ? (
+        <span className="absolute left-0 top-0 h-full w-1 bg-brand" />
+      ) : null}
       <div className="mb-3 flex items-center gap-3">
         <span
           className={`rounded-md p-2 ${highlight ? "bg-brand/15 text-brand" : "bg-muted text-muted-foreground"}`}
@@ -620,7 +762,9 @@ function ParticipationCard({
       className="group rounded-xl border border-card-border bg-card p-5 shadow-[var(--shadow-card)] transition-colors hover:border-primary/35 hover:bg-primary/5"
     >
       <h3 className="font-display text-lg font-bold">{title}</h3>
-      <p className="mt-2 text-sm leading-6 text-muted-foreground">{description}</p>
+      <p className="mt-2 text-sm leading-6 text-muted-foreground">
+        {description}
+      </p>
       <span className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-primary">
         Apri
         <ArrowUpRight className="h-4 w-4" aria-hidden="true" />

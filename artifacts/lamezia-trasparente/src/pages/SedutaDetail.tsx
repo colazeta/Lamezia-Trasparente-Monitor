@@ -37,8 +37,9 @@ import {
   macrotemaColors,
   macrotemaLabel,
 } from "@/lib/macrotema";
-import { CouncilSessionV0DemoDetail } from "@/components/launch/CouncilSessionV0DemoCard";
+import { CouncilSessionV0Detail } from "@/components/launch/CouncilSessionV0Card";
 import { councilSessionV0DemoFixture } from "@/data/councilSessionV0";
+import { findCouncilSessionV0ReviewedRecord } from "@/data/councilSessionV0Reviewed";
 
 const VOTE_VARIANTS: Record<
   string,
@@ -61,8 +62,14 @@ function formatDate(value: string | null | undefined) {
 export function SedutaDetail() {
   const [, params] = useRoute("/convocazioni/:id");
   const routeId = params?.id ?? "";
-  const isDemoRoute = routeId === councilSessionV0DemoFixture.id;
-  const id = routeId && !isDemoRoute ? Number(routeId) : NaN;
+  const reviewedSession = findCouncilSessionV0ReviewedRecord(routeId);
+  const staticSession =
+    reviewedSession ??
+    (routeId === councilSessionV0DemoFixture.id
+      ? councilSessionV0DemoFixture
+      : undefined);
+  const isStaticRoute = staticSession !== undefined;
+  const id = routeId && !isStaticRoute ? Number(routeId) : NaN;
 
   const {
     data: seduta,
@@ -70,14 +77,14 @@ export function SedutaDetail() {
     isError,
   } = useGetSeduta(id, {
     query: {
-      enabled: !Number.isNaN(id) && !isDemoRoute,
+      enabled: !Number.isNaN(id) && !isStaticRoute,
       queryKey: getGetSedutaQueryKey(id),
     },
   });
 
   const { data: storia } = useGetPublicationStoria(id, {
     query: {
-      enabled: !Number.isNaN(id) && !isDemoRoute && !!seduta,
+      enabled: !Number.isNaN(id) && !isStaticRoute && !!seduta,
       queryKey: getGetPublicationStoriaQueryKey(id),
     },
   });
@@ -120,15 +127,24 @@ export function SedutaDetail() {
         Torna alle convocazioni
       </Link>
 
-      {isDemoRoute ? (
+      {staticSession ? (
         <>
           <PageMeta
-            title="Scheda demo convocazione"
-            description="Fixture dimostrativa per verificare il formato minimo di una scheda seduta: fonti, limiti del dato e stato di verifica. Non rappresenta una convocazione reale."
-            path={`/convocazioni/${councilSessionV0DemoFixture.id}`}
+            title={
+              staticSession.title.value ??
+              (staticSession.isDemoFixture
+                ? "Scheda demo convocazione"
+                : "Scheda seduta")
+            }
+            description={
+              staticSession.isDemoFixture
+                ? "Fixture dimostrativa per verificare il formato minimo di una scheda seduta. Non rappresenta una convocazione reale."
+                : "Scheda fonte-centrica di una convocazione del Consiglio o di una Commissione consiliare, con provenienza, stato di verifica e limiti del dato."
+            }
+            path={`/convocazioni/${staticSession.id}`}
             type="article"
           />
-          <CouncilSessionV0DemoDetail />
+          <CouncilSessionV0Detail session={staticSession} />
         </>
       ) : isLoading ? (
         <div className="rounded-2xl border border-border bg-muted/30 p-6 md:p-8 space-y-4">

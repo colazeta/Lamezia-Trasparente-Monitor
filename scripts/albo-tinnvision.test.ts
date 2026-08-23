@@ -21,11 +21,19 @@ import {
   classifyAlboRecordCategory,
 } from "./albo-classification-dictionary";
 import { ALBO_PRETORIO_LAMEZIA_SOURCE } from "./albo-source-config";
+import {
+  identifyInstitutionalSessionCandidate,
+  identifyInstitutionalSessionCandidates,
+  type InstitutionalSessionCandidateInput,
+} from "./institutional-session-candidates";
 
 const FIXTURE_RETRIEVED_AT = "2026-06-19T10:00:00.000Z";
 
 test("defaults CLI output to repository data directory", () => {
-  const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
+  const repoRoot = path.resolve(
+    path.dirname(fileURLToPath(import.meta.url)),
+    "..",
+  );
   assert.equal(parseArgs([]).outDir, path.join(repoRoot, "data"));
 });
 
@@ -44,14 +52,20 @@ test("parses Tinnvision XML export and normalises minimal albo_item fields", () 
   assert.equal(items[0].source_url, ALBO_PRETORIO_LAMEZIA_SOURCE.sourceUrl);
   assert.equal(items[0].verification_status, "official_source_acquired");
   assert.equal(items[0].public_visibility, "publishable");
-  assert.equal(items[0].classification.dictionary_version, ALBO_CLASSIFICATION_DICTIONARY_VERSION);
+  assert.equal(
+    items[0].classification.dictionary_version,
+    ALBO_CLASSIFICATION_DICTIONARY_VERSION,
+  );
   assert.equal(items[0].classification.sector.id, "governo_territorio");
   assert.equal(items[0].classification.act_category.id, "determinazioni");
   assert.match(items[0].content_hash, /^[a-f0-9]{64}$/);
 
   assert.equal(items[1].public_visibility, "metadata_only");
   assert.equal(items[1].privacy_risk, "high");
-  assert.equal(items[1].classification.sector.id, "servizi_cittadino_demografici");
+  assert.equal(
+    items[1].classification.sector.id,
+    "servizi_cittadino_demografici",
+  );
   assert.equal(items[1].classification.act_category.id, "stato_civile");
   assert.equal(items[2].public_visibility, "publishable_with_minimisation");
   assert.equal(items[2].privacy_risk, "medium");
@@ -100,6 +114,101 @@ test("classifies Albo records by civic sector and act category dictionary", () =
       sector: "altri_enti",
       act_category: "avvisi",
     },
+  );
+
+  assert.equal(
+    classifyAlboRecordCategory({
+      office: "UOA SEGRETERIA GENERALE - ATTIVITA' ISTITUZIONALI",
+      act_type: "CONVOCAZIONE CONSIGLIO COMUNALE",
+      subject: "Avviso seduta di Consiglio Comunale.",
+    }).act_category.id,
+    "convocazioni_istituzionali",
+  );
+});
+
+test("identifies council and commission notices without inferring session dates", () => {
+  const inputs = [
+    sessionCandidateFixture({
+      id: "albo-2026-2673",
+      publication_number: "2026/2673",
+      act_type: "CONVOCAZIONE CONSIGLIO COMUNALE",
+      subject: "Avviso seduta di Consiglio Comunale.",
+      document_url: null,
+    }),
+    sessionCandidateFixture({
+      id: "albo-2026-2648",
+      publication_number: "2026/2648",
+      act_type: "CONVOCAZIONI COMMISSIONI CONSILIARI",
+      subject: "Convocazione 2° Commissione Consiliare Permanente.",
+      document_url:
+        "https://albo.tinnvision.cloud/allegati/2026_2648_2_P?ente=00301390795",
+    }),
+  ];
+
+  const candidates = identifyInstitutionalSessionCandidates(inputs);
+
+  assert.deepEqual(
+    candidates.map((candidate) => [candidate.kind, candidate.reviewStatus]),
+    [
+      ["council", "metadata_only"],
+      ["commission", "attachment_review_required"],
+    ],
+  );
+  for (const candidate of candidates) {
+    assert.deepEqual(candidate.scheduledOccurrences, []);
+    assert.deepEqual(candidate.agendaItems, []);
+    assert.match(candidate.limitations[0], /non viene interpretata/);
+    assert.equal(candidate.contextSearch.status, "required");
+    assert.equal(candidate.contextSearch.rerunAfterOfficialEnrichment, true);
+    assert.equal(candidate.contextSearch.mediaSearchRequired, true);
+    assert.equal(candidate.contextSearch.querySeeds.length, 3);
+    assert.ok(candidate.contextSearch.priorityPublishers.includes("City One"));
+    assert.ok(
+      candidate.contextSearch.priorityPublishers.includes("LameziaInforma"),
+    );
+    assert.equal(candidate.contextSearch.reviewMoments.length, 5);
+    assert.ok(
+      candidate.contextSearch.querySeeds.every((query) =>
+        query.startsWith("Lamezia Terme"),
+      ),
+    );
+    assert.match(
+      candidate.contextSearch.limitations.join(" "),
+      /non possono riempire campi ufficiali mancanti/i,
+    );
+  }
+});
+
+test("rejects unsafe, unsupported or untraceable session candidates", () => {
+  const safe = sessionCandidateFixture();
+
+  assert.equal(
+    identifyInstitutionalSessionCandidate({
+      ...safe,
+      public_visibility: "metadata_only",
+    }),
+    null,
+  );
+  assert.equal(
+    identifyInstitutionalSessionCandidate({
+      ...safe,
+      privacy_risk: "medium",
+    }),
+    null,
+  );
+  assert.equal(
+    identifyInstitutionalSessionCandidate({
+      ...safe,
+      act_type: "DELIBERAZIONE DI CONSIGLIO",
+    }),
+    null,
+  );
+  assert.equal(
+    identifyInstitutionalSessionCandidate({
+      ...safe,
+      source_url: "https://example.test/albo?ente=00301390795",
+    }),
+    null,
   );
 });
 
@@ -151,7 +260,10 @@ test("does not classify personal-service welfare records as low-risk publishable
   assert.equal(result.publicLatest.counts.minimised, 0);
 
   const publicLatest = await readFile(result.paths.publicLatest, "utf8");
-  assert.doesNotMatch(publicLatest, /assegno di matern|assistenza domiciliare|persona fisica/i);
+  assert.doesNotMatch(
+    publicLatest,
+    /assegno di matern|assistenza domiciliare|persona fisica/i,
+  );
   assert.match(publicLatest, /Metadato minimo/);
 });
 
@@ -210,7 +322,13 @@ test("keeps ordinary administrative records publishable when broad words are not
 
   assert.deepEqual(
     result.items.map((item) => item.public_visibility),
-    ["publishable_with_minimisation", "publishable", "publishable", "publishable", "publishable"],
+    [
+      "publishable_with_minimisation",
+      "publishable",
+      "publishable",
+      "publishable",
+      "publishable",
+    ],
   );
   assert.equal(result.items[0].privacy_risk, "medium");
   assert.equal(result.items[1].privacy_risk, "low");
@@ -269,16 +387,22 @@ test("diffs new, changed, removed and unchanged records by item id and content h
 
   const diff = diffAlboItems(previous, next);
 
-  assert.deepEqual(diff.new.map((item) => item.publication_number), ["2026/3"]);
-  assert.deepEqual(diff.changed.map((entry) => entry.after.publication_number), [
-    "2026/1",
-  ]);
-  assert.deepEqual(diff.removed.map((item) => item.publication_number), [
-    "2026/4",
-  ]);
-  assert.deepEqual(diff.unchanged.map((item) => item.publication_number), [
-    "2026/2",
-  ]);
+  assert.deepEqual(
+    diff.new.map((item) => item.publication_number),
+    ["2026/3"],
+  );
+  assert.deepEqual(
+    diff.changed.map((entry) => entry.after.publication_number),
+    ["2026/1"],
+  );
+  assert.deepEqual(
+    diff.removed.map((item) => item.publication_number),
+    ["2026/4"],
+  );
+  assert.deepEqual(
+    diff.unchanged.map((item) => item.publication_number),
+    ["2026/2"],
+  );
 });
 
 test("run command writes snapshots and public outputs without mirroring sensitive subjects", async () => {
@@ -303,14 +427,29 @@ test("run command writes snapshots and public outputs without mirroring sensitiv
   assert.equal(result.publicStatus.source, ALBO_PRETORIO_LAMEZIA_SOURCE.source);
   assert.equal(result.publicStatus.last_update, FIXTURE_RETRIEVED_AT);
   assert.equal(result.publicStatus.method, "xml");
-  assert.equal(result.publicStatus.verification_status, "official_source_acquired");
+  assert.equal(
+    result.publicStatus.verification_status,
+    "official_source_acquired",
+  );
   assert.equal(result.publicStatus.counts.acquired, 4);
-  assert.equal(result.publicStatus.diff_baseline.status, "baseline_unavailable");
+  assert.equal(
+    result.publicStatus.diff_baseline.status,
+    "baseline_unavailable",
+  );
   assert.equal(result.publicStatus.diff_baseline.public_safe, false);
-  assert.equal(result.publicStatus.classification_dictionary.version, ALBO_CLASSIFICATION_DICTIONARY_VERSION);
-  assert.ok(result.publicStatus.known_limits.includes(ALBO_CLASSIFICATION_KNOWN_LIMIT));
+  assert.equal(
+    result.publicStatus.classification_dictionary.version,
+    ALBO_CLASSIFICATION_DICTIONARY_VERSION,
+  );
+  assert.ok(
+    result.publicStatus.known_limits.includes(ALBO_CLASSIFICATION_KNOWN_LIMIT),
+  );
   assert.equal(result.publicDiff.diff_baseline.status, "baseline_unavailable");
-  assert.ok(result.publicStatus.known_limits.includes(result.publicStatus.diff_baseline.note));
+  assert.ok(
+    result.publicStatus.known_limits.includes(
+      result.publicStatus.diff_baseline.note,
+    ),
+  );
   assert.ok(result.publicStatus.known_limits.length > 0);
   assert.match(
     String(result.publicStatus.official_albo_disclaimer),
@@ -327,9 +466,18 @@ test("run command writes snapshots and public outputs without mirroring sensitiv
   assert.match(publicLatest, /Determinazioni dirigenziali/);
   assert.match(publicStatus, /08:00-20:00 Europe\/Rome/);
   assert.match(publicStatus, /ubuntu-latest/);
-  assert.equal(result.publicLatest.classification_dictionary.version, ALBO_CLASSIFICATION_DICTIONARY_VERSION);
-  assert.equal(result.publicLatest.items[0].classification.sector.id, "governo_territorio");
-  assert.equal(result.publicLatest.items[0].classification.act_category.id, "determinazioni");
+  assert.equal(
+    result.publicLatest.classification_dictionary.version,
+    ALBO_CLASSIFICATION_DICTIONARY_VERSION,
+  );
+  assert.equal(
+    result.publicLatest.items[0].classification.sector.id,
+    "governo_territorio",
+  );
+  assert.equal(
+    result.publicLatest.items[0].classification.act_category.id,
+    "determinazioni",
+  );
   assert.equal(result.publicLatest.excluded[0].classification, undefined);
 
   for (const publicRecord of [
@@ -349,7 +497,9 @@ test("run command writes snapshots and public outputs without mirroring sensitiv
   assert.match(runLog, /Esclusi dal public layer: 1/);
 });
 
-function pickClassificationIds(classification: ReturnType<typeof classifyAlboRecordCategory>): {
+function pickClassificationIds(
+  classification: ReturnType<typeof classifyAlboRecordCategory>,
+): {
   sector: string;
   act_category: string;
 } {
@@ -368,17 +518,47 @@ test("run command compares against the previous current snapshot", async () => {
   await writeFile(
     previousPath,
     [
-      xmlRecord("2026/1", "DETERMINAZIONE DIRIGENZIALE", "SETTORE TECNICO", "Affidamento servizio A", "1"),
-      xmlRecord("2026/2", "AVVISO PUBBLICO", "SEGRETERIA", "Avviso stabile", ""),
-      xmlRecord("2026/4", "AVVISO PUBBLICO", "SEGRETERIA", "Avviso non piu presente", ""),
+      xmlRecord(
+        "2026/1",
+        "DETERMINAZIONE DIRIGENZIALE",
+        "SETTORE TECNICO",
+        "Affidamento servizio A",
+        "1",
+      ),
+      xmlRecord(
+        "2026/2",
+        "AVVISO PUBBLICO",
+        "SEGRETERIA",
+        "Avviso stabile",
+        "",
+      ),
+      xmlRecord(
+        "2026/4",
+        "AVVISO PUBBLICO",
+        "SEGRETERIA",
+        "Avviso non piu presente",
+        "",
+      ),
     ].join("\n"),
     "utf8",
   );
   await writeFile(
     nextPath,
     [
-      xmlRecord("2026/1", "DETERMINAZIONE DIRIGENZIALE", "SETTORE TECNICO", "Affidamento servizio A aggiornato", "1"),
-      xmlRecord("2026/2", "AVVISO PUBBLICO", "SEGRETERIA", "Avviso stabile", ""),
+      xmlRecord(
+        "2026/1",
+        "DETERMINAZIONE DIRIGENZIALE",
+        "SETTORE TECNICO",
+        "Affidamento servizio A aggiornato",
+        "1",
+      ),
+      xmlRecord(
+        "2026/2",
+        "AVVISO PUBBLICO",
+        "SEGRETERIA",
+        "Avviso stabile",
+        "",
+      ),
       xmlRecord("2026/3", "AVVISO PUBBLICO", "SEGRETERIA", "Nuovo avviso", ""),
     ].join("\n"),
     "utf8",
@@ -403,7 +583,10 @@ test("run command compares against the previous current snapshot", async () => {
   assert.equal(result.publicDiff.counts.unchanged, 1);
   assert.equal(result.publicStatus.diff_baseline.status, "public_safe");
   assert.equal(result.publicStatus.diff_baseline.public_safe, true);
-  assert.equal(result.publicStatus.diff_baseline.previous_retrieved_at, "2026-06-19T08:00:00.000Z");
+  assert.equal(
+    result.publicStatus.diff_baseline.previous_retrieved_at,
+    "2026-06-19T08:00:00.000Z",
+  );
   assert.equal(result.publicDiff.diff_baseline.status, "public_safe");
 
   const publicDiff = await readFile(result.paths.publicDiff, "utf8");
@@ -415,7 +598,9 @@ test("run command compares against the previous current snapshot", async () => {
 });
 
 test("current snapshot baseline ignores raw-derived hashes for minimised records", async () => {
-  const tmp = await mkdtemp(path.join(tmpdir(), "albo-tinnvision-redacted-snapshot-baseline-"));
+  const tmp = await mkdtemp(
+    path.join(tmpdir(), "albo-tinnvision-redacted-snapshot-baseline-"),
+  );
   const previousPath = path.join(tmp, "previous.xml");
   const nextPath = path.join(tmp, "next.xml");
   const outDir = path.join(tmp, "data");
@@ -464,7 +649,9 @@ test("current snapshot baseline ignores raw-derived hashes for minimised records
 });
 
 test("run command can compare against committed public latest without raw snapshots", async () => {
-  const tmp = await mkdtemp(path.join(tmpdir(), "albo-tinnvision-public-baseline-"));
+  const tmp = await mkdtemp(
+    path.join(tmpdir(), "albo-tinnvision-public-baseline-"),
+  );
   const previousPath = path.join(tmp, "previous.xml");
   const nextPath = path.join(tmp, "next.xml");
   const outDir = path.join(tmp, "data");
@@ -472,17 +659,47 @@ test("run command can compare against committed public latest without raw snapsh
   await writeFile(
     previousPath,
     [
-      xmlRecord("2026/1", "DETERMINAZIONE DIRIGENZIALE", "SETTORE TECNICO", "Affidamento servizio A", "1"),
-      xmlRecord("2026/2", "AVVISO PUBBLICO", "SEGRETERIA", "Avviso stabile", ""),
-      xmlRecord("2026/4", "AVVISO PUBBLICO", "SEGRETERIA", "Avviso non piu presente", ""),
+      xmlRecord(
+        "2026/1",
+        "DETERMINAZIONE DIRIGENZIALE",
+        "SETTORE TECNICO",
+        "Affidamento servizio A",
+        "1",
+      ),
+      xmlRecord(
+        "2026/2",
+        "AVVISO PUBBLICO",
+        "SEGRETERIA",
+        "Avviso stabile",
+        "",
+      ),
+      xmlRecord(
+        "2026/4",
+        "AVVISO PUBBLICO",
+        "SEGRETERIA",
+        "Avviso non piu presente",
+        "",
+      ),
     ].join("\n"),
     "utf8",
   );
   await writeFile(
     nextPath,
     [
-      xmlRecord("2026/1", "DETERMINAZIONE DIRIGENZIALE", "SETTORE TECNICO", "Affidamento servizio A aggiornato", "1"),
-      xmlRecord("2026/2", "AVVISO PUBBLICO", "SEGRETERIA", "Avviso stabile", ""),
+      xmlRecord(
+        "2026/1",
+        "DETERMINAZIONE DIRIGENZIALE",
+        "SETTORE TECNICO",
+        "Affidamento servizio A aggiornato",
+        "1",
+      ),
+      xmlRecord(
+        "2026/2",
+        "AVVISO PUBBLICO",
+        "SEGRETERIA",
+        "Avviso stabile",
+        "",
+      ),
       xmlRecord("2026/3", "AVVISO PUBBLICO", "SEGRETERIA", "Nuovo avviso", ""),
     ].join("\n"),
     "utf8",
@@ -508,12 +725,20 @@ test("run command can compare against committed public latest without raw snapsh
   assert.equal(result.publicDiff.counts.removed, 1);
   assert.equal(result.publicDiff.counts.unchanged, 1);
   assert.equal(result.publicStatus.diff_baseline.status, "public_safe");
-  assert.equal(result.publicStatus.diff_baseline.previous_retrieved_at, "2026-06-19T08:00:00.000Z");
-  assert.match(result.publicStatus.diff_baseline.note, /committed public\/albo\/latest\.json/);
+  assert.equal(
+    result.publicStatus.diff_baseline.previous_retrieved_at,
+    "2026-06-19T08:00:00.000Z",
+  );
+  assert.match(
+    result.publicStatus.diff_baseline.note,
+    /committed public\/albo\/latest\.json/,
+  );
 });
 
 test("public latest baseline ignores raw-derived hashes for minimised records", async () => {
-  const tmp = await mkdtemp(path.join(tmpdir(), "albo-tinnvision-redacted-baseline-"));
+  const tmp = await mkdtemp(
+    path.join(tmpdir(), "albo-tinnvision-redacted-baseline-"),
+  );
   const previousPath = path.join(tmp, "previous.xml");
   const nextPath = path.join(tmp, "next.xml");
   const outDir = path.join(tmp, "data");
@@ -556,7 +781,10 @@ test("public latest baseline ignores raw-derived hashes for minimised records", 
     retrievedAt: "2026-06-19T09:00:00.000Z",
   });
 
-  assert.notEqual(previous.publicLatest.items[0].content_hash, result.publicLatest.items[0].content_hash);
+  assert.notEqual(
+    previous.publicLatest.items[0].content_hash,
+    result.publicLatest.items[0].content_hash,
+  );
   assert.equal(result.publicLatest.items[0].public_visibility, "metadata_only");
   assert.equal(result.publicDiff.counts.changed, 0);
   assert.equal(result.publicDiff.counts.unchanged, 1);
@@ -614,7 +842,14 @@ test("archives only official low-risk publishable PDFs into public documents sto
   );
 
   const archivedPdf = await readFile(
-    path.join(outDir, "public", "albo", "documents", "2026", `${expectedSha}.pdf`),
+    path.join(
+      outDir,
+      "public",
+      "albo",
+      "documents",
+      "2026",
+      `${expectedSha}.pdf`,
+    ),
   );
   assert.deepEqual(new Uint8Array(archivedPdf), pdfBytes);
 
@@ -728,7 +963,10 @@ test("discovers official Tinnvision PDF attachments only for low-risk publishabl
   assert.equal(result.publicLatest.items[0].document_url, expectedDocumentUrl);
   assert.equal(result.publicLatest.items[1].document_url, null);
   assert.equal(result.documentsManifest.counts.archived, 1);
-  assert.equal(result.documentsManifest.documents[0].document_url, expectedDocumentUrl);
+  assert.equal(
+    result.documentsManifest.documents[0].document_url,
+    expectedDocumentUrl,
+  );
   assert.match(
     result.snapshot.known_limits.join("\n"),
     /dettaglio ufficiale Tinnvision solo per record pubblicabili a basso rischio/,
@@ -736,10 +974,13 @@ test("discovers official Tinnvision PDF attachments only for low-risk publishabl
 });
 
 test("excludes metadata-only and high-risk records from PDF archiving without exposing document URLs", async () => {
-  const tmp = await mkdtemp(path.join(tmpdir(), "albo-tinnvision-pdf-excluded-"));
+  const tmp = await mkdtemp(
+    path.join(tmpdir(), "albo-tinnvision-pdf-excluded-"),
+  );
   const fixturePath = path.join(tmp, "albo.xml");
   const outDir = path.join(tmp, "data");
-  const metadataOnlyUrl = "https://albo.tinnvision.cloud/documenti/2026/2001.pdf";
+  const metadataOnlyUrl =
+    "https://albo.tinnvision.cloud/documenti/2026/2001.pdf";
   const highRiskUrl = "https://albo.tinnvision.cloud/documenti/2026/2002.pdf";
   await writeFile(
     fixturePath,
@@ -782,7 +1023,9 @@ test("excludes metadata-only and high-risk records from PDF archiving without ex
   );
   assert.ok(
     result.documentsManifest.decisions.every(
-      (decision) => decision.preservation_status === "excluded" && !("document_url" in decision),
+      (decision) =>
+        decision.preservation_status === "excluded" &&
+        !("document_url" in decision),
     ),
   );
 
@@ -793,7 +1036,9 @@ test("excludes metadata-only and high-risk records from PDF archiving without ex
 });
 
 test("skips otherwise eligible PDFs when content type or size limit fails", async () => {
-  const tmp = await mkdtemp(path.join(tmpdir(), "albo-tinnvision-pdf-content-"));
+  const tmp = await mkdtemp(
+    path.join(tmpdir(), "albo-tinnvision-pdf-content-"),
+  );
   const fixturePath = path.join(tmp, "albo.xml");
   const outDir = path.join(tmp, "data");
   const htmlUrl = "https://albo.tinnvision.cloud/documenti/2026/2501.pdf";
@@ -801,8 +1046,22 @@ test("skips otherwise eligible PDFs when content type or size limit fails", asyn
   await writeFile(
     fixturePath,
     [
-      xmlRecord("2026/2501", "AVVISO PUBBLICO", "SEGRETERIA", "Avviso pubblico ordinario", "", htmlUrl),
-      xmlRecord("2026/2502", "AVVISO PUBBLICO", "SEGRETERIA", "Avviso pubblico ordinario bis", "", oversizeUrl),
+      xmlRecord(
+        "2026/2501",
+        "AVVISO PUBBLICO",
+        "SEGRETERIA",
+        "Avviso pubblico ordinario",
+        "",
+        htmlUrl,
+      ),
+      xmlRecord(
+        "2026/2502",
+        "AVVISO PUBBLICO",
+        "SEGRETERIA",
+        "Avviso pubblico ordinario bis",
+        "",
+        oversizeUrl,
+      ),
     ].join("\n"),
     "utf8",
   );
@@ -834,7 +1093,9 @@ test("skips otherwise eligible PDFs when content type or size limit fails", asyn
     ["content_type_not_pdf", "size_limit_exceeded"],
   );
   assert.ok(
-    result.documentsManifest.decisions.every((decision) => !("document_url" in decision)),
+    result.documentsManifest.decisions.every(
+      (decision) => !("document_url" in decision),
+    ),
   );
 });
 
@@ -866,11 +1127,20 @@ test("marks medium-risk minimised records as human_review_required without downl
     },
   });
 
-  assert.equal(result.items[0].public_visibility, "publishable_with_minimisation");
+  assert.equal(
+    result.items[0].public_visibility,
+    "publishable_with_minimisation",
+  );
   assert.equal(result.items[0].privacy_risk, "medium");
   assert.equal(result.documentsManifest.counts.human_review_required, 1);
-  assert.equal(result.documentsManifest.decisions[0].preservation_status, "human_review_required");
-  assert.equal(result.documentsManifest.decisions[0].reason, "human_review_required");
+  assert.equal(
+    result.documentsManifest.decisions[0].preservation_status,
+    "human_review_required",
+  );
+  assert.equal(
+    result.documentsManifest.decisions[0].reason,
+    "human_review_required",
+  );
   assert.ok(!("document_url" in result.documentsManifest.decisions[0]));
 
   const manifest = await readFile(result.paths.documentsManifest, "utf8");
@@ -910,8 +1180,14 @@ test("rejects official HTTP document URLs with a warning and without fetching", 
   assert.equal(result.items[0].privacy_risk, "low");
   assert.equal(result.documentsManifest.counts.archived, 0);
   assert.equal(result.documentsManifest.counts.skipped, 1);
-  assert.equal(result.documentsManifest.decisions[0].preservation_status, "skipped");
-  assert.equal(result.documentsManifest.decisions[0].reason, "non_https_document_url");
+  assert.equal(
+    result.documentsManifest.decisions[0].preservation_status,
+    "skipped",
+  );
+  assert.equal(
+    result.documentsManifest.decisions[0].reason,
+    "non_https_document_url",
+  );
   assert.ok(!("document_url" in result.documentsManifest.decisions[0]));
   assert.match(result.documentsManifest.warnings.join("\n"), /not HTTPS/);
 
@@ -920,7 +1196,9 @@ test("rejects official HTTP document URLs with a warning and without fetching", 
   assert.match(manifest, /official document URL is not HTTPS/);
 });
 
-function snapshot(records: ReturnType<typeof parseTinnvisionXml>): AlboRawSnapshot {
+function snapshot(
+  records: ReturnType<typeof parseTinnvisionXml>,
+): AlboRawSnapshot {
   return {
     source: ALBO_PRETORIO_LAMEZIA_SOURCE.source,
     source_url: ALBO_PRETORIO_LAMEZIA_SOURCE.sourceUrl,
@@ -932,6 +1210,30 @@ function snapshot(records: ReturnType<typeof parseTinnvisionXml>): AlboRawSnapsh
     records,
     warnings: [],
     known_limits: [...ALBO_PRETORIO_LAMEZIA_SOURCE.knownLimits],
+  };
+}
+
+function sessionCandidateFixture(
+  overrides: Partial<InstitutionalSessionCandidateInput> = {},
+): InstitutionalSessionCandidateInput {
+  return {
+    id: "albo-2026-2648",
+    source: "Albo Pretorio Comune di Lamezia Terme",
+    source_url: ALBO_PRETORIO_LAMEZIA_SOURCE.sourceUrl,
+    retrieved_at: FIXTURE_RETRIEVED_AT,
+    publication_number: "2026/2648",
+    publication_start: "2026-08-07",
+    publication_end: "2026-08-14",
+    act_type: "CONVOCAZIONI COMMISSIONI CONSILIARI",
+    subject: "Convocazione 2° Commissione Consiliare Permanente.",
+    document_url:
+      "https://albo.tinnvision.cloud/allegati/2026_2648_2_P?ente=00301390795",
+    content_hash:
+      "f4301f15e2bfd99aecb79f25ceb4d1346a486ff1fe20e748f9bac89a818eee09",
+    verification_status: "official_source_acquired",
+    privacy_risk: "low",
+    public_visibility: "publishable",
+    ...overrides,
   };
 }
 

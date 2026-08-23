@@ -1,4 +1,6 @@
-export const ALBO_CLASSIFICATION_DICTIONARY_VERSION = "2026-07-05-a";
+import { INSTITUTIONAL_SESSION_ACT_TYPES } from "./institutional-session-candidates";
+
+export const ALBO_CLASSIFICATION_DICTIONARY_VERSION = "2026-08-22-a";
 
 export type AlboClassificationConfidence = "high" | "medium" | "low";
 export type AlboClassificationBasis = "office" | "act_type" | "office_and_act_type" | "fallback";
@@ -305,7 +307,7 @@ const ACT_CATEGORY_RULES: readonly ClassificationRule<AlboActCategoryId>[] = [
   },
   {
     id: "convocazioni_istituzionali",
-    includes: ["CONVOCAZIONI COMMISSIONI CONSILIARI"],
+    includes: [...INSTITUTIONAL_SESSION_ACT_TYPES],
     sources: ["act_type"],
     confidence: "high",
     basis: "act_type",
