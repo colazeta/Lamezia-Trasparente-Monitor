@@ -1,10 +1,10 @@
 {
-  "generated_at": "2026-08-23T11:32:34.138Z",
+  "generated_at": "2026-08-23T12:59:04.731Z",
   "source": "Albo Pretorio Comune di Lamezia Terme",
   "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
   "provider": "Tinnvision",
-  "last_run_at": "2026-08-23T11:32:34.138Z",
-  "last_update": "2026-08-23T11:32:34.138Z",
+  "last_run_at": "2026-08-23T12:59:04.731Z",
+  "last_update": "2026-08-23T12:59:04.731Z",
   "method": "xml",
   "raw_format": "xml",
   "counts": {
@@ -21,11 +21,11 @@
   "diff_baseline": {
     "status": "public_safe",
     "public_safe": true,
-    "previous_retrieved_at": "2026-08-23T10:36:27.956Z",
+    "previous_retrieved_at": "2026-08-23T11:32:34.138Z",
     "note": "Diff derived from committed public/albo/latest.json; safe for scheduled public runs and limited to public-safe fields."
   },
   "warnings": [],
-  "next_scheduled_check": "2026-08-23T12:10:00.000Z",
+  "next_scheduled_check": "2026-08-23T13:10:00.000Z",
   "schedule": {
     "monitoring_window": "08:00-20:00 Europe/Rome",
     "timezone": "Europe/Rome",
@@ -43,7 +43,7 @@
     "Classificazione civica automatica basata su dizionario: settore e tipologia sono derivati da ufficio/provenienza e tipo atto, senza interpretare il contenuto dei PDF."
   ],
   "classification_dictionary": {
-    "version": "2026-07-05-a",
+    "version": "2026-08-22-a",
     "known_limits": [
       "Classificazione civica automatica basata su dizionario: settore e tipologia sono derivati da ufficio/provenienza e tipo atto, senza interpretare il contenuto dei PDF."
     ],
