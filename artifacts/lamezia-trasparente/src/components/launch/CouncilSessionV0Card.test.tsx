@@ -14,28 +14,27 @@ function reviewedRecord(id: string) {
 }
 
 describe("CouncilSessionV0Card", () => {
-  it("renders the council notice as official metadata without inventing a date", () => {
+  it("renders the officially confirmed council date without inventing a time", () => {
     const session = reviewedRecord("albo-2026-2673-consiglio-comunale");
 
     render(<CouncilSessionV0SummaryCard session={session} />);
 
     expect(
       screen.getByRole("heading", {
-        name: "Consiglio comunale — avviso di seduta",
+        name: "Consiglio comunale — seduta del 13 agosto 2026",
       }),
     ).toBeInTheDocument();
-    expect(screen.getByText("Data da verificare")).toBeInTheDocument();
+    expect(screen.getByText("13 agosto 2026")).toBeInTheDocument();
+    expect(screen.queryByText(/13 agosto 2026.*02:00/i)).not.toBeInTheDocument();
+    expect(screen.getByText("Seduta svolta")).toBeInTheDocument();
     expect(
-      screen.getByText(/data, ora e ordine del giorno restano da verificare/i),
-    ).toBeInTheDocument();
-    expect(
-      screen.getByText("3 articoli contestuali revisionati"),
+      screen.getByText("6 articoli contestuali revisionati"),
     ).toBeInTheDocument();
     expect(
       screen.getByRole("link", { name: /Fonte ufficiale/i }),
     ).toHaveAttribute(
       "href",
-      "https://albo.tinnvision.cloud/?ente=00301390795",
+      "https://albo.tinnvision.cloud/allegati/2026_2755_6_ALLEG?ente=00301390795",
     );
   });
 
@@ -128,12 +127,13 @@ describe("CouncilSessionV0Card", () => {
     ).toHaveAttribute("href", expect.stringContaining("lameziainforma.it"));
   });
 
-  it("labels press coverage as a possible council match without completing official fields", () => {
+  it("links precise press coverage to the verified council date without filling the agenda", () => {
     const session = reviewedRecord("albo-2026-2673-consiglio-comunale");
 
     render(<CouncilSessionV0Detail session={session} />);
 
-    expect(screen.getAllByText("Possibile corrispondenza")).toHaveLength(3);
+    expect(screen.getAllByText("Stessa seduta")).toHaveLength(5);
+    expect(screen.getAllByText("Possibile corrispondenza")).toHaveLength(1);
     expect(
       screen.getByRole("link", {
         name: /Convocato Consiglio Comunale di Lamezia Terme/i,
@@ -141,15 +141,19 @@ describe("CouncilSessionV0Card", () => {
     ).toHaveAttribute("href", expect.stringContaining("cityonelamezia.it"));
     expect(
       screen.getByRole("link", {
-        name: /Consiglio comunale prima di Ferragosto/i,
+        name: /il Consiglio comunale approva l'assestamento/i,
       }),
-    ).toHaveAttribute("href", expect.stringContaining("lameziainforma.it"));
-    expect(screen.getByText("Data da verificare")).toBeInTheDocument();
+    ).toHaveAttribute("href", expect.stringContaining("lametino.it"));
+    expect(screen.getByText("13 agosto 2026")).toBeInTheDocument();
+    expect(screen.getByText("Svolta")).toBeInTheDocument();
     expect(
       screen.getByText("Ordine del giorno non disponibile."),
     ).toBeInTheDocument();
     expect(
-      screen.getByText(/manca l'allegato ufficiale.*collegamento/i),
+      screen.getByText(/fonte successiva conferma un solo punto/i),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(/fonte istituzionale successiva conferma la seduta/i),
     ).toBeInTheDocument();
   });
 
@@ -195,7 +199,7 @@ describe("CouncilSessionV0Card", () => {
       "href",
       "https://example.test/city-one-consiglio-2026-08-13",
     );
-    expect(screen.getAllByText("Perché è collegato")).toHaveLength(4);
+    expect(screen.getAllByText("Perché è collegato")).toHaveLength(7);
   });
 
   it("uses concise one-line empty states", () => {
