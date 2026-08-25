@@ -37,9 +37,16 @@ Snapshot Albo di riferimento: commit `5c861b94256c9c659630d8ad19b2f27279d1721b`,
 
 | Pubblicazione | Tipo               | Scheda                                             | Stato fonte                                                                      |
 | ------------- | ------------------ | -------------------------------------------------- | -------------------------------------------------------------------------------- |
-| `2026/2673`   | Consiglio comunale | Avviso di seduta, senza data/ora/ordine del giorno | Solo metadati ufficiali; l'export non espone l'allegato                          |
+| `2026/2673`   | Consiglio comunale | Seduta del 13 agosto 2026                          | Data e svolgimento confermati da una determinazione ufficiale successiva; orario e ordine del giorno completo non disponibili |
 | `2026/2648`   | II Commissione     | Seduta del 10 agosto 2026 alle 09:30               | Data, ora e due punti all'ordine del giorno confrontati con l'allegato ufficiale |
 | `2026/2648`   | II Commissione     | Seduta dell'11 agosto 2026 alle 09:30              | Stessa convocazione e stesso ordine del giorno della riga precedente             |
+
+Per `2026/2673`:
+
+- l'avviso originario resta la chiave di deduplicazione della scheda;
+- la [determinazione ufficiale pubblicata come 2026/2755](https://albo.tinnvision.cloud/allegati/2026_2755_6_ALLEG?ente=00301390795), acquisita il 25 agosto 2026, dichiara che il debito fuori bilancio oggetto dell'atto è stato approvato nella seduta del Consiglio comunale del 13 agosto 2026;
+- questa fonte istituzionale successiva consente di verificare la data e lo stato `svolta`, ma non espone l'orario né l'ordine del giorno completo;
+- il riferimento al debito fuori bilancio non viene presentato come ordine del giorno completo o come ricostruzione generale degli esiti.
 
 Per `2026/2648`:
 
@@ -96,19 +103,22 @@ Le regole non permettono di usare la stampa o la copertura audiovisiva editorial
 
 Se la ricerca è stata eseguita senza risultati abbastanza precisi, lo stato è `checked_no_match`. Questo documenta il controllo compiuto e non dimostra che non esistano articoli pertinenti.
 
-### Contesto revisionato il 23 agosto 2026
+### Contesto revisionato il 25 agosto 2026
 
 | Pubblicazione / seduta                     | Articolo                                                                                                                                                                                                                                                                                                             | Relazione               | Limite del collegamento                                                                                    |
 | ------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------- | ---------------------------------------------------------------------------------------------------------- |
-| `2026/2673` Consiglio                      | [Convocato Consiglio Comunale di Lamezia Terme in prossimità del ferragosto](https://www.cityonelamezia.it/convocato-consiglio-comunale-di-lamezia-terme-in-prossimita-del-ferragosto/) — City One, 10 agosto 2026                                                                                                   | `possible_same_session` | Riporta data, orari e 33 punti compatibili; non completa i campi ufficiali privi di allegato               |
-| `2026/2673` Consiglio                      | [Consiglio comunale prima di Ferragosto con soliti stilemi politici e qualche fuoriprogramma estivo](https://www.lameziainforma.it/istituzione/2026/08/13/consiglio-comunale-prima-di-ferragosto-con-soliti-stilemi-politici-e-qualche-fuoriprogramma-estivo/68880/) — LameziaInforma, 13 agosto 2026                | `possible_same_session` | L'organo, la giornata di pubblicazione e i temi sono compatibili; manca l'allegato ufficiale dell'avviso   |
-| `2026/2673` Consiglio                      | [Question time politico evaso in consiglio comunale](https://www.lameziainforma.it/politica/2026/08/13/question-time-politico-evaso-in-consiglio-comunale/68885/) — LameziaInforma, 13 agosto 2026                                                                                                                   | `possible_same_session` | Resoconto contestuale della stessa giornata; non è una fonte ufficiale della convocazione                  |
+| `2026/2673` Consiglio                      | [Convocato Consiglio Comunale di Lamezia Terme in prossimità del ferragosto](https://www.cityonelamezia.it/convocato-consiglio-comunale-di-lamezia-terme-in-prossimita-del-ferragosto/) — City One, 10 agosto 2026                                                                                                   | `same_session`          | Riporta la data del 13 agosto e 33 punti compatibili con la seduta ora verificata da fonte istituzionale; non completa i campi ufficiali mancanti |
+| `2026/2673` Consiglio                      | [Consiglio comunale prima di Ferragosto con soliti stilemi politici e qualche fuoriprogramma estivo](https://www.lameziainforma.it/istituzione/2026/08/13/consiglio-comunale-prima-di-ferragosto-con-soliti-stilemi-politici-e-qualche-fuoriprogramma-estivo/68880/) — LameziaInforma, 13 agosto 2026                | `same_session`          | Organo, data e temi coincidono con la seduta verificata; resta una fonte editoriale e non certifica dati o esiti ufficiali |
+| `2026/2673` Consiglio                      | [Question time politico evaso in consiglio comunale](https://www.lameziainforma.it/politica/2026/08/13/question-time-politico-evaso-in-consiglio-comunale/68885/) — LameziaInforma, 13 agosto 2026                                                                                                                   | `same_session`          | Resoconto del Consiglio nella data verificata, con riferimenti distintivi; non sostituisce verbale o resoconto istituzionale |
+| `2026/2673` Consiglio                      | [Lamezia, 33 punti in Consiglio comunale il 13 agosto: al centro assestamento e salvaguardia equilibri di Bilancio](https://www.lametino.it/ultime/lamezia-33-punti-in-consiglio-comunale-il-13-agosto-al-centro-assestamento-e-salvaguardia-equilibri-di-bilancio.html) — il Lametino, 10 agosto 2026 | `same_session`          | Organo e data coincidono; il titolo contiene inoltre punti distintivi della seduta |
+| `2026/2673` Consiglio                      | [Lamezia, il Consiglio comunale approva l'assestamento e la salvaguardia degli equilibri di Bilancio](https://www.lametino.it/ultime/lamezia-il-consiglio-comunale-approva-lassestamento-e-la-salvaguardia-degli-equilibri-di-bilancio.html) — il Lametino, 13 agosto 2026 | `same_session`          | Resoconto della stessa data e dello stesso organo, con temi distintivi già associati alla seduta |
+| `2026/2673` Consiglio                      | [Lamezia, Amministrazione Comunale su disabilità: “Sottoscritti 142 Progetti di Vita. Ora rafforziamo rete territoriale”](https://www.lametino.it/ultimora/lamezia-amministrazione-comunale-su-disabilita-sottoscritti-142-progetti-di-vita-ora-rafforziamo-rete-territoriale.html) — il Lametino, 14 agosto 2026 | `possible_same_session` | La pubblicazione e il tema sono compatibili con la seduta, ma manca l'ordine del giorno ufficiale completo per un collegamento certo |
 | `2026/2648` II Commissione, 10 e 11 agosto | [Approvato in giunta l'assestamento generale di bilancio e salvaguardia degli equilibri per l'esercizio 2026](https://www.lameziainforma.it/istituzione/2026/08/06/approvato-in-giunta-lassestamento-generale-di-bilancio-e-salvaguardia-degli-equilibri-per-lesercizio-2026/68773/) — LameziaInforma, 6 agosto 2026 | `agenda_item`           | Approfondisce l'assestamento indicato in agenda; non documenta le riunioni della Commissione               |
 | `2026/2648` II Commissione, 10 e 11 agosto | [LAMEZIA \| Bilancio, la maggioranza si sfalda in Giunta: tre assessori assenti. Muraca: «È sfiducia al sindaco»](https://lanovitaonline.it/lamezia-bilancio-la-maggioranza-si-sfalda-in-giunta-tre-assessori-assenti-muraca-e-sfiducia-al-sindaco/) — La Novità Online, 8 agosto 2026                               | `agenda_item`           | Riporta una posizione politica sul tema dell'assestamento; non verifica attività o esiti della Commissione |
 
 Non sono emersi articoli che nominino con sufficiente precisione le sedute della II Commissione del 10 o 11 agosto. Per questo i due risultati sono presentati soltanto come contesto sui temi in agenda.
 
-La homepage di City One indicizza anche il richiamo “Consiglio Comunale 13 Agosto 2026 - Video”. Il controllo del 23 agosto non ha però restituito una pagina stabile e verificabile per quel contenuto: il segnale resta annotato nella ricerca, ma non viene pubblicato come elemento `media` e non valorizza la registrazione ufficiale.
+La homepage di City One indicizza anche il richiamo “Consiglio Comunale 13 Agosto 2026 - Video”. Il controllo del 25 agosto non ha però restituito una pagina stabile e verificabile per quel contenuto: il segnale resta annotato nella ricerca, ma non viene pubblicato come elemento `media` e non valorizza la registrazione ufficiale.
 
 ## Procedura di aggiornamento
 
@@ -127,5 +137,5 @@ La homepage di City One indicizza anche il richiamo “Consiglio Comunale 13 Ago
 - Il detector non esegue OCR e non interpreta PDF.
 - Le schede revisionate sono curate in codice e non sono ancora materializzate automaticamente nella tabella `sedute`.
 - La ricerca contestuale richiede revisione editoriale: articoli e video vengono materializzati soltanto in una PR revisionabile, con relazione, tipo, stato del collegamento e limiti espliciti.
-- La convocazione non dimostra svolgimento, presenze, votazioni o esiti.
+- La convocazione non dimostra svolgimento, presenze, votazioni o esiti; una fonte istituzionale successiva può verificare solo gli elementi che dichiara esplicitamente.
 - Streaming, registrazioni, verbali e resoconti richiedono monitoraggi distinti.
