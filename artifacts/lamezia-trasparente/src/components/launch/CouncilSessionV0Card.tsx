@@ -29,12 +29,15 @@ import {
 
 function formatDate(value: string | null) {
   if (!value) return "Data da verificare";
-  const date = new Date(value);
+  const isDateOnly = /^\d{4}-\d{2}-\d{2}$/.test(value);
+  const date = new Date(isDateOnly ? `${value}T00:00:00Z` : value);
   if (Number.isNaN(date.getTime())) return value;
-  return new Intl.DateTimeFormat("it-IT", {
-    dateStyle: "long",
-    timeStyle: "short",
-  }).format(date);
+  return new Intl.DateTimeFormat(
+    "it-IT",
+    isDateOnly
+      ? { dateStyle: "long", timeZone: "UTC" }
+      : { dateStyle: "long", timeStyle: "short" },
+  ).format(date);
 }
 
 function formatPublishedDate(value: string | null) {
@@ -416,7 +419,10 @@ export function CouncilSessionV0Detail({
               />
               {isDemo
                 ? "Esempio tecnico: non descrive una seduta reale."
-                : "La convocazione non prova lo svolgimento della seduta."}
+                : session.sessionStatus.value === "svolta" &&
+                    session.sessionStatus.sourceStatus === "verificato"
+                  ? "Una fonte istituzionale successiva conferma la seduta."
+                  : "La convocazione non prova lo svolgimento della seduta."}
             </p>
           </div>
         </div>
