@@ -235,6 +235,108 @@ function commissionSession(
         "Titolo normalizzato dalla convocazione ufficiale; la fonte identifica la II Commissione come Servizi economici e finanziari.",
     },
     scheduledAt: {
+      key: "scheduledAt",
+      label: "Data e ora",
+      value: `${date}T09:30:00+02:00`,
+      sourceStatus: "verificato",
+      sourceUrl: documentUrl,
+      limit:
+        "Data e ora trascritte dall'allegato ufficiale; indicano la programmazione, non provano lo svolgimento.",
+    },
+    sessionStatus: {
+      key: "sessionStatus",
+      label: "Stato seduta",
+      value: "non_verificata",
+      sourceStatus: "parziale",
+      sourceUrl: documentUrl,
+      limit:
+        "La convocazione documenta la seduta programmata; non è stata collegata una fonte che ne confermi lo svolgimento o l'eventuale rinvio.",
+    },
+    agenda: {
+      key: "agenda",
+      label: "Ordine del giorno",
+      value: commissionAgenda,
+      sourceStatus: "verificato",
+      sourceUrl: documentUrl,
+      limit:
+        "Sintesi fedele dei due punti riportati nell'allegato; per formulazione completa e riferimenti normativi consultare il documento originale.",
+    },
+    sourceLink: {
+      key: "sourceLink",
+      label: "Fonte",
+      value: "Apri la convocazione nell'Albo ufficiale",
+      sourceStatus: "verificato",
+      sourceUrl: documentUrl,
+      limit: `Pubblicazione ${commissionCandidate.publicationNumber}; copia acquisita e verificata tramite hash nel repository.`,
+    },
+    liveStreaming: {
+      key: "liveStreaming",
+      label: "Streaming live",
+      value: null,
+      sourceStatus: "assente",
+      sourceUrl: documentUrl,
+      limit:
+        "Non rilevato nella convocazione consultata; ciò non esclude che possa essere stato comunicato su un altro canale.",
+    },
+    recording: {
+      key: "recording",
+      label: "Registrazione",
+      value: null,
+      sourceStatus: "assente",
+      sourceUrl: documentUrl,
+      limit:
+        "Non rilevata nella fonte monitorata; nessuna conclusione viene tratta sulla disponibilità complessiva di registrazioni.",
+    },
+    minutesOrReport: {
+      key: "minutesOrReport",
+      label: "Verbale o resoconto",
+      value: null,
+      sourceStatus: "assente",
+      sourceUrl: documentUrl,
+      limit:
+        "Non rilevato nella convocazione; verbali o resoconti successivi richiedono una ricerca separata nelle fonti istituzionali.",
+    },
+    lastCheckedAt: {
+      key: "lastCheckedAt",
+      label: "Ultimo controllo",
+      value: SOURCE_REVIEWED_AT,
+      sourceStatus: "verificato",
+      sourceUrl: documentUrl,
+      limit:
+        "Controllo della copia ufficiale archiviata; future modifiche o nuove pubblicazioni non sono incluse automaticamente in questa scheda revisionata.",
+    },
+    dataLimits: {
+      key: "dataLimits",
+      label: "Limiti del dato",
+      value: [
+        "La stessa convocazione programma due sedute, il 10 e l'11 agosto 2026 alle 09:30.",
+        "La scheda non certifica svolgimento, presenze, esiti o completezza storica.",
+        "Streaming, registrazione e verbale sono indicati come non rilevati nella fonte consultata, non come inesistenti.",
+      ],
+      sourceStatus: "parziale",
+      sourceUrl: documentUrl,
+      limit:
+        "Prima tranche editoriale basata su un solo avviso ufficiale; la copertura delle Commissioni non è completa.",
+    },
+  };
+}
+
+const councilVerifiedSession: CouncilSessionV0 = {
+  id: "albo-2026-2673-consiglio-comunale",
+  kind: "council",
+  isDemoFixture: false,
+  provenance: councilProvenance,
+  contextResearch: councilContextResearch,
+  title: {
+    key: "title",
+    label: "Titolo",
+    value: "Consiglio comunale — seduta del 13 agosto 2026",
+    sourceStatus: "verificato",
+    sourceUrl: councilCandidate.source.url,
+    limit:
+      `Titolo normalizzato dall'oggetto della pubblicazione ${councilCandidate.publicationNumber} e dalla data confermata dalla pubblicazione istituzionale 2026/2755.`,
+  },
+  scheduledAt: {
     key: "scheduledAt",
     label: "Data e ora",
     value: "2026-08-13",
@@ -259,7 +361,7 @@ function commissionSession(
     sourceStatus: "assente",
     sourceUrl: councilCandidate.source.url,
     limit:
-      "Non rilevato nei metadati ufficiali acquisiti; serve l'allegato o un'altra fonte istituzionale per pubblicarlo.",
+      "Non rilevato nei metadati ufficiali acquisiti; la fonte successiva conferma un solo punto e non viene usata per ricostruire l'elenco completo.",
   },
   sourceLink: {
     key: "sourceLink",
