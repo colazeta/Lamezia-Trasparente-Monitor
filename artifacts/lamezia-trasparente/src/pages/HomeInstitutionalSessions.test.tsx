@@ -29,7 +29,7 @@ describe("HomeInstitutionalSessions", () => {
       screen.getByText(/6 articoli · 5 stessa seduta · 1 possibile/i),
     ).toBeInTheDocument();
     expect(
-      screen.getAllByText(/2 articoli · sui temi in agenda/i),
+      screen.getAllByText(/2 articoli · 2 sui temi in agenda/i),
     ).toHaveLength(2);
     expect(
       screen.getByText(/fonte istituzionale successiva lo conferma/i),
