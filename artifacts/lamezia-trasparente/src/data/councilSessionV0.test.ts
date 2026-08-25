@@ -232,28 +232,35 @@ describe("councilSessionV0", () => {
     }
   });
 
-  it("keeps the council notice metadata-only when the official attachment is unavailable", () => {
+  it("enriches the council record from a later official source without inventing time or agenda", () => {
     const council = findCouncilSessionV0ReviewedRecord(
       "albo-2026-2673-consiglio-comunale",
     );
 
     expect(council?.kind).toBe("council");
-    expect(council?.scheduledAt.value).toBeNull();
-    expect(council?.scheduledAt.sourceStatus).toBe("da_verificare");
+    expect(council?.scheduledAt.value).toBe("2026-08-13");
+    expect(council?.scheduledAt.sourceStatus).toBe("verificato");
+    expect(council?.scheduledAt.sourceUrl).toContain("2026_2755_6_ALLEG");
+    expect(council?.scheduledAt.limit).toMatch(/orario.*non è presente/i);
+    expect(council?.sessionStatus.value).toBe("svolta");
+    expect(council?.sessionStatus.sourceStatus).toBe("verificato");
     expect(council?.agenda.value).toBeNull();
     expect(council?.provenance?.documentUrl).toBeNull();
     expect(council?.dataLimits.value?.join(" ")).toMatch(
-      /finestra di pubblicazione.*non è la data della seduta/i,
+      /ordine del giorno completo/i,
     );
     expect(
       council?.contextResearch.articles.map((article) => article.relationship),
     ).toEqual([
-      "possible_same_session",
-      "possible_same_session",
+      "same_session",
+      "same_session",
+      "same_session",
+      "same_session",
+      "same_session",
       "possible_same_session",
     ]);
     expect(council?.contextResearch.searchNote).toMatch(
-      /impedisce di stabilire.*stessa seduta/i,
+      /pubblicazione istituzionale 2026\/2755.*13 agosto/i,
     );
     expect(council?.contextResearch.searchNote).toMatch(
       /video.*senza.*pagina stabile/i,
