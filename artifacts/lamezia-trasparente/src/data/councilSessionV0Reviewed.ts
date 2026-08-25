@@ -15,14 +15,17 @@ const COMMISSION_NOTICE_URL =
   "https://albo.tinnvision.cloud/allegati/2026_2648_2_P?ente=00301390795";
 const COMMISSION_ARCHIVED_DOCUMENT_URL =
   "/data/public/albo/documents/2026/842702b2044b4b6f9a7b21a65eac2ab59866ee3f321872e6b28fd481598be304.pdf";
+const COUNCIL_SESSION_EVIDENCE_URL =
+  "https://albo.tinnvision.cloud/allegati/2026_2755_6_ALLEG?ente=00301390795";
 const SOURCE_REVIEWED_AT = "2026-08-22T12:10:49Z";
 const CONTEXT_RESEARCHED_AT = "2026-08-23T10:48:08Z";
+const COUNCIL_CONTEXT_RESEARCHED_AT = "2026-08-25T18:54:22.874Z";
 
 const councilContextResearch: CouncilSessionV0ContextResearch = {
   status: "reviewed_matches",
-  checkedAt: CONTEXT_RESEARCHED_AT,
+  checkedAt: COUNCIL_CONTEXT_RESEARCHED_AT,
   searchNote:
-    "Tre articoli sono compatibili con l'avviso, ma l'assenza dell'allegato ufficiale impedisce di stabilire che descrivano la stessa seduta. City One indicizza inoltre un video del Consiglio del 13 agosto nella homepage, senza esporre una pagina stabile verificabile: per questo non è pubblicato come collegamento audiovisivo.",
+    "La pubblicazione istituzionale 2026/2755 conferma una seduta del Consiglio comunale il 13 agosto 2026. Cinque articoli coincidono con organo, data e temi distintivi; un sesto descrive un ulteriore tema trattato nella stessa giornata ma resta una possibile corrispondenza. La stampa non completa l'orario o l'ordine del giorno. City One indicizza anche un video senza esporre una pagina stabile verificabile, quindi non è pubblicato come collegamento audiovisivo.",
   articles: [
     {
       title:
@@ -30,10 +33,10 @@ const councilContextResearch: CouncilSessionV0ContextResearch = {
       url: "https://www.cityonelamezia.it/convocato-consiglio-comunale-di-lamezia-terme-in-prossimita-del-ferragosto/",
       publisher: "City One",
       publishedAt: "2026-08-10",
-      relationship: "possible_same_session",
+      relationship: "same_session",
       relevanceNote:
-        "Riporta Consiglio comunale, prima convocazione del 13 agosto, seconda convocazione del 14 agosto e 33 punti in agenda. I dettagli sono compatibili con l'avviso Albo 2026/2673, ma restano dati editoriali e non completano i campi ufficiali mancanti.",
-      reviewedAt: CONTEXT_RESEARCHED_AT,
+        "Indica il Consiglio del 13 agosto e include tra i 33 punti i debiti fuori bilancio; la successiva pubblicazione istituzionale 2026/2755 conferma organo, data e l'approvazione di uno di questi debiti.",
+      reviewedAt: COUNCIL_CONTEXT_RESEARCHED_AT,
     },
     {
       title:
@@ -41,20 +44,53 @@ const councilContextResearch: CouncilSessionV0ContextResearch = {
       url: "https://www.lameziainforma.it/istituzione/2026/08/13/consiglio-comunale-prima-di-ferragosto-con-soliti-stilemi-politici-e-qualche-fuoriprogramma-estivo/68880/",
       publisher: "LameziaInforma",
       publishedAt: "2026-08-13",
-      relationship: "possible_same_session",
+      relationship: "same_session",
       relevanceNote:
-        "Data di pubblicazione, organo e temi trattati sono compatibili con l'avviso Albo 2026/2673; manca l'allegato ufficiale per stabilire il collegamento in modo definitivo.",
-      reviewedAt: CONTEXT_RESEARCHED_AT,
+        "Descrive il Consiglio del 13 agosto e temi distintivi, inclusi bilancio e debiti fuori bilancio; la data della seduta è ora confermata dalla fonte istituzionale 2026/2755.",
+      reviewedAt: COUNCIL_CONTEXT_RESEARCHED_AT,
     },
     {
       title: "Question time politico evaso in consiglio comunale",
       url: "https://www.lameziainforma.it/politica/2026/08/13/question-time-politico-evaso-in-consiglio-comunale/68885/",
       publisher: "LameziaInforma",
       publishedAt: "2026-08-13",
+      relationship: "same_session",
+      relevanceNote:
+        "Il resoconto del 13 agosto tratta question time e debiti fuori bilancio; organo, data e tema del debito coincidono con la successiva fonte istituzionale.",
+      reviewedAt: COUNCIL_CONTEXT_RESEARCHED_AT,
+    },
+    {
+      title:
+        "Lamezia, 33 punti in Consiglio comunale il 13 agosto: al centro assestamento e salvaguardia equilibri di Bilancio",
+      url: "https://www.lametino.it/ultime/lamezia-33-punti-in-consiglio-comunale-il-13-agosto-al-centro-assestamento-e-salvaguardia-equilibri-di-bilancio.html",
+      publisher: "il Lametino",
+      publishedAt: "2026-08-10",
+      relationship: "same_session",
+      relevanceNote:
+        "Annuncia il Consiglio del 13 agosto e riporta assestamento, salvaguardia degli equilibri e debiti fuori bilancio; uno di questi ultimi è richiamato dalla fonte istituzionale 2026/2755.",
+      reviewedAt: COUNCIL_CONTEXT_RESEARCHED_AT,
+    },
+    {
+      title:
+        "Lamezia, il Consiglio comunale approva l'assestamento e la salvaguardia degli equilibri di Bilancio",
+      url: "https://www.lametino.it/ultime/lamezia-il-consiglio-comunale-approva-lassestamento-e-la-salvaguardia-degli-equilibri-di-bilancio.html",
+      publisher: "il Lametino",
+      publishedAt: "2026-08-13",
+      relationship: "same_session",
+      relevanceNote:
+        "Resoconta il Consiglio del 13 agosto e più temi distintivi già presenti negli avvisi editoriali; la data è confermata dalla pubblicazione istituzionale successiva.",
+      reviewedAt: COUNCIL_CONTEXT_RESEARCHED_AT,
+    },
+    {
+      title:
+        "Lamezia, Amministrazione Comunale su disabilità: \"Sottoscritti 142 Progetti di Vita. Ora rafforziamo rete territoriale\"",
+      url: "https://www.lametino.it/ultimora/lamezia-amministrazione-comunale-su-disabilita-sottoscritti-142-progetti-di-vita-ora-rafforziamo-rete-territoriale.html",
+      publisher: "il Lametino",
+      publishedAt: "2026-08-14",
       relationship: "possible_same_session",
       relevanceNote:
-        "Il resoconto descrive question time e debiti fuori bilancio nella stessa giornata; è un indizio contestuale, non una fonte ufficiale della convocazione.",
-      reviewedAt: CONTEXT_RESEARCHED_AT,
+        "Riferisce un'informativa resa nel Consiglio del 13 agosto. La data coincide con quella verificata, ma la fonte ufficiale acquisita non espone l'ordine del giorno completo.",
+      reviewedAt: COUNCIL_CONTEXT_RESEARCHED_AT,
     },
   ],
   media: [],
@@ -199,123 +235,22 @@ function commissionSession(
         "Titolo normalizzato dalla convocazione ufficiale; la fonte identifica la II Commissione come Servizi economici e finanziari.",
     },
     scheduledAt: {
-      key: "scheduledAt",
-      label: "Data e ora",
-      value: `${date}T09:30:00+02:00`,
-      sourceStatus: "verificato",
-      sourceUrl: documentUrl,
-      limit:
-        "Data e ora trascritte dall'allegato ufficiale; indicano la programmazione, non provano lo svolgimento.",
-    },
-    sessionStatus: {
-      key: "sessionStatus",
-      label: "Stato seduta",
-      value: "non_verificata",
-      sourceStatus: "parziale",
-      sourceUrl: documentUrl,
-      limit:
-        "La convocazione documenta la seduta programmata; non è stata collegata una fonte che ne confermi lo svolgimento o l'eventuale rinvio.",
-    },
-    agenda: {
-      key: "agenda",
-      label: "Ordine del giorno",
-      value: commissionAgenda,
-      sourceStatus: "verificato",
-      sourceUrl: documentUrl,
-      limit:
-        "Sintesi fedele dei due punti riportati nell'allegato; per formulazione completa e riferimenti normativi consultare il documento originale.",
-    },
-    sourceLink: {
-      key: "sourceLink",
-      label: "Fonte",
-      value: "Apri la convocazione nell'Albo ufficiale",
-      sourceStatus: "verificato",
-      sourceUrl: documentUrl,
-      limit: `Pubblicazione ${commissionCandidate.publicationNumber}; copia acquisita e verificata tramite hash nel repository.`,
-    },
-    liveStreaming: {
-      key: "liveStreaming",
-      label: "Streaming live",
-      value: null,
-      sourceStatus: "assente",
-      sourceUrl: documentUrl,
-      limit:
-        "Non rilevato nella convocazione consultata; ciò non esclude che possa essere stato comunicato su un altro canale.",
-    },
-    recording: {
-      key: "recording",
-      label: "Registrazione",
-      value: null,
-      sourceStatus: "assente",
-      sourceUrl: documentUrl,
-      limit:
-        "Non rilevata nella fonte monitorata; nessuna conclusione viene tratta sulla disponibilità complessiva di registrazioni.",
-    },
-    minutesOrReport: {
-      key: "minutesOrReport",
-      label: "Verbale o resoconto",
-      value: null,
-      sourceStatus: "assente",
-      sourceUrl: documentUrl,
-      limit:
-        "Non rilevato nella convocazione; verbali o resoconti successivi richiedono una ricerca separata nelle fonti istituzionali.",
-    },
-    lastCheckedAt: {
-      key: "lastCheckedAt",
-      label: "Ultimo controllo",
-      value: SOURCE_REVIEWED_AT,
-      sourceStatus: "verificato",
-      sourceUrl: documentUrl,
-      limit:
-        "Controllo della copia ufficiale archiviata; future modifiche o nuove pubblicazioni non sono incluse automaticamente in questa scheda revisionata.",
-    },
-    dataLimits: {
-      key: "dataLimits",
-      label: "Limiti del dato",
-      value: [
-        "La stessa convocazione programma due sedute, il 10 e l'11 agosto 2026 alle 09:30.",
-        "La scheda non certifica svolgimento, presenze, esiti o completezza storica.",
-        "Streaming, registrazione e verbale sono indicati come non rilevati nella fonte consultata, non come inesistenti.",
-      ],
-      sourceStatus: "parziale",
-      sourceUrl: documentUrl,
-      limit:
-        "Prima tranche editoriale basata su un solo avviso ufficiale; la copertura delle Commissioni non è completa.",
-    },
-  };
-}
-
-const councilMetadataOnlySession: CouncilSessionV0 = {
-  id: "albo-2026-2673-consiglio-comunale",
-  kind: "council",
-  isDemoFixture: false,
-  provenance: councilProvenance,
-  contextResearch: councilContextResearch,
-  title: {
-    key: "title",
-    label: "Titolo",
-    value: "Consiglio comunale — avviso di seduta",
-    sourceStatus: "verificato",
-    sourceUrl: councilCandidate.source.url,
-    limit: `Titolo normalizzato dall'oggetto della pubblicazione ${councilCandidate.publicationNumber}.`,
-  },
-  scheduledAt: {
     key: "scheduledAt",
     label: "Data e ora",
-    value: null,
-    sourceStatus: "da_verificare",
-    sourceUrl: councilCandidate.source.url,
+    value: "2026-08-13",
+    sourceStatus: "verificato",
+    sourceUrl: COUNCIL_SESSION_EVIDENCE_URL,
     limit:
-      "L'export ufficiale monitorato non espone l'allegato: le date di inizio e fine pubblicazione non vengono usate come data della seduta.",
+      "La data è indicata nella pubblicazione istituzionale 2026/2755; l'orario non è presente nella fonte e non viene ricavato dalla stampa.",
   },
   sessionStatus: {
     key: "sessionStatus",
     label: "Stato seduta",
-    value: "non_verificata",
-    sourceStatus: "da_verificare",
-    sourceUrl: councilCandidate.source.url,
+    value: "svolta",
+    sourceStatus: "verificato",
+    sourceUrl: COUNCIL_SESSION_EVIDENCE_URL,
     limit:
-      "È verificata la presenza dell'avviso nell'Albo, non la programmazione puntuale né lo svolgimento della seduta.",
+      "La determinazione successiva richiama un debito approvato nella seduta del 13 agosto; non documenta presenze, durata o trattazione completa.",
   },
   agenda: {
     key: "agenda",
@@ -329,10 +264,11 @@ const councilMetadataOnlySession: CouncilSessionV0 = {
   sourceLink: {
     key: "sourceLink",
     label: "Fonte",
-    value: "Apri l'Albo Pretorio ufficiale",
+    value: "Apri l'evidenza istituzionale sulla seduta",
     sourceStatus: "verificato",
-    sourceUrl: councilCandidate.source.url,
-    limit: `Pubblicazione ${councilCandidate.publicationNumber}; l'export non ha restituito un URL diretto al documento.`,
+    sourceUrl: COUNCIL_SESSION_EVIDENCE_URL,
+    limit:
+      "La pubblicazione 2026/2755 conferma organo, data e approvazione di un debito; l'avviso originario 2026/2673 resta privo di allegato nell'export acquisito.",
   },
   liveStreaming: {
     key: "liveStreaming",
@@ -364,31 +300,32 @@ const councilMetadataOnlySession: CouncilSessionV0 = {
   lastCheckedAt: {
     key: "lastCheckedAt",
     label: "Ultimo controllo",
-    value: SOURCE_REVIEWED_AT,
+    value: COUNCIL_CONTEXT_RESEARCHED_AT,
     sourceStatus: "verificato",
-    sourceUrl: councilCandidate.source.url,
+    sourceUrl: COUNCIL_SESSION_EVIDENCE_URL,
     limit:
-      "Controllo del record ufficiale acquisito; la scheda conserva solo i metadati effettivamente disponibili.",
+      "Controllo della nuova pubblicazione istituzionale e nuova ricerca di articoli e video nella finestra dal 6 al 20 agosto 2026.",
   },
   dataLimits: {
     key: "dataLimits",
     label: "Limiti del dato",
     value: [
-      "Scheda metadata-only: data, ora e ordine del giorno restano da verificare.",
-      "La finestra di pubblicazione Albo dal 10 al 14 agosto 2026 non è la data della seduta.",
-      "Il rilevamento dell'avviso non prova che la seduta si sia svolta.",
+      "Data e svolgimento sono confermati dalla pubblicazione istituzionale 2026/2755; l'orario resta da verificare.",
+      "La fonte successiva documenta l'approvazione di un debito fuori bilancio, non l'ordine del giorno completo, le presenze o tutte le votazioni.",
+      "L'avviso originario 2026/2673 non espone un allegato nell'export acquisito.",
+      "Il richiamo video di City One non ha ancora una pagina stabile verificabile.",
     ],
     sourceStatus: "parziale",
-    sourceUrl: councilCandidate.source.url,
+    sourceUrl: COUNCIL_SESSION_EVIDENCE_URL,
     limit:
-      "Prima identificazione fonte-centrica del tipo atto Consiglio; nessuna copertura storica completa è dichiarata.",
+      "Arricchimento prudenziale basato su una fonte istituzionale successiva; nessuna informazione editoriale completa i campi ufficiali mancanti.",
   },
 };
 
 export const councilSessionV0ReviewedRecords: readonly CouncilSessionV0[] = [
   commissionSession("2026-08-11"),
   commissionSession("2026-08-10"),
-  councilMetadataOnlySession,
+  councilVerifiedSession,
 ];
 
 const reviewedRecordsById = new Map(
