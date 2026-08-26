@@ -27,7 +27,7 @@ const councilContextResearch: CouncilSessionV0ContextResearch = {
   status: "reviewed_matches",
   checkedAt: COUNCIL_CONTEXT_RESEARCHED_AT,
   searchNote:
-    "La pubblicazione istituzionale 2026/2755 conferma una seduta del Consiglio comunale il 13 agosto 2026. Cinque articoli coincidono con organo, data e temi distintivi; un sesto descrive un ulteriore tema trattato nella stessa giornata ma resta una possibile corrispondenza. La stampa non completa l'orario o l'ordine del giorno. City One indicizza anche un video senza esporre una pagina stabile verificabile, quindi non è pubblicato come collegamento audiovisivo.",
+    "La pubblicazione istituzionale 2026/2755 conferma una seduta del Consiglio comunale il 13 agosto 2026. Cinque articoli coincidono con organo, data e temi distintivi; un sesto descrive un ulteriore tema trattato nella stessa giornata ma resta una possibile corrispondenza. La stampa non completa l'orario o l'ordine del giorno. È disponibile la registrazione editoriale integrale indicizzata da City One; resta distinta da eventuali registrazioni istituzionali.",
   articles: [
     {
       title:
@@ -95,7 +95,20 @@ const councilContextResearch: CouncilSessionV0ContextResearch = {
       reviewedAt: COUNCIL_CONTEXT_RESEARCHED_AT,
     },
   ],
-  media: [],
+  media: [
+    {
+      title: "Consiglio Comunale 13 Agosto 2026 - Video",
+      url: "https://www.facebook.com/cityonetv/videos/1584310006611277",
+      publisher: "City One",
+      publishedAt: "2026-08-13",
+      relationship: "same_session",
+      mediaType: "full_recording",
+      availability: "replay_available",
+      relevanceNote:
+        "City One presenta il contenuto come video del Consiglio comunale del 13 agosto 2026. Il collegamento è una registrazione editoriale esterna e non prova da solo completezza, svolgimento o risultati della seduta.",
+      reviewedAt: "2026-08-26T05:51:44Z",
+    },
+  ],
 };
 
 const commissionContextResearch: CouncilSessionV0ContextResearch = {
@@ -431,7 +444,7 @@ const councilVerifiedSession: CouncilSessionV0 = {
       "Data e svolgimento sono confermati dalla pubblicazione istituzionale 2026/2755; l'orario resta da verificare.",
       "La fonte successiva documenta l'approvazione di un debito fuori bilancio, non l'ordine del giorno completo, le presenze o tutte le votazioni.",
       "L'avviso originario 2026/2673 non espone un allegato nell'export acquisito.",
-      "Il richiamo video di City One non ha ancora una pagina stabile verificabile.",
+      "La registrazione City One è copertura editoriale esterna e non una registrazione istituzionale.",
     ],
     sourceStatus: "parziale",
     sourceUrl: COUNCIL_SESSION_EVIDENCE_URL,
