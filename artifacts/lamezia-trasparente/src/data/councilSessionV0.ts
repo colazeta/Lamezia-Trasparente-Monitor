@@ -145,6 +145,8 @@ export interface CouncilSessionV0SupplementalEvidence {
   publicationNumber: string;
   sourceLabel: string;
   sourceUrl: string;
+  archivedDocumentUrl: string;
+  documentSha256: string;
   retrievedAt: string;
   reviewedAt: string;
   verificationNote: string;
