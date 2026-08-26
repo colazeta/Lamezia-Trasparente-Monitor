@@ -27,6 +27,11 @@ describe("CouncilSessionV0Card", () => {
     expect(
       screen.getByText("Fonte istituzionale successiva controllata"),
     ).toBeInTheDocument();
+    expect(
+      screen.getByRole("link", {
+        name: "Consiglio Comunale 13 Agosto 2026 - Video",
+      }),
+    ).toHaveAttribute("href", "https://www.facebook.com/cityonetv/videos/1584310006611277");
     expect(screen.getByText("13 agosto 2026")).toBeInTheDocument();
     expect(screen.queryByText(/13 agosto 2026.*02:00/i)).not.toBeInTheDocument();
     expect(screen.getByText("Seduta svolta")).toBeInTheDocument();
@@ -135,7 +140,7 @@ describe("CouncilSessionV0Card", () => {
 
     render(<CouncilSessionV0Detail session={session} />);
 
-    expect(screen.getAllByText("Stessa seduta")).toHaveLength(5);
+    expect(screen.getAllByText("Stessa seduta")).toHaveLength(6);
     expect(screen.getAllByText("Possibile corrispondenza")).toHaveLength(1);
     expect(
       screen.getByRole("link", {
