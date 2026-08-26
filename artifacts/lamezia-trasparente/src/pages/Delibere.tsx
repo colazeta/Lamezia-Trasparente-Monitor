@@ -3,9 +3,10 @@ import {
   useListDelibere,
   type Publication,
 } from "@workspace/api-client-react";
-import { Search, Gavel, Calendar } from "lucide-react";
+import { Calendar, ChevronRight, FileText, Gavel, Search } from "lucide-react";
 import { format } from "date-fns";
 import { it } from "date-fns/locale";
+import { Link } from "wouter";
 
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -38,6 +39,28 @@ function formatDate(value: string | null | undefined) {
     : format(d, "dd MMM yyyy", { locale: it });
 }
 
+function usefulRegisterNumber(value: string | null | undefined) {
+  const normalised = value?.trim();
+  if (!normalised || normalised === "0") return null;
+  return normalised;
+}
+
+function deliberaNumber(delibera: Publication) {
+  const structured =
+    usefulRegisterNumber(delibera.numRegSet) ??
+    usefulRegisterNumber(delibera.numRegGen);
+  if (structured) return structured;
+
+  const match = /\bNR\.?\s*(\d+)/i.exec(delibera.tipologia ?? "");
+  return match?.[1] ?? null;
+}
+
+function organLabel(subcategory: string | null | undefined) {
+  if (subcategory === "giunta") return "Giunta comunale";
+  if (subcategory === "consiglio") return "Consiglio comunale";
+  return "Deliberazione";
+}
+
 export function Delibere() {
   const [tipo, setTipo] = useState<string>("all");
   const [search, setSearch] = useState("");
@@ -59,19 +82,20 @@ export function Delibere() {
       <div className="mb-8">
         <span className="eyebrow text-primary">
           <Gavel className="h-3.5 w-3.5" />
-          Organi collegiali
+          Atti deliberativi
         </span>
         <h1 className="mt-2 text-3xl md:text-4xl font-display font-bold tracking-tight">
-          Elenco Delibere
+          Archivio delle delibere
         </h1>
         <p className="mt-3 text-muted-foreground text-lg max-w-3xl">
-          Le deliberazioni della Giunta e del Consiglio Comunale, raccolte e
-          rese consultabili in modo permanente.
+          Le deliberazioni della Giunta e del Consiglio comunale raccolte in un
+          archivio consultabile, con numero dell'atto, data, oggetto e documenti
+          disponibili dalla fonte ufficiale.
         </p>
         <CivicMonitorReturn context="Le delibere sono fonti primarie per verificare promesse, criticità pubbliche e atti collegati senza trarre conclusioni autonome." />
       </div>
 
-      <div className="flex flex-col md:flex-row md:items-center gap-4 mb-8">
+      <div className="flex flex-col md:flex-row md:items-center gap-4 mb-4">
         <div className="inline-flex rounded-lg border border-border bg-muted/40 p-1">
           {TABS.map((t) => (
             <button
@@ -91,14 +115,23 @@ export function Delibere() {
         <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
-            placeholder="Cerca per oggetto..."
-            aria-label="Cerca delibere per oggetto"
+            placeholder="Cerca per oggetto, numero o pubblicazione Albo..."
+            aria-label="Cerca nell'archivio delle delibere"
             className="pl-9 h-11 bg-background"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
         </div>
       </div>
+
+      {!isLoading && delibere.length > 0 && (
+        <div className="mb-5 flex flex-wrap items-center justify-between gap-2 text-xs text-muted-foreground">
+          <span className="font-semibold">
+            {delibere.length} {delibere.length === 1 ? "atto trovato" : "atti trovati"}
+          </span>
+          <span>Ordinati per data dell'atto, dal più recente</span>
+        </div>
+      )}
 
       <div className="space-y-3">
         {isLoading ? (
@@ -111,46 +144,63 @@ export function Delibere() {
               </Card>
             ))
         ) : delibere.length > 0 ? (
-          delibere.map((d) => (
-            <Card
-              key={d.id}
-              className="group p-5 transition-all hover:shadow-lg hover:-translate-y-0.5 hover:border-brand/40"
-            >
-              <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
-                <div className="flex flex-wrap items-center gap-2">
-                  <Badge variant="secondary" className="text-xs capitalize">
-                    {d.subcategory ?? "delibera"}
-                  </Badge>
-                  <MacrotemaBadge macrotema={d.macrotema} />
-                  {d.isNew && (
-                    <Badge variant="brand" className="text-xs">
-                      NUOVO
+          delibere.map((d) => {
+            const number = deliberaNumber(d);
+            return (
+              <Card
+                key={d.id}
+                className="group p-5 transition-all hover:shadow-lg hover:-translate-y-0.5 hover:border-brand/40"
+              >
+                <div className="flex flex-wrap items-start justify-between gap-3 mb-3">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <Badge variant="secondary" className="text-xs">
+                      {organLabel(d.subcategory)}
                     </Badge>
-                  )}
-                  {d.numRegGen && (
-                    <span className="font-mono text-xs text-muted-foreground">
-                      N. {d.numRegGen}
+                    {number && (
+                      <span className="font-mono text-xs font-semibold text-foreground">
+                        Delibera n. {number}
+                      </span>
+                    )}
+                    <MacrotemaBadge macrotema={d.macrotema} />
+                    {d.isNew && (
+                      <Badge variant="brand" className="text-xs">
+                        NUOVO
+                      </Badge>
+                    )}
+                  </div>
+                  <div className="flex items-center gap-1.5 text-xs font-mono text-muted-foreground">
+                    <Calendar className="h-3.5 w-3.5" />
+                    {formatDate(d.dataAtto ?? d.pubStart)}
+                  </div>
+                </div>
+
+                <h2 className="font-display font-bold text-foreground leading-snug group-hover:text-brand transition-colors">
+                  {d.oggetto}
+                </h2>
+
+                <div className="mt-3 flex flex-wrap gap-x-5 gap-y-2 text-xs text-muted-foreground">
+                  {d.progressivo && (
+                    <span className="inline-flex items-center gap-1.5">
+                      <FileText className="h-3.5 w-3.5" />
+                      Pubblicazione Albo {d.progressivo}
                     </span>
                   )}
+                  {d.provenienza && <span>Provenienza: {d.provenienza}</span>}
                 </div>
-                <div className="flex items-center gap-1.5 text-xs font-mono text-muted-foreground">
-                  <Calendar className="h-3.5 w-3.5" />
-                  {formatDate(d.dataAtto ?? d.pubStart)}
+
+                <div className="mt-4 flex flex-col gap-3 border-t border-border pt-3 sm:flex-row sm:items-start sm:justify-between">
+                  <Link
+                    href={`/albo/${d.id}`}
+                    className="inline-flex items-center gap-1 text-xs font-semibold text-primary hover:text-brand transition-colors"
+                  >
+                    Apri la scheda dell'atto
+                    <ChevronRight className="h-3.5 w-3.5" />
+                  </Link>
+                  <AlboLink attachments={d.attachments} className="sm:max-w-[55%]" />
                 </div>
-              </div>
-              <h3 className="font-display font-bold text-foreground leading-snug group-hover:text-brand transition-colors">
-                {d.oggetto}
-              </h3>
-              {d.provenienza && (
-                <p className="mt-2 text-xs text-muted-foreground">
-                  {d.provenienza}
-                </p>
-              )}
-              <div className="mt-3 border-t border-border pt-3">
-                <AlboLink />
-              </div>
-            </Card>
-          ))
+              </Card>
+            );
+          })
         ) : (
           <Empty className="border bg-muted/20">
             <EmptyHeader>
