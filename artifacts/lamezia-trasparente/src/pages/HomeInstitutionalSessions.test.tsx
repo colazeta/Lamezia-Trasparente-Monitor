@@ -19,6 +19,7 @@ describe("HomeInstitutionalSessions", () => {
       screen.getByRole("heading", { name: "Commissioni consiliari" }),
     ).toBeInTheDocument();
 
+    expect(screen.getByText("Fonte successiva controllata")).toBeInTheDocument();
     expect(screen.getByText(/13 agosto 2026/i)).toBeInTheDocument();
     expect(screen.getByText(/11 agosto 2026/i)).toBeInTheDocument();
     expect(screen.getByText(/10 agosto 2026/i)).toBeInTheDocument();
