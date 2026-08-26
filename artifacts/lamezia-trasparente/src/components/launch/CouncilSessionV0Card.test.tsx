@@ -24,6 +24,9 @@ describe("CouncilSessionV0Card", () => {
         name: "Consiglio comunale — seduta del 13 agosto 2026",
       }),
     ).toBeInTheDocument();
+    expect(
+      screen.getByText("Fonte istituzionale successiva controllata"),
+    ).toBeInTheDocument();
     expect(screen.getByText("13 agosto 2026")).toBeInTheDocument();
     expect(screen.queryByText(/13 agosto 2026.*02:00/i)).not.toBeInTheDocument();
     expect(screen.getByText("Seduta svolta")).toBeInTheDocument();
