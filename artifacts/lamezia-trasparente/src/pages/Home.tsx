@@ -553,6 +553,11 @@ function InstitutionalSessionsHomeCard({
       session.provenance?.sourceReviewStatus ===
       "reviewed_against_official_attachment",
   );
+  const laterOfficialSourceReviewed = sessions.some(
+    (session) =>
+      session.provenance?.sourceReviewStatus ===
+      "reviewed_against_later_official_source",
+  );
 
   return (
     <Card className="flex h-full flex-col overflow-hidden border-primary/20">
@@ -562,7 +567,11 @@ function InstitutionalSessionsHomeCard({
             <Icon className="h-5 w-5" aria-hidden="true" />
           </span>
           <span className="rounded-full border border-primary/20 bg-primary/5 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-primary">
-            {attachmentReviewed ? "Allegato controllato" : "Metadati ufficiali"}
+            {attachmentReviewed
+              ? "Allegato controllato"
+              : laterOfficialSourceReviewed
+                ? "Fonte successiva controllata"
+                : "Metadati ufficiali"}
           </span>
         </div>
         <h3 className="mt-4 font-display text-2xl font-bold tracking-tight">
