@@ -138,7 +138,17 @@ export interface CouncilSessionV0Field<T> {
 
 export type CouncilSessionV0SourceReviewStatus =
   | "official_metadata_only"
-  | "reviewed_against_official_attachment";
+  | "reviewed_against_official_attachment"
+  | "reviewed_against_later_official_source";
+
+export interface CouncilSessionV0SupplementalEvidence {
+  publicationNumber: string;
+  sourceLabel: string;
+  sourceUrl: string;
+  retrievedAt: string;
+  reviewedAt: string;
+  verificationNote: string;
+}
 
 export interface CouncilSessionV0Provenance {
   noticeId: string;
@@ -153,6 +163,7 @@ export interface CouncilSessionV0Provenance {
   retrievedAt: string;
   reviewedAt: string;
   sourceReviewStatus: CouncilSessionV0SourceReviewStatus;
+  supplementalEvidence?: readonly CouncilSessionV0SupplementalEvidence[];
 }
 
 export interface CouncilSessionV0ContextArticle {
