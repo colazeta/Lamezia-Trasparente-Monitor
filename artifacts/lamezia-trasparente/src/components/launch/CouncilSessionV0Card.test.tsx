@@ -27,11 +27,6 @@ describe("CouncilSessionV0Card", () => {
     expect(
       screen.getByText("Fonte istituzionale successiva controllata"),
     ).toBeInTheDocument();
-    expect(
-      screen.getByRole("link", {
-        name: "Consiglio Comunale 13 Agosto 2026 - Video",
-      }),
-    ).toHaveAttribute("href", "https://www.facebook.com/cityonetv/videos/1584310006611277");
     expect(screen.getByText("13 agosto 2026")).toBeInTheDocument();
     expect(screen.queryByText(/13 agosto 2026.*02:00/i)).not.toBeInTheDocument();
     expect(screen.getByText("Seduta svolta")).toBeInTheDocument();
@@ -152,6 +147,11 @@ describe("CouncilSessionV0Card", () => {
         name: /il Consiglio comunale approva l'assestamento/i,
       }),
     ).toHaveAttribute("href", expect.stringContaining("lametino.it"));
+    expect(
+      screen.getByRole("link", {
+        name: "Consiglio Comunale 13 Agosto 2026 - Video",
+      }),
+    ).toHaveAttribute("href", "https://www.facebook.com/cityonetv/videos/1584310006611277");
     expect(screen.getByText("13 agosto 2026")).toBeInTheDocument();
     expect(screen.getByText("Svolta")).toBeInTheDocument();
     expect(
