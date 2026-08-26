@@ -25,6 +25,7 @@ import {
   type CouncilSessionV0,
   type CouncilSessionV0Field,
   type CouncilSessionV0FieldStatus,
+  type CouncilSessionV0SourceReviewStatus,
 } from "@/data/councilSessionV0";
 
 function formatDate(value: string | null) {
@@ -48,6 +49,30 @@ function formatPublishedDate(value: string | null) {
     dateStyle: "long",
     timeZone: "Europe/Rome",
   }).format(date);
+}
+
+function sourceReviewLabel(
+  status: CouncilSessionV0SourceReviewStatus | undefined,
+) {
+  if (status === "reviewed_against_official_attachment") {
+    return "Allegato ufficiale controllato";
+  }
+  if (status === "reviewed_against_later_official_source") {
+    return "Fonte istituzionale successiva controllata";
+  }
+  return "Metadati ufficiali disponibili";
+}
+
+function sourceReviewDescription(
+  status: CouncilSessionV0SourceReviewStatus | undefined,
+) {
+  if (status === "reviewed_against_official_attachment") {
+    return "Metadati e allegato ufficiale controllati";
+  }
+  if (status === "reviewed_against_later_official_source") {
+    return "Avviso ufficiale e fonte istituzionale successiva controllati";
+  }
+  return "Solo metadati ufficiali; allegato non disponibile nell'export";
 }
 
 function textValue(field: CouncilSessionV0Field<unknown>) {
@@ -169,10 +194,12 @@ export function CouncilSessionV0Notice({
             Scheda collegata a fonte ufficiale
           </p>
           <p className="text-muted-foreground">
-            I dati provengono dalla pubblicazione Albo{" "}
-            {session.provenance?.publicationNumber}. La convocazione documenta
-            una programmazione o un avviso: non prova, da sola, che la seduta si
-            sia svolta.
+            La scheda parte dalla pubblicazione Albo{" "}
+            {session.provenance?.publicationNumber}.
+            {session.provenance?.sourceReviewStatus ===
+            "reviewed_against_later_official_source"
+              ? " Una fonte istituzionale successiva verifica gli elementi dichiarati nella scheda."
+              : " La convocazione documenta una programmazione o un avviso: non prova, da sola, che la seduta si sia svolta."}
           </p>
           {!compact && (
             <p className="text-muted-foreground">
@@ -205,11 +232,9 @@ export function CouncilSessionV0SummaryCard({
   session: CouncilSessionV0;
 }) {
   const isDemo = session.isDemoFixture;
-  const sourceReviewLabel =
-    session.provenance?.sourceReviewStatus ===
-    "reviewed_against_official_attachment"
-      ? "Allegato ufficiale controllato"
-      : "Metadati ufficiali disponibili";
+  const reviewedSourceLabel = sourceReviewLabel(
+    session.provenance?.sourceReviewStatus,
+  );
   const contextArticleCount = session.contextResearch.articles.length;
   const contextMediaCount = session.contextResearch.media.length;
 
@@ -223,7 +248,7 @@ export function CouncilSessionV0SummaryCard({
     >
       <div className="mb-3 flex flex-wrap items-center gap-2">
         <Badge variant={isDemo ? "outline" : "success"}>
-          {isDemo ? "Fixture dimostrativa" : sourceReviewLabel}
+          {isDemo ? "Fixture dimostrativa" : reviewedSourceLabel}
         </Badge>
         <Badge variant="secondary">
           {councilSessionV0KindLabels[session.kind]}
@@ -237,7 +262,10 @@ export function CouncilSessionV0SummaryCard({
           ? "Esempio tecnico privo di valore informativo reale."
           : session.provenance?.sourceReviewStatus === "official_metadata_only"
             ? "Avviso individuato nell'Albo; data, ora e ordine del giorno restano da verificare."
-            : "Data, ora e ordine del giorno sono stati confrontati con l'allegato ufficiale archiviato."}
+            : session.provenance?.sourceReviewStatus ===
+                "reviewed_against_later_official_source"
+              ? "Una fonte istituzionale successiva conferma data e svolgimento; orario e ordine del giorno completo non sono disponibili."
+              : "Data, ora e ordine del giorno sono stati confrontati con l'allegato ufficiale archiviato."}
       </p>
       <dl className="mt-4 grid gap-3 text-sm sm:grid-cols-2">
         <div>
@@ -377,10 +405,7 @@ export function CouncilSessionV0Detail({
             <Badge variant={isDemo ? "outline" : "success"}>
               {isDemo
                 ? "Scheda demo"
-                : session.provenance?.sourceReviewStatus ===
-                    "reviewed_against_official_attachment"
-                  ? "Allegato ufficiale controllato"
-                  : "Metadati ufficiali"}
+                : sourceReviewLabel(session.provenance?.sourceReviewStatus)}
             </Badge>
           </div>
 
@@ -822,14 +847,47 @@ export function CouncilSessionV0Detail({
                   Stato della fonte
                 </dt>
                 <dd className="mt-1 text-muted-foreground">
-                  {session.provenance?.sourceReviewStatus ===
-                  "reviewed_against_official_attachment"
-                    ? "Metadati e allegato ufficiale controllati"
-                    : "Solo metadati ufficiali; allegato non disponibile nell'export"}
+                  {sourceReviewDescription(
+                    session.provenance?.sourceReviewStatus,
+                  )}
                 </dd>
               </div>
             </dl>
           )}
+
+          {!isDemo &&
+            session.provenance?.supplementalEvidence &&
+            session.provenance.supplementalEvidence.length > 0 && (
+              <div className="mt-5 border-t border-border pt-5">
+                <h3 className="font-semibold text-foreground">
+                  Fonti istituzionali successive
+                </h3>
+                <ul className="mt-3 space-y-3">
+                  {session.provenance.supplementalEvidence.map((evidence) => (
+                    <li
+                      key={evidence.publicationNumber}
+                      className="rounded-xl border border-border p-3"
+                    >
+                      <a
+                        href={evidence.sourceUrl}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="inline-flex items-center gap-1.5 text-sm font-semibold text-brand hover:underline"
+                      >
+                        Pubblicazione {evidence.publicationNumber}
+                        <ExternalLink
+                          className="h-3.5 w-3.5"
+                          aria-hidden="true"
+                        />
+                      </a>
+                      <p className="mt-1 text-xs leading-5 text-muted-foreground">
+                        {evidence.verificationNote}
+                      </p>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
 
           <div className="mt-5 border-t border-border pt-5">
             <h3 className="font-semibold text-foreground">Stato dei dati</h3>
