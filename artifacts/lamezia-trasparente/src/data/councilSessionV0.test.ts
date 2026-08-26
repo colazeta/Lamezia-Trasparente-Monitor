@@ -246,6 +246,15 @@ describe("councilSessionV0", () => {
     expect(council?.sessionStatus.sourceStatus).toBe("verificato");
     expect(council?.agenda.value).toBeNull();
     expect(council?.provenance?.documentUrl).toBeNull();
+    expect(council?.provenance?.sourceReviewStatus).toBe(
+      "reviewed_against_later_official_source",
+    );
+    expect(council?.provenance?.supplementalEvidence).toEqual([
+      expect.objectContaining({
+        publicationNumber: "2026/2755",
+        sourceUrl: expect.stringContaining("2026_2755_6_ALLEG"),
+      }),
+    ]);
     expect(council?.dataLimits.value?.join(" ")).toMatch(
       /ordine del giorno completo/i,
     );
