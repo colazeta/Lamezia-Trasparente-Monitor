@@ -17,6 +17,8 @@ const COMMISSION_ARCHIVED_DOCUMENT_URL =
   "/data/public/albo/documents/2026/842702b2044b4b6f9a7b21a65eac2ab59866ee3f321872e6b28fd481598be304.pdf";
 const COUNCIL_SESSION_EVIDENCE_URL =
   "https://albo.tinnvision.cloud/allegati/2026_2755_6_ALLEG?ente=00301390795";
+const COUNCIL_SESSION_EVIDENCE_ARCHIVE_URL =
+  "/data/public/albo/documents/2026/5153a02c9fce5744a8d398798cad8867a5591fa403cfb91d762e78b6547261b3.pdf";
 const SOURCE_REVIEWED_AT = "2026-08-22T12:10:49Z";
 const CONTEXT_RESEARCHED_AT = "2026-08-23T10:48:08Z";
 const COUNCIL_CONTEXT_RESEARCHED_AT = "2026-08-25T18:54:22.874Z";
@@ -210,6 +212,9 @@ const councilProvenance: CouncilSessionV0Provenance = {
       publicationNumber: "2026/2755",
       sourceLabel: "Albo Pretorio Comune di Lamezia Terme",
       sourceUrl: COUNCIL_SESSION_EVIDENCE_URL,
+      archivedDocumentUrl: COUNCIL_SESSION_EVIDENCE_ARCHIVE_URL,
+      documentSha256:
+        "5153a02c9fce5744a8d398798cad8867a5591fa403cfb91d762e78b6547261b3",
       retrievedAt: COUNCIL_CONTEXT_RESEARCHED_AT,
       reviewedAt: COUNCIL_CONTEXT_RESEARCHED_AT,
       verificationNote:
