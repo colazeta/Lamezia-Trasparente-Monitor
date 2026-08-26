@@ -28,10 +28,14 @@ describe("CouncilSessionV0Card", () => {
       screen.getByText("Fonte istituzionale successiva controllata"),
     ).toBeInTheDocument();
     expect(screen.getByText("13 agosto 2026")).toBeInTheDocument();
-    expect(screen.queryByText(/13 agosto 2026.*02:00/i)).not.toBeInTheDocument();
+    expect(
+      screen.queryByText(/13 agosto 2026.*02:00/i),
+    ).not.toBeInTheDocument();
     expect(screen.getByText("Seduta svolta")).toBeInTheDocument();
     expect(
-      screen.getByText(/6 articoli contestuali revisionati.*1 video revisionato/),
+      screen.getByText(
+        /6 articoli contestuali revisionati.*2 video revisionati/,
+      ),
     ).toBeInTheDocument();
     expect(
       screen.getByRole("link", { name: /Fonte ufficiale/i }),
@@ -91,7 +95,7 @@ describe("CouncilSessionV0Card", () => {
       within(navigation).getByRole("link", { name: "Ordine del giorno" }),
     ).toHaveAttribute("href", "#ordine-del-giorno");
     expect(
-      within(navigation).getByRole("link", { name: "Articoli e video" }),
+      within(navigation).getByRole("link", { name: "Video e articoli" }),
     ).toHaveAttribute("href", "#contenuti-collegati");
     expect(
       within(navigation).getByRole("link", { name: "Documenti" }),
@@ -113,7 +117,7 @@ describe("CouncilSessionV0Card", () => {
     render(<CouncilSessionV0Detail session={session} />);
 
     expect(
-      screen.getByRole("heading", { name: "Articoli e video" }),
+      screen.getByRole("heading", { name: "Copertura della seduta" }),
     ).toBeInTheDocument();
     expect(
       screen.getByText(
@@ -151,7 +155,34 @@ describe("CouncilSessionV0Card", () => {
       screen.getByRole("link", {
         name: "Consiglio Comunale 13 Agosto 2026 - Video",
       }),
-    ).toHaveAttribute("href", "https://www.facebook.com/cityonetv/videos/1584310006611277");
+    ).toHaveAttribute(
+      "href",
+      "https://www.facebook.com/cityonetv/videos/1584310006611277",
+    );
+    expect(
+      screen.getByRole("link", {
+        name: "Salvatore Vescio — Consiglio comunale del 13 agosto 2026",
+      }),
+    ).toHaveAttribute("href", "https://www.instagram.com/reel/DcB8mBgtILm/");
+    expect(
+      screen.getByRole("heading", { name: "Temi emersi dalla copertura" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        /Ricostruzione editoriale distinta dall'ordine del giorno/i,
+      ),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("link", {
+        name: "Copia archiviata 2026/2755",
+        hidden: true,
+      }),
+    ).toHaveAttribute(
+      "href",
+      expect.stringContaining(
+        "e008e83a4d7ae0a4672146b73ebc62e64d565a26eeb043cafaf9e45d92ecf2c5.pdf",
+      ),
+    );
     expect(screen.getByText("13 agosto 2026")).toBeInTheDocument();
     expect(screen.getByText("Svolta")).toBeInTheDocument();
     expect(
@@ -190,7 +221,9 @@ describe("CouncilSessionV0Card", () => {
 
     render(<CouncilSessionV0Detail session={session} />);
 
-    expect(screen.getByRole("heading", { name: "Video" })).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: "Video e interviste" }),
+    ).toBeInTheDocument();
     expect(
       screen.getByText(/Diretta editoriale.*Replay disponibile/i),
     ).toBeInTheDocument();

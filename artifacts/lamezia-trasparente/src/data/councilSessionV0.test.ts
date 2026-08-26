@@ -254,10 +254,10 @@ describe("councilSessionV0", () => {
         publicationNumber: "2026/2755",
         sourceUrl: expect.stringContaining("2026_2755_6_ALLEG"),
         archivedDocumentUrl: expect.stringContaining(
-          "5153a02c9fce5744a8d398798cad8867a5591fa403cfb91d762e78b6547261b3.pdf",
+          "e008e83a4d7ae0a4672146b73ebc62e64d565a26eeb043cafaf9e45d92ecf2c5.pdf",
         ),
         documentSha256:
-          "5153a02c9fce5744a8d398798cad8867a5591fa403cfb91d762e78b6547261b3",
+          "e008e83a4d7ae0a4672146b73ebc62e64d565a26eeb043cafaf9e45d92ecf2c5",
       }),
     ]);
     expect(council?.dataLimits.value?.join(" ")).toMatch(
@@ -283,9 +283,25 @@ describe("councilSessionV0", () => {
         availability: "replay_available",
         relationship: "same_session",
       }),
+      expect.objectContaining({
+        publisher: "Liberali Calabria",
+        mediaType: "excerpt",
+        availability: "replay_available",
+        relationship: "same_session",
+      }),
     ]);
     expect(council?.contextResearch.searchNote).toMatch(
-      /registrazione editoriale integrale.*City One/i,
+      /registrazione editoriale integrale.*City One.*estratto.*Salvatore Vescio/i,
+    );
+    expect(council?.contextResearch.editorialAgenda).toHaveLength(8);
+    expect(council?.contextResearch.editorialAgenda?.[0]).toEqual(
+      expect.objectContaining({
+        confidence: "high",
+        sourceUrls: expect.arrayContaining([
+          expect.stringContaining("cityonelamezia.it"),
+          expect.stringContaining("lametino.it"),
+        ]),
+      }),
     );
   });
 

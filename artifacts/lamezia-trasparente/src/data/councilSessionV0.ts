@@ -190,12 +190,25 @@ export interface CouncilSessionV0ContextMedia {
   reviewedAt: string;
 }
 
+export type CouncilSessionV0EditorialAgendaConfidence =
+  | "high"
+  | "medium"
+  | "low";
+
+export interface CouncilSessionV0EditorialAgendaItem {
+  title: string;
+  sourceUrls: readonly string[];
+  confidence: CouncilSessionV0EditorialAgendaConfidence;
+  reason: string;
+}
+
 export interface CouncilSessionV0ContextResearch {
   status: CouncilSessionV0ContextResearchStatus;
   checkedAt: string | null;
   searchNote: string;
   articles: readonly CouncilSessionV0ContextArticle[];
   media: readonly CouncilSessionV0ContextMedia[];
+  editorialAgenda?: readonly CouncilSessionV0EditorialAgendaItem[];
 }
 
 export interface CouncilSessionV0 {

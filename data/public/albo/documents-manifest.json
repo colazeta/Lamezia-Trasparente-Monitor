@@ -125,9 +125,9 @@
       "document_url": "https://albo.tinnvision.cloud/allegati/2026_2755_6_ALLEG?ente=00301390795",
       "preservation_status": "archived",
       "reason": "eligible_low_risk_publishable_pdf",
-      "storage_path": "data/public/albo/documents/2026/5153a02c9fce5744a8d398798cad8867a5591fa403cfb91d762e78b6547261b3.pdf",
-      "sha256": "5153a02c9fce5744a8d398798cad8867a5591fa403cfb91d762e78b6547261b3",
-      "size_bytes": 964475,
+      "storage_path": "data/public/albo/documents/2026/e008e83a4d7ae0a4672146b73ebc62e64d565a26eeb043cafaf9e45d92ecf2c5.pdf",
+      "sha256": "e008e83a4d7ae0a4672146b73ebc62e64d565a26eeb043cafaf9e45d92ecf2c5",
+      "size_bytes": 786444,
       "content_type": "application/pdf"
     },
     {
@@ -1623,9 +1623,9 @@
       "document_url": "https://albo.tinnvision.cloud/allegati/2026_2755_6_ALLEG?ente=00301390795",
       "preservation_status": "archived",
       "reason": "eligible_low_risk_publishable_pdf",
-      "storage_path": "data/public/albo/documents/2026/5153a02c9fce5744a8d398798cad8867a5591fa403cfb91d762e78b6547261b3.pdf",
-      "sha256": "5153a02c9fce5744a8d398798cad8867a5591fa403cfb91d762e78b6547261b3",
-      "size_bytes": 964475,
+      "storage_path": "data/public/albo/documents/2026/e008e83a4d7ae0a4672146b73ebc62e64d565a26eeb043cafaf9e45d92ecf2c5.pdf",
+      "sha256": "e008e83a4d7ae0a4672146b73ebc62e64d565a26eeb043cafaf9e45d92ecf2c5",
+      "size_bytes": 786444,
       "content_type": "application/pdf"
     },
     {

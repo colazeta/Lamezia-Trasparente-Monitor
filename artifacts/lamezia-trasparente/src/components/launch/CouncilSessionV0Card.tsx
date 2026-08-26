@@ -374,6 +374,8 @@ export function CouncilSessionV0Detail({
           : "Non verificato";
   const hasContextMedia = session.contextResearch.media.length > 0;
   const hasContextArticles = session.contextResearch.articles.length > 0;
+  const hasEditorialAgenda =
+    (session.contextResearch.editorialAgenda?.length ?? 0) > 0;
   const contextItemCount =
     session.contextResearch.articles.length +
     session.contextResearch.media.length;
@@ -468,7 +470,7 @@ export function CouncilSessionV0Detail({
             href="#contenuti-collegati"
             className="rounded-lg px-3 py-2 text-muted-foreground hover:bg-muted hover:text-foreground"
           >
-            Articoli e video
+            Video e articoli
           </a>
           <a
             href="#documenti-ufficiali"
@@ -553,7 +555,7 @@ export function CouncilSessionV0Detail({
               id="session-context-title"
               className="font-display text-xl font-bold tracking-tight"
             >
-              Articoli e video
+              Copertura della seduta
             </h2>
           </div>
           <Badge variant="outline" className="whitespace-normal">
@@ -562,14 +564,7 @@ export function CouncilSessionV0Detail({
         </div>
 
         {hasContextItems ? (
-          <div
-            className={
-              "mt-5 grid gap-6 " +
-              (hasContextMedia && hasContextArticles
-                ? "lg:grid-cols-2"
-                : "grid-cols-1")
-            }
-          >
+          <div className="mt-5 space-y-6">
             {hasContextMedia && (
               <div aria-labelledby="session-media-title">
                 <h3
@@ -577,7 +572,7 @@ export function CouncilSessionV0Detail({
                   className="flex items-center gap-2 text-sm font-bold uppercase tracking-wide text-foreground"
                 >
                   <Video className="h-4 w-4 text-brand" aria-hidden="true" />
-                  Video
+                  Video e interviste
                 </h3>
 
                 <ul className="mt-3 divide-y divide-border rounded-xl border border-border">
@@ -636,7 +631,7 @@ export function CouncilSessionV0Detail({
                     className="h-4 w-4 text-brand"
                     aria-hidden="true"
                   />
-                  Articoli
+                  Articoli e contesto
                 </h3>
 
                 <ul className="mt-3 divide-y divide-border rounded-xl border border-border">
@@ -701,6 +696,54 @@ export function CouncilSessionV0Detail({
           <p className="mt-3 text-xs text-muted-foreground">
             Nessun articolo pertinente trovato.
           </p>
+        )}
+
+        {hasEditorialAgenda && (
+          <div className="mt-6 border-t border-border pt-5">
+            <h3 className="text-sm font-bold uppercase tracking-wide text-foreground">
+              Temi emersi dalla copertura
+            </h3>
+            <p className="mt-2 text-xs leading-relaxed text-muted-foreground">
+              Ricostruzione editoriale distinta dall&apos;ordine del giorno
+              ufficiale: non certifica trattazione, votazioni o risultati.
+            </p>
+            <ul className="mt-3 divide-y divide-border rounded-xl border border-border">
+              {session.contextResearch.editorialAgenda?.map((item) => (
+                <li key={item.title} className="p-4">
+                  <div className="flex flex-wrap items-start justify-between gap-2">
+                    <p className="font-semibold leading-snug text-foreground">
+                      {item.title}
+                    </p>
+                    <Badge variant="secondary" className="whitespace-normal">
+                      Confidenza{" "}
+                      {item.confidence === "high"
+                        ? "alta"
+                        : item.confidence === "medium"
+                          ? "media"
+                          : "bassa"}
+                    </Badge>
+                  </div>
+                  <p className="mt-2 text-xs leading-relaxed text-muted-foreground">
+                    {item.reason}
+                  </p>
+                  <div className="mt-2 flex flex-wrap gap-3">
+                    {item.sourceUrls.map((url, index) => (
+                      <a
+                        key={url}
+                        href={url}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="inline-flex items-center gap-1 text-xs font-semibold text-brand hover:underline"
+                      >
+                        Fonte editoriale {index + 1}
+                        <ExternalLink className="h-3 w-3" aria-hidden="true" />
+                      </a>
+                    ))}
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </div>
         )}
 
         <div
@@ -880,6 +923,20 @@ export function CouncilSessionV0Detail({
                           aria-hidden="true"
                         />
                       </a>
+                      {evidence.archivedDocumentUrl && (
+                        <a
+                          href={evidence.archivedDocumentUrl}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="ml-3 inline-flex items-center gap-1 text-xs font-semibold text-brand hover:underline"
+                        >
+                          Copia archiviata {evidence.publicationNumber}
+                          <ExternalLink
+                            className="h-3 w-3"
+                            aria-hidden="true"
+                          />
+                        </a>
+                      )}
                       <p className="mt-1 text-xs leading-5 text-muted-foreground">
                         {evidence.verificationNote}
                       </p>
