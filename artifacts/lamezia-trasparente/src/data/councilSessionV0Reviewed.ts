@@ -203,8 +203,19 @@ const councilProvenance: CouncilSessionV0Provenance = {
   documentSha256: null,
   embeddedDocumentSha256: null,
   retrievedAt: councilCandidate.source.retrievedAt,
-  reviewedAt: SOURCE_REVIEWED_AT,
-  sourceReviewStatus: "official_metadata_only",
+  reviewedAt: COUNCIL_CONTEXT_RESEARCHED_AT,
+  sourceReviewStatus: "reviewed_against_later_official_source",
+  supplementalEvidence: [
+    {
+      publicationNumber: "2026/2755",
+      sourceLabel: "Albo Pretorio Comune di Lamezia Terme",
+      sourceUrl: COUNCIL_SESSION_EVIDENCE_URL,
+      retrievedAt: COUNCIL_CONTEXT_RESEARCHED_AT,
+      reviewedAt: COUNCIL_CONTEXT_RESEARCHED_AT,
+      verificationNote:
+        "La determinazione conferma la seduta del 13 agosto 2026 e l'approvazione di uno specifico debito fuori bilancio; non documenta orario, ordine del giorno completo, presenze o tutte le votazioni.",
+    },
+  ],
 };
 
 const commissionAgenda = [
