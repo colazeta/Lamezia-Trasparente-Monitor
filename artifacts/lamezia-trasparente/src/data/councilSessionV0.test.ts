@@ -232,31 +232,76 @@ describe("councilSessionV0", () => {
     }
   });
 
-  it("keeps the council notice metadata-only when the official attachment is unavailable", () => {
+  it("enriches the council record from a later official source without inventing time or agenda", () => {
     const council = findCouncilSessionV0ReviewedRecord(
       "albo-2026-2673-consiglio-comunale",
     );
 
     expect(council?.kind).toBe("council");
-    expect(council?.scheduledAt.value).toBeNull();
-    expect(council?.scheduledAt.sourceStatus).toBe("da_verificare");
+    expect(council?.scheduledAt.value).toBe("2026-08-13");
+    expect(council?.scheduledAt.sourceStatus).toBe("verificato");
+    expect(council?.scheduledAt.sourceUrl).toContain("2026_2755_6_ALLEG");
+    expect(council?.scheduledAt.limit).toMatch(/orario.*non è presente/i);
+    expect(council?.sessionStatus.value).toBe("svolta");
+    expect(council?.sessionStatus.sourceStatus).toBe("verificato");
     expect(council?.agenda.value).toBeNull();
     expect(council?.provenance?.documentUrl).toBeNull();
+    expect(council?.provenance?.sourceReviewStatus).toBe(
+      "reviewed_against_later_official_source",
+    );
+    expect(council?.provenance?.supplementalEvidence).toEqual([
+      expect.objectContaining({
+        publicationNumber: "2026/2755",
+        sourceUrl: expect.stringContaining("2026_2755_6_ALLEG"),
+        archivedDocumentUrl: expect.stringContaining(
+          "e008e83a4d7ae0a4672146b73ebc62e64d565a26eeb043cafaf9e45d92ecf2c5.pdf",
+        ),
+        documentSha256:
+          "e008e83a4d7ae0a4672146b73ebc62e64d565a26eeb043cafaf9e45d92ecf2c5",
+      }),
+    ]);
     expect(council?.dataLimits.value?.join(" ")).toMatch(
-      /finestra di pubblicazione.*non è la data della seduta/i,
+      /ordine del giorno completo/i,
     );
     expect(
       council?.contextResearch.articles.map((article) => article.relationship),
     ).toEqual([
-      "possible_same_session",
-      "possible_same_session",
+      "same_session",
+      "same_session",
+      "same_session",
+      "same_session",
+      "same_session",
       "possible_same_session",
     ]);
     expect(council?.contextResearch.searchNote).toMatch(
-      /impedisce di stabilire.*stessa seduta/i,
+      /pubblicazione istituzionale 2026\/2755.*13 agosto/i,
     );
+    expect(council?.contextResearch.media).toEqual([
+      expect.objectContaining({
+        publisher: "City One",
+        mediaType: "full_recording",
+        availability: "replay_available",
+        relationship: "same_session",
+      }),
+      expect.objectContaining({
+        publisher: "Liberali Calabria",
+        mediaType: "excerpt",
+        availability: "replay_available",
+        relationship: "same_session",
+      }),
+    ]);
     expect(council?.contextResearch.searchNote).toMatch(
-      /video.*senza.*pagina stabile/i,
+      /registrazione editoriale integrale.*City One.*estratto.*Salvatore Vescio/i,
+    );
+    expect(council?.contextResearch.editorialAgenda).toHaveLength(8);
+    expect(council?.contextResearch.editorialAgenda?.[0]).toEqual(
+      expect.objectContaining({
+        confidence: "high",
+        sourceUrls: expect.arrayContaining([
+          expect.stringContaining("cityonelamezia.it"),
+          expect.stringContaining("lametino.it"),
+        ]),
+      }),
     );
   });
 

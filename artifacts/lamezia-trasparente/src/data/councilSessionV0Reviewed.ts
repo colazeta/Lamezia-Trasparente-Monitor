@@ -15,14 +15,19 @@ const COMMISSION_NOTICE_URL =
   "https://albo.tinnvision.cloud/allegati/2026_2648_2_P?ente=00301390795";
 const COMMISSION_ARCHIVED_DOCUMENT_URL =
   "/data/public/albo/documents/2026/842702b2044b4b6f9a7b21a65eac2ab59866ee3f321872e6b28fd481598be304.pdf";
+const COUNCIL_SESSION_EVIDENCE_URL =
+  "https://albo.tinnvision.cloud/allegati/2026_2755_6_ALLEG?ente=00301390795";
+const COUNCIL_SESSION_EVIDENCE_ARCHIVE_URL =
+  "/data/public/albo/documents/2026/e008e83a4d7ae0a4672146b73ebc62e64d565a26eeb043cafaf9e45d92ecf2c5.pdf";
 const SOURCE_REVIEWED_AT = "2026-08-22T12:10:49Z";
 const CONTEXT_RESEARCHED_AT = "2026-08-23T10:48:08Z";
+const COUNCIL_CONTEXT_RESEARCHED_AT = "2026-08-26T21:47:45Z";
 
 const councilContextResearch: CouncilSessionV0ContextResearch = {
   status: "reviewed_matches",
-  checkedAt: CONTEXT_RESEARCHED_AT,
+  checkedAt: COUNCIL_CONTEXT_RESEARCHED_AT,
   searchNote:
-    "Tre articoli sono compatibili con l'avviso, ma l'assenza dell'allegato ufficiale impedisce di stabilire che descrivano la stessa seduta. City One indicizza inoltre un video del Consiglio del 13 agosto nella homepage, senza esporre una pagina stabile verificabile: per questo non è pubblicato come collegamento audiovisivo.",
+    "La pubblicazione istituzionale 2026/2755 conferma una seduta del Consiglio comunale il 13 agosto 2026. Cinque articoli coincidono con organo, data e temi distintivi; un sesto descrive un ulteriore tema trattato nella stessa giornata ma resta una possibile corrispondenza. La stampa non completa l'orario o l'ordine del giorno ufficiale. Sono disponibili la registrazione editoriale integrale di City One e un estratto attribuito al consigliere Salvatore Vescio; restano distinti da eventuali registrazioni istituzionali. I temi sono ricostruiti separatamente dalla copertura editoriale.",
   articles: [
     {
       title:
@@ -30,10 +35,10 @@ const councilContextResearch: CouncilSessionV0ContextResearch = {
       url: "https://www.cityonelamezia.it/convocato-consiglio-comunale-di-lamezia-terme-in-prossimita-del-ferragosto/",
       publisher: "City One",
       publishedAt: "2026-08-10",
-      relationship: "possible_same_session",
+      relationship: "same_session",
       relevanceNote:
-        "Riporta Consiglio comunale, prima convocazione del 13 agosto, seconda convocazione del 14 agosto e 33 punti in agenda. I dettagli sono compatibili con l'avviso Albo 2026/2673, ma restano dati editoriali e non completano i campi ufficiali mancanti.",
-      reviewedAt: CONTEXT_RESEARCHED_AT,
+        "Indica il Consiglio del 13 agosto e include tra i 33 punti i debiti fuori bilancio; la successiva pubblicazione istituzionale 2026/2755 conferma organo, data e l'approvazione di uno di questi debiti.",
+      reviewedAt: COUNCIL_CONTEXT_RESEARCHED_AT,
     },
     {
       title:
@@ -41,23 +46,171 @@ const councilContextResearch: CouncilSessionV0ContextResearch = {
       url: "https://www.lameziainforma.it/istituzione/2026/08/13/consiglio-comunale-prima-di-ferragosto-con-soliti-stilemi-politici-e-qualche-fuoriprogramma-estivo/68880/",
       publisher: "LameziaInforma",
       publishedAt: "2026-08-13",
-      relationship: "possible_same_session",
+      relationship: "same_session",
       relevanceNote:
-        "Data di pubblicazione, organo e temi trattati sono compatibili con l'avviso Albo 2026/2673; manca l'allegato ufficiale per stabilire il collegamento in modo definitivo.",
-      reviewedAt: CONTEXT_RESEARCHED_AT,
+        "Descrive il Consiglio del 13 agosto e temi distintivi, inclusi bilancio e debiti fuori bilancio; la data della seduta è ora confermata dalla fonte istituzionale 2026/2755.",
+      reviewedAt: COUNCIL_CONTEXT_RESEARCHED_AT,
     },
     {
       title: "Question time politico evaso in consiglio comunale",
       url: "https://www.lameziainforma.it/politica/2026/08/13/question-time-politico-evaso-in-consiglio-comunale/68885/",
       publisher: "LameziaInforma",
       publishedAt: "2026-08-13",
+      relationship: "same_session",
+      relevanceNote:
+        "Il resoconto del 13 agosto tratta question time e debiti fuori bilancio; organo, data e tema del debito coincidono con la successiva fonte istituzionale.",
+      reviewedAt: COUNCIL_CONTEXT_RESEARCHED_AT,
+    },
+    {
+      title:
+        "Lamezia, 33 punti in Consiglio comunale il 13 agosto: al centro assestamento e salvaguardia equilibri di Bilancio",
+      url: "https://www.lametino.it/ultime/lamezia-33-punti-in-consiglio-comunale-il-13-agosto-al-centro-assestamento-e-salvaguardia-equilibri-di-bilancio.html",
+      publisher: "il Lametino",
+      publishedAt: "2026-08-10",
+      relationship: "same_session",
+      relevanceNote:
+        "Annuncia il Consiglio del 13 agosto e riporta assestamento, salvaguardia degli equilibri e debiti fuori bilancio; uno di questi ultimi è richiamato dalla fonte istituzionale 2026/2755.",
+      reviewedAt: COUNCIL_CONTEXT_RESEARCHED_AT,
+    },
+    {
+      title:
+        "Lamezia, il Consiglio comunale approva l'assestamento e la salvaguardia degli equilibri di Bilancio",
+      url: "https://www.lametino.it/ultime/lamezia-il-consiglio-comunale-approva-lassestamento-e-la-salvaguardia-degli-equilibri-di-bilancio.html",
+      publisher: "il Lametino",
+      publishedAt: "2026-08-13",
+      relationship: "same_session",
+      relevanceNote:
+        "Resoconta il Consiglio del 13 agosto e più temi distintivi già presenti negli avvisi editoriali; la data è confermata dalla pubblicazione istituzionale successiva.",
+      reviewedAt: COUNCIL_CONTEXT_RESEARCHED_AT,
+    },
+    {
+      title:
+        'Lamezia, Amministrazione Comunale su disabilità: "Sottoscritti 142 Progetti di Vita. Ora rafforziamo rete territoriale"',
+      url: "https://www.lametino.it/ultimora/lamezia-amministrazione-comunale-su-disabilita-sottoscritti-142-progetti-di-vita-ora-rafforziamo-rete-territoriale.html",
+      publisher: "il Lametino",
+      publishedAt: "2026-08-14",
       relationship: "possible_same_session",
       relevanceNote:
-        "Il resoconto descrive question time e debiti fuori bilancio nella stessa giornata; è un indizio contestuale, non una fonte ufficiale della convocazione.",
-      reviewedAt: CONTEXT_RESEARCHED_AT,
+        "Riferisce un'informativa resa nel Consiglio del 13 agosto. La data coincide con quella verificata, ma la fonte ufficiale acquisita non espone l'ordine del giorno completo.",
+      reviewedAt: COUNCIL_CONTEXT_RESEARCHED_AT,
     },
   ],
-  media: [],
+  media: [
+    {
+      title: "Consiglio Comunale 13 Agosto 2026 - Video",
+      url: "https://www.facebook.com/cityonetv/videos/1584310006611277",
+      publisher: "City One",
+      publishedAt: "2026-08-13",
+      relationship: "same_session",
+      mediaType: "full_recording",
+      availability: "replay_available",
+      relevanceNote:
+        "City One presenta il contenuto come video del Consiglio comunale del 13 agosto 2026. Il collegamento è una registrazione editoriale esterna e non prova da solo completezza, svolgimento o risultati della seduta.",
+      reviewedAt: "2026-08-26T05:51:44Z",
+    },
+    {
+      title: "Salvatore Vescio — Consiglio comunale del 13 agosto 2026",
+      url: "https://www.instagram.com/reel/DcB8mBgtILm/",
+      publisher: "Liberali Calabria",
+      publishedAt: "2026-08-14",
+      relationship: "same_session",
+      mediaType: "excerpt",
+      availability: "replay_available",
+      relevanceNote:
+        "Il titolo identifica espressamente il consigliere, l'organo e la data del 13 agosto 2026. È un estratto editoriale esterno: non prova completezza, programmazione, esiti o deliberazioni della seduta.",
+      reviewedAt: COUNCIL_CONTEXT_RESEARCHED_AT,
+    },
+  ],
+  editorialAgenda: [
+    {
+      title:
+        "Variazione al bilancio 2026–2028, assestamento e salvaguardia degli equilibri",
+      sourceUrls: [
+        "https://www.cityonelamezia.it/convocato-consiglio-comunale-di-lamezia-terme-in-prossimita-del-ferragosto/",
+        "https://www.lametino.it/ultime/lamezia-33-punti-in-consiglio-comunale-il-13-agosto-al-centro-assestamento-e-salvaguardia-equilibri-di-bilancio.html",
+      ],
+      confidence: "high",
+      reason:
+        "Entrambe le testate associano questi temi alla seduta del 13 agosto; il resoconto successivo del Lametino ne riferisce anche la trattazione. Non è un ordine del giorno ufficiale acquisito.",
+    },
+    {
+      title:
+        "Ripiano parziale delle perdite di Sacal e fondo per le società partecipate",
+      sourceUrls: [
+        "https://www.cityonelamezia.it/convocato-consiglio-comunale-di-lamezia-terme-in-prossimita-del-ferragosto/",
+        "https://www.lametino.it/ultime/lamezia-33-punti-in-consiglio-comunale-il-13-agosto-al-centro-assestamento-e-salvaguardia-equilibri-di-bilancio.html",
+      ],
+      confidence: "high",
+      reason:
+        "Il tema è riportato da entrambe le anticipazioni editoriali e ripreso dal resoconto post-seduta; resta una ricostruzione da stampa.",
+    },
+    {
+      title:
+        "Riconoscimento di debiti fuori bilancio e posizioni debitorie del Comune",
+      sourceUrls: [
+        "https://www.cityonelamezia.it/convocato-consiglio-comunale-di-lamezia-terme-in-prossimita-del-ferragosto/",
+        "https://www.lametino.it/ultime/lamezia-33-punti-in-consiglio-comunale-il-13-agosto-al-centro-assestamento-e-salvaguardia-equilibri-di-bilancio.html",
+      ],
+      confidence: "high",
+      reason:
+        "Le due testate riportano numerosi punti sui debiti fuori bilancio; la fonte istituzionale 2026/2755 conferma soltanto uno specifico debito approvato.",
+    },
+    {
+      title:
+        "Disabilità, Progetti di Vita, continuità assistenziale e inclusione scolastica",
+      sourceUrls: [
+        "https://www.cityonelamezia.it/convocato-consiglio-comunale-di-lamezia-terme-in-prossimita-del-ferragosto/",
+        "https://www.lametino.it/ultime/lamezia-33-punti-in-consiglio-comunale-il-13-agosto-al-centro-assestamento-e-salvaguardia-equilibri-di-bilancio.html",
+      ],
+      confidence: "high",
+      reason:
+        "Mozioni e interrogazioni su questi temi compaiono in entrambe le ricostruzioni editoriali; non se ne inferiscono votazioni o risultati.",
+    },
+    {
+      title:
+        "Riqualificazione urbana, parchi, fascia costiera ed ex Cinema Grandinetti",
+      sourceUrls: [
+        "https://www.cityonelamezia.it/convocato-consiglio-comunale-di-lamezia-terme-in-prossimita-del-ferragosto/",
+        "https://www.lametino.it/ultime/lamezia-33-punti-in-consiglio-comunale-il-13-agosto-al-centro-assestamento-e-salvaguardia-equilibri-di-bilancio.html",
+      ],
+      confidence: "high",
+      reason:
+        "Le due testate elencano interrogazioni e mozioni su spazi pubblici, parchi, pineta, lungomare e area dell'ex Cinema Grandinetti.",
+    },
+    {
+      title:
+        "Castello Normanno-Svevo e gestione del Teatro comunale Grandinetti",
+      sourceUrls: [
+        "https://www.cityonelamezia.it/convocato-consiglio-comunale-di-lamezia-terme-in-prossimita-del-ferragosto/",
+        "https://www.lametino.it/ultime/lamezia-33-punti-in-consiglio-comunale-il-13-agosto-al-centro-assestamento-e-salvaguardia-equilibri-di-bilancio.html",
+      ],
+      confidence: "high",
+      reason:
+        "Entrambe le anticipazioni includono quesiti sul recupero del Castello e sul futuro affidamento del Teatro; non documentano gli esiti.",
+    },
+    {
+      title:
+        "Digitalizzazione dell'ente e riconciliazione dei pagamenti tributari",
+      sourceUrls: [
+        "https://www.cityonelamezia.it/convocato-consiglio-comunale-di-lamezia-terme-in-prossimita-del-ferragosto/",
+        "https://www.lametino.it/ultime/lamezia-33-punti-in-consiglio-comunale-il-13-agosto-al-centro-assestamento-e-salvaguardia-equilibri-di-bilancio.html",
+      ],
+      confidence: "high",
+      reason:
+        "Il tema è riportato con formulazione coerente dalle due testate come interrogazione; non è trasferito nel campo ufficiale agenda.",
+    },
+    {
+      title:
+        "Sicurezza e servizi: cinghiali, SUEM 118, degrado urbano e incendio presso un'azienda di pneumatici",
+      sourceUrls: [
+        "https://www.cityonelamezia.it/convocato-consiglio-comunale-di-lamezia-terme-in-prossimita-del-ferragosto/",
+        "https://www.lametino.it/ultime/lamezia-33-punti-in-consiglio-comunale-il-13-agosto-al-centro-assestamento-e-salvaguardia-equilibri-di-bilancio.html",
+      ],
+      confidence: "high",
+      reason:
+        "I temi ricorrono nelle due ricostruzioni editoriali; la loro presenza non certifica discussione completa, decisioni o seguito amministrativo.",
+    },
+  ],
 };
 
 const commissionContextResearch: CouncilSessionV0ContextResearch = {
@@ -167,8 +320,22 @@ const councilProvenance: CouncilSessionV0Provenance = {
   documentSha256: null,
   embeddedDocumentSha256: null,
   retrievedAt: councilCandidate.source.retrievedAt,
-  reviewedAt: SOURCE_REVIEWED_AT,
-  sourceReviewStatus: "official_metadata_only",
+  reviewedAt: COUNCIL_CONTEXT_RESEARCHED_AT,
+  sourceReviewStatus: "reviewed_against_later_official_source",
+  supplementalEvidence: [
+    {
+      publicationNumber: "2026/2755",
+      sourceLabel: "Albo Pretorio Comune di Lamezia Terme",
+      sourceUrl: COUNCIL_SESSION_EVIDENCE_URL,
+      archivedDocumentUrl: COUNCIL_SESSION_EVIDENCE_ARCHIVE_URL,
+      documentSha256:
+        "e008e83a4d7ae0a4672146b73ebc62e64d565a26eeb043cafaf9e45d92ecf2c5",
+      retrievedAt: COUNCIL_CONTEXT_RESEARCHED_AT,
+      reviewedAt: COUNCIL_CONTEXT_RESEARCHED_AT,
+      verificationNote:
+        "La determinazione conferma la seduta del 13 agosto 2026 e l'approvazione di uno specifico debito fuori bilancio; non documenta orario, ordine del giorno completo, presenze o tutte le votazioni.",
+    },
+  ],
 };
 
 const commissionAgenda = [
@@ -285,7 +452,7 @@ function commissionSession(
   };
 }
 
-const councilMetadataOnlySession: CouncilSessionV0 = {
+const councilVerifiedSession: CouncilSessionV0 = {
   id: "albo-2026-2673-consiglio-comunale",
   kind: "council",
   isDemoFixture: false,
@@ -294,28 +461,28 @@ const councilMetadataOnlySession: CouncilSessionV0 = {
   title: {
     key: "title",
     label: "Titolo",
-    value: "Consiglio comunale — avviso di seduta",
+    value: "Consiglio comunale — seduta del 13 agosto 2026",
     sourceStatus: "verificato",
     sourceUrl: councilCandidate.source.url,
-    limit: `Titolo normalizzato dall'oggetto della pubblicazione ${councilCandidate.publicationNumber}.`,
+    limit: `Titolo normalizzato dall'oggetto della pubblicazione ${councilCandidate.publicationNumber} e dalla data confermata dalla pubblicazione istituzionale 2026/2755.`,
   },
   scheduledAt: {
     key: "scheduledAt",
     label: "Data e ora",
-    value: null,
-    sourceStatus: "da_verificare",
-    sourceUrl: councilCandidate.source.url,
+    value: "2026-08-13",
+    sourceStatus: "verificato",
+    sourceUrl: COUNCIL_SESSION_EVIDENCE_URL,
     limit:
-      "L'export ufficiale monitorato non espone l'allegato: le date di inizio e fine pubblicazione non vengono usate come data della seduta.",
+      "La data è indicata nella pubblicazione istituzionale 2026/2755; l'orario non è presente nella fonte e non viene ricavato dalla stampa.",
   },
   sessionStatus: {
     key: "sessionStatus",
     label: "Stato seduta",
-    value: "non_verificata",
-    sourceStatus: "da_verificare",
-    sourceUrl: councilCandidate.source.url,
+    value: "svolta",
+    sourceStatus: "verificato",
+    sourceUrl: COUNCIL_SESSION_EVIDENCE_URL,
     limit:
-      "È verificata la presenza dell'avviso nell'Albo, non la programmazione puntuale né lo svolgimento della seduta.",
+      "La determinazione successiva richiama un debito approvato nella seduta del 13 agosto; non documenta presenze, durata o trattazione completa.",
   },
   agenda: {
     key: "agenda",
@@ -324,15 +491,16 @@ const councilMetadataOnlySession: CouncilSessionV0 = {
     sourceStatus: "assente",
     sourceUrl: councilCandidate.source.url,
     limit:
-      "Non rilevato nei metadati ufficiali acquisiti; serve l'allegato o un'altra fonte istituzionale per pubblicarlo.",
+      "Non rilevato nei metadati ufficiali acquisiti; la fonte successiva conferma un solo punto e non viene usata per ricostruire l'elenco completo.",
   },
   sourceLink: {
     key: "sourceLink",
     label: "Fonte",
-    value: "Apri l'Albo Pretorio ufficiale",
+    value: "Apri l'evidenza istituzionale sulla seduta",
     sourceStatus: "verificato",
-    sourceUrl: councilCandidate.source.url,
-    limit: `Pubblicazione ${councilCandidate.publicationNumber}; l'export non ha restituito un URL diretto al documento.`,
+    sourceUrl: COUNCIL_SESSION_EVIDENCE_URL,
+    limit:
+      "La pubblicazione 2026/2755 conferma organo, data e approvazione di un debito; l'avviso originario 2026/2673 resta privo di allegato nell'export acquisito.",
   },
   liveStreaming: {
     key: "liveStreaming",
@@ -364,31 +532,32 @@ const councilMetadataOnlySession: CouncilSessionV0 = {
   lastCheckedAt: {
     key: "lastCheckedAt",
     label: "Ultimo controllo",
-    value: SOURCE_REVIEWED_AT,
+    value: COUNCIL_CONTEXT_RESEARCHED_AT,
     sourceStatus: "verificato",
-    sourceUrl: councilCandidate.source.url,
+    sourceUrl: COUNCIL_SESSION_EVIDENCE_URL,
     limit:
-      "Controllo del record ufficiale acquisito; la scheda conserva solo i metadati effettivamente disponibili.",
+      "Controllo della nuova pubblicazione istituzionale e nuova ricerca di articoli e video nella finestra dal 6 al 20 agosto 2026.",
   },
   dataLimits: {
     key: "dataLimits",
     label: "Limiti del dato",
     value: [
-      "Scheda metadata-only: data, ora e ordine del giorno restano da verificare.",
-      "La finestra di pubblicazione Albo dal 10 al 14 agosto 2026 non è la data della seduta.",
-      "Il rilevamento dell'avviso non prova che la seduta si sia svolta.",
+      "Data e svolgimento sono confermati dalla pubblicazione istituzionale 2026/2755; l'orario resta da verificare.",
+      "La fonte successiva documenta l'approvazione di un debito fuori bilancio, non l'ordine del giorno completo, le presenze o tutte le votazioni.",
+      "L'avviso originario 2026/2673 non espone un allegato nell'export acquisito.",
+      "La registrazione City One è copertura editoriale esterna e non una registrazione istituzionale.",
     ],
     sourceStatus: "parziale",
-    sourceUrl: councilCandidate.source.url,
+    sourceUrl: COUNCIL_SESSION_EVIDENCE_URL,
     limit:
-      "Prima identificazione fonte-centrica del tipo atto Consiglio; nessuna copertura storica completa è dichiarata.",
+      "Arricchimento prudenziale basato su una fonte istituzionale successiva; nessuna informazione editoriale completa i campi ufficiali mancanti.",
   },
 };
 
 export const councilSessionV0ReviewedRecords: readonly CouncilSessionV0[] = [
   commissionSession("2026-08-11"),
   commissionSession("2026-08-10"),
-  councilMetadataOnlySession,
+  councilVerifiedSession,
 ];
 
 const reviewedRecordsById = new Map(

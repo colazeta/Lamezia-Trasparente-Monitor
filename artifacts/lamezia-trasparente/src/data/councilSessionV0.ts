@@ -138,7 +138,19 @@ export interface CouncilSessionV0Field<T> {
 
 export type CouncilSessionV0SourceReviewStatus =
   | "official_metadata_only"
-  | "reviewed_against_official_attachment";
+  | "reviewed_against_official_attachment"
+  | "reviewed_against_later_official_source";
+
+export interface CouncilSessionV0SupplementalEvidence {
+  publicationNumber: string;
+  sourceLabel: string;
+  sourceUrl: string;
+  archivedDocumentUrl: string;
+  documentSha256: string;
+  retrievedAt: string;
+  reviewedAt: string;
+  verificationNote: string;
+}
 
 export interface CouncilSessionV0Provenance {
   noticeId: string;
@@ -153,6 +165,7 @@ export interface CouncilSessionV0Provenance {
   retrievedAt: string;
   reviewedAt: string;
   sourceReviewStatus: CouncilSessionV0SourceReviewStatus;
+  supplementalEvidence?: readonly CouncilSessionV0SupplementalEvidence[];
 }
 
 export interface CouncilSessionV0ContextArticle {
@@ -177,12 +190,25 @@ export interface CouncilSessionV0ContextMedia {
   reviewedAt: string;
 }
 
+export type CouncilSessionV0EditorialAgendaConfidence =
+  | "high"
+  | "medium"
+  | "low";
+
+export interface CouncilSessionV0EditorialAgendaItem {
+  title: string;
+  sourceUrls: readonly string[];
+  confidence: CouncilSessionV0EditorialAgendaConfidence;
+  reason: string;
+}
+
 export interface CouncilSessionV0ContextResearch {
   status: CouncilSessionV0ContextResearchStatus;
   checkedAt: string | null;
   searchNote: string;
   articles: readonly CouncilSessionV0ContextArticle[];
   media: readonly CouncilSessionV0ContextMedia[];
+  editorialAgenda?: readonly CouncilSessionV0EditorialAgendaItem[];
 }
 
 export interface CouncilSessionV0 {

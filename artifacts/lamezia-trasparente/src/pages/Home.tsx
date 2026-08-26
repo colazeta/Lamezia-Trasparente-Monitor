@@ -35,7 +35,10 @@ import {
 } from "@/data/alboPublicRun";
 import { ALBO_OPERATIONAL_STATUS } from "@/data/alboStatus";
 import { councilSessionV0ReviewedRecords } from "@/data/councilSessionV0Reviewed";
-import type { CouncilSessionV0 } from "@/data/councilSessionV0";
+import {
+  councilSessionV0StatusLabels,
+  type CouncilSessionV0,
+} from "@/data/councilSessionV0";
 import { asApiList } from "@/lib/apiList";
 import { PUBLIC_NUMBER_PLACEHOLDER } from "@/lib/publicNumbers";
 
@@ -85,13 +88,15 @@ function formatCivicTime(value: string | null | undefined) {
 
 function formatSessionDate(value: string | null) {
   if (!value) return "Data e ora da verificare";
-  const date = new Date(value);
+
+  const isDateOnly = /^\d{4}-\d{2}-\d{2}$/.test(value);
+  const date = new Date(isDateOnly ? `${value}T00:00:00Z` : value);
   if (Number.isNaN(date.getTime())) return "Data e ora da verificare";
 
   return new Intl.DateTimeFormat("it-IT", {
-    timeZone: "Europe/Rome",
+    timeZone: isDateOnly ? "UTC" : "Europe/Rome",
     dateStyle: "long",
-    timeStyle: "short",
+    ...(isDateOnly ? {} : { timeStyle: "short" as const }),
   }).format(date);
 }
 
@@ -495,9 +500,9 @@ export function HomeInstitutionalSessions() {
           <div className="mt-5 rounded-xl border border-primary/20 bg-primary/5 p-4 text-sm leading-6 text-muted-foreground">
             <p className="font-semibold text-foreground">Copertura iniziale</p>
             <p className="mt-1">
-              Sono mostrate le prime pubblicazioni revisionate. Una convocazione
-              documenta la programmazione o l&apos;avviso, ma non prova che la
-              seduta si sia svolta.
+              Sono mostrate le prime pubblicazioni revisionate. Lo svolgimento
+              viene indicato solo quando una fonte istituzionale successiva lo
+              conferma.
             </p>
           </div>
 
@@ -516,7 +521,7 @@ export function HomeInstitutionalSessions() {
         <div className="grid gap-5 md:grid-cols-2">
           <InstitutionalSessionsHomeCard
             title="Consiglio comunale"
-            description="Un avviso ufficiale individuato nell'Albo. Data, ora e ordine del giorno restano da verificare perché l'export monitorato non espone l'allegato."
+            description="La data e lo svolgimento sono confermati da una fonte istituzionale successiva. Orario e ordine del giorno completo restano da verificare."
             icon={Users}
             sessions={councilHomeSessions}
           />
@@ -548,6 +553,11 @@ function InstitutionalSessionsHomeCard({
       session.provenance?.sourceReviewStatus ===
       "reviewed_against_official_attachment",
   );
+  const laterOfficialSourceReviewed = sessions.some(
+    (session) =>
+      session.provenance?.sourceReviewStatus ===
+      "reviewed_against_later_official_source",
+  );
 
   return (
     <Card className="flex h-full flex-col overflow-hidden border-primary/20">
@@ -557,7 +567,11 @@ function InstitutionalSessionsHomeCard({
             <Icon className="h-5 w-5" aria-hidden="true" />
           </span>
           <span className="rounded-full border border-primary/20 bg-primary/5 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-primary">
-            {attachmentReviewed ? "Allegato controllato" : "Metadati ufficiali"}
+            {attachmentReviewed
+              ? "Allegato controllato"
+              : laterOfficialSourceReviewed
+                ? "Fonte successiva controllata"
+                : "Metadati ufficiali"}
           </span>
         </div>
         <h3 className="mt-4 font-display text-2xl font-bold tracking-tight">
@@ -589,16 +603,32 @@ function InstitutionalSessionsHomeCard({
               (session.contextResearch.status === "checked_no_match"
                 ? "Ricerca eseguita · nessun collegamento preciso"
                 : "Ricerca da completare");
-            const contextRelationshipSummary =
-              session.contextResearch.articles.every(
-                (article) => article.relationship === "possible_same_session",
-              )
-                ? "possibili corrispondenze"
-                : session.contextResearch.articles.every(
-                      (article) => article.relationship === "agenda_item",
-                    )
-                  ? "sui temi in agenda"
-                  : "relazioni distinte in scheda";
+            const sameSessionCount = session.contextResearch.articles.filter(
+              (article) => article.relationship === "same_session",
+            ).length;
+            const possibleSessionCount = session.contextResearch.articles.filter(
+              (article) => article.relationship === "possible_same_session",
+            ).length;
+            const agendaItemCount = session.contextResearch.articles.filter(
+              (article) => article.relationship === "agenda_item",
+            ).length;
+            const contextRelationshipSummary = [
+              sameSessionCount > 0
+                ? `${sameSessionCount} stessa seduta`
+                : null,
+              possibleSessionCount > 0
+                ? `${possibleSessionCount} ${possibleSessionCount === 1 ? "possibile" : "possibili"}`
+                : null,
+              agendaItemCount > 0
+                ? `${agendaItemCount} sui temi in agenda`
+                : null,
+            ]
+              .filter(Boolean)
+              .join(" · ");
+            const sessionStatusSummary =
+              councilSessionV0StatusLabels[
+                session.sessionStatus.value ?? "non_verificata"
+              ];
             return (
               <Link
                 key={session.id}
@@ -616,8 +646,8 @@ function InstitutionalSessionsHomeCard({
                     </p>
                     <p className="mt-1 line-clamp-2 text-xs leading-5 text-muted-foreground">
                       {agendaCount > 0
-                        ? `${agendaCount} punti all'ordine del giorno · stato della seduta non verificato`
-                        : "Ordine del giorno da verificare · stato della seduta non verificato"}
+                        ? `${agendaCount} punti all'ordine del giorno · ${sessionStatusSummary}`
+                        : `Ordine del giorno da verificare · ${sessionStatusSummary}`}
                     </p>
                     <p className="mt-1 flex items-center gap-1.5 text-xs font-semibold text-primary">
                       {contextMediaCount > 0 ? (

@@ -19,29 +19,30 @@ describe("HomeInstitutionalSessions", () => {
       screen.getByRole("heading", { name: "Commissioni consiliari" }),
     ).toBeInTheDocument();
 
-    expect(screen.getByText("Data e ora da verificare")).toBeInTheDocument();
+    expect(
+      screen.getByText("Fonte successiva controllata"),
+    ).toBeInTheDocument();
+    expect(screen.getByText(/13 agosto 2026/i)).toBeInTheDocument();
     expect(screen.getByText(/11 agosto 2026/i)).toBeInTheDocument();
     expect(screen.getByText(/10 agosto 2026/i)).toBeInTheDocument();
     expect(
       screen.getAllByText(/stato della seduta non verificato/i),
-    ).toHaveLength(3);
-    expect(
-      screen.getByText(/3 articoli · possibili corrispondenze/i),
-    ).toBeInTheDocument();
-    expect(
-      screen.getAllByText(/2 articoli · sui temi in agenda/i),
     ).toHaveLength(2);
     expect(
-      screen.getByText(/non prova che la seduta si sia svolta/i),
+      screen.getByText(/6 articoli · 2 video · 5 stessa seduta · 1 possibile/i),
+    ).toBeInTheDocument();
+    expect(
+      screen.getAllByText(/2 articoli · 2 sui temi in agenda/i),
+    ).toHaveLength(2);
+    expect(
+      screen.getByText(/fonte istituzionale successiva lo conferma/i),
     ).toBeInTheDocument();
   });
 
   it("links each source-reviewed occurrence to its public session sheet", () => {
     render(<HomeInstitutionalSessions />);
 
-    expect(
-      screen.getByText("Data e ora da verificare").closest("a"),
-    ).toHaveAttribute(
+    expect(screen.getByText(/13 agosto 2026/i).closest("a")).toHaveAttribute(
       "href",
       "/convocazioni/albo-2026-2673-consiglio-comunale",
     );
