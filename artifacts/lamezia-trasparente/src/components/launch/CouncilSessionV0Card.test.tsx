@@ -31,7 +31,7 @@ describe("CouncilSessionV0Card", () => {
     expect(screen.queryByText(/13 agosto 2026.*02:00/i)).not.toBeInTheDocument();
     expect(screen.getByText("Seduta svolta")).toBeInTheDocument();
     expect(
-      screen.getByText("6 articoli contestuali revisionati"),
+      screen.getByText(/6 articoli contestuali revisionati.*1 video revisionato/),
     ).toBeInTheDocument();
     expect(
       screen.getByRole("link", { name: /Fonte ufficiale/i }),
@@ -135,7 +135,7 @@ describe("CouncilSessionV0Card", () => {
 
     render(<CouncilSessionV0Detail session={session} />);
 
-    expect(screen.getAllByText("Stessa seduta")).toHaveLength(6);
+    expect(screen.getAllByText("Stessa seduta")).toHaveLength(5);
     expect(screen.getAllByText("Possibile corrispondenza")).toHaveLength(1);
     expect(
       screen.getByRole("link", {
