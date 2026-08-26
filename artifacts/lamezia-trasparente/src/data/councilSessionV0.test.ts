@@ -253,6 +253,11 @@ describe("councilSessionV0", () => {
       expect.objectContaining({
         publicationNumber: "2026/2755",
         sourceUrl: expect.stringContaining("2026_2755_6_ALLEG"),
+        archivedDocumentUrl: expect.stringContaining(
+          "5153a02c9fce5744a8d398798cad8867a5591fa403cfb91d762e78b6547261b3.pdf",
+        ),
+        documentSha256:
+          "5153a02c9fce5744a8d398798cad8867a5591fa403cfb91d762e78b6547261b3",
       }),
     ]);
     expect(council?.dataLimits.value?.join(" ")).toMatch(
@@ -271,8 +276,16 @@ describe("councilSessionV0", () => {
     expect(council?.contextResearch.searchNote).toMatch(
       /pubblicazione istituzionale 2026\/2755.*13 agosto/i,
     );
+    expect(council?.contextResearch.media).toEqual([
+      expect.objectContaining({
+        publisher: "City One",
+        mediaType: "full_recording",
+        availability: "replay_available",
+        relationship: "same_session",
+      }),
+    ]);
     expect(council?.contextResearch.searchNote).toMatch(
-      /video.*senza.*pagina stabile/i,
+      /registrazione editoriale integrale.*City One/i,
     );
   });
 
