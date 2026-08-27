@@ -271,10 +271,20 @@ describe("councilSessionV0", () => {
       "same_session",
       "same_session",
       "same_session",
-      "possible_same_session",
+      "same_session",
+      "same_session",
     ]);
     expect(council?.contextResearch.searchNote).toMatch(
       /pubblicazione istituzionale 2026\/2755.*13 agosto/i,
+    );
+    expect(council?.contextResearch.articles).toContainEqual(
+      expect.objectContaining({
+        publisher: "Comune di Lamezia Terme",
+        relationship: "same_session",
+        url: expect.stringContaining(
+          "comune.lamezia-terme.cz.it/it/news/115163",
+        ),
+      }),
     );
     expect(council?.contextResearch.media).toEqual([
       expect.objectContaining({
