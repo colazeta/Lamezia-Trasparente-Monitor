@@ -158,6 +158,103 @@ export const PROPOSAL_EVENT_LABELS: Record<ProposalEventType, string> = {
 
 export const PUBLIC_PROPOSALS = [
   {
+    id: "fontana-piazza-mercato-vecchio-manutenzione-2026",
+    title: "Ripristino e manutenzione della fontana di Piazza Mercato Vecchio",
+    summary:
+      "Richiesta di intervento sulla fontana ornamentale di Piazza Mercato Vecchio per eliminare acqua stagnante, alghe e rifiuti, ripristinare condizioni di pulizia e decoro e intervenire rispetto ai comportamenti che contribuiscono al degrado.",
+    promoterId: "lamezia-maltrattata-cittadini-giovani-assin",
+    promoter:
+      "Lamezia Maltrattata, Comitato Cittadini Giovani Lametini e Ass.IN Lamezia",
+    promoterType: "cittadino_comitato",
+    periodLabel: "27 agosto 2026",
+    year: "2026",
+    theme: "Decoro urbano e manutenzione",
+    threadId: "piazza-mercato-vecchio-decoro",
+    threadLabel: "Piazza Mercato Vecchio: manutenzione e decoro",
+    territorialArea: "Piazza Mercato Vecchio, Lamezia Terme",
+    institutionalRecipient: "Comune di Lamezia Terme",
+    channel: "comunicato",
+    sourceLabel: "LameziaTerme.it, 27 agosto 2026",
+    sourceUrl:
+      "https://www.lameziaterme.it/lamezia-fontana-piazza-mercato-vecchio-una-palude/",
+    status: "proposta_emersa",
+    linkedActs: [],
+    verificationNote:
+      "La fonte attribuisce congiuntamente la richiesta a Lamezia Maltrattata, Comitato Cittadini Giovani Lametini e Ass.IN Lamezia. È censita come proposta civica perché formula una richiesta operativa di manutenzione e ripristino; non è stato verificato un deposito formale, una petizione protocollata o una risposta del Comune.",
+    evidenceLevel: "fonte_stampa",
+    firstSeen: "2026-08-27",
+    lastUpdated: "2026-08-27",
+    events: [
+      {
+        id: "fontana-mercato-vecchio-richiesta-intervento",
+        date: "2026-08-27",
+        type: "emersione",
+        title: "I comitati chiedono manutenzione e ripristino della fontana",
+        summary:
+          "I tre soggetti firmatari chiedono che la fontana torni in condizioni decorose e igieniche, indicando come interventi necessari lo svuotamento e la pulizia delle vasche e un'azione rispetto ai comportamenti che alimentano il degrado.",
+        sourceLabel: "LameziaTerme.it",
+        sourceUrl:
+          "https://www.lameziaterme.it/lamezia-fontana-piazza-mercato-vecchio-una-palude/",
+        evidenceLevel: "fonte_stampa",
+      },
+    ],
+  },
+  {
+    id: "asili-nido-continuita-servizio-2026",
+    title: "Avvio urgente e misure di continuità per gli asili nido comunali",
+    summary:
+      "Richiesta di pubblicazione degli atti sulla procedura di gara, attivazione urgente del servizio e misure di continuità per evitare che le famiglie restino senza assistenza durante lo slittamento dell'apertura dei tre asili nido comunali.",
+    promoterId: "gennarino-masi",
+    promoter: "Gennarino Masi (PD)",
+    promoterType: "consigliere",
+    periodLabel: "26 agosto 2026",
+    year: "2026",
+    theme: "Welfare e servizi per l'infanzia",
+    threadId: "asili-nido-continuita-2026",
+    threadLabel:
+      "Asili nido: continuità del servizio, gare e ampliamento dell'offerta",
+    territorialArea:
+      "Asili nido comunali di via Conforti, via Spartivento e via Giovanni XXIII",
+    institutionalRecipient: "Comune di Lamezia Terme — Sindaco e Amministrazione comunale",
+    channel: "comunicato",
+    sourceLabel: "LameziaTerme.it, 26 agosto 2026",
+    sourceUrl:
+      "https://www.lameziaterme.it/lamezia-asili-nido-chiusi-masi-grave-deficit-programmazione/",
+    status: "proposta_emersa",
+    linkedActs: [],
+    verificationNote:
+      "La richiesta è formulata in un comunicato del consigliere Masi, senza che sia stato verificato un atto consiliare o un protocollo formale. La successiva replica dell'Amministrazione è registrata come risposta istituzionale: annuncia l'intenzione di utilizzare la Centrale Unica di Committenza di Lamezia Multiservizi e la realizzazione di tre ulteriori asili entro l'anno educativo 2027/2028, ma non equivale a recepimento formale delle richieste di Masi.",
+    evidenceLevel: "ricostruzione_multi_fonte",
+    firstSeen: "2026-08-26",
+    lastUpdated: "2026-08-26",
+    events: [
+      {
+        id: "asili-nido-masi-richiesta-continuita",
+        date: "2026-08-26",
+        type: "emersione",
+        title: "Masi chiede atti pubblici, avvio urgente e continuità del servizio",
+        summary:
+          "Dopo lo slittamento dell'apertura, il consigliere chiede la pubblicazione degli atti, l'attivazione del servizio con la massima urgenza e soluzioni che evitino di lasciare le famiglie senza assistenza; richiama inoltre la necessità di misure di continuità e di eventuali soluzioni ponte quando le procedure di gara rischiano di produrre vuoti di servizio.",
+        sourceLabel: "LameziaTerme.it",
+        sourceUrl:
+          "https://www.lameziaterme.it/lamezia-asili-nido-chiusi-masi-grave-deficit-programmazione/",
+        evidenceLevel: "fonte_stampa",
+      },
+      {
+        id: "asili-nido-risposta-gianturco",
+        date: "2026-08-26",
+        type: "risposta_istituzionale",
+        title: "L'Amministrazione risponde sulle gare e annuncia nuovi asili",
+        summary:
+          "L'Amministrazione attribuisce il ritardo ai tempi della Centrale Unica di Committenza di Reggio Calabria, afferma di aver sottoposto al Consiglio una deliberazione per utilizzare la CUC di Lamezia Multiservizi e comunica di lavorare alla realizzazione di tre ulteriori asili nido entro l'anno educativo 2027/2028.",
+        sourceLabel: "LameziaTerme.it",
+        sourceUrl:
+          "https://www.lameziaterme.it/asili-nido-gianturco-ritardo-legato-alla-gara-non-alla-programmazione/",
+        evidenceLevel: "fonte_stampa",
+      },
+    ],
+  },
+  {
     id: "ponte-sant-antonio-rilancio-2026",
     title: "Rilancio dell'area di Ponte S. Antonio",
     summary:
