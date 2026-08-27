@@ -21,16 +21,18 @@ const COUNCIL_SESSION_EVIDENCE_ARCHIVE_URL =
   "/data/public/albo/documents/2026/e008e83a4d7ae0a4672146b73ebc62e64d565a26eeb043cafaf9e45d92ecf2c5.pdf";
 const COUNCIL_PROJECTS_OF_LIFE_URL =
   "https://www.comune.lamezia-terme.cz.it/it/news/115163/lamezia-amministrazione-comunale-su-disabilita-sottoscritti-142-progetti-di-vita-ora-rafforziamo-rete-territoriale";
+const COUNCIL_CITY_ONE_RECORDING_URL =
+  "https://www.cityonelamezia.it/episodio/video/consiglio-comunale-del-13-agosto-consiglio-comunale/?format=video";
 const COUNCIL_VITALE_VIDEO_URL = "https://www.instagram.com/reel/DcGRDc8o1qI/";
 const SOURCE_REVIEWED_AT = "2026-08-22T12:10:49Z";
 const CONTEXT_RESEARCHED_AT = "2026-08-23T10:48:08Z";
-const COUNCIL_CONTEXT_RESEARCHED_AT = "2026-08-27T15:58:40Z";
+const COUNCIL_CONTEXT_RESEARCHED_AT = "2026-08-27T21:49:11Z";
 
 const councilContextResearch: CouncilSessionV0ContextResearch = {
   status: "reviewed_matches",
   checkedAt: COUNCIL_CONTEXT_RESEARCHED_AT,
   searchNote:
-    "La pubblicazione istituzionale 2026/2755 conferma una seduta del Consiglio comunale il 13 agosto 2026. Sette articoli e comunicati coincidono con organo, data e temi distintivi; il comunicato ufficiale del Comune del 14 agosto conferma che l'informativa sui Progetti di Vita è stata resa durante quella seduta, senza documentarne l'ordine del giorno completo. La stampa non completa l'orario o l'ordine del giorno ufficiale. Sono disponibili la registrazione editoriale integrale di City One e due estratti attribuiti a Salvatore Vescio e Annita Vitale; restano distinti da eventuali registrazioni istituzionali. I temi sono ricostruiti separatamente dalla copertura editoriale.",
+    "La pubblicazione istituzionale 2026/2755 conferma una seduta del Consiglio comunale il 13 agosto 2026. Sette articoli e comunicati coincidono con organo, data e temi distintivi; il comunicato ufficiale del Comune del 14 agosto conferma che l'informativa sui Progetti di Vita è stata resa durante quella seduta, senza documentarne l'ordine del giorno completo. La stampa non completa l'orario o l'ordine del giorno ufficiale. Sono disponibili la pagina editoriale stabile della registrazione integrale pubblicata da City One il 17 agosto e due estratti attribuiti a Salvatore Vescio e Annita Vitale; il video City One già individuato su Facebook non è contato una seconda volta. Tutti restano distinti da eventuali registrazioni istituzionali. I temi sono ricostruiti separatamente dalla copertura editoriale.",
   articles: [
     {
       title:
@@ -111,16 +113,16 @@ const councilContextResearch: CouncilSessionV0ContextResearch = {
   ],
   media: [
     {
-      title: "Consiglio Comunale 13 Agosto 2026 - Video",
-      url: "https://www.facebook.com/cityonetv/videos/1584310006611277",
+      title: "Consiglio comunale del 13 Agosto",
+      url: COUNCIL_CITY_ONE_RECORDING_URL,
       publisher: "City One",
-      publishedAt: "2026-08-13",
+      publishedAt: "2026-08-17",
       relationship: "same_session",
       mediaType: "full_recording",
       availability: "replay_available",
       relevanceNote:
-        "City One presenta il contenuto come video del Consiglio comunale del 13 agosto 2026. Il collegamento è una registrazione editoriale esterna e non prova da solo completezza, svolgimento o risultati della seduta.",
-      reviewedAt: "2026-08-26T05:51:44Z",
+        "La pagina editoriale di City One, pubblicata il 17 agosto, identifica e ospita il video del Consiglio comunale del 13 agosto 2026. Sostituisce come collegamento stabile la stessa registrazione già individuata su Facebook, senza duplicarla. Non prova da sola completezza, svolgimento o risultati della seduta.",
+      reviewedAt: COUNCIL_CONTEXT_RESEARCHED_AT,
     },
     {
       title: "Salvatore Vescio — Consiglio comunale del 13 agosto 2026",

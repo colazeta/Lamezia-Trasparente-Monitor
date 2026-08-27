@@ -164,11 +164,11 @@ describe("CouncilSessionV0Card", () => {
     ).toBe(true);
     expect(
       screen.getByRole("link", {
-        name: "Consiglio Comunale 13 Agosto 2026 - Video",
+        name: "Consiglio comunale del 13 Agosto",
       }),
     ).toHaveAttribute(
       "href",
-      "https://www.facebook.com/cityonetv/videos/1584310006611277",
+      "https://www.cityonelamezia.it/episodio/video/consiglio-comunale-del-13-agosto-consiglio-comunale/?format=video",
     );
     expect(
       screen.getByRole("link", {
