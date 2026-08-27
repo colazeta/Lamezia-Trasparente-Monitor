@@ -308,7 +308,7 @@ describe("councilSessionV0", () => {
       }),
     ]);
     expect(council?.contextResearch.searchNote).toMatch(
-      /registrazione editoriale integrale.*City One.*due estratti.*Salvatore Vescio.*Annita Vitale/i,
+      /pagina editoriale stabile.*registrazione integrale.*City One.*due estratti.*Salvatore Vescio.*Annita Vitale.*non è contato una seconda volta/i,
     );
     expect(council?.contextResearch.editorialAgenda).toHaveLength(9);
     expect(council?.contextResearch.editorialAgenda?.[0]).toEqual(
