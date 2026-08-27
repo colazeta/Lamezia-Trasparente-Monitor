@@ -34,7 +34,7 @@ describe("CouncilSessionV0Card", () => {
     expect(screen.getByText("Seduta svolta")).toBeInTheDocument();
     expect(
       screen.getByText(
-        /7 articoli contestuali revisionati.*2 video revisionati/,
+        /7 articoli contestuali revisionati.*3 video revisionati/,
       ),
     ).toBeInTheDocument();
     expect(
@@ -175,6 +175,11 @@ describe("CouncilSessionV0Card", () => {
         name: "Salvatore Vescio — Consiglio comunale del 13 agosto 2026",
       }),
     ).toHaveAttribute("href", "https://www.instagram.com/reel/DcB8mBgtILm/");
+    expect(
+      screen.getByRole("link", {
+        name: "Annita Vitale — intervento sul Piano di riequilibrio finanziario",
+      }),
+    ).toHaveAttribute("href", "https://www.instagram.com/reel/DcGRDc8o1qI/");
     expect(
       screen.getByRole("heading", { name: "Temi emersi dalla copertura" }),
     ).toBeInTheDocument();

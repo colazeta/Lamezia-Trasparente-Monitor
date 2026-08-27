@@ -299,11 +299,18 @@ describe("councilSessionV0", () => {
         availability: "replay_available",
         relationship: "same_session",
       }),
+      expect.objectContaining({
+        publisher: "Annita Vitale",
+        mediaType: "excerpt",
+        availability: "replay_available",
+        relationship: "same_session",
+        url: "https://www.instagram.com/reel/DcGRDc8o1qI/",
+      }),
     ]);
     expect(council?.contextResearch.searchNote).toMatch(
-      /registrazione editoriale integrale.*City One.*estratto.*Salvatore Vescio/i,
+      /registrazione editoriale integrale.*City One.*due estratti.*Salvatore Vescio.*Annita Vitale/i,
     );
-    expect(council?.contextResearch.editorialAgenda).toHaveLength(8);
+    expect(council?.contextResearch.editorialAgenda).toHaveLength(9);
     expect(council?.contextResearch.editorialAgenda?.[0]).toEqual(
       expect.objectContaining({
         confidence: "high",
@@ -311,6 +318,13 @@ describe("councilSessionV0", () => {
           expect.stringContaining("cityonelamezia.it"),
           expect.stringContaining("lametino.it"),
         ]),
+      }),
+    );
+    expect(council?.contextResearch.editorialAgenda).toContainEqual(
+      expect.objectContaining({
+        title: "Piano di riequilibrio finanziario pluriennale",
+        confidence: "medium",
+        sourceUrls: ["https://www.instagram.com/reel/DcGRDc8o1qI/"],
       }),
     );
   });

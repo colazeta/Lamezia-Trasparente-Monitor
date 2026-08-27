@@ -21,15 +21,16 @@ const COUNCIL_SESSION_EVIDENCE_ARCHIVE_URL =
   "/data/public/albo/documents/2026/e008e83a4d7ae0a4672146b73ebc62e64d565a26eeb043cafaf9e45d92ecf2c5.pdf";
 const COUNCIL_PROJECTS_OF_LIFE_URL =
   "https://www.comune.lamezia-terme.cz.it/it/news/115163/lamezia-amministrazione-comunale-su-disabilita-sottoscritti-142-progetti-di-vita-ora-rafforziamo-rete-territoriale";
+const COUNCIL_VITALE_VIDEO_URL = "https://www.instagram.com/reel/DcGRDc8o1qI/";
 const SOURCE_REVIEWED_AT = "2026-08-22T12:10:49Z";
 const CONTEXT_RESEARCHED_AT = "2026-08-23T10:48:08Z";
-const COUNCIL_CONTEXT_RESEARCHED_AT = "2026-08-27T09:47:44Z";
+const COUNCIL_CONTEXT_RESEARCHED_AT = "2026-08-27T15:58:40Z";
 
 const councilContextResearch: CouncilSessionV0ContextResearch = {
   status: "reviewed_matches",
   checkedAt: COUNCIL_CONTEXT_RESEARCHED_AT,
   searchNote:
-    "La pubblicazione istituzionale 2026/2755 conferma una seduta del Consiglio comunale il 13 agosto 2026. Sette articoli e comunicati coincidono con organo, data e temi distintivi; il comunicato ufficiale del Comune del 14 agosto conferma che l'informativa sui Progetti di Vita è stata resa durante quella seduta, senza documentarne l'ordine del giorno completo. La stampa non completa l'orario o l'ordine del giorno ufficiale. Sono disponibili la registrazione editoriale integrale di City One e un estratto attribuito al consigliere Salvatore Vescio; restano distinti da eventuali registrazioni istituzionali. I temi sono ricostruiti separatamente dalla copertura editoriale.",
+    "La pubblicazione istituzionale 2026/2755 conferma una seduta del Consiglio comunale il 13 agosto 2026. Sette articoli e comunicati coincidono con organo, data e temi distintivi; il comunicato ufficiale del Comune del 14 agosto conferma che l'informativa sui Progetti di Vita è stata resa durante quella seduta, senza documentarne l'ordine del giorno completo. La stampa non completa l'orario o l'ordine del giorno ufficiale. Sono disponibili la registrazione editoriale integrale di City One e due estratti attribuiti a Salvatore Vescio e Annita Vitale; restano distinti da eventuali registrazioni istituzionali. I temi sono ricostruiti separatamente dalla copertura editoriale.",
   articles: [
     {
       title:
@@ -133,6 +134,18 @@ const councilContextResearch: CouncilSessionV0ContextResearch = {
         "Il titolo identifica espressamente il consigliere, l'organo e la data del 13 agosto 2026. È un estratto editoriale esterno: non prova completezza, programmazione, esiti o deliberazioni della seduta.",
       reviewedAt: COUNCIL_CONTEXT_RESEARCHED_AT,
     },
+    {
+      title: "Annita Vitale — intervento sul Piano di riequilibrio finanziario",
+      url: COUNCIL_VITALE_VIDEO_URL,
+      publisher: "Annita Vitale",
+      publishedAt: "2026-08-16",
+      relationship: "same_session",
+      mediaType: "excerpt",
+      availability: "replay_available",
+      relevanceNote:
+        "Il fotogramma del reel identifica espressamente il Consiglio comunale del 13 agosto 2026 e un intervento sul Piano di riequilibrio finanziario; la descrizione espone una posizione politica. È un estratto editoriale esterno e non certifica ordine del giorno, votazioni, risultati o completezza della seduta.",
+      reviewedAt: COUNCIL_CONTEXT_RESEARCHED_AT,
+    },
   ],
   editorialAgenda: [
     {
@@ -145,6 +158,13 @@ const councilContextResearch: CouncilSessionV0ContextResearch = {
       confidence: "high",
       reason:
         "Entrambe le testate associano questi temi alla seduta del 13 agosto; il resoconto successivo del Lametino ne riferisce anche la trattazione. Non è un ordine del giorno ufficiale acquisito.",
+    },
+    {
+      title: "Piano di riequilibrio finanziario pluriennale",
+      sourceUrls: [COUNCIL_VITALE_VIDEO_URL],
+      confidence: "medium",
+      reason:
+        "Il reel di Annita Vitale identifica il proprio contenuto come intervento sul Piano di riequilibrio finanziario nel Consiglio del 13 agosto. La singola fonte documenta un tema emerso dalla copertura, non un punto dell'ordine del giorno ufficiale né l'esito di una votazione.",
     },
     {
       title:
