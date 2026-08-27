@@ -29,7 +29,7 @@ describe("HomeInstitutionalSessions", () => {
       screen.getAllByText(/stato della seduta non verificato/i),
     ).toHaveLength(2);
     expect(
-      screen.getByText(/6 articoli · 2 video · 5 stessa seduta · 1 possibile/i),
+      screen.getByText(/7 articoli · 2 video · 7 stessa seduta/i),
     ).toBeInTheDocument();
     expect(
       screen.getAllByText(/2 articoli · 2 sui temi in agenda/i),

@@ -34,7 +34,7 @@ describe("CouncilSessionV0Card", () => {
     expect(screen.getByText("Seduta svolta")).toBeInTheDocument();
     expect(
       screen.getByText(
-        /6 articoli contestuali revisionati.*2 video revisionati/,
+        /7 articoli contestuali revisionati.*2 video revisionati/,
       ),
     ).toBeInTheDocument();
     expect(
@@ -139,8 +139,10 @@ describe("CouncilSessionV0Card", () => {
 
     render(<CouncilSessionV0Detail session={session} />);
 
-    expect(screen.getAllByText("Stessa seduta")).toHaveLength(5);
-    expect(screen.getAllByText("Possibile corrispondenza")).toHaveLength(1);
+    expect(screen.getAllByText("Stessa seduta")).toHaveLength(7);
+    expect(
+      screen.queryByText("Possibile corrispondenza"),
+    ).not.toBeInTheDocument();
     expect(
       screen.getByRole("link", {
         name: /Convocato Consiglio Comunale di Lamezia Terme/i,
@@ -151,6 +153,15 @@ describe("CouncilSessionV0Card", () => {
         name: /il Consiglio comunale approva l'assestamento/i,
       }),
     ).toHaveAttribute("href", expect.stringContaining("lametino.it"));
+    expect(
+      screen
+        .getAllByRole("link", {
+          name: /Sottoscritti 142 Progetti di Vita/i,
+        })
+        .some((link) =>
+          link.getAttribute("href")?.includes("comune.lamezia-terme.cz.it"),
+        ),
+    ).toBe(true);
     expect(
       screen.getByRole("link", {
         name: "Consiglio Comunale 13 Agosto 2026 - Video",
@@ -240,7 +251,7 @@ describe("CouncilSessionV0Card", () => {
       "href",
       "https://example.test/city-one-consiglio-2026-08-13",
     );
-    expect(screen.getAllByText("Perché è collegato")).toHaveLength(7);
+    expect(screen.getAllByText("Perché è collegato")).toHaveLength(8);
   });
 
   it("uses concise one-line empty states", () => {

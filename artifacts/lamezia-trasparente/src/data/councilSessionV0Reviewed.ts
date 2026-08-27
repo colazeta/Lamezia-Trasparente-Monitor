@@ -19,15 +19,17 @@ const COUNCIL_SESSION_EVIDENCE_URL =
   "https://albo.tinnvision.cloud/allegati/2026_2755_6_ALLEG?ente=00301390795";
 const COUNCIL_SESSION_EVIDENCE_ARCHIVE_URL =
   "/data/public/albo/documents/2026/e008e83a4d7ae0a4672146b73ebc62e64d565a26eeb043cafaf9e45d92ecf2c5.pdf";
+const COUNCIL_PROJECTS_OF_LIFE_URL =
+  "https://www.comune.lamezia-terme.cz.it/it/news/115163/lamezia-amministrazione-comunale-su-disabilita-sottoscritti-142-progetti-di-vita-ora-rafforziamo-rete-territoriale";
 const SOURCE_REVIEWED_AT = "2026-08-22T12:10:49Z";
 const CONTEXT_RESEARCHED_AT = "2026-08-23T10:48:08Z";
-const COUNCIL_CONTEXT_RESEARCHED_AT = "2026-08-26T21:47:45Z";
+const COUNCIL_CONTEXT_RESEARCHED_AT = "2026-08-27T09:47:44Z";
 
 const councilContextResearch: CouncilSessionV0ContextResearch = {
   status: "reviewed_matches",
   checkedAt: COUNCIL_CONTEXT_RESEARCHED_AT,
   searchNote:
-    "La pubblicazione istituzionale 2026/2755 conferma una seduta del Consiglio comunale il 13 agosto 2026. Cinque articoli coincidono con organo, data e temi distintivi; un sesto descrive un ulteriore tema trattato nella stessa giornata ma resta una possibile corrispondenza. La stampa non completa l'orario o l'ordine del giorno ufficiale. Sono disponibili la registrazione editoriale integrale di City One e un estratto attribuito al consigliere Salvatore Vescio; restano distinti da eventuali registrazioni istituzionali. I temi sono ricostruiti separatamente dalla copertura editoriale.",
+    "La pubblicazione istituzionale 2026/2755 conferma una seduta del Consiglio comunale il 13 agosto 2026. Sette articoli e comunicati coincidono con organo, data e temi distintivi; il comunicato ufficiale del Comune del 14 agosto conferma che l'informativa sui Progetti di Vita è stata resa durante quella seduta, senza documentarne l'ordine del giorno completo. La stampa non completa l'orario o l'ordine del giorno ufficiale. Sono disponibili la registrazione editoriale integrale di City One e un estratto attribuito al consigliere Salvatore Vescio; restano distinti da eventuali registrazioni istituzionali. I temi sono ricostruiti separatamente dalla copertura editoriale.",
   articles: [
     {
       title:
@@ -89,9 +91,20 @@ const councilContextResearch: CouncilSessionV0ContextResearch = {
       url: "https://www.lametino.it/ultimora/lamezia-amministrazione-comunale-su-disabilita-sottoscritti-142-progetti-di-vita-ora-rafforziamo-rete-territoriale.html",
       publisher: "il Lametino",
       publishedAt: "2026-08-14",
-      relationship: "possible_same_session",
+      relationship: "same_session",
       relevanceNote:
-        "Riferisce un'informativa resa nel Consiglio del 13 agosto. La data coincide con quella verificata, ma la fonte ufficiale acquisita non espone l'ordine del giorno completo.",
+        "Riprende l'informativa sui Progetti di Vita resa nel Consiglio del 13 agosto, ora collegata anche al comunicato ufficiale del Comune; non documenta l'ordine del giorno completo.",
+      reviewedAt: COUNCIL_CONTEXT_RESEARCHED_AT,
+    },
+    {
+      title:
+        'Lamezia, Amministrazione Comunale su disabilità: "Sottoscritti 142 Progetti di Vita. Ora rafforziamo la rete territoriale"',
+      url: COUNCIL_PROJECTS_OF_LIFE_URL,
+      publisher: "Comune di Lamezia Terme",
+      publishedAt: "2026-08-14",
+      relationship: "same_session",
+      relevanceNote:
+        "Il comunicato istituzionale indica espressamente che i dati sui Progetti di Vita sono stati comunicati durante il Consiglio comunale del 13 agosto 2026. Verifica questo singolo tema trattato, non l'ordine del giorno completo, votazioni o altri esiti.",
       reviewedAt: COUNCIL_CONTEXT_RESEARCHED_AT,
     },
   ],
@@ -161,10 +174,11 @@ const councilContextResearch: CouncilSessionV0ContextResearch = {
       sourceUrls: [
         "https://www.cityonelamezia.it/convocato-consiglio-comunale-di-lamezia-terme-in-prossimita-del-ferragosto/",
         "https://www.lametino.it/ultime/lamezia-33-punti-in-consiglio-comunale-il-13-agosto-al-centro-assestamento-e-salvaguardia-equilibri-di-bilancio.html",
+        COUNCIL_PROJECTS_OF_LIFE_URL,
       ],
       confidence: "high",
       reason:
-        "Mozioni e interrogazioni su questi temi compaiono in entrambe le ricostruzioni editoriali; non se ne inferiscono votazioni o risultati.",
+        "Mozioni e interrogazioni su questi temi compaiono nelle due ricostruzioni editoriali; il comunicato del Comune conferma inoltre che l'informativa sui Progetti di Vita è stata resa durante la seduta. Non se ne inferiscono l'ordine del giorno completo, votazioni o risultati ulteriori.",
     },
     {
       title:
