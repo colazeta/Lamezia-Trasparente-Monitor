@@ -10,6 +10,7 @@ import {
   Landmark,
   Layers3,
   Lightbulb,
+  MapPinned,
   MapPin,
   RefreshCw,
   SearchCheck,
@@ -17,11 +18,21 @@ import {
 } from "lucide-react";
 
 import { CivicPracticeCard } from "@/components/civic-practices/CivicPracticeCard";
+import { ProposalMap } from "@/components/ProposalMap";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { PageMeta } from "@/components/seo/PageMeta";
 import { CIVIC_PRACTICES } from "@/data/civicPractices";
+import {
+  PROPOSAL_GEO_AREA_LABELS,
+  PROPOSAL_GEO_PRECISION_LABELS,
+  PROPOSAL_GEO_SCOPE_LABELS,
+  getProposalGeoAreas,
+  getProposalGeography,
+  proposalMatchesGeoArea,
+  type ProposalGeoArea,
+} from "@/data/proposalGeography";
 import {
   PUBLIC_PROPOSALS,
   PROPOSAL_CHANNEL_LABELS,
@@ -72,10 +83,81 @@ function formatDate(value: string) {
   }).format(new Date(`${value}T12:00:00`));
 }
 
+function ProposalGeographyBlock({ proposal }: { proposal: PublicProposal }) {
+  const geography = getProposalGeography(proposal.id);
+  if (!geography) return null;
+
+  return (
+    <section className="mt-5 rounded-2xl border border-border bg-muted/20 p-4">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+        <div>
+          <div className="flex items-center gap-2">
+            <MapPinned className="h-4 w-4 text-primary" aria-hidden="true" />
+            <p className="text-sm font-semibold text-foreground">
+              Riferimento geografico
+            </p>
+            <Badge variant="outline">
+              {PROPOSAL_GEO_SCOPE_LABELS[geography.scope]}
+            </Badge>
+          </div>
+          <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+            {geography.label}
+          </p>
+          <div className="mt-3 flex flex-wrap gap-2">
+            {geography.areas.map((area) => (
+              <Badge key={area} variant="secondary">
+                <MapPin className="mr-1 h-3 w-3" aria-hidden="true" />
+                {PROPOSAL_GEO_AREA_LABELS[area]}
+              </Badge>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <div className="mt-4 grid gap-3 md:grid-cols-2 xl:grid-cols-3">
+        {geography.points.map((point) => (
+          <div
+            key={point.id}
+            className="rounded-xl border border-border bg-background p-3"
+          >
+            <p className="text-xs font-semibold leading-relaxed text-foreground">
+              {point.label}
+            </p>
+            <p className="mt-2 font-mono text-xs text-muted-foreground">
+              {point.latitude.toFixed(5)}, {point.longitude.toFixed(5)}
+            </p>
+            <p className="mt-1 text-[11px] leading-relaxed text-muted-foreground">
+              {PROPOSAL_GEO_PRECISION_LABELS[point.precision]}
+            </p>
+            {point.sourceUrl ? (
+              <a
+                href={point.sourceUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="mt-2 inline-flex items-center gap-1 text-[11px] font-semibold text-primary underline-offset-4 hover:underline"
+              >
+                Fonte geografica
+                <ExternalLink className="h-3 w-3" aria-hidden="true" />
+              </a>
+            ) : null}
+          </div>
+        ))}
+      </div>
+
+      {geography.note ? (
+        <p className="mt-3 text-xs leading-relaxed text-muted-foreground">
+          {geography.note}
+        </p>
+      ) : null}
+    </section>
+  );
+}
+
 function ProposalCard({ proposal }: { proposal: PublicProposal }) {
   const orderedEvents = [...proposal.events].sort((a, b) =>
     a.date.localeCompare(b.date),
   );
+  const geography = getProposalGeography(proposal.id);
 
   return (
     <article
@@ -92,6 +174,12 @@ function ProposalCard({ proposal }: { proposal: PublicProposal }) {
               {PROPOSAL_CHANNEL_LABELS[proposal.channel]}
             </Badge>
             <Badge variant="secondary">{proposal.theme}</Badge>
+            {geography?.areas.map((area) => (
+              <Badge key={area} variant="outline">
+                <MapPin className="mr-1 h-3 w-3" aria-hidden="true" />
+                {PROPOSAL_GEO_AREA_LABELS[area]}
+              </Badge>
+            ))}
           </div>
           <h3
             id={`${proposal.id}-title`}
@@ -107,7 +195,12 @@ function ProposalCard({ proposal }: { proposal: PublicProposal }) {
               <CalendarDays className="h-3.5 w-3.5" aria-hidden="true" />
               Prima evidenza {formatDate(proposal.firstSeen)}
             </span>
-            {proposal.territorialArea ? (
+            {geography ? (
+              <span className="inline-flex items-center gap-1.5">
+                <MapPin className="h-3.5 w-3.5" aria-hidden="true" />
+                {geography.label}
+              </span>
+            ) : proposal.territorialArea ? (
               <span className="inline-flex items-center gap-1.5">
                 <MapPin className="h-3.5 w-3.5" aria-hidden="true" />
                 {proposal.territorialArea}
@@ -136,6 +229,8 @@ function ProposalCard({ proposal }: { proposal: PublicProposal }) {
           ) : null}
         </aside>
       </div>
+
+      <ProposalGeographyBlock proposal={proposal} />
 
       <dl className="mt-6 grid gap-4 text-sm md:grid-cols-2 xl:grid-cols-4">
         <div>
@@ -268,23 +363,28 @@ export function PropostePubbliche() {
   const [year, setYear] = useState(ALL);
   const [status, setStatus] = useState<SelectFilter<ProposalStatus>>(ALL);
   const [channel, setChannel] = useState<SelectFilter<ProposalChannel>>(ALL);
+  const [geoArea, setGeoArea] = useState<SelectFilter<ProposalGeoArea>>(ALL);
   const [view, setView] = useState<ArchiveView>("proposte");
 
   const themes = useMemo(() => getProposalThemes(), []);
   const promoters = useMemo(() => getProposalPromoters(), []);
   const years = useMemo(() => getProposalYears(), []);
+  const geoAreas = useMemo(() => getProposalGeoAreas(), []);
 
-  const filteredProposals = useMemo(
-    () =>
-      filterPublicProposals(PUBLIC_PROPOSALS, {
-        theme: theme === ALL ? undefined : theme,
-        promoter: promoter === ALL ? undefined : promoter,
-        year: year === ALL ? undefined : year,
-        status: status === ALL ? undefined : status,
-        channel: channel === ALL ? undefined : channel,
-      }),
-    [channel, promoter, status, theme, year],
-  );
+  const filteredProposals = useMemo(() => {
+    const filtered = filterPublicProposals(PUBLIC_PROPOSALS, {
+      theme: theme === ALL ? undefined : theme,
+      promoter: promoter === ALL ? undefined : promoter,
+      year: year === ALL ? undefined : year,
+      status: status === ALL ? undefined : status,
+      channel: channel === ALL ? undefined : channel,
+    });
+
+    if (geoArea === ALL) return filtered;
+    return filtered.filter((proposal) =>
+      proposalMatchesGeoArea(proposal.id, geoArea),
+    );
+  }, [channel, geoArea, promoter, status, theme, year]);
 
   const promoterGroups = useMemo(
     () => groupProposalsByPromoter(filteredProposals),
@@ -308,8 +408,18 @@ export function PropostePubbliche() {
   const externalProposals = PUBLIC_PROPOSALS.filter(
     (proposal) => proposal.evidenceLevel !== "fonte_interna_documentale",
   );
-  const promoterCount = new Set(PUBLIC_PROPOSALS.map((proposal) => proposal.promoterId)).size;
-  const threadCount = new Set(PUBLIC_PROPOSALS.map((proposal) => proposal.threadId)).size;
+  const promoterCount = new Set(
+    PUBLIC_PROPOSALS.map((proposal) => proposal.promoterId),
+  ).size;
+  const threadCount = new Set(
+    PUBLIC_PROPOSALS.map((proposal) => proposal.threadId),
+  ).size;
+  const geographicallySpecific = filteredProposals.filter(
+    (proposal) => getProposalGeography(proposal.id)?.scope !== "citywide",
+  ).length;
+  const citywide = filteredProposals.filter(
+    (proposal) => getProposalGeography(proposal.id)?.scope === "citywide",
+  ).length;
 
   const resetFilters = () => {
     setTheme(ALL);
@@ -317,20 +427,21 @@ export function PropostePubbliche() {
     setYear(ALL);
     setStatus(ALL);
     setChannel(ALL);
+    setGeoArea(ALL);
   };
 
   return (
     <>
       <PageMeta
         title="Proposte civiche"
-        description="Archivio verificabile delle proposte civiche rivolte a Lamezia Terme, organizzate per promotore, tema e sviluppo nel tempo, con fonti e stato documentale."
+        description="Archivio verificabile delle proposte civiche rivolte a Lamezia Terme, organizzate per promotore, tema, geografia e sviluppo nel tempo, con fonti e stato documentale."
         path="/proposte-civiche"
       />
       <div className="container mx-auto max-w-6xl px-4 py-8 md:py-12">
         <header className="space-y-6">
           <span className="eyebrow text-primary">
             <Archive className="h-3.5 w-3.5" aria-hidden="true" />
-            Archivio civico evolutivo
+            Archivio civico evolutivo e territoriale
           </span>
           <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_22rem] lg:items-end">
             <div>
@@ -338,28 +449,34 @@ export function PropostePubbliche() {
                 Proposte civiche
               </h1>
               <p className="mt-3 max-w-3xl text-lg leading-relaxed text-muted-foreground">
-                Non una lista di comunicati, ma la memoria verificabile delle idee,
-                petizioni, mozioni e richieste rivolte alla città. Ogni proposta
-                mantiene il proprio promotore, le fonti e gli sviluppi successivi:
-                quando cambia qualcosa, si aggiunge un evento alla storia invece di
-                creare un duplicato.
+                La memoria verificabile delle idee, petizioni, mozioni e richieste
+                rivolte alla città. Ogni proposta conserva promotore, fonti,
+                sviluppi e ora anche una referenziazione geografica esplicita, così
+                da poter leggere nel tempo non solo che cosa viene proposto, ma
+                anche dove si concentra l'iniziativa civica.
               </p>
             </div>
             <aside className="rounded-2xl border border-amber-200 bg-amber-50 p-4 text-amber-950 dark:border-amber-900/60 dark:bg-amber-950/20 dark:text-amber-100">
               <div className="flex gap-3">
-                <AlertTriangle className="mt-0.5 h-5 w-5 shrink-0" aria-hidden="true" />
+                <AlertTriangle
+                  className="mt-0.5 h-5 w-5 shrink-0"
+                  aria-hidden="true"
+                />
                 <p className="text-sm leading-relaxed">
-                  L'inclusione documenta l'esistenza e l'evoluzione di una proposta,
-                  non esprime adesione politica né un giudizio di merito. Stati e
-                  collegamenti istituzionali sono riportati solo entro quanto
-                  supportato dalle fonti censite.
+                  Coordinate e tag territoriali descrivono il riferimento geografico
+                  della proposta. I centroidi e i riferimenti stradali approssimati
+                  sono dichiarati come tali e non vanno interpretati come localizzazioni
+                  catastali o perimetri amministrativi esatti.
                 </p>
               </div>
             </aside>
           </div>
         </header>
 
-        <section className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4" aria-label="Sintesi archivio">
+        <section
+          className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4"
+          aria-label="Sintesi archivio"
+        >
           {[
             {
               label: "Proposte censite",
@@ -380,10 +497,10 @@ export function PropostePubbliche() {
               icon: Layers3,
             },
             {
-              label: "Sviluppi recenti",
-              value: latestEvents.length,
-              note: "ultimi eventi verificati mostrati sotto",
-              icon: History,
+              label: "Copertura geografica",
+              value: PUBLIC_PROPOSALS.length,
+              note: "ogni proposta ha tag e coordinate di riferimento",
+              icon: MapPinned,
             },
           ].map((item) => (
             <Card key={item.label} className="p-5">
@@ -391,7 +508,9 @@ export function PropostePubbliche() {
               <p className="mt-3 text-3xl font-bold tracking-tight text-foreground">
                 {item.value}
               </p>
-              <p className="mt-1 text-sm font-semibold text-foreground">{item.label}</p>
+              <p className="mt-1 text-sm font-semibold text-foreground">
+                {item.label}
+              </p>
               <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
                 {item.note}
               </p>
@@ -402,40 +521,51 @@ export function PropostePubbliche() {
         <section className="mt-8" aria-labelledby="ultimi-sviluppi-proposte">
           <div className="flex items-center gap-2">
             <History className="h-5 w-5 text-primary" aria-hidden="true" />
-            <h2 id="ultimi-sviluppi-proposte" className="font-display text-2xl font-bold">
+            <h2
+              id="ultimi-sviluppi-proposte"
+              className="font-display text-2xl font-bold"
+            >
               Ultimi sviluppi
             </h2>
           </div>
           <p className="mt-2 max-w-3xl text-sm leading-relaxed text-muted-foreground">
-            La timeline trasversale rende immediatamente visibile quando una proposta
-            viene depositata, calendarizzata, discussa, riceve una risposta o viene
+            La timeline trasversale rende visibile quando una proposta viene
+            depositata, calendarizzata, discussa, riceve una risposta o viene
             recepita. Lo storico precedente non viene sovrascritto.
           </p>
           <div className="mt-5 grid gap-3 md:grid-cols-2">
-            {latestEvents.map(({ proposalId, proposalTitle, promoter: eventPromoter, event }) => (
-              <Card key={`${proposalId}-${event.id}`} className="p-4">
-                <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
-                  <span className="font-semibold">{formatDate(event.date)}</span>
-                  <Badge variant="outline">{PROPOSAL_EVENT_LABELS[event.type]}</Badge>
-                </div>
-                <p className="mt-2 font-semibold text-foreground">{event.title}</p>
-                <p className="mt-1 text-sm text-muted-foreground">{proposalTitle}</p>
-                <p className="mt-2 text-xs text-muted-foreground">
-                  Promotore: {eventPromoter}
-                </p>
-                {event.sourceUrl ? (
-                  <a
-                    href={event.sourceUrl}
-                    className="mt-3 inline-flex items-center gap-1 text-xs font-semibold text-primary underline-offset-4 hover:underline"
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    Apri la fonte
-                    <ExternalLink className="h-3 w-3" aria-hidden="true" />
-                  </a>
-                ) : null}
-              </Card>
-            ))}
+            {latestEvents.map(
+              ({ proposalId, proposalTitle, promoter: eventPromoter, event }) => (
+                <Card key={`${proposalId}-${event.id}`} className="p-4">
+                  <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
+                    <span className="font-semibold">{formatDate(event.date)}</span>
+                    <Badge variant="outline">
+                      {PROPOSAL_EVENT_LABELS[event.type]}
+                    </Badge>
+                  </div>
+                  <p className="mt-2 font-semibold text-foreground">
+                    {event.title}
+                  </p>
+                  <p className="mt-1 text-sm text-muted-foreground">
+                    {proposalTitle}
+                  </p>
+                  <p className="mt-2 text-xs text-muted-foreground">
+                    Promotore: {eventPromoter}
+                  </p>
+                  {event.sourceUrl ? (
+                    <a
+                      href={event.sourceUrl}
+                      className="mt-3 inline-flex items-center gap-1 text-xs font-semibold text-primary underline-offset-4 hover:underline"
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      Apri la fonte
+                      <ExternalLink className="h-3 w-3" aria-hidden="true" />
+                    </a>
+                  ) : null}
+                </Card>
+              ),
+            )}
           </div>
         </section>
 
@@ -453,9 +583,9 @@ export function PropostePubbliche() {
               text: "Un nuovo articolo sullo stesso oggetto non crea un nuovo record: viene aggiunto come evento, salvo che cambi sostanzialmente contenuto o promotore.",
             },
             {
-              icon: FileText,
-              title: "Fonte sempre visibile",
-              text: "Sono preferite fonti primarie. La stampa può documentare lo scouting quando attribuisce in modo chiaro contenuto e promotore; il livello di evidenza resta esplicito.",
+              icon: MapPinned,
+              title: "Geografia con precisione dichiarata",
+              text: "Luoghi puntuali, aree, più sedi e proposte cittadine sono distinti. Coordinate approssimate e centroidi restano esplicitamente qualificati.",
             },
             {
               icon: Landmark,
@@ -465,7 +595,9 @@ export function PropostePubbliche() {
           ].map((item) => (
             <Card key={item.title} className="p-5">
               <item.icon className="h-5 w-5 text-primary" aria-hidden="true" />
-              <h3 className="mt-3 font-display text-lg font-semibold">{item.title}</h3>
+              <h3 className="mt-3 font-display text-lg font-semibold">
+                {item.title}
+              </h3>
               <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
                 {item.text}
               </p>
@@ -484,7 +616,10 @@ export function PropostePubbliche() {
                 Esplora l'archivio
               </h2>
             </div>
-            <div className="flex flex-wrap gap-2" aria-label="Modalità di visualizzazione">
+            <div
+              className="flex flex-wrap gap-2"
+              aria-label="Modalità di visualizzazione"
+            >
               <Button
                 type="button"
                 variant={view === "proposte" ? "default" : "outline"}
@@ -512,7 +647,24 @@ export function PropostePubbliche() {
             </div>
           </div>
 
-          <div className="grid gap-3 md:grid-cols-5">
+          <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-6">
+            <label className="space-y-2 text-sm font-medium">
+              Area geografica
+              <select
+                className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+                value={geoArea}
+                onChange={(event) =>
+                  setGeoArea(event.target.value as SelectFilter<ProposalGeoArea>)
+                }
+              >
+                <option value={ALL}>Tutte le aree</option>
+                {geoAreas.map((item) => (
+                  <option key={item} value={item}>
+                    {PROPOSAL_GEO_AREA_LABELS[item]}
+                  </option>
+                ))}
+              </select>
+            </label>
             <label className="space-y-2 text-sm font-medium">
               Tema
               <select
@@ -522,7 +674,9 @@ export function PropostePubbliche() {
               >
                 <option value={ALL}>Tutti i temi</option>
                 {themes.map((item) => (
-                  <option key={item} value={item}>{item}</option>
+                  <option key={item} value={item}>
+                    {item}
+                  </option>
                 ))}
               </select>
             </label>
@@ -535,7 +689,9 @@ export function PropostePubbliche() {
               >
                 <option value={ALL}>Tutti i promotori</option>
                 {promoters.map((item) => (
-                  <option key={item} value={item}>{item}</option>
+                  <option key={item} value={item}>
+                    {item}
+                  </option>
                 ))}
               </select>
             </label>
@@ -548,7 +704,9 @@ export function PropostePubbliche() {
               >
                 <option value={ALL}>Tutti gli anni</option>
                 {years.map((item) => (
-                  <option key={item} value={item}>{item}</option>
+                  <option key={item} value={item}>
+                    {item}
+                  </option>
                 ))}
               </select>
             </label>
@@ -563,7 +721,9 @@ export function PropostePubbliche() {
               >
                 <option value={ALL}>Tutti gli stati</option>
                 {PROPOSAL_STATUSES.map((item) => (
-                  <option key={item} value={item}>{PROPOSAL_STATUS_LABELS[item]}</option>
+                  <option key={item} value={item}>
+                    {PROPOSAL_STATUS_LABELS[item]}
+                  </option>
                 ))}
               </select>
             </label>
@@ -578,7 +738,9 @@ export function PropostePubbliche() {
               >
                 <option value={ALL}>Tutti i canali</option>
                 {PROPOSAL_CHANNELS.map((item) => (
-                  <option key={item} value={item}>{PROPOSAL_CHANNEL_LABELS[item]}</option>
+                  <option key={item} value={item}>
+                    {PROPOSAL_CHANNEL_LABELS[item]}
+                  </option>
                 ))}
               </select>
             </label>
@@ -588,11 +750,49 @@ export function PropostePubbliche() {
             <p className="text-sm text-muted-foreground" aria-live="polite">
               {filteredProposals.length} proposte visualizzate su {PUBLIC_PROPOSALS.length}.
             </p>
-            <Button type="button" variant="outline" size="sm" onClick={resetFilters}>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={resetFilters}
+            >
               <RefreshCw className="h-4 w-4" aria-hidden="true" />
               Reimposta filtri
             </Button>
           </div>
+        </section>
+
+        <section className="mt-8" aria-labelledby="mappa-proposte">
+          <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
+            <div>
+              <div className="flex items-center gap-2">
+                <MapPinned className="h-5 w-5 text-primary" aria-hidden="true" />
+                <h2 id="mappa-proposte" className="font-display text-2xl font-bold">
+                  Geografia delle proposte
+                </h2>
+              </div>
+              <p className="mt-2 max-w-3xl text-sm leading-relaxed text-muted-foreground">
+                La mappa segue gli stessi filtri dell'archivio. Mostra soltanto
+                riferimenti territoriali puntuali o areali; le proposte che riguardano
+                l'intera città restano nel conteggio ma non vengono trasformate in un
+                falso punto geografico.
+              </p>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              <Badge variant="secondary">
+                {geographicallySpecific} localizzate
+              </Badge>
+              <Badge variant="outline">{citywide} cittadine</Badge>
+            </div>
+          </div>
+          <div className="mt-5 overflow-hidden rounded-2xl border border-border bg-card p-2 shadow-sm">
+            <ProposalMap proposals={filteredProposals} />
+          </div>
+          <p className="mt-2 text-xs leading-relaxed text-muted-foreground">
+            I cerchi tratteggiati indicano riferimenti approssimati o centroidi di
+            area. Le coordinate puntuali e la loro precisione sono riportate anche in
+            ciascuna scheda.
+          </p>
         </section>
 
         <section className="mt-8" aria-labelledby="archivio-proposte">
@@ -602,8 +802,8 @@ export function PropostePubbliche() {
             </h2>
             <p className="mt-1 max-w-3xl text-sm leading-relaxed text-muted-foreground">
               La vista per promotore ricompone tutte le iniziative attribuite allo
-              stesso soggetto; la vista per filone collega invece proposte diverse
-              che partecipano alla stessa evoluzione civica o istituzionale.
+              stesso soggetto; la vista per filone collega proposte diverse che
+              partecipano alla stessa evoluzione civica o istituzionale.
             </p>
           </div>
 
@@ -631,9 +831,12 @@ export function PropostePubbliche() {
               {promoterGroups.map((group) => (
                 <section key={group.promoterId} className="space-y-4">
                   <div className="flex flex-wrap items-baseline gap-3 border-b border-border pb-3">
-                    <h3 className="font-display text-xl font-bold">{group.promoter}</h3>
+                    <h3 className="font-display text-xl font-bold">
+                      {group.promoter}
+                    </h3>
                     <Badge variant="secondary">
-                      {group.proposals.length} {group.proposals.length === 1 ? "proposta" : "proposte"}
+                      {group.proposals.length}{" "}
+                      {group.proposals.length === 1 ? "proposta" : "proposte"}
                     </Badge>
                   </div>
                   <div className="grid gap-5">
@@ -655,13 +858,21 @@ export function PropostePubbliche() {
                   <div className="border-b border-border pb-3">
                     <div className="flex flex-wrap items-center gap-2">
                       <Layers3 className="h-5 w-5 text-primary" aria-hidden="true" />
-                      <h3 className="font-display text-xl font-bold">{group.threadLabel}</h3>
+                      <h3 className="font-display text-xl font-bold">
+                        {group.threadLabel}
+                      </h3>
                       <Badge variant="secondary">
-                        {group.proposals.length} {group.proposals.length === 1 ? "proposta" : "proposte"}
+                        {group.proposals.length}{" "}
+                        {group.proposals.length === 1 ? "proposta" : "proposte"}
                       </Badge>
                     </div>
                     <p className="mt-2 text-xs text-muted-foreground">
-                      {new Set(group.proposals.map((proposal) => proposal.promoterId)).size} soggetti proponenti distinti
+                      {
+                        new Set(
+                          group.proposals.map((proposal) => proposal.promoterId),
+                        ).size
+                      }{" "}
+                      soggetti proponenti distinti
                     </p>
                   </div>
                   <div className="grid gap-5">
@@ -677,14 +888,20 @@ export function PropostePubbliche() {
           ) : null}
         </section>
 
-        <section className="mt-12 border-t border-border pt-8" aria-labelledby="pratiche-replicabili">
+        <section
+          className="mt-12 border-t border-border pt-8"
+          aria-labelledby="pratiche-replicabili"
+        >
           <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
             <div>
               <span className="eyebrow text-primary">
                 <Lightbulb className="h-3.5 w-3.5" aria-hidden="true" />
                 Ispirazioni esterne
               </span>
-              <h2 id="pratiche-replicabili" className="mt-2 font-display text-2xl font-bold">
+              <h2
+                id="pratiche-replicabili"
+                className="mt-2 font-display text-2xl font-bold"
+              >
                 Pratiche replicabili
               </h2>
               <p className="mt-1 max-w-3xl text-sm leading-relaxed text-muted-foreground">
