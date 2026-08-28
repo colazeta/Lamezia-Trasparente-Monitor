@@ -75,6 +75,7 @@ jobs:
         env:
           BASE_PATH: /
           CI: "true"
+          VITE_API_BASE_URL: ${{ vars.VITE_API_BASE_URL }}
         run: pnpm --filter @workspace/lamezia-trasparente run build
 
       - name: Check deploy provenance artifact
@@ -83,6 +84,7 @@ jobs:
           test -f artifacts/lamezia-trasparente/dist/public/deploy-provenance.json
           grep -Fq 'public-routes-contracts-organi-v2' artifacts/lamezia-trasparente/dist/public/deploy-provenance.json
           grep -Fq 'colazeta/Lamezia-Trasparente-Monitor' artifacts/lamezia-trasparente/dist/public/deploy-provenance.json
+          grep -Fq '"commitSha": "${{ github.sha }}"' artifacts/lamezia-trasparente/dist/public/deploy-provenance.json
           grep -Fq '/organi' artifacts/lamezia-trasparente/dist/public/deploy-provenance.json
 
       - name: Smoke generated static fallback
@@ -118,6 +120,7 @@ jobs:
               echo "- GitHub Actions secret or variable: \`CLOUDFLARE_ACCOUNT_ID\`"
               echo "- Optional GitHub Actions variable: \`CLOUDFLARE_PROJECT_NAME\` (defaults to \`lamezia-trasparente\`)"
               echo "- Optional GitHub Actions variable: \`PUBLIC_SITE_URL\` (defaults to \`https://lamezia-trasparente.pages.dev\`)"
+              echo "- Optional GitHub Actions variable: \`VITE_API_BASE_URL\` (public API origin; omit to keep the explicit static 503 fallback)"
               echo ""
               echo "Runbook: \`docs/deploy/cloudflare-pages.md\`"
             } >> "$GITHUB_STEP_SUMMARY"

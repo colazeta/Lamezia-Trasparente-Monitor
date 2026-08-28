@@ -1,10 +1,12 @@
 import { render, screen } from "@testing-library/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { Router as WouterRouter } from "wouter";
 
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Contracts } from "@/pages/Contracts";
+
+const contractQueryState = vi.hoisted(() => ({ isError: false }));
 
 vi.mock("@workspace/api-client-react", async (importOriginal) => {
   const actual =
@@ -12,7 +14,11 @@ vi.mock("@workspace/api-client-react", async (importOriginal) => {
 
   return {
     ...actual,
-    useListContracts: () => ({ data: [], isLoading: false }),
+    useListContracts: () => ({
+      data: [],
+      isError: contractQueryState.isError,
+      isLoading: false,
+    }),
     useGetContractsAnalytics: () => ({
       data: {
         totalCount: 0,
@@ -57,6 +63,10 @@ function renderContractsPage() {
 }
 
 describe("Contracts page lifecycle rendering", () => {
+  beforeEach(() => {
+    contractQueryState.isError = false;
+  });
+
   it("renders the public contracts page with the full BDNCP lifecycle", () => {
     renderContractsPage();
 
@@ -79,5 +89,25 @@ describe("Contracts page lifecycle rendering", () => {
     ]) {
       expect(screen.getAllByText(phase).length).toBeGreaterThan(0);
     }
+  });
+
+  it("does not present an unavailable source as zero contracts", () => {
+    contractQueryState.isError = true;
+    renderContractsPage();
+
+    expect(screen.getAllByText("Fonte in attivazione").length).toBeGreaterThan(
+      0,
+    );
+    expect(
+      screen.getByText(
+        /questo stato non significa che non esistano contratti/i,
+      ),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("link", { name: "Consulta BDNCP ANAC" }),
+    ).toHaveAttribute("href", expect.stringContaining("anticorruzione.it"));
+    expect(
+      screen.queryByText("Contratti protagonisti"),
+    ).not.toBeInTheDocument();
   });
 });

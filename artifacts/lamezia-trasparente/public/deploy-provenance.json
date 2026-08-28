@@ -3,12 +3,9 @@
   "repository": "colazeta/Lamezia-Trasparente-Monitor",
   "publicUrl": "https://lamezia-trasparente.pages.dev",
   "deploymentContract": "public-routes-contracts-organi-v2",
+  "commitSha": "generated-at-build-time",
   "requiredRoute": "/contratti",
-  "requiredRoutes": [
-    "/contratti",
-    "/organi",
-    "/amministratori"
-  ],
+  "requiredRoutes": ["/contratti", "/organi", "/amministratori"],
   "requiredMarkers": [
     "Contratti protagonisti",
     "Stato dei fascicoli contrattuali",
@@ -19,5 +16,5 @@
     "Righe storiche",
     "Commissioni Consiliari"
   ],
-  "createdAt": "2026-07-07"
+  "createdAt": "generated-at-build-time"
 }

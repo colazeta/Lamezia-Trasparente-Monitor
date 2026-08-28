@@ -23,6 +23,22 @@ function readSitemapUrls() {
   return Array.from(sitemap.matchAll(/<loc>([^<]+)<\/loc>/g), ([, loc]) => loc);
 }
 
+function readRedirectRules() {
+  const redirects = readFileSync(
+    path.join(appRoot, "public/_redirects"),
+    "utf8",
+  );
+
+  return redirects
+    .split(/\r?\n/)
+    .map((line) => line.trim())
+    .filter((line) => line && !line.startsWith("#"))
+    .map((line) => {
+      const [source, target, status] = line.split(/\s+/);
+      return { source, target, status };
+    });
+}
+
 describe("public route sitemap inventory", () => {
   it("keeps the static public sitemap aligned with the typed route inventory", () => {
     const expectedUrls = PUBLIC_INDEXABLE_PATHS.map(toPublicUrl);
@@ -37,6 +53,31 @@ describe("public route sitemap inventory", () => {
       PUBLIC_INDEXABLE_PATHS.length,
     );
     expect(new Set(sitemapUrls).size).toBe(sitemapUrls.length);
+  });
+
+  it("canonicalizes every directory route without rewriting it to the homepage", () => {
+    const rules = readRedirectRules();
+
+    for (const publicPath of PUBLIC_INDEXABLE_PATHS) {
+      const route = publicPath.replace(/\/+$/, "");
+      if (!route) continue;
+
+      expect(rules).toContainEqual({
+        source: route,
+        target: `${route}/`,
+        status: "301",
+      });
+      expect(rules).toContainEqual({
+        source: `${route}/*`,
+        target: "/index.html",
+        status: "200",
+      });
+      expect(rules).not.toContainEqual({
+        source: route,
+        target: "/index.html",
+        status: "200",
+      });
+    }
   });
 
   it("keeps dynamic, protected and redirect routes out of the sitemap inventory", () => {

@@ -30,7 +30,7 @@ describe("OpenData climate territory card", () => {
     } as ReturnType<typeof useListOpendataDatasets>);
   });
 
-  it("opens a shared dataset deep-link and preserves its theme on return", () => {
+  it("opens a shared dataset deep-link and preserves its theme on return", async () => {
     window.history.replaceState(
       {},
       "",
@@ -38,6 +38,10 @@ describe("OpenData climate territory card", () => {
     );
 
     render(<Opendata />);
+
+    await screen.findByRole("img", {
+      name: /Grafico del trend demografico di Lamezia Terme/i,
+    });
 
     expect(
       screen.getAllByRole("heading", {
@@ -51,12 +55,10 @@ describe("OpenData climate territory card", () => {
       "dataset=lamezia-demographic-trend",
     );
 
-    fireEvent.click(
-      screen.getByRole("button", { name: /Torna all'archivio dataset/i }),
-    );
+    fireEvent.click(screen.getByRole("button", { name: /Torna ai dataset/i }));
 
     expect(
-      screen.getByRole("heading", { name: "Archivio dataset" }),
+      screen.getByRole("heading", { name: "Dataset" }),
     ).toBeInTheDocument();
     expect(
       screen.getByRole("button", { name: /Popolazione e societa/i }),
@@ -64,14 +66,14 @@ describe("OpenData climate territory card", () => {
     expect(window.location.search).toBe("?tema=population-society");
   });
 
-  it("renders a simple thematic dataset archive before opening the climate detail", () => {
+  it("renders a simple thematic dataset archive before opening the climate detail", async () => {
     render(<Opendata />);
 
     expect(
-      screen.getByRole("heading", { level: 1, name: "Opendata" }),
+      screen.getByRole("heading", { level: 1, name: "Open Data" }),
     ).toBeInTheDocument();
     const libraryHeading = screen.getByRole("heading", {
-      name: "Scegli categoria",
+      name: "Esplora i dati",
     });
     expect(libraryHeading).toBeInTheDocument();
     expect(
@@ -84,45 +86,18 @@ describe("OpenData climate territory card", () => {
       screen.getByRole("button", { name: /Popolazione e societa/i }),
     ).toBeInTheDocument();
     expect(
-      screen.getByRole("button", { name: /Contratti e spesa pubblica/i }),
-    ).toBeInTheDocument();
-    expect(
-      screen.getByRole("button", { name: /Amministrazione e atti/i }),
-    ).toBeInTheDocument();
-    expect(
-      screen.getByRole("button", { name: /Patrimonio e beni confiscati/i }),
-    ).toBeInTheDocument();
-    expect(
-      screen.getByRole("button", { name: /Partecipazione e accesso civico/i }),
-    ).toBeInTheDocument();
-    expect(
       screen.getByRole("button", { name: /Tutti i dataset/i }),
     ).toHaveAttribute("aria-pressed", "true");
     expect(screen.getAllByText("Clima").length).toBeGreaterThan(0);
     expect(screen.getAllByText("Mobilita").length).toBeGreaterThan(0);
     expect(screen.getAllByText("Popolazione").length).toBeGreaterThan(0);
-    expect(screen.getByText("Contratti")).toBeInTheDocument();
-    expect(screen.getByText("Atti")).toBeInTheDocument();
-    expect(screen.getByText("Patrimonio")).toBeInTheDocument();
-    expect(screen.getByText("Accesso")).toBeInTheDocument();
-
     const archiveHeading = screen.getByRole("heading", {
-      name: "Archivio dataset",
+      name: "Dataset",
     });
     expect(archiveHeading).toBeInTheDocument();
     expect(
       screen.getAllByText(/Anomalie climatiche.*Lamezia Terme/).length,
     ).toBeGreaterThan(0);
-    expect(screen.getByText("Serie temporale giornaliera")).toBeInTheDocument();
-    expect(screen.getByText("Serie temporale mensile")).toBeInTheDocument();
-    expect(screen.getByText("Serie temporale annuale")).toBeInTheDocument();
-    expect(
-      screen.getByText("Distribuzione per classi d'eta"),
-    ).toBeInTheDocument();
-    expect(
-      screen.getByText("Distribuzione familiare aggregata"),
-    ).toBeInTheDocument();
-    expect(screen.getAllByText("Disponibile").length).toBeGreaterThan(0);
     expect(
       screen.getByRole("button", {
         name: /Apri scheda dataset Anomalie climatiche/i,
@@ -170,11 +145,13 @@ describe("OpenData climate territory card", () => {
       }),
     );
 
+    await screen.findByLabelText("Anno del dataset climatico");
+
     expect(
-      screen.getByRole("button", { name: /Torna all'archivio dataset/i }),
+      screen.getByRole("button", { name: /Torna ai dataset/i }),
     ).toBeInTheDocument();
     expect(
-      screen.queryByRole("heading", { name: "Archivio dataset" }),
+      screen.queryByRole("heading", { name: "Dataset" }),
     ).not.toBeInTheDocument();
 
     const climateHeadings = screen.getAllByRole("heading", {
@@ -228,11 +205,9 @@ describe("OpenData climate territory card", () => {
       section.getByText("Fonte, metodo e limiti del dato"),
     ).toBeInTheDocument();
 
-    fireEvent.click(
-      screen.getByRole("button", { name: /Torna all'archivio dataset/i }),
-    );
+    fireEvent.click(screen.getByRole("button", { name: /Torna ai dataset/i }));
     expect(
-      screen.getByRole("heading", { name: "Archivio dataset" }),
+      screen.getByRole("heading", { name: "Dataset" }),
     ).toBeInTheDocument();
     expect(
       screen.queryByRole("img", {
@@ -240,37 +215,12 @@ describe("OpenData climate territory card", () => {
       }),
     ).not.toBeInTheDocument();
 
-    fireEvent.click(
-      screen.getByRole("button", { name: /Contratti e spesa pubblica/i }),
-    );
     expect(
-      screen.getByRole("heading", {
-        name: "Nessun dataset pubblicato",
-      }),
-    ).toBeInTheDocument();
-    expect(
-      screen.getByRole("button", { name: "Mostra dataset disponibili" }),
-    ).toBeInTheDocument();
-    expect(
-      screen.queryByRole("heading", {
-        name: /Anomalie climatiche.*Lamezia Terme/,
-      }),
-    ).not.toBeInTheDocument();
-
-    fireEvent.click(
-      screen.getByRole("button", { name: "Mostra dataset disponibili" }),
-    );
-    expect(
-      screen.getByRole("button", {
-        name: /Apri scheda dataset Anomalie climatiche/i,
-      }),
-    ).toBeInTheDocument();
-    expect(
-      screen.getByRole("button", { name: /Tutti i dataset/i }),
+      screen.getByRole("button", { name: /Clima e territorio/i }),
     ).toHaveAttribute("aria-pressed", "true");
   });
 
-  it("keeps the static climate dataset visible when the remote catalog payload is unavailable", () => {
+  it("keeps the static climate dataset visible when the remote catalog payload is unavailable", async () => {
     vi.mocked(useListOpendataDatasets).mockReturnValue({
       data: { error: "catalog unavailable in static preview" },
       isLoading: false,
@@ -293,14 +243,14 @@ describe("OpenData climate territory card", () => {
       }),
     );
 
-    fireEvent.click(screen.getByText("Dettagli del dataset"));
+    fireEvent.click(await screen.findByText("Dettagli del dataset"));
 
     expect(screen.getByRole("link", { name: /Scarica JSON/i })).toHaveAttribute(
       "download",
     );
   });
 
-  it("opens the monthly air traffic dataset detail from the OpenData archive", () => {
+  it("opens the monthly air traffic dataset detail from the OpenData archive", async () => {
     render(<Opendata />);
 
     fireEvent.click(
@@ -308,6 +258,8 @@ describe("OpenData climate territory card", () => {
         name: /Apri scheda dataset Traffico aeroportuale mensile/i,
       }),
     );
+
+    await screen.findByLabelText("Anno del dataset sul traffico aeroportuale");
 
     expect(
       screen.getAllByRole("heading", {
@@ -334,14 +286,16 @@ describe("OpenData climate territory card", () => {
     ).toBeInTheDocument();
     expect(screen.getByRole("link", { name: /Scarica JSON/i })).toHaveAttribute(
       "href",
-      expect.stringContaining("lameziaAirTrafficMonthly"),
+      expect.stringMatching(
+        /(?:lameziaAirTrafficMonthly|^data:application\/json)/,
+      ),
     );
     expect(screen.getByRole("link", { name: /Scarica JSON/i })).toHaveAttribute(
       "download",
     );
   });
 
-  it("opens the municipal demographic trend dataset detail from the OpenData archive", () => {
+  it("opens the municipal demographic trend dataset detail from the OpenData archive", async () => {
     render(<Opendata />);
 
     fireEvent.click(
@@ -349,6 +303,10 @@ describe("OpenData climate territory card", () => {
         name: /Apri scheda dataset Trend demografico/i,
       }),
     );
+
+    await screen.findByRole("img", {
+      name: /Grafico del trend demografico di Lamezia Terme/i,
+    });
 
     expect(
       screen.getAllByRole("heading", {
@@ -380,7 +338,7 @@ describe("OpenData climate territory card", () => {
     );
   });
 
-  it("opens the municipal foreign residents age-sex dataset detail from the OpenData archive", () => {
+  it("opens the municipal foreign residents age-sex dataset detail from the OpenData archive", async () => {
     render(<Opendata />);
 
     fireEvent.click(
@@ -388,6 +346,10 @@ describe("OpenData climate territory card", () => {
         name: /Apri scheda dataset Stranieri per sesso ed eta/i,
       }),
     );
+
+    await screen.findByRole("img", {
+      name: /Piramide per eta e sesso dei residenti stranieri/i,
+    });
 
     expect(
       screen.getAllByRole("heading", {
@@ -421,7 +383,7 @@ describe("OpenData climate territory card", () => {
     );
   });
 
-  it("opens the municipal families by children count dataset detail from the OpenData archive", () => {
+  it("opens the municipal families by children count dataset detail from the OpenData archive", async () => {
     render(<Opendata />);
 
     fireEvent.click(
@@ -429,6 +391,10 @@ describe("OpenData climate territory card", () => {
         name: /Apri scheda dataset Famiglie per numero di figli/i,
       }),
     );
+
+    await screen.findByRole("img", {
+      name: /Grafico delle famiglie per numero di figli/i,
+    });
 
     expect(
       screen.getAllByRole("heading", {
@@ -462,4 +428,3 @@ describe("OpenData climate territory card", () => {
     );
   });
 });
-

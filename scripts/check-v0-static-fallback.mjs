@@ -3,9 +3,13 @@ import { access, readFile, readdir, stat } from "node:fs/promises";
 import { constants } from "node:fs";
 import path from "node:path";
 import process from "node:process";
+import { pathToFileURL } from "node:url";
 
 const DEFAULT_DIST_DIR = "artifacts/lamezia-trasparente/dist/public";
 const CLOUDFLARE_REDIRECTS_FILE = "_redirects";
+const CLOUDFLARE_WORKER_FILE = "_worker.js";
+const CLOUDFLARE_HEADERS_FILE = "_headers";
+const DEPLOY_PROVENANCE_FILE = "deploy-provenance.json";
 const STATIC_HEALTHZ_MARKER = "healthz.json";
 const EXPECTED_HEALTHZ_NOT_CHECKED = [
   "api",
@@ -27,6 +31,9 @@ const REQUIRED_ROUTES = [
 const SOURCE_HEALTH_CHUNK_PREFIX = "StatoMonitoraggio-";
 const SOURCE_HEALTH_CHUNK_MAX_BYTES = 40_000;
 const SOURCE_HEALTH_REQUIRED_TEXT = "Copertura del catalogo Open Data";
+const ENTRY_CHUNK_MAX_BYTES = 700_000;
+const HOME_CHUNK_MAX_BYTES = 50_000;
+const OPEN_DATA_INDEX_CHUNK_MAX_BYTES = 50_000;
 const SOURCE_HEALTH_FORBIDDEN_TEXT = [
   '"monthly_rows"',
   '"passengers_national"',
@@ -57,11 +64,13 @@ const REQUIRED_ORGANI_BUNDLE_TEXT = [
   "Righe storiche",
   "Commissioni Consiliari",
 ];
-const REQUIRED_CANONICAL_DIRECTORY_ROUTES = [
-  "/albo",
-  "/contratti",
-  "/organi",
-  "/amministratori",
+const REQUIRED_EDGE_FALLBACK_MARKERS = [
+  'pathname === "/api"',
+  "pathname.startsWith(API_PREFIX)",
+  "pathname.startsWith(FEED_PREFIX)",
+  '"Content-Type": "application/json; charset=utf-8"',
+  '"Content-Type": "application/xml; charset=utf-8"',
+  "status: 503",
 ];
 
 function usage() {
@@ -328,6 +337,128 @@ function parseRedirectRules(redirectsText) {
     });
 }
 
+function extractSitemapRoutes(sitemapText) {
+  return Array.from(
+    sitemapText.matchAll(/<loc>([^<]+)<\/loc>/g),
+    ([, loc]) => new URL(loc).pathname,
+  );
+}
+
+function assertEdgeFallback(workerText, workerPath) {
+  for (const marker of REQUIRED_EDGE_FALLBACK_MARKERS) {
+    if (!workerText.includes(marker)) {
+      throw new Error(
+        `Cloudflare worker is missing the API/feed fallback marker ${marker}: ${workerPath}`,
+      );
+    }
+  }
+}
+
+async function assertEdgeFallbackBehavior(workerPath) {
+  const workerModule = await import(
+    `${pathToFileURL(workerPath).href}?smoke=${Date.now()}`
+  );
+  const workerFetch = workerModule.default?.fetch;
+  if (typeof workerFetch !== "function") {
+    throw new Error(
+      `Cloudflare worker must export default.fetch: ${workerPath}`,
+    );
+  }
+
+  let assetRequests = 0;
+  const env = {
+    ASSETS: {
+      fetch: async () => {
+        assetRequests += 1;
+        return new Response("asset-fallback", {
+          headers: { "Content-Type": "text/html; charset=utf-8" },
+        });
+      },
+    },
+  };
+
+  const apiResponse = await workerFetch(
+    new Request("https://public.example/api/healthz"),
+    env,
+  );
+  if (
+    apiResponse.status !== 503 ||
+    !apiResponse.headers.get("content-type")?.includes("application/json")
+  ) {
+    throw new Error(
+      "Cloudflare worker API fallback must return JSON HTTP 503.",
+    );
+  }
+
+  const feedResponse = await workerFetch(
+    new Request("https://public.example/feeds/albo.xml"),
+    env,
+  );
+  if (
+    feedResponse.status !== 503 ||
+    !feedResponse.headers.get("content-type")?.includes("application/xml")
+  ) {
+    throw new Error(
+      "Cloudflare worker feed fallback must return XML HTTP 503.",
+    );
+  }
+
+  const assetResponse = await workerFetch(
+    new Request("https://public.example/contratti/"),
+    env,
+  );
+  if (assetResponse.status !== 200 || assetRequests !== 1) {
+    throw new Error(
+      "Cloudflare worker must delegate public routes to env.ASSETS.",
+    );
+  }
+
+  return { apiStatus: apiResponse.status, feedStatus: feedResponse.status };
+}
+
+async function assertChunkBudget(distDir, prefix, maxBytes) {
+  const assetsDir = path.join(distDir, "assets");
+  const matches = (await readdir(assetsDir, { withFileTypes: true })).filter(
+    (entry) =>
+      entry.isFile() &&
+      entry.name.startsWith(prefix) &&
+      entry.name.endsWith(".js"),
+  );
+  if (matches.length !== 1) {
+    throw new Error(
+      `Expected one ${prefix} JavaScript chunk, found ${matches.length}.`,
+    );
+  }
+  const bytes = (await stat(path.join(assetsDir, matches[0].name))).size;
+  if (bytes > maxBytes) {
+    throw new Error(`${prefix} chunk exceeds ${maxBytes} bytes: ${bytes}.`);
+  }
+  return { asset: matches[0].name, bytes, maxBytes };
+}
+
+function assertDeployProvenance(provenance, provenancePath) {
+  if (
+    !provenance ||
+    typeof provenance !== "object" ||
+    Array.isArray(provenance)
+  ) {
+    throw new Error(
+      `Deploy provenance must be a JSON object: ${provenancePath}`,
+    );
+  }
+  if (
+    provenance.repository !== "colazeta/Lamezia-Trasparente-Monitor" ||
+    typeof provenance.commitSha !== "string" ||
+    !/^[0-9a-f]{40}$/i.test(provenance.commitSha) ||
+    typeof provenance.createdAt !== "string" ||
+    Number.isNaN(Date.parse(provenance.createdAt))
+  ) {
+    throw new Error(
+      `Deploy provenance is missing a valid repository, commitSha or createdAt: ${provenancePath}`,
+    );
+  }
+}
+
 function assertDirectoryRouteRedirectPolicy(
   redirectsText,
   redirectsPath,
@@ -377,19 +508,45 @@ async function main() {
   const indexPath = path.join(absoluteDistDir, "index.html");
   const healthzPath = path.join(absoluteDistDir, STATIC_HEALTHZ_MARKER);
   const redirectsPath = path.join(absoluteDistDir, CLOUDFLARE_REDIRECTS_FILE);
+  const workerPath = path.join(absoluteDistDir, CLOUDFLARE_WORKER_FILE);
+  const headersPath = path.join(absoluteDistDir, CLOUDFLARE_HEADERS_FILE);
+  const sitemapPath = path.join(absoluteDistDir, "sitemap.xml");
+  const provenancePath = path.join(absoluteDistDir, DEPLOY_PROVENANCE_FILE);
 
   await assertDirectory(absoluteDistDir, "Static build directory");
   await assertReadableFile(indexPath, "Static fallback index.html");
   await assertReadableFile(healthzPath, "Static fallback healthz.json");
   await assertReadableFile(redirectsPath, "Cloudflare Pages _redirects");
+  await assertReadableFile(workerPath, "Cloudflare Pages _worker.js");
+  await assertReadableFile(headersPath, "Cloudflare Pages _headers");
+  await assertReadableFile(sitemapPath, "Public sitemap.xml");
+  await assertReadableFile(provenancePath, "Deploy provenance");
 
   const healthz = await readJsonFile(
     healthzPath,
     "Static fallback healthz.json",
   );
   assertHealthzMarker(healthz, healthzPath);
+  const provenance = await readJsonFile(provenancePath, "Deploy provenance");
+  assertDeployProvenance(provenance, provenancePath);
   const redirectsText = await readFile(redirectsPath, "utf8");
-  for (const route of REQUIRED_CANONICAL_DIRECTORY_ROUTES) {
+  const sitemapText = await readFile(sitemapPath, "utf8");
+  const sitemapRoutes = extractSitemapRoutes(sitemapText);
+  for (const route of sitemapRoutes) {
+    if (route === "/" || path.posix.extname(route)) continue;
+    const canonicalSource = route.replace(/\/+$/, "");
+    if (!canonicalSource) continue;
+    assertDirectoryRouteRedirectPolicy(
+      redirectsText,
+      redirectsPath,
+      canonicalSource,
+    );
+  }
+  const workerText = await readFile(workerPath, "utf8");
+  assertEdgeFallback(workerText, workerPath);
+  const edgeFallback = await assertEdgeFallbackBehavior(workerPath);
+
+  for (const route of ["/albo", "/contratti", "/organi", "/amministratori"]) {
     assertDirectoryRouteRedirectPolicy(redirectsText, redirectsPath, route);
   }
 
@@ -422,6 +579,33 @@ async function main() {
     [...REQUIRED_CONTRACT_BUNDLE_TEXT, ...REQUIRED_ORGANI_BUNDLE_TEXT],
   );
   const sourceHealthBundle = await assertSourceHealthBundle(absoluteDistDir);
+  const entryAsset = assets.find((assetPath) => assetPath.endsWith(".js"));
+  if (!entryAsset) {
+    throw new Error("index.html does not reference a JavaScript entry chunk.");
+  }
+  const entryBytes = (await stat(toDistPath(absoluteDistDir, entryAsset))).size;
+  if (entryBytes > ENTRY_CHUNK_MAX_BYTES) {
+    throw new Error(
+      `Entry chunk exceeds ${ENTRY_CHUNK_MAX_BYTES} bytes: ${entryBytes}.`,
+    );
+  }
+  const chunkBudgets = {
+    entry: {
+      asset: entryAsset,
+      bytes: entryBytes,
+      maxBytes: ENTRY_CHUNK_MAX_BYTES,
+    },
+    home: await assertChunkBudget(
+      absoluteDistDir,
+      "Home-",
+      HOME_CHUNK_MAX_BYTES,
+    ),
+    openDataIndex: await assertChunkBudget(
+      absoluteDistDir,
+      "Opendata-",
+      OPEN_DATA_INDEX_CHUNK_MAX_BYTES,
+    ),
+  };
 
   const routeResults = [];
   for (const route of routes) {
@@ -450,9 +634,15 @@ async function main() {
     index: indexPath,
     staticHealthz: healthzPath,
     redirects: redirectsPath,
+    worker: workerPath,
+    headers: headersPath,
+    deployProvenance: provenancePath,
+    edgeFallback,
+    sitemapRoutesChecked: sitemapRoutes.length,
     assetsChecked: assets.length,
     bundleAssetsChecked,
     sourceHealthBundle,
+    chunkBudgets,
     routes: routeResults,
     note: "This smoke check validates a local static artifact only. It does not choose a provider, call live APIs, run workers or certify civic data as current.",
   };

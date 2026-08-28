@@ -88,6 +88,7 @@ import { InterventionsMap } from "@/components/InterventionsMap";
 import { FeedSubscribeButton } from "@/components/FeedSubscribeButton";
 import { V0SectionLanding } from "@/components/launch/V0SectionLanding";
 import { ContractSourcePipelinePanel } from "@/components/contracts";
+import { SourceAvailabilityNotice } from "@/components/SourceAvailabilityNotice";
 import { quartiereLabel } from "@/lib/gis";
 import { asApiList } from "@/lib/apiList";
 import { BDNCP_APPALTI_URL, preferredBdncpUrl } from "@/lib/bdncp";
@@ -227,7 +228,11 @@ export function Contracts() {
     quartiere,
   ]);
 
-  const { data: contractsData, isLoading } = useListContracts(filters);
+  const {
+    data: contractsData,
+    isLoading,
+    isError: contractsUnavailable,
+  } = useListContracts(filters);
   const contracts = asApiList<Contract>(contractsData);
   const { data: analytics, isLoading: analyticsLoading } =
     useGetContractsAnalytics(filters);
@@ -329,8 +334,12 @@ export function Contracts() {
             con fonti e limiti espliciti.
           </>
         }
-        stateLabel="Pubblicabile"
-        stateDescription="Sezione consultabile nella versione pubblica, con copertura e aggiornamenti da verificare sulle fonti."
+        stateLabel={contractsUnavailable ? "Fonte in attivazione" : "Pubblicabile"}
+        stateDescription={
+          contractsUnavailable
+            ? "Il collegamento al servizio contratti non è disponibile in questa pubblicazione. Nessun totale viene rappresentato come zero."
+            : "Sezione consultabile nella versione pubblica, con copertura e aggiornamenti da verificare sulle fonti."
+        }
         findItems={[
           "Elenco, filtri e mappe dei contratti disponibili nel perimetro locale.",
           "Importi, oggetti, operatori economici e collegamenti documentali quando presenti.",
@@ -360,6 +369,14 @@ export function Contracts() {
         }
       />
 
+      {contractsUnavailable ? (
+        <SourceAvailabilityNotice
+          description="Il servizio dati dei contratti non risponde con un payload verificabile. Filtri, indicatori e fascicoli restano nascosti finché la fonte non viene collegata; questo stato non significa che non esistano contratti."
+          sourceHref={BDNCP_APPALTI_URL}
+          sourceLabel="Consulta BDNCP ANAC"
+        />
+      ) : (
+        <>
       {/* Last updated + ANAC portal link */}
       <div
         id="contratti-elenco"
@@ -909,6 +926,8 @@ export function Contracts() {
         onClose={() => setSelected(null)}
         themes={themes}
       />
+        </>
+      )}
     </div>
   );
 }
