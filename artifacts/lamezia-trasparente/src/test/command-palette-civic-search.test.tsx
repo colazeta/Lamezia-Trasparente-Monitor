@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 
 import { CommandPalette } from "@/components/search/CommandPalette";
@@ -20,9 +20,9 @@ describe("CommandPalette civic search", () => {
       screen.getByText("Ricerca nell'indice civico..."),
     ).toBeInTheDocument();
 
-    await waitFor(() => {
-      expect(screen.getByText("Paolo Mascaro")).toBeInTheDocument();
-    });
+    expect(
+      await screen.findByText("Paolo Mascaro", {}, { timeout: 5_000 }),
+    ).toBeInTheDocument();
     expect(screen.getByText("Dati e profili pubblici")).toBeInTheDocument();
     expect(
       screen.queryByText("Nessun risultato trovato."),

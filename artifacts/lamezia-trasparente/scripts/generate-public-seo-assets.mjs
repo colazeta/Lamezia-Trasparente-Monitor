@@ -1,4 +1,5 @@
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { execFileSync } from "node:child_process";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -56,7 +57,9 @@ function extractSitemapPaths(sitemapXml, defaultSiteUrl) {
       const url = new URL(loc);
 
       if (url.origin !== defaultUrl.origin) {
-        throw new Error(`Sitemap URL does not match the default origin: ${loc}`);
+        throw new Error(
+          `Sitemap URL does not match the default origin: ${loc}`,
+        );
       }
 
       if (
@@ -91,14 +94,21 @@ function toSiteUrl(siteUrl, publicPath) {
 function buildSeoAssets({ siteUrl = process.env.VITE_PUBLIC_SITE_URL } = {}) {
   const normalizedSiteUrl = normalizeSiteUrl(siteUrl ?? readDefaultSiteUrl());
   const defaultSiteUrl = readDefaultSiteUrl();
-  const sitemapTemplate = readFileSync(path.join(publicDir, "sitemap.xml"), "utf8");
-  const robotsTemplate = readFileSync(path.join(publicDir, "robots.txt"), "utf8");
+  const sitemapTemplate = readFileSync(
+    path.join(publicDir, "sitemap.xml"),
+    "utf8",
+  );
+  const robotsTemplate = readFileSync(
+    path.join(publicDir, "robots.txt"),
+    "utf8",
+  );
   const publicPaths = extractSitemapPaths(sitemapTemplate, defaultSiteUrl);
   let pathIndex = 0;
 
   const sitemap = sitemapTemplate.replace(
     /<loc>[^<]+<\/loc>/g,
-    () => `<loc>${toSiteUrl(normalizedSiteUrl, publicPaths[pathIndex++])}</loc>`,
+    () =>
+      `<loc>${toSiteUrl(normalizedSiteUrl, publicPaths[pathIndex++])}</loc>`,
   );
   const robots = robotsTemplate.replace(
     /^Sitemap:\s*\S+\s*$/m,
@@ -127,12 +137,44 @@ function writeRouteFallbackIndexes(outputDir, publicPaths) {
   }
 }
 
+function resolveCommitSha() {
+  const configured = [
+    process.env.DEPLOY_COMMIT_SHA,
+    process.env.CF_PAGES_COMMIT_SHA,
+    process.env.GITHUB_SHA,
+  ].find((value) => typeof value === "string" && value.trim());
+
+  if (configured) return configured.trim();
+
+  try {
+    return execFileSync("git", ["rev-parse", "HEAD"], {
+      cwd: path.resolve(appRoot, "..", ".."),
+      encoding: "utf8",
+      stdio: ["ignore", "pipe", "ignore"],
+    }).trim();
+  } catch {
+    return "not-provided";
+  }
+}
+
+function writeDeployProvenance(outputDir) {
+  const sourcePath = path.join(publicDir, "deploy-provenance.json");
+  const outputPath = path.join(outputDir, "deploy-provenance.json");
+  const provenance = JSON.parse(readFileSync(sourcePath, "utf8"));
+
+  provenance.commitSha = resolveCommitSha();
+  provenance.createdAt = new Date().toISOString();
+
+  writeFileSync(outputPath, `${JSON.stringify(provenance, null, 2)}\n`);
+}
+
 function writeSeoAssets(outputDir = defaultOutputDir) {
   const { publicPaths, robots, sitemap } = buildSeoAssets();
   mkdirSync(outputDir, { recursive: true });
   writeFileSync(path.join(outputDir, "robots.txt"), robots);
   writeFileSync(path.join(outputDir, "sitemap.xml"), sitemap);
   writeRouteFallbackIndexes(outputDir, publicPaths);
+  writeDeployProvenance(outputDir);
 }
 
 function checkSeoAssets() {
@@ -158,5 +200,6 @@ export {
   buildSeoAssets,
   checkSeoAssets,
   writeRouteFallbackIndexes,
+  writeDeployProvenance,
   writeSeoAssets,
 };

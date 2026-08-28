@@ -32,7 +32,7 @@ export function Footer() {
           </div>
 
           <div className="space-y-4">
-            <h4 className="eyebrow text-brand">Risorse</h4>
+            <h2 className="eyebrow text-brand">Risorse</h2>
             <ul className="space-y-2.5 text-sm text-sidebar-foreground/70">
               <li><Link href="/temi" className="hover:text-primary transition-colors">Tutti i Temi</Link></li>
               <li><Link href="/contratti" className="hover:text-primary transition-colors">Appalti Pubblici</Link></li>
@@ -48,7 +48,7 @@ export function Footer() {
           </div>
 
           <div className="space-y-4">
-            <h4 className="eyebrow text-brand">Partecipa</h4>
+            <h2 className="eyebrow text-brand">Partecipa</h2>
             <ul className="space-y-2.5 text-sm text-sidebar-foreground/70">
               <li><Link href="/segnalazioni" className="hover:text-primary transition-colors">Invia Segnalazione</Link></li>
               <li><Link href="/iscrizioni" className="hover:text-primary transition-colors">Centro Iscrizioni</Link></li>

@@ -40,6 +40,7 @@ import { MonitoringReportsSection } from "@/components/MonitoringReportsSection"
 import { PageMeta } from "@/components/seo/PageMeta";
 import { CivicMonitorReturn } from "@/components/CivicMonitorReturn";
 import { V0SectionLanding } from "@/components/launch/V0SectionLanding";
+import { SourceAvailabilityNotice } from "@/components/SourceAvailabilityNotice";
 import {
   buildCantieriometroCards,
   defaultCantieriometroFilters,
@@ -144,7 +145,7 @@ function dataStatus(project: PnrrProject) {
 }
 
 export function Pnrr() {
-  const { data, isLoading } = useListPnrrProjects();
+  const { data, isLoading, isError: sourceUnavailable } = useListPnrrProjects();
 
   const projects = asApiList<PnrrProject>(data?.projects);
   const uncensored = asApiList<Publication>(data?.uncensored);
@@ -311,8 +312,14 @@ export function Pnrr() {
               presenti nelle fonti.
             </>
           }
-          stateLabel="Pubblicabile"
-          stateDescription="Sezione consultabile con fonti, limiti e stato di verifica esplicitati."
+          stateLabel={
+            sourceUnavailable ? "Fonte in attivazione" : "Pubblicabile"
+          }
+          stateDescription={
+            sourceUnavailable
+              ? "Il collegamento al censimento PNRR non è disponibile in questa pubblicazione. Nessun totale viene rappresentato come zero."
+              : "Sezione consultabile con fonti, limiti e stato di verifica esplicitati."
+          }
           findItems={[
             "Progetti censiti, importi, missioni, CUP e stato informativo disponibile.",
             "Collegamenti a schede comunali, Albo Pretorio, contratti e allegati quando rilevati.",
@@ -368,7 +375,13 @@ export function Pnrr() {
         </div>
 
         <div id="pnrr-elenco" />
-        {isLoading ? (
+        {sourceUnavailable ? (
+          <SourceAvailabilityNotice
+            description="Il servizio dati PNRR non risponde con un payload verificabile. Schede, importi e indicatori restano nascosti finché la fonte non viene collegata; questo stato non significa che non esistano progetti."
+            sourceHref={COMUNE_PNRR_URL}
+            sourceLabel="Consulta la sezione PNRR del Comune"
+          />
+        ) : isLoading ? (
           <div className="mb-8 grid grid-cols-2 gap-4 lg:grid-cols-4">
             {Array(4)
               .fill(0)

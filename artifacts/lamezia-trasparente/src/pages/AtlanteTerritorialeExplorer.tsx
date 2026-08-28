@@ -1100,7 +1100,7 @@ function downloadMapSvg({
       return `<path d="${geometryToSvgPath(feature.geometry, project)}" fill="${getContinuousColor(
         value,
         summary,
-      )}" fill-opacity="${value === null ? "0.4" : "0.8"}" stroke="#ffffff" stroke-width="1"><title>${escapeXml(
+      )}" fill-opacity="${value === null ? "0.4" : "0.8"}" stroke="hsl(0 0% 100%)" stroke-width="1"><title>${escapeXml(
         `${getSectionPublicLabel(feature)}: ${formatAtlanteValue(
           value,
           activeIndicator.unitLabel,
@@ -1113,13 +1113,13 @@ function downloadMapSvg({
 
   const svg = `<?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">
-  <rect width="100%" height="100%" fill="#f8fafc" />
-  <text x="${padding}" y="44" font-family="Arial, sans-serif" font-size="28" font-weight="700" fill="#0f172a">Atlante territoriale · Lamezia Terme</text>
-  <text x="${padding}" y="72" font-family="Arial, sans-serif" font-size="16" fill="#475569">${escapeXml(
+  <rect width="100%" height="100%" fill="hsl(210 40% 98%)" />
+  <text x="${padding}" y="44" font-family="Arial, sans-serif" font-size="28" font-weight="700" fill="hsl(222 47% 11%)">Atlante territoriale · Lamezia Terme</text>
+  <text x="${padding}" y="72" font-family="Arial, sans-serif" font-size="16" fill="hsl(215 16% 47%)">${escapeXml(
     activeIndicator.label,
   )} · ${escapeXml(status)}</text>
   ${paths}
-  <text x="${padding}" y="760" font-family="Arial, sans-serif" font-size="14" fill="#334155">${escapeXml(
+  <text x="${padding}" y="760" font-family="Arial, sans-serif" font-size="14" fill="hsl(215 25% 27%)">${escapeXml(
     `Fonte: ${metadata.sourceInstitution}, ${metadata.sourceYear}. ${formatSectionCount(
       summary.availableCount,
     )} con dato; ${formatSectionCount(summary.missingCount)} senza dato.`,

@@ -66,7 +66,7 @@ import { PublicErrorBoundary } from "./components/PublicErrorBoundary";
 function RouteLoading() {
   return (
     <div
-      className="flex min-h-[40vh] items-center justify-center px-4 py-16"
+      className="flex min-h-[calc(100svh-5rem)] items-center justify-center px-4 py-16"
       role="status"
       aria-live="polite"
     >

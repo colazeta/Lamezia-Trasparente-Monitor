@@ -159,8 +159,16 @@ const gateways = [
 ] as const;
 
 export function Home() {
-  const { data: stats, isLoading: statsLoading } = useGetStatsOverview();
-  const { data: pnrrProjects } = useListPnrrProjects();
+  const {
+    data: stats,
+    isLoading: statsLoading,
+    isError: statsUnavailable,
+  } = useGetStatsOverview();
+  const {
+    data: pnrrProjects,
+    isLoading: pnrrLoading,
+    isError: pnrrUnavailable,
+  } = useListPnrrProjects();
 
   const pnrrProjectCount = asApiList(pnrrProjects?.projects).length;
   const pulseItems = buildPulseItems();
@@ -377,13 +385,15 @@ export function Home() {
               title="Contratti censiti"
               value={stats?.contracts}
               loading={statsLoading}
+              unavailable={statsUnavailable}
               href="/contratti"
               icon={FileText}
             />
             <StatCard
               title="Progetti PNRR"
               value={pnrrProjectCount}
-              loading={!pnrrProjects}
+              loading={pnrrLoading}
+              unavailable={pnrrUnavailable}
               href="/pnrr"
               icon={Landmark}
             />
@@ -393,6 +403,7 @@ export function Home() {
                 stats ? formatMonitoredAmount(stats.monitoredAmount) : undefined
               }
               loading={statsLoading}
+              unavailable={statsUnavailable}
               href="/contratti"
               icon={CheckCircle2}
               highlight
@@ -443,7 +454,7 @@ export function Home() {
             <h2 className="font-display text-2xl font-bold md:text-3xl">
               Vuoi capire quanto è affidabile un dato?
             </h2>
-            <p className="mt-2 max-w-2xl text-brand-foreground/80">
+            <p className="mt-2 max-w-2xl text-brand-foreground">
               Ogni lettura va ricondotta alla fonte, alla data di aggiornamento
               e ai limiti dichiarati. Il metodo è parte del prodotto, non una
               nota a margine.
@@ -607,8 +618,8 @@ function InstitutionalSessionsHomeCard({
               (article) => article.relationship === "same_session",
             ).length;
             const possibleSessionCount = session.contextResearch.articles.filter(
-              (article) => article.relationship === "possible_same_session",
-            ).length;
+                (article) => article.relationship === "possible_same_session",
+              ).length;
             const agendaItemCount = session.contextResearch.articles.filter(
               (article) => article.relationship === "agenda_item",
             ).length;
@@ -735,6 +746,7 @@ function StatCard({
   title,
   value,
   loading,
+  unavailable = false,
   href,
   icon: Icon,
   highlight = false,
@@ -742,6 +754,7 @@ function StatCard({
   title: string;
   value?: string | number;
   loading: boolean;
+  unavailable?: boolean;
   href: string;
   icon: React.ElementType;
   highlight?: boolean;
@@ -764,13 +777,23 @@ function StatCard({
           {title}
         </span>
       </div>
-      {loading ? (
+      {unavailable ? (
+        <div>
+          <div className="font-display text-lg font-bold text-foreground">
+            Fonte in attivazione
+          </div>
+          <p className="mt-1 text-xs text-muted-foreground">
+            Nessun totale viene mostrato finché il collegamento non è
+            verificato.
+          </p>
+        </div>
+      ) : loading ? (
         <Skeleton className="h-9 w-24" />
       ) : (
         <div
           className={`font-display text-3xl font-bold tracking-tight tabular-nums ${highlight ? "text-brand" : "text-foreground"}`}
         >
-          {value ?? 0}
+          {value ?? "Non disponibile"}
         </div>
       )}
     </Link>

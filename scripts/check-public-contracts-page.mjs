@@ -5,6 +5,17 @@ const DEFAULT_PUBLIC_URL = "https://lamezia-trasparente.pages.dev";
 const DEFAULT_ATTEMPTS = 1;
 const DEFAULT_DELAY_MS = 10_000;
 const DEPLOY_PROVENANCE_PATH = "/deploy-provenance.json";
+const SITEMAP_PATH = "/sitemap.xml";
+const API_CONTENT_TYPE_PROBES = [
+  "/api/healthz",
+  "/api/public/v1/stats",
+  "/api/public/v1/contracts",
+  "/api/public/v1/pnrr",
+];
+const FEED_CONTENT_TYPE_PROBES = [
+  "/api/feeds/contratti.xml",
+  "/feeds/albo.xml",
+];
 const REQUIRED_DEPLOYMENT_CONTRACT = "public-routes-contracts-organi-v2";
 const REQUIRED_PUBLIC_TEXT = [
   "rendiamoLameziaTrasparente",
@@ -53,7 +64,8 @@ function parseArgs(argv) {
     const arg = argv[i];
     if (arg === "--url") {
       const value = argv[(i += 1)];
-      if (!value || value.startsWith("--")) throw new Error("Missing value for --url.");
+      if (!value || value.startsWith("--"))
+        throw new Error("Missing value for --url.");
       options.publicUrl = value;
     } else if (arg === "--attempts") {
       const value = Number(argv[(i += 1)]);
@@ -103,12 +115,62 @@ async function fetchText(url, label) {
   });
 
   if (!response.ok) {
-    throw new Error(`${label} returned HTTP ${response.status}: ${response.url}`);
+    throw new Error(
+      `${label} returned HTTP ${response.status}: ${response.url}`,
+    );
   }
 
   return {
+    contentType: response.headers.get("content-type") ?? "",
     finalUrl: response.url,
+    status: response.status,
     text: await response.text(),
+  };
+}
+
+async function fetchHead(url, label) {
+  const response = await fetch(url, {
+    method: "HEAD",
+    headers: {
+      "cache-control": "no-cache",
+      pragma: "no-cache",
+    },
+    redirect: "follow",
+  });
+
+  if (!response.ok) {
+    throw new Error(
+      `${label} returned HTTP ${response.status}: ${response.url}`,
+    );
+  }
+
+  return {
+    contentType: response.headers.get("content-type") ?? "",
+    finalUrl: response.url,
+    status: response.status,
+  };
+}
+
+async function fetchProbe(url, label) {
+  const response = await fetch(url, {
+    method: "HEAD",
+    headers: {
+      "cache-control": "no-cache",
+      pragma: "no-cache",
+    },
+    redirect: "follow",
+  });
+
+  if (response.status >= 500 && response.status !== 503) {
+    throw new Error(
+      `${label} returned HTTP ${response.status}: ${response.url}`,
+    );
+  }
+
+  return {
+    contentType: response.headers.get("content-type") ?? "",
+    finalUrl: response.url,
+    status: response.status,
   };
 }
 
@@ -137,7 +199,9 @@ function assertRoute(publicUrl, route, finalUrl) {
   const expected = normalizeRouteForCompare(routeUrl(publicUrl, route));
   const actual = normalizeRouteForCompare(finalUrl);
   if (actual !== expected) {
-    throw new Error(`Direct ${route} resolved to ${finalUrl}; expected ${expected}.`);
+    throw new Error(
+      `Direct ${route} resolved to ${finalUrl}; expected ${expected}.`,
+    );
   }
 }
 
@@ -146,12 +210,37 @@ function assertPublicText(html, label) {
     html.toLowerCase().includes(marker.toLowerCase()),
   );
   if (!hasAnyMarker) {
-    throw new Error(`${label} does not contain an expected public site marker.`);
+    throw new Error(
+      `${label} does not contain an expected public site marker.`,
+    );
+  }
+}
+
+function extractSitemapRoutes(sitemapXml) {
+  const routes = Array.from(
+    sitemapXml.matchAll(/<loc>([^<]+)<\/loc>/g),
+    ([, loc]) => new URL(loc).pathname,
+  );
+  if (routes.length === 0) {
+    throw new Error("Public sitemap does not contain any routes.");
+  }
+  return routes;
+}
+
+function assertContentType(result, expected, label) {
+  if (!result.contentType.toLowerCase().includes(expected)) {
+    throw new Error(
+      `${label} returned ${result.contentType || "no Content-Type"} at ${result.finalUrl}; expected ${expected}.`,
+    );
   }
 }
 
 function assertDeployProvenance(provenance) {
-  if (!provenance || typeof provenance !== "object" || Array.isArray(provenance)) {
+  if (
+    !provenance ||
+    typeof provenance !== "object" ||
+    Array.isArray(provenance)
+  ) {
     throw new Error("Deploy provenance marker must be a JSON object.");
   }
   if (provenance.repository !== "colazeta/Lamezia-Trasparente-Monitor") {
@@ -190,7 +279,9 @@ function assertDeployProvenance(provenance) {
     ...REQUIRED_ORGANI_BUNDLE_TEXT,
   ]) {
     if (!requiredMarkers.includes(marker)) {
-      throw new Error(`Deploy provenance is missing required marker: ${marker}`);
+      throw new Error(
+        `Deploy provenance is missing required marker: ${marker}`,
+      );
     }
   }
 }
@@ -198,7 +289,9 @@ function assertDeployProvenance(provenance) {
 function extractScriptPaths(...htmlDocuments) {
   const scriptPaths = new Set();
   for (const html of htmlDocuments) {
-    for (const match of html.matchAll(/<script\b[^>]*\bsrc=["']([^"']+)["'][^>]*>/gi)) {
+    for (const match of html.matchAll(
+      /<script\b[^>]*\bsrc=["']([^"']+)["'][^>]*>/gi,
+    )) {
       const scriptPath = match[1];
       if (scriptPath) scriptPaths.add(scriptPath);
     }
@@ -214,7 +307,10 @@ async function fetchBundleText(publicUrl, scriptPaths) {
   const bundleParts = [];
   for (const scriptPath of scriptPaths) {
     const scriptUrl = new URL(scriptPath, `${publicUrl}/`).href;
-    const { text } = await fetchText(scriptUrl, `JavaScript asset ${scriptUrl}`);
+    const { text } = await fetchText(
+      scriptUrl,
+      `JavaScript asset ${scriptUrl}`,
+    );
     bundleParts.push(text);
   }
   return bundleParts.join("\n");
@@ -245,15 +341,18 @@ async function checkPublicContractsPage(publicUrl) {
   const contractsUrl = routeUrl(publicUrl, "/contratti");
   const organiUrl = routeUrl(publicUrl, "/organi");
   const provenanceUrl = routeUrl(publicUrl, DEPLOY_PROVENANCE_PATH);
+  const sitemapUrl = routeUrl(publicUrl, SITEMAP_PATH);
   const root = await fetchText(rootUrl, "Root route");
   const contracts = await fetchText(contractsUrl, "Contracts route");
   const organi = await fetchText(organiUrl, "Organi route");
   const provenance = await fetchJson(provenanceUrl, "Deploy provenance marker");
+  const sitemap = await fetchText(sitemapUrl, "Public sitemap");
 
   console.log(`Fetched ${rootUrl} -> ${root.finalUrl}`);
   console.log(`Fetched ${contractsUrl} -> ${contracts.finalUrl}`);
   console.log(`Fetched ${organiUrl} -> ${organi.finalUrl}`);
   console.log(`Fetched ${provenanceUrl} -> ${provenance.finalUrl}`);
+  console.log(`Fetched ${sitemapUrl} -> ${sitemap.finalUrl}`);
 
   assertRoute(publicUrl, "/contratti", contracts.finalUrl);
   assertRoute(publicUrl, "/organi", organi.finalUrl);
@@ -262,7 +361,59 @@ async function checkPublicContractsPage(publicUrl) {
   assertPublicText(organi.text, "Organi route");
   assertDeployProvenance(provenance.value);
 
-  const scriptPaths = extractScriptPaths(root.text, contracts.text, organi.text);
+  const sitemapRoutes = extractSitemapRoutes(sitemap.text);
+  const routeChecks = await Promise.all(
+    sitemapRoutes.map(async (route) => {
+      const result = await fetchHead(
+        routeUrl(publicUrl, route),
+        `Sitemap route ${route}`,
+      );
+      assertRoute(publicUrl, route, result.finalUrl);
+      assertContentType(result, "text/html", `Sitemap route ${route}`);
+      return { route, finalUrl: result.finalUrl };
+    }),
+  );
+  console.log(`Verified ${routeChecks.length} sitemap route(s).`);
+
+  for (const path of API_CONTENT_TYPE_PROBES) {
+    const result = await fetchProbe(
+      routeUrl(publicUrl, path),
+      `API probe ${path}`,
+    );
+    assertContentType(result, "application/json", `API probe ${path}`);
+  }
+  if (
+    typeof provenance.commitSha !== "string" ||
+    !/^[0-9a-f]{40}$/i.test(provenance.commitSha)
+  ) {
+    throw new Error(
+      `Deploy provenance has invalid commitSha: ${String(provenance.commitSha)}`,
+    );
+  }
+  if (
+    typeof provenance.createdAt !== "string" ||
+    Number.isNaN(Date.parse(provenance.createdAt))
+  ) {
+    throw new Error(
+      `Deploy provenance has invalid createdAt: ${String(provenance.createdAt)}`,
+    );
+  }
+  for (const path of FEED_CONTENT_TYPE_PROBES) {
+    const result = await fetchProbe(
+      routeUrl(publicUrl, path),
+      `Feed probe ${path}`,
+    );
+    assertContentType(result, "xml", `Feed probe ${path}`);
+  }
+  console.log(
+    `Verified ${API_CONTENT_TYPE_PROBES.length} API and ${FEED_CONTENT_TYPE_PROBES.length} feed Content-Type contract(s).`,
+  );
+
+  const scriptPaths = extractScriptPaths(
+    root.text,
+    contracts.text,
+    organi.text,
+  );
   console.log(`Found ${scriptPaths.length} public JavaScript asset(s).`);
   const bundleText = await fetchBundleText(publicUrl, scriptPaths);
   assertBundleMarkers(bundleText);
@@ -274,7 +425,9 @@ async function main() {
 
   for (let attempt = 1; attempt <= options.attempts; attempt += 1) {
     try {
-      console.log(`Public contracts smoke attempt ${attempt}/${options.attempts}`);
+      console.log(
+        `Public contracts smoke attempt ${attempt}/${options.attempts}`,
+      );
       await checkPublicContractsPage(options.publicUrl);
       console.log("Public contracts smoke passed.");
       return;

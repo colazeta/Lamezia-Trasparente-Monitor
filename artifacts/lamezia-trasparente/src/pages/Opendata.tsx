@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { lazy, Suspense, useEffect, useMemo, useState } from "react";
 import { Link } from "wouter";
 import {
   useGetOpendataFeedStatus,
@@ -18,11 +18,6 @@ import {
   Search,
 } from "lucide-react";
 
-import { AirTrafficDatasetCard } from "@/components/opendata/AirTrafficDatasetCard";
-import { ClimateTerritoryDatasetCard } from "@/components/opendata/ClimateTerritoryDatasetCard";
-import { DemographicTrendDatasetCard } from "@/components/opendata/DemographicTrendDatasetCard";
-import { FamiliesChildrenDatasetCard } from "@/components/opendata/FamiliesChildrenDatasetCard";
-import { ForeignResidentsDatasetCard } from "@/components/opendata/ForeignResidentsDatasetCard";
 import { OpenDataThemeLibrary } from "@/components/opendata/OpenDataThemeLibrary";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -38,6 +33,27 @@ import { apiUrl } from "@/lib/apiBaseUrl";
 import { formatPublicTimeField } from "@/lib/time";
 
 const PORTAL_URL = "https://opendata.comune.lamezia-terme.cz.it";
+
+const AirTrafficDatasetCard = lazy(async () => ({
+  default: (await import("@/components/opendata/AirTrafficDatasetCard"))
+    .AirTrafficDatasetCard,
+}));
+const ClimateTerritoryDatasetCard = lazy(async () => ({
+  default: (await import("@/components/opendata/ClimateTerritoryDatasetCard"))
+    .ClimateTerritoryDatasetCard,
+}));
+const DemographicTrendDatasetCard = lazy(async () => ({
+  default: (await import("@/components/opendata/DemographicTrendDatasetCard"))
+    .DemographicTrendDatasetCard,
+}));
+const FamiliesChildrenDatasetCard = lazy(async () => ({
+  default: (await import("@/components/opendata/FamiliesChildrenDatasetCard"))
+    .FamiliesChildrenDatasetCard,
+}));
+const ForeignResidentsDatasetCard = lazy(async () => ({
+  default: (await import("@/components/opendata/ForeignResidentsDatasetCard"))
+    .ForeignResidentsDatasetCard,
+}));
 
 type OpenDataArchiveItem = {
   theme: OpenDataThemeCategory;
@@ -334,21 +350,32 @@ function DatasetDetailView({
         </div>
       </header>
 
-      {item.dataset.detailKind === "climate-daily" ? (
-        <ClimateTerritoryDatasetCard />
-      ) : item.dataset.detailKind === "air-traffic-monthly" ? (
-        <AirTrafficDatasetCard />
-      ) : item.dataset.detailKind === "demographic-trend" ? (
-        <DemographicTrendDatasetCard />
-      ) : item.dataset.detailKind === "foreign-residents-age-sex" ? (
-        <ForeignResidentsDatasetCard />
-      ) : item.dataset.detailKind === "families-children" ? (
-        <FamiliesChildrenDatasetCard />
-      ) : (
-        <div className="rounded-xl border border-dashed border-border bg-muted/20 p-5 text-sm text-muted-foreground">
-          Visualizzazione non ancora disponibile per questo dataset.
-        </div>
-      )}
+      <Suspense
+        fallback={
+          <div
+            className="flex min-h-64 items-center justify-center rounded-xl border border-border bg-card p-6 text-sm font-semibold text-muted-foreground"
+            role="status"
+          >
+            Caricamento dataset…
+          </div>
+        }
+      >
+        {item.dataset.detailKind === "climate-daily" ? (
+          <ClimateTerritoryDatasetCard />
+        ) : item.dataset.detailKind === "air-traffic-monthly" ? (
+          <AirTrafficDatasetCard />
+        ) : item.dataset.detailKind === "demographic-trend" ? (
+          <DemographicTrendDatasetCard />
+        ) : item.dataset.detailKind === "foreign-residents-age-sex" ? (
+          <ForeignResidentsDatasetCard />
+        ) : item.dataset.detailKind === "families-children" ? (
+          <FamiliesChildrenDatasetCard />
+        ) : (
+          <div className="rounded-xl border border-dashed border-border bg-muted/20 p-5 text-sm text-muted-foreground">
+            Visualizzazione non ancora disponibile per questo dataset.
+          </div>
+        )}
+      </Suspense>
     </section>
   );
 }

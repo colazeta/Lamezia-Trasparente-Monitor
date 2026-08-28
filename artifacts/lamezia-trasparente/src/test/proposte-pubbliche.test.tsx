@@ -19,37 +19,41 @@ function renderProposteCiviche() {
 }
 
 describe("proposte civiche", () => {
-  it("espone i quattro seed demo come iniziative popolari neutrali", () => {
-    expect(PUBLIC_PROPOSALS).toHaveLength(4);
+  it("separa le proposte documentate dai quattro seed progettuali interni", () => {
+    expect(PUBLIC_PROPOSALS).toHaveLength(10);
+    const internalSeeds = PUBLIC_PROPOSALS.filter(
+      (proposal) => proposal.sourceUrl === undefined,
+    );
+    expect(internalSeeds).toHaveLength(4);
     expect(
-      PUBLIC_PROPOSALS.every(
+      internalSeeds.every(
         (proposal) => proposal.promoter === "Lamezia Trasparente",
       ),
     ).toBe(true);
     expect(
-      PUBLIC_PROPOSALS.every(
+      internalSeeds.every(
         (proposal) => proposal.channel === "iniziativa_popolare",
       ),
     ).toBe(true);
     expect(
-      PUBLIC_PROPOSALS.every(
+      internalSeeds.every(
         (proposal) =>
-          proposal.theme === "Trasparenza / partecipazione democratica",
+          proposal.theme === "Trasparenza e partecipazione democratica",
       ),
     ).toBe(true);
     expect(
-      PUBLIC_PROPOSALS.every((proposal) => proposal.sourceUrl === undefined),
-    ).toBe(true);
+      PUBLIC_PROPOSALS.filter((proposal) => proposal.sourceUrl),
+    ).toHaveLength(6);
   });
 
   it("filtra le proposte per stato, promotore e tema con utility pure", () => {
-    expect(getProposalThemes()).toEqual([
-      "Trasparenza / partecipazione democratica",
-    ]);
-    expect(getProposalPromoters()).toEqual(["Lamezia Trasparente"]);
+    expect(getProposalThemes()).toContain(
+      "Trasparenza e partecipazione democratica",
+    );
+    expect(getProposalPromoters()).toContain("Lamezia Trasparente");
 
     const filtered = filterPublicProposals(PUBLIC_PROPOSALS, {
-      theme: "trasparenza / partecipazione democratica",
+      theme: "trasparenza e partecipazione democratica",
       promoter: "lamezia trasparente",
       status: "proposta_emersa",
     });
@@ -69,7 +73,7 @@ describe("proposte civiche", () => {
       }),
     ).toBeInTheDocument();
     expect(
-      screen.getByText(/Archivio documentale, non endorsement/i),
+      screen.getByText(/non esprime adesione politica/i),
     ).toBeInTheDocument();
     expect(screen.getByLabelText("Tema")).toBeInTheDocument();
     expect(screen.getByLabelText("Promotore")).toBeInTheDocument();
@@ -96,16 +100,16 @@ describe("proposte civiche", () => {
     });
 
     expect(
-      screen.getByText("0 proposte visualizzate su 4 record seed."),
+      screen.getByText(
+        `0 proposte visualizzate su ${PUBLIC_PROPOSALS.length}.`,
+      ),
     ).toBeInTheDocument();
   });
 
-  it("non include dati personali non necessari nei record seed", () => {
+  it("non include dati personali non necessari nei record pubblici", () => {
     const serialized = JSON.stringify(PUBLIC_PROPOSALS);
 
-    expect(serialized).not.toMatch(
-      /[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/i,
-    );
+    expect(serialized).not.toMatch(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/i);
     expect(serialized).not.toMatch(/\b\+?\d{2,4}[\s.-]?\d{5,}\b/);
     expect(serialized).not.toMatch(
       /\b[A-Z]{6}\d{2}[A-Z]\d{2}[A-Z]\d{3}[A-Z]\b/i,
