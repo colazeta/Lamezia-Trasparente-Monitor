@@ -158,6 +158,47 @@ export const PROPOSAL_EVENT_LABELS: Record<ProposalEventType, string> = {
 
 export const PUBLIC_PROPOSALS = [
   {
+    id: "piazza-italia-sicurezza-prevenzione-2026",
+    title: "Strategia di prevenzione e controlli coordinati per Piazza Italia",
+    summary:
+      "Richiesta di una strategia stabile per sicurezza, decoro e vivibilità nell'area di Piazza Italia, con controlli coordinati, potenziamento della videosorveglianza, eventuali ordinanze comunali, coordinamento con la Prefettura e coinvolgimento dei servizi sociali nei casi di vulnerabilità.",
+    promoterId: "i-liberali-lamezia-terme",
+    promoter: "I Liberali Lamezia Terme",
+    promoterType: "forza_politica",
+    periodLabel: "27 agosto 2026",
+    year: "2026",
+    theme: "Sicurezza e decoro urbano",
+    threadId: "piazza-italia-sicurezza-vivibilita",
+    threadLabel: "Piazza Italia: sicurezza, prevenzione e vivibilità",
+    territorialArea: "Piazza Italia e aree circostanti, Sant'Eufemia Lamezia",
+    institutionalRecipient: "Comune di Lamezia Terme e autorità competenti",
+    channel: "comunicato",
+    sourceLabel: "City One, 27 agosto 2026",
+    sourceUrl:
+      "https://www.cityonelamezia.it/santeufemia-lamezia-il-problema-dei-continui-bivacchi-e-delle-condizioni-di-degrado/",
+    status: "proposta_emersa",
+    linkedActs: [],
+    verificationNote:
+      "City One pubblica integralmente la nota attribuita a I Liberali Lamezia Terme; il Lametino ne riprende nello stesso giorno le misure principali. La proposta è censita perché contiene richieste operative specifiche. Non sono stati verificati un deposito formale, un'ordinanza adottata, l'attivazione di un tavolo prefettizio o una risposta istituzionale. Le ripubblicazioni dello stesso comunicato non sono trattate come eventi distinti.",
+    evidenceLevel: "fonte_stampa",
+    firstSeen: "2026-08-27",
+    lastUpdated: "2026-08-27",
+    events: [
+      {
+        id: "piazza-italia-liberali-richiesta-prevenzione",
+        date: "2026-08-27",
+        type: "emersione",
+        title: "I Liberali chiedono controlli coordinati e una strategia di prevenzione",
+        summary:
+          "Il movimento chiede controlli più frequenti e coordinati, potenziamento della videosorveglianza, eventuali ordinanze comunali, possibile apertura di un tavolo permanente in Prefettura e coinvolgimento dei servizi sociali quando emergano situazioni di vulnerabilità.",
+        sourceLabel: "City One",
+        sourceUrl:
+          "https://www.cityonelamezia.it/santeufemia-lamezia-il-problema-dei-continui-bivacchi-e-delle-condizioni-di-degrado/",
+        evidenceLevel: "fonte_stampa",
+      },
+    ],
+  },
+  {
     id: "fontana-piazza-mercato-vecchio-manutenzione-2026",
     title: "Ripristino e manutenzione della fontana di Piazza Mercato Vecchio",
     summary:
