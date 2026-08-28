@@ -299,21 +299,82 @@ function extractScriptPaths(...htmlDocuments) {
   return [...scriptPaths];
 }
 
+function extractJavaScriptReferences(sourceText) {
+  const references = new Set();
+  for (const match of sourceText.matchAll(/["']([^"'?]+\.js(?:\?[^"']*)?)["']/g)) {
+    const reference = match[1];
+    if (
+      reference?.startsWith("/") ||
+      reference?.startsWith("./") ||
+      reference?.startsWith("../")
+    ) {
+      references.add(reference);
+    }
+  }
+  return [...references];
+}
+
+function bundleAssetPriority(url) {
+  const pathname = new URL(url).pathname;
+  if (/\/(?:Contracts|Organi)-[^/]+\.js$/i.test(pathname)) return 0;
+  if (
+    /\/(?:contractsSourceManifest|institutionalStaticData)-[^/]+\.js$/i.test(
+      pathname,
+    )
+  ) {
+    return 1;
+  }
+  return 2;
+}
+
+function hasRequiredBundleMarkers(bundleText) {
+  return [...REQUIRED_CONTRACT_BUNDLE_TEXT, ...REQUIRED_ORGANI_BUNDLE_TEXT].every(
+    (marker) => bundleText.includes(marker),
+  );
+}
+
 async function fetchBundleText(publicUrl, scriptPaths) {
   if (scriptPaths.length === 0) {
     throw new Error("No generated JavaScript assets found on public URL.");
   }
 
+  const publicOrigin = new URL(publicUrl).origin;
+  const queue = scriptPaths.map(
+    (scriptPath) => new URL(scriptPath, `${publicUrl}/`).href,
+  );
+  const queued = new Set(queue);
+  const fetched = new Set();
   const bundleParts = [];
-  for (const scriptPath of scriptPaths) {
-    const scriptUrl = new URL(scriptPath, `${publicUrl}/`).href;
+  while (queue.length > 0 && fetched.size < 64) {
+    queue.sort((left, right) => bundleAssetPriority(left) - bundleAssetPriority(right));
+    const scriptUrl = queue.shift();
+    if (!scriptUrl || fetched.has(scriptUrl)) continue;
+
     const { text } = await fetchText(
       scriptUrl,
       `JavaScript asset ${scriptUrl}`,
     );
+    fetched.add(scriptUrl);
     bundleParts.push(text);
+
+    const combinedText = bundleParts.join("\n");
+    if (hasRequiredBundleMarkers(combinedText)) {
+      return { assetCount: fetched.size, text: combinedText };
+    }
+
+    for (const reference of extractJavaScriptReferences(text)) {
+      const dependencyUrl = new URL(reference, scriptUrl);
+      if (
+        dependencyUrl.origin === publicOrigin &&
+        !queued.has(dependencyUrl.href)
+      ) {
+        queued.add(dependencyUrl.href);
+        queue.push(dependencyUrl.href);
+      }
+    }
   }
-  return bundleParts.join("\n");
+
+  return { assetCount: fetched.size, text: bundleParts.join("\n") };
 }
 
 function assertBundleMarkers(bundleText) {
@@ -383,19 +444,19 @@ async function checkPublicContractsPage(publicUrl) {
     assertContentType(result, "application/json", `API probe ${path}`);
   }
   if (
-    typeof provenance.commitSha !== "string" ||
-    !/^[0-9a-f]{40}$/i.test(provenance.commitSha)
+    typeof provenance.value.commitSha !== "string" ||
+    !/^[0-9a-f]{40}$/i.test(provenance.value.commitSha)
   ) {
     throw new Error(
-      `Deploy provenance has invalid commitSha: ${String(provenance.commitSha)}`,
+      `Deploy provenance has invalid commitSha: ${String(provenance.value.commitSha)}`,
     );
   }
   if (
-    typeof provenance.createdAt !== "string" ||
-    Number.isNaN(Date.parse(provenance.createdAt))
+    typeof provenance.value.createdAt !== "string" ||
+    Number.isNaN(Date.parse(provenance.value.createdAt))
   ) {
     throw new Error(
-      `Deploy provenance has invalid createdAt: ${String(provenance.createdAt)}`,
+      `Deploy provenance has invalid createdAt: ${String(provenance.value.createdAt)}`,
     );
   }
   for (const path of FEED_CONTENT_TYPE_PROBES) {
@@ -414,9 +475,9 @@ async function checkPublicContractsPage(publicUrl) {
     contracts.text,
     organi.text,
   );
-  console.log(`Found ${scriptPaths.length} public JavaScript asset(s).`);
-  const bundleText = await fetchBundleText(publicUrl, scriptPaths);
-  assertBundleMarkers(bundleText);
+  const bundle = await fetchBundleText(publicUrl, scriptPaths);
+  console.log(`Verified ${bundle.assetCount} public JavaScript asset(s).`);
+  assertBundleMarkers(bundle.text);
 }
 
 async function main() {
