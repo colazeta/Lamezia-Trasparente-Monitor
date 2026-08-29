@@ -125,7 +125,7 @@ export interface CliOptions {
   documentDiscovery?: boolean;
 }
 
-type PublicRecord = Record<string, unknown> & {
+export type PublicRecord = Record<string, unknown> & {
   id: string;
   source: string;
   retrieved_at: string;
@@ -133,7 +133,7 @@ type PublicRecord = Record<string, unknown> & {
   classification?: AlboRecordClassification;
   known_limits: string[];
 };
-type PublicLatest = Record<string, unknown> & {
+export type PublicLatest = Record<string, unknown> & {
   retrieved_at: string;
   classification_dictionary: typeof ALBO_CLASSIFICATION_DICTIONARY;
   counts: RunCounts;
@@ -220,6 +220,35 @@ export interface AlboDocumentsManifest {
   documents: ArchivedPdfDocument[];
   decisions: PdfPreservationDecision[];
 }
+export interface DeliberaArchiveItem extends PublicRecord {
+  first_observed_at: string;
+  last_observed_at: string;
+  archived_document: ArchivedPdfDocument | null;
+}
+export interface DelibereArchive {
+  generated_at: string;
+  source: string;
+  source_url: string;
+  verification_status: VerificationStatus;
+  coverage: {
+    first_observed_at: string | null;
+    last_observed_at: string | null;
+    first_act_date: string | null;
+    last_act_date: string | null;
+  };
+  counts: {
+    total: number;
+    giunta: number;
+    consiglio: number;
+    altro: number;
+    publishable: number;
+    minimised: number;
+    metadata_only: number;
+    archived_documents: number;
+  };
+  known_limits: string[];
+  items: DeliberaArchiveItem[];
+}
 export type AlboPublicStatus = Record<string, unknown> & {
   source: string;
   source_url: string;
@@ -242,6 +271,7 @@ export interface RunResult {
   publicLatest: PublicLatest;
   publicDiff: PublicDiff;
   documentsManifest: AlboDocumentsManifest;
+  delibereArchive: DelibereArchive;
   publicStatus: AlboPublicStatus;
   runLog: string;
   paths: Record<
@@ -251,6 +281,7 @@ export interface RunResult {
     | "publicLatest"
     | "publicDiff"
     | "documentsManifest"
+    | "delibereArchive"
     | "publicStatus"
     | "runLog",
     string
@@ -270,6 +301,8 @@ const ROME_MONITORING_WINDOW = "08:00-20:00 Europe/Rome";
 const GITHUB_ACTIONS_CRON_UTC = "10 6-19 * * *";
 const OFFICIAL_ALBO_DISCLAIMER =
   "Lamezia Trasparente Monitor non sostituisce l'Albo Pretorio ufficiale: pubblicazioni, termini, allegati e contenuti vanno verificati sulla fonte istituzionale.";
+const DELIBERE_ARCHIVE_LIMIT =
+  "Archivio cumulativo dei soli record public-safe osservati dal monitor: la copertura inizia dalla prima acquisizione disponibile e non certifica la completezza storica delle deliberazioni comunali.";
 const CIVIC_SAFEGUARDS = [
   "I PDF sono archiviati solo per record pubblicabili a basso rischio, con URL ufficiale, content-type application/pdf e limite dimensionale.",
   "Nessun PDF o allegato viene analizzato, interpretato, sottoposto a OCR o riassunto.",
@@ -361,8 +394,15 @@ export function parseArgs(argv: string[]): CliOptions {
 export async function runAlboIngestion(options: CliOptions): Promise<RunResult> {
   const currentPath = path.join(options.outDir, "snapshots", "albo", "current.json");
   const publicLatestPath = path.join(options.outDir, "public", "albo", "latest.json");
+  const delibereArchivePath = path.join(
+    options.outDir,
+    "public",
+    "albo",
+    "delibere-archive.json",
+  );
   const previous = await readSnapshot(currentPath);
   const previousPublicLatest = previous ? null : await readPublicLatest(publicLatestPath);
+  const previousDelibereArchive = await readDelibereArchive(delibereArchivePath);
   const acquiredSnapshot = await acquireAlboSnapshot(options);
   const snapshot = await enrichSnapshotDocumentUrls(acquiredSnapshot, options);
   const previousItems = previous ? normalizeAlboRecords(previous) : [];
@@ -381,6 +421,11 @@ export async function runAlboIngestion(options: CliOptions): Promise<RunResult> 
   const publicLatest = buildPublicLatest(snapshot, items, counts);
   const publicDiff = buildPublicDiff(snapshot, publicRecordDiff, counts, diffBaseline);
   const documentsManifest = await archivePublicPdfs(options.outDir, snapshot, items, options.pdfFetch ?? fetch);
+  const delibereArchive = buildDelibereArchive(
+    previousDelibereArchive,
+    publicLatest,
+    documentsManifest,
+  );
   const publicStatus = buildPublicStatus(snapshot, counts, diffBaseline);
   const runLog = renderRunLog(snapshot, counts);
   const paths = await writeArtifacts(
@@ -390,6 +435,7 @@ export async function runAlboIngestion(options: CliOptions): Promise<RunResult> 
     publicLatest,
     publicDiff,
     documentsManifest,
+    delibereArchive,
     publicStatus,
     runLog,
   );
@@ -400,6 +446,7 @@ export async function runAlboIngestion(options: CliOptions): Promise<RunResult> 
     publicLatest,
     publicDiff,
     documentsManifest,
+    delibereArchive,
     publicStatus,
     runLog,
     paths,
@@ -1143,6 +1190,188 @@ function publicRecordComparableHash(record: PublicRecord): string {
   return sha256(stablePublicRecord);
 }
 
+export function buildDelibereArchive(
+  previous: DelibereArchive | null,
+  latest: PublicLatest,
+  documentsManifest: AlboDocumentsManifest,
+): DelibereArchive {
+  const archivedById = new Map(
+    documentsManifest.documents.map((document) => [document.id, document]),
+  );
+  const itemsById = new Map(
+    (previous?.items ?? []).map((item) => [item.id, item]),
+  );
+
+  for (const record of latest.excluded) {
+    itemsById.delete(record.id);
+  }
+
+  for (const record of latest.items) {
+    const existing = itemsById.get(record.id);
+    if (!isDeliberationPublicRecord(record)) {
+      if (existing) itemsById.delete(record.id);
+      continue;
+    }
+
+    const retrievedAt = record.retrieved_at;
+    const canExposeArchivedDocument =
+      record.public_visibility === "publishable" &&
+      record.privacy_risk === "low";
+    const archivedDocument = canExposeArchivedDocument
+      ? archivedById.get(record.id) ?? existing?.archived_document ?? null
+      : null;
+
+    itemsById.set(record.id, {
+      ...record,
+      first_observed_at: existing?.first_observed_at ?? retrievedAt,
+      last_observed_at: retrievedAt,
+      archived_document: archivedDocument,
+    });
+  }
+
+  const items = [...itemsById.values()]
+    .map(withArchiveClassification)
+    .sort(compareDeliberaArchiveItems);
+  const firstObservedAt = earliestText(
+    items.map((item) => item.first_observed_at),
+  );
+  const lastObservedAt = latestText(
+    items.map((item) => item.last_observed_at),
+  );
+  const actDates = items
+    .map(
+      (item) =>
+        publicRecordText(item, "act_date") ??
+        publicRecordText(item, "publication_start"),
+    )
+    .filter((value): value is string => Boolean(value));
+
+  return {
+    generated_at: latest.retrieved_at,
+    source:
+      publicRecordValue(latest.source) ?? ALBO_PRETORIO_LAMEZIA_SOURCE.source,
+    source_url:
+      publicRecordValue(latest.source_url) ??
+      ALBO_PRETORIO_LAMEZIA_SOURCE.sourceUrl,
+    verification_status: archiveVerificationStatus(latest.verification_status),
+    coverage: {
+      first_observed_at: firstObservedAt,
+      last_observed_at: lastObservedAt,
+      first_act_date: earliestText(actDates),
+      last_act_date: latestText(actDates),
+    },
+    counts: {
+      total: items.length,
+      giunta: items.filter((item) => deliberationSubtype(item) === "giunta")
+        .length,
+      consiglio: items.filter(
+        (item) => deliberationSubtype(item) === "consiglio",
+      ).length,
+      altro: items.filter((item) => deliberationSubtype(item) === "altro")
+        .length,
+      publishable: items.filter(
+        (item) => item.public_visibility === "publishable",
+      ).length,
+      minimised: items.filter(
+        (item) => item.public_visibility === "publishable_with_minimisation",
+      ).length,
+      metadata_only: items.filter(
+        (item) => item.public_visibility === "metadata_only",
+      ).length,
+      archived_documents: items.filter(
+        (item) => item.archived_document !== null,
+      ).length,
+    },
+    known_limits: unique([
+      ...arrayValue(latest.known_limits).flatMap((value) =>
+        typeof value === "string" ? [value] : [],
+      ),
+      DELIBERE_ARCHIVE_LIMIT,
+      OFFICIAL_ALBO_DISCLAIMER,
+    ]),
+    items,
+  };
+}
+
+function isDeliberationPublicRecord(record: PublicRecord): boolean {
+  if (record.classification?.act_category.id === "deliberazioni") return true;
+  return /^DELIBERAZIONE\b/i.test(publicRecordText(record, "act_type") ?? "");
+}
+
+function withArchiveClassification(
+  item: DeliberaArchiveItem,
+): DeliberaArchiveItem {
+  if (item.classification) return item;
+  return {
+    ...item,
+    classification: classifyAlboRecordCategory({
+      office: publicRecordText(item, "office"),
+      act_type: publicRecordText(item, "act_type"),
+      subject: publicRecordText(item, "subject"),
+    }),
+  };
+}
+
+function deliberationSubtype(
+  record: PublicRecord,
+): "giunta" | "consiglio" | "altro" {
+  const actType = (publicRecordText(record, "act_type") ?? "").toUpperCase();
+  if (actType.includes("CONSIGLIO")) return "consiglio";
+  if (actType.includes("GIUNTA")) return "giunta";
+  return "altro";
+}
+
+function compareDeliberaArchiveItems(
+  left: DeliberaArchiveItem,
+  right: DeliberaArchiveItem,
+): number {
+  const leftKey = [
+    publicRecordText(left, "act_date"),
+    publicRecordText(left, "publication_start"),
+    publicRecordText(left, "publication_number"),
+    left.id,
+  ]
+    .filter(Boolean)
+    .join("|");
+  const rightKey = [
+    publicRecordText(right, "act_date"),
+    publicRecordText(right, "publication_start"),
+    publicRecordText(right, "publication_number"),
+    right.id,
+  ]
+    .filter(Boolean)
+    .join("|");
+  return rightKey.localeCompare(leftKey, "it");
+}
+
+function publicRecordText(record: PublicRecord, key: string): string | null {
+  return publicRecordValue(record[key]);
+}
+
+function publicRecordValue(value: unknown): string | null {
+  return typeof value === "string" && value.trim() ? value : null;
+}
+
+function earliestText(values: string[]): string | null {
+  return values.length > 0
+    ? [...values].sort((left, right) => left.localeCompare(right))[0] ?? null
+    : null;
+}
+
+function latestText(values: string[]): string | null {
+  return values.length > 0
+    ? [...values].sort((left, right) => right.localeCompare(left))[0] ?? null
+    : null;
+}
+
+function archiveVerificationStatus(value: unknown): VerificationStatus {
+  return value === "official_source_acquired" ||
+    value === "normalised_automatically" ||
+    value === "verification_required"
+    ? value
+    : "verification_required";
+}
+
 async function archivePublicPdfs(
   outDir: string,
   snapshot: AlboRawSnapshot,
@@ -1404,6 +1633,7 @@ async function writeArtifacts(
   publicLatest: PublicLatest,
   publicDiff: PublicDiff,
   documentsManifest: AlboDocumentsManifest,
+  delibereArchive: DelibereArchive,
   publicStatus: AlboPublicStatus,
   runLog: string,
 ): Promise<RunResult["paths"]> {
@@ -1419,7 +1649,18 @@ async function writeArtifacts(
     processedItems: path.join(outDir, "processed", "albo", "albo_items.json"),
     publicLatest: path.join(outDir, "public", "albo", "latest.json"),
     publicDiff: path.join(outDir, "public", "albo", "diff-latest.json"),
-    documentsManifest: path.join(outDir, "public", "albo", "documents-manifest.json"),
+    documentsManifest: path.join(
+      outDir,
+      "public",
+      "albo",
+      "documents-manifest.json",
+    ),
+    delibereArchive: path.join(
+      outDir,
+      "public",
+      "albo",
+      "delibere-archive.json",
+    ),
     publicStatus: path.join(outDir, "public", "albo", "status.json"),
     runLog: path.join(outDir, "public", "albo", "run-latest.md"),
   };
@@ -1436,6 +1677,7 @@ async function writeArtifacts(
   await writeJson(paths.publicLatest, publicLatest);
   await writeJson(paths.publicDiff, publicDiff);
   await writeJson(paths.documentsManifest, documentsManifest);
+  await writeJson(paths.delibereArchive, delibereArchive);
   await writeJson(paths.publicStatus, publicStatus);
   await writeFile(paths.runLog, runLog, "utf8");
   return paths;
@@ -1471,6 +1713,17 @@ async function readPublicLatest(filePath: string): Promise<PublicLatest | null> 
   try {
     const value = JSON.parse(await readFile(filePath, "utf8")) as unknown;
     return isPublicLatest(value) ? value : null;
+  } catch {
+    return null;
+  }
+}
+
+async function readDelibereArchive(
+  filePath: string,
+): Promise<DelibereArchive | null> {
+  try {
+    const value = JSON.parse(await readFile(filePath, "utf8")) as unknown;
+    return isDelibereArchive(value) ? value : null;
   } catch {
     return null;
   }
@@ -1862,6 +2115,49 @@ function isPublicRecord(value: unknown): value is PublicRecord {
     typeof (value as { retrieved_at?: unknown }).retrieved_at === "string" &&
     typeof (value as { verification_status?: unknown }).verification_status === "string" &&
     Array.isArray((value as { known_limits?: unknown }).known_limits)
+  );
+}
+
+function isDelibereArchive(value: unknown): value is DelibereArchive {
+  const archive = objectValue(value);
+  if (!archive) return false;
+  const coverage = objectValue(archive.coverage);
+  const counts = objectValue(archive.counts);
+  const items = arrayValue(archive.items);
+  return (
+    typeof archive.generated_at === "string" &&
+    typeof archive.source === "string" &&
+    typeof archive.source_url === "string" &&
+    archiveVerificationStatus(archive.verification_status) ===
+      archive.verification_status &&
+    coverage !== null &&
+    counts !== null &&
+    Array.isArray(archive.known_limits) &&
+    items.every(isDeliberaArchiveItem)
+  );
+}
+
+function isDeliberaArchiveItem(value: unknown): value is DeliberaArchiveItem {
+  if (!isPublicRecord(value)) return false;
+  const item = value as PublicRecord & Record<string, unknown>;
+  const visibility = item.public_visibility;
+  const privacyRisk = item.privacy_risk;
+  const archivedDocument = item.archived_document;
+  const canExposeArchivedDocument =
+    visibility === "publishable" && privacyRisk === "low";
+  return (
+    (visibility === "publishable" ||
+      visibility === "publishable_with_minimisation" ||
+      visibility === "metadata_only") &&
+    (privacyRisk === "low" ||
+      privacyRisk === "medium" ||
+      privacyRisk === "high") &&
+    typeof item.first_observed_at === "string" &&
+    typeof item.last_observed_at === "string" &&
+    isDeliberationPublicRecord(item) &&
+    (archivedDocument === null ||
+      (canExposeArchivedDocument &&
+        isReusableArchivedPdfDocument(archivedDocument)))
   );
 }
 

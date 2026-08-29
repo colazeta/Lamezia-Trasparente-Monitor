@@ -874,6 +874,108 @@ test("archives only official low-risk publishable PDFs into public documents sto
   assert.deepEqual(fetchCalls, [documentUrl]);
 });
 
+test("builds a cumulative public-safe deliberations archive and honours later exclusions", async () => {
+  const tmp = await mkdtemp(path.join(tmpdir(), "albo-delibere-archive-"));
+  const firstPath = path.join(tmp, "first.xml");
+  const secondPath = path.join(tmp, "second.xml");
+  const excludedPath = path.join(tmp, "excluded.xml");
+  const outDir = path.join(tmp, "data");
+  const documentUrl = "https://albo.tinnvision.cloud/documenti/2026/10.pdf";
+  const pdfBytes = new TextEncoder().encode("%PDF-1.7\ndelibera public-safe\n");
+
+  await writeFile(
+    firstPath,
+    xmlRecord(
+      "2026/10",
+      "DELIBERAZIONE DI GIUNTA",
+      "SEGRETERIA GENERALE",
+      "Approvazione del bilancio di previsione",
+      "10",
+      documentUrl,
+    ),
+    "utf8",
+  );
+  await writeFile(
+    secondPath,
+    xmlRecord(
+      "2026/11",
+      "DELIBERAZIONE DI CONSIGLIO",
+      "SEGRETERIA GENERALE",
+      "Approvazione del regolamento comunale",
+      "11",
+    ),
+    "utf8",
+  );
+  await writeFile(
+    excludedPath,
+    [
+      xmlRecord(
+        "2026/10",
+        "DELIBERAZIONE DI GIUNTA",
+        "SERVIZI SOCIALI",
+        "Contributo economico riferito a minore",
+        "10",
+      ),
+      xmlRecord(
+        "2026/11",
+        "DELIBERAZIONE DI CONSIGLIO",
+        "SEGRETERIA GENERALE",
+        "Approvazione del regolamento comunale",
+        "11",
+      ),
+    ].join("\n"),
+    "utf8",
+  );
+
+  const first = await runAlboIngestion({
+    outDir,
+    fromFile: firstPath,
+    inputFormat: "xml",
+    retrievedAt: "2026-06-19T08:00:00.000Z",
+    pdfFetch: async () =>
+      new Response(pdfBytes, {
+        status: 200,
+        headers: { "content-type": "application/pdf" },
+      }),
+  });
+  assert.equal(first.delibereArchive.counts.total, 1);
+  assert.equal(first.delibereArchive.counts.giunta, 1);
+  assert.equal(first.delibereArchive.counts.archived_documents, 1);
+
+  const second = await runAlboIngestion({
+    outDir,
+    fromFile: secondPath,
+    inputFormat: "xml",
+    retrievedAt: "2026-06-19T09:00:00.000Z",
+  });
+  assert.equal(second.delibereArchive.counts.total, 2);
+  assert.equal(second.delibereArchive.counts.giunta, 1);
+  assert.equal(second.delibereArchive.counts.consiglio, 1);
+  assert.equal(second.delibereArchive.counts.archived_documents, 1);
+  assert.ok(
+    second.delibereArchive.items.find((item) => item.id === "albo-2026-10")
+      ?.archived_document,
+  );
+
+  const third = await runAlboIngestion({
+    outDir,
+    fromFile: excludedPath,
+    inputFormat: "xml",
+    retrievedAt: "2026-06-19T10:00:00.000Z",
+  });
+  assert.equal(third.delibereArchive.counts.total, 1);
+  assert.equal(third.delibereArchive.counts.giunta, 0);
+  assert.equal(third.delibereArchive.counts.consiglio, 1);
+  assert.deepEqual(
+    third.delibereArchive.items.map((item) => item.id),
+    ["albo-2026-11"],
+  );
+
+  const archiveJson = await readFile(third.paths.delibereArchive, "utf8");
+  assert.match(archiveJson, /non certifica la completezza storica/i);
+  assert.doesNotMatch(archiveJson, /riferito a minore/i);
+});
+
 test("discovers official Tinnvision PDF attachments only for low-risk publishable records", async () => {
   const tmp = await mkdtemp(path.join(tmpdir(), "albo-tinnvision-detail-pdf-"));
   const fixturePath = path.join(tmp, "albo.xml");

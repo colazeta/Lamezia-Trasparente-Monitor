@@ -10,6 +10,7 @@
     "typecheck": "pnpm run typecheck:libs && pnpm -r --filter \"./artifacts/**\" --filter \"./scripts\" --if-present run typecheck",
     "test": "pnpm -r --if-present run test",
     "albo:fetch": "pnpm --filter @workspace/scripts run fetch:albo",
+    "albo:seed-delibere-archive": "pnpm --filter @workspace/scripts run seed:delibere-archive",
     "air:lamezia": "node scripts/build-lamezia-air-traffic-data.mjs",
     "climate:lamezia": "node scripts/build-lamezia-climate-data.mjs",
     "demography:lamezia": "node scripts/build-lamezia-demographic-trend-data.mjs",

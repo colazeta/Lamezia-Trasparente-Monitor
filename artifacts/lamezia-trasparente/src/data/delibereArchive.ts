@@ -1,0 +1,250 @@
+import publicDelibereArchive from "../../../../data/public/albo/delibere-archive.json";
+import { classifyAlboRecordCategory } from "../../../../scripts/albo-classification-dictionary";
+
+import type {
+  AlboArchivedDocument,
+  AlboItemClassification,
+  AlboPrivacyRisk,
+  AlboPublicRunItem,
+  AlboPublicVisibility,
+} from "@/data/alboPublicRun";
+
+export type DeliberaArchiveItem = AlboPublicRunItem & {
+  first_observed_at: string;
+  last_observed_at: string;
+  archived_document: AlboArchivedDocument | null;
+};
+
+type RawArchive = {
+  generated_at?: unknown;
+  source?: unknown;
+  source_url?: unknown;
+  verification_status?: unknown;
+  coverage?: {
+    first_observed_at?: unknown;
+    last_observed_at?: unknown;
+    first_act_date?: unknown;
+    last_act_date?: unknown;
+  };
+  known_limits?: unknown;
+  items?: unknown;
+};
+
+type RawArchiveItem = Record<string, unknown> & {
+  archived_document?: unknown;
+};
+
+type RawArchiveDocument = Record<string, unknown>;
+
+const rawArchive = publicDelibereArchive as unknown as RawArchive;
+
+function text(value: unknown): string | null {
+  return typeof value === "string" && value.trim() ? value : null;
+}
+
+function textArray(value: unknown): string[] {
+  return Array.isArray(value)
+    ? value.filter((item): item is string => typeof item === "string")
+    : [];
+}
+
+function visibility(value: unknown): AlboPublicVisibility | null {
+  return value === "publishable" ||
+    value === "publishable_with_minimisation" ||
+    value === "metadata_only"
+    ? value
+    : null;
+}
+
+function privacyRisk(value: unknown): AlboPrivacyRisk | null {
+  return value === "low" || value === "medium" || value === "high"
+    ? value
+    : null;
+}
+
+function classification(
+  value: unknown,
+  item: RawArchiveItem,
+): AlboItemClassification {
+  if (value && typeof value === "object") {
+    const candidate = value as Partial<AlboItemClassification>;
+    if (
+      typeof candidate.dictionary_version === "string" &&
+      candidate.sector &&
+      typeof candidate.sector.id === "string" &&
+      typeof candidate.sector.label === "string" &&
+      candidate.act_category &&
+      typeof candidate.act_category.id === "string" &&
+      typeof candidate.act_category.label === "string"
+    ) {
+      return candidate as AlboItemClassification;
+    }
+  }
+
+  return classifyAlboRecordCategory({
+    office: text(item.office),
+    act_type: text(item.act_type),
+    subject: text(item.subject),
+  });
+}
+
+function platformDocumentPath(storagePath: string): string {
+  return storagePath.startsWith("data/public/")
+    ? `/${storagePath}`
+    : storagePath;
+}
+
+function archivedDocument(value: unknown): AlboArchivedDocument | null {
+  if (!value || typeof value !== "object") return null;
+  const document = value as RawArchiveDocument;
+  const storagePath = text(document.storage_path);
+  const sizeBytes = document.size_bytes;
+  if (
+    !text(document.id) ||
+    !text(document.publication_number) ||
+    !text(document.retrieved_at) ||
+    !storagePath ||
+    !/^data\/public\/albo\/documents\/[0-9]{4}\/[a-f0-9]{64}\.pdf$/i.test(
+      storagePath,
+    ) ||
+    !text(document.sha256) ||
+    typeof sizeBytes !== "number" ||
+    !Number.isFinite(sizeBytes) ||
+    !text(document.content_type) ||
+    !text(document.verification_status)
+  ) {
+    return null;
+  }
+
+  return {
+    id: text(document.id)!,
+    publication_number: text(document.publication_number)!,
+    retrieved_at: text(document.retrieved_at)!,
+    storage_path: storagePath,
+    platform_path: platformDocumentPath(storagePath),
+    sha256: text(document.sha256)!,
+    size_bytes: sizeBytes,
+    content_type: text(document.content_type)!,
+    verification_status: text(document.verification_status)!,
+  };
+}
+
+function normalizeItem(value: unknown): DeliberaArchiveItem | null {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return null;
+  const item = value as RawArchiveItem;
+  const itemVisibility = visibility(item.public_visibility);
+  const itemPrivacyRisk = privacyRisk(item.privacy_risk);
+  const itemClassification = classification(item.classification, item);
+  const id = text(item.id);
+  const source = text(item.source);
+  const sourceUrl = text(item.source_url);
+  const retrievedAt = text(item.retrieved_at);
+  const verificationStatus = text(item.verification_status);
+  const firstObservedAt = text(item.first_observed_at);
+  const lastObservedAt = text(item.last_observed_at);
+  const subject = text(item.subject);
+
+  if (
+    !id ||
+    !source ||
+    !sourceUrl ||
+    !retrievedAt ||
+    !verificationStatus ||
+    !firstObservedAt ||
+    !lastObservedAt ||
+    !subject ||
+    !itemVisibility ||
+    !itemPrivacyRisk ||
+    (!/^DELIBERAZIONE\b/i.test(text(item.act_type) ?? "") &&
+      itemClassification.act_category.id !== "deliberazioni")
+  ) {
+    return null;
+  }
+
+  const document =
+    itemVisibility === "publishable" && itemPrivacyRisk === "low"
+      ? archivedDocument(item.archived_document)
+      : null;
+
+  return {
+    id,
+    source,
+    source_url: sourceUrl,
+    retrieved_at: retrievedAt,
+    publication_number: text(item.publication_number),
+    publication_start: text(item.publication_start),
+    publication_end: text(item.publication_end),
+    office: text(item.office),
+    act_type: text(item.act_type),
+    act_number: text(item.act_number),
+    act_date: text(item.act_date),
+    subject,
+    content_hash: text(item.content_hash),
+    verification_status: verificationStatus,
+    privacy_risk: itemPrivacyRisk,
+    public_visibility: itemVisibility,
+    classification: itemClassification,
+    known_limits: textArray(item.known_limits),
+    public_note: text(item.public_note),
+    first_observed_at: firstObservedAt,
+    last_observed_at: lastObservedAt,
+    archived_document: document,
+  };
+}
+
+function earliest(values: Array<string | null>): string | null {
+  const available = values.filter((value): value is string => Boolean(value));
+  return available.sort((left, right) => left.localeCompare(right))[0] ?? null;
+}
+
+function latest(values: Array<string | null>): string | null {
+  const available = values.filter((value): value is string => Boolean(value));
+  return available.sort((left, right) => right.localeCompare(left))[0] ?? null;
+}
+
+export const DELIBERE_ARCHIVE_ITEMS: DeliberaArchiveItem[] = (
+  Array.isArray(rawArchive.items) ? rawArchive.items : []
+)
+  .map(normalizeItem)
+  .filter((item): item is DeliberaArchiveItem => item !== null);
+
+export const DELIBERE_ARCHIVE_SUMMARY = {
+  generated_at: text(rawArchive.generated_at),
+  source: text(rawArchive.source) ?? "Albo Pretorio Comune di Lamezia Terme",
+  source_url:
+    text(rawArchive.source_url) ??
+    "https://albo.tinnvision.cloud/?ente=00301390795",
+  verification_status:
+    text(rawArchive.verification_status) ?? "verification_required",
+  coverage: {
+    first_observed_at: earliest(
+      DELIBERE_ARCHIVE_ITEMS.map((item) => item.first_observed_at),
+    ),
+    last_observed_at: latest(
+      DELIBERE_ARCHIVE_ITEMS.map((item) => item.last_observed_at),
+    ),
+    first_act_date: earliest(
+      DELIBERE_ARCHIVE_ITEMS.map(
+        (item) => item.act_date ?? item.publication_start,
+      ),
+    ),
+    last_act_date: latest(
+      DELIBERE_ARCHIVE_ITEMS.map(
+        (item) => item.act_date ?? item.publication_start,
+      ),
+    ),
+  },
+  counts: {
+    total: DELIBERE_ARCHIVE_ITEMS.length,
+    giunta: DELIBERE_ARCHIVE_ITEMS.filter((item) =>
+      item.act_type?.toUpperCase().includes("GIUNTA"),
+    ).length,
+    consiglio: DELIBERE_ARCHIVE_ITEMS.filter((item) =>
+      item.act_type?.toUpperCase().includes("CONSIGLIO"),
+    ).length,
+    archived_documents: DELIBERE_ARCHIVE_ITEMS.filter(
+      (item) => item.archived_document !== null,
+    ).length,
+  },
+  known_limits: textArray(rawArchive.known_limits),
+};
