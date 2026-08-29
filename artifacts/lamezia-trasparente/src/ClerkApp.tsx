@@ -12,6 +12,7 @@ import { Toaster } from "sonner";
 import { CivicHelperProvider } from "@/components/helper/CivicHelperContext";
 import { ThemeProvider } from "@/components/theme/ThemeProvider";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { EvidenceRoutes } from "./EvidenceRoutes";
 import { Router } from "./Router";
 
 interface ClerkAppProps {
@@ -152,6 +153,8 @@ export default function ClerkApp({
                 <Route path="/sign-in/*?">
                   <SignInPage basePath={basePath} />
                 </Route>
+                <Route path="/interventi-locali" component={EvidenceRoutes} />
+                <Route path="/interventi-locali/:id" component={EvidenceRoutes} />
                 <Route component={Router} />
               </Switch>
             </CivicHelperProvider>
