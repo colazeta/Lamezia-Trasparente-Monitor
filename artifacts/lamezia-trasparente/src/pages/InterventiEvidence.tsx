@@ -60,7 +60,11 @@ export function InterventiEvidence() {
 
     return publicItems.filter((item) => {
       if (area !== ALL && item.primaryArea !== area) return false;
-      if (type !== ALL && !item.interventionTypes.includes(type)) return false;
+      if (
+        type !== ALL &&
+        !(item.interventionTypes as readonly EvidenceInterventionType[]).includes(type)
+      )
+        return false;
       if (country !== ALL && item.country !== country) return false;
       if (strength !== ALL && item.evidenceStrength !== strength) return false;
       if (implementability !== ALL && item.implementability !== implementability) return false;
