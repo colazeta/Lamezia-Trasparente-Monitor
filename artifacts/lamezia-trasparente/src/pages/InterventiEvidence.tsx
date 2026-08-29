@@ -23,6 +23,7 @@ import {
   getEvidenceCountries,
   getEvidenceInterventionTypes,
   type EvidenceImplementability,
+  type EvidenceIntervention,
   type EvidenceInterventionType,
   type EvidenceStrength,
   type EvidenceThematicArea,
@@ -51,7 +52,10 @@ export function InterventiEvidence() {
     useState<AllOr<EvidenceImplementability>>(ALL);
 
   const publicItems = useMemo(
-    () => EVIDENCE_INTERVENTIONS.filter((item) => item.evidenceStrength !== "da_verificare"),
+    () =>
+      EVIDENCE_INTERVENTIONS.filter(
+        (item) => (item as EvidenceIntervention).evidenceStrength !== "da_verificare",
+      ),
     [],
   );
 
