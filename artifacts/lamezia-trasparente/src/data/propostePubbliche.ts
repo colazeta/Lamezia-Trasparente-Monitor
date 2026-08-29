@@ -244,11 +244,11 @@ export const PUBLIC_PROPOSALS = [
     id: "asili-nido-continuita-servizio-2026",
     title: "Avvio urgente e misure di continuità per gli asili nido comunali",
     summary:
-      "Richiesta di pubblicazione degli atti sulla procedura di gara, attivazione urgente del servizio e misure di continuità per evitare che le famiglie restino senza assistenza durante lo slittamento dell'apertura dei tre asili nido comunali.",
+      "Richiesta di trasparenza sulla procedura, attivazione urgente del servizio e misure di continuità per evitare vuoti nell'assistenza dei tre asili nido comunali; il 28 agosto la richiesta è confluita in un'interrogazione consiliare urgente a risposta scritta.",
     promoterId: "gennarino-masi",
     promoter: "Gennarino Masi (PD)",
     promoterType: "consigliere",
-    periodLabel: "26 agosto 2026",
+    periodLabel: "26–28 agosto 2026",
     year: "2026",
     theme: "Welfare e servizi per l'infanzia",
     threadId: "asili-nido-continuita-2026",
@@ -257,18 +257,32 @@ export const PUBLIC_PROPOSALS = [
     territorialArea:
       "Asili nido comunali di via Conforti, via Spartivento e via Giovanni XXIII",
     institutionalRecipient: "Comune di Lamezia Terme — Sindaco e Amministrazione comunale",
-    channel: "comunicato",
-    sourceLabel: "LameziaTerme.it, 26 agosto 2026",
+    channel: "interrogazione",
+    sourceLabel: "il Lametino, 28 agosto 2026",
     sourceUrl:
-      "https://www.lameziaterme.it/lamezia-asili-nido-chiusi-masi-grave-deficit-programmazione/",
-    status: "proposta_emersa",
-    linkedActs: [],
+      "https://www.lametino.it/ultime/lamezia-masi-pd-presenta-interrogazione-su-asili-nido-atti-smentiscono-comune.html",
+    status: "presentata_formalmente",
+    linkedActs: [
+      "Determinazione dirigenziale R.G. n. 1358 del 25/08/2026 — Albo Pretorio n. 2026/2759",
+    ],
     verificationNote:
-      "La richiesta è formulata in un comunicato del consigliere Masi, senza che sia stato verificato un atto consiliare o un protocollo formale. La successiva replica dell'Amministrazione è registrata come risposta istituzionale: annuncia l'intenzione di utilizzare la Centrale Unica di Committenza di Lamezia Multiservizi e la realizzazione di tre ulteriori asili entro l'anno educativo 2027/2028, ma non equivale a recepimento formale delle richieste di Masi.",
+      "La proposta è emersa pubblicamente il 26 agosto e il 28 agosto Masi dichiara di avere depositato un'interrogazione consiliare urgente a risposta scritta; non è stato reperito nelle fonti consultate il relativo numero di protocollo. Il repository contiene inoltre la pubblicazione ufficiale all'Albo n. 2026/2759, determinazione R.G. n. 1358 del 25 agosto 2026, relativa alla presa d'atto della determinazione della Stazione Appaltante Metropolitana di Reggio Calabria per la stessa gara. Gli atti amministrativi sono registrati come sviluppi documentali e non come recepimento della proposta.",
     evidenceLevel: "ricostruzione_multi_fonte",
     firstSeen: "2026-08-26",
-    lastUpdated: "2026-08-26",
+    lastUpdated: "2026-08-28",
     events: [
+      {
+        id: "asili-nido-atto-albo-25-agosto",
+        date: "2026-08-25",
+        type: "aggiornamento",
+        title: "Pubblicata la presa d'atto sulla procedura di gara",
+        summary:
+          "L'Albo Pretorio comunale registra la determinazione R.G. n. 1358 del 25 agosto 2026, pubblicazione n. 2026/2759, con cui il Comune prende atto della determinazione R.G. 2766 del 24 agosto della Stazione Appaltante Metropolitana di Reggio Calabria per la gestione dei tre asili.",
+        sourceLabel: "Albo Pretorio Comune di Lamezia Terme — pubbl. 2026/2759",
+        sourceUrl:
+          "https://albo.tinnvision.cloud/allegati/2026_2759_2_ALLEG?ente=00301390795",
+        evidenceLevel: "fonte_ufficiale",
+      },
       {
         id: "asili-nido-masi-richiesta-continuita",
         date: "2026-08-26",
@@ -291,6 +305,30 @@ export const PUBLIC_PROPOSALS = [
         sourceLabel: "LameziaTerme.it",
         sourceUrl:
           "https://www.lameziaterme.it/asili-nido-gianturco-ritardo-legato-alla-gara-non-alla-programmazione/",
+        evidenceLevel: "fonte_stampa",
+      },
+      {
+        id: "asili-nido-masi-interrogazione-urgente",
+        date: "2026-08-28",
+        type: "deposito",
+        title: "Masi deposita un'interrogazione urgente a risposta scritta",
+        summary:
+          "L'interrogazione chiede di ricostruire quanto avvenuto tra il 17 e il 25 agosto, spiegare perché non siano state mantenute o attivate misure di continuità e chiarire le responsabilità politiche e amministrative nella gestione del rinvio.",
+        sourceLabel: "il Lametino",
+        sourceUrl:
+          "https://www.lametino.it/ultime/lamezia-masi-pd-presenta-interrogazione-su-asili-nido-atti-smentiscono-comune.html",
+        evidenceLevel: "fonte_stampa",
+      },
+      {
+        id: "asili-nido-gianturco-risposta-28-agosto",
+        date: "2026-08-28",
+        type: "risposta_istituzionale",
+        title: "Gianturco ricostruisce la proroga tecnica e il subentro del nuovo gestore",
+        summary:
+          "L'assessore riferisce che il 30 luglio era stata disposta una proroga tecnica al gestore uscente, poi non proseguita dopo l'aggiudicazione; dal 17 agosto il Comune avrebbe avviato gli adempimenti di subentro e tutela dei lavoratori. Comunica inoltre che il 28 agosto è stata effettuata la consegna del servizio al nuovo gestore.",
+        sourceLabel: "il Lametino",
+        sourceUrl:
+          "https://www.lametino.it/ultime/lamezia-gianturco-su-asili-nido-comunali-ogni-passaggio-amministrativo-ha-i-suoi-tempi-no-a-strumentalizzazioni.html",
         evidenceLevel: "fonte_stampa",
       },
     ],
@@ -609,6 +647,115 @@ export const PUBLIC_PROPOSALS = [
         sourceLabel: "City One",
         sourceUrl:
           "https://www.cityonelamezia.it/convocato-consiglio-comunale-di-lamezia-terme-in-prossimita-del-ferragosto/",
+        evidenceLevel: "fonte_stampa",
+      },
+    ],
+  },
+  {
+    id: "passerella-marinella-gizzeria-2026",
+    title: "Completamento dell'iter per la passerella ciclopedonale Marinella–Gizzeria",
+    summary:
+      "Richiesta di completare gli adempimenti comunali necessari alla passerella ciclopedonale sulla SS18 tra Marinella e Gizzeria Lido e, nell'attesa, rendere più sicuri i percorsi esistenti con pulizia, ripristino stradale e verifica della possibile riapertura del vecchio ponte pedonale.",
+    promoterId: "comitato-gizzeria-lido-marinella",
+    promoter: "Comitato spontaneo di cittadini e villeggianti di Gizzeria Lido e Marinella",
+    promoterType: "cittadino_comitato",
+    periodLabel: "8–13 agosto 2026",
+    year: "2026",
+    theme: "Mobilità ciclopedonale e sicurezza stradale",
+    threadId: "passerella-marinella-gizzeria",
+    threadLabel: "Marinella–Gizzeria: passerella ciclopedonale e sicurezza sulla SS18",
+    territorialArea:
+      "Marinella di Lamezia Terme, SS18, via Antonio Cappelli e collegamento verso Gizzeria Lido",
+    institutionalRecipient: "Comune di Lamezia Terme — Sindaco e Lavori Pubblici",
+    channel: "assemblea_pubblica",
+    sourceLabel: "il Lametino, 8 agosto 2026",
+    sourceUrl:
+      "https://www.lametino.it/ultimora/passerella-su-ss18-tra-gizzeria-e-lamezia-cittadini-e-istituzioni-a-confronto-servono-risposte-e-tempi-certi.html",
+    status: "presentata_formalmente",
+    linkedActs: [
+      "Delibera n. 146 del 17/06/2021 — accordo preliminare per il collegamento ciclopedonale Marinella–Gizzeria Lido",
+    ],
+    verificationNote:
+      "La proposta emerge da un incontro pubblico promosso da un comitato spontaneo e apolitico. Le consigliere Annita Vitale e Marialucia Raso, presenti all'incontro, hanno successivamente depositato un'interrogazione al Sindaco sul medesimo oggetto: questo passaggio è trattato come istituzionalizzazione della stessa traiettoria civica, non come un record duplicato. Le fonti consultate non documentano ancora una risposta formale del Comune di Lamezia, l'approvazione finale del progetto da parte dell'ente o l'avvio della gara ANAS.",
+    evidenceLevel: "ricostruzione_multi_fonte",
+    firstSeen: "2026-08-08",
+    lastUpdated: "2026-08-13",
+    events: [
+      {
+        id: "passerella-comitato-incontro-pubblico",
+        date: "2026-08-08",
+        type: "emersione",
+        title: "Il comitato chiede tempi certi e soluzioni immediate per la sicurezza",
+        summary:
+          "Durante l'incontro pubblico il comitato chiede di chiarire e completare l'ultimo passaggio amministrativo per la nuova passerella; propone inoltre la pulizia e riapertura del viottolo e la verifica della possibile riapertura in sicurezza del vecchio ponte pedonale come soluzione temporanea.",
+        sourceLabel: "il Lametino",
+        sourceUrl:
+          "https://www.lametino.it/ultimora/passerella-su-ss18-tra-gizzeria-e-lamezia-cittadini-e-istituzioni-a-confronto-servono-risposte-e-tempi-certi.html",
+        evidenceLevel: "fonte_stampa",
+      },
+      {
+        id: "passerella-raso-vitale-interrogazione",
+        date: "2026-08-10",
+        type: "deposito",
+        title: "Raso e Vitale depositano un'interrogazione al Sindaco",
+        summary:
+          "Le consigliere chiedono quali adempimenti restino a carico di Lamezia e con quali tempi; se non vi sono ulteriori ostacoli chiedono l'approvazione rapida degli atti di competenza. Sollecitano anche il completamento del manto stradale e la pulizia costante di via Antonio Cappelli e dell'area del ponte.",
+        sourceLabel: "Corriere di Lamezia",
+        sourceUrl:
+          "https://www.corrieredilamezia.it/politica/2026_08_10/passerella-marinella-gizzeria-raso-e-vitale-lamezia-dica-cosa-deve-fare-e-lo-faccia-intanto-si-garantiscano-pulizia-e-sicurezza_65594/",
+        evidenceLevel: "fonte_stampa",
+      },
+      {
+        id: "passerella-comitato-ribadisce-ultimo-passo",
+        date: "2026-08-13",
+        type: "aggiornamento",
+        title: "Il comitato ribadisce la richiesta di completare l'iter",
+        summary:
+          "Caterina Misuraca, indicata come una delle promotrici del comitato, ribadisce che la richiesta è completare l'iter comunale e ottenere una data certa; conferma inoltre l'interesse a valutare il vecchio ponte pedonale come soluzione temporanea se tecnicamente riapribile in sicurezza.",
+        sourceLabel: "Calabria 7",
+        sourceUrl:
+          "https://calabria7.news/attualita/passerella-tra-gizzeria-lido-e-marinella-il-progetto-ce-i-fondi-ci-sono-cosa-aspettiamo/",
+        evidenceLevel: "fonte_stampa",
+      },
+    ],
+  },
+  {
+    id: "emodinamica-h24-giovanni-paolo-ii-2026",
+    title: "Emodinamica H24 al Presidio ospedaliero Giovanni Paolo II",
+    summary:
+      "Mozione regionale per garantire a Lamezia Terme, insieme ai presidi di Corigliano-Rossano, Paola e Vibo Valentia, un servizio di emodinamica strutturale e permanente operativo 24 ore su 24 e 7 giorni su 7, integrato nella Rete STEMI e nella rete per le sindromi coronariche acute, con reclutamento prioritario di specialisti e adeguate risorse tecnologiche.",
+    promoterId: "elisa-scutella-m5s",
+    promoter: "Elisa Scutellà (M5S)",
+    promoterType: "consigliere",
+    periodLabel: "18 agosto 2026",
+    year: "2026",
+    theme: "Sanità e rete ospedaliera",
+    threadId: "ospedale-emodinamica-h24",
+    threadLabel: "Ospedale Giovanni Paolo II: emodinamica H24 e rete cardiologica",
+    territorialArea: "Presidio ospedaliero Giovanni Paolo II, Lamezia Terme",
+    institutionalRecipient: "Regione Calabria — Giunta regionale e Consiglio regionale",
+    channel: "mozione",
+    sourceLabel: "TEN TV, 18 agosto 2026",
+    sourceUrl:
+      "https://www.tenonline.tv/news/politica/emodinamica-h24-scutella-depositata-mozione-per-trovare-soluzioni/",
+    status: "presentata_formalmente",
+    linkedActs: [],
+    verificationNote:
+      "Più fonti giornalistiche convergenti riferiscono il deposito della mozione da parte della capogruppo M5S in Consiglio regionale e ne riportano gli stessi contenuti operativi. Non è stato reperito nelle fonti consultate il numero ufficiale della mozione né un esito della discussione consiliare. La proposta riguarda quattro presidi calabresi; la scheda la censisce perché include espressamente il Presidio Giovanni Paolo II di Lamezia Terme.",
+    evidenceLevel: "ricostruzione_multi_fonte",
+    firstSeen: "2026-08-18",
+    lastUpdated: "2026-08-18",
+    events: [
+      {
+        id: "emodinamica-scutella-mozione-depositata",
+        date: "2026-08-18",
+        type: "deposito",
+        title: "Scutellà deposita la mozione per l'emodinamica H24",
+        summary:
+          "La mozione chiede servizi strutturali e permanenti H24 nei quattro presidi, piena integrazione nella Rete STEMI e SCA, un piano prioritario di reclutamento di medici e specialisti e un'equa distribuzione di risorse e tecnologie.",
+        sourceLabel: "TEN TV",
+        sourceUrl:
+          "https://www.tenonline.tv/news/politica/emodinamica-h24-scutella-depositata-mozione-per-trovare-soluzioni/",
         evidenceLevel: "fonte_stampa",
       },
     ],
