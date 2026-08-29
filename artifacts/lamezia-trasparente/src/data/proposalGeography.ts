@@ -230,6 +230,45 @@ export const PROPOSAL_GEOGRAPHY: Record<string, ProposalGeography> = {
     note:
       "Il riferimento rappresenta il filone territoriale Ginepri–Marinella e non delimita l’intero perimetro interessato dall’interrogazione.",
   },
+  "passerella-marinella-gizzeria-2026": {
+    label: "Marinella, SS18 e collegamento verso Gizzeria Lido",
+    scope: "area",
+    areas: ["costa"],
+    points: [
+      {
+        id: "via-antonio-cappelli-bastione",
+        label: "Via Antonio Cappelli / area Bastione di Malta — punto rappresentativo",
+        latitude: 38.93044,
+        longitude: 16.22154,
+        area: "costa",
+        precision: "area_centroid",
+        sourceLabel: "AroundUs / Wikimedia — Bastione di Malta, Via Antonio Cappelli",
+        sourceUrl: "https://it.aroundus.com/p/8132132-bastione-di-malta",
+      },
+    ],
+    note:
+      "Il punto è un riferimento territoriale lungo via Antonio Cappelli e non identifica la posizione esatta della futura passerella o del ponte sul torrente Piscirò.",
+  },
+  "emodinamica-h24-giovanni-paolo-ii-2026": {
+    label: "Presidio ospedaliero Giovanni Paolo II",
+    scope: "point",
+    areas: ["sambiase"],
+    points: [
+      {
+        id: "ospedale-giovanni-paolo-ii",
+        label: "Presidio ospedaliero Giovanni Paolo II, via Senatore Arturo Perugini",
+        latitude: 38.9583756,
+        longitude: 16.3001498,
+        area: "sambiase",
+        precision: "exact_landmark",
+        sourceLabel: "Regione Calabria — DGR 720/2023, tabella delle strutture ospedaliere",
+        sourceUrl:
+          "https://www.regione.calabria.it/wp-content/uploads/2023/12/dgr--720----del-15.12.2023-_.pdf",
+      },
+    ],
+    note:
+      "La coordinata è quella associata al P.O. Giovanni Paolo II nella tabella regionale delle strutture ospedaliere. Il tag Sambiase serve al filtro territoriale dell'archivio e non sostituisce una delimitazione amministrativa di quartiere.",
+  },
   "convocazioni-ordini-giorno-digitali": citywide(
     "Trasparenza delle sedute — intero territorio comunale",
   ),
