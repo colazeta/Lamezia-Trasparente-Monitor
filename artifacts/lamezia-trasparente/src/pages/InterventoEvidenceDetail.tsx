@@ -20,6 +20,7 @@ import {
   EVIDENCE_INTERVENTION_TYPE_LABELS,
   EVIDENCE_STRENGTH_LABELS,
   findEvidenceIntervention,
+  type EvidenceIntervention,
   type EvidenceStrength,
 } from "@/data/evidenceInterventions";
 
@@ -57,7 +58,9 @@ function LabelValue({ label, value }: { label: string; value: React.ReactNode })
 
 export function InterventoEvidenceDetail() {
   const [, params] = useRoute("/interventi-locali/:id");
-  const item = params?.id ? findEvidenceIntervention(params.id) : null;
+  const item: EvidenceIntervention | null = params?.id
+    ? findEvidenceIntervention(params.id)
+    : null;
 
   if (!item || item.evidenceStrength === "da_verificare") {
     return (
