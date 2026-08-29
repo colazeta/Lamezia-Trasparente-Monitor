@@ -6,6 +6,7 @@ import { Toaster } from "sonner";
 import { CivicHelperProvider } from "@/components/helper/CivicHelperContext";
 import { ThemeProvider } from "@/components/theme/ThemeProvider";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { EvidenceRoutes } from "./EvidenceRoutes";
 import { Router } from "./Router";
 
 const ClerkApp = lazy(() => import("./ClerkApp"));
@@ -78,6 +79,8 @@ function App() {
                     path="/admin/*?"
                     component={RedazioneUnavailablePage}
                   />
+                  <Route path="/interventi-locali" component={EvidenceRoutes} />
+                  <Route path="/interventi-locali/:id" component={EvidenceRoutes} />
                   <Route component={Router} />
                 </Switch>
               </CivicHelperProvider>
