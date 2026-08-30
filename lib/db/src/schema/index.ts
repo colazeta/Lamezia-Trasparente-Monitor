@@ -7,6 +7,7 @@ export * from "./themeMetrics";
 export * from "./performanceCategories";
 export * from "./performanceIndicators";
 export * from "./performanceIndicatorValues";
+export * from "./demographics";
 export * from "./contracts";
 export * from "./acts";
 export * from "./reports";
