@@ -503,7 +503,7 @@ function AlboDocumentItem({ publication: p }: { publication: Publication }) {
   const attachmentsCount = p.attachments?.length ?? 0;
   return (
     <li>
-      <Link href={`/albo/${p.id}`} className="block">
+      <Link href={`/albo/${p.publicId}`} className="block">
         <div className="group rounded-xl border border-card-border bg-card p-4 shadow-sm transition-all hover:-translate-y-0.5 hover:border-brand/40 hover:shadow-md">
           <div className="flex flex-wrap items-center justify-between gap-2">
             <div className="flex flex-wrap items-center gap-2">

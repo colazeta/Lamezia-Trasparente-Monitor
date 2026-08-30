@@ -22,9 +22,11 @@ Se una classificazione successiva sposta esplicitamente lo stesso record in
 `do_not_publish`, il record viene rimosso dall'archivio cumulativo.
 Nella pagina pubblica, l'archivio prevale inoltre sui duplicati API: dettagli e
 allegati API non possono arricchire un record già minimizzato o a solo metadato.
-La stessa regola fail-closed vale per i duplicati pubblicabili: schede interne e
-allegati API non sostituiscono mai il documento esplicitamente autorizzato dal
-manifest corrente.
+Per un duplicato pubblicabile a basso rischio, il client può aggiungere soltanto
+il collegamento alla medesima proiezione pubblica e allegati con attestazione
+esplicita; se esiste già una copia archiviata, quella resta il riferimento
+documentale prioritario. La corrispondenza avviene esclusivamente sul
+`public_id` stabile, non su euristiche basate su numero, data o testo.
 
 Ogni nuova acquisizione pubblica registra una `privacy_attestation` con versione
 della policy e base della valutazione. Un record storico già redatto che non ha
@@ -70,6 +72,30 @@ Anche `pnpm albo:sanitise-public` rigenera l'archivio dalla versione sanitizzata
 di `latest.json` e dal manifest sanitizzato, così revoche, presentazioni e policy
 privacy restano coerenti su tutti gli output pubblici.
 
+## Contratto di consultazione
+
+La pagina `/delibere` trasforma archivio statico e risposta API nello stesso
+view model pubblico. Le regole di presentazione sono condivise e verificabili:
+
+- il titolo visibile e il testo di ricerca provengono sempre da `presentation`;
+- `public_id` è identità, chiave di deduplicazione e destinazione stabile dei
+  collegamenti alle schede;
+- `presentation.area_theme.theme_id` è la chiave del filtro tematico; la label
+  è solo testo per il lettore e può cambiare con una nuova versione;
+- un tema non assegnabile resta esplicito come “Area non disponibile”, senza
+  derivarlo da campi soppressi o dal PDF;
+- ricerca, organo, tema, anno o intervallo e pagina sono serializzati nell'URL;
+  anno e intervallo personalizzato sono alternative, non filtri sovrapposti;
+- la paginazione usa blocchi deterministici di 20 record e riporta sempre il
+  conteggio filtrato sul totale unificato;
+- un errore dell'API non viene rappresentato come zero risultati: il fallback
+  statico resta consultabile e l'errore di aggiornamento è indicato a parte.
+
+I titoli lunghi non vengono troncati nel dato: la card limita solo l'ingombro
+visivo e offre l'espansione del testo completo. Fonte, copertura e limite di
+completezza restano visibili in forma sintetica; i dettagli metodologici sono
+espandibili.
+
 ## Documenti
 
 Il collegamento a una copia PDF locale viene conservato solo quando il manifest
@@ -87,6 +113,9 @@ Seed rigenerato con la policy corrente il 30 agosto 2026:
 - 43 deliberazioni di Giunta;
 - 20 deliberazioni di Consiglio;
 - 1 PDF autorizzato dal manifest corrente;
+- 10 assegnazioni tematiche deterministiche e 53 record senza area disponibile
+  (28 per testo soppresso dalla policy privacy, 25 senza regola sufficientemente
+  specifica);
 - date degli atti osservati: 10 giugno–24 agosto 2026.
 
 ## Limiti
