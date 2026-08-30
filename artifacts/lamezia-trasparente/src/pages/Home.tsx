@@ -617,16 +617,15 @@ function InstitutionalSessionsHomeCard({
             const sameSessionCount = session.contextResearch.articles.filter(
               (article) => article.relationship === "same_session",
             ).length;
-            const possibleSessionCount = session.contextResearch.articles.filter(
+            const possibleSessionCount =
+              session.contextResearch.articles.filter(
                 (article) => article.relationship === "possible_same_session",
               ).length;
             const agendaItemCount = session.contextResearch.articles.filter(
               (article) => article.relationship === "agenda_item",
             ).length;
             const contextRelationshipSummary = [
-              sameSessionCount > 0
-                ? `${sameSessionCount} stessa seduta`
-                : null,
+              sameSessionCount > 0 ? `${sameSessionCount} stessa seduta` : null,
               possibleSessionCount > 0
                 ? `${possibleSessionCount} ${possibleSessionCount === 1 ? "possibile" : "possibili"}`
                 : null,
@@ -719,7 +718,7 @@ function AlboPulseRow({ pulse }: { pulse: PulseItem }) {
 
   return (
     <Link
-      href="/albo"
+      href={`/albo?atto=${encodeURIComponent(item.id)}`}
       className="group block p-4 transition-colors hover:bg-muted/45"
     >
       <div className="mb-2 flex flex-wrap items-center gap-2">
@@ -729,10 +728,26 @@ function AlboPulseRow({ pulse }: { pulse: PulseItem }) {
         <span className="text-[10px] font-semibold text-muted-foreground">
           {item.classification.act_category.label}
         </span>
+        {item.presentation.labels.slice(0, 1).map((label) => (
+          <span key={label} className="text-[10px] font-semibold text-primary">
+            {label}
+          </span>
+        ))}
       </div>
-      <p className="line-clamp-2 text-sm font-semibold leading-snug text-foreground">
-        {item.subject}
+      <p
+        className="line-clamp-3 text-sm font-semibold leading-snug text-foreground"
+        data-long-title={
+          item.presentation.flags.includes("display_title_too_long") ||
+          undefined
+        }
+      >
+        {item.presentation.display_title}
       </p>
+      {item.presentation.summary && (
+        <p className="mt-1 line-clamp-2 text-xs leading-5 text-muted-foreground">
+          {item.presentation.summary}
+        </p>
+      )}
       <div className="mt-2 flex flex-wrap gap-x-3 gap-y-1 text-xs text-muted-foreground">
         <span>{item.classification.sector.label}</span>
         <span>·</span>
