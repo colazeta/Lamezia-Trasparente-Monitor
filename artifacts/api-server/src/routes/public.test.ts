@@ -4,6 +4,8 @@ import { inArray } from "drizzle-orm";
 import request from "supertest";
 import app from "../app";
 import { db, pool, publicationsTable } from "@workspace/db";
+import { publicActPublicId } from "@workspace/publication-standardisation/public-act";
+import { attestPublicationAtIngestion } from "../lib/publicActProjection";
 
 const createdIds: number[] = [];
 
@@ -106,6 +108,52 @@ describe("Public API v1", () => {
       `/api/public/v1/documents/${id}/markdown`,
     );
     expect(noMd.status).toBe(404);
+  });
+
+  it("dereferences the stable publicId in both public detail routes", async () => {
+    const unique = `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+    const progressivo = `lookup/${unique}`;
+    const oggetto = `Atto lookup ${unique}`;
+    const pubStart = new Date("2026-01-15T00:00:00.000Z");
+    const publicSafetyDecision = attestPublicationAtIngestion({
+      source: {
+        progressivo,
+        tipologia: "DETERMINAZIONE DIRIGENZIALE",
+        category: "albo",
+        subcategory: null,
+        provenienza: null,
+        oggetto,
+        dataAtto: null,
+        pubStart,
+        pubEnd: null,
+        numRegSet: null,
+        numRegGen: null,
+        cups: [],
+        pnrrMission: null,
+        isPnrr: false,
+      },
+      evaluatedAt: new Date("2026-08-30T09:00:00.000Z"),
+      previous: null,
+    });
+    const id = await createPublication({
+      progressivo,
+      oggetto,
+      pubStart,
+      publicSafetyDecision,
+    });
+    const publicId = publicActPublicId(progressivo)!;
+
+    const publicDetail = await request(app).get(
+      `/api/public/v1/documents/${publicId}`,
+    );
+    expect(publicDetail.status).toBe(200);
+    expect(publicDetail.body).toMatchObject({ id, publicId, progressivo });
+
+    const publicationDetail = await request(app).get(
+      `/api/publications/${publicId}`,
+    );
+    expect(publicationDetail.status).toBe(200);
+    expect(publicationDetail.body).toMatchObject({ id, publicId, progressivo });
   });
 
   it("serves the index and the OpenAPI document", async () => {

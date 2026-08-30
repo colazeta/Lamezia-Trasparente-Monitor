@@ -5,7 +5,6 @@ import { type Publication } from "@workspace/db";
 import {
   classifyAlboPublicSafety,
   isPublicActSafetyAttestation,
-  isPublicActSafetyDecision,
   makeAlboPublicSafetyDecision,
   makePublicActSafetyAttestation,
   projectPublicAct,
@@ -105,21 +104,32 @@ export function attestPublicationAtIngestion(input: {
   });
   let decision: PublicActSafetyDecision;
 
-  if (previousFailure === "missing" || previousFailure === "source_changed") {
+  const priorStructuralDecision = structuralPublicActSafetyDecision(
+    previousDecision(input.previous),
+  );
+
+  if (previousFailure === "missing") {
     decision = candidate;
   } else if (
+    previousFailure === "source_changed" ||
     previousFailure === "stale_policy" ||
-    previousFailure === "stale_profile"
+    previousFailure === "stale_profile" ||
+    previousFailure === "invalid_presentation"
   ) {
     decision = renewAlboPublicSafetyDecision(
       previousDecision(input.previous),
       candidate,
     );
-  } else if (
-    previousFailure === "invalid_presentation" &&
-    isPublicActSafetyDecision(previousDecision(input.previous))
-  ) {
-    decision = previousDecision(input.previous) as PublicActSafetyDecision;
+  } else if (priorStructuralDecision) {
+    // A malformed envelope cannot validate a permissive prior decision. It can,
+    // however, carry a structurally stricter restriction that must never be
+    // lost (especially do_not_publish).
+    decision = renewAlboPublicSafetyDecision(
+      previousDecision(input.previous),
+      requiredMetadataOnlyDecision(
+        "Attestazione precedente non valida: record limitato al metadato minimo.",
+      ),
+    );
   } else {
     decision = requiredMetadataOnlyDecision(
       "Attestazione precedente non valida: record limitato al metadato minimo.",
@@ -148,7 +158,7 @@ export function attestPublicationAtIngestion(input: {
 export function projectDatabasePublication(
   publication: Publication,
 ): ProjectedDatabasePublication | null {
-  const source = publicationSource(publication);
+  const source = publicationSafetySourceFromRecord(publication);
   const fingerprint = publicationSafetySourceFingerprint(source);
   const persisted = publication.publicSafetyDecision;
   let failure = publicActSafetyAttestationFailureReason(persisted, fingerprint);
@@ -359,7 +369,9 @@ function projectSafetySource(
   });
 }
 
-function publicationSource(publication: Publication): PublicationSafetySource {
+export function publicationSafetySourceFromRecord(
+  publication: Publication,
+): PublicationSafetySource {
   return {
     progressivo: publication.progressivo,
     tipologia: publication.tipologia,

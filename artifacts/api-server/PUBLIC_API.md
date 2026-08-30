@@ -64,8 +64,10 @@ e restituiscono una busta uniforme:
   - `from`, `to` — intervallo di pubblicazione (`YYYY-MM-DD`)
   - `isPnrr` — solo atti collegati al PNRR (`true`/`false`)
   - `hasMarkdown` — solo atti con testo Markdown estratto (`true`/`false`)
-- `GET /documents/{id}` — dettaglio di un atto (metadati + allegati)
-- `GET /documents/{id}/markdown` — testo pulito in Markdown estratto
+- `GET /documents/{id}` — dettaglio di un atto (metadati + allegati); `{id}`
+  accetta sia l'id numerico legacy sia il `publicId` stabile
+- `GET /documents/{id}/markdown` — testo pulito in Markdown estratto; accetta
+  gli stessi due identificatori
   dall'allegato PDF principale.
   - Default: JSON `{ id, progressivo, oggetto, markdownSource, markdownExtractedAt, markdown }`
   - Con `?format=md`: risposta diretta `text/markdown`
@@ -77,8 +79,10 @@ file nel database non autorizza la pubblicazione.
 
 Ogni atto include inoltre:
 
-- `publicId`, identificatore stabile condiviso (`albo-YYYY-N`) derivato dal
-  progressivo e indipendente dall'id numerico interno del database;
+- `publicId`, identificatore stabile condiviso (`albo-YYYY-N` per i progressivi
+  ufficiali canonici, `albo-raw-…` con codifica reversibile negli altri casi),
+  indipendente dall'id numerico interno del database e direttamente utilizzabile
+  negli endpoint di dettaglio REST e nei tool MCP;
 - `presentation`, con `display_title`, testo di ricerca normalizzato e audit
   della standardizzazione;
 - `publicSafety`, con policy/profilo applicati, visibilità, rischio prudenziale

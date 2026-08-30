@@ -1095,8 +1095,13 @@ paths:
         - name: id
           in: path
           required: true
+          description: Numeric legacy id or stable publicId returned by publication lists
           schema:
-            type: integer
+            oneOf:
+              - type: integer
+                minimum: 1
+              - type: string
+                pattern: '^albo-(?:[0-9]{4}-[1-9][0-9]*|raw-(?:[a-f0-9]{4})+)$'
       responses:
         "200":
           description: Publication detail
@@ -1120,8 +1125,13 @@ paths:
         - name: id
           in: path
           required: true
+          description: Numeric legacy id or stable publicId returned by publication lists
           schema:
-            type: integer
+            oneOf:
+              - type: integer
+                minimum: 1
+              - type: string
+                pattern: '^albo-(?:[0-9]{4}-[1-9][0-9]*|raw-(?:[a-f0-9]{4})+)$'
       responses:
         "200":
           description: Linked story
@@ -4509,10 +4519,12 @@ components:
 
     StoriaOriginatingSeduta:
       type: object
-      required: [id, progressivo, oggetto]
+      required: [id, publicId, progressivo, oggetto]
       properties:
         id:
           type: integer
+        publicId:
+          type: string
         progressivo:
           type: string
         oggetto:
@@ -4561,10 +4573,12 @@ components:
 
     StoriaPublicationItem:
       type: object
-      required: [id, progressivo, oggetto, tipologia, category, matchedBy]
+      required: [id, publicId, progressivo, oggetto, tipologia, category, matchedBy]
       properties:
         id:
           type: integer
+        publicId:
+          type: string
         progressivo:
           type: string
         oggetto:
@@ -4576,6 +4590,8 @@ components:
         pubStart:
           type: ["string", "null"]
         macrotema:
+          type: ["string", "null"]
+        subcategory:
           type: ["string", "null"]
         matchedBy:
           type: string

@@ -18,6 +18,22 @@ const pageSizeParam = {
   schema: { type: "integer", minimum: 1, maximum: 100, default: 20 },
 } as const;
 
+const publicActIdentifierParam = {
+  name: "id",
+  in: "path",
+  required: true,
+  description: "Id numerico legacy o publicId stabile restituito dalle liste.",
+  schema: {
+    oneOf: [
+      { type: "integer", minimum: 1 },
+      {
+        type: "string",
+        pattern: "^albo-(?:[0-9]{4}-[1-9][0-9]*|raw-(?:[a-f0-9]{4})+)$",
+      },
+    ],
+  },
+} as const;
+
 function paginated(itemRef: string) {
   return {
     type: "object",
@@ -127,14 +143,7 @@ export function buildPublicOpenApi(baseUrl: string): Record<string, unknown> {
           operationId: "getPublicDocument",
           tags: ["documents"],
           summary: "Dettaglio di un atto",
-          parameters: [
-            {
-              name: "id",
-              in: "path",
-              required: true,
-              schema: { type: "integer" },
-            },
-          ],
+          parameters: [publicActIdentifierParam],
           responses: {
             "200": jsonResponse(
               { $ref: "#/components/schemas/Document" },
@@ -156,12 +165,7 @@ export function buildPublicOpenApi(baseUrl: string): Record<string, unknown> {
             "Restituisce il testo estratto e ripulito dall'allegato PDF " +
             "principale. Con ?format=md restituisce direttamente text/markdown.",
           parameters: [
-            {
-              name: "id",
-              in: "path",
-              required: true,
-              schema: { type: "integer" },
-            },
+            publicActIdentifierParam,
             {
               name: "format",
               in: "query",

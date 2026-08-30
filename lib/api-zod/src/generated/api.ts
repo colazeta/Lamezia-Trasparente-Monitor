@@ -1060,8 +1060,12 @@ export const ListPublicationsResponse = zod.array(ListPublicationsResponseItem)
 /**
  * @summary Get a single publication with full detail (generates "In breve" lazily)
  */
+
+export const getPublicationPathIdTwoRegExp = new RegExp('^albo-(?:[0-9]{4}-[1-9][0-9]\*|raw-(?:[a-f0-9]{4})+)$');
+
+
 export const GetPublicationParams = zod.object({
-  "id": zod.coerce.number()
+  "id": zod.union([zod.coerce.number().min(1),zod.coerce.string().regex(getPublicationPathIdTwoRegExp)]).describe('Numeric legacy id or stable publicId returned by publication lists')
 })
 
 export const GetPublicationResponse = zod.object({
@@ -1160,8 +1164,12 @@ export const GetPublicationResponse = zod.object({
 /**
  * @summary Get linked story items for an Albo act (contracts, PNRR projects, sibling acts)
  */
+
+export const getPublicationStoriaPathIdTwoRegExp = new RegExp('^albo-(?:[0-9]{4}-[1-9][0-9]\*|raw-(?:[a-f0-9]{4})+)$');
+
+
 export const GetPublicationStoriaParams = zod.object({
-  "id": zod.coerce.number()
+  "id": zod.union([zod.coerce.number().min(1),zod.coerce.string().regex(getPublicationStoriaPathIdTwoRegExp)]).describe('Numeric legacy id or stable publicId returned by publication lists')
 })
 
 export const GetPublicationStoriaResponse = zod.object({
@@ -1184,16 +1192,19 @@ export const GetPublicationStoriaResponse = zod.object({
 })),
   "siblings": zod.array(zod.object({
   "id": zod.number(),
+  "publicId": zod.string(),
   "progressivo": zod.string(),
   "oggetto": zod.string(),
   "tipologia": zod.string(),
   "category": zod.string(),
   "pubStart": zod.string().nullish(),
   "macrotema": zod.string().nullish(),
+  "subcategory": zod.string().nullish(),
   "matchedBy": zod.enum(['cig', 'cup'])
 })),
   "originatingSeduta": zod.union([zod.object({
   "id": zod.number(),
+  "publicId": zod.string(),
   "progressivo": zod.string(),
   "oggetto": zod.string(),
   "pubStart": zod.string().nullish(),

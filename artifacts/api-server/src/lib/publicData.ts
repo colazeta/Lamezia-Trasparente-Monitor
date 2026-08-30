@@ -26,6 +26,10 @@ import {
   mapPublicDocument,
   mapPublicDocumentMarkdown,
 } from "./publicActProjection";
+import {
+  findPublicationByPublicIdentifier,
+  type PublicActIdentifier,
+} from "./publicActLookup";
 import { normaliseSearchText } from "@workspace/publication-standardisation";
 
 // Strato di accesso ai dati condiviso dall'API pubblica REST e dal server MCP,
@@ -163,17 +167,12 @@ export async function listDocuments(
   );
 }
 
-export async function getDocument(id: number) {
-  if (!Number.isFinite(id)) return null;
-  const [row] = await db
-    .select()
-    .from(publicationsTable)
-    .where(eq(publicationsTable.id, id))
-    .limit(1);
+export async function getDocument(identifier: PublicActIdentifier) {
+  const row = await findPublicationByPublicIdentifier(identifier);
   return row ? mapPublicDocument(row) : null;
 }
 
-export async function getDocumentMarkdown(id: number): Promise<{
+export async function getDocumentMarkdown(identifier: PublicActIdentifier): Promise<{
   id: number;
   publicId: string;
   progressivo: string;
@@ -182,12 +181,7 @@ export async function getDocumentMarkdown(id: number): Promise<{
   markdownExtractedAt: string | null;
   markdown: string;
 } | null> {
-  if (!Number.isFinite(id)) return null;
-  const [row] = await db
-    .select()
-    .from(publicationsTable)
-    .where(eq(publicationsTable.id, id))
-    .limit(1);
+  const row = await findPublicationByPublicIdentifier(identifier);
   return row ? mapPublicDocumentMarkdown(row) : null;
 }
 

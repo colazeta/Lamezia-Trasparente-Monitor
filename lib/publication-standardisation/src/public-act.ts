@@ -566,6 +566,21 @@ export function publicActPublicId(progressivo: string): string | null {
   return encoded ? `albo-raw-${encoded}` : null;
 }
 
+/** Reverses a public act id without a database scan. */
+export function publicActProgressivoFromPublicId(publicId: string): string | null {
+  const official = /^albo-(\d{4})-([1-9]\d*)$/u.exec(publicId);
+  if (official) return `${official[1]}/${official[2]}`;
+
+  const raw = /^albo-raw-((?:[a-f0-9]{4})+)$/u.exec(publicId)?.[1];
+  if (!raw) return null;
+
+  let progressivo = "";
+  for (let index = 0; index < raw.length; index += 4) {
+    progressivo += String.fromCharCode(Number.parseInt(raw.slice(index, index + 4), 16));
+  }
+  return publicActPublicId(progressivo) === publicId ? progressivo : null;
+}
+
 export function publicActProjectionFailureReason(
   input: PublicActProjectionInput,
 ): PublicActProjectionFailureReason | null {

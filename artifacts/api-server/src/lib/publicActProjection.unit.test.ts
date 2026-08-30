@@ -351,6 +351,59 @@ describe("persisted public-safety boundary", () => {
     expect(JSON.stringify(projected)).not.toContain(canary);
   });
 
+  it("never loosens a prior exclusion when the source changes", () => {
+    const excluded = attestPublicationAtIngestion({
+      source: source({ oggetto: "SERVIZIO DI TUTELA PER MINORI" }),
+      evaluatedAt: EVALUATED_AT,
+      previous: null,
+    });
+
+    const renewed = attestPublicationAtIngestion({
+      source: source({ oggetto: "OGGETTO ORDINARIO" }),
+      evaluatedAt: new Date("2026-08-31T09:00:00.000Z"),
+      previous: excluded,
+    });
+
+    expect(renewed.decision.public_visibility).toBe("do_not_publish");
+    expect(renewed.presentation).toBeNull();
+  });
+
+  it("reclassifies current source before repairing an invalid presentation", () => {
+    const initial = attestPublicationAtIngestion({
+      source: source({ oggetto: "OGGETTO ORDINARIO" }),
+      evaluatedAt: EVALUATED_AT,
+      previous: null,
+    });
+    const invalidPresentation = { ...initial, presentation: {} };
+
+    const repaired = attestPublicationAtIngestion({
+      source: source({ oggetto: "SERVIZIO DI TUTELA PER MINORI" }),
+      evaluatedAt: new Date("2026-08-31T09:00:00.000Z"),
+      previous: invalidPresentation,
+    });
+
+    expect(repaired.decision.public_visibility).toBe("do_not_publish");
+    expect(repaired.presentation).toBeNull();
+  });
+
+  it("preserves a structural exclusion from an otherwise invalid envelope", () => {
+    const excluded = attestPublicationAtIngestion({
+      source: source({ oggetto: "SERVIZIO DI TUTELA PER MINORI" }),
+      evaluatedAt: EVALUATED_AT,
+      previous: null,
+    });
+    const invalidEnvelope = { ...excluded, decision_source: "sorgente-non-valida" };
+
+    const repaired = attestPublicationAtIngestion({
+      source: source({ oggetto: "OGGETTO ORDINARIO" }),
+      evaluatedAt: new Date("2026-08-31T09:00:00.000Z"),
+      previous: invalidEnvelope,
+    });
+
+    expect(repaired.decision.public_visibility).toBe("do_not_publish");
+    expect(repaired.presentation).toBeNull();
+  });
+
   it("fails closed at request time for a stale persisted policy", () => {
     const canary = "CANARY-STALE-POLICY-765";
     const canonical = source({ oggetto: canary, provenienza: canary });

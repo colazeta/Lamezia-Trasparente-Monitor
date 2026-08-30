@@ -5,7 +5,7 @@ import {
   runOrganiSedutaSync,
   classifyMacrotema,
 } from "@workspace/db";
-import { sql, inArray } from "drizzle-orm";
+import { eq, inArray, isNull, sql } from "drizzle-orm";
 import { logger } from "./logger";
 import { runAttuazioneIngestion } from "./attuazionePnrr";
 import { runItaliadomaniIngestion } from "./italiadomaniPnrr";
@@ -31,6 +31,7 @@ import {
 } from "./sourceRegistry";
 import {
   attestPublicationAtIngestion,
+  publicationSafetySourceFromRecord,
   type PublicationSafetySource,
 } from "./publicActProjection";
 
@@ -203,6 +204,10 @@ export async function runIngestion(): Promise<{
       const now = new Date();
       for (const item of items) {
         const previous = existingByProgressivo.get(item.progressivo);
+        const macrotema = previous?.macrotemanManual
+          ? previous.macrotema
+          : (previous?.macrotema ??
+            classifyMacrotema(`${item.oggetto} ${item.tipologia ?? ""}`));
         const publicSafetyDecision = attestPublicationAtIngestion({
           source: item,
           evaluatedAt: now,
@@ -217,11 +222,9 @@ export async function runIngestion(): Promise<{
             pubEnd: asDate(item.pubEnd),
             cups: [...item.cups],
             isNew: previous?.isNew ?? !firstRun,
-            // Classifica solo all'inserimento; il conflitto non sovrascrive
-            // l'eventuale curatela manuale del macrotema.
-            macrotema:
-              previous?.macrotema ??
-              classifyMacrotema(`${item.oggetto} ${item.tipologia ?? ""}`),
+            // Colma i macrotemi automatici ancora null, senza sovrascrivere
+            // l'eventuale curatela manuale.
+            macrotema,
             publicSafetyDecision,
             lastSeenAt: now,
           })
@@ -241,10 +244,45 @@ export async function runIngestion(): Promise<{
               cups: [...item.cups],
               pnrrMission: item.pnrrMission,
               isPnrr: item.isPnrr,
+              macrotema,
               publicSafetyDecision,
               lastSeenAt: now,
             },
           });
+      }
+
+      // Historical rows may no longer occur in the current Albo export. Give
+      // every still-unattested row the same ingestion-boundary assessment and
+      // repair only legacy generic categories; no request path reads raw fields
+      // to compensate for a missing decision.
+      const legacyRows = await tx
+        .select()
+        .from(publicationsTable)
+        .where(isNull(publicationsTable.publicSafetyDecision));
+      for (const legacy of legacyRows) {
+        const inferred = classify(legacy.tipologia, legacy.oggetto);
+        const category =
+          legacy.category === "albo" ? inferred.category : legacy.category;
+        const subcategory =
+          legacy.subcategory ??
+          (category === inferred.category ? inferred.subcategory : null);
+        const publicSafetyDecision = attestPublicationAtIngestion({
+          source: {
+            ...publicationSafetySourceFromRecord(legacy),
+            category,
+            subcategory,
+          },
+          evaluatedAt: now,
+          previous: null,
+        });
+        const macrotema = legacy.macrotemanManual
+          ? legacy.macrotema
+          : (legacy.macrotema ??
+            classifyMacrotema(`${legacy.oggetto} ${legacy.tipologia ?? ""}`));
+        await tx
+          .update(publicationsTable)
+          .set({ category, subcategory, macrotema, publicSafetyDecision })
+          .where(eq(publicationsTable.id, legacy.id));
       }
       await tx
         .insert(feedStatusTable)

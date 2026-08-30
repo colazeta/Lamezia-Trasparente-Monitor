@@ -53,6 +53,7 @@ import {
   startLazyBriefGeneration,
 } from "../lib/briefs";
 import { mapPublicPublication } from "../lib/publicActProjection";
+import { findPublicationByPublicIdentifier } from "../lib/publicActLookup";
 import { normaliseSearchText } from "@workspace/publication-standardisation";
 
 const router: IRouter = Router();
@@ -441,17 +442,7 @@ router.get("/publications", async (req, res) => {
 });
 
 router.get("/publications/:id", async (req, res) => {
-  const id = Number(req.params.id);
-  if (Number.isNaN(id)) {
-    res.status(404).json({ error: "Atto non trovato" });
-    return;
-  }
-
-  const [publication] = await db
-    .select()
-    .from(publicationsTable)
-    .where(eq(publicationsTable.id, id));
-
+  const publication = await findPublicationByPublicIdentifier(req.params.id);
   const projected = publication ? mapPublicPublication(publication) : null;
   if (!publication || !projected) {
     res.status(404).json({ error: "Atto non trovato" });
@@ -467,24 +458,14 @@ router.get("/publications/:id", async (req, res) => {
     !publication.brief &&
     !publication.briefManual
   ) {
-    startLazyBriefGeneration(id, projected.oggetto, null);
+    startLazyBriefGeneration(publication.id, projected.oggetto, null);
   }
 
   res.json(projected);
 });
 
 router.get("/publications/:id/storia", async (req, res) => {
-  const id = Number(req.params.id);
-  if (Number.isNaN(id)) {
-    res.status(404).json({ error: "Atto non trovato" });
-    return;
-  }
-
-  const [publication] = await db
-    .select()
-    .from(publicationsTable)
-    .where(eq(publicationsTable.id, id));
-
+  const publication = await findPublicationByPublicIdentifier(req.params.id);
   const projectedPublication = publication
     ? mapPublicPublication(publication)
     : null;
@@ -492,6 +473,7 @@ router.get("/publications/:id/storia", async (req, res) => {
     res.status(404).json({ error: "Atto non trovato" });
     return;
   }
+  const id = publication.id;
 
   const oggettoUpper = projectedPublication.oggetto.toUpperCase();
   const cupsUpper = projectedPublication.cups.map((c) => c.toUpperCase());
@@ -602,7 +584,7 @@ router.get("/publications/:id/storia", async (req, res) => {
     }
   }
 
-  const siblings = siblingRows.slice(0, 15).flatMap((r) => {
+  const projectedSiblingRows = siblingRows.flatMap((r) => {
     const projected = mapPublicPublication(r);
     if (!projected) return [];
     const cig = relatedCigs.find((c) =>
@@ -616,16 +598,19 @@ router.get("/publications/:id/storia", async (req, res) => {
     return [
       {
         id: projected.id,
+        publicId: projected.publicId,
         progressivo: projected.progressivo,
         oggetto: projected.oggetto,
         tipologia: projected.tipologia,
         category: projected.category,
         pubStart: projected.pubStart,
         macrotema: projected.macrotema,
+        subcategory: projected.subcategory,
         matchedBy,
       },
     ];
   });
+  const siblings = projectedSiblingRows.slice(0, 15);
 
   // Seduta di origine: la convocazione da cui è stato prodotto questo atto.
   // Non applicabile se questo atto è già una convocazione (è esso stesso la seduta).
@@ -633,33 +618,32 @@ router.get("/publications/:id/storia", async (req, res) => {
   // precedente o coincidente), presumendo che sia l'atto che ha convocato la seduta.
   let originatingSeduta: {
     id: number;
+    publicId: string;
     progressivo: string;
     oggetto: string;
     pubStart: string | null;
     subcategory: string | null;
   } | null = null;
 
-  if (publication.category !== "convocazione") {
-    const convSiblings = siblingRows.filter(
-      (r) => r.category === "convocazione",
+  if (projectedPublication.category !== "convocazione") {
+    const convSiblings = projectedSiblingRows.filter(
+      (sibling) => sibling.category === "convocazione",
     );
     if (convSiblings.length > 0) {
       // Prefer the earliest convocazione (likely the one that called the meeting).
       const earliest = [...convSiblings].sort((a, b) => {
-        const ta = a.pubStart?.getTime() ?? 0;
-        const tb = b.pubStart?.getTime() ?? 0;
+        const ta = a.pubStart ? Date.parse(a.pubStart) : 0;
+        const tb = b.pubStart ? Date.parse(b.pubStart) : 0;
         return ta - tb;
       })[0];
-      const projected = mapPublicPublication(earliest);
-      if (projected) {
-        originatingSeduta = {
-          id: projected.id,
-          progressivo: projected.progressivo,
-          oggetto: projected.oggetto,
-          pubStart: projected.pubStart,
-          subcategory: projected.subcategory,
-        };
-      }
+      originatingSeduta = {
+        id: earliest.id,
+        publicId: earliest.publicId,
+        progressivo: earliest.progressivo,
+        oggetto: earliest.oggetto,
+        pubStart: earliest.pubStart,
+        subcategory: earliest.subcategory,
+      };
     }
   }
 
@@ -669,34 +653,6 @@ router.get("/publications/:id/storia", async (req, res) => {
     siblings,
     originatingSeduta,
   });
-});
-
-router.get("/delibere", async (req, res) => {
-  const tipo = typeof req.query.tipo === "string" ? req.query.tipo : undefined;
-  const q = typeof req.query.q === "string" ? req.query.q : undefined;
-
-  const conditions = [eq(publicationsTable.category, "delibera")];
-
-  const rows = await db
-    .select()
-    .from(publicationsTable)
-    .where(and(...conditions))
-    .orderBy(desc(publicationsTable.pubStart), desc(publicationsTable.id));
-  const normalisedQuery = q ? normaliseSearchText(q) : null;
-  res.json(
-    rows.flatMap((publication) => {
-      const projected = mapPublicPublication(publication);
-      if (!projected) return [];
-      if (tipo && projected.subcategory !== tipo) return [];
-      if (
-        normalisedQuery &&
-        !projected.presentation.search_text.includes(normalisedQuery)
-      ) {
-        return [];
-      }
-      return [projected];
-    }),
-  );
 });
 
 router.get("/convocazioni", async (req, res) => {

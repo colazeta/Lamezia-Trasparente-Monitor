@@ -5,6 +5,7 @@ import {
   classifyAlboPublicSafety,
   makeAlboPublicSafetyDecision,
   projectPublicAct,
+  publicActProgressivoFromPublicId,
   publicActPublicId,
   publicActProjectionFailureReason,
   type PublicActProjectionInput,
@@ -126,19 +127,24 @@ test("snapshot and API adapters receive the same presentation from one projector
 });
 
 test("public ids cannot collapse distinct raw progressivo values", () => {
-  const ids = [
+  const progressivi = [
     "2026/42",
     "2026-42",
     "2026_42",
     "2026/042",
     " 2026/42 ",
-  ].map(
-    (value) => publicActPublicId(value),
-  );
+  ];
+  const ids = progressivi.map((value) => publicActPublicId(value));
 
   assert.equal(ids[0], "albo-2026-42");
   assert.equal(new Set(ids).size, ids.length);
   assert.ok(ids.every(Boolean));
+  assert.deepEqual(
+    ids.map((value) => publicActProgressivoFromPublicId(value!)),
+    progressivi,
+  );
+  assert.equal(publicActProgressivoFromPublicId("albo-2026-0"), null);
+  assert.equal(publicActProgressivoFromPublicId("albo-raw-002f0"), null);
 });
 
 test("artifacts are emitted only with an explicit low-risk attestation", () => {

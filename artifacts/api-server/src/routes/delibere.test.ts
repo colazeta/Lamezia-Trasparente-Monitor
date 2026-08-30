@@ -4,6 +4,7 @@ import request from "supertest";
 
 import app from "../app";
 import { db, pool, publicationsTable } from "@workspace/db";
+import { attestPublicationAtIngestion } from "../lib/publicActProjection";
 
 const createdIds: number[] = [];
 
@@ -12,16 +13,40 @@ async function createLegacyDelibera(options: {
   organo: "GIUNTA" | "CONSIGLIO";
   number: number;
 }) {
+  const progressivo = `test-delibere/${options.marker}/${options.number}`;
+  const tipologia = `DELIBERAZIONE DI ${options.organo} NR. ${options.number} DEL 01/08/2026`;
+  const oggetto = `Archivio delibere ${options.marker} ${options.organo}`;
+  const publicSafetyDecision = attestPublicationAtIngestion({
+    source: {
+      progressivo,
+      tipologia,
+      category: "albo",
+      subcategory: null,
+      provenienza: null,
+      oggetto,
+      dataAtto: null,
+      pubStart: null,
+      pubEnd: null,
+      numRegSet: String(options.number),
+      numRegGen: null,
+      cups: [],
+      pnrrMission: null,
+      isPnrr: false,
+    },
+    evaluatedAt: new Date("2026-08-30T09:00:00.000Z"),
+    previous: null,
+  });
   const [row] = await db
     .insert(publicationsTable)
     .values({
-      progressivo: `test-delibere/${options.marker}/${options.number}`,
-      tipologia: `DELIBERAZIONE DI ${options.organo} NR. ${options.number} DEL 01/08/2026`,
+      progressivo,
+      tipologia,
       // Simulates historical records ingested before the dedicated classifier.
       category: "albo",
       subcategory: null,
-      oggetto: `Archivio delibere ${options.marker} ${options.organo}`,
+      oggetto,
       numRegSet: String(options.number),
+      publicSafetyDecision,
     })
     .returning();
 

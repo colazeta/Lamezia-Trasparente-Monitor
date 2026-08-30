@@ -81,8 +81,13 @@ export function createMcpServer(): McpServer {
     "get_document",
     {
       title: "Dettaglio di un atto",
-      description: "Restituisce i metadati e gli allegati di un singolo atto per id.",
-      inputSchema: { id: z.number().int().describe("Id dell'atto.") },
+      description:
+        "Restituisce i metadati e gli allegati di un singolo atto per id numerico o publicId stabile.",
+      inputSchema: {
+        id: z
+          .union([z.number().int(), z.string().min(1)])
+          .describe("Id numerico o publicId stabile dell'atto."),
+      },
     },
     async ({ id }) => {
       const doc = await getDocument(id);
@@ -97,7 +102,11 @@ export function createMcpServer(): McpServer {
       description:
         "Restituisce il testo pulito in Markdown estratto dall'allegato PDF " +
         "principale di un atto. Utile per leggere o riassumere il contenuto.",
-      inputSchema: { id: z.number().int().describe("Id dell'atto.") },
+      inputSchema: {
+        id: z
+          .union([z.number().int(), z.string().min(1)])
+          .describe("Id numerico o publicId stabile dell'atto."),
+      },
     },
     async ({ id }) => {
       const result = await getDocumentMarkdown(id);
