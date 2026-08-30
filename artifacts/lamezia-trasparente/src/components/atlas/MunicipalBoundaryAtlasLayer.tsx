@@ -7,6 +7,7 @@ import {
 } from "@/data/spatialLayers";
 
 export type MunicipalBoundaryAtlasLayerState =
+  | { status: "idle"; collection: null; message: null }
   | { status: "loading"; collection: null; message: null }
   | {
       status: "ready";
@@ -15,15 +16,23 @@ export type MunicipalBoundaryAtlasLayerState =
     }
   | { status: "error"; collection: null; message: string };
 
-export function useMunicipalBoundaryAtlasLayer(): MunicipalBoundaryAtlasLayerState {
+export function useMunicipalBoundaryAtlasLayer(
+  enabled: boolean,
+): MunicipalBoundaryAtlasLayerState {
   const [state, setState] = useState<MunicipalBoundaryAtlasLayerState>({
-    status: "loading",
+    status: "idle",
     collection: null,
     message: null,
   });
 
   useEffect(() => {
+    if (!enabled) {
+      setState({ status: "idle", collection: null, message: null });
+      return;
+    }
+
     let cancelled = false;
+    setState({ status: "loading", collection: null, message: null });
 
     loadMunicipalBoundarySpatialLayer()
       .then((collection) => {
@@ -44,7 +53,7 @@ export function useMunicipalBoundaryAtlasLayer(): MunicipalBoundaryAtlasLayerSta
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [enabled]);
 
   return state;
 }
