@@ -16,6 +16,15 @@ export type MunicipalBoundarySpatialFeature = {
 export type MunicipalBoundarySpatialCollection = {
   type: "FeatureCollection";
   features: MunicipalBoundarySpatialFeature[];
+  metadata: {
+    layer_id: "municipal-boundary";
+    geometry_role: "administrative_boundary";
+    representation: "municipal_boundary";
+    source_label: string;
+    attribution: string;
+    licence: string;
+    publication_note: string;
+  };
 };
 
 export type ConfiscatedAssetSpatialFeature = {
@@ -125,6 +134,16 @@ function isMunicipalBoundarySpatialCollection(
   if (!value || typeof value !== "object") return false;
   const collection = value as Partial<MunicipalBoundarySpatialCollection>;
   if (collection.type !== "FeatureCollection" || !Array.isArray(collection.features)) {
+    return false;
+  }
+  if (
+    collection.metadata?.layer_id !== "municipal-boundary" ||
+    collection.metadata.geometry_role !== "administrative_boundary" ||
+    collection.metadata.representation !== "municipal_boundary" ||
+    typeof collection.metadata.source_label !== "string" ||
+    typeof collection.metadata.attribution !== "string" ||
+    typeof collection.metadata.licence !== "string"
+  ) {
     return false;
   }
 
