@@ -137,6 +137,42 @@ test("classifies Albo records by civic sector and act category dictionary", () =
   );
 });
 
+test("materialises a reviewable presentation and theme null reason when a public subject is missing", () => {
+  const classification = classifyAlboRecordCategory({
+    office: "SEGRETERIA GENERALE",
+    act_type: "AVVISO",
+    subject: null,
+  });
+  const projected = reapplyAlboPublicSafety({
+    id: "albo-2026-9999",
+    source: ALBO_PRETORIO_LAMEZIA_SOURCE.source,
+    source_url: ALBO_PRETORIO_LAMEZIA_SOURCE.sourceUrl,
+    retrieved_at: FIXTURE_RETRIEVED_AT,
+    publication_number: "2026/9999",
+    office: "SEGRETERIA GENERALE",
+    act_type: "AVVISO",
+    subject: null,
+    verification_status: "official_source_acquired",
+    privacy_risk: "low",
+    public_visibility: "publishable",
+    classification,
+    known_limits: [],
+  });
+  const presentation = projected.presentation as NonNullable<
+    PublicRecord["presentation"]
+  > & {
+    area_theme: { theme_id: string | null; null_reason: string | null };
+  };
+
+  assert.equal(
+    presentation.display_title,
+    "Oggetto non disponibile nella fonte acquisita.",
+  );
+  assert.equal(presentation.standardisation.status, "review_required");
+  assert.equal(presentation.area_theme.theme_id, null);
+  assert.equal(presentation.area_theme.null_reason, "input_missing");
+});
+
 test("keeps procedural notifications behind the metadata-only privacy gate", () => {
   const variants = [
     "ART.143 CPC",

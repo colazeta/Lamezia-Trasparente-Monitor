@@ -23,7 +23,7 @@
     "check:organi:commissions": "tsx ./check-institutional-commissions.ts --snapshot ../data/sources/organi-istituzionali-commissioni-2025-source-snapshot.json",
     "check:organi:static-fallback": "node --experimental-strip-types ./check-institutional-static-fallback.mjs",
     "check:organi:live": "tsx ./check-institutional-roster.ts",
-    "test": "node --import tsx --test ./check-source-health.test.ts ./production-smoke-plan.test.ts ./civic-source-registry.test.ts ./territorio/istat-sezioni-censimento-lamezia.test.ts ./territorio/istat-atlante-processed-layer.test.ts ./publication-standardisation.test.ts ./albo-tinnvision.test.ts ./sanitise-albo-public-artifacts.test.ts ./albo-document-serving.test.ts ./albo-workflow-guard.test.ts ./climate/lameziaClimateCore.test.mjs",
+    "test": "node --import tsx --test ./check-source-health.test.ts ./production-smoke-plan.test.ts ./civic-source-registry.test.ts ./territorio/istat-sezioni-censimento-lamezia.test.ts ./territorio/istat-atlante-processed-layer.test.ts ./publication-standardisation.test.ts ./albo-area-theme-taxonomy.test.ts ./albo-tinnvision.test.ts ./sanitise-albo-public-artifacts.test.ts ./albo-document-serving.test.ts ./albo-workflow-guard.test.ts ./climate/lameziaClimateCore.test.mjs",
     "production-smoke-plan": "tsx ./production-smoke-plan.ts"
   },
   "dependencies": {

@@ -1,6 +1,8 @@
 export const PUBLICATION_STANDARDISATION_SCHEMA_VERSION =
   "publication-standardisation.v1";
 
+export * from "./area-theme";
+
 export type PublicationStandardisationStatus =
   | "unchanged"
   | "standardised_automatically"
@@ -46,6 +48,8 @@ export interface PublicationPresentation {
   action_id: string | null;
   action_label: string | null;
   search_text: string;
+  /** Optional during progressive adoption; never use labels as stable keys. */
+  area_theme?: import("./area-theme").PublicationAreaThemeAssignment;
   standardisation: PublicationStandardisationAudit;
 }
 
