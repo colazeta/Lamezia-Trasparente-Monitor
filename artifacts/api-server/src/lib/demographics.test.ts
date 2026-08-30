@@ -1,14 +1,18 @@
 import { describe, expect, it } from "vitest";
-import {
-  canonicalDimensionKey,
-  mapSdmxStatus,
-  parseCsvRow,
-  parseSdmxCsv,
-  selectCurrentPoints,
-} from "./demographics";
+
+// `@workspace/db` valida DATABASE_URL all'import. Questi test non interrogano
+// il database, ma importano lo stesso modulo dell'ingestione per testarne i
+// parser; un URL sintatticamente valido evita di trasformare test puri in una
+// dipendenza da un database CI realmente in ascolto.
+process.env.DATABASE_URL ??= "postgresql://localhost/lamezia_demographics_test";
+
+async function helpers() {
+  return import("./demographics");
+}
 
 describe("demographic SDMX parsing", () => {
-  it("parses quoted CSV fields without splitting embedded commas", () => {
+  it("parses quoted CSV fields without splitting embedded commas", async () => {
+    const { parseCsvRow } = await helpers();
     expect(parseCsvRow('2025,68200,"Lamezia, Terme",e')).toEqual([
       "2025",
       "68200",
@@ -17,7 +21,8 @@ describe("demographic SDMX parsing", () => {
     ]);
   });
 
-  it("maps explicit estimate and provisional statuses", () => {
+  it("maps explicit estimate and provisional statuses", async () => {
+    const { mapSdmxStatus } = await helpers();
     expect(mapSdmxStatus("e", "final")).toEqual({
       status: "estimated",
       qualityFlags: ["source_estimate"],
@@ -32,7 +37,8 @@ describe("demographic SDMX parsing", () => {
     });
   });
 
-  it("extracts period, value and OBS_STATUS from an SDMX CSV", () => {
+  it("extracts period, value and OBS_STATUS from an SDMX CSV", async () => {
+    const { parseSdmxCsv } = await helpers();
     const csv = [
       "TIME_PERIOD,OBS_VALUE,OBS_STATUS",
       "2024,68000,",
@@ -59,13 +65,15 @@ describe("demographic SDMX parsing", () => {
 });
 
 describe("demographic versioning helpers", () => {
-  it("canonicalises dimensions independent of input order", () => {
+  it("canonicalises dimensions independent of input order", async () => {
+    const { canonicalDimensionKey } = await helpers();
     expect(canonicalDimensionKey({ sex: "T", age: "TOTAL" })).toBe(
       '{"age":"TOTAL","sex":"T"}',
     );
   });
 
-  it("selects the most recently encountered release for each period", () => {
+  it("selects the most recently encountered release for each period", async () => {
+    const { selectCurrentPoints } = await helpers();
     const older = new Date("2026-03-01T00:00:00Z");
     const newer = new Date("2026-07-01T00:00:00Z");
 
