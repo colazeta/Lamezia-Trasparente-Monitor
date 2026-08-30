@@ -10,7 +10,8 @@
     "Gli export Tinnvision possono non includere URL diretti agli allegati; quando disponibile, il monitor usa il dettaglio ufficiale Tinnvision solo per individuare PDF HTTPS a basso rischio.",
     "La classificazione privacy e' prudenziale e automatica; i casi sensibili richiedono revisione umana prima di esposizioni piu' ricche.",
     "Quando gli export strutturati non includono URL diretti, il monitor prova il dettaglio ufficiale Tinnvision solo per record pubblicabili a basso rischio.",
-    "Classificazione civica automatica basata su dizionario: settore e tipologia sono derivati da ufficio/provenienza e tipo atto, senza interpretare il contenuto dei PDF."
+    "Classificazione civica automatica basata su dizionario: settore e tipologia sono derivati da ufficio/provenienza e tipo atto, senza interpretare il contenuto dei PDF.",
+    "Il titolo di presentazione completo e' prodotto da regole deterministiche sul solo oggetto public-safe: non sostituisce il valore conservato nel campo subject, non recupera contenuti esclusi e i casi ambigui richiedono revisione."
   ],
   "classification_dictionary": {
     "version": "2026-08-22-a",
@@ -148,9 +149,9 @@
     "changed": 0,
     "removed": 6,
     "unchanged": 76,
-    "publishable": 60,
+    "publishable": 58,
     "minimised": 2,
-    "metadata_only": 12,
+    "metadata_only": 14,
     "excluded": 2
   },
   "items": [
@@ -167,6 +168,9 @@
       "act_number": "218",
       "act_date": "2026-08-29",
       "content_hash": "ab359011569874fda0129ab7b2dc2e0180112a71f73d2074b6eec295eb17c946",
+      "subject": "Modifica temporanea della circolazione stradale per lavori inerenti l'ampliamento degli impianti di video sorveglianza presenti sul territorio comunale previsti poer Lunedì 31 Agosto p.v.",
+      "document_url": "https://albo.tinnvision.cloud/allegati/2026_2781_1_ALLEG?ente=00301390795",
+      "public_note": null,
       "verification_status": "official_source_acquired",
       "privacy_risk": "low",
       "public_visibility": "publishable",
@@ -195,9 +199,25 @@
         "Quando gli export strutturati non includono URL diretti, il monitor prova il dettaglio ufficiale Tinnvision solo per record pubblicabili a basso rischio.",
         "Classificazione civica automatica basata su dizionario: settore e tipologia sono derivati da ufficio/provenienza e tipo atto, senza interpretare il contenuto dei PDF."
       ],
-      "subject": "Modifica temporanea della circolazione stradale per lavori inerenti l'ampliamento degli impianti di video sorveglianza presenti sul territorio comunale previsti poer Lunedì 31 Agosto p.v.",
-      "document_url": "https://albo.tinnvision.cloud/allegati/2026_2781_1_ALLEG?ente=00301390795",
-      "public_note": null
+      "presentation": {
+        "display_title": "Modifica temporanea della circolazione stradale per lavori inerenti l'ampliamento degli impianti di video sorveglianza presenti sul territorio comunale previsti poer Lunedì 31 Agosto p.v.",
+        "action_id": null,
+        "action_label": null,
+        "search_text": "modifica temporanea della circolazione stradale per lavori inerenti l ampliamento degli impianti di video sorveglianza presenti sul territorio comunale previsti poer lunedi 31 agosto p v",
+        "standardisation": {
+          "schema_version": "publication-standardisation.v1",
+          "profile_id": "albo-public-title-it",
+          "profile_version": "2026-08-30.2",
+          "input_field": "subject",
+          "input_field_preserved": true,
+          "status": "unchanged",
+          "transformations": [],
+          "layout_flags": [
+            "display_title_too_long"
+          ],
+          "review_reasons": []
+        }
+      }
     },
     {
       "id": "albo-2026-2780",
@@ -212,6 +232,9 @@
       "act_number": "217",
       "act_date": "2026-08-28",
       "content_hash": "d87d6d6d137907cb13ca73984ea2fcd7238ff73769cdf74787932bb0537e22f6",
+      "subject": "Modifica temporanea della circolazione stradale in occasione dell'incontro di calcio valevole per la Coppa Italia del Campionato L.N.D. tra l'ASD Sambiase 2023 e la Vigor Lamezia Calcio 1919 previsto per Domenica 30 Agosto p.v..",
+      "document_url": "https://albo.tinnvision.cloud/allegati/2026_2780_1_ALLEG?ente=00301390795",
+      "public_note": null,
       "verification_status": "official_source_acquired",
       "privacy_risk": "low",
       "public_visibility": "publishable",
@@ -240,9 +263,25 @@
         "Quando gli export strutturati non includono URL diretti, il monitor prova il dettaglio ufficiale Tinnvision solo per record pubblicabili a basso rischio.",
         "Classificazione civica automatica basata su dizionario: settore e tipologia sono derivati da ufficio/provenienza e tipo atto, senza interpretare il contenuto dei PDF."
       ],
-      "subject": "Modifica temporanea della circolazione stradale in occasione dell'incontro di calcio valevole per la Coppa Italia del Campionato L.N.D. tra l'ASD Sambiase 2023 e la Vigor Lamezia Calcio 1919 previsto per Domenica 30 Agosto p.v..",
-      "document_url": "https://albo.tinnvision.cloud/allegati/2026_2780_1_ALLEG?ente=00301390795",
-      "public_note": null
+      "presentation": {
+        "display_title": "Modifica temporanea della circolazione stradale in occasione dell'incontro di calcio valevole per la Coppa Italia del Campionato L.N.D. tra l'ASD Sambiase 2023 e la Vigor Lamezia Calcio 1919 previsto per Domenica 30 Agosto p.v..",
+        "action_id": null,
+        "action_label": null,
+        "search_text": "modifica temporanea della circolazione stradale in occasione dell incontro di calcio valevole per la coppa italia del campionato l n d tra l asd sambiase 2023 e la vigor lamezia calcio 1919 previsto per domenica 30 agosto p v",
+        "standardisation": {
+          "schema_version": "publication-standardisation.v1",
+          "profile_id": "albo-public-title-it",
+          "profile_version": "2026-08-30.2",
+          "input_field": "subject",
+          "input_field_preserved": true,
+          "status": "unchanged",
+          "transformations": [],
+          "layout_flags": [
+            "display_title_too_long"
+          ],
+          "review_reasons": []
+        }
+      }
     },
     {
       "id": "albo-2026-2779",
@@ -257,6 +296,9 @@
       "act_number": "216",
       "act_date": "2026-08-28",
       "content_hash": "f0a15dc730e0da14ccc694ced967f40605b1a6ddaf2603055b6ccd40be4bc5f1",
+      "subject": "Modifica temporanea della circolazione stradale in occasione dell'evento denominato Lamezia in Fermento 2026 che si svolgerà nei giorni 4,5 e 6 Settembre 2026.",
+      "document_url": "https://albo.tinnvision.cloud/allegati/2026_2779_1_ALLEG?ente=00301390795",
+      "public_note": null,
       "verification_status": "official_source_acquired",
       "privacy_risk": "low",
       "public_visibility": "publishable",
@@ -285,9 +327,23 @@
         "Quando gli export strutturati non includono URL diretti, il monitor prova il dettaglio ufficiale Tinnvision solo per record pubblicabili a basso rischio.",
         "Classificazione civica automatica basata su dizionario: settore e tipologia sono derivati da ufficio/provenienza e tipo atto, senza interpretare il contenuto dei PDF."
       ],
-      "subject": "Modifica temporanea della circolazione stradale in occasione dell'evento denominato Lamezia in Fermento 2026 che si svolgerà nei giorni 4,5 e 6 Settembre 2026.",
-      "document_url": "https://albo.tinnvision.cloud/allegati/2026_2779_1_ALLEG?ente=00301390795",
-      "public_note": null
+      "presentation": {
+        "display_title": "Modifica temporanea della circolazione stradale in occasione dell'evento denominato Lamezia in Fermento 2026 che si svolgerà nei giorni 4,5 e 6 Settembre 2026.",
+        "action_id": null,
+        "action_label": null,
+        "search_text": "modifica temporanea della circolazione stradale in occasione dell evento denominato lamezia in fermento 2026 che si svolgera nei giorni 4 5 e 6 settembre 2026",
+        "standardisation": {
+          "schema_version": "publication-standardisation.v1",
+          "profile_id": "albo-public-title-it",
+          "profile_version": "2026-08-30.2",
+          "input_field": "subject",
+          "input_field_preserved": true,
+          "status": "unchanged",
+          "transformations": [],
+          "layout_flags": [],
+          "review_reasons": []
+        }
+      }
     },
     {
       "id": "albo-2026-2778",
@@ -298,10 +354,9 @@
       "publication_start": "2026-08-28",
       "publication_end": "2026-09-05",
       "office": null,
-      "act_type": "ART. 60 D.P.R. 29/9/1973 N.600",
+      "act_type": null,
       "act_number": null,
       "act_date": null,
-      "content_hash": "4955e2f6737596dc474b6d0f3bf3ff2e90f43590653a5160680fa8fd99b6f9d7",
       "verification_status": "official_source_acquired",
       "privacy_risk": "high",
       "public_visibility": "metadata_only",
@@ -335,7 +390,24 @@
       ],
       "subject": "Metadato minimo; oggetto non ripubblicato per prudenza privacy.",
       "document_url": null,
-      "public_note": "Record limitato al metadato minimo."
+      "public_note": "Record limitato al metadato minimo.",
+      "presentation": {
+        "display_title": "Metadato minimo; oggetto non ripubblicato per prudenza privacy.",
+        "action_id": null,
+        "action_label": null,
+        "search_text": "metadato minimo oggetto non ripubblicato per prudenza privacy",
+        "standardisation": {
+          "schema_version": "publication-standardisation.v1",
+          "profile_id": "albo-public-title-it",
+          "profile_version": "2026-08-30.2",
+          "input_field": "subject",
+          "input_field_preserved": true,
+          "status": "unchanged",
+          "transformations": [],
+          "layout_flags": [],
+          "review_reasons": []
+        }
+      }
     },
     {
       "id": "albo-2026-2777",
@@ -346,10 +418,9 @@
       "publication_start": "2026-08-28",
       "publication_end": "2026-09-10",
       "office": null,
-      "act_type": "ATTO DELL'UFFICIO ELETTORALE",
+      "act_type": null,
       "act_number": null,
       "act_date": null,
-      "content_hash": "29bd15158e97f6ee258560ab9037a27cfc8458dfdfd709eb3a0a9f3d0ff7baed",
       "verification_status": "official_source_acquired",
       "privacy_risk": "high",
       "public_visibility": "metadata_only",
@@ -383,7 +454,24 @@
       ],
       "subject": "Metadato minimo; oggetto non ripubblicato per prudenza privacy.",
       "document_url": null,
-      "public_note": "Record limitato al metadato minimo."
+      "public_note": "Record limitato al metadato minimo.",
+      "presentation": {
+        "display_title": "Metadato minimo; oggetto non ripubblicato per prudenza privacy.",
+        "action_id": null,
+        "action_label": null,
+        "search_text": "metadato minimo oggetto non ripubblicato per prudenza privacy",
+        "standardisation": {
+          "schema_version": "publication-standardisation.v1",
+          "profile_id": "albo-public-title-it",
+          "profile_version": "2026-08-30.2",
+          "input_field": "subject",
+          "input_field_preserved": true,
+          "status": "unchanged",
+          "transformations": [],
+          "layout_flags": [],
+          "review_reasons": []
+        }
+      }
     },
     {
       "id": "albo-2026-2776",
@@ -398,6 +486,9 @@
       "act_number": null,
       "act_date": null,
       "content_hash": "fb01fde26f016e0de7b1f53c6fffe04290a54bf7293b033514d43cc510f5486f",
+      "subject": "Asta pubblica prot. 12919 del 05.08.2026 141 veicoli da alienare ai fini della rottamazione - LOTTO n. 1 - Catanzaro; 86 veicoli da alienare ai fini della rottamazione - LOTTO n. 2 – Reggio Calabria. 27 veicoli da alienare ai fini della rottamazione LOTTO n. 3 – Vibo Valentia. [DEMANIO|AGDCL01|REGISTRO UFFICIALE|13818|28-08-2026][29581409|11178923]",
+      "document_url": "https://albo.tinnvision.cloud/allegati/2026_2776_1_X?ente=00301390795",
+      "public_note": null,
       "verification_status": "official_source_acquired",
       "privacy_risk": "low",
       "public_visibility": "publishable",
@@ -426,9 +517,25 @@
         "Quando gli export strutturati non includono URL diretti, il monitor prova il dettaglio ufficiale Tinnvision solo per record pubblicabili a basso rischio.",
         "Classificazione civica automatica basata su dizionario: settore e tipologia sono derivati da ufficio/provenienza e tipo atto, senza interpretare il contenuto dei PDF."
       ],
-      "subject": "Asta pubblica prot. 12919 del 05.08.2026 141 veicoli da alienare ai fini della rottamazione - LOTTO n. 1 - Catanzaro; 86 veicoli da alienare ai fini della rottamazione - LOTTO n. 2 – Reggio Calabria. 27 veicoli da alienare ai fini della rottamazione LOTTO n. 3 – Vibo Valentia. [DEMANIO|AGDCL01|REGISTRO UFFICIALE|13818|28-08-2026][29581409|11178923]",
-      "document_url": "https://albo.tinnvision.cloud/allegati/2026_2776_1_X?ente=00301390795",
-      "public_note": null
+      "presentation": {
+        "display_title": "Asta pubblica prot. 12919 del 05.08.2026 141 veicoli da alienare ai fini della rottamazione - LOTTO n. 1 - Catanzaro; 86 veicoli da alienare ai fini della rottamazione - LOTTO n. 2 – Reggio Calabria. 27 veicoli da alienare ai fini della rottamazione LOTTO n. 3 – Vibo Valentia. [DEMANIO|AGDCL01|REGISTRO UFFICIALE|13818|28-08-2026][29581409|11178923]",
+        "action_id": null,
+        "action_label": null,
+        "search_text": "asta pubblica prot 12919 del 05 08 2026 141 veicoli da alienare ai fini della rottamazione lotto n 1 catanzaro 86 veicoli da alienare ai fini della rottamazione lotto n 2 reggio calabria 27 veicoli da alienare ai fini della rottamazione lotto n 3 vibo valentia demanio agdcl01 registro ufficiale 13818 28 08 2026 29581409 11178923",
+        "standardisation": {
+          "schema_version": "publication-standardisation.v1",
+          "profile_id": "albo-public-title-it",
+          "profile_version": "2026-08-30.2",
+          "input_field": "subject",
+          "input_field_preserved": true,
+          "status": "unchanged",
+          "transformations": [],
+          "layout_flags": [
+            "display_title_too_long"
+          ],
+          "review_reasons": []
+        }
+      }
     },
     {
       "id": "albo-2026-2775",
@@ -439,10 +546,9 @@
       "publication_start": "2026-08-28",
       "publication_end": "2026-09-17",
       "office": null,
-      "act_type": "ART. 60 D.P.R. 29/9/1973 N.600",
+      "act_type": null,
       "act_number": null,
       "act_date": null,
-      "content_hash": "789315e2fcc17806edd37a9f15cb08637594841ba43198e543c00455196f977c",
       "verification_status": "official_source_acquired",
       "privacy_risk": "high",
       "public_visibility": "metadata_only",
@@ -476,7 +582,24 @@
       ],
       "subject": "Metadato minimo; oggetto non ripubblicato per prudenza privacy.",
       "document_url": null,
-      "public_note": "Record limitato al metadato minimo."
+      "public_note": "Record limitato al metadato minimo.",
+      "presentation": {
+        "display_title": "Metadato minimo; oggetto non ripubblicato per prudenza privacy.",
+        "action_id": null,
+        "action_label": null,
+        "search_text": "metadato minimo oggetto non ripubblicato per prudenza privacy",
+        "standardisation": {
+          "schema_version": "publication-standardisation.v1",
+          "profile_id": "albo-public-title-it",
+          "profile_version": "2026-08-30.2",
+          "input_field": "subject",
+          "input_field_preserved": true,
+          "status": "unchanged",
+          "transformations": [],
+          "layout_flags": [],
+          "review_reasons": []
+        }
+      }
     },
     {
       "id": "albo-2026-2774",
@@ -491,6 +614,9 @@
       "act_number": null,
       "act_date": null,
       "content_hash": "a04e83ffcabaa4f7dbea1ea51be55925b90df6bafe84a32ad83b13bd3a8d5a9d",
+      "subject": "Comune di Scandicci (FI) - Ordinanze cimiteriali.",
+      "document_url": "https://albo.tinnvision.cloud/allegati/2026_2774_3_P?ente=00301390795",
+      "public_note": null,
       "verification_status": "official_source_acquired",
       "privacy_risk": "low",
       "public_visibility": "publishable",
@@ -519,9 +645,23 @@
         "Quando gli export strutturati non includono URL diretti, il monitor prova il dettaglio ufficiale Tinnvision solo per record pubblicabili a basso rischio.",
         "Classificazione civica automatica basata su dizionario: settore e tipologia sono derivati da ufficio/provenienza e tipo atto, senza interpretare il contenuto dei PDF."
       ],
-      "subject": "Comune di Scandicci (FI) - Ordinanze cimiteriali.",
-      "document_url": "https://albo.tinnvision.cloud/allegati/2026_2774_3_P?ente=00301390795",
-      "public_note": null
+      "presentation": {
+        "display_title": "Comune di Scandicci (FI) - Ordinanze cimiteriali.",
+        "action_id": null,
+        "action_label": null,
+        "search_text": "comune di scandicci fi ordinanze cimiteriali",
+        "standardisation": {
+          "schema_version": "publication-standardisation.v1",
+          "profile_id": "albo-public-title-it",
+          "profile_version": "2026-08-30.2",
+          "input_field": "subject",
+          "input_field_preserved": true,
+          "status": "unchanged",
+          "transformations": [],
+          "layout_flags": [],
+          "review_reasons": []
+        }
+      }
     },
     {
       "id": "albo-2026-2773",
@@ -532,19 +672,18 @@
       "publication_start": "2026-08-27",
       "publication_end": "2026-09-04",
       "office": null,
-      "act_type": "PUBBLICAZIONE DI MATRIMONIO",
+      "act_type": null,
       "act_number": null,
       "act_date": null,
-      "content_hash": "f7599562db49ab0e3a30d2c08ea9493fa97980de545c956c4d682acf462728a3",
       "verification_status": "official_source_acquired",
       "privacy_risk": "high",
       "public_visibility": "metadata_only",
       "classification": {
         "dictionary_version": "2026-08-22-a",
         "sector": {
-          "id": "elettorale",
-          "label": "Elettorale",
-          "description": "Atti e comunicazioni riferiti a procedimenti elettorali.",
+          "id": "servizi_cittadino_demografici",
+          "label": "Servizi al cittadino e demografici",
+          "description": "Anagrafe, stato civile, leva, elettorale e servizi demografici al cittadino.",
           "confidence": "high",
           "basis": "office_and_act_type"
         },
@@ -569,7 +708,24 @@
       ],
       "subject": "Metadato minimo; oggetto non ripubblicato per prudenza privacy.",
       "document_url": null,
-      "public_note": "Record limitato al metadato minimo."
+      "public_note": "Record limitato al metadato minimo.",
+      "presentation": {
+        "display_title": "Metadato minimo; oggetto non ripubblicato per prudenza privacy.",
+        "action_id": null,
+        "action_label": null,
+        "search_text": "metadato minimo oggetto non ripubblicato per prudenza privacy",
+        "standardisation": {
+          "schema_version": "publication-standardisation.v1",
+          "profile_id": "albo-public-title-it",
+          "profile_version": "2026-08-30.2",
+          "input_field": "subject",
+          "input_field_preserved": true,
+          "status": "unchanged",
+          "transformations": [],
+          "layout_flags": [],
+          "review_reasons": []
+        }
+      }
     },
     {
       "id": "albo-2026-2772",
@@ -584,6 +740,9 @@
       "act_number": "1366",
       "act_date": "2026-08-27",
       "content_hash": "728a97ca60b12d9695c3b965496366051ac4ea2685aeeb6fdfdc0e46b3b4c598",
+      "subject": "Dimissioni volontarie dipendente. Presa d'atto.",
+      "document_url": "https://albo.tinnvision.cloud/allegati/2026_2772_9_ALLEG?ente=00301390795",
+      "public_note": null,
       "verification_status": "official_source_acquired",
       "privacy_risk": "low",
       "public_visibility": "publishable",
@@ -612,9 +771,23 @@
         "Quando gli export strutturati non includono URL diretti, il monitor prova il dettaglio ufficiale Tinnvision solo per record pubblicabili a basso rischio.",
         "Classificazione civica automatica basata su dizionario: settore e tipologia sono derivati da ufficio/provenienza e tipo atto, senza interpretare il contenuto dei PDF."
       ],
-      "subject": "Dimissioni volontarie dipendente. Presa d'atto.",
-      "document_url": "https://albo.tinnvision.cloud/allegati/2026_2772_9_ALLEG?ente=00301390795",
-      "public_note": null
+      "presentation": {
+        "display_title": "Dimissioni volontarie dipendente. Presa d'atto.",
+        "action_id": null,
+        "action_label": null,
+        "search_text": "dimissioni volontarie dipendente presa d atto",
+        "standardisation": {
+          "schema_version": "publication-standardisation.v1",
+          "profile_id": "albo-public-title-it",
+          "profile_version": "2026-08-30.2",
+          "input_field": "subject",
+          "input_field_preserved": true,
+          "status": "unchanged",
+          "transformations": [],
+          "layout_flags": [],
+          "review_reasons": []
+        }
+      }
     },
     {
       "id": "albo-2026-2771",
@@ -625,10 +798,9 @@
       "publication_start": "2026-08-27",
       "publication_end": "2026-09-04",
       "office": null,
-      "act_type": "ART.140 CPC (CODICE PROCEDURA CIVILE)",
+      "act_type": null,
       "act_number": null,
       "act_date": null,
-      "content_hash": "186fb91db34a80f95414c045cfe3c8bf180b0ceb6d356e19a20efcf6446c9c20",
       "verification_status": "official_source_acquired",
       "privacy_risk": "high",
       "public_visibility": "metadata_only",
@@ -662,7 +834,24 @@
       ],
       "subject": "Metadato minimo; oggetto non ripubblicato per prudenza privacy.",
       "document_url": null,
-      "public_note": "Record limitato al metadato minimo."
+      "public_note": "Record limitato al metadato minimo.",
+      "presentation": {
+        "display_title": "Metadato minimo; oggetto non ripubblicato per prudenza privacy.",
+        "action_id": null,
+        "action_label": null,
+        "search_text": "metadato minimo oggetto non ripubblicato per prudenza privacy",
+        "standardisation": {
+          "schema_version": "publication-standardisation.v1",
+          "profile_id": "albo-public-title-it",
+          "profile_version": "2026-08-30.2",
+          "input_field": "subject",
+          "input_field_preserved": true,
+          "status": "unchanged",
+          "transformations": [],
+          "layout_flags": [],
+          "review_reasons": []
+        }
+      }
     },
     {
       "id": "albo-2026-2770",
@@ -677,6 +866,9 @@
       "act_number": "1365",
       "act_date": "2026-08-27",
       "content_hash": "9965353f2de022a2fb99c4f549c590a5dc9a47e817bd2277b6d91986b5f37b56",
+      "subject": "Delibera CIPE 26/16 D.D.G. n.3 del 04/01/17 Patto per lo Sviluppo della Regione Calabria. “Intervento di adeg. sismico scuola dell’Infanzia di Bella tramite demoliz. e ricostr.. Appr. atti contabili dello stato finale e del C.U.C. tecnico-amministrativo",
+      "document_url": "https://albo.tinnvision.cloud/allegati/2026_2770_17_ALLEG?ente=00301390795",
+      "public_note": null,
       "verification_status": "official_source_acquired",
       "privacy_risk": "low",
       "public_visibility": "publishable",
@@ -705,9 +897,27 @@
         "Quando gli export strutturati non includono URL diretti, il monitor prova il dettaglio ufficiale Tinnvision solo per record pubblicabili a basso rischio.",
         "Classificazione civica automatica basata su dizionario: settore e tipologia sono derivati da ufficio/provenienza e tipo atto, senza interpretare il contenuto dei PDF."
       ],
-      "subject": "Delibera CIPE 26/16 D.D.G. n.3 del 04/01/17 Patto per lo Sviluppo della Regione Calabria. “Intervento di adeg. sismico scuola dell’Infanzia di Bella tramite demoliz. e ricostr.. Appr. atti contabili dello stato finale e del C.U.C. tecnico-amministrativo",
-      "document_url": "https://albo.tinnvision.cloud/allegati/2026_2770_17_ALLEG?ente=00301390795",
-      "public_note": null
+      "presentation": {
+        "display_title": "Delibera CIPE 26/16 D.D.G. n.3 del 04/01/17 Patto per lo Sviluppo della Regione Calabria. “Intervento di adeg. sismico scuola dell'Infanzia di Bella tramite demoliz. e ricostr.. Appr. atti contabili dello stato finale e del C.U.C. tecnico-amministrativo",
+        "action_id": null,
+        "action_label": null,
+        "search_text": "delibera cipe 26 16 d d g n 3 del 04 01 17 patto per lo sviluppo della regione calabria intervento di adeg sismico scuola dell infanzia di bella tramite demoliz e ricostr appr atti contabili dello stato finale e del c u c tecnico amministrativo",
+        "standardisation": {
+          "schema_version": "publication-standardisation.v1",
+          "profile_id": "albo-public-title-it",
+          "profile_version": "2026-08-30.2",
+          "input_field": "subject",
+          "input_field_preserved": true,
+          "status": "standardised_automatically",
+          "transformations": [
+            "normalise_apostrophes"
+          ],
+          "layout_flags": [
+            "display_title_too_long"
+          ],
+          "review_reasons": []
+        }
+      }
     },
     {
       "id": "albo-2026-2769",
@@ -722,6 +932,9 @@
       "act_number": "10",
       "act_date": "2026-08-26",
       "content_hash": "282b87ce9be3f81b7d2179cf34c1a68896d2f2f1bcbb24d647c9757268ee2132",
+      "subject": "Revoca del decreto sindacale n. 4 del 27/03/2026 e contestuale revoca di incarico assessorile.",
+      "document_url": "https://albo.tinnvision.cloud/allegati/2026_2769_3_ALLEG?ente=00301390795",
+      "public_note": null,
       "verification_status": "official_source_acquired",
       "privacy_risk": "low",
       "public_visibility": "publishable",
@@ -750,9 +963,23 @@
         "Quando gli export strutturati non includono URL diretti, il monitor prova il dettaglio ufficiale Tinnvision solo per record pubblicabili a basso rischio.",
         "Classificazione civica automatica basata su dizionario: settore e tipologia sono derivati da ufficio/provenienza e tipo atto, senza interpretare il contenuto dei PDF."
       ],
-      "subject": "Revoca del decreto sindacale n. 4 del 27/03/2026 e contestuale revoca di incarico assessorile.",
-      "document_url": "https://albo.tinnvision.cloud/allegati/2026_2769_3_ALLEG?ente=00301390795",
-      "public_note": null
+      "presentation": {
+        "display_title": "Revoca del decreto sindacale n. 4 del 27/03/2026 e contestuale revoca di incarico assessorile.",
+        "action_id": null,
+        "action_label": null,
+        "search_text": "revoca del decreto sindacale n 4 del 27 03 2026 e contestuale revoca di incarico assessorile",
+        "standardisation": {
+          "schema_version": "publication-standardisation.v1",
+          "profile_id": "albo-public-title-it",
+          "profile_version": "2026-08-30.2",
+          "input_field": "subject",
+          "input_field_preserved": true,
+          "status": "unchanged",
+          "transformations": [],
+          "layout_flags": [],
+          "review_reasons": []
+        }
+      }
     },
     {
       "id": "albo-2026-2768",
@@ -767,6 +994,9 @@
       "act_number": "215",
       "act_date": "2026-08-26",
       "content_hash": "9987c2219c537ad6dc73ea55e0108570941ffc070b7f841f514449feaf1ac20f",
+      "subject": "Ordinanza dirigenziale di rimozione dehors, ripristino stato dei luoghi, e diffida, in capo a pubblico esercizio di somministrazione, per occupazione abusiva di suolo pubblico",
+      "document_url": "https://albo.tinnvision.cloud/allegati/2026_2768_3_ALLEG?ente=00301390795",
+      "public_note": null,
       "verification_status": "official_source_acquired",
       "privacy_risk": "low",
       "public_visibility": "publishable",
@@ -795,9 +1025,23 @@
         "Quando gli export strutturati non includono URL diretti, il monitor prova il dettaglio ufficiale Tinnvision solo per record pubblicabili a basso rischio.",
         "Classificazione civica automatica basata su dizionario: settore e tipologia sono derivati da ufficio/provenienza e tipo atto, senza interpretare il contenuto dei PDF."
       ],
-      "subject": "Ordinanza dirigenziale di rimozione dehors, ripristino stato dei luoghi, e diffida, in capo a pubblico esercizio di somministrazione, per occupazione abusiva di suolo pubblico",
-      "document_url": "https://albo.tinnvision.cloud/allegati/2026_2768_3_ALLEG?ente=00301390795",
-      "public_note": null
+      "presentation": {
+        "display_title": "Ordinanza dirigenziale di rimozione dehors, ripristino stato dei luoghi, e diffida, in capo a pubblico esercizio di somministrazione, per occupazione abusiva di suolo pubblico",
+        "action_id": null,
+        "action_label": null,
+        "search_text": "ordinanza dirigenziale di rimozione dehors ripristino stato dei luoghi e diffida in capo a pubblico esercizio di somministrazione per occupazione abusiva di suolo pubblico",
+        "standardisation": {
+          "schema_version": "publication-standardisation.v1",
+          "profile_id": "albo-public-title-it",
+          "profile_version": "2026-08-30.2",
+          "input_field": "subject",
+          "input_field_preserved": true,
+          "status": "unchanged",
+          "transformations": [],
+          "layout_flags": [],
+          "review_reasons": []
+        }
+      }
     },
     {
       "id": "albo-2026-2767",
@@ -812,6 +1056,9 @@
       "act_number": null,
       "act_date": null,
       "content_hash": "c53827b0a7e08533f516791bfcbf9ffbe77de6eecfc41008ae0e798d8bf307fe",
+      "subject": "ordinanaza servizi cimiteriali Comune di Castelnuovo Berardenga",
+      "document_url": "https://albo.tinnvision.cloud/allegati/2026_2767_1_X?ente=00301390795",
+      "public_note": null,
       "verification_status": "official_source_acquired",
       "privacy_risk": "low",
       "public_visibility": "publishable",
@@ -840,9 +1087,25 @@
         "Quando gli export strutturati non includono URL diretti, il monitor prova il dettaglio ufficiale Tinnvision solo per record pubblicabili a basso rischio.",
         "Classificazione civica automatica basata su dizionario: settore e tipologia sono derivati da ufficio/provenienza e tipo atto, senza interpretare il contenuto dei PDF."
       ],
-      "subject": "ordinanaza servizi cimiteriali Comune di Castelnuovo Berardenga",
-      "document_url": "https://albo.tinnvision.cloud/allegati/2026_2767_1_X?ente=00301390795",
-      "public_note": null
+      "presentation": {
+        "display_title": "Ordinanaza servizi cimiteriali Comune di Castelnuovo Berardenga",
+        "action_id": null,
+        "action_label": null,
+        "search_text": "ordinanaza servizi cimiteriali comune di castelnuovo berardenga ordinanaza servizi cimiteriali comune di castelnuovo berardenga",
+        "standardisation": {
+          "schema_version": "publication-standardisation.v1",
+          "profile_id": "albo-public-title-it",
+          "profile_version": "2026-08-30.2",
+          "input_field": "subject",
+          "input_field_preserved": true,
+          "status": "standardised_automatically",
+          "transformations": [
+            "capitalise_initial"
+          ],
+          "layout_flags": [],
+          "review_reasons": []
+        }
+      }
     },
     {
       "id": "albo-2026-2766",
@@ -853,19 +1116,18 @@
       "publication_start": "2026-08-26",
       "publication_end": "2026-09-03",
       "office": null,
-      "act_type": "PUBBLICAZIONE DI MATRIMONIO",
+      "act_type": null,
       "act_number": null,
       "act_date": null,
-      "content_hash": "23f9c5e6ed659518ff1d9f550007d8063efb4a7d48d7574e651d64a30f1450be",
       "verification_status": "official_source_acquired",
       "privacy_risk": "high",
       "public_visibility": "metadata_only",
       "classification": {
         "dictionary_version": "2026-08-22-a",
         "sector": {
-          "id": "elettorale",
-          "label": "Elettorale",
-          "description": "Atti e comunicazioni riferiti a procedimenti elettorali.",
+          "id": "servizi_cittadino_demografici",
+          "label": "Servizi al cittadino e demografici",
+          "description": "Anagrafe, stato civile, leva, elettorale e servizi demografici al cittadino.",
           "confidence": "high",
           "basis": "office_and_act_type"
         },
@@ -890,7 +1152,24 @@
       ],
       "subject": "Metadato minimo; oggetto non ripubblicato per prudenza privacy.",
       "document_url": null,
-      "public_note": "Record limitato al metadato minimo."
+      "public_note": "Record limitato al metadato minimo.",
+      "presentation": {
+        "display_title": "Metadato minimo; oggetto non ripubblicato per prudenza privacy.",
+        "action_id": null,
+        "action_label": null,
+        "search_text": "metadato minimo oggetto non ripubblicato per prudenza privacy",
+        "standardisation": {
+          "schema_version": "publication-standardisation.v1",
+          "profile_id": "albo-public-title-it",
+          "profile_version": "2026-08-30.2",
+          "input_field": "subject",
+          "input_field_preserved": true,
+          "status": "unchanged",
+          "transformations": [],
+          "layout_flags": [],
+          "review_reasons": []
+        }
+      }
     },
     {
       "id": "albo-2026-2765",
@@ -905,6 +1184,9 @@
       "act_number": "1361",
       "act_date": "2026-08-26",
       "content_hash": "55f79e23cef6cb6d23e420c903242a89674336ec0602a5956fcd1d08f296bafc",
+      "subject": "PNRR M5C 2.3 I 3.1 Sport e Inclusione, CLUSTER 1, Intervento \"Nuova costruzione di tribune e impianti Stadio G.Renda - CUP C88C22000350006.APPROVAZIONE CERTIFICATO DI COLLAUDO TECNICO AMMINISTRATIVO",
+      "document_url": "https://albo.tinnvision.cloud/allegati/2026_2765_4_ALLEG?ente=00301390795",
+      "public_note": null,
       "verification_status": "official_source_acquired",
       "privacy_risk": "low",
       "public_visibility": "publishable",
@@ -933,9 +1215,25 @@
         "Quando gli export strutturati non includono URL diretti, il monitor prova il dettaglio ufficiale Tinnvision solo per record pubblicabili a basso rischio.",
         "Classificazione civica automatica basata su dizionario: settore e tipologia sono derivati da ufficio/provenienza e tipo atto, senza interpretare il contenuto dei PDF."
       ],
-      "subject": "PNRR M5C 2.3 I 3.1 Sport e Inclusione, CLUSTER 1, Intervento \"Nuova costruzione di tribune e impianti Stadio G.Renda - CUP C88C22000350006.APPROVAZIONE CERTIFICATO DI COLLAUDO TECNICO AMMINISTRATIVO",
-      "document_url": "https://albo.tinnvision.cloud/allegati/2026_2765_4_ALLEG?ente=00301390795",
-      "public_note": null
+      "presentation": {
+        "display_title": "PNRR M5C 2.3 I 3.1 Sport e Inclusione, CLUSTER 1, Intervento \"Nuova costruzione di tribune e impianti Stadio G.Renda - CUP C88C22000350006.APPROVAZIONE CERTIFICATO DI COLLAUDO TECNICO AMMINISTRATIVO",
+        "action_id": null,
+        "action_label": null,
+        "search_text": "pnrr m5c 2 3 i 3 1 sport e inclusione cluster 1 intervento nuova costruzione di tribune e impianti stadio g renda cup c88c22000350006 approvazione certificato di collaudo tecnico amministrativo",
+        "standardisation": {
+          "schema_version": "publication-standardisation.v1",
+          "profile_id": "albo-public-title-it",
+          "profile_version": "2026-08-30.2",
+          "input_field": "subject",
+          "input_field_preserved": true,
+          "status": "unchanged",
+          "transformations": [],
+          "layout_flags": [
+            "display_title_too_long"
+          ],
+          "review_reasons": []
+        }
+      }
     },
     {
       "id": "albo-2026-2764",
@@ -950,6 +1248,9 @@
       "act_number": null,
       "act_date": null,
       "content_hash": "7ce611cd2649989407c2f73599a97dab574424a18cd9233084cd1ada226174d8",
+      "subject": "Delibera CIPE 26/16 Decreto D.G. n.3 del 04/01/2017 Patto per lo Sviluppo della Regione Calabria. “Intervento di adeguamento sismico scuola dell’Infanzia di Bella tramite demolizione e ricostruzione”. Avviso ad opponendum",
+      "document_url": "https://albo.tinnvision.cloud/allegati/2026_2764_2_X?ente=00301390795",
+      "public_note": null,
       "verification_status": "official_source_acquired",
       "privacy_risk": "low",
       "public_visibility": "publishable",
@@ -978,9 +1279,27 @@
         "Quando gli export strutturati non includono URL diretti, il monitor prova il dettaglio ufficiale Tinnvision solo per record pubblicabili a basso rischio.",
         "Classificazione civica automatica basata su dizionario: settore e tipologia sono derivati da ufficio/provenienza e tipo atto, senza interpretare il contenuto dei PDF."
       ],
-      "subject": "Delibera CIPE 26/16 Decreto D.G. n.3 del 04/01/2017 Patto per lo Sviluppo della Regione Calabria. “Intervento di adeguamento sismico scuola dell’Infanzia di Bella tramite demolizione e ricostruzione”. Avviso ad opponendum",
-      "document_url": "https://albo.tinnvision.cloud/allegati/2026_2764_2_X?ente=00301390795",
-      "public_note": null
+      "presentation": {
+        "display_title": "Delibera CIPE 26/16 Decreto D.G. n.3 del 04/01/2017 Patto per lo Sviluppo della Regione Calabria. “Intervento di adeguamento sismico scuola dell'Infanzia di Bella tramite demolizione e ricostruzione”. Avviso ad opponendum",
+        "action_id": null,
+        "action_label": null,
+        "search_text": "delibera cipe 26 16 decreto d g n 3 del 04 01 2017 patto per lo sviluppo della regione calabria intervento di adeguamento sismico scuola dell infanzia di bella tramite demolizione e ricostruzione avviso ad opponendum",
+        "standardisation": {
+          "schema_version": "publication-standardisation.v1",
+          "profile_id": "albo-public-title-it",
+          "profile_version": "2026-08-30.2",
+          "input_field": "subject",
+          "input_field_preserved": true,
+          "status": "standardised_automatically",
+          "transformations": [
+            "normalise_apostrophes"
+          ],
+          "layout_flags": [
+            "display_title_too_long"
+          ],
+          "review_reasons": []
+        }
+      }
     },
     {
       "id": "albo-2026-2763",
@@ -991,10 +1310,9 @@
       "publication_start": "2026-08-26",
       "publication_end": "2026-09-03",
       "office": null,
-      "act_type": "ART.140 CPC (CODICE PROCEDURA CIVILE)",
+      "act_type": null,
       "act_number": null,
       "act_date": null,
-      "content_hash": "0d32ac13778556891c762c1df627ba3df19fcc4db1183c4f5ba8e330d9079c2f",
       "verification_status": "official_source_acquired",
       "privacy_risk": "high",
       "public_visibility": "metadata_only",
@@ -1028,7 +1346,24 @@
       ],
       "subject": "Metadato minimo; oggetto non ripubblicato per prudenza privacy.",
       "document_url": null,
-      "public_note": "Record limitato al metadato minimo."
+      "public_note": "Record limitato al metadato minimo.",
+      "presentation": {
+        "display_title": "Metadato minimo; oggetto non ripubblicato per prudenza privacy.",
+        "action_id": null,
+        "action_label": null,
+        "search_text": "metadato minimo oggetto non ripubblicato per prudenza privacy",
+        "standardisation": {
+          "schema_version": "publication-standardisation.v1",
+          "profile_id": "albo-public-title-it",
+          "profile_version": "2026-08-30.2",
+          "input_field": "subject",
+          "input_field_preserved": true,
+          "status": "unchanged",
+          "transformations": [],
+          "layout_flags": [],
+          "review_reasons": []
+        }
+      }
     },
     {
       "id": "albo-2026-2762",
@@ -1043,6 +1378,9 @@
       "act_number": "1360",
       "act_date": "2026-08-25",
       "content_hash": "1aa4a9bba5eb057e1a32e74da0c224819b6331d40ad72fe0c6187fc0b5912df7",
+      "subject": "PNRR M2C3I1.1. Lavori realizzazione Intervento demolizione e ricostruzione plesso scolastico Via delle Rose - I.C. Nicotera-Costabile – Affidamento servizio redazione Attestazione Prestazione Energetica - CIG BCC389A2DD - CUP C82C22000050006",
+      "document_url": "https://albo.tinnvision.cloud/allegati/2026_2762_9_ALLEG?ente=00301390795",
+      "public_note": null,
       "verification_status": "official_source_acquired",
       "privacy_risk": "low",
       "public_visibility": "publishable",
@@ -1071,9 +1409,25 @@
         "Quando gli export strutturati non includono URL diretti, il monitor prova il dettaglio ufficiale Tinnvision solo per record pubblicabili a basso rischio.",
         "Classificazione civica automatica basata su dizionario: settore e tipologia sono derivati da ufficio/provenienza e tipo atto, senza interpretare il contenuto dei PDF."
       ],
-      "subject": "PNRR M2C3I1.1. Lavori realizzazione Intervento demolizione e ricostruzione plesso scolastico Via delle Rose - I.C. Nicotera-Costabile – Affidamento servizio redazione Attestazione Prestazione Energetica - CIG BCC389A2DD - CUP C82C22000050006",
-      "document_url": "https://albo.tinnvision.cloud/allegati/2026_2762_9_ALLEG?ente=00301390795",
-      "public_note": null
+      "presentation": {
+        "display_title": "PNRR M2C3I1.1. Lavori realizzazione Intervento demolizione e ricostruzione plesso scolastico Via delle Rose - I.C. Nicotera-Costabile – Affidamento servizio redazione Attestazione Prestazione Energetica - CIG BCC389A2DD - CUP C82C22000050006",
+        "action_id": null,
+        "action_label": null,
+        "search_text": "pnrr m2c3i1 1 lavori realizzazione intervento demolizione e ricostruzione plesso scolastico via delle rose i c nicotera costabile affidamento servizio redazione attestazione prestazione energetica cig bcc389a2dd cup c82c22000050006",
+        "standardisation": {
+          "schema_version": "publication-standardisation.v1",
+          "profile_id": "albo-public-title-it",
+          "profile_version": "2026-08-30.2",
+          "input_field": "subject",
+          "input_field_preserved": true,
+          "status": "unchanged",
+          "transformations": [],
+          "layout_flags": [
+            "display_title_too_long"
+          ],
+          "review_reasons": []
+        }
+      }
     },
     {
       "id": "albo-2026-2761",
@@ -1088,6 +1442,9 @@
       "act_number": "1356",
       "act_date": "2026-08-24",
       "content_hash": "71429d93d127b3564a5312107df8776a3289abade103ef840c1cf36f2b471d68",
+      "subject": "Determina a contrarre e affidamento diretto alla libreria \"UBIK di Molinaro Francesca\" della fornitura di Libri con il contributo di cui al D.M N. 272 Del 05.08.2025 CIG :BA40458244",
+      "document_url": "https://albo.tinnvision.cloud/allegati/2026_2761_11_ALLEG?ente=00301390795",
+      "public_note": null,
       "verification_status": "official_source_acquired",
       "privacy_risk": "low",
       "public_visibility": "publishable",
@@ -1116,9 +1473,25 @@
         "Quando gli export strutturati non includono URL diretti, il monitor prova il dettaglio ufficiale Tinnvision solo per record pubblicabili a basso rischio.",
         "Classificazione civica automatica basata su dizionario: settore e tipologia sono derivati da ufficio/provenienza e tipo atto, senza interpretare il contenuto dei PDF."
       ],
-      "subject": "Determina a contrarre e affidamento diretto alla libreria \"UBIK di Molinaro Francesca\" della fornitura di Libri con il contributo di cui al D.M N. 272 Del 05.08.2025 CIG :BA40458244",
-      "document_url": "https://albo.tinnvision.cloud/allegati/2026_2761_11_ALLEG?ente=00301390795",
-      "public_note": null
+      "presentation": {
+        "display_title": "Determina a contrarre e affidamento diretto alla libreria \"UBIK di Molinaro Francesca\" della fornitura di Libri con il contributo di cui al D.M N. 272 Del 05.08.2025 CIG:BA40458244",
+        "action_id": null,
+        "action_label": null,
+        "search_text": "determina a contrarre e affidamento diretto alla libreria ubik di molinaro francesca della fornitura di libri con il contributo di cui al d m n 272 del 05 08 2025 cig ba40458244",
+        "standardisation": {
+          "schema_version": "publication-standardisation.v1",
+          "profile_id": "albo-public-title-it",
+          "profile_version": "2026-08-30.2",
+          "input_field": "subject",
+          "input_field_preserved": true,
+          "status": "standardised_automatically",
+          "transformations": [
+            "tighten_punctuation"
+          ],
+          "layout_flags": [],
+          "review_reasons": []
+        }
+      }
     },
     {
       "id": "albo-2026-2760",
@@ -1133,6 +1506,9 @@
       "act_number": "1357",
       "act_date": "2026-08-25",
       "content_hash": "3e300c14d4b7bfbec7e5853a0801c1215b74c43c0ded2c6a729528ac44f23668",
+      "subject": "Impegno di spesa per il servizio di gestione dei rifiuti sul territorio comunale per l'anno 2026",
+      "document_url": "https://albo.tinnvision.cloud/allegati/2026_2760_7_ALLEG?ente=00301390795",
+      "public_note": null,
       "verification_status": "official_source_acquired",
       "privacy_risk": "low",
       "public_visibility": "publishable",
@@ -1161,9 +1537,23 @@
         "Quando gli export strutturati non includono URL diretti, il monitor prova il dettaglio ufficiale Tinnvision solo per record pubblicabili a basso rischio.",
         "Classificazione civica automatica basata su dizionario: settore e tipologia sono derivati da ufficio/provenienza e tipo atto, senza interpretare il contenuto dei PDF."
       ],
-      "subject": "Impegno di spesa per il servizio di gestione dei rifiuti sul territorio comunale per l'anno 2026",
-      "document_url": "https://albo.tinnvision.cloud/allegati/2026_2760_7_ALLEG?ente=00301390795",
-      "public_note": null
+      "presentation": {
+        "display_title": "Impegno di spesa per il servizio di gestione dei rifiuti sul territorio comunale per l'anno 2026",
+        "action_id": null,
+        "action_label": null,
+        "search_text": "impegno di spesa per il servizio di gestione dei rifiuti sul territorio comunale per l anno 2026",
+        "standardisation": {
+          "schema_version": "publication-standardisation.v1",
+          "profile_id": "albo-public-title-it",
+          "profile_version": "2026-08-30.2",
+          "input_field": "subject",
+          "input_field_preserved": true,
+          "status": "unchanged",
+          "transformations": [],
+          "layout_flags": [],
+          "review_reasons": []
+        }
+      }
     },
     {
       "id": "albo-2026-2759",
@@ -1178,6 +1568,9 @@
       "act_number": "1358",
       "act_date": "2026-08-25",
       "content_hash": "b89edb8c1e210360c38a247ab0cbea0953336c00523cf2e6b09c0522d33db6c5",
+      "subject": "Appalto per la gestione asili nido comunali \"Via Conforti\", \"Via Spartivento\", \"Via Giovanni XXIII\" CUP C84D25002060004. Presa d'atto Determinazione Dirigenziale R.G. 2766 del 24.08.26 della Stazione Appaltante Metropolitana di Reggio Calabria",
+      "document_url": "https://albo.tinnvision.cloud/allegati/2026_2759_2_ALLEG?ente=00301390795",
+      "public_note": null,
       "verification_status": "official_source_acquired",
       "privacy_risk": "low",
       "public_visibility": "publishable",
@@ -1206,9 +1599,25 @@
         "Quando gli export strutturati non includono URL diretti, il monitor prova il dettaglio ufficiale Tinnvision solo per record pubblicabili a basso rischio.",
         "Classificazione civica automatica basata su dizionario: settore e tipologia sono derivati da ufficio/provenienza e tipo atto, senza interpretare il contenuto dei PDF."
       ],
-      "subject": "Appalto per la gestione asili nido comunali \"Via Conforti\", \"Via Spartivento\", \"Via Giovanni XXIII\" CUP C84D25002060004. Presa d'atto Determinazione Dirigenziale R.G. 2766 del 24.08.26 della Stazione Appaltante Metropolitana di Reggio Calabria",
-      "document_url": "https://albo.tinnvision.cloud/allegati/2026_2759_2_ALLEG?ente=00301390795",
-      "public_note": null
+      "presentation": {
+        "display_title": "Appalto per la gestione asili nido comunali \"Via Conforti\", \"Via Spartivento\", \"Via Giovanni XXIII\" CUP C84D25002060004. Presa d'atto Determinazione Dirigenziale R.G. 2766 del 24.08.26 della Stazione Appaltante Metropolitana di Reggio Calabria",
+        "action_id": null,
+        "action_label": null,
+        "search_text": "appalto per la gestione asili nido comunali via conforti via spartivento via giovanni xxiii cup c84d25002060004 presa d atto determinazione dirigenziale r g 2766 del 24 08 26 della stazione appaltante metropolitana di reggio calabria",
+        "standardisation": {
+          "schema_version": "publication-standardisation.v1",
+          "profile_id": "albo-public-title-it",
+          "profile_version": "2026-08-30.2",
+          "input_field": "subject",
+          "input_field_preserved": true,
+          "status": "unchanged",
+          "transformations": [],
+          "layout_flags": [
+            "display_title_too_long"
+          ],
+          "review_reasons": []
+        }
+      }
     },
     {
       "id": "albo-2026-2758",
@@ -1223,6 +1632,9 @@
       "act_number": "214",
       "act_date": "2026-08-25",
       "content_hash": "4880f889aeb77f73feede184f41edcdcb064d1ff2adb4ef3686342f4d88e8e69",
+      "subject": "Modifica temporanea della circolazione stradale in Via F. Costabile per la costruzione di un nuovo elettrodotto MT interrato dal 28 Agosto al 30 Settembre c.a.",
+      "document_url": "https://albo.tinnvision.cloud/allegati/2026_2758_1_ALLEG?ente=00301390795",
+      "public_note": null,
       "verification_status": "official_source_acquired",
       "privacy_risk": "low",
       "public_visibility": "publishable",
@@ -1251,9 +1663,23 @@
         "Quando gli export strutturati non includono URL diretti, il monitor prova il dettaglio ufficiale Tinnvision solo per record pubblicabili a basso rischio.",
         "Classificazione civica automatica basata su dizionario: settore e tipologia sono derivati da ufficio/provenienza e tipo atto, senza interpretare il contenuto dei PDF."
       ],
-      "subject": "Modifica temporanea della circolazione stradale in Via F. Costabile per la costruzione di un nuovo elettrodotto MT interrato dal 28 Agosto al 30 Settembre c.a.",
-      "document_url": "https://albo.tinnvision.cloud/allegati/2026_2758_1_ALLEG?ente=00301390795",
-      "public_note": null
+      "presentation": {
+        "display_title": "Modifica temporanea della circolazione stradale in Via F. Costabile per la costruzione di un nuovo elettrodotto MT interrato dal 28 Agosto al 30 Settembre c.a.",
+        "action_id": null,
+        "action_label": null,
+        "search_text": "modifica temporanea della circolazione stradale in via f costabile per la costruzione di un nuovo elettrodotto mt interrato dal 28 agosto al 30 settembre c a",
+        "standardisation": {
+          "schema_version": "publication-standardisation.v1",
+          "profile_id": "albo-public-title-it",
+          "profile_version": "2026-08-30.2",
+          "input_field": "subject",
+          "input_field_preserved": true,
+          "status": "unchanged",
+          "transformations": [],
+          "layout_flags": [],
+          "review_reasons": []
+        }
+      }
     },
     {
       "id": "albo-2026-2757",
@@ -1268,6 +1694,9 @@
       "act_number": "213",
       "act_date": "2026-08-25",
       "content_hash": "f363c1cf286cb4a352260a5b4ff4b7da69d44bf5f87a94a7e7c69587551be3f0",
+      "subject": "Modifica temporanea della circolazione stradale in alcune vie della città per la costruzione di un nuovo elettrodotto MT interrato dal 28 Agosto al 30 Settembre c.a.",
+      "document_url": "https://albo.tinnvision.cloud/allegati/2026_2757_1_ALLEG?ente=00301390795",
+      "public_note": null,
       "verification_status": "official_source_acquired",
       "privacy_risk": "low",
       "public_visibility": "publishable",
@@ -1296,9 +1725,23 @@
         "Quando gli export strutturati non includono URL diretti, il monitor prova il dettaglio ufficiale Tinnvision solo per record pubblicabili a basso rischio.",
         "Classificazione civica automatica basata su dizionario: settore e tipologia sono derivati da ufficio/provenienza e tipo atto, senza interpretare il contenuto dei PDF."
       ],
-      "subject": "Modifica temporanea della circolazione stradale in alcune vie della città per la costruzione di un nuovo elettrodotto MT interrato dal 28 Agosto al 30 Settembre c.a.",
-      "document_url": "https://albo.tinnvision.cloud/allegati/2026_2757_1_ALLEG?ente=00301390795",
-      "public_note": null
+      "presentation": {
+        "display_title": "Modifica temporanea della circolazione stradale in alcune vie della città per la costruzione di un nuovo elettrodotto MT interrato dal 28 Agosto al 30 Settembre c.a.",
+        "action_id": null,
+        "action_label": null,
+        "search_text": "modifica temporanea della circolazione stradale in alcune vie della citta per la costruzione di un nuovo elettrodotto mt interrato dal 28 agosto al 30 settembre c a",
+        "standardisation": {
+          "schema_version": "publication-standardisation.v1",
+          "profile_id": "albo-public-title-it",
+          "profile_version": "2026-08-30.2",
+          "input_field": "subject",
+          "input_field_preserved": true,
+          "status": "unchanged",
+          "transformations": [],
+          "layout_flags": [],
+          "review_reasons": []
+        }
+      }
     },
     {
       "id": "albo-2026-2756",
@@ -1313,6 +1756,9 @@
       "act_number": "212",
       "act_date": "2026-08-25",
       "content_hash": "51b707eccb4c484d69d5f2c308c2f501324670f828ca11590b60cea6a42f2be1",
+      "subject": "Modifica temporanea della circolazione stradale in alcune vie della città per la costruzione di un nuovo elettrodotto MT interrato dal 28 Agosto al 30 Settembre c.a.",
+      "document_url": "https://albo.tinnvision.cloud/allegati/2026_2756_1_ALLEG?ente=00301390795",
+      "public_note": null,
       "verification_status": "official_source_acquired",
       "privacy_risk": "low",
       "public_visibility": "publishable",
@@ -1341,9 +1787,23 @@
         "Quando gli export strutturati non includono URL diretti, il monitor prova il dettaglio ufficiale Tinnvision solo per record pubblicabili a basso rischio.",
         "Classificazione civica automatica basata su dizionario: settore e tipologia sono derivati da ufficio/provenienza e tipo atto, senza interpretare il contenuto dei PDF."
       ],
-      "subject": "Modifica temporanea della circolazione stradale in alcune vie della città per la costruzione di un nuovo elettrodotto MT interrato dal 28 Agosto al 30 Settembre c.a.",
-      "document_url": "https://albo.tinnvision.cloud/allegati/2026_2756_1_ALLEG?ente=00301390795",
-      "public_note": null
+      "presentation": {
+        "display_title": "Modifica temporanea della circolazione stradale in alcune vie della città per la costruzione di un nuovo elettrodotto MT interrato dal 28 Agosto al 30 Settembre c.a.",
+        "action_id": null,
+        "action_label": null,
+        "search_text": "modifica temporanea della circolazione stradale in alcune vie della citta per la costruzione di un nuovo elettrodotto mt interrato dal 28 agosto al 30 settembre c a",
+        "standardisation": {
+          "schema_version": "publication-standardisation.v1",
+          "profile_id": "albo-public-title-it",
+          "profile_version": "2026-08-30.2",
+          "input_field": "subject",
+          "input_field_preserved": true,
+          "status": "unchanged",
+          "transformations": [],
+          "layout_flags": [],
+          "review_reasons": []
+        }
+      }
     },
     {
       "id": "albo-2026-2755",
@@ -1358,6 +1818,9 @@
       "act_number": "1351",
       "act_date": "2026-08-21",
       "content_hash": "280b215a867cb8db0b94c7255fb8687e5a2fb08c682c7b0af074fedeae3aaffc",
+      "subject": "Impegno spesa per debito fuori bilancio derivante da Decreto ingiuntivo esecutivo n°408/2025, emesso dal Tribunale di Lamezia Terme, approvato nella seduta di Consiglio Comunale del 13.08.2026.",
+      "document_url": "https://albo.tinnvision.cloud/allegati/2026_2755_6_ALLEG?ente=00301390795",
+      "public_note": null,
       "verification_status": "official_source_acquired",
       "privacy_risk": "low",
       "public_visibility": "publishable",
@@ -1386,9 +1849,25 @@
         "Quando gli export strutturati non includono URL diretti, il monitor prova il dettaglio ufficiale Tinnvision solo per record pubblicabili a basso rischio.",
         "Classificazione civica automatica basata su dizionario: settore e tipologia sono derivati da ufficio/provenienza e tipo atto, senza interpretare il contenuto dei PDF."
       ],
-      "subject": "Impegno spesa per debito fuori bilancio derivante da Decreto ingiuntivo esecutivo n°408/2025, emesso dal Tribunale di Lamezia Terme, approvato nella seduta di Consiglio Comunale del 13.08.2026.",
-      "document_url": "https://albo.tinnvision.cloud/allegati/2026_2755_6_ALLEG?ente=00301390795",
-      "public_note": null
+      "presentation": {
+        "display_title": "Impegno spesa per debito fuori bilancio derivante da Decreto ingiuntivo esecutivo n°408/2025, emesso dal Tribunale di Lamezia Terme, approvato nella seduta di Consiglio Comunale del 13.08.2026.",
+        "action_id": null,
+        "action_label": null,
+        "search_text": "impegno spesa per debito fuori bilancio derivante da decreto ingiuntivo esecutivo n 408 2025 emesso dal tribunale di lamezia terme approvato nella seduta di consiglio comunale del 13 08 2026",
+        "standardisation": {
+          "schema_version": "publication-standardisation.v1",
+          "profile_id": "albo-public-title-it",
+          "profile_version": "2026-08-30.2",
+          "input_field": "subject",
+          "input_field_preserved": true,
+          "status": "unchanged",
+          "transformations": [],
+          "layout_flags": [
+            "display_title_too_long"
+          ],
+          "review_reasons": []
+        }
+      }
     },
     {
       "id": "albo-2026-2754",
@@ -1403,6 +1882,9 @@
       "act_number": "211",
       "act_date": "2026-08-24",
       "content_hash": "c7bbd69c084f0ca1dde5a80a39a50d43534fb42c9680a22310aa58b899f03462",
+      "subject": "Ordinanza dirigenziale di cessazione immediata di attivita' di pubblico spettacolo con intrattenimento musicale esercitata abusivamente da un locale di somministrazione alimenti e bevande",
+      "document_url": "https://albo.tinnvision.cloud/allegati/2026_2754_2_ALLEG?ente=00301390795",
+      "public_note": null,
       "verification_status": "official_source_acquired",
       "privacy_risk": "low",
       "public_visibility": "publishable",
@@ -1431,9 +1913,25 @@
         "Quando gli export strutturati non includono URL diretti, il monitor prova il dettaglio ufficiale Tinnvision solo per record pubblicabili a basso rischio.",
         "Classificazione civica automatica basata su dizionario: settore e tipologia sono derivati da ufficio/provenienza e tipo atto, senza interpretare il contenuto dei PDF."
       ],
-      "subject": "Ordinanza dirigenziale di cessazione immediata di attivita' di pubblico spettacolo con intrattenimento musicale esercitata abusivamente da un locale di somministrazione alimenti e bevande",
-      "document_url": "https://albo.tinnvision.cloud/allegati/2026_2754_2_ALLEG?ente=00301390795",
-      "public_note": null
+      "presentation": {
+        "display_title": "Ordinanza dirigenziale di cessazione immediata di attivita' di pubblico spettacolo con intrattenimento musicale esercitata abusivamente da un locale di somministrazione alimenti e bevande",
+        "action_id": null,
+        "action_label": null,
+        "search_text": "ordinanza dirigenziale di cessazione immediata di attivita di pubblico spettacolo con intrattenimento musicale esercitata abusivamente da un locale di somministrazione alimenti e bevande",
+        "standardisation": {
+          "schema_version": "publication-standardisation.v1",
+          "profile_id": "albo-public-title-it",
+          "profile_version": "2026-08-30.2",
+          "input_field": "subject",
+          "input_field_preserved": true,
+          "status": "unchanged",
+          "transformations": [],
+          "layout_flags": [
+            "display_title_too_long"
+          ],
+          "review_reasons": []
+        }
+      }
     },
     {
       "id": "albo-2026-2753",
@@ -1443,11 +1941,10 @@
       "publication_number": "2026/2753",
       "publication_start": "2026-08-24",
       "publication_end": "2026-09-08",
-      "office": "SETTORE AVVOCATURA",
-      "act_type": "DELIBERAZIONE DI GIUNTA",
+      "office": null,
+      "act_type": null,
       "act_number": "217",
       "act_date": "2026-08-24",
-      "content_hash": "de4913378e6ac0fb33d5e903a45c581021bbacc024f356ef8a01620b2c5e6494",
       "verification_status": "official_source_acquired",
       "privacy_risk": "medium",
       "public_visibility": "publishable_with_minimisation",
@@ -1481,7 +1978,24 @@
       ],
       "subject": "Oggetto minimizzato per prudenza privacy; consultare la fonte ufficiale.",
       "document_url": null,
-      "public_note": "Record pubblicato con minimizzazione automatica."
+      "public_note": "Record pubblicato con minimizzazione automatica.",
+      "presentation": {
+        "display_title": "Oggetto minimizzato per prudenza privacy; consultare la fonte ufficiale.",
+        "action_id": null,
+        "action_label": null,
+        "search_text": "oggetto minimizzato per prudenza privacy consultare la fonte ufficiale",
+        "standardisation": {
+          "schema_version": "publication-standardisation.v1",
+          "profile_id": "albo-public-title-it",
+          "profile_version": "2026-08-30.2",
+          "input_field": "subject",
+          "input_field_preserved": true,
+          "status": "unchanged",
+          "transformations": [],
+          "layout_flags": [],
+          "review_reasons": []
+        }
+      }
     },
     {
       "id": "albo-2026-2751",
@@ -1496,6 +2010,9 @@
       "act_number": "216",
       "act_date": "2026-08-24",
       "content_hash": "e777db9e1776b0018193be11554fb02600f751074ed54692d4be53d3181e803b",
+      "subject": "Approvazione Piano Attuativo Unitario ad iniziativa privata denominato “P.A.U. Raso Teresa” finalizzato alla realizzazione di capannone adibito a deposito e usi direzionali, proposto da Raso Teresa, proprietaria, ai sensi dell'art. 30 L.R. n. 19/2002.",
+      "document_url": "https://albo.tinnvision.cloud/allegati/2026_2751_16_ALLEG?ente=00301390795",
+      "public_note": null,
       "verification_status": "official_source_acquired",
       "privacy_risk": "low",
       "public_visibility": "publishable",
@@ -1524,9 +2041,25 @@
         "Quando gli export strutturati non includono URL diretti, il monitor prova il dettaglio ufficiale Tinnvision solo per record pubblicabili a basso rischio.",
         "Classificazione civica automatica basata su dizionario: settore e tipologia sono derivati da ufficio/provenienza e tipo atto, senza interpretare il contenuto dei PDF."
       ],
-      "subject": "Approvazione Piano Attuativo Unitario ad iniziativa privata denominato “P.A.U. Raso Teresa” finalizzato alla realizzazione di capannone adibito a deposito e usi direzionali, proposto da Raso Teresa, proprietaria, ai sensi dell'art. 30 L.R. n. 19/2002.",
-      "document_url": "https://albo.tinnvision.cloud/allegati/2026_2751_16_ALLEG?ente=00301390795",
-      "public_note": null
+      "presentation": {
+        "display_title": "Approvazione Piano Attuativo Unitario ad iniziativa privata denominato “P.A.U. Raso Teresa” finalizzato alla realizzazione di capannone adibito a deposito e usi direzionali, proposto da Raso Teresa, proprietaria, ai sensi dell'art. 30 L.R. n. 19/2002.",
+        "action_id": "approvazione",
+        "action_label": "Approvazione",
+        "search_text": "approvazione piano attuativo unitario ad iniziativa privata denominato p a u raso teresa finalizzato alla realizzazione di capannone adibito a deposito e usi direzionali proposto da raso teresa proprietaria ai sensi dell art 30 l r n 19 2002",
+        "standardisation": {
+          "schema_version": "publication-standardisation.v1",
+          "profile_id": "albo-public-title-it",
+          "profile_version": "2026-08-30.2",
+          "input_field": "subject",
+          "input_field_preserved": true,
+          "status": "unchanged",
+          "transformations": [],
+          "layout_flags": [
+            "display_title_too_long"
+          ],
+          "review_reasons": []
+        }
+      }
     },
     {
       "id": "albo-2026-2749",
@@ -1536,11 +2069,10 @@
       "publication_number": "2026/2749",
       "publication_start": "2026-08-24",
       "publication_end": "2026-09-08",
-      "office": "SETTORE AVVOCATURA",
-      "act_type": "DELIBERAZIONE DI GIUNTA",
+      "office": null,
+      "act_type": null,
       "act_number": "215",
       "act_date": "2026-08-24",
-      "content_hash": "7b8b009c1c05a3c7c52300840444c9ccc0423b6035c5837ac2a1b1b28705e1f1",
       "verification_status": "official_source_acquired",
       "privacy_risk": "medium",
       "public_visibility": "publishable_with_minimisation",
@@ -1574,7 +2106,24 @@
       ],
       "subject": "Oggetto minimizzato per prudenza privacy; consultare la fonte ufficiale.",
       "document_url": null,
-      "public_note": "Record pubblicato con minimizzazione automatica."
+      "public_note": "Record pubblicato con minimizzazione automatica.",
+      "presentation": {
+        "display_title": "Oggetto minimizzato per prudenza privacy; consultare la fonte ufficiale.",
+        "action_id": null,
+        "action_label": null,
+        "search_text": "oggetto minimizzato per prudenza privacy consultare la fonte ufficiale",
+        "standardisation": {
+          "schema_version": "publication-standardisation.v1",
+          "profile_id": "albo-public-title-it",
+          "profile_version": "2026-08-30.2",
+          "input_field": "subject",
+          "input_field_preserved": true,
+          "status": "unchanged",
+          "transformations": [],
+          "layout_flags": [],
+          "review_reasons": []
+        }
+      }
     },
     {
       "id": "albo-2026-2748",
@@ -1589,6 +2138,9 @@
       "act_number": "210",
       "act_date": "2026-08-23",
       "content_hash": "0a5a68aff918a5ce97323fb83d143bad447e71eaf810a8787bbbad5836218e38",
+      "subject": "Modifica temporanea della circolazione stradale in data 25 agosto c.a. in occasione delle operazioni di trasloco mobili in via Emilia e via B. Musolino.",
+      "document_url": "https://albo.tinnvision.cloud/allegati/2026_2748_1_ALLEG?ente=00301390795",
+      "public_note": null,
       "verification_status": "official_source_acquired",
       "privacy_risk": "low",
       "public_visibility": "publishable",
@@ -1617,9 +2169,23 @@
         "Quando gli export strutturati non includono URL diretti, il monitor prova il dettaglio ufficiale Tinnvision solo per record pubblicabili a basso rischio.",
         "Classificazione civica automatica basata su dizionario: settore e tipologia sono derivati da ufficio/provenienza e tipo atto, senza interpretare il contenuto dei PDF."
       ],
-      "subject": "Modifica temporanea della circolazione stradale in data 25 agosto c.a. in occasione delle operazioni di trasloco mobili in via Emilia e via B. Musolino.",
-      "document_url": "https://albo.tinnvision.cloud/allegati/2026_2748_1_ALLEG?ente=00301390795",
-      "public_note": null
+      "presentation": {
+        "display_title": "Modifica temporanea della circolazione stradale in data 25 agosto c.a. in occasione delle operazioni di trasloco mobili in via Emilia e via B. Musolino.",
+        "action_id": null,
+        "action_label": null,
+        "search_text": "modifica temporanea della circolazione stradale in data 25 agosto c a in occasione delle operazioni di trasloco mobili in via emilia e via b musolino",
+        "standardisation": {
+          "schema_version": "publication-standardisation.v1",
+          "profile_id": "albo-public-title-it",
+          "profile_version": "2026-08-30.2",
+          "input_field": "subject",
+          "input_field_preserved": true,
+          "status": "unchanged",
+          "transformations": [],
+          "layout_flags": [],
+          "review_reasons": []
+        }
+      }
     },
     {
       "id": "albo-2026-2747",
@@ -1634,6 +2200,9 @@
       "act_number": "1348",
       "act_date": "2026-08-20",
       "content_hash": "004adeb0ffd3ea1dd976f910ec21f3087cd1812ebd832ba9f6a42e5e69b2ac6d",
+      "subject": "Fondi Delibera CIPE n. 26/2003. Progetto CALABRIA FOOD & TOURISM ACADEMY . CUP:C85H22003140002. CIG:B43A3A975A. Svincolo e liquidazione ritenuta per infortuni 0,5%",
+      "document_url": "https://albo.tinnvision.cloud/allegati/2026_2747_10_ALLEG?ente=00301390795",
+      "public_note": null,
       "verification_status": "official_source_acquired",
       "privacy_risk": "low",
       "public_visibility": "publishable",
@@ -1662,9 +2231,25 @@
         "Quando gli export strutturati non includono URL diretti, il monitor prova il dettaglio ufficiale Tinnvision solo per record pubblicabili a basso rischio.",
         "Classificazione civica automatica basata su dizionario: settore e tipologia sono derivati da ufficio/provenienza e tipo atto, senza interpretare il contenuto dei PDF."
       ],
-      "subject": "Fondi Delibera CIPE n. 26/2003. Progetto CALABRIA FOOD & TOURISM ACADEMY . CUP:C85H22003140002. CIG:B43A3A975A. Svincolo e liquidazione ritenuta per infortuni 0,5%",
-      "document_url": "https://albo.tinnvision.cloud/allegati/2026_2747_10_ALLEG?ente=00301390795",
-      "public_note": null
+      "presentation": {
+        "display_title": "Fondi Delibera CIPE n. 26/2003. Progetto CALABRIA FOOD & TOURISM ACADEMY. CUP:C85H22003140002. CIG:B43A3A975A. Svincolo e liquidazione ritenuta per infortuni 0,5%",
+        "action_id": null,
+        "action_label": null,
+        "search_text": "fondi delibera cipe n 26 2003 progetto calabria food tourism academy cup c85h22003140002 cig b43a3a975a svincolo e liquidazione ritenuta per infortuni 0 5",
+        "standardisation": {
+          "schema_version": "publication-standardisation.v1",
+          "profile_id": "albo-public-title-it",
+          "profile_version": "2026-08-30.2",
+          "input_field": "subject",
+          "input_field_preserved": true,
+          "status": "standardised_automatically",
+          "transformations": [
+            "tighten_punctuation"
+          ],
+          "layout_flags": [],
+          "review_reasons": []
+        }
+      }
     },
     {
       "id": "albo-2026-2746",
@@ -1679,6 +2264,9 @@
       "act_number": "1349",
       "act_date": "2026-08-20",
       "content_hash": "52046a7794832a0220a5ce822fcb77b450273d114d232db7969bbee62a93d53b",
+      "subject": "Determinazione a contrarre. SERVIZI PROFESSIONALI AFFERENTI I SERVIZI tecnici di Direzione Lavori, CSE, per l’intervento REALIZZAZIONE DI UN’AREA DEDICATA ALL’OSPITALITÀ DI CAMPER IN LOCALITA’ CAPIZZAGLIE CUP:C84H24000630005,CIG: BCBA16AF4C",
+      "document_url": "https://albo.tinnvision.cloud/allegati/2026_2746_15_ALLEG?ente=00301390795",
+      "public_note": null,
       "verification_status": "official_source_acquired",
       "privacy_risk": "low",
       "public_visibility": "publishable",
@@ -1707,9 +2295,27 @@
         "Quando gli export strutturati non includono URL diretti, il monitor prova il dettaglio ufficiale Tinnvision solo per record pubblicabili a basso rischio.",
         "Classificazione civica automatica basata su dizionario: settore e tipologia sono derivati da ufficio/provenienza e tipo atto, senza interpretare il contenuto dei PDF."
       ],
-      "subject": "Determinazione a contrarre. SERVIZI PROFESSIONALI AFFERENTI I SERVIZI tecnici di Direzione Lavori, CSE, per l’intervento REALIZZAZIONE DI UN’AREA DEDICATA ALL’OSPITALITÀ DI CAMPER IN LOCALITA’ CAPIZZAGLIE CUP:C84H24000630005,CIG: BCBA16AF4C",
-      "document_url": "https://albo.tinnvision.cloud/allegati/2026_2746_15_ALLEG?ente=00301390795",
-      "public_note": null
+      "presentation": {
+        "display_title": "Determinazione a contrarre. SERVIZI PROFESSIONALI AFFERENTI I SERVIZI tecnici di Direzione Lavori, CSE, per l'intervento REALIZZAZIONE DI UN'AREA DEDICATA ALL'OSPITALITÀ DI CAMPER IN LOCALITA' CAPIZZAGLIE CUP:C84H24000630005,CIG: BCBA16AF4C",
+        "action_id": null,
+        "action_label": null,
+        "search_text": "determinazione a contrarre servizi professionali afferenti i servizi tecnici di direzione lavori cse per l intervento realizzazione di un area dedicata all ospitalita di camper in localita capizzaglie cup c84h24000630005 cig bcba16af4c",
+        "standardisation": {
+          "schema_version": "publication-standardisation.v1",
+          "profile_id": "albo-public-title-it",
+          "profile_version": "2026-08-30.2",
+          "input_field": "subject",
+          "input_field_preserved": true,
+          "status": "standardised_automatically",
+          "transformations": [
+            "normalise_apostrophes"
+          ],
+          "layout_flags": [
+            "display_title_too_long"
+          ],
+          "review_reasons": []
+        }
+      }
     },
     {
       "id": "albo-2026-2744",
@@ -1720,10 +2326,9 @@
       "publication_start": "2026-08-21",
       "publication_end": "2026-09-05",
       "office": null,
-      "act_type": "DETERMINAZIONE DIRIGENZIALE",
+      "act_type": null,
       "act_number": null,
       "act_date": null,
-      "content_hash": "91753292b2553f18c739a01688f3e665a859934c6dad2aadde832f084c1a36bf",
       "verification_status": "official_source_acquired",
       "privacy_risk": "high",
       "public_visibility": "metadata_only",
@@ -1757,7 +2362,24 @@
       ],
       "subject": "Metadato minimo; oggetto non ripubblicato per prudenza privacy.",
       "document_url": null,
-      "public_note": "Record limitato al metadato minimo."
+      "public_note": "Record limitato al metadato minimo.",
+      "presentation": {
+        "display_title": "Metadato minimo; oggetto non ripubblicato per prudenza privacy.",
+        "action_id": null,
+        "action_label": null,
+        "search_text": "metadato minimo oggetto non ripubblicato per prudenza privacy",
+        "standardisation": {
+          "schema_version": "publication-standardisation.v1",
+          "profile_id": "albo-public-title-it",
+          "profile_version": "2026-08-30.2",
+          "input_field": "subject",
+          "input_field_preserved": true,
+          "status": "unchanged",
+          "transformations": [],
+          "layout_flags": [],
+          "review_reasons": []
+        }
+      }
     },
     {
       "id": "albo-2026-2743",
@@ -1768,10 +2390,9 @@
       "publication_start": "2026-08-21",
       "publication_end": "2026-09-05",
       "office": null,
-      "act_type": "DETERMINAZIONE DIRIGENZIALE",
+      "act_type": null,
       "act_number": null,
       "act_date": null,
-      "content_hash": "814a235d5de9903077949624f9d0340f2a45ceabccda0562c61861f054fa0c06",
       "verification_status": "official_source_acquired",
       "privacy_risk": "high",
       "public_visibility": "metadata_only",
@@ -1805,7 +2426,24 @@
       ],
       "subject": "Metadato minimo; oggetto non ripubblicato per prudenza privacy.",
       "document_url": null,
-      "public_note": "Record limitato al metadato minimo."
+      "public_note": "Record limitato al metadato minimo.",
+      "presentation": {
+        "display_title": "Metadato minimo; oggetto non ripubblicato per prudenza privacy.",
+        "action_id": null,
+        "action_label": null,
+        "search_text": "metadato minimo oggetto non ripubblicato per prudenza privacy",
+        "standardisation": {
+          "schema_version": "publication-standardisation.v1",
+          "profile_id": "albo-public-title-it",
+          "profile_version": "2026-08-30.2",
+          "input_field": "subject",
+          "input_field_preserved": true,
+          "status": "unchanged",
+          "transformations": [],
+          "layout_flags": [],
+          "review_reasons": []
+        }
+      }
     },
     {
       "id": "albo-2026-2742",
@@ -1820,6 +2458,9 @@
       "act_number": "1334",
       "act_date": "2026-08-17",
       "content_hash": "549232ae13d0d5b366158a457920845c38c5499c63cfbf73a992e8572ac71939",
+      "subject": "Servizio di gestione asili nido comunali di Via Conforti, Via Spartivento, Via Giovanni XXIII. Numero Gara 8492798. Liquidazione somme Lotto 2 – Via Spartivento- periodo Marzo/Giugno 2026",
+      "document_url": "https://albo.tinnvision.cloud/allegati/2026_2742_9_ALLEG?ente=00301390795",
+      "public_note": null,
       "verification_status": "official_source_acquired",
       "privacy_risk": "low",
       "public_visibility": "publishable",
@@ -1848,9 +2489,25 @@
         "Quando gli export strutturati non includono URL diretti, il monitor prova il dettaglio ufficiale Tinnvision solo per record pubblicabili a basso rischio.",
         "Classificazione civica automatica basata su dizionario: settore e tipologia sono derivati da ufficio/provenienza e tipo atto, senza interpretare il contenuto dei PDF."
       ],
-      "subject": "Servizio di gestione asili nido comunali di Via Conforti, Via Spartivento, Via Giovanni XXIII. Numero Gara 8492798. Liquidazione somme Lotto 2 – Via Spartivento- periodo Marzo/Giugno 2026",
-      "document_url": "https://albo.tinnvision.cloud/allegati/2026_2742_9_ALLEG?ente=00301390795",
-      "public_note": null
+      "presentation": {
+        "display_title": "Servizio di gestione asili nido comunali di Via Conforti, Via Spartivento, Via Giovanni XXIII. Numero Gara 8492798. Liquidazione somme Lotto 2 – Via Spartivento- periodo Marzo/Giugno 2026",
+        "action_id": null,
+        "action_label": null,
+        "search_text": "servizio di gestione asili nido comunali di via conforti via spartivento via giovanni xxiii numero gara 8492798 liquidazione somme lotto 2 via spartivento periodo marzo giugno 2026",
+        "standardisation": {
+          "schema_version": "publication-standardisation.v1",
+          "profile_id": "albo-public-title-it",
+          "profile_version": "2026-08-30.2",
+          "input_field": "subject",
+          "input_field_preserved": true,
+          "status": "unchanged",
+          "transformations": [],
+          "layout_flags": [
+            "display_title_too_long"
+          ],
+          "review_reasons": []
+        }
+      }
     },
     {
       "id": "albo-2026-2741",
@@ -1865,6 +2522,9 @@
       "act_number": "1335",
       "act_date": "2026-08-17",
       "content_hash": "e88e54ed210abe541ea2b38524318292e65fe5019e0e17cbaa03af4fdd545cec",
+      "subject": "Servizio di gestione asili nido comunali di Via Conforti, Via Spartivento, Via Giovanni XXIII. Numero Gara 8492798. Liquidazione somme Lotto 3 – Via Giovanni XXIII- periodo Marzo/Giugno 2026",
+      "document_url": "https://albo.tinnvision.cloud/allegati/2026_2741_9_ALLEG?ente=00301390795",
+      "public_note": null,
       "verification_status": "official_source_acquired",
       "privacy_risk": "low",
       "public_visibility": "publishable",
@@ -1893,9 +2553,25 @@
         "Quando gli export strutturati non includono URL diretti, il monitor prova il dettaglio ufficiale Tinnvision solo per record pubblicabili a basso rischio.",
         "Classificazione civica automatica basata su dizionario: settore e tipologia sono derivati da ufficio/provenienza e tipo atto, senza interpretare il contenuto dei PDF."
       ],
-      "subject": "Servizio di gestione asili nido comunali di Via Conforti, Via Spartivento, Via Giovanni XXIII. Numero Gara 8492798. Liquidazione somme Lotto 3 – Via Giovanni XXIII- periodo Marzo/Giugno 2026",
-      "document_url": "https://albo.tinnvision.cloud/allegati/2026_2741_9_ALLEG?ente=00301390795",
-      "public_note": null
+      "presentation": {
+        "display_title": "Servizio di gestione asili nido comunali di Via Conforti, Via Spartivento, Via Giovanni XXIII. Numero Gara 8492798. Liquidazione somme Lotto 3 – Via Giovanni XXIII- periodo Marzo/Giugno 2026",
+        "action_id": null,
+        "action_label": null,
+        "search_text": "servizio di gestione asili nido comunali di via conforti via spartivento via giovanni xxiii numero gara 8492798 liquidazione somme lotto 3 via giovanni xxiii periodo marzo giugno 2026",
+        "standardisation": {
+          "schema_version": "publication-standardisation.v1",
+          "profile_id": "albo-public-title-it",
+          "profile_version": "2026-08-30.2",
+          "input_field": "subject",
+          "input_field_preserved": true,
+          "status": "unchanged",
+          "transformations": [],
+          "layout_flags": [
+            "display_title_too_long"
+          ],
+          "review_reasons": []
+        }
+      }
     },
     {
       "id": "albo-2026-2740",
@@ -1910,6 +2586,9 @@
       "act_number": "1333",
       "act_date": "2026-08-17",
       "content_hash": "4232c808fa19a4454ae51b119fdfd4b261b342441ce043d9c471aac93cf96749",
+      "subject": "Servizio di gestione asili nido comunali di Via Conforti, Via Spartivento, Via Giovanni XXIII. Numero Gara 8492798. Liquidazione somme Lotto 1 – Via Conforti- periodo Marzo/Giugno 2026",
+      "document_url": "https://albo.tinnvision.cloud/allegati/2026_2740_9_ALLEG?ente=00301390795",
+      "public_note": null,
       "verification_status": "official_source_acquired",
       "privacy_risk": "low",
       "public_visibility": "publishable",
@@ -1938,9 +2617,25 @@
         "Quando gli export strutturati non includono URL diretti, il monitor prova il dettaglio ufficiale Tinnvision solo per record pubblicabili a basso rischio.",
         "Classificazione civica automatica basata su dizionario: settore e tipologia sono derivati da ufficio/provenienza e tipo atto, senza interpretare il contenuto dei PDF."
       ],
-      "subject": "Servizio di gestione asili nido comunali di Via Conforti, Via Spartivento, Via Giovanni XXIII. Numero Gara 8492798. Liquidazione somme Lotto 1 – Via Conforti- periodo Marzo/Giugno 2026",
-      "document_url": "https://albo.tinnvision.cloud/allegati/2026_2740_9_ALLEG?ente=00301390795",
-      "public_note": null
+      "presentation": {
+        "display_title": "Servizio di gestione asili nido comunali di Via Conforti, Via Spartivento, Via Giovanni XXIII. Numero Gara 8492798. Liquidazione somme Lotto 1 – Via Conforti- periodo Marzo/Giugno 2026",
+        "action_id": null,
+        "action_label": null,
+        "search_text": "servizio di gestione asili nido comunali di via conforti via spartivento via giovanni xxiii numero gara 8492798 liquidazione somme lotto 1 via conforti periodo marzo giugno 2026",
+        "standardisation": {
+          "schema_version": "publication-standardisation.v1",
+          "profile_id": "albo-public-title-it",
+          "profile_version": "2026-08-30.2",
+          "input_field": "subject",
+          "input_field_preserved": true,
+          "status": "unchanged",
+          "transformations": [],
+          "layout_flags": [
+            "display_title_too_long"
+          ],
+          "review_reasons": []
+        }
+      }
     },
     {
       "id": "albo-2026-2739",
@@ -1955,6 +2650,9 @@
       "act_number": null,
       "act_date": null,
       "content_hash": "1fb87d8d248ed8a0cf53149e79b6c349c00f3553b53979e1090e339b6315c778",
+      "subject": "ORDINANZA SERVIZI CIMITERIALI Comune di Modigliana (FC)",
+      "document_url": "https://albo.tinnvision.cloud/allegati/2026_2739_1_X?ente=00301390795",
+      "public_note": null,
       "verification_status": "official_source_acquired",
       "privacy_risk": "low",
       "public_visibility": "publishable",
@@ -1983,9 +2681,23 @@
         "Quando gli export strutturati non includono URL diretti, il monitor prova il dettaglio ufficiale Tinnvision solo per record pubblicabili a basso rischio.",
         "Classificazione civica automatica basata su dizionario: settore e tipologia sono derivati da ufficio/provenienza e tipo atto, senza interpretare il contenuto dei PDF."
       ],
-      "subject": "ORDINANZA SERVIZI CIMITERIALI Comune di Modigliana (FC)",
-      "document_url": "https://albo.tinnvision.cloud/allegati/2026_2739_1_X?ente=00301390795",
-      "public_note": null
+      "presentation": {
+        "display_title": "ORDINANZA SERVIZI CIMITERIALI Comune di Modigliana (FC)",
+        "action_id": null,
+        "action_label": null,
+        "search_text": "ordinanza servizi cimiteriali comune di modigliana fc",
+        "standardisation": {
+          "schema_version": "publication-standardisation.v1",
+          "profile_id": "albo-public-title-it",
+          "profile_version": "2026-08-30.2",
+          "input_field": "subject",
+          "input_field_preserved": true,
+          "status": "unchanged",
+          "transformations": [],
+          "layout_flags": [],
+          "review_reasons": []
+        }
+      }
     },
     {
       "id": "albo-2026-2736",
@@ -2000,6 +2712,9 @@
       "act_number": "1347",
       "act_date": "2026-08-20",
       "content_hash": "7900d1a1f918d67ce32b0653bdeaac45f885128f25288c45fc65ed1ddcccd194",
+      "subject": "Intervento di adeguamento sismico ed efficientamento energetico della Scuola Media di Sant'Eufemia Plesso A appartenente all'Istituto Comprensivo di Sant'Eufemia Lamezia - Approvazione SAL 3 - CUP C85I17000050002 - CIG 80442759B9",
+      "document_url": "https://albo.tinnvision.cloud/allegati/2026_2736_10_ALLEG?ente=00301390795",
+      "public_note": null,
       "verification_status": "official_source_acquired",
       "privacy_risk": "low",
       "public_visibility": "publishable",
@@ -2028,9 +2743,25 @@
         "Quando gli export strutturati non includono URL diretti, il monitor prova il dettaglio ufficiale Tinnvision solo per record pubblicabili a basso rischio.",
         "Classificazione civica automatica basata su dizionario: settore e tipologia sono derivati da ufficio/provenienza e tipo atto, senza interpretare il contenuto dei PDF."
       ],
-      "subject": "Intervento di adeguamento sismico ed efficientamento energetico della Scuola Media di Sant'Eufemia Plesso A appartenente all'Istituto Comprensivo di Sant'Eufemia Lamezia - Approvazione SAL 3 - CUP C85I17000050002 - CIG 80442759B9",
-      "document_url": "https://albo.tinnvision.cloud/allegati/2026_2736_10_ALLEG?ente=00301390795",
-      "public_note": null
+      "presentation": {
+        "display_title": "Intervento di adeguamento sismico ed efficientamento energetico della Scuola Media di Sant'Eufemia Plesso A appartenente all'Istituto Comprensivo di Sant'Eufemia Lamezia - Approvazione SAL 3 - CUP C85I17000050002 - CIG 80442759B9",
+        "action_id": null,
+        "action_label": null,
+        "search_text": "intervento di adeguamento sismico ed efficientamento energetico della scuola media di sant eufemia plesso a appartenente all istituto comprensivo di sant eufemia lamezia approvazione sal 3 cup c85i17000050002 cig 80442759b9",
+        "standardisation": {
+          "schema_version": "publication-standardisation.v1",
+          "profile_id": "albo-public-title-it",
+          "profile_version": "2026-08-30.2",
+          "input_field": "subject",
+          "input_field_preserved": true,
+          "status": "unchanged",
+          "transformations": [],
+          "layout_flags": [
+            "display_title_too_long"
+          ],
+          "review_reasons": []
+        }
+      }
     },
     {
       "id": "albo-2026-2735",
@@ -2045,6 +2776,9 @@
       "act_number": "1346",
       "act_date": "2026-08-20",
       "content_hash": "d057341f404e9aa045d4edbbb0dc676ff5badd4387a9b038d9afcef21c0b7db3",
+      "subject": "PNRR M4C1I1.1 - Nuovo “Piano per asili nido e scuole dell’infanzia e servizi di educazione e cura per la prima infanzia”. Servizi di ingegneria ed architettura “Asilo Nido NIKE” – CUP C86F24000150006 – CIG B4A8CE6CE1. Liquidazione acconto DL e CSE.",
+      "document_url": "https://albo.tinnvision.cloud/allegati/2026_2735_10_ALLEG?ente=00301390795",
+      "public_note": null,
       "verification_status": "official_source_acquired",
       "privacy_risk": "low",
       "public_visibility": "publishable",
@@ -2073,9 +2807,27 @@
         "Quando gli export strutturati non includono URL diretti, il monitor prova il dettaglio ufficiale Tinnvision solo per record pubblicabili a basso rischio.",
         "Classificazione civica automatica basata su dizionario: settore e tipologia sono derivati da ufficio/provenienza e tipo atto, senza interpretare il contenuto dei PDF."
       ],
-      "subject": "PNRR M4C1I1.1 - Nuovo “Piano per asili nido e scuole dell’infanzia e servizi di educazione e cura per la prima infanzia”. Servizi di ingegneria ed architettura “Asilo Nido NIKE” – CUP C86F24000150006 – CIG B4A8CE6CE1. Liquidazione acconto DL e CSE.",
-      "document_url": "https://albo.tinnvision.cloud/allegati/2026_2735_10_ALLEG?ente=00301390795",
-      "public_note": null
+      "presentation": {
+        "display_title": "PNRR M4C1I1.1 - Nuovo “Piano per asili nido e scuole dell'infanzia e servizi di educazione e cura per la prima infanzia”. Servizi di ingegneria ed architettura “Asilo Nido NIKE” – CUP C86F24000150006 – CIG B4A8CE6CE1. Liquidazione acconto DL e CSE.",
+        "action_id": null,
+        "action_label": null,
+        "search_text": "pnrr m4c1i1 1 nuovo piano per asili nido e scuole dell infanzia e servizi di educazione e cura per la prima infanzia servizi di ingegneria ed architettura asilo nido nike cup c86f24000150006 cig b4a8ce6ce1 liquidazione acconto dl e cse",
+        "standardisation": {
+          "schema_version": "publication-standardisation.v1",
+          "profile_id": "albo-public-title-it",
+          "profile_version": "2026-08-30.2",
+          "input_field": "subject",
+          "input_field_preserved": true,
+          "status": "standardised_automatically",
+          "transformations": [
+            "normalise_apostrophes"
+          ],
+          "layout_flags": [
+            "display_title_too_long"
+          ],
+          "review_reasons": []
+        }
+      }
     },
     {
       "id": "albo-2026-2734",
@@ -2090,6 +2842,9 @@
       "act_number": "209",
       "act_date": "2026-08-20",
       "content_hash": "037dffe94081bc1135259c30e046e1271594aecfb4e3c6f558bfdf460171983c",
+      "subject": "Modifica temporanea della circolazione stradale dal 24 al 29 Agosto 2026 in alcuni tratti stradali del territorio comunale per l'ampliamento degli impianti di video sorveglianza",
+      "document_url": "https://albo.tinnvision.cloud/allegati/2026_2734_1_ALLEG?ente=00301390795",
+      "public_note": null,
       "verification_status": "official_source_acquired",
       "privacy_risk": "low",
       "public_visibility": "publishable",
@@ -2118,9 +2873,23 @@
         "Quando gli export strutturati non includono URL diretti, il monitor prova il dettaglio ufficiale Tinnvision solo per record pubblicabili a basso rischio.",
         "Classificazione civica automatica basata su dizionario: settore e tipologia sono derivati da ufficio/provenienza e tipo atto, senza interpretare il contenuto dei PDF."
       ],
-      "subject": "Modifica temporanea della circolazione stradale dal 24 al 29 Agosto 2026 in alcuni tratti stradali del territorio comunale per l'ampliamento degli impianti di video sorveglianza",
-      "document_url": "https://albo.tinnvision.cloud/allegati/2026_2734_1_ALLEG?ente=00301390795",
-      "public_note": null
+      "presentation": {
+        "display_title": "Modifica temporanea della circolazione stradale dal 24 al 29 Agosto 2026 in alcuni tratti stradali del territorio comunale per l'ampliamento degli impianti di video sorveglianza",
+        "action_id": null,
+        "action_label": null,
+        "search_text": "modifica temporanea della circolazione stradale dal 24 al 29 agosto 2026 in alcuni tratti stradali del territorio comunale per l ampliamento degli impianti di video sorveglianza",
+        "standardisation": {
+          "schema_version": "publication-standardisation.v1",
+          "profile_id": "albo-public-title-it",
+          "profile_version": "2026-08-30.2",
+          "input_field": "subject",
+          "input_field_preserved": true,
+          "status": "unchanged",
+          "transformations": [],
+          "layout_flags": [],
+          "review_reasons": []
+        }
+      }
     },
     {
       "id": "albo-2026-2733",
@@ -2135,6 +2904,9 @@
       "act_number": "1345",
       "act_date": "2026-08-19",
       "content_hash": "119d65e2204048bdbae518ef0532bceb4fd13cf1f55f5216e8be767d64afb13e",
+      "subject": "PNRR M5C2I2.3. (PINQuA) - Intervento ID 2398 \"SAN TEODORO RICEZIONE TURISTICA LOTTO 1\" - CUP C84E21000290001 - CIG B9E7D56EB2 - Liquidazione servizio verifica preventiva dell’interesse archeologico",
+      "document_url": "https://albo.tinnvision.cloud/allegati/2026_2733_9_ALLEG?ente=00301390795",
+      "public_note": null,
       "verification_status": "official_source_acquired",
       "privacy_risk": "low",
       "public_visibility": "publishable",
@@ -2163,9 +2935,27 @@
         "Quando gli export strutturati non includono URL diretti, il monitor prova il dettaglio ufficiale Tinnvision solo per record pubblicabili a basso rischio.",
         "Classificazione civica automatica basata su dizionario: settore e tipologia sono derivati da ufficio/provenienza e tipo atto, senza interpretare il contenuto dei PDF."
       ],
-      "subject": "PNRR M5C2I2.3. (PINQuA) - Intervento ID 2398 \"SAN TEODORO RICEZIONE TURISTICA LOTTO 1\" - CUP C84E21000290001 - CIG B9E7D56EB2 - Liquidazione servizio verifica preventiva dell’interesse archeologico",
-      "document_url": "https://albo.tinnvision.cloud/allegati/2026_2733_9_ALLEG?ente=00301390795",
-      "public_note": null
+      "presentation": {
+        "display_title": "PNRR M5C2I2.3. (PINQuA) - Intervento ID 2398 \"SAN TEODORO RICEZIONE TURISTICA LOTTO 1\" - CUP C84E21000290001 - CIG B9E7D56EB2 - Liquidazione servizio verifica preventiva dell'interesse archeologico",
+        "action_id": null,
+        "action_label": null,
+        "search_text": "pnrr m5c2i2 3 pinqua intervento id 2398 san teodoro ricezione turistica lotto 1 cup c84e21000290001 cig b9e7d56eb2 liquidazione servizio verifica preventiva dell interesse archeologico",
+        "standardisation": {
+          "schema_version": "publication-standardisation.v1",
+          "profile_id": "albo-public-title-it",
+          "profile_version": "2026-08-30.2",
+          "input_field": "subject",
+          "input_field_preserved": true,
+          "status": "standardised_automatically",
+          "transformations": [
+            "normalise_apostrophes"
+          ],
+          "layout_flags": [
+            "display_title_too_long"
+          ],
+          "review_reasons": []
+        }
+      }
     },
     {
       "id": "albo-2026-2732",
@@ -2180,6 +2970,9 @@
       "act_number": "1344",
       "act_date": "2026-08-19",
       "content_hash": "4fcf8dbe0e4c62b444f2bee8e286e53e2ac3fdab617657b3900a9874d34827a3",
+      "subject": "PNRR M5C2I2.3. (PINQuA) - Intervento ID 2398 \"SAN TEODORO RICEZIONE TURISTICA LOTTO 1\" - CUP C84E21000290001 - CIG AQ 9181061337 - CIG CONTRATTO SPECIFICO A01D5289C5 - Liquidazione quota parte spese di progettazione",
+      "document_url": "https://albo.tinnvision.cloud/allegati/2026_2732_10_ALLEG?ente=00301390795",
+      "public_note": null,
       "verification_status": "official_source_acquired",
       "privacy_risk": "low",
       "public_visibility": "publishable",
@@ -2208,9 +3001,25 @@
         "Quando gli export strutturati non includono URL diretti, il monitor prova il dettaglio ufficiale Tinnvision solo per record pubblicabili a basso rischio.",
         "Classificazione civica automatica basata su dizionario: settore e tipologia sono derivati da ufficio/provenienza e tipo atto, senza interpretare il contenuto dei PDF."
       ],
-      "subject": "PNRR M5C2I2.3. (PINQuA) - Intervento ID 2398 \"SAN TEODORO RICEZIONE TURISTICA LOTTO 1\" - CUP C84E21000290001 - CIG AQ 9181061337 - CIG CONTRATTO SPECIFICO A01D5289C5 - Liquidazione quota parte spese di progettazione",
-      "document_url": "https://albo.tinnvision.cloud/allegati/2026_2732_10_ALLEG?ente=00301390795",
-      "public_note": null
+      "presentation": {
+        "display_title": "PNRR M5C2I2.3. (PINQuA) - Intervento ID 2398 \"SAN TEODORO RICEZIONE TURISTICA LOTTO 1\" - CUP C84E21000290001 - CIG AQ 9181061337 - CIG CONTRATTO SPECIFICO A01D5289C5 - Liquidazione quota parte spese di progettazione",
+        "action_id": null,
+        "action_label": null,
+        "search_text": "pnrr m5c2i2 3 pinqua intervento id 2398 san teodoro ricezione turistica lotto 1 cup c84e21000290001 cig aq 9181061337 cig contratto specifico a01d5289c5 liquidazione quota parte spese di progettazione",
+        "standardisation": {
+          "schema_version": "publication-standardisation.v1",
+          "profile_id": "albo-public-title-it",
+          "profile_version": "2026-08-30.2",
+          "input_field": "subject",
+          "input_field_preserved": true,
+          "status": "unchanged",
+          "transformations": [],
+          "layout_flags": [
+            "display_title_too_long"
+          ],
+          "review_reasons": []
+        }
+      }
     },
     {
       "id": "albo-2026-2731",
@@ -2225,6 +3034,9 @@
       "act_number": "1343",
       "act_date": "2026-08-19",
       "content_hash": "5d746a25d9e989f921858ff2351f377e77c4c392b6d8ea124dcc538cd2d757b9",
+      "subject": "PNRR M5C2I2.3.(PINQuA). Lavori in appalto integrato relativi all'intervento \"Più servizi al territorio: ristrutturazioni e riqualificazione di spazi urbani sociali\". Saldo competenze tecniche progettazione esecutiva. CUP C81B21003520001. CIG A0187A63A4.",
+      "document_url": "https://albo.tinnvision.cloud/allegati/2026_2731_9_ALLEG?ente=00301390795",
+      "public_note": null,
       "verification_status": "official_source_acquired",
       "privacy_risk": "low",
       "public_visibility": "publishable",
@@ -2253,9 +3065,25 @@
         "Quando gli export strutturati non includono URL diretti, il monitor prova il dettaglio ufficiale Tinnvision solo per record pubblicabili a basso rischio.",
         "Classificazione civica automatica basata su dizionario: settore e tipologia sono derivati da ufficio/provenienza e tipo atto, senza interpretare il contenuto dei PDF."
       ],
-      "subject": "PNRR M5C2I2.3.(PINQuA). Lavori in appalto integrato relativi all'intervento \"Più servizi al territorio: ristrutturazioni e riqualificazione di spazi urbani sociali\". Saldo competenze tecniche progettazione esecutiva. CUP C81B21003520001. CIG A0187A63A4.",
-      "document_url": "https://albo.tinnvision.cloud/allegati/2026_2731_9_ALLEG?ente=00301390795",
-      "public_note": null
+      "presentation": {
+        "display_title": "PNRR M5C2I2.3.(PINQuA). Lavori in appalto integrato relativi all'intervento \"Più servizi al territorio: ristrutturazioni e riqualificazione di spazi urbani sociali\". Saldo competenze tecniche progettazione esecutiva. CUP C81B21003520001. CIG A0187A63A4.",
+        "action_id": null,
+        "action_label": null,
+        "search_text": "pnrr m5c2i2 3 pinqua lavori in appalto integrato relativi all intervento piu servizi al territorio ristrutturazioni e riqualificazione di spazi urbani sociali saldo competenze tecniche progettazione esecutiva cup c81b21003520001 cig a0187a63a4",
+        "standardisation": {
+          "schema_version": "publication-standardisation.v1",
+          "profile_id": "albo-public-title-it",
+          "profile_version": "2026-08-30.2",
+          "input_field": "subject",
+          "input_field_preserved": true,
+          "status": "unchanged",
+          "transformations": [],
+          "layout_flags": [
+            "display_title_too_long"
+          ],
+          "review_reasons": []
+        }
+      }
     },
     {
       "id": "albo-2026-2730",
@@ -2270,6 +3098,9 @@
       "act_number": "1342",
       "act_date": "2026-08-19",
       "content_hash": "fdfe3affb0879d403b12d8865a0acf800c99aed9d9549a6f87a1bcdd121a7743",
+      "subject": "PNRR M4C1I1.1 - Nuovo “Piano per asili nido e scuole dell’infanzia”. Lavori relativi all’intervento di realizzazione “Asilo Nido NIKE”. Liquidazione SAL n.3. CUP C86F24000150006. CIG B63A87D3EA.",
+      "document_url": "https://albo.tinnvision.cloud/allegati/2026_2730_10_ALLEG?ente=00301390795",
+      "public_note": null,
       "verification_status": "official_source_acquired",
       "privacy_risk": "low",
       "public_visibility": "publishable",
@@ -2298,9 +3129,27 @@
         "Quando gli export strutturati non includono URL diretti, il monitor prova il dettaglio ufficiale Tinnvision solo per record pubblicabili a basso rischio.",
         "Classificazione civica automatica basata su dizionario: settore e tipologia sono derivati da ufficio/provenienza e tipo atto, senza interpretare il contenuto dei PDF."
       ],
-      "subject": "PNRR M4C1I1.1 - Nuovo “Piano per asili nido e scuole dell’infanzia”. Lavori relativi all’intervento di realizzazione “Asilo Nido NIKE”. Liquidazione SAL n.3. CUP C86F24000150006. CIG B63A87D3EA.",
-      "document_url": "https://albo.tinnvision.cloud/allegati/2026_2730_10_ALLEG?ente=00301390795",
-      "public_note": null
+      "presentation": {
+        "display_title": "PNRR M4C1I1.1 - Nuovo “Piano per asili nido e scuole dell'infanzia”. Lavori relativi all'intervento di realizzazione “Asilo Nido NIKE”. Liquidazione SAL n.3. CUP C86F24000150006. CIG B63A87D3EA.",
+        "action_id": null,
+        "action_label": null,
+        "search_text": "pnrr m4c1i1 1 nuovo piano per asili nido e scuole dell infanzia lavori relativi all intervento di realizzazione asilo nido nike liquidazione sal n 3 cup c86f24000150006 cig b63a87d3ea",
+        "standardisation": {
+          "schema_version": "publication-standardisation.v1",
+          "profile_id": "albo-public-title-it",
+          "profile_version": "2026-08-30.2",
+          "input_field": "subject",
+          "input_field_preserved": true,
+          "status": "standardised_automatically",
+          "transformations": [
+            "normalise_apostrophes"
+          ],
+          "layout_flags": [
+            "display_title_too_long"
+          ],
+          "review_reasons": []
+        }
+      }
     },
     {
       "id": "albo-2026-2729",
@@ -2315,6 +3164,9 @@
       "act_number": "1340",
       "act_date": "2026-08-18",
       "content_hash": "9a1db33abdf828c1f9663042265f534c6203755e718e4dfcaf781146ac9e74e3",
+      "subject": "Intervento \"San Teodoro viabilità interna rione Lotto 5\". CUP: C81B21003460001. CIG:B9C8AB7512. Liquidazione stato avanzamento del servizio.",
+      "document_url": "https://albo.tinnvision.cloud/allegati/2026_2729_10_ALLEG?ente=00301390795",
+      "public_note": null,
       "verification_status": "official_source_acquired",
       "privacy_risk": "low",
       "public_visibility": "publishable",
@@ -2343,9 +3195,23 @@
         "Quando gli export strutturati non includono URL diretti, il monitor prova il dettaglio ufficiale Tinnvision solo per record pubblicabili a basso rischio.",
         "Classificazione civica automatica basata su dizionario: settore e tipologia sono derivati da ufficio/provenienza e tipo atto, senza interpretare il contenuto dei PDF."
       ],
-      "subject": "Intervento \"San Teodoro viabilità interna rione Lotto 5\". CUP: C81B21003460001. CIG:B9C8AB7512. Liquidazione stato avanzamento del servizio.",
-      "document_url": "https://albo.tinnvision.cloud/allegati/2026_2729_10_ALLEG?ente=00301390795",
-      "public_note": null
+      "presentation": {
+        "display_title": "Intervento \"San Teodoro viabilità interna rione Lotto 5\". CUP: C81B21003460001. CIG:B9C8AB7512. Liquidazione stato avanzamento del servizio.",
+        "action_id": null,
+        "action_label": null,
+        "search_text": "intervento san teodoro viabilita interna rione lotto 5 cup c81b21003460001 cig b9c8ab7512 liquidazione stato avanzamento del servizio",
+        "standardisation": {
+          "schema_version": "publication-standardisation.v1",
+          "profile_id": "albo-public-title-it",
+          "profile_version": "2026-08-30.2",
+          "input_field": "subject",
+          "input_field_preserved": true,
+          "status": "unchanged",
+          "transformations": [],
+          "layout_flags": [],
+          "review_reasons": []
+        }
+      }
     },
     {
       "id": "albo-2026-2727",
@@ -2360,6 +3226,9 @@
       "act_number": "1341",
       "act_date": "2026-08-19",
       "content_hash": "1a4d945d8fb244240c2f493ab3709e8dc6f165b1129c23ece271f09a42a6c073",
+      "subject": "Approvazione domande pervenute in risposta all'Avviso Pubblico di Manifestazione di Interesse per la costruzione del cartellone estivo integrato, espressamente concepito \"in fieri\" «Lamezia Terme - E-State Insieme 2026»",
+      "document_url": "https://albo.tinnvision.cloud/allegati/2026_2727_7_ALLEG?ente=00301390795",
+      "public_note": null,
       "verification_status": "official_source_acquired",
       "privacy_risk": "low",
       "public_visibility": "publishable",
@@ -2388,9 +3257,25 @@
         "Quando gli export strutturati non includono URL diretti, il monitor prova il dettaglio ufficiale Tinnvision solo per record pubblicabili a basso rischio.",
         "Classificazione civica automatica basata su dizionario: settore e tipologia sono derivati da ufficio/provenienza e tipo atto, senza interpretare il contenuto dei PDF."
       ],
-      "subject": "Approvazione domande pervenute in risposta all'Avviso Pubblico di Manifestazione di Interesse per la costruzione del cartellone estivo integrato, espressamente concepito \"in fieri\" «Lamezia Terme - E-State Insieme 2026»",
-      "document_url": "https://albo.tinnvision.cloud/allegati/2026_2727_7_ALLEG?ente=00301390795",
-      "public_note": null
+      "presentation": {
+        "display_title": "Approvazione domande pervenute in risposta all'Avviso Pubblico di Manifestazione di Interesse per la costruzione del cartellone estivo integrato, espressamente concepito \"in fieri\" «Lamezia Terme - E-State Insieme 2026»",
+        "action_id": "approvazione",
+        "action_label": "Approvazione",
+        "search_text": "approvazione domande pervenute in risposta all avviso pubblico di manifestazione di interesse per la costruzione del cartellone estivo integrato espressamente concepito in fieri lamezia terme e state insieme 2026",
+        "standardisation": {
+          "schema_version": "publication-standardisation.v1",
+          "profile_id": "albo-public-title-it",
+          "profile_version": "2026-08-30.2",
+          "input_field": "subject",
+          "input_field_preserved": true,
+          "status": "unchanged",
+          "transformations": [],
+          "layout_flags": [
+            "display_title_too_long"
+          ],
+          "review_reasons": []
+        }
+      }
     },
     {
       "id": "albo-2026-2726",
@@ -2405,6 +3290,9 @@
       "act_number": "1328",
       "act_date": "2026-08-12",
       "content_hash": "ed222872f2d18328ade996dac581c4009237be0c23d42cb7321c878686f68793",
+      "subject": "PNRR M5C 2.3 I 3.1 Sport e Inclusione, CLUSTER 1, Intervento \"Nuova costruzione di tribune e impianti Stadio G.Renda - CUP C88C22000350006.CIG: 9705430633. Svincolo polizze e ritenute",
+      "document_url": "https://albo.tinnvision.cloud/allegati/2026_2726_10_ALLEG?ente=00301390795",
+      "public_note": null,
       "verification_status": "official_source_acquired",
       "privacy_risk": "low",
       "public_visibility": "publishable",
@@ -2433,9 +3321,25 @@
         "Quando gli export strutturati non includono URL diretti, il monitor prova il dettaglio ufficiale Tinnvision solo per record pubblicabili a basso rischio.",
         "Classificazione civica automatica basata su dizionario: settore e tipologia sono derivati da ufficio/provenienza e tipo atto, senza interpretare il contenuto dei PDF."
       ],
-      "subject": "PNRR M5C 2.3 I 3.1 Sport e Inclusione, CLUSTER 1, Intervento \"Nuova costruzione di tribune e impianti Stadio G.Renda - CUP C88C22000350006.CIG: 9705430633. Svincolo polizze e ritenute",
-      "document_url": "https://albo.tinnvision.cloud/allegati/2026_2726_10_ALLEG?ente=00301390795",
-      "public_note": null
+      "presentation": {
+        "display_title": "PNRR M5C 2.3 I 3.1 Sport e Inclusione, CLUSTER 1, Intervento \"Nuova costruzione di tribune e impianti Stadio G.Renda - CUP C88C22000350006.CIG: 9705430633. Svincolo polizze e ritenute",
+        "action_id": null,
+        "action_label": null,
+        "search_text": "pnrr m5c 2 3 i 3 1 sport e inclusione cluster 1 intervento nuova costruzione di tribune e impianti stadio g renda cup c88c22000350006 cig 9705430633 svincolo polizze e ritenute",
+        "standardisation": {
+          "schema_version": "publication-standardisation.v1",
+          "profile_id": "albo-public-title-it",
+          "profile_version": "2026-08-30.2",
+          "input_field": "subject",
+          "input_field_preserved": true,
+          "status": "unchanged",
+          "transformations": [],
+          "layout_flags": [
+            "display_title_too_long"
+          ],
+          "review_reasons": []
+        }
+      }
     },
     {
       "id": "albo-2026-2725",
@@ -2450,6 +3354,9 @@
       "act_number": "1330",
       "act_date": "2026-08-13",
       "content_hash": "7c493223bbb949a3d84a95d41167288ba5c650386fabab6f2bc630fcceb60d23",
+      "subject": "Fornitura degli arredi nell’ambito del progetto PNRR Realizzazione della Mensa presso l’Istituto Comprensivo Ardito Don Bosco CUP: C85E24000220006, CIG:BC59BBA1AD. Approvazione CRE.Liquidazione",
+      "document_url": "https://albo.tinnvision.cloud/allegati/2026_2725_12_ALLEG?ente=00301390795",
+      "public_note": null,
       "verification_status": "official_source_acquired",
       "privacy_risk": "low",
       "public_visibility": "publishable",
@@ -2478,9 +3385,27 @@
         "Quando gli export strutturati non includono URL diretti, il monitor prova il dettaglio ufficiale Tinnvision solo per record pubblicabili a basso rischio.",
         "Classificazione civica automatica basata su dizionario: settore e tipologia sono derivati da ufficio/provenienza e tipo atto, senza interpretare il contenuto dei PDF."
       ],
-      "subject": "Fornitura degli arredi nell’ambito del progetto PNRR Realizzazione della Mensa presso l’Istituto Comprensivo Ardito Don Bosco CUP: C85E24000220006, CIG:BC59BBA1AD. Approvazione CRE.Liquidazione",
-      "document_url": "https://albo.tinnvision.cloud/allegati/2026_2725_12_ALLEG?ente=00301390795",
-      "public_note": null
+      "presentation": {
+        "display_title": "Fornitura degli arredi nell'ambito del progetto PNRR Realizzazione della Mensa presso l'Istituto Comprensivo Ardito Don Bosco CUP: C85E24000220006, CIG:BC59BBA1AD. Approvazione CRE.Liquidazione",
+        "action_id": null,
+        "action_label": null,
+        "search_text": "fornitura degli arredi nell ambito del progetto pnrr realizzazione della mensa presso l istituto comprensivo ardito don bosco cup c85e24000220006 cig bc59bba1ad approvazione cre liquidazione",
+        "standardisation": {
+          "schema_version": "publication-standardisation.v1",
+          "profile_id": "albo-public-title-it",
+          "profile_version": "2026-08-30.2",
+          "input_field": "subject",
+          "input_field_preserved": true,
+          "status": "standardised_automatically",
+          "transformations": [
+            "normalise_apostrophes"
+          ],
+          "layout_flags": [
+            "display_title_too_long"
+          ],
+          "review_reasons": []
+        }
+      }
     },
     {
       "id": "albo-2026-2724",
@@ -2495,6 +3420,9 @@
       "act_number": "9",
       "act_date": "2026-08-19",
       "content_hash": "411aa71a6fa84c2225f41949c4595f5d86bdccc897c87bc8fe84a5ab60da9505",
+      "subject": "Designazione Componente del Consiglio di Amministrazione della So.Ri.Cal. S.p.A.",
+      "document_url": "https://albo.tinnvision.cloud/allegati/2026_2724_4_ALLEG?ente=00301390795",
+      "public_note": null,
       "verification_status": "official_source_acquired",
       "privacy_risk": "low",
       "public_visibility": "publishable",
@@ -2523,9 +3451,23 @@
         "Quando gli export strutturati non includono URL diretti, il monitor prova il dettaglio ufficiale Tinnvision solo per record pubblicabili a basso rischio.",
         "Classificazione civica automatica basata su dizionario: settore e tipologia sono derivati da ufficio/provenienza e tipo atto, senza interpretare il contenuto dei PDF."
       ],
-      "subject": "Designazione Componente del Consiglio di Amministrazione della So.Ri.Cal. S.p.A.",
-      "document_url": "https://albo.tinnvision.cloud/allegati/2026_2724_4_ALLEG?ente=00301390795",
-      "public_note": null
+      "presentation": {
+        "display_title": "Designazione Componente del Consiglio di Amministrazione della So.Ri.Cal. S.p.A.",
+        "action_id": null,
+        "action_label": null,
+        "search_text": "designazione componente del consiglio di amministrazione della so ri cal s p a",
+        "standardisation": {
+          "schema_version": "publication-standardisation.v1",
+          "profile_id": "albo-public-title-it",
+          "profile_version": "2026-08-30.2",
+          "input_field": "subject",
+          "input_field_preserved": true,
+          "status": "unchanged",
+          "transformations": [],
+          "layout_flags": [],
+          "review_reasons": []
+        }
+      }
     },
     {
       "id": "albo-2026-2723",
@@ -2540,6 +3482,9 @@
       "act_number": "1339",
       "act_date": "2026-08-18",
       "content_hash": "08b008e52c6215353919c994cffce658c6b4c9098f5c1b729df9820f645df754",
+      "subject": "PNRR M5C2I2.3. (PINQuA). Intervento di realizzazione dei lavori in appalto integrato relativi all’intervento di riqualificazione quartiere Anzaro. Liquidazione SAL n. 3 dei lavori. CUP C81B21003510001 - CIG A01B55677B.",
+      "document_url": "https://albo.tinnvision.cloud/allegati/2026_2723_12_ALLEG?ente=00301390795",
+      "public_note": null,
       "verification_status": "official_source_acquired",
       "privacy_risk": "low",
       "public_visibility": "publishable",
@@ -2568,9 +3513,27 @@
         "Quando gli export strutturati non includono URL diretti, il monitor prova il dettaglio ufficiale Tinnvision solo per record pubblicabili a basso rischio.",
         "Classificazione civica automatica basata su dizionario: settore e tipologia sono derivati da ufficio/provenienza e tipo atto, senza interpretare il contenuto dei PDF."
       ],
-      "subject": "PNRR M5C2I2.3. (PINQuA). Intervento di realizzazione dei lavori in appalto integrato relativi all’intervento di riqualificazione quartiere Anzaro. Liquidazione SAL n. 3 dei lavori. CUP C81B21003510001 - CIG A01B55677B.",
-      "document_url": "https://albo.tinnvision.cloud/allegati/2026_2723_12_ALLEG?ente=00301390795",
-      "public_note": null
+      "presentation": {
+        "display_title": "PNRR M5C2I2.3. (PINQuA). Intervento di realizzazione dei lavori in appalto integrato relativi all'intervento di riqualificazione quartiere Anzaro. Liquidazione SAL n. 3 dei lavori. CUP C81B21003510001 - CIG A01B55677B.",
+        "action_id": null,
+        "action_label": null,
+        "search_text": "pnrr m5c2i2 3 pinqua intervento di realizzazione dei lavori in appalto integrato relativi all intervento di riqualificazione quartiere anzaro liquidazione sal n 3 dei lavori cup c81b21003510001 cig a01b55677b",
+        "standardisation": {
+          "schema_version": "publication-standardisation.v1",
+          "profile_id": "albo-public-title-it",
+          "profile_version": "2026-08-30.2",
+          "input_field": "subject",
+          "input_field_preserved": true,
+          "status": "standardised_automatically",
+          "transformations": [
+            "normalise_apostrophes"
+          ],
+          "layout_flags": [
+            "display_title_too_long"
+          ],
+          "review_reasons": []
+        }
+      }
     },
     {
       "id": "albo-2026-2722",
@@ -2585,6 +3548,9 @@
       "act_number": null,
       "act_date": null,
       "content_hash": "636780909e97324ba0c85d09e66e66b351d766bd298a9607dd431a5794b14f36",
+      "subject": "Ordinanza servizi cimiteriali comune di Cremona",
+      "document_url": "https://albo.tinnvision.cloud/allegati/2026_2722_3_P?ente=00301390795",
+      "public_note": null,
       "verification_status": "official_source_acquired",
       "privacy_risk": "low",
       "public_visibility": "publishable",
@@ -2613,9 +3579,23 @@
         "Quando gli export strutturati non includono URL diretti, il monitor prova il dettaglio ufficiale Tinnvision solo per record pubblicabili a basso rischio.",
         "Classificazione civica automatica basata su dizionario: settore e tipologia sono derivati da ufficio/provenienza e tipo atto, senza interpretare il contenuto dei PDF."
       ],
-      "subject": "Ordinanza servizi cimiteriali comune di Cremona",
-      "document_url": "https://albo.tinnvision.cloud/allegati/2026_2722_3_P?ente=00301390795",
-      "public_note": null
+      "presentation": {
+        "display_title": "Ordinanza servizi cimiteriali comune di Cremona",
+        "action_id": null,
+        "action_label": null,
+        "search_text": "ordinanza servizi cimiteriali comune di cremona",
+        "standardisation": {
+          "schema_version": "publication-standardisation.v1",
+          "profile_id": "albo-public-title-it",
+          "profile_version": "2026-08-30.2",
+          "input_field": "subject",
+          "input_field_preserved": true,
+          "status": "unchanged",
+          "transformations": [],
+          "layout_flags": [],
+          "review_reasons": []
+        }
+      }
     },
     {
       "id": "albo-2026-2721",
@@ -2630,6 +3610,9 @@
       "act_number": "1318",
       "act_date": "2026-08-13",
       "content_hash": "53137f870375afc63aff5f36aa665bf8ae3dc959b568f594e8afc1bd0d462702",
+      "subject": "Ripiano delle perdite dell'esercizio 2020 della società partecipata SA.CAL S.p.A. - impegno di spesa e liquidazione",
+      "document_url": "https://albo.tinnvision.cloud/allegati/2026_2721_5_ALLEG?ente=00301390795",
+      "public_note": null,
       "verification_status": "official_source_acquired",
       "privacy_risk": "low",
       "public_visibility": "publishable",
@@ -2658,9 +3641,23 @@
         "Quando gli export strutturati non includono URL diretti, il monitor prova il dettaglio ufficiale Tinnvision solo per record pubblicabili a basso rischio.",
         "Classificazione civica automatica basata su dizionario: settore e tipologia sono derivati da ufficio/provenienza e tipo atto, senza interpretare il contenuto dei PDF."
       ],
-      "subject": "Ripiano delle perdite dell'esercizio 2020 della società partecipata SA.CAL S.p.A. - impegno di spesa e liquidazione",
-      "document_url": "https://albo.tinnvision.cloud/allegati/2026_2721_5_ALLEG?ente=00301390795",
-      "public_note": null
+      "presentation": {
+        "display_title": "Ripiano delle perdite dell'esercizio 2020 della società partecipata SA.CAL S.p.A. - impegno di spesa e liquidazione",
+        "action_id": null,
+        "action_label": null,
+        "search_text": "ripiano delle perdite dell esercizio 2020 della societa partecipata sa cal s p a impegno di spesa e liquidazione",
+        "standardisation": {
+          "schema_version": "publication-standardisation.v1",
+          "profile_id": "albo-public-title-it",
+          "profile_version": "2026-08-30.2",
+          "input_field": "subject",
+          "input_field_preserved": true,
+          "status": "unchanged",
+          "transformations": [],
+          "layout_flags": [],
+          "review_reasons": []
+        }
+      }
     },
     {
       "id": "albo-2026-2720",
@@ -2671,10 +3668,9 @@
       "publication_start": "2026-08-17",
       "publication_end": "2026-09-01",
       "office": null,
-      "act_type": "DETERMINAZIONE DIRIGENZIALE",
+      "act_type": null,
       "act_number": null,
       "act_date": null,
-      "content_hash": "175aa5a1f95e1d7dfac8deda7f6dcc4611ce40b4f765385e10a47d108f94a725",
       "verification_status": "official_source_acquired",
       "privacy_risk": "high",
       "public_visibility": "metadata_only",
@@ -2708,7 +3704,24 @@
       ],
       "subject": "Metadato minimo; oggetto non ripubblicato per prudenza privacy.",
       "document_url": null,
-      "public_note": "Record limitato al metadato minimo."
+      "public_note": "Record limitato al metadato minimo.",
+      "presentation": {
+        "display_title": "Metadato minimo; oggetto non ripubblicato per prudenza privacy.",
+        "action_id": null,
+        "action_label": null,
+        "search_text": "metadato minimo oggetto non ripubblicato per prudenza privacy",
+        "standardisation": {
+          "schema_version": "publication-standardisation.v1",
+          "profile_id": "albo-public-title-it",
+          "profile_version": "2026-08-30.2",
+          "input_field": "subject",
+          "input_field_preserved": true,
+          "status": "unchanged",
+          "transformations": [],
+          "layout_flags": [],
+          "review_reasons": []
+        }
+      }
     },
     {
       "id": "albo-2026-2719",
@@ -2723,6 +3736,9 @@
       "act_number": "1326",
       "act_date": "2026-08-13",
       "content_hash": "568f92905eec1de86febc805c4b94122d48c183a61fe8b1fd40ccb789b51b680",
+      "subject": "Appalto per la gestione asili nido comunali \"Via Conforti\", \"Via Spartivento\", \"Via Giovanni XXIII\" per anni 3. CUP C84D25002060004. Impegno Spesa",
+      "document_url": "https://albo.tinnvision.cloud/allegati/2026_2719_13_ALLEG?ente=00301390795",
+      "public_note": null,
       "verification_status": "official_source_acquired",
       "privacy_risk": "low",
       "public_visibility": "publishable",
@@ -2751,9 +3767,23 @@
         "Quando gli export strutturati non includono URL diretti, il monitor prova il dettaglio ufficiale Tinnvision solo per record pubblicabili a basso rischio.",
         "Classificazione civica automatica basata su dizionario: settore e tipologia sono derivati da ufficio/provenienza e tipo atto, senza interpretare il contenuto dei PDF."
       ],
-      "subject": "Appalto per la gestione asili nido comunali \"Via Conforti\", \"Via Spartivento\", \"Via Giovanni XXIII\" per anni 3. CUP C84D25002060004. Impegno Spesa",
-      "document_url": "https://albo.tinnvision.cloud/allegati/2026_2719_13_ALLEG?ente=00301390795",
-      "public_note": null
+      "presentation": {
+        "display_title": "Appalto per la gestione asili nido comunali \"Via Conforti\", \"Via Spartivento\", \"Via Giovanni XXIII\" per anni 3. CUP C84D25002060004. Impegno Spesa",
+        "action_id": null,
+        "action_label": null,
+        "search_text": "appalto per la gestione asili nido comunali via conforti via spartivento via giovanni xxiii per anni 3 cup c84d25002060004 impegno spesa",
+        "standardisation": {
+          "schema_version": "publication-standardisation.v1",
+          "profile_id": "albo-public-title-it",
+          "profile_version": "2026-08-30.2",
+          "input_field": "subject",
+          "input_field_preserved": true,
+          "status": "unchanged",
+          "transformations": [],
+          "layout_flags": [],
+          "review_reasons": []
+        }
+      }
     },
     {
       "id": "albo-2026-2716",
@@ -2768,6 +3798,9 @@
       "act_number": null,
       "act_date": null,
       "content_hash": "738f96cf87227cb389c608a076e10c42ee62b25740ea5fe5c16b567a4135709e",
+      "subject": "Avviso di rilascio di Concessione edilizia in sanatoria (condono) Fascicolo N. 3620/3",
+      "document_url": "https://albo.tinnvision.cloud/allegati/2026_2716_2_P?ente=00301390795",
+      "public_note": null,
       "verification_status": "official_source_acquired",
       "privacy_risk": "low",
       "public_visibility": "publishable",
@@ -2796,9 +3829,23 @@
         "Quando gli export strutturati non includono URL diretti, il monitor prova il dettaglio ufficiale Tinnvision solo per record pubblicabili a basso rischio.",
         "Classificazione civica automatica basata su dizionario: settore e tipologia sono derivati da ufficio/provenienza e tipo atto, senza interpretare il contenuto dei PDF."
       ],
-      "subject": "Avviso di rilascio di Concessione edilizia in sanatoria (condono) Fascicolo N. 3620/3",
-      "document_url": "https://albo.tinnvision.cloud/allegati/2026_2716_2_P?ente=00301390795",
-      "public_note": null
+      "presentation": {
+        "display_title": "Avviso di rilascio di Concessione edilizia in sanatoria (condono) Fascicolo N. 3620/3",
+        "action_id": null,
+        "action_label": null,
+        "search_text": "avviso di rilascio di concessione edilizia in sanatoria condono fascicolo n 3620 3",
+        "standardisation": {
+          "schema_version": "publication-standardisation.v1",
+          "profile_id": "albo-public-title-it",
+          "profile_version": "2026-08-30.2",
+          "input_field": "subject",
+          "input_field_preserved": true,
+          "status": "unchanged",
+          "transformations": [],
+          "layout_flags": [],
+          "review_reasons": []
+        }
+      }
     },
     {
       "id": "albo-2026-2715",
@@ -2813,6 +3860,9 @@
       "act_number": null,
       "act_date": null,
       "content_hash": "5dc8977c304c96aac974bccca6afd75deaa3af01cd5d353934b45bb5a8892a03",
+      "subject": "Avviso di rilascio di Concessione edilizia in sanatoria (condono) Fascicolo N. 3057",
+      "document_url": "https://albo.tinnvision.cloud/allegati/2026_2715_2_P?ente=00301390795",
+      "public_note": null,
       "verification_status": "official_source_acquired",
       "privacy_risk": "low",
       "public_visibility": "publishable",
@@ -2841,9 +3891,23 @@
         "Quando gli export strutturati non includono URL diretti, il monitor prova il dettaglio ufficiale Tinnvision solo per record pubblicabili a basso rischio.",
         "Classificazione civica automatica basata su dizionario: settore e tipologia sono derivati da ufficio/provenienza e tipo atto, senza interpretare il contenuto dei PDF."
       ],
-      "subject": "Avviso di rilascio di Concessione edilizia in sanatoria (condono) Fascicolo N. 3057",
-      "document_url": "https://albo.tinnvision.cloud/allegati/2026_2715_2_P?ente=00301390795",
-      "public_note": null
+      "presentation": {
+        "display_title": "Avviso di rilascio di Concessione edilizia in sanatoria (condono) Fascicolo N. 3057",
+        "action_id": null,
+        "action_label": null,
+        "search_text": "avviso di rilascio di concessione edilizia in sanatoria condono fascicolo n 3057",
+        "standardisation": {
+          "schema_version": "publication-standardisation.v1",
+          "profile_id": "albo-public-title-it",
+          "profile_version": "2026-08-30.2",
+          "input_field": "subject",
+          "input_field_preserved": true,
+          "status": "unchanged",
+          "transformations": [],
+          "layout_flags": [],
+          "review_reasons": []
+        }
+      }
     },
     {
       "id": "albo-2026-2714",
@@ -2858,6 +3922,9 @@
       "act_number": null,
       "act_date": null,
       "content_hash": "5ab42b50d3b2d2d2ecddea92e3853e54c502113136088ebc673b6fbbda057b4a",
+      "subject": "Avviso di rilascio di Concessione edilizia in sanatoria (condono) Fascicolo n. 2132",
+      "document_url": "https://albo.tinnvision.cloud/allegati/2026_2714_2_P?ente=00301390795",
+      "public_note": null,
       "verification_status": "official_source_acquired",
       "privacy_risk": "low",
       "public_visibility": "publishable",
@@ -2886,9 +3953,23 @@
         "Quando gli export strutturati non includono URL diretti, il monitor prova il dettaglio ufficiale Tinnvision solo per record pubblicabili a basso rischio.",
         "Classificazione civica automatica basata su dizionario: settore e tipologia sono derivati da ufficio/provenienza e tipo atto, senza interpretare il contenuto dei PDF."
       ],
-      "subject": "Avviso di rilascio di Concessione edilizia in sanatoria (condono) Fascicolo n. 2132",
-      "document_url": "https://albo.tinnvision.cloud/allegati/2026_2714_2_P?ente=00301390795",
-      "public_note": null
+      "presentation": {
+        "display_title": "Avviso di rilascio di Concessione edilizia in sanatoria (condono) Fascicolo n. 2132",
+        "action_id": null,
+        "action_label": null,
+        "search_text": "avviso di rilascio di concessione edilizia in sanatoria condono fascicolo n 2132",
+        "standardisation": {
+          "schema_version": "publication-standardisation.v1",
+          "profile_id": "albo-public-title-it",
+          "profile_version": "2026-08-30.2",
+          "input_field": "subject",
+          "input_field_preserved": true,
+          "status": "unchanged",
+          "transformations": [],
+          "layout_flags": [],
+          "review_reasons": []
+        }
+      }
     },
     {
       "id": "albo-2026-2710",
@@ -2899,10 +3980,9 @@
       "publication_start": "2026-08-13",
       "publication_end": "2026-09-12",
       "office": null,
-      "act_type": "AVVISO",
+      "act_type": null,
       "act_number": null,
       "act_date": null,
-      "content_hash": "47be853acd1b913e5af8c8619ed70e65637e25b49415eb53af67ff067a79c7b0",
       "verification_status": "official_source_acquired",
       "privacy_risk": "high",
       "public_visibility": "metadata_only",
@@ -2936,7 +4016,24 @@
       ],
       "subject": "Metadato minimo; oggetto non ripubblicato per prudenza privacy.",
       "document_url": null,
-      "public_note": "Record limitato al metadato minimo."
+      "public_note": "Record limitato al metadato minimo.",
+      "presentation": {
+        "display_title": "Metadato minimo; oggetto non ripubblicato per prudenza privacy.",
+        "action_id": null,
+        "action_label": null,
+        "search_text": "metadato minimo oggetto non ripubblicato per prudenza privacy",
+        "standardisation": {
+          "schema_version": "publication-standardisation.v1",
+          "profile_id": "albo-public-title-it",
+          "profile_version": "2026-08-30.2",
+          "input_field": "subject",
+          "input_field_preserved": true,
+          "status": "unchanged",
+          "transformations": [],
+          "layout_flags": [],
+          "review_reasons": []
+        }
+      }
     },
     {
       "id": "albo-2026-2707",
@@ -2951,6 +4048,9 @@
       "act_number": null,
       "act_date": null,
       "content_hash": "94347c50f3b127a46f39cdc1e8b2436a97b1acdb3dce7dae046219c6ccb73ce3",
+      "subject": "AVVISO DI RILASCIO PERMESSO DI COSTRUIRE N. 24/2026",
+      "document_url": "https://albo.tinnvision.cloud/allegati/2026_2707_1_X?ente=00301390795",
+      "public_note": null,
       "verification_status": "official_source_acquired",
       "privacy_risk": "low",
       "public_visibility": "publishable",
@@ -2979,9 +4079,25 @@
         "Quando gli export strutturati non includono URL diretti, il monitor prova il dettaglio ufficiale Tinnvision solo per record pubblicabili a basso rischio.",
         "Classificazione civica automatica basata su dizionario: settore e tipologia sono derivati da ufficio/provenienza e tipo atto, senza interpretare il contenuto dei PDF."
       ],
-      "subject": "AVVISO DI RILASCIO PERMESSO DI COSTRUIRE N. 24/2026",
-      "document_url": "https://albo.tinnvision.cloud/allegati/2026_2707_1_X?ente=00301390795",
-      "public_note": null
+      "presentation": {
+        "display_title": "Avviso di rilascio permesso di costruire n. 24/2026",
+        "action_id": null,
+        "action_label": null,
+        "search_text": "avviso di rilascio permesso di costruire n 24 2026 avviso di rilascio permesso di costruire n 24 2026",
+        "standardisation": {
+          "schema_version": "publication-standardisation.v1",
+          "profile_id": "albo-public-title-it",
+          "profile_version": "2026-08-30.2",
+          "input_field": "subject",
+          "input_field_preserved": true,
+          "status": "standardised_automatically",
+          "transformations": [
+            "sentence_case"
+          ],
+          "layout_flags": [],
+          "review_reasons": []
+        }
+      }
     },
     {
       "id": "albo-2026-2706",
@@ -2996,6 +4112,9 @@
       "act_number": null,
       "act_date": null,
       "content_hash": "59eab4c2b0cf0e0e9b95461ac1239ec1d764b516ba2ece97c54d9d3ba2020076",
+      "subject": "AVVISO RILASCIO PERMESSO DI COSTRUIRE",
+      "document_url": "https://albo.tinnvision.cloud/allegati/2026_2706_1_X?ente=00301390795",
+      "public_note": null,
       "verification_status": "official_source_acquired",
       "privacy_risk": "low",
       "public_visibility": "publishable",
@@ -3024,9 +4143,25 @@
         "Quando gli export strutturati non includono URL diretti, il monitor prova il dettaglio ufficiale Tinnvision solo per record pubblicabili a basso rischio.",
         "Classificazione civica automatica basata su dizionario: settore e tipologia sono derivati da ufficio/provenienza e tipo atto, senza interpretare il contenuto dei PDF."
       ],
-      "subject": "AVVISO RILASCIO PERMESSO DI COSTRUIRE",
-      "document_url": "https://albo.tinnvision.cloud/allegati/2026_2706_1_X?ente=00301390795",
-      "public_note": null
+      "presentation": {
+        "display_title": "Avviso rilascio permesso di costruire",
+        "action_id": null,
+        "action_label": null,
+        "search_text": "avviso rilascio permesso di costruire avviso rilascio permesso di costruire",
+        "standardisation": {
+          "schema_version": "publication-standardisation.v1",
+          "profile_id": "albo-public-title-it",
+          "profile_version": "2026-08-30.2",
+          "input_field": "subject",
+          "input_field_preserved": true,
+          "status": "standardised_automatically",
+          "transformations": [
+            "sentence_case"
+          ],
+          "layout_flags": [],
+          "review_reasons": []
+        }
+      }
     },
     {
       "id": "albo-2026-2705",
@@ -3041,6 +4176,9 @@
       "act_number": null,
       "act_date": null,
       "content_hash": "37ed688182a08743c69889e5a1995485eeacf9112f4b3b7efc785db343d580c8",
+      "subject": "AVVISO RILASCIO PERMESSO DI COSTRUIRE",
+      "document_url": "https://albo.tinnvision.cloud/allegati/2026_2705_1_X?ente=00301390795",
+      "public_note": null,
       "verification_status": "official_source_acquired",
       "privacy_risk": "low",
       "public_visibility": "publishable",
@@ -3069,9 +4207,25 @@
         "Quando gli export strutturati non includono URL diretti, il monitor prova il dettaglio ufficiale Tinnvision solo per record pubblicabili a basso rischio.",
         "Classificazione civica automatica basata su dizionario: settore e tipologia sono derivati da ufficio/provenienza e tipo atto, senza interpretare il contenuto dei PDF."
       ],
-      "subject": "AVVISO RILASCIO PERMESSO DI COSTRUIRE",
-      "document_url": "https://albo.tinnvision.cloud/allegati/2026_2705_1_X?ente=00301390795",
-      "public_note": null
+      "presentation": {
+        "display_title": "Avviso rilascio permesso di costruire",
+        "action_id": null,
+        "action_label": null,
+        "search_text": "avviso rilascio permesso di costruire avviso rilascio permesso di costruire",
+        "standardisation": {
+          "schema_version": "publication-standardisation.v1",
+          "profile_id": "albo-public-title-it",
+          "profile_version": "2026-08-30.2",
+          "input_field": "subject",
+          "input_field_preserved": true,
+          "status": "standardised_automatically",
+          "transformations": [
+            "sentence_case"
+          ],
+          "layout_flags": [],
+          "review_reasons": []
+        }
+      }
     },
     {
       "id": "albo-2026-2704",
@@ -3086,6 +4240,9 @@
       "act_number": null,
       "act_date": null,
       "content_hash": "4347bed6ea424a69a5f0fda63d634b6145e487e0f71d2b46c9774d60299dff80",
+      "subject": "AVVISO DI RILASCIO PERMESSO DI COSTRUIRE",
+      "document_url": "https://albo.tinnvision.cloud/allegati/2026_2704_1_X?ente=00301390795",
+      "public_note": null,
       "verification_status": "official_source_acquired",
       "privacy_risk": "low",
       "public_visibility": "publishable",
@@ -3114,9 +4271,25 @@
         "Quando gli export strutturati non includono URL diretti, il monitor prova il dettaglio ufficiale Tinnvision solo per record pubblicabili a basso rischio.",
         "Classificazione civica automatica basata su dizionario: settore e tipologia sono derivati da ufficio/provenienza e tipo atto, senza interpretare il contenuto dei PDF."
       ],
-      "subject": "AVVISO DI RILASCIO PERMESSO DI COSTRUIRE",
-      "document_url": "https://albo.tinnvision.cloud/allegati/2026_2704_1_X?ente=00301390795",
-      "public_note": null
+      "presentation": {
+        "display_title": "Avviso di rilascio permesso di costruire",
+        "action_id": null,
+        "action_label": null,
+        "search_text": "avviso di rilascio permesso di costruire avviso di rilascio permesso di costruire",
+        "standardisation": {
+          "schema_version": "publication-standardisation.v1",
+          "profile_id": "albo-public-title-it",
+          "profile_version": "2026-08-30.2",
+          "input_field": "subject",
+          "input_field_preserved": true,
+          "status": "standardised_automatically",
+          "transformations": [
+            "sentence_case"
+          ],
+          "layout_flags": [],
+          "review_reasons": []
+        }
+      }
     },
     {
       "id": "albo-2026-2703",
@@ -3131,6 +4304,9 @@
       "act_number": null,
       "act_date": null,
       "content_hash": "0f0f26a2e60261e096576ff5352d4c53153fb7640b34efb4c4f2122d9bb28def",
+      "subject": "AVVISO DI RILASCIO PERMESSO DI COSTRUIRE",
+      "document_url": "https://albo.tinnvision.cloud/allegati/2026_2703_1_X?ente=00301390795",
+      "public_note": null,
       "verification_status": "official_source_acquired",
       "privacy_risk": "low",
       "public_visibility": "publishable",
@@ -3159,9 +4335,25 @@
         "Quando gli export strutturati non includono URL diretti, il monitor prova il dettaglio ufficiale Tinnvision solo per record pubblicabili a basso rischio.",
         "Classificazione civica automatica basata su dizionario: settore e tipologia sono derivati da ufficio/provenienza e tipo atto, senza interpretare il contenuto dei PDF."
       ],
-      "subject": "AVVISO DI RILASCIO PERMESSO DI COSTRUIRE",
-      "document_url": "https://albo.tinnvision.cloud/allegati/2026_2703_1_X?ente=00301390795",
-      "public_note": null
+      "presentation": {
+        "display_title": "Avviso di rilascio permesso di costruire",
+        "action_id": null,
+        "action_label": null,
+        "search_text": "avviso di rilascio permesso di costruire avviso di rilascio permesso di costruire",
+        "standardisation": {
+          "schema_version": "publication-standardisation.v1",
+          "profile_id": "albo-public-title-it",
+          "profile_version": "2026-08-30.2",
+          "input_field": "subject",
+          "input_field_preserved": true,
+          "status": "standardised_automatically",
+          "transformations": [
+            "sentence_case"
+          ],
+          "layout_flags": [],
+          "review_reasons": []
+        }
+      }
     },
     {
       "id": "albo-2026-2672",
@@ -3171,14 +4363,13 @@
       "publication_number": "2026/2672",
       "publication_start": "2026-08-10",
       "publication_end": "2026-08-30",
-      "office": "GUARDIA DI FINANZA",
-      "act_type": "ART.143 CPC (CODICE PROCEDURA CIVILE)",
+      "office": null,
+      "act_type": null,
       "act_number": null,
       "act_date": null,
-      "content_hash": "7c6787d4a3a4dad41fbd25f91950dd6849d7f83d27f3151800c888db1f1ad243",
       "verification_status": "official_source_acquired",
-      "privacy_risk": "low",
-      "public_visibility": "publishable",
+      "privacy_risk": "high",
+      "public_visibility": "metadata_only",
       "classification": {
         "dictionary_version": "2026-08-22-a",
         "sector": {
@@ -3202,11 +4393,30 @@
         "Gli export Tinnvision possono non includere URL diretti agli allegati; quando disponibile, il monitor usa il dettaglio ufficiale Tinnvision solo per individuare PDF HTTPS a basso rischio.",
         "La classificazione privacy e' prudenziale e automatica; i casi sensibili richiedono revisione umana prima di esposizioni piu' ricche.",
         "Quando gli export strutturati non includono URL diretti, il monitor prova il dettaglio ufficiale Tinnvision solo per record pubblicabili a basso rischio.",
-        "Classificazione civica automatica basata su dizionario: settore e tipologia sono derivati da ufficio/provenienza e tipo atto, senza interpretare il contenuto dei PDF."
+        "Classificazione civica automatica basata su dizionario: settore e tipologia sono derivati da ufficio/provenienza e tipo atto, senza interpretare il contenuto dei PDF.",
+        "Oggetto non ripubblicato integralmente nel layer pubblico per prudenza privacy.",
+        "Regola automatica prudenziale: notifiche e depositi procedurali pubblicati solo in forma minima."
       ],
-      "subject": "AFFISSIONE ALL'ALBO NEI CONFRONTI DI HUSSIN MOHAMMED KAMROZ ART. 143 C.P.C.",
-      "document_url": "https://albo.tinnvision.cloud/allegati/2026_2672_2_P?ente=00301390795",
-      "public_note": null
+      "subject": "Metadato minimo; oggetto non ripubblicato per prudenza privacy.",
+      "document_url": null,
+      "public_note": "Record limitato al metadato minimo.",
+      "presentation": {
+        "display_title": "Metadato minimo; oggetto non ripubblicato per prudenza privacy.",
+        "action_id": null,
+        "action_label": null,
+        "search_text": "metadato minimo oggetto non ripubblicato per prudenza privacy",
+        "standardisation": {
+          "schema_version": "publication-standardisation.v1",
+          "profile_id": "albo-public-title-it",
+          "profile_version": "2026-08-30.2",
+          "input_field": "subject",
+          "input_field_preserved": true,
+          "status": "unchanged",
+          "transformations": [],
+          "layout_flags": [],
+          "review_reasons": []
+        }
+      }
     },
     {
       "id": "albo-2026-2668",
@@ -3216,14 +4426,13 @@
       "publication_number": "2026/2668",
       "publication_start": "2026-08-10",
       "publication_end": "2026-08-30",
-      "office": "GUARDIA DI FINANZA",
-      "act_type": "ART.143 CPC (CODICE PROCEDURA CIVILE)",
+      "office": null,
+      "act_type": null,
       "act_number": null,
       "act_date": null,
-      "content_hash": "1b5b37e1aaea064395946f921029dfb8e1ebaec81ba5ae4eb63490831fc378dc",
       "verification_status": "official_source_acquired",
-      "privacy_risk": "low",
-      "public_visibility": "publishable",
+      "privacy_risk": "high",
+      "public_visibility": "metadata_only",
       "classification": {
         "dictionary_version": "2026-08-22-a",
         "sector": {
@@ -3247,11 +4456,30 @@
         "Gli export Tinnvision possono non includere URL diretti agli allegati; quando disponibile, il monitor usa il dettaglio ufficiale Tinnvision solo per individuare PDF HTTPS a basso rischio.",
         "La classificazione privacy e' prudenziale e automatica; i casi sensibili richiedono revisione umana prima di esposizioni piu' ricche.",
         "Quando gli export strutturati non includono URL diretti, il monitor prova il dettaglio ufficiale Tinnvision solo per record pubblicabili a basso rischio.",
-        "Classificazione civica automatica basata su dizionario: settore e tipologia sono derivati da ufficio/provenienza e tipo atto, senza interpretare il contenuto dei PDF."
+        "Classificazione civica automatica basata su dizionario: settore e tipologia sono derivati da ufficio/provenienza e tipo atto, senza interpretare il contenuto dei PDF.",
+        "Oggetto non ripubblicato integralmente nel layer pubblico per prudenza privacy.",
+        "Regola automatica prudenziale: notifiche e depositi procedurali pubblicati solo in forma minima."
       ],
-      "subject": "AFFISSIONE ALL'ALBO NEI CONFRONTI DI SPADAVECCHIA ANA MARIA ROSA - ART. 143 C.P.C.",
-      "document_url": "https://albo.tinnvision.cloud/allegati/2026_2668_2_P?ente=00301390795",
-      "public_note": null
+      "subject": "Metadato minimo; oggetto non ripubblicato per prudenza privacy.",
+      "document_url": null,
+      "public_note": "Record limitato al metadato minimo.",
+      "presentation": {
+        "display_title": "Metadato minimo; oggetto non ripubblicato per prudenza privacy.",
+        "action_id": null,
+        "action_label": null,
+        "search_text": "metadato minimo oggetto non ripubblicato per prudenza privacy",
+        "standardisation": {
+          "schema_version": "publication-standardisation.v1",
+          "profile_id": "albo-public-title-it",
+          "profile_version": "2026-08-30.2",
+          "input_field": "subject",
+          "input_field_preserved": true,
+          "status": "unchanged",
+          "transformations": [],
+          "layout_flags": [],
+          "review_reasons": []
+        }
+      }
     },
     {
       "id": "albo-2026-2647",
@@ -3266,6 +4494,9 @@
       "act_number": null,
       "act_date": null,
       "content_hash": "9318dc361a3e49d050f33628286a56f9dddfb0fa423415f65a19fa95340764fb",
+      "subject": "Avviso di rilascio di Concessione edilizia in sanatoria (condono) Fascicolo N. 1262",
+      "document_url": "https://albo.tinnvision.cloud/allegati/2026_2647_2_P?ente=00301390795",
+      "public_note": null,
       "verification_status": "official_source_acquired",
       "privacy_risk": "low",
       "public_visibility": "publishable",
@@ -3294,9 +4525,23 @@
         "Quando gli export strutturati non includono URL diretti, il monitor prova il dettaglio ufficiale Tinnvision solo per record pubblicabili a basso rischio.",
         "Classificazione civica automatica basata su dizionario: settore e tipologia sono derivati da ufficio/provenienza e tipo atto, senza interpretare il contenuto dei PDF."
       ],
-      "subject": "Avviso di rilascio di Concessione edilizia in sanatoria (condono) Fascicolo N. 1262",
-      "document_url": "https://albo.tinnvision.cloud/allegati/2026_2647_2_P?ente=00301390795",
-      "public_note": null
+      "presentation": {
+        "display_title": "Avviso di rilascio di Concessione edilizia in sanatoria (condono) Fascicolo N. 1262",
+        "action_id": null,
+        "action_label": null,
+        "search_text": "avviso di rilascio di concessione edilizia in sanatoria condono fascicolo n 1262",
+        "standardisation": {
+          "schema_version": "publication-standardisation.v1",
+          "profile_id": "albo-public-title-it",
+          "profile_version": "2026-08-30.2",
+          "input_field": "subject",
+          "input_field_preserved": true,
+          "status": "unchanged",
+          "transformations": [],
+          "layout_flags": [],
+          "review_reasons": []
+        }
+      }
     },
     {
       "id": "albo-2026-2646",
@@ -3307,10 +4552,9 @@
       "publication_start": "2026-08-07",
       "publication_end": "2026-09-06",
       "office": null,
-      "act_type": "ART.140 CPC (CODICE PROCEDURA CIVILE)",
+      "act_type": null,
       "act_number": null,
       "act_date": null,
-      "content_hash": "d6462bdb91d708a013b8760a1bda6d2ccb440464d61d0d6438328c0c31a0d0e6",
       "verification_status": "official_source_acquired",
       "privacy_risk": "high",
       "public_visibility": "metadata_only",
@@ -3344,7 +4588,24 @@
       ],
       "subject": "Metadato minimo; oggetto non ripubblicato per prudenza privacy.",
       "document_url": null,
-      "public_note": "Record limitato al metadato minimo."
+      "public_note": "Record limitato al metadato minimo.",
+      "presentation": {
+        "display_title": "Metadato minimo; oggetto non ripubblicato per prudenza privacy.",
+        "action_id": null,
+        "action_label": null,
+        "search_text": "metadato minimo oggetto non ripubblicato per prudenza privacy",
+        "standardisation": {
+          "schema_version": "publication-standardisation.v1",
+          "profile_id": "albo-public-title-it",
+          "profile_version": "2026-08-30.2",
+          "input_field": "subject",
+          "input_field_preserved": true,
+          "status": "unchanged",
+          "transformations": [],
+          "layout_flags": [],
+          "review_reasons": []
+        }
+      }
     },
     {
       "id": "albo-2026-2630",
@@ -3359,6 +4620,9 @@
       "act_number": null,
       "act_date": null,
       "content_hash": "d540fa825e86bd2a598ba3a8841597f9c87114b6f235faae8e5eaa5061db660e",
+      "subject": "Presa d'atto dell'elenco degli oggetti rinvenuti e fatti pervenire all'ente nel mese di luglio 2026",
+      "document_url": null,
+      "public_note": null,
       "verification_status": "official_source_acquired",
       "privacy_risk": "low",
       "public_visibility": "publishable",
@@ -3388,9 +4652,23 @@
         "Classificazione civica automatica basata su dizionario: settore e tipologia sono derivati da ufficio/provenienza e tipo atto, senza interpretare il contenuto dei PDF.",
         "Allegato/documento non incluso negli export strutturati Tinnvision o non disponibile tramite dettaglio ufficiale."
       ],
-      "subject": "Presa d'atto dell'elenco degli oggetti rinvenuti e fatti pervenire all'ente nel mese di luglio 2026",
-      "document_url": null,
-      "public_note": null
+      "presentation": {
+        "display_title": "Presa d'atto dell'elenco degli oggetti rinvenuti e fatti pervenire all'ente nel mese di luglio 2026",
+        "action_id": "presa_atto",
+        "action_label": "Presa d'atto",
+        "search_text": "presa d atto dell elenco degli oggetti rinvenuti e fatti pervenire all ente nel mese di luglio 2026",
+        "standardisation": {
+          "schema_version": "publication-standardisation.v1",
+          "profile_id": "albo-public-title-it",
+          "profile_version": "2026-08-30.2",
+          "input_field": "subject",
+          "input_field_preserved": true,
+          "status": "unchanged",
+          "transformations": [],
+          "layout_flags": [],
+          "review_reasons": []
+        }
+      }
     },
     {
       "id": "albo-2026-2627",
@@ -3405,6 +4683,9 @@
       "act_number": null,
       "act_date": null,
       "content_hash": "c0ca1ad1e2de10275c6c06015a221df8c275247e32b38aeab0f2bc89520e6a6d",
+      "subject": "Avviso di rilascio di Concessione edilizia in sanatoria (condono)",
+      "document_url": "https://albo.tinnvision.cloud/allegati/2026_2627_2_P?ente=00301390795",
+      "public_note": null,
       "verification_status": "official_source_acquired",
       "privacy_risk": "low",
       "public_visibility": "publishable",
@@ -3433,9 +4714,23 @@
         "Quando gli export strutturati non includono URL diretti, il monitor prova il dettaglio ufficiale Tinnvision solo per record pubblicabili a basso rischio.",
         "Classificazione civica automatica basata su dizionario: settore e tipologia sono derivati da ufficio/provenienza e tipo atto, senza interpretare il contenuto dei PDF."
       ],
-      "subject": "Avviso di rilascio di Concessione edilizia in sanatoria (condono)",
-      "document_url": "https://albo.tinnvision.cloud/allegati/2026_2627_2_P?ente=00301390795",
-      "public_note": null
+      "presentation": {
+        "display_title": "Avviso di rilascio di Concessione edilizia in sanatoria (condono)",
+        "action_id": null,
+        "action_label": null,
+        "search_text": "avviso di rilascio di concessione edilizia in sanatoria condono",
+        "standardisation": {
+          "schema_version": "publication-standardisation.v1",
+          "profile_id": "albo-public-title-it",
+          "profile_version": "2026-08-30.2",
+          "input_field": "subject",
+          "input_field_preserved": true,
+          "status": "unchanged",
+          "transformations": [],
+          "layout_flags": [],
+          "review_reasons": []
+        }
+      }
     },
     {
       "id": "albo-2026-2572",
@@ -3450,6 +4745,9 @@
       "act_number": null,
       "act_date": null,
       "content_hash": "6810094c21ec606b9de20b8d017829bb910c91366861b04cc50f524b9bc57b3a",
+      "subject": "Avviso di rilascio di Concessione edilizia in sanatoria (condono)",
+      "document_url": "https://albo.tinnvision.cloud/allegati/2026_2572_2_P?ente=00301390795",
+      "public_note": null,
       "verification_status": "official_source_acquired",
       "privacy_risk": "low",
       "public_visibility": "publishable",
@@ -3478,9 +4776,23 @@
         "Quando gli export strutturati non includono URL diretti, il monitor prova il dettaglio ufficiale Tinnvision solo per record pubblicabili a basso rischio.",
         "Classificazione civica automatica basata su dizionario: settore e tipologia sono derivati da ufficio/provenienza e tipo atto, senza interpretare il contenuto dei PDF."
       ],
-      "subject": "Avviso di rilascio di Concessione edilizia in sanatoria (condono)",
-      "document_url": "https://albo.tinnvision.cloud/allegati/2026_2572_2_P?ente=00301390795",
-      "public_note": null
+      "presentation": {
+        "display_title": "Avviso di rilascio di Concessione edilizia in sanatoria (condono)",
+        "action_id": null,
+        "action_label": null,
+        "search_text": "avviso di rilascio di concessione edilizia in sanatoria condono",
+        "standardisation": {
+          "schema_version": "publication-standardisation.v1",
+          "profile_id": "albo-public-title-it",
+          "profile_version": "2026-08-30.2",
+          "input_field": "subject",
+          "input_field_preserved": true,
+          "status": "unchanged",
+          "transformations": [],
+          "layout_flags": [],
+          "review_reasons": []
+        }
+      }
     },
     {
       "id": "albo-2026-2571",
@@ -3495,6 +4807,9 @@
       "act_number": null,
       "act_date": null,
       "content_hash": "025615a31d80ac935346aabc2e06b9d2252b6ace9a7e147bb14b7d4377e829d1",
+      "subject": "Avviso di rilascio di Concessione edilizia in sanatoria (condono)",
+      "document_url": "https://albo.tinnvision.cloud/allegati/2026_2571_2_P?ente=00301390795",
+      "public_note": null,
       "verification_status": "official_source_acquired",
       "privacy_risk": "low",
       "public_visibility": "publishable",
@@ -3523,9 +4838,23 @@
         "Quando gli export strutturati non includono URL diretti, il monitor prova il dettaglio ufficiale Tinnvision solo per record pubblicabili a basso rischio.",
         "Classificazione civica automatica basata su dizionario: settore e tipologia sono derivati da ufficio/provenienza e tipo atto, senza interpretare il contenuto dei PDF."
       ],
-      "subject": "Avviso di rilascio di Concessione edilizia in sanatoria (condono)",
-      "document_url": "https://albo.tinnvision.cloud/allegati/2026_2571_2_P?ente=00301390795",
-      "public_note": null
+      "presentation": {
+        "display_title": "Avviso di rilascio di Concessione edilizia in sanatoria (condono)",
+        "action_id": null,
+        "action_label": null,
+        "search_text": "avviso di rilascio di concessione edilizia in sanatoria condono",
+        "standardisation": {
+          "schema_version": "publication-standardisation.v1",
+          "profile_id": "albo-public-title-it",
+          "profile_version": "2026-08-30.2",
+          "input_field": "subject",
+          "input_field_preserved": true,
+          "status": "unchanged",
+          "transformations": [],
+          "layout_flags": [],
+          "review_reasons": []
+        }
+      }
     }
   ],
   "excluded": [
@@ -3573,5 +4902,16 @@
       ],
       "exclusion_reason": "Record escluso dal layer pubblico per prudenza privacy automatica."
     }
-  ]
+  ],
+  "standardisation": {
+    "schema_version": "publication-standardisation.v1",
+    "profile_id": "albo-public-title-it",
+    "profile_version": "2026-08-30.2",
+    "locale": "it-IT",
+    "stage": "after_public_safety_before_publication",
+    "execution": "deterministic_rules",
+    "input_values_preserved": true,
+    "generative_rewriting": false,
+    "ambiguous_cases": "review_required"
+  }
 }

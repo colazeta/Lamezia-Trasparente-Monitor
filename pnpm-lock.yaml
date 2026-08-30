@@ -955,7 +955,13 @@ importers:
         specifier: 'catalog:'
         version: 25.6.2
 
+  lib/publication-standardisation: {}
+
   scripts:
+    dependencies:
+      '@workspace/publication-standardisation':
+        specifier: workspace:*
+        version: link:../lib/publication-standardisation
     devDependencies:
       '@types/node':
         specifier: 'catalog:'

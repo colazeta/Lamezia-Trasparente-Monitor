@@ -77,6 +77,7 @@ pnpm --filter @workspace/db seed      # aggiorna i dati di seed
 
 - [API pubblica (REST + MCP)](artifacts/api-server/PUBLIC_API.md)
 - [Architettura delle integrazioni](docs/architecture/README.md)
+- [Layer di standardizzazione prima della pubblicazione](docs/architecture/publication-standardisation.md)
 - [Catalogo delle fonti e delle integrazioni](docs/architecture/integration-source-catalog.md)
 - [Integrazione Cruscotto Italia](docs/architecture/cruscotto-italia-integration.md)
 - [Allineamento a best practice AgID/Developers Italia/Designers Italia](docs/architecture/agid-alignment.md)

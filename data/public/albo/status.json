@@ -13,9 +13,9 @@
     "changed": 0,
     "removed": 6,
     "unchanged": 76,
-    "publishable": 60,
+    "publishable": 58,
     "minimised": 2,
-    "metadata_only": 12,
+    "metadata_only": 14,
     "excluded": 2
   },
   "diff_baseline": {
@@ -40,7 +40,8 @@
     "Gli export Tinnvision possono non includere URL diretti agli allegati; quando disponibile, il monitor usa il dettaglio ufficiale Tinnvision solo per individuare PDF HTTPS a basso rischio.",
     "La classificazione privacy e' prudenziale e automatica; i casi sensibili richiedono revisione umana prima di esposizioni piu' ricche.",
     "Quando gli export strutturati non includono URL diretti, il monitor prova il dettaglio ufficiale Tinnvision solo per record pubblicabili a basso rischio.",
-    "Classificazione civica automatica basata su dizionario: settore e tipologia sono derivati da ufficio/provenienza e tipo atto, senza interpretare il contenuto dei PDF."
+    "Classificazione civica automatica basata su dizionario: settore e tipologia sono derivati da ufficio/provenienza e tipo atto, senza interpretare il contenuto dei PDF.",
+    "Il titolo di presentazione completo e' prodotto da regole deterministiche sul solo oggetto public-safe: non sostituisce il valore conservato nel campo subject, non recupera contenuti esclusi e i casi ambigui richiedono revisione."
   ],
   "classification_dictionary": {
     "version": "2026-08-22-a",
@@ -178,5 +179,16 @@
     "Nessun PDF o allegato viene analizzato, interpretato, sottoposto a OCR o riassunto.",
     "Nessuna sintesi generativa, classifica, accusa o valutazione sostanziale viene prodotta.",
     "Il layer pubblico espone solo metadati minimizzati secondo le classi publishable, publishable_with_minimisation, metadata_only e do_not_publish."
-  ]
+  ],
+  "standardisation": {
+    "schema_version": "publication-standardisation.v1",
+    "profile_id": "albo-public-title-it",
+    "profile_version": "2026-08-30.2",
+    "locale": "it-IT",
+    "stage": "after_public_safety_before_publication",
+    "execution": "deterministic_rules",
+    "input_values_preserved": true,
+    "generative_rewriting": false,
+    "ambiguous_cases": "review_required"
+  }
 }

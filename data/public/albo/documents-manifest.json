@@ -16,15 +16,17 @@
     "no_pdf_parsing": true,
     "no_summaries": true,
     "no_rankings": true,
-    "paid_storage": false
+    "paid_storage": false,
+    "privacy_revocation_cleanup": true
   },
   "counts": {
     "considered": 76,
-    "eligible": 59,
-    "archived": 59,
+    "eligible": 57,
+    "archived": 57,
     "skipped": 1,
-    "excluded": 14,
-    "human_review_required": 2
+    "excluded": 16,
+    "human_review_required": 2,
+    "revoked": 2
   },
   "warnings": [],
   "documents": [
@@ -927,40 +929,6 @@
       "storage_path": "data/public/albo/documents/2026/2581f596ad6247e53f267205e43b225493b5f270edb09ec75b7fd48c877b4530.pdf",
       "sha256": "2581f596ad6247e53f267205e43b225493b5f270edb09ec75b7fd48c877b4530",
       "size_bytes": 100927,
-      "content_type": "application/pdf"
-    },
-    {
-      "id": "albo-2026-2672",
-      "publication_number": "2026/2672",
-      "source": "Albo Pretorio Comune di Lamezia Terme",
-      "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-08-30T11:50:38.527Z",
-      "public_visibility": "publishable",
-      "privacy_risk": "low",
-      "verification_status": "official_source_acquired",
-      "document_url": "https://albo.tinnvision.cloud/allegati/2026_2672_2_P?ente=00301390795",
-      "preservation_status": "archived",
-      "reason": "eligible_low_risk_publishable_pdf",
-      "storage_path": "data/public/albo/documents/2026/0b5f80006389fcf4f24ea3610b9c35560f93647f041abd27c8876639c174846f.pdf",
-      "sha256": "0b5f80006389fcf4f24ea3610b9c35560f93647f041abd27c8876639c174846f",
-      "size_bytes": 296262,
-      "content_type": "application/pdf"
-    },
-    {
-      "id": "albo-2026-2668",
-      "publication_number": "2026/2668",
-      "source": "Albo Pretorio Comune di Lamezia Terme",
-      "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-08-30T11:50:38.527Z",
-      "public_visibility": "publishable",
-      "privacy_risk": "low",
-      "verification_status": "official_source_acquired",
-      "document_url": "https://albo.tinnvision.cloud/allegati/2026_2668_2_P?ente=00301390795",
-      "preservation_status": "archived",
-      "reason": "eligible_low_risk_publishable_pdf",
-      "storage_path": "data/public/albo/documents/2026/fcb87341f2efa1bc8760d0701c41c350581cea2790263dba2bf938be6f6e1879.pdf",
-      "sha256": "fcb87341f2efa1bc8760d0701c41c350581cea2790263dba2bf938be6f6e1879",
-      "size_bytes": 275631,
       "content_type": "application/pdf"
     },
     {
@@ -2120,16 +2088,11 @@
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
       "retrieved_at": "2026-08-30T11:50:38.527Z",
-      "public_visibility": "publishable",
-      "privacy_risk": "low",
+      "public_visibility": "metadata_only",
+      "privacy_risk": "high",
       "verification_status": "official_source_acquired",
-      "document_url": "https://albo.tinnvision.cloud/allegati/2026_2672_2_P?ente=00301390795",
-      "preservation_status": "archived",
-      "reason": "eligible_low_risk_publishable_pdf",
-      "storage_path": "data/public/albo/documents/2026/0b5f80006389fcf4f24ea3610b9c35560f93647f041abd27c8876639c174846f.pdf",
-      "sha256": "0b5f80006389fcf4f24ea3610b9c35560f93647f041abd27c8876639c174846f",
-      "size_bytes": 296262,
-      "content_type": "application/pdf"
+      "preservation_status": "excluded",
+      "reason": "privacy_excluded"
     },
     {
       "id": "albo-2026-2668",
@@ -2137,16 +2100,11 @@
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
       "retrieved_at": "2026-08-30T11:50:38.527Z",
-      "public_visibility": "publishable",
-      "privacy_risk": "low",
+      "public_visibility": "metadata_only",
+      "privacy_risk": "high",
       "verification_status": "official_source_acquired",
-      "document_url": "https://albo.tinnvision.cloud/allegati/2026_2668_2_P?ente=00301390795",
-      "preservation_status": "archived",
-      "reason": "eligible_low_risk_publishable_pdf",
-      "storage_path": "data/public/albo/documents/2026/fcb87341f2efa1bc8760d0701c41c350581cea2790263dba2bf938be6f6e1879.pdf",
-      "sha256": "fcb87341f2efa1bc8760d0701c41c350581cea2790263dba2bf938be6f6e1879",
-      "size_bytes": 275631,
-      "content_type": "application/pdf"
+      "preservation_status": "excluded",
+      "reason": "privacy_excluded"
     },
     {
       "id": "albo-2026-2647",

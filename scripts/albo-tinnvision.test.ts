@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
-import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
+import { mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import test from "node:test";
@@ -12,6 +12,7 @@ import {
   parseArgs,
   parseTinnvisionHtml,
   parseTinnvisionXml,
+  reapplyAlboPublicSafety,
   runAlboIngestion,
   type AlboRawSnapshot,
 } from "./albo-tinnvision";
@@ -20,6 +21,7 @@ import {
   ALBO_CLASSIFICATION_KNOWN_LIMIT,
   classifyAlboRecordCategory,
 } from "./albo-classification-dictionary";
+import { ALBO_PUBLICATION_STANDARDISATION_KNOWN_LIMIT } from "./albo-publication-standardisation";
 import { ALBO_PRETORIO_LAMEZIA_SOURCE } from "./albo-source-config";
 import {
   identifyInstitutionalSessionCandidate,
@@ -124,6 +126,120 @@ test("classifies Albo records by civic sector and act category dictionary", () =
     }).act_category.id,
     "convocazioni_istituzionali",
   );
+});
+
+test("keeps procedural notifications behind the metadata-only privacy gate", () => {
+  const variants = [
+    "ART.143 CPC",
+    "ART. 143 C.P.C.",
+    "ART 143 CPC",
+    "ART.140 CPC",
+    "ART. 140 C.P.C.",
+    "ART 140 CPC",
+  ];
+  const records = variants.map((actType, index) => ({
+    ...parseTinnvisionXml(
+      xmlRecord(
+        `2026/${4100 + index}`,
+        actType,
+        "UFFICIO NOTIFICHE",
+        "Affissione all'albo nei confronti di PERSONA FITTIZIA",
+        "",
+      ),
+    )[0],
+  }));
+
+  const items = normalizeAlboRecords(snapshot(records));
+  assert.equal(items.length, variants.length);
+  for (const item of items) {
+    assert.equal(item.privacy_risk, "high");
+    assert.equal(item.public_visibility, "metadata_only");
+  }
+});
+
+test("scrubs names from secondary text fields in privacy-restricted records", async () => {
+  const tmp = await mkdtemp(path.join(tmpdir(), "albo-secondary-fields-"));
+  const fixturePath = path.join(tmp, "albo.xml");
+  const outDir = path.join(tmp, "data");
+
+  await writeFile(
+    fixturePath,
+    [
+      xmlRecord(
+        "2026/4150",
+        "NOTIFICA A PERSONA FITTIZIA",
+        "UFFICIO PERSONA FITTIZIA",
+        "Avviso procedurale",
+        "",
+      ),
+      xmlRecord(
+        "2026/4151",
+        "CONTENZIOSO PERSONA FITTIZIA",
+        "UFFICIO PERSONA FITTIZIA",
+        "Atto amministrativo",
+        "",
+      ),
+    ].join("\n"),
+    "utf8",
+  );
+
+  const result = await runAlboIngestion({
+    outDir,
+    fromFile: fixturePath,
+    inputFormat: "xml",
+    retrievedAt: FIXTURE_RETRIEVED_AT,
+  });
+  const serialised = await readFile(result.paths.publicLatest, "utf8");
+
+  assert.deepEqual(
+    result.publicLatest.items.map((item) => item.public_visibility),
+    ["metadata_only", "publishable_with_minimisation"],
+  );
+  assert.ok(
+    result.publicLatest.items.every(
+      (item) => item.office === null && item.act_type === null,
+    ),
+  );
+  assert.doesNotMatch(serialised, /PERSONA FITTIZIA/i);
+});
+
+test("rebuilds legacy public records from an explicit field allow-list", () => {
+  const raw = {
+    publication_number: "2026/4160",
+    publication_start: "2026-08-30",
+    publication_end: "2026-09-14",
+    office: "SETTORE TECNICO",
+    act_type: "DETERMINAZIONE DIRIGENZIALE",
+    act_number: "42",
+    act_date: "2026-08-29",
+    subject: "Affidamento manutenzione ordinaria",
+    document_url: null,
+    source_row: {},
+  };
+  const classification = classifyAlboRecordCategory(raw);
+  const projected = reapplyAlboPublicSafety({
+    id: "albo-2026-4160",
+    source: ALBO_PRETORIO_LAMEZIA_SOURCE.source,
+    source_url: ALBO_PRETORIO_LAMEZIA_SOURCE.sourceUrl,
+    retrieved_at: FIXTURE_RETRIEVED_AT,
+    verification_status: "official_source_acquired",
+    privacy_risk: "low",
+    public_visibility: "publishable",
+    known_limits: [null, ""] as unknown as string[],
+    ...raw,
+    classification: {} as typeof classification,
+    source_row: { private_name: "PERSONA FITTIZIA" },
+    private_note: "PERSONA FITTIZIA",
+  });
+
+  assert.equal(projected.public_visibility, "publishable");
+  assert.equal(
+    projected.classification?.dictionary_version,
+    classification.dictionary_version,
+  );
+  assert.equal("source_row" in projected, false);
+  assert.equal("private_note" in projected, false);
+  assert.doesNotMatch(JSON.stringify(projected), /PERSONA FITTIZIA/i);
 });
 
 test("identifies council and commission notices without inferring session dates", () => {
@@ -444,6 +560,11 @@ test("run command writes snapshots and public outputs without mirroring sensitiv
   assert.ok(
     result.publicStatus.known_limits.includes(ALBO_CLASSIFICATION_KNOWN_LIMIT),
   );
+  assert.ok(
+    result.publicStatus.known_limits.includes(
+      ALBO_PUBLICATION_STANDARDISATION_KNOWN_LIMIT,
+    ),
+  );
   assert.equal(result.publicDiff.diff_baseline.status, "baseline_unavailable");
   assert.ok(
     result.publicStatus.known_limits.includes(
@@ -479,6 +600,15 @@ test("run command writes snapshots and public outputs without mirroring sensitiv
     "determinazioni",
   );
   assert.equal(result.publicLatest.excluded[0].classification, undefined);
+  assert.equal(
+    result.publicLatest.standardisation.stage,
+    "after_public_safety_before_publication",
+  );
+  assert.equal(result.publicLatest.standardisation.generative_rewriting, false);
+  assert.equal(
+    result.publicStatus.standardisation.profile_id,
+    "albo-public-title-it",
+  );
 
   for (const publicRecord of [
     ...result.publicLatest.items,
@@ -495,6 +625,251 @@ test("run command writes snapshots and public outputs without mirroring sensitiv
   assert.match(runLog, /Minimizzati: 1/);
   assert.match(runLog, /Solo metadato: 1/);
   assert.match(runLog, /Esclusi dal public layer: 1/);
+});
+
+test("builds display titles only from the public-safe subject", async () => {
+  const tmp = await mkdtemp(
+    path.join(tmpdir(), "albo-tinnvision-standardisation-"),
+  );
+  const fixturePath = path.join(tmp, "albo.xml");
+  const outDir = path.join(tmp, "data");
+
+  await writeFile(
+    fixturePath,
+    [
+      xmlRecord(
+        "2026/3201",
+        "DELIBERAZIONE DI GIUNTA",
+        "SETTORE TECNICO",
+        "APPROVAZIONE DEL PROGETTO PNRR PER IL COMUNE DI LAMEZIA TERME",
+        "101",
+      ),
+      xmlRecord(
+        "2026/3202",
+        "DETERMINAZIONE DIRIGENZIALE",
+        "SETTORE AVVOCATURA",
+        "Proposta transattiva risarcimento danni VERDI ANNA",
+        "102",
+      ),
+      xmlRecord(
+        "2026/3203",
+        "PUBBLICAZIONE DI MATRIMONIO",
+        "SERVIZI DEMOGRAFICI",
+        "PUBBLICAZIONE DI MATRIMONIO DEI SIG.RI ROSSI MARIO E BIANCHI LUCIA",
+        "103",
+      ),
+    ].join("\n"),
+    "utf8",
+  );
+
+  const result = await runAlboIngestion({
+    outDir,
+    fromFile: fixturePath,
+    inputFormat: "xml",
+    retrievedAt: FIXTURE_RETRIEVED_AT,
+  });
+
+  const [publishable, minimised, metadataOnly] = result.publicLatest.items;
+  assert.equal(
+    publishable.subject,
+    "APPROVAZIONE DEL PROGETTO PNRR PER IL COMUNE DI LAMEZIA TERME",
+  );
+  assert.equal(
+    publishable.presentation?.display_title,
+    "Approvazione del progetto PNRR per il Comune di Lamezia Terme",
+  );
+  assert.equal(publishable.presentation?.action_id, "approvazione");
+  assert.equal(publishable.presentation?.action_label, "Approvazione");
+
+  assert.equal(
+    minimised.subject,
+    "Oggetto minimizzato per prudenza privacy; consultare la fonte ufficiale.",
+  );
+  assert.doesNotMatch(minimised.presentation?.search_text ?? "", /VERDI|ANNA/i);
+  assert.equal(
+    metadataOnly.subject,
+    "Metadato minimo; oggetto non ripubblicato per prudenza privacy.",
+  );
+  assert.doesNotMatch(
+    metadataOnly.presentation?.search_text ?? "",
+    /ROSSI|MARIO|BIANCHI|LUCIA/i,
+  );
+
+  const publicLatest = await readFile(result.paths.publicLatest, "utf8");
+  assert.doesNotMatch(publicLatest, /VERDI ANNA|ROSSI MARIO|BIANCHI LUCIA/i);
+});
+
+test("reapplies current privacy policy to the public baseline and revokes its PDF", async () => {
+  const tmp = await mkdtemp(
+    path.join(tmpdir(), "albo-tinnvision-policy-reapply-"),
+  );
+  const fixturePath = path.join(tmp, "albo.xml");
+  const outDir = path.join(tmp, "data");
+  const publicDir = path.join(outDir, "public", "albo");
+  const documentUrl =
+    "https://albo.tinnvision.cloud/allegati/2026_4201_2_P?ente=00301390795";
+  const digest = "a".repeat(64);
+  const storagePath = `data/public/albo/documents/2026/${digest}.pdf`;
+  const absoluteDocumentPath = path.join(
+    outDir,
+    "public",
+    "albo",
+    "documents",
+    "2026",
+    `${digest}.pdf`,
+  );
+  const oldRecord = {
+    id: "albo-2026-4201",
+    source: ALBO_PRETORIO_LAMEZIA_SOURCE.source,
+    source_url: ALBO_PRETORIO_LAMEZIA_SOURCE.sourceUrl,
+    retrieved_at: "2026-06-18T10:00:00.000Z",
+    publication_number: "2026/4201",
+    publication_start: "2026-06-18",
+    publication_end: "2026-07-03",
+    office: "UFFICIO NOTIFICHE",
+    act_type: "ART.143 CPC (CODICE PROCEDURA CIVILE)",
+    act_number: null,
+    act_date: null,
+    content_hash: "b".repeat(64),
+    verification_status: "official_source_acquired",
+    privacy_risk: "low",
+    public_visibility: "publishable",
+    known_limits: [],
+    subject:
+      "AFFISSIONE ALL'ALBO NEI CONFRONTI DI PERSONA FITTIZIA ART. 143 C.P.C.",
+    document_url: documentUrl,
+    public_note: null,
+  };
+
+  await mkdir(path.dirname(absoluteDocumentPath), { recursive: true });
+  await writeFile(absoluteDocumentPath, "previously archived", "utf8");
+  await writeFile(
+    path.join(publicDir, "latest.json"),
+    JSON.stringify({
+      retrieved_at: oldRecord.retrieved_at,
+      counts: {},
+      items: [oldRecord],
+      excluded: [],
+    }),
+    "utf8",
+  );
+  await writeFile(
+    path.join(publicDir, "documents-manifest.json"),
+    JSON.stringify({
+      documents: [
+        {
+          ...oldRecord,
+          document_url: documentUrl,
+          preservation_status: "archived",
+          reason: "eligible_low_risk_publishable_pdf",
+          storage_path: storagePath,
+          sha256: digest,
+          size_bytes: 19,
+          content_type: "application/pdf",
+        },
+      ],
+    }),
+    "utf8",
+  );
+  await writeFile(
+    fixturePath,
+    xmlRecord(
+      "2026/4201",
+      "ART.143 CPC (CODICE PROCEDURA CIVILE)",
+      "UFFICIO NOTIFICHE",
+      "AFFISSIONE ALL'ALBO NEI CONFRONTI DI PERSONA FITTIZIA ART. 143 C.P.C.",
+      "",
+      documentUrl,
+    ),
+    "utf8",
+  );
+
+  try {
+    const result = await runAlboIngestion({
+      outDir,
+      fromFile: fixturePath,
+      inputFormat: "xml",
+      retrievedAt: FIXTURE_RETRIEVED_AT,
+      pdfFetch: async () => {
+        throw new Error("metadata-only documents must not be fetched");
+      },
+    });
+    const serialisedPublicOutputs = JSON.stringify({
+      latest: result.publicLatest,
+      diff: result.publicDiff,
+      manifest: result.documentsManifest,
+    });
+
+    assert.equal(
+      result.publicLatest.items[0]?.public_visibility,
+      "metadata_only",
+    );
+    assert.equal(result.publicLatest.items[0]?.privacy_risk, "high");
+    assert.equal("content_hash" in (result.publicLatest.items[0] ?? {}), false);
+    assert.doesNotMatch(serialisedPublicOutputs, /PERSONA FITTIZIA/i);
+    assert.doesNotMatch(serialisedPublicOutputs, /2026_4201_2_P/i);
+    assert.equal(result.documentsManifest.counts.revoked, 1);
+    assert.equal(result.documentsManifest.counts.archived, 0);
+    assert.equal(
+      result.documentsManifest.decisions[0]?.reason,
+      "privacy_excluded",
+    );
+    await assert.rejects(readFile(absoluteDocumentPath));
+  } finally {
+    await rm(tmp, { recursive: true, force: true });
+  }
+});
+
+test("does not report presentation-profile changes as source-record changes", async () => {
+  const tmp = await mkdtemp(
+    path.join(tmpdir(), "albo-tinnvision-presentation-diff-"),
+  );
+  const fixturePath = path.join(tmp, "albo.xml");
+  const outDir = path.join(tmp, "data");
+  await writeFile(
+    fixturePath,
+    xmlRecord(
+      "2026/3301",
+      "DELIBERAZIONE DI GIUNTA",
+      "SETTORE TECNICO",
+      "APPROVAZIONE DEL PROGETTO PNRR PER IL COMUNE DI LAMEZIA TERME",
+      "104",
+    ),
+    "utf8",
+  );
+
+  const first = await runAlboIngestion({
+    outDir,
+    fromFile: fixturePath,
+    inputFormat: "xml",
+    retrievedAt: "2026-06-19T08:00:00.000Z",
+  });
+  const baseline = JSON.parse(
+    await readFile(first.paths.publicLatest, "utf8"),
+  ) as {
+    standardisation: { profile_version: string };
+    items: Array<{
+      presentation: { display_title: string };
+    }>;
+  };
+  baseline.standardisation.profile_version = "previous-profile";
+  baseline.items[0].presentation.display_title = "Titolo editoriale precedente";
+  await writeFile(
+    first.paths.publicLatest,
+    `${JSON.stringify(baseline, null, 2)}\n`,
+    "utf8",
+  );
+  await rm(path.join(outDir, "snapshots"), { recursive: true, force: true });
+
+  const result = await runAlboIngestion({
+    outDir,
+    fromFile: fixturePath,
+    inputFormat: "xml",
+    retrievedAt: "2026-06-19T09:00:00.000Z",
+  });
+
+  assert.equal(result.publicDiff.counts.changed, 0);
+  assert.equal(result.publicDiff.counts.unchanged, 1);
 });
 
 function pickClassificationIds(
@@ -735,7 +1110,7 @@ test("run command can compare against committed public latest without raw snapsh
   );
 });
 
-test("public latest baseline ignores raw-derived hashes for minimised records", async () => {
+test("public latest baseline omits raw-derived hashes for minimised records", async () => {
   const tmp = await mkdtemp(
     path.join(tmpdir(), "albo-tinnvision-redacted-baseline-"),
   );
@@ -781,10 +1156,8 @@ test("public latest baseline ignores raw-derived hashes for minimised records", 
     retrievedAt: "2026-06-19T09:00:00.000Z",
   });
 
-  assert.notEqual(
-    previous.publicLatest.items[0].content_hash,
-    result.publicLatest.items[0].content_hash,
-  );
+  assert.equal("content_hash" in previous.publicLatest.items[0], false);
+  assert.equal("content_hash" in result.publicLatest.items[0], false);
   assert.equal(result.publicLatest.items[0].public_visibility, "metadata_only");
   assert.equal(result.publicDiff.counts.changed, 0);
   assert.equal(result.publicDiff.counts.unchanged, 1);
