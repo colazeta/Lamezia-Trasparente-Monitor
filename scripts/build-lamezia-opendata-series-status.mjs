@@ -11,14 +11,12 @@ const GENERATED_DIR = path.join(
 const OUTPUT_PATH = path.join(GENERATED_DIR, "lameziaOpenDataSeriesStatus.json");
 
 async function main() {
-  const [climate, airport, demographic, foreignResidents, families] =
-    await Promise.all([
-      readJson("lameziaClimateDaily.metadata.json"),
-      readJson("lameziaAirTrafficMonthly.metadata.json"),
-      readJson("lameziaDemographicTrend.json"),
-      readJson("lameziaForeignResidentsAgeSex.json"),
-      readJson("lameziaFamiliesChildren.json"),
-    ]);
+  const [climate, airport, foreignResidents, families] = await Promise.all([
+    readJson("lameziaClimateDaily.metadata.json"),
+    readJson("lameziaAirTrafficMonthly.metadata.json"),
+    readJson("lameziaForeignResidentsAgeSex.json"),
+    readJson("lameziaFamiliesChildren.json"),
+  ]);
 
   const manifest = {
     schema_version: 1,
@@ -54,16 +52,19 @@ async function main() {
       buildSeries({
         id: "lamezia-demographic-trend",
         themeId: "population-society",
-        label: "Trend demografico - Lamezia Terme",
-        source: demographic.metadata.source,
-        sourceUrl: demographic.metadata.source_url,
-        latestObservation: String(demographic.metadata.latest_year),
-        latestObservationLabel: String(demographic.metadata.latest_year),
-        sourceModifiedAt: demographic.metadata.resource_last_modified,
-        materialisedAt: demographic.metadata.generated_at,
-        sourceCadence: "weekly",
-        sourceCadenceLabel: "Fonte settimanale",
-        updatePolicy: demographic.metadata.update_policy,
+        label: "Osservatorio demografico - Lamezia Terme",
+        source: "ISTAT - Demo e servizi SDMX",
+        sourceUrl: "https://demo.istat.it/",
+        latestObservation: null,
+        latestObservationLabel: "Serie corrente via API",
+        latestObservationNote:
+          "Il periodo più recente è letto dall'API demografica canonica; questo manifest statico non duplica il valore.",
+        sourceModifiedAt: null,
+        materialisedAt: null,
+        sourceCadence: "release-driven",
+        sourceCadenceLabel: "Rilascio ISTAT",
+        updatePolicy:
+          "Aggiornamento automatico sulle fonti ISTAT: le nuove release vengono acquisite nel layer demografico versionato e le versioni precedenti restano conservate.",
       }),
       buildSeries({
         id: "lamezia-foreign-residents-age-sex",
