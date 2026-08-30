@@ -31,6 +31,7 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 
 type Granularity = "annual" | "monthly";
+type SummaryWindow = "last5" | "last10" | "full";
 type SourceStatus =
   | "final"
   | "provisional"
@@ -132,6 +133,13 @@ function statusLabel(status: SourceStatus) {
   }
 }
 
+function windowLabel(window: SummaryWindow, summary: Summary) {
+  if (window === "last5") return "ultimi 5 anni";
+  if (window === "last10") return "ultimi 10 anni";
+  if (summary.from && summary.to) return `${summary.from}–${summary.to}`;
+  return "intero periodo disponibile";
+}
+
 function reconciliationMeta(status: ChangeDriverPoint["reconciliation"]) {
   if (status === "exact") {
     return { label: "Quadratura esatta", Icon: CheckCircle2, className: "text-success" };
@@ -144,6 +152,7 @@ function reconciliationMeta(status: ChangeDriverPoint["reconciliation"]) {
 
 export function ChangeDriversPanel() {
   const [granularity, setGranularity] = useState<Granularity>("annual");
+  const [summaryWindow, setSummaryWindow] = useState<SummaryWindow>("last5");
   const { data, isLoading, isError } = useQuery({
     queryKey: ["demographics", "change-drivers", granularity],
     queryFn: () => fetchDrivers(granularity),
@@ -152,8 +161,11 @@ export function ChangeDriversPanel() {
 
   const visiblePoints = useMemo(() => {
     const points = data?.current ?? [];
-    return granularity === "annual" ? points.slice(-15) : points.slice(-24);
-  }, [data, granularity]);
+    if (granularity === "monthly") return points.slice(-24);
+    if (summaryWindow === "last5") return points.slice(-5);
+    if (summaryWindow === "last10") return points.slice(-10);
+    return points;
+  }, [data, granularity, summaryWindow]);
 
   const chartData = useMemo(
     () =>
@@ -190,7 +202,12 @@ export function ChangeDriversPanel() {
   const latest = data.current[data.current.length - 1];
   const latestReconciliation = reconciliationMeta(latest.reconciliation);
   const ReconciliationIcon = latestReconciliation.Icon;
-  const summary = granularity === "annual" ? data.summaries.last5 : data.summaries.full;
+  const summary =
+    granularity === "annual" ? data.summaries[summaryWindow] : data.summaries.full;
+  const selectedWindowLabel =
+    granularity === "annual"
+      ? windowLabel(summaryWindow, summary)
+      : "periodo mensile disponibile";
 
   return (
     <section id="perche-cambia" className="space-y-6">
@@ -232,22 +249,52 @@ export function ChangeDriversPanel() {
         </div>
       </div>
 
+      {granularity === "annual" ? (
+        <div className="flex flex-wrap items-center gap-2" aria-label="Finestra temporale del bilancio demografico">
+          <span className="mr-1 text-sm text-muted-foreground">Periodo:</span>
+          {(
+            [
+              ["last5", "5 anni"],
+              ["last10", "10 anni"],
+              ["full", "Tutto"],
+            ] as const
+          ).map(([value, label]) => (
+            <Button
+              key={value}
+              type="button"
+              size="sm"
+              variant={summaryWindow === value ? "brand" : "outline"}
+              onClick={() => setSummaryWindow(value)}
+              aria-pressed={summaryWindow === value}
+              className="h-8 rounded-full"
+            >
+              {label}
+            </Button>
+          ))}
+          <span className="text-xs text-muted-foreground">
+            {summary.from && summary.to
+              ? `${summary.from}–${summary.to} · ${summary.periods} annualità`
+              : "periodo non disponibile"}
+          </span>
+        </div>
+      ) : null}
+
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <DriverCard
           icon={Baby}
-          label={granularity === "annual" ? "Saldo naturale · ultimi 5 anni" : "Saldo naturale · periodo disponibile"}
+          label={`Saldo naturale · ${selectedWindowLabel}`}
           value={summary.naturalBalance}
           detail="nati − morti"
         />
         <DriverCard
           icon={ArrowDownUp}
-          label={granularity === "annual" ? "Mobilità interna · ultimi 5 anni" : "Mobilità interna · periodo disponibile"}
+          label={`Mobilità interna · ${selectedWindowLabel}`}
           value={summary.internalBalance}
           detail="da/verso altri comuni"
         />
         <DriverCard
           icon={Globe2}
-          label={granularity === "annual" ? "Mobilità estera · ultimi 5 anni" : "Mobilità estera · periodo disponibile"}
+          label={`Mobilità estera · ${selectedWindowLabel}`}
           value={summary.foreignBalance}
           detail="da/verso l'estero"
         />
@@ -283,7 +330,7 @@ export function ChangeDriversPanel() {
           <CardTitle className="font-display">Componenti della variazione</CardTitle>
           <CardDescription>
             {granularity === "annual"
-              ? "Ultime annualità disponibili · persone"
+              ? `${selectedWindowLabel} · persone`
               : "Ultimi 24 mesi disponibili · persone"}
           </CardDescription>
         </CardHeader>
