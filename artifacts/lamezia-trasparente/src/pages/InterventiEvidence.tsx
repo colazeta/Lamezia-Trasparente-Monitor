@@ -27,7 +27,7 @@ import {
   type EvidenceInterventionType,
   type EvidenceStrength,
   type EvidenceThematicArea,
-} from "@/data/evidenceInterventions";
+} from "@/data/evidenceInterventionsArchive";
 
 const ALL = "all";
 
