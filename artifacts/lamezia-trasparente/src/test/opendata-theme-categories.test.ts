@@ -65,7 +65,7 @@ describe("OpenData thematic category library", () => {
       expect.arrayContaining([
         expect.objectContaining({
           id: "lamezia-demographic-trend",
-          dataType: "Serie temporale annuale",
+          dataType: "Serie annuali versionate e bilancio demografico",
           detailKind: "demographic-trend",
         }),
         expect.objectContaining({
