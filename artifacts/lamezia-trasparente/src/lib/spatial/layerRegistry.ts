@@ -1,0 +1,215 @@
+import type {
+  SpatialGeometry,
+  SpatialGeometryRole,
+  SpatialVerificationStatus,
+} from "./contract";
+
+export type SpatialLayerStatus =
+  | "existing"
+  | "pilot"
+  | "in_development"
+  | "planned";
+
+export type SpatialLayerGroup =
+  | "reference"
+  | "population"
+  | "legality"
+  | "public-investment"
+  | "public-assets"
+  | "services"
+  | "culture"
+  | "procurement";
+
+export type SpatialGeometryType = SpatialGeometry["type"];
+
+export type SpatialLayerDefinition = {
+  id: string;
+  title: string;
+  description: string;
+  group: SpatialLayerGroup;
+  status: SpatialLayerStatus;
+  geometryTypes: SpatialGeometryType[];
+  allowedGeometryRoles: SpatialGeometryRole[];
+  entityTypes: string[];
+  sourceLabel: string;
+  dataPath?: string | null;
+  defaultVisible: boolean;
+  minimumVerification?: SpatialVerificationStatus | null;
+  publicationRule: string;
+  caveats: string[];
+};
+
+/**
+ * Registro iniziale dei layer territoriali.
+ *
+ * È intenzionalmente indipendente dal viewer: Leaflet, GeoLibre o altri client
+ * devono leggere la stessa definizione logica e gli stessi dati canonici.
+ */
+export const SPATIAL_LAYER_REGISTRY: SpatialLayerDefinition[] = [
+  {
+    id: "municipal-boundary",
+    title: "Confine comunale",
+    description: "Perimetro geografico di riferimento del Comune di Lamezia Terme.",
+    group: "reference",
+    status: "existing",
+    geometryTypes: ["Polygon", "MultiPolygon"],
+    allowedGeometryRoles: ["administrative_boundary"],
+    entityTypes: ["municipality"],
+    sourceLabel: "Layer GIS di base servito dall'API di Lamezia Trasparente",
+    dataPath: "/api/gis/comune",
+    defaultVisible: true,
+    publicationRule:
+      "Usare come geografia di riferimento; non attribuire al perimetro indicatori o significati non presenti nella fonte.",
+    caveats: [
+      "La provenienza geometrica deve restare esposta nei metadati del layer.",
+    ],
+  },
+  {
+    id: "census-sections",
+    title: "Sezioni censuarie",
+    description:
+      "Geografie censuarie ISTAT e indicatori territoriali selezionabili nell'Atlante.",
+    group: "population",
+    status: "in_development",
+    geometryTypes: ["Polygon", "MultiPolygon"],
+    allowedGeometryRoles: ["census_area"],
+    entityTypes: ["census_section"],
+    sourceLabel: "ISTAT",
+    dataPath:
+      "/data/processed/territorio/istat_sezioni_censimento_lamezia.geojson",
+    defaultVisible: true,
+    publicationRule:
+      "Pubblicare soltanto geometrie e indicatori validati contro i tracciati ISTAT dichiarati nei metadati.",
+    caveats: [
+      "La pagina può usare dati demo durante lo sviluppo: la UI deve segnalarlo esplicitamente.",
+      "Non confondere sezioni censuarie con sezioni catastali, OMI, CAP o altre partizioni territoriali.",
+    ],
+  },
+  {
+    id: "confiscated-assets",
+    title: "Beni confiscati",
+    description:
+      "Beni confiscati con localizzazione sufficientemente documentata e collegamento alla scheda pubblica.",
+    group: "legality",
+    status: "pilot",
+    geometryTypes: ["Point", "Polygon", "MultiPolygon"],
+    allowedGeometryRoles: ["asset_location", "parcel"],
+    entityTypes: ["confiscated_asset"],
+    sourceLabel: "Fonti pubbliche censite nella sezione Beni confiscati",
+    defaultVisible: false,
+    minimumVerification: "machine_geocoded",
+    publicationRule:
+      "Ogni bene deve dichiarare ruolo della geometria, precisione, metodo, provenienza e stato di verifica; le posizioni approssimative devono essere riconoscibili come tali.",
+    caveats: [
+      "Le coordinate già presenti nei record non bastano da sole: devono essere accompagnate da provenienza e precisione.",
+      "Mantenere la mappa Leaflet esistente finché il layer canonico non è validato.",
+    ],
+  },
+  {
+    id: "public-works",
+    title: "Opere pubbliche",
+    description: "Opere e interventi pubblici con luogo di esecuzione verificabile.",
+    group: "public-investment",
+    status: "planned",
+    geometryTypes: ["Point", "LineString", "MultiLineString", "Polygon", "MultiPolygon"],
+    allowedGeometryRoles: ["intervention_site", "intervention_area", "route"],
+    entityTypes: ["public_work", "project"],
+    sourceLabel: "BDAP-MOP, Comune di Lamezia Terme e altre fonti pubbliche validate",
+    defaultVisible: false,
+    publicationRule:
+      "Pubblicare soltanto la geometria del luogo o dell'area di intervento, non la sede del soggetto attuatore o dell'affidatario.",
+    caveats: [
+      "La granularità della localizzazione può variare tra edificio, strada, area e intero comune.",
+    ],
+  },
+  {
+    id: "pnrr-projects",
+    title: "Progetti PNRR",
+    description: "Progetti PNRR territorialmente localizzabili nel Comune di Lamezia Terme.",
+    group: "public-investment",
+    status: "planned",
+    geometryTypes: ["Point", "LineString", "MultiLineString", "Polygon", "MultiPolygon"],
+    allowedGeometryRoles: ["intervention_site", "intervention_area", "route"],
+    entityTypes: ["pnrr_project"],
+    sourceLabel: "ReGiS / Italia Domani / fonti amministrative collegate",
+    defaultVisible: false,
+    publicationRule:
+      "La mappa deve rappresentare il luogo dell'intervento quando documentato; un'associazione al solo Comune non deve essere trasformata in un punto preciso.",
+    caveats: [
+      "Per progetti comunali senza localizzazione infra-comunale usare, se utile, un riferimento a livello comunale chiaramente dichiarato.",
+    ],
+  },
+  {
+    id: "public-assets",
+    title: "Patrimonio pubblico",
+    description: "Immobili, aree e strutture pubbliche con geometria verificabile.",
+    group: "public-assets",
+    status: "planned",
+    geometryTypes: ["Point", "Polygon", "MultiPolygon"],
+    allowedGeometryRoles: ["asset_location", "facility_location", "parcel"],
+    entityTypes: ["public_asset", "public_facility"],
+    sourceLabel: "Comune di Lamezia Terme e altre fonti patrimoniali pubbliche validate",
+    defaultVisible: false,
+    publicationRule:
+      "Associare ogni geometria al bene corretto e conservare la data di osservazione per evitare di presentare come attuale una situazione storica.",
+    caveats: [],
+  },
+  {
+    id: "schools-services",
+    title: "Scuole e servizi",
+    description: "Strutture scolastiche e servizi pubblici territorialmente identificabili.",
+    group: "services",
+    status: "planned",
+    geometryTypes: ["Point", "Polygon", "MultiPolygon"],
+    allowedGeometryRoles: ["facility_location"],
+    entityTypes: ["school", "public_service"],
+    sourceLabel: "Fonti istituzionali e comunali validate",
+    defaultVisible: false,
+    publicationRule:
+      "Usare la localizzazione della struttura o del servizio, con identificativo stabile e collegamento alla relativa entità.",
+    caveats: [],
+  },
+  {
+    id: "cultural-assets",
+    title: "Beni culturali",
+    description: "Beni e luoghi culturali collegabili alla lettura territoriale della città.",
+    group: "culture",
+    status: "planned",
+    geometryTypes: ["Point", "Polygon", "MultiPolygon"],
+    allowedGeometryRoles: ["asset_location", "facility_location", "parcel"],
+    entityTypes: ["cultural_asset"],
+    sourceLabel: "Fonti culturali e istituzionali validate",
+    defaultVisible: false,
+    publicationRule:
+      "Conservare separatamente localizzazione, fonte descrittiva e fonte della geometria quando non coincidono.",
+    caveats: [],
+  },
+  {
+    id: "localised-contract-interventions",
+    title: "Contratti con intervento localizzato",
+    description:
+      "Contratti collegati a un luogo di esecuzione o a un'opera territorialmente verificabile.",
+    group: "procurement",
+    status: "planned",
+    geometryTypes: ["Point", "LineString", "MultiLineString", "Polygon", "MultiPolygon"],
+    allowedGeometryRoles: ["intervention_site", "intervention_area", "route"],
+    entityTypes: ["contract"],
+    sourceLabel: "ANAC e documentazione amministrativa collegata",
+    defaultVisible: false,
+    publicationRule:
+      "Non usare supplier_registered_office o contracting_authority_office come sostituti del luogo di esecuzione. Se il contratto eredita la posizione da un'opera, conservare il collegamento all'entità territoriale sorgente.",
+    caveats: [
+      "Il numero di contratti mappabili sarà inferiore al numero totale di contratti: questa differenza deve essere mostrata come copertura, non colmata con geocodifiche improprie.",
+    ],
+  },
+];
+
+export function getSpatialLayer(layerId: string): SpatialLayerDefinition | null {
+  return SPATIAL_LAYER_REGISTRY.find((layer) => layer.id === layerId) ?? null;
+}
+
+export function getSpatialLayersByGroup(
+  group: SpatialLayerGroup,
+): SpatialLayerDefinition[] {
+  return SPATIAL_LAYER_REGISTRY.filter((layer) => layer.group === group);
+}
