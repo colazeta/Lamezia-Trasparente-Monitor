@@ -172,6 +172,9 @@ export function directReferenceToFeature(
     id: reference.geometryId,
     geometry: reference.geometry,
     properties: {
+      // Campi di dominio aggiuntivi sono ammessi, ma non possono sovrascrivere
+      // i metadati canonici di provenienza e significato territoriale.
+      ...extraProperties,
       entity_id: entity.entityId,
       entity_type: entity.entityType,
       title: entity.title,
@@ -192,7 +195,6 @@ export function directReferenceToFeature(
       valid_from: reference.source.validFrom,
       valid_to: reference.source.validTo,
       public_note: reference.publicNote,
-      ...extraProperties,
     },
   };
 }
