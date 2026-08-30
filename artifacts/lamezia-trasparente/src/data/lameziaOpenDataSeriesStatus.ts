@@ -1,6 +1,10 @@
 import openDataSeriesStatus from "./generated/lameziaOpenDataSeriesStatus.json";
 
-export type OpenDataSeriesSourceCadence = "daily" | "weekly" | "monthly";
+export type OpenDataSeriesSourceCadence =
+  | "daily"
+  | "weekly"
+  | "monthly"
+  | "release-driven";
 export type OpenDataSeriesMonitoringCadence = "daily";
 export type OpenDataSeriesAutomationStatus = "active";
 
@@ -14,7 +18,7 @@ export interface LameziaOpenDataSeriesStatusItem {
   latest_observation_label: string;
   latest_observation_note: string | null;
   source_modified_at: string | null;
-  materialised_at: string;
+  materialised_at: string | null;
   cadence: OpenDataSeriesSourceCadence;
   cadence_label: string;
   source_cadence: OpenDataSeriesSourceCadence;
