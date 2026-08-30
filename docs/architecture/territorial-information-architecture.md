@@ -146,7 +146,8 @@ Il registry descrive, per ciascun layer:
 - identificativo stabile;
 - titolo pubblico;
 - gruppo tematico;
-- stato di maturità;
+- stato di maturità del dato (`status`);
+- disponibilità nella superficie Atlante (`atlasStatus`);
 - tipi di geometria ammessi;
 - ruoli geografici ammessi;
 - entità sorgenti;
@@ -155,7 +156,9 @@ Il registry descrive, per ciascun layer:
 - visibilità predefinita;
 - caveat e regola minima di pubblicazione.
 
-Il registry deve diventare progressivamente la fonte unica per costruire il selettore dei layer nell'Atlante e per esporre metadati leggibili dall'utente.
+`status` e `atlasStatus` rispondono a due domande diverse. Un dataset può essere già canonico o esistente senza essere ancora pronto per comparire nell'Atlante: il renderer, l'accessibilità, i caveat o la semantica geografica possono richiedere ulteriore lavoro. Solo i layer con `atlasStatus="active"` e un percorso dati configurato sono candidati al selettore dell'Atlante.
+
+Questa separazione evita che l'introduzione di un nuovo dataset nel data model lo renda implicitamente visibile sulla mappa prima della relativa validazione. Il registry deve diventare progressivamente la fonte unica per costruire il selettore dei layer nell'Atlante e per esporre metadati leggibili dall'utente.
 
 ## GeoLibre e Leaflet
 
