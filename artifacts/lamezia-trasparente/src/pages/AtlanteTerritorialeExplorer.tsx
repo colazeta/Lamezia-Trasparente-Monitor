@@ -315,7 +315,11 @@ function MapExplorer({
 }) {
   const [resetSignal, setResetSignal] = useState(0);
   const [isFullPageMap, setFullPageMap] = useState(false);
-  const municipalBoundaryState = useMunicipalBoundaryAtlasLayer();
+  const [showMunicipalBoundary, setShowMunicipalBoundary] = useState(true);
+  const [showCensusSections, setShowCensusSections] = useState(true);
+  const municipalBoundaryState = useMunicipalBoundaryAtlasLayer(
+    showMunicipalBoundary,
+  );
   const confiscatedAssetsState = useConfiscatedAssetsAtlasLayer(
     showConfiscatedAssets,
   );
@@ -383,33 +387,37 @@ function MapExplorer({
               url={selectedBasemap.urlTemplate}
             />
           ) : null}
-          <GeoJSON
-            key={[
-              activeIndicator.id,
-              selectedSectionId ?? "none",
-              hoveredSectionId ?? "none",
-            ].join(":")}
-            data={mapData as unknown as GeoJSON.GeoJsonObject}
-            onEachFeature={(geoFeature, mapLayer) => {
-              bindSectionLayer({
-                activeIndicator,
-                feature: geoFeature as unknown as AtlanteFeature,
-                layer: mapLayer,
-                onSectionSelect,
-                setHoveredSectionId,
-              });
-            }}
-            style={(geoFeature) =>
-              getFeatureStyle({
-                activeIndicator,
-                feature: geoFeature as unknown as AtlanteFeature,
-                hoveredSectionId,
-                selectedSectionId,
-                summary,
-              })
-            }
-          />
-          <MunicipalBoundaryAtlasLayer state={municipalBoundaryState} />
+          {showCensusSections ? (
+            <GeoJSON
+              key={[
+                activeIndicator.id,
+                selectedSectionId ?? "none",
+                hoveredSectionId ?? "none",
+              ].join(":")}
+              data={mapData as unknown as GeoJSON.GeoJsonObject}
+              onEachFeature={(geoFeature, mapLayer) => {
+                bindSectionLayer({
+                  activeIndicator,
+                  feature: geoFeature as unknown as AtlanteFeature,
+                  layer: mapLayer,
+                  onSectionSelect,
+                  setHoveredSectionId,
+                });
+              }}
+              style={(geoFeature) =>
+                getFeatureStyle({
+                  activeIndicator,
+                  feature: geoFeature as unknown as AtlanteFeature,
+                  hoveredSectionId,
+                  selectedSectionId,
+                  summary,
+                })
+              }
+            />
+          ) : null}
+          {showMunicipalBoundary ? (
+            <MunicipalBoundaryAtlasLayer state={municipalBoundaryState} />
+          ) : null}
           {showConfiscatedAssets ? (
             <ConfiscatedAssetsAtlasLayer
               focusEntityId={focusConfiscatedAssetId}
@@ -453,20 +461,26 @@ function MapExplorer({
             Livelli
           </p>
           <div className="mt-1.5 flex flex-wrap gap-2 text-xs">
-            <span className="inline-flex items-center gap-1.5 rounded-md bg-primary/10 px-2 py-1 font-medium text-foreground">
-              <span
-                aria-hidden="true"
-                className="h-2 w-2 rounded-full border border-primary bg-transparent"
+            <label className="inline-flex cursor-pointer items-center gap-1.5 rounded-md border border-border bg-background px-2 py-1 font-medium text-foreground">
+              <input
+                checked={showMunicipalBoundary}
+                className="h-3.5 w-3.5 accent-primary"
+                onChange={(event) =>
+                  setShowMunicipalBoundary(event.target.checked)
+                }
+                type="checkbox"
               />
               {municipalBoundaryDefinition?.title ?? "Confine comunale"}
-            </span>
-            <span className="inline-flex items-center gap-1.5 rounded-md bg-primary/10 px-2 py-1 font-medium text-foreground">
-              <span
-                aria-hidden="true"
-                className="h-2 w-2 rounded-full bg-primary"
+            </label>
+            <label className="inline-flex cursor-pointer items-center gap-1.5 rounded-md border border-border bg-background px-2 py-1 font-medium text-foreground">
+              <input
+                checked={showCensusSections}
+                className="h-3.5 w-3.5 accent-primary"
+                onChange={(event) => setShowCensusSections(event.target.checked)}
+                type="checkbox"
               />
               {censusLayerDefinition?.title ?? "Sezioni censuarie"}
-            </span>
+            </label>
             <label className="inline-flex cursor-pointer items-center gap-1.5 rounded-md border border-border bg-background px-2 py-1 font-medium text-foreground">
               <input
                 checked={showConfiscatedAssets}
@@ -479,7 +493,7 @@ function MapExplorer({
               {confiscatedAssetsDefinition?.title ?? "Beni confiscati"}
             </label>
           </div>
-          {municipalBoundaryState.status === "error" ? (
+          {showMunicipalBoundary && municipalBoundaryState.status === "error" ? (
             <p
               aria-live="polite"
               className="mt-2 text-[11px] font-medium leading-4 text-destructive"
