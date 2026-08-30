@@ -1,5 +1,5 @@
 #!/usr/bin/env tsx
-import { readFile, rename, unlink, writeFile } from "node:fs/promises";
+import { readFile } from "node:fs/promises";
 import path from "node:path";
 import process from "node:process";
 import { fileURLToPath, pathToFileURL } from "node:url";
@@ -7,12 +7,20 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 import {
   buildDelibereArchive,
   isDelibereArchive,
+  promoteAlboArtifactBatch,
+  recoverAlboArtifactTransaction,
   reapplyAlboPublicSafety,
   type AlboDocumentsManifest,
   type PublicLatest,
   type PublicRecord,
   type PublicVisibility,
 } from "./albo-tinnvision";
+import {
+  readReviewedDocumentServingAllowlist,
+  resolveExistingArchivedPdfPath,
+  validateArchivedStoragePath,
+  verifyArchivedPdfFile,
+} from "./albo-document-storage";
 import {
   ALBO_PUBLICATION_STANDARDISATION,
   ALBO_PUBLICATION_STANDARDISATION_KNOWN_LIMIT,
@@ -29,6 +37,7 @@ interface SanitiseResult {
 export async function sanitiseAlboPublicArtifacts(
   outDir = DEFAULT_OUT_DIR,
 ): Promise<SanitiseResult> {
+  await recoverAlboArtifactTransaction(outDir);
   const publicDir = path.join(outDir, "public", "albo");
   const paths = {
     latest: path.join(publicDir, "latest.json"),
@@ -94,34 +103,61 @@ export async function sanitiseAlboPublicArtifacts(
   diff.known_limits = withStandardisationLimit(diff.known_limits);
 
   const recordById = new Map(records.map((record) => [record.id, record]));
+  const reviewedAllowlist = await readReviewedDocumentServingAllowlist(outDir);
+  const reviewedPaths = new Set(
+    reviewedAllowlist?.documents.map((document) => document.storage_path) ?? [],
+  );
+  await Promise.all(
+    reviewedAllowlist?.documents.map((document) =>
+      verifyArchivedPdfFile(outDir, document, { requireSize: false }),
+    ) ?? [],
+  );
   const documents = objectArray(manifest.documents, "manifest.documents");
   const revokedDocuments = documents.filter((document) => {
     const record = recordById.get(stringValue(document.id));
     return !record || !isPdfEligible(record);
   });
+  const retainedDocuments = documents.filter(
+    (document) => !revokedDocuments.includes(document),
+  );
+  await Promise.all(
+    retainedDocuments.map((document, index) => {
+      if (
+        document.preservation_status !== "archived" ||
+        document.reason !== "eligible_low_risk_publishable_pdf"
+      ) {
+        throw new Error(
+          `Invalid retained Albo PDF descriptor at manifest.documents[${index}]`,
+        );
+      }
+      return verifyArchivedPdfFile(
+        outDir,
+        {
+          storage_path: document.storage_path,
+          sha256: document.sha256,
+          size_bytes: document.size_bytes,
+          content_type: document.content_type,
+        },
+        { requireSize: true },
+      );
+    }),
+  );
+  const retainedPaths = new Set(
+    retainedDocuments.map((document) =>
+      validatedStoragePath(document.storage_path),
+    ),
+  );
   const revokedPaths = [
     ...new Set(
       revokedDocuments.map((document) =>
         validatedStoragePath(document.storage_path),
       ),
     ),
-  ];
-
-  for (const storagePath of revokedPaths) {
-    const absolutePath = path.join(
-      outDir,
-      ...storagePath.replace(/^data\//, "").split("/"),
-    );
-    try {
-      await unlink(absolutePath);
-    } catch (error) {
-      if ((error as NodeJS.ErrnoException).code !== "ENOENT") throw error;
-    }
-  }
-
-  const retainedDocuments = documents.filter(
-    (document) => !revokedDocuments.includes(document),
+  ].filter(
+    (storagePath) =>
+      !retainedPaths.has(storagePath) && !reviewedPaths.has(storagePath),
   );
+
   const decisions = objectArray(manifest.decisions, "manifest.decisions")
     .filter((decision) => recordById.has(stringValue(decision.id)))
     .map((decision) => {
@@ -165,14 +201,24 @@ export async function sanitiseAlboPublicArtifacts(
   status.standardisation = ALBO_PUBLICATION_STANDARDISATION;
   status.known_limits = withStandardisationLimit(status.known_limits);
 
-  await Promise.all([
-    writeJsonAtomic(paths.latest, latest),
-    writeJsonAtomic(paths.diff, diff),
-    writeJsonAtomic(paths.manifest, manifest),
-    writeJsonAtomic(paths.archive, sanitisedArchive),
-    writeJsonAtomic(paths.status, status),
-    writeTextAtomic(paths.runLog, updateRunLog(runLog, counts)),
-  ]);
+  const revocationPaths = await Promise.all(
+    revokedPaths.map((storagePath) =>
+      existingArchivedPdfPath(outDir, storagePath),
+    ),
+  );
+  await promoteAlboArtifactBatch(
+    [
+      { target: paths.latest, contents: jsonText(latest) },
+      { target: paths.diff, contents: jsonText(diff) },
+      { target: paths.archive, contents: jsonText(sanitisedArchive) },
+      { target: paths.status, contents: jsonText(status) },
+      { target: paths.runLog, contents: updateRunLog(runLog, counts) },
+      // Keep the PDF serving allow-list as the final public artifact promoted.
+      { target: paths.manifest, contents: jsonText(manifest) },
+    ],
+    revocationPaths.filter((value): value is string => value !== null),
+    { outDir },
+  );
 
   return { records: records.length, revoked_documents: revokedPaths };
 }
@@ -276,17 +322,19 @@ function privacySafeDecision(
 }
 
 function validatedStoragePath(value: unknown): string {
-  if (
-    typeof value !== "string" ||
-    !/^data\/public\/albo\/documents\/[0-9]{4}\/[a-f0-9]{64}\.pdf$/iu.test(
-      value,
-    )
-  ) {
-    throw new Error(
-      `Unsafe archived PDF path for privacy revocation: ${String(value)}`,
-    );
+  return validateArchivedStoragePath(value).storagePath;
+}
+
+async function existingArchivedPdfPath(
+  outDir: string,
+  storagePath: string,
+): Promise<string | null> {
+  try {
+    return await resolveExistingArchivedPdfPath(outDir, storagePath);
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code === "ENOENT") return null;
+    throw error;
   }
-  return value;
 }
 
 function withStandardisationLimit(value: unknown): string[] {
@@ -338,17 +386,8 @@ async function readJsonObject(
   return objectValue(JSON.parse(await readFile(filePath, "utf8")), filePath);
 }
 
-async function writeJsonAtomic(
-  filePath: string,
-  value: unknown,
-): Promise<void> {
-  await writeTextAtomic(filePath, `${JSON.stringify(value, null, 2)}\n`);
-}
-
-async function writeTextAtomic(filePath: string, value: string): Promise<void> {
-  const temporaryPath = `${filePath}.tmp-${process.pid}`;
-  await writeFile(temporaryPath, value, "utf8");
-  await rename(temporaryPath, filePath);
+function jsonText(value: unknown): string {
+  return `${JSON.stringify(value, null, 2)}\n`;
 }
 
 function parseOutDir(argv: string[]): string {

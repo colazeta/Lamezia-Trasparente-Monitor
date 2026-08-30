@@ -1,6 +1,7 @@
 #!/usr/bin/env tsx
 import { createHash } from "node:crypto";
-import { mkdir, readFile, stat, unlink, writeFile } from "node:fs/promises";
+import type { Dirent } from "node:fs";
+import { lstat, readFile, readdir } from "node:fs/promises";
 import path from "node:path";
 import process from "node:process";
 import { fileURLToPath, pathToFileURL } from "node:url";
@@ -34,6 +35,32 @@ import {
   projectPublicAct,
   publicActPublicId,
 } from "@workspace/publication-standardisation/public-act";
+import {
+  promoteAlboArtifactBatch,
+  recoverAlboArtifactTransaction,
+} from "./albo-artifact-transaction";
+import {
+  MAX_PUBLIC_PDF_BYTES,
+  assertArchiveYearDirectorySafe,
+  assertArchivedDocumentsRootSafe,
+  isArchivedStoragePath,
+  prepareArchivedPdfWritePath,
+  resolveExistingArchivedPdfPath,
+  reviewedDocumentStoragePaths,
+  validateArchivedStoragePath,
+  verifyArchivedPdfFile,
+} from "./albo-document-storage";
+
+export {
+  alboArtifactTransactionJournalPath,
+  promoteAlboArtifactBatch,
+  recoverAlboArtifactTransaction,
+  type AlboArtifactWrite,
+  type AlboPromotionEvent,
+  type AlboPromotionHooks,
+  type AlboPromotionOptions,
+  type AlboPromotionResult,
+} from "./albo-artifact-transaction";
 
 const SCRIPT_DIR = path.dirname(fileURLToPath(import.meta.url));
 const REPO_ROOT = path.resolve(SCRIPT_DIR, "..");
@@ -234,6 +261,9 @@ export interface ArchivedPdfDocument extends PdfPreservationDecision {
   sha256: string;
   size_bytes: number;
   content_type: string;
+  verified_at?: string;
+  etag?: string;
+  last_modified?: string;
 }
 export interface AlboDocumentsManifest {
   generated_at: string;
@@ -254,6 +284,9 @@ export interface AlboDocumentsManifest {
     no_summaries: true;
     no_rankings: true;
     privacy_revocation_cleanup: true;
+    unmanaged_orphan_cleanup: false;
+    upstream_revalidation: "conditional_get_or_full_get";
+    local_reuse_verification: "path_sha256_size_and_pdf_signature";
     paid_storage: false;
   };
   counts: {
@@ -298,6 +331,17 @@ export interface DelibereArchive {
   };
   known_limits: string[];
   items: DeliberaArchiveItem[];
+}
+
+interface PdfWrite {
+  storagePath: string;
+  bytes: Uint8Array;
+}
+
+interface PdfArchivePlan {
+  manifest: AlboDocumentsManifest;
+  writes: PdfWrite[];
+  revocations: string[];
 }
 export type AlboPublicStatus = Record<string, unknown> & {
   source: string;
@@ -362,8 +406,6 @@ const CIVIC_SAFEGUARDS = [
   "Nessuna sintesi generativa, classifica, accusa o valutazione sostanziale viene prodotta.",
   "Il layer pubblico espone solo metadati minimizzati secondo le classi publishable, publishable_with_minimisation, metadata_only e do_not_publish.",
 ];
-const MAX_PUBLIC_PDF_BYTES = 10 * 1024 * 1024;
-
 const NOTIFICATION_METADATA_ONLY_REASON =
   "Regola automatica prudenziale: notifiche e depositi procedurali pubblicati solo in forma minima.";
 
@@ -387,6 +429,8 @@ export function parseArgs(argv: string[]): CliOptions {
 }
 
 export async function runAlboIngestion(options: CliOptions): Promise<RunResult> {
+  await recoverAlboArtifactTransaction(options.outDir);
+  const pristineLifecycle = await isPristineAlboLifecycle(options.outDir);
   const currentPath = path.join(options.outDir, "snapshots", "albo", "current.json");
   const publicLatestPath = path.join(options.outDir, "public", "albo", "latest.json");
   const delibereArchivePath = path.join(
@@ -415,7 +459,14 @@ export async function runAlboIngestion(options: CliOptions): Promise<RunResult> 
   const counts = countRun(items, publicRecordDiff);
   const publicLatest = buildPublicLatest(snapshot, items, counts);
   const publicDiff = buildPublicDiff(snapshot, publicRecordDiff, counts, diffBaseline);
-  const documentsManifest = await archivePublicPdfs(options.outDir, snapshot, items, options.pdfFetch ?? fetch);
+  const pdfArchivePlan = await archivePublicPdfs(
+    options.outDir,
+    snapshot,
+    items,
+    options.pdfFetch ?? fetch,
+    pristineLifecycle,
+  );
+  const documentsManifest = pdfArchivePlan.manifest;
   const delibereArchive = buildDelibereArchive(
     previousDelibereArchive,
     publicLatest,
@@ -433,6 +484,7 @@ export async function runAlboIngestion(options: CliOptions): Promise<RunResult> 
     delibereArchive,
     publicStatus,
     runLog,
+    pdfArchivePlan,
   );
   return {
     snapshot,
@@ -1866,17 +1918,25 @@ async function archivePublicPdfs(
   snapshot: AlboRawSnapshot,
   items: AlboItem[],
   pdfFetch: typeof fetch,
-): Promise<AlboDocumentsManifest> {
+  allowMissingPreviousManifest: boolean,
+): Promise<PdfArchivePlan> {
   const documents: ArchivedPdfDocument[] = [];
   const decisions: PdfPreservationDecision[] = [];
-  const written = new Set<string>();
+  const pendingWrites = new Map<string, Uint8Array>();
   const warnings: string[] = [];
-  const previousDocuments = await readReusableArchivedDocuments(outDir);
+  const previousDocuments = await readReusableArchivedDocuments(
+    outDir,
+    allowMissingPreviousManifest,
+  );
+  const reviewedPaths = await reviewedDocumentStoragePaths(outDir);
 
   for (const item of items) {
     const base = pdfDecisionBase(item);
 
-    if (item.public_visibility === "publishable_with_minimisation" || item.privacy_risk === "medium") {
+    if (
+      item.public_visibility === "publishable_with_minimisation" ||
+      item.privacy_risk === "medium"
+    ) {
       decisions.push({
         ...base,
         preservation_status: "human_review_required",
@@ -1885,7 +1945,10 @@ async function archivePublicPdfs(
       continue;
     }
 
-    if (item.public_visibility !== "publishable" || item.privacy_risk !== "low") {
+    if (
+      item.public_visibility !== "publishable" ||
+      item.privacy_risk !== "low"
+    ) {
       decisions.push({
         ...base,
         preservation_status: "excluded",
@@ -1909,130 +1972,515 @@ async function archivePublicPdfs(
       continue;
     }
 
-    const reusable = await reusableArchivedDocument(outDir, item, officialDocument.href, previousDocuments);
-    if (reusable) {
-      decisions.push(reusable);
-      documents.push(reusable);
-      continue;
-    }
-
-    const archived = await fetchAndStorePdf(outDir, item, officialDocument.href, pdfFetch, written);
+    const previous = previousArchivedDocument(
+      previousDocuments,
+      item.id,
+      officialDocument.href,
+    );
+    const archived = await fetchAndPlanPdf(
+      outDir,
+      item,
+      officialDocument.href,
+      pdfFetch,
+      pendingWrites,
+      previous,
+    );
     decisions.push(archived);
     if (isArchivedPdfDocument(archived)) {
       documents.push(archived);
     }
   }
 
-  const revoked = await revokePrivacyIneligibleArchivedDocuments(
+  const revocations = await planArchivedDocumentRevocations(
     outDir,
-    items,
     previousDocuments,
     documents,
+    reviewedPaths,
   );
+  const archiveTreeAudit = await auditArchivedPdfTree(
+    outDir,
+    new Set([
+      ...documents.map((document) => document.storage_path),
+      ...reviewedPaths,
+    ]),
+    new Set(revocations),
+  );
+  if (archiveTreeAudit.unmanagedOrphans > 0) {
+    warnings.push(
+      `Detected ${archiveTreeAudit.unmanagedOrphans} unreferenced PDF file(s) in the validated archive tree; left untouched pending a separately reviewed cleanup.`,
+    );
+  }
+  if (archiveTreeAudit.unexpectedEntries > 0) {
+    warnings.push(
+      `Detected ${archiveTreeAudit.unexpectedEntries} unexpected archive tree entry or entries; no unmanaged cleanup was attempted.`,
+    );
+  }
 
   const counts = {
     considered: items.length,
-    eligible: decisions.filter((decision) => decision.reason === "eligible_low_risk_publishable_pdf").length,
+    eligible: decisions.filter(
+      (decision) => decision.reason === "eligible_low_risk_publishable_pdf",
+    ).length,
     archived: documents.length,
-    skipped: decisions.filter((decision) => decision.preservation_status === "skipped").length,
-    excluded: decisions.filter((decision) => decision.preservation_status === "excluded").length,
-    human_review_required: decisions.filter((decision) => decision.preservation_status === "human_review_required").length,
-    revoked,
+    skipped: decisions.filter(
+      (decision) => decision.preservation_status === "skipped",
+    ).length,
+    excluded: decisions.filter(
+      (decision) => decision.preservation_status === "excluded",
+    ).length,
+    human_review_required: decisions.filter(
+      (decision) => decision.preservation_status === "human_review_required",
+    ).length,
+    revoked: revocations.length,
   };
 
   return {
-    generated_at: snapshot.retrieved_at,
-    source: snapshot.source,
-    source_url: snapshot.source_url,
-    retrieved_at: snapshot.retrieved_at,
-    verification_status: verificationStatus(snapshot.fetch_method),
-    policy: {
-      eligibility:
-        "Archive only HTTPS official PDFs for records classified public_visibility=publishable and privacy_risk=low.",
-      official_url_host: officialAlboHost(),
-      requires_https: true,
-      content_type: "application/pdf",
-      max_size_bytes: MAX_PUBLIC_PDF_BYTES,
-      storage_path_template: "data/public/albo/documents/<year>/<sha>.pdf",
-      sha256_deduplication: true,
-      no_ocr: true,
-      no_pdf_parsing: true,
-      no_summaries: true,
-      no_rankings: true,
-      privacy_revocation_cleanup: true,
-      paid_storage: false,
+    manifest: {
+      generated_at: snapshot.retrieved_at,
+      source: snapshot.source,
+      source_url: snapshot.source_url,
+      retrieved_at: snapshot.retrieved_at,
+      verification_status: verificationStatus(snapshot.fetch_method),
+      policy: {
+        eligibility:
+          "Archive only HTTPS official PDFs for records classified public_visibility=publishable and privacy_risk=low.",
+        official_url_host: officialAlboHost(),
+        requires_https: true,
+        content_type: "application/pdf",
+        max_size_bytes: MAX_PUBLIC_PDF_BYTES,
+        storage_path_template: "data/public/albo/documents/<year>/<sha>.pdf",
+        sha256_deduplication: true,
+        no_ocr: true,
+        no_pdf_parsing: true,
+        no_summaries: true,
+        no_rankings: true,
+        privacy_revocation_cleanup: true,
+        unmanaged_orphan_cleanup: false,
+        upstream_revalidation: "conditional_get_or_full_get",
+        local_reuse_verification: "path_sha256_size_and_pdf_signature",
+        paid_storage: false,
+      },
+      counts,
+      warnings: unique(warnings),
+      documents,
+      decisions,
     },
-    counts,
-    warnings: unique(warnings),
-    documents,
-    decisions,
+    writes: [...pendingWrites].map(([storagePath, bytes]) => ({
+      storagePath,
+      bytes,
+    })),
+    revocations,
   };
 }
 
-async function revokePrivacyIneligibleArchivedDocuments(
+async function planArchivedDocumentRevocations(
   outDir: string,
-  items: AlboItem[],
-  previousDocuments: Map<string, ArchivedPdfDocument>,
+  previousDocuments: ArchivedPdfDocument[],
   activeDocuments: ArchivedPdfDocument[],
-): Promise<number> {
-  const itemById = new Map(items.map((item) => [item.id, item]));
+  reviewedPaths: Set<string>,
+): Promise<string[]> {
   const activePaths = new Set(
-    activeDocuments.map((document) => document.storage_path),
+    [
+      ...activeDocuments.map((document) => document.storage_path),
+      ...reviewedPaths,
+    ],
   );
-  let revoked = 0;
+  const revocations = new Set<string>();
 
-  for (const previous of previousDocuments.values()) {
-    const current = itemById.get(previous.id);
-    if (
-      !current ||
-      (current.public_visibility === "publishable" &&
-        current.privacy_risk === "low") ||
-      activePaths.has(previous.storage_path)
-    ) {
-      continue;
-    }
-    if (!isReusableStoragePath(previous.storage_path)) {
-      throw new Error(
-        `Unsafe archived PDF path for privacy revocation: ${previous.storage_path}`,
-      );
-    }
+  for (const previous of previousDocuments) {
+    if (activePaths.has(previous.storage_path)) continue;
+    validateArchivedStoragePath(previous.storage_path);
     try {
-      await unlink(absoluteArchivedPdfPath(outDir, previous.storage_path));
-      revoked += 1;
+      const absolutePath = await resolveExistingArchivedPdfPath(
+        outDir,
+        previous.storage_path,
+      );
+      const file = await lstat(absolutePath);
+      if (!file.isFile()) {
+        throw new Error(
+          `Archived PDF revocation target is not a file: ${previous.storage_path}`,
+        );
+      }
+      revocations.add(previous.storage_path);
     } catch (error) {
       if ((error as NodeJS.ErrnoException).code !== "ENOENT") throw error;
     }
   }
 
-  return revoked;
+  return [...revocations];
 }
 
-async function readReusableArchivedDocuments(outDir: string): Promise<Map<string, ArchivedPdfDocument>> {
-  try {
-    const manifestPath = path.join(outDir, "public", "albo", "documents-manifest.json");
-    const manifest = JSON.parse(await readFile(manifestPath, "utf8")) as Partial<AlboDocumentsManifest>;
-    const documents = Array.isArray(manifest.documents) ? manifest.documents : [];
-    return new Map(
-      documents
-        .filter(isReusableArchivedPdfDocument)
-        .map((document) => [document.document_url, document]),
-    );
-  } catch {
-    return new Map();
+async function auditArchivedPdfTree(
+  outDir: string,
+  activePaths: Set<string>,
+  plannedRevocations: Set<string>,
+): Promise<{ unmanagedOrphans: number; unexpectedEntries: number }> {
+  const documentsRoot = await assertArchivedDocumentsRootSafe(outDir);
+  if (!documentsRoot) {
+    return { unmanagedOrphans: 0, unexpectedEntries: 0 };
   }
+  let years: Dirent[];
+  try {
+    years = await readdir(documentsRoot, { withFileTypes: true });
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code === "ENOENT") {
+      return { unmanagedOrphans: 0, unexpectedEntries: 0 };
+    }
+    throw error;
+  }
+
+  let unmanagedOrphans = 0;
+  let unexpectedEntries = 0;
+  for (const year of years) {
+    if (year.isSymbolicLink()) {
+      throw new Error(
+        `Unsafe symlink in archived PDF tree: ${path.join(documentsRoot, year.name)}`,
+      );
+    }
+    if (!year.isDirectory() || !/^\d{4}$/u.test(year.name)) {
+      unexpectedEntries += 1;
+      continue;
+    }
+    const yearPath = await assertArchiveYearDirectorySafe(outDir, year.name);
+    const entries = await readdir(yearPath, {
+      withFileTypes: true,
+    });
+    for (const entry of entries) {
+      const storagePath = `data/public/albo/documents/${year.name}/${entry.name}`;
+      if (entry.isSymbolicLink()) {
+        throw new Error(
+          `Unsafe symlink in archived PDF tree: ${path.join(yearPath, entry.name)}`,
+        );
+      }
+      if (!entry.isFile() || !isArchivedStoragePath(storagePath)) {
+        unexpectedEntries += 1;
+        continue;
+      }
+      if (
+        !activePaths.has(storagePath) &&
+        !plannedRevocations.has(storagePath)
+      ) {
+        unmanagedOrphans += 1;
+      }
+    }
+  }
+
+  return { unmanagedOrphans, unexpectedEntries };
 }
 
-async function reusableArchivedDocument(
+async function readReusableArchivedDocuments(
+  outDir: string,
+  allowMissing: boolean,
+): Promise<ArchivedPdfDocument[]> {
+  const manifestPath = path.join(
+    outDir,
+    "public",
+    "albo",
+    "documents-manifest.json",
+  );
+  let contents: string;
+  try {
+    contents = await readFile(manifestPath, "utf8");
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code === "ENOENT") {
+      if (allowMissing) return [];
+      throw new Error(
+        `Missing previous Albo PDF manifest after an earlier ingestion: ${manifestPath}`,
+        { cause: error },
+      );
+    }
+    throw new Error(`Cannot read previous Albo PDF manifest: ${manifestPath}`, {
+      cause: error,
+    });
+  }
+
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(contents) as unknown;
+  } catch (error) {
+    throw new Error(
+      `Invalid JSON in previous Albo PDF manifest: ${manifestPath}`,
+      {
+        cause: error,
+      },
+    );
+  }
+
+  return validateAlboDocumentsManifest(parsed, manifestPath).documents;
+}
+
+export function validateAlboDocumentsManifest(
+  value: unknown,
+  manifestPath = "Albo PDF manifest",
+): AlboDocumentsManifest {
+  const invalid = (detail: string): never => {
+    throw new Error(
+      `Invalid schema in previous Albo PDF manifest: ${manifestPath} (${detail})`,
+    );
+  };
+  const manifestValue = objectValue(value);
+  if (!manifestValue) invalid("top-level object");
+  const manifest = manifestValue as Record<string, unknown>;
+  if (
+    !isIsoDateString(manifest.generated_at) ||
+    typeof manifest.source !== "string" ||
+    !manifest.source ||
+    !isOfficialAlboHttpsUrl(manifest.source_url) ||
+    !isIsoDateString(manifest.retrieved_at) ||
+    !isVerificationStatus(manifest.verification_status)
+  ) {
+    invalid("identity metadata");
+  }
+
+  const policy = objectValue(manifest.policy);
+  if (
+    !policy ||
+    typeof policy.eligibility !== "string" ||
+    !policy.eligibility ||
+    policy.official_url_host !== officialAlboHost() ||
+    policy.requires_https !== true ||
+    policy.content_type !== "application/pdf" ||
+    policy.max_size_bytes !== MAX_PUBLIC_PDF_BYTES ||
+    policy.storage_path_template !==
+      "data/public/albo/documents/<year>/<sha>.pdf" ||
+    policy.sha256_deduplication !== true ||
+    policy.no_ocr !== true ||
+    policy.no_pdf_parsing !== true ||
+    policy.no_summaries !== true ||
+    policy.no_rankings !== true ||
+    policy.privacy_revocation_cleanup !== true ||
+    policy.unmanaged_orphan_cleanup !== false ||
+    policy.upstream_revalidation !== "conditional_get_or_full_get" ||
+    policy.local_reuse_verification !==
+      "path_sha256_size_and_pdf_signature" ||
+    policy.paid_storage !== false
+  ) {
+    invalid("policy");
+  }
+  if (
+    !Array.isArray(manifest.warnings) ||
+    !manifest.warnings.every((warning) => typeof warning === "string") ||
+    !Array.isArray(manifest.decisions) ||
+    !Array.isArray(manifest.documents)
+  ) {
+    invalid("collections");
+  }
+
+  const decisionValues = manifest.decisions as unknown[];
+  const documentValues = manifest.documents as unknown[];
+  const decisions: Array<PdfPreservationDecision | ArchivedPdfDocument> =
+    decisionValues.map((decision, index) => {
+      if (!isPdfPreservationDecision(decision)) {
+        invalid(`decisions[${index}]`);
+      }
+      return decision as PdfPreservationDecision | ArchivedPdfDocument;
+    });
+  const documents: ArchivedPdfDocument[] = documentValues.map(
+    (document, index) => {
+      if (!isReusableArchivedPdfDocument(document)) {
+        invalid(`documents[${index}]`);
+      }
+      return document as ArchivedPdfDocument;
+    },
+  );
+  if (
+    new Set(decisions.map((decision) => decision.id)).size !== decisions.length
+  ) {
+    invalid("duplicate decision ids");
+  }
+  if (
+    new Set(documents.map((document) => document.id)).size !== documents.length
+  ) {
+    invalid("duplicate document ids");
+  }
+
+  const documentById = new Map(
+    documents.map((document) => [document.id, document]),
+  );
+  for (const decision of decisions) {
+    if (
+      decision.source !== manifest.source ||
+      decision.source_url !== manifest.source_url ||
+      decision.retrieved_at !== manifest.retrieved_at ||
+      decision.verification_status !== manifest.verification_status
+    ) {
+      invalid(`decision ${decision.id} source coherence`);
+    }
+    if (decision.preservation_status === "archived") {
+      const document = documentById.get(decision.id);
+      if (!document || !sameArchivedDecision(decision, document)) {
+        invalid(`archived decision ${decision.id} coherence`);
+      }
+    } else if (documentById.has(decision.id)) {
+      invalid(`non-archived decision ${decision.id} has a document`);
+    }
+  }
+  if (
+    documents.some(
+      (document) =>
+        document.source !== manifest.source ||
+        document.source_url !== manifest.source_url ||
+        document.retrieved_at !== manifest.retrieved_at,
+    )
+  ) {
+    invalid("document source coherence");
+  }
+
+  const countsValue = objectValue(manifest.counts);
+  if (!countsValue) invalid("counts");
+  const counts = countsValue as Record<string, unknown>;
+  const countKeys = [
+    "considered",
+    "eligible",
+    "archived",
+    "skipped",
+    "excluded",
+    "human_review_required",
+    "revoked",
+  ] as const;
+  if (
+    countKeys.some(
+      (key) =>
+        !Number.isSafeInteger(counts[key]) || (counts[key] as number) < 0,
+    )
+  ) {
+    invalid("counts");
+  }
+  const expectedCounts = {
+    considered: decisions.length,
+    eligible: decisions.filter(
+      (decision) => decision.reason === "eligible_low_risk_publishable_pdf",
+    ).length,
+    archived: documents.length,
+    skipped: decisions.filter(
+      (decision) => decision.preservation_status === "skipped",
+    ).length,
+    excluded: decisions.filter(
+      (decision) => decision.preservation_status === "excluded",
+    ).length,
+    human_review_required: decisions.filter(
+      (decision) => decision.preservation_status === "human_review_required",
+    ).length,
+  };
+  if (
+    Object.entries(expectedCounts).some(
+      ([key, expected]) => counts[key] !== expected,
+    )
+  ) {
+    invalid("count coherence");
+  }
+
+  return manifest as unknown as AlboDocumentsManifest;
+}
+
+function isPdfPreservationDecision(
+  value: unknown,
+): value is PdfPreservationDecision | ArchivedPdfDocument {
+  const decision = objectValue(value);
+  if (
+    !decision ||
+    typeof decision.id !== "string" ||
+    !decision.id ||
+    typeof decision.publication_number !== "string" ||
+    typeof decision.source !== "string" ||
+    !isOfficialAlboHttpsUrl(decision.source_url) ||
+    !isIsoDateString(decision.retrieved_at) ||
+    !isPublicVisibility(decision.public_visibility) ||
+    !isPrivacyRisk(decision.privacy_risk) ||
+    !isVerificationStatus(decision.verification_status)
+  ) {
+    return false;
+  }
+  if (decision.preservation_status === "archived") {
+    return (
+      isReusableArchivedPdfDocument(decision) &&
+      isOfficialAlboHttpsUrl(decision.document_url) &&
+      decision.public_visibility === "publishable" &&
+      decision.privacy_risk === "low"
+    );
+  }
+  if (
+    decision.document_url !== undefined ||
+    decision.storage_path !== undefined ||
+    decision.sha256 !== undefined ||
+    decision.size_bytes !== undefined ||
+    decision.content_type !== undefined
+  ) {
+    return false;
+  }
+  if (decision.preservation_status === "excluded") {
+    return decision.reason === "privacy_excluded";
+  }
+  if (decision.preservation_status === "human_review_required") {
+    return decision.reason === "human_review_required";
+  }
+  if (decision.preservation_status === "skipped") {
+    return [
+      "no_document_url",
+      "non_https_document_url",
+      "non_official_document_url",
+      "content_type_not_pdf",
+      "size_limit_exceeded",
+      "fetch_failed",
+    ].includes(String(decision.reason));
+  }
+  return false;
+}
+
+function sameArchivedDecision(
+  decision: PdfPreservationDecision | ArchivedPdfDocument,
+  document: ArchivedPdfDocument,
+): boolean {
+  if (!isArchivedPdfDocument(decision)) return false;
+  return (
+    decision.storage_path === document.storage_path &&
+    decision.sha256 === document.sha256 &&
+    decision.size_bytes === document.size_bytes &&
+    decision.content_type === document.content_type &&
+    decision.document_url === document.document_url
+  );
+}
+
+function previousArchivedDocument(
+  previousDocuments: ArchivedPdfDocument[],
+  itemId: string,
+  documentUrl: string,
+): ArchivedPdfDocument | null {
+  return (
+    previousDocuments.find(
+      (document) =>
+        document.id === itemId && document.document_url === documentUrl,
+    ) ??
+    previousDocuments.find(
+      (document) => document.document_url === documentUrl,
+    ) ??
+    null
+  );
+}
+
+async function verifiedReusableArchivedDocument(
   outDir: string,
   item: AlboItem,
   documentUrl: string,
-  previousDocuments: Map<string, ArchivedPdfDocument>,
+  previous: ArchivedPdfDocument | null,
 ): Promise<ArchivedPdfDocument | null> {
-  const previous = previousDocuments.get(documentUrl);
   if (!previous) return null;
+  const expectedPath = `data/public/albo/documents/${publicationYear(item)}/${previous.sha256}.pdf`;
+  if (
+    previous.storage_path !== expectedPath ||
+    previous.content_type !== "application/pdf" ||
+    previous.size_bytes <= 0 ||
+    previous.size_bytes > MAX_PUBLIC_PDF_BYTES
+  ) {
+    return null;
+  }
   try {
-    await stat(absoluteArchivedPdfPath(outDir, previous.storage_path));
-  } catch {
+    await verifyArchivedPdfFile(outDir, previous, { requireSize: true });
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code === "ENOENT") return null;
+    if (/symlink|escapes the archive root/iu.test(errorMessage(error))) {
+      throw error;
+    }
     return null;
   }
   return {
@@ -2044,14 +2492,21 @@ async function reusableArchivedDocument(
     sha256: previous.sha256,
     size_bytes: previous.size_bytes,
     content_type: previous.content_type,
+    ...(previous.verified_at ? { verified_at: previous.verified_at } : {}),
+    ...(previous.etag ? { etag: previous.etag } : {}),
+    ...(previous.last_modified
+      ? { last_modified: previous.last_modified }
+      : {}),
   };
 }
 
 function isReusableStoragePath(storagePath: string): boolean {
-  return /^data\/public\/albo\/documents\/[0-9]{4}\/[a-f0-9]{64}\.pdf$/i.test(storagePath);
+  return isArchivedStoragePath(storagePath);
 }
 
-function isReusableArchivedPdfDocument(value: unknown): value is ArchivedPdfDocument {
+function isReusableArchivedPdfDocument(
+  value: unknown,
+): value is ArchivedPdfDocument {
   const document = objectValue(value);
   if (!document) return false;
   return (
@@ -2060,28 +2515,76 @@ function isReusableArchivedPdfDocument(value: unknown): value is ArchivedPdfDocu
     typeof document.document_url === "string" &&
     typeof document.storage_path === "string" &&
     typeof document.sha256 === "string" &&
+    /^[a-f0-9]{64}$/iu.test(document.sha256) &&
     typeof document.size_bytes === "number" &&
-    typeof document.content_type === "string" &&
-    isReusableStoragePath(document.storage_path)
+    Number.isSafeInteger(document.size_bytes) &&
+    document.size_bytes > 0 &&
+    document.size_bytes <= MAX_PUBLIC_PDF_BYTES &&
+    document.content_type === "application/pdf" &&
+    typeof document.id === "string" &&
+    typeof document.publication_number === "string" &&
+    typeof document.source === "string" &&
+    typeof document.source_url === "string" &&
+    typeof document.retrieved_at === "string" &&
+    typeof document.public_visibility === "string" &&
+    typeof document.privacy_risk === "string" &&
+    typeof document.verification_status === "string" &&
+    (document.verified_at === undefined ||
+      typeof document.verified_at === "string") &&
+    (document.etag === undefined || typeof document.etag === "string") &&
+    (document.last_modified === undefined ||
+      typeof document.last_modified === "string") &&
+    isReusableStoragePath(document.storage_path) &&
+    document.storage_path.endsWith(`/${document.sha256}.pdf`)
   );
 }
 
-function absoluteArchivedPdfPath(outDir: string, storagePath: string): string {
-  return path.join(outDir, ...storagePath.replace(/^data\//, "").split("/"));
-}
-
-async function fetchAndStorePdf(
+async function fetchAndPlanPdf(
   outDir: string,
   item: AlboItem,
   documentUrl: string,
   pdfFetch: typeof fetch,
-  written: Set<string>,
+  pendingWrites: Map<string, Uint8Array>,
+  previous: ArchivedPdfDocument | null,
 ): Promise<PdfPreservationDecision | ArchivedPdfDocument> {
   const base = pdfDecisionBase(item);
+  const reusable = await verifiedReusableArchivedDocument(
+    outDir,
+    item,
+    documentUrl,
+    previous,
+  );
+  const conditionalHeaders = new Headers();
+  if (reusable?.etag) conditionalHeaders.set("if-none-match", reusable.etag);
+  if (reusable?.last_modified) {
+    conditionalHeaders.set("if-modified-since", reusable.last_modified);
+  }
 
   try {
-    const response = await pdfFetch(documentUrl);
+    const response = await fetchOfficialPdfWithValidatedRedirects(
+      documentUrl,
+      pdfFetch,
+      conditionalHeaders,
+    );
+    if (response.status === 304) {
+      if (
+        !reusable ||
+        (!conditionalHeaders.has("if-none-match") &&
+          !conditionalHeaders.has("if-modified-since"))
+      ) {
+        return {
+          ...base,
+          preservation_status: "skipped",
+          reason: "fetch_failed",
+        };
+      }
+      return {
+        ...reusable,
+        verified_at: item.retrieved_at,
+      };
+    }
     if (!response.ok) {
+      await cancelResponseBody(response);
       return {
         ...base,
         preservation_status: "skipped",
@@ -2089,8 +2592,11 @@ async function fetchAndStorePdf(
       };
     }
 
-    const contentType = normalizeContentType(response.headers.get("content-type"));
+    const contentType = normalizeContentType(
+      response.headers.get("content-type"),
+    );
     if (contentType !== "application/pdf") {
+      await cancelResponseBody(response);
       return {
         ...base,
         preservation_status: "skipped",
@@ -2098,8 +2604,11 @@ async function fetchAndStorePdf(
       };
     }
 
-    const declaredSize = parseContentLength(response.headers.get("content-length"));
+    const declaredSize = parseContentLength(
+      response.headers.get("content-length"),
+    );
     if (declaredSize !== null && declaredSize > MAX_PUBLIC_PDF_BYTES) {
+      await cancelResponseBody(response);
       return {
         ...base,
         preservation_status: "skipped",
@@ -2107,23 +2616,41 @@ async function fetchAndStorePdf(
       };
     }
 
-    const bytes = new Uint8Array(await response.arrayBuffer());
-    if (bytes.byteLength > MAX_PUBLIC_PDF_BYTES) {
+    const bytes = await readResponseBodyWithinLimit(
+      response,
+      MAX_PUBLIC_PDF_BYTES,
+    );
+    if (!bytes) {
       return {
         ...base,
         preservation_status: "skipped",
         reason: "size_limit_exceeded",
+      };
+    }
+    if (
+      (declaredSize !== null && declaredSize !== bytes.byteLength) ||
+      !hasPdfSignature(bytes)
+    ) {
+      return {
+        ...base,
+        preservation_status: "skipped",
+        reason:
+          declaredSize !== null && declaredSize !== bytes.byteLength
+            ? "fetch_failed"
+            : "content_type_not_pdf",
       };
     }
 
     const digest = sha256Bytes(bytes);
     const year = publicationYear(item);
     const storagePath = `data/public/albo/documents/${year}/${digest}.pdf`;
-    const absoluteStoragePath = path.join(outDir, "public", "albo", "documents", year, `${digest}.pdf`);
-    if (!written.has(absoluteStoragePath)) {
-      await mkdir(path.dirname(absoluteStoragePath), { recursive: true });
-      await writeFile(absoluteStoragePath, bytes);
-      written.add(absoluteStoragePath);
+    if (
+      !reusable ||
+      reusable.sha256 !== digest ||
+      reusable.size_bytes !== bytes.byteLength ||
+      reusable.storage_path !== storagePath
+    ) {
+      pendingWrites.set(storagePath, bytes);
     }
 
     return {
@@ -2135,6 +2662,8 @@ async function fetchAndStorePdf(
       sha256: digest,
       size_bytes: bytes.byteLength,
       content_type: contentType,
+      verified_at: item.retrieved_at,
+      ...headerMetadata(response),
     };
   } catch {
     return {
@@ -2143,6 +2672,109 @@ async function fetchAndStorePdf(
       reason: "fetch_failed",
     };
   }
+}
+
+async function fetchOfficialPdfWithValidatedRedirects(
+  initialUrl: string,
+  pdfFetch: typeof fetch,
+  headers: Headers,
+): Promise<Response> {
+  const visited = new Set<string>();
+  let currentUrl = initialUrl;
+  for (let hop = 0; hop <= 5; hop += 1) {
+    const official = resolveOfficialDocumentUrl(currentUrl);
+    if (!official.href || visited.has(official.href)) {
+      throw new Error(`Unsafe or cyclic official PDF redirect: ${currentUrl}`);
+    }
+    visited.add(official.href);
+    const response = await pdfFetch(official.href, {
+      headers,
+      redirect: "manual",
+    });
+    if (
+      response.url &&
+      resolveOfficialDocumentUrl(response.url).href === null
+    ) {
+      await cancelResponseBody(response);
+      throw new Error("PDF fetch resolved outside the official HTTPS host");
+    }
+    if (![301, 302, 303, 307, 308].includes(response.status)) {
+      return response;
+    }
+    const location = response.headers.get("location");
+    await cancelResponseBody(response);
+    if (!location || hop === 5) {
+      throw new Error("Invalid or excessive official PDF redirect chain");
+    }
+    currentUrl = new URL(location, official.href).href;
+  }
+  throw new Error("Excessive official PDF redirect chain");
+}
+
+async function readResponseBodyWithinLimit(
+  response: Response,
+  maxBytes: number,
+): Promise<Uint8Array | null> {
+  if (!response.body) return new Uint8Array();
+  const reader = response.body.getReader();
+  const chunks: Uint8Array[] = [];
+  let total = 0;
+  try {
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      if (!value) continue;
+      total += value.byteLength;
+      if (total > maxBytes) {
+        try {
+          await reader.cancel("Albo public PDF size limit exceeded");
+        } catch {
+          // The byte cap remains authoritative even if cancellation reports an error.
+        }
+        return null;
+      }
+      chunks.push(value);
+    }
+  } catch (error) {
+    try {
+      await reader.cancel(error);
+    } catch {
+      // Preserve the stream read failure.
+    }
+    throw error;
+  }
+
+  const bytes = new Uint8Array(total);
+  let offset = 0;
+  for (const chunk of chunks) {
+    bytes.set(chunk, offset);
+    offset += chunk.byteLength;
+  }
+  return bytes;
+}
+
+async function cancelResponseBody(response: Response): Promise<void> {
+  try {
+    await response.body?.cancel();
+  } catch {
+    // Cancellation is best-effort after the response has already been rejected.
+  }
+}
+
+function headerMetadata(
+  response: Response,
+): Pick<ArchivedPdfDocument, "etag" | "last_modified"> {
+  const etag = nullable(response.headers.get("etag"));
+  const lastModified = nullable(response.headers.get("last-modified"));
+  return {
+    ...(etag ? { etag } : {}),
+    ...(lastModified ? { last_modified: lastModified } : {}),
+  };
+}
+
+function hasPdfSignature(bytes: Uint8Array): boolean {
+  const prefix = new TextDecoder("latin1").decode(bytes.slice(0, 1024));
+  return prefix.includes("%PDF-");
 }
 
 function pdfDecisionBase(item: AlboItem): Omit<PdfPreservationDecision, "document_url" | "preservation_status" | "reason"> {
@@ -2172,6 +2804,7 @@ async function writeArtifacts(
   delibereArchive: DelibereArchive,
   publicStatus: AlboPublicStatus,
   runLog: string,
+  pdfArchivePlan: PdfArchivePlan,
 ): Promise<RunResult["paths"]> {
   const paths = {
     currentSnapshot: path.join(outDir, "snapshots", "albo", "current.json"),
@@ -2200,23 +2833,50 @@ async function writeArtifacts(
     publicStatus: path.join(outDir, "public", "albo", "status.json"),
     runLog: path.join(outDir, "public", "albo", "run-latest.md"),
   };
-  await Promise.all(Object.values(paths).map((filePath) => mkdir(path.dirname(filePath), { recursive: true })));
-  await writeJson(paths.currentSnapshot, snapshot);
-  await writeJson(paths.historySnapshot, snapshot);
-  await writeJson(paths.processedItems, {
+
+  const pdfWrites = await Promise.all(
+    pdfArchivePlan.writes.map(async ({ storagePath, bytes }) => ({
+      target: await prepareArchivedPdfWritePath(outDir, storagePath),
+      contents: bytes,
+    })),
+  );
+  const pdfRevocations = await Promise.all(
+    pdfArchivePlan.revocations.map((storagePath) =>
+      resolveExistingArchivedPdfPath(outDir, storagePath),
+    ),
+  );
+  const processed = {
     generated_at: snapshot.retrieved_at,
     source: snapshot.source,
     source_url: snapshot.source_url,
     retrieved_at: snapshot.retrieved_at,
     items,
-  });
-  await writeJson(paths.publicLatest, publicLatest);
-  await writeJson(paths.publicDiff, publicDiff);
-  await writeJson(paths.documentsManifest, documentsManifest);
-  await writeJson(paths.delibereArchive, delibereArchive);
-  await writeJson(paths.publicStatus, publicStatus);
-  await writeFile(paths.runLog, runLog, "utf8");
+  };
+  await promoteAlboArtifactBatch(
+    [
+      ...pdfWrites,
+      { target: paths.currentSnapshot, contents: jsonText(snapshot) },
+      { target: paths.historySnapshot, contents: jsonText(snapshot) },
+      { target: paths.processedItems, contents: jsonText(processed) },
+      { target: paths.publicLatest, contents: jsonText(publicLatest) },
+      { target: paths.publicDiff, contents: jsonText(publicDiff) },
+      { target: paths.delibereArchive, contents: jsonText(delibereArchive) },
+      { target: paths.publicStatus, contents: jsonText(publicStatus) },
+      { target: paths.runLog, contents: runLog },
+      // The serving allow-list is promoted last, after every referenced PDF.
+      {
+        target: paths.documentsManifest,
+        contents: jsonText(documentsManifest),
+      },
+    ],
+    pdfRevocations,
+    { outDir },
+  );
   return paths;
+}
+
+function jsonText(value: unknown): string {
+  return `${JSON.stringify(value, null, 2)}\n`;
 }
 
 function countRun(
@@ -2237,21 +2897,73 @@ function countRun(
 }
 
 async function readSnapshot(filePath: string): Promise<AlboRawSnapshot | null> {
+  let raw: string;
   try {
-    const value = JSON.parse(await readFile(filePath, "utf8")) as unknown;
-    return isSnapshot(value) ? value : null;
-  } catch {
-    return null;
+    raw = await readFile(filePath, "utf8");
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code === "ENOENT") return null;
+    throw new Error(`Cannot read previous Albo snapshot: ${filePath}`, {
+      cause: error,
+    });
   }
+  let value: unknown;
+  try {
+    value = JSON.parse(raw) as unknown;
+  } catch (error) {
+    throw new Error(`Invalid JSON in previous Albo snapshot: ${filePath}`, {
+      cause: error,
+    });
+  }
+  if (!isSnapshot(value)) {
+    throw new Error(`Invalid schema in previous Albo snapshot: ${filePath}`);
+  }
+  return value;
 }
 
 async function readPublicLatest(filePath: string): Promise<PublicLatest | null> {
+  let raw: string;
   try {
-    const value = JSON.parse(await readFile(filePath, "utf8")) as unknown;
-    return isPublicLatest(value) ? value : null;
-  } catch {
-    return null;
+    raw = await readFile(filePath, "utf8");
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code === "ENOENT") return null;
+    throw new Error(`Cannot read previous public Albo data: ${filePath}`, {
+      cause: error,
+    });
   }
+  let value: unknown;
+  try {
+    value = JSON.parse(raw) as unknown;
+  } catch (error) {
+    throw new Error(`Invalid JSON in previous public Albo data: ${filePath}`, {
+      cause: error,
+    });
+  }
+  if (!isPublicLatest(value)) {
+    throw new Error(`Invalid schema in previous public Albo data: ${filePath}`);
+  }
+  return value;
+}
+
+async function isPristineAlboLifecycle(outDir: string): Promise<boolean> {
+  const managedRoots = [
+    path.join(outDir, "snapshots", "albo"),
+    path.join(outDir, "processed", "albo"),
+    path.join(outDir, "public", "albo"),
+  ];
+  for (const managedRoot of managedRoots) {
+    try {
+      await lstat(managedRoot);
+      return false;
+    } catch (error) {
+      if ((error as NodeJS.ErrnoException).code !== "ENOENT") {
+        throw new Error(
+          `Cannot inspect previous Albo lifecycle state: ${managedRoot}`,
+          { cause: error },
+        );
+      }
+    }
+  }
+  return true;
 }
 
 async function readDelibereArchive(
@@ -2508,13 +3220,29 @@ function countVisibility(items: AlboItem[], visibility: PublicVisibility): numbe
   return items.filter((item) => item.public_visibility === visibility).length;
 }
 
-function resolveOfficialDocumentUrl(value: string | null): { href: string | null; reason: PdfPreservationReason } {
+function resolveOfficialDocumentUrl(value: string | null): {
+  href: string | null;
+  reason: PdfPreservationReason;
+} {
   if (!value) return { href: null, reason: "no_document_url" };
   try {
     const url = new URL(value, ALBO_PRETORIO_LAMEZIA_SOURCE.sourceUrl);
-    if (url.host !== officialAlboHost()) return { href: null, reason: "non_official_document_url" };
-    if (url.protocol === "https:") return { href: url.href, reason: "eligible_low_risk_publishable_pdf" };
-    if (url.protocol === "http:") return { href: null, reason: "non_https_document_url" };
+    if (
+      url.host !== officialAlboHost() ||
+      url.username !== "" ||
+      url.password !== ""
+    ) {
+      return { href: null, reason: "non_official_document_url" };
+    }
+    if (url.protocol === "https:") {
+      return {
+        href: url.href,
+        reason: "eligible_low_risk_publishable_pdf",
+      };
+    }
+    if (url.protocol === "http:") {
+      return { href: null, reason: "non_https_document_url" };
+    }
     return { href: null, reason: "non_official_document_url" };
   } catch {
     return { href: null, reason: "non_official_document_url" };
@@ -2568,10 +3296,6 @@ function usage(): string {
     "Fetches the Comune di Lamezia Terme Albo Pretorio from Tinnvision.",
     "The command tries XML and CSV exports first, then falls back to print/HTML parsing only when needed.",
   ].join("\n");
-}
-
-async function writeJson(filePath: string, value: unknown): Promise<void> {
-  await writeFile(filePath, `${JSON.stringify(value, null, 2)}\n`, "utf8");
 }
 
 function sha256(value: unknown): string {
@@ -2730,6 +3454,46 @@ function isPublicationPresentation(value: unknown): value is PublicationPresenta
     typeof standardisation.profile_version === "string" &&
     standardisation.input_field === "subject"
   );
+}
+
+function isIsoDateString(value: unknown): value is string {
+  return (
+    typeof value === "string" &&
+    value.length > 0 &&
+    Number.isFinite(Date.parse(value))
+  );
+}
+
+function isOfficialAlboHttpsUrl(value: unknown): value is string {
+  return (
+    typeof value === "string" &&
+    resolveOfficialDocumentUrl(value).href !== null
+  );
+}
+
+function isVerificationStatus(value: unknown): value is VerificationStatus {
+  return [
+    "official_source_acquired",
+    "normalised_automatically",
+    "verification_required",
+  ].includes(String(value));
+}
+
+function isPublicVisibility(value: unknown): value is PublicVisibility {
+  return [
+    "publishable",
+    "publishable_with_minimisation",
+    "metadata_only",
+    "do_not_publish",
+  ].includes(String(value));
+}
+
+function isPrivacyRisk(value: unknown): value is PrivacyRisk {
+  return ["low", "medium", "high"].includes(String(value));
+}
+
+function errorMessage(error: unknown): string {
+  return error instanceof Error ? error.message : String(error);
 }
 
 function unique(values: string[]): string[] {

@@ -16,8 +16,11 @@
     "no_pdf_parsing": true,
     "no_summaries": true,
     "no_rankings": true,
+    "paid_storage": false,
     "privacy_revocation_cleanup": true,
-    "paid_storage": false
+    "unmanaged_orphan_cleanup": false,
+    "upstream_revalidation": "conditional_get_or_full_get",
+    "local_reuse_verification": "path_sha256_size_and_pdf_signature"
   },
   "counts": {
     "considered": 76,
