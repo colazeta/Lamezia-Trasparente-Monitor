@@ -1,0 +1,19 @@
+{
+  "schema_version": "albo-reviewed-document-serving.v1",
+  "reviewed_at": "2026-08-30T00:00:00.000Z",
+  "source": "Albo Pretorio online del Comune di Lamezia Terme (piattaforma Tinnvision)",
+  "source_url": "https://albo.tinnvision.cloud/albo/00301390795",
+  "known_limits": [
+    "Questa lista contiene soltanto documenti storici gia' revisionati e richiamati da una sezione civica; non autorizza automaticamente gli altri PDF presenti nell'archivio fisico."
+  ],
+  "documents": [
+    {
+      "storage_path": "data/public/albo/documents/2026/842702b2044b4b6f9a7b21a65eac2ab59866ee3f321872e6b28fd481598be304.pdf",
+      "sha256": "842702b2044b4b6f9a7b21a65eac2ab59866ee3f321872e6b28fd481598be304",
+      "source_publication_number": "2026/2648",
+      "review_status": "approved_public_civic_document",
+      "evidence_ref": "docs/data-sources/council-and-commission-sessions.md",
+      "reason": "Documento istituzionale gia' revisionato e usato come fonte della sezione sulle commissioni consiliari."
+    }
+  ]
+}

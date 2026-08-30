@@ -1,9 +1,16 @@
-import { existsSync, readFileSync, readdirSync, statSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { defineConfig, type Plugin } from "vite";
 import react from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
 import path from "path";
 import runtimeErrorOverlay from "@replit/vite-plugin-runtime-error-modal";
+
+import {
+  ALBO_DOCUMENT_PREFIX,
+  alboDocumentServingFiles,
+  pruneUnallowlistedAlboDocumentFiles,
+  readVerifiedAlboDocument,
+} from "./albo-document-serving";
 
 const rawPort = process.env.PORT ?? "8081";
 
@@ -20,8 +27,6 @@ const atlantePublicDataFiles = [
   "data/processed/territorio/istat_sezioni_censimento_lamezia.metadata.json",
   "data/processed/territorio/istat_indicator_dictionary.json",
 ];
-const alboDocumentPrefix = "data/public/albo/documents/";
-
 function repoPublicDataPlugin(): Plugin {
   return {
     name: "repo-public-data",
@@ -34,7 +39,8 @@ function repoPublicDataPlugin(): Plugin {
           atlantePublicDataFiles.find(
             (candidate) => requestPath === `/${candidate}`,
           ) ??
-          (requestPath.startsWith(`/${alboDocumentPrefix}`) && /\.pdf$/i.test(requestPath)
+          (requestPath.startsWith(`/${ALBO_DOCUMENT_PREFIX}`) &&
+          /\.pdf$/i.test(requestPath)
             ? requestPath.slice(1)
             : null);
 
@@ -43,54 +49,55 @@ function repoPublicDataPlugin(): Plugin {
           return;
         }
 
-        const sourcePath = path.join(repoRoot, relativePath);
-        if (!existsSync(sourcePath)) {
+        const source = relativePath.startsWith(ALBO_DOCUMENT_PREFIX)
+          ? readVerifiedAlboDocument(repoRoot, relativePath)
+          : readRepoFile(relativePath);
+        if (!source) {
           next();
           return;
         }
 
         response.statusCode = 200;
         response.setHeader("Content-Type", contentTypeFor(relativePath));
-        response.end(readFileSync(sourcePath));
+        response.end(source);
       });
     },
     generateBundle() {
-      for (const relativePath of [...atlantePublicDataFiles, ...alboDocumentFiles()]) {
-        const sourcePath = path.join(repoRoot, relativePath);
-        if (!existsSync(sourcePath)) {
+      for (const relativePath of [
+        ...atlantePublicDataFiles,
+        ...alboDocumentServingFiles(repoRoot),
+      ]) {
+        const source = relativePath.startsWith(ALBO_DOCUMENT_PREFIX)
+          ? readVerifiedAlboDocument(repoRoot, relativePath)
+          : readRepoFile(relativePath);
+        if (!source) {
+          if (relativePath.startsWith(ALBO_DOCUMENT_PREFIX)) {
+            throw new Error(
+              `Allow-listed Albo PDF is missing or has an invalid digest: ${relativePath}`,
+            );
+          }
           continue;
         }
 
         this.emitFile({
           type: "asset",
           fileName: relativePath,
-          source: readFileSync(sourcePath),
+          source,
         });
       }
+    },
+    writeBundle(outputOptions) {
+      const outputDir = outputOptions.dir
+        ? path.resolve(outputOptions.dir)
+        : path.resolve(import.meta.dirname, "dist/public");
+      pruneUnallowlistedAlboDocumentFiles(repoRoot, outputDir);
     },
   };
 }
 
-function alboDocumentFiles(): string[] {
-  const root = path.join(repoRoot, alboDocumentPrefix);
-  if (!existsSync(root)) return [];
-
-  const files: string[] = [];
-  const visit = (dir: string) => {
-    for (const entry of readdirSync(dir)) {
-      const fullPath = path.join(dir, entry);
-      const stat = statSync(fullPath);
-      if (stat.isDirectory()) {
-        visit(fullPath);
-        continue;
-      }
-      if (stat.isFile() && /\.pdf$/i.test(entry)) {
-        files.push(path.relative(repoRoot, fullPath).replace(/\\/g, "/"));
-      }
-    }
-  };
-  visit(root);
-  return files;
+function readRepoFile(relativePath: string): Buffer | null {
+  const sourcePath = path.join(repoRoot, relativePath);
+  return existsSync(sourcePath) ? readFileSync(sourcePath) : null;
 }
 
 function contentTypeFor(filePath: string) {

@@ -15,17 +15,17 @@ flowchart TD
   C --> D[Validazione e source health]
   D --> E[Normalizzazione dominio]
   E --> F[(PostgreSQL / modello locale)]
-  E --> G[Object storage / allegati e copie]
-  F --> H[Data-access layer pubblico]
-  H --> I[REST /api/public/v1]
-  H --> J[MCP /api/mcp]
-  F --> K[Web app]
-  F --> L[Mobile app]
-  F --> M[Open data / DCAT-AP_IT / CKAN compatibile]
+  C --> G[Object storage / allegati e copie]
+  F --> H[Proiezione public-safe]
+  H --> I[Standardizzazione di presentazione]
+  I --> J[Data-access layer pubblico]
+  J --> K[REST e MCP]
+  J --> L[Web e mobile]
+  J --> M[Open data]
   N[Arricchimenti locali: AI, mapping, sintesi, temi] --> F
 ```
 
-La regola centrale è che la piattaforma non espone direttamente scraper, parser o fonti remote nelle pagine pubbliche. Ogni dato deve passare almeno da acquisizione, normalizzazione, conservazione della provenienza e controllo dei limiti.
+La regola centrale è che la piattaforma non espone direttamente scraper, parser o fonti remote nelle pagine pubbliche. Ogni dato deve passare almeno da acquisizione, normalizzazione, conservazione della provenienza, controllo di pubblicabilita' e standardizzazione verificabile della presentazione.
 
 ## Livelli dell'architettura
 
@@ -112,7 +112,17 @@ La normalizzazione non deve eliminare il riferimento alla fonte. Ogni entità pu
 - quanto è granulare?
 - quali limiti deve conoscere l'utente?
 
-### 6. Data-access layer pubblico
+### 6. Proiezione public-safe e standardizzazione di presentazione
+
+La proiezione public-safe decide quali campi possono essere pubblicati e quali
+devono essere minimizzati o esclusi. Solo dopo questa decisione il layer di
+presentazione puo' produrre titoli leggibili, formule di ricerca o label
+standardizzate. Non riceve dati rimossi e non modifica il campo ufficiale.
+
+Il contratto, le regole e la matrice di adozione sono definiti in
+[`publication-standardisation.md`](publication-standardisation.md).
+
+### 7. Data-access layer pubblico
 
 Le superfici pubbliche REST e MCP devono leggere dallo stesso data-access layer quando espongono gli stessi dati. Questa regola è già applicata nella documentazione del server pubblico: REST è montata su `/api/public/v1`, MCP su `/api/mcp`, ma entrambe condividono la stessa logica dati quando il dominio coincide.
 
@@ -137,6 +147,7 @@ Ogni nuova integrazione deve includere almeno:
 | Conservazione | snapshot o riferimento stabile al payload, quando possibile |
 | Qualità | validazione campi obbligatori, duplicati, stato assenza dati |
 | Pubblicazione | distinzione tra dato ufficiale, dato normalizzato e dato editoriale |
+| Standardizzazione | profilo versionato, campo ufficiale preservato, audit delle regole e casi ambigui in revisione |
 | API | endpoint versionati o inseriti in superficie versionata; envelope coerente |
 | MCP | tool read-only, coerente con REST dove il dominio coincide |
 | UI | badge fonte, data aggiornamento, caveat e linguaggio non accusatorio |
@@ -230,6 +241,7 @@ Sono vietati senza metodologia separata:
 - [ ] È definito se il dato entra in UI, REST, MCP, open data o solo audit.
 - [ ] È definito il fallback in caso di fonte non raggiungibile.
 - [ ] Gli eventuali dati personali sono minimizzati.
+- [ ] La standardizzazione di presentazione opera soltanto sui campi public-safe e conserva il dato ufficiale.
 - [ ] Il copy pubblico è prudente e non accusatorio.
 - [ ] I dati federati non sovrascrivono dati locali senza revisione.
 - [ ] Sono previsti test, source health o almeno una checklist manuale.
