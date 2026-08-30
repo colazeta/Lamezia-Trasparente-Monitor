@@ -167,7 +167,14 @@ export function parseDemoFormContract(
       `ISTAT demo schema changed: form-0 hid-i=${table ?? "missing"}, expected ${expectedTable}`,
     );
   }
-  for (const required of ["hid-i", "hid-a", "hid-l", "hid-cat", "hid-dati", "hid-tavola"]) {
+  for (const required of [
+    "hid-i",
+    "hid-a",
+    "hid-l",
+    "hid-cat",
+    "hid-dati",
+    "hid-tavola",
+  ]) {
     if (!(required in fixedFields)) {
       throw new Error(`ISTAT demo schema changed: hidden field ${required} missing`);
     }
@@ -177,7 +184,11 @@ export function parseDemoFormContract(
     /<select\b[^>]*name=["']a["'][^>]*>([\s\S]*?)<\/select>/i,
   );
   if (!yearSelect) throw new Error("ISTAT demo schema changed: year selector a missing");
-  const years = [...yearSelect[1].matchAll(/<option\b[^>]*value=["']?(\d{4})["']?[^>]*>/gi)]
+  const years = [
+    ...yearSelect[1].matchAll(
+      /<option\b[^>]*value=["']?(\d{4})["']?[^>]*>/gi,
+    ),
+  ]
     .map((item) => Number(item[1]))
     .filter(Number.isInteger);
   const uniqueYears = [...new Set(years)].sort((left, right) => left - right);
@@ -195,7 +206,9 @@ export function buildPayloadFromContract(
   year: number,
 ): Record<string, string> {
   if (!contract.years.includes(year)) {
-    throw new Error(`ISTAT demo ${contract.table}: year ${year} not declared by form-0`);
+    throw new Error(
+      `ISTAT demo ${contract.table}: year ${year} not declared by form-0`,
+    );
   }
   return {
     ...contract.fixedFields,
@@ -209,12 +222,11 @@ export function buildPayloadFromContract(
 }
 
 function columnTitle(column: { data: string; title: string }) {
-  return normalizeDemoLabel(column.title);
+  return normalizeDemoLabel(`${column.title} ${column.data}`);
 }
 
 function isFinalPopulationStart(title: string) {
   return (
-    title.includes("popolazione censita al 1 gennaio") ||
     title.includes("popolazione censita al 1 gennaio") ||
     title.includes("popolazione censita al primo gennaio")
   );
@@ -224,47 +236,118 @@ function isFinalPopulationEnd(title: string) {
   return title.includes("popolazione censita al 31 dicembre");
 }
 
+function isTotalColumn(column: { data: string; title: string }) {
+  const text = columnTitle(column);
+  const key = column.data.toLowerCase();
+  return (
+    text.includes(" totale") ||
+    text.startsWith("totale ") ||
+    text.endsWith(" totale") ||
+    /(?:^|[_-])(tot|totale|t|9)$/.test(key)
+  );
+}
+
+function isSexSpecificColumn(column: { data: string; title: string }) {
+  const text = columnTitle(column);
+  const key = column.data.toLowerCase();
+  return (
+    text.includes(" maschi") ||
+    text.includes(" femmine") ||
+    text.includes(" males") ||
+    text.includes(" females") ||
+    /(?:^|[_-])(m|f|maschi|femmine|males|females|1|2)$/.test(key)
+  );
+}
+
+function normalizeColumnSemanticTitle(column: { data: string; title: string }) {
+  const original = columnTitle(column);
+  if (isFinalPopulationStart(original)) {
+    return { ...column, title: `Popolazione iniziale · ${column.title}` };
+  }
+  if (isFinalPopulationEnd(original)) {
+    return { ...column, title: `Popolazione finale · ${column.title}` };
+  }
+  if (original.includes("altri iscritti")) {
+    return { ...column, title: `Iscritti per altri motivi · ${column.title}` };
+  }
+  if (original.includes("altri cancellati")) {
+    return { ...column, title: `Cancellati per altri motivi · ${column.title}` };
+  }
+  return { ...column };
+}
+
+function columnPriority(
+  column: { data: string; title: string },
+  granularity: BalanceGranularity,
+) {
+  const text = columnTitle(column);
+  let priority = 0;
+  if (isTotalColumn(column)) priority += 100;
+  if (isSexSpecificColumn(column)) priority -= 50;
+  if (
+    granularity === "annual" &&
+    (text.includes("popolazione iniziale popolazione censita") ||
+      text.includes("popolazione finale popolazione censita"))
+  ) {
+    priority += 200;
+  }
+  return priority;
+}
+
 /**
- * Adatta soltanto i metadati di colonna del bilancio annuale al vocabolario
- * canonico usato dal parser comune. I valori grezzi e le chiavi `data` restano
- * immutati. Se coesistono stock provvisori e censiti, la versione censita viene
- * portata davanti e resa semanticamente preferibile.
+ * Rende il parser indipendente dal layout del sesso usato dalla risposta.
+ * Alcune tavole esprimono Maschi/Femmine/Totale come righe, altre come colonne:
+ * in quest'ultimo caso portiamo le colonne Totale davanti alle corrispondenti
+ * colonne specifiche per sesso. Le righe non vengono alterate. Per gli stock
+ * annuali, la popolazione censita definitiva ha priorità sulla provvisoria.
+ *
+ * Se la risposta contiene chiavi non elencate in `datatable.columns`, le
+ * aggiungiamo come candidati tecnici usando il nome della chiave come titolo;
+ * il parser core continuerà comunque a fallire se non riconosce le sei poste
+ * obbligatorie, evitando pubblicazioni parziali o ambigue.
  */
 export function prepareBalanceResponse(
   response: DemoIstatResponse,
   granularity: BalanceGranularity,
 ): { response: DemoIstatResponse; hasFinalAnnualStocks: boolean } {
-  if (granularity !== "annual" || !response.datatable?.columns) {
-    return { response, hasFinalAnnualStocks: false };
-  }
+  const datatable = response.datatable;
+  if (!datatable) return { response, hasFinalAnnualStocks: false };
+
+  const declared = datatable.columns ?? [];
+  const declaredKeys = new Set(declared.map((column) => column.data));
+  const firstRow = datatable.data?.[0] ?? {};
+  const synthetic = Object.keys(firstRow)
+    .filter((key) => !declaredKeys.has(key))
+    .map((key) => ({ data: key, title: key }));
 
   let hasFinalStart = false;
   let hasFinalEnd = false;
-  const columns = response.datatable.columns.map((column) => {
-    const title = columnTitle(column);
-    if (isFinalPopulationStart(title)) {
+  const normalized = [...declared, ...synthetic].map((column) => {
+    const original = columnTitle(column);
+    if (granularity === "annual" && isFinalPopulationStart(original)) {
       hasFinalStart = true;
-      return { ...column, title: `Popolazione iniziale · ${column.title}` };
     }
-    if (isFinalPopulationEnd(title)) {
+    if (granularity === "annual" && isFinalPopulationEnd(original)) {
       hasFinalEnd = true;
-      return { ...column, title: `Popolazione finale · ${column.title}` };
     }
-    return { ...column };
+    return normalizeColumnSemanticTitle(column);
   });
 
-  const preferred = columns.filter((column) => {
-    const title = columnTitle(column);
-    return title.includes("popolazione iniziale popolazione censita") ||
-      title.includes("popolazione finale popolazione censita");
-  });
-  const rest = columns.filter((column) => !preferred.includes(column));
+  const ordered = normalized
+    .map((column, index) => ({
+      column,
+      index,
+      priority: columnPriority(column, granularity),
+    }))
+    .sort((left, right) => right.priority - left.priority || left.index - right.index)
+    .map((item) => item.column);
+
   return {
     response: {
       ...response,
       datatable: {
-        ...response.datatable,
-        columns: [...preferred, ...rest],
+        ...datatable,
+        columns: ordered,
       },
     },
     hasFinalAnnualStocks: hasFinalStart && hasFinalEnd,
@@ -288,13 +371,17 @@ export function refineAnnualStatus(
   });
 }
 
-async function fetchContract(granularity: BalanceGranularity): Promise<DemoFormContract> {
+async function fetchContract(
+  granularity: BalanceGranularity,
+): Promise<DemoFormContract> {
   const table = tableCode(granularity);
   const response = await fetch(sourceUrl(granularity), {
     headers: { "User-Agent": USER_AGENT },
   });
   if (!response.ok) {
-    throw new Error(`ISTAT demo ${table} schema fetch failed with status ${response.status}`);
+    throw new Error(
+      `ISTAT demo ${table} schema fetch failed with status ${response.status}`,
+    );
   }
   return parseDemoFormContract(await response.text(), table);
 }
@@ -314,14 +401,18 @@ async function fetchYear(
     body: new URLSearchParams(buildPayloadFromContract(contract, year)).toString(),
   });
   if (!response.ok) {
-    throw new Error(`ISTAT demo ${contract.table}/${year} failed with status ${response.status}`);
+    throw new Error(
+      `ISTAT demo ${contract.table}/${year} failed with status ${response.status}`,
+    );
   }
   const raw = await response.text();
   let parsed: DemoIstatResponse;
   try {
     parsed = JSON.parse(raw) as DemoIstatResponse;
   } catch {
-    throw new Error(`ISTAT demo ${contract.table}/${year} returned non-JSON payload`);
+    throw new Error(
+      `ISTAT demo ${contract.table}/${year} returned non-JSON payload`,
+    );
   }
   if (!parsed.Status) {
     throw new Error(
@@ -369,7 +460,10 @@ async function ensureSeries(
 }
 
 function payloadHash(table: string, year: number, raw: string) {
-  return createHash("sha256").update(`${table}:${year}:`).update(raw).digest("hex");
+  return createHash("sha256")
+    .update(`${table}:${year}:`)
+    .update(raw)
+    .digest("hex");
 }
 
 function flags(status: DemographicSourceStatus) {
@@ -426,8 +520,9 @@ async function persistField(
           granularity,
           caption: response.caption ?? null,
           note: response.nota ?? null,
-          parserVersion: 2,
+          parserVersion: 3,
           contractMode: "self-describing-form-0",
+          sexLayout: "row-or-column-total-preferred",
         },
       })
       .returning({ id: demographicReleasesTable.id });
@@ -480,7 +575,12 @@ async function yearAlreadyPresent(
 
 async function feedStatus(
   granularity: BalanceGranularity,
-  result: { status: "ok" | "error"; observations: number; releases: number; error?: string },
+  result: {
+    status: "ok" | "error";
+    observations: number;
+    releases: number;
+    error?: string;
+  },
 ) {
   const source = `demographics:istat-balance-${granularity}`;
   const now = new Date();
@@ -546,7 +646,11 @@ async function ingestGranularity(granularity: BalanceGranularity) {
         defaultStatus,
       );
       if (granularity === "annual") {
-        rows = refineAnnualStatus(rows, prepared.hasFinalAnnualStocks, defaultStatus);
+        rows = refineAnnualStatus(
+          rows,
+          prepared.hasFinalAnnualStocks,
+          defaultStatus,
+        );
       }
       for (const definition of FIELDS) {
         const result = await persistField(
@@ -563,8 +667,13 @@ async function ingestGranularity(granularity: BalanceGranularity) {
     } catch (err) {
       const message = err instanceof Error ? err.message : String(err);
       errors.push(`${year}: ${message}`);
-      logger.error({ err, granularity, year }, "ISTAT demographic balance ingestion failed");
+      logger.error(
+        { err, granularity, year },
+        "ISTAT demographic balance ingestion failed",
+      );
     }
+    // opendemografia, costruito sullo stesso endpoint, raccomanda esplicitamente
+    // richieste distanziate per evitare blocchi IP dell'infrastruttura ISTAT.
     await delay(1000);
   }
 
@@ -574,7 +683,13 @@ async function ingestGranularity(granularity: BalanceGranularity) {
     releases,
     error: errors.length ? errors.slice(0, 4).join("; ") : undefined,
   });
-  return { years: contract.years, requests, releases, observations, errors };
+  return {
+    years: contract.years,
+    requests,
+    releases,
+    observations,
+    errors,
+  };
 }
 
 /**
