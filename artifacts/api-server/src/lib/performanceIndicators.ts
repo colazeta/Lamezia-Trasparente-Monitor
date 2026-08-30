@@ -2,6 +2,7 @@ import { logger } from "./logger";
 import { runDemographicIngestion } from "./demographics";
 import { runSelfDescribingDemographicBalanceIngestion } from "./demographicBalanceIngestion";
 import { runRbdBackfill } from "./demographicRbd";
+import { runPopulationStructureIngestion } from "./populationStructure";
 
 // Prefisso comune delle sorgenti automatiche della sezione Performance. La
 // popolazione mantiene l'identificativo storico `performance:istat-popolazione`
@@ -11,8 +12,7 @@ export const PERFORMANCE_FEED_PREFIX = "performance:";
 
 // Il ciclo schedulato continua a passare da questo entrypoint per compatibilità
 // con l'orchestratore esistente. La popolazione aggiorna anche la proiezione
-// legacy Performance; bilancio annuale e mensile restano invece serie canoniche
-// demografiche, usate dal pannello "Perché cambia Lamezia".
+// legacy Performance; le altre serie restano invece canoniche demografiche.
 export async function runPerformanceIngestion(): Promise<void> {
   const population = await runDemographicIngestion();
   logger.info(
@@ -22,6 +22,13 @@ export async function runPerformanceIngestion(): Promise<void> {
     },
     "Performance population refreshed through demographic archive",
   );
+
+  // Età e sesso vivono nella stessa architettura versionata ma non sono una
+  // dipendenza del vecchio indicatore Performance. Un problema della fonte
+  // strutturale viene quindi registrato senza impedire il refresh del bilancio.
+  await runPopulationStructureIngestion().catch((err) => {
+    logger.error({ err }, "Population structure refresh failed");
+  });
 
   // Il bilancio corrente inizializza le serie annuali canoniche. Solo dopo
   // questa fase innestiamo il backfill RBD 2002–2018 sulle stesse serie: in
