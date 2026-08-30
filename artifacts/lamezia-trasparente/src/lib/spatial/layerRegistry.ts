@@ -55,34 +55,35 @@ export const SPATIAL_LAYER_REGISTRY: SpatialLayerDefinition[] = [
     geometryTypes: ["Polygon", "MultiPolygon"],
     allowedGeometryRoles: ["administrative_boundary"],
     entityTypes: ["municipality"],
-    sourceLabel: "Layer GIS di base servito dall'API di Lamezia Trasparente",
+    sourceLabel: "OpenStreetMap / Nominatim",
     dataPath: "/api/gis/comune",
     defaultVisible: true,
     publicationRule:
-      "Usare come geografia di riferimento; non attribuire al perimetro indicatori o significati non presenti nella fonte.",
+      "Usare esclusivamente come perimetro amministrativo di riferimento; conservare attribuzione e provenienza e non associare al confine significati non presenti nella fonte.",
     caveats: [
-      "La provenienza geometrica deve restare esposta nei metadati del layer.",
+      "Il layer è una geometria di riferimento derivata da OpenStreetMap/Nominatim e non sostituisce eventuali basi cartografiche ufficiali comunali o nazionali più autorevoli che dovessero diventare disponibili.",
     ],
   },
   {
     id: "census-sections",
     title: "Sezioni censuarie",
     description:
-      "Geografie censuarie ISTAT e indicatori territoriali selezionabili nell'Atlante.",
+      "Geometrie ufficiali ISTAT 2021 con indicatori del Censimento permanente 2023 selezionabili nell'Atlante.",
     group: "population",
-    status: "in_development",
+    status: "existing",
     geometryTypes: ["Polygon", "MultiPolygon"],
     allowedGeometryRoles: ["census_area"],
     entityTypes: ["census_section"],
-    sourceLabel: "ISTAT",
+    sourceLabel: "ISTAT — Basi territoriali 2021 e dati per sezioni di censimento 2023",
     dataPath:
       "/data/processed/territorio/istat_sezioni_censimento_lamezia.geojson",
     defaultVisible: true,
     publicationRule:
-      "Pubblicare soltanto geometrie e indicatori validati contro i tracciati ISTAT dichiarati nei metadati.",
+      "Usare le geometrie ISTAT processate e gli indicatori validati dichiarati nei metadati del dataset, mantenendo distinto un valore mancante dallo zero.",
     caveats: [
-      "La pagina può usare dati demo durante lo sviluppo: la UI deve segnalarlo esplicitamente.",
-      "Non confondere sezioni censuarie con sezioni catastali, OMI, CAP o altre partizioni territoriali.",
+      "Le geometrie sono riferite al 2021, mentre gli indicatori associati sono riferiti al 2023.",
+      "Non tutte le geometrie ufficiali dispongono di un valore per gli indicatori 2023: la copertura deve restare visibile e i valori mancanti non vanno imputati.",
+      "Non confondere sezioni censuarie con sezioni catastali, zone OMI, CAP o altre partizioni territoriali.",
     ],
   },
   {
