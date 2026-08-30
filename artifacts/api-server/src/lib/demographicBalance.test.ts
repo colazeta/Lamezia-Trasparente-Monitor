@@ -6,7 +6,17 @@ async function helpers() {
   return import("./demographicBalance");
 }
 
-function annualResponse() {
+type FixtureResponse = {
+  Status: boolean;
+  caption: string;
+  nota: string;
+  datatable: {
+    columns: Array<{ data: string; title: string }>;
+    data: Array<Record<string, string | number>>;
+  };
+};
+
+function annualResponse(): FixtureResponse {
   return {
     Status: true,
     caption: "Bilancio demografico 2025 - dati definitivi",
