@@ -15,6 +15,7 @@ import storageRouter from "./storage";
 import questionsRouter from "./questions";
 import oversightRouter from "./oversight";
 import performanceRouter from "./performance";
+import demographicChangeDriversRouter from "./demographicChangeDrivers";
 import demographicsRouter from "./demographics";
 import fundamentalActsRouter from "./fundamentalActs";
 import legalityRouter from "./legality";
@@ -47,6 +48,9 @@ router.use(storageRouter);
 router.use(questionsRouter);
 router.use(oversightRouter);
 router.use(performanceRouter);
+// Register the status-aware decomposition before the legacy demographics router;
+// it owns the same public path while the remaining series endpoints stay there.
+router.use(demographicChangeDriversRouter);
 router.use(demographicsRouter);
 router.use(fundamentalActsRouter);
 router.use(legalityRouter);
