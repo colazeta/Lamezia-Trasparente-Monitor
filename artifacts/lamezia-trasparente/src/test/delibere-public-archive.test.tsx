@@ -488,6 +488,35 @@ describe("archivio pubblico delle delibere", () => {
     );
   });
 
+  it("include l'intera data finale quando l'API restituisce timestamp ISO", () => {
+    const timestamped = mergeDelibere(
+      [],
+      [
+        apiPublication({
+          id: 9100,
+          publicId: "albo-2026-9100",
+          progressivo: "2026/9100",
+          dataAtto: "2026-08-24T23:59:59.000Z",
+          pubStart: "2026-08-24T11:40:17.244Z",
+        }),
+      ],
+    );
+
+    expect(
+      filterDelibere(timestamped, {
+        ...DEFAULT_DELIBERA_FILTERS,
+        dateFrom: "2026-08-24",
+        dateTo: "2026-08-24",
+      }),
+    ).toHaveLength(1);
+    expect(
+      filterDelibere(timestamped, {
+        ...DEFAULT_DELIBERA_FILTERS,
+        dateTo: "2026-08-23",
+      }),
+    ).toHaveLength(0);
+  });
+
   it("esegue il round-trip deterministico dello stato filtri nell'URL", () => {
     const encoded = updateDeliberaReaderSearch("", {
       query: " TARI 2026 ",
@@ -646,6 +675,46 @@ describe("archivio pubblico delle delibere", () => {
         "consiglio",
       ),
     );
+  });
+
+  it("conserva nell'URL un tema disponibile solo dopo il caricamento API", async () => {
+    const base = apiPublication();
+    const apiOnlyTheme = apiPublication({
+      id: 9200,
+      publicId: "albo-2026-9200",
+      progressivo: "2026/9200",
+      presentation: {
+        ...base.presentation,
+        display_title: "Piano della mobilità condivisa.",
+        search_text: "piano della mobilita condivisa",
+        area_theme: {
+          ...base.presentation.area_theme,
+          theme_id: "mobilita_condivisa",
+          theme_label: "Mobilità condivisa",
+        },
+      },
+    });
+    window.history.replaceState({}, "", "/delibere?tema=mobilita_condivisa");
+    apiState.isLoading = true;
+    const view = render(<Delibere />);
+
+    expect(new URLSearchParams(window.location.search).get("tema")).toBe(
+      "mobilita_condivisa",
+    );
+
+    apiState.data = [apiOnlyTheme];
+    apiState.isLoading = false;
+    view.rerender(<Delibere />);
+
+    await waitFor(() =>
+      expect(screen.getByLabelText("Filtra per area tematica")).toHaveValue(
+        "mobilita_condivisa",
+      ),
+    );
+    expect(new URLSearchParams(window.location.search).get("tema")).toBe(
+      "mobilita_condivisa",
+    );
+    expect(screen.getByText("1 di 64 atti.")).toBeInTheDocument();
   });
 
   it("distingue l'errore API dall'assenza di risultati", () => {
