@@ -1,6 +1,15 @@
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
-import { mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
+import {
+  mkdir,
+  mkdtemp,
+  readFile,
+  readdir,
+  rename,
+  rm,
+  symlink,
+  writeFile,
+} from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import test from "node:test";
@@ -17,6 +26,7 @@ import {
   parseTinnvisionXml,
   reapplyAlboPublicSafety,
   runAlboIngestion,
+  validateAlboDocumentsManifest,
   type AlboRawSnapshot,
   type PublicRecord,
 } from "./albo-tinnvision";
@@ -33,6 +43,10 @@ import {
   assertDelibereSeedSourceCoverage,
 } from "./seed-delibere-archive-history";
 import {
+  readReviewedDocumentServingAllowlist,
+  verifyArchivedPdfFile,
+} from "./albo-document-storage";
+import {
   identifyInstitutionalSessionCandidate,
   identifyInstitutionalSessionCandidates,
   type InstitutionalSessionCandidateInput,
@@ -46,6 +60,40 @@ const REPO_ROOT = path.resolve(
 
 test("defaults CLI output to repository data directory", () => {
   assert.equal(parseArgs([]).outDir, path.join(REPO_ROOT, "data"));
+});
+
+test("validates the versioned reviewed-document allow-list and its real PDF", async () => {
+  const repoRoot = path.resolve(
+    path.dirname(fileURLToPath(import.meta.url)),
+    "..",
+  );
+  const outDir = path.join(repoRoot, "data");
+  const allowlist = await readReviewedDocumentServingAllowlist(outDir);
+  assert.equal(allowlist?.schema_version, "albo-reviewed-document-serving.v1");
+  assert.ok((allowlist?.documents.length ?? 0) > 0);
+  const reviewed = allowlist?.documents[0];
+  assert.ok(reviewed);
+  await verifyArchivedPdfFile(outDir, reviewed, { requireSize: false });
+});
+
+test("validates the complete semantic contract of the versioned PDF manifest", async () => {
+  const repoRoot = path.resolve(
+    path.dirname(fileURLToPath(import.meta.url)),
+    "..",
+  );
+  const manifestPath = path.join(
+    repoRoot,
+    "data",
+    "public",
+    "albo",
+    "documents-manifest.json",
+  );
+  const manifest = validateAlboDocumentsManifest(
+    JSON.parse(await readFile(manifestPath, "utf8")),
+    manifestPath,
+  );
+  assert.equal(manifest.counts.archived, manifest.documents.length);
+  assert.equal(manifest.counts.considered, manifest.decisions.length);
 });
 
 test("parses Tinnvision XML export and normalises minimal albo_item fields", () => {
@@ -802,18 +850,42 @@ test("reapplies current privacy policy to the public baseline and revokes its PD
   await writeFile(
     path.join(publicDir, "documents-manifest.json"),
     JSON.stringify({
-      documents: [
-        {
-          ...oldRecord,
-          document_url: documentUrl,
-          preservation_status: "archived",
-          reason: "eligible_low_risk_publishable_pdf",
-          storage_path: storagePath,
-          sha256: digest,
-          size_bytes: 19,
-          content_type: "application/pdf",
-        },
-      ],
+      generated_at: oldRecord.retrieved_at,
+      source: oldRecord.source,
+      source_url: oldRecord.source_url,
+      retrieved_at: oldRecord.retrieved_at,
+      verification_status: oldRecord.verification_status,
+      policy: pdfManifestPolicy(),
+      counts: {
+        considered: 1,
+        eligible: 1,
+        archived: 1,
+        skipped: 0,
+        excluded: 0,
+        human_review_required: 0,
+        revoked: 0,
+      },
+      warnings: [],
+      documents: [{
+        ...oldRecord,
+        document_url: documentUrl,
+        preservation_status: "archived",
+        reason: "eligible_low_risk_publishable_pdf",
+        storage_path: storagePath,
+        sha256: digest,
+        size_bytes: 19,
+        content_type: "application/pdf",
+      }],
+      decisions: [{
+        ...oldRecord,
+        document_url: documentUrl,
+        preservation_status: "archived",
+        reason: "eligible_low_risk_publishable_pdf",
+        storage_path: storagePath,
+        sha256: digest,
+        size_bytes: 19,
+        content_type: "application/pdf",
+      }],
     }),
     "utf8",
   );
@@ -1318,6 +1390,7 @@ test("archives only official low-risk publishable PDFs into public documents sto
         headers: {
           "content-type": "application/pdf",
           "content-length": String(pdfBytes.byteLength),
+          etag: '"pdf-v1"',
         },
       });
     },
@@ -1356,15 +1429,959 @@ test("archives only official low-risk publishable PDFs into public documents sto
     fromFile: fixturePath,
     inputFormat: "xml",
     retrievedAt: "2026-06-19T11:00:00.000Z",
-    pdfFetch: async (url) => {
-      fetchCalls.push(`unexpected:${String(url)}`);
-      throw new Error("archived PDF should be reused");
+    pdfFetch: async (url, init) => {
+      fetchCalls.push(String(url));
+      assert.equal(new Headers(init?.headers).get("if-none-match"), '"pdf-v1"');
+      return new Response(null, { status: 304 });
     },
   });
 
   assert.equal(reused.documentsManifest.counts.archived, 1);
   assert.equal(reused.documentsManifest.documents[0].sha256, expectedSha);
-  assert.deepEqual(fetchCalls, [documentUrl]);
+  assert.deepEqual(fetchCalls, [documentUrl, documentUrl]);
+});
+
+test("revokes an archived PDF when its Albo record disappears", async () => {
+  const tmp = await mkdtemp(path.join(tmpdir(), "albo-pdf-disappeared-"));
+  const fixturePath = path.join(tmp, "albo.xml");
+  const outDir = path.join(tmp, "data");
+  const documentUrl =
+    "https://albo.tinnvision.cloud/documenti/2026/disappeared.pdf";
+  const pdfBytes = new TextEncoder().encode("%PDF-1.7\ndisappeared\n");
+
+  await writeFile(
+    fixturePath,
+    xmlRecord(
+      "2026/5001",
+      "AVVISO PUBBLICO",
+      "SEGRETERIA",
+      "Avviso pubblico temporaneo",
+      "",
+      documentUrl,
+    ),
+    "utf8",
+  );
+  const first = await runAlboIngestion({
+    outDir,
+    fromFile: fixturePath,
+    inputFormat: "xml",
+    retrievedAt: "2026-06-19T08:00:00.000Z",
+    pdfFetch: async () =>
+      new Response(pdfBytes, {
+        status: 200,
+        headers: { "content-type": "application/pdf" },
+      }),
+  });
+  const archivedPath = path.join(
+    outDir,
+    ...first.documentsManifest.documents[0].storage_path
+      .replace(/^data\//, "")
+      .split("/"),
+  );
+
+  await writeFile(fixturePath, "<albo></albo>", "utf8");
+  const second = await runAlboIngestion({
+    outDir,
+    fromFile: fixturePath,
+    inputFormat: "xml",
+    retrievedAt: "2026-06-19T09:00:00.000Z",
+    pdfFetch: async () => {
+      throw new Error("a disappeared record must not be fetched");
+    },
+  });
+
+  assert.equal(second.documentsManifest.documents.length, 0);
+  assert.equal(second.documentsManifest.counts.revoked, 1);
+  await assert.rejects(readFile(archivedPath), { code: "ENOENT" });
+});
+
+test("aborts without active-output writes when the previous PDF manifest is invalid", async () => {
+  const tmp = await mkdtemp(path.join(tmpdir(), "albo-pdf-bad-manifest-"));
+  const fixturePath = path.join(tmp, "albo.xml");
+  const outDir = path.join(tmp, "data");
+  await writeFile(
+    fixturePath,
+    xmlRecord(
+      "2026/5002",
+      "AVVISO PUBBLICO",
+      "SEGRETERIA",
+      "Avviso pubblico stabile",
+      "",
+    ),
+    "utf8",
+  );
+  const first = await runAlboIngestion({
+    outDir,
+    fromFile: fixturePath,
+    inputFormat: "xml",
+    retrievedAt: "2026-06-19T08:00:00.000Z",
+  });
+  const latestBefore = await readFile(first.paths.publicLatest, "utf8");
+  const statusBefore = await readFile(first.paths.publicStatus, "utf8");
+  await writeFile(first.paths.documentsManifest, "{ invalid-json", "utf8");
+
+  await assert.rejects(
+    runAlboIngestion({
+      outDir,
+      fromFile: fixturePath,
+      inputFormat: "xml",
+      retrievedAt: "2026-06-19T09:00:00.000Z",
+    }),
+    /Invalid JSON in previous Albo PDF manifest/,
+  );
+
+  assert.equal(await readFile(first.paths.publicLatest, "utf8"), latestBefore);
+  assert.equal(await readFile(first.paths.publicStatus, "utf8"), statusBefore);
+  assert.equal(
+    await readFile(first.paths.documentsManifest, "utf8"),
+    "{ invalid-json",
+  );
+
+  await writeFile(
+    first.paths.documentsManifest,
+    JSON.stringify({ documents: [] }),
+    "utf8",
+  );
+  await assert.rejects(
+    runAlboIngestion({
+      outDir,
+      fromFile: fixturePath,
+      inputFormat: "xml",
+      retrievedAt: "2026-06-19T09:30:00.000Z",
+    }),
+    /Invalid schema in previous Albo PDF manifest/,
+  );
+  assert.equal(await readFile(first.paths.publicLatest, "utf8"), latestBefore);
+  assert.equal(await readFile(first.paths.publicStatus, "utf8"), statusBefore);
+});
+
+test("accepts an absent PDF manifest only on the first ingestion", async () => {
+  const tmp = await mkdtemp(path.join(tmpdir(), "albo-pdf-missing-manifest-"));
+  const fixturePath = path.join(tmp, "albo.xml");
+  const outDir = path.join(tmp, "data");
+  await writeFile(
+    fixturePath,
+    xmlRecord(
+      "2026/5009",
+      "AVVISO PUBBLICO",
+      "SEGRETERIA",
+      "Avviso con ciclo già avviato",
+      "",
+    ),
+    "utf8",
+  );
+  const first = await runAlboIngestion({
+    outDir,
+    fromFile: fixturePath,
+    inputFormat: "xml",
+    retrievedAt: "2026-06-19T08:00:00.000Z",
+  });
+  const latestBefore = await readFile(first.paths.publicLatest, "utf8");
+  await rm(first.paths.documentsManifest);
+
+  await assert.rejects(
+    runAlboIngestion({
+      outDir,
+      fromFile: fixturePath,
+      inputFormat: "xml",
+      retrievedAt: "2026-06-19T09:00:00.000Z",
+    }),
+    /Missing previous Albo PDF manifest after an earlier ingestion/,
+  );
+  assert.equal(await readFile(first.paths.publicLatest, "utf8"), latestBefore);
+  await assert.rejects(readFile(first.paths.documentsManifest), {
+    code: "ENOENT",
+  });
+});
+
+test("does not treat corrupt prior snapshot or public JSON as an absent first run", async () => {
+  const tmp = await mkdtemp(path.join(tmpdir(), "albo-pdf-corrupt-baseline-"));
+  const fixturePath = path.join(tmp, "albo.xml");
+  const outDir = path.join(tmp, "data");
+  await writeFile(
+    fixturePath,
+    xmlRecord(
+      "2026/5013",
+      "AVVISO PUBBLICO",
+      "SEGRETERIA",
+      "Avviso con baseline",
+      "",
+    ),
+    "utf8",
+  );
+  const first = await runAlboIngestion({
+    outDir,
+    fromFile: fixturePath,
+    inputFormat: "xml",
+    retrievedAt: "2026-06-19T08:00:00.000Z",
+  });
+  await rm(first.paths.documentsManifest);
+  await writeFile(first.paths.currentSnapshot, "{ corrupt snapshot", "utf8");
+
+  try {
+    await assert.rejects(
+      runAlboIngestion({
+        outDir,
+        fromFile: fixturePath,
+        inputFormat: "xml",
+        retrievedAt: "2026-06-19T09:00:00.000Z",
+      }),
+      /Invalid JSON in previous Albo snapshot/,
+    );
+    await rm(first.paths.currentSnapshot);
+    await writeFile(first.paths.publicLatest, "{ corrupt public", "utf8");
+    await assert.rejects(
+      runAlboIngestion({
+        outDir,
+        fromFile: fixturePath,
+        inputFormat: "xml",
+        retrievedAt: "2026-06-19T09:30:00.000Z",
+      }),
+      /Invalid JSON in previous public Albo data/,
+    );
+  } finally {
+    await rm(tmp, { recursive: true, force: true });
+  }
+});
+
+test("rejects a missing manifest when an earlier archive tree exists", async () => {
+  const tmp = await mkdtemp(path.join(tmpdir(), "albo-pdf-tree-without-manifest-"));
+  const fixturePath = path.join(tmp, "albo.xml");
+  const outDir = path.join(tmp, "data");
+  const digest = "d".repeat(64);
+  await mkdir(
+    path.join(outDir, "public", "albo", "documents", "2026"),
+    { recursive: true },
+  );
+  await writeFile(
+    path.join(
+      outDir,
+      "public",
+      "albo",
+      "documents",
+      "2026",
+      `${digest}.pdf`,
+    ),
+    "%PDF-1.7\nlegacy",
+  );
+  await writeFile(fixturePath, "<albo></albo>", "utf8");
+
+  try {
+    await assert.rejects(
+      runAlboIngestion({
+        outDir,
+        fromFile: fixturePath,
+        inputFormat: "xml",
+        retrievedAt: "2026-06-19T08:00:00.000Z",
+      }),
+      /Missing previous Albo PDF manifest after an earlier ingestion/,
+    );
+  } finally {
+    await rm(tmp, { recursive: true, force: true });
+  }
+});
+
+test("rejects semantically incoherent, duplicate, or oversized manifests", async () => {
+  const tmp = await mkdtemp(path.join(tmpdir(), "albo-pdf-semantic-manifest-"));
+  const fixturePath = path.join(tmp, "albo.xml");
+  const outDir = path.join(tmp, "data");
+  const documentUrl =
+    "https://albo.tinnvision.cloud/documenti/2026/semantic.pdf";
+  await writeFile(
+    fixturePath,
+    xmlRecord(
+      "2026/5014",
+      "AVVISO PUBBLICO",
+      "SEGRETERIA",
+      "Avviso con manifest verificabile",
+      "",
+      documentUrl,
+    ),
+    "utf8",
+  );
+  const first = await runAlboIngestion({
+    outDir,
+    fromFile: fixturePath,
+    inputFormat: "xml",
+    retrievedAt: "2026-06-19T08:00:00.000Z",
+    pdfFetch: async () =>
+      new Response("%PDF-1.7\nsemantic", {
+        headers: { "content-type": "application/pdf" },
+      }),
+  });
+  const original = await readFile(first.paths.documentsManifest, "utf8");
+  const latestBefore = await readFile(first.paths.publicLatest, "utf8");
+
+  try {
+    const oversized = JSON.parse(original) as {
+      documents: Array<Record<string, unknown>>;
+      decisions: Array<Record<string, unknown>>;
+    };
+    oversized.documents[0].size_bytes = 10 * 1024 * 1024 + 1;
+    oversized.decisions[0].size_bytes = 10 * 1024 * 1024 + 1;
+    await writeFile(
+      first.paths.documentsManifest,
+      `${JSON.stringify(oversized, null, 2)}\n`,
+    );
+    await assert.rejects(
+      runAlboIngestion({
+        outDir,
+        fromFile: fixturePath,
+        inputFormat: "xml",
+        retrievedAt: "2026-06-19T09:00:00.000Z",
+      }),
+      /(?:decisions|documents)\[0\]/,
+    );
+
+    const duplicate = JSON.parse(original) as {
+      counts: Record<string, number>;
+      decisions: Array<Record<string, unknown>>;
+    };
+    duplicate.decisions.push({ ...duplicate.decisions[0] });
+    duplicate.counts.considered += 1;
+    duplicate.counts.eligible += 1;
+    await writeFile(
+      first.paths.documentsManifest,
+      `${JSON.stringify(duplicate, null, 2)}\n`,
+    );
+    await assert.rejects(
+      runAlboIngestion({
+        outDir,
+        fromFile: fixturePath,
+        inputFormat: "xml",
+        retrievedAt: "2026-06-19T09:30:00.000Z",
+      }),
+      /duplicate decision ids/,
+    );
+
+    const incoherent = JSON.parse(original) as {
+      counts: Record<string, number>;
+    };
+    incoherent.counts.archived += 1;
+    await writeFile(
+      first.paths.documentsManifest,
+      `${JSON.stringify(incoherent, null, 2)}\n`,
+    );
+    await assert.rejects(
+      runAlboIngestion({
+        outDir,
+        fromFile: fixturePath,
+        inputFormat: "xml",
+        retrievedAt: "2026-06-19T10:00:00.000Z",
+      }),
+      /count coherence/,
+    );
+    assert.equal(await readFile(first.paths.publicLatest, "utf8"), latestBefore);
+  } finally {
+    await rm(tmp, { recursive: true, force: true });
+  }
+});
+
+test("rejects PDF reuse when the local digest, size, MIME signature or path is not verified", async () => {
+  const tmp = await mkdtemp(path.join(tmpdir(), "albo-pdf-reuse-checks-"));
+  const fixturePath = path.join(tmp, "albo.xml");
+  const outDir = path.join(tmp, "data");
+  const documentUrl =
+    "https://albo.tinnvision.cloud/documenti/2026/reuse-checks.pdf";
+  const pdfBytes = new TextEncoder().encode("%PDF-1.7\nverified bytes\n");
+  await writeFile(
+    fixturePath,
+    xmlRecord(
+      "2026/5003",
+      "AVVISO PUBBLICO",
+      "SEGRETERIA",
+      "Avviso pubblico verificabile",
+      "",
+      documentUrl,
+    ),
+    "utf8",
+  );
+  const first = await runAlboIngestion({
+    outDir,
+    fromFile: fixturePath,
+    inputFormat: "xml",
+    retrievedAt: "2026-06-19T08:00:00.000Z",
+    pdfFetch: async () =>
+      new Response(pdfBytes, {
+        status: 200,
+        headers: {
+          "content-type": "application/pdf",
+          etag: '"reuse-v1"',
+        },
+      }),
+  });
+  const document = first.documentsManifest.documents[0];
+  const correctPath = path.join(
+    outDir,
+    ...document.storage_path.replace(/^data\//, "").split("/"),
+  );
+  const wrongStoragePath = document.storage_path.replace("/2026/", "/2025/");
+  const wrongPath = path.join(
+    outDir,
+    ...wrongStoragePath.replace(/^data\//, "").split("/"),
+  );
+  await mkdir(path.dirname(wrongPath), { recursive: true });
+  await rename(correctPath, wrongPath);
+  const manifest = JSON.parse(
+    await readFile(first.paths.documentsManifest, "utf8"),
+  ) as {
+    documents: Array<Record<string, unknown>>;
+    decisions: Array<Record<string, unknown>>;
+  };
+  manifest.documents[0].storage_path = wrongStoragePath;
+  manifest.decisions[0].storage_path = wrongStoragePath;
+  await writeFile(
+    first.paths.documentsManifest,
+    `${JSON.stringify(manifest, null, 2)}\n`,
+    "utf8",
+  );
+
+  let conditionalHeader: string | null = "not-called";
+  const repaired = await runAlboIngestion({
+    outDir,
+    fromFile: fixturePath,
+    inputFormat: "xml",
+    retrievedAt: "2026-06-19T09:00:00.000Z",
+    pdfFetch: async (_url, init) => {
+      conditionalHeader = new Headers(init?.headers).get("if-none-match");
+      return new Response(pdfBytes, {
+        status: 200,
+        headers: { "content-type": "application/pdf" },
+      });
+    },
+  });
+  assert.equal(conditionalHeader, null);
+  assert.equal(
+    repaired.documentsManifest.documents[0].storage_path,
+    document.storage_path,
+  );
+  assert.deepEqual(new Uint8Array(await readFile(correctPath)), pdfBytes);
+  await assert.rejects(readFile(wrongPath), { code: "ENOENT" });
+
+  const corruptBytes = new TextEncoder().encode("not a PDF and wrong size");
+  await writeFile(correctPath, corruptBytes);
+  conditionalHeader = "not-called";
+  await runAlboIngestion({
+    outDir,
+    fromFile: fixturePath,
+    inputFormat: "xml",
+    retrievedAt: "2026-06-19T10:00:00.000Z",
+    pdfFetch: async (_url, init) => {
+      conditionalHeader = new Headers(init?.headers).get("if-none-match");
+      return new Response(pdfBytes, {
+        status: 200,
+        headers: { "content-type": "application/pdf" },
+      });
+    },
+  });
+  assert.equal(conditionalHeader, null);
+  assert.deepEqual(new Uint8Array(await readFile(correctPath)), pdfBytes);
+});
+
+test("rearchives new bytes returned by the same official PDF URL", async () => {
+  const tmp = await mkdtemp(path.join(tmpdir(), "albo-pdf-upstream-change-"));
+  const fixturePath = path.join(tmp, "albo.xml");
+  const outDir = path.join(tmp, "data");
+  const documentUrl =
+    "https://albo.tinnvision.cloud/documenti/2026/stable-url.pdf";
+  const firstBytes = new TextEncoder().encode("%PDF-1.7\nversion one\n");
+  const secondBytes = new TextEncoder().encode("%PDF-1.7\nversion two\n");
+  await writeFile(
+    fixturePath,
+    xmlRecord(
+      "2026/5004",
+      "AVVISO PUBBLICO",
+      "SEGRETERIA",
+      "Avviso pubblico aggiornabile",
+      "",
+      documentUrl,
+    ),
+    "utf8",
+  );
+  const first = await runAlboIngestion({
+    outDir,
+    fromFile: fixturePath,
+    inputFormat: "xml",
+    retrievedAt: "2026-06-19T08:00:00.000Z",
+    pdfFetch: async () =>
+      new Response(firstBytes, {
+        status: 200,
+        headers: {
+          "content-type": "application/pdf",
+          etag: '"stable-v1"',
+        },
+      }),
+  });
+  const firstDocument = first.documentsManifest.documents[0];
+  const firstPath = path.join(
+    outDir,
+    ...firstDocument.storage_path.replace(/^data\//, "").split("/"),
+  );
+
+  let ifNoneMatch: string | null = null;
+  const second = await runAlboIngestion({
+    outDir,
+    fromFile: fixturePath,
+    inputFormat: "xml",
+    retrievedAt: "2026-06-19T09:00:00.000Z",
+    pdfFetch: async (_url, init) => {
+      ifNoneMatch = new Headers(init?.headers).get("if-none-match");
+      return new Response(secondBytes, {
+        status: 200,
+        headers: {
+          "content-type": "application/pdf",
+          etag: '"stable-v2"',
+        },
+      });
+    },
+  });
+  const secondDocument = second.documentsManifest.documents[0];
+  const secondPath = path.join(
+    outDir,
+    ...secondDocument.storage_path.replace(/^data\//, "").split("/"),
+  );
+
+  assert.equal(ifNoneMatch, '"stable-v1"');
+  assert.notEqual(secondDocument.sha256, firstDocument.sha256);
+  assert.equal(second.documentsManifest.counts.revoked, 1);
+  assert.deepEqual(new Uint8Array(await readFile(secondPath)), secondBytes);
+  await assert.rejects(readFile(firstPath), { code: "ENOENT" });
+});
+
+test("keeps a shared PDF path while at least one active record still references it", async () => {
+  const tmp = await mkdtemp(path.join(tmpdir(), "albo-pdf-shared-path-"));
+  const fixturePath = path.join(tmp, "albo.xml");
+  const outDir = path.join(tmp, "data");
+  const firstUrl = "https://albo.tinnvision.cloud/documenti/2026/shared-a.pdf";
+  const secondUrl = "https://albo.tinnvision.cloud/documenti/2026/shared-b.pdf";
+  const pdfBytes = new TextEncoder().encode("%PDF-1.7\nshared bytes\n");
+  await writeFile(
+    fixturePath,
+    [
+      xmlRecord(
+        "2026/5005",
+        "AVVISO PUBBLICO",
+        "SEGRETERIA",
+        "Primo avviso condiviso",
+        "",
+        firstUrl,
+      ),
+      xmlRecord(
+        "2026/5006",
+        "AVVISO PUBBLICO",
+        "SEGRETERIA",
+        "Secondo avviso condiviso",
+        "",
+        secondUrl,
+      ),
+    ].join("\n"),
+    "utf8",
+  );
+  const first = await runAlboIngestion({
+    outDir,
+    fromFile: fixturePath,
+    inputFormat: "xml",
+    retrievedAt: "2026-06-19T08:00:00.000Z",
+    pdfFetch: async () =>
+      new Response(pdfBytes, {
+        status: 200,
+        headers: {
+          "content-type": "application/pdf",
+          etag: '"shared-v1"',
+        },
+      }),
+  });
+  assert.equal(first.documentsManifest.documents.length, 2);
+  assert.equal(
+    first.documentsManifest.documents[0].storage_path,
+    first.documentsManifest.documents[1].storage_path,
+  );
+  const sharedPath = path.join(
+    outDir,
+    ...first.documentsManifest.documents[0].storage_path
+      .replace(/^data\//, "")
+      .split("/"),
+  );
+
+  await writeFile(
+    fixturePath,
+    xmlRecord(
+      "2026/5006",
+      "AVVISO PUBBLICO",
+      "SEGRETERIA",
+      "Secondo avviso condiviso",
+      "",
+      secondUrl,
+    ),
+    "utf8",
+  );
+  const second = await runAlboIngestion({
+    outDir,
+    fromFile: fixturePath,
+    inputFormat: "xml",
+    retrievedAt: "2026-06-19T09:00:00.000Z",
+    pdfFetch: async (_url, init) => {
+      assert.equal(
+        new Headers(init?.headers).get("if-none-match"),
+        '"shared-v1"',
+      );
+      return new Response(null, { status: 304 });
+    },
+  });
+
+  assert.equal(second.documentsManifest.documents.length, 1);
+  assert.equal(second.documentsManifest.counts.revoked, 0);
+  assert.deepEqual(new Uint8Array(await readFile(sharedPath)), pdfBytes);
+});
+
+test("never revokes or reports a PDF protected by the reviewed allow-list", async () => {
+  const tmp = await mkdtemp(path.join(tmpdir(), "albo-pdf-reviewed-path-"));
+  const fixturePath = path.join(tmp, "albo.xml");
+  const outDir = path.join(tmp, "data");
+  const documentUrl =
+    "https://albo.tinnvision.cloud/documenti/2026/reviewed.pdf";
+  const pdfBytes = new TextEncoder().encode("%PDF-1.7\nreviewed bytes\n");
+  await writeFile(
+    fixturePath,
+    xmlRecord(
+      "2026/5010",
+      "AVVISO PUBBLICO",
+      "SEGRETERIA",
+      "Avviso pubblico revisionato",
+      "",
+      documentUrl,
+    ),
+    "utf8",
+  );
+
+  try {
+    const first = await runAlboIngestion({
+      outDir,
+      fromFile: fixturePath,
+      inputFormat: "xml",
+      retrievedAt: "2026-06-19T08:00:00.000Z",
+      pdfFetch: async () =>
+        new Response(pdfBytes, {
+          headers: { "content-type": "application/pdf" },
+        }),
+    });
+    const document = first.documentsManifest.documents[0];
+    const absolutePath = path.join(
+      outDir,
+      ...document.storage_path.replace(/^data\//, "").split("/"),
+    );
+    await writeFile(
+      path.join(
+        outDir,
+        "public",
+        "albo",
+        "reviewed-document-serving-allowlist.json",
+      ),
+      `${JSON.stringify({
+        schema_version: "albo-reviewed-document-serving.v1",
+        reviewed_at: "2026-06-19T08:30:00.000Z",
+        source: ALBO_PRETORIO_LAMEZIA_SOURCE.source,
+        source_url: ALBO_PRETORIO_LAMEZIA_SOURCE.sourceUrl,
+        known_limits: ["Fixture revisionata."],
+        documents: [{
+          storage_path: document.storage_path,
+          sha256: document.sha256,
+          source_publication_number: document.publication_number,
+          review_status: "approved_public_civic_document",
+          evidence_ref: "docs/reviewed-fixture.md",
+          reason: "Documento civico revisionato.",
+        }],
+      }, null, 2)}\n`,
+      "utf8",
+    );
+    await writeFile(fixturePath, "<albo></albo>", "utf8");
+
+    const second = await runAlboIngestion({
+      outDir,
+      fromFile: fixturePath,
+      inputFormat: "xml",
+      retrievedAt: "2026-06-19T09:00:00.000Z",
+      pdfFetch: async () => {
+        throw new Error("disappeared records must not be fetched");
+      },
+    });
+    assert.equal(second.documentsManifest.counts.revoked, 0);
+    assert.doesNotMatch(
+      second.documentsManifest.warnings.join("\n"),
+      /unreferenced PDF/,
+    );
+    assert.deepEqual(new Uint8Array(await readFile(absolutePath)), pdfBytes);
+  } finally {
+    await rm(tmp, { recursive: true, force: true });
+  }
+});
+
+test("rejects a reviewed allow-list whose digest does not match its path", async () => {
+  const tmp = await mkdtemp(path.join(tmpdir(), "albo-pdf-bad-reviewed-"));
+  const fixturePath = path.join(tmp, "albo.xml");
+  const outDir = path.join(tmp, "data");
+  await writeFile(
+    fixturePath,
+    xmlRecord(
+      "2026/5011",
+      "AVVISO PUBBLICO",
+      "SEGRETERIA",
+      "Avviso senza allegato",
+      "",
+    ),
+    "utf8",
+  );
+  const first = await runAlboIngestion({
+    outDir,
+    fromFile: fixturePath,
+    inputFormat: "xml",
+    retrievedAt: "2026-06-19T08:00:00.000Z",
+  });
+  const latestBefore = await readFile(first.paths.publicLatest, "utf8");
+  const digest = "a".repeat(64);
+  await writeFile(
+    path.join(
+      outDir,
+      "public",
+      "albo",
+      "reviewed-document-serving-allowlist.json",
+    ),
+    `${JSON.stringify({
+      schema_version: "albo-reviewed-document-serving.v1",
+      reviewed_at: "2026-06-19T08:30:00.000Z",
+      source: ALBO_PRETORIO_LAMEZIA_SOURCE.source,
+      source_url: ALBO_PRETORIO_LAMEZIA_SOURCE.sourceUrl,
+      known_limits: ["Fixture non valida."],
+      documents: [{
+        storage_path: `data/public/albo/documents/2026/${digest}.pdf`,
+        sha256: "b".repeat(64),
+        source_publication_number: "2026/5011",
+        review_status: "approved_public_civic_document",
+        evidence_ref: "docs/reviewed-fixture.md",
+        reason: "Digest intenzionalmente errato.",
+      }],
+    }, null, 2)}\n`,
+    "utf8",
+  );
+
+  try {
+    await assert.rejects(
+      runAlboIngestion({
+        outDir,
+        fromFile: fixturePath,
+        inputFormat: "xml",
+        retrievedAt: "2026-06-19T09:00:00.000Z",
+      }),
+      /Invalid reviewed Albo document/,
+    );
+    assert.equal(await readFile(first.paths.publicLatest, "utf8"), latestBefore);
+  } finally {
+    await rm(tmp, { recursive: true, force: true });
+  }
+});
+
+test("reports unmanaged orphan PDFs without deleting the versioned backlog", async () => {
+  const tmp = await mkdtemp(path.join(tmpdir(), "albo-pdf-orphan-audit-"));
+  const fixturePath = path.join(tmp, "albo.xml");
+  const outDir = path.join(tmp, "data");
+  const orphanHash = "b".repeat(64);
+  const orphanPath = path.join(
+    outDir,
+    "public",
+    "albo",
+    "documents",
+    "2026",
+    `${orphanHash}.pdf`,
+  );
+  const orphanBytes = new TextEncoder().encode("%PDF-1.7\nlegacy orphan\n");
+  await mkdir(path.dirname(orphanPath), { recursive: true });
+  await writeFile(orphanPath, orphanBytes);
+  await writeFile(
+    path.join(outDir, "public", "albo", "documents-manifest.json"),
+    `${JSON.stringify({
+      generated_at: "2026-06-18T10:00:00.000Z",
+      source: ALBO_PRETORIO_LAMEZIA_SOURCE.source,
+      source_url: ALBO_PRETORIO_LAMEZIA_SOURCE.sourceUrl,
+      retrieved_at: "2026-06-18T10:00:00.000Z",
+      verification_status: "official_source_acquired",
+      policy: pdfManifestPolicy(),
+      counts: {
+        considered: 0,
+        eligible: 0,
+        archived: 0,
+        skipped: 0,
+        excluded: 0,
+        human_review_required: 0,
+        revoked: 0,
+      },
+      warnings: [],
+      documents: [],
+      decisions: [],
+    }, null, 2)}\n`,
+    "utf8",
+  );
+  await writeFile(
+    fixturePath,
+    xmlRecord(
+      "2026/5008",
+      "AVVISO PUBBLICO",
+      "SEGRETERIA",
+      "Avviso senza allegato",
+      "",
+    ),
+    "utf8",
+  );
+
+  const result = await runAlboIngestion({
+    outDir,
+    fromFile: fixturePath,
+    inputFormat: "xml",
+    retrievedAt: "2026-06-19T08:00:00.000Z",
+  });
+
+  assert.equal(result.documentsManifest.policy.unmanaged_orphan_cleanup, false);
+  assert.match(
+    result.documentsManifest.warnings.join("\n"),
+    /Detected 1 unreferenced PDF file/,
+  );
+  assert.deepEqual(new Uint8Array(await readFile(orphanPath)), orphanBytes);
+});
+
+test("rejects an external symlink used as an archive year directory", async () => {
+  const tmp = await mkdtemp(path.join(tmpdir(), "albo-pdf-year-symlink-"));
+  const fixturePath = path.join(tmp, "albo.xml");
+  const outDir = path.join(tmp, "data");
+  const outside = path.join(tmp, "outside");
+  const yearDirectory = path.join(
+    outDir,
+    "public",
+    "albo",
+    "documents",
+    "2026",
+  );
+  await mkdir(outside);
+  await writeFile(
+    fixturePath,
+    xmlRecord(
+      "2026/5012",
+      "AVVISO PUBBLICO",
+      "SEGRETERIA",
+      "Avviso iniziale senza allegato",
+      "",
+    ),
+    "utf8",
+  );
+
+  try {
+    await runAlboIngestion({
+      outDir,
+      fromFile: fixturePath,
+      inputFormat: "xml",
+      retrievedAt: "2026-06-19T08:00:00.000Z",
+    });
+    await mkdir(path.dirname(yearDirectory), { recursive: true });
+    await symlink(outside, yearDirectory, "dir");
+    await writeFile(
+      fixturePath,
+      xmlRecord(
+        "2026/5012",
+        "AVVISO PUBBLICO",
+        "SEGRETERIA",
+        "Avviso aggiornato con allegato",
+        "",
+        "https://albo.tinnvision.cloud/documenti/2026/symlink.pdf",
+      ),
+      "utf8",
+    );
+
+    await assert.rejects(
+      runAlboIngestion({
+        outDir,
+        fromFile: fixturePath,
+        inputFormat: "xml",
+        retrievedAt: "2026-06-19T09:00:00.000Z",
+        pdfFetch: async () =>
+          new Response("%PDF-1.7\nsymlink escape", {
+            headers: { "content-type": "application/pdf" },
+          }),
+      }),
+      /Unsafe symlink/,
+    );
+    assert.deepEqual(await readdir(outside), []);
+  } finally {
+    await rm(tmp, { recursive: true, force: true });
+  }
+});
+
+test("staging failure leaves the old manifest and PDF set unchanged", async () => {
+  const tmp = await mkdtemp(path.join(tmpdir(), "albo-pdf-atomic-stage-"));
+  const fixturePath = path.join(tmp, "albo.xml");
+  const outDir = path.join(tmp, "data");
+  const documentUrl = "https://albo.tinnvision.cloud/documenti/2026/atomic.pdf";
+  const firstBytes = new TextEncoder().encode("%PDF-1.7\nold active bytes\n");
+  const secondBytes = new TextEncoder().encode("%PDF-1.7\nnew staged bytes\n");
+  await writeFile(
+    fixturePath,
+    xmlRecord(
+      "2026/5007",
+      "AVVISO PUBBLICO",
+      "SEGRETERIA",
+      "Avviso pubblico atomico",
+      "",
+      documentUrl,
+    ),
+    "utf8",
+  );
+  const first = await runAlboIngestion({
+    outDir,
+    fromFile: fixturePath,
+    inputFormat: "xml",
+    retrievedAt: "2026-06-19T08:00:00.000Z",
+    pdfFetch: async () =>
+      new Response(firstBytes, {
+        status: 200,
+        headers: { "content-type": "application/pdf" },
+      }),
+  });
+  const manifestBefore = await readFile(first.paths.documentsManifest, "utf8");
+  const oldDocument = first.documentsManifest.documents[0];
+  const oldPath = path.join(
+    outDir,
+    ...oldDocument.storage_path.replace(/^data\//, "").split("/"),
+  );
+  const newDigest = createHash("sha256").update(secondBytes).digest("hex");
+  const newPath = path.join(
+    outDir,
+    "public",
+    "albo",
+    "documents",
+    "2026",
+    `${newDigest}.pdf`,
+  );
+  await rm(path.join(outDir, "processed"), { recursive: true, force: true });
+  await writeFile(path.join(outDir, "processed"), "blocks staging", "utf8");
+
+  await assert.rejects(
+    runAlboIngestion({
+      outDir,
+      fromFile: fixturePath,
+      inputFormat: "xml",
+      retrievedAt: "2026-06-19T09:00:00.000Z",
+      pdfFetch: async () =>
+        new Response(secondBytes, {
+          status: 200,
+          headers: { "content-type": "application/pdf" },
+        }),
+    }),
+    /EEXIST|ENOTDIR|Unsafe symlink or non-directory/,
+  );
+
+  assert.equal(
+    await readFile(first.paths.documentsManifest, "utf8"),
+    manifestBefore,
+  );
+  assert.deepEqual(new Uint8Array(await readFile(oldPath)), firstBytes);
+  await assert.rejects(readFile(newPath), { code: "ENOENT" });
 });
 
 test("builds a cumulative public-safe deliberations archive and honours later exclusions", async () => {
@@ -1975,6 +2992,103 @@ test("skips otherwise eligible PDFs when content type or size limit fails", asyn
   );
 });
 
+test("rejects every redirect hop that leaves the official HTTPS host", async () => {
+  const tmp = await mkdtemp(path.join(tmpdir(), "albo-pdf-redirect-host-"));
+  const fixturePath = path.join(tmp, "albo.xml");
+  const outDir = path.join(tmp, "data");
+  const documentUrl =
+    "https://albo.tinnvision.cloud/documenti/2026/redirect.pdf";
+  await writeFile(
+    fixturePath,
+    xmlRecord(
+      "2026/2503",
+      "AVVISO PUBBLICO",
+      "SEGRETERIA",
+      "Avviso con redirect non ufficiale",
+      "",
+      documentUrl,
+    ),
+    "utf8",
+  );
+  const calls: string[] = [];
+
+  try {
+    const result = await runAlboIngestion({
+      outDir,
+      fromFile: fixturePath,
+      inputFormat: "xml",
+      retrievedAt: FIXTURE_RETRIEVED_AT,
+      pdfFetch: async (url, init) => {
+        calls.push(String(url));
+        assert.equal(init?.redirect, "manual");
+        return new Response(null, {
+          status: 302,
+          headers: { location: "https://example.org/not-official.pdf" },
+        });
+      },
+    });
+    assert.deepEqual(calls, [documentUrl]);
+    assert.equal(result.documentsManifest.counts.archived, 0);
+    assert.equal(result.documentsManifest.decisions[0]?.reason, "fetch_failed");
+  } finally {
+    await rm(tmp, { recursive: true, force: true });
+  }
+});
+
+test("cancels an unbounded PDF stream as soon as it exceeds 10 MiB", async () => {
+  const tmp = await mkdtemp(path.join(tmpdir(), "albo-pdf-stream-cap-"));
+  const fixturePath = path.join(tmp, "albo.xml");
+  const outDir = path.join(tmp, "data");
+  const documentUrl =
+    "https://albo.tinnvision.cloud/documenti/2026/streamed.pdf";
+  await writeFile(
+    fixturePath,
+    xmlRecord(
+      "2026/2504",
+      "AVVISO PUBBLICO",
+      "SEGRETERIA",
+      "Avviso con allegato privo di content length",
+      "",
+      documentUrl,
+    ),
+    "utf8",
+  );
+  let cancelled = false;
+  const prefix = new TextEncoder().encode("%PDF-1.7\n");
+  const oversizedChunk = new Uint8Array(10 * 1024 * 1024);
+  oversizedChunk.set(prefix);
+  const body = new ReadableStream<Uint8Array>({
+    start(controller) {
+      controller.enqueue(oversizedChunk);
+      controller.enqueue(new Uint8Array([1]));
+    },
+    cancel() {
+      cancelled = true;
+    },
+  });
+
+  try {
+    const result = await runAlboIngestion({
+      outDir,
+      fromFile: fixturePath,
+      inputFormat: "xml",
+      retrievedAt: FIXTURE_RETRIEVED_AT,
+      pdfFetch: async () =>
+        new Response(body, {
+          headers: { "content-type": "application/pdf" },
+        }),
+    });
+    assert.equal(cancelled, true);
+    assert.equal(result.documentsManifest.counts.archived, 0);
+    assert.equal(
+      result.documentsManifest.decisions[0]?.reason,
+      "size_limit_exceeded",
+    );
+  } finally {
+    await rm(tmp, { recursive: true, force: true });
+  }
+});
+
 test("marks medium-risk minimised records as human_review_required without downloading or exposing the URL", async () => {
   const tmp = await mkdtemp(path.join(tmpdir(), "albo-tinnvision-pdf-review-"));
   const fixturePath = path.join(tmp, "albo.xml");
@@ -2071,6 +3185,28 @@ test("rejects official HTTP document URLs with a warning and without fetching", 
   assert.equal(manifest.includes(documentUrl), false);
   assert.match(manifest, /official document URL is not HTTPS/);
 });
+
+function pdfManifestPolicy() {
+  return {
+    eligibility:
+      "Archive only HTTPS official PDFs for records classified public_visibility=publishable and privacy_risk=low.",
+    official_url_host: "albo.tinnvision.cloud",
+    requires_https: true,
+    content_type: "application/pdf",
+    max_size_bytes: 10 * 1024 * 1024,
+    storage_path_template: "data/public/albo/documents/<year>/<sha>.pdf",
+    sha256_deduplication: true,
+    no_ocr: true,
+    no_pdf_parsing: true,
+    no_summaries: true,
+    no_rankings: true,
+    privacy_revocation_cleanup: true,
+    unmanaged_orphan_cleanup: false,
+    upstream_revalidation: "conditional_get_or_full_get",
+    local_reuse_verification: "path_sha256_size_and_pdf_signature",
+    paid_storage: false,
+  };
+}
 
 function snapshot(
   records: ReturnType<typeof parseTinnvisionXml>,

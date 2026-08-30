@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { createHash } from "node:crypto";
 import { mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
@@ -12,7 +13,8 @@ test("sanitises committed public artifacts and is idempotent", async () => {
   const tmp = await mkdtemp(path.join(tmpdir(), "albo-public-sanitiser-"));
   const outDir = path.join(tmp, "data");
   const publicDir = path.join(outDir, "public", "albo");
-  const digest = "c".repeat(64);
+  const documentBytes = Buffer.from("%PDF-1.7\npreviously archived\n");
+  const digest = createHash("sha256").update(documentBytes).digest("hex");
   const storagePath = `data/public/albo/documents/2026/${digest}.pdf`;
   const documentPath = path.join(
     outDir,
@@ -31,6 +33,32 @@ test("sanitises committed public artifacts and is idempotent", async () => {
     "documents",
     "2026",
     `${orphanDigest}.pdf`,
+  );
+  const archiveBytes = Buffer.from("%PDF-1.7\narchived deliberation\n");
+  const archiveDigest = createHash("sha256")
+    .update(archiveBytes)
+    .digest("hex");
+  const archiveStoragePath = `data/public/albo/documents/2026/${archiveDigest}.pdf`;
+  const archiveDocumentPath = path.join(
+    outDir,
+    "public",
+    "albo",
+    "documents",
+    "2026",
+    `${archiveDigest}.pdf`,
+  );
+  const reviewedBytes = Buffer.from("%PDF-1.7\nreviewed civic document\n");
+  const reviewedDigest = createHash("sha256")
+    .update(reviewedBytes)
+    .digest("hex");
+  const reviewedStoragePath = `data/public/albo/documents/2026/${reviewedDigest}.pdf`;
+  const reviewedDocumentPath = path.join(
+    outDir,
+    "public",
+    "albo",
+    "documents",
+    "2026",
+    `${reviewedDigest}.pdf`,
   );
   const documentUrl =
     "https://albo.tinnvision.cloud/allegati/2026_4301_2_P?ente=00301390795";
@@ -109,14 +137,25 @@ test("sanitises committed public artifacts and is idempotent", async () => {
       verification_status: "official_source_acquired",
       preservation_status: "archived",
       reason: "eligible_low_risk_publishable_pdf",
-      storage_path: orphanStoragePath,
-      sha256: orphanDigest,
-      size_bytes: 28,
+      storage_path: archiveStoragePath,
+      sha256: archiveDigest,
+      size_bytes: archiveBytes.byteLength,
       content_type: "application/pdf",
     },
   };
+  const retainedRecord = {
+    ...record,
+    id: "albo-2026-4303",
+    publication_number: "2026/4303",
+    office: "SEGRETERIA",
+    act_type: "AVVISO PUBBLICO",
+    content_hash: "a".repeat(64),
+    subject: "Avviso pubblico ordinario",
+    document_url:
+      "https://albo.tinnvision.cloud/allegati/2026_4303_2_P?ente=00301390795",
+  };
   const counts = {
-    acquired: 1,
+    acquired: 2,
     new: 1,
     changed: 0,
     removed: 0,
@@ -128,13 +167,15 @@ test("sanitises committed public artifacts and is idempotent", async () => {
   };
 
   await mkdir(path.dirname(documentPath), { recursive: true });
-  await writeFile(documentPath, "previously archived", "utf8");
+  await writeFile(documentPath, documentBytes);
   await writeFile(orphanDocumentPath, "orphaned manifest document", "utf8");
+  await writeFile(archiveDocumentPath, archiveBytes);
+  await writeFile(reviewedDocumentPath, reviewedBytes);
   await writeJson(path.join(publicDir, "latest.json"), {
     retrieved_at: record.retrieved_at,
     counts,
     known_limits: [],
-    items: [record],
+    items: [record, retainedRecord],
     excluded: [],
   });
   await writeJson(path.join(publicDir, "diff-latest.json"), {
@@ -155,11 +196,46 @@ test("sanitises committed public artifacts and is idempotent", async () => {
         id: record.id,
         document_url: documentUrl,
         storage_path: storagePath,
+        sha256: digest,
+        size_bytes: documentBytes.byteLength,
+        content_type: "application/pdf",
+        preservation_status: "archived",
+        reason: "eligible_low_risk_publishable_pdf",
+      },
+      {
+        id: retainedRecord.id,
+        document_url: retainedRecord.document_url,
+        storage_path: storagePath,
+        sha256: digest,
+        size_bytes: documentBytes.byteLength,
+        content_type: "application/pdf",
+        preservation_status: "archived",
+        reason: "eligible_low_risk_publishable_pdf",
       },
       {
         id: archiveRecord.id,
         document_url: archiveDocumentUrl,
+        storage_path: archiveStoragePath,
+        sha256: archiveDigest,
+        size_bytes: archiveBytes.byteLength,
+        content_type: "application/pdf",
+        preservation_status: "archived",
+        reason: "eligible_low_risk_publishable_pdf",
+      },
+      {
+        id: "albo-2026-9999",
+        document_url: "https://albo.tinnvision.cloud/allegati/orphan.pdf",
         storage_path: orphanStoragePath,
+      },
+      {
+        id: "albo-2026-9998",
+        document_url: "https://albo.tinnvision.cloud/allegati/reviewed.pdf",
+        storage_path: reviewedStoragePath,
+        sha256: reviewedDigest,
+        size_bytes: reviewedBytes.byteLength,
+        content_type: "application/pdf",
+        preservation_status: "archived",
+        reason: "eligible_low_risk_publishable_pdf",
       },
     ],
     decisions: [
@@ -170,8 +246,20 @@ test("sanitises committed public artifacts and is idempotent", async () => {
         reason: "eligible_low_risk_publishable_pdf",
       },
       {
+        id: retainedRecord.id,
+        document_url: retainedRecord.document_url,
+        preservation_status: "archived",
+        reason: "eligible_low_risk_publishable_pdf",
+      },
+      {
         id: archiveRecord.id,
         document_url: archiveDocumentUrl,
+        preservation_status: "archived",
+        reason: "eligible_low_risk_publishable_pdf",
+      },
+      {
+        id: "albo-2026-9998",
+        document_url: "https://albo.tinnvision.cloud/allegati/reviewed.pdf",
         preservation_status: "archived",
         reason: "eligible_low_risk_publishable_pdf",
       },
@@ -201,6 +289,26 @@ test("sanitises committed public artifacts and is idempotent", async () => {
     known_limits: [],
     items: [archiveRecord],
   });
+  await writeJson(
+    path.join(publicDir, "reviewed-document-serving-allowlist.json"),
+    {
+      schema_version: "albo-reviewed-document-serving.v1",
+      reviewed_at: "2026-06-18T10:00:00.000Z",
+      source: ALBO_PRETORIO_LAMEZIA_SOURCE.source,
+      source_url: ALBO_PRETORIO_LAMEZIA_SOURCE.sourceUrl,
+      known_limits: ["Fixture revisionata."],
+      documents: [
+        {
+          storage_path: reviewedStoragePath,
+          sha256: reviewedDigest,
+          source_publication_number: "2026/9998",
+          review_status: "approved_public_civic_document",
+          evidence_ref: "docs/reviewed-fixture.md",
+          reason: "Documento civico revisionato.",
+        },
+      ],
+    },
+  );
   await writeJson(path.join(publicDir, "status.json"), {
     counts,
     known_limits: [],
@@ -235,6 +343,21 @@ test("sanitises committed public artifacts and is idempotent", async () => {
 
     const first = await sanitiseAlboPublicArtifacts(outDir);
     const firstOutputs = await readOutputs(publicDir);
+    const invalidSignature = Buffer.alloc(documentBytes.byteLength, 120);
+    await writeFile(documentPath, invalidSignature);
+    await assert.rejects(
+      sanitiseAlboPublicArtifacts(outDir),
+      /signature is invalid/,
+    );
+    const invalidDigest = Buffer.from(documentBytes);
+    invalidDigest[invalidDigest.length - 1] = 120;
+    await writeFile(documentPath, invalidDigest);
+    await assert.rejects(
+      sanitiseAlboPublicArtifacts(outDir),
+      /physical digest is invalid/,
+    );
+    assert.deepEqual(await readOutputs(publicDir), firstOutputs);
+    await writeFile(documentPath, documentBytes);
     const second = await sanitiseAlboPublicArtifacts(outDir);
     const outputs = await readOutputs(publicDir);
     const serialised = outputs.join("\n");
@@ -255,9 +378,9 @@ test("sanitises committed public artifacts and is idempotent", async () => {
     assert.equal(second.revoked_documents.length, 0);
     assert.deepEqual(outputs, firstOutputs);
     assert.equal(latest.items[0]?.public_visibility, "metadata_only");
-    assert.equal(latest.counts.publishable, 0);
+    assert.equal(latest.counts.publishable, 1);
     assert.equal(latest.counts.metadata_only, 1);
-    assert.equal(manifest.documents.length, 0);
+    assert.equal(manifest.documents.length, 1);
     assert.equal(manifest.decisions[0]?.reason, "privacy_excluded");
     assert.equal(manifest.counts.revoked, 2);
     assert.equal(archive.items[0]?.public_visibility, "metadata_only");
@@ -273,7 +396,15 @@ test("sanitises committed public artifacts and is idempotent", async () => {
     assert.doesNotMatch(serialised, /PERSONA FITTIZIA/i);
     assert.doesNotMatch(serialised, /2026_4301_2_P/i);
     assert.doesNotMatch(serialised, /ROSSI MARIO/i);
-    await assert.rejects(readFile(documentPath));
+    assert.equal(
+      await readFile(documentPath, "utf8"),
+      documentBytes.toString(),
+    );
+    await assert.rejects(readFile(archiveDocumentPath));
+    assert.deepEqual(
+      new Uint8Array(await readFile(reviewedDocumentPath)),
+      new Uint8Array(reviewedBytes),
+    );
     await assert.rejects(readFile(orphanDocumentPath));
   } finally {
     await rm(tmp, { recursive: true, force: true });

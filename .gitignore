@@ -77,3 +77,4 @@ data/raw/comune-lamezia-opendata/*.json
 # non-minimised source data. Only data/public/albo/** is commit-safe.
 data/snapshots/albo/
 data/processed/albo/
+data/.albo-publication-transaction/
