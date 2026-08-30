@@ -1,4 +1,5 @@
 import * as core from "./propostePubblicheCore";
+import { applyScoutingUpdates } from "./proposalScoutingUpdates";
 import { SCOUTED_PUBLIC_PROPOSALS } from "./propostePubblicheScouting";
 
 export type {
@@ -29,8 +30,10 @@ export {
   groupProposalsByThread,
 } from "./propostePubblicheCore";
 
+const UPDATED_CORE_PROPOSALS = core.PUBLIC_PROPOSALS.map(applyScoutingUpdates);
+
 export const PUBLIC_PROPOSALS = [
-  ...core.PUBLIC_PROPOSALS,
+  ...UPDATED_CORE_PROPOSALS,
   ...SCOUTED_PUBLIC_PROPOSALS,
 ] as const satisfies readonly core.PublicProposal[];
 
