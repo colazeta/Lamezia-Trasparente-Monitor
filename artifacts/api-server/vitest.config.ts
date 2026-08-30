@@ -15,6 +15,7 @@ const databaseConfig = hasTestDatabaseConfig()
 const databaseFreeTests = [
   "src/lib/geocode.test.ts",
   "src/lib/ingestionSchedulerConfig.test.ts",
+  "src/lib/publicActProjection.unit.test.ts",
 ];
 
 export default defineConfig({

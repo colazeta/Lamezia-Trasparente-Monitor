@@ -8,7 +8,6 @@ import {
   performanceIndicatorsTable,
   performanceIndicatorValuesTable,
   attuazionePnrrProjectsTable,
-  type Publication,
   type PerformanceIndicator,
 } from "@workspace/db";
 import {
@@ -18,13 +17,20 @@ import {
   eq,
   gte,
   ilike,
-  isNotNull,
-  isNull,
   lte,
   or,
   sql,
   type SQL,
 } from "drizzle-orm";
+import {
+  mapPublicDocument,
+  mapPublicDocumentMarkdown,
+} from "./publicActProjection";
+import {
+  findPublicationByPublicIdentifier,
+  type PublicActIdentifier,
+} from "./publicActLookup";
+import { normaliseSearchText } from "@workspace/publication-standardisation";
 
 // Strato di accesso ai dati condiviso dall'API pubblica REST e dal server MCP,
 // così le due superfici espongono esattamente gli stessi dati e filtri. Tutto
@@ -88,63 +94,10 @@ function asString(value: unknown): string | undefined {
 
 // --- Documenti (atti / pubblicazioni Albo Pretorio) ---
 
-function mapAttachment(a: {
-  name: string;
-  tipo: string;
-  officialUrl: string;
-  storagePath: string | null;
-  contentType: string | null;
-  size: number | null;
-}) {
-  return {
-    name: a.name,
-    officialUrl: a.officialUrl,
-    archivedUrl: a.storagePath,
-    contentType: a.contentType,
-    size: a.size,
-  };
-}
-
-export function mapDocument(p: Publication) {
-  return {
-    id: p.id,
-    progressivo: p.progressivo,
-    tipologia: p.tipologia,
-    category: p.category,
-    subcategory: p.subcategory,
-    provenienza: p.provenienza,
-    oggetto: p.oggetto,
-    dataAtto: p.dataAtto ? p.dataAtto.toISOString() : null,
-    pubStart: p.pubStart ? p.pubStart.toISOString() : null,
-    pubEnd: p.pubEnd ? p.pubEnd.toISOString() : null,
-    numRegSet: p.numRegSet,
-    numRegGen: p.numRegGen,
-    cups: p.cups,
-    pnrrMission: p.pnrrMission,
-    isPnrr: p.isPnrr,
-    attachments: (p.attachments ?? []).map(mapAttachment),
-    hasMarkdown: Boolean(p.markdownText),
-    markdownSource: p.markdownSource,
-    markdownExtractedAt: p.markdownExtractedAt
-      ? p.markdownExtractedAt.toISOString()
-      : null,
-  };
-}
-
 function documentFilters(query: Record<string, unknown>): SQL[] {
   const conditions: SQL[] = [];
-  const q = asString(query.q);
-  if (q) {
-    const clause = or(
-      ilike(publicationsTable.oggetto, `%${q}%`),
-      ilike(publicationsTable.tipologia, `%${q}%`),
-    );
-    if (clause) conditions.push(clause);
-  }
   const category = asString(query.category);
   if (category) conditions.push(eq(publicationsTable.category, category));
-  const tipologia = asString(query.tipologia);
-  if (tipologia) conditions.push(eq(publicationsTable.tipologia, tipologia));
 
   const from = asString(query.from);
   if (from) {
@@ -162,80 +115,74 @@ function documentFilters(query: Record<string, unknown>): SQL[] {
     }
   }
 
-  const isPnrr = asBool(query.isPnrr);
-  if (isPnrr !== undefined) {
-    conditions.push(eq(publicationsTable.isPnrr, isPnrr));
-  }
-  const hasMarkdown = asBool(query.hasMarkdown);
-  if (hasMarkdown === true) {
-    conditions.push(isNotNull(publicationsTable.markdownText));
-  } else if (hasMarkdown === false) {
-    conditions.push(isNull(publicationsTable.markdownText));
-  }
   return conditions;
+}
+
+function filterPublicDocuments(
+  rows: NonNullable<ReturnType<typeof mapPublicDocument>>[],
+  query: Record<string, unknown>,
+) {
+  const q = asString(query.q);
+  const normalisedQuery = q ? normaliseSearchText(q) : null;
+  const tipologia = asString(query.tipologia);
+  const isPnrr = asBool(query.isPnrr);
+  const hasMarkdown = asBool(query.hasMarkdown);
+  return rows.filter((row) => {
+    if (
+      normalisedQuery &&
+      !row.presentation.search_text.includes(normalisedQuery)
+    ) {
+      return false;
+    }
+    if (tipologia && row.tipologia !== tipologia) return false;
+    if (isPnrr !== undefined && row.isPnrr !== isPnrr) return false;
+    if (hasMarkdown !== undefined && row.hasMarkdown !== hasMarkdown)
+      return false;
+    return true;
+  });
 }
 
 export async function listDocuments(
   query: Record<string, unknown>,
-): Promise<Paginated<ReturnType<typeof mapDocument>>> {
+): Promise<Paginated<NonNullable<ReturnType<typeof mapPublicDocument>>>> {
   const pagination = parsePagination(query);
   const conditions = documentFilters(query);
   const where = conditions.length ? and(...conditions) : undefined;
-
-  const [rows, [{ count }]] = await Promise.all([
-    db
-      .select()
-      .from(publicationsTable)
-      .where(where)
-      .orderBy(desc(publicationsTable.pubStart), desc(publicationsTable.id))
-      .limit(pagination.pageSize)
-      .offset(pagination.offset),
-    db
-      .select({ count: sql<number>`count(*)::int` })
-      .from(publicationsTable)
-      .where(where),
-  ]);
-
-  return envelope(rows.map(mapDocument), count, pagination);
-}
-
-export async function getDocument(
-  id: number,
-): Promise<ReturnType<typeof mapDocument> | null> {
-  if (!Number.isFinite(id)) return null;
-  const [row] = await db
+  const rows = await db
     .select()
     .from(publicationsTable)
-    .where(eq(publicationsTable.id, id))
-    .limit(1);
-  return row ? mapDocument(row) : null;
+    .where(where)
+    .orderBy(desc(publicationsTable.pubStart), desc(publicationsTable.id));
+  const projected = filterPublicDocuments(
+    rows.flatMap((row) => {
+      const item = mapPublicDocument(row);
+      return item ? [item] : [];
+    }),
+    query,
+  );
+  return envelope(
+    projected.slice(pagination.offset, pagination.offset + pagination.pageSize),
+    projected.length,
+    pagination,
+  );
 }
 
-export async function getDocumentMarkdown(id: number): Promise<{
+export async function getDocument(identifier: PublicActIdentifier) {
+  const row = await findPublicationByPublicIdentifier(identifier);
+  return row ? mapPublicDocument(row) : null;
+}
+
+export async function getDocumentMarkdown(identifier: PublicActIdentifier): Promise<{
   id: number;
+  publicId: string;
   progressivo: string;
   oggetto: string;
   markdownSource: string | null;
   markdownExtractedAt: string | null;
   markdown: string;
 } | null> {
-  if (!Number.isFinite(id)) return null;
-  const [row] = await db
-    .select()
-    .from(publicationsTable)
-    .where(eq(publicationsTable.id, id))
-    .limit(1);
-  if (!row || !row.markdownText) return null;
-  return {
-    id: row.id,
-    progressivo: row.progressivo,
-    oggetto: row.oggetto,
-    markdownSource: row.markdownSource,
-    markdownExtractedAt: row.markdownExtractedAt
-      ? row.markdownExtractedAt.toISOString()
-      : null,
-    markdown: row.markdownText,
-  };
+  const row = await findPublicationByPublicIdentifier(identifier);
+  return row ? mapPublicDocumentMarkdown(row) : null;
 }
 
 // --- Contratti pubblici (ANAC) ---

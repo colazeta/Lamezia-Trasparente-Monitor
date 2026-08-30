@@ -4,9 +4,8 @@ import {
   feedStatusTable,
   runOrganiSedutaSync,
   classifyMacrotema,
-  type InsertPublication,
 } from "@workspace/db";
-import { sql, inArray } from "drizzle-orm";
+import { eq, inArray, isNull, sql } from "drizzle-orm";
 import { logger } from "./logger";
 import { runAttuazioneIngestion } from "./attuazionePnrr";
 import { runItaliadomaniIngestion } from "./italiadomaniPnrr";
@@ -30,6 +29,11 @@ import {
   MONITORED_SOURCE_BY_ID,
   type MonitoredSourceId,
 } from "./sourceRegistry";
+import {
+  attestPublicationAtIngestion,
+  publicationSafetySourceFromRecord,
+  type PublicationSafetySource,
+} from "./publicActProjection";
 
 export const ALBO_SOURCE = "albo-lamezia";
 export const ALBO_LABEL = "Albo Pretorio – Amministrazione Trasparente";
@@ -99,11 +103,19 @@ function classify(tipologia: string, oggetto: string) {
   return { category, subcategory };
 }
 
-function parseAlboXml(xml: string): InsertPublication[] {
+type ParsedAlboPublication = Omit<
+  PublicationSafetySource,
+  "tipologia" | "oggetto"
+> & {
+  tipologia: string;
+  oggetto: string;
+};
+
+export function parseAlboXml(xml: string): ParsedAlboPublication[] {
   const blocks = [
     ...xml.matchAll(/<pubblicazione>([\s\S]*?)<\/pubblicazione>/g),
   ];
-  const out: InsertPublication[] = [];
+  const out: ParsedAlboPublication[] = [];
 
   for (const b of blocks) {
     const block = b[1];
@@ -179,39 +191,98 @@ export async function runIngestion(): Promise<{
       const progressivi = items.map((i) => i.progressivo);
       const existing = progressivi.length
         ? await tx
-            .select({ progressivo: publicationsTable.progressivo })
+            .select()
             .from(publicationsTable)
             .where(inArray(publicationsTable.progressivo, progressivi))
         : [];
       const existingSet = new Set(existing.map((e) => e.progressivo));
+      const existingByProgressivo = new Map(
+        existing.map((publication) => [publication.progressivo, publication]),
+      );
 
       const fresh = items.filter((i) => !existingSet.has(i.progressivo));
-      if (fresh.length) {
+      const now = new Date();
+      for (const item of items) {
+        const previous = existingByProgressivo.get(item.progressivo);
+        const macrotema = previous?.macrotemanManual
+          ? previous.macrotema
+          : (previous?.macrotema ??
+            classifyMacrotema(`${item.oggetto} ${item.tipologia ?? ""}`));
+        const publicSafetyDecision = attestPublicationAtIngestion({
+          source: item,
+          evaluatedAt: now,
+          previous: previous?.publicSafetyDecision ?? null,
+        });
         await tx
           .insert(publicationsTable)
-          .values(
-            fresh.map((i) => ({
-              ...i,
-              isNew: !firstRun,
-              // Classifica e persiste il macrotema al momento dell'inserimento;
-              // rispetta il principio "manuale vince": non toccare se macrotemanManual=true
-              // (gestito in separata curazione admin, mai in INSERT automatico).
-              macrotema: classifyMacrotema(`${i.oggetto} ${i.tipologia ?? ""}`),
-            })),
-          )
-          .onConflictDoNothing({ target: publicationsTable.progressivo });
+          .values({
+            ...item,
+            dataAtto: asDate(item.dataAtto),
+            pubStart: asDate(item.pubStart),
+            pubEnd: asDate(item.pubEnd),
+            cups: [...item.cups],
+            isNew: previous?.isNew ?? !firstRun,
+            // Colma i macrotemi automatici ancora null, senza sovrascrivere
+            // l'eventuale curatela manuale.
+            macrotema,
+            publicSafetyDecision,
+            lastSeenAt: now,
+          })
+          .onConflictDoUpdate({
+            target: publicationsTable.progressivo,
+            set: {
+              tipologia: item.tipologia ?? "ALTRO",
+              category: item.category,
+              subcategory: item.subcategory,
+              provenienza: item.provenienza,
+              oggetto: item.oggetto ?? "",
+              dataAtto: asDate(item.dataAtto),
+              pubStart: asDate(item.pubStart),
+              pubEnd: asDate(item.pubEnd),
+              numRegSet: item.numRegSet,
+              numRegGen: item.numRegGen,
+              cups: [...item.cups],
+              pnrrMission: item.pnrrMission,
+              isPnrr: item.isPnrr,
+              macrotema,
+              publicSafetyDecision,
+              lastSeenAt: now,
+            },
+          });
       }
 
-      const now = new Date();
-
-      // Aggiorna lastSeenAt per tutti gli atti presenti nel feed corrente, così
-      // si possono individuare le pubblicazioni sparite (pattern uniforme a
-      // contratti ANAC e progetti PNRR).
-      if (progressivi.length) {
+      // Historical rows may no longer occur in the current Albo export. Give
+      // every still-unattested row the same ingestion-boundary assessment and
+      // repair only legacy generic categories; no request path reads raw fields
+      // to compensate for a missing decision.
+      const legacyRows = await tx
+        .select()
+        .from(publicationsTable)
+        .where(isNull(publicationsTable.publicSafetyDecision));
+      for (const legacy of legacyRows) {
+        const inferred = classify(legacy.tipologia, legacy.oggetto);
+        const category =
+          legacy.category === "albo" ? inferred.category : legacy.category;
+        const subcategory =
+          legacy.subcategory ??
+          (category === inferred.category ? inferred.subcategory : null);
+        const publicSafetyDecision = attestPublicationAtIngestion({
+          source: {
+            ...publicationSafetySourceFromRecord(legacy),
+            category,
+            subcategory,
+          },
+          evaluatedAt: now,
+          previous: null,
+        });
+        const macrotema = legacy.macrotemanManual
+          ? legacy.macrotema
+          : (legacy.macrotema ??
+            classifyMacrotema(`${legacy.oggetto} ${legacy.tipologia ?? ""}`));
         await tx
           .update(publicationsTable)
-          .set({ lastSeenAt: now })
-          .where(inArray(publicationsTable.progressivo, progressivi));
+          .set({ category, subcategory, macrotema, publicSafetyDecision })
+          .where(eq(publicationsTable.id, legacy.id));
       }
       await tx
         .insert(feedStatusTable)
@@ -266,6 +337,11 @@ export async function runIngestion(): Promise<{
       });
     throw err;
   }
+}
+
+function asDate(value: Date | string | null): Date | null {
+  if (!value) return null;
+  return value instanceof Date ? value : new Date(value);
 }
 
 const INGESTION_INTERVAL_MS = 3 * 60 * 60 * 1000;

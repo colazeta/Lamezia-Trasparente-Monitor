@@ -14,6 +14,7 @@ import {
 } from "@workspace/api-zod";
 import { requireIngestAuth } from "../middlewares/requireIngestAuth";
 import { refreshFundamentalActSuggestion } from "../lib/fundamentalActs";
+import { mapPublicPublication } from "../lib/publicActProjection";
 
 const router: IRouter = Router();
 
@@ -26,9 +27,12 @@ type PublicationAttachment = {
   size: number | null;
 };
 
-function publicationAttachments(p: Publication | undefined): PublicationAttachment[] {
+function publicationAttachments(
+  p: Publication | undefined,
+): PublicationAttachment[] {
   if (!p) return [];
-  return (p.attachments ?? []) as PublicationAttachment[];
+  return (mapPublicPublication(p)?.attachments ??
+    []) as PublicationAttachment[];
 }
 
 function mapPublicationSummary(p: Publication) {
@@ -103,10 +107,7 @@ function mapPublic(act: FundamentalAct, linked: Publication | undefined) {
   };
 }
 
-function mapAdmin(
-  act: FundamentalAct,
-  byId: Map<number, Publication>,
-) {
+function mapAdmin(act: FundamentalAct, byId: Map<number, Publication>) {
   const linked = act.linkedPublicationId
     ? byId.get(act.linkedPublicationId)
     : undefined;
@@ -165,7 +166,9 @@ router.get("/atti-fondamentali", async (_req: Request, res: Response) => {
   const result = acts
     .map((a) => ({
       act: a,
-      linked: a.linkedPublicationId ? byId.get(a.linkedPublicationId) : undefined,
+      linked: a.linkedPublicationId
+        ? byId.get(a.linkedPublicationId)
+        : undefined,
     }))
     .filter(({ act, linked }) => isPublished(act, linked))
     .map(({ act, linked }) => mapPublic(act, linked));

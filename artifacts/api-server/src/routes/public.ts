@@ -29,7 +29,7 @@ function baseUrl(req: Request): string {
   return `${origin(req)}/api/public/v1`;
 }
 
-function parseId(raw: string): number {
+function parseNumericId(raw: string): number {
   return Number.parseInt(raw, 10);
 }
 
@@ -69,7 +69,7 @@ router.get("/documents", async (req, res) => {
 });
 
 router.get("/documents/:id/markdown", async (req, res) => {
-  const result = await getDocumentMarkdown(parseId(req.params.id));
+  const result = await getDocumentMarkdown(req.params.id);
   if (!result) {
     res.status(404).json({ error: "Testo Markdown non disponibile per questo atto" });
     return;
@@ -82,7 +82,7 @@ router.get("/documents/:id/markdown", async (req, res) => {
 });
 
 router.get("/documents/:id", async (req, res) => {
-  const doc = await getDocument(parseId(req.params.id));
+  const doc = await getDocument(req.params.id);
   if (!doc) {
     res.status(404).json({ error: "Atto non trovato" });
     return;
@@ -96,7 +96,7 @@ router.get("/contracts", async (req, res) => {
 });
 
 router.get("/contracts/:id", async (req, res) => {
-  const contract = await getContract(parseId(req.params.id));
+  const contract = await getContract(parseNumericId(req.params.id));
   if (!contract) {
     res.status(404).json({ error: "Contratto non trovato" });
     return;
@@ -110,7 +110,7 @@ router.get("/themes", async (req, res) => {
 });
 
 router.get("/themes/:id", async (req, res) => {
-  const theme = await getTheme(parseId(req.params.id));
+  const theme = await getTheme(parseNumericId(req.params.id));
   if (!theme) {
     res.status(404).json({ error: "Tema non trovato" });
     return;

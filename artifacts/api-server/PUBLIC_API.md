@@ -64,14 +64,44 @@ e restituiscono una busta uniforme:
   - `from`, `to` — intervallo di pubblicazione (`YYYY-MM-DD`)
   - `isPnrr` — solo atti collegati al PNRR (`true`/`false`)
   - `hasMarkdown` — solo atti con testo Markdown estratto (`true`/`false`)
-- `GET /documents/{id}` — dettaglio di un atto (metadati + allegati)
-- `GET /documents/{id}/markdown` — testo pulito in Markdown estratto
+- `GET /documents/{id}` — dettaglio di un atto (metadati + allegati); `{id}`
+  accetta sia l'id numerico legacy sia il `publicId` stabile
+- `GET /documents/{id}/markdown` — testo pulito in Markdown estratto; accetta
+  gli stessi due identificatori
   dall'allegato PDF principale.
   - Default: JSON `{ id, progressivo, oggetto, markdownSource, markdownExtractedAt, markdown }`
   - Con `?format=md`: risposta diretta `text/markdown`
 
 Ogni allegato espone sia il link al portale ufficiale (`officialUrl`) sia, quando
-disponibile, la copia archiviata sulla piattaforma (`archivedUrl`).
+disponibile, la copia archiviata sulla piattaforma (`archivedUrl`), ma soltanto
+se l'artefatto ha un'attestazione public-safe esplicita. La sola presenza del
+file nel database non autorizza la pubblicazione.
+
+Ogni atto include inoltre:
+
+- `publicId`, identificatore stabile condiviso (`albo-YYYY-N` per i progressivi
+  ufficiali canonici, `albo-raw-…` con codifica reversibile negli altri casi),
+  indipendente dall'id numerico interno del database e direttamente utilizzabile
+  negli endpoint di dettaglio REST e nei tool MCP;
+- `presentation`, con `display_title`, testo di ricerca normalizzato e audit
+  della standardizzazione;
+- `publicSafety`, con policy/profilo applicati, visibilità, rischio prudenziale
+  e stato delle attestazioni di allegati e Markdown.
+
+La proiezione è fail-closed: `do_not_publish` è escluso; attestazioni assenti,
+non valide, obsolete o non più coerenti col fingerprint della fonte producono
+soltanto un record generico `metadata_only`, senza riclassificare il testo raw a
+request-time. Lo stato è osservabile in `attestation_status`,
+`attestation_reason`, `attested_at` e `source_fingerprint_verified`.
+`publishable_with_minimisation` e `metadata_only` conservano soltanto i campi
+ammessi. Il wire format storico resta disponibile, ma i suoi valori provengono
+dalla stessa proiezione usata da REST, MCP e RSS.
+
+L'attestazione DB viene creata e rinnovata esclusivamente durante l'ingestione.
+Un cambio di policy o profilo non rende automaticamente più permissiva una
+decisione precedente; serve una nuova attestazione. Finché non esiste una
+allowlist dedicata agli artefatti, i percorsi archiviati dell'Albo e il Markdown
+estratto restano non pubblicabili anche se presenti nello storage interno.
 
 ### Contratti pubblici (ANAC)
 
@@ -226,9 +256,10 @@ curl -X POST "https://<host>/api/mcp" \
 
 ## Estrazione del testo (Markdown)
 
-Per gli atti con un allegato PDF non firmato, la piattaforma estrae in modo
-best-effort il testo e lo ripulisce in Markdown, con un'intestazione di metadati
-(tipologia, progressivo, date, provenienza, link alla fonte) seguita dal corpo
-del documento. Il testo è disponibile via `GET /documents/{id}/markdown` e via il
-tool MCP `get_document_markdown`. Gli allegati firmati `.p7m` non vengono
+Per gli atti con un allegato PDF non firmato, la piattaforma può estrarre in
+modo best-effort il testo e ripulirlo in Markdown. Il testo è pubblicato via
+`GET /documents/{id}/markdown` e tramite il tool MCP
+`get_document_markdown` soltanto dopo un'attestazione public-safe esplicita.
+In assenza dell'attestazione l'endpoint risponde `404`, anche se il testo è
+presente nello storage interno. Gli allegati firmati `.p7m` non vengono
 elaborati.

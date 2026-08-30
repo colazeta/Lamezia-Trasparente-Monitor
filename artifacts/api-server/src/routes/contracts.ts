@@ -26,6 +26,7 @@ import {
   type StorylineEvent,
   type StorylineIndicators,
 } from "../lib/contractStoryline";
+import { mapPublicPublication } from "../lib/publicActProjection";
 
 const router: IRouter = Router();
 
@@ -362,10 +363,14 @@ router.get("/contracts/:id/storyline", async (req, res) => {
   // forza del collegamento) è poi rifinito da `matchStrength`.
   const candidateFilters: SQL[] = [];
   if (contract.cig) {
-    candidateFilters.push(ilike(publicationsTable.oggetto, `%${contract.cig}%`));
+    candidateFilters.push(
+      ilike(publicationsTable.oggetto, `%${contract.cig}%`),
+    );
   }
   if (contract.cup) {
-    candidateFilters.push(ilike(publicationsTable.oggetto, `%${contract.cup}%`));
+    candidateFilters.push(
+      ilike(publicationsTable.oggetto, `%${contract.cup}%`),
+    );
     candidateFilters.push(
       sql`${contract.cup} = ANY(${publicationsTable.cups})`,
     );
@@ -379,6 +384,11 @@ router.get("/contracts/:id/storyline", async (req, res) => {
       .where(or(...candidateFilters));
   }
 
+  const publicPublications = publications.flatMap((publication) => {
+    const projected = mapPublicPublication(publication);
+    return projected ? [projected] : [];
+  });
+
   const { timeline, indicators } = buildStoryline(
     {
       cig: contract.cig,
@@ -386,20 +396,20 @@ router.get("/contracts/:id/storyline", async (req, res) => {
       amount: Number(contract.amount),
       awardDate: contract.awardDate,
     },
-    publications.map((p) => ({
+    publicPublications.map((p) => ({
       id: p.id,
       progressivo: p.progressivo,
       tipologia: p.tipologia,
       oggetto: p.oggetto,
       cups: p.cups,
-      dataAtto: p.dataAtto,
-      pubStart: p.pubStart,
+      dataAtto: p.dataAtto ? new Date(p.dataAtto) : null,
+      pubStart: p.pubStart ? new Date(p.pubStart) : null,
     })),
   );
 
   // Allegati e link ufficiali, indicizzati per pubblicazione, per arricchire la
   // timeline lato client senza esporre l'intero record della pubblicazione.
-  const pubById = new Map(publications.map((p) => [p.id, p]));
+  const pubById = new Map(publicPublications.map((p) => [p.id, p]));
 
   res.json({
     contract: mapContract(contract),

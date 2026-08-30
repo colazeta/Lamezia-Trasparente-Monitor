@@ -4,6 +4,8 @@ import { inArray } from "drizzle-orm";
 import request from "supertest";
 import app from "../app";
 import { db, pool, publicationsTable } from "@workspace/db";
+import { publicActPublicId } from "@workspace/publication-standardisation/public-act";
+import { attestPublicationAtIngestion } from "../lib/publicActProjection";
 
 const createdIds: number[] = [];
 const ACCEPT = "application/json, text/event-stream";
@@ -42,7 +44,9 @@ function toolResult(body: { result: { content: { text: string }[] } }) {
 afterEach(async () => {
   const ids = createdIds.splice(0);
   if (ids.length) {
-    await db.delete(publicationsTable).where(inArray(publicationsTable.id, ids));
+    await db
+      .delete(publicationsTable)
+      .where(inArray(publicationsTable.id, ids));
   }
 });
 
@@ -83,7 +87,7 @@ describe("MCP server", () => {
     );
   });
 
-  it("calls search_documents and get_document_markdown", async () => {
+  it("shares document search and keeps unattested Markdown closed", async () => {
     const id = await createPublication({
       markdownText: "# Atto\n\nContenuto.",
       markdownSource: "allegato.pdf",
@@ -92,12 +96,17 @@ describe("MCP server", () => {
 
     const search = await rpc(
       "tools/call",
-      { name: "search_documents", arguments: { hasMarkdown: true, pageSize: 100 } },
+      {
+        name: "search_documents",
+        arguments: { hasMarkdown: true, pageSize: 100 },
+      },
       3,
     );
     expect(search.status).toBe(200);
     const page = toolResult(search.body);
-    expect(page.pagination.total).toBeGreaterThanOrEqual(1);
+    expect(
+      page.data.find((item: { id: number }) => item.id === id),
+    ).toBeUndefined();
 
     const md = await rpc(
       "tools/call",
@@ -105,7 +114,8 @@ describe("MCP server", () => {
       4,
     );
     expect(md.status).toBe(200);
-    expect(toolResult(md.body).markdown).toContain("# Atto");
+    expect(md.body.result.isError).toBe(true);
+    expect(JSON.stringify(md.body)).not.toContain("# Atto");
   });
 
   it("returns an error result for a missing entity", async () => {
@@ -116,6 +126,48 @@ describe("MCP server", () => {
     );
     expect(res.status).toBe(200);
     expect(res.body.result.isError).toBe(true);
+  });
+
+  it("dereferences an act by stable publicId", async () => {
+    const unique = `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+    const progressivo = `mcp-lookup/${unique}`;
+    const oggetto = `Atto MCP lookup ${unique}`;
+    const pubStart = new Date("2026-02-01T00:00:00.000Z");
+    const publicSafetyDecision = attestPublicationAtIngestion({
+      source: {
+        progressivo,
+        tipologia: "DELIBERAZIONE",
+        category: "delibera",
+        subcategory: null,
+        provenienza: null,
+        oggetto,
+        dataAtto: null,
+        pubStart,
+        pubEnd: null,
+        numRegSet: null,
+        numRegGen: null,
+        cups: [],
+        pnrrMission: null,
+        isPnrr: false,
+      },
+      evaluatedAt: new Date("2026-08-30T09:00:00.000Z"),
+      previous: null,
+    });
+    const id = await createPublication({
+      progressivo,
+      oggetto,
+      pubStart,
+      publicSafetyDecision,
+    });
+    const publicId = publicActPublicId(progressivo)!;
+
+    const res = await rpc(
+      "tools/call",
+      { name: "get_document", arguments: { id: publicId } },
+      6,
+    );
+    expect(res.status).toBe(200);
+    expect(toolResult(res.body)).toMatchObject({ id, publicId, progressivo });
   });
 
   it("rejects GET with 405", async () => {

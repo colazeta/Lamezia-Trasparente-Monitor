@@ -9,6 +9,7 @@ import type { StoriaPublicationItemMatchedBy } from './storiaPublicationItemMatc
 
 export interface StoriaPublicationItem {
   id: number;
+  publicId: string;
   progressivo: string;
   oggetto: string;
   tipologia: string;
@@ -17,5 +18,7 @@ export interface StoriaPublicationItem {
   pubStart?: string | null;
   /** @nullable */
   macrotema?: string | null;
+  /** @nullable */
+  subcategory?: string | null;
   matchedBy: StoriaPublicationItemMatchedBy;
 }

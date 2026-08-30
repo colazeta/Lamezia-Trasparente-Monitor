@@ -7,11 +7,11 @@ import {
   publicationsTable,
   reportsTable,
   sharesTable,
-  classifyMacrotema,
   MACROTEMA_KEYS,
   type MacrotemaKey,
 } from "@workspace/db";
 import { eq, desc, isNotNull, sql } from "drizzle-orm";
+import { mapPublicPublication } from "../lib/publicActProjection";
 
 const router: IRouter = Router();
 
@@ -46,10 +46,10 @@ const themeSelect = {
 };
 
 router.get("/stats/overview", async (_req, res) => {
-  const [[themes], [contracts], [acts], [reports], [agg]] = await Promise.all([
+  const [[themes], [contracts], actRows, [reports], [agg]] = await Promise.all([
     db.select({ count: sql<number>`count(*)::int` }).from(themesTable),
     db.select({ count: sql<number>`count(*)::int` }).from(contractsTable),
-    db.select({ count: sql<number>`count(*)::int` }).from(publicationsTable),
+    db.select().from(publicationsTable),
     db.select({ count: sql<number>`count(*)::int` }).from(reportsTable),
     db
       .select({
@@ -68,7 +68,7 @@ router.get("/stats/overview", async (_req, res) => {
   res.json({
     themes: themes.count,
     contracts: contracts.count,
-    acts: acts.count,
+    acts: actRows.filter((row) => mapPublicPublication(row) !== null).length,
     reports: reports.count,
     totalRelevance: agg.totalRelevance,
     totalShares: agg.totalShares,
@@ -120,14 +120,10 @@ router.get("/stats/activity", async (_req, res) => {
       .orderBy(desc(contractsTable.awardDate))
       .limit(10),
     db
-      .select({
-        id: publicationsTable.id,
-        title: publicationsTable.oggetto,
-        date: publicationsTable.pubStart,
-      })
+      .select()
       .from(publicationsTable)
       .orderBy(desc(publicationsTable.pubStart))
-      .limit(10),
+      .limit(50),
     db
       .select({
         id: reportsTable.id,
@@ -155,15 +151,19 @@ router.get("/stats/activity", async (_req, res) => {
       date: c.date,
       themeId: c.themeId,
     })),
-    ...acts
-      .filter((a) => a.date !== null)
-      .map((a) => ({
-        id: `act-${a.id}`,
+    ...acts.flatMap((act) => {
+      const projected = mapPublicPublication(act);
+      if (!projected) return [];
+      const dateValue =
+        projected.pubStart ?? projected.dataAtto ?? projected.firstSeenAt;
+      return [{
+        id: `act-${projected.publicId}`,
         type: "act" as const,
-        title: a.title,
-        date: a.date as Date,
+        title: projected.presentation.display_title,
+        date: new Date(dateValue),
         themeId: null as number | null,
-      })),
+      }];
+    }),
     ...reports
       .filter((r) => r.date !== null)
       .map((r) => ({
@@ -197,31 +197,37 @@ router.get("/stats/publications-timeline", async (req, res) => {
       : 90;
 
   const rows = await db
-    .select({
-      day: sql<string>`to_char(date_trunc('day', ${publicationsTable.pubStart}), 'YYYY-MM-DD')`,
-      count: sql<number>`count(*)::int`,
-    })
+    .select()
     .from(publicationsTable)
     .where(
       sql`${publicationsTable.pubStart} IS NOT NULL AND ${publicationsTable.pubStart} >= now() - (${days} || ' days')::interval`,
     )
-    .groupBy(sql`date_trunc('day', ${publicationsTable.pubStart})`)
-    .orderBy(sql`date_trunc('day', ${publicationsTable.pubStart}) asc`);
+    .orderBy(publicationsTable.pubStart);
 
-  res.json({ days, points: rows });
+  const byDay = new Map<string, number>();
+  for (const row of rows) {
+    const projected = mapPublicPublication(row);
+    const day = projected?.pubStart?.slice(0, 10);
+    if (day) byDay.set(day, (byDay.get(day) ?? 0) + 1);
+  }
+  const points = [...byDay.entries()].map(([day, count]) => ({ day, count }));
+
+  res.json({ days, points });
 });
 
 router.get("/stats/publications-categories", async (_req, res) => {
-  const rows = await db
-    .select({
-      category: publicationsTable.category,
-      count: sql<number>`count(*)::int`,
-    })
-    .from(publicationsTable)
-    .groupBy(publicationsTable.category)
-    .orderBy(desc(sql`count(*)`));
-
-  res.json(rows);
+  const rows = await db.select().from(publicationsTable);
+  const counts = new Map<string, number>();
+  for (const row of rows) {
+    const projected = mapPublicPublication(row);
+    if (!projected) continue;
+    counts.set(projected.category, (counts.get(projected.category) ?? 0) + 1);
+  }
+  res.json(
+    [...counts.entries()]
+      .map(([category, count]) => ({ category, count }))
+      .sort((a, b) => b.count - a.count),
+  );
 });
 
 router.get("/stats/publications-macrotemi", async (req, res) => {
@@ -229,17 +235,10 @@ router.get("/stats/publications-macrotemi", async (req, res) => {
     typeof req.query.category === "string" ? req.query.category : undefined;
 
   const rows = await db
-    .select({
-      macrotema: publicationsTable.macrotema,
-      oggetto: publicationsTable.oggetto,
-      tipologia: publicationsTable.tipologia,
-    })
+    .select()
     .from(publicationsTable)
     .where(category ? eq(publicationsTable.category, category) : undefined);
 
-  // Conteggio per macrotema applicando la stessa logica del listing:
-  // usa il macrotema persistito quando presente, altrimenti la classificazione
-  // automatica dal testo (oggetto + tipologia).
   const counts: Record<MacrotemaKey, number> = MACROTEMA_KEYS.reduce(
     (acc, key) => {
       acc[key] = 0;
@@ -249,8 +248,9 @@ router.get("/stats/publications-macrotemi", async (req, res) => {
   );
 
   for (const r of rows) {
-    const key = (r.macrotema ??
-      classifyMacrotema(`${r.oggetto} ${r.tipologia ?? ""}`)) as MacrotemaKey;
+    const projected = mapPublicPublication(r);
+    if (!projected) continue;
+    const key = projected.macrotema as MacrotemaKey;
     if (key in counts) {
       counts[key] += 1;
     } else {

@@ -2827,7 +2827,7 @@ export function useListPublications<TData = Awaited<ReturnType<typeof listPublic
 
 
 
-export const getGetPublicationUrl = (id: number,) => {
+export const getGetPublicationUrl = (id: number | string,) => {
 
 
 
@@ -2838,7 +2838,7 @@ export const getGetPublicationUrl = (id: number,) => {
 /**
  * @summary Get a single publication with full detail (generates "In breve" lazily)
  */
-export const getPublication = async (id: number, options?: RequestInit): Promise<Publication> => {
+export const getPublication = async (id: number | string, options?: RequestInit): Promise<Publication> => {
 
   return customFetch<Publication>(getGetPublicationUrl(id),
   {
@@ -2853,14 +2853,14 @@ export const getPublication = async (id: number, options?: RequestInit): Promise
 
 
 
-export const getGetPublicationQueryKey = (id: number,) => {
+export const getGetPublicationQueryKey = (id: number | string,) => {
     return [
     `/api/publications/${id}`
     ] as const;
     }
 
 
-export const getGetPublicationQueryOptions = <TData = Awaited<ReturnType<typeof getPublication>>, TError = ErrorType<Error>>(id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getPublication>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+export const getGetPublicationQueryOptions = <TData = Awaited<ReturnType<typeof getPublication>>, TError = ErrorType<Error>>(id: number | string, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getPublication>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
 ) => {
 
 const {query: queryOptions, request: requestOptions} = options ?? {};
@@ -2887,7 +2887,7 @@ export type GetPublicationQueryError = ErrorType<Error>
  */
 
 export function useGetPublication<TData = Awaited<ReturnType<typeof getPublication>>, TError = ErrorType<Error>>(
- id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getPublication>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+ id: number | string, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getPublication>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
 
  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
 
@@ -2904,7 +2904,7 @@ export function useGetPublication<TData = Awaited<ReturnType<typeof getPublicati
 
 
 
-export const getGetPublicationStoriaUrl = (id: number,) => {
+export const getGetPublicationStoriaUrl = (id: number | string,) => {
 
 
 
@@ -2915,7 +2915,7 @@ export const getGetPublicationStoriaUrl = (id: number,) => {
 /**
  * @summary Get linked story items for an Albo act (contracts, PNRR projects, sibling acts)
  */
-export const getPublicationStoria = async (id: number, options?: RequestInit): Promise<PublicationStoria> => {
+export const getPublicationStoria = async (id: number | string, options?: RequestInit): Promise<PublicationStoria> => {
 
   return customFetch<PublicationStoria>(getGetPublicationStoriaUrl(id),
   {
@@ -2930,14 +2930,14 @@ export const getPublicationStoria = async (id: number, options?: RequestInit): P
 
 
 
-export const getGetPublicationStoriaQueryKey = (id: number,) => {
+export const getGetPublicationStoriaQueryKey = (id: number | string,) => {
     return [
     `/api/publications/${id}/storia`
     ] as const;
     }
 
 
-export const getGetPublicationStoriaQueryOptions = <TData = Awaited<ReturnType<typeof getPublicationStoria>>, TError = ErrorType<Error>>(id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getPublicationStoria>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+export const getGetPublicationStoriaQueryOptions = <TData = Awaited<ReturnType<typeof getPublicationStoria>>, TError = ErrorType<Error>>(id: number | string, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getPublicationStoria>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
 ) => {
 
 const {query: queryOptions, request: requestOptions} = options ?? {};
@@ -2964,7 +2964,7 @@ export type GetPublicationStoriaQueryError = ErrorType<Error>
  */
 
 export function useGetPublicationStoria<TData = Awaited<ReturnType<typeof getPublicationStoria>>, TError = ErrorType<Error>>(
- id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getPublicationStoria>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+ id: number | string, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getPublicationStoria>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
 
  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
 

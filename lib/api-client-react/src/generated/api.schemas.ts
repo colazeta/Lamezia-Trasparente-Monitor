@@ -387,8 +387,194 @@ export interface PublicationAttachment {
   size: number | null;
 }
 
+/**
+ * @nullable
+ */
+export type PublicationAreaThemeConfidence = typeof PublicationAreaThemeConfidence[keyof typeof PublicationAreaThemeConfidence] | null;
+
+
+export const PublicationAreaThemeConfidence = {
+  high: 'high',
+  medium: 'medium',
+} as const;
+
+export type PublicationAreaThemeBasis = typeof PublicationAreaThemeBasis[keyof typeof PublicationAreaThemeBasis];
+
+
+export const PublicationAreaThemeBasis = {
+  deterministic_rule: 'deterministic_rule',
+  manual_override: 'manual_override',
+  fallback: 'fallback',
+} as const;
+
+export interface PublicationAreaThemeEvidence {
+  rule_id: string;
+  input_field: string;
+  matched_terms: string[];
+}
+
+/**
+ * @nullable
+ */
+export type PublicationAreaThemeNullReason = typeof PublicationAreaThemeNullReason[keyof typeof PublicationAreaThemeNullReason] | null;
+
+
+export const PublicationAreaThemeNullReason = {
+  input_withheld_for_privacy: 'input_withheld_for_privacy',
+  input_missing: 'input_missing',
+  not_classified: 'not_classified',
+  ambiguous_match: 'ambiguous_match',
+} as const;
+
+/**
+ * @nullable
+ */
+export type PublicationAreaThemeOverride = {
+  id: string;
+  theme_id: string;
+  confidence: 'high' | 'medium';
+  rationale: string;
+  /** @nullable */
+  previous_theme_id: string | null;
+  /** @nullable */
+  previous_rule_id: string | null;
+} | null;
+
+export interface PublicationAreaTheme {
+  schema_version: string;
+  taxonomy_id: string;
+  taxonomy_version: string;
+  /** @nullable */
+  theme_id: string | null;
+  /** @nullable */
+  theme_label: string | null;
+  /** @nullable */
+  confidence: PublicationAreaThemeConfidence;
+  basis: PublicationAreaThemeBasis;
+  /** @nullable */
+  rule_id: string | null;
+  evidence: PublicationAreaThemeEvidence[];
+  /** @nullable */
+  null_reason: PublicationAreaThemeNullReason;
+  override: PublicationAreaThemeOverride | null;
+}
+
+export type PublicationStandardisationAuditStatus = typeof PublicationStandardisationAuditStatus[keyof typeof PublicationStandardisationAuditStatus];
+
+
+export const PublicationStandardisationAuditStatus = {
+  unchanged: 'unchanged',
+  standardised_automatically: 'standardised_automatically',
+  review_required: 'review_required',
+} as const;
+
+export interface PublicationStandardisationAudit {
+  schema_version: string;
+  profile_id: string;
+  profile_version: string;
+  input_field: string;
+  input_field_preserved: boolean;
+  status: PublicationStandardisationAuditStatus;
+  transformations: string[];
+  layout_flags: string[];
+  review_reasons: string[];
+}
+
+export interface PublicationPresentation {
+  display_title: string;
+  /** @nullable */
+  action_id: string | null;
+  /** @nullable */
+  action_label: string | null;
+  search_text: string;
+  area_theme: PublicationAreaTheme;
+  standardisation: PublicationStandardisationAudit;
+}
+
+export type PublicActSafetyPublicVisibility = typeof PublicActSafetyPublicVisibility[keyof typeof PublicActSafetyPublicVisibility];
+
+
+export const PublicActSafetyPublicVisibility = {
+  publishable: 'publishable',
+  publishable_with_minimisation: 'publishable_with_minimisation',
+  metadata_only: 'metadata_only',
+} as const;
+
+export type PublicActSafetyPrivacyRisk = typeof PublicActSafetyPrivacyRisk[keyof typeof PublicActSafetyPrivacyRisk];
+
+
+export const PublicActSafetyPrivacyRisk = {
+  low: 'low',
+  medium: 'medium',
+  high: 'high',
+} as const;
+
+export type PublicActSafetyAttestationStatus = typeof PublicActSafetyAttestationStatus[keyof typeof PublicActSafetyAttestationStatus];
+
+
+export const PublicActSafetyAttestationStatus = {
+  valid: 'valid',
+  legacy_missing: 'legacy_missing',
+  invalid: 'invalid',
+  stale: 'stale',
+  source_changed: 'source_changed',
+} as const;
+
+/**
+ * @nullable
+ */
+export type PublicActSafetyAttestationReason = typeof PublicActSafetyAttestationReason[keyof typeof PublicActSafetyAttestationReason] | null;
+
+
+export const PublicActSafetyAttestationReason = {
+  missing: 'missing',
+  invalid_schema: 'invalid_schema',
+  invalid_timestamp: 'invalid_timestamp',
+  invalid_source: 'invalid_source',
+  invalid_fingerprint: 'invalid_fingerprint',
+  stale_policy: 'stale_policy',
+  stale_profile: 'stale_profile',
+  invalid_decision: 'invalid_decision',
+  invalid_presentation: 'invalid_presentation',
+  source_changed: 'source_changed',
+} as const;
+
+/**
+ * @nullable
+ */
+export type PublicActSafetyAttestationSource = typeof PublicActSafetyAttestationSource[keyof typeof PublicActSafetyAttestationSource] | null;
+
+
+export const PublicActSafetyAttestationSource = {
+  albo_ingestion: 'albo_ingestion',
+} as const;
+
+export interface PublicActSafety {
+  policy_id: string;
+  policy_version: string;
+  standardisation_profile_id: string;
+  standardisation_profile_version: string;
+  public_visibility: PublicActSafetyPublicVisibility;
+  privacy_risk: PublicActSafetyPrivacyRisk;
+  /** @nullable */
+  reason: string | null;
+  projection_schema_version: string;
+  attachments_attested: boolean;
+  markdown_attested: boolean;
+  attestation_status: PublicActSafetyAttestationStatus;
+  /** @nullable */
+  attestation_reason: PublicActSafetyAttestationReason;
+  /** @nullable */
+  attestation_source: PublicActSafetyAttestationSource;
+  /** @nullable */
+  attested_at: string | null;
+  source_fingerprint_verified: boolean;
+}
+
 export interface Publication {
   id: number;
+  /** Stable cross-surface identifier derived from progressivo. */
+  publicId: string;
   progressivo: string;
   tipologia: string;
   category: string;
@@ -430,6 +616,8 @@ export interface Publication {
   briefGeneratedAt?: string | null;
   /** Per convocazioni — macrotemi aggregati dai punti ODG (può coprire più temi). Vuoto per gli altri tipi di atti. */
   odgMacrotemi?: string[];
+  presentation: PublicationPresentation;
+  publicSafety: PublicActSafety;
 }
 
 export type StoriaContractItemMatchedBy = typeof StoriaContractItemMatchedBy[keyof typeof StoriaContractItemMatchedBy];
@@ -473,6 +661,7 @@ export const StoriaPublicationItemMatchedBy = {
 
 export interface StoriaPublicationItem {
   id: number;
+  publicId: string;
   progressivo: string;
   oggetto: string;
   tipologia: string;
@@ -481,11 +670,14 @@ export interface StoriaPublicationItem {
   pubStart?: string | null;
   /** @nullable */
   macrotema?: string | null;
+  /** @nullable */
+  subcategory?: string | null;
   matchedBy: StoriaPublicationItemMatchedBy;
 }
 
 export interface StoriaOriginatingSeduta {
   id: number;
+  publicId: string;
   progressivo: string;
   oggetto: string;
   /** @nullable */

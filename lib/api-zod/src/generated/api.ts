@@ -965,6 +965,7 @@ export const ListPublicationsQueryParams = zod.object({
 
 export const ListPublicationsResponseItem = zod.object({
   "id": zod.number(),
+  "publicId": zod.string().describe('Stable cross-surface identifier derived from progressivo.'),
   "progressivo": zod.string(),
   "tipologia": zod.string(),
   "category": zod.string(),
@@ -993,7 +994,65 @@ export const ListPublicationsResponseItem = zod.object({
   "brief": zod.string().nullish().describe('AI-generated plain-language summary (\"In breve\")'),
   "briefManual": zod.boolean().optional().describe('True when the \"In breve\" summary was written\/curated by hand; the automatic batch never overwrites it.'),
   "briefGeneratedAt": zod.string().nullish().describe('When the \"In breve\" summary was last generated or edited (ISO 8601).'),
-  "odgMacrotemi": zod.array(zod.string()).optional().describe('Per convocazioni — macrotemi aggregati dai punti ODG (può coprire più temi). Vuoto per gli altri tipi di atti.')
+  "odgMacrotemi": zod.array(zod.string()).optional().describe('Per convocazioni — macrotemi aggregati dai punti ODG (può coprire più temi). Vuoto per gli altri tipi di atti.'),
+  "presentation": zod.object({
+  "display_title": zod.string(),
+  "action_id": zod.string().nullable(),
+  "action_label": zod.string().nullable(),
+  "search_text": zod.string(),
+  "area_theme": zod.object({
+  "schema_version": zod.string(),
+  "taxonomy_id": zod.string(),
+  "taxonomy_version": zod.string(),
+  "theme_id": zod.string().nullable(),
+  "theme_label": zod.string().nullable(),
+  "confidence": zod.union([zod.literal('high'),zod.literal('medium'),zod.literal(null)]).nullable(),
+  "basis": zod.enum(['deterministic_rule', 'manual_override', 'fallback']),
+  "rule_id": zod.string().nullable(),
+  "evidence": zod.array(zod.object({
+  "rule_id": zod.string(),
+  "input_field": zod.string(),
+  "matched_terms": zod.array(zod.string())
+})),
+  "null_reason": zod.union([zod.literal('input_withheld_for_privacy'),zod.literal('input_missing'),zod.literal('not_classified'),zod.literal('ambiguous_match'),zod.literal(null)]).nullable(),
+  "override": zod.object({
+  "id": zod.string(),
+  "theme_id": zod.string(),
+  "confidence": zod.enum(['high', 'medium']),
+  "rationale": zod.string(),
+  "previous_theme_id": zod.string().nullable(),
+  "previous_rule_id": zod.string().nullable()
+}).nullable()
+}),
+  "standardisation": zod.object({
+  "schema_version": zod.string(),
+  "profile_id": zod.string(),
+  "profile_version": zod.string(),
+  "input_field": zod.string(),
+  "input_field_preserved": zod.boolean(),
+  "status": zod.enum(['unchanged', 'standardised_automatically', 'review_required']),
+  "transformations": zod.array(zod.string()),
+  "layout_flags": zod.array(zod.string()),
+  "review_reasons": zod.array(zod.string())
+})
+}),
+  "publicSafety": zod.object({
+  "policy_id": zod.string(),
+  "policy_version": zod.string(),
+  "standardisation_profile_id": zod.string(),
+  "standardisation_profile_version": zod.string(),
+  "public_visibility": zod.enum(['publishable', 'publishable_with_minimisation', 'metadata_only']),
+  "privacy_risk": zod.enum(['low', 'medium', 'high']),
+  "reason": zod.string().nullable(),
+  "projection_schema_version": zod.string(),
+  "attachments_attested": zod.boolean(),
+  "markdown_attested": zod.boolean(),
+  "attestation_status": zod.enum(['valid', 'legacy_missing', 'invalid', 'stale', 'source_changed']),
+  "attestation_reason": zod.union([zod.literal(null),zod.literal('missing'),zod.literal('invalid_schema'),zod.literal('invalid_timestamp'),zod.literal('invalid_source'),zod.literal('invalid_fingerprint'),zod.literal('stale_policy'),zod.literal('stale_profile'),zod.literal('invalid_decision'),zod.literal('invalid_presentation'),zod.literal('source_changed')]).nullable(),
+  "attestation_source": zod.union([zod.literal('albo_ingestion'),zod.literal(null)]).nullable(),
+  "attested_at": zod.coerce.date().nullable(),
+  "source_fingerprint_verified": zod.boolean()
+})
 })
 export const ListPublicationsResponse = zod.array(ListPublicationsResponseItem)
 
@@ -1001,12 +1060,17 @@ export const ListPublicationsResponse = zod.array(ListPublicationsResponseItem)
 /**
  * @summary Get a single publication with full detail (generates "In breve" lazily)
  */
+
+export const getPublicationPathIdTwoRegExp = new RegExp('^albo-(?:[0-9]{4}-[1-9][0-9]\*|raw-(?:[a-f0-9]{4})+)$');
+
+
 export const GetPublicationParams = zod.object({
-  "id": zod.coerce.number()
+  "id": zod.union([zod.coerce.number().min(1),zod.coerce.string().regex(getPublicationPathIdTwoRegExp)]).describe('Numeric legacy id or stable publicId returned by publication lists')
 })
 
 export const GetPublicationResponse = zod.object({
   "id": zod.number(),
+  "publicId": zod.string().describe('Stable cross-surface identifier derived from progressivo.'),
   "progressivo": zod.string(),
   "tipologia": zod.string(),
   "category": zod.string(),
@@ -1035,15 +1099,77 @@ export const GetPublicationResponse = zod.object({
   "brief": zod.string().nullish().describe('AI-generated plain-language summary (\"In breve\")'),
   "briefManual": zod.boolean().optional().describe('True when the \"In breve\" summary was written\/curated by hand; the automatic batch never overwrites it.'),
   "briefGeneratedAt": zod.string().nullish().describe('When the \"In breve\" summary was last generated or edited (ISO 8601).'),
-  "odgMacrotemi": zod.array(zod.string()).optional().describe('Per convocazioni — macrotemi aggregati dai punti ODG (può coprire più temi). Vuoto per gli altri tipi di atti.')
+  "odgMacrotemi": zod.array(zod.string()).optional().describe('Per convocazioni — macrotemi aggregati dai punti ODG (può coprire più temi). Vuoto per gli altri tipi di atti.'),
+  "presentation": zod.object({
+  "display_title": zod.string(),
+  "action_id": zod.string().nullable(),
+  "action_label": zod.string().nullable(),
+  "search_text": zod.string(),
+  "area_theme": zod.object({
+  "schema_version": zod.string(),
+  "taxonomy_id": zod.string(),
+  "taxonomy_version": zod.string(),
+  "theme_id": zod.string().nullable(),
+  "theme_label": zod.string().nullable(),
+  "confidence": zod.union([zod.literal('high'),zod.literal('medium'),zod.literal(null)]).nullable(),
+  "basis": zod.enum(['deterministic_rule', 'manual_override', 'fallback']),
+  "rule_id": zod.string().nullable(),
+  "evidence": zod.array(zod.object({
+  "rule_id": zod.string(),
+  "input_field": zod.string(),
+  "matched_terms": zod.array(zod.string())
+})),
+  "null_reason": zod.union([zod.literal('input_withheld_for_privacy'),zod.literal('input_missing'),zod.literal('not_classified'),zod.literal('ambiguous_match'),zod.literal(null)]).nullable(),
+  "override": zod.object({
+  "id": zod.string(),
+  "theme_id": zod.string(),
+  "confidence": zod.enum(['high', 'medium']),
+  "rationale": zod.string(),
+  "previous_theme_id": zod.string().nullable(),
+  "previous_rule_id": zod.string().nullable()
+}).nullable()
+}),
+  "standardisation": zod.object({
+  "schema_version": zod.string(),
+  "profile_id": zod.string(),
+  "profile_version": zod.string(),
+  "input_field": zod.string(),
+  "input_field_preserved": zod.boolean(),
+  "status": zod.enum(['unchanged', 'standardised_automatically', 'review_required']),
+  "transformations": zod.array(zod.string()),
+  "layout_flags": zod.array(zod.string()),
+  "review_reasons": zod.array(zod.string())
+})
+}),
+  "publicSafety": zod.object({
+  "policy_id": zod.string(),
+  "policy_version": zod.string(),
+  "standardisation_profile_id": zod.string(),
+  "standardisation_profile_version": zod.string(),
+  "public_visibility": zod.enum(['publishable', 'publishable_with_minimisation', 'metadata_only']),
+  "privacy_risk": zod.enum(['low', 'medium', 'high']),
+  "reason": zod.string().nullable(),
+  "projection_schema_version": zod.string(),
+  "attachments_attested": zod.boolean(),
+  "markdown_attested": zod.boolean(),
+  "attestation_status": zod.enum(['valid', 'legacy_missing', 'invalid', 'stale', 'source_changed']),
+  "attestation_reason": zod.union([zod.literal(null),zod.literal('missing'),zod.literal('invalid_schema'),zod.literal('invalid_timestamp'),zod.literal('invalid_source'),zod.literal('invalid_fingerprint'),zod.literal('stale_policy'),zod.literal('stale_profile'),zod.literal('invalid_decision'),zod.literal('invalid_presentation'),zod.literal('source_changed')]).nullable(),
+  "attestation_source": zod.union([zod.literal('albo_ingestion'),zod.literal(null)]).nullable(),
+  "attested_at": zod.coerce.date().nullable(),
+  "source_fingerprint_verified": zod.boolean()
+})
 })
 
 
 /**
  * @summary Get linked story items for an Albo act (contracts, PNRR projects, sibling acts)
  */
+
+export const getPublicationStoriaPathIdTwoRegExp = new RegExp('^albo-(?:[0-9]{4}-[1-9][0-9]\*|raw-(?:[a-f0-9]{4})+)$');
+
+
 export const GetPublicationStoriaParams = zod.object({
-  "id": zod.coerce.number()
+  "id": zod.union([zod.coerce.number().min(1),zod.coerce.string().regex(getPublicationStoriaPathIdTwoRegExp)]).describe('Numeric legacy id or stable publicId returned by publication lists')
 })
 
 export const GetPublicationStoriaResponse = zod.object({
@@ -1066,16 +1192,19 @@ export const GetPublicationStoriaResponse = zod.object({
 })),
   "siblings": zod.array(zod.object({
   "id": zod.number(),
+  "publicId": zod.string(),
   "progressivo": zod.string(),
   "oggetto": zod.string(),
   "tipologia": zod.string(),
   "category": zod.string(),
   "pubStart": zod.string().nullish(),
   "macrotema": zod.string().nullish(),
+  "subcategory": zod.string().nullish(),
   "matchedBy": zod.enum(['cig', 'cup'])
 })),
   "originatingSeduta": zod.union([zod.object({
   "id": zod.number(),
+  "publicId": zod.string(),
   "progressivo": zod.string(),
   "oggetto": zod.string(),
   "pubStart": zod.string().nullish(),
@@ -1130,6 +1259,7 @@ export const RegeneratePublicationBriefParams = zod.object({
 
 export const RegeneratePublicationBriefResponse = zod.object({
   "id": zod.number(),
+  "publicId": zod.string().describe('Stable cross-surface identifier derived from progressivo.'),
   "progressivo": zod.string(),
   "tipologia": zod.string(),
   "category": zod.string(),
@@ -1158,7 +1288,65 @@ export const RegeneratePublicationBriefResponse = zod.object({
   "brief": zod.string().nullish().describe('AI-generated plain-language summary (\"In breve\")'),
   "briefManual": zod.boolean().optional().describe('True when the \"In breve\" summary was written\/curated by hand; the automatic batch never overwrites it.'),
   "briefGeneratedAt": zod.string().nullish().describe('When the \"In breve\" summary was last generated or edited (ISO 8601).'),
-  "odgMacrotemi": zod.array(zod.string()).optional().describe('Per convocazioni — macrotemi aggregati dai punti ODG (può coprire più temi). Vuoto per gli altri tipi di atti.')
+  "odgMacrotemi": zod.array(zod.string()).optional().describe('Per convocazioni — macrotemi aggregati dai punti ODG (può coprire più temi). Vuoto per gli altri tipi di atti.'),
+  "presentation": zod.object({
+  "display_title": zod.string(),
+  "action_id": zod.string().nullable(),
+  "action_label": zod.string().nullable(),
+  "search_text": zod.string(),
+  "area_theme": zod.object({
+  "schema_version": zod.string(),
+  "taxonomy_id": zod.string(),
+  "taxonomy_version": zod.string(),
+  "theme_id": zod.string().nullable(),
+  "theme_label": zod.string().nullable(),
+  "confidence": zod.union([zod.literal('high'),zod.literal('medium'),zod.literal(null)]).nullable(),
+  "basis": zod.enum(['deterministic_rule', 'manual_override', 'fallback']),
+  "rule_id": zod.string().nullable(),
+  "evidence": zod.array(zod.object({
+  "rule_id": zod.string(),
+  "input_field": zod.string(),
+  "matched_terms": zod.array(zod.string())
+})),
+  "null_reason": zod.union([zod.literal('input_withheld_for_privacy'),zod.literal('input_missing'),zod.literal('not_classified'),zod.literal('ambiguous_match'),zod.literal(null)]).nullable(),
+  "override": zod.object({
+  "id": zod.string(),
+  "theme_id": zod.string(),
+  "confidence": zod.enum(['high', 'medium']),
+  "rationale": zod.string(),
+  "previous_theme_id": zod.string().nullable(),
+  "previous_rule_id": zod.string().nullable()
+}).nullable()
+}),
+  "standardisation": zod.object({
+  "schema_version": zod.string(),
+  "profile_id": zod.string(),
+  "profile_version": zod.string(),
+  "input_field": zod.string(),
+  "input_field_preserved": zod.boolean(),
+  "status": zod.enum(['unchanged', 'standardised_automatically', 'review_required']),
+  "transformations": zod.array(zod.string()),
+  "layout_flags": zod.array(zod.string()),
+  "review_reasons": zod.array(zod.string())
+})
+}),
+  "publicSafety": zod.object({
+  "policy_id": zod.string(),
+  "policy_version": zod.string(),
+  "standardisation_profile_id": zod.string(),
+  "standardisation_profile_version": zod.string(),
+  "public_visibility": zod.enum(['publishable', 'publishable_with_minimisation', 'metadata_only']),
+  "privacy_risk": zod.enum(['low', 'medium', 'high']),
+  "reason": zod.string().nullable(),
+  "projection_schema_version": zod.string(),
+  "attachments_attested": zod.boolean(),
+  "markdown_attested": zod.boolean(),
+  "attestation_status": zod.enum(['valid', 'legacy_missing', 'invalid', 'stale', 'source_changed']),
+  "attestation_reason": zod.union([zod.literal(null),zod.literal('missing'),zod.literal('invalid_schema'),zod.literal('invalid_timestamp'),zod.literal('invalid_source'),zod.literal('invalid_fingerprint'),zod.literal('stale_policy'),zod.literal('stale_profile'),zod.literal('invalid_decision'),zod.literal('invalid_presentation'),zod.literal('source_changed')]).nullable(),
+  "attestation_source": zod.union([zod.literal('albo_ingestion'),zod.literal(null)]).nullable(),
+  "attested_at": zod.coerce.date().nullable(),
+  "source_fingerprint_verified": zod.boolean()
+})
 })
 
 
@@ -1175,6 +1363,7 @@ export const SetPublicationBriefBody = zod.object({
 
 export const SetPublicationBriefResponse = zod.object({
   "id": zod.number(),
+  "publicId": zod.string().describe('Stable cross-surface identifier derived from progressivo.'),
   "progressivo": zod.string(),
   "tipologia": zod.string(),
   "category": zod.string(),
@@ -1203,7 +1392,65 @@ export const SetPublicationBriefResponse = zod.object({
   "brief": zod.string().nullish().describe('AI-generated plain-language summary (\"In breve\")'),
   "briefManual": zod.boolean().optional().describe('True when the \"In breve\" summary was written\/curated by hand; the automatic batch never overwrites it.'),
   "briefGeneratedAt": zod.string().nullish().describe('When the \"In breve\" summary was last generated or edited (ISO 8601).'),
-  "odgMacrotemi": zod.array(zod.string()).optional().describe('Per convocazioni — macrotemi aggregati dai punti ODG (può coprire più temi). Vuoto per gli altri tipi di atti.')
+  "odgMacrotemi": zod.array(zod.string()).optional().describe('Per convocazioni — macrotemi aggregati dai punti ODG (può coprire più temi). Vuoto per gli altri tipi di atti.'),
+  "presentation": zod.object({
+  "display_title": zod.string(),
+  "action_id": zod.string().nullable(),
+  "action_label": zod.string().nullable(),
+  "search_text": zod.string(),
+  "area_theme": zod.object({
+  "schema_version": zod.string(),
+  "taxonomy_id": zod.string(),
+  "taxonomy_version": zod.string(),
+  "theme_id": zod.string().nullable(),
+  "theme_label": zod.string().nullable(),
+  "confidence": zod.union([zod.literal('high'),zod.literal('medium'),zod.literal(null)]).nullable(),
+  "basis": zod.enum(['deterministic_rule', 'manual_override', 'fallback']),
+  "rule_id": zod.string().nullable(),
+  "evidence": zod.array(zod.object({
+  "rule_id": zod.string(),
+  "input_field": zod.string(),
+  "matched_terms": zod.array(zod.string())
+})),
+  "null_reason": zod.union([zod.literal('input_withheld_for_privacy'),zod.literal('input_missing'),zod.literal('not_classified'),zod.literal('ambiguous_match'),zod.literal(null)]).nullable(),
+  "override": zod.object({
+  "id": zod.string(),
+  "theme_id": zod.string(),
+  "confidence": zod.enum(['high', 'medium']),
+  "rationale": zod.string(),
+  "previous_theme_id": zod.string().nullable(),
+  "previous_rule_id": zod.string().nullable()
+}).nullable()
+}),
+  "standardisation": zod.object({
+  "schema_version": zod.string(),
+  "profile_id": zod.string(),
+  "profile_version": zod.string(),
+  "input_field": zod.string(),
+  "input_field_preserved": zod.boolean(),
+  "status": zod.enum(['unchanged', 'standardised_automatically', 'review_required']),
+  "transformations": zod.array(zod.string()),
+  "layout_flags": zod.array(zod.string()),
+  "review_reasons": zod.array(zod.string())
+})
+}),
+  "publicSafety": zod.object({
+  "policy_id": zod.string(),
+  "policy_version": zod.string(),
+  "standardisation_profile_id": zod.string(),
+  "standardisation_profile_version": zod.string(),
+  "public_visibility": zod.enum(['publishable', 'publishable_with_minimisation', 'metadata_only']),
+  "privacy_risk": zod.enum(['low', 'medium', 'high']),
+  "reason": zod.string().nullable(),
+  "projection_schema_version": zod.string(),
+  "attachments_attested": zod.boolean(),
+  "markdown_attested": zod.boolean(),
+  "attestation_status": zod.enum(['valid', 'legacy_missing', 'invalid', 'stale', 'source_changed']),
+  "attestation_reason": zod.union([zod.literal(null),zod.literal('missing'),zod.literal('invalid_schema'),zod.literal('invalid_timestamp'),zod.literal('invalid_source'),zod.literal('invalid_fingerprint'),zod.literal('stale_policy'),zod.literal('stale_profile'),zod.literal('invalid_decision'),zod.literal('invalid_presentation'),zod.literal('source_changed')]).nullable(),
+  "attestation_source": zod.union([zod.literal('albo_ingestion'),zod.literal(null)]).nullable(),
+  "attested_at": zod.coerce.date().nullable(),
+  "source_fingerprint_verified": zod.boolean()
+})
 })
 
 
@@ -1217,6 +1464,7 @@ export const ListDelibereQueryParams = zod.object({
 
 export const ListDelibereResponseItem = zod.object({
   "id": zod.number(),
+  "publicId": zod.string().describe('Stable cross-surface identifier derived from progressivo.'),
   "progressivo": zod.string(),
   "tipologia": zod.string(),
   "category": zod.string(),
@@ -1245,7 +1493,65 @@ export const ListDelibereResponseItem = zod.object({
   "brief": zod.string().nullish().describe('AI-generated plain-language summary (\"In breve\")'),
   "briefManual": zod.boolean().optional().describe('True when the \"In breve\" summary was written\/curated by hand; the automatic batch never overwrites it.'),
   "briefGeneratedAt": zod.string().nullish().describe('When the \"In breve\" summary was last generated or edited (ISO 8601).'),
-  "odgMacrotemi": zod.array(zod.string()).optional().describe('Per convocazioni — macrotemi aggregati dai punti ODG (può coprire più temi). Vuoto per gli altri tipi di atti.')
+  "odgMacrotemi": zod.array(zod.string()).optional().describe('Per convocazioni — macrotemi aggregati dai punti ODG (può coprire più temi). Vuoto per gli altri tipi di atti.'),
+  "presentation": zod.object({
+  "display_title": zod.string(),
+  "action_id": zod.string().nullable(),
+  "action_label": zod.string().nullable(),
+  "search_text": zod.string(),
+  "area_theme": zod.object({
+  "schema_version": zod.string(),
+  "taxonomy_id": zod.string(),
+  "taxonomy_version": zod.string(),
+  "theme_id": zod.string().nullable(),
+  "theme_label": zod.string().nullable(),
+  "confidence": zod.union([zod.literal('high'),zod.literal('medium'),zod.literal(null)]).nullable(),
+  "basis": zod.enum(['deterministic_rule', 'manual_override', 'fallback']),
+  "rule_id": zod.string().nullable(),
+  "evidence": zod.array(zod.object({
+  "rule_id": zod.string(),
+  "input_field": zod.string(),
+  "matched_terms": zod.array(zod.string())
+})),
+  "null_reason": zod.union([zod.literal('input_withheld_for_privacy'),zod.literal('input_missing'),zod.literal('not_classified'),zod.literal('ambiguous_match'),zod.literal(null)]).nullable(),
+  "override": zod.object({
+  "id": zod.string(),
+  "theme_id": zod.string(),
+  "confidence": zod.enum(['high', 'medium']),
+  "rationale": zod.string(),
+  "previous_theme_id": zod.string().nullable(),
+  "previous_rule_id": zod.string().nullable()
+}).nullable()
+}),
+  "standardisation": zod.object({
+  "schema_version": zod.string(),
+  "profile_id": zod.string(),
+  "profile_version": zod.string(),
+  "input_field": zod.string(),
+  "input_field_preserved": zod.boolean(),
+  "status": zod.enum(['unchanged', 'standardised_automatically', 'review_required']),
+  "transformations": zod.array(zod.string()),
+  "layout_flags": zod.array(zod.string()),
+  "review_reasons": zod.array(zod.string())
+})
+}),
+  "publicSafety": zod.object({
+  "policy_id": zod.string(),
+  "policy_version": zod.string(),
+  "standardisation_profile_id": zod.string(),
+  "standardisation_profile_version": zod.string(),
+  "public_visibility": zod.enum(['publishable', 'publishable_with_minimisation', 'metadata_only']),
+  "privacy_risk": zod.enum(['low', 'medium', 'high']),
+  "reason": zod.string().nullable(),
+  "projection_schema_version": zod.string(),
+  "attachments_attested": zod.boolean(),
+  "markdown_attested": zod.boolean(),
+  "attestation_status": zod.enum(['valid', 'legacy_missing', 'invalid', 'stale', 'source_changed']),
+  "attestation_reason": zod.union([zod.literal(null),zod.literal('missing'),zod.literal('invalid_schema'),zod.literal('invalid_timestamp'),zod.literal('invalid_source'),zod.literal('invalid_fingerprint'),zod.literal('stale_policy'),zod.literal('stale_profile'),zod.literal('invalid_decision'),zod.literal('invalid_presentation'),zod.literal('source_changed')]).nullable(),
+  "attestation_source": zod.union([zod.literal('albo_ingestion'),zod.literal(null)]).nullable(),
+  "attested_at": zod.coerce.date().nullable(),
+  "source_fingerprint_verified": zod.boolean()
+})
 })
 export const ListDelibereResponse = zod.array(ListDelibereResponseItem)
 
@@ -1259,6 +1565,7 @@ export const ListConvocazioniQueryParams = zod.object({
 
 export const ListConvocazioniResponseItem = zod.object({
   "id": zod.number(),
+  "publicId": zod.string().describe('Stable cross-surface identifier derived from progressivo.'),
   "progressivo": zod.string(),
   "tipologia": zod.string(),
   "category": zod.string(),
@@ -1287,7 +1594,65 @@ export const ListConvocazioniResponseItem = zod.object({
   "brief": zod.string().nullish().describe('AI-generated plain-language summary (\"In breve\")'),
   "briefManual": zod.boolean().optional().describe('True when the \"In breve\" summary was written\/curated by hand; the automatic batch never overwrites it.'),
   "briefGeneratedAt": zod.string().nullish().describe('When the \"In breve\" summary was last generated or edited (ISO 8601).'),
-  "odgMacrotemi": zod.array(zod.string()).optional().describe('Per convocazioni — macrotemi aggregati dai punti ODG (può coprire più temi). Vuoto per gli altri tipi di atti.')
+  "odgMacrotemi": zod.array(zod.string()).optional().describe('Per convocazioni — macrotemi aggregati dai punti ODG (può coprire più temi). Vuoto per gli altri tipi di atti.'),
+  "presentation": zod.object({
+  "display_title": zod.string(),
+  "action_id": zod.string().nullable(),
+  "action_label": zod.string().nullable(),
+  "search_text": zod.string(),
+  "area_theme": zod.object({
+  "schema_version": zod.string(),
+  "taxonomy_id": zod.string(),
+  "taxonomy_version": zod.string(),
+  "theme_id": zod.string().nullable(),
+  "theme_label": zod.string().nullable(),
+  "confidence": zod.union([zod.literal('high'),zod.literal('medium'),zod.literal(null)]).nullable(),
+  "basis": zod.enum(['deterministic_rule', 'manual_override', 'fallback']),
+  "rule_id": zod.string().nullable(),
+  "evidence": zod.array(zod.object({
+  "rule_id": zod.string(),
+  "input_field": zod.string(),
+  "matched_terms": zod.array(zod.string())
+})),
+  "null_reason": zod.union([zod.literal('input_withheld_for_privacy'),zod.literal('input_missing'),zod.literal('not_classified'),zod.literal('ambiguous_match'),zod.literal(null)]).nullable(),
+  "override": zod.object({
+  "id": zod.string(),
+  "theme_id": zod.string(),
+  "confidence": zod.enum(['high', 'medium']),
+  "rationale": zod.string(),
+  "previous_theme_id": zod.string().nullable(),
+  "previous_rule_id": zod.string().nullable()
+}).nullable()
+}),
+  "standardisation": zod.object({
+  "schema_version": zod.string(),
+  "profile_id": zod.string(),
+  "profile_version": zod.string(),
+  "input_field": zod.string(),
+  "input_field_preserved": zod.boolean(),
+  "status": zod.enum(['unchanged', 'standardised_automatically', 'review_required']),
+  "transformations": zod.array(zod.string()),
+  "layout_flags": zod.array(zod.string()),
+  "review_reasons": zod.array(zod.string())
+})
+}),
+  "publicSafety": zod.object({
+  "policy_id": zod.string(),
+  "policy_version": zod.string(),
+  "standardisation_profile_id": zod.string(),
+  "standardisation_profile_version": zod.string(),
+  "public_visibility": zod.enum(['publishable', 'publishable_with_minimisation', 'metadata_only']),
+  "privacy_risk": zod.enum(['low', 'medium', 'high']),
+  "reason": zod.string().nullable(),
+  "projection_schema_version": zod.string(),
+  "attachments_attested": zod.boolean(),
+  "markdown_attested": zod.boolean(),
+  "attestation_status": zod.enum(['valid', 'legacy_missing', 'invalid', 'stale', 'source_changed']),
+  "attestation_reason": zod.union([zod.literal(null),zod.literal('missing'),zod.literal('invalid_schema'),zod.literal('invalid_timestamp'),zod.literal('invalid_source'),zod.literal('invalid_fingerprint'),zod.literal('stale_policy'),zod.literal('stale_profile'),zod.literal('invalid_decision'),zod.literal('invalid_presentation'),zod.literal('source_changed')]).nullable(),
+  "attestation_source": zod.union([zod.literal('albo_ingestion'),zod.literal(null)]).nullable(),
+  "attested_at": zod.coerce.date().nullable(),
+  "source_fingerprint_verified": zod.boolean()
+})
 })
 export const ListConvocazioniResponse = zod.array(ListConvocazioniResponseItem)
 
@@ -1301,6 +1666,7 @@ export const GetSedutaParams = zod.object({
 
 export const GetSedutaResponse = zod.object({
   "id": zod.number(),
+  "publicId": zod.string().describe('Stable cross-surface identifier derived from progressivo.'),
   "progressivo": zod.string(),
   "tipologia": zod.string(),
   "category": zod.string(),
@@ -1329,7 +1695,65 @@ export const GetSedutaResponse = zod.object({
   "brief": zod.string().nullish().describe('AI-generated plain-language summary (\"In breve\")'),
   "briefManual": zod.boolean().optional().describe('True when the \"In breve\" summary was written\/curated by hand; the automatic batch never overwrites it.'),
   "briefGeneratedAt": zod.string().nullish().describe('When the \"In breve\" summary was last generated or edited (ISO 8601).'),
-  "odgMacrotemi": zod.array(zod.string()).optional().describe('Per convocazioni — macrotemi aggregati dai punti ODG (può coprire più temi). Vuoto per gli altri tipi di atti.')
+  "odgMacrotemi": zod.array(zod.string()).optional().describe('Per convocazioni — macrotemi aggregati dai punti ODG (può coprire più temi). Vuoto per gli altri tipi di atti.'),
+  "presentation": zod.object({
+  "display_title": zod.string(),
+  "action_id": zod.string().nullable(),
+  "action_label": zod.string().nullable(),
+  "search_text": zod.string(),
+  "area_theme": zod.object({
+  "schema_version": zod.string(),
+  "taxonomy_id": zod.string(),
+  "taxonomy_version": zod.string(),
+  "theme_id": zod.string().nullable(),
+  "theme_label": zod.string().nullable(),
+  "confidence": zod.union([zod.literal('high'),zod.literal('medium'),zod.literal(null)]).nullable(),
+  "basis": zod.enum(['deterministic_rule', 'manual_override', 'fallback']),
+  "rule_id": zod.string().nullable(),
+  "evidence": zod.array(zod.object({
+  "rule_id": zod.string(),
+  "input_field": zod.string(),
+  "matched_terms": zod.array(zod.string())
+})),
+  "null_reason": zod.union([zod.literal('input_withheld_for_privacy'),zod.literal('input_missing'),zod.literal('not_classified'),zod.literal('ambiguous_match'),zod.literal(null)]).nullable(),
+  "override": zod.object({
+  "id": zod.string(),
+  "theme_id": zod.string(),
+  "confidence": zod.enum(['high', 'medium']),
+  "rationale": zod.string(),
+  "previous_theme_id": zod.string().nullable(),
+  "previous_rule_id": zod.string().nullable()
+}).nullable()
+}),
+  "standardisation": zod.object({
+  "schema_version": zod.string(),
+  "profile_id": zod.string(),
+  "profile_version": zod.string(),
+  "input_field": zod.string(),
+  "input_field_preserved": zod.boolean(),
+  "status": zod.enum(['unchanged', 'standardised_automatically', 'review_required']),
+  "transformations": zod.array(zod.string()),
+  "layout_flags": zod.array(zod.string()),
+  "review_reasons": zod.array(zod.string())
+})
+}),
+  "publicSafety": zod.object({
+  "policy_id": zod.string(),
+  "policy_version": zod.string(),
+  "standardisation_profile_id": zod.string(),
+  "standardisation_profile_version": zod.string(),
+  "public_visibility": zod.enum(['publishable', 'publishable_with_minimisation', 'metadata_only']),
+  "privacy_risk": zod.enum(['low', 'medium', 'high']),
+  "reason": zod.string().nullable(),
+  "projection_schema_version": zod.string(),
+  "attachments_attested": zod.boolean(),
+  "markdown_attested": zod.boolean(),
+  "attestation_status": zod.enum(['valid', 'legacy_missing', 'invalid', 'stale', 'source_changed']),
+  "attestation_reason": zod.union([zod.literal(null),zod.literal('missing'),zod.literal('invalid_schema'),zod.literal('invalid_timestamp'),zod.literal('invalid_source'),zod.literal('invalid_fingerprint'),zod.literal('stale_policy'),zod.literal('stale_profile'),zod.literal('invalid_decision'),zod.literal('invalid_presentation'),zod.literal('source_changed')]).nullable(),
+  "attestation_source": zod.union([zod.literal('albo_ingestion'),zod.literal(null)]).nullable(),
+  "attested_at": zod.coerce.date().nullable(),
+  "source_fingerprint_verified": zod.boolean()
+})
 }).and(zod.object({
   "hasReport": zod.boolean(),
   "summary": zod.string().nullable(),
@@ -1388,6 +1812,7 @@ export const UpsertSedutaReportBody = zod.object({
 
 export const UpsertSedutaReportResponse = zod.object({
   "id": zod.number(),
+  "publicId": zod.string().describe('Stable cross-surface identifier derived from progressivo.'),
   "progressivo": zod.string(),
   "tipologia": zod.string(),
   "category": zod.string(),
@@ -1416,7 +1841,65 @@ export const UpsertSedutaReportResponse = zod.object({
   "brief": zod.string().nullish().describe('AI-generated plain-language summary (\"In breve\")'),
   "briefManual": zod.boolean().optional().describe('True when the \"In breve\" summary was written\/curated by hand; the automatic batch never overwrites it.'),
   "briefGeneratedAt": zod.string().nullish().describe('When the \"In breve\" summary was last generated or edited (ISO 8601).'),
-  "odgMacrotemi": zod.array(zod.string()).optional().describe('Per convocazioni — macrotemi aggregati dai punti ODG (può coprire più temi). Vuoto per gli altri tipi di atti.')
+  "odgMacrotemi": zod.array(zod.string()).optional().describe('Per convocazioni — macrotemi aggregati dai punti ODG (può coprire più temi). Vuoto per gli altri tipi di atti.'),
+  "presentation": zod.object({
+  "display_title": zod.string(),
+  "action_id": zod.string().nullable(),
+  "action_label": zod.string().nullable(),
+  "search_text": zod.string(),
+  "area_theme": zod.object({
+  "schema_version": zod.string(),
+  "taxonomy_id": zod.string(),
+  "taxonomy_version": zod.string(),
+  "theme_id": zod.string().nullable(),
+  "theme_label": zod.string().nullable(),
+  "confidence": zod.union([zod.literal('high'),zod.literal('medium'),zod.literal(null)]).nullable(),
+  "basis": zod.enum(['deterministic_rule', 'manual_override', 'fallback']),
+  "rule_id": zod.string().nullable(),
+  "evidence": zod.array(zod.object({
+  "rule_id": zod.string(),
+  "input_field": zod.string(),
+  "matched_terms": zod.array(zod.string())
+})),
+  "null_reason": zod.union([zod.literal('input_withheld_for_privacy'),zod.literal('input_missing'),zod.literal('not_classified'),zod.literal('ambiguous_match'),zod.literal(null)]).nullable(),
+  "override": zod.object({
+  "id": zod.string(),
+  "theme_id": zod.string(),
+  "confidence": zod.enum(['high', 'medium']),
+  "rationale": zod.string(),
+  "previous_theme_id": zod.string().nullable(),
+  "previous_rule_id": zod.string().nullable()
+}).nullable()
+}),
+  "standardisation": zod.object({
+  "schema_version": zod.string(),
+  "profile_id": zod.string(),
+  "profile_version": zod.string(),
+  "input_field": zod.string(),
+  "input_field_preserved": zod.boolean(),
+  "status": zod.enum(['unchanged', 'standardised_automatically', 'review_required']),
+  "transformations": zod.array(zod.string()),
+  "layout_flags": zod.array(zod.string()),
+  "review_reasons": zod.array(zod.string())
+})
+}),
+  "publicSafety": zod.object({
+  "policy_id": zod.string(),
+  "policy_version": zod.string(),
+  "standardisation_profile_id": zod.string(),
+  "standardisation_profile_version": zod.string(),
+  "public_visibility": zod.enum(['publishable', 'publishable_with_minimisation', 'metadata_only']),
+  "privacy_risk": zod.enum(['low', 'medium', 'high']),
+  "reason": zod.string().nullable(),
+  "projection_schema_version": zod.string(),
+  "attachments_attested": zod.boolean(),
+  "markdown_attested": zod.boolean(),
+  "attestation_status": zod.enum(['valid', 'legacy_missing', 'invalid', 'stale', 'source_changed']),
+  "attestation_reason": zod.union([zod.literal(null),zod.literal('missing'),zod.literal('invalid_schema'),zod.literal('invalid_timestamp'),zod.literal('invalid_source'),zod.literal('invalid_fingerprint'),zod.literal('stale_policy'),zod.literal('stale_profile'),zod.literal('invalid_decision'),zod.literal('invalid_presentation'),zod.literal('source_changed')]).nullable(),
+  "attestation_source": zod.union([zod.literal('albo_ingestion'),zod.literal(null)]).nullable(),
+  "attested_at": zod.coerce.date().nullable(),
+  "source_fingerprint_verified": zod.boolean()
+})
 }).and(zod.object({
   "hasReport": zod.boolean(),
   "summary": zod.string().nullable(),
@@ -1621,6 +2104,7 @@ export const ListPnrrProjectsResponse = zod.object({
   "lastPublication": zod.string().nullish(),
   "documents": zod.array(zod.object({
   "id": zod.number(),
+  "publicId": zod.string().describe('Stable cross-surface identifier derived from progressivo.'),
   "progressivo": zod.string(),
   "tipologia": zod.string(),
   "category": zod.string(),
@@ -1649,7 +2133,65 @@ export const ListPnrrProjectsResponse = zod.object({
   "brief": zod.string().nullish().describe('AI-generated plain-language summary (\"In breve\")'),
   "briefManual": zod.boolean().optional().describe('True when the \"In breve\" summary was written\/curated by hand; the automatic batch never overwrites it.'),
   "briefGeneratedAt": zod.string().nullish().describe('When the \"In breve\" summary was last generated or edited (ISO 8601).'),
-  "odgMacrotemi": zod.array(zod.string()).optional().describe('Per convocazioni — macrotemi aggregati dai punti ODG (può coprire più temi). Vuoto per gli altri tipi di atti.')
+  "odgMacrotemi": zod.array(zod.string()).optional().describe('Per convocazioni — macrotemi aggregati dai punti ODG (può coprire più temi). Vuoto per gli altri tipi di atti.'),
+  "presentation": zod.object({
+  "display_title": zod.string(),
+  "action_id": zod.string().nullable(),
+  "action_label": zod.string().nullable(),
+  "search_text": zod.string(),
+  "area_theme": zod.object({
+  "schema_version": zod.string(),
+  "taxonomy_id": zod.string(),
+  "taxonomy_version": zod.string(),
+  "theme_id": zod.string().nullable(),
+  "theme_label": zod.string().nullable(),
+  "confidence": zod.union([zod.literal('high'),zod.literal('medium'),zod.literal(null)]).nullable(),
+  "basis": zod.enum(['deterministic_rule', 'manual_override', 'fallback']),
+  "rule_id": zod.string().nullable(),
+  "evidence": zod.array(zod.object({
+  "rule_id": zod.string(),
+  "input_field": zod.string(),
+  "matched_terms": zod.array(zod.string())
+})),
+  "null_reason": zod.union([zod.literal('input_withheld_for_privacy'),zod.literal('input_missing'),zod.literal('not_classified'),zod.literal('ambiguous_match'),zod.literal(null)]).nullable(),
+  "override": zod.object({
+  "id": zod.string(),
+  "theme_id": zod.string(),
+  "confidence": zod.enum(['high', 'medium']),
+  "rationale": zod.string(),
+  "previous_theme_id": zod.string().nullable(),
+  "previous_rule_id": zod.string().nullable()
+}).nullable()
+}),
+  "standardisation": zod.object({
+  "schema_version": zod.string(),
+  "profile_id": zod.string(),
+  "profile_version": zod.string(),
+  "input_field": zod.string(),
+  "input_field_preserved": zod.boolean(),
+  "status": zod.enum(['unchanged', 'standardised_automatically', 'review_required']),
+  "transformations": zod.array(zod.string()),
+  "layout_flags": zod.array(zod.string()),
+  "review_reasons": zod.array(zod.string())
+})
+}),
+  "publicSafety": zod.object({
+  "policy_id": zod.string(),
+  "policy_version": zod.string(),
+  "standardisation_profile_id": zod.string(),
+  "standardisation_profile_version": zod.string(),
+  "public_visibility": zod.enum(['publishable', 'publishable_with_minimisation', 'metadata_only']),
+  "privacy_risk": zod.enum(['low', 'medium', 'high']),
+  "reason": zod.string().nullable(),
+  "projection_schema_version": zod.string(),
+  "attachments_attested": zod.boolean(),
+  "markdown_attested": zod.boolean(),
+  "attestation_status": zod.enum(['valid', 'legacy_missing', 'invalid', 'stale', 'source_changed']),
+  "attestation_reason": zod.union([zod.literal(null),zod.literal('missing'),zod.literal('invalid_schema'),zod.literal('invalid_timestamp'),zod.literal('invalid_source'),zod.literal('invalid_fingerprint'),zod.literal('stale_policy'),zod.literal('stale_profile'),zod.literal('invalid_decision'),zod.literal('invalid_presentation'),zod.literal('source_changed')]).nullable(),
+  "attestation_source": zod.union([zod.literal('albo_ingestion'),zod.literal(null)]).nullable(),
+  "attested_at": zod.coerce.date().nullable(),
+  "source_fingerprint_verified": zod.boolean()
+})
 })),
   "linkedContracts": zod.array(zod.object({
   "relationKey": zod.enum(['CUP']).describe('Chiave documentale effettivamente usata dal PNRR Tracker per collegare progetto e contratto\/affidamento'),
@@ -1686,6 +2228,7 @@ export const ListPnrrProjectsResponse = zod.object({
 })),
   "uncensored": zod.array(zod.object({
   "id": zod.number(),
+  "publicId": zod.string().describe('Stable cross-surface identifier derived from progressivo.'),
   "progressivo": zod.string(),
   "tipologia": zod.string(),
   "category": zod.string(),
@@ -1714,7 +2257,65 @@ export const ListPnrrProjectsResponse = zod.object({
   "brief": zod.string().nullish().describe('AI-generated plain-language summary (\"In breve\")'),
   "briefManual": zod.boolean().optional().describe('True when the \"In breve\" summary was written\/curated by hand; the automatic batch never overwrites it.'),
   "briefGeneratedAt": zod.string().nullish().describe('When the \"In breve\" summary was last generated or edited (ISO 8601).'),
-  "odgMacrotemi": zod.array(zod.string()).optional().describe('Per convocazioni — macrotemi aggregati dai punti ODG (può coprire più temi). Vuoto per gli altri tipi di atti.')
+  "odgMacrotemi": zod.array(zod.string()).optional().describe('Per convocazioni — macrotemi aggregati dai punti ODG (può coprire più temi). Vuoto per gli altri tipi di atti.'),
+  "presentation": zod.object({
+  "display_title": zod.string(),
+  "action_id": zod.string().nullable(),
+  "action_label": zod.string().nullable(),
+  "search_text": zod.string(),
+  "area_theme": zod.object({
+  "schema_version": zod.string(),
+  "taxonomy_id": zod.string(),
+  "taxonomy_version": zod.string(),
+  "theme_id": zod.string().nullable(),
+  "theme_label": zod.string().nullable(),
+  "confidence": zod.union([zod.literal('high'),zod.literal('medium'),zod.literal(null)]).nullable(),
+  "basis": zod.enum(['deterministic_rule', 'manual_override', 'fallback']),
+  "rule_id": zod.string().nullable(),
+  "evidence": zod.array(zod.object({
+  "rule_id": zod.string(),
+  "input_field": zod.string(),
+  "matched_terms": zod.array(zod.string())
+})),
+  "null_reason": zod.union([zod.literal('input_withheld_for_privacy'),zod.literal('input_missing'),zod.literal('not_classified'),zod.literal('ambiguous_match'),zod.literal(null)]).nullable(),
+  "override": zod.object({
+  "id": zod.string(),
+  "theme_id": zod.string(),
+  "confidence": zod.enum(['high', 'medium']),
+  "rationale": zod.string(),
+  "previous_theme_id": zod.string().nullable(),
+  "previous_rule_id": zod.string().nullable()
+}).nullable()
+}),
+  "standardisation": zod.object({
+  "schema_version": zod.string(),
+  "profile_id": zod.string(),
+  "profile_version": zod.string(),
+  "input_field": zod.string(),
+  "input_field_preserved": zod.boolean(),
+  "status": zod.enum(['unchanged', 'standardised_automatically', 'review_required']),
+  "transformations": zod.array(zod.string()),
+  "layout_flags": zod.array(zod.string()),
+  "review_reasons": zod.array(zod.string())
+})
+}),
+  "publicSafety": zod.object({
+  "policy_id": zod.string(),
+  "policy_version": zod.string(),
+  "standardisation_profile_id": zod.string(),
+  "standardisation_profile_version": zod.string(),
+  "public_visibility": zod.enum(['publishable', 'publishable_with_minimisation', 'metadata_only']),
+  "privacy_risk": zod.enum(['low', 'medium', 'high']),
+  "reason": zod.string().nullable(),
+  "projection_schema_version": zod.string(),
+  "attachments_attested": zod.boolean(),
+  "markdown_attested": zod.boolean(),
+  "attestation_status": zod.enum(['valid', 'legacy_missing', 'invalid', 'stale', 'source_changed']),
+  "attestation_reason": zod.union([zod.literal(null),zod.literal('missing'),zod.literal('invalid_schema'),zod.literal('invalid_timestamp'),zod.literal('invalid_source'),zod.literal('invalid_fingerprint'),zod.literal('stale_policy'),zod.literal('stale_profile'),zod.literal('invalid_decision'),zod.literal('invalid_presentation'),zod.literal('source_changed')]).nullable(),
+  "attestation_source": zod.union([zod.literal('albo_ingestion'),zod.literal(null)]).nullable(),
+  "attested_at": zod.coerce.date().nullable(),
+  "source_fingerprint_verified": zod.boolean()
+})
 })),
   "censusLastUpdatedAt": zod.string().nullish().describe('When the PNRR census feed was last successfully updated'),
   "importSourceLabel": zod.string().describe('Label recorded by the latest PNRR import for the data source actually used'),
@@ -1962,6 +2563,7 @@ export const GetDeliberaVotesParams = zod.object({
 export const GetDeliberaVotesResponse = zod.object({
   "delibera": zod.object({
   "id": zod.number(),
+  "publicId": zod.string().describe('Stable cross-surface identifier derived from progressivo.'),
   "progressivo": zod.string(),
   "tipologia": zod.string(),
   "category": zod.string(),
@@ -1990,7 +2592,65 @@ export const GetDeliberaVotesResponse = zod.object({
   "brief": zod.string().nullish().describe('AI-generated plain-language summary (\"In breve\")'),
   "briefManual": zod.boolean().optional().describe('True when the \"In breve\" summary was written\/curated by hand; the automatic batch never overwrites it.'),
   "briefGeneratedAt": zod.string().nullish().describe('When the \"In breve\" summary was last generated or edited (ISO 8601).'),
-  "odgMacrotemi": zod.array(zod.string()).optional().describe('Per convocazioni — macrotemi aggregati dai punti ODG (può coprire più temi). Vuoto per gli altri tipi di atti.')
+  "odgMacrotemi": zod.array(zod.string()).optional().describe('Per convocazioni — macrotemi aggregati dai punti ODG (può coprire più temi). Vuoto per gli altri tipi di atti.'),
+  "presentation": zod.object({
+  "display_title": zod.string(),
+  "action_id": zod.string().nullable(),
+  "action_label": zod.string().nullable(),
+  "search_text": zod.string(),
+  "area_theme": zod.object({
+  "schema_version": zod.string(),
+  "taxonomy_id": zod.string(),
+  "taxonomy_version": zod.string(),
+  "theme_id": zod.string().nullable(),
+  "theme_label": zod.string().nullable(),
+  "confidence": zod.union([zod.literal('high'),zod.literal('medium'),zod.literal(null)]).nullable(),
+  "basis": zod.enum(['deterministic_rule', 'manual_override', 'fallback']),
+  "rule_id": zod.string().nullable(),
+  "evidence": zod.array(zod.object({
+  "rule_id": zod.string(),
+  "input_field": zod.string(),
+  "matched_terms": zod.array(zod.string())
+})),
+  "null_reason": zod.union([zod.literal('input_withheld_for_privacy'),zod.literal('input_missing'),zod.literal('not_classified'),zod.literal('ambiguous_match'),zod.literal(null)]).nullable(),
+  "override": zod.object({
+  "id": zod.string(),
+  "theme_id": zod.string(),
+  "confidence": zod.enum(['high', 'medium']),
+  "rationale": zod.string(),
+  "previous_theme_id": zod.string().nullable(),
+  "previous_rule_id": zod.string().nullable()
+}).nullable()
+}),
+  "standardisation": zod.object({
+  "schema_version": zod.string(),
+  "profile_id": zod.string(),
+  "profile_version": zod.string(),
+  "input_field": zod.string(),
+  "input_field_preserved": zod.boolean(),
+  "status": zod.enum(['unchanged', 'standardised_automatically', 'review_required']),
+  "transformations": zod.array(zod.string()),
+  "layout_flags": zod.array(zod.string()),
+  "review_reasons": zod.array(zod.string())
+})
+}),
+  "publicSafety": zod.object({
+  "policy_id": zod.string(),
+  "policy_version": zod.string(),
+  "standardisation_profile_id": zod.string(),
+  "standardisation_profile_version": zod.string(),
+  "public_visibility": zod.enum(['publishable', 'publishable_with_minimisation', 'metadata_only']),
+  "privacy_risk": zod.enum(['low', 'medium', 'high']),
+  "reason": zod.string().nullable(),
+  "projection_schema_version": zod.string(),
+  "attachments_attested": zod.boolean(),
+  "markdown_attested": zod.boolean(),
+  "attestation_status": zod.enum(['valid', 'legacy_missing', 'invalid', 'stale', 'source_changed']),
+  "attestation_reason": zod.union([zod.literal(null),zod.literal('missing'),zod.literal('invalid_schema'),zod.literal('invalid_timestamp'),zod.literal('invalid_source'),zod.literal('invalid_fingerprint'),zod.literal('stale_policy'),zod.literal('stale_profile'),zod.literal('invalid_decision'),zod.literal('invalid_presentation'),zod.literal('source_changed')]).nullable(),
+  "attestation_source": zod.union([zod.literal('albo_ingestion'),zod.literal(null)]).nullable(),
+  "attested_at": zod.coerce.date().nullable(),
+  "source_fingerprint_verified": zod.boolean()
+})
 }),
   "tally": zod.object({
   "favorevole": zod.number(),

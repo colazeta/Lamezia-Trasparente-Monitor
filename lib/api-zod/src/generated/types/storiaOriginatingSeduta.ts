@@ -8,6 +8,7 @@
 
 export interface StoriaOriginatingSeduta {
   id: number;
+  publicId: string;
   progressivo: string;
   oggetto: string;
   /** @nullable */

@@ -585,6 +585,7 @@ test("run command writes snapshots and public outputs without mirroring sensitiv
   assert.equal(result.publicLatest.counts.minimised, 1);
   assert.equal(result.publicLatest.counts.metadata_only, 1);
   assert.equal(result.publicLatest.counts.excluded, 1);
+  assert.equal(result.publicLatest.items[0].public_id, "albo-2026-1001");
   assert.equal(result.publicStatus.source, ALBO_PRETORIO_LAMEZIA_SOURCE.source);
   assert.equal(result.publicStatus.last_update, FIXTURE_RETRIEVED_AT);
   assert.equal(result.publicStatus.method, "xml");

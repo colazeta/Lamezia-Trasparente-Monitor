@@ -51,6 +51,8 @@ export type FeedItem = {
   title: string;
   link: string;
   guid: string;
+  /** Stable cross-surface id; GUID remains backward-compatible for readers. */
+  publicId?: string;
   date: Date | null;
   description: string;
 };
@@ -84,6 +86,9 @@ export function buildRssFeed(channel: FeedChannel): string {
         `      <link>${escapeXml(item.link)}</link>`,
         `      <guid isPermaLink="false">${escapeXml(item.guid)}</guid>`,
       ];
+      if (item.publicId) {
+        parts.push(`      <lt:publicId>${escapeXml(item.publicId)}</lt:publicId>`);
+      }
       if (item.date) {
         parts.push(`      <pubDate>${rfc822(item.date)}</pubDate>`);
       }
@@ -97,7 +102,7 @@ export function buildRssFeed(channel: FeedChannel): string {
     .join("\n");
 
   return `<?xml version="1.0" encoding="UTF-8"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:lt="https://lameziatrasparente.it/ns/public-act/1.0">
   <channel>
     <title>${escapeXml(channel.title)}</title>
     <link>${escapeXml(channel.link)}</link>

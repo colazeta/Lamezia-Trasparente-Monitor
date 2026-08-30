@@ -15,6 +15,7 @@ import {
 import { asc, desc, eq, inArray } from "drizzle-orm";
 import { CreateBandoBody, UpdateBandoBody } from "@workspace/api-zod";
 import { requireIngestAuth } from "../middlewares/requireIngestAuth";
+import { mapPublicPublication } from "../lib/publicActProjection";
 import {
   deriveEsito,
   lostAmountFor,
@@ -77,9 +78,14 @@ function mapMatch(m: BandoMatch, targets: ResolvedTargets) {
   if (m.targetType === "publication" && m.publicationId != null) {
     const p = targets.publications.get(m.publicationId);
     if (p) {
-      title = p.oggetto;
-      reference = p.progressivo;
-      date = (p.pubStart ?? p.dataAtto)?.toISOString() ?? null;
+      const projected = mapPublicPublication(p);
+      if (projected) {
+        title = projected.presentation.display_title;
+        reference = projected.progressivo;
+        date = projected.pubStart ?? projected.dataAtto;
+      } else {
+        title = "Atto non disponibile nel layer pubblico";
+      }
     }
   } else if (m.targetType === "contract" && m.contractId != null) {
     const c = targets.contracts.get(m.contractId);
@@ -110,6 +116,19 @@ function mapMatch(m: BandoMatch, targets: ResolvedTargets) {
     contractId: m.contractId,
     pnrrProjectId: m.pnrrProjectId,
   };
+}
+
+function publicSafeMatches(
+  matches: BandoMatch[],
+  targets: ResolvedTargets,
+): BandoMatch[] {
+  return matches.filter((match) => {
+    if (match.targetType !== "publication") return true;
+    if (match.publicationId == null) return false;
+    const publication = targets.publications.get(match.publicationId);
+    const projected = publication ? mapPublicPublication(publication) : null;
+    return projected?.publicSafety.public_visibility === "publishable";
+  });
 }
 
 async function loadMatchesByBando(
@@ -229,6 +248,9 @@ router.get("/bandi", async (req: Request, res: Response) => {
     .where(eq(bandiTable.source, "manual"))
     .orderBy(desc(bandiTable.updatedAt), desc(bandiTable.id));
   const matchesByBando = await loadMatchesByBando(rows.map((r) => r.id));
+  const targets = await resolveMatchTargets(
+    rows.flatMap((row) => matchesByBando.get(row.id) ?? []),
+  );
 
   const statusFilter = typeof req.query.status === "string" ? req.query.status : null;
   const settoreFilter =
@@ -238,7 +260,9 @@ router.get("/bandi", async (req: Request, res: Response) => {
     typeof req.query.ente === "string" ? req.query.ente.toLowerCase() : null;
 
   const result = rows
-    .map((b) => mapPublic(b, matchesByBando.get(b.id) ?? []))
+    .map((b) =>
+      mapPublic(b, publicSafeMatches(matchesByBando.get(b.id) ?? [], targets)),
+    )
     .filter((b) => {
       if (statusFilter && b.status !== statusFilter) return false;
       if (settoreFilter && b.settore !== settoreFilter) return false;
@@ -261,6 +285,9 @@ router.get("/bandi/summary", async (_req: Request, res: Response) => {
     .from(bandiTable)
     .where(eq(bandiTable.source, "manual"));
   const matchesByBando = await loadMatchesByBando(rows.map((r) => r.id));
+  const targets = await resolveMatchTargets(
+    rows.flatMap((row) => matchesByBando.get(row.id) ?? []),
+  );
 
   let aperti = 0;
   let inScadenza = 0;
@@ -274,7 +301,7 @@ router.get("/bandi/summary", async (_req: Request, res: Response) => {
   const esitoMap = new Map<BandoEsito, number>();
 
   for (const b of rows) {
-    const matches = matchesByBando.get(b.id) ?? [];
+    const matches = publicSafeMatches(matchesByBando.get(b.id) ?? [], targets);
     const esito = deriveEsito(b.status, matches);
     const lost = lostAmountFor(b, esito);
     risorsePerseTotale += lost;
@@ -474,7 +501,9 @@ router.get("/bandi/:slug", async (req: Request, res: Response) => {
   const matchesByBando = await loadMatchesByBando([bando.id]);
   const matches = matchesByBando.get(bando.id) ?? [];
   const targets = await resolveMatchTargets(matches);
-  res.json(mapDetail(bando, matches, targets, false));
+  res.json(
+    mapDetail(bando, publicSafeMatches(matches, targets), targets, false),
+  );
 });
 
 /**

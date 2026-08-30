@@ -193,6 +193,9 @@ importers:
       '@workspace/integrations-openai-ai-server':
         specifier: workspace:*
         version: link:../../lib/integrations-openai-ai-server
+      '@workspace/publication-standardisation':
+        specifier: workspace:*
+        version: link:../../lib/publication-standardisation
       cookie-parser:
         specifier: ^1.4.7
         version: 1.4.7

@@ -7,14 +7,12 @@ import {
   officialsTable,
   publicationsTable,
   sessionReportsTable,
-  classifyMacrotema,
   type Organo,
   type Publication,
   type Seduta,
 } from "@workspace/db";
 import { and, eq, asc, desc, inArray, sql } from "drizzle-orm";
-
-import { computeOdgMacrotemi } from "./publications";
+import { mapPublicPublication } from "../lib/publicActProjection";
 
 const router: IRouter = Router();
 
@@ -146,20 +144,19 @@ function mapSeduta(
   hasReport: boolean,
   pub?: Publication,
 ) {
-  const macrotema = pub
-    ? pub.macrotema ?? classifyMacrotema(`${pub.oggetto} ${pub.tipologia ?? ""}`)
-    : null;
-  const odgMacrotemi = pub ? computeOdgMacrotemi(pub.markdownText ?? null) : [];
+  const projected = pub ? mapPublicPublication(pub) : null;
   return {
     id: s.id,
     type: s.type,
     date: s.date ? s.date.toISOString() : null,
-    agenda: s.agenda,
+    // Agenda is a free DB field without a persisted artifact attestation.
+    agenda: null,
     hasReport,
-    publicationId: s.publicationId,
+    publicationId: projected ? s.publicationId : null,
     organo: organo ? organoRef(organo) : null,
-    macrotema,
-    odgMacrotemi,
+    macrotema: projected?.macrotema ?? null,
+    // No DB Markdown is public until a separate artifact attestation exists.
+    odgMacrotemi: [] as string[],
   };
 }
 

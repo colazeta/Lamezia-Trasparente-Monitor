@@ -4,6 +4,8 @@ import { inArray } from "drizzle-orm";
 import request from "supertest";
 import app from "../app";
 import { db, pool, publicationsTable } from "@workspace/db";
+import { publicActPublicId } from "@workspace/publication-standardisation/public-act";
+import { attestPublicationAtIngestion } from "../lib/publicActProjection";
 
 const createdIds: number[] = [];
 
@@ -29,7 +31,9 @@ async function createPublication(
 afterEach(async () => {
   const ids = createdIds.splice(0);
   if (ids.length) {
-    await db.delete(publicationsTable).where(inArray(publicationsTable.id, ids));
+    await db
+      .delete(publicationsTable)
+      .where(inArray(publicationsTable.id, ids));
   }
 });
 
@@ -49,12 +53,14 @@ describe("Public API v1", () => {
   });
 
   it("caps pageSize at 100", async () => {
-    const res = await request(app).get("/api/public/v1/documents?pageSize=5000");
+    const res = await request(app).get(
+      "/api/public/v1/documents?pageSize=5000",
+    );
     expect(res.status).toBe(200);
     expect(res.body.pagination.pageSize).toBe(100);
   });
 
-  it("filters documents by hasMarkdown and exposes the markdown endpoint", async () => {
+  it("does not publish stored Markdown without an explicit attestation", async () => {
     const id = await createPublication({
       markdownText: "# Titolo\n\nCorpo del documento.",
       markdownSource: "allegato.pdf",
@@ -65,26 +71,36 @@ describe("Public API v1", () => {
       "/api/public/v1/documents?hasMarkdown=true&pageSize=100",
     );
     expect(list.status).toBe(200);
-    const found = (list.body.data as { id: number; hasMarkdown: boolean }[]).find(
-      (d) => d.id === id,
-    );
-    expect(found).toBeDefined();
-    expect(found!.hasMarkdown).toBe(true);
+    const found = (
+      list.body.data as { id: number; hasMarkdown: boolean }[]
+    ).find((d) => d.id === id);
+    expect(found).toBeUndefined();
 
-    const md = await request(app).get(`/api/public/v1/documents/${id}/markdown`);
-    expect(md.status).toBe(200);
-    expect(md.body.markdown).toContain("# Titolo");
+    const safeList = await request(app).get(
+      "/api/public/v1/documents?hasMarkdown=false&pageSize=100",
+    );
+    const safeFound = (
+      safeList.body.data as { id: number; hasMarkdown: boolean }[]
+    ).find((d) => d.id === id);
+    expect(safeFound).toBeDefined();
+    expect(safeFound!.hasMarkdown).toBe(false);
+
+    const md = await request(app).get(
+      `/api/public/v1/documents/${id}/markdown`,
+    );
+    expect(md.status).toBe(404);
 
     const raw = await request(app).get(
       `/api/public/v1/documents/${id}/markdown?format=md`,
     );
-    expect(raw.status).toBe(200);
-    expect(raw.headers["content-type"]).toContain("text/markdown");
-    expect(raw.text).toContain("# Titolo");
+    expect(raw.status).toBe(404);
+    expect(JSON.stringify(raw.body)).not.toContain("# Titolo");
   });
 
   it("returns 404 for a missing document and missing markdown", async () => {
-    const missing = await request(app).get("/api/public/v1/documents/999999999");
+    const missing = await request(app).get(
+      "/api/public/v1/documents/999999999",
+    );
     expect(missing.status).toBe(404);
 
     const id = await createPublication();
@@ -92,6 +108,52 @@ describe("Public API v1", () => {
       `/api/public/v1/documents/${id}/markdown`,
     );
     expect(noMd.status).toBe(404);
+  });
+
+  it("dereferences the stable publicId in both public detail routes", async () => {
+    const unique = `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+    const progressivo = `lookup/${unique}`;
+    const oggetto = `Atto lookup ${unique}`;
+    const pubStart = new Date("2026-01-15T00:00:00.000Z");
+    const publicSafetyDecision = attestPublicationAtIngestion({
+      source: {
+        progressivo,
+        tipologia: "DETERMINAZIONE DIRIGENZIALE",
+        category: "albo",
+        subcategory: null,
+        provenienza: null,
+        oggetto,
+        dataAtto: null,
+        pubStart,
+        pubEnd: null,
+        numRegSet: null,
+        numRegGen: null,
+        cups: [],
+        pnrrMission: null,
+        isPnrr: false,
+      },
+      evaluatedAt: new Date("2026-08-30T09:00:00.000Z"),
+      previous: null,
+    });
+    const id = await createPublication({
+      progressivo,
+      oggetto,
+      pubStart,
+      publicSafetyDecision,
+    });
+    const publicId = publicActPublicId(progressivo)!;
+
+    const publicDetail = await request(app).get(
+      `/api/public/v1/documents/${publicId}`,
+    );
+    expect(publicDetail.status).toBe(200);
+    expect(publicDetail.body).toMatchObject({ id, publicId, progressivo });
+
+    const publicationDetail = await request(app).get(
+      `/api/publications/${publicId}`,
+    );
+    expect(publicationDetail.status).toBe(200);
+    expect(publicationDetail.body).toMatchObject({ id, publicId, progressivo });
   });
 
   it("serves the index and the OpenAPI document", async () => {
