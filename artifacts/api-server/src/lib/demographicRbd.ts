@@ -12,6 +12,7 @@ import {
   canonicalDimensionKey,
   LAMEZIA_ISTAT_CODE,
   parseSdmxCsv,
+  POPULATION_SERIES_KEY,
 } from "./demographics";
 import {
   balanceSeriesKey,
@@ -91,14 +92,24 @@ async function targetSeries(config: RbdFieldConfig) {
   return series;
 }
 
-async function alreadyBackfilled(config: RbdFieldConfig): Promise<boolean> {
-  const series = await targetSeries(config);
+async function seriesByKey(seriesKey: string) {
+  const [series] = await db
+    .select()
+    .from(demographicSeriesTable)
+    .where(eq(demographicSeriesTable.seriesKey, seriesKey));
+  if (!series) {
+    throw new Error(`Serie demografica ${seriesKey} non inizializzata`);
+  }
+  return series;
+}
+
+async function hasRbdRelease(seriesId: number): Promise<boolean> {
   const [release] = await db
     .select({ id: demographicReleasesTable.id })
     .from(demographicReleasesTable)
     .where(
       and(
-        eq(demographicReleasesTable.seriesId, series.id),
+        eq(demographicReleasesTable.seriesId, seriesId),
         eq(demographicReleasesTable.sourceDataset, RBD_DATAFLOW_ID),
       ),
     )
@@ -106,8 +117,12 @@ async function alreadyBackfilled(config: RbdFieldConfig): Promise<boolean> {
   return Boolean(release);
 }
 
-async function persistRbdField(config: RbdFieldConfig) {
+async function alreadyBackfilled(config: RbdFieldConfig): Promise<boolean> {
   const series = await targetSeries(config);
+  return hasRbdRelease(series.id);
+}
+
+async function fetchRbdSeries(config: RbdFieldConfig) {
   const url = rbdSdmxUrl(config);
   const response = await fetch(url, {
     headers: {
@@ -128,8 +143,26 @@ async function persistRbdField(config: RbdFieldConfig) {
       `ISTAT RBD ${config.dataType}: attese 17 annualità 2002–2018, ricevute ${observations.length}`,
     );
   }
+  return { url, response, rawPayload, observations };
+}
 
-  const hash = hashPayload(rawPayload);
+function releaseMetadata(config: RbdFieldConfig) {
+  return {
+    dataflow: RBD_DATAFLOW_ID,
+    dataType: config.dataType,
+    periodStart: 2002,
+    periodEnd: 2018,
+    sourceStatus: "reconstructed",
+    territorialClassification: 2019,
+    excludedPartial2001: true,
+    methodologyBreakAt: 2019,
+  };
+}
+
+async function persistRbdField(config: RbdFieldConfig) {
+  const series = await targetSeries(config);
+  const payload = await fetchRbdSeries(config);
+  const hash = hashPayload(payload.rawPayload);
   const [sameRelease] = await db
     .select({ id: demographicReleasesTable.id })
     .from(demographicReleasesTable)
@@ -151,28 +184,19 @@ async function persistRbdField(config: RbdFieldConfig) {
       .values({
         seriesId: series.id,
         sourceDataset: RBD_DATAFLOW_ID,
-        sourceUrl: url,
+        sourceUrl: payload.url,
         sourceHash: hash,
-        sourceVersion: response.headers.get("etag"),
+        sourceVersion: payload.response.headers.get("etag"),
         acquiredAt: now,
-        httpEtag: response.headers.get("etag"),
-        httpLastModified: response.headers.get("last-modified"),
-        rawPayload,
-        metadata: {
-          dataflow: RBD_DATAFLOW_ID,
-          dataType: config.dataType,
-          periodStart: 2002,
-          periodEnd: 2018,
-          sourceStatus: "reconstructed",
-          territorialClassification: 2019,
-          excludedPartial2001: true,
-          methodologyBreakAt: 2019,
-        },
+        httpEtag: payload.response.headers.get("etag"),
+        httpLastModified: payload.response.headers.get("last-modified"),
+        rawPayload: payload.rawPayload,
+        metadata: releaseMetadata(config),
       })
       .returning({ id: demographicReleasesTable.id });
 
     await tx.insert(demographicObservationsTable).values(
-      observations.map((point) => ({
+      payload.observations.map((point) => ({
         seriesId: series.id,
         releaseId: release.id,
         geographyCode: LAMEZIA_ISTAT_CODE,
@@ -192,7 +216,60 @@ async function persistRbdField(config: RbdFieldConfig) {
     );
   });
 
-  return { inserted: observations.length, changed: true };
+  return { inserted: payload.observations.length, changed: true };
+}
+
+async function persistPopulationHistoryMirror() {
+  const populationSeries = await seriesByKey(POPULATION_SERIES_KEY);
+  if (await hasRbdRelease(populationSeries.id)) {
+    return { inserted: 0, changed: false };
+  }
+
+  const config = RBD_FIELDS.find((item) => item.field === "populationStart");
+  if (!config) throw new Error("Configurazione RBD JAN mancante");
+  const payload = await fetchRbdSeries(config);
+  const hash = hashPayload(payload.rawPayload);
+  const now = new Date();
+
+  await db.transaction(async (tx) => {
+    const [release] = await tx
+      .insert(demographicReleasesTable)
+      .values({
+        seriesId: populationSeries.id,
+        sourceDataset: RBD_DATAFLOW_ID,
+        sourceUrl: payload.url,
+        sourceHash: hash,
+        sourceVersion: payload.response.headers.get("etag"),
+        acquiredAt: now,
+        httpEtag: payload.response.headers.get("etag"),
+        httpLastModified: payload.response.headers.get("last-modified"),
+        rawPayload: payload.rawPayload,
+        metadata: {
+          ...releaseMetadata(config),
+          mirrorRole: "population-resident-jan1-history",
+        },
+      })
+      .returning({ id: demographicReleasesTable.id });
+
+    await tx.insert(demographicObservationsTable).values(
+      payload.observations.map((point) => ({
+        seriesId: populationSeries.id,
+        releaseId: release.id,
+        geographyCode: LAMEZIA_ISTAT_CODE,
+        referencePeriod: point.period,
+        referenceType: "stock",
+        dimensions: {},
+        dimensionKey: canonicalDimensionKey({}),
+        value: String(point.value),
+        unit: populationSeries.unit,
+        sourceStatus: "reconstructed",
+        sourceObservationStatus: point.rawStatus,
+        qualityFlags: point.qualityFlags,
+      })),
+    );
+  });
+
+  return { inserted: payload.observations.length, changed: true };
 }
 
 async function recordRbdFeedStatus(
@@ -269,6 +346,13 @@ export async function runRbdBackfill(): Promise<{
       if (result.changed) releases++;
       observations += result.inserted;
     }
+
+    // JAN alimenta anche la serie longitudinale principale usata da "Lamezia
+    // nel tempo". È un mirror semantico, non una nuova fonte: la release mantiene
+    // il dataflow RBD e lo status reconstructed.
+    const mirror = await persistPopulationHistoryMirror();
+    if (mirror.changed) releases++;
+    observations += mirror.inserted;
 
     await recordRbdFeedStatus({ status: "ok", observations, releases });
     logger.info(
