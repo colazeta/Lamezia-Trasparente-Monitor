@@ -36,6 +36,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+import { PopulationHistoryPanel } from "@/components/demographics/PopulationHistoryPanel";
 import {
   computeTrend,
   formatIndicatorValue,
@@ -123,7 +124,6 @@ export function PerformanceDetail() {
         </div>
       ) : (
         <>
-          {/* Header */}
           <div className="mb-8">
             <div className="mb-3 flex flex-wrap items-center gap-2">
               <span className="eyebrow text-primary">
@@ -152,7 +152,6 @@ export function PerformanceDetail() {
             ) : null}
           </div>
 
-          {/* KPI summary */}
           <div className="mb-8 grid gap-4 sm:grid-cols-3">
             <Card className="relative overflow-hidden border-brand/40 bg-brand/5">
               <span className="absolute left-0 top-0 h-full w-1 bg-brand" />
@@ -233,7 +232,10 @@ export function PerformanceDetail() {
             </Card>
           </div>
 
-          {/* Time series chart */}
+          {indicator.slug === "popolazione-residente" ? (
+            <PopulationHistoryPanel />
+          ) : null}
+
           <Card className="mb-8 overflow-hidden">
             <CardHeader className="border-b border-border bg-muted/40">
               <CardTitle className="flex items-center gap-2 font-display font-bold tracking-tight">
@@ -337,7 +339,6 @@ export function PerformanceDetail() {
             </CardContent>
           </Card>
 
-          {/* Data table */}
           {indicator.values.length > 0 ? (
             <Card className="overflow-hidden">
               <CardHeader className="border-b border-border bg-muted/40">
