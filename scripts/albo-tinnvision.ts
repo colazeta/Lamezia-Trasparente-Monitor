@@ -23,12 +23,17 @@ import {
 import {
   ALBO_PUBLICATION_STANDARDISATION,
   ALBO_PUBLICATION_STANDARDISATION_KNOWN_LIMIT,
-  standardiseAlboPublicSubject,
 } from "./albo-publication-standardisation";
 import type {
   PublicationPresentation,
   PublicationStandardisationDescriptor,
 } from "@workspace/publication-standardisation";
+import {
+  classifyAlboPublicSafety,
+  makeAlboPublicSafetyDecision,
+  projectPublicAct,
+  publicActPublicId,
+} from "@workspace/publication-standardisation/public-act";
 
 const SCRIPT_DIR = path.dirname(fileURLToPath(import.meta.url));
 const REPO_ROOT = path.resolve(SCRIPT_DIR, "..");
@@ -161,6 +166,7 @@ export interface CliOptions {
 
 export type PublicRecord = Record<string, unknown> & {
   id: string;
+  public_id: string;
   source: string;
   retrieved_at: string;
   verification_status: VerificationStatus;
@@ -358,72 +364,6 @@ const CIVIC_SAFEGUARDS = [
 ];
 const MAX_PUBLIC_PDF_BYTES = 10 * 1024 * 1024;
 
-const DO_NOT_PUBLISH_TERMS = [
-  "minore",
-  "minori",
-  "adozione",
-  "affido",
-  "sanitar",
-  "disabil",
-  "handicap",
-  "invalid",
-  "tutela",
-  "amministratore di sostegno",
-];
-const METADATA_ONLY_TERMS = [
-  "assegno di maternita",
-  "assegno maternita",
-  "maternita",
-  "beneficiari",
-  "elenco benefici",
-  "elenco dei benefici",
-  "graduatoria benefici",
-  "contributo economico a favore di persona fisica",
-  "contributi economici straordinari",
-  "assistenza domiciliare",
-  "assistenza sociale",
-  "assistenti sociali",
-  "fondo poverta",
-  "servizi sociali",
-  "servizio sociale",
-  "non autosufficien",
-  "fragil",
-  "fna ",
-  "pubblicazione di matrimonio",
-  "matrimonio",
-  "notifica",
-  "irreperibil",
-  "cambio nome",
-  "cambio cognome",
-  "avviso di deposito",
-  "casa comunale",
-  "elenco x 1 gg",
-];
-const MINIMISE_TERMS = [
-  "benefici",
-  "assegno",
-  "sussidio",
-  "sussidi",
-  "bonus sociale",
-  "welfare",
-  "sostegno economico",
-  "sostegno al reddito",
-  "supporto familiare",
-  "nucleo familiare",
-  "nuclei familiari",
-  "graduatori",
-  "contenzioso",
-  "risarc",
-  "transatt",
-  "sinistro",
-  "avvocatura",
-];
-const PROCEDURAL_NOTIFICATION_PATTERNS = [
-  /\bart(?:icolo)?\s*\.?\s*(?:140|143)\s*(?:c\s*\.?\s*p\s*\.?\s*c\s*\.?|codice\s+di\s+procedura\s+civile)\b/iu,
-  /\baffissione\s+all['’]albo\s+nei\s+confronti\s+di\b/iu,
-  /\bnotifica\s+per\s+pubblici\s+proclami\b/iu,
-  /\bdeposito\s+(?:presso|nella)\s+(?:la\s+)?casa\s+comunale\b/iu,
-];
 const NOTIFICATION_METADATA_ONLY_REASON =
   "Regola automatica prudenziale: notifiche e depositi procedurali pubblicati solo in forma minima.";
 
@@ -1191,77 +1131,70 @@ function alboItemDeliberationBody(
 
 function publicItem(item: AlboItem): PublicRecord {
   const deliberationBody = alboItemDeliberationBody(item);
-  const base = {
+  const decision = classifyAlboPublicSafety({
+    subject: item.subject,
+    act_type: item.act_type,
+    office: item.office,
+    act_category_id: item.classification.act_category.id,
+  });
+  const projection = projectPublicAct({
     id: item.id,
+    progressivo: item.publication_number,
+    tipologia: item.act_type,
+    category: "albo",
+    subcategory: item.classification.act_category.id,
+    provenienza: item.office,
+    oggetto: item.subject,
+    data_atto: item.act_date,
+    publication_start: item.publication_start,
+    publication_end: item.publication_end,
+    registry_section_number: null,
+    registry_general_number: item.act_number,
+    cups: [],
+    pnrr_mission: null,
+    is_pnrr: false,
+    is_new: false,
+    first_seen_at: item.retrieved_at,
+    macrotema: null,
+    decision,
+    attachments: item.document_url
+      ? [{ name: "Documento ufficiale", tipo: null, official_url: item.document_url, archived_url: null, content_type: null, size: null, public_safe: true }]
+      : [],
+  });
+  if (!projection) return publicExcludedItem(item);
+
+  const isFull = decision.public_visibility === "publishable";
+  return {
+    id: item.id,
+    public_id: projection.public_id,
     source: item.source,
     source_url: item.source_url,
     retrieved_at: item.retrieved_at,
-    publication_number: item.publication_number,
-    publication_start: item.publication_start,
-    publication_end: item.publication_end,
-    office: item.office,
-    act_type: item.act_type,
-    act_number: item.act_number,
-    act_date: item.act_date,
+    publication_number: projection.progressivo,
+    publication_start: projection.publication_start,
+    publication_end: projection.publication_end,
+    office: isFull ? projection.provenienza : null,
+    act_type: isFull ? projection.tipologia : null,
+    act_number: projection.registry_general_number,
+    act_date: projection.data_atto,
+    ...(isFull ? { content_hash: item.content_hash } : {}),
+    subject: projection.oggetto,
+    document_url: projection.attachments[0]?.official_url ?? null,
+    public_note: decision.public_visibility === "publishable_with_minimisation"
+      ? "Record pubblicato con minimizzazione automatica."
+      : decision.public_visibility === "metadata_only"
+        ? "Record limitato al metadato minimo."
+        : null,
     verification_status: item.verification_status,
-    privacy_risk: item.privacy_risk,
-    public_visibility: item.public_visibility,
+    privacy_risk: decision.privacy_risk,
+    public_visibility: decision.public_visibility,
     classification: item.classification,
     privacy_attestation: sourcePrivacyAttestation(),
     ...(deliberationBody
       ? { deliberation_body: deliberationBody }
       : {}),
+    presentation: projection.presentation,
     known_limits: item.known_limits,
-  };
-  let publicSafeRecord: PublicRecord;
-  if (item.public_visibility === "publishable") {
-    publicSafeRecord = {
-      ...base,
-      content_hash: item.content_hash,
-      subject: item.subject,
-      document_url: item.document_url,
-      public_note: null,
-    };
-  } else if (item.public_visibility === "publishable_with_minimisation") {
-    publicSafeRecord = {
-      ...base,
-      office: null,
-      act_type: null,
-      subject: "Oggetto minimizzato per prudenza privacy; consultare la fonte ufficiale.",
-      document_url: null,
-      public_note: "Record pubblicato con minimizzazione automatica.",
-    };
-  } else {
-    publicSafeRecord = {
-      ...base,
-      office: null,
-      act_type: null,
-      act_number: null,
-      act_date: null,
-      subject: "Metadato minimo; oggetto non ripubblicato per prudenza privacy.",
-      document_url: null,
-      public_note: "Record limitato al metadato minimo.",
-    };
-  }
-
-  return attachPublicPresentation(publicSafeRecord);
-}
-
-function attachPublicPresentation(record: PublicRecord): PublicRecord {
-  const publicSafeSubject = typeof record.subject === "string" ? record.subject : null;
-  const areaThemeAvailability =
-    record.public_visibility === "publishable"
-      ? publicSafeSubject
-        ? "available"
-        : "missing"
-      : "withheld_for_privacy";
-  return {
-    ...record,
-    // The presentation layer may only receive the already minimised public
-    // subject. It never sees or reconstructs a redacted source value.
-    presentation: standardiseAlboPublicSubject(publicSafeSubject, {
-      area_theme_availability: areaThemeAvailability,
-    }),
   };
 }
 
@@ -1269,6 +1202,7 @@ function publicExcludedItem(item: AlboItem): PublicRecord {
   const deliberationBody = alboItemDeliberationBody(item);
   return {
     id: item.id,
+    public_id: publicActPublicId(item.publication_number) ?? item.id,
     source: item.source,
     source_url: item.source_url,
     retrieved_at: item.retrieved_at,
@@ -1500,89 +1434,81 @@ function projectExistingPublicRecord(
     ...(reason ? [reason] : []),
   ]);
 
-  if (publicVisibility === "publishable") {
-    const contentHash = stringValue(record.content_hash);
-    return attachPublicPresentation({
+  const decision = makeAlboPublicSafetyDecision(publicVisibility, privacyRisk, reason);
+  const documentUrl = stringValue(record.document_url);
+  const projection = decision ? projectPublicAct({
+    id: record.id,
+    progressivo: stringValue(record.publication_number) ?? "",
+    tipologia: stringValue(record.act_type),
+    category: "albo",
+    subcategory: classification.act_category.id,
+    provenienza: stringValue(record.office),
+    oggetto: stringValue(record.subject),
+    data_atto: stringValue(record.act_date),
+    publication_start: stringValue(record.publication_start),
+    publication_end: stringValue(record.publication_end),
+    registry_section_number: null,
+    registry_general_number: stringValue(record.act_number),
+    cups: [],
+    pnrr_mission: null,
+    is_pnrr: false,
+    is_new: false,
+    first_seen_at: record.retrieved_at,
+    macrotema: null,
+    decision,
+    attachments: documentUrl
+      ? [{ name: "Documento ufficiale", tipo: null, official_url: documentUrl, archived_url: null, content_type: null, size: null, public_safe: true }]
+      : [],
+  }) : null;
+
+  if (!projection) {
+    return {
       id: record.id,
+      public_id: publicActPublicId(stringValue(record.publication_number) ?? "") ?? record.id,
       source: record.source,
-      source_url: stringValue(record.source_url),
+      source_url: record.source_url,
       retrieved_at: record.retrieved_at,
-      publication_number: stringValue(record.publication_number),
-      publication_start: stringValue(record.publication_start),
-      publication_end: stringValue(record.publication_end),
-      office: stringValue(record.office),
-      act_type: stringValue(record.act_type),
-      act_number: stringValue(record.act_number),
-      act_date: stringValue(record.act_date),
-      ...(contentHash ? { content_hash: contentHash } : {}),
-      subject: stringValue(record.subject),
-      document_url: stringValue(record.document_url),
-      public_note: null,
+      publication_number: record.publication_number,
       verification_status: record.verification_status,
       privacy_risk: privacyRisk,
-      public_visibility: publicVisibility,
+      public_visibility: "do_not_publish",
       classification,
       ...policyFields,
       known_limits: knownLimits,
-    });
+      exclusion_reason: "Record escluso dal layer pubblico per prudenza privacy automatica.",
+    };
   }
 
-  const base: PublicRecord = {
+  const isFull = publicVisibility === "publishable";
+  const contentHash = stringValue(record.content_hash);
+  return {
     id: record.id,
+    public_id: projection.public_id,
     source: record.source,
-    source_url: record.source_url,
+    source_url: stringValue(record.source_url),
     retrieved_at: record.retrieved_at,
-    publication_number: record.publication_number,
-    publication_start: record.publication_start,
-    publication_end: record.publication_end,
-    office: null,
-    act_type: null,
-    act_number: record.act_number ?? null,
-    act_date: record.act_date ?? null,
+    publication_number: projection.progressivo,
+    publication_start: projection.publication_start,
+    publication_end: projection.publication_end,
+    office: isFull ? projection.provenienza : null,
+    act_type: isFull ? projection.tipologia : null,
+    act_number: projection.registry_general_number,
+    act_date: projection.data_atto,
+    ...(isFull && contentHash ? { content_hash: contentHash } : {}),
+    subject: projection.oggetto,
+    document_url: projection.attachments[0]?.official_url ?? null,
+    public_note: publicVisibility === "publishable_with_minimisation"
+      ? "Record pubblicato con minimizzazione automatica."
+      : publicVisibility === "metadata_only"
+        ? "Record limitato al metadato minimo."
+        : null,
     verification_status: record.verification_status,
     privacy_risk: privacyRisk,
     public_visibility: publicVisibility,
     classification,
     ...policyFields,
+    presentation: projection.presentation,
     known_limits: knownLimits,
-  };
-
-  if (publicVisibility === "publishable_with_minimisation") {
-    return attachPublicPresentation({
-      ...base,
-      subject:
-        "Oggetto minimizzato per prudenza privacy; consultare la fonte ufficiale.",
-      document_url: null,
-      public_note: "Record pubblicato con minimizzazione automatica.",
-    });
-  }
-
-  if (publicVisibility === "metadata_only") {
-    return attachPublicPresentation({
-      ...base,
-      office: null,
-      act_number: null,
-      act_date: null,
-      subject:
-        "Metadato minimo; oggetto non ripubblicato per prudenza privacy.",
-      document_url: null,
-      public_note: "Record limitato al metadato minimo.",
-    });
-  }
-
-  return {
-    id: record.id,
-    source: record.source,
-    source_url: record.source_url,
-    retrieved_at: record.retrieved_at,
-    publication_number: record.publication_number,
-    verification_status: record.verification_status,
-    privacy_risk: privacyRisk,
-    public_visibility: "do_not_publish",
-    ...policyFields,
-    known_limits: knownLimits,
-    exclusion_reason:
-      "Record escluso dal layer pubblico per prudenza privacy automatica.",
   };
 }
 
@@ -2367,36 +2293,16 @@ function parseByFormat(
 }
 
 function classify(record: RawAlboRecord): PrivacyClassification {
-  const text = privacySearchText(record);
-  if (DO_NOT_PUBLISH_TERMS.some((term) => text.includes(term))) {
-    return {
-      privacyRisk: "high",
-      publicVisibility: "do_not_publish",
-      reason: "Regola automatica prudenziale: possibile contenuto sociale, sanitario o personale sensibile.",
-    };
-  }
-  if (METADATA_ONLY_TERMS.some((term) => text.includes(term))) {
-    return {
-      privacyRisk: "high",
-      publicVisibility: "metadata_only",
-      reason: "Regola automatica prudenziale: stato civile, notifiche o metadati personali pubblicati solo in forma minima.",
-    };
-  }
-  if (PROCEDURAL_NOTIFICATION_PATTERNS.some((pattern) => pattern.test(text))) {
-    return {
-      privacyRisk: "high",
-      publicVisibility: "metadata_only",
-      reason: NOTIFICATION_METADATA_ONLY_REASON,
-    };
-  }
-  if (MINIMISE_TERMS.some((term) => text.includes(term))) {
-    return {
-      privacyRisk: "medium",
-      publicVisibility: "publishable_with_minimisation",
-      reason: "Regola automatica prudenziale: oggetto minimizzato per possibile presenza di dati personali o contenzioso.",
-    };
-  }
-  return { privacyRisk: "low", publicVisibility: "publishable", reason: null };
+  const decision = classifyAlboPublicSafety({
+    subject: record.subject,
+    act_type: record.act_type,
+    office: record.office,
+  });
+  return {
+    privacyRisk: decision.privacy_risk,
+    publicVisibility: decision.public_visibility,
+    reason: decision.reason,
+  };
 }
 
 function enforceClassificationSafety(
@@ -2420,15 +2326,6 @@ function isNotificationDepositClassification(value: unknown): boolean {
   const classification = objectValue(value);
   const actCategory = objectValue(classification?.act_category);
   return actCategory?.id === "notifiche_depositi";
-}
-
-function privacySearchText(record: RawAlboRecord): string {
-  return [record.subject, record.act_type, record.office]
-    .filter(Boolean)
-    .join(" ")
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "");
 }
 
 function itemLimits(snapshot: AlboRawSnapshot, record: RawAlboRecord, reason: string | null): string[] {

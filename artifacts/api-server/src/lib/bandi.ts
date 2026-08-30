@@ -11,6 +11,7 @@ import {
 } from "@workspace/db";
 import { and, desc, eq, ilike, or, sql } from "drizzle-orm";
 import { logger } from "./logger";
+import { mapPublicPublication } from "./publicActProjection";
 
 // --- Estrazione di CUP/CIG dal testo libero del bando -----------------------
 // I bandi non hanno un CIG/CUP strutturato, ma la redazione può citarli nelle
@@ -31,9 +32,7 @@ function extractCodes(text: string): { cigs: string[]; cups: string[] } {
 }
 
 function cleanKeywords(keywords: string[] | null | undefined): string[] {
-  return (keywords ?? [])
-    .map((k) => k.trim())
-    .filter((k) => k.length >= 3);
+  return (keywords ?? []).map((k) => k.trim()).filter((k) => k.length >= 3);
 }
 
 // Numero massimo di riscontri suggeriti per bando e per tipo di sorgente, per
@@ -261,12 +260,7 @@ async function refreshBandoCandidates(): Promise<number> {
 
   // --- 1) Albo Pretorio: avvisi/bandi pubblicati ---
   const pubs = await db
-    .select({
-      id: publicationsTable.id,
-      progressivo: publicationsTable.progressivo,
-      oggetto: publicationsTable.oggetto,
-      tipologia: publicationsTable.tipologia,
-    })
+    .select()
     .from(publicationsTable)
     .where(
       or(
@@ -281,13 +275,19 @@ async function refreshBandoCandidates(): Promise<number> {
     .limit(200);
 
   for (const p of pubs) {
-    if (!BANDO_CANDIDATE_RE.test(`${p.oggetto} ${p.tipologia}`)) continue;
+    const projected = mapPublicPublication(p);
+    if (!projected) continue;
+    if (
+      !BANDO_CANDIDATE_RE.test(`${projected.oggetto} ${projected.tipologia}`)
+    ) {
+      continue;
+    }
     const ok = await insertCandidate({
-      ref: `pub-${p.progressivo}`,
-      slug: makeSlug(`suggerito-pub-${p.progressivo}`),
-      title: truncate(p.oggetto),
-      description: p.oggetto,
-      settore: classifyMacrotema(`${p.oggetto} ${p.tipologia ?? ""}`),
+      ref: `pub-${projected.progressivo}`,
+      slug: makeSlug(`suggerito-pub-${projected.progressivo}`),
+      title: truncate(projected.oggetto),
+      description: projected.oggetto,
+      settore: projected.macrotema,
       keywords: [],
     });
     if (ok) created += 1;

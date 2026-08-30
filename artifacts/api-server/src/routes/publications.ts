@@ -52,6 +52,8 @@ import {
   startBriefBatch,
   startLazyBriefGeneration,
 } from "../lib/briefs";
+import { mapPublicPublication } from "../lib/publicActProjection";
+import { normaliseSearchText } from "@workspace/publication-standardisation";
 
 const router: IRouter = Router();
 
@@ -218,11 +220,12 @@ export function computeOdgMacrotemi(text: string | null): string[] {
 }
 
 async function buildSedutaDetail(publication: Publication) {
+  const publicPublication = mapPublicPublication(publication);
+  if (!publicPublication) return null;
   const [report] = await db
     .select()
     .from(sessionReportsTable)
     .where(eq(sessionReportsTable.publicationId, publication.id));
-
 
   let interventions: SessionIntervention[] = [];
   if (report) {
@@ -280,41 +283,12 @@ async function buildSedutaDetail(publication: Publication) {
       .orderBy(asc(officialsTable.name));
   }
 
-  // Cerca delibere prodotte nella stessa sessione (stessa subcategory,
-  // entro 14 giorni dalla convocazione) per abbinamento ai punti ODG.
-  let sessionDelibere: { id: number; oggetto: string; category: string }[] = [];
-  if (publication.pubStart) {
-    const windowMs = 14 * 24 * 60 * 60 * 1000;
-    const after = new Date(publication.pubStart.getTime() - windowMs);
-    const before = new Date(publication.pubStart.getTime() + windowMs);
-    const conditions = [
-      eq(publicationsTable.category, "delibera"),
-      gte(publicationsTable.pubStart, after),
-      lte(publicationsTable.pubStart, before),
-    ];
-    if (publication.subcategory) {
-      conditions.push(eq(publicationsTable.subcategory, publication.subcategory));
-    }
-    sessionDelibere = await db
-      .select({
-        id: publicationsTable.id,
-        oggetto: publicationsTable.oggetto,
-        category: publicationsTable.category,
-      })
-      .from(publicationsTable)
-      .where(and(...conditions))
-      .orderBy(asc(publicationsTable.dataAtto), asc(publicationsTable.id))
-      .limit(30);
-  }
-
-  // Estrai i punti ODG dal campo agenda della seduta (se disponibile) oppure
-  // dal markdownText della convocazione (fallback). Usato per mostrare il tema
-  // di ciascun punto dell'ordine del giorno nella UI.
-  const odgSource = seduta?.agenda ?? publication.markdownText ?? null;
-  const odgPoints = extractOdgPoints(odgSource, sessionDelibere, []);
+  // Agenda e Markdown non hanno ancora un'attestazione public-safe persistita.
+  // Non derivare punti ODG pubblici da campi liberi non attestati.
+  const odgPoints: ReturnType<typeof extractOdgPoints> = [];
 
   return {
-    ...mapPublication(publication),
+    ...publicPublication,
     hasReport: Boolean(report),
     summary: report?.summary ?? null,
     interventions: interventions.map(mapIntervention),
@@ -324,7 +298,7 @@ async function buildSedutaDetail(publication: Publication) {
   };
 }
 
-function mapPublication(p: Publication) {
+function mapAdminPublication(p: Publication) {
   return {
     id: p.id,
     progressivo: p.progressivo,
@@ -366,21 +340,14 @@ function mapPublication(p: Publication) {
   };
 }
 
-function buildFilters(req: {
-  query: Record<string, unknown>;
-}) {
-  const q = typeof req.query.q === "string" ? req.query.q : undefined;
+function buildFilters(req: { query: Record<string, unknown> }) {
   const category =
     typeof req.query.category === "string" ? req.query.category : undefined;
-  const tipologia =
-    typeof req.query.tipologia === "string" ? req.query.tipologia : undefined;
   const from = typeof req.query.from === "string" ? req.query.from : undefined;
   const to = typeof req.query.to === "string" ? req.query.to : undefined;
 
   const conditions = [];
-  if (q) conditions.push(ilike(publicationsTable.oggetto, `%${q}%`));
   if (category) conditions.push(eq(publicationsTable.category, category));
-  if (tipologia) conditions.push(eq(publicationsTable.tipologia, tipologia));
   const fromDate = from ? new Date(from) : undefined;
   if (fromDate && !Number.isNaN(fromDate.getTime())) {
     conditions.push(gte(publicationsTable.pubStart, fromDate));
@@ -432,6 +399,8 @@ router.get("/publications/feed-status", async (_req, res) => {
 router.get("/publications", async (req, res) => {
   const macrotemaFilter =
     typeof req.query.macrotema === "string" ? req.query.macrotema : undefined;
+  const tipologiaFilter =
+    typeof req.query.tipologia === "string" ? req.query.tipologia : undefined;
   const conditions = buildFilters(req);
   // Filtro macrotema a livello DB: usa il valore persistito quando disponibile;
   // le righe senza macrotema persistito vengono incluse solo se la classificazione
@@ -451,19 +420,24 @@ router.get("/publications", async (req, res) => {
     .where(conditions.length ? and(...conditions) : undefined)
     .orderBy(desc(publicationsTable.pubStart), desc(publicationsTable.id));
 
-  let filtered = rows;
-  // Post-filter only the IS NULL rows that haven't been classified+persisted yet.
-  if (macrotemaFilter) {
-    filtered = rows.filter(
-      (r) =>
-        r.macrotema === macrotemaFilter ||
-        (!r.macrotema &&
-          classifyMacrotema(`${r.oggetto} ${r.tipologia ?? ""}`) ===
-            macrotemaFilter),
-    );
-  }
-
-  res.json(filtered.map(mapPublication));
+  const normalisedQuery =
+    typeof req.query.q === "string" ? normaliseSearchText(req.query.q) : null;
+  res.json(
+    rows.flatMap((publication) => {
+      const projected = mapPublicPublication(publication);
+      if (!projected) return [];
+      if (macrotemaFilter && projected.macrotema !== macrotemaFilter) return [];
+      if (tipologiaFilter && projected.tipologia !== tipologiaFilter) return [];
+      if (
+        normalisedQuery &&
+        !projected.presentation.search_text.includes(normalisedQuery) &&
+        !normaliseSearchText(projected.progressivo).includes(normalisedQuery)
+      ) {
+        return [];
+      }
+      return [projected];
+    }),
+  );
 });
 
 router.get("/publications/:id", async (req, res) => {
@@ -478,7 +452,8 @@ router.get("/publications/:id", async (req, res) => {
     .from(publicationsTable)
     .where(eq(publicationsTable.id, id));
 
-  if (!publication) {
+  const projected = publication ? mapPublicPublication(publication) : null;
+  if (!publication || !projected) {
     res.status(404).json({ error: "Atto non trovato" });
     return;
   }
@@ -487,15 +462,15 @@ router.get("/publications/:id", async (req, res) => {
   // Funziona sia con markdownText (testo completo) sia con solo l'oggetto.
   // Non sovrascrive le sintesi manuali (briefManual=true).
   // Il lock impedisce chiamate LLM concorrenti per lo stesso atto (protezione costi).
-  if (!publication.brief && !publication.briefManual) {
-    startLazyBriefGeneration(
-      id,
-      publication.oggetto,
-      publication.markdownText ?? null,
-    );
+  if (
+    projected.publicSafety.public_visibility === "publishable" &&
+    !publication.brief &&
+    !publication.briefManual
+  ) {
+    startLazyBriefGeneration(id, projected.oggetto, null);
   }
 
-  res.json(mapPublication(publication));
+  res.json(projected);
 });
 
 router.get("/publications/:id/storia", async (req, res) => {
@@ -510,13 +485,16 @@ router.get("/publications/:id/storia", async (req, res) => {
     .from(publicationsTable)
     .where(eq(publicationsTable.id, id));
 
-  if (!publication) {
+  const projectedPublication = publication
+    ? mapPublicPublication(publication)
+    : null;
+  if (!publication || !projectedPublication) {
     res.status(404).json({ error: "Atto non trovato" });
     return;
   }
 
-  const oggettoUpper = publication.oggetto.toUpperCase();
-  const cupsUpper = publication.cups.map((c) => c.toUpperCase());
+  const oggettoUpper = projectedPublication.oggetto.toUpperCase();
+  const cupsUpper = projectedPublication.cups.map((c) => c.toUpperCase());
 
   // Cerca contratti collegati via CIG (il CIG del contratto compare nell'oggetto
   // dell'atto) oppure via CUP (il CUP del contratto è nella lista cups dell'atto).
@@ -624,20 +602,29 @@ router.get("/publications/:id/storia", async (req, res) => {
     }
   }
 
-  const siblings = siblingRows.slice(0, 15).map((r) => {
-    const cig = relatedCigs.find((c) => r.oggetto.toUpperCase().includes(c.toUpperCase()));
+  const siblings = siblingRows.slice(0, 15).flatMap((r) => {
+    const projected = mapPublicPublication(r);
+    if (!projected) return [];
+    const cig = relatedCigs.find((c) =>
+      projected.oggetto.toUpperCase().includes(c.toUpperCase()),
+    );
+    const cup = projected.cups.some((value) =>
+      cupsUpper.includes(value.toUpperCase()),
+    );
+    if (!cig && !cup) return [];
     const matchedBy: "cig" | "cup" = cig ? "cig" : "cup";
-    return {
-      id: r.id,
-      progressivo: r.progressivo,
-      oggetto: r.oggetto,
-      tipologia: r.tipologia,
-      category: r.category,
-      pubStart: r.pubStart ? r.pubStart.toISOString() : null,
-      macrotema:
-        r.macrotema ?? classifyMacrotema(`${r.oggetto} ${r.tipologia ?? ""}`),
-      matchedBy,
-    };
+    return [
+      {
+        id: projected.id,
+        progressivo: projected.progressivo,
+        oggetto: projected.oggetto,
+        tipologia: projected.tipologia,
+        category: projected.category,
+        pubStart: projected.pubStart,
+        macrotema: projected.macrotema,
+        matchedBy,
+      },
+    ];
   });
 
   // Seduta di origine: la convocazione da cui è stato prodotto questo atto.
@@ -663,13 +650,16 @@ router.get("/publications/:id/storia", async (req, res) => {
         const tb = b.pubStart?.getTime() ?? 0;
         return ta - tb;
       })[0];
-      originatingSeduta = {
-        id: earliest.id,
-        progressivo: earliest.progressivo,
-        oggetto: earliest.oggetto,
-        pubStart: earliest.pubStart ? earliest.pubStart.toISOString() : null,
-        subcategory: earliest.subcategory ?? null,
-      };
+      const projected = mapPublicPublication(earliest);
+      if (projected) {
+        originatingSeduta = {
+          id: projected.id,
+          progressivo: projected.progressivo,
+          oggetto: projected.oggetto,
+          pubStart: projected.pubStart,
+          subcategory: projected.subcategory,
+        };
+      }
     }
   }
 
@@ -686,15 +676,27 @@ router.get("/delibere", async (req, res) => {
   const q = typeof req.query.q === "string" ? req.query.q : undefined;
 
   const conditions = [eq(publicationsTable.category, "delibera")];
-  if (tipo) conditions.push(eq(publicationsTable.subcategory, tipo));
-  if (q) conditions.push(ilike(publicationsTable.oggetto, `%${q}%`));
 
   const rows = await db
     .select()
     .from(publicationsTable)
     .where(and(...conditions))
     .orderBy(desc(publicationsTable.pubStart), desc(publicationsTable.id));
-  res.json(rows.map(mapPublication));
+  const normalisedQuery = q ? normaliseSearchText(q) : null;
+  res.json(
+    rows.flatMap((publication) => {
+      const projected = mapPublicPublication(publication);
+      if (!projected) return [];
+      if (tipo && projected.subcategory !== tipo) return [];
+      if (
+        normalisedQuery &&
+        !projected.presentation.search_text.includes(normalisedQuery)
+      ) {
+        return [];
+      }
+      return [projected];
+    }),
+  );
 });
 
 router.get("/convocazioni", async (req, res) => {
@@ -703,7 +705,6 @@ router.get("/convocazioni", async (req, res) => {
     typeof req.query.macrotema === "string" ? req.query.macrotema : undefined;
 
   const conditions = [eq(publicationsTable.category, "convocazione")];
-  if (tipo) conditions.push(eq(publicationsTable.subcategory, tipo));
   // Macrotema DB filter: include rows matching persisted value OR not yet classified.
   if (macrotemaFilter) {
     conditions.push(
@@ -722,7 +723,12 @@ router.get("/convocazioni", async (req, res) => {
 
   // Map and then post-filter: include rows whose publication-level macrotema
   // OR any ODG-point macrotema matches the requested filter.
-  const mapped = rows.map(mapPublication);
+  const mapped = rows.flatMap((publication) => {
+    const projected = mapPublicPublication(publication);
+    return projected && (!tipo || projected.subcategory === tipo)
+      ? [projected]
+      : [];
+  });
   const filtered = macrotemaFilter
     ? mapped.filter(
         (r) =>
@@ -760,7 +766,12 @@ router.get("/convocazioni/:id", async (req, res) => {
     return;
   }
 
-  res.json(await buildSedutaDetail(publication));
+  const detail = await buildSedutaDetail(publication);
+  if (!detail) {
+    res.status(404).json({ error: "Seduta non trovata" });
+    return;
+  }
+  res.json(detail);
 });
 
 router.post(
@@ -832,7 +843,12 @@ router.post(
       }
     });
 
-    res.json(await buildSedutaDetail(publication));
+    const detail = await buildSedutaDetail(publication);
+    if (!detail) {
+      res.status(404).json({ error: "Seduta non trovata" });
+      return;
+    }
+    res.json(detail);
   },
 );
 
@@ -929,17 +945,19 @@ router.get("/pnrr/projects", async (_req, res) => {
   ]);
 
   // Index attuazione rows by normalised CUP for O(1) lookup.
-  const attuazioneByCup = new Map<
-    string,
-    (typeof attuazioneRows)[number]
-  >();
+  const attuazioneByCup = new Map<string, (typeof attuazioneRows)[number]>();
   for (const r of attuazioneRows) {
     if (r.cup) attuazioneByCup.set(normalizeCup(r.cup), r);
   }
 
-  // Index albo publications by CUP.
-  const docsByCup = new Map<string, Publication[]>();
-  for (const r of alboRows) {
+  // Index only public-safe projected publications by CUP. Matching a project
+  // from a raw CUP would otherwise leak a relation removed by minimisation.
+  const publicAlboRows = alboRows.flatMap((publication) => {
+    const projected = mapPublicPublication(publication);
+    return projected?.isPnrr ? [projected] : [];
+  });
+  const docsByCup = new Map<string, (typeof publicAlboRows)[number][]>();
+  for (const r of publicAlboRows) {
     for (const c of r.cups) {
       const cup = normalizeCup(c);
       const list = docsByCup.get(cup);
@@ -957,7 +975,7 @@ router.get("/pnrr/projects", async (_req, res) => {
     else contractsByCup.set(cup, [r]);
   }
 
-  const matchedDocIds = new Set<number>();
+  const matchedPublicIds = new Set<string>();
 
   const latestImportSourceLabel = italiadomaniStatus?.label ?? ITALIADOMANI_LABEL;
   const latestImportSourceUrl = italiadomaniStatus?.url ?? ITALIADOMANI_LOC_URL;
@@ -1018,9 +1036,9 @@ router.get("/pnrr/projects", async (_req, res) => {
 
       const alboMatched = docsByCup.get(cup) ?? [];
       const contractMatched = contractsByCup.get(cup) ?? [];
-      const documents = alboMatched.map((d) => {
-        matchedDocIds.add(d.id);
-        return mapPublication(d);
+      const documents = alboMatched.map((document) => {
+        matchedPublicIds.add(document.publicId);
+        return document;
       });
       let lastPublication: string | null = null;
       for (const d of documents) {
@@ -1078,9 +1096,9 @@ router.get("/pnrr/projects", async (_req, res) => {
     });
   }
 
-  const uncensored = alboRows
-    .filter((r) => !matchedDocIds.has(r.id))
-    .map(mapPublication);
+  const uncensored = publicAlboRows.filter(
+    (r) => !matchedPublicIds.has(r.publicId),
+  );
 
   const censusLastUpdatedAt = italiadomaniStatus?.lastUpdatedAt
     ? italiadomaniStatus.lastUpdatedAt.toISOString()
@@ -1157,7 +1175,7 @@ router.post(
       .from(publicationsTable)
       .where(eq(publicationsTable.id, id));
 
-    res.json(mapPublication(updated ?? publication));
+    res.json(mapAdminPublication(updated ?? publication));
   },
 );
 
@@ -1218,7 +1236,7 @@ router.put(
       .from(publicationsTable)
       .where(eq(publicationsTable.id, id));
 
-    res.json(mapPublication(updated ?? publication));
+    res.json(mapAdminPublication(updated ?? publication));
   },
 );
 

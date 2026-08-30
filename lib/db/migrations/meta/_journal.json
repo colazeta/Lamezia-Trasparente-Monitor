@@ -85,6 +85,13 @@
       "when": 1788114600000,
       "tag": "0011_demographics_versioning",
       "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "7",
+      "when": 1788120000000,
+      "tag": "0012_publications_public_safety_decision",
+      "breakpoints": true
     }
   ]
 }

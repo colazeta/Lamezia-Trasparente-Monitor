@@ -6,10 +6,14 @@
  * OpenAPI spec version: 0.1.0
  */
 import type { MacrotemaKey } from './macrotemaKey';
+import type { PublicActSafety } from './publicActSafety';
 import type { PublicationAttachment } from './publicationAttachment';
+import type { PublicationPresentation } from './publicationPresentation';
 
 export interface Publication {
   id: number;
+  /** Stable cross-surface identifier derived from progressivo. */
+  publicId: string;
   progressivo: string;
   tipologia: string;
   category: string;
@@ -51,4 +55,6 @@ export interface Publication {
   briefGeneratedAt?: string | null;
   /** Per convocazioni — macrotemi aggregati dai punti ODG (può coprire più temi). Vuoto per gli altri tipi di atti. */
   odgMacrotemi?: string[];
+  presentation: PublicationPresentation;
+  publicSafety: PublicActSafety;
 }

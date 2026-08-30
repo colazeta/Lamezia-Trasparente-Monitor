@@ -29,7 +29,9 @@ async function createPublication(
 afterEach(async () => {
   const ids = createdIds.splice(0);
   if (ids.length) {
-    await db.delete(publicationsTable).where(inArray(publicationsTable.id, ids));
+    await db
+      .delete(publicationsTable)
+      .where(inArray(publicationsTable.id, ids));
   }
 });
 
@@ -49,12 +51,14 @@ describe("Public API v1", () => {
   });
 
   it("caps pageSize at 100", async () => {
-    const res = await request(app).get("/api/public/v1/documents?pageSize=5000");
+    const res = await request(app).get(
+      "/api/public/v1/documents?pageSize=5000",
+    );
     expect(res.status).toBe(200);
     expect(res.body.pagination.pageSize).toBe(100);
   });
 
-  it("filters documents by hasMarkdown and exposes the markdown endpoint", async () => {
+  it("does not publish stored Markdown without an explicit attestation", async () => {
     const id = await createPublication({
       markdownText: "# Titolo\n\nCorpo del documento.",
       markdownSource: "allegato.pdf",
@@ -65,26 +69,36 @@ describe("Public API v1", () => {
       "/api/public/v1/documents?hasMarkdown=true&pageSize=100",
     );
     expect(list.status).toBe(200);
-    const found = (list.body.data as { id: number; hasMarkdown: boolean }[]).find(
-      (d) => d.id === id,
-    );
-    expect(found).toBeDefined();
-    expect(found!.hasMarkdown).toBe(true);
+    const found = (
+      list.body.data as { id: number; hasMarkdown: boolean }[]
+    ).find((d) => d.id === id);
+    expect(found).toBeUndefined();
 
-    const md = await request(app).get(`/api/public/v1/documents/${id}/markdown`);
-    expect(md.status).toBe(200);
-    expect(md.body.markdown).toContain("# Titolo");
+    const safeList = await request(app).get(
+      "/api/public/v1/documents?hasMarkdown=false&pageSize=100",
+    );
+    const safeFound = (
+      safeList.body.data as { id: number; hasMarkdown: boolean }[]
+    ).find((d) => d.id === id);
+    expect(safeFound).toBeDefined();
+    expect(safeFound!.hasMarkdown).toBe(false);
+
+    const md = await request(app).get(
+      `/api/public/v1/documents/${id}/markdown`,
+    );
+    expect(md.status).toBe(404);
 
     const raw = await request(app).get(
       `/api/public/v1/documents/${id}/markdown?format=md`,
     );
-    expect(raw.status).toBe(200);
-    expect(raw.headers["content-type"]).toContain("text/markdown");
-    expect(raw.text).toContain("# Titolo");
+    expect(raw.status).toBe(404);
+    expect(JSON.stringify(raw.body)).not.toContain("# Titolo");
   });
 
   it("returns 404 for a missing document and missing markdown", async () => {
-    const missing = await request(app).get("/api/public/v1/documents/999999999");
+    const missing = await request(app).get(
+      "/api/public/v1/documents/999999999",
+    );
     expect(missing.status).toBe(404);
 
     const id = await createPublication();

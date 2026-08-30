@@ -4,7 +4,6 @@ import {
   feedStatusTable,
   runOrganiSedutaSync,
   classifyMacrotema,
-  type InsertPublication,
 } from "@workspace/db";
 import { sql, inArray } from "drizzle-orm";
 import { logger } from "./logger";
@@ -30,6 +29,10 @@ import {
   MONITORED_SOURCE_BY_ID,
   type MonitoredSourceId,
 } from "./sourceRegistry";
+import {
+  attestPublicationAtIngestion,
+  type PublicationSafetySource,
+} from "./publicActProjection";
 
 export const ALBO_SOURCE = "albo-lamezia";
 export const ALBO_LABEL = "Albo Pretorio – Amministrazione Trasparente";
@@ -99,11 +102,19 @@ function classify(tipologia: string, oggetto: string) {
   return { category, subcategory };
 }
 
-function parseAlboXml(xml: string): InsertPublication[] {
+type ParsedAlboPublication = Omit<
+  PublicationSafetySource,
+  "tipologia" | "oggetto"
+> & {
+  tipologia: string;
+  oggetto: string;
+};
+
+export function parseAlboXml(xml: string): ParsedAlboPublication[] {
   const blocks = [
     ...xml.matchAll(/<pubblicazione>([\s\S]*?)<\/pubblicazione>/g),
   ];
-  const out: InsertPublication[] = [];
+  const out: ParsedAlboPublication[] = [];
 
   for (const b of blocks) {
     const block = b[1];
@@ -179,39 +190,61 @@ export async function runIngestion(): Promise<{
       const progressivi = items.map((i) => i.progressivo);
       const existing = progressivi.length
         ? await tx
-            .select({ progressivo: publicationsTable.progressivo })
+            .select()
             .from(publicationsTable)
             .where(inArray(publicationsTable.progressivo, progressivi))
         : [];
       const existingSet = new Set(existing.map((e) => e.progressivo));
+      const existingByProgressivo = new Map(
+        existing.map((publication) => [publication.progressivo, publication]),
+      );
 
       const fresh = items.filter((i) => !existingSet.has(i.progressivo));
-      if (fresh.length) {
+      const now = new Date();
+      for (const item of items) {
+        const previous = existingByProgressivo.get(item.progressivo);
+        const publicSafetyDecision = attestPublicationAtIngestion({
+          source: item,
+          evaluatedAt: now,
+          previous: previous?.publicSafetyDecision ?? null,
+        });
         await tx
           .insert(publicationsTable)
-          .values(
-            fresh.map((i) => ({
-              ...i,
-              isNew: !firstRun,
-              // Classifica e persiste il macrotema al momento dell'inserimento;
-              // rispetta il principio "manuale vince": non toccare se macrotemanManual=true
-              // (gestito in separata curazione admin, mai in INSERT automatico).
-              macrotema: classifyMacrotema(`${i.oggetto} ${i.tipologia ?? ""}`),
-            })),
-          )
-          .onConflictDoNothing({ target: publicationsTable.progressivo });
-      }
-
-      const now = new Date();
-
-      // Aggiorna lastSeenAt per tutti gli atti presenti nel feed corrente, così
-      // si possono individuare le pubblicazioni sparite (pattern uniforme a
-      // contratti ANAC e progetti PNRR).
-      if (progressivi.length) {
-        await tx
-          .update(publicationsTable)
-          .set({ lastSeenAt: now })
-          .where(inArray(publicationsTable.progressivo, progressivi));
+          .values({
+            ...item,
+            dataAtto: asDate(item.dataAtto),
+            pubStart: asDate(item.pubStart),
+            pubEnd: asDate(item.pubEnd),
+            cups: [...item.cups],
+            isNew: previous?.isNew ?? !firstRun,
+            // Classifica solo all'inserimento; il conflitto non sovrascrive
+            // l'eventuale curatela manuale del macrotema.
+            macrotema:
+              previous?.macrotema ??
+              classifyMacrotema(`${item.oggetto} ${item.tipologia ?? ""}`),
+            publicSafetyDecision,
+            lastSeenAt: now,
+          })
+          .onConflictDoUpdate({
+            target: publicationsTable.progressivo,
+            set: {
+              tipologia: item.tipologia ?? "ALTRO",
+              category: item.category,
+              subcategory: item.subcategory,
+              provenienza: item.provenienza,
+              oggetto: item.oggetto ?? "",
+              dataAtto: asDate(item.dataAtto),
+              pubStart: asDate(item.pubStart),
+              pubEnd: asDate(item.pubEnd),
+              numRegSet: item.numRegSet,
+              numRegGen: item.numRegGen,
+              cups: [...item.cups],
+              pnrrMission: item.pnrrMission,
+              isPnrr: item.isPnrr,
+              publicSafetyDecision,
+              lastSeenAt: now,
+            },
+          });
       }
       await tx
         .insert(feedStatusTable)
@@ -266,6 +299,11 @@ export async function runIngestion(): Promise<{
       });
     throw err;
   }
+}
+
+function asDate(value: Date | string | null): Date | null {
+  if (!value) return null;
+  return value instanceof Date ? value : new Date(value);
 }
 
 const INGESTION_INTERVAL_MS = 3 * 60 * 60 * 1000;

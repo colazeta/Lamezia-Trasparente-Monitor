@@ -22,6 +22,47 @@ export type PublicationAttachment = {
   size: number | null;
 };
 
+/**
+ * Persisted output of the ingestion-time public-safety boundary. Runtime
+ * consumers still validate schema/policy/profile versions before projecting.
+ */
+export type PublicationPublicSafetyAttestation = {
+  schema_version: string;
+  evaluated_at: string;
+  decision_source: "albo_ingestion";
+  source_fingerprint: string;
+  decision: {
+    policy_id: string;
+    policy_version: string;
+    standardisation_profile_id: string;
+    standardisation_profile_version: string;
+    public_visibility:
+      | "publishable"
+      | "publishable_with_minimisation"
+      | "metadata_only"
+      | "do_not_publish";
+    privacy_risk: "low" | "medium" | "high";
+    reason: string | null;
+  };
+  presentation: {
+    display_title: string;
+    action_id: string | null;
+    action_label: string | null;
+    search_text: string;
+    standardisation: {
+      schema_version: string;
+      profile_id: string;
+      profile_version: string;
+      input_field: string;
+      input_field_preserved: true;
+      status: "unchanged" | "standardised_automatically" | "review_required";
+      transformations: string[];
+      layout_flags: string[];
+      review_reasons: string[];
+    };
+  } | null;
+};
+
 export const publicationsTable = pgTable(
   "publications",
   {
@@ -61,6 +102,11 @@ export const publicationsTable = pgTable(
     brief: text("brief"),
     briefManual: boolean("brief_manual").notNull().default(false),
     briefGeneratedAt: timestamp("brief_generated_at", { withTimezone: true }),
+    // Attestazione versionata prodotta soltanto dall'ingestione dopo la policy
+    // public-safety. Null identifica record legacy e viene proiettato fail-closed.
+    publicSafetyDecision: jsonb(
+      "public_safety_decision",
+    ).$type<PublicationPublicSafetyAttestation | null>(),
     // Ambito di spesa (macrotema) classificato automaticamente dall'oggetto/tipologia.
     // Persistito per consentire il filtro a livello DB e la curazione manuale.
     // Rispetta il principio "modifiche manuali vincono": se macrotema_manual=true

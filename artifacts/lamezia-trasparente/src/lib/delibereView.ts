@@ -162,8 +162,7 @@ export function apiDeliberaItem(publication: Publication): DeliberaListItem {
 function optionalApiPresentation(
   publication: Publication,
 ): { displayTitle: string; searchText: string } | null {
-  const value = (publication as Publication & { presentation?: unknown })
-    .presentation;
+  const value: unknown = publication.presentation;
   if (!value || typeof value !== "object" || Array.isArray(value)) return null;
   const candidate = value as Record<string, unknown>;
   const displayTitle =

@@ -42,7 +42,9 @@ function toolResult(body: { result: { content: { text: string }[] } }) {
 afterEach(async () => {
   const ids = createdIds.splice(0);
   if (ids.length) {
-    await db.delete(publicationsTable).where(inArray(publicationsTable.id, ids));
+    await db
+      .delete(publicationsTable)
+      .where(inArray(publicationsTable.id, ids));
   }
 });
 
@@ -83,7 +85,7 @@ describe("MCP server", () => {
     );
   });
 
-  it("calls search_documents and get_document_markdown", async () => {
+  it("shares document search and keeps unattested Markdown closed", async () => {
     const id = await createPublication({
       markdownText: "# Atto\n\nContenuto.",
       markdownSource: "allegato.pdf",
@@ -92,12 +94,17 @@ describe("MCP server", () => {
 
     const search = await rpc(
       "tools/call",
-      { name: "search_documents", arguments: { hasMarkdown: true, pageSize: 100 } },
+      {
+        name: "search_documents",
+        arguments: { hasMarkdown: true, pageSize: 100 },
+      },
       3,
     );
     expect(search.status).toBe(200);
     const page = toolResult(search.body);
-    expect(page.pagination.total).toBeGreaterThanOrEqual(1);
+    expect(
+      page.data.find((item: { id: number }) => item.id === id),
+    ).toBeUndefined();
 
     const md = await rpc(
       "tools/call",
@@ -105,7 +112,8 @@ describe("MCP server", () => {
       4,
     );
     expect(md.status).toBe(200);
-    expect(toolResult(md.body).markdown).toContain("# Atto");
+    expect(md.body.result.isError).toBe(true);
+    expect(JSON.stringify(md.body)).not.toContain("# Atto");
   });
 
   it("returns an error result for a missing entity", async () => {

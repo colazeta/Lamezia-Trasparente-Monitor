@@ -20,6 +20,7 @@ import { and, eq, asc, desc, ilike, inArray } from "drizzle-orm";
 import sanitizeHtml from "sanitize-html";
 import { CreateOfficialBody, UpdateOfficialBody } from "@workspace/api-zod";
 import { requireIngestAuth } from "../middlewares/requireIngestAuth";
+import { mapPublicPublication } from "../lib/publicActProjection";
 
 const router: IRouter = Router();
 
@@ -206,13 +207,8 @@ async function buildProfile(official: Official) {
       ),
     db
       .select({
-        publicationId: officialVotesTable.publicationId,
         vote: officialVotesTable.vote,
-        oggetto: publicationsTable.oggetto,
-        numRegGen: publicationsTable.numRegGen,
-        subcategory: publicationsTable.subcategory,
-        dataAtto: publicationsTable.dataAtto,
-        pubStart: publicationsTable.pubStart,
+        publication: publicationsTable,
       })
       .from(officialVotesTable)
       .innerJoin(
@@ -251,18 +247,19 @@ async function buildProfile(official: Official) {
     activities: activities.map(mapActivity),
     remunerations: remunerations.map(mapRemuneration),
     declarations: declarations.map(mapDeclaration),
-    votes: votes.map((v) => ({
-      publicationId: v.publicationId,
-      vote: v.vote,
-      oggetto: v.oggetto,
-      numRegGen: v.numRegGen,
-      subcategory: v.subcategory,
-      dataAtto: v.dataAtto
-        ? v.dataAtto.toISOString()
-        : v.pubStart
-          ? v.pubStart.toISOString()
-          : null,
-    })),
+    votes: votes.flatMap((v) => {
+      const projected = mapPublicPublication(v.publication);
+      return projected
+        ? [{
+            publicationId: projected.id,
+            vote: v.vote,
+            oggetto: projected.oggetto,
+            numRegGen: projected.numRegGen,
+            subcategory: projected.subcategory,
+            dataAtto: projected.dataAtto ?? projected.pubStart,
+          }]
+        : [];
+    }),
     organi: organi.map((o) => ({
       id: o.id,
       type: o.type,
@@ -546,6 +543,11 @@ router.get("/delibere/:id/votes", async (req, res) => {
     res.status(404).json({ error: "Delibera non trovata" });
     return;
   }
+  const publicDelibera = mapPublicPublication(delibera);
+  if (!publicDelibera) {
+    res.status(404).json({ error: "Delibera non trovata" });
+    return;
+  }
 
   const rows = await db
     .select({
@@ -573,23 +575,26 @@ router.get("/delibere/:id/votes", async (req, res) => {
 
   res.json({
     delibera: {
-      id: delibera.id,
-      progressivo: delibera.progressivo,
-      tipologia: delibera.tipologia,
-      category: delibera.category,
-      subcategory: delibera.subcategory,
-      provenienza: delibera.provenienza,
-      oggetto: delibera.oggetto,
-      dataAtto: delibera.dataAtto ? delibera.dataAtto.toISOString() : null,
-      pubStart: delibera.pubStart ? delibera.pubStart.toISOString() : null,
-      pubEnd: delibera.pubEnd ? delibera.pubEnd.toISOString() : null,
-      numRegSet: delibera.numRegSet,
-      numRegGen: delibera.numRegGen,
-      cups: delibera.cups,
-      pnrrMission: delibera.pnrrMission,
-      isPnrr: delibera.isPnrr,
-      isNew: delibera.isNew,
-      firstSeenAt: delibera.firstSeenAt.toISOString(),
+      id: publicDelibera.id,
+      publicId: publicDelibera.publicId,
+      progressivo: publicDelibera.progressivo,
+      tipologia: publicDelibera.tipologia,
+      category: publicDelibera.category,
+      subcategory: publicDelibera.subcategory,
+      provenienza: publicDelibera.provenienza,
+      oggetto: publicDelibera.oggetto,
+      dataAtto: publicDelibera.dataAtto,
+      pubStart: publicDelibera.pubStart,
+      pubEnd: publicDelibera.pubEnd,
+      numRegSet: publicDelibera.numRegSet,
+      numRegGen: publicDelibera.numRegGen,
+      cups: publicDelibera.cups,
+      pnrrMission: publicDelibera.pnrrMission,
+      isPnrr: publicDelibera.isPnrr,
+      isNew: publicDelibera.isNew,
+      firstSeenAt: publicDelibera.firstSeenAt,
+      presentation: publicDelibera.presentation,
+      publicSafety: publicDelibera.publicSafety,
     },
     tally,
     votes: rows,

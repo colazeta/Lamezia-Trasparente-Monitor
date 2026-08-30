@@ -4405,6 +4405,7 @@ components:
       type: object
       required:
         - id
+        - publicId
         - progressivo
         - tipologia
         - category
@@ -4414,9 +4415,14 @@ components:
         - isNew
         - firstSeenAt
         - macrotema
+        - presentation
+        - publicSafety
       properties:
         id:
           type: integer
+        publicId:
+          type: string
+          description: Stable cross-surface identifier derived from progressivo.
         progressivo:
           type: string
         tipologia:
@@ -4475,6 +4481,10 @@ components:
           description: Per convocazioni — macrotemi aggregati dai punti ODG (può coprire più temi). Vuoto per gli altri tipi di atti.
           items:
             type: string
+        presentation:
+          $ref: "#/components/schemas/PublicationPresentation"
+        publicSafety:
+          $ref: "#/components/schemas/PublicActSafety"
 
     PublicationStoria:
       type: object
@@ -4571,6 +4581,223 @@ components:
           type: string
           enum: [cig, cup]
 
+    PublicationPresentation:
+      type: object
+      required:
+        - display_title
+        - action_id
+        - action_label
+        - search_text
+        - area_theme
+        - standardisation
+      properties:
+        display_title:
+          type: string
+        action_id:
+          type: ["string", "null"]
+        action_label:
+          type: ["string", "null"]
+        search_text:
+          type: string
+        area_theme:
+          $ref: "#/components/schemas/PublicationAreaTheme"
+        standardisation:
+          $ref: "#/components/schemas/PublicationStandardisationAudit"
+
+    PublicationAreaThemeEvidence:
+      type: object
+      required: [rule_id, input_field, matched_terms]
+      properties:
+        rule_id:
+          type: string
+        input_field:
+          type: string
+        matched_terms:
+          type: array
+          items:
+            type: string
+
+    PublicationAreaThemeOverride:
+      type: ["object", "null"]
+      required:
+        - id
+        - theme_id
+        - confidence
+        - rationale
+        - previous_theme_id
+        - previous_rule_id
+      properties:
+        id:
+          type: string
+        theme_id:
+          type: string
+        confidence:
+          type: string
+          enum: [high, medium]
+        rationale:
+          type: string
+        previous_theme_id:
+          type: ["string", "null"]
+        previous_rule_id:
+          type: ["string", "null"]
+
+    PublicationAreaTheme:
+      type: object
+      required:
+        - schema_version
+        - taxonomy_id
+        - taxonomy_version
+        - theme_id
+        - theme_label
+        - confidence
+        - basis
+        - rule_id
+        - evidence
+        - null_reason
+        - override
+      properties:
+        schema_version:
+          type: string
+        taxonomy_id:
+          type: string
+        taxonomy_version:
+          type: string
+        theme_id:
+          type: ["string", "null"]
+        theme_label:
+          type: ["string", "null"]
+        confidence:
+          type: ["string", "null"]
+          enum: [high, medium, null]
+        basis:
+          type: string
+          enum: [deterministic_rule, manual_override, fallback]
+        rule_id:
+          type: ["string", "null"]
+        evidence:
+          type: array
+          items:
+            $ref: "#/components/schemas/PublicationAreaThemeEvidence"
+        null_reason:
+          type: ["string", "null"]
+          enum:
+            - input_withheld_for_privacy
+            - input_missing
+            - not_classified
+            - ambiguous_match
+            - null
+        override:
+          $ref: "#/components/schemas/PublicationAreaThemeOverride"
+
+    PublicationStandardisationAudit:
+      type: object
+      required:
+        - schema_version
+        - profile_id
+        - profile_version
+        - input_field
+        - input_field_preserved
+        - status
+        - transformations
+        - layout_flags
+        - review_reasons
+      properties:
+        schema_version:
+          type: string
+        profile_id:
+          type: string
+        profile_version:
+          type: string
+        input_field:
+          type: string
+        input_field_preserved:
+          type: boolean
+        status:
+          type: string
+          enum: [unchanged, standardised_automatically, review_required]
+        transformations:
+          type: array
+          items:
+            type: string
+        layout_flags:
+          type: array
+          items:
+            type: string
+        review_reasons:
+          type: array
+          items:
+            type: string
+
+    PublicActSafety:
+      type: object
+      required:
+        - policy_id
+        - policy_version
+        - standardisation_profile_id
+        - standardisation_profile_version
+        - public_visibility
+        - privacy_risk
+        - reason
+        - projection_schema_version
+        - attachments_attested
+        - markdown_attested
+        - attestation_status
+        - attestation_reason
+        - attestation_source
+        - attested_at
+        - source_fingerprint_verified
+      properties:
+        policy_id:
+          type: string
+        policy_version:
+          type: string
+        standardisation_profile_id:
+          type: string
+        standardisation_profile_version:
+          type: string
+        public_visibility:
+          type: string
+          enum:
+            - publishable
+            - publishable_with_minimisation
+            - metadata_only
+        privacy_risk:
+          type: string
+          enum: [low, medium, high]
+        reason:
+          type: ["string", "null"]
+        projection_schema_version:
+          type: string
+        attachments_attested:
+          type: boolean
+        markdown_attested:
+          type: boolean
+        attestation_status:
+          type: string
+          enum: [valid, legacy_missing, invalid, stale, source_changed]
+        attestation_reason:
+          type: ["string", "null"]
+          enum:
+            - null
+            - missing
+            - invalid_schema
+            - invalid_timestamp
+            - invalid_source
+            - invalid_fingerprint
+            - stale_policy
+            - stale_profile
+            - invalid_decision
+            - invalid_presentation
+            - source_changed
+        attestation_source:
+          type: ["string", "null"]
+          enum: [albo_ingestion, null]
+        attested_at:
+          type: ["string", "null"]
+          format: date-time
+        source_fingerprint_verified:
+          type: boolean
+
     PublicationAttachment:
       type: object
       required:
@@ -4615,7 +4842,8 @@ components:
 
     FundamentalActPublicationSummary:
       type: object
-      required: [id, progressivo, tipologia, oggetto, dataAtto, pubStart, attachments]
+      required:
+        [id, progressivo, tipologia, oggetto, dataAtto, pubStart, attachments]
       properties:
         id:
           type: integer
@@ -6308,7 +6536,17 @@ components:
 
     OpendataSnapshot:
       type: object
-      required: [id, resourceId, capturedAt, rowCount, changed, columns, rows, truncated]
+      required:
+        [
+          id,
+          resourceId,
+          capturedAt,
+          rowCount,
+          changed,
+          columns,
+          rows,
+          truncated,
+        ]
       properties:
         id:
           type: integer
@@ -6353,7 +6591,8 @@ components:
       allOf:
         - $ref: "#/components/schemas/Publication"
         - type: object
-          required: [hasReport, summary, interventions, organo, votes, odgPoints]
+          required:
+            [hasReport, summary, interventions, organo, votes, odgPoints]
           properties:
             hasReport:
               type: boolean
@@ -6431,7 +6670,8 @@ components:
       allOf:
         - $ref: "#/components/schemas/OrganoRef"
         - type: object
-          required: [description, position, memberCount, historyCount, sedutaCount]
+          required:
+            [description, position, memberCount, historyCount, sedutaCount]
           properties:
             description:
               type: ["string", "null"]
@@ -6499,7 +6739,16 @@ components:
     OrganoTerm:
       type: object
       required:
-        [label, startDate, endDate, status, sourceLabel, sourceUrl, notes, members]
+        [
+          label,
+          startDate,
+          endDate,
+          status,
+          sourceLabel,
+          sourceUrl,
+          notes,
+          members,
+        ]
       properties:
         label:
           type: string
@@ -6702,9 +6951,9 @@ components:
         foiaLink:
           type: ["string", "null"]
         outcome:
-          $ref: '#/components/schemas/ReportOutcome'
+          $ref: "#/components/schemas/ReportOutcome"
         verificationStatus:
-          $ref: '#/components/schemas/ReportVerificationStatus'
+          $ref: "#/components/schemas/ReportVerificationStatus"
         interpretiveCaution:
           type: string
         publishedAt:

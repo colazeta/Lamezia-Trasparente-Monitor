@@ -18,6 +18,7 @@ import {
   type FeedChannel,
   type FeedItem,
 } from "../lib/feeds";
+import { mapPublicPublication } from "../lib/publicActProjection";
 
 const router: IRouter = Router();
 
@@ -35,30 +36,44 @@ function sendFeed(
 
 // Link pubblico di un atto dell'Albo: preferisce il documento ufficiale (primo
 // allegato) così il lettore apre direttamente il PDF; altrimenti rimanda alla
-// pagina pubblica dell'Albo. Il guid univoco resta il progressivo.
-function publicationLink(
-  p: typeof publicationsTable.$inferSelect,
-  fallback: string,
-): string {
-  const attachment = p.attachments?.[0];
-  if (attachment?.officialUrl) return attachment.officialUrl;
-  return fallback;
-}
-
+// pagina pubblica dell'Albo. Il GUID storico non cambia (evita duplicati nei
+// reader RSS); il nuovo identificatore cross-surface vive nel namespace lt.
 function publicationItem(
   p: typeof publicationsTable.$inferSelect,
   fallback: string,
-): FeedItem {
-  const descriptionParts = [p.tipologia];
-  if (p.provenienza) descriptionParts.push(p.provenienza);
-  descriptionParts.push(p.oggetto);
+): FeedItem | null {
+  const projected = mapPublicPublication(p);
+  if (!projected) return null;
+  const descriptionParts = [projected.tipologia];
+  if (projected.provenienza) descriptionParts.push(projected.provenienza);
+  descriptionParts.push(projected.oggetto);
+  const attachment = projected.attachments[0];
   return {
-    title: p.oggetto,
-    link: publicationLink(p, fallback),
+    title: projected.presentation.display_title,
+    link: attachment?.storagePath ?? attachment?.officialUrl ?? fallback,
     guid: `albo:${p.progressivo}`,
-    date: p.pubStart ?? p.dataAtto ?? p.firstSeenAt,
+    publicId: projected.publicId,
+    date: feedDate(
+      projected.pubStart ?? projected.dataAtto ?? projected.firstSeenAt,
+    ),
     description: toPlainText(descriptionParts.join(" — ")),
   };
+}
+
+function feedDate(value: string | null): Date | null {
+  if (!value) return null;
+  const date = new Date(value);
+  return Number.isNaN(date.getTime()) ? null : date;
+}
+
+function publicationItems(
+  rows: (typeof publicationsTable.$inferSelect)[],
+  fallback: string,
+): FeedItem[] {
+  return rows.flatMap((row) => {
+    const item = publicationItem(row, fallback);
+    return item ? [item] : [];
+  });
 }
 
 // Feed dell'Albo Pretorio: tutti gli atti pubblicati più recenti.
@@ -76,7 +91,7 @@ router.get("/feeds/albo.xml", async (_req, res) => {
     description:
       "Gli atti pubblicati più recenti dall'Albo Pretorio del Comune di Lamezia Terme, monitorati in modo indipendente.",
     selfUrl: feedUrl("/feeds/albo.xml"),
-    items: rows.map((p) => publicationItem(p, fallback)),
+    items: publicationItems(rows, fallback),
   });
 });
 
@@ -96,7 +111,7 @@ router.get("/feeds/delibere.xml", async (_req, res) => {
     description:
       "Le delibere comunali più recenti pubblicate all'Albo Pretorio del Comune di Lamezia Terme.",
     selfUrl: feedUrl("/feeds/delibere.xml"),
-    items: rows.map((p) => publicationItem(p, fallback)),
+    items: publicationItems(rows, fallback),
   });
 });
 

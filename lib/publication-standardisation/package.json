@@ -4,6 +4,9 @@
   "private": true,
   "type": "module",
   "exports": {
-    ".": "./src/index.ts"
+    ".": "./src/index.ts",
+    "./albo": "./src/albo.ts",
+    "./albo-area-theme": "./src/albo-area-theme.ts",
+    "./public-act": "./src/public-act.ts"
   }
 }

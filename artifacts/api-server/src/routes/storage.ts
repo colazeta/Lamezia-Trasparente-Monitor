@@ -137,6 +137,13 @@ router.get("/storage/public-objects/*filePath", async (req: Request, res: Respon
   try {
     const raw = req.params.filePath;
     const filePath = Array.isArray(raw) ? raw.join("/") : raw;
+    // Albo artifacts have no persisted reviewed allowlist yet. Keeping a file
+    // in object storage is not an attestation, so direct paths fail closed even
+    // when an older ingestion archived the object under the public prefix.
+    if (filePath.replace(/^\/+/, "").startsWith("albo/")) {
+      res.status(404).json({ error: "File not found" });
+      return;
+    }
     const file = await objectStorageService.searchPublicObject(filePath);
     if (!file) {
       res.status(404).json({ error: "File not found" });
