@@ -42,12 +42,18 @@ export type SpatialPrecision =
   | "area"
   | "unknown";
 
+/**
+ * Come è stata prodotta la geometria. Il metodo è distinto dallo stato di
+ * verifica: una coordinata inserita manualmente può essere ancora da rivedere,
+ * mentre una coordinata automatica può essere sufficientemente precisa per la
+ * pubblicazione senza essere stata validata umanamente.
+ */
 export type SpatialMethod =
   | "source_geometry"
   | "source_coordinates"
   | "official_address_geocoded"
   | "other_address_geocoded"
-  | "manual_verified"
+  | "manual_coordinates"
   | "linked_entity"
   | "inferred_approximation"
   | "unknown";
