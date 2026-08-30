@@ -282,6 +282,13 @@ function deliberationDate(item: DeliberaListItem): string | null {
   return item.actDate ?? item.publicationStart;
 }
 
+function deliberationDay(item: DeliberaListItem): string | null {
+  const match = /^(\d{4}-\d{2}-\d{2})(?:T|$)/u.exec(
+    deliberationDate(item) ?? "",
+  );
+  return match?.[1] ?? null;
+}
+
 function dateYear(value: string | null): string | null {
   const match = /^(\d{4})-\d{2}-\d{2}/u.exec(value ?? "");
   return match?.[1] ?? null;
@@ -293,7 +300,7 @@ export function filterDelibere(
 ): DeliberaListItem[] {
   const normalizedQuery = normalizedSearch(filters.query);
   return items.filter((item) => {
-    const date = deliberationDate(item);
+    const date = deliberationDay(item);
     if (filters.organ !== "all" && item.organ !== filters.organ) return false;
     if (
       filters.theme !== ALL_DELIBERE_THEMES &&

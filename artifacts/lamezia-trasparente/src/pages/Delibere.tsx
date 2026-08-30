@@ -316,13 +316,13 @@ export function Delibere() {
   }
 
   useEffect(() => {
-    if (!selectedThemeIsValid) {
+    if (!isLoading && !selectedThemeIsValid) {
       updateReaderState(
         { theme: ALL_DELIBERE_THEMES, page: 1 },
         { replace: true },
       );
     }
-  }, [selectedThemeIsValid]);
+  }, [isLoading, selectedThemeIsValid]);
 
   useEffect(() => {
     if (readerState.page !== pagination.currentPage) {
