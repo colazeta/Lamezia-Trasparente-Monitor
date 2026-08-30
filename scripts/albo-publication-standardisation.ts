@@ -4,6 +4,8 @@ import {
   type PublicationStandardisationProfile,
 } from "@workspace/publication-standardisation";
 
+import { classifyAlboPublicAreaTheme } from "./albo-area-theme-taxonomy";
+
 export const ALBO_PUBLICATION_STANDARDISATION_PROFILE = {
   id: "albo-public-title-it",
   version: "2026-08-30.2",
@@ -83,12 +85,53 @@ export const ALBO_PUBLICATION_STANDARDISATION =
   );
 
 export const ALBO_PUBLICATION_STANDARDISATION_KNOWN_LIMIT =
-  "Il titolo di presentazione completo e' prodotto da regole deterministiche sul solo oggetto public-safe: non sostituisce il valore conservato nel campo subject, non recupera contenuti esclusi e i casi ambigui richiedono revisione.";
+  "Il titolo di presentazione completo e' prodotto da regole deterministiche sul solo oggetto public-safe: non sostituisce il valore conservato nel campo subject, non recupera contenuti esclusi e i casi ambigui richiedono revisione. Se la fonte non fornisce alcun oggetto, viene mostrato un segnaposto esplicito e il record resta marcato per revisione.";
 
-export function standardiseAlboPublicSubject(subject: string | null) {
-  return standardisePublicationTitle({
+const MISSING_PUBLIC_SUBJECT_TITLE =
+  "Oggetto non disponibile nella fonte acquisita.";
+
+export function standardiseAlboPublicSubject(
+  subject: string | null,
+  options: {
+    area_theme_availability?: "available" | "withheld_for_privacy" | "missing";
+  } = {},
+) {
+  const areaTheme = classifyAlboPublicAreaTheme(
+    subject,
+    options.area_theme_availability,
+  );
+  const presentation = standardisePublicationTitle({
     input_text: subject,
     input_field: "subject",
     profile: ALBO_PUBLICATION_STANDARDISATION_PROFILE,
   });
+  if (!presentation) {
+    if (areaTheme.null_reason !== "input_missing") return null;
+    const fallback = standardisePublicationTitle({
+      input_text: MISSING_PUBLIC_SUBJECT_TITLE,
+      input_field: "subject",
+      profile: ALBO_PUBLICATION_STANDARDISATION_PROFILE,
+    });
+    if (!fallback) return null;
+    return {
+      ...fallback,
+      standardisation: {
+        ...fallback.standardisation,
+        status: "review_required" as const,
+        transformations: [
+          ...fallback.standardisation.transformations,
+          "missing_input_fallback",
+        ],
+        review_reasons: [
+          ...fallback.standardisation.review_reasons,
+          "missing_public_subject",
+        ],
+      },
+      area_theme: areaTheme,
+    };
+  }
+  return {
+    ...presentation,
+    area_theme: areaTheme,
+  };
 }

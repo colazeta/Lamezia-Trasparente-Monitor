@@ -1,0 +1,87 @@
+{
+  "source_snapshot": "data/public/albo/latest.json",
+  "source_retrieved_at": "2026-08-30T11:50:38.527Z",
+  "schema_version": "albo-navigation-facet-readiness.v1",
+  "assessment_version": "2026-08-30.1",
+  "thresholds": {
+    "classification_coverage": 0.98,
+    "area_theme_accuracy": 0.9,
+    "area_theme_high_confidence_precision": 0.97,
+    "area_theme_max_fallback_rate": 0.1,
+    "area_theme_materialisation_coverage": 1,
+    "action_coverage": 0.7,
+    "action_precision": 0.95,
+    "action_min_records_per_option": 5
+  },
+  "corpus": {
+    "visible_records": 74,
+    "publishable_records": 58
+  },
+  "facets": {
+    "act_family": {
+      "contract_status": "missing",
+      "proxy_field": "classification.act_category",
+      "proxy_meaning": "Categoria civica derivata dalla tipologia: utile come proxy di copertura, ma non e' ancora un contratto act_family.",
+      "proxy_populated_records": 69,
+      "proxy_coverage": 0.9324324324324325,
+      "required_coverage": 0.98,
+      "proxy_coverage_pass": false,
+      "reviewed_accuracy": null,
+      "public_filter_ready": false,
+      "blocker": "Contratto act_family assente; la proxy non raggiunge il 98% e non dispone di accuratezza revisionata."
+    },
+    "issuer_organ": {
+      "contract_status": "missing",
+      "proxy_field": "classification.sector",
+      "proxy_meaning": "Settore civico derivato da provenienza e tipo atto: non identifica in modo affidabile issuer o organo.",
+      "proxy_populated_records": 68,
+      "proxy_coverage": 0.918918918918919,
+      "required_coverage": 0.98,
+      "proxy_coverage_pass": false,
+      "reviewed_accuracy": null,
+      "public_filter_ready": false,
+      "blocker": "Contratto issuer/organ assente; la proxy non raggiunge il 98% e non dispone di accuratezza revisionata."
+    },
+    "area_theme": {
+      "contract_status": "versioned",
+      "contract_field": "presentation.area_theme",
+      "eligible_records": 58,
+      "materialised_records": 0,
+      "materialisation_coverage": 0,
+      "required_materialisation_coverage": 1,
+      "materialisation_pass": false,
+      "reviewed_accuracy": 1,
+      "accuracy_pass": true,
+      "reviewed_high_confidence_precision": 1,
+      "high_confidence_precision_pass": true,
+      "reviewed_fallback_rate": 0,
+      "reviewed_fallback_rate_pass": true,
+      "corpus_fallback_records": 0,
+      "corpus_fallback_rate": null,
+      "corpus_fallback_rate_pass": false,
+      "public_filter_ready": false,
+      "blocker": "Il contratto non e' ancora materializzato su tutti i record pubblicabili del corpus corrente."
+    },
+    "action": {
+      "contract_status": "versioned",
+      "contract_field": "presentation.action_id",
+      "eligible_records": 58,
+      "assigned_records": 3,
+      "coverage": 0.05172413793103448,
+      "required_coverage": 0.7,
+      "coverage_pass": false,
+      "reviewed_precision": 1,
+      "required_precision": 0.95,
+      "precision_pass": true,
+      "option_counts": {
+        "approvazione": 2,
+        "presa_atto": 1
+      },
+      "minimum_records_per_option": 1,
+      "required_minimum_records_per_option": 5,
+      "minimum_per_option_pass": false,
+      "public_filter_ready": false,
+      "blocker": "Copertura e numerosita' per opzione insufficienti per un filtro leggibile."
+    }
+  }
+}

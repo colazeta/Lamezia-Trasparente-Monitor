@@ -1,0 +1,217 @@
+{
+  "gold_set_id": "albo-area-theme-gold-set",
+  "version": "2026-08-30.1",
+  "taxonomy_id": "municipal-public-act-area-theme-it",
+  "taxonomy_version": "2026-08-30.1",
+  "source_snapshot": "data/public/albo/latest.json",
+  "source_retrieved_at": "2026-08-30T11:50:38.527Z",
+  "records": [
+    {
+      "fixture_id": "mobility-with-security-overlap",
+      "source_record_id": "albo-2026-2781",
+      "subject": "Modifica temporanea della circolazione stradale per lavori inerenti l'ampliamento degli impianti di video sorveglianza presenti sul territorio comunale previsti poer Lunedì 31 Agosto p.v.",
+      "availability": "available",
+      "expected_theme_id": "mobilita_sicurezza",
+      "expected_null_reason": null,
+      "expected_action_id": null
+    },
+    {
+      "fixture_id": "mobility-with-sport-overlap",
+      "source_record_id": "albo-2026-2780",
+      "subject": "Modifica temporanea della circolazione stradale in occasione dell'incontro di calcio valevole per la Coppa Italia del Campionato L.N.D. tra l'ASD Sambiase 2023 e la Vigor Lamezia Calcio 1919 previsto per Domenica 30 Agosto p.v..",
+      "availability": "available",
+      "expected_theme_id": "mobilita_sicurezza",
+      "expected_null_reason": null,
+      "expected_action_id": null
+    },
+    {
+      "fixture_id": "assets-auction",
+      "source_record_id": "albo-2026-2776",
+      "subject": "Asta pubblica prot. 12919 del 05.08.2026 141 veicoli da alienare ai fini della rottamazione - LOTTO n. 1 - Catanzaro; 86 veicoli da alienare ai fini della rottamazione - LOTTO n. 2 – Reggio Calabria. 27 veicoli da alienare ai fini della rottamazione LOTTO n. 3 – Vibo Valentia. [DEMANIO|AGDCL01|REGISTRO UFFICIALE|13818|28-08-2026][29581409|11178923]",
+      "availability": "available",
+      "expected_theme_id": "patrimonio_economia",
+      "expected_null_reason": null,
+      "expected_action_id": null
+    },
+    {
+      "fixture_id": "cemetery-services",
+      "source_record_id": "albo-2026-2774",
+      "subject": "Comune di Scandicci (FI) - Ordinanze cimiteriali.",
+      "availability": "available",
+      "expected_theme_id": "servizi_civici",
+      "expected_null_reason": null,
+      "expected_action_id": null
+    },
+    {
+      "fixture_id": "personnel-resignation",
+      "source_record_id": "albo-2026-2772",
+      "subject": "Dimissioni volontarie dipendente. Presa d'atto.",
+      "availability": "available",
+      "expected_theme_id": "amministrazione_personale",
+      "expected_null_reason": null,
+      "expected_action_id": null
+    },
+    {
+      "fixture_id": "school-with-public-works-overlap",
+      "source_record_id": "albo-2026-2764",
+      "subject": "Delibera CIPE 26/16 Decreto D.G. n.3 del 04/01/2017 Patto per lo Sviluppo della Regione Calabria. “Intervento di adeguamento sismico scuola dell’Infanzia di Bella tramite demolizione e ricostruzione”. Avviso ad opponendum",
+      "availability": "available",
+      "expected_theme_id": "scuola_educazione",
+      "expected_null_reason": null,
+      "expected_action_id": null
+    },
+    {
+      "fixture_id": "municipal-administration-role",
+      "source_record_id": "albo-2026-2769",
+      "subject": "Revoca del decreto sindacale n. 4 del 27/03/2026 e contestuale revoca di incarico assessorile.",
+      "availability": "available",
+      "expected_theme_id": "amministrazione_personale",
+      "expected_null_reason": null,
+      "expected_action_id": null
+    },
+    {
+      "fixture_id": "business-enforcement-not-culture",
+      "source_record_id": "albo-2026-2754",
+      "subject": "Ordinanza dirigenziale di cessazione immediata di attivita' di pubblico spettacolo con intrattenimento musicale esercitata abusivamente da un locale di somministrazione alimenti e bevande",
+      "availability": "available",
+      "expected_theme_id": "patrimonio_economia",
+      "expected_null_reason": null,
+      "expected_action_id": null
+    },
+    {
+      "fixture_id": "sport-facility-with-works-overlap",
+      "source_record_id": "albo-2026-2765",
+      "subject": "PNRR M5C 2.3 I 3.1 Sport e Inclusione, CLUSTER 1, Intervento \"Nuova costruzione di tribune e impianti Stadio G.Renda - CUP C88C22000350006.APPROVAZIONE CERTIFICATO DI COLLAUDO TECNICO AMMINISTRATIVO",
+      "availability": "available",
+      "expected_theme_id": "cultura_sport_turismo",
+      "expected_null_reason": null,
+      "expected_action_id": null
+    },
+    {
+      "fixture_id": "environment-waste",
+      "source_record_id": "albo-2026-2760",
+      "subject": "Impegno di spesa per il servizio di gestione dei rifiuti sul territorio comunale per l'anno 2026",
+      "availability": "available",
+      "expected_theme_id": "ambiente_energia",
+      "expected_null_reason": null,
+      "expected_action_id": null
+    },
+    {
+      "fixture_id": "early-childhood-services",
+      "source_record_id": "albo-2026-2759",
+      "subject": "Appalto per la gestione asili nido comunali \"Via Conforti\", \"Via Spartivento\", \"Via Giovanni XXIII\" CUP C84D25002060004. Presa d'atto Determinazione Dirigenziale R.G. 2766 del 24.08.26 della Stazione Appaltante Metropolitana di Reggio Calabria",
+      "availability": "available",
+      "expected_theme_id": "scuola_educazione",
+      "expected_null_reason": null,
+      "expected_action_id": null
+    },
+    {
+      "fixture_id": "budget-outstanding-debt",
+      "source_record_id": "albo-2026-2755",
+      "subject": "Impegno spesa per debito fuori bilancio derivante da Decreto ingiuntivo esecutivo n°408/2025, emesso dal Tribunale di Lamezia Terme, approvato nella seduta di Consiglio Comunale del 13.08.2026.",
+      "availability": "available",
+      "expected_theme_id": "bilancio_tributi",
+      "expected_null_reason": null,
+      "expected_action_id": null
+    },
+    {
+      "fixture_id": "building-plan",
+      "source_record_id": "albo-2026-2751",
+      "subject": "Approvazione Piano Attuativo Unitario ad iniziativa privata denominato “P.A.U. Raso Teresa” finalizzato alla realizzazione di capannone adibito a deposito e usi direzionali, proposto da Raso Teresa, proprietaria, ai sensi dell'art. 30 L.R. n. 19/2002.",
+      "availability": "available",
+      "expected_theme_id": "territorio_edilizia",
+      "expected_null_reason": null,
+      "expected_action_id": "approvazione"
+    },
+    {
+      "fixture_id": "tourism-with-public-works-overlap",
+      "source_record_id": "albo-2026-2746",
+      "subject": "Determinazione a contrarre. SERVIZI PROFESSIONALI AFFERENTI I SERVIZI tecnici di Direzione Lavori, CSE, per l’intervento REALIZZAZIONE DI UN’AREA DEDICATA ALL’OSPITALITÀ DI CAMPER IN LOCALITA’ CAPIZZAGLIE CUP:C84H24000630005,CIG: BCBA16AF4C",
+      "availability": "available",
+      "expected_theme_id": "cultura_sport_turismo",
+      "expected_null_reason": null,
+      "expected_action_id": null
+    },
+    {
+      "fixture_id": "infrastructure-regeneration",
+      "source_record_id": "albo-2026-2731",
+      "subject": "PNRR M5C2I2.3.(PINQuA). Lavori in appalto integrato relativi all'intervento \"Più servizi al territorio: ristrutturazioni e riqualificazione di spazi urbani sociali\". Saldo competenze tecniche progettazione esecutiva. CUP C81B21003520001. CIG A0187A63A4.",
+      "availability": "available",
+      "expected_theme_id": "lavori_infrastrutture",
+      "expected_null_reason": null,
+      "expected_action_id": null
+    },
+    {
+      "fixture_id": "internal-roads-public-works",
+      "source_record_id": "albo-2026-2729",
+      "subject": "Intervento \"San Teodoro viabilità interna rione Lotto 5\". CUP: C81B21003460001. CIG:B9C8AB7512. Liquidazione stato avanzamento del servizio.",
+      "availability": "available",
+      "expected_theme_id": "lavori_infrastrutture",
+      "expected_null_reason": null,
+      "expected_action_id": null
+    },
+    {
+      "fixture_id": "culture-summer-programme",
+      "source_record_id": "albo-2026-2727",
+      "subject": "Approvazione domande pervenute in risposta all'Avviso Pubblico di Manifestazione di Interesse per la costruzione del cartellone estivo integrato, espressamente concepito \"in fieri\" «Lamezia Terme - E-State Insieme 2026»",
+      "availability": "available",
+      "expected_theme_id": "cultura_sport_turismo",
+      "expected_null_reason": null,
+      "expected_action_id": "approvazione"
+    },
+    {
+      "fixture_id": "school-canteen-furniture",
+      "source_record_id": "albo-2026-2725",
+      "subject": "Fornitura degli arredi nell’ambito del progetto PNRR Realizzazione della Mensa presso l’Istituto Comprensivo Ardito Don Bosco CUP: C85E24000220006, CIG:BC59BBA1AD. Approvazione CRE.Liquidazione",
+      "availability": "available",
+      "expected_theme_id": "scuola_educazione",
+      "expected_null_reason": null,
+      "expected_action_id": null
+    },
+    {
+      "fixture_id": "participated-company-losses",
+      "source_record_id": "albo-2026-2721",
+      "subject": "Ripiano delle perdite dell'esercizio 2020 della società partecipata SA.CAL S.p.A. - impegno di spesa e liquidazione",
+      "availability": "available",
+      "expected_theme_id": "bilancio_tributi",
+      "expected_null_reason": null,
+      "expected_action_id": null
+    },
+    {
+      "fixture_id": "building-permit-amnesty",
+      "source_record_id": "albo-2026-2716",
+      "subject": "Avviso di rilascio di Concessione edilizia in sanatoria (condono) Fascicolo N. 3620/3",
+      "availability": "available",
+      "expected_theme_id": "territorio_edilizia",
+      "expected_null_reason": null,
+      "expected_action_id": null
+    },
+    {
+      "fixture_id": "found-property-civic-service",
+      "source_record_id": "albo-2026-2630",
+      "subject": "Presa d'atto dell'elenco degli oggetti rinvenuti e fatti pervenire all'ente nel mese di luglio 2026",
+      "availability": "available",
+      "expected_theme_id": "servizi_civici",
+      "expected_null_reason": null,
+      "expected_action_id": "presa_atto"
+    },
+    {
+      "fixture_id": "privacy-metadata-only",
+      "source_record_id": "albo-2026-2778",
+      "subject": "Metadato minimo; oggetto non ripubblicato per prudenza privacy.",
+      "availability": "withheld_for_privacy",
+      "expected_theme_id": null,
+      "expected_null_reason": "input_withheld_for_privacy",
+      "expected_action_id": null
+    },
+    {
+      "fixture_id": "privacy-minimised",
+      "source_record_id": "albo-2026-2753",
+      "subject": "Oggetto minimizzato per prudenza privacy; consultare la fonte ufficiale.",
+      "availability": "withheld_for_privacy",
+      "expected_theme_id": null,
+      "expected_null_reason": "input_withheld_for_privacy",
+      "expected_action_id": null
+    }
+  ]
+}

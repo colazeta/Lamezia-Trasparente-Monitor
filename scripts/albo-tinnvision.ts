@@ -13,6 +13,14 @@ import {
 } from "./albo-classification-dictionary";
 import { ALBO_PRETORIO_LAMEZIA_SOURCE } from "./albo-source-config";
 import {
+  ALBO_PUBLIC_AREA_THEME_DESCRIPTOR,
+  ALBO_PUBLIC_AREA_THEME_KNOWN_LIMIT,
+} from "./albo-area-theme-taxonomy";
+import {
+  assessAlboNavigationFacetReadiness,
+  type AlboNavigationFacetReadiness,
+} from "./albo-navigation-facet-readiness";
+import {
   ALBO_PUBLICATION_STANDARDISATION,
   ALBO_PUBLICATION_STANDARDISATION_KNOWN_LIMIT,
   standardiseAlboPublicSubject,
@@ -152,6 +160,8 @@ export type PublicRecord = Record<string, unknown> & {
 type PublicLatest = Record<string, unknown> & {
   retrieved_at: string;
   standardisation: PublicationStandardisationDescriptor;
+  area_theme_taxonomy?: typeof ALBO_PUBLIC_AREA_THEME_DESCRIPTOR;
+  navigation_facet_readiness?: AlboNavigationFacetReadiness;
   classification_dictionary: typeof ALBO_CLASSIFICATION_DICTIONARY;
   counts: RunCounts;
   items: PublicRecord[];
@@ -167,6 +177,7 @@ type PublicDiff = Record<string, unknown> & {
   counts: RunCounts;
   diff_baseline: DiffBaseline;
   standardisation: PublicationStandardisationDescriptor;
+  area_theme_taxonomy?: typeof ALBO_PUBLIC_AREA_THEME_DESCRIPTOR;
   classification_dictionary: typeof ALBO_CLASSIFICATION_DICTIONARY;
 };
 export type PdfPreservationStatus =
@@ -962,6 +973,12 @@ function buildSnapshot(
 }
 
 function buildPublicLatest(snapshot: AlboRawSnapshot, items: AlboItem[], counts: RunCounts): PublicLatest {
+  const publicItems = items
+    .filter((item) => item.public_visibility !== "do_not_publish")
+    .map(publicItem);
+  const excludedItems = items
+    .filter((item) => item.public_visibility === "do_not_publish")
+    .map(publicExcludedItem);
   return {
     generated_at: snapshot.retrieved_at,
     source: snapshot.source,
@@ -972,12 +989,16 @@ function buildPublicLatest(snapshot: AlboRawSnapshot, items: AlboItem[], counts:
       ...snapshot.known_limits,
       ALBO_CLASSIFICATION_KNOWN_LIMIT,
       ALBO_PUBLICATION_STANDARDISATION_KNOWN_LIMIT,
+      ALBO_PUBLIC_AREA_THEME_KNOWN_LIMIT,
     ]),
     standardisation: ALBO_PUBLICATION_STANDARDISATION,
+    area_theme_taxonomy: ALBO_PUBLIC_AREA_THEME_DESCRIPTOR,
+    navigation_facet_readiness:
+      assessAlboNavigationFacetReadiness(publicItems),
     classification_dictionary: ALBO_CLASSIFICATION_DICTIONARY,
     counts,
-    items: items.filter((item) => item.public_visibility !== "do_not_publish").map(publicItem),
-    excluded: items.filter((item) => item.public_visibility === "do_not_publish").map(publicExcludedItem),
+    items: publicItems,
+    excluded: excludedItems,
   };
 }
 
@@ -1024,8 +1045,10 @@ function buildPublicDiff(
       ...snapshot.known_limits,
       ALBO_CLASSIFICATION_KNOWN_LIMIT,
       ALBO_PUBLICATION_STANDARDISATION_KNOWN_LIMIT,
+      ALBO_PUBLIC_AREA_THEME_KNOWN_LIMIT,
     ]),
     standardisation: ALBO_PUBLICATION_STANDARDISATION,
+    area_theme_taxonomy: ALBO_PUBLIC_AREA_THEME_DESCRIPTOR,
     classification_dictionary: ALBO_CLASSIFICATION_DICTIONARY,
     counts,
     diff_baseline: diffBaseline,
@@ -1062,6 +1085,7 @@ function buildPublicStatus(snapshot: AlboRawSnapshot, counts: RunCounts, diffBas
     },
     verification_status: verificationStatus(snapshot.fetch_method),
     standardisation: ALBO_PUBLICATION_STANDARDISATION,
+    area_theme_taxonomy: ALBO_PUBLIC_AREA_THEME_DESCRIPTOR,
     known_limits: publicStatusKnownLimits(snapshot, diffBaseline),
     classification_dictionary: ALBO_CLASSIFICATION_DICTIONARY,
     official_albo_disclaimer: OFFICIAL_ALBO_DISCLAIMER,
@@ -1074,6 +1098,7 @@ function publicStatusKnownLimits(snapshot: AlboRawSnapshot, diffBaseline: DiffBa
     ...snapshot.known_limits,
     ALBO_CLASSIFICATION_KNOWN_LIMIT,
     ALBO_PUBLICATION_STANDARDISATION_KNOWN_LIMIT,
+    ALBO_PUBLIC_AREA_THEME_KNOWN_LIMIT,
     ...(diffBaseline.status === "baseline_unavailable" ? [diffBaseline.note] : []),
   ]);
 }
@@ -1133,11 +1158,19 @@ function publicItem(item: AlboItem): PublicRecord {
 
 function attachPublicPresentation(record: PublicRecord): PublicRecord {
   const publicSafeSubject = typeof record.subject === "string" ? record.subject : null;
+  const areaThemeAvailability =
+    record.public_visibility === "publishable"
+      ? publicSafeSubject
+        ? "available"
+        : "missing"
+      : "withheld_for_privacy";
   return {
     ...record,
     // The presentation layer may only receive the already minimised public
     // subject. It never sees or reconstructs a redacted source value.
-    presentation: standardiseAlboPublicSubject(publicSafeSubject),
+    presentation: standardiseAlboPublicSubject(publicSafeSubject, {
+      area_theme_availability: areaThemeAvailability,
+    }),
   };
 }
 

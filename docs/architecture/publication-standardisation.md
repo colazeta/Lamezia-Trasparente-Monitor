@@ -83,6 +83,35 @@ type PublicationPresentation = {
   action_id: string | null;
   action_label: string | null;
   search_text: string;
+  area_theme?: {
+    schema_version: "publication-area-theme.v1";
+    taxonomy_id: string;
+    taxonomy_version: string;
+    theme_id: string | null;
+    theme_label: string | null;
+    confidence: "high" | "medium" | null;
+    basis: "deterministic_rule" | "manual_override" | "fallback";
+    rule_id: string | null;
+    evidence: Array<{
+      rule_id: string;
+      input_field: string;
+      matched_terms: string[];
+    }>;
+    null_reason:
+      | "input_withheld_for_privacy"
+      | "input_missing"
+      | "not_classified"
+      | "ambiguous_match"
+      | null;
+    override: {
+      id: string;
+      theme_id: string;
+      confidence: "high" | "medium";
+      rationale: string;
+      previous_theme_id: string | null;
+      previous_rule_id: string | null;
+    } | null;
+  };
   standardisation: {
     schema_version: "publication-standardisation.v1";
     profile_id: string;
@@ -96,6 +125,65 @@ type PublicationPresentation = {
   };
 };
 ```
+
+`area_theme` e' opzionale per consentire l'adozione progressiva del contratto
+v1. Quando presente, i client usano `theme_id` come chiave stabile e la label
+soltanto come testo di presentazione. L'assenza di una classificazione non e'
+un'unica categoria indistinta: `null_reason` separa dato soppresso per privacy,
+input mancante, mancata classificazione e ambiguita'.
+
+## Facette indipendenti
+
+La navigazione non comprime informazioni diverse in un unico `macrotema`.
+Ogni facetta mantiene un vocabolario, una provenienza e una metrica propri.
+
+| Facetta        | Domanda per il lettore                   | Contratto corrente                                       |
+| -------------- | ---------------------------------------- | -------------------------------------------------------- |
+| `act_family`   | quale famiglia documentale?              | assente; `classification.act_category` e' solo una proxy |
+| `act_type`     | quale tipo ufficiale dichiara la fonte?  | valore canonico public-safe                              |
+| `area_theme`   | di quale ambito civico tratta il titolo? | tassonomia locale deterministica e versionata            |
+| `issuer/organ` | chi ha emesso o proposto l'atto?         | assente; `classification.sector` non identifica l'organo |
+| `action`       | quale formula operativa apre il titolo?  | regole non distruttive sul titolo                        |
+
+`area_theme` non viene derivato da ufficio, tipo atto, PDF o campi soppressi.
+La prima integrazione usa soltanto `subject` dopo il public-safety gate. Nei
+record minimizzati la classificazione e' nulla con
+`input_withheld_for_privacy`, anche se il sistema interno conserva un oggetto
+piu' ricco.
+
+## Tassonomia tematica iniziale
+
+Il profilo `municipal-public-act-area-theme-it@2026-08-30.1` usa ID stabili e
+label modificabili mediante una nuova versione. Le regole sono frasi o termini
+espliciti normalizzati, con priorita' dichiarate per sovrapposizioni reali:
+circolazione durante un evento resta mobilita', un intervento su un edificio
+scolastico resta scuola e un impianto sportivo resta sport. Un pareggio effettivo
+produce `ambiguous_match`, non una scelta dipendente dall'ordine del codice.
+
+Ogni assegnazione conserva confidenza, `rule_id`, evidenze, versione e un
+eventuale override editoriale con motivazione e classificazione precedente.
+Gli override sono ammessi solo su testo gia' disponibile al layer pubblico.
+
+Il gold set e il report sono versionati insieme alla tassonomia:
+
+- `scripts/fixtures/albo-area-theme-gold-set.2026-08-30.1.json`;
+- `scripts/fixtures/albo-navigation-facet-readiness.2026-08-30.1.json`;
+- `docs/audits/public-act-area-theme-quality-2026-08-30.1.md`.
+
+Le soglie prima di esporre filtri pubblici sono: almeno 98% di accuratezza per
+famiglia/provenienza, 90% per il tema, 97% di precisione sulle assegnazioni ad
+alta confidenza e non oltre il 10% di fallback. Il filtro per azione richiede
+inoltre almeno 70% di copertura, 95% di precisione e cinque record per opzione.
+Determinismo e idempotenza non ammettono tolleranza: devono restare al 100%.
+
+La readiness dei filtri e' un descriptor separato dalla tassonomia:
+`albo-navigation-facet-readiness.v1`. La pipeline lo ricalcola sui soli record
+pubblici e pubblica un booleano `public_filter_ready` per facetta. La categoria
+atto e il settore esistenti restano proxy esplicite: la loro copertura non puo'
+creare implicitamente un contratto `act_family` o `issuer/organ`, e senza un
+gold set di accuratezza il gate resta chiuso. Anche un tema validato sul gold
+set resta non filtrabile finche' `presentation.area_theme` non e' materializzato
+su tutto il corpus eleggibile.
 
 L'artefatto pubblico dichiara inoltre profilo, versione, posizione del layer
 nella pipeline e assenza di riscrittura generativa.
