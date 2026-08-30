@@ -77,7 +77,16 @@ describe("PopulationStructurePanel", () => {
         name: /Piramide della popolazione di Lamezia Terme al 1° gennaio 2026/i,
       }),
     ).toBeInTheDocument();
-    expect(screen.getAllByText("quadratura esatta")).toHaveLength(2);
+
+    const qualityHeading = screen.getByRole("heading", {
+      name: "Controlli di quadratura",
+    });
+    const qualityCard = qualityHeading.closest("div.rounded-xl") ?? qualityHeading.parentElement?.parentElement;
+    expect(qualityCard).not.toBeNull();
+    expect(
+      within(qualityCard as HTMLElement).getAllByText(/quadratura esatta/i),
+    ).toHaveLength(2);
+
     expect(fetchMock).toHaveBeenCalledWith("/api/demographics/structure");
   });
 
