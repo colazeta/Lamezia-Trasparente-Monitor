@@ -26,6 +26,10 @@ const KIND_PRIORITY: Record<CivicSearchKind, number> = {
   dataset: 2,
 };
 
+const DATASET_SEARCH_ALIASES: Record<string, readonly string[]> = {
+  "lamezia-demographic-trend": ["trend demografico"],
+};
+
 function normalizeSearchText(value: string): string {
   return value
     .normalize("NFD")
@@ -48,7 +52,7 @@ export function buildCivicSearchIndex(): CivicSearchItem[] {
     id: `organo:${organo.slug}`,
     kind: "organo",
     label: organo.name,
-    detail: `Organo istituzionale Â· ${organo.memberCount} componenti correnti`,
+    detail: `Organo istituzionale · ${organo.memberCount} componenti correnti`,
     href: `/organi/${organo.slug}`,
     keywords: [organo.type, organo.description ?? "", "comune composizione"]
       .filter(Boolean)
@@ -79,7 +83,7 @@ export function buildCivicSearchIndex(): CivicSearchItem[] {
       id: `dataset:${dataset.id}`,
       kind: "dataset" as const,
       label: dataset.label,
-      detail: `${theme.label} Â· ${dataset.dataType}`,
+      detail: `${theme.label} · ${dataset.dataType}`,
       href: buildOpenDataArchiveHref(theme.id, dataset.id),
       keywords: [
         theme.label,
@@ -90,6 +94,7 @@ export function buildCivicSearchIndex(): CivicSearchItem[] {
         dataset.dataType,
         dataset.sourceLabel,
         dataset.updateCadence,
+        ...(DATASET_SEARCH_ALIASES[dataset.id] ?? []),
       ].join(" "),
       statusLabel: dataset.statusLabel,
     })),
@@ -145,4 +150,3 @@ export function searchCivicIndex(
     )
     .slice(0, limit);
 }
-
