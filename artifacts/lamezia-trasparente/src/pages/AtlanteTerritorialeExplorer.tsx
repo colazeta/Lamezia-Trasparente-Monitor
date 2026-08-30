@@ -14,6 +14,11 @@ import {
   X,
 } from "lucide-react";
 import {
+  ConfiscatedAssetsAtlasLayer,
+  getConfiscatedAssetsCoverageLabel,
+  useConfiscatedAssetsAtlasLayer,
+} from "@/components/atlas/ConfiscatedAssetsAtlasLayer";
+import {
   buildAtlanteDistribution,
   type AtlanteFeature,
   type AtlanteFeatureCollection,
@@ -29,6 +34,7 @@ import {
   loadAtlanteLayer,
   readIndicatorValue,
 } from "@/data/atlanteTerritoriale";
+import { getSpatialLayer, parseAtlasNavigation } from "@/lib/spatial";
 
 const NO_BASEMAP_ID = "none";
 const BASEMAP_PROVIDERS = [
@@ -93,6 +99,13 @@ type LoadState =
   | { status: "error"; layer: null; message: string };
 
 export function AtlanteTerritoriale() {
+  const navigationState = useMemo(
+    () =>
+      parseAtlasNavigation(
+        typeof window === "undefined" ? "" : window.location.search,
+      ),
+    [],
+  );
   const [loadState, setLoadState] = useState<LoadState>({
     status: "loading",
     layer: null,
@@ -106,7 +119,14 @@ export function AtlanteTerritoriale() {
   const [selectedBasemapId, setSelectedBasemapId] = useState<BasemapId>(
     NO_BASEMAP_ID,
   );
+  const [showConfiscatedAssets, setShowConfiscatedAssets] = useState(() =>
+    navigationState.layerIds.includes("confiscated-assets"),
+  );
   const [isDetailOpen, setDetailOpen] = useState(false);
+  const focusConfiscatedAssetId =
+    navigationState.entity?.entityType === "confiscated_asset"
+      ? navigationState.entity.entityId
+      : null;
 
   useEffect(() => {
     let cancelled = false;
@@ -210,6 +230,7 @@ export function AtlanteTerritoriale() {
               bounds={bounds}
               dataStatus={layer.dataStatus}
               features={features}
+              focusConfiscatedAssetId={focusConfiscatedAssetId}
               hoveredFeature={hoveredFeature}
               hoveredSectionId={hoveredSectionId}
               isDetailOpen={isDetailOpen}
@@ -223,6 +244,8 @@ export function AtlanteTerritoriale() {
               selectedSectionId={selectedSectionId}
               setHoveredSectionId={setHoveredSectionId}
               setSelectedBasemapId={setSelectedBasemapId}
+              setShowConfiscatedAssets={setShowConfiscatedAssets}
+              showConfiscatedAssets={showConfiscatedAssets}
               summary={summary}
             />
 
@@ -245,6 +268,7 @@ function MapExplorer({
   bounds,
   dataStatus,
   features,
+  focusConfiscatedAssetId,
   hoveredFeature,
   hoveredSectionId,
   isDetailOpen,
@@ -258,6 +282,8 @@ function MapExplorer({
   selectedSectionId,
   setHoveredSectionId,
   setSelectedBasemapId,
+  setShowConfiscatedAssets,
+  showConfiscatedAssets,
   summary,
 }: {
   activeIndicator: AtlanteIndicatorDefinition | null;
@@ -265,6 +291,7 @@ function MapExplorer({
   bounds: GeographicBounds | null;
   dataStatus: AtlanteLoadedLayer["dataStatus"];
   features: AtlanteFeature[];
+  focusConfiscatedAssetId: string | null;
   hoveredFeature: AtlanteFeature | null;
   hoveredSectionId: string | null;
   isDetailOpen: boolean;
@@ -278,10 +305,20 @@ function MapExplorer({
   selectedSectionId: string | null;
   setHoveredSectionId: (sectionId: string | null) => void;
   setSelectedBasemapId: (basemapId: BasemapId) => void;
+  setShowConfiscatedAssets: (visible: boolean) => void;
+  showConfiscatedAssets: boolean;
   summary: ReturnType<typeof buildAtlanteDistribution>;
 }) {
   const [resetSignal, setResetSignal] = useState(0);
   const [isFullPageMap, setFullPageMap] = useState(false);
+  const confiscatedAssetsState = useConfiscatedAssetsAtlasLayer(
+    showConfiscatedAssets,
+  );
+  const confiscatedAssetsCoverage = getConfiscatedAssetsCoverageLabel(
+    confiscatedAssetsState,
+  );
+  const censusLayerDefinition = getSpatialLayer("census-sections");
+  const confiscatedAssetsDefinition = getSpatialLayer("confiscated-assets");
   const selectedBasemap =
     BASEMAP_PROVIDERS.find((provider) => provider.id === selectedBasemapId) ??
     null;
@@ -366,6 +403,12 @@ function MapExplorer({
               })
             }
           />
+          {showConfiscatedAssets ? (
+            <ConfiscatedAssetsAtlasLayer
+              focusEntityId={focusConfiscatedAssetId}
+              state={confiscatedAssetsState}
+            />
+          ) : null}
         </MapContainer>
 
         <div className="absolute left-3 top-3 z-[650] w-[min(390px,calc(100%-1.5rem))] rounded-xl border border-border/80 bg-card/95 p-2.5 shadow-xl backdrop-blur">
@@ -398,7 +441,45 @@ function MapExplorer({
           </p>
         </div>
 
-        <div className="absolute right-3 top-[116px] z-[650] flex max-w-[calc(100%-1.5rem)] flex-wrap justify-end gap-1.5 sm:top-3 sm:max-w-none">
+        <div className="absolute left-3 top-[118px] z-[650] w-[min(390px,calc(100%-1.5rem))] rounded-xl border border-border/80 bg-card/95 p-2.5 shadow-xl backdrop-blur">
+          <p className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
+            Livelli
+          </p>
+          <div className="mt-1.5 flex flex-wrap gap-2 text-xs">
+            <span className="inline-flex items-center gap-1.5 rounded-md bg-primary/10 px-2 py-1 font-medium text-foreground">
+              <span
+                aria-hidden="true"
+                className="h-2 w-2 rounded-full bg-primary"
+              />
+              {censusLayerDefinition?.title ?? "Sezioni censuarie"}
+            </span>
+            <label className="inline-flex cursor-pointer items-center gap-1.5 rounded-md border border-border bg-background px-2 py-1 font-medium text-foreground">
+              <input
+                checked={showConfiscatedAssets}
+                className="h-3.5 w-3.5 accent-primary"
+                onChange={(event) =>
+                  setShowConfiscatedAssets(event.target.checked)
+                }
+                type="checkbox"
+              />
+              {confiscatedAssetsDefinition?.title ?? "Beni confiscati"}
+            </label>
+          </div>
+          {showConfiscatedAssets && confiscatedAssetsCoverage ? (
+            <p
+              aria-live="polite"
+              className={`mt-2 text-[11px] leading-4 ${
+                confiscatedAssetsState.status === "error"
+                  ? "font-medium text-destructive"
+                  : "text-muted-foreground"
+              }`}
+            >
+              {confiscatedAssetsCoverage}
+            </p>
+          ) : null}
+        </div>
+
+        <div className="absolute right-3 top-[230px] z-[650] flex max-w-[calc(100%-1.5rem)] flex-wrap justify-end gap-1.5 sm:top-3 sm:max-w-none">
           <label className="inline-flex h-9 items-center gap-1.5 rounded-lg border border-border/80 bg-card/95 px-2 text-xs font-medium text-foreground shadow-md backdrop-blur">
             <Layers className="h-3.5 w-3.5 text-primary" aria-hidden="true" />
             <span className="sr-only sm:not-sr-only">Sfondo</span>
