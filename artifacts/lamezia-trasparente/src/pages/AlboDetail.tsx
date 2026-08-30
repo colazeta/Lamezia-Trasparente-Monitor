@@ -134,18 +134,25 @@ function ProfileField({
 
 export function AlboDetail() {
   const [, params] = useRoute("/albo/:id");
-  const id = params?.id ? Number(params.id) : NaN;
+  const routeId = params?.id?.trim() ?? "";
+  const id: number | string = /^\d+$/u.test(routeId)
+    ? Number(routeId)
+    : routeId;
+  const hasValidId =
+    (typeof id === "number" && Number.isInteger(id) && id > 0) ||
+    (typeof id === "string" &&
+      /^albo-(?:\d{4}-[1-9]\d*|raw-(?:[a-f0-9]{4})+)$/u.test(id));
 
   const { data: publication, isLoading, isError } = useGetPublication(id, {
     query: {
-      enabled: !Number.isNaN(id),
+      enabled: hasValidId,
       queryKey: getGetPublicationQueryKey(id),
     },
   });
 
   const { data: storia, isLoading: storiaLoading } = useGetPublicationStoria(id, {
     query: {
-      enabled: !Number.isNaN(id) && !!publication,
+      enabled: hasValidId && !!publication,
       queryKey: getGetPublicationStoriaQueryKey(id),
     },
   });
@@ -416,7 +423,7 @@ export function AlboDetail() {
                       {storia.siblings
                         .filter((s) => s.category === "delibera")
                         .map((s) => (
-                          <Link key={s.id} href={`/albo/${s.id}`} className="block">
+                          <Link key={s.publicId} href={`/albo/${s.publicId}`} className="block">
                             <Card className="group p-4 transition-all hover:shadow-md hover:-translate-y-0.5 hover:border-brand/40">
                               <div className="flex flex-wrap items-start justify-between gap-2">
                                 <div className="flex-1 min-w-0">
@@ -450,7 +457,7 @@ export function AlboDetail() {
                       {storia.siblings
                         .filter((s) => s.category !== "delibera")
                         .map((s) => (
-                          <Link key={s.id} href={`/albo/${s.id}`} className="block">
+                          <Link key={s.publicId} href={`/albo/${s.publicId}`} className="block">
                             <Card className="group p-4 transition-all hover:shadow-md hover:-translate-y-0.5 hover:border-brand/40">
                               <div className="flex flex-wrap items-start justify-between gap-2">
                                 <div className="flex-1 min-w-0">

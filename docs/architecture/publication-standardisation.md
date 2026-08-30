@@ -83,7 +83,7 @@ type PublicationPresentation = {
   action_id: string | null;
   action_label: string | null;
   search_text: string;
-  area_theme?: {
+  area_theme: {
     schema_version: "publication-area-theme.v1";
     taxonomy_id: string;
     taxonomy_version: string;
@@ -126,11 +126,13 @@ type PublicationPresentation = {
 };
 ```
 
-`area_theme` e' opzionale per consentire l'adozione progressiva del contratto
-v1. Quando presente, i client usano `theme_id` come chiave stabile e la label
-soltanto come testo di presentazione. L'assenza di una classificazione non e'
-un'unica categoria indistinta: `null_reason` separa dato soppresso per privacy,
-input mancante, mancata classificazione e ambiguita'.
+`area_theme` e' obbligatorio nelle proiezioni pubbliche che adottano questo
+contratto. `theme_id` e `theme_label` possono essere nulli, ma in quel caso il
+record deve dichiarare un `null_reason`: dato soppresso per privacy, input
+mancante, mancata classificazione o ambiguita'. I client usano `theme_id` come
+chiave stabile e la label soltanto come testo di presentazione. Record legacy
+privi della facetta vengono riproiettati dalla pipeline corrente; non ricevono
+una classificazione ricostruita nel frontend.
 
 ## Facette indipendenti
 
@@ -207,14 +209,14 @@ partenza, in forma priva di differenze tra maiuscole e accenti.
 
 ## Adozione
 
-| Dominio               | Stato                                              | Passo successivo                                                               |
-| --------------------- | -------------------------------------------------- | ------------------------------------------------------------------------------ |
-| Albo Pretorio         | adottato nella proiezione public-safe              | usare `presentation` nelle viste pubbliche                                     |
-| Archivio delibere     | eredita i record dell'Albo quando viene rigenerato | esporre titolo, azione e settore nella navigazione                             |
-| Contratti             | normalizzatori di dominio gia' presenti            | aggiungere un profilo di presentazione senza duplicare la normalizzazione ANAC |
-| PNRR                  | normalizzazioni locali presenti                    | separare campi ufficiali e label pubbliche                                     |
-| Open data             | normalizzazioni locali presenti                    | applicare il contratto ai titoli dei dataset                                   |
-| Elezioni e territorio | pipeline canoniche gia' strutturate                | valutare solo i campi testuali effettivamente pubblicati                       |
+| Dominio               | Stato                                             | Passo successivo                                                               |
+| --------------------- | ------------------------------------------------- | ------------------------------------------------------------------------------ |
+| Albo Pretorio         | adottato nella proiezione public-safe e nelle API | monitorare qualità e versionare ogni modifica al profilo                       |
+| Archivio delibere     | adottato nel dato statico e nel view model comune | ampliare la tassonomia solo dopo gold set e soglie di readiness                |
+| Contratti             | normalizzatori di dominio gia' presenti           | aggiungere un profilo di presentazione senza duplicare la normalizzazione ANAC |
+| PNRR                  | normalizzazioni locali presenti                   | separare campi ufficiali e label pubbliche                                     |
+| Open data             | normalizzazioni locali presenti                   | applicare il contratto ai titoli dei dataset                                   |
+| Elezioni e territorio | pipeline canoniche gia' strutturate               | valutare solo i campi testuali effettivamente pubblicati                       |
 
 L'adozione e' progressiva e deve avvenire con issue e test specifici per
 dominio. Una nuova ingestion pubblica deve adottare il layer oppure documentare
@@ -230,6 +232,8 @@ esplicitamente perche' non si applica.
 - allow-list di serving verificabile:
   `artifacts/lamezia-trasparente/albo-document-serving.ts` e
   `data/public/albo/reviewed-document-serving-allowlist.json`;
+- view model e stato URL delle delibere:
+  `artifacts/lamezia-trasparente/src/lib/delibereView.ts`;
 - test del contratto: `scripts/publication-standardisation.test.ts` e test Albo.
 
 Il frontend deve consumare `display_title`; non deve ricostruirlo con proprie
