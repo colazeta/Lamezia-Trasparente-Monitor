@@ -31,7 +31,7 @@ describe("civic search index", () => {
     });
     expect(searchCivicIndex("trend demografico")[0]).toMatchObject({
       kind: "dataset",
-      label: "Trend demografico - Lamezia Terme",
+      label: "Osservatorio demografico - Lamezia Terme",
     });
   });
 
@@ -51,4 +51,3 @@ describe("civic search index", () => {
     );
   });
 });
-
