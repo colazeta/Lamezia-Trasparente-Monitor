@@ -1,0 +1,109 @@
+import { getSpatialLayer } from "@/lib/spatial";
+
+export type ConfiscatedAssetSpatialFeature = {
+  type: "Feature";
+  id: string;
+  geometry: {
+    type: "Point";
+    coordinates: [number, number];
+  };
+  properties: {
+    entity_id: string;
+    entity_type: "confiscated_asset";
+    title: string;
+    public_url: string;
+    geometry_id: string;
+    geometry_role: "asset_location";
+    spatial_precision: "street" | "unknown";
+    spatial_method:
+      | "official_address_geocoded"
+      | "other_address_geocoded"
+      | "manual_coordinates";
+    spatial_confidence: "high" | "medium";
+    verification_status: "verified" | "machine_geocoded";
+    is_inferred: boolean;
+    source_id: string | null;
+    source_label: string;
+    source_url: string | null;
+    source_dataset: string | null;
+    source_record_id: string | null;
+    observed_at: null;
+    valid_from: null;
+    valid_to: null;
+    public_note: string;
+    status: "sequestrato" | "confiscato" | "assegnato" | "riutilizzato";
+    tipologia: string;
+    address: string | null;
+    neighbourhood: string | null;
+    data_source_label: string;
+    data_source_url: string | null;
+    geocoding_provider: string | null;
+    location_updated_at: string;
+  };
+};
+
+export type ConfiscatedAssetsSpatialCollection = {
+  type: "FeatureCollection";
+  features: ConfiscatedAssetSpatialFeature[];
+  metadata: {
+    layer_id: "confiscated-assets";
+    entity_type: "confiscated_asset";
+    input_records: number;
+    published_features: number;
+    excluded_records: number;
+    exclusions: Record<string, number>;
+    publication_policy: string;
+    source_dataset_label: string;
+    source_dataset_url: string;
+    automatic_geocoder: string;
+  };
+};
+
+export async function loadConfiscatedAssetsSpatialLayer(): Promise<ConfiscatedAssetsSpatialCollection> {
+  const definition = getSpatialLayer("confiscated-assets");
+  if (!definition?.dataPath) {
+    throw new Error("Layer beni confiscati non configurato");
+  }
+
+  const response = await fetch(definition.dataPath, {
+    headers: { Accept: "application/geo+json, application/json" },
+  });
+  if (!response.ok) {
+    throw new Error(`Layer beni confiscati non disponibile (${response.status})`);
+  }
+
+  const payload = (await response.json()) as unknown;
+  if (!isConfiscatedAssetsSpatialCollection(payload)) {
+    throw new Error("Formato del layer beni confiscati non valido");
+  }
+
+  return payload;
+}
+
+function isConfiscatedAssetsSpatialCollection(
+  value: unknown,
+): value is ConfiscatedAssetsSpatialCollection {
+  if (!value || typeof value !== "object") return false;
+  const collection = value as Partial<ConfiscatedAssetsSpatialCollection>;
+  if (collection.type !== "FeatureCollection" || !Array.isArray(collection.features)) {
+    return false;
+  }
+  if (!collection.metadata || collection.metadata.layer_id !== "confiscated-assets") {
+    return false;
+  }
+
+  return collection.features.every((feature) => {
+    const coordinates = feature?.geometry?.coordinates;
+    return (
+      feature?.type === "Feature" &&
+      feature.geometry?.type === "Point" &&
+      Array.isArray(coordinates) &&
+      coordinates.length >= 2 &&
+      Number.isFinite(coordinates[0]) &&
+      Number.isFinite(coordinates[1]) &&
+      typeof feature.properties?.entity_id === "string" &&
+      typeof feature.properties?.title === "string" &&
+      typeof feature.properties?.public_url === "string"
+    );
+  });
+}
