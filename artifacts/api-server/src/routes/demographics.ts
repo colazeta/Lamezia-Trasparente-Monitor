@@ -16,6 +16,7 @@ import {
   summarizeChangeDrivers,
   type BalanceGranularity,
 } from "../lib/demographicBalance";
+import { getPopulationStructureSnapshot } from "../lib/populationStructure";
 
 const router: IRouter = Router();
 
@@ -209,6 +210,44 @@ router.get("/demographics/series/:key", async (req, res) => {
               note: "Il tratto 2002–2018 proviene dalla ricostruzione statistica RBD su classificazione territoriale 2019; dal 2019 il Censimento permanente e la nuova contabilità micro-demografica MIDEA/ANVIS definiscono la serie corrente. Le due provenienze restano distinguibili nelle release e nello status dell'osservazione.",
             }]
           : [],
+    },
+  });
+});
+
+router.get("/demographics/structure", async (req, res) => {
+  const rawPeriod = Array.isArray(req.query.period)
+    ? req.query.period[0]
+    : req.query.period;
+  const period = typeof rawPeriod === "string" ? rawPeriod : null;
+  const snapshot = await getPopulationStructureSnapshot(period);
+  if (!snapshot) {
+    res.status(404).json({ error: "Struttura demografica non ancora disponibile" });
+    return;
+  }
+
+  res.json({
+    geography: {
+      code: LAMEZIA_ISTAT_CODE,
+      name: "Lamezia Terme",
+      level: "municipality",
+    },
+    ...snapshot,
+    methodology: {
+      referencePeriod:
+        "La struttura si riferisce alla popolazione residente al 1° gennaio dell'anno selezionato.",
+      ageBands:
+        "Le quote 0–14, 15–64, 65+ e 80+ sono somme deterministiche delle singole età pubblicate dalla fonte.",
+      ageingIndex: "popolazione 65+ / popolazione 0–14 × 100",
+      structuralDependency:
+        "(popolazione 0–14 + popolazione 65+) / popolazione 15–64 × 100",
+      elderlyDependency: "popolazione 65+ / popolazione 15–64 × 100",
+      youthDependency: "popolazione 0–14 / popolazione 15–64 × 100",
+      pyramid:
+        "La piramide aggrega le singole età in classi quinquennali; la classe 100+ resta aperta e non viene trasformata in un'età media convenzionale.",
+      temporalBreak:
+        "Il tratto 2002–2018 è una ricostruzione statistica su classificazione territoriale 2019 ed è marcato reconstructed. Dal 2019 la struttura proviene dalla popolazione residente del Censimento permanente. La cesura resta esplicita.",
+      quality:
+        "Il totale pubblicato viene confrontato sia con maschi + femmine sia con la somma delle singole età. Una differenza non nulla resta esposta e non viene corretta artificialmente.",
     },
   });
 });
