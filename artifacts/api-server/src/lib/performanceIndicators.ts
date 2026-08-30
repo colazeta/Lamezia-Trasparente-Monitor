@@ -1,6 +1,7 @@
 import { logger } from "./logger";
 import { runDemographicIngestion } from "./demographics";
 import { runSelfDescribingDemographicBalanceIngestion } from "./demographicBalanceIngestion";
+import { runRbdBackfill } from "./demographicRbd";
 
 // Prefisso comune delle sorgenti automatiche della sezione Performance. La
 // popolazione mantiene l'identificativo storico `performance:istat-popolazione`
@@ -22,11 +23,19 @@ export async function runPerformanceIngestion(): Promise<void> {
     "Performance population refreshed through demographic archive",
   );
 
-  // Il bilancio usa un adapter self-describing: legge il form ISTAT prima di
-  // ogni ciclo, riproduce i campi hidden realmente dichiarati e conserva
-  // separatamente revisioni provvisorie e definitive. Un suo errore non annulla
-  // l'aggiornamento della popolazione: ogni fonte registra il proprio stato.
+  // Il bilancio corrente inizializza le serie annuali canoniche. Solo dopo
+  // questa fase innestiamo il backfill RBD 2002–2018 sulle stesse serie: in
+  // questo modo la semantica resta unica mentre release e sourceStatus
+  // distinguono chiaramente ricostruzione storica e dato post-2019.
+  let currentBalanceReady = true;
   await runSelfDescribingDemographicBalanceIngestion().catch((err) => {
+    currentBalanceReady = false;
     logger.error({ err }, "Demographic balance refresh failed");
   });
+
+  if (currentBalanceReady) {
+    await runRbdBackfill().catch((err) => {
+      logger.error({ err }, "Reconstructed demographic backfill failed");
+    });
+  }
 }
