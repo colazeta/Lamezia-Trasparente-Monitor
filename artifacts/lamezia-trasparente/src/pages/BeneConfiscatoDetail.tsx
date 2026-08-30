@@ -111,7 +111,7 @@ export function BeneConfiscatoDetail() {
     layerIds: ["confiscated-assets"],
     entity: {
       entityType: "confiscated_asset",
-      entityId: asset.id,
+      entityId: String(asset.id),
     },
   });
 
