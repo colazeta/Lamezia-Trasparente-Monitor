@@ -51,14 +51,22 @@ describe("proposte civiche data model", () => {
     });
 
     expect(proposals).toHaveLength(4);
-    expect(proposals.every((proposal) => proposal.promoterId === "lamezia-trasparente")).toBe(true);
+    expect(
+      proposals.every(
+        (proposal) => proposal.promoterId === "lamezia-trasparente",
+      ),
+    ).toBe(true);
   });
 
   it("keeps timeline dates internally coherent", () => {
     for (const proposal of PUBLIC_PROPOSALS) {
       const dates = proposal.events.map((event) => event.date).sort();
+      const emergenceDates = proposal.events
+        .filter((event) => event.type === "emersione")
+        .map((event) => event.date)
+        .sort();
       expect(dates.length).toBeGreaterThan(0);
-      expect(proposal.firstSeen).toBe(dates[0]);
+      expect(proposal.firstSeen).toBe(emergenceDates[0] ?? dates[0]);
       expect(proposal.lastUpdated).toBe(dates[dates.length - 1]);
       expect(new Set(proposal.events.map((event) => event.id)).size).toBe(
         proposal.events.length,
