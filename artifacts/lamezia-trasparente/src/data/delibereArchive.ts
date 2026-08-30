@@ -23,7 +23,7 @@ export type DeliberaPresentation = {
   };
 };
 
-export type DeliberaArchiveItem = AlboPublicRunItem & {
+export type DeliberaArchiveItem = Omit<AlboPublicRunItem, "presentation"> & {
   deliberation_body: DeliberationBody;
   presentation: DeliberaPresentation;
   first_observed_at: string;
