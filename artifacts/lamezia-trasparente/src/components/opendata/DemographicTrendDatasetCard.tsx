@@ -38,18 +38,18 @@ export function DemographicTrendDatasetCard() {
             </p>
           </div>
           <div className="flex flex-wrap gap-2">
-            <a href={POPULATION_API} target="_blank" rel="noreferrer">
-              <Button variant="outline" size="sm">
+            <Button asChild variant="outline" size="sm">
+              <a href={POPULATION_API} target="_blank" rel="noreferrer">
                 <FileJson className="h-4 w-4" />
                 API popolazione
-              </Button>
-            </a>
-            <a href={CHANGE_DRIVERS_API} target="_blank" rel="noreferrer">
-              <Button variant="outline" size="sm">
+              </a>
+            </Button>
+            <Button asChild variant="outline" size="sm">
+              <a href={CHANGE_DRIVERS_API} target="_blank" rel="noreferrer">
                 <FileJson className="h-4 w-4" />
                 API bilancio
-              </Button>
-            </a>
+              </a>
+            </Button>
           </div>
         </div>
 
