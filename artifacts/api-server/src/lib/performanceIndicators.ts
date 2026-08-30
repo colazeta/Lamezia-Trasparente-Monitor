@@ -1,5 +1,5 @@
 import { logger } from "./logger";
-import { syncPopulationPerformanceProjection } from "./demographics";
+import { runDemographicIngestion } from "./demographics";
 
 // Prefisso comune delle sorgenti automatiche della sezione Performance. La
 // popolazione mantiene l'identificativo storico `performance:istat-popolazione`
@@ -7,14 +7,17 @@ import { syncPopulationPerformanceProjection } from "./demographics";
 // ora nell'archivio demografico versionato.
 export const PERFORMANCE_FEED_PREFIX = "performance:";
 
-// La sezione Performance non interroga più direttamente ISTAT per la
-// popolazione. Aggiorna soltanto la propria proiezione corrente a partire dalle
-// osservazioni demografiche canoniche, così una revisione della stessa annualità
-// non distrugge la release precedente.
+// Il ciclo schedulato continua a passare da questo entrypoint per compatibilità
+// con l'orchestratore esistente, ma l'acquisizione ISTAT è delegata al layer
+// demografico. `runDemographicIngestion` salva la release append-only e poi
+// aggiorna la proiezione corrente usata dalla UI Performance.
 export async function runPerformanceIngestion(): Promise<void> {
-  const projectionChanges = await syncPopulationPerformanceProjection();
+  const result = await runDemographicIngestion();
   logger.info(
-    { projectionChanges },
-    "Performance projection refreshed from demographic archive",
+    {
+      inserted: result.inserted,
+      projectionChanges: result.projectionChanges,
+    },
+    "Performance population refreshed through demographic archive",
   );
 }
