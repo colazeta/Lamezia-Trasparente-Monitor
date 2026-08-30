@@ -25,7 +25,8 @@ export function useConfiscatedAssetsAtlasLayer(
   });
 
   useEffect(() => {
-    if (!enabled || state.status === "ready" || state.status === "loading") {
+    if (!enabled) {
+      setState({ status: "idle", collection: null, message: null });
       return;
     }
 
@@ -51,7 +52,7 @@ export function useConfiscatedAssetsAtlasLayer(
     return () => {
       cancelled = true;
     };
-  }, [enabled, state.status]);
+  }, [enabled]);
 
   return state;
 }
