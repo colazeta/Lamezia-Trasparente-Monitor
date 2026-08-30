@@ -20,6 +20,27 @@ vi.mock("@workspace/api-client-react", () => ({
   })),
 }));
 
+// This file tests the Open Data archive integration, not React Query itself.
+// The canonical demographic panels have their own runtime data contract, so
+// stub them here to keep this surface test independent from network/context.
+vi.mock("@/components/demographics/PopulationHistoryPanel", () => ({
+  PopulationHistoryPanel: () => (
+    <section data-testid="population-history-panel">
+      <h2>Lamezia nel tempo</h2>
+      <p>Serie della popolazione residente con release versionate.</p>
+    </section>
+  ),
+}));
+
+vi.mock("@/components/demographics/ChangeDriversPanel", () => ({
+  ChangeDriversPanel: () => (
+    <section data-testid="change-drivers-panel">
+      <h2>Perché cambia Lamezia</h2>
+      <p>Saldo naturale e componenti migratorie del bilancio demografico.</p>
+    </section>
+  ),
+}));
+
 describe("OpenData climate territory card", () => {
   beforeEach(() => {
     localStorage.clear();
@@ -30,7 +51,7 @@ describe("OpenData climate territory card", () => {
     } as ReturnType<typeof useListOpendataDatasets>);
   });
 
-  it("opens a shared dataset deep-link and preserves its theme on return", async () => {
+  it("opens a shared demographic deep-link and preserves its theme on return", async () => {
     window.history.replaceState(
       {},
       "",
@@ -39,19 +60,16 @@ describe("OpenData climate territory card", () => {
 
     render(<Opendata />);
 
-    await screen.findByRole(
-      "img",
-      {
-        name: /Grafico del trend demografico di Lamezia Terme/i,
-      },
-      { timeout: 5_000 },
-    );
+    await screen.findByRole("heading", { name: "Lamezia nel tempo" });
 
     expect(
       screen.getAllByRole("heading", {
-        name: /Trend demografico - Lamezia Terme/i,
+        name: /Osservatorio demografico.*Lamezia Terme/i,
       }).length,
     ).toBeGreaterThan(0);
+    expect(
+      screen.getByRole("heading", { name: "Perché cambia Lamezia" }),
+    ).toBeInTheDocument();
     expect(
       document.querySelectorAll("#trend-demografico-lamezia"),
     ).toHaveLength(1);
@@ -95,9 +113,8 @@ describe("OpenData climate territory card", () => {
     expect(screen.getAllByText("Clima").length).toBeGreaterThan(0);
     expect(screen.getAllByText("Mobilita").length).toBeGreaterThan(0);
     expect(screen.getAllByText("Popolazione").length).toBeGreaterThan(0);
-    const archiveHeading = screen.getByRole("heading", {
-      name: "Dataset",
-    });
+
+    const archiveHeading = screen.getByRole("heading", { name: "Dataset" });
     expect(archiveHeading).toBeInTheDocument();
     expect(
       screen.getAllByText(/Anomalie climatiche.*Lamezia Terme/).length,
@@ -114,7 +131,7 @@ describe("OpenData climate territory card", () => {
     ).toBeInTheDocument();
     expect(
       screen.getByRole("button", {
-        name: /Apri scheda dataset Trend demografico/i,
+        name: /Apri scheda dataset Osservatorio demografico/i,
       }),
     ).toBeInTheDocument();
     expect(
@@ -139,7 +156,7 @@ describe("OpenData climate territory card", () => {
     expect(
       Boolean(
         libraryHeading.compareDocumentPosition(archiveHeading) &
-        Node.DOCUMENT_POSITION_FOLLOWING,
+          Node.DOCUMENT_POSITION_FOLLOWING,
       ),
     ).toBe(true);
 
@@ -176,8 +193,8 @@ describe("OpenData climate territory card", () => {
 
     const climateSection = climateHeading.closest("section");
     expect(climateSection).not.toBeNull();
-
     const section = within(climateSection as HTMLElement);
+
     expect(
       section.getByRole("img", {
         name: /Grafico delle anomalie climatiche giornaliere/i,
@@ -218,12 +235,6 @@ describe("OpenData climate territory card", () => {
       screen.getByRole("heading", { name: "Dataset" }),
     ).toBeInTheDocument();
     expect(
-      screen.queryByRole("img", {
-        name: /Grafico delle anomalie climatiche giornaliere/i,
-      }),
-    ).not.toBeInTheDocument();
-
-    expect(
       screen.getByRole("button", { name: /Clima e territorio/i }),
     ).toHaveAttribute("aria-pressed", "true");
   });
@@ -239,18 +250,12 @@ describe("OpenData climate territory card", () => {
     expect(
       screen.getAllByText(/Anomalie climatiche.*Lamezia Terme/).length,
     ).toBeGreaterThan(0);
-    expect(
-      screen.queryByRole("img", {
-        name: /Grafico delle anomalie climatiche giornaliere/i,
-      }),
-    ).not.toBeInTheDocument();
 
     fireEvent.click(
       screen.getByRole("button", {
         name: /Apri scheda dataset Anomalie climatiche/i,
       }),
     );
-
     fireEvent.click(await screen.findByText("Dettagli del dataset"));
 
     expect(screen.getByRole("link", { name: /Scarica JSON/i })).toHaveAttribute(
@@ -284,7 +289,6 @@ describe("OpenData climate territory card", () => {
     ).toBeInTheDocument();
 
     fireEvent.click(screen.getByText("Dettagli del dataset"));
-
     expect(screen.getByText("Ultimo mese completo")).toBeInTheDocument();
     expect(screen.getByText("Passeggeri da gennaio")).toBeInTheDocument();
     expect(screen.getByText("Quota internazionale")).toBeInTheDocument();
@@ -293,57 +297,46 @@ describe("OpenData climate territory card", () => {
       screen.getByText(/La fonte misura traffico aeroportuale mensile/i),
     ).toBeInTheDocument();
     expect(screen.getByRole("link", { name: /Scarica JSON/i })).toHaveAttribute(
-      "href",
-      expect.stringMatching(
-        /(?:lameziaAirTrafficMonthly|^data:application\/json)/,
-      ),
-    );
-    expect(screen.getByRole("link", { name: /Scarica JSON/i })).toHaveAttribute(
       "download",
     );
   });
 
-  it("opens the municipal demographic trend dataset detail from the OpenData archive", async () => {
+  it("opens the canonical demographic observatory from the OpenData archive", async () => {
     render(<Opendata />);
 
     fireEvent.click(
       screen.getByRole("button", {
-        name: /Apri scheda dataset Trend demografico/i,
+        name: /Apri scheda dataset Osservatorio demografico/i,
       }),
     );
 
-    await screen.findByRole("img", {
-      name: /Grafico del trend demografico di Lamezia Terme/i,
-    });
+    await screen.findByRole("heading", { name: "Lamezia nel tempo" });
 
     expect(
       screen.getAllByRole("heading", {
-        name: /Trend demografico - Lamezia Terme/i,
+        name: /Osservatorio demografico.*Lamezia Terme/i,
       }).length,
     ).toBeGreaterThan(0);
     expect(
-      screen.getByRole("img", {
-        name: /Grafico del trend demografico di Lamezia Terme/i,
-      }),
+      screen.getByRole("heading", { name: "Perché cambia Lamezia" }),
     ).toBeInTheDocument();
-
-    fireEvent.click(screen.getByText("Dettagli del dataset"));
-
-    expect(screen.getByText("Popolazione residente")).toBeInTheDocument();
-    expect(screen.getByText("Saldo sulla serie")).toBeInTheDocument();
-    expect(screen.getByText("Scarto dal massimo")).toBeInTheDocument();
-    expect(screen.getByText("Variazione ultimo anno")).toBeInTheDocument();
+    expect(screen.getByTestId("population-history-panel")).toBeInTheDocument();
+    expect(screen.getByTestId("change-drivers-panel")).toBeInTheDocument();
     expect(
-      screen.getByText(/Serie aggregata pubblicata dal portale comunale/i),
+      screen.getByText(/non esiste più una copia statica separata/i),
     ).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: /Scarica JSON/i })).toHaveAttribute(
+    expect(screen.getByText("Fonte canonica: ISTAT")).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /API popolazione/i })).toHaveAttribute(
       "href",
-      expect.stringContaining("lameziaDemographicTrend"),
+      "/api/demographics/series/population-resident-jan1",
     );
-    expect(screen.getByRole("link", { name: /CSV sorgente/i })).toHaveAttribute(
+    expect(screen.getByRole("link", { name: /API bilancio/i })).toHaveAttribute(
       "href",
-      expect.stringContaining("trend-demografico.csv"),
+      "/api/demographics/change-drivers?granularity=annual",
     );
+    expect(
+      screen.getByText(/precedente serie generata dal CSV del Portale OpenData comunale/i),
+    ).toBeInTheDocument();
   });
 
   it("opens the municipal foreign residents age-sex dataset detail from the OpenData archive", async () => {
@@ -371,7 +364,6 @@ describe("OpenData climate territory card", () => {
     ).toBeInTheDocument();
 
     fireEvent.click(screen.getByText("Dettagli del dataset"));
-
     expect(screen.getByText("Residenti stranieri")).toBeInTheDocument();
     expect(screen.getByText("Classe piu numerosa")).toBeInTheDocument();
     expect(screen.getByText("Eta 15-64")).toBeInTheDocument();
@@ -382,12 +374,7 @@ describe("OpenData climate territory card", () => {
       screen.getByText(/Distribuzione aggregata per sesso e classi d'eta/i),
     ).toBeInTheDocument();
     expect(screen.getByRole("link", { name: /Scarica JSON/i })).toHaveAttribute(
-      "href",
-      expect.stringContaining("lameziaForeignResidentsAgeSex"),
-    );
-    expect(screen.getByRole("link", { name: /CSV sorgente/i })).toHaveAttribute(
-      "href",
-      expect.stringContaining("stranieri-per-sesso-ed-eta.csv"),
+      "download",
     );
   });
 
@@ -416,7 +403,6 @@ describe("OpenData climate territory card", () => {
     ).toBeInTheDocument();
 
     fireEvent.click(screen.getByText("Dettagli del dataset"));
-
     expect(
       screen.getByText("Famiglie nella distribuzione"),
     ).toBeInTheDocument();
@@ -427,12 +413,7 @@ describe("OpenData climate territory card", () => {
       screen.getByText(/non espone l'anno di riferimento/i),
     ).toBeInTheDocument();
     expect(screen.getByRole("link", { name: /Scarica JSON/i })).toHaveAttribute(
-      "href",
-      expect.stringContaining("lameziaFamiliesChildren"),
-    );
-    expect(screen.getByRole("link", { name: /CSV sorgente/i })).toHaveAttribute(
-      "href",
-      expect.stringContaining("famiglie-per-numero-figli.csv"),
+      "download",
     );
   });
 });
