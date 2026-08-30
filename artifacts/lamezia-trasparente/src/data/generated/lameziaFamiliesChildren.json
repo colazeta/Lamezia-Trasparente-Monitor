@@ -15,7 +15,7 @@
     "dataset_title": "Comune di Lamezia Terme - Famiglie per Numero Figli",
     "resource_id": "c29d86df-a1ad-48f7-a702-1c74abcf2946",
     "resource_name": "Comune di Lamezia Terme - Famiglie per Numero Figli csv",
-    "resource_hash": "fc64d4ab6c54d4c305a696f4196f5ef8",
+    "resource_hash": "6781a6ddfe1be0d8351caa3647ae6997",
     "holder_name": "Comune di Lamezia Terme",
     "holder_identifier": "c_m208",
     "publisher_name": "Comune di Lamezia Terme",
@@ -25,14 +25,14 @@
     "license_type": "https://w3id.org/italia/controlled-vocabulary/licences/A21_CCBY40",
     "frequency": "WEEKLY",
     "metadata_created": "2025-03-05T07:40:17.538Z",
-    "metadata_modified": "2026-08-24T02:31:31.646Z",
-    "resource_last_modified": "2026-08-22T16:07:18.000Z",
-    "generated_at": "2026-08-24T07:16:04.139Z",
+    "metadata_modified": "2026-08-30T16:23:19.701Z",
+    "resource_last_modified": "2026-08-30T16:08:13.000Z",
+    "generated_at": "2026-08-30T20:03:39.949Z",
     "rows": 6,
     "total_families_with_children": 13358,
-    "one_child_families": 6764,
-    "two_children_families": 5228,
-    "three_or_more_children_families": 1366,
+    "one_child_families": 6762,
+    "two_children_families": 5229,
+    "three_or_more_children_families": 1367,
     "update_policy": "Aggiornamento settimanale dal Portale OpenData del Comune di Lamezia Terme quando la risorsa CSV pubblica cambia.",
     "caveat": "Distribuzione aggregata pubblicata dal portale comunale. Il CSV non espone l'anno di riferimento e non include esplicitamente le famiglie senza figli; la scheda rappresenta la risorsa corrente acquisita."
   },
@@ -43,5 +43,5 @@
     "share_of_total",
     "cumulative_families"
   ],
-  "family_children_rows": "1|1|6764|0.5064|6764\n2|2|5228|0.3914|11992\n3|3|1149|0.086|13141\n4|4|172|0.0129|13313\n5|5|31|0.0023|13344\n6 o piu|6|14|0.001|13358"
+  "family_children_rows": "1|1|6762|0.5062|6762\n2|2|5229|0.3915|11991\n3|3|1150|0.0861|13141\n4|4|172|0.0129|13313\n5|5|31|0.0023|13344\n6 o piu|6|14|0.001|13358"
 }
