@@ -37,6 +37,7 @@ import {
 } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { PopulationHistoryPanel } from "@/components/demographics/PopulationHistoryPanel";
+import { ChangeDriversPanel } from "@/components/demographics/ChangeDriversPanel";
 import {
   computeTrend,
   formatIndicatorValue,
@@ -233,7 +234,10 @@ export function PerformanceDetail() {
           </div>
 
           {indicator.slug === "popolazione-residente" ? (
-            <PopulationHistoryPanel />
+            <div className="mb-10 space-y-10">
+              <PopulationHistoryPanel />
+              <ChangeDriversPanel />
+            </div>
           ) : null}
 
           <Card className="mb-8 overflow-hidden">
