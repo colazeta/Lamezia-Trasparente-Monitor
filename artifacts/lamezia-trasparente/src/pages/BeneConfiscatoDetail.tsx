@@ -33,6 +33,7 @@ import {
   STATUS_LABEL,
 } from "@/components/ConfiscatedAssetsMap";
 import { quartiereLabel } from "@/lib/gis";
+import { buildAtlasHref } from "@/lib/spatial";
 
 const STATUS_META: Record<
   ConfiscatedAssetStatus,
@@ -106,6 +107,13 @@ export function BeneConfiscatoDetail() {
 
   const meta = STATUS_META[asset.status];
   const hasLocation = asset.latitude != null && asset.longitude != null;
+  const atlasHref = buildAtlasHref({
+    layerIds: ["confiscated-assets"],
+    entity: {
+      entityType: "confiscated_asset",
+      entityId: String(asset.id),
+    },
+  });
 
   return (
     <div className="container mx-auto px-4 py-8 md:py-12">
@@ -224,6 +232,14 @@ export function BeneConfiscatoDetail() {
               </span>
             </div>
           </Card>
+
+          {hasLocation ? (
+            <Link href={atlasHref}>
+              <Button variant="outline" className="w-full gap-2">
+                <MapPin className="h-4 w-4" /> Mostra nell’Atlante
+              </Button>
+            </Link>
+          ) : null}
 
           {asset.officialUrl && (
             <a

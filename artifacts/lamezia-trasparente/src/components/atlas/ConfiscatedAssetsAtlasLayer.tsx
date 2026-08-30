@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { CircleMarker, Popup, Tooltip } from "react-leaflet";
+import { CircleMarker, Popup, Tooltip, useMap } from "react-leaflet";
 import {
   loadConfiscatedAssetsSpatialLayer,
   type ConfiscatedAssetsSpatialCollection,
@@ -59,13 +59,19 @@ export function useConfiscatedAssetsAtlasLayer(
 
 export function ConfiscatedAssetsAtlasLayer({
   state,
+  focusEntityId = null,
 }: {
   state: ConfiscatedAssetsAtlasLayerState;
+  focusEntityId?: string | null;
 }) {
   if (state.status !== "ready") return null;
 
   return (
     <>
+      <ConfiscatedAssetMapFocus
+        collection={state.collection}
+        entityId={focusEntityId}
+      />
       {state.collection.features.map((feature) => {
         const [longitude, latitude] = feature.geometry.coordinates;
         const properties = feature.properties;
@@ -157,6 +163,31 @@ export function getConfiscatedAssetsCoverageLabel(
   if (input_records === 0) return "Nessun bene disponibile";
 
   return `${published_features} in mappa su ${input_records}; ${excluded_records} esclusi perché la localizzazione non supera ancora i criteri di pubblicazione`;
+}
+
+function ConfiscatedAssetMapFocus({
+  collection,
+  entityId,
+}: {
+  collection: ConfiscatedAssetsSpatialCollection;
+  entityId: string | null;
+}) {
+  const map = useMap();
+
+  useEffect(() => {
+    if (!entityId) return;
+    const feature = collection.features.find(
+      (candidate) => candidate.properties.entity_id === entityId,
+    );
+    if (!feature) return;
+
+    const [longitude, latitude] = feature.geometry.coordinates;
+    map.setView([latitude, longitude], Math.max(map.getZoom(), 15), {
+      animate: false,
+    });
+  }, [collection, entityId, map]);
+
+  return null;
 }
 
 function formatAssetStatus(

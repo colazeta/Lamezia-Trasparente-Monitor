@@ -1,5 +1,23 @@
 import { getSpatialLayer } from "@/lib/spatial";
 
+export type MunicipalBoundarySpatialFeature = {
+  type: "Feature";
+  properties: {
+    name?: string;
+    kind?: string;
+    [key: string]: unknown;
+  } | null;
+  geometry: {
+    type: "Polygon" | "MultiPolygon";
+    coordinates: unknown;
+  };
+};
+
+export type MunicipalBoundarySpatialCollection = {
+  type: "FeatureCollection";
+  features: MunicipalBoundarySpatialFeature[];
+};
+
 export type ConfiscatedAssetSpatialFeature = {
   type: "Feature";
   id: string;
@@ -59,6 +77,27 @@ export type ConfiscatedAssetsSpatialCollection = {
   };
 };
 
+export async function loadMunicipalBoundarySpatialLayer(): Promise<MunicipalBoundarySpatialCollection> {
+  const definition = getSpatialLayer("municipal-boundary");
+  if (!definition?.dataPath) {
+    throw new Error("Confine comunale non configurato");
+  }
+
+  const response = await fetch(definition.dataPath, {
+    headers: { Accept: "application/geo+json, application/json" },
+  });
+  if (!response.ok) {
+    throw new Error(`Confine comunale non disponibile (${response.status})`);
+  }
+
+  const payload = (await response.json()) as unknown;
+  if (!isMunicipalBoundarySpatialCollection(payload)) {
+    throw new Error("Formato del confine comunale non valido");
+  }
+
+  return payload;
+}
+
 export async function loadConfiscatedAssetsSpatialLayer(): Promise<ConfiscatedAssetsSpatialCollection> {
   const definition = getSpatialLayer("confiscated-assets");
   if (!definition?.dataPath) {
@@ -78,6 +117,25 @@ export async function loadConfiscatedAssetsSpatialLayer(): Promise<ConfiscatedAs
   }
 
   return payload;
+}
+
+function isMunicipalBoundarySpatialCollection(
+  value: unknown,
+): value is MunicipalBoundarySpatialCollection {
+  if (!value || typeof value !== "object") return false;
+  const collection = value as Partial<MunicipalBoundarySpatialCollection>;
+  if (collection.type !== "FeatureCollection" || !Array.isArray(collection.features)) {
+    return false;
+  }
+
+  return collection.features.length > 0 && collection.features.every((feature) => {
+    const geometryType = feature?.geometry?.type;
+    return (
+      feature?.type === "Feature" &&
+      (geometryType === "Polygon" || geometryType === "MultiPolygon") &&
+      Array.isArray(feature.geometry.coordinates)
+    );
+  });
 }
 
 function isConfiscatedAssetsSpatialCollection(
