@@ -1,6 +1,6 @@
 import { logger } from "./logger";
 import { runDemographicIngestion } from "./demographics";
-import { runDemographicBalanceIngestion } from "./demographicBalance";
+import { runSelfDescribingDemographicBalanceIngestion } from "./demographicBalanceIngestion";
 
 // Prefisso comune delle sorgenti automatiche della sezione Performance. La
 // popolazione mantiene l'identificativo storico `performance:istat-popolazione`
@@ -22,10 +22,11 @@ export async function runPerformanceIngestion(): Promise<void> {
     "Performance population refreshed through demographic archive",
   );
 
-  // Un errore della sorgente bilancio non annulla l'aggiornamento della
-  // popolazione: ogni fonte registra il proprio feed status e viene osservata
-  // separatamente.
-  await runDemographicBalanceIngestion().catch((err) => {
+  // Il bilancio usa un adapter self-describing: legge il form ISTAT prima di
+  // ogni ciclo, riproduce i campi hidden realmente dichiarati e conserva
+  // separatamente revisioni provvisorie e definitive. Un suo errore non annulla
+  // l'aggiornamento della popolazione: ogni fonte registra il proprio stato.
+  await runSelfDescribingDemographicBalanceIngestion().catch((err) => {
     logger.error({ err }, "Demographic balance refresh failed");
   });
 }
