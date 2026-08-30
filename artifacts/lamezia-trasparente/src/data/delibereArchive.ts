@@ -11,11 +11,23 @@ import type {
 
 export type DeliberationBody = "giunta" | "consiglio" | "altro";
 
+export type DeliberaAreaTheme = {
+  schema_version: string;
+  taxonomy_id: string;
+  taxonomy_version: string;
+  theme_id: string | null;
+  theme_label: string | null;
+  confidence: "high" | "medium" | null;
+  basis: "deterministic_rule" | "manual_override" | "fallback";
+  null_reason: string | null;
+};
+
 export type DeliberaPresentation = {
   display_title: string;
   action_id: string | null;
   action_label: string | null;
   search_text: string;
+  area_theme: DeliberaAreaTheme;
   standardisation: {
     profile_id: string;
     profile_version: string;
@@ -24,6 +36,7 @@ export type DeliberaPresentation = {
 };
 
 export type DeliberaArchiveItem = Omit<AlboPublicRunItem, "presentation"> & {
+  public_id: string;
   deliberation_body: DeliberationBody;
   presentation: DeliberaPresentation;
   first_observed_at: string;
@@ -84,6 +97,48 @@ function deliberationBody(value: unknown): DeliberationBody | null {
     : null;
 }
 
+function areaTheme(value: unknown): DeliberaAreaTheme | null {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return null;
+  const candidate = value as Record<string, unknown>;
+  const schemaVersion = text(candidate.schema_version);
+  const taxonomyId = text(candidate.taxonomy_id);
+  const taxonomyVersion = text(candidate.taxonomy_version);
+  const themeId = text(candidate.theme_id);
+  const themeLabel = text(candidate.theme_label);
+  const confidence = candidate.confidence;
+  const basis = candidate.basis;
+  const nullReason = text(candidate.null_reason);
+
+  if (
+    !schemaVersion ||
+    !taxonomyId ||
+    !taxonomyVersion ||
+    Boolean(themeId) !== Boolean(themeLabel) ||
+    (confidence !== null && confidence !== "high" && confidence !== "medium") ||
+    (themeId !== null && confidence === null) ||
+    (themeId === null && (confidence !== null || nullReason === null)) ||
+    (themeId !== null && nullReason !== null) ||
+    (basis === "fallback" && themeId !== null) ||
+    (basis !== "fallback" && themeId === null) ||
+    (basis !== "deterministic_rule" &&
+      basis !== "manual_override" &&
+      basis !== "fallback")
+  ) {
+    return null;
+  }
+
+  return {
+    schema_version: schemaVersion,
+    taxonomy_id: taxonomyId,
+    taxonomy_version: taxonomyVersion,
+    theme_id: themeId,
+    theme_label: themeLabel,
+    confidence,
+    basis,
+    null_reason: nullReason,
+  };
+}
+
 function presentation(value: unknown): DeliberaPresentation | null {
   if (!value || typeof value !== "object" || Array.isArray(value)) return null;
   const candidate = value as Record<string, unknown>;
@@ -95,11 +150,13 @@ function presentation(value: unknown): DeliberaPresentation | null {
       : null;
   const displayTitle = text(candidate.display_title);
   const searchText = text(candidate.search_text);
+  const itemAreaTheme = areaTheme(candidate.area_theme);
   const profileId = text(standardisation?.profile_id);
   const profileVersion = text(standardisation?.profile_version);
   if (
     !displayTitle ||
     !searchText ||
+    !itemAreaTheme ||
     !profileId ||
     !profileVersion ||
     standardisation?.input_field !== "subject"
@@ -111,6 +168,7 @@ function presentation(value: unknown): DeliberaPresentation | null {
     action_id: text(candidate.action_id),
     action_label: text(candidate.action_label),
     search_text: searchText,
+    area_theme: itemAreaTheme,
     standardisation: {
       profile_id: profileId,
       profile_version: profileVersion,
@@ -172,8 +230,7 @@ function archivedDocument(value: unknown): AlboArchivedDocument | null {
     typeof sizeBytes !== "number" ||
     !Number.isFinite(sizeBytes) ||
     sizeBytes <= 0 ||
-    contentType?.split(";", 1)[0]?.trim().toLowerCase() !==
-      "application/pdf" ||
+    contentType?.split(";", 1)[0]?.trim().toLowerCase() !== "application/pdf" ||
     !text(document.verification_status)
   ) {
     return null;
@@ -201,6 +258,7 @@ function normalizeItem(value: unknown): DeliberaArchiveItem | null {
   const itemDeliberationBody = deliberationBody(item.deliberation_body);
   const itemPresentation = presentation(item.presentation);
   const id = text(item.id);
+  const publicId = text(item.public_id);
   const source = text(item.source);
   const sourceUrl = text(item.source_url);
   const retrievedAt = text(item.retrieved_at);
@@ -211,6 +269,8 @@ function normalizeItem(value: unknown): DeliberaArchiveItem | null {
 
   if (
     !id ||
+    !/^albo-(?:\d{4}-[1-9]\d*|raw-(?:[a-f0-9]{4})+)$/u.test(id) ||
+    publicId !== id ||
     !source ||
     !sourceUrl ||
     !retrievedAt ||
@@ -236,6 +296,7 @@ function normalizeItem(value: unknown): DeliberaArchiveItem | null {
 
   return {
     id,
+    public_id: publicId,
     source,
     source_url: sourceUrl,
     retrieved_at: retrievedAt,

@@ -455,8 +455,8 @@ export function SedutaDetail() {
                     <div className="space-y-2">
                       {storiaDelibere.map((s) => (
                         <Link
-                          key={s.id}
-                          href={`/albo/${s.id}`}
+                          key={s.publicId}
+                          href={`/albo/${s.publicId}`}
                           className="block"
                         >
                           <Card className="group p-4 transition-all hover:shadow-md hover:-translate-y-0.5 hover:border-brand/40">
@@ -483,8 +483,8 @@ export function SedutaDetail() {
                     <div className="space-y-2">
                       {storiaAltriAtti.map((s) => (
                         <Link
-                          key={s.id}
-                          href={`/albo/${s.id}`}
+                          key={s.publicId}
+                          href={`/albo/${s.publicId}`}
                           className="block"
                         >
                           <Card className="group p-4 transition-all hover:shadow-md hover:-translate-y-0.5 hover:border-brand/40">
