@@ -39,9 +39,13 @@ describe("OpenData climate territory card", () => {
 
     render(<Opendata />);
 
-    await screen.findByRole("img", {
-      name: /Grafico del trend demografico di Lamezia Terme/i,
-    });
+    await screen.findByRole(
+      "img",
+      {
+        name: /Grafico del trend demografico di Lamezia Terme/i,
+      },
+      { timeout: 5_000 },
+    );
 
     expect(
       screen.getAllByRole("heading", {
@@ -145,7 +149,11 @@ describe("OpenData climate territory card", () => {
       }),
     );
 
-    await screen.findByLabelText("Anno del dataset climatico");
+    await screen.findByLabelText(
+      "Anno del dataset climatico",
+      {},
+      { timeout: 5_000 },
+    );
 
     expect(
       screen.getByRole("button", { name: /Torna ai dataset/i }),

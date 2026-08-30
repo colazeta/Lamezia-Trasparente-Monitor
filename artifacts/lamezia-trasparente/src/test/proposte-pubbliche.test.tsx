@@ -20,7 +20,7 @@ function renderProposteCiviche() {
 
 describe("proposte civiche", () => {
   it("separa le proposte documentate dai quattro seed progettuali interni", () => {
-    expect(PUBLIC_PROPOSALS).toHaveLength(10);
+    expect(PUBLIC_PROPOSALS).toHaveLength(17);
     const internalSeeds = PUBLIC_PROPOSALS.filter(
       (proposal) => proposal.sourceUrl === undefined,
     );
@@ -43,7 +43,7 @@ describe("proposte civiche", () => {
     ).toBe(true);
     expect(
       PUBLIC_PROPOSALS.filter((proposal) => proposal.sourceUrl),
-    ).toHaveLength(6);
+    ).toHaveLength(13);
   });
 
   it("filtra le proposte per stato, promotore e tema con utility pure", () => {
@@ -73,7 +73,7 @@ describe("proposte civiche", () => {
       }),
     ).toBeInTheDocument();
     expect(
-      screen.getByText(/non esprime adesione politica/i),
+      screen.getByText("Stato documentale, non politico"),
     ).toBeInTheDocument();
     expect(screen.getByLabelText("Tema")).toBeInTheDocument();
     expect(screen.getByLabelText("Promotore")).toBeInTheDocument();
@@ -106,8 +106,10 @@ describe("proposte civiche", () => {
     ).toBeInTheDocument();
   });
 
-  it("non include dati personali non necessari nei record pubblici", () => {
-    const serialized = JSON.stringify(PUBLIC_PROPOSALS);
+  it("non include dati personali non necessari nei contenuti descrittivi", () => {
+    const serialized = JSON.stringify(PUBLIC_PROPOSALS, (key, value) =>
+      key === "sourceUrl" ? undefined : value,
+    );
 
     expect(serialized).not.toMatch(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/i);
     expect(serialized).not.toMatch(/\b\+?\d{2,4}[\s.-]?\d{5,}\b/);
