@@ -5,7 +5,10 @@ import {
   ALBO_CLASSIFICATION_DICTIONARY,
   classifyAlboRecordCategory,
 } from "../../../../scripts/albo-classification-dictionary";
-import { ALBO_OPERATIONAL_STATUS, type AlboStatusCounts } from "@/data/alboStatus";
+import {
+  ALBO_OPERATIONAL_STATUS,
+  type AlboStatusCounts,
+} from "@/data/alboStatus";
 
 export type AlboPublicVisibility =
   | "publishable"
@@ -14,7 +17,11 @@ export type AlboPublicVisibility =
 
 export type AlboPrivacyRisk = "low" | "medium" | "high";
 export type AlboClassificationConfidence = "high" | "medium" | "low";
-export type AlboClassificationBasis = "office" | "act_type" | "office_and_act_type" | "fallback";
+export type AlboClassificationBasis =
+  | "office"
+  | "act_type"
+  | "office_and_act_type"
+  | "fallback";
 
 export type AlboClassificationTag = {
   id: string;
@@ -28,6 +35,30 @@ export type AlboItemClassification = {
   dictionary_version: string;
   sector: AlboClassificationTag;
   act_category: AlboClassificationTag;
+};
+
+export type AlboPresentationStandardisation = {
+  schema_version: string | null;
+  profile_id: string | null;
+  profile_version: string | null;
+  status: string;
+  transformations: string[];
+  layout_flags: string[];
+  review_reasons: string[];
+};
+
+export type AlboPublicationPresentation = {
+  display_title: string;
+  summary: string | null;
+  labels: string[];
+  search_text: string;
+  flags: string[];
+  action_id: string | null;
+  action_label: string | null;
+  standardisation: AlboPresentationStandardisation;
+  validation_status: "valid" | "legacy_fallback" | "invalid";
+  invalid_fields: string[];
+  legacy_fallback: boolean;
 };
 
 export type AlboPublicRunItem = {
@@ -48,6 +79,7 @@ export type AlboPublicRunItem = {
   privacy_risk: AlboPrivacyRisk;
   public_visibility: AlboPublicVisibility;
   classification: AlboItemClassification;
+  presentation: AlboPublicationPresentation;
   known_limits: string[];
   public_note: string | null;
 };
@@ -57,10 +89,35 @@ export type AlboPublicDiffChangedItem = {
   after: AlboPublicRunItem;
 };
 
-type RawAlboPublicRunItem = Partial<AlboPublicRunItem> & {
+type RawAlboPublicRunItem = Omit<
+  Partial<AlboPublicRunItem>,
+  "public_visibility" | "privacy_risk" | "classification" | "presentation"
+> & {
   public_visibility?: string;
   privacy_risk?: string;
   classification?: unknown;
+  presentation?: unknown;
+};
+
+type RawAlboPublicationPresentation = {
+  display_title?: unknown;
+  summary?: unknown;
+  labels?: unknown;
+  search_text?: unknown;
+  flags?: unknown;
+  action_id?: unknown;
+  action_label?: unknown;
+  standardisation?: unknown;
+};
+
+type RawAlboPresentationStandardisation = {
+  schema_version?: unknown;
+  profile_id?: unknown;
+  profile_version?: unknown;
+  status?: unknown;
+  transformations?: unknown;
+  layout_flags?: unknown;
+  review_reasons?: unknown;
 };
 
 type RawAlboPublicLatest = {
@@ -85,7 +142,10 @@ type RawAlboPublicDiff = {
   classification_dictionary?: unknown;
   diff?: {
     new?: RawAlboPublicRunItem[];
-    changed?: Array<{ before?: RawAlboPublicRunItem; after?: RawAlboPublicRunItem }>;
+    changed?: Array<{
+      before?: RawAlboPublicRunItem;
+      after?: RawAlboPublicRunItem;
+    }>;
     removed?: RawAlboPublicRunItem[];
     unchanged?: RawAlboPublicRunItem[];
   };
@@ -173,8 +233,15 @@ function nullableText(value: unknown): string | null {
 
 function arrayOfText(value: unknown): string[] {
   return Array.isArray(value)
-    ? value.filter((item): item is string => typeof item === "string")
+    ? value
+        .filter((item): item is string => typeof item === "string")
+        .map((item) => item.trim())
+        .filter(Boolean)
     : [];
+}
+
+function uniqueText(values: string[]): string[] {
+  return [...new Set(values)];
 }
 
 function isPublicVisibility(value: unknown): value is AlboPublicVisibility {
@@ -189,15 +256,26 @@ function isPrivacyRisk(value: unknown): value is AlboPrivacyRisk {
   return value === "low" || value === "medium" || value === "high";
 }
 
-function isClassificationConfidence(value: unknown): value is AlboClassificationConfidence {
+function isClassificationConfidence(
+  value: unknown,
+): value is AlboClassificationConfidence {
   return value === "high" || value === "medium" || value === "low";
 }
 
-function isClassificationBasis(value: unknown): value is AlboClassificationBasis {
-  return value === "office" || value === "act_type" || value === "office_and_act_type" || value === "fallback";
+function isClassificationBasis(
+  value: unknown,
+): value is AlboClassificationBasis {
+  return (
+    value === "office" ||
+    value === "act_type" ||
+    value === "office_and_act_type" ||
+    value === "fallback"
+  );
 }
 
-function normalizeClassificationTag(value: unknown): AlboClassificationTag | null {
+function normalizeClassificationTag(
+  value: unknown,
+): AlboClassificationTag | null {
   if (!value || typeof value !== "object") return null;
   const tag = value as RawAlboClassificationTag;
   if (
@@ -226,7 +304,8 @@ function normalizeItemClassification(value: unknown): AlboItemClassification {
   const actCategory = normalizeClassificationTag(classification.act_category);
   const dictionaryVersion = nullableText(classification.dictionary_version);
 
-  if (!sector || !actCategory || !dictionaryVersion) return FALLBACK_CLASSIFICATION;
+  if (!sector || !actCategory || !dictionaryVersion)
+    return FALLBACK_CLASSIFICATION;
 
   return {
     dictionary_version: dictionaryVersion,
@@ -235,7 +314,9 @@ function normalizeItemClassification(value: unknown): AlboItemClassification {
   };
 }
 
-function classifyFallbackFromRecord(item: RawAlboPublicRunItem): AlboItemClassification {
+function classifyFallbackFromRecord(
+  item: RawAlboPublicRunItem,
+): AlboItemClassification {
   return classifyAlboRecordCategory({
     office: nullableText(item.office),
     act_type: nullableText(item.act_type),
@@ -248,12 +329,87 @@ function normalizeItemClassificationForRecord(
   item: RawAlboPublicRunItem,
 ): AlboItemClassification {
   const normalized = normalizeItemClassification(value);
-  return normalized.dictionary_version === FALLBACK_CLASSIFICATION.dictionary_version
+  return normalized.dictionary_version ===
+    FALLBACK_CLASSIFICATION.dictionary_version
     ? classifyFallbackFromRecord(item)
     : normalized;
 }
 
-function normalizePublicRunItem(item: RawAlboPublicRunItem): AlboPublicRunItem | null {
+function normalizePresentationStandardisation(
+  value: unknown,
+  legacyFallback: boolean,
+): AlboPresentationStandardisation {
+  const raw =
+    value && typeof value === "object"
+      ? (value as RawAlboPresentationStandardisation)
+      : {};
+
+  return {
+    schema_version: nullableText(raw.schema_version),
+    profile_id: nullableText(raw.profile_id),
+    profile_version: nullableText(raw.profile_version),
+    status:
+      nullableText(raw.status) ??
+      (legacyFallback ? "legacy_fallback" : "unavailable"),
+    transformations: arrayOfText(raw.transformations),
+    layout_flags: arrayOfText(raw.layout_flags),
+    review_reasons: arrayOfText(raw.review_reasons),
+  };
+}
+
+export function normalizeAlboPublicationPresentation(
+  value: unknown,
+  legacyTitle: string,
+): AlboPublicationPresentation {
+  const hasPresentationObject = value !== null && typeof value === "object";
+  const raw = hasPresentationObject
+    ? (value as RawAlboPublicationPresentation)
+    : {};
+  const displayTitle = nullableText(raw.display_title);
+  const presentationSearchText = nullableText(raw.search_text);
+  const legacyFallback = !hasPresentationObject;
+  const invalidFields = legacyFallback
+    ? []
+    : [
+        ...(!displayTitle ? ["display_title"] : []),
+        ...(!presentationSearchText ? ["search_text"] : []),
+      ];
+  const resolvedTitle = legacyFallback
+    ? legacyTitle
+    : (displayTitle ?? "Titolo standardizzato non disponibile.");
+  const standardisation = normalizePresentationStandardisation(
+    raw.standardisation,
+    legacyFallback,
+  );
+  const actionLabel = nullableText(raw.action_label);
+
+  return {
+    display_title: resolvedTitle,
+    summary: nullableText(raw.summary),
+    labels: uniqueText(arrayOfText(raw.labels)),
+    search_text: legacyFallback
+      ? normalizeAlboPublicSearchText(legacyTitle)
+      : (presentationSearchText ?? ""),
+    flags: uniqueText([
+      ...arrayOfText(raw.flags),
+      ...standardisation.layout_flags,
+    ]),
+    action_id: nullableText(raw.action_id),
+    action_label: actionLabel,
+    standardisation,
+    validation_status: legacyFallback
+      ? "legacy_fallback"
+      : invalidFields.length
+        ? "invalid"
+        : "valid",
+    invalid_fields: invalidFields,
+    legacy_fallback: legacyFallback,
+  };
+}
+
+function normalizePublicRunItem(
+  item: RawAlboPublicRunItem,
+): AlboPublicRunItem | null {
   if (
     typeof item.id !== "string" ||
     typeof item.source !== "string" ||
@@ -265,6 +421,9 @@ function normalizePublicRunItem(item: RawAlboPublicRunItem): AlboPublicRunItem |
   ) {
     return null;
   }
+
+  const subject =
+    nullableText(item.subject) ?? "Oggetto non disponibile nel layer pubblico.";
 
   return {
     id: item.id,
@@ -278,12 +437,19 @@ function normalizePublicRunItem(item: RawAlboPublicRunItem): AlboPublicRunItem |
     act_type: nullableText(item.act_type),
     act_number: nullableText(item.act_number),
     act_date: nullableText(item.act_date),
-    subject: nullableText(item.subject) ?? "Oggetto non disponibile nel layer pubblico.",
+    subject,
     content_hash: nullableText(item.content_hash),
     verification_status: item.verification_status,
     privacy_risk: item.privacy_risk,
     public_visibility: item.public_visibility,
-    classification: normalizeItemClassificationForRecord(item.classification, item),
+    classification: normalizeItemClassificationForRecord(
+      item.classification,
+      item,
+    ),
+    presentation: normalizeAlboPublicationPresentation(
+      item.presentation,
+      subject,
+    ),
     known_limits: arrayOfText(item.known_limits),
     public_note: nullableText(item.public_note),
   };
@@ -295,12 +461,12 @@ function numberValue(value: unknown): number {
 
 function platformDocumentPath(storagePath: string): string {
   const normalized = storagePath.replace(/\\/g, "/");
-  return normalized.startsWith("data/public/")
-    ? `/${normalized}`
-    : normalized;
+  return normalized.startsWith("data/public/") ? `/${normalized}` : normalized;
 }
 
-function normalizeArchivedDocument(document: RawArchivedAlboDocument): AlboArchivedDocument | null {
+function normalizeArchivedDocument(
+  document: RawArchivedAlboDocument,
+): AlboArchivedDocument | null {
   const id = nullableText(document.id);
   const publicationNumber = nullableText(document.publication_number);
   const retrievedAt = nullableText(document.retrieved_at);
@@ -310,7 +476,15 @@ function normalizeArchivedDocument(document: RawArchivedAlboDocument): AlboArchi
   const verificationStatus = nullableText(document.verification_status);
   const sizeBytes = numberValue(document.size_bytes);
 
-  if (!id || !publicationNumber || !retrievedAt || !storagePath || !sha256 || !contentType || !verificationStatus) {
+  if (
+    !id ||
+    !publicationNumber ||
+    !retrievedAt ||
+    !storagePath ||
+    !sha256 ||
+    !contentType ||
+    !verificationStatus
+  ) {
     return null;
   }
 
@@ -329,7 +503,8 @@ function normalizeArchivedDocument(document: RawArchivedAlboDocument): AlboArchi
 
 const latest = publicAlboLatest as RawAlboPublicLatest;
 const latestDiff = publicAlboDiff as RawAlboPublicDiff;
-const documentsManifest = publicAlboDocumentsManifest as RawAlboDocumentsManifest;
+const documentsManifest =
+  publicAlboDocumentsManifest as RawAlboDocumentsManifest;
 
 export const ALBO_PUBLIC_RUN_ITEMS: AlboPublicRunItem[] = latest.items
   .map(normalizePublicRunItem)
@@ -345,22 +520,39 @@ export const ALBO_PUBLIC_RUN_SUMMARY = {
   official_albo_disclaimer: ALBO_OPERATIONAL_STATUS.official_albo_disclaimer,
 };
 
-const classificationDictionary = (latest.classification_dictionary ?? {}) as RawAlboClassificationDictionary;
+const classificationDictionary = (latest.classification_dictionary ??
+  {}) as RawAlboClassificationDictionary;
 
 export const ALBO_PUBLIC_CLASSIFICATION_DICTIONARY = {
-  version: nullableText(classificationDictionary.version) ?? ALBO_CLASSIFICATION_DICTIONARY.version,
+  version:
+    nullableText(classificationDictionary.version) ??
+    ALBO_CLASSIFICATION_DICTIONARY.version,
   known_limits: arrayOfText(classificationDictionary.known_limits).length
     ? arrayOfText(classificationDictionary.known_limits)
     : ALBO_CLASSIFICATION_DICTIONARY.known_limits,
   sectors: Array.isArray(classificationDictionary.sectors)
     ? classificationDictionary.sectors
         .map(normalizeClassificationDictionaryEntry)
-        .filter((entry): entry is Pick<AlboClassificationTag, "id" | "label" | "description"> => entry !== null)
+        .filter(
+          (
+            entry,
+          ): entry is Pick<
+            AlboClassificationTag,
+            "id" | "label" | "description"
+          > => entry !== null,
+        )
     : ALBO_CLASSIFICATION_DICTIONARY.sectors,
   act_categories: Array.isArray(classificationDictionary.act_categories)
     ? classificationDictionary.act_categories
         .map(normalizeClassificationDictionaryEntry)
-        .filter((entry): entry is Pick<AlboClassificationTag, "id" | "label" | "description"> => entry !== null)
+        .filter(
+          (
+            entry,
+          ): entry is Pick<
+            AlboClassificationTag,
+            "id" | "label" | "description"
+          > => entry !== null,
+        )
     : ALBO_CLASSIFICATION_DICTIONARY.act_categories,
 };
 
@@ -368,7 +560,8 @@ export const ALBO_PUBLIC_DIFF_SUMMARY = {
   source: nullableText(latestDiff.source) ?? latest.source,
   source_url: nullableText(latestDiff.source_url) ?? latest.source_url,
   retrieved_at: nullableText(latestDiff.retrieved_at) ?? latest.retrieved_at,
-  verification_status: nullableText(latestDiff.verification_status) ?? latest.verification_status,
+  verification_status:
+    nullableText(latestDiff.verification_status) ?? latest.verification_status,
   counts: {
     acquired: numberValue(latestDiff.counts?.acquired),
     new: numberValue(latestDiff.counts?.new),
@@ -383,27 +576,37 @@ export const ALBO_PUBLIC_DIFF_SUMMARY = {
   known_limits: arrayOfText(latestDiff.known_limits),
 };
 
-export const ALBO_PUBLIC_DIFF_NEW_ITEMS: AlboPublicRunItem[] = (latestDiff.diff?.new ?? [])
+export const ALBO_PUBLIC_DIFF_NEW_ITEMS: AlboPublicRunItem[] = (
+  latestDiff.diff?.new ?? []
+)
   .map(normalizePublicRunItem)
   .filter((item): item is AlboPublicRunItem => item !== null);
 
-export const ALBO_PUBLIC_DIFF_CHANGED_ITEMS: AlboPublicDiffChangedItem[] = (latestDiff.diff?.changed ?? [])
+export const ALBO_PUBLIC_DIFF_CHANGED_ITEMS: AlboPublicDiffChangedItem[] = (
+  latestDiff.diff?.changed ?? []
+)
   .map((entry) => ({
     before: entry.before ? normalizePublicRunItem(entry.before) : null,
     after: entry.after ? normalizePublicRunItem(entry.after) : null,
   }))
   .filter((entry): entry is AlboPublicDiffChangedItem => entry.after !== null);
 
-export const ALBO_PUBLIC_DIFF_REMOVED_ITEMS: AlboPublicRunItem[] = (latestDiff.diff?.removed ?? [])
+export const ALBO_PUBLIC_DIFF_REMOVED_ITEMS: AlboPublicRunItem[] = (
+  latestDiff.diff?.removed ?? []
+)
   .map(normalizePublicRunItem)
   .filter((item): item is AlboPublicRunItem => item !== null);
 
 export const ALBO_DOCUMENTS_MANIFEST = {
   generated_at: nullableText(documentsManifest.generated_at),
   retrieved_at: nullableText(documentsManifest.retrieved_at),
-  verification_status: nullableText(documentsManifest.verification_status) ?? "verification_required",
+  verification_status:
+    nullableText(documentsManifest.verification_status) ??
+    "verification_required",
   policy: {
-    eligibility: nullableText(documentsManifest.policy?.eligibility) ?? "PDF archiviati solo quando risultano ufficiali e a basso rischio.",
+    eligibility:
+      nullableText(documentsManifest.policy?.eligibility) ??
+      "PDF archiviati solo quando risultano ufficiali e a basso rischio.",
     max_size_bytes: numberValue(documentsManifest.policy?.max_size_bytes),
     no_ocr: documentsManifest.policy?.no_ocr === true,
     no_pdf_parsing: documentsManifest.policy?.no_pdf_parsing === true,
@@ -416,7 +619,9 @@ export const ALBO_DOCUMENTS_MANIFEST = {
     archived: numberValue(documentsManifest.counts?.archived),
     skipped: numberValue(documentsManifest.counts?.skipped),
     excluded: numberValue(documentsManifest.counts?.excluded),
-    human_review_required: numberValue(documentsManifest.counts?.human_review_required),
+    human_review_required: numberValue(
+      documentsManifest.counts?.human_review_required,
+    ),
   },
   warnings: arrayOfText(documentsManifest.warnings),
   documents: (documentsManifest.documents ?? [])
@@ -428,7 +633,10 @@ export const ALBO_ARCHIVED_DOCUMENTS_BY_ID = new Map(
   ALBO_DOCUMENTS_MANIFEST.documents.map((document) => [document.id, document]),
 );
 
-export const ALBO_PUBLIC_VISIBILITY_LABELS: Record<AlboPublicVisibility, string> = {
+export const ALBO_PUBLIC_VISIBILITY_LABELS: Record<
+  AlboPublicVisibility,
+  string
+> = {
   publishable: "Pubblicabile",
   publishable_with_minimisation: "Minimizzato",
   metadata_only: "Solo metadato",
@@ -440,36 +648,53 @@ export const ALBO_PRIVACY_RISK_LABELS: Record<AlboPrivacyRisk, string> = {
   high: "rischio alto",
 };
 
-function searchText(value: string): string {
+export function normalizeAlboPublicSearchText(value: string): string {
   return value
-    .toLowerCase()
     .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "");
+    .replace(/\p{M}+/gu, "")
+    .toLocaleLowerCase("it-IT")
+    .replace(/[^\p{L}\p{N}]+/gu, " ")
+    .trim()
+    .replace(/\s+/gu, " ");
 }
 
 export function alboPublicSearchText(item: AlboPublicRunItem): string {
-  return searchText([
-    item.publication_number,
-    item.publication_start,
-    item.publication_end,
-    item.office,
-    item.act_type,
-    item.act_number,
-    item.act_date,
-    item.subject,
-    item.classification.sector.label,
-    item.classification.act_category.label,
-    item.public_visibility,
-    item.privacy_risk,
-  ]
+  const metadataSearchText = normalizeAlboPublicSearchText(
+    [
+      item.publication_number,
+      item.publication_start,
+      item.publication_end,
+      item.office,
+      item.act_type,
+      item.act_number,
+      item.act_date,
+      item.classification.sector.label,
+      item.classification.act_category.label,
+      ...item.presentation.labels,
+      item.public_visibility,
+      item.privacy_risk,
+    ]
+      .filter(Boolean)
+      .join(" "),
+  );
+
+  return [item.presentation.search_text, metadataSearchText]
     .filter(Boolean)
-    .join(" "));
+    .join(" ");
 }
 
-function normalizeClassificationDictionaryEntry(value: unknown): Pick<AlboClassificationTag, "id" | "label" | "description"> | null {
+function normalizeClassificationDictionaryEntry(
+  value: unknown,
+): Pick<AlboClassificationTag, "id" | "label" | "description"> | null {
   if (!value || typeof value !== "object") return null;
-  const entry = value as Partial<Pick<AlboClassificationTag, "id" | "label" | "description">>;
-  if (typeof entry.id !== "string" || typeof entry.label !== "string" || typeof entry.description !== "string") {
+  const entry = value as Partial<
+    Pick<AlboClassificationTag, "id" | "label" | "description">
+  >;
+  if (
+    typeof entry.id !== "string" ||
+    typeof entry.label !== "string" ||
+    typeof entry.description !== "string"
+  ) {
     return null;
   }
   return {
