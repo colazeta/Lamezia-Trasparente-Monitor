@@ -7,6 +7,7 @@
     "hello": "tsx ./src/hello.ts",
     "fetch:albo": "tsx ./albo-tinnvision.ts",
     "sanitise:albo-public": "node --import tsx ./sanitise-albo-public-artifacts.ts",
+    "seed:delibere-archive": "node --import tsx ./seed-delibere-archive-history.ts",
     "fetch:zornade-sezioni-urbane-catasto": "tsx ./territorio/zornade-sezioni-urbane-catasto.ts",
     "etl:istat-sezioni-censimento-lamezia": "tsx ./territorio/istat-sezioni-censimento-lamezia.ts",
     "materialize:istat-sezioni-censimento-lamezia": "tsx ./territorio/istat-sezioni-censimento-lamezia-materialize.ts",
