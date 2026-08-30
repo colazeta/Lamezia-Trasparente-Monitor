@@ -78,10 +78,8 @@ describe("PopulationStructurePanel", () => {
       }),
     ).toBeInTheDocument();
 
-    const qualityHeading = screen.getByRole("heading", {
-      name: "Controlli di quadratura",
-    });
-    const qualityCard = qualityHeading.closest("div.rounded-xl") ?? qualityHeading.parentElement?.parentElement;
+    const qualityTitle = screen.getByText("Controlli di quadratura");
+    const qualityCard = qualityTitle.closest("div.rounded-xl");
     expect(qualityCard).not.toBeNull();
     expect(
       within(qualityCard as HTMLElement).getAllByText(/quadratura esatta/i),
