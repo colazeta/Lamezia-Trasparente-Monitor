@@ -10,6 +10,8 @@ export type SpatialLayerStatus =
   | "in_development"
   | "planned";
 
+export type SpatialAtlasStatus = "active" | "planned";
+
 export type SpatialLayerGroup =
   | "reference"
   | "population"
@@ -28,6 +30,7 @@ export type SpatialLayerDefinition = {
   description: string;
   group: SpatialLayerGroup;
   status: SpatialLayerStatus;
+  atlasStatus: SpatialAtlasStatus;
   geometryTypes: SpatialGeometryType[];
   allowedGeometryRoles: SpatialGeometryRole[];
   entityTypes: string[];
@@ -44,6 +47,8 @@ export type SpatialLayerDefinition = {
  *
  * È intenzionalmente indipendente dal viewer: Leaflet, GeoLibre o altri client
  * devono leggere la stessa definizione logica e gli stessi dati canonici.
+ * `atlasStatus` descrive la disponibilità nella superficie Atlante, non il
+ * motore cartografico usato per renderizzare il layer.
  */
 export const SPATIAL_LAYER_REGISTRY: SpatialLayerDefinition[] = [
   {
@@ -52,6 +57,7 @@ export const SPATIAL_LAYER_REGISTRY: SpatialLayerDefinition[] = [
     description: "Perimetro geografico di riferimento del Comune di Lamezia Terme.",
     group: "reference",
     status: "existing",
+    atlasStatus: "active",
     geometryTypes: ["Polygon", "MultiPolygon"],
     allowedGeometryRoles: ["administrative_boundary"],
     entityTypes: ["municipality"],
@@ -71,6 +77,7 @@ export const SPATIAL_LAYER_REGISTRY: SpatialLayerDefinition[] = [
       "Geometrie ufficiali ISTAT 2021 con indicatori del Censimento permanente 2023 selezionabili nell'Atlante.",
     group: "population",
     status: "existing",
+    atlasStatus: "active",
     geometryTypes: ["Polygon", "MultiPolygon"],
     allowedGeometryRoles: ["census_area"],
     entityTypes: ["census_section"],
@@ -93,6 +100,7 @@ export const SPATIAL_LAYER_REGISTRY: SpatialLayerDefinition[] = [
       "Beni confiscati con localizzazione sufficientemente documentata e collegamento alla scheda pubblica.",
     group: "legality",
     status: "pilot",
+    atlasStatus: "active",
     geometryTypes: ["Point", "Polygon", "MultiPolygon"],
     allowedGeometryRoles: ["asset_location", "parcel"],
     entityTypes: ["confiscated_asset"],
@@ -114,6 +122,7 @@ export const SPATIAL_LAYER_REGISTRY: SpatialLayerDefinition[] = [
     description: "Opere e interventi pubblici con luogo di esecuzione verificabile.",
     group: "public-investment",
     status: "planned",
+    atlasStatus: "planned",
     geometryTypes: ["Point", "LineString", "MultiLineString", "Polygon", "MultiPolygon"],
     allowedGeometryRoles: ["intervention_site", "intervention_area", "route"],
     entityTypes: ["public_work", "project"],
@@ -131,6 +140,7 @@ export const SPATIAL_LAYER_REGISTRY: SpatialLayerDefinition[] = [
     description: "Progetti PNRR territorialmente localizzabili nel Comune di Lamezia Terme.",
     group: "public-investment",
     status: "planned",
+    atlasStatus: "planned",
     geometryTypes: ["Point", "LineString", "MultiLineString", "Polygon", "MultiPolygon"],
     allowedGeometryRoles: ["intervention_site", "intervention_area", "route"],
     entityTypes: ["pnrr_project"],
@@ -148,6 +158,7 @@ export const SPATIAL_LAYER_REGISTRY: SpatialLayerDefinition[] = [
     description: "Immobili, aree e strutture pubbliche con geometria verificabile.",
     group: "public-assets",
     status: "planned",
+    atlasStatus: "planned",
     geometryTypes: ["Point", "Polygon", "MultiPolygon"],
     allowedGeometryRoles: ["asset_location", "facility_location", "parcel"],
     entityTypes: ["public_asset", "public_facility"],
@@ -163,6 +174,7 @@ export const SPATIAL_LAYER_REGISTRY: SpatialLayerDefinition[] = [
     description: "Strutture scolastiche e servizi pubblici territorialmente identificabili.",
     group: "services",
     status: "planned",
+    atlasStatus: "planned",
     geometryTypes: ["Point", "Polygon", "MultiPolygon"],
     allowedGeometryRoles: ["facility_location"],
     entityTypes: ["school", "public_service"],
@@ -178,6 +190,7 @@ export const SPATIAL_LAYER_REGISTRY: SpatialLayerDefinition[] = [
     description: "Beni e luoghi culturali collegabili alla lettura territoriale della città.",
     group: "culture",
     status: "planned",
+    atlasStatus: "planned",
     geometryTypes: ["Point", "Polygon", "MultiPolygon"],
     allowedGeometryRoles: ["asset_location", "facility_location", "parcel"],
     entityTypes: ["cultural_asset"],
@@ -194,6 +207,7 @@ export const SPATIAL_LAYER_REGISTRY: SpatialLayerDefinition[] = [
       "Contratti collegati a un luogo di esecuzione o a un'opera territorialmente verificabile.",
     group: "procurement",
     status: "planned",
+    atlasStatus: "planned",
     geometryTypes: ["Point", "LineString", "MultiLineString", "Polygon", "MultiPolygon"],
     allowedGeometryRoles: ["intervention_site", "intervention_area", "route"],
     entityTypes: ["contract"],
@@ -215,4 +229,10 @@ export function getSpatialLayersByGroup(
   group: SpatialLayerGroup,
 ): SpatialLayerDefinition[] {
   return SPATIAL_LAYER_REGISTRY.filter((layer) => layer.group === group);
+}
+
+export function getActiveAtlasSpatialLayers(): SpatialLayerDefinition[] {
+  return SPATIAL_LAYER_REGISTRY.filter(
+    (layer) => layer.atlasStatus === "active" && Boolean(layer.dataPath),
+  );
 }
