@@ -12,6 +12,7 @@ import {
 } from "@workspace/api-zod";
 import { requireIngestAuth } from "../middlewares/requireIngestAuth";
 import { nearestQuartiere } from "../lib/geocode";
+import { buildConfiscatedAssetsSpatialCollection } from "../lib/confiscatedAssetsSpatial";
 
 const router: IRouter = Router();
 
@@ -104,6 +105,20 @@ router.get("/beni-confiscati/summary", async (_req: Request, res: Response) => {
       .map(([tipologia, count]) => ({ tipologia, count }))
       .sort((a, b) => b.count - a.count),
   });
+});
+
+// --- GET /beni-confiscati/geojson: layer pubblico fail-closed --------------
+// Espone soltanto le posizioni che superano le regole di provenienza e verifica
+// definite nello spatial adapter. I record esclusi restano conteggiati nei
+// metadati del FeatureCollection, così la copertura cartografica è trasparente.
+router.get("/beni-confiscati/geojson", async (_req: Request, res: Response) => {
+  const rows = await db
+    .select()
+    .from(confiscatedAssetsTable)
+    .orderBy(asc(confiscatedAssetsTable.denominazione));
+  res.type("application/geo+json").json(
+    buildConfiscatedAssetsSpatialCollection(rows),
+  );
 });
 
 // --- GET /beni-confiscati/admin: elenco redazionale completo ---------------
