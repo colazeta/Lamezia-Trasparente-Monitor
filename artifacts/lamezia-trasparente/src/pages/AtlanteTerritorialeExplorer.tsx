@@ -19,6 +19,10 @@ import {
   useConfiscatedAssetsAtlasLayer,
 } from "@/components/atlas/ConfiscatedAssetsAtlasLayer";
 import {
+  MunicipalBoundaryAtlasLayer,
+  useMunicipalBoundaryAtlasLayer,
+} from "@/components/atlas/MunicipalBoundaryAtlasLayer";
+import {
   buildAtlanteDistribution,
   type AtlanteFeature,
   type AtlanteFeatureCollection,
@@ -311,12 +315,14 @@ function MapExplorer({
 }) {
   const [resetSignal, setResetSignal] = useState(0);
   const [isFullPageMap, setFullPageMap] = useState(false);
+  const municipalBoundaryState = useMunicipalBoundaryAtlasLayer();
   const confiscatedAssetsState = useConfiscatedAssetsAtlasLayer(
     showConfiscatedAssets,
   );
   const confiscatedAssetsCoverage = getConfiscatedAssetsCoverageLabel(
     confiscatedAssetsState,
   );
+  const municipalBoundaryDefinition = getSpatialLayer("municipal-boundary");
   const censusLayerDefinition = getSpatialLayer("census-sections");
   const confiscatedAssetsDefinition = getSpatialLayer("confiscated-assets");
   const selectedBasemap =
@@ -403,6 +409,7 @@ function MapExplorer({
               })
             }
           />
+          <MunicipalBoundaryAtlasLayer state={municipalBoundaryState} />
           {showConfiscatedAssets ? (
             <ConfiscatedAssetsAtlasLayer
               focusEntityId={focusConfiscatedAssetId}
@@ -449,6 +456,13 @@ function MapExplorer({
             <span className="inline-flex items-center gap-1.5 rounded-md bg-primary/10 px-2 py-1 font-medium text-foreground">
               <span
                 aria-hidden="true"
+                className="h-2 w-2 rounded-full border border-primary bg-transparent"
+              />
+              {municipalBoundaryDefinition?.title ?? "Confine comunale"}
+            </span>
+            <span className="inline-flex items-center gap-1.5 rounded-md bg-primary/10 px-2 py-1 font-medium text-foreground">
+              <span
+                aria-hidden="true"
                 className="h-2 w-2 rounded-full bg-primary"
               />
               {censusLayerDefinition?.title ?? "Sezioni censuarie"}
@@ -465,6 +479,14 @@ function MapExplorer({
               {confiscatedAssetsDefinition?.title ?? "Beni confiscati"}
             </label>
           </div>
+          {municipalBoundaryState.status === "error" ? (
+            <p
+              aria-live="polite"
+              className="mt-2 text-[11px] font-medium leading-4 text-destructive"
+            >
+              {municipalBoundaryState.message}
+            </p>
+          ) : null}
           {showConfiscatedAssets && confiscatedAssetsCoverage ? (
             <p
               aria-live="polite"
@@ -479,7 +501,7 @@ function MapExplorer({
           ) : null}
         </div>
 
-        <div className="absolute right-3 top-[230px] z-[650] flex max-w-[calc(100%-1.5rem)] flex-wrap justify-end gap-1.5 sm:top-3 sm:max-w-none">
+        <div className="absolute right-3 top-[250px] z-[650] flex max-w-[calc(100%-1.5rem)] flex-wrap justify-end gap-1.5 sm:top-3 sm:max-w-none">
           <label className="inline-flex h-9 items-center gap-1.5 rounded-lg border border-border/80 bg-card/95 px-2 text-xs font-medium text-foreground shadow-md backdrop-blur">
             <Layers className="h-3.5 w-3.5 text-primary" aria-hidden="true" />
             <span className="sr-only sm:not-sr-only">Sfondo</span>
