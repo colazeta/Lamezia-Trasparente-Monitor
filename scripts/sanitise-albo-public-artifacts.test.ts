@@ -5,6 +5,7 @@ import path from "node:path";
 import test from "node:test";
 
 import { sanitiseAlboPublicArtifacts } from "./sanitise-albo-public-artifacts";
+import { classifyAlboRecordCategory } from "./albo-classification-dictionary";
 import { ALBO_PRETORIO_LAMEZIA_SOURCE } from "./albo-source-config";
 
 test("sanitises committed public artifacts and is idempotent", async () => {
@@ -55,6 +56,65 @@ test("sanitises committed public artifacts and is idempotent", async () => {
     document_url: documentUrl,
     public_note: null,
   };
+  const archiveDocumentUrl =
+    "https://albo.tinnvision.cloud/allegati/2026_4302_2_P?ente=00301390795";
+  const archiveRecord = {
+    id: "albo-2026-4302",
+    source: ALBO_PRETORIO_LAMEZIA_SOURCE.source,
+    source_url: ALBO_PRETORIO_LAMEZIA_SOURCE.sourceUrl,
+    retrieved_at: "2026-06-18T10:00:00.000Z",
+    publication_number: "2026/4302",
+    publication_start: "2026-06-18",
+    publication_end: "2026-07-03",
+    office: "SERVIZI DEMOGRAFICI",
+    act_type: "DELIBERAZIONE DI GIUNTA",
+    act_number: "42",
+    act_date: "2026-06-17",
+    content_hash: "f".repeat(64),
+    verification_status: "official_source_acquired",
+    privacy_risk: "low",
+    public_visibility: "publishable",
+    classification: classifyAlboRecordCategory({
+      office: "SERVIZI DEMOGRAFICI",
+      act_type: "DELIBERAZIONE DI GIUNTA",
+      subject: "PUBBLICAZIONE DI MATRIMONIO DI ROSSI MARIO",
+    }),
+    known_limits: [],
+    subject: "PUBBLICAZIONE DI MATRIMONIO DI ROSSI MARIO",
+    document_url: archiveDocumentUrl,
+    public_note: null,
+    deliberation_body: "giunta",
+    presentation: {
+      display_title: "Pubblicazione di matrimonio di Rossi Mario",
+      action_id: null,
+      action_label: null,
+      search_text: "pubblicazione di matrimonio di rossi mario",
+      standardisation: {
+        profile_id: "legacy-test",
+        profile_version: "1",
+        input_field: "subject",
+      },
+    },
+    first_observed_at: "2026-06-18T10:00:00.000Z",
+    last_observed_at: "2026-06-18T10:00:00.000Z",
+    archived_document: {
+      id: "albo-2026-4302",
+      publication_number: "2026/4302",
+      source: ALBO_PRETORIO_LAMEZIA_SOURCE.source,
+      source_url: ALBO_PRETORIO_LAMEZIA_SOURCE.sourceUrl,
+      retrieved_at: "2026-06-18T10:00:00.000Z",
+      document_url: archiveDocumentUrl,
+      public_visibility: "publishable",
+      privacy_risk: "low",
+      verification_status: "official_source_acquired",
+      preservation_status: "archived",
+      reason: "eligible_low_risk_publishable_pdf",
+      storage_path: orphanStoragePath,
+      sha256: orphanDigest,
+      size_bytes: 28,
+      content_type: "application/pdf",
+    },
+  };
   const counts = {
     acquired: 1,
     new: 1,
@@ -97,8 +157,8 @@ test("sanitises committed public artifacts and is idempotent", async () => {
         storage_path: storagePath,
       },
       {
-        id: "albo-2026-9999",
-        document_url: "https://albo.tinnvision.cloud/allegati/orphan.pdf",
+        id: archiveRecord.id,
+        document_url: archiveDocumentUrl,
         storage_path: orphanStoragePath,
       },
     ],
@@ -110,12 +170,36 @@ test("sanitises committed public artifacts and is idempotent", async () => {
         reason: "eligible_low_risk_publishable_pdf",
       },
       {
-        id: "albo-2026-9999",
-        document_url: "https://albo.tinnvision.cloud/allegati/orphan.pdf",
+        id: archiveRecord.id,
+        document_url: archiveDocumentUrl,
         preservation_status: "archived",
         reason: "eligible_low_risk_publishable_pdf",
       },
     ],
+  });
+  await writeJson(path.join(publicDir, "delibere-archive.json"), {
+    generated_at: archiveRecord.retrieved_at,
+    source: archiveRecord.source,
+    source_url: archiveRecord.source_url,
+    verification_status: archiveRecord.verification_status,
+    coverage: {
+      first_observed_at: archiveRecord.first_observed_at,
+      last_observed_at: archiveRecord.last_observed_at,
+      first_act_date: archiveRecord.act_date,
+      last_act_date: archiveRecord.act_date,
+    },
+    counts: {
+      total: 1,
+      giunta: 1,
+      consiglio: 0,
+      altro: 0,
+      publishable: 1,
+      minimised: 0,
+      metadata_only: 0,
+      archived_documents: 1,
+    },
+    known_limits: [],
+    items: [archiveRecord],
   });
   await writeJson(path.join(publicDir, "status.json"), {
     counts,
@@ -138,6 +222,17 @@ test("sanitises committed public artifacts and is idempotent", async () => {
   );
 
   try {
+    const archivePath = path.join(publicDir, "delibere-archive.json");
+    const validArchive = await readFile(archivePath, "utf8");
+    await writeJson(archivePath, { items: [{ id: "malformed" }] });
+    await assert.rejects(
+      sanitiseAlboPublicArtifacts(outDir),
+      /Invalid deliberations archive/i,
+    );
+    await assert.doesNotReject(readFile(documentPath));
+    await assert.doesNotReject(readFile(orphanDocumentPath));
+    await writeFile(archivePath, validArchive, "utf8");
+
     const first = await sanitiseAlboPublicArtifacts(outDir);
     const firstOutputs = await readOutputs(publicDir);
     const second = await sanitiseAlboPublicArtifacts(outDir);
@@ -152,6 +247,9 @@ test("sanitises committed public artifacts and is idempotent", async () => {
       documents: unknown[];
       decisions: Array<Record<string, unknown>>;
     };
+    const archive = JSON.parse(outputs[3] ?? "{}") as {
+      items: Array<Record<string, unknown>>;
+    };
 
     assert.equal(first.revoked_documents.length, 2);
     assert.equal(second.revoked_documents.length, 0);
@@ -162,8 +260,19 @@ test("sanitises committed public artifacts and is idempotent", async () => {
     assert.equal(manifest.documents.length, 0);
     assert.equal(manifest.decisions[0]?.reason, "privacy_excluded");
     assert.equal(manifest.counts.revoked, 2);
+    assert.equal(archive.items[0]?.public_visibility, "metadata_only");
+    assert.equal(archive.items[0]?.archived_document, null);
+    assert.match(String(archive.items[0]?.subject), /Metadato minimo/i);
+    assert.match(
+      String(
+        (archive.items[0]?.presentation as Record<string, unknown> | undefined)
+          ?.display_title,
+      ),
+      /Metadato minimo/i,
+    );
     assert.doesNotMatch(serialised, /PERSONA FITTIZIA/i);
     assert.doesNotMatch(serialised, /2026_4301_2_P/i);
+    assert.doesNotMatch(serialised, /ROSSI MARIO/i);
     await assert.rejects(readFile(documentPath));
     await assert.rejects(readFile(orphanDocumentPath));
   } finally {
@@ -177,6 +286,7 @@ function readOutputs(publicDir: string): Promise<string[]> {
       "latest.json",
       "diff-latest.json",
       "documents-manifest.json",
+      "delibere-archive.json",
       "status.json",
       "run-latest.md",
     ].map((file) => readFile(path.join(publicDir, file), "utf8")),

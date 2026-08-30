@@ -7,7 +7,10 @@ import test from "node:test";
 import { fileURLToPath } from "node:url";
 
 import {
+  ALBO_PRIVACY_POLICY_VERSION,
+  buildDelibereArchive,
   diffAlboItems,
+  isDelibereArchive,
   normalizeAlboRecords,
   parseArgs,
   parseTinnvisionHtml,
@@ -15,6 +18,7 @@ import {
   reapplyAlboPublicSafety,
   runAlboIngestion,
   type AlboRawSnapshot,
+  type PublicRecord,
 } from "./albo-tinnvision";
 import {
   ALBO_CLASSIFICATION_DICTIONARY_VERSION,
@@ -24,19 +28,24 @@ import {
 import { ALBO_PUBLICATION_STANDARDISATION_KNOWN_LIMIT } from "./albo-publication-standardisation";
 import { ALBO_PRETORIO_LAMEZIA_SOURCE } from "./albo-source-config";
 import {
+  appendCurrentPublicLatest,
+  assertDelibereSeedHistoryAvailable,
+  assertDelibereSeedSourceCoverage,
+} from "./seed-delibere-archive-history";
+import {
   identifyInstitutionalSessionCandidate,
   identifyInstitutionalSessionCandidates,
   type InstitutionalSessionCandidateInput,
 } from "./institutional-session-candidates";
 
 const FIXTURE_RETRIEVED_AT = "2026-06-19T10:00:00.000Z";
+const REPO_ROOT = path.resolve(
+  path.dirname(fileURLToPath(import.meta.url)),
+  "..",
+);
 
 test("defaults CLI output to repository data directory", () => {
-  const repoRoot = path.resolve(
-    path.dirname(fileURLToPath(import.meta.url)),
-    "..",
-  );
-  assert.equal(parseArgs([]).outDir, path.join(repoRoot, "data"));
+  assert.equal(parseArgs([]).outDir, path.join(REPO_ROOT, "data"));
 });
 
 test("parses Tinnvision XML export and normalises minimal albo_item fields", () => {
@@ -805,6 +814,12 @@ test("reapplies current privacy policy to the public baseline and revokes its PD
       "metadata_only",
     );
     assert.equal(result.publicLatest.items[0]?.privacy_risk, "high");
+    assert.deepEqual(result.publicLatest.items[0]?.privacy_attestation, {
+      schema_version: "albo-privacy-policy-attestation.v1",
+      policy_version: ALBO_PRIVACY_POLICY_VERSION,
+      assessment_basis: "source_record",
+      status: "current",
+    });
     assert.equal("content_hash" in (result.publicLatest.items[0] ?? {}), false);
     assert.doesNotMatch(serialisedPublicOutputs, /PERSONA FITTIZIA/i);
     assert.doesNotMatch(serialisedPublicOutputs, /2026_4201_2_P/i);
@@ -818,6 +833,74 @@ test("reapplies current privacy policy to the public baseline and revokes its PD
   } finally {
     await rm(tmp, { recursive: true, force: true });
   }
+});
+
+test("keeps unattested restricted history metadata-only until source reacquisition", () => {
+  const legacyRestricted = {
+    id: "albo-2026-legacy-restricted",
+    source: ALBO_PRETORIO_LAMEZIA_SOURCE.source,
+    source_url: ALBO_PRETORIO_LAMEZIA_SOURCE.sourceUrl,
+    retrieved_at: "2026-06-18T10:00:00.000Z",
+    publication_number: "2026/legacy-restricted",
+    publication_start: "2026-06-18",
+    publication_end: "2026-07-03",
+    office: null,
+    act_type: null,
+    act_number: "42",
+    act_date: "2026-06-17",
+    verification_status: "official_source_acquired",
+    privacy_risk: "medium",
+    public_visibility: "publishable_with_minimisation",
+    classification: classifyAlboRecordCategory({
+      office: "AVVOCATURA",
+      act_type: "DELIBERAZIONE DI GIUNTA",
+      subject: "CONTENZIOSO",
+    }),
+    deliberation_body: "giunta",
+    known_limits: [],
+    subject:
+      "Oggetto minimizzato per prudenza privacy; consultare la fonte ufficiale.",
+    document_url: null,
+    public_note: "Record pubblicato con minimizzazione automatica.",
+  } satisfies PublicRecord;
+
+  const projected = reapplyAlboPublicSafety(legacyRestricted);
+  assert.equal(projected.public_visibility, "metadata_only");
+  assert.equal(projected.privacy_risk, "high");
+  assert.equal(projected.office, null);
+  assert.equal(projected.act_type, null);
+  assert.equal(projected.act_number, null);
+  assert.equal(projected.document_url, null);
+  assert.equal(projected.deliberation_body, "giunta");
+  assert.match(String(projected.subject), /Metadato minimo/i);
+  assert.deepEqual(projected.privacy_attestation, {
+    schema_version: "albo-privacy-policy-attestation.v1",
+    policy_version: ALBO_PRIVACY_POLICY_VERSION,
+    assessment_basis: "redacted_public_record",
+    status: "reacquisition_required",
+  });
+  const replayed = reapplyAlboPublicSafety(projected);
+  assert.equal(replayed.public_visibility, "metadata_only");
+  assert.equal(
+    (replayed.privacy_attestation as { status?: unknown })?.status,
+    "reacquisition_required",
+  );
+
+  const stalePolicy = reapplyAlboPublicSafety({
+    ...legacyRestricted,
+    privacy_attestation: {
+      schema_version: "albo-privacy-policy-attestation.v1",
+      policy_version: "albo-privacy-policy.previous",
+      assessment_basis: "source_record",
+      status: "current",
+    },
+  });
+  assert.equal(stalePolicy.public_visibility, "metadata_only");
+  assert.equal(stalePolicy.privacy_risk, "high");
+  assert.equal(
+    (stalePolicy.privacy_attestation as { status?: unknown })?.status,
+    "reacquisition_required",
+  );
 });
 
 test("does not report presentation-profile changes as source-record changes", async () => {
@@ -1245,6 +1328,389 @@ test("archives only official low-risk publishable PDFs into public documents sto
   assert.equal(reused.documentsManifest.counts.archived, 1);
   assert.equal(reused.documentsManifest.documents[0].sha256, expectedSha);
   assert.deepEqual(fetchCalls, [documentUrl]);
+});
+
+test("builds a cumulative public-safe deliberations archive and honours later exclusions", async () => {
+  const tmp = await mkdtemp(path.join(tmpdir(), "albo-delibere-archive-"));
+  const firstPath = path.join(tmp, "first.xml");
+  const secondPath = path.join(tmp, "second.xml");
+  const excludedPath = path.join(tmp, "excluded.xml");
+  const outDir = path.join(tmp, "data");
+  const documentUrl = "https://albo.tinnvision.cloud/documenti/2026/10.pdf";
+  const pdfBytes = new TextEncoder().encode("%PDF-1.7\ndelibera public-safe\n");
+
+  await writeFile(
+    firstPath,
+    xmlRecord(
+      "2026/10",
+      "DELIBERAZIONE DI GIUNTA",
+      "SEGRETERIA GENERALE",
+      "Approvazione del bilancio di previsione",
+      "10",
+      documentUrl,
+    ),
+    "utf8",
+  );
+  await writeFile(
+    secondPath,
+    xmlRecord(
+      "2026/11",
+      "DELIBERAZIONE DI CONSIGLIO",
+      "SEGRETERIA GENERALE",
+      "Approvazione del regolamento comunale",
+      "11",
+    ),
+    "utf8",
+  );
+  await writeFile(
+    excludedPath,
+    [
+      xmlRecord(
+        "2026/10",
+        "DELIBERAZIONE DI GIUNTA",
+        "SERVIZI SOCIALI",
+        "Contributo economico riferito a minore",
+        "10",
+      ),
+      xmlRecord(
+        "2026/11",
+        "DELIBERAZIONE DI CONSIGLIO",
+        "SEGRETERIA GENERALE",
+        "Approvazione del regolamento comunale",
+        "11",
+      ),
+    ].join("\n"),
+    "utf8",
+  );
+
+  const first = await runAlboIngestion({
+    outDir,
+    fromFile: firstPath,
+    inputFormat: "xml",
+    retrievedAt: "2026-06-19T08:00:00.000Z",
+    pdfFetch: async () =>
+      new Response(pdfBytes, {
+        status: 200,
+        headers: { "content-type": "application/pdf" },
+      }),
+  });
+  assert.equal(first.delibereArchive.counts.total, 1);
+  assert.equal(first.delibereArchive.counts.giunta, 1);
+  assert.equal(first.delibereArchive.counts.archived_documents, 1);
+
+  const second = await runAlboIngestion({
+    outDir,
+    fromFile: secondPath,
+    inputFormat: "xml",
+    retrievedAt: "2026-06-19T09:00:00.000Z",
+  });
+  assert.equal(second.delibereArchive.counts.total, 2);
+  assert.equal(second.delibereArchive.counts.giunta, 1);
+  assert.equal(second.delibereArchive.counts.consiglio, 1);
+  assert.equal(second.delibereArchive.counts.archived_documents, 0);
+  assert.equal(
+    second.delibereArchive.items.find((item) => item.id === "albo-2026-10")
+      ?.archived_document,
+    null,
+  );
+  assert.ok(
+    second.delibereArchive.items.every(
+      (item) => item.presentation?.standardisation.input_field === "subject",
+    ),
+  );
+
+  const third = await runAlboIngestion({
+    outDir,
+    fromFile: excludedPath,
+    inputFormat: "xml",
+    retrievedAt: "2026-06-19T10:00:00.000Z",
+  });
+  assert.equal(third.delibereArchive.counts.total, 1);
+  assert.equal(third.delibereArchive.counts.giunta, 0);
+  assert.equal(third.delibereArchive.counts.consiglio, 1);
+  assert.deepEqual(
+    third.delibereArchive.items.map((item) => item.id),
+    ["albo-2026-11"],
+  );
+
+  const committedReplay = [{ sha: "committed", latest: second.publicLatest }];
+  assert.equal(
+    appendCurrentPublicLatest(committedReplay, second.publicLatest).length,
+    1,
+  );
+  const replayWithWorktreeLatest = appendCurrentPublicLatest(
+    committedReplay,
+    third.publicLatest,
+  );
+  assert.equal(replayWithWorktreeLatest.length, 2);
+  assert.equal(replayWithWorktreeLatest.at(-1)?.sha, "worktree");
+  let replayedArchive = second.delibereArchive;
+  for (const snapshot of replayWithWorktreeLatest) {
+    replayedArchive = buildDelibereArchive(
+      replayedArchive,
+      snapshot.latest,
+      third.documentsManifest,
+    );
+  }
+  assert.deepEqual(
+    replayedArchive.items.map((item) => item.id),
+    ["albo-2026-11"],
+  );
+
+  const archiveJson = await readFile(third.paths.delibereArchive, "utf8");
+  assert.match(archiveJson, /non certifica la completezza storica/i);
+  assert.doesNotMatch(archiveJson, /riferito a minore/i);
+});
+
+test("preserves the public-safe deliberation body for newly restricted acts", async () => {
+  const tmp = await mkdtemp(
+    path.join(tmpdir(), "albo-delibere-restricted-body-"),
+  );
+  const fixturePath = path.join(tmp, "albo.xml");
+  const outDir = path.join(tmp, "data");
+  await writeFile(
+    fixturePath,
+    [
+      xmlRecord(
+        "2026/21",
+        "DELIBERAZIONE DI GIUNTA",
+        "AVVOCATURA",
+        "Contenzioso e proposta di transazione",
+        "21",
+      ),
+      xmlRecord(
+        "2026/22",
+        "DELIBERAZIONE DI CONSIGLIO",
+        "SERVIZI DEMOGRAFICI",
+        "Pubblicazione di matrimonio",
+        "22",
+      ),
+    ].join("\n"),
+    "utf8",
+  );
+
+  const result = await runAlboIngestion({
+    outDir,
+    fromFile: fixturePath,
+    inputFormat: "xml",
+    retrievedAt: "2026-06-19T11:00:00.000Z",
+  });
+  const giunta = result.publicLatest.items.find(
+    (item) => item.id === "albo-2026-21",
+  );
+  const consiglio = result.publicLatest.items.find(
+    (item) => item.id === "albo-2026-22",
+  );
+
+  assert.equal(giunta?.public_visibility, "publishable_with_minimisation");
+  assert.equal(giunta?.deliberation_body, "giunta");
+  assert.equal(consiglio?.public_visibility, "metadata_only");
+  assert.equal(consiglio?.deliberation_body, "consiglio");
+  assert.equal(
+    (giunta?.privacy_attestation as { policy_version?: unknown })
+      ?.policy_version,
+    ALBO_PRIVACY_POLICY_VERSION,
+  );
+  assert.deepEqual(
+    result.delibereArchive.items.map((item) => [
+      item.id,
+      item.deliberation_body,
+    ]),
+    [
+      ["albo-2026-22", "consiglio"],
+      ["albo-2026-21", "giunta"],
+    ],
+  );
+  assert.equal(result.delibereArchive.counts.giunta, 1);
+  assert.equal(result.delibereArchive.counts.consiglio, 1);
+});
+
+test("keeps an immutable 63-record baseline for the initial deliberations seed", async () => {
+  const baseline = JSON.parse(
+    await readFile(
+      path.join(
+        REPO_ROOT,
+        "scripts",
+        "fixtures",
+        "delibere-archive-seed-baseline.json",
+      ),
+      "utf8",
+    ),
+  ) as {
+    schema_version: string;
+    counts: { total: number; giunta: number; consiglio: number };
+    items: Array<{ id: string; deliberation_body: string }>;
+  };
+  const ids = new Set(baseline.items.map((item) => item.id));
+  const giunta = baseline.items.filter(
+    (item) => item.deliberation_body === "giunta",
+  ).length;
+  const consiglio = baseline.items.filter(
+    (item) => item.deliberation_body === "consiglio",
+  ).length;
+
+  assert.equal(baseline.schema_version, "delibere-archive-seed-baseline.v1");
+  assert.deepEqual(baseline.counts, {
+    total: 63,
+    giunta: 43,
+    consiglio: 20,
+  });
+  assert.equal(baseline.items.length, baseline.counts.total);
+  assert.equal(ids.size, baseline.counts.total);
+  assert.equal(giunta, baseline.counts.giunta);
+  assert.equal(consiglio, baseline.counts.consiglio);
+});
+
+test("fails closed when a deliberations seed lacks bootstrap or complete history", () => {
+  assert.throws(
+    () =>
+      assertDelibereSeedHistoryAvailable({
+        has_bootstrap: false,
+        shallow_repository: true,
+      }),
+    /bootstrap assente.*cronologia Git shallow/i,
+  );
+  assert.doesNotThrow(() =>
+    assertDelibereSeedHistoryAvailable({
+      has_bootstrap: true,
+      shallow_repository: true,
+    }),
+  );
+  assert.throws(
+    () =>
+      assertDelibereSeedSourceCoverage(
+        new Set(["albo-2026-2753", "albo-2026-2751"]),
+        ["albo-2026-2753", "albo-2026-2751", "albo-2026-2567"],
+      ),
+    /Seed delibere incompleto.*albo-2026-2567/i,
+  );
+  assert.equal(
+    isDelibereArchive({
+      generated_at: "2026-08-30T00:00:00.000Z",
+      source: "Fonte pubblica",
+      source_url: "https://example.test/albo",
+      verification_status: "verification_required",
+      coverage: {},
+      counts: {},
+      known_limits: [],
+      items: [
+        {
+          id: "albo-2026-2753",
+          source: "Fonte pubblica",
+          retrieved_at: "2026-08-30T00:00:00.000Z",
+          verification_status: "verification_required",
+          known_limits: [],
+        },
+      ],
+    }),
+    false,
+  );
+});
+
+test("validates the live cumulative archive against dynamic safety and document invariants", async () => {
+  const archive = JSON.parse(
+    await readFile(
+      path.join(REPO_ROOT, "data", "public", "albo", "delibere-archive.json"),
+      "utf8",
+    ),
+  ) as {
+    counts: Record<string, number>;
+    items: Array<Record<string, unknown>>;
+  };
+  const manifest = JSON.parse(
+    await readFile(
+      path.join(REPO_ROOT, "data", "public", "albo", "documents-manifest.json"),
+      "utf8",
+    ),
+  ) as { documents: Array<Record<string, unknown>> };
+  const manifestById = new Map(
+    manifest.documents.map((document) => [document.id, document]),
+  );
+
+  const giunta = archive.items.filter(
+    (item) => item.deliberation_body === "giunta",
+  ).length;
+  const consiglio = archive.items.filter(
+    (item) => item.deliberation_body === "consiglio",
+  ).length;
+  const altro = archive.items.filter(
+    (item) => item.deliberation_body === "altro",
+  ).length;
+  const publishable = archive.items.filter(
+    (item) => item.public_visibility === "publishable",
+  ).length;
+  const minimised = archive.items.filter(
+    (item) => item.public_visibility === "publishable_with_minimisation",
+  ).length;
+  const metadataOnly = archive.items.filter(
+    (item) => item.public_visibility === "metadata_only",
+  ).length;
+  const archived = archive.items.filter(
+    (item) => item.archived_document !== null,
+  );
+
+  assert.equal(archive.counts.total, archive.items.length);
+  assert.equal(archive.counts.giunta, giunta);
+  assert.equal(archive.counts.consiglio, consiglio);
+  assert.equal(archive.counts.altro, altro);
+  assert.equal(archive.counts.publishable, publishable);
+  assert.equal(archive.counts.minimised, minimised);
+  assert.equal(archive.counts.metadata_only, metadataOnly);
+  assert.equal(archive.counts.archived_documents, archived.length);
+  assert.equal(giunta + consiglio + altro, archive.items.length);
+  assert.ok(
+    archive.items.every((item) => {
+      const presentation = item.presentation as
+        | Record<string, unknown>
+        | undefined;
+      const privacyAttestation = item.privacy_attestation as
+        | Record<string, unknown>
+        | undefined;
+      return (
+        item.public_visibility !== "do_not_publish" &&
+        typeof presentation?.display_title === "string" &&
+        typeof presentation.search_text === "string" &&
+        privacyAttestation?.schema_version ===
+          "albo-privacy-policy-attestation.v1" &&
+        privacyAttestation.policy_version === ALBO_PRIVACY_POLICY_VERSION &&
+        (privacyAttestation.status === "current" ||
+          privacyAttestation.status === "reacquisition_required")
+      );
+    }),
+  );
+
+  const restricted = archive.items.filter(
+    (item) => item.public_visibility !== "publishable",
+  );
+  assert.ok(
+    restricted.every(
+      (item) =>
+        item.office == null &&
+        item.act_type == null &&
+        item.document_url == null &&
+        item.content_hash == null &&
+        item.archived_document == null,
+    ),
+  );
+
+  for (const item of archived) {
+    const document = item.archived_document as Record<string, unknown>;
+    const authorised = manifestById.get(item.id) as
+      | Record<string, unknown>
+      | undefined;
+    assert.equal(item.public_visibility, "publishable");
+    assert.equal(item.privacy_risk, "low");
+    assert.equal(authorised?.sha256, document.sha256);
+    assert.equal(authorised?.storage_path, document.storage_path);
+
+    const storagePath = String(document.storage_path);
+    const bytes = await readFile(path.join(REPO_ROOT, storagePath));
+    assert.equal(
+      createHash("sha256").update(bytes).digest("hex"),
+      document.sha256,
+    );
+    assert.equal(bytes.byteLength, document.size_bytes);
+  }
 });
 
 test("discovers official Tinnvision PDF attachments only for low-risk publishable records", async () => {

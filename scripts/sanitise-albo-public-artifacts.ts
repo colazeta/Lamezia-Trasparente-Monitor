@@ -5,7 +5,11 @@ import process from "node:process";
 import { fileURLToPath, pathToFileURL } from "node:url";
 
 import {
+  buildDelibereArchive,
+  isDelibereArchive,
   reapplyAlboPublicSafety,
+  type AlboDocumentsManifest,
+  type PublicLatest,
   type PublicRecord,
   type PublicVisibility,
 } from "./albo-tinnvision";
@@ -30,16 +34,21 @@ export async function sanitiseAlboPublicArtifacts(
     latest: path.join(publicDir, "latest.json"),
     diff: path.join(publicDir, "diff-latest.json"),
     manifest: path.join(publicDir, "documents-manifest.json"),
+    archive: path.join(publicDir, "delibere-archive.json"),
     status: path.join(publicDir, "status.json"),
     runLog: path.join(publicDir, "run-latest.md"),
   };
-  const [latest, diff, manifest, status, runLog] = await Promise.all([
+  const [latest, diff, manifest, archive, status, runLog] = await Promise.all([
     readJsonObject(paths.latest),
     readJsonObject(paths.diff),
     readJsonObject(paths.manifest),
+    readJsonObject(paths.archive),
     readJsonObject(paths.status),
     readFile(paths.runLog, "utf8"),
   ]);
+  if (!isDelibereArchive(archive)) {
+    throw new Error(`Invalid deliberations archive at ${paths.archive}`);
+  }
 
   const records = [
     ...publicRecordArray(latest.items, "latest.items"),
@@ -146,6 +155,12 @@ export async function sanitiseAlboPublicArtifacts(
     revoked: numberValue(previousManifestCounts.revoked) + revokedPaths.length,
   };
 
+  const sanitisedArchive = buildDelibereArchive(
+    archive,
+    latest as unknown as PublicLatest,
+    manifest as unknown as AlboDocumentsManifest,
+  );
+
   status.counts = counts;
   status.standardisation = ALBO_PUBLICATION_STANDARDISATION;
   status.known_limits = withStandardisationLimit(status.known_limits);
@@ -154,6 +169,7 @@ export async function sanitiseAlboPublicArtifacts(
     writeJsonAtomic(paths.latest, latest),
     writeJsonAtomic(paths.diff, diff),
     writeJsonAtomic(paths.manifest, manifest),
+    writeJsonAtomic(paths.archive, sanitisedArchive),
     writeJsonAtomic(paths.status, status),
     writeTextAtomic(paths.runLog, updateRunLog(runLog, counts)),
   ]);
