@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { PopulationStructurePanel } from "@/components/demographics/PopulationStructurePanel";
 
@@ -63,8 +63,14 @@ describe("PopulationStructurePanel", () => {
       await screen.findByRole("heading", { name: "Chi vive a Lamezia" }),
     ).toBeInTheDocument();
     expect(screen.getByText("stima")).toBeInTheDocument();
-    expect(screen.getByText("12,7%")).toBeInTheDocument();
-    expect(screen.getByText("23,1%")).toBeInTheDocument();
+
+    const youngCard = screen.getByText("0–14 anni").parentElement;
+    const elderlyCard = screen.getByText("65 anni e più").parentElement;
+    expect(youngCard).not.toBeNull();
+    expect(elderlyCard).not.toBeNull();
+    expect(within(youngCard as HTMLElement).getByText("12,7%")).toBeInTheDocument();
+    expect(within(elderlyCard as HTMLElement).getByText("23,1%")).toBeInTheDocument();
+
     expect(screen.getByText("182,4")).toBeInTheDocument();
     expect(
       screen.getByRole("img", {
