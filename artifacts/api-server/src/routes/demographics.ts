@@ -206,7 +206,7 @@ router.get("/demographics/series/:key", async (req, res) => {
           ? [{
               period: "2019",
               type: "methodological",
-              note: "Dal 2019 il Censimento permanente e la nuova contabilizzazione demografica richiedono cautela nei confronti di lungo periodo; il dato ufficiale resta comunque esposto con la propria provenienza e release.",
+              note: "Il tratto 2002–2018 proviene dalla ricostruzione statistica RBD su classificazione territoriale 2019; dal 2019 il Censimento permanente e la nuova contabilità micro-demografica MIDEA/ANVIS definiscono la serie corrente. Le due provenienze restano distinguibili nelle release e nello status dell'osservazione.",
             }]
           : [],
     },
@@ -229,7 +229,10 @@ router.get("/demographics/change-drivers", async (req, res) => {
     granularity,
     source: {
       name: "ISTAT",
-      dataset: granularity === "annual" ? "P02" : "D7B",
+      dataset:
+        granularity === "annual"
+          ? "RBD 2002–2018 + P02 2019+"
+          : "D7B",
       url:
         granularity === "annual"
           ? "https://demo.istat.it/app/?i=P02&l=it"
@@ -251,11 +254,11 @@ router.get("/demographics/change-drivers", async (req, res) => {
           "iscritti per altri motivi − cancellati per altri motivi",
       },
       annualReconciliation:
-        "Per il bilancio annuale definitivo la variazione è riconciliata come saldo naturale + saldo migratorio interno + saldo migratorio estero + aggiustamento statistico. L'aggiustamento ISTAT incorpora le altre poste anagrafiche e la sovra/sotto-copertura censuaria, quindi non viene sommato due volte il saldo per altri motivi.",
+        "Per il 2019+ definitivo la variazione è riconciliata come saldo naturale + saldo migratorio interno + saldo migratorio estero + aggiustamento statistico. L'aggiustamento ISTAT incorpora le altre poste anagrafiche e la sovra/sotto-copertura censuaria, quindi non viene sommato due volte il saldo per altri motivi. Nel tratto RBD 2002–2018 sono esposte le poste ricostruite disponibili; se una posta di chiusura non è pubblicata, la quadratura resta dichiarata come parziale anziché essere imputata artificialmente.",
       monthlyReconciliation:
         "Nel bilancio mensile provvisorio la popolazione di fine periodo è costruita sui flussi naturale, migratorio interno e migratorio estero; le altre poste e la copertura censuaria entrano nel successivo consolidamento definitivo.",
       temporalBreak:
-        "Dal 2019 ISTAT contabilizza i flussi per data dell'evento nell'ambito della nuova contabilità micro-demografica MIDEA/ANVIS. I confronti con periodi precedenti richiedono una serie ricostruita separata.",
+        "Il tratto 2002–2018 è la ricostruzione statistica RBD, classificata come reconstructed. Dal 2019 ISTAT usa il Censimento permanente e contabilizza i flussi per data dell'evento nell'ambito della nuova contabilità micro-demografica MIDEA/ANVIS. La cesura resta esplicita e le due provenienze non vengono presentate come metodologicamente identiche.",
       reconciliationStatus:
         "exact indica una quadratura entro ±0,5 persone; mismatch segnala che le poste disponibili non quadrano con la variazione osservata e richiede verifica; partial indica che manca almeno una posta necessaria.",
       narrative:
