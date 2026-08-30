@@ -22,7 +22,7 @@ import {
   findEvidenceIntervention,
   type EvidenceIntervention,
   type EvidenceStrength,
-} from "@/data/evidenceInterventions";
+} from "@/data/evidenceInterventionsArchive";
 
 function evidenceBadgeVariant(strength: EvidenceStrength) {
   if (strength === "molto_forte") return "default" as const;
