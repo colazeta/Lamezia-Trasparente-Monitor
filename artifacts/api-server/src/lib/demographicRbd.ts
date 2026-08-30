@@ -5,13 +5,15 @@ import {
   demographicReleasesTable,
   demographicSeriesTable,
   feedStatusTable,
+  type DemographicSeries,
 } from "@workspace/db";
 import { and, eq } from "drizzle-orm";
 import { logger } from "./logger";
 import {
   canonicalDimensionKey,
   LAMEZIA_ISTAT_CODE,
-  parseSdmxCsv,
+  mapSdmxStatus,
+  parseCsvRow,
   POPULATION_SERIES_KEY,
 } from "./demographics";
 import {
@@ -33,6 +35,14 @@ export type RbdFieldConfig = {
   referenceType: "stock" | "flow";
 };
 
+export type RbdObservation = {
+  dataType: string;
+  period: string;
+  value: number;
+  rawStatus: string | null;
+  qualityFlags: string[];
+};
+
 // Il dataflow RBD espone anche ACQCITIZ, ma l'acquisizione di cittadinanza non
 // modifica la popolazione totale e non entra nella quadratura demografica.
 // Importiamo quindi solo le otto poste necessarie alla storia del bilancio.
@@ -47,35 +57,92 @@ export const RBD_FIELDS: RbdFieldConfig[] = [
   { field: "populationEnd", dataType: "DEC", referenceType: "stock" },
 ];
 
-export function rbdSeriesKey(dataType: string): string {
+const RBD_DATA_TYPES = new Set(RBD_FIELDS.map((field) => field.dataType));
+
+export function rbdCombinedSeriesKey(): string {
   // Dimension order: FREQ.REF_AREA.DATA_TYPE.AGE.SEX.CITIZENSHIP.
-  // Lamezia is explicitly 079160 in the Calabria RBD codelist; 9/TOTAL select
-  // both sexes and all citizenships.
-  return `A.${LAMEZIA_ISTAT_CODE}.${dataType}.TOTAL.9.TOTAL`;
+  // Lamezia è 079160 nella codelist Calabria; 9/TOTAL selezionano entrambi i
+  // sessi e tutte le cittadinanze. In SDMX il `+` seleziona più valori della
+  // stessa dimensione, quindi tutte le otto poste arrivano con una sola query.
+  const dataTypes = RBD_FIELDS.map((field) => field.dataType).join("+");
+  return `A.${LAMEZIA_ISTAT_CODE}.${dataTypes}.TOTAL.9.TOTAL`;
 }
 
-export function rbdSdmxUrl(config: RbdFieldConfig): string {
-  const key = rbdSeriesKey(config.dataType);
-  return `${RBD_SOURCE_URL}/SDMXWS/rest/data/${RBD_DATAFLOW}/${key}?startPeriod=2002&endPeriod=2018`;
+export function rbdSdmxUrl(): string {
+  return `${RBD_SOURCE_URL}/SDMXWS/rest/data/${RBD_DATAFLOW}/${rbdCombinedSeriesKey()}?startPeriod=2002&endPeriod=2018`;
 }
 
-export function normaliseRbdCsv(csv: string) {
-  return parseSdmxCsv(csv, "reconstructed")
-    .filter((point) => {
-      const year = Number(point.period.slice(0, 4));
-      return Number.isInteger(year) && year >= 2002 && year <= 2018;
-    })
-    .map((point) => ({
-      ...point,
-      sourceStatus: "reconstructed" as const,
+export function parseRbdCsv(csv: string): RbdObservation[] {
+  const lines = csv.split(/\r?\n/).filter((line) => line.trim().length > 0);
+  if (lines.length < 2) return [];
+
+  const header = parseCsvRow(lines[0]).map((value) => value.trim());
+  const dataTypeIdx = header.indexOf("DATA_TYPE");
+  const periodIdx = header.indexOf("TIME_PERIOD");
+  const valueIdx = header.indexOf("OBS_VALUE");
+  const statusIdx = header.indexOf("OBS_STATUS");
+  if (dataTypeIdx === -1 || periodIdx === -1 || valueIdx === -1) {
+    throw new Error(
+      "ISTAT RBD CSV privo di DATA_TYPE, TIME_PERIOD o OBS_VALUE",
+    );
+  }
+
+  const out: RbdObservation[] = [];
+  for (let i = 1; i < lines.length; i++) {
+    const cols = parseCsvRow(lines[i]);
+    const dataType = cols[dataTypeIdx]?.trim();
+    const period = cols[periodIdx]?.trim();
+    const rawValue = cols[valueIdx]?.trim();
+    if (!dataType || !RBD_DATA_TYPES.has(dataType) || !period || !rawValue) {
+      continue;
+    }
+
+    const year = Number(period.slice(0, 4));
+    if (!Number.isInteger(year) || year < 2002 || year > 2018) continue;
+
+    const value = Number(rawValue);
+    if (!Number.isFinite(value)) continue;
+
+    const rawStatus =
+      statusIdx >= 0 && cols[statusIdx]?.trim()
+        ? cols[statusIdx].trim()
+        : null;
+    const mapped = mapSdmxStatus(rawStatus, "reconstructed");
+    out.push({
+      dataType,
+      period,
+      value,
+      rawStatus,
       qualityFlags: [
-        ...new Set([...point.qualityFlags, "source_reconstructed"]),
+        ...new Set(["source_reconstructed", ...mapped.qualityFlags]),
       ],
-    }));
+    });
+  }
+
+  return out.sort(
+    (left, right) =>
+      left.dataType.localeCompare(right.dataType) ||
+      left.period.localeCompare(right.period),
+  );
 }
 
-function hashPayload(payload: string) {
-  return createHash("sha256").update(payload).digest("hex");
+function observationsForType(
+  observations: RbdObservation[],
+  dataType: string,
+): RbdObservation[] {
+  return observations.filter((point) => point.dataType === dataType);
+}
+
+function hashObservations(points: RbdObservation[]): string {
+  // L'hash è specifico della singola posta, non dell'intero bundle. Se ISTAT
+  // rettificasse solo una componente, le altre serie non apparirebbero
+  // artificiosamente come revisionate.
+  const canonical = points.map((point) => ({
+    period: point.period,
+    value: point.value,
+    rawStatus: point.rawStatus,
+  }));
+  return createHash("sha256").update(JSON.stringify(canonical)).digest("hex");
 }
 
 async function targetSeries(config: RbdFieldConfig) {
@@ -117,35 +184,6 @@ async function hasRbdRelease(seriesId: number): Promise<boolean> {
   return Boolean(release);
 }
 
-async function alreadyBackfilled(config: RbdFieldConfig): Promise<boolean> {
-  const series = await targetSeries(config);
-  return hasRbdRelease(series.id);
-}
-
-async function fetchRbdSeries(config: RbdFieldConfig) {
-  const url = rbdSdmxUrl(config);
-  const response = await fetch(url, {
-    headers: {
-      "User-Agent": USER_AGENT,
-      Accept: "application/vnd.sdmx.data+csv;version=1.0.0",
-    },
-  });
-  if (!response.ok) {
-    throw new Error(
-      `ISTAT RBD ${config.dataType} failed with status ${response.status}`,
-    );
-  }
-
-  const rawPayload = await response.text();
-  const observations = normaliseRbdCsv(rawPayload);
-  if (observations.length !== 17) {
-    throw new Error(
-      `ISTAT RBD ${config.dataType}: attese 17 annualità 2002–2018, ricevute ${observations.length}`,
-    );
-  }
-  return { url, response, rawPayload, observations };
-}
-
 function releaseMetadata(config: RbdFieldConfig) {
   return {
     dataflow: RBD_DATAFLOW_ID,
@@ -156,59 +194,92 @@ function releaseMetadata(config: RbdFieldConfig) {
     territorialClassification: 2019,
     excludedPartial2001: true,
     methodologyBreakAt: 2019,
+    acquisitionMode: "single-multiseries-sdmx-query",
   };
 }
 
-async function persistRbdField(config: RbdFieldConfig) {
-  const series = await targetSeries(config);
-  const payload = await fetchRbdSeries(config);
-  const hash = hashPayload(payload.rawPayload);
+async function fetchRbdBundle() {
+  const url = rbdSdmxUrl();
+  const response = await fetch(url, {
+    headers: {
+      "User-Agent": USER_AGENT,
+      Accept: "application/vnd.sdmx.data+csv;version=1.0.0",
+    },
+  });
+  if (!response.ok) {
+    throw new Error(`ISTAT RBD bundle failed with status ${response.status}`);
+  }
+
+  const rawPayload = await response.text();
+  const observations = parseRbdCsv(rawPayload);
+  for (const config of RBD_FIELDS) {
+    const count = observationsForType(observations, config.dataType).length;
+    if (count !== 17) {
+      throw new Error(
+        `ISTAT RBD ${config.dataType}: attese 17 annualità 2002–2018, ricevute ${count}`,
+      );
+    }
+  }
+
+  return { url, response, rawPayload, observations };
+}
+
+type RbdBundle = Awaited<ReturnType<typeof fetchRbdBundle>>;
+
+async function persistRelease(options: {
+  series: DemographicSeries;
+  config: RbdFieldConfig;
+  bundle: RbdBundle;
+  dimensions: Record<string, string>;
+  unit: string;
+}) {
+  const points = observationsForType(
+    options.bundle.observations,
+    options.config.dataType,
+  );
+  const hash = hashObservations(points);
   const [sameRelease] = await db
     .select({ id: demographicReleasesTable.id })
     .from(demographicReleasesTable)
     .where(
       and(
-        eq(demographicReleasesTable.seriesId, series.id),
+        eq(demographicReleasesTable.seriesId, options.series.id),
         eq(demographicReleasesTable.sourceHash, hash),
       ),
     )
     .limit(1);
-  if (sameRelease) {
-    return { inserted: 0, changed: false };
-  }
+  if (sameRelease) return { inserted: 0, changed: false };
 
   const now = new Date();
   await db.transaction(async (tx) => {
     const [release] = await tx
       .insert(demographicReleasesTable)
       .values({
-        seriesId: series.id,
+        seriesId: options.series.id,
         sourceDataset: RBD_DATAFLOW_ID,
-        sourceUrl: payload.url,
+        sourceUrl: options.bundle.url,
         sourceHash: hash,
-        sourceVersion: payload.response.headers.get("etag"),
+        sourceVersion: options.bundle.response.headers.get("etag"),
         acquiredAt: now,
-        httpEtag: payload.response.headers.get("etag"),
-        httpLastModified: payload.response.headers.get("last-modified"),
-        rawPayload: payload.rawPayload,
-        metadata: releaseMetadata(config),
+        httpEtag: options.bundle.response.headers.get("etag"),
+        httpLastModified: options.bundle.response.headers.get("last-modified"),
+        rawPayload: options.bundle.rawPayload,
+        metadata: releaseMetadata(options.config),
       })
       .returning({ id: demographicReleasesTable.id });
 
+    const dimensionKey = canonicalDimensionKey(options.dimensions);
     await tx.insert(demographicObservationsTable).values(
-      payload.observations.map((point) => ({
-        seriesId: series.id,
+      points.map((point) => ({
+        seriesId: options.series.id,
         releaseId: release.id,
         geographyCode: LAMEZIA_ISTAT_CODE,
         referencePeriod: point.period,
-        referenceType: config.referenceType,
-        dimensions: { frequency: "annual", reconstruction: "RBD" },
-        dimensionKey: canonicalDimensionKey({
-          frequency: "annual",
-          reconstruction: "RBD",
-        }),
+        referenceType: options.config.referenceType,
+        dimensions: options.dimensions,
+        dimensionKey,
         value: String(point.value),
-        unit: "persone",
+        unit: options.unit,
         sourceStatus: "reconstructed",
         sourceObservationStatus: point.rawStatus,
         qualityFlags: point.qualityFlags,
@@ -216,69 +287,16 @@ async function persistRbdField(config: RbdFieldConfig) {
     );
   });
 
-  return { inserted: payload.observations.length, changed: true };
-}
-
-async function persistPopulationHistoryMirror() {
-  const populationSeries = await seriesByKey(POPULATION_SERIES_KEY);
-  if (await hasRbdRelease(populationSeries.id)) {
-    return { inserted: 0, changed: false };
-  }
-
-  const config = RBD_FIELDS.find((item) => item.field === "populationStart");
-  if (!config) throw new Error("Configurazione RBD JAN mancante");
-  const payload = await fetchRbdSeries(config);
-  const hash = hashPayload(payload.rawPayload);
-  const now = new Date();
-
-  await db.transaction(async (tx) => {
-    const [release] = await tx
-      .insert(demographicReleasesTable)
-      .values({
-        seriesId: populationSeries.id,
-        sourceDataset: RBD_DATAFLOW_ID,
-        sourceUrl: payload.url,
-        sourceHash: hash,
-        sourceVersion: payload.response.headers.get("etag"),
-        acquiredAt: now,
-        httpEtag: payload.response.headers.get("etag"),
-        httpLastModified: payload.response.headers.get("last-modified"),
-        rawPayload: payload.rawPayload,
-        metadata: {
-          ...releaseMetadata(config),
-          mirrorRole: "population-resident-jan1-history",
-        },
-      })
-      .returning({ id: demographicReleasesTable.id });
-
-    await tx.insert(demographicObservationsTable).values(
-      payload.observations.map((point) => ({
-        seriesId: populationSeries.id,
-        releaseId: release.id,
-        geographyCode: LAMEZIA_ISTAT_CODE,
-        referencePeriod: point.period,
-        referenceType: "stock",
-        dimensions: {},
-        dimensionKey: canonicalDimensionKey({}),
-        value: String(point.value),
-        unit: populationSeries.unit,
-        sourceStatus: "reconstructed",
-        sourceObservationStatus: point.rawStatus,
-        qualityFlags: point.qualityFlags,
-      })),
-    );
-  });
-
-  return { inserted: payload.observations.length, changed: true };
+  return { inserted: points.length, changed: true };
 }
 
 async function recordRbdFeedStatus(
   outcome:
-    | { status: "ok"; observations: number; releases: number }
+    | { status: "ok"; observations: number; releases: number; requests: number }
     | { status: "error"; error: string },
 ) {
   const now = new Date();
-  const url = `${RBD_SOURCE_URL}/SDMXWS/rest/data/${RBD_DATAFLOW}`;
+  const url = rbdSdmxUrl();
   if (outcome.status === "ok") {
     await db
       .insert(feedStatusTable)
@@ -335,31 +353,89 @@ export async function runRbdBackfill(): Promise<{
   fields: number;
   releases: number;
   observations: number;
+  requests: number;
 }> {
   let releases = 0;
   let observations = 0;
 
   try {
-    for (const config of RBD_FIELDS) {
-      if (await alreadyBackfilled(config)) continue;
-      const result = await persistRbdField(config);
+    const targets = await Promise.all(
+      RBD_FIELDS.map(async (config) => ({
+        config,
+        series: await targetSeries(config),
+      })),
+    );
+    const populationSeries = await seriesByKey(POPULATION_SERIES_KEY);
+
+    const missingTargets: typeof targets = [];
+    for (const target of targets) {
+      if (!(await hasRbdRelease(target.series.id))) missingTargets.push(target);
+    }
+    const populationMirrorMissing = !(await hasRbdRelease(populationSeries.id));
+
+    // Backfill one-shot: dopo l'acquisizione iniziale nessuna chiamata alla fonte
+    // storica viene effettuata nei cicli ordinari.
+    if (!missingTargets.length && !populationMirrorMissing) {
+      await recordRbdFeedStatus({
+        status: "ok",
+        observations: (RBD_FIELDS.length + 1) * 17,
+        releases: 0,
+        requests: 0,
+      });
+      return {
+        fields: RBD_FIELDS.length,
+        releases: 0,
+        observations: 0,
+        requests: 0,
+      };
+    }
+
+    // Una sola query multi-serie evita di avvicinarsi al limite ufficiale ISTAT
+    // di 5 richieste/minuto per IP.
+    const bundle = await fetchRbdBundle();
+
+    for (const target of missingTargets) {
+      const result = await persistRelease({
+        series: target.series,
+        config: target.config,
+        bundle,
+        dimensions: { frequency: "annual", reconstruction: "RBD" },
+        unit: "persone",
+      });
       if (result.changed) releases++;
       observations += result.inserted;
     }
 
-    // JAN alimenta anche la serie longitudinale principale usata da "Lamezia
-    // nel tempo". È un mirror semantico, non una nuova fonte: la release mantiene
-    // il dataflow RBD e lo status reconstructed.
-    const mirror = await persistPopulationHistoryMirror();
-    if (mirror.changed) releases++;
-    observations += mirror.inserted;
+    if (populationMirrorMissing) {
+      const jan = RBD_FIELDS.find((item) => item.field === "populationStart");
+      if (!jan) throw new Error("Configurazione RBD JAN mancante");
+      const mirror = await persistRelease({
+        series: populationSeries,
+        config: jan,
+        bundle,
+        dimensions: {},
+        unit: populationSeries.unit,
+      });
+      if (mirror.changed) releases++;
+      observations += mirror.inserted;
+    }
 
-    await recordRbdFeedStatus({ status: "ok", observations, releases });
+    await recordRbdFeedStatus({
+      status: "ok",
+      observations,
+      releases,
+      requests: 1,
+    });
     logger.info(
-      { fields: RBD_FIELDS.length, releases, observations },
+      { fields: RBD_FIELDS.length, releases, observations, requests: 1 },
       "ISTAT RBD demographic backfill complete",
     );
-    return { fields: RBD_FIELDS.length, releases, observations };
+    return {
+      fields: RBD_FIELDS.length,
+      releases,
+      observations,
+      requests: 1,
+    };
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);
     await recordRbdFeedStatus({ status: "error", error: message }).catch(() => {});
