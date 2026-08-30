@@ -95,14 +95,16 @@ export const SPATIAL_LAYER_REGISTRY: SpatialLayerDefinition[] = [
     geometryTypes: ["Point", "Polygon", "MultiPolygon"],
     allowedGeometryRoles: ["asset_location", "parcel"],
     entityTypes: ["confiscated_asset"],
-    sourceLabel: "Fonti pubbliche censite nella sezione Beni confiscati",
+    sourceLabel: "ANBSC / localizzazioni redazionali qualificate",
+    dataPath: "/api/beni-confiscati/geojson",
     defaultVisible: false,
     minimumVerification: "machine_geocoded",
     publicationRule:
-      "Ogni bene deve dichiarare ruolo della geometria, precisione, metodo, provenienza e stato di verifica; le posizioni approssimative devono essere riconoscibili come tali.",
+      "Fail-closed: pubblicare soltanto coordinate valide con provenienza geografica coerente e geoVerify=false; i record approssimati o ancora da verificare restano esclusi dal layer pubblico.",
     caveats: [
-      "Le coordinate già presenti nei record non bastano da sole: devono essere accompagnate da provenienza e precisione.",
-      "Mantenere la mappa Leaflet esistente finché il layer canonico non è validato.",
+      "Le coordinate già presenti nei record non bastano da sole: devono essere accompagnate da provenienza e stato di verifica coerenti.",
+      "Il GeoJSON espone la copertura e i motivi di esclusione, così i beni non mappabili non vengono occultati né geocodificati artificialmente.",
+      "Mantenere la mappa Leaflet esistente finché il layer canonico non è validato nell'Atlante.",
     ],
   },
   {
