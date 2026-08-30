@@ -115,14 +115,14 @@ export const OPEN_DATA_THEME_LIBRARY = [
     datasets: [
       {
         id: "lamezia-demographic-trend",
-        label: "Trend demografico - Lamezia Terme",
+        label: "Osservatorio demografico - Lamezia Terme",
         statusLabel: "Disponibile",
-        dataType: "Serie temporale annuale",
+        dataType: "Serie annuali versionate e bilancio demografico",
         description:
-          "Popolazione residente annua 2001-2025 acquisita dal CSV del Portale OpenData del Comune e pubblicata come JSON statico.",
+          "Archivio canonico della popolazione residente e delle componenti del bilancio demografico di Lamezia Terme, con release ISTAT conservate, revisioni visibili e ricostruzione storica 2002-2018 semanticamente distinta dal 2019+.",
         updateCadence:
-          "Aggiornamento settimanale quando il portale OpenData comunale modifica la risorsa CSV.",
-        sourceLabel: "Comune di Lamezia Terme - Portale OpenData",
+          "Aggiornamento automatico sulle fonti ISTAT; le release storiche vengono conservate invece di essere sovrascritte.",
+        sourceLabel: "ISTAT - archivio demografico versionato",
         detailKind: "demographic-trend",
       },
       {
