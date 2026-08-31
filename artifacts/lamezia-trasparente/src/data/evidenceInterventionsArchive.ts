@@ -13,6 +13,7 @@ import {
   type EvidenceThematicArea,
 } from "./evidenceInterventions";
 import { EVIDENCE_INTERVENTIONS_DAILY } from "./evidenceInterventionsDaily";
+import { EVIDENCE_INTERVENTIONS_2026_08_31 } from "./evidenceInterventions20260831";
 
 export {
   EVIDENCE_AREA_LABELS,
@@ -34,6 +35,7 @@ export type {
 export const EVIDENCE_INTERVENTIONS = [
   ...BASE_EVIDENCE_INTERVENTIONS,
   ...EVIDENCE_INTERVENTIONS_DAILY,
+  ...EVIDENCE_INTERVENTIONS_2026_08_31,
 ] as const satisfies readonly EvidenceIntervention[];
 
 export function getEvidenceCountries() {
