@@ -164,9 +164,8 @@ describe("Albo public run surface", () => {
       throw new Error("Expected a public title containing an apostrophe.");
     }
 
-    const copiedFragment = punctuatedItem.presentation.display_title.match(
-      /\p{L}+[’']\p{L}+/u,
-    )?.[0];
+    const copiedFragment =
+      punctuatedItem.presentation.display_title.match(/\p{L}+[’']\p{L}+/u)?.[0];
     if (!copiedFragment) {
       throw new Error("Expected an apostrophe-bearing title fragment.");
     }
@@ -191,8 +190,11 @@ describe("Albo public run surface", () => {
         `${expectedMatches} di ${ALBO_PUBLIC_RUN_ITEMS.length} record pubblici mostrati.`,
       ),
     ).toBeInTheDocument();
+    const archive = within(
+      screen.getByRole("region", { name: "Cerca negli atti disponibili" }),
+    );
     expect(
-      screen.getByText(punctuatedItem.presentation.display_title, {
+      archive.getByText(punctuatedItem.presentation.display_title, {
         exact: true,
       }),
     ).toBeInTheDocument();
@@ -213,8 +215,11 @@ describe("Albo public run surface", () => {
       target: { value: standardisedItem.publication_number },
     });
 
+    const archive = within(
+      screen.getByRole("region", { name: "Cerca negli atti disponibili" }),
+    );
     expect(
-      screen.getByText(standardisedItem.presentation.display_title, {
+      archive.getByText(standardisedItem.presentation.display_title, {
         exact: true,
       }),
     ).toBeInTheDocument();
@@ -348,10 +353,7 @@ describe("Albo public run surface", () => {
         { exact: true },
       ),
     ).toBeInTheDocument();
-    expect(itemLinks[0]).toHaveAttribute(
-      "href",
-      expectedHref,
-    );
+    expect(itemLinks[0]).toHaveAttribute("href", expectedHref);
   });
 
   it("keeps a deterministic compatibility fallback for legacy snapshots", () => {

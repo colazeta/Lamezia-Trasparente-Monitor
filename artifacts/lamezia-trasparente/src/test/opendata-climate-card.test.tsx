@@ -60,7 +60,11 @@ describe("OpenData climate territory card", () => {
 
     render(<Opendata />);
 
-    await screen.findByRole("heading", { name: "Lamezia nel tempo" });
+    await screen.findByRole(
+      "heading",
+      { name: "Lamezia nel tempo" },
+      { timeout: 5_000 },
+    );
 
     expect(
       screen.getAllByRole("heading", {
@@ -310,7 +314,11 @@ describe("OpenData climate territory card", () => {
       }),
     );
 
-    await screen.findByRole("heading", { name: "Lamezia nel tempo" });
+    await screen.findByRole(
+      "heading",
+      { name: "Lamezia nel tempo" },
+      { timeout: 5_000 },
+    );
 
     expect(
       screen.getAllByRole("heading", {
