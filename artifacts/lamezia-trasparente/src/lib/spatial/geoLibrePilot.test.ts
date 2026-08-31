@@ -3,6 +3,7 @@ import { describe, expect, it } from "vitest";
 import {
   getActiveAtlasSpatialLayers,
   type SpatialLayerDefinition,
+  type SpatialLayerId,
 } from "./layerRegistry";
 import {
   buildGeoLibreViewerUrl,
@@ -10,7 +11,7 @@ import {
   resolveSpatialDataUrl,
 } from "./geoLibrePilot";
 
-function layer(id: string, dataPath: string): SpatialLayerDefinition {
+function layer(id: SpatialLayerId, dataPath: string): SpatialLayerDefinition {
   return {
     id,
     title: id,
@@ -74,8 +75,11 @@ describe("GeoLibre pilot helpers", () => {
       buildGeoLibreViewerUrl({
         viewerBaseUrl: "https://web.geolibre.app/",
         layers: [
-          layer("boundary", "/api/gis/comune"),
-          layer("census", "/data/processed/territorio/sezioni.geojson"),
+          layer("municipal-boundary", "/api/gis/comune"),
+          layer(
+            "census-sections",
+            "/data/processed/territorio/sezioni.geojson",
+          ),
         ],
         siteOrigin: "https://lamezia.example",
         apiBaseUrl: "https://api.lamezia.example",

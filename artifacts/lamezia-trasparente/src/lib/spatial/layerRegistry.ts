@@ -24,8 +24,19 @@ export type SpatialLayerGroup =
 
 export type SpatialGeometryType = SpatialGeometry["type"];
 
+export type SpatialLayerId =
+  | "municipal-boundary"
+  | "census-sections"
+  | "confiscated-assets"
+  | "public-works"
+  | "pnrr-projects"
+  | "public-assets"
+  | "schools-services"
+  | "cultural-assets"
+  | "localised-contract-interventions";
+
 export type SpatialLayerDefinition = {
-  id: string;
+  id: SpatialLayerId;
   title: string;
   description: string;
   group: SpatialLayerGroup;
@@ -241,7 +252,7 @@ export function getInitialAtlasVisibleLayerIds(
   requestedLayerIds: string[] = [],
 ): string[] {
   const activeLayers = getActiveAtlasSpatialLayers();
-  const activeLayerIds = new Set(activeLayers.map((layer) => layer.id));
+  const activeLayerIds = new Set<string>(activeLayers.map((layer) => layer.id));
 
   return Array.from(
     new Set([
