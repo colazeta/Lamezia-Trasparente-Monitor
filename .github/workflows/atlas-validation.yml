@@ -50,6 +50,9 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Build shared type dependencies
+        run: pnpm run typecheck:libs
+
       - name: Typecheck web app
         run: pnpm --filter @workspace/lamezia-trasparente run typecheck
 
