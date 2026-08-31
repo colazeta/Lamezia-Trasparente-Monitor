@@ -1,6 +1,7 @@
 import { ExternalLink, FileJson, Info, Users } from "lucide-react";
 import { PopulationHistoryPanel } from "@/components/demographics/PopulationHistoryPanel";
 import { PopulationStructurePanel } from "@/components/demographics/PopulationStructurePanel";
+import { PopulationCitizenshipPanel } from "@/components/demographics/PopulationCitizenshipPanel";
 import { ChangeDriversPanel } from "@/components/demographics/ChangeDriversPanel";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -8,6 +9,7 @@ import { Card, CardContent } from "@/components/ui/card";
 
 const POPULATION_API = "/api/demographics/series/population-resident-jan1";
 const STRUCTURE_API = "/api/demographics/structure";
+const CITIZENSHIP_API = "/api/demographics/citizenship";
 const CHANGE_DRIVERS_API = "/api/demographics/change-drivers?granularity=annual";
 const ISTAT_DEMO_URL = "https://demo.istat.it/";
 
@@ -33,10 +35,10 @@ export function DemographicTrendDatasetCard() {
             </h2>
             <p className="mt-2 text-sm leading-6 text-muted-foreground">
               Questa vista usa direttamente l'archivio demografico versionato di
-              LameziaTrasparente. Popolazione, struttura per età e sesso, release
-              della fonte e bilancio demografico sono quindi gli stessi dati
-              utilizzati nelle altre sezioni del sito: non esiste più una copia
-              statica separata per Open Data.
+              LameziaTrasparente. Popolazione, struttura per età e sesso,
+              cittadinanza, release della fonte e bilancio demografico sono quindi
+              gli stessi dati utilizzati nelle altre sezioni del sito: non esiste
+              più una copia statica separata per Open Data.
             </p>
           </div>
           <div className="flex flex-wrap gap-2">
@@ -50,6 +52,12 @@ export function DemographicTrendDatasetCard() {
               <a href={STRUCTURE_API} target="_blank" rel="noreferrer">
                 <FileJson className="h-4 w-4" />
                 API struttura
+              </a>
+            </Button>
+            <Button asChild variant="outline" size="sm">
+              <a href={CITIZENSHIP_API} target="_blank" rel="noreferrer">
+                <FileJson className="h-4 w-4" />
+                API cittadinanza
               </a>
             </Button>
             <Button asChild variant="outline" size="sm">
@@ -85,18 +93,20 @@ export function DemographicTrendDatasetCard() {
 
       <PopulationHistoryPanel />
       <PopulationStructurePanel />
+      <PopulationCitizenshipPanel />
       <ChangeDriversPanel />
 
       <Card className="border-dashed">
         <CardContent className="flex gap-3 p-5 text-sm leading-6 text-muted-foreground">
           <Info className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
           <p>
-            La precedente serie generata dal CSV del Portale OpenData comunale
-            resta una fonte di confronto e provenienza documentale, ma non
-            alimenta più questa visualizzazione. Per la lettura corrente vengono
-            usate le serie ISTAT versionate; le ricostruzioni storiche 2002–2018
-            restano qualificate esplicitamente come ricostruite e mantengono una
-            cesura metodologica visibile rispetto al 2019+.
+            Le precedenti serie generate dai CSV del Portale OpenData comunale,
+            compresa la distribuzione statica degli stranieri per età e sesso,
+            restano fonti di confronto e provenienza documentale ma non alimentano
+            più l'Osservatorio. Per la lettura corrente vengono usate le serie
+            ISTAT versionate; le ricostruzioni storiche 2002–2018 restano
+            qualificate esplicitamente come ricostruite e mantengono una cesura
+            metodologica visibile rispetto al 2019+.
           </p>
         </CardContent>
       </Card>
