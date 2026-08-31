@@ -1,0 +1,169 @@
+{
+  "source_snapshot": "data/public/albo/latest.json",
+  "source_commit": "dbe2b5bfecd494732c97ceadfcffe145cd442b1e",
+  "source_blob": "52eb16d11684ae10a4fdcf4c17d77c8f3f901f33",
+  "source_retrieved_at": "2026-08-30T11:50:38.527Z",
+  "projection_note": "Immutable test-only field projection grouped by identical facet inputs. No titles, people, record identifiers or document URLs are copied; absent area_theme fields are represented as null.",
+  "groups": [
+    {
+      "count": 1,
+      "public_visibility": "metadata_only",
+      "act_category_id": "avvisi",
+      "sector_id": "non_classificato",
+      "area_theme": null,
+      "action_id": null
+    },
+    {
+      "count": 3,
+      "public_visibility": "metadata_only",
+      "act_category_id": "determinazioni",
+      "sector_id": "servizi_persona",
+      "area_theme": null,
+      "action_id": null
+    },
+    {
+      "count": 1,
+      "public_visibility": "metadata_only",
+      "act_category_id": "elettorale",
+      "sector_id": "elettorale",
+      "area_theme": null,
+      "action_id": null
+    },
+    {
+      "count": 2,
+      "public_visibility": "metadata_only",
+      "act_category_id": "non_classificato",
+      "sector_id": "non_classificato",
+      "area_theme": null,
+      "action_id": null
+    },
+    {
+      "count": 5,
+      "public_visibility": "metadata_only",
+      "act_category_id": "notifiche_depositi",
+      "sector_id": "notifiche_depositi",
+      "area_theme": null,
+      "action_id": null
+    },
+    {
+      "count": 2,
+      "public_visibility": "metadata_only",
+      "act_category_id": "stato_civile",
+      "sector_id": "servizi_cittadino_demografici",
+      "area_theme": null,
+      "action_id": null
+    },
+    {
+      "count": 2,
+      "public_visibility": "publishable_with_minimisation",
+      "act_category_id": "deliberazioni",
+      "sector_id": "avvocatura_contenzioso",
+      "area_theme": null,
+      "action_id": null
+    },
+    {
+      "count": 1,
+      "public_visibility": "publishable",
+      "act_category_id": "avvisi",
+      "sector_id": "bilancio_finanze",
+      "area_theme": null,
+      "action_id": "presa_atto"
+    },
+    {
+      "count": 1,
+      "public_visibility": "publishable",
+      "act_category_id": "avvisi",
+      "sector_id": "governo_territorio",
+      "area_theme": null,
+      "action_id": null
+    },
+    {
+      "count": 1,
+      "public_visibility": "publishable",
+      "act_category_id": "deliberazioni",
+      "sector_id": "governo_territorio",
+      "area_theme": null,
+      "action_id": "approvazione"
+    },
+    {
+      "count": 3,
+      "public_visibility": "publishable",
+      "act_category_id": "determinazioni",
+      "sector_id": "bilancio_finanze",
+      "area_theme": null,
+      "action_id": null
+    },
+    {
+      "count": 11,
+      "public_visibility": "publishable",
+      "act_category_id": "determinazioni",
+      "sector_id": "governo_territorio",
+      "area_theme": null,
+      "action_id": null
+    },
+    {
+      "count": 1,
+      "public_visibility": "publishable",
+      "act_category_id": "determinazioni",
+      "sector_id": "patrimonio_territorio",
+      "area_theme": null,
+      "action_id": "approvazione"
+    },
+    {
+      "count": 6,
+      "public_visibility": "publishable",
+      "act_category_id": "determinazioni",
+      "sector_id": "patrimonio_territorio",
+      "area_theme": null,
+      "action_id": null
+    },
+    {
+      "count": 5,
+      "public_visibility": "publishable",
+      "act_category_id": "determinazioni",
+      "sector_id": "servizi_persona",
+      "area_theme": null,
+      "action_id": null
+    },
+    {
+      "count": 12,
+      "public_visibility": "publishable",
+      "act_category_id": "edilizia_urbanistica",
+      "sector_id": "governo_territorio",
+      "area_theme": null,
+      "action_id": null
+    },
+    {
+      "count": 3,
+      "public_visibility": "publishable",
+      "act_category_id": "non_classificato",
+      "sector_id": "non_classificato",
+      "area_theme": null,
+      "action_id": null
+    },
+    {
+      "count": 4,
+      "public_visibility": "publishable",
+      "act_category_id": "ordinanze",
+      "sector_id": "altri_enti",
+      "area_theme": null,
+      "action_id": null
+    },
+    {
+      "count": 2,
+      "public_visibility": "publishable",
+      "act_category_id": "ordinanze",
+      "sector_id": "governo_territorio",
+      "area_theme": null,
+      "action_id": null
+    },
+    {
+      "count": 8,
+      "public_visibility": "publishable",
+      "act_category_id": "ordinanze",
+      "sector_id": "vigilanza_sicurezza",
+      "area_theme": null,
+      "action_id": null
+    }
+  ]
+}
