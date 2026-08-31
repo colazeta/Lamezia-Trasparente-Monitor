@@ -84,6 +84,23 @@ describe("populationHouseholds P02 projection", () => {
     ).toThrow(/householdPopulation not found/i);
   });
 
+  it("fails closed when the source exposes contradictory total rows", () => {
+    const parsed = JSON.parse(p02Fixture()) as {
+      datatable: { data: Array<Record<string, unknown>> };
+    };
+    parsed.datatable.data.push({
+      sesso: "Totale",
+      pop_fam: 65700,
+      famiglie: 28610,
+      famiglie_str: 2100,
+      media: "2,30",
+    });
+
+    expect(() =>
+      parseP02HouseholdPayload(JSON.stringify(parsed), "2025", "final"),
+    ).toThrow(/multiple total rows/i);
+  });
+
   it("summarizes household change without conflating the dated ISTAT series with families-with-children", () => {
     const points = [
       {
