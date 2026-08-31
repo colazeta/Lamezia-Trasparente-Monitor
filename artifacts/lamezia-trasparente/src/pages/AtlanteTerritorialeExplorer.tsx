@@ -933,7 +933,7 @@ function MapLegend({
         {activeIndicator.label}
       </p>
       <div
-        aria-label="Scala cromatica indicatore censuario"
+        aria-hidden="true"
         className="mt-2 grid h-2.5 overflow-hidden rounded-full border border-border"
         style={{ gridTemplateColumns: `repeat(${SCALE_COLORS.length}, minmax(0,1fr))` }}
       >
