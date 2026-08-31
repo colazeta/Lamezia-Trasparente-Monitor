@@ -100,11 +100,11 @@ export function DemographicTrendDatasetCard() {
         <CardContent className="flex gap-3 p-5 text-sm leading-6 text-muted-foreground">
           <Info className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
           <p>
-            Le precedenti serie generate dai CSV del Portale OpenData comunale,
-            compresa la distribuzione statica degli stranieri per età e sesso,
-            restano fonti di confronto e provenienza documentale ma non alimentano
-            più l'Osservatorio. Per la lettura corrente vengono usate le serie
-            ISTAT versionate; le ricostruzioni storiche 2002–2018 restano
+            La precedente serie generata dal CSV del Portale OpenData comunale e
+            la precedente distribuzione statica degli stranieri per età e sesso
+            restano fonti di confronto e provenienza documentale, ma non
+            alimentano più l'Osservatorio. Per la lettura corrente vengono usate
+            le serie ISTAT versionate; le ricostruzioni storiche 2002–2018 restano
             qualificate esplicitamente come ricostruite e mantengono una cesura
             metodologica visibile rispetto al 2019+.
           </p>
