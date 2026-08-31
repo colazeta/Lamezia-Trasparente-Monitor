@@ -13,6 +13,7 @@ import {
   Search,
   X,
 } from "lucide-react";
+import { CensusSectionsDataView } from "@/components/atlas/CensusSectionsDataView";
 import {
   ConfiscatedAssetsAtlasLayer,
   getConfiscatedAssetsCoverageLabel,
@@ -132,6 +133,7 @@ export function AtlanteTerritoriale() {
     NO_BASEMAP_ID,
   );
   const [isDetailOpen, setDetailOpen] = useState(false);
+  const showCensusSections = visibleLayerIds.includes("census-sections");
   const focusConfiscatedAssetId =
     navigationState.entity?.entityType === "confiscated_asset"
       ? navigationState.entity.entityId
@@ -231,7 +233,8 @@ export function AtlanteTerritoriale() {
             Atlante territoriale
           </h1>
           <p className="mt-1 text-sm text-muted-foreground sm:text-base">
-            Scegli un indicatore, poi tocca un’area della mappa.
+            Esplora il territorio attivando i livelli disponibili. I dati
+            censuari sono consultabili anche senza usare la mappa.
           </p>
         </div>
       </header>
@@ -273,12 +276,23 @@ export function AtlanteTerritoriale() {
               visibleLayerIds={visibleLayerIds}
             />
 
-            <CoverageStrip
-              dataStatus={layer.dataStatus}
-              metadata={metadata}
-              summary={summary}
-            />
-            <SourceAndLimits metadata={metadata} summary={summary} />
+            {showCensusSections && activeIndicator ? (
+              <>
+                <CensusSectionsDataView
+                  activeIndicator={activeIndicator}
+                  availableIndicators={availableIndicators}
+                  features={features}
+                  onIndicatorSelect={setSelectedIndicatorId}
+                  onSectionSelect={selectSection}
+                />
+                <CoverageStrip
+                  dataStatus={layer.dataStatus}
+                  metadata={metadata}
+                  summary={summary}
+                />
+                <SourceAndLimits metadata={metadata} summary={summary} />
+              </>
+            ) : null}
           </div>
         )}
       </div>
@@ -381,7 +395,7 @@ function MapExplorer({
       }`}
     >
       <h2 className="sr-only" id="atlante-map-title">
-        Mappa
+        Mappa interattiva dell’Atlante territoriale
       </h2>
 
       <div
@@ -450,62 +464,60 @@ function MapExplorer({
           ) : null}
         </MapContainer>
 
-        <div className="absolute left-3 top-3 z-[650] w-[min(390px,calc(100%-1.5rem))] rounded-xl border border-border/80 bg-card/95 p-2.5 shadow-xl backdrop-blur">
-          <label className="block">
-            <span className="mb-1 block text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
-              Indicatore
-            </span>
-            <select
-              aria-label="Indicatore mappa"
-              className="h-10 w-full rounded-lg border border-border bg-background px-3 text-sm font-semibold text-foreground outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
-              onChange={(event) => onIndicatorSelect(event.target.value)}
-              value={activeIndicator.id}
-            >
-              {availableIndicators.map((indicator) => (
-                <option key={indicator.id} value={indicator.id}>
-                  {indicator.label}
-                </option>
-              ))}
-            </select>
-          </label>
-          <p className="mt-2 text-xs text-muted-foreground">
-            {hoveredFeature
-              ? `${getSectionPublicLabel(hoveredFeature)} · ${formatProfileValue(
-                  readIndicatorValue(hoveredFeature, activeIndicator),
-                  activeIndicator.unitLabel,
-                )}`
-              : selectedFeature
-                ? `${getSectionPublicLabel(selectedFeature)} selezionata`
-                : "Tocca un’area per vedere i dati."}
-          </p>
-        </div>
-
-        <div className="absolute left-3 top-[118px] z-[650] w-[min(390px,calc(100%-1.5rem))] rounded-xl border border-border/80 bg-card/95 p-2.5 shadow-xl backdrop-blur">
-          <p className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
-            Livelli
-          </p>
-          <div className="mt-1.5 flex flex-wrap gap-2 text-xs">
-            {activeAtlasLayers.map((layerDefinition) => (
-              <label
-                className="inline-flex cursor-pointer items-center gap-1.5 rounded-md border border-border bg-background px-2 py-1 font-medium text-foreground"
-                key={layerDefinition.id}
-                title={layerDefinition.description}
+        <div className="absolute left-3 right-3 top-3 z-[650] max-h-[calc(100%-1.5rem)] overflow-y-auto rounded-xl border border-border/80 bg-card/95 p-2.5 shadow-xl backdrop-blur sm:right-auto sm:w-[390px]">
+          {showCensusSections ? (
+            <label className="block">
+              <span className="mb-1 block text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
+                Indicatore censuario
+              </span>
+              <select
+                aria-label="Indicatore della mappa censuaria"
+                className="h-10 w-full rounded-lg border border-border bg-background px-3 text-sm font-semibold text-foreground outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
+                onChange={(event) => onIndicatorSelect(event.target.value)}
+                value={activeIndicator.id}
               >
-                <input
-                  checked={visibleLayerIdSet.has(layerDefinition.id)}
-                  className="h-3.5 w-3.5 accent-primary"
-                  onChange={(event) =>
-                    onLayerVisibilityChange(
-                      layerDefinition.id,
-                      event.target.checked,
-                    )
-                  }
-                  type="checkbox"
-                />
-                {layerDefinition.title}
-              </label>
-            ))}
+                {availableIndicators.map((indicator) => (
+                  <option key={indicator.id} value={indicator.id}>
+                    {indicator.label}
+                  </option>
+                ))}
+              </select>
+            </label>
+          ) : (
+            <p className="text-xs leading-5 text-muted-foreground">
+              Attiva “Sezioni censuarie” per visualizzare gli indicatori ISTAT.
+            </p>
+          )}
+
+          <div className="mt-2 border-t border-border pt-2">
+            <p className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
+              Livelli
+            </p>
+            <div className="mt-1.5 flex flex-wrap gap-2 text-xs">
+              {activeAtlasLayers.map((layerDefinition) => (
+                <label
+                  className="inline-flex cursor-pointer items-center gap-1.5 rounded-md border border-border bg-background px-2 py-1 font-medium text-foreground"
+                  key={layerDefinition.id}
+                  title={layerDefinition.description}
+                >
+                  <input
+                    aria-label={`Livello ${layerDefinition.title}`}
+                    checked={visibleLayerIdSet.has(layerDefinition.id)}
+                    className="h-3.5 w-3.5 accent-primary"
+                    onChange={(event) =>
+                      onLayerVisibilityChange(
+                        layerDefinition.id,
+                        event.target.checked,
+                      )
+                    }
+                    type="checkbox"
+                  />
+                  {layerDefinition.title}
+                </label>
+              ))}
+            </div>
           </div>
+
           {showMunicipalBoundary && municipalBoundaryState.status === "error" ? (
             <p
               aria-live="polite"
@@ -526,65 +538,82 @@ function MapExplorer({
               {confiscatedAssetsCoverage}
             </p>
           ) : null}
-        </div>
 
-        <div className="absolute right-3 top-[250px] z-[650] flex max-w-[calc(100%-1.5rem)] flex-wrap justify-end gap-1.5 sm:top-3 sm:max-w-none">
-          <label className="inline-flex h-9 items-center gap-1.5 rounded-lg border border-border/80 bg-card/95 px-2 text-xs font-medium text-foreground shadow-md backdrop-blur">
-            <Layers className="h-3.5 w-3.5 text-primary" aria-hidden="true" />
-            <span className="sr-only sm:not-sr-only">Sfondo</span>
-            <select
-              aria-label="Sfondo mappa"
-              className="max-w-24 bg-transparent text-xs outline-none sm:max-w-none"
-              onChange={(event) =>
-                setSelectedBasemapId(event.target.value as BasemapId)
-              }
-              value={selectedBasemapId}
+          <div className="mt-2 flex flex-wrap items-center gap-1.5 border-t border-border pt-2">
+            <label className="inline-flex h-9 items-center gap-1.5 rounded-lg border border-border bg-background px-2 text-xs font-medium text-foreground">
+              <Layers className="h-3.5 w-3.5 text-primary" aria-hidden="true" />
+              <span> Sfondo </span>
+              <select
+                aria-label="Sfondo mappa"
+                className="max-w-24 bg-transparent text-xs outline-none sm:max-w-none"
+                onChange={(event) =>
+                  setSelectedBasemapId(event.target.value as BasemapId)
+                }
+                value={selectedBasemapId}
+              >
+                <option value={NO_BASEMAP_ID}>Nessuno</option>
+                {BASEMAP_PROVIDERS.map((provider) => (
+                  <option key={provider.id} value={provider.id}>
+                    {provider.label}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <UtilityButton
+              label="Reimposta vista"
+              onClick={() => setResetSignal((value) => value + 1)}
             >
-              <option value={NO_BASEMAP_ID}>Nessuno</option>
-              {BASEMAP_PROVIDERS.map((provider) => (
-                <option key={provider.id} value={provider.id}>
-                  {provider.label}
-                </option>
-              ))}
-            </select>
-          </label>
-          <UtilityButton
-            label="Reimposta vista"
-            onClick={() => setResetSignal((value) => value + 1)}
-          >
-            <RefreshCw className="h-3.5 w-3.5" />
-          </UtilityButton>
-          <UtilityButton
-            label={isFullPageMap ? "Esci dalla pagina intera" : "Pagina intera"}
-            onClick={() => setFullPageMap(!isFullPageMap)}
-            pressed={isFullPageMap}
-          >
-            {isFullPageMap ? (
-              <Minimize2 className="h-3.5 w-3.5" />
-            ) : (
-              <Maximize2 className="h-3.5 w-3.5" />
-            )}
-          </UtilityButton>
-          <UtilityButton
-            label="Scarica mappa"
-            onClick={() =>
-              downloadMapSvg({
-                activeIndicator,
-                bounds,
-                dataStatus,
-                features,
-                metadata,
-                summary,
-              })
-            }
-          >
-            <Download className="h-3.5 w-3.5" />
-          </UtilityButton>
+              <RefreshCw className="h-3.5 w-3.5" />
+            </UtilityButton>
+            <UtilityButton
+              label={isFullPageMap ? "Esci dalla pagina intera" : "Pagina intera"}
+              onClick={() => setFullPageMap(!isFullPageMap)}
+              pressed={isFullPageMap}
+            >
+              {isFullPageMap ? (
+                <Minimize2 className="h-3.5 w-3.5" />
+              ) : (
+                <Maximize2 className="h-3.5 w-3.5" />
+              )}
+            </UtilityButton>
+            {showCensusSections ? (
+              <UtilityButton
+                label="Scarica mappa censuaria in SVG"
+                onClick={() =>
+                  downloadMapSvg({
+                    activeIndicator,
+                    bounds,
+                    dataStatus,
+                    features,
+                    metadata,
+                    summary,
+                  })
+                }
+              >
+                <Download className="h-3.5 w-3.5" />
+              </UtilityButton>
+            ) : null}
+          </div>
+
+          {showCensusSections ? (
+            <p className="mt-2 text-xs text-muted-foreground">
+              {hoveredFeature
+                ? `${getSectionPublicLabel(hoveredFeature)} · ${formatProfileValue(
+                    readIndicatorValue(hoveredFeature, activeIndicator),
+                    activeIndicator.unitLabel,
+                  )}`
+                : selectedFeature
+                  ? `${getSectionPublicLabel(selectedFeature)} selezionata`
+                  : "Tocca un’area oppure usa la tabella sotto la mappa."}
+            </p>
+          ) : null}
         </div>
 
-        <MapLegend activeIndicator={activeIndicator} summary={summary} />
+        {showCensusSections ? (
+          <MapLegend activeIndicator={activeIndicator} summary={summary} />
+        ) : null}
 
-        {selectedFeature && isDetailOpen ? (
+        {showCensusSections && selectedFeature && isDetailOpen ? (
           <AreaDetail
             activeIndicator={activeIndicator}
             availableIndicators={availableIndicators}
@@ -594,7 +623,7 @@ function MapExplorer({
             onSectionSelect={onSectionSelect}
             summary={summary}
           />
-        ) : selectedFeature ? (
+        ) : showCensusSections && selectedFeature ? (
           <button
             className="absolute bottom-3 left-3 z-[650] max-w-[calc(100%-1.5rem)] rounded-xl border border-border/80 bg-card/95 px-3 py-2 text-left text-sm font-semibold text-foreground shadow-xl backdrop-blur hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
             onClick={onOpenDetail}
@@ -835,7 +864,7 @@ function SourceAndLimits({
   return (
     <details className="rounded-lg border border-border/70 bg-muted/20 text-sm">
       <summary className="cursor-pointer list-none px-3 py-2.5 font-semibold text-foreground marker:hidden">
-        Fonte e limiti
+        Fonte e limiti dei dati censuari
       </summary>
       <div className="grid gap-4 border-t border-border px-3 py-3 text-xs leading-5 text-muted-foreground md:grid-cols-3">
         <div>
@@ -867,15 +896,15 @@ function SourceAndLimits({
         <div>
           <p className="font-semibold text-foreground">Come leggere</p>
           <p className="mt-1">
-            Il colore mostra il valore dell’indicatore scelto. Un dato mancante
-            resta distinto dallo zero.
+            Il colore del layer censuario mostra il valore dell’indicatore
+            scelto. Un dato mancante resta distinto dallo zero.
           </p>
         </div>
         <div>
           <p className="font-semibold text-foreground">Limiti</p>
           <p className="mt-1">
             {formatInteger(summary.availableCount)} sezioni hanno un valore e{" "}
-            {formatInteger(summary.missingCount)} no. La mappa non assegna
+            {formatInteger(summary.missingCount)} no. Il layer non assegna
             punteggi, classifiche o giudizi alle aree.
           </p>
           {metadata.knownLimits.length > 0 ? (
@@ -904,7 +933,7 @@ function MapLegend({
         {activeIndicator.label}
       </p>
       <div
-        aria-label="Scala cromatica indicatore"
+        aria-label="Scala cromatica indicatore censuario"
         className="mt-2 grid h-2.5 overflow-hidden rounded-full border border-border"
         style={{ gridTemplateColumns: `repeat(${SCALE_COLORS.length}, minmax(0,1fr))` }}
       >
@@ -942,7 +971,7 @@ function UtilityButton({
     <button
       aria-label={label}
       aria-pressed={pressed}
-      className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-border/80 bg-card/95 text-foreground shadow-md backdrop-blur hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+      className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-border bg-background text-foreground hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
       onClick={onClick}
       title={label}
       type="button"
@@ -1244,7 +1273,7 @@ function downloadMapSvg({
   const svg = `<?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">
   <rect width="100%" height="100%" fill="hsl(210 40% 98%)" />
-  <text x="${padding}" y="44" font-family="Arial, sans-serif" font-size="28" font-weight="700" fill="hsl(222 47% 11%)">Atlante territoriale · Lamezia Terme</text>
+  <text x="${padding}" y="44" font-family="Arial, sans-serif" font-size="28" font-weight="700" fill="hsl(222 47% 11%)">Mappa censuaria · Lamezia Terme</text>
   <text x="${padding}" y="72" font-family="Arial, sans-serif" font-size="16" fill="hsl(215 16% 47%)">${escapeXml(
     activeIndicator.label,
   )} · ${escapeXml(status)}</text>
@@ -1260,7 +1289,7 @@ function downloadMapSvg({
   const url = window.URL.createObjectURL(blob);
   const link = document.createElement("a");
   link.href = url;
-  link.download = `atlante-territoriale-lamezia-${activeIndicator.id}.svg`;
+  link.download = `mappa-censuaria-lamezia-${activeIndicator.id}.svg`;
   document.body.appendChild(link);
   link.click();
   link.remove();
