@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { Globe2, Info, UsersRound } from "lucide-react";
+import { Globe2, Info } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import {
   Card,
@@ -171,17 +171,24 @@ export function PopulationCitizenshipPanel() {
   const band = (key: CitizenshipResponse["foreignAgeBands"][number]["key"]) =>
     data.foreignAgeBands.find((item) => item.key === key)!;
   const firstHistory = data.history[0] ?? null;
-  const latestHistory = data.history.at(-1) ?? null;
+  const selectedHistory =
+    data.history.find((point) => point.period === data.period) ??
+    data.history.at(-1) ??
+    null;
   const shareDelta =
     firstHistory?.foreignShare !== null &&
     firstHistory?.foreignShare !== undefined &&
-    latestHistory?.foreignShare !== null &&
-    latestHistory?.foreignShare !== undefined
-      ? latestHistory.foreignShare - firstHistory.foreignShare
+    selectedHistory?.foreignShare !== null &&
+    selectedHistory?.foreignShare !== undefined
+      ? selectedHistory.foreignShare - firstHistory.foreignShare
       : null;
 
   return (
-    <section id="cittadinanza" className="space-y-6" aria-labelledby="citizenship-title">
+    <section
+      id="cittadinanza"
+      className="space-y-6"
+      aria-labelledby="citizenship-title"
+    >
       <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <span className="eyebrow text-primary">
@@ -260,7 +267,7 @@ export function PopulationCitizenshipPanel() {
           }
           detail={
             firstHistory
-              ? `incidenza rispetto al ${firstHistory.period}`
+              ? `incidenza ${data.period} rispetto al ${firstHistory.period}`
               : "serie storica non disponibile"
           }
         />
@@ -295,7 +302,11 @@ export function PopulationCitizenshipPanel() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="space-y-2" role="img" aria-label="Serie storica dell'incidenza dei cittadini stranieri a Lamezia Terme">
+            <div
+              className="space-y-2"
+              role="img"
+              aria-label="Serie storica dell'incidenza dei cittadini stranieri a Lamezia Terme"
+            >
               {data.history.map((point) => (
                 <div
                   className="grid grid-cols-[3rem_1fr_4rem] items-center gap-3 text-xs"
@@ -351,7 +362,8 @@ export function PopulationCitizenshipPanel() {
                     </span>
                     <span>{country.name}</span>
                     <span className="text-right tabular-nums font-medium">
-                      {formatPeople(country.total)} · {formatPercent(country.shareOfForeign)}
+                      {formatPeople(country.total)} ·{" "}
+                      {formatPercent(country.shareOfForeign)}
                     </span>
                   </div>
                 ))}
@@ -379,7 +391,9 @@ export function PopulationCitizenshipPanel() {
             <p>{data.methodology.temporalBreak}</p>
             <p>{data.methodology.coverage}</p>
             <p>
-              <strong className="font-medium text-foreground">Luogo di nascita:</strong>{" "}
+              <strong className="font-medium text-foreground">
+                Luogo di nascita:
+              </strong>{" "}
               {data.methodology.birthplace}
             </p>
           </div>
