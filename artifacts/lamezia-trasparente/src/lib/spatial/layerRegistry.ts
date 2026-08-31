@@ -236,3 +236,19 @@ export function getActiveAtlasSpatialLayers(): SpatialLayerDefinition[] {
     (layer) => layer.atlasStatus === "active" && Boolean(layer.dataPath),
   );
 }
+
+export function getInitialAtlasVisibleLayerIds(
+  requestedLayerIds: string[] = [],
+): string[] {
+  const activeLayers = getActiveAtlasSpatialLayers();
+  const activeLayerIds = new Set(activeLayers.map((layer) => layer.id));
+
+  return Array.from(
+    new Set([
+      ...activeLayers
+        .filter((layer) => layer.defaultVisible)
+        .map((layer) => layer.id),
+      ...requestedLayerIds.filter((layerId) => activeLayerIds.has(layerId)),
+    ]),
+  );
+}

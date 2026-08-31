@@ -38,7 +38,11 @@ import {
   loadAtlanteLayer,
   readIndicatorValue,
 } from "@/data/atlanteTerritoriale";
-import { getSpatialLayer, parseAtlasNavigation } from "@/lib/spatial";
+import {
+  getActiveAtlasSpatialLayers,
+  getInitialAtlasVisibleLayerIds,
+  parseAtlasNavigation,
+} from "@/lib/spatial";
 
 const NO_BASEMAP_ID = "none";
 const BASEMAP_PROVIDERS = [
@@ -110,6 +114,10 @@ export function AtlanteTerritoriale() {
       ),
     [],
   );
+  const activeAtlasLayers = useMemo(() => getActiveAtlasSpatialLayers(), []);
+  const [visibleLayerIds, setVisibleLayerIds] = useState<string[]>(() =>
+    getInitialAtlasVisibleLayerIds(navigationState.layerIds),
+  );
   const [loadState, setLoadState] = useState<LoadState>({
     status: "loading",
     layer: null,
@@ -122,9 +130,6 @@ export function AtlanteTerritoriale() {
   const [hoveredSectionId, setHoveredSectionId] = useState<string | null>(null);
   const [selectedBasemapId, setSelectedBasemapId] = useState<BasemapId>(
     NO_BASEMAP_ID,
-  );
-  const [showConfiscatedAssets, setShowConfiscatedAssets] = useState(() =>
-    navigationState.layerIds.includes("confiscated-assets"),
   );
   const [isDetailOpen, setDetailOpen] = useState(false);
   const focusConfiscatedAssetId =
@@ -203,6 +208,20 @@ export function AtlanteTerritoriale() {
     setSelectedSectionId(sectionId);
     setDetailOpen(true);
   };
+  const setLayerVisibility = (layerId: string, visible: boolean) => {
+    if (!activeAtlasLayers.some((layerDefinition) => layerDefinition.id === layerId)) {
+      return;
+    }
+
+    setVisibleLayerIds((currentLayerIds) => {
+      if (visible) {
+        return currentLayerIds.includes(layerId)
+          ? currentLayerIds
+          : [...currentLayerIds, layerId];
+      }
+      return currentLayerIds.filter((currentLayerId) => currentLayerId !== layerId);
+    });
+  };
 
   return (
     <main className="min-h-screen bg-background text-foreground">
@@ -229,6 +248,7 @@ export function AtlanteTerritoriale() {
             {layer.dataStatus === "demo" ? <DemoNotice /> : null}
 
             <MapExplorer
+              activeAtlasLayers={activeAtlasLayers}
               activeIndicator={activeIndicator}
               availableIndicators={availableIndicators}
               bounds={bounds}
@@ -241,6 +261,7 @@ export function AtlanteTerritoriale() {
               metadata={metadata}
               onCloseDetail={() => setDetailOpen(false)}
               onIndicatorSelect={setSelectedIndicatorId}
+              onLayerVisibilityChange={setLayerVisibility}
               onOpenDetail={() => setDetailOpen(true)}
               onSectionSelect={selectSection}
               selectedBasemapId={selectedBasemapId}
@@ -248,9 +269,8 @@ export function AtlanteTerritoriale() {
               selectedSectionId={selectedSectionId}
               setHoveredSectionId={setHoveredSectionId}
               setSelectedBasemapId={setSelectedBasemapId}
-              setShowConfiscatedAssets={setShowConfiscatedAssets}
-              showConfiscatedAssets={showConfiscatedAssets}
               summary={summary}
+              visibleLayerIds={visibleLayerIds}
             />
 
             <CoverageStrip
@@ -267,6 +287,7 @@ export function AtlanteTerritoriale() {
 }
 
 function MapExplorer({
+  activeAtlasLayers,
   activeIndicator,
   availableIndicators,
   bounds,
@@ -279,6 +300,7 @@ function MapExplorer({
   metadata,
   onCloseDetail,
   onIndicatorSelect,
+  onLayerVisibilityChange,
   onOpenDetail,
   onSectionSelect,
   selectedBasemapId,
@@ -286,10 +308,10 @@ function MapExplorer({
   selectedSectionId,
   setHoveredSectionId,
   setSelectedBasemapId,
-  setShowConfiscatedAssets,
-  showConfiscatedAssets,
   summary,
+  visibleLayerIds,
 }: {
+  activeAtlasLayers: ReturnType<typeof getActiveAtlasSpatialLayers>;
   activeIndicator: AtlanteIndicatorDefinition | null;
   availableIndicators: AtlanteIndicatorDefinition[];
   bounds: GeographicBounds | null;
@@ -302,6 +324,7 @@ function MapExplorer({
   metadata: AtlanteLayerMetadata;
   onCloseDetail: () => void;
   onIndicatorSelect: (indicatorId: string) => void;
+  onLayerVisibilityChange: (layerId: string, visible: boolean) => void;
   onOpenDetail: () => void;
   onSectionSelect: (sectionId: string) => void;
   selectedBasemapId: BasemapId;
@@ -309,14 +332,18 @@ function MapExplorer({
   selectedSectionId: string | null;
   setHoveredSectionId: (sectionId: string | null) => void;
   setSelectedBasemapId: (basemapId: BasemapId) => void;
-  setShowConfiscatedAssets: (visible: boolean) => void;
-  showConfiscatedAssets: boolean;
   summary: ReturnType<typeof buildAtlanteDistribution>;
+  visibleLayerIds: string[];
 }) {
   const [resetSignal, setResetSignal] = useState(0);
   const [isFullPageMap, setFullPageMap] = useState(false);
-  const [showMunicipalBoundary, setShowMunicipalBoundary] = useState(true);
-  const [showCensusSections, setShowCensusSections] = useState(true);
+  const visibleLayerIdSet = useMemo(
+    () => new Set(visibleLayerIds),
+    [visibleLayerIds],
+  );
+  const showMunicipalBoundary = visibleLayerIdSet.has("municipal-boundary");
+  const showCensusSections = visibleLayerIdSet.has("census-sections");
+  const showConfiscatedAssets = visibleLayerIdSet.has("confiscated-assets");
   const municipalBoundaryState = useMunicipalBoundaryAtlasLayer(
     showMunicipalBoundary,
   );
@@ -326,9 +353,6 @@ function MapExplorer({
   const confiscatedAssetsCoverage = getConfiscatedAssetsCoverageLabel(
     confiscatedAssetsState,
   );
-  const municipalBoundaryDefinition = getSpatialLayer("municipal-boundary");
-  const censusLayerDefinition = getSpatialLayer("census-sections");
-  const confiscatedAssetsDefinition = getSpatialLayer("confiscated-assets");
   const selectedBasemap =
     BASEMAP_PROVIDERS.find((provider) => provider.id === selectedBasemapId) ??
     null;
@@ -461,37 +485,26 @@ function MapExplorer({
             Livelli
           </p>
           <div className="mt-1.5 flex flex-wrap gap-2 text-xs">
-            <label className="inline-flex cursor-pointer items-center gap-1.5 rounded-md border border-border bg-background px-2 py-1 font-medium text-foreground">
-              <input
-                checked={showMunicipalBoundary}
-                className="h-3.5 w-3.5 accent-primary"
-                onChange={(event) =>
-                  setShowMunicipalBoundary(event.target.checked)
-                }
-                type="checkbox"
-              />
-              {municipalBoundaryDefinition?.title ?? "Confine comunale"}
-            </label>
-            <label className="inline-flex cursor-pointer items-center gap-1.5 rounded-md border border-border bg-background px-2 py-1 font-medium text-foreground">
-              <input
-                checked={showCensusSections}
-                className="h-3.5 w-3.5 accent-primary"
-                onChange={(event) => setShowCensusSections(event.target.checked)}
-                type="checkbox"
-              />
-              {censusLayerDefinition?.title ?? "Sezioni censuarie"}
-            </label>
-            <label className="inline-flex cursor-pointer items-center gap-1.5 rounded-md border border-border bg-background px-2 py-1 font-medium text-foreground">
-              <input
-                checked={showConfiscatedAssets}
-                className="h-3.5 w-3.5 accent-primary"
-                onChange={(event) =>
-                  setShowConfiscatedAssets(event.target.checked)
-                }
-                type="checkbox"
-              />
-              {confiscatedAssetsDefinition?.title ?? "Beni confiscati"}
-            </label>
+            {activeAtlasLayers.map((layerDefinition) => (
+              <label
+                className="inline-flex cursor-pointer items-center gap-1.5 rounded-md border border-border bg-background px-2 py-1 font-medium text-foreground"
+                key={layerDefinition.id}
+                title={layerDefinition.description}
+              >
+                <input
+                  checked={visibleLayerIdSet.has(layerDefinition.id)}
+                  className="h-3.5 w-3.5 accent-primary"
+                  onChange={(event) =>
+                    onLayerVisibilityChange(
+                      layerDefinition.id,
+                      event.target.checked,
+                    )
+                  }
+                  type="checkbox"
+                />
+                {layerDefinition.title}
+              </label>
+            ))}
           </div>
           {showMunicipalBoundary && municipalBoundaryState.status === "error" ? (
             <p
