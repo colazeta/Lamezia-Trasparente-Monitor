@@ -9,13 +9,17 @@ const databaseConfig = hasTestDatabaseConfig()
   : null;
 
 // Most api-server tests intentionally exercise routes/ingestion against a
-// disposable PostgreSQL database.  In environments that do not provide a DB
-// URL (for example the lightweight Replit validation workflow), still run the
+// disposable PostgreSQL database. In environments that do not provide a DB
+// URL (for example the lightweight CI validation workflow), still run the
 // database-free unit tests instead of failing while loading the config.
 const databaseFreeTests = [
   "src/lib/geocode.test.ts",
   "src/lib/ingestionSchedulerConfig.test.ts",
   "src/lib/publicActProjection.unit.test.ts",
+  // Parser/contract only: imports the DB schema but never opens a connection.
+  // Keeping it in the DB-free suite means SDMX dimension/filter regressions are
+  // caught by the standard CI rather than only by a full integration database.
+  "src/lib/populationCitizenship.test.ts",
 ];
 
 export default defineConfig({

@@ -17,6 +17,7 @@ import {
   type BalanceGranularity,
 } from "../lib/demographicBalance";
 import { getPopulationStructureSnapshot } from "../lib/populationStructure";
+import { getPopulationCitizenshipSnapshot } from "../lib/populationCitizenship";
 
 const router: IRouter = Router();
 
@@ -248,6 +249,41 @@ router.get("/demographics/structure", async (req, res) => {
         "Il tratto 2002–2018 è una ricostruzione statistica su classificazione territoriale 2019 ed è marcato reconstructed. Dal 2019 la struttura proviene dalla popolazione residente del Censimento permanente. La cesura resta esplicita.",
       quality:
         "Il totale pubblicato viene confrontato sia con maschi + femmine sia con la somma delle singole età. Una differenza non nulla resta esposta e non viene corretta artificialmente.",
+    },
+  });
+});
+
+router.get("/demographics/citizenship", async (req, res) => {
+  const rawPeriod = Array.isArray(req.query.period)
+    ? req.query.period[0]
+    : req.query.period;
+  const period = typeof rawPeriod === "string" ? rawPeriod : null;
+  const snapshot = await getPopulationCitizenshipSnapshot(period);
+  if (!snapshot) {
+    res.status(404).json({ error: "Dati di cittadinanza non ancora disponibili" });
+    return;
+  }
+
+  res.json({
+    geography: {
+      code: LAMEZIA_ISTAT_CODE,
+      name: "Lamezia Terme",
+      level: "municipality",
+    },
+    ...snapshot,
+    methodology: {
+      citizenship:
+        "Per popolazione straniera si intendono i residenti con cittadinanza non italiana. Cittadinanza, paese di nascita e provenienza migratoria sono concetti distinti e non vengono usati come sinonimi.",
+      referencePeriod:
+        "Le consistenze si riferiscono alla popolazione residente al 1° gennaio dell'anno indicato.",
+      temporalBreak:
+        "Il tratto 2002–2018 della popolazione straniera per età e sesso proviene dalla ricostruzione statistica ISTAT ed è marcato reconstructed; dal 2019 usa il Censimento permanente.",
+      countryDetail:
+        "Il dettaglio per singola cittadinanza usa il dataflow ISTAT 29_317 dal 2019. La fonte contiene anche aggregazioni geopolitiche: l'elenco dei principali paesi seleziona soltanto codici-paese e non somma le aggregazioni.",
+      coverage:
+        "La somma dei singoli paesi è confrontata con il totale dei residenti stranieri proveniente dalla serie indipendente per età e sesso. L'eventuale differenza resta visibile e può comprendere apolidi, codici non-paese o altre classificazioni della fonte.",
+      birthplace:
+        "Il paese di nascita non è inferito dalla cittadinanza. Entrerà come serie autonoma quando il relativo contratto di fonte sarà acquisito e validato; nessun incrocio cittadinanza × paese di nascita viene ricostruito.",
     },
   });
 });
