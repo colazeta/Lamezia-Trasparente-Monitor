@@ -17,6 +17,8 @@
     "demography:lamezia": "node scripts/build-lamezia-demographic-trend-data.mjs",
     "families-children:lamezia": "node scripts/build-lamezia-families-children-data.mjs",
     "foreign-residents:lamezia": "node scripts/build-lamezia-foreign-residents-data.mjs",
+    "pnrr:lamezia": "node scripts/build-lamezia-pnrr-static-data.mjs",
+    "pnrr:check:lamezia": "node scripts/check-lamezia-pnrr-static-data.mjs",
     "opendata:refresh:lamezia": "node scripts/refresh-lamezia-opendata-series.mjs",
     "opendata:status:lamezia": "node scripts/build-lamezia-opendata-series-status.mjs",
     "smoke:v0-static-fallback": "pnpm --filter @workspace/lamezia-trasparente run build && node scripts/check-v0-static-fallback.mjs",

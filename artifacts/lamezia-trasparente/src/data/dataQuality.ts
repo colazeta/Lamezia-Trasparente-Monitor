@@ -1,4 +1,5 @@
 import { DATA_SOURCE_BY_NAME, type DataSourceName } from "@/data/dataSources";
+import { LAMEZIA_PNRR_STATIC_DATA } from "@/data/lameziaPnrr";
 
 export interface DataQualityIndicator {
   sourceName: DataSourceName;
@@ -58,6 +59,12 @@ const DATA_QUALITY_NOTES = [
       "Documentato/manuale: identificativi e campi chiave variano per dataset; copertura aggregata non confrontabile tra risorse eterogenee.",
     attachmentAvailability:
       "Documentato/manuale: risorse CSV, JSON o altri formati sono collegate nelle schede quando pubblicate; quota aggregata non calcolata qui.",
+  },
+  {
+    sourceName: "Comune di Lamezia Terme — Attuazione Misure PNRR",
+    lastKnownUpdate: `Calcolato: feed materializzato il ${LAMEZIA_PNRR_STATIC_DATA.metadata.materialized_at}; la data descrive l'acquisizione, non l'aggiornamento amministrativo dei progetti.`,
+    identifierCoverage: `Calcolato: ${LAMEZIA_PNRR_STATIC_DATA.coverage.projects_with_cup} schede con CUP su ${LAMEZIA_PNRR_STATIC_DATA.coverage.projects} schede comunali acquisite.`,
+    attachmentAvailability: `Calcolato: ${LAMEZIA_PNRR_STATIC_DATA.coverage.municipal_attachments} collegamenti ad allegati esposti nelle schede comunali e ${LAMEZIA_PNRR_STATIC_DATA.coverage.albo_evidence} atti Albo pubblicabili nel feed.`,
   },
   {
     sourceName: "Italia Domani — Open data PNRR",

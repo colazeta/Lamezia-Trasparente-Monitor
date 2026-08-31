@@ -22,7 +22,6 @@ import {
   MapPin,
   Hammer,
 } from "lucide-react";
-import { PnrrProject, Publication } from "@workspace/api-client-react";
 import { format } from "date-fns";
 import { it } from "date-fns/locale";
 
@@ -53,6 +52,16 @@ import {
   type CantieriometroPresenceFilter,
 } from "@/lib/cantieriometro";
 import { asApiList } from "@/lib/apiList";
+import {
+  LAMEZIA_PNRR_STATIC_DATA,
+  LAMEZIA_PNRR_STATIC_DATA_URL,
+  LAMEZIA_PNRR_STATIC_VIEW,
+  adaptRuntimePnrrDocuments,
+  adaptRuntimePnrrProjects,
+  mergePnrrViewDocuments,
+  mergePnrrViewProjects,
+  type PnrrViewProject,
+} from "@/data/lameziaPnrr";
 
 const ITALIA_DOMANI_PROJECTS_DATASET_URL =
   "https://www.italiadomani.gov.it/content/dam/italiadomani/opendata/Progetti_del_PNRR/Progetti_PNRR.csv";
@@ -63,7 +72,7 @@ const COMUNE_PNRR_URL =
 
 type AmountFilter = CantieriometroAmountFilter;
 type PresenceFilter = CantieriometroPresenceFilter;
-type LocationQuality = PnrrProject["locationQuality"];
+type LocationQuality = PnrrViewProject["locationQuality"];
 
 const amountFilters: { value: AmountFilter; label: string }[] = [
   { value: "all", label: "Tutti gli importi" },
@@ -101,7 +110,7 @@ function formatImportoShort(value: number): string {
     : "—";
 }
 
-function projectMatchesAmount(project: PnrrProject, filter: AmountFilter) {
+function projectMatchesAmount(project: PnrrViewProject, filter: AmountFilter) {
   if (filter === "all") return true;
   const amount = project.importoFinanziato;
   if (amount == null || Number.isNaN(amount)) return false;
@@ -126,18 +135,23 @@ function locationQualityLabel(value: LocationQuality | null | undefined) {
 
 function sourceLabelForUrl(url: string | null | undefined, fallback: string) {
   if (!url) return null;
+  if (url.includes("comune.lamezia-terme.cz.it/it/attuazione-misure-pnrr")) {
+    return "Comune di Lamezia Terme — Attuazione Misure PNRR";
+  }
   return url.includes("openpnrr.it")
     ? "OpenPNRR — progetti/localizzazioni per Comune"
     : fallback;
 }
 
-function dataStatus(project: PnrrProject) {
+function dataStatus(project: PnrrViewProject) {
+  if (project.dataOrigin === "static-municipal")
+    return "ufficiale (scheda Comune acquisita)";
   if (project.aggiornamentoVecchio)
     return "da verificare sulla fonte ufficiale";
   if (
     project.documentsCount > 0 ||
-    asApiList<PnrrProject["attachments"][number]>(project.attachments).length >
-      0
+    asApiList<PnrrViewProject["attachments"][number]>(project.attachments)
+      .length > 0
   )
     return "arricchito con collegamenti rilevati";
   if (project.trasparenzaCompleta) return "ufficiale (Comune rilevato)";
@@ -145,15 +159,45 @@ function dataStatus(project: PnrrProject) {
 }
 
 export function Pnrr() {
-  const { data, isLoading, isError: sourceUnavailable } = useListPnrrProjects();
-
-  const projects = asApiList<PnrrProject>(data?.projects);
-  const uncensored = asApiList<Publication>(data?.uncensored);
-  const censusLastUpdatedAt: string | null | undefined =
-    data?.censusLastUpdatedAt;
-  const importSourceLabel = data?.importSourceLabel;
-  const importSourceUrl = data?.importSourceUrl;
-  const importSourceStatus = data?.importSourceStatus;
+  const {
+    data,
+    isLoading,
+    isError: apiSourceUnavailable,
+  } = useListPnrrProjects();
+  const runtimeProjects = useMemo(
+    () => adaptRuntimePnrrProjects(data?.projects),
+    [data?.projects],
+  );
+  const runtimeUnmatchedEvidence = useMemo(
+    () => adaptRuntimePnrrDocuments(data?.uncensored),
+    [data?.uncensored],
+  );
+  const projects = useMemo(
+    () =>
+      mergePnrrViewProjects(runtimeProjects, LAMEZIA_PNRR_STATIC_VIEW.projects),
+    [runtimeProjects],
+  );
+  const uncensored = useMemo(
+    () =>
+      mergePnrrViewDocuments(
+        runtimeUnmatchedEvidence,
+        LAMEZIA_PNRR_STATIC_VIEW.unmatchedEvidence,
+      ),
+    [runtimeUnmatchedEvidence],
+  );
+  const usingStaticFeed = runtimeProjects.length === 0;
+  const sourceUnavailable = apiSourceUnavailable && projects.length === 0;
+  const sourceLoading = isLoading && projects.length === 0;
+  const censusLastUpdatedAt = usingStaticFeed
+    ? LAMEZIA_PNRR_STATIC_DATA.metadata.materialized_at
+    : data?.censusLastUpdatedAt;
+  const importSourceLabel = usingStaticFeed
+    ? LAMEZIA_PNRR_STATIC_DATA.metadata.source
+    : data?.importSourceLabel;
+  const importSourceUrl = usingStaticFeed
+    ? LAMEZIA_PNRR_STATIC_DATA.metadata.source_url
+    : data?.importSourceUrl;
+  const importSourceStatus = usingStaticFeed ? "ok" : data?.importSourceStatus;
 
   const [search, setSearch] = useState("");
   const [amountFilter, setAmountFilter] = useState<AmountFilter>("all");
@@ -170,7 +214,7 @@ export function Pnrr() {
     let totalImporto = 0;
     let cupCount = 0;
     let linkedActsCount = 0;
-    let staleCount = 0;
+    let freshnessVerificationCount = 0;
 
     for (const p of projects) {
       if (p.mission) {
@@ -182,14 +226,14 @@ export function Pnrr() {
       }
       if (p.cup) cupCount += 1;
       if (p.documentsCount > 0) linkedActsCount += 1;
-      if (p.aggiornamentoVecchio) staleCount += 1;
+      if (p.freshnessAssessment !== "current") freshnessVerificationCount += 1;
     }
 
     return {
       projectsCount: projects.length,
       cupCount,
       linkedActsCount,
-      staleCount,
+      freshnessVerificationCount,
       totalImporto,
       missions: Array.from(missionMap.entries())
         .map(([mission, count]) => ({ mission, count }))
@@ -274,7 +318,7 @@ export function Pnrr() {
       }
       if (
         staleFilter !== "all" &&
-        project.aggiornamentoVecchio !== (staleFilter === "yes")
+        (project.freshnessAssessment !== "current") !== (staleFilter === "yes")
       ) {
         return false;
       }
@@ -306,35 +350,42 @@ export function Pnrr() {
           title="PNRR e progetti finanziati"
           subtitle={
             <>
-              Schede pubbliche dei progetti PNRR localizzati a Lamezia Terme,
+              Schede pubblicate nella sezione PNRR del Comune di Lamezia Terme,
               con importi, stati e collegamenti alle fonti disponibili. La
-              lettura resta documentale: non deduce ritardi o criticità non
-              presenti nelle fonti.
+              lettura resta documentale: non deduce ubicazioni puntuali, ritardi
+              o criticità non presenti nelle fonti.
             </>
           }
           stateLabel={
-            sourceUnavailable ? "Fonte in attivazione" : "Pubblicabile"
+            sourceUnavailable
+              ? "Fonte in attivazione"
+              : usingStaticFeed
+                ? "Feed comunale disponibile"
+                : "Feed comunale e API disponibili"
           }
           stateDescription={
             sourceUnavailable
               ? "Il collegamento al censimento PNRR non è disponibile in questa pubblicazione. Nessun totale viene rappresentato come zero."
-              : "Sezione consultabile con fonti, limiti e stato di verifica esplicitati."
+              : usingStaticFeed
+                ? "Le schede ufficiali del Comune sono materializzate nella pubblicazione con provenienza, data di acquisizione e collegamenti documentali verificabili."
+                : "Le schede comunali sono integrate con i dati disponibili dal servizio PNRR, mantenendo provenienza e regole di riconciliazione esplicite."
           }
           findItems={[
-            "Progetti censiti, importi, missioni, CUP e stato informativo disponibile.",
+            "Schede acquisite, importi, missioni, CUP e stato informativo disponibile.",
             "Collegamenti a schede comunali, Albo Pretorio, contratti e allegati quando rilevati.",
             "Filtri del Cantieriometro per individuare dati presenti, mancanti o da aggiornare.",
           ]}
           missingItems={[
-            "Stabilizzazione del perimetro fonti e degli aggiornamenti automatici.",
-            "Verifica completa dei collegamenti tra progetti, atti e affidamenti.",
-            "Conferma manuale dei casi con localizzazione o documentazione da verificare.",
+            "Riconciliazione completa con il censimento nazionale Italia Domani/ReGiS.",
+            "Date e stati di avanzamento quando non sono esposti nelle schede comunali.",
+            "Collegamenti a contratti e affidamenti non dimostrabili tramite CUP.",
           ]}
           sourceLimit={
             <>
-              La base richiama dataset Italia Domani e fonti comunali quando
-              disponibili. I collegamenti e gli aggiornamenti vanno controllati
-              sulle fonti originarie prima di qualsiasi uso sensibile.
+              Il perimetro minimo deriva dalle schede pubblicate nella sezione
+              PNRR del Comune: non equivale al censimento nazionale completo.
+              Gli atti Albo sono associati a un progetto soltanto quando il CUP
+              coincide; assenze e campi vuoti restano dati da verificare.
             </>
           }
           cta={{ label: "Consulta lo stato PNRR", href: "#pnrr-elenco" }}
@@ -345,7 +396,9 @@ export function Pnrr() {
           {importSourceLabel && (
             <p className="flex flex-wrap items-center gap-1.5">
               <ExternalLink className="h-3 w-3" aria-hidden="true" />
-              Fonte dati usata dall'ultima importazione:{" "}
+              {usingStaticFeed
+                ? "Fonte del feed statico: "
+                : "Fonte dati usata dall'ultima importazione: "}
               {importSourceUrl ? (
                 <a
                   href={importSourceUrl}
@@ -368,10 +421,27 @@ export function Pnrr() {
           {censusLastUpdatedAt && (
             <p className="flex items-center gap-1.5">
               <RefreshCw className="h-3 w-3" aria-hidden="true" />
-              Ultimo aggiornamento dati rilevato:{" "}
+              {usingStaticFeed
+                ? "Feed statico materializzato: "
+                : "Ultimo aggiornamento dati rilevato: "}
               {formatDate(censusLastUpdatedAt)}
             </p>
           )}
+          <p className="flex items-center gap-1.5">
+            <FileText className="h-3 w-3" aria-hidden="true" />
+            <a
+              href={LAMEZIA_PNRR_STATIC_DATA_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-medium text-primary hover:underline"
+            >
+              Apri il feed JSON materializzato
+            </a>
+          </p>
+          <p>
+            {LAMEZIA_PNRR_STATIC_DATA.metadata.coverage_note}{" "}
+            {LAMEZIA_PNRR_STATIC_DATA.metadata.reconciliation_rule}
+          </p>
         </div>
 
         <div id="pnrr-elenco" />
@@ -381,7 +451,7 @@ export function Pnrr() {
             sourceHref={COMUNE_PNRR_URL}
             sourceLabel="Consulta la sezione PNRR del Comune"
           />
-        ) : isLoading ? (
+        ) : sourceLoading ? (
           <div className="mb-8 grid grid-cols-2 gap-4 lg:grid-cols-4">
             {Array(4)
               .fill(0)
@@ -407,13 +477,13 @@ export function Pnrr() {
                 className="grid grid-cols-2 gap-4 lg:grid-cols-5"
               >
                 <StatCard
-                  label="Progetti monitorati"
+                  label="Schede progetto disponibili"
                   value={String(census.projectsCount)}
                   icon={FolderKanban}
                   highlight
                 />
                 <StatCard
-                  label="Valore monitorato"
+                  label="Somma importi esposti"
                   value={formatImportoShort(census.totalImporto)}
                   icon={Euro}
                 />
@@ -428,8 +498,8 @@ export function Pnrr() {
                   icon={Link2}
                 />
                 <StatCard
-                  label="Stato non aggiornato"
-                  value={String(census.staleCount)}
+                  label="Aggiornamento da verificare"
+                  value={String(census.freshnessVerificationCount)}
                   icon={Clock}
                 />
               </div>
@@ -544,13 +614,13 @@ export function Pnrr() {
                   options={presenceOptions("Tutti")}
                 />
                 <FilterSelect
-                  label="Stato aggiornato"
+                  label="Verifica aggiornamento"
                   value={staleFilter}
                   onChange={(value) => setStaleFilter(value as PresenceFilter)}
                   options={[
                     { value: "all", label: "Tutti" },
-                    { value: "no", label: "Dato aggiornato o concluso" },
-                    { value: "yes", label: "Dato non aggiornato" },
+                    { value: "no", label: "Aggiornamento disponibile" },
+                    { value: "yes", label: "Da verificare sulla fonte" },
                   ]}
                 />
               </div>
@@ -559,7 +629,7 @@ export function Pnrr() {
                 aria-live="polite"
               >
                 {filteredProjects.length} progetti visualizzati su{" "}
-                {projects.length} monitorati.
+                {projects.length} schede disponibili.
               </p>
             </section>
 
@@ -604,7 +674,7 @@ export function Pnrr() {
               )}
             </section>
 
-            {uncensored && uncensored.length > 0 && (
+            {uncensored.length > 0 && (
               <section
                 className="rounded-xl border border-amber-300/60 bg-amber-50/60 p-5 dark:border-amber-500/30 dark:bg-amber-500/10"
                 aria-labelledby="pnrr-uncensored"
@@ -923,7 +993,7 @@ function FilterSelect({
   );
 }
 
-function PnrrCard({ project }: { project: PnrrProject }) {
+function PnrrCard({ project }: { project: PnrrViewProject }) {
   return (
     <article
       data-tour="pnrr-detail"
@@ -936,7 +1006,10 @@ function PnrrCard({ project }: { project: PnrrProject }) {
       <div className="p-5">
         <div className="mb-3 flex flex-wrap items-center gap-2">
           <Badge variant="outline" className="font-mono text-xs shadow-none">
-            ID interno {project.id}
+            {project.dataOrigin === "static-municipal"
+              ? "ID scheda Comune"
+              : "ID interno"}{" "}
+            {project.id}
           </Badge>
           {project.cup ? (
             <Badge variant="brand" className="font-mono text-xs shadow-none">
@@ -962,10 +1035,12 @@ function PnrrCard({ project }: { project: PnrrProject }) {
               <ShieldCheck className="h-3 w-3" aria-hidden="true" />
               {dataStatus(project)}
             </span>
-            {project.aggiornamentoVecchio && (
+            {project.freshnessAssessment !== "current" && (
               <span className="inline-flex items-center gap-1 rounded-full bg-amber-50 px-2.5 py-1 text-xs font-semibold text-amber-700 ring-1 ring-amber-200 dark:bg-amber-500/10 dark:text-amber-300 dark:ring-amber-500/30">
                 <Clock className="h-3 w-3" aria-hidden="true" />
-                Dato non aggiornato
+                {project.freshnessAssessment === "stale"
+                  ? "Dato non aggiornato"
+                  : "Data aggiornamento non indicata"}
               </span>
             )}
           </div>
@@ -995,7 +1070,9 @@ function PnrrCard({ project }: { project: PnrrProject }) {
           </span>
           <span className="flex items-center gap-1">
             <Calendar className="h-3.5 w-3.5" aria-hidden="true" />
-            Aggiornato {formatDate(project.lastUpdatedAt)}
+            {project.freshnessAssessment === "not_assessed"
+              ? `Scheda pubblicata ${formatDate(project.publishedAt)}`
+              : `Aggiornato ${formatDate(project.lastUpdatedAt)}`}
           </span>
         </div>
 
@@ -1027,7 +1104,11 @@ function PnrrCard({ project }: { project: PnrrProject }) {
           />
           <MetaRow
             label="Fonte finanziamento"
-            value="PNRR — censimento Italia Domani"
+            value={
+              project.dataOrigin === "static-municipal"
+                ? "PNRR — scheda ufficiale del Comune"
+                : "PNRR — censimento e fonti disponibili"
+            }
           />
           <MetaRow
             label="Soggetto titolare"
@@ -1038,6 +1119,10 @@ function PnrrCard({ project }: { project: PnrrProject }) {
             label="Soggetto attuatore"
             value={project.attuatore}
             fallback="Non disponibile"
+          />
+          <MetaRow
+            label="Soggetto sub-attuatore"
+            value={project.subAttuatore}
           />
           <MetaRow
             label="Localizzazione"
@@ -1063,23 +1148,27 @@ function PnrrCard({ project }: { project: PnrrProject }) {
 
         <SourceTraceability project={project} />
 
-        <div className="mb-4 flex flex-wrap items-center gap-3">
-          <Link
-            href={`/monitoraggio/nuovo?pnrrProjectId=${project.id}`}
-            className="inline-flex items-center gap-1.5 rounded-md border border-brand/40 bg-brand/10 px-2.5 py-1 text-xs font-semibold text-brand transition-colors hover:bg-brand/20"
-            data-testid={`link-monitora-pnrr-${project.id}`}
-          >
-            <Telescope className="h-3.5 w-3.5" aria-hidden="true" />
-            Monitora questo progetto
-          </Link>
-        </div>
+        {project.dataOrigin !== "static-municipal" && (
+          <>
+            <div className="mb-4 flex flex-wrap items-center gap-3">
+              <Link
+                href={`/monitoraggio/nuovo?pnrrProjectId=${project.id}`}
+                className="inline-flex items-center gap-1.5 rounded-md border border-brand/40 bg-brand/10 px-2.5 py-1 text-xs font-semibold text-brand transition-colors hover:bg-brand/20"
+                data-testid={`link-monitora-pnrr-${project.id}`}
+              >
+                <Telescope className="h-3.5 w-3.5" aria-hidden="true" />
+                Monitora questo progetto
+              </Link>
+            </div>
 
-        <MonitoringReportsSection
-          subjectType="pnrr"
-          pnrrProjectId={project.id}
-        />
+            <MonitoringReportsSection
+              subjectType="pnrr"
+              pnrrProjectId={project.id}
+            />
+          </>
+        )}
 
-        {asApiList<PnrrProject["attachments"][number]>(project.attachments)
+        {asApiList<PnrrViewProject["attachments"][number]>(project.attachments)
           .length > 0 && (
           <section
             className="mt-4 border-t border-border/60 pt-4"
@@ -1093,7 +1182,7 @@ function PnrrCard({ project }: { project: PnrrProject }) {
               Allegati ufficiali Comune
             </h4>
             <ul className="space-y-1.5">
-              {asApiList<PnrrProject["attachments"][number]>(
+              {asApiList<PnrrViewProject["attachments"][number]>(
                 project.attachments,
               ).map((att) => (
                 <li key={att.url}>
@@ -1129,10 +1218,10 @@ function PnrrCard({ project }: { project: PnrrProject }) {
               {project.documentsCount}
             </span>
           </h4>
-          {asApiList<PnrrProject["documents"][number]>(project.documents)
+          {asApiList<PnrrViewProject["documents"][number]>(project.documents)
             .length > 0 ? (
             <div className="space-y-2">
-              {asApiList<PnrrProject["documents"][number]>(
+              {asApiList<PnrrViewProject["documents"][number]>(
                 project.documents,
               ).map((doc) => (
                 <div key={doc.id} className="rounded-lg bg-muted/30 p-3">
@@ -1176,7 +1265,7 @@ function PnrrCard({ project }: { project: PnrrProject }) {
   );
 }
 
-function SourceTraceability({ project }: { project: PnrrProject }) {
+function SourceTraceability({ project }: { project: PnrrViewProject }) {
   const projectSourceLabel = sourceLabelForUrl(
     project.projectSourceUrl,
     "Dataset ufficiale Italia Domani — Progetti PNRR",
@@ -1221,7 +1310,9 @@ function SourceTraceability({ project }: { project: PnrrProject }) {
           )}
           <p className="mt-1 text-xs text-muted-foreground">
             {projectSourceLabel
-              ? "Fonte usata per leggere o verificare anagrafica, importi, missione e stato dei CUP selezionati."
+              ? project.dataOrigin === "static-municipal"
+                ? "Scheda ufficiale usata per acquisire anagrafica, CUP, importo, missione e allegati esposti dal Comune."
+                : "Fonte usata per leggere o verificare anagrafica, importi, missione e stato dei CUP selezionati."
               : "Il metadato dell'ultimo tentativo è separato dai dati già pubblicati: serve verifica tecnica prima di attribuire una fonte puntuale."}
           </p>
         </div>
@@ -1247,7 +1338,9 @@ function SourceTraceability({ project }: { project: PnrrProject }) {
           )}
           <p className="mt-1 text-xs text-muted-foreground">
             {locationSourceLabel
-              ? "Fonte usata per filtrare o verificare i CUP associati al Comune di Lamezia Terme prima della pubblicazione nel tracker."
+              ? project.dataOrigin === "static-municipal"
+                ? "L'inclusione nella sezione comunale definisce il perimetro del feed, ma non prova l'ubicazione puntuale del singolo intervento."
+                : "Fonte usata per filtrare o verificare i CUP associati al Comune di Lamezia Terme prima della pubblicazione nel tracker."
               : "Il metadato disponibile non permette di attribuire con certezza la fonte di localizzazione delle righe già pubblicate."}
           </p>
         </div>
@@ -1285,8 +1378,8 @@ function SourceTraceability({ project }: { project: PnrrProject }) {
   );
 }
 
-function LinkedContractsSection({ project }: { project: PnrrProject }) {
-  const linkedContracts = asApiList<PnrrProject["linkedContracts"][number]>(
+function LinkedContractsSection({ project }: { project: PnrrViewProject }) {
+  const linkedContracts = asApiList<PnrrViewProject["linkedContracts"][number]>(
     project.linkedContracts,
   );
 

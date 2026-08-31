@@ -72,6 +72,21 @@ export const DATA_SOURCES = [
       "I dataset possono avere granularità, completezza e periodicità diverse. Le trasformazioni tabellari e gli snapshot locali servono alla consultazione civica e vanno confrontati con la scheda ufficiale del dataset.",
   },
   {
+    name: "Comune di Lamezia Terme — Attuazione Misure PNRR",
+    description:
+      "Indice e schede puntuali dei progetti pubblicati nella sezione PNRR comunale, con CUP, importi, soggetti e allegati quando esposti.",
+    href: "https://www.comune.lamezia-terme.cz.it/it/attuazione-misure-pnrr",
+    linkLabel: "Apri la sezione PNRR del Comune",
+    linkScope: "specifico",
+    linkNote:
+      "Fonte locale primaria del feed statico; ogni scheda conserva il proprio URL puntuale e viene riconciliata con gli atti Albo soltanto tramite CUP identico.",
+    dataType: "Ufficiale",
+    updateFrequency:
+      "Controllo automatico giornaliero; il sito conserva l'ultima materializzazione valida quando l'acquisizione o i controlli falliscono.",
+    limitations:
+      "Il perimetro coincide con le schede pubblicate nella sezione comunale e non equivale al censimento nazionale completo. La data di pubblicazione non è trattata come data di aggiornamento o avanzamento.",
+  },
+  {
     name: "Italia Domani — Open data PNRR",
     description:
       "Dataset nazionali sui progetti PNRR, filtrati per il Comune di Lamezia Terme e collegati ai CUP quando presenti.",

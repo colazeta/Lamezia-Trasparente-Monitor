@@ -1,0 +1,77 @@
+name: Lamezia PNRR static feed refresh
+
+on:
+  workflow_dispatch:
+  schedule:
+    # GitHub cron is UTC: 05:45 UTC is 06:45 CET and 07:45 CEST.
+    - cron: "45 5 * * *"
+  pull_request:
+    paths:
+      - "scripts/build-lamezia-pnrr-static-data.mjs"
+      - "scripts/check-lamezia-pnrr-static-data.mjs"
+      - "scripts/pnrr/**"
+      - "artifacts/lamezia-trasparente/src/data/lameziaPnrr*"
+      - "artifacts/lamezia-trasparente/src/pages/Pnrr.tsx"
+      - ".github/workflows/lamezia-pnrr-static-data.yml"
+  push:
+    branches: [main]
+    paths:
+      - "scripts/build-lamezia-pnrr-static-data.mjs"
+      - "scripts/check-lamezia-pnrr-static-data.mjs"
+      - "scripts/pnrr/**"
+      - ".github/workflows/lamezia-pnrr-static-data.yml"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: lamezia-pnrr-static-feed-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  refresh-pnrr-feed:
+    name: Validate and refresh municipal PNRR feed
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Fast-forward branch before scheduled write
+        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+        run: git pull --ff-only origin main
+
+      - name: Test parser, safety policy and CUP reconciliation
+        run: |
+          node --check scripts/pnrr/lameziaPnrrCore.mjs
+          node --check scripts/build-lamezia-pnrr-static-data.mjs
+          node --check scripts/check-lamezia-pnrr-static-data.mjs
+          node --test scripts/pnrr/lameziaPnrrCore.test.mjs
+          node scripts/check-lamezia-pnrr-static-data.mjs
+
+      - name: Materialize official municipal project pages
+        if: github.event_name != 'pull_request'
+        run: node scripts/build-lamezia-pnrr-static-data.mjs
+
+      - name: Commit changed static feed
+        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add artifacts/lamezia-trasparente/src/data/generated/lameziaPnrrProjects.json
+
+          if git diff --cached --quiet; then
+            echo "No PNRR source or reconciliation changes to commit."
+            exit 0
+          fi
+
+          git commit -m "Update Lamezia PNRR static feed"
+          git push
