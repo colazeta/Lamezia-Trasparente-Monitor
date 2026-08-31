@@ -1,6 +1,9 @@
 import { describe, expect, it } from "vitest";
 
-import type { SpatialLayerDefinition } from "./layerRegistry";
+import {
+  getActiveAtlasSpatialLayers,
+  type SpatialLayerDefinition,
+} from "./layerRegistry";
 import {
   buildGeoLibreViewerUrl,
   isGeoLibrePilotEnabled,
@@ -87,6 +90,31 @@ describe("GeoLibre pilot helpers", () => {
     expect(url.searchParams.getAll("data")).toEqual([
       "https://api.lamezia.example/api/gis/comune",
       "https://lamezia.example/data/processed/territorio/sezioni.geojson",
+    ]);
+  });
+
+  it("keeps the GeoLibre pilot aligned with the active canonical Atlas registry", () => {
+    const activeLayers = getActiveAtlasSpatialLayers();
+
+    expect(activeLayers.map((item) => item.id)).toEqual([
+      "municipal-boundary",
+      "census-sections",
+      "confiscated-assets",
+    ]);
+
+    const url = new URL(
+      buildGeoLibreViewerUrl({
+        viewerBaseUrl: "https://web.geolibre.app/",
+        layers: activeLayers,
+        siteOrigin: "https://lamezia.example",
+        apiBaseUrl: "https://api.lamezia.example",
+      }),
+    );
+
+    expect(url.searchParams.getAll("data")).toEqual([
+      "https://api.lamezia.example/api/gis/comune",
+      "https://lamezia.example/data/processed/territorio/istat_sezioni_censimento_lamezia.geojson",
+      "https://api.lamezia.example/api/beni-confiscati/geojson",
     ]);
   });
 });
