@@ -1,0 +1,60 @@
+import type { SpatialLayerDefinition } from "./layerRegistry";
+
+export type BuildGeoLibreViewerUrlOptions = {
+  viewerBaseUrl: string;
+  layers: SpatialLayerDefinition[];
+  siteOrigin: string;
+  apiBaseUrl?: string | null;
+  theme?: "light" | "dark" | null;
+};
+
+export function isGeoLibrePilotEnabled(value: string | undefined): boolean {
+  return value?.trim().toLowerCase() === "true";
+}
+
+export function buildGeoLibreViewerUrl({
+  viewerBaseUrl,
+  layers,
+  siteOrigin,
+  apiBaseUrl = null,
+  theme = null,
+}: BuildGeoLibreViewerUrlOptions): string {
+  const viewerUrl = new URL(viewerBaseUrl);
+  viewerUrl.search = "";
+  viewerUrl.searchParams.set("layout", "viewer");
+  viewerUrl.searchParams.set("panels", "collapsed");
+
+  if (theme) {
+    viewerUrl.searchParams.set("theme", theme);
+  }
+
+  for (const layer of layers) {
+    if (!layer.dataPath) continue;
+    viewerUrl.searchParams.append(
+      "data",
+      resolveSpatialDataUrl(layer.dataPath, siteOrigin, apiBaseUrl),
+    );
+  }
+
+  return viewerUrl.toString();
+}
+
+export function resolveSpatialDataUrl(
+  dataPath: string,
+  siteOrigin: string,
+  apiBaseUrl?: string | null,
+): string {
+  if (/^https?:\/\//i.test(dataPath)) return dataPath;
+
+  const normalizedApiBaseUrl = apiBaseUrl?.trim() ?? "";
+  const baseUrl =
+    dataPath.startsWith("/api/") && normalizedApiBaseUrl
+      ? normalizedApiBaseUrl
+      : siteOrigin;
+
+  return new URL(dataPath, ensureTrailingSlash(baseUrl)).toString();
+}
+
+function ensureTrailingSlash(value: string): string {
+  return value.endsWith("/") ? value : `${value}/`;
+}
