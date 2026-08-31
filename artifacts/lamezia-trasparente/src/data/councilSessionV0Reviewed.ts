@@ -31,7 +31,7 @@ const COUNCIL_VITALE_VIDEO_URL = "https://www.instagram.com/reel/DcGRDc8o1qI/";
 const SOURCE_REVIEWED_AT = "2026-08-22T12:10:49Z";
 const CONTEXT_RESEARCHED_AT = "2026-08-23T10:48:08Z";
 const COUNCIL_CONTEXT_RESEARCHED_AT = "2026-08-27T21:49:11Z";
-const COMMISSION_VI_RESEARCHED_AT = "2026-08-31T15:53:04Z";
+const COMMISSION_VI_RESEARCHED_AT = "2026-08-31T22:02:47Z";
 
 const councilContextResearch: CouncilSessionV0ContextResearch = {
   status: "reviewed_matches",
@@ -258,7 +258,7 @@ const commissionViContextResearch: CouncilSessionV0ContextResearch = {
   status: "checked_no_match",
   checkedAt: COMMISSION_VI_RESEARCHED_AT,
   searchNote:
-    "Ricerca eseguita sui metadati ufficiali della pubblicazione 2026/2788, sulla VI Commissione e sul titolo «Calendario lavori». Non sono emersi articoli, dirette, registrazioni, clip o interviste collegabili con sufficiente precisione. L'allegato ufficiale è individuato ma non ancora revisionato: la finestra di pubblicazione dell'Albo non viene usata come data della seduta e non sono ricostruiti temi editoriali.",
+    "Ricerca eseguita dopo la revisione dell'allegato ufficiale 2026/2788, usando VI Commissione, le date del 1° e 4 settembre 2026, l'orario delle 12:00 e i due punti distintivi dell'ordine del giorno. Non sono emersi articoli, dirette, registrazioni, clip o interviste collegabili con sufficiente precisione. La ricerca sarà ripetuta in prossimità e dopo le sedute; non sono ricostruiti temi editoriali perché l'ordine del giorno ufficiale è disponibile.",
   articles: [],
   media: [],
 };
@@ -388,10 +388,11 @@ const commissionViProvenance: CouncilSessionV0Provenance = {
   sourceContentHash: commissionViCandidate.source.contentHash,
   documentSha256:
     "165152190ac39451d35caf5815bfb4d7d6d7ee66c20abe630c98b47d62858c72",
-  embeddedDocumentSha256: null,
+  embeddedDocumentSha256:
+    "c09e7aacd7d22f77f8e72db5b5198203748b5f032dfd604b236f46fe8a28197d",
   retrievedAt: commissionViCandidate.source.retrievedAt,
   reviewedAt: COMMISSION_VI_RESEARCHED_AT,
-  sourceReviewStatus: "official_metadata_only",
+  sourceReviewStatus: "reviewed_against_official_attachment",
 };
 
 const councilProvenance: CouncilSessionV0Provenance = {
@@ -537,108 +538,121 @@ function commissionSession(
   };
 }
 
-const commissionViCalendarCandidate: CouncilSessionV0 = {
-  id: "albo-2026-2788-commissione-vi-calendario",
-  kind: "commission",
-  isDemoFixture: false,
-  provenance: commissionViProvenance,
-  contextResearch: commissionViContextResearch,
-  title: {
-    key: "title",
-    label: "Titolo",
-    value: "VI Commissione consiliare permanente — calendario lavori",
-    sourceStatus: "verificato",
-    sourceUrl: COMMISSION_VI_NOTICE_URL,
-    limit:
-      "Titolo normalizzato dall'oggetto ufficiale della pubblicazione 2026/2788; il documento può programmare una o più sedute.",
-  },
-  scheduledAt: {
-    key: "scheduledAt",
-    label: "Data e ora",
-    value: null,
-    sourceStatus: "da_verificare",
-    sourceUrl: COMMISSION_VI_NOTICE_URL,
-    limit:
-      "Date e orari richiedono la revisione dell'allegato ufficiale. Il periodo 31 agosto–7 settembre è la finestra di pubblicazione dell'Albo e non viene presentato come data della seduta.",
-  },
-  sessionStatus: {
-    key: "sessionStatus",
-    label: "Stato seduta",
-    value: "non_verificata",
-    sourceStatus: "parziale",
-    sourceUrl: COMMISSION_VI_NOTICE_URL,
-    limit:
-      "La pubblicazione prova l'esistenza del calendario istituzionale, non lo svolgimento, l'eventuale rinvio o gli esiti delle sedute.",
-  },
-  agenda: {
-    key: "agenda",
-    label: "Ordine del giorno",
-    value: null,
-    sourceStatus: "da_verificare",
-    sourceUrl: COMMISSION_VI_NOTICE_URL,
-    limit:
-      "L'ordine del giorno non è ricavabile dai metadati dell'Albo e resta sospeso fino alla revisione dell'allegato.",
-  },
-  sourceLink: {
-    key: "sourceLink",
-    label: "Fonte",
-    value: "Apri il calendario ufficiale della VI Commissione",
-    sourceStatus: "verificato",
-    sourceUrl: COMMISSION_VI_NOTICE_URL,
-    limit:
-      "Pubblicazione 2026/2788; l'URL dell'allegato è stato acquisito dall'export pubblico del repository.",
-  },
-  liveStreaming: {
-    key: "liveStreaming",
-    label: "Streaming live",
-    value: null,
-    sourceStatus: "assente",
-    sourceUrl: COMMISSION_VI_NOTICE_URL,
-    limit:
-      "Non rilevato nei metadati ufficiali acquisiti; richiede un nuovo controllo dopo la verifica delle date.",
-  },
-  recording: {
-    key: "recording",
-    label: "Registrazione",
-    value: null,
-    sourceStatus: "assente",
-    sourceUrl: COMMISSION_VI_NOTICE_URL,
-    limit:
-      "Non rilevata nei metadati ufficiali acquisiti; non equivale a dichiararne l'inesistenza.",
-  },
-  minutesOrReport: {
-    key: "minutesOrReport",
-    label: "Verbale o resoconto",
-    value: null,
-    sourceStatus: "assente",
-    sourceUrl: COMMISSION_VI_NOTICE_URL,
-    limit:
-      "Non rilevato al primo controllo; eventuali pubblicazioni successive richiedono una ricerca separata.",
-  },
-  lastCheckedAt: {
-    key: "lastCheckedAt",
-    label: "Ultimo controllo",
-    value: COMMISSION_VI_RESEARCHED_AT,
-    sourceStatus: "verificato",
-    sourceUrl: OFFICIAL_ALBO_URL,
-    limit:
-      "Controllati elenco ufficiale, export pubblico e ricerca editoriale; resta da revisionare il contenuto dell'allegato.",
-  },
-  dataLimits: {
-    key: "dataLimits",
-    label: "Limiti del dato",
-    value: [
-      "La pubblicazione 2026/2788 riguarda un calendario lavori e può comprendere più sedute: non è materializzata come una singola occorrenza datata.",
-      "Date, orari, sede e ordine del giorno non sono ricavati dalla finestra di pubblicazione dell'Albo.",
-      "L'allegato ufficiale è archiviato con SHA-256, ma il contenuto non è ancora stato revisionato.",
-      "Non sono emersi collegamenti editoriali sufficientemente precisi al primo controllo.",
-    ],
-    sourceStatus: "parziale",
-    sourceUrl: COMMISSION_VI_NOTICE_URL,
-    limit:
-      "Scheda-candidato prudenziale: sarà espansa nelle singole sedute solo dopo la verifica dell'allegato ufficiale.",
-  },
-};
+const commissionViAgenda = [
+  "Denominazione comunale d'origine (De.Co.).",
+  "Regolamento chioschi.",
+] as const;
+
+function commissionViSession(
+  date: "2026-09-01" | "2026-09-04",
+): CouncilSessionV0 {
+  const italianDate =
+    date === "2026-09-01" ? "1 settembre 2026" : "4 settembre 2026";
+  const documentUrl = commissionViCandidate.source.documentUrl ?? undefined;
+
+  return {
+    id: `albo-2026-2788-commissione-vi-${date}`,
+    kind: "commission",
+    isDemoFixture: false,
+    provenance: commissionViProvenance,
+    contextResearch: commissionViContextResearch,
+    title: {
+      key: "title",
+      label: "Titolo",
+      value: `VI Commissione consiliare permanente — seduta del ${italianDate}`,
+      sourceStatus: "verificato",
+      sourceUrl: documentUrl,
+      limit:
+        "Titolo normalizzato dalla convocazione ufficiale; la fonte identifica la VI Commissione come Sviluppo economico ed attività produttive.",
+    },
+    scheduledAt: {
+      key: "scheduledAt",
+      label: "Data e ora",
+      value: `${date}T12:00:00+02:00`,
+      sourceStatus: "verificato",
+      sourceUrl: documentUrl,
+      limit:
+        "Data e ora trascritte dall'allegato ufficiale; indicano la programmazione, non provano lo svolgimento.",
+    },
+    sessionStatus: {
+      key: "sessionStatus",
+      label: "Stato seduta",
+      value: "non_verificata",
+      sourceStatus: "parziale",
+      sourceUrl: documentUrl,
+      limit:
+        "La convocazione documenta la seduta programmata; non è stata collegata una fonte che ne confermi lo svolgimento o l'eventuale rinvio.",
+    },
+    agenda: {
+      key: "agenda",
+      label: "Ordine del giorno",
+      value: commissionViAgenda,
+      sourceStatus: "verificato",
+      sourceUrl: documentUrl,
+      limit:
+        "Trascrizione fedele dei due punti riportati nell'allegato ufficiale; non documenta discussione, votazioni o esiti.",
+    },
+    sourceLink: {
+      key: "sourceLink",
+      label: "Fonte",
+      value: "Apri il calendario ufficiale della VI Commissione",
+      sourceStatus: "verificato",
+      sourceUrl: documentUrl,
+      limit: `Pubblicazione ${commissionViCandidate.publicationNumber}; copia acquisita e verificata tramite hash nel repository.`,
+    },
+    liveStreaming: {
+      key: "liveStreaming",
+      label: "Streaming live",
+      value: null,
+      sourceStatus: "assente",
+      sourceUrl: documentUrl,
+      limit:
+        "Non rilevato nella convocazione consultata; ciò non esclude che possa essere comunicato su un altro canale.",
+    },
+    recording: {
+      key: "recording",
+      label: "Registrazione",
+      value: null,
+      sourceStatus: "assente",
+      sourceUrl: documentUrl,
+      limit:
+        "Non rilevata nella fonte monitorata; nessuna conclusione viene tratta sulla disponibilità complessiva di registrazioni.",
+    },
+    minutesOrReport: {
+      key: "minutesOrReport",
+      label: "Verbale o resoconto",
+      value: null,
+      sourceStatus: "assente",
+      sourceUrl: documentUrl,
+      limit:
+        "Non rilevato nella convocazione; verbali o resoconti successivi richiedono una ricerca separata nelle fonti istituzionali.",
+    },
+    lastCheckedAt: {
+      key: "lastCheckedAt",
+      label: "Ultimo controllo",
+      value: COMMISSION_VI_RESEARCHED_AT,
+      sourceStatus: "verificato",
+      sourceUrl: documentUrl,
+      limit:
+        "Controllo della copia ufficiale archiviata e ricerca contestuale iniziale; nuovi collegamenti saranno verificati in prossimità e dopo la seduta.",
+    },
+    dataLimits: {
+      key: "dataLimits",
+      label: "Limiti del dato",
+      value: [
+        "La stessa convocazione programma due sedute, il 1° e il 4 settembre 2026 alle 12:00.",
+        "La sede non è indicata nell'allegato ufficiale e non viene inferita.",
+        "La scheda non certifica svolgimento, presenze, esiti o completezza storica.",
+        "Streaming, registrazione e verbale sono indicati come non rilevati nella fonte consultata, non come inesistenti.",
+        "Non sono emersi collegamenti editoriali sufficientemente precisi al primo controllo.",
+      ],
+      sourceStatus: "parziale",
+      sourceUrl: documentUrl,
+      limit:
+        "Prima verifica basata sul calendario ufficiale; la ricerca di copertura sarà ripetuta durante la finestra attiva.",
+    },
+  };
+}
 
 const councilVerifiedSession: CouncilSessionV0 = {
   id: "albo-2026-2673-consiglio-comunale",
@@ -743,7 +757,8 @@ const councilVerifiedSession: CouncilSessionV0 = {
 };
 
 export const councilSessionV0ReviewedRecords: readonly CouncilSessionV0[] = [
-  commissionViCalendarCandidate,
+  commissionViSession("2026-09-04"),
+  commissionViSession("2026-09-01"),
   commissionSession("2026-08-11"),
   commissionSession("2026-08-10"),
   councilVerifiedSession,

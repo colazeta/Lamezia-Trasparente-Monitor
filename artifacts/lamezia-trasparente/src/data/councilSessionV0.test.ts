@@ -197,7 +197,7 @@ describe("councilSessionV0", () => {
   });
 
   it("publishes source-traceable records for both council and commission notices", () => {
-    expect(councilSessionV0ReviewedRecords).toHaveLength(4);
+    expect(councilSessionV0ReviewedRecords).toHaveLength(5);
     expect(
       new Set(councilSessionV0ReviewedRecords.map((item) => item.kind)),
     ).toEqual(new Set(["council", "commission"]));
@@ -336,38 +336,47 @@ describe("councilSessionV0", () => {
     );
   });
 
-  it("keeps the VI Commission calendar as a metadata-only candidate until the attachment is reviewed", () => {
-    const calendar = findCouncilSessionV0ReviewedRecord(
-      "albo-2026-2788-commissione-vi-calendario",
+  it("expands the reviewed VI Commission calendar into two sourced occurrences", () => {
+    const commissionSessions = councilSessionV0ReviewedRecords.filter(
+      (session) =>
+        session.kind === "commission" &&
+        session.provenance?.publicationNumber === "2026/2788",
     );
 
-    expect(calendar?.kind).toBe("commission");
-    expect(calendar?.provenance?.publicationNumber).toBe("2026/2788");
-    expect(calendar?.provenance?.sourceContentHash).toBe(
-      "32af1fef2fdc84892259f836c0cc6c1aa70d1e404d664a91f7cad339e3c24629",
-    );
-    expect(calendar?.provenance?.documentUrl).toContain("2026_2788_2_P");
-    expect(calendar?.provenance?.archivedDocumentUrl).toBe(
-      "/data/public/albo/documents/2026/165152190ac39451d35caf5815bfb4d7d6d7ee66c20abe630c98b47d62858c72.pdf",
-    );
-    expect(calendar?.provenance?.documentSha256).toBe(
-      "165152190ac39451d35caf5815bfb4d7d6d7ee66c20abe630c98b47d62858c72",
-    );
-    expect(calendar?.provenance?.sourceReviewStatus).toBe(
-      "official_metadata_only",
-    );
-    expect(calendar?.scheduledAt.value).toBeNull();
-    expect(calendar?.scheduledAt.sourceStatus).toBe("da_verificare");
-    expect(calendar?.scheduledAt.limit).toMatch(
-      /finestra di pubblicazione.*non viene presentato come data/i,
-    );
-    expect(calendar?.agenda.value).toBeNull();
-    expect(calendar?.contextResearch.status).toBe("checked_no_match");
-    expect(calendar?.contextResearch.articles).toEqual([]);
-    expect(calendar?.contextResearch.media).toEqual([]);
-    expect(calendar?.dataLimits.value?.join(" ")).toMatch(
-      /può comprendere più sedute/i,
-    );
+    expect(
+      commissionSessions.map((session) => session.scheduledAt.value),
+    ).toEqual(["2026-09-04T12:00:00+02:00", "2026-09-01T12:00:00+02:00"]);
+    for (const session of commissionSessions) {
+      expect(session.provenance?.sourceContentHash).toBe(
+        "32af1fef2fdc84892259f836c0cc6c1aa70d1e404d664a91f7cad339e3c24629",
+      );
+      expect(session.provenance?.documentUrl).toContain("2026_2788_2_P");
+      expect(session.provenance?.archivedDocumentUrl).toBe(
+        "/data/public/albo/documents/2026/165152190ac39451d35caf5815bfb4d7d6d7ee66c20abe630c98b47d62858c72.pdf",
+      );
+      expect(session.provenance?.documentSha256).toBe(
+        "165152190ac39451d35caf5815bfb4d7d6d7ee66c20abe630c98b47d62858c72",
+      );
+      expect(session.provenance?.embeddedDocumentSha256).toBe(
+        "c09e7aacd7d22f77f8e72db5b5198203748b5f032dfd604b236f46fe8a28197d",
+      );
+      expect(session.provenance?.sourceReviewStatus).toBe(
+        "reviewed_against_official_attachment",
+      );
+      expect(session.scheduledAt.sourceStatus).toBe("verificato");
+      expect(session.agenda.sourceStatus).toBe("verificato");
+      expect(session.agenda.value).toEqual([
+        "Denominazione comunale d'origine (De.Co.).",
+        "Regolamento chioschi.",
+      ]);
+      expect(session.sessionStatus.value).toBe("non_verificata");
+      expect(session.contextResearch.status).toBe("checked_no_match");
+      expect(session.contextResearch.articles).toEqual([]);
+      expect(session.contextResearch.media).toEqual([]);
+      expect(session.dataLimits.value?.join(" ")).toMatch(
+        /sede non è indicata.*non viene inferita/i,
+      );
+    }
   });
 
   it("expands the reviewed II Commission calendar into two sourced occurrences", () => {
