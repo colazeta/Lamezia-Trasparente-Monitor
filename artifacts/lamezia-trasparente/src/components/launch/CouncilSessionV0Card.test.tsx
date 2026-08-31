@@ -259,20 +259,20 @@ describe("CouncilSessionV0Card", () => {
     expect(screen.getAllByText("Perché è collegato")).toHaveLength(8);
   });
 
-  it("shows the VI Commission calendar as metadata-only without inventing a date", () => {
-    const session = reviewedRecord(
-      "albo-2026-2788-commissione-vi-calendario",
-    );
+  it("shows a VI Commission occurrence from the reviewed official attachment", () => {
+    const session = reviewedRecord("albo-2026-2788-commissione-vi-2026-09-01");
 
     render(<CouncilSessionV0SummaryCard session={session} />);
 
     expect(
       screen.getByRole("heading", {
-        name: "VI Commissione consiliare permanente — calendario lavori",
+        name: "VI Commissione consiliare permanente — seduta del 1 settembre 2026",
       }),
     ).toBeInTheDocument();
-    expect(screen.getByText("Metadati ufficiali disponibili")).toBeInTheDocument();
-    expect(screen.getByText("Data da verificare")).toBeInTheDocument();
+    expect(
+      screen.getByText("Allegato ufficiale controllato"),
+    ).toBeInTheDocument();
+    expect(screen.getByText(/1 settembre 2026.*12:00/i)).toBeInTheDocument();
     expect(
       screen.getByText(
         "Ricerca di contesto eseguita: nessuna corrispondenza sufficientemente precisa",
