@@ -65,6 +65,22 @@ function parseHttpDate(value: string | null): Date | null {
   return Number.isNaN(parsed.getTime()) ? null : parsed;
 }
 
+function normalizeBirthCountrySourceStatus(
+  value: string,
+): ParsedBirthCountryObservation["sourceStatus"] {
+  switch (value) {
+    case "final":
+    case "provisional":
+    case "estimated":
+    case "reconstructed":
+    case "forecast":
+    case "unknown":
+      return value;
+    default:
+      return "unknown";
+  }
+}
+
 async function ensureSeries() {
   const values = {
     title: "Popolazione residente per paese di nascita al 1° gennaio",
@@ -217,7 +233,6 @@ async function fetchContract() {
   const html = await response.text();
   return { contract: parseRcsBirthFormContract(html), requests: 1 };
 }
-
 async function fetchYear(
   seriesId: number,
   contract: RcsBirthFormContract,
@@ -401,7 +416,7 @@ async function getCurrentBirthCountryPoints(): Promise<CurrentBirthCountryPoint[
       birthCountryLabel,
       sex,
       value: Number(row.value),
-      sourceStatus: row.sourceStatus,
+      sourceStatus: normalizeBirthCountrySourceStatus(row.sourceStatus),
       rawStatus: row.sourceObservationStatus,
       qualityFlags: row.qualityFlags as string[],
       releaseId: row.releaseId,

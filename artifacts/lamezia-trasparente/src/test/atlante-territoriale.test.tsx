@@ -279,7 +279,6 @@ describe("Atlante territoriale", () => {
 
   it("computes distribution bins while keeping null and zero distinct", () => {
     const summary = buildAtlanteDistribution([0, 10, 20, null, 20], 3);
-
     expect(summary.totalCount).toBe(5);
     expect(summary.availableCount).toBe(4);
     expect(summary.missingCount).toBe(1);
@@ -311,23 +310,22 @@ describe("Atlante territoriale", () => {
       screen.getByRole("heading", { name: "Atlante territoriale" }),
     ).toBeInTheDocument();
     expect(
-      screen.getByText("Scegli un indicatore, poi tocca un’area della mappa."),
+      await screen.findByText("Tocca un’area oppure usa la tabella sotto la mappa."),
     ).toBeInTheDocument();
-    expect(await screen.findByTestId("atlante-leaflet-map")).toBeInTheDocument();
+    expect(screen.getByTestId("atlante-leaflet-map")).toBeInTheDocument();
     expect(screen.getByTestId("atlante-istat-overlay")).toBeInTheDocument();
-    expect(screen.getByText("Tocca un’area per vedere i dati.")).toBeInTheDocument();
     expect(screen.queryByText(/in preparazione/i)).not.toBeInTheDocument();
     expect(
       screen.queryByRole("complementary", { name: /Dettaglio area Atlante/i }),
     ).not.toBeInTheDocument();
 
     const indicatorSelect = screen.getByRole("combobox", {
-      name: "Indicatore mappa",
+      name: "Indicatore della mappa censuaria",
     });
     expect(indicatorSelect).toHaveValue("popolazione-residente");
     expect(screen.getByText("2 sezioni con dato")).toBeInTheDocument();
     expect(screen.getByText("1 sezione senza dato")).toBeInTheDocument();
-    expect(screen.getByText("Fonte e limiti")).toBeInTheDocument();
+    expect(screen.getByText("Fonte e limiti dei dati censuari")).toBeInTheDocument();
 
     const basemapSelect = screen.getByRole("combobox", { name: "Sfondo mappa" });
     expect(basemapSelect).toHaveValue("none");
@@ -349,7 +347,9 @@ describe("Atlante territoriale", () => {
       screen.getByRole("button", { name: "Esci dalla pagina intera" }),
     );
 
-    fireEvent.click(screen.getByRole("button", { name: "Scarica mappa" }));
+    fireEvent.click(
+      screen.getByRole("button", { name: "Scarica mappa censuaria in SVG" }),
+    );
     expect(createObjectURL).toHaveBeenCalled();
     expect(clickSpy).toHaveBeenCalled();
     expect(revokeObjectURL).toHaveBeenCalledWith("blob:atlante-map");
@@ -401,7 +401,7 @@ describe("Atlante territoriale", () => {
     ).toBeInTheDocument();
     expect(screen.getAllByText("Dato non disponibile").length).toBeGreaterThan(0);
 
-    fireEvent.click(screen.getByText("Fonte e limiti"));
+    fireEvent.click(screen.getByText("Fonte e limiti dei dati censuari"));
     expect(screen.getByText("Fonte dati")).toBeInTheDocument();
     expect(screen.getByText("Come leggere")).toBeInTheDocument();
     expect(screen.getByText("Limiti")).toBeInTheDocument();
@@ -428,6 +428,6 @@ describe("Atlante territoriale", () => {
     expect(await screen.findAllByText(/Dato dimostrativo/i)).not.toHaveLength(0);
     expect(screen.getByTestId("atlante-leaflet-map")).toBeInTheDocument();
     expect(screen.queryByText(/in preparazione/i)).not.toBeInTheDocument();
-    expect(screen.getByText("Fonte e limiti")).toBeInTheDocument();
+    expect(screen.getByText("Fonte e limiti dei dati censuari")).toBeInTheDocument();
   });
 });

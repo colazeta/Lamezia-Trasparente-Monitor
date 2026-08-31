@@ -75,7 +75,10 @@ type CitizenshipResponse = {
 function formatPeople(value: number | null) {
   return value === null
     ? "—"
-    : new Intl.NumberFormat("it-IT", { maximumFractionDigits: 0 }).format(value);
+    : new Intl.NumberFormat("it-IT", {
+        maximumFractionDigits: 0,
+        useGrouping: "always",
+      }).format(value);
 }
 
 function formatPercent(value: number | null) {
