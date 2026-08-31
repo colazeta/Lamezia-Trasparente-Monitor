@@ -73,7 +73,13 @@ describe("Open Data discovery surface", () => {
         }`,
       ),
     ).toBeInTheDocument();
-    expect(scope.getByText("Ultimo dato: giu 2026")).toBeInTheDocument();
+    const airTraffic = LAMEZIA_OPEN_DATA_SERIES_BY_ID.get(
+      "lamezia-air-traffic-monthly",
+    );
+    expect(airTraffic).toBeDefined();
+    expect(
+      scope.getByText(`Ultimo dato: ${airTraffic!.latest_observation_label}`),
+    ).toBeInTheDocument();
     expect(
       scope.getByText("Ultimo dato: Risorsa corrente"),
     ).toBeInTheDocument();

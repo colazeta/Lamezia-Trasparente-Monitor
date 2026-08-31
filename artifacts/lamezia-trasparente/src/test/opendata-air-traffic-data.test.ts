@@ -7,21 +7,30 @@ describe("Lamezia air traffic monthly OpenData dataset", () => {
 
     expect(metadata.source).toContain("Assaeroporti");
     expect(metadata.first_month).toBe("2000-01");
-    expect(metadata.latest_complete_month).toBe("2026-06");
-    expect(monthly).toHaveLength(318);
-    expect(metadata.source_periods).toHaveLength(monthly.length);
+    expect(metadata.latest_complete_month).toBe(monthly.at(-1)?.month);
+    expect(monthly[0]?.month).toBe(metadata.first_month);
+    expect(monthly).toHaveLength(metadata.months);
     expect(metadata.source_file_url_template).toContain("download-export");
 
     const months = monthly.map((record) => record.month);
     expect([...months].sort()).toEqual(months);
     expect(new Set(months).size).toBe(months.length);
+    expect(metadata.source_periods).toEqual(months);
+    const [firstYear, firstMonth] = metadata.first_month.split("-").map(Number);
+    const [lastYear, lastMonth] = metadata.latest_complete_month
+      .split("-")
+      .map(Number);
+    expect(monthly).toHaveLength(
+      (lastYear - firstYear) * 12 + lastMonth - firstMonth + 1,
+    );
   });
 
-  it("matches the latest Assaeroporti row extracted for Lamezia Terme", () => {
-    const latest = LAMEZIA_AIR_TRAFFIC_DATA.monthly.at(-1);
-    const latestAnnual = LAMEZIA_AIR_TRAFFIC_DATA.annual.at(-1);
+  it("preserves the reviewed June 2026 Assaeroporti row as the series grows", () => {
+    const june = LAMEZIA_AIR_TRAFFIC_DATA.monthly.find(
+      (record) => record.month === "2026-06",
+    );
 
-    expect(latest).toMatchObject({
+    expect(june).toMatchObject({
       month: "2026-06",
       rank: 19,
       movements: {
@@ -40,12 +49,52 @@ describe("Lamezia air traffic monthly OpenData dataset", () => {
         total_yoy_pct: -0.305,
       },
     });
-    expect(latestAnnual).toMatchObject({
-      year: 2026,
-      months: 6,
-      passengers_total: 1534874,
-      movements_total: 12061,
-      cargo_tons_total: 550.6,
-    });
+    const firstHalf = LAMEZIA_AIR_TRAFFIC_DATA.monthly.filter(
+      (record) => record.year === 2026 && record.month_number <= 6,
+    );
+    expect(firstHalf).toHaveLength(6);
+    expect(
+      firstHalf.reduce(
+        (sum, record) => sum + (record.passengers.total ?? 0),
+        0,
+      ),
+    ).toBe(1534874);
+    expect(
+      firstHalf.reduce((sum, record) => sum + (record.movements.total ?? 0), 0),
+    ).toBe(12061);
+    expect(
+      firstHalf.reduce(
+        (sum, record) => sum + (record.cargo_tons.total ?? 0),
+        0,
+      ),
+    ).toBeCloseTo(550.6, 1);
+  });
+
+  it("reconciles annual summaries with all available months, including new releases", () => {
+    const { monthly, annual } = LAMEZIA_AIR_TRAFFIC_DATA;
+    expect(annual.map((record) => record.year)).toEqual([
+      ...new Set(monthly.map((record) => record.year)),
+    ]);
+    for (const summary of annual) {
+      const records = monthly.filter((record) => record.year === summary.year);
+      expect(summary.months).toBe(records.length);
+      expect(summary.latest_month).toBe(records.at(-1)?.month);
+      expect(summary.passengers_total).toBe(
+        records.reduce(
+          (sum, record) => sum + (record.passengers.total ?? 0),
+          0,
+        ),
+      );
+      expect(summary.movements_total).toBe(
+        records.reduce((sum, record) => sum + (record.movements.total ?? 0), 0),
+      );
+      expect(summary.cargo_tons_total).toBe(
+        Number(
+          records
+            .reduce((sum, record) => sum + (record.cargo_tons.total ?? 0), 0)
+            .toFixed(1),
+        ),
+      );
+    }
   });
 });
