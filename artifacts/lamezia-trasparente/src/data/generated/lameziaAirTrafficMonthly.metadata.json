@@ -3,9 +3,9 @@
   "dataset_id": "lamezia-air-traffic-monthly",
   "source": "Assaeroporti - Dati di traffico aeroportuale",
   "source_url": "https://assaeroporti.com/dati-di-traffico/",
-  "generated_at": "2026-08-20T21:38:49.926Z",
-  "latest_data_point": "2026-06",
-  "record_count": 318,
+  "generated_at": "2026-08-31T13:34:53.416Z",
+  "latest_data_point": "2026-07",
+  "record_count": 319,
   "update_policy": "Aggiornamento mensile quando Assaeroporti pubblica un nuovo file Excel di traffico aeroportuale.",
   "caveat": "La fonte misura traffico aeroportuale mensile dello scalo, non soli arrivi a Lamezia Terme: passeggeri e movimenti sono conteggi complessivi di aeroporto secondo le tabelle Assaeroporti.",
   "licence_or_terms_note": "Dato riusato da file pubblici Assaeroporti; verificare le condizioni del sito sorgente prima di redistribuzioni esterne."
