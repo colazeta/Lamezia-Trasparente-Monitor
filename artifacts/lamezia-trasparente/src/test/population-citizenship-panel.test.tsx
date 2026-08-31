@@ -120,18 +120,25 @@ describe("PopulationCitizenshipPanel", () => {
     expect(foreignCard).not.toBeNull();
     expect(shareCard).not.toBeNull();
     expect(deltaCard).not.toBeNull();
-    expect(within(foreignCard as HTMLElement).getByText("6.000")).toBeInTheDocument();
-    expect(within(shareCard as HTMLElement).getByText("9%")).toBeInTheDocument();
-    expect(within(deltaCard as HTMLElement).getByText("+6 p.p.")).toBeInTheDocument();
-    expect(
-      within(deltaCard as HTMLElement).getByText(/2025.*2002/i),
-    ).toBeInTheDocument();
+    expect(foreignCard).toHaveTextContent("6.000");
+    expect(shareCard).toHaveTextContent("9%");
+    expect(deltaCard).toHaveTextContent("+6 p.p.");
+    expect(deltaCard).toHaveTextContent(/incidenza 2025 rispetto al 2002/i);
 
-    expect(screen.getByText("Dettaglio disponibile per il 2024")).toBeInTheDocument();
-    expect(screen.getByText("Romania")).toBeInTheDocument();
-    expect(screen.getByText("Ucraina")).toBeInTheDocument();
-    expect(screen.getByText(/differenza rispetto al totale stranieri 30/i)).toBeInTheDocument();
-    expect(screen.getAllByText(/paese di nascita/i).length).toBeGreaterThan(0);
+    const countriesTitle = screen.getByText("Principali cittadinanze");
+    const countriesCard = countriesTitle.closest("div.rounded-xl");
+    expect(countriesCard).not.toBeNull();
+    expect(countriesCard).toHaveTextContent("Dettaglio disponibile per il 2024");
+    expect(within(countriesCard as HTMLElement).getByText("Romania")).toBeInTheDocument();
+    expect(within(countriesCard as HTMLElement).getByText("Ucraina")).toBeInTheDocument();
+    expect(countriesCard).toHaveTextContent(
+      /differenza rispetto al totale stranieri 30/i,
+    );
+
+    expect(document.body).toHaveTextContent(/paese di nascita/i);
+    expect(document.body).toHaveTextContent(
+      /non è inferito dalla cittadinanza/i,
+    );
     expect(fetchMock).toHaveBeenCalledWith("/api/demographics/citizenship");
   });
 
