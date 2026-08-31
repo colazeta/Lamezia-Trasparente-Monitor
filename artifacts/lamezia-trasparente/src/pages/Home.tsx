@@ -538,7 +538,7 @@ export function HomeInstitutionalSessions() {
           />
           <InstitutionalSessionsHomeCard
             title="Commissioni consiliari"
-            description="Due sedute della II Commissione trascritte dallo stesso allegato ufficiale, con data, ora e ordine del giorno controllati."
+            description="Due sedute della II Commissione con dati controllati e un calendario della VI Commissione ancora senza date verificate."
             icon={CalendarClock}
             sessions={commissionHomeSessions}
           />
@@ -559,16 +559,25 @@ function InstitutionalSessionsHomeCard({
   icon: React.ElementType;
   sessions: readonly CouncilSessionV0[];
 }) {
-  const attachmentReviewed = sessions.some(
-    (session) =>
-      session.provenance?.sourceReviewStatus ===
-      "reviewed_against_official_attachment",
+  const sourceReviewStatuses = new Set(
+    sessions
+      .map((session) => session.provenance?.sourceReviewStatus)
+      .filter(Boolean),
   );
-  const laterOfficialSourceReviewed = sessions.some(
-    (session) =>
-      session.provenance?.sourceReviewStatus ===
-      "reviewed_against_later_official_source",
+  const hasMixedSourceReview = sourceReviewStatuses.size > 1;
+  const attachmentReviewed = sourceReviewStatuses.has(
+    "reviewed_against_official_attachment",
   );
+  const laterOfficialSourceReviewed = sourceReviewStatuses.has(
+    "reviewed_against_later_official_source",
+  );
+  const publicationNumbers = [
+    ...new Set(
+      sessions
+        .map((session) => session.provenance?.publicationNumber)
+        .filter((publication): publication is string => Boolean(publication)),
+    ),
+  ];
 
   return (
     <Card className="flex h-full flex-col overflow-hidden border-primary/20">
@@ -578,11 +587,13 @@ function InstitutionalSessionsHomeCard({
             <Icon className="h-5 w-5" aria-hidden="true" />
           </span>
           <span className="rounded-full border border-primary/20 bg-primary/5 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-primary">
-            {attachmentReviewed
-              ? "Allegato controllato"
-              : laterOfficialSourceReviewed
-                ? "Fonte successiva controllata"
-                : "Metadati ufficiali"}
+            {hasMixedSourceReview
+              ? "Verifica mista"
+              : attachmentReviewed
+                ? "Allegato controllato"
+                : laterOfficialSourceReviewed
+                  ? "Fonte successiva controllata"
+                  : "Metadati ufficiali"}
           </span>
         </div>
         <h3 className="mt-4 font-display text-2xl font-bold tracking-tight">
@@ -688,8 +699,8 @@ function InstitutionalSessionsHomeCard({
         </div>
 
         <div className="mt-auto border-t border-border bg-muted/20 px-4 py-3 text-xs leading-5 text-muted-foreground">
-          {sessions.length > 0
-            ? `Fonte: Albo Pretorio · pubblicazione ${sessions[0].provenance?.publicationNumber}`
+          {publicationNumbers.length > 0
+            ? `Fonte: Albo Pretorio · ${publicationNumbers.length === 1 ? "pubblicazione" : "pubblicazioni"} ${publicationNumbers.join(", ")}`
             : "Nessuna scheda revisionata disponibile."}
         </div>
       </CardContent>

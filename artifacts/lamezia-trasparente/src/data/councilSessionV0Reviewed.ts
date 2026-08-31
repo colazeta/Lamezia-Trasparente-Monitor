@@ -15,6 +15,10 @@ const COMMISSION_NOTICE_URL =
   "https://albo.tinnvision.cloud/allegati/2026_2648_2_P?ente=00301390795";
 const COMMISSION_ARCHIVED_DOCUMENT_URL =
   "/data/public/albo/documents/2026/842702b2044b4b6f9a7b21a65eac2ab59866ee3f321872e6b28fd481598be304.pdf";
+const COMMISSION_VI_NOTICE_URL =
+  "https://albo.tinnvision.cloud/allegati/2026_2788_2_P?ente=00301390795";
+const COMMISSION_VI_ARCHIVED_DOCUMENT_URL =
+  "/data/public/albo/documents/2026/165152190ac39451d35caf5815bfb4d7d6d7ee66c20abe630c98b47d62858c72.pdf";
 const COUNCIL_SESSION_EVIDENCE_URL =
   "https://albo.tinnvision.cloud/allegati/2026_2755_6_ALLEG?ente=00301390795";
 const COUNCIL_SESSION_EVIDENCE_ARCHIVE_URL =
@@ -27,6 +31,7 @@ const COUNCIL_VITALE_VIDEO_URL = "https://www.instagram.com/reel/DcGRDc8o1qI/";
 const SOURCE_REVIEWED_AT = "2026-08-22T12:10:49Z";
 const CONTEXT_RESEARCHED_AT = "2026-08-23T10:48:08Z";
 const COUNCIL_CONTEXT_RESEARCHED_AT = "2026-08-27T21:49:11Z";
+const COMMISSION_VI_RESEARCHED_AT = "2026-08-31T15:53:04Z";
 
 const councilContextResearch: CouncilSessionV0ContextResearch = {
   status: "reviewed_matches",
@@ -249,6 +254,15 @@ const councilContextResearch: CouncilSessionV0ContextResearch = {
   ],
 };
 
+const commissionViContextResearch: CouncilSessionV0ContextResearch = {
+  status: "checked_no_match",
+  checkedAt: COMMISSION_VI_RESEARCHED_AT,
+  searchNote:
+    "Ricerca eseguita sui metadati ufficiali della pubblicazione 2026/2788, sulla VI Commissione e sul titolo «Calendario lavori». Non sono emersi articoli, dirette, registrazioni, clip o interviste collegabili con sufficiente precisione. L'allegato ufficiale è individuato ma non ancora revisionato: la finestra di pubblicazione dell'Albo non viene usata come data della seduta e non sono ricostruiti temi editoriali.",
+  articles: [],
+  media: [],
+};
+
 const commissionContextResearch: CouncilSessionV0ContextResearch = {
   status: "reviewed_matches",
   checkedAt: CONTEXT_RESEARCHED_AT,
@@ -310,6 +324,25 @@ const commissionCandidate = requireCandidate({
   public_visibility: "publishable",
 });
 
+const commissionViCandidate = requireCandidate({
+  id: "albo-2026-2788",
+  source: "Albo Pretorio Comune di Lamezia Terme",
+  source_url: OFFICIAL_ALBO_URL,
+  retrieved_at: "2026-08-31T13:37:46.902Z",
+  publication_number: "2026/2788",
+  publication_start: "2026-08-31",
+  publication_end: "2026-09-07",
+  act_type: "CONVOCAZIONI COMMISSIONI CONSILIARI",
+  subject:
+    "Convocazione 6° Commissione Consiliare Permanente. Calendario lavori.",
+  document_url: COMMISSION_VI_NOTICE_URL,
+  content_hash:
+    "32af1fef2fdc84892259f836c0cc6c1aa70d1e404d664a91f7cad339e3c24629",
+  verification_status: "official_source_acquired",
+  privacy_risk: "low",
+  public_visibility: "publishable",
+});
+
 const councilCandidate = requireCandidate({
   id: "albo-2026-2673",
   source: "Albo Pretorio Comune di Lamezia Terme",
@@ -343,6 +376,22 @@ const commissionProvenance: CouncilSessionV0Provenance = {
   retrievedAt: commissionCandidate.source.retrievedAt,
   reviewedAt: SOURCE_REVIEWED_AT,
   sourceReviewStatus: "reviewed_against_official_attachment",
+};
+
+const commissionViProvenance: CouncilSessionV0Provenance = {
+  noticeId: commissionViCandidate.id,
+  publicationNumber: commissionViCandidate.publicationNumber,
+  sourceLabel: commissionViCandidate.source.label,
+  sourceUrl: commissionViCandidate.source.url,
+  documentUrl: commissionViCandidate.source.documentUrl,
+  archivedDocumentUrl: COMMISSION_VI_ARCHIVED_DOCUMENT_URL,
+  sourceContentHash: commissionViCandidate.source.contentHash,
+  documentSha256:
+    "165152190ac39451d35caf5815bfb4d7d6d7ee66c20abe630c98b47d62858c72",
+  embeddedDocumentSha256: null,
+  retrievedAt: commissionViCandidate.source.retrievedAt,
+  reviewedAt: COMMISSION_VI_RESEARCHED_AT,
+  sourceReviewStatus: "official_metadata_only",
 };
 
 const councilProvenance: CouncilSessionV0Provenance = {
@@ -488,6 +537,109 @@ function commissionSession(
   };
 }
 
+const commissionViCalendarCandidate: CouncilSessionV0 = {
+  id: "albo-2026-2788-commissione-vi-calendario",
+  kind: "commission",
+  isDemoFixture: false,
+  provenance: commissionViProvenance,
+  contextResearch: commissionViContextResearch,
+  title: {
+    key: "title",
+    label: "Titolo",
+    value: "VI Commissione consiliare permanente — calendario lavori",
+    sourceStatus: "verificato",
+    sourceUrl: COMMISSION_VI_NOTICE_URL,
+    limit:
+      "Titolo normalizzato dall'oggetto ufficiale della pubblicazione 2026/2788; il documento può programmare una o più sedute.",
+  },
+  scheduledAt: {
+    key: "scheduledAt",
+    label: "Data e ora",
+    value: null,
+    sourceStatus: "da_verificare",
+    sourceUrl: COMMISSION_VI_NOTICE_URL,
+    limit:
+      "Date e orari richiedono la revisione dell'allegato ufficiale. Il periodo 31 agosto–7 settembre è la finestra di pubblicazione dell'Albo e non viene presentato come data della seduta.",
+  },
+  sessionStatus: {
+    key: "sessionStatus",
+    label: "Stato seduta",
+    value: "non_verificata",
+    sourceStatus: "parziale",
+    sourceUrl: COMMISSION_VI_NOTICE_URL,
+    limit:
+      "La pubblicazione prova l'esistenza del calendario istituzionale, non lo svolgimento, l'eventuale rinvio o gli esiti delle sedute.",
+  },
+  agenda: {
+    key: "agenda",
+    label: "Ordine del giorno",
+    value: null,
+    sourceStatus: "da_verificare",
+    sourceUrl: COMMISSION_VI_NOTICE_URL,
+    limit:
+      "L'ordine del giorno non è ricavabile dai metadati dell'Albo e resta sospeso fino alla revisione dell'allegato.",
+  },
+  sourceLink: {
+    key: "sourceLink",
+    label: "Fonte",
+    value: "Apri il calendario ufficiale della VI Commissione",
+    sourceStatus: "verificato",
+    sourceUrl: COMMISSION_VI_NOTICE_URL,
+    limit:
+      "Pubblicazione 2026/2788; l'URL dell'allegato è stato acquisito dall'export pubblico del repository.",
+  },
+  liveStreaming: {
+    key: "liveStreaming",
+    label: "Streaming live",
+    value: null,
+    sourceStatus: "assente",
+    sourceUrl: COMMISSION_VI_NOTICE_URL,
+    limit:
+      "Non rilevato nei metadati ufficiali acquisiti; richiede un nuovo controllo dopo la verifica delle date.",
+  },
+  recording: {
+    key: "recording",
+    label: "Registrazione",
+    value: null,
+    sourceStatus: "assente",
+    sourceUrl: COMMISSION_VI_NOTICE_URL,
+    limit:
+      "Non rilevata nei metadati ufficiali acquisiti; non equivale a dichiararne l'inesistenza.",
+  },
+  minutesOrReport: {
+    key: "minutesOrReport",
+    label: "Verbale o resoconto",
+    value: null,
+    sourceStatus: "assente",
+    sourceUrl: COMMISSION_VI_NOTICE_URL,
+    limit:
+      "Non rilevato al primo controllo; eventuali pubblicazioni successive richiedono una ricerca separata.",
+  },
+  lastCheckedAt: {
+    key: "lastCheckedAt",
+    label: "Ultimo controllo",
+    value: COMMISSION_VI_RESEARCHED_AT,
+    sourceStatus: "verificato",
+    sourceUrl: OFFICIAL_ALBO_URL,
+    limit:
+      "Controllati elenco ufficiale, export pubblico e ricerca editoriale; resta da revisionare il contenuto dell'allegato.",
+  },
+  dataLimits: {
+    key: "dataLimits",
+    label: "Limiti del dato",
+    value: [
+      "La pubblicazione 2026/2788 riguarda un calendario lavori e può comprendere più sedute: non è materializzata come una singola occorrenza datata.",
+      "Date, orari, sede e ordine del giorno non sono ricavati dalla finestra di pubblicazione dell'Albo.",
+      "L'allegato ufficiale è archiviato con SHA-256, ma il contenuto non è ancora stato revisionato.",
+      "Non sono emersi collegamenti editoriali sufficientemente precisi al primo controllo.",
+    ],
+    sourceStatus: "parziale",
+    sourceUrl: COMMISSION_VI_NOTICE_URL,
+    limit:
+      "Scheda-candidato prudenziale: sarà espansa nelle singole sedute solo dopo la verifica dell'allegato ufficiale.",
+  },
+};
+
 const councilVerifiedSession: CouncilSessionV0 = {
   id: "albo-2026-2673-consiglio-comunale",
   kind: "council",
@@ -591,6 +743,7 @@ const councilVerifiedSession: CouncilSessionV0 = {
 };
 
 export const councilSessionV0ReviewedRecords: readonly CouncilSessionV0[] = [
+  commissionViCalendarCandidate,
   commissionSession("2026-08-11"),
   commissionSession("2026-08-10"),
   councilVerifiedSession,

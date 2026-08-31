@@ -72,7 +72,7 @@ function sourceReviewDescription(
   if (status === "reviewed_against_later_official_source") {
     return "Avviso ufficiale e fonte istituzionale successiva controllati";
   }
-  return "Solo metadati ufficiali; allegato non disponibile nell'export";
+  return "Metadati ufficiali acquisiti; allegato non ancora revisionato";
 }
 
 function textValue(field: CouncilSessionV0Field<unknown>) {
