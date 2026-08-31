@@ -6,10 +6,12 @@ import { Toaster } from "sonner";
 import { CivicHelperProvider } from "@/components/helper/CivicHelperContext";
 import { ThemeProvider } from "@/components/theme/ThemeProvider";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { EvidenceRoutes } from "./EvidenceRoutes";
 import { Router } from "./Router";
 
 const ClerkApp = lazy(() => import("./ClerkApp"));
+const EvidenceRoutes = lazy(() =>
+  import("./EvidenceRoutes").then((module) => ({ default: module.EvidenceRoutes })),
+);
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -62,6 +64,25 @@ function AppLoading() {
   );
 }
 
+function EvidenceLoading() {
+  return (
+    <main
+      className="flex min-h-[100dvh] items-center justify-center bg-background px-4 text-sm font-semibold text-muted-foreground"
+      role="status"
+    >
+      Caricamento archivio…
+    </main>
+  );
+}
+
+function EvidenceRoute() {
+  return (
+    <Suspense fallback={<EvidenceLoading />}>
+      <EvidenceRoutes />
+    </Suspense>
+  );
+}
+
 function App() {
   if (!configuredClerkPubKey) {
     return (
@@ -79,8 +100,8 @@ function App() {
                     path="/admin/*?"
                     component={RedazioneUnavailablePage}
                   />
-                  <Route path="/interventi-locali" component={EvidenceRoutes} />
-                  <Route path="/interventi-locali/:id" component={EvidenceRoutes} />
+                  <Route path="/interventi-locali" component={EvidenceRoute} />
+                  <Route path="/interventi-locali/:id" component={EvidenceRoute} />
                   <Route component={Router} />
                 </Switch>
               </CivicHelperProvider>
