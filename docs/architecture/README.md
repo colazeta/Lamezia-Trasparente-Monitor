@@ -11,6 +11,7 @@ La documentazione ha uno scopo operativo: rendere verificabile da maintainer, re
 - [`integration-source-catalog.md`](integration-source-catalog.md) — catalogo delle fonti che alimentano o possono alimentare il prodotto, con ruolo, stato, superficie pubblica e caveat.
 - [`cruscotto-italia-integration.md`](cruscotto-italia-integration.md) — integrazione di Cruscotto Italia come fonte federata nazionale per il comune di Lamezia Terme.
 - [`territorial-information-architecture.md`](territorial-information-architecture.md) — architettura dell'Atlante territoriale come indice geografico unico, Spatial Contract, registry dei layer, regole di provenienza e percorso di integrazione GeoLibre.
+- [`geolibre-pilot.md`](geolibre-pilot.md) — contratto del pilot GeoLibre dietro feature flag, alimentazione dai layer canonici, CORS, deployment e criteri di promozione.
 - [`agid-alignment.md`](agid-alignment.md) — applicazione pratica di best practice AgID/Developers Italia/Designers Italia a documentazione, API, riuso, open data, accessibilità e manutenzione.
 
 ## Principio fondamentale
