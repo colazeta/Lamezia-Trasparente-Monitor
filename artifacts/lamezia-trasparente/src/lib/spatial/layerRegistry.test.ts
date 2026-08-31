@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import {
   getActiveAtlasSpatialLayers,
+  getInitialAtlasVisibleLayerIds,
   getSpatialLayer,
   SPATIAL_LAYER_REGISTRY,
 } from "./layerRegistry";
@@ -22,6 +23,27 @@ describe("spatial layer registry", () => {
     expect(getSpatialLayer("municipal-boundary")?.defaultVisible).toBe(true);
     expect(getSpatialLayer("census-sections")?.defaultVisible).toBe(true);
     expect(getSpatialLayer("confiscated-assets")?.defaultVisible).toBe(false);
+  });
+
+  it("derives the initial Atlas selection from active registry defaults", () => {
+    expect(getInitialAtlasVisibleLayerIds()).toEqual([
+      "municipal-boundary",
+      "census-sections",
+    ]);
+  });
+
+  it("adds valid deep-linked layers without enabling planned or unknown layers", () => {
+    expect(
+      getInitialAtlasVisibleLayerIds([
+        "confiscated-assets",
+        "pnrr-projects",
+        "not-a-layer",
+      ]),
+    ).toEqual([
+      "municipal-boundary",
+      "census-sections",
+      "confiscated-assets",
+    ]);
   });
 
   it("does not expose planned domains before their Atlas implementation is ready", () => {
