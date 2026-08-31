@@ -52,7 +52,22 @@ export function resolveSpatialDataUrl(
       ? normalizedApiBaseUrl
       : siteOrigin;
 
-  return new URL(dataPath, ensureTrailingSlash(baseUrl)).toString();
+  return appendPathToBaseUrl(baseUrl, dataPath, siteOrigin);
+}
+
+function appendPathToBaseUrl(
+  baseUrl: string,
+  dataPath: string,
+  siteOrigin: string,
+): string {
+  const url = new URL(ensureTrailingSlash(baseUrl), siteOrigin);
+  const basePath = url.pathname.replace(/\/$/, "");
+  const suffix = dataPath.startsWith("/") ? dataPath : `/${dataPath}`;
+
+  url.pathname = `${basePath}${suffix}`.replace(/\/{2,}/g, "/");
+  url.search = "";
+  url.hash = "";
+  return url.toString();
 }
 
 function ensureTrailingSlash(value: string): string {
