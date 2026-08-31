@@ -42,6 +42,8 @@ Questo catalogo elenca le principali fonti che alimentano, o possono alimentare,
 | Object storage | Replit sidecar / GCS | strumentale | presente | archiviazione | conserva evidenze, non determina ufficialità del dato |
 | Mappe e tile | provider cartografici / Leaflet / mappe native | strumentale | presente | web, mobile | base map non è fonte amministrativa; layer dati devono avere proprie fonti |
 
+Nel feed PNRR, l'eventuale fase associata a un allegato è una classificazione automatica del titolo per agevolare la navigazione: non rappresenta lo stato di avanzamento del progetto.
+
 ## Fonte primaria, fonte federata e trasformazione locale
 
 Una stessa scheda pubblica può combinare tre livelli. Esempio:

@@ -35,6 +35,30 @@ describe("Lamezia PNRR static feed", () => {
     );
   });
 
+  it("maps the official municipal attachment archive with explicit provenance metadata", () => {
+    expect(LAMEZIA_PNRR_STATIC_DATA.schema_version).toBe(2);
+
+    const source = LAMEZIA_PNRR_STATIC_DATA.projects.find(
+      (project) => project.attachments.length > 1,
+    );
+    const view = LAMEZIA_PNRR_STATIC_VIEW.projects.find(
+      (project) => project.sourceId === source?.source_id,
+    );
+
+    expect(source).toBeDefined();
+    expect(view?.attachments).toHaveLength(source?.attachments.length ?? 0);
+    expect(
+      view?.attachments.map((attachment) => attachment.sourceOrder),
+    ).toEqual(source?.attachments.map((attachment) => attachment.source_order));
+    expect(
+      view?.attachments.every(
+        (attachment) =>
+          attachment.phaseLabel.length > 0 &&
+          attachment.phaseDescription.length > 0,
+      ),
+    ).toBe(true);
+  });
+
   it("enriches runtime rows only on an identical CUP and keeps static-only rows", () => {
     const [matched, staticOnly] = LAMEZIA_PNRR_STATIC_VIEW.projects;
     const runtime = {

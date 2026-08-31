@@ -60,6 +60,7 @@ import {
   adaptRuntimePnrrProjects,
   mergePnrrViewDocuments,
   mergePnrrViewProjects,
+  type PnrrViewAttachment,
   type PnrrViewProject,
 } from "@/data/lameziaPnrr";
 
@@ -288,6 +289,8 @@ export function Pnrr() {
           project.intervention,
           project.holder,
           project.attuatore,
+          ...project.attachments.map((attachment) => attachment.title),
+          ...project.documents.map((document) => document.oggetto),
         ]
           .filter(Boolean)
           .join(" ")
@@ -993,6 +996,157 @@ function FilterSelect({
   );
 }
 
+const municipalAttachmentPhaseOrder =
+  LAMEZIA_PNRR_STATIC_DATA.attachment_taxonomy.phases.map((phase) => phase.id);
+
+function MunicipalDocumentArchive({ project }: { project: PnrrViewProject }) {
+  const attachments = asApiList<PnrrViewAttachment>(project.attachments);
+  if (attachments.length === 0) return null;
+
+  const groups = municipalAttachmentPhaseOrder.flatMap((phase) => {
+    const items = attachments
+      .filter((attachment) => attachment.phase === phase)
+      .sort((left, right) => left.sourceOrder - right.sourceOrder);
+    return items.length > 0
+      ? [
+          {
+            phase,
+            label: items[0].phaseLabel,
+            description: items[0].phaseDescription,
+            items,
+          },
+        ]
+      : [];
+  });
+  const years = Array.from(
+    new Set(
+      attachments.flatMap((attachment) =>
+        attachment.documentYear == null ? [] : [attachment.documentYear],
+      ),
+    ),
+  ).sort((left, right) => left - right);
+  const yearRange =
+    years.length === 0
+      ? null
+      : years[0] === years.at(-1)
+        ? String(years[0])
+        : `${years[0]}–${years.at(-1)}`;
+  const classifiedPhases = groups.filter(
+    (group) => group.phase !== "other",
+  ).length;
+
+  return (
+    <details
+      className="group mt-4 overflow-hidden rounded-lg border border-border/70 bg-muted/10"
+      data-testid={`pnrr-document-archive-${project.id}`}
+    >
+      <summary className="flex cursor-pointer list-none items-start gap-3 px-4 py-3 marker:content-none hover:bg-muted/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset">
+        <Paperclip
+          className="mt-0.5 h-4 w-4 shrink-0 text-primary"
+          aria-hidden="true"
+        />
+        <span className="min-w-0 flex-1">
+          <span className="block text-sm font-semibold text-foreground">
+            Archivio documentale ufficiale
+          </span>
+          <span className="mt-0.5 block text-xs text-muted-foreground">
+            {attachments.length}{" "}
+            {attachments.length === 1 ? "allegato" : "allegati"}
+            {yearRange ? ` · anni rilevati ${yearRange}` : ""}
+            {classifiedPhases > 0
+              ? ` · ${classifiedPhases} fasi documentali`
+              : ""}
+          </span>
+        </span>
+        <span className="shrink-0 text-xs font-semibold text-primary group-open:hidden">
+          Apri
+        </span>
+        <span className="hidden shrink-0 text-xs font-semibold text-primary group-open:inline">
+          Chiudi
+        </span>
+      </summary>
+
+      <div className="border-t border-border/60 px-4 py-4">
+        <p className="mb-4 text-xs leading-relaxed text-muted-foreground">
+          {LAMEZIA_PNRR_STATIC_DATA.attachment_taxonomy.classification_policy}{" "}
+          {LAMEZIA_PNRR_STATIC_DATA.attachment_taxonomy.order_policy} Le date
+          con precisione annuale non sono presentate come date dell'atto.
+        </p>
+
+        <div className="space-y-5">
+          {groups.map((group) => (
+            <section
+              key={group.phase}
+              aria-labelledby={`pnrr-archive-${project.id}-${group.phase}`}
+            >
+              <div className="mb-2 flex flex-wrap items-baseline gap-x-2 gap-y-1">
+                <h5
+                  id={`pnrr-archive-${project.id}-${group.phase}`}
+                  className="text-sm font-semibold text-foreground"
+                >
+                  {group.label}
+                </h5>
+                <span className="rounded-full bg-muted px-2 py-0.5 text-xs font-semibold tabular-nums text-muted-foreground">
+                  {group.items.length}
+                </span>
+                <p className="basis-full text-xs text-muted-foreground">
+                  {group.description}
+                </p>
+              </div>
+              <ol className="space-y-2">
+                {group.items.map((attachment) => (
+                  <MunicipalDocumentItem
+                    key={attachment.url}
+                    attachment={attachment}
+                  />
+                ))}
+              </ol>
+            </section>
+          ))}
+        </div>
+      </div>
+    </details>
+  );
+}
+
+function MunicipalDocumentItem({
+  attachment,
+}: {
+  attachment: PnrrViewAttachment;
+}) {
+  return (
+    <li className="rounded-md border border-border/50 bg-card px-3 py-2.5">
+      <a
+        href={attachment.url}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="inline-flex items-start gap-2 text-sm font-medium leading-snug text-primary hover:underline"
+      >
+        <FileText className="mt-0.5 h-3.5 w-3.5 shrink-0" aria-hidden="true" />
+        <span className="break-words">{attachment.title}</span>
+      </a>
+      {(attachment.sequence != null || attachment.documentYear != null) && (
+        <div className="mt-1.5 flex flex-wrap gap-1.5 pl-5 text-[11px] text-muted-foreground">
+          {attachment.sequence != null && (
+            <span className="rounded-full bg-muted px-2 py-0.5">
+              n. {attachment.sequence} nel titolo
+            </span>
+          )}
+          {attachment.documentDate ? (
+            <span className="rounded-full bg-muted px-2 py-0.5">
+              data nel titolo: {formatDate(attachment.documentDate)}
+            </span>
+          ) : attachment.documentYear != null ? (
+            <span className="rounded-full bg-muted px-2 py-0.5">
+              anno nel titolo/file: {attachment.documentYear}
+            </span>
+          ) : null}
+        </div>
+      )}
+    </li>
+  );
+}
+
 function PnrrCard({ project }: { project: PnrrViewProject }) {
   return (
     <article
@@ -1168,41 +1322,7 @@ function PnrrCard({ project }: { project: PnrrViewProject }) {
           </>
         )}
 
-        {asApiList<PnrrViewProject["attachments"][number]>(project.attachments)
-          .length > 0 && (
-          <section
-            className="mt-4 border-t border-border/60 pt-4"
-            aria-labelledby={`pnrr-attachments-${project.id}`}
-          >
-            <h4
-              id={`pnrr-attachments-${project.id}`}
-              className="mb-2 flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide text-muted-foreground"
-            >
-              <Paperclip className="h-3.5 w-3.5" aria-hidden="true" />
-              Allegati ufficiali Comune
-            </h4>
-            <ul className="space-y-1.5">
-              {asApiList<PnrrViewProject["attachments"][number]>(
-                project.attachments,
-              ).map((att) => (
-                <li key={att.url}>
-                  <a
-                    href={att.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-start gap-1.5 text-sm text-primary hover:underline"
-                  >
-                    <FileText
-                      className="mt-0.5 h-3.5 w-3.5 shrink-0"
-                      aria-hidden="true"
-                    />
-                    <span className="break-all">{att.title}</span>
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </section>
-        )}
+        <MunicipalDocumentArchive project={project} />
 
         <section
           className="mt-4 border-t border-border/60 pt-4"

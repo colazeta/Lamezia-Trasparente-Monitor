@@ -39,5 +39,11 @@ describe("PNRR page static feed", () => {
     expect(
       screen.queryByText(/Il servizio dati PNRR non risponde/i),
     ).not.toBeInTheDocument();
+    expect(
+      screen.getAllByText("Archivio documentale ufficiale").length,
+    ).toBeGreaterThan(0);
+    expect(
+      screen.getAllByText(/non rappresenta lo stato di avanzamento/i).length,
+    ).toBeGreaterThan(0);
   });
 });

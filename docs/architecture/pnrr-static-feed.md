@@ -19,23 +19,49 @@ zero e non dimostra assenza amministrativa, ritardo o criticità.
 2. Ogni scheda viene acquisita integralmente prima di produrre un nuovo output.
    Il parser conserva titolo, Missione, Componente, investimento, intervento,
    soggetti, CUP, importo, eventuali date/stato e allegati esposti dalla pagina.
-3. I record pubblici dell'Albo Pretorio sono ammessi solo se hanno
+3. Gli allegati della scheda mantengono titolo, URL e ordine della fonte. Il
+   titolo viene classificato in una fase documentale e può fornire una data o
+   un anno soltanto quando questi sono espressi in modo esplicito. Il parser non
+   legge il PDF e non usa la classificazione per dedurre avanzamento, ritardi o
+   completamento del progetto.
+4. I record pubblici dell'Albo Pretorio sono ammessi solo se hanno
    `public_visibility=publishable`, `privacy_risk=low` e provenienza ufficiale
    acquisita.
-4. Un atto Albo viene collegato a una scheda progetto **soltanto** quando i due
+5. Un atto Albo viene collegato a una scheda progetto **soltanto** quando i due
    record condividono lo stesso CUP normalizzato. Un richiamo testuale al PNRR
    senza CUP resta un'evidenza non associata.
    Le evidenze già osservate restano nello storico descrittivo, ma ogni record
    ancora presente negli output correnti — inclusi quelli esclusi — viene
    rivalutato con la policy pubblica/privacy più recente.
-5. Il dataset viene validato e scritto in
+6. Il dataset viene validato e scritto in
    `artifacts/lamezia-trasparente/src/data/generated/lameziaPnrrProjects.json`.
    Se una pagina non è acquisibile, il numero di schede scende sotto la soglia
    di sicurezza o una relazione non supera i controlli, il job fallisce senza
    sostituire l'ultima versione valida.
-6. La pagina usa il feed comunale come base sempre disponibile. Se l'API PNRR è
+7. La pagina usa il feed comunale come base sempre disponibile. Se l'API PNRR è
    attiva, i record vengono arricchiti e uniti esclusivamente per CUP; le schede
    comunali non presenti nell'API restano consultabili.
+
+## Archivio documentale delle schede
+
+Gli allegati ufficiali non sono più presentati come un elenco indistinto. Ogni
+scheda espone un archivio richiudibile, ordinato come la pagina comunale e
+raggruppato secondo la tassonomia `pnrr-attachment-phase.v1`:
+
+| Fase                           | Contenuti indicativi                                                        |
+| ------------------------------ | --------------------------------------------------------------------------- |
+| Programmazione e finanziamento | Avvisi, candidature, decreti di finanziamento, graduatorie e convenzioni    |
+| Progettazione e autorizzazioni | Progetti, studi, indagini, conferenze di servizi, pareri e nomine tecniche  |
+| Affidamenti e contratti        | Gare, decisioni a contrarre, affidamenti, aggiudicazioni e subappalti       |
+| Esecuzione e spesa             | SAL, liquidazioni, anticipazioni, varianti e altri atti esecutivi/contabili |
+| Collaudo e chiusura            | Collaudi, ultimazioni, regolare esecuzione e verifiche conclusive           |
+| Altri documenti                | Titoli che non consentono una classificazione prudente                      |
+
+La tassonomia è uno strumento di navigazione. Le fasi non sono mutuamente
+esclusive sul piano amministrativo e l'assegnazione automatica usa soltanto il
+titolo. Il dataset conserva inoltre `classification_basis`, `date_precision` e
+`date_basis`, così l'interfaccia può distinguere una data completa da un semplice
+anno presente nel nome del file.
 
 ## Provenienza e priorità
 
@@ -58,6 +84,8 @@ record effettivamente presenti nel database.
   limitata.
 - Soglia minima di schede, URL ufficiali obbligatori, CUP canonici, importi
   positivi e identificatori univoci.
+- Verifica di tassonomia, ordine di fonte, precisione temporale e coerenza dei
+  conteggi degli allegati.
 - Verifica che ogni relazione progetto–atto condivida davvero il CUP.
 - Rimozione del collegamento alla copia PDF locale quando il file non è più
   autorizzato dal manifest corrente o dalla allowlist revisionata; i metadati
@@ -77,5 +105,12 @@ record effettivamente presenti nel database.
 - Lo storico degli atti inizia dalla prima materializzazione del feed e dagli
   archivi pubblici già presenti nel repository; gli snapshot precedenti non
   disponibili non vengono ricostruiti per inferenza.
+- Gli allegati mantenuti nelle schede comunali possono documentare annualità
+  precedenti alla prima materializzazione; ciò non li trasforma in uno storico
+  completo delle pubblicazioni dell'Albo.
+- I PDF presenti nell'albero di archivio ma non più referenziati dal manifest
+  corrente o dalla allowlist revisionata non vengono recuperati, analizzati o
+  pubblicati automaticamente. Servono una riconciliazione documentale e una
+  revisione separata.
 - La copertura nazionale e gli stati ReGiS/Italia Domani richiedono un successivo
   flusso di riconciliazione con pari garanzie di provenienza.

@@ -23,6 +23,77 @@ const ITALIAN_MONTHS = new Map([
   ["dic", 12],
 ]);
 
+export const MUNICIPAL_ATTACHMENT_PHASES = Object.freeze([
+  {
+    id: "programme_funding",
+    label: "Programmazione e finanziamento",
+    description:
+      "Avvisi, candidature, decreti di finanziamento, graduatorie e convenzioni.",
+  },
+  {
+    id: "planning_authorisations",
+    label: "Progettazione e autorizzazioni",
+    description:
+      "Progetti, studi, indagini, conferenze di servizi, pareri e nomine tecniche.",
+  },
+  {
+    id: "procurement_contracts",
+    label: "Affidamenti e contratti",
+    description:
+      "Gare, decisioni a contrarre, affidamenti, aggiudicazioni e subappalti.",
+  },
+  {
+    id: "execution_spending",
+    label: "Esecuzione e spesa",
+    description:
+      "Stati di avanzamento, liquidazioni, anticipazioni, varianti e altri atti esecutivi o contabili.",
+  },
+  {
+    id: "completion_verification",
+    label: "Collaudo e chiusura",
+    description:
+      "Collaudi, certificati di ultimazione o regolare esecuzione e verifiche conclusive.",
+  },
+  {
+    id: "other",
+    label: "Altri documenti",
+    description:
+      "Allegati il cui titolo non consente una classificazione documentale prudente.",
+  },
+]);
+
+const MUNICIPAL_ATTACHMENT_PHASE_BY_ID = new Map(
+  MUNICIPAL_ATTACHMENT_PHASES.map((phase) => [phase.id, phase]),
+);
+
+const MUNICIPAL_ATTACHMENT_PHASE_RULES = [
+  {
+    id: "completion_verification",
+    pattern:
+      /collaud|certificat.{0,30}(?:ultimazione|regolare esecuzione)|ultimazione lavori|fine lavori|conformita tecnica|relazione struttura ultimata|\brsu\b|\bcre\b/,
+  },
+  {
+    id: "procurement_contracts",
+    pattern:
+      /affidament|aggiudicaz|(?:determina|decisione).{0,24}contrarre|indizione.{0,20}gara|procedura.{0,20}gara|subappalt|contratto|appalto/,
+  },
+  {
+    id: "execution_spending",
+    pattern:
+      /liquidaz|pagament|\bsal\b|stato.{0,20}avanzamento|anticipaz|impegno.{0,16}spesa|accertamento.{0,16}entrat|perizia.{0,24}variant|assestamento.{0,20}contabile|manutenzion|consegna.{0,16}lavor|direzione.{0,16}lavor|coordinamento.{0,16}sicurezz/,
+  },
+  {
+    id: "planning_authorisations",
+    pattern:
+      /progett|\bp\s*f\s*t\s*e\b|\bd\s*i\s*p\b|fattibilit|fattibit|\bconf(?:erenza)?\b.{0,18}serviz|indagin|parere|nomina.{0,12}rup|approvazione.{0,18}schema/,
+  },
+  {
+    id: "programme_funding",
+    pattern:
+      /avviso|decreto.{0,24}finanziamento|finanziament|candidatur|graduatoria|ammission|ammess|istanza.{0,18}partecipazione|contribut|convenzione|coprogettazione/,
+  },
+];
+
 export function decodeHtmlEntities(value) {
   return String(value ?? "")
     .replace(/&#(x[0-9a-f]+|[0-9]+);/gi, (_, code) => {
@@ -188,6 +259,37 @@ export function parseItalianDate(value) {
     return null;
   }
   return `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+}
+
+export function deriveMunicipalAttachmentMetadata({ title, url, sourceOrder }) {
+  const cleanedTitle = cleanHtmlText(title) ?? "Allegato";
+  const exactDate =
+    parseNumericAttachmentDate(cleanedTitle) ?? parseItalianDate(cleanedTitle);
+  const yearCandidates = exactDate
+    ? [Number(exactDate.slice(0, 4))]
+    : extractAttachmentYearCandidates(cleanedTitle);
+  const documentYear = yearCandidates.length === 1 ? yearCandidates[0] : null;
+  const searchableTitle = normaliseAttachmentSearchText(cleanedTitle);
+  const matchedRule = MUNICIPAL_ATTACHMENT_PHASE_RULES.find((rule) =>
+    rule.pattern.test(searchableTitle),
+  );
+
+  return {
+    title: cleanedTitle,
+    url,
+    source_order: sourceOrder,
+    sequence: extractAttachmentSequence(cleanedTitle),
+    document_date: exactDate,
+    document_year: documentYear,
+    date_precision: exactDate ? "day" : documentYear ? "year" : null,
+    date_basis: exactDate
+      ? "title_explicit_date"
+      : documentYear
+        ? "title_or_filename_year"
+        : null,
+    phase: matchedRule?.id ?? "other",
+    classification_basis: matchedRule ? "title_keyword" : "unclassified",
+  };
 }
 
 export function extractCups(value) {
@@ -360,9 +462,10 @@ export function buildStaticPnrrDataset({
     (total, project) => total + project.attachments.length,
     0,
   );
+  const attachments = publicProjects.flatMap((project) => project.attachments);
 
   return {
-    schema_version: 1,
+    schema_version: 2,
     metadata: {
       dataset_id: "lamezia-pnrr-static-feed",
       source: "Città di Lamezia Terme — Attuazione Misure PNRR",
@@ -392,6 +495,16 @@ export function buildStaticPnrrDataset({
       licence_or_terms_note:
         "Il dataset civico conserva campi descrittivi, metadati di provenienza e collegamenti alle fonti ufficiali; per il riuso dei documenti si applicano le condizioni indicate dai rispettivi portali.",
     },
+    attachment_taxonomy: {
+      schema_version: "pnrr-attachment-phase.v1",
+      order_policy:
+        "Gli allegati mantengono l'ordine della scheda comunale; non viene inferita una cronologia quando il titolo non espone una data.",
+      classification_policy:
+        "La fase documentale è una classificazione automatica basata soltanto sul titolo dell'allegato e serve alla navigazione: non rappresenta lo stato di avanzamento del progetto.",
+      date_policy:
+        "La data o l'anno sono esposti solo quando compaiono esplicitamente nel titolo o nel nome del file; la precisione resta dichiarata.",
+      phases: MUNICIPAL_ATTACHMENT_PHASES,
+    },
     coverage: {
       projects: publicProjects.length,
       projects_with_cup: publicProjects.filter((project) => project.cup).length,
@@ -402,6 +515,15 @@ export function buildStaticPnrrDataset({
         (project) => project.albo_evidence_ids.length > 0,
       ).length,
       municipal_attachments: attachmentsCount,
+      municipal_attachments_classified: attachments.filter(
+        (attachment) => attachment.phase !== "other",
+      ).length,
+      municipal_attachments_with_year: attachments.filter(
+        (attachment) => attachment.document_year != null,
+      ).length,
+      municipal_attachments_with_day: attachments.filter(
+        (attachment) => attachment.date_precision === "day",
+      ).length,
       albo_evidence: alboEvidence.length,
       linked_albo_evidence: linkedEvidenceIds.size,
       unmatched_albo_evidence: unmatchedEvidenceIds.length,
@@ -424,8 +546,22 @@ export function validateStaticPnrrDataset(
   const evidenceIds = new Set(evidence.map((item) => item.id));
   const sourceIds = new Set();
 
-  if (dataset?.schema_version !== 1) {
-    errors.push("schema_version must be 1");
+  if (dataset?.schema_version !== 2) {
+    errors.push("schema_version must be 2");
+  }
+  const attachmentPhases = new Map(
+    (dataset?.attachment_taxonomy?.phases ?? []).map((phase) => [
+      phase.id,
+      phase,
+    ]),
+  );
+  if (
+    attachmentPhases.size !== MUNICIPAL_ATTACHMENT_PHASES.length ||
+    MUNICIPAL_ATTACHMENT_PHASES.some(
+      (phase) => attachmentPhases.get(phase.id)?.label !== phase.label,
+    )
+  ) {
+    errors.push("attachment_taxonomy does not match the supported phases");
   }
   if (projects.length < minimumProjects) {
     errors.push(
@@ -451,6 +587,70 @@ export function validateStaticPnrrDataset(
     }
     if (project?.amount_eur != null && project.amount_eur <= 0) {
       errors.push(`project ${project?.source_id} has a non-positive amount`);
+    }
+
+    for (const [attachmentIndex, attachment] of (
+      project?.attachments ?? []
+    ).entries()) {
+      if (!attachment?.title?.trim() || !isHttpUrl(attachment?.url)) {
+        errors.push(
+          `project ${project?.source_id} has an invalid municipal attachment`,
+        );
+      }
+      if (
+        !Number.isInteger(attachment?.source_order) ||
+        attachment.source_order !== attachmentIndex
+      ) {
+        errors.push(
+          `project ${project?.source_id} has an invalid attachment source order`,
+        );
+      }
+      if (!MUNICIPAL_ATTACHMENT_PHASE_BY_ID.has(attachment?.phase)) {
+        errors.push(
+          `project ${project?.source_id} has an unsupported attachment phase`,
+        );
+      }
+      if (
+        attachment?.date_precision === "day" &&
+        (!isIsoCalendarDate(attachment?.document_date) ||
+          attachment.document_year !==
+            Number(attachment.document_date?.slice(0, 4)) ||
+          attachment.date_basis !== "title_explicit_date")
+      ) {
+        errors.push(
+          `project ${project?.source_id} has an invalid attachment day precision`,
+        );
+      }
+      if (
+        attachment?.date_precision === "year" &&
+        (!Number.isInteger(attachment?.document_year) ||
+          attachment.document_year < 2020 ||
+          attachment.document_year > 2035 ||
+          attachment.document_date != null ||
+          attachment.date_basis !== "title_or_filename_year")
+      ) {
+        errors.push(
+          `project ${project?.source_id} has an invalid attachment year precision`,
+        );
+      }
+      if (
+        attachment?.date_precision == null &&
+        (attachment?.document_date != null ||
+          attachment?.document_year != null ||
+          attachment?.date_basis != null)
+      ) {
+        errors.push(
+          `project ${project?.source_id} has attachment date data without precision`,
+        );
+      }
+      if (
+        (attachment?.phase === "other") !==
+        (attachment?.classification_basis === "unclassified")
+      ) {
+        errors.push(
+          `project ${project?.source_id} has inconsistent attachment classification metadata`,
+        );
+      }
     }
 
     for (const evidenceId of project?.albo_evidence_ids ?? []) {
@@ -487,6 +687,45 @@ export function validateStaticPnrrDataset(
   }
   if (dataset?.coverage?.albo_evidence !== evidence.length) {
     errors.push("coverage.albo_evidence does not match the evidence records");
+  }
+  const municipalAttachments = projects.flatMap(
+    (project) => project.attachments ?? [],
+  );
+  if (
+    dataset?.coverage?.municipal_attachments !== municipalAttachments.length
+  ) {
+    errors.push(
+      "coverage.municipal_attachments does not match the attachment records",
+    );
+  }
+  if (
+    dataset?.coverage?.municipal_attachments_classified !==
+    municipalAttachments.filter((attachment) => attachment.phase !== "other")
+      .length
+  ) {
+    errors.push(
+      "coverage.municipal_attachments_classified does not match the attachment records",
+    );
+  }
+  if (
+    dataset?.coverage?.municipal_attachments_with_year !==
+    municipalAttachments.filter(
+      (attachment) => attachment.document_year != null,
+    ).length
+  ) {
+    errors.push(
+      "coverage.municipal_attachments_with_year does not match the attachment records",
+    );
+  }
+  if (
+    dataset?.coverage?.municipal_attachments_with_day !==
+    municipalAttachments.filter(
+      (attachment) => attachment.date_precision === "day",
+    ).length
+  ) {
+    errors.push(
+      "coverage.municipal_attachments_with_day does not match the attachment records",
+    );
   }
 
   if (errors.length > 0) {
@@ -538,6 +777,7 @@ export function stableDatasetPayload(dataset) {
       materialized_at: null,
       albo_snapshot_generated_at: null,
     },
+    attachment_taxonomy: dataset.attachment_taxonomy,
     coverage: dataset.coverage,
     projects: dataset.projects,
     albo_evidence: dataset.albo_evidence,
@@ -600,10 +840,90 @@ function extractAttachments(section, baseUrl) {
     const title =
       cleanHtmlText(match[2]) ??
       decodeURIComponent(url.pathname.split("/").pop() ?? "Allegato");
-    attachments.set(url.toString(), { title, url: url.toString() });
+    const canonicalUrl = url.toString();
+    if (attachments.has(canonicalUrl)) continue;
+    attachments.set(
+      canonicalUrl,
+      deriveMunicipalAttachmentMetadata({
+        title,
+        url: canonicalUrl,
+        sourceOrder: attachments.size,
+      }),
+    );
   }
-  return Array.from(attachments.values()).sort((left, right) =>
-    left.title.localeCompare(right.title, "it"),
+  return Array.from(attachments.values());
+}
+
+function normaliseAttachmentSearchText(value) {
+  return String(value ?? "")
+    .normalize("NFD")
+    .replace(/\p{Diacritic}/gu, "")
+    .toLowerCase()
+    .replace(/[’']/g, " ")
+    .replace(/[_./-]+/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function extractAttachmentSequence(value) {
+  const match = /^\s*0*([1-9][0-9]?)(?=\s*(?:[-.)_]|[a-zA-ZÀ-ÿ]))/.exec(
+    String(value ?? ""),
+  );
+  return match ? Number(match[1]) : null;
+}
+
+function parseNumericAttachmentDate(value) {
+  const match =
+    /(?:^|[^0-9])([0-3]?[0-9])[./-]([01]?[0-9])[./-](20[0-9]{2})(?:[^0-9]|$)/.exec(
+      String(value ?? ""),
+    );
+  if (!match) return null;
+  const day = Number(match[1]);
+  const month = Number(match[2]);
+  const year = Number(match[3]);
+  const date = new Date(Date.UTC(year, month - 1, day));
+  if (
+    date.getUTCFullYear() !== year ||
+    date.getUTCMonth() !== month - 1 ||
+    date.getUTCDate() !== day
+  ) {
+    return null;
+  }
+  return `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+}
+
+function extractAttachmentYearCandidates(value) {
+  return Array.from(
+    new Set(
+      Array.from(String(value ?? "").matchAll(/20[0-9]{2}/g), (match) =>
+        Number(match[0]),
+      ).filter((year) => year >= 2020 && year <= 2035),
+    ),
+  ).sort((left, right) => left - right);
+}
+
+function isHttpUrl(value) {
+  try {
+    const url = new URL(value);
+    return url.protocol === "https:" || url.protocol === "http:";
+  } catch {
+    return false;
+  }
+}
+
+function isIsoCalendarDate(value) {
+  const match = /^(20[0-9]{2})-([0-9]{2})-([0-9]{2})$/.exec(
+    String(value ?? ""),
+  );
+  if (!match) return false;
+  const year = Number(match[1]);
+  const month = Number(match[2]);
+  const day = Number(match[3]);
+  const date = new Date(Date.UTC(year, month - 1, day));
+  return (
+    date.getUTCFullYear() === year &&
+    date.getUTCMonth() === month - 1 &&
+    date.getUTCDate() === day
   );
 }
 

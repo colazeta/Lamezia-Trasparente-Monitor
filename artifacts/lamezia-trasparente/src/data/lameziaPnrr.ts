@@ -11,6 +11,31 @@ export type PnrrDataOrigin = "runtime-api" | "static-municipal" | "hybrid";
 
 export type PnrrFreshnessAssessment = "current" | "stale" | "not_assessed";
 
+export type PnrrAttachmentPhase =
+  | "programme_funding"
+  | "planning_authorisations"
+  | "procurement_contracts"
+  | "execution_spending"
+  | "completion_verification"
+  | "other";
+
+export interface PnrrViewAttachment {
+  title: string;
+  url: string;
+  sourceOrder: number;
+  sequence: number | null;
+  documentDate: string | null;
+  documentYear: number | null;
+  datePrecision: "day" | "year" | null;
+  phase: PnrrAttachmentPhase;
+  phaseLabel: string;
+  phaseDescription: string;
+  classificationBasis:
+    | "title_keyword"
+    | "unclassified"
+    | "runtime_unclassified";
+}
+
 export interface PnrrViewDocument {
   id: string | number;
   publicId: string;
@@ -22,8 +47,9 @@ export interface PnrrViewDocument {
   attachments?: PublicationAttachment[];
 }
 
-export type PnrrViewProject = Omit<PnrrProject, "documents"> & {
+export type PnrrViewProject = Omit<PnrrProject, "documents" | "attachments"> & {
   documents: PnrrViewDocument[];
+  attachments: PnrrViewAttachment[];
   dataOrigin: PnrrDataOrigin;
   freshnessAssessment: PnrrFreshnessAssessment;
   subAttuatore: string | null;
@@ -32,6 +58,20 @@ export type PnrrViewProject = Omit<PnrrProject, "documents"> & {
 export interface LameziaPnrrAttachment {
   title: string;
   url: string;
+  source_order: number;
+  sequence: number | null;
+  document_date: string | null;
+  document_year: number | null;
+  date_precision: "day" | "year" | null;
+  date_basis: "title_explicit_date" | "title_or_filename_year" | null;
+  phase: PnrrAttachmentPhase;
+  classification_basis: "title_keyword" | "unclassified";
+}
+
+export interface LameziaPnrrAttachmentPhaseDefinition {
+  id: PnrrAttachmentPhase;
+  label: string;
+  description: string;
 }
 
 export interface LameziaPnrrAlboEvidence {
@@ -102,12 +142,22 @@ export interface LameziaPnrrStaticDataset {
     caveat: string;
     licence_or_terms_note: string;
   };
+  attachment_taxonomy: {
+    schema_version: string;
+    order_policy: string;
+    classification_policy: string;
+    date_policy: string;
+    phases: LameziaPnrrAttachmentPhaseDefinition[];
+  };
   coverage: {
     projects: number;
     projects_with_cup: number;
     projects_with_amount: number;
     projects_with_albo_evidence: number;
     municipal_attachments: number;
+    municipal_attachments_classified: number;
+    municipal_attachments_with_year: number;
+    municipal_attachments_with_day: number;
     albo_evidence: number;
     linked_albo_evidence: number;
     unmatched_albo_evidence: number;
@@ -133,6 +183,9 @@ export const LAMEZIA_PNRR_STATIC_VIEW = buildStaticPnrrViewData(
 export function buildStaticPnrrViewData(
   dataset: LameziaPnrrStaticDataset,
 ): LameziaPnrrStaticViewData {
+  const attachmentPhases = new Map(
+    dataset.attachment_taxonomy.phases.map((phase) => [phase.id, phase]),
+  );
   const evidenceById = new Map(
     dataset.albo_evidence.map((evidence) => [
       evidence.id,
@@ -181,7 +234,24 @@ export function buildStaticPnrrViewData(
         "Il perimetro deriva dalla sezione PNRR del Comune; la scheda non espone necessariamente l'ubicazione puntuale dell'intervento.",
       trasparenzaCompleta: true,
       aggiornamentoVecchio: false,
-      attachments: project.attachments,
+      attachments: project.attachments.map((attachment) => {
+        const phase = attachmentPhases.get(attachment.phase);
+        return {
+          title: attachment.title,
+          url: attachment.url,
+          sourceOrder: attachment.source_order,
+          sequence: attachment.sequence,
+          documentDate: attachment.document_date,
+          documentYear: attachment.document_year,
+          datePrecision: attachment.date_precision,
+          phase: attachment.phase,
+          phaseLabel: phase?.label ?? "Altri documenti",
+          phaseDescription:
+            phase?.description ??
+            "Allegati non classificati automaticamente in una fase documentale.",
+          classificationBasis: attachment.classification_basis,
+        } satisfies PnrrViewAttachment;
+      }),
       documentsCount: documents.length,
       lastPublication,
       documents,
@@ -207,6 +277,9 @@ export function adaptRuntimePnrrProjects(value: unknown): PnrrViewProject[] {
   return (value as PnrrProject[]).map((project) => ({
     ...project,
     documents: project.documents,
+    attachments: project.attachments.map((attachment, index) =>
+      toRuntimeAttachment(attachment, index),
+    ),
     dataOrigin: "runtime-api",
     freshnessAssessment: project.lastUpdatedAt
       ? project.aggiornamentoVecchio
@@ -333,14 +406,34 @@ function toPnrrViewDocument(
 }
 
 function mergeAttachments(
-  left: readonly PnrrProject["attachments"][number][],
-  right: readonly PnrrProject["attachments"][number][],
+  left: readonly PnrrViewAttachment[],
+  right: readonly PnrrViewAttachment[],
 ) {
   return Array.from(
     new Map(
       [...left, ...right].map((attachment) => [attachment.url, attachment]),
     ).values(),
   );
+}
+
+function toRuntimeAttachment(
+  attachment: PnrrProject["attachments"][number],
+  sourceOrder: number,
+): PnrrViewAttachment {
+  return {
+    title: attachment.title,
+    url: attachment.url,
+    sourceOrder,
+    sequence: null,
+    documentDate: null,
+    documentYear: null,
+    datePrecision: null,
+    phase: "other",
+    phaseLabel: "Altri documenti",
+    phaseDescription:
+      "Allegati non classificati automaticamente in una fase documentale.",
+    classificationBasis: "runtime_unclassified",
+  };
 }
 
 function mergeDocuments(

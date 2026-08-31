@@ -3,9 +3,11 @@ import test from "node:test";
 import {
   buildAlboEvidenceArchive,
   buildStaticPnrrDataset,
+  deriveMunicipalAttachmentMetadata,
   extractCups,
   extractProjectLinks,
   parseMunicipalPnrrProject,
+  stableDatasetPayload,
   validateCoverageRegression,
   validateStaticPnrrDataset,
 } from "./lameziaPnrrCore.mjs";
@@ -49,6 +51,7 @@ test("parseMunicipalPnrrProject extracts official fields, amount and attachments
       <a id="importo-finanziato"></a><h2>Importo Finanziato</h2><div>10.374.159,48 €</div>
       <a id="atti-legislativi-e-amministrativi"></a>
       <a href="/files/atto.pdf">Approvazione progetto</a>
+      <a href="/files/avviso.pdf">Avviso 2022</a>
     `,
   });
 
@@ -58,11 +61,82 @@ test("parseMunicipalPnrrProject extracts official fields, amount and attachments
   assert.equal(project.published_at, "2025-10-17");
   assert.deepEqual(project.attachments, [
     {
+      classification_basis: "title_keyword",
+      date_basis: null,
+      date_precision: null,
+      document_date: null,
+      document_year: null,
+      phase: "planning_authorisations",
+      sequence: null,
+      source_order: 0,
       title: "Approvazione progetto",
       url: "https://www.comune.lamezia-terme.cz.it/files/atto.pdf",
     },
+    {
+      classification_basis: "title_keyword",
+      date_basis: "title_or_filename_year",
+      date_precision: "year",
+      document_date: null,
+      document_year: 2022,
+      phase: "programme_funding",
+      sequence: null,
+      source_order: 1,
+      title: "Avviso 2022",
+      url: "https://www.comune.lamezia-terme.cz.it/files/avviso.pdf",
+    },
   ]);
   assert.match(project.source_record_hash, /^[a-f0-9]{64}$/);
+});
+
+test("municipal attachment metadata discloses phase, source order and date precision", () => {
+  assert.deepEqual(
+    deriveMunicipalAttachmentMetadata({
+      title:
+        "27 - Approvazione e Liquidazione SAL n. 3 atto n.157 del 04.11.2025",
+      url: "https://example.test/sal.pdf",
+      sourceOrder: 6,
+    }),
+    {
+      title:
+        "27 - Approvazione e Liquidazione SAL n. 3 atto n.157 del 04.11.2025",
+      url: "https://example.test/sal.pdf",
+      source_order: 6,
+      sequence: 27,
+      document_date: "2025-11-04",
+      document_year: 2025,
+      date_precision: "day",
+      date_basis: "title_explicit_date",
+      phase: "execution_spending",
+      classification_basis: "title_keyword",
+    },
+  );
+
+  const ambiguousYear = deriveMunicipalAttachmentMetadata({
+    title: "Avviso 2022 aggiornato nel 2023",
+    url: "https://example.test/avviso.pdf",
+    sourceOrder: 0,
+  });
+  assert.equal(ambiguousYear.document_year, null);
+  assert.equal(ambiguousYear.date_precision, null);
+  assert.equal(ambiguousYear.phase, "programme_funding");
+});
+
+test("municipal attachment metadata recognizes cautious title variants", () => {
+  const planning = deriveMunicipalAttachmentMetadata({
+    title: "Approvazione progetti definitivi e conferenza di servizi",
+    url: "https://example.test/progetti.pdf",
+    sourceOrder: 0,
+  });
+  assert.equal(planning.phase, "planning_authorisations");
+  assert.equal(planning.classification_basis, "title_keyword");
+
+  const funding = deriveMunicipalAttachmentMetadata({
+    title: "Decreto con elenco dei comuni ammessi al finanziamento",
+    url: "https://example.test/decreto.pdf",
+    sourceOrder: 1,
+  });
+  assert.equal(funding.phase, "programme_funding");
+  assert.equal(funding.classification_basis, "title_keyword");
 });
 
 test("Albo evidence uses explicit PNRR text or an official project CUP and removes revoked current records", () => {
@@ -191,6 +265,11 @@ test("buildStaticPnrrDataset links only shared CUP evidence and reports unmatche
   assert.deepEqual(dataset.unmatched_albo_evidence_ids, ["unmatched"]);
   assert.equal(dataset.coverage.projects_with_albo_evidence, 1);
   assert.equal(dataset.coverage.linked_albo_evidence, 1);
+  assert.equal(dataset.schema_version, 2);
+  assert.equal(
+    stableDatasetPayload(dataset).attachment_taxonomy.schema_version,
+    "pnrr-attachment-phase.v1",
+  );
   assert.match(dataset.metadata.coverage_note, /non equivale/i);
 });
 

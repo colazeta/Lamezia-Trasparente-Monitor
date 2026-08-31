@@ -42,5 +42,5 @@ for (const evidence of dataset.albo_evidence) {
   }
 }
 console.log(
-  `Validated ${dataset.coverage.projects} municipal PNRR projects, ${dataset.coverage.albo_evidence} Albo evidence records and ${dataset.coverage.municipal_attachments} municipal attachments.`,
+  `Validated ${dataset.coverage.projects} municipal PNRR projects, ${dataset.coverage.albo_evidence} Albo evidence records and ${dataset.coverage.municipal_attachments} municipal attachments (${dataset.coverage.municipal_attachments_classified} classified; ${dataset.coverage.municipal_attachments_with_year} with an explicit year).`,
 );

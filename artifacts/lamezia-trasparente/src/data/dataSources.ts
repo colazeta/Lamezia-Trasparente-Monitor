@@ -79,12 +79,12 @@ export const DATA_SOURCES = [
     linkLabel: "Apri la sezione PNRR del Comune",
     linkScope: "specifico",
     linkNote:
-      "Fonte locale primaria del feed statico; ogni scheda conserva il proprio URL puntuale e viene riconciliata con gli atti Albo soltanto tramite CUP identico.",
+      "Fonte locale primaria del feed statico; ogni scheda conserva il proprio URL puntuale, l'ordine degli allegati esposti e viene riconciliata con gli atti Albo soltanto tramite CUP identico.",
     dataType: "Ufficiale",
     updateFrequency:
       "Controllo automatico giornaliero; il sito conserva l'ultima materializzazione valida quando l'acquisizione o i controlli falliscono.",
     limitations:
-      "Il perimetro coincide con le schede pubblicate nella sezione comunale e non equivale al censimento nazionale completo. La data di pubblicazione non è trattata come data di aggiornamento o avanzamento.",
+      "Il perimetro coincide con le schede pubblicate nella sezione comunale e non equivale al censimento nazionale completo. La fase documentale è derivata dal solo titolo dell'allegato per facilitare la navigazione: non è uno stato di avanzamento. La data di pubblicazione non è trattata come data di aggiornamento.",
   },
   {
     name: "Italia Domani — Open data PNRR",

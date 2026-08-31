@@ -64,7 +64,7 @@ const DATA_QUALITY_NOTES = [
     sourceName: "Comune di Lamezia Terme — Attuazione Misure PNRR",
     lastKnownUpdate: `Calcolato: feed materializzato il ${LAMEZIA_PNRR_STATIC_DATA.metadata.materialized_at}; la data descrive l'acquisizione, non l'aggiornamento amministrativo dei progetti.`,
     identifierCoverage: `Calcolato: ${LAMEZIA_PNRR_STATIC_DATA.coverage.projects_with_cup} schede con CUP su ${LAMEZIA_PNRR_STATIC_DATA.coverage.projects} schede comunali acquisite.`,
-    attachmentAvailability: `Calcolato: ${LAMEZIA_PNRR_STATIC_DATA.coverage.municipal_attachments} collegamenti ad allegati esposti nelle schede comunali e ${LAMEZIA_PNRR_STATIC_DATA.coverage.albo_evidence} atti Albo pubblicabili nel feed.`,
+    attachmentAvailability: `Calcolato: ${LAMEZIA_PNRR_STATIC_DATA.coverage.municipal_attachments} allegati esposti nelle schede comunali; ${LAMEZIA_PNRR_STATIC_DATA.coverage.municipal_attachments_classified} classificati per fase documentale dal titolo e ${LAMEZIA_PNRR_STATIC_DATA.coverage.municipal_attachments_with_year} con almeno un anno esplicito. Sono inoltre presenti ${LAMEZIA_PNRR_STATIC_DATA.coverage.albo_evidence} atti Albo pubblicabili nel feed.`,
   },
   {
     sourceName: "Italia Domani — Open data PNRR",
