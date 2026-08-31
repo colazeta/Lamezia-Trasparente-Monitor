@@ -258,7 +258,7 @@ const commissionViContextResearch: CouncilSessionV0ContextResearch = {
   status: "checked_no_match",
   checkedAt: COMMISSION_VI_RESEARCHED_AT,
   searchNote:
-    "Ricerca eseguita sui metadati ufficiali della pubblicazione 2026/2788, sul protocollo 67220, sulla VI Commissione e sul titolo «Calendario lavori». Non sono emersi articoli, dirette, registrazioni, clip o interviste collegabili con sufficiente precisione. L'allegato ufficiale è individuato ma non ancora revisionato: la finestra di pubblicazione dell'Albo non viene usata come data della seduta e non sono ricostruiti temi editoriali.",
+    "Ricerca eseguita sui metadati ufficiali della pubblicazione 2026/2788, sulla VI Commissione e sul titolo «Calendario lavori». Non sono emersi articoli, dirette, registrazioni, clip o interviste collegabili con sufficiente precisione. L'allegato ufficiale è individuato ma non ancora revisionato: la finestra di pubblicazione dell'Albo non viene usata come data della seduta e non sono ricostruiti temi editoriali.",
   articles: [],
   media: [],
 };
@@ -586,7 +586,7 @@ const commissionViCalendarCandidate: CouncilSessionV0 = {
     sourceStatus: "verificato",
     sourceUrl: COMMISSION_VI_NOTICE_URL,
     limit:
-      "Pubblicazione 2026/2788, protocollo 67220; l'URL dell'allegato è stato acquisito dall'export pubblico del repository.",
+      "Pubblicazione 2026/2788; l'URL dell'allegato è stato acquisito dall'export pubblico del repository.",
   },
   liveStreaming: {
     key: "liveStreaming",
