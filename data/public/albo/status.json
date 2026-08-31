@@ -1,31 +1,31 @@
 {
-  "generated_at": "2026-08-30T16:37:50.919Z",
+  "generated_at": "2026-08-31T13:37:46.902Z",
   "source": "Albo Pretorio Comune di Lamezia Terme",
   "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
   "provider": "Tinnvision",
-  "last_run_at": "2026-08-30T16:37:50.919Z",
-  "last_update": "2026-08-30T16:37:50.919Z",
+  "last_run_at": "2026-08-31T13:37:46.902Z",
+  "last_update": "2026-08-31T13:37:46.902Z",
   "method": "xml",
   "raw_format": "xml",
   "counts": {
-    "acquired": 76,
-    "new": 0,
-    "changed": 2,
-    "removed": 0,
-    "unchanged": 74,
-    "publishable": 58,
+    "acquired": 81,
+    "new": 7,
+    "changed": 16,
+    "removed": 2,
+    "unchanged": 58,
+    "publishable": 64,
     "minimised": 2,
-    "metadata_only": 14,
+    "metadata_only": 13,
     "excluded": 2
   },
   "diff_baseline": {
     "status": "public_safe",
     "public_safe": true,
-    "previous_retrieved_at": "2026-08-30T11:50:38.527Z",
+    "previous_retrieved_at": "2026-08-30T16:37:50.919Z",
     "note": "Diff derived from committed public/albo/latest.json; safe for scheduled public runs and limited to public-safe fields."
   },
   "warnings": [],
-  "next_scheduled_check": "2026-08-30T17:10:00.000Z",
+  "next_scheduled_check": "2026-08-31T14:10:00.000Z",
   "schedule": {
     "monitoring_window": "08:00-20:00 Europe/Rome",
     "timezone": "Europe/Rome",
@@ -45,6 +45,74 @@
     "generative_rewriting": false,
     "ambiguous_cases": "review_required"
   },
+  "area_theme_taxonomy": {
+    "schema_version": "publication-area-theme.v1",
+    "taxonomy_id": "municipal-public-act-area-theme-it",
+    "taxonomy_version": "2026-08-30.1",
+    "locale": "it-IT",
+    "input_fields": [
+      "subject"
+    ],
+    "input_boundary": "public_safe_only",
+    "execution": "deterministic_rules",
+    "themes": [
+      {
+        "id": "mobilita_sicurezza",
+        "label": "Mobilità e sicurezza urbana",
+        "description": "Circolazione, traffico, sosta, trasporto locale e sicurezza degli spazi urbani."
+      },
+      {
+        "id": "territorio_edilizia",
+        "label": "Urbanistica, edilizia e territorio",
+        "description": "Pianificazione urbanistica, titoli edilizi, sanatorie e governo del territorio."
+      },
+      {
+        "id": "lavori_infrastrutture",
+        "label": "Lavori pubblici e infrastrutture",
+        "description": "Opere pubbliche, manutenzioni, progettazione e infrastrutture comunali."
+      },
+      {
+        "id": "scuola_educazione",
+        "label": "Scuola, educazione e infanzia",
+        "description": "Scuole, servizi educativi, asili nido, mense e prima infanzia."
+      },
+      {
+        "id": "welfare_salute",
+        "label": "Welfare, salute e servizi alla persona",
+        "description": "Assistenza, inclusione sociale, salute e servizi rivolti alle persone."
+      },
+      {
+        "id": "ambiente_energia",
+        "label": "Ambiente, rifiuti ed energia",
+        "description": "Rifiuti, verde, acqua, ambiente, energia ed efficientamento ambientale."
+      },
+      {
+        "id": "cultura_sport_turismo",
+        "label": "Cultura, sport, turismo ed eventi",
+        "description": "Biblioteche, iniziative culturali, sport, turismo ed eventi pubblici."
+      },
+      {
+        "id": "bilancio_tributi",
+        "label": "Bilancio, tributi e partecipate",
+        "description": "Bilancio, entrate, tributi e aspetti economici delle società partecipate."
+      },
+      {
+        "id": "amministrazione_personale",
+        "label": "Amministrazione, personale e organi",
+        "description": "Personale, incarichi, nomine, organi e organizzazione dell'ente."
+      },
+      {
+        "id": "patrimonio_economia",
+        "label": "Patrimonio e attività economiche",
+        "description": "Patrimonio, demanio, alienazioni, commercio e attività produttive."
+      },
+      {
+        "id": "servizi_civici",
+        "label": "Servizi civici e cimiteriali",
+        "description": "Anagrafe, stato civile, servizi elettorali, cimiteriali e altri servizi civici."
+      }
+    ]
+  },
   "known_limits": [
     "Tranche A acquisisce l'elenco degli atti correnti esposto dalla fonte ufficiale, senza dichiarare completezza storica.",
     "I PDF sono archiviati solo per record pubblicabili a basso rischio; allegati e PDF non sono analizzati, interpretati o sottoposti a OCR.",
@@ -52,7 +120,8 @@
     "La classificazione privacy e' prudenziale e automatica; i casi sensibili richiedono revisione umana prima di esposizioni piu' ricche.",
     "Quando gli export strutturati non includono URL diretti, il monitor prova il dettaglio ufficiale Tinnvision solo per record pubblicabili a basso rischio.",
     "Classificazione civica automatica basata su dizionario: settore e tipologia sono derivati da ufficio/provenienza e tipo atto, senza interpretare il contenuto dei PDF.",
-    "Il titolo di presentazione completo e' prodotto da regole deterministiche sul solo oggetto public-safe: non sostituisce il valore conservato nel campo subject, non recupera contenuti esclusi e i casi ambigui richiedono revisione."
+    "Il titolo di presentazione completo e' prodotto da regole deterministiche sul solo oggetto public-safe: non sostituisce il valore conservato nel campo subject, non recupera contenuti esclusi e i casi ambigui richiedono revisione. Se la fonte non fornisce alcun oggetto, viene mostrato un segnaposto esplicito e il record resta marcato per revisione.",
+    "L'area tematica e' una classificazione civica locale, deterministica e versionata: non sostituisce tipologia o famiglia dell'atto, organo, ufficio, azione o macrotema ufficiale; i casi senza evidenza sufficiente restano non classificati."
   ],
   "classification_dictionary": {
     "version": "2026-08-22-a",
