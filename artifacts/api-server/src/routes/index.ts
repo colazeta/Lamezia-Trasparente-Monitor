@@ -17,6 +17,7 @@ import oversightRouter from "./oversight";
 import performanceRouter from "./performance";
 import demographicChangeDriversRouter from "./demographicChangeDrivers";
 import demographicBirthplaceRouter from "./demographicBirthplace";
+import demographicHouseholdsRouter from "./demographicHouseholds";
 import demographicsRouter from "./demographics";
 import fundamentalActsRouter from "./fundamentalActs";
 import legalityRouter from "./legality";
@@ -53,6 +54,7 @@ router.use(performanceRouter);
 // demographics router; the remaining generic series endpoints stay there.
 router.use(demographicChangeDriversRouter);
 router.use(demographicBirthplaceRouter);
+router.use(demographicHouseholdsRouter);
 router.use(demographicsRouter);
 router.use(fundamentalActsRouter);
 router.use(legalityRouter);
