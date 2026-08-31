@@ -347,8 +347,12 @@ describe("councilSessionV0", () => {
       "32af1fef2fdc84892259f836c0cc6c1aa70d1e404d664a91f7cad339e3c24629",
     );
     expect(calendar?.provenance?.documentUrl).toContain("2026_2788_2_P");
-    expect(calendar?.provenance?.archivedDocumentUrl).toBeNull();
-    expect(calendar?.provenance?.documentSha256).toBeNull();
+    expect(calendar?.provenance?.archivedDocumentUrl).toBe(
+      "/data/public/albo/documents/2026/165152190ac39451d35caf5815bfb4d7d6d7ee66c20abe630c98b47d62858c72.pdf",
+    );
+    expect(calendar?.provenance?.documentSha256).toBe(
+      "165152190ac39451d35caf5815bfb4d7d6d7ee66c20abe630c98b47d62858c72",
+    );
     expect(calendar?.provenance?.sourceReviewStatus).toBe(
       "official_metadata_only",
     );
