@@ -259,6 +259,34 @@ describe("CouncilSessionV0Card", () => {
     expect(screen.getAllByText("Perché è collegato")).toHaveLength(8);
   });
 
+  it("shows the VI Commission calendar as metadata-only without inventing a date", () => {
+    const session = reviewedRecord(
+      "albo-2026-2788-commissione-vi-calendario",
+    );
+
+    render(<CouncilSessionV0SummaryCard session={session} />);
+
+    expect(
+      screen.getByRole("heading", {
+        name: "VI Commissione consiliare permanente — calendario lavori",
+      }),
+    ).toBeInTheDocument();
+    expect(screen.getByText("Metadati ufficiali disponibili")).toBeInTheDocument();
+    expect(screen.getByText("Data da verificare")).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        "Ricerca di contesto eseguita: nessuna corrispondenza sufficientemente precisa",
+      ),
+    ).toBeInTheDocument();
+    expect(screen.queryByText("31 agosto 2026")).not.toBeInTheDocument();
+    expect(
+      screen.getByRole("link", { name: /Fonte ufficiale/i }),
+    ).toHaveAttribute(
+      "href",
+      "https://albo.tinnvision.cloud/allegati/2026_2788_2_P?ente=00301390795",
+    );
+  });
+
   it("uses concise one-line empty states", () => {
     const base = reviewedRecord("albo-2026-2648-commissione-ii-2026-08-10");
     const session = {
