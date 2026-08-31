@@ -27,7 +27,12 @@ describe("HomeInstitutionalSessions", () => {
     expect(screen.getByText(/10 agosto 2026/i)).toBeInTheDocument();
     expect(
       screen.getAllByText(/stato della seduta non verificato/i),
-    ).toHaveLength(2);
+    ).toHaveLength(3);
+    expect(screen.getByText("Verifica mista")).toBeInTheDocument();
+    expect(screen.getByText(/Data da verificare/i)).toBeInTheDocument();
+    expect(
+      screen.getByText(/pubblicazioni 2026\/2788, 2026\/2648/i),
+    ).toBeInTheDocument();
     expect(
       screen.getByText(/7 articoli · 3 video · 7 stessa seduta/i),
     ).toBeInTheDocument();
@@ -53,6 +58,10 @@ describe("HomeInstitutionalSessions", () => {
     expect(screen.getByText(/10 agosto 2026/i).closest("a")).toHaveAttribute(
       "href",
       "/convocazioni/albo-2026-2648-commissione-ii-2026-08-10",
+    );
+    expect(screen.getByText(/Data da verificare/i).closest("a")).toHaveAttribute(
+      "href",
+      "/convocazioni/albo-2026-2788-commissione-vi-calendario",
     );
     expect(
       screen.getByRole("link", { name: /Apri l'archivio delle sedute/i }),
