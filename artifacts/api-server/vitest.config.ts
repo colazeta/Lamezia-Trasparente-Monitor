@@ -17,9 +17,10 @@ const databaseFreeTests = [
   "src/lib/ingestionSchedulerConfig.test.ts",
   "src/lib/publicActProjection.unit.test.ts",
   // Parser/contract only: imports the DB schema but never opens a connection.
-  // Keeping it in the DB-free suite means SDMX dimension/filter regressions are
+  // Keeping these in the DB-free suite means source-contract regressions are
   // caught by the standard CI rather than only by a full integration database.
   "src/lib/populationCitizenship.test.ts",
+  "src/lib/populationBirthCountry.test.ts",
 ];
 
 export default defineConfig({

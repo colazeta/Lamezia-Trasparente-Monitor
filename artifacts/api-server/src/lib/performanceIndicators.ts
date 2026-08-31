@@ -4,6 +4,7 @@ import { runSelfDescribingDemographicBalanceIngestion } from "./demographicBalan
 import { runRbdBackfill } from "./demographicRbd";
 import { runPopulationStructureIngestion } from "./populationStructure";
 import { runPopulationCitizenshipIngestion } from "./populationCitizenship";
+import { runPopulationBirthCountryIngestion } from "./populationBirthCountry";
 
 // Prefisso comune delle sorgenti automatiche della sezione Performance. La
 // popolazione mantiene l'identificativo storico `performance:istat-popolazione`
@@ -54,6 +55,16 @@ export async function runPerformanceIngestion(): Promise<void> {
   } catch (err) {
     sdmxBudgetReliable = false;
     logger.error({ err }, "Population citizenship refresh failed");
+  }
+
+  // Il paese di nascita è acquisito dalla tavola Demo RCS tramite il contratto
+  // auto-descrittivo form-1/RPCCerca.php. Non usa il servizio SDMX-RI e quindi
+  // non entra nel budget delle cinque query SDMX/minuto; resta però isolato in
+  // modo che un problema RCS non blocchi gli altri feed demografici.
+  try {
+    await runPopulationBirthCountryIngestion();
+  } catch (err) {
+    logger.error({ err }, "Population country-of-birth refresh failed");
   }
 
   // Il bilancio corrente inizializza le serie annuali canoniche. Solo dopo
