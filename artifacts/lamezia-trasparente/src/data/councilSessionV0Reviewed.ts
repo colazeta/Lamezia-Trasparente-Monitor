@@ -17,6 +17,8 @@ const COMMISSION_ARCHIVED_DOCUMENT_URL =
   "/data/public/albo/documents/2026/842702b2044b4b6f9a7b21a65eac2ab59866ee3f321872e6b28fd481598be304.pdf";
 const COMMISSION_VI_NOTICE_URL =
   "https://albo.tinnvision.cloud/allegati/2026_2788_2_P?ente=00301390795";
+const COMMISSION_VI_ARCHIVED_DOCUMENT_URL =
+  "/data/public/albo/documents/2026/165152190ac39451d35caf5815bfb4d7d6d7ee66c20abe630c98b47d62858c72.pdf";
 const COUNCIL_SESSION_EVIDENCE_URL =
   "https://albo.tinnvision.cloud/allegati/2026_2755_6_ALLEG?ente=00301390795";
 const COUNCIL_SESSION_EVIDENCE_ARCHIVE_URL =
@@ -382,9 +384,10 @@ const commissionViProvenance: CouncilSessionV0Provenance = {
   sourceLabel: commissionViCandidate.source.label,
   sourceUrl: commissionViCandidate.source.url,
   documentUrl: commissionViCandidate.source.documentUrl,
-  archivedDocumentUrl: null,
+  archivedDocumentUrl: COMMISSION_VI_ARCHIVED_DOCUMENT_URL,
   sourceContentHash: commissionViCandidate.source.contentHash,
-  documentSha256: null,
+  documentSha256:
+    "165152190ac39451d35caf5815bfb4d7d6d7ee66c20abe630c98b47d62858c72",
   embeddedDocumentSha256: null,
   retrievedAt: commissionViCandidate.source.retrievedAt,
   reviewedAt: COMMISSION_VI_RESEARCHED_AT,
@@ -627,7 +630,7 @@ const commissionViCalendarCandidate: CouncilSessionV0 = {
     value: [
       "La pubblicazione 2026/2788 riguarda un calendario lavori e può comprendere più sedute: non è materializzata come una singola occorrenza datata.",
       "Date, orari, sede e ordine del giorno non sono ricavati dalla finestra di pubblicazione dell'Albo.",
-      "L'allegato ufficiale è collegato ma non ancora archiviato né revisionato; hash del PDF e copia immutabile restano da acquisire.",
+      "L'allegato ufficiale è archiviato con SHA-256, ma il contenuto non è ancora stato revisionato.",
       "Non sono emersi collegamenti editoriali sufficientemente precisi al primo controllo.",
     ],
     sourceStatus: "parziale",
