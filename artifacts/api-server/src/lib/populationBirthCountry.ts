@@ -407,11 +407,6 @@ async function persistYear(options: {
     .limit(1);
   if (sameRelease) return { inserted: 0, changed: false };
 
-  const labels = Object.fromEntries(
-    options.observations
-      .filter((row) => row.sex === "total")
-      .map((row) => [row.birthCountry, row.birthCountryLabel]),
-  );
   const sourceDataset = datasetForYear(options.year);
   const now = new Date();
   const etag = options.response.headers.get("etag");
@@ -436,19 +431,28 @@ async function persistYear(options: {
           queryForm: 1,
           period: options.year,
           countrySelector: "9999",
-          countryLabels: labels,
           methodologyBreakAt: 2019,
           sourceStatus: options.year <= 2018 ? "reconstructed" : "final",
           bulkSource: RCS_BULK_URL,
           observationCount: options.observations.length,
-          parserVersion: 1,
+          countryDomainSize: new Set(
+            options.observations.map((row) => row.birthCountry),
+          ).size,
+          parserVersion: 2,
         },
       })
       .returning({ id: demographicReleasesTable.id });
 
     await tx.insert(demographicObservationsTable).values(
       options.observations.map((row) => {
-        const dimensions = { birthCountry: row.birthCountry, sex: row.sex };
+        const identityDimensions = {
+          birthCountry: row.birthCountry,
+          sex: row.sex,
+        };
+        const dimensions = {
+          ...identityDimensions,
+          birthCountryLabel: row.birthCountryLabel,
+        };
         return {
           seriesId: options.seriesId,
           releaseId: release.id,
@@ -456,7 +460,7 @@ async function persistYear(options: {
           referencePeriod: row.period,
           referenceType: "stock" as const,
           dimensions,
-          dimensionKey: canonicalDimensionKey(dimensions),
+          dimensionKey: canonicalDimensionKey(identityDimensions),
           value: String(row.value),
           unit: "persone",
           sourceStatus: row.sourceStatus,
@@ -607,17 +611,6 @@ export async function runPopulationBirthCountryIngestion() {
   }
 }
 
-function labelsFromMetadata(metadata: unknown): Record<string, string> {
-  if (!metadata || typeof metadata !== "object") return {};
-  const labels = (metadata as Record<string, unknown>).countryLabels;
-  if (!labels || typeof labels !== "object" || Array.isArray(labels)) return {};
-  return Object.fromEntries(
-    Object.entries(labels as Record<string, unknown>).filter(
-      (entry): entry is [string, string] => typeof entry[1] === "string",
-    ),
-  );
-}
-
 async function getCurrentBirthCountryPoints(): Promise<CurrentBirthCountryPoint[]> {
   const [series] = await db
     .select({ id: demographicSeriesTable.id })
@@ -638,7 +631,6 @@ async function getCurrentBirthCountryPoints(): Promise<CurrentBirthCountryPoint[
       releaseId: demographicReleasesTable.id,
       acquiredAt: demographicReleasesTable.acquiredAt,
       sourceDataset: demographicReleasesTable.sourceDataset,
-      metadata: demographicReleasesTable.metadata,
     })
     .from(demographicObservationsTable)
     .innerJoin(
@@ -661,13 +653,13 @@ async function getCurrentBirthCountryPoints(): Promise<CurrentBirthCountryPoint[
   for (const row of rows) {
     const dimensions = row.dimensions as Record<string, string>;
     const birthCountry = dimensions.birthCountry;
+    const birthCountryLabel = dimensions.birthCountryLabel;
     const sex = dimensions.sex as BirthCountrySex | undefined;
-    if (!birthCountry || !sex) continue;
-    const labels = labelsFromMetadata(row.metadata);
+    if (!birthCountry || !birthCountryLabel || !sex) continue;
     current.set(`${row.period}|${row.dimensionKey}`, {
       period: row.period,
       birthCountry,
-      birthCountryLabel: labels[birthCountry] ?? birthCountry,
+      birthCountryLabel,
       sex,
       value: Number(row.value),
       sourceStatus: row.sourceStatus as DemographicSourceStatus,
