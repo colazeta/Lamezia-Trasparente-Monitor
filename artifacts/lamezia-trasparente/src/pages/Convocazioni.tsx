@@ -281,10 +281,9 @@ export function Convocazioni() {
             </h2>
             <p className="mt-1 max-w-3xl text-sm leading-relaxed text-muted-foreground">
               Tranche iniziale: una seduta del Consiglio confermata da fonte
-              istituzionale successiva, due sedute della II Commissione
-              trascritte dallo stesso allegato ufficiale e un calendario della
-              VI Commissione disponibile come metadato ufficiale. La selezione
-              non costituisce una copertura storica completa.
+              istituzionale successiva, due sedute della II Commissione e due
+              della VI Commissione trascritte dai rispettivi allegati ufficiali.
+              La selezione non costituisce una copertura storica completa.
             </p>
           </div>
         </div>
