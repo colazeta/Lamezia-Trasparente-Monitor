@@ -29,7 +29,7 @@ describe("HomeInstitutionalSessions", () => {
       screen.getAllByText(/stato della seduta non verificato/i),
     ).toHaveLength(3);
     expect(screen.getByText("Verifica mista")).toBeInTheDocument();
-    expect(screen.getByText(/Data da verificare/i)).toBeInTheDocument();
+    expect(screen.getByText(/Data non disponibile/i)).toBeInTheDocument();
     expect(
       screen.getByText(/pubblicazioni 2026\/2788, 2026\/2648/i),
     ).toBeInTheDocument();
@@ -59,7 +59,7 @@ describe("HomeInstitutionalSessions", () => {
       "href",
       "/convocazioni/albo-2026-2648-commissione-ii-2026-08-10",
     );
-    expect(screen.getByText(/Data da verificare/i).closest("a")).toHaveAttribute(
+    expect(screen.getByText(/Data non disponibile/i).closest("a")).toHaveAttribute(
       "href",
       "/convocazioni/albo-2026-2788-commissione-vi-calendario",
     );
