@@ -60,9 +60,10 @@ export function GeoLibreAtlasPilot() {
           className="overflow-hidden rounded-2xl border border-border/80 bg-card shadow-lg"
         >
           <iframe
-            allow="fullscreen; geolocation"
+            allow="fullscreen"
             className="h-[78svh] min-h-[620px] w-full border-0"
             loading="lazy"
+            referrerPolicy="strict-origin-when-cross-origin"
             src={viewerUrl}
             title="Atlante territoriale — viewer GeoLibre sperimentale"
           />
