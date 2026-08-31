@@ -538,7 +538,7 @@ export function HomeInstitutionalSessions() {
           />
           <InstitutionalSessionsHomeCard
             title="Commissioni consiliari"
-            description="Due sedute della II Commissione trascritte dallo stesso allegato ufficiale, con data, ora e ordine del giorno controllati."
+            description="Due sedute della II Commissione con dati controllati e un calendario della VI Commissione ancora senza date verificate."
             icon={CalendarClock}
             sessions={commissionHomeSessions}
           />
