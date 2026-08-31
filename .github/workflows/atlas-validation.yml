@@ -1,0 +1,62 @@
+name: Atlas validation
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/atlas-validation.yml"
+      - "artifacts/lamezia-trasparente/src/pages/AtlanteTerritoriale*.tsx"
+      - "artifacts/lamezia-trasparente/src/components/atlas/**"
+      - "artifacts/lamezia-trasparente/src/data/atlanteTerritoriale*.ts"
+      - "artifacts/lamezia-trasparente/src/data/spatialLayers.ts"
+      - "artifacts/lamezia-trasparente/src/lib/spatial/**"
+      - "artifacts/lamezia-trasparente/src/test/atlante-accessibility.test.tsx"
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/atlas-validation.yml"
+      - "artifacts/lamezia-trasparente/src/pages/AtlanteTerritoriale*.tsx"
+      - "artifacts/lamezia-trasparente/src/components/atlas/**"
+      - "artifacts/lamezia-trasparente/src/data/atlanteTerritoriale*.ts"
+      - "artifacts/lamezia-trasparente/src/data/spatialLayers.ts"
+      - "artifacts/lamezia-trasparente/src/lib/spatial/**"
+      - "artifacts/lamezia-trasparente/src/test/atlante-accessibility.test.tsx"
+
+permissions:
+  contents: read
+
+jobs:
+  validate-atlas:
+    name: Typecheck and Atlas tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.28.1
+          run_install: false
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Typecheck web app
+        run: pnpm --filter @workspace/lamezia-trasparente run typecheck
+
+      - name: Run Atlas tests
+        run: >-
+          pnpm --filter @workspace/lamezia-trasparente exec vitest run
+          src/test/atlante-accessibility.test.tsx
+          src/lib/spatial/atlasNavigation.test.ts
+          src/lib/spatial/layerRegistry.test.ts
+          --configLoader runner
