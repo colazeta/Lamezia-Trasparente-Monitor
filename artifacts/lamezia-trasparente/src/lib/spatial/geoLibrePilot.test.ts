@@ -44,6 +44,16 @@ describe("GeoLibre pilot helpers", () => {
     ).toBe("https://api.lamezia.example/api/gis/comune");
   });
 
+  it("preserves an API base path prefix", () => {
+    expect(
+      resolveSpatialDataUrl(
+        "/api/gis/comune",
+        "https://lamezia.example",
+        "https://gateway.example/lamezia-backend",
+      ),
+    ).toBe("https://gateway.example/lamezia-backend/api/gis/comune");
+  });
+
   it("resolves static layers against the public site origin", () => {
     expect(
       resolveSpatialDataUrl(
