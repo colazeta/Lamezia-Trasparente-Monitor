@@ -24,7 +24,10 @@ export type ParsedBirthCountryObservation = {
   birthCountryLabel: string;
   sex: BirthCountrySex;
   value: number;
-  sourceStatus: BirthCountrySourceStatus;
+  // Parser output uses known values, while persisted observations are read back
+  // through Drizzle as plain strings. The public summary normalizes that DB
+  // boundary back to the closed status vocabulary below.
+  sourceStatus: string;
   rawStatus: string | null;
   qualityFlags: string[];
   sourceDataset?: string;
@@ -368,11 +371,13 @@ function statusForRows(
     "provisional",
     "estimated",
     "reconstructed",
+    "forecast",
     "unknown",
   ] as const) {
     if (statuses.has(status)) return status;
   }
-  return "final";
+  if (statuses.size === 1 && statuses.has("final")) return "final";
+  return "unknown";
 }
 
 function valueFor(
