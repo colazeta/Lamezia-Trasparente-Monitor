@@ -5,12 +5,13 @@ import {
   parseRcsBirthResponse,
   summarizeBirthCountry,
   type ParsedBirthCountryObservation,
-} from "./populationBirthCountry";
+} from "./populationBirthCountryCore";
 
 function formFixture() {
   const countries = Array.from({ length: 120 }, (_, index) => {
     const code = 100 + index;
-    const label = code === 100 ? "Italia" : code === 201 ? "Albania" : `Paese ${code}`;
+    const label =
+      code === 100 ? "Italia" : code === 201 ? "Albania" : `Paese ${code}`;
     return `<option value="${code}">${label}</option>`;
   }).join("");
   return `
@@ -37,7 +38,11 @@ function responseFixture(year: number) {
       totale: 20,
     })),
   ].map((row) => ({ anno: year, territorio: "Lamezia Terme", ...row }));
-  return JSON.stringify({ Status: true, Messaggio: null, datatable: { data: rows } });
+  return JSON.stringify({
+    Status: true,
+    Messaggio: null,
+    datatable: { data: rows },
+  });
 }
 
 describe("populationBirthCountry source contract", () => {
@@ -64,15 +69,33 @@ describe("populationBirthCountry source contract", () => {
   it("maps response labels to country codes and preserves the historical source status", () => {
     const contract = parseRcsBirthFormContract(formFixture());
     const current = parseRcsBirthResponse(responseFixture(2025), contract, 2025);
-    expect(current.find((row) => row.birthCountry === "100" && row.sex === "total")).toMatchObject({
+    expect(
+      current.find(
+        (row) => row.birthCountry === "100" && row.sex === "total",
+      ),
+    ).toMatchObject({
       value: 600,
       sourceStatus: "final",
     });
-    expect(current.find((row) => row.birthCountry === "201" && row.sex === "female")?.value).toBe(80);
+    expect(
+      current.find(
+        (row) => row.birthCountry === "201" && row.sex === "female",
+      )?.value,
+    ).toBe(80);
 
-    const historical = parseRcsBirthResponse(responseFixture(2018), contract, 2018);
-    expect(new Set(historical.map((row) => row.sourceStatus))).toEqual(new Set(["reconstructed"]));
-    expect(historical.every((row) => row.qualityFlags.includes("source_reconstructed"))).toBe(true);
+    const historical = parseRcsBirthResponse(
+      responseFixture(2018),
+      contract,
+      2018,
+    );
+    expect(new Set(historical.map((row) => row.sourceStatus))).toEqual(
+      new Set(["reconstructed"]),
+    );
+    expect(
+      historical.every((row) =>
+        row.qualityFlags.includes("source_reconstructed"),
+      ),
+    ).toBe(true);
   });
 
   it("fails closed when the source returns a country label outside the declared domain", () => {
@@ -80,10 +103,20 @@ describe("populationBirthCountry source contract", () => {
     const payload = JSON.stringify({
       Status: true,
       datatable: {
-        data: [{ anno: 2025, denominazione: "Paese non dichiarato", maschi: 1, femmine: 1, totale: 2 }],
+        data: [
+          {
+            anno: 2025,
+            denominazione: "Paese non dichiarato",
+            maschi: 1,
+            femmine: 1,
+            totale: 2,
+          },
+        ],
       },
     });
-    expect(() => parseRcsBirthResponse(payload, contract, 2025)).toThrow(/unmapped country labels/i);
+    expect(() => parseRcsBirthResponse(payload, contract, 2025)).toThrow(
+      /unmapped country labels/i,
+    );
   });
 
   it("derives born-abroad counts from country of birth, independently of citizenship", () => {
@@ -117,8 +150,13 @@ describe("populationBirthCountry source contract", () => {
       bornAbroad: 400,
       bornAbroadShare: 40,
     });
-    expect(summary.topBirthCountries[0]).toMatchObject({ name: "Albania", total: 150 });
-    expect(summary.topBirthCountries.some((row) => row.code === "995")).toBe(false);
+    expect(summary.topBirthCountries[0]).toMatchObject({
+      name: "Albania",
+      total: 150,
+    });
+    expect(summary.topBirthCountries.some((row) => row.code === "995")).toBe(
+      false,
+    );
     expect(summary.quality.coverageDifference).toBe(0);
   });
 });
