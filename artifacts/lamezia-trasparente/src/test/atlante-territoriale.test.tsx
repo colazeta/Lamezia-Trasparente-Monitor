@@ -310,18 +310,17 @@ describe("Atlante territoriale", () => {
       screen.getByRole("heading", { name: "Atlante territoriale" }),
     ).toBeInTheDocument();
     expect(
-      await screen.findByText("Scegli un indicatore, poi tocca un’area della mappa."),
+      await screen.findByText("Tocca un’area oppure usa la tabella sotto la mappa."),
     ).toBeInTheDocument();
-    expect(await screen.findByTestId("atlante-leaflet-map")).toBeInTheDocument();
+    expect(screen.getByTestId("atlante-leaflet-map")).toBeInTheDocument();
     expect(screen.getByTestId("atlante-istat-overlay")).toBeInTheDocument();
-    expect(screen.getByText("Tocca un’area per vedere i dati.")).toBeInTheDocument();
     expect(screen.queryByText(/in preparazione/i)).not.toBeInTheDocument();
     expect(
       screen.queryByRole("complementary", { name: /Dettaglio area Atlante/i }),
     ).not.toBeInTheDocument();
 
     const indicatorSelect = screen.getByRole("combobox", {
-      name: "Indicatore mappa",
+      name: "Indicatore della mappa censuaria",
     });
     expect(indicatorSelect).toHaveValue("popolazione-residente");
     expect(screen.getByText("2 sezioni con dato")).toBeInTheDocument();
@@ -348,7 +347,9 @@ describe("Atlante territoriale", () => {
       screen.getByRole("button", { name: "Esci dalla pagina intera" }),
     );
 
-    fireEvent.click(screen.getByRole("button", { name: "Scarica mappa" }));
+    fireEvent.click(
+      screen.getByRole("button", { name: "Scarica mappa censuaria in SVG" }),
+    );
     expect(createObjectURL).toHaveBeenCalled();
     expect(clickSpy).toHaveBeenCalled();
     expect(revokeObjectURL).toHaveBeenCalledWith("blob:atlante-map");
