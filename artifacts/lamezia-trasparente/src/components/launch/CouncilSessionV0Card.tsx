@@ -37,7 +37,11 @@ function formatDate(value: string | null) {
     "it-IT",
     isDateOnly
       ? { dateStyle: "long", timeZone: "UTC" }
-      : { dateStyle: "long", timeStyle: "short" },
+      : {
+          dateStyle: "long",
+          timeStyle: "short",
+          timeZone: "Europe/Rome",
+        },
   ).format(date);
 }
 
