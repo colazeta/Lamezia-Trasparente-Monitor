@@ -252,7 +252,7 @@ export function getInitialAtlasVisibleLayerIds(
   requestedLayerIds: string[] = [],
 ): string[] {
   const activeLayers = getActiveAtlasSpatialLayers();
-  const activeLayerIds = new Set(activeLayers.map((layer) => layer.id));
+  const activeLayerIds = new Set<string>(activeLayers.map((layer) => layer.id));
 
   return Array.from(
     new Set([
