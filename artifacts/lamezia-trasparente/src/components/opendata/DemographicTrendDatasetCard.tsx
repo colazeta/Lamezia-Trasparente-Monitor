@@ -2,6 +2,7 @@ import { ExternalLink, FileJson, Info, Users } from "lucide-react";
 import { PopulationHistoryPanel } from "@/components/demographics/PopulationHistoryPanel";
 import { PopulationStructurePanel } from "@/components/demographics/PopulationStructurePanel";
 import { PopulationCitizenshipPanel } from "@/components/demographics/PopulationCitizenshipPanel";
+import { PopulationBirthCountryPanel } from "@/components/demographics/PopulationBirthCountryPanel";
 import { ChangeDriversPanel } from "@/components/demographics/ChangeDriversPanel";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -10,6 +11,7 @@ import { Card, CardContent } from "@/components/ui/card";
 const POPULATION_API = "/api/demographics/series/population-resident-jan1";
 const STRUCTURE_API = "/api/demographics/structure";
 const CITIZENSHIP_API = "/api/demographics/citizenship";
+const BIRTHPLACE_API = "/api/demographics/birthplace";
 const CHANGE_DRIVERS_API = "/api/demographics/change-drivers?granularity=annual";
 const ISTAT_DEMO_URL = "https://demo.istat.it/";
 
@@ -36,9 +38,10 @@ export function DemographicTrendDatasetCard() {
             <p className="mt-2 text-sm leading-6 text-muted-foreground">
               Questa vista usa direttamente l'archivio demografico versionato di
               LameziaTrasparente. Popolazione, struttura per età e sesso,
-              cittadinanza, release della fonte e bilancio demografico sono quindi
-              gli stessi dati utilizzati nelle altre sezioni del sito: non esiste
-              più una copia statica separata per Open Data.
+              cittadinanza, paese di nascita, release della fonte e bilancio
+              demografico sono quindi gli stessi dati utilizzati nelle altre
+              sezioni del sito: non esiste più una copia statica separata per
+              Open Data.
             </p>
           </div>
           <div className="flex flex-wrap gap-2">
@@ -58,6 +61,12 @@ export function DemographicTrendDatasetCard() {
               <a href={CITIZENSHIP_API} target="_blank" rel="noreferrer">
                 <FileJson className="h-4 w-4" />
                 API cittadinanza
+              </a>
+            </Button>
+            <Button asChild variant="outline" size="sm">
+              <a href={BIRTHPLACE_API} target="_blank" rel="noreferrer">
+                <FileJson className="h-4 w-4" />
+                API paese di nascita
               </a>
             </Button>
             <Button asChild variant="outline" size="sm">
@@ -94,6 +103,7 @@ export function DemographicTrendDatasetCard() {
       <PopulationHistoryPanel />
       <PopulationStructurePanel />
       <PopulationCitizenshipPanel />
+      <PopulationBirthCountryPanel />
       <ChangeDriversPanel />
 
       <Card className="border-dashed">
@@ -104,9 +114,10 @@ export function DemographicTrendDatasetCard() {
             la precedente distribuzione statica degli stranieri per età e sesso
             restano fonti di confronto e provenienza documentale, ma non
             alimentano più l'Osservatorio. Per la lettura corrente vengono usate
-            le serie ISTAT versionate; le ricostruzioni storiche 2002–2018 restano
-            qualificate esplicitamente come ricostruite e mantengono una cesura
-            metodologica visibile rispetto al 2019+.
+            le serie ISTAT versionate; cittadinanza e paese di nascita restano
+            assi separati e le ricostruzioni storiche 2002–2018 sono qualificate
+            esplicitamente come ricostruite, con una cesura metodologica visibile
+            rispetto al 2019+.
           </p>
         </CardContent>
       </Card>
