@@ -50,5 +50,5 @@ Questa cartella integra, ma non sostituisce:
 - Repository Cruscotto Italia: `https://github.com/AgID/cruscotto-italia`
 - Linee guida AgID su acquisizione e riuso software per le PA: `https://docs.italia.it/italia/developers-italia/lg-acquisizione-e-riuso-software-per-pa-docs/it/stabile/`
 - Guida Developers Italia alla pubblicazione open source: `https://docs.italia.it/italia/developers-italia/lg-acquisizione-e-riuso-software-per-pa-docs/it/stabile/attachments/allegato-a-guida-alla-pubblicazione-open-source-di-software-realizzato-per-la-pa.html`
-- Guida Developers Italia alla manutenzione open source: `https://docs.italia.it/italia/developers-italia/lg-acquisizione-e-riuso-software-per-pa-docs/it/stabile/attachments/allegato-b-guida-alla-manutenzione-di-software-open-source-di-software-realizzato-per-la-pa.html`
+- Guida Developers Italia alla manutenzione open source: `https://docs.italia.it/italia/developers-italia/lg-acquisizione-e-riuso-software-per-pa-docs/it/stabile/attachments/allegato-b-guida-alla-manutenzione-di-software-open-source.html`
 - Designers Italia / design system: `https://designers.italia.it/argomenti/design-system/`
