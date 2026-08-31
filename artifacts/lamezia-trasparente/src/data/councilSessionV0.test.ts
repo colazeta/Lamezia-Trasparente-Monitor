@@ -197,7 +197,7 @@ describe("councilSessionV0", () => {
   });
 
   it("publishes source-traceable records for both council and commission notices", () => {
-    expect(councilSessionV0ReviewedRecords).toHaveLength(3);
+    expect(councilSessionV0ReviewedRecords).toHaveLength(4);
     expect(
       new Set(councilSessionV0ReviewedRecords.map((item) => item.kind)),
     ).toEqual(new Set(["council", "commission"]));
@@ -209,9 +209,16 @@ describe("councilSessionV0", () => {
       expect(session.provenance?.sourceUrl).toContain("albo.tinnvision.cloud");
       expect(session.provenance?.sourceContentHash).toMatch(/^[a-f0-9]{64}$/);
       expect(session.lastCheckedAt.value).toBeTruthy();
-      expect(session.contextResearch.status).toBe("reviewed_matches");
+      expect(["reviewed_matches", "checked_no_match"]).toContain(
+        session.contextResearch.status,
+      );
       expect(session.contextResearch.checkedAt).toBeTruthy();
-      expect(session.contextResearch.articles.length).toBeGreaterThan(0);
+      if (session.contextResearch.status === "reviewed_matches") {
+        expect(session.contextResearch.articles.length).toBeGreaterThan(0);
+      } else {
+        expect(session.contextResearch.articles).toEqual([]);
+        expect(session.contextResearch.media).toEqual([]);
+      }
       for (const article of session.contextResearch.articles) {
         expect(article.url).toMatch(/^https:\/\//);
         expect(article.publisher.length).toBeGreaterThan(0);
@@ -329,9 +336,41 @@ describe("councilSessionV0", () => {
     );
   });
 
-  it("expands the reviewed commission calendar into two sourced occurrences", () => {
+  it("keeps the VI Commission calendar as a metadata-only candidate until the attachment is reviewed", () => {
+    const calendar = findCouncilSessionV0ReviewedRecord(
+      "albo-2026-2788-commissione-vi-calendario",
+    );
+
+    expect(calendar?.kind).toBe("commission");
+    expect(calendar?.provenance?.publicationNumber).toBe("2026/2788");
+    expect(calendar?.provenance?.sourceContentHash).toBe(
+      "32af1fef2fdc84892259f836c0cc6c1aa70d1e404d664a91f7cad339e3c24629",
+    );
+    expect(calendar?.provenance?.documentUrl).toContain("2026_2788_2_P");
+    expect(calendar?.provenance?.archivedDocumentUrl).toBeNull();
+    expect(calendar?.provenance?.documentSha256).toBeNull();
+    expect(calendar?.provenance?.sourceReviewStatus).toBe(
+      "official_metadata_only",
+    );
+    expect(calendar?.scheduledAt.value).toBeNull();
+    expect(calendar?.scheduledAt.sourceStatus).toBe("da_verificare");
+    expect(calendar?.scheduledAt.limit).toMatch(
+      /finestra di pubblicazione.*non viene presentato come data/i,
+    );
+    expect(calendar?.agenda.value).toBeNull();
+    expect(calendar?.contextResearch.status).toBe("checked_no_match");
+    expect(calendar?.contextResearch.articles).toEqual([]);
+    expect(calendar?.contextResearch.media).toEqual([]);
+    expect(calendar?.dataLimits.value?.join(" ")).toMatch(
+      /può comprendere più sedute/i,
+    );
+  });
+
+  it("expands the reviewed II Commission calendar into two sourced occurrences", () => {
     const commissionSessions = councilSessionV0ReviewedRecords.filter(
-      (session) => session.kind === "commission",
+      (session) =>
+        session.kind === "commission" &&
+        session.provenance?.publicationNumber === "2026/2648",
     );
 
     expect(
