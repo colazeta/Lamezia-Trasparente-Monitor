@@ -11,6 +11,7 @@ La documentazione ha uno scopo operativo: rendere verificabile da maintainer, re
 - [`integration-source-catalog.md`](integration-source-catalog.md) — catalogo delle fonti che alimentano o possono alimentare il prodotto, con ruolo, stato, superficie pubblica e caveat.
 - [`cruscotto-italia-integration.md`](cruscotto-italia-integration.md) — integrazione di Cruscotto Italia come fonte federata nazionale per il comune di Lamezia Terme.
 - [`territorial-information-architecture.md`](territorial-information-architecture.md) — architettura dell'Atlante territoriale come indice geografico unico, Spatial Contract, registry dei layer, regole di provenienza e percorso di integrazione GeoLibre.
+- [`geolibre-pilot.md`](geolibre-pilot.md) — contratto del pilot GeoLibre dietro feature flag, alimentazione dai layer canonici, CORS, deployment e criteri di promozione.
 - [`agid-alignment.md`](agid-alignment.md) — applicazione pratica di best practice AgID/Developers Italia/Designers Italia a documentazione, API, riuso, open data, accessibilità e manutenzione.
 
 ## Principio fondamentale
@@ -49,5 +50,5 @@ Questa cartella integra, ma non sostituisce:
 - Repository Cruscotto Italia: `https://github.com/AgID/cruscotto-italia`
 - Linee guida AgID su acquisizione e riuso software per le PA: `https://docs.italia.it/italia/developers-italia/lg-acquisizione-e-riuso-software-per-pa-docs/it/stabile/`
 - Guida Developers Italia alla pubblicazione open source: `https://docs.italia.it/italia/developers-italia/lg-acquisizione-e-riuso-software-per-pa-docs/it/stabile/attachments/allegato-a-guida-alla-pubblicazione-open-source-di-software-realizzato-per-la-pa.html`
-- Guida Developers Italia alla manutenzione open source: `https://docs.italia.it/italia/developers-italia/lg-acquisizione-e-riuso-software-per-pa-docs/it/stabile/attachments/allegato-b-guida-alla-manutenzione-di-software-open-source.html`
+- Guida Developers Italia alla manutenzione open source: `https://docs.italia.it/italia/developers-italia/lg-acquisizione-e-riuso-software-per-pa-docs/it/stabile/attachments/allegato-b-guida-alla-manutenzione-di-software-open-source-di-software-realizzato-per-la-pa.html`
 - Designers Italia / design system: `https://designers.italia.it/argomenti/design-system/`
