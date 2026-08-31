@@ -3,6 +3,7 @@ import { runDemographicIngestion } from "./demographics";
 import { runSelfDescribingDemographicBalanceIngestion } from "./demographicBalanceIngestion";
 import { runRbdBackfill } from "./demographicRbd";
 import { runPopulationStructureIngestion } from "./populationStructure";
+import { runPopulationCitizenshipIngestion } from "./populationCitizenship";
 
 // Prefisso comune delle sorgenti automatiche della sezione Performance. La
 // popolazione mantiene l'identificativo storico `performance:istat-popolazione`
@@ -25,9 +26,16 @@ export async function runPerformanceIngestion(): Promise<void> {
 
   // Età e sesso vivono nella stessa architettura versionata ma non sono una
   // dipendenza del vecchio indicatore Performance. Un problema della fonte
-  // strutturale viene quindi registrato senza impedire il refresh del bilancio.
+  // strutturale viene quindi registrato senza impedire gli altri refresh.
   await runPopulationStructureIngestion().catch((err) => {
     logger.error({ err }, "Population structure refresh failed");
+  });
+
+  // Cittadinanza e popolazione straniera hanno feed indipendenti. Il modulo
+  // applica internamente una strategia di cold-start che mantiene l'intero
+  // ciclo entro il rate limit SDMX ISTAT anche quando manca il backfill storico.
+  await runPopulationCitizenshipIngestion().catch((err) => {
+    logger.error({ err }, "Population citizenship refresh failed");
   });
 
   // Il bilancio corrente inizializza le serie annuali canoniche. Solo dopo
