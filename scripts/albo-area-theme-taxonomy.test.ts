@@ -117,16 +117,46 @@ test("meets the versioned reader-navigation quality gates", () => {
   );
 });
 
-test("keeps every public filter gate false on the assessed current snapshot", () => {
-  const latest = JSON.parse(
+test("reproduces the versioned assessment from its immutable historical input", () => {
+  const historical = JSON.parse(
     readFileSync(
       fileURLToPath(
-        new URL("../data/public/albo/latest.json", import.meta.url),
+        new URL(
+          "./fixtures/albo-navigation-facet-input.2026-08-30.1.json",
+          import.meta.url,
+        ),
       ),
       "utf8",
     ),
-  ) as { items: Array<Record<string, unknown>> };
-  const readiness = assessAlboNavigationFacetReadiness(latest.items);
+  ) as {
+    source_snapshot: string;
+    source_retrieved_at: string;
+    groups: Array<{
+      count: number;
+      public_visibility: string;
+      act_category_id: string | null;
+      sector_id: string | null;
+      area_theme: Record<string, unknown> | null;
+      action_id: string | null;
+    }>;
+  };
+  // Only the fields read by the assessor are retained; live ingestion is not
+  // required to keep the counts of this dated, reviewed assessment forever.
+  const records = historical.groups.flatMap((group) => {
+    assert.ok(Number.isInteger(group.count) && group.count > 0);
+    return Array.from({ length: group.count }, () => ({
+      public_visibility: group.public_visibility,
+      classification: {
+        act_category: { id: group.act_category_id },
+        sector: { id: group.sector_id },
+      },
+      presentation: {
+        area_theme: group.area_theme,
+        action_id: group.action_id,
+      },
+    }));
+  });
+  const readiness = assessAlboNavigationFacetReadiness(records);
   const persistedReadiness = JSON.parse(
     readFileSync(
       fileURLToPath(
@@ -175,10 +205,70 @@ test("keeps every public filter gate false on the assessed current snapshot", ()
     [false, false, false, false],
   );
   assert.deepEqual(persistedReadiness, {
-    source_snapshot: "data/public/albo/latest.json",
-    source_retrieved_at: "2026-08-30T11:50:38.527Z",
+    source_snapshot: historical.source_snapshot,
+    source_retrieved_at: historical.source_retrieved_at,
     ...readiness,
   });
+});
+
+test("validates current snapshot gates without freezing ingestion totals", () => {
+  const latest = JSON.parse(
+    readFileSync(
+      fileURLToPath(
+        new URL("../data/public/albo/latest.json", import.meta.url),
+      ),
+      "utf8",
+    ),
+  ) as { items: Array<Record<string, unknown>> };
+  const readiness = assessAlboNavigationFacetReadiness(latest.items);
+  const visible = latest.items.filter(
+    (record) => record.public_visibility !== "do_not_publish",
+  );
+  const publishable = visible.filter(
+    (record) => record.public_visibility === "publishable",
+  );
+
+  assert.ok(
+    visible.length > 0,
+    "the current public snapshot must not be empty",
+  );
+  assert.deepEqual(readiness.corpus, {
+    visible_records: visible.length,
+    publishable_records: publishable.length,
+  });
+  for (const facet of [
+    readiness.facets.act_family,
+    readiness.facets.issuer_organ,
+  ]) {
+    assert.equal(facet.contract_status, "missing");
+    assert.equal(facet.public_filter_ready, false);
+    assert.ok(facet.proxy_populated_records <= visible.length);
+  }
+
+  const areaTheme = readiness.facets.area_theme;
+  assert.equal(areaTheme.eligible_records, publishable.length);
+  assert.ok(areaTheme.materialised_records <= publishable.length);
+  assert.equal(
+    areaTheme.public_filter_ready,
+    areaTheme.materialisation_pass &&
+      areaTheme.accuracy_pass &&
+      areaTheme.high_confidence_precision_pass &&
+      areaTheme.reviewed_fallback_rate_pass &&
+      areaTheme.corpus_fallback_rate_pass,
+  );
+  const action = readiness.facets.action;
+  assert.equal(action.eligible_records, publishable.length);
+  assert.ok(action.assigned_records <= publishable.length);
+  assert.equal(
+    action.assigned_records,
+    Object.values(action.option_counts).reduce((sum, count) => sum + count, 0),
+  );
+  assert.equal(
+    action.public_filter_ready,
+    action.coverage_pass &&
+      action.precision_pass &&
+      action.minimum_per_option_pass,
+  );
 });
 
 test("does not promote coverage proxies into missing facet contracts", () => {
@@ -236,10 +326,7 @@ test("matches every reviewed gold fixture and preserves distinct null reasons", 
       "missing_public_subject",
     ),
   );
-  assert.equal(
-    missingPresentation?.area_theme.null_reason,
-    "input_missing",
-  );
+  assert.equal(missingPresentation?.area_theme.null_reason, "input_missing");
   assert.equal(
     classifyAlboPublicAreaTheme("Comunicazione istituzionale generica")
       .null_reason,
