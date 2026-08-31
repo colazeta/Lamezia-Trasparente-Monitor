@@ -24,8 +24,19 @@ export type SpatialLayerGroup =
 
 export type SpatialGeometryType = SpatialGeometry["type"];
 
+export type SpatialLayerId =
+  | "municipal-boundary"
+  | "census-sections"
+  | "confiscated-assets"
+  | "public-works"
+  | "pnrr-projects"
+  | "public-assets"
+  | "schools-services"
+  | "cultural-assets"
+  | "localised-contract-interventions";
+
 export type SpatialLayerDefinition = {
-  id: string;
+  id: SpatialLayerId;
   title: string;
   description: string;
   group: SpatialLayerGroup;
