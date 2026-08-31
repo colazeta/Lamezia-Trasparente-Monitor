@@ -7,7 +7,7 @@ import {
   feedStatusTable,
   type DemographicSourceStatus,
 } from "@workspace/db";
-import { and, asc, desc, eq } from "drizzle-orm";
+import { and, asc, eq } from "drizzle-orm";
 import {
   canonicalDimensionKey,
   LAMEZIA_ISTAT_CODE,
@@ -134,7 +134,11 @@ export function parseRcsBirthFormContract(html: string): RcsBirthFormContract {
     /<select\b[^>]*name=["']a["'][^>]*>([\s\S]*?)<\/select>/i,
   );
   if (!yearSelect) throw new Error("ISTAT RCS schema changed: year selector missing");
-  const years = [...yearSelect[1].matchAll(/<option\b[^>]*value=["']?(\d{4})["']?[^>]*>/gi)]
+  const years = [
+    ...yearSelect[1].matchAll(
+      /<option\b[^>]*value=["']?(\d{4})["']?[^>]*>/gi,
+    ),
+  ]
     .map((match) => Number(match[1]))
     .filter(Number.isInteger);
   const uniqueYears = [...new Set(years)].sort((left, right) => left - right);
@@ -147,14 +151,19 @@ export function parseRcsBirthFormContract(html: string): RcsBirthFormContract {
     throw new Error("ISTAT RCS schema changed: country-of-birth selector missing");
   }
   const countryLabels: Record<string, string> = {};
-  for (const match of countrySelect[1].matchAll(/<option\b([^>]*)>([\s\S]*?)<\/option>/gi)) {
+  for (const match of countrySelect[1].matchAll(
+    /<option\b([^>]*)>([\s\S]*?)<\/option>/gi,
+  )) {
     const tag = `<option ${match[1]}>`;
     const value = attribute(tag, "value") ?? "";
     if (!isCountryCode(value)) continue;
     const label = cleanHtmlText(match[2]);
     if (label) countryLabels[value] = label;
   }
-  if (!countryLabels[ITALY_BIRTH_COUNTRY_CODE] || Object.keys(countryLabels).length < 100) {
+  if (
+    !countryLabels[ITALY_BIRTH_COUNTRY_CODE] ||
+    Object.keys(countryLabels).length < 100
+  ) {
     throw new Error(
       `ISTAT RCS schema changed: country-of-birth domain incomplete (${Object.keys(countryLabels).length} country codes)`,
     );
@@ -221,7 +230,10 @@ export function parseRcsBirthResponse(
   if (!Array.isArray(data)) throw new Error("ISTAT RCS response missing datatable.data");
 
   const codeByLabel = new Map(
-    Object.entries(contract.countryLabels).map(([code, label]) => [normalizeLabel(label), code]),
+    Object.entries(contract.countryLabels).map(([code, label]) => [
+      normalizeLabel(label),
+      code,
+    ]),
   );
   const out: ParsedBirthCountryObservation[] = [];
   const unknownLabels = new Set<string>();
@@ -234,7 +246,8 @@ export function parseRcsBirthResponse(
     const row = item as Record<string, unknown>;
     const rowYear = Number(row.anno ?? expectedYear);
     if (rowYear !== expectedYear) continue;
-    const label = typeof row.denominazione === "string" ? row.denominazione.trim() : "";
+    const label =
+      typeof row.denominazione === "string" ? row.denominazione.trim() : "";
     if (!label) continue;
     const birthCountry = codeByLabel.get(normalizeLabel(label));
     if (!birthCountry) {
@@ -264,7 +277,9 @@ export function parseRcsBirthResponse(
 
   if (unknownLabels.size) {
     throw new Error(
-      `ISTAT RCS response contains unmapped country labels: ${[...unknownLabels].slice(0, 5).join(", ")}`,
+      `ISTAT RCS response contains unmapped country labels: ${[...unknownLabels]
+        .slice(0, 5)
+        .join(", ")}`,
     );
   }
   validateBirthCountryObservations(out, String(expectedYear));
@@ -279,7 +294,9 @@ export function validateBirthCountryObservations(
   observations: ParsedBirthCountryObservation[],
   label: string,
 ): void {
-  if (!observations.length) throw new Error(`${label}: no valid birth-country observations`);
+  if (!observations.length) {
+    throw new Error(`${label}: no valid birth-country observations`);
+  }
   const italy = observations.filter(
     (row) => row.birthCountry === ITALY_BIRTH_COUNTRY_CODE,
   );
@@ -289,7 +306,9 @@ export function validateBirthCountryObservations(
     }
   }
   const totalCountries = new Set(
-    observations.filter((row) => row.sex === "total").map((row) => row.birthCountry),
+    observations
+      .filter((row) => row.sex === "total")
+      .map((row) => row.birthCountry),
   );
   if (totalCountries.size < 10) {
     throw new Error(`${label}: implausibly small country domain (${totalCountries.size})`);
@@ -481,7 +500,13 @@ async function fetchYear(
   }
   const payload = await response.text();
   const observations = parseRcsBirthResponse(payload, contract, year);
-  const persisted = await persistYear({ seriesId, year, payload, response, observations });
+  const persisted = await persistYear({
+    seriesId,
+    year,
+    payload,
+    response,
+    observations,
+  });
   return { requests: 1, ...persisted };
 }
 
@@ -489,7 +514,6 @@ async function recordFeedStatus(outcome: {
   status: "ok" | "error";
   observations?: number;
   releases?: number;
-  remainingBackfill?: number;
   error?: string;
 }) {
   const now = new Date();
@@ -505,7 +529,6 @@ async function recordFeedStatus(outcome: {
       itemsNew: outcome.releases ?? 0,
       lastCheckedAt: now,
       lastUpdatedAt: (outcome.releases ?? 0) > 0 ? now : undefined,
-      metadata: { remainingBackfillYears: outcome.remainingBackfill ?? null },
     })
     .onConflictDoUpdate({
       target: feedStatusTable.source,
@@ -517,7 +540,6 @@ async function recordFeedStatus(outcome: {
         itemsTotal: outcome.observations ?? 0,
         itemsNew: outcome.releases ?? 0,
         lastCheckedAt: now,
-        metadata: { remainingBackfillYears: outcome.remainingBackfill ?? null },
         ...((outcome.releases ?? 0) > 0 ? { lastUpdatedAt: now } : {}),
       },
     });
@@ -538,7 +560,9 @@ export async function runPopulationBirthCountryIngestion() {
     const coverage = await persistedYearReleases(series.id);
     const missingBefore = contract.years.filter((year) => !coverage.has(year));
     const targets = new Set<number>([latestYear]);
-    for (const year of missingBefore.filter((year) => year !== latestYear).slice(0, BACKFILL_YEARS_PER_RUN)) {
+    for (const year of missingBefore
+      .filter((year) => year !== latestYear)
+      .slice(0, BACKFILL_YEARS_PER_RUN)) {
       targets.add(year);
     }
 
@@ -560,15 +584,18 @@ export async function runPopulationBirthCountryIngestion() {
     }
 
     const coverageAfter = await persistedYearReleases(series.id);
-    const remainingBackfill = contract.years.filter((year) => !coverageAfter.has(year)).length;
-    await recordFeedStatus({
-      status: "ok",
-      observations,
-      releases,
-      remainingBackfill,
-    });
+    const remainingBackfill = contract.years.filter(
+      (year) => !coverageAfter.has(year),
+    ).length;
+    await recordFeedStatus({ status: "ok", observations, releases });
     logger.info(
-      { requests, releases, observations, remainingBackfill, years: [...targets] },
+      {
+        requests,
+        releases,
+        observations,
+        remainingBackfill,
+        years: [...targets],
+      },
       "ISTAT country-of-birth ingestion complete",
     );
     return { requests, releases, observations, remainingBackfill };
@@ -585,8 +612,9 @@ function labelsFromMetadata(metadata: unknown): Record<string, string> {
   const labels = (metadata as Record<string, unknown>).countryLabels;
   if (!labels || typeof labels !== "object" || Array.isArray(labels)) return {};
   return Object.fromEntries(
-    Object.entries(labels as Record<string, unknown>)
-      .filter((entry): entry is [string, string] => typeof entry[1] === "string"),
+    Object.entries(labels as Record<string, unknown>).filter(
+      (entry): entry is [string, string] => typeof entry[1] === "string",
+    ),
   );
 }
 
@@ -604,7 +632,8 @@ async function getCurrentBirthCountryPoints(): Promise<CurrentBirthCountryPoint[
       dimensions: demographicObservationsTable.dimensions,
       dimensionKey: demographicObservationsTable.dimensionKey,
       sourceStatus: demographicObservationsTable.sourceStatus,
-      sourceObservationStatus: demographicObservationsTable.sourceObservationStatus,
+      sourceObservationStatus:
+        demographicObservationsTable.sourceObservationStatus,
       qualityFlags: demographicObservationsTable.qualityFlags,
       releaseId: demographicReleasesTable.id,
       acquiredAt: demographicReleasesTable.acquiredAt,
@@ -681,7 +710,10 @@ async function getIndependentPopulationByPeriod() {
         eq(demographicObservationsTable.geographyCode, LAMEZIA_ISTAT_CODE),
       ),
     )
-    .orderBy(asc(demographicReleasesTable.acquiredAt), asc(demographicReleasesTable.id));
+    .orderBy(
+      asc(demographicReleasesTable.acquiredAt),
+      asc(demographicReleasesTable.id),
+    );
   const current = new Map<string, number>();
   for (const row of rows) current.set(row.period, Number(row.value));
   return current;
@@ -693,9 +725,16 @@ function round(value: number | null, digits = 1): number | null {
   return Math.round(value * factor) / factor;
 }
 
-function statusForRows(rows: ParsedBirthCountryObservation[]): DemographicSourceStatus {
+function statusForRows(
+  rows: ParsedBirthCountryObservation[],
+): DemographicSourceStatus {
   const statuses = new Set(rows.map((row) => row.sourceStatus));
-  for (const status of ["provisional", "estimated", "reconstructed", "unknown"] as const) {
+  for (const status of [
+    "provisional",
+    "estimated",
+    "reconstructed",
+    "unknown",
+  ] as const) {
     if (statuses.has(status)) return status;
   }
   return "final";
@@ -706,7 +745,9 @@ function valueFor(
   code: string,
   sex: BirthCountrySex,
 ): number {
-  return rows.find((row) => row.birthCountry === code && row.sex === sex)?.value ?? 0;
+  return (
+    rows.find((row) => row.birthCountry === code && row.sex === sex)?.value ?? 0
+  );
 }
 
 export type PopulationBirthCountrySummary = {
@@ -742,7 +783,9 @@ export function summarizeBirthCountry(
   independentPopulation: number | null = null,
 ): PopulationBirthCountrySummary {
   const selected = rows.filter((row) => row.period === period);
-  if (!selected.length) throw new Error(`No country-of-birth observations for ${period}`);
+  if (!selected.length) {
+    throw new Error(`No country-of-birth observations for ${period}`);
+  }
   const totalRows = selected.filter((row) => row.sex === "total");
   const sourceCountryTotal = totalRows.reduce((sum, row) => sum + row.value, 0);
   const bornInItaly = valueFor(selected, ITALY_BIRTH_COUNTRY_CODE, "total");
@@ -769,9 +812,18 @@ export function summarizeBirthCountry(
       shareOfBornAbroad:
         bornAbroad > 0 ? round((row.value / bornAbroad) * 100) : null,
     }))
-    .sort((left, right) => right.total - left.total || left.name.localeCompare(right.name))
+    .sort(
+      (left, right) =>
+        right.total - left.total || left.name.localeCompare(right.name),
+    )
     .slice(0, 10);
-  const datasets = [...new Set((selected as CurrentBirthCountryPoint[]).map((row) => row.sourceDataset).filter(Boolean))];
+  const datasets = [
+    ...new Set(
+      (selected as CurrentBirthCountryPoint[])
+        .map((row) => row.sourceDataset)
+        .filter(Boolean),
+    ),
+  ];
 
   return {
     period,
@@ -780,7 +832,8 @@ export function summarizeBirthCountry(
       population,
       bornInItaly,
       bornAbroad,
-      bornAbroadShare: population > 0 ? round((bornAbroad / population) * 100) : null,
+      bornAbroadShare:
+        population > 0 ? round((bornAbroad / population) * 100) : null,
       male,
       female,
     },
@@ -789,9 +842,13 @@ export function summarizeBirthCountry(
       sourceCountryTotal,
       independentPopulation,
       coverageDifference:
-        independentPopulation === null ? null : sourceCountryTotal - independentPopulation,
+        independentPopulation === null
+          ? null
+          : sourceCountryTotal - independentPopulation,
     },
-    sourceDataset: datasets.length ? datasets.join(" + ") : datasetForYear(Number(period)),
+    sourceDataset: datasets.length
+      ? datasets.join(" + ")
+      : datasetForYear(Number(period)),
   };
 }
 
@@ -818,7 +875,9 @@ export async function getPopulationBirthCountrySnapshot(
   requestedPeriod?: string | null,
 ): Promise<PopulationBirthCountrySnapshot | null> {
   const points = await getCurrentBirthCountryPoints();
-  const availablePeriods = [...new Set(points.map((point) => point.period))].sort();
+  const availablePeriods = [
+    ...new Set(points.map((point) => point.period)),
+  ].sort();
   if (!availablePeriods.length) return null;
   const period =
     requestedPeriod &&
@@ -827,9 +886,17 @@ export async function getPopulationBirthCountrySnapshot(
       ? requestedPeriod
       : availablePeriods[availablePeriods.length - 1];
   const populations = await getIndependentPopulationByPeriod();
-  const selected = summarizeBirthCountry(points, period, populations.get(period) ?? null);
+  const selected = summarizeBirthCountry(
+    points,
+    period,
+    populations.get(period) ?? null,
+  );
   const history = availablePeriods.map((item) => {
-    const summary = summarizeBirthCountry(points, item, populations.get(item) ?? null);
+    const summary = summarizeBirthCountry(
+      points,
+      item,
+      populations.get(item) ?? null,
+    );
     return {
       period: item,
       population: summary.counts.population,
