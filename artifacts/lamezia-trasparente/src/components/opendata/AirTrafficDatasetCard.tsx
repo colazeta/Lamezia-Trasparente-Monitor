@@ -23,8 +23,10 @@ import {
   LAMEZIA_AIR_TRAFFIC_YEARS,
   getLameziaAirTrafficAnnualMetrics,
   getLameziaAirTrafficRecordsForYear,
+  getLameziaAirTrafficYearComparison,
   type LameziaAirTrafficAnnualMetrics,
   type LameziaAirTrafficMonthlyRecord,
+  type LameziaAirTrafficYearComparison,
 } from "@/data/lameziaAirTraffic";
 
 const CHART_WIDTH = 1040;
@@ -60,6 +62,14 @@ export function AirTrafficDatasetCard() {
   );
   const records = useMemo(
     () => getLameziaAirTrafficRecordsForYear(selectedYear),
+    [selectedYear],
+  );
+  const previousYearRecords = useMemo(
+    () => getLameziaAirTrafficRecordsForYear(selectedYear - 1),
+    [selectedYear],
+  );
+  const yearComparison = useMemo(
+    () => getLameziaAirTrafficYearComparison(selectedYear),
     [selectedYear],
   );
   const annualMetrics = getLameziaAirTrafficAnnualMetrics(selectedYear);
@@ -118,14 +128,17 @@ export function AirTrafficDatasetCard() {
         <AirTrafficChart
           isLatestYear={isLatestYear}
           latestCompleteMonth={metadata.latest_complete_month}
+          previousYearRecords={previousYearRecords}
           records={records}
           year={selectedYear}
         />
 
         <p className="mt-3 text-sm leading-6 text-muted-foreground">
           Le barre impilate distinguono passeggeri nazionali, internazionali e
-          altri conteggi residuali; il totale include le definizioni pubblicate
-          nei file mensili della fonte.
+          altri conteggi residuali.{" "}
+          {yearComparison
+            ? "La linea tratteggiata mostra il totale dello stesso mese dell'anno precedente. Per gli anni parziali il confronto si ferma all'ultimo mese disponibile."
+            : `Il ${selectedYear} e il primo anno della serie, quindi il confronto con l'anno precedente non e disponibile.`}
         </p>
 
         <details className="mt-5 rounded-lg border border-border bg-muted/20 text-sm leading-6">
@@ -135,8 +148,10 @@ export function AirTrafficDatasetCard() {
           <div className="border-t border-border p-4">
             <AirTrafficInsightBoard
               annualMetrics={annualMetrics}
+              comparison={yearComparison}
               isLatestYear={isLatestYear}
               latestRecord={latestRecord}
+              year={selectedYear}
             />
             <div className="mt-4 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
               <AirTrafficQuickFacts
@@ -165,20 +180,35 @@ function AirTrafficChart({
   year,
   latestCompleteMonth,
   isLatestYear,
+  previousYearRecords,
 }: {
   records: LameziaAirTrafficMonthlyRecord[];
   year: number;
   latestCompleteMonth: string;
   isLatestYear: boolean;
+  previousYearRecords: LameziaAirTrafficMonthlyRecord[];
 }) {
   const recordsByMonth = new Map(
     records.map((record) => [record.month_number, record]),
+  );
+  const availableMonths = new Set(recordsByMonth.keys());
+  const comparablePreviousYearRecords = previousYearRecords.filter((record) =>
+    availableMonths.has(record.month_number),
+  );
+  const previousRecordsByMonth = new Map(
+    comparablePreviousYearRecords.map((record) => [
+      record.month_number,
+      record,
+    ]),
   );
   const plotWidth = CHART_WIDTH - PLOT.left - PLOT.right;
   const plotHeight = CHART_HEIGHT - PLOT.top - PLOT.bottom;
   const maxPassengers = Math.max(
     1,
     ...records.map((record) => record.passengers.total ?? 0),
+    ...comparablePreviousYearRecords.map(
+      (record) => record.passengers.total ?? 0,
+    ),
   );
   const yMax = Math.ceil(maxPassengers / 50_000) * 50_000;
   const yForValue = (value: number) =>
@@ -187,6 +217,17 @@ function AirTrafficChart({
     PLOT.left + ((month - 1) / 11) * plotWidth;
   const barWidth = 46;
   const gridValues = buildPassengerGrid(yMax);
+  const comparisonPoints = comparablePreviousYearRecords
+    .filter((record) => record.passengers.total !== null)
+    .map((record) => ({
+      month: record.month_number,
+      x: xForMonth(record.month_number),
+      y: yForValue(record.passengers.total ?? 0),
+    }));
+  const comparisonPath = comparisonPoints
+    .map((point, index) => `${index === 0 ? "M" : "L"} ${point.x} ${point.y}`)
+    .join(" ");
+  const hasPreviousYearComparison = comparisonPoints.length > 0;
 
   return (
     <div className="mt-5 overflow-x-auto rounded-xl border border-border bg-background p-3 shadow-sm">
@@ -202,8 +243,13 @@ function AirTrafficChart({
         </title>
         <desc id="air-traffic-chart-desc">
           Anno {year}: barre mensili dei passeggeri totali con segmenti per
-          traffico nazionale, internazionale e residuale; il marker evidenzia
-          l'ultimo mese completo disponibile quando l'anno e parziale.
+          traffico nazionale, internazionale e residuale.
+          {hasPreviousYearComparison
+            ? ` La linea tratteggiata mostra il totale dello stesso mese del ${year - 1}, limitato ai mesi disponibili nel ${year}.`
+            : " Il confronto con l'anno precedente non e disponibile."}
+          {isLatestYear
+            ? " Il marker evidenzia l'ultimo mese completo disponibile."
+            : ""}
         </desc>
         <rect
           fill="hsl(var(--background))"
@@ -226,7 +272,9 @@ function AirTrafficChart({
           x={CHART_WIDTH - PLOT.right}
           y={24}
         >
-          nazionali, internazionali e altri conteggi
+          {hasPreviousYearComparison
+            ? `barre ${year} · linea ${year - 1}`
+            : `barre ${year}`}
         </text>
         {gridValues.map((value) => (
           <g key={value}>
@@ -250,9 +298,22 @@ function AirTrafficChart({
             </text>
           </g>
         ))}
+        {hasPreviousYearComparison ? (
+          <path
+            d={comparisonPath}
+            fill="none"
+            pointerEvents="none"
+            stroke="hsl(var(--foreground) / 0.58)"
+            strokeDasharray="7 6"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="3"
+          />
+        ) : null}
         {MONTH_LABELS.map((label, index) => {
           const month = index + 1;
           const record = recordsByMonth.get(month);
+          const previousRecord = previousRecordsByMonth.get(month);
           const x = xForMonth(month);
           const total = record?.passengers.total ?? 0;
           const national = record?.passengers.national ?? 0;
@@ -265,9 +326,16 @@ function AirTrafficChart({
           const baseY = PLOT.top + plotHeight;
           const isLatestMarker =
             isLatestYear && record?.month === latestCompleteMonth;
+          const monthDescription = buildMonthComparisonDescription(
+            record,
+            previousRecord,
+            label,
+            year,
+          );
 
           return (
-            <g key={label}>
+            <g aria-label={monthDescription} key={label} role="group">
+              <title>{monthDescription}</title>
               {record ? (
                 <>
                   <rect
@@ -352,6 +420,18 @@ function AirTrafficChart({
             </g>
           );
         })}
+        {comparisonPoints.map((point) => (
+          <circle
+            cx={point.x}
+            cy={point.y}
+            fill="hsl(var(--background))"
+            key={point.month}
+            pointerEvents="none"
+            r="4"
+            stroke="hsl(var(--foreground) / 0.68)"
+            strokeWidth="2"
+          />
+        ))}
       </svg>
       <div className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-2 text-xs text-muted-foreground">
         <LegendItem color="hsl(var(--chart-1))" label="Nazionali" />
@@ -360,6 +440,11 @@ function AirTrafficChart({
           color="hsl(var(--muted-foreground) / 0.45)"
           label="Transiti diretti e altri"
         />
+        {hasPreviousYearComparison ? (
+          <LineLegendItem label={`Totale ${year - 1}`} />
+        ) : (
+          <span>Confronto con {year - 1} non disponibile</span>
+        )}
         {isLatestYear ? (
           <span className="inline-flex items-center gap-2">
             <span className="h-4 border-l-2 border-dashed border-brand" />
@@ -373,18 +458,22 @@ function AirTrafficChart({
 
 function AirTrafficInsightBoard({
   annualMetrics,
+  comparison,
   latestRecord,
   isLatestYear,
+  year,
 }: {
   annualMetrics: LameziaAirTrafficAnnualMetrics | null;
+  comparison: LameziaAirTrafficYearComparison | null;
   latestRecord: LameziaAirTrafficMonthlyRecord | null;
   isLatestYear: boolean;
+  year: number;
 }) {
   return (
     <div className="mt-5 grid gap-3 lg:grid-cols-6">
       <InsightItem
         className="lg:col-span-2"
-        detail={latestRecord ? formatMonth(latestRecord.month) : "n.d."}
+        detail={formatMonthlyComparisonDetail(latestRecord, year - 1)}
         icon={<Users className="h-4 w-4" />}
         label={isLatestYear ? "Ultimo mese completo" : "Ultimo mese dell'anno"}
         tone={toneForValue(latestRecord?.passengers.total_yoy_pct ?? null)}
@@ -392,10 +481,14 @@ function AirTrafficInsightBoard({
       />
       <InsightItem
         className="lg:col-span-2"
-        detail={`${formatInteger(annualMetrics?.months ?? null)} mesi nel dataset`}
+        detail={formatPeriodComparisonDetail(
+          comparison?.months ?? annualMetrics?.months ?? null,
+          comparison?.passengers_yoy_pct ?? null,
+          year - 1,
+        )}
         icon={<TrendingUp className="h-4 w-4" />}
         label={isLatestYear ? "Passeggeri da gennaio" : "Passeggeri annui"}
-        tone="neutral"
+        tone={toneForValue(comparison?.passengers_yoy_pct ?? null)}
         value={formatInteger(annualMetrics?.passengers_total ?? null)}
       />
       <InsightItem
@@ -412,22 +505,26 @@ function AirTrafficInsightBoard({
       />
       <InsightItem
         className="lg:col-span-2"
-        detail={`var. mese ${formatSignedPercent(
-          latestRecord?.movements.total_yoy_pct ?? null,
-        )}`}
+        detail={formatPeriodComparisonDetail(
+          comparison?.months ?? annualMetrics?.months ?? null,
+          comparison?.movements_yoy_pct ?? null,
+          year - 1,
+        )}
         icon={<Activity className="h-4 w-4" />}
         label={isLatestYear ? "Movimenti da gennaio" : "Movimenti annui"}
-        tone={toneForValue(latestRecord?.movements.total_yoy_pct ?? null)}
+        tone={toneForValue(comparison?.movements_yoy_pct ?? null)}
         value={formatInteger(annualMetrics?.movements_total ?? null)}
       />
       <InsightItem
         className="lg:col-span-2"
-        detail={`var. mese ${formatSignedPercent(
-          latestRecord?.cargo_tons.total_yoy_pct ?? null,
-        )}`}
+        detail={formatPeriodComparisonDetail(
+          comparison?.months ?? annualMetrics?.months ?? null,
+          comparison?.cargo_tons_yoy_pct ?? null,
+          year - 1,
+        )}
         icon={<Package className="h-4 w-4" />}
         label="Cargo cumulato"
-        tone={toneForValue(latestRecord?.cargo_tons.total_yoy_pct ?? null)}
+        tone={toneForValue(comparison?.cargo_tons_yoy_pct ?? null)}
         value={formatTons(annualMetrics?.cargo_tons_total ?? null)}
       />
       <InsightItem
@@ -496,7 +593,10 @@ function MethodDisclosure({
         <MethodBox title="Metodo">
           La pipeline scarica i file `download-export/anno/mese`, seleziona la
           riga {metadata.airport_name} nei fogli mensili e pubblica una serie
-          JSON statica.
+          JSON statica. Il confronto allinea ogni mese con lo stesso mese
+          dell'anno precedente e, per gli anni parziali, usa soltanto il periodo
+          disponibile. La variazione mensile riprende il dato della fonte; i
+          riepiloghi cumulati sono ricalcolati sui totali dei mesi allineati.
         </MethodBox>
         <MethodBox title="Limiti">
           {metadata.caveat}
@@ -577,6 +677,18 @@ function LegendItem({ color, label }: { color: string; label: string }) {
   );
 }
 
+function LineLegendItem({ label }: { label: string }) {
+  return (
+    <span className="inline-flex items-center gap-2">
+      <span
+        aria-hidden="true"
+        className="h-0 w-7 border-t-2 border-dashed border-foreground/60"
+      />
+      {label}
+    </span>
+  );
+}
+
 function buildPassengerGrid(max: number) {
   const step = max <= 250_000 ? 50_000 : 100_000;
   const values = [];
@@ -591,6 +703,48 @@ function toneForValue(value: number | null): "warm" | "cool" | "neutral" {
     return "neutral";
   }
   return value > 0 ? "warm" : "cool";
+}
+
+function buildMonthComparisonDescription(
+  record: LameziaAirTrafficMonthlyRecord | undefined,
+  previousRecord: LameziaAirTrafficMonthlyRecord | undefined,
+  monthLabel: string,
+  year: number,
+) {
+  if (!record) {
+    return `${monthLabel} ${year}: dato mensile non disponibile`;
+  }
+
+  const currentDescription = `${formatMonth(record.month)}: ${formatInteger(record.passengers.total)} passeggeri`;
+  if (!previousRecord) {
+    return `${currentDescription}; confronto con l'anno precedente non disponibile`;
+  }
+
+  return `${currentDescription}; ${formatInteger(previousRecord.passengers.total)} nello stesso mese dell'anno precedente; variazione ${formatSignedPercent(record.passengers.total_yoy_pct)}`;
+}
+
+function formatMonthlyComparisonDetail(
+  record: LameziaAirTrafficMonthlyRecord | null,
+  previousYear: number,
+) {
+  if (!record) {
+    return "n.d.";
+  }
+  if (record.passengers.total_yoy_pct === null) {
+    return `${formatMonth(record.month)} · confronto con il ${previousYear} non disponibile`;
+  }
+  return `${formatMonth(record.month)} · ${formatSignedPercent(record.passengers.total_yoy_pct)} sullo stesso mese del ${previousYear}`;
+}
+
+function formatPeriodComparisonDetail(
+  months: number | null,
+  yearOverYearChange: number | null,
+  previousYear: number,
+) {
+  const period = months === null ? "periodo n.d." : `${months} mesi`;
+  return yearOverYearChange === null
+    ? `${period} · confronto con il ${previousYear} non disponibile`
+    : `${period} · ${formatSignedPercent(yearOverYearChange)} sullo stesso periodo del ${previousYear}`;
 }
 
 function formatMonth(month: string) {
