@@ -4386,11 +4386,13 @@ export const ConfirmBandoSuggestionResponse = zod.object({
 
 
 /**
- * Returns the confiscated assets (manual editorial entries plus those
-imported from the ANBSC open data) with their location, filterable by
-status and tipologia.
+ * Returns only confiscated assets whose coordinates pass the shared
+fail-closed spatial publication policy. Editorial records without a
+valid, consistently sourced and publishable location remain available
+to the protected admin view, but are excluded here. Results are
+filterable by status and tipologia.
 
- * @summary Public catalog of confiscated assets in the municipality
+ * @summary Public cartographic catalog of confiscated assets
  */
 export const ListConfiscatedAssetsQueryParams = zod.object({
   "status": zod.enum(['sequestrato', 'confiscato', 'assegnato', 'riutilizzato']).optional(),
@@ -4441,7 +4443,10 @@ export const CreateConfiscatedAssetBody = zod.object({
 
 
 /**
- * @summary Aggregate stats for the confiscated assets section
+ * Counts only records accepted by the same fail-closed spatial policy
+used by the public list and GeoJSON layer.
+
+ * @summary Aggregate stats for the publishable cartographic catalog
  */
 export const GetConfiscatedAssetsSummaryResponse = zod.object({
   "totale": zod.number(),
@@ -4493,6 +4498,10 @@ export const ListConfiscatedAssetsAdminResponse = zod.array(ListConfiscatedAsset
 
 
 /**
+ * Returns the public record. Coordinate and derived geolocation fields
+are null unless the location passes the shared spatial publication
+policy.
+
  * @summary Public detail of a confiscated asset
  */
 export const GetConfiscatedAssetParams = zod.object({

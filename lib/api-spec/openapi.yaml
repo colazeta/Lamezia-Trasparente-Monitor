@@ -3341,11 +3341,13 @@ paths:
     get:
       tags: [confiscatedAssets]
       operationId: listConfiscatedAssets
-      summary: Public catalog of confiscated assets in the municipality
+      summary: Public cartographic catalog of confiscated assets
       description: |
-        Returns the confiscated assets (manual editorial entries plus those
-        imported from the ANBSC open data) with their location, filterable by
-        status and tipologia.
+        Returns only confiscated assets whose coordinates pass the shared
+        fail-closed spatial publication policy. Editorial records without a
+        valid, consistently sourced and publishable location remain available
+        to the protected admin view, but are excluded here. Results are
+        filterable by status and tipologia.
       parameters:
         - name: status
           in: query
@@ -3402,7 +3404,10 @@ paths:
     get:
       tags: [confiscatedAssets]
       operationId: getConfiscatedAssetsSummary
-      summary: Aggregate stats for the confiscated assets section
+      summary: Aggregate stats for the publishable cartographic catalog
+      description: |
+        Counts only records accepted by the same fail-closed spatial policy
+        used by the public list and GeoJSON layer.
       responses:
         "200":
           description: Summary statistics.
@@ -3439,6 +3444,10 @@ paths:
       tags: [confiscatedAssets]
       operationId: getConfiscatedAsset
       summary: Public detail of a confiscated asset
+      description: |
+        Returns the public record. Coordinate and derived geolocation fields
+        are null unless the location passes the shared spatial publication
+        policy.
       parameters:
         - name: slug
           in: path

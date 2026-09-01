@@ -80,19 +80,14 @@ function parseCoordinate(value: unknown): number | null {
   return Number.isFinite(parsed) ? parsed : null;
 }
 
-function classifyExclusion(
+export function getConfiscatedAssetSpatialExclusionReason(
   asset: ConfiscatedAsset,
 ): ConfiscatedAssetsSpatialExclusionReason | null {
   const latitude = parseCoordinate(asset.latitude);
   const longitude = parseCoordinate(asset.longitude);
 
   if (latitude === null || longitude === null) return "missing_coordinates";
-  if (
-    latitude < -90 ||
-    latitude > 90 ||
-    longitude < -180 ||
-    longitude > 180
-  ) {
+  if (latitude < -90 || latitude > 90 || longitude < -180 || longitude > 180) {
     return "invalid_coordinates";
   }
   if (!asset.geoSource) return "missing_geolocation_provenance";
@@ -107,6 +102,17 @@ function classifyExclusion(
     return "inconsistent_geolocation_provenance";
   }
   return null;
+}
+
+/**
+ * Single fail-closed publication gate shared by the GeoJSON adapter and every
+ * public surface that describes itself as cartographic. Keeping this predicate
+ * here prevents list/count views from drifting away from the layer policy.
+ */
+export function isConfiscatedAssetSpatiallyPublishable(
+  asset: ConfiscatedAsset,
+): boolean {
+  return getConfiscatedAssetSpatialExclusionReason(asset) === null;
 }
 
 function toFeature(asset: ConfiscatedAsset): ConfiscatedAssetSpatialFeature {
@@ -194,7 +200,7 @@ export function buildConfiscatedAssetsSpatialCollection(
   const features: ConfiscatedAssetSpatialFeature[] = [];
 
   for (const asset of assets) {
-    const exclusion = classifyExclusion(asset);
+    const exclusion = getConfiscatedAssetSpatialExclusionReason(asset);
     if (exclusion) {
       exclusions[exclusion] += 1;
       continue;

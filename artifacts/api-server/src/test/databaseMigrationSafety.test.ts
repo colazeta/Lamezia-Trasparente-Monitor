@@ -13,7 +13,9 @@ import {
   getMigrationStatus,
   isMigrationTrackingPresent,
   isSchemaBootstrapped,
+  LEGACY_CONFISCATED_ASSETS_DEMO_CLEANUP_SQL,
   MigrationError,
+  removeLegacyConfiscatedAssetDemoRows,
   runMigrations,
 } from "@workspace/db";
 import os from "node:os";
@@ -230,6 +232,40 @@ async function countCategories(pool: Pool): Promise<number> {
   return Number(res.rows[0]?.n ?? 0);
 }
 
+async function insertLegacyConfiscatedAssetDemo(
+  pool: Pool,
+  descriptionSuffix = "",
+): Promise<void> {
+  await pool.query(
+    `INSERT INTO confiscated_assets (
+       slug, denominazione, description, tipologia, status, indirizzo,
+       assegnatario, destinazione_uso, dati_catastali, official_url, source,
+       source_id, latitude, longitude, geo_address, geo_quartiere, geo_source,
+       geo_manual, geo_verify, notes
+     ) VALUES (
+       $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, 'manual', NULL,
+       $11, $12, $13, $14, 'manual', true, false, ''
+     )`,
+    [
+      "appartamento-via-del-progresso-nicastro",
+      "Appartamento in Via del Progresso",
+      "Unità immobiliare residenziale confiscata e trasferita al patrimonio del Comune, in attesa di destinazione a finalità sociali." +
+        descriptionSuffix,
+      "Appartamento",
+      "confiscato",
+      "Via del Progresso, Nicastro, Lamezia Terme",
+      "",
+      "",
+      "Foglio 12, particella 340, sub 4",
+      "https://www.benisequestraticonfiscati.it/",
+      "38.9785000",
+      "16.3095000",
+      "Via del Progresso, Nicastro",
+      "nicastro",
+    ],
+  );
+}
+
 beforeAll(() => {
   adminBaseUrl = new URL(adminDatabaseUrl);
 });
@@ -246,6 +282,50 @@ afterEach(async () => {
 });
 
 describe("database upgrade safety (baselineLogic / runMigrations)", () => {
+  it("keeps the custom cleanup migration aligned with the runtime repair", () => {
+    const migration = fs.readFileSync(
+      path.join(
+        migrationsFolder,
+        "0013_cleanup_confiscated_assets_demo_rows.sql",
+      ),
+      "utf-8",
+    );
+
+    expect(migration).toContain(LEGACY_CONFISCATED_ASSETS_DEMO_CLEANUP_SQL);
+  });
+
+  it("removes only an unchanged legacy demo row and is idempotent", async () => {
+    const scratch = await createScratchDatabase();
+    try {
+      await runMigrations({
+        client: scratch.pool,
+        database: scratch.db,
+        migrationsFolder,
+      });
+
+      await insertLegacyConfiscatedAssetDemo(scratch.pool);
+      expect(await removeLegacyConfiscatedAssetDemoRows(scratch.pool)).toBe(1);
+
+      await insertLegacyConfiscatedAssetDemo(
+        scratch.pool,
+        " Scheda successivamente curata.",
+      );
+      expect(await removeLegacyConfiscatedAssetDemoRows(scratch.pool)).toBe(0);
+      expect(await removeLegacyConfiscatedAssetDemoRows(scratch.pool)).toBe(0);
+
+      const retained = await scratch.pool.query<{ description: string }>(
+        "SELECT description FROM confiscated_assets WHERE slug = $1",
+        ["appartamento-via-del-progresso-nicastro"],
+      );
+      expect(retained.rows).toHaveLength(1);
+      expect(retained.rows[0]?.description).toContain(
+        "Scheda successivamente curata",
+      );
+    } finally {
+      await scratch.pool.end();
+    }
+  });
+
   it("records hashes with drizzle's sha256 scheme and the journal `when`", async () => {
     const scratch = await createScratchDatabase();
     try {

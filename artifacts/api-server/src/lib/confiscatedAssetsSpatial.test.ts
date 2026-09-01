@@ -1,6 +1,9 @@
 import { describe, expect, it } from "vitest";
 import type { ConfiscatedAsset } from "@workspace/db";
-import { buildConfiscatedAssetsSpatialCollection } from "./confiscatedAssetsSpatial";
+import {
+  buildConfiscatedAssetsSpatialCollection,
+  isConfiscatedAssetSpatiallyPublishable,
+} from "./confiscatedAssetsSpatial";
 
 function asset(
   overrides: Partial<ConfiscatedAsset> = {},
@@ -34,6 +37,16 @@ function asset(
 }
 
 describe("buildConfiscatedAssetsSpatialCollection", () => {
+  it("espone lo stesso gate fail-closed riutilizzabile da lista e conteggi", () => {
+    expect(isConfiscatedAssetSpatiallyPublishable(asset())).toBe(true);
+    expect(
+      isConfiscatedAssetSpatiallyPublishable(asset({ geoVerify: true })),
+    ).toBe(false);
+    expect(
+      isConfiscatedAssetSpatiallyPublishable(asset({ geoSource: null })),
+    ).toBe(false);
+  });
+
   it("pubblica una geocodifica automatica non approssimata senza chiamarla verificata", () => {
     const collection = buildConfiscatedAssetsSpatialCollection([asset()]);
 
