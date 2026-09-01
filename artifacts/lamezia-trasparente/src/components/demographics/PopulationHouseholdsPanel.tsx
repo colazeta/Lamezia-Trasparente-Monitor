@@ -50,6 +50,39 @@ type HouseholdResponse = {
     averageDifference: number | null;
     flags: string[];
   };
+  composition: {
+    schemaVersion: 1;
+    referenceYear: 2023;
+    municipality: { name: string; istatCode: string };
+    totalHouseholds: number;
+    byComponents: Array<{
+      key: "1" | "2" | "3" | "4" | "5" | "6+";
+      sourceField: "PF3" | "PF4" | "PF5" | "PF6" | "PF7" | "PF8";
+      households: number;
+      share: number;
+    }>;
+    indicators: {
+      onePersonHouseholds: number;
+      onePersonShare: number;
+      fivePlusHouseholds: number;
+      fivePlusShare: number;
+    };
+    quality: {
+      includedRows: number;
+      skippedFictitiousRows: number;
+      incompleteRows: number;
+      componentSum: number;
+      reconciliationDifference: number;
+      exactReconciliation: boolean;
+    };
+    source: {
+      institution: string;
+      dataset: string;
+      referenceDate: string;
+      sourceUpdateDate: string;
+      pageUrl: string;
+    };
+  };
   source: {
     name: string;
     dataset: string;
@@ -64,6 +97,9 @@ type HouseholdResponse = {
     coverage: string;
     history: string;
     childrenDataset: string;
+    composition: string;
+    compositionQuality: string;
+    familyRelationships: string;
   };
 };
 
@@ -86,6 +122,15 @@ function formatPercent(value: number | null) {
   return value === null
     ? "—"
     : `${new Intl.NumberFormat("it-IT", { maximumFractionDigits: 1 }).format(value)}%`;
+}
+
+function formatSourceDate(value: string) {
+  return new Intl.DateTimeFormat("it-IT", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+    timeZone: "UTC",
+  }).format(new Date(`${value}T00:00:00Z`));
 }
 
 function statusLabel(status: SourceStatus) {
@@ -141,6 +186,14 @@ export function PopulationHouseholdsPanel() {
 
   const maxHouseholds = useMemo(
     () => Math.max(1, ...(data?.history.map((point) => point.households) ?? [1])),
+    [data],
+  );
+  const maxCompositionShare = useMemo(
+    () =>
+      Math.max(
+        1,
+        ...(data?.composition.byComponents.map((item) => item.share) ?? [1]),
+      ),
     [data],
   );
 
@@ -319,6 +372,115 @@ export function PopulationHouseholdsPanel() {
         </Card>
       </div>
 
+      <section aria-labelledby="household-composition-title">
+        <Card>
+          <CardHeader>
+            <div className="mb-2 flex flex-wrap items-center gap-2">
+              <Badge variant="outline" className="shadow-none">
+                Censimento {data.composition.referenceYear}
+              </Badge>
+              <Badge variant="outline" className="shadow-none">
+                fotografia distinta dallo storico P02
+              </Badge>
+            </div>
+            <CardTitle id="household-composition-title">
+              Composizione delle famiglie nel 2023
+            </CardTitle>
+            <CardDescription>
+              Famiglie anagrafiche per numero di componenti, aggregate dalle
+              sezioni censuarie di Lamezia Terme. Questa fotografia resta fissa
+              anche quando si cambia l'anno nel selettore dello storico.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="grid gap-6 lg:grid-cols-[1.4fr_1fr]">
+            <div
+              role="list"
+              aria-label="Distribuzione delle famiglie di Lamezia Terme per numero di componenti nel 2023"
+              className="space-y-3"
+            >
+              {data.composition.byComponents.map((item) => {
+                const label =
+                  item.key === "1"
+                    ? "1 componente"
+                    : item.key === "6+"
+                      ? "6 o più componenti"
+                      : `${item.key} componenti`;
+                return (
+                  <div
+                    key={item.key}
+                    role="listitem"
+                    aria-label={`${label}: ${formatInteger(item.households)} famiglie, ${formatPercent(item.share)}`}
+                    className="grid grid-cols-[7rem_1fr_auto] items-center gap-2 sm:grid-cols-[8.5rem_1fr_auto] sm:gap-3"
+                  >
+                    <span className="text-sm font-medium text-foreground">
+                      {label}
+                    </span>
+                    <div
+                      aria-hidden="true"
+                      className="h-3 overflow-hidden rounded-full bg-muted"
+                    >
+                      <div
+                        className="h-full rounded-full bg-primary/75"
+                        style={{
+                          width: `${(item.share / maxCompositionShare) * 100}%`,
+                        }}
+                      />
+                    </div>
+                    <span className="min-w-20 text-right text-sm tabular-nums text-muted-foreground sm:min-w-24">
+                      {formatInteger(item.households)} ·{" "}
+                      {formatPercent(item.share)}
+                    </span>
+                  </div>
+                );
+              })}
+              <p className="pt-1 text-xs leading-5 text-muted-foreground">
+                Quote arrotondate a un decimale; la quadratura è verificata sui
+                conteggi interi.
+              </p>
+            </div>
+
+            <div className="space-y-3">
+              <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
+                <MetricCard
+                  label="Famiglie unipersonali"
+                  value={formatInteger(
+                    data.composition.indicators.onePersonHouseholds,
+                  )}
+                  detail={`${formatPercent(data.composition.indicators.onePersonShare)} del totale censuario`}
+                />
+                <MetricCard
+                  label="Famiglie con almeno 5 componenti"
+                  value={formatInteger(
+                    data.composition.indicators.fivePlusHouseholds,
+                  )}
+                  detail={`${formatPercent(data.composition.indicators.fivePlusShare)} del totale censuario`}
+                />
+              </div>
+              <div className="rounded-lg border border-border bg-muted/20 p-4 text-sm leading-6 text-muted-foreground">
+                <p>
+                  Totale di controllo:{" "}
+                  {formatInteger(data.composition.totalHouseholds)} famiglie;
+                  PF3–PF8 = PF1, senza residui.
+                </p>
+                <p className="mt-2">{data.methodology.familyRelationships}</p>
+                <a
+                  className="mt-2 inline-block font-medium text-primary hover:underline"
+                  href={data.composition.source.pageUrl}
+                  rel="noreferrer"
+                  target="_blank"
+                >
+                  Fonte ISTAT
+                </a>
+                <span className="ml-2 text-xs">
+                  edizione aggiornata il{" "}
+                  {formatSourceDate(data.composition.source.sourceUpdateDate)}
+                </span>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </section>
+
       <Card className="border-dashed">
         <CardContent className="space-y-3 p-5 text-sm leading-6 text-muted-foreground">
           <div className="flex gap-3">
@@ -330,6 +492,12 @@ export function PopulationHouseholdsPanel() {
           </div>
           <p>{data.methodology.averageHouseholdSize}</p>
           <p>{data.methodology.coverage}</p>
+          <p>
+            <strong className="font-medium text-foreground">
+              Composizione 2023:
+            </strong>{" "}
+            {data.methodology.composition} {data.methodology.compositionQuality}
+          </p>
           <p>
             <strong className="font-medium text-foreground">Famiglie per numero di figli:</strong>{" "}
             {data.methodology.childrenDataset}

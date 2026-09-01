@@ -1,4 +1,5 @@
 import { Router, type IRouter } from "express";
+import householdComposition2023 from "../data/lameziaHouseholdComposition2023.json";
 import { LAMEZIA_ISTAT_CODE } from "../lib/demographics";
 import { getPopulationHouseholdSnapshot } from "../lib/populationHouseholds";
 
@@ -24,6 +25,7 @@ router.get("/demographics/households", async (req, res) => {
       level: "municipality",
     },
     ...snapshot,
+    composition: householdComposition2023,
     methodology: {
       household:
         "Famiglia è l'unità anagrafica di persone coabitanti legate da matrimonio, parentela, affinità, adozione, tutela o vincoli affettivi; può essere costituita anche da una sola persona.",
@@ -39,6 +41,12 @@ router.get("/demographics/households", async (req, res) => {
         "La serie parte dalle annualità P02 effettivamente conservate nell'archivio. Non viene retrodatata usando la risorsa comunale sulle famiglie per numero di figli, perché quella risorsa non espone l'anno di riferimento e non include le famiglie senza figli.",
       childrenDataset:
         "La distribuzione comunale delle famiglie per numero di figli resta un arricchimento Open Data separato e non viene usata come denominatore della serie ISTAT finché il suo periodo di riferimento non è verificato.",
+      composition:
+        "La distribuzione per numero di componenti è una fotografia censuaria distinta, riferita al 31 dicembre 2023 e aggregata dalle sezioni ISTAT del comune. Non cambia quando si seleziona un altro anno della serie P02.",
+      compositionQuality:
+        "I conteggi PF3-PF8 quadrano esattamente con PF1. Le sezioni fittizie sono escluse, i mancanti non sono convertiti a zero e le quote sono arrotondate a un decimale soltanto dopo la quadratura sui conteggi interi.",
+      familyRelationships:
+        "La dimensione della famiglia anagrafica non consente di inferire coppie, figli, parentela o altre relazioni tra i componenti.",
     },
   });
 });

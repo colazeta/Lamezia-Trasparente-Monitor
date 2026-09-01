@@ -8,6 +8,12 @@ Pagina fonte: https://www.istat.it/notizia/dati-per-sezioni-di-censimento/
 
 Download registrato nel progetto: `Dati_regionali_2023.zip` da IstatData. Il file regionale Calabria contiene le variabili censuarie per sezione; Lamezia Terme è identificata dal codice ISTAT `079160`.
 
+Edizione acquisita e verificata:
+
+- aggiornamento indicato dalla fonte: **9 giugno 2026**;
+- SHA-256 archivio `Dati_regionali_2023.zip`: `05661a6e248d4241c9fdd1b1fa1e740eae0706dd3fcfdbeb366f608269bfeb45`;
+- SHA-256 workbook `R18_Calabria_2023_sezioni.xlsx`: `40de6162994478f85773e71829dd7ec49badbef472e285ce4de855793eb1fa28`.
+
 ## Variabili
 
 Il profilo comunale usa esclusivamente campi del tracciato ufficiale 2023:
@@ -39,6 +45,37 @@ Il dataset comunale già presente in Open Data “Famiglie per numero di figli�
 
 5. Se la quadratura non è esatta o esistono righe reali incomplete, il profilo non è qualificato come pubblicabile senza ulteriore verifica.
 6. Sono derivati soltanto indicatori trasparenti, fra cui quota di famiglie unipersonali e quota di famiglie con almeno 5 componenti.
+
+## Profilo comunale materializzato
+
+L'aggregazione ufficiale 2023, dopo l'esclusione di una sezione fittizia, comprende **246 sezioni reali complete** e produce:
+
+| Componenti | Campo |   Famiglie |                        Quota |
+| ---------- | ----: | ---------: | ---------------------------: |
+| 1          | `PF3` |      8.713 |                        31,6% |
+| 2          | `PF4` |      7.197 |                        26,1% |
+| 3          | `PF5` |      5.369 |                        19,5% |
+| 4          | `PF6` |      4.709 |                        17,1% |
+| 5          | `PF7` |      1.263 |                         4,6% |
+| 6 o più    | `PF8` |        340 |                         1,2% |
+| **Totale** | `PF1` | **27.591** | **100% sui conteggi interi** |
+
+La somma delle sei classi è esattamente **27.591**, con residuo zero rispetto a `PF1`. Le quote mostrate sono arrotondate singolarmente a un decimale e possono quindi sommare visivamente a 100,1%.
+
+Indicatori derivati:
+
+- famiglie unipersonali: **8.713**, pari al **31,6%**;
+- famiglie con almeno 5 componenti: **1.603**, pari al **5,8%**.
+
+Il profilo versionato è `artifacts/api-server/src/data/lameziaHouseholdComposition2023.json`. Per rigenerarlo dai due file ufficiali:
+
+```bash
+corepack pnpm --filter @workspace/scripts run materialize:istat-household-composition-lamezia \
+  --variables-xlsx /percorso/R18_Calabria_2023_sezioni.xlsx \
+  --archive /percorso/Dati_regionali_2023.zip
+```
+
+Il comando ricalcola entrambi gli hash, verifica gli identificativi di sezione, rifiuta duplicati e scrive l'artefatto soltanto dopo il superamento dei gate di pubblicazione.
 
 ## Relazione con lo storico famiglie
 

@@ -1,4 +1,10 @@
-import { fireEvent, render, screen, waitFor, within } from "@testing-library/react";
+import {
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+  within,
+} from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { PopulationHouseholdsPanel } from "@/components/demographics/PopulationHouseholdsPanel";
 
@@ -44,6 +50,41 @@ const payload = {
     averageDifference: -0.004,
     flags: ["derived_from_p02_release"],
   },
+  composition: {
+    schemaVersion: 1,
+    referenceYear: 2023,
+    municipality: { name: "Lamezia Terme", istatCode: "079160" },
+    totalHouseholds: 27591,
+    byComponents: [
+      { key: "1", sourceField: "PF3", households: 8713, share: 31.6 },
+      { key: "2", sourceField: "PF4", households: 7197, share: 26.1 },
+      { key: "3", sourceField: "PF5", households: 5369, share: 19.5 },
+      { key: "4", sourceField: "PF6", households: 4709, share: 17.1 },
+      { key: "5", sourceField: "PF7", households: 1263, share: 4.6 },
+      { key: "6+", sourceField: "PF8", households: 340, share: 1.2 },
+    ],
+    indicators: {
+      onePersonHouseholds: 8713,
+      onePersonShare: 31.6,
+      fivePlusHouseholds: 1603,
+      fivePlusShare: 5.8,
+    },
+    quality: {
+      includedRows: 246,
+      skippedFictitiousRows: 1,
+      incompleteRows: 0,
+      componentSum: 27591,
+      reconciliationDifference: 0,
+      exactReconciliation: true,
+    },
+    source: {
+      institution: "ISTAT",
+      dataset: "Dati per sezioni di censimento 2023",
+      referenceDate: "2023-12-31",
+      sourceUpdateDate: "2026-06-09",
+      pageUrl: "https://www.istat.it/notizia/dati-per-sezioni-di-censimento/",
+    },
+  },
   source: {
     name: "ISTAT",
     dataset: "P02",
@@ -60,6 +101,12 @@ const payload = {
     history: "Sono mostrate solo annualità realmente acquisite.",
     childrenDataset:
       "La distribuzione comunale per figli resta separata perché non è datata.",
+    composition:
+      "La composizione è una fotografia censuaria 2023 distinta dallo storico.",
+    compositionQuality:
+      "PF3-PF8 quadrano esattamente con PF1 sui conteggi interi.",
+    familyRelationships:
+      "La dimensione non consente di inferire coppie, figli o parentela.",
   },
 };
 
@@ -94,6 +141,32 @@ describe("PopulationHouseholdsPanel", () => {
       within(averageCard as HTMLElement).getByText("2,29"),
     ).toBeInTheDocument();
     expect(screen.getByText("97,2%")).toBeInTheDocument();
+    const composition = screen.getByRole("region", {
+      name: "Composizione delle famiglie nel 2023",
+    });
+    const onePersonCard = within(composition).getByText(
+      "Famiglie unipersonali",
+    ).parentElement;
+    const fivePlusCard = within(composition).getByText(
+      "Famiglie con almeno 5 componenti",
+    ).parentElement;
+    expect(onePersonCard).not.toBeNull();
+    expect(fivePlusCard).not.toBeNull();
+    expect(
+      within(onePersonCard as HTMLElement).getByText("8713"),
+    ).toBeInTheDocument();
+    expect(
+      within(fivePlusCard as HTMLElement).getByText("1603"),
+    ).toBeInTheDocument();
+    expect(within(composition).getByText(/PF3–PF8 = PF1/i)).toBeInTheDocument();
+    expect(
+      within(composition).getByText(/edizione aggiornata il 9 giugno 2026/i),
+    ).toBeInTheDocument();
+    expect(
+      within(composition).getByText(
+        /non consente di inferire coppie, figli o parentela/i,
+      ),
+    ).toBeInTheDocument();
     expect(
       screen.getByText(/distribuzione comunale per figli resta separata/i),
     ).toBeInTheDocument();
