@@ -30,7 +30,7 @@ Il dataset comunale già presente in Open Data “Famiglie per numero di figli�
 
 ## Regole di aggregazione e QA
 
-1. Si aggregano le sole sezioni del Comune di Lamezia Terme (`079160`).
+1. Ogni riga deve avere un identificativo di sezione con prefisso comunale `079160`; righe prive dell'identificativo o appartenenti a un altro comune bloccano l'aggregazione.
 2. Le sezioni fittizie ISTAT `888888x` e `999999x` sono escluse, coerentemente con il layer territoriale pubblico corrente.
 3. Valori mancanti restano mancanti: non vengono convertiti a zero.
 4. Prima della pubblicazione deve valere, sul perimetro aggregato:

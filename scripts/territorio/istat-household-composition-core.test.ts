@@ -74,6 +74,32 @@ test("excludes explicitly marked fictitious census sections", () => {
   assert.equal(profile.quality.skippedFictitiousRows, 1);
 });
 
+test("rejects a row without a census-section identifier", () => {
+  assert.throws(
+    () =>
+      aggregateHouseholdComposition([
+        {
+          ...completeRows[0],
+          sectionId: null,
+        },
+      ]),
+    /missing its section identifier/i,
+  );
+});
+
+test("rejects rows outside municipality 079160", () => {
+  assert.throws(
+    () =>
+      aggregateHouseholdComposition([
+        {
+          ...completeRows[0],
+          sectionId: "0790230000001",
+        },
+      ]),
+    /outside municipality 079160/i,
+  );
+});
+
 test("does not publish a profile with an unexplained PF1 residual", () => {
   const profile = aggregateHouseholdComposition([
     {

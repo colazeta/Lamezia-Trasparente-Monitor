@@ -81,7 +81,9 @@ describe("PopulationHouseholdsPanel", () => {
       await screen.findByRole("heading", { name: "Come cambiano le famiglie" }),
     ).toBeInTheDocument();
 
-    const householdsCard = screen.getByText("Famiglie").parentElement;
+    const householdsCard = screen.getByText("Famiglie", {
+      selector: "p",
+    }).parentElement;
     const averageCard = screen.getByText("Componenti medi").parentElement;
     expect(householdsCard).not.toBeNull();
     expect(averageCard).not.toBeNull();
