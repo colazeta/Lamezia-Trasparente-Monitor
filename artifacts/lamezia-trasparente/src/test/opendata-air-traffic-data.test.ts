@@ -1,5 +1,8 @@
 import { describe, expect, it } from "vitest";
-import { LAMEZIA_AIR_TRAFFIC_DATA } from "../data/lameziaAirTraffic";
+import {
+  LAMEZIA_AIR_TRAFFIC_DATA,
+  getLameziaAirTrafficYearComparison,
+} from "../data/lameziaAirTraffic";
 
 describe("Lamezia air traffic monthly OpenData dataset", () => {
   it("keeps the generated monthly series sorted and source traceable", () => {
@@ -96,5 +99,27 @@ describe("Lamezia air traffic monthly OpenData dataset", () => {
         ),
       );
     }
+  });
+
+  it("compares a partial year only with the same months of the previous year", () => {
+    expect(getLameziaAirTrafficYearComparison(2026)).toMatchObject({
+      year: 2026,
+      previous_year: 2025,
+      months: 7,
+      latest_month: "2026-07",
+      passengers_total: 1961184,
+      previous_passengers_total: 1721353,
+      passengers_yoy_pct: 0.1393,
+      movements_total: 15412,
+      previous_movements_total: 15082,
+      movements_yoy_pct: 0.0219,
+      cargo_tons_total: 655.2,
+      previous_cargo_tons_total: 893.2,
+      cargo_tons_yoy_pct: -0.2664,
+    });
+  });
+
+  it("does not invent a comparison before the beginning of the series", () => {
+    expect(getLameziaAirTrafficYearComparison(2000)).toBeNull();
   });
 });

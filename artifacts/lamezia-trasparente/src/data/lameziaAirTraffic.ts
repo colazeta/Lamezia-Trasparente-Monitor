@@ -53,6 +53,22 @@ export interface LameziaAirTrafficAnnualMetrics {
   latest_month: string;
 }
 
+export interface LameziaAirTrafficYearComparison {
+  year: number;
+  previous_year: number;
+  months: number;
+  latest_month: string;
+  passengers_total: number;
+  previous_passengers_total: number;
+  passengers_yoy_pct: number | null;
+  movements_total: number;
+  previous_movements_total: number;
+  movements_yoy_pct: number | null;
+  cargo_tons_total: number;
+  previous_cargo_tons_total: number;
+  cargo_tons_yoy_pct: number | null;
+}
+
 export interface LameziaAirTrafficDataset {
   schema_version: number;
   metadata: {
@@ -163,6 +179,76 @@ export function getLameziaAirTrafficAnnualMetrics(year: number) {
     LAMEZIA_AIR_TRAFFIC_DATA.annual.find((metric) => metric.year === year) ??
     null
   );
+}
+
+export function getLameziaAirTrafficYearComparison(
+  year: number,
+): LameziaAirTrafficYearComparison | null {
+  const currentRecords = getLameziaAirTrafficRecordsForYear(year);
+  const previousRecordsByMonth = new Map(
+    getLameziaAirTrafficRecordsForYear(year - 1).map((record) => [
+      record.month_number,
+      record,
+    ]),
+  );
+  const comparablePairs = currentRecords.flatMap((current) => {
+    const previous = previousRecordsByMonth.get(current.month_number);
+    return previous ? [{ current, previous }] : [];
+  });
+
+  if (comparablePairs.length === 0) {
+    return null;
+  }
+
+  const passengersTotal = sumComparisonPairs(
+    comparablePairs,
+    ({ current }) => current.passengers.total,
+  );
+  const previousPassengersTotal = sumComparisonPairs(
+    comparablePairs,
+    ({ previous }) => previous.passengers.total,
+  );
+  const movementsTotal = sumComparisonPairs(
+    comparablePairs,
+    ({ current }) => current.movements.total,
+  );
+  const previousMovementsTotal = sumComparisonPairs(
+    comparablePairs,
+    ({ previous }) => previous.movements.total,
+  );
+  const cargoTonsTotal = sumComparisonPairs(
+    comparablePairs,
+    ({ current }) => current.cargo_tons.total,
+  );
+  const previousCargoTonsTotal = sumComparisonPairs(
+    comparablePairs,
+    ({ previous }) => previous.cargo_tons.total,
+  );
+
+  return {
+    year,
+    previous_year: year - 1,
+    months: comparablePairs.length,
+    latest_month: comparablePairs[comparablePairs.length - 1].current.month,
+    passengers_total: passengersTotal,
+    previous_passengers_total: previousPassengersTotal,
+    passengers_yoy_pct: calculateYearOverYearChange(
+      passengersTotal,
+      previousPassengersTotal,
+    ),
+    movements_total: movementsTotal,
+    previous_movements_total: previousMovementsTotal,
+    movements_yoy_pct: calculateYearOverYearChange(
+      movementsTotal,
+      previousMovementsTotal,
+    ),
+    cargo_tons_total: Number(cargoTonsTotal.toFixed(1)),
+    previous_cargo_tons_total: Number(previousCargoTonsTotal.toFixed(1)),
+    cargo_tons_yoy_pct: calculateYearOverYearChange(
+      cargoTonsTotal,
+      previousCargoTonsTotal,
+    ),
+  };
 }
 
 export function getLatestLameziaAirTrafficRecord() {
@@ -301,4 +387,23 @@ function sumBy(
   selector: (record: LameziaAirTrafficMonthlyRecord) => number | null,
 ) {
   return records.reduce((total, record) => total + (selector(record) ?? 0), 0);
+}
+
+function sumComparisonPairs(
+  pairs: Array<{
+    current: LameziaAirTrafficMonthlyRecord;
+    previous: LameziaAirTrafficMonthlyRecord;
+  }>,
+  selector: (pair: {
+    current: LameziaAirTrafficMonthlyRecord;
+    previous: LameziaAirTrafficMonthlyRecord;
+  }) => number | null,
+) {
+  return pairs.reduce((total, pair) => total + (selector(pair) ?? 0), 0);
+}
+
+function calculateYearOverYearChange(current: number, previous: number) {
+  return previous === 0
+    ? null
+    : Number(((current - previous) / previous).toFixed(4));
 }
