@@ -1,18 +1,24 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "metadata": {
     "dataset_id": "lamezia-pnrr-static-feed",
     "source": "Città di Lamezia Terme — Attuazione Misure PNRR",
     "source_url": "https://www.comune.lamezia-terme.cz.it/it/attuazione-misure-pnrr",
     "source_type": "official_municipal_project_pages",
-    "materialized_at": "2026-08-31T22:55:24.736Z",
+    "materialized_at": "2026-09-01T05:31:15.965Z",
     "source_index_hash": "c7a08dbc6c8ea8f08d1849762aca29587dfe392cc42b1a099f42c8f2e078f1b7",
+    "opencup_source": "OpenCUP — Sistema CUP",
+    "opencup_source_url": "https://www.opencup.gov.it/portale/web/opencup/home",
+    "opencup_source_type": "official_public_investment_project_pages",
+    "opencup_source_hash": "42854d3921f4631cd319a46f80f72193d4a5f6872348a69e9a93e9e06969b460",
     "albo_snapshot_generated_at": "2026-08-31T13:37:46.902Z",
-    "update_policy": "Controllo giornaliero della sezione comunale PNRR e riconciliazione con gli output pubblici dell'Albo Pretorio; il file cambia solo quando mutano dati o collegamenti documentali.",
+    "update_policy": "Controllo giornaliero della sezione comunale PNRR, arricchimento delle schede pubbliche OpenCUP e riconciliazione con gli output pubblici dell'Albo Pretorio; il file cambia solo quando mutano dati o collegamenti documentali.",
+    "opencup_update_policy": "Le schede OpenCUP vengono acquisite per CUP durante la materializzazione. Un errore temporaneo conserva l'ultimo corredo OpenCUP valido dello stesso CUP, se disponibile.",
     "reconciliation_rule": "Gli atti Albo sono collegati a una scheda progetto esclusivamente quando condividono lo stesso CUP normalizzato; i soli richiami testuali PNRR restano evidenze non riconciliate.",
     "coverage_note": "Il perimetro deriva dalle schede pubblicate nella sezione PNRR del Comune e non equivale al censimento nazionale completo ReGiS/Italia Domani.",
     "caveat": "Importi, stati e allegati descrivono quanto pubblicato nelle fonti acquisite. L'assenza di un campo o di un atto non dimostra assenza amministrativa, ritardo o criticità.",
-    "licence_or_terms_note": "Il dataset civico conserva campi descrittivi, metadati di provenienza e collegamenti alle fonti ufficiali; per il riuso dei documenti si applicano le condizioni indicate dai rispettivi portali."
+    "opencup_caveat": "OpenCUP descrive il corredo anagrafico della decisione di investimento registrata nel Sistema CUP. Lo stato del CUP non equivale allo stato di avanzamento dei lavori né, da solo, alla conferma del finanziamento PNRR.",
+    "licence_or_terms_note": "Il dataset civico conserva campi descrittivi, metadati di provenienza e collegamenti alle fonti ufficiali. I dati OpenCUP sono indicati dal portale come CC-BY; per il riuso degli altri documenti si applicano le condizioni indicate dalle rispettive fonti."
   },
   "attachment_taxonomy": {
     "schema_version": "pnrr-attachment-phase.v1",
@@ -56,6 +62,10 @@
     "projects": 30,
     "projects_with_cup": 30,
     "projects_with_amount": 30,
+    "projects_with_opencup": 30,
+    "projects_without_opencup": 0,
+    "projects_with_opencup_total_cost": 28,
+    "projects_with_opencup_public_funding": 28,
     "projects_with_albo_evidence": 8,
     "municipal_attachments": 279,
     "municipal_attachments_classified": 245,
@@ -159,6 +169,58 @@
       ],
       "verification_status": "official_municipal_project_page",
       "source_record_hash": "55476fc97e7067514fe59178db0aaecfdac192303cc81b69370880706d30f011",
+      "opencup": {
+        "source_url": "https://www.opencup.gov.it/portale/it/web/opencup/home/progetto/-/cup/C81C22001090006",
+        "cup": "C81C22001090006",
+        "title": "MIGRAZIONE AL CLOUD DEI SERVIZI DIGITALI DELL'AMMINISTRAZIONE*TERRITORIO COMUNALE*N.18 SERVIZI DA MIGRARE",
+        "total_cost_eur": 419124,
+        "public_funding_eur": 419124,
+        "decision_year": 2022,
+        "cup_status": "ATTIVO",
+        "description": null,
+        "infrastructure": "MIGRAZIONE AL CLOUD DEI SERVIZI DIGITALI DELL'AMMINISTRAZIONE",
+        "beneficiary_tax_code": null,
+        "reference_address": "TERRITORIO COMUNALE",
+        "location": {
+          "country": "ITALIA",
+          "macro_area": "SUD",
+          "region": "CALABRIA",
+          "province": "CATANZARO",
+          "municipality": "LAMEZIA TERME"
+        },
+        "holder": {
+          "name": "COMUNE DI LAMEZIA TERME - CZ -",
+          "tax_code": "00301390795",
+          "area": "AMMINISTRAZIONI LOCALI",
+          "category": "ENTI TERRITORIALI E DI AMMINISTRAZIONE DEL TERRITORIO",
+          "subcategory": "AMMINISTRAZIONI COMUNALI"
+        },
+        "classification": {
+          "nature": "SERVIZI",
+          "typology": "APPLICATIVI E PIATTAFORME WEB",
+          "intervention_area": "SERVIZI PER LA P.A. E PER LA COLLETTIVITA'",
+          "sector": "SERVIZI PER LA P.A. E PER LA COLLETTIVITA'",
+          "subsector": "SERVIZI E TECNOLOGIE PER L'INFORMAZIONE E LE COMUNICAZIONI",
+          "category": "SISTEMI INFORMATIVI PER LA P.A."
+        },
+        "generated_at": "2022-07-11",
+        "unique_infrastructure": null,
+        "programming_instrument": "ALTRO-PNRR MISSIONE 1 COMPONENTE 1 ASSE 1 INVESTIMENTO 1.2 ABILITAZIONE AL CLOUD PER LE PA LOCALI",
+        "master_cup": null,
+        "linked_cups_count": 0,
+        "financial": {
+          "concession_or_finance_acts": false,
+          "sponsorships": "NON PREVISTE",
+          "coverage": "COMUNITARIA"
+        },
+        "cipess": {
+          "resolution_number": null,
+          "resolution_year": null,
+          "strategic_infrastructure_law": false
+        },
+        "verification_status": "official_opencup_project_page",
+        "source_record_hash": "085230d8a8b1c972bebb72b92ed0dec6f9f833fdd6571b55e022547b38639530"
+      },
       "albo_evidence_ids": []
     },
     {
@@ -242,6 +304,58 @@
       ],
       "verification_status": "official_municipal_project_page",
       "source_record_hash": "863375b224e62055d2a4613126384b21cd22cf7a00117bac719ab130b0080010",
+      "opencup": {
+        "source_url": "https://www.opencup.gov.it/portale/it/web/opencup/home/progetto/-/cup/C81F22000650006",
+        "cup": "C81F22000650006",
+        "title": "MIGLIORAMENTO DELLESPERIENZA DUSO DEL SITO E DEI SERVIZI DIGITALI PER IL CITTADINO - CITIZEN EXPERIENCE*VIA PERUGINI 15/C*SITO COMUNALE E SERVIZI DIGITALI PER IL CITTADINO",
+        "total_cost_eur": 328160,
+        "public_funding_eur": 328160,
+        "decision_year": 2022,
+        "cup_status": "ATTIVO",
+        "description": null,
+        "infrastructure": "MIGLIORAMENTO DELLESPERIENZA DUSO DEL SITO E DEI SERVIZI DIGITALI PER IL CITTADINO - CITIZEN EXPERIENCE",
+        "beneficiary_tax_code": null,
+        "reference_address": "VIA PERUGINI 15/C",
+        "location": {
+          "country": "ITALIA",
+          "macro_area": "SUD",
+          "region": "CALABRIA",
+          "province": "CATANZARO",
+          "municipality": "LAMEZIA TERME"
+        },
+        "holder": {
+          "name": "COMUNE DI LAMEZIA TERME - CZ -",
+          "tax_code": "00301390795",
+          "area": "AMMINISTRAZIONI LOCALI",
+          "category": "ENTI TERRITORIALI E DI AMMINISTRAZIONE DEL TERRITORIO",
+          "subcategory": "AMMINISTRAZIONI COMUNALI"
+        },
+        "classification": {
+          "nature": "SERVIZI",
+          "typology": "APPLICATIVI E PIATTAFORME WEB",
+          "intervention_area": "SERVIZI PER LA P.A. E PER LA COLLETTIVITA'",
+          "sector": "SERVIZI PER LA P.A. E PER LA COLLETTIVITA'",
+          "subsector": "SERVIZI E APPLICAZIONI INFORMATICHE PER I CITTADINI E LE IMPRESE",
+          "category": "SERVIZI ED APPLICAZIONI PER IL PUBBLICO"
+        },
+        "generated_at": "2022-06-07",
+        "unique_infrastructure": null,
+        "programming_instrument": "ALTRO-PNRR MISSIONE 1 COMPONENTE 1, INVESTIMENTO 1.4 SERVIZI E CITTADINANZA DIGITALE, MISURA 1.4.1 ESPERIENZA DEL CITTADINO NEI SERVIZI PUBBLICI.",
+        "master_cup": null,
+        "linked_cups_count": 0,
+        "financial": {
+          "concession_or_finance_acts": false,
+          "sponsorships": "NON PREVISTE",
+          "coverage": "COMUNITARIA"
+        },
+        "cipess": {
+          "resolution_number": null,
+          "resolution_year": null,
+          "strategic_infrastructure_law": false
+        },
+        "verification_status": "official_opencup_project_page",
+        "source_record_hash": "7fa5e54db965f024e70d5dcaf30f3accc74fe48592397019ee0e4e5f9edfff1b"
+      },
       "albo_evidence_ids": []
     },
     {
@@ -289,6 +403,58 @@
       ],
       "verification_status": "official_municipal_project_page",
       "source_record_hash": "e791b355e552a1eab40b84ddb1f21a828ddce9ddb2cd8bbc56487981a52ebece",
+      "opencup": {
+        "source_url": "https://www.opencup.gov.it/portale/it/web/opencup/home/progetto/-/cup/C51F24004830006",
+        "cup": "C51F24004830006",
+        "title": "SERVIZI ANPR - REGISTRI STATO CIVILE*TERRITORIO NAZIONALE*ADESIONE AI SERVIZI RESI DISPONIBILI DA ANPR PER L'UTILIZZO DI ANSC",
+        "total_cost_eur": 16275,
+        "public_funding_eur": 16275,
+        "decision_year": 2024,
+        "cup_status": "ATTIVO",
+        "description": null,
+        "infrastructure": "SERVIZI ANPR - REGISTRI STATO CIVILE",
+        "beneficiary_tax_code": null,
+        "reference_address": "TERRITORIO NAZIONALE",
+        "location": {
+          "country": "ITALIA",
+          "macro_area": "SUD",
+          "region": "CALABRIA",
+          "province": "CATANZARO",
+          "municipality": "LAMEZIA TERME"
+        },
+        "holder": {
+          "name": "COMUNE DI LAMEZIA TERME - CZ -",
+          "tax_code": "00301390795",
+          "area": "AMMINISTRAZIONI LOCALI",
+          "category": "ENTI TERRITORIALI E DI AMMINISTRAZIONE DEL TERRITORIO",
+          "subcategory": "AMMINISTRAZIONI COMUNALI"
+        },
+        "classification": {
+          "nature": "SERVIZI",
+          "typology": "APPLICATIVI E PIATTAFORME WEB",
+          "intervention_area": "SERVIZI PER LA P.A. E PER LA COLLETTIVITA'",
+          "sector": "SERVIZI PER LA P.A. E PER LA COLLETTIVITA'",
+          "subsector": "SERVIZI E APPLICAZIONI INFORMATICHE PER I CITTADINI E LE IMPRESE",
+          "category": "SERVIZI ED APPLICAZIONI PER IL PUBBLICO"
+        },
+        "generated_at": "2024-10-17",
+        "unique_infrastructure": null,
+        "programming_instrument": "ALTRO-PCM - DIPARTIMENTO PER LA TRASFORMAZIONE DIGITALE - PNRR M1C1 - 1.4.4. - ESTENSIONE DELL'UTILIZZO DELL'ANAGRAFE NAZIONALE DIGITALE (ANPR) - ADESIONE ALLO STATO CIVILE DIGITALE (ANSC) - AVVISO DEL 22 LUGLIO 2024",
+        "master_cup": null,
+        "linked_cups_count": 0,
+        "financial": {
+          "concession_or_finance_acts": null,
+          "sponsorships": null,
+          "coverage": "COMUNITARIA"
+        },
+        "cipess": {
+          "resolution_number": null,
+          "resolution_year": null,
+          "strategic_infrastructure_law": false
+        },
+        "verification_status": "official_opencup_project_page",
+        "source_record_hash": "529d155dffbd908559b224133707de7427f095ea85f5eb374856323689ea04cd"
+      },
       "albo_evidence_ids": []
     },
     {
@@ -384,6 +550,58 @@
       ],
       "verification_status": "official_municipal_project_page",
       "source_record_hash": "2afc449b0c8ce33fb639da20842ff6c62ddd43f8ccc62d19f446f6fff8530644",
+      "opencup": {
+        "source_url": "https://www.opencup.gov.it/portale/it/web/opencup/home/progetto/-/cup/C83J23000100006",
+        "cup": "C83J23000100006",
+        "title": "RETE DEI SERVIZI DI FACILITAZIONE DIGITALE*INCLUSIONE DIGITALE*DURATA DEL CORSO NOVE MESI",
+        "total_cost_eur": 308817,
+        "public_funding_eur": 308817,
+        "decision_year": 2023,
+        "cup_status": "ATTIVO",
+        "description": "INCLUSIONE DIGITALE",
+        "infrastructure": null,
+        "beneficiary_tax_code": null,
+        "reference_address": "VIA SEN. A. PERUGINI 15/C",
+        "location": {
+          "country": "ITALIA",
+          "macro_area": "SUD",
+          "region": "CALABRIA",
+          "province": "CATANZARO",
+          "municipality": "LAMEZIA TERME"
+        },
+        "holder": {
+          "name": "COMUNE DI LAMEZIA TERME - CZ -",
+          "tax_code": "00301390795",
+          "area": "AMMINISTRAZIONI LOCALI",
+          "category": "ENTI TERRITORIALI E DI AMMINISTRAZIONE DEL TERRITORIO",
+          "subcategory": "AMMINISTRAZIONI COMUNALI"
+        },
+        "classification": {
+          "nature": "CORSI DI FORMAZIONE",
+          "typology": "CORSI DI FORMAZIONE",
+          "intervention_area": "SERVIZI PER LA P.A. E PER LA COLLETTIVITA'",
+          "sector": "SERVIZI PER LA P.A. E PER LA COLLETTIVITA'",
+          "subsector": "ASSISTENZA SOCIALE E SERVIZI ALLA PERSONA",
+          "category": "MISURE DI INCLUSIONE SOCIALE-SOSTEGNO AL REDDITO"
+        },
+        "generated_at": "2023-08-31",
+        "unique_infrastructure": null,
+        "programming_instrument": "ALTRO-Convenzione",
+        "master_cup": null,
+        "linked_cups_count": 0,
+        "financial": {
+          "concession_or_finance_acts": false,
+          "sponsorships": "NON PREVISTE",
+          "coverage": "COMUNITARIA"
+        },
+        "cipess": {
+          "resolution_number": null,
+          "resolution_year": null,
+          "strategic_infrastructure_law": false
+        },
+        "verification_status": "official_opencup_project_page",
+        "source_record_hash": "abbb3a15c00756c46d5767794fcd77504590f54c46d7caedaaf48b4efa39e8ed"
+      },
       "albo_evidence_ids": []
     },
     {
@@ -827,6 +1045,58 @@
       ],
       "verification_status": "official_municipal_project_page",
       "source_record_hash": "e014ed05cb3aff8b22408252f6040974d962cbad9e78e183a645975802dd0205",
+      "opencup": {
+        "source_url": "https://www.opencup.gov.it/portale/it/web/opencup/home/progetto/-/cup/C82C22000050006",
+        "cup": "C82C22000050006",
+        "title": "INTERVENTO DI DEMOLIZIONE E RICOSTRUZIONE DEL PLESSO SCOLASTICO DI VIA DELLE ROSE, APPARTENENTE ALL'ISTITUTO COMPRENSIVO NICOTERA - COSTABILE*VIA DELLE ROSE*DEMOLIZIONE E RICOSTRUZIONE DI UN NUOVO EDIFICIO PUBBLICO ADIBITO AD USO SCOLASTICO",
+        "total_cost_eur": 2335000,
+        "public_funding_eur": 2335000,
+        "decision_year": 2022,
+        "cup_status": "ATTIVO",
+        "description": "DEMOLIZIONE E RICOSTRUZIONE DI UN NUOVO EDIFICIO PUBBLICO ADIBITO AD USO SCOLASTICO",
+        "infrastructure": "INTERVENTO DI DEMOLIZIONE E RICOSTRUZIONE DEL PLESSO SCOLASTICO DI VIA DELLE ROSE, APPARTENENTE ALL'ISTITUTO COMPRENSIVO NICOTERA - COSTABILE",
+        "beneficiary_tax_code": null,
+        "reference_address": "VIA DELLE ROSE",
+        "location": {
+          "country": "ITALIA",
+          "macro_area": "SUD",
+          "region": "CALABRIA",
+          "province": "CATANZARO",
+          "municipality": "LAMEZIA TERME"
+        },
+        "holder": {
+          "name": "COMUNE DI LAMEZIA TERME - CZ -",
+          "tax_code": "00301390795",
+          "area": "AMMINISTRAZIONI LOCALI",
+          "category": "ENTI TERRITORIALI E DI AMMINISTRAZIONE DEL TERRITORIO",
+          "subcategory": "AMMINISTRAZIONI COMUNALI"
+        },
+        "classification": {
+          "nature": "LAVORI PUBBLICI",
+          "typology": "DEMOLIZIONE",
+          "intervention_area": "IMMOBILI",
+          "sector": "INFRASTRUTTURE SOCIALI",
+          "subsector": "SOCIALI E SCOLASTICHE",
+          "category": "SCUOLE ELEMENTARI, MEDIE E SUPERIORI"
+        },
+        "generated_at": "2022-02-07",
+        "unique_infrastructure": false,
+        "programming_instrument": "ALTRO-MISSIONE 2  RIVOLUZIONE VERDE E TRANSIZIONE ECOLOGICA -COMPONENTE 3 - EFFICIENZA ENERGETICA E RIQUALIFICAZIONE DEGLI EDIFICI  INVESTIMENTO 1.1: COSTRUZIONE DI NUOVE SCUOLE MEDIANTE SOSTITUZIONE EDILIZIA",
+        "master_cup": null,
+        "linked_cups_count": 0,
+        "financial": {
+          "concession_or_finance_acts": false,
+          "sponsorships": "NON PREVISTE",
+          "coverage": "COMUNITARIA"
+        },
+        "cipess": {
+          "resolution_number": null,
+          "resolution_year": null,
+          "strategic_infrastructure_law": false
+        },
+        "verification_status": "official_opencup_project_page",
+        "source_record_hash": "b0ad1cbdd063b6d66229fcd37b4cafe417f0938cc440861e936de438a68f5bec"
+      },
       "albo_evidence_ids": [
         "albo-2026-2762"
       ]
@@ -888,6 +1158,58 @@
       ],
       "verification_status": "official_municipal_project_page",
       "source_record_hash": "b5ce3d04c45e88629a3c63d63dacdf5edf36b8c210c7b367de2f0f8b1244c124",
+      "opencup": {
+        "source_url": "https://www.opencup.gov.it/portale/it/web/opencup/home/progetto/-/cup/C81E23000070006",
+        "cup": "C81E23000070006",
+        "title": "MIGLIORAMENTO E MECCANIZZAZIONE DELLA RETE DI RACCOLTA DIFFERENZIATA DEI RIFIUTI URBANI*VIA LAMEZIA TERME*MIGLIORAMENTO E MECCANIZZAZIONE DELLA RETE DI RACCOLTA DIFFERENZIATA DEI RIFIUTI URBANI",
+        "total_cost_eur": 975644,
+        "public_funding_eur": 975644,
+        "decision_year": 2023,
+        "cup_status": "ATTIVO",
+        "description": null,
+        "infrastructure": "MIGLIORAMENTO E MECCANIZZAZIONE DELLA RETE DI RACCOLTA DIFFERENZIATA DEI RIFIUTI URBANI",
+        "beneficiary_tax_code": null,
+        "reference_address": "VIA LAMEZIA TERME",
+        "location": {
+          "country": "ITALIA",
+          "macro_area": "SUD",
+          "region": "CALABRIA",
+          "province": "CATANZARO",
+          "municipality": "LAMEZIA TERME"
+        },
+        "holder": {
+          "name": "COMUNE DI LAMEZIA TERME - CZ -",
+          "tax_code": "00301390795",
+          "area": "AMMINISTRAZIONI LOCALI",
+          "category": "ENTI TERRITORIALI E DI AMMINISTRAZIONE DEL TERRITORIO",
+          "subcategory": "AMMINISTRAZIONI COMUNALI"
+        },
+        "classification": {
+          "nature": "SERVIZI",
+          "typology": "ALTRO",
+          "intervention_area": "AMBIENTE ED ENERGIA",
+          "sector": "INFRASTRUTTURE AMBIENTALI E RISORSE IDRICHE",
+          "subsector": "SMALTIMENTO RIFIUTI",
+          "category": "IMPIANTI PER LA GESTIONE DELLA RACCOLTA DIFFERENZIATA"
+        },
+        "generated_at": "2023-04-07",
+        "unique_infrastructure": null,
+        "programming_instrument": "ALTRO-PROGRAMMA TRIENNALE DELLE OO.PP.",
+        "master_cup": null,
+        "linked_cups_count": 0,
+        "financial": {
+          "concession_or_finance_acts": false,
+          "sponsorships": "NON PREVISTE",
+          "coverage": "COMUNITARIA"
+        },
+        "cipess": {
+          "resolution_number": null,
+          "resolution_year": null,
+          "strategic_infrastructure_law": false
+        },
+        "verification_status": "official_opencup_project_page",
+        "source_record_hash": "61e5cc95d09262fed1e1545621dd8d319bf0e33681905727defd81c5c60d9282"
+      },
       "albo_evidence_ids": []
     },
     {
@@ -1091,6 +1413,58 @@
       ],
       "verification_status": "official_municipal_project_page",
       "source_record_hash": "7ce88800c384070168a770b64723b841c6381b60a484d8d767502efb6ef9bcb6",
+      "opencup": {
+        "source_url": "https://www.opencup.gov.it/portale/it/web/opencup/home/progetto/-/cup/C86F24000180006",
+        "cup": "C86F24000180006",
+        "title": "REALIZZAZIONE DELL'ASILO NIDO ESTIA MEDIANTE RICONVERSIONE CON DEMOLIZIONE E RICOSTRUZIONE DI EDIFICIO PUBBLICO ESISTENTE NON GIÀ DESTINATO AD ASILO NIDO*VIA DELLA VITTORIA*REALIZZAZIONE NUOVO ASILO NIDO MEDIANTE DEMOLIZIONE DI EDIFICIO ESISTENTE",
+        "total_cost_eur": 1512000,
+        "public_funding_eur": 1512000,
+        "decision_year": 2024,
+        "cup_status": "ATTIVO",
+        "description": "REALIZZAZIONE NUOVO ASILO NIDO MEDIANTE DEMOLIZIONE DI EDIFICIO ESISTENTE",
+        "infrastructure": "REALIZZAZIONE DELL'ASILO NIDO ESTIA MEDIANTE RICONVERSIONE CON DEMOLIZIONE E RICOSTRUZIONE DI EDIFICIO PUBBLICO ESISTENTE NON GIÀ DESTINATO AD ASILO NIDO",
+        "beneficiary_tax_code": null,
+        "reference_address": "VIA DELLA VITTORIA",
+        "location": {
+          "country": "ITALIA",
+          "macro_area": "SUD",
+          "region": "CALABRIA",
+          "province": "CATANZARO",
+          "municipality": "LAMEZIA TERME"
+        },
+        "holder": {
+          "name": "COMUNE DI LAMEZIA TERME - CZ -",
+          "tax_code": "00301390795",
+          "area": "AMMINISTRAZIONI LOCALI",
+          "category": "ENTI TERRITORIALI E DI AMMINISTRAZIONE DEL TERRITORIO",
+          "subcategory": "AMMINISTRAZIONI COMUNALI"
+        },
+        "classification": {
+          "nature": "LAVORI PUBBLICI",
+          "typology": "DEMOLIZIONE",
+          "intervention_area": "IMMOBILI",
+          "sector": "INFRASTRUTTURE SOCIALI",
+          "subsector": "SOCIALI E SCOLASTICHE",
+          "category": "ASILI NIDO"
+        },
+        "generated_at": "2024-05-30",
+        "unique_infrastructure": false,
+        "programming_instrument": "ALTRO-MISSIONE 4  ISTRUZIONE E RICERCA  COMPONENTE 1 - POTENZIAMENTO DELLOFFERTA DEI SERVIZI DI ISTRUZIONE: DAGLI ASILI NIDO ALLE UNIVERSITÀ - INVESTIMENTO 1.1: PIANO PER ASILI NIDO E SCUOLE DELLINFANZIA E SERVIZI DI EDUCAZIONE E CURA PER LA PRIMA INFANZIA",
+        "master_cup": null,
+        "linked_cups_count": 0,
+        "financial": {
+          "concession_or_finance_acts": false,
+          "sponsorships": "NON PREVISTE",
+          "coverage": "COMUNITARIA"
+        },
+        "cipess": {
+          "resolution_number": null,
+          "resolution_year": null,
+          "strategic_infrastructure_law": false
+        },
+        "verification_status": "official_opencup_project_page",
+        "source_record_hash": "5ffc332764032eee06aabb722aa113d8bf316daad5be7857d54a321ba621de10"
+      },
       "albo_evidence_ids": []
     },
     {
@@ -1330,6 +1704,58 @@
       ],
       "verification_status": "official_municipal_project_page",
       "source_record_hash": "b744f88f5df32bbdc17985df91d5e3db2df40b0c89d52761abe5500781a71cea",
+      "opencup": {
+        "source_url": "https://www.opencup.gov.it/portale/it/web/opencup/home/progetto/-/cup/C86F24000150006",
+        "cup": "C86F24000150006",
+        "title": "REALIZZAZIONE DELL'ASILO NIDO NIKE MEDIANTE RICONVERSIONE CON DEMOLIZIONE E RICOSTRUZIONE DI EDIFICIO PUBBLICO ESISTENTE NON GIÀ DESTINATO AD ASILO NIDO*VIA DELLA VITTORIA*REALIZZAZIONE NUOVO ASILO NIDO MEDIANTE DEMOLIZIONE DI EDIFICIO ESISTENTE",
+        "total_cost_eur": 1512000,
+        "public_funding_eur": 1512000,
+        "decision_year": 2024,
+        "cup_status": "ATTIVO",
+        "description": "REALIZZAZIONE NUOVO ASILO NIDO MEDIANTE DEMOLIZIONE DI EDIFICIO ESISTENTE",
+        "infrastructure": "REALIZZAZIONE DELL'ASILO NIDO NIKE MEDIANTE RICONVERSIONE CON DEMOLIZIONE E RICOSTRUZIONE DI EDIFICIO PUBBLICO ESISTENTE NON GIÀ DESTINATO AD ASILO NIDO",
+        "beneficiary_tax_code": null,
+        "reference_address": "VIA DELLA VITTORIA",
+        "location": {
+          "country": "ITALIA",
+          "macro_area": "SUD",
+          "region": "CALABRIA",
+          "province": "CATANZARO",
+          "municipality": "LAMEZIA TERME"
+        },
+        "holder": {
+          "name": "COMUNE DI LAMEZIA TERME - CZ -",
+          "tax_code": "00301390795",
+          "area": "AMMINISTRAZIONI LOCALI",
+          "category": "ENTI TERRITORIALI E DI AMMINISTRAZIONE DEL TERRITORIO",
+          "subcategory": "AMMINISTRAZIONI COMUNALI"
+        },
+        "classification": {
+          "nature": "LAVORI PUBBLICI",
+          "typology": "DEMOLIZIONE",
+          "intervention_area": "IMMOBILI",
+          "sector": "INFRASTRUTTURE SOCIALI",
+          "subsector": "SOCIALI E SCOLASTICHE",
+          "category": "ASILI NIDO"
+        },
+        "generated_at": "2024-05-28",
+        "unique_infrastructure": false,
+        "programming_instrument": "ALTRO-MISSIONE 4  ISTRUZIONE E RICERCA  COMPONENTE 1 - POTENZIAMENTO DELLOFFERTA DEI SERVIZI DI ISTRUZIONE: DAGLI ASILI NIDO ALLE UNIVERSITÀ - INVESTIMENTO 1.1: PIANO PER ASILI NIDO E SCUOLE DELLINFANZIA E SERVIZI DI EDUCAZIONE E CURA PER LA PRIMA INFANZIA",
+        "master_cup": null,
+        "linked_cups_count": 0,
+        "financial": {
+          "concession_or_finance_acts": false,
+          "sponsorships": "NON PREVISTE",
+          "coverage": "COMUNITARIA"
+        },
+        "cipess": {
+          "resolution_number": null,
+          "resolution_year": null,
+          "strategic_infrastructure_law": false
+        },
+        "verification_status": "official_opencup_project_page",
+        "source_record_hash": "94500436b5036318d12d81de4062b85f36b74f28bd6e17eab19ae2001377b619"
+      },
       "albo_evidence_ids": [
         "albo-2026-2735",
         "albo-2026-2730"
@@ -1524,6 +1950,58 @@
       ],
       "verification_status": "official_municipal_project_page",
       "source_record_hash": "4656ba97ac1cfdc1b2b6d0cfcfc93c5acd400f2d059d4d5365a58852974db73b",
+      "opencup": {
+        "source_url": "https://www.opencup.gov.it/portale/it/web/opencup/home/progetto/-/cup/C85E22000130006",
+        "cup": "C85E22000130006",
+        "title": "NIDO DINFANZIA LIGEA*PIANO API*REALIZZAZIONE DI NUOVA STRUTTURA DA DESTINARE AD ASILO NIDO",
+        "total_cost_eur": 1679304,
+        "public_funding_eur": 1679304,
+        "decision_year": 2022,
+        "cup_status": "ATTIVO",
+        "description": "REALIZZAZIONE DI NUOVA STRUTTURA DA DESTINARE AD ASILO NIDO",
+        "infrastructure": "NIDO DINFANZIA LIGEA",
+        "beneficiary_tax_code": null,
+        "reference_address": "PIANO API",
+        "location": {
+          "country": "ITALIA",
+          "macro_area": "SUD",
+          "region": "CALABRIA",
+          "province": "CATANZARO",
+          "municipality": "LAMEZIA TERME"
+        },
+        "holder": {
+          "name": "COMUNE DI LAMEZIA TERME - CZ -",
+          "tax_code": "00301390795",
+          "area": "AMMINISTRAZIONI LOCALI",
+          "category": "ENTI TERRITORIALI E DI AMMINISTRAZIONE DEL TERRITORIO",
+          "subcategory": "AMMINISTRAZIONI COMUNALI"
+        },
+        "classification": {
+          "nature": "LAVORI PUBBLICI",
+          "typology": "NUOVA REALIZZAZIONE",
+          "intervention_area": "IMMOBILI",
+          "sector": "INFRASTRUTTURE SOCIALI",
+          "subsector": "SOCIALI E SCOLASTICHE",
+          "category": "ASILI NIDO"
+        },
+        "generated_at": "2022-02-25",
+        "unique_infrastructure": false,
+        "programming_instrument": "ALTRO-MISSIONE 4  ISTRUZIONE E RICERCA  COMPONENTE 1 - POTENZIAMENTO DELLOFFERTA DEI SERVIZI DI ISTRUZIONE: DAGLI ASILI NIDO ALLE UNIVERSITÀ - INVESTIMENTO 1.1: PIANO PER ASILI NIDO E SCUOLE DELLINFANZIA E SERVIZI DI EDUCAZIONE E CURA PER LA PRIMA INFANZIA",
+        "master_cup": null,
+        "linked_cups_count": 0,
+        "financial": {
+          "concession_or_finance_acts": false,
+          "sponsorships": "NON PREVISTE",
+          "coverage": "COMUNITARIA"
+        },
+        "cipess": {
+          "resolution_number": null,
+          "resolution_year": null,
+          "strategic_infrastructure_law": false
+        },
+        "verification_status": "official_opencup_project_page",
+        "source_record_hash": "2bbc7c7392507d91a78f242fb438ea54ff6af0594d5f4873e8af9acac4f6f0c3"
+      },
       "albo_evidence_ids": []
     },
     {
@@ -1703,6 +2181,58 @@
       ],
       "verification_status": "official_municipal_project_page",
       "source_record_hash": "8465e7efc386e98f509c16d30430fff10c92d9b6f832ddb824aa0d5d5c721877",
+      "opencup": {
+        "source_url": "https://www.opencup.gov.it/portale/it/web/opencup/home/progetto/-/cup/C85E24000220006",
+        "cup": "C85E24000220006",
+        "title": "ISTITUTO COMPRENSIVO ARDITO - DON BOSCO*VIA ROBERTO IL GUISCARDO*PREDISPOSIZIONE NUOVI SPAZI DA ADIBIRE AL SERVIZIO DI MENSA SCOLASTICA",
+        "total_cost_eur": 480000,
+        "public_funding_eur": 480000,
+        "decision_year": 2024,
+        "cup_status": "ATTIVO",
+        "description": "PREDISPOSIZIONE NUOVI SPAZI DA ADIBIRE AL SERVIZIO DI MENSA SCOLASTICA",
+        "infrastructure": "ISTITUTO COMPRENSIVO ARDITO - DON BOSCO",
+        "beneficiary_tax_code": null,
+        "reference_address": "VIA ROBERTO IL GUISCARDO",
+        "location": {
+          "country": "ITALIA",
+          "macro_area": "SUD",
+          "region": "CALABRIA",
+          "province": "CATANZARO",
+          "municipality": "LAMEZIA TERME"
+        },
+        "holder": {
+          "name": "COMUNE DI LAMEZIA TERME - CZ -",
+          "tax_code": "00301390795",
+          "area": "AMMINISTRAZIONI LOCALI",
+          "category": "ENTI TERRITORIALI E DI AMMINISTRAZIONE DEL TERRITORIO",
+          "subcategory": "AMMINISTRAZIONI COMUNALI"
+        },
+        "classification": {
+          "nature": "LAVORI PUBBLICI",
+          "typology": "NUOVA REALIZZAZIONE",
+          "intervention_area": "IMMOBILI",
+          "sector": "INFRASTRUTTURE SOCIALI",
+          "subsector": "SOCIALI E SCOLASTICHE",
+          "category": "SCUOLE ELEMENTARI, MEDIE E SUPERIORI"
+        },
+        "generated_at": "2024-09-02",
+        "unique_infrastructure": false,
+        "programming_instrument": "ALTRO-MISSIONE 4  ISTRUZIONE E RICERCA  COMPONENTE 1 - POTENZIAMENTO DELLOFFERTA DEI SERVIZI DI ISTRUZIONE: DAGLI ASILI NIDO ALLE UNIVERSITÀ - INVESTIMENTO 1.2: PIANO DI ESTENSIONE DEL TEMPO PIENO E MENSE",
+        "master_cup": null,
+        "linked_cups_count": 0,
+        "financial": {
+          "concession_or_finance_acts": false,
+          "sponsorships": "NON PREVISTE",
+          "coverage": "COMUNITARIA"
+        },
+        "cipess": {
+          "resolution_number": null,
+          "resolution_year": null,
+          "strategic_infrastructure_law": false
+        },
+        "verification_status": "official_opencup_project_page",
+        "source_record_hash": "d73b3cd9d18bcc75ac195522403799cb8b1f3222ba58a29fc21eb7e17515afdd"
+      },
       "albo_evidence_ids": [
         "albo-2026-2725"
       ]
@@ -1992,6 +2522,58 @@
       ],
       "verification_status": "official_municipal_project_page",
       "source_record_hash": "b58e7c2179375f77008f24ed940ece3e75a2b4867d295246aaa815ac4979d8c0",
+      "opencup": {
+        "source_url": "https://www.opencup.gov.it/portale/it/web/opencup/home/progetto/-/cup/C88I21000370001",
+        "cup": "C88I21000370001",
+        "title": "MIGLIORAMENTO DELLA QUALITÀ DEL DECORO URBANO E DEL TESSUTO SOCIALE E AMBIENTALE, ANCHE MEDIANTE INTERVENTI DI RISTRUTTURAZIONE DI EDILIZIA DI IMMOBILI PUBBLICI , CON PARTICOLARE RIFERIMENTO ALLO SVILUPPO DEI SERVIZIO SOCIALI, CULTURALI E SPORTIVI*VIA PERUGINI*SISTEMAZIONE DELLO SPAZIO ANTISTANTE LA SEDE COMUNALE,RISTRUTTURAZIONE E SOPRAELEVAZIONE IMMOBILE ESISTENTE, REALIZZAZIONE DELLA PIAZZA ANTISTANTE LA CONCATTEDRALE DI SAN BENEDETTO, RISTRUTTURAZIONE DEL PALAZZETTO DELLO SPORT",
+        "total_cost_eur": 9950000,
+        "public_funding_eur": 9950000,
+        "decision_year": 2021,
+        "cup_status": "ATTIVO",
+        "description": "SISTEMAZIONE DELLO SPAZIO ANTISTANTE LA SEDE COMUNALE,RISTRUTTURAZIONE E SOPRAELEVAZIONE IMMOBILE ESISTENTE, REALIZZAZIONE DELLA PIAZZA ANTISTANTE LA CONCATTEDRALE DI SAN BENEDETTO, RISTRUTTURAZIONE DEL PALAZZETTO DELLO SPORT",
+        "infrastructure": "MIGLIORAMENTO DELLA QUALITÀ DEL DECORO URBANO E DEL TESSUTO SOCIALE E AMBIENTALE, ANCHE MEDIANTE INTERVENTI DI RISTRUTTURAZIONE DI EDILIZIA DI IMMOBILI PUBBLICI , CON PARTICOLARE RIFERIMENTO ALLO SVILUPPO DEI SERVIZIO SOCIALI, CULTURALI E SPORTIVI",
+        "beneficiary_tax_code": null,
+        "reference_address": "VIA PERUGINI",
+        "location": {
+          "country": "ITALIA",
+          "macro_area": "SUD",
+          "region": "CALABRIA",
+          "province": "CATANZARO",
+          "municipality": "LAMEZIA TERME"
+        },
+        "holder": {
+          "name": "COMUNE DI LAMEZIA TERME - CZ -",
+          "tax_code": "00301390795",
+          "area": "AMMINISTRAZIONI LOCALI",
+          "category": "ENTI TERRITORIALI E DI AMMINISTRAZIONE DEL TERRITORIO",
+          "subcategory": "AMMINISTRAZIONI COMUNALI"
+        },
+        "classification": {
+          "nature": "LAVORI PUBBLICI",
+          "typology": "RISTRUTTURAZIONE CON EFFICIENTAMENTO ENERGETICO",
+          "intervention_area": "IMMOBILI",
+          "sector": "INFRASTRUTTURE SOCIALI",
+          "subsector": "ALTRE INFRASTRUTTURE SOCIALI",
+          "category": "ALTRE INFRASTRUTTURE"
+        },
+        "generated_at": "2021-06-01",
+        "unique_infrastructure": true,
+        "programming_instrument": "ALTRO-RIGENERAZIONE URBANA Contributi per investimenti in progetti di rigenerazione urbana, volti alla riduzione di fenomeni di marginalizzazione e degrado sociale, nonché al miglioramento della qualità del decoro urbano e del tessuto sociale ed ambientale",
+        "master_cup": null,
+        "linked_cups_count": 0,
+        "financial": {
+          "concession_or_finance_acts": false,
+          "sponsorships": "NON PREVISTE",
+          "coverage": "STATALE"
+        },
+        "cipess": {
+          "resolution_number": null,
+          "resolution_year": null,
+          "strategic_infrastructure_law": false
+        },
+        "verification_status": "official_opencup_project_page",
+        "source_record_hash": "ffa9b8363073e83e77d7447b6a9332f34baf8401cb1a7ae2d1db04cd10958e70"
+      },
       "albo_evidence_ids": []
     },
     {
@@ -2219,6 +2801,58 @@
       ],
       "verification_status": "official_municipal_project_page",
       "source_record_hash": "011615e937e81298d84f76a7915e795714e7557d5f171ace27313daa63dc7f52",
+      "opencup": {
+        "source_url": "https://www.opencup.gov.it/portale/it/web/opencup/home/progetto/-/cup/C88C22000350006",
+        "cup": "C88C22000350006",
+        "title": "NUOVA COSTRUZIONE DI TRIBUNE E IMPIANTI PRESSO LO STADIO GIANNI RENDA DI LAMEZIA TERME.*VIA SAVUTANO SNC -88046 LAMEZIA TERME*- REALIZZAZIONE STRUTTURA DI COPERTURA TRIBUNA LATO OVEST CAMPO A 11; - REALIZZAZIONE MANUFATTO LOCALE TECNICO/DEPOSITO; - REALIZZAZIONE CAMPO DI BADMINTON PARALIMPICI; IMPIANTI E INSTALLAZIONE DI TORRI E TRALICCI: - EFFICIENTAMENTO ENERGETICO IMPIANTI.",
+        "total_cost_eur": 1500000,
+        "public_funding_eur": 1500000,
+        "decision_year": 2022,
+        "cup_status": "ATTIVO",
+        "description": "- REALIZZAZIONE STRUTTURA DI COPERTURA TRIBUNA LATO OVEST CAMPO A 11; - REALIZZAZIONE MANUFATTO LOCALE TECNICO/DEPOSITO; - REALIZZAZIONE CAMPO DI BADMINTON PARALIMPICI; IMPIANTI E INSTALLAZIONE DI TORRI E TRALICCI: - EFFICIENTAMENTO ENERGETICO IMPIANTI.",
+        "infrastructure": "NUOVA COSTRUZIONE DI TRIBUNE E IMPIANTI PRESSO LO STADIO GIANNI RENDA DI LAMEZIA TERME.",
+        "beneficiary_tax_code": null,
+        "reference_address": "VIA SAVUTANO SNC -88046 LAMEZIA TERME",
+        "location": {
+          "country": "ITALIA",
+          "macro_area": "SUD",
+          "region": "CALABRIA",
+          "province": "CATANZARO",
+          "municipality": "LAMEZIA TERME"
+        },
+        "holder": {
+          "name": "COMUNE DI LAMEZIA TERME - CZ -",
+          "tax_code": "00301390795",
+          "area": "AMMINISTRAZIONI LOCALI",
+          "category": "ENTI TERRITORIALI E DI AMMINISTRAZIONE DEL TERRITORIO",
+          "subcategory": "AMMINISTRAZIONI COMUNALI"
+        },
+        "classification": {
+          "nature": "LAVORI PUBBLICI",
+          "typology": "AMPLIAMENTO (COMPRESA SOPRAELEVAZIONE) O POTENZIAMENTO",
+          "intervention_area": "IMMOBILI",
+          "sector": "INFRASTRUTTURE SOCIALI",
+          "subsector": "ALTRE INFRASTRUTTURE SOCIALI",
+          "category": "ALTRE INFRASTRUTTURE"
+        },
+        "generated_at": "2022-06-20",
+        "unique_infrastructure": false,
+        "programming_instrument": "ALTRO-REALIZZAZIONE DI NUOVI IMPIANTI SPORTIVI, DI CITTADELLA DELLO SPORT E IMPIANTI POLIVALENTI INDOOR DA PARTE DEI CAPOLUOGHI DI REGIONE E DI PROVINCIA. CUP: J55E22000170006 - PRESIDENZA DEL CONSIGLIO DEI MINISTRI- UFFICIO PER LO SPORT",
+        "master_cup": null,
+        "linked_cups_count": 0,
+        "financial": {
+          "concession_or_finance_acts": false,
+          "sponsorships": "NON PREVISTE",
+          "coverage": "COMUNITARIA"
+        },
+        "cipess": {
+          "resolution_number": null,
+          "resolution_year": null,
+          "strategic_infrastructure_law": false
+        },
+        "verification_status": "official_opencup_project_page",
+        "source_record_hash": "6a780c148eb0d1f647a36c2dafd67f782d961d500537058b9df91b3208aa4c06"
+      },
       "albo_evidence_ids": [
         "albo-2026-2765",
         "albo-2026-2726"
@@ -2317,6 +2951,58 @@
       ],
       "verification_status": "official_municipal_project_page",
       "source_record_hash": "932fd2d4a0fa3ffc5d7b60b73acb93697081c9cc7761dec64a204472643230f5",
+      "opencup": {
+        "source_url": "https://www.opencup.gov.it/portale/it/web/opencup/home/progetto/-/cup/C34H22000300006",
+        "cup": "C34H22000300006",
+        "title": "ADATTAMENTO DEGLI SPAZI DOMICILIARI DEGLI UTENTI DISABILI COINVOLTI NEL PROGETTO E INTERVENTI DI DOMOTICA*AMBITO TERRITORIALE DI LAMEZIA TERME*PROGETTAZIONE PERSONALIZZATA A FAVORE DEI MEDESIMI UTENTI CON RIFERIMENTO AGLI ASSI ABITAZIONE E LAVORO",
+        "total_cost_eur": 715000,
+        "public_funding_eur": 715000,
+        "decision_year": 2022,
+        "cup_status": "ATTIVO",
+        "description": null,
+        "infrastructure": "ADATTAMENTO DEGLI SPAZI DOMICILIARI DEGLI UTENTI DISABILI COINVOLTI NEL PROGETTO E INTERVENTI DI DOMOTICA",
+        "beneficiary_tax_code": null,
+        "reference_address": "AMBITO TERRITORIALE DI LAMEZIA TERME",
+        "location": {
+          "country": "ITALIA",
+          "macro_area": "SUD",
+          "region": "CALABRIA",
+          "province": "CATANZARO",
+          "municipality": "CORTALE, CURINGA, FALERNA, FEROLETO ANTICO, GIZZERIA, JACURSO, MAIDA, NOCERA TIRINESE, PIANOPOLI, PLATANIA, SAN PIETRO A MAIDA, LAMEZIA TERME"
+        },
+        "holder": {
+          "name": "COMUNE DI LAMEZIA TERME - CZ -",
+          "tax_code": "00301390795",
+          "area": "AMMINISTRAZIONI LOCALI",
+          "category": "ENTI TERRITORIALI E DI AMMINISTRAZIONE DEL TERRITORIO",
+          "subcategory": "AMMINISTRAZIONI COMUNALI"
+        },
+        "classification": {
+          "nature": "SERVIZI",
+          "typology": "ALTRO",
+          "intervention_area": "IMMOBILI",
+          "sector": "INFRASTRUTTURE SOCIALI",
+          "subsector": "ALTRE INFRASTRUTTURE SOCIALI",
+          "category": "ALTRE INFRASTRUTTURE"
+        },
+        "generated_at": "2022-03-30",
+        "unique_infrastructure": null,
+        "programming_instrument": "ASSENTE",
+        "master_cup": null,
+        "linked_cups_count": 0,
+        "financial": {
+          "concession_or_finance_acts": false,
+          "sponsorships": "NON PREVISTE",
+          "coverage": "COMUNITARIA"
+        },
+        "cipess": {
+          "resolution_number": null,
+          "resolution_year": null,
+          "strategic_infrastructure_law": false
+        },
+        "verification_status": "official_opencup_project_page",
+        "source_record_hash": "773fd5acee4de81de4e5102a5491470aa6fe500842c63e3b11f801536da99720"
+      },
       "albo_evidence_ids": []
     },
     {
@@ -2376,6 +3062,58 @@
       ],
       "verification_status": "official_municipal_project_page",
       "source_record_hash": "9762ca88c59ae1715be809d1781e56f947a04c3277b9fe07bf5a7f41e42d6494",
+      "opencup": {
+        "source_url": "https://www.opencup.gov.it/portale/it/web/opencup/home/progetto/-/cup/C81B21003560001",
+        "cup": "C81B21003560001",
+        "title": "PERCORSO DI COLLEGAMENTO AL MARE ATTRAVERSO IL FIUME BAGNI DA PARCO MITOIO FINO AL MARE*VIA TERRITORIO LAMETINO*VALORIZZAZIONE DELLA FASCIA COSTIERA ATTRAVERSO LA REALIZZAZIONE DI LA MESSA IN SICUREZZA DEL FIUME E SUO ATTRAVERSAMENTO, PISTE CICLABILI E PEDONALI NONCHÉ RIGENERAZIONE AMBIEMNTALE DELL'AREA",
+        "total_cost_eur": 5000000,
+        "public_funding_eur": 5000000,
+        "decision_year": 2021,
+        "cup_status": "ATTIVO",
+        "description": "VALORIZZAZIONE DELLA FASCIA COSTIERA ATTRAVERSO LA REALIZZAZIONE DI LA MESSA IN SICUREZZA DEL FIUME E SUO ATTRAVERSAMENTO, PISTE CICLABILI E PEDONALI NONCHÉ RIGENERAZIONE AMBIEMNTALE DELL'AREA",
+        "infrastructure": "PERCORSO DI COLLEGAMENTO AL MARE ATTRAVERSO IL FIUME BAGNI DA PARCO MITOIO FINO AL MARE",
+        "beneficiary_tax_code": null,
+        "reference_address": "VIA TERRITORIO LAMETINO",
+        "location": {
+          "country": "ITALIA",
+          "macro_area": "SUD",
+          "region": "CALABRIA",
+          "province": "CATANZARO",
+          "municipality": "LAMEZIA TERME"
+        },
+        "holder": {
+          "name": "COMUNE DI LAMEZIA TERME - CZ -",
+          "tax_code": "00301390795",
+          "area": "AMMINISTRAZIONI LOCALI",
+          "category": "ENTI TERRITORIALI E DI AMMINISTRAZIONE DEL TERRITORIO",
+          "subcategory": "AMMINISTRAZIONI COMUNALI"
+        },
+        "classification": {
+          "nature": "LAVORI PUBBLICI",
+          "typology": "NUOVA REALIZZAZIONE",
+          "intervention_area": "AMBIENTE ED ENERGIA",
+          "sector": "INFRASTRUTTURE AMBIENTALI E RISORSE IDRICHE",
+          "subsector": "PROTEZIONE, VALORIZZAZIONE E FRUIZIONE DELL'AMBIENTE",
+          "category": "ALTRE STRUTTURE/INFRASTRUTTURE PER LA PROTEZIONE, VALORIZZAZIONE E FRUIZIONE AMBIENTALE"
+        },
+        "generated_at": "2021-04-12",
+        "unique_infrastructure": true,
+        "programming_instrument": "ALTRO-PROGRAMMA INNOVATIVO NAZIONALE PER LA QUALITÀ DELL'ABITARE",
+        "master_cup": null,
+        "linked_cups_count": 0,
+        "financial": {
+          "concession_or_finance_acts": false,
+          "sponsorships": "NON PREVISTE",
+          "coverage": "STATALE"
+        },
+        "cipess": {
+          "resolution_number": null,
+          "resolution_year": null,
+          "strategic_infrastructure_law": false
+        },
+        "verification_status": "official_opencup_project_page",
+        "source_record_hash": "2012f28139b8300428b41b2c6a8c815eb00b3409c0fab8508a41123b93e10cbb"
+      },
       "albo_evidence_ids": []
     },
     {
@@ -2471,6 +3209,58 @@
       ],
       "verification_status": "official_municipal_project_page",
       "source_record_hash": "30e803e03c3bdf302069d7a4b8f813503ac731a69f5034bfd8ee19e181126331",
+      "opencup": {
+        "source_url": "https://www.opencup.gov.it/portale/it/web/opencup/home/progetto/-/cup/C81B21003570001",
+        "cup": "C81B21003570001",
+        "title": "SANT'EUFEMIA: LOC. MARINELLA-CAFARONE-RIQUALIFICAZIONE PINETA-COMPLETAMENTO LUNGOMARE*VIA TERRITORIO LAMETINO*VALORIZZAZIONE DELLA FASCIA COSTIERA ATTRAVERSO LA REALIZZAZIONE DI UN LUNGOMARE, DI PISTE CICLABILI E PEDONALI NONCHÉ RIGENERAZIONE DELLA FASCIA COSTIERA, NONCHÉ REALIZZAZIONE DI IMPIANTI TECNOLOGICI",
+        "total_cost_eur": 5000000,
+        "public_funding_eur": 5000000,
+        "decision_year": 2021,
+        "cup_status": "ATTIVO",
+        "description": "VALORIZZAZIONE DELLA FASCIA COSTIERA ATTRAVERSO LA REALIZZAZIONE DI UN LUNGOMARE, DI PISTE CICLABILI E PEDONALI NONCHÉ RIGENERAZIONE DELLA FASCIA COSTIERA, NONCHÉ REALIZZAZIONE DI IMPIANTI TECNOLOGICI",
+        "infrastructure": "SANT'EUFEMIA: LOC. MARINELLA-CAFARONE-RIQUALIFICAZIONE PINETA-COMPLETAMENTO LUNGOMARE",
+        "beneficiary_tax_code": null,
+        "reference_address": "VIA TERRITORIO LAMETINO",
+        "location": {
+          "country": "ITALIA",
+          "macro_area": "SUD",
+          "region": "CALABRIA",
+          "province": "CATANZARO",
+          "municipality": "LAMEZIA TERME"
+        },
+        "holder": {
+          "name": "COMUNE DI LAMEZIA TERME - CZ -",
+          "tax_code": "00301390795",
+          "area": "AMMINISTRAZIONI LOCALI",
+          "category": "ENTI TERRITORIALI E DI AMMINISTRAZIONE DEL TERRITORIO",
+          "subcategory": "AMMINISTRAZIONI COMUNALI"
+        },
+        "classification": {
+          "nature": "LAVORI PUBBLICI",
+          "typology": "NUOVA REALIZZAZIONE",
+          "intervention_area": "AMBIENTE ED ENERGIA",
+          "sector": "INFRASTRUTTURE AMBIENTALI E RISORSE IDRICHE",
+          "subsector": "PROTEZIONE, VALORIZZAZIONE E FRUIZIONE DELL'AMBIENTE",
+          "category": "ALTRE STRUTTURE/INFRASTRUTTURE PER LA PROTEZIONE, VALORIZZAZIONE E FRUIZIONE AMBIENTALE"
+        },
+        "generated_at": "2021-04-12",
+        "unique_infrastructure": true,
+        "programming_instrument": "ALTRO-PROGRAMMA INNOVATIVO NAZIONALE PER LA QUALITÀ DELL'ABITARE",
+        "master_cup": null,
+        "linked_cups_count": 0,
+        "financial": {
+          "concession_or_finance_acts": false,
+          "sponsorships": "NON PREVISTE",
+          "coverage": "STATALE"
+        },
+        "cipess": {
+          "resolution_number": null,
+          "resolution_year": null,
+          "strategic_infrastructure_law": false
+        },
+        "verification_status": "official_opencup_project_page",
+        "source_record_hash": "c185f176fec3a15895968cb02fc50f26a1b7837f5575d4fc03fd7ff6db9ea690"
+      },
       "albo_evidence_ids": []
     },
     {
@@ -2590,6 +3380,58 @@
       ],
       "verification_status": "official_municipal_project_page",
       "source_record_hash": "a04e21580549fe31d1ea352cf21d29f2c117106d2fad358b2762f8291c042f72",
+      "opencup": {
+        "source_url": "https://www.opencup.gov.it/portale/it/web/opencup/home/progetto/-/cup/C81B21003540001",
+        "cup": "C81B21003540001",
+        "title": "PISTA CICLABILE*VIA TERRITORIO LAMETINO*REALIZZAZIONE DI PISTE CICLABILI SUL TERRITORIO LAMETINO",
+        "total_cost_eur": null,
+        "public_funding_eur": null,
+        "decision_year": 2021,
+        "cup_status": "ATTIVO",
+        "description": "REALIZZAZIONE DI PISTE CICLABILI SUL TERRITORIO LAMETINO",
+        "infrastructure": "PISTA CICLABILE",
+        "beneficiary_tax_code": null,
+        "reference_address": "VIA TERRITORIO LAMETINO",
+        "location": {
+          "country": "ITALIA",
+          "macro_area": "SUD",
+          "region": "CALABRIA",
+          "province": "CATANZARO",
+          "municipality": "LAMEZIA TERME"
+        },
+        "holder": {
+          "name": "COMUNE DI LAMEZIA TERME - CZ -",
+          "tax_code": "00301390795",
+          "area": "AMMINISTRAZIONI LOCALI",
+          "category": "ENTI TERRITORIALI E DI AMMINISTRAZIONE DEL TERRITORIO",
+          "subcategory": "AMMINISTRAZIONI COMUNALI"
+        },
+        "classification": {
+          "nature": "LAVORI PUBBLICI",
+          "typology": "NUOVA REALIZZAZIONE",
+          "intervention_area": "TRASPORTI",
+          "sector": "INFRASTRUTTURE DI TRASPORTO",
+          "subsector": "STRADALI",
+          "category": "PISTE CICLABILI"
+        },
+        "generated_at": "2021-04-12",
+        "unique_infrastructure": true,
+        "programming_instrument": "ALTRO-PROGRAMMA INNOVATIVO NAZIONALE PER LA QUALITÀ DELL'ABITARE",
+        "master_cup": null,
+        "linked_cups_count": 0,
+        "financial": {
+          "concession_or_finance_acts": false,
+          "sponsorships": "NON PREVISTE",
+          "coverage": "STATALE"
+        },
+        "cipess": {
+          "resolution_number": null,
+          "resolution_year": null,
+          "strategic_infrastructure_law": false
+        },
+        "verification_status": "official_opencup_project_page",
+        "source_record_hash": "f2af10bc04c4b373e0bbe3bb5411dd4edc0e0eea2d0eb9498169e8cfd6e2f3ef"
+      },
       "albo_evidence_ids": []
     },
     {
@@ -2673,6 +3515,58 @@
       ],
       "verification_status": "official_municipal_project_page",
       "source_record_hash": "613eed42c321632eebf27df8bdbb042b14550ba5c88c53392ca9b9aaaf4e53c7",
+      "opencup": {
+        "source_url": "https://www.opencup.gov.it/portale/it/web/opencup/home/progetto/-/cup/C87H21000540001",
+        "cup": "C87H21000540001",
+        "title": "QUALITÀ DELL'ABITARE-RECUPERO E RISANAMENTO DELLE ABITAZIONI DEL CENTRO STORICO DI SAMBIASE*VIA EX COMUNE DI SAMBIASE*RECUPERO E VALORIZZAZIONE EDILIZIA PRIVATA URBANA A SCOPO SOCIALE (ALLOGGI PER FASCE DEBOLI)",
+        "total_cost_eur": 4829097,
+        "public_funding_eur": 4829097,
+        "decision_year": 2021,
+        "cup_status": "ATTIVO",
+        "description": "RECUPERO E VALORIZZAZIONE EDILIZIA PRIVATA URBANA A SCOPO SOCIALE (ALLOGGI PER FASCE DEBOLI)",
+        "infrastructure": "QUALITÀ DELL'ABITARE-RECUPERO E RISANAMENTO DELLE ABITAZIONI DEL CENTRO STORICO DI SAMBIASE",
+        "beneficiary_tax_code": null,
+        "reference_address": "VIA EX COMUNE DI SAMBIASE",
+        "location": {
+          "country": "ITALIA",
+          "macro_area": "SUD",
+          "region": "CALABRIA",
+          "province": "CATANZARO",
+          "municipality": "LAMEZIA TERME"
+        },
+        "holder": {
+          "name": "COMUNE DI LAMEZIA TERME - CZ -",
+          "tax_code": "00301390795",
+          "area": "AMMINISTRAZIONI LOCALI",
+          "category": "ENTI TERRITORIALI E DI AMMINISTRAZIONE DEL TERRITORIO",
+          "subcategory": "AMMINISTRAZIONI COMUNALI"
+        },
+        "classification": {
+          "nature": "LAVORI PUBBLICI",
+          "typology": "MANUTENZIONE STRAORDINARIA",
+          "intervention_area": "IMMOBILI",
+          "sector": "INFRASTRUTTURE SOCIALI",
+          "subsector": "ABITATIVE",
+          "category": "FABBRICATI RESIDENZIALI URBANI"
+        },
+        "generated_at": "2021-04-12",
+        "unique_infrastructure": true,
+        "programming_instrument": "ALTRO-PROGRAMMA INNOVATIVO NAZIONALE PER LA QUALITÀ DELL'ABITARE",
+        "master_cup": null,
+        "linked_cups_count": 0,
+        "financial": {
+          "concession_or_finance_acts": false,
+          "sponsorships": "NON PREVISTE",
+          "coverage": "STATALE"
+        },
+        "cipess": {
+          "resolution_number": null,
+          "resolution_year": null,
+          "strategic_infrastructure_law": false
+        },
+        "verification_status": "official_opencup_project_page",
+        "source_record_hash": "864a6e20d6d08fc1e8e69a0271b5ca496ef9cf6c19094939b6793a01e5a40f1d"
+      },
       "albo_evidence_ids": []
     },
     {
@@ -2756,6 +3650,58 @@
       ],
       "verification_status": "official_municipal_project_page",
       "source_record_hash": "7582e66a6b17a7e47539ec8999c918740124127a869b5f5aadfd50031a4214fb",
+      "opencup": {
+        "source_url": "https://www.opencup.gov.it/portale/it/web/opencup/home/progetto/-/cup/C81B21003500001",
+        "cup": "C81B21003500001",
+        "title": "INTERVENTO DI RIGENERAZIONE AREA POLISPORTIVA LOC. SANTA MARIA-SAMBIASE NORD*VIA FRAZIONE MONTANA - SANTA MARIA LAMEZIA TERME*INTERVENTO RIQUALIFICAZIONE FRAZIONE MONTANA ATTRAVERSO LA REALIZZAZIONE DI IMPIANTI SPORTIVI E RICREATIVI PER L'AGGREGAZIONE SOCIALE",
+        "total_cost_eur": 2321014,
+        "public_funding_eur": 2321014,
+        "decision_year": 2021,
+        "cup_status": "ATTIVO",
+        "description": "INTERVENTO RIQUALIFICAZIONE FRAZIONE MONTANA ATTRAVERSO LA REALIZZAZIONE DI IMPIANTI SPORTIVI E RICREATIVI PER L'AGGREGAZIONE SOCIALE",
+        "infrastructure": "INTERVENTO DI RIGENERAZIONE AREA POLISPORTIVA LOC. SANTA MARIA-SAMBIASE NORD",
+        "beneficiary_tax_code": null,
+        "reference_address": "VIA FRAZIONE MONTANA - SANTA MARIA LAMEZIA TERME",
+        "location": {
+          "country": "ITALIA",
+          "macro_area": "SUD",
+          "region": "CALABRIA",
+          "province": "CATANZARO",
+          "municipality": "LAMEZIA TERME"
+        },
+        "holder": {
+          "name": "COMUNE DI LAMEZIA TERME - CZ -",
+          "tax_code": "00301390795",
+          "area": "AMMINISTRAZIONI LOCALI",
+          "category": "ENTI TERRITORIALI E DI AMMINISTRAZIONE DEL TERRITORIO",
+          "subcategory": "AMMINISTRAZIONI COMUNALI"
+        },
+        "classification": {
+          "nature": "LAVORI PUBBLICI",
+          "typology": "NUOVA REALIZZAZIONE",
+          "intervention_area": "IMMOBILI",
+          "sector": "INFRASTRUTTURE SOCIALI",
+          "subsector": "SPORT, SPETTACOLO E TEMPO LIBERO",
+          "category": "IMPIANTI SPORTIVI"
+        },
+        "generated_at": "2021-04-12",
+        "unique_infrastructure": true,
+        "programming_instrument": "ALTRO-PROGRAMMA INNOVATIVO NAZIONALE PER LA QUALITÀ DELL'ABITARE",
+        "master_cup": null,
+        "linked_cups_count": 0,
+        "financial": {
+          "concession_or_finance_acts": false,
+          "sponsorships": "NON PREVISTE",
+          "coverage": "STATALE"
+        },
+        "cipess": {
+          "resolution_number": null,
+          "resolution_year": null,
+          "strategic_infrastructure_law": false
+        },
+        "verification_status": "official_opencup_project_page",
+        "source_record_hash": "798d32c1344edd0de0c221e2f322be4c5a5376df1094209d5e38ef0410d52a7d"
+      },
       "albo_evidence_ids": []
     },
     {
@@ -2851,6 +3797,58 @@
       ],
       "verification_status": "official_municipal_project_page",
       "source_record_hash": "53858cbf2413d6a355f9cbe3f6c58c8a1cf4d5ebfc4b15e23a03f420a2503ba8",
+      "opencup": {
+        "source_url": "https://www.opencup.gov.it/portale/it/web/opencup/home/progetto/-/cup/C87H21000530001",
+        "cup": "C87H21000530001",
+        "title": "SAN TEODORO ALLOGGI PARCHEGGIO LOTTO 3*VIA RIONE SAN TEODORO*RECUPERO E VALORIZZAZIONE EDILIZIA PRIVATA URBANA A SCOPO SOCIALE (ALLOGGI PARCHEGGIO)",
+        "total_cost_eur": 2805735,
+        "public_funding_eur": 2805735,
+        "decision_year": 2021,
+        "cup_status": "ATTIVO",
+        "description": "RECUPERO E VALORIZZAZIONE EDILIZIA PRIVATA URBANA A SCOPO SOCIALE (ALLOGGI PARCHEGGIO)",
+        "infrastructure": "SAN TEODORO ALLOGGI PARCHEGGIO LOTTO 3",
+        "beneficiary_tax_code": null,
+        "reference_address": "VIA RIONE SAN TEODORO",
+        "location": {
+          "country": "ITALIA",
+          "macro_area": "SUD",
+          "region": "CALABRIA",
+          "province": "CATANZARO",
+          "municipality": "LAMEZIA TERME"
+        },
+        "holder": {
+          "name": "COMUNE DI LAMEZIA TERME - CZ -",
+          "tax_code": "00301390795",
+          "area": "AMMINISTRAZIONI LOCALI",
+          "category": "ENTI TERRITORIALI E DI AMMINISTRAZIONE DEL TERRITORIO",
+          "subcategory": "AMMINISTRAZIONI COMUNALI"
+        },
+        "classification": {
+          "nature": "LAVORI PUBBLICI",
+          "typology": "MANUTENZIONE STRAORDINARIA",
+          "intervention_area": "IMMOBILI",
+          "sector": "INFRASTRUTTURE SOCIALI",
+          "subsector": "ABITATIVE",
+          "category": "FABBRICATI RESIDENZIALI URBANI"
+        },
+        "generated_at": "2021-04-12",
+        "unique_infrastructure": true,
+        "programming_instrument": "ALTRO-PROGRAMMA INNOVATIVO NAZIONALE PER LA QUALITÀ DELL'ABITARE,",
+        "master_cup": null,
+        "linked_cups_count": 0,
+        "financial": {
+          "concession_or_finance_acts": false,
+          "sponsorships": "NON PREVISTE",
+          "coverage": "STATALE"
+        },
+        "cipess": {
+          "resolution_number": null,
+          "resolution_year": null,
+          "strategic_infrastructure_law": false
+        },
+        "verification_status": "official_opencup_project_page",
+        "source_record_hash": "c60e6d5408d93fef3f8b65c520443b3de52fee427ecea6c91a892b3912a54efe"
+      },
       "albo_evidence_ids": []
     },
     {
@@ -2910,6 +3908,58 @@
       ],
       "verification_status": "official_municipal_project_page",
       "source_record_hash": "62d7cab10954ddd9e8f6e581fdd05879f764663378285230707447aecbcc05f4",
+      "opencup": {
+        "source_url": "https://www.opencup.gov.it/portale/it/web/opencup/home/progetto/-/cup/C81B21003490001",
+        "cup": "C81B21003490001",
+        "title": "SAN TEODORO ENERGIA MICROIDRAULICA LOTTO 8*VIA RIONE SAN TEODORO*INTERVENTO DI RIQUALIFICAZIONE URBANA, AMBIENTALE ED ENERGETICA CON PRODUZIONE DI ENERGIA ELETTRICA ATTRAVERSO LA RISTRUTTURAZIONE DI MULINI AD ACQUA ED OPERE IDRAULICHE",
+        "total_cost_eur": 3168154,
+        "public_funding_eur": 3168154,
+        "decision_year": 2021,
+        "cup_status": "ATTIVO",
+        "description": "INTERVENTO DI RIQUALIFICAZIONE URBANA, AMBIENTALE ED ENERGETICA CON PRODUZIONE DI ENERGIA ELETTRICA ATTRAVERSO LA RISTRUTTURAZIONE DI MULINI AD ACQUA ED OPERE IDRAULICHE",
+        "infrastructure": "SAN TEODORO ENERGIA MICROIDRAULICA LOTTO 8",
+        "beneficiary_tax_code": null,
+        "reference_address": "VIA RIONE SAN TEODORO",
+        "location": {
+          "country": "ITALIA",
+          "macro_area": "SUD",
+          "region": "CALABRIA",
+          "province": "CATANZARO",
+          "municipality": "LAMEZIA TERME"
+        },
+        "holder": {
+          "name": "COMUNE DI LAMEZIA TERME - CZ -",
+          "tax_code": "00301390795",
+          "area": "AMMINISTRAZIONI LOCALI",
+          "category": "ENTI TERRITORIALI E DI AMMINISTRAZIONE DEL TERRITORIO",
+          "subcategory": "AMMINISTRAZIONI COMUNALI"
+        },
+        "classification": {
+          "nature": "LAVORI PUBBLICI",
+          "typology": "NUOVA REALIZZAZIONE",
+          "intervention_area": "AMBIENTE ED ENERGIA",
+          "sector": "INFRASTRUTTURE AMBIENTALI E RISORSE IDRICHE",
+          "subsector": "PROTEZIONE, VALORIZZAZIONE E FRUIZIONE DELL'AMBIENTE",
+          "category": "ALTRE STRUTTURE/INFRASTRUTTURE PER LA PROTEZIONE, VALORIZZAZIONE E FRUIZIONE AMBIENTALE"
+        },
+        "generated_at": "2021-04-12",
+        "unique_infrastructure": true,
+        "programming_instrument": "ALTRO-PROGRAMMA INNOVATIVO NAZIONALE PER LA QUALITÀ DELL'ABITARE,",
+        "master_cup": null,
+        "linked_cups_count": 0,
+        "financial": {
+          "concession_or_finance_acts": false,
+          "sponsorships": "NON PREVISTE",
+          "coverage": "STATALE"
+        },
+        "cipess": {
+          "resolution_number": null,
+          "resolution_year": null,
+          "strategic_infrastructure_law": false
+        },
+        "verification_status": "official_opencup_project_page",
+        "source_record_hash": "a05cb4b06e6ead5a62640a67e00ffcf1d969313f5f029ef5ddaf79e0ea8b5418"
+      },
       "albo_evidence_ids": []
     },
     {
@@ -3185,6 +4235,58 @@
       ],
       "verification_status": "official_municipal_project_page",
       "source_record_hash": "2df9be9a5d703c9ecae5093442b20c8d3b64e10d481c118d5eb44fde1691e87f",
+      "opencup": {
+        "source_url": "https://www.opencup.gov.it/portale/it/web/opencup/home/progetto/-/cup/C81B21003550001",
+        "cup": "C81B21003550001",
+        "title": "INTERVENTO DI RIQUALIFICAZIONE URBANA AREA CENTRO STORICO SAN PIETRO LAMETINO*VIA FRAZIONE SAN PIETRO LAMETINO*INTERVENTO DI RIGENERAZIONE URBANA DELLA FRAZIONE SAN PIETRO LAMETINA ATTRAVERSO IMPIANTI TECNOLOGICI (SMART CITY) PARCO RUBANO RISTRUTTURAZIONE DI EDIFICI PUBBLICI PER FINALITÀ SOCIALI",
+        "total_cost_eur": 6500000,
+        "public_funding_eur": 6500000,
+        "decision_year": 2021,
+        "cup_status": "ATTIVO",
+        "description": "INTERVENTO DI RIGENERAZIONE URBANA DELLA FRAZIONE SAN PIETRO LAMETINA ATTRAVERSO IMPIANTI TECNOLOGICI (SMART CITY) PARCO RUBANO RISTRUTTURAZIONE DI EDIFICI PUBBLICI PER FINALITÀ SOCIALI",
+        "infrastructure": "INTERVENTO DI RIQUALIFICAZIONE URBANA AREA CENTRO STORICO SAN PIETRO LAMETINO",
+        "beneficiary_tax_code": null,
+        "reference_address": "VIA FRAZIONE SAN PIETRO LAMETINO",
+        "location": {
+          "country": "ITALIA",
+          "macro_area": "SUD",
+          "region": "CALABRIA",
+          "province": "CATANZARO",
+          "municipality": "LAMEZIA TERME"
+        },
+        "holder": {
+          "name": "COMUNE DI LAMEZIA TERME - CZ -",
+          "tax_code": "00301390795",
+          "area": "AMMINISTRAZIONI LOCALI",
+          "category": "ENTI TERRITORIALI E DI AMMINISTRAZIONE DEL TERRITORIO",
+          "subcategory": "AMMINISTRAZIONI COMUNALI"
+        },
+        "classification": {
+          "nature": "LAVORI PUBBLICI",
+          "typology": "NUOVA REALIZZAZIONE",
+          "intervention_area": "IMMOBILI",
+          "sector": "INFRASTRUTTURE SOCIALI",
+          "subsector": "ALTRE INFRASTRUTTURE SOCIALI",
+          "category": "ALTRE INFRASTRUTTURE"
+        },
+        "generated_at": "2021-04-12",
+        "unique_infrastructure": true,
+        "programming_instrument": "ALTRO-PROGRAMMA INNOVATIVO NAZIONALE PER LA QUALITÀ DELL'ABITARE",
+        "master_cup": null,
+        "linked_cups_count": 0,
+        "financial": {
+          "concession_or_finance_acts": false,
+          "sponsorships": "NON PREVISTE",
+          "coverage": "STATALE"
+        },
+        "cipess": {
+          "resolution_number": null,
+          "resolution_year": null,
+          "strategic_infrastructure_law": false
+        },
+        "verification_status": "official_opencup_project_page",
+        "source_record_hash": "a598572b601547e1406213d34127ea7b0bf5f5d3b41b70a5633a08e58e50b77e"
+      },
       "albo_evidence_ids": []
     },
     {
@@ -3292,6 +4394,58 @@
       ],
       "verification_status": "official_municipal_project_page",
       "source_record_hash": "e0708e92328bffb9669ff528d33c481057ae70857dfd4961a23ce154dfaec87b",
+      "opencup": {
+        "source_url": "https://www.opencup.gov.it/portale/it/web/opencup/home/progetto/-/cup/C81B21003520001",
+        "cup": "C81B21003520001",
+        "title": "PIÙ SERVIZI AL TERRITORIO*VIA EX COMUNE DI SAMBIASE*RISTRUTTURAZIONI E RIQUALIFICAZIONE DI SPAZI URBANI SOCIALI (MERCATO, PARCO URBANO, AREE SPORTIVE E VERDE)CON PERCORSI STORICO CULTURALI",
+        "total_cost_eur": 8645133,
+        "public_funding_eur": 8645133,
+        "decision_year": 2021,
+        "cup_status": "ATTIVO",
+        "description": "RISTRUTTURAZIONI E RIQUALIFICAZIONE DI SPAZI URBANI SOCIALI (MERCATO, PARCO URBANO, AREE SPORTIVE E VERDE)CON PERCORSI STORICO CULTURALI",
+        "infrastructure": "PIÙ SERVIZI AL TERRITORIO",
+        "beneficiary_tax_code": null,
+        "reference_address": "VIA EX COMUNE DI SAMBIASE",
+        "location": {
+          "country": "ITALIA",
+          "macro_area": "SUD",
+          "region": "CALABRIA",
+          "province": "CATANZARO",
+          "municipality": "LAMEZIA TERME"
+        },
+        "holder": {
+          "name": "COMUNE DI LAMEZIA TERME - CZ -",
+          "tax_code": "00301390795",
+          "area": "AMMINISTRAZIONI LOCALI",
+          "category": "ENTI TERRITORIALI E DI AMMINISTRAZIONE DEL TERRITORIO",
+          "subcategory": "AMMINISTRAZIONI COMUNALI"
+        },
+        "classification": {
+          "nature": "LAVORI PUBBLICI",
+          "typology": "NUOVA REALIZZAZIONE",
+          "intervention_area": "IMMOBILI",
+          "sector": "INFRASTRUTTURE SOCIALI",
+          "subsector": "SPORT, SPETTACOLO E TEMPO LIBERO",
+          "category": "ALTRE STRUTTURE RICREATIVE"
+        },
+        "generated_at": "2021-04-12",
+        "unique_infrastructure": true,
+        "programming_instrument": "ALTRO-PROGRAMMA INNOVATIVO NAZIONALE PER LA QUALITÀ DELL'ABITARE",
+        "master_cup": null,
+        "linked_cups_count": 0,
+        "financial": {
+          "concession_or_finance_acts": false,
+          "sponsorships": "NON PREVISTE",
+          "coverage": "STATALE"
+        },
+        "cipess": {
+          "resolution_number": null,
+          "resolution_year": null,
+          "strategic_infrastructure_law": false
+        },
+        "verification_status": "official_opencup_project_page",
+        "source_record_hash": "e638b43a4a939f9bedbb8b39d07691c06e0c88330880a8ba92f4394df24ea869"
+      },
       "albo_evidence_ids": [
         "albo-2026-2731"
       ]
@@ -3341,6 +4495,58 @@
       ],
       "verification_status": "official_municipal_project_page",
       "source_record_hash": "96e1a8a63e8bd22719a9297aeae459e0c2af90f30f303b798f2b6e27c389051a",
+      "opencup": {
+        "source_url": "https://www.opencup.gov.it/portale/it/web/opencup/home/progetto/-/cup/C81B21003480001",
+        "cup": "C81B21003480001",
+        "title": "SAN TEODORO SCALE MOBILI LOTTO 7*VIA RIONE SAN TEODORO*REALIZZAZIONE DI SCALE MOBILI NECESSARIE A FAVORIRE UNA MOBILITÀ SOSTENIBILE",
+        "total_cost_eur": 4216662,
+        "public_funding_eur": 4216662,
+        "decision_year": 2021,
+        "cup_status": "ATTIVO",
+        "description": "REALIZZAZIONE DI SCALE MOBILI NECESSARIE A FAVORIRE UNA MOBILITÀ SOSTENIBILE",
+        "infrastructure": "SAN TEODORO SCALE MOBILI LOTTO 7",
+        "beneficiary_tax_code": null,
+        "reference_address": "VIA RIONE SAN TEODORO",
+        "location": {
+          "country": "ITALIA",
+          "macro_area": "SUD",
+          "region": "CALABRIA",
+          "province": "CATANZARO",
+          "municipality": "LAMEZIA TERME"
+        },
+        "holder": {
+          "name": "COMUNE DI LAMEZIA TERME - CZ -",
+          "tax_code": "00301390795",
+          "area": "AMMINISTRAZIONI LOCALI",
+          "category": "ENTI TERRITORIALI E DI AMMINISTRAZIONE DEL TERRITORIO",
+          "subcategory": "AMMINISTRAZIONI COMUNALI"
+        },
+        "classification": {
+          "nature": "LAVORI PUBBLICI",
+          "typology": "NUOVA REALIZZAZIONE",
+          "intervention_area": "IMMOBILI",
+          "sector": "INFRASTRUTTURE SOCIALI",
+          "subsector": "ALTRE INFRASTRUTTURE SOCIALI",
+          "category": "ALTRE INFRASTRUTTURE"
+        },
+        "generated_at": "2021-04-12",
+        "unique_infrastructure": true,
+        "programming_instrument": "ALTRO-PROGRAMMA INNOVATIVO NAZIONALE PER LA QUALITÀ DELL'ABITARE",
+        "master_cup": null,
+        "linked_cups_count": 0,
+        "financial": {
+          "concession_or_finance_acts": false,
+          "sponsorships": "NON PREVISTE",
+          "coverage": "STATALE"
+        },
+        "cipess": {
+          "resolution_number": null,
+          "resolution_year": null,
+          "strategic_infrastructure_law": false
+        },
+        "verification_status": "official_opencup_project_page",
+        "source_record_hash": "740b217b648329d56ec2785a988579756df6317add3a6f00a402f1db89442706"
+      },
       "albo_evidence_ids": []
     },
     {
@@ -3388,6 +4594,58 @@
       ],
       "verification_status": "official_municipal_project_page",
       "source_record_hash": "2c1ca4e7366fc5aea1986b9fddd471fd04d9b750112f7049f054a917beb4d25d",
+      "opencup": {
+        "source_url": "https://www.opencup.gov.it/portale/it/web/opencup/home/progetto/-/cup/C81B21003470001",
+        "cup": "C81B21003470001",
+        "title": "SAN TEODORO STRADA ESTERNA E PARCHEGGI LOTTO 6*VIA RIONE SAN TEODORO*REALIZZAZIONE DI STRADA ESTERNA AI RIONI DI SAN TEODOO E TIMPONE AL FINE DI CONSENTIRE L'ACCESSO AI MEZZI DI SOCCORSO ALTRIMENTI NON POSSIBILE OLTRE CHE UNA MAGGIORE POSSIBILITÀ DI ACCESSO AI RIONI STESSI",
+        "total_cost_eur": 3081635,
+        "public_funding_eur": 3081635,
+        "decision_year": 2021,
+        "cup_status": "ATTIVO",
+        "description": "REALIZZAZIONE DI STRADA ESTERNA AI RIONI DI SAN TEODOO E TIMPONE AL FINE DI CONSENTIRE L'ACCESSO AI MEZZI DI SOCCORSO ALTRIMENTI NON POSSIBILE OLTRE CHE UNA MAGGIORE POSSIBILITÀ DI ACCESSO AI RIONI STESSI",
+        "infrastructure": "SAN TEODORO STRADA ESTERNA E PARCHEGGI LOTTO 6",
+        "beneficiary_tax_code": null,
+        "reference_address": "VIA RIONE SAN TEODORO",
+        "location": {
+          "country": "ITALIA",
+          "macro_area": "SUD",
+          "region": "CALABRIA",
+          "province": "CATANZARO",
+          "municipality": "LAMEZIA TERME"
+        },
+        "holder": {
+          "name": "COMUNE DI LAMEZIA TERME - CZ -",
+          "tax_code": "00301390795",
+          "area": "AMMINISTRAZIONI LOCALI",
+          "category": "ENTI TERRITORIALI E DI AMMINISTRAZIONE DEL TERRITORIO",
+          "subcategory": "AMMINISTRAZIONI COMUNALI"
+        },
+        "classification": {
+          "nature": "LAVORI PUBBLICI",
+          "typology": "NUOVA REALIZZAZIONE",
+          "intervention_area": "TRASPORTI",
+          "sector": "INFRASTRUTTURE DI TRASPORTO",
+          "subsector": "STRADALI",
+          "category": "STRADE REGIONALI, PROVINCIALI E COMUNALI"
+        },
+        "generated_at": "2021-04-12",
+        "unique_infrastructure": true,
+        "programming_instrument": "ALTRO-PROGRAMMA INNOVATIVO NAZIONALE PER LA QUALITÀ DELL'ABITARE",
+        "master_cup": null,
+        "linked_cups_count": 0,
+        "financial": {
+          "concession_or_finance_acts": false,
+          "sponsorships": "NON PREVISTE",
+          "coverage": "STATALE"
+        },
+        "cipess": {
+          "resolution_number": null,
+          "resolution_year": null,
+          "strategic_infrastructure_law": false
+        },
+        "verification_status": "official_opencup_project_page",
+        "source_record_hash": "d3293b1fe7e88a5c5a6eb67bb7d8e5194c113e44a36d0599ace5c697d8ad68aa"
+      },
       "albo_evidence_ids": []
     },
     {
@@ -3483,6 +4741,58 @@
       ],
       "verification_status": "official_municipal_project_page",
       "source_record_hash": "dc7b9062e97ab77f2fc0201b93b7489fa8066a06e3e23ba57b8a45d67ec7c9d8",
+      "opencup": {
+        "source_url": "https://www.opencup.gov.it/portale/it/web/opencup/home/progetto/-/cup/C84E21000290001",
+        "cup": "C84E21000290001",
+        "title": "SAN TEODORO RICEZIONE TURISTICA LOTTO 1*VIA RIONE SAN TEODORO*RECUPERO E VALORIZZAZIONE EDILIZIA PRIVATA URBANA A SCOPO ACCOGLIENZA TURISTICA",
+        "total_cost_eur": 4421317,
+        "public_funding_eur": 4421317,
+        "decision_year": 2021,
+        "cup_status": "ATTIVO",
+        "description": "RECUPERO E VALORIZZAZIONE EDILIZIA PRIVATA URBANA A SCOPO ACCOGLIENZA TURISTICA",
+        "infrastructure": "SAN TEODORO RICEZIONE TURISTICA LOTTO 1",
+        "beneficiary_tax_code": null,
+        "reference_address": "VIA RIONE SAN TEODORO",
+        "location": {
+          "country": "ITALIA",
+          "macro_area": "SUD",
+          "region": "CALABRIA",
+          "province": "CATANZARO",
+          "municipality": "LAMEZIA TERME"
+        },
+        "holder": {
+          "name": "COMUNE DI LAMEZIA TERME - CZ -",
+          "tax_code": "00301390795",
+          "area": "AMMINISTRAZIONI LOCALI",
+          "category": "ENTI TERRITORIALI E DI AMMINISTRAZIONE DEL TERRITORIO",
+          "subcategory": "AMMINISTRAZIONI COMUNALI"
+        },
+        "classification": {
+          "nature": "LAVORI PUBBLICI",
+          "typology": "RISTRUTTURAZIONE (PER CAMBIO DI DESTINAZIONE D'USO)",
+          "intervention_area": "IMMOBILI",
+          "sector": "INFRASTRUTTURE SOCIALI",
+          "subsector": "ABITATIVE",
+          "category": "ALTRI EDIFICI ABITATIVI"
+        },
+        "generated_at": "2021-04-12",
+        "unique_infrastructure": true,
+        "programming_instrument": "ALTRO-PROGRAMMA INNOVATIVO NAZIONALE PER LA QUALITÀ DELL'ABITARE,",
+        "master_cup": null,
+        "linked_cups_count": 0,
+        "financial": {
+          "concession_or_finance_acts": false,
+          "sponsorships": "NON PREVISTE",
+          "coverage": "STATALE"
+        },
+        "cipess": {
+          "resolution_number": null,
+          "resolution_year": null,
+          "strategic_infrastructure_law": false
+        },
+        "verification_status": "official_opencup_project_page",
+        "source_record_hash": "af4af4d19d8f43c6a0d0b2c646f42fb7bb3ce5cf17c73d3f4334b6c759756eb7"
+      },
       "albo_evidence_ids": [
         "albo-2026-2732",
         "albo-2026-2733"
@@ -3557,6 +4867,58 @@
       ],
       "verification_status": "official_municipal_project_page",
       "source_record_hash": "4b79cd532eaaffec92880a156e117c6f592cc4b501b7069d25d60b5efa0479c0",
+      "opencup": {
+        "source_url": "https://www.opencup.gov.it/portale/it/web/opencup/home/progetto/-/cup/C87H21000520001",
+        "cup": "C87H21000520001",
+        "title": "SAN TEODORO ALLOGGI FASCE SOCIALI DEBOLI LOTTO 2*VIA RIONE SAN TEODORO*RECUPERO E VALORIZZAZIONE EDILIZIA PRIVATA URBANA A SCOPO SOCIALE (ALLOGGI PER FASCE DEBOLI)",
+        "total_cost_eur": 5739815,
+        "public_funding_eur": 5739815,
+        "decision_year": 2021,
+        "cup_status": "ATTIVO",
+        "description": "RECUPERO E VALORIZZAZIONE EDILIZIA PRIVATA URBANA A SCOPO SOCIALE (ALLOGGI PER FASCE DEBOLI)",
+        "infrastructure": "SAN TEODORO ALLOGGI FASCE SOCIALI DEBOLI LOTTO 2",
+        "beneficiary_tax_code": null,
+        "reference_address": "VIA RIONE SAN TEODORO",
+        "location": {
+          "country": "ITALIA",
+          "macro_area": "SUD",
+          "region": "CALABRIA",
+          "province": "CATANZARO",
+          "municipality": "LAMEZIA TERME"
+        },
+        "holder": {
+          "name": "COMUNE DI LAMEZIA TERME - CZ -",
+          "tax_code": "00301390795",
+          "area": "AMMINISTRAZIONI LOCALI",
+          "category": "ENTI TERRITORIALI E DI AMMINISTRAZIONE DEL TERRITORIO",
+          "subcategory": "AMMINISTRAZIONI COMUNALI"
+        },
+        "classification": {
+          "nature": "LAVORI PUBBLICI",
+          "typology": "MANUTENZIONE STRAORDINARIA",
+          "intervention_area": "IMMOBILI",
+          "sector": "INFRASTRUTTURE SOCIALI",
+          "subsector": "ABITATIVE",
+          "category": "FABBRICATI RESIDENZIALI URBANI"
+        },
+        "generated_at": "2021-04-12",
+        "unique_infrastructure": true,
+        "programming_instrument": "ALTRO-PROGRAMMA INNOVATIVO NAZIONALE PER LA QUALITÀ DELL'ABITARE,",
+        "master_cup": null,
+        "linked_cups_count": 0,
+        "financial": {
+          "concession_or_finance_acts": false,
+          "sponsorships": "NON PREVISTE",
+          "coverage": "STATALE"
+        },
+        "cipess": {
+          "resolution_number": null,
+          "resolution_year": null,
+          "strategic_infrastructure_law": false
+        },
+        "verification_status": "official_opencup_project_page",
+        "source_record_hash": "ecedf60c408e823e290413a5eadc3ca31a0401235cb0caa6bc33a809bb3e2a89"
+      },
       "albo_evidence_ids": []
     },
     {
@@ -3640,6 +5002,58 @@
       ],
       "verification_status": "official_municipal_project_page",
       "source_record_hash": "29fdd1a83e223c8f5764640f7e2fc02ada0d9f1a31e26cbd2f56d3be3a1c6e0b",
+      "opencup": {
+        "source_url": "https://www.opencup.gov.it/portale/it/web/opencup/home/progetto/-/cup/C81B21003460001",
+        "cup": "C81B21003460001",
+        "title": "SAN TEODORO VIABILITÀ INTERNA A RIONE LOTTO 5*VIA RIONE SAN TEODORO*RIQUALIFICAZIONE DELLA VIABILITÀ URBNA AL FINE DI FAVORIRE LA MOBILITÀ E L'ACCESSIBILITÀ (PARCHEGGI, INFO-TRASPORTO, ETC.)",
+        "total_cost_eur": 4290387,
+        "public_funding_eur": 4290387,
+        "decision_year": 2021,
+        "cup_status": "ATTIVO",
+        "description": "RIQUALIFICAZIONE DELLA VIABILITÀ URBNA AL FINE DI FAVORIRE LA MOBILITÀ E L'ACCESSIBILITÀ (PARCHEGGI, INFO-TRASPORTO, ETC.)",
+        "infrastructure": "SAN TEODORO VIABILITÀ INTERNA A RIONE LOTTO 5",
+        "beneficiary_tax_code": null,
+        "reference_address": "VIA RIONE SAN TEODORO",
+        "location": {
+          "country": "ITALIA",
+          "macro_area": "SUD",
+          "region": "CALABRIA",
+          "province": "CATANZARO",
+          "municipality": "LAMEZIA TERME"
+        },
+        "holder": {
+          "name": "COMUNE DI LAMEZIA TERME - CZ -",
+          "tax_code": "00301390795",
+          "area": "AMMINISTRAZIONI LOCALI",
+          "category": "ENTI TERRITORIALI E DI AMMINISTRAZIONE DEL TERRITORIO",
+          "subcategory": "AMMINISTRAZIONI COMUNALI"
+        },
+        "classification": {
+          "nature": "LAVORI PUBBLICI",
+          "typology": "NUOVA REALIZZAZIONE",
+          "intervention_area": "TRASPORTI",
+          "sector": "INFRASTRUTTURE DI TRASPORTO",
+          "subsector": "STRADALI",
+          "category": "STRADE REGIONALI, PROVINCIALI E COMUNALI"
+        },
+        "generated_at": "2021-04-12",
+        "unique_infrastructure": true,
+        "programming_instrument": "ALTRO-PROGRAMMA INNOVATIVO NAZIONALE PER LA QUALITÀ DELL'ABITARE,",
+        "master_cup": null,
+        "linked_cups_count": 0,
+        "financial": {
+          "concession_or_finance_acts": false,
+          "sponsorships": "NON PREVISTE",
+          "coverage": "STATALE"
+        },
+        "cipess": {
+          "resolution_number": null,
+          "resolution_year": null,
+          "strategic_infrastructure_law": false
+        },
+        "verification_status": "official_opencup_project_page",
+        "source_record_hash": "ca1445787722fd1921a2538cbe2a676185d37923f86d12c90b602b3d369c754c"
+      },
       "albo_evidence_ids": [
         "albo-2026-2729"
       ]
@@ -3701,6 +5115,58 @@
       ],
       "verification_status": "official_municipal_project_page",
       "source_record_hash": "8d6fc5ef51dfbd423df4c9860ae93be9d437ae39c198cd0f1fb008da71630f0d",
+      "opencup": {
+        "source_url": "https://www.opencup.gov.it/portale/it/web/opencup/home/progetto/-/cup/C81B21003450001",
+        "cup": "C81B21003450001",
+        "title": "SAN TEODORO VERDE NATURALE E ATTREZZATO LOTTO 4*VIA RIONE SAN TEODORO*RIQUALIFICAZIONE DI AREE PUBBLICHE-PRIVATE A SCOPO SCOCIALE ATTAVERSO LA REALIZZAZIONE DI UN PARCO URBANO ATTREZZATO",
+        "total_cost_eur": null,
+        "public_funding_eur": null,
+        "decision_year": 2021,
+        "cup_status": "ATTIVO",
+        "description": "RIQUALIFICAZIONE DI AREE PUBBLICHE-PRIVATE A SCOPO SCOCIALE ATTAVERSO LA REALIZZAZIONE DI UN PARCO URBANO ATTREZZATO",
+        "infrastructure": "SAN TEODORO VERDE NATURALE E ATTREZZATO LOTTO 4",
+        "beneficiary_tax_code": null,
+        "reference_address": "VIA RIONE SAN TEODORO",
+        "location": {
+          "country": "ITALIA",
+          "macro_area": "SUD",
+          "region": "CALABRIA",
+          "province": "CATANZARO",
+          "municipality": "LAMEZIA TERME"
+        },
+        "holder": {
+          "name": "COMUNE DI LAMEZIA TERME - CZ -",
+          "tax_code": "00301390795",
+          "area": "AMMINISTRAZIONI LOCALI",
+          "category": "ENTI TERRITORIALI E DI AMMINISTRAZIONE DEL TERRITORIO",
+          "subcategory": "AMMINISTRAZIONI COMUNALI"
+        },
+        "classification": {
+          "nature": "LAVORI PUBBLICI",
+          "typology": "NUOVA REALIZZAZIONE",
+          "intervention_area": "AMBIENTE ED ENERGIA",
+          "sector": "INFRASTRUTTURE AMBIENTALI E RISORSE IDRICHE",
+          "subsector": "PROTEZIONE, VALORIZZAZIONE E FRUIZIONE DELL'AMBIENTE",
+          "category": "INFRASTRUTTURE VERDI"
+        },
+        "generated_at": "2021-04-12",
+        "unique_infrastructure": true,
+        "programming_instrument": "ALTRO-PROGRAMMA INNOVATIVO NAZIONALE PER LA QUALITÀ DELL'ABITARE",
+        "master_cup": null,
+        "linked_cups_count": 0,
+        "financial": {
+          "concession_or_finance_acts": false,
+          "sponsorships": "NON PREVISTE",
+          "coverage": "STATALE"
+        },
+        "cipess": {
+          "resolution_number": null,
+          "resolution_year": null,
+          "strategic_infrastructure_law": false
+        },
+        "verification_status": "official_opencup_project_page",
+        "source_record_hash": "3ef4b892b2ce88527e1863a967df94a8bed6f116c7d357c64af34e7060eab9d2"
+      },
       "albo_evidence_ids": []
     },
     {
@@ -3880,6 +5346,58 @@
       ],
       "verification_status": "official_municipal_project_page",
       "source_record_hash": "7ef66d279277759d7abc8f2a569e67fad705db5d772e5f63345eb4c4af510740",
+      "opencup": {
+        "source_url": "https://www.opencup.gov.it/portale/it/web/opencup/home/progetto/-/cup/C81B21003510001",
+        "cup": "C81B21003510001",
+        "title": "RIQUALIFICAZIONE QUARTIERE ANZARO*VIA EX COMUNE DI SAMBIASE*REALIZZAZIONE DI INFRASTRUTTURE SOCIALI (CASA PROTETTA PER DISABILI), RICREATIVE, SPORTIVE E VERDE",
+        "total_cost_eur": 5698166,
+        "public_funding_eur": 5698166,
+        "decision_year": 2021,
+        "cup_status": "ATTIVO",
+        "description": "REALIZZAZIONE DI INFRASTRUTTURE SOCIALI (CASA PROTETTA PER DISABILI), RICREATIVE, SPORTIVE E VERDE",
+        "infrastructure": "RIQUALIFICAZIONE QUARTIERE ANZARO",
+        "beneficiary_tax_code": null,
+        "reference_address": "VIA EX COMUNE DI SAMBIASE",
+        "location": {
+          "country": "ITALIA",
+          "macro_area": "SUD",
+          "region": "CALABRIA",
+          "province": "CATANZARO",
+          "municipality": "LAMEZIA TERME"
+        },
+        "holder": {
+          "name": "COMUNE DI LAMEZIA TERME - CZ -",
+          "tax_code": "00301390795",
+          "area": "AMMINISTRAZIONI LOCALI",
+          "category": "ENTI TERRITORIALI E DI AMMINISTRAZIONE DEL TERRITORIO",
+          "subcategory": "AMMINISTRAZIONI COMUNALI"
+        },
+        "classification": {
+          "nature": "LAVORI PUBBLICI",
+          "typology": "NUOVA REALIZZAZIONE",
+          "intervention_area": "IMMOBILI",
+          "sector": "INFRASTRUTTURE SOCIALI",
+          "subsector": "SOCIALI E SCOLASTICHE",
+          "category": "ALTRE STRUTTURE SOCIALI"
+        },
+        "generated_at": "2021-04-12",
+        "unique_infrastructure": true,
+        "programming_instrument": "ALTRO-PROGRAMMA INNOVATIVO NAZIONALE PER LA QUALITÀ DELL'ABITARE",
+        "master_cup": null,
+        "linked_cups_count": 0,
+        "financial": {
+          "concession_or_finance_acts": false,
+          "sponsorships": "NON PREVISTE",
+          "coverage": "STATALE"
+        },
+        "cipess": {
+          "resolution_number": null,
+          "resolution_year": null,
+          "strategic_infrastructure_law": false
+        },
+        "verification_status": "official_opencup_project_page",
+        "source_record_hash": "15df3b0effddab8a48aad25a49bf60b3796c9f80883647873be4147da8987f07"
+      },
       "albo_evidence_ids": [
         "albo-2026-2723"
       ]
@@ -4121,6 +5639,58 @@
       ],
       "verification_status": "official_municipal_project_page",
       "source_record_hash": "0f4bda1071ac02d79e6fba8c2313890d74a939ec6e93481aa242a09932722303",
+      "opencup": {
+        "source_url": "https://www.opencup.gov.it/portale/it/web/opencup/home/progetto/-/cup/C83I22000170006",
+        "cup": "C83I22000170006",
+        "title": "RISTRUTTURAZIONE EDILIZIA, RIGENERAZIONE COMPRENDENTE MANUTENZIONE STRAORDINARIA E ORDINARIA PRESSO LO STADIO ROCCO RIGA DI LAMEZIA TERME.*VIA BOCCIONI SNC -88046 LAMEZIA TERME*INTERVENTO DI RISTRUTTURAZIONE EDILIZIA PREVEDENDO DEMOLIZIONE E RICOSTRUZIONE DELLA TRIBUNA E SOTTOSTANTI LOCALI SPOGLIOTAIO LATO OVEST. MANUTENZIONE STRAORDINARIA DELLA TRIBUNA LATO EST E DEL LOCALE TECNICO POSTO A SUD.EFFICIENTAMENTO ENERGETICO.",
+        "total_cost_eur": 1000000,
+        "public_funding_eur": 1000000,
+        "decision_year": 2022,
+        "cup_status": "ATTIVO",
+        "description": "INTERVENTO DI RISTRUTTURAZIONE EDILIZIA PREVEDENDO DEMOLIZIONE E RICOSTRUZIONE DELLA TRIBUNA E SOTTOSTANTI LOCALI SPOGLIOTAIO LATO OVEST. MANUTENZIONE STRAORDINARIA DELLA TRIBUNA LATO EST E DEL LOCALE TECNICO POSTO A SUD.EFFICIENTAMENTO ENERGETICO.",
+        "infrastructure": "RISTRUTTURAZIONE EDILIZIA, RIGENERAZIONE COMPRENDENTE MANUTENZIONE STRAORDINARIA E ORDINARIA PRESSO LO STADIO ROCCO RIGA DI LAMEZIA TERME.",
+        "beneficiary_tax_code": null,
+        "reference_address": "VIA BOCCIONI SNC -88046 LAMEZIA TERME",
+        "location": {
+          "country": "ITALIA",
+          "macro_area": "SUD",
+          "region": "CALABRIA",
+          "province": "CATANZARO",
+          "municipality": "LAMEZIA TERME"
+        },
+        "holder": {
+          "name": "COMUNE DI LAMEZIA TERME - CZ -",
+          "tax_code": "00301390795",
+          "area": "AMMINISTRAZIONI LOCALI",
+          "category": "ENTI TERRITORIALI E DI AMMINISTRAZIONE DEL TERRITORIO",
+          "subcategory": "AMMINISTRAZIONI COMUNALI"
+        },
+        "classification": {
+          "nature": "LAVORI PUBBLICI",
+          "typology": "RISTRUTTURAZIONE CON EFFICIENTAMENTO ENERGETICO",
+          "intervention_area": "IMMOBILI",
+          "sector": "INFRASTRUTTURE SOCIALI",
+          "subsector": "SPORT, SPETTACOLO E TEMPO LIBERO",
+          "category": "IMPIANTI SPORTIVI"
+        },
+        "generated_at": "2022-06-20",
+        "unique_infrastructure": false,
+        "programming_instrument": "ALTRO-INTERVENTI FINALIZZATI ALLEFFICIENTAMENTO DELLE STRUTTURE SPORTIVE ESISTENTI DA PARTE DEI CAPOLUOGHI DI REGIONE E DI PROVINCIA. CUP: J53I22000120006 - PRESIDENZA DEL CONSIGLIO DEI MINISTRI- UFFICIO PER LO SPORT",
+        "master_cup": null,
+        "linked_cups_count": 0,
+        "financial": {
+          "concession_or_finance_acts": false,
+          "sponsorships": "NON PREVISTE",
+          "coverage": "COMUNITARIA"
+        },
+        "cipess": {
+          "resolution_number": null,
+          "resolution_year": null,
+          "strategic_infrastructure_law": false
+        },
+        "verification_status": "official_opencup_project_page",
+        "source_record_hash": "cb0d80ca14e4eb74dc32ba1b04c6edbb2ee541bbc442dd494f4728a00861544d"
+      },
       "albo_evidence_ids": []
     }
   ],

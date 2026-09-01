@@ -36,7 +36,7 @@ describe("Lamezia PNRR static feed", () => {
   });
 
   it("maps the official municipal attachment archive with explicit provenance metadata", () => {
-    expect(LAMEZIA_PNRR_STATIC_DATA.schema_version).toBe(2);
+    expect(LAMEZIA_PNRR_STATIC_DATA.schema_version).toBe(3);
 
     const source = LAMEZIA_PNRR_STATIC_DATA.projects.find(
       (project) => project.attachments.length > 1,
@@ -57,6 +57,49 @@ describe("Lamezia PNRR static feed", () => {
           attachment.phaseDescription.length > 0,
       ),
     ).toBe(true);
+  });
+
+  it("reconciles every available OpenCUP record only by identical CUP", () => {
+    const enrichedProjects = LAMEZIA_PNRR_STATIC_DATA.projects.filter(
+      (project) => project.opencup,
+    );
+    const projectCups = LAMEZIA_PNRR_STATIC_DATA.projects.flatMap((project) =>
+      project.cup ? [project.cup] : [],
+    );
+
+    expect(enrichedProjects).toHaveLength(
+      LAMEZIA_PNRR_STATIC_DATA.coverage.projects_with_opencup,
+    );
+    expect(new Set(projectCups).size).toBe(projectCups.length);
+    expect(LAMEZIA_PNRR_STATIC_DATA.coverage.projects_without_opencup).toBe(
+      LAMEZIA_PNRR_STATIC_DATA.coverage.projects - enrichedProjects.length,
+    );
+    expect(
+      LAMEZIA_PNRR_STATIC_DATA.coverage.projects_with_opencup_total_cost,
+    ).toBe(
+      enrichedProjects.filter(
+        (project) => project.opencup?.total_cost_eur != null,
+      ).length,
+    );
+    expect(
+      LAMEZIA_PNRR_STATIC_DATA.coverage.projects_with_opencup_public_funding,
+    ).toBe(
+      enrichedProjects.filter(
+        (project) => project.opencup?.public_funding_eur != null,
+      ).length,
+    );
+
+    for (const source of enrichedProjects) {
+      const view = LAMEZIA_PNRR_STATIC_VIEW.projects.find(
+        (project) => project.sourceId === source.source_id,
+      );
+      expect(source.opencup?.cup).toBe(source.cup);
+      expect(source.opencup?.source_url).toBe(
+        `https://www.opencup.gov.it/portale/it/web/opencup/home/progetto/-/cup/${source.cup}`,
+      );
+      expect(view?.openCup).toEqual(source.opencup);
+      expect(view?.locationSourceUrl).toBe(source.opencup?.source_url);
+    }
   });
 
   it("enriches runtime rows only on an identical CUP and keeps static-only rows", () => {
@@ -80,6 +123,7 @@ describe("Lamezia PNRR static feed", () => {
       cup: matched.cup,
       dataOrigin: "hybrid",
       documentsCount: matched.documentsCount,
+      openCup: matched.openCup,
     });
     expect(result[1].key).toBe(staticOnly.key);
   });

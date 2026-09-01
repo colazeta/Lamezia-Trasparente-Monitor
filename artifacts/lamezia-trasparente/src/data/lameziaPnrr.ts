@@ -50,6 +50,7 @@ export interface PnrrViewDocument {
 export type PnrrViewProject = Omit<PnrrProject, "documents" | "attachments"> & {
   documents: PnrrViewDocument[];
   attachments: PnrrViewAttachment[];
+  openCup: LameziaPnrrOpenCupProject | null;
   dataOrigin: PnrrDataOrigin;
   freshnessAssessment: PnrrFreshnessAssessment;
   subAttuatore: string | null;
@@ -72,6 +73,59 @@ export interface LameziaPnrrAttachmentPhaseDefinition {
   id: PnrrAttachmentPhase;
   label: string;
   description: string;
+}
+
+export interface LameziaPnrrOpenCupProject {
+  source_url: string;
+  cup: string;
+  title: string;
+  total_cost_eur: number | null;
+  public_funding_eur: number | null;
+  decision_year: number | null;
+  cup_status: string | null;
+  description: string | null;
+  infrastructure: string | null;
+  beneficiary_tax_code: string | null;
+  reference_address: string | null;
+  location: {
+    country: string | null;
+    macro_area: string | null;
+    region: string | null;
+    province: string | null;
+    municipality: string | null;
+  };
+  holder: {
+    name: string | null;
+    tax_code: string | null;
+    area: string | null;
+    category: string | null;
+    subcategory: string | null;
+  };
+  classification: {
+    nature: string | null;
+    typology: string | null;
+    intervention_area: string | null;
+    sector: string | null;
+    subsector: string | null;
+    category: string | null;
+  };
+  generated_at: string | null;
+  unique_infrastructure: boolean | null;
+  programming_instrument: string | null;
+  master_cup: string | null;
+  linked_cups_count: number | null;
+  financial: {
+    concession_or_finance_acts: boolean | null;
+    sponsorships: string | null;
+    coverage: string | null;
+  };
+  cipess: {
+    resolution_number: string | null;
+    resolution_year: number | null;
+    strategic_infrastructure_law: boolean | null;
+  };
+  verification_status: "official_opencup_project_page";
+  source_record_hash: string;
 }
 
 export interface LameziaPnrrAlboEvidence {
@@ -121,6 +175,7 @@ export interface LameziaPnrrStaticProject {
   end_date: string | null;
   published_at: string | null;
   attachments: LameziaPnrrAttachment[];
+  opencup: LameziaPnrrOpenCupProject | null;
   verification_status: string;
   source_record_hash: string;
   albo_evidence_ids: string[];
@@ -135,11 +190,17 @@ export interface LameziaPnrrStaticDataset {
     source_type: string;
     materialized_at: string;
     source_index_hash: string;
+    opencup_source: string;
+    opencup_source_url: string;
+    opencup_source_type: string;
+    opencup_source_hash: string;
     albo_snapshot_generated_at: string | null;
     update_policy: string;
+    opencup_update_policy: string;
     reconciliation_rule: string;
     coverage_note: string;
     caveat: string;
+    opencup_caveat: string;
     licence_or_terms_note: string;
   };
   attachment_taxonomy: {
@@ -153,6 +214,10 @@ export interface LameziaPnrrStaticDataset {
     projects: number;
     projects_with_cup: number;
     projects_with_amount: number;
+    projects_with_opencup: number;
+    projects_without_opencup: number;
+    projects_with_opencup_total_cost: number;
+    projects_with_opencup_public_funding: number;
     projects_with_albo_evidence: number;
     municipal_attachments: number;
     municipal_attachments_classified: number;
@@ -201,13 +266,20 @@ export function buildStaticPnrrViewData(
     const lastPublication = latestDate(
       documents.map((document) => document.pubStart ?? null),
     );
+    const openCupLocation =
+      project.opencup?.reference_address ??
+      project.opencup?.location.municipality ??
+      null;
 
     return {
       id: Number(project.source_id),
       key: `comune-pnrr-${project.source_id}`,
       sourceId: project.source_id,
       projectSourceUrl: project.source_url,
-      locationSourceUrl: dataset.metadata.source_url,
+      locationSourceUrl:
+        openCupLocation && project.opencup
+          ? project.opencup.source_url
+          : dataset.metadata.source_url,
       importSourceLabel: dataset.metadata.source,
       importSourceUrl: dataset.metadata.source_url,
       importSourceStatus: "ok",
@@ -228,10 +300,13 @@ export function buildStaticPnrrViewData(
       endDate: project.end_date,
       publishedAt: project.published_at,
       lastUpdatedAt: null,
-      location: "Lamezia Terme",
-      locationQuality: "dedotta" as const,
-      locationNote:
-        "Il perimetro deriva dalla sezione PNRR del Comune; la scheda non espone necessariamente l'ubicazione puntuale dell'intervento.",
+      location: openCupLocation ?? "Lamezia Terme",
+      locationQuality: openCupLocation
+        ? ("ufficiale" as const)
+        : ("dedotta" as const),
+      locationNote: openCupLocation
+        ? "Localizzazione dichiarata nel corredo informativo OpenCUP; non equivale a una geocodifica verificata del cantiere."
+        : "Il perimetro deriva dalla sezione PNRR del Comune; la scheda non espone necessariamente l'ubicazione puntuale dell'intervento.",
       trasparenzaCompleta: true,
       aggiornamentoVecchio: false,
       attachments: project.attachments.map((attachment) => {
@@ -252,6 +327,7 @@ export function buildStaticPnrrViewData(
           classificationBasis: attachment.classification_basis,
         } satisfies PnrrViewAttachment;
       }),
+      openCup: project.opencup,
       documentsCount: documents.length,
       lastPublication,
       documents,
@@ -280,6 +356,7 @@ export function adaptRuntimePnrrProjects(value: unknown): PnrrViewProject[] {
     attachments: project.attachments.map((attachment, index) =>
       toRuntimeAttachment(attachment, index),
     ),
+    openCup: null,
     dataOrigin: "runtime-api",
     freshnessAssessment: project.lastUpdatedAt
       ? project.aggiornamentoVecchio
@@ -320,6 +397,15 @@ export function mergePnrrViewProjects(
     return {
       ...runtimeProject,
       url: runtimeProject.url ?? staticProject.url,
+      location: runtimeProject.location ?? staticProject.location,
+      locationQuality: runtimeProject.location
+        ? runtimeProject.locationQuality
+        : staticProject.locationQuality,
+      locationSourceUrl:
+        runtimeProject.locationSourceUrl ?? staticProject.locationSourceUrl,
+      locationNote: runtimeProject.location
+        ? runtimeProject.locationNote
+        : staticProject.locationNote,
       title: runtimeProject.title.trim()
         ? runtimeProject.title
         : staticProject.title,
@@ -343,6 +429,7 @@ export function mergePnrrViewProjects(
       endDate: runtimeProject.endDate ?? staticProject.endDate,
       publishedAt: runtimeProject.publishedAt ?? staticProject.publishedAt,
       trasparenzaCompleta: true,
+      openCup: staticProject.openCup,
       attachments: mergeAttachments(
         runtimeProject.attachments,
         staticProject.attachments,

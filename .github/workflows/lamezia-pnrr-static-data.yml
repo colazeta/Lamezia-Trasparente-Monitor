@@ -30,7 +30,7 @@ concurrency:
 
 jobs:
   refresh-pnrr-feed:
-    name: Validate and refresh municipal PNRR feed
+    name: Validate and refresh municipal/OpenCUP PNRR feed
     runs-on: ubuntu-latest
     timeout-minutes: 20
 
@@ -55,7 +55,7 @@ jobs:
           node --test scripts/pnrr/lameziaPnrrCore.test.mjs
           node scripts/check-lamezia-pnrr-static-data.mjs
 
-      - name: Materialize official municipal project pages
+      - name: Materialize official municipal and OpenCUP project pages
         if: github.event_name != 'pull_request'
         run: node scripts/build-lamezia-pnrr-static-data.mjs
 

@@ -139,6 +139,9 @@ function sourceLabelForUrl(url: string | null | undefined, fallback: string) {
   if (url.includes("comune.lamezia-terme.cz.it/it/attuazione-misure-pnrr")) {
     return "Comune di Lamezia Terme — Attuazione Misure PNRR";
   }
+  if (url.includes("opencup.gov.it/")) {
+    return "OpenCUP — Sistema CUP";
+  }
   return url.includes("openpnrr.it")
     ? "OpenPNRR — progetti/localizzazioni per Comune"
     : fallback;
@@ -146,7 +149,9 @@ function sourceLabelForUrl(url: string | null | undefined, fallback: string) {
 
 function dataStatus(project: PnrrViewProject) {
   if (project.dataOrigin === "static-municipal")
-    return "ufficiale (scheda Comune acquisita)";
+    return project.openCup
+      ? "ufficiale (Comune + OpenCUP)"
+      : "ufficiale (scheda Comune acquisita)";
   if (project.aggiornamentoVecchio)
     return "da verificare sulla fonte ufficiale";
   if (
@@ -289,6 +294,15 @@ export function Pnrr() {
           project.intervention,
           project.holder,
           project.attuatore,
+          project.openCup?.title,
+          project.openCup?.description,
+          project.openCup?.infrastructure,
+          project.openCup?.reference_address,
+          project.openCup?.classification.nature,
+          project.openCup?.classification.typology,
+          project.openCup?.classification.sector,
+          project.openCup?.classification.subsector,
+          project.openCup?.classification.category,
           ...project.attachments.map((attachment) => attachment.title),
           ...project.documents.map((document) => document.oggetto),
         ]
@@ -354,9 +368,9 @@ export function Pnrr() {
           subtitle={
             <>
               Schede pubblicate nella sezione PNRR del Comune di Lamezia Terme,
-              con importi, stati e collegamenti alle fonti disponibili. La
-              lettura resta documentale: non deduce ubicazioni puntuali, ritardi
-              o criticità non presenti nelle fonti.
+              arricchite con l'anagrafica ufficiale OpenCUP e i collegamenti
+              alle fonti disponibili. La lettura resta documentale: non deduce
+              avanzamento, ritardi o criticità non presenti nelle fonti.
             </>
           }
           stateLabel={
@@ -370,13 +384,13 @@ export function Pnrr() {
             sourceUnavailable
               ? "Il collegamento al censimento PNRR non è disponibile in questa pubblicazione. Nessun totale viene rappresentato come zero."
               : usingStaticFeed
-                ? "Le schede ufficiali del Comune sono materializzate nella pubblicazione con provenienza, data di acquisizione e collegamenti documentali verificabili."
+                ? "Le schede ufficiali del Comune e i corredi OpenCUP sono materializzati nella pubblicazione con provenienza separata e collegamenti verificabili."
                 : "Le schede comunali sono integrate con i dati disponibili dal servizio PNRR, mantenendo provenienza e regole di riconciliazione esplicite."
           }
           findItems={[
-            "Schede acquisite, importi, missioni, CUP e stato informativo disponibile.",
+            "Schede acquisite, CUP univoci, missioni e misure condivise tra più progetti.",
+            "Anagrafica OpenCUP con costi previsti, localizzazione e classificazione del progetto.",
             "Collegamenti a schede comunali, Albo Pretorio, contratti e allegati quando rilevati.",
-            "Filtri del Cantieriometro per individuare dati presenti, mancanti o da aggiornare.",
           ]}
           missingItems={[
             "Riconciliazione completa con il censimento nazionale Italia Domani/ReGiS.",
@@ -388,7 +402,9 @@ export function Pnrr() {
               Il perimetro minimo deriva dalle schede pubblicate nella sezione
               PNRR del Comune: non equivale al censimento nazionale completo.
               Gli atti Albo sono associati a un progetto soltanto quando il CUP
-              coincide; assenze e campi vuoti restano dati da verificare.
+              coincide. OpenCUP descrive la decisione di investimento: il suo
+              stato non equivale allo stato dei lavori o alla conferma del
+              finanziamento PNRR.
             </>
           }
           cta={{ label: "Consulta lo stato PNRR", href: "#pnrr-elenco" }}
@@ -441,11 +457,61 @@ export function Pnrr() {
               Apri il feed JSON materializzato
             </a>
           </p>
+          {LAMEZIA_PNRR_STATIC_DATA.coverage.projects_with_opencup > 0 && (
+            <p className="flex flex-wrap items-center gap-1.5">
+              <ExternalLink className="h-3 w-3" aria-hidden="true" />
+              Arricchimento anagrafico:{" "}
+              <a
+                href={LAMEZIA_PNRR_STATIC_DATA.metadata.opencup_source_url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-medium text-primary hover:underline"
+              >
+                {LAMEZIA_PNRR_STATIC_DATA.metadata.opencup_source}
+              </a>
+              <span>
+                · {LAMEZIA_PNRR_STATIC_DATA.coverage.projects_with_opencup} CUP
+                verificati · costo e finanziamento pubblico esposti in{" "}
+                {
+                  LAMEZIA_PNRR_STATIC_DATA.coverage
+                    .projects_with_opencup_public_funding
+                }{" "}
+                schede
+              </span>
+            </p>
+          )}
           <p>
             {LAMEZIA_PNRR_STATIC_DATA.metadata.coverage_note}{" "}
             {LAMEZIA_PNRR_STATIC_DATA.metadata.reconciliation_rule}
           </p>
         </div>
+
+        <section
+          aria-labelledby="pnrr-code-guide"
+          className="mb-8 rounded-xl border border-sky-200 bg-sky-50/70 p-4 text-sm dark:border-sky-500/30 dark:bg-sky-500/10"
+        >
+          <div className="flex items-start gap-3">
+            <Hash
+              className="mt-0.5 h-5 w-5 shrink-0 text-sky-700 dark:text-sky-300"
+              aria-hidden="true"
+            />
+            <div>
+              <h2
+                id="pnrr-code-guide"
+                className="font-display font-bold text-foreground"
+              >
+                Come leggere i codici
+              </h2>
+              <p className="mt-1 leading-relaxed text-muted-foreground">
+                Il <strong className="text-foreground">CUP</strong> identifica
+                il singolo progetto d'investimento. Missione, componente e
+                misura sono invece livelli del PNRR condivisi: più progetti con
+                CUP diversi possono quindi riportare, correttamente, lo stesso
+                codice di missione o investimento.
+              </p>
+            </div>
+          </div>
+        </section>
 
         <div id="pnrr-elenco" />
         {sourceUnavailable ? (
@@ -877,7 +943,7 @@ function CantieriometroSection({
                       variant="brand"
                       className="font-mono text-xs shadow-none"
                     >
-                      CUP {card.cup}
+                      CUP · ID progetto {card.cup}
                     </Badge>
                   ) : (
                     <Badge variant="outline" className="text-xs shadow-none">
@@ -994,6 +1060,209 @@ function FilterSelect({
       </select>
     </label>
   );
+}
+
+function OpenCupProjectDetails({ project }: { project: PnrrViewProject }) {
+  const openCup = project.openCup;
+  if (!openCup) return null;
+
+  const amountsDiffer =
+    project.importoFinanziato != null &&
+    openCup.public_funding_eur != null &&
+    Math.abs(project.importoFinanziato - openCup.public_funding_eur) > 0.01;
+  const location = joinOpenCupValues([
+    openCup.reference_address,
+    openCup.location.municipality,
+    openCup.location.province,
+    openCup.location.region,
+  ]);
+  const holderClassification = joinOpenCupValues([
+    openCup.holder.area,
+    openCup.holder.category,
+    openCup.holder.subcategory,
+  ]);
+  const cipessResolution = joinOpenCupValues([
+    openCup.cipess.resolution_number
+      ? `n. ${openCup.cipess.resolution_number}`
+      : null,
+    openCup.cipess.resolution_year != null
+      ? String(openCup.cipess.resolution_year)
+      : null,
+  ]);
+
+  return (
+    <details
+      className="group mb-4 overflow-hidden rounded-lg border border-sky-200/80 bg-sky-50/40 dark:border-sky-500/30 dark:bg-sky-500/5"
+      data-testid={`pnrr-opencup-${project.id}`}
+    >
+      <summary className="flex cursor-pointer list-none items-start gap-3 px-4 py-3 marker:content-none hover:bg-sky-100/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset dark:hover:bg-sky-500/10">
+        <ExternalLink
+          className="mt-0.5 h-4 w-4 shrink-0 text-sky-700 dark:text-sky-300"
+          aria-hidden="true"
+        />
+        <span className="min-w-0 flex-1">
+          <span className="block text-sm font-semibold text-foreground">
+            Anagrafica ufficiale OpenCUP
+          </span>
+          <span className="mt-0.5 block text-xs text-muted-foreground">
+            CUP {openCup.cup}
+            {openCup.decision_year != null
+              ? ` · decisione ${openCup.decision_year}`
+              : ""}
+            {openCup.cup_status ? ` · stato CUP ${openCup.cup_status}` : ""}
+          </span>
+        </span>
+        <span className="shrink-0 text-xs font-semibold text-primary group-open:hidden">
+          Apri
+        </span>
+        <span className="hidden shrink-0 text-xs font-semibold text-primary group-open:inline">
+          Chiudi
+        </span>
+      </summary>
+
+      <div className="border-t border-sky-200/70 px-4 py-4 dark:border-sky-500/20">
+        <p className="mb-4 text-xs leading-relaxed text-muted-foreground">
+          {LAMEZIA_PNRR_STATIC_DATA.metadata.opencup_caveat} I valori OpenCUP
+          restano distinti da quelli esposti nella scheda comunale.
+        </p>
+
+        <dl className="grid gap-x-6 gap-y-3 md:grid-cols-2 lg:grid-cols-3">
+          <MetaRow label="Denominazione OpenCUP" value={openCup.title} />
+          <MetaRow label="Descrizione OpenCUP" value={openCup.description} />
+          <MetaRow
+            label="Struttura / infrastruttura"
+            value={openCup.infrastructure}
+          />
+          <MetaRow
+            label="Anno della decisione"
+            value={
+              openCup.decision_year != null
+                ? String(openCup.decision_year)
+                : null
+            }
+          />
+          <MetaRow label="Stato del CUP" value={openCup.cup_status} />
+          <MetaRow
+            label="Data di generazione CUP"
+            value={
+              openCup.generated_at ? formatDate(openCup.generated_at) : null
+            }
+          />
+          <MetaRow
+            label="Costo totale previsto — OpenCUP"
+            value={formatImporto(openCup.total_cost_eur)}
+            fallback="Non disponibile nella scheda OpenCUP"
+          />
+          <MetaRow
+            label="Finanziamento pubblico previsto — OpenCUP"
+            value={formatImporto(openCup.public_funding_eur)}
+            fallback="Non disponibile nella scheda OpenCUP"
+          />
+          <MetaRow
+            label="Copertura finanziaria — OpenCUP"
+            value={openCup.financial.coverage}
+          />
+          <MetaRow label="Titolare OpenCUP" value={openCup.holder.name} />
+          <MetaRow
+            label="CF / Partita IVA titolare"
+            value={openCup.holder.tax_code}
+          />
+          <MetaRow
+            label="Classificazione del titolare"
+            value={holderClassification}
+          />
+          <MetaRow
+            label="CF / Partita IVA beneficiario"
+            value={openCup.beneficiary_tax_code}
+          />
+          <MetaRow label="Indirizzo / localizzazione" value={location} />
+          <MetaRow
+            label="Natura del progetto"
+            value={openCup.classification.nature}
+          />
+          <MetaRow
+            label="Tipologia OpenCUP"
+            value={openCup.classification.typology}
+          />
+          <MetaRow
+            label="Area d'intervento"
+            value={openCup.classification.intervention_area}
+          />
+          <MetaRow label="Settore" value={openCup.classification.sector} />
+          <MetaRow
+            label="Sottosettore"
+            value={openCup.classification.subsector}
+          />
+          <MetaRow
+            label="Categoria OpenCUP"
+            value={openCup.classification.category}
+          />
+          <MetaRow
+            label="Strumento di programmazione"
+            value={openCup.programming_instrument}
+          />
+          <MetaRow
+            label="Infrastruttura unica"
+            value={formatOpenCupBoolean(openCup.unique_infrastructure)}
+          />
+          <MetaRow label="CUP master" value={openCup.master_cup} />
+          <MetaRow
+            label="Numero di CUP collegati"
+            value={
+              openCup.linked_cups_count != null
+                ? String(openCup.linked_cups_count)
+                : null
+            }
+          />
+          <MetaRow
+            label="Atti di concessione o finanza"
+            value={formatOpenCupBoolean(
+              openCup.financial.concession_or_finance_acts,
+            )}
+          />
+          <MetaRow
+            label="Sponsorizzazioni"
+            value={openCup.financial.sponsorships}
+          />
+          <MetaRow label="Delibera CIPESS" value={cipessResolution} />
+          <MetaRow
+            label="Legge obiettivo"
+            value={formatOpenCupBoolean(
+              openCup.cipess.strategic_infrastructure_law,
+            )}
+          />
+        </dl>
+
+        {amountsDiffer && (
+          <p className="mt-4 rounded-md border border-amber-200 bg-amber-50 px-3 py-2 text-xs leading-relaxed text-amber-900 dark:border-amber-500/30 dark:bg-amber-500/10 dark:text-amber-200">
+            L'importo finanziato esposto dal Comune e il finanziamento pubblico
+            previsto in OpenCUP non coincidono. Sono riportati entrambi con la
+            rispettiva fonte, senza stabilire automaticamente quale sia il
+            valore più aggiornato o la ragione della differenza.
+          </p>
+        )}
+
+        <a
+          href={openCup.source_url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-primary hover:underline"
+        >
+          <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
+          Apri la scheda ufficiale OpenCUP
+        </a>
+      </div>
+    </details>
+  );
+}
+
+function joinOpenCupValues(values: Array<string | null | undefined>) {
+  const uniqueValues = Array.from(new Set(values.filter(Boolean)));
+  return uniqueValues.length > 0 ? uniqueValues.join(" · ") : null;
+}
+
+function formatOpenCupBoolean(value: boolean | null) {
+  return value == null ? null : value ? "Sì" : "No";
 }
 
 const municipalAttachmentPhaseOrder =
@@ -1167,7 +1436,7 @@ function PnrrCard({ project }: { project: PnrrViewProject }) {
           </Badge>
           {project.cup ? (
             <Badge variant="brand" className="font-mono text-xs shadow-none">
-              CUP {project.cup}
+              CUP · ID progetto {project.cup}
             </Badge>
           ) : (
             <Badge variant="outline" className="text-xs shadow-none">
@@ -1176,12 +1445,12 @@ function PnrrCard({ project }: { project: PnrrViewProject }) {
           )}
           {project.mission && (
             <Badge variant="outline" className="text-xs shadow-none">
-              {project.mission.split(" ")[0]}
+              Missione {project.mission.split(" ")[0]}
             </Badge>
           )}
           {project.component && (
             <Badge variant="outline" className="font-mono text-xs shadow-none">
-              {project.component.split(" ")[0]}
+              Componente {project.component.split(" ")[0]}
             </Badge>
           )}
           <div className="ml-auto flex flex-wrap items-center gap-2">
@@ -1301,6 +1570,8 @@ function PnrrCard({ project }: { project: PnrrViewProject }) {
         </dl>
 
         <SourceTraceability project={project} />
+
+        <OpenCupProjectDetails project={project} />
 
         {project.dataOrigin !== "static-municipal" && (
           <>
@@ -1458,9 +1729,11 @@ function SourceTraceability({ project }: { project: PnrrViewProject }) {
           )}
           <p className="mt-1 text-xs text-muted-foreground">
             {locationSourceLabel
-              ? project.dataOrigin === "static-municipal"
-                ? "L'inclusione nella sezione comunale definisce il perimetro del feed, ma non prova l'ubicazione puntuale del singolo intervento."
-                : "Fonte usata per filtrare o verificare i CUP associati al Comune di Lamezia Terme prima della pubblicazione nel tracker."
+              ? project.locationSourceUrl?.includes("opencup.gov.it/")
+                ? "Indirizzo o area dichiarati nel corredo OpenCUP; non equivalgono a una geocodifica verificata del cantiere."
+                : project.dataOrigin === "static-municipal"
+                  ? "L'inclusione nella sezione comunale definisce il perimetro del feed, ma non prova l'ubicazione puntuale del singolo intervento."
+                  : "Fonte usata per filtrare o verificare i CUP associati al Comune di Lamezia Terme prima della pubblicazione nel tracker."
               : "Il metadato disponibile non permette di attribuire con certezza la fonte di localizzazione delle righe già pubblicate."}
           </p>
         </div>

@@ -19,7 +19,7 @@ Questo catalogo elenca le principali fonti che alimentano, o possono alimentare,
 | Albo Pretorio e atti | Portale/atti del Comune di Lamezia Terme | primaria locale | presente | web, mobile, REST, MCP | PDF e allegati firmati possono non essere elaborabili; testo Markdown è best-effort |
 | Allegati e copie archiviate | URL ufficiali + object storage locale | evidenza tecnica | presente / da consolidare | web, REST dove opportuno | la copia archiviata non sostituisce il documento ufficiale |
 | Contratti pubblici | ANAC / obblighi L. 190/2012 e dataset collegati | primaria nazionale | presente | web, REST, MCP, open data | CIG, importi e fornitori vanno mantenuti con fonte e data; eventuali mismatch non sono automaticamente anomalie |
-| PNRR | sezione Attuazione Misure PNRR del Comune + Italia Domani / ReGiS | primaria locale + primaria nazionale | presente / da consolidare | web, REST, MCP | il feed comunale non equivale al censimento nazionale completo; stati e importi possono avere aggiornamenti asincroni rispetto agli atti locali |
+| PNRR | sezione Attuazione Misure PNRR del Comune + OpenCUP + Italia Domani / ReGiS | primaria locale + primarie nazionali | presente / da consolidare | web, REST, MCP | il feed comunale non equivale al censimento nazionale completo; stati e importi possono avere aggiornamenti asincroni rispetto agli atti locali |
 | Performance | indicatori ISTAT SDMX e valori manuali/locali | primaria nazionale + locale | presente | web, REST, MCP | distinguere sempre dato ufficiale, dato manuale e indicatore derivato |
 | Bandi e avvisi | fonti pubbliche comunali o correlate | primaria locale | presente | web, mobile | collegamenti a contratti/PNRR sono relazioni locali da verificare |
 | Beni confiscati | ANBSC e dataset pubblici collegati | primaria nazionale | presente | web, mobile, mappe | georeferenziazione e stato dei beni possono richiedere verifica puntuale |
@@ -43,6 +43,11 @@ Questo catalogo elenca le principali fonti che alimentano, o possono alimentare,
 | Mappe e tile | provider cartografici / Leaflet / mappe native | strumentale | presente | web, mobile | base map non è fonte amministrativa; layer dati devono avere proprie fonti |
 
 Nel feed PNRR, l'eventuale fase associata a un allegato è una classificazione automatica del titolo per agevolare la navigazione: non rappresenta lo stato di avanzamento del progetto.
+
+OpenCUP arricchisce le schede PNRR soltanto quando il CUP coincide esattamente.
+Il corredo OpenCUP resta separato dai valori comunali: lo stato del CUP non è lo
+stato dei lavori e un importo differente viene mostrato con la propria fonte,
+senza selezionare automaticamente un valore prevalente.
 
 ## Fonte primaria, fonte federata e trasformazione locale
 

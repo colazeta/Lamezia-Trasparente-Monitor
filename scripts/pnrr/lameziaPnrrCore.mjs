@@ -3,6 +3,8 @@ import { createHash } from "node:crypto";
 export const COMUNE_PNRR_INDEX_URL =
   "https://www.comune.lamezia-terme.cz.it/it/attuazione-misure-pnrr";
 export const COMUNE_PNRR_ORIGIN = "https://www.comune.lamezia-terme.cz.it";
+export const OPENCUP_PROJECT_BASE_URL =
+  "https://www.opencup.gov.it/portale/it/web/opencup/home/progetto/-/cup";
 
 const CUP_RE = /\b[A-Z][0-9]{2}[A-Z][0-9]{11}\b/g;
 const MISSION_RE = /\bM[1-7]\s*C[0-9]+(?:\s*I\s*[0-9]+(?:\.[0-9]+)*)?/gi;
@@ -214,6 +216,157 @@ export function parseMunicipalPnrrProject({ sourceId, sourceUrl, html }) {
     published_at: publishedAt,
     attachments,
     verification_status: "official_municipal_project_page",
+  };
+
+  return {
+    ...project,
+    source_record_hash: sha256(stableStringify(project)),
+  };
+}
+
+export function buildOpenCupProjectUrl(cup) {
+  const normalizedCup = String(cup ?? "")
+    .trim()
+    .toUpperCase();
+  if (!/^[A-Z][0-9]{2}[A-Z][0-9]{11}$/.test(normalizedCup)) {
+    throw new Error(`Cannot build an OpenCUP URL for invalid CUP: ${cup}`);
+  }
+  return `${OPENCUP_PROJECT_BASE_URL}/${normalizedCup}`;
+}
+
+export function parseOpenCupProject({ cup, sourceUrl, html }) {
+  const normalizedCup = String(cup ?? "")
+    .trim()
+    .toUpperCase();
+  const expectedUrl = buildOpenCupProjectUrl(normalizedCup);
+  if (sourceUrl !== expectedUrl) {
+    throw new Error(`Unexpected OpenCUP source URL for ${normalizedCup}`);
+  }
+
+  const pageCup =
+    /CUP:\s*(?:<[^>]+>\s*)*<strong>\s*([A-Z][0-9]{2}[A-Z][0-9]{11})\s*<\/strong>/i
+      .exec(html)?.[1]
+      ?.toUpperCase() ?? null;
+  if (pageCup !== normalizedCup) {
+    throw new Error(
+      `OpenCUP page does not confirm requested CUP ${normalizedCup}`,
+    );
+  }
+
+  const title = cleanHtmlText(
+    /<div[^>]*id=["']resRicerca["'][\s\S]*?<h2[^>]*>([\s\S]*?)<\/h2>/i.exec(
+      html,
+    )?.[1],
+  );
+  if (!title) {
+    throw new Error(`OpenCUP page ${normalizedCup} has no project title`);
+  }
+
+  const primaryDetailsEnd = html.indexOf("_callInteroperabilitaURL");
+  const primaryDetails =
+    primaryDetailsEnd < 0 ? html : html.slice(0, primaryDetailsEnd);
+  const locationPanel = extractOpenCupPanel(html, "Localizzazione progetto");
+  const holderPanel = extractOpenCupPanel(html, "Soggetto titolare");
+  const classificationPanel = extractOpenCupPanel(
+    html,
+    "Classificazione Progetto",
+  );
+  const additionalPanel = extractOpenCupPanel(
+    html,
+    "Dati aggiuntivi del progetto",
+  );
+  const financialPanel = extractOpenCupPanel(html, "Dati finanziari");
+  const cipessPanel = extractOpenCupPanel(html, "Dati CIPESS");
+
+  const project = {
+    source_url: sourceUrl,
+    cup: normalizedCup,
+    title,
+    total_cost_eur: extractOpenCupAmount(html, "Totale costo previsto"),
+    public_funding_eur: extractOpenCupAmount(
+      html,
+      "Totale Finanziamento pubblico previsto",
+    ),
+    decision_year: parseOpenCupInteger(
+      extractOpenCupField(primaryDetails, "Anno decisione"),
+    ),
+    cup_status: extractOpenCupField(primaryDetails, "Stato"),
+    description: extractOpenCupField(primaryDetails, "Descrizione intervento"),
+    infrastructure: extractOpenCupField(
+      primaryDetails,
+      "Struttura/Infrastruttura oggetto dell'intervento",
+    ),
+    beneficiary_tax_code: extractOpenCupField(
+      primaryDetails,
+      "Partita IVA/Codice Fiscale beneficiario",
+    ),
+    reference_address: extractOpenCupField(
+      primaryDetails,
+      "Indirizzo o area di riferimento",
+    ),
+    location: {
+      country: extractOpenCupField(locationPanel, "Stato"),
+      macro_area: extractOpenCupField(locationPanel, "Area Geografica"),
+      region: extractOpenCupField(locationPanel, "Regione"),
+      province: extractOpenCupField(locationPanel, "Provincia"),
+      municipality: extractOpenCupField(locationPanel, "Comune"),
+    },
+    holder: {
+      name:
+        extractOpenCupField(holderPanel, "Denominazione") ??
+        extractOpenCupField(primaryDetails, "Soggetto titolare"),
+      tax_code: extractOpenCupField(holderPanel, "CF/Partita IVA"),
+      area: extractOpenCupField(holderPanel, "Area"),
+      category: extractOpenCupField(holderPanel, "Categoria"),
+      subcategory: extractOpenCupField(holderPanel, "Sotto Categoria"),
+    },
+    classification: {
+      nature: extractOpenCupField(classificationPanel, "Classificazione"),
+      typology: extractOpenCupField(classificationPanel, "Tipologia"),
+      intervention_area: extractOpenCupField(
+        classificationPanel,
+        "Area d'intervento",
+      ),
+      sector: extractOpenCupField(classificationPanel, "Settore"),
+      subsector: extractOpenCupField(classificationPanel, "Sottosettore"),
+      category: extractOpenCupField(classificationPanel, "Categoria"),
+    },
+    generated_at: parseOpenCupDate(
+      extractOpenCupField(additionalPanel, "Data di generazione"),
+    ),
+    unique_infrastructure: parseOpenCupBoolean(
+      extractOpenCupField(additionalPanel, "Struttura/Infrastruttura Unica"),
+    ),
+    programming_instrument: extractOpenCupField(
+      additionalPanel,
+      "Strumento di Programmazione",
+    ),
+    master_cup: normalizeOpenCupCup(
+      extractOpenCupField(additionalPanel, "CUP Master"),
+    ),
+    linked_cups_count: parseOpenCupInteger(
+      extractOpenCupField(additionalPanel, "Numero di CUP collegati"),
+    ),
+    financial: {
+      concession_or_finance_acts: parseOpenCupBoolean(
+        extractOpenCupField(
+          financialPanel,
+          "Atti di concessione o finanza del Progetto",
+        ),
+      ),
+      sponsorships: extractOpenCupField(financialPanel, "Sponsorizzazioni"),
+      coverage: extractOpenCupField(financialPanel, "Copertura Finanziaria"),
+    },
+    cipess: {
+      resolution_number: extractOpenCupField(cipessPanel, "N° Delibera CIPESS"),
+      resolution_year: parseOpenCupInteger(
+        extractOpenCupField(cipessPanel, "Anno Delibera"),
+      ),
+      strategic_infrastructure_law: parseOpenCupBoolean(
+        extractOpenCupField(cipessPanel, "Legge Obiettivo"),
+      ),
+    },
+    verification_status: "official_opencup_project_page",
   };
 
   return {
@@ -463,9 +616,10 @@ export function buildStaticPnrrDataset({
     0,
   );
   const attachments = publicProjects.flatMap((project) => project.attachments);
+  const openCupProjects = publicProjects.filter((project) => project.opencup);
 
   return {
-    schema_version: 2,
+    schema_version: 3,
     metadata: {
       dataset_id: "lamezia-pnrr-static-feed",
       source: "Città di Lamezia Terme — Attuazione Misure PNRR",
@@ -483,17 +637,33 @@ export function buildStaticPnrrDataset({
           ),
         ),
       ),
+      opencup_source: "OpenCUP — Sistema CUP",
+      opencup_source_url: "https://www.opencup.gov.it/portale/web/opencup/home",
+      opencup_source_type: "official_public_investment_project_pages",
+      opencup_source_hash: sha256(
+        stableStringify(
+          openCupProjects.map((project) => ({
+            cup: project.cup,
+            source_url: project.opencup.source_url,
+            source_record_hash: project.opencup.source_record_hash,
+          })),
+        ),
+      ),
       albo_snapshot_generated_at: alboSnapshotGeneratedAt,
       update_policy:
-        "Controllo giornaliero della sezione comunale PNRR e riconciliazione con gli output pubblici dell'Albo Pretorio; il file cambia solo quando mutano dati o collegamenti documentali.",
+        "Controllo giornaliero della sezione comunale PNRR, arricchimento delle schede pubbliche OpenCUP e riconciliazione con gli output pubblici dell'Albo Pretorio; il file cambia solo quando mutano dati o collegamenti documentali.",
+      opencup_update_policy:
+        "Le schede OpenCUP vengono acquisite per CUP durante la materializzazione. Un errore temporaneo conserva l'ultimo corredo OpenCUP valido dello stesso CUP, se disponibile.",
       reconciliation_rule:
         "Gli atti Albo sono collegati a una scheda progetto esclusivamente quando condividono lo stesso CUP normalizzato; i soli richiami testuali PNRR restano evidenze non riconciliate.",
       coverage_note:
         "Il perimetro deriva dalle schede pubblicate nella sezione PNRR del Comune e non equivale al censimento nazionale completo ReGiS/Italia Domani.",
       caveat:
         "Importi, stati e allegati descrivono quanto pubblicato nelle fonti acquisite. L'assenza di un campo o di un atto non dimostra assenza amministrativa, ritardo o criticità.",
+      opencup_caveat:
+        "OpenCUP descrive il corredo anagrafico della decisione di investimento registrata nel Sistema CUP. Lo stato del CUP non equivale allo stato di avanzamento dei lavori né, da solo, alla conferma del finanziamento PNRR.",
       licence_or_terms_note:
-        "Il dataset civico conserva campi descrittivi, metadati di provenienza e collegamenti alle fonti ufficiali; per il riuso dei documenti si applicano le condizioni indicate dai rispettivi portali.",
+        "Il dataset civico conserva campi descrittivi, metadati di provenienza e collegamenti alle fonti ufficiali. I dati OpenCUP sono indicati dal portale come CC-BY; per il riuso degli altri documenti si applicano le condizioni indicate dalle rispettive fonti.",
     },
     attachment_taxonomy: {
       schema_version: "pnrr-attachment-phase.v1",
@@ -510,6 +680,14 @@ export function buildStaticPnrrDataset({
       projects_with_cup: publicProjects.filter((project) => project.cup).length,
       projects_with_amount: publicProjects.filter(
         (project) => project.amount_eur != null,
+      ).length,
+      projects_with_opencup: openCupProjects.length,
+      projects_without_opencup: publicProjects.length - openCupProjects.length,
+      projects_with_opencup_total_cost: openCupProjects.filter(
+        (project) => project.opencup.total_cost_eur != null,
+      ).length,
+      projects_with_opencup_public_funding: openCupProjects.filter(
+        (project) => project.opencup.public_funding_eur != null,
       ).length,
       projects_with_albo_evidence: publicProjects.filter(
         (project) => project.albo_evidence_ids.length > 0,
@@ -545,9 +723,10 @@ export function validateStaticPnrrDataset(
     : [];
   const evidenceIds = new Set(evidence.map((item) => item.id));
   const sourceIds = new Set();
+  const cups = new Set();
 
-  if (dataset?.schema_version !== 2) {
-    errors.push("schema_version must be 2");
+  if (dataset?.schema_version !== 3) {
+    errors.push("schema_version must be 3");
   }
   const attachmentPhases = new Map(
     (dataset?.attachment_taxonomy?.phases ?? []).map((phase) => [
@@ -585,8 +764,75 @@ export function validateStaticPnrrDataset(
     if (project?.cup && !/^[A-Z][0-9]{2}[A-Z][0-9]{11}$/.test(project.cup)) {
       errors.push(`project ${project?.source_id} has an invalid CUP`);
     }
+    if (project?.cup && cups.has(project.cup)) {
+      errors.push(`duplicate project CUP: ${project.cup}`);
+    }
+    if (project?.cup) cups.add(project.cup);
     if (project?.amount_eur != null && project.amount_eur <= 0) {
       errors.push(`project ${project?.source_id} has a non-positive amount`);
+    }
+
+    if (project?.opencup) {
+      const openCup = project.opencup;
+      const { source_record_hash: openCupHash, ...openCupPayload } = openCup;
+      if (
+        !project.cup ||
+        openCup.cup !== project.cup ||
+        openCup.source_url !== buildOpenCupProjectUrl(project.cup) ||
+        openCup.verification_status !== "official_opencup_project_page" ||
+        !openCup.title?.trim() ||
+        !/^[a-f0-9]{64}$/.test(openCupHash ?? "") ||
+        openCupHash !== sha256(stableStringify(openCupPayload))
+      ) {
+        errors.push(
+          `project ${project?.source_id} has invalid OpenCUP provenance`,
+        );
+      }
+      if (
+        openCup.decision_year != null &&
+        (!Number.isInteger(openCup.decision_year) ||
+          openCup.decision_year < 2000 ||
+          openCup.decision_year > 2100)
+      ) {
+        errors.push(
+          `project ${project?.source_id} has an invalid OpenCUP decision year`,
+        );
+      }
+      if (
+        openCup.generated_at != null &&
+        !isIsoCalendarDate(openCup.generated_at)
+      ) {
+        errors.push(
+          `project ${project?.source_id} has an invalid OpenCUP generation date`,
+        );
+      }
+      if (
+        [openCup.total_cost_eur, openCup.public_funding_eur].some(
+          (amount) =>
+            amount != null && (!Number.isFinite(amount) || amount < 0),
+        )
+      ) {
+        errors.push(
+          `project ${project?.source_id} has an invalid OpenCUP amount`,
+        );
+      }
+      if (
+        openCup.linked_cups_count != null &&
+        (!Number.isInteger(openCup.linked_cups_count) ||
+          openCup.linked_cups_count < 0)
+      ) {
+        errors.push(
+          `project ${project?.source_id} has an invalid OpenCUP linked CUP count`,
+        );
+      }
+      if (
+        openCup.master_cup != null &&
+        !/^[A-Z][0-9]{2}[A-Z][0-9]{11}$/.test(openCup.master_cup)
+      ) {
+        errors.push(
+          `project ${project?.source_id} has an invalid OpenCUP master CUP`,
+        );
+      }
     }
 
     for (const [attachmentIndex, attachment] of (
@@ -688,6 +934,40 @@ export function validateStaticPnrrDataset(
   if (dataset?.coverage?.albo_evidence !== evidence.length) {
     errors.push("coverage.albo_evidence does not match the evidence records");
   }
+  const projectsWithOpenCup = projects.filter((project) => project.opencup);
+  if (
+    dataset?.coverage?.projects_with_opencup !== projectsWithOpenCup.length ||
+    dataset?.coverage?.projects_without_opencup !==
+      projects.length - projectsWithOpenCup.length
+  ) {
+    errors.push("OpenCUP coverage does not match the project records");
+  }
+  if (
+    dataset?.coverage?.projects_with_opencup_total_cost !==
+      projectsWithOpenCup.filter(
+        (project) => project.opencup.total_cost_eur != null,
+      ).length ||
+    dataset?.coverage?.projects_with_opencup_public_funding !==
+      projectsWithOpenCup.filter(
+        (project) => project.opencup.public_funding_eur != null,
+      ).length
+  ) {
+    errors.push("OpenCUP amount coverage does not match the project records");
+  }
+  const expectedOpenCupSourceHash = sha256(
+    stableStringify(
+      projectsWithOpenCup.map((project) => ({
+        cup: project.cup,
+        source_url: project.opencup.source_url,
+        source_record_hash: project.opencup.source_record_hash,
+      })),
+    ),
+  );
+  if (dataset?.metadata?.opencup_source_hash !== expectedOpenCupSourceHash) {
+    errors.push(
+      "metadata.opencup_source_hash does not match the OpenCUP records",
+    );
+  }
   const municipalAttachments = projects.flatMap(
     (project) => project.attachments ?? [],
   );
@@ -743,6 +1023,7 @@ export function validateCoverageRegression(candidate, previous) {
     ["projects", 0.8],
     ["projects_with_cup", 0.75],
     ["projects_with_amount", 0.75],
+    ["projects_with_opencup", 0.8],
     ["municipal_attachments", 0.5],
   ];
   const regressions = [];
@@ -900,6 +1181,98 @@ function extractAttachmentYearCandidates(value) {
       ).filter((year) => year >= 2020 && year <= 2035),
     ),
   ).sort((left, right) => left - right);
+}
+
+function extractOpenCupPanel(html, title) {
+  const escapedTitle = escapeRegExp(title);
+  const match = new RegExp(
+    `<span[^>]*class=["'][^"']*title-text[^"']*["'][^>]*>\\s*${escapedTitle}\\s*</span>`,
+    "i",
+  ).exec(String(html ?? ""));
+  if (!match) return "";
+  const start = match.index;
+  const remaining = html.slice(start + match[0].length);
+  const nextPanelOffset = remaining.search(
+    /<div[^>]*class=["'][^"']*panel\s+panel-default\b/i,
+  );
+  return nextPanelOffset < 0
+    ? html.slice(start)
+    : html.slice(start, start + match[0].length + nextPanelOffset);
+}
+
+function extractOpenCupField(section, label) {
+  if (!section) return null;
+  const escapedLabel = escapeRegExp(label);
+  const labelMatch = new RegExp(
+    `<span[^>]*class=["'][^"']*tltDett[^"']*["'][^>]*>\\s*${escapedLabel}\\s*</span>`,
+    "i",
+  ).exec(section);
+  if (!labelMatch) return null;
+  const valueMatch =
+    /<span[^>]*class=["'][^"']*tltLabel[^"']*["'][^>]*>([\s\S]*?)<\/span>/i.exec(
+      section.slice(labelMatch.index + labelMatch[0].length),
+    );
+  return normalizeOpenCupValue(cleanHtmlText(valueMatch?.[1]));
+}
+
+function extractOpenCupAmount(html, label) {
+  const text = cleanHtmlText(html);
+  if (!text) return null;
+  const match = new RegExp(
+    `${escapeRegExp(label)}\\s+([0-9][0-9.,]*)\\s*(?:€|&euro;)`,
+    "i",
+  ).exec(text);
+  if (!match) return null;
+  const raw = match[1];
+  let normalized;
+  if (raw.includes(",") && raw.includes(".")) {
+    normalized = raw.replace(/\./g, "").replace(",", ".");
+  } else if (raw.includes(",")) {
+    normalized = raw.replace(",", ".");
+  } else {
+    normalized = raw;
+  }
+  let amount = Number(normalized);
+  if (!Number.isFinite(amount) && raw.includes(".")) {
+    amount = Number(raw.replace(/\./g, ""));
+  }
+  return Number.isFinite(amount) && amount >= 0 ? amount : null;
+}
+
+function normalizeOpenCupValue(value) {
+  const cleaned = cleanHtmlText(value);
+  if (!cleaned) return null;
+  if (/^(?:DATO\s+)?NON\s+PRESENTE$/i.test(cleaned)) return null;
+  return cleaned;
+}
+
+function normalizeOpenCupCup(value) {
+  const normalized = String(value ?? "")
+    .trim()
+    .toUpperCase();
+  return /^[A-Z][0-9]{2}[A-Z][0-9]{11}$/.test(normalized) ? normalized : null;
+}
+
+function parseOpenCupInteger(value) {
+  if (value == null || !/^\s*[0-9]+\s*$/.test(String(value))) return null;
+  const parsed = Number.parseInt(String(value), 10);
+  return Number.isSafeInteger(parsed) ? parsed : null;
+}
+
+function parseOpenCupBoolean(value) {
+  if (value == null) return null;
+  const normalized = String(value).trim().toUpperCase();
+  if (normalized === "SI" || normalized === "SÌ") return true;
+  if (normalized === "NO") return false;
+  return null;
+}
+
+function parseOpenCupDate(value) {
+  return parseNumericAttachmentDate(value);
+}
+
+function escapeRegExp(value) {
+  return String(value).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 
 function isHttpUrl(value) {
