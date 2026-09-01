@@ -51,6 +51,8 @@ export type HouseholdCompositionProfile = {
   };
 };
 
+export const LAMEZIA_ISTAT_CODE = "079160" as const;
+
 const LABELS = ["1", "2", "3", "4", "5", "6+"] as const;
 
 function assertCount(value: number | null, label: string): number {
@@ -63,6 +65,18 @@ function assertCount(value: number | null, label: string): number {
 function round(value: number, digits = 1) {
   const factor = 10 ** digits;
   return Math.round(value * factor) / factor;
+}
+
+function assertLameziaSectionId(sectionId: string | null | undefined): string {
+  if (!sectionId) {
+    throw new Error("Household census row is missing its section identifier");
+  }
+  if (!sectionId.startsWith(LAMEZIA_ISTAT_CODE)) {
+    throw new Error(
+      `Household census section ${sectionId} is outside municipality ${LAMEZIA_ISTAT_CODE}`,
+    );
+  }
+  return sectionId;
 }
 
 /**
@@ -86,6 +100,8 @@ export function aggregateHouseholdComposition(
   let incompleteRows = 0;
 
   for (const row of rows) {
+    const sectionId = assertLameziaSectionId(row.sectionId);
+
     if (row.isFictitious) {
       skippedFictitiousRows += 1;
       continue;
@@ -97,12 +113,12 @@ export function aggregateHouseholdComposition(
       continue;
     }
 
-    const householdCount = assertCount(row.PF1, `${row.sectionId ?? "row"}.PF1`);
+    const householdCount = assertCount(row.PF1, `${sectionId}.PF1`);
     totalHouseholds += householdCount;
     includedRows += 1;
 
     for (const field of HOUSEHOLD_COMPONENT_FIELDS) {
-      const value = assertCount(row[field], `${row.sectionId ?? "row"}.${field}`);
+      const value = assertCount(row[field], `${sectionId}.${field}`);
       components.set(field, (components.get(field) ?? 0) + value);
     }
   }
@@ -136,7 +152,7 @@ export function aggregateHouseholdComposition(
 
   return {
     referenceYear: 2023,
-    municipality: { name: "Lamezia Terme", istatCode: "079160" },
+    municipality: { name: "Lamezia Terme", istatCode: LAMEZIA_ISTAT_CODE },
     totalHouseholds,
     byComponents,
     indicators: {
