@@ -21,7 +21,28 @@ const GIOVANNI_PAOLO_II: ProposalGeography = {
     "La coordinata è quella associata al P.O. Giovanni Paolo II nella tabella regionale delle strutture ospedaliere. Il tag Sambiase serve al filtro territoriale dell'archivio e non sostituisce una delimitazione amministrativa di quartiere.",
 };
 
+const LAMEZIA_CITYWIDE: ProposalGeography = {
+  label: "Intero territorio comunale di Lamezia Terme",
+  scope: "citywide",
+  areas: ["intera_citta"],
+  points: [
+    {
+      id: "lamezia-city-centroid",
+      label: "Lamezia Terme — centroide di visualizzazione",
+      latitude: 38.965,
+      longitude: 16.31,
+      area: "intera_citta",
+      precision: "city_centroid",
+      sourceLabel: "Centro mappa GIS del progetto",
+    },
+  ],
+  note:
+    "La coordinata è esclusivamente un centroide di visualizzazione e indicizzazione: non attribuisce alla proposta un luogo fisico specifico e non viene mostrata come pin locale sulla mappa pubblica.",
+};
+
 export const SCOUTED_PROPOSAL_GEOGRAPHY: Record<string, ProposalGeography> = {
   "emodinamica-h24-vescio-2026": GIOVANNI_PAOLO_II,
   "emodinamica-h24-nucifero-2026": GIOVANNI_PAOLO_II,
+  "scuole-orario-ridotto-caldo-settembre-2026": LAMEZIA_CITYWIDE,
+  "tutela-animali-regolamento-garante-sportello-2026": LAMEZIA_CITYWIDE,
 };
