@@ -100,6 +100,32 @@ describe("Docling processor request contract", () => {
     ).toThrow();
   });
 
+  it("rejects markdown-only requests because lossless structured JSON is mandatory", () => {
+    expect(() =>
+      buildDoclingProcessorRequest({
+        source: {
+          sha256: SOURCE_SHA,
+          contentType: "application/pdf",
+          sizeBytes: 1000,
+        },
+        reason: "embedded-pdf-container",
+        baseline: {
+          status: "ok",
+          characters: 810,
+          pages: 1,
+          hasEmbeddedPdf: true,
+        },
+        processorVersion: "2.124.0",
+        limits: {
+          maxBytes: 10_000,
+          maxPages: 20,
+          timeoutMs: 120_000,
+        },
+        requestedOutputs: ["markdown"],
+      }),
+    ).toThrow(/structured-json is mandatory/);
+  });
+
   it("fails closed on unrecognised fields such as a processor-side source URL", () => {
     const req = request();
     expect(() =>
@@ -155,6 +181,23 @@ describe("Docling processor result contract", () => {
             kind: "markdown",
             contentSha256: MARKDOWN_SHA,
             sizeBytes: 1452,
+          },
+        ],
+      }),
+    ).toThrow();
+  });
+
+  it("rejects a zero-byte structured JSON artifact", () => {
+    const req = request();
+    const result = okResult();
+    expect(() =>
+      parseDoclingProcessorResultForRequest(req, {
+        ...result,
+        artifacts: [
+          {
+            kind: "structured-json",
+            contentSha256: STRUCTURED_SHA,
+            sizeBytes: 0,
           },
         ],
       }),
