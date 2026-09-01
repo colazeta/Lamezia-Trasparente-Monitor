@@ -18,7 +18,10 @@ export const DOCLING_CONTRACT_REASONS = [
   "reviewed-layout-class",
 ] as const satisfies readonly DoclingEnrichmentReason[];
 
+export const DOCLING_OUTPUT_KINDS = ["structured-json", "markdown"] as const;
+
 export type DoclingContractReason = (typeof DOCLING_CONTRACT_REASONS)[number];
+export type DoclingOutputKind = (typeof DOCLING_OUTPUT_KINDS)[number];
 
 const sha256Schema = z.string().regex(/^[a-f0-9]{64}$/);
 const nonNegativeInteger = z.number().int().nonnegative();
@@ -68,10 +71,7 @@ export const doclingProcessorRequestSchema = z
       })
       .strict(),
     limits: processorLimitsSchema,
-    requestedOutputs: z
-      .array(z.enum(["structured-json", "markdown"]))
-      .min(1)
-      .max(2),
+    requestedOutputs: z.array(z.enum(DOCLING_OUTPUT_KINDS)).min(1).max(2),
   })
   .strict()
   .superRefine((request, ctx) => {
@@ -108,12 +108,13 @@ export const doclingProcessorRequestSchema = z
       sourceSha256: request.source.sha256,
       reason: request.selection.reason,
       processorVersion: request.target.processorVersion,
+      requestedOutputs: request.requestedOutputs,
     });
     if (request.jobKey !== expectedJobKey) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
         path: ["jobKey"],
-        message: "jobKey does not match source/reason/processor version",
+        message: "jobKey does not match source/reason/processor version/outputs",
       });
     }
   });
@@ -150,6 +151,7 @@ const resultBase = {
       version: z.string().min(1).max(64),
     })
     .strict(),
+  extractedAt: z.string().datetime(),
   durationMs: nonNegativeInteger,
 } as const;
 
@@ -229,12 +231,20 @@ export const doclingProcessorResultSchema = z.union([
 export type DoclingProcessorRequest = z.infer<typeof doclingProcessorRequestSchema>;
 export type DoclingProcessorResult = z.infer<typeof doclingProcessorResultSchema>;
 
+export function normalizeDoclingRequestedOutputs(
+  outputs: readonly DoclingOutputKind[],
+): DoclingOutputKind[] {
+  return [...outputs].sort((a, b) => a.localeCompare(b));
+}
+
 export function buildDoclingJobKey(input: {
   sourceSha256: string;
   reason: DoclingContractReason;
   processorVersion: string;
+  requestedOutputs: readonly DoclingOutputKind[];
 }): string {
-  return `docling:v${DOCLING_PROCESSOR_CONTRACT_VERSION}:${input.processorVersion}:${input.sourceSha256}:${input.reason}`;
+  const outputKey = normalizeDoclingRequestedOutputs(input.requestedOutputs).join("+");
+  return `docling:v${DOCLING_PROCESSOR_CONTRACT_VERSION}:${input.processorVersion}:${input.sourceSha256}:${input.reason}:${outputKey}`;
 }
 
 export function buildDoclingProcessorRequest(input: {
@@ -243,14 +253,16 @@ export function buildDoclingProcessorRequest(input: {
   baseline: z.infer<typeof baselineObservationSchema>;
   processorVersion: string;
   limits: z.infer<typeof processorLimitsSchema>;
-  requestedOutputs?: Array<"structured-json" | "markdown">;
+  requestedOutputs?: DoclingOutputKind[];
 }): DoclingProcessorRequest {
+  const requestedOutputs = input.requestedOutputs ?? ["structured-json", "markdown"];
   return doclingProcessorRequestSchema.parse({
     schemaVersion: DOCLING_PROCESSOR_CONTRACT_VERSION,
     jobKey: buildDoclingJobKey({
       sourceSha256: input.source.sha256,
       reason: input.reason,
       processorVersion: input.processorVersion,
+      requestedOutputs,
     }),
     representationKind: DOCLING_REPRESENTATION_KIND,
     source: input.source,
@@ -263,7 +275,7 @@ export function buildDoclingProcessorRequest(input: {
       processorVersion: input.processorVersion,
     },
     limits: input.limits,
-    requestedOutputs: input.requestedOutputs ?? ["structured-json", "markdown"],
+    requestedOutputs,
   });
 }
 
@@ -288,6 +300,12 @@ export function parseDoclingProcessorResultForRequest(
     throw new Error("Docling processor result version mismatch");
   }
   if (result.status === "ok") {
+    if (result.metrics.pages !== null && result.metrics.pages > request.limits.maxPages) {
+      throw new Error("Docling processor result exceeds requested maxPages");
+    }
+    if (result.durationMs > request.limits.timeoutMs) {
+      throw new Error("Docling processor result exceeds requested timeoutMs");
+    }
     const requested = new Set(request.requestedOutputs);
     const returned = new Set(result.artifacts.map((artifact) => artifact.kind));
     for (const kind of requested) {
