@@ -16,7 +16,9 @@ const FEED_CONTENT_TYPE_PROBES = [
   "/api/feeds/contratti.xml",
   "/feeds/albo.xml",
 ];
-const REQUIRED_DEPLOYMENT_CONTRACT = "public-routes-contracts-organi-v2";
+const REQUIRED_DEPLOYMENT_CONTRACT = "contracts-current-albo-static-v3";
+const STATIC_CONTRACTS_DATA_PATH =
+  "/data/processed/contracts/lamezia-contracts-current.json";
 const REQUIRED_PUBLIC_TEXT = [
   "rendiamoLameziaTrasparente",
   "Osservatorio Civico Indipendente",
@@ -24,6 +26,9 @@ const REQUIRED_PUBLIC_TEXT = [
 const REQUIRED_CONTRACT_BUNDLE_TEXT = [
   "Contratti pubblici sotto osservazione",
   "Contratti protagonisti",
+  "Attiva · perimetro corrente",
+  "Albo Pretorio corrente",
+  "Filtro pubblico e privacy",
   "Stato dei fascicoli contrattuali",
   "Copertura fasi",
   "Copertura stato fasi dei fascicoli",
@@ -306,6 +311,9 @@ function assertDeployProvenance(provenance, expectedCommit = null) {
     : [];
   for (const marker of [
     "Contratti protagonisti",
+    "Attiva · perimetro corrente",
+    "Albo Pretorio corrente",
+    "Filtro pubblico e privacy",
     "Stato dei fascicoli contrattuali",
     "Copertura fasi",
     "Copertura stato fasi dei fascicoli",
@@ -334,7 +342,9 @@ function extractScriptPaths(...htmlDocuments) {
 
 function extractJavaScriptReferences(sourceText) {
   const references = new Set();
-  for (const match of sourceText.matchAll(/["']([^"'?]+\.js(?:\?[^"']*)?)["']/g)) {
+  for (const match of sourceText.matchAll(
+    /["']([^"'?]+\.js(?:\?[^"']*)?)["']/g,
+  )) {
     const reference = match[1];
     if (
       reference?.startsWith("/") ||
@@ -361,9 +371,10 @@ function bundleAssetPriority(url) {
 }
 
 function hasRequiredBundleMarkers(bundleText) {
-  return [...REQUIRED_CONTRACT_BUNDLE_TEXT, ...REQUIRED_ORGANI_BUNDLE_TEXT].every(
-    (marker) => bundleText.includes(marker),
-  );
+  return [
+    ...REQUIRED_CONTRACT_BUNDLE_TEXT,
+    ...REQUIRED_ORGANI_BUNDLE_TEXT,
+  ].every((marker) => bundleText.includes(marker));
 }
 
 async function fetchBundleText(publicUrl, scriptPaths) {
@@ -379,7 +390,9 @@ async function fetchBundleText(publicUrl, scriptPaths) {
   const fetched = new Set();
   const bundleParts = [];
   while (queue.length > 0 && fetched.size < 64) {
-    queue.sort((left, right) => bundleAssetPriority(left) - bundleAssetPriority(right));
+    queue.sort(
+      (left, right) => bundleAssetPriority(left) - bundleAssetPriority(right),
+    );
     const scriptUrl = queue.shift();
     if (!scriptUrl || fetched.has(scriptUrl)) continue;
 
@@ -430,6 +443,45 @@ function assertBundleMarkers(bundleText) {
   }
 }
 
+function assertLiveContractsData({ contracts, feedStatus, staticDataset }) {
+  if (!Array.isArray(contracts)) {
+    throw new Error("Contracts API must return a JSON array.");
+  }
+  if (
+    feedStatus?.source !== "albo_pretorio_cig_current" ||
+    feedStatus?.status !== "current-window" ||
+    feedStatus?.itemsTotal !== contracts.length
+  ) {
+    throw new Error(
+      "Contracts feed status must identify the current Albo window and match the list total.",
+    );
+  }
+  if (
+    staticDataset?.schemaVersion !== "lamezia-contracts-current.v1" ||
+    staticDataset?.source?.scope !== "current-albo-window" ||
+    !Array.isArray(staticDataset.contracts) ||
+    staticDataset.contracts.length !== contracts.length
+  ) {
+    throw new Error(
+      "Static contracts dataset must expose the current-Albo schema and match the API.",
+    );
+  }
+
+  for (const contract of contracts) {
+    if (
+      !Number.isInteger(contract.id) ||
+      !/^[A-Z0-9]{10}$/u.test(contract.cig ?? "") ||
+      contract.withoutMepa !== false ||
+      typeof contract.amount !== "number" ||
+      contract.amount < 0
+    ) {
+      throw new Error(
+        "Contracts API contains a record that violates the static public-data safeguards.",
+      );
+    }
+  }
+}
+
 async function checkPublicContractsPage(publicUrl, expectedCommit = null) {
   const rootUrl = routeUrl(publicUrl, "/");
   const contractsUrl = routeUrl(publicUrl, "/contratti");
@@ -441,12 +493,25 @@ async function checkPublicContractsPage(publicUrl, expectedCommit = null) {
   const organi = await fetchText(organiUrl, "Organi route");
   const provenance = await fetchJson(provenanceUrl, "Deploy provenance marker");
   const sitemap = await fetchText(sitemapUrl, "Public sitemap");
+  const contractsApi = await fetchJson(
+    routeUrl(publicUrl, "/api/contracts"),
+    "Contracts API",
+  );
+  const contractsFeedStatus = await fetchJson(
+    routeUrl(publicUrl, "/api/contracts/feed-status"),
+    "Contracts feed status",
+  );
+  const contractsStaticData = await fetchJson(
+    routeUrl(publicUrl, STATIC_CONTRACTS_DATA_PATH),
+    "Static contracts dataset",
+  );
 
   console.log(`Fetched ${rootUrl} -> ${root.finalUrl}`);
   console.log(`Fetched ${contractsUrl} -> ${contracts.finalUrl}`);
   console.log(`Fetched ${organiUrl} -> ${organi.finalUrl}`);
   console.log(`Fetched ${provenanceUrl} -> ${provenance.finalUrl}`);
   console.log(`Fetched ${sitemapUrl} -> ${sitemap.finalUrl}`);
+  console.log(`Fetched /api/contracts -> ${contractsApi.finalUrl}`);
 
   assertRoute(publicUrl, "/contratti", contracts.finalUrl);
   assertRoute(publicUrl, "/organi", organi.finalUrl);
@@ -454,6 +519,23 @@ async function checkPublicContractsPage(publicUrl, expectedCommit = null) {
   assertPublicText(contracts.text, "Contracts route");
   assertPublicText(organi.text, "Organi route");
   assertDeployProvenance(provenance.value, expectedCommit);
+  assertLiveContractsData({
+    contracts: contractsApi.value,
+    feedStatus: contractsFeedStatus.value,
+    staticDataset: contractsStaticData.value,
+  });
+
+  if (contractsApi.value.length > 0) {
+    const firstId = contractsApi.value[0].id;
+    await fetchJson(
+      routeUrl(publicUrl, `/api/contracts/${firstId}`),
+      "Contracts detail API",
+    );
+    await fetchJson(
+      routeUrl(publicUrl, `/api/contracts/${firstId}/storyline`),
+      "Contracts storyline API",
+    );
+  }
 
   const sitemapRoutes = extractSitemapRoutes(sitemap.text);
   const routeChecks = await Promise.all(
@@ -490,6 +572,11 @@ async function checkPublicContractsPage(publicUrl, expectedCommit = null) {
       `Feed probe ${path}`,
     );
     assertContentType(result, "xml", `Feed probe ${path}`);
+    if (path.includes("contratti.xml") && result.status !== 200) {
+      throw new Error(
+        `Contracts feed ${path} returned HTTP ${result.status}; expected 200.`,
+      );
+    }
   }
   console.log(
     `Verified ${API_CONTENT_TYPE_PROBES.length} API and ${FEED_CONTENT_TYPE_PROBES.length} feed Content-Type contract(s).`,

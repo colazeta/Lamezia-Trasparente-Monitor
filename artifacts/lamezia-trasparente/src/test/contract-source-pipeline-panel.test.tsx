@@ -40,7 +40,7 @@ describe("ContractSourcePipelinePanel", () => {
     contractListMock.contracts = [];
   });
 
-  it("renders the source pipeline without public ingestion claims", () => {
+  it("renders the active current-Albo source pipeline with explicit limits", () => {
     renderPanel();
 
     expect(screen.getByText("Contratti protagonisti")).toBeInTheDocument();
@@ -49,13 +49,17 @@ describe("ContractSourcePipelinePanel", () => {
         name: "Stato dei fascicoli contrattuali",
       }),
     ).toBeInTheDocument();
-    expect(screen.getByText("Gate fonti e pubblicazione")).toBeInTheDocument();
-    expect(screen.getByText("Dry-run ingestion")).toBeInTheDocument();
-    expect(screen.getByText("Produzione chiusa")).toBeInTheDocument();
+    expect(screen.getByText("Perimetro e prossimo passo")).toBeInTheDocument();
+    expect(screen.getByText("Albo Pretorio corrente")).toBeInTheDocument();
+    expect(screen.getByText("Filtro pubblico e privacy")).toBeInTheDocument();
     expect(
-      screen.getByText("0 record produzione, 0 scritture pubbliche"),
+      screen.getByText(
+        "Ponte di ricerca, non sincronizzazione della scheda ANAC",
+      ),
     ).toBeInTheDocument();
-    expect(screen.getByText("Lettura immediata dello stato")).toBeInTheDocument();
+    expect(
+      screen.getByText("Lettura immediata dello stato"),
+    ).toBeInTheDocument();
     expect(screen.queryByText(/ANAC sincronizzata/i)).not.toBeInTheDocument();
   });
 
@@ -114,7 +118,9 @@ describe("ContractSourcePipelinePanel", () => {
       name: "Copertura stato fasi dei fascicoli",
     });
 
-    expect(within(phaseCoverage).getByText("Programmazione")).toBeInTheDocument();
+    expect(
+      within(phaseCoverage).getByText("Programmazione"),
+    ).toBeInTheDocument();
     expect(
       within(phaseCoverage).getByRole("img", {
         name: "Programmazione: 0 documentate, 0 parziali, 1 mancanti",
@@ -127,15 +133,18 @@ describe("ContractSourcePipelinePanel", () => {
     ).toBeInTheDocument();
   });
 
-  it("keeps the public production gate closed from the dry-run report", () => {
+  it("keeps the historical ANAC integration separate from the active layer", () => {
     const snapshot = buildContractPipelineSnapshot();
 
-    expect(snapshot.discoveryStatus).toBe("needs_manual_verification");
-    expect(snapshot.dryRunGate).toBe("blocked_by_source_discovery");
-    expect(snapshot.productionIngestionAllowed).toBe(false);
-    expect(snapshot.productionRecordsWritten).toBe(false);
-    expect(snapshot.publicAppDataWritten).toBe(false);
-    expect(snapshot.databaseWrites).toBe(false);
+    expect(snapshot.stages).toHaveLength(4);
+    expect(snapshot.stages.map((stage) => stage.state)).toEqual([
+      "complete",
+      "complete",
+      "complete",
+      "ready",
+    ]);
+    expect(snapshot.nextAction).toContain("storico completo");
+    expect(snapshot.nextAction).toContain("nessuna assenza");
   });
 });
 

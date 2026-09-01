@@ -390,6 +390,9 @@ function buildEvidence(
   for (const event of timeline) {
     const phaseKey = mapStorylinePhase(event.phase);
     const hasAttachment = event.attachments.length > 0;
+    const officialAttachmentUrl = event.attachments
+      .map((attachment) => safeOfficialAlboUrl(attachment.officialUrl))
+      .find((url): url is string => Boolean(url));
     evidence.push({
       id: `albo-${event.publicationId}`,
       phaseKey,
@@ -400,7 +403,7 @@ function buildEvidence(
       sourceLabel: hasAttachment
         ? `Albo Pretorio ${event.progressivo}`
         : `Riferimento Albo Pretorio ${event.progressivo}`,
-      sourceUrl: `/albo/${event.publicationId}`,
+      sourceUrl: officialAttachmentUrl ?? `/albo/${event.publicationId}`,
       identifier: event.matchedBy.toUpperCase(),
       isOfficialSourceEvidence: hasAttachment,
     });
@@ -435,6 +438,18 @@ function buildEvidence(
   }
 
   return evidence;
+}
+
+function safeOfficialAlboUrl(value: string | null | undefined): string | null {
+  if (!value) return null;
+  try {
+    const url = new URL(value);
+    return url.protocol === "https:" && url.hostname === "albo.tinnvision.cloud"
+      ? url.toString()
+      : null;
+  } catch {
+    return null;
+  }
 }
 
 function buildPhase(input: {

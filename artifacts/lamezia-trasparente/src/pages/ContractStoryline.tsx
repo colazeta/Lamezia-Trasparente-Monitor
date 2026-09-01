@@ -111,7 +111,7 @@ const STATUS_META: Record<
       "border-transparent bg-emerald-100 text-emerald-800 dark:bg-emerald-500/20 dark:text-emerald-300",
   },
   in_corso: {
-    label: "In corso",
+    label: "In documentazione",
     className:
       "border-transparent bg-sky-100 text-sky-800 dark:bg-sky-500/20 dark:text-sky-300",
   },
@@ -140,7 +140,7 @@ export function ContractStoryline() {
         className="inline-flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-primary transition-colors mb-6"
       >
         <ArrowLeft className="h-4 w-4" />
-        Torna agli appalti
+        Torna ai fascicoli
       </Link>
 
       {isLoading ? (
@@ -158,9 +158,9 @@ export function ContractStoryline() {
             <EmptyMedia variant="icon">
               <FileText className="h-6 w-6" />
             </EmptyMedia>
-            <EmptyTitle>Appalto non trovato</EmptyTitle>
+            <EmptyTitle>Fascicolo non trovato</EmptyTitle>
             <EmptyDescription>
-              Il contratto richiesto non esiste o non è più disponibile.
+              Il fascicolo richiesto non esiste o non è più disponibile.
             </EmptyDescription>
           </EmptyHeader>
         </Empty>
@@ -216,12 +216,12 @@ function StorylineContent({
           ) : null}
           {contract.withoutTender ? (
             <Badge className="border-transparent bg-amber-100 text-amber-800 text-xs shadow-none dark:bg-amber-500/20 dark:text-amber-300">
-              Senza gara
+              Affidamento diretto dichiarato
             </Badge>
           ) : null}
           {contract.withoutMepa ? (
             <Badge className="border-transparent bg-amber-100 text-amber-800 text-xs shadow-none dark:bg-amber-500/20 dark:text-amber-300">
-              Fuori MEPA
+              Fuori MePA dichiarato
             </Badge>
           ) : null}
           <Badge className={`text-xs shadow-none ${status.className}`}>
@@ -271,20 +271,20 @@ function StorylineContent({
 
       <ContractPublicLimitsBox limits={dossier.publicLimits} />
 
-      {/* Caratteristiche dell'appalto */}
+      {/* Dati del fascicolo */}
       <section>
         <h2 className="mb-1 font-display text-xl font-bold tracking-tight">
-          Caratteristiche dell'appalto
+          Dati del fascicolo
         </h2>
         <p className="mb-4 text-sm text-muted-foreground">
-          I dati identificativi della spesa, così come pubblicati dalla stazione
-          appaltante.
+          I dati identificativi rilevati nelle fonti pubbliche disponibili,
+          senza colmare automaticamente i campi assenti.
         </p>
         <div className="rounded-2xl border border-card-border bg-card p-6 shadow-sm">
           <dl className="grid gap-x-6 gap-y-5 sm:grid-cols-2 text-sm">
             <MetaRow
               icon={Euro}
-              label="Importo aggiudicato"
+              label="Importo rilevato"
               value={
                 contract.amount > 0
                   ? formatEuro(contract.amount)
@@ -313,7 +313,7 @@ function StorylineContent({
             />
             <MetaRow
               icon={Calendar}
-              label="Data di aggiudicazione"
+              label="Data di riferimento"
               value={formatDate(contract.awardDate)}
             />
             <MetaRow
@@ -354,7 +354,7 @@ function StorylineContent({
                 ? `${indicators.daysToFirstLiquidazione} gg`
                 : "—"
             }
-            sub="dall'aggiudicazione"
+            sub="dal primo atto collegato"
           />
           <IndicatorCard
             icon={Banknote}
@@ -409,7 +409,7 @@ function StorylineContent({
           Cronistoria degli atti
         </h2>
         <p className="mb-5 text-sm text-muted-foreground">
-          Ricostruita dagli atti dell'Albo Pretorio collegati a questo appalto
+          Ricostruita dagli atti dell'Albo Pretorio collegati a questo fascicolo
           tramite CIG o CUP.
         </p>
 
@@ -422,7 +422,7 @@ function StorylineContent({
               <EmptyTitle>Nessun atto collegato</EmptyTitle>
               <EmptyDescription>
                 Non sono state trovate pubblicazioni dell'Albo Pretorio
-                collegabili a questo appalto tramite CIG o CUP. La cronistoria
+                collegabili a questo fascicolo tramite CIG o CUP. La cronistoria
                 si arricchirà con le nuove pubblicazioni.
               </EmptyDescription>
             </EmptyHeader>
@@ -449,7 +449,7 @@ function StorylineContent({
 // Elenco compatto delle pubblicazioni dell'Albo Pretorio che citano il CIG,
 // con collegamento diretto alla scheda di dettaglio di ciascun atto.
 function AlboDocumentsSection({ cig }: { cig: string }) {
-  const { data, isLoading } = useListPublications({ q: cig });
+  const { data, isLoading, isError } = useListPublications({ q: cig });
   const publications = data ?? [];
 
   return (
@@ -458,7 +458,7 @@ function AlboDocumentsSection({ cig }: { cig: string }) {
         Documenti dell'Albo
       </h2>
       <p className="mb-5 text-sm text-muted-foreground">
-        Gli atti dell'Albo Pretorio che citano il CIG di questo appalto. Apri
+        Gli atti dell'Albo Pretorio che citano il CIG di questo fascicolo. Apri
         ciascuna scheda per leggere il testo completo e gli allegati.
       </p>
 
@@ -476,6 +476,19 @@ function AlboDocumentsSection({ cig }: { cig: string }) {
               </div>
             ))}
         </div>
+      ) : isError ? (
+        <Empty className="rounded-2xl border border-dashed border-border">
+          <EmptyHeader>
+            <EmptyMedia variant="icon">
+              <FileSearch className="h-6 w-6" />
+            </EmptyMedia>
+            <EmptyTitle>Ricerca Albo aggiuntiva non disponibile</EmptyTitle>
+            <EmptyDescription>
+              Il documento ufficiale già associato al fascicolo resta
+              consultabile nella cronistoria qui sopra.
+            </EmptyDescription>
+          </EmptyHeader>
+        </Empty>
       ) : publications.length === 0 ? (
         <Empty className="rounded-2xl border border-dashed border-border">
           <EmptyHeader>
