@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 import { Router } from "wouter";
 import { describe, expect, it, vi } from "vitest";
 
@@ -50,6 +50,17 @@ describe("PNRR page static feed", () => {
       LAMEZIA_PNRR_STATIC_DATA.coverage.projects_with_opencup,
     );
     expect(screen.getAllByText(/CUP · ID progetto/i).length).toBeGreaterThan(0);
+    const dossierToggles = screen.getAllByTestId(/^pnrr-dossier-toggle-/);
+    expect(dossierToggles).toHaveLength(
+      LAMEZIA_PNRR_STATIC_DATA.coverage.projects,
+    );
+    const firstDossier = dossierToggles[0].closest("details");
+    expect(firstDossier).not.toHaveAttribute("open");
+    fireEvent.click(dossierToggles[0]);
+    expect(firstDossier).toHaveAttribute("open");
+    expect(screen.getAllByText("Dossier completo del progetto")).toHaveLength(
+      LAMEZIA_PNRR_STATIC_DATA.coverage.projects,
+    );
     expect(
       screen.getAllByText(/non rappresenta lo stato di avanzamento/i).length,
     ).toBeGreaterThan(0);
