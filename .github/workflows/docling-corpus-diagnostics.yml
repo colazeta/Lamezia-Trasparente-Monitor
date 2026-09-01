@@ -80,6 +80,7 @@ jobs:
           tmp/docling/corpus/candidates.json
           --output-dir tmp/docling/corpus/results
           --max-items 4
+          --max-pages 20
 
       - name: Fail closed if extracted content was retained
         run: python tools/docling/verify_metrics_only_artifacts.py tmp/docling/corpus
