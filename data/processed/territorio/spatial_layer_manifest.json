@@ -1,0 +1,59 @@
+{
+  "schema_version": "1.0",
+  "generated_at": "2026-09-01T19:08:35.895Z",
+  "scope": {
+    "municipality": "Lamezia Terme",
+    "istat_code": "079160"
+  },
+  "publication_policy": "default-deny",
+  "layers": [
+    {
+      "layer_id": "municipal-boundary",
+      "primary_data_path": "/data/processed/territorio/lamezia_confine_comunale.geojson",
+      "data_path": "/data/processed/territorio/lamezia_confine_comunale.geojson",
+      "distribution_role": "primary",
+      "media_type": "application/geo+json",
+      "distribution_status": "published",
+      "content_status": "populated",
+      "feature_count": 1,
+      "excluded_feature_count": 0,
+      "sha256": "5254a64e615ca00b5353606911881df912c79cf6dc097660acd08baa5ee04f79",
+      "source_label": "OpenStreetMap / Nominatim",
+      "licence": "ODbL 1.0",
+      "source_modified": null,
+      "publication_note": "Perimetro amministrativo di riferimento; non sostituisce una base ufficiale più autorevole che dovesse diventare disponibile."
+    },
+    {
+      "layer_id": "census-sections",
+      "primary_data_path": "/data/processed/territorio/istat_sezioni_censimento_lamezia.geojson",
+      "data_path": "/data/processed/territorio/istat_sezioni_censimento_lamezia.geojson",
+      "distribution_role": "primary",
+      "media_type": "application/geo+json",
+      "distribution_status": "published",
+      "content_status": "populated",
+      "feature_count": 317,
+      "excluded_feature_count": 0,
+      "sha256": "9f236f542d803f9c9e900e19b285fa2c7e20ea565c78163f40c17d7101b35476",
+      "source_label": "ISTAT — Basi territoriali 2021 e dati per sezioni di censimento 2023",
+      "licence": "CC BY 4.0 unless otherwise indicated by ISTAT",
+      "source_modified": "geometrie 2021; indicatori 2023",
+      "publication_note": "I valori mancanti restano distinti dallo zero; la copertura degli indicatori è documentata nei metadati associati."
+    },
+    {
+      "layer_id": "confiscated-assets",
+      "primary_data_path": "/api/beni-confiscati/geojson",
+      "data_path": "/data/processed/territorio/beni_confiscati_lamezia.geojson",
+      "distribution_role": "continuity_fallback",
+      "media_type": "application/geo+json",
+      "distribution_status": "published",
+      "content_status": "empty_by_policy",
+      "feature_count": 0,
+      "excluded_feature_count": 340,
+      "sha256": "7ad42ba28a902e51aa0af9c1f1b58bb2a5688978d2df1c81dbe02b07297587b6",
+      "source_label": "ANBSC — beni immobili in amministrazione e destinati (Comune di Lamezia Terme)",
+      "licence": "Italian Open Data License v2.0",
+      "source_modified": "2026-09-02 04:00:00",
+      "publication_note": "Fallback statico tecnicamente disponibile ma privo di feature: collocare ogni bene sul centroide comunale produrrebbe una localizzazione falsa. I conteggi descrivono la fonte ANBSC, non una mappa puntuale né lo stato del feed API canonico costruito dal database. Questa distribuzione è un fallback di continuità ANBSC e non sostituisce il feed API costruito dal database, che conserva eventuali localizzazioni redazionali qualificate."
+    }
+  ]
+}

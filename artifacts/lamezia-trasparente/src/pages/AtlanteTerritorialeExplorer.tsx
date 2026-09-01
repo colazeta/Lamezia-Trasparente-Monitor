@@ -532,7 +532,11 @@ function MapExplorer({
               className={`mt-2 text-[11px] leading-4 ${
                 confiscatedAssetsState.status === "error"
                   ? "font-medium text-destructive"
-                  : "text-muted-foreground"
+                  : confiscatedAssetsState.status === "ready" &&
+                      confiscatedAssetsState.distribution ===
+                        "continuity_fallback"
+                    ? "font-medium text-warning"
+                    : "text-muted-foreground"
               }`}
             >
               {confiscatedAssetsCoverage}

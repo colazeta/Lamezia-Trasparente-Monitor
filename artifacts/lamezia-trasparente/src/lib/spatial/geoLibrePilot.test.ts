@@ -11,10 +11,15 @@ import {
   buildGeoLibreViewerUrl,
   checkGeoLibreLayerAvailability,
   isGeoLibrePilotEnabled,
+  loadSpatialPublicationManifest,
   resolveSpatialDataUrl,
 } from "./geoLibrePilot";
 
-function layer(id: SpatialLayerId, dataPath: string): SpatialLayerDefinition {
+function layer(
+  id: SpatialLayerId,
+  dataPath: string,
+  fallbackDataPath?: string,
+): SpatialLayerDefinition {
   return {
     id,
     title: id,
@@ -27,6 +32,7 @@ function layer(id: SpatialLayerId, dataPath: string): SpatialLayerDefinition {
     entityTypes: ["municipality"],
     sourceLabel: "test",
     dataPath,
+    fallbackDataPath,
     defaultVisible: true,
     publicationRule: "test",
     caveats: [],
@@ -174,6 +180,43 @@ describe("GeoLibre pilot helpers", () => {
     ]);
   });
 
+  it("uses a declared static fallback without replacing the canonical API path", async () => {
+    const requested: string[] = [];
+    const availability = await checkGeoLibreLayerAvailability({
+      layers: [
+        layer(
+          "confiscated-assets",
+          "/api/beni-confiscati/geojson",
+          "/data/processed/territorio/beni_confiscati_lamezia.geojson",
+        ),
+      ],
+      siteOrigin: "https://lamezia.example",
+      fetcher: async (input) => {
+        const url = input instanceof Request ? input.url : String(input);
+        requested.push(url);
+        return new Response(null, {
+          status: url.includes("/api/") ? 503 : 200,
+          headers: { "content-type": "application/geo+json" },
+        });
+      },
+    });
+
+    expect(availability[0]).toMatchObject({
+      dataUrl:
+        "https://lamezia.example/data/processed/territorio/beni_confiscati_lamezia.geojson",
+      status: "ready",
+      reason: null,
+      distribution: "continuity_fallback",
+      primaryDataUrl: "https://lamezia.example/api/beni-confiscati/geojson",
+      primaryHttpStatus: 503,
+      primaryReason: "http_error",
+    });
+    expect(requested).toEqual([
+      "https://lamezia.example/api/beni-confiscati/geojson",
+      "https://lamezia.example/data/processed/territorio/beni_confiscati_lamezia.geojson",
+    ]);
+  });
+
   it("rejects a successful response that is not GeoJSON", async () => {
     const availability = await checkGeoLibreLayerAvailability({
       layers: [layer("municipal-boundary", "/api/gis/comune")],
@@ -262,9 +305,99 @@ describe("GeoLibre pilot helpers", () => {
     );
 
     expect(url.searchParams.getAll("data")).toEqual([
-      "https://api.lamezia.example/api/gis/comune",
+      "https://lamezia.example/data/processed/territorio/lamezia_confine_comunale.geojson",
       "https://lamezia.example/data/processed/territorio/istat_sezioni_censimento_lamezia.geojson",
       "https://api.lamezia.example/api/beni-confiscati/geojson",
     ]);
+  });
+
+  it("accepts a default-deny manifest aligned with every active layer", async () => {
+    const activeLayers = getActiveAtlasSpatialLayers();
+    const manifest = {
+      schema_version: "1.0",
+      generated_at: "2026-09-01T18:00:00.000Z",
+      scope: { municipality: "Lamezia Terme", istat_code: "079160" },
+      publication_policy: "default-deny",
+      layers: activeLayers.map((item, index) => ({
+        layer_id: item.id,
+        primary_data_path: item.dataPath,
+        data_path: item.fallbackDataPath ?? item.dataPath,
+        distribution_role: item.fallbackDataPath
+          ? "continuity_fallback"
+          : "primary",
+        media_type: "application/geo+json",
+        distribution_status: "published",
+        content_status: index === 2 ? "empty_by_policy" : "populated",
+        feature_count: index === 0 ? 1 : index === 1 ? 317 : 0,
+        excluded_feature_count: index === 2 ? 340 : 0,
+        sha256: "a".repeat(64),
+        source_label: item.sourceLabel,
+        licence: "test",
+        source_modified: null,
+        publication_note: "test",
+      })),
+    };
+
+    const loaded = await loadSpatialPublicationManifest({
+      layers: activeLayers,
+      siteOrigin: "https://lamezia.example",
+      fetcher: async (input, init) => {
+        expect(input).toBe(
+          "https://lamezia.example/data/processed/territorio/spatial_layer_manifest.json",
+        );
+        expect(init?.method).toBe("GET");
+        return Response.json(manifest, {
+          headers: { "content-type": "application/json; charset=utf-8" },
+        });
+      },
+    });
+
+    expect(loaded.layers[2]).toMatchObject({
+      layer_id: "confiscated-assets",
+      content_status: "empty_by_policy",
+      excluded_feature_count: 340,
+    });
+  });
+
+  it("rejects a manifest whose data path diverges from the registry", async () => {
+    const activeLayers = getActiveAtlasSpatialLayers();
+    const manifest = {
+      schema_version: "1.0",
+      generated_at: "2026-09-01T18:00:00.000Z",
+      scope: { municipality: "Lamezia Terme", istat_code: "079160" },
+      publication_policy: "default-deny",
+      layers: activeLayers.map((item) => ({
+        layer_id: item.id,
+        primary_data_path: item.dataPath,
+        data_path:
+          item.id === "municipal-boundary"
+            ? "/data/processed/territorio/wrong.geojson"
+            : (item.fallbackDataPath ?? item.dataPath),
+        distribution_role: item.fallbackDataPath
+          ? "continuity_fallback"
+          : "primary",
+        media_type: "application/geo+json",
+        distribution_status: "published",
+        content_status: "populated",
+        feature_count: 1,
+        excluded_feature_count: 0,
+        sha256: "b".repeat(64),
+        source_label: item.sourceLabel,
+        licence: "test",
+        source_modified: null,
+        publication_note: "test",
+      })),
+    };
+
+    await expect(
+      loadSpatialPublicationManifest({
+        layers: activeLayers,
+        siteOrigin: "https://lamezia.example",
+        fetcher: async () =>
+          Response.json(manifest, {
+            headers: { "content-type": "application/json" },
+          }),
+      }),
+    ).rejects.toThrow(/manifest mismatch for municipal-boundary/);
   });
 });

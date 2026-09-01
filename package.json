@@ -21,6 +21,7 @@
     "pnrr:check:lamezia": "node scripts/check-lamezia-pnrr-static-data.mjs",
     "opendata:refresh:lamezia": "node scripts/refresh-lamezia-opendata-series.mjs",
     "opendata:status:lamezia": "node scripts/build-lamezia-opendata-series-status.mjs",
+    "spatial:snapshots:lamezia": "pnpm --filter @workspace/scripts run materialize:spatial-public-snapshots",
     "smoke:v0-static-fallback": "pnpm --filter @workspace/lamezia-trasparente run build && node scripts/check-v0-static-fallback.mjs",
     "smoke:public-contracts": "node scripts/check-public-contracts-page.mjs",
     "hook:pr-guard": "node scripts/hooks/pr-guard.mjs",

@@ -11,7 +11,9 @@ import { getActiveAtlasSpatialLayers } from "@/lib/spatial";
 import {
   buildGeoLibreViewerUrl,
   checkGeoLibreLayerAvailability,
+  loadSpatialPublicationManifest,
   type GeoLibreLayerAvailability,
+  type SpatialPublicationManifest,
 } from "@/lib/spatial/geoLibrePilot";
 
 const DEFAULT_GEOLIBRE_VIEWER_URL = "https://web.geolibre.app/";
@@ -22,6 +24,9 @@ export function GeoLibreAtlasPilot() {
     typeof window === "undefined" ? null : window.location.origin;
   const [availability, setAvailability] = useState<
     GeoLibreLayerAvailability[] | null
+  >(null);
+  const [manifest, setManifest] = useState<
+    SpatialPublicationManifest | null | false
   >(null);
 
   useEffect(() => {
@@ -36,16 +41,35 @@ export function GeoLibreAtlasPilot() {
     }).then((result) => {
       if (!controller.signal.aborted) setAvailability(result);
     });
+    void loadSpatialPublicationManifest({
+      layers: activeLayers,
+      siteOrigin,
+      signal: controller.signal,
+    })
+      .then((result) => {
+        if (!controller.signal.aborted) setManifest(result);
+      })
+      .catch(() => {
+        if (!controller.signal.aborted) setManifest(false);
+      });
 
     return () => controller.abort();
   }, [activeLayers, siteOrigin]);
 
+  const readyFeeds = useMemo(
+    () =>
+      availability?.filter(
+        (item) => item.status === "ready" && item.dataUrl !== null,
+      ) ?? [],
+    [availability],
+  );
   const readyLayers = useMemo(
     () =>
-      availability
-        ?.filter((item) => item.status === "ready")
-        .map((item) => item.layer) ?? [],
-    [availability],
+      readyFeeds.map((item) => ({
+        ...item.layer,
+        dataPath: item.dataUrl,
+      })),
+    [readyFeeds],
   );
   const unavailableLayers = useMemo(
     () => availability?.filter((item) => item.status === "unavailable") ?? [],
@@ -63,6 +87,20 @@ export function GeoLibreAtlasPilot() {
       apiBaseUrl: import.meta.env.VITE_API_BASE_URL,
     });
   }, [readyLayers, siteOrigin]);
+  const emptySnapshotLayers = useMemo(
+    () =>
+      manifest
+        ? manifest.layers.filter(
+            (layer) => layer.content_status === "empty_by_policy",
+          )
+        : [],
+    [manifest],
+  );
+  const continuityFallbacks = useMemo(
+    () =>
+      readyFeeds.filter((item) => item.distribution === "continuity_fallback"),
+    [readyFeeds],
+  );
 
   if (!siteOrigin) return null;
 
@@ -96,8 +134,9 @@ export function GeoLibreAtlasPilot() {
           <p>
             Prima di aprire GeoLibre, il pilot verifica i feed dei layer attivi
             e inoltra al viewer soltanto quelli disponibili e in formato
-            GeoJSON. Un feed non raggiungibile resta dichiarato come
-            indisponibile: non viene sostituito con un insieme vuoto.
+            GeoJSON. La sorgente primaria resta preferita; un fallback statico
+            viene usato solo se è dichiarato, verificato e segnalato. Un errore
+            non viene mai trasformato implicitamente in un insieme vuoto.
           </p>
         </div>
 
@@ -129,6 +168,86 @@ export function GeoLibreAtlasPilot() {
             </p>
           </div>
         )}
+
+        {manifest ? (
+          <div
+            aria-live="polite"
+            className="rounded-lg border border-border bg-card px-3 py-3 text-sm"
+            role="status"
+          >
+            <p className="font-semibold text-foreground">
+              Snapshot statici pubblicati: {manifest.layers.length} di{" "}
+              {activeLayers.length};{" "}
+              {
+                manifest.layers.filter(
+                  (layer) => layer.content_status === "populated",
+                ).length
+              }{" "}
+              con geometrie
+            </p>
+            <p className="mt-1 text-xs leading-5 text-muted-foreground">
+              Manifest default-deny con conteggi, licenze e digest SHA-256 delle
+              distribuzioni versionate e con il loro rapporto con la sorgente
+              primaria.
+            </p>
+          </div>
+        ) : manifest === false ? (
+          <div
+            className="rounded-lg border border-warning/40 bg-warning/10 px-3 py-2.5 text-xs leading-5 text-foreground"
+            role="alert"
+          >
+            Manifest degli snapshot non disponibile; la verifica tecnica dei
+            singoli feed resta attiva.
+          </div>
+        ) : null}
+
+        {continuityFallbacks.length > 0 ? (
+          <div
+            className="flex items-start gap-2 rounded-lg border border-warning/40 bg-warning/10 px-3 py-2.5 text-xs leading-5 text-foreground"
+            role="status"
+          >
+            <AlertTriangle
+              className="mt-0.5 h-4 w-4 flex-none text-warning"
+              aria-hidden="true"
+            />
+            <div>
+              <p className="font-semibold">
+                Fallback statico di continuità attivo
+              </p>
+              <ul className="mt-1 list-disc pl-4 text-muted-foreground">
+                {continuityFallbacks.map((item) => (
+                  <li key={item.layer.id}>
+                    {item.layer.title} — {primaryLayerFailureReason(item)};
+                    viene usata la distribuzione statica dichiarata. Il feed API
+                    costruito dal database resta la sorgente primaria.
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        ) : null}
+
+        {emptySnapshotLayers.length > 0 ? (
+          <div className="flex items-start gap-2 rounded-lg border border-warning/40 bg-warning/10 px-3 py-2.5 text-xs leading-5 text-foreground">
+            <AlertTriangle
+              className="mt-0.5 h-4 w-4 flex-none text-warning"
+              aria-hidden="true"
+            />
+            <div>
+              <p className="font-semibold">Snapshot statici vuoti per policy</p>
+              <ul className="mt-1 list-disc pl-4 text-muted-foreground">
+                {emptySnapshotLayers.map((layer) => (
+                  <li key={layer.layer_id}>
+                    {layerTitle(activeLayers, layer.layer_id)} —{" "}
+                    {layer.feature_count} feature pubblicate;{" "}
+                    {layer.excluded_feature_count} record esclusi.{" "}
+                    {layer.publication_note}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        ) : null}
 
         {availability !== null && unavailableLayers.length > 0 ? (
           <div
@@ -210,4 +329,27 @@ function unavailableLayerReason(item: GeoLibreLayerAvailability): string {
   if (item.reason === "missing_data_path") return "feed non configurato";
   if (item.httpStatus !== null) return `HTTP ${item.httpStatus}`;
   return "rete/CORS";
+}
+
+function primaryLayerFailureReason(item: GeoLibreLayerAvailability): string {
+  if (item.primaryReason === "timeout") {
+    return "feed primario oltre il tempo massimo";
+  }
+  if (item.primaryReason === "invalid_content_type") {
+    return "feed primario in formato non GeoJSON";
+  }
+  if (item.primaryReason === "invalid_url") {
+    return "URL del feed primario non valido";
+  }
+  if (item.primaryHttpStatus !== null) {
+    return `feed primario HTTP ${item.primaryHttpStatus}`;
+  }
+  return "feed primario non raggiungibile (rete/CORS)";
+}
+
+function layerTitle(
+  layers: ReturnType<typeof getActiveAtlasSpatialLayers>,
+  layerId: string,
+): string {
+  return layers.find((layer) => layer.id === layerId)?.title ?? layerId;
 }

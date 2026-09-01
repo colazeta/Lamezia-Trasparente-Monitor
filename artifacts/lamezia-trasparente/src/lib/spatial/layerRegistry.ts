@@ -47,6 +47,7 @@ export type SpatialLayerDefinition = {
   entityTypes: string[];
   sourceLabel: string;
   dataPath?: string | null;
+  fallbackDataPath?: string | null;
   defaultVisible: boolean;
   minimumVerification?: SpatialVerificationStatus | null;
   publicationRule: string;
@@ -57,7 +58,9 @@ export type SpatialLayerDefinition = {
  * Registro iniziale dei layer territoriali.
  *
  * È intenzionalmente indipendente dal viewer: Leaflet, GeoLibre o altri client
- * devono leggere la stessa definizione logica e gli stessi dati canonici.
+ * devono leggere la stessa definizione logica e gli stessi dati canonici. Un
+ * eventuale `fallbackDataPath` è una distribuzione di continuità esplicita e
+ * non sostituisce la sorgente primaria indicata da `dataPath`.
  * `atlasStatus` descrive la disponibilità nella superficie Atlante, non il
  * motore cartografico usato per renderizzare il layer.
  */
@@ -65,7 +68,8 @@ export const SPATIAL_LAYER_REGISTRY: SpatialLayerDefinition[] = [
   {
     id: "municipal-boundary",
     title: "Confine comunale",
-    description: "Perimetro geografico di riferimento del Comune di Lamezia Terme.",
+    description:
+      "Perimetro geografico di riferimento del Comune di Lamezia Terme.",
     group: "reference",
     status: "existing",
     atlasStatus: "active",
@@ -73,7 +77,7 @@ export const SPATIAL_LAYER_REGISTRY: SpatialLayerDefinition[] = [
     allowedGeometryRoles: ["administrative_boundary"],
     entityTypes: ["municipality"],
     sourceLabel: "OpenStreetMap / Nominatim",
-    dataPath: "/api/gis/comune",
+    dataPath: "/data/processed/territorio/lamezia_confine_comunale.geojson",
     defaultVisible: true,
     publicationRule:
       "Usare esclusivamente come perimetro amministrativo di riferimento; conservare attribuzione e provenienza e non associare al confine significati non presenti nella fonte.",
@@ -92,7 +96,8 @@ export const SPATIAL_LAYER_REGISTRY: SpatialLayerDefinition[] = [
     geometryTypes: ["Polygon", "MultiPolygon"],
     allowedGeometryRoles: ["census_area"],
     entityTypes: ["census_section"],
-    sourceLabel: "ISTAT — Basi territoriali 2021 e dati per sezioni di censimento 2023",
+    sourceLabel:
+      "ISTAT — Basi territoriali 2021 e dati per sezioni di censimento 2023",
     dataPath:
       "/data/processed/territorio/istat_sezioni_censimento_lamezia.geojson",
     defaultVisible: true,
@@ -117,27 +122,39 @@ export const SPATIAL_LAYER_REGISTRY: SpatialLayerDefinition[] = [
     entityTypes: ["confiscated_asset"],
     sourceLabel: "ANBSC / localizzazioni redazionali qualificate",
     dataPath: "/api/beni-confiscati/geojson",
+    fallbackDataPath:
+      "/data/processed/territorio/beni_confiscati_lamezia.geojson",
     defaultVisible: false,
     minimumVerification: "machine_geocoded",
     publicationRule:
       "Fail-closed: pubblicare soltanto coordinate valide con provenienza geografica coerente e geoVerify=false; i record approssimati o ancora da verificare restano esclusi dal layer pubblico.",
     caveats: [
       "Le coordinate già presenti nei record non bastano da sole: devono essere accompagnate da provenienza e stato di verifica coerenti.",
-      "Il GeoJSON espone la copertura e i motivi di esclusione, così i beni non mappabili non vengono occultati né geocodificati artificialmente.",
+      "Il feed API costruito dal database resta la distribuzione primaria, così le localizzazioni redazionali qualificate non vengono perse.",
+      "Lo snapshot statico è soltanto un fallback di continuità ANBSC: espone copertura e motivi di esclusione senza sostituire il database o trasformare un errore in assenza di beni.",
+      "La fotografia ANBSC corrente espone coordinate comunali, non posizioni dei singoli beni: questi record restano esclusi dal layer puntuale.",
       "Mantenere la mappa Leaflet esistente finché il layer canonico non è validato nell'Atlante.",
     ],
   },
   {
     id: "public-works",
     title: "Opere pubbliche",
-    description: "Opere e interventi pubblici con luogo di esecuzione verificabile.",
+    description:
+      "Opere e interventi pubblici con luogo di esecuzione verificabile.",
     group: "public-investment",
     status: "planned",
     atlasStatus: "planned",
-    geometryTypes: ["Point", "LineString", "MultiLineString", "Polygon", "MultiPolygon"],
+    geometryTypes: [
+      "Point",
+      "LineString",
+      "MultiLineString",
+      "Polygon",
+      "MultiPolygon",
+    ],
     allowedGeometryRoles: ["intervention_site", "intervention_area", "route"],
     entityTypes: ["public_work", "project"],
-    sourceLabel: "BDAP-MOP, Comune di Lamezia Terme e altre fonti pubbliche validate",
+    sourceLabel:
+      "BDAP-MOP, Comune di Lamezia Terme e altre fonti pubbliche validate",
     defaultVisible: false,
     publicationRule:
       "Pubblicare soltanto la geometria del luogo o dell'area di intervento, non la sede del soggetto attuatore o dell'affidatario.",
@@ -148,11 +165,18 @@ export const SPATIAL_LAYER_REGISTRY: SpatialLayerDefinition[] = [
   {
     id: "pnrr-projects",
     title: "Progetti PNRR",
-    description: "Progetti PNRR territorialmente localizzabili nel Comune di Lamezia Terme.",
+    description:
+      "Progetti PNRR territorialmente localizzabili nel Comune di Lamezia Terme.",
     group: "public-investment",
     status: "planned",
     atlasStatus: "planned",
-    geometryTypes: ["Point", "LineString", "MultiLineString", "Polygon", "MultiPolygon"],
+    geometryTypes: [
+      "Point",
+      "LineString",
+      "MultiLineString",
+      "Polygon",
+      "MultiPolygon",
+    ],
     allowedGeometryRoles: ["intervention_site", "intervention_area", "route"],
     entityTypes: ["pnrr_project"],
     sourceLabel: "ReGiS / Italia Domani / fonti amministrative collegate",
@@ -166,14 +190,16 @@ export const SPATIAL_LAYER_REGISTRY: SpatialLayerDefinition[] = [
   {
     id: "public-assets",
     title: "Patrimonio pubblico",
-    description: "Immobili, aree e strutture pubbliche con geometria verificabile.",
+    description:
+      "Immobili, aree e strutture pubbliche con geometria verificabile.",
     group: "public-assets",
     status: "planned",
     atlasStatus: "planned",
     geometryTypes: ["Point", "Polygon", "MultiPolygon"],
     allowedGeometryRoles: ["asset_location", "facility_location", "parcel"],
     entityTypes: ["public_asset", "public_facility"],
-    sourceLabel: "Comune di Lamezia Terme e altre fonti patrimoniali pubbliche validate",
+    sourceLabel:
+      "Comune di Lamezia Terme e altre fonti patrimoniali pubbliche validate",
     defaultVisible: false,
     publicationRule:
       "Associare ogni geometria al bene corretto e conservare la data di osservazione per evitare di presentare come attuale una situazione storica.",
@@ -182,7 +208,8 @@ export const SPATIAL_LAYER_REGISTRY: SpatialLayerDefinition[] = [
   {
     id: "schools-services",
     title: "Scuole e servizi",
-    description: "Strutture scolastiche e servizi pubblici territorialmente identificabili.",
+    description:
+      "Strutture scolastiche e servizi pubblici territorialmente identificabili.",
     group: "services",
     status: "planned",
     atlasStatus: "planned",
@@ -198,7 +225,8 @@ export const SPATIAL_LAYER_REGISTRY: SpatialLayerDefinition[] = [
   {
     id: "cultural-assets",
     title: "Beni culturali",
-    description: "Beni e luoghi culturali collegabili alla lettura territoriale della città.",
+    description:
+      "Beni e luoghi culturali collegabili alla lettura territoriale della città.",
     group: "culture",
     status: "planned",
     atlasStatus: "planned",
@@ -219,7 +247,13 @@ export const SPATIAL_LAYER_REGISTRY: SpatialLayerDefinition[] = [
     group: "procurement",
     status: "planned",
     atlasStatus: "planned",
-    geometryTypes: ["Point", "LineString", "MultiLineString", "Polygon", "MultiPolygon"],
+    geometryTypes: [
+      "Point",
+      "LineString",
+      "MultiLineString",
+      "Polygon",
+      "MultiPolygon",
+    ],
     allowedGeometryRoles: ["intervention_site", "intervention_area", "route"],
     entityTypes: ["contract"],
     sourceLabel: "ANAC e documentazione amministrativa collegata",
@@ -232,7 +266,9 @@ export const SPATIAL_LAYER_REGISTRY: SpatialLayerDefinition[] = [
   },
 ];
 
-export function getSpatialLayer(layerId: string): SpatialLayerDefinition | null {
+export function getSpatialLayer(
+  layerId: string,
+): SpatialLayerDefinition | null {
   return SPATIAL_LAYER_REGISTRY.find((layer) => layer.id === layerId) ?? null;
 }
 
