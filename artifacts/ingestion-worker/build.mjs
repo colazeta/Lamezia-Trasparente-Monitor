@@ -1,7 +1,7 @@
 import { createRequire } from "node:module";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { rm, cp } from "node:fs/promises";
+import { mkdir, rm, cp } from "node:fs/promises";
 import { build as esbuild } from "esbuild";
 import esbuildPluginPino from "esbuild-plugin-pino";
 
@@ -19,6 +19,7 @@ async function buildAll() {
     entryPoints: {
       index: path.resolve(artifactDir, "src/index.ts"),
       doclingExecutor: path.resolve(artifactDir, "src/doclingExecutor.ts"),
+      doclingPreflight: path.resolve(artifactDir, "src/doclingPreflight.ts"),
     },
     platform: "node",
     bundle: true,
@@ -126,6 +127,22 @@ globalThis.__dirname = __bannerPath.dirname(globalThis.__filename);
     path.resolve(distDir, "migrations"),
     { recursive: true },
   );
+
+  // Ship the processor contract next to the worker bundle. Runtime activation
+  // still requires a compatible Python environment; build never installs or
+  // downloads Python dependencies.
+  const doclingDistDir = path.resolve(distDir, "docling");
+  await mkdir(doclingDistDir, { recursive: true });
+  await Promise.all([
+    cp(
+      path.resolve(workspaceRoot, "tools/docling/processor_contract.py"),
+      path.resolve(doclingDistDir, "processor_contract.py"),
+    ),
+    cp(
+      path.resolve(workspaceRoot, "tools/docling/requirements.txt"),
+      path.resolve(doclingDistDir, "requirements.txt"),
+    ),
+  ]);
 }
 
 buildAll().catch((err) => {
