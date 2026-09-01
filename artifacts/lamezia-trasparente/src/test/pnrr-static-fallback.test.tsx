@@ -56,6 +56,9 @@ describe("PNRR page static feed", () => {
     );
     const firstDossier = dossierToggles[0].closest("details");
     expect(firstDossier).not.toHaveAttribute("open");
+    expect(dossierToggles[0]).toHaveAccessibleName(
+      `Dossier completo del progetto: ${LAMEZIA_PNRR_STATIC_DATA.projects[0].title} — CUP ${LAMEZIA_PNRR_STATIC_DATA.projects[0].cup}`,
+    );
     fireEvent.click(dossierToggles[0]);
     expect(firstDossier).toHaveAttribute("open");
     expect(screen.getAllByText("Dossier completo del progetto")).toHaveLength(

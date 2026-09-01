@@ -1610,6 +1610,9 @@ function PnrrCard({ project }: { project: PnrrViewProject }) {
         <summary
           className="flex cursor-pointer list-none items-center gap-3 px-5 py-4 marker:content-none hover:bg-muted/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset md:px-6"
           data-testid={`pnrr-dossier-toggle-${project.id}`}
+          aria-label={`Dossier completo del progetto: ${project.title}${
+            project.cup ? ` — CUP ${project.cup}` : ""
+          }`}
         >
           <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-brand/10 text-brand">
             <FolderKanban className="h-5 w-5" aria-hidden="true" />
