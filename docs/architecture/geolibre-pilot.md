@@ -8,7 +8,9 @@ La fonte di verità resta il data model canonico del progetto e il relativo `spa
 
 ## Feature flag
 
-Il pilot è disabilitato per default.
+Il pilot è disabilitato per default negli ambienti locali. La configurazione
+pubblica versionata in `artifacts/lamezia-trasparente/.env.production` lo abilita
+in produzione come opzione esplicita, mantenendo Leaflet come scelta iniziale.
 
 Variabili frontend:
 
@@ -39,6 +41,13 @@ https://web.geolibre.app/
 
 I percorsi `/api/*` usano `VITE_API_BASE_URL` quando configurato; gli asset statici usano l’origine pubblica del sito.
 
+Prima di costruire l’URL del viewer, il frontend esegue una richiesta `HEAD` con
+timeout di 8 secondi per ogni feed e accetta soltanto risposte HTTP riuscite con
+Content-Type JSON o GeoJSON. I layer non raggiungibili, bloccati da CORS, troppo
+lenti o serviti con un formato inatteso vengono esclusi dall’URL GeoLibre e
+dichiarati nell’interfaccia con la copertura `disponibili / attivi`. Un errore
+non viene mai convertito in una collezione vuota.
+
 Non viene creato un `.geolibre.json` parallelo e non vengono duplicate geometrie o proprietà di dominio.
 
 ## CORS
@@ -57,6 +66,11 @@ Il viewer usa `layout=viewer` e `panels=collapsed`:
 - nessuna scrittura sul data model di Lamezia Trasparente.
 
 Nel primo pilot, un cambiamento della composizione dei layer richiede il caricamento dell’iframe. Non viene ancora usata l’embed API runtime.
+
+La disponibilità è rilevata quando l’utente apre il pilot. Se nessun feed è
+raggiungibile, l’iframe non viene avviato e l’interfaccia invita a tornare a
+Leaflet. Questa degradazione controllata rende il pilot osservabile, ma non
+soddisfa il criterio di promozione relativo al caricamento di tutti i layer.
 
 ## Embed API e self-hosting
 

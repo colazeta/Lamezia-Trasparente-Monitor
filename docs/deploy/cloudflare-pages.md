@@ -16,6 +16,7 @@ Use these settings when the Cloudflare Pages project is connected to the GitHub 
 - Root directory: repository root, unless the dashboard separately supports the package directory without changing the output directory above
 - Environment variable: `BASE_PATH=/`
 - Optional environment variable: `VITE_API_BASE_URL=https://api.example.org` when the public API is deployed on a separate reviewed origin
+- `VITE_ATLAS_GEOLIBRE_ENABLED=true` is already committed in the frontend production configuration; override it only for an intentional rollback of the experimental viewer
 
 The root `wrangler.toml` also declares `pages_build_output_dir = "artifacts/lamezia-trasparente/dist/public"` for Cloudflare Pages and Wrangler-based deployments. The dashboard settings must remain aligned with that path.
 
@@ -23,11 +24,25 @@ The Vite app also copies `_redirects`, `_headers`, `_worker.js` and `deploy-prov
 
 The edge worker reserves same-origin `/api/*` and XML feed paths. Until a real API origin is configured through `VITE_API_BASE_URL`, those paths return an explicit `503` JSON or XML response rather than the SPA HTML. This makes unavailable data distinguishable from a genuine zero. When the frontend and API are split, set the repository variable `VITE_API_BASE_URL` to the public API origin without `/api`, credentials, query or fragment.
 
-## Direct deployment workflow
+## Deployment workflow
 
-The `Cloudflare Pages deploy` GitHub Actions workflow builds the static frontend, checks the generated fallback, checks the deploy provenance artifact, deploys `artifacts/lamezia-trasparente/dist/public` with Wrangler, then runs the public contracts smoke against `https://lamezia-trasparente.pages.dev`.
+The `Cloudflare Pages deploy` GitHub Actions workflow builds the static frontend,
+checks the generated fallback and provenance artifact, then selects one of two
+reviewed publish modes:
 
-Configure these repository settings before relying on the direct deploy job:
+- when both Wrangler credentials are present, it publishes
+  `artifacts/lamezia-trasparente/dist/public` directly;
+- on a `push`, when neither credential is present, it relies on the existing
+  Cloudflare Pages Git integration triggered by that same event.
+
+In both modes the final public smoke waits for
+`https://lamezia-trasparente.pages.dev` and requires
+`deploy-provenance.json` to contain the exact `github.sha` handled by the
+workflow. A green result therefore proves that the tested commit, rather than a
+previous deployment, is live.
+
+Configure these repository settings only when direct Wrangler publishing is
+desired:
 
 - Secret: `CLOUDFLARE_API_TOKEN`
 - Secret or variable: `CLOUDFLARE_ACCOUNT_ID`
@@ -35,9 +50,15 @@ Configure these repository settings before relying on the direct deploy job:
 - Optional variable: `PUBLIC_SITE_URL` (defaults to `https://lamezia-trasparente.pages.dev`)
 - Optional variable: `VITE_API_BASE_URL` (public API origin; if omitted, the static edge fallback remains intentionally active)
 
-Create the two required values in GitHub at `Settings -> Secrets and variables -> Actions`. Keep the API token as a secret. The account ID may be a secret or a repository variable because the workflow accepts both.
+Create both values in GitHub at `Settings -> Secrets and variables -> Actions`.
+Keep the API token as a secret. The account ID may be a secret or a repository
+variable because the workflow accepts both.
 
-If the Cloudflare credentials are missing, the workflow fails before the deploy step and writes a short remediation checklist to the GitHub Actions step summary. A green `Cloudflare Pages deploy` run means the credentials were present, Wrangler attempted the production publish, and the live public contracts smoke passed.
+Partial credential configuration fails closed. With neither value configured,
+the direct Wrangler step is skipped only for `push` events and the exact-commit
+smoke validates the native Git deployment instead. A manual `workflow_dispatch`
+has no push capable of triggering that integration, so it requires both Wrangler
+credentials and otherwise fails immediately with an explicit error.
 
 The other workflows have different jobs:
 
@@ -45,9 +66,12 @@ The other workflows have different jobs:
 - `deploy smoke` builds locally and smoke-checks the currently configured public URL.
 - `GitHub Pages static fallback` verifies the static fallback artifact.
 
-Those workflows can be green while production Cloudflare deployment is still blocked. The deploy signal for `https://lamezia-trasparente.pages.dev` is the `Cloudflare Pages deploy` workflow.
+Those workflows can be green without proving which commit is public. The deploy
+signal for `https://lamezia-trasparente.pages.dev` is the Cloudflare Pages deploy
+workflow because its final smoke is pinned to the triggering commit.
 
-After adding or fixing the credentials, rerun the failed `Cloudflare Pages deploy` workflow from GitHub Actions, or dispatch it manually on branch `main`.
+After adding, removing or fixing the credential pair, rerun the `Cloudflare Pages
+deploy` workflow from GitHub Actions, or dispatch it manually on branch `main`.
 
 ## Deploy provenance marker
 
@@ -63,4 +87,7 @@ After a deployment, the live URL must satisfy all checks:
 - API probes return `application/json` and feed probes return XML, including the explicit `503` fallback when the backend is not connected.
 - The generated JavaScript bundle contains the contract-state markers `Contratti protagonisti`, `Stato dei fascicoli contrattuali`, `Copertura fasi`, and `Copertura stato fasi dei fascicoli`.
 
-The shared script `scripts/check-public-contracts-page.mjs` enforces this public smoke. The `deploy smoke` workflow and the direct Cloudflare deploy workflow both use it.
+The shared script `scripts/check-public-contracts-page.mjs` enforces this public
+smoke. Pass `--expected-commit <full-sha>` when the check must prove a specific
+deployment. The `deploy smoke` workflow and the Cloudflare deploy workflow both
+use the shared contract checks.

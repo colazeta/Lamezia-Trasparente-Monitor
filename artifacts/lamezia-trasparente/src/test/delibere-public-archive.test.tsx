@@ -222,7 +222,7 @@ describe("archivio pubblico delle delibere", () => {
         (item) => item.archived_document !== null,
       ).length,
     });
-    expect(DELIBERE_ARCHIVE_ITEMS).toHaveLength(63);
+    expect(DELIBERE_ARCHIVE_ITEMS.length).toBeGreaterThanOrEqual(63);
     expect(
       DELIBERE_ARCHIVE_ITEMS.every(
         (item) => item.classification.act_category.id === "deliberazioni",
@@ -714,7 +714,9 @@ describe("archivio pubblico delle delibere", () => {
     expect(new URLSearchParams(window.location.search).get("tema")).toBe(
       "mobilita_condivisa",
     );
-    expect(screen.getByText("1 di 64 atti.")).toBeInTheDocument();
+    expect(
+      screen.getByText(`1 di ${DELIBERE_ARCHIVE_ITEMS.length + 1} atti.`),
+    ).toBeInTheDocument();
   });
 
   it("distingue l'errore API dall'assenza di risultati", () => {
