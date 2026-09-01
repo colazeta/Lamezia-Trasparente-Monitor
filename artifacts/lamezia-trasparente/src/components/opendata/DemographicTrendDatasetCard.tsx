@@ -8,13 +8,16 @@ import { ChangeDriversPanel } from "@/components/demographics/ChangeDriversPanel
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { LAMEZIA_HOUSEHOLD_COMPOSITION_2023_DATA_URL } from "@/data/lameziaHouseholdComposition2023";
+import { apiUrl } from "@/lib/apiBaseUrl";
 
 const POPULATION_API = "/api/demographics/series/population-resident-jan1";
 const STRUCTURE_API = "/api/demographics/structure";
 const CITIZENSHIP_API = "/api/demographics/citizenship";
 const BIRTHPLACE_API = "/api/demographics/birthplace";
 const HOUSEHOLDS_API = "/api/demographics/households";
-const CHANGE_DRIVERS_API = "/api/demographics/change-drivers?granularity=annual";
+const CHANGE_DRIVERS_API =
+  "/api/demographics/change-drivers?granularity=annual";
 const ISTAT_DEMO_URL = "https://demo.istat.it/";
 
 export function DemographicTrendDatasetCard() {
@@ -72,9 +75,18 @@ export function DemographicTrendDatasetCard() {
               </a>
             </Button>
             <Button asChild variant="outline" size="sm">
-              <a href={HOUSEHOLDS_API} target="_blank" rel="noreferrer">
+              <a href={apiUrl(HOUSEHOLDS_API)} target="_blank" rel="noreferrer">
                 <FileJson className="h-4 w-4" />
                 API famiglie
+              </a>
+            </Button>
+            <Button asChild variant="outline" size="sm">
+              <a
+                download="lamezia-famiglie-componenti-2023.json"
+                href={LAMEZIA_HOUSEHOLD_COMPOSITION_2023_DATA_URL}
+              >
+                <FileJson className="h-4 w-4" />
+                JSON famiglie 2023
               </a>
             </Button>
             <Button asChild variant="outline" size="sm">
