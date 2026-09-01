@@ -24,6 +24,7 @@ const DETAIL_TIMEOUT_MS = 20_000;
 const DOWNLOAD_TIMEOUT_MS = 45_000;
 const HASH_BACKFILL_MAX_ROWS = 10;
 const HASH_BACKFILL_MAX_ATTACHMENTS = 20;
+const HASH_BACKFILL_RETRY_AFTER_MS = 24 * 60 * 60 * 1000;
 
 type AllegatoItem = {
   PROGRESSIVO: number | string;
@@ -187,15 +188,47 @@ export type AttachmentHashBackfillResult = {
   skipped: number;
 };
 
+function withBackfillAttempt(
+  attachment: PublicationAttachment,
+  attemptedAt: string,
+): PublicationAttachment {
+  return { ...attachment, sha256BackfillAttemptedAt: attemptedAt };
+}
+
 /**
  * Bounded legacy provenance repair. It hashes only bytes already present in the
  * canonical object-storage copy; it never refetches an attachment from Tinn.
- * Recorded/storage size mismatches are fail-closed and leave the attachment
- * unchanged. Both row count and attachment count are capped per cycle.
+ * Recorded/storage size mismatches are fail-closed and leave the hash unset.
+ *
+ * Every attempted legacy attachment records only a technical ISO timestamp in
+ * the JSONB record. Never-attempted/least-recently-attempted rows are selected
+ * first, while failed attempts are cooled down for 24 hours. This prevents a
+ * permanently unavailable object from starving older eligible records.
  */
 export async function backfillAlboAttachmentHashes(
   storage: ObjectStorageService,
 ): Promise<AttachmentHashBackfillResult> {
+  const attemptedAt = new Date().toISOString();
+  const retryBefore = new Date(
+    Date.now() - HASH_BACKFILL_RETRY_AFTER_MS,
+  ).toISOString();
+  const safeAttachments = sql`CASE
+    WHEN jsonb_typeof(${publicationsTable.attachments}) = 'array'
+      THEN ${publicationsTable.attachments}
+    ELSE '[]'::jsonb
+  END`;
+  const eligibleAttachment = sql`COALESCE(attachment->>'storagePath', '') LIKE ${`${STORAGE_PREFIX}%`}
+    AND COALESCE(attachment->>'sha256', '') = ''
+    AND (
+      COALESCE(attachment->>'sha256BackfillAttemptedAt', '') = ''
+      OR attachment->>'sha256BackfillAttemptedAt' < ${retryBefore}
+    )`;
+  const oldestAttempt = sql`COALESCE((
+    SELECT MIN(COALESCE(NULLIF(attachment->>'sha256BackfillAttemptedAt', ''), ''))
+    FROM jsonb_array_elements(${safeAttachments}) AS attachment
+    WHERE ${eligibleAttachment}
+  ), '')`;
+
   const candidates = await db
     .select({
       id: publicationsTable.id,
@@ -207,13 +240,12 @@ export async function backfillAlboAttachmentHashes(
         isNotNull(publicationsTable.detailFetchedAt),
         sql`EXISTS (
           SELECT 1
-          FROM jsonb_array_elements(${publicationsTable.attachments}) AS attachment
-          WHERE COALESCE(attachment->>'storagePath', '') LIKE ${`${STORAGE_PREFIX}%`}
-            AND COALESCE(attachment->>'sha256', '') = ''
+          FROM jsonb_array_elements(${safeAttachments}) AS attachment
+          WHERE ${eligibleAttachment}
         )`,
       ),
     )
-    .orderBy(desc(publicationsTable.pubStart), asc(publicationsTable.id))
+    .orderBy(oldestAttempt, desc(publicationsTable.pubStart), asc(publicationsTable.id))
     .limit(HASH_BACKFILL_MAX_ROWS);
 
   let rowsUpdated = 0;
@@ -226,9 +258,12 @@ export async function backfillAlboAttachmentHashes(
     const attachments: PublicationAttachment[] = [];
 
     for (const attachment of row.attachments ?? []) {
+      const lastAttempt = attachment.sha256BackfillAttemptedAt ?? null;
+      const eligibleRetry = !lastAttempt || lastAttempt < retryBefore;
       if (
         attachment.sha256 ||
-        !attachment.storagePath?.startsWith(STORAGE_PREFIX)
+        !attachment.storagePath?.startsWith(STORAGE_PREFIX) ||
+        !eligibleRetry
       ) {
         attachments.push(attachment);
         continue;
@@ -239,10 +274,12 @@ export async function backfillAlboAttachmentHashes(
         continue;
       }
       attachmentsAttempted += 1;
+      changed = true;
 
+      const attemptedAttachment = withBackfillAttempt(attachment, attemptedAt);
       if (attachment.size !== null && attachment.size > MAX_FILE_BYTES) {
         skipped += 1;
-        attachments.push(attachment);
+        attachments.push(attemptedAttachment);
         continue;
       }
 
@@ -251,7 +288,7 @@ export async function backfillAlboAttachmentHashes(
         const file = await storage.searchPublicObject(relativePath);
         if (!file) {
           skipped += 1;
-          attachments.push(attachment);
+          attachments.push(attemptedAttachment);
           continue;
         }
 
@@ -264,27 +301,26 @@ export async function backfillAlboAttachmentHashes(
           (attachment.size !== null && attachment.size !== storedSize)
         ) {
           skipped += 1;
-          attachments.push(attachment);
+          attachments.push(attemptedAttachment);
           continue;
         }
 
         const [buf] = await file.download();
         if (buf.byteLength !== storedSize) {
           skipped += 1;
-          attachments.push(attachment);
+          attachments.push(attemptedAttachment);
           continue;
         }
 
         attachments.push({
-          ...attachment,
+          ...attemptedAttachment,
           size: attachment.size ?? storedSize,
           sha256: sha256Hex(buf),
         });
         hashesBackfilled += 1;
-        changed = true;
       } catch {
         skipped += 1;
-        attachments.push(attachment);
+        attachments.push(attemptedAttachment);
       }
     }
 
