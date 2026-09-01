@@ -13,9 +13,42 @@
       "sha256": "842702b2044b4b6f9a7b21a65eac2ab59866ee3f321872e6b28fd481598be304",
       "repoPath": "data/public/albo/documents/2026/842702b2044b4b6f9a7b21a65eac2ab59866ee3f321872e6b28fd481598be304.pdf",
       "reviewStatus": "approved-for-full-pdf-serving",
-      "benchmarkClass": "reviewed-institutional-pdf",
-      "benchmarkStatus": "selected-not-run",
-      "selectionReason": "Reviewed institutional commission-electoral document already used as a primary source in the public product; suitable as the first unambiguous end-to-end smoke-test input."
+      "benchmarkClass": "pdf-container-with-embedded-administrative-pdf",
+      "benchmarkStatus": "smoke-tested-material-gain-on-embedded-pdf",
+      "selectionReason": "Reviewed institutional commission document already used as a primary source in the public product. The outer PDF is a protocol wrapper containing the substantive convocazione as an embedded PDF.",
+      "embeddedDocuments": [
+        {
+          "declaredName": "convocazione 2.pdf",
+          "sha256": "3069388db15c43fdbf3cc980195f9c88ded602a6e9f8f89f358a006ce789096c",
+          "integrityCheck": "matched-wrapper-declared-sha256"
+        }
+      ],
+      "lastBenchmark": {
+        "date": "2026-09-01",
+        "commitSha": "6c6cc1cb1610e4941c6f9f418950e6746b42f056",
+        "workflowRunId": 33544169127,
+        "versions": {
+          "pdfParse": "2.4.5",
+          "docling": "2.124.0",
+          "pypdf": "6.16.2"
+        },
+        "wrapper": {
+          "classification": "equivalent-text-with-structured-json-gain",
+          "pdfParseCharacters": 810,
+          "doclingCharacters": 792,
+          "pdfParseElapsedMs": 91,
+          "doclingElapsedMs": 23481,
+          "note": "Both extract the protocol wrapper. Docling adds structured labels and picture references, but Markdown is not a lossless substitute for the structured JSON."
+        },
+        "embeddedPdf": {
+          "classification": "material-docling-gain",
+          "pdfParseCharacters": 16,
+          "doclingCharacters": 1452,
+          "pdfParseElapsedMs": 111,
+          "doclingElapsedMs": 13795,
+          "note": "The current baseline returns effectively no substantive text. Docling recovers the commission heading, recipients, subject, dates and agenda items. Minor OCR/spacing defects remain possible and must not be treated as verified source text."
+        }
+      }
     }
   ]
 }
