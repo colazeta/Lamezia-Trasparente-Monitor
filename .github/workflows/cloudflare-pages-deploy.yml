@@ -82,7 +82,7 @@ jobs:
         shell: bash
         run: |
           test -f artifacts/lamezia-trasparente/dist/public/deploy-provenance.json
-          grep -Fq 'public-routes-contracts-organi-v2' artifacts/lamezia-trasparente/dist/public/deploy-provenance.json
+          grep -Fq 'contracts-current-albo-static-v3' artifacts/lamezia-trasparente/dist/public/deploy-provenance.json
           grep -Fq 'colazeta/Lamezia-Trasparente-Monitor' artifacts/lamezia-trasparente/dist/public/deploy-provenance.json
           grep -Fq '"commitSha": "${{ github.sha }}"' artifacts/lamezia-trasparente/dist/public/deploy-provenance.json
           grep -Fq '/organi' artifacts/lamezia-trasparente/dist/public/deploy-provenance.json
