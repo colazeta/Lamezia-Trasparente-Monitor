@@ -192,6 +192,42 @@ describe("GeoLibre pilot helpers", () => {
     });
   });
 
+  it("keeps valid layers available when the configured API base URL is malformed", async () => {
+    const requested: string[] = [];
+    const availability = await checkGeoLibreLayerAvailability({
+      layers: [
+        layer("municipal-boundary", "/api/gis/comune"),
+        layer("census-sections", "/data/processed/territorio/sezioni.geojson"),
+      ],
+      siteOrigin: "https://lamezia.example",
+      apiBaseUrl: "http://[invalid",
+      fetcher: async (input) => {
+        requested.push(input instanceof Request ? input.url : String(input));
+        return new Response(null, {
+          status: 200,
+          headers: { "content-type": "application/geo+json" },
+        });
+      },
+    });
+
+    expect(availability).toMatchObject([
+      {
+        dataUrl: null,
+        status: "unavailable",
+        reason: "invalid_url",
+      },
+      {
+        dataUrl:
+          "https://lamezia.example/data/processed/territorio/sezioni.geojson",
+        status: "ready",
+        reason: null,
+      },
+    ]);
+    expect(requested).toEqual([
+      "https://lamezia.example/data/processed/territorio/sezioni.geojson",
+    ]);
+  });
+
   it("bounds a stalled feed and reports it as unavailable", async () => {
     const availability = await checkGeoLibreLayerAvailability({
       layers: [layer("municipal-boundary", "/api/gis/comune")],

@@ -206,6 +206,7 @@ export function GeoLibreAtlasPilot() {
 function unavailableLayerReason(item: GeoLibreLayerAvailability): string {
   if (item.reason === "timeout") return "tempo di risposta scaduto";
   if (item.reason === "invalid_content_type") return "formato non GeoJSON";
+  if (item.reason === "invalid_url") return "URL del feed non valido";
   if (item.reason === "missing_data_path") return "feed non configurato";
   if (item.httpStatus !== null) return `HTTP ${item.httpStatus}`;
   return "rete/CORS";

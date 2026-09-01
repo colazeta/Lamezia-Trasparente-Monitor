@@ -20,6 +20,7 @@ export type GeoLibreLayerAvailability = {
     | "missing_data_path"
     | "http_error"
     | "invalid_content_type"
+    | "invalid_url"
     | "network_error"
     | "timeout"
     | null;
@@ -94,11 +95,23 @@ export async function checkGeoLibreLayerAvailability({
         };
       }
 
-      const dataUrl = resolveSpatialDataUrl(
-        layer.dataPath,
-        siteOrigin,
-        apiBaseUrl,
-      );
+      let dataUrl: string;
+      try {
+        dataUrl = resolveSpatialDataUrl(
+          layer.dataPath,
+          siteOrigin,
+          apiBaseUrl,
+        );
+      } catch {
+        return {
+          layer,
+          dataUrl: null,
+          status: "unavailable",
+          httpStatus: null,
+          contentType: null,
+          reason: "invalid_url",
+        };
+      }
 
       const requestController = new AbortController();
       const abortRequest = () => requestController.abort(signal?.reason);
