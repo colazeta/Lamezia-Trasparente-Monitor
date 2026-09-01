@@ -89,4 +89,89 @@ export const SCOUTED_PUBLIC_PROPOSALS = [
       },
     ],
   },
+  {
+    id: "scuole-orario-ridotto-caldo-settembre-2026",
+    title: "Orario scolastico ridotto a settembre per il caldo",
+    summary:
+      "Richiesta di predisporre per l'intero mese di settembre un orario ridotto in tutte le scuole cittadine di ogni ordine e grado, come misura temporanea contro le elevate temperature negli edifici privi di adeguata climatizzazione o ventilazione.",
+    promoterId: "fernando-nucifero-udc",
+    promoter: "Fernando Nucifero (UDC)",
+    promoterType: "forza_politica",
+    periodLabel: "31 agosto 2026",
+    year: "2026",
+    theme: "Scuola, clima e sicurezza",
+    threadId: "scuole-caldo-estremo",
+    threadLabel: "Scuole: caldo estremo, orari e adeguamento degli edifici",
+    territorialArea: "Istituti scolastici del territorio comunale di Lamezia Terme",
+    institutionalRecipient: "Comune di Lamezia Terme e dirigenti scolastici",
+    channel: "comunicato",
+    sourceLabel: "City One, 31 agosto 2026",
+    sourceUrl:
+      "https://www.cityonelamezia.it/emergenza-caldo-nucifero-udc-propone-orario-ridotto-per-tutte-le-scuole-cittadine-per-il-mese-di-settembre/",
+    status: "proposta_emersa",
+    linkedActs: [],
+    verificationNote:
+      "La fonte attribuisce a Nucifero una misura circoscritta e operativa: riduzione dell'orario per tutte le scuole cittadine durante settembre. Non è stato verificato un atto formalmente depositato, un provvedimento comunale o una decisione dei dirigenti scolastici. Il record documenta la proposta e non assume che il Comune disponga da solo di tutte le competenze necessarie alla sua attuazione.",
+    evidenceLevel: "fonte_stampa",
+    firstSeen: "2026-08-31",
+    lastUpdated: "2026-08-31",
+    events: [
+      {
+        id: "scuole-nucifero-orario-ridotto-settembre",
+        date: "2026-08-31",
+        type: "emersione",
+        title: "Nucifero propone un orario ridotto per le scuole durante settembre",
+        summary:
+          "La proposta chiede una rimodulazione temporanea del monte ore giornaliero per tutte le scuole cittadine, motivandola con le temperature elevate e con l'assenza, in diversi edifici, di sistemi adeguati di climatizzazione o ventilazione.",
+        sourceLabel: "City One",
+        sourceUrl:
+          "https://www.cityonelamezia.it/emergenza-caldo-nucifero-udc-propone-orario-ridotto-per-tutte-le-scuole-cittadine-per-il-mese-di-settembre/",
+        evidenceLevel: "fonte_stampa",
+      },
+    ],
+  },
+  {
+    id: "tutela-animali-regolamento-garante-sportello-2026",
+    title: "Aggiornamento del regolamento e strumenti comunali per la tutela degli animali",
+    summary:
+      "Pacchetto di richieste per aggiornare e condividere il regolamento comunale sui diritti degli animali alla normativa regionale, promuovere attività didattico-culturali, attivare uno sportello di ascolto, nominare un garante per i diritti degli animali e formalizzare una rete di contatti per le emergenze.",
+    promoterId: "ninfa-marilena-vescio",
+    promoter: "Ninfa Marilena Vescio",
+    promoterType: "cittadino_comitato",
+    periodLabel: "31 agosto 2026",
+    year: "2026",
+    theme: "Tutela animale e servizi civici",
+    threadId: "tutela-animali-servizi-comunali",
+    threadLabel: "Tutela degli animali: regole, servizi e partecipazione",
+    territorialArea: "Intero territorio comunale di Lamezia Terme",
+    institutionalRecipient: "Comune di Lamezia Terme",
+    channel: "comunicato",
+    sourceLabel: "il Lametino, 31 agosto 2026",
+    sourceUrl:
+      "https://www.lametino.it/ultimora/lamezia-al-via-la-raccolta-di-cibo-per-le-colonie-feline-della-citta.html",
+    status: "proposta_emersa",
+    linkedActs: [
+      "Regolamento comunale per la tutela e il benessere degli animali — Delibera n. 7 del 15/03/2016",
+      "Legge regionale Calabria n. 45/2023",
+    ],
+    verificationNote:
+      "La nota è pubblicata in occasione di una raccolta alimentare per le colonie feline, ma contiene anche richieste di policy comunale sufficientemente determinate. La promotrice è indicata dalla fonte come referente di colonia felina. Non risultano verificati un deposito formale, una risposta del Comune o l'avvio degli strumenti richiesti. Il luogo della raccolta alimentare non viene usato come geografia della proposta, che riguarda l'intero territorio comunale.",
+    evidenceLevel: "fonte_stampa",
+    firstSeen: "2026-08-31",
+    lastUpdated: "2026-08-31",
+    events: [
+      {
+        id: "tutela-animali-vescio-regolamento-garante-sportello",
+        date: "2026-08-31",
+        type: "emersione",
+        title: "Proposti aggiornamento del regolamento, garante, sportello e rete di emergenza",
+        summary:
+          "Vescio chiede di aggiornare il regolamento comunale alla normativa regionale, sviluppare iniziative educative, attivare uno sportello di ascolto, nominare un garante per i diritti degli animali e rendere ufficiale una rete di contatti utili per le emergenze.",
+        sourceLabel: "il Lametino",
+        sourceUrl:
+          "https://www.lametino.it/ultimora/lamezia-al-via-la-raccolta-di-cibo-per-le-colonie-feline-della-citta.html",
+        evidenceLevel: "fonte_stampa",
+      },
+    ],
+  },
 ] as const satisfies readonly PublicProposal[];
