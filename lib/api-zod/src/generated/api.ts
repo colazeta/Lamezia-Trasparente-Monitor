@@ -4620,6 +4620,165 @@ export const UpdateConfiscatedAssetLocationResponse = zod.object({
 
 
 /**
+ * Returns the selected annual P02 household snapshot and history together with the separate, fixed 2023 census profile by number of components.
+ * @summary Get the annual household series and the 2023 census composition
+ */
+export const GetDemographicHouseholdsQueryParams = zod.object({
+  "period": zod.coerce.string().optional().describe('Annual P02 period, or `latest` when omitted.')
+})
+
+export const getDemographicHouseholdsResponseGeographyCodeRegExp = new RegExp('^[0-9]{6}$');
+export const getDemographicHouseholdsResponseCountsHouseholdsMin = 0;
+
+export const getDemographicHouseholdsResponseCountsHouseholdPopulationMin = 0;
+
+export const getDemographicHouseholdsResponseCountsAverageHouseholdSizeMin = 0;
+
+export const getDemographicHouseholdsResponseCountsTotalPopulationMin = 0;
+
+export const getDemographicHouseholdsResponseHistoryItemHouseholdsMin = 0;
+
+export const getDemographicHouseholdsResponseHistoryItemHouseholdPopulationMin = 0;
+
+export const getDemographicHouseholdsResponseHistoryItemAverageHouseholdSizeMin = 0;
+
+export const getDemographicHouseholdsResponseHistoryItemTotalPopulationMin = 0;
+
+export const getDemographicHouseholdsResponseCompositionMunicipalityIstatCodeRegExp = new RegExp('^[0-9]{6}$');
+export const getDemographicHouseholdsResponseCompositionTotalHouseholdsMin = 0;
+
+export const getDemographicHouseholdsResponseCompositionByComponentsItemHouseholdsMin = 0;
+
+export const getDemographicHouseholdsResponseCompositionByComponentsItemShareMin = 0;
+export const getDemographicHouseholdsResponseCompositionByComponentsItemShareMax = 100;
+
+export const getDemographicHouseholdsResponseCompositionByComponentsMin = 6;
+export const getDemographicHouseholdsResponseCompositionByComponentsMax = 6;
+
+export const getDemographicHouseholdsResponseCompositionIndicatorsOnePersonHouseholdsMin = 0;
+
+export const getDemographicHouseholdsResponseCompositionIndicatorsOnePersonShareMin = 0;
+export const getDemographicHouseholdsResponseCompositionIndicatorsOnePersonShareMax = 100;
+
+export const getDemographicHouseholdsResponseCompositionIndicatorsFivePlusHouseholdsMin = 0;
+
+export const getDemographicHouseholdsResponseCompositionIndicatorsFivePlusShareMin = 0;
+export const getDemographicHouseholdsResponseCompositionIndicatorsFivePlusShareMax = 100;
+
+export const getDemographicHouseholdsResponseCompositionQualityIncludedRowsMin = 0;
+
+export const getDemographicHouseholdsResponseCompositionQualitySkippedFictitiousRowsMin = 0;
+
+export const getDemographicHouseholdsResponseCompositionQualityIncompleteRowsMin = 0;
+
+export const getDemographicHouseholdsResponseCompositionQualityComponentSumMin = 0;
+
+export const getDemographicHouseholdsResponseCompositionSourceArchiveSha256RegExp = new RegExp('^[a-f0-9]{64}$');
+export const getDemographicHouseholdsResponseCompositionSourceWorkbookSha256RegExp = new RegExp('^[a-f0-9]{64}$');
+
+
+export const GetDemographicHouseholdsResponse = zod.object({
+  "geography": zod.object({
+  "code": zod.string().regex(getDemographicHouseholdsResponseGeographyCodeRegExp),
+  "name": zod.string(),
+  "level": zod.enum(['municipality'])
+}),
+  "period": zod.string(),
+  "availablePeriods": zod.array(zod.string()),
+  "sourceStatus": zod.enum(['final', 'provisional', 'estimated', 'reconstructed', 'forecast', 'unknown']),
+  "counts": zod.object({
+  "households": zod.number().min(getDemographicHouseholdsResponseCountsHouseholdsMin),
+  "householdPopulation": zod.number().min(getDemographicHouseholdsResponseCountsHouseholdPopulationMin),
+  "averageHouseholdSize": zod.number().min(getDemographicHouseholdsResponseCountsAverageHouseholdSizeMin),
+  "totalPopulation": zod.number().min(getDemographicHouseholdsResponseCountsTotalPopulationMin).nullable(),
+  "householdPopulationShare": zod.number().nullable()
+}),
+  "changeFromFirst": zod.object({
+  "firstPeriod": zod.string(),
+  "householdsAbsolute": zod.number(),
+  "householdsPercent": zod.number().nullable(),
+  "averageHouseholdSize": zod.number()
+}),
+  "history": zod.array(zod.object({
+  "period": zod.string(),
+  "households": zod.number().min(getDemographicHouseholdsResponseHistoryItemHouseholdsMin),
+  "householdPopulation": zod.number().min(getDemographicHouseholdsResponseHistoryItemHouseholdPopulationMin),
+  "averageHouseholdSize": zod.number().min(getDemographicHouseholdsResponseHistoryItemAverageHouseholdSizeMin),
+  "sourceStatus": zod.enum(['final', 'provisional', 'estimated', 'reconstructed', 'forecast', 'unknown']),
+  "totalPopulation": zod.number().min(getDemographicHouseholdsResponseHistoryItemTotalPopulationMin).nullable()
+})),
+  "quality": zod.object({
+  "publishedAverageHouseholdSize": zod.number().nullable(),
+  "derivedAverageHouseholdSize": zod.number(),
+  "averageDifference": zod.number().nullable(),
+  "flags": zod.array(zod.string())
+}),
+  "source": zod.object({
+  "name": zod.string(),
+  "dataset": zod.string(),
+  "url": zod.string().url(),
+  "projection": zod.string()
+}),
+  "composition": zod.object({
+  "schemaVersion": zod.literal(1),
+  "referenceYear": zod.literal(2023),
+  "municipality": zod.object({
+  "name": zod.string(),
+  "istatCode": zod.string().regex(getDemographicHouseholdsResponseCompositionMunicipalityIstatCodeRegExp)
+}),
+  "totalHouseholds": zod.number().min(getDemographicHouseholdsResponseCompositionTotalHouseholdsMin),
+  "byComponents": zod.array(zod.object({
+  "key": zod.enum(['1', '2', '3', '4', '5', '6+']),
+  "sourceField": zod.enum(['PF3', 'PF4', 'PF5', 'PF6', 'PF7', 'PF8']),
+  "households": zod.number().min(getDemographicHouseholdsResponseCompositionByComponentsItemHouseholdsMin),
+  "share": zod.number().min(getDemographicHouseholdsResponseCompositionByComponentsItemShareMin).max(getDemographicHouseholdsResponseCompositionByComponentsItemShareMax)
+})).min(getDemographicHouseholdsResponseCompositionByComponentsMin).max(getDemographicHouseholdsResponseCompositionByComponentsMax),
+  "indicators": zod.object({
+  "onePersonHouseholds": zod.number().min(getDemographicHouseholdsResponseCompositionIndicatorsOnePersonHouseholdsMin),
+  "onePersonShare": zod.number().min(getDemographicHouseholdsResponseCompositionIndicatorsOnePersonShareMin).max(getDemographicHouseholdsResponseCompositionIndicatorsOnePersonShareMax),
+  "fivePlusHouseholds": zod.number().min(getDemographicHouseholdsResponseCompositionIndicatorsFivePlusHouseholdsMin),
+  "fivePlusShare": zod.number().min(getDemographicHouseholdsResponseCompositionIndicatorsFivePlusShareMin).max(getDemographicHouseholdsResponseCompositionIndicatorsFivePlusShareMax)
+}),
+  "quality": zod.object({
+  "includedRows": zod.number().min(getDemographicHouseholdsResponseCompositionQualityIncludedRowsMin),
+  "skippedFictitiousRows": zod.number().min(getDemographicHouseholdsResponseCompositionQualitySkippedFictitiousRowsMin),
+  "incompleteRows": zod.number().min(getDemographicHouseholdsResponseCompositionQualityIncompleteRowsMin),
+  "componentSum": zod.number().min(getDemographicHouseholdsResponseCompositionQualityComponentSumMin),
+  "reconciliationDifference": zod.number(),
+  "exactReconciliation": zod.boolean()
+}),
+  "source": zod.object({
+  "institution": zod.string(),
+  "dataset": zod.string(),
+  "territorialLevel": zod.string(),
+  "referenceDate": zod.coerce.date(),
+  "sourceUpdateDate": zod.coerce.date(),
+  "pageUrl": zod.string().url(),
+  "downloadUrl": zod.string().url(),
+  "archiveFile": zod.string(),
+  "archiveMember": zod.string(),
+  "workbookFile": zod.string(),
+  "archiveSha256": zod.string().regex(getDemographicHouseholdsResponseCompositionSourceArchiveSha256RegExp),
+  "workbookSha256": zod.string().regex(getDemographicHouseholdsResponseCompositionSourceWorkbookSha256RegExp),
+  "licence": zod.string()
+})
+}),
+  "methodology": zod.object({
+  "household": zod.string(),
+  "referencePeriod": zod.string(),
+  "averageHouseholdSize": zod.string(),
+  "provenance": zod.string(),
+  "coverage": zod.string(),
+  "history": zod.string(),
+  "childrenDataset": zod.string(),
+  "composition": zod.string(),
+  "compositionQuality": zod.string(),
+  "familyRelationships": zod.string()
+})
+})
+
+
+/**
  * Returns the published citizen-tracked requests, optionally filtered by
 outcome, type, linked theme, recipient entity and request-date range.
 Pending (unmoderated) submissions are excluded.

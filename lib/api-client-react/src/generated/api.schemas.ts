@@ -13,6 +13,235 @@ export interface Error {
   error: string;
 }
 
+export type HouseholdSourceStatus = typeof HouseholdSourceStatus[keyof typeof HouseholdSourceStatus];
+
+
+export const HouseholdSourceStatus = {
+  final: 'final',
+  provisional: 'provisional',
+  estimated: 'estimated',
+  reconstructed: 'reconstructed',
+  forecast: 'forecast',
+  unknown: 'unknown',
+} as const;
+
+export type HouseholdGeographyLevel = typeof HouseholdGeographyLevel[keyof typeof HouseholdGeographyLevel];
+
+
+export const HouseholdGeographyLevel = {
+  municipality: 'municipality',
+} as const;
+
+export interface HouseholdGeography {
+  /** @pattern ^[0-9]{6}$ */
+  code: string;
+  name: string;
+  level: HouseholdGeographyLevel;
+}
+
+export interface HouseholdMunicipality {
+  name: string;
+  /** @pattern ^[0-9]{6}$ */
+  istatCode: string;
+}
+
+export interface HouseholdCounts {
+  /** @minimum 0 */
+  households: number;
+  /** @minimum 0 */
+  householdPopulation: number;
+  /** @minimum 0 */
+  averageHouseholdSize: number;
+  /**
+     * @minimum 0
+     * @nullable
+     */
+  totalPopulation: number | null;
+  /** @nullable */
+  householdPopulationShare: number | null;
+}
+
+export interface HouseholdChangeFromFirst {
+  firstPeriod: string;
+  householdsAbsolute: number;
+  /** @nullable */
+  householdsPercent: number | null;
+  averageHouseholdSize: number;
+}
+
+export interface HouseholdHistoryPoint {
+  period: string;
+  /** @minimum 0 */
+  households: number;
+  /** @minimum 0 */
+  householdPopulation: number;
+  /** @minimum 0 */
+  averageHouseholdSize: number;
+  sourceStatus: HouseholdSourceStatus;
+  /**
+     * @minimum 0
+     * @nullable
+     */
+  totalPopulation: number | null;
+}
+
+export interface HouseholdQuality {
+  /** @nullable */
+  publishedAverageHouseholdSize: number | null;
+  derivedAverageHouseholdSize: number;
+  /** @nullable */
+  averageDifference: number | null;
+  flags: string[];
+}
+
+export interface HouseholdAnnualSource {
+  name: string;
+  dataset: string;
+  url: string;
+  projection: string;
+}
+
+export type HouseholdComponentBucketKey = typeof HouseholdComponentBucketKey[keyof typeof HouseholdComponentBucketKey];
+
+
+export const HouseholdComponentBucketKey = {
+  NUMBER_1: '1',
+  NUMBER_2: '2',
+  NUMBER_3: '3',
+  NUMBER_4: '4',
+  NUMBER_5: '5',
+  '6+': '6+',
+} as const;
+
+export type HouseholdComponentBucketSourceField = typeof HouseholdComponentBucketSourceField[keyof typeof HouseholdComponentBucketSourceField];
+
+
+export const HouseholdComponentBucketSourceField = {
+  PF3: 'PF3',
+  PF4: 'PF4',
+  PF5: 'PF5',
+  PF6: 'PF6',
+  PF7: 'PF7',
+  PF8: 'PF8',
+} as const;
+
+export interface HouseholdComponentBucket {
+  key: HouseholdComponentBucketKey;
+  sourceField: HouseholdComponentBucketSourceField;
+  /** @minimum 0 */
+  households: number;
+  /**
+     * @minimum 0
+     * @maximum 100
+     */
+  share: number;
+}
+
+export interface HouseholdCompositionIndicators {
+  /** @minimum 0 */
+  onePersonHouseholds: number;
+  /**
+     * @minimum 0
+     * @maximum 100
+     */
+  onePersonShare: number;
+  /** @minimum 0 */
+  fivePlusHouseholds: number;
+  /**
+     * @minimum 0
+     * @maximum 100
+     */
+  fivePlusShare: number;
+}
+
+export interface HouseholdCompositionQuality {
+  /** @minimum 0 */
+  includedRows: number;
+  /** @minimum 0 */
+  skippedFictitiousRows: number;
+  /** @minimum 0 */
+  incompleteRows: number;
+  /** @minimum 0 */
+  componentSum: number;
+  reconciliationDifference: number;
+  exactReconciliation: boolean;
+}
+
+export interface HouseholdCompositionSource {
+  institution: string;
+  dataset: string;
+  territorialLevel: string;
+  referenceDate: string;
+  sourceUpdateDate: string;
+  pageUrl: string;
+  downloadUrl: string;
+  archiveFile: string;
+  archiveMember: string;
+  workbookFile: string;
+  /** @pattern ^[a-f0-9]{64}$ */
+  archiveSha256: string;
+  /** @pattern ^[a-f0-9]{64}$ */
+  workbookSha256: string;
+  licence: string;
+}
+
+export type HouseholdComposition2023SchemaVersion = typeof HouseholdComposition2023SchemaVersion[keyof typeof HouseholdComposition2023SchemaVersion];
+
+
+export const HouseholdComposition2023SchemaVersion = {
+  NUMBER_1: 1,
+} as const;
+
+export type HouseholdComposition2023ReferenceYear = typeof HouseholdComposition2023ReferenceYear[keyof typeof HouseholdComposition2023ReferenceYear];
+
+
+export const HouseholdComposition2023ReferenceYear = {
+  NUMBER_2023: 2023,
+} as const;
+
+export interface HouseholdComposition2023 {
+  schemaVersion: HouseholdComposition2023SchemaVersion;
+  referenceYear: HouseholdComposition2023ReferenceYear;
+  municipality: HouseholdMunicipality;
+  /** @minimum 0 */
+  totalHouseholds: number;
+  /**
+     * @minItems 6
+     * @maxItems 6
+     */
+  byComponents: HouseholdComponentBucket[];
+  indicators: HouseholdCompositionIndicators;
+  quality: HouseholdCompositionQuality;
+  source: HouseholdCompositionSource;
+}
+
+export interface HouseholdMethodology {
+  household: string;
+  referencePeriod: string;
+  averageHouseholdSize: string;
+  provenance: string;
+  coverage: string;
+  history: string;
+  childrenDataset: string;
+  composition: string;
+  compositionQuality: string;
+  familyRelationships: string;
+}
+
+export interface DemographicHouseholdsResponse {
+  geography: HouseholdGeography;
+  period: string;
+  availablePeriods: string[];
+  sourceStatus: HouseholdSourceStatus;
+  counts: HouseholdCounts;
+  changeFromFirst: HouseholdChangeFromFirst;
+  history: HouseholdHistoryPoint[];
+  quality: HouseholdQuality;
+  source: HouseholdAnnualSource;
+  composition: HouseholdComposition2023;
+  methodology: HouseholdMethodology;
+}
+
 export interface UploadUrlRequest {
   /**
      * Original file name.
@@ -3031,6 +3260,13 @@ ente?: string;
 export type ListConfiscatedAssetsParams = {
 status?: ConfiscatedAssetStatus;
 tipologia?: string;
+};
+
+export type GetDemographicHouseholdsParams = {
+/**
+ * Annual P02 period, or `latest` when omitted.
+ */
+period?: string;
 };
 
 export type ListAccessoCivicoParams = {

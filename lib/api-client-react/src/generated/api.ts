@@ -45,6 +45,7 @@ import type {
   ContractAnalytics,
   ContractStoryline,
   DeliberaVotes,
+  DemographicHouseholdsResponse,
   Error,
   FeedStatus,
   FollowInput,
@@ -53,6 +54,7 @@ import type {
   FundamentalActCreateInput,
   FundamentalActUpdateInput,
   GetContractsAnalyticsParams,
+  GetDemographicHouseholdsParams,
   GetPublicationsMacrotemiParams,
   GetPublicationsTimelineParams,
   HealthStatus,
@@ -9290,6 +9292,91 @@ export const useUpdateConfiscatedAssetLocation = <TError = ErrorType<void>,
       > => {
       return useMutation(getUpdateConfiscatedAssetLocationMutationOptions(options));
     }
+
+export const getGetDemographicHouseholdsUrl = (params?: GetDemographicHouseholdsParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : value.toString())
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/demographics/households?${stringifiedParams}` : `/api/demographics/households`
+}
+
+/**
+ * Returns the selected annual P02 household snapshot and history together with the separate, fixed 2023 census profile by number of components.
+ * @summary Get the annual household series and the 2023 census composition
+ */
+export const getDemographicHouseholds = async (params?: GetDemographicHouseholdsParams, options?: RequestInit): Promise<DemographicHouseholdsResponse> => {
+
+  return customFetch<DemographicHouseholdsResponse>(getGetDemographicHouseholdsUrl(params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetDemographicHouseholdsQueryKey = (params?: GetDemographicHouseholdsParams,) => {
+    return [
+    `/api/demographics/households`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getGetDemographicHouseholdsQueryOptions = <TData = Awaited<ReturnType<typeof getDemographicHouseholds>>, TError = ErrorType<Error>>(params?: GetDemographicHouseholdsParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getDemographicHouseholds>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetDemographicHouseholdsQueryKey(params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getDemographicHouseholds>>> = ({ signal }) => getDemographicHouseholds(params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getDemographicHouseholds>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetDemographicHouseholdsQueryResult = NonNullable<Awaited<ReturnType<typeof getDemographicHouseholds>>>
+export type GetDemographicHouseholdsQueryError = ErrorType<Error>
+
+
+/**
+ * @summary Get the annual household series and the 2023 census composition
+ */
+
+export function useGetDemographicHouseholds<TData = Awaited<ReturnType<typeof getDemographicHouseholds>>, TError = ErrorType<Error>>(
+ params?: GetDemographicHouseholdsParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getDemographicHouseholds>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetDemographicHouseholdsQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
+
+
 
 export const getListAccessoCivicoUrl = (params?: ListAccessoCivicoParams,) => {
   const normalizedParams = new URLSearchParams();

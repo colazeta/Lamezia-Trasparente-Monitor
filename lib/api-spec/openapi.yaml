@@ -30,6 +30,8 @@ tags:
     description: Curated citizen questions ("Cosa puoi scoprire?")
   - name: oversight
     description: Pareri degli organi di vigilanza e controllo
+  - name: demographics
+    description: Municipal demographic observations and census profiles
 paths:
   /healthz:
     get:
@@ -3560,6 +3562,35 @@ paths:
         "404":
           description: Not found.
 
+  /demographics/households:
+    get:
+      operationId: getDemographicHouseholds
+      tags: [demographics]
+      summary: Get the annual household series and the 2023 census composition
+      description: >-
+        Returns the selected annual P02 household snapshot and history together
+        with the separate, fixed 2023 census profile by number of components.
+      parameters:
+        - name: period
+          in: query
+          required: false
+          description: Annual P02 period, or `latest` when omitted.
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Household series and census composition for Lamezia Terme.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DemographicHouseholdsResponse"
+        "404":
+          description: No complete versioned P02 household snapshot for the requested period.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
   /accesso-civico:
     get:
       tags: [accesso-civico]
@@ -3849,6 +3880,365 @@ components:
           type: string
       required:
         - error
+
+    HouseholdSourceStatus:
+      type: string
+      enum: [final, provisional, estimated, reconstructed, forecast, unknown]
+
+    HouseholdGeography:
+      type: object
+      required: [code, name, level]
+      properties:
+        code:
+          type: string
+          pattern: "^[0-9]{6}$"
+        name:
+          type: string
+        level:
+          type: string
+          enum: [municipality]
+
+    HouseholdMunicipality:
+      type: object
+      required: [name, istatCode]
+      properties:
+        name:
+          type: string
+        istatCode:
+          type: string
+          pattern: "^[0-9]{6}$"
+
+    HouseholdCounts:
+      type: object
+      required:
+        - households
+        - householdPopulation
+        - averageHouseholdSize
+        - totalPopulation
+        - householdPopulationShare
+      properties:
+        households:
+          type: integer
+          minimum: 0
+        householdPopulation:
+          type: integer
+          minimum: 0
+        averageHouseholdSize:
+          type: number
+          minimum: 0
+        totalPopulation:
+          type: ["integer", "null"]
+          minimum: 0
+        householdPopulationShare:
+          type: ["number", "null"]
+
+    HouseholdChangeFromFirst:
+      type: object
+      required:
+        - firstPeriod
+        - householdsAbsolute
+        - householdsPercent
+        - averageHouseholdSize
+      properties:
+        firstPeriod:
+          type: string
+        householdsAbsolute:
+          type: integer
+        householdsPercent:
+          type: ["number", "null"]
+        averageHouseholdSize:
+          type: number
+
+    HouseholdHistoryPoint:
+      type: object
+      required:
+        - period
+        - households
+        - householdPopulation
+        - averageHouseholdSize
+        - sourceStatus
+        - totalPopulation
+      properties:
+        period:
+          type: string
+        households:
+          type: integer
+          minimum: 0
+        householdPopulation:
+          type: integer
+          minimum: 0
+        averageHouseholdSize:
+          type: number
+          minimum: 0
+        sourceStatus:
+          $ref: "#/components/schemas/HouseholdSourceStatus"
+        totalPopulation:
+          type: ["integer", "null"]
+          minimum: 0
+
+    HouseholdQuality:
+      type: object
+      required:
+        - publishedAverageHouseholdSize
+        - derivedAverageHouseholdSize
+        - averageDifference
+        - flags
+      properties:
+        publishedAverageHouseholdSize:
+          type: ["number", "null"]
+        derivedAverageHouseholdSize:
+          type: number
+        averageDifference:
+          type: ["number", "null"]
+        flags:
+          type: array
+          items:
+            type: string
+
+    HouseholdAnnualSource:
+      type: object
+      required: [name, dataset, url, projection]
+      properties:
+        name:
+          type: string
+        dataset:
+          type: string
+        url:
+          type: string
+          format: uri
+        projection:
+          type: string
+
+    HouseholdComponentBucket:
+      type: object
+      required: [key, sourceField, households, share]
+      properties:
+        key:
+          type: string
+          enum: ["1", "2", "3", "4", "5", "6+"]
+        sourceField:
+          type: string
+          enum: [PF3, PF4, PF5, PF6, PF7, PF8]
+        households:
+          type: integer
+          minimum: 0
+        share:
+          type: number
+          minimum: 0
+          maximum: 100
+
+    HouseholdCompositionIndicators:
+      type: object
+      required:
+        - onePersonHouseholds
+        - onePersonShare
+        - fivePlusHouseholds
+        - fivePlusShare
+      properties:
+        onePersonHouseholds:
+          type: integer
+          minimum: 0
+        onePersonShare:
+          type: number
+          minimum: 0
+          maximum: 100
+        fivePlusHouseholds:
+          type: integer
+          minimum: 0
+        fivePlusShare:
+          type: number
+          minimum: 0
+          maximum: 100
+
+    HouseholdCompositionQuality:
+      type: object
+      required:
+        - includedRows
+        - skippedFictitiousRows
+        - incompleteRows
+        - componentSum
+        - reconciliationDifference
+        - exactReconciliation
+      properties:
+        includedRows:
+          type: integer
+          minimum: 0
+        skippedFictitiousRows:
+          type: integer
+          minimum: 0
+        incompleteRows:
+          type: integer
+          minimum: 0
+        componentSum:
+          type: integer
+          minimum: 0
+        reconciliationDifference:
+          type: integer
+        exactReconciliation:
+          type: boolean
+
+    HouseholdCompositionSource:
+      type: object
+      required:
+        - institution
+        - dataset
+        - territorialLevel
+        - referenceDate
+        - sourceUpdateDate
+        - pageUrl
+        - downloadUrl
+        - archiveFile
+        - archiveMember
+        - workbookFile
+        - archiveSha256
+        - workbookSha256
+        - licence
+      properties:
+        institution:
+          type: string
+        dataset:
+          type: string
+        territorialLevel:
+          type: string
+        referenceDate:
+          type: string
+          format: date
+        sourceUpdateDate:
+          type: string
+          format: date
+        pageUrl:
+          type: string
+          format: uri
+        downloadUrl:
+          type: string
+          format: uri
+        archiveFile:
+          type: string
+        archiveMember:
+          type: string
+        workbookFile:
+          type: string
+        archiveSha256:
+          type: string
+          pattern: "^[a-f0-9]{64}$"
+        workbookSha256:
+          type: string
+          pattern: "^[a-f0-9]{64}$"
+        licence:
+          type: string
+
+    HouseholdComposition2023:
+      type: object
+      required:
+        - schemaVersion
+        - referenceYear
+        - municipality
+        - totalHouseholds
+        - byComponents
+        - indicators
+        - quality
+        - source
+      properties:
+        schemaVersion:
+          type: integer
+          enum: [1]
+        referenceYear:
+          type: integer
+          enum: [2023]
+        municipality:
+          $ref: "#/components/schemas/HouseholdMunicipality"
+        totalHouseholds:
+          type: integer
+          minimum: 0
+        byComponents:
+          type: array
+          minItems: 6
+          maxItems: 6
+          items:
+            $ref: "#/components/schemas/HouseholdComponentBucket"
+        indicators:
+          $ref: "#/components/schemas/HouseholdCompositionIndicators"
+        quality:
+          $ref: "#/components/schemas/HouseholdCompositionQuality"
+        source:
+          $ref: "#/components/schemas/HouseholdCompositionSource"
+
+    HouseholdMethodology:
+      type: object
+      required:
+        - household
+        - referencePeriod
+        - averageHouseholdSize
+        - provenance
+        - coverage
+        - history
+        - childrenDataset
+        - composition
+        - compositionQuality
+        - familyRelationships
+      properties:
+        household:
+          type: string
+        referencePeriod:
+          type: string
+        averageHouseholdSize:
+          type: string
+        provenance:
+          type: string
+        coverage:
+          type: string
+        history:
+          type: string
+        childrenDataset:
+          type: string
+        composition:
+          type: string
+        compositionQuality:
+          type: string
+        familyRelationships:
+          type: string
+
+    DemographicHouseholdsResponse:
+      type: object
+      required:
+        - geography
+        - period
+        - availablePeriods
+        - sourceStatus
+        - counts
+        - changeFromFirst
+        - history
+        - quality
+        - source
+        - composition
+        - methodology
+      properties:
+        geography:
+          $ref: "#/components/schemas/HouseholdGeography"
+        period:
+          type: string
+        availablePeriods:
+          type: array
+          items:
+            type: string
+        sourceStatus:
+          $ref: "#/components/schemas/HouseholdSourceStatus"
+        counts:
+          $ref: "#/components/schemas/HouseholdCounts"
+        changeFromFirst:
+          $ref: "#/components/schemas/HouseholdChangeFromFirst"
+        history:
+          type: array
+          items:
+            $ref: "#/components/schemas/HouseholdHistoryPoint"
+        quality:
+          $ref: "#/components/schemas/HouseholdQuality"
+        source:
+          $ref: "#/components/schemas/HouseholdAnnualSource"
+        composition:
+          $ref: "#/components/schemas/HouseholdComposition2023"
+        methodology:
+          $ref: "#/components/schemas/HouseholdMethodology"
 
     UploadUrlRequest:
       type: object

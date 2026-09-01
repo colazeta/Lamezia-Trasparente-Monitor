@@ -547,10 +547,10 @@ function parseWorksheetRows(xml: string, sharedStrings: string[]): string[][] {
   return rows;
 }
 
-async function readXlsxRows(xlsxPath: string): Promise<string[][]> {
+export async function readXlsxRows(xlsxPath: string): Promise<string[][]> {
   const tempDir = await mkdtemp(path.join(tmpdir(), "istat-xlsx-"));
   try {
-    await runCommand("tar", ["-xf", xlsxPath, "-C", tempDir]);
+    await runCommand("unzip", ["-q", xlsxPath, "-d", tempDir]);
     const workbookXml = await readFile(
       path.join(tempDir, "xl/workbook.xml"),
       "utf8",
