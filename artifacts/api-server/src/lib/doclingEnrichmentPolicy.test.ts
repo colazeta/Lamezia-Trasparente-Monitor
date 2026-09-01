@@ -49,6 +49,19 @@ describe("decideDoclingEnrichment", () => {
     });
   });
 
+  it("keeps a healthy wrapper with an embedded PDF as a container candidate", () => {
+    expect(
+      decideDoclingEnrichment({
+        ...base,
+        baselineCharacters: 810,
+        hasEmbeddedPdf: true,
+      }),
+    ).toMatchObject({
+      requestStructuredExtraction: true,
+      reason: "embedded-pdf-container",
+    });
+  });
+
   it("requests enrichment when the baseline extractor failed", () => {
     expect(
       decideDoclingEnrichment({

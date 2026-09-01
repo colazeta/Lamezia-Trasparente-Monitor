@@ -3,6 +3,7 @@ export type DoclingEnrichmentReason =
   | "unsupported-content-type"
   | "resource-bound"
   | "embedded-pdf-sparse-baseline"
+  | "embedded-pdf-container"
   | "baseline-failed"
   | "scan-like-sparse-baseline"
   | "reviewed-layout-class"
@@ -92,10 +93,13 @@ export function decideDoclingEnrichment(
 
   const sparseBaseline = density !== null && density < SPARSE_CHARACTERS_PER_PAGE;
 
-  if (input.hasEmbeddedPdf && (input.baselineStatus !== "ok" || sparseBaseline)) {
+  if (input.hasEmbeddedPdf) {
     return {
       requestStructuredExtraction: true,
-      reason: "embedded-pdf-sparse-baseline",
+      reason:
+        input.baselineStatus !== "ok" || sparseBaseline
+          ? "embedded-pdf-sparse-baseline"
+          : "embedded-pdf-container",
       baselineCharactersPerPage: density,
     };
   }
