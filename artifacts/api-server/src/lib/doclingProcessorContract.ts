@@ -82,6 +82,14 @@ export const doclingProcessorRequestSchema = z
         message: "source exceeds request maxBytes",
       });
     }
+    const observedPages = request.selection.baseline.pages;
+    if (observedPages !== null && observedPages > request.limits.maxPages) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["selection", "baseline", "pages"],
+        message: "observed page count exceeds request maxPages",
+      });
+    }
     if (new Set(request.requestedOutputs).size !== request.requestedOutputs.length) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
@@ -278,6 +286,20 @@ export function parseDoclingProcessorResultForRequest(
   }
   if (result.processor.version !== request.target.processorVersion) {
     throw new Error("Docling processor result version mismatch");
+  }
+  if (result.status === "ok") {
+    const requested = new Set(request.requestedOutputs);
+    const returned = new Set(result.artifacts.map((artifact) => artifact.kind));
+    for (const kind of requested) {
+      if (!returned.has(kind)) {
+        throw new Error(`Docling processor result missing requested output: ${kind}`);
+      }
+    }
+    for (const kind of returned) {
+      if (!requested.has(kind)) {
+        throw new Error(`Docling processor result returned unrequested output: ${kind}`);
+      }
+    }
   }
   return result;
 }
