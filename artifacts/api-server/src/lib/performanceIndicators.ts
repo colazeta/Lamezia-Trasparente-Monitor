@@ -5,6 +5,7 @@ import { runRbdBackfill } from "./demographicRbd";
 import { runPopulationStructureIngestion } from "./populationStructure";
 import { runPopulationCitizenshipIngestion } from "./populationCitizenship";
 import { runPopulationBirthCountryIngestion } from "./populationBirthCountry";
+import { runPopulationHouseholdProjection } from "./populationHouseholds";
 
 // Prefisso comune delle sorgenti automatiche della sezione Performance. La
 // popolazione mantiene l'identificativo storico `performance:istat-popolazione`
@@ -76,6 +77,16 @@ export async function runPerformanceIngestion(): Promise<void> {
     currentBalanceReady = false;
     logger.error({ err }, "Demographic balance refresh failed");
   });
+
+  // Numero di famiglie e popolazione residente in famiglia sono già contenuti
+  // nel payload P02 archiviato dalla fase precedente. La proiezione li estrae
+  // dalle release immutabili senza una nuova richiesta alla fonte e conserva
+  // l'identificativo della release sorgente nei metadata della serie derivata.
+  if (currentBalanceReady) {
+    await runPopulationHouseholdProjection().catch((err) => {
+      logger.error({ err }, "Population household projection failed");
+    });
+  }
 
   const rbdFitsBudget =
     sdmxBudgetReliable &&

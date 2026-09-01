@@ -3,6 +3,7 @@ import { PopulationHistoryPanel } from "@/components/demographics/PopulationHist
 import { PopulationStructurePanel } from "@/components/demographics/PopulationStructurePanel";
 import { PopulationCitizenshipPanel } from "@/components/demographics/PopulationCitizenshipPanel";
 import { PopulationBirthCountryPanel } from "@/components/demographics/PopulationBirthCountryPanel";
+import { PopulationHouseholdsPanel } from "@/components/demographics/PopulationHouseholdsPanel";
 import { ChangeDriversPanel } from "@/components/demographics/ChangeDriversPanel";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -12,6 +13,7 @@ const POPULATION_API = "/api/demographics/series/population-resident-jan1";
 const STRUCTURE_API = "/api/demographics/structure";
 const CITIZENSHIP_API = "/api/demographics/citizenship";
 const BIRTHPLACE_API = "/api/demographics/birthplace";
+const HOUSEHOLDS_API = "/api/demographics/households";
 const CHANGE_DRIVERS_API = "/api/demographics/change-drivers?granularity=annual";
 const ISTAT_DEMO_URL = "https://demo.istat.it/";
 
@@ -38,10 +40,10 @@ export function DemographicTrendDatasetCard() {
             <p className="mt-2 text-sm leading-6 text-muted-foreground">
               Questa vista usa direttamente l'archivio demografico versionato di
               LameziaTrasparente. Popolazione, struttura per età e sesso,
-              cittadinanza, paese di nascita, release della fonte e bilancio
-              demografico sono quindi gli stessi dati utilizzati nelle altre
-              sezioni del sito: non esiste più una copia statica separata per
-              Open Data.
+              cittadinanza, paese di nascita, famiglie, release della fonte e
+              bilancio demografico sono quindi gli stessi dati utilizzati nelle
+              altre sezioni del sito: non esiste più una copia statica separata
+              per Open Data.
             </p>
           </div>
           <div className="flex flex-wrap gap-2">
@@ -67,6 +69,12 @@ export function DemographicTrendDatasetCard() {
               <a href={BIRTHPLACE_API} target="_blank" rel="noreferrer">
                 <FileJson className="h-4 w-4" />
                 API paese di nascita
+              </a>
+            </Button>
+            <Button asChild variant="outline" size="sm">
+              <a href={HOUSEHOLDS_API} target="_blank" rel="noreferrer">
+                <FileJson className="h-4 w-4" />
+                API famiglie
               </a>
             </Button>
             <Button asChild variant="outline" size="sm">
@@ -104,6 +112,7 @@ export function DemographicTrendDatasetCard() {
       <PopulationStructurePanel />
       <PopulationCitizenshipPanel />
       <PopulationBirthCountryPanel />
+      <PopulationHouseholdsPanel />
       <ChangeDriversPanel />
 
       <Card className="border-dashed">
@@ -111,13 +120,14 @@ export function DemographicTrendDatasetCard() {
           <Info className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
           <p>
             La precedente serie generata dal CSV del Portale OpenData comunale e
-            la precedente distribuzione statica degli stranieri per età e sesso
-            restano fonti di confronto e provenienza documentale, ma non
-            alimentano più l'Osservatorio. Per la lettura corrente vengono usate
-            le serie ISTAT versionate; cittadinanza e paese di nascita restano
-            assi separati e le ricostruzioni storiche 2002–2018 sono qualificate
-            esplicitamente come ricostruite, con una cesura metodologica visibile
-            rispetto al 2019+.
+            le precedenti distribuzioni statiche restano fonti di confronto e
+            provenienza documentale, ma non alimentano più l'Osservatorio quando
+            esiste una serie ISTAT canonica. Per le famiglie, la distribuzione
+            comunale per numero di figli resta un arricchimento separato perché
+            non espone l'anno di riferimento e non comprende esplicitamente le
+            famiglie senza figli. Cittadinanza e paese di nascita restano assi
+            separati e le ricostruzioni storiche sono qualificate esplicitamente
+            quando presenti.
           </p>
         </CardContent>
       </Card>
