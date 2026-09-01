@@ -8,7 +8,7 @@ The PoC does **not** replace the current PDF handling, modify the API server, wr
 
 Docling is pinned to `2.124.0`. `pypdf` is pinned to `6.16.2` for bounded inspection and extraction of files embedded inside PDF containers. Any upgrade must be evaluated again on the same benchmark corpus before promotion.
 
-A dedicated GitHub Actions benchmark runs only on changes to this PoC (or by explicit manual dispatch), uses the repository's allowed `ubuntu-latest` runner, requires no secrets and never deploys or publishes benchmark output.
+A dedicated GitHub Actions benchmark runs only when extraction code, tests, pinned dependencies, the benchmark workflow, baseline helper or immutable sample PDF changes (or by explicit manual dispatch). It uses the repository's allowed `ubuntu-latest` runner, requires no secrets and never deploys or publishes benchmark output.
 
 ## Why container-aware processing is required
 
