@@ -23,6 +23,7 @@ const MAX_FILE_BYTES = 30 * 1024 * 1024; // 30 MB per attachment
 const DETAIL_TIMEOUT_MS = 20_000;
 const DOWNLOAD_TIMEOUT_MS = 45_000;
 const HASH_BACKFILL_MAX_ROWS = 10;
+const HASH_BACKFILL_MAX_ATTACHMENTS = 20;
 
 type AllegatoItem = {
   PROGRESSIVO: number | string;
@@ -69,6 +70,17 @@ function guessContentType(name: string, headerType: string | null): string {
 
 export function sha256Hex(data: Uint8Array): string {
   return createHash("sha256").update(data).digest("hex");
+}
+
+function parseStoredSize(value: unknown): number | null {
+  if (typeof value === "number" && Number.isFinite(value) && value >= 0) {
+    return value;
+  }
+  if (typeof value === "string" && /^\d+$/.test(value)) {
+    const parsed = Number(value);
+    return Number.isSafeInteger(parsed) ? parsed : null;
+  }
+  return null;
 }
 
 async function fetchDetail(id: string): Promise<DetailResponse | null> {
@@ -170,6 +182,7 @@ async function enrichOne(
 export type AttachmentHashBackfillResult = {
   rowsExamined: number;
   rowsUpdated: number;
+  attachmentsAttempted: number;
   hashesBackfilled: number;
   skipped: number;
 };
@@ -177,7 +190,8 @@ export type AttachmentHashBackfillResult = {
 /**
  * Bounded legacy provenance repair. It hashes only bytes already present in the
  * canonical object-storage copy; it never refetches an attachment from Tinn.
- * A stored size mismatch is fail-closed and leaves the attachment unchanged.
+ * Recorded/storage size mismatches are fail-closed and leave the attachment
+ * unchanged. Both row count and attachment count are capped per cycle.
  */
 export async function backfillAlboAttachmentHashes(
   storage: ObjectStorageService,
@@ -203,6 +217,7 @@ export async function backfillAlboAttachmentHashes(
     .limit(HASH_BACKFILL_MAX_ROWS);
 
   let rowsUpdated = 0;
+  let attachmentsAttempted = 0;
   let hashesBackfilled = 0;
   let skipped = 0;
 
@@ -219,6 +234,18 @@ export async function backfillAlboAttachmentHashes(
         continue;
       }
 
+      if (attachmentsAttempted >= HASH_BACKFILL_MAX_ATTACHMENTS) {
+        attachments.push(attachment);
+        continue;
+      }
+      attachmentsAttempted += 1;
+
+      if (attachment.size !== null && attachment.size > MAX_FILE_BYTES) {
+        skipped += 1;
+        attachments.push(attachment);
+        continue;
+      }
+
       const relativePath = attachment.storagePath.slice(STORAGE_PREFIX.length);
       try {
         const file = await storage.searchPublicObject(relativePath);
@@ -227,13 +254,22 @@ export async function backfillAlboAttachmentHashes(
           attachments.push(attachment);
           continue;
         }
-        const [buf] = await file.download();
-        if (buf.byteLength === 0 || buf.byteLength > MAX_FILE_BYTES) {
+
+        const [metadata] = await file.getMetadata();
+        const storedSize = parseStoredSize(metadata.size);
+        if (
+          storedSize === null ||
+          storedSize === 0 ||
+          storedSize > MAX_FILE_BYTES ||
+          (attachment.size !== null && attachment.size !== storedSize)
+        ) {
           skipped += 1;
           attachments.push(attachment);
           continue;
         }
-        if (attachment.size !== null && attachment.size !== buf.byteLength) {
+
+        const [buf] = await file.download();
+        if (buf.byteLength !== storedSize) {
           skipped += 1;
           attachments.push(attachment);
           continue;
@@ -241,17 +277,13 @@ export async function backfillAlboAttachmentHashes(
 
         attachments.push({
           ...attachment,
-          size: attachment.size ?? buf.byteLength,
+          size: attachment.size ?? storedSize,
           sha256: sha256Hex(buf),
         });
         hashesBackfilled += 1;
         changed = true;
-      } catch (err) {
+      } catch {
         skipped += 1;
-        logger.warn(
-          { err, publicationId: row.id, attachmentName: attachment.name },
-          "Albo attachment SHA-256 backfill skipped for stored object",
-        );
         attachments.push(attachment);
       }
     }
@@ -268,8 +300,19 @@ export async function backfillAlboAttachmentHashes(
   return {
     rowsExamined: candidates.length,
     rowsUpdated,
+    attachmentsAttempted,
     hashesBackfilled,
     skipped,
+  };
+}
+
+function emptyHashBackfillResult(): AttachmentHashBackfillResult {
+  return {
+    rowsExamined: 0,
+    rowsUpdated: 0,
+    attachmentsAttempted: 0,
+    hashesBackfilled: 0,
+    skipped: 0,
   };
 }
 
@@ -297,12 +340,7 @@ export async function enrichAlboAttachments(): Promise<{
     return {
       processed: 0,
       withFiles: 0,
-      hashBackfill: {
-        rowsExamined: 0,
-        rowsUpdated: 0,
-        hashesBackfilled: 0,
-        skipped: 0,
-      },
+      hashBackfill: emptyHashBackfillResult(),
     };
   }
 
@@ -361,15 +399,9 @@ export async function enrichAlboAttachments(): Promise<{
     withFiles = refreshed.filter((r) => (r.attachments?.length ?? 0) > 0).length;
   }
 
-  const hashBackfill = await backfillAlboAttachmentHashes(storage).catch((err) => {
-    logger.warn({ err }, "Albo attachment SHA-256 backfill cycle failed");
-    return {
-      rowsExamined: 0,
-      rowsUpdated: 0,
-      hashesBackfilled: 0,
-      skipped: 0,
-    } satisfies AttachmentHashBackfillResult;
-  });
+  const hashBackfill = await backfillAlboAttachmentHashes(storage).catch(() =>
+    emptyHashBackfillResult(),
+  );
 
   logger.info(
     {
