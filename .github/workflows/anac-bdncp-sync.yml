@@ -1,0 +1,87 @@
+name: ANAC BDNCP sync
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "40 5 * * *"
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/anac-bdncp-sync.yml"
+      - "scripts/contracts/anacBdncpSyncCore.ts"
+      - "scripts/contracts/syncOfficialAnacBdncp.ts"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: anac-bdncp-sync
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    name: Refresh official ANAC CIG snapshot
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.28.1
+          run_install: false
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Verify the triggering commit is public before refreshing
+        if: github.event_name == 'push'
+        run: >-
+          node scripts/check-public-contracts-page.mjs
+          --url https://lamezia-trasparente.pages.dev
+          --expected-commit "${{ github.sha }}"
+          --attempts 30
+          --delay-ms 10000
+
+      - name: Sync official ANAC open data
+        run: pnpm contracts:anac-sync
+
+      - name: Commit public ANAC status and last-known-good cache
+        id: commit_snapshot
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add data/public/contracts/anac-bdncp/latest.json
+
+          if git diff --cached --quiet; then
+            echo "No ANAC/BDNCP snapshot changes to commit."
+            echo "committed=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          git commit -m "Update ANAC BDNCP public snapshot"
+          git pull --rebase origin main
+          git push origin HEAD:main
+          echo "committed=true" >> "$GITHUB_OUTPUT"
+          echo "commit_sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+
+      - name: Verify the refreshed snapshot is public
+        if: steps.commit_snapshot.outputs.committed == 'true'
+        run: >-
+          node scripts/check-public-contracts-page.mjs
+          --url https://lamezia-trasparente.pages.dev
+          --expected-commit "${{ steps.commit_snapshot.outputs.commit_sha }}"
+          --attempts 30
+          --delay-ms 10000

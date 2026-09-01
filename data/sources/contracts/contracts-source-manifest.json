@@ -1,14 +1,14 @@
 {
   "schema_version": "contracts-source-manifest.v1",
-  "updated_at": "2026-06-27",
-  "scope": "Source-family discovery manifest for public contracts and public-works links. This catalogue does not contain production records and does not declare a live synchronisation.",
+  "updated_at": "2026-09-01",
+  "scope": "Source-family manifest for public contracts and public-works links. It documents the current Albo projection, official CIG links and the bounded ANAC open-data synchronisation without claiming complete BDNCP coverage.",
   "manual_verification_phrase": "URL ufficiale da verificare manualmente prima dell'ingestione",
   "sources": [
     {
       "id": "anac-bdncp-pcp",
       "label": "ANAC BDNCP / Piattaforma Contratti Pubblici",
       "authority": "ANAC",
-      "official_url": "https://dati.anticorruzione.it/superset/dashboard/appalti/",
+      "official_url": "https://dati.anticorruzione.it/superset/dashboard/dettaglio_cig/",
       "access_type": "portal_search",
       "source_axis": "mixed",
       "primary_identifiers": ["CIG", "CUP", "procedure_id", "lot_id"],
@@ -25,11 +25,11 @@
       "ingestion_status": "link_bridge",
       "public_claim_level": "linked_only",
       "limitations": [
-        "Usare come ponte di ricerca ufficiale basato su CIG quando disponibile.",
+        "Usare la vista ufficiale dettaglio CIG quando l'identificativo e formalmente valido.",
         "Il link non certifica una scheda BDNCP sincronizzata nella piattaforma locale.",
         "Esecuzione, SAL, liquidazioni, collaudo ed esito restano da documentare con fonti esplicite."
       ],
-      "next_action": "Mantenere il link bridge; censire separatamente dataset strutturati BDNCP/PCP prima di qualsiasi parser reale."
+      "next_action": "Monitorare la stabilita della vista dettaglio CIG e mantenerla separata dalla copertura strutturata dei pacchetti open data."
     },
     {
       "id": "anac-pvl",
@@ -62,11 +62,11 @@
       "id": "anac-open-data-cig-annual",
       "label": "ANAC open data CIG annual datasets",
       "authority": "ANAC",
-      "official_url": null,
-      "access_type": "unknown",
+      "official_url": "https://dati.anticorruzione.it/opendata/dataset/cig-2025",
+      "access_type": "open_data",
       "source_axis": "lot",
       "primary_identifiers": ["CIG", "procedure_id", "lot_id"],
-      "expected_formats": ["csv", "json", "zip", "unknown"],
+      "expected_formats": ["csv", "json", "zip"],
       "update_mode": "full_dump",
       "lifecycle_coverage": {
         "programmazione": false,
@@ -77,30 +77,27 @@
         "valutazione_collaudo_esito": false
       },
       "ingestion_status": "not_implemented",
-      "public_claim_level": "fixture_only",
+      "public_claim_level": "linked_only",
       "limitations": [
-        "URL ufficiale da verificare manualmente prima dell'ingestione",
-        "Lo skeleton attuale legge solo fixture JSON locali e false per test.",
-        "Nessun dump annuale ANAC reale e scaricato, salvato o pubblicato in questa PR.",
-        "Discovery spike 2026-06-27: landing open data raggiungibile, ma pacchetto/API CIG annuale non verificato come endpoint stabile in questo ambiente."
+        "La pagina annuale ufficiale e censita ma il dump annuale non e acquisito dalla pipeline corrente.",
+        "Il dataset annuale non viene usato per dichiarare completezza storica.",
+        "La pipeline periodica usa separatamente i pacchetti mensili di aggiornamento CIG."
       ],
-      "next_action": "Verificare manualmente il pacchetto annuale ufficiale, versione, licenza, campi CIG/lotto e data di pubblicazione prima del parser reale.",
+      "next_action": "Valutare il dump annuale solo con limiti di dimensione e una strategia di ricostruzione storica separata.",
       "discovery_metadata": {
-        "discovery_status": "needs_manual_verification",
-        "checked_at": "2026-06-27T20:50:00.000Z",
+        "discovery_status": "verified",
+        "checked_at": "2026-09-01T00:00:00.000Z",
         "checked_by": "codex",
-        "verified_url": null,
-        "landing_page_url": "https://dati.anticorruzione.it/opendata/",
-        "package_url": null,
+        "verified_url": "https://dati.anticorruzione.it/opendata/dataset/cig-2025",
+        "landing_page_url": "https://dati.anticorruzione.it/opendata",
+        "package_url": "https://dati.anticorruzione.it/opendata/dataset/cig-2025",
         "sample_file_url": null,
         "detected_format": "html",
         "freshness_label": "annual",
-        "version_hint": null,
+        "version_hint": "2025",
         "notes": [
-          "Landing ufficiale open data ANAC raggiungibile con richiesta metadata leggera.",
-          "La query metadata al catalogo/pacchetto CIG annuale non ha verificato un endpoint strutturato stabile in questo ambiente.",
-          "URL ufficiale da verificare manualmente prima dell'ingestione",
-          "Discovery separata da ingestione: nessun record reale ANAC e stato scritto in directory pubbliche o dati applicativi."
+          "Pagina dataset annuale verificata sul catalogo ufficiale ANAC.",
+          "Discovery separata da ingestione: la pipeline corrente non scarica il dump annuale."
         ]
       }
     },
@@ -108,11 +105,11 @@
       "id": "anac-open-data-cig-delta",
       "label": "ANAC open data CIG delta/update datasets",
       "authority": "ANAC",
-      "official_url": null,
-      "access_type": "unknown",
+      "official_url": "https://dati.anticorruzione.it/opendata/dataset/cig",
+      "access_type": "open_data",
       "source_axis": "lot",
       "primary_identifiers": ["CIG", "procedure_id", "lot_id"],
-      "expected_formats": ["csv", "json", "zip", "unknown"],
+      "expected_formats": ["csv", "zip"],
       "update_mode": "delta",
       "lifecycle_coverage": {
         "programmazione": false,
@@ -122,14 +119,30 @@
         "esecuzione": false,
         "valutazione_collaudo_esito": false
       },
-      "ingestion_status": "not_implemented",
-      "public_claim_level": "none",
+      "ingestion_status": "implemented",
+      "public_claim_level": "ingestion_ready",
       "limitations": [
-        "URL ufficiale da verificare manualmente prima dell'ingestione",
-        "Serve una strategia di deduplica, versionamento e freshness prima di leggere aggiornamenti incrementali.",
-        "Non dichiarare aggiornamento periodico finche non esiste una pipeline documentata."
+        "La pipeline consulta una finestra mensile limitata e non ricostruisce lo storico completo BDNCP.",
+        "Un CIG non trovato nei pacchetti consultati non e considerato assente dalla BDNCP.",
+        "In caso di errore resta disponibile l'ultimo snapshot valido e lo stato fonte diventa degradato o non recente."
       ],
-      "next_action": "Verificare se ANAC pubblica pacchetti delta stabili o solo snapshot; disegnare mapping idempotente CIG/lotto."
+      "next_action": "Monitorare esiti e dimensioni dei pacchetti; ampliare la finestra solo dopo misure operative.",
+      "discovery_metadata": {
+        "discovery_status": "verified",
+        "checked_at": "2026-09-01T00:00:00.000Z",
+        "checked_by": "codex",
+        "verified_url": "https://dati.anticorruzione.it/opendata/dataset/cig",
+        "landing_page_url": "https://dati.anticorruzione.it/opendata",
+        "package_url": "https://dati.anticorruzione.it/opendata/dataset/cig",
+        "sample_file_url": "https://dati.anticorruzione.it/opendata/download/dataset/cig/filesystem/20260501-cig_csv.zip",
+        "detected_format": "zip",
+        "freshness_label": "delta",
+        "version_hint": "2026-05",
+        "notes": [
+          "Pagina dataset e convenzione dei pacchetti CSV ZIP verificate sul catalogo ufficiale ANAC.",
+          "La disponibilita di ogni singolo mese viene verificata a ogni esecuzione e non e presunta."
+        ]
+      }
     },
     {
       "id": "anac-open-data-aggiudicazioni",
@@ -162,8 +175,8 @@
       "id": "anac-ocds-bdncp",
       "label": "ANAC OCDS / OCDS-style BDNCP publication layer",
       "authority": "ANAC",
-      "official_url": null,
-      "access_type": "unknown",
+      "official_url": "https://dati.anticorruzione.it/opendata/dataset/ocds-appalti-ordinari-2026",
+      "access_type": "open_data",
       "source_axis": "mixed",
       "primary_identifiers": [
         "ocid",
@@ -174,8 +187,8 @@
         "CIG",
         "CUP"
       ],
-      "expected_formats": ["ocds_json", "json", "zip", "unknown"],
-      "update_mode": "unknown",
+      "expected_formats": ["ocds_json", "json"],
+      "update_mode": "periodic",
       "lifecycle_coverage": {
         "programmazione": true,
         "progettazione": false,
@@ -185,13 +198,29 @@
         "valutazione_collaudo_esito": false
       },
       "ingestion_status": "not_implemented",
-      "public_claim_level": "none",
+      "public_claim_level": "linked_only",
       "limitations": [
-        "URL ufficiale da verificare manualmente prima dell'ingestione",
-        "Layer OCDS/OCDS-style da identificare senza assumere completezza lifecycle.",
+        "Il layer OCDS ufficiale e censito ma non viene acquisito dalla pipeline corrente.",
+        "Non assumere completezza del ciclo di vita dai soli release package.",
         "CIG e CUP restano chiavi distinte anche quando compaiono nello stesso package."
       ],
-      "next_action": "Verificare endpoint o pacchetti ufficiali, versione OCDS, policy delta/full e campi implementation prima di creare il parser."
+      "next_action": "Valutare separatamente dimensioni, policy release e mapping del lifecycle prima di creare un parser OCDS.",
+      "discovery_metadata": {
+        "discovery_status": "verified",
+        "checked_at": "2026-09-01T00:00:00.000Z",
+        "checked_by": "codex",
+        "verified_url": "https://dati.anticorruzione.it/opendata/dataset/ocds-appalti-ordinari-2026",
+        "landing_page_url": "https://dati.anticorruzione.it/opendata",
+        "package_url": "https://dati.anticorruzione.it/opendata/dataset/ocds-appalti-ordinari-2026",
+        "sample_file_url": "https://dati.anticorruzione.it/opendata/download/dataset/ocds/filesystem/bulk/2026/02.json",
+        "detected_format": "ocds_json",
+        "freshness_label": "periodic",
+        "version_hint": "2026-02",
+        "notes": [
+          "Pagina dataset e una risorsa bulk JSON verificate sul catalogo ufficiale ANAC.",
+          "La risorsa resta censita ma fuori dal perimetro della sincronizzazione CIG corrente."
+        ]
+      }
     },
     {
       "id": "opencup",

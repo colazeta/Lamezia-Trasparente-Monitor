@@ -7,6 +7,8 @@ import {
   parseExplicitAmount,
   type AlboPublicSnapshot,
 } from "./staticContractsDataset";
+import { createPendingAnacBdncpSnapshot } from "./anacBdncpSync";
+import { BDNCP_CIG_DETAIL_URL } from "./bdncp";
 
 describe("static contracts dataset", () => {
   it("projects only official public Albo acts with a formal CIG", () => {
@@ -27,6 +29,10 @@ describe("static contracts dataset", () => {
       status: "current-window",
       itemsTotal: 2,
     });
+    expect(dataset.anacConnection).toMatchObject({
+      schemaVersion: "anac-bdncp-connection.v1",
+      status: "pending",
+    });
 
     const directAward = dataset.contracts.find(
       (contract) => contract.cig === "B123456789",
@@ -40,6 +46,7 @@ describe("static contracts dataset", () => {
       macrotema: "scuole",
     });
     expect(directAward?.procedureType).toContain("dichiarato nell'oggetto");
+    expect(directAward?.anacUrl).toBe(`${BDNCP_CIG_DETAIL_URL}?cig=B123456789`);
     expect(
       dataset.storylines[String(directAward?.id)].timeline[0].attachments,
     ).toHaveLength(1);
@@ -65,6 +72,52 @@ describe("static contracts dataset", () => {
     expect(
       extractCig("CIG AQ 9181061337 - CIG CONTRATTO SPECIFICO A01D5289C5"),
     ).toBe("A01D5289C5");
+  });
+
+  it("keeps structured ANAC matches separate from current-Albo facts", () => {
+    const anacSnapshot = createPendingAnacBdncpSnapshot(
+      "2026-09-01T12:00:00.000Z",
+    );
+    anacSnapshot.status = "current";
+    anacSnapshot.lastAttemptAt = anacSnapshot.generatedAt;
+    anacSnapshot.lastSuccessAt = anacSnapshot.generatedAt;
+    anacSnapshot.consultedArchives = [
+      {
+        period: "2026-08",
+        url: "https://dati.anticorruzione.it/archive.zip",
+        retrievedAt: anacSnapshot.generatedAt,
+        recordsScanned: 20,
+        matchedRecords: 1,
+      },
+    ];
+    anacSnapshot.records = [
+      {
+        cig: "B123456789",
+        title: "Record ANAC del lotto",
+        contractingAuthority: "Comune di Lamezia Terme",
+        tenderAmount: 9876.54,
+        procedureType: "AFFIDAMENTO DIRETTO",
+        recordId: "GARA-1",
+        sourceArchiveUrl: "https://dati.anticorruzione.it/archive.zip",
+        sourcePeriod: "2026-08",
+        acquiredAt: anacSnapshot.generatedAt,
+      },
+    ];
+
+    const dataset = buildStaticContractsDataset(
+      fixtureSnapshot(),
+      anacSnapshot,
+    );
+
+    expect(dataset.anacConnection.coverage).toMatchObject({
+      structuredMatches: 1,
+      consultedArchives: 1,
+    });
+    expect(dataset.anacConnection.unmatchedCigs).toContain("A01D5289C5");
+    expect(
+      dataset.contracts.find((contract) => contract.cig === "B123456789")
+        ?.amount,
+    ).toBe(1234.56);
   });
 });
 

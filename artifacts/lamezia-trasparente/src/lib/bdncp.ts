@@ -7,6 +7,9 @@ import {
 export const BDNCP_APPALTI_URL =
   "https://dati.anticorruzione.it/superset/dashboard/appalti/";
 
+export const BDNCP_CIG_DETAIL_URL =
+  "https://dati.anticorruzione.it/superset/dashboard/dettaglio_cig/";
+
 export const ANAC_PVL_URL = "https://pubblicitalegale.anticorruzione.it/";
 
 export const ANAC_DIGITAL_CONTRACTS_URL =
@@ -34,7 +37,7 @@ export function buildBdncpSearchUrl(cig: string | null | undefined): string {
   const classification = classifyProcurementIdentifier(cig);
 
   if (classification.type === "cig" && classification.formallyValid) {
-    return `${BDNCP_APPALTI_URL}?cig=${encodeURIComponent(
+    return `${BDNCP_CIG_DETAIL_URL}?cig=${encodeURIComponent(
       classification.normalized,
     )}`;
   }
@@ -77,11 +80,11 @@ export function buildBdncpSearchBridge(
         ? "fallback-search"
         : "missing-cig",
     label: formallyValidCig
-      ? `Ricerca BDNCP per CIG ${cigClassification.normalized}`
+      ? `Scheda BDNCP per CIG ${cigClassification.normalized}`
       : "Ricerca BDNCP da completare",
     publicClaim: "collegamento parziale",
     publicLimit:
-      "Il link apre un punto di ricerca ufficiale ANAC/BDNCP e non certifica, da solo, una scheda sincronizzata nella piattaforma locale.",
+      "Il link apre la vista ufficiale ANAC per il CIG e non certifica, da solo, una scheda sincronizzata nella piattaforma locale.",
   };
 }
 

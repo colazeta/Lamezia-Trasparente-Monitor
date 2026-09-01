@@ -5,14 +5,18 @@ import type {
   LifecyclePhase,
   StorylineIndicators,
 } from "@workspace/api-client-react";
+import {
+  buildAnacBdncpConnectionStatus,
+  createPendingAnacBdncpSnapshot,
+  type AnacBdncpConnectionStatus,
+  type AnacBdncpSyncSnapshot,
+} from "./anacBdncpSync";
+import { bdncpUrlForCig } from "./bdncp";
 
 export const STATIC_CONTRACTS_DATA_PATH =
   "data/processed/contracts/lamezia-contracts-current.json";
 
 export const STATIC_CONTRACTS_SCHEMA_VERSION = "lamezia-contracts-current.v1";
-
-const BDNCP_APPALTI_URL =
-  "https://dati.anticorruzione.it/superset/dashboard/appalti/";
 
 type AlboAreaTheme = {
   theme_id?: string | null;
@@ -67,6 +71,7 @@ export type StaticContractsDataset = {
     withExplicitSupplier: number;
   };
   feedStatus: FeedStatus;
+  anacConnection: AnacBdncpConnectionStatus;
   contracts: Contract[];
   storylines: Record<string, ContractStoryline>;
 };
@@ -78,6 +83,7 @@ type ContractPhaseDetails = {
 
 export function buildStaticContractsDataset(
   snapshot: AlboPublicSnapshot,
+  anacSnapshot: AnacBdncpSyncSnapshot = createPendingAnacBdncpSnapshot(),
 ): StaticContractsDataset {
   const generatedAt = validIsoDate(snapshot.generated_at)
     ? snapshot.generated_at!
@@ -118,7 +124,8 @@ export function buildStaticContractsDataset(
   );
   const limitations = uniqueStrings([
     "Il perimetro comprende solo gli atti correnti dell'Albo Pretorio che riportano un CIG; non e' uno storico completo dei contratti del Comune.",
-    "Il CIG e' una chiave di collegamento al portale BDNCP/ANAC, non una prova di sincronizzazione della relativa scheda.",
+    "Ogni CIG formalmente valido collega la vista ufficiale ANAC; la copertura strutturata resta limitata ai pacchetti mensili dichiarati nello stato della fonte.",
+    "Un CIG senza match nello snapshot consultato non risulta per questo assente dalla BDNCP.",
     "Importi, operatori economici, procedure e strumenti di acquisto sono valorizzati solo quando risultano espliciti nell'oggetto pubblico dell'atto.",
     ...(snapshot.known_limits ?? []),
   ]);
@@ -135,6 +142,10 @@ export function buildStaticContractsDataset(
       : generatedAt,
     lastUpdatedAt: generatedAt,
   };
+  const anacConnection = buildAnacBdncpConnectionStatus(
+    anacSnapshot,
+    contracts.map((contract) => contract.cig),
+  );
 
   return {
     schemaVersion: STATIC_CONTRACTS_SCHEMA_VERSION,
@@ -163,6 +174,7 @@ export function buildStaticContractsDataset(
       ).length,
     },
     feedStatus,
+    anacConnection,
     contracts,
     storylines,
   };
@@ -238,7 +250,7 @@ function buildContract(item: AlboPublicItem, cig: string): Contract | null {
     acquisitionTool: deriveAcquisitionTool(subject),
     withoutTender: procedure.directAward,
     withoutMepa: false,
-    anacUrl: `${BDNCP_APPALTI_URL}?cig=${encodeURIComponent(cig)}`,
+    anacUrl: bdncpUrlForCig(cig),
     themeId: null,
     macrotema: deriveMacrotema(
       item.presentation?.area_theme?.theme_id,

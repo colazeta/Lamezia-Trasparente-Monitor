@@ -10,7 +10,7 @@ Questa inventory descrive le famiglie di fonte utili al modulo contratti/opere. 
 
 ## Manifesto delle fonti ufficiali
 
-Il manifesto machine-readable e in `data/sources/contracts/contracts-source-manifest.json`. Descrive famiglie di fonte, non record di contratto: non contiene dump ANAC, BDNCP, PVL, OpenCUP, MOP o Amministrazione Trasparente e non dichiara alcuna sincronizzazione attiva con quelle basi dati.
+Il manifesto machine-readable e in `data/sources/contracts/contracts-source-manifest.json`. Descrive famiglie di fonte e il relativo stato tecnico; i record pubblici ANAC eventualmente acquisiti restano nello snapshot separato `data/public/contracts/anac-bdncp/latest.json`.
 
 La discovery delle fonti resta separata dall'ingestione dei record per tre ragioni:
 
@@ -18,7 +18,7 @@ La discovery delle fonti resta separata dall'ingestione dei record per tre ragio
 - poi si progettano parser separati per ANAC CIG annuali, delta/update, aggiudicazioni, layer OCDS/OCDS-style, OpenCUP e MOP;
 - solo dopo una fonte strutturata, verificata e versionabile puo alimentare dati reali nella piattaforma.
 
-Finche una fonte non e parserizzata da un endpoint o pacchetto ufficiale stabile, la UI pubblica deve usare formule come `catalogo fonti`, `ponte di ricerca`, `fonte collegata`, `parser skeleton`, `non ancora ingerito`, `limite informativo` e `verifica manuale richiesta`. Non deve presentare il manifesto come prova di completezza BDNCP, ricostruzione lifecycle completa o sincronizzazione periodica.
+La pipeline mensile CIG ora legge pacchetti ufficiali entro una finestra limitata e pubblica separatamente lo stato di connessione. La UI non presenta il manifesto o un mancato match come prova di completezza BDNCP o di assenza del contratto.
 
 Il manifesto mantiene separati gli assi CIG e CUP:
 
@@ -26,20 +26,20 @@ Il manifesto mantiene separati gli assi CIG e CUP:
 - `CUP`: asse progetto/investimento/opera per OpenCUP e MOP;
 - fonti miste come OCDS-style o dataset locali possono contenerli entrambi, ma non li rendono intercambiabili.
 
-## Dataset discovery spike
+## Discovery storica e verifica corrente
 
-Lo spike 2026-06-27 controlla una sola famiglia fonte: `anac-open-data-cig-annual`. La scelta segue la priorita tecnica sul dataset annuale CIG/open-data ANAC, perche e il candidato piu vicino allo skeleton CIG gia presente.
+Lo spike del 2026-06-27 aveva lasciato il dataset annuale in verifica manuale. La verifica del 2026-09-01 ha censito le pagine ufficiali del dataset CIG annuale, degli aggiornamenti CIG e del layer OCDS 2026, oltre a una risorsa mensile CSV ZIP e a una risorsa bulk OCDS.
 
-Esito dello spike:
+Stato corrente:
 
-- la landing ufficiale `https://dati.anticorruzione.it/opendata/` risponde a una richiesta leggera;
-- la query metadata leggera verso il possibile catalogo/pacchetto CIG annuale e stata respinta dal gateway del portale ANAC nell'ambiente Codex;
-- nessun endpoint strutturato stabile, package URL o sample file URL e stato verificato;
-- il manifest mantiene quindi `discovery_status: needs_manual_verification`, `ingestion_status: not_implemented` e nessuna pretesa di record pubblico ingerito.
+- `anac-open-data-cig-annual` e verificato come fonte, ma non viene scaricato;
+- `anac-open-data-cig-delta` ha una pipeline operativa, limitata e con cache ultimo-dato-valido;
+- `anac-ocds-bdncp` e verificato nel catalogo, ma resta fuori dalla pipeline corrente;
+- la disponibilita di ogni pacchetto mensile viene controllata a ogni esecuzione e non e presunta.
 
 Il report machine-readable dello spike e in `data/interim/contracts/source-discovery/anac-open-data-cig-annual.discovery.json`. Il report contiene solo metadata di discovery, probe HTTP e limiti; non contiene CIG reali, CUP reali, operatori, importi, date di affidamento o record di contratto.
 
-Questa discovery non e ingestione: prima di esporre record in `/contratti` o `/contratti/:id` servono endpoint ufficiale stabile, schema campi, versione/freshness, parser reale, deduplica, persistenza e gate di revisione umana. Fino ad allora la UI pubblica deve parlare di `source discovery`, `endpoint non ancora verificato`, `parser da preparare` e `limite informativo`.
+Dettagli operativi, stati e comportamento degradato sono documentati in `docs/contracts-anac-bdncp-sync.md`.
 
 ## Ingestion dry-run
 
@@ -50,7 +50,7 @@ Il dry-run ANAC CIG esegue la pipeline tecnica senza superare il gate pubblico:
 - produce un report interim in `data/interim/contracts/ingestion/`;
 - mantiene `production_ingestion_allowed: false`, `production_records_written: false`, `public_app_data_written: false` e `database_writes: false`.
 
-Con lo stato attuale (`discovery_status: needs_manual_verification`) il gate resta `blocked_by_source_discovery`. Il dry-run dimostra che il contratto tecnico parser/report funziona, non che ANAC o BDNCP siano sincronizzati. Prima di qualsiasi dato reale servono verifica manuale dell'endpoint ufficiale, parser reale, persistenza, deduplica e revisione umana esplicita.
+Quel dry-run storico resta `blocked_by_source_discovery` perche legge il report interim del 2026-06-27. Dimostra soltanto il vecchio contratto fixture/parser e non alimenta la pipeline mensile operativa, che usa un file pubblico e un parser separati.
 
 ## Famiglie di fonte
 
@@ -59,7 +59,7 @@ Con lo stato attuale (`discovery_status: needs_manual_verification`) il gate res
 | ANAC BDNCP / Piattaforma Contratti Pubblici         | CIG, procedure id, lot id, eventuali CUP collegati                    | procedure-centred, lot-centred, contract-centred              | gara/pubblicazione, affidamento; altre fasi solo se presenti nei record ufficiali disponibili                           | portale/dati aperti, modalita specifica da verificare per dataset          | link bridge; ingestion candidate                                     | Usare `ponte di ricerca` o `fonte ufficiale collegata` finche il record non e ingerito. Non dichiarare sync BDNCP completa.                        |
 | ANAC Pubblicita a Valore Legale                     | CIG, publication id, procedure id                                     | publication-centred, procedure-centred                        | gara/pubblicazione, avvisi, esiti quando pubblicati                                                                     | portale ufficiale, frequenza da verificare                                 | link bridge                                                          | Usare come punto ufficiale di ricerca. Non dedurre affidamento/esecuzione se il contenuto non e ingerito.                                          |
 | ANAC open data - dataset CIG annuali                | CIG, lot id, procedure id, stazione appaltante                        | procedure-centred, lot-centred                                | gara/pubblicazione; affidamento solo se campi di aggiudicazione sono presenti e significativi                           | full dump annuale o periodico, da verificare per pacchetto                 | parser skeleton per fixture JSON; ingestion candidate per dati reali | `fonte ufficiale ingerita` solo dopo parsing da file ufficiale stabile. CIG-only non completa esecuzione o collaudo.                               |
-| ANAC open data - delta/update CIG                   | CIG, lot id, update id                                                | procedure-centred, delta-centred                              | aggiornamento di gara/pubblicazione e affidamento se i campi sono presenti                                              | delta/periodic, da verificare per pacchetto                                | not implemented                                                      | Serve gestione versioni, deduplica e freshness. Copy: `aggiornamento da verificare` finche non c'e pipeline.                                       |
+| ANAC open data - delta/update CIG                   | CIG, lot id, update id                                                | procedure-centred, delta-centred                              | aggiornamento di gara/pubblicazione e affidamento se i campi sono presenti                                              | pacchetti mensili, disponibilita verificata a ogni esecuzione              | implementato con finestra limitata e cache ultimo dato valido        | Un mancato match non prova assenza dalla BDNCP; lo stato fonte resta sempre visibile.                                                              |
 | ANAC open data - aggiudicazioni/esiti               | CIG, lot id, award id, operator id                                    | award-centred, lot-centred                                    | affidamento; importi/operatori solo se presenti                                                                         | full/delta/periodic, da verificare                                         | ingestion candidate                                                  | Puo documentare affidamento; non documenta esecuzione, SAL, liquidazioni o collaudo.                                                               |
 | ANAC open data - operatori/partecipanti             | operator id, codice fiscale/partita IVA dove pubblici, CIG/lot id     | operator-centred, lot-centred                                 | gara/pubblicazione, partecipazione, aggiudicazione se collegata                                                         | full/delta/periodic, da verificare                                         | ingestion candidate                                                  | Non trasformare partecipazione o ricorrenza in valutazione sostanziale. Copy: `dato derivato` o `fonte ufficiale ingerita` per campi parserizzati. |
 | ANAC OCDS BDNCP / layer OCDS-style                  | OCID/procedure id, lot id, award id, contract id, CIG, CUP se esposto | OCDS release/package-centred; procedure, lot, award, contract | programmazione/gara/affidamento/contratto in base alle release disponibili; esecuzione solo se esplicitamente modellata | full/delta release packages, da verificare nel catalogo ufficiale corrente | ingestion candidate, non implemented                                 | Prima PR futura deve fissare schema e package ufficiali. Non usare `OCDS` come sinonimo di completezza lifecycle.                                  |
@@ -83,12 +83,10 @@ Con lo stato attuale (`discovery_status: needs_manual_verification`) il gate res
 | Amministrazione Trasparente | possibile                | possibile                 | si                           | si se documenti presenti            | possibile                     | possibile                        |
 | Dataset locale derivato     | no fonte primaria        | no fonte primaria         | lettura derivata             | lettura derivata                    | lettura derivata              | lettura derivata                 |
 
-## Stato dopo questa PR
+## Stato operativo
 
-- Il manifesto JSON ufficializza il catalogo iniziale delle famiglie fonte e marca come `not_implemented` i dataset con URL puntuale non ancora verificato.
-- `anac-open-data-cig-annual` ha metadata di discovery e report interim, ma resta `needs_manual_verification`.
-- La pipeline di ingestion dry-run ANAC CIG produce solo un report fixture-only e mantiene il gate produzione bloccato dalla discovery.
-- Il parser skeleton legge solo fixture JSON locali e produce dossier compatibili con metadata di ingestione.
-- Nessun dato reale ANAC, OpenCUP o MOP viene scaricato o pubblicato.
-- `fonte ufficiale ingerita` e consentito solo per evidenze costruite da record fixture parserizzati nei test.
-- La UI pubblica continua a distinguere ponte di ricerca, fonte collegata, fonte ingerita, dato derivato, revisione manuale e limite informativo.
+- Ogni CIG formalmente valido usa la vista ufficiale ANAC `dettaglio_cig`.
+- La pipeline programmata consulta i pacchetti mensili CIG, seleziona soltanto i CIG correnti e conserva l'ultimo snapshot valido.
+- L'endpoint `/api/contracts/anac-status` rende verificabili stato, freshness e copertura della finestra consultata.
+- Il parser fixture-only storico resta un test separato e non alimenta lo snapshot pubblico.
+- Annuale e OCDS sono censiti ma non ingeriti; OpenCUP, MOP e aggiudicazioni restano fuori perimetro.

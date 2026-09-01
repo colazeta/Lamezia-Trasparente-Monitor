@@ -55,6 +55,9 @@ const REQUIRED_CONTRACT_BUNDLE_TEXT = [
   "Copertura fasi",
   "Copertura stato fasi dei fascicoli",
   "Ponte BDNCP",
+  "Collegamento attivo",
+  "Prima sincronizzazione in attesa",
+  "Dataset ANAC",
   "Programmazione",
   "Progettazione",
   "Gara / pubblicazione",
@@ -77,6 +80,7 @@ const REQUIRED_EDGE_FALLBACK_MARKERS = [
   '"Content-Type": "application/xml; charset=utf-8"',
   "lamezia-contracts-current.json",
   'const CONTRACTS_API_PATH = "/api/contracts"',
+  'const ANAC_STATUS_API_PATH = "/api/contracts/anac-status"',
   "status: 503",
 ];
 
@@ -214,6 +218,7 @@ function assertStaticContractsDataset(dataset, datasetPath) {
     Array.isArray(dataset) ||
     dataset.schemaVersion !== "lamezia-contracts-current.v1" ||
     !Array.isArray(dataset.contracts) ||
+    dataset.anacConnection?.schemaVersion !== "anac-bdncp-connection.v1" ||
     !dataset.storylines ||
     typeof dataset.storylines !== "object"
   ) {
@@ -230,6 +235,24 @@ function assertStaticContractsDataset(dataset, datasetPath) {
   ) {
     throw new Error(
       `Static contracts dataset must declare its current-Albo scope and limitations: ${datasetPath}`,
+    );
+  }
+
+  if (
+    !["pending", "current", "stale", "degraded"].includes(
+      dataset.anacConnection.status,
+    ) ||
+    !Number.isInteger(dataset.anacConnection.coverage?.directCigLinks) ||
+    !Number.isInteger(dataset.anacConnection.coverage?.structuredMatches) ||
+    dataset.anacConnection.coverage.directCigLinks < 0 ||
+    dataset.anacConnection.coverage.structuredMatches < 0 ||
+    dataset.anacConnection.coverage?.directCigLinks >
+      dataset.contracts.length ||
+    dataset.anacConnection.coverage?.structuredMatches >
+      dataset.anacConnection.coverage?.directCigLinks
+  ) {
+    throw new Error(
+      `Static contracts dataset has an invalid ANAC/BDNCP connection status: ${datasetPath}`,
     );
   }
 
@@ -435,6 +458,11 @@ async function assertEdgeFallbackBehavior(workerPath, contractsDataset) {
   }
 
   let assetRequests = 0;
+  const workerDataset = structuredClone(contractsDataset);
+  workerDataset.anacConnection.status = "current";
+  workerDataset.anacConnection.lastAttemptAt = "2000-01-01T00:00:00.000Z";
+  workerDataset.anacConnection.lastSuccessAt = "2000-01-01T00:00:00.000Z";
+  workerDataset.anacConnection.failureCategory = null;
   const env = {
     ASSETS: {
       fetch: async (assetRequest) => {
@@ -442,7 +470,7 @@ async function assertEdgeFallbackBehavior(workerPath, contractsDataset) {
           new URL(assetRequest.url).pathname ===
           `/${STATIC_CONTRACTS_DATA_FILE}`
         ) {
-          return new Response(JSON.stringify(contractsDataset), {
+          return new Response(JSON.stringify(workerDataset), {
             status: 200,
             headers: { "Content-Type": "application/json; charset=utf-8" },
           });
@@ -477,6 +505,23 @@ async function assertEdgeFallbackBehavior(workerPath, contractsDataset) {
   if (contractsStatusResponse.status !== 200) {
     throw new Error(
       "Cloudflare worker contracts feed-status endpoint must return HTTP 200.",
+    );
+  }
+
+  const anacStatusResponse = await workerFetch(
+    new Request("https://public.example/api/contracts/anac-status"),
+    env,
+  );
+  const anacStatus = await anacStatusResponse.json();
+  if (
+    anacStatusResponse.status !== 200 ||
+    anacStatus?.schemaVersion !== "anac-bdncp-connection.v1" ||
+    anacStatus?.status !== "stale" ||
+    anacStatus?.coverage?.directCigLinks !==
+      contractsDataset.anacConnection.coverage.directCigLinks
+  ) {
+    throw new Error(
+      "Cloudflare worker ANAC/BDNCP status endpoint must expose the generated connection status.",
     );
   }
 

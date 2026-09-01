@@ -16,6 +16,7 @@ import {
   STATIC_CONTRACTS_DATA_PATH,
   type AlboPublicSnapshot,
 } from "./src/lib/staticContractsDataset";
+import { validateAnacBdncpSyncSnapshot } from "./src/lib/anacBdncpSync";
 
 const rawPort = process.env.PORT ?? "8081";
 
@@ -28,6 +29,7 @@ if (Number.isNaN(port) || port <= 0) {
 const basePath = process.env.BASE_PATH ?? "/";
 const repoRoot = path.resolve(import.meta.dirname, "..", "..");
 const alboPublicSnapshotPath = "data/public/albo/latest.json";
+const anacBdncpSnapshotPath = "data/public/contracts/anac-bdncp/latest.json";
 const atlantePublicDataFiles = [
   "data/processed/territorio/lamezia_confine_comunale.geojson",
   "data/processed/territorio/istat_sezioni_censimento_lamezia.geojson",
@@ -140,8 +142,27 @@ function readStaticContractsDataset() {
       }`,
     );
   }
+  const anacSource = readRepoFile(anacBdncpSnapshotPath);
+  if (!anacSource) {
+    throw new Error(
+      `ANAC/BDNCP snapshot is required to build contracts: ${anacBdncpSnapshotPath}`,
+    );
+  }
 
-  return buildStaticContractsDataset(snapshot);
+  let anacSnapshot;
+  try {
+    anacSnapshot = validateAnacBdncpSyncSnapshot(
+      JSON.parse(anacSource.toString("utf8")),
+    );
+  } catch (error) {
+    throw new Error(
+      `ANAC/BDNCP snapshot is not valid: ${
+        error instanceof Error ? error.message : String(error)
+      }`,
+    );
+  }
+
+  return buildStaticContractsDataset(snapshot, anacSnapshot);
 }
 
 function contentTypeFor(filePath: string) {

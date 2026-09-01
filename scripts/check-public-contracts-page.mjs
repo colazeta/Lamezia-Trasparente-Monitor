@@ -16,7 +16,7 @@ const FEED_CONTENT_TYPE_PROBES = [
   "/api/feeds/contratti.xml",
   "/feeds/albo.xml",
 ];
-const REQUIRED_DEPLOYMENT_CONTRACT = "contracts-current-albo-static-v3";
+const REQUIRED_DEPLOYMENT_CONTRACT = "contracts-anac-bdncp-resilient-v4";
 const STATIC_CONTRACTS_DATA_PATH =
   "/data/processed/contracts/lamezia-contracts-current.json";
 const REQUIRED_PUBLIC_TEXT = [
@@ -33,6 +33,9 @@ const REQUIRED_CONTRACT_BUNDLE_TEXT = [
   "Copertura fasi",
   "Copertura stato fasi dei fascicoli",
   "Ponte BDNCP",
+  "Collegamento attivo",
+  "Prima sincronizzazione in attesa",
+  "Dataset ANAC",
   "Programmazione",
   "Progettazione",
   "Gara / pubblicazione",
@@ -449,7 +452,12 @@ function assertBundleMarkers(bundleText) {
   }
 }
 
-function assertLiveContractsData({ contracts, feedStatus, staticDataset }) {
+function assertLiveContractsData({
+  contracts,
+  feedStatus,
+  staticDataset,
+  anacStatus,
+}) {
   if (!Array.isArray(contracts)) {
     throw new Error("Contracts API must return a JSON array.");
   }
@@ -460,6 +468,22 @@ function assertLiveContractsData({ contracts, feedStatus, staticDataset }) {
   ) {
     throw new Error(
       "Contracts feed status must identify the current Albo window and match the list total.",
+    );
+  }
+  if (
+    anacStatus?.schemaVersion !== "anac-bdncp-connection.v1" ||
+    !["pending", "current", "stale", "degraded"].includes(anacStatus.status) ||
+    !Number.isInteger(anacStatus.coverage?.directCigLinks) ||
+    !Number.isInteger(anacStatus.coverage?.structuredMatches) ||
+    anacStatus.coverage.directCigLinks < 0 ||
+    anacStatus.coverage.structuredMatches < 0 ||
+    anacStatus.coverage?.directCigLinks > contracts.length ||
+    anacStatus.coverage?.structuredMatches >
+      anacStatus.coverage?.directCigLinks ||
+    staticDataset?.anacConnection?.schemaVersion !== "anac-bdncp-connection.v1"
+  ) {
+    throw new Error(
+      "ANAC/BDNCP status must distinguish link coverage, structured matches and source state.",
     );
   }
   if (
@@ -507,6 +531,10 @@ async function checkPublicContractsPage(publicUrl, expectedCommit = null) {
     routeUrl(publicUrl, "/api/contracts/feed-status"),
     "Contracts feed status",
   );
+  const anacStatus = await fetchJson(
+    routeUrl(publicUrl, "/api/contracts/anac-status"),
+    "ANAC/BDNCP connection status",
+  );
   const contractsStaticData = await fetchJson(
     routeUrl(publicUrl, STATIC_CONTRACTS_DATA_PATH),
     "Static contracts dataset",
@@ -518,6 +546,7 @@ async function checkPublicContractsPage(publicUrl, expectedCommit = null) {
   console.log(`Fetched ${provenanceUrl} -> ${provenance.finalUrl}`);
   console.log(`Fetched ${sitemapUrl} -> ${sitemap.finalUrl}`);
   console.log(`Fetched /api/contracts -> ${contractsApi.finalUrl}`);
+  console.log(`Fetched /api/contracts/anac-status -> ${anacStatus.finalUrl}`);
 
   assertRoute(publicUrl, "/contratti", contracts.finalUrl);
   assertRoute(publicUrl, "/organi", organi.finalUrl);
@@ -529,6 +558,7 @@ async function checkPublicContractsPage(publicUrl, expectedCommit = null) {
     contracts: contractsApi.value,
     feedStatus: contractsFeedStatus.value,
     staticDataset: contractsStaticData.value,
+    anacStatus: anacStatus.value,
   });
 
   if (contractsApi.value.length > 0) {
