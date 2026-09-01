@@ -2,11 +2,13 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import {
   buildAlboEvidenceArchive,
+  buildOpenCupProjectUrl,
   buildStaticPnrrDataset,
   deriveMunicipalAttachmentMetadata,
   extractCups,
   extractProjectLinks,
   parseMunicipalPnrrProject,
+  parseOpenCupProject,
   stableDatasetPayload,
   validateCoverageRegression,
   validateStaticPnrrDataset,
@@ -86,6 +88,173 @@ test("parseMunicipalPnrrProject extracts official fields, amount and attachments
     },
   ]);
   assert.match(project.source_record_hash, /^[a-f0-9]{64}$/);
+});
+
+test("parseOpenCupProject keeps official fields separate from municipal data", () => {
+  const sourceUrl = buildOpenCupProjectUrl(CUP);
+  const project = parseOpenCupProject({
+    cup: CUP,
+    sourceUrl,
+    html: `
+      <div id="resRicerca">
+        <h2>PIÙ SERVIZI AL TERRITORIO*VIA SAMBIASE</h2>
+        CUP: <span><strong>${CUP}</strong></span>
+        <span>Totale costo previsto</span><br><span>8645133.0 &euro;</span>
+        <span>Totale Finanziamento pubblico previsto</span><br><span>8000000.0 &euro;</span>
+      </div>
+      <div class="datiCup">
+        <span class="tltDett">Anno decisione</span><br><span class="tltLabel">2021</span>
+        <span class="tltDett">Stato</span><br><span class="tltLabelAtt">ATTIVO</span>
+        <span class="tltDett">Soggetto titolare</span><br><span class="tltLabel">COMUNE DI LAMEZIA TERME</span>
+        <span class="tltDett">Descrizione intervento</span><br><span class="tltLabel">RIQUALIFICAZIONE DI SPAZI URBANI</span>
+        <span class="tltDett">Struttura/Infrastruttura oggetto dell'intervento</span><span class="tltLabel">PIÙ SERVIZI AL TERRITORIO</span>
+        <span class="tltDett">Partita IVA/Codice Fiscale beneficiario</span><br><span class="tltLabel">DATO NON PRESENTE</span>
+        <span class="tltDett">Indirizzo o area di riferimento</span><br><span class="tltLabel">VIA SAMBIASE</span>
+      </div>
+      <script>var _callInteroperabilitaURL = true;</script>
+      ${openCupPanel("Localizzazione progetto", [
+        ["Stato", "ITALIA"],
+        ["Area Geografica", "SUD"],
+        ["Regione", "CALABRIA"],
+        ["Provincia", "CATANZARO"],
+        ["Comune", "LAMEZIA TERME"],
+      ])}
+      ${openCupPanel("Soggetto titolare", [
+        ["Denominazione", "COMUNE DI LAMEZIA TERME - CZ -"],
+        ["CF/Partita IVA", "00301390795"],
+        ["Area", "AMMINISTRAZIONI LOCALI"],
+        ["Categoria", "ENTI TERRITORIALI"],
+        ["Sotto Categoria", "AMMINISTRAZIONI COMUNALI"],
+      ])}
+      ${openCupPanel("Classificazione Progetto", [
+        ["Classificazione", "LAVORI PUBBLICI"],
+        ["Tipologia", "NUOVA REALIZZAZIONE"],
+        ["Area d'intervento", "IMMOBILI"],
+        ["Settore", "INFRASTRUTTURE SOCIALI"],
+        ["Sottosettore", "SPORT, SPETTACOLO E TEMPO LIBERO"],
+        ["Categoria", "ALTRE STRUTTURE RICREATIVE"],
+      ])}
+      ${openCupPanel("Dati aggiuntivi del progetto", [
+        ["Data di generazione", "12/04/2021"],
+        ["Struttura/Infrastruttura Unica", "SI"],
+        ["Strumento di Programmazione", "PROGRAMMA QUALITÀ DELL'ABITARE"],
+        ["CUP Master", "NON PRESENTE"],
+        ["Numero di CUP collegati", "0"],
+      ])}
+      ${openCupPanel("Dati finanziari", [
+        ["Atti di concessione o finanza del Progetto", "NO"],
+        ["Sponsorizzazioni", "NON PREVISTE"],
+        ["Copertura Finanziaria", "STATALE"],
+      ])}
+      ${openCupPanel("Dati CIPESS", [
+        ["N° Delibera CIPESS", "DATO NON PRESENTE"],
+        ["Anno Delibera", "DATO NON PRESENTE"],
+        ["Legge Obiettivo", "NO"],
+      ])}
+    `,
+  });
+
+  assert.deepEqual(project, {
+    source_url: sourceUrl,
+    cup: CUP,
+    title: "PIÙ SERVIZI AL TERRITORIO*VIA SAMBIASE",
+    total_cost_eur: 8_645_133,
+    public_funding_eur: 8_000_000,
+    decision_year: 2021,
+    cup_status: "ATTIVO",
+    description: "RIQUALIFICAZIONE DI SPAZI URBANI",
+    infrastructure: "PIÙ SERVIZI AL TERRITORIO",
+    beneficiary_tax_code: null,
+    reference_address: "VIA SAMBIASE",
+    location: {
+      country: "ITALIA",
+      macro_area: "SUD",
+      region: "CALABRIA",
+      province: "CATANZARO",
+      municipality: "LAMEZIA TERME",
+    },
+    holder: {
+      name: "COMUNE DI LAMEZIA TERME - CZ -",
+      tax_code: "00301390795",
+      area: "AMMINISTRAZIONI LOCALI",
+      category: "ENTI TERRITORIALI",
+      subcategory: "AMMINISTRAZIONI COMUNALI",
+    },
+    classification: {
+      nature: "LAVORI PUBBLICI",
+      typology: "NUOVA REALIZZAZIONE",
+      intervention_area: "IMMOBILI",
+      sector: "INFRASTRUTTURE SOCIALI",
+      subsector: "SPORT, SPETTACOLO E TEMPO LIBERO",
+      category: "ALTRE STRUTTURE RICREATIVE",
+    },
+    generated_at: "2021-04-12",
+    unique_infrastructure: true,
+    programming_instrument: "PROGRAMMA QUALITÀ DELL'ABITARE",
+    master_cup: null,
+    linked_cups_count: 0,
+    financial: {
+      concession_or_finance_acts: false,
+      sponsorships: "NON PREVISTE",
+      coverage: "STATALE",
+    },
+    cipess: {
+      resolution_number: null,
+      resolution_year: null,
+      strategic_infrastructure_law: false,
+    },
+    verification_status: "official_opencup_project_page",
+    source_record_hash: project.source_record_hash,
+  });
+  assert.match(project.source_record_hash, /^[a-f0-9]{64}$/);
+});
+
+test("OpenCUP URL construction rejects a non-canonical CUP", () => {
+  assert.throws(() => buildOpenCupProjectUrl("M5C2"), /invalid CUP/);
+});
+
+test("OpenCUP provenance hashes are validated against the acquired payload", () => {
+  const opencup = parseOpenCupProject({
+    cup: CUP,
+    sourceUrl: buildOpenCupProjectUrl(CUP),
+    html: `<div id="resRicerca"><h2>Progetto OpenCUP</h2>CUP: <strong>${CUP}</strong></div>`,
+  });
+  const dataset = buildStaticPnrrDataset({
+    projects: [
+      {
+        source_id: "3281",
+        source_url:
+          "https://www.comune.lamezia-terme.cz.it/it/attuazione-misure-pnrr/3281",
+        source_record_hash: "a".repeat(64),
+        title: "Progetto comunale",
+        mission: null,
+        component: null,
+        investment: null,
+        intervention: null,
+        holder: null,
+        attuatore: null,
+        sub_attuatore: null,
+        cup: CUP,
+        amount_eur: 100,
+        status: null,
+        start_date: null,
+        end_date: null,
+        published_at: null,
+        attachments: [],
+        opencup,
+        verification_status: "official_municipal_project_page",
+      },
+    ],
+    alboEvidence: [],
+    materializedAt: "2026-08-31T12:00:00.000Z",
+  });
+
+  assert.doesNotThrow(() => validateStaticPnrrDataset(dataset));
+  dataset.projects[0].opencup.title = "Valore alterato";
+  assert.throws(
+    () => validateStaticPnrrDataset(dataset),
+    /invalid OpenCUP provenance/,
+  );
 });
 
 test("municipal attachment metadata discloses phase, source order and date precision", () => {
@@ -265,7 +434,8 @@ test("buildStaticPnrrDataset links only shared CUP evidence and reports unmatche
   assert.deepEqual(dataset.unmatched_albo_evidence_ids, ["unmatched"]);
   assert.equal(dataset.coverage.projects_with_albo_evidence, 1);
   assert.equal(dataset.coverage.linked_albo_evidence, 1);
-  assert.equal(dataset.schema_version, 2);
+  assert.equal(dataset.schema_version, 3);
+  assert.equal(dataset.coverage.projects_with_opencup, 0);
   assert.equal(
     stableDatasetPayload(dataset).attachment_taxonomy.schema_version,
     "pnrr-attachment-phase.v1",
@@ -325,6 +495,50 @@ test("validateStaticPnrrDataset rejects an Albo relation without a shared CUP", 
   );
 });
 
+test("validateStaticPnrrDataset rejects duplicate project CUPs", () => {
+  const project = {
+    source_id: "3281",
+    source_url:
+      "https://www.comune.lamezia-terme.cz.it/it/attuazione-misure-pnrr/3281",
+    source_record_hash: "a".repeat(64),
+    title: "Progetto",
+    mission: null,
+    component: null,
+    investment: null,
+    intervention: null,
+    holder: null,
+    attuatore: null,
+    sub_attuatore: null,
+    cup: CUP,
+    amount_eur: 100,
+    status: null,
+    start_date: null,
+    end_date: null,
+    published_at: null,
+    attachments: [],
+    opencup: null,
+    verification_status: "official_municipal_project_page",
+  };
+  const dataset = buildStaticPnrrDataset({
+    projects: [
+      project,
+      {
+        ...project,
+        source_id: "3282",
+        source_url:
+          "https://www.comune.lamezia-terme.cz.it/it/attuazione-misure-pnrr/3282",
+      },
+    ],
+    alboEvidence: [],
+    materializedAt: "2026-08-31T12:00:00.000Z",
+  });
+
+  assert.throws(
+    () => validateStaticPnrrDataset(dataset),
+    /duplicate project CUP/,
+  );
+});
+
 test("validateCoverageRegression keeps the previous feed on a parser collapse", () => {
   assert.throws(
     () =>
@@ -349,6 +563,22 @@ test("validateCoverageRegression keeps the previous feed on a parser collapse", 
     /coverage regression/,
   );
 });
+
+function openCupPanel(title, fields) {
+  return `
+    <div class="panel panel-default">
+      <span class="title-text">${title}</span>
+      <div class="panel-body">
+        ${fields
+          .map(
+            ([label, value]) =>
+              `<span class="tltDett">${label}</span><br><span class="tltLabel">${value}</span>`,
+          )
+          .join("\n")}
+      </div>
+    </div>
+  `;
+}
 
 function publicRecord({ id, subject }) {
   return {

@@ -42,6 +42,11 @@ describe("PNRR page static feed", () => {
     expect(
       screen.getAllByText("Archivio documentale ufficiale").length,
     ).toBeGreaterThan(0);
+    expect(screen.getByText("Come leggere i codici")).toBeInTheDocument();
+    expect(screen.getAllByText("Anagrafica ufficiale OpenCUP").length).toBe(
+      LAMEZIA_PNRR_STATIC_DATA.coverage.projects_with_opencup,
+    );
+    expect(screen.getAllByText(/CUP · ID progetto/i).length).toBeGreaterThan(0);
     expect(
       screen.getAllByText(/non rappresenta lo stato di avanzamento/i).length,
     ).toBeGreaterThan(0);

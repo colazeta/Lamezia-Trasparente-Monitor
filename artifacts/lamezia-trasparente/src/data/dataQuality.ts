@@ -67,6 +67,13 @@ const DATA_QUALITY_NOTES = [
     attachmentAvailability: `Calcolato: ${LAMEZIA_PNRR_STATIC_DATA.coverage.municipal_attachments} allegati esposti nelle schede comunali; ${LAMEZIA_PNRR_STATIC_DATA.coverage.municipal_attachments_classified} classificati per fase documentale dal titolo e ${LAMEZIA_PNRR_STATIC_DATA.coverage.municipal_attachments_with_year} con almeno un anno esplicito. Sono inoltre presenti ${LAMEZIA_PNRR_STATIC_DATA.coverage.albo_evidence} atti Albo pubblicabili nel feed.`,
   },
   {
+    sourceName: "OpenCUP — Sistema CUP",
+    lastKnownUpdate: `Calcolato: schede OpenCUP acquisite nella materializzazione del ${LAMEZIA_PNRR_STATIC_DATA.metadata.materialized_at}; la data non rappresenta una modifica amministrativa del singolo CUP.`,
+    identifierCoverage: `Calcolato: ${LAMEZIA_PNRR_STATIC_DATA.coverage.projects_with_opencup} schede OpenCUP riconciliate tramite CUP identico su ${LAMEZIA_PNRR_STATIC_DATA.coverage.projects_with_cup} progetti comunali dotati di CUP; costo totale disponibile per ${LAMEZIA_PNRR_STATIC_DATA.coverage.projects_with_opencup_total_cost} schede e finanziamento pubblico per ${LAMEZIA_PNRR_STATIC_DATA.coverage.projects_with_opencup_public_funding}. I campi mancanti restano null e non diventano zero.`,
+    attachmentAvailability:
+      "Non applicabile: OpenCUP è usato per il corredo anagrafico della decisione di investimento; gli allegati restano quelli pubblicati nelle schede comunali e negli atti Albo autorizzati.",
+  },
+  {
     sourceName: "Italia Domani — Open data PNRR",
     lastKnownUpdate:
       "Documentato: aggiornamento secondo calendario nazionale PNRR; questa pagina conserva solo la regola di consultazione.",

@@ -87,6 +87,21 @@ export const DATA_SOURCES = [
       "Il perimetro coincide con le schede pubblicate nella sezione comunale e non equivale al censimento nazionale completo. La fase documentale è derivata dal solo titolo dell'allegato per facilitare la navigazione: non è uno stato di avanzamento. La data di pubblicazione non è trattata come data di aggiornamento.",
   },
   {
+    name: "OpenCUP — Sistema CUP",
+    description:
+      "Schede ufficiali delle decisioni di investimento pubblico registrate nel Sistema CUP, usate per arricchire i progetti comunali tramite CUP identico.",
+    href: "https://www.opencup.gov.it/portale/web/opencup/home",
+    linkLabel: "Apri OpenCUP",
+    linkScope: "consultazione",
+    linkNote:
+      "Ogni progetto PNRR materializzato conserva anche il collegamento puntuale alla propria scheda OpenCUP; i valori restano distinti da quelli della fonte comunale.",
+    dataType: "Ufficiale",
+    updateFrequency:
+      "Acquisizione giornaliera delle schede puntuali; OpenCUP dichiara attività giornaliera di bonifica del corredo informativo e aggiornamento mensile dei dataset massivi.",
+    limitations:
+      "Lo stato del CUP descrive il codice nel Sistema CUP e non lo stato dei lavori. L'associazione PNRR indicata in OpenCUP può derivare da quanto segnalato dal titolare in fase di generazione e non prova, da sola, l'ammissione definitiva al finanziamento. Dati rilasciati dal portale con licenza CC-BY.",
+  },
+  {
     name: "Italia Domani — Open data PNRR",
     description:
       "Dataset nazionali sui progetti PNRR, filtrati per il Comune di Lamezia Terme e collegati ai CUP quando presenti.",
