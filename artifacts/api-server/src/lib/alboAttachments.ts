@@ -1,11 +1,12 @@
 import { createHash } from "node:crypto";
 import { db, publicationsTable, type PublicationAttachment } from "@workspace/db";
-import { and, asc, desc, isNull, sql } from "drizzle-orm";
+import { and, asc, desc, isNotNull, isNull, sql } from "drizzle-orm";
 import { logger } from "./logger";
 import { ObjectStorageService } from "./objectStorage";
 
 const TINN_BASE = "https://albo.tinnvision.cloud";
 const ENTE = "00301390795";
+const STORAGE_PREFIX = "/api/storage/public-objects/";
 
 // The official detail API is gated behind an `Accept: application/json` header
 // (without it the route 404s). The id is `ANNO-PROGRESSIVO` (dash-separated).
@@ -21,6 +22,7 @@ const CONCURRENCY = 3;
 const MAX_FILE_BYTES = 30 * 1024 * 1024; // 30 MB per attachment
 const DETAIL_TIMEOUT_MS = 20_000;
 const DOWNLOAD_TIMEOUT_MS = 45_000;
+const HASH_BACKFILL_MAX_ROWS = 10;
 
 type AllegatoItem = {
   PROGRESSIVO: number | string;
@@ -122,7 +124,7 @@ async function archiveAllegato(
     );
     return {
       ...base,
-      storagePath: `/api/storage/public-objects/${storagePath}`,
+      storagePath: `${STORAGE_PREFIX}${storagePath}`,
       contentType,
       size: buf.byteLength,
       sha256: digest,
@@ -165,15 +167,122 @@ async function enrichOne(
     .where(sql`${publicationsTable.id} = ${pub.id}`);
 }
 
+export type AttachmentHashBackfillResult = {
+  rowsExamined: number;
+  rowsUpdated: number;
+  hashesBackfilled: number;
+  skipped: number;
+};
+
+/**
+ * Bounded legacy provenance repair. It hashes only bytes already present in the
+ * canonical object-storage copy; it never refetches an attachment from Tinn.
+ * A stored size mismatch is fail-closed and leaves the attachment unchanged.
+ */
+export async function backfillAlboAttachmentHashes(
+  storage: ObjectStorageService,
+): Promise<AttachmentHashBackfillResult> {
+  const candidates = await db
+    .select({
+      id: publicationsTable.id,
+      attachments: publicationsTable.attachments,
+    })
+    .from(publicationsTable)
+    .where(
+      and(
+        isNotNull(publicationsTable.detailFetchedAt),
+        sql`EXISTS (
+          SELECT 1
+          FROM jsonb_array_elements(${publicationsTable.attachments}) AS attachment
+          WHERE COALESCE(attachment->>'storagePath', '') LIKE ${`${STORAGE_PREFIX}%`}
+            AND COALESCE(attachment->>'sha256', '') = ''
+        )`,
+      ),
+    )
+    .orderBy(desc(publicationsTable.pubStart), asc(publicationsTable.id))
+    .limit(HASH_BACKFILL_MAX_ROWS);
+
+  let rowsUpdated = 0;
+  let hashesBackfilled = 0;
+  let skipped = 0;
+
+  for (const row of candidates) {
+    let changed = false;
+    const attachments: PublicationAttachment[] = [];
+
+    for (const attachment of row.attachments ?? []) {
+      if (
+        attachment.sha256 ||
+        !attachment.storagePath?.startsWith(STORAGE_PREFIX)
+      ) {
+        attachments.push(attachment);
+        continue;
+      }
+
+      const relativePath = attachment.storagePath.slice(STORAGE_PREFIX.length);
+      try {
+        const file = await storage.searchPublicObject(relativePath);
+        if (!file) {
+          skipped += 1;
+          attachments.push(attachment);
+          continue;
+        }
+        const [buf] = await file.download();
+        if (buf.byteLength === 0 || buf.byteLength > MAX_FILE_BYTES) {
+          skipped += 1;
+          attachments.push(attachment);
+          continue;
+        }
+        if (attachment.size !== null && attachment.size !== buf.byteLength) {
+          skipped += 1;
+          attachments.push(attachment);
+          continue;
+        }
+
+        attachments.push({
+          ...attachment,
+          size: attachment.size ?? buf.byteLength,
+          sha256: sha256Hex(buf),
+        });
+        hashesBackfilled += 1;
+        changed = true;
+      } catch (err) {
+        skipped += 1;
+        logger.warn(
+          { err, publicationId: row.id, attachmentName: attachment.name },
+          "Albo attachment SHA-256 backfill skipped for stored object",
+        );
+        attachments.push(attachment);
+      }
+    }
+
+    if (changed) {
+      await db
+        .update(publicationsTable)
+        .set({ attachments })
+        .where(sql`${publicationsTable.id} = ${row.id}`);
+      rowsUpdated += 1;
+    }
+  }
+
+  return {
+    rowsExamined: candidates.length,
+    rowsUpdated,
+    hashesBackfilled,
+    skipped,
+  };
+}
+
 /**
  * Best-effort pass that fetches the official per-act detail, archives its
- * attachments into object storage, and records direct links. Only processes
- * acts not yet enriched (detailFetchedAt IS NULL), capped per cycle, with a
- * small concurrency pool. Never throws — failures degrade to "no files".
+ * attachments into object storage, records direct links, and gradually adds
+ * SHA-256 provenance to legacy stored copies. New archival and legacy hash
+ * backfill are independently bounded.
  */
 export async function enrichAlboAttachments(): Promise<{
   processed: number;
   withFiles: number;
+  hashBackfill: AttachmentHashBackfillResult;
 }> {
   let storage: ObjectStorageService;
   try {
@@ -185,7 +294,16 @@ export async function enrichAlboAttachments(): Promise<{
       { err },
       "Albo attachment archival skipped: object storage not configured",
     );
-    return { processed: 0, withFiles: 0 };
+    return {
+      processed: 0,
+      withFiles: 0,
+      hashBackfill: {
+        rowsExamined: 0,
+        rowsUpdated: 0,
+        hashesBackfilled: 0,
+        skipped: 0,
+      },
+    };
   }
 
   const pending = await db
@@ -203,48 +321,64 @@ export async function enrichAlboAttachments(): Promise<{
     .orderBy(desc(publicationsTable.pubStart), asc(publicationsTable.id))
     .limit(MAX_PER_CYCLE);
 
-  if (pending.length === 0) return { processed: 0, withFiles: 0 };
-
   let processed = 0;
   let withFiles = 0;
-  const queue = [...pending];
 
-  async function worker(): Promise<void> {
-    for (;;) {
-      const next = queue.shift();
-      if (!next) break;
-      try {
-        await enrichOne(storage, next);
-        processed += 1;
-      } catch (err) {
-        // Transient failure: leave detailFetchedAt NULL to retry next cycle.
-        logger.warn(
-          { err, progressivo: next.progressivo },
-          "Albo attachment enrichment failed for act",
-        );
+  if (pending.length > 0) {
+    const queue = [...pending];
+
+    async function worker(): Promise<void> {
+      for (;;) {
+        const next = queue.shift();
+        if (!next) break;
+        try {
+          await enrichOne(storage, next);
+          processed += 1;
+        } catch (err) {
+          // Transient failure: leave detailFetchedAt NULL to retry next cycle.
+          logger.warn(
+            { err, progressivo: next.progressivo },
+            "Albo attachment enrichment failed for act",
+          );
+        }
       }
     }
+
+    await Promise.all(
+      Array.from({ length: Math.min(CONCURRENCY, queue.length) }, () => worker()),
+    );
+
+    // Count how many of the processed rows ended up with at least one file.
+    const refreshed = await db
+      .select({ attachments: publicationsTable.attachments })
+      .from(publicationsTable)
+      .where(
+        sql`${publicationsTable.id} IN (${sql.join(
+          pending.map((p) => sql`${p.id}`),
+          sql`, `,
+        )})`,
+      );
+    withFiles = refreshed.filter((r) => (r.attachments?.length ?? 0) > 0).length;
   }
 
-  await Promise.all(
-    Array.from({ length: Math.min(CONCURRENCY, queue.length) }, () => worker()),
-  );
-
-  // Count how many of the processed rows ended up with at least one file.
-  const refreshed = await db
-    .select({ attachments: publicationsTable.attachments })
-    .from(publicationsTable)
-    .where(
-      sql`${publicationsTable.id} IN (${sql.join(
-        pending.map((p) => sql`${p.id}`),
-        sql`, `,
-      )})`,
-    );
-  withFiles = refreshed.filter((r) => (r.attachments?.length ?? 0) > 0).length;
+  const hashBackfill = await backfillAlboAttachmentHashes(storage).catch((err) => {
+    logger.warn({ err }, "Albo attachment SHA-256 backfill cycle failed");
+    return {
+      rowsExamined: 0,
+      rowsUpdated: 0,
+      hashesBackfilled: 0,
+      skipped: 0,
+    } satisfies AttachmentHashBackfillResult;
+  });
 
   logger.info(
-    { processed, withFiles, source: "albo-attachments" },
+    {
+      processed,
+      withFiles,
+      hashBackfill,
+      source: "albo-attachments",
+    },
     "Albo attachment enrichment cycle complete",
   );
-  return { processed, withFiles };
+  return { processed, withFiles, hashBackfill };
 }
