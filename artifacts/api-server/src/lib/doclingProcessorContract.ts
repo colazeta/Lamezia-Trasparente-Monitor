@@ -89,6 +89,13 @@ export const doclingProcessorRequestSchema = z
         message: "requested outputs must be unique",
       });
     }
+    if (!request.requestedOutputs.includes("structured-json")) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["requestedOutputs"],
+        message: "structured-json is mandatory for every processor request",
+      });
+    }
     const expectedJobKey = buildDoclingJobKey({
       sourceSha256: request.source.sha256,
       reason: request.selection.reason,
@@ -103,13 +110,26 @@ export const doclingProcessorRequestSchema = z
     }
   });
 
-const processorArtifactSchema = z
+const structuredJsonArtifactSchema = z
   .object({
-    kind: z.enum(["structured-json", "markdown"]),
+    kind: z.literal("structured-json"),
+    contentSha256: sha256Schema,
+    sizeBytes: positiveInteger,
+  })
+  .strict();
+
+const markdownArtifactSchema = z
+  .object({
+    kind: z.literal("markdown"),
     contentSha256: sha256Schema,
     sizeBytes: nonNegativeInteger,
   })
   .strict();
+
+const processorArtifactSchema = z.union([
+  structuredJsonArtifactSchema,
+  markdownArtifactSchema,
+]);
 
 const resultBase = {
   schemaVersion: z.literal(DOCLING_PROCESSOR_CONTRACT_VERSION),
