@@ -34,8 +34,10 @@ def sha256_file(path: Path) -> str:
 
 
 def safe_stem(name: str) -> str:
-    stem = Path(name).stem
+    flattened = name.replace("/", "_").replace("\\", "_")
+    stem = Path(flattened).stem
     cleaned = re.sub(r"[^A-Za-z0-9._-]+", "_", stem).strip("._-")
+    cleaned = re.sub(r"_+", "_", cleaned)
     return cleaned[:96] or "document"
 
 
