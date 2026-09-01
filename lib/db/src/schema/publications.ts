@@ -20,6 +20,9 @@ export type PublicationAttachment = {
   storagePath: string | null;
   contentType: string | null;
   size: number | null;
+  // SHA-256 of the exact bytes archived in object storage. Optional for legacy
+  // JSON rows created before source-hash provenance was introduced.
+  sha256?: string | null;
 };
 
 /**
