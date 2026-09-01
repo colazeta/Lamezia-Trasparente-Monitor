@@ -5,13 +5,13 @@
     "source": "Città di Lamezia Terme — Attuazione Misure PNRR",
     "source_url": "https://www.comune.lamezia-terme.cz.it/it/attuazione-misure-pnrr",
     "source_type": "official_municipal_project_pages",
-    "materialized_at": "2026-09-01T06:20:34.137Z",
+    "materialized_at": "2026-09-01T16:52:55.116Z",
     "source_index_hash": "c7a08dbc6c8ea8f08d1849762aca29587dfe392cc42b1a099f42c8f2e078f1b7",
     "opencup_source": "OpenCUP — Sistema CUP",
     "opencup_source_url": "https://www.opencup.gov.it/portale/web/opencup/home",
     "opencup_source_type": "official_public_investment_project_pages",
     "opencup_source_hash": "f6fa4d2b0d76e96f34983589fbc5dbf3ba07c18d66002291134bdcb3051813b2",
-    "albo_snapshot_generated_at": "2026-08-31T13:37:46.902Z",
+    "albo_snapshot_generated_at": "2026-09-01T16:34:40.060Z",
     "update_policy": "Controllo automatico ogni sei ore della sezione comunale PNRR, rilevamento dei nuovi CUP, arricchimento delle schede pubbliche OpenCUP e riconciliazione con gli output pubblici dell'Albo Pretorio; il file cambia solo quando mutano dati, stato di acquisizione o collegamenti documentali.",
     "opencup_update_policy": "Ogni nuovo CUP comunale genera subito una scheda e avvia l'acquisizione OpenCUP. Se il corredo non è ancora disponibile resta in attesa e viene ritentato automaticamente; un errore temporaneo su un CUP già acquisito conserva l'ultimo corredo valido, marcandolo come non aggiornato.",
     "reconciliation_rule": "Gli atti Albo sono collegati a una scheda progetto esclusivamente quando condividono lo stesso CUP normalizzato; i soli richiami testuali PNRR restano evidenze non riconciliate.",
@@ -1130,7 +1130,9 @@
         "status_observed_at": "2026-09-01T06:20:34.137Z",
         "fallback_used": false
       },
-      "albo_evidence_ids": ["albo-2026-2762"]
+      "albo_evidence_ids": [
+        "albo-2026-2762"
+      ]
     },
     {
       "source_id": "3311",
@@ -1805,7 +1807,10 @@
         "status_observed_at": "2026-09-01T06:20:34.137Z",
         "fallback_used": false
       },
-      "albo_evidence_ids": ["albo-2026-2735", "albo-2026-2730"]
+      "albo_evidence_ids": [
+        "albo-2026-2735",
+        "albo-2026-2730"
+      ]
     },
     {
       "source_id": "3309",
@@ -2291,7 +2296,9 @@
         "status_observed_at": "2026-09-01T06:20:34.137Z",
         "fallback_used": false
       },
-      "albo_evidence_ids": ["albo-2026-2725"]
+      "albo_evidence_ids": [
+        "albo-2026-2725"
+      ]
     },
     {
       "source_id": "3305",
@@ -2921,7 +2928,10 @@
         "status_observed_at": "2026-09-01T06:20:34.137Z",
         "fallback_used": false
       },
-      "albo_evidence_ids": ["albo-2026-2765", "albo-2026-2726"]
+      "albo_evidence_ids": [
+        "albo-2026-2765",
+        "albo-2026-2726"
+      ]
     },
     {
       "source_id": "3325",
@@ -4571,7 +4581,9 @@
         "status_observed_at": "2026-09-01T06:20:34.137Z",
         "fallback_used": false
       },
-      "albo_evidence_ids": ["albo-2026-2731"]
+      "albo_evidence_ids": [
+        "albo-2026-2731"
+      ]
     },
     {
       "source_id": "3296",
@@ -4934,7 +4946,10 @@
         "status_observed_at": "2026-09-01T06:20:34.137Z",
         "fallback_used": false
       },
-      "albo_evidence_ids": ["albo-2026-2732", "albo-2026-2733"]
+      "albo_evidence_ids": [
+        "albo-2026-2732",
+        "albo-2026-2733"
+      ]
     },
     {
       "source_id": "3292",
@@ -5204,7 +5219,9 @@
         "status_observed_at": "2026-09-01T06:20:34.137Z",
         "fallback_used": false
       },
-      "albo_evidence_ids": ["albo-2026-2729"]
+      "albo_evidence_ids": [
+        "albo-2026-2729"
+      ]
     },
     {
       "source_id": "3293",
@@ -5558,7 +5575,9 @@
         "status_observed_at": "2026-09-01T06:20:34.137Z",
         "fallback_used": false
       },
-      "albo_evidence_ids": ["albo-2026-2723"]
+      "albo_evidence_ids": [
+        "albo-2026-2723"
+      ]
     },
     {
       "source_id": "3237",
@@ -5872,9 +5891,16 @@
       "act_number": "1360",
       "act_date": "2026-08-25",
       "subject": "PNRR M2C3I1.1. Lavori realizzazione Intervento demolizione e ricostruzione plesso scolastico Via delle Rose - I.C. Nicotera-Costabile – Affidamento servizio redazione Attestazione Prestazione Energetica - CIG BCC389A2DD - CUP C82C22000050006",
-      "cups": ["C82C22000050006"],
-      "mission_codes": ["M2C3I1.1"],
-      "match_basis": ["explicit_pnrr_marker", "official_project_cup"],
+      "cups": [
+        "C82C22000050006"
+      ],
+      "mission_codes": [
+        "M2C3I1.1"
+      ],
+      "match_basis": [
+        "explicit_pnrr_marker",
+        "official_project_cup"
+      ],
       "verification_status": "official_source_acquired",
       "public_visibility": "publishable",
       "privacy_risk": "low",
@@ -5882,10 +5908,10 @@
       "archived_path": "data/public/albo/documents/2026/71a38e9a3bb026b05931a8e6e0a89561c1d92d2ba3b5cdeeac958fa54b8d4ecf.pdf",
       "document_content_type": "application/pdf",
       "document_size_bytes": 4008617,
-      "first_observed_at": "2026-08-31T13:37:46.902Z",
-      "last_observed_at": "2026-08-31T13:37:46.902Z",
+      "first_observed_at": "2026-09-01T16:34:40.060Z",
+      "last_observed_at": "2026-09-01T16:34:40.060Z",
       "evidence_status": "official_albo_public_record",
-      "evidence_hash": "fdd6dc7ea93417394da423f3f1de06a70837b968a9ca8b8a6fd7189fd5368ad6"
+      "evidence_hash": "7baddf8e0c03a1e84ebd186b00e9a79c901e8d2d065c51e10f26aa85e9fad1fc"
     },
     {
       "id": "albo-2026-2765",
@@ -5900,9 +5926,14 @@
       "act_number": "1361",
       "act_date": "2026-08-26",
       "subject": "PNRR M5C 2.3 I 3.1 Sport e Inclusione, CLUSTER 1, Intervento \"Nuova costruzione di tribune e impianti Stadio G.Renda - CUP C88C22000350006.APPROVAZIONE CERTIFICATO DI COLLAUDO TECNICO AMMINISTRATIVO",
-      "cups": ["C88C22000350006"],
+      "cups": [
+        "C88C22000350006"
+      ],
       "mission_codes": [],
-      "match_basis": ["explicit_pnrr_marker", "official_project_cup"],
+      "match_basis": [
+        "explicit_pnrr_marker",
+        "official_project_cup"
+      ],
       "verification_status": "official_source_acquired",
       "public_visibility": "publishable",
       "privacy_risk": "low",
@@ -5910,10 +5941,10 @@
       "archived_path": "data/public/albo/documents/2026/5609968da473ba3dc8bd6893278ff37e476bf8fe86557c6e92e88cdc73311465.pdf",
       "document_content_type": "application/pdf",
       "document_size_bytes": 1948041,
-      "first_observed_at": "2026-08-31T13:37:46.902Z",
-      "last_observed_at": "2026-08-31T13:37:46.902Z",
+      "first_observed_at": "2026-09-01T16:34:40.060Z",
+      "last_observed_at": "2026-09-01T16:34:40.060Z",
       "evidence_status": "official_albo_public_record",
-      "evidence_hash": "1ba6809548f46823c0480b3fc8b17fe2ce01ece5e5e97d3004eb897aceb691d7"
+      "evidence_hash": "a7a95956fa3fab86454f0941a1aff7de054d3107539927075e2bfd8e4e10c06f"
     },
     {
       "id": "albo-2026-2735",
@@ -5928,9 +5959,16 @@
       "act_number": "1346",
       "act_date": "2026-08-20",
       "subject": "PNRR M4C1I1.1 - Nuovo “Piano per asili nido e scuole dell’infanzia e servizi di educazione e cura per la prima infanzia”. Servizi di ingegneria ed architettura “Asilo Nido NIKE” – CUP C86F24000150006 – CIG B4A8CE6CE1. Liquidazione acconto DL e CSE.",
-      "cups": ["C86F24000150006"],
-      "mission_codes": ["M4C1I1.1"],
-      "match_basis": ["explicit_pnrr_marker", "official_project_cup"],
+      "cups": [
+        "C86F24000150006"
+      ],
+      "mission_codes": [
+        "M4C1I1.1"
+      ],
+      "match_basis": [
+        "explicit_pnrr_marker",
+        "official_project_cup"
+      ],
       "verification_status": "official_source_acquired",
       "public_visibility": "publishable",
       "privacy_risk": "low",
@@ -5938,10 +5976,10 @@
       "archived_path": "data/public/albo/documents/2026/f86a73c444876cb21479002b5b16684ef2bb06a956974d7ffae2d7195c9382f9.pdf",
       "document_content_type": "application/pdf",
       "document_size_bytes": 2730905,
-      "first_observed_at": "2026-08-31T13:37:46.902Z",
-      "last_observed_at": "2026-08-31T13:37:46.902Z",
+      "first_observed_at": "2026-09-01T16:34:40.060Z",
+      "last_observed_at": "2026-09-01T16:34:40.060Z",
       "evidence_status": "official_albo_public_record",
-      "evidence_hash": "26f84c5726fc15778ed7ca2fbed211c28df12979c0226a5f0376026702593ac9"
+      "evidence_hash": "a9c15cab5b776ba9ea153b7db1a5c7e26a6682f01febb548660d53b2a84b7794"
     },
     {
       "id": "albo-2026-2730",
@@ -5956,9 +5994,16 @@
       "act_number": "1342",
       "act_date": "2026-08-19",
       "subject": "PNRR M4C1I1.1 - Nuovo “Piano per asili nido e scuole dell’infanzia”. Lavori relativi all’intervento di realizzazione “Asilo Nido NIKE”. Liquidazione SAL n.3. CUP C86F24000150006. CIG B63A87D3EA.",
-      "cups": ["C86F24000150006"],
-      "mission_codes": ["M4C1I1.1"],
-      "match_basis": ["explicit_pnrr_marker", "official_project_cup"],
+      "cups": [
+        "C86F24000150006"
+      ],
+      "mission_codes": [
+        "M4C1I1.1"
+      ],
+      "match_basis": [
+        "explicit_pnrr_marker",
+        "official_project_cup"
+      ],
       "verification_status": "official_source_acquired",
       "public_visibility": "publishable",
       "privacy_risk": "low",
@@ -5966,10 +6011,10 @@
       "archived_path": "data/public/albo/documents/2026/8afc9d6ebf2babc6a9f34112c015ecc56f31ec6f03badb480e9e17e37bcbd335.pdf",
       "document_content_type": "application/pdf",
       "document_size_bytes": 2484234,
-      "first_observed_at": "2026-08-31T13:37:46.902Z",
-      "last_observed_at": "2026-08-31T13:37:46.902Z",
+      "first_observed_at": "2026-09-01T16:34:40.060Z",
+      "last_observed_at": "2026-09-01T16:34:40.060Z",
       "evidence_status": "official_albo_public_record",
-      "evidence_hash": "ee9e5d85d1dc88f2f8e9c1ce8b23f36a3ce1e45645b35549fb9a3031229ff1bc"
+      "evidence_hash": "754e2cae3420c69b236eb4ffb6791612811c161d47a74ed4d1644c68e377212b"
     },
     {
       "id": "albo-2026-2731",
@@ -5984,9 +6029,16 @@
       "act_number": "1343",
       "act_date": "2026-08-19",
       "subject": "PNRR M5C2I2.3.(PINQuA). Lavori in appalto integrato relativi all'intervento \"Più servizi al territorio: ristrutturazioni e riqualificazione di spazi urbani sociali\". Saldo competenze tecniche progettazione esecutiva. CUP C81B21003520001. CIG A0187A63A4.",
-      "cups": ["C81B21003520001"],
-      "mission_codes": ["M5C2I2.3"],
-      "match_basis": ["explicit_pnrr_marker", "official_project_cup"],
+      "cups": [
+        "C81B21003520001"
+      ],
+      "mission_codes": [
+        "M5C2I2.3"
+      ],
+      "match_basis": [
+        "explicit_pnrr_marker",
+        "official_project_cup"
+      ],
       "verification_status": "official_source_acquired",
       "public_visibility": "publishable",
       "privacy_risk": "low",
@@ -5994,10 +6046,10 @@
       "archived_path": "data/public/albo/documents/2026/a2f5603b696f49f7759153582c4728633acac968c437fdf5a3c1a5b6e5ab3c07.pdf",
       "document_content_type": "application/pdf",
       "document_size_bytes": 2702097,
-      "first_observed_at": "2026-08-31T13:37:46.902Z",
-      "last_observed_at": "2026-08-31T13:37:46.902Z",
+      "first_observed_at": "2026-09-01T16:34:40.060Z",
+      "last_observed_at": "2026-09-01T16:34:40.060Z",
       "evidence_status": "official_albo_public_record",
-      "evidence_hash": "711af2ad11fcacbee44b4353c7dff60b6720537398f5d8aefbd098419bf61e79"
+      "evidence_hash": "0db25897d3a51bea483e45e7014f2463e0c1f6e911c28ab5c31c47bbc696ccab"
     },
     {
       "id": "albo-2026-2732",
@@ -6012,9 +6064,16 @@
       "act_number": "1344",
       "act_date": "2026-08-19",
       "subject": "PNRR M5C2I2.3. (PINQuA) - Intervento ID 2398 \"SAN TEODORO RICEZIONE TURISTICA LOTTO 1\" - CUP C84E21000290001 - CIG AQ 9181061337 - CIG CONTRATTO SPECIFICO A01D5289C5 - Liquidazione quota parte spese di progettazione",
-      "cups": ["C84E21000290001"],
-      "mission_codes": ["M5C2I2.3"],
-      "match_basis": ["explicit_pnrr_marker", "official_project_cup"],
+      "cups": [
+        "C84E21000290001"
+      ],
+      "mission_codes": [
+        "M5C2I2.3"
+      ],
+      "match_basis": [
+        "explicit_pnrr_marker",
+        "official_project_cup"
+      ],
       "verification_status": "official_source_acquired",
       "public_visibility": "publishable",
       "privacy_risk": "low",
@@ -6022,10 +6081,10 @@
       "archived_path": "data/public/albo/documents/2026/76b73980df65098c7c6b8a9b23b46b57e460900817bf17f454aad25a4988e49c.pdf",
       "document_content_type": "application/pdf",
       "document_size_bytes": 2407565,
-      "first_observed_at": "2026-08-31T13:37:46.902Z",
-      "last_observed_at": "2026-08-31T13:37:46.902Z",
+      "first_observed_at": "2026-09-01T16:34:40.060Z",
+      "last_observed_at": "2026-09-01T16:34:40.060Z",
       "evidence_status": "official_albo_public_record",
-      "evidence_hash": "46f067593d4cd86e9cf163587513605564ef2566e50fee0cd9b3b0d1b174ade2"
+      "evidence_hash": "17b3934f38de462740ecaa01b7c857c9b689443ecd7144b62eef409d64b161df"
     },
     {
       "id": "albo-2026-2733",
@@ -6040,9 +6099,16 @@
       "act_number": "1345",
       "act_date": "2026-08-19",
       "subject": "PNRR M5C2I2.3. (PINQuA) - Intervento ID 2398 \"SAN TEODORO RICEZIONE TURISTICA LOTTO 1\" - CUP C84E21000290001 - CIG B9E7D56EB2 - Liquidazione servizio verifica preventiva dell’interesse archeologico",
-      "cups": ["C84E21000290001"],
-      "mission_codes": ["M5C2I2.3"],
-      "match_basis": ["explicit_pnrr_marker", "official_project_cup"],
+      "cups": [
+        "C84E21000290001"
+      ],
+      "mission_codes": [
+        "M5C2I2.3"
+      ],
+      "match_basis": [
+        "explicit_pnrr_marker",
+        "official_project_cup"
+      ],
       "verification_status": "official_source_acquired",
       "public_visibility": "publishable",
       "privacy_risk": "low",
@@ -6050,10 +6116,10 @@
       "archived_path": "data/public/albo/documents/2026/e68c2842bd0a0f642e107d82fca4b7a8b392ef9ed68d1a9da2fa3cb4c50ba89e.pdf",
       "document_content_type": "application/pdf",
       "document_size_bytes": 2130959,
-      "first_observed_at": "2026-08-31T13:37:46.902Z",
-      "last_observed_at": "2026-08-31T13:37:46.902Z",
+      "first_observed_at": "2026-09-01T16:34:40.060Z",
+      "last_observed_at": "2026-09-01T16:34:40.060Z",
       "evidence_status": "official_albo_public_record",
-      "evidence_hash": "8a1c4ba5fce710ea451e25272dd033acb46977ae456fce30b33d61abdfce3571"
+      "evidence_hash": "b03bcd5796b1828c00d2141a1ff735eb51ad2dca8bc149707363e25fef01c945"
     },
     {
       "id": "albo-2026-2725",
@@ -6068,9 +6134,14 @@
       "act_number": "1330",
       "act_date": "2026-08-13",
       "subject": "Fornitura degli arredi nell’ambito del progetto PNRR Realizzazione della Mensa presso l’Istituto Comprensivo Ardito Don Bosco CUP: C85E24000220006, CIG:BC59BBA1AD. Approvazione CRE.Liquidazione",
-      "cups": ["C85E24000220006"],
+      "cups": [
+        "C85E24000220006"
+      ],
       "mission_codes": [],
-      "match_basis": ["explicit_pnrr_marker", "official_project_cup"],
+      "match_basis": [
+        "explicit_pnrr_marker",
+        "official_project_cup"
+      ],
       "verification_status": "official_source_acquired",
       "public_visibility": "publishable",
       "privacy_risk": "low",
@@ -6078,10 +6149,10 @@
       "archived_path": "data/public/albo/documents/2026/0e9bda925b7ba95ad4eb5fcbd97df50bd7d6c5d5c32e4d78cec03c36015cce93.pdf",
       "document_content_type": "application/pdf",
       "document_size_bytes": 1818221,
-      "first_observed_at": "2026-08-31T13:37:46.902Z",
-      "last_observed_at": "2026-08-31T13:37:46.902Z",
+      "first_observed_at": "2026-09-01T16:34:40.060Z",
+      "last_observed_at": "2026-09-01T16:34:40.060Z",
       "evidence_status": "official_albo_public_record",
-      "evidence_hash": "10313de867e122180196ec2d93d88232bf5b018d3a2e6e35f81be1ede38609c2"
+      "evidence_hash": "f92791f673511773c35e9ba2027f3af69d74dce1464f53a15fcac3afe3e59edb"
     },
     {
       "id": "albo-2026-2726",
@@ -6096,9 +6167,14 @@
       "act_number": "1328",
       "act_date": "2026-08-12",
       "subject": "PNRR M5C 2.3 I 3.1 Sport e Inclusione, CLUSTER 1, Intervento \"Nuova costruzione di tribune e impianti Stadio G.Renda - CUP C88C22000350006.CIG: 9705430633. Svincolo polizze e ritenute",
-      "cups": ["C88C22000350006"],
+      "cups": [
+        "C88C22000350006"
+      ],
       "mission_codes": [],
-      "match_basis": ["explicit_pnrr_marker", "official_project_cup"],
+      "match_basis": [
+        "explicit_pnrr_marker",
+        "official_project_cup"
+      ],
       "verification_status": "official_source_acquired",
       "public_visibility": "publishable",
       "privacy_risk": "low",
@@ -6106,10 +6182,10 @@
       "archived_path": "data/public/albo/documents/2026/ede98be0620845ed117228d306b2486f397b2d478cde7be34624615760641fc5.pdf",
       "document_content_type": "application/pdf",
       "document_size_bytes": 2014085,
-      "first_observed_at": "2026-08-31T13:37:46.902Z",
-      "last_observed_at": "2026-08-31T13:37:46.902Z",
+      "first_observed_at": "2026-09-01T16:34:40.060Z",
+      "last_observed_at": "2026-09-01T16:34:40.060Z",
       "evidence_status": "official_albo_public_record",
-      "evidence_hash": "78bffca5a57e0e4afff8bd9f3196e92bce7150f00cbe459043afe6ad96c50f88"
+      "evidence_hash": "e16790f2612abd7a087adc340399e949ce2d71ac0b82f18b9fbbbdfb572c3bba"
     },
     {
       "id": "albo-2026-2729",
@@ -6124,9 +6200,13 @@
       "act_number": "1340",
       "act_date": "2026-08-18",
       "subject": "Intervento \"San Teodoro viabilità interna rione Lotto 5\". CUP: C81B21003460001. CIG:B9C8AB7512. Liquidazione stato avanzamento del servizio.",
-      "cups": ["C81B21003460001"],
+      "cups": [
+        "C81B21003460001"
+      ],
       "mission_codes": [],
-      "match_basis": ["official_project_cup"],
+      "match_basis": [
+        "official_project_cup"
+      ],
       "verification_status": "official_source_acquired",
       "public_visibility": "publishable",
       "privacy_risk": "low",
@@ -6134,10 +6214,10 @@
       "archived_path": "data/public/albo/documents/2026/d6b088defa2f9ff8eb3e7d4329cd3876fc4d4b9926dd8d2c9cfbbfbb21a431e7.pdf",
       "document_content_type": "application/pdf",
       "document_size_bytes": 1926320,
-      "first_observed_at": "2026-08-31T13:37:46.902Z",
-      "last_observed_at": "2026-08-31T13:37:46.902Z",
+      "first_observed_at": "2026-09-01T16:34:40.060Z",
+      "last_observed_at": "2026-09-01T16:34:40.060Z",
       "evidence_status": "official_albo_public_record",
-      "evidence_hash": "b7346fce0cf5e10cde7a696b46e6885c986d827916fa59dc18972ac63a87870e"
+      "evidence_hash": "aebf928ac1e4fa6d71ce1a2a7c9b8fb604a5971340161c80acff4ea9d40ae60d"
     },
     {
       "id": "albo-2026-2723",
@@ -6152,9 +6232,16 @@
       "act_number": "1339",
       "act_date": "2026-08-18",
       "subject": "PNRR M5C2I2.3. (PINQuA). Intervento di realizzazione dei lavori in appalto integrato relativi all’intervento di riqualificazione quartiere Anzaro. Liquidazione SAL n. 3 dei lavori. CUP C81B21003510001 - CIG A01B55677B.",
-      "cups": ["C81B21003510001"],
-      "mission_codes": ["M5C2I2.3"],
-      "match_basis": ["explicit_pnrr_marker", "official_project_cup"],
+      "cups": [
+        "C81B21003510001"
+      ],
+      "mission_codes": [
+        "M5C2I2.3"
+      ],
+      "match_basis": [
+        "explicit_pnrr_marker",
+        "official_project_cup"
+      ],
       "verification_status": "official_source_acquired",
       "public_visibility": "publishable",
       "privacy_risk": "low",
@@ -6162,10 +6249,10 @@
       "archived_path": "data/public/albo/documents/2026/18dcfdc2b37d732bbacbf174cb8b9f7d970222fadd1785284d2ec44bef7b48af.pdf",
       "document_content_type": "application/pdf",
       "document_size_bytes": 2564285,
-      "first_observed_at": "2026-08-31T13:37:46.902Z",
-      "last_observed_at": "2026-08-31T13:37:46.902Z",
+      "first_observed_at": "2026-09-01T16:34:40.060Z",
+      "last_observed_at": "2026-09-01T16:34:40.060Z",
       "evidence_status": "official_albo_public_record",
-      "evidence_hash": "611bb5ebb3f47cb65557b77f1b4f0aea660fa373f64d3663896615284c7ea7aa"
+      "evidence_hash": "7d0fa545816a45ec8f37efb5447244a0b57b27f992cfb2e4d2ce94d4d913a542"
     }
   ],
   "unmatched_albo_evidence_ids": []
