@@ -29,6 +29,13 @@ export type DoclingEnrichmentDecision = {
 
 const DEFAULT_MAX_PAGES = 20;
 const SPARSE_CHARACTERS_PER_PAGE = 100;
+export const DOCLING_ENRICHMENT_FLAG = "DOCLING_ENRICHMENT_ENABLED";
+
+export function isDoclingEnrichmentEnabled(
+  env: Record<string, string | undefined> = process.env,
+): boolean {
+  return env[DOCLING_ENRICHMENT_FLAG]?.trim().toLowerCase() === "true";
+}
 
 function isPdfContentType(contentType: string | null | undefined): boolean {
   if (!contentType) return false;
@@ -50,8 +57,8 @@ function charactersPerPage(
  *
  * This function never invokes Docling and has no side effects. The official source remains
  * canonical; a positive decision is only permission for a separate worker/processor to attempt
- * a derived extraction. The feature flag is fail-closed and defaults must be supplied explicitly
- * by the caller.
+ * a derived extraction. The feature flag is fail-closed and defaults to disabled unless the
+ * caller explicitly opts in via DOCLING_ENRICHMENT_ENABLED=true.
  */
 export function decideDoclingEnrichment(
   input: DoclingEnrichmentInput,
