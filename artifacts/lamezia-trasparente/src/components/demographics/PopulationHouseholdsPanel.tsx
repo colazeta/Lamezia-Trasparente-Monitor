@@ -393,12 +393,13 @@ export function PopulationHouseholdsPanel() {
             </CardDescription>
           </CardHeader>
           <CardContent className="grid gap-6 lg:grid-cols-[1.4fr_1fr]">
-            <div
-              role="list"
-              aria-label="Distribuzione delle famiglie di Lamezia Terme per numero di componenti nel 2023"
-              className="space-y-3"
-            >
-              {data.composition.byComponents.map((item) => {
+            <div className="space-y-3">
+              <div
+                role="list"
+                aria-label="Distribuzione delle famiglie di Lamezia Terme per numero di componenti nel 2023"
+                className="space-y-3"
+              >
+                {data.composition.byComponents.map((item) => {
                 const label =
                   item.key === "1"
                     ? "1 componente"
@@ -432,7 +433,8 @@ export function PopulationHouseholdsPanel() {
                     </span>
                   </div>
                 );
-              })}
+                })}
+              </div>
               <p className="pt-1 text-xs leading-5 text-muted-foreground">
                 Quote arrotondate a un decimale; la quadratura è verificata sui
                 conteggi interi.
