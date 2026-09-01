@@ -276,6 +276,7 @@ export function Router() {
                 path="/amministratori/:id"
                 component={AmministratoreDetail}
               />
+              <Route path="/pnrr/:cup" component={Pnrr} />
               <PublicRouteWithMeta
                 path="/pnrr"
                 component={Pnrr}
