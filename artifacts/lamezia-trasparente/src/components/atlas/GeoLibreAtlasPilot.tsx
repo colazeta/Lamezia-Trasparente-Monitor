@@ -20,8 +20,10 @@ const DEFAULT_GEOLIBRE_VIEWER_URL = "https://web.geolibre.app/";
 
 export function GeoLibreAtlasPilot() {
   const activeLayers = useMemo(() => getActiveAtlasSpatialLayers(), []);
-  const siteOrigin =
-    typeof window === "undefined" ? null : window.location.origin;
+  const siteBaseUrl =
+    typeof window === "undefined"
+      ? null
+      : new URL(import.meta.env.BASE_URL, window.location.origin).toString();
   const [availability, setAvailability] = useState<
     GeoLibreLayerAvailability[] | null
   >(null);
@@ -30,12 +32,12 @@ export function GeoLibreAtlasPilot() {
   >(null);
 
   useEffect(() => {
-    if (!siteOrigin) return;
+    if (!siteBaseUrl) return;
 
     const controller = new AbortController();
     void checkGeoLibreLayerAvailability({
       layers: activeLayers,
-      siteOrigin,
+      siteOrigin: siteBaseUrl,
       apiBaseUrl: import.meta.env.VITE_API_BASE_URL,
       signal: controller.signal,
     }).then((result) => {
@@ -43,7 +45,7 @@ export function GeoLibreAtlasPilot() {
     });
     void loadSpatialPublicationManifest({
       layers: activeLayers,
-      siteOrigin,
+      siteOrigin: siteBaseUrl,
       signal: controller.signal,
     })
       .then((result) => {
@@ -54,7 +56,7 @@ export function GeoLibreAtlasPilot() {
       });
 
     return () => controller.abort();
-  }, [activeLayers, siteOrigin]);
+  }, [activeLayers, siteBaseUrl]);
 
   const readyFeeds = useMemo(
     () =>
@@ -76,17 +78,17 @@ export function GeoLibreAtlasPilot() {
     [availability],
   );
   const viewerUrl = useMemo(() => {
-    if (!siteOrigin || readyLayers.length === 0) return null;
+    if (!siteBaseUrl || readyLayers.length === 0) return null;
 
     return buildGeoLibreViewerUrl({
       viewerBaseUrl:
         import.meta.env.VITE_ATLAS_GEOLIBRE_URL?.trim() ||
         DEFAULT_GEOLIBRE_VIEWER_URL,
       layers: readyLayers,
-      siteOrigin,
+      siteOrigin: siteBaseUrl,
       apiBaseUrl: import.meta.env.VITE_API_BASE_URL,
     });
-  }, [readyLayers, siteOrigin]);
+  }, [readyLayers, siteBaseUrl]);
   const emptySnapshotLayers = useMemo(
     () =>
       manifest
@@ -102,7 +104,7 @@ export function GeoLibreAtlasPilot() {
     [readyFeeds],
   );
 
-  if (!siteOrigin) return null;
+  if (!siteBaseUrl) return null;
 
   return (
     <main className="min-h-screen bg-background text-foreground">

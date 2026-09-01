@@ -86,6 +86,18 @@ describe("GeoLibre pilot helpers", () => {
     ).toBe("https://lamezia.example/data/processed/territorio/sezioni.geojson");
   });
 
+  it("preserves the deployment base path for static layers", () => {
+    expect(
+      resolveSpatialDataUrl(
+        "/data/processed/territorio/sezioni.geojson",
+        "https://lamezia.example/Lamezia-Trasparente-Monitor/",
+        "https://api.lamezia.example",
+      ),
+    ).toBe(
+      "https://lamezia.example/Lamezia-Trasparente-Monitor/data/processed/territorio/sezioni.geojson",
+    );
+  });
+
   it("builds a read-only GeoLibre URL with repeated canonical data parameters", () => {
     const url = new URL(
       buildGeoLibreViewerUrl({

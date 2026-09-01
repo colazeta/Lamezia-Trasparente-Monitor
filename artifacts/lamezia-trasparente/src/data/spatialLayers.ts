@@ -1,4 +1,9 @@
+import { withPublicBasePath } from "@/lib/publicBasePath";
 import { getSpatialLayer } from "@/lib/spatial";
+
+type LoadSpatialLayerOptions = {
+  publicBaseUrl?: string;
+};
 
 export type MunicipalBoundarySpatialFeature = {
   type: "Feature";
@@ -97,15 +102,20 @@ export type ConfiscatedAssetsSpatialLoadResult = {
   primaryFailure: ConfiscatedAssetsSpatialLoadFailure | null;
 };
 
-export async function loadMunicipalBoundarySpatialLayer(): Promise<MunicipalBoundarySpatialCollection> {
+export async function loadMunicipalBoundarySpatialLayer({
+  publicBaseUrl = import.meta.env.BASE_URL,
+}: LoadSpatialLayerOptions = {}): Promise<MunicipalBoundarySpatialCollection> {
   const definition = getSpatialLayer("municipal-boundary");
   if (!definition?.dataPath) {
     throw new Error("Confine comunale non configurato");
   }
 
-  const response = await fetch(definition.dataPath, {
-    headers: { Accept: "application/geo+json, application/json" },
-  });
+  const response = await fetch(
+    resolvePublicSpatialDataPath(definition.dataPath, publicBaseUrl),
+    {
+      headers: { Accept: "application/geo+json, application/json" },
+    },
+  );
   if (!response.ok) {
     throw new Error(`Confine comunale non disponibile (${response.status})`);
   }
@@ -118,7 +128,9 @@ export async function loadMunicipalBoundarySpatialLayer(): Promise<MunicipalBoun
   return payload;
 }
 
-export async function loadConfiscatedAssetsSpatialLayer(): Promise<ConfiscatedAssetsSpatialLoadResult> {
+export async function loadConfiscatedAssetsSpatialLayer({
+  publicBaseUrl = import.meta.env.BASE_URL,
+}: LoadSpatialLayerOptions = {}): Promise<ConfiscatedAssetsSpatialLoadResult> {
   const definition = getSpatialLayer("confiscated-assets");
   if (!definition?.dataPath) {
     throw new Error("Layer beni confiscati non configurato");
@@ -128,6 +140,7 @@ export async function loadConfiscatedAssetsSpatialLayer(): Promise<ConfiscatedAs
     return {
       collection: await fetchConfiscatedAssetsSpatialCollection(
         definition.dataPath,
+        publicBaseUrl,
       ),
       distribution: "primary",
       primaryFailure: null,
@@ -138,6 +151,7 @@ export async function loadConfiscatedAssetsSpatialLayer(): Promise<ConfiscatedAs
       return {
         collection: await fetchConfiscatedAssetsSpatialCollection(
           definition.fallbackDataPath,
+          publicBaseUrl,
         ),
         distribution: "continuity_fallback",
         primaryFailure,
@@ -149,12 +163,16 @@ export async function loadConfiscatedAssetsSpatialLayer(): Promise<ConfiscatedAs
 
 async function fetchConfiscatedAssetsSpatialCollection(
   dataPath: string,
+  publicBaseUrl: string,
 ): Promise<ConfiscatedAssetsSpatialCollection> {
   let response: Response;
   try {
-    response = await fetch(dataPath, {
-      headers: { Accept: "application/geo+json, application/json" },
-    });
+    response = await fetch(
+      resolvePublicSpatialDataPath(dataPath, publicBaseUrl),
+      {
+        headers: { Accept: "application/geo+json, application/json" },
+      },
+    );
   } catch {
     throw new ConfiscatedAssetsSpatialLoadError("network_error", null);
   }
@@ -179,6 +197,16 @@ async function fetchConfiscatedAssetsSpatialCollection(
   }
 
   return payload;
+}
+
+function resolvePublicSpatialDataPath(
+  dataPath: string,
+  publicBaseUrl: string,
+): string {
+  if (!dataPath.startsWith("/") || dataPath.startsWith("/api/")) {
+    return dataPath;
+  }
+  return withPublicBasePath(dataPath as `/${string}`, publicBaseUrl);
 }
 
 class ConfiscatedAssetsSpatialLoadError extends Error {
