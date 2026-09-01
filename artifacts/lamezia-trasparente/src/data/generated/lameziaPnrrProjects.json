@@ -1,19 +1,19 @@
 {
-  "schema_version": 3,
+  "schema_version": 4,
   "metadata": {
     "dataset_id": "lamezia-pnrr-static-feed",
     "source": "Città di Lamezia Terme — Attuazione Misure PNRR",
     "source_url": "https://www.comune.lamezia-terme.cz.it/it/attuazione-misure-pnrr",
     "source_type": "official_municipal_project_pages",
-    "materialized_at": "2026-09-01T05:31:15.965Z",
+    "materialized_at": "2026-09-01T06:20:34.137Z",
     "source_index_hash": "c7a08dbc6c8ea8f08d1849762aca29587dfe392cc42b1a099f42c8f2e078f1b7",
     "opencup_source": "OpenCUP — Sistema CUP",
     "opencup_source_url": "https://www.opencup.gov.it/portale/web/opencup/home",
     "opencup_source_type": "official_public_investment_project_pages",
-    "opencup_source_hash": "42854d3921f4631cd319a46f80f72193d4a5f6872348a69e9a93e9e06969b460",
+    "opencup_source_hash": "f6fa4d2b0d76e96f34983589fbc5dbf3ba07c18d66002291134bdcb3051813b2",
     "albo_snapshot_generated_at": "2026-08-31T13:37:46.902Z",
-    "update_policy": "Controllo giornaliero della sezione comunale PNRR, arricchimento delle schede pubbliche OpenCUP e riconciliazione con gli output pubblici dell'Albo Pretorio; il file cambia solo quando mutano dati o collegamenti documentali.",
-    "opencup_update_policy": "Le schede OpenCUP vengono acquisite per CUP durante la materializzazione. Un errore temporaneo conserva l'ultimo corredo OpenCUP valido dello stesso CUP, se disponibile.",
+    "update_policy": "Controllo automatico ogni sei ore della sezione comunale PNRR, rilevamento dei nuovi CUP, arricchimento delle schede pubbliche OpenCUP e riconciliazione con gli output pubblici dell'Albo Pretorio; il file cambia solo quando mutano dati, stato di acquisizione o collegamenti documentali.",
+    "opencup_update_policy": "Ogni nuovo CUP comunale genera subito una scheda e avvia l'acquisizione OpenCUP. Se il corredo non è ancora disponibile resta in attesa e viene ritentato automaticamente; un errore temporaneo su un CUP già acquisito conserva l'ultimo corredo valido, marcandolo come non aggiornato.",
     "reconciliation_rule": "Gli atti Albo sono collegati a una scheda progetto esclusivamente quando condividono lo stesso CUP normalizzato; i soli richiami testuali PNRR restano evidenze non riconciliate.",
     "coverage_note": "Il perimetro deriva dalle schede pubblicate nella sezione PNRR del Comune e non equivale al censimento nazionale completo ReGiS/Italia Domani.",
     "caveat": "Importi, stati e allegati descrivono quanto pubblicato nelle fonti acquisite. L'assenza di un campo o di un atto non dimostra assenza amministrativa, ritardo o criticità.",
@@ -64,6 +64,9 @@
     "projects_with_amount": 30,
     "projects_with_opencup": 30,
     "projects_without_opencup": 0,
+    "projects_with_opencup_fresh": 30,
+    "projects_with_opencup_stale": 0,
+    "projects_pending_opencup": 0,
     "projects_with_opencup_total_cost": 28,
     "projects_with_opencup_public_funding": 28,
     "projects_with_albo_evidence": 8,
@@ -221,6 +224,12 @@
         "verification_status": "official_opencup_project_page",
         "source_record_hash": "085230d8a8b1c972bebb72b92ed0dec6f9f833fdd6571b55e022547b38639530"
       },
+      "opencup_acquisition": {
+        "status": "fresh",
+        "acquired_at": "2026-09-01T05:31:15.965Z",
+        "status_observed_at": "2026-09-01T06:20:34.137Z",
+        "fallback_used": false
+      },
       "albo_evidence_ids": []
     },
     {
@@ -307,13 +316,13 @@
       "opencup": {
         "source_url": "https://www.opencup.gov.it/portale/it/web/opencup/home/progetto/-/cup/C81F22000650006",
         "cup": "C81F22000650006",
-        "title": "MIGLIORAMENTO DELLESPERIENZA DUSO DEL SITO E DEI SERVIZI DIGITALI PER IL CITTADINO - CITIZEN EXPERIENCE*VIA PERUGINI 15/C*SITO COMUNALE E SERVIZI DIGITALI PER IL CITTADINO",
+        "title": "MIGLIORAMENTO DELL’ESPERIENZA D’USO DEL SITO E DEI SERVIZI DIGITALI PER IL CITTADINO - CITIZEN EXPERIENCE*VIA PERUGINI 15/C*SITO COMUNALE E SERVIZI DIGITALI PER IL CITTADINO",
         "total_cost_eur": 328160,
         "public_funding_eur": 328160,
         "decision_year": 2022,
         "cup_status": "ATTIVO",
         "description": null,
-        "infrastructure": "MIGLIORAMENTO DELLESPERIENZA DUSO DEL SITO E DEI SERVIZI DIGITALI PER IL CITTADINO - CITIZEN EXPERIENCE",
+        "infrastructure": "MIGLIORAMENTO DELL’ESPERIENZA D’USO DEL SITO E DEI SERVIZI DIGITALI PER IL CITTADINO - CITIZEN EXPERIENCE",
         "beneficiary_tax_code": null,
         "reference_address": "VIA PERUGINI 15/C",
         "location": {
@@ -354,7 +363,13 @@
           "strategic_infrastructure_law": false
         },
         "verification_status": "official_opencup_project_page",
-        "source_record_hash": "7fa5e54db965f024e70d5dcaf30f3accc74fe48592397019ee0e4e5f9edfff1b"
+        "source_record_hash": "34899f0f54ae4d60906f398d3e5f3bbdab4e29856032b74a5fd15a2138861fea"
+      },
+      "opencup_acquisition": {
+        "status": "fresh",
+        "acquired_at": "2026-09-01T06:13:49.692Z",
+        "status_observed_at": "2026-09-01T06:20:34.137Z",
+        "fallback_used": false
       },
       "albo_evidence_ids": []
     },
@@ -454,6 +469,12 @@
         },
         "verification_status": "official_opencup_project_page",
         "source_record_hash": "529d155dffbd908559b224133707de7427f095ea85f5eb374856323689ea04cd"
+      },
+      "opencup_acquisition": {
+        "status": "fresh",
+        "acquired_at": "2026-09-01T05:31:15.965Z",
+        "status_observed_at": "2026-09-01T06:20:34.137Z",
+        "fallback_used": false
       },
       "albo_evidence_ids": []
     },
@@ -601,6 +622,12 @@
         },
         "verification_status": "official_opencup_project_page",
         "source_record_hash": "abbb3a15c00756c46d5767794fcd77504590f54c46d7caedaaf48b4efa39e8ed"
+      },
+      "opencup_acquisition": {
+        "status": "fresh",
+        "acquired_at": "2026-09-01T05:31:15.965Z",
+        "status_observed_at": "2026-09-01T06:20:34.137Z",
+        "fallback_used": false
       },
       "albo_evidence_ids": []
     },
@@ -1081,7 +1108,7 @@
         },
         "generated_at": "2022-02-07",
         "unique_infrastructure": false,
-        "programming_instrument": "ALTRO-MISSIONE 2  RIVOLUZIONE VERDE E TRANSIZIONE ECOLOGICA -COMPONENTE 3 - EFFICIENZA ENERGETICA E RIQUALIFICAZIONE DEGLI EDIFICI  INVESTIMENTO 1.1: COSTRUZIONE DI NUOVE SCUOLE MEDIANTE SOSTITUZIONE EDILIZIA",
+        "programming_instrument": "ALTRO-MISSIONE 2 – RIVOLUZIONE VERDE E TRANSIZIONE ECOLOGICA -COMPONENTE 3 - EFFICIENZA ENERGETICA E RIQUALIFICAZIONE DEGLI EDIFICI – INVESTIMENTO 1.1: COSTRUZIONE DI NUOVE SCUOLE MEDIANTE SOSTITUZIONE EDILIZIA",
         "master_cup": null,
         "linked_cups_count": 0,
         "financial": {
@@ -1095,11 +1122,15 @@
           "strategic_infrastructure_law": false
         },
         "verification_status": "official_opencup_project_page",
-        "source_record_hash": "b0ad1cbdd063b6d66229fcd37b4cafe417f0938cc440861e936de438a68f5bec"
+        "source_record_hash": "288735b454c55d240f4fb8152885f1f5558e02e8102c4f69995e41e54e772dd2"
       },
-      "albo_evidence_ids": [
-        "albo-2026-2762"
-      ]
+      "opencup_acquisition": {
+        "status": "fresh",
+        "acquired_at": "2026-09-01T06:13:49.692Z",
+        "status_observed_at": "2026-09-01T06:20:34.137Z",
+        "fallback_used": false
+      },
+      "albo_evidence_ids": ["albo-2026-2762"]
     },
     {
       "source_id": "3311",
@@ -1209,6 +1240,12 @@
         },
         "verification_status": "official_opencup_project_page",
         "source_record_hash": "61e5cc95d09262fed1e1545621dd8d319bf0e33681905727defd81c5c60d9282"
+      },
+      "opencup_acquisition": {
+        "status": "fresh",
+        "acquired_at": "2026-09-01T05:31:15.965Z",
+        "status_observed_at": "2026-09-01T06:20:34.137Z",
+        "fallback_used": false
       },
       "albo_evidence_ids": []
     },
@@ -1449,7 +1486,7 @@
         },
         "generated_at": "2024-05-30",
         "unique_infrastructure": false,
-        "programming_instrument": "ALTRO-MISSIONE 4  ISTRUZIONE E RICERCA  COMPONENTE 1 - POTENZIAMENTO DELLOFFERTA DEI SERVIZI DI ISTRUZIONE: DAGLI ASILI NIDO ALLE UNIVERSITÀ - INVESTIMENTO 1.1: PIANO PER ASILI NIDO E SCUOLE DELLINFANZIA E SERVIZI DI EDUCAZIONE E CURA PER LA PRIMA INFANZIA",
+        "programming_instrument": "ALTRO-MISSIONE 4 – ISTRUZIONE E RICERCA – COMPONENTE 1 - POTENZIAMENTO DELL’OFFERTA DEI SERVIZI DI ISTRUZIONE: DAGLI ASILI NIDO ALLE UNIVERSITÀ - INVESTIMENTO 1.1: PIANO PER ASILI NIDO E SCUOLE DELL’INFANZIA E SERVIZI DI EDUCAZIONE E CURA PER LA PRIMA INFANZIA",
         "master_cup": null,
         "linked_cups_count": 0,
         "financial": {
@@ -1463,7 +1500,13 @@
           "strategic_infrastructure_law": false
         },
         "verification_status": "official_opencup_project_page",
-        "source_record_hash": "5ffc332764032eee06aabb722aa113d8bf316daad5be7857d54a321ba621de10"
+        "source_record_hash": "aca883fc03e34ccc4209e663b5d621782e4a960d533720a2186d2aff16981fdd"
+      },
+      "opencup_acquisition": {
+        "status": "fresh",
+        "acquired_at": "2026-09-01T06:13:49.692Z",
+        "status_observed_at": "2026-09-01T06:20:34.137Z",
+        "fallback_used": false
       },
       "albo_evidence_ids": []
     },
@@ -1740,7 +1783,7 @@
         },
         "generated_at": "2024-05-28",
         "unique_infrastructure": false,
-        "programming_instrument": "ALTRO-MISSIONE 4  ISTRUZIONE E RICERCA  COMPONENTE 1 - POTENZIAMENTO DELLOFFERTA DEI SERVIZI DI ISTRUZIONE: DAGLI ASILI NIDO ALLE UNIVERSITÀ - INVESTIMENTO 1.1: PIANO PER ASILI NIDO E SCUOLE DELLINFANZIA E SERVIZI DI EDUCAZIONE E CURA PER LA PRIMA INFANZIA",
+        "programming_instrument": "ALTRO-MISSIONE 4 – ISTRUZIONE E RICERCA – COMPONENTE 1 - POTENZIAMENTO DELL’OFFERTA DEI SERVIZI DI ISTRUZIONE: DAGLI ASILI NIDO ALLE UNIVERSITÀ - INVESTIMENTO 1.1: PIANO PER ASILI NIDO E SCUOLE DELL’INFANZIA E SERVIZI DI EDUCAZIONE E CURA PER LA PRIMA INFANZIA",
         "master_cup": null,
         "linked_cups_count": 0,
         "financial": {
@@ -1754,12 +1797,15 @@
           "strategic_infrastructure_law": false
         },
         "verification_status": "official_opencup_project_page",
-        "source_record_hash": "94500436b5036318d12d81de4062b85f36b74f28bd6e17eab19ae2001377b619"
+        "source_record_hash": "81e11cb362dea33e936e8535707409c5a232ec2a652fdaf69e03eb0b9d6cfbb2"
       },
-      "albo_evidence_ids": [
-        "albo-2026-2735",
-        "albo-2026-2730"
-      ]
+      "opencup_acquisition": {
+        "status": "fresh",
+        "acquired_at": "2026-09-01T06:13:49.692Z",
+        "status_observed_at": "2026-09-01T06:20:34.137Z",
+        "fallback_used": false
+      },
+      "albo_evidence_ids": ["albo-2026-2735", "albo-2026-2730"]
     },
     {
       "source_id": "3309",
@@ -1953,13 +1999,13 @@
       "opencup": {
         "source_url": "https://www.opencup.gov.it/portale/it/web/opencup/home/progetto/-/cup/C85E22000130006",
         "cup": "C85E22000130006",
-        "title": "NIDO DINFANZIA LIGEA*PIANO API*REALIZZAZIONE DI NUOVA STRUTTURA DA DESTINARE AD ASILO NIDO",
+        "title": "NIDO D’INFANZIA LIGEA*PIANO API*REALIZZAZIONE DI NUOVA STRUTTURA DA DESTINARE AD ASILO NIDO",
         "total_cost_eur": 1679304,
         "public_funding_eur": 1679304,
         "decision_year": 2022,
         "cup_status": "ATTIVO",
         "description": "REALIZZAZIONE DI NUOVA STRUTTURA DA DESTINARE AD ASILO NIDO",
-        "infrastructure": "NIDO DINFANZIA LIGEA",
+        "infrastructure": "NIDO D’INFANZIA LIGEA",
         "beneficiary_tax_code": null,
         "reference_address": "PIANO API",
         "location": {
@@ -1986,7 +2032,7 @@
         },
         "generated_at": "2022-02-25",
         "unique_infrastructure": false,
-        "programming_instrument": "ALTRO-MISSIONE 4  ISTRUZIONE E RICERCA  COMPONENTE 1 - POTENZIAMENTO DELLOFFERTA DEI SERVIZI DI ISTRUZIONE: DAGLI ASILI NIDO ALLE UNIVERSITÀ - INVESTIMENTO 1.1: PIANO PER ASILI NIDO E SCUOLE DELLINFANZIA E SERVIZI DI EDUCAZIONE E CURA PER LA PRIMA INFANZIA",
+        "programming_instrument": "ALTRO-MISSIONE 4 – ISTRUZIONE E RICERCA – COMPONENTE 1 - POTENZIAMENTO DELL’OFFERTA DEI SERVIZI DI ISTRUZIONE: DAGLI ASILI NIDO ALLE UNIVERSITÀ - INVESTIMENTO 1.1: PIANO PER ASILI NIDO E SCUOLE DELL’INFANZIA E SERVIZI DI EDUCAZIONE E CURA PER LA PRIMA INFANZIA",
         "master_cup": null,
         "linked_cups_count": 0,
         "financial": {
@@ -2000,7 +2046,13 @@
           "strategic_infrastructure_law": false
         },
         "verification_status": "official_opencup_project_page",
-        "source_record_hash": "2bbc7c7392507d91a78f242fb438ea54ff6af0594d5f4873e8af9acac4f6f0c3"
+        "source_record_hash": "f21882fde8099f43a2e9db7a79f5b9509c3a85d1fb4f5b3d269fb8588bc91d8b"
+      },
+      "opencup_acquisition": {
+        "status": "fresh",
+        "acquired_at": "2026-09-01T06:13:49.692Z",
+        "status_observed_at": "2026-09-01T06:20:34.137Z",
+        "fallback_used": false
       },
       "albo_evidence_ids": []
     },
@@ -2217,7 +2269,7 @@
         },
         "generated_at": "2024-09-02",
         "unique_infrastructure": false,
-        "programming_instrument": "ALTRO-MISSIONE 4  ISTRUZIONE E RICERCA  COMPONENTE 1 - POTENZIAMENTO DELLOFFERTA DEI SERVIZI DI ISTRUZIONE: DAGLI ASILI NIDO ALLE UNIVERSITÀ - INVESTIMENTO 1.2: PIANO DI ESTENSIONE DEL TEMPO PIENO E MENSE",
+        "programming_instrument": "ALTRO-MISSIONE 4 – ISTRUZIONE E RICERCA – COMPONENTE 1 - POTENZIAMENTO DELL’OFFERTA DEI SERVIZI DI ISTRUZIONE: DAGLI ASILI NIDO ALLE UNIVERSITÀ - INVESTIMENTO 1.2: PIANO DI ESTENSIONE DEL TEMPO PIENO E MENSE",
         "master_cup": null,
         "linked_cups_count": 0,
         "financial": {
@@ -2231,11 +2283,15 @@
           "strategic_infrastructure_law": false
         },
         "verification_status": "official_opencup_project_page",
-        "source_record_hash": "d73b3cd9d18bcc75ac195522403799cb8b1f3222ba58a29fc21eb7e17515afdd"
+        "source_record_hash": "392899be2b47af639b4adb3be9c2a4f6f9623c9885886b5c793cfe6793c50b85"
       },
-      "albo_evidence_ids": [
-        "albo-2026-2725"
-      ]
+      "opencup_acquisition": {
+        "status": "fresh",
+        "acquired_at": "2026-09-01T06:13:49.692Z",
+        "status_observed_at": "2026-09-01T06:20:34.137Z",
+        "fallback_used": false
+      },
+      "albo_evidence_ids": ["albo-2026-2725"]
     },
     {
       "source_id": "3305",
@@ -2525,13 +2581,13 @@
       "opencup": {
         "source_url": "https://www.opencup.gov.it/portale/it/web/opencup/home/progetto/-/cup/C88I21000370001",
         "cup": "C88I21000370001",
-        "title": "MIGLIORAMENTO DELLA QUALITÀ DEL DECORO URBANO E DEL TESSUTO SOCIALE E AMBIENTALE, ANCHE MEDIANTE INTERVENTI DI RISTRUTTURAZIONE DI EDILIZIA DI IMMOBILI PUBBLICI , CON PARTICOLARE RIFERIMENTO ALLO SVILUPPO DEI SERVIZIO SOCIALI, CULTURALI E SPORTIVI*VIA PERUGINI*SISTEMAZIONE DELLO SPAZIO ANTISTANTE LA SEDE COMUNALE,RISTRUTTURAZIONE E SOPRAELEVAZIONE IMMOBILE ESISTENTE, REALIZZAZIONE DELLA PIAZZA ANTISTANTE LA CONCATTEDRALE DI SAN BENEDETTO, RISTRUTTURAZIONE DEL PALAZZETTO DELLO SPORT",
+        "title": "“MIGLIORAMENTO DELLA QUALITÀ DEL DECORO URBANO E DEL TESSUTO SOCIALE E AMBIENTALE, ANCHE MEDIANTE INTERVENTI DI RISTRUTTURAZIONE DI EDILIZIA DI IMMOBILI PUBBLICI , CON PARTICOLARE RIFERIMENTO ALLO SVILUPPO DEI SERVIZIO SOCIALI, CULTURALI E SPORTIVI”*VIA PERUGINI*SISTEMAZIONE DELLO SPAZIO ANTISTANTE LA SEDE COMUNALE,RISTRUTTURAZIONE E SOPRAELEVAZIONE IMMOBILE ESISTENTE, REALIZZAZIONE DELLA PIAZZA ANTISTANTE LA CONCATTEDRALE DI SAN BENEDETTO, RISTRUTTURAZIONE DEL PALAZZETTO DELLO SPORT",
         "total_cost_eur": 9950000,
         "public_funding_eur": 9950000,
         "decision_year": 2021,
         "cup_status": "ATTIVO",
         "description": "SISTEMAZIONE DELLO SPAZIO ANTISTANTE LA SEDE COMUNALE,RISTRUTTURAZIONE E SOPRAELEVAZIONE IMMOBILE ESISTENTE, REALIZZAZIONE DELLA PIAZZA ANTISTANTE LA CONCATTEDRALE DI SAN BENEDETTO, RISTRUTTURAZIONE DEL PALAZZETTO DELLO SPORT",
-        "infrastructure": "MIGLIORAMENTO DELLA QUALITÀ DEL DECORO URBANO E DEL TESSUTO SOCIALE E AMBIENTALE, ANCHE MEDIANTE INTERVENTI DI RISTRUTTURAZIONE DI EDILIZIA DI IMMOBILI PUBBLICI , CON PARTICOLARE RIFERIMENTO ALLO SVILUPPO DEI SERVIZIO SOCIALI, CULTURALI E SPORTIVI",
+        "infrastructure": "“MIGLIORAMENTO DELLA QUALITÀ DEL DECORO URBANO E DEL TESSUTO SOCIALE E AMBIENTALE, ANCHE MEDIANTE INTERVENTI DI RISTRUTTURAZIONE DI EDILIZIA DI IMMOBILI PUBBLICI , CON PARTICOLARE RIFERIMENTO ALLO SVILUPPO DEI SERVIZIO SOCIALI, CULTURALI E SPORTIVI”",
         "beneficiary_tax_code": null,
         "reference_address": "VIA PERUGINI",
         "location": {
@@ -2572,7 +2628,13 @@
           "strategic_infrastructure_law": false
         },
         "verification_status": "official_opencup_project_page",
-        "source_record_hash": "ffa9b8363073e83e77d7447b6a9332f34baf8401cb1a7ae2d1db04cd10958e70"
+        "source_record_hash": "4e5151a677c34007e90210970da6172cf45f16f6e0247444ed03e7ecb13d54c4"
+      },
+      "opencup_acquisition": {
+        "status": "fresh",
+        "acquired_at": "2026-09-01T06:13:49.692Z",
+        "status_observed_at": "2026-09-01T06:20:34.137Z",
+        "fallback_used": false
       },
       "albo_evidence_ids": []
     },
@@ -2853,10 +2915,13 @@
         "verification_status": "official_opencup_project_page",
         "source_record_hash": "6a780c148eb0d1f647a36c2dafd67f782d961d500537058b9df91b3208aa4c06"
       },
-      "albo_evidence_ids": [
-        "albo-2026-2765",
-        "albo-2026-2726"
-      ]
+      "opencup_acquisition": {
+        "status": "fresh",
+        "acquired_at": "2026-09-01T05:31:15.965Z",
+        "status_observed_at": "2026-09-01T06:20:34.137Z",
+        "fallback_used": false
+      },
+      "albo_evidence_ids": ["albo-2026-2765", "albo-2026-2726"]
     },
     {
       "source_id": "3325",
@@ -3003,6 +3068,12 @@
         "verification_status": "official_opencup_project_page",
         "source_record_hash": "773fd5acee4de81de4e5102a5491470aa6fe500842c63e3b11f801536da99720"
       },
+      "opencup_acquisition": {
+        "status": "fresh",
+        "acquired_at": "2026-09-01T05:31:15.965Z",
+        "status_observed_at": "2026-09-01T06:20:34.137Z",
+        "fallback_used": false
+      },
       "albo_evidence_ids": []
     },
     {
@@ -3113,6 +3184,12 @@
         },
         "verification_status": "official_opencup_project_page",
         "source_record_hash": "2012f28139b8300428b41b2c6a8c815eb00b3409c0fab8508a41123b93e10cbb"
+      },
+      "opencup_acquisition": {
+        "status": "fresh",
+        "acquired_at": "2026-09-01T05:31:15.965Z",
+        "status_observed_at": "2026-09-01T06:20:34.137Z",
+        "fallback_used": false
       },
       "albo_evidence_ids": []
     },
@@ -3260,6 +3337,12 @@
         },
         "verification_status": "official_opencup_project_page",
         "source_record_hash": "c185f176fec3a15895968cb02fc50f26a1b7837f5575d4fc03fd7ff6db9ea690"
+      },
+      "opencup_acquisition": {
+        "status": "fresh",
+        "acquired_at": "2026-09-01T05:31:15.965Z",
+        "status_observed_at": "2026-09-01T06:20:34.137Z",
+        "fallback_used": false
       },
       "albo_evidence_ids": []
     },
@@ -3432,6 +3515,12 @@
         "verification_status": "official_opencup_project_page",
         "source_record_hash": "f2af10bc04c4b373e0bbe3bb5411dd4edc0e0eea2d0eb9498169e8cfd6e2f3ef"
       },
+      "opencup_acquisition": {
+        "status": "fresh",
+        "acquired_at": "2026-09-01T05:31:15.965Z",
+        "status_observed_at": "2026-09-01T06:20:34.137Z",
+        "fallback_used": false
+      },
       "albo_evidence_ids": []
     },
     {
@@ -3567,6 +3656,12 @@
         "verification_status": "official_opencup_project_page",
         "source_record_hash": "864a6e20d6d08fc1e8e69a0271b5ca496ef9cf6c19094939b6793a01e5a40f1d"
       },
+      "opencup_acquisition": {
+        "status": "fresh",
+        "acquired_at": "2026-09-01T05:31:15.965Z",
+        "status_observed_at": "2026-09-01T06:20:34.137Z",
+        "fallback_used": false
+      },
       "albo_evidence_ids": []
     },
     {
@@ -3701,6 +3796,12 @@
         },
         "verification_status": "official_opencup_project_page",
         "source_record_hash": "798d32c1344edd0de0c221e2f322be4c5a5376df1094209d5e38ef0410d52a7d"
+      },
+      "opencup_acquisition": {
+        "status": "fresh",
+        "acquired_at": "2026-09-01T05:31:15.965Z",
+        "status_observed_at": "2026-09-01T06:20:34.137Z",
+        "fallback_used": false
       },
       "albo_evidence_ids": []
     },
@@ -3849,6 +3950,12 @@
         "verification_status": "official_opencup_project_page",
         "source_record_hash": "c60e6d5408d93fef3f8b65c520443b3de52fee427ecea6c91a892b3912a54efe"
       },
+      "opencup_acquisition": {
+        "status": "fresh",
+        "acquired_at": "2026-09-01T05:31:15.965Z",
+        "status_observed_at": "2026-09-01T06:20:34.137Z",
+        "fallback_used": false
+      },
       "albo_evidence_ids": []
     },
     {
@@ -3959,6 +4066,12 @@
         },
         "verification_status": "official_opencup_project_page",
         "source_record_hash": "a05cb4b06e6ead5a62640a67e00ffcf1d969313f5f029ef5ddaf79e0ea8b5418"
+      },
+      "opencup_acquisition": {
+        "status": "fresh",
+        "acquired_at": "2026-09-01T05:31:15.965Z",
+        "status_observed_at": "2026-09-01T06:20:34.137Z",
+        "fallback_used": false
       },
       "albo_evidence_ids": []
     },
@@ -4287,6 +4400,12 @@
         "verification_status": "official_opencup_project_page",
         "source_record_hash": "a598572b601547e1406213d34127ea7b0bf5f5d3b41b70a5633a08e58e50b77e"
       },
+      "opencup_acquisition": {
+        "status": "fresh",
+        "acquired_at": "2026-09-01T05:31:15.965Z",
+        "status_observed_at": "2026-09-01T06:20:34.137Z",
+        "fallback_used": false
+      },
       "albo_evidence_ids": []
     },
     {
@@ -4446,9 +4565,13 @@
         "verification_status": "official_opencup_project_page",
         "source_record_hash": "e638b43a4a939f9bedbb8b39d07691c06e0c88330880a8ba92f4394df24ea869"
       },
-      "albo_evidence_ids": [
-        "albo-2026-2731"
-      ]
+      "opencup_acquisition": {
+        "status": "fresh",
+        "acquired_at": "2026-09-01T05:31:15.965Z",
+        "status_observed_at": "2026-09-01T06:20:34.137Z",
+        "fallback_used": false
+      },
+      "albo_evidence_ids": ["albo-2026-2731"]
     },
     {
       "source_id": "3296",
@@ -4546,6 +4669,12 @@
         },
         "verification_status": "official_opencup_project_page",
         "source_record_hash": "740b217b648329d56ec2785a988579756df6317add3a6f00a402f1db89442706"
+      },
+      "opencup_acquisition": {
+        "status": "fresh",
+        "acquired_at": "2026-09-01T05:31:15.965Z",
+        "status_observed_at": "2026-09-01T06:20:34.137Z",
+        "fallback_used": false
       },
       "albo_evidence_ids": []
     },
@@ -4645,6 +4774,12 @@
         },
         "verification_status": "official_opencup_project_page",
         "source_record_hash": "d3293b1fe7e88a5c5a6eb67bb7d8e5194c113e44a36d0599ace5c697d8ad68aa"
+      },
+      "opencup_acquisition": {
+        "status": "fresh",
+        "acquired_at": "2026-09-01T05:31:15.965Z",
+        "status_observed_at": "2026-09-01T06:20:34.137Z",
+        "fallback_used": false
       },
       "albo_evidence_ids": []
     },
@@ -4777,7 +4912,7 @@
         },
         "generated_at": "2021-04-12",
         "unique_infrastructure": true,
-        "programming_instrument": "ALTRO-PROGRAMMA INNOVATIVO NAZIONALE PER LA QUALITÀ DELL'ABITARE,",
+        "programming_instrument": "ALTRO-“PROGRAMMA INNOVATIVO NAZIONALE PER LA QUALITÀ DELL'ABITARE”,",
         "master_cup": null,
         "linked_cups_count": 0,
         "financial": {
@@ -4791,12 +4926,15 @@
           "strategic_infrastructure_law": false
         },
         "verification_status": "official_opencup_project_page",
-        "source_record_hash": "af4af4d19d8f43c6a0d0b2c646f42fb7bb3ce5cf17c73d3f4334b6c759756eb7"
+        "source_record_hash": "8495cd313ee5347f88366b949e092e9a89c94d18ec4911ba2d6f6c23381d5aa1"
       },
-      "albo_evidence_ids": [
-        "albo-2026-2732",
-        "albo-2026-2733"
-      ]
+      "opencup_acquisition": {
+        "status": "fresh",
+        "acquired_at": "2026-09-01T06:13:49.692Z",
+        "status_observed_at": "2026-09-01T06:20:34.137Z",
+        "fallback_used": false
+      },
+      "albo_evidence_ids": ["albo-2026-2732", "albo-2026-2733"]
     },
     {
       "source_id": "3292",
@@ -4918,6 +5056,12 @@
         },
         "verification_status": "official_opencup_project_page",
         "source_record_hash": "ecedf60c408e823e290413a5eadc3ca31a0401235cb0caa6bc33a809bb3e2a89"
+      },
+      "opencup_acquisition": {
+        "status": "fresh",
+        "acquired_at": "2026-09-01T05:31:15.965Z",
+        "status_observed_at": "2026-09-01T06:20:34.137Z",
+        "fallback_used": false
       },
       "albo_evidence_ids": []
     },
@@ -5054,9 +5198,13 @@
         "verification_status": "official_opencup_project_page",
         "source_record_hash": "ca1445787722fd1921a2538cbe2a676185d37923f86d12c90b602b3d369c754c"
       },
-      "albo_evidence_ids": [
-        "albo-2026-2729"
-      ]
+      "opencup_acquisition": {
+        "status": "fresh",
+        "acquired_at": "2026-09-01T05:31:15.965Z",
+        "status_observed_at": "2026-09-01T06:20:34.137Z",
+        "fallback_used": false
+      },
+      "albo_evidence_ids": ["albo-2026-2729"]
     },
     {
       "source_id": "3293",
@@ -5166,6 +5314,12 @@
         },
         "verification_status": "official_opencup_project_page",
         "source_record_hash": "3ef4b892b2ce88527e1863a967df94a8bed6f116c7d357c64af34e7060eab9d2"
+      },
+      "opencup_acquisition": {
+        "status": "fresh",
+        "acquired_at": "2026-09-01T05:31:15.965Z",
+        "status_observed_at": "2026-09-01T06:20:34.137Z",
+        "fallback_used": false
       },
       "albo_evidence_ids": []
     },
@@ -5398,9 +5552,13 @@
         "verification_status": "official_opencup_project_page",
         "source_record_hash": "15df3b0effddab8a48aad25a49bf60b3796c9f80883647873be4147da8987f07"
       },
-      "albo_evidence_ids": [
-        "albo-2026-2723"
-      ]
+      "opencup_acquisition": {
+        "status": "fresh",
+        "acquired_at": "2026-09-01T05:31:15.965Z",
+        "status_observed_at": "2026-09-01T06:20:34.137Z",
+        "fallback_used": false
+      },
+      "albo_evidence_ids": ["albo-2026-2723"]
     },
     {
       "source_id": "3237",
@@ -5675,7 +5833,7 @@
         },
         "generated_at": "2022-06-20",
         "unique_infrastructure": false,
-        "programming_instrument": "ALTRO-INTERVENTI FINALIZZATI ALLEFFICIENTAMENTO DELLE STRUTTURE SPORTIVE ESISTENTI DA PARTE DEI CAPOLUOGHI DI REGIONE E DI PROVINCIA. CUP: J53I22000120006 - PRESIDENZA DEL CONSIGLIO DEI MINISTRI- UFFICIO PER LO SPORT",
+        "programming_instrument": "ALTRO-INTERVENTI FINALIZZATI ALL’EFFICIENTAMENTO DELLE STRUTTURE SPORTIVE ESISTENTI DA PARTE DEI CAPOLUOGHI DI REGIONE E DI PROVINCIA. CUP: J53I22000120006 - PRESIDENZA DEL CONSIGLIO DEI MINISTRI- UFFICIO PER LO SPORT",
         "master_cup": null,
         "linked_cups_count": 0,
         "financial": {
@@ -5689,7 +5847,13 @@
           "strategic_infrastructure_law": false
         },
         "verification_status": "official_opencup_project_page",
-        "source_record_hash": "cb0d80ca14e4eb74dc32ba1b04c6edbb2ee541bbc442dd494f4728a00861544d"
+        "source_record_hash": "ded886677f69c9c97f5c568617ce7c8831a19d5014d2e7a11f096fff665d01cc"
+      },
+      "opencup_acquisition": {
+        "status": "fresh",
+        "acquired_at": "2026-09-01T06:13:49.692Z",
+        "status_observed_at": "2026-09-01T06:20:34.137Z",
+        "fallback_used": false
       },
       "albo_evidence_ids": []
     }
@@ -5708,16 +5872,9 @@
       "act_number": "1360",
       "act_date": "2026-08-25",
       "subject": "PNRR M2C3I1.1. Lavori realizzazione Intervento demolizione e ricostruzione plesso scolastico Via delle Rose - I.C. Nicotera-Costabile – Affidamento servizio redazione Attestazione Prestazione Energetica - CIG BCC389A2DD - CUP C82C22000050006",
-      "cups": [
-        "C82C22000050006"
-      ],
-      "mission_codes": [
-        "M2C3I1.1"
-      ],
-      "match_basis": [
-        "explicit_pnrr_marker",
-        "official_project_cup"
-      ],
+      "cups": ["C82C22000050006"],
+      "mission_codes": ["M2C3I1.1"],
+      "match_basis": ["explicit_pnrr_marker", "official_project_cup"],
       "verification_status": "official_source_acquired",
       "public_visibility": "publishable",
       "privacy_risk": "low",
@@ -5743,14 +5900,9 @@
       "act_number": "1361",
       "act_date": "2026-08-26",
       "subject": "PNRR M5C 2.3 I 3.1 Sport e Inclusione, CLUSTER 1, Intervento \"Nuova costruzione di tribune e impianti Stadio G.Renda - CUP C88C22000350006.APPROVAZIONE CERTIFICATO DI COLLAUDO TECNICO AMMINISTRATIVO",
-      "cups": [
-        "C88C22000350006"
-      ],
+      "cups": ["C88C22000350006"],
       "mission_codes": [],
-      "match_basis": [
-        "explicit_pnrr_marker",
-        "official_project_cup"
-      ],
+      "match_basis": ["explicit_pnrr_marker", "official_project_cup"],
       "verification_status": "official_source_acquired",
       "public_visibility": "publishable",
       "privacy_risk": "low",
@@ -5776,16 +5928,9 @@
       "act_number": "1346",
       "act_date": "2026-08-20",
       "subject": "PNRR M4C1I1.1 - Nuovo “Piano per asili nido e scuole dell’infanzia e servizi di educazione e cura per la prima infanzia”. Servizi di ingegneria ed architettura “Asilo Nido NIKE” – CUP C86F24000150006 – CIG B4A8CE6CE1. Liquidazione acconto DL e CSE.",
-      "cups": [
-        "C86F24000150006"
-      ],
-      "mission_codes": [
-        "M4C1I1.1"
-      ],
-      "match_basis": [
-        "explicit_pnrr_marker",
-        "official_project_cup"
-      ],
+      "cups": ["C86F24000150006"],
+      "mission_codes": ["M4C1I1.1"],
+      "match_basis": ["explicit_pnrr_marker", "official_project_cup"],
       "verification_status": "official_source_acquired",
       "public_visibility": "publishable",
       "privacy_risk": "low",
@@ -5811,16 +5956,9 @@
       "act_number": "1342",
       "act_date": "2026-08-19",
       "subject": "PNRR M4C1I1.1 - Nuovo “Piano per asili nido e scuole dell’infanzia”. Lavori relativi all’intervento di realizzazione “Asilo Nido NIKE”. Liquidazione SAL n.3. CUP C86F24000150006. CIG B63A87D3EA.",
-      "cups": [
-        "C86F24000150006"
-      ],
-      "mission_codes": [
-        "M4C1I1.1"
-      ],
-      "match_basis": [
-        "explicit_pnrr_marker",
-        "official_project_cup"
-      ],
+      "cups": ["C86F24000150006"],
+      "mission_codes": ["M4C1I1.1"],
+      "match_basis": ["explicit_pnrr_marker", "official_project_cup"],
       "verification_status": "official_source_acquired",
       "public_visibility": "publishable",
       "privacy_risk": "low",
@@ -5846,16 +5984,9 @@
       "act_number": "1343",
       "act_date": "2026-08-19",
       "subject": "PNRR M5C2I2.3.(PINQuA). Lavori in appalto integrato relativi all'intervento \"Più servizi al territorio: ristrutturazioni e riqualificazione di spazi urbani sociali\". Saldo competenze tecniche progettazione esecutiva. CUP C81B21003520001. CIG A0187A63A4.",
-      "cups": [
-        "C81B21003520001"
-      ],
-      "mission_codes": [
-        "M5C2I2.3"
-      ],
-      "match_basis": [
-        "explicit_pnrr_marker",
-        "official_project_cup"
-      ],
+      "cups": ["C81B21003520001"],
+      "mission_codes": ["M5C2I2.3"],
+      "match_basis": ["explicit_pnrr_marker", "official_project_cup"],
       "verification_status": "official_source_acquired",
       "public_visibility": "publishable",
       "privacy_risk": "low",
@@ -5881,16 +6012,9 @@
       "act_number": "1344",
       "act_date": "2026-08-19",
       "subject": "PNRR M5C2I2.3. (PINQuA) - Intervento ID 2398 \"SAN TEODORO RICEZIONE TURISTICA LOTTO 1\" - CUP C84E21000290001 - CIG AQ 9181061337 - CIG CONTRATTO SPECIFICO A01D5289C5 - Liquidazione quota parte spese di progettazione",
-      "cups": [
-        "C84E21000290001"
-      ],
-      "mission_codes": [
-        "M5C2I2.3"
-      ],
-      "match_basis": [
-        "explicit_pnrr_marker",
-        "official_project_cup"
-      ],
+      "cups": ["C84E21000290001"],
+      "mission_codes": ["M5C2I2.3"],
+      "match_basis": ["explicit_pnrr_marker", "official_project_cup"],
       "verification_status": "official_source_acquired",
       "public_visibility": "publishable",
       "privacy_risk": "low",
@@ -5916,16 +6040,9 @@
       "act_number": "1345",
       "act_date": "2026-08-19",
       "subject": "PNRR M5C2I2.3. (PINQuA) - Intervento ID 2398 \"SAN TEODORO RICEZIONE TURISTICA LOTTO 1\" - CUP C84E21000290001 - CIG B9E7D56EB2 - Liquidazione servizio verifica preventiva dell’interesse archeologico",
-      "cups": [
-        "C84E21000290001"
-      ],
-      "mission_codes": [
-        "M5C2I2.3"
-      ],
-      "match_basis": [
-        "explicit_pnrr_marker",
-        "official_project_cup"
-      ],
+      "cups": ["C84E21000290001"],
+      "mission_codes": ["M5C2I2.3"],
+      "match_basis": ["explicit_pnrr_marker", "official_project_cup"],
       "verification_status": "official_source_acquired",
       "public_visibility": "publishable",
       "privacy_risk": "low",
@@ -5951,14 +6068,9 @@
       "act_number": "1330",
       "act_date": "2026-08-13",
       "subject": "Fornitura degli arredi nell’ambito del progetto PNRR Realizzazione della Mensa presso l’Istituto Comprensivo Ardito Don Bosco CUP: C85E24000220006, CIG:BC59BBA1AD. Approvazione CRE.Liquidazione",
-      "cups": [
-        "C85E24000220006"
-      ],
+      "cups": ["C85E24000220006"],
       "mission_codes": [],
-      "match_basis": [
-        "explicit_pnrr_marker",
-        "official_project_cup"
-      ],
+      "match_basis": ["explicit_pnrr_marker", "official_project_cup"],
       "verification_status": "official_source_acquired",
       "public_visibility": "publishable",
       "privacy_risk": "low",
@@ -5984,14 +6096,9 @@
       "act_number": "1328",
       "act_date": "2026-08-12",
       "subject": "PNRR M5C 2.3 I 3.1 Sport e Inclusione, CLUSTER 1, Intervento \"Nuova costruzione di tribune e impianti Stadio G.Renda - CUP C88C22000350006.CIG: 9705430633. Svincolo polizze e ritenute",
-      "cups": [
-        "C88C22000350006"
-      ],
+      "cups": ["C88C22000350006"],
       "mission_codes": [],
-      "match_basis": [
-        "explicit_pnrr_marker",
-        "official_project_cup"
-      ],
+      "match_basis": ["explicit_pnrr_marker", "official_project_cup"],
       "verification_status": "official_source_acquired",
       "public_visibility": "publishable",
       "privacy_risk": "low",
@@ -6017,13 +6124,9 @@
       "act_number": "1340",
       "act_date": "2026-08-18",
       "subject": "Intervento \"San Teodoro viabilità interna rione Lotto 5\". CUP: C81B21003460001. CIG:B9C8AB7512. Liquidazione stato avanzamento del servizio.",
-      "cups": [
-        "C81B21003460001"
-      ],
+      "cups": ["C81B21003460001"],
       "mission_codes": [],
-      "match_basis": [
-        "official_project_cup"
-      ],
+      "match_basis": ["official_project_cup"],
       "verification_status": "official_source_acquired",
       "public_visibility": "publishable",
       "privacy_risk": "low",
@@ -6049,16 +6152,9 @@
       "act_number": "1339",
       "act_date": "2026-08-18",
       "subject": "PNRR M5C2I2.3. (PINQuA). Intervento di realizzazione dei lavori in appalto integrato relativi all’intervento di riqualificazione quartiere Anzaro. Liquidazione SAL n. 3 dei lavori. CUP C81B21003510001 - CIG A01B55677B.",
-      "cups": [
-        "C81B21003510001"
-      ],
-      "mission_codes": [
-        "M5C2I2.3"
-      ],
-      "match_basis": [
-        "explicit_pnrr_marker",
-        "official_project_cup"
-      ],
+      "cups": ["C81B21003510001"],
+      "mission_codes": ["M5C2I2.3"],
+      "match_basis": ["explicit_pnrr_marker", "official_project_cup"],
       "verification_status": "official_source_acquired",
       "public_visibility": "publishable",
       "privacy_risk": "low",

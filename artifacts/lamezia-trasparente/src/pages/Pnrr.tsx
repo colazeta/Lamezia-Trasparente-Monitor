@@ -151,7 +151,9 @@ function dataStatus(project: PnrrViewProject) {
   if (project.dataOrigin === "static-municipal")
     return project.openCup
       ? "ufficiale (Comune + OpenCUP)"
-      : "ufficiale (scheda Comune acquisita)";
+      : project.openCupAcquisition?.status === "pending"
+        ? "ufficiale (Comune; OpenCUP in acquisizione)"
+        : "ufficiale (scheda Comune acquisita)";
   if (project.aggiornamentoVecchio)
     return "da verificare sulla fonte ufficiale";
   if (
@@ -1062,9 +1064,30 @@ function FilterSelect({
   );
 }
 
-function OpenCupProjectDetails({ project }: { project: PnrrViewProject }) {
+export function OpenCupProjectDetails({
+  project,
+}: {
+  project: PnrrViewProject;
+}) {
   const openCup = project.openCup;
-  if (!openCup) return null;
+  const acquisition = project.openCupAcquisition;
+  if (!openCup) {
+    if (acquisition?.status !== "pending") return null;
+    return (
+      <div
+        className="mb-4 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm leading-relaxed text-amber-950 dark:border-amber-500/30 dark:bg-amber-500/10 dark:text-amber-100"
+        data-testid={`pnrr-opencup-pending-${project.id}`}
+      >
+        <p className="font-semibold">OpenCUP in acquisizione automatica</p>
+        <p className="mt-1 text-xs">
+          Il CUP è presente nella scheda comunale, ma il corredo OpenCUP non era
+          disponibile quando lo stato è stato registrato il{" "}
+          {formatDate(acquisition.status_observed_at)}. Il flusso lo ritenterà
+          automaticamente al prossimo controllo.
+        </p>
+      </div>
+    );
+  }
 
   const amountsDiffer =
     project.importoFinanziato != null &&
@@ -1121,6 +1144,17 @@ function OpenCupProjectDetails({ project }: { project: PnrrViewProject }) {
       </summary>
 
       <div className="border-t border-sky-200/70 px-4 py-4 dark:border-sky-500/20">
+        {acquisition?.status === "stale" && (
+          <p className="mb-4 rounded-md border border-amber-200 bg-amber-50 px-3 py-2 text-xs leading-relaxed text-amber-900 dark:border-amber-500/30 dark:bg-amber-500/10 dark:text-amber-200">
+            OpenCUP non era disponibile quando lo stato è stato registrato il{" "}
+            {formatDate(acquisition.status_observed_at)}. È mostrato l'ultimo
+            corredo valido, acquisito il{" "}
+            {acquisition.acquired_at
+              ? `${formatDate(acquisition.acquired_at)}.`
+              : "data non disponibile."}{" "}
+            Il flusso proverà di nuovo automaticamente.
+          </p>
+        )}
         <p className="mb-4 text-xs leading-relaxed text-muted-foreground">
           {LAMEZIA_PNRR_STATIC_DATA.metadata.opencup_caveat} I valori OpenCUP
           restano distinti da quelli esposti nella scheda comunale.
@@ -1142,6 +1176,14 @@ function OpenCupProjectDetails({ project }: { project: PnrrViewProject }) {
             }
           />
           <MetaRow label="Stato del CUP" value={openCup.cup_status} />
+          <MetaRow
+            label="Acquisizione del corredo OpenCUP"
+            value={
+              acquisition?.acquired_at
+                ? formatDate(acquisition.acquired_at)
+                : null
+            }
+          />
           <MetaRow
             label="Data di generazione CUP"
             value={

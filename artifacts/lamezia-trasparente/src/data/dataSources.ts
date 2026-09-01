@@ -82,7 +82,7 @@ export const DATA_SOURCES = [
       "Fonte locale primaria del feed statico; ogni scheda conserva il proprio URL puntuale, l'ordine degli allegati esposti e viene riconciliata con gli atti Albo soltanto tramite CUP identico.",
     dataType: "Ufficiale",
     updateFrequency:
-      "Controllo automatico giornaliero; il sito conserva l'ultima materializzazione valida quando l'acquisizione o i controlli falliscono.",
+      "Controllo automatico ogni sei ore; il sito rileva i CUP nuovi e conserva l'ultima materializzazione valida quando l'acquisizione o i controlli falliscono.",
     limitations:
       "Il perimetro coincide con le schede pubblicate nella sezione comunale e non equivale al censimento nazionale completo. La fase documentale è derivata dal solo titolo dell'allegato per facilitare la navigazione: non è uno stato di avanzamento. La data di pubblicazione non è trattata come data di aggiornamento.",
   },
@@ -94,10 +94,10 @@ export const DATA_SOURCES = [
     linkLabel: "Apri OpenCUP",
     linkScope: "consultazione",
     linkNote:
-      "Ogni progetto PNRR materializzato conserva anche il collegamento puntuale alla propria scheda OpenCUP; i valori restano distinti da quelli della fonte comunale.",
+      "Ogni progetto PNRR con CUP avvia automaticamente l'acquisizione della scheda OpenCUP; data e stato dell'acquisizione restano tracciati e i valori non sovrascrivono quelli della fonte comunale.",
     dataType: "Ufficiale",
     updateFrequency:
-      "Acquisizione giornaliera delle schede puntuali; OpenCUP dichiara attività giornaliera di bonifica del corredo informativo e aggiornamento mensile dei dataset massivi.",
+      "Acquisizione automatica ogni sei ore delle schede puntuali; OpenCUP dichiara attività giornaliera di bonifica del corredo informativo e aggiornamento mensile dei dataset massivi.",
     limitations:
       "Lo stato del CUP descrive il codice nel Sistema CUP e non lo stato dei lavori. L'associazione PNRR indicata in OpenCUP può derivare da quanto segnalato dal titolare in fase di generazione e non prova, da sola, l'ammissione definitiva al finanziamento. Dati rilasciati dal portale con licenza CC-BY.",
   },

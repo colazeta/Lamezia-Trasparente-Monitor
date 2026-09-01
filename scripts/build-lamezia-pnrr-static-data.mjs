@@ -7,8 +7,10 @@ import {
   buildAlboEvidenceArchive,
   buildStaticPnrrDataset,
   extractProjectLinks,
+  findNewProjectCups,
   parseOpenCupProject,
   parseMunicipalPnrrProject,
+  reconcileOpenCupAcquisition,
   stableDatasetPayload,
   stableStringify,
   validateCoverageRegression,
@@ -46,6 +48,7 @@ const openCupConcurrency = Number.parseInt(
   process.env.LAMEZIA_PNRR_OPENCUP_FETCH_CONCURRENCY ?? "3",
   10,
 );
+const materializationAttemptedAt = new Date().toISOString();
 
 if (!Number.isInteger(minimumProjectCount) || minimumProjectCount < 1) {
   throw new Error(`Invalid LAMEZIA_PNRR_MIN_PROJECTS: ${minimumProjectCount}`);
@@ -101,35 +104,61 @@ const municipalProjects = await mapWithConcurrency(
   },
 );
 
-const existingOpenCupByCup = new Map(
+const existingProjectByCup = new Map(
   (existing?.projects ?? [])
-    .filter((project) => project.cup && project.opencup)
-    .map((project) => [project.cup, project.opencup]),
+    .filter((project) => project.cup)
+    .map((project) => [project.cup, project]),
+);
+const newCups = findNewProjectCups(municipalProjects, existing?.projects ?? []);
+console.log(
+  newCups.length > 0
+    ? `Detected ${newCups.length} new municipal CUP${newCups.length === 1 ? "" : "s"}: ${newCups.join(", ")}. OpenCUP acquisition starts in this run.`
+    : "No new municipal CUP detected; existing OpenCUP records will be refreshed.",
 );
 const openCupWarnings = [];
 const projects = await mapWithConcurrency(
   municipalProjects,
   openCupConcurrency,
   async (project) => {
-    if (!project.cup) return { ...project, opencup: null };
+    if (!project.cup) {
+      return { ...project, opencup: null, opencup_acquisition: null };
+    }
+    const previousProject = existingProjectByCup.get(project.cup) ?? null;
+    const previousOpenCup = previousProject?.opencup ?? null;
+    const previousAcquisition =
+      previousProject?.opencup_acquisition ??
+      legacyOpenCupAcquisition(previousProject, existing);
     const sourceUrl = buildOpenCupProjectUrl(project.cup);
     try {
       const html = await fetchText(sourceUrl);
+      const fetchedOpenCup = parseOpenCupProject({
+        cup: project.cup,
+        sourceUrl,
+        html,
+      });
       return {
         ...project,
-        opencup: parseOpenCupProject({
-          cup: project.cup,
-          sourceUrl,
-          html,
+        ...reconcileOpenCupAcquisition({
+          fetchedOpenCup,
+          previousOpenCup,
+          previousAcquisition,
+          attemptedAt: materializationAttemptedAt,
         }),
       };
     } catch (error) {
-      const fallback = existingOpenCupByCup.get(project.cup) ?? null;
       const detail = error instanceof Error ? error.message : String(error);
       openCupWarnings.push(
-        `${project.cup}: ${detail}; ${fallback ? "retained previous OpenCUP record" : "no previous OpenCUP record available"}`,
+        `${project.cup}: ${detail}; ${previousOpenCup ? "retained previous OpenCUP record and marked it stale" : "marked OpenCUP acquisition pending for automatic retry"}`,
       );
-      return { ...project, opencup: fallback };
+      return {
+        ...project,
+        ...reconcileOpenCupAcquisition({
+          fetchedOpenCup: null,
+          previousOpenCup,
+          previousAcquisition,
+          attemptedAt: materializationAttemptedAt,
+        }),
+      };
     }
   },
 );
@@ -151,7 +180,7 @@ const alboEvidence = buildAlboEvidenceArchive({
 const candidate = buildStaticPnrrDataset({
   projects,
   alboEvidence,
-  materializedAt: new Date().toISOString(),
+  materializedAt: materializationAttemptedAt,
   alboSnapshotGeneratedAt: latestAlbo.generated_at ?? null,
 });
 validateStaticPnrrDataset(candidate, { minimumProjects: minimumProjectCount });
@@ -163,7 +192,7 @@ if (
     stableStringify(stableDatasetPayload(candidate))
 ) {
   console.log(
-    `PNRR static feed already matches ${links.length} official municipal project pages, ${candidate.coverage.projects_with_opencup} OpenCUP records and ${alboEvidence.length} retained Albo evidence records.`,
+    `PNRR static feed already matches ${links.length} official municipal project pages, ${candidate.coverage.projects_with_opencup_fresh} fresh OpenCUP records, ${candidate.coverage.projects_with_opencup_stale} stale records, ${candidate.coverage.projects_pending_opencup} pending acquisitions and ${alboEvidence.length} retained Albo evidence records.`,
   );
   process.exit(0);
 }
@@ -171,8 +200,20 @@ if (
 await mkdir(path.dirname(outputPath), { recursive: true });
 await writeFile(outputPath, `${JSON.stringify(candidate, null, 2)}\n`, "utf8");
 console.log(
-  `Wrote ${candidate.coverage.projects} projects, ${candidate.coverage.projects_with_opencup} OpenCUP records and ${candidate.coverage.albo_evidence} Albo evidence records to ${path.relative(repoRoot, outputPath)}.`,
+  `Wrote ${candidate.coverage.projects} projects, ${candidate.coverage.projects_with_opencup_fresh} fresh OpenCUP records, ${candidate.coverage.projects_with_opencup_stale} stale records, ${candidate.coverage.projects_pending_opencup} pending acquisitions and ${candidate.coverage.albo_evidence} Albo evidence records to ${path.relative(repoRoot, outputPath)}.`,
 );
+
+function legacyOpenCupAcquisition(previousProject, previousDataset) {
+  if (!previousProject?.opencup) return null;
+  const acquiredAt = previousDataset?.metadata?.materialized_at;
+  if (!acquiredAt) return null;
+  return {
+    status: "fresh",
+    acquired_at: acquiredAt,
+    status_observed_at: acquiredAt,
+    fallback_used: false,
+  };
+}
 
 async function fetchText(url) {
   let lastError;
