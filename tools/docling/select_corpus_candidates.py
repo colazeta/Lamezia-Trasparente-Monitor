@@ -8,6 +8,7 @@ from pathlib import Path
 from typing import Any
 
 SCHEMA_VERSION = 1
+DEFAULT_MAX_SIZE_BYTES = 3 * 1024 * 1024
 
 FINANCE_PATTERNS = (
     r"\bbilancio\b",
@@ -57,7 +58,12 @@ def candidate_record(item: dict[str, Any], archived: dict[str, Any]) -> dict[str
     }
 
 
-def build_pool(latest: dict[str, Any], manifest: dict[str, Any]) -> list[dict[str, Any]]:
+def build_pool(
+    latest: dict[str, Any],
+    manifest: dict[str, Any],
+    *,
+    max_size_bytes: int | None = None,
+) -> list[dict[str, Any]]:
     archived_by_publication = {
         document.get("publication_number"): document
         for document in manifest.get("documents", [])
@@ -80,6 +86,9 @@ def build_pool(latest: dict[str, Any], manifest: dict[str, Any]) -> list[dict[st
             continue
         if archived.get("privacy_risk") != "low":
             continue
+        size_bytes = archived.get("size_bytes")
+        if max_size_bytes is not None and (not isinstance(size_bytes, int) or size_bytes > max_size_bytes):
+            continue
 
         record = candidate_record(item, archived)
         subject = str(item.get("subject") or "")
@@ -91,11 +100,12 @@ def build_pool(latest: dict[str, Any], manifest: dict[str, Any]) -> list[dict[st
     return pool
 
 
-def select_candidates(pool: list[dict[str, Any]], per_class: int = 2) -> list[dict[str, Any]]:
+def select_candidates(pool: list[dict[str, Any]], per_class: int = 1) -> list[dict[str, Any]]:
     selected: list[dict[str, Any]] = []
     used: set[str] = set()
 
     def add(records: list[dict[str, Any]], benchmark_class: str, limit: int) -> None:
+        added = 0
         for record in records:
             sha = str(record.get("sha256") or "")
             if not sha or sha in used:
@@ -105,7 +115,8 @@ def select_candidates(pool: list[dict[str, Any]], per_class: int = 2) -> list[di
             clean["contentPolicy"] = "metrics-only"
             selected.append(clean)
             used.add(sha)
-            if sum(1 for item in selected if item["benchmarkClass"] == benchmark_class) >= limit:
+            added += 1
+            if added >= limit:
                 break
 
     finance = sorted(
@@ -137,15 +148,16 @@ def main() -> int:
     parser.add_argument("--latest", type=Path, default=Path("data/public/albo/latest.json"))
     parser.add_argument("--manifest", type=Path, default=Path("data/public/albo/documents-manifest.json"))
     parser.add_argument("--output", type=Path, default=Path("tmp/docling/corpus/candidates.json"))
-    parser.add_argument("--per-class", type=int, default=2)
+    parser.add_argument("--per-class", type=int, default=1)
+    parser.add_argument("--max-size-bytes", type=int, default=DEFAULT_MAX_SIZE_BYTES)
     args = parser.parse_args()
 
-    if args.per_class <= 0:
-        raise SystemExit("--per-class must be greater than zero")
+    if args.per_class <= 0 or args.max_size_bytes <= 0:
+        raise SystemExit("Selection limits must be greater than zero")
 
     latest = load_json(args.latest)
     manifest = load_json(args.manifest)
-    pool = build_pool(latest, manifest)
+    pool = build_pool(latest, manifest, max_size_bytes=args.max_size_bytes)
     selected = select_candidates(pool, per_class=args.per_class)
 
     payload = {
@@ -155,6 +167,8 @@ def main() -> int:
             "requiredPublicVisibility": "publishable",
             "requiredPrivacyRisk": "low",
             "requiredPreservationStatus": "archived",
+            "maxCandidateSizeBytes": args.max_size_bytes,
+            "perClass": args.per_class,
             "contentRetained": False,
             "classes": [
                 "financial-layout-candidate",
