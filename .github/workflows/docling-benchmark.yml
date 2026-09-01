@@ -1,0 +1,71 @@
+name: Docling benchmark
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - '.github/workflows/docling-benchmark.yml'
+      - 'tools/docling/**'
+      - 'artifacts/api-server/scripts/docling_pdf_baseline.mjs'
+      - 'data/public/albo/documents/2026/842702b2044b4b6f9a7b21a65eac2ab59866ee3f321872e6b28fd481598be304.pdf'
+
+permissions:
+  contents: read
+
+jobs:
+  benchmark:
+    name: Compare Docling with pdf-parse
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Verify immutable benchmark source
+        shell: bash
+        run: |
+          set -euo pipefail
+          file='data/public/albo/documents/2026/842702b2044b4b6f9a7b21a65eac2ab59866ee3f321872e6b28fd481598be304.pdf'
+          expected='842702b2044b4b6f9a7b21a65eac2ab59866ee3f321872e6b28fd481598be304'
+          actual="$(sha256sum "$file" | awk '{print $1}')"
+          test "$actual" = "$expected"
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.28.1
+          run_install: false
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install Node dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+          cache-dependency-path: tools/docling/requirements.txt
+
+      - name: Install Docling
+        run: python -m pip install -r tools/docling/requirements.txt
+
+      - name: Run immutable benchmark
+        run: >-
+          python tools/docling/run_benchmark.py
+          data/public/albo/documents/2026/842702b2044b4b6f9a7b21a65eac2ab59866ee3f321872e6b28fd481598be304.pdf
+
+      - name: Upload benchmark artefacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: docling-benchmark-2026-2648
+          path: tmp/docling/benchmark/
+          if-no-files-found: warn
+          retention-days: 7
