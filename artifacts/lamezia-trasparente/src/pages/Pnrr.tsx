@@ -21,6 +21,8 @@ import {
   Link2,
   MapPin,
   Hammer,
+  ChevronDown,
+  type LucideIcon,
 } from "lucide-react";
 import { format } from "date-fns";
 import { it } from "date-fns/locale";
@@ -719,7 +721,7 @@ export function Pnrr() {
               </div>
 
               {filteredProjects.length > 0 ? (
-                <div data-tour="pnrr-list" className="mb-12 space-y-4">
+                <div data-tour="pnrr-list" className="mb-12 space-y-6">
                   {filteredProjects.map((project) => (
                     <PnrrCard key={project.key} project={project} />
                   ))}
@@ -1075,7 +1077,7 @@ export function OpenCupProjectDetails({
     if (acquisition?.status !== "pending") return null;
     return (
       <div
-        className="mb-4 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm leading-relaxed text-amber-950 dark:border-amber-500/30 dark:bg-amber-500/10 dark:text-amber-100"
+        className="rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm leading-relaxed text-amber-950 dark:border-amber-500/30 dark:bg-amber-500/10 dark:text-amber-100"
         data-testid={`pnrr-opencup-pending-${project.id}`}
       >
         <p className="font-semibold">OpenCUP in acquisizione automatica</p>
@@ -1115,7 +1117,7 @@ export function OpenCupProjectDetails({
 
   return (
     <details
-      className="group mb-4 overflow-hidden rounded-lg border border-sky-200/80 bg-sky-50/40 dark:border-sky-500/30 dark:bg-sky-500/5"
+      className="group overflow-hidden rounded-lg border border-sky-200/80 bg-sky-50/40 dark:border-sky-500/30 dark:bg-sky-500/5"
       data-testid={`pnrr-opencup-${project.id}`}
     >
       <summary className="flex cursor-pointer list-none items-start gap-3 px-4 py-3 marker:content-none hover:bg-sky-100/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset dark:hover:bg-sky-500/10">
@@ -1348,7 +1350,7 @@ function MunicipalDocumentArchive({ project }: { project: PnrrViewProject }) {
 
   return (
     <details
-      className="group mt-4 overflow-hidden rounded-lg border border-border/70 bg-muted/10"
+      className="group overflow-hidden rounded-lg border border-border/70 bg-muted/10"
       data-testid={`pnrr-document-archive-${project.id}`}
     >
       <summary className="flex cursor-pointer list-none items-start gap-3 px-4 py-3 marker:content-none hover:bg-muted/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset">
@@ -1459,241 +1461,352 @@ function MunicipalDocumentItem({
 }
 
 function PnrrCard({ project }: { project: PnrrViewProject }) {
+  const attachmentsCount = asApiList<PnrrViewAttachment>(
+    project.attachments,
+  ).length;
+  const linkedContractsCount = asApiList<
+    PnrrViewProject["linkedContracts"][number]
+  >(project.linkedContracts).length;
+  const acquisitionStatus = project.openCupAcquisition?.status;
+
   return (
     <article
       data-tour="pnrr-detail"
-      className="overflow-hidden rounded-xl border border-card-border bg-card shadow-sm"
+      className="relative overflow-hidden rounded-2xl border border-card-border bg-card shadow-sm transition-shadow hover:shadow-md"
     >
-      <div
-        className={`h-1 w-full ${project.documentsCount > 0 ? "bg-emerald-500" : "bg-slate-300 dark:bg-slate-600"}`}
+      <span
+        className="absolute inset-y-0 left-0 w-1 bg-brand"
+        aria-hidden="true"
       />
 
-      <div className="p-5">
-        <div className="mb-3 flex flex-wrap items-center gap-2">
-          <Badge variant="outline" className="font-mono text-xs shadow-none">
-            {project.dataOrigin === "static-municipal"
-              ? "ID scheda Comune"
-              : "ID interno"}{" "}
-            {project.id}
-          </Badge>
-          {project.cup ? (
-            <Badge variant="brand" className="font-mono text-xs shadow-none">
-              CUP · ID progetto {project.cup}
-            </Badge>
-          ) : (
-            <Badge variant="outline" className="text-xs shadow-none">
-              CUP non disponibile
-            </Badge>
-          )}
-          {project.mission && (
-            <Badge variant="outline" className="text-xs shadow-none">
-              Missione {project.mission.split(" ")[0]}
-            </Badge>
-          )}
-          {project.component && (
-            <Badge variant="outline" className="font-mono text-xs shadow-none">
-              Componente {project.component.split(" ")[0]}
-            </Badge>
-          )}
-          <div className="ml-auto flex flex-wrap items-center gap-2">
-            <span className="inline-flex items-center gap-1 rounded-full bg-sky-50 px-2.5 py-1 text-xs font-semibold text-sky-700 ring-1 ring-sky-200 dark:bg-sky-500/10 dark:text-sky-300 dark:ring-sky-500/30">
-              <ShieldCheck className="h-3 w-3" aria-hidden="true" />
-              {dataStatus(project)}
+      <div className="bg-gradient-to-br from-brand/10 via-card to-card px-5 py-5 md:px-6 md:py-6">
+        <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+          <div className="min-w-0 flex-1">
+            <div className="mb-3 flex flex-wrap items-center gap-2">
+              {project.cup ? (
+                <Badge
+                  variant="brand"
+                  className="font-mono text-xs shadow-none"
+                >
+                  CUP · ID progetto {project.cup}
+                </Badge>
+              ) : (
+                <Badge variant="outline" className="text-xs shadow-none">
+                  CUP non disponibile
+                </Badge>
+              )}
+              {project.mission && (
+                <Badge variant="outline" className="text-xs shadow-none">
+                  Missione {project.mission.split(" ")[0]}
+                </Badge>
+              )}
+              {project.component && (
+                <Badge
+                  variant="outline"
+                  className="font-mono text-xs shadow-none"
+                >
+                  Componente {project.component.split(" ")[0]}
+                </Badge>
+              )}
+              <Badge
+                variant="outline"
+                className="font-mono text-xs text-muted-foreground shadow-none"
+              >
+                {project.dataOrigin === "static-municipal"
+                  ? "Scheda Comune"
+                  : "ID interno"}{" "}
+                {project.id}
+              </Badge>
+            </div>
+
+            <h3 className="max-w-4xl text-lg font-display font-bold leading-snug text-foreground md:text-xl">
+              {project.title}
+            </h3>
+          </div>
+
+          <div className="flex shrink-0 flex-wrap gap-2 lg:max-w-xs lg:justify-end">
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-sky-50 px-3 py-1.5 text-xs font-semibold text-sky-800 ring-1 ring-sky-200 dark:bg-sky-500/10 dark:text-sky-200 dark:ring-sky-500/30">
+              <ShieldCheck className="h-3.5 w-3.5" aria-hidden="true" />
+              {acquisitionStatus === "fresh"
+                ? "OpenCUP acquisito"
+                : acquisitionStatus === "stale"
+                  ? "OpenCUP: ultimo dato valido"
+                  : acquisitionStatus === "pending"
+                    ? "OpenCUP in acquisizione"
+                    : dataStatus(project)}
             </span>
             {project.freshnessAssessment !== "current" && (
-              <span className="inline-flex items-center gap-1 rounded-full bg-amber-50 px-2.5 py-1 text-xs font-semibold text-amber-700 ring-1 ring-amber-200 dark:bg-amber-500/10 dark:text-amber-300 dark:ring-amber-500/30">
-                <Clock className="h-3 w-3" aria-hidden="true" />
+              <span
+                className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-semibold ring-1 ${
+                  project.freshnessAssessment === "stale"
+                    ? "bg-amber-50 text-amber-800 ring-amber-200 dark:bg-amber-500/10 dark:text-amber-200 dark:ring-amber-500/30"
+                    : "bg-muted text-muted-foreground ring-border"
+                }`}
+              >
+                <Clock className="h-3.5 w-3.5" aria-hidden="true" />
                 {project.freshnessAssessment === "stale"
-                  ? "Dato non aggiornato"
-                  : "Data aggiornamento non indicata"}
+                  ? "Aggiornamento da verificare"
+                  : "Data non indicata"}
               </span>
             )}
           </div>
         </div>
 
-        <h3 className="mb-3 font-display font-bold leading-snug text-foreground">
-          {project.title}
-        </h3>
-
-        <div className="mb-4 flex flex-wrap items-center gap-x-4 gap-y-1.5 text-sm text-muted-foreground">
-          {formatImporto(project.importoFinanziato) && (
-            <span className="flex items-center gap-1 font-semibold text-foreground">
-              <Euro className="h-3.5 w-3.5 text-brand" aria-hidden="true" />
-              {formatImporto(project.importoFinanziato)}
-            </span>
-          )}
-          {(project.attuatore ?? project.holder) && (
-            <span className="flex items-center gap-1">
-              <Building2 className="h-3.5 w-3.5" aria-hidden="true" />
-              {project.attuatore ?? project.holder}
-            </span>
-          )}
-          <span className="flex items-center gap-1">
-            <MapPin className="h-3.5 w-3.5" aria-hidden="true" />
-            {project.location ?? "Localizzazione non disponibile"} —{" "}
-            {locationQualityLabel(project.locationQuality)}
-          </span>
-          <span className="flex items-center gap-1">
-            <Calendar className="h-3.5 w-3.5" aria-hidden="true" />
-            {project.freshnessAssessment === "not_assessed"
-              ? `Scheda pubblicata ${formatDate(project.publishedAt)}`
-              : `Aggiornato ${formatDate(project.lastUpdatedAt)}`}
-          </span>
-        </div>
-
-        <dl className="mb-4 grid gap-x-6 gap-y-2 text-sm sm:grid-cols-2 lg:grid-cols-3">
-          <MetaRow
-            label="Missione"
-            value={project.mission}
-            fallback="Non disponibile"
-          />
-          <MetaRow
-            label="Componente"
-            value={project.component}
-            fallback="Non disponibile"
-          />
-          <MetaRow
-            label="Misura / investimento"
-            value={project.investment}
-            fallback="Non disponibile"
-          />
-          <MetaRow
-            label="Intervento"
-            value={project.intervention}
-            fallback="Non disponibile"
-          />
-          <MetaRow
-            label="Importo finanziato"
+        <dl className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+          <ProjectFact
+            icon={Euro}
+            label="Importo esposto"
             value={formatImporto(project.importoFinanziato)}
-            fallback="Importo non disponibile"
-          />
-          <MetaRow
-            label="Fonte finanziamento"
-            value={
-              project.dataOrigin === "static-municipal"
-                ? "PNRR — scheda ufficiale del Comune"
-                : "PNRR — censimento e fonti disponibili"
-            }
-          />
-          <MetaRow
-            label="Soggetto titolare"
-            value={project.holder}
             fallback="Non disponibile"
+            highlight
           />
-          <MetaRow
+          <ProjectFact
+            icon={Building2}
             label="Soggetto attuatore"
-            value={project.attuatore}
+            value={project.attuatore ?? project.holder}
             fallback="Non disponibile"
           />
-          <MetaRow
-            label="Soggetto sub-attuatore"
-            value={project.subAttuatore}
-          />
-          <MetaRow
+          <ProjectFact
+            icon={MapPin}
             label="Localizzazione"
             value={project.location}
-            fallback="Localizzazione non disponibile"
+            fallback="Non disponibile"
           />
-          <MetaRow
-            label="Qualità localizzazione"
-            value={locationQualityLabel(project.locationQuality)}
+          <ProjectFact
+            icon={Calendar}
+            label={
+              project.freshnessAssessment === "not_assessed"
+                ? "Pubblicazione scheda"
+                : "Ultimo aggiornamento"
+            }
+            value={
+              project.freshnessAssessment === "not_assessed"
+                ? formatDate(project.publishedAt)
+                : formatDate(project.lastUpdatedAt)
+            }
           />
-          <MetaRow
-            label="Stato procedurale / lavori"
-            value={project.status}
-            fallback="Stato non disponibile"
-          />
-          <MetaRow
-            label="Scadenza / milestone"
-            value={project.endDate ? formatDate(project.endDate) : null}
-            fallback="Scadenza non disponibile"
-          />
-          <MetaRow label="Data status" value={dataStatus(project)} />
         </dl>
 
-        <SourceTraceability project={project} />
+        <div className="mt-4 grid grid-cols-3 overflow-hidden rounded-xl border border-border/60 bg-card/80">
+          <ProjectEvidenceCount
+            icon={Paperclip}
+            value={attachmentsCount}
+            label="Allegati comunali"
+          />
+          <ProjectEvidenceCount
+            icon={FileText}
+            value={project.documentsCount}
+            label="Atti collegati"
+          />
+          <ProjectEvidenceCount
+            icon={Link2}
+            value={linkedContractsCount}
+            label="Contratti collegati"
+          />
+        </div>
+      </div>
 
-        <OpenCupProjectDetails project={project} />
-
-        {project.dataOrigin !== "static-municipal" && (
-          <>
-            <div className="mb-4 flex flex-wrap items-center gap-3">
-              <Link
-                href={`/monitoraggio/nuovo?pnrrProjectId=${project.id}`}
-                className="inline-flex items-center gap-1.5 rounded-md border border-brand/40 bg-brand/10 px-2.5 py-1 text-xs font-semibold text-brand transition-colors hover:bg-brand/20"
-                data-testid={`link-monitora-pnrr-${project.id}`}
-              >
-                <Telescope className="h-3.5 w-3.5" aria-hidden="true" />
-                Monitora questo progetto
-              </Link>
-            </div>
-
-            <MonitoringReportsSection
-              subjectType="pnrr"
-              pnrrProjectId={project.id}
-            />
-          </>
-        )}
-
-        <MunicipalDocumentArchive project={project} />
-
-        <section
-          className="mt-4 border-t border-border/60 pt-4"
-          aria-labelledby={`pnrr-acts-${project.id}`}
+      <details className="group/dossier border-t border-border/60">
+        <summary
+          className="flex cursor-pointer list-none items-center gap-3 px-5 py-4 marker:content-none hover:bg-muted/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset md:px-6"
+          data-testid={`pnrr-dossier-toggle-${project.id}`}
+          aria-label={`Dossier completo del progetto: ${project.title}${
+            project.cup ? ` — CUP ${project.cup}` : ""
+          }`}
         >
-          <h4
-            id={`pnrr-acts-${project.id}`}
-            className="mb-2 flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground"
-          >
-            <FileText className="h-3.5 w-3.5" aria-hidden="true" />
-            Atti Albo Pretorio collegati per CUP
-            <span className="ml-auto rounded-full bg-muted px-2 py-0.5 text-xs font-bold tabular-nums text-foreground">
-              {project.documentsCount}
+          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-brand/10 text-brand">
+            <FolderKanban className="h-5 w-5" aria-hidden="true" />
+          </span>
+          <span className="min-w-0 flex-1">
+            <span className="block text-sm font-semibold text-foreground">
+              Dossier completo del progetto
             </span>
-          </h4>
-          {asApiList<PnrrViewProject["documents"][number]>(project.documents)
-            .length > 0 ? (
-            <div className="space-y-2">
-              {asApiList<PnrrViewProject["documents"][number]>(
-                project.documents,
-              ).map((doc) => (
-                <div key={doc.id} className="rounded-lg bg-muted/30 p-3">
-                  <div className="flex items-start gap-3">
-                    <FileText
-                      className="mt-0.5 h-4 w-4 shrink-0 text-primary"
-                      aria-hidden="true"
-                    />
-                    <div className="min-w-0 flex-1">
-                      <p className="text-sm font-medium leading-snug">
-                        {doc.oggetto}
-                      </p>
-                      <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted-foreground">
-                        <span>{doc.tipologia}</span>
-                        <span className="flex items-center gap-1 font-mono">
-                          <Calendar className="h-3 w-3" aria-hidden="true" />
-                          {formatDate(doc.pubStart)}
-                        </span>
+            <span className="mt-0.5 block text-xs leading-relaxed text-muted-foreground">
+              Anagrafica, fonti, OpenCUP, documenti, atti e contratti
+            </span>
+          </span>
+          <span className="hidden text-xs font-semibold text-primary sm:inline group-open/dossier:hidden">
+            Apri la scheda
+          </span>
+          <span className="hidden text-xs font-semibold text-primary sm:group-open/dossier:inline">
+            Riduci
+          </span>
+          <ChevronDown
+            className="h-4 w-4 shrink-0 text-muted-foreground transition-transform group-open/dossier:rotate-180"
+            aria-hidden="true"
+          />
+        </summary>
+
+        <div
+          className="space-y-4 border-t border-border/60 bg-muted/10 p-4 md:p-5"
+          data-testid={`pnrr-dossier-${project.id}`}
+        >
+          <section
+            className="rounded-xl border border-border/70 bg-card p-4"
+            aria-labelledby={`pnrr-overview-${project.id}`}
+          >
+            <h4
+              id={`pnrr-overview-${project.id}`}
+              className="mb-3 flex items-center gap-2 text-sm font-display font-bold text-foreground"
+            >
+              <Layers className="h-4 w-4 text-brand" aria-hidden="true" />
+              Quadro del progetto
+            </h4>
+            <dl className="grid gap-x-6 gap-y-3 text-sm sm:grid-cols-2 lg:grid-cols-3">
+              <MetaRow
+                label="Missione"
+                value={project.mission}
+                fallback="Non disponibile"
+              />
+              <MetaRow
+                label="Componente"
+                value={project.component}
+                fallback="Non disponibile"
+              />
+              <MetaRow
+                label="Misura / investimento"
+                value={project.investment}
+                fallback="Non disponibile"
+              />
+              <MetaRow
+                label="Intervento"
+                value={project.intervention}
+                fallback="Non disponibile"
+              />
+              <MetaRow
+                label="Importo finanziato"
+                value={formatImporto(project.importoFinanziato)}
+                fallback="Importo non disponibile"
+              />
+              <MetaRow
+                label="Fonte finanziamento"
+                value={
+                  project.dataOrigin === "static-municipal"
+                    ? "PNRR — scheda ufficiale del Comune"
+                    : "PNRR — censimento e fonti disponibili"
+                }
+              />
+              <MetaRow
+                label="Soggetto titolare"
+                value={project.holder}
+                fallback="Non disponibile"
+              />
+              <MetaRow
+                label="Soggetto attuatore"
+                value={project.attuatore}
+                fallback="Non disponibile"
+              />
+              <MetaRow
+                label="Soggetto sub-attuatore"
+                value={project.subAttuatore}
+              />
+              <MetaRow
+                label="Localizzazione"
+                value={project.location}
+                fallback="Localizzazione non disponibile"
+              />
+              <MetaRow
+                label="Qualità localizzazione"
+                value={locationQualityLabel(project.locationQuality)}
+              />
+              <MetaRow
+                label="Stato procedurale / lavori"
+                value={project.status}
+                fallback="Stato non disponibile"
+              />
+              <MetaRow
+                label="Scadenza / milestone"
+                value={project.endDate ? formatDate(project.endDate) : null}
+                fallback="Scadenza non disponibile"
+              />
+              <MetaRow label="Disponibilità dati" value={dataStatus(project)} />
+            </dl>
+          </section>
+
+          <SourceTraceability project={project} />
+
+          <OpenCupProjectDetails project={project} />
+
+          {project.dataOrigin !== "static-municipal" && (
+            <section className="rounded-xl border border-border/70 bg-card p-4">
+              <div className="mb-4 flex flex-wrap items-center gap-3">
+                <Link
+                  href={`/monitoraggio/nuovo?pnrrProjectId=${project.id}`}
+                  className="inline-flex items-center gap-1.5 rounded-md border border-brand/40 bg-brand/10 px-2.5 py-1 text-xs font-semibold text-brand transition-colors hover:bg-brand/20"
+                  data-testid={`link-monitora-pnrr-${project.id}`}
+                >
+                  <Telescope className="h-3.5 w-3.5" aria-hidden="true" />
+                  Monitora questo progetto
+                </Link>
+              </div>
+
+              <MonitoringReportsSection
+                subjectType="pnrr"
+                pnrrProjectId={project.id}
+              />
+            </section>
+          )}
+
+          <MunicipalDocumentArchive project={project} />
+
+          <section
+            className="rounded-xl border border-border/70 bg-card p-4"
+            aria-labelledby={`pnrr-acts-${project.id}`}
+          >
+            <h4
+              id={`pnrr-acts-${project.id}`}
+              className="mb-2 flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground"
+            >
+              <FileText className="h-3.5 w-3.5" aria-hidden="true" />
+              Atti Albo Pretorio collegati per CUP
+              <span className="ml-auto rounded-full bg-muted px-2 py-0.5 text-xs font-bold tabular-nums text-foreground">
+                {project.documentsCount}
+              </span>
+            </h4>
+            {asApiList<PnrrViewProject["documents"][number]>(project.documents)
+              .length > 0 ? (
+              <div className="space-y-2">
+                {asApiList<PnrrViewProject["documents"][number]>(
+                  project.documents,
+                ).map((doc) => (
+                  <div key={doc.id} className="rounded-lg bg-muted/30 p-3">
+                    <div className="flex items-start gap-3">
+                      <FileText
+                        className="mt-0.5 h-4 w-4 shrink-0 text-primary"
+                        aria-hidden="true"
+                      />
+                      <div className="min-w-0 flex-1">
+                        <p className="text-sm font-medium leading-snug">
+                          {doc.oggetto}
+                        </p>
+                        <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted-foreground">
+                          <span>{doc.tipologia}</span>
+                          <span className="flex items-center gap-1 font-mono">
+                            <Calendar className="h-3 w-3" aria-hidden="true" />
+                            {formatDate(doc.pubStart)}
+                          </span>
+                        </div>
                       </div>
                     </div>
+                    <div className="mt-2 pl-7">
+                      <AlboLink attachments={doc.attachments} />
+                    </div>
                   </div>
-                  <div className="mt-2 pl-7">
-                    <AlboLink attachments={doc.attachments} />
-                  </div>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <p className="text-sm text-muted-foreground">
-              Atto collegato non rilevato nei dati disponibili. Le prossime
-              versioni potranno collegare CUP, pubblicazioni Albo,
-              determinazioni, liquidazioni e contratti quando il dato sarà
-              disponibile.
-            </p>
-          )}
-        </section>
+                ))}
+              </div>
+            ) : (
+              <p className="text-sm text-muted-foreground">
+                Atto collegato non rilevato nei dati disponibili. Le prossime
+                versioni potranno collegare CUP, pubblicazioni Albo,
+                determinazioni, liquidazioni e contratti quando il dato sarà
+                disponibile.
+              </p>
+            )}
+          </section>
 
-        <LinkedContractsSection project={project} />
-      </div>
+          <LinkedContractsSection project={project} />
+        </div>
+      </details>
     </article>
   );
 }
@@ -1710,7 +1823,7 @@ function SourceTraceability({ project }: { project: PnrrViewProject }) {
 
   return (
     <section
-      className="mb-4 rounded-lg border border-border/60 bg-muted/20 p-3"
+      className="rounded-lg border border-border/60 bg-muted/20 p-3"
       aria-labelledby={`pnrr-sources-${project.id}`}
     >
       <h4
@@ -1820,7 +1933,7 @@ function LinkedContractsSection({ project }: { project: PnrrViewProject }) {
 
   return (
     <section
-      className="mt-4 border-t border-border/60 pt-4"
+      className="rounded-xl border border-border/70 bg-card p-4"
       aria-labelledby={`pnrr-contracts-${project.id}`}
     >
       <h4
@@ -1902,6 +2015,68 @@ function LinkedContractsSection({ project }: { project: PnrrViewProject }) {
         </p>
       )}
     </section>
+  );
+}
+
+function ProjectFact({
+  icon: Icon,
+  label,
+  value,
+  fallback,
+  highlight = false,
+}: {
+  icon: LucideIcon;
+  label: string;
+  value: string | null | undefined;
+  fallback?: string;
+  highlight?: boolean;
+}) {
+  const displayValue = value || fallback || "—";
+  return (
+    <div
+      className={`min-w-0 rounded-xl border px-3.5 py-3 ${
+        highlight ? "border-brand/25 bg-brand/5" : "border-border/60 bg-card/80"
+      }`}
+    >
+      <dt className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+        <Icon
+          className={`h-3.5 w-3.5 ${highlight ? "text-brand" : ""}`}
+          aria-hidden="true"
+        />
+        {label}
+      </dt>
+      <dd
+        className={`mt-1 break-words text-sm font-semibold leading-snug ${
+          value ? "text-foreground" : "text-muted-foreground"
+        }`}
+      >
+        {displayValue}
+      </dd>
+    </div>
+  );
+}
+
+function ProjectEvidenceCount({
+  icon: Icon,
+  value,
+  label,
+}: {
+  icon: LucideIcon;
+  value: number;
+  label: string;
+}) {
+  return (
+    <div className="flex min-w-0 items-center justify-center gap-2 border-r border-border/60 px-2 py-3 last:border-r-0 sm:px-4">
+      <Icon className="hidden h-4 w-4 text-brand sm:block" aria-hidden="true" />
+      <span className="min-w-0 text-center sm:text-left">
+        <span className="block text-base font-display font-bold tabular-nums text-foreground">
+          {value}
+        </span>
+        <span className="block text-[11px] font-medium leading-tight text-muted-foreground sm:text-xs">
+          {label}
+        </span>
+      </span>
+    </div>
   );
 }
 
