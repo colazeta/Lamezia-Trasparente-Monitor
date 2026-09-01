@@ -23,9 +23,9 @@ concurrency:
 
 jobs:
   diagnostics:
-    name: Metrics-only six-document corpus
+    name: Metrics-only four-document corpus
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 20
 
     steps:
       - name: Checkout repository
@@ -71,13 +71,15 @@ jobs:
         run: >-
           python tools/docling/select_corpus_candidates.py
           --output tmp/docling/corpus/candidates.json
+          --per-class 1
+          --max-size-bytes 3145728
 
       - name: Run bounded metrics-only corpus
         run: >-
           python tools/docling/run_corpus_benchmark.py
           tmp/docling/corpus/candidates.json
           --output-dir tmp/docling/corpus/results
-          --max-items 6
+          --max-items 4
 
       - name: Fail closed if extracted content was retained
         run: python tools/docling/verify_metrics_only_artifacts.py tmp/docling/corpus
