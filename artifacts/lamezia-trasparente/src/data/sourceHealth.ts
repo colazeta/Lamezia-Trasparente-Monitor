@@ -5,6 +5,7 @@ import climateMetadata from "./generated/lameziaClimateDaily.metadata.json";
 import demographicTrend from "./generated/lameziaDemographicTrend.json";
 import familiesChildren from "./generated/lameziaFamiliesChildren.json";
 import foreignResidents from "./generated/lameziaForeignResidentsAgeSex.json";
+import householdComposition from "../../../api-server/src/data/lameziaHouseholdComposition2023.json";
 import { OPEN_DATA_THEME_LIBRARY } from "./opendataThemeCategories";
 
 export type SourceHealthStatus =
@@ -352,6 +353,31 @@ const openDataItems: SourceHealthItem[] = [
       demographicTrend.metadata.rows,
       demographicTrend.metadata.update_policy,
       demographicTrend.metadata.caveat,
+    ],
+  }),
+  buildOpenDataHealthItem({
+    id: "opendata-famiglie-componenti-2023",
+    datasetId: "lamezia-household-composition-2023",
+    name: "Open Data ISTAT — famiglie per numero di componenti 2023",
+    checkedAt: householdComposition.verification.verifiedAt,
+    updatedAt: householdComposition.source.sourceUpdateDate,
+    sourceUrl: householdComposition.source.pageUrl,
+    expectedRefresh:
+      "Rigenerazione verificata quando ISTAT pubblica una nuova edizione compatibile dei dati per sezione.",
+    expectedDays: 550,
+    priority: "alta",
+    metricLabel: `${householdComposition.totalHouseholds.toLocaleString("it-IT")} famiglie; ${householdComposition.quality.includedRows} sezioni reali; residuo ${householdComposition.quality.reconciliationDifference}`,
+    cautionNote:
+      "Fotografia censuaria riferita al 2023, non serie storica. La dimensione della famiglia anagrafica non descrive relazioni di coppia, parentela o presenza di figli.",
+    evidenceValues: [
+      householdComposition.source.pageUrl,
+      householdComposition.source.sourceUpdateDate,
+      householdComposition.verification.verifiedAt,
+      householdComposition.source.archiveSha256,
+      householdComposition.source.workbookSha256,
+      householdComposition.totalHouseholds,
+      householdComposition.quality.includedRows,
+      householdComposition.quality.exactReconciliation,
     ],
   }),
   buildOpenDataHealthItem({

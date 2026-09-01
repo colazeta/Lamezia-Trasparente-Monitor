@@ -51,6 +51,10 @@ type RequiredField = (typeof REQUIRED_FIELDS)[number];
 
 export type HouseholdCompositionArtifact = HouseholdCompositionProfile & {
   schemaVersion: 1;
+  verification: {
+    verifiedAt: string;
+    method: "sha256-and-exact-reconciliation";
+  };
   source: {
     institution: "ISTAT";
     dataset: string;
@@ -204,6 +208,7 @@ export function buildHouseholdCompositionArtifact(
     archiveMemberSha256: string;
     workbookSha256: string;
   },
+  verifiedAt = new Date().toISOString(),
 ): HouseholdCompositionArtifact {
   const profile = aggregateHouseholdComposition(rows);
   assertPublishableHouseholdComposition(profile);
@@ -217,9 +222,21 @@ export function buildHouseholdCompositionArtifact(
       `Workbook SHA-256 ${hashes.workbookSha256} does not match archive member ${ARCHIVE_WORKBOOK_MEMBER} (${hashes.archiveMemberSha256})`,
     );
   }
+  const verifiedAtEpoch = Date.parse(verifiedAt);
+  if (
+    !Number.isFinite(verifiedAtEpoch) ||
+    new Date(verifiedAtEpoch).toISOString() !== verifiedAt ||
+    verifiedAtEpoch < Date.parse("2026-06-09")
+  ) {
+    throw new Error("verifiedAt: expected a normalized ISO-8601 timestamp");
+  }
   return {
     schemaVersion: 1,
     ...profile,
+    verification: {
+      verifiedAt,
+      method: "sha256-and-exact-reconciliation",
+    },
     source: {
       institution: "ISTAT",
       dataset:

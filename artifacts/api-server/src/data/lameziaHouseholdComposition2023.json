@@ -58,6 +58,10 @@
     "reconciliationDifference": 0,
     "exactReconciliation": true
   },
+  "verification": {
+    "verifiedAt": "2026-09-01T18:11:15.000Z",
+    "method": "sha256-and-exact-reconciliation"
+  },
   "source": {
     "institution": "ISTAT",
     "dataset": "Dati per sezioni di censimento — Censimento permanente della popolazione e delle abitazioni 2023",

@@ -4,7 +4,7 @@ import { assessSourceHealth, SOURCE_HEALTH } from "@/data/sourceHealth";
 
 describe("SOURCE_HEALTH", () => {
   it("derives the public register from versioned evidence", () => {
-    expect(SOURCE_HEALTH.sources).toHaveLength(7);
+    expect(SOURCE_HEALTH.sources).toHaveLength(8);
     expect(SOURCE_HEALTH.generatedAt).toBeTruthy();
     expect(SOURCE_HEALTH.traceabilityScore).toBeGreaterThan(0);
     expect(SOURCE_HEALTH.freshnessScore).toBeGreaterThanOrEqual(0);
@@ -34,8 +34,8 @@ describe("SOURCE_HEALTH", () => {
 
   it("covers every dataset published in the Open Data archive", () => {
     expect(SOURCE_HEALTH.openDataCoverage).toEqual({
-      published: 5,
-      monitored: 5,
+      published: 6,
+      monitored: 6,
       percentage: 100,
       missingDatasetIds: [],
     });
@@ -43,7 +43,19 @@ describe("SOURCE_HEALTH", () => {
     const datasetIds = SOURCE_HEALTH.sources
       .map((source) => source.openDataDatasetId)
       .filter(Boolean);
-    expect(new Set(datasetIds).size).toBe(5);
+    expect(new Set(datasetIds).size).toBe(6);
+  });
+
+  it("keeps household verification separate from the ISTAT source update", () => {
+    const household = SOURCE_HEALTH.sources.find(
+      (source) => source.id === "opendata-famiglie-componenti-2023",
+    );
+
+    expect(household).toMatchObject({
+      lastCheckedAt: "2026-09-01T18:11:15.000Z",
+      lastUpdatedAt: "2026-06-09",
+    });
+    expect(household?.lastCheckedAt).not.toBe(household?.lastUpdatedAt);
   });
 
   it("explains missing, stale and warning states without substantive claims", () => {
