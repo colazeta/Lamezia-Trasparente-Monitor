@@ -17,12 +17,14 @@ import {
   LAMEZIA_HOUSEHOLD_COMPOSITION_2023_DATA_URL,
   type LameziaHouseholdCompositionRecord,
 } from "@/data/lameziaHouseholdComposition2023";
+import { withPublicBasePath } from "@/lib/publicBasePath";
 
 const CHART_WIDTH = 1080;
 const CHART_HEIGHT = 390;
 const PLOT = { left: 190, right: 185, top: 60, bottom: 38 };
-const FAMILIES_CHILDREN_DATASET_URL =
-  "/opendata?tema=population-society&dataset=lamezia-families-children";
+const FAMILIES_CHILDREN_DATASET_URL = withPublicBasePath(
+  "/opendata?tema=population-society&dataset=lamezia-families-children",
+);
 
 const numberFormat = new Intl.NumberFormat("it-IT", {
   useGrouping: "always",
