@@ -1,3 +1,4 @@
+import { createHash } from "node:crypto";
 import { db, publicationsTable, type PublicationAttachment } from "@workspace/db";
 import { and, asc, desc, isNull, sql } from "drizzle-orm";
 import { logger } from "./logger";
@@ -64,6 +65,10 @@ function guessContentType(name: string, headerType: string | null): string {
   return "application/octet-stream";
 }
 
+export function sha256Hex(data: Uint8Array): string {
+  return createHash("sha256").update(data).digest("hex");
+}
+
 async function fetchDetail(id: string): Promise<DetailResponse | null> {
   const url = `${TINN_BASE}/api/pubblicazioni/${id}?ente=${ENTE}`;
   const res = await fetch(url, {
@@ -93,6 +98,7 @@ async function archiveAllegato(
     storagePath: null,
     contentType: null,
     size: null,
+    sha256: null,
   };
 
   try {
@@ -108,6 +114,7 @@ async function archiveAllegato(
       res.headers.get("content-type"),
     );
     const filePath = `albo/${idDir}/${item.PROGRESSIVO}-${safeName(name)}`;
+    const digest = sha256Hex(buf);
     const storagePath = await storage.uploadPublicObject(
       filePath,
       buf,
@@ -118,6 +125,7 @@ async function archiveAllegato(
       storagePath: `/api/storage/public-objects/${storagePath}`,
       contentType,
       size: buf.byteLength,
+      sha256: digest,
     };
   } catch {
     // Network/storage failure: keep the official direct link, no local copy.
