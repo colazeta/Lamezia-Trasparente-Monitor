@@ -52,6 +52,8 @@ const processorLimitsSchema = z
   })
   .strict();
 
+export type DoclingProcessorLimits = z.infer<typeof processorLimitsSchema>;
+
 export const doclingProcessorRequestSchema = z
   .object({
     schemaVersion: z.literal(DOCLING_PROCESSOR_CONTRACT_VERSION),
@@ -109,12 +111,14 @@ export const doclingProcessorRequestSchema = z
       reason: request.selection.reason,
       processorVersion: request.target.processorVersion,
       requestedOutputs: request.requestedOutputs,
+      limits: request.limits,
     });
     if (request.jobKey !== expectedJobKey) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
         path: ["jobKey"],
-        message: "jobKey does not match source/reason/processor version/outputs",
+        message:
+          "jobKey does not match source/reason/processor version/outputs/limits",
       });
     }
   });
@@ -242,9 +246,11 @@ export function buildDoclingJobKey(input: {
   reason: DoclingContractReason;
   processorVersion: string;
   requestedOutputs: readonly DoclingOutputKind[];
+  limits: DoclingProcessorLimits;
 }): string {
   const outputKey = normalizeDoclingRequestedOutputs(input.requestedOutputs).join("+");
-  return `docling:v${DOCLING_PROCESSOR_CONTRACT_VERSION}:${input.processorVersion}:${input.sourceSha256}:${input.reason}:${outputKey}`;
+  const limitsKey = `b${input.limits.maxBytes}-p${input.limits.maxPages}-t${input.limits.timeoutMs}`;
+  return `docling:v${DOCLING_PROCESSOR_CONTRACT_VERSION}:${input.processorVersion}:${input.sourceSha256}:${input.reason}:${outputKey}:${limitsKey}`;
 }
 
 export function buildDoclingProcessorRequest(input: {
@@ -252,7 +258,7 @@ export function buildDoclingProcessorRequest(input: {
   reason: DoclingContractReason;
   baseline: z.infer<typeof baselineObservationSchema>;
   processorVersion: string;
-  limits: z.infer<typeof processorLimitsSchema>;
+  limits: DoclingProcessorLimits;
   requestedOutputs?: DoclingOutputKind[];
 }): DoclingProcessorRequest {
   const requestedOutputs = input.requestedOutputs ?? ["structured-json", "markdown"];
@@ -263,6 +269,7 @@ export function buildDoclingProcessorRequest(input: {
       reason: input.reason,
       processorVersion: input.processorVersion,
       requestedOutputs,
+      limits: input.limits,
     }),
     representationKind: DOCLING_REPRESENTATION_KIND,
     source: input.source,

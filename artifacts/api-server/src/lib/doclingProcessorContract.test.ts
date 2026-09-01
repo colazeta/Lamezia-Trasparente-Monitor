@@ -10,7 +10,14 @@ const STRUCTURED_SHA = "b".repeat(64);
 const MARKDOWN_SHA = "c".repeat(64);
 const EXTRACTED_AT = "2026-09-01T20:00:00.000Z";
 
-function request(requestedOutputs?: Array<"structured-json" | "markdown">) {
+function request(
+  requestedOutputs?: Array<"structured-json" | "markdown">,
+  limitsOverride?: Partial<{
+    maxBytes: number;
+    maxPages: number;
+    timeoutMs: number;
+  }>,
+) {
   return buildDoclingProcessorRequest({
     source: {
       sha256: SOURCE_SHA,
@@ -29,6 +36,7 @@ function request(requestedOutputs?: Array<"structured-json" | "markdown">) {
       maxBytes: 10_000,
       maxPages: 20,
       timeoutMs: 120_000,
+      ...limitsOverride,
     },
     requestedOutputs,
   });
@@ -84,6 +92,17 @@ describe("Docling processor request contract", () => {
 
     expect(structuredOnly.jobKey).not.toBe(both.jobKey);
     expect(both.jobKey).toBe(bothReordered.jobKey);
+  });
+
+  it("includes the execution limits in job identity", () => {
+    const standard = request();
+    const morePages = request(undefined, { maxPages: 40 });
+    const longerTimeout = request(undefined, { timeoutMs: 180_000 });
+    const largerByteEnvelope = request(undefined, { maxBytes: 20_000 });
+
+    expect(morePages.jobKey).not.toBe(standard.jobKey);
+    expect(longerTimeout.jobKey).not.toBe(standard.jobKey);
+    expect(largerByteEnvelope.jobKey).not.toBe(standard.jobKey);
   });
 
   it("rejects requests whose source exceeds the explicit byte bound", () => {
