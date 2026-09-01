@@ -41,6 +41,7 @@ import {
   STATUS_LABEL,
 } from "@/components/ConfiscatedAssetsMap";
 import { CivicMonitorReturn } from "@/components/CivicMonitorReturn";
+import { DocumentedConfiscatedAssetsRegistry } from "@/components/DocumentedConfiscatedAssetsRegistry";
 
 const STATUS_BADGE: Record<ConfiscatedAssetStatus, string> = {
   sequestrato:
@@ -165,13 +166,26 @@ export function BeniConfiscati() {
           Beni confiscati alle mafie
         </h1>
         <p className="text-muted-foreground">
-          La mappa dei beni immobili sequestrati e confiscati alla criminalità
-          organizzata sul territorio di Lamezia Terme. Per ciascun bene è
-          indicato lo stato (sequestrato, confiscato, assegnato o riutilizzato),
-          l'eventuale ente o associazione assegnataria e la destinazione d'uso,
-          per seguire il percorso di restituzione alla collettività.
+          Un censimento progressivo dei beni immobili sequestrati e confiscati
+          alla criminalità organizzata sul territorio di Lamezia Terme. Le
+          schede separano ciò che è documentato, ciò che resta da verificare e
+          ciò che può essere pubblicato come posizione cartografica.
         </p>
         <CivicMonitorReturn context="Le schede sui beni confiscati alimentano la memoria civica del Monitor e possono collegarsi ad atti, requisiti di legalità e fonti pubbliche." />
+      </div>
+
+      <DocumentedConfiscatedAssetsRegistry />
+
+      <div className="mb-5 max-w-3xl space-y-2">
+        <h2 className="font-display text-2xl font-bold tracking-tight">
+          Layer cartografico verificato
+        </h2>
+        <p className="text-sm leading-6 text-muted-foreground">
+          La mappa e i conteggi sottostanti includono soltanto record con una
+          localizzazione puntuale ammessa dalla politica di pubblicazione. Le
+          schede documentali prive di coordinate verificate restano visibili
+          sopra, ma non diventano punti stimati.
+        </p>
       </div>
 
       <div className="mb-8">
@@ -246,8 +260,9 @@ export function BeniConfiscati() {
             </EmptyMedia>
             <EmptyTitle>Nessun bene trovato</EmptyTitle>
             <EmptyDescription>
-              Non ci sono beni confiscati che corrispondono ai filtri
-              selezionati.
+              {status === "all" && tipologia === "all"
+                ? "Nessuna posizione puntuale supera ancora i criteri di pubblicazione. Le schede documentali restano consultabili nella sezione precedente."
+                : "Non ci sono beni confiscati che corrispondono ai filtri selezionati."}
             </EmptyDescription>
           </EmptyHeader>
         </Empty>

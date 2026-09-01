@@ -37,6 +37,7 @@ const atlantePublicDataFiles = [
   "data/processed/territorio/istat_indicator_dictionary.json",
   "data/processed/territorio/beni_confiscati_lamezia.geojson",
   "data/processed/territorio/spatial_layer_manifest.json",
+  "data/curated/territorio/beni_confiscati_lamezia_pilot.json",
 ];
 function repoPublicDataPlugin(): Plugin {
   return {
