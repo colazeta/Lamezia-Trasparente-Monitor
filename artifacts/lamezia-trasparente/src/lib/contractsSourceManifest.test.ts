@@ -117,19 +117,20 @@ describe("contracts source manifest", () => {
     }
   });
 
-  it("validates source-level discovery metadata separately from ingestion metadata", () => {
+  it("records verified annual discovery without claiming annual ingestion", () => {
     const annualCigSource = getContractSourceById("anac-open-data-cig-annual");
 
     expect(annualCigSource?.discovery_metadata).toMatchObject({
-      discovery_status: "needs_manual_verification",
+      discovery_status: "verified",
       checked_by: "codex",
-      landing_page_url: "https://dati.anticorruzione.it/opendata/",
-      package_url: null,
+      verified_url: "https://dati.anticorruzione.it/opendata/dataset/cig-2025",
+      landing_page_url: "https://dati.anticorruzione.it/opendata",
+      package_url: "https://dati.anticorruzione.it/opendata/dataset/cig-2025",
       detected_format: "html",
       freshness_label: "annual",
     });
     expect(annualCigSource?.ingestion_status).toBe("not_implemented");
-    expect(annualCigSource?.public_claim_level).toBe("fixture_only");
+    expect(annualCigSource?.public_claim_level).toBe("linked_only");
   });
 
   it("allows ready_for_parser only after verified discovery, without marking it ingested", () => {
@@ -196,6 +197,10 @@ describe("contracts source manifest", () => {
               "https://dati.anticorruzione.it/opendata/download/anac-cig-annual-metadata-fixture.zip",
             access_type: "open_data",
             ingestion_status: "ready_for_parser",
+            discovery_metadata: {
+              ...annualCigSource.discovery_metadata!,
+              discovery_status: "needs_manual_verification",
+            },
           },
         ],
       }),
@@ -217,6 +222,7 @@ describe("contracts source manifest", () => {
     );
     expect(listIngestionReadySources().map((source) => source.id)).toEqual(
       expect.arrayContaining([
+        "anac-open-data-cig-delta",
         "comune-lamezia-albo-pretorio",
         "lmt-local-derived-contract-data",
       ]),
@@ -226,14 +232,11 @@ describe("contracts source manifest", () => {
 
     expect(summary.totalSources).toBe(contractsSourceManifest.sources.length);
     expect(summary.byIngestionStatus.not_implemented).toBeGreaterThan(0);
-    expect(summary.byDiscoveryStatus.needs_manual_verification).toBeGreaterThan(
-      0,
-    );
+    expect(summary.byDiscoveryStatus.verified).toBeGreaterThanOrEqual(3);
     expect(summary.byIdentifier.CIG).toBeGreaterThan(summary.byIdentifier.CUP);
     expect(summary.manualDiscoveryRequired).toEqual(
       expect.arrayContaining([
-        "anac-open-data-cig-annual",
-        "anac-ocds-bdncp",
+        "anac-open-data-aggiudicazioni",
         "mop-monitoraggio-opere-pubbliche",
       ]),
     );

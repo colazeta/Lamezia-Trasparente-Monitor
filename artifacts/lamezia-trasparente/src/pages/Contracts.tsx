@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import {
   useListContracts,
   useGetContractsAnalytics,
@@ -93,6 +94,10 @@ import { quartiereLabel } from "@/lib/gis";
 import { asApiList } from "@/lib/apiList";
 import { BDNCP_APPALTI_URL, preferredBdncpUrl } from "@/lib/bdncp";
 import {
+  ANAC_BDNCP_CONNECTION_SCHEMA_VERSION,
+  type AnacBdncpConnectionStatus,
+} from "@/lib/anacBdncpSync";
+import {
   CONTRACT_LIFECYCLE_PHASE_LABELS,
   buildContractDossier,
   summarizeContractDossiers,
@@ -177,6 +182,20 @@ function formatDateTime(value: string | null | undefined) {
     : format(d, "dd MMM yyyy, HH:mm", { locale: it });
 }
 
+async function fetchAnacBdncpConnection(): Promise<AnacBdncpConnectionStatus> {
+  const response = await fetch("/api/contracts/anac-status", {
+    headers: { Accept: "application/json" },
+  });
+  if (!response.ok) {
+    throw new Error("ANAC/BDNCP connection status is unavailable");
+  }
+  const payload = (await response.json()) as AnacBdncpConnectionStatus;
+  if (payload.schemaVersion !== ANAC_BDNCP_CONNECTION_SCHEMA_VERSION) {
+    throw new Error("ANAC/BDNCP connection status has an invalid schema");
+  }
+  return payload;
+}
+
 export function Contracts() {
   const [search, setSearch] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
@@ -237,6 +256,16 @@ export function Contracts() {
   const { data: analytics, isLoading: analyticsLoading } =
     useGetContractsAnalytics(filters);
   const { data: feedStatus } = useGetContractsFeedStatus();
+  const {
+    data: anacConnection,
+    isLoading: anacConnectionLoading,
+    isError: anacConnectionUnavailable,
+  } = useQuery({
+    queryKey: ["contracts", "anac-bdncp-status"],
+    queryFn: fetchAnacBdncpConnection,
+    staleTime: 5 * 60 * 1000,
+    retry: 1,
+  });
   const dossierByContractId = useMemo(
     () =>
       new Map(
@@ -349,19 +378,20 @@ export function Contracts() {
         findItems={[
           "Fascicoli correnti costruiti dagli atti pubblici che espongono un CIG.",
           "CUP, importi, operatori e procedure solo quando dichiarati nell'oggetto pubblico.",
-          "Documento ufficiale dell'Albo e ponte di ricerca BDNCP per ogni CIG valido.",
+          "Documento dell'Albo, scheda ufficiale ANAC per CIG e stato della sincronizzazione open data.",
         ]}
         missingItems={[
           "Lo storico completo dei contratti e degli affidamenti del Comune.",
-          "La sincronizzazione strutturata delle schede BDNCP/ANAC.",
+          "La copertura BDNCP completa oltre i pacchetti ANAC effettivamente consultati.",
           "Dati non esplicitati nell'oggetto dell'atto o esclusi dal perimetro pubblico.",
         ]}
         sourceLimit={
           <>
             Il perimetro è la finestra corrente dell'Albo Pretorio, non
-            l'inventario storico dei contratti. Il CIG apre una ricerca
-            ufficiale BDNCP ma non certifica una scheda sincronizzata; i dati
-            mancanti restano non disponibili e non implicano irregolarità.
+            l'inventario storico dei contratti. Ogni CIG formalmente valido
+            apre la scheda ufficiale ANAC; lo stato separato indica se esiste
+            anche un record negli snapshot consultati. I dati mancanti non
+            implicano irregolarità.
           </>
         }
         cta={{ label: "Consulta i contratti", href: "#contratti-elenco" }}
@@ -435,6 +465,9 @@ export function Contracts() {
         contracts={contracts}
         loading={isLoading}
         portalUrl={BDNCP_APPALTI_URL}
+        connection={anacConnection}
+        connectionLoading={anacConnectionLoading}
+        connectionUnavailable={anacConnectionUnavailable}
       />
 
       <SpendingByMacrotema contracts={contracts} loading={isLoading} />
@@ -948,10 +981,16 @@ function BdncpBridge({
   contracts,
   loading,
   portalUrl,
+  connection,
+  connectionLoading,
+  connectionUnavailable,
 }: {
   contracts: Contract[] | undefined;
   loading: boolean;
   portalUrl: string;
+  connection: AnacBdncpConnectionStatus | undefined;
+  connectionLoading: boolean;
+  connectionUnavailable: boolean;
 }) {
   const list = asApiList<Contract>(contracts);
   const summary = summarizeContractDossiers(list);
@@ -969,13 +1008,19 @@ function BdncpBridge({
               Fascicoli civici CIG/CUP
             </h2>
             <p className="mt-2 text-sm text-muted-foreground">
-              Il CIG apre il ponte verso BDNCP/PCP, mentre il CUP rende
+              Il CIG apre la scheda ufficiale BDNCP/PCP, mentre il CUP rende
               leggibile l'asse opera/progetto per i lavori pubblici. La
               piattaforma locale affianca questi identificativi con atti Albo,
               localizzazione e stato del ciclo di vita quando le fonti sono
               disponibili.
             </p>
           </div>
+
+          <AnacConnectionCard
+            connection={connection}
+            loading={connectionLoading}
+            unavailable={connectionUnavailable}
+          />
 
           {loading ? (
             <div className="grid gap-3 sm:grid-cols-3 lg:grid-cols-1">
@@ -1003,7 +1048,7 @@ function BdncpBridge({
                 icon={ExternalLink}
                 label="Ponti BDNCP"
                 value={`${summary.withBdncpSearchBridge}/${summary.total}`}
-                sub="ponte di ricerca, non ingestione diretta"
+                sub="collegamenti ufficiali diretti per CIG valido"
               />
               <BdncpMetric
                 icon={HardHat}
@@ -1032,7 +1077,7 @@ function BdncpBridge({
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 text-sm font-semibold text-primary hover:underline"
           >
-            Apri il cruscotto BDNCP ANAC
+            Apri il portale BDNCP ANAC
             <ExternalLink className="h-4 w-4" />
           </a>
         </div>
@@ -1067,6 +1112,117 @@ function BdncpBridge({
         </ol>
       </div>
     </section>
+  );
+}
+
+function AnacConnectionCard({
+  connection,
+  loading,
+  unavailable,
+}: {
+  connection: AnacBdncpConnectionStatus | undefined;
+  loading: boolean;
+  unavailable: boolean;
+}) {
+  if (loading) return <Skeleton className="h-36 rounded-xl" />;
+
+  const state = connection?.status;
+  const presentation =
+    state === "current"
+      ? {
+          label: "Collegamento attivo",
+          detail: "Pacchetti ufficiali ANAC consultati; snapshot aggiornato.",
+          className:
+            "border-emerald-500/30 bg-emerald-500/5 text-emerald-700 dark:text-emerald-300",
+        }
+      : state === "stale"
+        ? {
+            label: "Ultimo snapshot disponibile",
+            detail:
+              "La fonte non è recente: restano visibili i dati validi già acquisiti.",
+            className:
+              "border-amber-500/30 bg-amber-500/5 text-amber-700 dark:text-amber-300",
+          }
+        : state === "degraded"
+          ? {
+              label: "Fonte temporaneamente non raggiungibile",
+              detail:
+                "I link ufficiali per CIG restano attivi; nessuno zero viene dedotto dal guasto.",
+              className:
+                "border-amber-500/30 bg-amber-500/5 text-amber-700 dark:text-amber-300",
+            }
+          : state === "pending"
+            ? {
+                label: "Prima sincronizzazione in attesa",
+                detail:
+                  "I link ufficiali per CIG sono già attivi; lo snapshot strutturato è in attivazione.",
+                className:
+                  "border-sky-500/30 bg-sky-500/5 text-sky-700 dark:text-sky-300",
+              }
+            : {
+                label: "Stato non disponibile",
+                detail: unavailable
+                  ? "Il controllo di stato non risponde; i collegamenti ufficiali per CIG restano disponibili."
+                  : "Lo stato della fonte non è ancora determinabile.",
+                className: "border-border bg-muted/30 text-muted-foreground",
+              };
+
+  return (
+    <div className={`rounded-xl border p-4 ${presentation.className}`}>
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <div className="flex items-center gap-2 font-semibold">
+          <RefreshCw className="h-4 w-4" />
+          {presentation.label}
+        </div>
+        {connection ? (
+          <span className="font-mono text-xs tabular-nums">
+            {connection.coverage.structuredMatches}/
+            {connection.coverage.trackedUniqueCigs} CIG collegati nei dati
+          </span>
+        ) : null}
+      </div>
+      <p className="mt-2 text-xs leading-relaxed opacity-90">
+        {presentation.detail}
+      </p>
+      {connection ? (
+        <div className="mt-3 grid gap-1 text-xs sm:grid-cols-2">
+          <span>
+            Ultimo tentativo: {formatDateTime(connection.lastAttemptAt)}
+          </span>
+          <span>
+            Ultimo snapshot valido: {formatDateTime(connection.lastSuccessAt)}
+          </span>
+          <span>
+            Pacchetti consultati: {connection.coverage.consultedArchives}
+          </span>
+          <span>Link diretti CIG: {connection.coverage.directCigLinks}</span>
+        </div>
+      ) : null}
+      <p className="mt-3 text-[11px] leading-relaxed opacity-80">
+        Un CIG non trovato nei pacchetti consultati non risulta per questo
+        assente dalla BDNCP.
+      </p>
+      {connection ? (
+        <div className="mt-3 flex flex-wrap gap-x-4 gap-y-2 text-xs font-semibold">
+          <a
+            href={connection.source.datasetUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1 hover:underline"
+          >
+            Dataset ANAC <ExternalLink className="h-3 w-3" />
+          </a>
+          <a
+            href={connection.source.bdncpUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1 hover:underline"
+          >
+            BDNCP <ExternalLink className="h-3 w-3" />
+          </a>
+        </div>
+      ) : null}
+    </div>
   );
 }
 

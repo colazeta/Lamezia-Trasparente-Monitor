@@ -28,7 +28,7 @@ Ogni fase espone uno stato pubblico prudente:
 
 ## Fonti
 
-- BDNCP/ANAC: usata oggi come `link/search bridge`, non come record sincronizzato.
+- BDNCP/ANAC: vista ufficiale diretta per ogni CIG formalmente valido; snapshot strutturato limitato ai pacchetti mensili effettivamente consultati.
 - PVL ANAC: collegamento ufficiale di ricerca per pubblicita legale.
 - Albo Pretorio: fonte locale collegabile agli eventi di affidamento, esecuzione e collaudo quando gli atti citano CIG o CUP.
 - Dataset locale: dato derivato dalla base applicativa, da non confondere con verifica sostanziale.
@@ -38,16 +38,16 @@ Ogni fase espone uno stato pubblico prudente:
 - Fondazione BDNCP/CUP lifecycle: implementata come dossier civico con CIG, CUP, fasi, evidenze e limiti informativi.
 - Parser skeleton ANAC/OCDS: implementato solo con fixture false locali di test; non scarica e non pubblica record reali.
 - Manifesto fonti ufficiali: introdotto come catalogo in `data/sources/contracts/contracts-source-manifest.json`.
-- Discovery metadata: `anac-open-data-cig-annual` ha un report interim, ma l'endpoint package ufficiale resta da verificare manualmente.
+- Discovery metadata: annuale CIG, aggiornamenti CIG e layer OCDS 2026 hanno URL ufficiali verificati.
 - Ingestion dry-run ANAC CIG: esegue il parser fixture-only e scrive solo un report interim; produzione, database e UI pubblica restano bloccati.
-- Ingestione produzione: non attiva per ANAC, BDNCP/PCP, PVL, OpenCUP, MOP o Amministrazione Trasparente.
+- Sincronizzazione produzione: attiva per una finestra limitata dei pacchetti mensili CIG; non attiva per annuale, OCDS, PVL, OpenCUP, MOP o Amministrazione Trasparente.
 - Pubblicazione futura: qualsiasi record reale richiede parser, persistenza e gate di revisione umana prima della UI pubblica.
 
 ## Limiti pubblici
 
 La UI usa formule come `da verificare`, `ponte di ricerca`, `fonte ufficiale collegata`, `fonte ufficiale ingerita`, `dato derivato` e `limite informativo`. Non usa il collegamento BDNCP per dichiarare regolarita, completezza o sincronizzazione completa.
 
-Quando non esiste una fonte stabile ingerita, la piattaforma mostra un ponte di ricerca e conserva il limite informativo. Il prossimo passo tecnico potra collegare API o dump stabili BDNCP/PCP/OpenCUP solo quando disponibili e verificabili.
+Quando il download ANAC non risponde, la piattaforma conserva l'ultimo snapshot valido, espone lo stato degradato e mantiene i link ufficiali per CIG. Non trasforma l'errore remoto in assenza di contratti.
 
 ## Dal ponte di ricerca all'ingestione
 

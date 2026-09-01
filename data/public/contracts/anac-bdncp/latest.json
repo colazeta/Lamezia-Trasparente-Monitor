@@ -1,0 +1,28 @@
+{
+  "schemaVersion": "anac-bdncp-sync.v1",
+  "generatedAt": "2026-09-01T00:00:00.000Z",
+  "status": "pending",
+  "lastAttemptAt": null,
+  "lastSuccessAt": null,
+  "failureCategory": null,
+  "source": {
+    "id": "anac-open-data-cig-delta",
+    "label": "ANAC open data — aggiornamenti CIG",
+    "datasetUrl": "https://dati.anticorruzione.it/opendata/dataset/cig",
+    "catalogUrl": "https://dati.anticorruzione.it/opendata",
+    "bdncpUrl": "https://pubblicitalegale.anticorruzione.it/bdncp",
+    "format": "csv-in-zip",
+    "lookbackMonths": 12
+  },
+  "attemptedArchives": 0,
+  "unavailableArchives": 0,
+  "trackedCigs": [],
+  "consultedArchives": [],
+  "records": [],
+  "limitations": [
+    "La copertura strutturata riguarda soltanto i pacchetti mensili ANAC effettivamente consultati e non costituisce uno storico completo della BDNCP.",
+    "Un CIG non trovato nei pacchetti consultati non risulta per questo assente dalla BDNCP.",
+    "Un'indisponibilita temporanea della fonte ANAC non implica assenza di contratti: viene conservato l'ultimo snapshot valido.",
+    "Gli importi ANAC, quando presenti, sono importi del lotto e non vengono sommati agli importi ricavati dagli atti dell'Albo."
+  ]
+}

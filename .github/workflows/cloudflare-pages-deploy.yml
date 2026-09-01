@@ -18,10 +18,12 @@ on:
       - main
     paths:
       - '.github/workflows/cloudflare-pages-deploy.yml'
+      - '.github/workflows/anac-bdncp-sync.yml'
       - 'artifacts/api-server/src/routes/organi.ts'
       - 'artifacts/api-server/src/routes/organi.test.ts'
       - 'artifacts/lamezia-trasparente/**'
       - 'data/public/albo/**'
+      - 'data/public/contracts/**'
       - 'data/processed/territorio/**'
       - 'data/sources/organi-istituzionali-*.json'
       - 'lib/db/src/institutional-officials*.ts'
@@ -32,6 +34,8 @@ on:
       - 'scripts/check-institutional-*.ts'
       - 'scripts/check-public-contracts-page.mjs'
       - 'scripts/check-v0-static-fallback.mjs'
+      - 'scripts/contracts/anacBdncpSyncCore.ts'
+      - 'scripts/contracts/syncOfficialAnacBdncp.ts'
       - 'wrangler.toml'
 
 permissions:
@@ -82,7 +86,7 @@ jobs:
         shell: bash
         run: |
           test -f artifacts/lamezia-trasparente/dist/public/deploy-provenance.json
-          grep -Fq 'contracts-current-albo-static-v3' artifacts/lamezia-trasparente/dist/public/deploy-provenance.json
+          grep -Fq 'contracts-anac-bdncp-resilient-v4' artifacts/lamezia-trasparente/dist/public/deploy-provenance.json
           grep -Fq 'colazeta/Lamezia-Trasparente-Monitor' artifacts/lamezia-trasparente/dist/public/deploy-provenance.json
           grep -Fq '"commitSha": "${{ github.sha }}"' artifacts/lamezia-trasparente/dist/public/deploy-provenance.json
           grep -Fq '/organi' artifacts/lamezia-trasparente/dist/public/deploy-provenance.json

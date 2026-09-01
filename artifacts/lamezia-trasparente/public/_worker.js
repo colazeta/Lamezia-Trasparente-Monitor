@@ -4,6 +4,7 @@ const API_FEED_PREFIX = "/api/feeds/";
 const STATIC_CONTRACTS_DATA_PATH =
   "/data/processed/contracts/lamezia-contracts-current.json";
 const CONTRACTS_API_PATH = "/api/contracts";
+const ANAC_STATUS_API_PATH = "/api/contracts/anac-status";
 const PUBLIC_CONTRACTS_API_PATH = "/api/public/v1/contracts";
 const CONTRACTS_FEED_PATHS = new Set([
   "/feeds/contratti.xml",
@@ -101,6 +102,7 @@ async function loadContractsDataset(request, env) {
     dataset?.schemaVersion !== "lamezia-contracts-current.v1" ||
     !Array.isArray(dataset.contracts) ||
     !dataset.feedStatus ||
+    dataset.anacConnection?.schemaVersion !== "anac-bdncp-connection.v1" ||
     !dataset.storylines ||
     typeof dataset.storylines !== "object"
   ) {
@@ -332,6 +334,12 @@ async function handleContractsRequest(request, env, url) {
   }
 
   const pathname = url.pathname;
+  if (pathname === ANAC_STATUS_API_PATH) {
+    return jsonResponse(
+      request,
+      withRuntimeAnacFreshness(dataset.anacConnection),
+    );
+  }
   if (pathname === `${CONTRACTS_API_PATH}/feed-status`) {
     return jsonResponse(request, dataset.feedStatus);
   }
@@ -380,6 +388,21 @@ async function handleContractsRequest(request, env, url) {
     { status: "not-found", message: "Endpoint contratti non trovato." },
     404,
   );
+}
+
+function withRuntimeAnacFreshness(connection) {
+  if (connection?.status !== "current" || !connection.lastSuccessAt) {
+    return connection;
+  }
+  const lastSuccess = Date.parse(connection.lastSuccessAt);
+  const staleAfterMilliseconds = 72 * 60 * 60 * 1000;
+  if (
+    Number.isNaN(lastSuccess) ||
+    Date.now() - lastSuccess <= staleAfterMilliseconds
+  ) {
+    return connection;
+  }
+  return { ...connection, status: "stale" };
 }
 
 function normalized(value) {

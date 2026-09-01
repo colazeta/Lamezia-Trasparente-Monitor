@@ -12,6 +12,7 @@
     "albo:fetch": "pnpm --filter @workspace/scripts run fetch:albo",
     "albo:sanitise-public": "pnpm --filter @workspace/scripts run sanitise:albo-public",
     "albo:seed-delibere-archive": "pnpm --filter @workspace/scripts run seed:delibere-archive",
+    "contracts:anac-sync": "pnpm --filter @workspace/scripts run sync:anac-bdncp",
     "air:lamezia": "node scripts/build-lamezia-air-traffic-data.mjs",
     "climate:lamezia": "node scripts/build-lamezia-climate-data.mjs",
     "demography:lamezia": "node scripts/build-lamezia-demographic-trend-data.mjs",

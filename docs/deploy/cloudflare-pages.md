@@ -22,7 +22,7 @@ The root `wrangler.toml` also declares `pages_build_output_dir = "artifacts/lame
 
 The Vite app also copies `_redirects`, `_headers`, `_worker.js` and `deploy-provenance.json` into the build output. Every directory route in the sitemap is canonicalized to its trailing-slash form and then served by its generated SPA fallback, without collapsing the URL to `/`.
 
-The edge worker reserves same-origin `/api/*` and XML feed paths. The contracts list, detail, storyline, analytics, status and feed are served from the generated current-Albo dataset; API families that are not connected still return an explicit `503` JSON or XML response rather than the SPA HTML. This keeps unavailable data distinguishable from a genuine zero. When the frontend and API are split, set the repository variable `VITE_API_BASE_URL` to the public API origin without `/api`, credentials, query or fragment.
+The edge worker reserves same-origin `/api/*` and XML feed paths. The contracts list, detail, storyline, analytics, feed status, ANAC connection status and feed are served from the generated current-Albo dataset; API families that are not connected still return an explicit `503` JSON or XML response rather than the SPA HTML. This keeps unavailable data distinguishable from a genuine zero. When the frontend and API are split, set the repository variable `VITE_API_BASE_URL` to the public API origin without `/api`, credentials, query or fragment.
 
 ## Deployment workflow
 
@@ -75,16 +75,16 @@ deploy` workflow from GitHub Actions, or dispatch it manually on branch `main`.
 
 ## Deploy provenance marker
 
-The public build includes `/deploy-provenance.json` with `deploymentContract = "contracts-current-albo-static-v3"`, the exact 40-character Git commit SHA and an ISO build timestamp. The public smoke requires those fields before checking bundle strings and the current-Albo contracts API. If `pages.dev` serves a new JavaScript asset but not this JSON marker, Cloudflare is publishing a source or output that is not the current `artifacts/lamezia-trasparente/dist/public` build.
+The public build includes `/deploy-provenance.json` with `deploymentContract = "contracts-anac-bdncp-resilient-v4"`, the exact 40-character Git commit SHA and an ISO build timestamp. The public smoke requires those fields before checking bundle strings and the current-Albo contracts API. If `pages.dev` serves a new JavaScript asset but not this JSON marker, Cloudflare is publishing a source or output that is not the current `artifacts/lamezia-trasparente/dist/public` build.
 
 ## Contracts route smoke
 
 After a deployment, the live URL must satisfy all checks:
 
-- `https://lamezia-trasparente.pages.dev/deploy-provenance.json` exposes `contracts-current-albo-static-v3`.
+- `https://lamezia-trasparente.pages.dev/deploy-provenance.json` exposes `contracts-anac-bdncp-resilient-v4`.
 - `https://lamezia-trasparente.pages.dev/contratti` remains on `/contratti` when loaded directly.
 - Every route published in `/sitemap.xml` remains on its own pathname when loaded directly.
-- `/api/contracts`, `/api/contracts/feed-status`, contract detail and storyline return the current-Albo dataset with HTTP `200`; `/api/feeds/contratti.xml` returns XML with HTTP `200`.
+- `/api/contracts`, `/api/contracts/feed-status`, `/api/contracts/anac-status`, contract detail and storyline return the current-Albo dataset with HTTP `200`; `/api/feeds/contratti.xml` returns XML with HTTP `200`.
 - Unconnected API and feed families keep the explicit `503` fallback.
 - The generated JavaScript bundle contains the active-layer and contract-state markers `Attiva · perimetro corrente`, `Albo Pretorio corrente`, `Contratti protagonisti`, `Stato dei fascicoli contrattuali`, `Copertura fasi`, and `Copertura stato fasi dei fascicoli`.
 
