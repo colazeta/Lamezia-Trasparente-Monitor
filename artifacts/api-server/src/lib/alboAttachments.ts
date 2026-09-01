@@ -435,9 +435,7 @@ export async function enrichAlboAttachments(): Promise<{
     withFiles = refreshed.filter((r) => (r.attachments?.length ?? 0) > 0).length;
   }
 
-  const hashBackfill = await backfillAlboAttachmentHashes(storage).catch(() =>
-    emptyHashBackfillResult(),
-  );
+  const hashBackfill = await backfillAlboAttachmentHashes(storage);
 
   logger.info(
     {
