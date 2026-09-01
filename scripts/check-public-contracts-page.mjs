@@ -359,7 +359,13 @@ function extractJavaScriptReferences(sourceText) {
 
 function bundleAssetPriority(url) {
   const pathname = new URL(url).pathname;
-  if (/\/(?:Contracts|Organi)-[^/]+\.js$/i.test(pathname)) return 0;
+  if (
+    /\/(?:Contracts|ContractStoryline|contractDossier|Organi)-[^/]+\.js$/i.test(
+      pathname,
+    )
+  ) {
+    return 0;
+  }
   if (
     /\/(?:contractsSourceManifest|institutionalStaticData)-[^/]+\.js$/i.test(
       pathname,
