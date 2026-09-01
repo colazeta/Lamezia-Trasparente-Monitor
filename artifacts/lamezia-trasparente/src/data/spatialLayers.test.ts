@@ -100,4 +100,29 @@ describe("confiscated assets spatial loading", () => {
       "/data/processed/territorio/beni_confiscati_lamezia.geojson",
     ]);
   });
+
+  it("resolves static distributions against the deployment base path", async () => {
+    const requested: string[] = [];
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async (input: RequestInfo | URL) => {
+        const url = String(input);
+        requested.push(url);
+        if (url === "/api/beni-confiscati/geojson") {
+          return Response.json({}, { status: 404 });
+        }
+        return Response.json(fallbackCollection);
+      }),
+    );
+
+    const result = await loadConfiscatedAssetsSpatialLayer({
+      publicBaseUrl: "/Lamezia-Trasparente-Monitor/",
+    });
+
+    expect(result.distribution).toBe("continuity_fallback");
+    expect(requested).toEqual([
+      "/api/beni-confiscati/geojson",
+      "/Lamezia-Trasparente-Monitor/data/processed/territorio/beni_confiscati_lamezia.geojson",
+    ]);
+  });
 });
