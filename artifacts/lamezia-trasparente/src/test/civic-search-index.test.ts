@@ -18,7 +18,7 @@ describe("civic search index", () => {
 
     expect(kinds.persona).toBeGreaterThan(30);
     expect(kinds.organo).toBeGreaterThanOrEqual(10);
-    expect(kinds.dataset).toBe(5);
+    expect(kinds.dataset).toBe(6);
     expect(new Set(CIVIC_SEARCH_INDEX.map((item) => item.id)).size).toBe(
       CIVIC_SEARCH_INDEX.length,
     );
@@ -32,6 +32,10 @@ describe("civic search index", () => {
     expect(searchCivicIndex("trend demografico")[0]).toMatchObject({
       kind: "dataset",
       label: "Osservatorio demografico - Lamezia Terme",
+    });
+    expect(searchCivicIndex("famiglie numero componenti")[0]).toMatchObject({
+      kind: "dataset",
+      label: "Famiglie per numero di componenti 2023 - Lamezia Terme",
     });
   });
 

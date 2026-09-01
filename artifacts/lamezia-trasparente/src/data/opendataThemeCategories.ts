@@ -13,6 +13,7 @@ export interface OpenDataThemeDataset {
     | "climate-daily"
     | "demographic-trend"
     | "families-children"
+    | "household-composition-2023"
     | "foreign-residents-age-sex";
 }
 
@@ -124,6 +125,18 @@ export const OPEN_DATA_THEME_LIBRARY = [
           "Aggiornamento automatico sulle fonti ISTAT; le release storiche vengono conservate invece di essere sovrascritte.",
         sourceLabel: "ISTAT - archivio demografico versionato",
         detailKind: "demographic-trend",
+      },
+      {
+        id: "lamezia-household-composition-2023",
+        label: "Famiglie per numero di componenti 2023 - Lamezia Terme",
+        statusLabel: "Disponibile",
+        dataType: "Distribuzione censuaria aggregata",
+        description:
+          "Famiglie anagrafiche per 1, 2, 3, 4, 5 e 6 o più componenti, aggregate dalle sezioni ISTAT 2023 e pubblicate come JSON statico con quadratura esatta sul totale comunale.",
+        updateCadence:
+          "Rigenerazione verificata quando ISTAT pubblica una nuova edizione compatibile dei dati per sezione di censimento.",
+        sourceLabel: "ISTAT - Censimento permanente 2023",
+        detailKind: "household-composition-2023",
       },
       {
         id: "lamezia-foreign-residents-age-sex",

@@ -11,12 +11,16 @@ const GENERATED_DIR = path.join(
 const OUTPUT_PATH = path.join(GENERATED_DIR, "lameziaOpenDataSeriesStatus.json");
 
 async function main() {
-  const [climate, airport, foreignResidents, families] = await Promise.all([
-    readJson("lameziaClimateDaily.metadata.json"),
-    readJson("lameziaAirTrafficMonthly.metadata.json"),
-    readJson("lameziaForeignResidentsAgeSex.json"),
-    readJson("lameziaFamiliesChildren.json"),
-  ]);
+  const [climate, airport, foreignResidents, families, householdComposition] =
+    await Promise.all([
+      readJson("lameziaClimateDaily.metadata.json"),
+      readJson("lameziaAirTrafficMonthly.metadata.json"),
+      readJson("lameziaForeignResidentsAgeSex.json"),
+      readJson("lameziaFamiliesChildren.json"),
+      readRepoJson(
+        "artifacts/api-server/src/data/lameziaHouseholdComposition2023.json",
+      ),
+    ]);
 
   const manifest = {
     schema_version: 1,
@@ -65,6 +69,27 @@ async function main() {
         sourceCadenceLabel: "Rilascio ISTAT",
         updatePolicy:
           "Aggiornamento automatico sulle fonti ISTAT: le nuove release vengono acquisite nel layer demografico versionato e le versioni precedenti restano conservate.",
+      }),
+      buildSeries({
+        id: "lamezia-household-composition-2023",
+        themeId: "population-society",
+        label: "Famiglie per numero di componenti 2023 - Lamezia Terme",
+        source: "ISTAT - Censimento permanente 2023",
+        sourceUrl: householdComposition.source.pageUrl,
+        latestObservation: String(householdComposition.referenceYear),
+        latestObservationLabel: String(householdComposition.referenceYear),
+        latestObservationNote:
+          "Fotografia censuaria al 31 dicembre 2023; non è una serie storica e non viene retrodatata.",
+        sourceModifiedAt: householdComposition.source.sourceUpdateDate,
+        materialisedAt: householdComposition.verification.verifiedAt,
+        sourceCadence: "release-driven",
+        sourceCadenceLabel: "Rilascio ISTAT",
+        monitoringCadence: "release-driven",
+        monitoringCadenceLabel: "Verifica su nuova edizione ISTAT",
+        automationStatus: "manual",
+        automationStatusLabel: "Materializzazione verificata",
+        updatePolicy:
+          "Rigenerazione dal file ufficiale quando ISTAT pubblica una nuova edizione compatibile; hash, righe e quadratura vengono verificati prima della pubblicazione.",
       }),
       buildSeries({
         id: "lamezia-foreign-residents-age-sex",
@@ -116,6 +141,10 @@ function buildSeries({
   materialisedAt,
   sourceCadence,
   sourceCadenceLabel,
+  monitoringCadence = "daily",
+  monitoringCadenceLabel = "Controllo giornaliero",
+  automationStatus = "active",
+  automationStatusLabel = "Aggiornamento automatico",
   updatePolicy,
 }) {
   return {
@@ -133,10 +162,10 @@ function buildSeries({
     cadence_label: sourceCadenceLabel,
     source_cadence: sourceCadence,
     source_cadence_label: sourceCadenceLabel,
-    monitoring_cadence: "daily",
-    monitoring_cadence_label: "Controllo giornaliero",
-    automation_status: "active",
-    automation_status_label: "Aggiornamento automatico",
+    monitoring_cadence: monitoringCadence,
+    monitoring_cadence_label: monitoringCadenceLabel,
+    automation_status: automationStatus,
+    automation_status_label: automationStatusLabel,
     update_policy: updatePolicy,
   };
 }
@@ -166,6 +195,10 @@ function formatObservation(value) {
 
 async function readJson(fileName) {
   return JSON.parse(await readFile(path.join(GENERATED_DIR, fileName), "utf8"));
+}
+
+async function readRepoJson(relativePath) {
+  return JSON.parse(await readFile(path.join(REPO_ROOT, relativePath), "utf8"));
 }
 
 main().catch((error) => {

@@ -5,8 +5,8 @@ export type OpenDataSeriesSourceCadence =
   | "weekly"
   | "monthly"
   | "release-driven";
-export type OpenDataSeriesMonitoringCadence = "daily";
-export type OpenDataSeriesAutomationStatus = "active";
+export type OpenDataSeriesMonitoringCadence = "daily" | "release-driven";
+export type OpenDataSeriesAutomationStatus = "active" | "manual";
 
 export interface LameziaOpenDataSeriesStatusItem {
   id: string;

@@ -14,10 +14,10 @@ describe("Open Data discovery surface", () => {
       screen.getByRole("heading", { name: "Esplora i dati" }),
     ).toBeInTheDocument();
     expect(
-      screen.getByRole("button", { name: /tutti i dataset: 5 dataset/i }),
+      screen.getByRole("button", { name: /tutti i dataset: 6 dataset/i }),
     ).toHaveAttribute("aria-pressed", "true");
     expect(
-      screen.getByRole("button", { name: /popolazione e societa: 3 dataset/i }),
+      screen.getByRole("button", { name: /popolazione e societa: 4 dataset/i }),
     ).toBeInTheDocument();
     expect(
       screen.getByRole("button", { name: /clima e territorio: 1 dataset/i }),
@@ -41,9 +41,11 @@ describe("Open Data discovery surface", () => {
       screen.queryByRole("button", { name: /accesso/i }),
     ).not.toBeInTheDocument();
 
-    expect(screen.getByText("5 serie monitorate")).toBeInTheDocument();
     expect(
-      screen.getByText(/fonti controllate ogni giorno/i),
+      screen.getByText(/6 dataset con stato documentato/i),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(/5 aggiornati automaticamente/i),
     ).toBeInTheDocument();
     const disclosure = screen
       .getByText("Aggiornamento e fonti")
@@ -83,9 +85,13 @@ describe("Open Data discovery surface", () => {
     expect(
       scope.getByText("Ultimo dato: Risorsa corrente"),
     ).toBeInTheDocument();
+    expect(scope.getByText("Ultimo dato: 2023")).toBeInTheDocument();
+    expect(
+      scope.getByText(/Rilascio ISTAT · Materializzazione verificata/i),
+    ).toBeInTheDocument();
     expect(
       scope.getAllByRole("link", { name: "Fonte ufficiale" }),
-    ).toHaveLength(5);
+    ).toHaveLength(6);
     expect(scope.getByText(/non un dato in tempo reale/i)).toBeInTheDocument();
   });
 });

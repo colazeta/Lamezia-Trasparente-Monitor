@@ -50,6 +50,12 @@ const FamiliesChildrenDatasetCard = lazy(async () => ({
   default: (await import("@/components/opendata/FamiliesChildrenDatasetCard"))
     .FamiliesChildrenDatasetCard,
 }));
+// Source metadata and limitations are rendered by the dedicated dataset card.
+const HouseholdCompositionDatasetCard = lazy(async () => ({
+  default: (
+    await import("@/components/opendata/HouseholdCompositionDatasetCard")
+  ).HouseholdCompositionDatasetCard,
+}));
 const ForeignResidentsDatasetCard = lazy(async () => ({
   default: (await import("@/components/opendata/ForeignResidentsDatasetCard"))
     .ForeignResidentsDatasetCard,
@@ -370,6 +376,8 @@ function DatasetDetailView({
           <ForeignResidentsDatasetCard />
         ) : item.dataset.detailKind === "families-children" ? (
           <FamiliesChildrenDatasetCard />
+        ) : item.dataset.detailKind === "household-composition-2023" ? (
+          <HouseholdCompositionDatasetCard />
         ) : (
           <div className="rounded-xl border border-dashed border-border bg-muted/20 p-5 text-sm text-muted-foreground">
             Visualizzazione non ancora disponibile per questo dataset.

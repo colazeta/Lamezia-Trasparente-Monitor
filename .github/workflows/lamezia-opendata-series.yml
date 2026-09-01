@@ -16,6 +16,7 @@ on:
       - "scripts/build-lamezia-demographic-trend-data.mjs"
       - "scripts/build-lamezia-foreign-residents-data.mjs"
       - "scripts/build-lamezia-families-children-data.mjs"
+      - "artifacts/api-server/src/data/lameziaHouseholdComposition2023.json"
   pull_request:
     paths: *refresh_paths
 
@@ -57,16 +58,31 @@ jobs:
           const { readFileSync } = require('node:fs');
           const dir = 'artifacts/lamezia-trasparente/src/data/generated';
           const manifest = JSON.parse(readFileSync(`${dir}/lameziaOpenDataSeriesStatus.json`, 'utf8'));
-          if (manifest.schema_version !== 1 || !Array.isArray(manifest.series) || manifest.series.length !== 5) {
-            throw new Error('Open Data freshness manifest must contain exactly five monitored series.');
+          if (manifest.schema_version !== 1 || !Array.isArray(manifest.series) || manifest.series.length !== 6) {
+            throw new Error('Open Data freshness manifest must contain exactly six documented series.');
           }
           const ids = new Set(manifest.series.map((series) => series.id));
-          if (ids.size !== 5) throw new Error('Open Data series IDs must be unique.');
-          if (!manifest.series.every((series) => series.monitoring_cadence === 'daily')) {
-            throw new Error('Every monitored Open Data series must declare daily source checking.');
+          if (ids.size !== 6) throw new Error('Open Data series IDs must be unique.');
+          const automated = manifest.series.filter((series) => series.automation_status === 'active');
+          if (automated.length !== 5 || !automated.every((series) => series.monitoring_cadence === 'daily')) {
+            throw new Error('The five automated Open Data series must declare daily source checking.');
           }
-          if (!manifest.series.every((series) => series.automation_status === 'active')) {
-            throw new Error('Every monitored Open Data series must declare active automation.');
+          const household = manifest.series.find((series) => series.id === 'lamezia-household-composition-2023');
+          const householdData = JSON.parse(
+            readFileSync('artifacts/api-server/src/data/lameziaHouseholdComposition2023.json', 'utf8'),
+          );
+          if (
+            !household ||
+            household.latest_observation !== String(householdData.referenceYear) ||
+            household.source_modified_at !== householdData.source.sourceUpdateDate ||
+            household.materialised_at !== householdData.verification.verifiedAt ||
+            household.monitoring_cadence !== 'release-driven' ||
+            household.automation_status !== 'manual' ||
+            householdData.quality.incompleteRows !== 0 ||
+            !householdData.quality.exactReconciliation ||
+            householdData.quality.componentSum !== householdData.totalHouseholds
+          ) {
+            throw new Error('Household composition must match the verified release-driven canonical profile.');
           }
           const families = manifest.series.find((series) => series.id === 'lamezia-families-children');
           if (!families || families.latest_observation !== null) {

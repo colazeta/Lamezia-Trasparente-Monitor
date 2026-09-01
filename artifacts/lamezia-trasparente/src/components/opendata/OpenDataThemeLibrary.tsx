@@ -93,9 +93,11 @@ export function OpenDataThemeLibrary({
             <CheckCircle2 className="h-4 w-4 text-primary" aria-hidden="true" />
             <span>
               <strong className="font-semibold text-foreground">
-                {LAMEZIA_OPEN_DATA_SERIES_STATUS_SUMMARY.total} serie monitorate
+                {LAMEZIA_OPEN_DATA_SERIES_STATUS_SUMMARY.total} dataset con
+                stato documentato
               </strong>{" "}
-              · fonti controllate ogni giorno
+              · {LAMEZIA_OPEN_DATA_SERIES_STATUS_SUMMARY.automated} aggiornati
+              automaticamente
             </span>
           </p>
           <details className="group">
@@ -113,6 +115,10 @@ export function OpenDataThemeLibrary({
                   </p>
                   <p className="mt-1 text-xs text-muted-foreground">
                     Ultimo dato: {series.latest_observation_label}
+                  </p>
+                  <p className="mt-1 text-xs text-muted-foreground">
+                    {series.source_cadence_label} ·{" "}
+                    {series.automation_status_label}
                   </p>
                   <a
                     className="mt-1 inline-flex items-center gap-1 text-xs font-medium text-primary hover:underline"

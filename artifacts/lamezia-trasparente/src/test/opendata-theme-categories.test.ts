@@ -60,13 +60,18 @@ describe("OpenData thematic category library", () => {
       dataType: "Serie temporale mensile",
       detailKind: "air-traffic-monthly",
     });
-    expect(populationTheme?.datasets).toHaveLength(3);
+    expect(populationTheme?.datasets).toHaveLength(4);
     expect(populationTheme?.datasets).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
           id: "lamezia-demographic-trend",
           dataType: "Serie annuali versionate e bilancio demografico",
           detailKind: "demographic-trend",
+        }),
+        expect.objectContaining({
+          id: "lamezia-household-composition-2023",
+          dataType: "Distribuzione censuaria aggregata",
+          detailKind: "household-composition-2023",
         }),
         expect.objectContaining({
           id: "lamezia-foreign-residents-age-sex",

@@ -65,6 +65,27 @@
       "update_policy": "Aggiornamento automatico sulle fonti ISTAT: le nuove release vengono acquisite nel layer demografico versionato e le versioni precedenti restano conservate."
     },
     {
+      "id": "lamezia-household-composition-2023",
+      "theme_id": "population-society",
+      "label": "Famiglie per numero di componenti 2023 - Lamezia Terme",
+      "source": "ISTAT - Censimento permanente 2023",
+      "source_url": "https://www.istat.it/notizia/dati-per-sezioni-di-censimento/",
+      "latest_observation": "2023",
+      "latest_observation_label": "2023",
+      "latest_observation_note": "Fotografia censuaria al 31 dicembre 2023; non è una serie storica e non viene retrodatata.",
+      "source_modified_at": "2026-06-09",
+      "materialised_at": "2026-09-01T18:11:15.000Z",
+      "cadence": "release-driven",
+      "cadence_label": "Rilascio ISTAT",
+      "source_cadence": "release-driven",
+      "source_cadence_label": "Rilascio ISTAT",
+      "monitoring_cadence": "release-driven",
+      "monitoring_cadence_label": "Verifica su nuova edizione ISTAT",
+      "automation_status": "manual",
+      "automation_status_label": "Materializzazione verificata",
+      "update_policy": "Rigenerazione dal file ufficiale quando ISTAT pubblica una nuova edizione compatibile; hash, righe e quadratura vengono verificati prima della pubblicazione."
+    },
+    {
       "id": "lamezia-foreign-residents-age-sex",
       "theme_id": "population-society",
       "label": "Stranieri per sesso ed eta - Lamezia Terme",

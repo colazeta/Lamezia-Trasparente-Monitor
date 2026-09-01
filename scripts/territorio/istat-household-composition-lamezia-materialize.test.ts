@@ -103,6 +103,12 @@ test("the committed profile is publishable and matches the territorial PF1 total
   assert.equal(artifact.quality.skippedFictitiousRows, 1);
   assert.equal(artifact.quality.incompleteRows, 0);
   assert.equal(artifact.quality.componentSum, 27_591);
+  assert.equal(artifact.verification.method, "sha256-and-exact-reconciliation");
+  assert.ok(Number.isFinite(Date.parse(artifact.verification.verifiedAt)));
+  assert.ok(
+    Date.parse(artifact.verification.verifiedAt) >=
+      Date.parse(artifact.source.sourceUpdateDate),
+  );
   assert.equal(
     artifact.source.archiveSha256,
     "05661a6e248d4241c9fdd1b1fa1e740eae0706dd3fcfdbeb366f608269bfeb45",
@@ -151,6 +157,26 @@ test("does not build an artifact with non-auditable source hashes", () => {
         workbookSha256: "0".repeat(64),
       }),
     /expected a lowercase SHA-256 digest/i,
+  );
+});
+
+test("records only a normalized verification timestamp", () => {
+  const rows = householdRowsFromWorkbook([
+    headers,
+    ["18", "79160", "791600000001", "1", "1", "0", "0", "0", "0", "0"],
+  ]);
+  assert.throws(
+    () =>
+      buildHouseholdCompositionArtifact(
+        rows,
+        {
+          archiveSha256: "a".repeat(64),
+          archiveMemberSha256: "b".repeat(64),
+          workbookSha256: "b".repeat(64),
+        },
+        "2026-09-01",
+      ),
+    /normalized ISO-8601 timestamp/i,
   );
 });
 

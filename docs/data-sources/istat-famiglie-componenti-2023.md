@@ -77,6 +77,13 @@ corepack pnpm --filter @workspace/scripts run materialize:istat-household-compos
 
 Il comando ricalcola entrambi gli hash, verifica gli identificativi di sezione, rifiuta duplicati e scrive l'artefatto soltanto dopo il superamento dei gate di pubblicazione.
 Inoltre legge direttamente dallo ZIP il membro `Dati_regionali_2023/R18_Calabria_2023_sezioni.xlsx` e richiede che il suo SHA-256 coincida con quello del workbook passato a `--variables-xlsx`: un file esterno o appartenente a un'altra edizione blocca la pubblicazione.
+L'artefatto registra inoltre `verification.verifiedAt`: è il momento effettivo in cui hash e gate sono stati superati, distinto da `source.sourceUpdateDate`, che resta la data dichiarata da ISTAT. La UI usa il primo come “Ultimo controllo” e il secondo come “Ultimo aggiornamento della fonte”.
+
+Lo stesso artefatto canonico alimenta sia `/api/demographics/households` sia la scheda statica **“Famiglie per numero di componenti 2023”** nell'archivio Open Data. Il frontend lo include nel bundle come JSON scaricabile: grafico e valori restano quindi consultabili anche nei deploy pubblici privi di un origin API configurato, senza mantenere una seconda copia dei conteggi.
+
+Deep-link pubblico della scheda:
+
+`/opendata?tema=population-society&dataset=lamezia-household-composition-2023`
 
 ## Relazione con lo storico famiglie
 
