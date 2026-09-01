@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import type { DemographicHouseholdsResponse } from "@workspace/api-client-react";
-import { Home, Info, UsersRound } from "lucide-react";
+import { FileJson, Home, Info, UsersRound } from "lucide-react";
+import { HouseholdCompositionDatasetCard } from "@/components/opendata/HouseholdCompositionDatasetCard";
 import { Badge } from "@/components/ui/badge";
 import {
   Card,
@@ -10,6 +11,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+import { apiFetch, apiUrl } from "@/lib/apiBaseUrl";
 
 type SourceStatus = DemographicHouseholdsResponse["sourceStatus"];
 type HouseholdResponse = DemographicHouseholdsResponse;
@@ -79,7 +81,7 @@ export function PopulationHouseholdsPanel() {
           selectedPeriod === "latest"
             ? ""
             : `?period=${encodeURIComponent(selectedPeriod)}`;
-        const response = await fetch(`/api/demographics/households${query}`);
+        const response = await apiFetch(`/api/demographics/households${query}`);
         if (!response.ok) {
           throw new Error(`Households API returned ${response.status}`);
         }
@@ -124,16 +126,7 @@ export function PopulationHouseholdsPanel() {
   }
 
   if (isError || !data) {
-    return (
-      <Card className="border-dashed">
-        <CardContent className="p-6 text-sm text-muted-foreground">
-          I dati annuali sulle famiglie non sono ancora disponibili nella
-          proiezione demografica. Il pannello comparirà dopo il prossimo ciclo
-          che abbia una release P02 completa con numero di famiglie e
-          popolazione residente in famiglia.
-        </CardContent>
-      </Card>
-    );
+    return <StaticHouseholdCompositionFallback />;
   }
 
   return (
@@ -438,6 +431,64 @@ export function PopulationHouseholdsPanel() {
           ) : null}
         </CardContent>
       </Card>
+    </section>
+  );
+}
+
+function StaticHouseholdCompositionFallback() {
+  return (
+    <section
+      id="famiglie-lamezia"
+      className="space-y-6"
+      aria-labelledby="households-title"
+    >
+      <div>
+        <span className="eyebrow text-primary">
+          <UsersRound className="h-3.5 w-3.5" />
+          Famiglie
+        </span>
+        <h3
+          className="mt-2 text-xl md:text-2xl font-display font-bold tracking-tight"
+          id="households-title"
+        >
+          Come cambiano le famiglie
+        </h3>
+        <p className="mt-2 max-w-3xl text-sm leading-6 text-muted-foreground">
+          La serie annuale P02 e la fotografia censuaria 2023 hanno periodi e
+          funzioni distinti. Quando il servizio annuale non risponde, il profilo
+          strutturale ISTAT resta disponibile dal JSON canonico incluso nella
+          pubblicazione.
+        </p>
+      </div>
+
+      <Card className="border-dashed" role="status">
+        <CardContent className="flex flex-col gap-3 p-5 text-sm leading-6 text-muted-foreground sm:flex-row sm:items-start sm:justify-between">
+          <div className="flex gap-3">
+            <Info className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
+            <div>
+              <p className="font-medium text-foreground">
+                Serie annuale non disponibile in questa sessione
+              </p>
+              <p>
+                L'endpoint demografico non ha restituito un profilo P02
+                utilizzabile, quindi qui non vengono mostrati conteggi annuali.
+                La fotografia ISTAT 2023 verificata è consultabile qui sotto.
+              </p>
+            </div>
+          </div>
+          <a
+            className="inline-flex shrink-0 items-center gap-1.5 font-medium text-primary hover:underline"
+            href={apiUrl("/api/demographics/households")}
+            rel="noreferrer"
+            target="_blank"
+          >
+            <FileJson className="h-4 w-4" />
+            Verifica API annuale
+          </a>
+        </CardContent>
+      </Card>
+
+      <HouseholdCompositionDatasetCard />
     </section>
   );
 }

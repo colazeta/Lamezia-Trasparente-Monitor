@@ -340,6 +340,13 @@ describe("OpenData climate territory card", () => {
       "href",
       "/api/demographics/series/population-resident-jan1",
     );
+    expect(screen.getByRole("link", { name: /API famiglie/i })).toHaveAttribute(
+      "href",
+      "/api/demographics/households",
+    );
+    expect(
+      screen.getByRole("link", { name: /JSON famiglie 2023/i }),
+    ).toHaveAttribute("download", "lamezia-famiglie-componenti-2023.json");
     expect(screen.getByRole("link", { name: /API bilancio/i })).toHaveAttribute(
       "href",
       "/api/demographics/change-drivers?granularity=annual",

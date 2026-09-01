@@ -180,7 +180,10 @@ describe("PopulationHouseholdsPanel", () => {
     expect(
       screen.getByText(/distribuzione comunale per figli resta separata/i),
     ).toBeInTheDocument();
-    expect(fetchMock).toHaveBeenCalledWith("/api/demographics/households");
+    expect(fetchMock).toHaveBeenCalledWith(
+      "/api/demographics/households",
+      undefined,
+    );
   });
 
   it("requests the selected historical year", async () => {
@@ -200,7 +203,57 @@ describe("PopulationHouseholdsPanel", () => {
     await waitFor(() => {
       expect(fetchMock).toHaveBeenLastCalledWith(
         "/api/demographics/households?period=2023",
+        undefined,
       );
     });
+  });
+
+  it("keeps the verified 2023 composition visible when the annual API is unavailable", async () => {
+    const fetchMock = vi.fn().mockResolvedValue({
+      ok: false,
+      status: 503,
+    });
+    vi.stubGlobal("fetch", fetchMock);
+
+    render(<PopulationHouseholdsPanel />);
+
+    expect(
+      await screen.findByRole("heading", { name: "Come cambiano le famiglie" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText("Serie annuale non disponibile in questa sessione"),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("img", {
+        name: /Famiglie di Lamezia Terme per numero di componenti nel 2023/i,
+      }),
+    ).toBeInTheDocument();
+
+    const total = screen.getByText("Famiglie totali").closest("dl");
+    const onePerson = screen.getByText("Famiglie unipersonali").closest("dl");
+    const fivePlus = screen.getByText("Almeno 5 componenti").closest("dl");
+    expect(total).not.toBeNull();
+    expect(onePerson).not.toBeNull();
+    expect(fivePlus).not.toBeNull();
+    expect(
+      within(total as HTMLElement).getByText("27.591"),
+    ).toBeInTheDocument();
+    expect(
+      within(onePerson as HTMLElement).getByText("8.713"),
+    ).toBeInTheDocument();
+    expect(
+      within(fivePlus as HTMLElement).getByText("1.603"),
+    ).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /Scarica JSON/i })).toHaveAttribute(
+      "download",
+      "lamezia-famiglie-componenti-2023.json",
+    );
+    expect(
+      screen.getByRole("link", { name: /Verifica API annuale/i }),
+    ).toHaveAttribute("href", "/api/demographics/households");
+    expect(fetchMock).toHaveBeenCalledWith(
+      "/api/demographics/households",
+      undefined,
+    );
   });
 });
