@@ -14,7 +14,7 @@ permissions:
 
 jobs:
   benchmark:
-    name: Compare Docling with pdf-parse
+    name: Compare wrapper and embedded PDF
     runs-on: ubuntu-latest
     timeout-minutes: 30
 
@@ -53,13 +53,37 @@ jobs:
           cache: pip
           cache-dependency-path: tools/docling/requirements.txt
 
-      - name: Install Docling
+      - name: Install benchmark dependencies
         run: python -m pip install -r tools/docling/requirements.txt
 
-      - name: Run immutable benchmark
+      - name: Run helper tests
+        run: |
+          python tools/docling/test_extract_document.py
+          python tools/docling/test_extract_pdf_attachments.py
+          python -m py_compile tools/docling/extract_document.py tools/docling/extract_pdf_attachments.py tools/docling/run_benchmark.py
+
+      - name: Benchmark wrapper PDF
         run: >-
           python tools/docling/run_benchmark.py
           data/public/albo/documents/2026/842702b2044b4b6f9a7b21a65eac2ab59866ee3f321872e6b28fd481598be304.pdf
+          --output-dir tmp/docling/benchmark/wrapper
+
+      - name: Extract embedded files
+        run: >-
+          python tools/docling/extract_pdf_attachments.py
+          data/public/albo/documents/2026/842702b2044b4b6f9a7b21a65eac2ab59866ee3f321872e6b28fd481598be304.pdf
+          --output-dir tmp/docling/benchmark/embedded/source
+
+      - name: Verify and benchmark embedded PDF
+        shell: bash
+        run: |
+          set -euo pipefail
+          mapfile -t embedded < <(find tmp/docling/benchmark/embedded/source -maxdepth 1 -type f -name '*.pdf' -print)
+          test "${#embedded[@]}" -eq 1
+          expected='3069388db15c43fdbf3cc980195f9c88ded602a6e9f8f89f358a006ce789096c'
+          actual="$(sha256sum "${embedded[0]}" | awk '{print $1}')"
+          test "$actual" = "$expected"
+          python tools/docling/run_benchmark.py "${embedded[0]}" --output-dir tmp/docling/benchmark/embedded/results
 
       - name: Upload benchmark artefacts
         if: always()
