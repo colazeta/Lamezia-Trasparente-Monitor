@@ -1,0 +1,211 @@
+{
+  "schema_version": "1.0",
+  "title": "Beni confiscati di Lamezia Terme — primo registro documentale",
+  "scope": {
+    "municipality": "Lamezia Terme",
+    "record_type": "documented_reuse_site"
+  },
+  "last_verified_at": "2026-09-01",
+  "publication_policy": {
+    "summary": "Ogni scheda distingue il sito di riuso documentato dalla localizzazione cartografica e dal collegamento al singolo record ANBSC.",
+    "coordinate_rule": "Le coordinate sono pubblicate solo dopo una verifica puntuale basata su una fonte localizzativa tracciabile; indirizzi, centroidi comunali e risultati approssimati non sono trasformati automaticamente in punti.",
+    "anbsc_rule": "Un identificativo ANBSC è associato alla scheda solo quando una fonte pubblica consente di dimostrare il collegamento uno-a-uno."
+  },
+  "methodology_sources": [
+    {
+      "title": "ANBSC — immobili destinati nel Comune di Lamezia Terme",
+      "publisher": "Agenzia nazionale per l'amministrazione e la destinazione dei beni sequestrati e confiscati",
+      "source_kind": "institutional",
+      "url": "https://benidestinati.anbsc.it/api/data/beni/immobili/destinato?comune=Lamezia%20Terme",
+      "note": "Il feed è usato per il perimetro comunale. Le coordinate esposte sono comunali e non identificano la posizione del singolo bene."
+    },
+    {
+      "title": "ANBSC — immobili in amministrazione nel Comune di Lamezia Terme",
+      "publisher": "Agenzia nazionale per l'amministrazione e la destinazione dei beni sequestrati e confiscati",
+      "source_kind": "institutional",
+      "url": "https://benidestinati.anbsc.it/api/data/beni/immobili/in_amministrazione?comune=Lamezia%20Terme",
+      "note": "Il feed è usato per il perimetro comunale, non per attribuire automaticamente un record a una sede di riuso."
+    }
+  ],
+  "records": [
+    {
+      "id": "reuse-site:pensieri-e-parole",
+      "slug": "pensieri-e-parole-via-dei-bizantini",
+      "name": "Pensieri e Parole",
+      "status": "riutilizzato",
+      "address": {
+        "label": "Via dei Bizantini 97–101, Lamezia Terme",
+        "precision": "civic_range",
+        "verification_status": "documented"
+      },
+      "location": {
+        "publication_status": "withheld_pending_verification",
+        "coordinates": null,
+        "note": "L'indirizzo è documentato, ma non è ancora disponibile una coordinata puntuale verificata e tracciabile per l'intero complesso."
+      },
+      "anbsc_match": {
+        "status": "not_established",
+        "record_ids": [],
+        "note": "Le fonti consultate non consentono ancora di attribuire con certezza il sito a uno o più identificativi del feed ANBSC."
+      },
+      "manager": "Comunità Progetto Sud",
+      "context": "Edificio confiscato e concesso dal Comune a uso sociale. Il complesso ospita da anni servizi e iniziative della Comunità Progetto Sud; la rifunzionalizzazione conclusa nel 2026 consolida attività rivolte all'autismo, alla prevenzione del gioco d'azzardo problematico e all'accoglienza e integrazione di adulti e minori.",
+      "public_uses": [
+        "servizi per persone con autismo",
+        "prevenzione del gioco d'azzardo problematico",
+        "accoglienza e integrazione di adulti e minori"
+      ],
+      "refunctionalization": {
+        "programme": "PNRR — valorizzazione dei beni confiscati",
+        "project_title": "Pensieri e Parole",
+        "amount_eur": 570000,
+        "protocol": "2021-VBM-00103",
+        "cup": "C84D22000000007",
+        "municipal_act_reference": "Deliberazione di Giunta comunale n. 76 del 10 marzo 2022",
+        "completion_date": "2026-05-11"
+      },
+      "sources": [
+        {
+          "title": "Lamezia Terme, conclusi due interventi di valorizzazione di beni confiscati",
+          "publisher": "Ministero dell'interno",
+          "source_kind": "institutional",
+          "url": "https://www.interno.gov.it/it/notizie/lamezia-terme-conclusi-due-interventi-valorizzazione-beni-confiscati",
+          "published_at": "2026-05-11",
+          "supports": [
+            "conclusione della rifunzionalizzazione",
+            "gestione della Comunità Progetto Sud"
+          ]
+        },
+        {
+          "title": "Elenco dei progetti di rifunzionalizzazione",
+          "publisher": "Commissario straordinario per il recupero e la rifunzionalizzazione dei beni confiscati",
+          "source_kind": "institutional",
+          "url": "https://commissari.interno.gov.it/sites/default/files/0/2025-09/allegato_elenco_decreto_arzachena_commissario_rifunzionalizzazione.pdf",
+          "published_at": null,
+          "supports": [
+            "protocollo 2021-VBM-00103",
+            "CUP C84D22000000007",
+            "finanziamento di 570.000 euro"
+          ]
+        },
+        {
+          "title": "Bilancio sociale 2017",
+          "publisher": "Comunità Progetto Sud",
+          "source_kind": "manager",
+          "url": "https://www.comunitaprogettosud.it/wp-content/uploads/CPS2017_Bilancio-sociale_sintetico.pdf",
+          "published_at": null,
+          "supports": [
+            "natura di bene confiscato concesso in uso sociale",
+            "presenza dei servizi nel complesso di via dei Bizantini 95–101"
+          ]
+        },
+        {
+          "title": "Lamezia, l'11 maggio inaugurazione di due beni confiscati assegnati al Comune",
+          "publisher": "Il Lametino",
+          "source_kind": "press",
+          "url": "https://www.lametino.it/eventi/lamezia-l11-maggio-inaugurazione-di-due-beni-confiscati-assegnati-al-comune.html",
+          "published_at": "2026-05-08",
+          "supports": [
+            "indirizzo via dei Bizantini 97–101",
+            "destinazioni sociali dopo la rifunzionalizzazione"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "reuse-site:mamas-lucky-friends-center",
+      "slug": "mamas-lucky-friends-center-via-guzzi",
+      "name": "Mamas Lucky Friends Center — Nests and Help Mothers FabLab",
+      "status": "riutilizzato",
+      "address": {
+        "label": "Via Sebastiano Guzzi 70, Lamezia Terme",
+        "precision": "civic",
+        "verification_status": "documented"
+      },
+      "location": {
+        "publication_status": "withheld_pending_verification",
+        "coordinates": null,
+        "note": "Più fonti documentano il civico, ma la coordinata disponibile in una directory commerciale non è considerata sufficiente per la pubblicazione nel layer civico."
+      },
+      "anbsc_match": {
+        "status": "not_established",
+        "record_ids": [],
+        "note": "Le fonti consultate non consentono ancora di attribuire con certezza il sito a uno o più identificativi del feed ANBSC."
+      },
+      "manager": "ASD Lucky Friends",
+      "context": "Immobile confiscato affidato dal Comune all'ASD Lucky Friends e riutilizzato come presidio di inclusione. La rifunzionalizzazione conclusa nel 2026 amplia il centro con servizi per donne vittime di violenza e persone vulnerabili, una ludoteca e laboratori rivolti a giovani con disabilità.",
+      "public_uses": [
+        "ascolto e supporto per donne vittime di violenza e persone vulnerabili",
+        "ludoteca",
+        "laboratori e attività inclusive per giovani con disabilità"
+      ],
+      "refunctionalization": {
+        "programme": "PNRR — valorizzazione dei beni confiscati",
+        "project_title": "Mamas Lucky Friends Center — Nests and Help Mothers FabLab",
+        "amount_eur": 599900,
+        "protocol": "2021-VBM-00358",
+        "cup": "C82F22000190006",
+        "municipal_act_reference": "Deliberazione di Giunta comunale n. 92 del 29 marzo 2022",
+        "completion_date": "2026-05-11"
+      },
+      "sources": [
+        {
+          "title": "Lamezia Terme, conclusi due interventi di valorizzazione di beni confiscati",
+          "publisher": "Ministero dell'interno",
+          "source_kind": "institutional",
+          "url": "https://www.interno.gov.it/it/notizie/lamezia-terme-conclusi-due-interventi-valorizzazione-beni-confiscati",
+          "published_at": "2026-05-11",
+          "supports": [
+            "conclusione della rifunzionalizzazione",
+            "nuove funzioni sociali del centro"
+          ]
+        },
+        {
+          "title": "Elenco dei progetti di rifunzionalizzazione",
+          "publisher": "Commissario straordinario per il recupero e la rifunzionalizzazione dei beni confiscati",
+          "source_kind": "institutional",
+          "url": "https://commissari.interno.gov.it/sites/default/files/0/2025-09/allegato_elenco_decreto_arzachena_commissario_rifunzionalizzazione.pdf",
+          "published_at": null,
+          "supports": [
+            "protocollo 2021-VBM-00358",
+            "CUP C82F22000190006",
+            "finanziamento di 599.900 euro"
+          ]
+        },
+        {
+          "title": "Center Lucky Friends",
+          "publisher": "ASD Lucky Friends",
+          "source_kind": "manager",
+          "url": "https://www.luckyfriends.it/",
+          "published_at": null,
+          "supports": [
+            "affidamento comunale dell'immobile confiscato",
+            "attività inclusive del centro"
+          ]
+        },
+        {
+          "title": "Lamezia, l'11 maggio inaugurazione di due beni confiscati assegnati al Comune",
+          "publisher": "Il Lametino",
+          "source_kind": "press",
+          "url": "https://www.lametino.it/eventi/lamezia-l11-maggio-inaugurazione-di-due-beni-confiscati-assegnati-al-comune.html",
+          "published_at": "2026-05-08",
+          "supports": [
+            "indirizzo via Sebastiano Guzzi 70",
+            "destinazioni sociali dopo la rifunzionalizzazione"
+          ]
+        },
+        {
+          "title": "Lab Lucky Gym",
+          "publisher": "Cooperativa sociale Inrete ETS",
+          "source_kind": "service_provider",
+          "url": "https://www.coopinrete.it/progetti/centri-educativi/edulabs-2024/lab-lucky-gym",
+          "published_at": "2024-12-02",
+          "supports": [
+            "attività inclusive presso il Center Lucky Friends",
+            "indirizzo via Sebastiano Guzzi 70"
+          ]
+        }
+      ]
+    }
+  ]
+}
