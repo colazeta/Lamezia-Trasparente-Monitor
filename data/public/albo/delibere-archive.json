@@ -1,11 +1,11 @@
 {
-  "generated_at": "2026-08-31T13:37:46.902Z",
+  "generated_at": "2026-09-01T11:34:40.003Z",
   "source": "Albo Pretorio Comune di Lamezia Terme",
   "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
   "verification_status": "official_source_acquired",
   "coverage": {
     "first_observed_at": "2026-06-25T14:07:05.864Z",
-    "last_observed_at": "2026-08-31T13:37:46.902Z",
+    "last_observed_at": "2026-09-01T11:34:40.003Z",
     "first_act_date": "2026-06-10",
     "last_act_date": "2026-08-24"
   },
@@ -37,7 +37,7 @@
       "public_id": "albo-2026-2753",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-08-31T13:37:46.902Z",
+      "retrieved_at": "2026-09-01T11:34:40.003Z",
       "publication_number": "2026/2753",
       "publication_start": "2026-08-24",
       "publication_end": "2026-09-08",
@@ -117,7 +117,7 @@
         "Regola automatica prudenziale: oggetto minimizzato per possibile presenza di dati personali o contenzioso."
       ],
       "first_observed_at": "2026-08-24T11:40:17.244Z",
-      "last_observed_at": "2026-08-31T13:37:46.902Z",
+      "last_observed_at": "2026-09-01T11:34:40.003Z",
       "archived_document": null
     },
     {
@@ -125,7 +125,7 @@
       "public_id": "albo-2026-2751",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-08-31T13:37:46.902Z",
+      "retrieved_at": "2026-09-01T11:34:40.003Z",
       "publication_number": "2026/2751",
       "publication_start": "2026-08-24",
       "publication_end": "2026-09-08",
@@ -214,13 +214,13 @@
         "Classificazione civica automatica basata su dizionario: settore e tipologia sono derivati da ufficio/provenienza e tipo atto, senza interpretare il contenuto dei PDF."
       ],
       "first_observed_at": "2026-08-24T11:40:17.244Z",
-      "last_observed_at": "2026-08-31T13:37:46.902Z",
+      "last_observed_at": "2026-09-01T11:34:40.003Z",
       "archived_document": {
         "id": "albo-2026-2751",
         "publication_number": "2026/2751",
         "source": "Albo Pretorio Comune di Lamezia Terme",
         "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-        "retrieved_at": "2026-08-31T13:37:46.902Z",
+        "retrieved_at": "2026-09-01T11:34:40.003Z",
         "public_visibility": "publishable",
         "privacy_risk": "low",
         "verification_status": "official_source_acquired",
@@ -231,7 +231,7 @@
         "sha256": "b02f6768f54f8a9096b21adc7ce1f434bf69ae455dfce05d7124f0e9568b5908",
         "size_bytes": 1532866,
         "content_type": "application/pdf",
-        "verified_at": "2026-08-31T13:37:46.902Z"
+        "verified_at": "2026-09-01T11:34:40.003Z"
       }
     },
     {
@@ -239,7 +239,7 @@
       "public_id": "albo-2026-2749",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-08-31T13:37:46.902Z",
+      "retrieved_at": "2026-09-01T11:34:40.003Z",
       "publication_number": "2026/2749",
       "publication_start": "2026-08-24",
       "publication_end": "2026-09-08",
@@ -319,7 +319,7 @@
         "Regola automatica prudenziale: oggetto minimizzato per possibile presenza di dati personali o contenzioso."
       ],
       "first_observed_at": "2026-08-24T11:40:17.244Z",
-      "last_observed_at": "2026-08-31T13:37:46.902Z",
+      "last_observed_at": "2026-09-01T11:34:40.003Z",
       "archived_document": null
     },
     {

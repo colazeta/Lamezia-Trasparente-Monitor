@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-08-31T13:37:46.902Z",
+  "generated_at": "2026-09-01T11:34:40.003Z",
   "source": "Albo Pretorio Comune di Lamezia Terme",
   "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-  "retrieved_at": "2026-08-31T13:37:46.902Z",
+  "retrieved_at": "2026-09-01T11:34:40.003Z",
   "verification_status": "official_source_acquired",
   "known_limits": [
     "Tranche A acquisisce l'elenco degli atti correnti esposto dalla fonte ufficiale, senza dichiarare completezza storica.",
@@ -107,16 +107,16 @@
       "action_min_records_per_option": 5
     },
     "corpus": {
-      "visible_records": 79,
-      "publishable_records": 64
+      "visible_records": 103,
+      "publishable_records": 86
     },
     "facets": {
       "act_family": {
         "contract_status": "missing",
         "proxy_field": "classification.act_category",
         "proxy_meaning": "Categoria civica derivata dalla tipologia: utile come proxy di copertura, ma non e' ancora un contratto act_family.",
-        "proxy_populated_records": 74,
-        "proxy_coverage": 0.9367088607594937,
+        "proxy_populated_records": 98,
+        "proxy_coverage": 0.9514563106796117,
         "required_coverage": 0.98,
         "proxy_coverage_pass": false,
         "reviewed_accuracy": null,
@@ -127,8 +127,8 @@
         "contract_status": "missing",
         "proxy_field": "classification.sector",
         "proxy_meaning": "Settore civico derivato da provenienza e tipo atto: non identifica in modo affidabile issuer o organo.",
-        "proxy_populated_records": 73,
-        "proxy_coverage": 0.9240506329113924,
+        "proxy_populated_records": 97,
+        "proxy_coverage": 0.941747572815534,
         "required_coverage": 0.98,
         "proxy_coverage_pass": false,
         "reviewed_accuracy": null,
@@ -138,8 +138,8 @@
       "area_theme": {
         "contract_status": "versioned",
         "contract_field": "presentation.area_theme",
-        "eligible_records": 64,
-        "materialised_records": 64,
+        "eligible_records": 86,
+        "materialised_records": 86,
         "materialisation_coverage": 1,
         "required_materialisation_coverage": 1,
         "materialisation_pass": true,
@@ -149,8 +149,8 @@
         "high_confidence_precision_pass": true,
         "reviewed_fallback_rate": 0,
         "reviewed_fallback_rate_pass": true,
-        "corpus_fallback_records": 4,
-        "corpus_fallback_rate": 0.0625,
+        "corpus_fallback_records": 6,
+        "corpus_fallback_rate": 0.06976744186046512,
         "corpus_fallback_rate_pass": true,
         "public_filter_ready": true,
         "blocker": null
@@ -158,9 +158,9 @@
       "action": {
         "contract_status": "versioned",
         "contract_field": "presentation.action_id",
-        "eligible_records": 64,
+        "eligible_records": 86,
         "assigned_records": 4,
-        "coverage": 0.0625,
+        "coverage": 0.046511627906976744,
         "required_coverage": 0.7,
         "coverage_pass": false,
         "reviewed_precision": 1,
@@ -309,23 +309,2201 @@
     ]
   },
   "counts": {
-    "acquired": 81,
-    "new": 7,
-    "changed": 16,
-    "removed": 2,
-    "unchanged": 58,
-    "publishable": 64,
+    "acquired": 105,
+    "new": 24,
+    "changed": 0,
+    "removed": 0,
+    "unchanged": 81,
+    "publishable": 86,
     "minimised": 2,
-    "metadata_only": 13,
+    "metadata_only": 15,
     "excluded": 2
   },
   "items": [
+    {
+      "id": "albo-2026-2813",
+      "public_id": "albo-2026-2813",
+      "source": "Albo Pretorio Comune di Lamezia Terme",
+      "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
+      "retrieved_at": "2026-09-01T11:34:40.003Z",
+      "publication_number": "2026/2813",
+      "publication_start": "2026-09-01",
+      "publication_end": "2026-10-01",
+      "office": "SETTORE GOVERNO DEL TERRITORIO - PIANIFICAZIONE TERRITORIALE ED URBANISTICA",
+      "act_type": "AVVISO RILASCIO PERMESSO DI COSTRUIRE",
+      "act_number": null,
+      "act_date": null,
+      "content_hash": "2aa15054819a3ce91284995299808b514d7acc9d379d9c4332606fe35bf1544b",
+      "subject": "Avviso di rilascio di Concessione edilizia in sanatoria (condono) Fascicolo N. 1857",
+      "document_url": "https://albo.tinnvision.cloud/allegati/2026_2813_2_P?ente=00301390795",
+      "public_note": null,
+      "verification_status": "official_source_acquired",
+      "privacy_risk": "low",
+      "public_visibility": "publishable",
+      "classification": {
+        "dictionary_version": "2026-08-22-a",
+        "sector": {
+          "id": "governo_territorio",
+          "label": "Governo del territorio e urbanistica",
+          "description": "Urbanistica, pianificazione territoriale, edilizia e atti tecnici collegati al territorio.",
+          "confidence": "high",
+          "basis": "office_and_act_type"
+        },
+        "act_category": {
+          "id": "edilizia_urbanistica",
+          "label": "Edilizia e urbanistica",
+          "description": "Permessi di costruire, avvisi edilizi e atti urbanistici.",
+          "confidence": "high",
+          "basis": "act_type"
+        }
+      },
+      "privacy_attestation": {
+        "schema_version": "albo-privacy-policy-attestation.v1",
+        "policy_version": "albo-privacy-policy.2026-08-30.1",
+        "assessment_basis": "source_record",
+        "status": "current"
+      },
+      "presentation": {
+        "display_title": "Avviso di rilascio di Concessione edilizia in sanatoria (condono) Fascicolo N. 1857",
+        "action_id": null,
+        "action_label": null,
+        "search_text": "avviso di rilascio di concessione edilizia in sanatoria condono fascicolo n 1857",
+        "standardisation": {
+          "schema_version": "publication-standardisation.v1",
+          "profile_id": "albo-public-title-it",
+          "profile_version": "2026-08-30.2",
+          "input_field": "subject",
+          "input_field_preserved": true,
+          "status": "unchanged",
+          "transformations": [],
+          "layout_flags": [],
+          "review_reasons": []
+        },
+        "area_theme": {
+          "schema_version": "publication-area-theme.v1",
+          "taxonomy_id": "municipal-public-act-area-theme-it",
+          "taxonomy_version": "2026-08-30.1",
+          "theme_id": "territorio_edilizia",
+          "theme_label": "Urbanistica, edilizia e territorio",
+          "confidence": "high",
+          "basis": "deterministic_rule",
+          "rule_id": "building-permits",
+          "evidence": [
+            {
+              "rule_id": "building-permits",
+              "input_field": "subject",
+              "matched_terms": [
+                "concessione edilizia",
+                "condono",
+                "sanatoria"
+              ]
+            }
+          ],
+          "null_reason": null,
+          "override": null
+        }
+      },
+      "known_limits": [
+        "Tranche A acquisisce l'elenco degli atti correnti esposto dalla fonte ufficiale, senza dichiarare completezza storica.",
+        "I PDF sono archiviati solo per record pubblicabili a basso rischio; allegati e PDF non sono analizzati, interpretati o sottoposti a OCR.",
+        "Gli export Tinnvision possono non includere URL diretti agli allegati; quando disponibile, il monitor usa il dettaglio ufficiale Tinnvision solo per individuare PDF HTTPS a basso rischio.",
+        "La classificazione privacy e' prudenziale e automatica; i casi sensibili richiedono revisione umana prima di esposizioni piu' ricche.",
+        "Quando gli export strutturati non includono URL diretti, il monitor prova il dettaglio ufficiale Tinnvision solo per record pubblicabili a basso rischio.",
+        "Classificazione civica automatica basata su dizionario: settore e tipologia sono derivati da ufficio/provenienza e tipo atto, senza interpretare il contenuto dei PDF."
+      ]
+    },
+    {
+      "id": "albo-2026-2812",
+      "public_id": "albo-2026-2812",
+      "source": "Albo Pretorio Comune di Lamezia Terme",
+      "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
+      "retrieved_at": "2026-09-01T11:34:40.003Z",
+      "publication_number": "2026/2812",
+      "publication_start": "2026-09-01",
+      "publication_end": "2026-10-01",
+      "office": "SETTORE GOVERNO DEL TERRITORIO - PIANIFICAZIONE TERRITORIALE ED URBANISTICA",
+      "act_type": "AVVISO RILASCIO PERMESSO DI COSTRUIRE",
+      "act_number": null,
+      "act_date": null,
+      "content_hash": "6fe2e2cbb040ef8353a9bab335a4d101e217b7b200e5d7b1071337492b071efa",
+      "subject": "Avviso di rilascio di Concessione edilizia in sanatoria (condono) Fascicolo N. 11454",
+      "document_url": "https://albo.tinnvision.cloud/allegati/2026_2812_2_P?ente=00301390795",
+      "public_note": null,
+      "verification_status": "official_source_acquired",
+      "privacy_risk": "low",
+      "public_visibility": "publishable",
+      "classification": {
+        "dictionary_version": "2026-08-22-a",
+        "sector": {
+          "id": "governo_territorio",
+          "label": "Governo del territorio e urbanistica",
+          "description": "Urbanistica, pianificazione territoriale, edilizia e atti tecnici collegati al territorio.",
+          "confidence": "high",
+          "basis": "office_and_act_type"
+        },
+        "act_category": {
+          "id": "edilizia_urbanistica",
+          "label": "Edilizia e urbanistica",
+          "description": "Permessi di costruire, avvisi edilizi e atti urbanistici.",
+          "confidence": "high",
+          "basis": "act_type"
+        }
+      },
+      "privacy_attestation": {
+        "schema_version": "albo-privacy-policy-attestation.v1",
+        "policy_version": "albo-privacy-policy.2026-08-30.1",
+        "assessment_basis": "source_record",
+        "status": "current"
+      },
+      "presentation": {
+        "display_title": "Avviso di rilascio di Concessione edilizia in sanatoria (condono) Fascicolo N. 11454",
+        "action_id": null,
+        "action_label": null,
+        "search_text": "avviso di rilascio di concessione edilizia in sanatoria condono fascicolo n 11454",
+        "standardisation": {
+          "schema_version": "publication-standardisation.v1",
+          "profile_id": "albo-public-title-it",
+          "profile_version": "2026-08-30.2",
+          "input_field": "subject",
+          "input_field_preserved": true,
+          "status": "unchanged",
+          "transformations": [],
+          "layout_flags": [],
+          "review_reasons": []
+        },
+        "area_theme": {
+          "schema_version": "publication-area-theme.v1",
+          "taxonomy_id": "municipal-public-act-area-theme-it",
+          "taxonomy_version": "2026-08-30.1",
+          "theme_id": "territorio_edilizia",
+          "theme_label": "Urbanistica, edilizia e territorio",
+          "confidence": "high",
+          "basis": "deterministic_rule",
+          "rule_id": "building-permits",
+          "evidence": [
+            {
+              "rule_id": "building-permits",
+              "input_field": "subject",
+              "matched_terms": [
+                "concessione edilizia",
+                "condono",
+                "sanatoria"
+              ]
+            }
+          ],
+          "null_reason": null,
+          "override": null
+        }
+      },
+      "known_limits": [
+        "Tranche A acquisisce l'elenco degli atti correnti esposto dalla fonte ufficiale, senza dichiarare completezza storica.",
+        "I PDF sono archiviati solo per record pubblicabili a basso rischio; allegati e PDF non sono analizzati, interpretati o sottoposti a OCR.",
+        "Gli export Tinnvision possono non includere URL diretti agli allegati; quando disponibile, il monitor usa il dettaglio ufficiale Tinnvision solo per individuare PDF HTTPS a basso rischio.",
+        "La classificazione privacy e' prudenziale e automatica; i casi sensibili richiedono revisione umana prima di esposizioni piu' ricche.",
+        "Quando gli export strutturati non includono URL diretti, il monitor prova il dettaglio ufficiale Tinnvision solo per record pubblicabili a basso rischio.",
+        "Classificazione civica automatica basata su dizionario: settore e tipologia sono derivati da ufficio/provenienza e tipo atto, senza interpretare il contenuto dei PDF."
+      ]
+    },
+    {
+      "id": "albo-2026-2811",
+      "public_id": "albo-2026-2811",
+      "source": "Albo Pretorio Comune di Lamezia Terme",
+      "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
+      "retrieved_at": "2026-09-01T11:34:40.003Z",
+      "publication_number": "2026/2811",
+      "publication_start": "2026-09-01",
+      "publication_end": "2026-10-01",
+      "office": "SETTORE GOVERNO DEL TERRITORIO - PIANIFICAZIONE TERRITORIALE ED URBANISTICA",
+      "act_type": "AVVISO RILASCIO PERMESSO DI COSTRUIRE",
+      "act_number": null,
+      "act_date": null,
+      "content_hash": "9e082c34cedf2b72d2565bebb8a8ef0763cefa54435a4ba107545019ccc42364",
+      "subject": "Avviso di rilascio di Concessione edilizia in sanatoria (condono) Fascicolo N. 1311",
+      "document_url": "https://albo.tinnvision.cloud/allegati/2026_2811_2_P?ente=00301390795",
+      "public_note": null,
+      "verification_status": "official_source_acquired",
+      "privacy_risk": "low",
+      "public_visibility": "publishable",
+      "classification": {
+        "dictionary_version": "2026-08-22-a",
+        "sector": {
+          "id": "governo_territorio",
+          "label": "Governo del territorio e urbanistica",
+          "description": "Urbanistica, pianificazione territoriale, edilizia e atti tecnici collegati al territorio.",
+          "confidence": "high",
+          "basis": "office_and_act_type"
+        },
+        "act_category": {
+          "id": "edilizia_urbanistica",
+          "label": "Edilizia e urbanistica",
+          "description": "Permessi di costruire, avvisi edilizi e atti urbanistici.",
+          "confidence": "high",
+          "basis": "act_type"
+        }
+      },
+      "privacy_attestation": {
+        "schema_version": "albo-privacy-policy-attestation.v1",
+        "policy_version": "albo-privacy-policy.2026-08-30.1",
+        "assessment_basis": "source_record",
+        "status": "current"
+      },
+      "presentation": {
+        "display_title": "Avviso di rilascio di Concessione edilizia in sanatoria (condono) Fascicolo N. 1311",
+        "action_id": null,
+        "action_label": null,
+        "search_text": "avviso di rilascio di concessione edilizia in sanatoria condono fascicolo n 1311",
+        "standardisation": {
+          "schema_version": "publication-standardisation.v1",
+          "profile_id": "albo-public-title-it",
+          "profile_version": "2026-08-30.2",
+          "input_field": "subject",
+          "input_field_preserved": true,
+          "status": "unchanged",
+          "transformations": [],
+          "layout_flags": [],
+          "review_reasons": []
+        },
+        "area_theme": {
+          "schema_version": "publication-area-theme.v1",
+          "taxonomy_id": "municipal-public-act-area-theme-it",
+          "taxonomy_version": "2026-08-30.1",
+          "theme_id": "territorio_edilizia",
+          "theme_label": "Urbanistica, edilizia e territorio",
+          "confidence": "high",
+          "basis": "deterministic_rule",
+          "rule_id": "building-permits",
+          "evidence": [
+            {
+              "rule_id": "building-permits",
+              "input_field": "subject",
+              "matched_terms": [
+                "concessione edilizia",
+                "condono",
+                "sanatoria"
+              ]
+            }
+          ],
+          "null_reason": null,
+          "override": null
+        }
+      },
+      "known_limits": [
+        "Tranche A acquisisce l'elenco degli atti correnti esposto dalla fonte ufficiale, senza dichiarare completezza storica.",
+        "I PDF sono archiviati solo per record pubblicabili a basso rischio; allegati e PDF non sono analizzati, interpretati o sottoposti a OCR.",
+        "Gli export Tinnvision possono non includere URL diretti agli allegati; quando disponibile, il monitor usa il dettaglio ufficiale Tinnvision solo per individuare PDF HTTPS a basso rischio.",
+        "La classificazione privacy e' prudenziale e automatica; i casi sensibili richiedono revisione umana prima di esposizioni piu' ricche.",
+        "Quando gli export strutturati non includono URL diretti, il monitor prova il dettaglio ufficiale Tinnvision solo per record pubblicabili a basso rischio.",
+        "Classificazione civica automatica basata su dizionario: settore e tipologia sono derivati da ufficio/provenienza e tipo atto, senza interpretare il contenuto dei PDF."
+      ]
+    },
+    {
+      "id": "albo-2026-2810",
+      "public_id": "albo-2026-2810",
+      "source": "Albo Pretorio Comune di Lamezia Terme",
+      "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
+      "retrieved_at": "2026-09-01T11:34:40.003Z",
+      "publication_number": "2026/2810",
+      "publication_start": "2026-09-01",
+      "publication_end": "2026-10-01",
+      "office": "SETTORE GOVERNO DEL TERRITORIO - PIANIFICAZIONE TERRITORIALE ED URBANISTICA",
+      "act_type": "AVVISO RILASCIO PERMESSO DI COSTRUIRE",
+      "act_number": null,
+      "act_date": null,
+      "content_hash": "f55d2016b84a776d27c1500e64757cec6bb82c061b568437a197e6ab9550226a",
+      "subject": "Avviso di rilascio di Concessione edilizia in sanatoria (condono) Fascicolo N. 5516",
+      "document_url": "https://albo.tinnvision.cloud/allegati/2026_2810_2_P?ente=00301390795",
+      "public_note": null,
+      "verification_status": "official_source_acquired",
+      "privacy_risk": "low",
+      "public_visibility": "publishable",
+      "classification": {
+        "dictionary_version": "2026-08-22-a",
+        "sector": {
+          "id": "governo_territorio",
+          "label": "Governo del territorio e urbanistica",
+          "description": "Urbanistica, pianificazione territoriale, edilizia e atti tecnici collegati al territorio.",
+          "confidence": "high",
+          "basis": "office_and_act_type"
+        },
+        "act_category": {
+          "id": "edilizia_urbanistica",
+          "label": "Edilizia e urbanistica",
+          "description": "Permessi di costruire, avvisi edilizi e atti urbanistici.",
+          "confidence": "high",
+          "basis": "act_type"
+        }
+      },
+      "privacy_attestation": {
+        "schema_version": "albo-privacy-policy-attestation.v1",
+        "policy_version": "albo-privacy-policy.2026-08-30.1",
+        "assessment_basis": "source_record",
+        "status": "current"
+      },
+      "presentation": {
+        "display_title": "Avviso di rilascio di Concessione edilizia in sanatoria (condono) Fascicolo N. 5516",
+        "action_id": null,
+        "action_label": null,
+        "search_text": "avviso di rilascio di concessione edilizia in sanatoria condono fascicolo n 5516",
+        "standardisation": {
+          "schema_version": "publication-standardisation.v1",
+          "profile_id": "albo-public-title-it",
+          "profile_version": "2026-08-30.2",
+          "input_field": "subject",
+          "input_field_preserved": true,
+          "status": "unchanged",
+          "transformations": [],
+          "layout_flags": [],
+          "review_reasons": []
+        },
+        "area_theme": {
+          "schema_version": "publication-area-theme.v1",
+          "taxonomy_id": "municipal-public-act-area-theme-it",
+          "taxonomy_version": "2026-08-30.1",
+          "theme_id": "territorio_edilizia",
+          "theme_label": "Urbanistica, edilizia e territorio",
+          "confidence": "high",
+          "basis": "deterministic_rule",
+          "rule_id": "building-permits",
+          "evidence": [
+            {
+              "rule_id": "building-permits",
+              "input_field": "subject",
+              "matched_terms": [
+                "concessione edilizia",
+                "condono",
+                "sanatoria"
+              ]
+            }
+          ],
+          "null_reason": null,
+          "override": null
+        }
+      },
+      "known_limits": [
+        "Tranche A acquisisce l'elenco degli atti correnti esposto dalla fonte ufficiale, senza dichiarare completezza storica.",
+        "I PDF sono archiviati solo per record pubblicabili a basso rischio; allegati e PDF non sono analizzati, interpretati o sottoposti a OCR.",
+        "Gli export Tinnvision possono non includere URL diretti agli allegati; quando disponibile, il monitor usa il dettaglio ufficiale Tinnvision solo per individuare PDF HTTPS a basso rischio.",
+        "La classificazione privacy e' prudenziale e automatica; i casi sensibili richiedono revisione umana prima di esposizioni piu' ricche.",
+        "Quando gli export strutturati non includono URL diretti, il monitor prova il dettaglio ufficiale Tinnvision solo per record pubblicabili a basso rischio.",
+        "Classificazione civica automatica basata su dizionario: settore e tipologia sono derivati da ufficio/provenienza e tipo atto, senza interpretare il contenuto dei PDF."
+      ]
+    },
+    {
+      "id": "albo-2026-2809",
+      "public_id": "albo-2026-2809",
+      "source": "Albo Pretorio Comune di Lamezia Terme",
+      "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
+      "retrieved_at": "2026-09-01T11:34:40.003Z",
+      "publication_number": "2026/2809",
+      "publication_start": "2026-09-01",
+      "publication_end": "2026-10-01",
+      "office": "SETTORE GOVERNO DEL TERRITORIO - PIANIFICAZIONE TERRITORIALE ED URBANISTICA",
+      "act_type": "AVVISO RILASCIO PERMESSO DI COSTRUIRE",
+      "act_number": null,
+      "act_date": null,
+      "content_hash": "0ad9230ced920e3b27a78fd856f11451b4dc3938117fb14830fe4da98708851e",
+      "subject": "Avviso di rilascio di Concessione edilizia in sanatoria (condono) Fascicolo N. 5517",
+      "document_url": "https://albo.tinnvision.cloud/allegati/2026_2809_2_P?ente=00301390795",
+      "public_note": null,
+      "verification_status": "official_source_acquired",
+      "privacy_risk": "low",
+      "public_visibility": "publishable",
+      "classification": {
+        "dictionary_version": "2026-08-22-a",
+        "sector": {
+          "id": "governo_territorio",
+          "label": "Governo del territorio e urbanistica",
+          "description": "Urbanistica, pianificazione territoriale, edilizia e atti tecnici collegati al territorio.",
+          "confidence": "high",
+          "basis": "office_and_act_type"
+        },
+        "act_category": {
+          "id": "edilizia_urbanistica",
+          "label": "Edilizia e urbanistica",
+          "description": "Permessi di costruire, avvisi edilizi e atti urbanistici.",
+          "confidence": "high",
+          "basis": "act_type"
+        }
+      },
+      "privacy_attestation": {
+        "schema_version": "albo-privacy-policy-attestation.v1",
+        "policy_version": "albo-privacy-policy.2026-08-30.1",
+        "assessment_basis": "source_record",
+        "status": "current"
+      },
+      "presentation": {
+        "display_title": "Avviso di rilascio di Concessione edilizia in sanatoria (condono) Fascicolo N. 5517",
+        "action_id": null,
+        "action_label": null,
+        "search_text": "avviso di rilascio di concessione edilizia in sanatoria condono fascicolo n 5517",
+        "standardisation": {
+          "schema_version": "publication-standardisation.v1",
+          "profile_id": "albo-public-title-it",
+          "profile_version": "2026-08-30.2",
+          "input_field": "subject",
+          "input_field_preserved": true,
+          "status": "unchanged",
+          "transformations": [],
+          "layout_flags": [],
+          "review_reasons": []
+        },
+        "area_theme": {
+          "schema_version": "publication-area-theme.v1",
+          "taxonomy_id": "municipal-public-act-area-theme-it",
+          "taxonomy_version": "2026-08-30.1",
+          "theme_id": "territorio_edilizia",
+          "theme_label": "Urbanistica, edilizia e territorio",
+          "confidence": "high",
+          "basis": "deterministic_rule",
+          "rule_id": "building-permits",
+          "evidence": [
+            {
+              "rule_id": "building-permits",
+              "input_field": "subject",
+              "matched_terms": [
+                "concessione edilizia",
+                "condono",
+                "sanatoria"
+              ]
+            }
+          ],
+          "null_reason": null,
+          "override": null
+        }
+      },
+      "known_limits": [
+        "Tranche A acquisisce l'elenco degli atti correnti esposto dalla fonte ufficiale, senza dichiarare completezza storica.",
+        "I PDF sono archiviati solo per record pubblicabili a basso rischio; allegati e PDF non sono analizzati, interpretati o sottoposti a OCR.",
+        "Gli export Tinnvision possono non includere URL diretti agli allegati; quando disponibile, il monitor usa il dettaglio ufficiale Tinnvision solo per individuare PDF HTTPS a basso rischio.",
+        "La classificazione privacy e' prudenziale e automatica; i casi sensibili richiedono revisione umana prima di esposizioni piu' ricche.",
+        "Quando gli export strutturati non includono URL diretti, il monitor prova il dettaglio ufficiale Tinnvision solo per record pubblicabili a basso rischio.",
+        "Classificazione civica automatica basata su dizionario: settore e tipologia sono derivati da ufficio/provenienza e tipo atto, senza interpretare il contenuto dei PDF."
+      ]
+    },
+    {
+      "id": "albo-2026-2808",
+      "public_id": "albo-2026-2808",
+      "source": "Albo Pretorio Comune di Lamezia Terme",
+      "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
+      "retrieved_at": "2026-09-01T11:34:40.003Z",
+      "publication_number": "2026/2808",
+      "publication_start": "2026-09-01",
+      "publication_end": "2026-10-01",
+      "office": "SETTORE GOVERNO DEL TERRITORIO - PIANIFICAZIONE TERRITORIALE ED URBANISTICA",
+      "act_type": "AVVISO RILASCIO PERMESSO DI COSTRUIRE",
+      "act_number": null,
+      "act_date": null,
+      "content_hash": "b268e1d444e3b9d217ac8fa992b50ab3952eefa9f772daf89056b0f37de161f7",
+      "subject": "Avviso di rilascio di Concessione edilizia in sanatoria (condono) Fascicolo N. 5518",
+      "document_url": "https://albo.tinnvision.cloud/allegati/2026_2808_2_P?ente=00301390795",
+      "public_note": null,
+      "verification_status": "official_source_acquired",
+      "privacy_risk": "low",
+      "public_visibility": "publishable",
+      "classification": {
+        "dictionary_version": "2026-08-22-a",
+        "sector": {
+          "id": "governo_territorio",
+          "label": "Governo del territorio e urbanistica",
+          "description": "Urbanistica, pianificazione territoriale, edilizia e atti tecnici collegati al territorio.",
+          "confidence": "high",
+          "basis": "office_and_act_type"
+        },
+        "act_category": {
+          "id": "edilizia_urbanistica",
+          "label": "Edilizia e urbanistica",
+          "description": "Permessi di costruire, avvisi edilizi e atti urbanistici.",
+          "confidence": "high",
+          "basis": "act_type"
+        }
+      },
+      "privacy_attestation": {
+        "schema_version": "albo-privacy-policy-attestation.v1",
+        "policy_version": "albo-privacy-policy.2026-08-30.1",
+        "assessment_basis": "source_record",
+        "status": "current"
+      },
+      "presentation": {
+        "display_title": "Avviso di rilascio di Concessione edilizia in sanatoria (condono) Fascicolo N. 5518",
+        "action_id": null,
+        "action_label": null,
+        "search_text": "avviso di rilascio di concessione edilizia in sanatoria condono fascicolo n 5518",
+        "standardisation": {
+          "schema_version": "publication-standardisation.v1",
+          "profile_id": "albo-public-title-it",
+          "profile_version": "2026-08-30.2",
+          "input_field": "subject",
+          "input_field_preserved": true,
+          "status": "unchanged",
+          "transformations": [],
+          "layout_flags": [],
+          "review_reasons": []
+        },
+        "area_theme": {
+          "schema_version": "publication-area-theme.v1",
+          "taxonomy_id": "municipal-public-act-area-theme-it",
+          "taxonomy_version": "2026-08-30.1",
+          "theme_id": "territorio_edilizia",
+          "theme_label": "Urbanistica, edilizia e territorio",
+          "confidence": "high",
+          "basis": "deterministic_rule",
+          "rule_id": "building-permits",
+          "evidence": [
+            {
+              "rule_id": "building-permits",
+              "input_field": "subject",
+              "matched_terms": [
+                "concessione edilizia",
+                "condono",
+                "sanatoria"
+              ]
+            }
+          ],
+          "null_reason": null,
+          "override": null
+        }
+      },
+      "known_limits": [
+        "Tranche A acquisisce l'elenco degli atti correnti esposto dalla fonte ufficiale, senza dichiarare completezza storica.",
+        "I PDF sono archiviati solo per record pubblicabili a basso rischio; allegati e PDF non sono analizzati, interpretati o sottoposti a OCR.",
+        "Gli export Tinnvision possono non includere URL diretti agli allegati; quando disponibile, il monitor usa il dettaglio ufficiale Tinnvision solo per individuare PDF HTTPS a basso rischio.",
+        "La classificazione privacy e' prudenziale e automatica; i casi sensibili richiedono revisione umana prima di esposizioni piu' ricche.",
+        "Quando gli export strutturati non includono URL diretti, il monitor prova il dettaglio ufficiale Tinnvision solo per record pubblicabili a basso rischio.",
+        "Classificazione civica automatica basata su dizionario: settore e tipologia sono derivati da ufficio/provenienza e tipo atto, senza interpretare il contenuto dei PDF."
+      ]
+    },
+    {
+      "id": "albo-2026-2807",
+      "public_id": "albo-2026-2807",
+      "source": "Albo Pretorio Comune di Lamezia Terme",
+      "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
+      "retrieved_at": "2026-09-01T11:34:40.003Z",
+      "publication_number": "2026/2807",
+      "publication_start": "2026-09-01",
+      "publication_end": "2026-10-01",
+      "office": "SETTORE GOVERNO DEL TERRITORIO - PIANIFICAZIONE TERRITORIALE ED URBANISTICA",
+      "act_type": "AVVISO RILASCIO PERMESSO DI COSTRUIRE",
+      "act_number": null,
+      "act_date": null,
+      "content_hash": "efabfdb498e0a980f5254cffb30cb7f844c649f893ad502e7ed665231a5455c3",
+      "subject": "Avviso di rilascio di Concessione edilizia in sanatoria (condono) Fascicolo N. 11326",
+      "document_url": "https://albo.tinnvision.cloud/allegati/2026_2807_2_P?ente=00301390795",
+      "public_note": null,
+      "verification_status": "official_source_acquired",
+      "privacy_risk": "low",
+      "public_visibility": "publishable",
+      "classification": {
+        "dictionary_version": "2026-08-22-a",
+        "sector": {
+          "id": "governo_territorio",
+          "label": "Governo del territorio e urbanistica",
+          "description": "Urbanistica, pianificazione territoriale, edilizia e atti tecnici collegati al territorio.",
+          "confidence": "high",
+          "basis": "office_and_act_type"
+        },
+        "act_category": {
+          "id": "edilizia_urbanistica",
+          "label": "Edilizia e urbanistica",
+          "description": "Permessi di costruire, avvisi edilizi e atti urbanistici.",
+          "confidence": "high",
+          "basis": "act_type"
+        }
+      },
+      "privacy_attestation": {
+        "schema_version": "albo-privacy-policy-attestation.v1",
+        "policy_version": "albo-privacy-policy.2026-08-30.1",
+        "assessment_basis": "source_record",
+        "status": "current"
+      },
+      "presentation": {
+        "display_title": "Avviso di rilascio di Concessione edilizia in sanatoria (condono) Fascicolo N. 11326",
+        "action_id": null,
+        "action_label": null,
+        "search_text": "avviso di rilascio di concessione edilizia in sanatoria condono fascicolo n 11326",
+        "standardisation": {
+          "schema_version": "publication-standardisation.v1",
+          "profile_id": "albo-public-title-it",
+          "profile_version": "2026-08-30.2",
+          "input_field": "subject",
+          "input_field_preserved": true,
+          "status": "unchanged",
+          "transformations": [],
+          "layout_flags": [],
+          "review_reasons": []
+        },
+        "area_theme": {
+          "schema_version": "publication-area-theme.v1",
+          "taxonomy_id": "municipal-public-act-area-theme-it",
+          "taxonomy_version": "2026-08-30.1",
+          "theme_id": "territorio_edilizia",
+          "theme_label": "Urbanistica, edilizia e territorio",
+          "confidence": "high",
+          "basis": "deterministic_rule",
+          "rule_id": "building-permits",
+          "evidence": [
+            {
+              "rule_id": "building-permits",
+              "input_field": "subject",
+              "matched_terms": [
+                "concessione edilizia",
+                "condono",
+                "sanatoria"
+              ]
+            }
+          ],
+          "null_reason": null,
+          "override": null
+        }
+      },
+      "known_limits": [
+        "Tranche A acquisisce l'elenco degli atti correnti esposto dalla fonte ufficiale, senza dichiarare completezza storica.",
+        "I PDF sono archiviati solo per record pubblicabili a basso rischio; allegati e PDF non sono analizzati, interpretati o sottoposti a OCR.",
+        "Gli export Tinnvision possono non includere URL diretti agli allegati; quando disponibile, il monitor usa il dettaglio ufficiale Tinnvision solo per individuare PDF HTTPS a basso rischio.",
+        "La classificazione privacy e' prudenziale e automatica; i casi sensibili richiedono revisione umana prima di esposizioni piu' ricche.",
+        "Quando gli export strutturati non includono URL diretti, il monitor prova il dettaglio ufficiale Tinnvision solo per record pubblicabili a basso rischio.",
+        "Classificazione civica automatica basata su dizionario: settore e tipologia sono derivati da ufficio/provenienza e tipo atto, senza interpretare il contenuto dei PDF."
+      ]
+    },
+    {
+      "id": "albo-2026-2806",
+      "public_id": "albo-2026-2806",
+      "source": "Albo Pretorio Comune di Lamezia Terme",
+      "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
+      "retrieved_at": "2026-09-01T11:34:40.003Z",
+      "publication_number": "2026/2806",
+      "publication_start": "2026-09-01",
+      "publication_end": "2026-10-01",
+      "office": "SETTORE GOVERNO DEL TERRITORIO - PIANIFICAZIONE TERRITORIALE ED URBANISTICA",
+      "act_type": "AVVISO RILASCIO PERMESSO DI COSTRUIRE",
+      "act_number": null,
+      "act_date": null,
+      "content_hash": "477ddaf3faf933a341a364629984f00857eff1299ed3e6c0a910ba37743ac3de",
+      "subject": "Avviso di rilascio di Concessione edilizia in sanatoria (condono) Fascicolo N. 4382",
+      "document_url": "https://albo.tinnvision.cloud/allegati/2026_2806_2_P?ente=00301390795",
+      "public_note": null,
+      "verification_status": "official_source_acquired",
+      "privacy_risk": "low",
+      "public_visibility": "publishable",
+      "classification": {
+        "dictionary_version": "2026-08-22-a",
+        "sector": {
+          "id": "governo_territorio",
+          "label": "Governo del territorio e urbanistica",
+          "description": "Urbanistica, pianificazione territoriale, edilizia e atti tecnici collegati al territorio.",
+          "confidence": "high",
+          "basis": "office_and_act_type"
+        },
+        "act_category": {
+          "id": "edilizia_urbanistica",
+          "label": "Edilizia e urbanistica",
+          "description": "Permessi di costruire, avvisi edilizi e atti urbanistici.",
+          "confidence": "high",
+          "basis": "act_type"
+        }
+      },
+      "privacy_attestation": {
+        "schema_version": "albo-privacy-policy-attestation.v1",
+        "policy_version": "albo-privacy-policy.2026-08-30.1",
+        "assessment_basis": "source_record",
+        "status": "current"
+      },
+      "presentation": {
+        "display_title": "Avviso di rilascio di Concessione edilizia in sanatoria (condono) Fascicolo N. 4382",
+        "action_id": null,
+        "action_label": null,
+        "search_text": "avviso di rilascio di concessione edilizia in sanatoria condono fascicolo n 4382",
+        "standardisation": {
+          "schema_version": "publication-standardisation.v1",
+          "profile_id": "albo-public-title-it",
+          "profile_version": "2026-08-30.2",
+          "input_field": "subject",
+          "input_field_preserved": true,
+          "status": "unchanged",
+          "transformations": [],
+          "layout_flags": [],
+          "review_reasons": []
+        },
+        "area_theme": {
+          "schema_version": "publication-area-theme.v1",
+          "taxonomy_id": "municipal-public-act-area-theme-it",
+          "taxonomy_version": "2026-08-30.1",
+          "theme_id": "territorio_edilizia",
+          "theme_label": "Urbanistica, edilizia e territorio",
+          "confidence": "high",
+          "basis": "deterministic_rule",
+          "rule_id": "building-permits",
+          "evidence": [
+            {
+              "rule_id": "building-permits",
+              "input_field": "subject",
+              "matched_terms": [
+                "concessione edilizia",
+                "condono",
+                "sanatoria"
+              ]
+            }
+          ],
+          "null_reason": null,
+          "override": null
+        }
+      },
+      "known_limits": [
+        "Tranche A acquisisce l'elenco degli atti correnti esposto dalla fonte ufficiale, senza dichiarare completezza storica.",
+        "I PDF sono archiviati solo per record pubblicabili a basso rischio; allegati e PDF non sono analizzati, interpretati o sottoposti a OCR.",
+        "Gli export Tinnvision possono non includere URL diretti agli allegati; quando disponibile, il monitor usa il dettaglio ufficiale Tinnvision solo per individuare PDF HTTPS a basso rischio.",
+        "La classificazione privacy e' prudenziale e automatica; i casi sensibili richiedono revisione umana prima di esposizioni piu' ricche.",
+        "Quando gli export strutturati non includono URL diretti, il monitor prova il dettaglio ufficiale Tinnvision solo per record pubblicabili a basso rischio.",
+        "Classificazione civica automatica basata su dizionario: settore e tipologia sono derivati da ufficio/provenienza e tipo atto, senza interpretare il contenuto dei PDF."
+      ]
+    },
+    {
+      "id": "albo-2026-2805",
+      "public_id": "albo-2026-2805",
+      "source": "Albo Pretorio Comune di Lamezia Terme",
+      "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
+      "retrieved_at": "2026-09-01T11:34:40.003Z",
+      "publication_number": "2026/2805",
+      "publication_start": "2026-09-01",
+      "publication_end": "2026-10-01",
+      "office": "SETTORE GOVERNO DEL TERRITORIO - PIANIFICAZIONE TERRITORIALE ED URBANISTICA",
+      "act_type": "AVVISO RILASCIO PERMESSO DI COSTRUIRE",
+      "act_number": null,
+      "act_date": null,
+      "content_hash": "bac4a35ef456b3e03b72ba881768496513d97dbeea17c42691e8c4213f59a90f",
+      "subject": "Avviso di rilascio di Concessione edilizia in sanatoria (condono) Fascicolo N. 4999",
+      "document_url": "https://albo.tinnvision.cloud/allegati/2026_2805_2_P?ente=00301390795",
+      "public_note": null,
+      "verification_status": "official_source_acquired",
+      "privacy_risk": "low",
+      "public_visibility": "publishable",
+      "classification": {
+        "dictionary_version": "2026-08-22-a",
+        "sector": {
+          "id": "governo_territorio",
+          "label": "Governo del territorio e urbanistica",
+          "description": "Urbanistica, pianificazione territoriale, edilizia e atti tecnici collegati al territorio.",
+          "confidence": "high",
+          "basis": "office_and_act_type"
+        },
+        "act_category": {
+          "id": "edilizia_urbanistica",
+          "label": "Edilizia e urbanistica",
+          "description": "Permessi di costruire, avvisi edilizi e atti urbanistici.",
+          "confidence": "high",
+          "basis": "act_type"
+        }
+      },
+      "privacy_attestation": {
+        "schema_version": "albo-privacy-policy-attestation.v1",
+        "policy_version": "albo-privacy-policy.2026-08-30.1",
+        "assessment_basis": "source_record",
+        "status": "current"
+      },
+      "presentation": {
+        "display_title": "Avviso di rilascio di Concessione edilizia in sanatoria (condono) Fascicolo N. 4999",
+        "action_id": null,
+        "action_label": null,
+        "search_text": "avviso di rilascio di concessione edilizia in sanatoria condono fascicolo n 4999",
+        "standardisation": {
+          "schema_version": "publication-standardisation.v1",
+          "profile_id": "albo-public-title-it",
+          "profile_version": "2026-08-30.2",
+          "input_field": "subject",
+          "input_field_preserved": true,
+          "status": "unchanged",
+          "transformations": [],
+          "layout_flags": [],
+          "review_reasons": []
+        },
+        "area_theme": {
+          "schema_version": "publication-area-theme.v1",
+          "taxonomy_id": "municipal-public-act-area-theme-it",
+          "taxonomy_version": "2026-08-30.1",
+          "theme_id": "territorio_edilizia",
+          "theme_label": "Urbanistica, edilizia e territorio",
+          "confidence": "high",
+          "basis": "deterministic_rule",
+          "rule_id": "building-permits",
+          "evidence": [
+            {
+              "rule_id": "building-permits",
+              "input_field": "subject",
+              "matched_terms": [
+                "concessione edilizia",
+                "condono",
+                "sanatoria"
+              ]
+            }
+          ],
+          "null_reason": null,
+          "override": null
+        }
+      },
+      "known_limits": [
+        "Tranche A acquisisce l'elenco degli atti correnti esposto dalla fonte ufficiale, senza dichiarare completezza storica.",
+        "I PDF sono archiviati solo per record pubblicabili a basso rischio; allegati e PDF non sono analizzati, interpretati o sottoposti a OCR.",
+        "Gli export Tinnvision possono non includere URL diretti agli allegati; quando disponibile, il monitor usa il dettaglio ufficiale Tinnvision solo per individuare PDF HTTPS a basso rischio.",
+        "La classificazione privacy e' prudenziale e automatica; i casi sensibili richiedono revisione umana prima di esposizioni piu' ricche.",
+        "Quando gli export strutturati non includono URL diretti, il monitor prova il dettaglio ufficiale Tinnvision solo per record pubblicabili a basso rischio.",
+        "Classificazione civica automatica basata su dizionario: settore e tipologia sono derivati da ufficio/provenienza e tipo atto, senza interpretare il contenuto dei PDF."
+      ]
+    },
+    {
+      "id": "albo-2026-2804",
+      "public_id": "albo-2026-2804",
+      "source": "Albo Pretorio Comune di Lamezia Terme",
+      "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
+      "retrieved_at": "2026-09-01T11:34:40.003Z",
+      "publication_number": "2026/2804",
+      "publication_start": "2026-09-01",
+      "publication_end": "2026-10-01",
+      "office": "SETTORE GOVERNO DEL TERRITORIO - PIANIFICAZIONE TERRITORIALE ED URBANISTICA",
+      "act_type": "AVVISO RILASCIO PERMESSO DI COSTRUIRE",
+      "act_number": null,
+      "act_date": null,
+      "content_hash": "1d4639d777f00acb40ae735ed082a4a12cf3bc3b28ee9fb77db9c3d5c1d0478c",
+      "subject": "Avviso di rilascio di Concessione edilizia in sanatoria (condono) Fascicolo N. 6292",
+      "document_url": "https://albo.tinnvision.cloud/allegati/2026_2804_2_P?ente=00301390795",
+      "public_note": null,
+      "verification_status": "official_source_acquired",
+      "privacy_risk": "low",
+      "public_visibility": "publishable",
+      "classification": {
+        "dictionary_version": "2026-08-22-a",
+        "sector": {
+          "id": "governo_territorio",
+          "label": "Governo del territorio e urbanistica",
+          "description": "Urbanistica, pianificazione territoriale, edilizia e atti tecnici collegati al territorio.",
+          "confidence": "high",
+          "basis": "office_and_act_type"
+        },
+        "act_category": {
+          "id": "edilizia_urbanistica",
+          "label": "Edilizia e urbanistica",
+          "description": "Permessi di costruire, avvisi edilizi e atti urbanistici.",
+          "confidence": "high",
+          "basis": "act_type"
+        }
+      },
+      "privacy_attestation": {
+        "schema_version": "albo-privacy-policy-attestation.v1",
+        "policy_version": "albo-privacy-policy.2026-08-30.1",
+        "assessment_basis": "source_record",
+        "status": "current"
+      },
+      "presentation": {
+        "display_title": "Avviso di rilascio di Concessione edilizia in sanatoria (condono) Fascicolo N. 6292",
+        "action_id": null,
+        "action_label": null,
+        "search_text": "avviso di rilascio di concessione edilizia in sanatoria condono fascicolo n 6292",
+        "standardisation": {
+          "schema_version": "publication-standardisation.v1",
+          "profile_id": "albo-public-title-it",
+          "profile_version": "2026-08-30.2",
+          "input_field": "subject",
+          "input_field_preserved": true,
+          "status": "unchanged",
+          "transformations": [],
+          "layout_flags": [],
+          "review_reasons": []
+        },
+        "area_theme": {
+          "schema_version": "publication-area-theme.v1",
+          "taxonomy_id": "municipal-public-act-area-theme-it",
+          "taxonomy_version": "2026-08-30.1",
+          "theme_id": "territorio_edilizia",
+          "theme_label": "Urbanistica, edilizia e territorio",
+          "confidence": "high",
+          "basis": "deterministic_rule",
+          "rule_id": "building-permits",
+          "evidence": [
+            {
+              "rule_id": "building-permits",
+              "input_field": "subject",
+              "matched_terms": [
+                "concessione edilizia",
+                "condono",
+                "sanatoria"
+              ]
+            }
+          ],
+          "null_reason": null,
+          "override": null
+        }
+      },
+      "known_limits": [
+        "Tranche A acquisisce l'elenco degli atti correnti esposto dalla fonte ufficiale, senza dichiarare completezza storica.",
+        "I PDF sono archiviati solo per record pubblicabili a basso rischio; allegati e PDF non sono analizzati, interpretati o sottoposti a OCR.",
+        "Gli export Tinnvision possono non includere URL diretti agli allegati; quando disponibile, il monitor usa il dettaglio ufficiale Tinnvision solo per individuare PDF HTTPS a basso rischio.",
+        "La classificazione privacy e' prudenziale e automatica; i casi sensibili richiedono revisione umana prima di esposizioni piu' ricche.",
+        "Quando gli export strutturati non includono URL diretti, il monitor prova il dettaglio ufficiale Tinnvision solo per record pubblicabili a basso rischio.",
+        "Classificazione civica automatica basata su dizionario: settore e tipologia sono derivati da ufficio/provenienza e tipo atto, senza interpretare il contenuto dei PDF."
+      ]
+    },
+    {
+      "id": "albo-2026-2803",
+      "public_id": "albo-2026-2803",
+      "source": "Albo Pretorio Comune di Lamezia Terme",
+      "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
+      "retrieved_at": "2026-09-01T11:34:40.003Z",
+      "publication_number": "2026/2803",
+      "publication_start": "2026-09-01",
+      "publication_end": "2026-10-01",
+      "office": "SETTORE GOVERNO DEL TERRITORIO - PIANIFICAZIONE TERRITORIALE ED URBANISTICA",
+      "act_type": "AVVISO RILASCIO PERMESSO DI COSTRUIRE",
+      "act_number": null,
+      "act_date": null,
+      "content_hash": "330961a2dda0141b91f3e5a8c035837f620ebe7f7b00a23d75161e114f469111",
+      "subject": "Avviso di rilascio di Concessione edilizia in sanatoria (condono) Fascicolo N. 6834",
+      "document_url": "https://albo.tinnvision.cloud/allegati/2026_2803_2_P?ente=00301390795",
+      "public_note": null,
+      "verification_status": "official_source_acquired",
+      "privacy_risk": "low",
+      "public_visibility": "publishable",
+      "classification": {
+        "dictionary_version": "2026-08-22-a",
+        "sector": {
+          "id": "governo_territorio",
+          "label": "Governo del territorio e urbanistica",
+          "description": "Urbanistica, pianificazione territoriale, edilizia e atti tecnici collegati al territorio.",
+          "confidence": "high",
+          "basis": "office_and_act_type"
+        },
+        "act_category": {
+          "id": "edilizia_urbanistica",
+          "label": "Edilizia e urbanistica",
+          "description": "Permessi di costruire, avvisi edilizi e atti urbanistici.",
+          "confidence": "high",
+          "basis": "act_type"
+        }
+      },
+      "privacy_attestation": {
+        "schema_version": "albo-privacy-policy-attestation.v1",
+        "policy_version": "albo-privacy-policy.2026-08-30.1",
+        "assessment_basis": "source_record",
+        "status": "current"
+      },
+      "presentation": {
+        "display_title": "Avviso di rilascio di Concessione edilizia in sanatoria (condono) Fascicolo N. 6834",
+        "action_id": null,
+        "action_label": null,
+        "search_text": "avviso di rilascio di concessione edilizia in sanatoria condono fascicolo n 6834",
+        "standardisation": {
+          "schema_version": "publication-standardisation.v1",
+          "profile_id": "albo-public-title-it",
+          "profile_version": "2026-08-30.2",
+          "input_field": "subject",
+          "input_field_preserved": true,
+          "status": "unchanged",
+          "transformations": [],
+          "layout_flags": [],
+          "review_reasons": []
+        },
+        "area_theme": {
+          "schema_version": "publication-area-theme.v1",
+          "taxonomy_id": "municipal-public-act-area-theme-it",
+          "taxonomy_version": "2026-08-30.1",
+          "theme_id": "territorio_edilizia",
+          "theme_label": "Urbanistica, edilizia e territorio",
+          "confidence": "high",
+          "basis": "deterministic_rule",
+          "rule_id": "building-permits",
+          "evidence": [
+            {
+              "rule_id": "building-permits",
+              "input_field": "subject",
+              "matched_terms": [
+                "concessione edilizia",
+                "condono",
+                "sanatoria"
+              ]
+            }
+          ],
+          "null_reason": null,
+          "override": null
+        }
+      },
+      "known_limits": [
+        "Tranche A acquisisce l'elenco degli atti correnti esposto dalla fonte ufficiale, senza dichiarare completezza storica.",
+        "I PDF sono archiviati solo per record pubblicabili a basso rischio; allegati e PDF non sono analizzati, interpretati o sottoposti a OCR.",
+        "Gli export Tinnvision possono non includere URL diretti agli allegati; quando disponibile, il monitor usa il dettaglio ufficiale Tinnvision solo per individuare PDF HTTPS a basso rischio.",
+        "La classificazione privacy e' prudenziale e automatica; i casi sensibili richiedono revisione umana prima di esposizioni piu' ricche.",
+        "Quando gli export strutturati non includono URL diretti, il monitor prova il dettaglio ufficiale Tinnvision solo per record pubblicabili a basso rischio.",
+        "Classificazione civica automatica basata su dizionario: settore e tipologia sono derivati da ufficio/provenienza e tipo atto, senza interpretare il contenuto dei PDF."
+      ]
+    },
+    {
+      "id": "albo-2026-2802",
+      "public_id": "albo-2026-2802",
+      "source": "Albo Pretorio Comune di Lamezia Terme",
+      "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
+      "retrieved_at": "2026-09-01T11:34:40.003Z",
+      "publication_number": "2026/2802",
+      "publication_start": "2026-09-01",
+      "publication_end": "2026-09-16",
+      "office": "SETTORE GESTIONE E VALORIZZAZIONE DEL PATRIMONIO E DEL TERRITORIO COMUNALE",
+      "act_type": "DETERMINAZIONE DIRIGENZIALE",
+      "act_number": "1363",
+      "act_date": "2026-01-28",
+      "content_hash": "c563294f0599dbce1601eb6f70b0aef7058fdba4f148b83a122b0dbb5c18bdb5",
+      "subject": "Decisione a contrarre e affidamento diretto alla libreria \"MondadorI Bookstore Di Valentina Curatolo\" della fornitura di Libri con il contributo di cui al D.M N. 272 Del 05.08.2025 Cig: BA19CCDBF3",
+      "document_url": "https://albo.tinnvision.cloud/allegati/2026_2802_17_ALLEG?ente=00301390795",
+      "public_note": null,
+      "verification_status": "official_source_acquired",
+      "privacy_risk": "low",
+      "public_visibility": "publishable",
+      "classification": {
+        "dictionary_version": "2026-08-22-a",
+        "sector": {
+          "id": "patrimonio_territorio",
+          "label": "Patrimonio e territorio comunale",
+          "description": "Gestione e valorizzazione del patrimonio comunale e del territorio comunale.",
+          "confidence": "high",
+          "basis": "office"
+        },
+        "act_category": {
+          "id": "determinazioni",
+          "label": "Determinazioni dirigenziali",
+          "description": "Determinazioni, liquidazioni, affidamenti e altri atti gestionali dirigenziali.",
+          "confidence": "high",
+          "basis": "act_type"
+        }
+      },
+      "privacy_attestation": {
+        "schema_version": "albo-privacy-policy-attestation.v1",
+        "policy_version": "albo-privacy-policy.2026-08-30.1",
+        "assessment_basis": "source_record",
+        "status": "current"
+      },
+      "presentation": {
+        "display_title": "Decisione a contrarre e affidamento diretto alla libreria \"MondadorI Bookstore Di Valentina Curatolo\" della fornitura di Libri con il contributo di cui al D.M N. 272 Del 05.08.2025 CIG: BA19CCDBF3",
+        "action_id": null,
+        "action_label": null,
+        "search_text": "decisione a contrarre e affidamento diretto alla libreria mondadori bookstore di valentina curatolo della fornitura di libri con il contributo di cui al d m n 272 del 05 08 2025 cig ba19ccdbf3 decisione a contrarre e affidamento diretto alla libreria mondadori bookstore di valentina curatolo della fornitura di libri con il contributo di cui al d m n 272 del 05 08 2025 cig ba19ccdbf3",
+        "standardisation": {
+          "schema_version": "publication-standardisation.v1",
+          "profile_id": "albo-public-title-it",
+          "profile_version": "2026-08-30.2",
+          "input_field": "subject",
+          "input_field_preserved": true,
+          "status": "standardised_automatically",
+          "transformations": [
+            "restore_canonical_terms"
+          ],
+          "layout_flags": [
+            "display_title_too_long"
+          ],
+          "review_reasons": []
+        },
+        "area_theme": {
+          "schema_version": "publication-area-theme.v1",
+          "taxonomy_id": "municipal-public-act-area-theme-it",
+          "taxonomy_version": "2026-08-30.1",
+          "theme_id": "cultura_sport_turismo",
+          "theme_label": "Cultura, sport, turismo ed eventi",
+          "confidence": "high",
+          "basis": "deterministic_rule",
+          "rule_id": "culture-tourism-events",
+          "evidence": [
+            {
+              "rule_id": "culture-tourism-events",
+              "input_field": "subject",
+              "matched_terms": [
+                "fornitura di libri"
+              ]
+            }
+          ],
+          "null_reason": null,
+          "override": null
+        }
+      },
+      "known_limits": [
+        "Tranche A acquisisce l'elenco degli atti correnti esposto dalla fonte ufficiale, senza dichiarare completezza storica.",
+        "I PDF sono archiviati solo per record pubblicabili a basso rischio; allegati e PDF non sono analizzati, interpretati o sottoposti a OCR.",
+        "Gli export Tinnvision possono non includere URL diretti agli allegati; quando disponibile, il monitor usa il dettaglio ufficiale Tinnvision solo per individuare PDF HTTPS a basso rischio.",
+        "La classificazione privacy e' prudenziale e automatica; i casi sensibili richiedono revisione umana prima di esposizioni piu' ricche.",
+        "Quando gli export strutturati non includono URL diretti, il monitor prova il dettaglio ufficiale Tinnvision solo per record pubblicabili a basso rischio.",
+        "Classificazione civica automatica basata su dizionario: settore e tipologia sono derivati da ufficio/provenienza e tipo atto, senza interpretare il contenuto dei PDF."
+      ]
+    },
+    {
+      "id": "albo-2026-2801",
+      "public_id": "albo-2026-2801",
+      "source": "Albo Pretorio Comune di Lamezia Terme",
+      "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
+      "retrieved_at": "2026-09-01T11:34:40.003Z",
+      "publication_number": "2026/2801",
+      "publication_start": "2026-09-01",
+      "publication_end": "2026-10-01",
+      "office": "SETTORE GOVERNO DEL TERRITORIO - PIANIFICAZIONE TERRITORIALE ED URBANISTICA",
+      "act_type": "AVVISO RILASCIO PERMESSO DI COSTRUIRE",
+      "act_number": null,
+      "act_date": null,
+      "content_hash": "b7c2840c86506b1c5c44c71d9438dec9a5635841dee42fc668ebcf3fc7ebee12",
+      "subject": "Avviso di rilascio di Concessione edilizia in sanatoria (condono) Fascicolo N. 490",
+      "document_url": null,
+      "public_note": null,
+      "verification_status": "official_source_acquired",
+      "privacy_risk": "low",
+      "public_visibility": "publishable",
+      "classification": {
+        "dictionary_version": "2026-08-22-a",
+        "sector": {
+          "id": "governo_territorio",
+          "label": "Governo del territorio e urbanistica",
+          "description": "Urbanistica, pianificazione territoriale, edilizia e atti tecnici collegati al territorio.",
+          "confidence": "high",
+          "basis": "office_and_act_type"
+        },
+        "act_category": {
+          "id": "edilizia_urbanistica",
+          "label": "Edilizia e urbanistica",
+          "description": "Permessi di costruire, avvisi edilizi e atti urbanistici.",
+          "confidence": "high",
+          "basis": "act_type"
+        }
+      },
+      "privacy_attestation": {
+        "schema_version": "albo-privacy-policy-attestation.v1",
+        "policy_version": "albo-privacy-policy.2026-08-30.1",
+        "assessment_basis": "source_record",
+        "status": "current"
+      },
+      "presentation": {
+        "display_title": "Avviso di rilascio di Concessione edilizia in sanatoria (condono) Fascicolo N. 490",
+        "action_id": null,
+        "action_label": null,
+        "search_text": "avviso di rilascio di concessione edilizia in sanatoria condono fascicolo n 490",
+        "standardisation": {
+          "schema_version": "publication-standardisation.v1",
+          "profile_id": "albo-public-title-it",
+          "profile_version": "2026-08-30.2",
+          "input_field": "subject",
+          "input_field_preserved": true,
+          "status": "unchanged",
+          "transformations": [],
+          "layout_flags": [],
+          "review_reasons": []
+        },
+        "area_theme": {
+          "schema_version": "publication-area-theme.v1",
+          "taxonomy_id": "municipal-public-act-area-theme-it",
+          "taxonomy_version": "2026-08-30.1",
+          "theme_id": "territorio_edilizia",
+          "theme_label": "Urbanistica, edilizia e territorio",
+          "confidence": "high",
+          "basis": "deterministic_rule",
+          "rule_id": "building-permits",
+          "evidence": [
+            {
+              "rule_id": "building-permits",
+              "input_field": "subject",
+              "matched_terms": [
+                "concessione edilizia",
+                "condono",
+                "sanatoria"
+              ]
+            }
+          ],
+          "null_reason": null,
+          "override": null
+        }
+      },
+      "known_limits": [
+        "Tranche A acquisisce l'elenco degli atti correnti esposto dalla fonte ufficiale, senza dichiarare completezza storica.",
+        "I PDF sono archiviati solo per record pubblicabili a basso rischio; allegati e PDF non sono analizzati, interpretati o sottoposti a OCR.",
+        "Gli export Tinnvision possono non includere URL diretti agli allegati; quando disponibile, il monitor usa il dettaglio ufficiale Tinnvision solo per individuare PDF HTTPS a basso rischio.",
+        "La classificazione privacy e' prudenziale e automatica; i casi sensibili richiedono revisione umana prima di esposizioni piu' ricche.",
+        "Quando gli export strutturati non includono URL diretti, il monitor prova il dettaglio ufficiale Tinnvision solo per record pubblicabili a basso rischio.",
+        "Classificazione civica automatica basata su dizionario: settore e tipologia sono derivati da ufficio/provenienza e tipo atto, senza interpretare il contenuto dei PDF.",
+        "Allegato/documento non incluso negli export strutturati Tinnvision o non disponibile tramite dettaglio ufficiale."
+      ]
+    },
+    {
+      "id": "albo-2026-2800",
+      "public_id": "albo-2026-2800",
+      "source": "Albo Pretorio Comune di Lamezia Terme",
+      "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
+      "retrieved_at": "2026-09-01T11:34:40.003Z",
+      "publication_number": "2026/2800",
+      "publication_start": "2026-09-01",
+      "publication_end": "2026-10-01",
+      "office": "SETTORE GOVERNO DEL TERRITORIO - PIANIFICAZIONE TERRITORIALE ED URBANISTICA",
+      "act_type": "AVVISO RILASCIO PERMESSO DI COSTRUIRE",
+      "act_number": null,
+      "act_date": null,
+      "content_hash": "a82da027fcc0d808d282770ac5f9b08e0cd1d6c86ac479d2482208b55f3fb670",
+      "subject": "Avviso di rilascio di Concessione edilizia in sanatoria (condono) Fascicolo N. 238",
+      "document_url": "https://albo.tinnvision.cloud/allegati/2026_2800_2_P?ente=00301390795",
+      "public_note": null,
+      "verification_status": "official_source_acquired",
+      "privacy_risk": "low",
+      "public_visibility": "publishable",
+      "classification": {
+        "dictionary_version": "2026-08-22-a",
+        "sector": {
+          "id": "governo_territorio",
+          "label": "Governo del territorio e urbanistica",
+          "description": "Urbanistica, pianificazione territoriale, edilizia e atti tecnici collegati al territorio.",
+          "confidence": "high",
+          "basis": "office_and_act_type"
+        },
+        "act_category": {
+          "id": "edilizia_urbanistica",
+          "label": "Edilizia e urbanistica",
+          "description": "Permessi di costruire, avvisi edilizi e atti urbanistici.",
+          "confidence": "high",
+          "basis": "act_type"
+        }
+      },
+      "privacy_attestation": {
+        "schema_version": "albo-privacy-policy-attestation.v1",
+        "policy_version": "albo-privacy-policy.2026-08-30.1",
+        "assessment_basis": "source_record",
+        "status": "current"
+      },
+      "presentation": {
+        "display_title": "Avviso di rilascio di Concessione edilizia in sanatoria (condono) Fascicolo N. 238",
+        "action_id": null,
+        "action_label": null,
+        "search_text": "avviso di rilascio di concessione edilizia in sanatoria condono fascicolo n 238",
+        "standardisation": {
+          "schema_version": "publication-standardisation.v1",
+          "profile_id": "albo-public-title-it",
+          "profile_version": "2026-08-30.2",
+          "input_field": "subject",
+          "input_field_preserved": true,
+          "status": "unchanged",
+          "transformations": [],
+          "layout_flags": [],
+          "review_reasons": []
+        },
+        "area_theme": {
+          "schema_version": "publication-area-theme.v1",
+          "taxonomy_id": "municipal-public-act-area-theme-it",
+          "taxonomy_version": "2026-08-30.1",
+          "theme_id": "territorio_edilizia",
+          "theme_label": "Urbanistica, edilizia e territorio",
+          "confidence": "high",
+          "basis": "deterministic_rule",
+          "rule_id": "building-permits",
+          "evidence": [
+            {
+              "rule_id": "building-permits",
+              "input_field": "subject",
+              "matched_terms": [
+                "concessione edilizia",
+                "condono",
+                "sanatoria"
+              ]
+            }
+          ],
+          "null_reason": null,
+          "override": null
+        }
+      },
+      "known_limits": [
+        "Tranche A acquisisce l'elenco degli atti correnti esposto dalla fonte ufficiale, senza dichiarare completezza storica.",
+        "I PDF sono archiviati solo per record pubblicabili a basso rischio; allegati e PDF non sono analizzati, interpretati o sottoposti a OCR.",
+        "Gli export Tinnvision possono non includere URL diretti agli allegati; quando disponibile, il monitor usa il dettaglio ufficiale Tinnvision solo per individuare PDF HTTPS a basso rischio.",
+        "La classificazione privacy e' prudenziale e automatica; i casi sensibili richiedono revisione umana prima di esposizioni piu' ricche.",
+        "Quando gli export strutturati non includono URL diretti, il monitor prova il dettaglio ufficiale Tinnvision solo per record pubblicabili a basso rischio.",
+        "Classificazione civica automatica basata su dizionario: settore e tipologia sono derivati da ufficio/provenienza e tipo atto, senza interpretare il contenuto dei PDF."
+      ]
+    },
+    {
+      "id": "albo-2026-2799",
+      "public_id": "albo-2026-2799",
+      "source": "Albo Pretorio Comune di Lamezia Terme",
+      "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
+      "retrieved_at": "2026-09-01T11:34:40.003Z",
+      "publication_number": "2026/2799",
+      "publication_start": "2026-09-01",
+      "publication_end": "2026-09-16",
+      "office": "SETTORE GESTIONE E VALORIZZAZIONE DEL PATRIMONIO E DEL TERRITORIO COMUNALE",
+      "act_type": "DETERMINAZIONE DIRIGENZIALE",
+      "act_number": "1362",
+      "act_date": "2026-08-05",
+      "content_hash": "b0b04319114fb4e0445949f54cb668650b30ef8e6c0e4e2ba1c6571a7c70d1e2",
+      "subject": "Servizi di noleggio delle luminarie e di allestimento tecnico nell'ambito delle feste patronali 2026. CIG BBD93EF334. Liquidazione fattura n. 38_26 del 21/07/2026",
+      "document_url": "https://albo.tinnvision.cloud/allegati/2026_2799_14_ALLEG?ente=00301390795",
+      "public_note": null,
+      "verification_status": "official_source_acquired",
+      "privacy_risk": "low",
+      "public_visibility": "publishable",
+      "classification": {
+        "dictionary_version": "2026-08-22-a",
+        "sector": {
+          "id": "patrimonio_territorio",
+          "label": "Patrimonio e territorio comunale",
+          "description": "Gestione e valorizzazione del patrimonio comunale e del territorio comunale.",
+          "confidence": "high",
+          "basis": "office"
+        },
+        "act_category": {
+          "id": "determinazioni",
+          "label": "Determinazioni dirigenziali",
+          "description": "Determinazioni, liquidazioni, affidamenti e altri atti gestionali dirigenziali.",
+          "confidence": "high",
+          "basis": "act_type"
+        }
+      },
+      "privacy_attestation": {
+        "schema_version": "albo-privacy-policy-attestation.v1",
+        "policy_version": "albo-privacy-policy.2026-08-30.1",
+        "assessment_basis": "source_record",
+        "status": "current"
+      },
+      "presentation": {
+        "display_title": "Servizi di noleggio delle luminarie e di allestimento tecnico nell'ambito delle feste patronali 2026. CIG BBD93EF334. Liquidazione fattura n. 38_26 del 21/07/2026",
+        "action_id": null,
+        "action_label": null,
+        "search_text": "servizi di noleggio delle luminarie e di allestimento tecnico nell ambito delle feste patronali 2026 cig bbd93ef334 liquidazione fattura n 38 26 del 21 07 2026",
+        "standardisation": {
+          "schema_version": "publication-standardisation.v1",
+          "profile_id": "albo-public-title-it",
+          "profile_version": "2026-08-30.2",
+          "input_field": "subject",
+          "input_field_preserved": true,
+          "status": "unchanged",
+          "transformations": [],
+          "layout_flags": [],
+          "review_reasons": []
+        },
+        "area_theme": {
+          "schema_version": "publication-area-theme.v1",
+          "taxonomy_id": "municipal-public-act-area-theme-it",
+          "taxonomy_version": "2026-08-30.1",
+          "theme_id": null,
+          "theme_label": null,
+          "confidence": null,
+          "basis": "fallback",
+          "rule_id": null,
+          "evidence": [],
+          "null_reason": "not_classified",
+          "override": null
+        }
+      },
+      "known_limits": [
+        "Tranche A acquisisce l'elenco degli atti correnti esposto dalla fonte ufficiale, senza dichiarare completezza storica.",
+        "I PDF sono archiviati solo per record pubblicabili a basso rischio; allegati e PDF non sono analizzati, interpretati o sottoposti a OCR.",
+        "Gli export Tinnvision possono non includere URL diretti agli allegati; quando disponibile, il monitor usa il dettaglio ufficiale Tinnvision solo per individuare PDF HTTPS a basso rischio.",
+        "La classificazione privacy e' prudenziale e automatica; i casi sensibili richiedono revisione umana prima di esposizioni piu' ricche.",
+        "Quando gli export strutturati non includono URL diretti, il monitor prova il dettaglio ufficiale Tinnvision solo per record pubblicabili a basso rischio.",
+        "Classificazione civica automatica basata su dizionario: settore e tipologia sono derivati da ufficio/provenienza e tipo atto, senza interpretare il contenuto dei PDF."
+      ]
+    },
+    {
+      "id": "albo-2026-2798",
+      "public_id": "albo-2026-2798",
+      "source": "Albo Pretorio Comune di Lamezia Terme",
+      "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
+      "retrieved_at": "2026-09-01T11:34:40.003Z",
+      "publication_number": "2026/2798",
+      "publication_start": "2026-09-01",
+      "publication_end": "2026-09-16",
+      "office": "SETTORE GESTIONE E VALORIZZAZIONE DEL PATRIMONIO E DEL TERRITORIO COMUNALE",
+      "act_type": "DETERMINAZIONE DIRIGENZIALE",
+      "act_number": "1364",
+      "act_date": "2026-08-07",
+      "content_hash": "080717842f93c01585cdf22f358e15f7a52ad3b14bfb8373e66e3f10067a4b75",
+      "subject": "Liquidazione ulteriori fatture emesse dalla società Hera Comm Spa, per la fornitura di energia elettrica per gli immobili di proprietà comunale. Periodo Maggio 2026. CIG B94F3C7834.",
+      "document_url": "https://albo.tinnvision.cloud/allegati/2026_2798_10_ALLEG?ente=00301390795",
+      "public_note": null,
+      "verification_status": "official_source_acquired",
+      "privacy_risk": "low",
+      "public_visibility": "publishable",
+      "classification": {
+        "dictionary_version": "2026-08-22-a",
+        "sector": {
+          "id": "patrimonio_territorio",
+          "label": "Patrimonio e territorio comunale",
+          "description": "Gestione e valorizzazione del patrimonio comunale e del territorio comunale.",
+          "confidence": "high",
+          "basis": "office"
+        },
+        "act_category": {
+          "id": "determinazioni",
+          "label": "Determinazioni dirigenziali",
+          "description": "Determinazioni, liquidazioni, affidamenti e altri atti gestionali dirigenziali.",
+          "confidence": "high",
+          "basis": "act_type"
+        }
+      },
+      "privacy_attestation": {
+        "schema_version": "albo-privacy-policy-attestation.v1",
+        "policy_version": "albo-privacy-policy.2026-08-30.1",
+        "assessment_basis": "source_record",
+        "status": "current"
+      },
+      "presentation": {
+        "display_title": "Liquidazione ulteriori fatture emesse dalla società Hera Comm Spa, per la fornitura di energia elettrica per gli immobili di proprietà comunale. Periodo Maggio 2026. CIG B94F3C7834.",
+        "action_id": null,
+        "action_label": null,
+        "search_text": "liquidazione ulteriori fatture emesse dalla societa hera comm spa per la fornitura di energia elettrica per gli immobili di proprieta comunale periodo maggio 2026 cig b94f3c7834",
+        "standardisation": {
+          "schema_version": "publication-standardisation.v1",
+          "profile_id": "albo-public-title-it",
+          "profile_version": "2026-08-30.2",
+          "input_field": "subject",
+          "input_field_preserved": true,
+          "status": "unchanged",
+          "transformations": [],
+          "layout_flags": [
+            "display_title_too_long"
+          ],
+          "review_reasons": []
+        },
+        "area_theme": {
+          "schema_version": "publication-area-theme.v1",
+          "taxonomy_id": "municipal-public-act-area-theme-it",
+          "taxonomy_version": "2026-08-30.1",
+          "theme_id": null,
+          "theme_label": null,
+          "confidence": null,
+          "basis": "fallback",
+          "rule_id": null,
+          "evidence": [],
+          "null_reason": "not_classified",
+          "override": null
+        }
+      },
+      "known_limits": [
+        "Tranche A acquisisce l'elenco degli atti correnti esposto dalla fonte ufficiale, senza dichiarare completezza storica.",
+        "I PDF sono archiviati solo per record pubblicabili a basso rischio; allegati e PDF non sono analizzati, interpretati o sottoposti a OCR.",
+        "Gli export Tinnvision possono non includere URL diretti agli allegati; quando disponibile, il monitor usa il dettaglio ufficiale Tinnvision solo per individuare PDF HTTPS a basso rischio.",
+        "La classificazione privacy e' prudenziale e automatica; i casi sensibili richiedono revisione umana prima di esposizioni piu' ricche.",
+        "Quando gli export strutturati non includono URL diretti, il monitor prova il dettaglio ufficiale Tinnvision solo per record pubblicabili a basso rischio.",
+        "Classificazione civica automatica basata su dizionario: settore e tipologia sono derivati da ufficio/provenienza e tipo atto, senza interpretare il contenuto dei PDF."
+      ]
+    },
+    {
+      "id": "albo-2026-2797",
+      "public_id": "albo-2026-2797",
+      "source": "Albo Pretorio Comune di Lamezia Terme",
+      "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
+      "retrieved_at": "2026-09-01T11:34:40.003Z",
+      "publication_number": "2026/2797",
+      "publication_start": "2026-09-01",
+      "publication_end": "2026-09-16",
+      "office": "SETTORE GESTIONE E VALORIZZAZIONE DEL PATRIMONIO E DEL TERRITORIO COMUNALE",
+      "act_type": "DETERMINAZIONE DIRIGENZIALE",
+      "act_number": "1367",
+      "act_date": "2026-01-28",
+      "content_hash": "5fc1ca0b2cc692d9fe90fb156a6da44a37fbfba43da1c63c0a72941a1911ade4",
+      "subject": "Determinazione a contrarre e affidamento diretto alla libreria \"Giunti al punto\" della fornitura di libri per la biblioteca comunale in virtu' del contributo d.m n. 272 del 05.08.2025 CIG:BA17F7B9CE",
+      "document_url": "https://albo.tinnvision.cloud/allegati/2026_2797_19_ALLEG?ente=00301390795",
+      "public_note": null,
+      "verification_status": "official_source_acquired",
+      "privacy_risk": "low",
+      "public_visibility": "publishable",
+      "classification": {
+        "dictionary_version": "2026-08-22-a",
+        "sector": {
+          "id": "patrimonio_territorio",
+          "label": "Patrimonio e territorio comunale",
+          "description": "Gestione e valorizzazione del patrimonio comunale e del territorio comunale.",
+          "confidence": "high",
+          "basis": "office"
+        },
+        "act_category": {
+          "id": "determinazioni",
+          "label": "Determinazioni dirigenziali",
+          "description": "Determinazioni, liquidazioni, affidamenti e altri atti gestionali dirigenziali.",
+          "confidence": "high",
+          "basis": "act_type"
+        }
+      },
+      "privacy_attestation": {
+        "schema_version": "albo-privacy-policy-attestation.v1",
+        "policy_version": "albo-privacy-policy.2026-08-30.1",
+        "assessment_basis": "source_record",
+        "status": "current"
+      },
+      "presentation": {
+        "display_title": "Determinazione a contrarre e affidamento diretto alla libreria \"Giunti al punto\" della fornitura di libri per la biblioteca comunale in virtu' del contributo d.m n. 272 del 05.08.2025 CIG:BA17F7B9CE",
+        "action_id": null,
+        "action_label": null,
+        "search_text": "determinazione a contrarre e affidamento diretto alla libreria giunti al punto della fornitura di libri per la biblioteca comunale in virtu del contributo d m n 272 del 05 08 2025 cig ba17f7b9ce",
+        "standardisation": {
+          "schema_version": "publication-standardisation.v1",
+          "profile_id": "albo-public-title-it",
+          "profile_version": "2026-08-30.2",
+          "input_field": "subject",
+          "input_field_preserved": true,
+          "status": "unchanged",
+          "transformations": [],
+          "layout_flags": [
+            "display_title_too_long"
+          ],
+          "review_reasons": []
+        },
+        "area_theme": {
+          "schema_version": "publication-area-theme.v1",
+          "taxonomy_id": "municipal-public-act-area-theme-it",
+          "taxonomy_version": "2026-08-30.1",
+          "theme_id": "cultura_sport_turismo",
+          "theme_label": "Cultura, sport, turismo ed eventi",
+          "confidence": "high",
+          "basis": "deterministic_rule",
+          "rule_id": "culture-tourism-events",
+          "evidence": [
+            {
+              "rule_id": "culture-tourism-events",
+              "input_field": "subject",
+              "matched_terms": [
+                "biblioteca",
+                "fornitura di libri"
+              ]
+            }
+          ],
+          "null_reason": null,
+          "override": null
+        }
+      },
+      "known_limits": [
+        "Tranche A acquisisce l'elenco degli atti correnti esposto dalla fonte ufficiale, senza dichiarare completezza storica.",
+        "I PDF sono archiviati solo per record pubblicabili a basso rischio; allegati e PDF non sono analizzati, interpretati o sottoposti a OCR.",
+        "Gli export Tinnvision possono non includere URL diretti agli allegati; quando disponibile, il monitor usa il dettaglio ufficiale Tinnvision solo per individuare PDF HTTPS a basso rischio.",
+        "La classificazione privacy e' prudenziale e automatica; i casi sensibili richiedono revisione umana prima di esposizioni piu' ricche.",
+        "Quando gli export strutturati non includono URL diretti, il monitor prova il dettaglio ufficiale Tinnvision solo per record pubblicabili a basso rischio.",
+        "Classificazione civica automatica basata su dizionario: settore e tipologia sono derivati da ufficio/provenienza e tipo atto, senza interpretare il contenuto dei PDF."
+      ]
+    },
+    {
+      "id": "albo-2026-2796",
+      "public_id": "albo-2026-2796",
+      "source": "Albo Pretorio Comune di Lamezia Terme",
+      "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
+      "retrieved_at": "2026-09-01T11:34:40.003Z",
+      "publication_number": "2026/2796",
+      "publication_start": "2026-09-01",
+      "publication_end": "2026-10-01",
+      "office": "SETTORE GOVERNO DEL TERRITORIO - PIANIFICAZIONE TERRITORIALE ED URBANISTICA",
+      "act_type": "AVVISO RILASCIO PERMESSO DI COSTRUIRE",
+      "act_number": null,
+      "act_date": null,
+      "content_hash": "c1839552f81b85589c923b356af25549d82a594831e98f8b3ba14f067e56700a",
+      "subject": "Avviso di rilascio di Concessione edilizia in sanatoria (condono) Fascicolo N. 11019",
+      "document_url": "https://albo.tinnvision.cloud/allegati/2026_2796_2_P?ente=00301390795",
+      "public_note": null,
+      "verification_status": "official_source_acquired",
+      "privacy_risk": "low",
+      "public_visibility": "publishable",
+      "classification": {
+        "dictionary_version": "2026-08-22-a",
+        "sector": {
+          "id": "governo_territorio",
+          "label": "Governo del territorio e urbanistica",
+          "description": "Urbanistica, pianificazione territoriale, edilizia e atti tecnici collegati al territorio.",
+          "confidence": "high",
+          "basis": "office_and_act_type"
+        },
+        "act_category": {
+          "id": "edilizia_urbanistica",
+          "label": "Edilizia e urbanistica",
+          "description": "Permessi di costruire, avvisi edilizi e atti urbanistici.",
+          "confidence": "high",
+          "basis": "act_type"
+        }
+      },
+      "privacy_attestation": {
+        "schema_version": "albo-privacy-policy-attestation.v1",
+        "policy_version": "albo-privacy-policy.2026-08-30.1",
+        "assessment_basis": "source_record",
+        "status": "current"
+      },
+      "presentation": {
+        "display_title": "Avviso di rilascio di Concessione edilizia in sanatoria (condono) Fascicolo N. 11019",
+        "action_id": null,
+        "action_label": null,
+        "search_text": "avviso di rilascio di concessione edilizia in sanatoria condono fascicolo n 11019",
+        "standardisation": {
+          "schema_version": "publication-standardisation.v1",
+          "profile_id": "albo-public-title-it",
+          "profile_version": "2026-08-30.2",
+          "input_field": "subject",
+          "input_field_preserved": true,
+          "status": "unchanged",
+          "transformations": [],
+          "layout_flags": [],
+          "review_reasons": []
+        },
+        "area_theme": {
+          "schema_version": "publication-area-theme.v1",
+          "taxonomy_id": "municipal-public-act-area-theme-it",
+          "taxonomy_version": "2026-08-30.1",
+          "theme_id": "territorio_edilizia",
+          "theme_label": "Urbanistica, edilizia e territorio",
+          "confidence": "high",
+          "basis": "deterministic_rule",
+          "rule_id": "building-permits",
+          "evidence": [
+            {
+              "rule_id": "building-permits",
+              "input_field": "subject",
+              "matched_terms": [
+                "concessione edilizia",
+                "condono",
+                "sanatoria"
+              ]
+            }
+          ],
+          "null_reason": null,
+          "override": null
+        }
+      },
+      "known_limits": [
+        "Tranche A acquisisce l'elenco degli atti correnti esposto dalla fonte ufficiale, senza dichiarare completezza storica.",
+        "I PDF sono archiviati solo per record pubblicabili a basso rischio; allegati e PDF non sono analizzati, interpretati o sottoposti a OCR.",
+        "Gli export Tinnvision possono non includere URL diretti agli allegati; quando disponibile, il monitor usa il dettaglio ufficiale Tinnvision solo per individuare PDF HTTPS a basso rischio.",
+        "La classificazione privacy e' prudenziale e automatica; i casi sensibili richiedono revisione umana prima di esposizioni piu' ricche.",
+        "Quando gli export strutturati non includono URL diretti, il monitor prova il dettaglio ufficiale Tinnvision solo per record pubblicabili a basso rischio.",
+        "Classificazione civica automatica basata su dizionario: settore e tipologia sono derivati da ufficio/provenienza e tipo atto, senza interpretare il contenuto dei PDF."
+      ]
+    },
+    {
+      "id": "albo-2026-2795",
+      "public_id": "albo-2026-2795",
+      "source": "Albo Pretorio Comune di Lamezia Terme",
+      "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
+      "retrieved_at": "2026-09-01T11:34:40.003Z",
+      "publication_number": "2026/2795",
+      "publication_start": "2026-09-01",
+      "publication_end": "2026-10-01",
+      "office": "SETTORE GOVERNO DEL TERRITORIO - PIANIFICAZIONE TERRITORIALE ED URBANISTICA",
+      "act_type": "AVVISO RILASCIO PERMESSO DI COSTRUIRE",
+      "act_number": null,
+      "act_date": null,
+      "content_hash": "80059e2df1248808ded692a0fe50c78527639aaf34188ffcefa1af9b6391daf5",
+      "subject": "Avviso di rilascio di Concessione edilizia in sanatoria (condono) Fascicolo N. 11021",
+      "document_url": "https://albo.tinnvision.cloud/allegati/2026_2795_2_P?ente=00301390795",
+      "public_note": null,
+      "verification_status": "official_source_acquired",
+      "privacy_risk": "low",
+      "public_visibility": "publishable",
+      "classification": {
+        "dictionary_version": "2026-08-22-a",
+        "sector": {
+          "id": "governo_territorio",
+          "label": "Governo del territorio e urbanistica",
+          "description": "Urbanistica, pianificazione territoriale, edilizia e atti tecnici collegati al territorio.",
+          "confidence": "high",
+          "basis": "office_and_act_type"
+        },
+        "act_category": {
+          "id": "edilizia_urbanistica",
+          "label": "Edilizia e urbanistica",
+          "description": "Permessi di costruire, avvisi edilizi e atti urbanistici.",
+          "confidence": "high",
+          "basis": "act_type"
+        }
+      },
+      "privacy_attestation": {
+        "schema_version": "albo-privacy-policy-attestation.v1",
+        "policy_version": "albo-privacy-policy.2026-08-30.1",
+        "assessment_basis": "source_record",
+        "status": "current"
+      },
+      "presentation": {
+        "display_title": "Avviso di rilascio di Concessione edilizia in sanatoria (condono) Fascicolo N. 11021",
+        "action_id": null,
+        "action_label": null,
+        "search_text": "avviso di rilascio di concessione edilizia in sanatoria condono fascicolo n 11021",
+        "standardisation": {
+          "schema_version": "publication-standardisation.v1",
+          "profile_id": "albo-public-title-it",
+          "profile_version": "2026-08-30.2",
+          "input_field": "subject",
+          "input_field_preserved": true,
+          "status": "unchanged",
+          "transformations": [],
+          "layout_flags": [],
+          "review_reasons": []
+        },
+        "area_theme": {
+          "schema_version": "publication-area-theme.v1",
+          "taxonomy_id": "municipal-public-act-area-theme-it",
+          "taxonomy_version": "2026-08-30.1",
+          "theme_id": "territorio_edilizia",
+          "theme_label": "Urbanistica, edilizia e territorio",
+          "confidence": "high",
+          "basis": "deterministic_rule",
+          "rule_id": "building-permits",
+          "evidence": [
+            {
+              "rule_id": "building-permits",
+              "input_field": "subject",
+              "matched_terms": [
+                "concessione edilizia",
+                "condono",
+                "sanatoria"
+              ]
+            }
+          ],
+          "null_reason": null,
+          "override": null
+        }
+      },
+      "known_limits": [
+        "Tranche A acquisisce l'elenco degli atti correnti esposto dalla fonte ufficiale, senza dichiarare completezza storica.",
+        "I PDF sono archiviati solo per record pubblicabili a basso rischio; allegati e PDF non sono analizzati, interpretati o sottoposti a OCR.",
+        "Gli export Tinnvision possono non includere URL diretti agli allegati; quando disponibile, il monitor usa il dettaglio ufficiale Tinnvision solo per individuare PDF HTTPS a basso rischio.",
+        "La classificazione privacy e' prudenziale e automatica; i casi sensibili richiedono revisione umana prima di esposizioni piu' ricche.",
+        "Quando gli export strutturati non includono URL diretti, il monitor prova il dettaglio ufficiale Tinnvision solo per record pubblicabili a basso rischio.",
+        "Classificazione civica automatica basata su dizionario: settore e tipologia sono derivati da ufficio/provenienza e tipo atto, senza interpretare il contenuto dei PDF."
+      ]
+    },
+    {
+      "id": "albo-2026-2794",
+      "public_id": "albo-2026-2794",
+      "source": "Albo Pretorio Comune di Lamezia Terme",
+      "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
+      "retrieved_at": "2026-09-01T11:34:40.003Z",
+      "publication_number": "2026/2794",
+      "publication_start": "2026-09-01",
+      "publication_end": "2026-10-01",
+      "office": "SETTORE GOVERNO DEL TERRITORIO - PIANIFICAZIONE TERRITORIALE ED URBANISTICA",
+      "act_type": "AVVISO RILASCIO PERMESSO DI COSTRUIRE",
+      "act_number": null,
+      "act_date": null,
+      "content_hash": "bb95a9b29bf549c44dcaebfffa303d37868fab3e11ee7e168ce3e06c60e3abc0",
+      "subject": "Avviso di rilascio di Concessione edilizia in sanatoria (condono) Fascicolo N. 11022",
+      "document_url": "https://albo.tinnvision.cloud/allegati/2026_2794_2_P?ente=00301390795",
+      "public_note": null,
+      "verification_status": "official_source_acquired",
+      "privacy_risk": "low",
+      "public_visibility": "publishable",
+      "classification": {
+        "dictionary_version": "2026-08-22-a",
+        "sector": {
+          "id": "governo_territorio",
+          "label": "Governo del territorio e urbanistica",
+          "description": "Urbanistica, pianificazione territoriale, edilizia e atti tecnici collegati al territorio.",
+          "confidence": "high",
+          "basis": "office_and_act_type"
+        },
+        "act_category": {
+          "id": "edilizia_urbanistica",
+          "label": "Edilizia e urbanistica",
+          "description": "Permessi di costruire, avvisi edilizi e atti urbanistici.",
+          "confidence": "high",
+          "basis": "act_type"
+        }
+      },
+      "privacy_attestation": {
+        "schema_version": "albo-privacy-policy-attestation.v1",
+        "policy_version": "albo-privacy-policy.2026-08-30.1",
+        "assessment_basis": "source_record",
+        "status": "current"
+      },
+      "presentation": {
+        "display_title": "Avviso di rilascio di Concessione edilizia in sanatoria (condono) Fascicolo N. 11022",
+        "action_id": null,
+        "action_label": null,
+        "search_text": "avviso di rilascio di concessione edilizia in sanatoria condono fascicolo n 11022",
+        "standardisation": {
+          "schema_version": "publication-standardisation.v1",
+          "profile_id": "albo-public-title-it",
+          "profile_version": "2026-08-30.2",
+          "input_field": "subject",
+          "input_field_preserved": true,
+          "status": "unchanged",
+          "transformations": [],
+          "layout_flags": [],
+          "review_reasons": []
+        },
+        "area_theme": {
+          "schema_version": "publication-area-theme.v1",
+          "taxonomy_id": "municipal-public-act-area-theme-it",
+          "taxonomy_version": "2026-08-30.1",
+          "theme_id": "territorio_edilizia",
+          "theme_label": "Urbanistica, edilizia e territorio",
+          "confidence": "high",
+          "basis": "deterministic_rule",
+          "rule_id": "building-permits",
+          "evidence": [
+            {
+              "rule_id": "building-permits",
+              "input_field": "subject",
+              "matched_terms": [
+                "concessione edilizia",
+                "condono",
+                "sanatoria"
+              ]
+            }
+          ],
+          "null_reason": null,
+          "override": null
+        }
+      },
+      "known_limits": [
+        "Tranche A acquisisce l'elenco degli atti correnti esposto dalla fonte ufficiale, senza dichiarare completezza storica.",
+        "I PDF sono archiviati solo per record pubblicabili a basso rischio; allegati e PDF non sono analizzati, interpretati o sottoposti a OCR.",
+        "Gli export Tinnvision possono non includere URL diretti agli allegati; quando disponibile, il monitor usa il dettaglio ufficiale Tinnvision solo per individuare PDF HTTPS a basso rischio.",
+        "La classificazione privacy e' prudenziale e automatica; i casi sensibili richiedono revisione umana prima di esposizioni piu' ricche.",
+        "Quando gli export strutturati non includono URL diretti, il monitor prova il dettaglio ufficiale Tinnvision solo per record pubblicabili a basso rischio.",
+        "Classificazione civica automatica basata su dizionario: settore e tipologia sono derivati da ufficio/provenienza e tipo atto, senza interpretare il contenuto dei PDF."
+      ]
+    },
+    {
+      "id": "albo-2026-2793",
+      "public_id": "albo-2026-2793",
+      "source": "Albo Pretorio Comune di Lamezia Terme",
+      "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
+      "retrieved_at": "2026-09-01T11:34:40.003Z",
+      "publication_number": "2026/2793",
+      "publication_start": "2026-09-01",
+      "publication_end": "2026-10-01",
+      "office": "SETTORE GOVERNO DEL TERRITORIO - PIANIFICAZIONE TERRITORIALE ED URBANISTICA",
+      "act_type": "AVVISO RILASCIO PERMESSO DI COSTRUIRE",
+      "act_number": null,
+      "act_date": null,
+      "content_hash": "2aba223b95e303dd935fed65327b2af667240d4f586c6f2c78b99e9edb4d8266",
+      "subject": "Avviso di rilascio di Concessione edilizia in sanatoria (condono) Fascicolo N. 11020",
+      "document_url": "https://albo.tinnvision.cloud/allegati/2026_2793_2_P?ente=00301390795",
+      "public_note": null,
+      "verification_status": "official_source_acquired",
+      "privacy_risk": "low",
+      "public_visibility": "publishable",
+      "classification": {
+        "dictionary_version": "2026-08-22-a",
+        "sector": {
+          "id": "governo_territorio",
+          "label": "Governo del territorio e urbanistica",
+          "description": "Urbanistica, pianificazione territoriale, edilizia e atti tecnici collegati al territorio.",
+          "confidence": "high",
+          "basis": "office_and_act_type"
+        },
+        "act_category": {
+          "id": "edilizia_urbanistica",
+          "label": "Edilizia e urbanistica",
+          "description": "Permessi di costruire, avvisi edilizi e atti urbanistici.",
+          "confidence": "high",
+          "basis": "act_type"
+        }
+      },
+      "privacy_attestation": {
+        "schema_version": "albo-privacy-policy-attestation.v1",
+        "policy_version": "albo-privacy-policy.2026-08-30.1",
+        "assessment_basis": "source_record",
+        "status": "current"
+      },
+      "presentation": {
+        "display_title": "Avviso di rilascio di Concessione edilizia in sanatoria (condono) Fascicolo N. 11020",
+        "action_id": null,
+        "action_label": null,
+        "search_text": "avviso di rilascio di concessione edilizia in sanatoria condono fascicolo n 11020",
+        "standardisation": {
+          "schema_version": "publication-standardisation.v1",
+          "profile_id": "albo-public-title-it",
+          "profile_version": "2026-08-30.2",
+          "input_field": "subject",
+          "input_field_preserved": true,
+          "status": "unchanged",
+          "transformations": [],
+          "layout_flags": [],
+          "review_reasons": []
+        },
+        "area_theme": {
+          "schema_version": "publication-area-theme.v1",
+          "taxonomy_id": "municipal-public-act-area-theme-it",
+          "taxonomy_version": "2026-08-30.1",
+          "theme_id": "territorio_edilizia",
+          "theme_label": "Urbanistica, edilizia e territorio",
+          "confidence": "high",
+          "basis": "deterministic_rule",
+          "rule_id": "building-permits",
+          "evidence": [
+            {
+              "rule_id": "building-permits",
+              "input_field": "subject",
+              "matched_terms": [
+                "concessione edilizia",
+                "condono",
+                "sanatoria"
+              ]
+            }
+          ],
+          "null_reason": null,
+          "override": null
+        }
+      },
+      "known_limits": [
+        "Tranche A acquisisce l'elenco degli atti correnti esposto dalla fonte ufficiale, senza dichiarare completezza storica.",
+        "I PDF sono archiviati solo per record pubblicabili a basso rischio; allegati e PDF non sono analizzati, interpretati o sottoposti a OCR.",
+        "Gli export Tinnvision possono non includere URL diretti agli allegati; quando disponibile, il monitor usa il dettaglio ufficiale Tinnvision solo per individuare PDF HTTPS a basso rischio.",
+        "La classificazione privacy e' prudenziale e automatica; i casi sensibili richiedono revisione umana prima di esposizioni piu' ricche.",
+        "Quando gli export strutturati non includono URL diretti, il monitor prova il dettaglio ufficiale Tinnvision solo per record pubblicabili a basso rischio.",
+        "Classificazione civica automatica basata su dizionario: settore e tipologia sono derivati da ufficio/provenienza e tipo atto, senza interpretare il contenuto dei PDF."
+      ]
+    },
+    {
+      "id": "albo-2026-2792",
+      "public_id": "albo-2026-2792",
+      "source": "Albo Pretorio Comune di Lamezia Terme",
+      "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
+      "retrieved_at": "2026-09-01T11:34:40.003Z",
+      "publication_number": "2026/2792",
+      "publication_start": "2026-09-01",
+      "publication_end": "2026-10-01",
+      "office": "SETTORE GOVERNO DEL TERRITORIO - PIANIFICAZIONE TERRITORIALE ED URBANISTICA",
+      "act_type": "AVVISO RILASCIO PERMESSO DI COSTRUIRE",
+      "act_number": null,
+      "act_date": null,
+      "content_hash": "60060e9096fc9405ff6c7eec91e30156bbe69d10cf55b23744e803209f779d27",
+      "subject": "Avviso di rilascio di Concessione edilizia in sanatoria (condono) Fascicolo N. 11096",
+      "document_url": "https://albo.tinnvision.cloud/allegati/2026_2792_2_P?ente=00301390795",
+      "public_note": null,
+      "verification_status": "official_source_acquired",
+      "privacy_risk": "low",
+      "public_visibility": "publishable",
+      "classification": {
+        "dictionary_version": "2026-08-22-a",
+        "sector": {
+          "id": "governo_territorio",
+          "label": "Governo del territorio e urbanistica",
+          "description": "Urbanistica, pianificazione territoriale, edilizia e atti tecnici collegati al territorio.",
+          "confidence": "high",
+          "basis": "office_and_act_type"
+        },
+        "act_category": {
+          "id": "edilizia_urbanistica",
+          "label": "Edilizia e urbanistica",
+          "description": "Permessi di costruire, avvisi edilizi e atti urbanistici.",
+          "confidence": "high",
+          "basis": "act_type"
+        }
+      },
+      "privacy_attestation": {
+        "schema_version": "albo-privacy-policy-attestation.v1",
+        "policy_version": "albo-privacy-policy.2026-08-30.1",
+        "assessment_basis": "source_record",
+        "status": "current"
+      },
+      "presentation": {
+        "display_title": "Avviso di rilascio di Concessione edilizia in sanatoria (condono) Fascicolo N. 11096",
+        "action_id": null,
+        "action_label": null,
+        "search_text": "avviso di rilascio di concessione edilizia in sanatoria condono fascicolo n 11096",
+        "standardisation": {
+          "schema_version": "publication-standardisation.v1",
+          "profile_id": "albo-public-title-it",
+          "profile_version": "2026-08-30.2",
+          "input_field": "subject",
+          "input_field_preserved": true,
+          "status": "unchanged",
+          "transformations": [],
+          "layout_flags": [],
+          "review_reasons": []
+        },
+        "area_theme": {
+          "schema_version": "publication-area-theme.v1",
+          "taxonomy_id": "municipal-public-act-area-theme-it",
+          "taxonomy_version": "2026-08-30.1",
+          "theme_id": "territorio_edilizia",
+          "theme_label": "Urbanistica, edilizia e territorio",
+          "confidence": "high",
+          "basis": "deterministic_rule",
+          "rule_id": "building-permits",
+          "evidence": [
+            {
+              "rule_id": "building-permits",
+              "input_field": "subject",
+              "matched_terms": [
+                "concessione edilizia",
+                "condono",
+                "sanatoria"
+              ]
+            }
+          ],
+          "null_reason": null,
+          "override": null
+        }
+      },
+      "known_limits": [
+        "Tranche A acquisisce l'elenco degli atti correnti esposto dalla fonte ufficiale, senza dichiarare completezza storica.",
+        "I PDF sono archiviati solo per record pubblicabili a basso rischio; allegati e PDF non sono analizzati, interpretati o sottoposti a OCR.",
+        "Gli export Tinnvision possono non includere URL diretti agli allegati; quando disponibile, il monitor usa il dettaglio ufficiale Tinnvision solo per individuare PDF HTTPS a basso rischio.",
+        "La classificazione privacy e' prudenziale e automatica; i casi sensibili richiedono revisione umana prima di esposizioni piu' ricche.",
+        "Quando gli export strutturati non includono URL diretti, il monitor prova il dettaglio ufficiale Tinnvision solo per record pubblicabili a basso rischio.",
+        "Classificazione civica automatica basata su dizionario: settore e tipologia sono derivati da ufficio/provenienza e tipo atto, senza interpretare il contenuto dei PDF."
+      ]
+    },
+    {
+      "id": "albo-2026-2791",
+      "public_id": "albo-2026-2791",
+      "source": "Albo Pretorio Comune di Lamezia Terme",
+      "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
+      "retrieved_at": "2026-09-01T11:34:40.003Z",
+      "publication_number": "2026/2791",
+      "publication_start": "2026-09-01",
+      "publication_end": "2026-09-21",
+      "office": null,
+      "act_type": null,
+      "act_number": null,
+      "act_date": null,
+      "subject": "Metadato minimo; oggetto non ripubblicato per prudenza privacy.",
+      "document_url": null,
+      "public_note": "Record limitato al metadato minimo.",
+      "verification_status": "official_source_acquired",
+      "privacy_risk": "high",
+      "public_visibility": "metadata_only",
+      "classification": {
+        "dictionary_version": "2026-08-22-a",
+        "sector": {
+          "id": "servizi_cittadino_demografici",
+          "label": "Servizi al cittadino e demografici",
+          "description": "Anagrafe, stato civile, leva, elettorale e servizi demografici al cittadino.",
+          "confidence": "high",
+          "basis": "office_and_act_type"
+        },
+        "act_category": {
+          "id": "notifiche_depositi",
+          "label": "Notifiche e depositi",
+          "description": "Notifiche, depositi, avvisi di deposito e pubblicazioni ex codice di procedura civile.",
+          "confidence": "high",
+          "basis": "act_type"
+        }
+      },
+      "privacy_attestation": {
+        "schema_version": "albo-privacy-policy-attestation.v1",
+        "policy_version": "albo-privacy-policy.2026-08-30.1",
+        "assessment_basis": "source_record",
+        "status": "current"
+      },
+      "presentation": {
+        "display_title": "Metadato minimo; oggetto non ripubblicato per prudenza privacy.",
+        "action_id": null,
+        "action_label": null,
+        "search_text": "metadato minimo oggetto non ripubblicato per prudenza privacy",
+        "standardisation": {
+          "schema_version": "publication-standardisation.v1",
+          "profile_id": "albo-public-title-it",
+          "profile_version": "2026-08-30.2",
+          "input_field": "subject",
+          "input_field_preserved": true,
+          "status": "unchanged",
+          "transformations": [],
+          "layout_flags": [],
+          "review_reasons": []
+        },
+        "area_theme": {
+          "schema_version": "publication-area-theme.v1",
+          "taxonomy_id": "municipal-public-act-area-theme-it",
+          "taxonomy_version": "2026-08-30.1",
+          "theme_id": null,
+          "theme_label": null,
+          "confidence": null,
+          "basis": "fallback",
+          "rule_id": null,
+          "evidence": [],
+          "null_reason": "input_withheld_for_privacy",
+          "override": null
+        }
+      },
+      "known_limits": [
+        "Tranche A acquisisce l'elenco degli atti correnti esposto dalla fonte ufficiale, senza dichiarare completezza storica.",
+        "I PDF sono archiviati solo per record pubblicabili a basso rischio; allegati e PDF non sono analizzati, interpretati o sottoposti a OCR.",
+        "Gli export Tinnvision possono non includere URL diretti agli allegati; quando disponibile, il monitor usa il dettaglio ufficiale Tinnvision solo per individuare PDF HTTPS a basso rischio.",
+        "La classificazione privacy e' prudenziale e automatica; i casi sensibili richiedono revisione umana prima di esposizioni piu' ricche.",
+        "Quando gli export strutturati non includono URL diretti, il monitor prova il dettaglio ufficiale Tinnvision solo per record pubblicabili a basso rischio.",
+        "Classificazione civica automatica basata su dizionario: settore e tipologia sono derivati da ufficio/provenienza e tipo atto, senza interpretare il contenuto dei PDF.",
+        "Allegato/documento non incluso negli export strutturati Tinnvision o non disponibile tramite dettaglio ufficiale.",
+        "Oggetto non ripubblicato integralmente nel layer pubblico per prudenza privacy.",
+        "Regola automatica prudenziale: stato civile, notifiche o metadati personali pubblicati solo in forma minima."
+      ]
+    },
+    {
+      "id": "albo-2026-2790",
+      "public_id": "albo-2026-2790",
+      "source": "Albo Pretorio Comune di Lamezia Terme",
+      "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
+      "retrieved_at": "2026-09-01T11:34:40.003Z",
+      "publication_number": "2026/2790",
+      "publication_start": "2026-09-01",
+      "publication_end": "2026-09-09",
+      "office": null,
+      "act_type": null,
+      "act_number": null,
+      "act_date": null,
+      "subject": "Metadato minimo; oggetto non ripubblicato per prudenza privacy.",
+      "document_url": null,
+      "public_note": "Record limitato al metadato minimo.",
+      "verification_status": "official_source_acquired",
+      "privacy_risk": "high",
+      "public_visibility": "metadata_only",
+      "classification": {
+        "dictionary_version": "2026-08-22-a",
+        "sector": {
+          "id": "altri_enti",
+          "label": "Altri enti e soggetti esterni",
+          "description": "Pubblicazioni provenienti da altri enti pubblici o soggetti esterni al Comune.",
+          "confidence": "medium",
+          "basis": "office"
+        },
+        "act_category": {
+          "id": "notifiche_depositi",
+          "label": "Notifiche e depositi",
+          "description": "Notifiche, depositi, avvisi di deposito e pubblicazioni ex codice di procedura civile.",
+          "confidence": "high",
+          "basis": "act_type"
+        }
+      },
+      "privacy_attestation": {
+        "schema_version": "albo-privacy-policy-attestation.v1",
+        "policy_version": "albo-privacy-policy.2026-08-30.1",
+        "assessment_basis": "source_record",
+        "status": "current"
+      },
+      "presentation": {
+        "display_title": "Metadato minimo; oggetto non ripubblicato per prudenza privacy.",
+        "action_id": null,
+        "action_label": null,
+        "search_text": "metadato minimo oggetto non ripubblicato per prudenza privacy",
+        "standardisation": {
+          "schema_version": "publication-standardisation.v1",
+          "profile_id": "albo-public-title-it",
+          "profile_version": "2026-08-30.2",
+          "input_field": "subject",
+          "input_field_preserved": true,
+          "status": "unchanged",
+          "transformations": [],
+          "layout_flags": [],
+          "review_reasons": []
+        },
+        "area_theme": {
+          "schema_version": "publication-area-theme.v1",
+          "taxonomy_id": "municipal-public-act-area-theme-it",
+          "taxonomy_version": "2026-08-30.1",
+          "theme_id": null,
+          "theme_label": null,
+          "confidence": null,
+          "basis": "fallback",
+          "rule_id": null,
+          "evidence": [],
+          "null_reason": "input_withheld_for_privacy",
+          "override": null
+        }
+      },
+      "known_limits": [
+        "Tranche A acquisisce l'elenco degli atti correnti esposto dalla fonte ufficiale, senza dichiarare completezza storica.",
+        "I PDF sono archiviati solo per record pubblicabili a basso rischio; allegati e PDF non sono analizzati, interpretati o sottoposti a OCR.",
+        "Gli export Tinnvision possono non includere URL diretti agli allegati; quando disponibile, il monitor usa il dettaglio ufficiale Tinnvision solo per individuare PDF HTTPS a basso rischio.",
+        "La classificazione privacy e' prudenziale e automatica; i casi sensibili richiedono revisione umana prima di esposizioni piu' ricche.",
+        "Quando gli export strutturati non includono URL diretti, il monitor prova il dettaglio ufficiale Tinnvision solo per record pubblicabili a basso rischio.",
+        "Classificazione civica automatica basata su dizionario: settore e tipologia sono derivati da ufficio/provenienza e tipo atto, senza interpretare il contenuto dei PDF.",
+        "Allegato/documento non incluso negli export strutturati Tinnvision o non disponibile tramite dettaglio ufficiale.",
+        "Oggetto non ripubblicato integralmente nel layer pubblico per prudenza privacy.",
+        "Regola automatica prudenziale: stato civile, notifiche o metadati personali pubblicati solo in forma minima."
+      ]
+    },
     {
       "id": "albo-2026-2789",
       "public_id": "albo-2026-2789",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-08-31T13:37:46.902Z",
+      "retrieved_at": "2026-09-01T11:34:40.003Z",
       "publication_number": "2026/2789",
       "publication_start": "2026-08-31",
       "publication_end": "2026-09-15",
@@ -417,7 +2595,7 @@
       "public_id": "albo-2026-2788",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-08-31T13:37:46.902Z",
+      "retrieved_at": "2026-09-01T11:34:40.003Z",
       "publication_number": "2026/2788",
       "publication_start": "2026-08-31",
       "publication_end": "2026-09-07",
@@ -507,7 +2685,7 @@
       "public_id": "albo-2026-2786",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-08-31T13:37:46.902Z",
+      "retrieved_at": "2026-09-01T11:34:40.003Z",
       "publication_number": "2026/2786",
       "publication_start": "2026-08-31",
       "publication_end": "2026-09-15",
@@ -591,7 +2769,7 @@
       "public_id": "albo-2026-2785",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-08-31T13:37:46.902Z",
+      "retrieved_at": "2026-09-01T11:34:40.003Z",
       "publication_number": "2026/2785",
       "publication_start": "2026-08-31",
       "publication_end": "2026-09-15",
@@ -675,7 +2853,7 @@
       "public_id": "albo-2026-2784",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-08-31T13:37:46.902Z",
+      "retrieved_at": "2026-09-01T11:34:40.003Z",
       "publication_number": "2026/2784",
       "publication_start": "2026-08-31",
       "publication_end": "2026-09-15",
@@ -759,7 +2937,7 @@
       "public_id": "albo-2026-2783",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-08-31T13:37:46.902Z",
+      "retrieved_at": "2026-09-01T11:34:40.003Z",
       "publication_number": "2026/2783",
       "publication_start": "2026-08-31",
       "publication_end": "2026-09-15",
@@ -843,7 +3021,7 @@
       "public_id": "albo-2026-2782",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-08-31T13:37:46.902Z",
+      "retrieved_at": "2026-09-01T11:34:40.003Z",
       "publication_number": "2026/2782",
       "publication_start": "2026-08-31",
       "publication_end": "2026-09-15",
@@ -925,7 +3103,7 @@
       "public_id": "albo-2026-2781",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-08-31T13:37:46.902Z",
+      "retrieved_at": "2026-09-01T11:34:40.003Z",
       "publication_number": "2026/2781",
       "publication_start": "2026-08-29",
       "publication_end": "2026-09-13",
@@ -1018,7 +3196,7 @@
       "public_id": "albo-2026-2780",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-08-31T13:37:46.902Z",
+      "retrieved_at": "2026-09-01T11:34:40.003Z",
       "publication_number": "2026/2780",
       "publication_start": "2026-08-28",
       "publication_end": "2026-09-12",
@@ -1111,7 +3289,7 @@
       "public_id": "albo-2026-2779",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-08-31T13:37:46.902Z",
+      "retrieved_at": "2026-09-01T11:34:40.003Z",
       "publication_number": "2026/2779",
       "publication_start": "2026-08-28",
       "publication_end": "2026-09-12",
@@ -1202,7 +3380,7 @@
       "public_id": "albo-2026-2778",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-08-31T13:37:46.902Z",
+      "retrieved_at": "2026-09-01T11:34:40.003Z",
       "publication_number": "2026/2778",
       "publication_start": "2026-08-28",
       "publication_end": "2026-09-05",
@@ -1286,7 +3464,7 @@
       "public_id": "albo-2026-2777",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-08-31T13:37:46.902Z",
+      "retrieved_at": "2026-09-01T11:34:40.003Z",
       "publication_number": "2026/2777",
       "publication_start": "2026-08-28",
       "publication_end": "2026-09-10",
@@ -1370,7 +3548,7 @@
       "public_id": "albo-2026-2776",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-08-31T13:37:46.902Z",
+      "retrieved_at": "2026-09-01T11:34:40.003Z",
       "publication_number": "2026/2776",
       "publication_start": "2026-08-28",
       "publication_end": "2026-09-27",
@@ -1464,7 +3642,7 @@
       "public_id": "albo-2026-2775",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-08-31T13:37:46.902Z",
+      "retrieved_at": "2026-09-01T11:34:40.003Z",
       "publication_number": "2026/2775",
       "publication_start": "2026-08-28",
       "publication_end": "2026-09-17",
@@ -1548,7 +3726,7 @@
       "public_id": "albo-2026-2774",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-08-31T13:37:46.902Z",
+      "retrieved_at": "2026-09-01T11:34:40.003Z",
       "publication_number": "2026/2774",
       "publication_start": "2026-08-27",
       "publication_end": "2026-09-11",
@@ -1638,7 +3816,7 @@
       "public_id": "albo-2026-2773",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-08-31T13:37:46.902Z",
+      "retrieved_at": "2026-09-01T11:34:40.003Z",
       "publication_number": "2026/2773",
       "publication_start": "2026-08-27",
       "publication_end": "2026-09-04",
@@ -1722,7 +3900,7 @@
       "public_id": "albo-2026-2772",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-08-31T13:37:46.902Z",
+      "retrieved_at": "2026-09-01T11:34:40.003Z",
       "publication_number": "2026/2772",
       "publication_start": "2026-08-27",
       "publication_end": "2026-09-11",
@@ -1813,7 +3991,7 @@
       "public_id": "albo-2026-2771",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-08-31T13:37:46.902Z",
+      "retrieved_at": "2026-09-01T11:34:40.003Z",
       "publication_number": "2026/2771",
       "publication_start": "2026-08-27",
       "publication_end": "2026-09-04",
@@ -1897,7 +4075,7 @@
       "public_id": "albo-2026-2770",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-08-31T13:37:46.902Z",
+      "retrieved_at": "2026-09-01T11:34:40.003Z",
       "publication_number": "2026/2770",
       "publication_start": "2026-08-27",
       "publication_end": "2026-09-11",
@@ -1991,7 +4169,7 @@
       "public_id": "albo-2026-2769",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-08-31T13:37:46.902Z",
+      "retrieved_at": "2026-09-01T11:34:40.003Z",
       "publication_number": "2026/2769",
       "publication_start": "2026-08-26",
       "publication_end": "2026-09-10",
@@ -2082,7 +4260,7 @@
       "public_id": "albo-2026-2768",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-08-31T13:37:46.902Z",
+      "retrieved_at": "2026-09-01T11:34:40.003Z",
       "publication_number": "2026/2768",
       "publication_start": "2026-08-26",
       "publication_end": "2026-09-10",
@@ -2173,7 +4351,7 @@
       "public_id": "albo-2026-2767",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-08-31T13:37:46.902Z",
+      "retrieved_at": "2026-09-01T11:34:40.003Z",
       "publication_number": "2026/2767",
       "publication_start": "2026-08-26",
       "publication_end": "2026-09-10",
@@ -2265,7 +4443,7 @@
       "public_id": "albo-2026-2766",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-08-31T13:37:46.902Z",
+      "retrieved_at": "2026-09-01T11:34:40.003Z",
       "publication_number": "2026/2766",
       "publication_start": "2026-08-26",
       "publication_end": "2026-09-03",
@@ -2349,7 +4527,7 @@
       "public_id": "albo-2026-2765",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-08-31T13:37:46.902Z",
+      "retrieved_at": "2026-09-01T11:34:40.003Z",
       "publication_number": "2026/2765",
       "publication_start": "2026-08-26",
       "publication_end": "2026-09-10",
@@ -2443,7 +4621,7 @@
       "public_id": "albo-2026-2764",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-08-31T13:37:46.902Z",
+      "retrieved_at": "2026-09-01T11:34:40.003Z",
       "publication_number": "2026/2764",
       "publication_start": "2026-08-26",
       "publication_end": "2026-09-25",
@@ -2537,7 +4715,7 @@
       "public_id": "albo-2026-2763",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-08-31T13:37:46.902Z",
+      "retrieved_at": "2026-09-01T11:34:40.003Z",
       "publication_number": "2026/2763",
       "publication_start": "2026-08-26",
       "publication_end": "2026-09-03",
@@ -2621,7 +4799,7 @@
       "public_id": "albo-2026-2762",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-08-31T13:37:46.902Z",
+      "retrieved_at": "2026-09-01T11:34:40.003Z",
       "publication_number": "2026/2762",
       "publication_start": "2026-08-26",
       "publication_end": "2026-09-10",
@@ -2713,7 +4891,7 @@
       "public_id": "albo-2026-2761",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-08-31T13:37:46.902Z",
+      "retrieved_at": "2026-09-01T11:34:40.003Z",
       "publication_number": "2026/2761",
       "publication_start": "2026-08-26",
       "publication_end": "2026-09-10",
@@ -2805,7 +4983,7 @@
       "public_id": "albo-2026-2760",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-08-31T13:37:46.902Z",
+      "retrieved_at": "2026-09-01T11:34:40.003Z",
       "publication_number": "2026/2760",
       "publication_start": "2026-08-25",
       "publication_end": "2026-09-09",
@@ -2896,7 +5074,7 @@
       "public_id": "albo-2026-2759",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-08-31T13:37:46.902Z",
+      "retrieved_at": "2026-09-01T11:34:40.003Z",
       "publication_number": "2026/2759",
       "publication_start": "2026-08-25",
       "publication_end": "2026-09-09",
@@ -2988,7 +5166,7 @@
       "public_id": "albo-2026-2758",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-08-31T13:37:46.902Z",
+      "retrieved_at": "2026-09-01T11:34:40.003Z",
       "publication_number": "2026/2758",
       "publication_start": "2026-08-25",
       "publication_end": "2026-09-09",
@@ -3079,7 +5257,7 @@
       "public_id": "albo-2026-2757",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-08-31T13:37:46.902Z",
+      "retrieved_at": "2026-09-01T11:34:40.003Z",
       "publication_number": "2026/2757",
       "publication_start": "2026-08-25",
       "publication_end": "2026-09-09",
@@ -3170,7 +5348,7 @@
       "public_id": "albo-2026-2756",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-08-31T13:37:46.902Z",
+      "retrieved_at": "2026-09-01T11:34:40.003Z",
       "publication_number": "2026/2756",
       "publication_start": "2026-08-25",
       "publication_end": "2026-09-09",
@@ -3261,7 +5439,7 @@
       "public_id": "albo-2026-2755",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-08-31T13:37:46.902Z",
+      "retrieved_at": "2026-09-01T11:34:40.003Z",
       "publication_number": "2026/2755",
       "publication_start": "2026-08-25",
       "publication_end": "2026-09-09",
@@ -3353,7 +5531,7 @@
       "public_id": "albo-2026-2754",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-08-31T13:37:46.902Z",
+      "retrieved_at": "2026-09-01T11:34:40.003Z",
       "publication_number": "2026/2754",
       "publication_start": "2026-08-24",
       "publication_end": "2026-09-08",
@@ -3445,7 +5623,7 @@
       "public_id": "albo-2026-2753",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-08-31T13:37:46.902Z",
+      "retrieved_at": "2026-09-01T11:34:40.003Z",
       "publication_number": "2026/2753",
       "publication_start": "2026-08-24",
       "publication_end": "2026-09-08",
@@ -3530,7 +5708,7 @@
       "public_id": "albo-2026-2751",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-08-31T13:37:46.902Z",
+      "retrieved_at": "2026-09-01T11:34:40.003Z",
       "publication_number": "2026/2751",
       "publication_start": "2026-08-24",
       "publication_end": "2026-09-08",
@@ -3624,7 +5802,7 @@
       "public_id": "albo-2026-2749",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-08-31T13:37:46.902Z",
+      "retrieved_at": "2026-09-01T11:34:40.003Z",
       "publication_number": "2026/2749",
       "publication_start": "2026-08-24",
       "publication_end": "2026-09-08",
@@ -3709,7 +5887,7 @@
       "public_id": "albo-2026-2748",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-08-31T13:37:46.902Z",
+      "retrieved_at": "2026-09-01T11:34:40.003Z",
       "publication_number": "2026/2748",
       "publication_start": "2026-08-23",
       "publication_end": "2026-09-07",
@@ -3800,7 +5978,7 @@
       "public_id": "albo-2026-2747",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-08-31T13:37:46.902Z",
+      "retrieved_at": "2026-09-01T11:34:40.003Z",
       "publication_number": "2026/2747",
       "publication_start": "2026-08-21",
       "publication_end": "2026-09-05",
@@ -3892,7 +6070,7 @@
       "public_id": "albo-2026-2746",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-08-31T13:37:46.902Z",
+      "retrieved_at": "2026-09-01T11:34:40.003Z",
       "publication_number": "2026/2746",
       "publication_start": "2026-08-21",
       "publication_end": "2026-09-05",
@@ -3986,7 +6164,7 @@
       "public_id": "albo-2026-2744",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-08-31T13:37:46.902Z",
+      "retrieved_at": "2026-09-01T11:34:40.003Z",
       "publication_number": "2026/2744",
       "publication_start": "2026-08-21",
       "publication_end": "2026-09-05",
@@ -4070,7 +6248,7 @@
       "public_id": "albo-2026-2743",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-08-31T13:37:46.902Z",
+      "retrieved_at": "2026-09-01T11:34:40.003Z",
       "publication_number": "2026/2743",
       "publication_start": "2026-08-21",
       "publication_end": "2026-09-05",
@@ -4154,7 +6332,7 @@
       "public_id": "albo-2026-2742",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-08-31T13:37:46.902Z",
+      "retrieved_at": "2026-09-01T11:34:40.003Z",
       "publication_number": "2026/2742",
       "publication_start": "2026-08-21",
       "publication_end": "2026-09-05",
@@ -4246,7 +6424,7 @@
       "public_id": "albo-2026-2741",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-08-31T13:37:46.902Z",
+      "retrieved_at": "2026-09-01T11:34:40.003Z",
       "publication_number": "2026/2741",
       "publication_start": "2026-08-21",
       "publication_end": "2026-09-05",
@@ -4338,7 +6516,7 @@
       "public_id": "albo-2026-2740",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-08-31T13:37:46.902Z",
+      "retrieved_at": "2026-09-01T11:34:40.003Z",
       "publication_number": "2026/2740",
       "publication_start": "2026-08-21",
       "publication_end": "2026-09-05",
@@ -4430,7 +6608,7 @@
       "public_id": "albo-2026-2739",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-08-31T13:37:46.902Z",
+      "retrieved_at": "2026-09-01T11:34:40.003Z",
       "publication_number": "2026/2739",
       "publication_start": "2026-08-21",
       "publication_end": "2026-09-05",
@@ -4520,7 +6698,7 @@
       "public_id": "albo-2026-2736",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-08-31T13:37:46.902Z",
+      "retrieved_at": "2026-09-01T11:34:40.003Z",
       "publication_number": "2026/2736",
       "publication_start": "2026-08-21",
       "publication_end": "2026-09-05",
@@ -4613,7 +6791,7 @@
       "public_id": "albo-2026-2735",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-08-31T13:37:46.902Z",
+      "retrieved_at": "2026-09-01T11:34:40.003Z",
       "publication_number": "2026/2735",
       "publication_start": "2026-08-21",
       "publication_end": "2026-09-05",
@@ -4709,7 +6887,7 @@
       "public_id": "albo-2026-2734",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-08-31T13:37:46.902Z",
+      "retrieved_at": "2026-09-01T11:34:40.003Z",
       "publication_number": "2026/2734",
       "publication_start": "2026-08-20",
       "publication_end": "2026-09-04",
@@ -4800,7 +6978,7 @@
       "public_id": "albo-2026-2733",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-08-31T13:37:46.902Z",
+      "retrieved_at": "2026-09-01T11:34:40.003Z",
       "publication_number": "2026/2733",
       "publication_start": "2026-08-20",
       "publication_end": "2026-09-04",
@@ -4894,7 +7072,7 @@
       "public_id": "albo-2026-2732",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-08-31T13:37:46.902Z",
+      "retrieved_at": "2026-09-01T11:34:40.003Z",
       "publication_number": "2026/2732",
       "publication_start": "2026-08-20",
       "publication_end": "2026-09-04",
@@ -4986,7 +7164,7 @@
       "public_id": "albo-2026-2731",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-08-31T13:37:46.902Z",
+      "retrieved_at": "2026-09-01T11:34:40.003Z",
       "publication_number": "2026/2731",
       "publication_start": "2026-08-20",
       "publication_end": "2026-09-04",
@@ -5079,7 +7257,7 @@
       "public_id": "albo-2026-2730",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-08-31T13:37:46.902Z",
+      "retrieved_at": "2026-09-01T11:34:40.003Z",
       "publication_number": "2026/2730",
       "publication_start": "2026-08-20",
       "publication_end": "2026-09-04",
@@ -5174,7 +7352,7 @@
       "public_id": "albo-2026-2729",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-08-31T13:37:46.902Z",
+      "retrieved_at": "2026-09-01T11:34:40.003Z",
       "publication_number": "2026/2729",
       "publication_start": "2026-08-19",
       "publication_end": "2026-09-03",
@@ -5264,7 +7442,7 @@
       "public_id": "albo-2026-2727",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-08-31T13:37:46.902Z",
+      "retrieved_at": "2026-09-01T11:34:40.003Z",
       "publication_number": "2026/2727",
       "publication_start": "2026-08-19",
       "publication_end": "2026-09-03",
@@ -5356,7 +7534,7 @@
       "public_id": "albo-2026-2726",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-08-31T13:37:46.902Z",
+      "retrieved_at": "2026-09-01T11:34:40.003Z",
       "publication_number": "2026/2726",
       "publication_start": "2026-08-19",
       "publication_end": "2026-09-03",
@@ -5450,7 +7628,7 @@
       "public_id": "albo-2026-2725",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-08-31T13:37:46.902Z",
+      "retrieved_at": "2026-09-01T11:34:40.003Z",
       "publication_number": "2026/2725",
       "publication_start": "2026-08-19",
       "publication_end": "2026-09-03",
@@ -5544,7 +7722,7 @@
       "public_id": "albo-2026-2724",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-08-31T13:37:46.902Z",
+      "retrieved_at": "2026-09-01T11:34:40.003Z",
       "publication_number": "2026/2724",
       "publication_start": "2026-08-19",
       "publication_end": "2026-09-03",
@@ -5635,7 +7813,7 @@
       "public_id": "albo-2026-2723",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-08-31T13:37:46.902Z",
+      "retrieved_at": "2026-09-01T11:34:40.003Z",
       "publication_number": "2026/2723",
       "publication_start": "2026-08-18",
       "publication_end": "2026-09-02",
@@ -5730,7 +7908,7 @@
       "public_id": "albo-2026-2722",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-08-31T13:37:46.902Z",
+      "retrieved_at": "2026-09-01T11:34:40.003Z",
       "publication_number": "2026/2722",
       "publication_start": "2026-08-18",
       "publication_end": "2026-09-02",
@@ -5820,7 +7998,7 @@
       "public_id": "albo-2026-2721",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-08-31T13:37:46.902Z",
+      "retrieved_at": "2026-09-01T11:34:40.003Z",
       "publication_number": "2026/2721",
       "publication_start": "2026-08-18",
       "publication_end": "2026-09-02",
@@ -5911,7 +8089,7 @@
       "public_id": "albo-2026-2720",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-08-31T13:37:46.902Z",
+      "retrieved_at": "2026-09-01T11:34:40.003Z",
       "publication_number": "2026/2720",
       "publication_start": "2026-08-17",
       "publication_end": "2026-09-01",
@@ -5995,7 +8173,7 @@
       "public_id": "albo-2026-2719",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-08-31T13:37:46.902Z",
+      "retrieved_at": "2026-09-01T11:34:40.003Z",
       "publication_number": "2026/2719",
       "publication_start": "2026-08-17",
       "publication_end": "2026-09-01",
@@ -6085,7 +8263,7 @@
       "public_id": "albo-2026-2716",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-08-31T13:37:46.902Z",
+      "retrieved_at": "2026-09-01T11:34:40.003Z",
       "publication_number": "2026/2716",
       "publication_start": "2026-08-14",
       "publication_end": "2026-09-13",
@@ -6177,7 +8355,7 @@
       "public_id": "albo-2026-2715",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-08-31T13:37:46.902Z",
+      "retrieved_at": "2026-09-01T11:34:40.003Z",
       "publication_number": "2026/2715",
       "publication_start": "2026-08-14",
       "publication_end": "2026-09-13",
@@ -6269,7 +8447,7 @@
       "public_id": "albo-2026-2714",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-08-31T13:37:46.902Z",
+      "retrieved_at": "2026-09-01T11:34:40.003Z",
       "publication_number": "2026/2714",
       "publication_start": "2026-08-14",
       "publication_end": "2026-09-13",
@@ -6361,7 +8539,7 @@
       "public_id": "albo-2026-2710",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-08-31T13:37:46.902Z",
+      "retrieved_at": "2026-09-01T11:34:40.003Z",
       "publication_number": "2026/2710",
       "publication_start": "2026-08-13",
       "publication_end": "2026-09-12",
@@ -6445,7 +8623,7 @@
       "public_id": "albo-2026-2707",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-08-31T13:37:46.902Z",
+      "retrieved_at": "2026-09-01T11:34:40.003Z",
       "publication_number": "2026/2707",
       "publication_start": "2026-08-13",
       "publication_end": "2026-09-12",
@@ -6537,7 +8715,7 @@
       "public_id": "albo-2026-2706",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-08-31T13:37:46.902Z",
+      "retrieved_at": "2026-09-01T11:34:40.003Z",
       "publication_number": "2026/2706",
       "publication_start": "2026-08-13",
       "publication_end": "2026-09-12",
@@ -6629,7 +8807,7 @@
       "public_id": "albo-2026-2705",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-08-31T13:37:46.902Z",
+      "retrieved_at": "2026-09-01T11:34:40.003Z",
       "publication_number": "2026/2705",
       "publication_start": "2026-08-13",
       "publication_end": "2026-09-12",
@@ -6721,7 +8899,7 @@
       "public_id": "albo-2026-2704",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-08-31T13:37:46.902Z",
+      "retrieved_at": "2026-09-01T11:34:40.003Z",
       "publication_number": "2026/2704",
       "publication_start": "2026-08-13",
       "publication_end": "2026-09-12",
@@ -6813,7 +8991,7 @@
       "public_id": "albo-2026-2703",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-08-31T13:37:46.902Z",
+      "retrieved_at": "2026-09-01T11:34:40.003Z",
       "publication_number": "2026/2703",
       "publication_start": "2026-08-13",
       "publication_end": "2026-09-12",
@@ -6905,7 +9083,7 @@
       "public_id": "albo-2026-2647",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-08-31T13:37:46.902Z",
+      "retrieved_at": "2026-09-01T11:34:40.003Z",
       "publication_number": "2026/2647",
       "publication_start": "2026-08-07",
       "publication_end": "2026-09-06",
@@ -6997,7 +9175,7 @@
       "public_id": "albo-2026-2646",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-08-31T13:37:46.902Z",
+      "retrieved_at": "2026-09-01T11:34:40.003Z",
       "publication_number": "2026/2646",
       "publication_start": "2026-08-07",
       "publication_end": "2026-09-06",
@@ -7081,7 +9259,7 @@
       "public_id": "albo-2026-2630",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-08-31T13:37:46.902Z",
+      "retrieved_at": "2026-09-01T11:34:40.003Z",
       "publication_number": "2026/2630",
       "publication_start": "2026-08-07",
       "publication_end": "2026-09-06",
@@ -7172,7 +9350,7 @@
       "public_id": "albo-2026-2627",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-08-31T13:37:46.902Z",
+      "retrieved_at": "2026-09-01T11:34:40.003Z",
       "publication_number": "2026/2627",
       "publication_start": "2026-08-06",
       "publication_end": "2026-09-05",
@@ -7264,7 +9442,7 @@
       "public_id": "albo-2026-2572",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-08-31T13:37:46.902Z",
+      "retrieved_at": "2026-09-01T11:34:40.003Z",
       "publication_number": "2026/2572",
       "publication_start": "2026-08-04",
       "publication_end": "2026-09-03",
@@ -7356,7 +9534,7 @@
       "public_id": "albo-2026-2571",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-08-31T13:37:46.902Z",
+      "retrieved_at": "2026-09-01T11:34:40.003Z",
       "publication_number": "2026/2571",
       "publication_start": "2026-08-04",
       "publication_end": "2026-09-03",
@@ -7450,7 +9628,7 @@
       "public_id": "albo-2026-2752",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-08-31T13:37:46.902Z",
+      "retrieved_at": "2026-09-01T11:34:40.003Z",
       "publication_number": "2026/2752",
       "verification_status": "official_source_acquired",
       "privacy_risk": "high",
@@ -7480,7 +9658,7 @@
       "public_id": "albo-2026-2745",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-08-31T13:37:46.902Z",
+      "retrieved_at": "2026-09-01T11:34:40.003Z",
       "publication_number": "2026/2745",
       "verification_status": "official_source_acquired",
       "privacy_risk": "high",
