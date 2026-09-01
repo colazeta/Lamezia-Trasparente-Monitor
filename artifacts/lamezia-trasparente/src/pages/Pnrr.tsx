@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { Link } from "wouter";
+import { Link, useRoute } from "wouter";
 import { useListPnrrProjects } from "@workspace/api-client-react";
 import {
   Landmark,
@@ -22,12 +22,17 @@ import {
   MapPin,
   Hammer,
   ChevronDown,
+  ChevronLeft,
+  Copy,
+  History,
+  Share2,
   type LucideIcon,
 } from "lucide-react";
 import { format } from "date-fns";
 import { it } from "date-fns/locale";
 
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
   Empty,
@@ -54,6 +59,11 @@ import {
   type CantieriometroPresenceFilter,
 } from "@/lib/cantieriometro";
 import { asApiList } from "@/lib/apiList";
+import {
+  buildPnrrEvidenceTimeline,
+  type PnrrEvidenceEvent,
+} from "@/lib/pnrrEvidenceTimeline";
+import { withPublicBasePath } from "@/lib/publicBasePath";
 import {
   LAMEZIA_PNRR_STATIC_DATA,
   LAMEZIA_PNRR_STATIC_DATA_URL,
@@ -113,6 +123,35 @@ function formatImportoShort(value: number): string {
     : "—";
 }
 
+function normaliseCup(value: string | null | undefined) {
+  return value?.replace(/[^a-z0-9]/gi, "").toUpperCase() ?? "";
+}
+
+function pnrrProjectPath(cup: string) {
+  return `/pnrr/${encodeURIComponent(normaliseCup(cup))}` as const;
+}
+
+async function copyText(text: string) {
+  if (typeof navigator !== "undefined" && navigator.clipboard?.writeText) {
+    await navigator.clipboard.writeText(text);
+    return;
+  }
+
+  if (typeof document === "undefined" || !document.execCommand) {
+    throw new Error("Clipboard API unavailable");
+  }
+
+  const area = document.createElement("textarea");
+  area.value = text;
+  area.style.position = "fixed";
+  area.style.opacity = "0";
+  document.body.appendChild(area);
+  area.select();
+  const copied = document.execCommand("copy");
+  document.body.removeChild(area);
+  if (!copied) throw new Error("Copy command failed");
+}
+
 function projectMatchesAmount(project: PnrrViewProject, filter: AmountFilter) {
   if (filter === "all") return true;
   const amount = project.importoFinanziato;
@@ -169,6 +208,7 @@ function dataStatus(project: PnrrViewProject) {
 }
 
 export function Pnrr() {
+  const [isProjectRoute, routeParams] = useRoute("/pnrr/:cup");
   const {
     data,
     isLoading,
@@ -186,6 +226,16 @@ export function Pnrr() {
     () =>
       mergePnrrViewProjects(runtimeProjects, LAMEZIA_PNRR_STATIC_VIEW.projects),
     [runtimeProjects],
+  );
+  const requestedCup = isProjectRoute ? normaliseCup(routeParams?.cup) : null;
+  const requestedProject = useMemo(
+    () =>
+      requestedCup
+        ? (projects.find(
+            (project) => normaliseCup(project.cup) === requestedCup,
+          ) ?? null)
+        : null,
+    [projects, requestedCup],
   );
   const uncensored = useMemo(
     () =>
@@ -356,6 +406,17 @@ export function Pnrr() {
     staleFilter,
     statusFilter,
   ]);
+
+  if (isProjectRoute) {
+    return (
+      <PnrrProjectPermalinkPage
+        project={requestedProject}
+        requestedCup={requestedCup ?? ""}
+        sourceLoading={sourceLoading}
+        sourceUnavailable={sourceUnavailable}
+      />
+    );
+  }
 
   return (
     <>
@@ -824,6 +885,96 @@ export function Pnrr() {
               <EmptyDescription>
                 Il censimento Italia Domani non è ancora stato importato. I
                 progetti compariranno al completamento della prima ingestione.
+              </EmptyDescription>
+            </EmptyHeader>
+          </Empty>
+        )}
+      </div>
+    </>
+  );
+}
+
+function PnrrProjectPermalinkPage({
+  project,
+  requestedCup,
+  sourceLoading,
+  sourceUnavailable,
+}: {
+  project: PnrrViewProject | null;
+  requestedCup: string;
+  sourceLoading: boolean;
+  sourceUnavailable: boolean;
+}) {
+  const canonicalPath = requestedCup ? pnrrProjectPath(requestedCup) : "/pnrr";
+
+  return (
+    <>
+      <PageMeta
+        title={
+          project
+            ? `${project.title} — CUP ${project.cup ?? requestedCup}`
+            : requestedCup
+              ? `Progetto PNRR — CUP ${requestedCup}`
+              : "Progetto PNRR"
+        }
+        description={
+          project
+            ? `Scheda civica del progetto PNRR con CUP ${project.cup ?? requestedCup}, fonti disponibili e cronologia delle evidenze pubblicate.`
+            : "Scheda civica puntuale di un progetto PNRR, da verificare sulle fonti pubbliche disponibili."
+        }
+        path={canonicalPath}
+      />
+      <div
+        className="container mx-auto max-w-6xl px-4 py-8 md:py-12"
+        data-testid="pnrr-permalink-page"
+      >
+        <Link
+          href="/pnrr#pnrr-elenco"
+          className="mb-5 inline-flex items-center gap-1.5 text-sm font-semibold text-muted-foreground transition-colors hover:text-foreground"
+        >
+          <ChevronLeft className="h-4 w-4" aria-hidden="true" />
+          Torna a tutti i progetti PNRR
+        </Link>
+
+        {sourceLoading ? (
+          <div className="space-y-4" role="status">
+            <Skeleton className="h-7 w-48" />
+            <Skeleton className="h-40 w-full rounded-2xl" />
+          </div>
+        ) : sourceUnavailable ? (
+          <SourceAvailabilityNotice
+            description="Il servizio dati PNRR non risponde con un payload verificabile e non è disponibile una scheda materializzata per il CUP richiesto. Questo stato non dimostra l'assenza del progetto."
+            sourceHref={COMUNE_PNRR_URL}
+            sourceLabel="Consulta la sezione PNRR del Comune"
+          />
+        ) : project ? (
+          <>
+            <div className="mb-5 rounded-xl border border-sky-200 bg-sky-50/70 px-4 py-3 text-sm text-sky-950 dark:border-sky-500/30 dark:bg-sky-500/10 dark:text-sky-100">
+              Questa è la scheda stabile del CUP {project.cup}. Il collegamento
+              identifica lo stesso progetto presente nell'elenco generale e non
+              crea una seconda registrazione.
+            </div>
+            <PnrrCard
+              project={project}
+              headingLevel="h1"
+              isPermalink
+              defaultDossierOpen
+            />
+          </>
+        ) : (
+          <Empty className="border border-dashed border-border bg-muted/20">
+            <EmptyHeader>
+              <EmptyMedia variant="icon" className="bg-brand/10 text-brand">
+                <Hash className="h-6 w-6" aria-hidden="true" />
+              </EmptyMedia>
+              <EmptyTitle className="font-display">
+                CUP non trovato nel perimetro pubblicato
+              </EmptyTitle>
+              <EmptyDescription>
+                {requestedCup
+                  ? `Il CUP ${requestedCup} non corrisponde a una scheda del censimento disponibile.`
+                  : "Il collegamento non contiene un CUP valido."}{" "}
+                L'assenza dalla pagina non dimostra che il progetto non esista.
               </EmptyDescription>
             </EmptyHeader>
           </Empty>
@@ -1460,7 +1611,17 @@ function MunicipalDocumentItem({
   );
 }
 
-function PnrrCard({ project }: { project: PnrrViewProject }) {
+function PnrrCard({
+  project,
+  headingLevel = "h3",
+  isPermalink = false,
+  defaultDossierOpen = false,
+}: {
+  project: PnrrViewProject;
+  headingLevel?: "h1" | "h3";
+  isPermalink?: boolean;
+  defaultDossierOpen?: boolean;
+}) {
   const attachmentsCount = asApiList<PnrrViewAttachment>(
     project.attachments,
   ).length;
@@ -1468,9 +1629,35 @@ function PnrrCard({ project }: { project: PnrrViewProject }) {
     PnrrViewProject["linkedContracts"][number]
   >(project.linkedContracts).length;
   const acquisitionStatus = project.openCupAcquisition?.status;
+  const [copyFeedback, setCopyFeedback] = useState<string | null>(null);
+  const [dossierOpen, setDossierOpen] = useState(defaultDossierOpen);
+  const ProjectHeading = headingLevel;
+  const projectPermalink = project.cup ? pnrrProjectPath(project.cup) : null;
+
+  const handleCopy = async (value: string, successMessage: string) => {
+    try {
+      await copyText(value);
+      setCopyFeedback(successMessage);
+    } catch {
+      setCopyFeedback(
+        "Copia non riuscita: usa il collegamento o la barra del browser.",
+      );
+    }
+  };
+
+  const handleCopyLink = () => {
+    if (!projectPermalink) return;
+    const publicPath = withPublicBasePath(projectPermalink);
+    const value =
+      typeof window === "undefined"
+        ? publicPath
+        : new URL(publicPath, window.location.origin).toString();
+    void handleCopy(value, "Link stabile copiato negli appunti.");
+  };
 
   return (
     <article
+      id={`pnrr-project-${normaliseCup(project.cup) || project.id}`}
       data-tour="pnrr-detail"
       className="relative overflow-hidden rounded-2xl border border-card-border bg-card shadow-sm transition-shadow hover:shadow-md"
     >
@@ -1519,9 +1706,9 @@ function PnrrCard({ project }: { project: PnrrViewProject }) {
               </Badge>
             </div>
 
-            <h3 className="max-w-4xl text-lg font-display font-bold leading-snug text-foreground md:text-xl">
+            <ProjectHeading className="max-w-4xl text-lg font-display font-bold leading-snug text-foreground md:text-xl">
               {project.title}
-            </h3>
+            </ProjectHeading>
           </div>
 
           <div className="flex shrink-0 flex-wrap gap-2 lg:max-w-xs lg:justify-end">
@@ -1552,7 +1739,30 @@ function PnrrCard({ project }: { project: PnrrViewProject }) {
           </div>
         </div>
 
-        <dl className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        <div
+          className="mt-5 flex flex-col gap-2 rounded-xl border border-border/60 bg-card/80 px-4 py-3 sm:flex-row sm:items-start sm:justify-between"
+          data-testid={`pnrr-declared-status-${project.id}`}
+        >
+          <div className="flex min-w-0 items-start gap-2.5">
+            <span className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-brand/10 text-brand">
+              <Hammer className="h-4 w-4" aria-hidden="true" />
+            </span>
+            <div className="min-w-0">
+              <p className="text-sm font-semibold text-foreground">
+                Stato dichiarato del progetto
+              </p>
+              <p className="mt-0.5 text-sm leading-relaxed text-muted-foreground">
+                {project.status || "Non disponibile nelle fonti acquisite."}
+              </p>
+            </div>
+          </div>
+          <p className="max-w-md text-xs leading-relaxed text-muted-foreground sm:text-right">
+            Separato dallo stato tecnico di acquisizione e dallo stato
+            anagrafico del CUP: non viene dedotto dai documenti collegati.
+          </p>
+        </div>
+
+        <dl className="mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
           <ProjectFact
             icon={Euro}
             label="Importo esposto"
@@ -1604,9 +1814,63 @@ function PnrrCard({ project }: { project: PnrrViewProject }) {
             label="Contratti collegati"
           />
         </div>
+
+        {project.cup && projectPermalink && (
+          <div className="mt-4 flex flex-wrap items-center gap-2 border-t border-border/50 pt-4">
+            {!isPermalink && (
+              <Link
+                href={projectPermalink}
+                aria-label={`Apri la scheda stabile del CUP ${project.cup}: ${project.title}`}
+                className="inline-flex h-9 items-center gap-1.5 rounded-md border border-input bg-background px-3 text-sm font-semibold transition-colors hover:bg-accent hover:text-accent-foreground"
+              >
+                <Link2 className="h-4 w-4" aria-hidden="true" />
+                Apri scheda CUP
+              </Link>
+            )}
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              className="h-9"
+              aria-label={`Copia CUP ${project.cup} di ${project.title}`}
+              onClick={() =>
+                void handleCopy(
+                  project.cup ?? "",
+                  `CUP ${project.cup} copiato negli appunti.`,
+                )
+              }
+            >
+              <Copy className="h-4 w-4" aria-hidden="true" />
+              Copia CUP
+            </Button>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              className="h-9"
+              aria-label={`Copia il link della scheda CUP ${project.cup}: ${project.title}`}
+              onClick={handleCopyLink}
+            >
+              <Share2 className="h-4 w-4" aria-hidden="true" />
+              Copia link
+            </Button>
+            {copyFeedback && (
+              <span
+                className="text-sm font-medium text-muted-foreground"
+                role="status"
+              >
+                {copyFeedback}
+              </span>
+            )}
+          </div>
+        )}
       </div>
 
-      <details className="group/dossier border-t border-border/60">
+      <details
+        className="group/dossier border-t border-border/60"
+        open={dossierOpen}
+        onToggle={(event) => setDossierOpen(event.currentTarget.open)}
+      >
         <summary
           className="flex cursor-pointer list-none items-center gap-3 px-5 py-4 marker:content-none hover:bg-muted/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset md:px-6"
           data-testid={`pnrr-dossier-toggle-${project.id}`}
@@ -1725,6 +1989,8 @@ function PnrrCard({ project }: { project: PnrrViewProject }) {
 
           <SourceTraceability project={project} />
 
+          <ProjectEvidenceTimeline project={project} />
+
           <OpenCupProjectDetails project={project} />
 
           {project.dataOrigin !== "static-municipal" && (
@@ -1808,6 +2074,162 @@ function PnrrCard({ project }: { project: PnrrViewProject }) {
         </div>
       </details>
     </article>
+  );
+}
+
+function ProjectEvidenceTimeline({ project }: { project: PnrrViewProject }) {
+  const timeline = useMemo(() => buildPnrrEvidenceTimeline(project), [project]);
+  const visibleEvents = timeline.events.slice(0, 8);
+  const remainingEvents = timeline.events.slice(8);
+
+  return (
+    <section
+      className="rounded-xl border border-border/70 bg-card p-4"
+      aria-labelledby={`pnrr-timeline-title-${project.id}`}
+      data-testid={`pnrr-evidence-timeline-${project.id}`}
+    >
+      <div className="flex items-start gap-3">
+        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-brand/10 text-brand">
+          <History className="h-5 w-5" aria-hidden="true" />
+        </span>
+        <div className="min-w-0">
+          <h4
+            id={`pnrr-timeline-title-${project.id}`}
+            className="text-sm font-display font-bold text-foreground"
+          >
+            Cronologia delle evidenze pubblicate
+          </h4>
+          <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
+            Ordina soltanto schede, acquisizioni e documenti per le date
+            disponibili. Non rappresenta l'avanzamento fisico, amministrativo o
+            finanziario del progetto.
+          </p>
+        </div>
+      </div>
+
+      {visibleEvents.length > 0 ? (
+        <div className="mt-4">
+          <EvidenceTimelineList events={visibleEvents} />
+          {remainingEvents.length > 0 && (
+            <details className="group/timeline mt-3 border-t border-border/60 pt-3">
+              <summary className="flex cursor-pointer list-none items-center gap-2 text-sm font-semibold text-primary marker:content-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+                <ChevronDown
+                  className="h-4 w-4 transition-transform group-open/timeline:rotate-180"
+                  aria-hidden="true"
+                />
+                Mostra altri {remainingEvents.length} eventi datati
+              </summary>
+              <div className="mt-3">
+                <EvidenceTimelineList events={remainingEvents} />
+              </div>
+            </details>
+          )}
+        </div>
+      ) : (
+        <p className="mt-4 rounded-lg bg-muted/30 px-3 py-2 text-sm text-muted-foreground">
+          Nessuna evidenza con una data utilizzabile è disponibile per questa
+          scheda.
+        </p>
+      )}
+
+      {timeline.undatedEvidenceCount > 0 && (
+        <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+          {timeline.undatedEvidenceCount}{" "}
+          {timeline.undatedEvidenceCount === 1
+            ? "documento privo"
+            : "documenti privi"}{" "}
+          di una data sufficientemente precisa restano consultabili
+          nell'archivio documentale, ma non vengono ordinati nella cronologia.
+        </p>
+      )}
+    </section>
+  );
+}
+
+function EvidenceTimelineList({ events }: { events: PnrrEvidenceEvent[] }) {
+  return (
+    <ol className="space-y-0">
+      {events.map((event) => {
+        const Icon =
+          event.kind === "municipal_attachment"
+            ? Paperclip
+            : event.kind === "albo_publication"
+              ? FileText
+              : event.kind === "contract_award"
+                ? Link2
+                : event.kind === "opencup_generation" ||
+                    event.kind === "opencup_acquisition"
+                  ? ExternalLink
+                  : RefreshCw;
+        const title = (
+          <>
+            <Icon
+              className="mt-0.5 h-4 w-4 shrink-0 text-brand"
+              aria-hidden="true"
+            />
+            <span>{event.title}</span>
+          </>
+        );
+
+        return (
+          <li
+            key={event.id}
+            className="grid gap-2 border-l-2 border-brand/20 pb-4 pl-4 last:pb-0 sm:grid-cols-[8.5rem_minmax(0,1fr)] sm:gap-4"
+            data-event-date={event.date}
+            data-event-precision={event.datePrecision}
+          >
+            <div>
+              <time
+                dateTime={
+                  event.datePrecision === "day" ? event.date : undefined
+                }
+                className="text-sm font-semibold tabular-nums text-foreground"
+              >
+                {event.datePrecision === "year"
+                  ? event.date
+                  : formatDate(event.date)}
+              </time>
+              {event.datePrecision === "year" && (
+                <span className="mt-0.5 block text-xs text-muted-foreground">
+                  solo anno
+                </span>
+              )}
+            </div>
+            <div className="min-w-0">
+              {event.href ? (
+                event.href.startsWith("/") ? (
+                  <Link
+                    href={event.href}
+                    className="flex items-start gap-2 text-sm font-semibold leading-snug text-primary hover:underline"
+                  >
+                    {title}
+                  </Link>
+                ) : (
+                  <a
+                    href={event.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-start gap-2 text-sm font-semibold leading-snug text-primary hover:underline"
+                  >
+                    {title}
+                  </a>
+                )
+              ) : (
+                <p className="flex items-start gap-2 text-sm font-semibold leading-snug text-foreground">
+                  {title}
+                </p>
+              )}
+              <p className="mt-1 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                {event.sourceLabel}
+              </p>
+              <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
+                {event.description}
+              </p>
+            </div>
+          </li>
+        );
+      })}
+    </ol>
   );
 }
 
