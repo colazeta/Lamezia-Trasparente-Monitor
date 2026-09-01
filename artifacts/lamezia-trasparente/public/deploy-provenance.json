@@ -8,6 +8,7 @@
   "requiredRoutes": ["/contratti", "/organi", "/amministratori"],
   "requiredMarkers": [
     "Contratti protagonisti",
+    "La storia documentale del contratto",
     "Attiva · perimetro corrente",
     "Albo Pretorio corrente",
     "Filtro pubblico e privacy",
