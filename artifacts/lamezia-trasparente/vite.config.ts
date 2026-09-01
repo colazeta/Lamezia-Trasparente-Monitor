@@ -11,6 +11,11 @@ import {
   pruneUnallowlistedAlboDocumentFiles,
   readVerifiedAlboDocument,
 } from "./albo-document-serving";
+import {
+  buildStaticContractsDataset,
+  STATIC_CONTRACTS_DATA_PATH,
+  type AlboPublicSnapshot,
+} from "./src/lib/staticContractsDataset";
 
 const rawPort = process.env.PORT ?? "8081";
 
@@ -22,6 +27,7 @@ if (Number.isNaN(port) || port <= 0) {
 
 const basePath = process.env.BASE_PATH ?? "/";
 const repoRoot = path.resolve(import.meta.dirname, "..", "..");
+const alboPublicSnapshotPath = "data/public/albo/latest.json";
 const atlantePublicDataFiles = [
   "data/processed/territorio/istat_sezioni_censimento_lamezia.geojson",
   "data/processed/territorio/istat_sezioni_censimento_lamezia.metadata.json",
@@ -43,6 +49,13 @@ function repoPublicDataPlugin(): Plugin {
           /\.pdf$/i.test(requestPath)
             ? requestPath.slice(1)
             : null);
+
+        if (requestPath === `/${STATIC_CONTRACTS_DATA_PATH}`) {
+          response.statusCode = 200;
+          response.setHeader("Content-Type", "application/json; charset=utf-8");
+          response.end(`${JSON.stringify(readStaticContractsDataset())}\n`);
+          return;
+        }
 
         if (!relativePath || relativePath.includes("..")) {
           next();
@@ -85,6 +98,12 @@ function repoPublicDataPlugin(): Plugin {
           source,
         });
       }
+
+      this.emitFile({
+        type: "asset",
+        fileName: STATIC_CONTRACTS_DATA_PATH,
+        source: `${JSON.stringify(readStaticContractsDataset())}\n`,
+      });
     },
     writeBundle(outputOptions) {
       const outputDir = outputOptions.dir
@@ -98,6 +117,28 @@ function repoPublicDataPlugin(): Plugin {
 function readRepoFile(relativePath: string): Buffer | null {
   const sourcePath = path.join(repoRoot, relativePath);
   return existsSync(sourcePath) ? readFileSync(sourcePath) : null;
+}
+
+function readStaticContractsDataset() {
+  const source = readRepoFile(alboPublicSnapshotPath);
+  if (!source) {
+    throw new Error(
+      `Public Albo snapshot is required to build contracts: ${alboPublicSnapshotPath}`,
+    );
+  }
+
+  let snapshot: AlboPublicSnapshot;
+  try {
+    snapshot = JSON.parse(source.toString("utf8")) as AlboPublicSnapshot;
+  } catch (error) {
+    throw new Error(
+      `Public Albo snapshot is not valid JSON: ${
+        error instanceof Error ? error.message : String(error)
+      }`,
+    );
+  }
+
+  return buildStaticContractsDataset(snapshot);
 }
 
 function contentTypeFor(filePath: string) {

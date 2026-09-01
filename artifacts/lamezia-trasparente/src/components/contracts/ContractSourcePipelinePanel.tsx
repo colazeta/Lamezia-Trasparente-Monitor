@@ -138,12 +138,13 @@ const PHASE_SHORT_LABELS: Record<DossierPhase["key"], string> = {
 };
 
 export function ContractSourcePipelinePanel() {
-  const [statusFilter, setStatusFilter] =
-    useState<DossierStatusFilter>("all");
+  const [statusFilter, setStatusFilter] = useState<DossierStatusFilter>("all");
   const snapshot = buildContractPipelineSnapshot();
   const { data, isLoading } = useListContracts({});
   const contracts = asApiList<Contract>(data);
-  const dossiers = contracts.map((contract) => buildContractDossier({ contract }));
+  const dossiers = contracts.map((contract) =>
+    buildContractDossier({ contract }),
+  );
   const phaseCoverage = summarizePhaseCoverage(dossiers);
   const summary = summarizeContractDossiers(contracts);
   const statusCounts = countDossierStatuses(dossiers);
@@ -175,18 +176,18 @@ export function ContractSourcePipelinePanel() {
               Stato dei fascicoli contrattuali
             </h2>
             <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-              La sezione parte dai singoli contratti: per ogni fascicolo conta
-              quali fasi sono documentate, quali restano parziali e dove serve
-              un collegamento piu forte a BDNCP, CUP o atti locali.
+              La sezione parte dagli atti correnti dell'Albo che riportano un
+              CIG. Ogni fascicolo mostra ciò che l'atto documenta e rende
+              visibili le fasi che richiedono altre fonti.
             </p>
           </div>
 
           <div className="grid gap-3 sm:grid-cols-2">
             <PanelMetric
               icon={FileText}
-              label="Contratti"
+              label="Fascicoli correnti"
               value={isLoading ? "..." : String(summary.total)}
-              sub="fascicoli monitorati"
+              sub="atti Albo con CIG"
             />
             <PanelMetric
               icon={AlertTriangle}
@@ -203,7 +204,9 @@ export function ContractSourcePipelinePanel() {
             <PanelMetric
               icon={RefreshCw}
               label="Esecuzione da integrare"
-              value={isLoading ? "..." : String(summary.missingExecutionEvidence)}
+              value={
+                isLoading ? "..." : String(summary.missingExecutionEvidence)
+              }
               sub="SAL, varianti o liquidazioni"
             />
           </div>
@@ -213,7 +216,10 @@ export function ContractSourcePipelinePanel() {
               Lettura immediata dello stato
             </div>
             <div className="flex flex-wrap gap-2">
-              <StatusCountBadge status="complete" count={statusCounts.complete} />
+              <StatusCountBadge
+                status="complete"
+                count={statusCounts.complete}
+              />
               <StatusCountBadge status="partial" count={statusCounts.partial} />
               <StatusCountBadge
                 status="needs-review"
@@ -251,17 +257,19 @@ export function ContractSourcePipelinePanel() {
             <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
               <div>
                 <div className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                  Contratti da guardare per primi
+                  Fascicoli da integrare per primi
                 </div>
                 <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
-                  Priorita basata sullo stato del dossier: prima fasi mancanti,
-                  poi fascicoli parziali.
+                  Priorità documentale: prima le fasi senza fonte collegata, poi
+                  i fascicoli parziali.
                 </p>
               </div>
               <Badge
                 className={`shadow-none ${DOSSIER_STATUS_META["needs-review"].className}`}
               >
-                {isLoading ? "..." : `${statusCounts["needs-review"]} da verificare`}
+                {isLoading
+                  ? "..."
+                  : `${statusCounts["needs-review"]} da verificare`}
               </Badge>
             </div>
 
@@ -304,7 +312,7 @@ export function ContractSourcePipelinePanel() {
                     <div className="min-w-0">
                       <div className="flex flex-wrap items-center gap-2">
                         <span className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
-                          Fonte {index + 1}
+                          Passaggio {index + 1}
                         </span>
                         <Badge
                           className={`text-[10px] shadow-none ${meta.badgeClassName}`}
@@ -329,7 +337,7 @@ export function ContractSourcePipelinePanel() {
           </ol>
 
           <div className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900 dark:border-amber-500/30 dark:bg-amber-500/10 dark:text-amber-200">
-            <div className="font-semibold">Gate fonti e pubblicazione</div>
+            <div className="font-semibold">Perimetro e prossimo passo</div>
             <p className="mt-1 text-xs leading-relaxed">
               {snapshot.nextAction}
             </p>
@@ -344,13 +352,13 @@ export function ContractSourcePipelinePanel() {
               Lista completa dei fascicoli contrattuali
             </div>
             <h3 className="mt-1 font-display text-xl font-bold tracking-tight text-foreground">
-              Tutti i contratti espongono il proprio stato
+              Ogni fascicolo espone il proprio stato documentale
             </h3>
           </div>
           <p className="max-w-xl text-xs leading-relaxed text-muted-foreground">
-            La vista ordina tutti i fascicoli con lacune informative, poi quelli
-            parziali e infine quelli completi, mantenendo CIG, CUP e ponte BDNCP
-            accanto allo stato del contratto.
+            La vista ordina i fascicoli con fonti da integrare, poi quelli
+            parziali e infine quelli più documentati, mantenendo CIG, CUP e
+            ponte BDNCP accanto allo stato.
           </p>
         </div>
 
@@ -676,7 +684,10 @@ function ContractDossierCard({ dossier }: { dossier: ContractDossier }) {
 
       <div className="mt-3 flex flex-wrap gap-1.5">
         {cig?.value ? (
-          <Badge variant="outline" className="font-mono text-[10px] shadow-none">
+          <Badge
+            variant="outline"
+            className="font-mono text-[10px] shadow-none"
+          >
             CIG {cig.value}
           </Badge>
         ) : (
@@ -685,7 +696,10 @@ function ContractDossierCard({ dossier }: { dossier: ContractDossier }) {
           </Badge>
         )}
         {cup?.value ? (
-          <Badge variant="outline" className="font-mono text-[10px] shadow-none">
+          <Badge
+            variant="outline"
+            className="font-mono text-[10px] shadow-none"
+          >
             CUP {cup.value}
           </Badge>
         ) : null}
@@ -757,7 +771,9 @@ function DossierMiniMetric({
       <dt className="text-[10px] font-medium uppercase tracking-wide text-muted-foreground">
         {label}
       </dt>
-      <dd className={`mt-1 font-display text-lg font-bold tabular-nums ${tone}`}>
+      <dd
+        className={`mt-1 font-display text-lg font-bold tabular-nums ${tone}`}
+      >
         {value}
       </dd>
     </div>

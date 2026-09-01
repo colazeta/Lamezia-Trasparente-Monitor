@@ -12,6 +12,10 @@
   Access-Control-Allow-Origin: *
   Cache-Control: public, max-age=3600
 
+/data/processed/contracts/*
+  Access-Control-Allow-Origin: *
+  Cache-Control: public, max-age=900
+
 /data/public/albo/documents/*
   Cache-Control: public, max-age=86400
 

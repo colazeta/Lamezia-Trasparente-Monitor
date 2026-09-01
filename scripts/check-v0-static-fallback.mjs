@@ -11,6 +11,8 @@ const CLOUDFLARE_WORKER_FILE = "_worker.js";
 const CLOUDFLARE_HEADERS_FILE = "_headers";
 const DEPLOY_PROVENANCE_FILE = "deploy-provenance.json";
 const STATIC_HEALTHZ_MARKER = "healthz.json";
+const STATIC_CONTRACTS_DATA_FILE =
+  "data/processed/contracts/lamezia-contracts-current.json";
 const EXPECTED_HEALTHZ_NOT_CHECKED = [
   "api",
   "worker",
@@ -46,6 +48,9 @@ const REQUIRED_PUBLIC_TEXT = [
 const REQUIRED_CONTRACT_BUNDLE_TEXT = [
   "Contratti pubblici sotto osservazione",
   "Contratti protagonisti",
+  "Attiva · perimetro corrente",
+  "Albo Pretorio corrente",
+  "Filtro pubblico e privacy",
   "Stato dei fascicoli contrattuali",
   "Copertura fasi",
   "Copertura stato fasi dei fascicoli",
@@ -70,6 +75,8 @@ const REQUIRED_EDGE_FALLBACK_MARKERS = [
   "pathname.startsWith(FEED_PREFIX)",
   '"Content-Type": "application/json; charset=utf-8"',
   '"Content-Type": "application/xml; charset=utf-8"',
+  "lamezia-contracts-current.json",
+  'const CONTRACTS_API_PATH = "/api/contracts"',
   "status: 503",
 ];
 
@@ -198,6 +205,68 @@ function assertHealthzMarker(healthz, healthzPath) {
       );
     }
   }
+}
+
+function assertStaticContractsDataset(dataset, datasetPath) {
+  if (
+    !dataset ||
+    typeof dataset !== "object" ||
+    Array.isArray(dataset) ||
+    dataset.schemaVersion !== "lamezia-contracts-current.v1" ||
+    !Array.isArray(dataset.contracts) ||
+    !dataset.storylines ||
+    typeof dataset.storylines !== "object"
+  ) {
+    throw new Error(
+      `Static contracts dataset has an invalid schema: ${datasetPath}`,
+    );
+  }
+
+  if (
+    dataset.source?.scope !== "current-albo-window" ||
+    dataset.source?.publicClaim !== "atti correnti con CIG" ||
+    !Array.isArray(dataset.source?.limitations) ||
+    dataset.source.limitations.length === 0
+  ) {
+    throw new Error(
+      `Static contracts dataset must declare its current-Albo scope and limitations: ${datasetPath}`,
+    );
+  }
+
+  if (
+    dataset.coverage?.contracts !== dataset.contracts.length ||
+    dataset.coverage?.cigBearingItems !== dataset.contracts.length ||
+    dataset.feedStatus?.itemsTotal !== dataset.contracts.length
+  ) {
+    throw new Error(
+      `Static contracts coverage and feed totals are inconsistent: ${datasetPath}`,
+    );
+  }
+
+  for (const contract of dataset.contracts) {
+    if (
+      !Number.isInteger(contract.id) ||
+      !/^[A-Z0-9]{10}$/u.test(contract.cig ?? "") ||
+      typeof contract.title !== "string" ||
+      !contract.title.trim() ||
+      typeof contract.amount !== "number" ||
+      contract.amount < 0 ||
+      contract.withoutMepa !== false ||
+      !dataset.storylines[String(contract.id)]
+    ) {
+      throw new Error(
+        `Static contracts dataset contains an invalid or unsupported contract record: ${datasetPath}`,
+      );
+    }
+  }
+
+  return {
+    schemaVersion: dataset.schemaVersion,
+    contracts: dataset.contracts.length,
+    withCup: dataset.coverage.withCup,
+    withExplicitAmount: dataset.coverage.withExplicitAmount,
+    source: dataset.source.id,
+  };
 }
 
 async function readJsonFile(filePath, label) {
@@ -354,7 +423,7 @@ function assertEdgeFallback(workerText, workerPath) {
   }
 }
 
-async function assertEdgeFallbackBehavior(workerPath) {
+async function assertEdgeFallbackBehavior(workerPath, contractsDataset) {
   const workerModule = await import(
     `${pathToFileURL(workerPath).href}?smoke=${Date.now()}`
   );
@@ -368,7 +437,16 @@ async function assertEdgeFallbackBehavior(workerPath) {
   let assetRequests = 0;
   const env = {
     ASSETS: {
-      fetch: async () => {
+      fetch: async (assetRequest) => {
+        if (
+          new URL(assetRequest.url).pathname ===
+          `/${STATIC_CONTRACTS_DATA_FILE}`
+        ) {
+          return new Response(JSON.stringify(contractsDataset), {
+            status: 200,
+            headers: { "Content-Type": "application/json; charset=utf-8" },
+          });
+        }
         assetRequests += 1;
         return new Response("asset-fallback", {
           headers: { "Content-Type": "text/html; charset=utf-8" },
@@ -376,6 +454,64 @@ async function assertEdgeFallbackBehavior(workerPath) {
       },
     },
   };
+
+  const contractsResponse = await workerFetch(
+    new Request("https://public.example/api/contracts"),
+    env,
+  );
+  const contracts = await contractsResponse.json();
+  if (
+    contractsResponse.status !== 200 ||
+    !Array.isArray(contracts) ||
+    contracts.length !== contractsDataset.contracts.length
+  ) {
+    throw new Error(
+      "Cloudflare worker contracts API must return the generated static dataset.",
+    );
+  }
+
+  const contractsStatusResponse = await workerFetch(
+    new Request("https://public.example/api/contracts/feed-status"),
+    env,
+  );
+  if (contractsStatusResponse.status !== 200) {
+    throw new Error(
+      "Cloudflare worker contracts feed-status endpoint must return HTTP 200.",
+    );
+  }
+
+  const analyticsResponse = await workerFetch(
+    new Request("https://public.example/api/contracts/analytics"),
+    env,
+  );
+  const analytics = await analyticsResponse.json();
+  if (
+    analyticsResponse.status !== 200 ||
+    analytics.totalCount !== contracts.length
+  ) {
+    throw new Error(
+      "Cloudflare worker contracts analytics must match the static list.",
+    );
+  }
+
+  if (contracts.length > 0) {
+    const firstContract = contracts[0];
+    const detailResponse = await workerFetch(
+      new Request(`https://public.example/api/contracts/${firstContract.id}`),
+      env,
+    );
+    const storylineResponse = await workerFetch(
+      new Request(
+        `https://public.example/api/contracts/${firstContract.id}/storyline`,
+      ),
+      env,
+    );
+    if (detailResponse.status !== 200 || storylineResponse.status !== 200) {
+      throw new Error(
+        "Cloudflare worker contracts detail and storyline endpoints must return HTTP 200.",
+      );
+    }
+  }
 
   const apiResponse = await workerFetch(
     new Request("https://public.example/api/healthz"),
@@ -403,6 +539,21 @@ async function assertEdgeFallbackBehavior(workerPath) {
     );
   }
 
+  const contractsFeedResponse = await workerFetch(
+    new Request("https://public.example/feeds/contratti.xml"),
+    env,
+  );
+  if (
+    contractsFeedResponse.status !== 200 ||
+    !contractsFeedResponse.headers
+      .get("content-type")
+      ?.includes("application/xml")
+  ) {
+    throw new Error(
+      "Cloudflare worker contracts feed must return XML HTTP 200.",
+    );
+  }
+
   const assetResponse = await workerFetch(
     new Request("https://public.example/contratti/"),
     env,
@@ -413,7 +564,13 @@ async function assertEdgeFallbackBehavior(workerPath) {
     );
   }
 
-  return { apiStatus: apiResponse.status, feedStatus: feedResponse.status };
+  return {
+    apiStatus: apiResponse.status,
+    unavailableFeedStatus: feedResponse.status,
+    contractsStatus: contractsResponse.status,
+    contractsFeedStatus: contractsFeedResponse.status,
+    contracts: contracts.length,
+  };
 }
 
 async function assertChunkBudget(distDir, prefix, maxBytes) {
@@ -512,6 +669,10 @@ async function main() {
   const headersPath = path.join(absoluteDistDir, CLOUDFLARE_HEADERS_FILE);
   const sitemapPath = path.join(absoluteDistDir, "sitemap.xml");
   const provenancePath = path.join(absoluteDistDir, DEPLOY_PROVENANCE_FILE);
+  const contractsDatasetPath = path.join(
+    absoluteDistDir,
+    STATIC_CONTRACTS_DATA_FILE,
+  );
 
   await assertDirectory(absoluteDistDir, "Static build directory");
   await assertReadableFile(indexPath, "Static fallback index.html");
@@ -521,6 +682,7 @@ async function main() {
   await assertReadableFile(headersPath, "Cloudflare Pages _headers");
   await assertReadableFile(sitemapPath, "Public sitemap.xml");
   await assertReadableFile(provenancePath, "Deploy provenance");
+  await assertReadableFile(contractsDatasetPath, "Static contracts dataset");
 
   const healthz = await readJsonFile(
     healthzPath,
@@ -529,6 +691,14 @@ async function main() {
   assertHealthzMarker(healthz, healthzPath);
   const provenance = await readJsonFile(provenancePath, "Deploy provenance");
   assertDeployProvenance(provenance, provenancePath);
+  const contractsDataset = await readJsonFile(
+    contractsDatasetPath,
+    "Static contracts dataset",
+  );
+  const staticContracts = assertStaticContractsDataset(
+    contractsDataset,
+    contractsDatasetPath,
+  );
   const redirectsText = await readFile(redirectsPath, "utf8");
   const sitemapText = await readFile(sitemapPath, "utf8");
   const sitemapRoutes = extractSitemapRoutes(sitemapText);
@@ -544,7 +714,10 @@ async function main() {
   }
   const workerText = await readFile(workerPath, "utf8");
   assertEdgeFallback(workerText, workerPath);
-  const edgeFallback = await assertEdgeFallbackBehavior(workerPath);
+  const edgeFallback = await assertEdgeFallbackBehavior(
+    workerPath,
+    contractsDataset,
+  );
 
   for (const route of ["/albo", "/contratti", "/organi", "/amministratori"]) {
     assertDirectoryRouteRedirectPolicy(redirectsText, redirectsPath, route);
@@ -637,6 +810,8 @@ async function main() {
     worker: workerPath,
     headers: headersPath,
     deployProvenance: provenancePath,
+    contractsDataset: contractsDatasetPath,
+    staticContracts,
     edgeFallback,
     sitemapRoutesChecked: sitemapRoutes.length,
     assetsChecked: assets.length,
@@ -644,7 +819,7 @@ async function main() {
     sourceHealthBundle,
     chunkBudgets,
     routes: routeResults,
-    note: "This smoke check validates a local static artifact only. It does not choose a provider, call live APIs, run workers or certify civic data as current.",
+    note: "This smoke check validates the local static artifact and executes the bundled edge worker against generated assets. It does not call the live deployment or certify historical completeness.",
   };
 
   console.log(JSON.stringify(result, null, 2));

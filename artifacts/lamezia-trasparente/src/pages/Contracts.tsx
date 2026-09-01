@@ -317,6 +317,8 @@ export function Contracts() {
       ),
     [visibleContracts],
   );
+  const currentAlboFeed =
+    feedStatus?.source === "albo_pretorio_cig_current";
 
   return (
     <div className="container mx-auto px-4 py-8 md:py-12 max-w-6xl">
@@ -334,28 +336,32 @@ export function Contracts() {
             con fonti e limiti espliciti.
           </>
         }
-        stateLabel={contractsUnavailable ? "Fonte in attivazione" : "Pubblicabile"}
+        stateLabel={
+          contractsUnavailable
+            ? "Fonte in attivazione"
+            : "Attiva · perimetro corrente"
+        }
         stateDescription={
           contractsUnavailable
             ? "Il collegamento al servizio contratti non è disponibile in questa pubblicazione. Nessun totale viene rappresentato come zero."
-            : "Sezione consultabile nella versione pubblica, con copertura e aggiornamenti da verificare sulle fonti."
+            : "Schede ricavate dagli atti correnti dell'Albo Pretorio che riportano un CIG, con fonte e limiti visibili."
         }
         findItems={[
-          "Elenco, filtri e mappe dei contratti disponibili nel perimetro locale.",
-          "Importi, oggetti, operatori economici e collegamenti documentali quando presenti.",
-          "Indicatori di lettura trattati come segnali documentali, non come conclusioni.",
+          "Fascicoli correnti costruiti dagli atti pubblici che espongono un CIG.",
+          "CUP, importi, operatori e procedure solo quando dichiarati nell'oggetto pubblico.",
+          "Documento ufficiale dell'Albo e ponte di ricerca BDNCP per ogni CIG valido.",
         ]}
         missingItems={[
-          "Dichiarazioni di sincronizzazione con tutte le fonti contrattuali.",
-          "Schede di dettaglio consolidate da dataset ufficiali per ogni affidamento e storico.",
-          "Verifica puntuale dei dati mancanti sui documenti originari.",
+          "Lo storico completo dei contratti e degli affidamenti del Comune.",
+          "La sincronizzazione strutturata delle schede BDNCP/ANAC.",
+          "Dati non esplicitati nell'oggetto dell'atto o esclusi dal perimetro pubblico.",
         ]}
         sourceLimit={
           <>
-            La base usa dataset locale, collegamenti ANAC/BDNCP e atti
-            disponibili nel sistema. Non dichiara una sincronizzazione ANAC:
-            dati mancanti o incompleti indicano una necessita di verifica
-            documentale e non implicano irregolarita.
+            Il perimetro è la finestra corrente dell'Albo Pretorio, non
+            l'inventario storico dei contratti. Il CIG apre una ricerca
+            ufficiale BDNCP ma non certifica una scheda sincronizzata; i dati
+            mancanti restano non disponibili e non implicano irregolarità.
           </>
         }
         cta={{ label: "Consulta i contratti", href: "#contratti-elenco" }}
@@ -389,8 +395,8 @@ export function Contracts() {
             <span className="font-medium text-foreground">
               {formatDateTime(feedStatus?.lastUpdatedAt)}
             </span>
-            {feedStatus?.itemsTotal ? (
-              <> · {feedStatus.itemsTotal} contratti monitorati</>
+            {typeof feedStatus?.itemsTotal === "number" ? (
+              <> · {feedStatus.itemsTotal} fascicoli correnti con CIG</>
             ) : null}
           </span>
         </div>
@@ -401,7 +407,9 @@ export function Contracts() {
           className="inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:underline"
         >
           <Landmark className="h-4 w-4" />
-          Portale BDNCP ANAC - dati appalti
+          {currentAlboFeed
+            ? "Apri la fonte: Albo Pretorio"
+            : "Apri la fonte dichiarata"}
           <ExternalLink className="h-3.5 w-3.5" />
         </a>
       </div>
@@ -426,13 +434,17 @@ export function Contracts() {
       <BdncpBridge
         contracts={contracts}
         loading={isLoading}
-        portalUrl={feedStatus?.url || BDNCP_APPALTI_URL}
+        portalUrl={BDNCP_APPALTI_URL}
       />
 
       <SpendingByMacrotema contracts={contracts} loading={isLoading} />
 
       {/* Analytics */}
-      <Analytics loading={analyticsLoading} analytics={analytics} />
+      <Analytics
+        loading={analyticsLoading}
+        analytics={analytics}
+        contracts={contracts}
+      />
 
       {/* Filters */}
       <div
@@ -721,12 +733,12 @@ export function Contracts() {
             </h3>
           </div>
           <span className="text-xs text-muted-foreground">
-            {locatedContracts.length} su {visibleContracts.length} appalti
+            {locatedContracts.length} su {visibleContracts.length} fascicoli
             geolocalizzati
           </span>
         </div>
         <p className="mb-3 text-xs text-muted-foreground">
-          Solo gli appalti con un luogo riconoscibile (lavori, opere, interventi
+          Solo i fascicoli con un luogo riconoscibile (lavori, opere, interventi
           su strade ed edifici) compaiono sulla mappa: la maggior parte degli
           atti amministrativi non indica una posizione fisica. I punti
           tratteggiati in ambra hanno una posizione approssimata, da verificare.
@@ -743,7 +755,7 @@ export function Contracts() {
           <div className="flex h-[200px] flex-col items-center justify-center gap-2 rounded-xl border border-dashed border-border text-center">
             <MapPin className="h-6 w-6 text-muted-foreground" />
             <p className="text-sm text-muted-foreground">
-              Nessun appalto geolocalizzato per i filtri attuali.
+              Nessun fascicolo geolocalizzato per i filtri attuali.
             </p>
           </div>
         )}
@@ -853,7 +865,7 @@ export function Contracts() {
                         ) : null}
                         {contract.withoutTender ? (
                           <Badge className="border-transparent bg-amber-100 text-amber-800 text-[10px] shadow-none dark:bg-amber-500/20 dark:text-amber-300">
-                            Senza gara
+                            Affidamento diretto dichiarato
                           </Badge>
                         ) : null}
                       </div>
@@ -891,7 +903,7 @@ export function Contracts() {
                           e.stopPropagation();
                           navigate(`/contratti/${contract.id}`);
                         }}
-                        aria-label="Apri la storyline dell'appalto"
+                        aria-label="Apri la storia documentale del fascicolo"
                       >
                         <ExternalLink className="h-4 w-4" />
                       </Button>
@@ -906,7 +918,7 @@ export function Contracts() {
                         <FileText className="h-6 w-6" />
                       </div>
                       <div className="font-display font-bold text-foreground">
-                        Nessun appalto trovato
+                        Nessun fascicolo trovato
                       </div>
                       <p className="text-sm text-muted-foreground max-w-sm">
                         Nessun contratto corrisponde ai filtri attuali. Prova a
@@ -977,13 +989,13 @@ function BdncpBridge({
             <div className="grid gap-3 sm:grid-cols-3 lg:grid-cols-1">
               <BdncpMetric
                 icon={Hash}
-                label="Contratti con CIG"
+                label="Fascicoli con CIG"
                 value={`${summary.withCig}/${summary.total}`}
                 sub="chiave procedura da verificare in BDNCP"
               />
               <BdncpMetric
                 icon={FileText}
-                label="Contratti con CUP"
+                label="Fascicoli con CUP"
                 value={`${summary.withCup}/${summary.total}`}
                 sub="asse progetto/opera quando disponibile"
               />
@@ -997,7 +1009,7 @@ function BdncpBridge({
                 icon={HardHat}
                 label="Lavori pubblici nel perimetro"
                 value={String(summary.publicWorks)}
-                sub="contratti con ambito o testo compatibile"
+                sub="fascicoli con ambito o testo compatibile"
               />
               <BdncpMetric
                 icon={RefreshCw}
@@ -1143,9 +1155,11 @@ function matchesDossierFilters(
 function Analytics({
   loading,
   analytics,
+  contracts,
 }: {
   loading: boolean;
   analytics: ContractAnalytics | undefined;
+  contracts: Contract[];
 }) {
   if (loading) {
     return (
@@ -1182,14 +1196,11 @@ function Analytics({
     typeof analytics.withoutTenderCount === "number"
       ? analytics.withoutTenderCount
       : 0;
-  const withoutMepaPct =
-    typeof analytics.withoutMepaPct === "number"
-      ? analytics.withoutMepaPct
-      : 0;
-  const withoutMepaCount =
-    typeof analytics.withoutMepaCount === "number"
-      ? analytics.withoutMepaCount
-      : 0;
+  const knownAmountCount = contracts.filter(
+    (contract) => contract.amount > 0,
+  ).length;
+  const withCupCount = contracts.filter((contract) => Boolean(contract.cup))
+    .length;
   const mostRecurrentBeneficiary =
     analytics.mostRecurrentBeneficiary &&
     typeof analytics.mostRecurrentBeneficiary.name === "string" &&
@@ -1246,29 +1257,45 @@ function Analytics({
       {/* KPI cards */}
       <div className="grid gap-4 grid-cols-2 lg:grid-cols-4">
         <StatCard
-          label="Valore totale (filtrato)"
-          value={formatEuro(totalAmount, true)}
-          icon={Euro}
+          label="Fascicoli correnti"
+          value={String(totalCount)}
+          icon={FileText}
           highlight
         />
         <StatCard
-          label="Contratti"
-          value={String(totalCount)}
-          icon={FileText}
+          label="Importi espliciti"
+          value={`${knownAmountCount}/${totalCount}`}
+          sub={
+            knownAmountCount > 0
+              ? `${formatEuro(totalAmount, true)} rilevati`
+              : "gli importi assenti non valgono zero"
+          }
+          icon={Euro}
         />
         <StatCard
-          label="Affidati senza gara"
-          value={`${withoutTenderPct.toFixed(0)}%`}
-          sub={`${withoutTenderCount} contratti`}
+          label="Formula affidamento diretto"
+          value={String(withoutTenderCount)}
+          sub={`${withoutTenderPct.toFixed(0)}% degli oggetti correnti`}
           icon={Gavel}
         />
         <StatCard
-          label="Fuori dal MePA"
-          value={`${withoutMepaPct.toFixed(0)}%`}
-          sub={`${withoutMepaCount} contratti`}
-          icon={ShoppingCart}
+          label="Fascicoli con CUP"
+          value={String(withCupCount)}
+          sub="identificativo progetto esplicito"
+          icon={Hash}
         />
       </div>
+
+      {knownAmountCount === 0 ? (
+        <div className="flex items-start gap-3 rounded-xl border border-sky-200 bg-sky-50 px-4 py-3 text-sm text-sky-900 dark:border-sky-500/30 dark:bg-sky-500/10 dark:text-sky-200">
+          <Info className="mt-0.5 h-4 w-4 shrink-0" />
+          <p>
+            Nel perimetro filtrato nessun importo è esplicito nell'oggetto
+            pubblico dell'atto. Per questo non viene mostrato un totale pari a
+            zero: gli importi restano da verificare nei documenti ufficiali.
+          </p>
+        </div>
+      ) : null}
 
       {/* Recurrent beneficiary highlight */}
       {mostRecurrentBeneficiary ? (
@@ -1283,7 +1310,7 @@ function Analytics({
             <div className="font-display font-bold text-foreground">
               {mostRecurrentBeneficiary.name}{" "}
               <span className="text-sm font-normal text-muted-foreground">
-                · {mostRecurrentBeneficiary.count} contratti
+                · {mostRecurrentBeneficiary.count} fascicoli
               </span>
             </div>
           </div>
@@ -1293,6 +1320,7 @@ function Analytics({
       {/* Charts */}
       <div className="grid gap-4 lg:grid-cols-2">
         {/* Top beneficiaries by amount */}
+        {beneficiaryData.length > 0 ? (
         <ChartCard title="Top beneficiari per importo" icon={Users}>
           <ChartContainer
             config={beneficiaryConfig}
@@ -1328,8 +1356,10 @@ function Analytics({
             </BarChart>
           </ChartContainer>
         </ChartCard>
+        ) : null}
 
         {/* Amount over time */}
+        {timeData.length > 0 ? (
         <ChartCard title="Importi nel tempo" icon={Calendar}>
           <ChartContainer config={timeConfig} className="h-[280px] w-full">
             <LineChart data={timeData} margin={{ left: 8, right: 16 }}>
@@ -1356,8 +1386,10 @@ function Analytics({
             </LineChart>
           </ChartContainer>
         </ChartCard>
+        ) : null}
 
         {/* Distribution by procedure */}
+        {procedureData.length > 0 ? (
         <ChartCard title="Distribuzione per procedura" icon={Gavel}>
           <ChartContainer config={procedureConfig} className="h-[280px] w-full">
             <PieChart>
@@ -1380,8 +1412,10 @@ function Analytics({
           </ChartContainer>
           <Legend data={procedureData} />
         </ChartCard>
+        ) : null}
 
         {/* Distribution by acquisition tool */}
+        {toolData.length > 0 ? (
         <ChartCard title="Distribuzione per strumento" icon={ShoppingCart}>
           <ChartContainer config={toolConfig} className="h-[280px] w-full">
             <PieChart>
@@ -1404,6 +1438,7 @@ function Analytics({
           </ChartContainer>
           <Legend data={toolData} />
         </ChartCard>
+        ) : null}
       </div>
     </div>
   );
@@ -1541,6 +1576,7 @@ function SpendingByMacrotema({
         label: string;
         icon: React.ComponentType<{ className?: string }>;
         amount: number;
+        knownAmounts: number;
         count: number;
       }
     >();
@@ -1548,10 +1584,11 @@ function SpendingByMacrotema({
     for (const c of list) {
       const m = macrotemaOf(c);
       const amount = c.amount > 0 ? c.amount : 0;
-      total += amount;
+      total += 1;
       const prev = map.get(m.key);
       if (prev) {
         prev.amount += amount;
+        if (amount > 0) prev.knownAmounts += 1;
         prev.count += 1;
       } else {
         map.set(m.key, {
@@ -1559,12 +1596,13 @@ function SpendingByMacrotema({
           label: m.label,
           icon: m.icon,
           amount,
+          knownAmounts: amount > 0 ? 1 : 0,
           count: 1,
         });
       }
     }
     const groups = Array.from(map.values()).sort(
-      (a, b) => b.amount - a.amount || b.count - a.count,
+      (a, b) => b.count - a.count || b.amount - a.amount,
     );
     const recent = [...list]
       .sort(
@@ -1599,22 +1637,22 @@ function SpendingByMacrotema({
       <div className="mb-5">
         <span className="eyebrow text-primary">
           <Wallet className="h-3.5 w-3.5" />
-          In cosa spende il Comune
+          Ambiti degli atti correnti
         </span>
         <h2 className="mt-2 font-display text-2xl font-bold tracking-tight md:text-3xl">
-          La spesa per macrotemi
+          I fascicoli per macrotema
         </h2>
         <p className="mt-2 max-w-3xl text-muted-foreground">
-          Gli appalti raggruppati per ambito di spesa — ambiente, scuole,
-          strade, sociale e altro — con i relativi totali e l'elenco delle
-          ultime spese registrate.
+          Gli atti con CIG sono raggruppati per ambito civico — ambiente,
+          scuole, strade, sociale e altro. Il conteggio descrive il perimetro
+          corrente; un importo compare solo quando è esplicito nell'oggetto.
         </p>
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {groups.map((g) => {
           const Icon = g.icon;
-          const pct = total > 0 ? (g.amount / total) * 100 : 0;
+          const pct = total > 0 ? (g.count / total) * 100 : 0;
           return (
             <div
               key={g.key}
@@ -1626,10 +1664,12 @@ function SpendingByMacrotema({
                 </div>
                 <div className="text-right">
                   <div className="font-display text-xl font-bold tabular-nums text-foreground">
-                    {formatEuro(g.amount, true)}
+                    {g.count} {g.count === 1 ? "fascicolo" : "fascicoli"}
                   </div>
                   <div className="text-xs text-muted-foreground">
-                    {g.count} {g.count === 1 ? "appalto" : "appalti"}
+                    {g.knownAmounts > 0
+                      ? `${formatEuro(g.amount, true)} in ${g.knownAmounts} atti`
+                      : "importo non rilevato"}
                   </div>
                 </div>
               </div>
@@ -1643,19 +1683,19 @@ function SpendingByMacrotema({
                 />
               </div>
               <div className="mt-1 text-xs text-muted-foreground tabular-nums">
-                {pct.toFixed(1)}% della spesa
+                {pct.toFixed(1)}% dei fascicoli correnti
               </div>
             </div>
           );
         })}
       </div>
 
-      {/* Ultime spese registrate */}
+      {/* Ultimi atti registrati */}
       <div className="mt-6 rounded-xl border border-card-border bg-card p-5 shadow-sm">
         <div className="mb-4 flex items-center gap-2">
           <RefreshCw className="h-4 w-4 text-brand" />
           <h3 className="font-display font-bold tracking-tight">
-            Ultime spese registrate
+            Ultimi atti con CIG
           </h3>
         </div>
         <div className="divide-y divide-border">
@@ -1727,12 +1767,12 @@ function ContractDetail({
                 ) : null}
                 {contract.withoutTender ? (
                   <Badge className="border-transparent bg-amber-100 text-amber-800 text-xs shadow-none dark:bg-amber-500/20 dark:text-amber-300">
-                    Senza gara
+                    Affidamento diretto dichiarato
                   </Badge>
                 ) : null}
                 {contract.withoutMepa ? (
                   <Badge variant="outline" className="text-xs shadow-none">
-                    Fuori MePA
+                    Fuori MePA dichiarato
                   </Badge>
                 ) : null}
               </div>
