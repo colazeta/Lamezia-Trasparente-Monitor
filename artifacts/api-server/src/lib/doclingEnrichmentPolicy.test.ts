@@ -1,5 +1,8 @@
 import { describe, expect, it } from "vitest";
-import { decideDoclingEnrichment } from "./doclingEnrichmentPolicy";
+import {
+  decideDoclingEnrichment,
+  isDoclingEnrichmentEnabled,
+} from "./doclingEnrichmentPolicy";
 
 const base = {
   enabled: true,
@@ -8,6 +11,15 @@ const base = {
   baselineCharacters: 1000,
   pages: 1,
 };
+
+describe("isDoclingEnrichmentEnabled", () => {
+  it("defaults to disabled and requires an explicit true value", () => {
+    expect(isDoclingEnrichmentEnabled({})).toBe(false);
+    expect(isDoclingEnrichmentEnabled({ DOCLING_ENRICHMENT_ENABLED: "false" })).toBe(false);
+    expect(isDoclingEnrichmentEnabled({ DOCLING_ENRICHMENT_ENABLED: "1" })).toBe(false);
+    expect(isDoclingEnrichmentEnabled({ DOCLING_ENRICHMENT_ENABLED: " TRUE " })).toBe(true);
+  });
+});
 
 describe("decideDoclingEnrichment", () => {
   it("fails closed when the feature is disabled", () => {
