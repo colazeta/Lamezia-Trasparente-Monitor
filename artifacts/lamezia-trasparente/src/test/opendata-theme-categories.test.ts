@@ -70,7 +70,7 @@ describe("OpenData thematic category library", () => {
         }),
         expect.objectContaining({
           id: "lamezia-household-composition-2023",
-          dataType: "Distribuzione censuaria aggregata",
+          dataType: "Benchmark strutturale censuario 2023",
           detailKind: "household-composition-2023",
         }),
         expect.objectContaining({
@@ -80,7 +80,7 @@ describe("OpenData thematic category library", () => {
         }),
         expect.objectContaining({
           id: "lamezia-families-children",
-          dataType: "Distribuzione familiare aggregata",
+          dataType: "Approfondimento comunale per numero di figli",
           detailKind: "families-children",
         }),
       ]),

@@ -160,7 +160,7 @@ describe("OpenData climate territory card", () => {
     expect(
       Boolean(
         libraryHeading.compareDocumentPosition(archiveHeading) &
-          Node.DOCUMENT_POSITION_FOLLOWING,
+        Node.DOCUMENT_POSITION_FOLLOWING,
       ),
     ).toBe(true);
 
@@ -334,7 +334,9 @@ describe("OpenData climate territory card", () => {
       screen.getByText(/non esiste più una copia statica separata/i),
     ).toBeInTheDocument();
     expect(screen.getByText("Fonte canonica: ISTAT")).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: /API popolazione/i })).toHaveAttribute(
+    expect(
+      screen.getByRole("link", { name: /API popolazione/i }),
+    ).toHaveAttribute(
       "href",
       "/api/demographics/series/population-resident-jan1",
     );
@@ -343,7 +345,9 @@ describe("OpenData climate territory card", () => {
       "/api/demographics/change-drivers?granularity=annual",
     );
     expect(
-      screen.getByText(/precedente serie generata dal CSV del Portale OpenData comunale/i),
+      screen.getByText(
+        /precedente serie generata dal CSV del Portale OpenData comunale/i,
+      ),
     ).toBeInTheDocument();
   });
 
@@ -420,6 +424,22 @@ describe("OpenData climate territory card", () => {
     expect(
       screen.getByText(/non espone l'anno di riferimento/i),
     ).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: /ISTAT è il riferimento/i }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText("13.358 famiglie classificate"),
+    ).toBeInTheDocument();
+    expect(screen.getByText("27.591 famiglie totali")).toBeInTheDocument();
+    expect(
+      screen.getByText(/non possono essere trattate come un sottoinsieme/i),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("link", { name: /Apri il benchmark ISTAT/i }),
+    ).toHaveAttribute(
+      "href",
+      "/opendata?tema=population-society&dataset=lamezia-household-composition-2023",
+    );
     expect(screen.getByRole("link", { name: /Scarica JSON/i })).toHaveAttribute(
       "download",
     );

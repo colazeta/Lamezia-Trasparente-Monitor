@@ -130,9 +130,9 @@ export const OPEN_DATA_THEME_LIBRARY = [
         id: "lamezia-household-composition-2023",
         label: "Famiglie per numero di componenti 2023 - Lamezia Terme",
         statusLabel: "Disponibile",
-        dataType: "Distribuzione censuaria aggregata",
+        dataType: "Benchmark strutturale censuario 2023",
         description:
-          "Famiglie anagrafiche per 1, 2, 3, 4, 5 e 6 o più componenti, aggregate dalle sezioni ISTAT 2023 e pubblicate come JSON statico con quadratura esatta sul totale comunale.",
+          "Benchmark strutturale delle famiglie anagrafiche per 1, 2, 3, 4, 5 e 6 o più componenti, aggregato dalle sezioni ISTAT 2023 e pubblicato come JSON statico con quadratura esatta sul totale comunale.",
         updateCadence:
           "Rigenerazione verificata quando ISTAT pubblica una nuova edizione compatibile dei dati per sezione di censimento.",
         sourceLabel: "ISTAT - Censimento permanente 2023",
@@ -154,9 +154,9 @@ export const OPEN_DATA_THEME_LIBRARY = [
         id: "lamezia-families-children",
         label: "Famiglie per numero di figli - Lamezia Terme",
         statusLabel: "Disponibile",
-        dataType: "Distribuzione familiare aggregata",
+        dataType: "Approfondimento comunale per numero di figli",
         description:
-          "Famiglie per numero di figli acquisite dal CSV del Portale OpenData del Comune e pubblicate come JSON statico.",
+          "Distribuzione interna alla risorsa comunale per numero di figli, pubblicata come JSON statico e letta accanto al benchmark strutturale ISTAT 2023 senza calcolare confronti diretti tra perimetri diversi.",
         updateCadence:
           "Aggiornamento settimanale quando il portale OpenData comunale modifica la risorsa CSV.",
         sourceLabel: "Comune di Lamezia Terme - Portale OpenData",

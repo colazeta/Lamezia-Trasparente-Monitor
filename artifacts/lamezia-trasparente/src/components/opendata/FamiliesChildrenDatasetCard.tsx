@@ -1,11 +1,13 @@
 import { type ReactNode } from "react";
 import {
+  ArrowRight,
   BarChart3,
   CalendarDays,
   Database,
   Download,
   ExternalLink,
   FileJson,
+  Home,
   Info,
   Users,
 } from "lucide-react";
@@ -17,10 +19,15 @@ import {
   LAMEZIA_FAMILIES_CHILDREN_SUMMARY,
   type LameziaFamiliesChildrenRecord,
 } from "@/data/lameziaFamiliesChildren";
+import { LAMEZIA_HOUSEHOLD_COMPOSITION_2023_DATA } from "@/data/lameziaHouseholdComposition2023";
+import { withPublicBasePath } from "@/lib/publicBasePath";
 
 const CHART_WIDTH = 1040;
 const CHART_HEIGHT = 330;
 const PLOT = { left: 96, right: 116, top: 48, bottom: 42 };
+const HOUSEHOLD_COMPOSITION_DATASET_URL = withPublicBasePath(
+  "/opendata?tema=population-society&dataset=lamezia-household-composition-2023",
+);
 
 const numberFormat = new Intl.NumberFormat("it-IT");
 const percentFormat = new Intl.NumberFormat("it-IT", {
@@ -32,6 +39,7 @@ export function FamiliesChildrenDatasetCard() {
   const records = LAMEZIA_FAMILIES_CHILDREN_DATA.family_children;
   const metadata = LAMEZIA_FAMILIES_CHILDREN_DATA.metadata;
   const summary = LAMEZIA_FAMILIES_CHILDREN_SUMMARY;
+  const householdBenchmark = LAMEZIA_HOUSEHOLD_COMPOSITION_2023_DATA;
 
   return (
     <section
@@ -54,7 +62,8 @@ export function FamiliesChildrenDatasetCard() {
             </h2>
             <p className="mt-2 text-sm leading-6 text-muted-foreground">
               Distribuzione aggregata delle famiglie per numero di figli
-              pubblicata dal Portale OpenData del Comune.
+              pubblicata dal Portale OpenData del Comune. È un approfondimento
+              distinto dal profilo ISTAT per numero di componenti.
             </p>
           </div>
           <a href={LAMEZIA_FAMILIES_CHILDREN_DATA_URL} download>
@@ -74,6 +83,64 @@ export function FamiliesChildrenDatasetCard() {
           Le barre mostrano la distribuzione pubblicata nel CSV comunale; le
           quote sono calcolate sul totale delle famiglie presenti nella risorsa.
         </p>
+
+        <section
+          aria-labelledby="famiglie-figli-benchmark-title"
+          className="mt-5 rounded-xl border border-primary/25 bg-primary/5 p-4 md:p-5"
+        >
+          <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+            <div className="max-w-3xl">
+              <p className="text-xs font-semibold uppercase tracking-wide text-primary">
+                Benchmark strutturale 2023
+              </p>
+              <h3
+                className="mt-1 font-display text-lg font-bold text-foreground"
+                id="famiglie-figli-benchmark-title"
+              >
+                ISTAT è il riferimento per il totale delle famiglie
+              </h3>
+              <p className="mt-2 text-sm leading-6 text-muted-foreground">
+                Il profilo censuario ISTAT copre tutte le famiglie anagrafiche
+                di Lamezia Terme al 31 dicembre 2023 e le classifica per numero
+                di componenti. Questa fonte comunale classifica invece soltanto
+                le famiglie presenti nella risorsa per numero di figli e non
+                dichiara l’anno di riferimento.
+              </p>
+            </div>
+            <Button asChild size="sm" variant="outline">
+              <a href={HOUSEHOLD_COMPOSITION_DATASET_URL}>
+                Apri il benchmark ISTAT
+                <ArrowRight className="h-4 w-4" />
+              </a>
+            </Button>
+          </div>
+
+          <div className="mt-4 grid gap-3 sm:grid-cols-2">
+            <BenchmarkItem
+              detail="Classi da 1 a 6 o più figli · anno non dichiarato"
+              icon={<Users className="h-4 w-4" />}
+              label="Risorsa comunale"
+              value={`${formatInteger(summary.total)} famiglie classificate`}
+            />
+            <BenchmarkItem
+              detail="Tutte le famiglie anagrafiche · 31 dicembre 2023"
+              icon={<Home className="h-4 w-4" />}
+              label="Benchmark ISTAT 2023"
+              value={`${formatInteger(
+                householdBenchmark.totalHouseholds,
+              )} famiglie totali`}
+            />
+          </div>
+
+          <p className="mt-4 border-t border-primary/15 pt-3 text-xs leading-5 text-muted-foreground">
+            I due conteggi non vengono rapportati tra loro: “figli” e
+            “componenti” non sono la stessa variabile e, finché periodo e
+            copertura della fonte comunale non sono certificati, le{" "}
+            {formatInteger(summary.total)} famiglie non possono essere trattate
+            come un sottoinsieme direttamente confrontabile delle{" "}
+            {formatInteger(householdBenchmark.totalHouseholds)} famiglie ISTAT.
+          </p>
+        </section>
 
         <details className="mt-5 rounded-lg border border-border bg-muted/20 text-sm leading-6">
           <summary className="cursor-pointer list-none px-4 py-3 font-semibold text-foreground marker:hidden">
@@ -202,7 +269,8 @@ function FamiliesChildrenChart({
         </title>
         <desc id="families-children-chart-desc">
           Distribuzione delle famiglie per numero di figli pubblicata dal
-          portale OpenData del Comune di Lamezia Terme.
+          portale OpenData del Comune di Lamezia Terme. Il numero di figli non
+          coincide con il numero di componenti della famiglia anagrafica.
         </desc>
         <rect
           fill="hsl(var(--background))"
@@ -216,7 +284,7 @@ function FamiliesChildrenChart({
           x={PLOT.left}
           y={26}
         >
-          Famiglie per numero di figli
+          Numero di figli nella risorsa comunale
         </text>
         <text
           fill="hsl(var(--muted-foreground))"
@@ -275,6 +343,33 @@ function FamiliesChildrenChart({
         })}
       </svg>
     </div>
+  );
+}
+
+function BenchmarkItem({
+  detail,
+  icon,
+  label,
+  value,
+}: {
+  detail: string;
+  icon: ReactNode;
+  label: string;
+  value: string;
+}) {
+  return (
+    <dl className="rounded-lg border border-primary/20 bg-background p-3.5 shadow-sm">
+      <dt className="flex items-center gap-2 text-xs font-semibold text-foreground">
+        <span className="inline-flex h-7 w-7 items-center justify-center rounded-md bg-primary/10 text-primary ring-1 ring-primary/20">
+          {icon}
+        </span>
+        {label}
+      </dt>
+      <dd className="mt-2 font-display text-lg font-bold tabular-nums text-foreground">
+        {value}
+      </dd>
+      <dd className="mt-1 text-xs leading-5 text-muted-foreground">{detail}</dd>
+    </dl>
   );
 }
 

@@ -46,6 +46,13 @@ describe("HouseholdCompositionDatasetCard", () => {
     expect(
       screen.getByText(/PF3 \+ PF4 \+ PF5 \+ PF6 \+ PF7 \+ PF8 = PF1/i),
     ).toBeInTheDocument();
+    expect(screen.getByText(/Uso come benchmark/i)).toBeInTheDocument();
+    expect(
+      screen.getByRole("link", { name: /Apri la fonte comunale/i }),
+    ).toHaveAttribute(
+      "href",
+      "/opendata?tema=population-society&dataset=lamezia-families-children",
+    );
 
     const download = screen.getByRole("link", { name: /Scarica JSON/i });
     expect(download).toHaveAttribute(
