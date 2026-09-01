@@ -1,0 +1,2 @@
+# Pinned for a reproducible proof of concept. Upgrade only after re-running the benchmark corpus.
+docling==2.124.0

@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "scope": "Public benchmark items explicitly reviewed for full-document serving in Lamezia Trasparente",
+  "policy": {
+    "commitOnlyReviewedPublicDocuments": true,
+    "note": "Documents that are useful for an internal benchmark but are not explicitly approved for full public serving must remain outside this committed manifest and outside Git."
+  },
+  "items": [
+    {
+      "id": "albo-2026-2648-reviewed-commissioni",
+      "sourceDomain": "albo-pretorio",
+      "publicationNumber": "2026/2648",
+      "sha256": "842702b2044b4b6f9a7b21a65eac2ab59866ee3f321872e6b28fd481598be304",
+      "repoPath": "data/public/albo/documents/2026/842702b2044b4b6f9a7b21a65eac2ab59866ee3f321872e6b28fd481598be304.pdf",
+      "reviewStatus": "approved-for-full-pdf-serving",
+      "benchmarkClass": "reviewed-institutional-pdf",
+      "benchmarkStatus": "selected-not-run",
+      "selectionReason": "Reviewed institutional commission-electoral document already used as a primary source in the public product; suitable as the first unambiguous end-to-end smoke-test input."
+    }
+  ]
+}
