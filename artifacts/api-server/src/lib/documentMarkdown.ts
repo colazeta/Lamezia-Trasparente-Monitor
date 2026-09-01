@@ -19,6 +19,12 @@ import {
   isDoclingEnrichmentEnabled,
   type DoclingEnrichmentDecision,
 } from "./doclingEnrichmentPolicy";
+import {
+  createDoclingRuntimeContext,
+  evaluateDoclingRuntimeCandidate,
+  type DoclingRuntimeContext,
+  type DoclingRuntimeSummary,
+} from "./doclingRuntimeWiring";
 
 const MAX_PER_CYCLE = 15;
 const CONCURRENCY = 2;
@@ -30,6 +36,8 @@ type PdfBaselineExtraction = {
   text: string;
   pages: number | null;
   hasEmbeddedPdf: boolean;
+  sourceBytes: Uint8Array;
+  doclingDecision: DoclingEnrichmentDecision;
 };
 
 type DoclingObserver = (decision: DoclingEnrichmentDecision) => void;
@@ -149,15 +157,20 @@ async function extractFromStorage(
 
     const text = result.text ?? "";
     const pages = Number.isFinite(result.total) ? result.total : null;
-    observe(
-      observeDoclingCandidate({
-        baselineStatus: "ok",
-        baselineCharacters: text.length,
-        pages,
-        hasEmbeddedPdf,
-      }),
-    );
-    return { text, pages, hasEmbeddedPdf };
+    const doclingDecision = observeDoclingCandidate({
+      baselineStatus: "ok",
+      baselineCharacters: text.length,
+      pages,
+      hasEmbeddedPdf,
+    });
+    observe(doclingDecision);
+    return {
+      text,
+      pages,
+      hasEmbeddedPdf,
+      sourceBytes: bytes,
+      doclingDecision,
+    };
   } finally {
     await parser.destroy().catch(() => {});
   }
@@ -167,6 +180,7 @@ async function extractOne(
   storage: ObjectStorageService,
   pub: Publication,
   observe: DoclingObserver,
+  runtime: DoclingRuntimeContext,
 ): Promise<boolean> {
   const attachment = pickPdfAttachment(pub.attachments ?? []);
 
@@ -179,6 +193,17 @@ async function extractOne(
   }
 
   const extraction = await extractFromStorage(storage, attachment, observe);
+  if (extraction) {
+    await evaluateDoclingRuntimeCandidate(runtime, {
+      decision: extraction.doclingDecision,
+      sourceBytes: extraction.sourceBytes,
+      expectedSourceSha256: attachment.sha256,
+      baselineCharacters: extraction.text.length,
+      pages: extraction.pages,
+      hasEmbeddedPdf: extraction.hasEmbeddedPdf,
+    });
+  }
+
   const raw = extraction?.text ?? "";
   const body = raw ? cleanBody(raw) : "";
 
@@ -209,8 +234,10 @@ export async function extractDocumentMarkdown(): Promise<{
   processed: number;
   withText: number;
   doclingObservation: DoclingObservationSummary;
+  doclingRuntime: DoclingRuntimeSummary;
 }> {
   const doclingObservation = createDoclingObservationSummary();
+  const runtime = createDoclingRuntimeContext();
   const observe: DoclingObserver = (decision) => {
     recordDoclingObservation(doclingObservation, decision);
   };
@@ -224,7 +251,12 @@ export async function extractDocumentMarkdown(): Promise<{
       { err },
       "Document Markdown extraction skipped: object storage not configured",
     );
-    return { processed: 0, withText: 0, doclingObservation };
+    return {
+      processed: 0,
+      withText: 0,
+      doclingObservation,
+      doclingRuntime: runtime.summary,
+    };
   }
 
   const pending = await db
@@ -241,7 +273,12 @@ export async function extractDocumentMarkdown(): Promise<{
     .limit(MAX_PER_CYCLE);
 
   if (pending.length === 0) {
-    return { processed: 0, withText: 0, doclingObservation };
+    return {
+      processed: 0,
+      withText: 0,
+      doclingObservation,
+      doclingRuntime: runtime.summary,
+    };
   }
 
   let processed = 0;
@@ -253,7 +290,7 @@ export async function extractDocumentMarkdown(): Promise<{
       const next = queue.shift();
       if (!next) break;
       try {
-        const ok = await extractOne(storage, next, observe);
+        const ok = await extractOne(storage, next, observe, runtime);
         processed += 1;
         if (ok) withText += 1;
       } catch (err) {
@@ -279,8 +316,18 @@ export async function extractDocumentMarkdown(): Promise<{
         realEnrichmentEnabled: isDoclingEnrichmentEnabled(),
         ...doclingObservation,
       },
+      doclingRuntime: {
+        mode: "worker-gated-memory-only",
+        realEnrichmentEnabled: isDoclingEnrichmentEnabled(),
+        ...runtime.summary,
+      },
     },
     "Document Markdown extraction cycle complete",
   );
-  return { processed, withText, doclingObservation };
+  return {
+    processed,
+    withText,
+    doclingObservation,
+    doclingRuntime: runtime.summary,
+  };
 }
