@@ -34,6 +34,8 @@ Una **famiglia anagrafica** non coincide necessariamente con un nucleo familiare
 
 Il dataset comunale già presente in Open Data “Famiglie per numero di figli” resta un arricchimento separato: non ha un anno di riferimento verificato e non include esplicitamente le famiglie senza figli, quindi non può essere usato come denominatore del profilo censuario né trasformato in una serie storica.
 
+Il profilo ISTAT viene usato come **benchmark strutturale 2023** della scheda comunale: fissa il totale canonico di 27.591 famiglie anagrafiche e rende esplicito il perimetro completo. Il confronto è soltanto metodologico e di contesto. Non si calcolano rapporto, scarto o copertura tra le 13.358 famiglie classificate nella risorsa comunale e il totale ISTAT, perché “numero di figli” e “numero di componenti” sono variabili diverse e la risorsa comunale non certifica un periodo coerente né la classe senza figli.
+
 ## Regole di aggregazione e QA
 
 1. Ogni riga deve avere un identificativo di sezione con prefisso comunale `079160`; righe prive dell'identificativo o appartenenti a un altro comune bloccano l'aggregazione.

@@ -1,5 +1,6 @@
 import { type ReactNode } from "react";
 import {
+  ArrowRight,
   CalendarDays,
   CheckCircle2,
   Download,
@@ -20,6 +21,8 @@ import {
 const CHART_WIDTH = 1080;
 const CHART_HEIGHT = 390;
 const PLOT = { left: 190, right: 185, top: 60, bottom: 38 };
+const FAMILIES_CHILDREN_DATASET_URL =
+  "/opendata?tema=population-society&dataset=lamezia-families-children";
 
 const numberFormat = new Intl.NumberFormat("it-IT", {
   useGrouping: "always",
@@ -114,6 +117,23 @@ export function HouseholdCompositionDatasetCard() {
           </span>
         </div>
 
+        <div className="mt-5 flex flex-col gap-3 rounded-lg border border-border bg-muted/20 p-4 text-sm leading-6 md:flex-row md:items-center md:justify-between">
+          <p className="max-w-3xl text-muted-foreground">
+            <strong className="font-semibold text-foreground">
+              Uso come benchmark.
+            </strong>{" "}
+            Questo profilo definisce il perimetro strutturale 2023 delle
+            famiglie. La fonte comunale sul numero di figli resta un
+            approfondimento separato e non viene quadrata su questo totale.
+          </p>
+          <Button asChild className="shrink-0" size="sm" variant="outline">
+            <a href={FAMILIES_CHILDREN_DATASET_URL}>
+              Apri la fonte comunale
+              <ArrowRight className="h-4 w-4" />
+            </a>
+          </Button>
+        </div>
+
         <details className="mt-5 rounded-lg border border-border bg-muted/20 text-sm leading-6">
           <summary className="cursor-pointer list-none px-4 py-3 font-semibold text-foreground marker:hidden">
             Fonte, controlli e limiti del dato
@@ -175,9 +195,9 @@ export function HouseholdCompositionDatasetCard() {
               </MethodBox>
               <MethodBox title="Metodo">
                 Sono aggregate soltanto le{" "}
-                {formatInteger(data.quality.includedRows)} sezioni reali complete
-                di Lamezia Terme; i mancanti non vengono trasformati in zero e
-                una mancata quadratura blocca la pubblicazione.
+                {formatInteger(data.quality.includedRows)} sezioni reali
+                complete di Lamezia Terme; i mancanti non vengono trasformati in
+                zero e una mancata quadratura blocca la pubblicazione.
               </MethodBox>
               <MethodBox title="Limite semantico">
                 “Famiglia anagrafica” non equivale a “nucleo familiare”. La sola
