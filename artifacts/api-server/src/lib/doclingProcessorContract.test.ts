@@ -9,7 +9,7 @@ const SOURCE_SHA = "a".repeat(64);
 const STRUCTURED_SHA = "b".repeat(64);
 const MARKDOWN_SHA = "c".repeat(64);
 
-function request() {
+function request(requestedOutputs?: Array<"structured-json" | "markdown">) {
   return buildDoclingProcessorRequest({
     source: {
       sha256: SOURCE_SHA,
@@ -29,11 +29,11 @@ function request() {
       maxPages: 20,
       timeoutMs: 120_000,
     },
+    requestedOutputs,
   });
 }
 
-function okResult() {
-  const req = request();
+function okResult(req = request()) {
   return {
     schemaVersion: 1 as const,
     jobKey: req.jobKey,
@@ -100,7 +100,7 @@ describe("Docling processor request contract", () => {
     ).toThrow();
   });
 
-  it("rejects markdown-only requests because lossless structured JSON is mandatory", () => {
+  it("rejects requests whose known page count exceeds maxPages", () => {
     expect(() =>
       buildDoclingProcessorRequest({
         source: {
@@ -108,12 +108,12 @@ describe("Docling processor request contract", () => {
           contentType: "application/pdf",
           sizeBytes: 1000,
         },
-        reason: "embedded-pdf-container",
+        reason: "scan-like-sparse-baseline",
         baseline: {
           status: "ok",
-          characters: 810,
-          pages: 1,
-          hasEmbeddedPdf: true,
+          characters: 16,
+          pages: 21,
+          hasEmbeddedPdf: false,
         },
         processorVersion: "2.124.0",
         limits: {
@@ -121,9 +121,18 @@ describe("Docling processor request contract", () => {
           maxPages: 20,
           timeoutMs: 120_000,
         },
-        requestedOutputs: ["markdown"],
       }),
-    ).toThrow(/structured-json is mandatory/);
+    ).toThrow(/observed page count exceeds request maxPages/);
+  });
+
+  it("rejects markdown-only requests because lossless structured JSON is mandatory", () => {
+    expect(() => request(["markdown"])).toThrow(/structured-json is mandatory/);
+  });
+
+  it("allows structured-json without requesting convenience Markdown", () => {
+    expect(request(["structured-json"]).requestedOutputs).toEqual([
+      "structured-json",
+    ]);
   });
 
   it("fails closed on unrecognised fields such as a processor-side source URL", () => {
@@ -141,12 +150,13 @@ describe("Docling processor request contract", () => {
 });
 
 describe("Docling processor result contract", () => {
-  it("accepts a matching derived result with a lossless structured artifact", () => {
+  it("accepts a matching derived result with all requested artifacts", () => {
     const req = request();
-    const parsed = parseDoclingProcessorResultForRequest(req, okResult());
+    const parsed = parseDoclingProcessorResultForRequest(req, okResult(req));
     expect(parsed.status).toBe("ok");
     if (parsed.status === "ok") {
       expect(parsed.artifacts.some((artifact) => artifact.kind === "structured-json")).toBe(true);
+      expect(parsed.artifacts.some((artifact) => artifact.kind === "markdown")).toBe(true);
     }
   });
 
@@ -154,7 +164,7 @@ describe("Docling processor result contract", () => {
     const req = request();
     expect(() =>
       parseDoclingProcessorResultForRequest(req, {
-        ...okResult(),
+        ...okResult(req),
         sourceSha256: "d".repeat(64),
       }),
     ).toThrow(/source SHA-256 mismatch/);
@@ -164,7 +174,7 @@ describe("Docling processor result contract", () => {
     const req = request();
     expect(() =>
       parseDoclingProcessorResultForRequest(req, {
-        ...okResult(),
+        ...okResult(req),
         jobKey: "docling:v1:other",
       }),
     ).toThrow(/jobKey mismatch/);
@@ -172,10 +182,9 @@ describe("Docling processor result contract", () => {
 
   it("rejects successful output that omits structured-json", () => {
     const req = request();
-    const result = okResult();
     expect(() =>
       parseDoclingProcessorResultForRequest(req, {
-        ...result,
+        ...okResult(req),
         artifacts: [
           {
             kind: "markdown",
@@ -188,11 +197,10 @@ describe("Docling processor result contract", () => {
   });
 
   it("rejects a zero-byte structured JSON artifact", () => {
-    const req = request();
-    const result = okResult();
+    const req = request(["structured-json"]);
     expect(() =>
       parseDoclingProcessorResultForRequest(req, {
-        ...result,
+        ...okResult(req),
         artifacts: [
           {
             kind: "structured-json",
@@ -202,6 +210,44 @@ describe("Docling processor result contract", () => {
         ],
       }),
     ).toThrow();
+  });
+
+  it("rejects a response that omits a requested convenience output", () => {
+    const req = request();
+    expect(() =>
+      parseDoclingProcessorResultForRequest(req, {
+        ...okResult(req),
+        artifacts: [
+          {
+            kind: "structured-json",
+            contentSha256: STRUCTURED_SHA,
+            sizeBytes: 9000,
+          },
+        ],
+      }),
+    ).toThrow(/missing requested output: markdown/);
+  });
+
+  it("accepts exactly structured-json when that is the only requested output", () => {
+    const req = request(["structured-json"]);
+    const parsed = parseDoclingProcessorResultForRequest(req, {
+      ...okResult(req),
+      artifacts: [
+        {
+          kind: "structured-json",
+          contentSha256: STRUCTURED_SHA,
+          sizeBytes: 9000,
+        },
+      ],
+    });
+    expect(parsed.status).toBe("ok");
+  });
+
+  it("rejects unrequested extra artifacts for minimisation", () => {
+    const req = request(["structured-json"]);
+    expect(() =>
+      parseDoclingProcessorResultForRequest(req, okResult(req)),
+    ).toThrow(/returned unrequested output: markdown/);
   });
 
   it("accepts a bounded skip without fabricated artifacts", () => {
