@@ -11,6 +11,7 @@ from pathlib import Path
 from typing import Any
 
 SCHEMA_VERSION = 1
+DEFAULT_MAX_PAGES = 20
 
 
 def sha256_file(path: Path) -> str:
@@ -45,6 +46,8 @@ def chars_per_page(characters: Any, pages: Any) -> float | None:
 
 
 def screening_signal(baseline: dict[str, Any], docling: dict[str, Any]) -> str:
+    if docling.get("status") == "skipped-resource-bound":
+        return "skipped-resource-bound"
     base_chars = baseline.get("characters")
     doc_chars = docling.get("characters")
     pages = baseline.get("pages") or docling.get("pages")
@@ -107,11 +110,12 @@ def main() -> int:
     parser.add_argument("candidates", type=Path)
     parser.add_argument("--repo-root", type=Path, default=Path(__file__).resolve().parents[2])
     parser.add_argument("--output-dir", type=Path, default=Path("tmp/docling/corpus/results"))
-    parser.add_argument("--max-items", type=int, default=6)
+    parser.add_argument("--max-items", type=int, default=4)
+    parser.add_argument("--max-pages", type=int, default=DEFAULT_MAX_PAGES)
     args = parser.parse_args()
 
-    if args.max_items <= 0:
-        raise SystemExit("--max-items must be greater than zero")
+    if args.max_items <= 0 or args.max_pages <= 0:
+        raise SystemExit("Corpus resource limits must be greater than zero")
 
     repo_root = args.repo_root.resolve()
     candidates_path = args.candidates.resolve()
@@ -137,6 +141,8 @@ def main() -> int:
 
     results: list[dict[str, Any]] = []
     failures = 0
+    processed_docling = 0
+    skipped_resource = 0
 
     for item in items:
         relative = Path(str(item.get("storagePath") or ""))
@@ -167,43 +173,54 @@ def main() -> int:
             "contentRetained": False,
         }
 
-        docling: dict[str, Any]
-        doc_started = time.perf_counter()
-        try:
-            conversion = converter.convert(document)
-            doc = conversion.document
-            markdown = doc.export_to_markdown()
-            doc_dict = doc.export_to_dict()
-            doc_elapsed_ms = round((time.perf_counter() - doc_started) * 1000)
-            docling = {
-                "status": "ok",
+        base_pages = baseline.get("pages")
+        if isinstance(base_pages, int) and base_pages > args.max_pages:
+            skipped_resource += 1
+            docling: dict[str, Any] = {
+                "status": "skipped-resource-bound",
                 "extractor": "docling",
                 "extractorVersion": docling_version,
-                "characters": len(markdown),
-                "pages": container_len(doc_dict.get("pages")),
-                "tables": container_len(doc_dict.get("tables")),
-                "elapsedMs": doc_elapsed_ms,
+                "reason": "baseline-page-count-exceeds-corpus-limit",
+                "maxPages": args.max_pages,
                 "contentRetained": False,
             }
-            del markdown
-            del doc_dict
-            del doc
-            del conversion
-        except Exception as exc:
-            doc_elapsed_ms = round((time.perf_counter() - doc_started) * 1000)
-            docling = {
-                "status": "failed",
-                "extractor": "docling",
-                "extractorVersion": docling_version,
-                "elapsedMs": doc_elapsed_ms,
-                "errorType": type(exc).__name__,
-                "contentRetained": False,
-            }
+        else:
+            processed_docling += 1
+            doc_started = time.perf_counter()
+            try:
+                conversion = converter.convert(document)
+                doc = conversion.document
+                markdown = doc.export_to_markdown()
+                doc_dict = doc.export_to_dict()
+                doc_elapsed_ms = round((time.perf_counter() - doc_started) * 1000)
+                docling = {
+                    "status": "ok",
+                    "extractor": "docling",
+                    "extractorVersion": docling_version,
+                    "characters": len(markdown),
+                    "pages": container_len(doc_dict.get("pages")),
+                    "tables": container_len(doc_dict.get("tables")),
+                    "elapsedMs": doc_elapsed_ms,
+                    "contentRetained": False,
+                }
+                del markdown
+                del doc_dict
+                del doc
+                del conversion
+            except Exception as exc:
+                doc_elapsed_ms = round((time.perf_counter() - doc_started) * 1000)
+                docling = {
+                    "status": "failed",
+                    "extractor": "docling",
+                    "extractorVersion": docling_version,
+                    "elapsedMs": doc_elapsed_ms,
+                    "errorType": type(exc).__name__,
+                    "contentRetained": False,
+                }
 
         same_source_hash = sha256_file(document) == source_sha
         base_chars = baseline.get("characters")
         doc_chars = docling.get("characters")
-        base_pages = baseline.get("pages")
         doc_pages = docling.get("pages")
         comparison = {
             "sameSourceHash": same_source_hash,
@@ -212,8 +229,11 @@ def main() -> int:
             "automaticWinner": None,
         }
 
-        status = "ok" if baseline_code == 0 and baseline.get("status") == "ok" and docling.get("status") == "ok" and same_source_hash else "failed"
-        if status != "ok":
+        if docling.get("status") == "skipped-resource-bound":
+            status = "skipped-resource-bound" if baseline_code == 0 and baseline.get("status") == "ok" and same_source_hash else "failed"
+        else:
+            status = "ok" if baseline_code == 0 and baseline.get("status") == "ok" and docling.get("status") == "ok" and same_source_hash else "failed"
+        if status == "failed":
             failures += 1
 
         results.append(
@@ -244,11 +264,17 @@ def main() -> int:
         "candidateManifest": candidates_path.name,
         "requestedItems": len(items),
         "completedItems": sum(1 for item in results if item.get("status") == "ok"),
+        "skippedResourceBoundItems": skipped_resource,
         "failedItems": failures,
+        "resourcePolicy": {
+            "maxItems": args.max_items,
+            "maxPagesPerCandidate": args.max_pages,
+        },
         "docling": {
             "version": docling_version,
             "sharedConverter": True,
             "converterInitMs": converter_init_ms,
+            "processedItems": processed_docling,
         },
         "qualityPolicy": "Metrics can screen document classes but cannot establish extraction quality without reviewed source-level spot checks.",
         "items": results,
@@ -257,7 +283,7 @@ def main() -> int:
     summary_path = output_dir / "corpus-summary.json"
     summary_path.write_text(json.dumps(summary, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     print(json.dumps(summary, indent=2, ensure_ascii=False))
-    return 1 if failures else 0
+    return 1 if failures or processed_docling == 0 else 0
 
 
 if __name__ == "__main__":
