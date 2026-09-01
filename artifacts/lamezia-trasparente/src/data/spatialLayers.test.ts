@@ -56,9 +56,13 @@ describe("confiscated assets spatial loading", () => {
       }),
     );
 
-    const collection = await loadConfiscatedAssetsSpatialLayer();
+    const result = await loadConfiscatedAssetsSpatialLayer();
 
-    expect(collection.features).toHaveLength(1);
+    expect(result.collection.features).toHaveLength(1);
+    expect(result).toMatchObject({
+      distribution: "primary",
+      primaryFailure: null,
+    });
     expect(requested).toEqual(["/api/beni-confiscati/geojson"]);
   });
 
@@ -79,13 +83,17 @@ describe("confiscated assets spatial loading", () => {
       }),
     );
 
-    const collection = await loadConfiscatedAssetsSpatialLayer();
+    const result = await loadConfiscatedAssetsSpatialLayer();
 
-    expect(collection.features).toHaveLength(0);
-    expect(collection.metadata).toMatchObject({
+    expect(result.collection.features).toHaveLength(0);
+    expect(result.collection.metadata).toMatchObject({
       input_records: 340,
       published_features: 0,
       excluded_records: 340,
+    });
+    expect(result).toMatchObject({
+      distribution: "continuity_fallback",
+      primaryFailure: { reason: "http_error", httpStatus: 503 },
     });
     expect(requested).toEqual([
       "/api/beni-confiscati/geojson",

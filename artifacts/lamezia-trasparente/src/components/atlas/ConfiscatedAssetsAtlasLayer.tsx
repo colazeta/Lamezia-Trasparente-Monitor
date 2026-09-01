@@ -3,6 +3,7 @@ import { CircleMarker, Popup, Tooltip, useMap } from "react-leaflet";
 import {
   loadConfiscatedAssetsSpatialLayer,
   type ConfiscatedAssetsSpatialCollection,
+  type ConfiscatedAssetsSpatialLoadFailure,
 } from "@/data/spatialLayers";
 
 export type ConfiscatedAssetsAtlasLayerState =
@@ -11,6 +12,8 @@ export type ConfiscatedAssetsAtlasLayerState =
   | {
       status: "ready";
       collection: ConfiscatedAssetsSpatialCollection;
+      distribution: "primary" | "continuity_fallback";
+      primaryFailure: ConfiscatedAssetsSpatialLoadFailure | null;
       message: null;
     }
   | { status: "error"; collection: null; message: string };
@@ -34,9 +37,15 @@ export function useConfiscatedAssetsAtlasLayer(
     setState({ status: "loading", collection: null, message: null });
 
     loadConfiscatedAssetsSpatialLayer()
-      .then((collection) => {
+      .then(({ collection, distribution, primaryFailure }) => {
         if (!cancelled) {
-          setState({ status: "ready", collection, message: null });
+          setState({
+            status: "ready",
+            collection,
+            distribution,
+            primaryFailure,
+            message: null,
+          });
         }
       })
       .catch(() => {
@@ -160,9 +169,24 @@ export function getConfiscatedAssetsCoverageLabel(
 
   const { input_records, published_features, excluded_records } =
     state.collection.metadata;
+  if (state.distribution === "continuity_fallback") {
+    return `Fallback statico ANBSC attivo: ${formatPrimaryFailure(state.primaryFailure)}. ${published_features} in mappa su ${input_records} record della fotografia ANBSC; ${excluded_records} esclusi. Questi conteggi non rappresentano la copertura corrente del database.`;
+  }
   if (input_records === 0) return "Nessun bene disponibile";
 
   return `${published_features} in mappa su ${input_records}; ${excluded_records} esclusi perché la localizzazione non supera ancora i criteri di pubblicazione`;
+}
+
+function formatPrimaryFailure(
+  failure: ConfiscatedAssetsSpatialLoadFailure | null,
+): string {
+  if (failure?.reason === "http_error" && failure.httpStatus !== null) {
+    return `feed database primario non disponibile (HTTP ${failure.httpStatus})`;
+  }
+  if (failure?.reason === "invalid_payload") {
+    return "feed database primario in formato non valido";
+  }
+  return "feed database primario non raggiungibile (rete/CORS)";
 }
 
 function ConfiscatedAssetMapFocus({
@@ -222,7 +246,8 @@ function formatSpatialMethod(
     | "other_address_geocoded"
     | "manual_coordinates",
 ): string {
-  if (method === "manual_coordinates") return "Coordinate fissate dalla redazione";
+  if (method === "manual_coordinates")
+    return "Coordinate fissate dalla redazione";
   if (method === "official_address_geocoded") {
     return "Indirizzo della fonte ufficiale geocodificato";
   }

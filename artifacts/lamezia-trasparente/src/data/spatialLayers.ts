@@ -86,6 +86,17 @@ export type ConfiscatedAssetsSpatialCollection = {
   };
 };
 
+export type ConfiscatedAssetsSpatialLoadFailure = {
+  reason: "http_error" | "invalid_payload" | "network_error";
+  httpStatus: number | null;
+};
+
+export type ConfiscatedAssetsSpatialLoadResult = {
+  collection: ConfiscatedAssetsSpatialCollection;
+  distribution: "primary" | "continuity_fallback";
+  primaryFailure: ConfiscatedAssetsSpatialLoadFailure | null;
+};
+
 export async function loadMunicipalBoundarySpatialLayer(): Promise<MunicipalBoundarySpatialCollection> {
   const definition = getSpatialLayer("municipal-boundary");
   if (!definition?.dataPath) {
@@ -107,49 +118,85 @@ export async function loadMunicipalBoundarySpatialLayer(): Promise<MunicipalBoun
   return payload;
 }
 
-export async function loadConfiscatedAssetsSpatialLayer(): Promise<ConfiscatedAssetsSpatialCollection> {
+export async function loadConfiscatedAssetsSpatialLayer(): Promise<ConfiscatedAssetsSpatialLoadResult> {
   const definition = getSpatialLayer("confiscated-assets");
   if (!definition?.dataPath) {
     throw new Error("Layer beni confiscati non configurato");
   }
 
-  const dataPaths = [definition.dataPath, definition.fallbackDataPath].filter(
-    (dataPath): dataPath is string => Boolean(dataPath),
-  );
-  let lastError: Error | null = null;
-
-  for (const dataPath of dataPaths) {
-    try {
-      return await fetchConfiscatedAssetsSpatialCollection(dataPath);
-    } catch (error) {
-      lastError =
-        error instanceof Error
-          ? error
-          : new Error("Layer beni confiscati non disponibile");
+  try {
+    return {
+      collection: await fetchConfiscatedAssetsSpatialCollection(
+        definition.dataPath,
+      ),
+      distribution: "primary",
+      primaryFailure: null,
+    };
+  } catch (error) {
+    const primaryFailure = toConfiscatedAssetsSpatialLoadFailure(error);
+    if (definition.fallbackDataPath) {
+      return {
+        collection: await fetchConfiscatedAssetsSpatialCollection(
+          definition.fallbackDataPath,
+        ),
+        distribution: "continuity_fallback",
+        primaryFailure,
+      };
     }
+    throw error;
   }
-
-  throw lastError ?? new Error("Layer beni confiscati non disponibile");
 }
 
 async function fetchConfiscatedAssetsSpatialCollection(
   dataPath: string,
 ): Promise<ConfiscatedAssetsSpatialCollection> {
-  const response = await fetch(dataPath, {
-    headers: { Accept: "application/geo+json, application/json" },
-  });
+  let response: Response;
+  try {
+    response = await fetch(dataPath, {
+      headers: { Accept: "application/geo+json, application/json" },
+    });
+  } catch {
+    throw new ConfiscatedAssetsSpatialLoadError("network_error", null);
+  }
   if (!response.ok) {
-    throw new Error(
-      `Layer beni confiscati non disponibile (${response.status})`,
+    throw new ConfiscatedAssetsSpatialLoadError("http_error", response.status);
+  }
+
+  let payload: unknown;
+  try {
+    payload = (await response.json()) as unknown;
+  } catch {
+    throw new ConfiscatedAssetsSpatialLoadError(
+      "invalid_payload",
+      response.status,
+    );
+  }
+  if (!isConfiscatedAssetsSpatialCollection(payload)) {
+    throw new ConfiscatedAssetsSpatialLoadError(
+      "invalid_payload",
+      response.status,
     );
   }
 
-  const payload = (await response.json()) as unknown;
-  if (!isConfiscatedAssetsSpatialCollection(payload)) {
-    throw new Error("Formato del layer beni confiscati non valido");
-  }
-
   return payload;
+}
+
+class ConfiscatedAssetsSpatialLoadError extends Error {
+  constructor(
+    readonly reason: ConfiscatedAssetsSpatialLoadFailure["reason"],
+    readonly httpStatus: number | null,
+  ) {
+    super("Layer beni confiscati non disponibile");
+  }
+}
+
+function toConfiscatedAssetsSpatialLoadFailure(
+  error: unknown,
+): ConfiscatedAssetsSpatialLoadFailure {
+  if (error instanceof ConfiscatedAssetsSpatialLoadError) {
+    return { reason: error.reason, httpStatus: error.httpStatus };
+  }
+  return { reason: "network_error", httpStatus: null };
 }
 
 function isMunicipalBoundarySpatialCollection(
