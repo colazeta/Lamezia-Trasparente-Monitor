@@ -55,6 +55,7 @@ export type DoclingAdapterResult =
         | "request-invalid"
         | "executor-timeout"
         | "executor-error"
+        | "executor-outcome-invalid"
         | "source-bytes-mutated"
         | "processor-result-invalid"
         | "artifact-set-invalid"
@@ -115,8 +116,8 @@ async function executeWithTimeout(
 
   const timeout = new Promise<never>((_, reject) => {
     timer = setTimeout(() => {
-      controller.abort();
       reject(new DoclingExecutorTimeoutError());
+      controller.abort();
     }, request.limits.timeoutMs);
   });
 
@@ -125,9 +126,28 @@ async function executeWithTimeout(
       executor({ request, sourceBytes, signal: controller.signal }),
       timeout,
     ]);
+  } catch (error) {
+    if (controller.signal.aborted) {
+      throw new DoclingExecutorTimeoutError();
+    }
+    throw error;
   } finally {
     if (timer) clearTimeout(timer);
   }
+}
+
+function cloneExecutorArtifacts(value: unknown): DoclingExecutorArtifacts | null {
+  if (value === null || typeof value !== "object" || Array.isArray(value)) {
+    return null;
+  }
+
+  const cloned: DoclingExecutorArtifacts = {};
+  for (const [kind, bytes] of Object.entries(value as Record<string, unknown>)) {
+    if (kind !== "structured-json" && kind !== "markdown") return null;
+    if (!(bytes instanceof Uint8Array)) return null;
+    cloned[kind] = new Uint8Array(bytes);
+  }
+  return cloned;
 }
 
 function validateArtifactBytes(
@@ -242,6 +262,20 @@ export async function runDoclingProcessorAdapter(
     return { status: "rejected", code: "source-bytes-mutated" };
   }
 
+  if (
+    outcome === null ||
+    typeof outcome !== "object" ||
+    !("result" in outcome) ||
+    !("artifacts" in outcome)
+  ) {
+    return { status: "rejected", code: "executor-outcome-invalid" };
+  }
+
+  const artifacts = cloneExecutorArtifacts(outcome.artifacts);
+  if (!artifacts) {
+    return { status: "rejected", code: "executor-outcome-invalid" };
+  }
+
   let result: DoclingProcessorResult;
   try {
     result = parseDoclingProcessorResultForRequest(request, outcome.result);
@@ -249,13 +283,13 @@ export async function runDoclingProcessorAdapter(
     return { status: "rejected", code: "processor-result-invalid" };
   }
 
-  const artifactError = validateArtifactBytes(result, outcome.artifacts);
+  const artifactError = validateArtifactBytes(result, artifacts);
   if (artifactError) return artifactError;
 
   return {
     status: "validated",
     request,
     result,
-    artifacts: outcome.artifacts,
+    artifacts,
   };
 }
