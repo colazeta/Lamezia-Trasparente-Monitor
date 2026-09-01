@@ -90,50 +90,48 @@ jobs:
       - name: Smoke generated static fallback
         run: node scripts/check-v0-static-fallback.mjs
 
-      - name: Verify Cloudflare deployment credentials
+      - name: Resolve Cloudflare deployment mode
+        id: cloudflare_mode
         shell: bash
         run: |
-          missing=0
-          if [ -z "$(printf '%s' "$CLOUDFLARE_API_TOKEN" | tr -d '[:space:]')" ]; then
-            echo "::error::Missing CLOUDFLARE_API_TOKEN secret."
-            missing=1
-          else
+          token_present=false
+          account_present=false
+
+          if [ -n "$(printf '%s' "$CLOUDFLARE_API_TOKEN" | tr -d '[:space:]')" ]; then
+            token_present=true
             echo "::add-mask::$CLOUDFLARE_API_TOKEN"
           fi
 
-          if [ -z "$(printf '%s' "$CLOUDFLARE_ACCOUNT_ID" | tr -d '[:space:]')" ]; then
-            echo "::error::Missing CLOUDFLARE_ACCOUNT_ID secret or variable."
-            missing=1
-          else
+          if [ -n "$(printf '%s' "$CLOUDFLARE_ACCOUNT_ID" | tr -d '[:space:]')" ]; then
+            account_present=true
             echo "::add-mask::$CLOUDFLARE_ACCOUNT_ID"
           fi
 
-          if [ "$missing" -eq 1 ]; then
+          if [ "$token_present" = true ] && [ "$account_present" = true ]; then
+            echo "direct=true" >> "$GITHUB_OUTPUT"
             {
-              echo "### Cloudflare Pages deploy blocked"
+              echo "### Cloudflare Pages deployment mode"
               echo ""
-              echo "The static build and local fallback checks completed, but the production deploy cannot start without Cloudflare credentials."
-              echo ""
-              echo "Configure these repository settings, then rerun this workflow:"
-              echo ""
-              echo "- GitHub Actions secret: \`CLOUDFLARE_API_TOKEN\`"
-              echo "- GitHub Actions secret or variable: \`CLOUDFLARE_ACCOUNT_ID\`"
-              echo "- Optional GitHub Actions variable: \`CLOUDFLARE_PROJECT_NAME\` (defaults to \`lamezia-trasparente\`)"
-              echo "- Optional GitHub Actions variable: \`PUBLIC_SITE_URL\` (defaults to \`https://lamezia-trasparente.pages.dev\`)"
-              echo "- Optional GitHub Actions variable: \`VITE_API_BASE_URL\` (public API origin; omit to keep the explicit static 503 fallback)"
-              echo ""
-              echo "Runbook: \`docs/deploy/cloudflare-pages.md\`"
+              echo "Wrangler direct publish is enabled. The public smoke will require the exact Git commit after deployment."
             } >> "$GITHUB_STEP_SUMMARY"
-            echo "Cloudflare Pages deploy cannot continue because required credentials are not configured."
-            echo "Configure CLOUDFLARE_API_TOKEN and CLOUDFLARE_ACCOUNT_ID, then rerun this workflow."
+          elif [ "$token_present" = false ] && [ "$account_present" = false ]; then
+            echo "direct=false" >> "$GITHUB_OUTPUT"
+            {
+              echo "### Cloudflare Pages deployment mode"
+              echo ""
+              echo "Wrangler credentials are not configured, so publishing is delegated to the existing Cloudflare Pages Git integration. The public smoke will wait for and require this exact Git commit."
+            } >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "::error::Cloudflare credentials are only partially configured. Set both CLOUDFLARE_API_TOKEN and CLOUDFLARE_ACCOUNT_ID, or remove both to use the native Git integration."
             exit 1
           fi
 
       - name: Deploy to Cloudflare Pages
+        if: steps.cloudflare_mode.outputs.direct == 'true'
         run: |
           pnpm dlx wrangler@latest pages deploy artifacts/lamezia-trasparente/dist/public \
             --project-name "$CLOUDFLARE_PROJECT_NAME" \
             --branch main
 
       - name: Smoke public contracts and organi routes
-        run: node scripts/check-public-contracts-page.mjs --url "$PUBLIC_SITE_URL" --attempts 12 --delay-ms 10000
+        run: node scripts/check-public-contracts-page.mjs --url "$PUBLIC_SITE_URL" --expected-commit "$GITHUB_SHA" --attempts 24 --delay-ms 10000

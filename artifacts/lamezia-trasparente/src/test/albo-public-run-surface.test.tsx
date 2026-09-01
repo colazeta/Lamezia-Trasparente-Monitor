@@ -158,7 +158,7 @@ describe("Albo public run surface", () => {
 
   it("normalises copied punctuation exactly like the presentation search index", async () => {
     const punctuatedItem = ALBO_PUBLIC_RUN_ITEMS.find((item) =>
-      /[’']/u.test(item.presentation.display_title),
+      /\p{L}+[’']\p{L}+/u.test(item.presentation.display_title),
     );
     if (!punctuatedItem) {
       throw new Error("Expected a public title containing an apostrophe.");

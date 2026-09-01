@@ -46,7 +46,7 @@ const REQUIRED_DEPLOY_ROUTES = ["/contratti", "/organi", "/amministratori"];
 
 function usage() {
   return [
-    "Usage: node scripts/check-public-contracts-page.mjs [--url <public-url>] [--attempts <n>] [--delay-ms <ms>]",
+    "Usage: node scripts/check-public-contracts-page.mjs [--url <public-url>] [--expected-commit <sha>] [--attempts <n>] [--delay-ms <ms>]",
     "",
     "Checks the production/public contracts and organi routes plus generated bundle markers.",
     "Defaults to https://lamezia-trasparente.pages.dev.",
@@ -57,6 +57,7 @@ function parseArgs(argv) {
   const options = {
     attempts: DEFAULT_ATTEMPTS,
     delayMs: DEFAULT_DELAY_MS,
+    expectedCommit: null,
     publicUrl: DEFAULT_PUBLIC_URL,
   };
 
@@ -67,6 +68,12 @@ function parseArgs(argv) {
       if (!value || value.startsWith("--"))
         throw new Error("Missing value for --url.");
       options.publicUrl = value;
+    } else if (arg === "--expected-commit") {
+      const value = argv[(i += 1)];
+      if (!value || value.startsWith("--")) {
+        throw new Error("Missing value for --expected-commit.");
+      }
+      options.expectedCommit = normalizeExpectedCommit(value);
     } else if (arg === "--attempts") {
       const value = Number(argv[(i += 1)]);
       if (!Number.isInteger(value) || value < 1) {
@@ -95,6 +102,16 @@ function normalizePublicUrl(value) {
   const trimmed = String(value || "").trim();
   if (!trimmed) throw new Error("Public URL cannot be blank.");
   return new URL(trimmed).href.replace(/\/+$/, "");
+}
+
+function normalizeExpectedCommit(value) {
+  const normalized = String(value || "")
+    .trim()
+    .toLowerCase();
+  if (!/^[0-9a-f]{40}$/.test(normalized)) {
+    throw new Error("--expected-commit must be a full 40-character Git SHA.");
+  }
+  return normalized;
 }
 
 function sleep(ms) {
@@ -235,7 +252,7 @@ function assertContentType(result, expected, label) {
   }
 }
 
-function assertDeployProvenance(provenance) {
+function assertDeployProvenance(provenance, expectedCommit = null) {
   if (
     !provenance ||
     typeof provenance !== "object" ||
@@ -253,6 +270,22 @@ function assertDeployProvenance(provenance) {
       `Deploy provenance has unexpected deploymentContract: ${String(
         provenance.deploymentContract,
       )}`,
+    );
+  }
+  if (
+    typeof provenance.commitSha !== "string" ||
+    !/^[0-9a-f]{40}$/i.test(provenance.commitSha)
+  ) {
+    throw new Error(
+      `Deploy provenance has invalid commitSha: ${String(provenance.commitSha)}`,
+    );
+  }
+  if (
+    expectedCommit &&
+    provenance.commitSha.toLowerCase() !== expectedCommit.toLowerCase()
+  ) {
+    throw new Error(
+      `Deploy provenance commit is ${provenance.commitSha}; expected ${expectedCommit}.`,
     );
   }
   if (provenance.requiredRoute !== "/contratti") {
@@ -397,7 +430,7 @@ function assertBundleMarkers(bundleText) {
   }
 }
 
-async function checkPublicContractsPage(publicUrl) {
+async function checkPublicContractsPage(publicUrl, expectedCommit = null) {
   const rootUrl = routeUrl(publicUrl, "/");
   const contractsUrl = routeUrl(publicUrl, "/contratti");
   const organiUrl = routeUrl(publicUrl, "/organi");
@@ -420,7 +453,7 @@ async function checkPublicContractsPage(publicUrl) {
   assertPublicText(root.text, "Root route");
   assertPublicText(contracts.text, "Contracts route");
   assertPublicText(organi.text, "Organi route");
-  assertDeployProvenance(provenance.value);
+  assertDeployProvenance(provenance.value, expectedCommit);
 
   const sitemapRoutes = extractSitemapRoutes(sitemap.text);
   const routeChecks = await Promise.all(
@@ -442,14 +475,6 @@ async function checkPublicContractsPage(publicUrl) {
       `API probe ${path}`,
     );
     assertContentType(result, "application/json", `API probe ${path}`);
-  }
-  if (
-    typeof provenance.value.commitSha !== "string" ||
-    !/^[0-9a-f]{40}$/i.test(provenance.value.commitSha)
-  ) {
-    throw new Error(
-      `Deploy provenance has invalid commitSha: ${String(provenance.value.commitSha)}`,
-    );
   }
   if (
     typeof provenance.value.createdAt !== "string" ||
@@ -489,7 +514,7 @@ async function main() {
       console.log(
         `Public contracts smoke attempt ${attempt}/${options.attempts}`,
       );
-      await checkPublicContractsPage(options.publicUrl);
+      await checkPublicContractsPage(options.publicUrl, options.expectedCommit);
       console.log("Public contracts smoke passed.");
       return;
     } catch (error) {
