@@ -23,6 +23,9 @@ export type PublicationAttachment = {
   // SHA-256 of the exact bytes archived in object storage. Optional for legacy
   // JSON rows created before source-hash provenance was introduced.
   sha256?: string | null;
+  // Technical retry marker for legacy SHA backfill. ISO-8601 UTC when the
+  // canonical stored copy was last considered; never used as civic metadata.
+  sha256BackfillAttemptedAt?: string | null;
 };
 
 /**
