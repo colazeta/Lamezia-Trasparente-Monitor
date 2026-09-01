@@ -1,0 +1,53 @@
+{
+  "schema_version": "1.0",
+  "generated_at": "2026-09-01T18:47:12.342Z",
+  "scope": {
+    "municipality": "Lamezia Terme",
+    "istat_code": "079160"
+  },
+  "publication_policy": "default-deny",
+  "layers": [
+    {
+      "layer_id": "municipal-boundary",
+      "data_path": "/data/processed/territorio/lamezia_confine_comunale.geojson",
+      "media_type": "application/geo+json",
+      "distribution_status": "published",
+      "content_status": "populated",
+      "feature_count": 1,
+      "excluded_feature_count": 0,
+      "sha256": "5254a64e615ca00b5353606911881df912c79cf6dc097660acd08baa5ee04f79",
+      "source_label": "OpenStreetMap / Nominatim",
+      "licence": "ODbL 1.0",
+      "source_modified": null,
+      "publication_note": "Perimetro amministrativo di riferimento; non sostituisce una base ufficiale più autorevole che dovesse diventare disponibile."
+    },
+    {
+      "layer_id": "census-sections",
+      "data_path": "/data/processed/territorio/istat_sezioni_censimento_lamezia.geojson",
+      "media_type": "application/geo+json",
+      "distribution_status": "published",
+      "content_status": "populated",
+      "feature_count": 317,
+      "excluded_feature_count": 0,
+      "sha256": "9f236f542d803f9c9e900e19b285fa2c7e20ea565c78163f40c17d7101b35476",
+      "source_label": "ISTAT — Basi territoriali 2021 e dati per sezioni di censimento 2023",
+      "licence": "CC BY 4.0 unless otherwise indicated by ISTAT",
+      "source_modified": "geometrie 2021; indicatori 2023",
+      "publication_note": "I valori mancanti restano distinti dallo zero; la copertura degli indicatori è documentata nei metadati associati."
+    },
+    {
+      "layer_id": "confiscated-assets",
+      "data_path": "/data/processed/territorio/beni_confiscati_lamezia.geojson",
+      "media_type": "application/geo+json",
+      "distribution_status": "published",
+      "content_status": "empty_by_policy",
+      "feature_count": 0,
+      "excluded_feature_count": 340,
+      "sha256": "2f57ea01871d79eb933fd753581505461e9a18deea309c7e4eb3b98b7b293a7d",
+      "source_label": "ANBSC — beni immobili in amministrazione e destinati (Comune di Lamezia Terme)",
+      "licence": "Italian Open Data License v2.0",
+      "source_modified": "2026-09-02 04:00:00",
+      "publication_note": "Snapshot tecnicamente disponibile ma privo di feature: collocare ogni bene sul centroide comunale produrrebbe una localizzazione falsa. I conteggi descrivono la fonte ANBSC, non una mappa puntuale."
+    }
+  ]
+}

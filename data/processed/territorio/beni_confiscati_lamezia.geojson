@@ -1,0 +1,28 @@
+{
+  "type": "FeatureCollection",
+  "features": [],
+  "metadata": {
+    "layer_id": "confiscated-assets",
+    "entity_type": "confiscated_asset",
+    "input_records": 340,
+    "published_features": 0,
+    "excluded_records": 340,
+    "exclusions": {
+      "municipal_centroid_only": 292,
+      "missing_asset_coordinates": 48,
+      "asset_coordinates_pending_review": 0
+    },
+    "publication_policy": "Fail-closed: le coordinate comunali ANBSC non sono posizioni dei singoli beni. Sono pubblicate solo localizzazioni asset-level con provenienza e verifica coerenti; nessun record della presente fotografia supera ancora il criterio.",
+    "source_dataset_label": "ANBSC — beni immobili in amministrazione e destinati (Comune di Lamezia Terme)",
+    "source_dataset_url": "https://benidestinati.anbsc.it/api/data/beni/catalog",
+    "source_modified": "2026-09-02 04:00:00",
+    "source_counts": {
+      "in_administration": 119,
+      "destined": 221
+    },
+    "licence": "Italian Open Data License v2.0",
+    "licence_url": "https://www.dati.gov.it/content/italian-open-data-license-v20",
+    "automatic_geocoder": "not used",
+    "publication_note": "Snapshot tecnicamente disponibile ma privo di feature: collocare ogni bene sul centroide comunale produrrebbe una localizzazione falsa. I conteggi descrivono la fonte ANBSC, non una mappa puntuale."
+  }
+}

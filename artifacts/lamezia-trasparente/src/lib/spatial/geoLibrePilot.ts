@@ -35,7 +35,42 @@ export type CheckGeoLibreLayerAvailabilityOptions = {
   fetcher?: typeof fetch;
 };
 
+export type SpatialPublicationManifestLayer = {
+  layer_id: string;
+  data_path: string;
+  media_type: "application/geo+json";
+  distribution_status: "published";
+  content_status: "populated" | "empty_by_policy";
+  feature_count: number;
+  excluded_feature_count: number;
+  sha256: string;
+  source_label: string;
+  licence: string;
+  source_modified: string | null;
+  publication_note: string;
+};
+
+export type SpatialPublicationManifest = {
+  schema_version: "1.0";
+  generated_at: string;
+  scope: {
+    municipality: "Lamezia Terme";
+    istat_code: "079160";
+  };
+  publication_policy: "default-deny";
+  layers: SpatialPublicationManifestLayer[];
+};
+
+export type LoadSpatialPublicationManifestOptions = {
+  layers: SpatialLayerDefinition[];
+  siteOrigin: string;
+  signal?: AbortSignal;
+  fetcher?: typeof fetch;
+};
+
 const DEFAULT_LAYER_AVAILABILITY_TIMEOUT_MS = 8_000;
+export const SPATIAL_PUBLICATION_MANIFEST_PATH =
+  "/data/processed/territorio/spatial_layer_manifest.json";
 
 export function isGeoLibrePilotEnabled(value: string | undefined): boolean {
   return value?.trim().toLowerCase() === "true";
@@ -97,11 +132,7 @@ export async function checkGeoLibreLayerAvailability({
 
       let dataUrl: string;
       try {
-        dataUrl = resolveSpatialDataUrl(
-          layer.dataPath,
-          siteOrigin,
-          apiBaseUrl,
-        );
+        dataUrl = resolveSpatialDataUrl(layer.dataPath, siteOrigin, apiBaseUrl);
       } catch {
         return {
           layer,
@@ -187,6 +218,64 @@ export async function checkGeoLibreLayerAvailability({
   );
 }
 
+/**
+ * Legge il manifest corredato dai digest degli snapshot e verifica che ogni
+ * layer attivo punti alla stessa distribuzione dichiarata nel registry.
+ */
+export async function loadSpatialPublicationManifest({
+  layers,
+  siteOrigin,
+  signal,
+  fetcher = fetch,
+}: LoadSpatialPublicationManifestOptions): Promise<SpatialPublicationManifest> {
+  const manifestUrl = resolveSpatialDataUrl(
+    SPATIAL_PUBLICATION_MANIFEST_PATH,
+    siteOrigin,
+  );
+  const response = await fetcher(manifestUrl, {
+    method: "GET",
+    cache: "no-store",
+    credentials: "omit",
+    signal,
+    headers: { Accept: "application/json" },
+  });
+  if (!response.ok) {
+    throw new Error(
+      `Spatial publication manifest unavailable (${response.status})`,
+    );
+  }
+  const contentType = response.headers.get("content-type")?.toLowerCase() ?? "";
+  if (!contentType.includes("application/json")) {
+    throw new Error("Spatial publication manifest is not JSON");
+  }
+
+  const value = (await response.json()) as unknown;
+  if (!isSpatialPublicationManifest(value)) {
+    throw new Error("Invalid spatial publication manifest");
+  }
+
+  const manifestByLayerId = new Map(
+    value.layers.map((manifestLayer) => [
+      manifestLayer.layer_id,
+      manifestLayer,
+    ]),
+  );
+  if (manifestByLayerId.size !== value.layers.length) {
+    throw new Error("Spatial publication manifest contains duplicate layers");
+  }
+  if (manifestByLayerId.size !== layers.length) {
+    throw new Error("Spatial publication manifest layer count mismatch");
+  }
+  for (const layer of layers) {
+    const manifestLayer = manifestByLayerId.get(layer.id);
+    if (!manifestLayer || manifestLayer.data_path !== layer.dataPath) {
+      throw new Error(`Spatial publication manifest mismatch for ${layer.id}`);
+    }
+  }
+
+  return value;
+}
+
 export function resolveSpatialDataUrl(
   dataPath: string,
   siteOrigin: string,
@@ -227,6 +316,47 @@ function isGeoJsonContentType(value: string | null): boolean {
   return (
     normalized.includes("application/json") || normalized.includes("geo+json")
   );
+}
+
+function isSpatialPublicationManifest(
+  value: unknown,
+): value is SpatialPublicationManifest {
+  if (!value || typeof value !== "object") return false;
+  const manifest = value as Partial<SpatialPublicationManifest>;
+  if (
+    manifest.schema_version !== "1.0" ||
+    manifest.publication_policy !== "default-deny" ||
+    manifest.scope?.municipality !== "Lamezia Terme" ||
+    manifest.scope.istat_code !== "079160" ||
+    typeof manifest.generated_at !== "string" ||
+    !Number.isFinite(Date.parse(manifest.generated_at)) ||
+    !Array.isArray(manifest.layers)
+  ) {
+    return false;
+  }
+
+  return manifest.layers.every((layer) => {
+    if (!layer || typeof layer !== "object") return false;
+    return (
+      typeof layer.layer_id === "string" &&
+      typeof layer.data_path === "string" &&
+      layer.data_path.startsWith("/data/processed/territorio/") &&
+      layer.media_type === "application/geo+json" &&
+      layer.distribution_status === "published" &&
+      (layer.content_status === "populated" ||
+        layer.content_status === "empty_by_policy") &&
+      Number.isInteger(layer.feature_count) &&
+      layer.feature_count >= 0 &&
+      Number.isInteger(layer.excluded_feature_count) &&
+      layer.excluded_feature_count >= 0 &&
+      /^[a-f0-9]{64}$/.test(layer.sha256) &&
+      typeof layer.source_label === "string" &&
+      typeof layer.licence === "string" &&
+      (layer.source_modified === null ||
+        typeof layer.source_modified === "string") &&
+      typeof layer.publication_note === "string"
+    );
+  });
 }
 
 function normalizeTimeoutMs(value: number): number {

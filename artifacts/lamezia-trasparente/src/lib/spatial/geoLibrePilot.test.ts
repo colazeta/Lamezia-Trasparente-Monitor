@@ -11,6 +11,7 @@ import {
   buildGeoLibreViewerUrl,
   checkGeoLibreLayerAvailability,
   isGeoLibrePilotEnabled,
+  loadSpatialPublicationManifest,
   resolveSpatialDataUrl,
 } from "./geoLibrePilot";
 
@@ -262,9 +263,91 @@ describe("GeoLibre pilot helpers", () => {
     );
 
     expect(url.searchParams.getAll("data")).toEqual([
-      "https://api.lamezia.example/api/gis/comune",
+      "https://lamezia.example/data/processed/territorio/lamezia_confine_comunale.geojson",
       "https://lamezia.example/data/processed/territorio/istat_sezioni_censimento_lamezia.geojson",
-      "https://api.lamezia.example/api/beni-confiscati/geojson",
+      "https://lamezia.example/data/processed/territorio/beni_confiscati_lamezia.geojson",
     ]);
+  });
+
+  it("accepts a default-deny manifest aligned with every active layer", async () => {
+    const activeLayers = getActiveAtlasSpatialLayers();
+    const manifest = {
+      schema_version: "1.0",
+      generated_at: "2026-09-01T18:00:00.000Z",
+      scope: { municipality: "Lamezia Terme", istat_code: "079160" },
+      publication_policy: "default-deny",
+      layers: activeLayers.map((item, index) => ({
+        layer_id: item.id,
+        data_path: item.dataPath,
+        media_type: "application/geo+json",
+        distribution_status: "published",
+        content_status: index === 2 ? "empty_by_policy" : "populated",
+        feature_count: index === 0 ? 1 : index === 1 ? 317 : 0,
+        excluded_feature_count: index === 2 ? 340 : 0,
+        sha256: "a".repeat(64),
+        source_label: item.sourceLabel,
+        licence: "test",
+        source_modified: null,
+        publication_note: "test",
+      })),
+    };
+
+    const loaded = await loadSpatialPublicationManifest({
+      layers: activeLayers,
+      siteOrigin: "https://lamezia.example",
+      fetcher: async (input, init) => {
+        expect(input).toBe(
+          "https://lamezia.example/data/processed/territorio/spatial_layer_manifest.json",
+        );
+        expect(init?.method).toBe("GET");
+        return Response.json(manifest, {
+          headers: { "content-type": "application/json; charset=utf-8" },
+        });
+      },
+    });
+
+    expect(loaded.layers[2]).toMatchObject({
+      layer_id: "confiscated-assets",
+      content_status: "empty_by_policy",
+      excluded_feature_count: 340,
+    });
+  });
+
+  it("rejects a manifest whose data path diverges from the registry", async () => {
+    const activeLayers = getActiveAtlasSpatialLayers();
+    const manifest = {
+      schema_version: "1.0",
+      generated_at: "2026-09-01T18:00:00.000Z",
+      scope: { municipality: "Lamezia Terme", istat_code: "079160" },
+      publication_policy: "default-deny",
+      layers: activeLayers.map((item) => ({
+        layer_id: item.id,
+        data_path:
+          item.id === "municipal-boundary"
+            ? "/data/processed/territorio/wrong.geojson"
+            : item.dataPath,
+        media_type: "application/geo+json",
+        distribution_status: "published",
+        content_status: "populated",
+        feature_count: 1,
+        excluded_feature_count: 0,
+        sha256: "b".repeat(64),
+        source_label: item.sourceLabel,
+        licence: "test",
+        source_modified: null,
+        publication_note: "test",
+      })),
+    };
+
+    await expect(
+      loadSpatialPublicationManifest({
+        layers: activeLayers,
+        siteOrigin: "https://lamezia.example",
+        fetcher: async () =>
+          Response.json(manifest, {
+            headers: { "content-type": "application/json" },
+          }),
+      }),
+    ).rejects.toThrow(/manifest mismatch for municipal-boundary/);
   });
 });

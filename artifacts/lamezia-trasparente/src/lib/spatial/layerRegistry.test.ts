@@ -25,6 +25,29 @@ describe("spatial layer registry", () => {
     expect(getSpatialLayer("confiscated-assets")?.defaultVisible).toBe(false);
   });
 
+  it("serves every active layer from the same-origin snapshot contract", () => {
+    expect(
+      getActiveAtlasSpatialLayers().map(({ id, dataPath }) => ({
+        id,
+        dataPath,
+      })),
+    ).toEqual([
+      {
+        id: "municipal-boundary",
+        dataPath: "/data/processed/territorio/lamezia_confine_comunale.geojson",
+      },
+      {
+        id: "census-sections",
+        dataPath:
+          "/data/processed/territorio/istat_sezioni_censimento_lamezia.geojson",
+      },
+      {
+        id: "confiscated-assets",
+        dataPath: "/data/processed/territorio/beni_confiscati_lamezia.geojson",
+      },
+    ]);
+  });
+
   it("derives the initial Atlas selection from active registry defaults", () => {
     expect(getInitialAtlasVisibleLayerIds()).toEqual([
       "municipal-boundary",
@@ -39,11 +62,7 @@ describe("spatial layer registry", () => {
         "pnrr-projects",
         "not-a-layer",
       ]),
-    ).toEqual([
-      "municipal-boundary",
-      "census-sections",
-      "confiscated-assets",
-    ]);
+    ).toEqual(["municipal-boundary", "census-sections", "confiscated-assets"]);
   });
 
   it("does not expose planned domains before their Atlas implementation is ready", () => {

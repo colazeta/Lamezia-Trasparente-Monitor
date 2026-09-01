@@ -34,12 +34,20 @@ Esempio concettuale:
 https://web.geolibre.app/
   ?layout=viewer
   &panels=collapsed
-  &data=https://<api>/api/gis/comune
+  &data=https://<site>/data/processed/territorio/lamezia_confine_comunale.geojson
   &data=https://<site>/data/processed/territorio/istat_sezioni_censimento_lamezia.geojson
-  &data=https://<api>/api/beni-confiscati/geojson
+  &data=https://<site>/data/processed/territorio/beni_confiscati_lamezia.geojson
 ```
 
-I percorsi `/api/*` usano `VITE_API_BASE_URL` quando configurato; gli asset statici usano l’origine pubblica del sito.
+I tre layer attivi usano snapshot statici same-origin. Leaflet e GeoLibre leggono
+gli stessi `dataPath` del registry, quindi il deploy pubblico non dipende dalla
+disponibilità di un origin API per la cartografia di base.
+
+Il manifest
+`/data/processed/territorio/spatial_layer_manifest.json` dichiara per ogni
+distribuzione percorso, conteggio feature, conteggio esclusioni, stato del
+contenuto, fonte, licenza e digest SHA-256. Il frontend lo valida contro il
+registry prima di mostrarne i dati di copertura.
 
 Prima di costruire l’URL del viewer, il frontend esegue una richiesta `HEAD` con
 timeout di 8 secondi per ogni feed e accetta soltanto risposte HTTP riuscite con
@@ -48,7 +56,32 @@ lenti o serviti con un formato inatteso vengono esclusi dall’URL GeoLibre e
 dichiarati nell’interfaccia con la copertura `disponibili / attivi`. Un errore
 non viene mai convertito in una collezione vuota.
 
-Non viene creato un `.geolibre.json` parallelo e non vengono duplicate geometrie o proprietà di dominio.
+Una collezione può invece essere **pubblicata ma vuota per policy** quando
+l’assenza di feature è un risultato verificato e documentato dal processo di
+materializzazione. È il caso della fotografia corrente dei beni confiscati:
+l’API pubblica ANBSC espone 340 immobili riferiti a Lamezia Terme, ma soltanto
+coordinate del Comune (292 record) oppure nessuna coordinata (48 record). Il
+centroide comunale non viene rappresentato come posizione del singolo bene;
+lo snapshot contiene quindi 0 feature e conserva nel metadata tutti i conteggi
+di esclusione. Questo stato è distinto sia da un errore di rete sia da un
+dataset realmente privo di record.
+
+Dettagli di fonte, conteggi e stop condition sono nella nota
+[Snapshot spaziale dei beni confiscati](../data-sources/beni-confiscati-spatial-snapshot.md).
+
+Non viene creato un `.geolibre.json` parallelo. Gli snapshot sono distribuzioni
+del contratto spaziale canonico, non configurazioni specifiche del viewer.
+
+La materializzazione si aggiorna con:
+
+```bash
+pnpm run spatial:snapshots:lamezia
+```
+
+Il comando legge il confine già versionato nel repository, il GeoJSON ISTAT
+processato e gli endpoint JSON/DCAT pubblici ANBSC; interrompe la pubblicazione
+se trova record fuori Comune, identificativi duplicati o un contratto sorgente
+inatteso.
 
 ## CORS
 
@@ -67,7 +100,7 @@ Il viewer usa `layout=viewer` e `panels=collapsed`:
 
 Nel primo pilot, un cambiamento della composizione dei layer richiede il caricamento dell’iframe. Non viene ancora usata l’embed API runtime.
 
-La disponibilità è rilevata quando l’utente apre il pilot. Se nessun feed è
+La disponibilità tecnica è rilevata quando l’utente apre il pilot. Se nessun feed è
 raggiungibile, l’iframe non viene avviato e l’interfaccia invita a tornare a
 Leaflet. Questa degradazione controllata rende il pilot osservabile, ma non
 soddisfa il criterio di promozione relativo al caricamento di tutti i layer.
