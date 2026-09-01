@@ -26,6 +26,7 @@ const REQUIRED_PUBLIC_TEXT = [
 const REQUIRED_CONTRACT_BUNDLE_TEXT = [
   "Contratti pubblici sotto osservazione",
   "Contratti protagonisti",
+  "La storia documentale del contratto",
   "Attiva · perimetro corrente",
   "Albo Pretorio corrente",
   "Filtro pubblico e privacy",

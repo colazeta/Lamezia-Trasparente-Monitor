@@ -32,7 +32,12 @@ const PHASE_ICONS: Record<ContractLifecyclePhaseKey, LucideIcon> = {
 
 const STATUS_META: Record<
   ContractLifecycleStatus,
-  { label: string; className: string; dotClassName: string; stripClassName: string }
+  {
+    label: string;
+    className: string;
+    dotClassName: string;
+    stripClassName: string;
+  }
 > = {
   documented: {
     label: "Documentata",
@@ -118,15 +123,15 @@ export function ContractLifecycleRail({
         <div>
           <span className="eyebrow text-primary">
             <Circle className="h-3.5 w-3.5" />
-            Stato del contratto
+            Quadro di supporto
           </span>
           <h2 className="mt-2 font-display text-xl font-bold tracking-tight md:text-2xl">
-            Il fascicolo civico segue il contratto, fase per fase
+            Copertura documentale delle fasi
           </h2>
           <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted-foreground">
-            Qui il contratto è il protagonista: lo stato non è solo una voce
-            amministrativa, ma la lettura del suo percorso da programmazione e
-            progettazione fino a esecuzione, collaudo e verifiche.
+            Questo quadro completa la timeline: segnala quali passaggi del ciclo
+            risultano documentati, parziali o ancora da collegare nelle fonti
+            disponibili. Una fase assente non implica che non sia avvenuta.
           </p>
           <p className="mt-3 max-w-2xl text-sm font-medium leading-relaxed text-foreground">
             {dossier.title}
@@ -188,7 +193,9 @@ export function ContractLifecycleRail({
             <span className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
               Prossima priorità del dossier
             </span>
-            <Badge className={`text-[10px] shadow-none ${priorityMeta.className}`}>
+            <Badge
+              className={`text-[10px] shadow-none ${priorityMeta.className}`}
+            >
               {priorityMeta.label}
             </Badge>
           </div>
@@ -330,7 +337,9 @@ function StatusMetric({
       <dt className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
         {label}
       </dt>
-      <dd className={`mt-1 font-display text-2xl font-bold tabular-nums ${tone}`}>
+      <dd
+        className={`mt-1 font-display text-2xl font-bold tabular-nums ${tone}`}
+      >
         {value}
       </dd>
     </div>
