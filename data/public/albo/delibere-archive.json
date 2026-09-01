@@ -1,23 +1,23 @@
 {
-  "generated_at": "2026-09-01T11:34:40.003Z",
+  "generated_at": "2026-09-01T16:34:40.060Z",
   "source": "Albo Pretorio Comune di Lamezia Terme",
   "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
   "verification_status": "official_source_acquired",
   "coverage": {
     "first_observed_at": "2026-06-25T14:07:05.864Z",
-    "last_observed_at": "2026-09-01T11:34:40.003Z",
+    "last_observed_at": "2026-09-01T16:34:40.060Z",
     "first_act_date": "2026-06-10",
     "last_act_date": "2026-08-24"
   },
   "counts": {
-    "total": 63,
+    "total": 79,
     "giunta": 43,
-    "consiglio": 20,
+    "consiglio": 36,
     "altro": 0,
-    "publishable": 35,
-    "minimised": 2,
+    "publishable": 40,
+    "minimised": 13,
     "metadata_only": 26,
-    "archived_documents": 1
+    "archived_documents": 6
   },
   "known_limits": [
     "Tranche A acquisisce l'elenco degli atti correnti esposto dalla fonte ufficiale, senza dichiarare completezza storica.",
@@ -37,7 +37,7 @@
       "public_id": "albo-2026-2753",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-01T11:34:40.003Z",
+      "retrieved_at": "2026-09-01T16:34:40.060Z",
       "publication_number": "2026/2753",
       "publication_start": "2026-08-24",
       "publication_end": "2026-09-08",
@@ -117,7 +117,7 @@
         "Regola automatica prudenziale: oggetto minimizzato per possibile presenza di dati personali o contenzioso."
       ],
       "first_observed_at": "2026-08-24T11:40:17.244Z",
-      "last_observed_at": "2026-09-01T11:34:40.003Z",
+      "last_observed_at": "2026-09-01T16:34:40.060Z",
       "archived_document": null
     },
     {
@@ -125,7 +125,7 @@
       "public_id": "albo-2026-2751",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-01T11:34:40.003Z",
+      "retrieved_at": "2026-09-01T16:34:40.060Z",
       "publication_number": "2026/2751",
       "publication_start": "2026-08-24",
       "publication_end": "2026-09-08",
@@ -214,13 +214,13 @@
         "Classificazione civica automatica basata su dizionario: settore e tipologia sono derivati da ufficio/provenienza e tipo atto, senza interpretare il contenuto dei PDF."
       ],
       "first_observed_at": "2026-08-24T11:40:17.244Z",
-      "last_observed_at": "2026-09-01T11:34:40.003Z",
+      "last_observed_at": "2026-09-01T16:34:40.060Z",
       "archived_document": {
         "id": "albo-2026-2751",
         "publication_number": "2026/2751",
         "source": "Albo Pretorio Comune di Lamezia Terme",
         "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-        "retrieved_at": "2026-09-01T11:34:40.003Z",
+        "retrieved_at": "2026-09-01T16:34:40.060Z",
         "public_visibility": "publishable",
         "privacy_risk": "low",
         "verification_status": "official_source_acquired",
@@ -231,7 +231,7 @@
         "sha256": "b02f6768f54f8a9096b21adc7ce1f434bf69ae455dfce05d7124f0e9568b5908",
         "size_bytes": 1532866,
         "content_type": "application/pdf",
-        "verified_at": "2026-09-01T11:34:40.003Z"
+        "verified_at": "2026-09-01T16:34:40.060Z"
       }
     },
     {
@@ -239,7 +239,7 @@
       "public_id": "albo-2026-2749",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-01T11:34:40.003Z",
+      "retrieved_at": "2026-09-01T16:34:40.060Z",
       "publication_number": "2026/2749",
       "publication_start": "2026-08-24",
       "publication_end": "2026-09-08",
@@ -319,7 +319,1522 @@
         "Regola automatica prudenziale: oggetto minimizzato per possibile presenza di dati personali o contenzioso."
       ],
       "first_observed_at": "2026-08-24T11:40:17.244Z",
-      "last_observed_at": "2026-09-01T11:34:40.003Z",
+      "last_observed_at": "2026-09-01T16:34:40.060Z",
+      "archived_document": null
+    },
+    {
+      "id": "albo-2026-2830",
+      "public_id": "albo-2026-2830",
+      "source": "Albo Pretorio Comune di Lamezia Terme",
+      "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
+      "retrieved_at": "2026-09-01T16:34:40.060Z",
+      "publication_number": "2026/2830",
+      "publication_start": "2026-09-01",
+      "publication_end": "2026-09-16",
+      "office": "SETTORE ECONOMICO FINANZIARIO",
+      "act_type": "DELIBERAZIONE DI CONSIGLIO",
+      "act_number": "67",
+      "act_date": "2026-08-13",
+      "content_hash": "91b91fa07ae953fcda1328688e929966e0e563f060b8dabe472810d1a0c552c8",
+      "subject": "Assestamento generale di bilancio e salvaguardia degli equilibri per l’esercizio 2026 ai sensi degli artt. 175, comma 8 e 193 del D.lgs. n. 267/2000.",
+      "document_url": "https://albo.tinnvision.cloud/allegati/2026_2830_13_ALLEG?ente=00301390795",
+      "public_note": null,
+      "verification_status": "official_source_acquired",
+      "privacy_risk": "low",
+      "public_visibility": "publishable",
+      "classification": {
+        "dictionary_version": "2026-08-22-a",
+        "sector": {
+          "id": "bilancio_finanze",
+          "label": "Bilancio, finanze e tributi",
+          "description": "Contabilita, bilancio, finanze, tributi e gestione economica.",
+          "confidence": "high",
+          "basis": "office"
+        },
+        "act_category": {
+          "id": "deliberazioni",
+          "label": "Deliberazioni",
+          "description": "Deliberazioni di giunta o di altri organi deliberativi.",
+          "confidence": "high",
+          "basis": "act_type"
+        }
+      },
+      "privacy_attestation": {
+        "schema_version": "albo-privacy-policy-attestation.v1",
+        "policy_version": "albo-privacy-policy.2026-08-30.1",
+        "assessment_basis": "complete_public_record",
+        "status": "current"
+      },
+      "deliberation_body": "consiglio",
+      "presentation": {
+        "display_title": "Assestamento generale di bilancio e salvaguardia degli equilibri per l'esercizio 2026 ai sensi degli artt. 175, comma 8 e 193 del D.lgs. n. 267/2000.",
+        "action_id": null,
+        "action_label": null,
+        "search_text": "assestamento generale di bilancio e salvaguardia degli equilibri per l esercizio 2026 ai sensi degli artt 175 comma 8 e 193 del d lgs n 267 2000",
+        "standardisation": {
+          "schema_version": "publication-standardisation.v1",
+          "profile_id": "albo-public-title-it",
+          "profile_version": "2026-08-30.2",
+          "input_field": "subject",
+          "input_field_preserved": true,
+          "status": "standardised_automatically",
+          "transformations": [
+            "normalise_apostrophes"
+          ],
+          "layout_flags": [],
+          "review_reasons": []
+        },
+        "area_theme": {
+          "schema_version": "publication-area-theme.v1",
+          "taxonomy_id": "municipal-public-act-area-theme-it",
+          "taxonomy_version": "2026-08-30.1",
+          "theme_id": null,
+          "theme_label": null,
+          "confidence": null,
+          "basis": "fallback",
+          "rule_id": null,
+          "evidence": [],
+          "null_reason": "not_classified",
+          "override": null
+        }
+      },
+      "known_limits": [
+        "Tranche A acquisisce l'elenco degli atti correnti esposto dalla fonte ufficiale, senza dichiarare completezza storica.",
+        "I PDF sono archiviati solo per record pubblicabili a basso rischio; allegati e PDF non sono analizzati, interpretati o sottoposti a OCR.",
+        "Gli export Tinnvision possono non includere URL diretti agli allegati; quando disponibile, il monitor usa il dettaglio ufficiale Tinnvision solo per individuare PDF HTTPS a basso rischio.",
+        "La classificazione privacy e' prudenziale e automatica; i casi sensibili richiedono revisione umana prima di esposizioni piu' ricche.",
+        "Quando gli export strutturati non includono URL diretti, il monitor prova il dettaglio ufficiale Tinnvision solo per record pubblicabili a basso rischio.",
+        "Classificazione civica automatica basata su dizionario: settore e tipologia sono derivati da ufficio/provenienza e tipo atto, senza interpretare il contenuto dei PDF."
+      ],
+      "first_observed_at": "2026-09-01T16:34:40.060Z",
+      "last_observed_at": "2026-09-01T16:34:40.060Z",
+      "archived_document": {
+        "id": "albo-2026-2830",
+        "publication_number": "2026/2830",
+        "source": "Albo Pretorio Comune di Lamezia Terme",
+        "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
+        "retrieved_at": "2026-09-01T16:34:40.060Z",
+        "public_visibility": "publishable",
+        "privacy_risk": "low",
+        "verification_status": "official_source_acquired",
+        "document_url": "https://albo.tinnvision.cloud/allegati/2026_2830_13_ALLEG?ente=00301390795",
+        "preservation_status": "archived",
+        "reason": "eligible_low_risk_publishable_pdf",
+        "storage_path": "data/public/albo/documents/2026/4a68a39c72ad72032f60d956a05b70a8b6eadeef2a9972800f281dbe0edb214c.pdf",
+        "sha256": "4a68a39c72ad72032f60d956a05b70a8b6eadeef2a9972800f281dbe0edb214c",
+        "size_bytes": 1386053,
+        "content_type": "application/pdf",
+        "verified_at": "2026-09-01T16:34:40.060Z"
+      }
+    },
+    {
+      "id": "albo-2026-2829",
+      "public_id": "albo-2026-2829",
+      "source": "Albo Pretorio Comune di Lamezia Terme",
+      "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
+      "retrieved_at": "2026-09-01T16:34:40.060Z",
+      "publication_number": "2026/2829",
+      "publication_start": "2026-09-01",
+      "publication_end": "2026-09-16",
+      "office": "SETTORE ECONOMICO FINANZIARIO",
+      "act_type": "DELIBERAZIONE DI CONSIGLIO",
+      "act_number": "66",
+      "act_date": "2026-08-13",
+      "content_hash": "b39352be9f6a27191a495122286afe74d8b7ecb901a8b9550f7ff87b52480215",
+      "subject": "Approvazione del ripiano parziale delle perdite della società SA.CAL. S.p.a e conseguente utilizzo parziale della quota accantonata del risultato di amministrazione al Fondo Perdite Società Partecipate (Art. 21, D. Lgs. n. 175/2016).",
+      "document_url": "https://albo.tinnvision.cloud/allegati/2026_2829_19_ALLEG?ente=00301390795",
+      "public_note": null,
+      "verification_status": "official_source_acquired",
+      "privacy_risk": "low",
+      "public_visibility": "publishable",
+      "classification": {
+        "dictionary_version": "2026-08-22-a",
+        "sector": {
+          "id": "bilancio_finanze",
+          "label": "Bilancio, finanze e tributi",
+          "description": "Contabilita, bilancio, finanze, tributi e gestione economica.",
+          "confidence": "high",
+          "basis": "office"
+        },
+        "act_category": {
+          "id": "deliberazioni",
+          "label": "Deliberazioni",
+          "description": "Deliberazioni di giunta o di altri organi deliberativi.",
+          "confidence": "high",
+          "basis": "act_type"
+        }
+      },
+      "privacy_attestation": {
+        "schema_version": "albo-privacy-policy-attestation.v1",
+        "policy_version": "albo-privacy-policy.2026-08-30.1",
+        "assessment_basis": "complete_public_record",
+        "status": "current"
+      },
+      "deliberation_body": "consiglio",
+      "presentation": {
+        "display_title": "Approvazione del ripiano parziale delle perdite della società SA.CAL. S.p.a e conseguente utilizzo parziale della quota accantonata del risultato di amministrazione al Fondo Perdite Società Partecipate (Art. 21, D. Lgs. n. 175/2016).",
+        "action_id": "approvazione",
+        "action_label": "Approvazione",
+        "search_text": "approvazione del ripiano parziale delle perdite della societa sa cal s p a e conseguente utilizzo parziale della quota accantonata del risultato di amministrazione al fondo perdite societa partecipate art 21 d lgs n 175 2016",
+        "standardisation": {
+          "schema_version": "publication-standardisation.v1",
+          "profile_id": "albo-public-title-it",
+          "profile_version": "2026-08-30.2",
+          "input_field": "subject",
+          "input_field_preserved": true,
+          "status": "unchanged",
+          "transformations": [],
+          "layout_flags": [
+            "display_title_too_long"
+          ],
+          "review_reasons": []
+        },
+        "area_theme": {
+          "schema_version": "publication-area-theme.v1",
+          "taxonomy_id": "municipal-public-act-area-theme-it",
+          "taxonomy_version": "2026-08-30.1",
+          "theme_id": null,
+          "theme_label": null,
+          "confidence": null,
+          "basis": "fallback",
+          "rule_id": null,
+          "evidence": [],
+          "null_reason": "not_classified",
+          "override": null
+        }
+      },
+      "known_limits": [
+        "Tranche A acquisisce l'elenco degli atti correnti esposto dalla fonte ufficiale, senza dichiarare completezza storica.",
+        "I PDF sono archiviati solo per record pubblicabili a basso rischio; allegati e PDF non sono analizzati, interpretati o sottoposti a OCR.",
+        "Gli export Tinnvision possono non includere URL diretti agli allegati; quando disponibile, il monitor usa il dettaglio ufficiale Tinnvision solo per individuare PDF HTTPS a basso rischio.",
+        "La classificazione privacy e' prudenziale e automatica; i casi sensibili richiedono revisione umana prima di esposizioni piu' ricche.",
+        "Quando gli export strutturati non includono URL diretti, il monitor prova il dettaglio ufficiale Tinnvision solo per record pubblicabili a basso rischio.",
+        "Classificazione civica automatica basata su dizionario: settore e tipologia sono derivati da ufficio/provenienza e tipo atto, senza interpretare il contenuto dei PDF."
+      ],
+      "first_observed_at": "2026-09-01T16:34:40.060Z",
+      "last_observed_at": "2026-09-01T16:34:40.060Z",
+      "archived_document": {
+        "id": "albo-2026-2829",
+        "publication_number": "2026/2829",
+        "source": "Albo Pretorio Comune di Lamezia Terme",
+        "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
+        "retrieved_at": "2026-09-01T16:34:40.060Z",
+        "public_visibility": "publishable",
+        "privacy_risk": "low",
+        "verification_status": "official_source_acquired",
+        "document_url": "https://albo.tinnvision.cloud/allegati/2026_2829_19_ALLEG?ente=00301390795",
+        "preservation_status": "archived",
+        "reason": "eligible_low_risk_publishable_pdf",
+        "storage_path": "data/public/albo/documents/2026/c520a61b989b9d54bffd4f84a8dc12b43723e553b83dda97f2dda91786e17d02.pdf",
+        "sha256": "c520a61b989b9d54bffd4f84a8dc12b43723e553b83dda97f2dda91786e17d02",
+        "size_bytes": 1273313,
+        "content_type": "application/pdf",
+        "verified_at": "2026-09-01T16:34:40.060Z"
+      }
+    },
+    {
+      "id": "albo-2026-2828",
+      "public_id": "albo-2026-2828",
+      "source": "Albo Pretorio Comune di Lamezia Terme",
+      "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
+      "retrieved_at": "2026-09-01T16:34:40.060Z",
+      "publication_number": "2026/2828",
+      "publication_start": "2026-09-01",
+      "publication_end": "2026-09-16",
+      "office": "SETTORE ECONOMICO FINANZIARIO",
+      "act_type": "DELIBERAZIONE DI CONSIGLIO",
+      "act_number": "65",
+      "act_date": "2026-08-13",
+      "content_hash": "9e7be1fa1f70a79446385e5ebf13001452deb79ddb825a1a6f03005b9ce5ee64",
+      "subject": "Ratifica della Deliberazione di Giunta Comunale n. 192 del 07/07/2026 ad oggetto \"Bilancio di previsione 2026-2028. Variazione d'urgenza ai sensi dell'art. 175 del D. Lgs. n. 267/00 e ss.mm.ii.\"",
+      "document_url": "https://albo.tinnvision.cloud/allegati/2026_2828_11_ALLEG?ente=00301390795",
+      "public_note": null,
+      "verification_status": "official_source_acquired",
+      "privacy_risk": "low",
+      "public_visibility": "publishable",
+      "classification": {
+        "dictionary_version": "2026-08-22-a",
+        "sector": {
+          "id": "bilancio_finanze",
+          "label": "Bilancio, finanze e tributi",
+          "description": "Contabilita, bilancio, finanze, tributi e gestione economica.",
+          "confidence": "high",
+          "basis": "office"
+        },
+        "act_category": {
+          "id": "deliberazioni",
+          "label": "Deliberazioni",
+          "description": "Deliberazioni di giunta o di altri organi deliberativi.",
+          "confidence": "high",
+          "basis": "act_type"
+        }
+      },
+      "privacy_attestation": {
+        "schema_version": "albo-privacy-policy-attestation.v1",
+        "policy_version": "albo-privacy-policy.2026-08-30.1",
+        "assessment_basis": "complete_public_record",
+        "status": "current"
+      },
+      "deliberation_body": "consiglio",
+      "presentation": {
+        "display_title": "Ratifica della Deliberazione di Giunta Comunale n. 192 del 07/07/2026 ad oggetto \"Bilancio di previsione 2026-2028. Variazione d'urgenza ai sensi dell'art. 175 del D. Lgs. n. 267/00 e ss.mm.ii.\"",
+        "action_id": null,
+        "action_label": null,
+        "search_text": "ratifica della deliberazione di giunta comunale n 192 del 07 07 2026 ad oggetto bilancio di previsione 2026 2028 variazione d urgenza ai sensi dell art 175 del d lgs n 267 00 e ss mm ii",
+        "standardisation": {
+          "schema_version": "publication-standardisation.v1",
+          "profile_id": "albo-public-title-it",
+          "profile_version": "2026-08-30.2",
+          "input_field": "subject",
+          "input_field_preserved": true,
+          "status": "unchanged",
+          "transformations": [],
+          "layout_flags": [
+            "display_title_too_long"
+          ],
+          "review_reasons": []
+        },
+        "area_theme": {
+          "schema_version": "publication-area-theme.v1",
+          "taxonomy_id": "municipal-public-act-area-theme-it",
+          "taxonomy_version": "2026-08-30.1",
+          "theme_id": "bilancio_tributi",
+          "theme_label": "Bilancio, tributi e partecipate",
+          "confidence": "high",
+          "basis": "deterministic_rule",
+          "rule_id": "budget-specific",
+          "evidence": [
+            {
+              "rule_id": "budget-specific",
+              "input_field": "subject",
+              "matched_terms": [
+                "bilancio di previsione"
+              ]
+            }
+          ],
+          "null_reason": null,
+          "override": null
+        }
+      },
+      "known_limits": [
+        "Tranche A acquisisce l'elenco degli atti correnti esposto dalla fonte ufficiale, senza dichiarare completezza storica.",
+        "I PDF sono archiviati solo per record pubblicabili a basso rischio; allegati e PDF non sono analizzati, interpretati o sottoposti a OCR.",
+        "Gli export Tinnvision possono non includere URL diretti agli allegati; quando disponibile, il monitor usa il dettaglio ufficiale Tinnvision solo per individuare PDF HTTPS a basso rischio.",
+        "La classificazione privacy e' prudenziale e automatica; i casi sensibili richiedono revisione umana prima di esposizioni piu' ricche.",
+        "Quando gli export strutturati non includono URL diretti, il monitor prova il dettaglio ufficiale Tinnvision solo per record pubblicabili a basso rischio.",
+        "Classificazione civica automatica basata su dizionario: settore e tipologia sono derivati da ufficio/provenienza e tipo atto, senza interpretare il contenuto dei PDF."
+      ],
+      "first_observed_at": "2026-09-01T16:34:40.060Z",
+      "last_observed_at": "2026-09-01T16:34:40.060Z",
+      "archived_document": {
+        "id": "albo-2026-2828",
+        "publication_number": "2026/2828",
+        "source": "Albo Pretorio Comune di Lamezia Terme",
+        "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
+        "retrieved_at": "2026-09-01T16:34:40.060Z",
+        "public_visibility": "publishable",
+        "privacy_risk": "low",
+        "verification_status": "official_source_acquired",
+        "document_url": "https://albo.tinnvision.cloud/allegati/2026_2828_11_ALLEG?ente=00301390795",
+        "preservation_status": "archived",
+        "reason": "eligible_low_risk_publishable_pdf",
+        "storage_path": "data/public/albo/documents/2026/e177180d5b0c5afc8fb87c362ed518bfc4127b68fad2434a39a60ec31812f4c8.pdf",
+        "sha256": "e177180d5b0c5afc8fb87c362ed518bfc4127b68fad2434a39a60ec31812f4c8",
+        "size_bytes": 722947,
+        "content_type": "application/pdf",
+        "verified_at": "2026-09-01T16:34:40.060Z"
+      }
+    },
+    {
+      "id": "albo-2026-2827",
+      "public_id": "albo-2026-2827",
+      "source": "Albo Pretorio Comune di Lamezia Terme",
+      "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
+      "retrieved_at": "2026-09-01T16:34:40.060Z",
+      "publication_number": "2026/2827",
+      "publication_start": "2026-09-01",
+      "publication_end": "2026-09-16",
+      "office": null,
+      "act_type": null,
+      "act_number": "80",
+      "act_date": "2026-08-13",
+      "subject": "Oggetto minimizzato per prudenza privacy; consultare la fonte ufficiale.",
+      "document_url": null,
+      "public_note": "Record pubblicato con minimizzazione automatica.",
+      "verification_status": "official_source_acquired",
+      "privacy_risk": "medium",
+      "public_visibility": "publishable_with_minimisation",
+      "classification": {
+        "dictionary_version": "2026-08-22-a",
+        "sector": {
+          "id": "avvocatura_contenzioso",
+          "label": "Avvocatura e contenzioso",
+          "description": "Atti dell'avvocatura, contenzioso, liti e procedimenti legali dell'ente.",
+          "confidence": "high",
+          "basis": "office"
+        },
+        "act_category": {
+          "id": "deliberazioni",
+          "label": "Deliberazioni",
+          "description": "Deliberazioni di giunta o di altri organi deliberativi.",
+          "confidence": "high",
+          "basis": "act_type"
+        }
+      },
+      "privacy_attestation": {
+        "schema_version": "albo-privacy-policy-attestation.v1",
+        "policy_version": "albo-privacy-policy.2026-08-30.1",
+        "assessment_basis": "source_record",
+        "status": "current"
+      },
+      "deliberation_body": "consiglio",
+      "presentation": {
+        "display_title": "Oggetto minimizzato per prudenza privacy; consultare la fonte ufficiale.",
+        "action_id": null,
+        "action_label": null,
+        "search_text": "oggetto minimizzato per prudenza privacy consultare la fonte ufficiale",
+        "standardisation": {
+          "schema_version": "publication-standardisation.v1",
+          "profile_id": "albo-public-title-it",
+          "profile_version": "2026-08-30.2",
+          "input_field": "subject",
+          "input_field_preserved": true,
+          "status": "unchanged",
+          "transformations": [],
+          "layout_flags": [],
+          "review_reasons": []
+        },
+        "area_theme": {
+          "schema_version": "publication-area-theme.v1",
+          "taxonomy_id": "municipal-public-act-area-theme-it",
+          "taxonomy_version": "2026-08-30.1",
+          "theme_id": null,
+          "theme_label": null,
+          "confidence": null,
+          "basis": "fallback",
+          "rule_id": null,
+          "evidence": [],
+          "null_reason": "input_withheld_for_privacy",
+          "override": null
+        }
+      },
+      "known_limits": [
+        "Tranche A acquisisce l'elenco degli atti correnti esposto dalla fonte ufficiale, senza dichiarare completezza storica.",
+        "I PDF sono archiviati solo per record pubblicabili a basso rischio; allegati e PDF non sono analizzati, interpretati o sottoposti a OCR.",
+        "Gli export Tinnvision possono non includere URL diretti agli allegati; quando disponibile, il monitor usa il dettaglio ufficiale Tinnvision solo per individuare PDF HTTPS a basso rischio.",
+        "La classificazione privacy e' prudenziale e automatica; i casi sensibili richiedono revisione umana prima di esposizioni piu' ricche.",
+        "Quando gli export strutturati non includono URL diretti, il monitor prova il dettaglio ufficiale Tinnvision solo per record pubblicabili a basso rischio.",
+        "Classificazione civica automatica basata su dizionario: settore e tipologia sono derivati da ufficio/provenienza e tipo atto, senza interpretare il contenuto dei PDF.",
+        "Allegato/documento non incluso negli export strutturati Tinnvision o non disponibile tramite dettaglio ufficiale.",
+        "Oggetto non ripubblicato integralmente nel layer pubblico per prudenza privacy.",
+        "Regola automatica prudenziale: oggetto minimizzato per possibile presenza di dati personali o contenzioso."
+      ],
+      "first_observed_at": "2026-09-01T16:34:40.060Z",
+      "last_observed_at": "2026-09-01T16:34:40.060Z",
+      "archived_document": null
+    },
+    {
+      "id": "albo-2026-2826",
+      "public_id": "albo-2026-2826",
+      "source": "Albo Pretorio Comune di Lamezia Terme",
+      "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
+      "retrieved_at": "2026-09-01T16:34:40.060Z",
+      "publication_number": "2026/2826",
+      "publication_start": "2026-09-01",
+      "publication_end": "2026-09-16",
+      "office": null,
+      "act_type": null,
+      "act_number": "79",
+      "act_date": "2026-08-13",
+      "subject": "Oggetto minimizzato per prudenza privacy; consultare la fonte ufficiale.",
+      "document_url": null,
+      "public_note": "Record pubblicato con minimizzazione automatica.",
+      "verification_status": "official_source_acquired",
+      "privacy_risk": "medium",
+      "public_visibility": "publishable_with_minimisation",
+      "classification": {
+        "dictionary_version": "2026-08-22-a",
+        "sector": {
+          "id": "avvocatura_contenzioso",
+          "label": "Avvocatura e contenzioso",
+          "description": "Atti dell'avvocatura, contenzioso, liti e procedimenti legali dell'ente.",
+          "confidence": "high",
+          "basis": "office"
+        },
+        "act_category": {
+          "id": "deliberazioni",
+          "label": "Deliberazioni",
+          "description": "Deliberazioni di giunta o di altri organi deliberativi.",
+          "confidence": "high",
+          "basis": "act_type"
+        }
+      },
+      "privacy_attestation": {
+        "schema_version": "albo-privacy-policy-attestation.v1",
+        "policy_version": "albo-privacy-policy.2026-08-30.1",
+        "assessment_basis": "source_record",
+        "status": "current"
+      },
+      "deliberation_body": "consiglio",
+      "presentation": {
+        "display_title": "Oggetto minimizzato per prudenza privacy; consultare la fonte ufficiale.",
+        "action_id": null,
+        "action_label": null,
+        "search_text": "oggetto minimizzato per prudenza privacy consultare la fonte ufficiale",
+        "standardisation": {
+          "schema_version": "publication-standardisation.v1",
+          "profile_id": "albo-public-title-it",
+          "profile_version": "2026-08-30.2",
+          "input_field": "subject",
+          "input_field_preserved": true,
+          "status": "unchanged",
+          "transformations": [],
+          "layout_flags": [],
+          "review_reasons": []
+        },
+        "area_theme": {
+          "schema_version": "publication-area-theme.v1",
+          "taxonomy_id": "municipal-public-act-area-theme-it",
+          "taxonomy_version": "2026-08-30.1",
+          "theme_id": null,
+          "theme_label": null,
+          "confidence": null,
+          "basis": "fallback",
+          "rule_id": null,
+          "evidence": [],
+          "null_reason": "input_withheld_for_privacy",
+          "override": null
+        }
+      },
+      "known_limits": [
+        "Tranche A acquisisce l'elenco degli atti correnti esposto dalla fonte ufficiale, senza dichiarare completezza storica.",
+        "I PDF sono archiviati solo per record pubblicabili a basso rischio; allegati e PDF non sono analizzati, interpretati o sottoposti a OCR.",
+        "Gli export Tinnvision possono non includere URL diretti agli allegati; quando disponibile, il monitor usa il dettaglio ufficiale Tinnvision solo per individuare PDF HTTPS a basso rischio.",
+        "La classificazione privacy e' prudenziale e automatica; i casi sensibili richiedono revisione umana prima di esposizioni piu' ricche.",
+        "Quando gli export strutturati non includono URL diretti, il monitor prova il dettaglio ufficiale Tinnvision solo per record pubblicabili a basso rischio.",
+        "Classificazione civica automatica basata su dizionario: settore e tipologia sono derivati da ufficio/provenienza e tipo atto, senza interpretare il contenuto dei PDF.",
+        "Allegato/documento non incluso negli export strutturati Tinnvision o non disponibile tramite dettaglio ufficiale.",
+        "Oggetto non ripubblicato integralmente nel layer pubblico per prudenza privacy.",
+        "Regola automatica prudenziale: oggetto minimizzato per possibile presenza di dati personali o contenzioso."
+      ],
+      "first_observed_at": "2026-09-01T16:34:40.060Z",
+      "last_observed_at": "2026-09-01T16:34:40.060Z",
+      "archived_document": null
+    },
+    {
+      "id": "albo-2026-2825",
+      "public_id": "albo-2026-2825",
+      "source": "Albo Pretorio Comune di Lamezia Terme",
+      "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
+      "retrieved_at": "2026-09-01T16:34:40.060Z",
+      "publication_number": "2026/2825",
+      "publication_start": "2026-09-01",
+      "publication_end": "2026-09-16",
+      "office": "SETTORE ECONOMICO FINANZIARIO",
+      "act_type": "DELIBERAZIONE DI CONSIGLIO",
+      "act_number": "78",
+      "act_date": "2026-08-13",
+      "content_hash": "9baae41ed42d781a0ddda37e953efbe3209c14484a1a443dc2f1a745a5591f19",
+      "subject": "Riconoscimento di legittimità ai sensi dell'Art 194 comma 1 lett. A, Dlgs 267/2000, del debito fuori bilancio derivante da Decreto ingiuntivo emesso dal tribunale di Lamezia Terme n°408/2025 del 18.11.2025 - R.G. 1132/2025 - esecutivo in data 13.2.2026.",
+      "document_url": "https://albo.tinnvision.cloud/allegati/2026_2825_14_ALLEG?ente=00301390795",
+      "public_note": null,
+      "verification_status": "official_source_acquired",
+      "privacy_risk": "low",
+      "public_visibility": "publishable",
+      "classification": {
+        "dictionary_version": "2026-08-22-a",
+        "sector": {
+          "id": "bilancio_finanze",
+          "label": "Bilancio, finanze e tributi",
+          "description": "Contabilita, bilancio, finanze, tributi e gestione economica.",
+          "confidence": "high",
+          "basis": "office"
+        },
+        "act_category": {
+          "id": "deliberazioni",
+          "label": "Deliberazioni",
+          "description": "Deliberazioni di giunta o di altri organi deliberativi.",
+          "confidence": "high",
+          "basis": "act_type"
+        }
+      },
+      "privacy_attestation": {
+        "schema_version": "albo-privacy-policy-attestation.v1",
+        "policy_version": "albo-privacy-policy.2026-08-30.1",
+        "assessment_basis": "complete_public_record",
+        "status": "current"
+      },
+      "deliberation_body": "consiglio",
+      "presentation": {
+        "display_title": "Riconoscimento di legittimità ai sensi dell'Art 194 comma 1 lett. A, Dlgs 267/2000, del debito fuori bilancio derivante da Decreto ingiuntivo emesso dal tribunale di Lamezia Terme n°408/2025 del 18.11.2025 - R.G. 1132/2025 - esecutivo in data 13.2.2026.",
+        "action_id": "riconoscimento",
+        "action_label": "Riconoscimento",
+        "search_text": "riconoscimento di legittimita ai sensi dell art 194 comma 1 lett a dlgs 267 2000 del debito fuori bilancio derivante da decreto ingiuntivo emesso dal tribunale di lamezia terme n 408 2025 del 18 11 2025 r g 1132 2025 esecutivo in data 13 2 2026",
+        "standardisation": {
+          "schema_version": "publication-standardisation.v1",
+          "profile_id": "albo-public-title-it",
+          "profile_version": "2026-08-30.2",
+          "input_field": "subject",
+          "input_field_preserved": true,
+          "status": "unchanged",
+          "transformations": [],
+          "layout_flags": [
+            "display_title_too_long"
+          ],
+          "review_reasons": []
+        },
+        "area_theme": {
+          "schema_version": "publication-area-theme.v1",
+          "taxonomy_id": "municipal-public-act-area-theme-it",
+          "taxonomy_version": "2026-08-30.1",
+          "theme_id": "bilancio_tributi",
+          "theme_label": "Bilancio, tributi e partecipate",
+          "confidence": "high",
+          "basis": "deterministic_rule",
+          "rule_id": "budget-specific",
+          "evidence": [
+            {
+              "rule_id": "budget-specific",
+              "input_field": "subject",
+              "matched_terms": [
+                "debito fuori bilancio"
+              ]
+            }
+          ],
+          "null_reason": null,
+          "override": null
+        }
+      },
+      "known_limits": [
+        "Tranche A acquisisce l'elenco degli atti correnti esposto dalla fonte ufficiale, senza dichiarare completezza storica.",
+        "I PDF sono archiviati solo per record pubblicabili a basso rischio; allegati e PDF non sono analizzati, interpretati o sottoposti a OCR.",
+        "Gli export Tinnvision possono non includere URL diretti agli allegati; quando disponibile, il monitor usa il dettaglio ufficiale Tinnvision solo per individuare PDF HTTPS a basso rischio.",
+        "La classificazione privacy e' prudenziale e automatica; i casi sensibili richiedono revisione umana prima di esposizioni piu' ricche.",
+        "Quando gli export strutturati non includono URL diretti, il monitor prova il dettaglio ufficiale Tinnvision solo per record pubblicabili a basso rischio.",
+        "Classificazione civica automatica basata su dizionario: settore e tipologia sono derivati da ufficio/provenienza e tipo atto, senza interpretare il contenuto dei PDF."
+      ],
+      "first_observed_at": "2026-09-01T16:34:40.060Z",
+      "last_observed_at": "2026-09-01T16:34:40.060Z",
+      "archived_document": {
+        "id": "albo-2026-2825",
+        "publication_number": "2026/2825",
+        "source": "Albo Pretorio Comune di Lamezia Terme",
+        "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
+        "retrieved_at": "2026-09-01T16:34:40.060Z",
+        "public_visibility": "publishable",
+        "privacy_risk": "low",
+        "verification_status": "official_source_acquired",
+        "document_url": "https://albo.tinnvision.cloud/allegati/2026_2825_14_ALLEG?ente=00301390795",
+        "preservation_status": "archived",
+        "reason": "eligible_low_risk_publishable_pdf",
+        "storage_path": "data/public/albo/documents/2026/6e58c3d5a9c8baa69c8d603ea0bcffba4fbac36885733cb33e8ef9d410c012b1.pdf",
+        "sha256": "6e58c3d5a9c8baa69c8d603ea0bcffba4fbac36885733cb33e8ef9d410c012b1",
+        "size_bytes": 1257676,
+        "content_type": "application/pdf",
+        "verified_at": "2026-09-01T16:34:40.060Z"
+      }
+    },
+    {
+      "id": "albo-2026-2824",
+      "public_id": "albo-2026-2824",
+      "source": "Albo Pretorio Comune di Lamezia Terme",
+      "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
+      "retrieved_at": "2026-09-01T16:34:40.060Z",
+      "publication_number": "2026/2824",
+      "publication_start": "2026-09-01",
+      "publication_end": "2026-09-16",
+      "office": null,
+      "act_type": null,
+      "act_number": "77",
+      "act_date": "2026-08-13",
+      "subject": "Oggetto minimizzato per prudenza privacy; consultare la fonte ufficiale.",
+      "document_url": null,
+      "public_note": "Record pubblicato con minimizzazione automatica.",
+      "verification_status": "official_source_acquired",
+      "privacy_risk": "medium",
+      "public_visibility": "publishable_with_minimisation",
+      "classification": {
+        "dictionary_version": "2026-08-22-a",
+        "sector": {
+          "id": "avvocatura_contenzioso",
+          "label": "Avvocatura e contenzioso",
+          "description": "Atti dell'avvocatura, contenzioso, liti e procedimenti legali dell'ente.",
+          "confidence": "high",
+          "basis": "office"
+        },
+        "act_category": {
+          "id": "deliberazioni",
+          "label": "Deliberazioni",
+          "description": "Deliberazioni di giunta o di altri organi deliberativi.",
+          "confidence": "high",
+          "basis": "act_type"
+        }
+      },
+      "privacy_attestation": {
+        "schema_version": "albo-privacy-policy-attestation.v1",
+        "policy_version": "albo-privacy-policy.2026-08-30.1",
+        "assessment_basis": "source_record",
+        "status": "current"
+      },
+      "deliberation_body": "consiglio",
+      "presentation": {
+        "display_title": "Oggetto minimizzato per prudenza privacy; consultare la fonte ufficiale.",
+        "action_id": null,
+        "action_label": null,
+        "search_text": "oggetto minimizzato per prudenza privacy consultare la fonte ufficiale",
+        "standardisation": {
+          "schema_version": "publication-standardisation.v1",
+          "profile_id": "albo-public-title-it",
+          "profile_version": "2026-08-30.2",
+          "input_field": "subject",
+          "input_field_preserved": true,
+          "status": "unchanged",
+          "transformations": [],
+          "layout_flags": [],
+          "review_reasons": []
+        },
+        "area_theme": {
+          "schema_version": "publication-area-theme.v1",
+          "taxonomy_id": "municipal-public-act-area-theme-it",
+          "taxonomy_version": "2026-08-30.1",
+          "theme_id": null,
+          "theme_label": null,
+          "confidence": null,
+          "basis": "fallback",
+          "rule_id": null,
+          "evidence": [],
+          "null_reason": "input_withheld_for_privacy",
+          "override": null
+        }
+      },
+      "known_limits": [
+        "Tranche A acquisisce l'elenco degli atti correnti esposto dalla fonte ufficiale, senza dichiarare completezza storica.",
+        "I PDF sono archiviati solo per record pubblicabili a basso rischio; allegati e PDF non sono analizzati, interpretati o sottoposti a OCR.",
+        "Gli export Tinnvision possono non includere URL diretti agli allegati; quando disponibile, il monitor usa il dettaglio ufficiale Tinnvision solo per individuare PDF HTTPS a basso rischio.",
+        "La classificazione privacy e' prudenziale e automatica; i casi sensibili richiedono revisione umana prima di esposizioni piu' ricche.",
+        "Quando gli export strutturati non includono URL diretti, il monitor prova il dettaglio ufficiale Tinnvision solo per record pubblicabili a basso rischio.",
+        "Classificazione civica automatica basata su dizionario: settore e tipologia sono derivati da ufficio/provenienza e tipo atto, senza interpretare il contenuto dei PDF.",
+        "Allegato/documento non incluso negli export strutturati Tinnvision o non disponibile tramite dettaglio ufficiale.",
+        "Oggetto non ripubblicato integralmente nel layer pubblico per prudenza privacy.",
+        "Regola automatica prudenziale: oggetto minimizzato per possibile presenza di dati personali o contenzioso."
+      ],
+      "first_observed_at": "2026-09-01T16:34:40.060Z",
+      "last_observed_at": "2026-09-01T16:34:40.060Z",
+      "archived_document": null
+    },
+    {
+      "id": "albo-2026-2823",
+      "public_id": "albo-2026-2823",
+      "source": "Albo Pretorio Comune di Lamezia Terme",
+      "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
+      "retrieved_at": "2026-09-01T16:34:40.060Z",
+      "publication_number": "2026/2823",
+      "publication_start": "2026-09-01",
+      "publication_end": "2026-09-16",
+      "office": null,
+      "act_type": null,
+      "act_number": "76",
+      "act_date": "2026-08-13",
+      "subject": "Oggetto minimizzato per prudenza privacy; consultare la fonte ufficiale.",
+      "document_url": null,
+      "public_note": "Record pubblicato con minimizzazione automatica.",
+      "verification_status": "official_source_acquired",
+      "privacy_risk": "medium",
+      "public_visibility": "publishable_with_minimisation",
+      "classification": {
+        "dictionary_version": "2026-08-22-a",
+        "sector": {
+          "id": "avvocatura_contenzioso",
+          "label": "Avvocatura e contenzioso",
+          "description": "Atti dell'avvocatura, contenzioso, liti e procedimenti legali dell'ente.",
+          "confidence": "high",
+          "basis": "office"
+        },
+        "act_category": {
+          "id": "deliberazioni",
+          "label": "Deliberazioni",
+          "description": "Deliberazioni di giunta o di altri organi deliberativi.",
+          "confidence": "high",
+          "basis": "act_type"
+        }
+      },
+      "privacy_attestation": {
+        "schema_version": "albo-privacy-policy-attestation.v1",
+        "policy_version": "albo-privacy-policy.2026-08-30.1",
+        "assessment_basis": "source_record",
+        "status": "current"
+      },
+      "deliberation_body": "consiglio",
+      "presentation": {
+        "display_title": "Oggetto minimizzato per prudenza privacy; consultare la fonte ufficiale.",
+        "action_id": null,
+        "action_label": null,
+        "search_text": "oggetto minimizzato per prudenza privacy consultare la fonte ufficiale",
+        "standardisation": {
+          "schema_version": "publication-standardisation.v1",
+          "profile_id": "albo-public-title-it",
+          "profile_version": "2026-08-30.2",
+          "input_field": "subject",
+          "input_field_preserved": true,
+          "status": "unchanged",
+          "transformations": [],
+          "layout_flags": [],
+          "review_reasons": []
+        },
+        "area_theme": {
+          "schema_version": "publication-area-theme.v1",
+          "taxonomy_id": "municipal-public-act-area-theme-it",
+          "taxonomy_version": "2026-08-30.1",
+          "theme_id": null,
+          "theme_label": null,
+          "confidence": null,
+          "basis": "fallback",
+          "rule_id": null,
+          "evidence": [],
+          "null_reason": "input_withheld_for_privacy",
+          "override": null
+        }
+      },
+      "known_limits": [
+        "Tranche A acquisisce l'elenco degli atti correnti esposto dalla fonte ufficiale, senza dichiarare completezza storica.",
+        "I PDF sono archiviati solo per record pubblicabili a basso rischio; allegati e PDF non sono analizzati, interpretati o sottoposti a OCR.",
+        "Gli export Tinnvision possono non includere URL diretti agli allegati; quando disponibile, il monitor usa il dettaglio ufficiale Tinnvision solo per individuare PDF HTTPS a basso rischio.",
+        "La classificazione privacy e' prudenziale e automatica; i casi sensibili richiedono revisione umana prima di esposizioni piu' ricche.",
+        "Quando gli export strutturati non includono URL diretti, il monitor prova il dettaglio ufficiale Tinnvision solo per record pubblicabili a basso rischio.",
+        "Classificazione civica automatica basata su dizionario: settore e tipologia sono derivati da ufficio/provenienza e tipo atto, senza interpretare il contenuto dei PDF.",
+        "Allegato/documento non incluso negli export strutturati Tinnvision o non disponibile tramite dettaglio ufficiale.",
+        "Oggetto non ripubblicato integralmente nel layer pubblico per prudenza privacy.",
+        "Regola automatica prudenziale: oggetto minimizzato per possibile presenza di dati personali o contenzioso."
+      ],
+      "first_observed_at": "2026-09-01T16:34:40.060Z",
+      "last_observed_at": "2026-09-01T16:34:40.060Z",
+      "archived_document": null
+    },
+    {
+      "id": "albo-2026-2822",
+      "public_id": "albo-2026-2822",
+      "source": "Albo Pretorio Comune di Lamezia Terme",
+      "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
+      "retrieved_at": "2026-09-01T16:34:40.060Z",
+      "publication_number": "2026/2822",
+      "publication_start": "2026-09-01",
+      "publication_end": "2026-09-16",
+      "office": "SETTORE GESTIONE E VALORIZZAZIONE DEL PATRIMONIO E DEL TERRITORIO COMUNALE",
+      "act_type": "DELIBERAZIONE DI CONSIGLIO",
+      "act_number": "68",
+      "act_date": "2026-08-13",
+      "content_hash": "60cf725a5b196aa21133147e6f83dd1858e6edbe112ba97373e4747bf038fd38",
+      "subject": "Riconoscimento di legittimità del debito fuori bilancio derivante decreto ingiuntivo c/ Comune di Lamezia Terme.",
+      "document_url": "https://albo.tinnvision.cloud/allegati/2026_2822_19_ALLEG?ente=00301390795",
+      "public_note": null,
+      "verification_status": "official_source_acquired",
+      "privacy_risk": "low",
+      "public_visibility": "publishable",
+      "classification": {
+        "dictionary_version": "2026-08-22-a",
+        "sector": {
+          "id": "patrimonio_territorio",
+          "label": "Patrimonio e territorio comunale",
+          "description": "Gestione e valorizzazione del patrimonio comunale e del territorio comunale.",
+          "confidence": "high",
+          "basis": "office"
+        },
+        "act_category": {
+          "id": "deliberazioni",
+          "label": "Deliberazioni",
+          "description": "Deliberazioni di giunta o di altri organi deliberativi.",
+          "confidence": "high",
+          "basis": "act_type"
+        }
+      },
+      "privacy_attestation": {
+        "schema_version": "albo-privacy-policy-attestation.v1",
+        "policy_version": "albo-privacy-policy.2026-08-30.1",
+        "assessment_basis": "complete_public_record",
+        "status": "current"
+      },
+      "deliberation_body": "consiglio",
+      "presentation": {
+        "display_title": "Riconoscimento di legittimità del debito fuori bilancio derivante decreto ingiuntivo c/ Comune di Lamezia Terme.",
+        "action_id": "riconoscimento",
+        "action_label": "Riconoscimento",
+        "search_text": "riconoscimento di legittimita del debito fuori bilancio derivante decreto ingiuntivo c comune di lamezia terme",
+        "standardisation": {
+          "schema_version": "publication-standardisation.v1",
+          "profile_id": "albo-public-title-it",
+          "profile_version": "2026-08-30.2",
+          "input_field": "subject",
+          "input_field_preserved": true,
+          "status": "unchanged",
+          "transformations": [],
+          "layout_flags": [],
+          "review_reasons": []
+        },
+        "area_theme": {
+          "schema_version": "publication-area-theme.v1",
+          "taxonomy_id": "municipal-public-act-area-theme-it",
+          "taxonomy_version": "2026-08-30.1",
+          "theme_id": "bilancio_tributi",
+          "theme_label": "Bilancio, tributi e partecipate",
+          "confidence": "high",
+          "basis": "deterministic_rule",
+          "rule_id": "budget-specific",
+          "evidence": [
+            {
+              "rule_id": "budget-specific",
+              "input_field": "subject",
+              "matched_terms": [
+                "debito fuori bilancio"
+              ]
+            }
+          ],
+          "null_reason": null,
+          "override": null
+        }
+      },
+      "known_limits": [
+        "Tranche A acquisisce l'elenco degli atti correnti esposto dalla fonte ufficiale, senza dichiarare completezza storica.",
+        "I PDF sono archiviati solo per record pubblicabili a basso rischio; allegati e PDF non sono analizzati, interpretati o sottoposti a OCR.",
+        "Gli export Tinnvision possono non includere URL diretti agli allegati; quando disponibile, il monitor usa il dettaglio ufficiale Tinnvision solo per individuare PDF HTTPS a basso rischio.",
+        "La classificazione privacy e' prudenziale e automatica; i casi sensibili richiedono revisione umana prima di esposizioni piu' ricche.",
+        "Quando gli export strutturati non includono URL diretti, il monitor prova il dettaglio ufficiale Tinnvision solo per record pubblicabili a basso rischio.",
+        "Classificazione civica automatica basata su dizionario: settore e tipologia sono derivati da ufficio/provenienza e tipo atto, senza interpretare il contenuto dei PDF."
+      ],
+      "first_observed_at": "2026-09-01T16:34:40.060Z",
+      "last_observed_at": "2026-09-01T16:34:40.060Z",
+      "archived_document": {
+        "id": "albo-2026-2822",
+        "publication_number": "2026/2822",
+        "source": "Albo Pretorio Comune di Lamezia Terme",
+        "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
+        "retrieved_at": "2026-09-01T16:34:40.060Z",
+        "public_visibility": "publishable",
+        "privacy_risk": "low",
+        "verification_status": "official_source_acquired",
+        "document_url": "https://albo.tinnvision.cloud/allegati/2026_2822_19_ALLEG?ente=00301390795",
+        "preservation_status": "archived",
+        "reason": "eligible_low_risk_publishable_pdf",
+        "storage_path": "data/public/albo/documents/2026/1baf2a53b55964d3ee9df9e34a6d0cc03e1a2ba46941358235f4c848ef431ec1.pdf",
+        "sha256": "1baf2a53b55964d3ee9df9e34a6d0cc03e1a2ba46941358235f4c848ef431ec1",
+        "size_bytes": 1357458,
+        "content_type": "application/pdf",
+        "verified_at": "2026-09-01T16:34:40.060Z"
+      }
+    },
+    {
+      "id": "albo-2026-2821",
+      "public_id": "albo-2026-2821",
+      "source": "Albo Pretorio Comune di Lamezia Terme",
+      "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
+      "retrieved_at": "2026-09-01T16:34:40.060Z",
+      "publication_number": "2026/2821",
+      "publication_start": "2026-09-01",
+      "publication_end": "2026-09-16",
+      "office": null,
+      "act_type": null,
+      "act_number": "74",
+      "act_date": "2026-08-13",
+      "subject": "Oggetto minimizzato per prudenza privacy; consultare la fonte ufficiale.",
+      "document_url": null,
+      "public_note": "Record pubblicato con minimizzazione automatica.",
+      "verification_status": "official_source_acquired",
+      "privacy_risk": "medium",
+      "public_visibility": "publishable_with_minimisation",
+      "classification": {
+        "dictionary_version": "2026-08-22-a",
+        "sector": {
+          "id": "avvocatura_contenzioso",
+          "label": "Avvocatura e contenzioso",
+          "description": "Atti dell'avvocatura, contenzioso, liti e procedimenti legali dell'ente.",
+          "confidence": "high",
+          "basis": "office"
+        },
+        "act_category": {
+          "id": "deliberazioni",
+          "label": "Deliberazioni",
+          "description": "Deliberazioni di giunta o di altri organi deliberativi.",
+          "confidence": "high",
+          "basis": "act_type"
+        }
+      },
+      "privacy_attestation": {
+        "schema_version": "albo-privacy-policy-attestation.v1",
+        "policy_version": "albo-privacy-policy.2026-08-30.1",
+        "assessment_basis": "source_record",
+        "status": "current"
+      },
+      "deliberation_body": "consiglio",
+      "presentation": {
+        "display_title": "Oggetto minimizzato per prudenza privacy; consultare la fonte ufficiale.",
+        "action_id": null,
+        "action_label": null,
+        "search_text": "oggetto minimizzato per prudenza privacy consultare la fonte ufficiale",
+        "standardisation": {
+          "schema_version": "publication-standardisation.v1",
+          "profile_id": "albo-public-title-it",
+          "profile_version": "2026-08-30.2",
+          "input_field": "subject",
+          "input_field_preserved": true,
+          "status": "unchanged",
+          "transformations": [],
+          "layout_flags": [],
+          "review_reasons": []
+        },
+        "area_theme": {
+          "schema_version": "publication-area-theme.v1",
+          "taxonomy_id": "municipal-public-act-area-theme-it",
+          "taxonomy_version": "2026-08-30.1",
+          "theme_id": null,
+          "theme_label": null,
+          "confidence": null,
+          "basis": "fallback",
+          "rule_id": null,
+          "evidence": [],
+          "null_reason": "input_withheld_for_privacy",
+          "override": null
+        }
+      },
+      "known_limits": [
+        "Tranche A acquisisce l'elenco degli atti correnti esposto dalla fonte ufficiale, senza dichiarare completezza storica.",
+        "I PDF sono archiviati solo per record pubblicabili a basso rischio; allegati e PDF non sono analizzati, interpretati o sottoposti a OCR.",
+        "Gli export Tinnvision possono non includere URL diretti agli allegati; quando disponibile, il monitor usa il dettaglio ufficiale Tinnvision solo per individuare PDF HTTPS a basso rischio.",
+        "La classificazione privacy e' prudenziale e automatica; i casi sensibili richiedono revisione umana prima di esposizioni piu' ricche.",
+        "Quando gli export strutturati non includono URL diretti, il monitor prova il dettaglio ufficiale Tinnvision solo per record pubblicabili a basso rischio.",
+        "Classificazione civica automatica basata su dizionario: settore e tipologia sono derivati da ufficio/provenienza e tipo atto, senza interpretare il contenuto dei PDF.",
+        "Allegato/documento non incluso negli export strutturati Tinnvision o non disponibile tramite dettaglio ufficiale.",
+        "Oggetto non ripubblicato integralmente nel layer pubblico per prudenza privacy.",
+        "Regola automatica prudenziale: oggetto minimizzato per possibile presenza di dati personali o contenzioso."
+      ],
+      "first_observed_at": "2026-09-01T16:34:40.060Z",
+      "last_observed_at": "2026-09-01T16:34:40.060Z",
+      "archived_document": null
+    },
+    {
+      "id": "albo-2026-2820",
+      "public_id": "albo-2026-2820",
+      "source": "Albo Pretorio Comune di Lamezia Terme",
+      "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
+      "retrieved_at": "2026-09-01T16:34:40.060Z",
+      "publication_number": "2026/2820",
+      "publication_start": "2026-09-01",
+      "publication_end": "2026-09-16",
+      "office": null,
+      "act_type": null,
+      "act_number": "73",
+      "act_date": "2026-08-13",
+      "subject": "Oggetto minimizzato per prudenza privacy; consultare la fonte ufficiale.",
+      "document_url": null,
+      "public_note": "Record pubblicato con minimizzazione automatica.",
+      "verification_status": "official_source_acquired",
+      "privacy_risk": "medium",
+      "public_visibility": "publishable_with_minimisation",
+      "classification": {
+        "dictionary_version": "2026-08-22-a",
+        "sector": {
+          "id": "avvocatura_contenzioso",
+          "label": "Avvocatura e contenzioso",
+          "description": "Atti dell'avvocatura, contenzioso, liti e procedimenti legali dell'ente.",
+          "confidence": "high",
+          "basis": "office"
+        },
+        "act_category": {
+          "id": "deliberazioni",
+          "label": "Deliberazioni",
+          "description": "Deliberazioni di giunta o di altri organi deliberativi.",
+          "confidence": "high",
+          "basis": "act_type"
+        }
+      },
+      "privacy_attestation": {
+        "schema_version": "albo-privacy-policy-attestation.v1",
+        "policy_version": "albo-privacy-policy.2026-08-30.1",
+        "assessment_basis": "source_record",
+        "status": "current"
+      },
+      "deliberation_body": "consiglio",
+      "presentation": {
+        "display_title": "Oggetto minimizzato per prudenza privacy; consultare la fonte ufficiale.",
+        "action_id": null,
+        "action_label": null,
+        "search_text": "oggetto minimizzato per prudenza privacy consultare la fonte ufficiale",
+        "standardisation": {
+          "schema_version": "publication-standardisation.v1",
+          "profile_id": "albo-public-title-it",
+          "profile_version": "2026-08-30.2",
+          "input_field": "subject",
+          "input_field_preserved": true,
+          "status": "unchanged",
+          "transformations": [],
+          "layout_flags": [],
+          "review_reasons": []
+        },
+        "area_theme": {
+          "schema_version": "publication-area-theme.v1",
+          "taxonomy_id": "municipal-public-act-area-theme-it",
+          "taxonomy_version": "2026-08-30.1",
+          "theme_id": null,
+          "theme_label": null,
+          "confidence": null,
+          "basis": "fallback",
+          "rule_id": null,
+          "evidence": [],
+          "null_reason": "input_withheld_for_privacy",
+          "override": null
+        }
+      },
+      "known_limits": [
+        "Tranche A acquisisce l'elenco degli atti correnti esposto dalla fonte ufficiale, senza dichiarare completezza storica.",
+        "I PDF sono archiviati solo per record pubblicabili a basso rischio; allegati e PDF non sono analizzati, interpretati o sottoposti a OCR.",
+        "Gli export Tinnvision possono non includere URL diretti agli allegati; quando disponibile, il monitor usa il dettaglio ufficiale Tinnvision solo per individuare PDF HTTPS a basso rischio.",
+        "La classificazione privacy e' prudenziale e automatica; i casi sensibili richiedono revisione umana prima di esposizioni piu' ricche.",
+        "Quando gli export strutturati non includono URL diretti, il monitor prova il dettaglio ufficiale Tinnvision solo per record pubblicabili a basso rischio.",
+        "Classificazione civica automatica basata su dizionario: settore e tipologia sono derivati da ufficio/provenienza e tipo atto, senza interpretare il contenuto dei PDF.",
+        "Allegato/documento non incluso negli export strutturati Tinnvision o non disponibile tramite dettaglio ufficiale.",
+        "Oggetto non ripubblicato integralmente nel layer pubblico per prudenza privacy.",
+        "Regola automatica prudenziale: oggetto minimizzato per possibile presenza di dati personali o contenzioso."
+      ],
+      "first_observed_at": "2026-09-01T16:34:40.060Z",
+      "last_observed_at": "2026-09-01T16:34:40.060Z",
+      "archived_document": null
+    },
+    {
+      "id": "albo-2026-2819",
+      "public_id": "albo-2026-2819",
+      "source": "Albo Pretorio Comune di Lamezia Terme",
+      "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
+      "retrieved_at": "2026-09-01T16:34:40.060Z",
+      "publication_number": "2026/2819",
+      "publication_start": "2026-09-01",
+      "publication_end": "2026-09-16",
+      "office": null,
+      "act_type": null,
+      "act_number": "72",
+      "act_date": "2026-08-13",
+      "subject": "Oggetto minimizzato per prudenza privacy; consultare la fonte ufficiale.",
+      "document_url": null,
+      "public_note": "Record pubblicato con minimizzazione automatica.",
+      "verification_status": "official_source_acquired",
+      "privacy_risk": "medium",
+      "public_visibility": "publishable_with_minimisation",
+      "classification": {
+        "dictionary_version": "2026-08-22-a",
+        "sector": {
+          "id": "avvocatura_contenzioso",
+          "label": "Avvocatura e contenzioso",
+          "description": "Atti dell'avvocatura, contenzioso, liti e procedimenti legali dell'ente.",
+          "confidence": "high",
+          "basis": "office"
+        },
+        "act_category": {
+          "id": "deliberazioni",
+          "label": "Deliberazioni",
+          "description": "Deliberazioni di giunta o di altri organi deliberativi.",
+          "confidence": "high",
+          "basis": "act_type"
+        }
+      },
+      "privacy_attestation": {
+        "schema_version": "albo-privacy-policy-attestation.v1",
+        "policy_version": "albo-privacy-policy.2026-08-30.1",
+        "assessment_basis": "source_record",
+        "status": "current"
+      },
+      "deliberation_body": "consiglio",
+      "presentation": {
+        "display_title": "Oggetto minimizzato per prudenza privacy; consultare la fonte ufficiale.",
+        "action_id": null,
+        "action_label": null,
+        "search_text": "oggetto minimizzato per prudenza privacy consultare la fonte ufficiale",
+        "standardisation": {
+          "schema_version": "publication-standardisation.v1",
+          "profile_id": "albo-public-title-it",
+          "profile_version": "2026-08-30.2",
+          "input_field": "subject",
+          "input_field_preserved": true,
+          "status": "unchanged",
+          "transformations": [],
+          "layout_flags": [],
+          "review_reasons": []
+        },
+        "area_theme": {
+          "schema_version": "publication-area-theme.v1",
+          "taxonomy_id": "municipal-public-act-area-theme-it",
+          "taxonomy_version": "2026-08-30.1",
+          "theme_id": null,
+          "theme_label": null,
+          "confidence": null,
+          "basis": "fallback",
+          "rule_id": null,
+          "evidence": [],
+          "null_reason": "input_withheld_for_privacy",
+          "override": null
+        }
+      },
+      "known_limits": [
+        "Tranche A acquisisce l'elenco degli atti correnti esposto dalla fonte ufficiale, senza dichiarare completezza storica.",
+        "I PDF sono archiviati solo per record pubblicabili a basso rischio; allegati e PDF non sono analizzati, interpretati o sottoposti a OCR.",
+        "Gli export Tinnvision possono non includere URL diretti agli allegati; quando disponibile, il monitor usa il dettaglio ufficiale Tinnvision solo per individuare PDF HTTPS a basso rischio.",
+        "La classificazione privacy e' prudenziale e automatica; i casi sensibili richiedono revisione umana prima di esposizioni piu' ricche.",
+        "Quando gli export strutturati non includono URL diretti, il monitor prova il dettaglio ufficiale Tinnvision solo per record pubblicabili a basso rischio.",
+        "Classificazione civica automatica basata su dizionario: settore e tipologia sono derivati da ufficio/provenienza e tipo atto, senza interpretare il contenuto dei PDF.",
+        "Allegato/documento non incluso negli export strutturati Tinnvision o non disponibile tramite dettaglio ufficiale.",
+        "Oggetto non ripubblicato integralmente nel layer pubblico per prudenza privacy.",
+        "Regola automatica prudenziale: oggetto minimizzato per possibile presenza di dati personali o contenzioso."
+      ],
+      "first_observed_at": "2026-09-01T16:34:40.060Z",
+      "last_observed_at": "2026-09-01T16:34:40.060Z",
+      "archived_document": null
+    },
+    {
+      "id": "albo-2026-2818",
+      "public_id": "albo-2026-2818",
+      "source": "Albo Pretorio Comune di Lamezia Terme",
+      "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
+      "retrieved_at": "2026-09-01T16:34:40.060Z",
+      "publication_number": "2026/2818",
+      "publication_start": "2026-09-01",
+      "publication_end": "2026-09-16",
+      "office": null,
+      "act_type": null,
+      "act_number": "71",
+      "act_date": "2026-08-13",
+      "subject": "Oggetto minimizzato per prudenza privacy; consultare la fonte ufficiale.",
+      "document_url": null,
+      "public_note": "Record pubblicato con minimizzazione automatica.",
+      "verification_status": "official_source_acquired",
+      "privacy_risk": "medium",
+      "public_visibility": "publishable_with_minimisation",
+      "classification": {
+        "dictionary_version": "2026-08-22-a",
+        "sector": {
+          "id": "avvocatura_contenzioso",
+          "label": "Avvocatura e contenzioso",
+          "description": "Atti dell'avvocatura, contenzioso, liti e procedimenti legali dell'ente.",
+          "confidence": "high",
+          "basis": "office"
+        },
+        "act_category": {
+          "id": "deliberazioni",
+          "label": "Deliberazioni",
+          "description": "Deliberazioni di giunta o di altri organi deliberativi.",
+          "confidence": "high",
+          "basis": "act_type"
+        }
+      },
+      "privacy_attestation": {
+        "schema_version": "albo-privacy-policy-attestation.v1",
+        "policy_version": "albo-privacy-policy.2026-08-30.1",
+        "assessment_basis": "source_record",
+        "status": "current"
+      },
+      "deliberation_body": "consiglio",
+      "presentation": {
+        "display_title": "Oggetto minimizzato per prudenza privacy; consultare la fonte ufficiale.",
+        "action_id": null,
+        "action_label": null,
+        "search_text": "oggetto minimizzato per prudenza privacy consultare la fonte ufficiale",
+        "standardisation": {
+          "schema_version": "publication-standardisation.v1",
+          "profile_id": "albo-public-title-it",
+          "profile_version": "2026-08-30.2",
+          "input_field": "subject",
+          "input_field_preserved": true,
+          "status": "unchanged",
+          "transformations": [],
+          "layout_flags": [],
+          "review_reasons": []
+        },
+        "area_theme": {
+          "schema_version": "publication-area-theme.v1",
+          "taxonomy_id": "municipal-public-act-area-theme-it",
+          "taxonomy_version": "2026-08-30.1",
+          "theme_id": null,
+          "theme_label": null,
+          "confidence": null,
+          "basis": "fallback",
+          "rule_id": null,
+          "evidence": [],
+          "null_reason": "input_withheld_for_privacy",
+          "override": null
+        }
+      },
+      "known_limits": [
+        "Tranche A acquisisce l'elenco degli atti correnti esposto dalla fonte ufficiale, senza dichiarare completezza storica.",
+        "I PDF sono archiviati solo per record pubblicabili a basso rischio; allegati e PDF non sono analizzati, interpretati o sottoposti a OCR.",
+        "Gli export Tinnvision possono non includere URL diretti agli allegati; quando disponibile, il monitor usa il dettaglio ufficiale Tinnvision solo per individuare PDF HTTPS a basso rischio.",
+        "La classificazione privacy e' prudenziale e automatica; i casi sensibili richiedono revisione umana prima di esposizioni piu' ricche.",
+        "Quando gli export strutturati non includono URL diretti, il monitor prova il dettaglio ufficiale Tinnvision solo per record pubblicabili a basso rischio.",
+        "Classificazione civica automatica basata su dizionario: settore e tipologia sono derivati da ufficio/provenienza e tipo atto, senza interpretare il contenuto dei PDF.",
+        "Allegato/documento non incluso negli export strutturati Tinnvision o non disponibile tramite dettaglio ufficiale.",
+        "Oggetto non ripubblicato integralmente nel layer pubblico per prudenza privacy.",
+        "Regola automatica prudenziale: oggetto minimizzato per possibile presenza di dati personali o contenzioso."
+      ],
+      "first_observed_at": "2026-09-01T16:34:40.060Z",
+      "last_observed_at": "2026-09-01T16:34:40.060Z",
+      "archived_document": null
+    },
+    {
+      "id": "albo-2026-2817",
+      "public_id": "albo-2026-2817",
+      "source": "Albo Pretorio Comune di Lamezia Terme",
+      "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
+      "retrieved_at": "2026-09-01T16:34:40.060Z",
+      "publication_number": "2026/2817",
+      "publication_start": "2026-09-01",
+      "publication_end": "2026-09-16",
+      "office": null,
+      "act_type": null,
+      "act_number": "70",
+      "act_date": "2026-08-13",
+      "subject": "Oggetto minimizzato per prudenza privacy; consultare la fonte ufficiale.",
+      "document_url": null,
+      "public_note": "Record pubblicato con minimizzazione automatica.",
+      "verification_status": "official_source_acquired",
+      "privacy_risk": "medium",
+      "public_visibility": "publishable_with_minimisation",
+      "classification": {
+        "dictionary_version": "2026-08-22-a",
+        "sector": {
+          "id": "avvocatura_contenzioso",
+          "label": "Avvocatura e contenzioso",
+          "description": "Atti dell'avvocatura, contenzioso, liti e procedimenti legali dell'ente.",
+          "confidence": "high",
+          "basis": "office"
+        },
+        "act_category": {
+          "id": "deliberazioni",
+          "label": "Deliberazioni",
+          "description": "Deliberazioni di giunta o di altri organi deliberativi.",
+          "confidence": "high",
+          "basis": "act_type"
+        }
+      },
+      "privacy_attestation": {
+        "schema_version": "albo-privacy-policy-attestation.v1",
+        "policy_version": "albo-privacy-policy.2026-08-30.1",
+        "assessment_basis": "source_record",
+        "status": "current"
+      },
+      "deliberation_body": "consiglio",
+      "presentation": {
+        "display_title": "Oggetto minimizzato per prudenza privacy; consultare la fonte ufficiale.",
+        "action_id": null,
+        "action_label": null,
+        "search_text": "oggetto minimizzato per prudenza privacy consultare la fonte ufficiale",
+        "standardisation": {
+          "schema_version": "publication-standardisation.v1",
+          "profile_id": "albo-public-title-it",
+          "profile_version": "2026-08-30.2",
+          "input_field": "subject",
+          "input_field_preserved": true,
+          "status": "unchanged",
+          "transformations": [],
+          "layout_flags": [],
+          "review_reasons": []
+        },
+        "area_theme": {
+          "schema_version": "publication-area-theme.v1",
+          "taxonomy_id": "municipal-public-act-area-theme-it",
+          "taxonomy_version": "2026-08-30.1",
+          "theme_id": null,
+          "theme_label": null,
+          "confidence": null,
+          "basis": "fallback",
+          "rule_id": null,
+          "evidence": [],
+          "null_reason": "input_withheld_for_privacy",
+          "override": null
+        }
+      },
+      "known_limits": [
+        "Tranche A acquisisce l'elenco degli atti correnti esposto dalla fonte ufficiale, senza dichiarare completezza storica.",
+        "I PDF sono archiviati solo per record pubblicabili a basso rischio; allegati e PDF non sono analizzati, interpretati o sottoposti a OCR.",
+        "Gli export Tinnvision possono non includere URL diretti agli allegati; quando disponibile, il monitor usa il dettaglio ufficiale Tinnvision solo per individuare PDF HTTPS a basso rischio.",
+        "La classificazione privacy e' prudenziale e automatica; i casi sensibili richiedono revisione umana prima di esposizioni piu' ricche.",
+        "Quando gli export strutturati non includono URL diretti, il monitor prova il dettaglio ufficiale Tinnvision solo per record pubblicabili a basso rischio.",
+        "Classificazione civica automatica basata su dizionario: settore e tipologia sono derivati da ufficio/provenienza e tipo atto, senza interpretare il contenuto dei PDF.",
+        "Allegato/documento non incluso negli export strutturati Tinnvision o non disponibile tramite dettaglio ufficiale.",
+        "Oggetto non ripubblicato integralmente nel layer pubblico per prudenza privacy.",
+        "Regola automatica prudenziale: oggetto minimizzato per possibile presenza di dati personali o contenzioso."
+      ],
+      "first_observed_at": "2026-09-01T16:34:40.060Z",
+      "last_observed_at": "2026-09-01T16:34:40.060Z",
+      "archived_document": null
+    },
+    {
+      "id": "albo-2026-2816",
+      "public_id": "albo-2026-2816",
+      "source": "Albo Pretorio Comune di Lamezia Terme",
+      "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
+      "retrieved_at": "2026-09-01T16:34:40.060Z",
+      "publication_number": "2026/2816",
+      "publication_start": "2026-09-01",
+      "publication_end": "2026-09-16",
+      "office": null,
+      "act_type": null,
+      "act_number": "69",
+      "act_date": "2026-08-13",
+      "subject": "Oggetto minimizzato per prudenza privacy; consultare la fonte ufficiale.",
+      "document_url": null,
+      "public_note": "Record pubblicato con minimizzazione automatica.",
+      "verification_status": "official_source_acquired",
+      "privacy_risk": "medium",
+      "public_visibility": "publishable_with_minimisation",
+      "classification": {
+        "dictionary_version": "2026-08-22-a",
+        "sector": {
+          "id": "avvocatura_contenzioso",
+          "label": "Avvocatura e contenzioso",
+          "description": "Atti dell'avvocatura, contenzioso, liti e procedimenti legali dell'ente.",
+          "confidence": "high",
+          "basis": "office"
+        },
+        "act_category": {
+          "id": "deliberazioni",
+          "label": "Deliberazioni",
+          "description": "Deliberazioni di giunta o di altri organi deliberativi.",
+          "confidence": "high",
+          "basis": "act_type"
+        }
+      },
+      "privacy_attestation": {
+        "schema_version": "albo-privacy-policy-attestation.v1",
+        "policy_version": "albo-privacy-policy.2026-08-30.1",
+        "assessment_basis": "source_record",
+        "status": "current"
+      },
+      "deliberation_body": "consiglio",
+      "presentation": {
+        "display_title": "Oggetto minimizzato per prudenza privacy; consultare la fonte ufficiale.",
+        "action_id": null,
+        "action_label": null,
+        "search_text": "oggetto minimizzato per prudenza privacy consultare la fonte ufficiale",
+        "standardisation": {
+          "schema_version": "publication-standardisation.v1",
+          "profile_id": "albo-public-title-it",
+          "profile_version": "2026-08-30.2",
+          "input_field": "subject",
+          "input_field_preserved": true,
+          "status": "unchanged",
+          "transformations": [],
+          "layout_flags": [],
+          "review_reasons": []
+        },
+        "area_theme": {
+          "schema_version": "publication-area-theme.v1",
+          "taxonomy_id": "municipal-public-act-area-theme-it",
+          "taxonomy_version": "2026-08-30.1",
+          "theme_id": null,
+          "theme_label": null,
+          "confidence": null,
+          "basis": "fallback",
+          "rule_id": null,
+          "evidence": [],
+          "null_reason": "input_withheld_for_privacy",
+          "override": null
+        }
+      },
+      "known_limits": [
+        "Tranche A acquisisce l'elenco degli atti correnti esposto dalla fonte ufficiale, senza dichiarare completezza storica.",
+        "I PDF sono archiviati solo per record pubblicabili a basso rischio; allegati e PDF non sono analizzati, interpretati o sottoposti a OCR.",
+        "Gli export Tinnvision possono non includere URL diretti agli allegati; quando disponibile, il monitor usa il dettaglio ufficiale Tinnvision solo per individuare PDF HTTPS a basso rischio.",
+        "La classificazione privacy e' prudenziale e automatica; i casi sensibili richiedono revisione umana prima di esposizioni piu' ricche.",
+        "Quando gli export strutturati non includono URL diretti, il monitor prova il dettaglio ufficiale Tinnvision solo per record pubblicabili a basso rischio.",
+        "Classificazione civica automatica basata su dizionario: settore e tipologia sono derivati da ufficio/provenienza e tipo atto, senza interpretare il contenuto dei PDF.",
+        "Allegato/documento non incluso negli export strutturati Tinnvision o non disponibile tramite dettaglio ufficiale.",
+        "Oggetto non ripubblicato integralmente nel layer pubblico per prudenza privacy.",
+        "Regola automatica prudenziale: oggetto minimizzato per possibile presenza di dati personali o contenzioso."
+      ],
+      "first_observed_at": "2026-09-01T16:34:40.060Z",
+      "last_observed_at": "2026-09-01T16:34:40.060Z",
+      "archived_document": null
+    },
+    {
+      "id": "albo-2026-2815",
+      "public_id": "albo-2026-2815",
+      "source": "Albo Pretorio Comune di Lamezia Terme",
+      "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
+      "retrieved_at": "2026-09-01T16:34:40.060Z",
+      "publication_number": "2026/2815",
+      "publication_start": "2026-09-01",
+      "publication_end": "2026-09-16",
+      "office": null,
+      "act_type": null,
+      "act_number": "75",
+      "act_date": "2026-08-13",
+      "subject": "Oggetto minimizzato per prudenza privacy; consultare la fonte ufficiale.",
+      "document_url": null,
+      "public_note": "Record pubblicato con minimizzazione automatica.",
+      "verification_status": "official_source_acquired",
+      "privacy_risk": "medium",
+      "public_visibility": "publishable_with_minimisation",
+      "classification": {
+        "dictionary_version": "2026-08-22-a",
+        "sector": {
+          "id": "avvocatura_contenzioso",
+          "label": "Avvocatura e contenzioso",
+          "description": "Atti dell'avvocatura, contenzioso, liti e procedimenti legali dell'ente.",
+          "confidence": "high",
+          "basis": "office"
+        },
+        "act_category": {
+          "id": "deliberazioni",
+          "label": "Deliberazioni",
+          "description": "Deliberazioni di giunta o di altri organi deliberativi.",
+          "confidence": "high",
+          "basis": "act_type"
+        }
+      },
+      "privacy_attestation": {
+        "schema_version": "albo-privacy-policy-attestation.v1",
+        "policy_version": "albo-privacy-policy.2026-08-30.1",
+        "assessment_basis": "source_record",
+        "status": "current"
+      },
+      "deliberation_body": "consiglio",
+      "presentation": {
+        "display_title": "Oggetto minimizzato per prudenza privacy; consultare la fonte ufficiale.",
+        "action_id": null,
+        "action_label": null,
+        "search_text": "oggetto minimizzato per prudenza privacy consultare la fonte ufficiale",
+        "standardisation": {
+          "schema_version": "publication-standardisation.v1",
+          "profile_id": "albo-public-title-it",
+          "profile_version": "2026-08-30.2",
+          "input_field": "subject",
+          "input_field_preserved": true,
+          "status": "unchanged",
+          "transformations": [],
+          "layout_flags": [],
+          "review_reasons": []
+        },
+        "area_theme": {
+          "schema_version": "publication-area-theme.v1",
+          "taxonomy_id": "municipal-public-act-area-theme-it",
+          "taxonomy_version": "2026-08-30.1",
+          "theme_id": null,
+          "theme_label": null,
+          "confidence": null,
+          "basis": "fallback",
+          "rule_id": null,
+          "evidence": [],
+          "null_reason": "input_withheld_for_privacy",
+          "override": null
+        }
+      },
+      "known_limits": [
+        "Tranche A acquisisce l'elenco degli atti correnti esposto dalla fonte ufficiale, senza dichiarare completezza storica.",
+        "I PDF sono archiviati solo per record pubblicabili a basso rischio; allegati e PDF non sono analizzati, interpretati o sottoposti a OCR.",
+        "Gli export Tinnvision possono non includere URL diretti agli allegati; quando disponibile, il monitor usa il dettaglio ufficiale Tinnvision solo per individuare PDF HTTPS a basso rischio.",
+        "La classificazione privacy e' prudenziale e automatica; i casi sensibili richiedono revisione umana prima di esposizioni piu' ricche.",
+        "Quando gli export strutturati non includono URL diretti, il monitor prova il dettaglio ufficiale Tinnvision solo per record pubblicabili a basso rischio.",
+        "Classificazione civica automatica basata su dizionario: settore e tipologia sono derivati da ufficio/provenienza e tipo atto, senza interpretare il contenuto dei PDF.",
+        "Allegato/documento non incluso negli export strutturati Tinnvision o non disponibile tramite dettaglio ufficiale.",
+        "Oggetto non ripubblicato integralmente nel layer pubblico per prudenza privacy.",
+        "Regola automatica prudenziale: oggetto minimizzato per possibile presenza di dati personali o contenzioso."
+      ],
+      "first_observed_at": "2026-09-01T16:34:40.060Z",
+      "last_observed_at": "2026-09-01T16:34:40.060Z",
       "archived_document": null
     },
     {
