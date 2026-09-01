@@ -9,7 +9,8 @@ import {
   writeFile,
 } from "node:fs/promises";
 import { tmpdir } from "node:os";
-import { isAbsolute, join, resolve } from "node:path";
+import { dirname, isAbsolute, join, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
 import type {
   DoclingExecutorArtifacts,
   DoclingProcessorExecutor,
@@ -17,7 +18,11 @@ import type {
 } from "../../api-server/src/lib/doclingProcessorAdapter";
 import type { DoclingProcessorRequest } from "../../api-server/src/lib/doclingProcessorContract";
 
-const DEFAULT_PROCESSOR_SCRIPT = "tools/docling/processor_contract.py";
+const MODULE_DIR = dirname(fileURLToPath(import.meta.url));
+const DEFAULT_PROCESSOR_SCRIPT = resolve(
+  MODULE_DIR,
+  "../../../tools/docling/processor_contract.py",
+);
 const DEFAULT_PYTHON_BIN = "python3";
 const MAX_RESULT_BYTES = 1024 * 1024;
 const MIN_DERIVED_ARTIFACT_BYTES = 1024 * 1024;
@@ -32,8 +37,8 @@ export type WorkerDoclingExecutorConfig = {
 function resolveProcessorScript(config: WorkerDoclingExecutorConfig): string {
   const configured =
     config.processorScript ?? process.env.DOCLING_PROCESSOR_SCRIPT?.trim();
-  const value = configured || DEFAULT_PROCESSOR_SCRIPT;
-  return isAbsolute(value) ? value : resolve(process.cwd(), value);
+  if (!configured) return DEFAULT_PROCESSOR_SCRIPT;
+  return isAbsolute(configured) ? configured : resolve(process.cwd(), configured);
 }
 
 function resolvePythonBin(config: WorkerDoclingExecutorConfig): string {
