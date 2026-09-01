@@ -25,6 +25,36 @@ const ITALIAN_MONTHS = new Map([
   ["dic", 12],
 ]);
 
+const WINDOWS_1252_C1 = new Map([
+  [0x80, "€"],
+  [0x82, "‚"],
+  [0x83, "ƒ"],
+  [0x84, "„"],
+  [0x85, "…"],
+  [0x86, "†"],
+  [0x87, "‡"],
+  [0x88, "ˆ"],
+  [0x89, "‰"],
+  [0x8a, "Š"],
+  [0x8b, "‹"],
+  [0x8c, "Œ"],
+  [0x8e, "Ž"],
+  [0x91, "‘"],
+  [0x92, "’"],
+  [0x93, "“"],
+  [0x94, "”"],
+  [0x95, "•"],
+  [0x96, "–"],
+  [0x97, "—"],
+  [0x98, "˜"],
+  [0x99, "™"],
+  [0x9a, "š"],
+  [0x9b, "›"],
+  [0x9c, "œ"],
+  [0x9e, "ž"],
+  [0x9f, "Ÿ"],
+]);
+
 export const MUNICIPAL_ATTACHMENT_PHASES = Object.freeze([
   {
     id: "programme_funding",
@@ -115,7 +145,11 @@ export function decodeHtmlEntities(value) {
     .replace(/&eacute;/gi, "é")
     .replace(/&igrave;/gi, "ì")
     .replace(/&ograve;/gi, "ò")
-    .replace(/&ugrave;/gi, "ù");
+    .replace(/&ugrave;/gi, "ù")
+    .replace(
+      /[\u0080-\u009f]/g,
+      (character) => WINDOWS_1252_C1.get(character.codePointAt(0)) ?? "",
+    );
 }
 
 export function cleanHtmlText(value) {
@@ -232,6 +266,83 @@ export function buildOpenCupProjectUrl(cup) {
     throw new Error(`Cannot build an OpenCUP URL for invalid CUP: ${cup}`);
   }
   return `${OPENCUP_PROJECT_BASE_URL}/${normalizedCup}`;
+}
+
+export function findNewProjectCups(projects, previousProjects = []) {
+  const previousCups = new Set(
+    previousProjects.map((project) => project?.cup).filter(Boolean),
+  );
+  return projects
+    .map((project) => project?.cup)
+    .filter((cup) => cup && !previousCups.has(cup))
+    .sort();
+}
+
+export function reconcileOpenCupAcquisition({
+  fetchedOpenCup,
+  previousOpenCup = null,
+  previousAcquisition = null,
+  attemptedAt,
+}) {
+  if (!isIsoInstant(attemptedAt)) {
+    throw new Error(`Invalid OpenCUP acquisition timestamp: ${attemptedAt}`);
+  }
+
+  if (fetchedOpenCup) {
+    const unchangedFreshRecord =
+      previousOpenCup?.source_record_hash ===
+        fetchedOpenCup.source_record_hash &&
+      previousAcquisition?.status === "fresh" &&
+      isIsoInstant(previousAcquisition.acquired_at);
+    return {
+      opencup: fetchedOpenCup,
+      opencup_acquisition: {
+        status: "fresh",
+        acquired_at: unchangedFreshRecord
+          ? previousAcquisition.acquired_at
+          : attemptedAt,
+        status_observed_at:
+          unchangedFreshRecord &&
+          isIsoInstant(previousAcquisition.status_observed_at)
+            ? previousAcquisition.status_observed_at
+            : attemptedAt,
+        fallback_used: false,
+      },
+    };
+  }
+
+  if (previousOpenCup) {
+    const acquiredAt = isIsoInstant(previousAcquisition?.acquired_at)
+      ? previousAcquisition.acquired_at
+      : attemptedAt;
+    return {
+      opencup: previousOpenCup,
+      opencup_acquisition: {
+        status: "stale",
+        acquired_at: acquiredAt,
+        status_observed_at:
+          previousAcquisition?.status === "stale" &&
+          isIsoInstant(previousAcquisition.status_observed_at)
+            ? previousAcquisition.status_observed_at
+            : attemptedAt,
+        fallback_used: true,
+      },
+    };
+  }
+
+  return {
+    opencup: null,
+    opencup_acquisition: {
+      status: "pending",
+      acquired_at: null,
+      status_observed_at:
+        previousAcquisition?.status === "pending" &&
+        isIsoInstant(previousAcquisition.status_observed_at)
+          ? previousAcquisition.status_observed_at
+          : attemptedAt,
+      fallback_used: false,
+    },
+  };
 }
 
 export function parseOpenCupProject({ cup, sourceUrl, html }) {
@@ -617,9 +728,18 @@ export function buildStaticPnrrDataset({
   );
   const attachments = publicProjects.flatMap((project) => project.attachments);
   const openCupProjects = publicProjects.filter((project) => project.opencup);
+  const freshOpenCupProjects = publicProjects.filter(
+    (project) => project.opencup_acquisition?.status === "fresh",
+  );
+  const staleOpenCupProjects = publicProjects.filter(
+    (project) => project.opencup_acquisition?.status === "stale",
+  );
+  const pendingOpenCupProjects = publicProjects.filter(
+    (project) => project.opencup_acquisition?.status === "pending",
+  );
 
   return {
-    schema_version: 3,
+    schema_version: 4,
     metadata: {
       dataset_id: "lamezia-pnrr-static-feed",
       source: "Città di Lamezia Terme — Attuazione Misure PNRR",
@@ -651,9 +771,9 @@ export function buildStaticPnrrDataset({
       ),
       albo_snapshot_generated_at: alboSnapshotGeneratedAt,
       update_policy:
-        "Controllo giornaliero della sezione comunale PNRR, arricchimento delle schede pubbliche OpenCUP e riconciliazione con gli output pubblici dell'Albo Pretorio; il file cambia solo quando mutano dati o collegamenti documentali.",
+        "Controllo automatico ogni sei ore della sezione comunale PNRR, rilevamento dei nuovi CUP, arricchimento delle schede pubbliche OpenCUP e riconciliazione con gli output pubblici dell'Albo Pretorio; il file cambia solo quando mutano dati, stato di acquisizione o collegamenti documentali.",
       opencup_update_policy:
-        "Le schede OpenCUP vengono acquisite per CUP durante la materializzazione. Un errore temporaneo conserva l'ultimo corredo OpenCUP valido dello stesso CUP, se disponibile.",
+        "Ogni nuovo CUP comunale genera subito una scheda e avvia l'acquisizione OpenCUP. Se il corredo non è ancora disponibile resta in attesa e viene ritentato automaticamente; un errore temporaneo su un CUP già acquisito conserva l'ultimo corredo valido, marcandolo come non aggiornato.",
       reconciliation_rule:
         "Gli atti Albo sono collegati a una scheda progetto esclusivamente quando condividono lo stesso CUP normalizzato; i soli richiami testuali PNRR restano evidenze non riconciliate.",
       coverage_note:
@@ -683,6 +803,9 @@ export function buildStaticPnrrDataset({
       ).length,
       projects_with_opencup: openCupProjects.length,
       projects_without_opencup: publicProjects.length - openCupProjects.length,
+      projects_with_opencup_fresh: freshOpenCupProjects.length,
+      projects_with_opencup_stale: staleOpenCupProjects.length,
+      projects_pending_opencup: pendingOpenCupProjects.length,
       projects_with_opencup_total_cost: openCupProjects.filter(
         (project) => project.opencup.total_cost_eur != null,
       ).length,
@@ -725,8 +848,8 @@ export function validateStaticPnrrDataset(
   const sourceIds = new Set();
   const cups = new Set();
 
-  if (dataset?.schema_version !== 3) {
-    errors.push("schema_version must be 3");
+  if (dataset?.schema_version !== 4) {
+    errors.push("schema_version must be 4");
   }
   const attachmentPhases = new Map(
     (dataset?.attachment_taxonomy?.phases ?? []).map((phase) => [
@@ -770,6 +893,43 @@ export function validateStaticPnrrDataset(
     if (project?.cup) cups.add(project.cup);
     if (project?.amount_eur != null && project.amount_eur <= 0) {
       errors.push(`project ${project?.source_id} has a non-positive amount`);
+    }
+
+    const acquisition = project?.opencup_acquisition;
+    if (!project?.cup) {
+      if (project?.opencup || acquisition != null) {
+        errors.push(
+          `project ${project?.source_id} has OpenCUP data without a CUP`,
+        );
+      }
+    } else if (
+      !acquisition ||
+      !["fresh", "stale", "pending"].includes(acquisition.status) ||
+      !isIsoInstant(acquisition.status_observed_at)
+    ) {
+      errors.push(
+        `project ${project?.source_id} has invalid OpenCUP acquisition metadata`,
+      );
+    } else if (
+      (acquisition.status === "fresh" &&
+        (!project.opencup ||
+          !isIsoInstant(acquisition.acquired_at) ||
+          acquisition.fallback_used !== false)) ||
+      (acquisition.status === "stale" &&
+        (!project.opencup ||
+          !isIsoInstant(acquisition.acquired_at) ||
+          acquisition.fallback_used !== true)) ||
+      (acquisition.status === "pending" &&
+        (project.opencup ||
+          acquisition.acquired_at != null ||
+          acquisition.fallback_used !== false)) ||
+      (isIsoInstant(acquisition.acquired_at) &&
+        Date.parse(acquisition.acquired_at) >
+          Date.parse(acquisition.status_observed_at))
+    ) {
+      errors.push(
+        `project ${project?.source_id} has inconsistent OpenCUP acquisition metadata`,
+      );
     }
 
     if (project?.opencup) {
@@ -935,12 +1095,35 @@ export function validateStaticPnrrDataset(
     errors.push("coverage.albo_evidence does not match the evidence records");
   }
   const projectsWithOpenCup = projects.filter((project) => project.opencup);
+  const projectsWithFreshOpenCup = projects.filter(
+    (project) => project.opencup_acquisition?.status === "fresh",
+  );
+  const projectsWithStaleOpenCup = projects.filter(
+    (project) => project.opencup_acquisition?.status === "stale",
+  );
+  const projectsPendingOpenCup = projects.filter(
+    (project) => project.opencup_acquisition?.status === "pending",
+  );
   if (
     dataset?.coverage?.projects_with_opencup !== projectsWithOpenCup.length ||
     dataset?.coverage?.projects_without_opencup !==
       projects.length - projectsWithOpenCup.length
   ) {
     errors.push("OpenCUP coverage does not match the project records");
+  }
+  if (
+    dataset?.coverage?.projects_with_opencup_fresh !==
+      projectsWithFreshOpenCup.length ||
+    dataset?.coverage?.projects_with_opencup_stale !==
+      projectsWithStaleOpenCup.length ||
+    dataset?.coverage?.projects_pending_opencup !==
+      projectsPendingOpenCup.length ||
+    projectsWithOpenCup.length !==
+      projectsWithFreshOpenCup.length + projectsWithStaleOpenCup.length
+  ) {
+    errors.push(
+      "OpenCUP acquisition coverage does not match the project records",
+    );
   }
   if (
     dataset?.coverage?.projects_with_opencup_total_cost !==
@@ -1297,6 +1480,14 @@ function isIsoCalendarDate(value) {
     date.getUTCFullYear() === year &&
     date.getUTCMonth() === month - 1 &&
     date.getUTCDate() === day
+  );
+}
+
+function isIsoInstant(value) {
+  return (
+    typeof value === "string" &&
+    /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3})?Z$/.test(value) &&
+    Number.isFinite(Date.parse(value))
   );
 }
 

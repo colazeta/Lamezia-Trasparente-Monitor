@@ -36,7 +36,7 @@ describe("Lamezia PNRR static feed", () => {
   });
 
   it("maps the official municipal attachment archive with explicit provenance metadata", () => {
-    expect(LAMEZIA_PNRR_STATIC_DATA.schema_version).toBe(3);
+    expect(LAMEZIA_PNRR_STATIC_DATA.schema_version).toBe(4);
 
     const source = LAMEZIA_PNRR_STATIC_DATA.projects.find(
       (project) => project.attachments.length > 1,
@@ -75,6 +75,10 @@ describe("Lamezia PNRR static feed", () => {
       LAMEZIA_PNRR_STATIC_DATA.coverage.projects - enrichedProjects.length,
     );
     expect(
+      LAMEZIA_PNRR_STATIC_DATA.coverage.projects_with_opencup_fresh +
+        LAMEZIA_PNRR_STATIC_DATA.coverage.projects_with_opencup_stale,
+    ).toBe(enrichedProjects.length);
+    expect(
       LAMEZIA_PNRR_STATIC_DATA.coverage.projects_with_opencup_total_cost,
     ).toBe(
       enrichedProjects.filter(
@@ -98,6 +102,7 @@ describe("Lamezia PNRR static feed", () => {
         `https://www.opencup.gov.it/portale/it/web/opencup/home/progetto/-/cup/${source.cup}`,
       );
       expect(view?.openCup).toEqual(source.opencup);
+      expect(view?.openCupAcquisition).toEqual(source.opencup_acquisition);
       expect(view?.locationSourceUrl).toBe(source.opencup?.source_url);
     }
   });
@@ -124,6 +129,7 @@ describe("Lamezia PNRR static feed", () => {
       dataOrigin: "hybrid",
       documentsCount: matched.documentsCount,
       openCup: matched.openCup,
+      openCupAcquisition: matched.openCupAcquisition,
     });
     expect(result[1].key).toBe(staticOnly.key);
   });

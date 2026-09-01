@@ -11,6 +11,13 @@ export type PnrrDataOrigin = "runtime-api" | "static-municipal" | "hybrid";
 
 export type PnrrFreshnessAssessment = "current" | "stale" | "not_assessed";
 
+export interface LameziaPnrrOpenCupAcquisition {
+  status: "fresh" | "stale" | "pending";
+  acquired_at: string | null;
+  status_observed_at: string;
+  fallback_used: boolean;
+}
+
 export type PnrrAttachmentPhase =
   | "programme_funding"
   | "planning_authorisations"
@@ -51,6 +58,7 @@ export type PnrrViewProject = Omit<PnrrProject, "documents" | "attachments"> & {
   documents: PnrrViewDocument[];
   attachments: PnrrViewAttachment[];
   openCup: LameziaPnrrOpenCupProject | null;
+  openCupAcquisition: LameziaPnrrOpenCupAcquisition | null;
   dataOrigin: PnrrDataOrigin;
   freshnessAssessment: PnrrFreshnessAssessment;
   subAttuatore: string | null;
@@ -176,13 +184,14 @@ export interface LameziaPnrrStaticProject {
   published_at: string | null;
   attachments: LameziaPnrrAttachment[];
   opencup: LameziaPnrrOpenCupProject | null;
+  opencup_acquisition: LameziaPnrrOpenCupAcquisition | null;
   verification_status: string;
   source_record_hash: string;
   albo_evidence_ids: string[];
 }
 
 export interface LameziaPnrrStaticDataset {
-  schema_version: number;
+  schema_version: 4;
   metadata: {
     dataset_id: string;
     source: string;
@@ -216,6 +225,9 @@ export interface LameziaPnrrStaticDataset {
     projects_with_amount: number;
     projects_with_opencup: number;
     projects_without_opencup: number;
+    projects_with_opencup_fresh: number;
+    projects_with_opencup_stale: number;
+    projects_pending_opencup: number;
     projects_with_opencup_total_cost: number;
     projects_with_opencup_public_funding: number;
     projects_with_albo_evidence: number;
@@ -328,6 +340,7 @@ export function buildStaticPnrrViewData(
         } satisfies PnrrViewAttachment;
       }),
       openCup: project.opencup,
+      openCupAcquisition: project.opencup_acquisition,
       documentsCount: documents.length,
       lastPublication,
       documents,
@@ -357,6 +370,7 @@ export function adaptRuntimePnrrProjects(value: unknown): PnrrViewProject[] {
       toRuntimeAttachment(attachment, index),
     ),
     openCup: null,
+    openCupAcquisition: null,
     dataOrigin: "runtime-api",
     freshnessAssessment: project.lastUpdatedAt
       ? project.aggiornamentoVecchio
@@ -430,6 +444,7 @@ export function mergePnrrViewProjects(
       publishedAt: runtimeProject.publishedAt ?? staticProject.publishedAt,
       trasparenzaCompleta: true,
       openCup: staticProject.openCup,
+      openCupAcquisition: staticProject.openCupAcquisition,
       attachments: mergeAttachments(
         runtimeProject.attachments,
         staticProject.attachments,

@@ -4,11 +4,14 @@ import {
   buildAlboEvidenceArchive,
   buildOpenCupProjectUrl,
   buildStaticPnrrDataset,
+  cleanHtmlText,
   deriveMunicipalAttachmentMetadata,
   extractCups,
   extractProjectLinks,
+  findNewProjectCups,
   parseMunicipalPnrrProject,
   parseOpenCupProject,
+  reconcileOpenCupAcquisition,
   stableDatasetPayload,
   validateCoverageRegression,
   validateStaticPnrrDataset,
@@ -213,6 +216,86 @@ test("OpenCUP URL construction rejects a non-canonical CUP", () => {
   assert.throws(() => buildOpenCupProjectUrl("M5C2"), /invalid CUP/);
 });
 
+test("OpenCUP text normalizes legacy Windows-1252 punctuation", () => {
+  assert.equal(
+    cleanHtmlText(
+      "MIGLIORAMENTO DELL\u0092ESPERIENZA \u0093CITTADINO\u0094 \u0096 PNRR",
+    ),
+    "MIGLIORAMENTO DELL’ESPERIENZA “CITTADINO” – PNRR",
+  );
+});
+
+test("new municipal CUPs are detected once and sorted", () => {
+  assert.deepEqual(
+    findNewProjectCups(
+      [{ cup: "C82D24000300005" }, { cup: CUP }, { cup: null }],
+      [{ cup: CUP }],
+    ),
+    ["C82D24000300005"],
+  );
+});
+
+test("OpenCUP acquisition tracks fresh, stale and pending transitions", () => {
+  const firstAttempt = "2026-09-01T06:00:00.000Z";
+  const secondAttempt = "2026-09-01T12:00:00.000Z";
+  const openCup = { source_record_hash: "a".repeat(64) };
+  const fresh = reconcileOpenCupAcquisition({
+    fetchedOpenCup: openCup,
+    attemptedAt: firstAttempt,
+  });
+  assert.deepEqual(fresh.opencup_acquisition, {
+    status: "fresh",
+    acquired_at: firstAttempt,
+    status_observed_at: firstAttempt,
+    fallback_used: false,
+  });
+  assert.deepEqual(
+    reconcileOpenCupAcquisition({
+      fetchedOpenCup: openCup,
+      previousOpenCup: openCup,
+      previousAcquisition: fresh.opencup_acquisition,
+      attemptedAt: secondAttempt,
+    }).opencup_acquisition,
+    fresh.opencup_acquisition,
+  );
+
+  const stale = reconcileOpenCupAcquisition({
+    fetchedOpenCup: null,
+    previousOpenCup: openCup,
+    previousAcquisition: fresh.opencup_acquisition,
+    attemptedAt: secondAttempt,
+  });
+  assert.equal(stale.opencup, openCup);
+  assert.deepEqual(stale.opencup_acquisition, {
+    status: "stale",
+    acquired_at: firstAttempt,
+    status_observed_at: secondAttempt,
+    fallback_used: true,
+  });
+
+  const pending = reconcileOpenCupAcquisition({
+    fetchedOpenCup: null,
+    attemptedAt: secondAttempt,
+  });
+  assert.deepEqual(pending, {
+    opencup: null,
+    opencup_acquisition: {
+      status: "pending",
+      acquired_at: null,
+      status_observed_at: secondAttempt,
+      fallback_used: false,
+    },
+  });
+  assert.deepEqual(
+    reconcileOpenCupAcquisition({
+      fetchedOpenCup: null,
+      previousAcquisition: pending.opencup_acquisition,
+      attemptedAt: "2026-09-01T18:00:00.000Z",
+    }).opencup_acquisition,
+    pending.opencup_acquisition,
+  );
+});
+
 test("OpenCUP provenance hashes are validated against the acquired payload", () => {
   const opencup = parseOpenCupProject({
     cup: CUP,
@@ -242,6 +325,12 @@ test("OpenCUP provenance hashes are validated against the acquired payload", () 
         published_at: null,
         attachments: [],
         opencup,
+        opencup_acquisition: {
+          status: "fresh",
+          acquired_at: "2026-08-31T12:00:00.000Z",
+          status_observed_at: "2026-08-31T12:00:00.000Z",
+          fallback_used: false,
+        },
         verification_status: "official_municipal_project_page",
       },
     ],
@@ -250,6 +339,16 @@ test("OpenCUP provenance hashes are validated against the acquired payload", () 
   });
 
   assert.doesNotThrow(() => validateStaticPnrrDataset(dataset));
+  const invalidAcquisition = structuredClone(dataset);
+  invalidAcquisition.projects[0].opencup_acquisition = {
+    ...invalidAcquisition.projects[0].opencup_acquisition,
+    status: "stale",
+    fallback_used: false,
+  };
+  assert.throws(
+    () => validateStaticPnrrDataset(invalidAcquisition),
+    /inconsistent OpenCUP acquisition metadata/,
+  );
   dataset.projects[0].opencup.title = "Valore alterato";
   assert.throws(
     () => validateStaticPnrrDataset(dataset),
@@ -419,6 +518,13 @@ test("buildStaticPnrrDataset links only shared CUP evidence and reports unmatche
     end_date: null,
     published_at: "2025-10-17",
     attachments: [],
+    opencup: null,
+    opencup_acquisition: {
+      status: "pending",
+      acquired_at: null,
+      status_observed_at: "2026-08-31T12:00:00.000Z",
+      fallback_used: false,
+    },
     verification_status: "official_municipal_project_page",
   };
   const linked = { id: "linked", cups: [CUP] };
@@ -434,8 +540,9 @@ test("buildStaticPnrrDataset links only shared CUP evidence and reports unmatche
   assert.deepEqual(dataset.unmatched_albo_evidence_ids, ["unmatched"]);
   assert.equal(dataset.coverage.projects_with_albo_evidence, 1);
   assert.equal(dataset.coverage.linked_albo_evidence, 1);
-  assert.equal(dataset.schema_version, 3);
+  assert.equal(dataset.schema_version, 4);
   assert.equal(dataset.coverage.projects_with_opencup, 0);
+  assert.equal(dataset.coverage.projects_pending_opencup, 1);
   assert.equal(
     stableDatasetPayload(dataset).attachment_taxonomy.schema_version,
     "pnrr-attachment-phase.v1",
@@ -473,6 +580,13 @@ test("validateStaticPnrrDataset rejects an Albo relation without a shared CUP", 
         end_date: null,
         published_at: null,
         attachments: [],
+        opencup: null,
+        opencup_acquisition: {
+          status: "pending",
+          acquired_at: null,
+          status_observed_at: "2026-08-31T12:00:00.000Z",
+          fallback_used: false,
+        },
         verification_status: "official_municipal_project_page",
       },
     ],
@@ -517,6 +631,12 @@ test("validateStaticPnrrDataset rejects duplicate project CUPs", () => {
     published_at: null,
     attachments: [],
     opencup: null,
+    opencup_acquisition: {
+      status: "pending",
+      acquired_at: null,
+      status_observed_at: "2026-08-31T12:00:00.000Z",
+      fallback_used: false,
+    },
     verification_status: "official_municipal_project_page",
   };
   const dataset = buildStaticPnrrDataset({

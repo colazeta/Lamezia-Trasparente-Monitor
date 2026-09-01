@@ -14,8 +14,11 @@ vi.mock("@/components/MonitoringReportsSection", () => ({
   MonitoringReportsSection: () => null,
 }));
 
-import { LAMEZIA_PNRR_STATIC_DATA } from "@/data/lameziaPnrr";
-import { Pnrr } from "@/pages/Pnrr";
+import {
+  LAMEZIA_PNRR_STATIC_DATA,
+  LAMEZIA_PNRR_STATIC_VIEW,
+} from "@/data/lameziaPnrr";
+import { OpenCupProjectDetails, Pnrr } from "@/pages/Pnrr";
 
 describe("PNRR page static feed", () => {
   it("keeps municipal project sheets visible when the runtime API fails", () => {
@@ -50,5 +53,48 @@ describe("PNRR page static feed", () => {
     expect(
       screen.getAllByText(/non rappresenta lo stato di avanzamento/i).length,
     ).toBeGreaterThan(0);
+  });
+
+  it("discloses pending and retained OpenCUP acquisition states", () => {
+    const source = LAMEZIA_PNRR_STATIC_VIEW.projects[0];
+    const observedAt = "2026-09-01T06:00:00.000Z";
+    const { rerender } = render(
+      <OpenCupProjectDetails
+        project={{
+          ...source,
+          openCup: null,
+          openCupAcquisition: {
+            status: "pending",
+            acquired_at: null,
+            status_observed_at: observedAt,
+            fallback_used: false,
+          },
+        }}
+      />,
+    );
+
+    expect(
+      screen.getByText("OpenCUP in acquisizione automatica"),
+    ).toBeInTheDocument();
+    expect(screen.getByText(/ritenterà automaticamente/i)).toBeInTheDocument();
+
+    rerender(
+      <OpenCupProjectDetails
+        project={{
+          ...source,
+          openCupAcquisition: {
+            status: "stale",
+            acquired_at: "2026-08-31T12:00:00.000Z",
+            status_observed_at: observedAt,
+            fallback_used: true,
+          },
+        }}
+      />,
+    );
+
+    expect(screen.getByText(/ultimo corredo valido/i)).toBeInTheDocument();
+    expect(
+      screen.getByText("Acquisizione del corredo OpenCUP"),
+    ).toBeInTheDocument();
   });
 });
