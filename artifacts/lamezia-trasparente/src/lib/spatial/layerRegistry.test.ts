@@ -25,25 +25,32 @@ describe("spatial layer registry", () => {
     expect(getSpatialLayer("confiscated-assets")?.defaultVisible).toBe(false);
   });
 
-  it("serves every active layer from the same-origin snapshot contract", () => {
+  it("keeps canonical paths and explicit continuity fallbacks in the registry", () => {
     expect(
-      getActiveAtlasSpatialLayers().map(({ id, dataPath }) => ({
-        id,
-        dataPath,
-      })),
+      getActiveAtlasSpatialLayers().map(
+        ({ id, dataPath, fallbackDataPath }) => ({
+          id,
+          dataPath,
+          fallbackDataPath,
+        }),
+      ),
     ).toEqual([
       {
         id: "municipal-boundary",
         dataPath: "/data/processed/territorio/lamezia_confine_comunale.geojson",
+        fallbackDataPath: undefined,
       },
       {
         id: "census-sections",
         dataPath:
           "/data/processed/territorio/istat_sezioni_censimento_lamezia.geojson",
+        fallbackDataPath: undefined,
       },
       {
         id: "confiscated-assets",
-        dataPath: "/data/processed/territorio/beni_confiscati_lamezia.geojson",
+        dataPath: "/api/beni-confiscati/geojson",
+        fallbackDataPath:
+          "/data/processed/territorio/beni_confiscati_lamezia.geojson",
       },
     ]);
   });

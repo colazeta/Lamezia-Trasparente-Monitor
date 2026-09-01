@@ -56,12 +56,20 @@ export function GeoLibreAtlasPilot() {
     return () => controller.abort();
   }, [activeLayers, siteOrigin]);
 
+  const readyFeeds = useMemo(
+    () =>
+      availability?.filter(
+        (item) => item.status === "ready" && item.dataUrl !== null,
+      ) ?? [],
+    [availability],
+  );
   const readyLayers = useMemo(
     () =>
-      availability
-        ?.filter((item) => item.status === "ready")
-        .map((item) => item.layer) ?? [],
-    [availability],
+      readyFeeds.map((item) => ({
+        ...item.layer,
+        dataPath: item.dataUrl,
+      })),
+    [readyFeeds],
   );
   const unavailableLayers = useMemo(
     () => availability?.filter((item) => item.status === "unavailable") ?? [],
@@ -87,6 +95,11 @@ export function GeoLibreAtlasPilot() {
           )
         : [],
     [manifest],
+  );
+  const continuityFallbacks = useMemo(
+    () =>
+      readyFeeds.filter((item) => item.distribution === "continuity_fallback"),
+    [readyFeeds],
   );
 
   if (!siteOrigin) return null;
@@ -121,9 +134,9 @@ export function GeoLibreAtlasPilot() {
           <p>
             Prima di aprire GeoLibre, il pilot verifica i feed dei layer attivi
             e inoltra al viewer soltanto quelli disponibili e in formato
-            GeoJSON. Il manifest distingue inoltre una distribuzione vuota per
-            policy da un errore: un feed non raggiungibile non viene mai
-            sostituito con un insieme vuoto.
+            GeoJSON. La sorgente primaria resta preferita; un fallback statico
+            viene usato solo se è dichiarato, verificato e segnalato. Un errore
+            non viene mai trasformato implicitamente in un insieme vuoto.
           </p>
         </div>
 
@@ -163,7 +176,7 @@ export function GeoLibreAtlasPilot() {
             role="status"
           >
             <p className="font-semibold text-foreground">
-              Snapshot pubblicati: {manifest.layers.length} di{" "}
+              Snapshot statici pubblicati: {manifest.layers.length} di{" "}
               {activeLayers.length};{" "}
               {
                 manifest.layers.filter(
@@ -174,7 +187,8 @@ export function GeoLibreAtlasPilot() {
             </p>
             <p className="mt-1 text-xs leading-5 text-muted-foreground">
               Manifest default-deny con conteggi, licenze e digest SHA-256 delle
-              distribuzioni canoniche.
+              distribuzioni versionate e con il loro rapporto con la sorgente
+              primaria.
             </p>
           </div>
         ) : manifest === false ? (
@@ -187,6 +201,32 @@ export function GeoLibreAtlasPilot() {
           </div>
         ) : null}
 
+        {continuityFallbacks.length > 0 ? (
+          <div
+            className="flex items-start gap-2 rounded-lg border border-warning/40 bg-warning/10 px-3 py-2.5 text-xs leading-5 text-foreground"
+            role="status"
+          >
+            <AlertTriangle
+              className="mt-0.5 h-4 w-4 flex-none text-warning"
+              aria-hidden="true"
+            />
+            <div>
+              <p className="font-semibold">
+                Fallback statico di continuità attivo
+              </p>
+              <ul className="mt-1 list-disc pl-4 text-muted-foreground">
+                {continuityFallbacks.map((item) => (
+                  <li key={item.layer.id}>
+                    {item.layer.title} — {primaryLayerFailureReason(item)};
+                    viene usata la distribuzione statica dichiarata. Il feed API
+                    costruito dal database resta la sorgente primaria.
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        ) : null}
+
         {emptySnapshotLayers.length > 0 ? (
           <div className="flex items-start gap-2 rounded-lg border border-warning/40 bg-warning/10 px-3 py-2.5 text-xs leading-5 text-foreground">
             <AlertTriangle
@@ -194,7 +234,7 @@ export function GeoLibreAtlasPilot() {
               aria-hidden="true"
             />
             <div>
-              <p className="font-semibold">Distribuzioni vuote per policy</p>
+              <p className="font-semibold">Snapshot statici vuoti per policy</p>
               <ul className="mt-1 list-disc pl-4 text-muted-foreground">
                 {emptySnapshotLayers.map((layer) => (
                   <li key={layer.layer_id}>
@@ -289,6 +329,22 @@ function unavailableLayerReason(item: GeoLibreLayerAvailability): string {
   if (item.reason === "missing_data_path") return "feed non configurato";
   if (item.httpStatus !== null) return `HTTP ${item.httpStatus}`;
   return "rete/CORS";
+}
+
+function primaryLayerFailureReason(item: GeoLibreLayerAvailability): string {
+  if (item.primaryReason === "timeout") {
+    return "feed primario oltre il tempo massimo";
+  }
+  if (item.primaryReason === "invalid_content_type") {
+    return "feed primario in formato non GeoJSON";
+  }
+  if (item.primaryReason === "invalid_url") {
+    return "URL del feed primario non valido";
+  }
+  if (item.primaryHttpStatus !== null) {
+    return `feed primario HTTP ${item.primaryHttpStatus}`;
+  }
+  return "feed primario non raggiungibile (rete/CORS)";
 }
 
 function layerTitle(

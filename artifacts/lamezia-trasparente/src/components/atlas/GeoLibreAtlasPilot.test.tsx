@@ -23,8 +23,11 @@ describe("GeoLibre Atlas pilot", () => {
             layers: [
               {
                 layer_id: "municipal-boundary",
+                primary_data_path:
+                  "/data/processed/territorio/lamezia_confine_comunale.geojson",
                 data_path:
                   "/data/processed/territorio/lamezia_confine_comunale.geojson",
+                distribution_role: "primary",
                 media_type: "application/geo+json",
                 distribution_status: "published",
                 content_status: "populated",
@@ -38,8 +41,11 @@ describe("GeoLibre Atlas pilot", () => {
               },
               {
                 layer_id: "census-sections",
+                primary_data_path:
+                  "/data/processed/territorio/istat_sezioni_censimento_lamezia.geojson",
                 data_path:
                   "/data/processed/territorio/istat_sezioni_censimento_lamezia.geojson",
+                distribution_role: "primary",
                 media_type: "application/geo+json",
                 distribution_status: "published",
                 content_status: "populated",
@@ -53,8 +59,10 @@ describe("GeoLibre Atlas pilot", () => {
               },
               {
                 layer_id: "confiscated-assets",
+                primary_data_path: "/api/beni-confiscati/geojson",
                 data_path:
                   "/data/processed/territorio/beni_confiscati_lamezia.geojson",
+                distribution_role: "continuity_fallback",
                 media_type: "application/geo+json",
                 distribution_status: "published",
                 content_status: "empty_by_policy",
@@ -75,6 +83,13 @@ describe("GeoLibre Atlas pilot", () => {
 
       expect(init?.method).toBe("HEAD");
 
+      if (url.endsWith("/api/beni-confiscati/geojson")) {
+        return new Response(null, {
+          status: 503,
+          headers: { "content-type": "application/json" },
+        });
+      }
+
       return new Response(null, {
         status: 200,
         headers: {
@@ -90,8 +105,14 @@ describe("GeoLibre Atlas pilot", () => {
       await screen.findByText(/Copertura GeoLibre: 3 di 3 layer disponibili/),
     ).toBeInTheDocument();
     expect(
-      await screen.findByText(/Snapshot pubblicati: 3 di 3; 2 con geometrie/),
+      await screen.findByText(
+        /Snapshot statici pubblicati: 3 di 3; 2 con geometrie/,
+      ),
     ).toBeInTheDocument();
+    expect(
+      screen.getByText(/Fallback statico di continuità attivo/),
+    ).toBeInTheDocument();
+    expect(screen.getByText(/feed primario HTTP 503/)).toBeInTheDocument();
     expect(
       screen.getByText(
         /Beni confiscati — 0 feature pubblicate; 340 record esclusi/,

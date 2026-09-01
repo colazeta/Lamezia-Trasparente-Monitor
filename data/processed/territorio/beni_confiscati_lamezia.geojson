@@ -4,6 +4,8 @@
   "metadata": {
     "layer_id": "confiscated-assets",
     "entity_type": "confiscated_asset",
+    "distribution_role": "continuity_fallback",
+    "primary_data_path": "/api/beni-confiscati/geojson",
     "input_records": 340,
     "published_features": 0,
     "excluded_records": 340,
@@ -23,6 +25,6 @@
     "licence": "Italian Open Data License v2.0",
     "licence_url": "https://www.dati.gov.it/content/italian-open-data-license-v20",
     "automatic_geocoder": "not used",
-    "publication_note": "Snapshot tecnicamente disponibile ma privo di feature: collocare ogni bene sul centroide comunale produrrebbe una localizzazione falsa. I conteggi descrivono la fonte ANBSC, non una mappa puntuale."
+    "publication_note": "Fallback statico tecnicamente disponibile ma privo di feature: collocare ogni bene sul centroide comunale produrrebbe una localizzazione falsa. I conteggi descrivono la fonte ANBSC, non una mappa puntuale né lo stato del feed API canonico costruito dal database."
   }
 }

@@ -4,7 +4,10 @@
 
 GeoLibre entra in Lamezia Trasparente come **viewer alternativo sperimentale** dell’Atlante, non come nuovo data store e non come sostituzione immediata di Leaflet.
 
-La fonte di verità resta il data model canonico del progetto e il relativo `spatial layer registry`. Il pilot carica gli stessi `dataPath` dei layer con `atlasStatus="active"`.
+La fonte di verità resta il data model canonico del progetto e il relativo
+`spatial layer registry`. Il pilot preferisce sempre il `dataPath` primario dei
+layer con `atlasStatus="active"`; un eventuale `fallbackDataPath` è una
+distribuzione di continuità esplicita, non una seconda fonte di verità.
 
 ## Feature flag
 
@@ -39,38 +42,47 @@ https://web.geolibre.app/
   &data=https://<site>/data/processed/territorio/beni_confiscati_lamezia.geojson
 ```
 
-I tre layer attivi usano snapshot statici same-origin. Leaflet e GeoLibre leggono
-gli stessi `dataPath` del registry, quindi il deploy pubblico non dipende dalla
-disponibilità di un origin API per la cartografia di base.
+Confine comunale e sezioni censuarie usano distribuzioni statiche primarie
+same-origin. Per i beni confiscati, invece, il `dataPath` primario resta
+`/api/beni-confiscati/geojson`: è costruito dal database attraverso lo spatial
+adapter fail-closed e conserva le localizzazioni redazionali qualificate. Lo
+snapshot ANBSC mostrato nell’esempio è dichiarato come `fallbackDataPath` e viene
+usato da Leaflet o GeoLibre soltanto quando il feed API non è disponibile.
 
 Il manifest
 `/data/processed/territorio/spatial_layer_manifest.json` dichiara per ogni
-distribuzione percorso, conteggio feature, conteggio esclusioni, stato del
+distribuzione percorso primario, percorso statico, ruolo (`primary` oppure
+`continuity_fallback`), conteggio feature, conteggio esclusioni, stato del
 contenuto, fonte, licenza e digest SHA-256. Il frontend lo valida contro il
 registry prima di mostrarne i dati di copertura.
 
 Prima di costruire l’URL del viewer, il frontend esegue una richiesta `HEAD` con
-timeout di 8 secondi per ogni feed e accetta soltanto risposte HTTP riuscite con
-Content-Type JSON o GeoJSON. I layer non raggiungibili, bloccati da CORS, troppo
-lenti o serviti con un formato inatteso vengono esclusi dall’URL GeoLibre e
-dichiarati nell’interfaccia con la copertura `disponibili / attivi`. Un errore
-non viene mai convertito in una collezione vuota.
+timeout di 8 secondi e accetta soltanto risposte HTTP riuscite con Content-Type
+JSON o GeoJSON. Verifica prima il feed primario; dopo un errore prova il fallback
+soltanto se il registry lo dichiara. L’interfaccia segnala sia l’attivazione del
+fallback sia la causa del fallimento primario. Se anche il fallback non supera
+la verifica, il layer viene escluso. Un errore non viene mai convertito
+implicitamente in una collezione vuota.
 
 Una collezione può invece essere **pubblicata ma vuota per policy** quando
 l’assenza di feature è un risultato verificato e documentato dal processo di
-materializzazione. È il caso della fotografia corrente dei beni confiscati:
+materializzazione. È il caso del fallback ANBSC corrente dei beni confiscati:
 l’API pubblica ANBSC espone 340 immobili riferiti a Lamezia Terme, ma soltanto
 coordinate del Comune (292 record) oppure nessuna coordinata (48 record). Il
 centroide comunale non viene rappresentato come posizione del singolo bene;
 lo snapshot contiene quindi 0 feature e conserva nel metadata tutti i conteggi
 di esclusione. Questo stato è distinto sia da un errore di rete sia da un
-dataset realmente privo di record.
+dataset realmente privo di record. Non descrive né azzera le eventuali
+localizzazioni qualificate presenti nel database: quando il feed API è
+raggiungibile, quello resta la distribuzione selezionata.
 
 Dettagli di fonte, conteggi e stop condition sono nella nota
 [Snapshot spaziale dei beni confiscati](../data-sources/beni-confiscati-spatial-snapshot.md).
 
 Non viene creato un `.geolibre.json` parallelo. Gli snapshot sono distribuzioni
-del contratto spaziale canonico, non configurazioni specifiche del viewer.
+versionate del contratto spaziale, con il loro ruolo dichiarato, non
+configurazioni specifiche del viewer né sostituti silenziosi delle sorgenti
+primarie.
 
 La materializzazione si aggiorna con:
 
@@ -149,5 +161,10 @@ public GeoJSON / altri formati canonici
 ├── Leaflet
 └── GeoLibre
 ```
+
+Un fallback statico può affiancare una distribuzione primaria solo se il
+registry e il manifest rendono leggibili entrambi i percorsi, il ruolo del
+fallback e la sua copertura. Il fallback non può cancellare o sovrascrivere dati
+qualificati presenti nella sorgente primaria.
 
 Una modifica richiesta soltanto da GeoLibre non deve deformare la semantica canonica dei dati. Se un nuovo formato di distribuzione diventa necessario (per esempio GeoParquet o PMTiles), va introdotto come ulteriore output dello spatial layer, non come fonte di verità separata.

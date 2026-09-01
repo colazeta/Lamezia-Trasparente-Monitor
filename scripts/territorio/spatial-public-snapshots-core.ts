@@ -22,6 +22,8 @@ export type ConfiscatedAssetsSnapshot = {
   metadata: {
     layer_id: "confiscated-assets";
     entity_type: "confiscated_asset";
+    distribution_role: "continuity_fallback";
+    primary_data_path: "/api/beni-confiscati/geojson";
     input_records: number;
     published_features: 0;
     excluded_records: number;
@@ -55,7 +57,9 @@ export type SpatialPublicationManifest = {
   publication_policy: "default-deny";
   layers: Array<{
     layer_id: "municipal-boundary" | "census-sections" | "confiscated-assets";
+    primary_data_path: string;
     data_path: string;
+    distribution_role: "primary" | "continuity_fallback";
     media_type: "application/geo+json";
     distribution_status: "published";
     content_status: "populated" | "empty_by_policy";
@@ -222,6 +226,8 @@ export function buildConfiscatedAssetsSnapshot({
     metadata: {
       layer_id: "confiscated-assets",
       entity_type: "confiscated_asset",
+      distribution_role: "continuity_fallback",
+      primary_data_path: "/api/beni-confiscati/geojson",
       input_records: records.length,
       published_features: 0,
       excluded_records: records.length,
@@ -241,7 +247,7 @@ export function buildConfiscatedAssetsSnapshot({
         "https://www.dati.gov.it/content/italian-open-data-license-v20",
       automatic_geocoder: "not used",
       publication_note:
-        "Snapshot tecnicamente disponibile ma privo di feature: collocare ogni bene sul centroide comunale produrrebbe una localizzazione falsa. I conteggi descrivono la fonte ANBSC, non una mappa puntuale.",
+        "Fallback statico tecnicamente disponibile ma privo di feature: collocare ogni bene sul centroide comunale produrrebbe una localizzazione falsa. I conteggi descrivono la fonte ANBSC, non una mappa puntuale né lo stato del feed API canonico costruito dal database.",
     },
   };
 }
@@ -274,8 +280,11 @@ export function buildSpatialPublicationManifest(options: {
     layers: [
       {
         layer_id: "municipal-boundary",
+        primary_data_path:
+          "/data/processed/territorio/lamezia_confine_comunale.geojson",
         data_path:
           "/data/processed/territorio/lamezia_confine_comunale.geojson",
+        distribution_role: "primary",
         media_type: "application/geo+json",
         distribution_status: "published",
         content_status: "populated",
@@ -290,8 +299,11 @@ export function buildSpatialPublicationManifest(options: {
       },
       {
         layer_id: "census-sections",
+        primary_data_path:
+          "/data/processed/territorio/istat_sezioni_censimento_lamezia.geojson",
         data_path:
           "/data/processed/territorio/istat_sezioni_censimento_lamezia.geojson",
+        distribution_role: "primary",
         media_type: "application/geo+json",
         distribution_status: "published",
         content_status: "populated",
@@ -307,7 +319,9 @@ export function buildSpatialPublicationManifest(options: {
       },
       {
         layer_id: "confiscated-assets",
+        primary_data_path: "/api/beni-confiscati/geojson",
         data_path: "/data/processed/territorio/beni_confiscati_lamezia.geojson",
+        distribution_role: "continuity_fallback",
         media_type: "application/geo+json",
         distribution_status: "published",
         content_status: "empty_by_policy",
@@ -320,8 +334,7 @@ export function buildSpatialPublicationManifest(options: {
         licence: options.confiscatedAssetsSnapshot.metadata.licence,
         source_modified:
           options.confiscatedAssetsSnapshot.metadata.source_modified,
-        publication_note:
-          options.confiscatedAssetsSnapshot.metadata.publication_note,
+        publication_note: `${options.confiscatedAssetsSnapshot.metadata.publication_note} Questa distribuzione è un fallback di continuità ANBSC e non sostituisce il feed API costruito dal database, che conserva eventuali localizzazioni redazionali qualificate.`,
       },
     ],
   };

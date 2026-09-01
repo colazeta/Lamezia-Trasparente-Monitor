@@ -2,10 +2,25 @@
 
 ## Scopo
 
-Questa nota documenta la distribuzione pubblica
+Questa nota documenta la distribuzione pubblica di continuità
 `data/processed/territorio/beni_confiscati_lamezia.geojson` usata dall’Atlante
-territoriale. Lo snapshot non è un elenco alternativo dei beni e non introduce
-geocodifiche: applica il contratto spaziale default-deny ai dati pubblici ANBSC.
+territoriale quando il feed primario non è raggiungibile. Lo snapshot non è un
+elenco alternativo dei beni e non introduce geocodifiche: applica il contratto
+spaziale default-deny ai dati pubblici ANBSC.
+
+## Rapporto con la sorgente primaria
+
+Il feed canonico dei beni confiscati resta
+`/api/beni-confiscati/geojson`, costruito dal database attraverso
+`buildConfiscatedAssetsSpatialCollection`. Quel percorso pubblica le
+localizzazioni che superano i controlli su coordinate, provenienza coerente e
+`geoVerify=false`, incluse eventuali correzioni redazionali qualificate.
+
+Il registry dichiara questo file come `fallbackDataPath` e il manifest gli
+assegna `distribution_role="continuity_fallback"`. Leaflet e GeoLibre lo usano
+solo dopo il fallimento del feed primario e mostrano esplicitamente lo stato di
+fallback. Lo snapshot vuoto non equivale quindi a zero localizzazioni nel
+database e non può oscurare il feed API quando torna disponibile.
 
 ## Fonte
 
@@ -24,7 +39,7 @@ pagina InfoWeb, che durante la reingegnerizzazione della piattaforma i dati
 sulle destinazioni potrebbero essere sottostimati. I conteggi vanno quindi
 letti come fotografia della fonte, non come certificazione di completezza.
 
-## Esito della fotografia
+## Esito della fotografia ANBSC
 
 | Stato ANBSC        | Record sorgente | Feature pubblicate |
 | ------------------ | --------------: | -----------------: |
@@ -60,9 +75,10 @@ La materializzazione:
 3. non pubblica automaticamente eventuali nuovi campi di coordinate
    asset-level: li classifica come `asset_coordinates_pending_review`;
 4. genera confine, snapshot dei beni e manifest con digest SHA-256;
-5. mantiene lo snapshot ISTAT esistente come terza distribuzione canonica.
+5. mantiene lo snapshot ISTAT esistente come terza distribuzione versionata.
 
-Un futuro passaggio da 0 a feature puntuali richiede una revisione dedicata di
-precisione, provenienza, stato di verifica e collegamento alla scheda pubblica.
-Non è autorizzato inferire posizioni dal centroide comunale, da categorie, da
-procedimenti o da altri campi non spaziali.
+Un futuro passaggio del fallback ANBSC da 0 a feature puntuali richiede una
+revisione dedicata di precisione, provenienza, stato di verifica e collegamento
+alla scheda pubblica. Questo gate non rimuove le feature già qualificate dal
+percorso database/API. Non è autorizzato inferire posizioni dal centroide
+comunale, da categorie, da procedimenti o da altri campi non spaziali.

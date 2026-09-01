@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "generated_at": "2026-09-01T18:47:12.342Z",
+  "generated_at": "2026-09-01T19:08:35.895Z",
   "scope": {
     "municipality": "Lamezia Terme",
     "istat_code": "079160"
@@ -9,7 +9,9 @@
   "layers": [
     {
       "layer_id": "municipal-boundary",
+      "primary_data_path": "/data/processed/territorio/lamezia_confine_comunale.geojson",
       "data_path": "/data/processed/territorio/lamezia_confine_comunale.geojson",
+      "distribution_role": "primary",
       "media_type": "application/geo+json",
       "distribution_status": "published",
       "content_status": "populated",
@@ -23,7 +25,9 @@
     },
     {
       "layer_id": "census-sections",
+      "primary_data_path": "/data/processed/territorio/istat_sezioni_censimento_lamezia.geojson",
       "data_path": "/data/processed/territorio/istat_sezioni_censimento_lamezia.geojson",
+      "distribution_role": "primary",
       "media_type": "application/geo+json",
       "distribution_status": "published",
       "content_status": "populated",
@@ -37,17 +41,19 @@
     },
     {
       "layer_id": "confiscated-assets",
+      "primary_data_path": "/api/beni-confiscati/geojson",
       "data_path": "/data/processed/territorio/beni_confiscati_lamezia.geojson",
+      "distribution_role": "continuity_fallback",
       "media_type": "application/geo+json",
       "distribution_status": "published",
       "content_status": "empty_by_policy",
       "feature_count": 0,
       "excluded_feature_count": 340,
-      "sha256": "2f57ea01871d79eb933fd753581505461e9a18deea309c7e4eb3b98b7b293a7d",
+      "sha256": "7ad42ba28a902e51aa0af9c1f1b58bb2a5688978d2df1c81dbe02b07297587b6",
       "source_label": "ANBSC — beni immobili in amministrazione e destinati (Comune di Lamezia Terme)",
       "licence": "Italian Open Data License v2.0",
       "source_modified": "2026-09-02 04:00:00",
-      "publication_note": "Snapshot tecnicamente disponibile ma privo di feature: collocare ogni bene sul centroide comunale produrrebbe una localizzazione falsa. I conteggi descrivono la fonte ANBSC, non una mappa puntuale."
+      "publication_note": "Fallback statico tecnicamente disponibile ma privo di feature: collocare ogni bene sul centroide comunale produrrebbe una localizzazione falsa. I conteggi descrivono la fonte ANBSC, non una mappa puntuale né lo stato del feed API canonico costruito dal database. Questa distribuzione è un fallback di continuità ANBSC e non sostituisce il feed API costruito dal database, che conserva eventuali localizzazioni redazionali qualificate."
     }
   ]
 }

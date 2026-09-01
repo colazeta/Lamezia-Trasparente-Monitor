@@ -113,11 +113,35 @@ export async function loadConfiscatedAssetsSpatialLayer(): Promise<ConfiscatedAs
     throw new Error("Layer beni confiscati non configurato");
   }
 
-  const response = await fetch(definition.dataPath, {
+  const dataPaths = [definition.dataPath, definition.fallbackDataPath].filter(
+    (dataPath): dataPath is string => Boolean(dataPath),
+  );
+  let lastError: Error | null = null;
+
+  for (const dataPath of dataPaths) {
+    try {
+      return await fetchConfiscatedAssetsSpatialCollection(dataPath);
+    } catch (error) {
+      lastError =
+        error instanceof Error
+          ? error
+          : new Error("Layer beni confiscati non disponibile");
+    }
+  }
+
+  throw lastError ?? new Error("Layer beni confiscati non disponibile");
+}
+
+async function fetchConfiscatedAssetsSpatialCollection(
+  dataPath: string,
+): Promise<ConfiscatedAssetsSpatialCollection> {
+  const response = await fetch(dataPath, {
     headers: { Accept: "application/geo+json, application/json" },
   });
   if (!response.ok) {
-    throw new Error(`Layer beni confiscati non disponibile (${response.status})`);
+    throw new Error(
+      `Layer beni confiscati non disponibile (${response.status})`,
+    );
   }
 
   const payload = (await response.json()) as unknown;
@@ -133,7 +157,10 @@ function isMunicipalBoundarySpatialCollection(
 ): value is MunicipalBoundarySpatialCollection {
   if (!value || typeof value !== "object") return false;
   const collection = value as Partial<MunicipalBoundarySpatialCollection>;
-  if (collection.type !== "FeatureCollection" || !Array.isArray(collection.features)) {
+  if (
+    collection.type !== "FeatureCollection" ||
+    !Array.isArray(collection.features)
+  ) {
     return false;
   }
   if (
@@ -147,14 +174,17 @@ function isMunicipalBoundarySpatialCollection(
     return false;
   }
 
-  return collection.features.length > 0 && collection.features.every((feature) => {
-    const geometryType = feature?.geometry?.type;
-    return (
-      feature?.type === "Feature" &&
-      (geometryType === "Polygon" || geometryType === "MultiPolygon") &&
-      Array.isArray(feature.geometry.coordinates)
-    );
-  });
+  return (
+    collection.features.length > 0 &&
+    collection.features.every((feature) => {
+      const geometryType = feature?.geometry?.type;
+      return (
+        feature?.type === "Feature" &&
+        (geometryType === "Polygon" || geometryType === "MultiPolygon") &&
+        Array.isArray(feature.geometry.coordinates)
+      );
+    })
+  );
 }
 
 function isConfiscatedAssetsSpatialCollection(
@@ -162,10 +192,16 @@ function isConfiscatedAssetsSpatialCollection(
 ): value is ConfiscatedAssetsSpatialCollection {
   if (!value || typeof value !== "object") return false;
   const collection = value as Partial<ConfiscatedAssetsSpatialCollection>;
-  if (collection.type !== "FeatureCollection" || !Array.isArray(collection.features)) {
+  if (
+    collection.type !== "FeatureCollection" ||
+    !Array.isArray(collection.features)
+  ) {
     return false;
   }
-  if (!collection.metadata || collection.metadata.layer_id !== "confiscated-assets") {
+  if (
+    !collection.metadata ||
+    collection.metadata.layer_id !== "confiscated-assets"
+  ) {
     return false;
   }
 

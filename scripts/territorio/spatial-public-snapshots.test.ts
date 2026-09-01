@@ -57,6 +57,11 @@ test("does not turn ANBSC municipality centroids into asset locations", () => {
   assert.deepEqual(snapshot.features, []);
   assert.equal(snapshot.metadata.input_records, 2);
   assert.equal(snapshot.metadata.excluded_records, 2);
+  assert.equal(snapshot.metadata.distribution_role, "continuity_fallback");
+  assert.equal(
+    snapshot.metadata.primary_data_path,
+    "/api/beni-confiscati/geojson",
+  );
   assert.deepEqual(snapshot.metadata.exclusions, {
     municipal_centroid_only: 1,
     missing_asset_coordinates: 1,
@@ -123,24 +128,42 @@ test("manifest records checksums and distinguishes empty-by-policy content", () 
   assert.equal(manifest.layers.length, 3);
   assert.equal(manifest.layers[0].sha256, sha256("municipal"));
   assert.deepEqual(
-    manifest.layers.map(({ layer_id, content_status, feature_count }) => ({
-      layer_id,
-      content_status,
-      feature_count,
-    })),
+    manifest.layers.map(
+      ({
+        layer_id,
+        primary_data_path,
+        distribution_role,
+        content_status,
+        feature_count,
+      }) => ({
+        layer_id,
+        primary_data_path,
+        distribution_role,
+        content_status,
+        feature_count,
+      }),
+    ),
     [
       {
         layer_id: "municipal-boundary",
+        primary_data_path:
+          "/data/processed/territorio/lamezia_confine_comunale.geojson",
+        distribution_role: "primary",
         content_status: "populated",
         feature_count: 1,
       },
       {
         layer_id: "census-sections",
+        primary_data_path:
+          "/data/processed/territorio/istat_sezioni_censimento_lamezia.geojson",
+        distribution_role: "primary",
         content_status: "populated",
         feature_count: 317,
       },
       {
         layer_id: "confiscated-assets",
+        primary_data_path: "/api/beni-confiscati/geojson",
+        distribution_role: "continuity_fallback",
         content_status: "empty_by_policy",
         feature_count: 0,
       },
@@ -183,6 +206,11 @@ test("committed spatial snapshots match their publication manifest", () => {
   }
 
   assert.deepEqual(confiscated.features, []);
+  assert.equal(confiscated.metadata.distribution_role, "continuity_fallback");
+  assert.equal(
+    confiscated.metadata.primary_data_path,
+    "/api/beni-confiscati/geojson",
+  );
   assert.equal(confiscated.metadata.input_records, 340);
   assert.equal(confiscated.metadata.excluded_records, 340);
   assert.deepEqual(confiscated.metadata.source_counts, {

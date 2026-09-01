@@ -47,6 +47,7 @@ export type SpatialLayerDefinition = {
   entityTypes: string[];
   sourceLabel: string;
   dataPath?: string | null;
+  fallbackDataPath?: string | null;
   defaultVisible: boolean;
   minimumVerification?: SpatialVerificationStatus | null;
   publicationRule: string;
@@ -57,7 +58,9 @@ export type SpatialLayerDefinition = {
  * Registro iniziale dei layer territoriali.
  *
  * È intenzionalmente indipendente dal viewer: Leaflet, GeoLibre o altri client
- * devono leggere la stessa definizione logica e gli stessi dati canonici.
+ * devono leggere la stessa definizione logica e gli stessi dati canonici. Un
+ * eventuale `fallbackDataPath` è una distribuzione di continuità esplicita e
+ * non sostituisce la sorgente primaria indicata da `dataPath`.
  * `atlasStatus` descrive la disponibilità nella superficie Atlante, non il
  * motore cartografico usato per renderizzare il layer.
  */
@@ -118,14 +121,17 @@ export const SPATIAL_LAYER_REGISTRY: SpatialLayerDefinition[] = [
     allowedGeometryRoles: ["asset_location", "parcel"],
     entityTypes: ["confiscated_asset"],
     sourceLabel: "ANBSC / localizzazioni redazionali qualificate",
-    dataPath: "/data/processed/territorio/beni_confiscati_lamezia.geojson",
+    dataPath: "/api/beni-confiscati/geojson",
+    fallbackDataPath:
+      "/data/processed/territorio/beni_confiscati_lamezia.geojson",
     defaultVisible: false,
     minimumVerification: "machine_geocoded",
     publicationRule:
       "Fail-closed: pubblicare soltanto coordinate valide con provenienza geografica coerente e geoVerify=false; i record approssimati o ancora da verificare restano esclusi dal layer pubblico.",
     caveats: [
       "Le coordinate già presenti nei record non bastano da sole: devono essere accompagnate da provenienza e stato di verifica coerenti.",
-      "Il GeoJSON statico espone la copertura e i motivi di esclusione, così i beni non mappabili non vengono occultati né geocodificati artificialmente.",
+      "Il feed API costruito dal database resta la distribuzione primaria, così le localizzazioni redazionali qualificate non vengono perse.",
+      "Lo snapshot statico è soltanto un fallback di continuità ANBSC: espone copertura e motivi di esclusione senza sostituire il database o trasformare un errore in assenza di beni.",
       "La fotografia ANBSC corrente espone coordinate comunali, non posizioni dei singoli beni: questi record restano esclusi dal layer puntuale.",
       "Mantenere la mappa Leaflet esistente finché il layer canonico non è validato nell'Atlante.",
     ],
