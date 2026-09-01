@@ -147,8 +147,25 @@ test("does not build an artifact with non-auditable source hashes", () => {
     () =>
       buildHouseholdCompositionArtifact(rows, {
         archiveSha256: "not-a-hash",
+        archiveMemberSha256: "0".repeat(64),
         workbookSha256: "0".repeat(64),
       }),
     /expected a lowercase SHA-256 digest/i,
+  );
+});
+
+test("does not publish a workbook that is not the archive member", () => {
+  const rows = householdRowsFromWorkbook([
+    headers,
+    ["18", "79160", "791600000001", "1", "1", "0", "0", "0", "0", "0"],
+  ]);
+  assert.throws(
+    () =>
+      buildHouseholdCompositionArtifact(rows, {
+        archiveSha256: "a".repeat(64),
+        archiveMemberSha256: "b".repeat(64),
+        workbookSha256: "c".repeat(64),
+      }),
+    /does not match archive member/i,
   );
 });

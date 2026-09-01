@@ -1,4 +1,5 @@
 import { Router, type IRouter } from "express";
+import { GetDemographicHouseholdsResponse } from "@workspace/api-zod";
 import householdComposition2023 from "../data/lameziaHouseholdComposition2023.json";
 import { LAMEZIA_ISTAT_CODE } from "../lib/demographics";
 import { getPopulationHouseholdSnapshot } from "../lib/populationHouseholds";
@@ -13,12 +14,13 @@ router.get("/demographics/households", async (req, res) => {
   const snapshot = await getPopulationHouseholdSnapshot(period);
   if (!snapshot) {
     res.status(404).json({
-      error: "Dati sulle famiglie non ancora disponibili nell'archivio versionato",
+      error:
+        "Dati sulle famiglie non ancora disponibili nell'archivio versionato",
     });
     return;
   }
 
-  res.json({
+  const payload = {
     geography: {
       code: LAMEZIA_ISTAT_CODE,
       name: "Lamezia Terme",
@@ -48,7 +50,9 @@ router.get("/demographics/households", async (req, res) => {
       familyRelationships:
         "La dimensione della famiglia anagrafica non consente di inferire coppie, figli, parentela o altre relazioni tra i componenti.",
     },
-  });
+  };
+  GetDemographicHouseholdsResponse.parse(payload);
+  res.json(payload);
 });
 
 export default router;

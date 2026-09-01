@@ -76,6 +76,7 @@ corepack pnpm --filter @workspace/scripts run materialize:istat-household-compos
 ```
 
 Il comando ricalcola entrambi gli hash, verifica gli identificativi di sezione, rifiuta duplicati e scrive l'artefatto soltanto dopo il superamento dei gate di pubblicazione.
+Inoltre legge direttamente dallo ZIP il membro `Dati_regionali_2023/R18_Calabria_2023_sezioni.xlsx` e richiede che il suo SHA-256 coincida con quello del workbook passato a `--variables-xlsx`: un file esterno o appartenente a un'altra edizione blocca la pubblicazione.
 
 ## Relazione con lo storico famiglie
 

@@ -67,6 +67,7 @@
     "pageUrl": "https://www.istat.it/notizia/dati-per-sezioni-di-censimento/",
     "downloadUrl": "https://esploradati.istat.it/databrowser/DWL/PERMPOP/SUBCOM/Dati_regionali_2023.zip",
     "archiveFile": "Dati_regionali_2023.zip",
+    "archiveMember": "Dati_regionali_2023/R18_Calabria_2023_sezioni.xlsx",
     "workbookFile": "R18_Calabria_2023_sezioni.xlsx",
     "archiveSha256": "05661a6e248d4241c9fdd1b1fa1e740eae0706dd3fcfdbeb366f608269bfeb45",
     "workbookSha256": "40de6162994478f85773e71829dd7ec49badbef472e285ce4de855793eb1fa28",

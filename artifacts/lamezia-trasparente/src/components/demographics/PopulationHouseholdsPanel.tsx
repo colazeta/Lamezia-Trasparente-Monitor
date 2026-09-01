@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import type { DemographicHouseholdsResponse } from "@workspace/api-client-react";
 import { Home, Info, UsersRound } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -10,103 +11,15 @@ import {
 } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 
-type SourceStatus =
-  | "final"
-  | "provisional"
-  | "estimated"
-  | "reconstructed"
-  | "forecast"
-  | "unknown";
-
-type HouseholdResponse = {
-  geography: { code: string; name: string; level: string };
-  period: string;
-  availablePeriods: string[];
-  sourceStatus: SourceStatus;
-  counts: {
-    households: number;
-    householdPopulation: number;
-    averageHouseholdSize: number;
-    totalPopulation: number | null;
-    householdPopulationShare: number | null;
-  };
-  changeFromFirst: {
-    firstPeriod: string;
-    householdsAbsolute: number;
-    householdsPercent: number | null;
-    averageHouseholdSize: number;
-  };
-  history: Array<{
-    period: string;
-    households: number;
-    householdPopulation: number;
-    averageHouseholdSize: number;
-    sourceStatus: SourceStatus;
-    totalPopulation: number | null;
-  }>;
-  quality: {
-    publishedAverageHouseholdSize: number | null;
-    derivedAverageHouseholdSize: number;
-    averageDifference: number | null;
-    flags: string[];
-  };
-  composition: {
-    schemaVersion: 1;
-    referenceYear: 2023;
-    municipality: { name: string; istatCode: string };
-    totalHouseholds: number;
-    byComponents: Array<{
-      key: "1" | "2" | "3" | "4" | "5" | "6+";
-      sourceField: "PF3" | "PF4" | "PF5" | "PF6" | "PF7" | "PF8";
-      households: number;
-      share: number;
-    }>;
-    indicators: {
-      onePersonHouseholds: number;
-      onePersonShare: number;
-      fivePlusHouseholds: number;
-      fivePlusShare: number;
-    };
-    quality: {
-      includedRows: number;
-      skippedFictitiousRows: number;
-      incompleteRows: number;
-      componentSum: number;
-      reconciliationDifference: number;
-      exactReconciliation: boolean;
-    };
-    source: {
-      institution: string;
-      dataset: string;
-      referenceDate: string;
-      sourceUpdateDate: string;
-      pageUrl: string;
-    };
-  };
-  source: {
-    name: string;
-    dataset: string;
-    url: string;
-    projection: string;
-  };
-  methodology: {
-    household: string;
-    referencePeriod: string;
-    averageHouseholdSize: string;
-    provenance: string;
-    coverage: string;
-    history: string;
-    childrenDataset: string;
-    composition: string;
-    compositionQuality: string;
-    familyRelationships: string;
-  };
-};
+type SourceStatus = DemographicHouseholdsResponse["sourceStatus"];
+type HouseholdResponse = DemographicHouseholdsResponse;
 
 function formatInteger(value: number | null) {
   return value === null
     ? "—"
-    : new Intl.NumberFormat("it-IT", { maximumFractionDigits: 0 }).format(value);
+    : new Intl.NumberFormat("it-IT", { maximumFractionDigits: 0 }).format(
+        value,
+      );
 }
 
 function formatDecimal(value: number | null, digits = 2) {
@@ -185,7 +98,8 @@ export function PopulationHouseholdsPanel() {
   }, [selectedPeriod]);
 
   const maxHouseholds = useMemo(
-    () => Math.max(1, ...(data?.history.map((point) => point.households) ?? [1])),
+    () =>
+      Math.max(1, ...(data?.history.map((point) => point.households) ?? [1])),
     [data],
   );
   const maxCompositionShare = useMemo(
@@ -199,7 +113,10 @@ export function PopulationHouseholdsPanel() {
 
   if (isLoading && !data) {
     return (
-      <section className="space-y-4" aria-label="Caricamento dati sulle famiglie">
+      <section
+        className="space-y-4"
+        aria-label="Caricamento dati sulle famiglie"
+      >
         <Skeleton className="h-8 w-72" />
         <Skeleton className="h-64 w-full rounded-xl" />
       </section>
@@ -272,7 +189,9 @@ export function PopulationHouseholdsPanel() {
         <Badge variant="outline" className="shadow-none">
           {statusLabel(data.sourceStatus)}
         </Badge>
-        <span>{data.source.name} · {data.source.dataset}</span>
+        <span>
+          {data.source.name} · {data.source.dataset}
+        </span>
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -339,7 +258,8 @@ export function PopulationHouseholdsPanel() {
           <CardHeader>
             <CardTitle>Rispetto al primo anno disponibile</CardTitle>
             <CardDescription>
-              Confronto descrittivo, non una spiegazione causale del cambiamento.
+              Confronto descrittivo, non una spiegazione causale del
+              cambiamento.
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -400,39 +320,39 @@ export function PopulationHouseholdsPanel() {
                 className="space-y-3"
               >
                 {data.composition.byComponents.map((item) => {
-                const label =
-                  item.key === "1"
-                    ? "1 componente"
-                    : item.key === "6+"
-                      ? "6 o più componenti"
-                      : `${item.key} componenti`;
-                return (
-                  <div
-                    key={item.key}
-                    role="listitem"
-                    aria-label={`${label}: ${formatInteger(item.households)} famiglie, ${formatPercent(item.share)}`}
-                    className="grid grid-cols-[7rem_1fr_auto] items-center gap-2 sm:grid-cols-[8.5rem_1fr_auto] sm:gap-3"
-                  >
-                    <span className="text-sm font-medium text-foreground">
-                      {label}
-                    </span>
+                  const label =
+                    item.key === "1"
+                      ? "1 componente"
+                      : item.key === "6+"
+                        ? "6 o più componenti"
+                        : `${item.key} componenti`;
+                  return (
                     <div
-                      aria-hidden="true"
-                      className="h-3 overflow-hidden rounded-full bg-muted"
+                      key={item.key}
+                      role="listitem"
+                      aria-label={`${label}: ${formatInteger(item.households)} famiglie, ${formatPercent(item.share)}`}
+                      className="grid grid-cols-[7rem_1fr_auto] items-center gap-2 sm:grid-cols-[8.5rem_1fr_auto] sm:gap-3"
                     >
+                      <span className="text-sm font-medium text-foreground">
+                        {label}
+                      </span>
                       <div
-                        className="h-full rounded-full bg-primary/75"
-                        style={{
-                          width: `${(item.share / maxCompositionShare) * 100}%`,
-                        }}
-                      />
+                        aria-hidden="true"
+                        className="h-3 overflow-hidden rounded-full bg-muted"
+                      >
+                        <div
+                          className="h-full rounded-full bg-primary/75"
+                          style={{
+                            width: `${(item.share / maxCompositionShare) * 100}%`,
+                          }}
+                        />
+                      </div>
+                      <span className="min-w-20 text-right text-sm tabular-nums text-muted-foreground sm:min-w-24">
+                        {formatInteger(item.households)} ·{" "}
+                        {formatPercent(item.share)}
+                      </span>
                     </div>
-                    <span className="min-w-20 text-right text-sm tabular-nums text-muted-foreground sm:min-w-24">
-                      {formatInteger(item.households)} ·{" "}
-                      {formatPercent(item.share)}
-                    </span>
-                  </div>
-                );
+                  );
                 })}
               </div>
               <p className="pt-1 text-xs leading-5 text-muted-foreground">
@@ -501,21 +421,19 @@ export function PopulationHouseholdsPanel() {
             {data.methodology.composition} {data.methodology.compositionQuality}
           </p>
           <p>
-            <strong className="font-medium text-foreground">Famiglie per numero di figli:</strong>{" "}
+            <strong className="font-medium text-foreground">
+              Famiglie per numero di figli:
+            </strong>{" "}
             {data.methodology.childrenDataset}
           </p>
           {data.quality.averageDifference !== null ? (
             <p>
-              Controllo della media pubblicata: {formatDecimal(
-                data.quality.publishedAverageHouseholdSize,
-                3,
-              )} dalla fonte contro {formatDecimal(
-                data.quality.derivedAverageHouseholdSize,
-                3,
-              )} ricalcolato; differenza {formatDecimal(
-                data.quality.averageDifference,
-                3,
-              )}.
+              Controllo della media pubblicata:{" "}
+              {formatDecimal(data.quality.publishedAverageHouseholdSize, 3)}{" "}
+              dalla fonte contro{" "}
+              {formatDecimal(data.quality.derivedAverageHouseholdSize, 3)}{" "}
+              ricalcolato; differenza{" "}
+              {formatDecimal(data.quality.averageDifference, 3)}.
             </p>
           ) : null}
         </CardContent>

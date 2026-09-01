@@ -5,10 +5,11 @@ import {
   waitFor,
   within,
 } from "@testing-library/react";
+import type { DemographicHouseholdsResponse } from "@workspace/api-client-react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { PopulationHouseholdsPanel } from "@/components/demographics/PopulationHouseholdsPanel";
 
-const payload = {
+const payload: DemographicHouseholdsResponse = {
   geography: { code: "079160", name: "Lamezia Terme", level: "municipality" },
   period: "2025",
   availablePeriods: ["2021", "2022", "2023", "2024", "2025"],
@@ -80,9 +81,18 @@ const payload = {
     source: {
       institution: "ISTAT",
       dataset: "Dati per sezioni di censimento 2023",
+      territorialLevel: "sezione di censimento",
       referenceDate: "2023-12-31",
       sourceUpdateDate: "2026-06-09",
       pageUrl: "https://www.istat.it/notizia/dati-per-sezioni-di-censimento/",
+      downloadUrl:
+        "https://esploradati.istat.it/databrowser/DWL/PERMPOP/SUBCOM/Dati_regionali_2023.zip",
+      archiveFile: "Dati_regionali_2023.zip",
+      archiveMember: "Dati_regionali_2023/R18_Calabria_2023_sezioni.xlsx",
+      workbookFile: "R18_Calabria_2023_sezioni.xlsx",
+      archiveSha256: "a".repeat(64),
+      workbookSha256: "b".repeat(64),
+      licence: "CC BY 4.0",
     },
   },
   source: {

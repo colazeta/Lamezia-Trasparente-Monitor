@@ -1,4 +1,5 @@
 #!/usr/bin/env tsx
+import { spawn } from "node:child_process";
 import { createHash } from "node:crypto";
 import { createReadStream } from "node:fs";
 import { mkdir, rename, stat, writeFile } from "node:fs/promises";
@@ -36,6 +37,8 @@ const DEFAULT_OUTPUT = path.join(
   repoRoot,
   "artifacts/api-server/src/data/lameziaHouseholdComposition2023.json",
 );
+const ARCHIVE_WORKBOOK_MEMBER =
+  "Dati_regionali_2023/R18_Calabria_2023_sezioni.xlsx";
 
 const REQUIRED_FIELDS = [
   "PROCOM",
@@ -57,6 +60,7 @@ export type HouseholdCompositionArtifact = HouseholdCompositionProfile & {
     pageUrl: string;
     downloadUrl: string;
     archiveFile: "Dati_regionali_2023.zip";
+    archiveMember: typeof ARCHIVE_WORKBOOK_MEMBER;
     workbookFile: "R18_Calabria_2023_sezioni.xlsx";
     archiveSha256: string;
     workbookSha256: string;
@@ -195,7 +199,11 @@ export function householdRowsFromWorkbook(
 
 export function buildHouseholdCompositionArtifact(
   rows: HouseholdCensusRow[],
-  hashes: { archiveSha256: string; workbookSha256: string },
+  hashes: {
+    archiveSha256: string;
+    archiveMemberSha256: string;
+    workbookSha256: string;
+  },
 ): HouseholdCompositionArtifact {
   const profile = aggregateHouseholdComposition(rows);
   assertPublishableHouseholdComposition(profile);
@@ -203,6 +211,11 @@ export function buildHouseholdCompositionArtifact(
     if (!/^[a-f0-9]{64}$/.test(hash)) {
       throw new Error(`${label}: expected a lowercase SHA-256 digest`);
     }
+  }
+  if (hashes.archiveMemberSha256 !== hashes.workbookSha256) {
+    throw new Error(
+      `Workbook SHA-256 ${hashes.workbookSha256} does not match archive member ${ARCHIVE_WORKBOOK_MEMBER} (${hashes.archiveMemberSha256})`,
+    );
   }
   return {
     schemaVersion: 1,
@@ -218,6 +231,7 @@ export function buildHouseholdCompositionArtifact(
       downloadUrl:
         "https://esploradati.istat.it/databrowser/DWL/PERMPOP/SUBCOM/Dati_regionali_2023.zip",
       archiveFile: "Dati_regionali_2023.zip",
+      archiveMember: ARCHIVE_WORKBOOK_MEMBER,
       workbookFile: "R18_Calabria_2023_sezioni.xlsx",
       archiveSha256: hashes.archiveSha256,
       workbookSha256: hashes.workbookSha256,
@@ -234,6 +248,36 @@ async function sha256(filePath: string): Promise<string> {
     stream.on("data", (chunk) => hash.update(chunk));
     stream.on("error", reject);
     stream.on("end", () => resolve(hash.digest("hex")));
+  });
+}
+
+async function sha256ArchiveMember(
+  archivePath: string,
+  memberPath: string,
+): Promise<string> {
+  await stat(archivePath);
+  return new Promise((resolve, reject) => {
+    const hash = createHash("sha256");
+    const child = spawn("unzip", ["-p", archivePath, memberPath], {
+      stdio: ["ignore", "pipe", "pipe"],
+    });
+    let stderr = "";
+    child.stdout.on("data", (chunk) => hash.update(chunk));
+    child.stderr.on("data", (chunk) => {
+      stderr += String(chunk);
+    });
+    child.on("error", reject);
+    child.on("close", (code) => {
+      if (code !== 0) {
+        reject(
+          new Error(
+            `Cannot read ${memberPath} from ${archivePath}: ${stderr.trim() || `unzip exited with ${code}`}`,
+          ),
+        );
+        return;
+      }
+      resolve(hash.digest("hex"));
+    });
   });
 }
 
@@ -267,14 +311,16 @@ function parseArgs(argv: string[]) {
 
 export async function materialize(argv = process.argv.slice(2)): Promise<void> {
   const options = parseArgs(argv);
-  const [workbookRows, archiveSha256, workbookSha256] = await Promise.all([
-    readXlsxRows(options.xlsxPath),
-    sha256(options.archivePath),
-    sha256(options.xlsxPath),
-  ]);
+  const [workbookRows, archiveSha256, archiveMemberSha256, workbookSha256] =
+    await Promise.all([
+      readXlsxRows(options.xlsxPath),
+      sha256(options.archivePath),
+      sha256ArchiveMember(options.archivePath, ARCHIVE_WORKBOOK_MEMBER),
+      sha256(options.xlsxPath),
+    ]);
   const artifact = buildHouseholdCompositionArtifact(
     householdRowsFromWorkbook(workbookRows),
-    { archiveSha256, workbookSha256 },
+    { archiveSha256, archiveMemberSha256, workbookSha256 },
   );
   await mkdir(path.dirname(options.outputPath), { recursive: true });
   const temporaryPath = `${options.outputPath}.tmp`;
