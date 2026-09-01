@@ -32,12 +32,24 @@ def load_json_stdout(stdout: str, label: str) -> dict:
         raise RuntimeError(f"{label} returned non-JSON output: {exc}") from exc
 
 
+def remove_if_exists(path: Path) -> None:
+    try:
+        path.unlink()
+    except FileNotFoundError:
+        pass
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Compare current pdf-parse extraction with Docling on one immutable local PDF.")
     parser.add_argument("document", type=Path)
     parser.add_argument("--repo-root", type=Path, default=Path(__file__).resolve().parents[2])
     parser.add_argument("--output-dir", type=Path, default=Path("tmp/docling/benchmark"))
     parser.add_argument("--skip-docling", action="store_true", help="Run only the current pdf-parse baseline.")
+    parser.add_argument(
+        "--metrics-only",
+        action="store_true",
+        help="Retain only hashes/metrics/manifests; discard extracted text, Markdown and structured document JSON.",
+    )
     args = parser.parse_args()
 
     repo_root = args.repo_root.resolve()
@@ -61,6 +73,9 @@ def main() -> int:
         "scripts/docling_pdf_baseline.mjs",
         str(document),
     ]
+    if args.metrics_only:
+        baseline_command.append("--omit-text")
+
     code, stdout, stderr, wall_ms = run_command(baseline_command, repo_root)
     baseline = load_json_stdout(stdout, "pdf-parse baseline") if stdout.strip() else {
         "schemaVersion": 1,
@@ -68,7 +83,11 @@ def main() -> int:
         "extractorVersion": "2.4.5",
         "status": "failed",
         "error": stderr.strip() or f"exit code {code}",
+        "contentRetained": False,
     }
+    if args.metrics_only:
+        baseline.pop("text", None)
+        baseline["contentRetained"] = False
     baseline["runnerWallMs"] = wall_ms
     baseline["processExitCode"] = code
     if stderr.strip():
@@ -79,6 +98,8 @@ def main() -> int:
 
     result = {
         "schemaVersion": 1,
+        "mode": "metrics-only" if args.metrics_only else "quality-benchmark",
+        "contentRetained": not args.metrics_only,
         "source": {
             "fileName": document.name,
             "sha256": source_sha,
@@ -100,7 +121,7 @@ def main() -> int:
             "characterDelta": None,
             "pageDelta": None,
             "automaticWinner": None,
-            "note": "Character/page deltas are diagnostics only; quality requires the manual spot-check rubric.",
+            "note": "Character/page deltas are diagnostics only; quality requires a reviewed source and manual spot-check rubric.",
         },
     }
 
@@ -115,6 +136,8 @@ def main() -> int:
         ]
         doc_code, doc_stdout, doc_stderr, doc_wall_ms = run_command(docling_command, repo_root)
         manifest_path = docling_output / f"{prefix}.docling.manifest.json"
+        markdown_path = docling_output / f"{prefix}.docling.md"
+        json_path = docling_output / f"{prefix}.docling.json"
         docling = None
         if manifest_path.is_file():
             docling = json.loads(manifest_path.read_text(encoding="utf-8"))
@@ -125,7 +148,7 @@ def main() -> int:
             "processExitCode": doc_code,
             "runnerWallMs": doc_wall_ms,
             "stderr": doc_stderr.strip() or None,
-            "stdout": doc_stdout.strip() or None,
+            "stdout": None if args.metrics_only else (doc_stdout.strip() or None),
             "manifest": manifest_path.name if manifest_path.is_file() else None,
             "characters": docling_result.get("markdownCharacters"),
             "pages": docling_result.get("pageCount"),
@@ -133,6 +156,7 @@ def main() -> int:
             "elapsedMs": docling_result.get("elapsedMs"),
             "sourceSha256": (docling or {}).get("source", {}).get("sha256"),
             "extractorVersion": (docling or {}).get("extractor", {}).get("version"),
+            "contentRetained": not args.metrics_only,
         }
 
         if docling:
@@ -146,6 +170,18 @@ def main() -> int:
             doc_pages = result["docling"]["pages"]
             if isinstance(base_pages, int) and isinstance(doc_pages, int):
                 result["comparison"]["pageDelta"] = doc_pages - base_pages
+
+        if args.metrics_only:
+            remove_if_exists(markdown_path)
+            remove_if_exists(json_path)
+            if manifest_path.is_file():
+                manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+                manifest.pop("artifacts", None)
+                manifest["contentRetained"] = False
+                manifest_path.write_text(
+                    json.dumps(manifest, indent=2, ensure_ascii=False, sort_keys=True) + "\n",
+                    encoding="utf-8",
+                )
 
     summary_path = output_dir / f"{prefix}.comparison.json"
     summary_path.write_text(json.dumps(result, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
