@@ -119,17 +119,20 @@ def main() -> int:
         if manifest_path.is_file():
             docling = json.loads(manifest_path.read_text(encoding="utf-8"))
 
+        docling_result = (docling or {}).get("result", {})
         result["docling"] = {
-            "status": "ok" if doc_code == 0 and docling else "failed",
+            "status": "ok" if doc_code == 0 and docling_result.get("status") == "ok" else "failed",
             "processExitCode": doc_code,
             "runnerWallMs": doc_wall_ms,
             "stderr": doc_stderr.strip() or None,
             "stdout": doc_stdout.strip() or None,
             "manifest": manifest_path.name if manifest_path.is_file() else None,
-            "characters": (docling or {}).get("metrics", {}).get("markdownCharacters"),
-            "pages": (docling or {}).get("metrics", {}).get("pages"),
-            "tables": (docling or {}).get("metrics", {}).get("tables"),
+            "characters": docling_result.get("markdownCharacters"),
+            "pages": docling_result.get("pageCount"),
+            "tables": docling_result.get("tableCount"),
+            "elapsedMs": docling_result.get("elapsedMs"),
             "sourceSha256": (docling or {}).get("source", {}).get("sha256"),
+            "extractorVersion": (docling or {}).get("extractor", {}).get("version"),
         }
 
         if docling:
