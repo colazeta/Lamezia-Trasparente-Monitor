@@ -20,7 +20,7 @@ function renderProposteCiviche() {
 
 describe("proposte civiche", () => {
   it("separa le proposte documentate dai quattro seed progettuali interni", () => {
-    expect(PUBLIC_PROPOSALS).toHaveLength(17);
+    expect(PUBLIC_PROPOSALS).toHaveLength(19);
     const internalSeeds = PUBLIC_PROPOSALS.filter(
       (proposal) => proposal.sourceUrl === undefined,
     );
@@ -43,7 +43,7 @@ describe("proposte civiche", () => {
     ).toBe(true);
     expect(
       PUBLIC_PROPOSALS.filter((proposal) => proposal.sourceUrl),
-    ).toHaveLength(13);
+    ).toHaveLength(15);
   });
 
   it("filtra le proposte per stato, promotore e tema con utility pure", () => {
