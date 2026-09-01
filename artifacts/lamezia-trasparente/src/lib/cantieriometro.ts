@@ -1,4 +1,25 @@
-import type { PnrrProject } from "@workspace/api-client-react";
+import type { PnrrLocationQuality } from "@workspace/api-client-react";
+
+export interface CantieriometroProject {
+  id: number;
+  key: string;
+  title: string;
+  intervention?: string | null;
+  cup?: string | null;
+  importoFinanziato?: number | null;
+  location: string | null;
+  locationQuality: PnrrLocationQuality;
+  locationNote: string;
+  status?: string | null;
+  documentsCount?: number;
+  documents?: readonly unknown[];
+  linkedContracts?: readonly unknown[];
+  lastUpdatedAt?: string | null;
+  lastPublication?: string | null;
+  publishedAt?: string | null;
+  aggiornamentoVecchio: boolean;
+  freshnessAssessment?: "current" | "stale" | "not_assessed";
+}
 
 export type CantieriometroAmountFilter =
   | "all"
@@ -25,7 +46,7 @@ export type CantieriometroCard = {
   cup: string | null;
   amount: number | null;
   location: string | null;
-  locationQuality: PnrrProject["locationQuality"];
+  locationQuality: PnrrLocationQuality;
   locationNote: string;
   projectStatus: string | null;
   linkedActsCount: number;
@@ -46,7 +67,7 @@ export const defaultCantieriometroFilters: CantieriometroFilters = {
 };
 
 export function buildCantieriometroCards(
-  projects: readonly PnrrProject[],
+  projects: readonly CantieriometroProject[],
 ): CantieriometroCard[] {
   return projects
     .map((project) => {
@@ -58,10 +79,12 @@ export function buildCantieriometroCards(
       const hasLocation =
         Boolean(location) && project.locationQuality !== "non_disponibile";
       const lastUpdatedAt =
-        project.lastUpdatedAt ??
-        project.lastPublication ??
-        project.publishedAt ??
-        null;
+        project.freshnessAssessment === "not_assessed"
+          ? null
+          : (project.lastUpdatedAt ??
+            project.lastPublication ??
+            project.publishedAt ??
+            null);
 
       return {
         projectId: project.id,
@@ -80,8 +103,9 @@ export function buildCantieriometroCards(
         hasLinkedActs: linkedActsCount > 0,
         hasLocation,
         needsDataVerification:
-          project.aggiornamentoVecchio ||
-          !lastUpdatedAt ||
+          (project.freshnessAssessment
+            ? project.freshnessAssessment !== "current"
+            : project.aggiornamentoVecchio || !lastUpdatedAt) ||
           project.locationQuality === "da_verificare",
       };
     })
