@@ -51,7 +51,7 @@ The manifest records the source file name, full SHA-256, byte size, Docling vers
 The helper tests do not require Docling to be installed:
 
 ```bash
-python -m unittest tools/docling/test_extract_document.py
+python tools/docling/test_extract_document.py
 python -m py_compile tools/docling/extract_document.py
 ```
 
