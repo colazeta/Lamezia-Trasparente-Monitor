@@ -23,7 +23,7 @@ export type DoclingObservationSummary = {
 };
 
 export function hasEmbeddedPdfMarker(data: Uint8Array): boolean {
-  const bytes = Buffer.from(data.buffer, data.byteOffset, data.byteLength);
+  const bytes = Buffer.from(data);
   const markerIndex = bytes.indexOf(EMBEDDED_FILES_MARKER);
   if (markerIndex < 0) return false;
 
