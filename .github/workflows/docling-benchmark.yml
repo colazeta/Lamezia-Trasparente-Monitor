@@ -5,7 +5,12 @@ on:
   pull_request:
     paths:
       - '.github/workflows/docling-benchmark.yml'
-      - 'tools/docling/**'
+      - 'tools/docling/requirements.txt'
+      - 'tools/docling/extract_document.py'
+      - 'tools/docling/extract_pdf_attachments.py'
+      - 'tools/docling/run_benchmark.py'
+      - 'tools/docling/test_extract_document.py'
+      - 'tools/docling/test_extract_pdf_attachments.py'
       - 'artifacts/api-server/scripts/docling_pdf_baseline.mjs'
       - 'data/public/albo/documents/2026/842702b2044b4b6f9a7b21a65eac2ab59866ee3f321872e6b28fd481598be304.pdf'
 
