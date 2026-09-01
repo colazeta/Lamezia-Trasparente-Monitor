@@ -41,12 +41,12 @@ https://web.geolibre.app/
 
 I percorsi `/api/*` usano `VITE_API_BASE_URL` quando configurato; gli asset statici usano l’origine pubblica del sito.
 
-Prima di costruire l’URL del viewer, il frontend esegue una richiesta `HEAD` per
-ogni feed e accetta soltanto risposte HTTP riuscite con Content-Type JSON o
-GeoJSON. I layer non raggiungibili, bloccati da CORS o serviti con un formato
-inatteso vengono esclusi dall’URL GeoLibre e dichiarati nell’interfaccia con la
-copertura `disponibili / attivi`. Un errore non viene mai convertito in una
-collezione vuota.
+Prima di costruire l’URL del viewer, il frontend esegue una richiesta `HEAD` con
+timeout di 8 secondi per ogni feed e accetta soltanto risposte HTTP riuscite con
+Content-Type JSON o GeoJSON. I layer non raggiungibili, bloccati da CORS, troppo
+lenti o serviti con un formato inatteso vengono esclusi dall’URL GeoLibre e
+dichiarati nell’interfaccia con la copertura `disponibili / attivi`. Un errore
+non viene mai convertito in una collezione vuota.
 
 Non viene creato un `.geolibre.json` parallelo e non vengono duplicate geometrie o proprietà di dominio.
 

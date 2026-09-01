@@ -77,9 +77,7 @@ describe("GeoLibre pilot helpers", () => {
         "https://lamezia.example",
         "https://api.lamezia.example",
       ),
-    ).toBe(
-      "https://lamezia.example/data/processed/territorio/sezioni.geojson",
-    );
+    ).toBe("https://lamezia.example/data/processed/territorio/sezioni.geojson");
   });
 
   it("builds a read-only GeoLibre URL with repeated canonical data parameters", () => {
@@ -191,6 +189,21 @@ describe("GeoLibre pilot helpers", () => {
       status: "unavailable",
       httpStatus: 200,
       reason: "invalid_content_type",
+    });
+  });
+
+  it("bounds a stalled feed and reports it as unavailable", async () => {
+    const availability = await checkGeoLibreLayerAvailability({
+      layers: [layer("municipal-boundary", "/api/gis/comune")],
+      siteOrigin: "https://lamezia.example",
+      timeoutMs: 5,
+      fetcher: () => new Promise<Response>(() => undefined),
+    });
+
+    expect(availability[0]).toMatchObject({
+      status: "unavailable",
+      httpStatus: null,
+      reason: "timeout",
     });
   });
 

@@ -114,15 +114,18 @@ jobs:
               echo ""
               echo "Wrangler direct publish is enabled. The public smoke will require the exact Git commit after deployment."
             } >> "$GITHUB_STEP_SUMMARY"
-          elif [ "$token_present" = false ] && [ "$account_present" = false ]; then
+          elif [ "$token_present" = false ] && [ "$account_present" = false ] && [ "$GITHUB_EVENT_NAME" = "push" ]; then
             echo "direct=false" >> "$GITHUB_OUTPUT"
             {
               echo "### Cloudflare Pages deployment mode"
               echo ""
               echo "Wrangler credentials are not configured, so publishing is delegated to the existing Cloudflare Pages Git integration. The public smoke will wait for and require this exact Git commit."
             } >> "$GITHUB_STEP_SUMMARY"
+          elif [ "$token_present" = false ] && [ "$account_present" = false ]; then
+            echo "::error::A manual deployment requires CLOUDFLARE_API_TOKEN and CLOUDFLARE_ACCOUNT_ID because no Git push is available to trigger the native Cloudflare Pages integration."
+            exit 1
           else
-            echo "::error::Cloudflare credentials are only partially configured. Set both CLOUDFLARE_API_TOKEN and CLOUDFLARE_ACCOUNT_ID, or remove both to use the native Git integration."
+            echo "::error::Cloudflare credentials are only partially configured. Set both CLOUDFLARE_API_TOKEN and CLOUDFLARE_ACCOUNT_ID; removing both selects the native Git integration only on push events."
             exit 1
           fi
 

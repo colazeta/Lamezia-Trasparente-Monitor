@@ -21,6 +21,7 @@ export type GeoLibreLayerAvailability = {
     | "http_error"
     | "invalid_content_type"
     | "network_error"
+    | "timeout"
     | null;
 };
 
@@ -29,8 +30,11 @@ export type CheckGeoLibreLayerAvailabilityOptions = {
   siteOrigin: string;
   apiBaseUrl?: string | null;
   signal?: AbortSignal;
+  timeoutMs?: number;
   fetcher?: typeof fetch;
 };
+
+const DEFAULT_LAYER_AVAILABILITY_TIMEOUT_MS = 8_000;
 
 export function isGeoLibrePilotEnabled(value: string | undefined): boolean {
   return value?.trim().toLowerCase() === "true";
@@ -72,6 +76,7 @@ export async function checkGeoLibreLayerAvailability({
   siteOrigin,
   apiBaseUrl = null,
   signal,
+  timeoutMs = DEFAULT_LAYER_AVAILABILITY_TIMEOUT_MS,
   fetcher = fetch,
 }: CheckGeoLibreLayerAvailabilityOptions): Promise<
   GeoLibreLayerAvailability[]
@@ -95,13 +100,31 @@ export async function checkGeoLibreLayerAvailability({
         apiBaseUrl,
       );
 
+      const requestController = new AbortController();
+      const abortRequest = () => requestController.abort(signal?.reason);
+      if (signal?.aborted) abortRequest();
+      else signal?.addEventListener("abort", abortRequest, { once: true });
+
+      let didTimeout = false;
+      let timeoutId: ReturnType<typeof setTimeout> | null = null;
+      const timeoutPromise = new Promise<never>((_resolve, reject) => {
+        timeoutId = setTimeout(() => {
+          didTimeout = true;
+          requestController.abort();
+          reject(new Error("GeoLibre layer availability timeout"));
+        }, normalizeTimeoutMs(timeoutMs));
+      });
+
       try {
-        const response = await fetcher(dataUrl, {
-          method: "HEAD",
-          cache: "no-store",
-          credentials: "omit",
-          signal,
-        });
+        const response = await Promise.race([
+          fetcher(dataUrl, {
+            method: "HEAD",
+            cache: "no-store",
+            credentials: "omit",
+            signal: requestController.signal,
+          }),
+          timeoutPromise,
+        ]);
         const contentType = response.headers.get("content-type");
 
         if (!response.ok) {
@@ -141,8 +164,11 @@ export async function checkGeoLibreLayerAvailability({
           status: "unavailable",
           httpStatus: null,
           contentType: null,
-          reason: "network_error",
+          reason: didTimeout ? "timeout" : "network_error",
         };
+      } finally {
+        if (timeoutId !== null) clearTimeout(timeoutId);
+        signal?.removeEventListener("abort", abortRequest);
       }
     }),
   );
@@ -188,4 +214,10 @@ function isGeoJsonContentType(value: string | null): boolean {
   return (
     normalized.includes("application/json") || normalized.includes("geo+json")
   );
+}
+
+function normalizeTimeoutMs(value: number): number {
+  return Number.isFinite(value) && value >= 0
+    ? value
+    : DEFAULT_LAYER_AVAILABILITY_TIMEOUT_MS;
 }

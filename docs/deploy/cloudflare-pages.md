@@ -32,8 +32,8 @@ reviewed publish modes:
 
 - when both Wrangler credentials are present, it publishes
   `artifacts/lamezia-trasparente/dist/public` directly;
-- when neither credential is present, it relies on the existing Cloudflare Pages
-  Git integration triggered by the same push.
+- on a `push`, when neither credential is present, it relies on the existing
+  Cloudflare Pages Git integration triggered by that same event.
 
 In both modes the final public smoke waits for
 `https://lamezia-trasparente.pages.dev` and requires
@@ -55,8 +55,10 @@ Keep the API token as a secret. The account ID may be a secret or a repository
 variable because the workflow accepts both.
 
 Partial credential configuration fails closed. With neither value configured,
-the direct Wrangler step is skipped and the exact-commit smoke validates the
-native Git deployment instead.
+the direct Wrangler step is skipped only for `push` events and the exact-commit
+smoke validates the native Git deployment instead. A manual `workflow_dispatch`
+has no push capable of triggering that integration, so it requires both Wrangler
+credentials and otherwise fails immediately with an explicit error.
 
 The other workflows have different jobs:
 
