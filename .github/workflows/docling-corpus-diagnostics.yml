@@ -1,0 +1,88 @@
+name: Docling corpus diagnostics
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - '.github/workflows/docling-corpus-diagnostics.yml'
+      - 'tools/docling/select_corpus_candidates.py'
+      - 'tools/docling/run_corpus_benchmark.py'
+      - 'tools/docling/verify_metrics_only_artifacts.py'
+      - 'tools/docling/test_select_corpus_candidates.py'
+      - 'tools/docling/run_benchmark.py'
+      - 'artifacts/api-server/scripts/docling_pdf_baseline.mjs'
+      - 'tools/docling/extract_document.py'
+      - 'tools/docling/requirements.txt'
+
+permissions:
+  contents: read
+
+jobs:
+  diagnostics:
+    name: Metrics-only six-document corpus
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.28.1
+          run_install: false
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install Node dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+          cache-dependency-path: tools/docling/requirements.txt
+
+      - name: Install benchmark dependencies
+        run: python -m pip install -r tools/docling/requirements.txt
+
+      - name: Run privacy and syntax tests
+        run: |
+          python tools/docling/test_extract_document.py
+          python tools/docling/test_extract_pdf_attachments.py
+          python tools/docling/test_select_corpus_candidates.py
+          python -m py_compile \
+            tools/docling/run_benchmark.py \
+            tools/docling/select_corpus_candidates.py \
+            tools/docling/run_corpus_benchmark.py \
+            tools/docling/verify_metrics_only_artifacts.py
+
+      - name: Select public-safe candidates from metadata
+        run: >-
+          python tools/docling/select_corpus_candidates.py
+          --output tmp/docling/corpus/candidates.json
+
+      - name: Run bounded metrics-only corpus
+        run: >-
+          python tools/docling/run_corpus_benchmark.py
+          tmp/docling/corpus/candidates.json
+          --output-dir tmp/docling/corpus/results
+          --max-items 6
+
+      - name: Fail closed if extracted content was retained
+        run: python tools/docling/verify_metrics_only_artifacts.py tmp/docling/corpus
+
+      - name: Upload metrics-only diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: docling-corpus-diagnostics
+          path: tmp/docling/corpus/
+          if-no-files-found: warn
+          retention-days: 7
