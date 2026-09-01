@@ -5,6 +5,7 @@ export type BuildGeoLibreViewerUrlOptions = {
   layers: SpatialLayerDefinition[];
   siteOrigin: string;
   apiBaseUrl?: string | null;
+  publicBaseUrl?: string | null;
   theme?: "light" | "dark" | null;
 };
 
@@ -36,6 +37,7 @@ export type CheckGeoLibreLayerAvailabilityOptions = {
   layers: SpatialLayerDefinition[];
   siteOrigin: string;
   apiBaseUrl?: string | null;
+  publicBaseUrl?: string | null;
   signal?: AbortSignal;
   timeoutMs?: number;
   fetcher?: typeof fetch;
@@ -72,6 +74,7 @@ export type SpatialPublicationManifest = {
 export type LoadSpatialPublicationManifestOptions = {
   layers: SpatialLayerDefinition[];
   siteOrigin: string;
+  publicBaseUrl?: string | null;
   signal?: AbortSignal;
   fetcher?: typeof fetch;
 };
@@ -89,6 +92,7 @@ export function buildGeoLibreViewerUrl({
   layers,
   siteOrigin,
   apiBaseUrl = null,
+  publicBaseUrl = null,
   theme = null,
 }: BuildGeoLibreViewerUrlOptions): string {
   const viewerUrl = new URL(viewerBaseUrl);
@@ -104,7 +108,12 @@ export function buildGeoLibreViewerUrl({
     if (!layer.dataPath) continue;
     viewerUrl.searchParams.append(
       "data",
-      resolveSpatialDataUrl(layer.dataPath, siteOrigin, apiBaseUrl),
+      resolveSpatialDataUrl(
+        layer.dataPath,
+        siteOrigin,
+        apiBaseUrl,
+        publicBaseUrl,
+      ),
     );
   }
 
@@ -120,6 +129,7 @@ export async function checkGeoLibreLayerAvailability({
   layers,
   siteOrigin,
   apiBaseUrl = null,
+  publicBaseUrl = null,
   signal,
   timeoutMs = DEFAULT_LAYER_AVAILABILITY_TIMEOUT_MS,
   fetcher = fetch,
@@ -147,6 +157,7 @@ export async function checkGeoLibreLayerAvailability({
         dataPath: layer.dataPath,
         siteOrigin,
         apiBaseUrl,
+        publicBaseUrl,
         signal,
         timeoutMs,
         fetcher,
@@ -171,6 +182,7 @@ export async function checkGeoLibreLayerAvailability({
         dataPath: layer.fallbackDataPath,
         siteOrigin,
         apiBaseUrl,
+        publicBaseUrl,
         signal,
         timeoutMs,
         fetcher,
@@ -197,6 +209,7 @@ async function probeGeoJsonDistribution({
   dataPath,
   siteOrigin,
   apiBaseUrl,
+  publicBaseUrl,
   signal,
   timeoutMs,
   fetcher,
@@ -204,13 +217,19 @@ async function probeGeoJsonDistribution({
   dataPath: string;
   siteOrigin: string;
   apiBaseUrl: string | null;
+  publicBaseUrl: string | null;
   signal?: AbortSignal;
   timeoutMs: number;
   fetcher: typeof fetch;
 }): Promise<GeoJsonDistributionProbe> {
   let dataUrl: string;
   try {
-    dataUrl = resolveSpatialDataUrl(dataPath, siteOrigin, apiBaseUrl);
+    dataUrl = resolveSpatialDataUrl(
+      dataPath,
+      siteOrigin,
+      apiBaseUrl,
+      publicBaseUrl,
+    );
   } catch {
     return {
       dataUrl: null,
@@ -296,12 +315,15 @@ async function probeGeoJsonDistribution({
 export async function loadSpatialPublicationManifest({
   layers,
   siteOrigin,
+  publicBaseUrl = null,
   signal,
   fetcher = fetch,
 }: LoadSpatialPublicationManifestOptions): Promise<SpatialPublicationManifest> {
   const manifestUrl = resolveSpatialDataUrl(
     SPATIAL_PUBLICATION_MANIFEST_PATH,
     siteOrigin,
+    null,
+    publicBaseUrl,
   );
   const response = await fetcher(manifestUrl, {
     method: "GET",
@@ -360,14 +382,15 @@ export function resolveSpatialDataUrl(
   dataPath: string,
   siteOrigin: string,
   apiBaseUrl?: string | null,
+  publicBaseUrl?: string | null,
 ): string {
   if (/^https?:\/\//i.test(dataPath)) return dataPath;
 
   const normalizedApiBaseUrl = apiBaseUrl?.trim() ?? "";
-  const baseUrl =
-    dataPath.startsWith("/api/") && normalizedApiBaseUrl
-      ? normalizedApiBaseUrl
-      : siteOrigin;
+  const normalizedPublicBaseUrl = publicBaseUrl?.trim() ?? "";
+  const baseUrl = dataPath.startsWith("/api/")
+    ? normalizedApiBaseUrl || siteOrigin
+    : normalizedPublicBaseUrl || siteOrigin;
 
   return appendPathToBaseUrl(baseUrl, dataPath, siteOrigin);
 }

@@ -86,16 +86,29 @@ describe("GeoLibre pilot helpers", () => {
     ).toBe("https://lamezia.example/data/processed/territorio/sezioni.geojson");
   });
 
-  it("preserves the deployment base path for static layers", () => {
+  it("keeps API routes on the origin while preserving the public base path for static layers", () => {
+    const siteOrigin = "https://lamezia.example";
+    const publicBaseUrl =
+      "https://lamezia.example/Lamezia-Trasparente-Monitor/";
+
     expect(
       resolveSpatialDataUrl(
         "/data/processed/territorio/sezioni.geojson",
-        "https://lamezia.example/Lamezia-Trasparente-Monitor/",
+        siteOrigin,
         "https://api.lamezia.example",
+        publicBaseUrl,
       ),
     ).toBe(
       "https://lamezia.example/Lamezia-Trasparente-Monitor/data/processed/territorio/sezioni.geojson",
     );
+    expect(
+      resolveSpatialDataUrl(
+        "/api/beni-confiscati/geojson",
+        siteOrigin,
+        null,
+        publicBaseUrl,
+      ),
+    ).toBe("https://lamezia.example/api/beni-confiscati/geojson");
   });
 
   it("builds a read-only GeoLibre URL with repeated canonical data parameters", () => {
@@ -203,6 +216,7 @@ describe("GeoLibre pilot helpers", () => {
         ),
       ],
       siteOrigin: "https://lamezia.example",
+      publicBaseUrl: "https://lamezia.example/Lamezia-Trasparente-Monitor/",
       fetcher: async (input) => {
         const url = input instanceof Request ? input.url : String(input);
         requested.push(url);
@@ -215,7 +229,7 @@ describe("GeoLibre pilot helpers", () => {
 
     expect(availability[0]).toMatchObject({
       dataUrl:
-        "https://lamezia.example/data/processed/territorio/beni_confiscati_lamezia.geojson",
+        "https://lamezia.example/Lamezia-Trasparente-Monitor/data/processed/territorio/beni_confiscati_lamezia.geojson",
       status: "ready",
       reason: null,
       distribution: "continuity_fallback",
@@ -225,7 +239,7 @@ describe("GeoLibre pilot helpers", () => {
     });
     expect(requested).toEqual([
       "https://lamezia.example/api/beni-confiscati/geojson",
-      "https://lamezia.example/data/processed/territorio/beni_confiscati_lamezia.geojson",
+      "https://lamezia.example/Lamezia-Trasparente-Monitor/data/processed/territorio/beni_confiscati_lamezia.geojson",
     ]);
   });
 
@@ -353,9 +367,10 @@ describe("GeoLibre pilot helpers", () => {
     const loaded = await loadSpatialPublicationManifest({
       layers: activeLayers,
       siteOrigin: "https://lamezia.example",
+      publicBaseUrl: "https://lamezia.example/Lamezia-Trasparente-Monitor/",
       fetcher: async (input, init) => {
         expect(input).toBe(
-          "https://lamezia.example/data/processed/territorio/spatial_layer_manifest.json",
+          "https://lamezia.example/Lamezia-Trasparente-Monitor/data/processed/territorio/spatial_layer_manifest.json",
         );
         expect(init?.method).toBe("GET");
         return Response.json(manifest, {
