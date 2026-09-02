@@ -12,6 +12,10 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { getInstitutionalProposalEvents } from "@/data/proposalArchiveTimeline";
 import {
+  CANONICAL_PROPOSAL_ACTION_LABELS,
+  getCanonicalProposalPresentation,
+} from "@/data/proposalCanonicalPresentation";
+import {
   PROPOSAL_GEO_AREA_LABELS,
   PROPOSAL_GEO_PRECISION_LABELS,
   PROPOSAL_GEO_SCOPE_LABELS,
@@ -184,10 +188,44 @@ function InstitutionalPath({ proposal }: { proposal: PublicProposal }) {
   );
 }
 
+function CanonicalRequestBlock({ proposal }: { proposal: PublicProposal }) {
+  const canonical = getCanonicalProposalPresentation(proposal);
+
+  return (
+    <div className="rounded-lg border border-primary/20 bg-primary/[0.025] px-3 py-2.5">
+      <div className="flex flex-wrap items-center gap-1.5">
+        <p className="text-xs font-semibold text-foreground">Richiesta canonica</p>
+        <Badge variant="secondary">Standard LT v{canonical.version}</Badge>
+        {canonical.actionTypes.map((actionType) => (
+          <Badge key={actionType} variant="outline">
+            {CANONICAL_PROPOSAL_ACTION_LABELS[actionType]}
+          </Badge>
+        ))}
+      </div>
+      <p className="mt-1.5 text-sm leading-snug text-foreground">{canonical.request}</p>
+      <ul className="mt-2 grid gap-1 text-xs text-muted-foreground md:grid-cols-2">
+        {canonical.measures.map((measure) => (
+          <li key={measure} className="flex gap-1.5">
+            <span aria-hidden="true">•</span>
+            <span>{measure}</span>
+          </li>
+        ))}
+      </ul>
+      {canonical.expectedOutcome ? (
+        <p className="mt-2 border-t border-border pt-2 text-xs text-muted-foreground">
+          <span className="font-semibold text-foreground">Risultato atteso:</span>{" "}
+          {canonical.expectedOutcome}
+        </p>
+      ) : null}
+    </div>
+  );
+}
+
 export function ProposalDossierCard({ proposal }: { proposal: PublicProposal }) {
   const orderedEvents = [...proposal.events].sort((a, b) => a.date.localeCompare(b.date));
   const latestEvent = orderedEvents[orderedEvents.length - 1];
   const georeferenced = isProposalGeoreferenced(proposal.id);
+  const canonical = getCanonicalProposalPresentation(proposal);
 
   return (
     <article
@@ -209,9 +247,9 @@ export function ProposalDossierCard({ proposal }: { proposal: PublicProposal }) 
         <div className="mt-2 grid gap-2 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-start">
           <div className="min-w-0">
             <h3 id={`${proposal.id}-title`} className="font-display text-lg font-semibold tracking-tight">
-              {proposal.title}
+              {canonical.title}
             </h3>
-            <p className="mt-1 text-sm leading-snug text-muted-foreground">{proposal.summary}</p>
+            <p className="mt-1 text-sm leading-snug text-muted-foreground">{canonical.request}</p>
           </div>
           <div className="flex flex-wrap gap-x-3 gap-y-1 text-[11px] text-muted-foreground lg:max-w-[22rem] lg:justify-end">
             <span className="inline-flex items-center gap-1">
@@ -237,13 +275,16 @@ export function ProposalDossierCard({ proposal }: { proposal: PublicProposal }) 
 
         <details className="mt-2 border-t border-border pt-2">
           <summary className="cursor-pointer text-xs font-semibold text-primary">
-            Apri dossier · {orderedEvents.length} {orderedEvents.length === 1 ? "evento" : "eventi"}
+            Apri dossier · {canonical.measures.length} misure · {orderedEvents.length}{" "}
+            {orderedEvents.length === 1 ? "evento" : "eventi"}
             {proposal.linkedActs.length > 0
               ? ` · ${proposal.linkedActs.length} ${proposal.linkedActs.length === 1 ? "atto" : "atti"}`
               : ""}
           </summary>
 
           <div className="mt-3 space-y-2.5">
+            <CanonicalRequestBlock proposal={proposal} />
+
             <dl className="grid gap-x-4 gap-y-2 rounded-lg border border-border bg-muted/10 p-3 sm:grid-cols-2 lg:grid-cols-4">
               <MetadataItem label="Promotore">
                 <span className="font-semibold">{proposal.promoter}</span>
@@ -307,7 +348,7 @@ export function ProposalDossierCard({ proposal }: { proposal: PublicProposal }) 
 
             <details className="rounded-lg border border-border bg-muted/10 px-3 py-2">
               <summary className="cursor-pointer text-xs font-semibold text-foreground">
-                Fonti, atti e verifica
+                Fonti, record di acquisizione e verifica
               </summary>
               <div className="mt-2 space-y-2 text-xs text-muted-foreground">
                 <div className="flex flex-wrap items-center gap-2">
@@ -327,6 +368,16 @@ export function ProposalDossierCard({ proposal }: { proposal: PublicProposal }) 
                     <span className="font-semibold text-foreground">{proposal.sourceLabel}</span>
                   )}
                 </div>
+
+                <div className="rounded-md border border-border bg-background px-2.5 py-2">
+                  <p className="font-semibold text-foreground">Record di acquisizione</p>
+                  <p className="mt-1 font-medium text-foreground">{proposal.title}</p>
+                  <p className="mt-0.5 leading-relaxed">{proposal.summary}</p>
+                  <p className="mt-1 text-[10px] leading-relaxed">
+                    Questo testo conserva la formulazione usata nel dataset di acquisizione. La scheda pubblica usa invece la rappresentazione canonica LT v{canonical.version}.
+                  </p>
+                </div>
+
                 {proposal.linkedActs.length > 0 ? (
                   <div>
                     <p className="font-semibold text-foreground">Atti collegati</p>
