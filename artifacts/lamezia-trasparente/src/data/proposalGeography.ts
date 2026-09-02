@@ -29,6 +29,13 @@ export function getProposalGeography(
   return PROPOSAL_GEOGRAPHY[proposalId];
 }
 
+export function isProposalGeoreferenced(proposalId: string): boolean {
+  const geography = getProposalGeography(proposalId);
+  return Boolean(
+    geography && geography.scope !== "citywide" && geography.points.length > 0,
+  );
+}
+
 export function proposalMatchesGeoArea(
   proposalId: string,
   area: core.ProposalGeoArea,
@@ -38,4 +45,12 @@ export function proposalMatchesGeoArea(
 
 export function getProposalGeoAreas() {
   return core.getProposalGeoAreas();
+}
+
+export function getProposalLocalGeoAreas() {
+  return core
+    .getProposalGeoAreas()
+    .filter((area): area is Exclude<core.ProposalGeoArea, "intera_citta"> =>
+      area !== "intera_citta",
+    );
 }

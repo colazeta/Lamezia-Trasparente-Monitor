@@ -23,40 +23,25 @@ describe("proposte civiche", () => {
     const internalSeeds = PUBLIC_PROPOSALS.filter(
       (proposal) => proposal.sourceUrl === undefined,
     );
-    const documentedProposals = PUBLIC_PROPOSALS.filter(
-      (proposal) => proposal.sourceUrl !== undefined,
-    );
-
     expect(internalSeeds).toHaveLength(4);
-    expect(documentedProposals).toHaveLength(
+    expect(
+      internalSeeds.every((proposal) => proposal.promoter === "Lamezia Trasparente"),
+    ).toBe(true);
+    expect(
+      internalSeeds.every((proposal) => proposal.channel === "iniziativa_popolare"),
+    ).toBe(true);
+    expect(
+      internalSeeds.every(
+        (proposal) => proposal.theme === "Trasparenza e partecipazione democratica",
+      ),
+    ).toBe(true);
+    expect(PUBLIC_PROPOSALS.filter((proposal) => proposal.sourceUrl)).toHaveLength(
       PUBLIC_PROPOSALS.length - internalSeeds.length,
     );
-    expect(documentedProposals.length).toBeGreaterThan(0);
-    expect(documentedProposals.every((proposal) => proposal.sourceUrl)).toBe(
-      true,
-    );
-    expect(
-      internalSeeds.every(
-        (proposal) => proposal.promoter === "Lamezia Trasparente",
-      ),
-    ).toBe(true);
-    expect(
-      internalSeeds.every(
-        (proposal) => proposal.channel === "iniziativa_popolare",
-      ),
-    ).toBe(true);
-    expect(
-      internalSeeds.every(
-        (proposal) =>
-          proposal.theme === "Trasparenza e partecipazione democratica",
-      ),
-    ).toBe(true);
   });
 
   it("filtra le proposte per stato, promotore e tema con utility pure", () => {
-    expect(getProposalThemes()).toContain(
-      "Trasparenza e partecipazione democratica",
-    );
+    expect(getProposalThemes()).toContain("Trasparenza e partecipazione democratica");
     expect(getProposalPromoters()).toContain("Lamezia Trasparente");
 
     const filtered = filterPublicProposals(PUBLIC_PROPOSALS, {
@@ -66,36 +51,29 @@ describe("proposte civiche", () => {
     });
 
     expect(filtered).toHaveLength(4);
-    expect(
-      filterPublicProposals(PUBLIC_PROPOSALS, { status: "discussa" }),
-    ).toHaveLength(0);
+    expect(filterPublicProposals(PUBLIC_PROPOSALS, { status: "discussa" })).toHaveLength(0);
   });
 
-  it("renderizza criteri metodologici, filtri minimi e cards delle proposte", () => {
+  it("renderizza archivio compatto, filtri e timeline", () => {
     renderProposteCiviche();
 
-    expect(
-      screen.getByRole("heading", {
-        name: "Proposte civiche",
-      }),
-    ).toBeInTheDocument();
-    expect(
-      screen.getByText("Stato documentale, non politico"),
-    ).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Proposte civiche" })).toBeInTheDocument();
+    expect(screen.getByText("Stato documentale, non politico.")).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Distribuzione temporale" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Nascita" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Sviluppi" })).toBeInTheDocument();
+    expect(screen.getByLabelText("Localizzazione")).toBeInTheDocument();
+    expect(screen.getByLabelText("Area locale")).toBeInTheDocument();
     expect(screen.getByLabelText("Tema")).toBeInTheDocument();
     expect(screen.getByLabelText("Promotore")).toBeInTheDocument();
     expect(screen.getByLabelText("Anno")).toBeInTheDocument();
     expect(screen.getByLabelText("Stato")).toBeInTheDocument();
     expect(screen.getByLabelText("Canale")).toBeInTheDocument();
     expect(
-      screen.getByText(
-        "Pubblicità digitale di convocazioni e ordini del giorno",
-      ),
+      screen.getByText("Pubblicità digitale di convocazioni e ordini del giorno"),
     ).toBeInTheDocument();
     expect(
-      screen.getByText(
-        "Firma digitale per iniziative popolari, istanze e petizioni",
-      ),
+      screen.getByText("Firma digitale per iniziative popolari, istanze e petizioni"),
     ).toBeInTheDocument();
   });
 
@@ -107,10 +85,18 @@ describe("proposte civiche", () => {
     });
 
     expect(
-      screen.getByText(
-        `0 proposte visualizzate su ${PUBLIC_PROPOSALS.length}.`,
-      ),
+      screen.getByText(new RegExp(`0 proposte visualizzate su ${PUBLIC_PROPOSALS.length}\\.`)),
     ).toBeInTheDocument();
+  });
+
+  it("distingue esplicitamente le proposte georeferenziate dalle citywide", () => {
+    renderProposteCiviche();
+
+    fireEvent.change(screen.getByLabelText("Localizzazione"), {
+      target: { value: "citywide" },
+    });
+
+    expect(screen.getAllByText(/Intera città · non georeferenziata/i).length).toBeGreaterThan(0);
   });
 
   it("non include dati personali non necessari nei contenuti descrittivi", () => {
