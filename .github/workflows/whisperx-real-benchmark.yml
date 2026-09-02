@@ -21,9 +21,12 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 60
     env:
-      BENCHMARK_ID: consiglio-2026-05-19-public-mirror-clip
-      MIRROR_VIDEO_ID: NcoMFxDtCtE
-      MIRROR_URL: https://www.youtube.com/watch?v=NcoMFxDtCtE
+      BENCHMARK_ID: sondrio-consiglio-2026-04-30-official-control-clip
+      SOURCE_ROLE: official-municipal-control
+      CANONICAL_STATUS: official-source
+      SOURCE_PROVIDER: comune-sondrio
+      SOURCE_ID: seduta-consiglio-2026-04-30-audio
+      SOURCE_URL: https://comune.sondrio.it/wp-content/uploads/sites/152/2026/05/30_04_2026_Compresso_tagl.mp3
       CLIP_START_SECONDS: '300'
       CLIP_DURATION_SECONDS: '600'
       WHISPERX_MODEL: small
@@ -36,11 +39,6 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-
-      - name: Set up Node.js for yt-dlp YouTube JS runtime
-        uses: actions/setup-node@v4
-        with:
-          node-version: 24
 
       - name: Install media tools
         shell: bash
@@ -57,34 +55,34 @@ jobs:
           ffprobe -version > /tmp/ffprobe-version.txt
           head -n 1 /tmp/ffmpeg-version.txt
           head -n 1 /tmp/ffprobe-version.txt
-          node --version
 
       - name: Test benchmark minimisation helper
         run: |
           python tools/whisperx/test_benchmark_metrics.py
           python -m py_compile tools/whisperx/benchmark_metrics.py tools/whisperx/extract_media.py
 
-      - name: Install pinned acquisition tool
-        run: python -m pip install --disable-pip-version-check 'yt-dlp==2026.8.19'
-
-      - name: Acquire benchmark mirror and derive bounded local clip
+      - name: Acquire official control audio and derive bounded local clip
         shell: bash
         run: |
           set -euo pipefail
           mkdir -p tmp/whisperx-benchmark/source tmp/whisperx-benchmark/output
-          yt-dlp \
-            --no-playlist \
-            --js-runtimes node \
-            --format 'bestaudio/best' \
-            --output 'tmp/whisperx-benchmark/source/source.%(ext)s' \
-            "$MIRROR_URL"
+          curl \
+            --fail \
+            --location \
+            --silent \
+            --show-error \
+            --retry 3 \
+            --retry-all-errors \
+            --connect-timeout 20 \
+            --max-time 300 \
+            --output tmp/whisperx-benchmark/source/source.mp3 \
+            "$SOURCE_URL"
+          test -s tmp/whisperx-benchmark/source/source.mp3
 
-          source_file="$(find tmp/whisperx-benchmark/source -maxdepth 1 -type f -name 'source.*' | head -n 1)"
-          test -n "$source_file"
           ffmpeg -hide_banner -loglevel error -y \
             -ss "$CLIP_START_SECONDS" \
             -t "$CLIP_DURATION_SECONDS" \
-            -i "$source_file" \
+            -i tmp/whisperx-benchmark/source/source.mp3 \
             -vn -ac 1 -ar 16000 -c:a pcm_s16le \
             tmp/whisperx-benchmark/benchmark.wav
           test -s tmp/whisperx-benchmark/benchmark.wav
@@ -137,7 +135,10 @@ jobs:
             --manifest "$manifest" \
             --output tmp/whisperx-benchmark/metrics.json \
             --benchmark-id "$BENCHMARK_ID" \
-            --mirror-video-id "$MIRROR_VIDEO_ID" \
+            --source-role "$SOURCE_ROLE" \
+            --canonical-status "$CANONICAL_STATUS" \
+            --source-provider "$SOURCE_PROVIDER" \
+            --source-id "$SOURCE_ID" \
             --clip-start-seconds "$CLIP_START_SECONDS" \
             --clip-requested-seconds "$CLIP_DURATION_SECONDS"
 
@@ -162,7 +163,8 @@ jobs:
           assert data['privacy']['rawMediaRetained'] is False
           assert data['privacy']['speakerIdentityProduced'] is False
           assert data['processor']['diarizationEnabled'] is False
-          assert data['canonicalStatus'] == 'not-established'
+          assert data['canonicalStatus'] == 'official-source'
+          assert data['source']['provider'] == 'comune-sondrio'
           print(json.dumps(data, ensure_ascii=False, sort_keys=True))
           PY
 
