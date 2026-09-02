@@ -21,6 +21,7 @@ export * from "./opendataDatasets";
 export * from "./opendataResources";
 export * from "./opendataSnapshots";
 export * from "./feedStatus";
+export * from "./changeSentinelEvents";
 export * from "./themeFollowers";
 export * from "./sessionReports";
 export * from "./officials";
