@@ -63,6 +63,15 @@
       "derivation": "The reviewed player bundle exposes the route template /media/${r.media}; r.media is the UUID already attested in the City One episode player locator."
     },
     {
+      "id": "selftv-media-script-f0330685",
+      "url": "https://share.selftv.video/assets/f0330685.js",
+      "publisher": "SelfTV",
+      "role": "reviewed-player-script-locator",
+      "expectedMarkers": [],
+      "mayProvideQualityMedia": true,
+      "discoveredFrom": "selftv-media-lidia-vescio-2026-05-19"
+    },
+    {
       "id": "selftv-player-script-2e83ef47",
       "url": "https://share.selftv.video/assets/2e83ef47.js",
       "publisher": "SelfTV",
