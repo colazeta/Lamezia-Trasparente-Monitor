@@ -151,18 +151,30 @@ export class AnacCsvMatcher {
     const cig = cleanCell(row[this.indexes.cig]).toUpperCase();
     if (!this.trackedCigs.has(cig)) return;
 
-    const record: AnacBdncpRecord = {
+    const next: AnacBdncpRecord = {
       cig,
       title: nullableCell(row[this.indexes.title]),
       contractingAuthority: nullableCell(row[this.indexes.authority]),
+      contractingAuthorityCode: nullableCell(row[this.indexes.authorityCode]),
+      contractingAuthorityTaxId: nullableCell(row[this.indexes.authorityTaxId]),
       tenderAmount: parseAnacAmount(row[this.indexes.amount]),
       procedureType: nullableCell(row[this.indexes.procedure]),
+      procedureCode: nullableCell(row[this.indexes.procedureCode]),
+      publicationDate: parseAnacDate(row[this.indexes.publicationDate]),
+      submissionDeadline: parseAnacDate(row[this.indexes.submissionDeadline]),
+      cpvCode: nullableCell(row[this.indexes.cpvCode]),
+      cpvDescription: nullableCell(row[this.indexes.cpvDescription]),
+      cpvIsPrimary: parseAnacBoolean(row[this.indexes.cpvIsPrimary]),
+      outcomeCode: nullableCell(row[this.indexes.outcomeCode]),
+      outcome: nullableCell(row[this.indexes.outcome]),
+      outcomeDate: parseAnacDate(row[this.indexes.outcomeDate]),
       recordId: nullableCell(row[this.indexes.recordId]),
       sourceArchiveUrl: this.source.url,
       sourcePeriod: this.source.period,
       acquiredAt: this.source.acquiredAt,
     };
-    this.records.set(cig, record);
+    const previous = this.records.get(cig);
+    this.records.set(cig, previous ? mergeAnacRows(previous, next) : next);
   }
 }
 
@@ -229,6 +241,49 @@ export function mergeAnacSyncAttempt(input: {
       a.cig.localeCompare(b.cig),
     ),
     limitations: [...ANAC_BDNCP_PUBLIC_LIMITATIONS],
+  };
+}
+
+function mergeAnacRows(
+  previous: AnacBdncpRecord,
+  next: AnacBdncpRecord,
+): AnacBdncpRecord {
+  const preferNextPrimary = next.cpvIsPrimary === true;
+  const preservePreviousPrimary =
+    previous.cpvIsPrimary === true && next.cpvIsPrimary !== true;
+  const cpvSource = preferNextPrimary
+    ? next
+    : preservePreviousPrimary
+      ? previous
+      : next.cpvCode
+        ? next
+        : previous;
+
+  return {
+    cig: previous.cig,
+    title: next.title ?? previous.title,
+    contractingAuthority:
+      next.contractingAuthority ?? previous.contractingAuthority,
+    contractingAuthorityCode:
+      next.contractingAuthorityCode ?? previous.contractingAuthorityCode,
+    contractingAuthorityTaxId:
+      next.contractingAuthorityTaxId ?? previous.contractingAuthorityTaxId,
+    tenderAmount: next.tenderAmount ?? previous.tenderAmount,
+    procedureType: next.procedureType ?? previous.procedureType,
+    procedureCode: next.procedureCode ?? previous.procedureCode,
+    publicationDate: next.publicationDate ?? previous.publicationDate,
+    submissionDeadline:
+      next.submissionDeadline ?? previous.submissionDeadline,
+    cpvCode: cpvSource.cpvCode,
+    cpvDescription: cpvSource.cpvDescription,
+    cpvIsPrimary: cpvSource.cpvIsPrimary,
+    outcomeCode: next.outcomeCode ?? previous.outcomeCode,
+    outcome: next.outcome ?? previous.outcome,
+    outcomeDate: next.outcomeDate ?? previous.outcomeDate,
+    recordId: next.recordId ?? previous.recordId,
+    sourceArchiveUrl: next.sourceArchiveUrl,
+    sourcePeriod: next.sourcePeriod,
+    acquiredAt: next.acquiredAt,
   };
 }
 
@@ -347,12 +402,44 @@ function resolveIndexes(headers: string[]) {
       "denominazione_sa",
       "amministrazione_appaltante",
     ),
+    authorityCode: index("codice_ausa", "cod_ausa"),
+    authorityTaxId: index(
+      "cf_amministrazione_appaltante",
+      "codice_fiscale_stazione_appaltante",
+      "cf_stazione_appaltante",
+    ),
     amount: index("importo_lotto", "importo", "importo_base_asta"),
     procedure: index(
+      "tipo_scelta_contraente",
       "scelta_contraente",
       "tipo_procedura",
       "procedura",
       "modalita_realizzazione",
+    ),
+    procedureCode: index(
+      "cod_tipo_scelta_contraente",
+      "codice_tipo_scelta_contraente",
+      "cod_tipo_procedura",
+    ),
+    publicationDate: index(
+      "data_pubblicazione",
+      "data_pubblicazione_gara",
+      "data_pubblicazione_bando",
+    ),
+    submissionDeadline: index(
+      "data_scadenza_offerta",
+      "data_scadenza_offerte",
+      "data_scadenza_bando",
+    ),
+    cpvCode: index("cod_cpv", "codice_cpv", "cpv"),
+    cpvDescription: index("descrizione_cpv", "desc_cpv"),
+    cpvIsPrimary: index("flag_prevalente", "cpv_prevalente"),
+    outcomeCode: index("cod_esito", "codice_esito"),
+    outcome: index("esito", "descrizione_esito"),
+    outcomeDate: index(
+      "data_comunicazione_esito",
+      "data_esito",
+      "data_aggiudicazione_definitiva",
     ),
     recordId: index("id_gara", "numero_gara", "id_lotto", "lot_id"),
   };
@@ -394,4 +481,21 @@ function parseAnacAmount(value: string | undefined): number | null {
   }
   const parsed = Number(cleaned);
   return Number.isFinite(parsed) && parsed >= 0 ? parsed : null;
+}
+
+function parseAnacDate(value: string | undefined): string | null {
+  const cleaned = cleanCell(value);
+  if (!cleaned) return null;
+  const italian = /^(\d{2})\/(\d{2})\/(\d{4})(.*)$/u.exec(cleaned);
+  const normalized = italian
+    ? `${italian[3]}-${italian[2]}-${italian[1]}${italian[4]}`
+    : cleaned;
+  return Number.isNaN(Date.parse(normalized)) ? null : normalized;
+}
+
+function parseAnacBoolean(value: string | undefined): boolean | null {
+  const cleaned = cleanCell(value).toUpperCase();
+  if (["1", "S", "SI", "TRUE", "Y", "YES"].includes(cleaned)) return true;
+  if (["0", "N", "NO", "FALSE"].includes(cleaned)) return false;
+  return null;
 }
