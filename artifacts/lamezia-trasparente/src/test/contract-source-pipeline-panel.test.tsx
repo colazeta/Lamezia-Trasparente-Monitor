@@ -1,4 +1,4 @@
-import { render, screen, within } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { Contract } from "@workspace/api-client-react";
@@ -40,100 +40,45 @@ describe("ContractSourcePipelinePanel", () => {
     contractListMock.contracts = [];
   });
 
-  it("renders the active current-Albo source pipeline with explicit limits", () => {
+  it("shows a concise citizen-facing source overview", () => {
     renderPanel();
 
-    expect(screen.getByText("Contratti protagonisti")).toBeInTheDocument();
+    expect(screen.getByText("Fonti dei contratti")).toBeInTheDocument();
     expect(
       screen.getByRole("heading", {
-        name: "Stato dei fascicoli contrattuali",
+        name: "Dati pubblici, con la fonte sempre raggiungibile",
       }),
     ).toBeInTheDocument();
-    expect(screen.getByText("Perimetro e prossimo passo")).toBeInTheDocument();
-    expect(screen.getByText("Albo Pretorio corrente")).toBeInTheDocument();
-    expect(screen.getByText("Filtro pubblico e privacy")).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /Consulta ANAC/i })).toBeInTheDocument();
     expect(
-      screen.getByText(
-        "Ponte di ricerca, non sincronizzazione della scheda ANAC",
-      ),
+      screen.getByRole("link", { name: "Come leggiamo i dati" }),
     ).toBeInTheDocument();
-    expect(
-      screen.getByText("Lettura immediata dello stato"),
-    ).toBeInTheDocument();
-    expect(screen.queryByText(/ANAC sincronizzata/i)).not.toBeInTheDocument();
   });
 
-  it("exposes dossier status controls on the complete contract list", () => {
+  it("keeps internal pipeline mechanics out of the ordinary public view", () => {
     renderPanel();
 
-    expect(screen.getByText("Stato fascicoli")).toBeInTheDocument();
-    expect(
-      screen.getByRole("group", {
-        name: "Filtra fascicoli contrattuali per stato",
-      }),
-    ).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Tutti 0" })).toHaveAttribute(
-      "aria-pressed",
-      "true",
-    );
-    expect(
-      screen.getByRole("button", { name: "Da verificare 0" }),
-    ).toBeInTheDocument();
-    expect(
-      screen.getByRole("button", { name: "Parziale 0" }),
-    ).toBeInTheDocument();
-    expect(
-      screen.getByRole("button", { name: "Completo 0" }),
-    ).toBeInTheDocument();
+    expect(screen.queryByText("Ponte BDNCP")).not.toBeInTheDocument();
+    expect(screen.queryByText("Perimetro e prossimo passo")).not.toBeInTheDocument();
+    expect(screen.queryByText("Copertura fasi")).not.toBeInTheDocument();
+    expect(screen.queryByText(/Passaggio 1/i)).not.toBeInTheDocument();
+    expect(screen.queryByText(/parser/i)).not.toBeInTheDocument();
   });
 
-  it("shows the phase state strip on each contract dossier card", () => {
+  it("summarizes the current public scope without exposing technical coverage metrics", () => {
     contractListMock.contracts = [
-      contractFixture({
-        title: "Manutenzione straordinaria strade",
-        cig: "B123456789",
-        macrotema: "strade",
-      }),
+      contractFixture({ cig: "B123456789" }),
+      contractFixture({ id: 102, title: "Servizio senza CIG", cig: null }),
     ];
 
     renderPanel();
 
-    expect(screen.getByText("Flusso fasi")).toBeInTheDocument();
-    const phaseStrip = screen.getByLabelText(
-      "Stato fasi del fascicolo Manutenzione straordinaria strade",
-    );
-
-    expect(
-      within(phaseStrip).getByText("Programmazione: mancante"),
-    ).toBeInTheDocument();
-    expect(
-      within(phaseStrip).getByText("Progettazione: parziale"),
-    ).toBeInTheDocument();
-    expect(
-      within(phaseStrip).getByText("Esecuzione del contratto: mancante"),
-    ).toBeInTheDocument();
-
-    expect(screen.getByText("Copertura fasi")).toBeInTheDocument();
-    const phaseCoverage = screen.getByRole("list", {
-      name: "Copertura stato fasi dei fascicoli",
-    });
-
-    expect(
-      within(phaseCoverage).getByText("Programmazione"),
-    ).toBeInTheDocument();
-    expect(
-      within(phaseCoverage).getByRole("img", {
-        name: "Programmazione: 0 documentate, 0 parziali, 1 mancanti",
-      }),
-    ).toBeInTheDocument();
-    expect(
-      within(phaseCoverage).getByRole("img", {
-        name: "Progettazione: 0 documentate, 1 parziali, 0 mancanti",
-      }),
-    ).toBeInTheDocument();
+    expect(screen.getByText("2")).toBeInTheDocument();
+    expect(screen.getByText("1 con CIG rilevato")).toBeInTheDocument();
+    expect(screen.queryByText(/fasi mancanti/i)).not.toBeInTheDocument();
   });
 
-  it("keeps the historical ANAC integration separate from the active layer", () => {
+  it("keeps the historical integration model testable outside the public copy", () => {
     const snapshot = buildContractPipelineSnapshot();
 
     expect(snapshot.stages).toHaveLength(4);
