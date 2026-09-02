@@ -20,12 +20,11 @@ test("worker build ships the v2 contract-aware Docling processor and readiness e
   assert.match(processor, /SCHEMA_VERSION\s*=\s*2/u);
   assert.match(processor, /extract_single_embedded_pdf/u);
   assert.match(processor, /DOCLING_ARTIFACTS_PATH/u);
-  assert.ok(
-    requirements
-      .split(/\r?\n/u)
-      .map((line) => line.trim())
-      .includes("docling==2.124.0"),
-  );
+  const pins = requirements
+    .split(/\r?\n/u)
+    .map((line) => line.trim());
+  assert.ok(pins.includes("docling==2.124.0"));
+  assert.ok(pins.includes("pypdf==6.16.2"));
   assert.equal(preflight.isFile(), true);
   assert.equal(smoke.isFile(), true);
 });
