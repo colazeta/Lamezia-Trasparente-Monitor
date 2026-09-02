@@ -5,13 +5,13 @@
     "source": "Città di Lamezia Terme — Attuazione Misure PNRR",
     "source_url": "https://www.comune.lamezia-terme.cz.it/it/attuazione-misure-pnrr",
     "source_type": "official_municipal_project_pages",
-    "materialized_at": "2026-09-01T16:52:55.116Z",
+    "materialized_at": "2026-09-02T21:01:15.563Z",
     "source_index_hash": "c7a08dbc6c8ea8f08d1849762aca29587dfe392cc42b1a099f42c8f2e078f1b7",
     "opencup_source": "OpenCUP — Sistema CUP",
     "opencup_source_url": "https://www.opencup.gov.it/portale/web/opencup/home",
     "opencup_source_type": "official_public_investment_project_pages",
     "opencup_source_hash": "f6fa4d2b0d76e96f34983589fbc5dbf3ba07c18d66002291134bdcb3051813b2",
-    "albo_snapshot_generated_at": "2026-09-01T16:34:40.060Z",
+    "albo_snapshot_generated_at": "2026-09-02T16:31:00.452Z",
     "update_policy": "Controllo automatico ogni sei ore della sezione comunale PNRR, rilevamento dei nuovi CUP, arricchimento delle schede pubbliche OpenCUP e riconciliazione con gli output pubblici dell'Albo Pretorio; il file cambia solo quando mutano dati, stato di acquisizione o collegamenti documentali.",
     "opencup_update_policy": "Ogni nuovo CUP comunale genera subito una scheda e avvia l'acquisizione OpenCUP. Se il corredo non è ancora disponibile resta in attesa e viene ritentato automaticamente; un errore temporaneo su un CUP già acquisito conserva l'ultimo corredo valido, marcandolo come non aggiornato.",
     "reconciliation_rule": "Gli atti Albo sono collegati a una scheda progetto esclusivamente quando condividono lo stesso CUP normalizzato; i soli richiami testuali PNRR restano evidenze non riconciliate.",
@@ -5908,10 +5908,10 @@
       "archived_path": "data/public/albo/documents/2026/71a38e9a3bb026b05931a8e6e0a89561c1d92d2ba3b5cdeeac958fa54b8d4ecf.pdf",
       "document_content_type": "application/pdf",
       "document_size_bytes": 4008617,
-      "first_observed_at": "2026-09-01T16:34:40.060Z",
-      "last_observed_at": "2026-09-01T16:34:40.060Z",
+      "first_observed_at": "2026-09-02T16:31:00.452Z",
+      "last_observed_at": "2026-09-02T16:31:00.452Z",
       "evidence_status": "official_albo_public_record",
-      "evidence_hash": "7baddf8e0c03a1e84ebd186b00e9a79c901e8d2d065c51e10f26aa85e9fad1fc"
+      "evidence_hash": "c3619ca7c6040207fa9198f3e8fb0f963b50268d3d8f96af33daf09410d9f609"
     },
     {
       "id": "albo-2026-2765",
@@ -5941,10 +5941,10 @@
       "archived_path": "data/public/albo/documents/2026/5609968da473ba3dc8bd6893278ff37e476bf8fe86557c6e92e88cdc73311465.pdf",
       "document_content_type": "application/pdf",
       "document_size_bytes": 1948041,
-      "first_observed_at": "2026-09-01T16:34:40.060Z",
-      "last_observed_at": "2026-09-01T16:34:40.060Z",
+      "first_observed_at": "2026-09-02T16:31:00.452Z",
+      "last_observed_at": "2026-09-02T16:31:00.452Z",
       "evidence_status": "official_albo_public_record",
-      "evidence_hash": "a7a95956fa3fab86454f0941a1aff7de054d3107539927075e2bfd8e4e10c06f"
+      "evidence_hash": "8d4d58523a144020a82548b144d4d018769f3e246b8d9668f63889233d2d5dd8"
     },
     {
       "id": "albo-2026-2735",
@@ -5976,10 +5976,10 @@
       "archived_path": "data/public/albo/documents/2026/f86a73c444876cb21479002b5b16684ef2bb06a956974d7ffae2d7195c9382f9.pdf",
       "document_content_type": "application/pdf",
       "document_size_bytes": 2730905,
-      "first_observed_at": "2026-09-01T16:34:40.060Z",
-      "last_observed_at": "2026-09-01T16:34:40.060Z",
+      "first_observed_at": "2026-09-02T16:31:00.452Z",
+      "last_observed_at": "2026-09-02T16:31:00.452Z",
       "evidence_status": "official_albo_public_record",
-      "evidence_hash": "a9c15cab5b776ba9ea153b7db1a5c7e26a6682f01febb548660d53b2a84b7794"
+      "evidence_hash": "b99d913321c88a000b322c1484ad440e279d2ae2cc7b52d69765b9a4e8f22033"
     },
     {
       "id": "albo-2026-2730",
@@ -6011,10 +6011,10 @@
       "archived_path": "data/public/albo/documents/2026/8afc9d6ebf2babc6a9f34112c015ecc56f31ec6f03badb480e9e17e37bcbd335.pdf",
       "document_content_type": "application/pdf",
       "document_size_bytes": 2484234,
-      "first_observed_at": "2026-09-01T16:34:40.060Z",
-      "last_observed_at": "2026-09-01T16:34:40.060Z",
+      "first_observed_at": "2026-09-02T16:31:00.452Z",
+      "last_observed_at": "2026-09-02T16:31:00.452Z",
       "evidence_status": "official_albo_public_record",
-      "evidence_hash": "754e2cae3420c69b236eb4ffb6791612811c161d47a74ed4d1644c68e377212b"
+      "evidence_hash": "46e7f118b14f82694851b90704ce1ceefd212c68b3a4c207f85d472bf1fdd90c"
     },
     {
       "id": "albo-2026-2731",
@@ -6046,10 +6046,10 @@
       "archived_path": "data/public/albo/documents/2026/a2f5603b696f49f7759153582c4728633acac968c437fdf5a3c1a5b6e5ab3c07.pdf",
       "document_content_type": "application/pdf",
       "document_size_bytes": 2702097,
-      "first_observed_at": "2026-09-01T16:34:40.060Z",
-      "last_observed_at": "2026-09-01T16:34:40.060Z",
+      "first_observed_at": "2026-09-02T16:31:00.452Z",
+      "last_observed_at": "2026-09-02T16:31:00.452Z",
       "evidence_status": "official_albo_public_record",
-      "evidence_hash": "0db25897d3a51bea483e45e7014f2463e0c1f6e911c28ab5c31c47bbc696ccab"
+      "evidence_hash": "e1cd12809a4fc1998ad98ed47b75508e32d5d0ac3b5fcf7ef5375b91ebcff5da"
     },
     {
       "id": "albo-2026-2732",
@@ -6081,10 +6081,10 @@
       "archived_path": "data/public/albo/documents/2026/76b73980df65098c7c6b8a9b23b46b57e460900817bf17f454aad25a4988e49c.pdf",
       "document_content_type": "application/pdf",
       "document_size_bytes": 2407565,
-      "first_observed_at": "2026-09-01T16:34:40.060Z",
-      "last_observed_at": "2026-09-01T16:34:40.060Z",
+      "first_observed_at": "2026-09-02T16:31:00.452Z",
+      "last_observed_at": "2026-09-02T16:31:00.452Z",
       "evidence_status": "official_albo_public_record",
-      "evidence_hash": "17b3934f38de462740ecaa01b7c857c9b689443ecd7144b62eef409d64b161df"
+      "evidence_hash": "97c7fd02c5c7f53d66d9186d531119a44703598f4178eac6005c04cfed475113"
     },
     {
       "id": "albo-2026-2733",
@@ -6116,10 +6116,10 @@
       "archived_path": "data/public/albo/documents/2026/e68c2842bd0a0f642e107d82fca4b7a8b392ef9ed68d1a9da2fa3cb4c50ba89e.pdf",
       "document_content_type": "application/pdf",
       "document_size_bytes": 2130959,
-      "first_observed_at": "2026-09-01T16:34:40.060Z",
-      "last_observed_at": "2026-09-01T16:34:40.060Z",
+      "first_observed_at": "2026-09-02T16:31:00.452Z",
+      "last_observed_at": "2026-09-02T16:31:00.452Z",
       "evidence_status": "official_albo_public_record",
-      "evidence_hash": "b03bcd5796b1828c00d2141a1ff735eb51ad2dca8bc149707363e25fef01c945"
+      "evidence_hash": "9d0810e2c42a30907423e1df7e4bbab8ecbc486d0162c725671168059bacba42"
     },
     {
       "id": "albo-2026-2725",
@@ -6149,10 +6149,10 @@
       "archived_path": "data/public/albo/documents/2026/0e9bda925b7ba95ad4eb5fcbd97df50bd7d6c5d5c32e4d78cec03c36015cce93.pdf",
       "document_content_type": "application/pdf",
       "document_size_bytes": 1818221,
-      "first_observed_at": "2026-09-01T16:34:40.060Z",
-      "last_observed_at": "2026-09-01T16:34:40.060Z",
+      "first_observed_at": "2026-09-02T16:31:00.452Z",
+      "last_observed_at": "2026-09-02T16:31:00.452Z",
       "evidence_status": "official_albo_public_record",
-      "evidence_hash": "f92791f673511773c35e9ba2027f3af69d74dce1464f53a15fcac3afe3e59edb"
+      "evidence_hash": "87d630f40c0cedb6cc0d820231151afea329316958c1963c9798da4bdf71fea7"
     },
     {
       "id": "albo-2026-2726",
@@ -6182,10 +6182,10 @@
       "archived_path": "data/public/albo/documents/2026/ede98be0620845ed117228d306b2486f397b2d478cde7be34624615760641fc5.pdf",
       "document_content_type": "application/pdf",
       "document_size_bytes": 2014085,
-      "first_observed_at": "2026-09-01T16:34:40.060Z",
-      "last_observed_at": "2026-09-01T16:34:40.060Z",
+      "first_observed_at": "2026-09-02T16:31:00.452Z",
+      "last_observed_at": "2026-09-02T16:31:00.452Z",
       "evidence_status": "official_albo_public_record",
-      "evidence_hash": "e16790f2612abd7a087adc340399e949ce2d71ac0b82f18b9fbbbdfb572c3bba"
+      "evidence_hash": "ddb64462b0edf654975e432a1d3f952909ca8100f33ee725a7f3ba8b0c468c10"
     },
     {
       "id": "albo-2026-2729",
@@ -6214,10 +6214,10 @@
       "archived_path": "data/public/albo/documents/2026/d6b088defa2f9ff8eb3e7d4329cd3876fc4d4b9926dd8d2c9cfbbfbb21a431e7.pdf",
       "document_content_type": "application/pdf",
       "document_size_bytes": 1926320,
-      "first_observed_at": "2026-09-01T16:34:40.060Z",
-      "last_observed_at": "2026-09-01T16:34:40.060Z",
+      "first_observed_at": "2026-09-02T16:31:00.452Z",
+      "last_observed_at": "2026-09-02T16:31:00.452Z",
       "evidence_status": "official_albo_public_record",
-      "evidence_hash": "aebf928ac1e4fa6d71ce1a2a7c9b8fb604a5971340161c80acff4ea9d40ae60d"
+      "evidence_hash": "42e3dfcb6a3b0507c596f8a9c2e7064c977d3ca6d02050cb51bca1eefae65777"
     },
     {
       "id": "albo-2026-2723",
@@ -6249,10 +6249,10 @@
       "archived_path": "data/public/albo/documents/2026/18dcfdc2b37d732bbacbf174cb8b9f7d970222fadd1785284d2ec44bef7b48af.pdf",
       "document_content_type": "application/pdf",
       "document_size_bytes": 2564285,
-      "first_observed_at": "2026-09-01T16:34:40.060Z",
-      "last_observed_at": "2026-09-01T16:34:40.060Z",
+      "first_observed_at": "2026-09-02T16:31:00.452Z",
+      "last_observed_at": "2026-09-02T16:31:00.452Z",
       "evidence_status": "official_albo_public_record",
-      "evidence_hash": "7d0fa545816a45ec8f37efb5447244a0b57b27f992cfb2e4d2ce94d4d913a542"
+      "evidence_hash": "fe4a6acf3b2867f3c8ccc12116568ab9d852c324339c33f7a8ac573ad9833277"
     }
   ],
   "unmatched_albo_evidence_ids": []
