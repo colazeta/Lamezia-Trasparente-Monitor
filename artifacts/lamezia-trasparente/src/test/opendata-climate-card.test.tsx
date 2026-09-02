@@ -84,7 +84,7 @@ describe("OpenData climate territory card", () => {
     fireEvent.click(screen.getByRole("button", { name: /Torna ai dataset/i }));
 
     expect(
-      screen.getByRole("heading", { name: "Dataset" }),
+      screen.getByRole("heading", { name: "Famiglie di dataset" }),
     ).toBeInTheDocument();
     expect(
       screen.getByRole("button", { name: /Popolazione e societa/i }),
@@ -118,7 +118,9 @@ describe("OpenData climate territory card", () => {
     expect(screen.getAllByText("Mobilita").length).toBeGreaterThan(0);
     expect(screen.getAllByText("Popolazione").length).toBeGreaterThan(0);
 
-    const archiveHeading = screen.getByRole("heading", { name: "Dataset" });
+    const archiveHeading = screen.getByRole("heading", {
+      name: "Famiglie di dataset",
+    });
     expect(archiveHeading).toBeInTheDocument();
     expect(
       screen.getAllByText(/Anomalie climatiche.*Lamezia Terme/).length,
@@ -180,7 +182,7 @@ describe("OpenData climate territory card", () => {
       screen.getByRole("button", { name: /Torna ai dataset/i }),
     ).toBeInTheDocument();
     expect(
-      screen.queryByRole("heading", { name: "Dataset" }),
+      screen.queryByRole("heading", { name: "Famiglie di dataset" }),
     ).not.toBeInTheDocument();
 
     const climateHeadings = screen.getAllByRole("heading", {
@@ -236,7 +238,7 @@ describe("OpenData climate territory card", () => {
 
     fireEvent.click(screen.getByRole("button", { name: /Torna ai dataset/i }));
     expect(
-      screen.getByRole("heading", { name: "Dataset" }),
+      screen.getByRole("heading", { name: "Famiglie di dataset" }),
     ).toBeInTheDocument();
     expect(
       screen.getByRole("button", { name: /Clima e territorio/i }),
