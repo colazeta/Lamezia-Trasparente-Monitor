@@ -54,7 +54,7 @@ describe("proposte civiche", () => {
     expect(filterPublicProposals(PUBLIC_PROPOSALS, { status: "discussa" })).toHaveLength(0);
   });
 
-  it("renderizza archivio compatto, filtri e timeline", () => {
+  it("renderizza archivio compatto, filtri, timeline e titoli canonici", () => {
     renderProposteCiviche();
 
     expect(screen.getByRole("heading", { name: "Proposte civiche" })).toBeInTheDocument();
@@ -70,10 +70,10 @@ describe("proposte civiche", () => {
     expect(screen.getByLabelText("Stato")).toBeInTheDocument();
     expect(screen.getByLabelText("Canale")).toBeInTheDocument();
     expect(
-      screen.getByText("Pubblicità digitale di convocazioni e ordini del giorno"),
+      screen.getByText("Pubblicazione digitale di convocazioni e ordini del giorno"),
     ).toBeInTheDocument();
     expect(
-      screen.getByText("Firma digitale per iniziative popolari, istanze e petizioni"),
+      screen.getByText("Sottoscrizione digitale di iniziative, istanze e petizioni"),
     ).toBeInTheDocument();
   });
 
