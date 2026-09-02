@@ -30,6 +30,18 @@ export {
   groupProposalsByThread,
 } from "./propostePubblicheCore";
 
+export type {
+  CanonicalProposalAction,
+  CanonicalProposalPresentation,
+} from "./proposalCanonicalPresentation";
+export {
+  CANONICAL_PROPOSAL_ACTIONS,
+  CANONICAL_PROPOSAL_ACTION_LABELS,
+  getCanonicalProposalPresentation,
+  getCanonicalProposalPresentationIds,
+  hasCanonicalProposalPresentation,
+} from "./proposalCanonicalPresentation";
+
 const UPDATED_CORE_PROPOSALS = core.PUBLIC_PROPOSALS.map(applyScoutingUpdates);
 
 export const PUBLIC_PROPOSALS = [
