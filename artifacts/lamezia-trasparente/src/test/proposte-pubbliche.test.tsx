@@ -40,7 +40,7 @@ describe("proposte civiche", () => {
     );
   });
 
-  it("filtra le proposte per stato, promotore e tema con utility pure", () => {
+  it("mantiene il tema di acquisizione disponibile nelle utility pure", () => {
     expect(getProposalThemes()).toContain("Trasparenza e partecipazione democratica");
     expect(getProposalPromoters()).toContain("Lamezia Trasparente");
 
@@ -54,7 +54,7 @@ describe("proposte civiche", () => {
     expect(filterPublicProposals(PUBLIC_PROPOSALS, { status: "discussa" })).toHaveLength(0);
   });
 
-  it("renderizza archivio compatto, filtri, timeline e titoli canonici", () => {
+  it("renderizza archivio compatto, filtro Materia PA, timeline e titoli canonici", () => {
     renderProposteCiviche();
 
     expect(screen.getByRole("heading", { name: "Proposte civiche" })).toBeInTheDocument();
@@ -64,7 +64,8 @@ describe("proposte civiche", () => {
     expect(screen.getByRole("button", { name: "Sviluppi" })).toBeInTheDocument();
     expect(screen.getByLabelText("Localizzazione")).toBeInTheDocument();
     expect(screen.getByLabelText("Area locale")).toBeInTheDocument();
-    expect(screen.getByLabelText("Tema")).toBeInTheDocument();
+    expect(screen.getByLabelText("Materia PA")).toBeInTheDocument();
+    expect(screen.queryByLabelText("Tema")).not.toBeInTheDocument();
     expect(screen.getByLabelText("Promotore")).toBeInTheDocument();
     expect(screen.getByLabelText("Anno")).toBeInTheDocument();
     expect(screen.getByLabelText("Stato")).toBeInTheDocument();
@@ -75,6 +76,36 @@ describe("proposte civiche", () => {
     expect(
       screen.getByText("Sottoscrizione digitale di iniziative, istanze e petizioni"),
     ).toBeInTheDocument();
+  });
+
+  it("filtra l'archivio con una materia ufficiale della PA", () => {
+    renderProposteCiviche();
+
+    fireEvent.change(screen.getByLabelText("Materia PA"), {
+      target: { value: "2" },
+    });
+
+    expect(screen.getAllByText("Salute, benessere e assistenza").length).toBeGreaterThan(0);
+    expect(screen.getByText(/Emodinamica H24 strutturale al Giovanni Paolo II/i)).toBeInTheDocument();
+  });
+
+  it("rende selezionabile GOVE come fallback ufficiale per governo e settore pubblico", () => {
+    renderProposteCiviche();
+
+    expect(
+      screen.getByRole("option", { name: "Governo e settore pubblico" }),
+    ).toBeInTheDocument();
+
+    fireEvent.change(screen.getByLabelText("Materia PA"), {
+      target: { value: "GOVE" },
+    });
+
+    expect(
+      screen.getByText("Pubblicazione digitale di convocazioni e ordini del giorno"),
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByText(/Emodinamica H24 strutturale al Giovanni Paolo II/i),
+    ).not.toBeInTheDocument();
   });
 
   it("aggiorna il conteggio quando un filtro non contiene risultati", () => {

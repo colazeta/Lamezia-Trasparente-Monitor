@@ -42,6 +42,29 @@ export {
   hasCanonicalProposalPresentation,
 } from "./proposalCanonicalPresentation";
 
+export type {
+  LtSemanticExtensionId,
+  OfficialFallbackDataThemeCode,
+  PaPublicServiceSubjectCode,
+  PaSemanticConcept,
+  ProposalPaSemanticProfile,
+  ProposalPaSubjectCode,
+} from "./proposalPaSemanticProfile";
+export {
+  EU_DATA_THEME_SCHEME,
+  LT_SEMANTIC_EXTENSIONS,
+  OFFICIAL_FALLBACK_DATA_THEMES,
+  PA_PUBLIC_SERVICE_SUBJECT_SCHEME,
+  PA_PUBLIC_SERVICE_SUBJECTS,
+  PA_TRANSPARENCY_SUBJECT_SCHEME_URI,
+  getAvailablePaSubjects,
+  getMappedProposalThemes,
+  getProposalLocalSemanticExtensions,
+  getProposalOfficialPaSubjects,
+  getProposalPaSemanticProfile,
+  proposalMatchesPaSubject,
+} from "./proposalPaSemanticProfile";
+
 const UPDATED_CORE_PROPOSALS = core.PUBLIC_PROPOSALS.map(applyScoutingUpdates);
 
 export const PUBLIC_PROPOSALS = [

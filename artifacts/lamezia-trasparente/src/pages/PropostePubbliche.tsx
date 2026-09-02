@@ -40,11 +40,13 @@ import {
   PROPOSAL_STATUS_LABELS,
   PROPOSAL_STATUSES,
   filterPublicProposals,
+  getAvailablePaSubjects,
   getProposalPromoters,
-  getProposalThemes,
   getProposalYears,
   groupProposalsByPromoter,
   groupProposalsByThread,
+  proposalMatchesPaSubject,
+  type PaPublicServiceSubjectCode,
   type ProposalChannel,
   type ProposalStatus,
 } from "@/data/propostePubbliche";
@@ -60,7 +62,7 @@ function sortByLatestUpdate<T extends { lastUpdated: string }>(items: readonly T
 }
 
 export function PropostePubbliche() {
-  const [theme, setTheme] = useState(ALL);
+  const [paSubject, setPaSubject] = useState<SelectFilter<PaPublicServiceSubjectCode>>(ALL);
   const [promoter, setPromoter] = useState(ALL);
   const [year, setYear] = useState(ALL);
   const [status, setStatus] = useState<SelectFilter<ProposalStatus>>(ALL);
@@ -71,20 +73,22 @@ export function PropostePubbliche() {
   const [timelineMode, setTimelineMode] = useState<ProposalTimelineMode>("origins");
   const [timelineRange, setTimelineRange] = useState<ProposalTimelineRange | null>(null);
 
-  const themes = useMemo(() => getProposalThemes(), []);
+  const paSubjects = useMemo(() => getAvailablePaSubjects(PUBLIC_PROPOSALS), []);
   const promoters = useMemo(() => getProposalPromoters(), []);
   const years = useMemo(() => getProposalYears(), []);
   const geoAreas = useMemo(() => getProposalLocalGeoAreas(), []);
 
   const baseFilteredProposals = useMemo(() => {
     let filtered = filterPublicProposals(PUBLIC_PROPOSALS, {
-      theme: theme === ALL ? undefined : theme,
       promoter: promoter === ALL ? undefined : promoter,
       year: year === ALL ? undefined : year,
       status: status === ALL ? undefined : status,
       channel: channel === ALL ? undefined : channel,
     });
 
+    if (paSubject !== ALL) {
+      filtered = filtered.filter((proposal) => proposalMatchesPaSubject(proposal, paSubject));
+    }
     if (geoMode === "georeferenced") {
       filtered = filtered.filter((proposal) => isProposalGeoreferenced(proposal.id));
     }
@@ -99,7 +103,7 @@ export function PropostePubbliche() {
     }
 
     return filtered;
-  }, [channel, geoArea, geoMode, promoter, status, theme, year]);
+  }, [channel, geoArea, geoMode, paSubject, promoter, status, year]);
 
   const filteredProposals = useMemo(
     () =>
@@ -131,7 +135,7 @@ export function PropostePubbliche() {
   );
 
   const resetFilters = () => {
-    setTheme(ALL);
+    setPaSubject(ALL);
     setPromoter(ALL);
     setYear(ALL);
     setStatus(ALL);
@@ -145,7 +149,7 @@ export function PropostePubbliche() {
     <>
       <PageMeta
         title="Proposte civiche"
-        description="Archivio verificabile delle proposte civiche rivolte a Lamezia Terme, organizzate per promotore, tema, percorso documentale, tempo e, quando pertinente, riferimento geografico verificabile."
+        description="Archivio verificabile delle proposte civiche rivolte a Lamezia Terme, organizzate secondo le materie ufficiali dei servizi pubblici, promotore, percorso documentale, tempo e, quando pertinente, riferimento geografico verificabile."
         path="/proposte-civiche"
       />
 
@@ -159,13 +163,13 @@ export function PropostePubbliche() {
             Proposte civiche
           </h1>
           <p className="mt-2 max-w-4xl text-sm leading-relaxed text-muted-foreground md:text-base">
-            Un dossier per proposta, esplorabile per tempo, promotore, tema e territorio.
-            Le proposte riferite genericamente a tutta Lamezia non ricevono coordinate artificiali.
+            Un dossier per proposta, esplorabile per tempo, promotore, materia della PA e territorio.
+            La classificazione di base riusa i vocabolari ufficiali di schema.gov.it; le proposte riferite genericamente a tutta Lamezia non ricevono coordinate artificiali.
           </p>
           <div className="mt-3 flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
             <AlertTriangle className="h-3.5 w-3.5 text-primary" aria-hidden="true" />
             <strong className="text-foreground">Stato documentale, non politico.</strong>
-            <span>Geografia solo quando esiste un luogo o un’area realmente identificabile.</span>
+            <span>Materia PA da vocabolario controllato; estensioni LT solo dove strettamente necessarie.</span>
           </div>
         </header>
 
@@ -248,10 +252,16 @@ export function PropostePubbliche() {
               </select>
             </label>
             <label className="space-y-1 text-xs font-medium">
-              Tema
-              <select className="w-full rounded-md border border-input bg-background px-2.5 py-1.5 text-xs" value={theme} onChange={(event) => setTheme(event.target.value)}>
-                <option value={ALL}>Tutti i temi</option>
-                {themes.map((item) => <option key={item} value={item}>{item}</option>)}
+              Materia PA
+              <select
+                className="w-full rounded-md border border-input bg-background px-2.5 py-1.5 text-xs"
+                value={paSubject}
+                onChange={(event) => setPaSubject(event.target.value as SelectFilter<PaPublicServiceSubjectCode>)}
+              >
+                <option value={ALL}>Tutte le materie</option>
+                {paSubjects.map((subject) => (
+                  <option key={subject.code} value={subject.code}>{subject.label}</option>
+                ))}
               </select>
             </label>
             <label className="space-y-1 text-xs font-medium">
@@ -292,7 +302,8 @@ export function PropostePubbliche() {
 
           <p className="mt-2 border-t border-border pt-2 text-xs text-muted-foreground" aria-live="polite">
             <span>{filteredProposals.length} proposte visualizzate su {PUBLIC_PROPOSALS.length}.</span>{" "}
-            <span>{filteredGeoreferenced.length} georeferenziate nei filtri correnti.</span>
+            <span>{filteredGeoreferenced.length} georeferenziate nei filtri correnti.</span>{" "}
+            <span>Materia PA: vocabolario controllato schema.gov.it.</span>
           </p>
         </section>
 
