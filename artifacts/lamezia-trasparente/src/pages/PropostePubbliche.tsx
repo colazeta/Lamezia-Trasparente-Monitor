@@ -42,15 +42,16 @@ import {
   PUBLIC_PROPOSALS,
   PROPOSAL_CHANNEL_LABELS,
   PROPOSAL_CHANNELS,
-  PROPOSAL_STATUS_LABELS,
-  PROPOSAL_STATUSES,
+  PROPOSAL_PUBLIC_STATE_LABELS,
   filterPublicProposals,
+  getAvailablePublicInstitutionalStates,
   getProposalPromoters,
   getProposalYears,
   groupProposalsByPromoter,
   groupProposalsByThread,
+  proposalMatchesPublicInstitutionalState,
   type ProposalChannel,
-  type ProposalStatus,
+  type ProposalPublicState,
 } from "@/data/propostePubbliche";
 
 const ALL = "all";
@@ -67,7 +68,7 @@ export function PropostePubbliche() {
   const [paSubject, setPaSubject] = useState<SelectFilter<ProposalPaSubjectCode>>(ALL);
   const [promoter, setPromoter] = useState(ALL);
   const [year, setYear] = useState(ALL);
-  const [status, setStatus] = useState<SelectFilter<ProposalStatus>>(ALL);
+  const [status, setStatus] = useState<SelectFilter<ProposalPublicState>>(ALL);
   const [channel, setChannel] = useState<SelectFilter<ProposalChannel>>(ALL);
   const [geoArea, setGeoArea] = useState<SelectFilter<ProposalGeoArea>>(ALL);
   const [geoMode, setGeoMode] = useState<GeoMode>("all");
@@ -76,6 +77,10 @@ export function PropostePubbliche() {
   const [timelineRange, setTimelineRange] = useState<ProposalTimelineRange | null>(null);
 
   const paSubjects = useMemo(() => getAvailablePrimaryPaSubjects(PUBLIC_PROPOSALS), []);
+  const publicStates = useMemo(
+    () => getAvailablePublicInstitutionalStates(PUBLIC_PROPOSALS),
+    [],
+  );
   const promoters = useMemo(() => getProposalPromoters(), []);
   const years = useMemo(() => getProposalYears(), []);
   const geoAreas = useMemo(() => getProposalLocalGeoAreas(), []);
@@ -84,13 +89,17 @@ export function PropostePubbliche() {
     let filtered = filterPublicProposals(PUBLIC_PROPOSALS, {
       promoter: promoter === ALL ? undefined : promoter,
       year: year === ALL ? undefined : year,
-      status: status === ALL ? undefined : status,
       channel: channel === ALL ? undefined : channel,
     });
 
     if (paSubject !== ALL) {
       filtered = filtered.filter((proposal) =>
         proposalMatchesPrimaryPaSubject(proposal, paSubject),
+      );
+    }
+    if (status !== ALL) {
+      filtered = filtered.filter((proposal) =>
+        proposalMatchesPublicInstitutionalState(proposal, status),
       );
     }
     if (geoMode === "georeferenced") {
@@ -172,7 +181,7 @@ export function PropostePubbliche() {
           <div className="mt-3 flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
             <AlertTriangle className="h-3.5 w-3.5 text-primary" aria-hidden="true" />
             <strong className="text-foreground">Stato documentale, non politico.</strong>
-            <span>Le proposte riferite all’intera città non ricevono coordinate artificiali.</span>
+            <span>Gli stati mostrati sintetizzano il percorso documentato; i dettagli restano nel dossier.</span>
           </div>
         </header>
 
@@ -283,9 +292,17 @@ export function PropostePubbliche() {
             </label>
             <label className="space-y-1 text-xs font-medium">
               Stato
-              <select className="w-full rounded-md border border-input bg-background px-2.5 py-1.5 text-xs" value={status} onChange={(event) => setStatus(event.target.value as SelectFilter<ProposalStatus>)}>
+              <select
+                className="w-full rounded-md border border-input bg-background px-2.5 py-1.5 text-xs"
+                value={status}
+                onChange={(event) =>
+                  setStatus(event.target.value as SelectFilter<ProposalPublicState>)
+                }
+              >
                 <option value={ALL}>Tutti gli stati</option>
-                {PROPOSAL_STATUSES.map((item) => <option key={item} value={item}>{PROPOSAL_STATUS_LABELS[item]}</option>)}
+                {publicStates.map((item) => (
+                  <option key={item} value={item}>{PROPOSAL_PUBLIC_STATE_LABELS[item]}</option>
+                ))}
               </select>
             </label>
             <label className="space-y-1 text-xs font-medium">
