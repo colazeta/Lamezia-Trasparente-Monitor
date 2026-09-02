@@ -32,6 +32,26 @@
       "sessionMatchBasis": "The episode title names three topics independently documented in the 19 May 2026 session report: airport access, TIS workers and out-of-town voting."
     },
     {
+      "id": "cityone-wordpress-video-116499",
+      "url": "https://www.cityonelamezia.it/wp-json/wp/v2/video/116499",
+      "publisher": "City One Lamezia",
+      "role": "reviewed-third-party-video-metadata",
+      "expectedDate": "2026-05-19",
+      "expectedMarkers": ["Lidia Vescio", "accessi aeroportuali", "lavoratori TIS", "voto degli elettori fuori sede"],
+      "mayProvideQualityMedia": true,
+      "discoveredFrom": "cityone-episode-lidia-vescio-2026-05-19"
+    },
+    {
+      "id": "selftv-player-lidia-vescio-2026-05-19",
+      "url": "https://share.selftv.video/embed/media/15cf723b-5a89-4278-afc3-2f1b88ac3577/player?template=tv",
+      "publisher": "SelfTV / City One",
+      "role": "reviewed-third-party-player-locator",
+      "expectedDate": "2026-05-19",
+      "expectedMarkers": [],
+      "mayProvideQualityMedia": true,
+      "discoveredFrom": "cityone-episode-lidia-vescio-2026-05-19"
+    },
+    {
       "id": "cityone-home-video-surface",
       "url": "https://www.cityonelamezia.it/",
       "publisher": "City One Lamezia",
