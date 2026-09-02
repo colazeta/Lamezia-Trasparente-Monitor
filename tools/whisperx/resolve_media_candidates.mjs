@@ -7,9 +7,11 @@ const MAX_HTML_BYTES = 5 * 1024 * 1024;
 const TIMEOUT_MS = 20_000;
 const MAX_REDIRECTS = 3;
 const MAX_SCRIPT_HINTS = 100;
+const MAX_SCRIPT_LITERAL_HINTS = 120;
 const MEDIA_EXT = /\.(?:mp3|m4a|aac|wav|ogg|opus|mp4|webm|m3u8|mpd)(?:$|[?#])/i;
 const MEDIA_HINT = /(?:youtube\.com|youtu\.be|vimeo\.com|facebook\.com|fb\.watch|player|stream|video|media)/i;
 const SCRIPT_ENDPOINT_HINT = /(?:\/api\/|manifest|playlist|m3u8|\.mpd|\.mp4|playback|stream|media|source)/i;
+const SCRIPT_LITERAL_HINT = /(?:api|media|stream|source|manifest|playlist|playback|hls|dash|m3u8|mp4|src|url)/i;
 
 function die(message) {
   console.error(message);
@@ -68,6 +70,20 @@ function extractScriptHints(text, baseUrl) {
       found.add(url);
       if (found.size >= MAX_SCRIPT_HINTS) return [...found].sort();
     }
+  }
+  return [...found].sort();
+}
+
+function extractScriptLiteralHints(text) {
+  const found = new Set();
+  const literalPattern = /(["'`])((?:\\.|(?!\1).){1,220})\1/g;
+  let match;
+  while ((match = literalPattern.exec(text)) !== null) {
+    const literal = decodeCandidate(match[2]).trim();
+    if (!literal || !SCRIPT_LITERAL_HINT.test(literal)) continue;
+    if (/\s{3,}/.test(literal)) continue;
+    found.add(literal);
+    if (found.size >= MAX_SCRIPT_LITERAL_HINTS) break;
   }
   return [...found].sort();
 }
@@ -140,10 +156,10 @@ async function main() {
       const final = new URL(response.finalUrl);
       if (final.origin !== approved.origin) throw new Error('cross-origin-redirect');
       const contentType = response.contentType.split(';')[0];
+      const isScript = /(?:javascript|ecmascript)/i.test(contentType) || candidate.role === 'reviewed-player-script-locator';
       const resources = extractResources(response.text, response.finalUrl);
-      const scriptHints = /(?:javascript|ecmascript)/i.test(contentType) || candidate.role === 'reviewed-player-script-locator'
-        ? extractScriptHints(response.text, response.finalUrl)
-        : [];
+      const scriptHints = isScript ? extractScriptHints(response.text, response.finalUrl) : [];
+      const scriptLiteralHints = isScript ? extractScriptLiteralHints(response.text) : [];
       results.push({
         id: candidate.id,
         role: candidate.role,
@@ -159,6 +175,8 @@ async function main() {
         discoveredResourceCount: resources.length,
         scriptEndpointHints: scriptHints,
         scriptEndpointHintCount: scriptHints.length,
+        scriptLiteralHints,
+        scriptLiteralHintCount: scriptLiteralHints.length,
       });
     } catch (error) {
       results.push({
@@ -171,6 +189,8 @@ async function main() {
         discoveredResourceCount: 0,
         scriptEndpointHints: [],
         scriptEndpointHintCount: 0,
+        scriptLiteralHints: [],
+        scriptLiteralHintCount: 0,
       });
     }
   }
@@ -188,6 +208,7 @@ async function main() {
       maxResponseBytes: MAX_HTML_BYTES,
       timeoutMs: TIMEOUT_MS,
       maxScriptEndpointHints: MAX_SCRIPT_HINTS,
+      maxScriptLiteralHints: MAX_SCRIPT_LITERAL_HINTS,
       secretsUsed: false,
     },
     results,
@@ -201,6 +222,7 @@ async function main() {
     reachable: results.filter((item) => item.ok).length,
     discoveredResources: results.reduce((sum, item) => sum + item.discoveredResourceCount, 0),
     scriptEndpointHints: results.reduce((sum, item) => sum + item.scriptEndpointHintCount, 0),
+    scriptLiteralHints: results.reduce((sum, item) => sum + item.scriptLiteralHintCount, 0),
   }));
 }
 
