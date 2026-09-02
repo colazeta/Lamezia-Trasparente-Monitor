@@ -43,18 +43,20 @@ export {
 } from "./proposalCanonicalPresentation";
 
 export type {
-  LtSemanticExtensionId,
+  OfficialFallbackDataThemeCode,
   PaPublicServiceSubjectCode,
   PaSemanticConcept,
   ProposalPaSemanticProfile,
+  ProposalPaSubjectCode,
 } from "./proposalPaSemanticProfile";
 export {
-  LT_SEMANTIC_EXTENSIONS,
+  EU_DATA_THEME_SCHEME,
+  OFFICIAL_FALLBACK_DATA_THEMES,
   PA_PUBLIC_SERVICE_SUBJECT_SCHEME,
   PA_PUBLIC_SERVICE_SUBJECTS,
+  PA_TRANSPARENCY_SUBJECT_SCHEME_URI,
   getAvailablePaSubjects,
   getMappedProposalThemes,
-  getProposalLocalSemanticExtensions,
   getProposalOfficialPaSubjects,
   getProposalPaSemanticProfile,
   proposalMatchesPaSubject,
