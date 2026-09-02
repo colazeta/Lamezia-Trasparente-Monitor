@@ -138,7 +138,14 @@ jobs:
           test "$(jq -r '.watchKey' /tmp/provision-second.json)" = 'pnrr-index'
 
       - name: Send real changedetection test notification
-        run: node tools/changedetection/provision_watch.mjs --send-test
+        shell: bash
+        run: |
+          set -euo pipefail
+          if ! node tools/changedetection/provision_watch.mjs --send-test; then
+            echo 'LT receiver diagnostic (content/headers not logged):' >&2
+            grep -Ei 'sentinel|error|exception|failed|500' /tmp/lt-api.log | tail -n 80 >&2 || true
+            exit 1
+          fi
 
       - name: Verify durable LT receiver event only
         run: pnpm --filter @workspace/api-server exec node scripts/assert_change_sentinel_event.mjs
