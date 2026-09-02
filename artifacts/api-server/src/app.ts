@@ -15,6 +15,7 @@ import {
   getClerkProxyHost,
 } from "./middlewares/clerkProxyMiddleware";
 import router from "./routes";
+import changeSentinelRouter from "./routes/changeSentinel";
 import mcpRouter from "./routes/mcp";
 import { logger } from "./lib/logger";
 
@@ -53,6 +54,12 @@ app.use(CLERK_PROXY_PATH, clerkProxyMiddleware());
 app.use(cors({ credentials: true, origin: true }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// The sentinel receiver has its own dedicated high-entropy authentication and
+// must not depend on editorial Clerk credentials. Keeping this single route
+// before clerkMiddleware also lets the fail-closed receiver operate in worker/
+// integration environments where Clerk is intentionally not configured.
+app.use("/api", changeSentinelRouter);
 
 // Clerk session middleware — resolves key from host for multi-domain support
 app.use(
