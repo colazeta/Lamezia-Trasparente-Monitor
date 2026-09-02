@@ -58,19 +58,18 @@ export interface OpenDataSourceDefinition {
   label: string;
 }
 
-interface OpenDataThemeDefinition
-  extends Omit<OpenDataThemeCategory, "datasets"> {}
+type OpenDataThemeDefinition = Omit<OpenDataThemeCategory, "datasets">;
 
 export const DEFAULT_OPEN_DATA_THEME_ID = "climate-territory";
 
-export const OPEN_DATA_SOURCE_REGISTRY = [
+export const OPEN_DATA_SOURCE_REGISTRY: readonly OpenDataSourceDefinition[] = [
   { id: "open-meteo", label: "Open-Meteo" },
   { id: "assaeroporti", label: "Assaeroporti" },
   { id: "istat", label: "ISTAT" },
   { id: "comune-opendata", label: "Comune di Lamezia Terme · Open Data" },
-] as const satisfies readonly OpenDataSourceDefinition[];
+];
 
-export const OPEN_DATA_DATASET_REGISTRY = [
+export const OPEN_DATA_DATASET_REGISTRY: readonly OpenDataThemeDataset[] = [
   {
     id: "lamezia-climate-daily",
     label: "Anomalie climatiche · Lamezia Terme",
@@ -219,9 +218,9 @@ export const OPEN_DATA_DATASET_REGISTRY = [
     licence: null,
     layer: "canonical",
   },
-] as const satisfies readonly OpenDataThemeDataset[];
+];
 
-const OPEN_DATA_THEME_DEFINITIONS = [
+const OPEN_DATA_THEME_DEFINITIONS: readonly OpenDataThemeDefinition[] = [
   {
     id: "climate-territory",
     label: "Clima e territorio",
@@ -355,7 +354,7 @@ const OPEN_DATA_THEME_DEFINITIONS = [
       "riuso in iniziative civiche",
     ],
   },
-] as const satisfies readonly OpenDataThemeDefinition[];
+];
 
 export const OPEN_DATA_THEME_LIBRARY: OpenDataThemeCategory[] =
   OPEN_DATA_THEME_DEFINITIONS.map((theme) => ({
@@ -427,7 +426,9 @@ export function buildOpenDataCatalogStatistics(
   const datasets = [...OPEN_DATA_DATASET_REGISTRY];
   const families = new Set(datasets.map((dataset) => dataset.familyId));
   const sourceIds = new Set(datasets.map((dataset) => dataset.sourceId));
-  const formats = new Set(datasets.flatMap((dataset) => dataset.formats));
+  const formats = new Set<OpenDataDatasetFormat>(
+    datasets.flatMap((dataset) => dataset.formats),
+  );
   const publishedThemeIds = new Set(datasets.map((dataset) => dataset.themeId));
   const operationalStatus = datasets
     .map((dataset) => LAMEZIA_OPEN_DATA_SERIES_BY_ID.get(dataset.id))
