@@ -56,6 +56,13 @@ export const OFFICIAL_FALLBACK_DATA_THEMES = {
   },
 } as const;
 
+/**
+ * Transitional API retained so callers can explicitly verify that no local
+ * thematic extension is being used. This object is intentionally empty.
+ */
+export const LT_SEMANTIC_EXTENSIONS = {} as const;
+export type LtSemanticExtensionId = never;
+
 export type PaPublicServiceSubjectCode = keyof typeof PA_PUBLIC_SERVICE_SUBJECTS;
 export type OfficialFallbackDataThemeCode = keyof typeof OFFICIAL_FALLBACK_DATA_THEMES;
 export type ProposalPaSubjectCode =
@@ -179,6 +186,13 @@ export function getProposalOfficialPaSubjects(
     ...profile.officialSubjectCodes.map(officialPublicServiceConcept),
     ...(profile.officialFallbackDataThemes ?? []).map(officialFallbackConcept),
   ];
+}
+
+export function getProposalLocalSemanticExtensions(
+  proposal: Pick<PublicProposal, "id" | "theme">,
+) {
+  getProposalPaSemanticProfile(proposal);
+  return [] as const;
 }
 
 export function getAvailablePaSubjects(proposals: readonly PublicProposal[]) {
