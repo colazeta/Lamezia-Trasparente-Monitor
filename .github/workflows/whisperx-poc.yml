@@ -1,0 +1,66 @@
+name: WhisperX PoC guards
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - '.github/workflows/whisperx-poc.yml'
+      - 'tools/whisperx/**'
+      - 'docs/architecture/whisperx-integration.md'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: whisperx-poc-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  guards:
+    name: Local-file / privacy / no-diarization guards
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Run lightweight helper tests
+        run: |
+          python tools/whisperx/test_extract_media.py
+          python -m py_compile tools/whisperx/extract_media.py
+
+      - name: Verify pinned upstream and corpus metadata
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -Fx 'whisperx==3.8.6' tools/whisperx/requirements.txt
+          test "$(jq -r '.upstream.pinnedVersion' tools/whisperx/benchmark-corpus.public.json)" = '3.8.6'
+          test "$(jq -r '.items[0].sourceRole' tools/whisperx/benchmark-corpus.public.json)" = 'benchmark-only-public-mirror'
+          test "$(jq -r '.items[0].canonicalStatus' tools/whisperx/benchmark-corpus.public.json)" = 'not-established'
+
+      - name: Verify Phase 1 has no diarization or remote-fetch path
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          source = Path('tools/whisperx/extract_media.py').read_text(encoding='utf-8')
+          forbidden = [
+              'DiarizationPipeline',
+              'assign_word_speakers',
+              '--hf_token',
+              '--hf-token',
+              'requests.get(',
+              'httpx.get(',
+              'urllib.request',
+          ]
+          found = [item for item in forbidden if item in source]
+          if found:
+              raise SystemExit('Phase 1 WhisperX boundary violation: ' + ', '.join(found))
+          PY
