@@ -6,6 +6,8 @@ import {
   alertMigrationProblem,
   logMigrationStatus,
 } from "../../api-server/src/lib/migrationStatus";
+import { configureWorkerDoclingExecutor } from "../../api-server/src/lib/doclingRuntimeWiring";
+import { createWorkerDoclingExecutor } from "./doclingExecutor";
 
 async function prepareDatabaseForIngestion(): Promise<boolean> {
   try {
@@ -58,6 +60,11 @@ async function main(): Promise<void> {
     process.exitCode = 1;
     return;
   }
+
+  // Process-local capability injection: only the one-shot worker configures an
+  // executor. The HTTP API scheduler imports the same ingestion pipeline but
+  // never calls this bootstrap, so it cannot spawn Docling.
+  configureWorkerDoclingExecutor(createWorkerDoclingExecutor());
 
   await runIngestionCycle();
   logger.info("One-shot ingestion worker completed");
