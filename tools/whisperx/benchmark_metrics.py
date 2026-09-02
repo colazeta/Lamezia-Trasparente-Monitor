@@ -8,7 +8,7 @@ import re
 from pathlib import Path
 from typing import Any
 
-PUBLIC_TERMS = ("consiglio", "comunale", "lamezia")
+REVIEWED_TERMS = ("consiglio", "comunale", "lamezia", "sondrio")
 
 
 def load_json(path: Path) -> dict[str, Any]:
@@ -35,7 +35,10 @@ def build_metrics(
     manifest: dict[str, Any],
     *,
     benchmark_id: str,
-    mirror_video_id: str,
+    source_role: str,
+    canonical_status: str,
+    source_provider: str,
+    source_id: str,
     clip_start_seconds: int,
     clip_requested_seconds: int,
 ) -> dict[str, Any]:
@@ -87,7 +90,7 @@ def build_metrics(
     rtf = finite_number(result.get("realTimeFactor"))
 
     token_set = set(tokens)
-    term_hits = {term: term in token_set for term in PUBLIC_TERMS}
+    term_hits = {term: term in token_set for term in REVIEWED_TERMS}
     alignment_coverage = aligned_words / word_count if word_count else 0.0
     mean_score = sum(word_scores) / len(word_scores) if word_scores else None
     words_per_minute = (word_count / duration * 60.0) if duration and duration > 0 else None
@@ -95,9 +98,9 @@ def build_metrics(
     return {
         "schemaVersion": 1,
         "benchmarkId": benchmark_id,
-        "sourceRole": "benchmark-only-public-mirror",
-        "canonicalStatus": "not-established",
-        "mirror": {"provider": "youtube", "videoId": mirror_video_id},
+        "sourceRole": source_role,
+        "canonicalStatus": canonical_status,
+        "source": {"provider": source_provider, "id": source_id},
         "clip": {
             "startSeconds": clip_start_seconds,
             "requestedSeconds": clip_requested_seconds,
@@ -141,7 +144,10 @@ def main() -> int:
     parser.add_argument("--manifest", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--benchmark-id", required=True)
-    parser.add_argument("--mirror-video-id", required=True)
+    parser.add_argument("--source-role", required=True)
+    parser.add_argument("--canonical-status", required=True)
+    parser.add_argument("--source-provider", required=True)
+    parser.add_argument("--source-id", required=True)
     parser.add_argument("--clip-start-seconds", type=int, required=True)
     parser.add_argument("--clip-requested-seconds", type=int, required=True)
     args = parser.parse_args()
@@ -150,7 +156,10 @@ def main() -> int:
         load_json(args.transcript),
         load_json(args.manifest),
         benchmark_id=args.benchmark_id,
-        mirror_video_id=args.mirror_video_id,
+        source_role=args.source_role,
+        canonical_status=args.canonical_status,
+        source_provider=args.source_provider,
+        source_id=args.source_id,
         clip_start_seconds=args.clip_start_seconds,
         clip_requested_seconds=args.clip_requested_seconds,
     )
