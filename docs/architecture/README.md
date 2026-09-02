@@ -9,6 +9,7 @@ La documentazione ha uno scopo operativo: rendere verificabile da maintainer, re
 - [`integrations-overview.md`](integrations-overview.md) — architettura logica delle integrazioni, pipeline dati, controlli e regole di pubblicazione.
 - [`publication-standardisation.md`](publication-standardisation.md) — confine versionato tra dato acquisito e presentazione pubblica, con regole di preservazione della fonte, minimizzazione e revisione.
 - [`semantic-ontology.md`](semantic-ontology.md) — profilo semantico federato per entità, relazioni e domini, con OntoPiA come riferimento primario per la PA italiana e mapping verso SEMIC/W3C/OGC, ePO/OCDS, BODS e FollowTheMoney.
+- [`semantic-profile.v0.1.yaml`](semantic-profile.v0.1.yaml) — baseline machine-readable delle classi canoniche, associazioni, moduli, provenance, entity resolution e bridge dai domini correnti.
 - [`semantic-mappings.csv`](semantic-mappings.csv) — registro iniziale dei mapping semantici, con relazione, stato, autorità e note per ciascun allineamento.
 - [`integration-source-catalog.md`](integration-source-catalog.md) — catalogo delle fonti che alimentano o possono alimentare il prodotto, con ruolo, stato, superficie pubblica e caveat.
 - [`cruscotto-italia-integration.md`](cruscotto-italia-integration.md) — integrazione di Cruscotto Italia come fonte federata nazionale per il comune di Lamezia Terme.
@@ -52,5 +53,5 @@ Questa cartella integra, ma non sostituisce:
 - Repository Cruscotto Italia: `https://github.com/AgID/cruscotto-italia`
 - Linee guida AgID su acquisizione e riuso software per le PA: `https://docs.italia.it/italia/developers-italia/lg-acquisizione-e-riuso-software-per-pa-docs/it/stabile/`
 - Guida Developers Italia alla pubblicazione open source: `https://docs.italia.it/italia/developers-italia/lg-acquisizione-e-riuso-software-per-pa-docs/it/stabile/attachments/allegato-a-guida-alla-pubblicazione-open-source-di-software-realizzato-per-la-pa.html`
-- Guida Developers Italia alla manutenzione open source: `https://docs.italia.it/italia/developers-italia/lg-acquisizione-e-riuso-software-per-pa-docs/it/stabile/attachments/allegato-b-guida-alla-manutenzione-di-software-open-source.html`
+- Guida Developers Italia alla manutenzione open source: `https://docs.italia.it/italia/developers-italia/lg-acquisizione-e-riuso-software-per-pa-docs/it/stabile/attachments/allegato-b-guida-alla-manutenzione-di-software-open-source-di-software-realizzato-per-la-pa.html`
 - Designers Italia / design system: `https://designers.italia.it/argomenti/design-system/`
