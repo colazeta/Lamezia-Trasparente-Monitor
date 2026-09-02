@@ -46,18 +46,16 @@ const REQUIRED_PUBLIC_TEXT = [
   "Osservatorio Civico Indipendente",
 ];
 const REQUIRED_CONTRACT_BUNDLE_TEXT = [
-  "Contratti pubblici sotto osservazione",
-  "Fonti dei contratti",
-  "Dati pubblici, con la fonte sempre raggiungibile",
-  "La storia documentale del contratto",
-  "Consulta ANAC",
-  "Programmazione",
-  "Progettazione",
-  "Gara / pubblicazione",
-  "Esecuzione della gara",
-  "Affidamento",
-  "Esecuzione del contratto",
-  "Conclusione, collaudi e verifiche",
+  "Cosa affida il Comune, a chi e per quanto",
+  "Contratti da approfondire",
+  "Esplora tutti i contratti",
+  "Filtri avanzati",
+  "Da approfondire",
+  "La storia del contratto, atto per atto",
+  "Le informazioni essenziali",
+  "Segnali di attenzione",
+  "Dati tecnici, identificativi e fonti",
+  "Verifica nella fonte ufficiale",
 ];
 const REQUIRED_ORGANI_BUNDLE_TEXT = [
   "Organi del Comune",
