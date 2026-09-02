@@ -116,11 +116,12 @@ jobs:
             sleep 1
           done
 
-          api_key="$(jq -r '.. | .api_access_token? // empty' "$GITHUB_WORKSPACE/tmp/changedetection-datastore/changedetection.json")"
+          api_key="$(docker exec lt-changedetection-smoke python -c "import json; print(json.load(open('/datastore/changedetection.json'))['settings']['application']['api_access_token'])")"
           if [[ -z "$api_key" || "$api_key" == "null" ]]; then
             echo 'changedetection API key not found' >&2
             exit 1
           fi
+          echo "::add-mask::$api_key"
           echo "CHANGEDETECTION_API_KEY=$api_key" >> "$GITHUB_ENV"
 
       - name: Provision PNRR watch idempotently
