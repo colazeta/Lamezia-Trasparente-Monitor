@@ -15,6 +15,7 @@
     "materialize:spatial-public-snapshots": "tsx ./territorio/spatial-public-snapshots-materialize.ts",
     "sync:anac-bdncp": "tsx ./contracts/syncOfficialAnacBdncp.ts",
     "sync:anac-awards": "tsx ./contracts/syncOfficialAnacAwards.ts",
+    "sync:anac-operators": "tsx ./contracts/syncOfficialAnacOperators.ts",
     "check:cardinal-readiness": "tsx ./contracts/cardinalReadinessCli.ts",
     "check:cardinal-award-readiness": "tsx ./contracts/cardinalAwardReadinessCli.ts",
     "typecheck": "tsc -p tsconfig.json --noEmit",
@@ -29,7 +30,7 @@
     "check:organi:commissions": "tsx ./check-institutional-commissions.ts --snapshot ../data/sources/organi-istituzionali-commissioni-2025-source-snapshot.json",
     "check:organi:static-fallback": "node --experimental-strip-types ./check-institutional-static-fallback.mjs",
     "check:organi:live": "tsx ./check-institutional-roster.ts",
-    "test": "node --import tsx --test ./check-source-health.test.ts ./production-smoke-plan.test.ts ./civic-source-registry.test.ts ./territorio/istat-sezioni-censimento-lamezia.test.ts ./territorio/istat-atlante-processed-layer.test.ts ./territorio/istat-household-composition-core.test.ts ./territorio/istat-household-composition-lamezia-materialize.test.ts ./territorio/spatial-public-snapshots.test.ts ./publication-standardisation.test.ts ./public-act-projection.test.ts ./albo-area-theme-taxonomy.test.ts ./albo-tinnvision.test.ts ./albo-artifact-transaction.test.ts ./sanitise-albo-public-artifacts.test.ts ./albo-document-serving.test.ts ./albo-workflow-guard.test.ts ./contracts/anacBdncpSyncCore.test.ts ./contracts/anacCkanDiscovery.test.ts ./contracts/cardinalReadiness.test.ts ./contracts/anacAwards.test.ts ./contracts/cardinalAwardReadiness.test.ts ./climate/lameziaClimateCore.test.mjs ./pnrr/lameziaPnrrCore.test.mjs",
+    "test": "node --import tsx --test ./check-source-health.test.ts ./production-smoke-plan.test.ts ./civic-source-registry.test.ts ./territorio/istat-sezioni-censimento-lamezia.test.ts ./territorio/istat-atlante-processed-layer.test.ts ./territorio/istat-household-composition-core.test.ts ./territorio/istat-household-composition-lamezia-materialize.test.ts ./territorio/spatial-public-snapshots.test.ts ./publication-standardisation.test.ts ./public-act-projection.test.ts ./albo-area-theme-taxonomy.test.ts ./albo-tinnvision.test.ts ./albo-artifact-transaction.test.ts ./sanitise-albo-public-artifacts.test.ts ./albo-document-serving.test.ts ./albo-workflow-guard.test.ts ./contracts/anacBdncpSyncCore.test.ts ./contracts/anacCkanDiscovery.test.ts ./contracts/cardinalReadiness.test.ts ./contracts/anacAwards.test.ts ./contracts/anacOperators.test.ts ./contracts/cardinalAwardReadiness.test.ts ./climate/lameziaClimateCore.test.mjs ./pnrr/lameziaPnrrCore.test.mjs",
     "production-smoke-plan": "tsx ./production-smoke-plan.ts"
   },
   "dependencies": {
