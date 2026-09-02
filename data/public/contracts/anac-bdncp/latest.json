@@ -1,8 +1,8 @@
 {
   "schemaVersion": "anac-bdncp-sync.v1",
-  "generatedAt": "2026-09-01T20:37:18.390Z",
+  "generatedAt": "2026-09-02T09:53:29.986Z",
   "status": "degraded",
-  "lastAttemptAt": "2026-09-01T20:37:18.390Z",
+  "lastAttemptAt": "2026-09-02T09:53:29.986Z",
   "lastSuccessAt": null,
   "failureCategory": "source-unavailable",
   "source": {
