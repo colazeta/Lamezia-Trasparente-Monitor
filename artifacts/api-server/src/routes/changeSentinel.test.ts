@@ -9,6 +9,8 @@ import {
 const NOW_MS = Date.UTC(2026, 8, 2, 11, 0, 0);
 const VALID_TOKEN = "sentinel-test-token-0123456789-abcdef";
 
+type RecordEvent = NonNullable<ChangeSentinelReceiverDependencies["recordEvent"]>;
+
 const VALID_EVENT = {
   schemaVersion: 1,
   sentinel: "changedetection.io",
@@ -29,7 +31,11 @@ function enableReceiver(token = VALID_TOKEN) {
   vi.stubEnv("CHANGE_SENTINEL_WEBHOOK_TOKEN", token);
 }
 
-function postEvent(app: ReturnType<typeof makeApp>, body: unknown = VALID_EVENT) {
+function successfulRecorder() {
+  return vi.fn<RecordEvent>(async () => "inserted" as const);
+}
+
+function postEvent(app: ReturnType<typeof makeApp>, body: object = VALID_EVENT) {
   return request(app)
     .post("/api/internal/change-sentinel")
     .set("x-lt-sentinel-token", VALID_TOKEN)
@@ -42,7 +48,7 @@ afterEach(() => {
 
 describe("change sentinel receiver", () => {
   it("is hidden by default and never records an event", async () => {
-    const recordEvent = vi.fn(async () => "inserted" as const);
+    const recordEvent = successfulRecorder();
     const response = await postEvent(makeApp({ recordEvent }));
 
     expect(response.status).toBe(404);
@@ -52,7 +58,7 @@ describe("change sentinel receiver", () => {
   it("fails closed when enabled without a sufficiently strong configured token", async () => {
     vi.stubEnv("CHANGE_SENTINEL_RECEIVER_ENABLED", "true");
     vi.stubEnv("CHANGE_SENTINEL_WEBHOOK_TOKEN", "too-short");
-    const recordEvent = vi.fn(async () => "inserted" as const);
+    const recordEvent = successfulRecorder();
 
     const response = await postEvent(makeApp({ recordEvent }));
     expect(response.status).toBe(503);
@@ -61,7 +67,7 @@ describe("change sentinel receiver", () => {
 
   it("rejects a missing or incorrect secret before recording anything", async () => {
     enableReceiver();
-    const recordEvent = vi.fn(async () => "inserted" as const);
+    const recordEvent = successfulRecorder();
     const app = makeApp({ recordEvent });
 
     const missing = await request(app)
@@ -79,7 +85,7 @@ describe("change sentinel receiver", () => {
 
   it("persists one valid registry-resolved event and returns no civic content", async () => {
     enableReceiver();
-    const recordEvent = vi.fn(async () => "inserted" as const);
+    const recordEvent = successfulRecorder();
 
     const response = await postEvent(makeApp({ recordEvent }));
 
@@ -99,7 +105,7 @@ describe("change sentinel receiver", () => {
   it("treats a durable duplicate as idempotent success", async () => {
     enableReceiver();
     const seen = new Set<string>();
-    const recordEvent = vi.fn(async (decision) => {
+    const recordEvent = vi.fn<RecordEvent>(async (decision) => {
       if (seen.has(decision.eventId)) return "duplicate" as const;
       seen.add(decision.eventId);
       return "inserted" as const;
@@ -120,7 +126,7 @@ describe("change sentinel receiver", () => {
 
   it("rejects changedetection content fields before persistence", async () => {
     enableReceiver();
-    const recordEvent = vi.fn(async () => "inserted" as const);
+    const recordEvent = successfulRecorder();
 
     const response = await postEvent(makeApp({ recordEvent }), {
       ...VALID_EVENT,
@@ -133,7 +139,7 @@ describe("change sentinel receiver", () => {
 
   it("rejects unknown watches and registry URL mismatches", async () => {
     enableReceiver();
-    const recordEvent = vi.fn(async () => "inserted" as const);
+    const recordEvent = successfulRecorder();
     const app = makeApp({ recordEvent });
 
     const unknown = await postEvent(app, {
@@ -152,7 +158,7 @@ describe("change sentinel receiver", () => {
 
   it("rejects stale and implausibly future notifications", async () => {
     enableReceiver();
-    const recordEvent = vi.fn(async () => "inserted" as const);
+    const recordEvent = successfulRecorder();
     const app = makeApp({ recordEvent });
 
     const stale = await postEvent(app, {
@@ -171,7 +177,7 @@ describe("change sentinel receiver", () => {
 
   it("enforces a small receiver payload budget", async () => {
     enableReceiver();
-    const recordEvent = vi.fn(async () => "inserted" as const);
+    const recordEvent = successfulRecorder();
     const response = await postEvent(makeApp({ recordEvent }), {
       ...VALID_EVENT,
       padding: "x".repeat(5_000),
@@ -183,7 +189,7 @@ describe("change sentinel receiver", () => {
 
   it("returns retryable unavailability when durable persistence fails", async () => {
     enableReceiver();
-    const recordEvent = vi.fn(async () => {
+    const recordEvent = vi.fn<RecordEvent>(async () => {
       throw new Error("database unavailable");
     });
 
