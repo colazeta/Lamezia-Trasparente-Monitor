@@ -1,7 +1,7 @@
 import { z } from "zod";
 import type { DoclingEnrichmentReason } from "./doclingEnrichmentPolicy";
 
-export const DOCLING_PROCESSOR_CONTRACT_VERSION = 1 as const;
+export const DOCLING_PROCESSOR_CONTRACT_VERSION = 2 as const;
 export const DOCLING_REPRESENTATION_KIND = "derived-noncanonical" as const;
 
 /**
@@ -144,6 +144,20 @@ const processorArtifactSchema = z.union([
   markdownArtifactSchema,
 ]);
 
+export const embeddedDerivedSourceSchema = z
+  .object({
+    kind: z.literal("embedded-pdf"),
+    parentSha256: sha256Schema,
+    sha256: sha256Schema,
+    sizeBytes: positiveInteger,
+    attachmentIndex: positiveInteger.max(20),
+  })
+  .strict();
+
+export type DoclingEmbeddedDerivedSource = z.infer<
+  typeof embeddedDerivedSourceSchema
+>;
+
 const resultBase = {
   schemaVersion: z.literal(DOCLING_PROCESSOR_CONTRACT_VERSION),
   jobKey: z.string().min(1).max(256),
@@ -163,6 +177,7 @@ const okResultSchema = z
   .object({
     ...resultBase,
     status: z.literal("ok"),
+    derivedSource: embeddedDerivedSourceSchema.optional(),
     metrics: z
       .object({
         markdownCharacters: nonNegativeInteger,
@@ -324,6 +339,20 @@ export function parseDoclingProcessorResultForRequest(
       if (!requested.has(kind)) {
         throw new Error(`Docling processor result returned unrequested output: ${kind}`);
       }
+    }
+
+    if (request.selection.reason === "embedded-pdf-container") {
+      if (!result.derivedSource) {
+        throw new Error("Docling processor result missing embedded derived source");
+      }
+      if (result.derivedSource.parentSha256 !== request.source.sha256) {
+        throw new Error("Docling derived source parent SHA-256 mismatch");
+      }
+      if (result.derivedSource.sizeBytes > request.limits.maxBytes) {
+        throw new Error("Docling derived source exceeds requested maxBytes");
+      }
+    } else if (result.derivedSource) {
+      throw new Error("Docling processor result returned unexpected derived source");
     }
   }
   return result;
