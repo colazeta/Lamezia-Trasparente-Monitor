@@ -4,6 +4,7 @@ import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const EXPECTED_DOCLING_VERSION = "2.124.0";
+const EXPECTED_PYPDF_VERSION = "6.16.2";
 const MODULE_DIR = dirname(fileURLToPath(import.meta.url));
 const BUNDLED_PROCESSOR = resolve(MODULE_DIR, "docling/processor_contract.py");
 const BUNDLED_REQUIREMENTS = resolve(MODULE_DIR, "docling/requirements.txt");
@@ -13,6 +14,7 @@ const MAX_RUNTIME_OUTPUT_CHARS = 512;
 
 type PythonRuntimeState = {
   docling: string;
+  pypdf: string;
   torchCuda: string | null;
   forbiddenGpuPackages: number;
 };
@@ -28,7 +30,7 @@ async function pythonRuntimeState(pythonBin: string): Promise<PythonRuntimeState
       "import torch",
       "from importlib.metadata import distributions, version",
       "forbidden = [d.metadata.get('Name','') for d in distributions() if d.metadata.get('Name','').lower().startswith(('nvidia-','cuda-'))]",
-      "print(json.dumps({'docling': version('docling'), 'torchCuda': torch.version.cuda, 'forbiddenGpuPackages': len(forbidden)}))",
+      "print(json.dumps({'docling': version('docling'), 'pypdf': version('pypdf'), 'torchCuda': torch.version.cuda, 'forbiddenGpuPackages': len(forbidden)}))",
     ].join("; ");
 
     const child = spawn(pythonBin, ["-c", code], {
@@ -80,17 +82,23 @@ async function assertModelArtifactsReady(): Promise<void> {
 export async function assertDoclingWorkerReady(): Promise<{
   status: "ok";
   doclingVersion: string;
+  pypdfVersion: string;
   modelArtifacts: "ready";
 }> {
   await Promise.all([access(BUNDLED_PROCESSOR), access(BUNDLED_REQUIREMENTS)]);
 
   const requirements = await readFile(BUNDLED_REQUIREMENTS, "utf8");
-  const pinned = requirements
-    .split(/\r?\n/u)
-    .map((line) => line.trim())
-    .some((line) => line === `docling==${EXPECTED_DOCLING_VERSION}`);
-  if (!pinned) {
+  const pinnedLines = new Set(
+    requirements
+      .split(/\r?\n/u)
+      .map((line) => line.trim())
+      .filter(Boolean),
+  );
+  if (!pinnedLines.has(`docling==${EXPECTED_DOCLING_VERSION}`)) {
     throw new Error("Bundled Docling requirement does not match worker expectation");
+  }
+  if (!pinnedLines.has(`pypdf==${EXPECTED_PYPDF_VERSION}`)) {
+    throw new Error("Bundled pypdf requirement does not match worker expectation");
   }
 
   await assertModelArtifactsReady();
@@ -100,6 +108,9 @@ export async function assertDoclingWorkerReady(): Promise<{
   if (runtime.docling !== EXPECTED_DOCLING_VERSION) {
     throw new Error("Installed Docling version does not match worker expectation");
   }
+  if (runtime.pypdf !== EXPECTED_PYPDF_VERSION) {
+    throw new Error("Installed pypdf version does not match worker expectation");
+  }
   if (runtime.torchCuda !== null || runtime.forbiddenGpuPackages !== 0) {
     throw new Error("Docling worker environment is not CPU-only");
   }
@@ -107,6 +118,7 @@ export async function assertDoclingWorkerReady(): Promise<{
   return {
     status: "ok",
     doclingVersion: runtime.docling,
+    pypdfVersion: runtime.pypdf,
     modelArtifacts: "ready",
   };
 }
@@ -118,6 +130,8 @@ assertDoclingWorkerReady()
         status: result.status,
         processor: "docling",
         version: result.doclingVersion,
+        embeddedExtractor: "pypdf",
+        embeddedExtractorVersion: result.pypdfVersion,
         modelArtifacts: result.modelArtifacts,
         networkInstallAttempted: false,
       }) + "\n",
@@ -125,7 +139,7 @@ assertDoclingWorkerReady()
   })
   .catch(() => {
     process.stderr.write(
-      "Docling worker preflight failed: CPU-only dependencies, bundled assets or prefetched model artifacts are unavailable.\n",
+      "Docling worker preflight failed: pinned CPU-only dependencies, bundled assets or prefetched model artifacts are unavailable.\n",
     );
     process.exitCode = 1;
   });
