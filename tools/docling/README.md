@@ -1,140 +1,104 @@
-# Docling document-extraction PoC
+# Docling selective document processor
 
-This directory contains an isolated proof of concept for evaluating Docling against the document-extraction needs of Lamezia Trasparente.
+This directory contains the benchmark, processor and verification tooling used by Lamezia Trasparente's **selective** Docling enrichment path.
 
-## Scope
+Docling does not replace the existing `pdf-parse` fast path. The official archived document remains canonical evidence; embedded files and Docling outputs are always `derived-noncanonical` representations with explicit provenance.
 
-The PoC does **not** replace the current PDF handling, modify the API server, write to PostgreSQL, publish extracted text, or participate in the production ingestion path. It accepts already acquired local documents and writes derived benchmark artefacts under `tmp/docling/`, which is ignored by Git.
+## Current production boundary
 
-Docling is pinned to `2.124.0`. `pypdf` is pinned to `6.16.2` for bounded inspection and extraction of files embedded inside PDF containers. Any upgrade must be evaluated again on the same benchmark corpus before promotion.
+The controlled worker path is:
 
-A dedicated GitHub Actions benchmark runs only when extraction code, tests, pinned dependencies, the benchmark workflow, baseline helper or immutable sample PDF changes (or by explicit manual dispatch). It uses the repository's allowed `ubuntu-latest` runner, requires no secrets and never deploys or publishes benchmark output.
-
-## Why container-aware processing is required
-
-Some administrative PDFs are only protocol wrappers. The substantive act may be stored as a PDF attachment embedded inside the outer PDF and may not be directly visible to a browser or to the existing text extractor.
-
-For that reason the PoC separates two operations:
-
-1. inspect the already acquired PDF container and extract bounded embedded files with their own SHA-256;
-2. run the baseline and Docling against the exact same extracted file hash.
-
-The outer official PDF remains canonical evidence. Embedded files and Docling outputs are derived artefacts whose relationship to the parent source must be retained.
-
-## Local setup
-
-```bash
-python3 -m venv .local/docling-venv
-source .local/docling-venv/bin/activate
-python -m pip install --upgrade pip
-python -m pip install -r tools/docling/requirements.txt
+```text
+canonical archived PDF
+  → pdf-parse baseline + observation
+  → embedded-pdf-container candidate
+  → trusted adapter
+  → worker-only local executor
+  → extract exactly one embedded child PDF
+  → Docling on the child PDF with prefetched local models
+  → child SHA + structured JSON independently validated by the adapter
 ```
 
-Docling may populate its local model cache on first use. No managed or paid document-processing service is required.
+Only `embedded-pdf-container` is currently promoted for real execution. A wrapper with zero or multiple embedded PDFs fails closed and remains observation-only. At most one Docling evaluation may run per ingestion cycle.
 
-## Run a direct extraction
+`DOCLING_ENRICHMENT_ENABLED` remains `false` by default and must never be enabled in the HTTP/API process. Current validated output is memory-only: it is not persisted or published.
+
+## Pinned dependencies
+
+- Docling `2.124.0`
+- pypdf `6.16.2`
+
+Any upgrade requires re-running the reviewed benchmark and packaged smoke test before promotion.
+
+## Offline worker provisioning
+
+Runtime must not download model weights. Provision the dedicated ingestion-worker environment explicitly:
+
+```bash
+export DOCLING_ARTIFACTS_PATH=/opt/lamezia/docling-models
+bash tools/docling/provision_cpu_worker.sh
+pnpm --filter @workspace/ingestion-worker run build
+pnpm --filter @workspace/ingestion-worker run docling:preflight
+```
+
+The provisioning helper installs the pinned dependencies with the CPU PyTorch backend, rejects CUDA/NVIDIA packages and prefetches Docling model artifacts with `docling-tools models download`. The preflight is offline and requires the model directory to be present and non-empty.
+
+See `docs/architecture/docling-worker-activation.md` for the activation and rollback procedure.
+
+## Packaged smoke test
+
+The reviewed public fixture is Albo publication `2026/2648`:
+
+- parent wrapper SHA-256: `842702b2044b4b6f9a7b21a65eac2ab59866ee3f321872e6b28fd481598be304`
+- embedded child SHA-256: `3069388db15c43fdbf3cc980195f9c88ded602a6e9f8f89f358a006ce789096c`
+
+After provisioning/build:
+
+```bash
+pnpm --filter @workspace/ingestion-worker run docling:smoke -- \
+  --source data/public/albo/documents/2026/842702b2044b4b6f9a7b21a65eac2ab59866ee3f321872e6b28fd481598be304.pdf \
+  --expected-parent 842702b2044b4b6f9a7b21a65eac2ab59866ee3f321872e6b28fd481598be304 \
+  --expected-child 3069388db15c43fdbf3cc980195f9c88ded602a6e9f8f89f358a006ce789096c
+```
+
+The smoke command traverses the packaged worker trust path and emits only technical metadata. It never prints extracted document content.
+
+## Evidence behind selective promotion
+
+On the outer `2026/2648` wrapper, `pdf-parse` and Docling recover broadly equivalent text, so Docling is not justified as a universal parser.
+
+The wrapper contains `convocazione 2.pdf`. On that child:
+
+- `pdf-parse` 2.4.5 extracted only 16 non-substantive characters;
+- Docling 2.124.0 extracted 1,452 Markdown characters and recovered the commission heading, recipients, subject, dates and agenda items.
+
+This is the reviewed material-gain case supporting the current `embedded-pdf-container` promotion. Character count alone is never treated as a quality verdict.
+
+## Benchmark and diagnostic tooling
+
+Direct benchmark tools remain available for evaluation and future document classes:
 
 ```bash
 python tools/docling/extract_document.py /path/to/document.pdf
-```
-
-Optional output directory and size limit:
-
-```bash
-python tools/docling/extract_document.py /path/to/document.pdf \
-  --output-dir tmp/docling \
-  --max-bytes 52428800
-```
-
-## Inspect embedded PDF attachments
-
-```bash
 python tools/docling/extract_pdf_attachments.py /path/to/container.pdf \
   --output-dir tmp/docling/attachments
-```
-
-The attachment extractor fails closed above explicit count, per-file and total-size limits. Filenames are path-flattened and outputs are keyed by content hash to avoid traversal and silent overwrite.
-
-## Compare with the current baseline
-
-```bash
 python tools/docling/run_benchmark.py /path/to/document.pdf
 ```
 
-The runner executes the current backend baseline (`pdf-parse` 2.4.5) and Docling against the same immutable SHA-256. It records timing and structural diagnostics but intentionally does not select an automatic winner.
+The GitHub `Docling benchmark` workflow runs the reviewed benchmark plus the packaged worker smoke path whenever the Docling contract, processor, executor, readiness or fixture changes.
 
-## Output and provenance
+## Tests
 
-For a source named `delibera.pdf`, Docling outputs use the source hash:
+Lightweight tests include hashing, path/privacy controls, embedded-child selection, contract v2, CPU provisioning policy and model-cache requirements. Node tests cover trusted-adapter validation, runtime gating/telemetry and executor cleanup/bounds.
 
-```text
-tmp/docling/
-  delibera-<sha12>.docling.md
-  delibera-<sha12>.docling.json
-  delibera-<sha12>.docling.manifest.json
-```
+The key invariants are:
 
-The manifest records the source file name, SHA-256, byte size, extractor/version, extraction timestamp, elapsed time and structural metrics. It intentionally does not record the absolute local input path.
+- parent source hash is attested before execution;
+- child PDF hash/size/magic are independently revalidated by the trusted adapter;
+- no remote source fetch is available to the processor;
+- model download happens only during provisioning;
+- worker execution is feature-gated and bounded;
+- baseline Markdown remains independent of any Docling skip/failure/error;
+- no Docling output becomes canonical evidence.
 
-Markdown is a convenience representation, not the lossless canonical derived representation. The structured Docling JSON may contain information (for example labels or layout elements) that Markdown omits.
-
-## First real benchmark result
-
-The first public benchmark item is Albo publication `2026/2648`.
-
-The outer PDF is a protocol wrapper. On that wrapper, `pdf-parse` and Docling recover broadly equivalent substantive text; Docling adds structure but is much more computationally expensive.
-
-The wrapper contains one embedded file, `convocazione 2.pdf`. Its extracted SHA-256 exactly matches the hash declared inside the protocol wrapper. On this substantive embedded PDF:
-
-- `pdf-parse` 2.4.5 extracted only 16 characters of non-substantive page-marker text;
-- Docling 2.124.0 extracted 1,452 Markdown characters and recovered the commission heading, recipients, subject, dates and agenda items;
-- minor OCR/spacing defects remain possible, so derived text is not treated as verified official text.
-
-This is the first demonstrated material gain and establishes embedded/scanned administrative PDFs as a strong candidate class for selective Docling enrichment.
-
-## Lightweight tests
-
-```bash
-python tools/docling/test_extract_document.py
-python tools/docling/test_extract_pdf_attachments.py
-python -m py_compile \
-  tools/docling/extract_document.py \
-  tools/docling/extract_pdf_attachments.py \
-  tools/docling/run_benchmark.py
-```
-
-## Benchmark corpus
-
-Before runtime integration, continue evaluating a fixed corpus containing at least:
-
-- 3 born-digital delibere/determine with ordinary paragraphs;
-- 3 scanned or image-heavy administrative PDFs;
-- 2 table-heavy documents, preferably financial/budget material;
-- 2 PNRR or procurement attachments with mixed layout;
-- 2 non-PDF office documents if they occur in the real archive.
-
-Do not commit source documents or extracted output unless the existing publication/minimisation rules explicitly allow it. Record source identifiers and hashes so benchmark results remain reproducible.
-
-## Evaluation dimensions
-
-For every document compare:
-
-1. text completeness and reading order;
-2. heading/list structure;
-3. table structure and merged cells;
-4. page/layout information useful for traceability;
-5. behaviour on scans and OCR;
-6. preservation of critical identifiers and dates;
-7. extraction time and resource use;
-8. deterministic/stable output on a repeated run;
-9. failure mode and diagnostic quality.
-
-A larger character count is not, by itself, evidence of better extraction.
-
-## Promotion rule
-
-Docling should move beyond PoC only after the corpus shows a material improvement on difficult document classes without meaningful regression on ordinary born-digital PDFs and with an acceptable resource envelope.
-
-The current result is sufficient to justify continuing toward **selective** enrichment, not universal replacement of `pdf-parse`.
-
-If promoted, the intended architecture is a separate document processor called by an ingestion/enrichment worker after source acquisition and hashing. The public Node/TypeScript API process remains independent of the Python/ML stack. The official source document remains canonical evidence; embedded files and Docling outputs remain derived, versioned representations with explicit provenance.
+Persistence, backfill, indexing and UI use of validated structured JSON are a **separate document-intelligence phase**, not part of the Docling processor integration itself.
