@@ -11,8 +11,8 @@ import {
 import { isDoclingEnrichmentEnabled } from "./doclingEnrichmentPolicy";
 
 /**
- * No reason is promoted to real execution yet. Observation and contract support
- * are not permission to run Docling in production.
+ * No reason is promoted through the adapter's global default policy. Runtime
+ * promotion remains worker-local and separately feature-gated.
  */
 export const DOCLING_PROMOTED_REASONS: readonly DoclingContractReason[] = [];
 
@@ -30,6 +30,12 @@ export type DoclingExecutorArtifacts = Partial<
 export type DoclingExecutorOutcome = {
   result: unknown;
   artifacts: DoclingExecutorArtifacts;
+  /**
+   * For container transforms, the executor returns the exact child bytes only
+   * so this trusted boundary can independently verify the processor-declared
+   * SHA/size. The bytes are never persisted or exposed by the adapter result.
+   */
+  derivedSourceBytes?: Uint8Array;
 };
 
 export type DoclingProcessorExecutor = (input: {
@@ -58,6 +64,11 @@ export type DoclingAdapterResult =
         | "executor-outcome-invalid"
         | "source-bytes-mutated"
         | "processor-result-invalid"
+        | "derived-source-missing"
+        | "derived-source-unexpected"
+        | "derived-source-size-mismatch"
+        | "derived-source-hash-mismatch"
+        | "derived-source-format-invalid"
         | "artifact-set-invalid"
         | "artifact-size-mismatch"
         | "artifact-hash-mismatch"
@@ -150,6 +161,45 @@ function cloneExecutorArtifacts(value: unknown): DoclingExecutorArtifacts | null
   return cloned;
 }
 
+function cloneOptionalBytes(value: unknown): Uint8Array | null | undefined {
+  if (value === undefined) return undefined;
+  if (!(value instanceof Uint8Array)) return null;
+  return new Uint8Array(value);
+}
+
+function validateDerivedSourceBytes(
+  result: DoclingProcessorResult,
+  derivedSourceBytes: Uint8Array | undefined,
+): DoclingAdapterResult | null {
+  if (result.status !== "ok") {
+    return derivedSourceBytes === undefined
+      ? null
+      : { status: "rejected", code: "derived-source-unexpected" };
+  }
+
+  if (!result.derivedSource) {
+    return derivedSourceBytes === undefined
+      ? null
+      : { status: "rejected", code: "derived-source-unexpected" };
+  }
+  if (!derivedSourceBytes) {
+    return { status: "rejected", code: "derived-source-missing" };
+  }
+  if (derivedSourceBytes.byteLength !== result.derivedSource.sizeBytes) {
+    return { status: "rejected", code: "derived-source-size-mismatch" };
+  }
+  if (sha256Bytes(derivedSourceBytes) !== result.derivedSource.sha256) {
+    return { status: "rejected", code: "derived-source-hash-mismatch" };
+  }
+  const pdfMagic = new TextDecoder("ascii").decode(
+    derivedSourceBytes.subarray(0, Math.min(5, derivedSourceBytes.byteLength)),
+  );
+  if (pdfMagic !== "%PDF-") {
+    return { status: "rejected", code: "derived-source-format-invalid" };
+  }
+  return null;
+}
+
 function validateArtifactBytes(
   result: DoclingProcessorResult,
   artifacts: DoclingExecutorArtifacts,
@@ -201,13 +251,11 @@ function validateArtifactBytes(
 }
 
 /**
- * Trusted Node-side boundary for a future separate Docling processor.
+ * Trusted Node-side boundary for the separate Docling processor.
  *
- * The default policy is deliberately non-executable: the feature flag must be
- * true AND the reason must be present in DOCLING_PROMOTED_REASONS, which is
- * currently empty. Tests can inject a policy to exercise validation logic.
- *
- * This function never persists or publishes derived bytes.
+ * The adapter validates the immutable parent source, the request/result
+ * identity, the derived child-PDF bytes for container transforms, and all
+ * requested output artifacts. It never persists or publishes derived bytes.
  */
 export async function runDoclingProcessorAdapter(
   input: RunDoclingAdapterInput,
@@ -272,7 +320,8 @@ export async function runDoclingProcessorAdapter(
   }
 
   const artifacts = cloneExecutorArtifacts(outcome.artifacts);
-  if (!artifacts) {
+  const derivedSourceBytes = cloneOptionalBytes(outcome.derivedSourceBytes);
+  if (!artifacts || derivedSourceBytes === null) {
     return { status: "rejected", code: "executor-outcome-invalid" };
   }
 
@@ -282,6 +331,12 @@ export async function runDoclingProcessorAdapter(
   } catch {
     return { status: "rejected", code: "processor-result-invalid" };
   }
+
+  const derivedSourceError = validateDerivedSourceBytes(
+    result,
+    derivedSourceBytes,
+  );
+  if (derivedSourceError) return derivedSourceError;
 
   const artifactError = validateArtifactBytes(result, artifacts);
   if (artifactError) return artifactError;
