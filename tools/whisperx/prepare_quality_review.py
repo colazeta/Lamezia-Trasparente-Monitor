@@ -62,6 +62,46 @@ def source_sha(transcript: dict[str, Any]) -> str | None:
     return value.lower() if isinstance(value, str) and re.fullmatch(r"[0-9a-fA-F]{64}", value) else None
 
 
+def validate_quality_scope(transcript: dict[str, Any], plan: dict[str, Any]) -> tuple[str, dict[str, Any]]:
+    policy = plan.get("processorPolicy")
+    if not isinstance(policy, dict):
+        raise ValueError("Quality plan is missing processorPolicy")
+
+    sha = source_sha(transcript)
+    if policy.get("sourceSha256Required") is True and sha is None:
+        raise ValueError("Quality gate requires a valid sourceSha256")
+
+    language = str(transcript.get("language") or "").strip().casefold()
+    required_language = str(policy.get("requiredLanguage") or "").strip().casefold()
+    if required_language and language != required_language:
+        raise ValueError(f"Quality gate requires language={required_language}")
+
+    processor = transcript.get("processor")
+    if not isinstance(processor, dict):
+        raise ValueError("Quality gate requires processor metadata")
+    expected_name = str(policy.get("name") or "").strip().casefold()
+    actual_name = str(processor.get("name") or "whisperx").strip().casefold()
+    if expected_name and actual_name != expected_name:
+        raise ValueError(f"Quality gate requires processor={expected_name}")
+    expected_version = str(policy.get("expectedVersion") or "").strip()
+    actual_version = str(processor.get("version") or "").strip()
+    if expected_version and actual_version != expected_version:
+        raise ValueError(f"Quality gate requires WhisperX version {expected_version}")
+
+    diarization = transcript.get("diarization")
+    if not isinstance(diarization, dict):
+        diarization = {}
+    diarization_enabled = bool(diarization.get("enabled", False))
+    if policy.get("diarizationEnabled") is False and diarization_enabled:
+        raise ValueError("Lamezia ASR quality gate accepts diarization-disabled transcripts only")
+
+    segments = transcript_segments(transcript)
+    if not segments:
+        raise ValueError("Quality gate requires a non-empty transcript")
+
+    return sha or "", processor
+
+
 def term_hits(
     segments: list[dict[str, Any]], expected_terms: list[dict[str, Any]]
 ) -> list[dict[str, Any]]:
@@ -201,8 +241,12 @@ def build_packet(
     *,
     include_snippets: bool,
 ) -> dict[str, Any]:
+    sha, processor = validate_quality_scope(transcript, plan)
     segments = transcript_segments(transcript)
     duration = transcript_duration(transcript, segments)
+    if duration <= 0:
+        raise ValueError("Quality gate requires a positive transcript duration")
+
     expected_terms = plan.get("expectedTerms")
     if not isinstance(expected_terms, list):
         expected_terms = []
@@ -215,21 +259,18 @@ def build_packet(
                 segments, float(window["start"]), float(window["end"])
             )
 
-    processor = transcript.get("processor") if isinstance(transcript.get("processor"), dict) else {}
-    diarization = transcript.get("diarization") if isinstance(transcript.get("diarization"), dict) else {}
-
     return {
         "schemaVersion": 1,
         "reviewId": plan.get("reviewId"),
         "representationKind": "derived-local-quality-review",
-        "sourceSha256": source_sha(transcript),
+        "sourceSha256": sha,
         "durationSeconds": round(duration, 3),
         "processor": {
             "name": processor.get("name") or "whisperx",
             "version": processor.get("version"),
             "model": processor.get("model"),
             "language": transcript.get("language"),
-            "diarizationEnabled": bool(diarization.get("enabled", False)),
+            "diarizationEnabled": False,
             "speakerIdentityStatus": "not-produced",
         },
         "termDiagnostics": hits,
@@ -277,7 +318,6 @@ def main() -> int:
         encoding="utf-8",
     )
 
-    # Print only a non-content summary, never transcript snippets.
     summary = {
         "reviewId": packet["reviewId"],
         "sourceSha256": packet["sourceSha256"],
