@@ -6,6 +6,7 @@ import { Toaster } from "sonner";
 import { CivicHelperProvider } from "@/components/helper/CivicHelperContext";
 import { ThemeProvider } from "@/components/theme/ThemeProvider";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { WebMcpBridge } from "@/lib/webmcp";
 import { Router } from "./Router";
 
 const ClerkApp = lazy(() => import("./ClerkApp"));
@@ -68,6 +69,7 @@ function App() {
         <ThemeProvider>
           <TooltipProvider>
             <WouterRouter base={basePath}>
+              <WebMcpBridge />
               <CivicHelperProvider>
                 <Switch>
                   <Route
@@ -91,6 +93,7 @@ function App() {
 
   return (
     <WouterRouter base={basePath}>
+      <WebMcpBridge />
       <Suspense fallback={<AppLoading />}>
         <ClerkApp
           basePath={basePath}
