@@ -12,51 +12,57 @@ export function ContractEvidencePanel({
   const evidence = dossier.evidence;
 
   return (
-    <section className="rounded-2xl border border-card-border bg-card p-5 shadow-sm">
-      <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
+    <details className="group rounded-2xl border border-card-border bg-card shadow-sm">
+      <summary className="flex cursor-pointer list-none items-center justify-between gap-4 p-5 marker:content-none">
         <div>
           <span className="eyebrow text-primary">
             <ShieldCheck className="h-3.5 w-3.5" />
-            Fonti e prove
+            Fonti e metodo
           </span>
           <h2 className="mt-2 font-display text-lg font-bold tracking-tight">
-            Evidenze del fascicolo
+            Verifica le fonti del fascicolo
           </h2>
+          <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
+            Apri questo livello solo se vuoi controllare da dove provengono le
+            informazioni mostrate nella scheda.
+          </p>
         </div>
-        <span className="text-xs text-muted-foreground">
-          {evidence.length} {evidence.length === 1 ? "voce" : "voci"}
+        <span className="shrink-0 text-xs font-medium text-muted-foreground">
+          {evidence.length} {evidence.length === 1 ? "fonte" : "fonti"}
         </span>
-      </div>
+      </summary>
 
-      <div className="space-y-3">
-        {evidence.map((item) => (
-          <EvidenceItem key={item.id} evidence={item} />
-        ))}
-      </div>
-
-      {dossier.officialLinks.length > 0 ? (
-        <div className="mt-5 border-t border-border pt-4">
-          <div className="mb-2 text-xs uppercase tracking-wide text-muted-foreground">
-            Collegamenti ufficiali
-          </div>
-          <div className="flex flex-wrap gap-2">
-            {dossier.officialLinks.map((link) => (
-              <a
-                key={`${link.sourceKind}-${link.href}`}
-                href={link.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 rounded-md border border-primary/30 bg-primary/5 px-3 py-2 text-xs font-semibold text-primary transition-colors hover:border-primary hover:bg-primary/10"
-                title={link.note}
-              >
-                {link.label}
-                <ExternalLink className="h-3.5 w-3.5" />
-              </a>
-            ))}
-          </div>
+      <div className="border-t border-border px-5 pb-5 pt-4">
+        <div className="space-y-3">
+          {evidence.map((item) => (
+            <EvidenceItem key={item.id} evidence={item} />
+          ))}
         </div>
-      ) : null}
-    </section>
+
+        {dossier.officialLinks.length > 0 ? (
+          <div className="mt-5 border-t border-border pt-4">
+            <div className="mb-2 text-xs uppercase tracking-wide text-muted-foreground">
+              Collegamenti ufficiali
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {dossier.officialLinks.map((link) => (
+                <a
+                  key={`${link.sourceKind}-${link.href}`}
+                  href={link.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 rounded-md border border-primary/30 bg-primary/5 px-3 py-2 text-xs font-semibold text-primary transition-colors hover:border-primary hover:bg-primary/10"
+                  title={link.note}
+                >
+                  {link.label}
+                  <ExternalLink className="h-3.5 w-3.5" />
+                </a>
+              ))}
+            </div>
+          </div>
+        ) : null}
+      </div>
+    </details>
   );
 }
 
@@ -81,13 +87,7 @@ function EvidenceItem({ evidence }: { evidence: ContractEvidence }) {
       </div>
       <div className="mt-3 flex flex-wrap items-center gap-3 text-xs text-muted-foreground">
         <span>{evidence.sourceLabel}</span>
-        {evidence.identifier ? <span>via {evidence.identifier}</span> : null}
-        {evidence.ingestionMetadata ? (
-          <span>
-            dataset {evidence.ingestionMetadata.source_dataset_label} · parser{" "}
-            {evidence.ingestionMetadata.parser_version}
-          </span>
-        ) : null}
+        {evidence.identifier ? <span>{evidence.identifier}</span> : null}
         {evidence.sourceUrl ? (
           <a
             href={evidence.sourceUrl}
@@ -95,7 +95,7 @@ function EvidenceItem({ evidence }: { evidence: ContractEvidence }) {
             rel={isExternal ? "noopener noreferrer" : undefined}
             className="inline-flex items-center gap-1 font-semibold text-primary hover:underline"
           >
-            Apri riferimento
+            Apri fonte
             <ExternalLink className="h-3.5 w-3.5" />
           </a>
         ) : null}
