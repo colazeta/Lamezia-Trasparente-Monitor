@@ -45,6 +45,28 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Probe ANAC operator source discovery
+        shell: bash
+        run: |
+          mkdir -p .artifacts/anac-operator-audit
+          UA='Mozilla/5.0 (compatible; Lamezia-Trasparente-Monitor/1.0; +https://lamezia-trasparente.pages.dev/metodologia)'
+          : > .artifacts/anac-operator-audit/source-probe.log
+          for dataset in partecipanti aggiudicatari; do
+            echo "=== $dataset CKAN ===" | tee -a .artifacts/anac-operator-audit/source-probe.log
+            curl -sS -L --max-time 20 -A "$UA" -D /tmp/anac-headers \
+              "https://dati.anticorruzione.it/opendata/api/3/action/package_show?id=$dataset" \
+              -o /tmp/anac-body || true
+            grep -Ei '^(HTTP/|location:|content-type:|content-length:)' /tmp/anac-headers | tee -a .artifacts/anac-operator-audit/source-probe.log || true
+            head -c 3000 /tmp/anac-body | tr '\n' ' ' | tee -a .artifacts/anac-operator-audit/source-probe.log || true
+            printf '\n\n' | tee -a .artifacts/anac-operator-audit/source-probe.log
+            echo "=== $dataset canonical ===" | tee -a .artifacts/anac-operator-audit/source-probe.log
+            curl -sS -I -L --max-time 20 -A "$UA" \
+              "https://dati.anticorruzione.it/opendata/download/dataset/$dataset/filesystem/${dataset}_csv.zip" \
+              | grep -Ei '^(HTTP/|location:|content-type:|content-length:)' \
+              | tee -a .artifacts/anac-operator-audit/source-probe.log || true
+            printf '\n' | tee -a .artifacts/anac-operator-audit/source-probe.log
+          done
+
       - name: Sync ANAC operator datasets
         id: sync
         continue-on-error: true
