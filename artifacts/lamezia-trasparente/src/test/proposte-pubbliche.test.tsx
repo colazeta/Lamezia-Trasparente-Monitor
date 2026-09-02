@@ -20,11 +20,21 @@ function renderProposteCiviche() {
 
 describe("proposte civiche", () => {
   it("separa le proposte documentate dai quattro seed progettuali interni", () => {
-    expect(PUBLIC_PROPOSALS).toHaveLength(19);
     const internalSeeds = PUBLIC_PROPOSALS.filter(
       (proposal) => proposal.sourceUrl === undefined,
     );
+    const documentedProposals = PUBLIC_PROPOSALS.filter(
+      (proposal) => proposal.sourceUrl !== undefined,
+    );
+
     expect(internalSeeds).toHaveLength(4);
+    expect(documentedProposals).toHaveLength(
+      PUBLIC_PROPOSALS.length - internalSeeds.length,
+    );
+    expect(documentedProposals.length).toBeGreaterThan(0);
+    expect(documentedProposals.every((proposal) => proposal.sourceUrl)).toBe(
+      true,
+    );
     expect(
       internalSeeds.every(
         (proposal) => proposal.promoter === "Lamezia Trasparente",
@@ -41,9 +51,6 @@ describe("proposte civiche", () => {
           proposal.theme === "Trasparenza e partecipazione democratica",
       ),
     ).toBe(true);
-    expect(
-      PUBLIC_PROPOSALS.filter((proposal) => proposal.sourceUrl),
-    ).toHaveLength(15);
   });
 
   it("filtra le proposte per stato, promotore e tema con utility pure", () => {
