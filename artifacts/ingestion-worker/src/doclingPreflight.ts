@@ -1,5 +1,5 @@
 import { spawn } from "node:child_process";
-import { access, readFile } from "node:fs/promises";
+import { access, readFile, readdir, stat } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -9,50 +9,78 @@ const BUNDLED_PROCESSOR = resolve(MODULE_DIR, "docling/processor_contract.py");
 const BUNDLED_REQUIREMENTS = resolve(MODULE_DIR, "docling/requirements.txt");
 const DEFAULT_PYTHON_BIN = "python3";
 const PREFLIGHT_TIMEOUT_MS = 10_000;
-const MAX_VERSION_OUTPUT_CHARS = 128;
+const MAX_RUNTIME_OUTPUT_CHARS = 512;
 
-async function installedDoclingVersion(pythonBin: string): Promise<string> {
-  return new Promise<string>((resolvePromise, rejectPromise) => {
+type PythonRuntimeState = {
+  docling: string;
+  torchCuda: string | null;
+  forbiddenGpuPackages: number;
+};
+
+async function pythonRuntimeState(pythonBin: string): Promise<PythonRuntimeState> {
+  return new Promise<PythonRuntimeState>((resolvePromise, rejectPromise) => {
     const controller = new AbortController();
     const timer = setTimeout(() => controller.abort(), PREFLIGHT_TIMEOUT_MS);
     let stdout = "";
 
-    const child = spawn(
-      pythonBin,
-      [
-        "-c",
-        "from importlib.metadata import version; print(version('docling'))",
-      ],
-      {
-        stdio: ["ignore", "pipe", "ignore"],
-        signal: controller.signal,
-      },
-    );
+    const code = [
+      "import json",
+      "import torch",
+      "from importlib.metadata import distributions, version",
+      "forbidden = [d.metadata.get('Name','') for d in distributions() if d.metadata.get('Name','').lower().startswith(('nvidia-','cuda-'))]",
+      "print(json.dumps({'docling': version('docling'), 'torchCuda': torch.version.cuda, 'forbiddenGpuPackages': len(forbidden)}))",
+    ].join("; ");
+
+    const child = spawn(pythonBin, ["-c", code], {
+      stdio: ["ignore", "pipe", "ignore"],
+      signal: controller.signal,
+    });
 
     child.stdout.setEncoding("utf8");
     child.stdout.on("data", (chunk: string) => {
-      if (stdout.length <= MAX_VERSION_OUTPUT_CHARS) stdout += chunk;
+      if (stdout.length <= MAX_RUNTIME_OUTPUT_CHARS) stdout += chunk;
     });
     child.once("error", rejectPromise);
-    child.once("close", (code) => {
+    child.once("close", (exitCode) => {
       clearTimeout(timer);
-      if (code !== 0) {
+      if (exitCode !== 0) {
         rejectPromise(new Error("Python/Docling preflight command failed"));
         return;
       }
-      const value = stdout.trim();
-      if (!value || value.length > MAX_VERSION_OUTPUT_CHARS) {
-        rejectPromise(new Error("Python/Docling preflight returned invalid version output"));
+      if (!stdout.trim() || stdout.length > MAX_RUNTIME_OUTPUT_CHARS) {
+        rejectPromise(new Error("Python/Docling preflight returned invalid output"));
         return;
       }
-      resolvePromise(value);
+      try {
+        const parsed = JSON.parse(stdout) as PythonRuntimeState;
+        resolvePromise(parsed);
+      } catch {
+        rejectPromise(new Error("Python/Docling preflight returned non-JSON output"));
+      }
     });
   });
+}
+
+async function assertModelArtifactsReady(): Promise<void> {
+  const configured = process.env.DOCLING_ARTIFACTS_PATH?.trim();
+  if (!configured) {
+    throw new Error("DOCLING_ARTIFACTS_PATH is required for offline activation");
+  }
+  const modelPath = resolve(configured);
+  const info = await stat(modelPath);
+  if (!info.isDirectory()) {
+    throw new Error("Docling model artifact path is not a directory");
+  }
+  const entries = await readdir(modelPath);
+  if (entries.length === 0) {
+    throw new Error("Docling model artifact directory is empty");
+  }
 }
 
 export async function assertDoclingWorkerReady(): Promise<{
   status: "ok";
   doclingVersion: string;
+  modelArtifacts: "ready";
 }> {
   await Promise.all([access(BUNDLED_PROCESSOR), access(BUNDLED_REQUIREMENTS)]);
 
@@ -65,13 +93,22 @@ export async function assertDoclingWorkerReady(): Promise<{
     throw new Error("Bundled Docling requirement does not match worker expectation");
   }
 
+  await assertModelArtifactsReady();
+
   const pythonBin = process.env.DOCLING_PYTHON_BIN?.trim() || DEFAULT_PYTHON_BIN;
-  const installed = await installedDoclingVersion(pythonBin);
-  if (installed !== EXPECTED_DOCLING_VERSION) {
+  const runtime = await pythonRuntimeState(pythonBin);
+  if (runtime.docling !== EXPECTED_DOCLING_VERSION) {
     throw new Error("Installed Docling version does not match worker expectation");
   }
+  if (runtime.torchCuda !== null || runtime.forbiddenGpuPackages !== 0) {
+    throw new Error("Docling worker environment is not CPU-only");
+  }
 
-  return { status: "ok", doclingVersion: installed };
+  return {
+    status: "ok",
+    doclingVersion: runtime.docling,
+    modelArtifacts: "ready",
+  };
 }
 
 assertDoclingWorkerReady()
@@ -81,13 +118,14 @@ assertDoclingWorkerReady()
         status: result.status,
         processor: "docling",
         version: result.doclingVersion,
+        modelArtifacts: result.modelArtifacts,
         networkInstallAttempted: false,
       }) + "\n",
     );
   })
   .catch(() => {
     process.stderr.write(
-      "Docling worker preflight failed: bundled assets or pinned Python dependency are unavailable.\n",
+      "Docling worker preflight failed: CPU-only dependencies, bundled assets or prefetched model artifacts are unavailable.\n",
     );
     process.exitCode = 1;
   });
