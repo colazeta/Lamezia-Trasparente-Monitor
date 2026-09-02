@@ -99,6 +99,13 @@
       "when": 1788297681918,
       "tag": "0013_cleanup_confiscated_assets_demo_rows",
       "breakpoints": true
+    },
+    {
+      "idx": 14,
+      "version": "7",
+      "when": 1788347100000,
+      "tag": "0014_change_sentinel_events",
+      "breakpoints": true
     }
   ]
 }
