@@ -8,6 +8,8 @@ La documentazione ha uno scopo operativo: rendere verificabile da maintainer, re
 
 - [`integrations-overview.md`](integrations-overview.md) — architettura logica delle integrazioni, pipeline dati, controlli e regole di pubblicazione.
 - [`publication-standardisation.md`](publication-standardisation.md) — confine versionato tra dato acquisito e presentazione pubblica, con regole di preservazione della fonte, minimizzazione e revisione.
+- [`semantic-ontology.md`](semantic-ontology.md) — profilo semantico federato per entità, relazioni e domini, con OntoPiA come riferimento primario per la PA italiana e mapping verso SEMIC/W3C/OGC, ePO/OCDS, BODS e FollowTheMoney.
+- [`semantic-mappings.csv`](semantic-mappings.csv) — registro iniziale dei mapping semantici, con relazione, stato, autorità e note per ciascun allineamento.
 - [`integration-source-catalog.md`](integration-source-catalog.md) — catalogo delle fonti che alimentano o possono alimentare il prodotto, con ruolo, stato, superficie pubblica e caveat.
 - [`cruscotto-italia-integration.md`](cruscotto-italia-integration.md) — integrazione di Cruscotto Italia come fonte federata nazionale per il comune di Lamezia Terme.
 - [`territorial-information-architecture.md`](territorial-information-architecture.md) — architettura dell'Atlante territoriale come indice geografico unico, Spatial Contract, registry dei layer, regole di provenienza e percorso di integrazione GeoLibre.
