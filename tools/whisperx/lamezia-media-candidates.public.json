@@ -1,0 +1,135 @@
+{
+  "schemaVersion": 1,
+  "purpose": "whisperx-lamezia-quality-source-resolution",
+  "session": {
+    "municipality": "Lamezia Terme",
+    "type": "consiglio-comunale",
+    "date": "2026-05-19"
+  },
+  "productionRequirement": {
+    "institutionalLocatorStillRequired": true,
+    "thirdPartyMirrorCanBecomeCanonical": false,
+    "processorMayFetchUrls": false
+  },
+  "candidates": [
+    {
+      "id": "cityone-session-report-2026-05-19",
+      "url": "https://www.cityonelamezia.it/consiglio-comunale-lamezia-murone-su-accessi-aeroportuali-amministrazione-non-consultata/",
+      "publisher": "City One Lamezia",
+      "role": "reviewed-third-party-session-evidence",
+      "expectedDate": "2026-05-19",
+      "expectedMarkers": ["Mario Murone", "Lidia Vescio", "PNRR", "Richetti"],
+      "mayProvideQualityMedia": true
+    },
+    {
+      "id": "cityone-episode-lidia-vescio-2026-05-19",
+      "url": "https://www.cityonelamezia.it/episodio/video/la-consigliera-comunale-lidia-vescio-del-pd-ai-nostri-microfoni-su-accessi-aeroportuali-lavoratori-tis-voto-degli-elettori-fuori-sede-video-news/?format=video",
+      "publisher": "City One Lamezia",
+      "role": "reviewed-third-party-quality-episode-candidate",
+      "expectedDate": "2026-05-19",
+      "expectedMarkers": ["Lidia Vescio", "accessi aeroportuali", "lavoratori TIS", "voto degli elettori fuori sede"],
+      "mayProvideQualityMedia": true,
+      "sessionMatchBasis": "The episode title names three topics independently documented in the 19 May 2026 session report: airport access, TIS workers and out-of-town voting."
+    },
+    {
+      "id": "cityone-wordpress-video-116499",
+      "url": "https://www.cityonelamezia.it/wp-json/wp/v2/video/116499",
+      "publisher": "City One Lamezia",
+      "role": "reviewed-third-party-video-metadata",
+      "expectedDate": "2026-05-19",
+      "expectedMarkers": ["Lidia Vescio", "accessi aeroportuali", "lavoratori TIS", "voto degli elettori fuori sede"],
+      "mayProvideQualityMedia": true,
+      "discoveredFrom": "cityone-episode-lidia-vescio-2026-05-19"
+    },
+    {
+      "id": "selftv-player-lidia-vescio-2026-05-19",
+      "url": "https://share.selftv.video/embed/media/15cf723b-5a89-4278-afc3-2f1b88ac3577/player?template=tv",
+      "publisher": "SelfTV / City One",
+      "role": "reviewed-third-party-player-locator",
+      "expectedDate": "2026-05-19",
+      "expectedMarkers": [],
+      "mayProvideQualityMedia": true,
+      "discoveredFrom": "cityone-episode-lidia-vescio-2026-05-19"
+    },
+    {
+      "id": "selftv-media-lidia-vescio-2026-05-19",
+      "url": "https://share.selftv.video/media/15cf723b-5a89-4278-afc3-2f1b88ac3577",
+      "publisher": "SelfTV / City One",
+      "role": "reviewed-third-party-media-route-candidate",
+      "expectedDate": "2026-05-19",
+      "expectedMarkers": [],
+      "mayProvideQualityMedia": true,
+      "discoveredFrom": "selftv-player-script-aca549ae",
+      "derivation": "The reviewed player bundle exposes the route template /media/${r.media}; r.media is the UUID already attested in the City One episode player locator."
+    },
+    {
+      "id": "selftv-media-script-f0330685",
+      "url": "https://share.selftv.video/assets/f0330685.js",
+      "publisher": "SelfTV",
+      "role": "reviewed-player-script-locator",
+      "expectedMarkers": [],
+      "mayProvideQualityMedia": true,
+      "discoveredFrom": "selftv-media-lidia-vescio-2026-05-19"
+    },
+    {
+      "id": "selftv-player-script-2e83ef47",
+      "url": "https://share.selftv.video/assets/2e83ef47.js",
+      "publisher": "SelfTV",
+      "role": "reviewed-player-script-locator",
+      "expectedMarkers": [],
+      "mayProvideQualityMedia": true,
+      "discoveredFrom": "selftv-player-lidia-vescio-2026-05-19"
+    },
+    {
+      "id": "selftv-player-script-6e097b20",
+      "url": "https://share.selftv.video/assets/6e097b20.js",
+      "publisher": "SelfTV",
+      "role": "reviewed-player-script-locator",
+      "expectedMarkers": [],
+      "mayProvideQualityMedia": true,
+      "discoveredFrom": "selftv-player-lidia-vescio-2026-05-19"
+    },
+    {
+      "id": "selftv-player-script-940edaae",
+      "url": "https://share.selftv.video/assets/940edaae.js",
+      "publisher": "SelfTV",
+      "role": "reviewed-player-script-locator",
+      "expectedMarkers": [],
+      "mayProvideQualityMedia": true,
+      "discoveredFrom": "selftv-player-lidia-vescio-2026-05-19"
+    },
+    {
+      "id": "selftv-player-script-aca549ae",
+      "url": "https://share.selftv.video/assets/aca549ae.js",
+      "publisher": "SelfTV",
+      "role": "reviewed-player-script-locator",
+      "expectedMarkers": [],
+      "mayProvideQualityMedia": true,
+      "discoveredFrom": "selftv-player-lidia-vescio-2026-05-19"
+    },
+    {
+      "id": "selftv-player-script-e8da119f",
+      "url": "https://share.selftv.video/assets/e8da119f.js",
+      "publisher": "SelfTV",
+      "role": "reviewed-player-script-locator",
+      "expectedMarkers": [],
+      "mayProvideQualityMedia": true,
+      "discoveredFrom": "selftv-player-lidia-vescio-2026-05-19"
+    },
+    {
+      "id": "municipium-council-page",
+      "url": "https://www.comune.lamezia-terme.cz.it/it/unita_organizzative/consiglio-comunale",
+      "publisher": "Comune di Lamezia Terme",
+      "role": "institutional-locator-candidate",
+      "mayProvideQualityMedia": true
+    },
+    {
+      "id": "municipium-government-page",
+      "url": "https://www.comune.lamezia-terme.cz.it/it/page/organi-di-governo",
+      "publisher": "Comune di Lamezia Terme",
+      "role": "institutional-recording-policy-evidence",
+      "mayProvideQualityMedia": false
+    }
+  ],
+  "resolutionRule": "Only URLs already listed here may be fetched by the source-resolution probe. Discovered media are benchmark candidates only until separately reviewed; they are never handed to WhisperX as URLs."
+}

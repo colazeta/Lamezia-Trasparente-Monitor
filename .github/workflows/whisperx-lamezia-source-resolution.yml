@@ -1,0 +1,71 @@
+name: WhisperX Lamezia source resolution
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - '.github/workflows/whisperx-lamezia-source-resolution.yml'
+      - 'tools/whisperx/lamezia-media-candidates.public.json'
+      - 'tools/whisperx/resolve_media_candidates.mjs'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: whisperx-lamezia-source-resolution-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  resolve:
+    name: Resolve reviewed Lamezia media locators
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Static boundary checks
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check tools/whisperx/resolve_media_candidates.mjs
+          jq -e '.productionRequirement.institutionalLocatorStillRequired == true' tools/whisperx/lamezia-media-candidates.public.json >/dev/null
+          jq -e '.productionRequirement.thirdPartyMirrorCanBecomeCanonical == false' tools/whisperx/lamezia-media-candidates.public.json >/dev/null
+          jq -e '.productionRequirement.processorMayFetchUrls == false' tools/whisperx/lamezia-media-candidates.public.json >/dev/null
+          test "$(jq '[.candidates[].url | startswith("https://")] | all' tools/whisperx/lamezia-media-candidates.public.json)" = true
+          if grep -Eqi 'process\.env|authorization["'"'']?[[:space:]]*:|cookie["'"'']?[[:space:]]*:|cookies-from-browser|--cookies|bearer[[:space:]]|basic[[:space:]]' tools/whisperx/resolve_media_candidates.mjs; then
+            echo 'Source probe must not depend on credential-bearing configuration or headers' >&2
+            exit 1
+          fi
+
+      - name: Probe allowlisted pages only
+        run: |
+          node tools/whisperx/resolve_media_candidates.mjs \
+            tools/whisperx/lamezia-media-candidates.public.json \
+            tmp/whisperx-source-resolution/resolution.json
+
+      - name: Validate non-content result
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -s tmp/whisperx-source-resolution/resolution.json
+          jq -e '.fetchPolicy.allowlistedOnly == true' tmp/whisperx-source-resolution/resolution.json >/dev/null
+          jq -e '.fetchPolicy.followsDiscoveredResources == false' tmp/whisperx-source-resolution/resolution.json >/dev/null
+          jq -e '.fetchPolicy.crossOriginRedirectFetchPermitted == false' tmp/whisperx-source-resolution/resolution.json >/dev/null
+          jq -e '.fetchPolicy.maxRedirects == 3' tmp/whisperx-source-resolution/resolution.json >/dev/null
+          jq -e '.fetchPolicy.secretsUsed == false' tmp/whisperx-source-resolution/resolution.json >/dev/null
+          jq -e '[.results[] | select(.ok == true)] | length >= 1' tmp/whisperx-source-resolution/resolution.json >/dev/null
+          jq '{session, fetchPolicy, results: [.results[] | {id, role, ok, status, contentType, bodySha256, bodyBytes, markers, discoveredResourceCount, discoveredResources, scriptEndpointHintCount, scriptEndpointHints, error}]}' tmp/whisperx-source-resolution/resolution.json
+
+      - name: Upload locator diagnostics only
+        uses: actions/upload-artifact@v4
+        with:
+          name: whisperx-lamezia-source-resolution
+          path: tmp/whisperx-source-resolution/resolution.json
+          if-no-files-found: error
+          retention-days: 7
