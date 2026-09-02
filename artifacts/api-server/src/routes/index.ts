@@ -29,7 +29,6 @@ import publicRouter from "./public";
 import monitoringReportsRouter from "./monitoringReports";
 import helperRouter from "./helper";
 import redazioneRouter from "./redazione";
-import changeSentinelRouter from "./changeSentinel";
 
 const router: IRouter = Router();
 
@@ -67,8 +66,5 @@ router.use("/public/v1", publicRouter);
 router.use(monitoringReportsRouter);
 router.use(helperRouter);
 router.use(redazioneRouter);
-// Internal, hidden-by-default receiver. It only records authenticated sentinel
-// metadata and has no canonical ingestion call-site in this phase.
-router.use(changeSentinelRouter);
 
 export default router;

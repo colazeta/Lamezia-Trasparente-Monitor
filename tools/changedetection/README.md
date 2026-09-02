@@ -1,8 +1,8 @@
-# changedetection.io sentinel PoC
+# changedetection.io sentinel integration
 
-This directory documents how to evaluate changedetection.io as a **non-canonical sentinel** for Lamezia Trasparente. The first PR does not deploy or start the service and does not expose a webhook receiver.
+changedetection.io is integrated as a **non-canonical change sentinel** for selected Lamezia Trasparente HTML sources. It never replaces the official page, canonical LT fetcher/parser or publication pipeline.
 
-## Version and security floor
+## Pinned upstream
 
 Use exactly:
 
@@ -10,13 +10,117 @@ Use exactly:
 dgtlmoon/changedetection.io:0.55.8
 ```
 
-Do not use `latest`. Do not use versions below `0.54.8`.
+Security floor: `>=0.54.8`. Do not use `latest` and do not deploy releases `<=0.54.7`.
 
 Upstream license: Apache-2.0.
 
-## Local isolated instance
+The provisioning tool also checks `/api/v1/systeminfo` and refuses to configure an instance whose reported version is not exactly `0.55.8`.
 
-For an operator-run local PoC, bind the UI/API only to loopback and use a persistent local volume:
+## Integrated flow
+
+```text
+approved external HTML page
+        ↓
+changedetection.io 0.55.8
+        ↓
+minimal signed/authenticated event
+        ↓
+LT receiver (disabled by default)
+        ↓
+durable event-id ledger / queue
+        ↓
+LT sentinel worker (independent flag)
+        ↓
+existing canonical ingestor
+        ↓
+canonical fingerprint before/after
+```
+
+The only promoted source is currently:
+
+```text
+watchKey: pnrr-index
+canonicalSourceId: attuazione-pnrr-lamezia
+URL: https://www.comune.lamezia-terme.cz.it/it/attuazione-misure-pnrr
+fetch backend: html_requests
+interval: 15 minutes
+```
+
+The existing scheduled PNRR refresh remains enabled as the comparison/control path. No existing polling cadence is reduced by this integration.
+
+## Receiver and trigger flags
+
+Two independent switches are required:
+
+```text
+CHANGE_SENTINEL_RECEIVER_ENABLED=true
+CHANGE_SENTINEL_TRIGGER_ENABLED=true
+```
+
+Receiver-only observation is therefore possible without authorising a sentinel-driven canonical crawl.
+
+The receiver requires a dedicated secret:
+
+```text
+CHANGE_SENTINEL_WEBHOOK_TOKEN=<high-entropy secret, >=32 chars>
+```
+
+It expects that value in `x-lt-sentinel-token`. Secrets belong only in deployment secret managers / changedetection runtime configuration and must never be committed or logged.
+
+## Idempotent watch provisioning
+
+Configure the reviewed watch through the upstream API using:
+
+```bash
+CHANGEDETECTION_BASE_URL=https://sentinel.example.org \
+CHANGEDETECTION_API_KEY=... \
+CHANGE_SENTINEL_RECEIVER_URL=https://api.example.org/api/internal/change-sentinel \
+CHANGE_SENTINEL_WEBHOOK_TOKEN=... \
+node tools/changedetection/provision_watch.mjs
+```
+
+The provisioner:
+
+- verifies upstream version `0.55.8`;
+- lists existing watches;
+- creates or updates one matching the LT PNRR watch identity;
+- sets `html_requests` and 15-minute cadence;
+- configures a minimal JSON body using real upstream Jinja variables `watch_url` and `notification_timestamp`;
+- configures the Apprise custom HTTP header `+x-lt-sentinel-token`;
+- reads the watch back and verifies its effective configuration;
+- never prints the API key, webhook token or notification URL.
+
+A receiver URL must use HTTPS. Plain HTTP is accepted only for explicit loopback smoke tests with `CHANGE_SENTINEL_ALLOW_INSECURE_LOCAL=true`.
+
+## Notification body
+
+The provisioner configures only:
+
+```jinja
+{
+  "schemaVersion": 1,
+  "sentinel": "changedetection.io",
+  "watchKey": "pnrr-index",
+  "watchUrl": "{{ watch_url }}",
+  "notificationTimestamp": {{ notification_timestamp }}
+}
+```
+
+Do **not** add `diff`, `diff_full`, snapshots, screenshots, HTML or extracted text. The LT receiver uses the URL only to verify it matches its own registry; it never uses webhook data as a fetch target.
+
+## Optional upstream test notification
+
+After provisioning, an operator can exercise the real changedetection notification renderer without waiting for a source change:
+
+```bash
+node tools/changedetection/provision_watch.mjs --send-test
+```
+
+This calls the upstream native test-notification endpoint for the provisioned watch. The command still emits no secret or page content.
+
+## Local isolated upstream instance
+
+For local inspection only:
 
 ```bash
 docker run -d \
@@ -27,61 +131,31 @@ docker run -d \
   dgtlmoon/changedetection.io:0.55.8
 ```
 
-Do not expose this PoC instance publicly without an explicit deployment/security review.
+Do not expose such an instance publicly without a deployment/security review.
 
-## First watch
+## Packaged smoke
 
-Create only the reviewed PNRR index watch:
+`.github/workflows/changedetection-sentinel-smoke.yml` is deliberately unscheduled. It starts:
 
-```text
-watchKey: pnrr-index
-URL: https://www.comune.lamezia-terme.cz.it/it/attuazione-misure-pnrr
-fetch backend: html_requests
-proposed interval: 15 minutes
-```
+1. PostgreSQL;
+2. the real LT API receiver with migrations;
+3. the pinned upstream Docker image `0.55.8`;
+4. idempotent watch provisioning twice;
+5. the actual upstream `send-test` notification path.
 
-Start without include filters. This deliberately favors false positives over false negatives while we establish what parts of the municipal page are volatile. Add subtractive selectors later only from measured noise.
+It then verifies that LT has exactly one durable `received` event for `attuazione-pnrr-lamezia`, with zero canonical work executed. This exercises the actual Jinja body, Apprise custom header, receiver authentication, strict event contract and DB idempotency boundary without depending on a live change to the municipal page.
 
-The corresponding canonical LT source is already `attuazione-pnrr-lamezia`; changedetection.io never replaces that ingestor.
+The queue→canonical PNRR path remains independently covered by the normal TypeScript/worker CI, including source allowlisting, leases, retries and material-change fingerprints.
 
-## Minimal notification body
+## What remains an operational decision
 
-When the future authenticated receiver exists, configure the watch notification body as minimal JSON:
+Integration completeness does **not** imply that the sentinel should replace scheduled polling. Before changing cadence, collect real observations for:
 
-```jinja
-{
-  "schemaVersion": 1,
-  "sentinel": "changedetection.io",
-  "watchKey": "pnrr-index",
-  "watchUrl": {{ watch_url | tojson }},
-  "notificationTimestamp": {{ notification_timestamp | tojson }}
-}
-```
+- notification latency;
+- `material_change=true/false` rate;
+- duplicate notifications;
+- retry/failure rate;
+- changedetection CPU/memory footprint;
+- missed changes compared with the existing scheduled control path.
 
-Do **not** add `diff`, `diff_full`, `current_snapshot`, `prev_snapshot`, screenshots, page HTML or extracted text.
-
-changedetection.io notifications support HTTP POST targets and custom headers via Apprise. The receiver URL and secret header are intentionally not specified in this PoC because no endpoint has been promoted yet.
-
-## API management
-
-The upstream REST API is available under `/api/v1/` and uses `x-api-key` authentication when API access is configured. Any future watch provisioning automation should use an API key supplied from the deployment secret manager; never commit it to this repository.
-
-Watch provisioning should be idempotent by LT `watchKey`, and should verify the upstream URL/config after creation rather than assuming a successful POST means the intended watch exists.
-
-## What the PoC validates
-
-The current repository-side contract validates:
-
-- strict minimal payload;
-- HTTPS-only watch URL;
-- approved `watchKey`;
-- exact match between notification URL and LT registry URL;
-- deterministic event ID for retries;
-- canonical trigger identity owned by LT, not the webhook;
-- rejection of diff/snapshot content.
-
-It performs no network call and invokes no ingestor.
-
-## Next gate
-
-After CI/review, introduce an authenticated, disabled-by-default receiver and durable idempotency. Only then wire the single PNRR watch to the existing canonical PNRR ingestion function and benchmark latency/false positives against the existing scheduled cycle.
+Additional watches should be promoted only where these measurements show a clear benefit. Structured feeds/APIs should continue to use their native canonical polling when that is already cheap and reliable.

@@ -2,80 +2,61 @@
 
 ## Status
 
-Phase 1 contract/registry is merged. Phase 2 adds an authenticated, disabled-by-default receiver with durable idempotency, while still performing **no canonical ingestion** from the webhook request.
+The changedetection.io integration package is implemented behind independent fail-closed gates. The final closure gate uses the real pinned upstream image, its REST watch API, its Jinja notification renderer and its Apprise custom HTTP transport against the real LT authenticated receiver + Postgres ledger.
 
-Upstream evaluated on 2026-09-02:
+Upstream baseline:
 
 - repository: `dgtlmoon/changedetection.io`;
 - license: Apache-2.0;
-- pinned PoC version: `0.55.8`;
+- pinned version: `0.55.8`;
 - minimum permitted version: `0.54.8`;
-- upstream API: `/api/v1/` with API-key authentication for watch management;
-- notifications: custom HTTP POST/PUT targets through Apprise/Jinja templates.
+- REST API: `/api/v1/` with `x-api-key` authentication;
+- notifications: custom HTTP targets through Apprise/Jinja;
+- upstream notification variables used by LT: `watch_url`, `notification_timestamp`;
+- custom header syntax used by LT: `+x-lt-sentinel-token=...`.
 
-Do not use `latest`. Versions `<=0.54.7` are outside the permitted security floor.
+Do not use `latest`. Releases `<=0.54.7` are outside the permitted security floor.
 
 ## Architectural role
 
-changedetection.io is a **sentinel**, not a source of record.
-
-It may answer:
-
-> Has a previously approved web resource materially changed since the last check?
-
-It must not answer:
-
-- what canonical content should be stored;
-- which URL Lamezia Trasparente should fetch;
-- whether a record should be inserted/updated/deleted;
-- what a diff means administratively;
-- whether a change is anomalous, risky or suspicious.
-
-The intended flow is:
+changedetection.io is a **sentinel**, never a source of record.
 
 ```text
-approved external page
+approved external HTML page
         ↓
-changedetection.io watch
+changedetection.io 0.55.8
         ↓
-minimal authenticated change event
+minimal authenticated event
         ↓
-LT watch registry / durable idempotency gate
+LT watch registry + receiver
         ↓
-canonical LT source identity
+durable idempotency / queue ledger
         ↓
-(existing canonical ingestor — Phase 3 only)
+one-shot LT sentinel worker
         ↓
-existing content hash / dedupe / normalisation / publication
+explicit existing canonical ingestor
+        ↓
+canonical content fingerprint before/after
 ```
 
-The official upstream page and the content acquired by the existing LT ingestor remain canonical evidence.
+The official upstream page and the content fetched by the LT ingestor remain canonical evidence. changedetection snapshots/diffs are neither stored in LT nor used to decide what content is canonical.
 
-## First PoC watch
+## First promoted watch
 
-The first watch is deliberately attached to an existing HTML ingestor:
+Only one watch is promoted:
 
 - watch key: `pnrr-index`;
-- LT source: `attuazione-pnrr-lamezia`;
+- canonical LT source: `attuazione-pnrr-lamezia`;
 - canonical URL: `https://www.comune.lamezia-terme.cz.it/it/attuazione-misure-pnrr`;
-- changedetection fetcher: `html_requests`;
-- proposed PoC cadence: 15 minutes.
+- fetch backend: `html_requests`;
+- sentinel interval: 15 minutes;
+- include filters: none initially.
 
-The canonical PNRR crawler already owns parsing and project discovery. The sentinel can therefore be evaluated without creating any new ingestion semantics.
+No source URL is dynamically selected by a webhook. The canonical mapping is owned by the LT registry and the queue worker only dispatches this explicitly promoted source.
 
-## Trust boundary
+## Notification trust boundary
 
-### Registry-owned URL
-
-The notification includes the watched URL only as an integrity signal. Lamezia Trasparente resolves `watchKey` against its own manifest and returns the registry-owned canonical URL.
-
-A webhook URL must **never** be passed to `fetch()`, a browser, object storage or a canonical ingestor.
-
-Known watch + URL mismatch = fail closed.
-
-### Minimal payload
-
-The notification contract permits only:
+The accepted notification shape is intentionally tiny:
 
 ```json
 {
@@ -87,109 +68,135 @@ The notification contract permits only:
 }
 ```
 
-`diff`, `diff_full`, snapshots, screenshots, HTML and page text are intentionally rejected by the strict schema. They are not necessary to decide whether canonical work may be requested.
+The real upstream watch is configured with Jinja variables `{{ watch_url }}` and `{{ notification_timestamp }}`. `diff`, `diff_full`, snapshots, screenshots, HTML and extracted page text are rejected by LT's strict schema and are never required by the integration.
 
-### Authentication
+The notification URL carries only the dedicated secret header through the upstream-supported Apprise `+header=value` syntax. The secret itself exists only in deployment/runtime configuration.
 
-Phase 2 receiver:
+## Receiver
+
+Endpoint:
 
 ```text
 POST /api/internal/change-sentinel
 ```
 
-It is hidden with `404` unless `CHANGE_SENTINEL_RECEIVER_ENABLED=true`. When enabled it requires a dedicated secret in `CHANGE_SENTINEL_WEBHOOK_TOKEN` and the matching `x-lt-sentinel-token` request header. Token comparison is performed after hashing to fixed-size buffers and using constant-time comparison.
+It is hidden with `404` unless `CHANGE_SENTINEL_RECEIVER_ENABLED=true`.
 
-The secret must live in the deployment secret manager, never in watch manifests, notification bodies, source control or logs.
+When enabled:
 
-### Replay / duplicate delivery
+1. a server-side secret of at least 32 characters must exist;
+2. `x-lt-sentinel-token` is compared in constant time after fixed-size hashing;
+3. request body is bounded to 4 KiB;
+4. schema is strict and content-rich fields are rejected;
+5. watchKey + URL must match the LT registry;
+6. event timestamp must be within the allowed 48-hour / +5-minute window;
+7. event is inserted into `change_sentinel_events` by deterministic primary-key event ID.
 
-Accepted notifications produce a deterministic event ID from:
+The receiver performs **no canonical fetch**.
 
-- provider;
-- watch key;
-- registry-owned canonical URL;
-- notification timestamp in milliseconds.
+## Durable queue / worker
 
-`change_sentinel_events.event_id` is the primary key. Duplicate delivery is therefore durable and idempotent across process restarts.
+A second independent feature flag controls canonical execution:
 
-The ledger stores only event/source/watch/timestamps/state metadata. It does not store webhook URL, diff, snapshot, HTML or text.
+```text
+CHANGE_SENTINEL_TRIGGER_ENABLED=true
+```
 
-## Threat model
+The one-shot worker:
+
+- does not import DB/canonical modules when disabled;
+- claims at most one event per invocation;
+- uses `FOR UPDATE SKIP LOCKED`;
+- uses a 15-minute lease with stale-lease reclaim;
+- permits at most 3 attempts;
+- dispatches only `attuazione-pnrr-lamezia`;
+- invokes the existing `runAttuazioneIngestion()` rather than introducing another fetcher/parser;
+- stores bounded technical outcome metadata only.
+
+The queue is deliberately at-least-once. A crash after canonical ingestion but before acknowledgement may cause a retry; the canonical ingestor is already source-ID/upsert based.
+
+## Canonical material-change measurement
+
+For every sentinel-driven PNRR crawl, LT fingerprints canonical project rows before and after ingestion. The fingerprint includes civic content fields and normalised attachments, while excluding operational fields such as DB IDs and first/last-seen timestamps.
+
+The ledger stores only:
+
+- canonical before hash;
+- canonical after hash;
+- `material_change` boolean;
+- attempts/lease timestamps;
+- technical error code where applicable.
+
+This lets us measure changedetection false-positive signals against LT canonical data rather than against a visual/text diff.
+
+## Idempotent upstream provisioning
+
+`tools/changedetection/provision_watch.mjs`:
+
+- requires upstream API base URL + API key;
+- checks `/api/v1/systeminfo` and requires exactly `0.55.8`;
+- lists existing watches;
+- creates or updates the single PNRR watch;
+- verifies the effective watch after provisioning;
+- configures `html_requests`, 15-minute interval, minimal JSON body and secret header;
+- refuses insecure non-loopback HTTP receiver URLs;
+- never prints API key, webhook secret or notification target.
+
+The provisioner may use the upstream native send-test endpoint with `--send-test`; this proves the actual Jinja/Apprise notification path without waiting for a real municipal-page change.
+
+## Threat model / safeguards
 
 ### SSRF / arbitrary fetch
 
-Mitigation: webhook URLs are never fetch targets; registry lookup owns the canonical URL. Phase 2 has no fetch or ingestion dependency at all.
+Webhook URLs are never fetch targets. The notification URL is only an integrity signal checked against the LT registry. Canonical work uses the pre-existing hard-coded LT source mapping.
 
-### Spoofed notification
+### Spoofing
 
-Mitigation: dedicated secret header before semantic event acceptance. Unknown watch or URL mismatch fail closed.
+Dedicated secret header, constant-time comparison, strict registry lookup and timestamp bounds.
 
-### Payload abuse / content leakage
+### Content leakage
 
-Mitigation: strict schema, 4 KiB receiver budget, diff/snapshot/content fields rejected, no content persistence.
+4 KiB receiver budget, strict schema and no diff/snapshot/content persistence.
 
 ### Replay / retry storms
 
-Mitigation: deterministic event ID plus DB primary-key idempotency. Notifications older than 48 hours or more than 5 minutes in the future are rejected.
+Deterministic event ID + DB primary key. Worker attempts are bounded to 3 with lease semantics.
 
 ### False positives
 
-Likely sources include timestamps, rotating navigation, counters and template/layout changes. Initial PoC starts without aggressive include filters so substantive changes are not hidden. Noise is measured first; subtractive selectors may then be added conservatively.
+Initial watch avoids aggressive include filters. `material_change=false` provides the evidence needed to identify noise before selectors are tightened.
 
 ### False negatives
 
-Overly narrow CSS/XPath filters can hide substantive changes. The existing scheduled canonical ingestion remains active throughout the PoC and acts as the comparison/control path.
+The pre-existing scheduled PNRR refresh remains active as the comparison/control path. No polling cadence is reduced by this integration package.
 
-## Failure isolation
+### Sentinel outage
 
-changedetection.io must never become required for ordinary ingestion.
+The ordinary canonical scheduled ingestion continues independently.
 
-- sentinel unavailable → existing scheduled ingestion continues;
-- receiver disabled/rejected → existing scheduled ingestion continues;
-- duplicate notification → no duplicate ledger entry and no canonical work;
-- receiver DB unavailable → `503`, sender may retry, scheduled ingestion continues;
-- sentinel detects no change → no claim that the source is complete or unchanged in an administrative/legal sense.
+## Packaged upstream smoke
 
-## Promotion phases
+`.github/workflows/changedetection-sentinel-smoke.yml` has **no schedule**. On relevant PR changes/manual dispatch it starts:
 
-### Phase 1 — contract / registry — complete
+1. PostgreSQL;
+2. the real LT API receiver with migrations;
+3. `dgtlmoon/changedetection.io:0.55.8`;
+4. the idempotent provisioner twice;
+5. the upstream native test-notification path.
 
-- pinned upstream/security metadata;
-- approved watch manifest;
-- strict notification parser;
-- watchKey/URL registry validation;
-- deterministic event ID;
-- canonical trigger object with no execution.
+It verifies one durable LT event in receiver-only state and explicitly leaves the canonical trigger disabled. This proves the pinned upstream API/configuration, Jinja variables, Apprise header, LT auth/schema and DB idempotency boundary without making the smoke dependent on the live municipal page.
 
-### Phase 2 — authenticated receiver — current
+Queue→canonical dispatch, retry and fingerprint semantics remain covered by the normal CI/worker tests.
 
-- internal route, disabled by default;
-- dedicated secret-header authentication;
-- bounded body and timestamp window;
-- durable idempotency store;
-- telemetry containing only watch key/source id/outcome, never page content;
-- no canonical ingestion action.
+## Definition of complete
 
-### Phase 3 — controlled canonical trigger
+The **integration package** is complete when, on one reviewed head:
 
-Map accepted source IDs to explicit existing ingestion functions. Start with `attuazione-pnrr-lamezia` only. Prefer worker/queue execution rather than running a long crawl synchronously inside the webhook request. Keep the normal scheduled ingestion enabled and compare results.
+- general CI is green;
+- hook / zero-cost gates are green;
+- the pinned upstream smoke is green;
+- provisioning is idempotent;
+- receiver and trigger remain disabled by default;
+- scheduled PNRR polling remains unchanged.
 
-### Phase 4 — broader watch set
-
-Promote additional sources only where the sentinel demonstrates meaningful latency/cost benefit. Structured feeds/APIs should not be added mechanically when normal polling is already cheap and reliable.
-
-## PoC evaluation
-
-For each real change, compare sentinel + canonical ingestion against the existing scheduled path:
-
-1. time from upstream change to sentinel event;
-2. time from event to canonical ingestion result;
-3. duplicate event rate;
-4. false-positive rate (sentinel fired but canonical content identity did not materially change);
-5. missed-change rate compared with scheduled canonical polling;
-6. request/CPU/memory footprint;
-7. behavior when the sentinel is offline.
-
-Promotion requires a real latency or operational benefit without weakening source provenance, canonical hashing, ingestion reliability or privacy/minimisation.
-
-See `docs/architecture/changedetection-receiver.md` for the Phase 2 operational contract.
+After that, the remaining work is operational evaluation rather than integration engineering: run the sentinel in a chosen environment, collect real latency/noise/material-change evidence, and only then decide whether any polling cadence should change or additional HTML sources should be promoted.
