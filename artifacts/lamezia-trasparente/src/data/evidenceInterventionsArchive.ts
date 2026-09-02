@@ -15,6 +15,7 @@ import {
 import { EVIDENCE_INTERVENTIONS_DAILY } from "./evidenceInterventionsDaily";
 import { EVIDENCE_INTERVENTIONS_2026_08_31 } from "./evidenceInterventions20260831";
 import { EVIDENCE_INTERVENTIONS_2026_09_01 } from "./evidenceInterventions20260901";
+import { EVIDENCE_INTERVENTIONS_2026_09_02 } from "./evidenceInterventions20260902";
 
 export {
   EVIDENCE_AREA_LABELS,
@@ -38,6 +39,7 @@ export const EVIDENCE_INTERVENTIONS = [
   ...EVIDENCE_INTERVENTIONS_DAILY,
   ...EVIDENCE_INTERVENTIONS_2026_08_31,
   ...EVIDENCE_INTERVENTIONS_2026_09_01,
+  ...EVIDENCE_INTERVENTIONS_2026_09_02,
 ] as const satisfies readonly EvidenceIntervention[];
 
 export function getEvidenceCountries() {
