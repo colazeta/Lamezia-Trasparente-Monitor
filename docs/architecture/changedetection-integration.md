@@ -2,7 +2,7 @@
 
 ## Status
 
-PoC architecture only. No HTTP receiver, no changedetection.io deployment, no DB write and no canonical ingestion behavior are changed by this increment.
+Phase 1 contract/registry is merged. Phase 2 adds an authenticated, disabled-by-default receiver with durable idempotency, while still performing **no canonical ingestion** from the webhook request.
 
 Upstream evaluated on 2026-09-02:
 
@@ -40,11 +40,11 @@ changedetection.io watch
         ↓
 minimal authenticated change event
         ↓
-LT watch registry / idempotency gate
+LT watch registry / durable idempotency gate
         ↓
 canonical LT source identity
         ↓
-existing canonical ingestor
+(existing canonical ingestor — Phase 3 only)
         ↓
 existing content hash / dedupe / normalisation / publication
 ```
@@ -75,7 +75,7 @@ Known watch + URL mismatch = fail closed.
 
 ### Minimal payload
 
-The phase-1 notification contract permits only:
+The notification contract permits only:
 
 ```json
 {
@@ -87,13 +87,19 @@ The phase-1 notification contract permits only:
 }
 ```
 
-`diff`, `diff_full`, snapshots, screenshots, HTML and page text are intentionally rejected by the strict schema. They are not necessary to decide whether the canonical ingestor should run.
+`diff`, `diff_full`, snapshots, screenshots, HTML and page text are intentionally rejected by the strict schema. They are not necessary to decide whether canonical work may be requested.
 
 ### Authentication
 
-A future HTTP receiver must require a dedicated high-entropy secret header, separate from editor/auth/API credentials. The secret must live in the deployment secret manager, never in watch manifests, notification bodies, source control or logs.
+Phase 2 receiver:
 
-changedetection.io supports custom notification headers through its Apprise notification URL syntax; the exact receiver URL/header will be introduced only when the endpoint exists.
+```text
+POST /api/internal/change-sentinel
+```
+
+It is hidden with `404` unless `CHANGE_SENTINEL_RECEIVER_ENABLED=true`. When enabled it requires a dedicated secret in `CHANGE_SENTINEL_WEBHOOK_TOKEN` and the matching `x-lt-sentinel-token` request header. Token comparison is performed after hashing to fixed-size buffers and using constant-time comparison.
+
+The secret must live in the deployment secret manager, never in watch manifests, notification bodies, source control or logs.
 
 ### Replay / duplicate delivery
 
@@ -104,25 +110,27 @@ Accepted notifications produce a deterministic event ID from:
 - registry-owned canonical URL;
 - notification timestamp in milliseconds.
 
-The future receiver/queue must use that event ID as an idempotency key. Duplicate delivery must not create duplicate canonical work.
+`change_sentinel_events.event_id` is the primary key. Duplicate delivery is therefore durable and idempotent across process restarts.
+
+The ledger stores only event/source/watch/timestamps/state metadata. It does not store webhook URL, diff, snapshot, HTML or text.
 
 ## Threat model
 
 ### SSRF / arbitrary fetch
 
-Mitigation: webhook URLs are never fetch targets; registry lookup owns the canonical URL.
+Mitigation: webhook URLs are never fetch targets; registry lookup owns the canonical URL. Phase 2 has no fetch or ingestion dependency at all.
 
 ### Spoofed notification
 
-Mitigation: dedicated secret header before event parsing/wiring. Unknown watch or URL mismatch fail closed.
+Mitigation: dedicated secret header before semantic event acceptance. Unknown watch or URL mismatch fail closed.
 
 ### Payload abuse / content leakage
 
-Mitigation: strict small schema; diff/snapshot/content fields rejected; request-body size limit at the future route.
+Mitigation: strict schema, 4 KiB receiver budget, diff/snapshot/content fields rejected, no content persistence.
 
 ### Replay / retry storms
 
-Mitigation: deterministic event ID and durable idempotency before a production trigger is enabled.
+Mitigation: deterministic event ID plus DB primary-key idempotency. Notifications older than 48 hours or more than 5 minutes in the future are rejected.
 
 ### False positives
 
@@ -137,14 +145,14 @@ Overly narrow CSS/XPath filters can hide substantive changes. The existing sched
 changedetection.io must never become required for ordinary ingestion.
 
 - sentinel unavailable → existing scheduled ingestion continues;
-- notification rejected → existing scheduled ingestion continues;
-- duplicate notification → no additional canonical work;
-- canonical ingestor fails → normal source-specific failure handling applies;
+- receiver disabled/rejected → existing scheduled ingestion continues;
+- duplicate notification → no duplicate ledger entry and no canonical work;
+- receiver DB unavailable → `503`, sender may retry, scheduled ingestion continues;
 - sentinel detects no change → no claim that the source is complete or unchanged in an administrative/legal sense.
 
 ## Promotion phases
 
-### Phase 1 — contract (this PR)
+### Phase 1 — contract / registry — complete
 
 - pinned upstream/security metadata;
 - approved watch manifest;
@@ -153,20 +161,18 @@ changedetection.io must never become required for ordinary ingestion.
 - deterministic event ID;
 - canonical trigger object with no execution.
 
-### Phase 2 — authenticated receiver
-
-Only after Phase 1 CI/review:
+### Phase 2 — authenticated receiver — current
 
 - internal route, disabled by default;
-- secret-header authentication;
-- bounded body;
+- dedicated secret-header authentication;
+- bounded body and timestamp window;
 - durable idempotency store;
 - telemetry containing only watch key/source id/outcome, never page content;
-- no direct publication action.
+- no canonical ingestion action.
 
 ### Phase 3 — controlled canonical trigger
 
-Map accepted source IDs to explicit existing ingestion functions. Start with `attuazione-pnrr-lamezia` only. Keep the normal scheduled ingestion enabled and compare results.
+Map accepted source IDs to explicit existing ingestion functions. Start with `attuazione-pnrr-lamezia` only. Prefer worker/queue execution rather than running a long crawl synchronously inside the webhook request. Keep the normal scheduled ingestion enabled and compare results.
 
 ### Phase 4 — broader watch set
 
@@ -185,3 +191,5 @@ For each real change, compare sentinel + canonical ingestion against the existin
 7. behavior when the sentinel is offline.
 
 Promotion requires a real latency or operational benefit without weakening source provenance, canonical hashing, ingestion reliability or privacy/minimisation.
+
+See `docs/architecture/changedetection-receiver.md` for the Phase 2 operational contract.
