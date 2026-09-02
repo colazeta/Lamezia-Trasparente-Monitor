@@ -28,6 +28,12 @@ Il modello supporta questa progressione:
 
 Gli stadi sono derivati conservativamente dagli eventi documentati e dallo stato tecnico già presente nel record.
 
+### Petizione e formalizzazione
+
+L'avvio di una petizione o di una raccolta firme **non equivale al deposito formale presso l'istituzione destinataria**.
+
+Un evento `petizione` documenta l'esistenza o l'avvio della raccolta firme e resta distinto da `deposito`. La proposta passa a `formalizzata` / **Presentata formalmente** soltanto quando è verificato un deposito, una trasmissione all'ente o un'altra formalizzazione istituzionale esplicita. Se la fonte descrive soltanto una futura intenzione di trasmettere la petizione, la proposta resta **Segnalata**.
+
 ### Attuazione
 
 `recepita` non significa `attuata`.
@@ -46,8 +52,8 @@ Per entrare in `attuazione_avviata` o `attuata` deve esistere una evidenza dedic
 
 La vista cittadino usa un vocabolario deliberatamente più piccolo:
 
-- **Segnalata**: la proposta è documentata come emersa pubblicamente;
-- **Presentata formalmente**: è documentato un deposito, una petizione o un'altra formalizzazione;
+- **Segnalata**: la proposta è documentata come emersa pubblicamente; include anche una petizione/raccolta firme avviata ma non ancora verificata come depositata;
+- **Presentata formalmente**: è documentato un deposito, una trasmissione all'ente o un'altra formalizzazione istituzionale verificabile;
 - **Ha avuto seguito**: è documentata almeno una calendarizzazione, discussione, risposta, recepimento o altro seguito istituzionale sostanziale;
 - **In attuazione**: esiste evidenza attuativa esplicita secondo la soglia sopra descritta;
 - **Nessun seguito noto**: lo stato tecnico lo documenta esplicitamente;
@@ -60,6 +66,7 @@ Il filtro pubblico mostra soltanto gli stati effettivamente presenti nei record 
 Il backend normalizza le fonti secondo ruoli distinti:
 
 - `origine`
+- `petizione`
 - `formalizzazione`
 - `calendarizzazione`
 - `discussione`
@@ -67,6 +74,8 @@ Il backend normalizza le fonti secondo ruoli distinti:
 - `recepimento`
 - `aggiornamento`
 - `atto_collegato`
+
+`petizione` indica una petizione o raccolta firme documentata; `formalizzazione` richiede invece evidenza della presentazione istituzionale. Questa distinzione evita che il canale o il formato dell'iniziativa venga confuso con il suo effettivo avanzamento procedurale.
 
 Questa classificazione serve per audit e analisi. Non deve diventare una fila di badge nella card pubblica.
 
@@ -110,6 +119,7 @@ Ogni nuova proposta deve:
 4. avere metadata geografici, anche quando `citywide` senza coordinate;
 5. avere uno stato istituzionale derivabile;
 6. mantenere eventi e fonti coerenti con i ruoli documentali;
-7. non entrare in `in_attuazione` senza evidenza attuativa dedicata.
+7. distinguere petizione/raccolta firme da deposito istituzionale;
+8. non entrare in `in_attuazione` senza evidenza attuativa dedicata.
 
 Il test `proposalArchiveAlignment.test.ts` verifica l'allineamento del medesimo insieme di record fra dataset, canonico, semantica, geografia e percorso istituzionale.

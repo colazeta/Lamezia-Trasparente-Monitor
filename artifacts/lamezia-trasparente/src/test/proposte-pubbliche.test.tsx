@@ -139,8 +139,11 @@ describe("proposte civiche", () => {
     });
 
     expect(
-      screen.getByText(/Continuità e avvio dei tre asili nido comunali/i),
+      screen.getByText(/Manutenzione e valorizzazione dell.area di Ponte S. Antonio/i),
     ).toBeInTheDocument();
+    expect(
+      screen.queryByText(/Continuità e avvio dei tre asili nido comunali/i),
+    ).not.toBeInTheDocument();
     expect(
       screen.queryByText(/Sicurezza e vivibilità di Piazza Italia/i),
     ).not.toBeInTheDocument();
