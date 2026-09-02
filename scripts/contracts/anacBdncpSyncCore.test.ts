@@ -33,11 +33,11 @@ describe("ANAC/BDNCP sync core", () => {
     );
   });
 
-  it("maps only tracked CIG rows and preserves quoted CSV content", () => {
+  it("maps tracked CIG rows including Cardinal-relevant source fields", () => {
     const csv = [
-      "CIG;oggetto_lotto;denominazione_amministrazione_appaltante;importo_lotto;scelta_contraente;id_gara",
-      'B123456789;"Servizio; civico";Comune di Lamezia Terme;1.234,56;AFFIDAMENTO DIRETTO;G-10',
-      "A01D5289C5;Altro lotto;Altra amministrazione;900,00;PROCEDURA APERTA;G-11",
+      "CIG;oggetto_lotto;denominazione_amministrazione_appaltante;codice_ausa;cf_amministrazione_appaltante;importo_lotto;cod_tipo_scelta_contraente;tipo_scelta_contraente;data_pubblicazione;data_scadenza_offerta;cod_cpv;descrizione_cpv;flag_prevalente;cod_esito;esito;data_comunicazione_esito;numero_gara",
+      'B123456789;"Servizio; civico";Comune di Lamezia Terme;0000247922;00301390795;1.234,56;1;PROCEDURA APERTA;2026-08-01;31/08/2026;72000000-5;Servizi informatici;1;1;AGGIUDICATA;2026-09-01;G-10',
+      "A01D5289C5;Altro lotto;Altra amministrazione;0000000001;00000000001;900,00;1;PROCEDURA APERTA;2026-08-02;2026-08-30;45000000-7;Lavori;1;;;;G-11",
     ].join("\r\n");
     const result = parseAnacCigCsv(csv, new Set(["B123456789"]), {
       url: "https://dati.anticorruzione.it/archive.zip",
@@ -51,14 +51,44 @@ describe("ANAC/BDNCP sync core", () => {
         cig: "B123456789",
         title: "Servizio; civico",
         contractingAuthority: "Comune di Lamezia Terme",
+        contractingAuthorityCode: "0000247922",
+        contractingAuthorityTaxId: "00301390795",
         tenderAmount: 1234.56,
-        procedureType: "AFFIDAMENTO DIRETTO",
+        procedureType: "PROCEDURA APERTA",
+        procedureCode: "1",
+        publicationDate: "2026-08-01",
+        submissionDeadline: "2026-08-31",
+        cpvCode: "72000000-5",
+        cpvDescription: "Servizi informatici",
+        cpvIsPrimary: true,
+        outcomeCode: "1",
+        outcome: "AGGIUDICATA",
+        outcomeDate: "2026-09-01",
         recordId: "G-10",
         sourceArchiveUrl: "https://dati.anticorruzione.it/archive.zip",
         sourcePeriod: "2026-08",
         acquiredAt: "2026-09-01T12:00:00.000Z",
       },
     ]);
+  });
+
+  it("preserves the prevalent CPV when a CIG spans several CPV rows", () => {
+    const csv = [
+      "cig;cod_cpv;descrizione_cpv;flag_prevalente;data_pubblicazione;data_scadenza_offerta",
+      "B123456789;72000000-5;Servizi informatici;1;2026-08-01;2026-08-31",
+      "B123456789;30200000-1;Apparecchiature informatiche;0;2026-08-01;2026-08-31",
+    ].join("\n");
+
+    const result = parseAnacCigCsv(csv, new Set(["B123456789"]), {
+      url: "https://dati.anticorruzione.it/archive.zip",
+      period: "2026-08",
+      acquiredAt: "2026-09-01T12:00:00.000Z",
+    });
+
+    assert.equal(result.records.length, 1);
+    assert.equal(result.records[0]?.cpvCode, "72000000-5");
+    assert.equal(result.records[0]?.cpvIsPrimary, true);
+    assert.equal(result.records[0]?.submissionDeadline, "2026-08-31");
   });
 
   it("parses escaped quotes and embedded newlines across stream chunks", () => {
@@ -185,8 +215,19 @@ function record(cig: string, acquiredAt: string): AnacBdncpRecord {
     cig,
     title: "Record in cache",
     contractingAuthority: "Comune di Lamezia Terme",
+    contractingAuthorityCode: "0000247922",
+    contractingAuthorityTaxId: "00301390795",
     tenderAmount: 100,
     procedureType: null,
+    procedureCode: null,
+    publicationDate: null,
+    submissionDeadline: null,
+    cpvCode: null,
+    cpvDescription: null,
+    cpvIsPrimary: null,
+    outcomeCode: null,
+    outcome: null,
+    outcomeDate: null,
     recordId: null,
     sourceArchiveUrl: "https://dati.anticorruzione.it/archive.zip",
     sourcePeriod: "2026-08",

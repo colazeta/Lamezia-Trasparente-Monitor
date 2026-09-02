@@ -4,8 +4,8 @@ import type {
 } from "../../artifacts/lamezia-trasparente/src/lib/anacBdncpSync";
 
 export const CARDINAL_TARGET_VERSION = "0.0.8";
-export const CARDINAL_READINESS_SCHEMA_VERSION = "cardinal-readiness.v1";
-export const CARDINAL_ADAPTER_VERSION = "anac-cardinal-readiness.v1";
+export const CARDINAL_READINESS_SCHEMA_VERSION = "cardinal-readiness.v2";
+export const CARDINAL_ADAPTER_VERSION = "anac-cardinal-readiness.v2";
 export const CARDINAL_DOCS_URL = "https://cardinal.readthedocs.io/en/latest/";
 
 export type CardinalReadinessStatus =
@@ -15,6 +15,7 @@ export type CardinalReadinessStatus =
 
 export type CardinalMappingKind =
   | "source-backed"
+  | "conditional-semantic"
   | "derived-local"
   | "not-mapped";
 
@@ -58,6 +59,10 @@ export interface CardinalIndicatorReadiness {
   missingRequiredOcdsPaths: string[];
   optionalOcdsPaths: string[];
   scopeNote: string | null;
+  recordCoverage: {
+    totalRecords: number;
+    computableRecords: number;
+  };
 }
 
 export interface CardinalReadinessReport {
@@ -83,6 +88,7 @@ export interface CardinalReadinessReport {
   };
   sourceFieldCoverage: CardinalFieldCoverage[];
   safelyProjectableOcdsPaths: string[];
+  conditionallyProjectableOcdsPaths: string[];
   locallyDerivedOcdsPaths: string[];
   indicators: CardinalIndicatorReadiness[];
   summary: Record<CardinalReadinessStatus, number>;
@@ -111,6 +117,8 @@ export const CARDINAL_RED_FLAGS: readonly CardinalIndicatorDefinition[] = [
       "/tender/procurementMethod",
       "/tender/procurementMethodDetails",
     ],
+    scopeNote:
+      "ANAC publicationDate is used as tenderPeriod.startDate only for records that independently identify an open procedure; it is not promoted for invitation-based or otherwise ambiguous procedures.",
   },
   {
     code: "R018",
@@ -120,7 +128,7 @@ export const CARDINAL_RED_FLAGS: readonly CardinalIndicatorDefinition[] = [
       "/tender/procurementMethod",
     ],
     scopeNote:
-      "The ANAC procedure label is not treated as an OCDS procurementMethod until an explicit code mapping is documented.",
+      "An open ANAC procedure can be mapped to OCDS procurementMethod=open only when code and label agree. numberOfTenderers remains unavailable in the current CIG feed.",
   },
   {
     code: "R024",
@@ -211,7 +219,7 @@ export const CARDINAL_RED_FLAGS: readonly CardinalIndicatorDefinition[] = [
       "/awards[]/items[]/classification/scheme",
     ],
     scopeNote:
-      "The classification must be a known hierarchical numeric taxonomy such as CPV or UNSPSC; no scheme is inferred from the code alone.",
+      "The source CPV is not promoted to an award-item classification: a lot-level prevalent CPV and an awarded item are different semantic objects.",
   },
   {
     code: "R058",
@@ -228,10 +236,11 @@ export const CARDINAL_RED_FLAGS: readonly CardinalIndicatorDefinition[] = [
 ] as const;
 
 /**
- * Fields that can be projected without changing their source meaning.
- * `ocid` is deliberately classified as local/derived: a CIG can provide a
- * deterministic analysis key, but it is not presented as a registered OCDS
- * identifier issued by an OCDS publisher.
+ * `source-backed` mappings preserve source semantics directly.
+ * `conditional-semantic` mappings require a record-level rule before an OCDS
+ * meaning is asserted. In particular, publicationDate is not automatically a
+ * tender-period start date and procedureCode is not automatically an OCDS
+ * procurementMethod.
  */
 export const ANAC_CARDINAL_FIELD_MAPPINGS: readonly CardinalSourceFieldMapping[] = [
   {
@@ -250,7 +259,19 @@ export const ANAC_CARDINAL_FIELD_MAPPINGS: readonly CardinalSourceFieldMapping[]
     sourceField: "contractingAuthority",
     ocdsPath: "/buyer/name",
     mappingKind: "source-backed",
-    note: "The authority name is source-backed, but the current source does not provide the organization identifier Cardinal needs for organization-level outputs.",
+    note: "The authority name is source-backed.",
+  },
+  {
+    sourceField: "contractingAuthorityCode",
+    ocdsPath: null,
+    mappingKind: "not-mapped",
+    note: "The AUSA code is retained as a source identifier but is not silently used as an OCDS party id.",
+  },
+  {
+    sourceField: "contractingAuthorityTaxId",
+    ocdsPath: null,
+    mappingKind: "not-mapped",
+    note: "The authority tax identifier is retained source-side until the OCDS identifier scheme and party relationship are explicit.",
   },
   {
     sourceField: "tenderAmount",
@@ -262,13 +283,67 @@ export const ANAC_CARDINAL_FIELD_MAPPINGS: readonly CardinalSourceFieldMapping[]
     sourceField: "procedureType",
     ocdsPath: "/tender/procurementMethodDetails",
     mappingKind: "source-backed",
-    note: "The local ANAC procedure label is preserved as details. It is not silently converted to the OCDS procurementMethod codelist.",
+    note: "The ANAC procedure label is preserved as details.",
+  },
+  {
+    sourceField: "procedureCode",
+    ocdsPath: "/tender/procurementMethod",
+    mappingKind: "conditional-semantic",
+    note: "Only a code/label pair independently identifying an open procedure is currently projected to OCDS procurementMethod=open; other values remain unmapped.",
+  },
+  {
+    sourceField: "publicationDate",
+    ocdsPath: "/tender/tenderPeriod/startDate",
+    mappingKind: "conditional-semantic",
+    note: "Publication date is projected to tenderPeriod.startDate only for a verified open-procedure record.",
+  },
+  {
+    sourceField: "submissionDeadline",
+    ocdsPath: "/tender/tenderPeriod/endDate",
+    mappingKind: "source-backed",
+    note: "ANAC offer-submission deadline directly supplies the end of the submission period when present.",
+  },
+  {
+    sourceField: "cpvCode",
+    ocdsPath: null,
+    mappingKind: "not-mapped",
+    note: "The prevalent lot-level CPV is retained for benchmarking but is not represented as an award-item classification.",
+  },
+  {
+    sourceField: "cpvDescription",
+    ocdsPath: null,
+    mappingKind: "not-mapped",
+    note: "CPV description is retained as source metadata.",
+  },
+  {
+    sourceField: "cpvIsPrimary",
+    ocdsPath: null,
+    mappingKind: "not-mapped",
+    note: "The ANAC prevalent-CPV flag is retained to select the representative lot classification.",
+  },
+  {
+    sourceField: "outcomeCode",
+    ocdsPath: null,
+    mappingKind: "not-mapped",
+    note: "Procedure outcome code is not sufficient by itself to construct an OCDS award.",
+  },
+  {
+    sourceField: "outcome",
+    ocdsPath: null,
+    mappingKind: "not-mapped",
+    note: "Procedure outcome text is retained but not converted to award status without an award-level source.",
+  },
+  {
+    sourceField: "outcomeDate",
+    ocdsPath: null,
+    mappingKind: "not-mapped",
+    note: "Outcome communication date is retained as source metadata.",
   },
   {
     sourceField: "recordId",
     ocdsPath: null,
     mappingKind: "not-mapped",
-    note: "The ANAC record/gara/lot identifier remains provenance metadata until a specific OCDS relationship is documented.",
+    note: "The ANAC gara/lot identifier remains provenance metadata until a specific OCDS relationship is documented.",
   },
 ] as const;
 
@@ -277,19 +352,13 @@ export function buildCardinalReadinessReport(
   generatedAt = new Date().toISOString(),
 ): CardinalReadinessReport {
   const sourceFieldCoverage = buildSourceFieldCoverage(snapshot.records);
-  const safelyProjectableOcdsPaths = ANAC_CARDINAL_FIELD_MAPPINGS.filter(
-    (mapping) => mapping.mappingKind === "source-backed" && mapping.ocdsPath,
-  )
-    .map((mapping) => mapping.ocdsPath as string)
-    .sort();
-  const locallyDerivedOcdsPaths = ANAC_CARDINAL_FIELD_MAPPINGS.filter(
-    (mapping) => mapping.mappingKind === "derived-local" && mapping.ocdsPath,
-  )
-    .map((mapping) => mapping.ocdsPath as string)
-    .sort();
-  const available = new Set(safelyProjectableOcdsPaths);
+  const safelyProjectableOcdsPaths = uniqueMappedPaths("source-backed");
+  const conditionallyProjectableOcdsPaths = uniqueMappedPaths(
+    "conditional-semantic",
+  );
+  const locallyDerivedOcdsPaths = uniqueMappedPaths("derived-local");
   const indicators = CARDINAL_RED_FLAGS.map((definition) =>
-    assessIndicatorReadiness(definition, available),
+    assessIndicatorAcrossRecords(definition, snapshot.records),
   );
   const summary: CardinalReadinessReport["summary"] = {
     computable: 0,
@@ -298,14 +367,13 @@ export function buildCardinalReadinessReport(
   };
   for (const indicator of indicators) summary[indicator.status] += 1;
 
-  const canRunIndicators =
-    snapshot.records.length > 0 && summary.computable > 0;
+  const canRunIndicators = summary.computable > 0;
   const reason =
     snapshot.records.length === 0
       ? "No structured ANAC/BDNCP records are currently available in the snapshot."
       : summary.computable === 0
-        ? "The current source-backed field set does not satisfy the minimum prerequisites of any Cardinal red flag."
-        : "At least one Cardinal red flag has all minimum source-backed prerequisites.";
+        ? "No current record satisfies all minimum source-backed and semantically validated prerequisites of a Cardinal red flag."
+        : "At least one current record satisfies all minimum prerequisites of at least one Cardinal red flag.";
 
   return {
     schemaVersion: CARDINAL_READINESS_SCHEMA_VERSION,
@@ -330,6 +398,7 @@ export function buildCardinalReadinessReport(
     },
     sourceFieldCoverage,
     safelyProjectableOcdsPaths,
+    conditionallyProjectableOcdsPaths,
     locallyDerivedOcdsPaths,
     indicators,
     summary,
@@ -340,7 +409,8 @@ export function buildCardinalReadinessReport(
     limitations: [
       "This report measures data readiness only. It does not calculate Cardinal indicators or infer procurement risk.",
       "A Cardinal red flag is a screening signal, not evidence of wrongdoing, corruption, favouritism or individual responsibility.",
-      "Readiness is based on source-backed minimum fields. Local labels are not silently mapped to OCDS codelists.",
+      "Readiness is evaluated at record level: required paths must co-occur on the same procurement record before an indicator is marked computable.",
+      "ANAC publication date is not treated as a tender-period start date unless code and label independently support an open-procedure interpretation.",
       "A locally-derived analysis identifier can support processing but is not represented as an official publisher-issued OCDS OCID.",
       "Statistical outlier indicators additionally require a sufficiently broad and comparable population; field completeness alone is not enough for substantive interpretation.",
       ...snapshot.limitations,
@@ -352,6 +422,100 @@ export function assessIndicatorReadiness(
   definition: CardinalIndicatorDefinition,
   availableOcdsPaths: ReadonlySet<string>,
 ): CardinalIndicatorReadiness {
+  const result = assessPaths(definition, availableOcdsPaths);
+  return {
+    ...result,
+    recordCoverage: {
+      totalRecords: 1,
+      computableRecords: result.status === "computable" ? 1 : 0,
+    },
+  };
+}
+
+export function assessIndicatorAcrossRecords(
+  definition: CardinalIndicatorDefinition,
+  records: readonly AnacBdncpRecord[],
+): CardinalIndicatorReadiness {
+  const union = new Set<string>();
+  let computableRecords = 0;
+
+  for (const record of records) {
+    const paths = buildCardinalRecordOcdsPaths(record);
+    for (const path of paths) union.add(path);
+    if (definition.requiredOcdsPaths.every((path) => paths.has(path))) {
+      computableRecords += 1;
+    }
+  }
+
+  const pathAssessment = assessPaths(definition, union);
+  const status: CardinalReadinessStatus =
+    computableRecords > 0
+      ? "computable"
+      : pathAssessment.availableRequiredOcdsPaths.length > 0
+        ? "partially-supported"
+        : "unsupported";
+
+  return {
+    ...pathAssessment,
+    status,
+    recordCoverage: {
+      totalRecords: records.length,
+      computableRecords,
+    },
+  };
+}
+
+export function buildCardinalRecordOcdsPaths(
+  record: AnacBdncpRecord,
+): ReadonlySet<string> {
+  const paths = new Set<string>();
+
+  for (const mapping of ANAC_CARDINAL_FIELD_MAPPINGS) {
+    if (
+      mapping.mappingKind === "source-backed" &&
+      mapping.ocdsPath &&
+      hasSourceValue(record[mapping.sourceField])
+    ) {
+      paths.add(mapping.ocdsPath);
+    }
+  }
+
+  if (inferOcdsProcurementMethod(record) === "open") {
+    paths.add("/tender/procurementMethod");
+    if (hasValidDate(record.publicationDate)) {
+      paths.add("/tender/tenderPeriod/startDate");
+    }
+  }
+
+  return paths;
+}
+
+export function inferOcdsProcurementMethod(
+  record: AnacBdncpRecord,
+): "open" | null {
+  const code = record.procedureCode?.trim().toLowerCase() ?? "";
+  const label = normalizeProcedureLabel(record.procedureType);
+  const labelIsOpen = label === "APERTA" || label === "PROCEDURA APERTA";
+  const codeIsOpen = code === "open" || code === "1";
+  return codeIsOpen && labelIsOpen ? "open" : null;
+}
+
+export function buildSourceFieldCoverage(
+  records: readonly AnacBdncpRecord[],
+): CardinalFieldCoverage[] {
+  return ANAC_CARDINAL_FIELD_MAPPINGS.map((mapping) => ({
+    ...mapping,
+    nonNullRecords: records.filter((record) =>
+      hasSourceValue(record[mapping.sourceField]),
+    ).length,
+    totalRecords: records.length,
+  }));
+}
+
+function assessPaths(
+  definition: CardinalIndicatorDefinition,
+  availableOcdsPaths: ReadonlySet<string>,
+): Omit<CardinalIndicatorReadiness, "recordCoverage"> {
   const availableRequiredOcdsPaths = definition.requiredOcdsPaths.filter((path) =>
     availableOcdsPaths.has(path),
   );
@@ -377,20 +541,32 @@ export function assessIndicatorReadiness(
   };
 }
 
-export function buildSourceFieldCoverage(
-  records: readonly AnacBdncpRecord[],
-): CardinalFieldCoverage[] {
-  return ANAC_CARDINAL_FIELD_MAPPINGS.map((mapping) => ({
-    ...mapping,
-    nonNullRecords: records.filter((record) =>
-      hasSourceValue(record[mapping.sourceField]),
-    ).length,
-    totalRecords: records.length,
-  }));
+function uniqueMappedPaths(kind: CardinalMappingKind): string[] {
+  return Array.from(
+    new Set(
+      ANAC_CARDINAL_FIELD_MAPPINGS.filter(
+        (mapping) => mapping.mappingKind === kind && mapping.ocdsPath,
+      ).map((mapping) => mapping.ocdsPath as string),
+    ),
+  ).sort();
 }
 
 function hasSourceValue(value: AnacBdncpRecord[keyof AnacBdncpRecord]): boolean {
   if (value === null || value === undefined) return false;
   if (typeof value === "string") return value.trim().length > 0;
+  if (typeof value === "boolean") return true;
   return Number.isFinite(value);
+}
+
+function hasValidDate(value: string | null): boolean {
+  return value !== null && !Number.isNaN(Date.parse(value));
+}
+
+function normalizeProcedureLabel(value: string | null): string {
+  return (value ?? "")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/gu, "")
+    .trim()
+    .replace(/\s+/gu, " ")
+    .toUpperCase();
 }

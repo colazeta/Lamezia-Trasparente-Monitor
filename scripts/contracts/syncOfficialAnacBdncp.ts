@@ -23,8 +23,14 @@ import {
   AnacCsvMatcher,
   buildAnacCigArchiveCandidates,
   mergeAnacSyncAttempt,
+  type AnacArchiveCandidate,
   type SuccessfulArchiveSync,
 } from "./anacBdncpSyncCore";
+import {
+  ANAC_CKAN_PACKAGE_SHOW_URL,
+  buildAnacCigPackageIds,
+  selectAnacCigArchiveCandidates,
+} from "./anacCkanDiscovery";
 import {
   extractCig,
   type AlboPublicSnapshot,
@@ -51,6 +57,9 @@ const maxArchiveBytes = integerEnvironment(
   1_000_000,
   1_000_000_000,
 );
+const maxCkanBytes = 5 * 1024 * 1024;
+const userAgent =
+  "Mozilla/5.0 (compatible; Lamezia-Trasparente-Monitor/1.0; +https://lamezia-trasparente.pages.dev/metodologia)";
 
 async function main(): Promise<void> {
   const attemptedAt = new Date().toISOString();
@@ -59,9 +68,15 @@ async function main(): Promise<void> {
     readPreviousSnapshot(outputPath),
   ]);
   const trackedCigs = currentFormalCigs(alboSnapshot);
-  const candidates = buildAnacCigArchiveCandidates(
-    new Date(attemptedAt),
+  const referenceDate = new Date(attemptedAt);
+  const fallbackCandidates = buildAnacCigArchiveCandidates(
+    referenceDate,
     lookbackMonths,
+  );
+  const candidates = await discoverAnacCigArchiveCandidates(
+    referenceDate,
+    lookbackMonths,
+    fallbackCandidates,
   );
   const tempDirectory = await mkdtemp(
     path.join(tmpdir(), "lamezia-anac-bdncp-"),
@@ -148,6 +163,93 @@ async function main(): Promise<void> {
   );
 }
 
+async function discoverAnacCigArchiveCandidates(
+  referenceDate: Date,
+  lookback: number,
+  fallbackCandidates: AnacArchiveCandidate[],
+): Promise<AnacArchiveCandidate[]> {
+  const discovered = new Map<string, AnacArchiveCandidate>();
+  const packageIds = buildAnacCigPackageIds(referenceDate, lookback);
+
+  for (const packageId of packageIds) {
+    try {
+      const payload = await fetchCkanPackage(packageId);
+      if (payload === null) continue;
+      for (const candidate of selectAnacCigArchiveCandidates(
+        payload,
+        referenceDate,
+        lookback,
+      )) {
+        discovered.set(candidate.period, candidate);
+      }
+    } catch (error) {
+      console.warn(
+        `ANAC CKAN ${packageId}: discovery non disponibile (${error instanceof Error ? error.message : "errore sconosciuto"}).`,
+      );
+    }
+  }
+
+  if (discovered.size === 0) {
+    console.warn(
+      "ANAC CKAN: nessuna risorsa mensile CSV/ZIP scoperta; uso il pattern URL storico come fallback.",
+    );
+    return fallbackCandidates;
+  }
+
+  console.log(
+    `ANAC CKAN: ${discovered.size} risorse mensili risolte dal catalogo ufficiale.`,
+  );
+  return fallbackCandidates.map(
+    (fallback) => discovered.get(fallback.period) ?? fallback,
+  );
+}
+
+async function fetchCkanPackage(packageId: string): Promise<unknown | null> {
+  const url = new URL(ANAC_CKAN_PACKAGE_SHOW_URL);
+  url.searchParams.set("id", packageId);
+  let lastError: unknown;
+
+  for (let attempt = 1; attempt <= 2; attempt += 1) {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 20_000);
+    try {
+      const response = await fetch(url, {
+        signal: controller.signal,
+        headers: {
+          Accept: "application/json",
+          "User-Agent": userAgent,
+        },
+      });
+      if (response.status === 404) {
+        await response.body?.cancel();
+        return null;
+      }
+      if (!response.ok) {
+        await response.body?.cancel();
+        throw new Error(`HTTP ${response.status}`);
+      }
+      assertOfficialAnacUrl(response.url);
+      const declaredLength = Number(response.headers.get("content-length"));
+      if (Number.isFinite(declaredLength) && declaredLength > maxCkanBytes) {
+        await response.body?.cancel();
+        throw new Error("CKAN response exceeds size cap");
+      }
+      const text = await response.text();
+      if (Buffer.byteLength(text, "utf8") > maxCkanBytes) {
+        throw new Error("CKAN response exceeds size cap");
+      }
+      return JSON.parse(text) as unknown;
+    } catch (error) {
+      lastError = error;
+      if (attempt === 2) throw error;
+    } finally {
+      clearTimeout(timeout);
+    }
+  }
+
+  throw lastError;
+}
+
 async function downloadArchive(
   url: string,
   destination: string,
@@ -161,8 +263,7 @@ async function downloadArchive(
         signal: controller.signal,
         headers: {
           Accept: "application/zip, application/octet-stream;q=0.9, */*;q=0.1",
-          "User-Agent":
-            "Lamezia-Trasparente-Monitor/1.0 (+https://lamezia-trasparente.pages.dev/metodologia)",
+          "User-Agent": userAgent,
         },
       });
       if (response.status === 404) {
