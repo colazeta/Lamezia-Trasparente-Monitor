@@ -5,8 +5,10 @@ import { URL } from 'node:url';
 
 const MAX_HTML_BYTES = 5 * 1024 * 1024;
 const TIMEOUT_MS = 20_000;
-const MEDIA_EXT = /\.(?:mp3|m4a|aac|wav|ogg|opus|mp4|webm|m3u8)(?:$|[?#])/i;
+const MAX_SCRIPT_HINTS = 100;
+const MEDIA_EXT = /\.(?:mp3|m4a|aac|wav|ogg|opus|mp4|webm|m3u8|mpd)(?:$|[?#])/i;
 const MEDIA_HINT = /(?:youtube\.com|youtu\.be|vimeo\.com|facebook\.com|fb\.watch|player|stream|video|media)/i;
+const SCRIPT_ENDPOINT_HINT = /(?:\/api\/|manifest|playlist|m3u8|\.mpd|\.mp4|playback|stream|media|source)/i;
 
 function die(message) {
   console.error(message);
@@ -24,7 +26,14 @@ function normaliseUrl(value, base) {
   }
 }
 
-function extractResources(html, baseUrl) {
+function decodeCandidate(value) {
+  return value
+    .replace(/\\\//g, '/')
+    .replace(/\\u002F/gi, '/')
+    .replace(/&amp;/g, '&');
+}
+
+function extractResources(text, baseUrl) {
   const found = new Set();
   const patterns = [
     /(?:src|href|content|data-src|data-video-url|data-url)\s*=\s*["']([^"']+)["']/gi,
@@ -32,9 +41,8 @@ function extractResources(html, baseUrl) {
   ];
   for (const pattern of patterns) {
     let match;
-    while ((match = pattern.exec(html)) !== null) {
-      const decoded = match[1].replace(/\\\//g, '/').replace(/&amp;/g, '&');
-      const url = normaliseUrl(decoded, baseUrl);
+    while ((match = pattern.exec(text)) !== null) {
+      const url = normaliseUrl(decodeCandidate(match[1]), baseUrl);
       if (!url) continue;
       if (MEDIA_EXT.test(url) || MEDIA_HINT.test(url)) found.add(url);
     }
@@ -42,8 +50,29 @@ function extractResources(html, baseUrl) {
   return [...found].sort();
 }
 
-function markerPresence(html, markers = []) {
-  const lower = html.toLocaleLowerCase('it');
+function extractScriptHints(text, baseUrl) {
+  const found = new Set();
+  const patterns = [
+    /https?:\\?\/\\?\/[^"'`\\\s<>]+/gi,
+    /["'`]((?:\/|\.\/|\.\.\/)[^"'`\s]{1,300})["'`]/g,
+  ];
+
+  for (const pattern of patterns) {
+    let match;
+    while ((match = pattern.exec(text)) !== null) {
+      const raw = decodeCandidate(match[1] || match[0]);
+      if (!SCRIPT_ENDPOINT_HINT.test(raw)) continue;
+      const url = normaliseUrl(raw, baseUrl);
+      if (!url) continue;
+      found.add(url);
+      if (found.size >= MAX_SCRIPT_HINTS) return [...found].sort();
+    }
+  }
+  return [...found].sort();
+}
+
+function markerPresence(text, markers = []) {
+  const lower = text.toLocaleLowerCase('it');
   return Object.fromEntries(markers.map((marker) => [marker, lower.includes(String(marker).toLocaleLowerCase('it'))]));
 }
 
@@ -56,7 +85,7 @@ async function boundedFetch(url) {
       signal: controller.signal,
       headers: {
         'user-agent': 'Lamezia-Trasparente-WhisperX-SourceProbe/1.0 (+public-source-resolution)',
-        accept: 'text/html,application/xhtml+xml,application/json;q=0.8,*/*;q=0.1',
+        accept: 'text/html,application/xhtml+xml,application/json,text/javascript,application/javascript;q=0.9,*/*;q=0.1',
       },
     });
     const contentType = response.headers.get('content-type') || '';
@@ -91,7 +120,11 @@ async function main() {
       const response = await boundedFetch(approved.toString());
       const final = new URL(response.finalUrl);
       if (final.origin !== approved.origin) throw new Error('cross-origin-redirect');
+      const contentType = response.contentType.split(';')[0];
       const resources = extractResources(response.text, response.finalUrl);
+      const scriptHints = /(?:javascript|ecmascript)/i.test(contentType) || candidate.role === 'reviewed-player-script-locator'
+        ? extractScriptHints(response.text, response.finalUrl)
+        : [];
       results.push({
         id: candidate.id,
         role: candidate.role,
@@ -99,12 +132,14 @@ async function main() {
         finalUrl: response.finalUrl,
         status: response.status,
         ok: response.ok,
-        contentType: response.contentType.split(';')[0],
+        contentType,
         bodySha256: crypto.createHash('sha256').update(response.bytes).digest('hex'),
         bodyBytes: response.bytes.byteLength,
         markers: markerPresence(response.text, candidate.expectedMarkers),
         discoveredResources: resources,
         discoveredResourceCount: resources.length,
+        scriptEndpointHints: scriptHints,
+        scriptEndpointHintCount: scriptHints.length,
       });
     } catch (error) {
       results.push({
@@ -115,6 +150,8 @@ async function main() {
         error: error instanceof Error ? error.message : 'unknown-error',
         discoveredResources: [],
         discoveredResourceCount: 0,
+        scriptEndpointHints: [],
+        scriptEndpointHintCount: 0,
       });
     }
   }
@@ -129,11 +166,11 @@ async function main() {
       followsDiscoveredResources: false,
       maxResponseBytes: MAX_HTML_BYTES,
       timeoutMs: TIMEOUT_MS,
+      maxScriptEndpointHints: MAX_SCRIPT_HINTS,
       secretsUsed: false,
     },
     results,
   };
-  await fs.mkdir(new URL('.', `file://${process.cwd()}/${outputPath}`).pathname, { recursive: true }).catch(() => {});
   const slash = outputPath.lastIndexOf('/');
   if (slash >= 0) await fs.mkdir(outputPath.slice(0, slash), { recursive: true });
   await fs.writeFile(outputPath, `${JSON.stringify(output, null, 2)}\n`, 'utf8');
@@ -142,6 +179,7 @@ async function main() {
     candidates: results.length,
     reachable: results.filter((item) => item.ok).length,
     discoveredResources: results.reduce((sum, item) => sum + item.discoveredResourceCount, 0),
+    scriptEndpointHints: results.reduce((sum, item) => sum + item.scriptEndpointHintCount, 0),
   }));
 }
 
