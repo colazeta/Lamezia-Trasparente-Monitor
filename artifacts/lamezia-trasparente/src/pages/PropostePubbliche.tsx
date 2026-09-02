@@ -34,19 +34,21 @@ import {
   type ProposalGeoArea,
 } from "@/data/proposalGeography";
 import {
+  getAvailablePrimaryPaSubjects,
+  proposalMatchesPrimaryPaSubject,
+  type ProposalPaSubjectCode,
+} from "@/data/proposalPaSemanticProfile";
+import {
   PUBLIC_PROPOSALS,
   PROPOSAL_CHANNEL_LABELS,
   PROPOSAL_CHANNELS,
   PROPOSAL_STATUS_LABELS,
   PROPOSAL_STATUSES,
   filterPublicProposals,
-  getAvailablePaSubjects,
   getProposalPromoters,
   getProposalYears,
   groupProposalsByPromoter,
   groupProposalsByThread,
-  proposalMatchesPaSubject,
-  type PaPublicServiceSubjectCode,
   type ProposalChannel,
   type ProposalStatus,
 } from "@/data/propostePubbliche";
@@ -62,7 +64,7 @@ function sortByLatestUpdate<T extends { lastUpdated: string }>(items: readonly T
 }
 
 export function PropostePubbliche() {
-  const [paSubject, setPaSubject] = useState<SelectFilter<PaPublicServiceSubjectCode>>(ALL);
+  const [paSubject, setPaSubject] = useState<SelectFilter<ProposalPaSubjectCode>>(ALL);
   const [promoter, setPromoter] = useState(ALL);
   const [year, setYear] = useState(ALL);
   const [status, setStatus] = useState<SelectFilter<ProposalStatus>>(ALL);
@@ -73,7 +75,7 @@ export function PropostePubbliche() {
   const [timelineMode, setTimelineMode] = useState<ProposalTimelineMode>("origins");
   const [timelineRange, setTimelineRange] = useState<ProposalTimelineRange | null>(null);
 
-  const paSubjects = useMemo(() => getAvailablePaSubjects(PUBLIC_PROPOSALS), []);
+  const paSubjects = useMemo(() => getAvailablePrimaryPaSubjects(PUBLIC_PROPOSALS), []);
   const promoters = useMemo(() => getProposalPromoters(), []);
   const years = useMemo(() => getProposalYears(), []);
   const geoAreas = useMemo(() => getProposalLocalGeoAreas(), []);
@@ -87,7 +89,9 @@ export function PropostePubbliche() {
     });
 
     if (paSubject !== ALL) {
-      filtered = filtered.filter((proposal) => proposalMatchesPaSubject(proposal, paSubject));
+      filtered = filtered.filter((proposal) =>
+        proposalMatchesPrimaryPaSubject(proposal, paSubject),
+      );
     }
     if (geoMode === "georeferenced") {
       filtered = filtered.filter((proposal) => isProposalGeoreferenced(proposal.id));
@@ -149,7 +153,7 @@ export function PropostePubbliche() {
     <>
       <PageMeta
         title="Proposte civiche"
-        description="Archivio verificabile delle proposte civiche rivolte a Lamezia Terme, organizzate secondo le materie ufficiali dei servizi pubblici, promotore, percorso documentale, tempo e, quando pertinente, riferimento geografico verificabile."
+        description="Archivio verificabile delle proposte civiche rivolte a Lamezia Terme, organizzate per materia, promotore, percorso documentale, tempo e, quando pertinente, riferimento geografico."
         path="/proposte-civiche"
       />
 
@@ -163,13 +167,12 @@ export function PropostePubbliche() {
             Proposte civiche
           </h1>
           <p className="mt-2 max-w-4xl text-sm leading-relaxed text-muted-foreground md:text-base">
-            Un dossier per proposta, esplorabile per tempo, promotore, materia della PA e territorio.
-            La classificazione di base riusa i vocabolari ufficiali di schema.gov.it; le proposte riferite genericamente a tutta Lamezia non ricevono coordinate artificiali.
+            Un dossier per proposta, esplorabile per tempo, promotore, materia e territorio.
           </p>
           <div className="mt-3 flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
             <AlertTriangle className="h-3.5 w-3.5 text-primary" aria-hidden="true" />
             <strong className="text-foreground">Stato documentale, non politico.</strong>
-            <span>Materia PA da vocabolario controllato; estensioni LT solo dove strettamente necessarie.</span>
+            <span>Le proposte riferite all’intera città non ricevono coordinate artificiali.</span>
           </div>
         </header>
 
@@ -252,11 +255,11 @@ export function PropostePubbliche() {
               </select>
             </label>
             <label className="space-y-1 text-xs font-medium">
-              Materia PA
+              Materia
               <select
                 className="w-full rounded-md border border-input bg-background px-2.5 py-1.5 text-xs"
                 value={paSubject}
-                onChange={(event) => setPaSubject(event.target.value as SelectFilter<PaPublicServiceSubjectCode>)}
+                onChange={(event) => setPaSubject(event.target.value as SelectFilter<ProposalPaSubjectCode>)}
               >
                 <option value={ALL}>Tutte le materie</option>
                 {paSubjects.map((subject) => (
@@ -302,8 +305,7 @@ export function PropostePubbliche() {
 
           <p className="mt-2 border-t border-border pt-2 text-xs text-muted-foreground" aria-live="polite">
             <span>{filteredProposals.length} proposte visualizzate su {PUBLIC_PROPOSALS.length}.</span>{" "}
-            <span>{filteredGeoreferenced.length} georeferenziate nei filtri correnti.</span>{" "}
-            <span>Materia PA: vocabolario controllato schema.gov.it.</span>
+            <span>{filteredGeoreferenced.length} georeferenziate nei filtri correnti.</span>
           </p>
         </section>
 
