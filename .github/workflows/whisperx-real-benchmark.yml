@@ -42,12 +42,21 @@ jobs:
         with:
           node-version: 24
 
+      - name: Install media tools
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends ffmpeg
+
       - name: Verify media tools
         shell: bash
         run: |
           set -euo pipefail
-          ffmpeg -version | head -n 1
-          ffprobe -version | head -n 1
+          ffmpeg -version > /tmp/ffmpeg-version.txt
+          ffprobe -version > /tmp/ffprobe-version.txt
+          head -n 1 /tmp/ffmpeg-version.txt
+          head -n 1 /tmp/ffprobe-version.txt
           node --version
 
       - name: Test benchmark minimisation helper
