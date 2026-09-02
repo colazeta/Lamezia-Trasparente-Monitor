@@ -66,6 +66,13 @@ jobs:
               | tee -a .artifacts/anac-operator-audit/source-probe.log || true
             printf '\n' | tee -a .artifacts/anac-operator-audit/source-probe.log
           done
+          echo "=== dettaglio CIG B10F05AA17 ===" | tee -a .artifacts/anac-operator-audit/source-probe.log
+          curl -sS -L --max-time 20 -A "$UA" -D /tmp/cig-headers \
+            "https://dettaglio-cig.anticorruzione.it/cig/B10F05AA17" \
+            -o .artifacts/anac-operator-audit/cig-detail-sample.html || true
+          grep -Ei '^(HTTP/|location:|content-type:|content-length:)' /tmp/cig-headers | tee -a .artifacts/anac-operator-audit/source-probe.log || true
+          head -c 5000 .artifacts/anac-operator-audit/cig-detail-sample.html | tr '\n' ' ' | tee -a .artifacts/anac-operator-audit/source-probe.log || true
+          printf '\n' | tee -a .artifacts/anac-operator-audit/source-probe.log
 
       - name: Sync ANAC operator datasets
         id: sync
