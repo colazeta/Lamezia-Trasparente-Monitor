@@ -107,6 +107,23 @@ describe("Performance evidence-first landing", () => {
     ).toBeInTheDocument();
   });
 
+  it("keeps verified source metadata separate from verified objective records", () => {
+    renderPerformance();
+
+    expect(
+      screen.getByRole("heading", { name: "Le fonti prima degli obiettivi" }),
+    ).toBeInTheDocument();
+    expect(screen.getAllByText("Metadati verificati")).toHaveLength(4);
+    expect(screen.getAllByText("Estrazione pending")).toHaveLength(4);
+    expect(
+      screen.getByText(/fonti pertinenti censite · estrazione pending/i),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(/trattino sopra indica quindi.*non ancora verificato/i),
+    ).toBeInTheDocument();
+    expect(screen.getByText("Obiettivi verificati").parentElement).toHaveTextContent("—");
+  });
+
   it("exposes coverage bars as accessible progress indicators", () => {
     renderPerformance();
 
