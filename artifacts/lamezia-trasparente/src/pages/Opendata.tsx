@@ -18,6 +18,7 @@ import {
   Search,
 } from "lucide-react";
 
+import { GenericDatasetDetail } from "@/components/opendata/GenericDatasetDetail";
 import { OpenDataThemeLibrary } from "@/components/opendata/OpenDataThemeLibrary";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -448,9 +449,7 @@ function DatasetDetailView({
         ) : item.dataset.detailKind === "household-composition-2023" ? (
           <HouseholdCompositionDatasetCard />
         ) : (
-          <div className="rounded-xl border border-dashed border-border bg-muted/20 p-5 text-sm text-muted-foreground">
-            Visualizzazione non ancora disponibile per questo dataset.
-          </div>
+          <GenericDatasetDetail dataset={item.dataset} />
         )}
       </Suspense>
     </section>
