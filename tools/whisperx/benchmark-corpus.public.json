@@ -14,16 +14,49 @@
       "publisher": "Lamezia Termeit",
       "sourceRole": "benchmark-only-public-mirror",
       "canonicalStatus": "not-established",
-      "reviewStatus": "benchmark-clip-selected",
+      "reviewStatus": "local-quality-candidate-ci-acquisition-blocked",
       "benchmarkClip": {
         "startSeconds": 300,
         "durationSeconds": 600,
-        "selectionPurpose": "Bounded ten-minute ASR/alignment benchmark on institutional-session speech without processing the full recording before resource and quality evidence exists."
+        "selectionPurpose": "Local Lamezia vocabulary/quality candidate after the technical processor benchmark succeeds on an official direct recording."
       },
       "benchmarkAcquisition": {
         "tool": "yt-dlp",
         "pinnedVersion": "2026.8.19",
-        "role": "ci-benchmark-only",
+        "role": "attempted-ci-benchmark-only",
+        "processorReceivesUrl": false,
+        "retainedAfterRun": false,
+        "ciStatus": "blocked-by-youtube-bot-challenge",
+        "cookieOrSecretFallbackPermitted": false
+      },
+      "benchmarkOutputPolicy": {
+        "rawMediaRetained": false,
+        "transcriptRetained": false,
+        "metricsOnlyArtifact": true,
+        "speakerIdentityProduced": false
+      },
+      "rawMediaInRepository": false,
+      "transcriptInRepository": false,
+      "selectionReason": "Public full-session candidate with multiple institutional speakers and Lamezia-specific vocabulary; retained for later quality review while the official municipal recording locator is still being resolved.",
+      "productionRule": "Do not use this mirror as the canonical LT recording unless provenance/rights and official-source resolution are separately reviewed. Do not add cookies/secrets merely to make the CI benchmark download this mirror."
+    },
+    {
+      "id": "sondrio-consiglio-2026-04-30-official-control",
+      "title": "Seduta consiglio comunale del 30 aprile 2026 - audio",
+      "sessionDate": "2026-04-30",
+      "mediaUrl": "https://comune.sondrio.it/wp-content/uploads/sites/152/2026/05/30_04_2026_Compresso_tagl.mp3",
+      "publisher": "Comune di Sondrio",
+      "sourceRole": "official-municipal-control",
+      "canonicalStatus": "official-source",
+      "reviewStatus": "selected-for-real-ci-benchmark",
+      "benchmarkClip": {
+        "startSeconds": 300,
+        "durationSeconds": 600,
+        "selectionPurpose": "Direct official municipal council audio used to validate WhisperX ASR/alignment, CPU resource envelope and metrics-only retention without third-party authentication."
+      },
+      "benchmarkAcquisition": {
+        "tool": "curl",
+        "role": "ci-benchmark-only-direct-official-download",
         "processorReceivesUrl": false,
         "retainedAfterRun": false
       },
@@ -35,8 +68,8 @@
       },
       "rawMediaInRepository": false,
       "transcriptInRepository": false,
-      "selectionReason": "Public full-session candidate with multiple institutional speakers; useful for ASR/alignment quality testing while the official municipal recording locator is still being resolved.",
-      "productionRule": "Do not use this mirror as the canonical LT recording unless provenance/rights and official-source resolution are separately reviewed."
+      "selectionReason": "Official municipality-hosted MP3 with real Italian council-session speech and no cookie/authentication dependency; suitable as the technical control benchmark.",
+      "productionRule": "This control benchmark establishes processor behavior only; it does not make Sondrio a Lamezia Trasparente production source."
     }
   ]
 }
