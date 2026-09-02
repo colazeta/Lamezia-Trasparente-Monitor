@@ -5,8 +5,10 @@ import type { PublicProposal } from "./propostePubblicheCore";
  *
  * Primary classification reuses the official controlled vocabulary
  * "Materie dei servizi pubblici" published in the national semantic-asset
- * catalogue (schema.gov.it / dati-semantic-assets). LT-specific concepts are
- * allowed only when the national vocabulary does not cover the semantic need.
+ * catalogue (schema.gov.it / dati-semantic-assets). When that 15-item scheme
+ * has a genuine domain gap, the profile falls back to another official concept
+ * already linked from the Italian semantic assets. No local thematic concept is
+ * currently required.
  */
 export const PA_PUBLIC_SERVICE_SUBJECT_SCHEME = {
   label: "Vocabolario Controllato sulle Materie dei Servizi Pubblici",
@@ -15,6 +17,15 @@ export const PA_PUBLIC_SERVICE_SUBJECT_SCHEME = {
     "https://schema.gov.it/semantic-assets/details/?uri=https%3A%2F%2Fw3id.org%2Fitalia%2Fcontrolled-vocabulary%2Fclassifications-for-public-services%2Fpublic-services-subject-matters",
   ontologyUri: "https://w3id.org/italia/onto/CPSV",
 } as const;
+
+export const EU_DATA_THEME_SCHEME = {
+  label: "Data Theme",
+  uri: "http://publications.europa.eu/resource/authority/data-theme",
+  authority: "Publications Office of the European Union",
+} as const;
+
+export const PA_TRANSPARENCY_SUBJECT_SCHEME_URI =
+  "https://w3id.org/italia/controlled-vocabulary/classifications-for-transparency/transparency-subject" as const;
 
 export const PA_PUBLIC_SERVICE_SUBJECTS = {
   "1": { code: "1", label: "Educazione e formazione" },
@@ -34,34 +45,36 @@ export const PA_PUBLIC_SERVICE_SUBJECTS = {
   "15": { code: "15", label: "Agricoltura e pesca" },
 } as const;
 
-export type PaPublicServiceSubjectCode = keyof typeof PA_PUBLIC_SERVICE_SUBJECTS;
-
-export type PaSemanticConcept = {
-  code: PaPublicServiceSubjectCode;
-  label: string;
-  uri: string;
-  schemeUri: typeof PA_PUBLIC_SERVICE_SUBJECT_SCHEME.uri;
-  authority: "schema.gov.it / AgID";
-};
-
-export const LT_SEMANTIC_EXTENSIONS = {
-  civic_governance_participation: {
-    id: "civic_governance_participation",
-    label: "Governo aperto, trasparenza e partecipazione civica",
-    definition:
-      "Estensione locale usata esclusivamente per proposte su accessibilità dell'attività consiliare e strumenti di partecipazione civica che non ricadono in modo corretto nelle 15 materie nazionali dei servizi pubblici.",
-    relatedOfficialUris: [
-      "http://publications.europa.eu/resource/authority/data-theme/GOVE",
-      "https://w3id.org/italia/controlled-vocabulary/classifications-for-transparency/transparency-subject",
-    ],
+export const OFFICIAL_FALLBACK_DATA_THEMES = {
+  GOVE: {
+    code: "GOVE",
+    label: "Governo e settore pubblico",
+    uri: "http://publications.europa.eu/resource/authority/data-theme/GOVE",
+    schemeUri: EU_DATA_THEME_SCHEME.uri,
+    authority: EU_DATA_THEME_SCHEME.authority,
+    relatedOfficialUris: [PA_TRANSPARENCY_SUBJECT_SCHEME_URI],
   },
 } as const;
 
-export type LtSemanticExtensionId = keyof typeof LT_SEMANTIC_EXTENSIONS;
+export type PaPublicServiceSubjectCode = keyof typeof PA_PUBLIC_SERVICE_SUBJECTS;
+export type OfficialFallbackDataThemeCode = keyof typeof OFFICIAL_FALLBACK_DATA_THEMES;
+export type ProposalPaSubjectCode =
+  | PaPublicServiceSubjectCode
+  | OfficialFallbackDataThemeCode;
+
+export type PaSemanticConcept = {
+  code: ProposalPaSubjectCode;
+  label: string;
+  uri: string;
+  schemeUri: string;
+  authority: string;
+  source: "schema.gov.it / AgID" | "EU Data Theme";
+  relatedOfficialUris?: readonly string[];
+};
 
 export type ProposalPaSemanticProfile = {
   officialSubjectCodes: readonly PaPublicServiceSubjectCode[];
-  localExtensions?: readonly LtSemanticExtensionId[];
+  officialFallbackDataThemes?: readonly OfficialFallbackDataThemeCode[];
   mappingNote?: string;
 };
 
@@ -116,20 +129,33 @@ const THEME_TO_PA_PROFILE: Record<string, ProposalPaSemanticProfile> = {
   },
   "Trasparenza e partecipazione democratica": {
     officialSubjectCodes: [],
-    localExtensions: ["civic_governance_participation"],
+    officialFallbackDataThemes: ["GOVE"],
     mappingNote:
-      "Le 15 materie nazionali dei servizi pubblici non contengono una voce corretta per partecipazione civica e pubblicità dell'attività consiliare. L'estensione LT è collegata al Data Theme GOVE e al vocabolario nazionale della trasparenza.",
+      "Le 15 materie nazionali dei servizi pubblici non contengono una voce specifica per pubblicità dell'attività istituzionale e partecipazione civica. Il profilo usa quindi il concetto ufficiale EU Data Theme GOVE — Governo e settore pubblico, già presente nei mapping delle risorse semantiche italiane — e mantiene il vocabolario nazionale della trasparenza come risorsa ufficiale correlata.",
   },
 };
 
-function officialConcept(code: PaPublicServiceSubjectCode): PaSemanticConcept {
+function officialPublicServiceConcept(
+  code: PaPublicServiceSubjectCode,
+): PaSemanticConcept {
   const concept = PA_PUBLIC_SERVICE_SUBJECTS[code];
   return {
     code,
     label: concept.label,
     uri: `${PA_PUBLIC_SERVICE_SUBJECT_SCHEME.uri}/${code}`,
     schemeUri: PA_PUBLIC_SERVICE_SUBJECT_SCHEME.uri,
-    authority: "schema.gov.it / AgID",
+    authority: "Agenzia per l'Italia Digitale",
+    source: "schema.gov.it / AgID",
+  };
+}
+
+function officialFallbackConcept(
+  code: OfficialFallbackDataThemeCode,
+): PaSemanticConcept {
+  const concept = OFFICIAL_FALLBACK_DATA_THEMES[code];
+  return {
+    ...concept,
+    source: "EU Data Theme",
   };
 }
 
@@ -139,7 +165,7 @@ export function getProposalPaSemanticProfile(
   const profile = THEME_TO_PA_PROFILE[proposal.theme];
   if (!profile) {
     throw new Error(
-      `Missing schema.gov.it semantic mapping for proposal ${proposal.id} (theme: ${proposal.theme})`,
+      `Missing official semantic mapping for proposal ${proposal.id} (theme: ${proposal.theme})`,
     );
   }
   return profile;
@@ -148,33 +174,37 @@ export function getProposalPaSemanticProfile(
 export function getProposalOfficialPaSubjects(
   proposal: Pick<PublicProposal, "id" | "theme">,
 ): readonly PaSemanticConcept[] {
-  return getProposalPaSemanticProfile(proposal).officialSubjectCodes.map(officialConcept);
-}
-
-export function getProposalLocalSemanticExtensions(
-  proposal: Pick<PublicProposal, "id" | "theme">,
-) {
-  const ids = getProposalPaSemanticProfile(proposal).localExtensions ?? [];
-  return ids.map((id) => LT_SEMANTIC_EXTENSIONS[id]);
+  const profile = getProposalPaSemanticProfile(proposal);
+  return [
+    ...profile.officialSubjectCodes.map(officialPublicServiceConcept),
+    ...(profile.officialFallbackDataThemes ?? []).map(officialFallbackConcept),
+  ];
 }
 
 export function getAvailablePaSubjects(proposals: readonly PublicProposal[]) {
-  const codes = new Set<PaPublicServiceSubjectCode>();
+  const conceptMap = new Map<string, PaSemanticConcept>();
   for (const proposal of proposals) {
-    for (const code of getProposalPaSemanticProfile(proposal).officialSubjectCodes) {
-      codes.add(code);
+    for (const concept of getProposalOfficialPaSubjects(proposal)) {
+      conceptMap.set(concept.uri, concept);
     }
   }
-  return [...codes]
-    .map(officialConcept)
-    .sort((a, b) => Number(a.code) - Number(b.code));
+  return [...conceptMap.values()].sort((a, b) => {
+    const aNumber = Number(a.code);
+    const bNumber = Number(b.code);
+    if (Number.isFinite(aNumber) && Number.isFinite(bNumber)) return aNumber - bNumber;
+    if (Number.isFinite(aNumber)) return -1;
+    if (Number.isFinite(bNumber)) return 1;
+    return a.label.localeCompare(b.label, "it");
+  });
 }
 
 export function proposalMatchesPaSubject(
   proposal: Pick<PublicProposal, "id" | "theme">,
-  code: PaPublicServiceSubjectCode,
+  code: ProposalPaSubjectCode,
 ) {
-  return getProposalPaSemanticProfile(proposal).officialSubjectCodes.includes(code);
+  return getProposalOfficialPaSubjects(proposal).some(
+    (concept) => concept.code === code,
+  );
 }
 
 export function getMappedProposalThemes() {
