@@ -1,26 +1,36 @@
-# Contracts ingestion skeleton
+# Contracts ingestion
 
-This directory contains the first fixture-only normalisation layer for ANAC/BDNCP-style CIG open-data records.
+This directory contains the source acquisition, normalisation and QA layers used to enrich the civic contract dossiers with public procurement data.
 
-Current scope:
+Current source-backed layers include:
 
-- reads local JSON fixtures only;
-- normalises formally valid CIG values through the existing procurement identifier helper;
-- maps records into `ContractDossier`-compatible objects;
-- attaches `ContractIngestionMetadata` separately from public source labels;
-- marks ANAC fixture evidence as `fonte ufficiale ingerita` only for data actually parsed from the fixture;
-- keeps execution and valutazione/collaudo/esito missing unless a future explicit execution/evaluation source exists.
-- runs metadata-only source discovery reports with `node scripts/contracts/discoverOfficialAnacSource.ts <source-id>`, without writing production records.
-- runs a gated fixture-only ingestion dry-run with `tsx scripts/contracts/runAnacCigIngestionDryRun.ts anac-open-data-cig-annual`, writing only an interim report under `data/interim/contracts/ingestion/`.
+- ANAC/BDNCP CIG acquisition for the monitored contract perimeter;
+- ANAC `Aggiudicazioni` enrichment for award outcome fields and reported tenderer counts;
+- OCDS Cardinal readiness checks that remain gated until their minimum source fields are available;
+- ANAC `Partecipanti` and `Aggiudicatari` operator-identity ingestion, kept as separate datasets and relations;
+- fixture-based and dry-run utilities retained for parser and source-discovery validation.
 
-Out of scope:
+The operator sync is available through:
+
+```bash
+pnpm run contracts:anac-operators-sync
+```
+
+It discovers the official ANAC dataset resources through CKAN, falls back only to the canonical ANAC HTTPS archive path, streams the CSV, keeps only tracked CIGs and writes separate snapshots under:
+
+- `data/public/contracts/anac-participants/latest.json`
+- `data/public/contracts/anac-awardees/latest.json`
+
+Operator identity rules are intentionally conservative: a valid source-backed fiscal identifier can form an `operatorKey`; a company name alone cannot. Participant and awardee roles are never merged, and group membership/role information is retained when published by ANAC.
+
+See `docs/contracts/anac-operator-identity.md` for the detailed contract, provenance and limitations.
+
+Out of scope for these scripts:
 
 - no scraping of dynamic ANAC pages;
-- no live download of BDNCP, PVL, OpenCUP or MOP datasets;
-- no production import into the application database;
-- no claim that CIG-only data complete the public-works lifecycle;
-- no operator, amount, award, execution or collaudo inference when source fields are absent.
-- no public exposure of source discovery output as ingested contract records.
-- no promotion from dry-run to production ingestion while ANAC source discovery remains manual-verification-only.
+- no inference of absent operator identifiers, bids, bid prices or bid statuses;
+- no automatic equivalence between the local `Contract.supplier` field and an ANAC awardee;
+- no public risk score derived from operator recurrence;
+- no claim that CIG-level open data complete the procurement or public-works lifecycle.
 
-Future PRs should add documented dataset discovery/download, schema-specific parsers, persistence, freshness metadata and human-review gates before exposing ingested records in public production pages.
+New source integrations should preserve source provenance, fail closed on incompatible schemas, keep missing values explicit and avoid presenting screening signals or descriptive recurrence as evidence of wrongdoing.
