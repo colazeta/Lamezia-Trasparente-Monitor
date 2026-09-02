@@ -5,7 +5,6 @@ import { mkdir, rm, cp } from "node:fs/promises";
 import { build as esbuild } from "esbuild";
 import esbuildPluginPino from "esbuild-plugin-pino";
 
-// Plugins (e.g. "esbuild-plugin-pino") may use require() to resolve dependencies.
 globalThis.require = createRequire(import.meta.url);
 
 const artifactDir = path.dirname(fileURLToPath(import.meta.url));
@@ -18,6 +17,10 @@ async function buildAll() {
   await esbuild({
     entryPoints: {
       index: path.resolve(artifactDir, "src/index.ts"),
+      changeSentinelWorker: path.resolve(
+        artifactDir,
+        "src/changeSentinelWorker.ts",
+      ),
       doclingExecutor: path.resolve(artifactDir, "src/doclingExecutor.ts"),
       doclingPreflight: path.resolve(artifactDir, "src/doclingPreflight.ts"),
       doclingSmoke: path.resolve(artifactDir, "src/doclingSmoke.ts"),
@@ -120,18 +123,12 @@ globalThis.__dirname = __bannerPath.dirname(globalThis.__filename);
     },
   });
 
-  // runMigrations() resolves migrations relative to the bundled file's
-  // __dirname, so scheduled deployments need the same migration copy as the API
-  // server bundle.
   await cp(
     path.resolve(workspaceRoot, "lib/db/migrations"),
     path.resolve(distDir, "migrations"),
     { recursive: true },
   );
 
-  // Ship the processor contract next to the worker bundle. Runtime activation
-  // still requires a compatible CPU-only Python environment and prefetched
-  // Docling model artifacts; build never installs or downloads Python assets.
   const doclingDistDir = path.resolve(distDir, "docling");
   await mkdir(doclingDistDir, { recursive: true });
   await Promise.all([
