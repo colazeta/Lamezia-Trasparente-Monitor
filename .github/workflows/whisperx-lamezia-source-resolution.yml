@@ -56,9 +56,11 @@ jobs:
           test -s tmp/whisperx-source-resolution/resolution.json
           jq -e '.fetchPolicy.allowlistedOnly == true' tmp/whisperx-source-resolution/resolution.json >/dev/null
           jq -e '.fetchPolicy.followsDiscoveredResources == false' tmp/whisperx-source-resolution/resolution.json >/dev/null
+          jq -e '.fetchPolicy.crossOriginRedirectFetchPermitted == false' tmp/whisperx-source-resolution/resolution.json >/dev/null
+          jq -e '.fetchPolicy.maxRedirects == 3' tmp/whisperx-source-resolution/resolution.json >/dev/null
           jq -e '.fetchPolicy.secretsUsed == false' tmp/whisperx-source-resolution/resolution.json >/dev/null
           jq -e '[.results[] | select(.ok == true)] | length >= 1' tmp/whisperx-source-resolution/resolution.json >/dev/null
-          jq '{session, fetchPolicy, results: [.results[] | {id, role, ok, status, contentType, bodySha256, bodyBytes, markers, discoveredResourceCount, discoveredResources, error}]}' tmp/whisperx-source-resolution/resolution.json
+          jq '{session, fetchPolicy, results: [.results[] | {id, role, ok, status, contentType, bodySha256, bodyBytes, markers, discoveredResourceCount, discoveredResources, scriptEndpointHintCount, scriptEndpointHints, error}]}' tmp/whisperx-source-resolution/resolution.json
 
       - name: Upload locator diagnostics only
         uses: actions/upload-artifact@v4
