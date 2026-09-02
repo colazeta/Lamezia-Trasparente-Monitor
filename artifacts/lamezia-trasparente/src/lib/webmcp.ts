@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useLocation } from "wouter";
 
 type ToolInput = Record<string, unknown>;
@@ -22,9 +22,17 @@ export type WebMcpModelContext = {
   ) => Promise<void> | void;
 };
 
+export type WebMcpActivity = {
+  tool: string;
+  label: string;
+  uiPath: string;
+  resultCount: number | null;
+};
+
 type ToolDependencies = {
   navigate: (path: string) => void;
   fetchImpl?: typeof fetch;
+  onActivity?: (activity: WebMcpActivity) => void;
 };
 
 const READ_ONLY_ANNOTATIONS = {
@@ -41,6 +49,26 @@ function asString(value: unknown) {
 
 function asOptionalNumber(value: unknown) {
   return typeof value === "number" && Number.isFinite(value) ? value : null;
+}
+
+function asRecord(value: unknown): Record<string, unknown> | null {
+  return value && typeof value === "object" && !Array.isArray(value)
+    ? (value as Record<string, unknown>)
+    : null;
+}
+
+function resultCountFrom(result: unknown) {
+  const record = asRecord(result);
+  if (!record) return null;
+
+  const pagination = asRecord(record.pagination);
+  if (pagination && typeof pagination.total === "number") {
+    return pagination.total;
+  }
+
+  if (Array.isArray(record.data)) return record.data.length;
+  if (Array.isArray(record.projects)) return record.projects.length;
+  return null;
 }
 
 function pageSizeFrom(value: unknown) {
@@ -100,9 +128,21 @@ function resultPayload(
   });
 }
 
+function reportActivity(
+  onActivity: ToolDependencies["onActivity"],
+  activity: Omit<WebMcpActivity, "resultCount">,
+  result: unknown,
+) {
+  onActivity?.({
+    ...activity,
+    resultCount: resultCountFrom(result),
+  });
+}
+
 export function createWebMcpTools({
   navigate,
   fetchImpl = fetch,
+  onActivity,
 }: ToolDependencies): WebMcpTool[] {
   return [
     {
@@ -143,6 +183,11 @@ export function createWebMcpTools({
           fetchImpl,
         );
 
+        reportActivity(
+          onActivity,
+          { tool: "search_civic_documents", label: "Ricerca atti", uiPath },
+          result,
+        );
         navigate(uiPath);
         return resultPayload("search_civic_documents", uiPath, apiPath, result);
       },
@@ -203,6 +248,11 @@ export function createWebMcpTools({
           fetchImpl,
         );
 
+        reportActivity(
+          onActivity,
+          { tool: "filter_public_contracts", label: "Filtro contratti", uiPath },
+          result,
+        );
         navigate(uiPath);
         return resultPayload("filter_public_contracts", uiPath, apiPath, result);
       },
@@ -245,6 +295,11 @@ export function createWebMcpTools({
           fetchImpl,
         );
 
+        reportActivity(
+          onActivity,
+          { tool: "explore_pnrr_projects", label: "Esplorazione PNRR", uiPath },
+          result,
+        );
         navigate(uiPath);
         return resultPayload("explore_pnrr_projects", uiPath, apiPath, result);
       },
@@ -283,6 +338,12 @@ export function createWebMcpTools({
           const apiPath = `/api/public/v1/documents/${encoded}`;
           const result = await fetchPublicJson(apiPath, new URLSearchParams(), fetchImpl);
           const uiPath = `/albo/${encoded}`;
+          onActivity?.({
+            tool: "inspect_civic_record",
+            label: "Scheda atto",
+            uiPath,
+            resultCount: 1,
+          });
           navigate(uiPath);
           return resultPayload("inspect_civic_record", uiPath, apiPath, result);
         }
@@ -292,6 +353,12 @@ export function createWebMcpTools({
           const apiPath = `/api/public/v1/contracts/${encoded}`;
           const result = await fetchPublicJson(apiPath, new URLSearchParams(), fetchImpl);
           const uiPath = `/contratti/${encoded}`;
+          onActivity?.({
+            tool: "inspect_civic_record",
+            label: "Scheda contratto",
+            uiPath,
+            resultCount: 1,
+          });
           navigate(uiPath);
           return resultPayload("inspect_civic_record", uiPath, apiPath, result);
         }
@@ -309,6 +376,12 @@ export function createWebMcpTools({
           fetchImpl,
         );
         const uiPath = `/pnrr/${encodeURIComponent(cup)}`;
+        onActivity?.({
+          tool: "inspect_civic_record",
+          label: "Scheda progetto PNRR",
+          uiPath,
+          resultCount: 1,
+        });
         navigate(uiPath);
         return resultPayload("inspect_civic_record", uiPath, apiPath, result);
       },
@@ -341,22 +414,60 @@ function getModelContext() {
 
 export function WebMcpBridge() {
   const [, navigate] = useLocation();
+  const [activity, setActivity] = useState<WebMcpActivity | null>(null);
 
   useEffect(() => {
     const modelContext = getModelContext();
     if (!modelContext) return undefined;
 
     const controller = new AbortController();
-    void registerWebMcpTools(modelContext, { navigate }, controller.signal).catch(
-      (error) => {
-        if (!controller.signal.aborted) {
-          console.warn("WebMCP tool registration failed", error);
-        }
-      },
-    );
+    void registerWebMcpTools(
+      modelContext,
+      { navigate, onActivity: setActivity },
+      controller.signal,
+    ).catch((error) => {
+      if (!controller.signal.aborted) {
+        console.warn("WebMCP tool registration failed", error);
+      }
+    });
 
     return () => controller.abort();
   }, [navigate]);
 
-  return null;
+  if (!activity) return null;
+
+  return (
+    <aside
+      className="fixed bottom-4 left-4 right-4 z-[80] mx-auto max-w-2xl rounded-xl border border-border bg-card/95 p-4 text-card-foreground shadow-lg backdrop-blur sm:left-auto sm:w-[30rem]"
+      aria-live="polite"
+      aria-label="Attività WebMCP"
+    >
+      <div className="flex items-start justify-between gap-4">
+        <div className="min-w-0">
+          <p className="text-xs font-bold uppercase tracking-wide text-primary">
+            Assistente WebMCP · sola lettura
+          </p>
+          <p className="mt-1 text-sm font-semibold">{activity.label}</p>
+          <p className="mt-1 break-all text-xs leading-5 text-muted-foreground">
+            Vista aperta: {activity.uiPath}
+            {activity.resultCount !== null
+              ? ` · ${activity.resultCount} record disponibili`
+              : ""}
+          </p>
+          <p className="mt-1 text-xs leading-5 text-muted-foreground">
+            Verifica sempre date, fonte e valore legale dei documenti nella
+            scheda pubblica.
+          </p>
+        </div>
+        <button
+          type="button"
+          onClick={() => setActivity(null)}
+          className="shrink-0 rounded-md border border-border px-2 py-1 text-xs font-semibold text-muted-foreground hover:text-foreground"
+          aria-label="Chiudi avviso WebMCP"
+        >
+          Chiudi
+        </button>
+      </div>
+    </aside>
+  );
 }
