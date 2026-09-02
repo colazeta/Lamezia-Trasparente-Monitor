@@ -70,6 +70,7 @@ export const INSTITUTIONAL_PROPOSAL_EVENT_TYPES = [
 
 export const PROPOSAL_EVIDENCE_ROLES = [
   "origine",
+  "petizione",
   "formalizzazione",
   "calendarizzazione",
   "discussione",
@@ -83,6 +84,7 @@ export type ProposalEvidenceRole = (typeof PROPOSAL_EVIDENCE_ROLES)[number];
 
 export const PROPOSAL_EVIDENCE_ROLE_LABELS: Record<ProposalEvidenceRole, string> = {
   origine: "Fonte originaria",
+  petizione: "Petizione / raccolta firme",
   formalizzazione: "Formalizzazione",
   calendarizzazione: "Calendarizzazione",
   discussione: "Discussione",
@@ -129,7 +131,6 @@ const eventProgress: Partial<
 > = {
   emersione: "emersa",
   deposito: "formalizzata",
-  petizione: "formalizzata",
   calendarizzazione: "calendarizzata",
   discussione: "discussa",
   risposta_istituzionale: "risposta_ricevuta",
@@ -174,8 +175,9 @@ function evidenceRoleForEventType(type: ProposalEventType): ProposalEvidenceRole
   switch (type) {
     case "emersione":
       return "origine";
-    case "deposito":
     case "petizione":
+      return "petizione";
+    case "deposito":
       return "formalizzazione";
     case "calendarizzazione":
       return "calendarizzazione";
