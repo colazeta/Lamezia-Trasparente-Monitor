@@ -27,6 +27,7 @@ mkdir -p "$ARTIFACTS_DIR"
 from importlib.metadata import PackageNotFoundError, version
 
 EXPECTED_DOCLING = "2.124.0"
+EXPECTED_PYPDF = "6.16.2"
 FORBIDDEN_PREFIXES = (
     "nvidia-",
     "cuda-",
@@ -34,12 +35,17 @@ FORBIDDEN_PREFIXES = (
 
 try:
     installed_docling = version("docling")
+    installed_pypdf = version("pypdf")
 except PackageNotFoundError as exc:
-    raise SystemExit("Docling was not installed") from exc
+    raise SystemExit("Pinned Docling worker dependency was not installed") from exc
 
 if installed_docling != EXPECTED_DOCLING:
     raise SystemExit(
         f"Docling version mismatch: expected {EXPECTED_DOCLING}, got {installed_docling}"
+    )
+if installed_pypdf != EXPECTED_PYPDF:
+    raise SystemExit(
+        f"pypdf version mismatch: expected {EXPECTED_PYPDF}, got {installed_pypdf}"
     )
 
 import importlib.metadata as metadata
@@ -60,7 +66,10 @@ import torch
 if torch.version.cuda is not None:
     raise SystemExit(f"CPU-only PyTorch expected, found CUDA {torch.version.cuda}")
 
-print(f"Docling CPU dependencies ready: docling={installed_docling}, torch={torch.__version__}")
+print(
+    f"Docling CPU dependencies ready: docling={installed_docling}, "
+    f"pypdf={installed_pypdf}, torch={torch.__version__}"
+)
 PY
 
 if ! command -v docling-tools >/dev/null 2>&1; then
