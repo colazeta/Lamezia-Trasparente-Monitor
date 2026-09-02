@@ -20,7 +20,7 @@ def main() -> int:
                 "words": [
                     {"word": "Consiglio", "start": 0.1, "end": 0.5, "score": 0.9},
                     {"word": "comunale", "start": 0.6, "end": 1.0, "score": 0.8},
-                    {"word": "Lamezia", "start": 1.1, "end": 1.5, "score": 0.7},
+                    {"word": "Sondrio", "start": 1.1, "end": 1.5, "score": 0.7},
                 ],
             }
         ],
@@ -37,15 +37,20 @@ def main() -> int:
         transcript,
         manifest,
         benchmark_id="fixture",
-        mirror_video_id="fixture-video",
+        source_role="official-municipal-control",
+        canonical_status="official-source",
+        source_provider="comune-sondrio",
+        source_id="fixture-audio",
         clip_start_seconds=300,
         clip_requested_seconds=600,
     )
+    assert metrics["source"] == {"provider": "comune-sondrio", "id": "fixture-audio"}
     assert metrics["result"]["alignmentCoverage"] == 1.0
     assert metrics["result"]["reviewedTermHits"] == {
         "consiglio": True,
         "comunale": True,
-        "lamezia": True,
+        "lamezia": False,
+        "sondrio": True,
     }
     assert metrics["privacy"]["transcriptRetained"] is False
     assert metrics["privacy"]["speakerIdentityProduced"] is False
