@@ -2,72 +2,69 @@
 
 ## Principio
 
-Il soggetto a cui una proposta è rivolta non coincide automaticamente con l'ente che possiede la competenza giuridica o amministrativa necessaria ad attuarla.
+Il destinatario di una proposta non coincide automaticamente con l'ente che possiede la competenza necessaria ad attuarla.
 
 Lamezia Trasparente mantiene quindi due dimensioni distinte:
 
-- **destinatario documentato**: chi viene indicato nella fonte o nel record di acquisizione come destinatario della proposta;
+- **destinatario documentato**: chi è indicato nella fonte o nel record di acquisizione;
 - **competenza sostanziale**: ente o enti la cui competenza per la misura concreta è stata verificata separatamente.
-
-La prima dimensione è pubblicabile nella vista cittadino. La seconda resta nel backend/audit finché non è sostenuta da una base verificabile.
 
 ## Vista cittadino
 
-Nel dossier viene mostrata una sola informazione semplice:
+Nel dossier viene mostrata soltanto la voce **A chi è rivolta**. Il valore deriva da `institutionalRecipient` con una normalizzazione puramente di presentazione. Il testo sorgente integrale resta conservato per audit.
 
-**A chi è rivolta**
-
-Il valore deriva da `institutionalRecipient`, con una normalizzazione puramente di presentazione che può rimuovere il dettaglio di uffici o ruoli interni dopo un trattino lungo. Il testo sorgente integrale resta conservato per audit.
-
-Non vengono aggiunti badge, filtri o classificazioni di competenza nella vista ordinaria.
+Non vengono aggiunti filtri o badge di competenza nella vista ordinaria.
 
 ## Backend
 
-`proposalInstitutionalCompetence.ts` mantiene:
+`proposalInstitutionalCompetence.ts` mantiene destinatario sorgente, destinatario pubblico canonico, stato della verifica, eventuale autorità primaria, eventuali enti coinvolti, fonti e nota metodologica.
 
-- destinatario sorgente;
-- destinatario pubblico canonico;
-- stato della verifica di competenza;
-- eventuale ente competente primario;
-- eventuali enti coinvolti;
-- fonte e nota della valutazione.
+Gli stati sono:
 
-Gli stati della valutazione sono:
+- `not_assessed`: nessuna attribuzione viene inferita;
+- `partially_verified`: la proposta attraversa più leve o l'attribuzione è verificata solo per alcune componenti;
+- `verified`: la misura censita ha un'autorità sostanziale sufficientemente chiara e documentata.
 
-- `not_assessed`;
-- `partially_verified`;
-- `verified`.
+`not_assessed` è uno stato legittimo e non deve essere eliminato per semplice completezza del dataset.
 
 ## Regola anti-inferenza
 
-`institutionalRecipient` non può essere copiato automaticamente in `primaryAuthority`.
+`institutionalRecipient` non può essere copiato automaticamente in `primaryAuthority`. Materia, tema, localizzazione, promotore, canale o tipo di atto non sono da soli prova della competenza.
 
-Allo stesso modo, materia PA, tema, localizzazione, promotore, tipo di atto e risposta istituzionale non sono da soli sufficienti a dimostrare la competenza.
+Un assessment può essere aggiunto soltanto quando una fonte ufficiale, un atto amministrativo, una norma o altra evidenza istituzionale affidabile sostiene l'attribuzione per la misura concreta.
 
-Un assessment può essere introdotto soltanto quando una fonte ufficiale, un atto amministrativo, una norma o altra evidenza istituzionale affidabile consente di sostenere l'attribuzione per la misura concreta.
+## Prima popolazione selettiva
 
-## Stato iniziale
+Il registry contiene assessment solo per casi ad alto valore interpretativo e con fonti istituzionali adeguate:
 
-Il registry `PROPOSAL_COMPETENCE_ASSESSMENTS` è intenzionalmente vuoto al momento dell'introduzione del layer.
+- emodinamica H24;
+- organici e continuità chirurgica del Giovanni Paolo II;
+- posticipo generale dell'apertura scolastica;
+- orario scolastico ridotto per il caldo;
+- aeroporto e intermodalità;
+- Piazza Italia e sicurezza urbana;
+- asili nido comunali;
+- Progetti di Vita.
 
-Questo non significa che le proposte siano prive di destinatario: tutte continuano ad avere la rappresentazione pubblica del destinatario documentato. Significa soltanto che il dataset non trasforma ancora tali destinatari in affermazioni sulla competenza sostanziale senza una verifica dedicata.
+Le fonti comprendono Regione Calabria, ASP Catanzaro, Comune di Lamezia Terme, Prefettura di Catanzaro e SACAL. Ogni autorità conserva nel dato il proprio riferimento verificabile.
 
-## Scouting futuro
+Le altre proposte restano `not_assessed` finché non emerge una ragione concreta e documentata per ricostruirne la competenza.
 
-Per ogni nuova proposta o revisione di una proposta esistente:
+## Scouting
 
-1. acquisire il destinatario dichiarato dalla fonte;
+Per ogni nuova proposta:
+
+1. acquisire il destinatario dichiarato;
 2. normalizzarlo soltanto per la presentazione pubblica;
 3. non inferire la competenza;
-4. cercare una base ufficiale quando la competenza è rilevante per interpretare il seguito della proposta;
-5. registrare l'assessment solo quando verificabile;
-6. distinguere ente competente da enti coinvolti;
-7. conservare la fonte e la nota di verifica.
+4. cercare una base ufficiale quando la competenza è rilevante;
+5. registrare l'assessment solo quando sostenuto;
+6. distinguere autorità primaria da enti coinvolti;
+7. conservare fonte e nota di verifica;
+8. mantenere `not_assessed` quando la ricostruzione non è sufficientemente solida.
 
-## Relazione con gli altri layer
-
-La catena resta:
+## Catena dati
 
 `fonte → record di acquisizione → standard canonico → materia PA → destinatario → competenza verificata (se disponibile) → geografia → percorso istituzionale → vista cittadino`.
 
-La complessità dei layer di competenza, semantica e percorso non deve essere manifestata nella UI ordinaria se non produce informazione utile al cittadino.
+La complessità del backend non deve essere manifestata nella UI ordinaria se non produce informazione utile al cittadino.
