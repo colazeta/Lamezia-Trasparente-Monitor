@@ -21,7 +21,7 @@ import type { DoclingProcessorRequest } from "../../api-server/src/lib/doclingPr
 const MODULE_DIR = dirname(fileURLToPath(import.meta.url));
 const DEFAULT_PROCESSOR_SCRIPT = resolve(
   MODULE_DIR,
-  "../../../tools/docling/processor_contract.py",
+  "docling/processor_contract.py",
 );
 const DEFAULT_PYTHON_BIN = "python3";
 const MAX_RESULT_BYTES = 1024 * 1024;
@@ -131,6 +131,8 @@ async function readRequestedArtifacts(
  *
  * Civic URLs, object-storage locators and document content are never placed on
  * argv or emitted to stdio. The HTTP API entrypoint does not import this module.
+ * The default processor script is bundled adjacent to this worker artifact;
+ * callers may still provide an explicit processor path for controlled tests.
  */
 export function createWorkerDoclingExecutor(
   config: WorkerDoclingExecutorConfig = {},
