@@ -11,6 +11,7 @@ export const CANONICAL_URL =
 export const CHECK_INTERVAL_MINUTES = 15;
 
 const MIN_SECRET_CHARS = 32;
+const MAX_DIAGNOSTIC_CHARS = 400;
 
 function requiredEnv(name) {
   const value = process.env[name]?.trim();
@@ -31,6 +32,16 @@ function normaliseBaseUrl(value) {
 
 function isLoopback(hostname) {
   return hostname === "127.0.0.1" || hostname === "localhost" || hostname === "::1";
+}
+
+function sanitiseDiagnostic(value, secrets = []) {
+  let text = String(value ?? "").replace(/[\r\n\t]+/gu, " ");
+  for (const secret of secrets) {
+    if (!secret) continue;
+    text = text.split(secret).join("[redacted]");
+    text = text.split(encodeURIComponent(secret)).join("[redacted]");
+  }
+  return text.slice(0, MAX_DIAGNOSTIC_CHARS);
 }
 
 export function buildNotificationBody() {
@@ -150,7 +161,7 @@ function assertProvisionedWatch(value, desired) {
   }
 }
 
-async function sendTestNotification(baseUrl, uuid, desired) {
+async function sendTestNotification(baseUrl, uuid, desired, webhookToken) {
   const form = new URLSearchParams();
   form.set("notification_urls", desired.notification_urls[0]);
   form.set("notification_title", desired.notification_title);
@@ -166,7 +177,13 @@ async function sendTestNotification(baseUrl, uuid, desired) {
   });
   const text = await response.text();
   if (!response.ok || !text.includes("OK - Sent test notifications")) {
-    throw new Error(`changedetection test notification failed (${response.status})`);
+    const diagnostic = sanitiseDiagnostic(text, [
+      webhookToken,
+      desired.notification_urls[0],
+    ]);
+    throw new Error(
+      `changedetection test notification failed (${response.status}): ${diagnostic || "no diagnostic"}`,
+    );
   }
 }
 
@@ -212,7 +229,7 @@ export async function provisionWatch(config) {
   assertProvisionedWatch(verified, desired);
 
   if (config.sendTest === true) {
-    await sendTestNotification(baseUrl, uuid, desired);
+    await sendTestNotification(baseUrl, uuid, desired, config.webhookToken);
   }
 
   return {
@@ -228,22 +245,28 @@ export async function provisionWatch(config) {
 
 async function main() {
   const args = new Set(process.argv.slice(2));
-  const result = await provisionWatch({
-    baseUrl: requiredEnv("CHANGEDETECTION_BASE_URL"),
-    apiKey: requiredEnv("CHANGEDETECTION_API_KEY"),
-    receiverUrl: requiredEnv("CHANGE_SENTINEL_RECEIVER_URL"),
-    webhookToken: requiredEnv("CHANGE_SENTINEL_WEBHOOK_TOKEN"),
-    allowInsecureLocal:
-      process.env.CHANGE_SENTINEL_ALLOW_INSECURE_LOCAL === "true",
-    sendTest: args.has("--send-test"),
-  });
-  process.stdout.write(JSON.stringify(result) + "\n");
+  const webhookToken = requiredEnv("CHANGE_SENTINEL_WEBHOOK_TOKEN");
+  try {
+    const result = await provisionWatch({
+      baseUrl: requiredEnv("CHANGEDETECTION_BASE_URL"),
+      apiKey: requiredEnv("CHANGEDETECTION_API_KEY"),
+      receiverUrl: requiredEnv("CHANGE_SENTINEL_RECEIVER_URL"),
+      webhookToken,
+      allowInsecureLocal:
+        process.env.CHANGE_SENTINEL_ALLOW_INSECURE_LOCAL === "true",
+      sendTest: args.has("--send-test"),
+    });
+    process.stdout.write(JSON.stringify(result) + "\n");
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    process.stderr.write(
+      `changedetection watch provisioning failed: ${sanitiseDiagnostic(message, [webhookToken])}\n`,
+    );
+    process.exitCode = 1;
+  }
 }
 
 const invokedPath = process.argv[1] ? resolve(process.argv[1]) : null;
 if (invokedPath && fileURLToPath(import.meta.url) === invokedPath) {
-  main().catch(() => {
-    process.stderr.write("changedetection watch provisioning failed.\n");
-    process.exitCode = 1;
-  });
+  main();
 }
