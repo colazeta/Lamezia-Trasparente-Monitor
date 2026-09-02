@@ -79,13 +79,15 @@ describe("trusted Docling adapter edge gates", () => {
     vi.useFakeTimers();
     const executor: DoclingProcessorExecutor = vi.fn(
       ({ signal }) =>
-        new Promise((_, reject) => {
-          signal.addEventListener(
-            "abort",
-            () => reject(new Error("transport aborted")),
-            { once: true },
-          );
-        }),
+        new Promise<Awaited<ReturnType<DoclingProcessorExecutor>>>(
+          (_resolve, reject) => {
+            signal.addEventListener(
+              "abort",
+              () => reject(new Error("transport aborted")),
+              { once: true },
+            );
+          },
+        ),
     );
 
     const pending = runDoclingProcessorAdapter(
