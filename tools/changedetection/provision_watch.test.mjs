@@ -7,6 +7,7 @@ import {
   CHECK_INTERVAL_MINUTES,
   desiredWatchConfig,
   EXPECTED_CHANGEDETECTION_VERSION,
+  extractCsrfToken,
   WATCH_KEY,
 } from "./provision_watch.mjs";
 
@@ -28,6 +29,14 @@ test("notification body is minimal JSON and does not include diff or snapshot to
   assert.ok(body.includes("{{ watch_url }}"));
   assert.ok(body.includes("{{ notification_timestamp }}"));
   assert.doesNotMatch(body, /diff|snapshot|html|screenshot/iu);
+});
+
+test("extracts the CSRF token exposed by changedetection base templates", () => {
+  assert.equal(
+    extractCsrfToken('<script>const csrftoken="csrf-session-value";</script>'),
+    "csrf-session-value",
+  );
+  assert.throws(() => extractCsrfToken("<html>no token</html>"), /CSRF token/u);
 });
 
 test("production receiver becomes a secure posts Apprise URL with only the secret header", () => {
