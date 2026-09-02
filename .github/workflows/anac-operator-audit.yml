@@ -57,7 +57,7 @@ jobs:
               "https://dati.anticorruzione.it/opendata/api/3/action/package_show?id=$dataset" \
               -o /tmp/anac-body || true
             grep -Ei '^(HTTP/|location:|content-type:|content-length:)' /tmp/anac-headers | tee -a .artifacts/anac-operator-audit/source-probe.log || true
-            head -c 1200 /tmp/anac-body | tr '\n' ' ' | tee -a .artifacts/anac-operator-audit/source-probe.log || true
+            head -c 500 /tmp/anac-body | tr '\n' ' ' | tee -a .artifacts/anac-operator-audit/source-probe.log || true
             printf '\n\n' | tee -a .artifacts/anac-operator-audit/source-probe.log
 
             echo "=== $dataset ANAC canonical ===" | tee -a .artifacts/anac-operator-audit/source-probe.log
@@ -67,12 +67,12 @@ jobs:
               | tee -a .artifacts/anac-operator-audit/source-probe.log || true
             printf '\n' | tee -a .artifacts/anac-operator-audit/source-probe.log
 
-            echo "=== $dataset data.europa.eu CKAN ===" | tee -a .artifacts/anac-operator-audit/source-probe.log
-            file=".artifacts/anac-operator-audit/federated/${dataset}-data-europa.json"
+            echo "=== $dataset data.europa.eu package_show ===" | tee -a .artifacts/anac-operator-audit/source-probe.log
+            exact=".artifacts/anac-operator-audit/federated/${dataset}-data-europa-package.json"
             curl -sS -L --max-time 30 -A "$UA" \
-              "https://data.europa.eu/api/hub/search/ckan/package_search?q=$dataset&rows=20" \
-              -o "$file" || true
-            node -e 'const fs=require("fs"); const [f,term]=process.argv.slice(1); try { const v=JSON.parse(fs.readFileSync(f,"utf8")); const r=v?.result?.results ?? v?.result?.result?.results ?? v?.results ?? []; console.log(`results=${Array.isArray(r)?r.length:"unknown"}`); for(const x of (Array.isArray(r)?r.slice(0,10):[])){ const resources=Array.isArray(x.resources)?x.resources:(Array.isArray(x.distributions)?x.distributions:[]); console.log(JSON.stringify({id:x.id,title:x.title,publisher:x.publisher,resourceCount:resources.length,resources:resources.slice(0,8).map(y=>({url:y.url,access_url:y.access_url,download_url:y.download_url,format:y.format,name:y.name}))})); }} catch(e){ console.log(`parse-error=${e.message}`); }' "$file" "$dataset" | tee -a .artifacts/anac-operator-audit/source-probe.log
+              "https://data.europa.eu/api/hub/search/ckan/package_show?id=$dataset" \
+              -o "$exact" || true
+            node -e 'const fs=require("fs"); const f=process.argv[1]; try { const v=JSON.parse(fs.readFileSync(f,"utf8")); const x=v?.result ?? {}; const resources=Array.isArray(x.resources)?x.resources:[]; console.log(JSON.stringify({success:v?.success,id:x.id,title:x.title,publisher:x.publisher,resourceCount:resources.length,resources:resources.map(y=>({id:y.id,title:y.title,format:y.format,size:y.size,date_updated:y.date_updated,access_url:y.access_url,download_url:y.download_url,url:y.url,availability:y.availability}))},null,2)); } catch(e){ console.log(`parse-error=${e.message}`); }' "$exact" | tee -a .artifacts/anac-operator-audit/source-probe.log
             printf '\n' | tee -a .artifacts/anac-operator-audit/source-probe.log
           done
 
@@ -81,7 +81,7 @@ jobs:
             "https://dettaglio-cig.anticorruzione.it/cig/B10F05AA17" \
             -o .artifacts/anac-operator-audit/cig-detail-sample.html || true
           grep -Ei '^(HTTP/|location:|content-type:|content-length:)' /tmp/cig-headers | tee -a .artifacts/anac-operator-audit/source-probe.log || true
-          head -c 1000 .artifacts/anac-operator-audit/cig-detail-sample.html | tr '\n' ' ' | tee -a .artifacts/anac-operator-audit/source-probe.log || true
+          head -c 500 .artifacts/anac-operator-audit/cig-detail-sample.html | tr '\n' ' ' | tee -a .artifacts/anac-operator-audit/source-probe.log || true
           printf '\n' | tee -a .artifacts/anac-operator-audit/source-probe.log
 
       - name: Sync ANAC operator datasets
