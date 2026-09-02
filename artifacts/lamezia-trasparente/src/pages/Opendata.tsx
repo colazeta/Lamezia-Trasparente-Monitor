@@ -66,6 +66,13 @@ type OpenDataArchiveItem = {
   dataset: OpenDataThemeDataset;
 };
 
+type OpenDataArchiveFamily = {
+  id: string;
+  label: string;
+  theme: OpenDataThemeCategory;
+  items: OpenDataArchiveItem[];
+};
+
 type OpenDataArchiveSelection = {
   themeId: string | null;
   datasetId: string | null;
@@ -75,6 +82,29 @@ function getArchiveItems(): OpenDataArchiveItem[] {
   return OPEN_DATA_THEME_LIBRARY.flatMap((theme) =>
     theme.datasets.map((dataset) => ({ theme, dataset })),
   );
+}
+
+function groupArchiveItemsByFamily(
+  items: OpenDataArchiveItem[],
+): OpenDataArchiveFamily[] {
+  const groups = new Map<string, OpenDataArchiveFamily>();
+
+  for (const item of items) {
+    const existing = groups.get(item.dataset.familyId);
+    if (existing) {
+      existing.items.push(item);
+      continue;
+    }
+
+    groups.set(item.dataset.familyId, {
+      id: item.dataset.familyId,
+      label: item.dataset.familyLabel,
+      theme: item.theme,
+      items: [item],
+    });
+  }
+
+  return Array.from(groups.values());
 }
 
 function readOpenDataArchiveSelection(): OpenDataArchiveSelection {
@@ -199,7 +229,8 @@ export function Opendata() {
           Open Data
         </h1>
         <p className="mt-2 max-w-2xl text-base text-muted-foreground md:text-lg">
-          Esplora dati su popolazione, clima e mobilità.
+          Dataset riusabili organizzati per tema e famiglia, con fonti,
+          aggiornamenti e copertura documentati.
         </p>
       </header>
 
@@ -256,64 +287,102 @@ function CuratedDatasetList({
     );
   }
 
+  const families = groupArchiveItemsByFamily(items);
+
   return (
     <section aria-labelledby="opendata-datasets-title" className="mb-8">
-      <div className="mb-3 flex items-center justify-between gap-3">
-        <h2
-          className="font-display text-xl font-bold text-foreground"
-          id="opendata-datasets-title"
-        >
-          Dataset
-        </h2>
-        <span className="text-sm text-muted-foreground">
-          {selectedTheme?.shortLabel ?? "Tutti"} · {items.length}
+      <div className="mb-3 flex items-end justify-between gap-3">
+        <div>
+          <h2
+            className="font-display text-xl font-bold text-foreground"
+            id="opendata-datasets-title"
+          >
+            Famiglie di dataset
+          </h2>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Una famiglia raccoglie dataset collegati senza confondere fonte,
+            perimetro o periodo di riferimento.
+          </p>
+        </div>
+        <span className="shrink-0 text-sm text-muted-foreground">
+          {selectedTheme?.shortLabel ?? "Tutti"} · {families.length} famiglie ·{" "}
+          {items.length} dataset
         </span>
       </div>
 
-      <ul
-        className="divide-y divide-border overflow-hidden rounded-xl border border-card-border bg-card"
-        role="list"
-      >
-        {items.map((item) => {
-          const status = LAMEZIA_OPEN_DATA_SERIES_BY_ID.get(item.dataset.id);
-          return (
-            <li key={item.dataset.id}>
-              <button
-                aria-label={`Apri scheda dataset ${item.dataset.label}`}
-                className="group grid w-full gap-3 p-4 text-left transition-colors hover:bg-primary/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset sm:grid-cols-[1fr_auto] sm:items-center"
-                onClick={() => onOpenDataset(item.dataset.id)}
-                type="button"
-              >
-                <div className="flex min-w-0 items-start gap-3">
-                  <span className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
-                    <FileSpreadsheet className="h-4 w-4" />
-                  </span>
-                  <div className="min-w-0">
-                    <h3 className="font-display text-base font-bold text-foreground sm:text-lg">
-                      {item.dataset.label}
-                    </h3>
-                    <p className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-muted-foreground">
-                      <span>{item.theme.shortLabel}</span>
-                      {status ? (
-                        <>
-                          <span aria-hidden="true">·</span>
-                          <span>
-                            Ultimo dato: {status.latest_observation_label}
-                          </span>
-                        </>
-                      ) : null}
-                    </p>
-                  </div>
-                </div>
-                <span className="inline-flex min-h-9 items-center justify-center gap-1.5 rounded-lg bg-primary px-3 py-2 text-sm font-semibold text-primary-foreground sm:w-auto">
-                  Apri
-                  <ChevronRight className="h-4 w-4" />
-                </span>
-              </button>
-            </li>
-          );
-        })}
-      </ul>
+      <div className="space-y-3">
+        {families.map((family) => (
+          <section
+            aria-labelledby={`opendata-family-${family.id}`}
+            className="overflow-hidden rounded-xl border border-card-border bg-card"
+            key={family.id}
+          >
+            <header className="flex flex-wrap items-center justify-between gap-2 border-b border-border bg-muted/20 px-4 py-3">
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-wide text-primary">
+                  {family.theme.shortLabel}
+                </p>
+                <h3
+                  className="font-display text-base font-bold text-foreground sm:text-lg"
+                  id={`opendata-family-${family.id}`}
+                >
+                  {family.label}
+                </h3>
+              </div>
+              <Badge variant="outline" className="shadow-none">
+                {family.items.length}{" "}
+                {family.items.length === 1 ? "dataset" : "dataset"}
+              </Badge>
+            </header>
+
+            <ul className="divide-y divide-border" role="list">
+              {family.items.map((item) => {
+                const status = LAMEZIA_OPEN_DATA_SERIES_BY_ID.get(
+                  item.dataset.id,
+                );
+                return (
+                  <li key={item.dataset.id}>
+                    <button
+                      aria-label={`Apri scheda dataset ${item.dataset.label}`}
+                      className="group grid w-full gap-3 p-4 text-left transition-colors hover:bg-primary/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset sm:grid-cols-[1fr_auto] sm:items-center"
+                      onClick={() => onOpenDataset(item.dataset.id)}
+                      type="button"
+                    >
+                      <div className="flex min-w-0 items-start gap-3">
+                        <span className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                          <FileSpreadsheet className="h-4 w-4" />
+                        </span>
+                        <div className="min-w-0">
+                          <h4 className="font-display text-base font-bold text-foreground sm:text-lg">
+                            {item.dataset.label}
+                          </h4>
+                          <p className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-muted-foreground">
+                            <span>{item.dataset.subtheme}</span>
+                            <span aria-hidden="true">·</span>
+                            <span>{item.dataset.sourceLabel}</span>
+                            {status ? (
+                              <>
+                                <span aria-hidden="true">·</span>
+                                <span>
+                                  Ultimo dato: {status.latest_observation_label}
+                                </span>
+                              </>
+                            ) : null}
+                          </p>
+                        </div>
+                      </div>
+                      <span className="inline-flex min-h-9 items-center justify-center gap-1.5 rounded-lg bg-primary px-3 py-2 text-sm font-semibold text-primary-foreground sm:w-auto">
+                        Apri
+                        <ChevronRight className="h-4 w-4" />
+                      </span>
+                    </button>
+                  </li>
+                );
+              })}
+            </ul>
+          </section>
+        ))}
+      </div>
     </section>
   );
 }
@@ -336,7 +405,7 @@ function DatasetDetailView({
 
       <header className="border-b border-border pb-4">
         <p className="text-xs font-semibold uppercase tracking-wide text-primary">
-          {item.theme.shortLabel}
+          {item.theme.shortLabel} / {item.dataset.familyLabel}
         </p>
         <h2
           className="mt-1 font-display text-2xl font-bold text-foreground"
@@ -396,7 +465,13 @@ function MunicipalCatalog({
   search,
 }: {
   datasets: OpendataDataset[];
-  feedStatus: { lastUpdatedAt?: string | null; itemsTotal?: number | null; url?: string | null } | undefined;
+  feedStatus:
+    | {
+        lastUpdatedAt?: string | null;
+        itemsTotal?: number | null;
+        url?: string | null;
+      }
+    | undefined;
   isLoading: boolean;
   onSearch: (value: string) => void;
   search: string;
@@ -449,7 +524,10 @@ function MunicipalCatalog({
             ))}
           </div>
         ) : datasets.length > 0 ? (
-          <div data-tour="opendata-catalog" className="mt-4 grid gap-2 sm:grid-cols-2">
+          <div
+            className="mt-4 grid gap-2 sm:grid-cols-2"
+            data-tour="opendata-catalog"
+          >
             {datasets.map((dataset) => (
               <CatalogDatasetLink dataset={dataset} key={dataset.id} />
             ))}
