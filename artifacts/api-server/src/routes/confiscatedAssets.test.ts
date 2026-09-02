@@ -28,6 +28,13 @@ async function insertAsset(
       status: "confiscato",
       indirizzo: "Via Roma 1, Lamezia Terme",
       source: "manual",
+      latitude: "38.9650000",
+      longitude: "16.3100000",
+      geoAddress: "Via Roma 1, Lamezia Terme",
+      geoQuartiere: "nicastro",
+      geoSource: "manual",
+      geoManual: true,
+      geoVerify: false,
       ...overrides,
     })
     .returning();
@@ -101,6 +108,19 @@ describe("GET /api/beni-confiscati (public list)", () => {
     expect(ids).toContain(terreno.id);
     expect(ids).not.toContain(appart.id);
   });
+
+  it("excludes records that do not pass the shared spatial publication gate", async () => {
+    const publishable = await insertAsset();
+    const needsReview = await insertAsset({ geoVerify: true });
+    const missingProvenance = await insertAsset({ geoSource: null });
+
+    const res = await request(app).get("/api/beni-confiscati");
+    expect(res.status).toBe(200);
+    const ids = res.body.map((a: { id: number }) => a.id);
+    expect(ids).toContain(publishable.id);
+    expect(ids).not.toContain(needsReview.id);
+    expect(ids).not.toContain(missingProvenance.id);
+  });
 });
 
 // ---------------------------------------------------------------------------
@@ -121,6 +141,28 @@ describe("GET /api/beni-confiscati/summary", () => {
     expect(Array.isArray(b.perStatus)).toBe(true);
     expect(Array.isArray(b.perTipologia)).toBe(true);
   });
+
+  it("counts only records accepted by the spatial publication gate", async () => {
+    const tipologia = unique("Tipologia verificata");
+    await insertAsset({ tipologia });
+    await insertAsset({ tipologia, geoVerify: true });
+    await insertAsset({ tipologia, latitude: null, longitude: null });
+
+    const res = await request(app).get("/api/beni-confiscati/summary");
+    expect(res.status).toBe(200);
+    expect(
+      res.body.perTipologia.find(
+        (item: { tipologia: string }) => item.tipologia === tipologia,
+      ),
+    ).toEqual({ tipologia, count: 1 });
+    expect(res.body.geolocalizzati).toBe(res.body.totale);
+    expect(
+      res.body.perStatus.reduce(
+        (sum: number, item: { count: number }) => sum + item.count,
+        0,
+      ),
+    ).toBe(res.body.totale);
+  });
 });
 
 // ---------------------------------------------------------------------------
@@ -133,6 +175,18 @@ describe("GET /api/beni-confiscati/:slug (public detail)", () => {
     expect(res.status).toBe(200);
     expect(res.body.id).toBe(asset.id);
     expect(res.body.slug).toBe(asset.slug);
+  });
+
+  it("redacts coordinates when the location still needs review", async () => {
+    const asset = await insertAsset({ geoVerify: true });
+    const res = await request(app).get(`/api/beni-confiscati/${asset.slug}`);
+
+    expect(res.status).toBe(200);
+    expect(res.body.latitude).toBeNull();
+    expect(res.body.longitude).toBeNull();
+    expect(res.body.geoAddress).toBeNull();
+    expect(res.body.geoQuartiere).toBeNull();
+    expect(res.body.indirizzo).toBe(asset.indirizzo);
   });
 
   it("does not expose admin-only fields in detail", async () => {

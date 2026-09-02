@@ -12,12 +12,17 @@ import {
 } from "@workspace/api-zod";
 import { requireIngestAuth } from "../middlewares/requireIngestAuth";
 import { nearestQuartiere } from "../lib/geocode";
-import { buildConfiscatedAssetsSpatialCollection } from "../lib/confiscatedAssetsSpatial";
+import {
+  buildConfiscatedAssetsSpatialCollection,
+  isConfiscatedAssetSpatiallyPublishable,
+} from "../lib/confiscatedAssetsSpatial";
 
 const router: IRouter = Router();
 
 // Vista pubblica: dati essenziali del bene con la sua posizione.
 function mapPublic(a: ConfiscatedAsset) {
+  const publishLocation = isConfiscatedAssetSpatiallyPublishable(a);
+
   return {
     id: a.id,
     slug: a.slug,
@@ -30,10 +35,12 @@ function mapPublic(a: ConfiscatedAsset) {
     destinazioneUso: a.destinazioneUso,
     datiCatastali: a.datiCatastali,
     officialUrl: a.officialUrl,
-    latitude: a.latitude,
-    longitude: a.longitude,
-    geoAddress: a.geoAddress,
-    geoQuartiere: a.geoQuartiere,
+    // Fail closed on every public response: an ineligible coordinate may
+    // remain available to the editorial view, but never leaks to a public map.
+    latitude: publishLocation ? a.latitude : null,
+    longitude: publishLocation ? a.longitude : null,
+    geoAddress: publishLocation ? a.geoAddress : null,
+    geoQuartiere: publishLocation ? a.geoQuartiere : null,
     updatedAt: a.updatedAt.toISOString(),
   };
 }
@@ -52,7 +59,7 @@ function mapAdmin(a: ConfiscatedAsset) {
   };
 }
 
-// --- GET /beni-confiscati: catalogo pubblico filtrabile --------------------
+// --- GET /beni-confiscati: catalogo cartografico pubblico filtrabile -------
 router.get("/beni-confiscati", async (req: Request, res: Response) => {
   const { status, tipologia } = req.query as {
     status?: string;
@@ -61,7 +68,9 @@ router.get("/beni-confiscati", async (req: Request, res: Response) => {
 
   const conds = [];
   if (status) {
-    conds.push(eq(confiscatedAssetsTable.status, status as ConfiscatedAssetStatus));
+    conds.push(
+      eq(confiscatedAssetsTable.status, status as ConfiscatedAssetStatus),
+    );
   }
   if (tipologia) {
     conds.push(eq(confiscatedAssetsTable.tipologia, tipologia));
@@ -73,12 +82,14 @@ router.get("/beni-confiscati", async (req: Request, res: Response) => {
     .where(conds.length ? and(...conds) : undefined)
     .orderBy(asc(confiscatedAssetsTable.denominazione));
 
-  res.json(rows.map(mapPublic));
+  res.json(rows.filter(isConfiscatedAssetSpatiallyPublishable).map(mapPublic));
 });
 
 // --- GET /beni-confiscati/summary: statistiche aggregate -------------------
 router.get("/beni-confiscati/summary", async (_req: Request, res: Response) => {
-  const rows = await db.select().from(confiscatedAssetsTable);
+  const rows = (await db.select().from(confiscatedAssetsTable)).filter(
+    isConfiscatedAssetSpatiallyPublishable,
+  );
 
   const byStatus = new Map<string, number>();
   const byTipologia = new Map<string, number>();
@@ -116,9 +127,9 @@ router.get("/beni-confiscati/geojson", async (_req: Request, res: Response) => {
     .select()
     .from(confiscatedAssetsTable)
     .orderBy(asc(confiscatedAssetsTable.denominazione));
-  res.type("application/geo+json").json(
-    buildConfiscatedAssetsSpatialCollection(rows),
-  );
+  res
+    .type("application/geo+json")
+    .json(buildConfiscatedAssetsSpatialCollection(rows));
 });
 
 // --- GET /beni-confiscati/admin: elenco redazionale completo ---------------

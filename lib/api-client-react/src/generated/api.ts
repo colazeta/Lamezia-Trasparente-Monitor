@@ -8705,11 +8705,13 @@ export const getListConfiscatedAssetsUrl = (params?: ListConfiscatedAssetsParams
 }
 
 /**
- * Returns the confiscated assets (manual editorial entries plus those
-imported from the ANBSC open data) with their location, filterable by
-status and tipologia.
+ * Returns only confiscated assets whose coordinates pass the shared
+fail-closed spatial publication policy. Editorial records without a
+valid, consistently sourced and publishable location remain available
+to the protected admin view, but are excluded here. Results are
+filterable by status and tipologia.
 
- * @summary Public catalog of confiscated assets in the municipality
+ * @summary Public cartographic catalog of confiscated assets
  */
 export const listConfiscatedAssets = async (params?: ListConfiscatedAssetsParams, options?: RequestInit): Promise<ConfiscatedAsset[]> => {
 
@@ -8756,7 +8758,7 @@ export type ListConfiscatedAssetsQueryError = ErrorType<unknown>
 
 
 /**
- * @summary Public catalog of confiscated assets in the municipality
+ * @summary Public cartographic catalog of confiscated assets
  */
 
 export function useListConfiscatedAssets<TData = Awaited<ReturnType<typeof listConfiscatedAssets>>, TError = ErrorType<unknown>>(
@@ -8857,7 +8859,10 @@ export const getGetConfiscatedAssetsSummaryUrl = () => {
 }
 
 /**
- * @summary Aggregate stats for the confiscated assets section
+ * Counts only records accepted by the same fail-closed spatial policy
+used by the public list and GeoJSON layer.
+
+ * @summary Aggregate stats for the publishable cartographic catalog
  */
 export const getConfiscatedAssetsSummary = async ( options?: RequestInit): Promise<ConfiscatedAssetSummary> => {
 
@@ -8904,7 +8909,7 @@ export type GetConfiscatedAssetsSummaryQueryError = ErrorType<unknown>
 
 
 /**
- * @summary Aggregate stats for the confiscated assets section
+ * @summary Aggregate stats for the publishable cartographic catalog
  */
 
 export function useGetConfiscatedAssetsSummary<TData = Awaited<ReturnType<typeof getConfiscatedAssetsSummary>>, TError = ErrorType<unknown>>(
@@ -9011,6 +9016,10 @@ export const getGetConfiscatedAssetUrl = (slug: string,) => {
 }
 
 /**
+ * Returns the public record. Coordinate and derived geolocation fields
+are null unless the location passes the shared spatial publication
+policy.
+
  * @summary Public detail of a confiscated asset
  */
 export const getConfiscatedAsset = async (slug: string, options?: RequestInit): Promise<ConfiscatedAsset> => {

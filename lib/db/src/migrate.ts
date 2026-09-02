@@ -10,6 +10,7 @@ import {
   type MigrationStatus,
   type QueryClient,
 } from "./baselineLogic";
+import { removeLegacyConfiscatedAssetDemoRows } from "./confiscatedAssetsCleanup";
 
 // When bundled by esbuild the build copies lib/db/migrations/ next to the
 // bundle entrypoint as dist/migrations/, so __dirname resolves correctly in
@@ -20,7 +21,8 @@ const migrationsFolder = path.join(__dirname, "migrations");
  * Applies all pending Drizzle migrations from the `migrations/` directory.
  *
  * This is the safe, non-interactive way to keep the database schema in sync:
- * - Never truncates or drops existing rows
+ * - Never truncates tables or drops schema; the only row deletion is the
+ *   signature-locked cleanup of five former fictional seed records
  * - Idempotent: already-applied migrations are skipped (tracked in
  *   `drizzle.__drizzle_migrations`)
  * - Works in CI and production without a TTY
@@ -183,6 +185,14 @@ export async function runMigrations(
       err,
     );
   }
+
+  // Push-bootstrapped databases baseline custom data migrations without
+  // executing them. Repeat the signature-locked, idempotent cleanup after
+  // every successful migration run so those deployments cannot retain the old
+  // demo rows. Keep this outside the migrator catch: Drizzle has already
+  // committed at this point, so a cleanup failure must not be described as an
+  // atomic migration rollback.
+  await removeLegacyConfiscatedAssetDemoRows(client);
 
   return getMigrationStatus(client, folder);
 }
