@@ -94,6 +94,22 @@ export {
   proposalMatchesPublicInstitutionalState,
 } from "./proposalInstitutionalState";
 
+export type {
+  ProposalAuthorityLevel,
+  ProposalCompetenceAssessment,
+  ProposalCompetenceAssessmentStatus,
+  ProposalCompetentAuthority,
+  ProposalInstitutionalCompetence,
+} from "./proposalInstitutionalCompetence";
+export {
+  PROPOSAL_AUTHORITY_LEVELS,
+  PROPOSAL_COMPETENCE_ASSESSMENTS,
+  PROPOSAL_COMPETENCE_ASSESSMENT_LABELS,
+  PROPOSAL_COMPETENCE_ASSESSMENT_STATUSES,
+  getProposalInstitutionalCompetence,
+  hasVerifiedProposalCompetence,
+} from "./proposalInstitutionalCompetence";
+
 const UPDATED_CORE_PROPOSALS = core.PUBLIC_PROPOSALS.map(applyScoutingUpdates);
 
 export const PUBLIC_PROPOSALS = [
