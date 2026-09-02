@@ -2,52 +2,54 @@ import { describe, expect, it, vi } from "vitest";
 import { render, screen, within } from "@testing-library/react";
 import { Router as WouterRouter } from "wouter";
 
-const CATEGORIES = [
-  {
-    id: 1,
-    name: "Servizi",
-    description: "Indicatori di prova",
-    indicators: [
-      {
-        id: 1,
-        title: "Indicatore completo",
-        unit: "%",
-        source: "ISTAT",
-        updateMode: "automatic",
-        polarity: "higher_better",
-        latestValue: { value: 120, period: "2025" },
-        previousValue: { value: 110, period: "2024" },
-        recentValues: [
-          { value: 100, period: "2023" },
-          { value: 110, period: "2024" },
-          { value: 120, period: "2025" },
-        ],
-      },
-      {
-        id: 2,
-        title: "Indicatore puntuale",
-        unit: "n.",
-        source: "Comune di Lamezia Terme",
-        updateMode: "manual",
-        polarity: "neutral",
-        latestValue: { value: 50, period: "2025" },
-        previousValue: null,
-        recentValues: [{ value: 50, period: "2025" }],
-      },
-      {
-        id: 3,
-        title: "Indicatore senza dato",
-        unit: "n.",
-        source: "",
-        updateMode: "manual",
-        polarity: "neutral",
-        latestValue: null,
-        previousValue: null,
-        recentValues: [],
-      },
-    ],
-  },
-];
+const { CATEGORIES } = vi.hoisted(() => ({
+  CATEGORIES: [
+    {
+      id: 1,
+      name: "Servizi",
+      description: "Indicatori di prova",
+      indicators: [
+        {
+          id: 1,
+          title: "Indicatore completo",
+          unit: "%",
+          source: "ISTAT",
+          updateMode: "automatic",
+          polarity: "higher_better",
+          latestValue: { value: 120, period: "2025" },
+          previousValue: { value: 110, period: "2024" },
+          recentValues: [
+            { value: 100, period: "2023" },
+            { value: 110, period: "2024" },
+            { value: 120, period: "2025" },
+          ],
+        },
+        {
+          id: 2,
+          title: "Indicatore puntuale",
+          unit: "n.",
+          source: "Comune di Lamezia Terme",
+          updateMode: "manual",
+          polarity: "neutral",
+          latestValue: { value: 50, period: "2025" },
+          previousValue: null,
+          recentValues: [{ value: 50, period: "2025" }],
+        },
+        {
+          id: 3,
+          title: "Indicatore senza dato",
+          unit: "n.",
+          source: "",
+          updateMode: "manual",
+          polarity: "neutral",
+          latestValue: null,
+          previousValue: null,
+          recentValues: [],
+        },
+      ],
+    },
+  ],
+}));
 
 vi.mock("@workspace/api-client-react", () => ({
   useListPerformanceCategories: () => ({
