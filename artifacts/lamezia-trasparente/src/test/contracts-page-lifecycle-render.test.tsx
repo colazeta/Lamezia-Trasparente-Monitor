@@ -62,12 +62,12 @@ function renderContractsPage() {
   );
 }
 
-describe("Contracts page lifecycle rendering", () => {
+describe("Contracts page public rendering", () => {
   beforeEach(() => {
     contractQueryState.isError = false;
   });
 
-  it("renders the public contracts page with the full BDNCP lifecycle", () => {
+  it("keeps contract sources verifiable without exposing the technical BDNCP bridge", () => {
     renderContractsPage();
 
     expect(
@@ -75,20 +75,18 @@ describe("Contracts page lifecycle rendering", () => {
         name: "Contratti pubblici sotto osservazione",
       }),
     ).toBeInTheDocument();
-    expect(screen.getAllByText("Ponte BDNCP").length).toBeGreaterThan(0);
-    expect(screen.getByText("Fascicoli civici CIG/CUP")).toBeInTheDocument();
-
-    for (const phase of [
-      "Programmazione",
-      "Progettazione",
-      "Gara / pubblicazione",
-      "Esecuzione della gara",
-      "Affidamento",
-      "Esecuzione del contratto",
-      "Conclusione, collaudi e verifiche",
-    ]) {
-      expect(screen.getAllByText(phase).length).toBeGreaterThan(0);
-    }
+    expect(
+      screen.getByRole("heading", { name: "Fonti dei contratti" }),
+    ).toBeInTheDocument();
+    expect(screen.getByText("Tutte le fonti")).toBeInTheDocument();
+    expect(screen.queryByText("Ponte BDNCP")).not.toBeInTheDocument();
+    expect(
+      screen.queryByText("Fascicoli civici CIG/CUP"),
+    ).not.toBeInTheDocument();
+    expect(screen.queryByText("Dataset ANAC")).not.toBeInTheDocument();
+    expect(
+      screen.queryByText(/Pacchetti consultati:/i),
+    ).not.toBeInTheDocument();
   });
 
   it("does not present an unavailable source as zero contracts", () => {
