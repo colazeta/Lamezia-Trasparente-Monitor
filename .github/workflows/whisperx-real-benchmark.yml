@@ -5,7 +5,12 @@ on:
   pull_request:
     paths:
       - '.github/workflows/whisperx-real-benchmark.yml'
-      - 'tools/whisperx/**'
+      - 'tools/whisperx/extract_media.py'
+      - 'tools/whisperx/test_extract_media.py'
+      - 'tools/whisperx/benchmark_metrics.py'
+      - 'tools/whisperx/test_benchmark_metrics.py'
+      - 'tools/whisperx/benchmark-corpus.public.json'
+      - 'tools/whisperx/requirements.txt'
       - 'docs/architecture/whisperx-integration.md'
 
 permissions:

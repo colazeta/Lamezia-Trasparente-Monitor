@@ -33,7 +33,12 @@ jobs:
       - name: Run lightweight helper tests
         run: |
           python tools/whisperx/test_extract_media.py
-          python -m py_compile tools/whisperx/extract_media.py
+          python tools/whisperx/test_benchmark_metrics.py
+          python tools/whisperx/test_prepare_quality_review.py
+          python -m py_compile \
+            tools/whisperx/extract_media.py \
+            tools/whisperx/benchmark_metrics.py \
+            tools/whisperx/prepare_quality_review.py
 
       - name: Verify pinned upstream and corpus metadata
         shell: bash
@@ -43,8 +48,12 @@ jobs:
           test "$(jq -r '.upstream.pinnedVersion' tools/whisperx/benchmark-corpus.public.json)" = '3.8.6'
           test "$(jq -r '.items[0].sourceRole' tools/whisperx/benchmark-corpus.public.json)" = 'benchmark-only-public-mirror'
           test "$(jq -r '.items[0].canonicalStatus' tools/whisperx/benchmark-corpus.public.json)" = 'not-established'
+          test "$(jq -r '.processorPolicy.expectedVersion' tools/whisperx/lamezia-quality-plan.public.json)" = '3.8.6'
+          test "$(jq -r '.processorPolicy.requiredLanguage' tools/whisperx/lamezia-quality-plan.public.json)" = 'it'
+          test "$(jq -r '.processorPolicy.diarizationEnabled' tools/whisperx/lamezia-quality-plan.public.json)" = 'false'
+          test "$(jq -r '.promotionRule.automaticPassPermitted' tools/whisperx/lamezia-quality-plan.public.json)" = 'false'
 
-      - name: Verify Phase 1 has no diarization or remote-fetch path
+      - name: Verify no diarization or remote-fetch processor path
         shell: bash
         run: |
           set -euo pipefail
@@ -62,5 +71,9 @@ jobs:
           ]
           found = [item for item in forbidden if item in source]
           if found:
-              raise SystemExit('Phase 1 WhisperX boundary violation: ' + ', '.join(found))
+              raise SystemExit('WhisperX processor boundary violation: ' + ', '.join(found))
+
+          review = Path('tools/whisperx/prepare_quality_review.py').read_text(encoding='utf-8')
+          if 'pending-human-review' not in review or 'automaticPassPermitted' not in review:
+              raise SystemExit('WhisperX quality gate lost its human-decision boundary')
           PY
