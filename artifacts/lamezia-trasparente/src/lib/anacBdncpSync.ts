@@ -22,8 +22,19 @@ export interface AnacBdncpRecord {
   cig: string;
   title: string | null;
   contractingAuthority: string | null;
+  contractingAuthorityCode: string | null;
+  contractingAuthorityTaxId: string | null;
   tenderAmount: number | null;
   procedureType: string | null;
+  procedureCode: string | null;
+  publicationDate: string | null;
+  submissionDeadline: string | null;
+  cpvCode: string | null;
+  cpvDescription: string | null;
+  cpvIsPrimary: boolean | null;
+  outcomeCode: string | null;
+  outcome: string | null;
+  outcomeDate: string | null;
   recordId: string | null;
   sourceArchiveUrl: string;
   sourcePeriod: string;
@@ -89,6 +100,7 @@ export const ANAC_BDNCP_PUBLIC_LIMITATIONS = [
   "Un CIG non trovato nei pacchetti consultati non risulta per questo assente dalla BDNCP.",
   "Un'indisponibilita temporanea della fonte ANAC non implica assenza di contratti: viene conservato l'ultimo snapshot valido.",
   "Gli importi ANAC, quando presenti, sono importi del lotto e non vengono sommati agli importi ricavati dagli atti dell'Albo.",
+  "Le date di pubblicazione e scadenza sono conservate come dati sorgente; l'eventuale proiezione in un periodo OCDS e subordinata a una regola semantica esplicita.",
 ] as const;
 
 export function createPendingAnacBdncpSnapshot(
@@ -213,7 +225,18 @@ export function validateAnacBdncpSyncSnapshot(
       !isIso(record.acquiredAt) ||
       !isNullableString(record.title) ||
       !isNullableString(record.contractingAuthority) ||
+      !isNullableString(record.contractingAuthorityCode) ||
+      !isNullableString(record.contractingAuthorityTaxId) ||
       !isNullableString(record.procedureType) ||
+      !isNullableString(record.procedureCode) ||
+      !isNullableDate(record.publicationDate) ||
+      !isNullableDate(record.submissionDeadline) ||
+      !isNullableString(record.cpvCode) ||
+      !isNullableString(record.cpvDescription) ||
+      !isNullableBoolean(record.cpvIsPrimary) ||
+      !isNullableString(record.outcomeCode) ||
+      !isNullableString(record.outcome) ||
+      !isNullableDate(record.outcomeDate) ||
       !isNullableString(record.recordId) ||
       (record.tenderAmount !== null &&
         (!Number.isFinite(record.tenderAmount) || record.tenderAmount < 0))
@@ -308,6 +331,10 @@ function isNullableIso(value: unknown): value is string | null {
   return value === null || isIso(value);
 }
 
+function isNullableDate(value: unknown): value is string | null {
+  return value === null || isIso(value);
+}
+
 function isHttpUrl(value: unknown): value is string {
   if (typeof value !== "string") return false;
   try {
@@ -328,6 +355,10 @@ function isOfficialAnacUrl(value: unknown): value is string {
 
 function isNullableString(value: unknown): value is string | null {
   return value === null || typeof value === "string";
+}
+
+function isNullableBoolean(value: unknown): value is boolean | null {
+  return value === null || typeof value === "boolean";
 }
 
 function isNonNegativeInteger(value: unknown): value is number {
