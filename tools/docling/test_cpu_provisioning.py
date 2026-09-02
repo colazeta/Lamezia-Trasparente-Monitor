@@ -15,6 +15,8 @@ class CpuProvisioningPolicyTest(unittest.TestCase):
         self.assertIn("torch.version.cuda", content)
         self.assertIn('"nvidia-"', content)
         self.assertIn('"cuda-"', content)
+        self.assertIn('EXPECTED_DOCLING = "2.124.0"', content)
+        self.assertIn('EXPECTED_PYPDF = "6.16.2"', content)
         self.assertIn("DOCLING_ARTIFACTS_PATH", content)
         self.assertIn("docling-tools models download", content)
         self.assertNotIn("DOCLING_ENRICHMENT_ENABLED=true", content)
