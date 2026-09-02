@@ -14,7 +14,25 @@
       "publisher": "Lamezia Termeit",
       "sourceRole": "benchmark-only-public-mirror",
       "canonicalStatus": "not-established",
-      "reviewStatus": "metadata-selected-not-run",
+      "reviewStatus": "benchmark-clip-selected",
+      "benchmarkClip": {
+        "startSeconds": 300,
+        "durationSeconds": 600,
+        "selectionPurpose": "Bounded ten-minute ASR/alignment benchmark on institutional-session speech without processing the full recording before resource and quality evidence exists."
+      },
+      "benchmarkAcquisition": {
+        "tool": "yt-dlp",
+        "pinnedVersion": "2026.8.19",
+        "role": "ci-benchmark-only",
+        "processorReceivesUrl": false,
+        "retainedAfterRun": false
+      },
+      "benchmarkOutputPolicy": {
+        "rawMediaRetained": false,
+        "transcriptRetained": false,
+        "metricsOnlyArtifact": true,
+        "speakerIdentityProduced": false
+      },
       "rawMediaInRepository": false,
       "transcriptInRepository": false,
       "selectionReason": "Public full-session candidate with multiple institutional speakers; useful for ASR/alignment quality testing while the official municipal recording locator is still being resolved.",
