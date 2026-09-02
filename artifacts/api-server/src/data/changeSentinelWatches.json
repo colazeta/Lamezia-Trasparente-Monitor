@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "upstream": {
+    "repository": "dgtlmoon/changedetection.io",
+    "pinnedVersion": "0.55.8",
+    "minimumVersion": "0.54.8",
+    "license": "Apache-2.0"
+  },
+  "watches": [
+    {
+      "watchKey": "pnrr-index",
+      "canonicalSourceId": "attuazione-pnrr-lamezia",
+      "canonicalUrl": "https://www.comune.lamezia-terme.cz.it/it/attuazione-misure-pnrr",
+      "fetchBackend": "html_requests",
+      "expectedCadenceSeconds": 900,
+      "includeFilters": [],
+      "status": "poc-proposed"
+    }
+  ]
+}
