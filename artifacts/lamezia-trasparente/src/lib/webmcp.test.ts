@@ -43,11 +43,12 @@ describe("WebMCP civic tools", () => {
       data: [{ id: 17, cig: "B123", title: "Manutenzione scuole" }],
       pagination: { page: 1, pageSize: 5, total: 1, totalPages: 1 },
     };
-    const fetchImpl = vi.fn().mockResolvedValue({
+    const fetchMock = vi.fn().mockResolvedValue({
       ok: true,
       status: 200,
       json: async () => payload,
-    }) as unknown as typeof fetch;
+    });
+    const fetchImpl = fetchMock as unknown as typeof fetch;
     const tool = createWebMcpTools({ navigate, fetchImpl }).find(
       (candidate) => candidate.name === "filter_public_contracts",
     );
@@ -59,7 +60,7 @@ describe("WebMCP civic tools", () => {
       from: "2026-01-01",
     });
 
-    const requestUrl = String(vi.mocked(fetchImpl).mock.calls[0]?.[0]);
+    const requestUrl = String(fetchMock.mock.calls[0]?.[0]);
     expect(requestUrl).toContain("/api/public/v1/contracts?");
     expect(requestUrl).toContain("q=scuole");
     expect(requestUrl).toContain("minAmount=100000");
