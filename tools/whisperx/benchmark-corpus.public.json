@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "upstream": {
+    "repository": "m-bain/whisperX",
+    "pinnedVersion": "3.8.6",
+    "license": "BSD-2-Clause"
+  },
+  "items": [
+    {
+      "id": "consiglio-2026-05-19-public-mirror",
+      "title": "Consiglio Comunale Lamezia Terme 19-05-2026",
+      "sessionDate": "2026-05-19",
+      "mediaUrl": "https://www.youtube.com/watch?v=NcoMFxDtCtE",
+      "publisher": "Lamezia Termeit",
+      "sourceRole": "benchmark-only-public-mirror",
+      "canonicalStatus": "not-established",
+      "reviewStatus": "metadata-selected-not-run",
+      "rawMediaInRepository": false,
+      "transcriptInRepository": false,
+      "selectionReason": "Public full-session candidate with multiple institutional speakers; useful for ASR/alignment quality testing while the official municipal recording locator is still being resolved.",
+      "productionRule": "Do not use this mirror as the canonical LT recording unless provenance/rights and official-source resolution are separately reviewed."
+    }
+  ]
+}
