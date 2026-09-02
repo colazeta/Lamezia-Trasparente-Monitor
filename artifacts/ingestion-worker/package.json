@@ -6,6 +6,7 @@
   "scripts": {
     "build": "node ./build.mjs",
     "start": "node --enable-source-maps ./dist/index.mjs",
+    "start:sentinel": "node --enable-source-maps ./dist/changeSentinelWorker.mjs",
     "typecheck": "pnpm --dir ../.. run typecheck:libs && tsc -p tsconfig.json --noEmit",
     "test": "pnpm run build && node --test ./test/*.test.mjs",
     "docling:preflight": "node ./dist/doclingPreflight.mjs",
