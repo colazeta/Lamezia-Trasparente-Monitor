@@ -40,9 +40,34 @@ const LAMEZIA_CITYWIDE: ProposalGeography = {
     "La coordinata è esclusivamente un centroide di visualizzazione e indicizzazione: non attribuisce alla proposta un luogo fisico specifico e non viene mostrata come pin locale sulla mappa pubblica.",
 };
 
+const AEROPORTO_LAMEZIA: ProposalGeography = {
+  label: "Aeroporto Internazionale di Lamezia Terme, Sant’Eufemia",
+  scope: "area",
+  areas: ["sant_eufemia"],
+  points: [
+    {
+      id: "aeroporto-lamezia-enac",
+      label: "Aeroporto Internazionale di Lamezia Terme — riferimento aeroportuale ENAC",
+      latitude: 38.9083333,
+      longitude: 16.2416667,
+      area: "sant_eufemia",
+      precision: "area_centroid",
+      sourceLabel: "ENAC — scheda Aeroporto Lamezia Terme, coordinate geografiche",
+      sourceUrl:
+        "https://www.enac.gov.it/app/uploads/2024/04/96-103_lamezia.pdf",
+    },
+  ],
+  note:
+    "Le coordinate ENAC identificano il riferimento geografico del sedime aeroportuale e non un terminale o un singolo manufatto. Per questo il punto è qualificato come rappresentativo dell'area aeroportuale. Le misure proposte includono anche connessioni ferroviarie e territoriali di scala regionale.",
+};
+
 export const SCOUTED_PROPOSAL_GEOGRAPHY: Record<string, ProposalGeography> = {
   "emodinamica-h24-vescio-2026": GIOVANNI_PAOLO_II,
   "emodinamica-h24-nucifero-2026": GIOVANNI_PAOLO_II,
   "scuole-orario-ridotto-caldo-settembre-2026": LAMEZIA_CITYWIDE,
   "tutela-animali-regolamento-garante-sportello-2026": LAMEZIA_CITYWIDE,
+  "scuole-posticipo-apertura-petizione-2026": LAMEZIA_CITYWIDE,
+  "ospedale-organici-continuita-chirurgica-pd-2026": GIOVANNI_PAOLO_II,
+  "prevenzione-maltempo-manutenzione-de-sensi-2026": LAMEZIA_CITYWIDE,
+  "aeroporto-intermodalita-rilancio-taverna-2026": AEROPORTO_LAMEZIA,
 };
