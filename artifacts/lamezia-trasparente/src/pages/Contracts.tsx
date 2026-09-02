@@ -1,5 +1,4 @@
 import { useEffect, useMemo, useState } from "react";
-import { useQuery } from "@tanstack/react-query";
 import {
   useListContracts,
   useGetContractsAnalytics,
@@ -24,8 +23,6 @@ import {
   Hash,
   Building2,
   Calendar,
-  CheckCircle2,
-  ClipboardCheck,
   ClipboardList,
   X,
   Leaf,
@@ -94,15 +91,8 @@ import { quartiereLabel } from "@/lib/gis";
 import { asApiList } from "@/lib/apiList";
 import { BDNCP_APPALTI_URL, preferredBdncpUrl } from "@/lib/bdncp";
 import {
-  ANAC_BDNCP_CONNECTION_SCHEMA_VERSION,
-  type AnacBdncpConnectionStatus,
-} from "@/lib/anacBdncpSync";
-import {
-  CONTRACT_LIFECYCLE_PHASE_LABELS,
   buildContractDossier,
-  summarizeContractDossiers,
   type ContractDossier,
-  type ContractLifecyclePhaseKey,
 } from "@/lib/contractDossier";
 import { MapPin } from "lucide-react";
 
@@ -112,49 +102,6 @@ const CHART_COLORS = [
   "hsl(var(--chart-3))",
   "hsl(var(--chart-4))",
   "hsl(var(--chart-5))",
-];
-
-const BDNCP_FLOW_STEPS: Array<{
-  phaseKey: ContractLifecyclePhaseKey;
-  detail: string;
-  icon: React.ComponentType<{ className?: string }>;
-}> = [
-  {
-    phaseKey: "programmazione",
-    detail:
-      "bisogno pubblico, CUP, programma e atti preliminari quando presenti",
-    icon: ClipboardList,
-  },
-  {
-    phaseKey: "progettazione",
-    detail: "progetto, quadro tecnico, importi, luogo e documenti collegabili",
-    icon: HardHat,
-  },
-  {
-    phaseKey: "gara_pubblicazione",
-    detail: "CIG, avviso, pubblicita legale e scheda nazionale BDNCP",
-    icon: Landmark,
-  },
-  {
-    phaseKey: "svolgimento_gara",
-    detail: "offerte, verbali, graduatoria, esclusioni o esiti di gara",
-    icon: ClipboardCheck,
-  },
-  {
-    phaseKey: "affidamento",
-    detail: "aggiudicatario, procedura, importo e stazione appaltante",
-    icon: Gavel,
-  },
-  {
-    phaseKey: "esecuzione",
-    detail: "contratto, SAL, varianti, liquidazioni e avanzamento documentale",
-    icon: RefreshCw,
-  },
-  {
-    phaseKey: "valutazione",
-    detail: "collaudo, CRE, chiusura, esito e verifiche civiche",
-    icon: CheckCircle2,
-  },
 ];
 
 function formatEuro(value: number, compact = false): string {
@@ -180,20 +127,6 @@ function formatDateTime(value: string | null | undefined) {
   return Number.isNaN(d.getTime())
     ? "—"
     : format(d, "dd MMM yyyy, HH:mm", { locale: it });
-}
-
-async function fetchAnacBdncpConnection(): Promise<AnacBdncpConnectionStatus> {
-  const response = await fetch("/api/contracts/anac-status", {
-    headers: { Accept: "application/json" },
-  });
-  if (!response.ok) {
-    throw new Error("ANAC/BDNCP connection status is unavailable");
-  }
-  const payload = (await response.json()) as AnacBdncpConnectionStatus;
-  if (payload.schemaVersion !== ANAC_BDNCP_CONNECTION_SCHEMA_VERSION) {
-    throw new Error("ANAC/BDNCP connection status has an invalid schema");
-  }
-  return payload;
 }
 
 export function Contracts() {
@@ -256,16 +189,6 @@ export function Contracts() {
   const { data: analytics, isLoading: analyticsLoading } =
     useGetContractsAnalytics(filters);
   const { data: feedStatus } = useGetContractsFeedStatus();
-  const {
-    data: anacConnection,
-    isLoading: anacConnectionLoading,
-    isError: anacConnectionUnavailable,
-  } = useQuery({
-    queryKey: ["contracts", "anac-bdncp-status"],
-    queryFn: fetchAnacBdncpConnection,
-    staleTime: 5 * 60 * 1000,
-    retry: 1,
-  });
   const dossierByContractId = useMemo(
     () =>
       new Map(
@@ -377,20 +300,19 @@ export function Contracts() {
         }
         findItems={[
           "Fascicoli correnti costruiti dagli atti pubblici che espongono un CIG.",
-          "CUP, importi, operatori e procedure solo quando dichiarati nell'oggetto pubblico.",
-          "Documento dell'Albo, scheda ufficiale ANAC per CIG e stato della sincronizzazione open data.",
+          "CUP, importi, operatori e procedure solo quando dichiarati nelle fonti disponibili.",
+          "Documento dell'Albo e collegamento alla fonte ufficiale ANAC per CIG.",
         ]}
         missingItems={[
           "Lo storico completo dei contratti e degli affidamenti del Comune.",
-          "La copertura BDNCP completa oltre i pacchetti ANAC effettivamente consultati.",
-          "Dati non esplicitati nell'oggetto dell'atto o esclusi dal perimetro pubblico.",
+          "La copertura completa di tutte le informazioni del ciclo di gara ed esecuzione.",
+          "Dati non esplicitati negli atti o esclusi dal perimetro pubblico.",
         ]}
         sourceLimit={
           <>
             Il perimetro è la finestra corrente dell'Albo Pretorio, non
             l'inventario storico dei contratti. Ogni CIG formalmente valido
-            apre la scheda ufficiale ANAC; lo stato separato indica se esiste
-            anche un record negli snapshot consultati. I dati mancanti non
+            consente di raggiungere la fonte ufficiale ANAC. I dati mancanti non
             implicano irregolarità.
           </>
         }
@@ -458,17 +380,7 @@ export function Contracts() {
         </p>
       </div>
 
-      {/* In cosa spende il Comune — spesa per macrotemi */}
       <ContractSourcePipelinePanel />
-
-      <BdncpBridge
-        contracts={contracts}
-        loading={isLoading}
-        portalUrl={BDNCP_APPALTI_URL}
-        connection={anacConnection}
-        connectionLoading={anacConnectionLoading}
-        connectionUnavailable={anacConnectionUnavailable}
-      />
 
       <SpendingByMacrotema contracts={contracts} loading={isLoading} />
 
@@ -655,7 +567,7 @@ export function Contracts() {
         <Select value={sourceFilter} onValueChange={setSourceFilter}>
           <SelectTrigger
             className="h-11 bg-background"
-            aria-label="Filtra per stato fonte"
+            aria-label="Filtra per disponibilità della fonte"
           >
             <div className="flex items-center gap-2 truncate">
               <Landmark className="h-4 w-4 text-muted-foreground shrink-0" />
@@ -663,15 +575,17 @@ export function Contracts() {
                 {sourceFilter === "all"
                   ? "Tutte le fonti"
                   : sourceFilter === "bdncp-bridge"
-                    ? "Ponte BDNCP"
-                    : "Fonte mancante"}
+                    ? "Fonte ufficiale disponibile"
+                    : "Fonte da integrare"}
               </span>
             </div>
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">Tutte le fonti</SelectItem>
-            <SelectItem value="bdncp-bridge">Ponte BDNCP</SelectItem>
-            <SelectItem value="missing-source">Fonte mancante</SelectItem>
+            <SelectItem value="bdncp-bridge">
+              Fonte ufficiale disponibile
+            </SelectItem>
+            <SelectItem value="missing-source">Fonte da integrare</SelectItem>
           </SelectContent>
         </Select>
 
@@ -890,9 +804,9 @@ export function Contracts() {
                             rel="noopener noreferrer"
                             className="inline-flex items-center gap-1 rounded-full border border-primary/30 px-2 py-0.5 text-[10px] font-medium text-primary transition-colors hover:border-primary hover:bg-primary/5"
                             onClick={(e) => e.stopPropagation()}
-                            aria-label={`Apri ricerca BDNCP per il contratto ${contract.title}`}
+                            aria-label={`Apri fonte ANAC per il contratto ${contract.title}`}
                           >
-                            BDNCP/PVL
+                            ANAC
                             <ExternalLink className="h-3 w-3" />
                           </a>
                         ) : null}
@@ -973,284 +887,6 @@ export function Contracts() {
       />
         </>
       )}
-    </div>
-  );
-}
-
-function BdncpBridge({
-  contracts,
-  loading,
-  portalUrl,
-  connection,
-  connectionLoading,
-  connectionUnavailable,
-}: {
-  contracts: Contract[] | undefined;
-  loading: boolean;
-  portalUrl: string;
-  connection: AnacBdncpConnectionStatus | undefined;
-  connectionLoading: boolean;
-  connectionUnavailable: boolean;
-}) {
-  const list = asApiList<Contract>(contracts);
-  const summary = summarizeContractDossiers(list);
-
-  return (
-    <section className="mb-10 rounded-2xl border border-card-border bg-card p-5 shadow-sm md:p-6">
-      <div className="grid gap-6 lg:grid-cols-[0.9fr_1.2fr]">
-        <div className="space-y-4">
-          <span className="eyebrow text-primary">
-            <Landmark className="h-3.5 w-3.5" />
-            Ponte BDNCP
-          </span>
-          <div>
-            <h2 className="font-display text-2xl font-bold tracking-tight md:text-3xl">
-              Fascicoli civici CIG/CUP
-            </h2>
-            <p className="mt-2 text-sm text-muted-foreground">
-              Il CIG apre la scheda ufficiale BDNCP/PCP, mentre il CUP rende
-              leggibile l'asse opera/progetto per i lavori pubblici. La
-              piattaforma locale affianca questi identificativi con atti Albo,
-              localizzazione e stato del ciclo di vita quando le fonti sono
-              disponibili.
-            </p>
-          </div>
-
-          <AnacConnectionCard
-            connection={connection}
-            loading={connectionLoading}
-            unavailable={connectionUnavailable}
-          />
-
-          {loading ? (
-            <div className="grid gap-3 sm:grid-cols-3 lg:grid-cols-1">
-              {Array.from({ length: BDNCP_FLOW_STEPS.length }).map(
-                (_, index) => (
-                  <Skeleton key={index} className="h-20 rounded-xl" />
-                ),
-              )}
-            </div>
-          ) : (
-            <div className="grid gap-3 sm:grid-cols-3 lg:grid-cols-1">
-              <BdncpMetric
-                icon={Hash}
-                label="Fascicoli con CIG"
-                value={`${summary.withCig}/${summary.total}`}
-                sub="chiave procedura da verificare in BDNCP"
-              />
-              <BdncpMetric
-                icon={FileText}
-                label="Fascicoli con CUP"
-                value={`${summary.withCup}/${summary.total}`}
-                sub="asse progetto/opera quando disponibile"
-              />
-              <BdncpMetric
-                icon={ExternalLink}
-                label="Ponti BDNCP"
-                value={`${summary.withBdncpSearchBridge}/${summary.total}`}
-                sub="collegamenti ufficiali diretti per CIG valido"
-              />
-              <BdncpMetric
-                icon={HardHat}
-                label="Lavori pubblici nel perimetro"
-                value={String(summary.publicWorks)}
-                sub="fascicoli con ambito o testo compatibile"
-              />
-              <BdncpMetric
-                icon={RefreshCw}
-                label="Esecuzione da integrare"
-                value={String(summary.missingExecutionEvidence)}
-                sub="fase non documentata o solo parziale"
-              />
-              <BdncpMetric
-                icon={CheckCircle2}
-                label="Valutazione da integrare"
-                value={String(summary.missingEvaluationEvidence)}
-                sub="collaudo/esito non documentati"
-              />
-            </div>
-          )}
-
-          <a
-            href={portalUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 text-sm font-semibold text-primary hover:underline"
-          >
-            Apri il portale BDNCP ANAC
-            <ExternalLink className="h-4 w-4" />
-          </a>
-        </div>
-
-        <ol className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
-          {BDNCP_FLOW_STEPS.map((step, index) => {
-            const Icon = step.icon;
-            return (
-              <li
-                key={step.phaseKey}
-                className="rounded-xl border border-border bg-muted/25 p-4"
-              >
-                <div className="flex items-start gap-3">
-                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-brand/10 text-brand">
-                    <Icon className="h-5 w-5" />
-                  </div>
-                  <div>
-                    <div className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
-                      Fase {index + 1}
-                    </div>
-                    <div className="mt-0.5 font-display font-bold tracking-tight text-foreground">
-                      {CONTRACT_LIFECYCLE_PHASE_LABELS[step.phaseKey]}
-                    </div>
-                    <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
-                      {step.detail}
-                    </p>
-                  </div>
-                </div>
-              </li>
-            );
-          })}
-        </ol>
-      </div>
-    </section>
-  );
-}
-
-function AnacConnectionCard({
-  connection,
-  loading,
-  unavailable,
-}: {
-  connection: AnacBdncpConnectionStatus | undefined;
-  loading: boolean;
-  unavailable: boolean;
-}) {
-  if (loading) return <Skeleton className="h-36 rounded-xl" />;
-
-  const state = connection?.status;
-  const presentation =
-    state === "current"
-      ? {
-          label: "Collegamento attivo",
-          detail: "Pacchetti ufficiali ANAC consultati; snapshot aggiornato.",
-          className:
-            "border-emerald-500/30 bg-emerald-500/5 text-emerald-700 dark:text-emerald-300",
-        }
-      : state === "stale"
-        ? {
-            label: "Ultimo snapshot disponibile",
-            detail:
-              "La fonte non è recente: restano visibili i dati validi già acquisiti.",
-            className:
-              "border-amber-500/30 bg-amber-500/5 text-amber-700 dark:text-amber-300",
-          }
-        : state === "degraded"
-          ? {
-              label: "Fonte temporaneamente non raggiungibile",
-              detail:
-                "I link ufficiali per CIG restano attivi; nessuno zero viene dedotto dal guasto.",
-              className:
-                "border-amber-500/30 bg-amber-500/5 text-amber-700 dark:text-amber-300",
-            }
-          : state === "pending"
-            ? {
-                label: "Prima sincronizzazione in attesa",
-                detail:
-                  "I link ufficiali per CIG sono già attivi; lo snapshot strutturato è in attivazione.",
-                className:
-                  "border-sky-500/30 bg-sky-500/5 text-sky-700 dark:text-sky-300",
-              }
-            : {
-                label: "Stato non disponibile",
-                detail: unavailable
-                  ? "Il controllo di stato non risponde; i collegamenti ufficiali per CIG restano disponibili."
-                  : "Lo stato della fonte non è ancora determinabile.",
-                className: "border-border bg-muted/30 text-muted-foreground",
-              };
-
-  return (
-    <div className={`rounded-xl border p-4 ${presentation.className}`}>
-      <div className="flex flex-wrap items-center justify-between gap-2">
-        <div className="flex items-center gap-2 font-semibold">
-          <RefreshCw className="h-4 w-4" />
-          {presentation.label}
-        </div>
-        {connection ? (
-          <span className="font-mono text-xs tabular-nums">
-            {connection.coverage.structuredMatches}/
-            {connection.coverage.trackedUniqueCigs} CIG collegati nei dati
-          </span>
-        ) : null}
-      </div>
-      <p className="mt-2 text-xs leading-relaxed opacity-90">
-        {presentation.detail}
-      </p>
-      {connection ? (
-        <div className="mt-3 grid gap-1 text-xs sm:grid-cols-2">
-          <span>
-            Ultimo tentativo: {formatDateTime(connection.lastAttemptAt)}
-          </span>
-          <span>
-            Ultimo snapshot valido: {formatDateTime(connection.lastSuccessAt)}
-          </span>
-          <span>
-            Pacchetti consultati: {connection.coverage.consultedArchives}
-          </span>
-          <span>Link diretti CIG: {connection.coverage.directCigLinks}</span>
-        </div>
-      ) : null}
-      <p className="mt-3 text-[11px] leading-relaxed opacity-80">
-        Un CIG non trovato nei pacchetti consultati non risulta per questo
-        assente dalla BDNCP.
-      </p>
-      {connection ? (
-        <div className="mt-3 flex flex-wrap gap-x-4 gap-y-2 text-xs font-semibold">
-          <a
-            href={connection.source.datasetUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-1 hover:underline"
-          >
-            Dataset ANAC <ExternalLink className="h-3 w-3" />
-          </a>
-          <a
-            href={connection.source.bdncpUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-1 hover:underline"
-          >
-            BDNCP <ExternalLink className="h-3 w-3" />
-          </a>
-        </div>
-      ) : null}
-    </div>
-  );
-}
-
-function BdncpMetric({
-  icon: Icon,
-  label,
-  value,
-  sub,
-}: {
-  icon: React.ComponentType<{ className?: string }>;
-  label: string;
-  value: string;
-  sub: string;
-}) {
-  return (
-    <div className="flex items-center gap-3 rounded-xl border border-border bg-background p-3">
-      <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-muted text-muted-foreground">
-        <Icon className="h-4 w-4" />
-      </div>
-      <div className="min-w-0">
-        <div className="text-xs uppercase tracking-wide text-muted-foreground">
-          {label}
-        </div>
-        <div className="font-display text-xl font-bold tracking-tight text-foreground">
-          {value}
-        </div>
-        <div className="text-xs text-muted-foreground">{sub}</div>
-      </div>
     </div>
   );
 }
