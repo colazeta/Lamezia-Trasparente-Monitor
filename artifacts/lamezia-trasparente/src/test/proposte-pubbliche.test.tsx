@@ -54,7 +54,7 @@ describe("proposte civiche", () => {
     expect(filterPublicProposals(PUBLIC_PROPOSALS, { status: "discussa" })).toHaveLength(0);
   });
 
-  it("renderizza archivio compatto, filtro Materia PA, timeline e titoli canonici", () => {
+  it("renderizza un archivio compatto con un solo filtro pubblico di materia", () => {
     renderProposteCiviche();
 
     expect(screen.getByRole("heading", { name: "Proposte civiche" })).toBeInTheDocument();
@@ -64,7 +64,8 @@ describe("proposte civiche", () => {
     expect(screen.getByRole("button", { name: "Sviluppi" })).toBeInTheDocument();
     expect(screen.getByLabelText("Localizzazione")).toBeInTheDocument();
     expect(screen.getByLabelText("Area locale")).toBeInTheDocument();
-    expect(screen.getByLabelText("Materia PA")).toBeInTheDocument();
+    expect(screen.getByLabelText("Materia")).toBeInTheDocument();
+    expect(screen.queryByLabelText("Materia PA")).not.toBeInTheDocument();
     expect(screen.queryByLabelText("Tema")).not.toBeInTheDocument();
     expect(screen.getByLabelText("Promotore")).toBeInTheDocument();
     expect(screen.getByLabelText("Anno")).toBeInTheDocument();
@@ -78,25 +79,34 @@ describe("proposte civiche", () => {
     ).toBeInTheDocument();
   });
 
-  it("filtra l'archivio con una materia ufficiale della PA", () => {
+  it("non manifesta nel filtro l'intera tassonomia backend se una materia non è usata", () => {
     renderProposteCiviche();
 
-    fireEvent.change(screen.getByLabelText("Materia PA"), {
+    expect(screen.queryByRole("option", { name: "Vita lavorativa" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("option", { name: "Agricoltura e pesca" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("option", { name: "Appalti pubblici" })).not.toBeInTheDocument();
+  });
+
+  it("filtra per la sola materia primaria, senza promuovere classificazioni secondarie", () => {
+    renderProposteCiviche();
+
+    fireEvent.change(screen.getByLabelText("Materia"), {
       target: { value: "2" },
     });
 
     expect(screen.getAllByText("Salute, benessere e assistenza").length).toBeGreaterThan(0);
     expect(screen.getByText(/Emodinamica H24 strutturale al Giovanni Paolo II/i)).toBeInTheDocument();
+    expect(screen.queryByText(/Continuità e avvio dei tre asili nido comunali/i)).not.toBeInTheDocument();
   });
 
-  it("rende selezionabile GOVE come fallback ufficiale per governo e settore pubblico", () => {
+  it("rende selezionabile GOVE come materia primaria per governo e settore pubblico", () => {
     renderProposteCiviche();
 
     expect(
       screen.getByRole("option", { name: "Governo e settore pubblico" }),
     ).toBeInTheDocument();
 
-    fireEvent.change(screen.getByLabelText("Materia PA"), {
+    fireEvent.change(screen.getByLabelText("Materia"), {
       target: { value: "GOVE" },
     });
 
