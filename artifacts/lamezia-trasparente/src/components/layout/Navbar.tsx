@@ -66,7 +66,7 @@ export function Navbar() {
                   <DropdownMenuTrigger className={groupTriggerClass(active)}>
                     {group.label}
                     <ChevronDown
-                      className="h-3.5 w-3.5 opacity-65"
+                      className="h-3.5 w-3.5 opacity-70"
                       aria-hidden="true"
                     />
                     {active ? (
@@ -99,7 +99,7 @@ export function Navbar() {
                             aria-current={itemActive ? "page" : undefined}
                             className={cn(
                               "flex cursor-pointer items-start gap-3 rounded-md px-2.5 py-2.5",
-                              itemActive && "bg-primary/8 text-primary",
+                              itemActive && "bg-primary/10 text-primary",
                             )}
                           >
                             <Icon
@@ -273,7 +273,7 @@ function MobileSectionLink({
       aria-current={active ? "page" : undefined}
       className={cn(
         "flex items-start gap-3 rounded-lg px-2.5 py-2.5 transition-colors hover:bg-muted/50",
-        active ? "bg-primary/8 text-primary" : "text-foreground",
+        active ? "bg-primary/10 text-primary" : "text-foreground",
       )}
     >
       <Icon
