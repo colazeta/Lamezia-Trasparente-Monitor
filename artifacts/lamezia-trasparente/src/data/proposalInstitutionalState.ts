@@ -107,7 +107,7 @@ export type ProposalImplementationEvidence = {
  * is met for a proposal.
  */
 export const PROPOSAL_IMPLEMENTATION_EVIDENCE: Readonly<
-  Record<string, ProposalImplementationEvidence>
+  Partial<Record<string, ProposalImplementationEvidence>>
 > = {};
 
 export type ProposalInstitutionalState = {
