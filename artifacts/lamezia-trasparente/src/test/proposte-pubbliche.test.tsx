@@ -89,6 +89,25 @@ describe("proposte civiche", () => {
     expect(screen.getByText(/Emodinamica H24 strutturale al Giovanni Paolo II/i)).toBeInTheDocument();
   });
 
+  it("rende selezionabile GOVE come fallback ufficiale per governo e settore pubblico", () => {
+    renderProposteCiviche();
+
+    expect(
+      screen.getByRole("option", { name: "Governo e settore pubblico" }),
+    ).toBeInTheDocument();
+
+    fireEvent.change(screen.getByLabelText("Materia PA"), {
+      target: { value: "GOVE" },
+    });
+
+    expect(
+      screen.getByText("Pubblicazione digitale di convocazioni e ordini del giorno"),
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByText(/Emodinamica H24 strutturale al Giovanni Paolo II/i),
+    ).not.toBeInTheDocument();
+  });
+
   it("aggiorna il conteggio quando un filtro non contiene risultati", () => {
     renderProposteCiviche();
 
