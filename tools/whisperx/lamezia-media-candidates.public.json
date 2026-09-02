@@ -52,20 +52,49 @@
       "discoveredFrom": "cityone-episode-lidia-vescio-2026-05-19"
     },
     {
-      "id": "cityone-home-video-surface",
-      "url": "https://www.cityonelamezia.it/",
-      "publisher": "City One Lamezia",
-      "role": "reviewed-third-party-video-surface",
-      "expectedMarkers": ["Consiglio Comunale Lamezia Terme", "Mario Murone", "Annita Vitale", "Fabrizio Muraca", "Mimmo Gianturco"],
-      "mayProvideQualityMedia": true
+      "id": "selftv-player-script-2e83ef47",
+      "url": "https://share.selftv.video/assets/2e83ef47.js",
+      "publisher": "SelfTV",
+      "role": "reviewed-player-script-locator",
+      "expectedMarkers": [],
+      "mayProvideQualityMedia": true,
+      "discoveredFrom": "selftv-player-lidia-vescio-2026-05-19"
     },
     {
-      "id": "cityone-video-index",
-      "url": "https://www.cityonelamezia.it/programma/video-news",
-      "publisher": "City One Lamezia",
-      "role": "reviewed-third-party-video-index",
-      "expectedMarkers": ["Consiglio Comunale Lamezia Terme", "Mario Murone", "Annita Vitale", "Fabrizio Muraca", "Mimmo Gianturco"],
-      "mayProvideQualityMedia": true
+      "id": "selftv-player-script-6e097b20",
+      "url": "https://share.selftv.video/assets/6e097b20.js",
+      "publisher": "SelfTV",
+      "role": "reviewed-player-script-locator",
+      "expectedMarkers": [],
+      "mayProvideQualityMedia": true,
+      "discoveredFrom": "selftv-player-lidia-vescio-2026-05-19"
+    },
+    {
+      "id": "selftv-player-script-940edaae",
+      "url": "https://share.selftv.video/assets/940edaae.js",
+      "publisher": "SelfTV",
+      "role": "reviewed-player-script-locator",
+      "expectedMarkers": [],
+      "mayProvideQualityMedia": true,
+      "discoveredFrom": "selftv-player-lidia-vescio-2026-05-19"
+    },
+    {
+      "id": "selftv-player-script-aca549ae",
+      "url": "https://share.selftv.video/assets/aca549ae.js",
+      "publisher": "SelfTV",
+      "role": "reviewed-player-script-locator",
+      "expectedMarkers": [],
+      "mayProvideQualityMedia": true,
+      "discoveredFrom": "selftv-player-lidia-vescio-2026-05-19"
+    },
+    {
+      "id": "selftv-player-script-e8da119f",
+      "url": "https://share.selftv.video/assets/e8da119f.js",
+      "publisher": "SelfTV",
+      "role": "reviewed-player-script-locator",
+      "expectedMarkers": [],
+      "mayProvideQualityMedia": true,
+      "discoveredFrom": "selftv-player-lidia-vescio-2026-05-19"
     },
     {
       "id": "municipium-council-page",
