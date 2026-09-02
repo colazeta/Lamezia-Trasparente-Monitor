@@ -15,6 +15,8 @@ from typing import Any
 SUPPORTED_REASON = "embedded-pdf-container"
 REPRESENTATION_KIND = "derived-noncanonical"
 SCHEMA_VERSION = 2
+EXPECTED_DOCLING_VERSION = "2.124.0"
+EXPECTED_PYPDF_VERSION = "6.16.2"
 MAX_EMBEDDED_ATTACHMENTS = 20
 
 
@@ -222,9 +224,15 @@ def main() -> int:
         )
         return 0
 
-    installed = package_version("docling")
+    installed_docling = package_version("docling")
+    installed_pypdf = package_version("pypdf")
     requested_version = str((request.get("target") or {}).get("processorVersion") or "")
-    if installed == "not-installed" or installed != requested_version:
+    if (
+        installed_docling == "not-installed"
+        or installed_docling != requested_version
+        or installed_docling != EXPECTED_DOCLING_VERSION
+        or installed_pypdf != EXPECTED_PYPDF_VERSION
+    ):
         duration_ms = round((time.perf_counter() - started) * 1000)
         write_result(
             output_dir,
@@ -255,7 +263,7 @@ def main() -> int:
             skipped_result(request, code="resource-bound", duration_ms=duration_ms),
         )
         return 0
-    except (UnsupportedEmbeddedSource, PackageNotFoundError):
+    except UnsupportedEmbeddedSource:
         duration_ms = round((time.perf_counter() - started) * 1000)
         write_result(
             output_dir,
