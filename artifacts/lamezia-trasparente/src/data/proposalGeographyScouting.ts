@@ -25,19 +25,9 @@ const LAMEZIA_CITYWIDE: ProposalGeography = {
   label: "Intero territorio comunale di Lamezia Terme",
   scope: "citywide",
   areas: ["intera_citta"],
-  points: [
-    {
-      id: "lamezia-city-centroid",
-      label: "Lamezia Terme — centroide di visualizzazione",
-      latitude: 38.965,
-      longitude: 16.31,
-      area: "intera_citta",
-      precision: "city_centroid",
-      sourceLabel: "Centro mappa GIS del progetto",
-    },
-  ],
+  points: [],
   note:
-    "La coordinata è esclusivamente un centroide di visualizzazione e indicizzazione: non attribuisce alla proposta un luogo fisico specifico e non viene mostrata come pin locale sulla mappa pubblica.",
+    "Ambito cittadino non georeferenziato: la proposta riguarda genericamente l’intero territorio comunale e non riceve coordinate artificiali.",
 };
 
 const AEROPORTO_LAMEZIA: ProposalGeography = {

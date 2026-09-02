@@ -36,7 +36,6 @@ export const PROPOSAL_GEO_PRECISIONS = [
   "exact_landmark",
   "street_approximate",
   "area_centroid",
-  "city_centroid",
 ] as const;
 
 export type ProposalGeoPrecision =
@@ -49,7 +48,6 @@ export const PROPOSAL_GEO_PRECISION_LABELS: Record<
   exact_landmark: "Punto identificato",
   street_approximate: "Riferimento stradale approssimato",
   area_centroid: "Centroide / punto rappresentativo dell’area",
-  city_centroid: "Centroide di visualizzazione cittadino",
 };
 
 export type ProposalGeoPoint = {
@@ -71,24 +69,14 @@ export type ProposalGeography = {
   note?: string;
 };
 
-const CITY_CENTROID: ProposalGeoPoint = {
-  id: "lamezia-city-centroid",
-  label: "Lamezia Terme — centroide di visualizzazione",
-  latitude: 38.965,
-  longitude: 16.31,
-  area: "intera_citta",
-  precision: "city_centroid",
-  sourceLabel: "Centro mappa GIS del progetto",
-};
-
 function citywide(label: string): ProposalGeography {
   return {
     label,
     scope: "citywide",
     areas: ["intera_citta"],
-    points: [CITY_CENTROID],
+    points: [],
     note:
-      "La coordinata è un centroide di visualizzazione e non indica un luogo fisico specifico della proposta.",
+      "Ambito cittadino non georeferenziato: la proposta riguarda genericamente l’intero territorio comunale e non riceve coordinate artificiali.",
   };
 }
 
@@ -209,7 +197,7 @@ export const PROPOSAL_GEOGRAPHY: Record<string, ProposalGeography> = {
     ],
   },
   "cinghiali-centro-misure-sicurezza-2026": citywide(
-    "Aree urbane di Lamezia Terme — riferimento cittadino",
+    "Aree urbane di Lamezia Terme — intero territorio comunale",
   ),
   "ginepri-marinella-sicurezza-valorizzazione-2026": {
     label: "Pineta Ginepri–Marinella, lungomare e fascia costiera",
