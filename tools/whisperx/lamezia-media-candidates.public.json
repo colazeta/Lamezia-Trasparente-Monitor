@@ -22,6 +22,14 @@
       "mayProvideQualityMedia": true
     },
     {
+      "id": "cityone-home-video-surface",
+      "url": "https://www.cityonelamezia.it/",
+      "publisher": "City One Lamezia",
+      "role": "reviewed-third-party-video-surface",
+      "expectedMarkers": ["Consiglio Comunale Lamezia Terme", "Mario Murone", "Annita Vitale", "Fabrizio Muraca", "Mimmo Gianturco"],
+      "mayProvideQualityMedia": true
+    },
+    {
       "id": "cityone-video-index",
       "url": "https://www.cityonelamezia.it/programma/video-news",
       "publisher": "City One Lamezia",
