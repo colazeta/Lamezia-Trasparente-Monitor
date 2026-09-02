@@ -1,0 +1,158 @@
+name: changedetection sentinel smoke
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - '.github/workflows/changedetection-sentinel-smoke.yml'
+      - 'tools/changedetection/**'
+      - 'artifacts/api-server/src/data/changeSentinelWatches.json'
+      - 'artifacts/api-server/src/lib/changeSentinel.ts'
+      - 'artifacts/api-server/src/lib/changeSentinelStore.ts'
+      - 'artifacts/api-server/src/routes/changeSentinel.ts'
+      - 'artifacts/api-server/scripts/assert_change_sentinel_event.mjs'
+      - 'lib/db/src/schema/changeSentinelEvents.ts'
+      - 'lib/db/migrations/0014_change_sentinel_events.sql'
+      - 'lib/db/migrations/0015_change_sentinel_queue.sql'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: changedetection-sentinel-smoke-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  smoke:
+    name: Pinned upstream → authenticated LT receiver
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: lt_ci
+          POSTGRES_PASSWORD: lt_ci_only
+          POSTGRES_DB: lt_ci
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd="pg_isready -U lt_ci -d lt_ci"
+          --health-interval=5s
+          --health-timeout=5s
+          --health-retries=10
+
+    env:
+      DATABASE_URL: postgresql://lt_ci:lt_ci_only@127.0.0.1:5432/lt_ci
+      NODE_ENV: production
+      PORT: '5050'
+      INGESTION_SCHEDULER_MODE: disabled
+      CHANGE_SENTINEL_RECEIVER_ENABLED: 'true'
+      CHANGE_SENTINEL_WEBHOOK_TOKEN: ci-only-sentinel-token-0123456789-abcdef
+      CHANGE_SENTINEL_RECEIVER_URL: http://127.0.0.1:5050/api/internal/change-sentinel
+      CHANGE_SENTINEL_ALLOW_INSECURE_LOCAL: 'true'
+      CHANGEDETECTION_BASE_URL: http://127.0.0.1:5000
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.28.1
+          run_install: false
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Test provisioning helpers
+        run: node --test tools/changedetection/provision_watch.test.mjs
+
+      - name: Build LT API receiver
+        run: pnpm --filter @workspace/api-server run build
+
+      - name: Start LT API receiver with migrations
+        shell: bash
+        run: |
+          set -euo pipefail
+          pnpm --filter @workspace/api-server run start > /tmp/lt-api.log 2>&1 &
+          echo "$!" > /tmp/lt-api.pid
+          for attempt in $(seq 1 60); do
+            if curl --fail --silent http://127.0.0.1:5050/api/healthz >/dev/null; then
+              exit 0
+            fi
+            sleep 1
+          done
+          cat /tmp/lt-api.log >&2
+          exit 1
+
+      - name: Start pinned changedetection.io
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$GITHUB_WORKSPACE/tmp/changedetection-datastore"
+          docker run --detach \
+            --name lt-changedetection-smoke \
+            --network host \
+            --env ALLOW_IANA_RESTRICTED_ADDRESSES=true \
+            --volume "$GITHUB_WORKSPACE/tmp/changedetection-datastore:/datastore" \
+            dgtlmoon/changedetection.io:0.55.8 >/dev/null
+
+          for attempt in $(seq 1 90); do
+            if curl --fail --silent http://127.0.0.1:5000/static/styles/pure-min.css >/dev/null; then
+              break
+            fi
+            if [[ "$attempt" == "90" ]]; then
+              docker logs lt-changedetection-smoke >&2
+              exit 1
+            fi
+            sleep 1
+          done
+
+          api_key="$(jq -r '.. | .api_access_token? // empty' "$GITHUB_WORKSPACE/tmp/changedetection-datastore/changedetection.json")"
+          if [[ -z "$api_key" || "$api_key" == "null" ]]; then
+            echo 'changedetection API key not found' >&2
+            exit 1
+          fi
+          echo "CHANGEDETECTION_API_KEY=$api_key" >> "$GITHUB_ENV"
+
+      - name: Provision PNRR watch idempotently
+        shell: bash
+        run: |
+          set -euo pipefail
+          node tools/changedetection/provision_watch.mjs > /tmp/provision-first.json
+          node tools/changedetection/provision_watch.mjs > /tmp/provision-second.json
+          first_uuid="$(jq -r '.uuid' /tmp/provision-first.json)"
+          second_uuid="$(jq -r '.uuid' /tmp/provision-second.json)"
+          test -n "$first_uuid"
+          test "$first_uuid" = "$second_uuid"
+          test "$(jq -r '.providerVersion' /tmp/provision-second.json)" = '0.55.8'
+          test "$(jq -r '.watchKey' /tmp/provision-second.json)" = 'pnrr-index'
+
+      - name: Send real changedetection test notification
+        run: node tools/changedetection/provision_watch.mjs --send-test
+
+      - name: Verify durable LT receiver event only
+        run: pnpm --filter @workspace/api-server exec node scripts/assert_change_sentinel_event.mjs
+
+      - name: Assert trigger remains disabled in smoke
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "${CHANGE_SENTINEL_TRIGGER_ENABLED:-}" != 'true'
+
+      - name: Cleanup smoke processes
+        if: always()
+        shell: bash
+        run: |
+          docker rm --force lt-changedetection-smoke >/dev/null 2>&1 || true
+          if [[ -f /tmp/lt-api.pid ]]; then
+            kill "$(cat /tmp/lt-api.pid)" >/dev/null 2>&1 || true
+          fi
