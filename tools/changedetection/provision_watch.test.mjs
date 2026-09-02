@@ -25,8 +25,8 @@ test("notification body is minimal JSON and does not include diff or snapshot to
   const body = buildNotificationBody();
   assert.match(body, /"schemaVersion": 1/u);
   assert.match(body, /"watchKey": "pnrr-index"/u);
-  assert.match(body, /{{ watch_url }}/u);
-  assert.match(body, /{{ notification_timestamp }}/u);
+  assert.ok(body.includes("{{ watch_url }}"));
+  assert.ok(body.includes("{{ notification_timestamp }}"));
   assert.doesNotMatch(body, /diff|snapshot|html|screenshot/iu);
 });
 
