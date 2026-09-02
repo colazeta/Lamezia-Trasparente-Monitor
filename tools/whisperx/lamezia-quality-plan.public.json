@@ -1,0 +1,69 @@
+{
+  "schemaVersion": 1,
+  "reviewId": "lamezia-consiglio-2026-05-19-whisperx-quality",
+  "session": {
+    "date": "2026-05-19",
+    "type": "consiglio-comunale",
+    "municipality": "Lamezia Terme"
+  },
+  "mediaCandidate": {
+    "url": "https://www.youtube.com/watch?v=NcoMFxDtCtE",
+    "publisher": "Lamezia Termeit",
+    "sourceRole": "benchmark-only-public-mirror",
+    "canonicalStatus": "not-established",
+    "ciAcquisitionStatus": "blocked-by-youtube-bot-challenge",
+    "cookieOrSecretFallbackPermitted": false
+  },
+  "institutionalEvidence": {
+    "recordingsDeclaredByMunicipality": true,
+    "institutionalRecordingLocatorResolved": false,
+    "municipalGovernmentPage": "https://www.comune.lamezia-terme.cz.it/it/page/organi-di-governo",
+    "councilPage": "https://www.comune.lamezia-terme.cz.it/it/organizational_unit/consiglio-comunale"
+  },
+  "publicContextSources": [
+    "https://www.cityonelamezia.it/mozioni-interrogazioni-e-pratiche-varie-martedi-19-maggio-torna-a-riunirsi-il-consiglio-comunale-di-lamezia/",
+    "https://www.cityonelamezia.it/consiglio-comunale-lamezia-murone-su-accessi-aeroportuali-amministrazione-non-consultata/"
+  ],
+  "expectedTerms": [
+    {"value": "Mario Murone", "category": "proper-name"},
+    {"value": "Maria Grandinetti", "category": "proper-name"},
+    {"value": "Lidia Vescio", "category": "proper-name"},
+    {"value": "Annita Vitale", "category": "proper-name"},
+    {"value": "Doris Lo Moro", "category": "proper-name"},
+    {"value": "Gennarino Masi", "category": "proper-name"},
+    {"value": "Fabrizio Muraca", "category": "proper-name"},
+    {"value": "Mimmo Gianturco", "category": "proper-name"},
+    {"value": "Giancarlo Nicotera", "category": "proper-name"},
+    {"value": "Donatella Amicarelli", "category": "proper-name"},
+    {"value": "Maria Lucia Raso", "category": "proper-name"},
+    {"value": "Sant'Eufemia", "category": "local-toponym"},
+    {"value": "contrada Rotoli", "category": "local-toponym"},
+    {"value": "Richetti", "category": "local-toponym"},
+    {"value": "SACAL", "category": "acronym-entity"},
+    {"value": "APCOA", "category": "acronym-entity"},
+    {"value": "PNRR", "category": "acronym-policy"},
+    {"value": "PSC", "category": "acronym-policy"},
+    {"value": "TIS", "category": "acronym-policy"},
+    {"value": "ecopiazzole", "category": "administrative-vocabulary"},
+    {"value": "diritti edificatori", "category": "administrative-vocabulary"},
+    {"value": "Commissione Pari Opportunità", "category": "administrative-vocabulary"},
+    {"value": "refezione scolastica", "category": "administrative-vocabulary"},
+    {"value": "principio di rotazione", "category": "administrative-vocabulary"}
+  ],
+  "mandatoryHumanReviewDimensions": [
+    "proper-names-and-local-toponyms",
+    "acronyms-and-administrative-vocabulary",
+    "numbers-amounts-dates-and-votes",
+    "word-timestamp-usability",
+    "overlapping-speech",
+    "material-hallucination-or-omission"
+  ],
+  "promotionRule": {
+    "automaticPassPermitted": false,
+    "termHitsAreAccuracyProof": false,
+    "criticalNameOrNumericErrorsRequireModelComparison": true,
+    "materialHallucinationBlocksPromotion": true,
+    "speakerIdentityMustRemainUnverifiedUnlessSeparatelyHumanValidated": true
+  },
+  "nextAction": "Resolve an institutional recording locator or provide a separately reviewed local recording, then run the quality-review helper on the derived WhisperX JSON."
+}
