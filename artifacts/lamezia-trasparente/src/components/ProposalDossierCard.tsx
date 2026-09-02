@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
+import { getInstitutionalProposalEvents } from "@/data/proposalArchiveTimeline";
 import {
   PROPOSAL_GEO_AREA_LABELS,
   PROPOSAL_GEO_PRECISION_LABELS,
@@ -60,10 +61,10 @@ function MetadataItem({
 }) {
   return (
     <div className="min-w-0">
-      <dt className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
+      <dt className="text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
         {label}
       </dt>
-      <dd className="mt-1 text-sm leading-snug text-foreground">{children}</dd>
+      <dd className="mt-0.5 text-xs leading-snug text-foreground">{children}</dd>
     </div>
   );
 }
@@ -72,31 +73,22 @@ function TerritoryBlock({ proposal }: { proposal: PublicProposal }) {
   const geography = getProposalGeography(proposal.id);
   if (!geography) return null;
 
-  const georeferenced = isProposalGeoreferenced(proposal.id);
-
-  if (!georeferenced) {
+  if (!isProposalGeoreferenced(proposal.id)) {
     return (
-      <div className="rounded-xl border border-border bg-muted/20 px-4 py-3">
-        <div className="flex flex-wrap items-center gap-2">
-          <Landmark className="h-4 w-4 text-muted-foreground" aria-hidden="true" />
-          <p className="text-sm font-semibold text-foreground">Ambito territoriale</p>
-          <Badge variant="outline">Non georeferenziata</Badge>
-          <Badge variant="secondary">Intera città</Badge>
-        </div>
-        <p className="mt-2 text-xs leading-relaxed text-muted-foreground">
-          {geography.label}. Nessuna coordinata viene assegnata perché la proposta
-          riguarda genericamente l’intero territorio comunale.
-        </p>
+      <div className="flex flex-wrap items-center gap-2 rounded-lg border border-border bg-muted/15 px-3 py-2 text-xs">
+        <Landmark className="h-3.5 w-3.5 text-muted-foreground" aria-hidden="true" />
+        <span className="font-semibold text-foreground">Ambito cittadino</span>
+        <Badge variant="outline">Non georeferenziata</Badge>
+        <span className="text-muted-foreground">{geography.label}</span>
       </div>
     );
   }
 
   return (
-    <div className="rounded-xl border border-primary/20 bg-primary/[0.035] px-4 py-3">
-      <div className="flex flex-wrap items-center gap-2">
-        <MapPinned className="h-4 w-4 text-primary" aria-hidden="true" />
-        <p className="text-sm font-semibold text-foreground">Riferimento geografico</p>
-        <Badge variant="secondary">Georeferenziata</Badge>
+    <div className="rounded-lg border border-primary/20 bg-primary/[0.025] px-3 py-2">
+      <div className="flex flex-wrap items-center gap-1.5 text-xs">
+        <MapPinned className="h-3.5 w-3.5 text-primary" aria-hidden="true" />
+        <span className="font-semibold text-foreground">Georeferenziata</span>
         <Badge variant="outline">{PROPOSAL_GEO_SCOPE_LABELS[geography.scope]}</Badge>
         {geography.areas.map((area) => (
           <Badge key={area} variant="outline">
@@ -104,27 +96,23 @@ function TerritoryBlock({ proposal }: { proposal: PublicProposal }) {
             {PROPOSAL_GEO_AREA_LABELS[area]}
           </Badge>
         ))}
+        <span className="text-muted-foreground">{geography.label}</span>
       </div>
-      <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-        {geography.label}
-      </p>
 
       <details className="mt-2 text-xs">
         <summary className="cursor-pointer font-semibold text-primary">
           {geography.points.length === 1
-            ? "Coordinate e fonte geografica"
+            ? "Coordinate e fonte"
             : `${geography.points.length} riferimenti geografici`}
         </summary>
-        <div className="mt-3 grid gap-2 md:grid-cols-2">
+        <div className="mt-2 grid gap-2 md:grid-cols-2">
           {geography.points.map((point) => (
-            <div key={point.id} className="rounded-lg border border-border bg-background p-3">
-              <p className="font-semibold leading-relaxed text-foreground">
-                {point.label}
-              </p>
-              <p className="mt-1 font-mono text-[11px] text-muted-foreground">
+            <div key={point.id} className="rounded-md border border-border bg-background p-2.5">
+              <p className="font-semibold text-foreground">{point.label}</p>
+              <p className="mt-0.5 font-mono text-[10px] text-muted-foreground">
                 {point.latitude.toFixed(5)}, {point.longitude.toFixed(5)}
               </p>
-              <p className="mt-1 text-[11px] text-muted-foreground">
+              <p className="mt-0.5 text-[10px] text-muted-foreground">
                 {PROPOSAL_GEO_PRECISION_LABELS[point.precision]}
               </p>
               {point.sourceUrl ? (
@@ -132,15 +120,13 @@ function TerritoryBlock({ proposal }: { proposal: PublicProposal }) {
                   href={point.sourceUrl}
                   target="_blank"
                   rel="noreferrer"
-                  className="mt-2 inline-flex items-center gap-1 font-semibold text-primary underline-offset-4 hover:underline"
+                  className="mt-1 inline-flex items-center gap-1 font-semibold text-primary hover:underline"
                 >
                   {point.sourceLabel}
                   <ExternalLink className="h-3 w-3" aria-hidden="true" />
                 </a>
               ) : (
-                <p className="mt-2 text-[11px] text-muted-foreground">
-                  {point.sourceLabel}
-                </p>
+                <p className="mt-1 text-[10px] text-muted-foreground">{point.sourceLabel}</p>
               )}
             </div>
           ))}
@@ -153,206 +139,210 @@ function TerritoryBlock({ proposal }: { proposal: PublicProposal }) {
   );
 }
 
-export function ProposalDossierCard({ proposal }: { proposal: PublicProposal }) {
-  const orderedEvents = [...proposal.events].sort((a, b) =>
-    a.date.localeCompare(b.date),
+function InstitutionalPath({ proposal }: { proposal: PublicProposal }) {
+  const institutionalEvents = getInstitutionalProposalEvents(proposal);
+  const visibleEvents = institutionalEvents.slice(-5);
+  if (institutionalEvents.length === 0 && proposal.linkedActs.length === 0) return null;
+
+  return (
+    <div className="rounded-lg border border-border px-3 py-2">
+      <div className="flex flex-wrap items-center gap-1.5 text-xs">
+        <Landmark className="h-3.5 w-3.5 text-primary" aria-hidden="true" />
+        <span className="font-semibold text-foreground">Percorso istituzionale</span>
+        {visibleEvents.map((event) => {
+          const label = `${PROPOSAL_EVENT_LABELS[event.type]} · ${formatDate(event.date)}`;
+          return event.sourceUrl ? (
+            <a
+              key={event.id}
+              href={event.sourceUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center gap-1 rounded-full border border-border bg-muted/20 px-2 py-0.5 font-medium text-foreground hover:border-primary/50 hover:text-primary"
+            >
+              {label}
+              <ExternalLink className="h-3 w-3" aria-hidden="true" />
+            </a>
+          ) : (
+            <span
+              key={event.id}
+              className="rounded-full border border-border bg-muted/20 px-2 py-0.5 font-medium text-foreground"
+            >
+              {label}
+            </span>
+          );
+        })}
+        {institutionalEvents.length > visibleEvents.length ? (
+          <Badge variant="outline">+{institutionalEvents.length - visibleEvents.length}</Badge>
+        ) : null}
+        {proposal.linkedActs.length > 0 ? (
+          <Badge variant="secondary">
+            {proposal.linkedActs.length} {proposal.linkedActs.length === 1 ? "atto" : "atti"}
+          </Badge>
+        ) : null}
+      </div>
+    </div>
   );
+}
+
+export function ProposalDossierCard({ proposal }: { proposal: PublicProposal }) {
+  const orderedEvents = [...proposal.events].sort((a, b) => a.date.localeCompare(b.date));
   const latestEvent = orderedEvents[orderedEvents.length - 1];
   const georeferenced = isProposalGeoreferenced(proposal.id);
 
   return (
     <article
       id={proposal.id}
-      className="rounded-2xl border border-border bg-card shadow-sm"
+      className="scroll-mt-24 rounded-xl border border-border bg-card shadow-sm"
       aria-labelledby={`${proposal.id}-title`}
     >
-      <div className="p-4 md:p-5">
-        <div className="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
-          <div className="min-w-0 flex-1">
-            <div className="flex flex-wrap gap-1.5">
-              <Badge variant={statusBadgeVariant(proposal.status)}>
-                {PROPOSAL_STATUS_LABELS[proposal.status]}
-              </Badge>
-              <Badge variant="outline">{PROPOSAL_CHANNEL_LABELS[proposal.channel]}</Badge>
-              <Badge variant="secondary">{proposal.theme}</Badge>
-              <Badge variant={georeferenced ? "secondary" : "outline"}>
-                {georeferenced ? "Georeferenziata" : "Non georeferenziata · intera città"}
-              </Badge>
-            </div>
-
-            <h3
-              id={`${proposal.id}-title`}
-              className="mt-3 font-display text-xl font-semibold tracking-tight md:text-2xl"
-            >
-              {proposal.title}
-            </h3>
-            <p className="mt-2 max-w-4xl text-sm leading-relaxed text-muted-foreground">
-              {proposal.summary}
-            </p>
-          </div>
-
-          <div className="shrink-0 text-xs text-muted-foreground lg:text-right">
-            <p className="inline-flex items-center gap-1.5 lg:justify-end">
-              <CalendarDays className="h-3.5 w-3.5" aria-hidden="true" />
-              Prima evidenza {formatDate(proposal.firstSeen)}
-            </p>
-            <p className="mt-1">Aggiornata {formatDate(proposal.lastUpdated)}</p>
-          </div>
+      <div className="px-4 py-3">
+        <div className="flex flex-wrap items-center gap-1.5">
+          <Badge variant={statusBadgeVariant(proposal.status)}>
+            {PROPOSAL_STATUS_LABELS[proposal.status]}
+          </Badge>
+          <Badge variant="outline">{proposal.theme}</Badge>
+          <Badge variant={georeferenced ? "secondary" : "outline"}>
+            {georeferenced ? "Georeferenziata" : "Intera città · non georeferenziata"}
+          </Badge>
         </div>
 
-        <dl className="mt-4 grid gap-x-5 gap-y-3 rounded-xl border border-border bg-muted/15 p-4 sm:grid-cols-2 lg:grid-cols-4">
-          <MetadataItem label="Promotore">
-            <span className="inline-flex items-start gap-1.5">
-              <UsersRound className="mt-0.5 h-3.5 w-3.5 shrink-0 text-muted-foreground" aria-hidden="true" />
-              <span>
-                <span className="font-semibold">{proposal.promoter}</span>
-                <span className="block text-xs text-muted-foreground">
-                  {PROPOSAL_PROMOTER_TYPE_LABELS[proposal.promoterType]}
-                </span>
-              </span>
+        <div className="mt-2 grid gap-2 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-start">
+          <div className="min-w-0">
+            <h3 id={`${proposal.id}-title`} className="font-display text-lg font-semibold tracking-tight">
+              {proposal.title}
+            </h3>
+            <p className="mt-1 text-sm leading-snug text-muted-foreground">{proposal.summary}</p>
+          </div>
+          <div className="flex flex-wrap gap-x-3 gap-y-1 text-[11px] text-muted-foreground lg:max-w-[22rem] lg:justify-end">
+            <span className="inline-flex items-center gap-1">
+              <UsersRound className="h-3 w-3" aria-hidden="true" />
+              <strong className="font-semibold text-foreground">{proposal.promoter}</strong>
             </span>
-          </MetadataItem>
-          <MetadataItem label="Destinatario">
-            {proposal.institutionalRecipient ?? "Non indicato"}
-          </MetadataItem>
-          <MetadataItem label="Filone">{proposal.threadLabel}</MetadataItem>
-          <MetadataItem label="Evidenza">
-            {PROPOSAL_EVIDENCE_LABELS[proposal.evidenceLevel]}
-          </MetadataItem>
-        </dl>
-
-        {proposal.coPromoters?.length ? (
-          <p className="mt-2 text-xs leading-relaxed text-muted-foreground">
-            <span className="font-semibold text-foreground">Altri soggetti citati:</span>{" "}
-            {proposal.coPromoters.join(", ")}
-          </p>
-        ) : null}
-
-        <div className="mt-3">
-          <TerritoryBlock proposal={proposal} />
+            <span className="inline-flex items-center gap-1">
+              <CalendarDays className="h-3 w-3" aria-hidden="true" />
+              {formatDate(proposal.firstSeen)}
+            </span>
+          </div>
         </div>
 
         {latestEvent ? (
-          <div className="mt-3 rounded-xl border border-border px-4 py-3">
-            <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
-              <div className="min-w-0">
-                <div className="flex flex-wrap items-center gap-2">
-                  <History className="h-4 w-4 text-primary" aria-hidden="true" />
-                  <p className="text-sm font-semibold text-foreground">Ultimo sviluppo</p>
-                  <Badge variant="outline">{PROPOSAL_EVENT_LABELS[latestEvent.type]}</Badge>
-                  <span className="text-xs text-muted-foreground">
-                    {formatDate(latestEvent.date)}
-                  </span>
-                </div>
-                <p className="mt-2 text-sm font-semibold text-foreground">
-                  {latestEvent.title}
-                </p>
-                <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
-                  {latestEvent.summary}
-                </p>
-              </div>
-              <Badge variant="secondary" className="shrink-0">
-                {orderedEvents.length} {orderedEvents.length === 1 ? "evento" : "eventi"}
-              </Badge>
-            </div>
-
-            {orderedEvents.length > 1 ? (
-              <details className="mt-3 border-t border-border pt-3">
-                <summary className="cursor-pointer text-xs font-semibold text-primary">
-                  Apri la timeline completa
-                </summary>
-                <ol className="mt-3 space-y-3 border-l border-border pl-4">
-                  {orderedEvents.map((event) => (
-                    <li key={event.id} className="relative">
-                      <span
-                        className="absolute -left-[1.16rem] top-1.5 h-2 w-2 rounded-full border border-background bg-primary"
-                        aria-hidden="true"
-                      />
-                      <div className="flex flex-wrap items-center gap-2">
-                        <span className="text-xs font-semibold text-muted-foreground">
-                          {formatDate(event.date)}
-                        </span>
-                        <Badge variant="outline">{PROPOSAL_EVENT_LABELS[event.type]}</Badge>
-                      </div>
-                      <p className="mt-1 text-sm font-semibold text-foreground">
-                        {event.title}
-                      </p>
-                      <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
-                        {event.summary}
-                      </p>
-                      {event.sourceUrl ? (
-                        <a
-                          href={event.sourceUrl}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="mt-1 inline-flex items-center gap-1 text-xs font-semibold text-primary underline-offset-4 hover:underline"
-                        >
-                          {event.sourceLabel}
-                          <ExternalLink className="h-3 w-3" aria-hidden="true" />
-                        </a>
-                      ) : (
-                        <p className="mt-1 text-xs text-muted-foreground">
-                          {event.sourceLabel}
-                        </p>
-                      )}
-                    </li>
-                  ))}
-                </ol>
-              </details>
-            ) : null}
+          <div className="mt-2 flex flex-wrap items-center gap-x-2 gap-y-1 border-t border-border pt-2 text-xs">
+            <History className="h-3.5 w-3.5 text-primary" aria-hidden="true" />
+            <span className="font-semibold text-foreground">Ultimo sviluppo</span>
+            <span className="text-muted-foreground">{formatDate(latestEvent.date)}</span>
+            <Badge variant="outline">{PROPOSAL_EVENT_LABELS[latestEvent.type]}</Badge>
+            <span className="min-w-0 flex-1 truncate text-muted-foreground">{latestEvent.title}</span>
           </div>
         ) : null}
 
-        <div className="mt-3 flex flex-col gap-2 border-t border-border pt-3 text-xs sm:flex-row sm:items-center sm:justify-between">
-          <div className="flex min-w-0 flex-wrap items-center gap-x-4 gap-y-2">
-            <span className="inline-flex items-center gap-1.5 text-muted-foreground">
-              <FileText className="h-3.5 w-3.5" aria-hidden="true" />
-              Fonte principale
-            </span>
-            {proposal.sourceUrl ? (
-              <a
-                href={proposal.sourceUrl}
-                target="_blank"
-                rel="noreferrer"
-                className="inline-flex min-w-0 items-center gap-1 font-semibold text-primary underline-offset-4 hover:underline"
-              >
-                <span className="truncate">{proposal.sourceLabel}</span>
-                <ExternalLink className="h-3 w-3 shrink-0" aria-hidden="true" />
-              </a>
-            ) : (
-              <span className="font-semibold text-foreground">{proposal.sourceLabel}</span>
-            )}
-            {proposal.linkedActs.length > 0 ? (
-              <span className="text-muted-foreground">
-                {proposal.linkedActs.length} {proposal.linkedActs.length === 1 ? "atto collegato" : "atti collegati"}
-              </span>
-            ) : null}
-          </div>
-        </div>
-
-        <details className="mt-3 rounded-xl border border-border bg-muted/10 px-4 py-3">
-          <summary className="cursor-pointer text-xs font-semibold text-foreground">
-            Documentazione e verifica
+        <details className="mt-2 border-t border-border pt-2">
+          <summary className="cursor-pointer text-xs font-semibold text-primary">
+            Apri dossier · {orderedEvents.length} {orderedEvents.length === 1 ? "evento" : "eventi"}
+            {proposal.linkedActs.length > 0
+              ? ` · ${proposal.linkedActs.length} ${proposal.linkedActs.length === 1 ? "atto" : "atti"}`
+              : ""}
           </summary>
-          {proposal.linkedActs.length > 0 ? (
-            <div className="mt-3">
-              <p className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
-                Atti collegati
+
+          <div className="mt-3 space-y-2.5">
+            <dl className="grid gap-x-4 gap-y-2 rounded-lg border border-border bg-muted/10 p-3 sm:grid-cols-2 lg:grid-cols-4">
+              <MetadataItem label="Promotore">
+                <span className="font-semibold">{proposal.promoter}</span>
+                <span className="block text-[10px] text-muted-foreground">
+                  {PROPOSAL_PROMOTER_TYPE_LABELS[proposal.promoterType]}
+                </span>
+              </MetadataItem>
+              <MetadataItem label="Destinatario">
+                {proposal.institutionalRecipient ?? "Non indicato"}
+              </MetadataItem>
+              <MetadataItem label="Filone">{proposal.threadLabel}</MetadataItem>
+              <MetadataItem label="Canale / evidenza">
+                {PROPOSAL_CHANNEL_LABELS[proposal.channel]} · {PROPOSAL_EVIDENCE_LABELS[proposal.evidenceLevel]}
+              </MetadataItem>
+            </dl>
+
+            {proposal.coPromoters?.length ? (
+              <p className="text-xs text-muted-foreground">
+                <span className="font-semibold text-foreground">Altri soggetti citati:</span>{" "}
+                {proposal.coPromoters.join(", ")}
               </p>
-              <ul className="mt-1 space-y-1 text-sm text-muted-foreground">
-                {proposal.linkedActs.map((act) => (
-                  <li key={act}>{act}</li>
+            ) : null}
+
+            <TerritoryBlock proposal={proposal} />
+            <InstitutionalPath proposal={proposal} />
+
+            <details className="rounded-lg border border-border px-3 py-2">
+              <summary className="cursor-pointer text-xs font-semibold text-foreground">
+                Cronologia completa
+              </summary>
+              <ol className="mt-2 space-y-2 border-l border-border pl-3">
+                {orderedEvents.map((event) => (
+                  <li key={event.id} className="relative text-xs">
+                    <span
+                      className="absolute -left-[0.97rem] top-1.5 h-1.5 w-1.5 rounded-full bg-primary"
+                      aria-hidden="true"
+                    />
+                    <div className="flex flex-wrap items-center gap-1.5">
+                      <span className="font-semibold text-muted-foreground">{formatDate(event.date)}</span>
+                      <Badge variant="outline">{PROPOSAL_EVENT_LABELS[event.type]}</Badge>
+                    </div>
+                    <p className="mt-0.5 font-semibold text-foreground">{event.title}</p>
+                    <p className="mt-0.5 leading-relaxed text-muted-foreground">{event.summary}</p>
+                    {event.sourceUrl ? (
+                      <a
+                        href={event.sourceUrl}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="mt-0.5 inline-flex items-center gap-1 font-semibold text-primary hover:underline"
+                      >
+                        {event.sourceLabel}
+                        <ExternalLink className="h-3 w-3" aria-hidden="true" />
+                      </a>
+                    ) : (
+                      <p className="mt-0.5 text-muted-foreground">{event.sourceLabel}</p>
+                    )}
+                  </li>
                 ))}
-              </ul>
-            </div>
-          ) : null}
-          <div className={proposal.linkedActs.length > 0 ? "mt-3 border-t border-border pt-3" : "mt-3"}>
-            <p className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
-              Nota di verifica redazionale
-            </p>
-            <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
-              {proposal.verificationNote}
-            </p>
+              </ol>
+            </details>
+
+            <details className="rounded-lg border border-border bg-muted/10 px-3 py-2">
+              <summary className="cursor-pointer text-xs font-semibold text-foreground">
+                Fonti, atti e verifica
+              </summary>
+              <div className="mt-2 space-y-2 text-xs text-muted-foreground">
+                <div className="flex flex-wrap items-center gap-2">
+                  <FileText className="h-3.5 w-3.5" aria-hidden="true" />
+                  <span>Fonte principale</span>
+                  {proposal.sourceUrl ? (
+                    <a
+                      href={proposal.sourceUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="inline-flex items-center gap-1 font-semibold text-primary hover:underline"
+                    >
+                      {proposal.sourceLabel}
+                      <ExternalLink className="h-3 w-3" aria-hidden="true" />
+                    </a>
+                  ) : (
+                    <span className="font-semibold text-foreground">{proposal.sourceLabel}</span>
+                  )}
+                </div>
+                {proposal.linkedActs.length > 0 ? (
+                  <div>
+                    <p className="font-semibold text-foreground">Atti collegati</p>
+                    <ul className="mt-1 space-y-0.5">
+                      {proposal.linkedActs.map((act) => (
+                        <li key={act}>{act}</li>
+                      ))}
+                    </ul>
+                  </div>
+                ) : null}
+                <div className="border-t border-border pt-2">
+                  <p className="font-semibold text-foreground">Nota di verifica redazionale</p>
+                  <p className="mt-0.5 leading-relaxed">{proposal.verificationNote}</p>
+                </div>
+              </div>
+            </details>
           </div>
         </details>
       </div>
