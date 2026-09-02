@@ -1,5 +1,7 @@
 #!/usr/bin/env node
+import { resolve } from "node:path";
 import process from "node:process";
+import { fileURLToPath } from "node:url";
 
 export const EXPECTED_CHANGEDETECTION_VERSION = "0.55.8";
 export const WATCH_KEY = "pnrr-index";
@@ -61,12 +63,13 @@ export function buildNotificationUrl(receiverValue, token, options = {}) {
   } else if (receiver.protocol !== "https:") {
     throw new Error("Receiver URL must use HTTP(S)");
   }
+  if (receiver.username || receiver.password || receiver.search || receiver.hash) {
+    throw new Error("Receiver URL must not contain credentials, query parameters or fragments");
+  }
 
-  const scheme = receiver.protocol === "https:" ? "posts:" : "post:";
-  const apprise = new URL(receiver.href);
-  apprise.protocol = scheme;
-  apprise.searchParams.set("+x-lt-sentinel-token", token);
-  return apprise.href;
+  const scheme = receiver.protocol === "https:" ? "posts" : "post";
+  const encodedToken = encodeURIComponent(token);
+  return `${scheme}://${receiver.host}${receiver.pathname}?+x-lt-sentinel-token=${encodedToken}`;
 }
 
 export function desiredWatchConfig(notificationUrl) {
@@ -121,8 +124,11 @@ async function apiRequest(baseUrl, apiKey, path, init = {}) {
   }
 }
 
-function sameJson(left, right) {
-  return JSON.stringify(left) === JSON.stringify(right);
+function sameNotificationUrls(left, right) {
+  return Array.isArray(left) &&
+    Array.isArray(right) &&
+    left.length === right.length &&
+    left.every((value, index) => value === right[index]);
 }
 
 function assertProvisionedWatch(value, desired) {
@@ -133,10 +139,10 @@ function assertProvisionedWatch(value, desired) {
   if (value.time_between_check_use_default !== false) {
     throw new Error("Provisioned watch unexpectedly uses default cadence");
   }
-  if (!sameJson(value.time_between_check, desired.time_between_check)) {
+  if (Number(value.time_between_check?.minutes ?? 0) !== CHECK_INTERVAL_MINUTES) {
     throw new Error("Provisioned watch cadence mismatch");
   }
-  if (!sameJson(value.notification_urls, desired.notification_urls)) {
+  if (!sameNotificationUrls(value.notification_urls, desired.notification_urls)) {
     throw new Error("Provisioned watch notification target mismatch");
   }
   if (value.notification_body !== desired.notification_body) {
@@ -234,7 +240,8 @@ async function main() {
   process.stdout.write(JSON.stringify(result) + "\n");
 }
 
-if (import.meta.url === `file://${process.argv[1]}`) {
+const invokedPath = process.argv[1] ? resolve(process.argv[1]) : null;
+if (invokedPath && fileURLToPath(import.meta.url) === invokedPath) {
   main().catch(() => {
     process.stderr.write("changedetection watch provisioning failed.\n");
     process.exitCode = 1;
