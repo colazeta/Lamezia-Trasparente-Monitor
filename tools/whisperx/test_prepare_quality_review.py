@@ -65,9 +65,12 @@ def main() -> int:
 
     counts = {item["value"]: item["count"] for item in packet["termDiagnostics"]}
     assert counts == {"Mario Murone": 1, "Sant'Eufemia": 1, "PNRR": 1}
-    assert len(packet["reviewWindows"]) >= 4
     assert all(0 <= item["start"] < item["end"] <= 100 for item in packet["reviewWindows"])
-    assert any("first-hit:proper-name" in item["reasons"] for item in packet["reviewWindows"])
+    reasons = {reason for item in packet["reviewWindows"] for reason in item["reasons"]}
+    assert {"coverage-start", "coverage-mid-1", "coverage-mid-2", "coverage-end"} <= reasons
+    assert "first-hit:proper-name" in reasons
+    assert "first-hit:local-toponym" in reasons
+    assert "first-hit:acronym-policy" in reasons
     assert "frase fixture" not in json.dumps(packet, ensure_ascii=False).casefold()
 
     snippet_packet = build_packet(transcript(), PLAN, include_snippets=True)
