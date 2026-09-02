@@ -33,6 +33,10 @@ function requiredSha(name: string): string {
   return value;
 }
 
+function invocationRoot(): string {
+  return process.env.INIT_CWD?.trim() || process.cwd();
+}
+
 function ensureSmokeSuccess(
   result: DoclingAdapterResult,
   expectedChildSha256: string,
@@ -78,7 +82,7 @@ async function main(): Promise<void> {
   }
   const expectedParentSha256 = requiredSha("--expected-parent");
   const expectedChildSha256 = requiredSha("--expected-child");
-  const sourcePath = resolve(sourceArg);
+  const sourcePath = resolve(invocationRoot(), sourceArg);
   const sourceBytes = new Uint8Array(await readFile(sourcePath));
   const parentSha256 = sha256(sourceBytes);
   if (parentSha256 !== expectedParentSha256) {
