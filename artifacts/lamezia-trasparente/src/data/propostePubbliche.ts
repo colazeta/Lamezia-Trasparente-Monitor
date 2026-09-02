@@ -42,6 +42,24 @@ export {
   hasCanonicalProposalPresentation,
 } from "./proposalCanonicalPresentation";
 
+export type {
+  LtSemanticExtensionId,
+  PaPublicServiceSubjectCode,
+  PaSemanticConcept,
+  ProposalPaSemanticProfile,
+} from "./proposalPaSemanticProfile";
+export {
+  LT_SEMANTIC_EXTENSIONS,
+  PA_PUBLIC_SERVICE_SUBJECT_SCHEME,
+  PA_PUBLIC_SERVICE_SUBJECTS,
+  getAvailablePaSubjects,
+  getMappedProposalThemes,
+  getProposalLocalSemanticExtensions,
+  getProposalOfficialPaSubjects,
+  getProposalPaSemanticProfile,
+  proposalMatchesPaSubject,
+} from "./proposalPaSemanticProfile";
+
 const UPDATED_CORE_PROPOSALS = core.PUBLIC_PROPOSALS.map(applyScoutingUpdates);
 
 export const PUBLIC_PROPOSALS = [
