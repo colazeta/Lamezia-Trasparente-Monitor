@@ -95,7 +95,7 @@ async function runProcessorProcess(input: {
     child.once("error", rejectPromise);
     child.once("close", (code) => {
       if (code === 0) resolvePromise();
-      else rejectPromise(new Error("Docling processor exited unsuccessfully"));
+      else rejectPromise(new Error("Docling processor transport exited unsuccessfully"));
     });
   });
 }
@@ -104,6 +104,15 @@ function resultStatus(value: unknown): string | null {
   if (!value || typeof value !== "object" || Array.isArray(value)) return null;
   const status = (value as Record<string, unknown>).status;
   return typeof status === "string" ? status : null;
+}
+
+function resultHasDerivedSource(value: unknown): boolean {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return false;
+  const derivedSource = (value as Record<string, unknown>).derivedSource;
+  if (!derivedSource || typeof derivedSource !== "object" || Array.isArray(derivedSource)) {
+    return false;
+  }
+  return (derivedSource as Record<string, unknown>).kind === "embedded-pdf";
 }
 
 async function readRequestedArtifacts(
@@ -124,15 +133,10 @@ async function readRequestedArtifacts(
 /**
  * Worker-only local transport for the standalone Docling processor.
  *
- * The executor accepts only the already-validated request and source bytes from
- * the trusted adapter. It materialises them into a private temporary directory,
- * invokes the configured processor command, reads bounded output bytes back
- * into memory and removes the entire temporary tree in `finally`.
- *
- * Civic URLs, object-storage locators and document content are never placed on
- * argv or emitted to stdio. The HTTP API entrypoint does not import this module.
- * The default processor script is bundled adjacent to this worker artifact;
- * callers may still provide an explicit processor path for controlled tests.
+ * The executor accepts only the already-validated request and parent-source
+ * bytes from the trusted adapter. For embedded-PDF transforms it also reads the
+ * exact child PDF back into memory so the adapter can independently re-hash it.
+ * All transport files are private and removed in `finally`.
  */
 export function createWorkerDoclingExecutor(
   config: WorkerDoclingExecutorConfig = {},
@@ -174,8 +178,17 @@ export function createWorkerDoclingExecutor(
         resultStatus(result) === "ok"
           ? await readRequestedArtifacts(outputDir, request)
           : {};
+      const derivedSourceBytes =
+        resultStatus(result) === "ok" && resultHasDerivedSource(result)
+          ? new Uint8Array(
+              await readFileBounded(
+                join(outputDir, "derived-source.pdf"),
+                request.limits.maxBytes,
+              ),
+            )
+          : undefined;
 
-      return { result, artifacts };
+      return { result, artifacts, derivedSourceBytes };
     } finally {
       await rm(workDir, { recursive: true, force: true });
     }

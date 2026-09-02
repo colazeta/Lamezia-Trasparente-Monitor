@@ -8,6 +8,7 @@ import {
 const SOURCE_SHA = "a".repeat(64);
 const STRUCTURED_SHA = "b".repeat(64);
 const MARKDOWN_SHA = "c".repeat(64);
+const DERIVED_SHA = "d".repeat(64);
 const EXTRACTED_AT = "2026-09-01T20:00:00.000Z";
 
 function request(
@@ -44,7 +45,7 @@ function request(
 
 function okResult(req = request()) {
   return {
-    schemaVersion: 1 as const,
+    schemaVersion: 2 as const,
     jobKey: req.jobKey,
     sourceSha256: SOURCE_SHA,
     representationKind: "derived-noncanonical" as const,
@@ -52,6 +53,13 @@ function okResult(req = request()) {
     extractedAt: EXTRACTED_AT,
     status: "ok" as const,
     durationMs: 2500,
+    derivedSource: {
+      kind: "embedded-pdf" as const,
+      parentSha256: SOURCE_SHA,
+      sha256: DERIVED_SHA,
+      sizeBytes: 8000,
+      attachmentIndex: 1,
+    },
     metrics: {
       markdownCharacters: 1452,
       pages: 1,
@@ -72,11 +80,13 @@ function okResult(req = request()) {
   };
 }
 
-describe("Docling processor request contract", () => {
+describe("Docling processor request contract v2", () => {
   it("builds a deterministic source-hash keyed request without a locator", () => {
     const first = request();
     const second = request();
+    expect(first.schemaVersion).toBe(2);
     expect(first.jobKey).toBe(second.jobKey);
+    expect(first.jobKey).toContain("docling:v2:");
     expect(first.jobKey).toContain(SOURCE_SHA);
     expect(first.representationKind).toBe("derived-noncanonical");
     expect(first).not.toHaveProperty("path");
@@ -85,27 +95,22 @@ describe("Docling processor request contract", () => {
     expect(first.source).not.toHaveProperty("url");
   });
 
-  it("includes the normalized requested output set in job identity", () => {
-    const structuredOnly = request(["structured-json"]);
+  it("includes outputs and execution limits in job identity", () => {
+    const standard = request();
     const both = request(["structured-json", "markdown"]);
     const bothReordered = request(["markdown", "structured-json"]);
-
-    expect(structuredOnly.jobKey).not.toBe(both.jobKey);
-    expect(both.jobKey).toBe(bothReordered.jobKey);
-  });
-
-  it("includes the execution limits in job identity", () => {
-    const standard = request();
     const morePages = request(undefined, { maxPages: 40 });
     const longerTimeout = request(undefined, { timeoutMs: 180_000 });
     const largerByteEnvelope = request(undefined, { maxBytes: 20_000 });
 
+    expect(standard.jobKey).not.toBe(both.jobKey);
+    expect(both.jobKey).toBe(bothReordered.jobKey);
     expect(morePages.jobKey).not.toBe(standard.jobKey);
     expect(longerTimeout.jobKey).not.toBe(standard.jobKey);
     expect(largerByteEnvelope.jobKey).not.toBe(standard.jobKey);
   });
 
-  it("rejects requests whose source exceeds the explicit byte bound", () => {
+  it("rejects requests outside source/page/output bounds", () => {
     expect(() =>
       buildDoclingProcessorRequest({
         source: {
@@ -128,9 +133,7 @@ describe("Docling processor request contract", () => {
         },
       }),
     ).toThrow();
-  });
 
-  it("rejects requests whose known page count exceeds maxPages", () => {
     expect(() =>
       buildDoclingProcessorRequest({
         source: {
@@ -153,19 +156,14 @@ describe("Docling processor request contract", () => {
         },
       }),
     ).toThrow(/observed page count exceeds request maxPages/);
-  });
 
-  it("rejects markdown-only requests because lossless structured JSON is mandatory", () => {
     expect(() => request(["markdown"])).toThrow(/structured-json is mandatory/);
-  });
-
-  it("allows structured-json without requesting convenience Markdown", () => {
     expect(request(["structured-json"]).requestedOutputs).toEqual([
       "structured-json",
     ]);
   });
 
-  it("fails closed on unrecognised fields such as a processor-side source URL", () => {
+  it("fails closed on unrecognised source locator fields", () => {
     const req = request();
     expect(() =>
       doclingProcessorRequestSchema.parse({
@@ -179,19 +177,21 @@ describe("Docling processor request contract", () => {
   });
 });
 
-describe("Docling processor result contract", () => {
-  it("accepts a matching derived result with all requested artifacts", () => {
+describe("Docling processor result contract v2", () => {
+  it("accepts matching parent-child provenance and requested artifacts", () => {
     const req = request();
     const parsed = parseDoclingProcessorResultForRequest(req, okResult(req));
     expect(parsed.status).toBe("ok");
     if (parsed.status === "ok") {
+      expect(parsed.derivedSource?.parentSha256).toBe(SOURCE_SHA);
+      expect(parsed.derivedSource?.sha256).toBe(DERIVED_SHA);
       expect(parsed.artifacts.some((artifact) => artifact.kind === "structured-json")).toBe(true);
       expect(parsed.artifacts.some((artifact) => artifact.kind === "markdown")).toBe(true);
       expect(parsed.extractedAt).toBe(EXTRACTED_AT);
     }
   });
 
-  it("requires a validated extraction timestamp", () => {
+  it("requires a valid timestamp and immutable parent identity", () => {
     const req = request();
     expect(() =>
       parseDoclingProcessorResultForRequest(req, {
@@ -199,61 +199,64 @@ describe("Docling processor result contract", () => {
         extractedAt: "not-a-date",
       }),
     ).toThrow();
-  });
-
-  it("rejects a result for a different immutable source hash", () => {
-    const req = request();
     expect(() =>
       parseDoclingProcessorResultForRequest(req, {
         ...okResult(req),
-        sourceSha256: "d".repeat(64),
+        sourceSha256: "e".repeat(64),
       }),
     ).toThrow(/source SHA-256 mismatch/);
-  });
-
-  it("rejects a result with a mismatched job identity", () => {
-    const req = request();
     expect(() =>
       parseDoclingProcessorResultForRequest(req, {
         ...okResult(req),
-        jobKey: "docling:v1:other",
+        jobKey: "docling:v2:other",
       }),
     ).toThrow(/jobKey mismatch/);
   });
 
-  it("rejects successful output that omits structured-json", () => {
+  it("requires parent-child provenance for embedded container success", () => {
+    const req = request();
+    const { derivedSource: _removed, ...withoutDerived } = okResult(req);
+    expect(() =>
+      parseDoclingProcessorResultForRequest(req, withoutDerived),
+    ).toThrow(/missing embedded derived source/);
+
+    expect(() =>
+      parseDoclingProcessorResultForRequest(req, {
+        ...okResult(req),
+        derivedSource: {
+          ...okResult(req).derivedSource,
+          parentSha256: "f".repeat(64),
+        },
+      }),
+    ).toThrow(/parent SHA-256 mismatch/);
+  });
+
+  it("enforces derived-source and processor resource bounds", () => {
     const req = request();
     expect(() =>
       parseDoclingProcessorResultForRequest(req, {
         ...okResult(req),
-        artifacts: [
-          {
-            kind: "markdown",
-            contentSha256: MARKDOWN_SHA,
-            sizeBytes: 1452,
-          },
-        ],
+        derivedSource: {
+          ...okResult(req).derivedSource,
+          sizeBytes: 10_001,
+        },
       }),
-    ).toThrow();
-  });
-
-  it("rejects a zero-byte structured JSON artifact", () => {
-    const req = request(["structured-json"]);
+    ).toThrow(/derived source exceeds requested maxBytes/);
     expect(() =>
       parseDoclingProcessorResultForRequest(req, {
         ...okResult(req),
-        artifacts: [
-          {
-            kind: "structured-json",
-            contentSha256: STRUCTURED_SHA,
-            sizeBytes: 0,
-          },
-        ],
+        metrics: { ...okResult(req).metrics, pages: 21 },
       }),
-    ).toThrow();
+    ).toThrow(/exceeds requested maxPages/);
+    expect(() =>
+      parseDoclingProcessorResultForRequest(req, {
+        ...okResult(req),
+        durationMs: 120_001,
+      }),
+    ).toThrow(/exceeds requested timeoutMs/);
   });
 
-  it("rejects a response that omits a requested convenience output", () => {
+  it("requires exactly the requested output set", () => {
     const req = request();
     expect(() =>
       parseDoclingProcessorResultForRequest(req, {
@@ -267,12 +270,10 @@ describe("Docling processor result contract", () => {
         ],
       }),
     ).toThrow(/missing requested output: markdown/);
-  });
 
-  it("accepts exactly structured-json when that is the only requested output", () => {
-    const req = request(["structured-json"]);
-    const parsed = parseDoclingProcessorResultForRequest(req, {
-      ...okResult(req),
+    const structuredOnly = request(["structured-json"]);
+    const parsed = parseDoclingProcessorResultForRequest(structuredOnly, {
+      ...okResult(structuredOnly),
       artifacts: [
         {
           kind: "structured-json",
@@ -282,42 +283,46 @@ describe("Docling processor result contract", () => {
       ],
     });
     expect(parsed.status).toBe("ok");
-  });
 
-  it("rejects unrequested extra artifacts for minimisation", () => {
-    const req = request(["structured-json"]);
     expect(() =>
-      parseDoclingProcessorResultForRequest(req, okResult(req)),
+      parseDoclingProcessorResultForRequest(structuredOnly, okResult(structuredOnly)),
     ).toThrow(/returned unrequested output: markdown/);
   });
 
-  it("rejects an ok result whose discovered page count exceeds maxPages", () => {
+  it("rejects malformed successful artifacts", () => {
     const req = request();
     expect(() =>
       parseDoclingProcessorResultForRequest(req, {
         ...okResult(req),
-        metrics: {
-          ...okResult(req).metrics,
-          pages: 21,
-        },
+        artifacts: [
+          {
+            kind: "markdown",
+            contentSha256: MARKDOWN_SHA,
+            sizeBytes: 1452,
+          },
+        ],
       }),
-    ).toThrow(/exceeds requested maxPages/);
-  });
+    ).toThrow();
 
-  it("rejects an ok result whose duration exceeds the requested timeout", () => {
-    const req = request();
+    const structuredOnly = request(["structured-json"]);
     expect(() =>
-      parseDoclingProcessorResultForRequest(req, {
-        ...okResult(req),
-        durationMs: 120_001,
+      parseDoclingProcessorResultForRequest(structuredOnly, {
+        ...okResult(structuredOnly),
+        artifacts: [
+          {
+            kind: "structured-json",
+            contentSha256: STRUCTURED_SHA,
+            sizeBytes: 0,
+          },
+        ],
       }),
-    ).toThrow(/exceeds requested timeoutMs/);
+    ).toThrow();
   });
 
-  it("accepts a bounded skip without fabricated artifacts", () => {
+  it("accepts a bounded skip without fabricated provenance or artifacts", () => {
     const req = request();
     const parsed = parseDoclingProcessorResultForRequest(req, {
-      schemaVersion: 1,
+      schemaVersion: 2,
       jobKey: req.jobKey,
       sourceSha256: SOURCE_SHA,
       representationKind: "derived-noncanonical",

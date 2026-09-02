@@ -93,26 +93,36 @@ function recordAdapterResult(
   result: DoclingAdapterResult,
 ): void {
   if (result.status === "validated") {
-    summary.validated += 1;
-    incrementOutcome(summary, "validated");
+    if (result.result.status === "ok") {
+      summary.validated += 1;
+      incrementOutcome(summary, "validated");
+      return;
+    }
+    if (result.result.status === "skipped") {
+      summary.skipped += 1;
+      incrementOutcome(summary, `processor-skipped:${result.result.skip.code}`);
+      return;
+    }
+    summary.rejected += 1;
+    incrementOutcome(summary, `processor-failed:${result.result.failure.code}`);
     return;
   }
   if (result.status === "skipped") {
     summary.skipped += 1;
-    incrementOutcome(summary, `skipped:${result.code}`);
+    incrementOutcome(summary, `adapter-skipped:${result.code}`);
     return;
   }
   summary.rejected += 1;
-  incrementOutcome(summary, `rejected:${result.code}`);
+  incrementOutcome(summary, `adapter-rejected:${result.code}`);
 }
 
 /**
  * Evaluate one already-observed candidate for worker-side execution.
  *
- * This function never persists or publishes Docling output. A validated result
- * is deliberately reduced to aggregate counters; the derived bytes become
- * unreachable after the call returns. Existing pdf-parse/Markdown behaviour is
- * therefore independent from Docling success/failure.
+ * This function never persists or publishes Docling output. A successful
+ * derived result is deliberately reduced to aggregate counters; all child and
+ * structured bytes become unreachable after the adapter call returns. Existing
+ * pdf-parse/Markdown behaviour is independent from Docling outcomes.
  */
 export async function evaluateDoclingRuntimeCandidate(
   context: DoclingRuntimeContext,

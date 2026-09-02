@@ -6,7 +6,8 @@ import {
   type RunDoclingAdapterInput,
 } from "./doclingProcessorAdapter";
 
-const SOURCE = Buffer.from("%PDF-1.4\nadapter-edge-test\n", "utf8");
+const SOURCE = Buffer.from("%PDF-1.4\nadapter-edge-parent\n", "utf8");
+const CHILD = Buffer.from("%PDF-1.4\nadapter-edge-child\n", "utf8");
 const PROCESSOR_VERSION = "2.124.0";
 const EXTRACTED_AT = "2026-09-01T20:40:00.000Z";
 
@@ -37,24 +38,32 @@ function validOutcome(
 ) {
   return {
     result: {
-      schemaVersion: 1,
+      schemaVersion: 2 as const,
       jobKey: request.jobKey,
       sourceSha256: request.source.sha256,
-      representationKind: "derived-noncanonical",
-      processor: { name: "docling", version: PROCESSOR_VERSION },
+      representationKind: "derived-noncanonical" as const,
+      processor: { name: "docling" as const, version: PROCESSOR_VERSION },
       extractedAt: EXTRACTED_AT,
-      status: "ok",
+      status: "ok" as const,
       durationMs: 10,
+      derivedSource: {
+        kind: "embedded-pdf" as const,
+        parentSha256: request.source.sha256,
+        sha256: sha256(CHILD),
+        sizeBytes: CHILD.byteLength,
+        attachmentIndex: 1,
+      },
       metrics: { markdownCharacters: 0, pages: 1, tables: 0 },
       artifacts: [
         {
-          kind: "structured-json",
+          kind: "structured-json" as const,
           contentSha256: sha256(structured),
           sizeBytes: structured.byteLength,
         },
       ],
     },
     artifacts: { "structured-json": structured },
+    derivedSourceBytes: CHILD,
   } as const;
 }
 
@@ -116,7 +125,7 @@ describe("trusted Docling adapter edge gates", () => {
     });
   });
 
-  it("returns defensive copies of validated derived bytes", async () => {
+  it("returns defensive copies of validated structured bytes", async () => {
     let executorOwned = Buffer.from(
       JSON.stringify({ schema_name: "DoclingDocument", value: 1 }),
       "utf8",

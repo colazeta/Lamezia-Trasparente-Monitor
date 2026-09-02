@@ -8,20 +8,43 @@ on:
       - 'tools/docling/requirements.txt'
       - 'tools/docling/extract_document.py'
       - 'tools/docling/extract_pdf_attachments.py'
+      - 'tools/docling/processor_contract.py'
       - 'tools/docling/run_benchmark.py'
       - 'tools/docling/test_extract_document.py'
       - 'tools/docling/test_extract_pdf_attachments.py'
+      - 'tools/docling/test_processor_contract.py'
+      - 'tools/docling/provision_cpu_worker.sh'
+      - 'tools/docling/test_cpu_provisioning.py'
+      - 'docs/architecture/docling-worker-activation.md'
       - 'artifacts/api-server/scripts/docling_pdf_baseline.mjs'
+      - 'artifacts/api-server/src/lib/doclingProcessorContract.ts'
+      - 'artifacts/api-server/src/lib/doclingProcessorContract.test.ts'
+      - 'artifacts/api-server/src/lib/doclingProcessorAdapter.ts'
+      - 'artifacts/api-server/src/lib/doclingProcessorAdapter.test.ts'
+      - 'artifacts/api-server/src/lib/doclingProcessorAdapter.edge.test.ts'
+      - 'artifacts/api-server/src/lib/doclingRuntimeWiring.ts'
+      - 'artifacts/api-server/src/lib/doclingRuntimeWiring.test.ts'
+      - 'artifacts/ingestion-worker/build.mjs'
+      - 'artifacts/ingestion-worker/package.json'
+      - 'artifacts/ingestion-worker/src/doclingExecutor.ts'
+      - 'artifacts/ingestion-worker/src/doclingPreflight.ts'
+      - 'artifacts/ingestion-worker/src/doclingSmoke.ts'
+      - 'artifacts/ingestion-worker/test/doclingBundle.test.mjs'
+      - 'artifacts/ingestion-worker/test/doclingExecutor.test.mjs'
       - 'data/public/albo/documents/2026/842702b2044b4b6f9a7b21a65eac2ab59866ee3f321872e6b28fd481598be304.pdf'
 
 permissions:
   contents: read
 
+concurrency:
+  group: docling-benchmark-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 jobs:
   benchmark:
-    name: Compare wrapper and embedded PDF
+    name: Packaged worker + reviewed embedded PDF
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 35
 
     steps:
       - name: Checkout repository
@@ -61,17 +84,55 @@ jobs:
           python -m pip install --upgrade uv
           uv pip install --system --torch-backend=cpu -r tools/docling/requirements.txt
           python - <<'PY'
+          import importlib.metadata as metadata
           import torch
+
+          forbidden = sorted(
+              dist.metadata["Name"]
+              for dist in metadata.distributions()
+              if (dist.metadata.get("Name") or "").lower().startswith(("nvidia-", "cuda-"))
+          )
+          if forbidden:
+              raise SystemExit("CUDA/NVIDIA packages found in CPU-only Docling job")
           if torch.version.cuda is not None:
               raise SystemExit(f"Expected CPU-only PyTorch, found CUDA {torch.version.cuda}")
           print(f"CPU-only PyTorch verified: {torch.__version__}")
           PY
 
-      - name: Run helper tests
+      - name: Prefetch Docling model artifacts
+        shell: bash
+        run: |
+          set -euo pipefail
+          models="$GITHUB_WORKSPACE/tmp/docling/models"
+          mkdir -p "$models"
+          docling-tools models download -o "$models" -q >/dev/null
+          test -n "$(find "$models" -type f -print -quit)"
+          echo "DOCLING_ARTIFACTS_PATH=$models" >> "$GITHUB_ENV"
+
+      - name: Run helper and contract tests
         run: |
           python tools/docling/test_extract_document.py
           python tools/docling/test_extract_pdf_attachments.py
-          python -m py_compile tools/docling/extract_document.py tools/docling/extract_pdf_attachments.py tools/docling/run_benchmark.py
+          python tools/docling/test_processor_contract.py
+          python tools/docling/test_cpu_provisioning.py
+          python -m py_compile \
+            tools/docling/extract_document.py \
+            tools/docling/extract_pdf_attachments.py \
+            tools/docling/processor_contract.py \
+            tools/docling/run_benchmark.py
+
+      - name: Build packaged ingestion worker
+        run: pnpm --filter @workspace/ingestion-worker run build
+
+      - name: Verify offline worker readiness
+        run: pnpm --filter @workspace/ingestion-worker run docling:preflight
+
+      - name: Run packaged end-to-end smoke
+        run: >-
+          pnpm --filter @workspace/ingestion-worker run docling:smoke --
+          --source data/public/albo/documents/2026/842702b2044b4b6f9a7b21a65eac2ab59866ee3f321872e6b28fd481598be304.pdf
+          --expected-parent 842702b2044b4b6f9a7b21a65eac2ab59866ee3f321872e6b28fd481598be304
+          --expected-child 3069388db15c43fdbf3cc980195f9c88ded602a6e9f8f89f358a006ce789096c
 
       - name: Benchmark wrapper PDF
         run: >-
