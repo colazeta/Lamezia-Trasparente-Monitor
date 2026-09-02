@@ -28,6 +28,8 @@ import {
   PROPOSAL_EVENT_LABELS,
   PROPOSAL_PROMOTER_TYPE_LABELS,
   PROPOSAL_STATUS_LABELS,
+  getProposalLocalSemanticExtensions,
+  getProposalOfficialPaSubjects,
   type PublicProposal,
   type ProposalStatus,
 } from "@/data/propostePubbliche";
@@ -190,18 +192,46 @@ function InstitutionalPath({ proposal }: { proposal: PublicProposal }) {
 
 function CanonicalRequestBlock({ proposal }: { proposal: PublicProposal }) {
   const canonical = getCanonicalProposalPresentation(proposal);
+  const officialSubjects = getProposalOfficialPaSubjects(proposal);
+  const localExtensions = getProposalLocalSemanticExtensions(proposal);
 
   return (
     <div className="rounded-lg border border-primary/20 bg-primary/[0.025] px-3 py-2.5">
       <div className="flex flex-wrap items-center gap-1.5">
         <p className="text-xs font-semibold text-foreground">Richiesta canonica</p>
         <Badge variant="secondary">Standard LT v{canonical.version}</Badge>
+      </div>
+
+      <div className="mt-1.5 flex flex-wrap items-center gap-1.5 text-[10px] text-muted-foreground">
+        <span className="font-semibold uppercase tracking-wide text-foreground">Materia PA</span>
+        {officialSubjects.map((subject) => (
+          <a
+            key={subject.uri}
+            href={subject.uri}
+            target="_blank"
+            rel="noreferrer"
+            className="inline-flex items-center"
+            title={`Concetto ufficiale ${subject.uri}`}
+          >
+            <Badge variant="outline">{subject.label}</Badge>
+          </a>
+        ))}
+        {localExtensions.map((extension) => (
+          <Badge key={extension.id} variant="outline">
+            {extension.label} · estensione LT
+          </Badge>
+        ))}
+      </div>
+
+      <div className="mt-1.5 flex flex-wrap items-center gap-1.5 text-[10px] text-muted-foreground">
+        <span className="font-semibold uppercase tracking-wide text-foreground">Intervento LT</span>
         {canonical.actionTypes.map((actionType) => (
           <Badge key={actionType} variant="outline">
             {CANONICAL_PROPOSAL_ACTION_LABELS[actionType]}
           </Badge>
         ))}
       </div>
+
       <p className="mt-1.5 text-sm leading-snug text-foreground">{canonical.request}</p>
       <ul className="mt-2 grid gap-1 text-xs text-muted-foreground md:grid-cols-2">
         {canonical.measures.map((measure) => (
@@ -226,6 +256,8 @@ export function ProposalDossierCard({ proposal }: { proposal: PublicProposal }) 
   const latestEvent = orderedEvents[orderedEvents.length - 1];
   const georeferenced = isProposalGeoreferenced(proposal.id);
   const canonical = getCanonicalProposalPresentation(proposal);
+  const officialSubjects = getProposalOfficialPaSubjects(proposal);
+  const localExtensions = getProposalLocalSemanticExtensions(proposal);
 
   return (
     <article
@@ -238,7 +270,14 @@ export function ProposalDossierCard({ proposal }: { proposal: PublicProposal }) 
           <Badge variant={statusBadgeVariant(proposal.status)}>
             {PROPOSAL_STATUS_LABELS[proposal.status]}
           </Badge>
-          <Badge variant="outline">{proposal.theme}</Badge>
+          {officialSubjects.map((subject) => (
+            <Badge key={subject.uri} variant="outline">{subject.label}</Badge>
+          ))}
+          {localExtensions.map((extension) => (
+            <Badge key={extension.id} variant="outline">
+              {extension.label} · LT
+            </Badge>
+          ))}
           <Badge variant={georeferenced ? "secondary" : "outline"}>
             {georeferenced ? "Georeferenziata" : "Intera città · non georeferenziata"}
           </Badge>
@@ -374,7 +413,7 @@ export function ProposalDossierCard({ proposal }: { proposal: PublicProposal }) 
                   <p className="mt-1 font-medium text-foreground">{proposal.title}</p>
                   <p className="mt-0.5 leading-relaxed">{proposal.summary}</p>
                   <p className="mt-1 text-[10px] leading-relaxed">
-                    Questo testo conserva la formulazione usata nel dataset di acquisizione. La scheda pubblica usa invece la rappresentazione canonica LT v{canonical.version}.
+                    Tema di acquisizione: <span className="font-semibold">{proposal.theme}</span>. Questo testo e la classificazione originaria restano disponibili per audit; la navigazione pubblica usa la Materia PA e la rappresentazione canonica LT v{canonical.version}.
                   </p>
                 </div>
 
