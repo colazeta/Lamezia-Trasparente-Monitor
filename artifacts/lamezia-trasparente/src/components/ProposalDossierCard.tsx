@@ -23,13 +23,16 @@ import {
   isProposalGeoreferenced,
 } from "@/data/proposalGeography";
 import {
+  getProposalPaSemanticProfile,
+  getProposalPrimaryPaSubject,
+  getProposalSecondaryPaSubjects,
+} from "@/data/proposalPaSemanticProfile";
+import {
   PROPOSAL_CHANNEL_LABELS,
   PROPOSAL_EVIDENCE_LABELS,
   PROPOSAL_EVENT_LABELS,
   PROPOSAL_PROMOTER_TYPE_LABELS,
   PROPOSAL_STATUS_LABELS,
-  getProposalLocalSemanticExtensions,
-  getProposalOfficialPaSubjects,
   type PublicProposal,
   type ProposalStatus,
 } from "@/data/propostePubbliche";
@@ -192,46 +195,13 @@ function InstitutionalPath({ proposal }: { proposal: PublicProposal }) {
 
 function CanonicalRequestBlock({ proposal }: { proposal: PublicProposal }) {
   const canonical = getCanonicalProposalPresentation(proposal);
-  const officialSubjects = getProposalOfficialPaSubjects(proposal);
-  const localExtensions = getProposalLocalSemanticExtensions(proposal);
 
   return (
     <div className="rounded-lg border border-primary/20 bg-primary/[0.025] px-3 py-2.5">
       <div className="flex flex-wrap items-center gap-1.5">
-        <p className="text-xs font-semibold text-foreground">Richiesta canonica</p>
+        <p className="text-xs font-semibold text-foreground">Cosa chiede</p>
         <Badge variant="secondary">Standard LT v{canonical.version}</Badge>
       </div>
-
-      <div className="mt-1.5 flex flex-wrap items-center gap-1.5 text-[10px] text-muted-foreground">
-        <span className="font-semibold uppercase tracking-wide text-foreground">Materia PA</span>
-        {officialSubjects.map((subject) => (
-          <a
-            key={subject.uri}
-            href={subject.uri}
-            target="_blank"
-            rel="noreferrer"
-            className="inline-flex items-center"
-            title={`Concetto ufficiale ${subject.uri}`}
-          >
-            <Badge variant="outline">{subject.label}</Badge>
-          </a>
-        ))}
-        {localExtensions.map((extension) => (
-          <Badge key={extension.id} variant="outline">
-            {extension.label} · estensione LT
-          </Badge>
-        ))}
-      </div>
-
-      <div className="mt-1.5 flex flex-wrap items-center gap-1.5 text-[10px] text-muted-foreground">
-        <span className="font-semibold uppercase tracking-wide text-foreground">Intervento LT</span>
-        {canonical.actionTypes.map((actionType) => (
-          <Badge key={actionType} variant="outline">
-            {CANONICAL_PROPOSAL_ACTION_LABELS[actionType]}
-          </Badge>
-        ))}
-      </div>
-
       <p className="mt-1.5 text-sm leading-snug text-foreground">{canonical.request}</p>
       <ul className="mt-2 grid gap-1 text-xs text-muted-foreground md:grid-cols-2">
         {canonical.measures.map((measure) => (
@@ -251,13 +221,55 @@ function CanonicalRequestBlock({ proposal }: { proposal: PublicProposal }) {
   );
 }
 
+function SemanticAudit({ proposal }: { proposal: PublicProposal }) {
+  const canonical = getCanonicalProposalPresentation(proposal);
+  const profile = getProposalPaSemanticProfile(proposal);
+  const primary = getProposalPrimaryPaSubject(proposal);
+  const secondary = getProposalSecondaryPaSubjects(proposal);
+
+  return (
+    <details className="rounded-md border border-border bg-background px-2.5 py-2">
+      <summary className="cursor-pointer font-semibold text-foreground">
+        Metadati semantici
+      </summary>
+      <div className="mt-2 space-y-1.5 text-[11px] leading-relaxed">
+        <p>
+          <span className="font-semibold text-foreground">Materia principale:</span>{" "}
+          <a href={primary.uri} target="_blank" rel="noreferrer" className="text-primary hover:underline">
+            {primary.label}
+          </a>
+        </p>
+        {secondary.length > 0 ? (
+          <p>
+            <span className="font-semibold text-foreground">Classificazioni secondarie:</span>{" "}
+            {secondary.map((subject, index) => (
+              <span key={subject.uri}>
+                {index > 0 ? ", " : ""}
+                <a href={subject.uri} target="_blank" rel="noreferrer" className="text-primary hover:underline">
+                  {subject.label}
+                </a>
+              </span>
+            ))}
+          </p>
+        ) : null}
+        <p>
+          <span className="font-semibold text-foreground">Facet operative LT:</span>{" "}
+          {canonical.actionTypes
+            .map((actionType) => CANONICAL_PROPOSAL_ACTION_LABELS[actionType])
+            .join(", ")}
+        </p>
+        {profile.mappingNote ? <p>{profile.mappingNote}</p> : null}
+      </div>
+    </details>
+  );
+}
+
 export function ProposalDossierCard({ proposal }: { proposal: PublicProposal }) {
   const orderedEvents = [...proposal.events].sort((a, b) => a.date.localeCompare(b.date));
   const latestEvent = orderedEvents[orderedEvents.length - 1];
   const georeferenced = isProposalGeoreferenced(proposal.id);
   const canonical = getCanonicalProposalPresentation(proposal);
-  const officialSubjects = getProposalOfficialPaSubjects(proposal);
-  const localExtensions = getProposalLocalSemanticExtensions(proposal);
+  const primarySubject = getProposalPrimaryPaSubject(proposal);
 
   return (
     <article
@@ -270,14 +282,7 @@ export function ProposalDossierCard({ proposal }: { proposal: PublicProposal }) 
           <Badge variant={statusBadgeVariant(proposal.status)}>
             {PROPOSAL_STATUS_LABELS[proposal.status]}
           </Badge>
-          {officialSubjects.map((subject) => (
-            <Badge key={subject.uri} variant="outline">{subject.label}</Badge>
-          ))}
-          {localExtensions.map((extension) => (
-            <Badge key={extension.id} variant="outline">
-              {extension.label} · LT
-            </Badge>
-          ))}
+          <Badge variant="outline">{primarySubject.label}</Badge>
           <Badge variant={georeferenced ? "secondary" : "outline"}>
             {georeferenced ? "Georeferenziata" : "Intera città · non georeferenziata"}
           </Badge>
@@ -413,7 +418,7 @@ export function ProposalDossierCard({ proposal }: { proposal: PublicProposal }) 
                   <p className="mt-1 font-medium text-foreground">{proposal.title}</p>
                   <p className="mt-0.5 leading-relaxed">{proposal.summary}</p>
                   <p className="mt-1 text-[10px] leading-relaxed">
-                    Tema di acquisizione: <span className="font-semibold">{proposal.theme}</span>. Questo testo e la classificazione originaria restano disponibili per audit; la navigazione pubblica usa la Materia PA e la rappresentazione canonica LT v{canonical.version}.
+                    Tema originario: <span className="font-semibold">{proposal.theme}</span>.
                   </p>
                 </div>
 
@@ -431,6 +436,7 @@ export function ProposalDossierCard({ proposal }: { proposal: PublicProposal }) 
                   <p className="font-semibold text-foreground">Nota di verifica redazionale</p>
                   <p className="mt-0.5 leading-relaxed">{proposal.verificationNote}</p>
                 </div>
+                <SemanticAudit proposal={proposal} />
               </div>
             </details>
           </div>
