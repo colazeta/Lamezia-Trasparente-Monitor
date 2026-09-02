@@ -62,6 +62,12 @@ export const OFFICIAL_FALLBACK_DATA_THEMES = {
  */
 export const LT_SEMANTIC_EXTENSIONS = {} as const;
 export type LtSemanticExtensionId = never;
+export type LtSemanticExtension = {
+  id: string;
+  label: string;
+  definition: string;
+  relatedOfficialUris: readonly string[];
+};
 
 export type PaPublicServiceSubjectCode = keyof typeof PA_PUBLIC_SERVICE_SUBJECTS;
 export type OfficialFallbackDataThemeCode = keyof typeof OFFICIAL_FALLBACK_DATA_THEMES;
@@ -190,9 +196,9 @@ export function getProposalOfficialPaSubjects(
 
 export function getProposalLocalSemanticExtensions(
   proposal: Pick<PublicProposal, "id" | "theme">,
-) {
+): readonly LtSemanticExtension[] {
   getProposalPaSemanticProfile(proposal);
-  return [] as const;
+  return [];
 }
 
 export function getAvailablePaSubjects(proposals: readonly PublicProposal[]) {
