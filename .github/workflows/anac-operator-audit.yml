@@ -68,26 +68,11 @@ jobs:
             printf '\n' | tee -a .artifacts/anac-operator-audit/source-probe.log
 
             echo "=== $dataset data.europa.eu CKAN ===" | tee -a .artifacts/anac-operator-audit/source-probe.log
+            file=".artifacts/anac-operator-audit/federated/${dataset}-data-europa.json"
             curl -sS -L --max-time 30 -A "$UA" \
               "https://data.europa.eu/api/hub/search/ckan/package_search?q=$dataset&rows=20" \
-              -o ".artifacts/anac-operator-audit/federated/${dataset}-data-europa.json" || true
-            node - ".artifacts/anac-operator-audit/federated/${dataset}-data-europa.json" "$dataset" <<'NODE' | tee -a .artifacts/anac-operator-audit/source-probe.log
-const fs = require('fs');
-const [file, term] = process.argv.slice(2);
-try {
-  const value = JSON.parse(fs.readFileSync(file, 'utf8'));
-  const results = value?.result?.results ?? value?.result?.result?.results ?? value?.results ?? [];
-  console.log(`results=${Array.isArray(results) ? results.length : 'unknown'}`);
-  for (const item of Array.isArray(results) ? results.slice(0, 10) : []) {
-    const title = typeof item.title === 'string' ? item.title : JSON.stringify(item.title ?? '');
-    const publisher = typeof item.publisher === 'string' ? item.publisher : JSON.stringify(item.publisher ?? '');
-    const resources = Array.isArray(item.resources) ? item.resources : Array.isArray(item.distributions) ? item.distributions : [];
-    console.log(JSON.stringify({id:item.id, title, publisher, resourceCount:resources.length, resources:resources.slice(0,8).map(r => ({url:r.url, access_url:r.access_url, download_url:r.download_url, format:r.format, name:r.name}))}));
-  }
-} catch (error) {
-  console.log(`parse-error=${error.message}`);
-}
-NODE
+              -o "$file" || true
+            node -e 'const fs=require("fs"); const [f,term]=process.argv.slice(1); try { const v=JSON.parse(fs.readFileSync(f,"utf8")); const r=v?.result?.results ?? v?.result?.result?.results ?? v?.results ?? []; console.log(`results=${Array.isArray(r)?r.length:"unknown"}`); for(const x of (Array.isArray(r)?r.slice(0,10):[])){ const resources=Array.isArray(x.resources)?x.resources:(Array.isArray(x.distributions)?x.distributions:[]); console.log(JSON.stringify({id:x.id,title:x.title,publisher:x.publisher,resourceCount:resources.length,resources:resources.slice(0,8).map(y=>({url:y.url,access_url:y.access_url,download_url:y.download_url,format:y.format,name:y.name}))})); }} catch(e){ console.log(`parse-error=${e.message}`); }' "$file" "$dataset" | tee -a .artifacts/anac-operator-audit/source-probe.log
             printf '\n' | tee -a .artifacts/anac-operator-audit/source-probe.log
           done
 
