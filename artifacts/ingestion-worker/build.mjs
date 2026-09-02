@@ -20,6 +20,7 @@ async function buildAll() {
       index: path.resolve(artifactDir, "src/index.ts"),
       doclingExecutor: path.resolve(artifactDir, "src/doclingExecutor.ts"),
       doclingPreflight: path.resolve(artifactDir, "src/doclingPreflight.ts"),
+      doclingSmoke: path.resolve(artifactDir, "src/doclingSmoke.ts"),
     },
     platform: "node",
     bundle: true,
@@ -129,8 +130,8 @@ globalThis.__dirname = __bannerPath.dirname(globalThis.__filename);
   );
 
   // Ship the processor contract next to the worker bundle. Runtime activation
-  // still requires a compatible Python environment; build never installs or
-  // downloads Python dependencies.
+  // still requires a compatible CPU-only Python environment and prefetched
+  // Docling model artifacts; build never installs or downloads Python assets.
   const doclingDistDir = path.resolve(distDir, "docling");
   await mkdir(doclingDistDir, { recursive: true });
   await Promise.all([
