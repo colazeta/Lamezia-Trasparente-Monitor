@@ -71,6 +71,8 @@ describe("proposte civiche", () => {
     expect(screen.getByLabelText("Anno")).toBeInTheDocument();
     expect(screen.getByLabelText("Stato")).toBeInTheDocument();
     expect(screen.getByLabelText("Canale")).toBeInTheDocument();
+    expect(screen.getAllByText("A chi è rivolta").length).toBeGreaterThan(0);
+    expect(screen.queryByText(/^Destinatario$/)).not.toBeInTheDocument();
     expect(
       screen.getByText("Pubblicazione digitale di convocazioni e ordini del giorno"),
     ).toBeInTheDocument();

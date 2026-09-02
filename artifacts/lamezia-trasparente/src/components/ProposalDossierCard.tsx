@@ -29,10 +29,12 @@ import {
 } from "@/data/proposalPaSemanticProfile";
 import {
   PROPOSAL_CHANNEL_LABELS,
+  PROPOSAL_COMPETENCE_ASSESSMENT_LABELS,
   PROPOSAL_EVIDENCE_LABELS,
   PROPOSAL_EVENT_LABELS,
   PROPOSAL_PROMOTER_TYPE_LABELS,
   PROPOSAL_PUBLIC_STATE_LABELS,
+  getProposalInstitutionalCompetence,
   getProposalInstitutionalState,
   type PublicProposal,
   type ProposalPublicState,
@@ -218,6 +220,7 @@ function SemanticAudit({ proposal }: { proposal: PublicProposal }) {
   const primary = getProposalPrimaryPaSubject(proposal);
   const secondary = getProposalSecondaryPaSubjects(proposal);
   const institutional = getProposalInstitutionalState(proposal);
+  const competence = getProposalInstitutionalCompetence(proposal);
 
   return (
     <details className="rounded-md border border-border bg-background px-2.5 py-2">
@@ -254,6 +257,27 @@ function SemanticAudit({ proposal }: { proposal: PublicProposal }) {
           <span className="font-semibold text-foreground">Stadio backend:</span>{" "}
           {institutional.progressStage} · status sorgente: {institutional.technicalStatus}
         </p>
+        <p>
+          <span className="font-semibold text-foreground">Destinatario sorgente:</span>{" "}
+          {competence.sourceAddressee ?? "Non indicato"}
+        </p>
+        <p>
+          <span className="font-semibold text-foreground">Competenza sostanziale:</span>{" "}
+          {PROPOSAL_COMPETENCE_ASSESSMENT_LABELS[competence.assessmentStatus]}
+        </p>
+        {competence.primaryAuthority ? (
+          <p>
+            <span className="font-semibold text-foreground">Ente competente verificato:</span>{" "}
+            {competence.primaryAuthority.label}
+          </p>
+        ) : null}
+        {competence.involvedAuthorities.length > 0 ? (
+          <p>
+            <span className="font-semibold text-foreground">Enti coinvolti verificati:</span>{" "}
+            {competence.involvedAuthorities.map((authority) => authority.label).join(", ")}
+          </p>
+        ) : null}
+        <p>{competence.assessmentNote}</p>
         {profile.mappingNote ? <p>{profile.mappingNote}</p> : null}
       </div>
     </details>
@@ -267,6 +291,7 @@ export function ProposalDossierCard({ proposal }: { proposal: PublicProposal }) 
   const canonical = getCanonicalProposalPresentation(proposal);
   const primarySubject = getProposalPrimaryPaSubject(proposal);
   const institutionalState = getProposalInstitutionalState(proposal);
+  const competence = getProposalInstitutionalCompetence(proposal);
 
   return (
     <article
@@ -333,8 +358,8 @@ export function ProposalDossierCard({ proposal }: { proposal: PublicProposal }) 
                   {PROPOSAL_PROMOTER_TYPE_LABELS[proposal.promoterType]}
                 </span>
               </MetadataItem>
-              <MetadataItem label="Destinatario">
-                {proposal.institutionalRecipient ?? "Non indicato"}
+              <MetadataItem label="A chi è rivolta">
+                {competence.publicAddressee}
               </MetadataItem>
               <MetadataItem label="Filone">{proposal.threadLabel}</MetadataItem>
               <MetadataItem label="Canale / evidenza">
