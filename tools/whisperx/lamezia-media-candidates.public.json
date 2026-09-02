@@ -1,0 +1,48 @@
+{
+  "schemaVersion": 1,
+  "purpose": "whisperx-lamezia-quality-source-resolution",
+  "session": {
+    "municipality": "Lamezia Terme",
+    "type": "consiglio-comunale",
+    "date": "2026-05-19"
+  },
+  "productionRequirement": {
+    "institutionalLocatorStillRequired": true,
+    "thirdPartyMirrorCanBecomeCanonical": false,
+    "processorMayFetchUrls": false
+  },
+  "candidates": [
+    {
+      "id": "cityone-session-report-2026-05-19",
+      "url": "https://www.cityonelamezia.it/consiglio-comunale-lamezia-murone-su-accessi-aeroportuali-amministrazione-non-consultata/",
+      "publisher": "City One Lamezia",
+      "role": "reviewed-third-party-session-evidence",
+      "expectedDate": "2026-05-19",
+      "expectedMarkers": ["Mario Murone", "Lidia Vescio", "PNRR", "Richetti"],
+      "mayProvideQualityMedia": true
+    },
+    {
+      "id": "cityone-video-index",
+      "url": "https://www.cityonelamezia.it/programma/video-news",
+      "publisher": "City One Lamezia",
+      "role": "reviewed-third-party-video-index",
+      "expectedMarkers": ["Consiglio Comunale Lamezia Terme", "Mario Murone", "Annita Vitale", "Fabrizio Muraca", "Mimmo Gianturco"],
+      "mayProvideQualityMedia": true
+    },
+    {
+      "id": "municipium-council-page",
+      "url": "https://www.comune.lamezia-terme.cz.it/it/unita_organizzative/consiglio-comunale",
+      "publisher": "Comune di Lamezia Terme",
+      "role": "institutional-locator-candidate",
+      "mayProvideQualityMedia": true
+    },
+    {
+      "id": "municipium-government-page",
+      "url": "https://www.comune.lamezia-terme.cz.it/it/page/organi-di-governo",
+      "publisher": "Comune di Lamezia Terme",
+      "role": "institutional-recording-policy-evidence",
+      "mayProvideQualityMedia": false
+    }
+  ],
+  "resolutionRule": "Only URLs already listed here may be fetched by the source-resolution probe. Discovered media are benchmark candidates only until separately reviewed; they are never handed to WhisperX as URLs."
+}
