@@ -5,6 +5,7 @@ import { URL } from 'node:url';
 
 const MAX_HTML_BYTES = 5 * 1024 * 1024;
 const TIMEOUT_MS = 20_000;
+const MAX_REDIRECTS = 3;
 const MAX_SCRIPT_HINTS = 100;
 const MEDIA_EXT = /\.(?:mp3|m4a|aac|wav|ogg|opus|mp4|webm|m3u8|mpd)(?:$|[?#])/i;
 const MEDIA_HINT = /(?:youtube\.com|youtu\.be|vimeo\.com|facebook\.com|fb\.watch|player|stream|video|media)/i;
@@ -76,31 +77,49 @@ function markerPresence(text, markers = []) {
   return Object.fromEntries(markers.map((marker) => [marker, lower.includes(String(marker).toLocaleLowerCase('it'))]));
 }
 
-async function boundedFetch(url) {
+async function boundedFetch(inputUrl) {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), TIMEOUT_MS);
+  const initial = new URL(inputUrl);
+  let current = initial;
+
   try {
-    const response = await fetch(url, {
-      redirect: 'follow',
-      signal: controller.signal,
-      headers: {
-        'user-agent': 'Lamezia-Trasparente-WhisperX-SourceProbe/1.0 (+public-source-resolution)',
-        accept: 'text/html,application/xhtml+xml,application/json,text/javascript,application/javascript;q=0.9,*/*;q=0.1',
-      },
-    });
-    const contentType = response.headers.get('content-type') || '';
-    const contentLength = Number(response.headers.get('content-length') || 0);
-    if (contentLength > MAX_HTML_BYTES) throw new Error('response-too-large');
-    const bytes = new Uint8Array(await response.arrayBuffer());
-    if (bytes.byteLength > MAX_HTML_BYTES) throw new Error('response-too-large');
-    return {
-      ok: response.ok,
-      status: response.status,
-      finalUrl: response.url,
-      contentType,
-      bytes,
-      text: new TextDecoder('utf-8', { fatal: false }).decode(bytes),
-    };
+    for (let redirectCount = 0; redirectCount <= MAX_REDIRECTS; redirectCount += 1) {
+      const response = await fetch(current.toString(), {
+        redirect: 'manual',
+        signal: controller.signal,
+        headers: {
+          'user-agent': 'Lamezia-Trasparente-WhisperX-SourceProbe/1.0 (+public-source-resolution)',
+          accept: 'text/html,application/xhtml+xml,application/json,text/javascript,application/javascript;q=0.9,*/*;q=0.1',
+        },
+      });
+
+      if (response.status >= 300 && response.status < 400) {
+        const location = response.headers.get('location');
+        if (!location) throw new Error('redirect-without-location');
+        if (redirectCount >= MAX_REDIRECTS) throw new Error('too-many-redirects');
+        const next = new URL(location, current);
+        if (!['http:', 'https:'].includes(next.protocol)) throw new Error('unsupported-redirect-protocol');
+        if (next.origin !== initial.origin) throw new Error('cross-origin-redirect');
+        current = next;
+        continue;
+      }
+
+      const contentType = response.headers.get('content-type') || '';
+      const contentLength = Number(response.headers.get('content-length') || 0);
+      if (contentLength > MAX_HTML_BYTES) throw new Error('response-too-large');
+      const bytes = new Uint8Array(await response.arrayBuffer());
+      if (bytes.byteLength > MAX_HTML_BYTES) throw new Error('response-too-large');
+      return {
+        ok: response.ok,
+        status: response.status,
+        finalUrl: current.toString(),
+        contentType,
+        bytes,
+        text: new TextDecoder('utf-8', { fatal: false }).decode(bytes),
+      };
+    }
+    throw new Error('too-many-redirects');
   } finally {
     clearTimeout(timer);
   }
@@ -164,6 +183,8 @@ async function main() {
     fetchPolicy: {
       allowlistedOnly: true,
       followsDiscoveredResources: false,
+      crossOriginRedirectFetchPermitted: false,
+      maxRedirects: MAX_REDIRECTS,
       maxResponseBytes: MAX_HTML_BYTES,
       timeoutMs: TIMEOUT_MS,
       maxScriptEndpointHints: MAX_SCRIPT_HINTS,
