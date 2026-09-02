@@ -32,21 +32,21 @@ import {
   PROPOSAL_EVIDENCE_LABELS,
   PROPOSAL_EVENT_LABELS,
   PROPOSAL_PROMOTER_TYPE_LABELS,
-  PROPOSAL_STATUS_LABELS,
+  PROPOSAL_PUBLIC_STATE_LABELS,
+  getProposalInstitutionalState,
   type PublicProposal,
-  type ProposalStatus,
+  type ProposalPublicState,
 } from "@/data/propostePubbliche";
 
-function statusBadgeVariant(status: ProposalStatus) {
+function statusBadgeVariant(status: ProposalPublicState) {
   switch (status) {
-    case "presentata_formalmente":
-    case "discussa":
+    case "presentata":
+    case "con_seguito":
       return "default" as const;
-    case "recepita_parzialmente":
-    case "recepita_integralmente":
+    case "in_attuazione":
       return "secondary" as const;
-    case "non_verificabile":
-    case "senza_seguito_noto":
+    case "da_verificare":
+    case "nessun_seguito_noto":
       return "outline" as const;
     default:
       return "secondary" as const;
@@ -150,38 +150,29 @@ function TerritoryBlock({ proposal }: { proposal: PublicProposal }) {
 
 function InstitutionalPath({ proposal }: { proposal: PublicProposal }) {
   const institutionalEvents = getInstitutionalProposalEvents(proposal);
-  const visibleEvents = institutionalEvents.slice(-5);
-  if (institutionalEvents.length === 0 && proposal.linkedActs.length === 0) return null;
+  const latestInstitutionalEvent = institutionalEvents.at(-1);
+  const state = getProposalInstitutionalState(proposal);
 
   return (
     <div className="rounded-lg border border-border px-3 py-2">
       <div className="flex flex-wrap items-center gap-1.5 text-xs">
         <Landmark className="h-3.5 w-3.5 text-primary" aria-hidden="true" />
         <span className="font-semibold text-foreground">Percorso istituzionale</span>
-        {visibleEvents.map((event) => {
-          const label = `${PROPOSAL_EVENT_LABELS[event.type]} · ${formatDate(event.date)}`;
-          return event.sourceUrl ? (
-            <a
-              key={event.id}
-              href={event.sourceUrl}
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex items-center gap-1 rounded-full border border-border bg-muted/20 px-2 py-0.5 font-medium text-foreground hover:border-primary/50 hover:text-primary"
-            >
-              {label}
-              <ExternalLink className="h-3 w-3" aria-hidden="true" />
-            </a>
-          ) : (
-            <span
-              key={event.id}
-              className="rounded-full border border-border bg-muted/20 px-2 py-0.5 font-medium text-foreground"
-            >
-              {label}
-            </span>
-          );
-        })}
-        {institutionalEvents.length > visibleEvents.length ? (
-          <Badge variant="outline">+{institutionalEvents.length - visibleEvents.length}</Badge>
+        <Badge variant="outline">
+          {PROPOSAL_PUBLIC_STATE_LABELS[state.publicState]}
+        </Badge>
+        {institutionalEvents.length > 0 ? (
+          <span className="text-muted-foreground">
+            {institutionalEvents.length}{" "}
+            {institutionalEvents.length === 1 ? "passaggio documentato" : "passaggi documentati"}
+          </span>
+        ) : (
+          <span className="text-muted-foreground">nessun passaggio istituzionale documentato</span>
+        )}
+        {latestInstitutionalEvent ? (
+          <span className="text-muted-foreground">
+            · ultimo: {PROPOSAL_EVENT_LABELS[latestInstitutionalEvent.type]} {formatDate(latestInstitutionalEvent.date)}
+          </span>
         ) : null}
         {proposal.linkedActs.length > 0 ? (
           <Badge variant="secondary">
@@ -226,11 +217,12 @@ function SemanticAudit({ proposal }: { proposal: PublicProposal }) {
   const profile = getProposalPaSemanticProfile(proposal);
   const primary = getProposalPrimaryPaSubject(proposal);
   const secondary = getProposalSecondaryPaSubjects(proposal);
+  const institutional = getProposalInstitutionalState(proposal);
 
   return (
     <details className="rounded-md border border-border bg-background px-2.5 py-2">
       <summary className="cursor-pointer font-semibold text-foreground">
-        Metadati semantici
+        Metadati semantici e di percorso
       </summary>
       <div className="mt-2 space-y-1.5 text-[11px] leading-relaxed">
         <p>
@@ -258,6 +250,10 @@ function SemanticAudit({ proposal }: { proposal: PublicProposal }) {
             .map((actionType) => CANONICAL_PROPOSAL_ACTION_LABELS[actionType])
             .join(", ")}
         </p>
+        <p>
+          <span className="font-semibold text-foreground">Stadio backend:</span>{" "}
+          {institutional.progressStage} · status sorgente: {institutional.technicalStatus}
+        </p>
         {profile.mappingNote ? <p>{profile.mappingNote}</p> : null}
       </div>
     </details>
@@ -270,6 +266,7 @@ export function ProposalDossierCard({ proposal }: { proposal: PublicProposal }) 
   const georeferenced = isProposalGeoreferenced(proposal.id);
   const canonical = getCanonicalProposalPresentation(proposal);
   const primarySubject = getProposalPrimaryPaSubject(proposal);
+  const institutionalState = getProposalInstitutionalState(proposal);
 
   return (
     <article
@@ -279,8 +276,8 @@ export function ProposalDossierCard({ proposal }: { proposal: PublicProposal }) 
     >
       <div className="px-4 py-3">
         <div className="flex flex-wrap items-center gap-1.5">
-          <Badge variant={statusBadgeVariant(proposal.status)}>
-            {PROPOSAL_STATUS_LABELS[proposal.status]}
+          <Badge variant={statusBadgeVariant(institutionalState.publicState)}>
+            {PROPOSAL_PUBLIC_STATE_LABELS[institutionalState.publicState]}
           </Badge>
           <Badge variant="outline">{primarySubject.label}</Badge>
           <Badge variant={georeferenced ? "secondary" : "outline"}>

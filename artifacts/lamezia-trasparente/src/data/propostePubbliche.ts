@@ -71,6 +71,29 @@ export {
   proposalMatchesPrimaryPaSubject,
 } from "./proposalPaSemanticProfile";
 
+export type {
+  ProposalEvidenceRole,
+  ProposalImplementationEvidence,
+  ProposalInstitutionalEvidence,
+  ProposalInstitutionalProgressStage,
+  ProposalInstitutionalState,
+  ProposalPublicState,
+} from "./proposalInstitutionalState";
+export {
+  INSTITUTIONAL_PROPOSAL_EVENT_TYPES,
+  PROPOSAL_EVIDENCE_ROLES,
+  PROPOSAL_EVIDENCE_ROLE_LABELS,
+  PROPOSAL_IMPLEMENTATION_EVIDENCE,
+  PROPOSAL_INSTITUTIONAL_PROGRESS_STAGES,
+  PROPOSAL_INSTITUTIONAL_PROGRESS_LABELS,
+  PROPOSAL_PUBLIC_STATES,
+  PROPOSAL_PUBLIC_STATE_LABELS,
+  getAvailablePublicInstitutionalStates,
+  getProposalInstitutionalEvidence,
+  getProposalInstitutionalState,
+  proposalMatchesPublicInstitutionalState,
+} from "./proposalInstitutionalState";
+
 const UPDATED_CORE_PROPOSALS = core.PUBLIC_PROPOSALS.map(applyScoutingUpdates);
 
 export const PUBLIC_PROPOSALS = [

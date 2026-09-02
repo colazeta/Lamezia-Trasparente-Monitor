@@ -54,7 +54,7 @@ describe("proposte civiche", () => {
     expect(filterPublicProposals(PUBLIC_PROPOSALS, { status: "discussa" })).toHaveLength(0);
   });
 
-  it("renderizza un archivio compatto con un solo filtro pubblico di materia", () => {
+  it("renderizza un archivio compatto con materia e stato cittadino", () => {
     renderProposteCiviche();
 
     expect(screen.getByRole("heading", { name: "Proposte civiche" })).toBeInTheDocument();
@@ -118,11 +118,42 @@ describe("proposte civiche", () => {
     ).not.toBeInTheDocument();
   });
 
-  it("aggiorna il conteggio quando un filtro non contiene risultati", () => {
+  it("mostra nel filtro solo stati cittadini e non gli stati tecnici", () => {
+    renderProposteCiviche();
+
+    expect(screen.getByRole("option", { name: "Segnalata" })).toBeInTheDocument();
+    expect(
+      screen.getByRole("option", { name: "Presentata formalmente" }),
+    ).toBeInTheDocument();
+    expect(screen.getByRole("option", { name: "Ha avuto seguito" })).toBeInTheDocument();
+    expect(screen.queryByRole("option", { name: "Recepita parzialmente" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("option", { name: "Discussa" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("option", { name: "In attuazione" })).not.toBeInTheDocument();
+  });
+
+  it("filtra usando lo stato cittadino derivato", () => {
     renderProposteCiviche();
 
     fireEvent.change(screen.getByLabelText("Stato"), {
-      target: { value: "discussa" },
+      target: { value: "presentata" },
+    });
+
+    expect(
+      screen.getByText(/Continuità e avvio dei tre asili nido comunali/i),
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByText(/Sicurezza e vivibilità di Piazza Italia/i),
+    ).not.toBeInTheDocument();
+  });
+
+  it("aggiorna il conteggio quando una combinazione di filtri non contiene risultati", () => {
+    renderProposteCiviche();
+
+    fireEvent.change(screen.getByLabelText("Promotore"), {
+      target: { value: "Lamezia Trasparente" },
+    });
+    fireEvent.change(screen.getByLabelText("Stato"), {
+      target: { value: "con_seguito" },
     });
 
     expect(
