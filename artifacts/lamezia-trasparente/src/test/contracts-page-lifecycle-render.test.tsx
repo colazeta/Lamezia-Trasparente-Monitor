@@ -76,7 +76,9 @@ describe("Contracts page public rendering", () => {
       }),
     ).toBeInTheDocument();
     expect(
-      screen.getByRole("heading", { name: "Fonti dei contratti" }),
+      screen.getByRole("heading", {
+        name: "Dati pubblici, con la fonte sempre raggiungibile",
+      }),
     ).toBeInTheDocument();
     expect(screen.getByText("Tutte le fonti")).toBeInTheDocument();
     expect(screen.queryByText("Ponte BDNCP")).not.toBeInTheDocument();
