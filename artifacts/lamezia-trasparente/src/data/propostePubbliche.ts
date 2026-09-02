@@ -54,15 +54,21 @@ export {
   EU_DATA_THEME_SCHEME,
   LT_SEMANTIC_EXTENSIONS,
   OFFICIAL_FALLBACK_DATA_THEMES,
+  PA_PUBLIC_SERVICE_SUBJECT_CODES,
   PA_PUBLIC_SERVICE_SUBJECT_SCHEME,
   PA_PUBLIC_SERVICE_SUBJECTS,
   PA_TRANSPARENCY_SUBJECT_SCHEME_URI,
+  getAllPaPublicServiceSubjects,
   getAvailablePaSubjects,
+  getAvailablePrimaryPaSubjects,
   getMappedProposalThemes,
   getProposalLocalSemanticExtensions,
   getProposalOfficialPaSubjects,
   getProposalPaSemanticProfile,
+  getProposalPrimaryPaSubject,
+  getProposalSecondaryPaSubjects,
   proposalMatchesPaSubject,
+  proposalMatchesPrimaryPaSubject,
 } from "./proposalPaSemanticProfile";
 
 const UPDATED_CORE_PROPOSALS = core.PUBLIC_PROPOSALS.map(applyScoutingUpdates);
