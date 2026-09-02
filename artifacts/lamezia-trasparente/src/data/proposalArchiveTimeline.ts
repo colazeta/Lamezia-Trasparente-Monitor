@@ -3,6 +3,7 @@ import type {
   ProposalEvent,
   ProposalEventType,
 } from "./propostePubblicheCore";
+import { INSTITUTIONAL_PROPOSAL_EVENT_TYPES } from "./proposalInstitutionalState";
 
 export type ProposalTimelineMode = "origins" | "events";
 
@@ -18,14 +19,6 @@ export type ProposalTimelineBucket = ProposalTimelineRange & {
   proposalCount: number;
   eventCount: number;
 };
-
-export const INSTITUTIONAL_PROPOSAL_EVENT_TYPES = [
-  "deposito",
-  "calendarizzazione",
-  "discussione",
-  "risposta_istituzionale",
-  "recepimento",
-] as const satisfies readonly ProposalEventType[];
 
 const institutionalEventTypes = new Set<ProposalEventType>(
   INSTITUTIONAL_PROPOSAL_EVENT_TYPES,
@@ -129,3 +122,5 @@ export function getInstitutionalProposalEvents(
     .filter((event) => institutionalEventTypes.has(event.type))
     .sort((a, b) => a.date.localeCompare(b.date));
 }
+
+export { INSTITUTIONAL_PROPOSAL_EVENT_TYPES };
