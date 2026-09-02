@@ -45,33 +45,58 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Probe ANAC operator source discovery
+      - name: Probe ANAC and federated source discovery
         shell: bash
         run: |
-          mkdir -p .artifacts/anac-operator-audit
+          mkdir -p .artifacts/anac-operator-audit/federated
           UA='Mozilla/5.0 (compatible; Lamezia-Trasparente-Monitor/1.0; +https://lamezia-trasparente.pages.dev/metodologia)'
           : > .artifacts/anac-operator-audit/source-probe.log
           for dataset in partecipanti aggiudicatari; do
-            echo "=== $dataset CKAN ===" | tee -a .artifacts/anac-operator-audit/source-probe.log
+            echo "=== $dataset ANAC CKAN ===" | tee -a .artifacts/anac-operator-audit/source-probe.log
             curl -sS -L --max-time 20 -A "$UA" -D /tmp/anac-headers \
               "https://dati.anticorruzione.it/opendata/api/3/action/package_show?id=$dataset" \
               -o /tmp/anac-body || true
             grep -Ei '^(HTTP/|location:|content-type:|content-length:)' /tmp/anac-headers | tee -a .artifacts/anac-operator-audit/source-probe.log || true
-            head -c 3000 /tmp/anac-body | tr '\n' ' ' | tee -a .artifacts/anac-operator-audit/source-probe.log || true
+            head -c 1200 /tmp/anac-body | tr '\n' ' ' | tee -a .artifacts/anac-operator-audit/source-probe.log || true
             printf '\n\n' | tee -a .artifacts/anac-operator-audit/source-probe.log
-            echo "=== $dataset canonical ===" | tee -a .artifacts/anac-operator-audit/source-probe.log
+
+            echo "=== $dataset ANAC canonical ===" | tee -a .artifacts/anac-operator-audit/source-probe.log
             curl -sS -I -L --max-time 20 -A "$UA" \
               "https://dati.anticorruzione.it/opendata/download/dataset/$dataset/filesystem/${dataset}_csv.zip" \
               | grep -Ei '^(HTTP/|location:|content-type:|content-length:)' \
               | tee -a .artifacts/anac-operator-audit/source-probe.log || true
             printf '\n' | tee -a .artifacts/anac-operator-audit/source-probe.log
+
+            echo "=== $dataset data.europa.eu CKAN ===" | tee -a .artifacts/anac-operator-audit/source-probe.log
+            curl -sS -L --max-time 30 -A "$UA" \
+              "https://data.europa.eu/api/hub/search/ckan/package_search?q=$dataset&rows=20" \
+              -o ".artifacts/anac-operator-audit/federated/${dataset}-data-europa.json" || true
+            node - ".artifacts/anac-operator-audit/federated/${dataset}-data-europa.json" "$dataset" <<'NODE' | tee -a .artifacts/anac-operator-audit/source-probe.log
+const fs = require('fs');
+const [file, term] = process.argv.slice(2);
+try {
+  const value = JSON.parse(fs.readFileSync(file, 'utf8'));
+  const results = value?.result?.results ?? value?.result?.result?.results ?? value?.results ?? [];
+  console.log(`results=${Array.isArray(results) ? results.length : 'unknown'}`);
+  for (const item of Array.isArray(results) ? results.slice(0, 10) : []) {
+    const title = typeof item.title === 'string' ? item.title : JSON.stringify(item.title ?? '');
+    const publisher = typeof item.publisher === 'string' ? item.publisher : JSON.stringify(item.publisher ?? '');
+    const resources = Array.isArray(item.resources) ? item.resources : Array.isArray(item.distributions) ? item.distributions : [];
+    console.log(JSON.stringify({id:item.id, title, publisher, resourceCount:resources.length, resources:resources.slice(0,8).map(r => ({url:r.url, access_url:r.access_url, download_url:r.download_url, format:r.format, name:r.name}))}));
+  }
+} catch (error) {
+  console.log(`parse-error=${error.message}`);
+}
+NODE
+            printf '\n' | tee -a .artifacts/anac-operator-audit/source-probe.log
           done
+
           echo "=== dettaglio CIG B10F05AA17 ===" | tee -a .artifacts/anac-operator-audit/source-probe.log
           curl -sS -L --max-time 20 -A "$UA" -D /tmp/cig-headers \
             "https://dettaglio-cig.anticorruzione.it/cig/B10F05AA17" \
             -o .artifacts/anac-operator-audit/cig-detail-sample.html || true
           grep -Ei '^(HTTP/|location:|content-type:|content-length:)' /tmp/cig-headers | tee -a .artifacts/anac-operator-audit/source-probe.log || true
-          head -c 5000 .artifacts/anac-operator-audit/cig-detail-sample.html | tr '\n' ' ' | tee -a .artifacts/anac-operator-audit/source-probe.log || true
+          head -c 1000 .artifacts/anac-operator-audit/cig-detail-sample.html | tr '\n' ' ' | tee -a .artifacts/anac-operator-audit/source-probe.log || true
           printf '\n' | tee -a .artifacts/anac-operator-audit/source-probe.log
 
       - name: Sync ANAC operator datasets
