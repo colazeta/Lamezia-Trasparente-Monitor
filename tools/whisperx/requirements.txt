@@ -1,0 +1,3 @@
+# Pinned for a reproducible Lamezia Trasparente proof of concept.
+# Upgrade only after re-running the reviewed municipal-session benchmark corpus.
+whisperx==3.8.6
