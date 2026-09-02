@@ -43,6 +43,7 @@ export {
 } from "./proposalCanonicalPresentation";
 
 export type {
+  LtSemanticExtensionId,
   OfficialFallbackDataThemeCode,
   PaPublicServiceSubjectCode,
   PaSemanticConcept,
@@ -51,12 +52,14 @@ export type {
 } from "./proposalPaSemanticProfile";
 export {
   EU_DATA_THEME_SCHEME,
+  LT_SEMANTIC_EXTENSIONS,
   OFFICIAL_FALLBACK_DATA_THEMES,
   PA_PUBLIC_SERVICE_SUBJECT_SCHEME,
   PA_PUBLIC_SERVICE_SUBJECTS,
   PA_TRANSPARENCY_SUBJECT_SCHEME_URI,
   getAvailablePaSubjects,
   getMappedProposalThemes,
+  getProposalLocalSemanticExtensions,
   getProposalOfficialPaSubjects,
   getProposalPaSemanticProfile,
   proposalMatchesPaSubject,
