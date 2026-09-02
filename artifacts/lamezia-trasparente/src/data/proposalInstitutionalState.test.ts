@@ -37,15 +37,34 @@ describe("proposal institutional state", () => {
 
     expect(
       getProposalInstitutionalState(
-        byId("asili-nido-continuita-servizio-2026"),
+        byId("ponte-sant-antonio-rilancio-2026"),
       ).publicState,
     ).toBe("presentata");
+
+    expect(
+      getProposalInstitutionalState(
+        byId("asili-nido-continuita-servizio-2026"),
+      ).publicState,
+    ).toBe("con_seguito");
 
     expect(
       getProposalInstitutionalState(
         byId("politiche-sociali-progetto-vita-2026"),
       ).publicState,
     ).toBe("con_seguito");
+  });
+
+  it("promotes a formally presented proposal to follow-up when a response is documented", () => {
+    const proposal = byId("asili-nido-continuita-servizio-2026");
+    expect(proposal.status).toBe("presentata_formalmente");
+    expect(
+      proposal.events.some((event) => event.type === "risposta_istituzionale"),
+    ).toBe(true);
+
+    const state = getProposalInstitutionalState(proposal);
+    expect(state.hasFormalization).toBe(true);
+    expect(state.hasInstitutionalFollowUp).toBe(true);
+    expect(state.publicState).toBe("con_seguito");
   });
 
   it("does not treat the launch of a petition as verified formal submission", () => {
