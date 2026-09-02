@@ -48,6 +48,18 @@ describe("proposal institutional state", () => {
     ).toBe("con_seguito");
   });
 
+  it("does not treat the launch of a petition as verified formal submission", () => {
+    const petition = byId("scuole-posticipo-apertura-petizione-2026");
+    const state = getProposalInstitutionalState(petition);
+
+    expect(petition.status).toBe("proposta_emersa");
+    expect(petition.events.some((event) => event.type === "petizione")).toBe(true);
+    expect(petition.events.some((event) => event.type === "deposito")).toBe(false);
+    expect(state.progressStage).toBe("emersa");
+    expect(state.hasFormalization).toBe(false);
+    expect(state.publicState).toBe("segnalata");
+  });
+
   it("never infers implementation from reception alone", () => {
     expect(Object.keys(PROPOSAL_IMPLEMENTATION_EVIDENCE)).toHaveLength(0);
 
