@@ -44,6 +44,44 @@ function sanitiseDiagnostic(value, secrets = []) {
   return text.slice(0, MAX_DIAGNOSTIC_CHARS);
 }
 
+export function extractCsrfToken(html) {
+  const match = /const\s+csrftoken\s*=\s*["']([^"']+)["']/u.exec(String(html));
+  if (!match?.[1]) {
+    throw new Error("changedetection UI did not expose a CSRF token");
+  }
+  return match[1];
+}
+
+function responseCookies(headers) {
+  if (typeof headers.getSetCookie === "function") {
+    return headers
+      .getSetCookie()
+      .map((value) => value.split(";", 1)[0])
+      .filter(Boolean)
+      .join("; ");
+  }
+  const value = headers.get("set-cookie");
+  return value ? value.split(";", 1)[0] : "";
+}
+
+async function createUiCsrfSession(baseUrl) {
+  const response = await fetch(`${baseUrl}/`, {
+    method: "GET",
+    redirect: "follow",
+    headers: { accept: "text/html" },
+  });
+  const html = await response.text();
+  if (!response.ok) {
+    throw new Error(`changedetection UI session request failed (${response.status})`);
+  }
+  const csrfToken = extractCsrfToken(html);
+  const cookie = responseCookies(response.headers);
+  if (!cookie) {
+    throw new Error("changedetection UI session did not return a session cookie");
+  }
+  return { csrfToken, cookie };
+}
+
 export function buildNotificationBody() {
   return JSON.stringify(
     {
@@ -162,7 +200,9 @@ function assertProvisionedWatch(value, desired) {
 }
 
 async function sendTestNotification(baseUrl, uuid, desired, webhookToken) {
+  const { csrfToken, cookie } = await createUiCsrfSession(baseUrl);
   const form = new URLSearchParams();
+  form.set("csrf_token", csrfToken);
   form.set("notification_urls", desired.notification_urls[0]);
   form.set("notification_title", desired.notification_title);
   form.set("notification_body", desired.notification_body);
@@ -171,7 +211,11 @@ async function sendTestNotification(baseUrl, uuid, desired, webhookToken) {
 
   const response = await fetch(`${baseUrl}/notification/send-test/${encodeURIComponent(uuid)}`, {
     method: "POST",
-    headers: { "content-type": "application/x-www-form-urlencoded" },
+    headers: {
+      "content-type": "application/x-www-form-urlencoded",
+      cookie,
+      referer: `${baseUrl}/`,
+    },
     body: form,
     redirect: "manual",
   });
@@ -180,6 +224,8 @@ async function sendTestNotification(baseUrl, uuid, desired, webhookToken) {
     const diagnostic = sanitiseDiagnostic(text, [
       webhookToken,
       desired.notification_urls[0],
+      csrfToken,
+      cookie,
     ]);
     throw new Error(
       `changedetection test notification failed (${response.status}): ${diagnostic || "no diagnostic"}`,
