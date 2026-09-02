@@ -174,4 +174,170 @@ export const SCOUTED_PUBLIC_PROPOSALS = [
       },
     ],
   },
+  {
+    id: "scuole-posticipo-apertura-petizione-2026",
+    title: "Posticipo di dieci giorni dell'apertura delle scuole",
+    summary:
+      "Petizione cittadina per chiedere alle istituzioni regionali competenti di rinviare di dieci giorni l'avvio delle lezioni, accompagnando la richiesta con l'apertura di un confronto sulle esigenze organizzative di famiglie e studenti.",
+    promoterId: "antonio-vaccaro-petizione-scuola",
+    promoter: "Antonio Vaccaro",
+    promoterType: "cittadino_comitato",
+    periodLabel: "1 settembre 2026",
+    year: "2026",
+    theme: "Scuola, clima e sicurezza",
+    threadId: "scuole-caldo-estremo",
+    threadLabel: "Scuole: caldo estremo, orari e adeguamento degli edifici",
+    territorialArea: "Istituti scolastici del territorio comunale di Lamezia Terme",
+    institutionalRecipient: "Regione Calabria e istituzioni regionali competenti",
+    channel: "petizione",
+    sourceLabel: "il Lametino, 1 settembre 2026",
+    sourceUrl:
+      "https://www.lametino.it/ultimora/lamezia-parte-petizione-per-chiedere-posticipo-di-10-giorni-dellapertura-della-scuola.html",
+    status: "proposta_emersa",
+    linkedActs: [],
+    verificationNote:
+      "La fonte identifica Antonio Vaccaro come promotore e descrive una raccolta firme pubblica avviata il 1 settembre con successiva trasmissione prevista alle istituzioni regionali. Non è stato verificato, al momento dello scouting, l'avvenuto deposito della petizione né un conteggio definitivo delle firme. Il punto di raccolta firme su Corso Giovanni Nicotera non viene usato come geografia della proposta, che riguarda le scuole dell'intero territorio comunale.",
+    evidenceLevel: "fonte_stampa",
+    firstSeen: "2026-09-01",
+    lastUpdated: "2026-09-01",
+    events: [
+      {
+        id: "scuole-vaccaro-avvio-raccolta-firme",
+        date: "2026-09-01",
+        type: "petizione",
+        title: "Avviata la raccolta firme per posticipare l'apertura delle scuole",
+        summary:
+          "La raccolta firme viene avviata sull'isola pedonale di Corso Giovanni Nicotera con la richiesta di rinviare di dieci giorni l'inizio delle lezioni e di trasmettere successivamente la petizione alle istituzioni regionali competenti.",
+        sourceLabel: "il Lametino",
+        sourceUrl:
+          "https://www.lametino.it/ultimora/lamezia-parte-petizione-per-chiedere-posticipo-di-10-giorni-dellapertura-della-scuola.html",
+        evidenceLevel: "fonte_stampa",
+      },
+    ],
+  },
+  {
+    id: "ospedale-organici-continuita-chirurgica-pd-2026",
+    title: "Rafforzamento degli organici e continuità chirurgica al Giovanni Paolo II",
+    summary:
+      "Interrogazione per chiedere misure urgenti e strutturali sulla carenza di personale infermieristico e medico nel blocco operatorio e nei reparti di Urologia, Ortopedia e Oncologia: soluzioni temporanee di mobilità o assegnazione, ricognizione formale dei fabbisogni, rafforzamento stabile degli organici e dei posti letto e convocazione della Conferenza dei Sindaci.",
+    promoterId: "gruppo-consiliare-pd-lamezia",
+    promoter: "Gruppo consiliare Partito Democratico — Lamezia Terme",
+    promoterType: "forza_politica",
+    coPromoters: ["Fabrizio Muraca", "Lidia Vescio", "Gennarino Masi"],
+    periodLabel: "1 settembre 2026",
+    year: "2026",
+    theme: "Sanità e rete ospedaliera",
+    threadId: "ospedale-organici-continuita-chirurgica",
+    threadLabel: "Ospedale Giovanni Paolo II: organici, posti letto e continuità chirurgica",
+    territorialArea: "Presidio ospedaliero Giovanni Paolo II, Lamezia Terme",
+    institutionalRecipient:
+      "Comune di Lamezia Terme — Sindaco e assessore competente; interlocuzione richiesta con ASP Catanzaro e Regione Calabria",
+    channel: "interrogazione",
+    sourceLabel: "City One, 1 settembre 2026",
+    sourceUrl:
+      "https://www.cityonelamezia.it/lamezia-carenze-di-organico-allospedale-interrogazione-dei-consiglieri-comunali-del-pd/",
+    status: "presentata_formalmente",
+    linkedActs: [],
+    verificationNote:
+      "City One pubblica il testo dell'interrogazione e attribuisce l'iniziativa a Fabrizio Muraca, capogruppo PD, Lidia Vescio e Gennarino Masi; il Lametino ne dà riscontro nello stesso giorno. Non è stato reperito nello scouting un numero di protocollo o un registro consiliare ufficiale dell'atto. La classificazione come presentata formalmente deriva dalla natura esplicita di interrogazione consiliare attestata dalle fonti, non da una verifica del protocollo.",
+    evidenceLevel: "ricostruzione_multi_fonte",
+    firstSeen: "2026-09-01",
+    lastUpdated: "2026-09-01",
+    events: [
+      {
+        id: "ospedale-pd-interrogazione-organici",
+        date: "2026-09-01",
+        type: "deposito",
+        title: "Interrogazione su organici, sedute chirurgiche e posti letto",
+        summary:
+          "Il gruppo PD chiede al Comune di attivare interlocuzioni con ASP e Regione, sollecitare misure temporanee per ripristinare le sedute chirurgiche, richiedere una ricognizione aggiornata dei fabbisogni e interventi strutturali su personale e posti letto, oltre alla convocazione della Conferenza dei Sindaci del comprensorio.",
+        sourceLabel: "City One",
+        sourceUrl:
+          "https://www.cityonelamezia.it/lamezia-carenze-di-organico-allospedale-interrogazione-dei-consiglieri-comunali-del-pd/",
+        evidenceLevel: "fonte_stampa",
+      },
+    ],
+  },
+  {
+    id: "prevenzione-maltempo-manutenzione-de-sensi-2026",
+    title: "Manutenzione preventiva per il maltempo autunnale",
+    summary:
+      "Richiesta di avviare prima della stagione piovosa un programma di manutenzione ordinaria comprendente pulizia e video-ispezione di caditoie e tombini nei punti critici, potature degli alberi interferenti, pulizia di canali e fossi, verifica di muretti, scarpate e segnaletica e un piano calendarizzato di spazzamento delle foglie.",
+    promoterId: "gabriella-de-sensi",
+    promoter: "Gabriella De Sensi",
+    promoterType: "altro",
+    periodLabel: "1 settembre 2026",
+    year: "2026",
+    theme: "Manutenzione urbana e prevenzione del rischio",
+    threadId: "prevenzione-maltempo-manutenzione-territorio",
+    threadLabel: "Prevenzione del maltempo e manutenzione ordinaria del territorio",
+    territorialArea: "Intero territorio comunale di Lamezia Terme, con priorità ai punti critici storici",
+    institutionalRecipient: "Comune di Lamezia Terme",
+    channel: "comunicato",
+    sourceLabel: "il Lametino, 1 settembre 2026",
+    sourceUrl:
+      "https://www.lametino.it/ultime/lamezia-ex-assessore-ai-lavori-pubblici-de-sensi-amministrazione-non-si-faccia-trovare-impreparata-allautunno-e-maltempo.html",
+    status: "proposta_emersa",
+    linkedActs: [],
+    verificationNote:
+      "La fonte qualifica De Sensi come già assessore ai Lavori Pubblici e riporta un elenco operativo di interventi di prevenzione. Non risultano verificati un deposito formale, una calendarizzazione o una risposta dell'Amministrazione. Poiché non vengono identificati singoli punti critici, la proposta è georiferita come citywide e non vengono inventate coordinate locali.",
+    evidenceLevel: "fonte_stampa",
+    firstSeen: "2026-09-01",
+    lastUpdated: "2026-09-01",
+    events: [
+      {
+        id: "de-sensi-piano-manutenzione-preventiva",
+        date: "2026-09-01",
+        type: "emersione",
+        title: "De Sensi chiede un piano immediato di manutenzione preventiva",
+        summary:
+          "La proposta elenca interventi su caditoie e tombini, alberature, canali di scolo e fossi, muretti e scarpate, segnaletica e spazzamento delle foglie da programmare già da settembre.",
+        sourceLabel: "il Lametino",
+        sourceUrl:
+          "https://www.lametino.it/ultime/lamezia-ex-assessore-ai-lavori-pubblici-de-sensi-amministrazione-non-si-faccia-trovare-impreparata-allautunno-e-maltempo.html",
+        evidenceLevel: "fonte_stampa",
+      },
+    ],
+  },
+  {
+    id: "aeroporto-intermodalita-rilancio-taverna-2026",
+    title: "Rilancio dell'aeroporto di Lamezia e intermodalità ferro-aria",
+    summary:
+      "Proposta di ripensare la politica regionale dei trasporti concentrando il rilancio sullo scalo di Lamezia, rafforzando l'intermodalità ferro-aria e una connessione diretta con l'Alta Velocità, potenziando i servizi di terra, coinvolgendo pienamente Comuni e territori nelle scelte strategiche di SACAL e costruendo collegamenti verso borghi e destinazioni turistiche.",
+    promoterId: "domenico-taverna-pd-lamezia",
+    promoter: "Domenico Taverna (PD Lamezia)",
+    promoterType: "forza_politica",
+    periodLabel: "1 settembre 2026",
+    year: "2026",
+    theme: "Mobilità, aeroporto e sviluppo territoriale",
+    threadId: "aeroporto-lamezia-intermodalita",
+    threadLabel: "Aeroporto di Lamezia: ruolo strategico, intermodalità e accessibilità",
+    territorialArea: "Aeroporto Internazionale di Lamezia Terme, Sant'Eufemia, e collegamenti regionali",
+    institutionalRecipient: "Regione Calabria, SACAL e Comune di Lamezia Terme",
+    channel: "comunicato",
+    sourceLabel: "il Lametino, 1 settembre 2026",
+    sourceUrl:
+      "https://www.lametino.it/calabria/aeroporti-calabresi-taverna-pd-lamezia-tagliamo-nastri-delle-opere-ma-perdiamo-voli.html",
+    status: "proposta_emersa",
+    linkedActs: ["Proposta Piano Nazionale degli Aeroporti 2026–2035"],
+    verificationNote:
+      "La nota contiene, oltre alla critica politica, un nucleo di misure sufficientemente concreto: rilancio dello scalo lametino, intermodalità ferro-aria con connessione all'Alta Velocità, potenziamento dei servizi di terra, maggiore coinvolgimento dei Comuni nelle scelte SACAL e collegamenti dei visitatori con le destinazioni del territorio. Non sono verificati un atto depositato o una risposta istituzionale. La geografia è ancorata all'aeroporto; le misure di rete hanno però portata regionale e non vengono ridotte a un singolo punto infrastrutturale.",
+    evidenceLevel: "fonte_stampa",
+    firstSeen: "2026-09-01",
+    lastUpdated: "2026-09-01",
+    events: [
+      {
+        id: "taverna-rilancio-aeroporto-intermodalita",
+        date: "2026-09-01",
+        type: "emersione",
+        title: "Taverna propone rilancio dello scalo e connessioni intermodali",
+        summary:
+          "La proposta indica come priorità il rafforzamento del ruolo dell'aeroporto di Lamezia, la connessione ferro-aria e con l'Alta Velocità, servizi di terra più forti, coinvolgimento dei territori nelle scelte SACAL e una rete di trasporto verso le destinazioni turistiche regionali.",
+        sourceLabel: "il Lametino",
+        sourceUrl:
+          "https://www.lametino.it/calabria/aeroporti-calabresi-taverna-pd-lamezia-tagliamo-nastri-delle-opere-ma-perdiamo-voli.html",
+        evidenceLevel: "fonte_stampa",
+      },
+    ],
+  },
 ] as const satisfies readonly PublicProposal[];
