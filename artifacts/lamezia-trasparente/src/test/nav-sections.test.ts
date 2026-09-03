@@ -58,14 +58,13 @@ describe("NAV_GROUPS invariants", () => {
 
   it("keeps the primary civic macro-areas explicit and ordered", () => {
     expect(NAV_GROUPS.map((group) => group.label)).toEqual([
-      "Cosa decide il Comune",
-      "Chi governa e come vota",
-      "Cosa viene finanziato e realizzato",
-      "Criticità e luoghi della città",
-      "Memoria civica e antimafia",
-      "Partecipazione e proposte",
-      "Dati pubblici e territorio",
-      "Stato delle fonti e monitoraggio",
+      "Atti",
+      "Comune",
+      "Spesa",
+      "Territorio",
+      "Legalità",
+      "Dati",
+      "Partecipa",
     ]);
   });
 
@@ -84,22 +83,27 @@ describe("NAV_GROUPS invariants", () => {
         "/performance/confronta",
       ]),
     );
-    expect(visibleHrefs).not.toEqual(expect.arrayContaining([
-      "/bandi",
-      "/archivio-proposte",
-      "/monitoraggio/nuovo",
-      "/legalita/timeline",
-      "/performance/confronta",
-    ]));
+    expect(visibleHrefs).not.toEqual(
+      expect.arrayContaining([
+        "/bandi",
+        "/archivio-proposte",
+        "/monitoraggio/nuovo",
+        "/legalita/timeline",
+        "/performance/confronta",
+      ]),
+    );
   });
 
-  it("keeps planned sections visible but not navigable or searchable", () => {
-    const planned = navItems.filter((item) => item.state === "planned");
+  it("keeps planned sections out of primary navigation and search", () => {
+    const allItems = ALL_NAV_GROUPS.flatMap((group) => group.items);
+    const planned = allItems.filter((item) => item.state === "planned");
+    const plannedHrefs = planned.map((item) => item.href);
+    const visibleHrefs = navItems.map((item) => item.href);
     const commandPaletteHrefs = COMMAND_PALETTE_GROUPS.flatMap((group) =>
       group.items.map((item) => item.href),
     );
 
-    expect(planned.map((item) => item.href)).toEqual(
+    expect(plannedHrefs).toEqual(
       expect.arrayContaining([
         "/elezioni-voti",
         "/segnalazioni-luoghi",
@@ -107,6 +111,8 @@ describe("NAV_GROUPS invariants", () => {
         "/dataset-scaricabili",
       ]),
     );
+    expect(visibleHrefs).not.toEqual(expect.arrayContaining(plannedHrefs));
+
     for (const item of planned) {
       expect(isNavItemNavigable(item)).toBe(false);
       expect(commandPaletteHrefs).not.toContain(item.href);
