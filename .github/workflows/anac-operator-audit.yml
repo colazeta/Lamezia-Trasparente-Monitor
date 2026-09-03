@@ -1,0 +1,79 @@
+name: ANAC operator live audit
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: anac-operator-live-audit
+  cancel-in-progress: false
+
+jobs:
+  audit:
+    name: Acquire ANAC participants and awardees
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.28.1
+          run_install: false
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Sync ANAC operator datasets
+        id: sync
+        continue-on-error: true
+        run: |
+          set -o pipefail
+          pnpm contracts:anac-operators-sync 2>&1 | tee .anac-operator-sync.log
+
+      - name: Build coverage audit
+        if: always()
+        run: pnpm --filter @workspace/scripts exec tsx ./contracts/anacOperatorCoverageAudit.ts .artifacts/anac-operator-audit/coverage.json
+
+      - name: Record live acquisition outcome
+        if: always()
+        env:
+          SYNC_OUTCOME: ${{ steps.sync.outcome }}
+          RUN_ID: ${{ github.run_id }}
+          HEAD_SHA: ${{ github.sha }}
+        run: |
+          mkdir -p .artifacts/anac-operator-audit
+          node -e 'const fs=require("fs"); const value={schemaVersion:"anac-operator-live-audit.v1",runId:process.env.RUN_ID,headSha:process.env.HEAD_SHA,syncOutcome:process.env.SYNC_OUTCOME,missingSnapshotsAreZero:false}; fs.writeFileSync(".artifacts/anac-operator-audit/run-status.json",JSON.stringify(value,null,2)+"\n");'
+
+      - name: Copy materialized snapshots into audit artifact
+        if: always()
+        shell: bash
+        run: |
+          mkdir -p .artifacts/anac-operator-audit/snapshots
+          cp -f .anac-operator-sync.log .artifacts/anac-operator-audit/sync.log || true
+          cp -f data/public/contracts/anac-participants/latest.json .artifacts/anac-operator-audit/snapshots/participants.json 2>/dev/null || true
+          cp -f data/public/contracts/anac-awardees/latest.json .artifacts/anac-operator-audit/snapshots/awardees.json 2>/dev/null || true
+
+      - name: Upload audit artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: anac-operator-live-audit-${{ github.run_id }}
+          path: .artifacts/anac-operator-audit
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Fail if live sync was incomplete
+        if: steps.sync.outcome != 'success'
+        run: exit 1
