@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 
+import { OPEN_DATA_DATASET_REGISTRY } from "@/data/openDataDatasetRegistry";
 import {
   CIVIC_SEARCH_INDEX,
   buildOpenDataArchiveHref,
@@ -18,7 +19,7 @@ describe("civic search index", () => {
 
     expect(kinds.persona).toBeGreaterThan(30);
     expect(kinds.organo).toBeGreaterThanOrEqual(10);
-    expect(kinds.dataset).toBe(6);
+    expect(kinds.dataset).toBe(OPEN_DATA_DATASET_REGISTRY.length);
     expect(new Set(CIVIC_SEARCH_INDEX.map((item) => item.id)).size).toBe(
       CIVIC_SEARCH_INDEX.length,
     );
