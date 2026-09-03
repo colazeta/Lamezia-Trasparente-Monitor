@@ -121,7 +121,7 @@ describe("Performance evidence-first landing", () => {
     expect(
       screen.getByText(/trattino sopra indica quindi.*non ancora verificato/i),
     ).toBeInTheDocument();
-    expect(screen.getByText("Obiettivi verificati").parentElement).toHaveTextContent("—");
+    expect(metricValue("Obiettivi verificati").getByText("—")).toBeInTheDocument();
   });
 
   it("exposes coverage bars as accessible progress indicators", () => {
