@@ -17,8 +17,11 @@ import {
   SearchTrigger,
   useCommandPalette,
 } from "@/components/search/CommandPalette";
-import { NAV_GROUPS, isSectionActive, type NavSection } from "./navSections";
-import { findPrimaryNavGroupByPath } from "./navState";
+import { NAV_GROUPS, type NavSection } from "./navSections";
+import {
+  findPrimaryNavGroupByPath,
+  findPrimaryNavItemByPath,
+} from "./navState";
 
 export function Navbar() {
   const [location] = useLocation();
@@ -26,14 +29,16 @@ export function Navbar() {
   const [openMobileGroup, setOpenMobileGroup] = useState<string | null>(null);
   const { open: paletteOpen, setOpen: setPaletteOpen } = useCommandPalette();
   const activeNavGroup = findPrimaryNavGroupByPath(location);
+  const activeNavItem = findPrimaryNavItemByPath(location);
   const activeNavGroupLabel = activeNavGroup?.label ?? null;
+  const activeNavItemHref = activeNavItem?.href ?? null;
 
   useEffect(() => {
     setIsOpen(false);
     setOpenMobileGroup(activeNavGroupLabel);
   }, [location, activeNavGroupLabel]);
 
-  const isActive = (href: string) => isSectionActive(href, location);
+  const isActive = (href: string) => href === activeNavItemHref;
   const isGroupActive = (group: NavSection) =>
     group.label === activeNavGroupLabel;
 
