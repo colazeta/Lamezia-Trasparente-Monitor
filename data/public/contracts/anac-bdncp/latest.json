@@ -1,8 +1,8 @@
 {
   "schemaVersion": "anac-bdncp-sync.v1",
-  "generatedAt": "2026-09-02T09:53:29.986Z",
+  "generatedAt": "2026-09-03T10:04:39.844Z",
   "status": "degraded",
-  "lastAttemptAt": "2026-09-02T09:53:29.986Z",
+  "lastAttemptAt": "2026-09-03T10:04:39.844Z",
   "lastSuccessAt": null,
   "failureCategory": "source-unavailable",
   "source": {
@@ -33,11 +33,14 @@
     "BA17F7B9CE",
     "BA19CCDBF3",
     "BA40458244",
+    "BA558BFAEF",
     "BBD93EF334",
     "BC59BBA1AD",
     "BCB680D8DC",
     "BCBA16AF4C",
-    "BCC389A2DD"
+    "BCBA630FB9",
+    "BCC389A2DD",
+    "BCD358274C"
   ],
   "consultedArchives": [],
   "records": [],
@@ -45,6 +48,7 @@
     "La copertura strutturata riguarda soltanto i pacchetti mensili ANAC effettivamente consultati e non costituisce uno storico completo della BDNCP.",
     "Un CIG non trovato nei pacchetti consultati non risulta per questo assente dalla BDNCP.",
     "Un'indisponibilita temporanea della fonte ANAC non implica assenza di contratti: viene conservato l'ultimo snapshot valido.",
-    "Gli importi ANAC, quando presenti, sono importi del lotto e non vengono sommati agli importi ricavati dagli atti dell'Albo."
+    "Gli importi ANAC, quando presenti, sono importi del lotto e non vengono sommati agli importi ricavati dagli atti dell'Albo.",
+    "Le date di pubblicazione e scadenza sono conservate come dati sorgente; l'eventuale proiezione in un periodo OCDS e subordinata a una regola semantica esplicita."
   ]
 }
