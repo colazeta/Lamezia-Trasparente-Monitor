@@ -12,6 +12,7 @@ import {
 } from "@workspace/db";
 
 const createdDatasetIds: number[] = [];
+const DCAT_AP_IT_PROFILE = "http://dati.gov.it/onto/dcatapit";
 
 async function createDataset(
   overrides: Partial<typeof opendataDatasetsTable.$inferInsert> = {},
@@ -110,7 +111,7 @@ describe("lastChangedAt (Aggiornato badge source of truth)", () => {
   });
 });
 
-describe("DCAT-AP_IT catalog", () => {
+describe("DCAT / DCAT-AP_IT catalog", () => {
   it("exposes the full catalog as JSON-LD", async () => {
     const ds = await createDataset();
     const res = await request(app).get("/api/opendata/catalog.jsonld");
@@ -124,6 +125,9 @@ describe("DCAT-AP_IT catalog", () => {
     );
     expect(found).toBeTruthy();
     expect(found?.["@type"]).toContain("dcat:Dataset");
+    expect(found?.["dct:conformsTo"]).toEqual({
+      "@id": DCAT_AP_IT_PROFILE,
+    });
     expect((found?.["dcat:theme"] as { "@id": string })["@id"]).toContain(
       "data-theme/GOVE",
     );
@@ -136,7 +140,7 @@ describe("DCAT-AP_IT catalog", () => {
     );
   });
 
-  it("exposes a single dataset as JSON-LD", async () => {
+  it("exposes a single conforming dataset with an explicit profile assertion", async () => {
     const ds = await createDataset();
     const res = await request(app).get(
       `/api/opendata/datasets/${ds.id}/dcat.jsonld`,
@@ -144,6 +148,52 @@ describe("DCAT-AP_IT catalog", () => {
     expect(res.status).toBe(200);
     expect(res.body["dct:identifier"]).toBe(ds.sourceId);
     expect(res.body["@context"]).toBeTruthy();
+    expect(res.body["dct:conformsTo"]).toEqual({
+      "@id": DCAT_AP_IT_PROFILE,
+    });
+  });
+
+  it("does not claim DCAT-AP_IT conformance when a mandatory controlled value is missing", async () => {
+    const ds = await createDataset({ theme: "tema-locale-non-mappato" });
+    const res = await request(app).get(
+      `/api/opendata/datasets/${ds.id}/dcat.jsonld`,
+    );
+    expect(res.status).toBe(200);
+    expect(res.body["dct:conformsTo"]).toBeUndefined();
+    expect(res.body["dcat:theme"]).toBeUndefined();
+  });
+
+  it("publishes inspectable DCAT-AP_IT diagnostics without promoting missing metadata", async () => {
+    const valid = await createDataset();
+    const invalid = await createDataset({
+      theme: "tema-locale-non-mappato",
+      frequency: null,
+      licenseId: null,
+      licenseTitle: null,
+    });
+
+    const res = await request(app).get("/api/opendata/dcat-ap-it/validation");
+    expect(res.status).toBe(200);
+    expect(res.body.profile).toBe(DCAT_AP_IT_PROFILE);
+
+    const validResult = res.body.results.find(
+      (item: { id: number }) => item.id === valid.id,
+    );
+    expect(validResult).toMatchObject({ conforms: true, issues: [] });
+
+    const invalidResult = res.body.results.find(
+      (item: { id: number }) => item.id === invalid.id,
+    );
+    expect(invalidResult.conforms).toBe(false);
+    expect(invalidResult.issues).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ code: "missing_or_invalid_theme" }),
+        expect.objectContaining({ code: "missing_or_invalid_frequency" }),
+        expect.objectContaining({
+          code: "missing_or_invalid_distribution_license",
+        }),
+      ]),
+    );
   });
 });
 

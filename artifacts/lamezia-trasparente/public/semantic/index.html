@@ -1,0 +1,632 @@
+<!doctype html>
+<html lang="it">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Semantica pubblica — rendiamoLameziaTrasparente</title>
+    <meta
+      name="description"
+      content="Profilo semantico pubblico di LameziaTrasparente: ontologie, interoperabilità, identificatori e stato DCAT-AP_IT."
+    />
+    <meta name="robots" content="index, follow" />
+    <link
+      rel="alternate"
+      type="application/ld+json"
+      href="/semantic/profile.jsonld"
+      title="LameziaTrasparente civic semantic profile"
+    />
+    <link
+      rel="alternate"
+      type="text/turtle"
+      href="/semantic/ontology.ttl"
+      title="LameziaTrasparente civic ontology"
+    />
+    <style>
+      :root {
+        color-scheme: light dark;
+        --bg: #f6f8fb;
+        --panel: rgba(255, 255, 255, 0.9);
+        --panel-strong: #ffffff;
+        --text: #172033;
+        --muted: #637086;
+        --line: #dce2ea;
+        --accent: #2463eb;
+        --accent-soft: #e8f0ff;
+        --good: #13795b;
+        --good-soft: #e8f7f1;
+        --warn: #946200;
+        --warn-soft: #fff5d8;
+        --code: #111827;
+        --shadow: 0 16px 50px rgba(27, 39, 66, 0.08);
+      }
+
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg: #0c1220;
+          --panel: rgba(18, 27, 44, 0.92);
+          --panel-strong: #121b2c;
+          --text: #eef3fb;
+          --muted: #aab5c7;
+          --line: #29364c;
+          --accent: #8bb2ff;
+          --accent-soft: #162a50;
+          --good: #75d7b8;
+          --good-soft: #12372f;
+          --warn: #f2cb70;
+          --warn-soft: #3c3014;
+          --code: #f3f6fb;
+          --shadow: 0 16px 50px rgba(0, 0, 0, 0.25);
+        }
+      }
+
+      * { box-sizing: border-box; }
+      html { scroll-behavior: smooth; }
+      body {
+        margin: 0;
+        background:
+          radial-gradient(circle at 20% 0%, color-mix(in srgb, var(--accent) 10%, transparent), transparent 35rem),
+          var(--bg);
+        color: var(--text);
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        line-height: 1.55;
+      }
+
+      a { color: inherit; }
+      a:focus-visible, button:focus-visible {
+        outline: 3px solid color-mix(in srgb, var(--accent) 50%, transparent);
+        outline-offset: 3px;
+      }
+
+      .wrap {
+        width: min(1120px, calc(100% - 32px));
+        margin: 0 auto;
+      }
+
+      header {
+        padding: 26px 0 18px;
+      }
+
+      .nav {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 18px;
+      }
+
+      .brand {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        text-decoration: none;
+        font-weight: 800;
+        letter-spacing: -0.02em;
+      }
+
+      .mark {
+        width: 34px;
+        height: 34px;
+        display: grid;
+        place-items: center;
+        border-radius: 11px;
+        background: var(--accent-soft);
+        color: var(--accent);
+        font-size: 18px;
+      }
+
+      .back {
+        color: var(--muted);
+        font-size: 14px;
+        font-weight: 650;
+        text-underline-offset: 3px;
+      }
+
+      main { padding: 18px 0 64px; }
+
+      .hero {
+        position: relative;
+        overflow: hidden;
+        padding: clamp(28px, 5vw, 58px);
+        border: 1px solid var(--line);
+        border-radius: 28px;
+        background: var(--panel);
+        box-shadow: var(--shadow);
+      }
+
+      .hero::after {
+        content: "";
+        position: absolute;
+        width: 300px;
+        height: 300px;
+        border-radius: 999px;
+        right: -120px;
+        top: -140px;
+        background: color-mix(in srgb, var(--accent) 10%, transparent);
+        pointer-events: none;
+      }
+
+      .eyebrow {
+        margin: 0 0 10px;
+        color: var(--accent);
+        font-size: 12px;
+        font-weight: 800;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+      }
+
+      h1, h2, h3 { line-height: 1.15; }
+      h1 {
+        max-width: 820px;
+        margin: 0;
+        font-size: clamp(34px, 6vw, 64px);
+        letter-spacing: -0.045em;
+      }
+
+      .lead {
+        max-width: 820px;
+        margin: 20px 0 0;
+        color: var(--muted);
+        font-size: clamp(17px, 2.2vw, 21px);
+      }
+
+      .badges {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 24px;
+      }
+
+      .badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        min-height: 32px;
+        padding: 6px 10px;
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        background: var(--panel-strong);
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 750;
+      }
+
+      .badge.good {
+        border-color: color-mix(in srgb, var(--good) 28%, var(--line));
+        background: var(--good-soft);
+        color: var(--good);
+      }
+
+      section { margin-top: 44px; }
+      .section-head {
+        display: grid;
+        gap: 8px;
+        max-width: 820px;
+        margin-bottom: 18px;
+      }
+      .section-head h2 {
+        margin: 0;
+        font-size: clamp(26px, 4vw, 38px);
+        letter-spacing: -0.035em;
+      }
+      .section-head p {
+        margin: 0;
+        color: var(--muted);
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(12, 1fr);
+        gap: 14px;
+      }
+
+      .card {
+        grid-column: span 4;
+        min-height: 196px;
+        padding: 20px;
+        border: 1px solid var(--line);
+        border-radius: 20px;
+        background: var(--panel);
+      }
+
+      .card.wide { grid-column: span 6; }
+      .card.full { grid-column: 1 / -1; }
+
+      .card .kicker {
+        color: var(--accent);
+        font-size: 11px;
+        font-weight: 800;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+      }
+
+      .card h3 {
+        margin: 10px 0 8px;
+        font-size: 19px;
+        letter-spacing: -0.02em;
+      }
+
+      .card p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 14px;
+      }
+
+      .card code, .mono {
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      }
+
+      .status {
+        display: grid;
+        grid-template-columns: minmax(0, 1.5fr) minmax(260px, 0.8fr);
+        gap: 14px;
+        align-items: stretch;
+      }
+
+      .status-panel {
+        padding: 22px;
+        border: 1px solid var(--line);
+        border-radius: 20px;
+        background: var(--panel);
+      }
+
+      .status-panel h3 { margin: 0 0 6px; }
+      .status-panel p { margin: 0; color: var(--muted); }
+
+      .metric {
+        display: flex;
+        align-items: baseline;
+        gap: 8px;
+        margin-top: 16px;
+      }
+
+      .metric strong {
+        font-size: 34px;
+        letter-spacing: -0.04em;
+      }
+      .metric span { color: var(--muted); font-size: 13px; }
+
+      .meter {
+        height: 8px;
+        margin-top: 12px;
+        border-radius: 99px;
+        background: color-mix(in srgb, var(--muted) 13%, transparent);
+        overflow: hidden;
+      }
+      .meter > span {
+        display: block;
+        width: 0;
+        height: 100%;
+        border-radius: inherit;
+        background: var(--accent);
+        transition: width 240ms ease;
+      }
+
+      .principles {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 14px;
+      }
+
+      .principle {
+        padding: 20px;
+        border: 1px solid var(--line);
+        border-radius: 20px;
+        background: var(--panel);
+      }
+      .principle strong {
+        display: block;
+        margin-bottom: 8px;
+        font-size: 16px;
+      }
+      .principle p { margin: 0; color: var(--muted); font-size: 14px; }
+
+      .resources {
+        display: grid;
+        gap: 10px;
+      }
+
+      .resource {
+        display: grid;
+        grid-template-columns: minmax(170px, 0.34fr) minmax(0, 1fr) auto;
+        gap: 14px;
+        align-items: center;
+        padding: 14px 16px;
+        border: 1px solid var(--line);
+        border-radius: 15px;
+        background: var(--panel);
+        text-decoration: none;
+      }
+      .resource:hover { border-color: color-mix(in srgb, var(--accent) 45%, var(--line)); }
+      .resource strong { font-size: 14px; }
+      .resource code {
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        color: var(--muted);
+        font: 12px ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      }
+      .resource span { color: var(--accent); font-size: 13px; font-weight: 750; }
+
+      .note {
+        margin-top: 14px;
+        padding: 14px 16px;
+        border-radius: 14px;
+        background: var(--warn-soft);
+        color: var(--warn);
+        font-size: 13px;
+      }
+
+      footer {
+        padding: 24px 0 40px;
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      @media (max-width: 850px) {
+        .card, .card.wide { grid-column: span 6; }
+        .status { grid-template-columns: 1fr; }
+        .principles { grid-template-columns: 1fr; }
+      }
+
+      @media (max-width: 600px) {
+        .wrap { width: min(100% - 22px, 1120px); }
+        .hero { border-radius: 22px; }
+        .card, .card.wide { grid-column: 1 / -1; }
+        .resource { grid-template-columns: 1fr auto; }
+        .resource code { grid-column: 1 / -1; grid-row: 2; }
+        .back { display: none; }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="wrap nav">
+        <a class="brand" href="/">
+          <span class="mark" aria-hidden="true">◉</span>
+          <span>rendiamoLameziaTrasparente</span>
+        </a>
+        <a class="back" href="/sviluppatori">API e riuso dei dati →</a>
+      </div>
+    </header>
+
+    <main class="wrap">
+      <section class="hero" aria-labelledby="semantic-title">
+        <p class="eyebrow">Semantic interoperability · public-safe</p>
+        <h1 id="semantic-title">Una semantica pubblica che non finge di sapere più dei dati.</h1>
+        <p class="lead">
+          Il livello semantico di LameziaTrasparente assegna significati stabili a
+          atti, contratti, temi, indicatori e progetti PNRR. Riusa standard W3C,
+          europei e italiani e distingue in modo esplicito ciò che è conforme,
+          ciò che è allineato e ciò che è soltanto un riferimento ontologico.
+        </p>
+        <div class="badges" aria-label="Stato del profilo semantico">
+          <span class="badge good">● Profilo 1.1.0</span>
+          <span class="badge">Read-only</span>
+          <span class="badge">JSON-LD + Turtle</span>
+          <span class="badge">URI stabili</span>
+          <span class="badge">Public-safe</span>
+        </div>
+      </section>
+
+      <section aria-labelledby="standards-title">
+        <div class="section-head">
+          <p class="eyebrow">Standard riusati</p>
+          <h2 id="standards-title">Piccolo core locale, ontologie forti fuori.</h2>
+          <p>
+            La piattaforma definisce localmente soltanto i concetti che le servono.
+            Provenienza, cataloghi, procurement, tassonomie e investimenti pubblici
+            vengono collegati a vocabolari già governati.
+          </p>
+        </div>
+        <div class="grid">
+          <article class="card">
+            <span class="kicker">Cataloghi</span>
+            <h3>DCAT 3 · DCAT-AP · DCAT-AP_IT</h3>
+            <p>
+              DCAT struttura cataloghi e distribuzioni. La conformità italiana non
+              è presunta: viene dichiarata soltanto sui record che superano il gate
+              dei metadati obbligatori.
+            </p>
+          </article>
+          <article class="card">
+            <span class="kicker">Provenienza</span>
+            <h3>PROV-O</h3>
+            <p>
+              Atti, rappresentazioni testuali, contratti e progetti sono trattati
+              come entità con provenienza verificabile. Una derivazione non sostituisce
+              mai la fonte pubblica.
+            </p>
+          </article>
+          <article class="card">
+            <span class="kicker">Tassonomie</span>
+            <h3>SKOS</h3>
+            <p>
+              Temi e tassonomie evolvono verso concept scheme con URI, label e
+              gerarchie governate, invece di restare stringhe libere e fragili.
+            </p>
+          </article>
+          <article class="card wide">
+            <span class="kicker">Contratti pubblici</span>
+            <h3>eProcurement Ontology 5.2.0 · PC-AP_IT</h3>
+            <p>
+              Un record ANAC <strong>descrive</strong> un contratto ePO: non viene
+              dichiarato equivalente a un contratto giuridicamente completo. PC-AP_IT
+              resta il riferimento italiano per il dominio procurement.
+            </p>
+          </article>
+          <article class="card wide">
+            <span class="kicker">PNRR · CUP · OpenCUP</span>
+            <h3>Ontologia degli Investimenti Pubblici DIPE/ISTAT</h3>
+            <p>
+              È il riferimento italiano primario per i progetti PNRR perché nasce
+              dall'analisi semantica del CUP e del patrimonio informativo OpenCUP.
+              Il mapping forte verrà promosso solo dopo un crosswalk campo per campo.
+            </p>
+          </article>
+          <article class="card wide">
+            <span class="kicker">Performance</span>
+            <h3>RDF Data Cube · OntoPiA Indicator</h3>
+            <p>
+              L'indicatore è distinto dalle sue osservazioni nel tempo. Periodo,
+              unità e valore devono restare espliciti prima di dichiarare allineamenti
+              più forti con l'ontologia italiana degli indicatori.
+            </p>
+          </article>
+          <article class="card wide">
+            <span class="kicker">Trasparenza italiana</span>
+            <h3>OntoPiA Transparency</h3>
+            <p>
+              È usata come riferimento, non come falsa certificazione: la versione
+              disponibile è ancora draft e la piattaforma non trasforma automaticamente
+              ogni atto in un obbligo normativo di trasparenza.
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <section aria-labelledby="principles-title">
+        <div class="section-head">
+          <p class="eyebrow">Regole semantiche</p>
+          <h2 id="principles-title">Tre parole che non vanno confuse.</h2>
+        </div>
+        <div class="principles">
+          <article class="principle">
+            <strong>Conformance</strong>
+            <p>
+              Una rappresentazione soddisfa un profilo verificabile. Per DCAT-AP_IT
+              LameziaTrasparente espone un gate pubblico e non riempie artificialmente
+              i campi mancanti.
+            </p>
+          </article>
+          <article class="principle">
+            <strong>Alignment</strong>
+            <p>
+              Un'ontologia esterna struttura lo stesso dominio, ma il record locale
+              può essere più stretto o incompleto. È il caso dell'allineamento ePO.
+            </p>
+          </article>
+          <article class="principle">
+            <strong>Reference</strong>
+            <p>
+              Un asset semantico è rilevante e orienta il modello, ma non esiste ancora
+              una prova sufficiente per dichiarare equivalenza o conformità.
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <section aria-labelledby="dcat-status-title">
+        <div class="section-head">
+          <p class="eyebrow">Conformità osservabile</p>
+          <h2 id="dcat-status-title">DCAT-AP_IT, senza badge cosmetici.</h2>
+          <p>
+            Il riepilogo sotto è caricato dall'endpoint pubblico di validazione.
+            Se un dataset non ha i metadati obbligatori, resta accessibile ma non
+            riceve una dichiarazione di conformità.
+          </p>
+        </div>
+        <div class="status">
+          <div class="status-panel" aria-live="polite">
+            <h3 id="dcat-label">Verifica DCAT-AP_IT</h3>
+            <p id="dcat-copy">Caricamento dello stato pubblico…</p>
+            <div class="metric">
+              <strong id="dcat-ratio">—</strong>
+              <span>dataset conformi / pubblicati</span>
+            </div>
+            <div class="meter" aria-hidden="true"><span id="dcat-meter"></span></div>
+          </div>
+          <div class="status-panel">
+            <h3>Il gate controlla</h3>
+            <p>
+              Identificativo, titolo, descrizione, modifica, data-theme, frequenza,
+              distribuzioni, file type, licenza e URL di accesso. La validazione
+              locale non sostituisce un validator RDF/SHACL esterno.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section aria-labelledby="resources-title">
+        <div class="section-head">
+          <p class="eyebrow">Rappresentazioni pubbliche</p>
+          <h2 id="resources-title">Ispezionabili, copiabili, versionate.</h2>
+        </div>
+        <div class="resources">
+          <a class="resource" href="/semantic/profile.jsonld">
+            <strong>Profilo semantico</strong>
+            <code>/semantic/profile.jsonld</code>
+            <span>JSON-LD ↗</span>
+          </a>
+          <a class="resource" href="/semantic/context.jsonld">
+            <strong>Context</strong>
+            <code>/semantic/context.jsonld</code>
+            <span>JSON-LD ↗</span>
+          </a>
+          <a class="resource" href="/semantic/ontology.ttl">
+            <strong>Ontologia locale</strong>
+            <code>/semantic/ontology.ttl</code>
+            <span>Turtle ↗</span>
+          </a>
+          <a class="resource" href="/api/opendata/dcat-ap-it/validation">
+            <strong>Stato DCAT-AP_IT</strong>
+            <code>/api/opendata/dcat-ap-it/validation</code>
+            <span>JSON ↗</span>
+          </a>
+          <a class="resource" href="/api/opendata/catalog.jsonld">
+            <strong>Catalogo Open Data</strong>
+            <code>/api/opendata/catalog.jsonld</code>
+            <span>JSON-LD ↗</span>
+          </a>
+        </div>
+        <div class="note">
+          Identità e classificazione restano conservative: un nome di fornitore non
+          diventa un'organizzazione canonica senza entity resolution; CUP e CIG non
+          sono intercambiabili; l'assenza di un dato non viene modellata come prova
+          che il fatto non esista.
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div class="wrap">
+        LameziaTrasparente · profilo semantico 1.1.0 · superficie pubblica in sola lettura.
+      </div>
+    </footer>
+
+    <script>
+      (() => {
+        const ratio = document.getElementById("dcat-ratio");
+        const copy = document.getElementById("dcat-copy");
+        const meter = document.getElementById("dcat-meter");
+        const label = document.getElementById("dcat-label");
+
+        fetch("/api/opendata/dcat-ap-it/validation", {
+          headers: { Accept: "application/json" },
+        })
+          .then((response) => {
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+            return response.json();
+          })
+          .then((payload) => {
+            const total = Number(payload?.summary?.datasets ?? 0);
+            const conforming = Number(payload?.summary?.conforming ?? 0);
+            const percentage = total > 0 ? Math.round((conforming / total) * 100) : 0;
+            ratio.textContent = `${conforming}/${total}`;
+            meter.style.width = `${percentage}%`;
+            label.textContent = payload?.conforms
+              ? "Catalogo conforme al gate locale"
+              : "Conformità dataset per dataset";
+            copy.textContent = payload?.conforms
+              ? "Tutti i dataset pubblicati superano i controlli locali obbligatori."
+              : `${Math.max(total - conforming, 0)} dataset richiedono ancora metadati obbligatori o controlled vocabulary verificabili.`;
+          })
+          .catch(() => {
+            ratio.textContent = "n/d";
+            copy.textContent =
+              "Lo stato live non è disponibile in questo momento. Nessuna conformità viene inferita dal solo errore di rete.";
+            meter.style.width = "0%";
+          });
+      })();
+    </script>
+  </body>
+</html>

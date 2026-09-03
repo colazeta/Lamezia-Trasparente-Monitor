@@ -5,6 +5,7 @@ import themesRouter from "./themes";
 import contractsRouter from "./contracts";
 import gisRouter from "./gis";
 import opendataRouter from "./opendata";
+import dcatValidationRouter from "./dcatValidation";
 import delibereRouter from "./delibere";
 import publicationsRouter from "./publications";
 import officialsRouter from "./officials";
@@ -37,6 +38,7 @@ router.use(categoriesRouter);
 router.use(themesRouter);
 router.use(contractsRouter);
 router.use(gisRouter);
+router.use(dcatValidationRouter);
 router.use(opendataRouter);
 // Register before publicationsRouter so /delibere is handled by the
 // compatibility-aware archive route rather than the legacy exact-category filter.

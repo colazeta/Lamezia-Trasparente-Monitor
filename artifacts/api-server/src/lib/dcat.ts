@@ -14,6 +14,7 @@ type ResourceRow = typeof opendataResourcesTable.$inferSelect;
 // Codice IPA del Comune di Lamezia Terme (Indice dei domicili digitali della PA).
 export const PUBLISHER_IPA = "c_m208";
 export const PUBLISHER_NAME = "Comune di Lamezia Terme";
+export const DCAT_AP_IT_PROFILE = "http://dati.gov.it/onto/dcatapit";
 
 const EU = "http://publications.europa.eu/resource/authority";
 const DATASET_TYPE = ["dcatapit:Dataset", "dcat:Dataset"];
@@ -59,7 +60,7 @@ const FREQUENCY_MAP: Record<string, string> = {
   CONTINUO: "CONT",
   IRREGULAR: "IRREG",
   IRREGOLARE: "IRREG",
-  "AS_NEEDED": "IRREG",
+  AS_NEEDED: "IRREG",
   UNKNOWN: "UNKNOWN",
 };
 
@@ -82,6 +83,45 @@ const FILE_TYPE_MAP: Record<string, string> = {
   SHP: "SHP",
   WMS: "WMS",
 };
+
+export type DcatApItIssueCode =
+  | "missing_identifier"
+  | "missing_title"
+  | "missing_description"
+  | "missing_modified"
+  | "missing_or_invalid_theme"
+  | "missing_or_invalid_frequency"
+  | "missing_distribution"
+  | "missing_or_invalid_distribution_format"
+  | "missing_or_invalid_distribution_license"
+  | "missing_or_invalid_access_url";
+
+export type DcatApItValidationIssue = {
+  code: DcatApItIssueCode;
+  field: string;
+  resourceId?: number;
+  message: string;
+};
+
+export type DcatApItValidation = {
+  profile: string;
+  conforms: boolean;
+  issues: DcatApItValidationIssue[];
+};
+
+function nonEmpty(value: string | null | undefined): boolean {
+  return typeof value === "string" && value.trim().length > 0;
+}
+
+function httpUrl(value: string | null | undefined): boolean {
+  if (!nonEmpty(value)) return false;
+  try {
+    const url = new URL(value!);
+    return url.protocol === "http:" || url.protocol === "https:";
+  } catch {
+    return false;
+  }
+}
 
 function langValue(value: string) {
   return { "@language": "it", "@value": value };
@@ -110,6 +150,8 @@ function formatNode(format: string | null) {
   if (!format) return undefined;
   const code = FILE_TYPE_MAP[format.trim().toUpperCase()];
   if (code) return { "@id": `${EU}/file-type/${code}` };
+  // Keep the source format visible in best-effort DCAT output, but this fallback
+  // does not satisfy the DCAT-AP_IT controlled-vocabulary conformance gate.
   return { "rdfs:label": format.toUpperCase() };
 }
 
@@ -153,9 +195,111 @@ function distributionNode(r: ResourceRow, license: unknown) {
 }
 
 /**
- * Build a single DCAT-AP_IT dataset node (without the surrounding catalog).
- * `origin` is the public origin (e.g. https://example.org) used to build the
- * stable landing-page URL pointing at the dataset detail page.
+ * Validate the mandatory DCAT-AP_IT metadata that can be established from the
+ * local Open Data projection without inventing missing source facts.
+ *
+ * This is intentionally stricter than the serializer: the serializer remains
+ * best-effort so public metadata is still inspectable, while `conforms` is true
+ * only when the source-backed mandatory fields are present and use the required
+ * controlled-vocabulary/URI forms.
+ */
+export function validateDcatApItDataset(
+  d: DatasetRow,
+  resources: ResourceRow[],
+): DcatApItValidation {
+  const issues: DcatApItValidationIssue[] = [];
+
+  if (!nonEmpty(d.sourceId)) {
+    issues.push({
+      code: "missing_identifier",
+      field: "dct:identifier",
+      message: "Identificativo dataset mancante.",
+    });
+  }
+  if (!nonEmpty(d.title)) {
+    issues.push({
+      code: "missing_title",
+      field: "dct:title",
+      message: "Titolo dataset mancante.",
+    });
+  }
+  if (!nonEmpty(d.description)) {
+    issues.push({
+      code: "missing_description",
+      field: "dct:description",
+      message: "Descrizione dataset mancante: il titolo non viene accettato come sostituto ai fini della conformità.",
+    });
+  }
+  if (!d.metadataModified) {
+    issues.push({
+      code: "missing_modified",
+      field: "dct:modified",
+      message: "Data ultima modifica del dataset mancante.",
+    });
+  }
+  if (!themeNode(d.theme)) {
+    issues.push({
+      code: "missing_or_invalid_theme",
+      field: "dcat:theme",
+      message: "Tema mancante o non riconducibile al vocabolario europeo data-theme.",
+    });
+  }
+  if (!frequencyNode(d.frequency)) {
+    issues.push({
+      code: "missing_or_invalid_frequency",
+      field: "dct:accrualPeriodicity",
+      message: "Frequenza mancante o non riconducibile al vocabolario europeo frequency.",
+    });
+  }
+  if (resources.length === 0) {
+    issues.push({
+      code: "missing_distribution",
+      field: "dcat:distribution",
+      message: "Nessuna distribuzione disponibile per il dataset aperto.",
+    });
+  }
+
+  const hasValidLicense = httpUrl(d.licenseId);
+  for (const resource of resources) {
+    const format = resource.format?.trim().toUpperCase() ?? "";
+    if (!FILE_TYPE_MAP[format]) {
+      issues.push({
+        code: "missing_or_invalid_distribution_format",
+        field: "dct:format",
+        resourceId: resource.id,
+        message: "Formato distribuzione mancante o non mappato al vocabolario europeo file-type.",
+      });
+    }
+    if (!hasValidLicense) {
+      issues.push({
+        code: "missing_or_invalid_distribution_license",
+        field: "dct:license",
+        resourceId: resource.id,
+        message: "Licenza della distribuzione mancante o priva di URI HTTP(S) verificabile.",
+      });
+    }
+    if (!httpUrl(resource.url)) {
+      issues.push({
+        code: "missing_or_invalid_access_url",
+        field: "dcat:accessURL",
+        resourceId: resource.id,
+        message: "URL di accesso della distribuzione mancante o non HTTP(S).",
+      });
+    }
+  }
+
+  return {
+    profile: DCAT_AP_IT_PROFILE,
+    conforms: issues.length === 0,
+    issues,
+  };
+}
+
+/**
+ * Build a single DCAT / DCAT-AP_IT candidate dataset node (without the
+ * surrounding catalog). `origin` is the public origin used to build the stable
+ * landing-page URL. A `dct:conformsTo` assertion is emitted only when the
+ * mandatory source-backed DCAT-AP_IT gate passes.
  */
 export function buildDcatDataset(
   d: DatasetRow,
@@ -163,6 +307,7 @@ export function buildDcatDataset(
   origin: string,
 ): Record<string, unknown> {
   const license = licenseNode(d);
+  const validation = validateDcatApItDataset(d, resources);
   const node: Record<string, unknown> = {
     "@id": `${origin}/api/opendata/datasets/${d.id}/dcat.jsonld#dataset`,
     "@type": DATASET_TYPE,
@@ -173,6 +318,10 @@ export function buildDcatDataset(
     "dct:rightsHolder": publisherNode(),
     "dcat:landingPage": { "@id": `${origin}/opendata/${d.id}` },
   };
+
+  if (validation.conforms) {
+    node["dct:conformsTo"] = { "@id": DCAT_AP_IT_PROFILE };
+  }
 
   const modified = dateValue(d.metadataModified);
   if (modified) node["dct:modified"] = modified;
@@ -211,21 +360,27 @@ const DCAT_CONTEXT = {
 };
 
 /**
- * Build a full DCAT-AP_IT catalog (JSON-LD) for the supplied datasets.
+ * Build a full DCAT catalog. The historical dcatapit classes remain in the
+ * representation for compatibility, but catalog-level `dct:conformsTo` is
+ * asserted only when every included dataset passes the explicit mandatory gate.
  */
 export function buildDcatCatalog(
   datasets: { dataset: DatasetRow; resources: ResourceRow[] }[],
   origin: string,
   modified: Date,
 ): Record<string, unknown> {
-  return {
+  const allConform = datasets.every(({ dataset, resources }) =>
+    validateDcatApItDataset(dataset, resources).conforms,
+  );
+
+  const catalog: Record<string, unknown> = {
     "@context": DCAT_CONTEXT,
     "@id": `${origin}/api/opendata/catalog.jsonld`,
     "@type": ["dcatapit:Catalog", "dcat:Catalog"],
     "dct:title": langValue(OPENDATA_LABEL),
     "dct:description": langValue(
-      `Catalogo dei dati aperti del ${PUBLISHER_NAME}, esposto in formato ` +
-        "DCAT-AP_IT per l'interoperabilità con dati.gov.it e il riuso da parte di terzi.",
+      `Catalogo dei dati aperti del ${PUBLISHER_NAME}, esposto in JSON-LD ` +
+        "DCAT con profilo italiano dichiarato soltanto per i record che superano il gate DCAT-AP_IT.",
     ),
     "dct:publisher": publisherNode(),
     "dct:modified": dateValue(modified),
@@ -235,6 +390,12 @@ export function buildDcatCatalog(
       buildDcatDataset(dataset, resources, origin),
     ),
   };
+
+  if (datasets.length > 0 && allConform) {
+    catalog["dct:conformsTo"] = { "@id": DCAT_AP_IT_PROFILE };
+  }
+
+  return catalog;
 }
 
 // Wrap a single dataset node as a self-contained JSON-LD document.

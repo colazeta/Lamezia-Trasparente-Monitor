@@ -61,6 +61,11 @@ app.use(express.urlencoded({ extended: true }));
 // integration environments where Clerk is intentionally not configured.
 app.use("/api", changeSentinelRouter);
 
+// The public MCP surface is deliberately independent of editorial Clerk state.
+// It exposes only the same public-safe projections as the public REST API and
+// must remain usable by external MCP clients without a browser session.
+app.use("/api/mcp", mcpRouter);
+
 // Clerk session middleware — resolves key from host for multi-domain support
 app.use(
   clerkMiddleware((req) => ({
@@ -71,7 +76,6 @@ app.use(
   })),
 );
 
-app.use("/api/mcp", mcpRouter);
 app.use("/api", router);
 
 app.use(

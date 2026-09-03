@@ -9,10 +9,13 @@ indicatori di performance e progetti PNRR.
 richiede autenticazione: espone solo dati già pubblici. Tutte le operazioni di
 scrittura restano sui canali interni protetti e non fanno parte di questa API.
 
-Sono disponibili due superfici sugli **stessi dati**:
+Le superfici pubbliche condividono lo stesso perimetro public-safe:
 
 1. **REST** con paginazione e filtri, montata su `/api/public/v1`.
 2. **MCP** (Model Context Protocol) per assistenti AI, su `/api/mcp`.
+3. **Open Data / linked metadata** in JSON, CKAN-compatible JSON e JSON-LD.
+4. **Profilo semantico civico** versionato, riutilizzato per interpretare le
+   entità esposte senza cambiare il wire format operativo.
 
 ## Base URL
 
@@ -67,8 +70,7 @@ e restituiscono una busta uniforme:
 - `GET /documents/{id}` — dettaglio di un atto (metadati + allegati); `{id}`
   accetta sia l'id numerico legacy sia il `publicId` stabile
 - `GET /documents/{id}/markdown` — testo pulito in Markdown estratto; accetta
-  gli stessi due identificatori
-  dall'allegato PDF principale.
+  gli stessi due identificatori dall'allegato PDF principale.
   - Default: JSON `{ id, progressivo, oggetto, markdownSource, markdownExtractedAt, markdown }`
   - Con `?format=md`: risposta diretta `text/markdown`
 
@@ -147,19 +149,50 @@ curl "https://<host>/api/public/v1/contracts?minAmount=100000&from=2026-01-01"
 curl "https://<host>/api/public/v1/openapi.json"
 ```
 
-## Catalogo OpenData (DCAT-AP_IT e CKAN)
+## Catalogo Open Data: DCAT, DCAT-AP_IT e CKAN
 
-Il catalogo OpenData locale è esposto in sola lettura su endpoint separati dalla
-REST civica `/api/public/v1`. Non richiede autenticazione e mantiene envelope o
-formati compatibili con gli standard indicati.
+Il catalogo Open Data locale è esposto in sola lettura su endpoint separati dalla
+REST civica `/api/public/v1`. Non richiede autenticazione.
 
-### Metadati DCAT-AP_IT
+È importante distinguere **serializzazione DCAT** e **conformità DCAT-AP_IT**.
+Il catalogo JSON-LD mantiene le classi e le proprietà DCAT/DCAT-AP_IT già usate
+dalla piattaforma, ma un record riceve l'asserzione `dct:conformsTo` verso il
+profilo nazionale soltanto quando supera il gate locale sui metadati obbligatori
+source-backed. Un campo obbligatorio mancante non viene inventato per far passare
+il profilo.
+
+Il gate controlla, tra l'altro:
+
+- identificativo, titolo e descrizione del dataset;
+- data ultima modifica;
+- tema riconducibile al vocabolario europeo `data-theme`;
+- frequenza riconducibile al vocabolario europeo `frequency`;
+- presenza di almeno una distribuzione;
+- formato della distribuzione riconducibile al vocabolario europeo `file-type`;
+- licenza con URI HTTP(S);
+- URL di accesso HTTP(S).
+
+Questi sono controlli locali sulle cardinalità/forme che la proiezione può
+verificare. Non sostituiscono una futura validazione RDF/SHACL o il validator
+ufficiale del profilo.
+
+### Metadati DCAT / DCAT-AP_IT
 
 - `GET /api/opendata/catalog.jsonld` — catalogo completo in JSON-LD
-  (`application/ld+json`).
+  (`application/ld+json`). L'asserzione di conformità a livello catalogo viene
+  emessa solo se tutti i dataset inclusi superano il gate.
 - `GET /api/opendata/datasets/{id}/dcat.jsonld` — metadati JSON-LD di un
   singolo dataset. `{id}` è l'identificativo numerico del dataset nel catalogo
-  locale.
+  locale. `dct:conformsTo` compare soltanto se il dataset supera il gate.
+- `GET /api/opendata/dcat-ap-it/validation` — diagnostica pubblica dataset per
+  dataset con `conforms`, riepilogo e lista dei campi obbligatori mancanti o non
+  riconosciuti. L'endpoint dichiara esplicitamente anche il perimetro della
+  validazione, per non presentarla come certificazione esterna.
+
+Il profilo nazionale di riferimento resta l'ontologia DCAT-AP_IT con IRI
+`http://dati.gov.it/onto/dcatapit`. In parallelo, il profilo semantico generale
+di LameziaTrasparente usa **DCAT 3 / DCAT-AP 3.0.1** come target europeo di
+hardening futuro. I due livelli non vengono confusi.
 
 ### API CKAN compatibile (Action API)
 
@@ -177,8 +210,11 @@ formati compatibili con gli standard indicati.
 Esempi:
 
 ```bash
-# Catalogo DCAT-AP_IT completo
+# Catalogo DCAT completo; la conformità è dichiarata solo sui record che passano il gate
 curl -H "Accept: application/ld+json" "https://<host>/api/opendata/catalog.jsonld"
+
+# Diagnostica DCAT-AP_IT
+curl -H "Accept: application/json" "https://<host>/api/opendata/dcat-ap-it/validation"
 
 # Ricerca CKAN compatibile
 curl -H "Accept: application/json" "https://<host>/api/3/action/package_search?q=bilancio&rows=10"
@@ -187,13 +223,41 @@ curl -H "Accept: application/json" "https://<host>/api/3/action/package_search?q
 curl -H "Accept: application/json" "https://<host>/api/3/action/package_show?id={sourceId|slug|id}"
 ```
 
-## Server MCP (per assistenti AI)
+## Profilo semantico civico
 
-La piattaforma espone un server compatibile **MCP** sugli stessi dati, su
-trasporto **Streamable HTTP** in modalità _stateless_ (nessuna sessione
-persistente: ogni richiesta è autosufficiente). Non servono API key o header
-`Authorization`; i client devono inviare `Content-Type` e `Accept` coerenti con
-il trasporto MCP.
+LameziaTrasparente pubblica un piccolo profilo semantico locale, progettato per
+riusare ontologie esterne senza duplicarle o dichiarare equivalenze eccessive:
+
+```text
+https://lamezia-trasparente.pages.dev/semantic/context.jsonld
+https://lamezia-trasparente.pages.dev/semantic/profile.jsonld
+https://lamezia-trasparente.pages.dev/semantic/ontology.ttl
+```
+
+Namespace locale:
+
+```text
+https://lamezia-trasparente.pages.dev/ontology#
+```
+
+Il profilo distingue tre casi:
+
+- **conformance target** — profilo che una rappresentazione deve poter validare;
+- **ontology alignment** — vocabolario esterno usato per modellare il dominio;
+- **reference** — risorsa semanticamente rilevante, senza equivalenza né pretesa
+  di conformità.
+
+La baseline riusa PROV-O, SKOS, eProcurement Ontology, RDF Data Cube,
+DCAT/DCAT-AP e gli asset OntoPiA/schema.gov.it. L'ontologia italiana Transparency
+resta reference-only finché è dichiarata draft e in attesa di revisione ANAC.
+
+Le regole complete su URI, identificatori, organizzazioni, CIG/CUP, concept
+scheme e versionamento sono in **[`../../docs/SEMANTIC_MODEL.md`](../../docs/SEMANTIC_MODEL.md)**.
+
+## Server MCP pubblico
+
+La piattaforma espone un server **MCP** permanente sugli stessi dati public-safe
+della REST, su trasporto **Streamable HTTP** in modalità stateless:
 
 ```
 POST /api/mcp
@@ -201,13 +265,20 @@ Content-Type: application/json
 Accept: application/json, text/event-stream
 ```
 
+Non servono API key né una sessione editoriale. Il server è montato fuori dal
+middleware Clerk e non espone dati raw, redazionali o amministrativi.
+
+Il contratto corrente supporta **MCP `2026-07-28`** e mantiene sullo stesso
+endpoint la compatibilità stateless con i client MCP della linea 2025. I nomi
+dei nove tool sotto sono considerati un contratto pubblico stabile.
+
 ### Tool disponibili (sola lettura)
 
 | Tool                    | Descrizione                                              |
 | ----------------------- | -------------------------------------------------------- |
 | `search_documents`      | Cerca/filtra gli atti (stessi filtri di `/documents`)    |
-| `get_document`          | Dettaglio di un atto per `id`                            |
-| `get_document_markdown` | Testo Markdown di un atto per `id`                       |
+| `get_document`          | Dettaglio di un atto per id numerico o `publicId`        |
+| `get_document_markdown` | Testo Markdown public-safe di un atto                    |
 | `search_contracts`      | Cerca/filtra i contratti (stessi filtri di `/contracts`) |
 | `get_contract`          | Dettaglio di un contratto per `id`                       |
 | `list_themes`           | Elenca i temi di monitoraggio                            |
@@ -215,31 +286,25 @@ Accept: application/json, text/event-stream
 | `list_performance`      | Categorie e indicatori di performance                    |
 | `list_pnrr`             | Elenca i progetti PNRR                                   |
 
-I tool di elenco restituiscono la stessa busta paginata della REST. I tool di
-dettaglio restituiscono un risultato con `isError: true` quando l'entità non
-esiste.
+Tutti i tool sono annotati come read-only, non distruttivi e idempotenti. I
+risultati di successo conservano il contenuto JSON testuale per i client legacy
+e aggiungono `structuredContent` con tre blocchi:
 
-### Esempi (curl)
+- `data` — risultato public-safe;
+- `semantic` — tipo locale versionato e mapping alle ontologie esterne;
+- `verification` — `publicOnly`, `sourceCheckRequired` e link al portale.
 
-```bash
-# 1) Handshake initialize (senza sessione persistente)
-curl -X POST "https://<host>/api/mcp" \
-  -H "Content-Type: application/json" \
-  -H "Accept: application/json, text/event-stream" \
-  -d '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2025-06-18","capabilities":{},"clientInfo":{"name":"demo","version":"1.0"}}}'
+I tool di dettaglio restituiscono un risultato con `isError: true` quando
+l'entità non esiste.
 
-# 2) Elenca i tool con gli stessi header richiesti
-curl -X POST "https://<host>/api/mcp" \
-  -H "Content-Type: application/json" \
-  -H "Accept: application/json, text/event-stream" \
-  -d '{"jsonrpc":"2.0","id":2,"method":"tools/list","params":{}}'
+Il server pubblica inoltre istruzioni per impedire interpretazioni improprie:
+dati mancanti, parziali o non aggiornati sono limiti documentali e non prova di
+assenza; importi, procedure, campi mancanti o indicatori non sono prova di
+irregolarità. Le conclusioni materiali vanno verificate sulle fonti pubbliche e
+sulla provenienza restituite dai record.
 
-# 3) Chiama un tool con gli stessi header richiesti
-curl -X POST "https://<host>/api/mcp" \
-  -H "Content-Type: application/json" \
-  -H "Accept: application/json, text/event-stream" \
-  -d '{"jsonrpc":"2.0","id":3,"method":"tools/call","params":{"name":"search_documents","arguments":{"hasMarkdown":true,"pageSize":3}}}'
-```
+Per configurazione client, discovery `2026-07-28`, esempi curl, politica di
+versionamento e compatibilità legacy, vedere **[`../../docs/MCP.md`](../../docs/MCP.md)**.
 
 ### Configurazione in un client MCP
 
