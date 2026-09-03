@@ -15,6 +15,8 @@
     "pcapit": "https://w3id.org/italia/onto/PublicContract/",
     "indicator": "https://w3id.org/italia/onto/Indicator/",
     "pi": "https://w3id.org/italia/PublicInvestment/onto/PublicInvestment/",
+    "adms": "http://www.w3.org/ns/adms#",
+    "sh": "http://www.w3.org/ns/shacl#",
     "owl": "http://www.w3.org/2002/07/owl#",
     "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
     "xsd": "http://www.w3.org/2001/XMLSchema#"
