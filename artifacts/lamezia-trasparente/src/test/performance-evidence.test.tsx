@@ -115,8 +115,8 @@ describe("Performance evidence-first landing", () => {
     expect(
       screen.getByRole("heading", { name: "Le fonti prima degli obiettivi" }),
     ).toBeInTheDocument();
-    expect(screen.getAllByText("Metadati verificati")).toHaveLength(4);
-    expect(screen.getAllByText("Estrazione pending")).toHaveLength(4);
+    expect(screen.getAllByText("Metadati verificati")).toHaveLength(5);
+    expect(screen.getAllByText("Estrazione pending")).toHaveLength(5);
     expect(screen.getByText("PDF indicizzato · pagine verificate")).toBeInTheDocument();
     expect(screen.getByText("Estrazione verificata")).toBeInTheDocument();
     expect(metricValue("Obiettivi verificati").getByText("3")).toBeInTheDocument();
