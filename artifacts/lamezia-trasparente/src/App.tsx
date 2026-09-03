@@ -1,11 +1,12 @@
-import { lazy, Suspense } from "react";
-import { Router as WouterRouter, Route, Switch } from "wouter";
+import { lazy, Suspense, type ReactNode } from "react";
+import { Router as WouterRouter, useLocation } from "wouter";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "sonner";
 
 import { CivicHelperProvider } from "@/components/helper/CivicHelperContext";
 import { ThemeProvider } from "@/components/theme/ThemeProvider";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { isProtectedAppPath } from "@/lib/authRouteMode";
 import { WebMcpBridge } from "@/lib/webmcp";
 import { Router } from "./Router";
 
@@ -62,46 +63,63 @@ function AppLoading() {
   );
 }
 
-function App() {
-  if (!configuredClerkPubKey) {
+function AppShell({ children }: { children: ReactNode }) {
+  return (
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider>
+        <TooltipProvider>
+          <CivicHelperProvider>{children}</CivicHelperProvider>
+          <Toaster position="top-right" />
+        </TooltipProvider>
+      </ThemeProvider>
+    </QueryClientProvider>
+  );
+}
+
+interface AppRoutesProps {
+  clerkPubKey?: string;
+  proxyUrl?: string;
+}
+
+export function AppRoutes({
+  clerkPubKey = configuredClerkPubKey,
+  proxyUrl = clerkProxyUrl,
+}: AppRoutesProps = {}) {
+  const [location] = useLocation();
+
+  if (!isProtectedAppPath(location)) {
     return (
-      <QueryClientProvider client={queryClient}>
-        <ThemeProvider>
-          <TooltipProvider>
-            <WouterRouter base={basePath}>
-              <WebMcpBridge />
-              <CivicHelperProvider>
-                <Switch>
-                  <Route
-                    path="/redazione/*?"
-                    component={RedazioneUnavailablePage}
-                  />
-                  <Route
-                    path="/admin/*?"
-                    component={RedazioneUnavailablePage}
-                  />
-                  <Route component={Router} />
-                </Switch>
-              </CivicHelperProvider>
-              <Toaster position="top-right" />
-            </WouterRouter>
-          </TooltipProvider>
-        </ThemeProvider>
-      </QueryClientProvider>
+      <AppShell>
+        <Router />
+      </AppShell>
+    );
+  }
+
+  if (!clerkPubKey) {
+    return (
+      <AppShell>
+        <RedazioneUnavailablePage />
+      </AppShell>
     );
   }
 
   return (
+    <Suspense fallback={<AppLoading />}>
+      <ClerkApp
+        basePath={basePath}
+        proxyUrl={proxyUrl}
+        publishableKey={clerkPubKey}
+        queryClient={queryClient}
+      />
+    </Suspense>
+  );
+}
+
+function App() {
+  return (
     <WouterRouter base={basePath}>
       <WebMcpBridge />
-      <Suspense fallback={<AppLoading />}>
-        <ClerkApp
-          basePath={basePath}
-          proxyUrl={clerkProxyUrl}
-          publishableKey={configuredClerkPubKey}
-          queryClient={queryClient}
-        />
-      </Suspense>
+      <AppRoutes />
     </WouterRouter>
   );
 }
