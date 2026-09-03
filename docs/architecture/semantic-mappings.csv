@@ -1,0 +1,48 @@
+local_term,local_kind,external_specification,external_term,mapping_relation,status,authority_or_basis,notes
+lt-core:Entity,foundation,OntoPiA l0,https://w3id.org/italia/onto/l0/Entity,profile_uses,accepted,OntoPiA l0 0.8,Canonical application registry remains distinct from PROV Entity
+lt-core:Agent,foundation,OntoPiA l0,https://w3id.org/italia/onto/l0/Agent,profile_uses,accepted,OntoPiA l0 0.8,Common parent for persons and organisations acting in context
+lt-agents:Person,class,CPV-AP_IT,https://w3id.org/italia/onto/CPV/Person,profile_uses,accepted,CPV-AP_IT 0.8,Primary person model for Italian PA context
+lt-agents:Person,class,SEMIC Core Person Vocabulary,Person,interoperability_mapping,to_validate,SEMIC CPV 2.1.2,EU projection; do not duplicate national profile semantics
+lt-organisations:Organization,class,COV-AP_IT,https://w3id.org/italia/onto/COV/Organization,profile_uses,accepted,COV-AP_IT 0.12,Primary public/private organisation model
+lt-organisations:Organization,class,W3C ORG,http://www.w3.org/ns/org#Organization,rdfs:subClassOf,inherited,COV-aligns-AP_IT,COV already declares this alignment
+lt-organisations:PublicOrganization,class,COV-AP_IT,https://w3id.org/italia/onto/COV/PublicOrganization,profile_uses,accepted,COV-AP_IT 0.12,Primary public organisation class
+lt-organisations:PublicOrganization,class,SEMIC CPOV,http://data.europa.eu/m8g/PublicOrganization,rdfs:subClassOf,inherited,COV-aligns-AP_IT,COV already declares this alignment
+lt-organisations:PrivateOrganization,class,COV-AP_IT,https://w3id.org/italia/onto/COV/PrivateOrganization,profile_uses,accepted,COV-AP_IT 0.12,Primary private organisation class
+lt-organisations:PrivateOrganization,class,eProcurement Ontology,http://data.europa.eu/a4g/ontology#Business,rdfs:subClassOf,inherited,COV-aligns-AP_IT,COV already aligns PrivateOrganization to ePO Business
+lt-organisations:PrivateOrganization,class,W3C Registered Organization,http://www.w3.org/ns/regorg#RegisteredOrganization,rdfs:subClassOf,inherited,COV-aligns-AP_IT,COV already declares this alignment
+lt-roles:Role,class,RO-AP_IT,https://w3id.org/italia/onto/RO/Role,profile_uses,accepted,RO-AP_IT 0.3,Role is not a person subtype
+lt-roles:RoleAssignment,association,RO-AP_IT,https://w3id.org/italia/onto/RO/TimeIndexedRole,profile_uses,accepted,RO-AP_IT 0.3,Temporal and contextual role assignment
+lt-geo:Place,class,CLV-AP_IT,https://w3id.org/italia/onto/CLV/,profile_uses,accepted,OntoPiA CLV,Use the most specific CLV class after domain mapping
+lt-geo:Geometry,projection,OGC GeoSPARQL,http://www.opengis.net/ont/geosparql#Geometry,interoperability_mapping,accepted,GeoSPARQL 1.1,Stable geometry projection for mapped entities
+lt-time:TemporalEntity,projection,OntoPiA TI,https://w3id.org/italia/onto/TI/,profile_uses,accepted,OntoPiA TI,Primary national temporal model
+lt-time:TemporalEntity,projection,W3C OWL-Time,http://www.w3.org/2006/time#TemporalEntity,interoperability_mapping,to_validate,W3C OWL-Time,Use when cross-standard temporal topology is required
+lt-transparency:TransparencyObligation,class,Transparency-AP_IT,https://w3id.org/italia/onto/Transparency/TransparencyObligation,profile_uses,accepted,Transparency-AP_IT 0.2,Normative transparency obligation
+lt-transparency:TransparencyResource,class,Transparency-AP_IT,https://w3id.org/italia/onto/Transparency/TransparencyResource,profile_uses,accepted,Transparency-AP_IT 0.2,Resource generated/published to fulfil an obligation
+lt-transparency:TransparencySubject,concept,Transparency-AP_IT,https://w3id.org/italia/onto/Transparency/TransparencySubject,profile_uses,accepted,Transparency-AP_IT 0.2,Keep distinct from local area_theme navigation facet
+lt-projects:Project,class,Project-AP_IT,https://w3id.org/italia/onto/Project/PublicInvestmentProject,profile_uses,accepted,Project-AP_IT 0.3,CUP is identifier of this entity not a presentation-card key
+lt-projects:CUP,identifier,Project-AP_IT,https://w3id.org/italia/onto/Project/UniqueProjectCode,profile_uses,accepted,Project-AP_IT 0.3,Scheme-qualified project identifier
+lt-procurement:ProcurementProcess,class,PublicContract-AP_IT,https://w3id.org/italia/onto/PublicContract/Procedure,profile_uses,accepted,PublicContract-AP_IT 0.4,National procedure model
+lt-procurement:ProcurementProcess,class,eProcurement Ontology,http://data.europa.eu/a4g/ontology#Procedure,rdfs:subClassOf,inherited,PublicContract-aligns-AP_IT,National ontology already declares this mapping
+lt-procurement:PublicContract,class,PublicContract-AP_IT,https://w3id.org/italia/onto/PublicContract/Contract,profile_uses,accepted,PublicContract-AP_IT 0.4,National contract model
+lt-procurement:PublicContract,class,eProcurement Ontology,http://data.europa.eu/a4g/ontology#Contract,rdfs:subClassOf,inherited,PublicContract-aligns-AP_IT,National ontology already declares this mapping
+lt-procurement:ProcurementParticipation,association,OCDS,parties.roles,exchange_mapping,accepted,OCDS,Use for ingestion/exchange semantics; canonical entity remains COV Organization
+lt-procurement:ProcurementParticipation,association,eProcurement Ontology,role-specific concepts,domain_extension,to_validate,ePO 5.2.0,Map role-by-role rather than asserting one broad equivalence
+lt-opendata:Dataset,class,W3C DCAT,http://www.w3.org/ns/dcat#Dataset,profile_uses,accepted,DCAT/DCAT-AP,Dataset identity and metadata
+lt-opendata:Distribution,class,W3C DCAT,http://www.w3.org/ns/dcat#Distribution,profile_uses,accepted,DCAT/DCAT-AP,Distribution is not a duplicate Dataset entity
+lt-statistics:Indicator,class,Indicator-AP_IT,https://w3id.org/italia/onto/Indicator/Indicator,profile_uses,accepted,Indicator-AP_IT 0.1,Indicator definition
+lt-statistics:IndicatorCalculation,class,Indicator-AP_IT,https://w3id.org/italia/onto/Indicator/IndicatorCalculation,profile_uses,accepted,Indicator-AP_IT 0.1,Separate calculation/observation from definition
+lt-documents:AdministrativeAct,class,Lamezia local profile,AdministrativeAct,local_extension,accepted,LT decision,Do not classify every administrative act as ELI LegalResource
+lt-documents:AdministrativeAct,class,ELI/ELI-DL,LegalResource/selective process classes,selective_mapping,to_validate,EU Publications Office / ELI-EP,Apply only when resource semantics satisfy ELI scope
+lt-assets:Asset,class,Lamezia local profile,Asset,local_extension,accepted,LT decision,Neutral asset class; confiscation/seizure/reuse modelled as measures
+lt-assets:Asset,class,FollowTheMoney,Asset,inspired_by,accepted,FollowTheMoney,Operational graph reference rather than semantic authority
+lt-assets:AssetMeasure,association,Lamezia local profile,AssetMeasure,local_extension,accepted,LT decision,Measure/status must be temporal and sourced
+lt-ownership:Ownership,association,BODS,ownership-or-control relationship statement,domain_extension,accepted,BODS 0.4,Primary specialist model for ownership/control and statements
+lt-ownership:Ownership,association,FollowTheMoney,Ownership,inspired_by,accepted,FollowTheMoney,Operational graph projection
+lt-ownership:Directorship,association,FollowTheMoney,Directorship,inspired_by,accepted,FollowTheMoney,Use only where source establishes a formal directorship/office
+lt-provenance:Statement,association,BODS,Statement model,inspired_by,accepted,BODS 0.4,Source assertion kept separate from canonical projection
+lt-provenance:SourceRecord,class,W3C PROV-O,http://www.w3.org/ns/prov#Entity,specialization,to_validate,PROV-O,PROV Entity applies in provenance context only
+lt-provenance:Derivation,relation,W3C PROV-O,http://www.w3.org/ns/prov#wasDerivedFrom,profile_uses,accepted,PROV-O,Trace canonical/public projections to source records
+lt-taxonomy:Concept,class,W3C SKOS,http://www.w3.org/2004/02/skos/core#Concept,profile_uses,accepted,SKOS,Use for codelists and taxonomic facets
+lt-taxonomy:ConceptScheme,class,W3C SKOS,http://www.w3.org/2004/02/skos/core#ConceptScheme,profile_uses,accepted,SKOS,All local controlled vocabularies are versioned schemes
+lt-resolution:EntityResolutionDecision,workflow,Nomenklatura/Yente,reconciliation decision workflow,inspired_by,accepted,implementation reference,Not an ontology equivalence
+lt-authoring:SemanticSchema,tooling,LinkML,LinkML schema,tooling_candidate,to_evaluate,LinkML,Authoring/generation option only; never runtime semantic authority

@@ -1,0 +1,375 @@
+schema_version: lt-semantic-profile.v0.1
+status: architecture_baseline
+issued: 2026-09-02
+issue: 920
+runtime_contract: false
+
+principles:
+  - italian_pa_semantics_first
+  - eu_and_web_interoperability_second
+  - specialist_domain_extensions_when_needed
+  - local_extension_only_for_uncovered_concepts
+  - roles_are_not_entity_types
+  - sourced_temporal_relations_are_reified
+  - source_statement_and_canonical_projection_are_distinct
+  - controlled_vocabularies_are_versioned
+  - no_name_only_automatic_entity_merge
+  - no_semantic_relation_implies_risk_or_wrongdoing
+
+modules:
+  foundation:
+    primary:
+      - id: ontopia-l0
+        source: https://w3id.org/italia/onto/l0
+        role: upper_model
+      - id: ontopia-ti
+        source: https://w3id.org/italia/onto/TI
+        role: time
+    complementary:
+      - id: w3c-prov-o
+        source: http://www.w3.org/ns/prov#
+        role: provenance
+      - id: w3c-skos
+        source: http://www.w3.org/2004/02/skos/core#
+        role: controlled_vocabularies
+      - id: w3c-owl-time
+        source: http://www.w3.org/2006/time#
+        role: temporal_interoperability
+
+  identity:
+    primary:
+      - id: cpv-ap-it
+        source: https://w3id.org/italia/onto/CPV
+        role: persons
+      - id: cov-ap-it
+        source: https://w3id.org/italia/onto/COV
+        role: organizations
+      - id: ro-ap-it
+        source: https://w3id.org/italia/onto/RO
+        role: contextual_and_temporal_roles
+      - id: clv-ap-it
+        source: https://w3id.org/italia/onto/CLV
+        role: location_and_address
+    complementary:
+      - id: semic-core-vocabularies
+        source: https://github.com/SEMICeu
+        role: eu_interoperability
+      - id: w3c-org
+        source: http://www.w3.org/ns/org#
+        role: organization_interoperability
+      - id: geosparql
+        source: http://www.opengis.net/ont/geosparql#
+        role: spatial_interoperability
+
+  civic_domains:
+    primary:
+      - id: transparency-ap-it
+        source: https://w3id.org/italia/onto/Transparency
+        role: administrative_transparency
+      - id: publiccontract-ap-it
+        source: https://w3id.org/italia/onto/PublicContract
+        role: public_procurement
+      - id: project-ap-it
+        source: https://w3id.org/italia/onto/Project
+        role: public_projects
+      - id: indicator-ap-it
+        source: https://w3id.org/italia/onto/Indicator
+        role: indicators_and_calculations
+      - id: dcat
+        source: http://www.w3.org/ns/dcat#
+        role: datasets_and_distributions
+    complementary:
+      - id: epo
+        source: http://data.europa.eu/a4g/ontology#
+        role: eu_procurement_extension
+      - id: ocds
+        source: https://standard.open-contracting.org/
+        role: procurement_exchange_and_ingestion
+      - id: cpsv-ap
+        source: https://github.com/SEMICeu/CPSV-AP
+        role: public_services
+      - id: cpev
+        source: https://github.com/SEMICeu/Core-Public-Event-Vocabulary
+        role: public_events
+      - id: eli
+        source: http://data.europa.eu/eli/ontology#
+        role: selective_legal_resource_alignment
+      - id: cccev
+        source: https://github.com/SEMICeu/CCCEV
+        role: criteria_requirements_evidence
+
+  investigative_extensions:
+    complementary:
+      - id: bods
+        source: https://standard.openownership.org/
+        role: ownership_control_and_statement_pattern
+      - id: followthemoney
+        source: https://github.com/opensanctions/followthemoney
+        role: pragmatic_entity_graph
+      - id: nomenklatura-yente
+        source: https://github.com/opensanctions/nomenklatura
+        role: entity_resolution_workflow
+
+canonical_classes:
+  Person:
+    module: lt-agents
+    primary_term: https://w3id.org/italia/onto/CPV/Person
+    entity_registry: true
+
+  Organization:
+    module: lt-organisations
+    primary_term: https://w3id.org/italia/onto/COV/Organization
+    entity_registry: true
+
+  PublicOrganization:
+    module: lt-organisations
+    parent: Organization
+    primary_term: https://w3id.org/italia/onto/COV/PublicOrganization
+    entity_registry: true
+
+  PrivateOrganization:
+    module: lt-organisations
+    parent: Organization
+    primary_term: https://w3id.org/italia/onto/COV/PrivateOrganization
+    entity_registry: true
+
+  Place:
+    module: lt-geo
+    primary_specification: CLV-AP_IT
+    entity_registry: true
+
+  Asset:
+    module: lt-assets
+    local_extension: true
+    inspired_by:
+      - FollowTheMoney Asset
+    entity_registry: true
+
+  Project:
+    module: lt-projects
+    primary_term: https://w3id.org/italia/onto/Project/PublicInvestmentProject
+    entity_registry: true
+
+  ProcurementProcess:
+    module: lt-procurement
+    primary_term: https://w3id.org/italia/onto/PublicContract/Procedure
+    entity_registry: true
+
+  PublicContract:
+    module: lt-procurement
+    primary_term: https://w3id.org/italia/onto/PublicContract/Contract
+    entity_registry: true
+
+  Event:
+    module: lt-events
+    primary_term: https://w3id.org/italia/onto/l0/EventOrSituation
+    entity_registry: true
+
+  InformationResource:
+    module: lt-documents
+    local_extension: true
+    entity_registry: true
+
+  AdministrativeAct:
+    module: lt-documents
+    parent: InformationResource
+    local_extension: true
+    selective_alignment:
+      - ELI/ELI-DL
+    entity_registry: true
+
+  Dataset:
+    module: lt-opendata
+    primary_term: http://www.w3.org/ns/dcat#Dataset
+    entity_registry: true
+
+  Indicator:
+    module: lt-statistics
+    primary_term: https://w3id.org/italia/onto/Indicator/Indicator
+    entity_registry: true
+
+  TransparencyObligation:
+    module: lt-transparency
+    primary_term: https://w3id.org/italia/onto/Transparency/TransparencyObligation
+    entity_registry: true
+
+  TransparencyResource:
+    module: lt-transparency
+    primary_term: https://w3id.org/italia/onto/Transparency/TransparencyResource
+    entity_registry: true
+
+association_patterns:
+  RoleAssignment:
+    primary_term: https://w3id.org/italia/onto/RO/TimeIndexedRole
+    required_dimensions:
+      - agent
+      - role
+      - context
+      - source_statement
+    temporal: true
+
+  Ownership:
+    specialist_basis:
+      - BODS ownership/control relationship
+      - FollowTheMoney Ownership
+    required_dimensions:
+      - owner
+      - owned_entity_or_asset
+      - source_statement
+    optional_dimensions:
+      - direct_or_indirect
+      - share
+      - control_type
+    temporal: true
+
+  ProcurementParticipation:
+    specialist_basis:
+      - PublicContract-AP_IT
+      - eProcurement Ontology
+      - OCDS party roles
+    required_dimensions:
+      - agent
+      - procurement_object
+      - role
+      - source_statement
+    temporal: true
+
+  ProjectParticipation:
+    primary_basis:
+      - Project-AP_IT
+    required_dimensions:
+      - agent
+      - project
+      - role
+      - source_statement
+    temporal: true
+
+  AssetMeasure:
+    local_extension: true
+    required_dimensions:
+      - asset
+      - measure_type
+      - authority_or_source
+      - source_statement
+    temporal: true
+    note: confiscation seizure assignment and reuse are measures/statuses not permanent asset types
+
+  EntityMention:
+    local_extension: true
+    required_dimensions:
+      - information_resource
+      - entity
+      - matching_basis
+    inferential_strength: none
+    note: mention does not imply ownership membership directorship procurement or wrongdoing
+
+  Statement:
+    specialist_basis:
+      - BODS statement model
+      - W3C PROV-O
+    required_dimensions:
+      - source_record
+      - subject
+      - predicate
+      - object_or_value
+    temporal: true
+
+  EntityResolutionDecision:
+    implementation_basis:
+      - Nomenklatura
+      - Yente
+    values:
+      - same_entity
+      - not_same_entity
+      - possible_match
+      - needs_review
+    auditable: true
+
+controlled_vocabulary_policy:
+  representation: skos:ConceptScheme
+  mapping_relations:
+    - skos:exactMatch
+    - skos:closeMatch
+    - skos:broadMatch
+    - skos:narrowMatch
+  exact_owl_equivalence_requires_proof: true
+  local_ids_stable_across_label_changes: true
+
+identifier_policy:
+  representation: scheme_plus_value
+  bare_identifier_allowed: false
+  possible_schemes:
+    - IPA
+    - REA
+    - VAT_or_tax_identifier_when_lawfully_processable
+    - LEI
+    - CUP
+    - CIG
+    - source_specific_identifier
+  publication_subject_to_public_safety_gate: true
+
+provenance_pipeline:
+  order:
+    - source
+    - source_record
+    - statement
+    - canonical_projection
+  overwrite_prior_source_claim: false
+  canonical_projection_must_remain_traceable: true
+
+current_domain_bridges:
+  officials:
+    target:
+      - Person
+      - RoleAssignment
+  organi:
+    target:
+      - Organization
+    note: classify as organization unit or group according to actual nature
+  organi_members:
+    target:
+      - RoleAssignment
+  contracts:
+    target:
+      - ProcurementProcess
+      - PublicContract
+      - ProcurementParticipation
+  pnrr:
+    target:
+      - Project
+      - ProjectParticipation
+  confiscatedAssets:
+    target:
+      - Asset
+      - AssetMeasure
+  opendata:
+    target:
+      - Dataset
+  performanceIndicators:
+    target:
+      - Indicator
+      - IndicatorCalculation
+  acts_and_publications:
+    target:
+      - InformationResource
+      - AdministrativeAct
+  sedute:
+    target:
+      - Event
+
+implementation_policy:
+  database: postgres_drizzle_remains_operational_source
+  triplestore_required: false
+  graph_database_required: false
+  future_exports:
+    - json
+    - jsonld
+    - rdf_turtle
+  future_validation:
+    - zod_or_json_schema
+    - shacl
+    - mapping_bridge_tests
+    - identifier_round_trip_tests
+  linkml:
+    status: evaluate_in_separate_issue
+    runtime_dependency: false
