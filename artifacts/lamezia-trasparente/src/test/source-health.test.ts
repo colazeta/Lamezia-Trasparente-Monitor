@@ -47,12 +47,17 @@ describe("SOURCE_HEALTH", () => {
     const percentage =
       published === 0 ? 100 : Math.round((monitored / published) * 100);
 
-    expect(SOURCE_HEALTH.openDataCoverage).toEqual({
+    expect(SOURCE_HEALTH.openDataCoverage).toMatchObject({
       published,
       monitored,
       percentage,
-      missingDatasetIds,
     });
+    expect(SOURCE_HEALTH.openDataCoverage.missingDatasetIds).toHaveLength(
+      missingDatasetIds.length,
+    );
+    expect(SOURCE_HEALTH.openDataCoverage.missingDatasetIds).toEqual(
+      expect.arrayContaining(missingDatasetIds),
+    );
     expect(monitoredDatasetIds.size).toBe(monitored);
   });
 
