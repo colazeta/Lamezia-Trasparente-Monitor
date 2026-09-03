@@ -18,20 +18,24 @@ import {
   useCommandPalette,
 } from "@/components/search/CommandPalette";
 import { NAV_GROUPS, isSectionActive, type NavSection } from "./navSections";
+import { findPrimaryNavGroupByPath } from "./navState";
 
 export function Navbar() {
   const [location] = useLocation();
   const [isOpen, setIsOpen] = useState(false);
   const [openMobileGroup, setOpenMobileGroup] = useState<string | null>(null);
   const { open: paletteOpen, setOpen: setPaletteOpen } = useCommandPalette();
+  const activeNavGroup = findPrimaryNavGroupByPath(location);
+  const activeNavGroupLabel = activeNavGroup?.label ?? null;
 
   useEffect(() => {
     setIsOpen(false);
-  }, [location]);
+    setOpenMobileGroup(activeNavGroupLabel);
+  }, [location, activeNavGroupLabel]);
 
   const isActive = (href: string) => isSectionActive(href, location);
   const isGroupActive = (group: NavSection) =>
-    group.items.some((item) => isActive(item.href));
+    group.label === activeNavGroupLabel;
 
   const groupTriggerClass = (active: boolean) =>
     cn(
@@ -40,6 +44,13 @@ export function Navbar() {
         ? "bg-primary/10 text-primary"
         : "text-muted-foreground hover:bg-muted/50 hover:text-foreground",
     );
+
+  const toggleMobileMenu = () => {
+    if (!isOpen) {
+      setOpenMobileGroup(activeNavGroupLabel);
+    }
+    setIsOpen((open) => !open);
+  };
 
   return (
     <>
@@ -76,14 +87,14 @@ export function Navbar() {
 
                   <DropdownMenuContent
                     align="start"
-                    className="w-[22rem] p-2"
+                    className="w-[21rem] p-1.5"
                     sideOffset={8}
                   >
-                    <div className="px-2 pb-2 pt-1">
+                    <div className="px-2 py-1.5">
                       <p className="text-sm font-bold text-foreground">
                         {group.label}
                       </p>
-                      <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
+                      <p className="mt-1 text-xs leading-5 text-muted-foreground">
                         {group.description}
                       </p>
                     </div>
@@ -98,7 +109,7 @@ export function Navbar() {
                             href={item.href}
                             aria-current={itemActive ? "page" : undefined}
                             className={cn(
-                              "flex cursor-pointer items-start gap-3 rounded-md px-2.5 py-2.5",
+                              "flex cursor-pointer items-start gap-3 rounded-md px-2 py-2",
                               itemActive && "bg-primary/10 text-primary",
                             )}
                           >
@@ -115,7 +126,7 @@ export function Navbar() {
                               <span className="block text-sm font-semibold leading-5">
                                 {item.label}
                               </span>
-                              <span className="mt-0.5 block text-xs leading-relaxed text-muted-foreground">
+                              <span className="mt-0.5 block text-xs leading-5 text-muted-foreground">
                                 {item.description}
                               </span>
                             </span>
@@ -133,10 +144,11 @@ export function Navbar() {
             <SearchTrigger onClick={() => setPaletteOpen(true)} />
             <ThemeToggle />
             <Button
+              type="button"
               variant="outline"
               size="icon"
               className="xl:hidden"
-              onClick={() => setIsOpen((open) => !open)}
+              onClick={toggleMobileMenu}
               aria-label={isOpen ? "Chiudi menu" : "Apri menu"}
               aria-expanded={isOpen}
               aria-controls="mobile-navigation"
@@ -160,6 +172,7 @@ export function Navbar() {
               aria-label="Navigazione mobile"
             >
               <button
+                type="button"
                 onClick={() => {
                   setIsOpen(false);
                   setPaletteOpen(true);
@@ -186,9 +199,11 @@ export function Navbar() {
               </Link>
 
               <div className="space-y-2 pt-1">
-                {NAV_GROUPS.map((group) => {
+                {NAV_GROUPS.map((group, index) => {
                   const active = isGroupActive(group);
                   const expanded = openMobileGroup === group.label;
+                  const triggerId = `mobile-nav-trigger-${index}`;
+                  const panelId = `mobile-nav-panel-${index}`;
 
                   return (
                     <div
@@ -199,6 +214,7 @@ export function Navbar() {
                       )}
                     >
                       <button
+                        id={triggerId}
                         type="button"
                         onClick={() =>
                           setOpenMobileGroup((current) =>
@@ -210,6 +226,7 @@ export function Navbar() {
                           active && "text-primary",
                         )}
                         aria-expanded={expanded}
+                        aria-controls={panelId}
                       >
                         <span className="min-w-0">
                           <span className="block text-sm font-bold">
@@ -228,20 +245,24 @@ export function Navbar() {
                         />
                       </button>
 
-                      {expanded ? (
-                        <div className="border-t border-border/70 px-2 py-2">
-                          {group.items.map((item) => (
-                            <MobileSectionLink
-                              key={item.href}
-                              href={item.href}
-                              label={item.label}
-                              description={item.description}
-                              icon={item.icon}
-                              active={isActive(item.href)}
-                            />
-                          ))}
-                        </div>
-                      ) : null}
+                      <div
+                        id={panelId}
+                        role="region"
+                        aria-labelledby={triggerId}
+                        hidden={!expanded}
+                        className="border-t border-border/70 px-2 py-2"
+                      >
+                        {group.items.map((item) => (
+                          <MobileSectionLink
+                            key={item.href}
+                            href={item.href}
+                            label={item.label}
+                            description={item.description}
+                            icon={item.icon}
+                            active={isActive(item.href)}
+                          />
+                        ))}
+                      </div>
                     </div>
                   );
                 })}
