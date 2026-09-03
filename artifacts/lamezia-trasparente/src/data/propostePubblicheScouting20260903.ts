@@ -13,7 +13,7 @@ export const SCOUTED_PUBLIC_PROPOSALS_20260903 = [
     title: "Diffida per manutenzione e messa in sicurezza del quartiere Bella",
     summary:
       "Diffida del consigliere Gennarino Masi per chiedere entro il 5 settembre un sopralluogo tecnico sulle strade del quartiere Bella, il ripristino del manto stradale e delle buche con priorità a via Lazio e al percorso processionale, la messa in sicurezza temporanea dei tratti non ripristinabili, lo sfalcio dell'erba e il ripristino del decoro; viene inoltre richiesto un riscontro scritto entro 48 ore con interventi, risorse, responsabile, soggetti esecutori, cronoprogramma, misure di sicurezza ed esiti del sopralluogo.",
-    promoterId: "gennarino-masi-pd",
+    promoterId: "gennarino-masi",
     promoter: "Gennarino Masi (PD)",
     promoterType: "consigliere",
     periodLabel: "2 settembre 2026",
