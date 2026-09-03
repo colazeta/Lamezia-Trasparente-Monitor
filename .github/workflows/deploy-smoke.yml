@@ -2,18 +2,11 @@ name: deploy smoke
 
 on:
   workflow_dispatch:
-    inputs:
-      public_url:
-        description: "Optional public site URL to smoke-check after the local build"
-        required: false
-        default: "https://lamezia-trasparente.pages.dev"
-        type: string
   push:
     branches:
       - main
     paths:
       - '.github/workflows/deploy-smoke.yml'
-      - '.github/workflows/cloudflare-pages-deploy.yml'
       - 'artifacts/api-server/src/routes/organi.ts'
       - 'artifacts/api-server/src/routes/organi.test.ts'
       - 'artifacts/lamezia-trasparente/**'
@@ -26,7 +19,6 @@ on:
       - 'pnpm-lock.yaml'
       - 'pnpm-workspace.yaml'
       - 'scripts/check-institutional-*.ts'
-      - 'scripts/check-public-contracts-page.mjs'
       - 'scripts/check-v0-static-fallback.mjs'
       - 'wrangler.toml'
 
@@ -64,7 +56,5 @@ jobs:
       - name: Smoke static fallback
         run: pnpm run smoke:v0-static-fallback
 
-      - name: Optional production URL smoke
-        env:
-          PUBLIC_SITE_URL: ${{ inputs.public_url || vars.PUBLIC_SITE_URL || 'https://lamezia-trasparente.pages.dev' }}
-        run: node scripts/check-public-contracts-page.mjs --url "$PUBLIC_SITE_URL" --attempts 12 --delay-ms 10000
+      # Production smoke intentionally lives in cloudflare-pages-deploy.yml,
+      # where the deployed site is validated against the exact GITHUB_SHA.
