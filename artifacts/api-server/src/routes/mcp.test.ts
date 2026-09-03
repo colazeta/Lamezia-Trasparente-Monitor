@@ -9,6 +9,18 @@ import { attestPublicationAtIngestion } from "../lib/publicActProjection";
 
 const createdIds: number[] = [];
 const ACCEPT = "application/json, text/event-stream";
+const MODERN_PROTOCOL = "2026-07-28";
+const EXPECTED_TOOLS = [
+  "get_contract",
+  "get_document",
+  "get_document_markdown",
+  "get_theme",
+  "list_performance",
+  "list_pnrr",
+  "list_themes",
+  "search_contracts",
+  "search_documents",
+];
 
 async function createPublication(
   overrides: Partial<typeof publicationsTable.$inferInsert> = {},
@@ -37,6 +49,30 @@ function rpc(method: string, params: unknown, id = 1) {
     .send({ jsonrpc: "2.0", id, method, params });
 }
 
+function modernRpc(method: string, id: string) {
+  return request(app)
+    .post("/api/mcp")
+    .set("Content-Type", "application/json")
+    .set("Accept", ACCEPT)
+    .set("MCP-Protocol-Version", MODERN_PROTOCOL)
+    .set("Mcp-Method", method)
+    .send({
+      jsonrpc: "2.0",
+      id,
+      method,
+      params: {
+        _meta: {
+          "io.modelcontextprotocol/protocolVersion": MODERN_PROTOCOL,
+          "io.modelcontextprotocol/clientInfo": {
+            name: "lamezia-mcp-test",
+            version: "1.0.0",
+          },
+          "io.modelcontextprotocol/clientCapabilities": {},
+        },
+      },
+    });
+}
+
 function toolResult(body: { result: { content: { text: string }[] } }) {
   return JSON.parse(body.result.content[0].text);
 }
@@ -55,7 +91,49 @@ afterAll(async () => {
 });
 
 describe("MCP server", () => {
-  it("initializes and advertises tools capability", async () => {
+  it("discovers the modern protocol and publishes civic safety instructions", async () => {
+    const res = await modernRpc("server/discover", "discover-1");
+
+    expect(res.status).toBe(200);
+    expect(res.body.result.supportedVersions).toContain(MODERN_PROTOCOL);
+    expect(res.body.result.capabilities).toHaveProperty("tools");
+    expect(res.body.result.instructions).toMatch(/read-only civic transparency data/i);
+    expect(res.body.result.instructions).toMatch(
+      /do not infer illegality or wrongdoing/i,
+    );
+    expect(
+      res.body.result._meta?.["io.modelcontextprotocol/serverInfo"]?.name,
+    ).toBe("lamezia-trasparente-public");
+  });
+
+  it("publishes a stable, entirely read-only modern tool contract", async () => {
+    const res = await modernRpc("tools/list", "modern-tools-1");
+
+    expect(res.status).toBe(200);
+    const tools = res.body.result.tools as Array<{
+      name: string;
+      outputSchema?: unknown;
+      annotations?: {
+        readOnlyHint?: boolean;
+        destructiveHint?: boolean;
+        idempotentHint?: boolean;
+        openWorldHint?: boolean;
+      };
+    }>;
+
+    expect(tools.map((tool) => tool.name).sort()).toEqual(EXPECTED_TOOLS);
+    for (const tool of tools) {
+      expect(tool.outputSchema).toBeDefined();
+      expect(tool.annotations).toMatchObject({
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: true,
+        openWorldHint: false,
+      });
+    }
+  });
+
+  it("initializes legacy clients and advertises tools capability", async () => {
     const res = await rpc("initialize", {
       protocolVersion: "2025-06-18",
       capabilities: {},
@@ -66,25 +144,13 @@ describe("MCP server", () => {
     expect(res.body.result.capabilities).toHaveProperty("tools");
   });
 
-  it("lists the read-only tools", async () => {
+  it("lists the read-only tools for legacy clients", async () => {
     const res = await rpc("tools/list", {}, 2);
     expect(res.status).toBe(200);
     const names = (res.body.result.tools as { name: string }[]).map(
       (t) => t.name,
     );
-    expect(names).toEqual(
-      expect.arrayContaining([
-        "search_documents",
-        "get_document",
-        "get_document_markdown",
-        "search_contracts",
-        "get_contract",
-        "list_themes",
-        "get_theme",
-        "list_performance",
-        "list_pnrr",
-      ]),
-    );
+    expect(names).toEqual(expect.arrayContaining(EXPECTED_TOOLS));
   });
 
   it("shares document search and keeps unattested Markdown closed", async () => {
@@ -170,7 +236,7 @@ describe("MCP server", () => {
     expect(toolResult(res.body)).toMatchObject({ id, publicId, progressivo });
   });
 
-  it("rejects GET with 405", async () => {
+  it("keeps legacy session GET unavailable in stateless mode", async () => {
     const res = await request(app).get("/api/mcp");
     expect(res.status).toBe(405);
   });
