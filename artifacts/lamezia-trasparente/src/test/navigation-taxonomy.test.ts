@@ -90,6 +90,8 @@ describe("active primary navigation area", () => {
     expect(primaryGroupLabel("/contratti")).toBe("Spesa");
     expect(primaryGroupLabel("/contratti/CIG-123")).toBe("Spesa");
     expect(primaryGroupLabel("/legalita/trame-festival")).toBe("Legalità");
+    expect(primaryGroupLabel("/albo")).toBe("Atti");
+    expect(primaryGroupLabel("/albo/")).toBe("Atti");
   });
 
   it("keeps search-only pages anchored to their conceptual macro-area", () => {
@@ -121,6 +123,7 @@ describe("active primary navigation destination", () => {
       "/legalita/trame-festival",
     );
     expect(primaryItemHref("/contratti/CIG-123")).toBe("/contratti");
+    expect(primaryItemHref("/albo")).toBe("/albo/");
   });
 
   it("maps canonical legacy routes to the visible destination", () => {
