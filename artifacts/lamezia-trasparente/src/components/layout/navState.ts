@@ -63,3 +63,25 @@ export function findPrimaryNavGroupByPath(
 
   return null;
 }
+
+/**
+ * Resolve the single visible destination that best represents the current
+ * location. Nested routes prefer the longest matching href so a child page does
+ * not highlight both itself and its parent at the same time.
+ */
+export function findPrimaryNavItemByPath(location: string): NavItem | null {
+  const resolvedLocation = resolveCanonicalLocation(location);
+  const activeGroup = findPrimaryNavGroupByPath(resolvedLocation);
+  if (!activeGroup) return null;
+
+  const candidates = activeGroup.items.filter((item) =>
+    isSectionActive(item.href, resolvedLocation),
+  );
+
+  if (candidates.length === 0) return null;
+
+  return [...candidates].sort(
+    (left, right) =>
+      normalizePath(right.href).length - normalizePath(left.href).length,
+  )[0];
+}
