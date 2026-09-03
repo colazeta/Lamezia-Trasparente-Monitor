@@ -11,6 +11,10 @@ import {
   listPerformance,
   listPnrr,
 } from "./publicData";
+import {
+  semanticDescriptor,
+  type SemanticResource,
+} from "./semanticProfile";
 
 const PUBLIC_SITE_URL = "https://lamezia-trasparente.pages.dev";
 
@@ -19,6 +23,7 @@ const SERVER_INSTRUCTIONS =
   "Use search/list tools before detail tools when the exact identifier is unknown. " +
   "Treat missing, partial or stale data as a documentation limitation, never as evidence that an event, contract or irregularity does not exist. " +
   "Do not infer illegality or wrongdoing from amounts, procedure types, missing fields or monitoring indicators. " +
+  "Successful structured results include a versioned semantic profile with explicit ontology alignments; treat 'reference' and 'describes' mappings as alignments, not OWL equivalence or conformance claims. " +
   "For legal effect, dates and material conclusions, verify the public source links and provenance returned by the records.";
 
 const READ_ONLY_ANNOTATIONS = {
@@ -39,9 +44,31 @@ const paginationFields = {
     .describe("Elementi per pagina (max 100)."),
 };
 
+const semanticMappingSchema = z.object({
+  relation: z.enum([
+    "subClassOf",
+    "describes",
+    "observationPattern",
+    "reference",
+  ]),
+  term: z.url(),
+  vocabulary: z.string(),
+  version: z.string().nullable(),
+});
+
+const semanticDescriptorSchema = z.object({
+  profile: z.url(),
+  context: z.url(),
+  ontology: z.url(),
+  profileVersion: z.string(),
+  entityType: z.url(),
+  mappings: z.array(semanticMappingSchema),
+});
+
 const publicResultSchema = z.object({
   resource: z.string(),
   data: z.unknown(),
+  semantic: semanticDescriptorSchema,
   verification: z.object({
     publicOnly: z.literal(true),
     sourceCheckRequired: z.literal(true),
@@ -51,10 +78,11 @@ const publicResultSchema = z.object({
 
 type PublicResult = z.infer<typeof publicResultSchema>;
 
-function structured(resource: string, payload: unknown): PublicResult {
+function structured(resource: SemanticResource, payload: unknown): PublicResult {
   return {
     resource,
     data: payload,
+    semantic: semanticDescriptor(resource),
     verification: {
       publicOnly: true,
       sourceCheckRequired: true,
@@ -65,7 +93,7 @@ function structured(resource: string, payload: unknown): PublicResult {
 
 // Keep the legacy text rendering unchanged while adding a stable structured
 // envelope for clients that understand modern MCP structuredContent.
-function json(resource: string, payload: unknown) {
+function json(resource: SemanticResource, payload: unknown) {
   const structuredContent = structured(resource, payload);
   return {
     content: [
@@ -87,9 +115,9 @@ export function createMcpServer(): McpServer {
     {
       name: "lamezia-trasparente-public",
       title: "LameziaTrasparente Public MCP",
-      version: "1.1.0",
+      version: "1.2.0",
       description:
-        "Read-only, source-verifiable civic transparency data for Lamezia Terme.",
+        "Read-only, source-verifiable and ontology-aligned civic transparency data for Lamezia Terme.",
       websiteUrl: PUBLIC_SITE_URL,
     },
     {
