@@ -35,14 +35,14 @@ export type {
   EvidenceThematicArea,
 };
 
-export const EVIDENCE_INTERVENTIONS = [
+export const EVIDENCE_INTERVENTIONS: readonly EvidenceIntervention[] = [
   ...BASE_EVIDENCE_INTERVENTIONS,
   ...EVIDENCE_INTERVENTIONS_DAILY,
   ...EVIDENCE_INTERVENTIONS_2026_08_31,
   ...EVIDENCE_INTERVENTIONS_2026_09_01,
   ...EVIDENCE_INTERVENTIONS_2026_09_02,
   ...EVIDENCE_INTERVENTIONS_2026_09_03,
-] as const satisfies readonly EvidenceIntervention[];
+];
 
 export function getEvidenceCountries() {
   return Array.from(new Set(EVIDENCE_INTERVENTIONS.map((item) => item.country))).sort((a, b) =>
