@@ -21,6 +21,7 @@ import { it } from "date-fns/locale";
 
 import { PerformanceIndicatorExplorer } from "@/components/performance/PerformanceIndicatorExplorer";
 import { PerformanceObjectiveRegistryPanel } from "@/components/performance/PerformanceObjectiveRegistryPanel";
+import { PerformanceProcessChainPanel } from "@/components/performance/PerformanceProcessChainPanel";
 import { Skeleton } from "@/components/ui/skeleton";
 import { getPerformanceRegistryStats } from "@/data/performanceObjectiveRegistry";
 
@@ -297,6 +298,7 @@ export function Performance() {
       </section>
 
       <PerformanceObjectiveRegistryPanel />
+      <PerformanceProcessChainPanel />
 
       <section aria-labelledby="measurement-coverage-heading" className="mb-10">
         <div className="grid gap-6 rounded-2xl border border-card-border bg-muted/20 p-5 md:grid-cols-[0.8fr_1.2fr] md:p-6">
