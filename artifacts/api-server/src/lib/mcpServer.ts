@@ -1,5 +1,5 @@
 import { McpServer } from "@modelcontextprotocol/server";
-import * as z from "zod/v4";
+import { z, type ZodRawShape } from "zod";
 import {
   listDocuments,
   getDocument,
@@ -28,7 +28,7 @@ const READ_ONLY_ANNOTATIONS = {
   openWorldHint: false,
 } as const;
 
-const paginationFields = {
+const paginationShape = {
   page: z.number().int().min(1).optional().describe("Numero di pagina (1-based)."),
   pageSize: z
     .number()
@@ -37,9 +37,9 @@ const paginationFields = {
     .max(100)
     .optional()
     .describe("Elementi per pagina (max 100)."),
-};
+} satisfies ZodRawShape;
 
-const publicResultSchema = z.object({
+const publicResultShape = {
   resource: z.string(),
   data: z.unknown(),
   verification: z.object({
@@ -47,9 +47,17 @@ const publicResultSchema = z.object({
     sourceCheckRequired: z.literal(true),
     portal: z.string().url(),
   }),
-});
+} satisfies ZodRawShape;
 
-type PublicResult = z.infer<typeof publicResultSchema>;
+type PublicResult = {
+  resource: string;
+  data: unknown;
+  verification: {
+    publicOnly: true;
+    sourceCheckRequired: true;
+    portal: string;
+  };
+};
 
 function structured(resource: string, payload: unknown): PublicResult {
   return {
@@ -104,7 +112,7 @@ export function createMcpServer(): McpServer {
       description:
         "Cerca e filtra gli atti pubblicati (delibere, determine, ordinanze, " +
         "convocazioni). Restituisce risultati paginati con metadati e allegati.",
-      inputSchema: z.object({
+      inputSchema: {
         q: z
           .string()
           .max(300)
@@ -135,9 +143,9 @@ export function createMcpServer(): McpServer {
           .boolean()
           .optional()
           .describe("Solo atti con testo Markdown estratto."),
-        ...paginationFields,
-      }),
-      outputSchema: publicResultSchema,
+        ...paginationShape,
+      },
+      outputSchema: publicResultShape,
       annotations: READ_ONLY_ANNOTATIONS,
     },
     async (args) => json("documents", await listDocuments(args)),
@@ -149,12 +157,12 @@ export function createMcpServer(): McpServer {
       title: "Dettaglio di un atto",
       description:
         "Restituisce i metadati e gli allegati di un singolo atto per id numerico o publicId stabile.",
-      inputSchema: z.object({
+      inputSchema: {
         id: z
           .union([z.number().int(), z.string().min(1).max(180)])
           .describe("Id numerico o publicId stabile dell'atto."),
-      }),
-      outputSchema: publicResultSchema,
+      },
+      outputSchema: publicResultShape,
       annotations: READ_ONLY_ANNOTATIONS,
     },
     async ({ id }) => {
@@ -170,12 +178,12 @@ export function createMcpServer(): McpServer {
       description:
         "Restituisce il testo pulito in Markdown estratto dall'allegato PDF " +
         "principale di un atto. Utile per leggere o riassumere il contenuto.",
-      inputSchema: z.object({
+      inputSchema: {
         id: z
           .union([z.number().int(), z.string().min(1).max(180)])
           .describe("Id numerico o publicId stabile dell'atto."),
-      }),
-      outputSchema: publicResultSchema,
+      },
+      outputSchema: publicResultShape,
       annotations: READ_ONLY_ANNOTATIONS,
     },
     async ({ id }) => {
@@ -194,7 +202,7 @@ export function createMcpServer(): McpServer {
         "Cerca e filtra i contratti pubblici (fonte ANAC) per fornitore, " +
         "importo, procedura, periodo o tema. Risultati paginati. I filtri e gli " +
         "indicatori non costituiscono prova di irregolarità.",
-      inputSchema: z.object({
+      inputSchema: {
         q: z
           .string()
           .max(300)
@@ -228,9 +236,9 @@ export function createMcpServer(): McpServer {
           .optional()
           .describe("Aggiudicati fino al (YYYY-MM-DD)."),
         themeId: z.number().int().optional().describe("Id del tema collegato."),
-        ...paginationFields,
-      }),
-      outputSchema: publicResultSchema,
+        ...paginationShape,
+      },
+      outputSchema: publicResultShape,
       annotations: READ_ONLY_ANNOTATIONS,
     },
     async (args) => json("contracts", await listContracts(args)),
@@ -241,10 +249,10 @@ export function createMcpServer(): McpServer {
     {
       title: "Dettaglio di un contratto",
       description: "Restituisce i dettagli pubblici di un singolo contratto per id.",
-      inputSchema: z.object({
+      inputSchema: {
         id: z.number().int().describe("Id del contratto."),
-      }),
-      outputSchema: publicResultSchema,
+      },
+      outputSchema: publicResultShape,
       annotations: READ_ONLY_ANNOTATIONS,
     },
     async ({ id }) => {
@@ -262,7 +270,7 @@ export function createMcpServer(): McpServer {
       description:
         "Elenca i temi di monitoraggio civico, con filtri per categoria, " +
         "stato e ricerca testuale. Risultati paginati.",
-      inputSchema: z.object({
+      inputSchema: {
         q: z.string().max(300).optional().describe("Ricerca per titolo."),
         categoryId: z.number().int().optional().describe("Id della categoria."),
         status: z
@@ -270,9 +278,9 @@ export function createMcpServer(): McpServer {
           .max(80)
           .optional()
           .describe("Stato: aperto, in_corso, monitoraggio, chiuso."),
-        ...paginationFields,
-      }),
-      outputSchema: publicResultSchema,
+        ...paginationShape,
+      },
+      outputSchema: publicResultShape,
       annotations: READ_ONLY_ANNOTATIONS,
     },
     async (args) => json("themes", await listThemes(args)),
@@ -284,10 +292,10 @@ export function createMcpServer(): McpServer {
       title: "Dettaglio di un tema",
       description:
         "Restituisce un tema di monitoraggio con la descrizione estesa e i contratti collegati.",
-      inputSchema: z.object({
+      inputSchema: {
         id: z.number().int().describe("Id del tema."),
-      }),
-      outputSchema: publicResultSchema,
+      },
+      outputSchema: publicResultShape,
       annotations: READ_ONLY_ANNOTATIONS,
     },
     async ({ id }) => {
@@ -303,7 +311,8 @@ export function createMcpServer(): McpServer {
       description:
         "Restituisce le categorie e gli indicatori di performance del Comune " +
         "con l'ultimo valore e quello precedente per ciascun indicatore.",
-      outputSchema: publicResultSchema,
+      inputSchema: {},
+      outputSchema: publicResultShape,
       annotations: READ_ONLY_ANNOTATIONS,
     },
     async () => json("performance", await listPerformance()),
@@ -316,7 +325,7 @@ export function createMcpServer(): McpServer {
       description:
         "Elenca i progetti PNRR del censimento Attuazione, con filtri per " +
         "missione, stato e ricerca testuale. Risultati paginati.",
-      inputSchema: z.object({
+      inputSchema: {
         q: z
           .string()
           .max(300)
@@ -324,9 +333,9 @@ export function createMcpServer(): McpServer {
           .describe("Ricerca su titolo, intervento, CUP."),
         mission: z.string().max(180).optional().describe("Missione PNRR."),
         status: z.string().max(120).optional().describe("Stato del progetto."),
-        ...paginationFields,
-      }),
-      outputSchema: publicResultSchema,
+        ...paginationShape,
+      },
+      outputSchema: publicResultShape,
       annotations: READ_ONLY_ANNOTATIONS,
     },
     async (args) => json("pnrr", await listPnrr(args)),
