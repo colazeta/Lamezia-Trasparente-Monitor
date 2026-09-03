@@ -2,7 +2,16 @@ import { fireEvent, render, screen, within } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 
 import { OpenDataThemeLibrary } from "@/components/opendata/OpenDataThemeLibrary";
+import { buildOpenDataCatalogStatistics } from "@/data/openDataDatasetRegistry";
 import { LAMEZIA_OPEN_DATA_SERIES_BY_ID } from "@/data/lameziaOpenDataSeriesStatus";
+
+const catalogStats = buildOpenDataCatalogStatistics(
+  new Date("2026-09-03T00:00:00.000Z"),
+);
+
+function themeCount(id: string) {
+  return catalogStats.byTheme.find((theme) => theme.id === id)?.count ?? 0;
+}
 
 describe("Open Data discovery surface", () => {
   it("starts with the available themes and keeps freshness secondary", () => {
@@ -14,17 +23,51 @@ describe("Open Data discovery surface", () => {
       screen.getByRole("heading", { name: "Esplora i dati" }),
     ).toBeInTheDocument();
     expect(
-      screen.getByRole("button", { name: /tutti i dataset: 6 dataset/i }),
+      screen.getByRole("button", {
+        name: new RegExp(
+          `tutti i dataset: ${catalogStats.totalDatasets} dataset`,
+          "i",
+        ),
+      }),
     ).toHaveAttribute("aria-pressed", "true");
     expect(
-      screen.getByRole("button", { name: /popolazione e societa: 4 dataset/i }),
-    ).toBeInTheDocument();
-    expect(
-      screen.getByRole("button", { name: /clima e territorio: 1 dataset/i }),
+      screen.getByRole("button", {
+        name: new RegExp(
+          `popolazione e societa: ${themeCount("population-society")} dataset`,
+          "i",
+        ),
+      }),
     ).toBeInTheDocument();
     expect(
       screen.getByRole("button", {
-        name: /mobilita e collegamenti: 1 dataset/i,
+        name: new RegExp(
+          `clima e territorio: ${themeCount("climate-territory")} dataset`,
+          "i",
+        ),
+      }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", {
+        name: new RegExp(
+          `mobilita e collegamenti: ${themeCount("mobility-connections")} dataset`,
+          "i",
+        ),
+      }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", {
+        name: new RegExp(
+          `investimenti e PNRR: ${themeCount("investments-pnrr")} dataset`,
+          "i",
+        ),
+      }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", {
+        name: new RegExp(
+          `patrimonio e beni confiscati: ${themeCount("assets-confiscated-property")} dataset`,
+          "i",
+        ),
       }),
     ).toBeInTheDocument();
 
@@ -35,17 +78,21 @@ describe("Open Data discovery surface", () => {
       screen.queryByRole("button", { name: /atti/i }),
     ).not.toBeInTheDocument();
     expect(
-      screen.queryByRole("button", { name: /patrimonio/i }),
-    ).not.toBeInTheDocument();
-    expect(
       screen.queryByRole("button", { name: /accesso/i }),
     ).not.toBeInTheDocument();
 
     expect(
-      screen.getByText(/6 dataset con stato documentato/i),
+      screen.getByText(
+        new RegExp(
+          `${catalogStats.documentedStatusDatasets}\/${catalogStats.totalDatasets} con stato documentato`,
+          "i",
+        ),
+      ),
     ).toBeInTheDocument();
     expect(
-      screen.getByText(/5 aggiornati automaticamente/i),
+      screen.getByText(
+        new RegExp(`${catalogStats.automatedDatasets} aggiornati automaticamente`, "i"),
+      ),
     ).toBeInTheDocument();
     const disclosure = screen
       .getByText("Aggiornamento e fonti")
@@ -91,7 +138,7 @@ describe("Open Data discovery surface", () => {
     ).toBeInTheDocument();
     expect(
       scope.getAllByRole("link", { name: "Fonte ufficiale" }),
-    ).toHaveLength(6);
+    ).toHaveLength(catalogStats.documentedStatusDatasets);
     expect(scope.getByText(/non un dato in tempo reale/i)).toBeInTheDocument();
   });
 });
