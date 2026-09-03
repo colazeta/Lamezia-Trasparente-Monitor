@@ -2,6 +2,7 @@ import { screen, within } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 
 import { ALBO_OPERATIONAL_STATUS } from "@/data/alboStatus";
+import { SOURCE_HEALTH } from "@/data/sourceHealth";
 import { StatoMonitoraggio } from "@/pages/StatoMonitoraggio";
 import { renderPage } from "./pages-harness";
 
@@ -49,7 +50,7 @@ describe("Albo Pretorio source status surface", () => {
     ).toBeInTheDocument();
   });
 
-  it("shows complete Open Data coverage, status reasons and evidence history", () => {
+  it("shows current Open Data coverage, status reasons and evidence history", () => {
     renderPage(StatoMonitoraggio);
 
     const coverageHeading = screen.getByRole("heading", {
@@ -59,11 +60,25 @@ describe("Albo Pretorio source status surface", () => {
     expect(coverage).not.toBeNull();
 
     const panel = within(coverage as HTMLElement);
-    expect(panel.getByText(/6 dei 6 dataset pubblicati/i)).toBeInTheDocument();
+    const { published, monitored, percentage, missingDatasetIds } =
+      SOURCE_HEALTH.openDataCoverage;
+
+    expect(
+      panel.getByText(
+        new RegExp(`${monitored} dei ${published} dataset pubblicati`, "i"),
+      ),
+    ).toBeInTheDocument();
     expect(panel.getByRole("progressbar")).toHaveAttribute(
       "aria-valuenow",
-      "100",
+      String(percentage),
     );
+
+    if (missingDatasetIds.length > 0) {
+      expect(panel.getByText(/Da integrare:/i)).toBeInTheDocument();
+      for (const datasetId of missingDatasetIds) {
+        expect(panel.getByText(new RegExp(datasetId, "i"))).toBeInTheDocument();
+      }
+    }
 
     expect(
       screen.getAllByText(/cadenza tecnica|manifest versionato/i).length,
