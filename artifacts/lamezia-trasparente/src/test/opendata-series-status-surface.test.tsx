@@ -14,10 +14,10 @@ describe("Open Data discovery surface", () => {
       screen.getByRole("heading", { name: "Esplora i dati" }),
     ).toBeInTheDocument();
     expect(
-      screen.getByRole("button", { name: /tutti i dataset: 6 dataset/i }),
+      screen.getByRole("button", { name: /tutti i dataset: 9 dataset/i }),
     ).toHaveAttribute("aria-pressed", "true");
     expect(
-      screen.getByRole("button", { name: /popolazione e societa: 4 dataset/i }),
+      screen.getByRole("button", { name: /popolazione e societa: 5 dataset/i }),
     ).toBeInTheDocument();
     expect(
       screen.getByRole("button", { name: /clima e territorio: 1 dataset/i }),
@@ -25,6 +25,14 @@ describe("Open Data discovery surface", () => {
     expect(
       screen.getByRole("button", {
         name: /mobilita e collegamenti: 1 dataset/i,
+      }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: /investimenti e pnrr: 1 dataset/i }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", {
+        name: /patrimonio e beni confiscati: 1 dataset/i,
       }),
     ).toBeInTheDocument();
 
@@ -35,14 +43,11 @@ describe("Open Data discovery surface", () => {
       screen.queryByRole("button", { name: /atti/i }),
     ).not.toBeInTheDocument();
     expect(
-      screen.queryByRole("button", { name: /patrimonio/i }),
-    ).not.toBeInTheDocument();
-    expect(
       screen.queryByRole("button", { name: /accesso/i }),
     ).not.toBeInTheDocument();
 
     expect(
-      screen.getByText(/6 dataset con stato documentato/i),
+      screen.getByText(/6\/9 con stato documentato/i),
     ).toBeInTheDocument();
     expect(
       screen.getByText(/5 aggiornati automaticamente/i),
