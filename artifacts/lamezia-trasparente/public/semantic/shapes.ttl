@@ -6,7 +6,6 @@
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix sh: <http://www.w3.org/ns/shacl#> .
-@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://lamezia-trasparente.pages.dev/semantic/shapes.ttl>
   a lt:ValidationShapeGraph ;
@@ -112,7 +111,14 @@ lt:CivicConceptSchemeShape
 
 lt:GovernedCivicConceptShape
   a sh:NodeShape ;
-  sh:targetClass skos:Concept ;
+  sh:targetNode <https://lamezia-trasparente.pages.dev/concept/acts> ,
+    <https://lamezia-trasparente.pages.dev/concept/governance> ,
+    <https://lamezia-trasparente.pages.dev/concept/spending> ,
+    <https://lamezia-trasparente.pages.dev/concept/territory> ,
+    <https://lamezia-trasparente.pages.dev/concept/integrity> ,
+    <https://lamezia-trasparente.pages.dev/concept/open-data> ,
+    <https://lamezia-trasparente.pages.dev/concept/participation> ;
+  sh:class skos:Concept ;
   sh:property [
     sh:path skos:notation ;
     sh:minCount 1 ;
