@@ -33,9 +33,17 @@ describe("home daily civic pulse contract", () => {
   it("gives council and commissions a clear sourced path from the homepage", () => {
     const home = readHome();
 
-    expect(home).toContain('title: "Sedute e ordini del giorno"');
-    expect(home).toContain('href: "/convocazioni"');
+    expect(home).toContain("Consiglio e Commissioni");
+    expect(home).toContain('href="/convocazioni"');
     expect(home).toContain("<HomeInstitutionalSessions />");
     expect(home).toContain("Fonte: Albo Pretorio");
+  });
+
+  it("uses the five-domain primary navigation as the homepage map", () => {
+    const home = readHome();
+
+    expect(home).toContain("PRIMARY_NAV_GROUPS");
+    expect(home).toContain("Esplora per domanda");
+    expect(home).toContain("<DomainCard");
   });
 });
