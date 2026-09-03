@@ -6,6 +6,7 @@
 @prefix epo: <http://data.europa.eu/a4g/ontology#> .
 @prefix qb: <http://purl.org/linked-data/cube#> .
 @prefix schema: <https://schema.org/> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
@@ -16,11 +17,12 @@
   dct:description "A deliberately small local ontology used to give stable semantics to LameziaTrasparente public data while reusing established W3C, EU and Italian public-sector vocabularies. External alignments are intentionally narrower than OWL equivalence unless explicitly stated."@en ;
   dct:issued "2026-09-03"^^xsd:date ;
   dct:modified "2026-09-03"^^xsd:date ;
-  owl:versionInfo "1.1.0" ;
+  owl:versionInfo "1.2.0" ;
   rdfs:seeAlso <https://www.w3.org/TR/vocab-dcat-3/> ,
     <https://semiceu.github.io/DCAT-AP/releases/3.0.1/> ,
     <https://www.w3.org/TR/prov-o/> ,
     <https://www.w3.org/TR/skos-reference/> ,
+    <https://www.w3.org/TR/shacl/> ,
     <https://docs.ted.europa.eu/EPO/latest/index.html> ,
     <https://w3id.org/italia/onto/PublicContract> ,
     <https://w3id.org/italia/onto/Indicator> ,
@@ -75,6 +77,16 @@ lt:PnrrProject a owl:Class ;
   rdfs:label "PNRR project"@en , "Progetto PNRR"@it ;
   rdfs:comment "A project financed or tracked within the Italian National Recovery and Resilience Plan. The DIPE/ISTAT Public Investment ontology, derived from CUP and OpenCUP semantics, is the primary Italian-domain reference. Procurement semantics are attached only when a source-backed procurement relation exists."@en ;
   rdfs:subClassOf schema:Project , prov:Entity .
+
+lt:validationShapes a owl:ObjectProperty ;
+  rdfs:label "validation shapes"@en , "shape di validazione"@it ;
+  rdfs:domain lt:SemanticProfile ;
+  rdfs:range sh:NodeShape .
+
+lt:civicConceptScheme a owl:ObjectProperty ;
+  rdfs:label "civic concept scheme"@en , "schema di concetti civici"@it ;
+  rdfs:domain lt:SemanticProfile ;
+  rdfs:range skos:ConceptScheme .
 
 lt:catalogueConformanceTarget a owl:ObjectProperty ;
   rdfs:label "catalogue conformance target"@en ;
