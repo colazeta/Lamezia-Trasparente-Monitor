@@ -67,20 +67,20 @@ describe("Contracts page public rendering", () => {
     contractQueryState.isError = false;
   });
 
-  it("keeps contract sources verifiable without exposing the technical BDNCP bridge", () => {
+  it("keeps the citizen-facing contract surface free of technical bridge details", () => {
     renderContractsPage();
 
     expect(
       screen.getByRole("heading", {
-        name: "Contratti pubblici sotto osservazione",
+        name: "Cosa affida il Comune, a chi e per quanto",
       }),
     ).toBeInTheDocument();
     expect(
-      screen.getByRole("heading", {
-        name: "Dati pubblici, con la fonte sempre raggiungibile",
-      }),
+      screen.getByText(/codici, provenienza e dettagli tecnici restano disponibili/i),
     ).toBeInTheDocument();
-    expect(screen.getByText("Tutte le fonti")).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: "Esplora tutti i contratti" }),
+    ).toBeInTheDocument();
     expect(screen.queryByText("Ponte BDNCP")).not.toBeInTheDocument();
     expect(
       screen.queryByText("Fascicoli civici CIG/CUP"),
@@ -95,17 +95,21 @@ describe("Contracts page public rendering", () => {
     contractQueryState.isError = true;
     renderContractsPage();
 
-    expect(screen.getAllByText("Fonte in attivazione").length).toBeGreaterThan(
-      0,
-    );
     expect(
-      screen.getByText(
-        /questo stato non significa che non esistano contratti/i,
-      ),
+      screen.getByRole("heading", { name: "Fonte in attivazione" }),
     ).toBeInTheDocument();
     expect(
-      screen.getByRole("link", { name: "Consulta BDNCP ANAC" }),
+      screen.getByText(/non risponde con un payload verificabile/i),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(/la pagina non mostra valori sostitutivi/i),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("link", { name: "Verifica su BDNCP ANAC" }),
     ).toHaveAttribute("href", expect.stringContaining("anticorruzione.it"));
+    expect(
+      screen.queryByText("Contratti nel perimetro"),
+    ).not.toBeInTheDocument();
     expect(
       screen.queryByText("Contratti protagonisti"),
     ).not.toBeInTheDocument();
