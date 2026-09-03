@@ -95,19 +95,21 @@ describe("Performance evidence-first landing", () => {
     expect(metricValue("Con fonte dichiarata").getByText("2")).toBeInTheDocument();
   });
 
-  it("marks the objective-to-OIV layer as documentary work still to acquire", () => {
+  it("shows verified objectives and results while keeping target and OIV separate", () => {
     renderPerformance();
 
     expect(screen.getByText("Obiettivo")).toBeInTheDocument();
     expect(screen.getByText("Target")).toBeInTheDocument();
     expect(screen.getByText("Validazione OIV")).toBeInTheDocument();
-    expect(screen.getAllByText("Da acquisire").length).toBeGreaterThanOrEqual(3);
+    expect(screen.getByText("3 obiettivi verificati")).toBeInTheDocument();
+    expect(screen.getByText("3 risultati collegati")).toBeInTheDocument();
+    expect(screen.getAllByText("Da acquisire").length).toBeGreaterThanOrEqual(2);
     expect(
       screen.getByText(/non dimostra da solo il raggiungimento di un obiettivo/i),
     ).toBeInTheDocument();
   });
 
-  it("keeps verified source metadata separate from verified objective records", () => {
+  it("keeps metadata, indexed PDF verification and visual verification distinct", () => {
     renderPerformance();
 
     expect(
@@ -115,13 +117,36 @@ describe("Performance evidence-first landing", () => {
     ).toBeInTheDocument();
     expect(screen.getAllByText("Metadati verificati")).toHaveLength(4);
     expect(screen.getAllByText("Estrazione pending")).toHaveLength(4);
+    expect(screen.getByText("PDF indicizzato · pagine verificate")).toBeInTheDocument();
+    expect(screen.getByText("Estrazione verificata")).toBeInTheDocument();
+    expect(metricValue("Obiettivi verificati").getByText("3")).toBeInTheDocument();
     expect(
-      screen.getByText(/fonti pertinenti censite · estrazione pending/i),
+      screen.getByRole("heading", { name: "Dal PDF alle fasi dell'obiettivo" }),
     ).toBeInTheDocument();
     expect(
-      screen.getByText(/trattino sopra indica quindi.*non ancora verificato/i),
+      screen.getByRole("heading", {
+        name: "Inclusione ed accessibilità dell'Amministrazione",
+      }),
     ).toBeInTheDocument();
-    expect(metricValue("Obiettivi verificati").getByText("—")).toBeInTheDocument();
+    expect(screen.getByText(/I campi non acquisiti restano null/i)).toBeInTheDocument();
+  });
+
+  it("renders the derived phase progress without presenting it as OIV validation", () => {
+    renderPerformance();
+
+    const objective13 = screen
+      .getByRole("heading", {
+        name: "Inclusione ed accessibilità dell'Amministrazione",
+      })
+      .closest("article");
+    expect(objective13).not.toBeNull();
+    expect(within(objective13 as HTMLElement).getByText("90%")).toBeInTheDocument();
+    expect(
+      within(objective13 as HTMLElement).getByText(/Calcolo LT sui pesi di fase/i),
+    ).toBeInTheDocument();
+    expect(
+      within(objective13 as HTMLElement).getByText(/finale 0%/i),
+    ).toBeInTheDocument();
   });
 
   it("exposes coverage bars as accessible progress indicators", () => {
