@@ -20,12 +20,8 @@ vi.mock("@/components/helper/CivicHelperFAB", () => ({
   CivicHelperFAB: () => null,
 }));
 
-vi.mock("@/components/helper/CivicAssistant", () => ({
-  CivicAssistant: () => null,
-}));
-
-vi.mock("@/components/helper/CivicWelcome", () => ({
-  CivicWelcome: () => null,
+vi.mock("@/components/helper/CivicHelperOverlays", () => ({
+  CivicHelperOverlays: () => null,
 }));
 
 function renderLayout(path = "/") {
@@ -47,7 +43,9 @@ describe("Main layout public front door", () => {
     expect(
       screen.queryByRole("link", { name: /apri sezione contratti/i }),
     ).not.toBeInTheDocument();
-    expect(screen.queryByText("Evidenze dati della piattaforma")).not.toBeInTheDocument();
+    expect(
+      screen.queryByText("Evidenze dati della piattaforma"),
+    ).not.toBeInTheDocument();
     expect(screen.getByText("Contenuto pagina")).toBeInTheDocument();
   });
 
