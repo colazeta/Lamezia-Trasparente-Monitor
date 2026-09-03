@@ -11,6 +11,7 @@ import {
   ChevronRight,
   Code2,
   Database,
+  Download,
   ExternalLink,
   FileJson,
   FileSpreadsheet,
@@ -25,6 +26,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import { LAMEZIA_OPEN_DATA_SERIES_BY_ID } from "@/data/lameziaOpenDataSeriesStatus";
+import { getOpenDataPrimaryDownload } from "@/data/openDataPrimaryDownload";
 import {
   OPEN_DATA_THEME_LIBRARY,
   type OpenDataThemeCategory,
@@ -396,6 +398,7 @@ function DatasetDetailView({
   onBack: () => void;
 }) {
   const status = LAMEZIA_OPEN_DATA_SERIES_BY_ID.get(item.dataset.id);
+  const primaryDownload = getOpenDataPrimaryDownload(item.dataset);
 
   return (
     <section aria-labelledby="opendata-dataset-detail-title" className="space-y-5">
@@ -405,24 +408,40 @@ function DatasetDetailView({
       </Button>
 
       <header className="border-b border-border pb-4">
-        <p className="text-xs font-semibold uppercase tracking-wide text-primary">
-          {item.theme.shortLabel} / {item.dataset.familyLabel}
-        </p>
-        <h2
-          className="mt-1 font-display text-2xl font-bold text-foreground"
-          id="opendata-dataset-detail-title"
-        >
-          {item.dataset.label}
-        </h2>
-        <p className="mt-2 max-w-3xl text-sm leading-6 text-muted-foreground">
-          {item.dataset.description}
-        </p>
-        <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-xs text-muted-foreground">
-          <span>{item.dataset.sourceLabel}</span>
-          {status ? (
-            <span>Ultimo dato: {status.latest_observation_label}</span>
+        <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+          <div className="min-w-0">
+            <p className="text-xs font-semibold uppercase tracking-wide text-primary">
+              {item.theme.shortLabel} / {item.dataset.familyLabel}
+            </p>
+            <h2
+              className="mt-1 font-display text-2xl font-bold text-foreground"
+              id="opendata-dataset-detail-title"
+            >
+              {item.dataset.label}
+            </h2>
+            <p className="mt-2 max-w-3xl text-sm leading-6 text-muted-foreground">
+              {item.dataset.description}
+            </p>
+            <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-xs text-muted-foreground">
+              <span>{item.dataset.sourceLabel}</span>
+              {status ? (
+                <span>Ultimo dato: {status.latest_observation_label}</span>
+              ) : null}
+              <span>{item.dataset.updateCadence}</span>
+            </div>
+          </div>
+
+          {primaryDownload ? (
+            <Button asChild className="w-full shrink-0 md:w-auto" size="lg">
+              <a
+                download={primaryDownload.downloadName}
+                href={primaryDownload.url}
+              >
+                <Download className="h-4 w-4" />
+                Scarica dati
+              </a>
+            </Button>
           ) : null}
-          <span>{item.dataset.updateCadence}</span>
         </div>
       </header>
 
