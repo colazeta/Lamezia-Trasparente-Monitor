@@ -78,6 +78,13 @@ function metricValue(label: string) {
   return within(card as HTMLElement);
 }
 
+function registryCountValue(label: string) {
+  const labelNode = screen.getByText(label);
+  const card = labelNode.closest("div.min-w-32");
+  if (!card) throw new Error(`Contatore registro non trovato per ${label}`);
+  return within(card as HTMLElement);
+}
+
 describe("Performance evidence-first landing", () => {
   it("derives observable coverage from the indicators without inventing a score", () => {
     renderPerformance();
@@ -121,7 +128,9 @@ describe("Performance evidence-first landing", () => {
     expect(
       screen.getByText(/trattino sopra indica quindi.*non ancora verificato/i),
     ).toBeInTheDocument();
-    expect(screen.getByText("Obiettivi verificati").parentElement).toHaveTextContent("—");
+    expect(
+      registryCountValue("Obiettivi verificati").getByText("—"),
+    ).toBeInTheDocument();
   });
 
   it("exposes coverage bars as accessible progress indicators", () => {
