@@ -1,0 +1,326 @@
+schema_version: lt-semantic-profile.v0.2
+status: architecture_validation
+issued: 2026-09-03
+issue: 928
+runtime_contract: false
+extends: docs/architecture/semantic-profile.v0.1.yaml
+supersedes_for_validation: docs/architecture/semantic-profile.v0.1.yaml
+
+compatibility:
+  v0_1_canonical_classes_unchanged: true
+  v0_1_identifier_policy_unchanged: true
+  v0_1_provenance_pipeline_unchanged: true
+  change_type: additive_refinement
+  note: >-
+    Version 0.2 does not replace the Italian-first federated stack. It adds
+    association and evidence patterns required by stress tests against data and
+    policies already present in the repository.
+
+additional_principles:
+  - participation_in_an_event_is_not_an_organizational_role
+  - source_stated_current_state_is_not_a_reconstructed_history
+  - indicator_definition_is_distinct_from_indicator_observation
+  - entity_identity_confidence_is_distinct_from_relation_assertion_strength
+  - qualified_identifier_matches_may_create_links_that_text_mentions_may_not
+  - source_titles_can_create_evidence_candidates_but_not_silent_entity_merges
+  - demo_or_fixture_rows_declared_fictional_must_never_become_civic_evidence
+
+association_patterns:
+  RoleAssignment:
+    inherited_from: lt-semantic-profile.v0.1
+    primary_term: https://w3id.org/italia/onto/RO/TimeIndexedRole
+    applies_when:
+      - an_agent_holds_a_role_or_office_in_an_organizational_context
+      - the_role_can_have_a_validity_interval
+    does_not_apply_when:
+      - the_agent_only_participates_in_a_single_event
+      - the_record_only_describes_an_electoral_candidacy
+    examples:
+      - mayor_in_municipality
+      - councillor_in_municipal_council
+      - assessor_in_municipal_executive
+      - member_in_commission
+
+  EventParticipation:
+    local_extension: true
+    semantic_basis:
+      - https://w3id.org/italia/onto/l0/EventOrSituation
+      - SEMIC Core Public Event Vocabulary
+      - Popolo event and participation patterns
+    required_dimensions:
+      - agent
+      - event
+      - participation_role
+      - source_statement
+    optional_dimensions:
+      - valid_from
+      - valid_to
+      - list_or_group
+      - outcome
+    examples:
+      - mayoral_candidate_in_election
+      - council_candidate_in_election
+      - attendee_in_meeting
+    note: >-
+      Event participation is contextual evidence. It must not be promoted to an
+      organizational RoleAssignment unless a separate source supports the office
+      or membership.
+
+  Ownership:
+    inherited_from: lt-semantic-profile.v0.1
+
+  ProcurementParticipation:
+    inherited_from: lt-semantic-profile.v0.1
+    identity_and_relation_are_separate: true
+    promotion_rule: >-
+      A source may explicitly state a supplier or award relationship while the
+      participating organization's canonical identity remains unresolved. Store
+      the sourced relation statement and the entity-resolution status separately.
+
+  ProjectParticipation:
+    inherited_from: lt-semantic-profile.v0.1
+    identity_and_relation_are_separate: true
+
+  AssetStateAssertion:
+    local_extension: true
+    required_dimensions:
+      - asset
+      - state
+      - source_record
+      - source_statement
+    optional_dimensions:
+      - observed_at
+      - valid_from
+      - valid_to
+      - assignee
+      - intended_or_effective_use
+    allowed_state_examples:
+      - seized
+      - confiscated
+      - assigned
+      - reused
+    historical_event_implied: false
+    note: >-
+      Use this pattern when a source or canonical row states the current or
+      observed legal/administrative state of an asset but does not provide the
+      event date or the complete preceding lifecycle.
+
+  AssetMeasure:
+    inherited_from: lt-semantic-profile.v0.1
+    tightened_requirements:
+      - asset
+      - measure_type
+      - source_statement
+      - event_date_or_explicit_date_precision
+    forbidden_inference:
+      - do_not_reconstruct_seizure_confiscation_assignment_reuse_sequence_from_current_status
+    note: >-
+      AssetMeasure represents a documented historical act or event. A bare
+      status value is insufficient to create one.
+
+  EntityMention:
+    inherited_from: lt-semantic-profile.v0.1
+    relation_strength: none
+    promotion_rule: >-
+      A mention may become evidence for a substantive relation only through a
+      separate statement with an explicit deterministic or source-stated basis.
+
+  EvidenceLink:
+    local_extension: true
+    required_dimensions:
+      - evidence_resource_or_source_record
+      - target_entity
+      - match_basis
+      - source_statement
+    allowed_match_basis:
+      - qualified_identifier_exact
+      - source_explicit_reference
+      - deterministic_rule
+      - editorial_review
+    disallowed_match_basis_for_canonical_link:
+      - topic_only
+      - generic_text_similarity
+      - pnrr_keyword_only
+    note: >-
+      Evidence links explain why a document or source record is connected to an
+      entity. They do not by themselves assert ownership, responsibility,
+      wrongdoing, procurement participation or another substantive relation.
+
+  IndicatorObservation:
+    local_extension: true
+    semantic_basis:
+      - https://w3id.org/italia/onto/Indicator/IndicatorCalculation
+      - W3C/SDMX observation pattern as an interoperability candidate
+    required_dimensions:
+      - indicator
+      - period
+      - value
+      - unit
+      - source_statement
+    optional_dimensions:
+      - source_record
+      - calculation_method
+      - correction_or_override
+      - observed_at
+      - geography
+    note: >-
+      Indicator identifies the metric definition. Each period/value is a
+      separate observation with its own provenance and correction history.
+
+  Statement:
+    inherited_from: lt-semantic-profile.v0.1
+    assertion_metadata:
+      required:
+        - assertion_status
+        - source_record
+      optional:
+        - confidence
+        - extraction_basis
+        - review_status
+        - valid_from
+        - valid_to
+
+  EntityResolutionDecision:
+    inherited_from: lt-semantic-profile.v0.1
+    decision_metadata:
+      required:
+        - resolution_status
+        - basis
+      optional:
+        - reviewer
+        - reviewed_at
+        - candidate_score
+        - notes
+
+assertion_policy:
+  entity_resolution_status_values:
+    - resolved_by_qualified_identifier
+    - resolved_by_authoritative_context
+    - resolved_after_editorial_review
+    - possible_match
+    - unresolved
+    - rejected_match
+  relation_assertion_status_values:
+    - source_explicit
+    - deterministic_identifier_link
+    - deterministic_rule
+    - editorially_confirmed
+    - candidate
+    - mention_only
+    - unresolved
+  invariant: >-
+    Entity resolution status and relation assertion status are independent. A
+    relation can be explicit in a source while the identity of one party remains
+    unresolved; conversely, two records can resolve to the same entity without
+    implying any substantive relation between that entity and another node.
+
+qualified_link_policy:
+  exact_identifier_schemes_with_domain_meaning:
+    CUP:
+      canonical_target: Project
+      note: same normalized CUP may reconcile project source records and project evidence
+    CIG:
+      canonical_target: ProcurementProcess_or_PublicContract
+      note: interpretation depends on the source object represented
+    source_id:
+      canonical_target: SourceRecord
+      note: source-specific identifiers are not global entity identifiers
+    tax_identifier:
+      canonical_target: Person_or_Organization
+      publication_subject_to_public_safety_gate: true
+  text_only_reference:
+    canonical_link_allowed: false
+    default_representation: EntityMention_or_unlinked_evidence
+
+source_record_policy:
+  preserve_multiple_records_for_one_entity: true
+  collapse_source_records_after_resolution: false
+  source_record_hash_is_provenance_not_identity: true
+  source_status_is_not_automatically_entity_lifecycle_status: true
+
+bridge_refinements:
+  institutional_officials:
+    source_paths:
+      - lib/db/src/institutional-officials-data.ts
+      - lib/db/src/schema/officials.ts
+      - lib/db/src/schema/organi.ts
+    mapping:
+      office_or_membership: RoleAssignment
+      electoral_candidacy: EventParticipation
+      person: Person
+      organ_or_commission: Organization_or_Event_context_as_applicable
+
+  pnrr:
+    source_paths:
+      - artifacts/lamezia-trasparente/src/data/generated/lameziaPnrrProjects.json
+    mapping:
+      municipal_project_record: SourceRecord
+      opencup_project_record: SourceRecord
+      canonical_project: Project
+      cup: qualified_identifier:CUP
+      municipal_or_opencup_holder: PublicOrganization
+      attachment: InformationResource
+      albo_link_by_normalized_cup: EvidenceLink
+      text_only_pnrr_reference: EntityMention_or_unlinked_evidence
+    invariants:
+      - opencup_cup_status_is_not_execution_status
+      - attachment_phase_is_navigation_classification_not_project_progress
+      - absence_of_field_or_act_is_not_evidence_of_delay_or_criticality
+
+  confiscatedAssets:
+    source_paths:
+      - lib/db/src/schema/confiscatedAssets.ts
+      - lib/db/src/confiscatedAssetsCleanup.ts
+    mapping:
+      asset_identity: Asset
+      current_status: AssetStateAssertion
+      dated_legal_or_administrative_measure: AssetMeasure
+      assignee: Organization_with_sourced_relation
+      source_id: SourceRecord_identifier
+    invariants:
+      - legacy_fictional_demo_rows_are_excluded_from_semantic_fixtures
+      - current_status_does_not_reconstruct_missing_event_dates
+      - source_auto_means_import_origin_not_truth_rank
+
+  performanceIndicators:
+    source_paths:
+      - lib/db/src/performanceCatalog.ts
+      - lib/db/src/schema/performanceIndicators.ts
+      - lib/db/src/schema/performanceIndicatorValues.ts
+    mapping:
+      catalogue_entry: Indicator
+      period_value: IndicatorObservation
+      external_key: source_specific_identifier
+      source: Source
+      manual_correction: Statement_or_observation_provenance_metadata
+    invariants:
+      - manual_value_does_not_delete_prior_source_provenance
+      - polarity_is_presentation_semantics_not_observed_value
+
+  opendata:
+    source_paths:
+      - lib/db/src/schema/opendataDatasets.ts
+      - lib/db/src/schema/opendataResources.ts
+    mapping:
+      dataset: Dataset
+      resource: dcat:Distribution
+      source_id: SourceRecord_identifier
+      theme: controlled_vocabulary_concept
+      license: rights_metadata
+
+validation_gates:
+  fixtures_file: docs/architecture/semantic-fixtures.v0.2.yaml
+  audit_file: docs/audits/semantic-profile-validation-v0.2.md
+  required:
+    - no_fictional_seed_as_evidence
+    - no_name_only_entity_merge
+    - no_status_to_history_inference
+    - no_text_only_project_reconciliation
+    - source_records_preserved_after_canonicalization
+    - observation_provenance_preserved
+    - relation_and_identity_confidence_separate
+  database_migration_allowed_after_this_profile: false
+  next_gate_before_database_migration:
+    - encode_schema_validation_for_the_profile
+    - test_additive_relational_design_against_fixtures
+    - review_public_safety_fields_for_person_and_identifier_exports
