@@ -1,4 +1,4 @@
-export const SEMANTIC_PROFILE_VERSION = "1.1.0";
+export const SEMANTIC_PROFILE_VERSION = "1.2.0";
 export const SEMANTIC_PROFILE_URL =
   "https://lamezia-trasparente.pages.dev/semantic/profile.jsonld";
 export const SEMANTIC_CONTEXT_URL =
