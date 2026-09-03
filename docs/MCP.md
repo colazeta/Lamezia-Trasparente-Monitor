@@ -66,15 +66,33 @@ The server also publishes model-facing instructions with the following rules:
 - material conclusions, dates and legal effects should be checked against the
   returned provenance and public source documents;
 - public-safety attestations remain fail-closed: material that has not passed the
-  public projection is not made available merely because it exists internally.
+  public projection is not made available merely because it exists internally;
+- semantic mappings marked `describes`, `reference` or `observationPattern` are
+  alignments and must not be interpreted as OWL equivalence or a conformance
+  claim.
 
 Successful tool results keep a text representation for compatibility and also
 publish `structuredContent` in this envelope:
 
 ```json
 {
-  "resource": "documents",
+  "resource": "contract",
   "data": {},
+  "semantic": {
+    "profile": "https://lamezia-trasparente.pages.dev/semantic/profile.jsonld",
+    "context": "https://lamezia-trasparente.pages.dev/semantic/context.jsonld",
+    "ontology": "https://lamezia-trasparente.pages.dev/semantic/ontology.ttl",
+    "profileVersion": "1.0.0",
+    "entityType": "https://lamezia-trasparente.pages.dev/ontology#PublicProcurementRecord",
+    "mappings": [
+      {
+        "relation": "describes",
+        "term": "http://data.europa.eu/a4g/ontology#Contract",
+        "vocabulary": "eProcurement Ontology",
+        "version": "5.2.0"
+      }
+    ]
+  },
   "verification": {
     "publicOnly": true,
     "sourceCheckRequired": true,
@@ -84,6 +102,36 @@ publish `structuredContent` in this envelope:
 ```
 
 `resource` varies by tool. `data` contains the corresponding public result.
+`semantic` describes the versioned local type and the external ontology terms
+used to interpret it. The semantic layer is documented in
+[`SEMANTIC_MODEL.md`](SEMANTIC_MODEL.md).
+
+## Semantic interoperability
+
+The MCP is ontology-aware without replacing the operational JSON model with RDF.
+The semantic profile is additive and preserves compatibility with existing
+clients.
+
+Current baseline:
+
+- **DCAT 3 / DCAT-AP 3.0.1** for public data catalogue semantics and catalogue
+  conformance targets;
+- **PROV-O** for provenance-bearing public entities;
+- **SKOS** for governed themes and controlled concept schemes;
+- **EU eProcurement Ontology 5.2.0** for procurement-domain semantics;
+- **RDF Data Cube** as the observation pattern for time-specific performance
+  values;
+- **OntoPiA/schema.gov.it** as the Italian semantic reference layer. The
+  OntoPiA Transparency ontology is explicitly treated as a draft reference, not
+  a validated ANAC conformance profile.
+
+The published machine-readable assets are:
+
+```text
+https://lamezia-trasparente.pages.dev/semantic/context.jsonld
+https://lamezia-trasparente.pages.dev/semantic/profile.jsonld
+https://lamezia-trasparente.pages.dev/semantic/ontology.ttl
+```
 
 ## Stable tool catalogue
 
@@ -169,7 +217,7 @@ Compatibility is deliberately **stateless**. Session-oriented legacy `GET` and
 
 ## Versioning policy
 
-The MCP implementation has its own server version, currently `1.1.0`.
+The MCP implementation has its own server version, currently `1.2.0`.
 
 For future changes:
 
@@ -179,7 +227,9 @@ For future changes:
 - the text result should remain available while compatibility with older MCP
   clients is useful;
 - protocol upgrades should preserve the legacy path for a documented transition
-  period rather than silently cutting clients off.
+  period rather than silently cutting clients off;
+- semantic-profile changes are versioned separately and must not silently
+  repurpose an existing URI.
 
 ## Development and verification
 
@@ -187,6 +237,7 @@ The implementation lives in:
 
 ```text
 artifacts/api-server/src/lib/mcpServer.ts
+artifacts/api-server/src/lib/semanticProfile.ts
 artifacts/api-server/src/routes/mcp.ts
 ```
 
@@ -209,6 +260,7 @@ The full monorepo CI remains authoritative before deployment.
 
 ## Related interfaces
 
+- Semantic model and ontology governance: [`SEMANTIC_MODEL.md`](SEMANTIC_MODEL.md)
 - Public REST and OpenAPI: [`artifacts/api-server/PUBLIC_API.md`](../artifacts/api-server/PUBLIC_API.md)
 - Browser WebMCP implementation: `artifacts/lamezia-trasparente/src/lib/webmcp.tsx`
 - WebMCP challenge history: [`WEBMCP_CHALLENGE_2026.md`](WEBMCP_CHALLENGE_2026.md)
