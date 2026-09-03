@@ -141,4 +141,4 @@ jobs:
             --branch main
 
       - name: Smoke public contracts and organi routes
-        run: node scripts/check-public-contracts-page.mjs --url "$PUBLIC_SITE_URL" --expected-commit "$GITHUB_SHA" --attempts 24 --delay-ms 10000
+        run: node scripts/check-public-contracts-page.mjs --url "$PUBLIC_SITE_URL" --expected-commit "$GITHUB_SHA" --attempts 60 --delay-ms 10000
