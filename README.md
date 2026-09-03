@@ -4,6 +4,21 @@
 
 The public React/Vite frontend lives in `artifacts/lamezia-trasparente`. For provider-neutral preparation notes covering build commands, static output, public configuration and the frontend/API/worker deployment boundary, see `docs/frontend-deployment.md`.
 
+## WebMCP Challenge 2026
+
+LameziaTrasparente is an existing civic-transparency platform that was **meaningfully extended with WebMCP during the OpenAI WebMCP Challenge submission period**. The challenge work is tracked in [issue #910](https://github.com/colazeta/Lamezia-Trasparente-Monitor/issues/910) and is deliberately separated from the pre-existing REST API and backend MCP server.
+
+The browser-side extension registers four public, read-only WebMCP tools:
+
+- `search_civic_documents` — search indexed public administrative records;
+- `filter_public_contracts` — query public contracts by text, procedure, amount and date;
+- `explore_pnrr_projects` — explore PNRR projects by text, mission and status;
+- `inspect_civic_record` — open an individual document, contract or PNRR record.
+
+Successful calls return structured public-safe data to the agent, move the citizen to the relevant LameziaTrasparente section and show an accessible read-only activity panel in the live UI with the action, result count and a small result preview. No editorial or write capability is exposed.
+
+For the exact pre-challenge baseline, implementation notes, safeguards, demo prompt, video outline and submission copy, see **[`docs/WEBMCP_CHALLENGE_2026.md`](docs/WEBMCP_CHALLENGE_2026.md)**.
+
 ## Ingestion worker
 
 The monorepo includes `@workspace/ingestion-worker`, a scheduled-job artifact that runs one ingestion cycle and exits. It reuses the API server ingestion pipeline instead of duplicating crawler logic, applies the same migration/schema startup safeguards before ingestion, and closes the PostgreSQL pool when the run finishes.
@@ -75,6 +90,7 @@ pnpm --filter @workspace/db seed      # aggiorna i dati di seed
 
 ## Documentazione aggiuntiva
 
+- [WebMCP Challenge 2026](docs/WEBMCP_CHALLENGE_2026.md)
 - [API pubblica (REST + MCP)](artifacts/api-server/PUBLIC_API.md)
 - [Architettura delle integrazioni](docs/architecture/README.md)
 - [Layer di standardizzazione prima della pubblicazione](docs/architecture/publication-standardisation.md)

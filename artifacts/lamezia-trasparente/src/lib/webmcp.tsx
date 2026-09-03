@@ -22,11 +22,17 @@ export type WebMcpModelContext = {
   ) => Promise<void> | void;
 };
 
+type WebMcpActivityItem = {
+  label: string;
+  href: string | null;
+};
+
 export type WebMcpActivity = {
   tool: string;
   label: string;
   uiPath: string;
   resultCount: number | null;
+  items: WebMcpActivityItem[];
 };
 
 type ToolDependencies = {
@@ -42,6 +48,7 @@ const READ_ONLY_ANNOTATIONS = {
 
 const DEFAULT_PAGE_SIZE = 5;
 const MAX_PAGE_SIZE = 10;
+const ACTIVITY_PREVIEW_LIMIT = 3;
 
 function asString(value: unknown) {
   return typeof value === "string" ? value.trim() : "";
@@ -57,6 +64,14 @@ function asRecord(value: unknown): Record<string, unknown> | null {
     : null;
 }
 
+function resultRowsFrom(result: unknown) {
+  const record = asRecord(result);
+  if (!record) return [];
+  if (Array.isArray(record.data)) return record.data;
+  if (Array.isArray(record.projects)) return record.projects;
+  return [];
+}
+
 function resultCountFrom(result: unknown) {
   const record = asRecord(result);
   if (!record) return null;
@@ -66,9 +81,66 @@ function resultCountFrom(result: unknown) {
     return pagination.total;
   }
 
-  if (Array.isArray(record.data)) return record.data.length;
-  if (Array.isArray(record.projects)) return record.projects.length;
-  return null;
+  const rows = resultRowsFrom(result);
+  return rows.length > 0 ? rows.length : null;
+}
+
+function firstText(...values: unknown[]) {
+  for (const value of values) {
+    const text = asString(value);
+    if (text) return text;
+  }
+  return "Record pubblico";
+}
+
+function activityItemsFrom(tool: string, result: unknown): WebMcpActivityItem[] {
+  return resultRowsFrom(result)
+    .slice(0, ACTIVITY_PREVIEW_LIMIT)
+    .map((value) => {
+      const record = asRecord(value);
+      if (!record) return null;
+      const presentation = asRecord(record.presentation);
+      const label = firstText(
+        presentation?.display_title,
+        record.title,
+        record.oggetto,
+        record.name,
+        record.cup,
+        record.cig,
+        record.publicId,
+        record.id,
+      );
+
+      if (tool === "search_civic_documents") {
+        const id = firstText(record.publicId, record.id);
+        return {
+          label,
+          href: id !== "Record pubblico" ? `/albo/${encodeURIComponent(id)}` : null,
+        };
+      }
+
+      if (tool === "filter_public_contracts") {
+        const id = firstText(record.id);
+        return {
+          label,
+          href:
+            id !== "Record pubblico"
+              ? `/contratti/${encodeURIComponent(id)}`
+              : null,
+        };
+      }
+
+      if (tool === "explore_pnrr_projects") {
+        const cup = asString(record.cup).replace(/[^a-z0-9]/gi, "").toUpperCase();
+        return {
+          label,
+          href: cup ? `/pnrr/${encodeURIComponent(cup)}` : null,
+        };
+      }
+
+      return { label, href: null };
+    })
+    .filter((item): item is WebMcpActivityItem => item !== null);
 }
 
 function pageSizeFrom(value: unknown) {
@@ -130,12 +202,13 @@ function resultPayload(
 
 function reportActivity(
   onActivity: ToolDependencies["onActivity"],
-  activity: Omit<WebMcpActivity, "resultCount">,
+  activity: Omit<WebMcpActivity, "resultCount" | "items">,
   result: unknown,
 ) {
   onActivity?.({
     ...activity,
     resultCount: resultCountFrom(result),
+    items: activityItemsFrom(activity.tool, result),
   });
 }
 
@@ -196,7 +269,7 @@ export function createWebMcpTools({
       name: "filter_public_contracts",
       title: "Filtra contratti pubblici",
       description:
-        "Filtra i contratti pubblici disponibili in LameziaTrasparente per testo, procedura, importo o periodo e porta l'utente alla stessa vista filtrata. Gli indicatori non costituiscono prova di irregolarità.",
+        "Filtra i contratti pubblici disponibili in LameziaTrasparente per testo, procedura, importo o periodo e porta l'utente alla sezione civica corrispondente. Gli indicatori non costituiscono prova di irregolarità.",
       inputSchema: {
         type: "object",
         additionalProperties: false,
@@ -261,7 +334,7 @@ export function createWebMcpTools({
       name: "explore_pnrr_projects",
       title: "Esplora progetti PNRR",
       description:
-        "Cerca e filtra i progetti PNRR censiti da LameziaTrasparente per testo, missione o stato e mostra la stessa selezione nella pagina PNRR. Le informazioni vanno lette insieme alle fonti e alle note di aggiornamento.",
+        "Cerca e filtra i progetti PNRR censiti da LameziaTrasparente per testo, missione o stato e porta l'utente alla sezione PNRR. Le informazioni vanno lette insieme alle fonti e alle note di aggiornamento.",
       inputSchema: {
         type: "object",
         additionalProperties: false,
@@ -343,6 +416,7 @@ export function createWebMcpTools({
             label: "Scheda atto",
             uiPath,
             resultCount: 1,
+            items: [],
           });
           navigate(uiPath);
           return resultPayload("inspect_civic_record", uiPath, apiPath, result);
@@ -358,6 +432,7 @@ export function createWebMcpTools({
             label: "Scheda contratto",
             uiPath,
             resultCount: 1,
+            items: [],
           });
           navigate(uiPath);
           return resultPayload("inspect_civic_record", uiPath, apiPath, result);
@@ -381,6 +456,7 @@ export function createWebMcpTools({
           label: "Scheda progetto PNRR",
           uiPath,
           resultCount: 1,
+          items: [],
         });
         navigate(uiPath);
         return resultPayload("inspect_civic_record", uiPath, apiPath, result);
@@ -402,14 +478,30 @@ export async function registerWebMcpTools(
   );
 }
 
+function isModelContext(value: unknown): value is WebMcpModelContext {
+  return Boolean(
+    value &&
+      typeof value === "object" &&
+      typeof (value as WebMcpModelContext).registerTool === "function",
+  );
+}
+
 function getModelContext() {
-  if (typeof document === "undefined") return null;
-  const candidate = (
-    document as Document & { modelContext?: WebMcpModelContext }
-  ).modelContext;
-  return candidate && typeof candidate.registerTool === "function"
-    ? candidate
-    : null;
+  if (typeof document !== "undefined") {
+    const documentContext = (
+      document as Document & { modelContext?: WebMcpModelContext }
+    ).modelContext;
+    if (isModelContext(documentContext)) return documentContext;
+  }
+
+  if (typeof navigator !== "undefined") {
+    const navigatorContext = (
+      navigator as Navigator & { modelContext?: WebMcpModelContext }
+    ).modelContext;
+    if (isModelContext(navigatorContext)) return navigatorContext;
+  }
+
+  return null;
 }
 
 export function WebMcpBridge() {
@@ -443,7 +535,7 @@ export function WebMcpBridge() {
       aria-label="Attività WebMCP"
     >
       <div className="flex items-start justify-between gap-4">
-        <div className="min-w-0">
+        <div className="min-w-0 flex-1">
           <p className="text-xs font-bold uppercase tracking-wide text-primary">
             Assistente WebMCP · sola lettura
           </p>
@@ -454,7 +546,35 @@ export function WebMcpBridge() {
               ? ` · ${activity.resultCount} record disponibili`
               : ""}
           </p>
-          <p className="mt-1 text-xs leading-5 text-muted-foreground">
+
+          {activity.items.length > 0 && (
+            <div className="mt-3 space-y-2">
+              <p className="text-xs font-semibold text-foreground">
+                Primi risultati della ricerca dell’assistente
+              </p>
+              <ul className="space-y-1.5">
+                {activity.items.map((item, index) => (
+                  <li key={`${item.label}-${index}`}>
+                    {item.href ? (
+                      <button
+                        type="button"
+                        onClick={() => navigate(item.href!)}
+                        className="w-full rounded-md border border-border bg-background px-3 py-2 text-left text-xs font-semibold leading-5 text-foreground hover:border-primary/30 hover:text-primary"
+                      >
+                        {item.label}
+                      </button>
+                    ) : (
+                      <div className="rounded-md border border-border bg-background px-3 py-2 text-xs font-semibold leading-5 text-foreground">
+                        {item.label}
+                      </div>
+                    )}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+          <p className="mt-3 text-xs leading-5 text-muted-foreground">
             Verifica sempre date, fonte e valore legale dei documenti nella
             scheda pubblica.
           </p>
