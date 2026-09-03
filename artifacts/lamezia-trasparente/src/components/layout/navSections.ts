@@ -13,7 +13,6 @@ import {
   FileText,
   Gauge,
   Gavel,
-  HandCoins,
   Landmark,
   MapPinned,
   Megaphone,
@@ -38,6 +37,12 @@ export type SectionAvailabilityState =
   | "available"
   | "in_progress"
   | "planned"
+  | "hidden";
+
+export type NavItemVisibility =
+  | "primary"
+  | "secondary"
+  | "search_only"
   | "hidden";
 
 export const SECTION_STATE_LABELS: Record<
@@ -66,6 +71,7 @@ export interface NavItem {
   description: string;
   icon: React.ElementType;
   state: SectionAvailabilityState;
+  visibility: NavItemVisibility;
   /** In-progress sections stay navigable only when the page has useful content. */
   hasUsefulPage?: boolean;
   keywords?: string;
@@ -82,26 +88,28 @@ export interface NavSection {
 
 const RAW_NAV_GROUPS: NavSection[] = [
   {
-    label: "Cosa decide il Comune",
+    label: "Atti",
     description:
-      "Atti, sedute e documenti che spiegano decisioni e pubblicazioni ufficiali.",
+      "Decisioni, sedute e documenti ufficiali del Comune, organizzati per consultazione civica.",
     items: [
       {
         href: "/convocazioni",
         label: "Sedute e ordini del giorno",
         description:
-          "Agenda di Consiglio e commissioni con avvisi, documenti, fonte e campi da verificare.",
+          "Consiglio e commissioni: agenda, avvisi, documenti e stato delle fonti.",
         icon: CalendarClock,
         state: "available",
+        visibility: "primary",
         keywords: "convocazioni sedute consiglio commissioni ordine del giorno",
       },
       {
         href: "/delibere",
         label: "Delibere e atti",
         description:
-          "Decisioni di Giunta e Consiglio con documenti, allegati e limiti della fonte.",
+          "Decisioni di Giunta e Consiglio con documenti, allegati e rinvio alle fonti.",
         icon: Gavel,
         state: "in_progress",
+        visibility: "primary",
         hasUsefulPage: true,
         keywords: "delibere atti giunta consiglio decisioni",
       },
@@ -109,44 +117,49 @@ const RAW_NAV_GROUPS: NavSection[] = [
         href: "/albo/",
         label: "Albo Pretorio",
         description:
-          "Archivio permanente e navigabile degli atti pubblicati dal Comune.",
+          "Archivio navigabile degli atti pubblicati dal Comune e dei relativi documenti.",
         icon: ShieldAlert,
         state: "available",
+        visibility: "primary",
         keywords: "albo pretorio pubblicazioni atti ufficiali",
       },
       {
         href: "/atti-fondamentali",
         label: "Atti fondamentali",
-        description: "Statuto, regolamenti e documenti che governano l'ente.",
+        description:
+          "Statuto, regolamenti e documenti essenziali che disciplinano e programmano l'ente.",
         icon: ScrollText,
         state: "in_progress",
+        visibility: "primary",
         hasUsefulPage: true,
-        keywords: "statuto regolamenti atti fondamentali",
+        keywords: "statuto regolamenti atti fondamentali programmazione",
       },
       {
         href: "/pareri",
         label: "Pareri e vigilanza",
         description:
-          "Voce specialistica tenuta fuori dalla navigazione primaria e leggibile dentro l'area atti.",
+          "Pareri, documenti di controllo e vigilanza disponibili nelle fonti pubbliche.",
         icon: ShieldCheck,
-        state: "hidden",
-        canonicalHref: "/delibere",
+        state: "in_progress",
+        visibility: "search_only",
+        hasUsefulPage: true,
         keywords: "pareri vigilanza revisori controllo",
       },
     ],
   },
   {
-    label: "Chi governa e come vota",
+    label: "Comune",
     description:
-      "Ruoli pubblici, organi dell'ente, macchina amministrativa e dati elettorali.",
+      "Persone, organi, capacità amministrativa e risultati dell'organizzazione comunale.",
     items: [
       {
         href: "/organi",
         label: "Organi istituzionali",
         description:
-          "Consiglio, Giunta, commissioni e composizione con fonte e ultimo controllo.",
+          "Consiglio, Giunta e commissioni con composizione, ruoli e fonti disponibili.",
         icon: Building2,
         state: "in_progress",
+        visibility: "primary",
         hasUsefulPage: true,
         keywords: "organi istituzionali consiglio giunta commissioni",
       },
@@ -154,9 +167,10 @@ const RAW_NAV_GROUPS: NavSection[] = [
         href: "/amministratori",
         label: "Amministratori",
         description:
-          "Sindaco, assessori e consiglieri con ruoli pubblici e dati da verificare.",
+          "Sindaco, assessori e consiglieri con ruoli pubblici e informazioni documentate.",
         icon: Users,
         state: "in_progress",
+        visibility: "primary",
         hasUsefulPage: true,
         keywords: "sindaco assessori consiglieri amministratori",
       },
@@ -164,11 +178,34 @@ const RAW_NAV_GROUPS: NavSection[] = [
         href: "/macchina-comunale",
         label: "Macchina comunale",
         description:
-          "Capacita amministrativa, organico, scoperture e stato delle fonti.",
+          "Organico, capacità amministrativa, scoperture e stato delle fonti disponibili.",
         icon: Network,
         state: "in_progress",
+        visibility: "primary",
         hasUsefulPage: true,
-        keywords: "macchina comunale organico personale uffici",
+        keywords: "macchina comunale organico personale uffici capacita amministrativa",
+      },
+      {
+        href: "/performance",
+        label: "Performance",
+        description:
+          "Indicatori amministrativi e confronti da leggere come segnali, non come giudizi automatici.",
+        icon: Gauge,
+        state: "in_progress",
+        visibility: "primary",
+        hasUsefulPage: true,
+        keywords: "performance indicatori kpi risultati amministrativi",
+      },
+      {
+        href: "/promessometro",
+        label: "Promessometro",
+        description:
+          "Collega impegni programmatici, atti e stati documentali senza scoring politico.",
+        icon: BookOpenCheck,
+        state: "in_progress",
+        visibility: "primary",
+        hasUsefulPage: true,
+        keywords: "promessometro programma promesse impegni atti",
       },
       {
         href: "/elezioni-voti",
@@ -177,32 +214,35 @@ const RAW_NAV_GROUPS: NavSection[] = [
           "Percorso previsto per risultati, sezioni, preferenze e verifiche elettorali.",
         icon: BarChart3,
         state: "planned",
+        visibility: "hidden",
         hasUsefulPage: false,
         keywords: "elezioni voti preferenze sezioni elettorali",
       },
     ],
   },
   {
-    label: "Cosa viene finanziato e realizzato",
+    label: "Spesa",
     description:
-      "Contratti, progetti, incarichi e indicatori da leggere con fonte e metodo.",
+      "Contratti, progetti finanziati e incarichi: dove vanno risorse pubbliche e affidamenti.",
     items: [
       {
         href: "/contratti",
         label: "Contratti pubblici",
         description:
-          "Gare, affidamenti e fornitori leggibili come schede documentali, senza promettere copertura completa.",
+          "Gare, affidamenti, CIG, importi e fornitori con fonti e limiti di copertura espliciti.",
         icon: FileText,
         state: "available",
-        keywords: "contratti appalti gare affidamenti fornitori cig",
+        visibility: "primary",
+        keywords: "contratti appalti gare affidamenti fornitori cig spesa",
       },
       {
         href: "/pnrr",
         label: "PNRR",
         description:
-          "Progetti finanziati, luoghi, CUP e collegamenti da verificare sulle fonti.",
+          "Progetti, CUP, finanziamenti, luoghi e informazioni disponibili sullo stato degli interventi.",
         icon: Landmark,
         state: "in_progress",
+        visibility: "primary",
         hasUsefulPage: true,
         keywords: "pnrr cup progetti finanziamenti cantieri",
       },
@@ -210,29 +250,21 @@ const RAW_NAV_GROUPS: NavSection[] = [
         href: "/incarichimetro",
         label: "Incarichi e consulenze",
         description:
-          "Incarichi, consulenze, ricorrenze e rotazioni come segnali documentali da verificare.",
+          "Incarichi, consulenze e ricorrenze come elementi documentali da approfondire.",
         icon: ClipboardList,
         state: "in_progress",
+        visibility: "primary",
         hasUsefulPage: true,
         keywords: "incarichi consulenze incarichimetro ricorrenza rotazione operatori",
-      },
-      {
-        href: "/performance",
-        label: "Performance",
-        description:
-          "Indicatori amministrativi come segnali documentali, non giudizi automatici.",
-        icon: Gauge,
-        state: "in_progress",
-        hasUsefulPage: true,
-        keywords: "performance indicatori kpi qualita vita",
       },
       {
         href: "/bandi",
         label: "Bandi e avvisi",
         description:
-          "Voce legacy confluita nella lettura piu ampia dei contratti pubblici.",
-        icon: HandCoins,
+          "Voce legacy confluita nella lettura più ampia dei contratti pubblici.",
+        icon: FileText,
         state: "hidden",
+        visibility: "hidden",
         canonicalHref: "/contratti",
         keywords: "bandi avvisi finanziamenti contributi",
       },
@@ -240,83 +272,101 @@ const RAW_NAV_GROUPS: NavSection[] = [
         href: "/performance/confronta",
         label: "Confronto performance",
         description:
-          "Voce legacy confluita nella sezione Performance per evitare un doppione primario.",
+          "Voce legacy confluita nella sezione Performance.",
         icon: BarChart3,
         state: "hidden",
+        visibility: "hidden",
         canonicalHref: "/performance",
         keywords: "confronto performance indicatori",
       },
     ],
   },
   {
-    label: "Criticità e luoghi della città",
+    label: "Territorio",
     description:
-      "Criticità documentali, monitoraggio civico e lettura dei luoghi da verificare.",
+      "Mappe, criticità documentali e percorsi di monitoraggio collegati ai luoghi della città.",
     items: [
+      {
+        href: "/atlante-territoriale",
+        label: "Atlante territoriale",
+        description:
+          "Mappa per sezioni censuarie ISTAT con indicatori, fonte, anno e limiti di lettura.",
+        icon: MapPinned,
+        state: "in_progress",
+        visibility: "primary",
+        hasUsefulPage: true,
+        keywords: "atlante territoriale mappa istat sezioni censuarie territorio",
+      },
       {
         href: "/criticita-pubbliche",
         label: "Criticità pubbliche",
         description:
-          "Registro di criticita documentali con fonte, stato di verifica e dati mancanti.",
+          "Registro di criticità documentali con fonte, stato di verifica e dati mancanti.",
         icon: ShieldAlert,
         state: "in_progress",
+        visibility: "primary",
         hasUsefulPage: true,
-        keywords: "criticita pubbliche segnalazioni verifiche fonti",
+        keywords: "criticita pubbliche segnalazioni verifiche fonti territorio",
       },
       {
         href: "/monitoraggio",
         label: "Monitor civico",
         description:
-          "Percorsi di monitoraggio e verifiche civiche collegati a criticità, atti e progetti.",
+          "Percorsi di verifica civica collegati a criticità, atti, progetti e luoghi.",
         icon: Telescope,
         state: "in_progress",
+        visibility: "primary",
         hasUsefulPage: true,
-        keywords: "monitoraggio civico monithon verifiche",
+        keywords: "monitoraggio civico monithon verifiche territorio",
       },
       {
         href: "/segnalazioni-luoghi",
-        label: "Segnalazioni / luoghi",
+        label: "Segnalazioni e luoghi",
         description:
           "Vista prevista per collegare segnalazioni, luoghi e stato di verifica territoriale.",
         icon: MapPinned,
         state: "planned",
+        visibility: "hidden",
         hasUsefulPage: false,
         keywords: "segnalazioni luoghi mappa territorio criticita",
       },
     ],
   },
   {
-    label: "Memoria civica e antimafia",
+    label: "Legalità",
     description:
-      "Memoria pubblica, beni confiscati e percorsi culturali con disciplina di fonte.",
+      "Memoria civica, beni confiscati e percorsi antimafia costruiti con disciplina di fonte.",
     items: [
-      {
-        href: "/beni-confiscati",
-        label: "Beni confiscati",
-        description:
-          "Patrimoni confiscati, geografie e riuso sociale con cautele e fonti.",
-        icon: ShieldOff,
-        state: "in_progress",
-        hasUsefulPage: true,
-        keywords: "beni confiscati anbsc riuso sociale antimafia",
-      },
       {
         href: "/legalita",
         label: "Legalità e memoria",
         description:
-          "Percorsi su legalita, prevenzione, riuso civico e fonti pubbliche con linguaggio prudente.",
+          "Percorsi documentati su legalità, prevenzione, memoria e fonti pubbliche.",
         icon: Scale,
         state: "in_progress",
+        visibility: "primary",
         hasUsefulPage: true,
-        keywords: "legalita memoria antimafia trasparenza",
+        keywords: "legalita memoria antimafia trasparenza storia",
+      },
+      {
+        href: "/beni-confiscati",
+        label: "Beni confiscati",
+        description:
+          "Patrimoni confiscati, geografie e riuso sociale con cautele e rinvio alle fonti.",
+        icon: ShieldOff,
+        state: "in_progress",
+        visibility: "primary",
+        hasUsefulPage: true,
+        keywords: "beni confiscati anbsc riuso sociale antimafia",
       },
       {
         href: "/legalita/trame-festival",
-        label: "Trame - Festival",
+        label: "Trame – Festival",
         description:
-          "Idee e analisi da Trame pubblicabili solo con fonte, minuto video e verifica redazionale.",
+          "Idee e analisi dal festival pubblicate solo con fonte e verifica redazionale.",
         icon: BookOpenCheck,
         state: "in_progress",
+        visibility: "primary",
         hasUsefulPage: true,
         keywords: "trame festival legalita antimafia cultura",
       },
@@ -324,111 +374,94 @@ const RAW_NAV_GROUPS: NavSection[] = [
         href: "/legalita/timeline",
         label: "Timeline legalità",
         description:
-          "Voce legacy confluita in Legalita e memoria per ridurre la frammentazione.",
+          "Voce legacy confluita nella sezione Legalità e memoria.",
         icon: Archive,
         state: "hidden",
+        visibility: "hidden",
         canonicalHref: "/legalita",
         keywords: "timeline legalita memoria civica",
       },
     ],
   },
   {
-    label: "Partecipazione e proposte",
+    label: "Dati",
     description:
-      "Proposte, accesso civico e segnalazioni come azioni civiche verificabili.",
+      "Dataset, fonti, copertura e metodo per capire cosa sappiamo e con quali limiti.",
     items: [
-      {
-        href: "/proposte-civiche",
-        label: "Proposte civiche",
-        description:
-          "Proposte pubbliche e pratiche replicabili raccolte con stato, fonte e limiti.",
-        icon: Archive,
-        state: "in_progress",
-        hasUsefulPage: true,
-        keywords: "proposte civiche demi archivio proposte pratiche replicabili",
-      },
-      {
-        href: "/accesso-civico",
-        label: "Accesso civico",
-        description: "Richiedi documenti e dati con l'accesso civico (FOIA).",
-        icon: FileSearch,
-        state: "in_progress",
-        hasUsefulPage: true,
-        keywords: "accesso civico foia richiesta documenti dati",
-      },
-      {
-        href: "/segnalazioni",
-        label: "Segnalazioni",
-        description:
-          "Segnala un dato da verificare o consulta criticita pubbliche distinguendo fatti e interpretazioni.",
-        icon: Megaphone,
-        state: "in_progress",
-        hasUsefulPage: true,
-        keywords: "segnalazioni criticita nuova segnalazione fonte verifica",
-      },
-      {
-        href: "/domande",
-        label: "Domande civiche",
-        description:
-          "Percorso di orientamento mantenuto fuori dalle macro-sezioni primarie.",
-        icon: BookOpenCheck,
-        state: "hidden",
-        canonicalHref: "/proposte-civiche",
-        keywords: "domande civiche orientamento",
-      },
-      {
-        href: "/temi",
-        label: "Temi",
-        description: "Indice tematico mantenuto come supporto, non come sezione primaria.",
-        icon: FileSearch,
-        state: "hidden",
-        keywords: "temi argomenti categorie",
-      },
-      {
-        href: "/archivio-proposte",
-        label: "Archivio proposte",
-        description:
-          "Nome legacy della sezione Proposte civiche.",
-        icon: Archive,
-        state: "hidden",
-        canonicalHref: "/proposte-civiche",
-        keywords: "archivio proposte proposte civiche",
-      },
-      {
-        href: "/monitoraggio/nuovo",
-        label: "Nuova segnalazione",
-        description:
-          "Azione legacy accorpata dentro Segnalazioni.",
-        icon: Megaphone,
-        state: "hidden",
-        canonicalHref: "/segnalazioni",
-        keywords: "nuova segnalazione crea report",
-      },
-    ],
-  },
-  {
-    label: "Dati pubblici e territorio",
-    description:
-      "Dati territoriali, open data e dataset futuri senza confonderli con sezioni civiche gia complete.",
-    items: [
-      {
-        href: "/atlante-territoriale",
-        label: "Atlante territoriale",
-        description:
-          "Mappa per sezioni censuarie ISTAT con indicatori, fonte, anno e limiti sempre visibili.",
-        icon: MapPinned,
-        state: "in_progress",
-        hasUsefulPage: true,
-        keywords: "atlante territoriale mappa istat sezioni censuarie",
-      },
       {
         href: "/opendata",
         label: "Open data",
-        description: "Catalogo di risorse aperte e riutilizzabili quando disponibili.",
+        description:
+          "Catalogo dei dataset e delle risorse aperte disponibili per consultazione e riuso.",
         icon: Database,
         state: "in_progress",
+        visibility: "primary",
         hasUsefulPage: true,
         keywords: "open data dati aperti dataset csv",
+      },
+      {
+        href: "/fonti-dati",
+        label: "Fonti dati",
+        description:
+          "Indice delle fonti pubbliche con stato del collegamento, frequenze attese e limiti.",
+        icon: BookOpen,
+        state: "available",
+        visibility: "primary",
+        keywords: "fonti dati qualita copertura aggiornamento",
+      },
+      {
+        href: "/stato-monitoraggio",
+        label: "Stato delle fonti",
+        description:
+          "Copertura e freschezza delle fonti censite, lette come controllo operativo.",
+        icon: Gauge,
+        state: "in_progress",
+        visibility: "primary",
+        hasUsefulPage: true,
+        keywords: "stato fonti monitoraggio copertura freschezza",
+      },
+      {
+        href: "/metodologia",
+        label: "Metodologia",
+        description:
+          "Criteri e cautele per leggere dati, indicatori, ricorrenze e assenze informative.",
+        icon: BookOpen,
+        state: "available",
+        visibility: "primary",
+        keywords: "metodologia metodo cautele indicatori",
+      },
+      {
+        href: "/statistiche",
+        label: "Statistiche",
+        description:
+          "Sintesi numeriche di supporto per orientare consultazione e approfondimento.",
+        icon: BarChart3,
+        state: "in_progress",
+        visibility: "search_only",
+        hasUsefulPage: true,
+        keywords: "statistiche grafici numeri",
+      },
+      {
+        href: "/sviluppatori",
+        label: "API e sviluppatori",
+        description:
+          "Informazioni tecniche per consultare API, endpoint e risorse aperte del progetto.",
+        icon: Code2,
+        state: "in_progress",
+        visibility: "search_only",
+        hasUsefulPage: true,
+        keywords: "api sviluppatori json endpoint",
+      },
+      {
+        href: "/feeds",
+        label: "Feed e aggiornamenti",
+        description:
+          "Canali tecnici per seguire pubblicazioni e aggiornamenti del monitoraggio civico.",
+        icon: Rss,
+        state: "in_progress",
+        visibility: "search_only",
+        hasUsefulPage: true,
+        keywords: "feed rss atom aggiornamenti",
       },
       {
         href: "/dati-elettorali",
@@ -437,6 +470,7 @@ const RAW_NAV_GROUPS: NavSection[] = [
           "Percorso previsto per dati elettorali pubblici verificati e scaricabili.",
         icon: BarChart3,
         state: "planned",
+        visibility: "hidden",
         hasUsefulPage: false,
         keywords: "dati elettorali voti preferenze",
       },
@@ -447,147 +481,159 @@ const RAW_NAV_GROUPS: NavSection[] = [
           "Raccolta prevista per export consolidati e documentati.",
         icon: Database,
         state: "planned",
+        visibility: "hidden",
         hasUsefulPage: false,
         keywords: "dataset scaricabili download csv json",
-      },
-      {
-        href: "/statistiche",
-        label: "Statistiche",
-        description:
-          "Sintesi numeriche mantenute come supporto, non come macro-area autonoma.",
-        icon: BarChart3,
-        state: "hidden",
-        canonicalHref: "/opendata",
-        keywords: "statistiche grafici numeri",
-      },
-      {
-        href: "/sviluppatori",
-        label: "API",
-        description:
-          "Voce tecnica da collocare nel footer o nella documentazione, non tra le sezioni civiche primarie.",
-        icon: Code2,
-        state: "hidden",
-        canonicalHref: "/opendata",
-        keywords: "api sviluppatori json endpoint",
       },
     ],
   },
   {
-    label: "Stato delle fonti e monitoraggio",
+    label: "Partecipa",
     description:
-      "Metodo, roadmap e strumenti di monitoraggio letti come stato del progetto, non come sezioni civiche equivalenti.",
+      "Segnalazioni, accesso ai documenti e proposte: strumenti concreti di partecipazione civica.",
     items: [
       {
-        href: "/stato-monitoraggio",
-        label: "Stato delle fonti",
+        href: "/segnalazioni",
+        label: "Segnalazioni",
         description:
-          "Copertura e freschezza delle fonti censite, da leggere come controllo operativo.",
-        icon: Gauge,
+          "Segnala un dato da verificare o consulta criticità distinguendo fatti e interpretazioni.",
+        icon: Megaphone,
         state: "in_progress",
+        visibility: "primary",
         hasUsefulPage: true,
-        keywords: "stato fonti monitoraggio copertura freschezza",
+        keywords: "segnalazioni criticita nuova segnalazione fonte verifica",
       },
       {
-        href: "/metodologia",
-        label: "Metodologia",
+        href: "/accesso-civico",
+        label: "Accesso civico",
         description:
-          "Come leggere dati, indicatori e assenze informative come segnali documentali da verificare.",
-        icon: BookOpen,
-        state: "available",
-        keywords: "metodologia metodo cautele indicatori",
+          "Orientamento per richiedere documenti e dati attraverso gli strumenti di accesso civico.",
+        icon: FileSearch,
+        state: "in_progress",
+        visibility: "primary",
+        hasUsefulPage: true,
+        keywords: "accesso civico foia richiesta documenti dati",
       },
       {
-        href: "/promessometro",
-        label: "Promessometro",
+        href: "/proposte-civiche",
+        label: "Proposte civiche",
         description:
-          "Collega promesse programmatiche, atti e stati documentali senza scoring politico.",
+          "Proposte pubbliche e pratiche replicabili raccolte con stato, fonte e limiti.",
+        icon: Archive,
+        state: "in_progress",
+        visibility: "primary",
+        hasUsefulPage: true,
+        keywords: "proposte civiche archivio proposte pratiche replicabili",
+      },
+      {
+        href: "/iscrizioni",
+        label: "Iscrizioni agli aggiornamenti",
+        description:
+          "Preferenze per ricevere aggiornamenti civici quando i canali sono configurati.",
+        icon: Rss,
+        state: "in_progress",
+        visibility: "search_only",
+        hasUsefulPage: true,
+        keywords: "iscrizioni newsletter notifiche aggiornamenti",
+      },
+      {
+        href: "/domande",
+        label: "Domande civiche",
+        description:
+          "Percorso di orientamento tra atti, dati e strumenti del monitoraggio civico.",
         icon: BookOpenCheck,
         state: "in_progress",
+        visibility: "search_only",
         hasUsefulPage: true,
-        keywords: "promessometro programma promesse atti",
+        keywords: "domande civiche orientamento",
+      },
+      {
+        href: "/temi",
+        label: "Temi",
+        description:
+          "Indice tematico trasversale usato come supporto alla navigazione e alla ricerca.",
+        icon: FileSearch,
+        state: "in_progress",
+        visibility: "search_only",
+        hasUsefulPage: true,
+        keywords: "temi argomenti categorie",
+      },
+      {
+        href: "/archivio-proposte",
+        label: "Archivio proposte",
+        description:
+          "Nome legacy della sezione Proposte civiche.",
+        icon: Archive,
+        state: "hidden",
+        visibility: "hidden",
+        canonicalHref: "/proposte-civiche",
+        keywords: "archivio proposte proposte civiche",
+      },
+      {
+        href: "/monitoraggio/nuovo",
+        label: "Nuova segnalazione",
+        description:
+          "Azione legacy accorpata nella sezione Segnalazioni.",
+        icon: Megaphone,
+        state: "hidden",
+        visibility: "hidden",
+        canonicalHref: "/segnalazioni",
+        keywords: "nuova segnalazione crea report",
+      },
+    ],
+  },
+  {
+    label: "Progetto e supporto",
+    description:
+      "Documentazione del progetto, assistenza, canali di contatto e informazioni tecniche.",
+    items: [
+      {
+        href: "/guida",
+        label: "Guida",
+        description: "Guida pratica per orientarsi tra sezioni, fonti e strumenti.",
+        icon: BookOpen,
+        state: "available",
+        visibility: "search_only",
+        keywords: "guida aiuto centro guida",
       },
       {
         href: "/roadmap",
         label: "Roadmap",
         description:
-          "Stato pubblico, limiti e priorita prudenti dei moduli civici.",
+          "Stato pubblico, limiti e priorità prudenti dei moduli civici.",
         icon: CircleDotDashed,
         state: "in_progress",
+        visibility: "search_only",
         hasUsefulPage: true,
         keywords: "roadmap sviluppo moduli priorita",
-      },
-      {
-        href: "/incarichimetro",
-        label: "Incarichimetro",
-        description:
-          "Nome tecnico del modulo Incarichi e consulenze, tenuto come keyword e non come seconda card.",
-        icon: ClipboardList,
-        state: "hidden",
-        canonicalHref: "/incarichimetro",
-        keywords: "incarichimetro incarichi consulenze",
-      },
-      {
-        href: "/fonti-dati",
-        label: "Fonti dati",
-        description:
-          "Pagina tecnica di supporto raggiungibile dal footer e dalla documentazione.",
-        icon: BookOpen,
-        state: "hidden",
-        canonicalHref: "/stato-monitoraggio",
-        keywords: "fonti dati qualita dati limiti",
-      },
-      {
-        href: "/feeds",
-        label: "Feed",
-        description: "Canali tecnici di aggiornamento fuori dalle sezioni civiche primarie.",
-        icon: Rss,
-        state: "hidden",
-        keywords: "feed rss atom aggiornamenti",
-      },
-      {
-        href: "/iscrizioni",
-        label: "Iscrizioni",
-        description:
-          "Preferenze per aggiornamenti civici quando i canali saranno configurati.",
-        icon: Rss,
-        state: "hidden",
-        keywords: "iscrizioni newsletter notifiche",
       },
       {
         href: "/note-legali",
         label: "Note legali",
         description:
-          "Avvertenze da mantenere nel footer tecnico e nelle pagine di metodo.",
+          "Avvertenze e limiti d'uso delle informazioni pubblicate dal progetto.",
         icon: Scale3D,
-        state: "hidden",
-        canonicalHref: "/metodologia",
+        state: "available",
+        visibility: "search_only",
         keywords: "note legali cautele responsabilita",
-      },
-      {
-        href: "/guida",
-        label: "Guida",
-        description:
-          "Supporto d'uso del sito, non macro-area civica primaria.",
-        icon: BookOpen,
-        state: "hidden",
-        keywords: "guida aiuto centro guida",
       },
       {
         href: "/chi-siamo",
         label: "Chi siamo",
         description:
-          "Pagina istituzionale del progetto, non macro-area civica primaria.",
+          "Obiettivi, natura civica e approccio documentale di Lamezia Trasparente.",
         icon: Users,
-        state: "hidden",
+        state: "available",
+        visibility: "search_only",
         keywords: "chi siamo progetto civico",
       },
       {
         href: "/contatti",
         label: "Contatti",
-        description:
-          "Canali di contatto da mantenere nel footer.",
+        description: "Canali di contatto relativi al progetto e al monitoraggio civico.",
         icon: Megaphone,
-        state: "hidden",
+        state: "available",
+        visibility: "search_only",
         keywords: "contatti email canali",
       },
     ],
@@ -610,22 +656,34 @@ export const ALL_NAV_GROUPS: NavSection[] = RAW_NAV_GROUPS.map((group) => ({
   items: group.items.map(withRouteContract),
 }));
 
+const MENU_VISIBILITIES = new Set<NavItemVisibility>([
+  "primary",
+  "secondary",
+]);
+
 export const NAV_GROUPS: NavSection[] = ALL_NAV_GROUPS.map((group) => ({
   ...group,
-  items: group.items.filter((item) => item.state !== "hidden"),
+  items: group.items.filter(
+    (item) => MENU_VISIBILITIES.has(item.visibility) && isNavItemNavigable(item),
+  ),
 })).filter((group) => group.items.length > 0);
 
-export const COMMAND_PALETTE_GROUPS: NavSection[] = NAV_GROUPS.map((group) => ({
-  ...group,
-  items: group.items.filter((item) => isNavItemNavigable(item)),
-})).filter((group) => group.items.length > 0);
+export const COMMAND_PALETTE_GROUPS: NavSection[] = ALL_NAV_GROUPS.map(
+  (group) => ({
+    ...group,
+    items: group.items.filter(
+      (item) => item.visibility !== "hidden" && isNavItemNavigable(item),
+    ),
+  }),
+).filter((group) => group.items.length > 0);
 
 export function isSectionActive(href: string, location: string): boolean {
   const normalizedHref = normalizeSectionPath(href);
   const normalizedLocation = normalizeSectionPath(location);
   return (
     normalizedLocation === normalizedHref ||
-    (normalizedHref !== "/" && normalizedLocation.startsWith(`${normalizedHref}/`))
+    (normalizedHref !== "/" &&
+      normalizedLocation.startsWith(`${normalizedHref}/`))
   );
 }
 
@@ -663,14 +721,13 @@ export interface ActiveSection {
 }
 
 /**
- * Finds the section whose list page exactly matches the current location.
- * Detail pages provide their own back-navigation, so the breadcrumb header
- * is intentionally limited to the list pages themselves.
+ * Finds the navigable section whose list page exactly matches the location.
+ * Search-only pages remain resolvable without being promoted to the main menu.
  */
 export function findSectionByPath(location: string): ActiveSection | null {
-  for (const group of NAV_GROUPS) {
+  for (const group of COMMAND_PALETTE_GROUPS) {
     for (const item of group.items) {
-      if (item.href === location) {
+      if (normalizeSectionPath(item.href) === normalizeSectionPath(location)) {
         return { group, item };
       }
     }
