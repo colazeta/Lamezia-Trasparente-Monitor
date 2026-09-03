@@ -1,0 +1,59 @@
+{
+  "@context": "https://lamezia-trasparente.pages.dev/semantic/context.jsonld",
+  "@id": "https://lamezia-trasparente.pages.dev/semantic/profile.jsonld",
+  "@type": "lt:SemanticProfile",
+  "owl:versionInfo": "1.0.0",
+  "dct:title": [
+    {
+      "@value": "LameziaTrasparente civic semantic profile",
+      "@language": "en"
+    },
+    {
+      "@value": "Profilo semantico civico di LameziaTrasparente",
+      "@language": "it"
+    }
+  ],
+  "dct:description": [
+    {
+      "@value": "Versioned semantic alignment for LameziaTrasparente public-safe civic data. It distinguishes validated conformance targets from ontology references and domain alignments; it does not assert OWL equivalence where the source data model is narrower than the external ontology.",
+      "@language": "en"
+    },
+    {
+      "@value": "Allineamento semantico versionato per i dati civici public-safe di LameziaTrasparente. Distingue gli obiettivi di conformità validabile dai riferimenti ontologici e dagli allineamenti di dominio; non dichiara equivalenza OWL quando il modello sorgente è più ristretto dell'ontologia esterna.",
+      "@language": "it"
+    }
+  ],
+  "dct:issued": {
+    "@value": "2026-09-03",
+    "@type": "xsd:date"
+  },
+  "dct:references": [
+    {
+      "@id": "https://www.w3.org/TR/vocab-dcat-3/"
+    },
+    {
+      "@id": "https://semiceu.github.io/DCAT-AP/releases/3.0.1/"
+    },
+    {
+      "@id": "https://www.w3.org/TR/prov-o/"
+    },
+    {
+      "@id": "https://www.w3.org/TR/skos-reference/"
+    },
+    {
+      "@id": "https://docs.ted.europa.eu/EPO/latest/index.html"
+    },
+    {
+      "@id": "https://w3id.org/italia/onto/Transparency/"
+    }
+  ],
+  "lt:catalogueConformanceTarget": {
+    "@id": "https://semiceu.github.io/DCAT-AP/releases/3.0.1/"
+  },
+  "lt:procurementAlignment": {
+    "@id": "http://data.europa.eu/a4g/ontology#"
+  },
+  "lt:italianTransparencyReference": {
+    "@id": "https://w3id.org/italia/onto/Transparency/"
+  }
+}
