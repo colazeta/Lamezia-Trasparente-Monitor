@@ -4,7 +4,7 @@ import {
 } from "@/data/lameziaOpenDataSeriesStatus";
 
 export type OpenDataThemeStatus = "published" | "ready";
-export type OpenDataDatasetFormat = "JSON" | "CSV" | "API";
+export type OpenDataDatasetFormat = "JSON" | "CSV" | "API" | "GeoJSON";
 export type OpenDataDatasetLayer = "canonical";
 
 export type OpenDataDetailKind =
@@ -15,6 +15,15 @@ export type OpenDataDetailKind =
   | "household-composition-2023"
   | "foreign-residents-age-sex";
 
+export interface OpenDataDistribution {
+  id: string;
+  label: string;
+  format: OpenDataDatasetFormat;
+  url: string;
+  downloadName?: string;
+  description?: string;
+}
+
 export interface OpenDataThemeDataset {
   id: string;
   label: string;
@@ -23,6 +32,7 @@ export interface OpenDataThemeDataset {
   description: string;
   updateCadence: string;
   sourceLabel: string;
+  sourceUrl?: string | null;
   detailKind?: OpenDataDetailKind;
   themeId: string;
   subtheme: string;
@@ -30,6 +40,7 @@ export interface OpenDataThemeDataset {
   familyLabel: string;
   sourceId: string;
   formats: readonly OpenDataDatasetFormat[];
+  distributions?: readonly OpenDataDistribution[];
   geographicCoverage: string;
   temporalCoverage: {
     from: string | null;
@@ -37,6 +48,7 @@ export interface OpenDataThemeDataset {
     label: string;
   } | null;
   licence: string | null;
+  methodNote?: string;
   layer: OpenDataDatasetLayer;
 }
 
@@ -67,6 +79,14 @@ export const OPEN_DATA_SOURCE_REGISTRY: readonly OpenDataSourceDefinition[] = [
   { id: "assaeroporti", label: "Assaeroporti" },
   { id: "istat", label: "ISTAT" },
   { id: "comune-opendata", label: "Comune di Lamezia Terme · Open Data" },
+  {
+    id: "confiscated-assets-public-evidence",
+    label: "ANBSC + fonti pubbliche documentate",
+  },
+  {
+    id: "comune-pnrr-opencup",
+    label: "Comune di Lamezia Terme · PNRR + OpenCUP",
+  },
 ];
 
 export const OPEN_DATA_DATASET_REGISTRY: readonly OpenDataThemeDataset[] = [
@@ -218,6 +238,129 @@ export const OPEN_DATA_DATASET_REGISTRY: readonly OpenDataThemeDataset[] = [
     licence: null,
     layer: "canonical",
   },
+  {
+    id: "istat-census-sections-lamezia-2023",
+    label: "Sezioni di censimento ISTAT 2023 - Lamezia Terme",
+    statusLabel: "Disponibile",
+    dataType: "Layer territoriale censuario",
+    description:
+      "Sezioni di censimento di Lamezia Terme con indicatori ISTAT 2023 collegati alla geometria ufficiale. I valori mancanti restano null e la copertura del join è documentata, senza trasformare l'assenza di dato in zero.",
+    updateCadence:
+      "Rigenerazione verificata quando ISTAT pubblica una nuova edizione compatibile dei dati per sezione di censimento.",
+    sourceLabel: "ISTAT - dati per sezioni di censimento",
+    sourceUrl: "https://www.istat.it/notizia/dati-per-sezioni-di-censimento/",
+    themeId: "population-society",
+    subtheme: "Geografia censuaria",
+    familyId: "census-sections",
+    familyLabel: "Sezioni di censimento",
+    sourceId: "istat",
+    formats: ["GeoJSON"],
+    distributions: [
+      {
+        id: "geojson",
+        label: "GeoJSON delle sezioni",
+        format: "GeoJSON",
+        url: "/data/processed/territorio/istat_sezioni_censimento_lamezia.geojson",
+        downloadName: "istat-sezioni-censimento-lamezia-2023.geojson",
+        description:
+          "Geometrie delle sezioni con gli indicatori 2023 che hanno superato i gate di pubblicazione.",
+      },
+    ],
+    geographicCoverage: "Comune di Lamezia Terme · 413 sezioni censuarie",
+    temporalCoverage: {
+      from: "2023",
+      to: "2023",
+      label: "Indicatori 2023 · geometrie di riferimento 2021",
+    },
+    licence: null,
+    methodNote:
+      "Il layer mantiene separati geometria, valori osservati e null. La copertura del join non è trattata come completa quando una sezione non ha una riga ISTAT 2023 associata.",
+    layer: "canonical",
+  },
+  {
+    id: "beni-confiscati-lamezia-documentati",
+    label: "Beni confiscati documentati - Lamezia Terme",
+    statusLabel: "Disponibile",
+    dataType: "Registro documentale e layer territoriale",
+    description:
+      "Registro pilota dei beni confiscati ricostruito da evidenze pubbliche e relativo layer territoriale. Non equivale al censimento completo ANBSC: ogni record conserva provenienza, qualità della localizzazione e limiti documentali.",
+    updateCadence:
+      "Aggiornamento quando nuove fonti pubbliche consentono di aggiungere, correggere o qualificare un bene documentato.",
+    sourceLabel: "ANBSC + fonti comunali e istituzionali documentate",
+    themeId: "assets-confiscated-property",
+    subtheme: "Beni confiscati",
+    familyId: "confiscated-assets",
+    familyLabel: "Beni confiscati documentati",
+    sourceId: "confiscated-assets-public-evidence",
+    formats: ["JSON", "GeoJSON"],
+    distributions: [
+      {
+        id: "json",
+        label: "Registro JSON",
+        format: "JSON",
+        url: "/data/curated/territorio/beni_confiscati_lamezia_pilot.json",
+        downloadName: "beni-confiscati-lamezia-documentati.json",
+        description:
+          "Registro curato con evidenze, cronologia e qualità della localizzazione.",
+      },
+      {
+        id: "geojson",
+        label: "Layer GeoJSON",
+        format: "GeoJSON",
+        url: "/data/processed/territorio/beni_confiscati_lamezia.geojson",
+        downloadName: "beni-confiscati-lamezia-documentati.geojson",
+        description:
+          "Proiezione geografica dei soli record pubblicabili secondo la policy spaziale.",
+      },
+    ],
+    geographicCoverage: "Comune di Lamezia Terme · perimetro pilota documentato",
+    temporalCoverage: null,
+    licence: null,
+    methodNote:
+      "Il registro è deliberatamente incompleto: documenta soltanto beni supportati dalle fonti raccolte. Coordinate e localizzazioni sono pubblicate solo quando superano i gate della policy spaziale.",
+    layer: "canonical",
+  },
+  {
+    id: "lamezia-pnrr-projects",
+    label: "Progetti PNRR - Lamezia Terme",
+    statusLabel: "Disponibile",
+    dataType: "Registro progetti per CUP",
+    description:
+      "Dataset canonico dei progetti esposti nella sezione PNRR del Comune, identificati per CUP e arricchiti separatamente con OpenCUP e con evidenze dell'Albo collegate soltanto tramite CUP condiviso.",
+    updateCadence:
+      "Materializzazione automatica ogni 6 ore; i nuovi CUP attivano l'acquisizione OpenCUP e gli stati fresh, stale o pending restano espliciti.",
+    sourceLabel: "Comune di Lamezia Terme - PNRR + OpenCUP",
+    sourceUrl:
+      "https://www.comune.lamezia-terme.cz.it/it/attuazione-misure-pnrr",
+    themeId: "investments-pnrr",
+    subtheme: "PNRR",
+    familyId: "pnrr-projects",
+    familyLabel: "Progetti PNRR",
+    sourceId: "comune-pnrr-opencup",
+    formats: ["JSON"],
+    distributions: [
+      {
+        id: "json",
+        label: "Dataset progetti JSON",
+        format: "JSON",
+        url: "/data/curated/pnrr/lamezia-pnrr-projects.json",
+        downloadName: "lamezia-pnrr-projects.json",
+        description:
+          "Un record per progetto/CUP, con campi comunali, arricchimento OpenCUP ed evidenze collegate mantenuti distinti.",
+      },
+    ],
+    geographicCoverage:
+      "Progetti esposti dalla sezione PNRR del Comune di Lamezia Terme",
+    temporalCoverage: {
+      from: "2021",
+      to: null,
+      label: "PNRR 2021–2026 · perimetro comunale pubblicato",
+    },
+    licence: null,
+    methodNote:
+      "Il perimetro deriva dalla sezione PNRR comunale e non implica completezza rispetto all'intero universo nazionale. I dati OpenCUP restano separati dai campi comunali e una relazione con l'Albo è pubblicata solo quando condivide un CUP normalizzato.",
+    layer: "canonical",
+  },
 ];
 
 const OPEN_DATA_THEME_DEFINITIONS: readonly OpenDataThemeDefinition[] = [
@@ -277,6 +420,7 @@ const OPEN_DATA_THEME_DEFINITIONS: readonly OpenDataThemeDefinition[] = [
       "serie temporali annuali",
       "distribuzioni per eta e sesso",
       "distribuzioni familiari aggregate",
+      "geografia censuaria",
       "indicatori demografici",
       "dataset comunali aggregati",
     ],
@@ -304,6 +448,23 @@ const OPEN_DATA_THEME_DEFINITIONS: readonly OpenDataThemeDefinition[] = [
     ],
   },
   {
+    id: "investments-pnrr",
+    label: "Investimenti e PNRR",
+    shortLabel: "PNRR",
+    status: "published",
+    statusLabel: "Dataset pubblicato",
+    description:
+      "Dataset sui progetti di investimento, sui CUP e sulle fonti che permettono di seguirne identità, importi, stato informativo ed evidenze collegate.",
+    civicQuestion:
+      "Quali investimenti PNRR sono documentati per Lamezia Terme e quali fonti consentono di seguirli senza duplicare lo stesso CUP?",
+    dataTypes: ["registri per CUP", "fonti progetto", "evidenze amministrative"],
+    civicUses: [
+      "ricostruzione del portafoglio PNRR",
+      "controllo dei duplicati per CUP",
+      "collegamento tra progetto, OpenCUP e atti pubblici",
+    ],
+  },
+  {
     id: "administration-acts",
     label: "Amministrazione e atti",
     shortLabel: "Atti",
@@ -324,8 +485,8 @@ const OPEN_DATA_THEME_DEFINITIONS: readonly OpenDataThemeDefinition[] = [
     id: "assets-confiscated-property",
     label: "Patrimonio e beni confiscati",
     shortLabel: "Patrimonio",
-    status: "ready",
-    statusLabel: "Categoria pronta",
+    status: "published",
+    statusLabel: "Dataset pubblicato",
     description:
       "Dataset su beni, patrimonio pubblico e riuso sociale, da leggere insieme ai limiti delle fonti disponibili.",
     civicQuestion:
@@ -363,7 +524,13 @@ export const OPEN_DATA_THEME_LIBRARY: OpenDataThemeCategory[] =
     civicUses: [...theme.civicUses],
     datasets: OPEN_DATA_DATASET_REGISTRY.filter(
       (dataset) => dataset.themeId === theme.id,
-    ).map((dataset) => ({ ...dataset, formats: [...dataset.formats] })),
+    ).map((dataset) => ({
+      ...dataset,
+      formats: [...dataset.formats],
+      distributions: dataset.distributions
+        ? dataset.distributions.map((distribution) => ({ ...distribution }))
+        : undefined,
+    })),
   }));
 
 export const OPEN_DATA_THEME_LIBRARY_SUMMARY = {
@@ -419,6 +586,15 @@ export interface OpenDataCatalogStatistics {
   byFormat: OpenDataCatalogDistributionItem[];
 }
 
+export function getOpenDataDatasetFormats(
+  dataset: OpenDataThemeDataset,
+): readonly OpenDataDatasetFormat[] {
+  if (!dataset.distributions?.length) return dataset.formats;
+  return Array.from(
+    new Set(dataset.distributions.map((distribution) => distribution.format)),
+  );
+}
+
 export function buildOpenDataCatalogStatistics(
   referenceDate = new Date(),
   recentWindowDays = 14,
@@ -427,7 +603,7 @@ export function buildOpenDataCatalogStatistics(
   const families = new Set(datasets.map((dataset) => dataset.familyId));
   const sourceIds = new Set(datasets.map((dataset) => dataset.sourceId));
   const formats = new Set<OpenDataDatasetFormat>(
-    datasets.flatMap((dataset) => dataset.formats),
+    datasets.flatMap((dataset) => [...getOpenDataDatasetFormats(dataset)]),
   );
   const publishedThemeIds = new Set(datasets.map((dataset) => dataset.themeId));
   const operationalStatus = datasets
@@ -484,8 +660,9 @@ export function buildOpenDataCatalogStatistics(
       .map((format) => ({
         id: format.toLowerCase(),
         label: format,
-        count: datasets.filter((dataset) => dataset.formats.includes(format))
-          .length,
+        count: datasets.filter((dataset) =>
+          getOpenDataDatasetFormats(dataset).includes(format),
+        ).length,
       }))
       .sort((a, b) => b.count - a.count || a.label.localeCompare(b.label)),
   };

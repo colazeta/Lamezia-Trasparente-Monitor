@@ -30,7 +30,7 @@ const basePath = process.env.BASE_PATH ?? "/";
 const repoRoot = path.resolve(import.meta.dirname, "..", "..");
 const alboPublicSnapshotPath = "data/public/albo/latest.json";
 const anacBdncpSnapshotPath = "data/public/contracts/anac-bdncp/latest.json";
-const atlantePublicDataFiles = [
+const repoPublicDataFiles = [
   "data/processed/territorio/lamezia_confine_comunale.geojson",
   "data/processed/territorio/istat_sezioni_censimento_lamezia.geojson",
   "data/processed/territorio/istat_sezioni_censimento_lamezia.metadata.json",
@@ -39,6 +39,14 @@ const atlantePublicDataFiles = [
   "data/processed/territorio/spatial_layer_manifest.json",
   "data/curated/territorio/beni_confiscati_lamezia_pilot.json",
 ];
+const repoPublicDataAliases = [
+  {
+    publicPath: "data/curated/pnrr/lamezia-pnrr-projects.json",
+    sourcePath:
+      "artifacts/lamezia-trasparente/src/data/generated/lameziaPnrrProjects.json",
+  },
+] as const;
+
 function repoPublicDataPlugin(): Plugin {
   return {
     name: "repo-public-data",
@@ -47,10 +55,17 @@ function repoPublicDataPlugin(): Plugin {
         const requestPath = decodeURIComponent(
           request.url?.split("?")[0] ?? "",
         );
-        const relativePath =
-          atlantePublicDataFiles.find(
+        const repoFile =
+          repoPublicDataFiles.find(
             (candidate) => requestPath === `/${candidate}`,
-          ) ??
+          ) ?? null;
+        const alias =
+          repoPublicDataAliases.find(
+            (candidate) => requestPath === `/${candidate.publicPath}`,
+          ) ?? null;
+        const relativePath =
+          repoFile ??
+          alias?.sourcePath ??
           (requestPath.startsWith(`/${ALBO_DOCUMENT_PREFIX}`) &&
           /\.pdf$/i.test(requestPath)
             ? requestPath.slice(1)
@@ -77,13 +92,16 @@ function repoPublicDataPlugin(): Plugin {
         }
 
         response.statusCode = 200;
-        response.setHeader("Content-Type", contentTypeFor(relativePath));
+        response.setHeader(
+          "Content-Type",
+          contentTypeFor(alias?.publicPath ?? relativePath),
+        );
         response.end(source);
       });
     },
     generateBundle() {
       for (const relativePath of [
-        ...atlantePublicDataFiles,
+        ...repoPublicDataFiles,
         ...alboDocumentServingFiles(repoRoot),
       ]) {
         const source = relativePath.startsWith(ALBO_DOCUMENT_PREFIX)
@@ -101,6 +119,20 @@ function repoPublicDataPlugin(): Plugin {
         this.emitFile({
           type: "asset",
           fileName: relativePath,
+          source,
+        });
+      }
+
+      for (const alias of repoPublicDataAliases) {
+        const source = readRepoFile(alias.sourcePath);
+        if (!source) {
+          throw new Error(
+            `Public data distribution source is missing: ${alias.sourcePath}`,
+          );
+        }
+        this.emitFile({
+          type: "asset",
+          fileName: alias.publicPath,
           source,
         });
       }
@@ -186,7 +218,7 @@ export default defineConfig({
           await import("@replit/vite-plugin-cartographer").then((m) =>
             m.cartographer({
               root: path.resolve(import.meta.dirname, ".."),
-            }),
+            ),
           ),
           await import("@replit/vite-plugin-dev-banner").then((m) =>
             m.devBanner(),

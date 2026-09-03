@@ -14,6 +14,7 @@ describe("OpenData thematic category library", () => {
     expect(ids).toContain("mobility-connections");
     expect(ids).toContain("population-society");
     expect(ids).toContain("contracts-spending");
+    expect(ids).toContain("investments-pnrr");
     expect(ids).toContain("administration-acts");
     expect(ids).toContain("assets-confiscated-property");
     expect(ids).toContain("participation-access");
@@ -30,7 +31,7 @@ describe("OpenData thematic category library", () => {
     }
   });
 
-  it("places published visual datasets inside their thematic categories", () => {
+  it("places published datasets inside their thematic categories", () => {
     const published = OPEN_DATA_THEME_LIBRARY.filter(
       (theme) => theme.status === "published",
     );
@@ -42,6 +43,12 @@ describe("OpenData thematic category library", () => {
     );
     const populationTheme = OPEN_DATA_THEME_LIBRARY.find(
       (theme) => theme.id === "population-society",
+    );
+    const assetsTheme = OPEN_DATA_THEME_LIBRARY.find(
+      (theme) => theme.id === "assets-confiscated-property",
+    );
+    const pnrrTheme = OPEN_DATA_THEME_LIBRARY.find(
+      (theme) => theme.id === "investments-pnrr",
     );
 
     expect(OPEN_DATA_THEME_LIBRARY_SUMMARY.total).toBe(
@@ -60,30 +67,44 @@ describe("OpenData thematic category library", () => {
       dataType: "Serie temporale mensile",
       detailKind: "air-traffic-monthly",
     });
-    expect(populationTheme?.datasets).toHaveLength(4);
+    expect(populationTheme?.datasets).toHaveLength(5);
     expect(populationTheme?.datasets).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
           id: "lamezia-demographic-trend",
-          dataType: "Serie annuali versionate e bilancio demografico",
           detailKind: "demographic-trend",
         }),
         expect.objectContaining({
           id: "lamezia-household-composition-2023",
-          dataType: "Benchmark strutturale censuario 2023",
           detailKind: "household-composition-2023",
         }),
         expect.objectContaining({
           id: "lamezia-foreign-residents-age-sex",
-          dataType: "Distribuzione per classi d'eta",
           detailKind: "foreign-residents-age-sex",
         }),
         expect.objectContaining({
           id: "lamezia-families-children",
-          dataType: "Approfondimento comunale per numero di figli",
           detailKind: "families-children",
+        }),
+        expect.objectContaining({
+          id: "istat-census-sections-lamezia-2023",
+          formats: ["GeoJSON"],
         }),
       ]),
     );
+    expect(assetsTheme?.status).toBe("published");
+    expect(assetsTheme?.datasets).toEqual([
+      expect.objectContaining({
+        id: "beni-confiscati-lamezia-documentati",
+        formats: ["JSON", "GeoJSON"],
+      }),
+    ]);
+    expect(pnrrTheme?.status).toBe("published");
+    expect(pnrrTheme?.datasets).toEqual([
+      expect.objectContaining({
+        id: "lamezia-pnrr-projects",
+        familyId: "pnrr-projects",
+      }),
+    ]);
   });
 });
