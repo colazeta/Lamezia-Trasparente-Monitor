@@ -67,20 +67,22 @@ describe("Contracts page public rendering", () => {
     contractQueryState.isError = false;
   });
 
-  it("keeps contract sources verifiable without exposing the technical BDNCP bridge", () => {
+  it("keeps the citizen view concise without exposing the technical BDNCP bridge", () => {
     renderContractsPage();
 
     expect(
       screen.getByRole("heading", {
-        name: "Contratti pubblici sotto osservazione",
+        name: "Cosa affida il Comune, a chi e per quanto",
       }),
     ).toBeInTheDocument();
     expect(
-      screen.getByRole("heading", {
-        name: "Dati pubblici, con la fonte sempre raggiungibile",
-      }),
+      screen.getByRole("heading", { name: "Esplora tutti i contratti" }),
     ).toBeInTheDocument();
-    expect(screen.getByText("Tutte le fonti")).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        "I dati mancanti non sono trattati come zero e non indicano irregolarità.",
+      ),
+    ).toBeInTheDocument();
     expect(screen.queryByText("Ponte BDNCP")).not.toBeInTheDocument();
     expect(
       screen.queryByText("Fascicoli civici CIG/CUP"),
@@ -99,15 +101,11 @@ describe("Contracts page public rendering", () => {
       0,
     );
     expect(
-      screen.getByText(
-        /questo stato non significa che non esistano contratti/i,
-      ),
+      screen.getByText(/la pagina non mostra valori sostitutivi/i),
     ).toBeInTheDocument();
     expect(
-      screen.getByRole("link", { name: "Consulta BDNCP ANAC" }),
+      screen.getByRole("link", { name: "Verifica su BDNCP ANAC" }),
     ).toHaveAttribute("href", expect.stringContaining("anticorruzione.it"));
-    expect(
-      screen.queryByText("Contratti protagonisti"),
-    ).not.toBeInTheDocument();
+    expect(screen.queryByText("Contratti nel perimetro")).not.toBeInTheDocument();
   });
 });
