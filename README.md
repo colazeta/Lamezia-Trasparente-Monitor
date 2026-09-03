@@ -4,6 +4,14 @@
 
 The public React/Vite frontend lives in `artifacts/lamezia-trasparente`. For provider-neutral preparation notes covering build commands, static output, public configuration and the frontend/API/worker deployment boundary, see `docs/frontend-deployment.md`.
 
+## Public MCP server
+
+LameziaTrasparente exposes a permanent, public **Model Context Protocol (MCP)** server for external AI clients on `/api/mcp`. It is a read-only Streamable HTTP surface over the same public-safe data model used by the REST API.
+
+The server supports the current MCP `2026-07-28` stateless protocol and retains stateless compatibility for 2025-era clients. The stable public tool contract covers administrative records, contracts, monitoring themes, performance indicators and PNRR projects. All tools are annotated read-only; no editorial, administrative or raw-ingestion capability is exposed.
+
+For endpoint configuration, the stable tool catalogue, protocol compatibility, safety rules and examples, see **[`docs/MCP.md`](docs/MCP.md)**.
+
 ## WebMCP Challenge 2026
 
 LameziaTrasparente is an existing civic-transparency platform that was **meaningfully extended with WebMCP during the OpenAI WebMCP Challenge submission period**. The challenge work is tracked in [issue #910](https://github.com/colazeta/Lamezia-Trasparente-Monitor/issues/910) and is deliberately separated from the pre-existing REST API and backend MCP server.
@@ -90,6 +98,7 @@ pnpm --filter @workspace/db seed      # aggiorna i dati di seed
 
 ## Documentazione aggiuntiva
 
+- [Public MCP server](docs/MCP.md)
 - [WebMCP Challenge 2026](docs/WEBMCP_CHALLENGE_2026.md)
 - [API pubblica (REST + MCP)](artifacts/api-server/PUBLIC_API.md)
 - [Architettura delle integrazioni](docs/architecture/README.md)
