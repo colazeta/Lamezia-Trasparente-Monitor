@@ -4,7 +4,10 @@ import {
   COMMAND_PALETTE_GROUPS,
   NAV_GROUPS,
 } from "@/components/layout/navSections";
-import { findPrimaryNavGroupByPath } from "@/components/layout/navState";
+import {
+  findPrimaryNavGroupByPath,
+  findPrimaryNavItemByPath,
+} from "@/components/layout/navState";
 
 const EXPECTED_PRIMARY_GROUPS = [
   "Atti",
@@ -22,6 +25,10 @@ function hrefs(groups: typeof NAV_GROUPS) {
 
 function primaryGroupLabel(path: string) {
   return findPrimaryNavGroupByPath(path)?.label ?? null;
+}
+
+function primaryItemHref(path: string) {
+  return findPrimaryNavItemByPath(path)?.href ?? null;
 }
 
 describe("public navigation taxonomy", () => {
@@ -104,5 +111,25 @@ describe("active primary navigation area", () => {
     expect(primaryGroupLabel("/roadmap")).toBeNull();
     expect(primaryGroupLabel("/note-legali")).toBeNull();
     expect(primaryGroupLabel("/unknown-route")).toBeNull();
+  });
+});
+
+describe("active primary navigation destination", () => {
+  it("selects exactly the most specific visible destination", () => {
+    expect(primaryItemHref("/legalita")).toBe("/legalita");
+    expect(primaryItemHref("/legalita/trame-festival")).toBe(
+      "/legalita/trame-festival",
+    );
+    expect(primaryItemHref("/contratti/CIG-123")).toBe("/contratti");
+  });
+
+  it("maps canonical legacy routes to the visible destination", () => {
+    expect(primaryItemHref("/performance/confronta")).toBe("/performance");
+    expect(primaryItemHref("/monitoraggio/nuovo")).toBe("/segnalazioni");
+  });
+
+  it("keeps search-only routes from falsely highlighting a visible child", () => {
+    expect(primaryItemHref("/sviluppatori")).toBeNull();
+    expect(primaryItemHref("/pareri")).toBeNull();
   });
 });
