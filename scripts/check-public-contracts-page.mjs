@@ -4,6 +4,8 @@ import process from "node:process";
 const DEFAULT_PUBLIC_URL = "https://lamezia-trasparente.pages.dev";
 const DEFAULT_ATTEMPTS = 1;
 const DEFAULT_DELAY_MS = 10_000;
+const REPOSITORY = "colazeta/Lamezia-Trasparente-Monitor";
+const MAIN_BRANCH = "main";
 const DEPLOY_PROVENANCE_PATH = "/deploy-provenance.json";
 const SITEMAP_PATH = "/sitemap.xml";
 const API_CONTENT_TYPE_PROBES = [
@@ -24,46 +26,33 @@ const REQUIRED_PUBLIC_TEXT = [
   "Osservatorio Civico Indipendente",
 ];
 const REQUIRED_CONTRACT_BUNDLE_TEXT = [
-  "Contratti pubblici sotto osservazione",
-  "Contratti protagonisti",
-  "La storia documentale del contratto",
-  "Attiva · perimetro corrente",
-  "Albo Pretorio corrente",
-  "Filtro pubblico e privacy",
-  "Stato dei fascicoli contrattuali",
-  "Copertura fasi",
-  "Copertura stato fasi dei fascicoli",
-  "Ponte BDNCP",
-  "Collegamento attivo",
-  "Prima sincronizzazione in attesa",
-  "Dataset ANAC",
-  "Programmazione",
-  "Progettazione",
-  "Gara / pubblicazione",
-  "Esecuzione della gara",
-  "Affidamento",
-  "Esecuzione del contratto",
-  "Conclusione, collaudi e verifiche",
+  "contracts-search",
+  "contracts-list",
+  "Contratti nel perimetro",
+  "I dati mancanti non sono trattati come zero",
 ];
 const REQUIRED_ORGANI_BUNDLE_TEXT = [
+  "organi-list",
   "Organi del Comune",
   "Componenti correnti",
   "Righe storiche",
-  "Commissioni Consiliari",
 ];
 const REQUIRED_DEPLOY_ROUTES = ["/contratti", "/organi", "/amministratori"];
+const requiredCommitRelationCache = new Map();
 
 function usage() {
   return [
-    "Usage: node scripts/check-public-contracts-page.mjs [--url <public-url>] [--expected-commit <sha>] [--attempts <n>] [--delay-ms <ms>]",
+    "Usage: node scripts/check-public-contracts-page.mjs [--url <public-url>] [--expected-commit <sha>] [--allow-newer-main] [--attempts <n>] [--delay-ms <ms>]",
     "",
     "Checks the production/public contracts and organi routes plus generated bundle markers.",
+    "When --allow-newer-main is used, a production commit newer than the expected SHA is accepted only if GitHub proves that it is a descendant of the expected SHA and belongs to the current main history.",
     "Defaults to https://lamezia-trasparente.pages.dev.",
   ].join("\n");
 }
 
 function parseArgs(argv) {
   const options = {
+    allowNewerMain: false,
     attempts: DEFAULT_ATTEMPTS,
     delayMs: DEFAULT_DELAY_MS,
     expectedCommit: null,
@@ -74,15 +63,18 @@ function parseArgs(argv) {
     const arg = argv[i];
     if (arg === "--url") {
       const value = argv[(i += 1)];
-      if (!value || value.startsWith("--"))
+      if (!value || value.startsWith("--")) {
         throw new Error("Missing value for --url.");
+      }
       options.publicUrl = value;
     } else if (arg === "--expected-commit") {
       const value = argv[(i += 1)];
       if (!value || value.startsWith("--")) {
         throw new Error("Missing value for --expected-commit.");
       }
-      options.expectedCommit = normalizeExpectedCommit(value);
+      options.expectedCommit = normalizeCommit(value, "--expected-commit");
+    } else if (arg === "--allow-newer-main") {
+      options.allowNewerMain = true;
     } else if (arg === "--attempts") {
       const value = Number(argv[(i += 1)]);
       if (!Number.isInteger(value) || value < 1) {
@@ -113,12 +105,10 @@ function normalizePublicUrl(value) {
   return new URL(trimmed).href.replace(/\/+$/, "");
 }
 
-function normalizeExpectedCommit(value) {
-  const normalized = String(value || "")
-    .trim()
-    .toLowerCase();
+function normalizeCommit(value, label = "commit") {
+  const normalized = String(value || "").trim().toLowerCase();
   if (!/^[0-9a-f]{40}$/.test(normalized)) {
-    throw new Error("--expected-commit must be a full 40-character Git SHA.");
+    throw new Error(`${label} must be a full 40-character Git SHA.`);
   }
   return normalized;
 }
@@ -216,6 +206,68 @@ async function fetchJson(url, label) {
   }
 }
 
+async function fetchGitHubJson(path, label) {
+  const token = String(process.env.GITHUB_TOKEN ?? "").trim();
+  const headers = {
+    accept: "application/vnd.github+json",
+    "user-agent": "lamezia-trasparente-deploy-smoke",
+    "x-github-api-version": "2022-11-28",
+  };
+  if (token) headers.authorization = `Bearer ${token}`;
+
+  const response = await fetch(`https://api.github.com${path}`, { headers });
+  if (!response.ok) {
+    throw new Error(
+      `${label} returned HTTP ${response.status}: ${response.url}`,
+    );
+  }
+  return response.json();
+}
+
+async function assertExpectedOrNewerMainCommit(expectedCommit, observedCommit) {
+  if (observedCommit === expectedCommit) {
+    return { mode: "exact", observedCommit };
+  }
+
+  const cacheKey = `${expectedCommit}:${observedCommit}`;
+  if (requiredCommitRelationCache.has(cacheKey)) {
+    const cached = requiredCommitRelationCache.get(cacheKey);
+    if (cached.ok) return cached.result;
+    throw new Error(cached.message);
+  }
+
+  const expectedToObserved = await fetchGitHubJson(
+    `/repos/${REPOSITORY}/compare/${expectedCommit}...${observedCommit}`,
+    "GitHub expected-to-production comparison",
+  );
+  if (expectedToObserved.status !== "ahead") {
+    const message = `Deploy provenance commit is ${observedCommit}; expected ${expectedCommit}, and GitHub does not identify the observed commit as its descendant.`;
+    requiredCommitRelationCache.set(cacheKey, { ok: false, message });
+    throw new Error(message);
+  }
+
+  const mainBranch = await fetchGitHubJson(
+    `/repos/${REPOSITORY}/branches/${MAIN_BRANCH}`,
+    "GitHub main branch",
+  );
+  const mainCommit = normalizeCommit(mainBranch?.commit?.sha, "main commit");
+  if (observedCommit !== mainCommit) {
+    const observedToMain = await fetchGitHubJson(
+      `/repos/${REPOSITORY}/compare/${observedCommit}...${mainCommit}`,
+      "GitHub production-to-main comparison",
+    );
+    if (observedToMain.status !== "ahead") {
+      const message = `Deploy provenance commit ${observedCommit} descends from ${expectedCommit} but is not in the current ${MAIN_BRANCH} history ending at ${mainCommit}.`;
+      requiredCommitRelationCache.set(cacheKey, { ok: false, message });
+      throw new Error(message);
+    }
+  }
+
+  const result = { mode: "superseded", observedCommit, mainCommit };
+  requiredCommitRelationCache.set(cacheKey, { ok: true, result });
+  return result;
+}
+
 function normalizeRouteForCompare(url) {
   const parsed = new URL(url);
   return `${parsed.origin}${parsed.pathname.replace(/\/+$/, "")}`;
@@ -236,9 +288,7 @@ function assertPublicText(html, label) {
     html.toLowerCase().includes(marker.toLowerCase()),
   );
   if (!hasAnyMarker) {
-    throw new Error(
-      `${label} does not contain an expected public site marker.`,
-    );
+    throw new Error(`${label} does not contain an expected public site marker.`);
   }
 }
 
@@ -261,42 +311,44 @@ function assertContentType(result, expected, label) {
   }
 }
 
-function assertDeployProvenance(provenance, expectedCommit = null) {
-  if (
-    !provenance ||
-    typeof provenance !== "object" ||
-    Array.isArray(provenance)
-  ) {
+async function assertDeployProvenance(
+  provenance,
+  { expectedCommit = null, allowNewerMain = false } = {},
+) {
+  if (!provenance || typeof provenance !== "object" || Array.isArray(provenance)) {
     throw new Error("Deploy provenance marker must be a JSON object.");
   }
-  if (provenance.repository !== "colazeta/Lamezia-Trasparente-Monitor") {
+  if (provenance.repository !== REPOSITORY) {
     throw new Error(
       `Deploy provenance has unexpected repository: ${String(provenance.repository)}`,
     );
   }
   if (provenance.deploymentContract !== REQUIRED_DEPLOYMENT_CONTRACT) {
     throw new Error(
-      `Deploy provenance has unexpected deploymentContract: ${String(
-        provenance.deploymentContract,
-      )}`,
+      `Deploy provenance has unexpected deploymentContract: ${String(provenance.deploymentContract)}`,
     );
   }
-  if (
-    typeof provenance.commitSha !== "string" ||
-    !/^[0-9a-f]{40}$/i.test(provenance.commitSha)
-  ) {
-    throw new Error(
-      `Deploy provenance has invalid commitSha: ${String(provenance.commitSha)}`,
-    );
+
+  const observedCommit = normalizeCommit(provenance.commitSha, "deploy provenance commitSha");
+  let commitRelation = { mode: "unconstrained", observedCommit };
+  if (expectedCommit) {
+    if (observedCommit === expectedCommit) {
+      commitRelation = { mode: "exact", observedCommit };
+    } else if (allowNewerMain) {
+      commitRelation = await assertExpectedOrNewerMainCommit(
+        expectedCommit,
+        observedCommit,
+      );
+      console.log(
+        `Expected commit ${expectedCommit} has been superseded in production by verified newer main commit ${observedCommit}.`,
+      );
+    } else {
+      throw new Error(
+        `Deploy provenance commit is ${observedCommit}; expected ${expectedCommit}.`,
+      );
+    }
   }
-  if (
-    expectedCommit &&
-    provenance.commitSha.toLowerCase() !== expectedCommit.toLowerCase()
-  ) {
-    throw new Error(
-      `Deploy provenance commit is ${provenance.commitSha}; expected ${expectedCommit}.`,
-    );
-  }
+
   if (provenance.requiredRoute !== "/contratti") {
     throw new Error(
       `Deploy provenance has unexpected requiredRoute: ${String(provenance.requiredRoute)}`,
@@ -310,25 +362,20 @@ function assertDeployProvenance(provenance, expectedCommit = null) {
       throw new Error(`Deploy provenance is missing required route: ${route}`);
     }
   }
+
   const requiredMarkers = Array.isArray(provenance.requiredMarkers)
     ? provenance.requiredMarkers
     : [];
   for (const marker of [
-    "Contratti protagonisti",
-    "Attiva · perimetro corrente",
-    "Albo Pretorio corrente",
-    "Filtro pubblico e privacy",
-    "Stato dei fascicoli contrattuali",
-    "Copertura fasi",
-    "Copertura stato fasi dei fascicoli",
+    ...REQUIRED_CONTRACT_BUNDLE_TEXT,
     ...REQUIRED_ORGANI_BUNDLE_TEXT,
   ]) {
     if (!requiredMarkers.includes(marker)) {
-      throw new Error(
-        `Deploy provenance is missing required marker: ${marker}`,
-      );
+      throw new Error(`Deploy provenance is missing required marker: ${marker}`);
     }
   }
+
+  return commitRelation;
 }
 
 function extractScriptPaths(...htmlDocuments) {
@@ -364,14 +411,14 @@ function extractJavaScriptReferences(sourceText) {
 function bundleAssetPriority(url) {
   const pathname = new URL(url).pathname;
   if (
-    /\/(?:Contracts|ContractStoryline|contractDossier|Organi)-[^/]+\.js$/i.test(
+    /\/(?:Contracts|ContractsCitizen|ContractsCitizenSections|Organi)-[^/]+\.js$/i.test(
       pathname,
     )
   ) {
     return 0;
   }
   if (
-    /\/(?:contractsSourceManifest|institutionalStaticData)-[^/]+\.js$/i.test(
+    /\/(?:contractCitizenSignals|contractDossier|institutionalStaticData)-[^/]+\.js$/i.test(
       pathname,
     )
   ) {
@@ -399,6 +446,7 @@ async function fetchBundleText(publicUrl, scriptPaths) {
   const queued = new Set(queue);
   const fetched = new Set();
   const bundleParts = [];
+
   while (queue.length > 0 && fetched.size < 64) {
     queue.sort(
       (left, right) => bundleAssetPriority(left) - bundleAssetPriority(right),
@@ -478,9 +526,8 @@ function assertLiveContractsData({
     !Number.isInteger(anacStatus.coverage?.structuredMatches) ||
     anacStatus.coverage.directCigLinks < 0 ||
     anacStatus.coverage.structuredMatches < 0 ||
-    anacStatus.coverage?.directCigLinks > contracts.length ||
-    anacStatus.coverage?.structuredMatches >
-      anacStatus.coverage?.directCigLinks ||
+    anacStatus.coverage.directCigLinks > contracts.length ||
+    anacStatus.coverage.structuredMatches > anacStatus.coverage.directCigLinks ||
     staticDataset?.anacConnection?.schemaVersion !== "anac-bdncp-connection.v1"
   ) {
     throw new Error(
@@ -513,12 +560,16 @@ function assertLiveContractsData({
   }
 }
 
-async function checkPublicContractsPage(publicUrl, expectedCommit = null) {
+async function checkPublicContractsPage(
+  publicUrl,
+  { expectedCommit = null, allowNewerMain = false } = {},
+) {
   const rootUrl = routeUrl(publicUrl, "/");
   const contractsUrl = routeUrl(publicUrl, "/contratti");
   const organiUrl = routeUrl(publicUrl, "/organi");
   const provenanceUrl = routeUrl(publicUrl, DEPLOY_PROVENANCE_PATH);
   const sitemapUrl = routeUrl(publicUrl, SITEMAP_PATH);
+
   const root = await fetchText(rootUrl, "Root route");
   const contracts = await fetchText(contractsUrl, "Contracts route");
   const organi = await fetchText(organiUrl, "Organi route");
@@ -554,7 +605,10 @@ async function checkPublicContractsPage(publicUrl, expectedCommit = null) {
   assertPublicText(root.text, "Root route");
   assertPublicText(contracts.text, "Contracts route");
   assertPublicText(organi.text, "Organi route");
-  assertDeployProvenance(provenance.value, expectedCommit);
+  const commitRelation = await assertDeployProvenance(provenance.value, {
+    expectedCommit,
+    allowNewerMain,
+  });
   assertLiveContractsData({
     contracts: contractsApi.value,
     feedStatus: contractsFeedStatus.value,
@@ -595,6 +649,7 @@ async function checkPublicContractsPage(publicUrl, expectedCommit = null) {
     );
     assertContentType(result, "application/json", `API probe ${path}`);
   }
+
   if (
     typeof provenance.value.createdAt !== "string" ||
     Number.isNaN(Date.parse(provenance.value.createdAt))
@@ -603,6 +658,7 @@ async function checkPublicContractsPage(publicUrl, expectedCommit = null) {
       `Deploy provenance has invalid createdAt: ${String(provenance.value.createdAt)}`,
     );
   }
+
   for (const path of FEED_CONTENT_TYPE_PROBES) {
     const result = await fetchProbe(
       routeUrl(publicUrl, path),
@@ -619,14 +675,12 @@ async function checkPublicContractsPage(publicUrl, expectedCommit = null) {
     `Verified ${API_CONTENT_TYPE_PROBES.length} API and ${FEED_CONTENT_TYPE_PROBES.length} feed Content-Type contract(s).`,
   );
 
-  const scriptPaths = extractScriptPaths(
-    root.text,
-    contracts.text,
-    organi.text,
-  );
+  const scriptPaths = extractScriptPaths(root.text, contracts.text, organi.text);
   const bundle = await fetchBundleText(publicUrl, scriptPaths);
   console.log(`Verified ${bundle.assetCount} public JavaScript asset(s).`);
   assertBundleMarkers(bundle.text);
+
+  return commitRelation;
 }
 
 async function main() {
@@ -638,8 +692,15 @@ async function main() {
       console.log(
         `Public contracts smoke attempt ${attempt}/${options.attempts}`,
       );
-      await checkPublicContractsPage(options.publicUrl, options.expectedCommit);
-      console.log("Public contracts smoke passed.");
+      const commitRelation = await checkPublicContractsPage(options.publicUrl, {
+        expectedCommit: options.expectedCommit,
+        allowNewerMain: options.allowNewerMain,
+      });
+      console.log(
+        commitRelation.mode === "superseded"
+          ? `Public contracts smoke passed on verified newer main commit ${commitRelation.observedCommit}.`
+          : "Public contracts smoke passed.",
+      );
       return;
     } catch (error) {
       lastError = error;

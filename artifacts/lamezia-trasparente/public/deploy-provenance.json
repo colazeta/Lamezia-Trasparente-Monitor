@@ -7,20 +7,14 @@
   "requiredRoute": "/contratti",
   "requiredRoutes": ["/contratti", "/organi", "/amministratori"],
   "requiredMarkers": [
-    "Contratti protagonisti",
-    "La storia documentale del contratto",
-    "Attiva · perimetro corrente",
-    "Albo Pretorio corrente",
-    "Filtro pubblico e privacy",
-    "Stato dei fascicoli contrattuali",
-    "Copertura fasi",
-    "Copertura stato fasi dei fascicoli",
-    "Collegamento attivo",
-    "Dataset ANAC",
+    "contracts-search",
+    "contracts-list",
+    "Contratti nel perimetro",
+    "I dati mancanti non sono trattati come zero",
+    "organi-list",
     "Organi del Comune",
     "Componenti correnti",
-    "Righe storiche",
-    "Commissioni Consiliari"
+    "Righe storiche"
   ],
   "createdAt": "generated-at-build-time"
 }
