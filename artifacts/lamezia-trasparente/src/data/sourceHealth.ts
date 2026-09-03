@@ -1,10 +1,12 @@
 import { ALBO_OPERATIONAL_STATUS } from "./alboStatus";
 import atlanteMetadata from "../../../../data/processed/territorio/istat_sezioni_censimento_lamezia.metadata.json";
+import confiscatedAssets from "../../../../data/curated/territorio/beni_confiscati_lamezia_pilot.json";
 import airTrafficMetadata from "./generated/lameziaAirTrafficMonthly.metadata.json";
 import climateMetadata from "./generated/lameziaClimateDaily.metadata.json";
 import demographicTrend from "./generated/lameziaDemographicTrend.json";
 import familiesChildren from "./generated/lameziaFamiliesChildren.json";
 import foreignResidents from "./generated/lameziaForeignResidentsAgeSex.json";
+import pnrrProjects from "./generated/lameziaPnrrProjects.json";
 import householdComposition from "../../../api-server/src/data/lameziaHouseholdComposition2023.json";
 import { OPEN_DATA_THEME_LIBRARY } from "./opendataThemeCategories";
 
@@ -248,6 +250,8 @@ function buildOpenDataHealthItem({
   metricLabel,
   cautionNote,
   evidenceValues,
+  evidenceLabel =
+    "Snapshot JSON generato dalla pipeline locale con metadati di fonte separati e versionati.",
 }: {
   id: string;
   datasetId: string;
@@ -261,6 +265,7 @@ function buildOpenDataHealthItem({
   metricLabel: string;
   cautionNote: string;
   evidenceValues: unknown[];
+  evidenceLabel?: string;
 }): SourceHealthItem {
   const traceability = evidenceCompleteness(evidenceValues);
   const assessment = assessSourceHealth({
@@ -282,8 +287,7 @@ function buildOpenDataHealthItem({
     traceabilityScore: traceability,
     freshnessScore: freshnessScore(checkedAt, expectedDays),
     metricLabel,
-    evidenceLabel:
-      "Snapshot JSON generato dalla pipeline locale con metadati di fonte separati e versionati.",
+    evidenceLabel,
     expectedRefresh,
     route: `/opendata?dataset=${datasetId}`,
     sourceUrl,
@@ -422,6 +426,56 @@ const openDataItems: SourceHealthItem[] = [
       foreignResidents.metadata.caveat,
     ],
   }),
+  buildOpenDataHealthItem({
+    id: "opendata-pnrr-progetti",
+    datasetId: "lamezia-pnrr-projects",
+    name: "Open Data — progetti PNRR",
+    checkedAt: pnrrProjects.metadata.materialized_at,
+    updatedAt: pnrrProjects.metadata.materialized_at,
+    sourceUrl: pnrrProjects.metadata.source_url,
+    expectedRefresh: pnrrProjects.metadata.update_policy,
+    expectedDays: 2,
+    priority: "alta",
+    metricLabel: `${pnrrProjects.coverage.projects} progetti; ${pnrrProjects.coverage.projects_with_cup} con CUP; ${pnrrProjects.coverage.projects_with_opencup} arricchiti OpenCUP`,
+    cautionNote: `${pnrrProjects.metadata.coverage_note} ${pnrrProjects.metadata.caveat}`,
+    evidenceLabel:
+      "Feed JSON materializzato dalla sezione PNRR comunale, arricchito con OpenCUP e riconciliato agli atti Albo solo tramite CUP condiviso.",
+    evidenceValues: [
+      pnrrProjects.metadata.source_url,
+      pnrrProjects.metadata.materialized_at,
+      pnrrProjects.metadata.source_index_hash,
+      pnrrProjects.metadata.opencup_source_hash,
+      pnrrProjects.metadata.update_policy,
+      pnrrProjects.coverage.projects,
+      pnrrProjects.coverage.projects_with_cup,
+      pnrrProjects.coverage.projects_with_opencup,
+      pnrrProjects.metadata.coverage_note,
+      pnrrProjects.metadata.caveat,
+    ],
+  }),
+  buildOpenDataHealthItem({
+    id: "opendata-beni-confiscati-documentati",
+    datasetId: "beni-confiscati-lamezia-documentati",
+    name: "Open Data — beni confiscati documentati",
+    checkedAt: `${confiscatedAssets.last_verified_at}T00:00:00.000Z`,
+    updatedAt: `${confiscatedAssets.last_verified_at}T00:00:00.000Z`,
+    sourceUrl: confiscatedAssets.methodology_sources[0].url,
+    expectedRefresh:
+      "Verifica mensile del perimetro ANBSC e delle fonti pubbliche usate per documentare riuso, indirizzi e collegamenti puntuali.",
+    expectedDays: 35,
+    priority: "alta",
+    metricLabel: `${confiscatedAssets.records.length} siti di riuso documentati`,
+    cautionNote: `${confiscatedAssets.publication_policy.summary} ${confiscatedAssets.publication_policy.anbsc_rule}`,
+    evidenceLabel:
+      "Registro documentale curato con fonti istituzionali e altre fonti pubbliche: coordinate e identificativi ANBSC sono pubblicati solo quando la verifica puntuale lo consente.",
+    evidenceValues: [
+      confiscatedAssets.last_verified_at,
+      confiscatedAssets.methodology_sources,
+      confiscatedAssets.records,
+      confiscatedAssets.publication_policy.coordinate_rule,
+      confiscatedAssets.publication_policy.anbsc_rule,
+    ],
+  }),
 ];
 
 const alboAssessment = assessSourceHealth({
@@ -468,6 +522,7 @@ const sources: SourceHealthItem[] = [
   },
   {
     id: "atlante-istat-sezioni",
+    openDataDatasetId: "istat-census-sections-lamezia-2023",
     name: "Atlante territoriale — sezioni censuarie ISTAT",
     sourceType: "dataset",
     priority: "alta",

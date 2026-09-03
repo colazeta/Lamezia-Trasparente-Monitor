@@ -59,7 +59,7 @@ describe("Albo Pretorio source status surface", () => {
     expect(coverage).not.toBeNull();
 
     const panel = within(coverage as HTMLElement);
-    expect(panel.getByText(/6 dei 6 dataset pubblicati/i)).toBeInTheDocument();
+    expect(panel.getByText(/9 dei 9 dataset pubblicati/i)).toBeInTheDocument();
     expect(panel.getByRole("progressbar")).toHaveAttribute(
       "aria-valuenow",
       "100",
