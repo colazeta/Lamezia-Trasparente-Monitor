@@ -2,10 +2,10 @@ import { describe, expect, it } from "vitest";
 
 import {
   CANONICAL_PROPOSAL_ACTIONS,
+  PUBLIC_PROPOSALS,
   getCanonicalProposalPresentation,
   getCanonicalProposalPresentationIds,
-} from "./proposalCanonicalPresentation";
-import { PUBLIC_PROPOSALS } from "./propostePubbliche";
+} from "./propostePubbliche";
 
 describe("canonical proposal presentation", () => {
   it("covers every published proposal and has no orphan entries", () => {
