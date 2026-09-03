@@ -5,7 +5,6 @@ import {
 } from "@workspace/api-client-react";
 import {
   ArrowRight,
-  ArrowUpRight,
   Calendar,
   CalendarClock,
   CheckCircle2,
@@ -15,7 +14,6 @@ import {
   Megaphone,
   Newspaper,
   RefreshCw,
-  ShieldAlert,
   Users,
   Video,
 } from "lucide-react";
@@ -133,27 +131,21 @@ function buildPulseItems(): PulseItem[] {
 
 const gateways = [
   {
-    title: "Consiglio e Commissioni",
-    description:
-      "Convocazioni, date, ordini del giorno e documenti collegati alle fonti disponibili.",
+    title: "Sedute e ordini del giorno",
+    description: "Consiglio e commissioni, con documenti e stato delle fonti.",
     href: "/convocazioni",
-    cta: "Segui i lavori",
     icon: Users,
   },
   {
-    title: "Dove vanno i soldi",
-    description:
-      "Contratti, affidamenti, importi e progetti PNRR collegati alle fonti disponibili.",
+    title: "Contratti pubblici",
+    description: "Affidamenti, CIG, importi e operatori dalle fonti disponibili.",
     href: "/contratti",
-    cta: "Segui la spesa pubblica",
     icon: FileText,
   },
   {
-    title: "Come partecipare",
-    description:
-      "Accesso civico, proposte e segnalazioni per chiedere dati o contribuire con elementi verificabili.",
+    title: "Accesso civico",
+    description: "Richiedi dati e documenti pubblici e segui il percorso della richiesta.",
     href: "/accesso-civico",
-    cta: "Scopri gli strumenti civici",
     icon: Megaphone,
   },
 ] as const;
@@ -180,36 +172,29 @@ export function Home() {
     <div className="flex flex-col">
       <PageMeta
         title="Lamezia Trasparente — atti, spesa e partecipazione civica"
-        description="Capire cosa decide, spende e realizza il Comune di Lamezia Terme attraverso atti, sedute, contratti e progetti collegati alle fonti pubbliche."
+        description="Atti, sedute, contratti e progetti del Comune di Lamezia Terme collegati alle fonti pubbliche, con stato e limiti dei dati espliciti."
         path="/"
       />
 
       <section
         data-tour="home-hero"
-        className="relative overflow-hidden bg-sidebar text-sidebar-foreground"
+        className="bg-sidebar text-sidebar-foreground"
       >
-        <div className="absolute inset-0 pointer-events-none civic-hero-grid opacity-40" />
-        <div className="container relative z-10 mx-auto max-w-6xl px-4 py-14 sm:py-18 md:px-6 md:py-24">
+        <div className="container mx-auto max-w-6xl px-4 py-14 md:px-6 md:py-20">
           <div className="max-w-4xl">
-            <div className="eyebrow inline-flex rounded-md border border-brand/40 bg-brand/10 px-3 py-1.5 text-brand">
-              <ShieldAlert className="h-3.5 w-3.5" aria-hidden="true" />
-              Lamezia Terme · dati pubblici
-            </div>
-
-            <h1 className="mt-6 max-w-4xl font-display text-4xl font-bold leading-[1.03] text-white sm:text-5xl md:text-6xl lg:text-7xl">
+            <h1 className="max-w-4xl font-display text-4xl font-bold leading-[1.03] text-white sm:text-5xl md:text-6xl lg:text-7xl">
               Capire cosa decide, spende e realizza il Comune.
             </h1>
 
             <p className="mt-6 max-w-3xl text-base leading-7 text-sidebar-foreground/80 sm:text-lg md:text-xl">
-              Atti, sedute, contratti e progetti pubblici collegati alle fonti,
-              in un solo posto. Il monitor aiuta a capire cosa cambia e rende
-              visibili anche limiti e stato dei dati.
+              Atti, sedute, contratti e progetti collegati alle fonti pubbliche,
+              con stato e limiti dei dati espliciti.
             </p>
 
             <div className="mt-8 flex w-full flex-col gap-3 sm:w-auto sm:flex-row">
               <Button asChild variant="brand" size="lg" className="font-bold">
                 <a href="#oggi">
-                  Vedi cosa c&apos;è di nuovo
+                  Ultimi aggiornamenti
                   <ArrowRight className="ml-1 h-4 w-4" aria-hidden="true" />
                 </a>
               </Button>
@@ -219,51 +204,35 @@ export function Home() {
                 size="lg"
                 className="border-white/25 bg-white/5 font-bold text-white hover:bg-white/10"
               >
-                <Link href="/contratti">Segui la spesa pubblica</Link>
+                <Link href="/contratti">Contratti pubblici</Link>
               </Button>
-            </div>
-
-            <div className="mt-6 flex flex-wrap gap-x-5 gap-y-2 text-sm text-sidebar-foreground/65">
-              <Link href="/metodologia" className="hover:text-white">
-                Come leggiamo i dati
-              </Link>
-              <Link href="/stato-monitoraggio" className="hover:text-white">
-                Stato delle fonti
-              </Link>
             </div>
           </div>
         </div>
       </section>
 
-      <section className="border-b border-border bg-background py-8 md:py-10">
+      <section className="border-b border-border bg-background py-7 md:py-8">
         <div className="container mx-auto px-4 md:px-6">
-          <div className="grid gap-4 md:grid-cols-3">
+          <div className="grid gap-3 md:grid-cols-3">
             {gateways.map((gateway) => {
               const Icon = gateway.icon;
               return (
                 <Link
                   key={gateway.title}
                   href={gateway.href}
-                  className="group rounded-xl border border-card-border bg-card p-5 shadow-[var(--shadow-card)] transition-colors hover:border-primary/35 hover:bg-primary/5 md:p-6"
+                  className="group rounded-xl border border-card-border bg-card p-4 shadow-[var(--shadow-card)] transition-colors hover:border-primary/35 hover:bg-primary/5 md:p-5"
                 >
-                  <div className="flex items-start gap-4">
+                  <div className="flex items-start gap-3">
                     <div className="rounded-lg bg-primary/10 p-2.5 text-primary">
                       <Icon className="h-5 w-5" aria-hidden="true" />
                     </div>
                     <div className="min-w-0">
-                      <h2 className="font-display text-xl font-bold tracking-tight">
+                      <h2 className="font-display text-lg font-bold tracking-tight">
                         {gateway.title}
                       </h2>
-                      <p className="mt-2 text-sm leading-6 text-muted-foreground">
+                      <p className="mt-1 text-sm leading-5 text-muted-foreground">
                         {gateway.description}
                       </p>
-                      <span className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-primary">
-                        {gateway.cta}
-                        <ArrowRight
-                          className="h-4 w-4 transition-transform group-hover:translate-x-0.5"
-                          aria-hidden="true"
-                        />
-                      </span>
                     </div>
                   </div>
                 </Link>
@@ -273,103 +242,82 @@ export function Home() {
         </div>
       </section>
 
-      <HomeInstitutionalSessions />
-
-      <section id="oggi" className="scroll-mt-24 bg-muted/25 py-14 md:py-20">
+      <section id="oggi" className="scroll-mt-24 bg-muted/25 py-12 md:py-16">
         <div className="container mx-auto px-4 md:px-6">
-          <div className="mb-8 max-w-3xl">
-            <span className="eyebrow text-primary">Il punto rapido</span>
-            <h2 className="mt-2 font-display text-3xl font-bold tracking-tight md:text-5xl">
-              Oggi a Lamezia
+          <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+            <h2 className="font-display text-3xl font-bold tracking-tight md:text-4xl">
+              Ultimi aggiornamenti dell&apos;Albo
             </h2>
-            <p className="mt-3 text-base leading-7 text-muted-foreground md:text-lg">
-              Cosa è cambiato nelle fonti collegate dall&apos;ultimo controllo e
-              quali appuntamenti pubblici risultano disponibili.
-            </p>
+            <Link
+              href="/albo"
+              className="text-sm font-semibold text-primary hover:underline"
+            >
+              Apri l&apos;Albo civico
+            </Link>
           </div>
 
-          <div className="grid gap-6">
-            <Card className="overflow-hidden">
-              <CardHeader className="border-b border-border bg-card py-4">
-                <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-                  <div>
-                    <p className="text-sm font-semibold text-foreground">
-                      Cosa è cambiato dall&apos;ultimo controllo
-                    </p>
-                    <p className="mt-1 text-xs leading-5 text-muted-foreground">
-                      Albo Pretorio · Ultimo controllo{" "}
-                      {formatCivicTime(ALBO_OPERATIONAL_STATUS.last_update)}
-                    </p>
+          <Card className="overflow-hidden">
+            <CardHeader className="border-b border-border bg-card py-4">
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                <p className="text-sm font-semibold text-foreground">
+                  Ultimo controllo{" "}
+                  {formatCivicTime(ALBO_OPERATIONAL_STATUS.last_update)}
+                </p>
+                <span className="inline-flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
+                  <RefreshCw className="h-3.5 w-3.5" aria-hidden="true" />
+                  Prossimo controllo{" "}
+                  {formatCivicTime(ALBO_OPERATIONAL_STATUS.next_scheduled_check)}
+                </span>
+              </div>
+
+              <div className="mt-3 grid grid-cols-3 gap-2">
+                <PulseCount label="Nuovi" value={pulseCounts.new} />
+                <PulseCount label="Aggiornati" value={pulseCounts.changed} />
+                <PulseCount
+                  label="Non più presenti"
+                  value={pulseCounts.removed}
+                />
+              </div>
+            </CardHeader>
+
+            <CardContent className="p-0">
+              <div className="divide-y divide-border">
+                {pulseItems.length > 0 ? (
+                  pulseItems.map((pulse) => (
+                    <AlboPulseRow
+                      key={`${pulse.kind}-${pulse.item.id}`}
+                      pulse={pulse}
+                    />
+                  ))
+                ) : (
+                  <div className="p-8 text-sm leading-6 text-muted-foreground">
+                    Non risultano record pubblici disponibili nello snapshot
+                    corrente.
                   </div>
-                  <Link
-                    href="/albo"
-                    className="shrink-0 text-sm font-semibold text-primary hover:underline"
-                  >
-                    Apri l&apos;Albo civico
-                  </Link>
-                </div>
+                )}
+              </div>
 
-                <div className="mt-3 grid grid-cols-3 gap-2">
-                  <PulseCount label="Nuovi" value={pulseCounts.new} />
-                  <PulseCount label="Aggiornati" value={pulseCounts.changed} />
-                  <PulseCount
-                    label="Non più presenti"
-                    value={pulseCounts.removed}
-                  />
-                </div>
-              </CardHeader>
-
-              <CardContent className="p-0">
-                <div className="divide-y divide-border">
-                  {pulseItems.length > 0 ? (
-                    pulseItems.map((pulse) => (
-                      <AlboPulseRow
-                        key={`${pulse.kind}-${pulse.item.id}`}
-                        pulse={pulse}
-                      />
-                    ))
-                  ) : (
-                    <div className="p-8 text-sm leading-6 text-muted-foreground">
-                      Non risultano record pubblici disponibili nello snapshot
-                      corrente.
-                    </div>
-                  )}
-                </div>
-
-                <div className="flex flex-col gap-1 border-t border-border bg-muted/25 px-4 py-3 text-xs text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
-                  <span>
-                    {hasDiff
-                      ? "Confronto effettuato sulla baseline pubblica precedente."
-                      : "Nessuna variazione rilevata: sono mostrati gli atti correnti più recenti."}
-                  </span>
-                  <span className="inline-flex items-center gap-1.5 font-medium">
-                    <RefreshCw className="h-3.5 w-3.5" aria-hidden="true" />
-                    Prossimo controllo{" "}
-                    {formatCivicTime(
-                      ALBO_OPERATIONAL_STATUS.next_scheduled_check,
-                    )}
-                  </span>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
+              <div className="border-t border-border bg-muted/25 px-4 py-3 text-xs text-muted-foreground">
+                {hasDiff
+                  ? "Confronto con la baseline pubblica precedente."
+                  : "Nessuna variazione rilevata: sono mostrati gli atti correnti più recenti."}
+              </div>
+            </CardContent>
+          </Card>
         </div>
       </section>
 
       <section className="border-y border-border bg-background py-10 md:py-12">
         <div className="container mx-auto px-4 md:px-6">
           <div className="mb-6 flex flex-col justify-between gap-3 md:flex-row md:items-end">
-            <div>
-              <span className="eyebrow text-primary">In numeri</span>
-              <h2 className="mt-2 font-display text-2xl font-bold tracking-tight md:text-3xl">
-                Cosa è già consultabile
-              </h2>
-            </div>
+            <h2 className="font-display text-2xl font-bold tracking-tight md:text-3xl">
+              Dati disponibili
+            </h2>
             <Link
               href="/stato-monitoraggio"
               className="text-sm font-semibold text-primary hover:underline"
             >
-              Verifica copertura e freschezza
+              Copertura e freschezza
             </Link>
           </div>
 
@@ -412,65 +360,38 @@ export function Home() {
         </div>
       </section>
 
-      <section className="bg-muted/20 py-14 md:py-20">
+      <HomeInstitutionalSessions />
+
+      <section className="bg-muted/20 py-12 md:py-16">
         <div className="container mx-auto px-4 md:px-6">
-          <div className="grid gap-8 lg:grid-cols-[0.85fr_1.15fr] lg:items-start">
+          <div className="grid gap-7 lg:grid-cols-[0.8fr_1.2fr] lg:items-start">
             <div className="max-w-xl">
-              <span className="eyebrow text-primary">Partecipazione</span>
-              <h2 className="mt-2 font-display text-3xl font-bold tracking-tight md:text-4xl">
-                Non solo leggere: puoi anche chiedere, proporre e correggere.
+              <h2 className="font-display text-3xl font-bold tracking-tight md:text-4xl">
+                Chiedi, proponi, segnala.
               </h2>
-              <p className="mt-4 text-base leading-7 text-muted-foreground">
-                Il progetto privilegia contributi documentati e verificabili. Le
-                segnalazioni non vengono trasformate automaticamente in fatti:
-                fonte, contesto e stato di verifica restano distinti.
+              <p className="mt-3 text-base leading-7 text-muted-foreground">
+                I contributi restano distinti dai fatti verificati: fonte,
+                contesto e stato di verifica sono sempre espliciti.
               </p>
             </div>
 
-            <div className="grid gap-4 sm:grid-cols-3">
+            <div className="grid gap-3 sm:grid-cols-3">
               <ParticipationCard
                 title="Chiedi un dato"
-                description="Usa l'accesso civico per richiedere documenti o informazioni pubbliche."
+                description="Richiedi documenti o informazioni pubbliche."
                 href="/accesso-civico"
               />
               <ParticipationCard
                 title="Proponi"
-                description="Consulta o suggerisci proposte civiche con fonte e stato espliciti."
+                description="Suggerisci una proposta civica documentata."
                 href="/proposte-civiche"
               />
               <ParticipationCard
                 title="Segnala"
-                description="Indica un dato, un atto o un elemento documentale che merita verifica."
+                description="Indica un dato o un atto da verificare."
                 href="/segnalazioni"
               />
             </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="bg-brand text-brand-foreground">
-        <div className="container mx-auto flex max-w-5xl flex-col gap-6 px-4 py-12 md:flex-row md:items-center md:justify-between md:px-6">
-          <div>
-            <h2 className="font-display text-2xl font-bold md:text-3xl">
-              Vuoi capire quanto è affidabile un dato?
-            </h2>
-            <p className="mt-2 max-w-2xl text-brand-foreground">
-              Ogni lettura va ricondotta alla fonte, alla data di aggiornamento
-              e ai limiti dichiarati. Il metodo è parte del prodotto, non una
-              nota a margine.
-            </p>
-          </div>
-          <div className="flex shrink-0 flex-col gap-2 sm:flex-row">
-            <Button asChild variant="secondary">
-              <Link href="/metodologia">Leggi la metodologia</Link>
-            </Button>
-            <Button
-              asChild
-              variant="outline"
-              className="border-brand-foreground/30 bg-transparent text-brand-foreground hover:bg-brand-foreground/10"
-            >
-              <Link href="/stato-monitoraggio">Stato delle fonti</Link>
-            </Button>
           </div>
         </div>
       </section>
@@ -490,41 +411,27 @@ export function HomeInstitutionalSessions() {
     <section
       id="consiglio-commissioni"
       aria-labelledby="consiglio-commissioni-title"
-      className="scroll-mt-24 border-b border-border bg-background py-14 md:py-20"
+      className="scroll-mt-24 border-b border-border bg-background py-12 md:py-16"
     >
-      <div className="container mx-auto grid gap-8 px-4 md:px-6 lg:grid-cols-[0.72fr_1.28fr] lg:items-start">
+      <div className="container mx-auto grid gap-7 px-4 md:px-6 lg:grid-cols-[0.72fr_1.28fr] lg:items-start">
         <div className="max-w-xl">
-          <span className="eyebrow text-primary">Lavori degli organi</span>
           <h2
             id="consiglio-commissioni-title"
-            className="mt-2 font-display text-3xl font-bold tracking-tight md:text-5xl"
+            className="font-display text-3xl font-bold tracking-tight md:text-4xl"
           >
             Segui Consiglio comunale e Commissioni
           </h2>
-          <p className="mt-4 text-base leading-7 text-muted-foreground md:text-lg">
-            Consulta convocazioni, date e ordini del giorno collegati alle fonti
-            istituzionali disponibili, insieme ad articoli, dirette e video
-            trovati e revisionati con una ricerca di contesto. Ogni scheda
-            distingue i dati verificati da quelli ancora da controllare.
+          <p className="mt-3 text-base leading-7 text-muted-foreground">
+            Convocazioni, date e ordini del giorno dalle fonti istituzionali
+            disponibili. Lo svolgimento viene indicato solo quando una fonte
+            istituzionale successiva lo conferma.
           </p>
 
-          <div className="mt-5 rounded-xl border border-primary/20 bg-primary/5 p-4 text-sm leading-6 text-muted-foreground">
-            <p className="font-semibold text-foreground">Copertura iniziale</p>
-            <p className="mt-1">
-              Sono mostrate le prime pubblicazioni revisionate. Lo svolgimento
-              viene indicato solo quando una fonte istituzionale successiva lo
-              conferma.
-            </p>
-          </div>
-
-          <div className="mt-6 flex flex-col gap-3 sm:flex-row lg:flex-col xl:flex-row">
+          <div className="mt-6">
             <Button asChild>
               <Link href="/convocazioni">
                 Apri l&apos;archivio delle sedute
               </Link>
-            </Button>
-            <Button asChild variant="outline">
-              <Link href="/metodologia">Fonti e limiti</Link>
             </Button>
           </div>
         </div>
@@ -841,13 +748,9 @@ function ParticipationCard({
       className="group rounded-xl border border-card-border bg-card p-5 shadow-[var(--shadow-card)] transition-colors hover:border-primary/35 hover:bg-primary/5"
     >
       <h3 className="font-display text-lg font-bold">{title}</h3>
-      <p className="mt-2 text-sm leading-6 text-muted-foreground">
+      <p className="mt-1 text-sm leading-5 text-muted-foreground">
         {description}
       </p>
-      <span className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-primary">
-        Apri
-        <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
-      </span>
     </Link>
   );
 }

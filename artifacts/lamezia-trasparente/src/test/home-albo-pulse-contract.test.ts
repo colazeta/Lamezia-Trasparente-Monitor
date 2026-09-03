@@ -18,7 +18,7 @@ describe("home daily civic pulse contract", () => {
     expect(home).toContain("ALBO_PUBLIC_DIFF_CHANGED_ITEMS");
     expect(home).toContain("ALBO_PUBLIC_DIFF_REMOVED_ITEMS");
     expect(home).toContain("ALBO_OPERATIONAL_STATUS");
-    expect(home).toContain("Cosa è cambiato dall&apos;ultimo controllo");
+    expect(home).toContain("Ultimi aggiornamenti dell&apos;Albo");
     expect(home).not.toContain("useGetRecentActivity");
   });
 
@@ -33,9 +33,9 @@ describe("home daily civic pulse contract", () => {
   it("gives council and commissions a clear sourced path from the homepage", () => {
     const home = readHome();
 
-    expect(home).toContain('title: "Consiglio e Commissioni"');
+    expect(home).toContain('title: "Sedute e ordini del giorno"');
     expect(home).toContain('href: "/convocazioni"');
     expect(home).toContain("<HomeInstitutionalSessions />");
-    expect(home).toContain("Copertura iniziale");
+    expect(home).toContain("Fonte: Albo Pretorio");
   });
 });

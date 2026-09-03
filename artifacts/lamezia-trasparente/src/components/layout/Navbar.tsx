@@ -9,7 +9,6 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {
@@ -76,19 +75,9 @@ export function Navbar() {
 
                   <DropdownMenuContent
                     align="start"
-                    className="w-[22rem] p-2"
+                    className="w-[18rem] p-1.5"
                     sideOffset={8}
                   >
-                    <div className="px-2 pb-2 pt-1">
-                      <p className="text-sm font-bold text-foreground">
-                        {group.label}
-                      </p>
-                      <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
-                        {group.description}
-                      </p>
-                    </div>
-                    <DropdownMenuSeparator />
-
                     {group.items.map((item) => {
                       const Icon = item.icon;
                       const itemActive = isActive(item.href);
@@ -98,26 +87,21 @@ export function Navbar() {
                             href={item.href}
                             aria-current={itemActive ? "page" : undefined}
                             className={cn(
-                              "flex cursor-pointer items-start gap-3 rounded-md px-2.5 py-2.5",
+                              "flex cursor-pointer items-center gap-2.5 rounded-md px-2.5 py-2",
                               itemActive && "bg-primary/10 text-primary",
                             )}
                           >
                             <Icon
                               className={cn(
-                                "mt-0.5 h-4 w-4 shrink-0",
+                                "h-4 w-4 shrink-0",
                                 itemActive
                                   ? "text-primary"
                                   : "text-muted-foreground",
                               )}
                               aria-hidden="true"
                             />
-                            <span className="min-w-0">
-                              <span className="block text-sm font-semibold leading-5">
-                                {item.label}
-                              </span>
-                              <span className="mt-0.5 block text-xs leading-relaxed text-muted-foreground">
-                                {item.description}
-                              </span>
+                            <span className="min-w-0 truncate text-sm font-semibold leading-5">
+                              {item.label}
                             </span>
                           </Link>
                         </DropdownMenuItem>
@@ -168,7 +152,7 @@ export function Navbar() {
                 aria-label="Cerca nel sito"
               >
                 <FileSearch className="h-4 w-4" aria-hidden="true" />
-                Cerca persone, dati o sezioni…
+                Cerca nel sito…
               </button>
 
               <Link
@@ -206,19 +190,12 @@ export function Navbar() {
                           )
                         }
                         className={cn(
-                          "flex w-full items-center justify-between gap-3 px-3.5 py-3 text-left transition-colors hover:bg-muted/40",
+                          "flex w-full items-center justify-between gap-3 px-3.5 py-3 text-left text-sm font-bold transition-colors hover:bg-muted/40",
                           active && "text-primary",
                         )}
                         aria-expanded={expanded}
                       >
-                        <span className="min-w-0">
-                          <span className="block text-sm font-bold">
-                            {group.label}
-                          </span>
-                          <span className="mt-0.5 block line-clamp-1 text-xs font-normal text-muted-foreground">
-                            {group.description}
-                          </span>
-                        </span>
+                        {group.label}
                         <ChevronDown
                           className={cn(
                             "h-4 w-4 shrink-0 text-muted-foreground transition-transform",
@@ -235,7 +212,6 @@ export function Navbar() {
                               key={item.href}
                               href={item.href}
                               label={item.label}
-                              description={item.description}
                               icon={item.icon}
                               active={isActive(item.href)}
                             />
@@ -257,13 +233,11 @@ export function Navbar() {
 function MobileSectionLink({
   href,
   label,
-  description,
   icon: Icon,
   active,
 }: {
   href: string;
   label: string;
-  description: string;
   icon: React.ElementType;
   active: boolean;
 }) {
@@ -272,22 +246,19 @@ function MobileSectionLink({
       href={href}
       aria-current={active ? "page" : undefined}
       className={cn(
-        "flex items-start gap-3 rounded-lg px-2.5 py-2.5 transition-colors hover:bg-muted/50",
+        "flex items-center gap-3 rounded-lg px-2.5 py-2.5 transition-colors hover:bg-muted/50",
         active ? "bg-primary/10 text-primary" : "text-foreground",
       )}
     >
       <Icon
         className={cn(
-          "mt-0.5 h-4 w-4 shrink-0",
+          "h-4 w-4 shrink-0",
           active ? "text-primary" : "text-muted-foreground",
         )}
         aria-hidden="true"
       />
-      <span className="min-w-0">
-        <span className="block text-sm font-semibold leading-5">{label}</span>
-        <span className="mt-0.5 block text-xs leading-relaxed text-muted-foreground">
-          {description}
-        </span>
+      <span className="min-w-0 truncate text-sm font-semibold leading-5">
+        {label}
       </span>
     </Link>
   );
