@@ -1,0 +1,88 @@
+@prefix lt: <https://lamezia-trasparente.pages.dev/ontology#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix epo: <http://data.europa.eu/a4g/ontology#> .
+@prefix qb: <http://purl.org/linked-data/cube#> .
+@prefix schema: <https://schema.org/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<https://lamezia-trasparente.pages.dev/ontology> a owl:Ontology ;
+  dct:title "LameziaTrasparente civic ontology"@en ,
+    "Ontologia civica di LameziaTrasparente"@it ;
+  dct:description "A deliberately small local ontology used to give stable semantics to LameziaTrasparente public data while reusing established W3C, EU and Italian public-sector vocabularies. External alignments are intentionally narrower than OWL equivalence unless explicitly stated."@en ;
+  dct:issued "2026-09-03"^^xsd:date ;
+  owl:versionInfo "1.0.0" ;
+  rdfs:seeAlso <https://www.w3.org/TR/vocab-dcat-3/> ,
+    <https://semiceu.github.io/DCAT-AP/releases/3.0.1/> ,
+    <https://www.w3.org/TR/prov-o/> ,
+    <https://www.w3.org/TR/skos-reference/> ,
+    <https://docs.ted.europa.eu/EPO/latest/index.html> ,
+    <https://w3id.org/italia/onto/Transparency/> .
+
+lt:SemanticProfile a owl:Class ;
+  rdfs:label "Semantic profile"@en , "Profilo semantico"@it .
+
+lt:AdministrativeAct a owl:Class ;
+  rdfs:label "Administrative act"@en , "Atto amministrativo"@it ;
+  rdfs:comment "A public-safe administrative record published by LameziaTrasparente. This class does not imply that every record is legislation or an act with general normative effect."@en ;
+  rdfs:subClassOf foaf:Document , prov:Entity .
+
+lt:AdministrativeActTextRepresentation a owl:Class ;
+  rdfs:label "Administrative act text representation"@en ,
+    "Rappresentazione testuale di atto amministrativo"@it ;
+  rdfs:comment "A public-safe textual representation derived from an administrative act, such as extracted Markdown."@en ;
+  rdfs:subClassOf prov:Entity .
+
+lt:isTextRepresentationOf a owl:ObjectProperty ;
+  rdfs:label "is text representation of"@en , "è rappresentazione testuale di"@it ;
+  rdfs:domain lt:AdministrativeActTextRepresentation ;
+  rdfs:range lt:AdministrativeAct .
+
+lt:PublicProcurementRecord a owl:Class ;
+  rdfs:label "Public procurement record"@en , "Record di contratto pubblico"@it ;
+  rdfs:comment "A public-safe record describing a procurement contract or related procurement object. It is not declared equivalent to epo:Contract because source records can expose only part of the legal procurement lifecycle."@en ;
+  rdfs:subClassOf prov:Entity .
+
+lt:describesContract a owl:ObjectProperty ;
+  rdfs:label "describes contract"@en , "descrive contratto"@it ;
+  rdfs:domain lt:PublicProcurementRecord ;
+  rdfs:range epo:Contract .
+
+lt:CivicTheme a owl:Class ;
+  rdfs:label "Civic monitoring theme"@en , "Tema di monitoraggio civico"@it ;
+  rdfs:comment "A concept used to classify and organise civic monitoring content. Public theme taxonomies should be published as SKOS concept schemes rather than as free-text labels."@en ;
+  rdfs:subClassOf skos:Concept .
+
+lt:PerformanceIndicator a owl:Class ;
+  rdfs:label "Performance indicator"@en , "Indicatore di performance"@it ;
+  rdfs:comment "A defined municipal performance concept whose time-specific values can be represented as RDF Data Cube observations."@en ;
+  rdfs:subClassOf skos:Concept .
+
+lt:hasObservation a owl:ObjectProperty ;
+  rdfs:label "has observation"@en , "ha osservazione"@it ;
+  rdfs:domain lt:PerformanceIndicator ;
+  rdfs:range qb:Observation .
+
+lt:PnrrProject a owl:Class ;
+  rdfs:label "PNRR project"@en , "Progetto PNRR"@it ;
+  rdfs:comment "A project financed or tracked within the Italian National Recovery and Resilience Plan. Procurement semantics are attached only when a source-backed procurement relation exists."@en ;
+  rdfs:subClassOf schema:Project , prov:Entity .
+
+lt:catalogueConformanceTarget a owl:ObjectProperty ;
+  rdfs:label "catalogue conformance target"@en ;
+  rdfs:domain lt:SemanticProfile ;
+  rdfs:range rdfs:Resource .
+
+lt:procurementAlignment a owl:ObjectProperty ;
+  rdfs:label "procurement alignment"@en ;
+  rdfs:domain lt:SemanticProfile ;
+  rdfs:range rdfs:Resource .
+
+lt:italianTransparencyReference a owl:ObjectProperty ;
+  rdfs:label "Italian transparency ontology reference"@en ;
+  rdfs:domain lt:SemanticProfile ;
+  rdfs:range rdfs:Resource .
