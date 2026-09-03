@@ -51,6 +51,27 @@ const AEROPORTO_LAMEZIA: ProposalGeography = {
     "Le coordinate ENAC identificano il riferimento geografico del sedime aeroportuale e non un terminale o un singolo manufatto. Per questo il punto è qualificato come rappresentativo dell'area aeroportuale. Le misure proposte includono anche connessioni ferroviarie e territoriali di scala regionale.",
 };
 
+const QUARTIERE_BELLA: ProposalGeography = {
+  label: "Quartiere Bella, con riferimento a via Lazio",
+  scope: "area",
+  areas: ["nicastro"],
+  points: [
+    {
+      id: "quartiere-bella-via-lazio",
+      label: "Via Lazio, quartiere Bella — punto stradale rappresentativo",
+      latitude: 38.97358,
+      longitude: 16.30704,
+      area: "nicastro",
+      precision: "street_approximate",
+      sourceLabel: "Impresa Italia — Via Lazio 76, Lamezia Terme",
+      sourceUrl:
+        "https://www.impresaitalia.info/kk03796787/careri-rosa-angela/lamezia-terme.aspx",
+    },
+  ],
+  note:
+    "Il punto è un riferimento verificabile lungo via Lazio, indicata dalla fonte della proposta come principale arteria del quartiere; non delimita il quartiere Bella e non localizza ogni intervento richiesto. Il tag Nicastro è usato come classificazione territoriale del quartiere, distinta dalla precisione della coordinata.",
+};
+
 export const SCOUTED_PROPOSAL_GEOGRAPHY: Record<string, ProposalGeography> = {
   "emodinamica-h24-vescio-2026": GIOVANNI_PAOLO_II,
   "emodinamica-h24-nucifero-2026": GIOVANNI_PAOLO_II,
@@ -60,4 +81,6 @@ export const SCOUTED_PROPOSAL_GEOGRAPHY: Record<string, ProposalGeography> = {
   "ospedale-organici-continuita-chirurgica-pd-2026": GIOVANNI_PAOLO_II,
   "prevenzione-maltempo-manutenzione-de-sensi-2026": LAMEZIA_CITYWIDE,
   "aeroporto-intermodalita-rilancio-taverna-2026": AEROPORTO_LAMEZIA,
+  "quartiere-bella-manutenzione-masi-2026": QUARTIERE_BELLA,
+  "quartiere-bella-pulizia-mtl-2026": QUARTIERE_BELLA,
 };
