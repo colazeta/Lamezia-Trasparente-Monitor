@@ -14,7 +14,7 @@ import { getInstitutionalProposalEvents } from "@/data/proposalArchiveTimeline";
 import {
   CANONICAL_PROPOSAL_ACTION_LABELS,
   getCanonicalProposalPresentation,
-} from "@/data/proposalCanonicalPresentation";
+} from "@/data/propostePubbliche";
 import {
   PROPOSAL_GEO_AREA_LABELS,
   PROPOSAL_GEO_PRECISION_LABELS,

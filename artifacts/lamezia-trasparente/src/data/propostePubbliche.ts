@@ -1,6 +1,7 @@
 import * as core from "./propostePubblicheCore";
 import { applyScoutingUpdates } from "./proposalScoutingUpdates";
 import { SCOUTED_PUBLIC_PROPOSALS } from "./propostePubblicheScouting";
+import { SCOUTED_PUBLIC_PROPOSALS_20260903 } from "./propostePubblicheScouting20260903";
 
 export type {
   ProposalPromoterType,
@@ -37,10 +38,12 @@ export type {
 export {
   CANONICAL_PROPOSAL_ACTIONS,
   CANONICAL_PROPOSAL_ACTION_LABELS,
+} from "./proposalCanonicalPresentation";
+export {
   getCanonicalProposalPresentation,
   getCanonicalProposalPresentationIds,
   hasCanonicalProposalPresentation,
-} from "./proposalCanonicalPresentation";
+} from "./proposalCanonicalPresentationArchive";
 
 export type {
   LtSemanticExtensionId,
@@ -115,6 +118,7 @@ const UPDATED_CORE_PROPOSALS = core.PUBLIC_PROPOSALS.map(applyScoutingUpdates);
 export const PUBLIC_PROPOSALS = [
   ...UPDATED_CORE_PROPOSALS,
   ...SCOUTED_PUBLIC_PROPOSALS,
+  ...SCOUTED_PUBLIC_PROPOSALS_20260903,
 ] as const satisfies readonly core.PublicProposal[];
 
 export function getProposalThemes(

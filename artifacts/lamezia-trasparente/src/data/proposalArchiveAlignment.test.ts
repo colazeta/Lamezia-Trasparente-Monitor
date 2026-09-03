@@ -1,6 +1,5 @@
 import { describe, expect, it } from "vitest";
 
-import { getCanonicalProposalPresentationIds } from "./proposalCanonicalPresentation";
 import { PROPOSAL_GEOGRAPHY, getProposalGeography } from "./proposalGeography";
 import { getProposalInstitutionalCompetence } from "./proposalInstitutionalCompetence";
 import { getProposalInstitutionalState } from "./proposalInstitutionalState";
@@ -8,7 +7,10 @@ import {
   getMappedProposalThemes,
   getProposalPrimaryPaSubject,
 } from "./proposalPaSemanticProfile";
-import { PUBLIC_PROPOSALS } from "./propostePubbliche";
+import {
+  PUBLIC_PROPOSALS,
+  getCanonicalProposalPresentationIds,
+} from "./propostePubbliche";
 
 describe("civic proposal archive end-to-end alignment", () => {
   it("keeps the same published proposal set across canonical and geography layers", () => {
