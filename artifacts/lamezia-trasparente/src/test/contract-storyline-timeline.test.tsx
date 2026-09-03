@@ -68,16 +68,15 @@ describe("ContractTimeline", () => {
 
     expect(
       screen.getByRole("heading", {
-        name: "La storia documentale del contratto",
+        name: "La storia del contratto, atto per atto",
       }),
     ).toBeInTheDocument();
-    expect(screen.getByText("61 giorni")).toBeInTheDocument();
-    expect(
-      screen.getByText("Fasi presenti nella cronistoria"),
-    ).toBeInTheDocument();
+    expect(screen.getByText("Atti collegati")).toBeInTheDocument();
+    expect(screen.getByText("Primo atto")).toBeInTheDocument();
+    expect(screen.getByText("Ultimo atto")).toBeInTheDocument();
 
     const list = screen.getByRole("list", {
-      name: "Cronologia documentale di Manutenzione scuola comunale",
+      name: "Cronologia di Manutenzione scuola comunale",
     });
     const items = within(list).getAllByTestId("timeline-event");
 
@@ -87,7 +86,7 @@ describe("ContractTimeline", () => {
     expect(items[2]).toHaveTextContent(
       "Liquidazione del primo stato di avanzamento",
     );
-    expect(items[1]).toHaveTextContent("Atto reperibile");
+    expect(items[1]).toHaveTextContent("Documento disponibile");
   });
 
   it("states the documentary limitation when no event is linked", () => {
@@ -107,7 +106,7 @@ describe("ContractTimeline", () => {
 
     expect(screen.getByText("Nessun atto collegato")).toBeInTheDocument();
     expect(
-      screen.getByText(/limite della documentazione disponibile/i),
+      screen.getByText(/questo limite documentale non è una valutazione/i),
     ).toBeInTheDocument();
     expect(screen.queryByText("Atti collegati")).not.toBeInTheDocument();
   });
