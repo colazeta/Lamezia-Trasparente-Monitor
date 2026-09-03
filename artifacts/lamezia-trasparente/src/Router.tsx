@@ -41,6 +41,14 @@ const MonitoraggioDetail = lazyNamed(() => import("./pages/MonitoraggioDetail"),
 const MonitoraggioNuovo = lazyNamed(() => import("./pages/MonitoraggioNuovo"), "MonitoraggioNuovo");
 const Promessometro = lazyNamed(() => import("./pages/Promessometro"), "Promessometro");
 const PropostePubbliche = lazyNamed(() => import("./pages/PropostePubbliche"), "PropostePubbliche");
+const InterventiEvidence = lazyNamed(
+  () => import("./pages/InterventiEvidence"),
+  "InterventiEvidence",
+);
+const InterventoEvidenceDetail = lazyNamed(
+  () => import("./pages/InterventoEvidenceDetail"),
+  "InterventoEvidenceDetail",
+);
 const MacchinaComunale = lazyNamed(() => import("./pages/MacchinaComunale"), "MacchinaComunale");
 const Legalita = lazyNamed(() => import("./pages/Legalita"), "Legalita");
 const TrameFestival = lazyNamed(() => import("./pages/TrameFestival"), "TrameFestival");
@@ -89,7 +97,7 @@ function RedazioneRoute() {
   );
 }
 
-// Legacy /admin/* â†’ redirect to /redazione
+// Legacy /admin/* → redirect to /redazione
 import { Redirect } from "wouter";
 
 function AdminRedirect() {
@@ -136,7 +144,7 @@ function PublicRouteWithMeta({
 export function Router() {
   return (
     <Switch>
-      {/* /redazione â€” no MainLayout (has its own full layout) */}
+      {/* /redazione — no MainLayout (has its own full layout) */}
       <Route path="/redazione" component={RedazioneRoute} />
       <Route path="/redazione/*" component={RedazioneRoute} />
 
@@ -144,7 +152,7 @@ export function Router() {
       <Route path="/admin" component={AdminRedirect} />
       <Route path="/admin/*" component={AdminRedirect} />
 
-      {/* Public pages â€” wrapped in MainLayout */}
+      {/* Public pages — wrapped in MainLayout */}
       <Route>
         <PublicErrorBoundary>
           <MainLayout>
@@ -197,7 +205,7 @@ export function Router() {
                 path="/monitoraggio"
                 component={Monitoraggio}
                 title="Monitor civico"
-                description="Hub documentale che collega criticitÃ  pubbliche, programma sotto verifica, atti, PNRR, incarichi, accesso civico e legalitÃ  senza formulare accuse autonome."
+                description="Hub documentale che collega criticità pubbliche, programma sotto verifica, atti, PNRR, incarichi, accesso civico e legalità senza formulare accuse autonome."
               />
               <PublicRouteWithMeta
                 path="/monitoraggio/nuovo"
@@ -217,6 +225,16 @@ export function Router() {
                 title="Proposte civiche"
                 description="Archivio documentale e neutro delle proposte civiche di valore pubblico censite come memoria verificabile."
               />
+              <PublicRouteWithMeta
+                path="/interventi-locali"
+                component={InterventiEvidence}
+                title="Interventi locali basati sull'evidenza"
+                description="Archivio di politiche e pratiche adottate da enti locali e accompagnate da valutazioni empiriche, con risultati, limiti e trasferibilità potenziale a Lamezia Terme."
+              />
+              <Route
+                path="/interventi-locali/:id"
+                component={InterventoEvidenceDetail}
+              />
               <Route
                 path="/archivio-proposte"
                 component={ProposteLegacyRedirect}
@@ -225,14 +243,14 @@ export function Router() {
                 path="/macchina-comunale"
                 component={MacchinaComunale}
                 title="Macchina comunale"
-                description="Modulo prudente sulla capacitÃ  amministrativa, organico, scoperture e stato delle fonti, senza valutazioni individuali."
+                description="Modulo prudente sulla capacità amministrativa, organico, scoperture e stato delle fonti, senza valutazioni individuali."
               />
               <Route path="/monitoraggio/:id" component={MonitoraggioDetail} />
               <PublicRouteWithMeta
                 path="/legalita/timeline"
                 component={LegalitaTimelineRedirect}
-                title="Timeline legalitÃ  e memoria civica"
-                description="Struttura pubblica per eventi documentati su legalitÃ , antimafia e memoria istituzionale, con fonti, status e cautele esplicite."
+                title="Timeline legalità e memoria civica"
+                description="Struttura pubblica per eventi documentati su legalità, antimafia e memoria istituzionale, con fonti, status e cautele esplicite."
               />
               <PublicRouteWithMeta
                 path="/legalita/trame-festival"
@@ -243,8 +261,8 @@ export function Router() {
               <PublicRouteWithMeta
                 path="/legalita"
                 component={Legalita}
-                title="LegalitÃ  e beni confiscati"
-                description="Percorsi informativi su legalitÃ , riuso civico e fonti pubbliche, con linguaggio prudente e non accusatorio."
+                title="Legalità e beni confiscati"
+                description="Percorsi informativi su legalità, riuso civico e fonti pubbliche, con linguaggio prudente e non accusatorio."
               />
               <PublicRouteWithMeta
                 path="/delibere"
@@ -294,7 +312,7 @@ export function Router() {
                 path="/feeds"
                 component={Feeds}
                 title="Feed e aggiornamenti"
-                description="Canali di aggiornamento per seguire pubblicazioni e novitÃ  del monitoraggio civico in modo trasparente."
+                description="Canali di aggiornamento per seguire pubblicazioni e novità del monitoraggio civico in modo trasparente."
               />
               <PublicRouteWithMeta
                 path="/sviluppatori"
@@ -325,14 +343,14 @@ export function Router() {
               <PublicRouteWithMeta
                 path="/criticita-pubbliche"
                 component={Reports}
-                title="Registro delle criticitÃ  pubbliche"
+                title="Registro delle criticità pubbliche"
                 description="Registro civico per distinguere segnalazioni, fonti, atti, risposte istituzionali e dati mancanti senza presentare accuse come fatti."
               />
               <PublicRouteWithMeta
                 path="/segnalazioni"
                 component={Reports}
-                title="Segnalazioni e criticitÃ  pubbliche"
-                description="Area unica per inviare segnalazioni civiche e consultarle come criticitÃ  pubbliche da verificare, non accuse."
+                title="Segnalazioni e criticità pubbliche"
+                description="Area unica per inviare segnalazioni civiche e consultarle come criticità pubbliche da verificare, non accuse."
               />
               <PublicRouteWithMeta
                 path="/statistiche"
@@ -369,13 +387,13 @@ export function Router() {
                 path="/note-legali"
                 component={NoteLegali}
                 title="Note legali"
-                description="Informazioni legali, avvertenze e limiti dâ€™uso per consultare le risorse pubblicate senza dedurre responsabilitÃ  o completezza dai dati."
+                description="Informazioni legali, avvertenze e limiti d’uso per consultare le risorse pubblicate senza dedurre responsabilità o completezza dai dati."
               />
               <PublicRouteWithMeta
                 path="/chi-siamo"
                 component={ChiSiamo}
                 title="Chi siamo"
-                description="Presentazione del progetto, dei suoi obiettivi civici e dellâ€™approccio documentale alla trasparenza pubblica."
+                description="Presentazione del progetto, dei suoi obiettivi civici e dell’approccio documentale alla trasparenza pubblica."
               />
               <PublicRouteWithMeta
                 path="/contatti"
@@ -387,7 +405,7 @@ export function Router() {
                 path="/iscrizioni"
                 component={Subscriptions}
                 title="Iscrizioni agli aggiornamenti"
-                description="Gestione delle preferenze per ricevere aggiornamenti civici e seguire le novitÃ  del progetto."
+                description="Gestione delle preferenze per ricevere aggiornamenti civici e seguire le novità del progetto."
               />
               <PublicRouteWithMeta
                 path="/guida"

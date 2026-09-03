@@ -40,6 +40,8 @@
 /promessometro/*    /index.html    200
 /proposte-civiche    /proposte-civiche/    301
 /proposte-civiche/*    /index.html    200
+/interventi-locali    /interventi-locali/    301
+/interventi-locali/*    /index.html    200
 /legalita    /legalita/    301
 /legalita/*    /index.html    200
 /delibere    /delibere/    301
