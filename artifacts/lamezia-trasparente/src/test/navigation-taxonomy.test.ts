@@ -4,6 +4,7 @@ import {
   COMMAND_PALETTE_GROUPS,
   NAV_GROUPS,
 } from "@/components/layout/navSections";
+import { findPrimaryNavGroupByPath } from "@/components/layout/navState";
 
 const EXPECTED_PRIMARY_GROUPS = [
   "Atti",
@@ -17,6 +18,10 @@ const EXPECTED_PRIMARY_GROUPS = [
 
 function hrefs(groups: typeof NAV_GROUPS) {
   return groups.flatMap((group) => group.items.map((item) => item.href));
+}
+
+function primaryGroupLabel(path: string) {
+  return findPrimaryNavGroupByPath(path)?.label ?? null;
 }
 
 describe("public navigation taxonomy", () => {
@@ -70,5 +75,34 @@ describe("public navigation taxonomy", () => {
     expect(allHrefs.has("/dataset-scaricabili")).toBe(true);
     expect(allHrefs.has("/bandi")).toBe(true);
     expect(allHrefs.has("/archivio-proposte")).toBe(true);
+  });
+});
+
+describe("active primary navigation area", () => {
+  it("resolves primary pages and their detail routes", () => {
+    expect(primaryGroupLabel("/contratti")).toBe("Spesa");
+    expect(primaryGroupLabel("/contratti/CIG-123")).toBe("Spesa");
+    expect(primaryGroupLabel("/legalita/trame-festival")).toBe("Legalità");
+  });
+
+  it("keeps search-only pages anchored to their conceptual macro-area", () => {
+    expect(primaryGroupLabel("/pareri")).toBe("Atti");
+    expect(primaryGroupLabel("/statistiche")).toBe("Dati");
+    expect(primaryGroupLabel("/sviluppatori")).toBe("Dati");
+    expect(primaryGroupLabel("/feeds")).toBe("Dati");
+    expect(primaryGroupLabel("/iscrizioni")).toBe("Partecipa");
+  });
+
+  it("resolves legacy aliases through their canonical destination", () => {
+    expect(primaryGroupLabel("/performance/confronta")).toBe("Comune");
+    expect(primaryGroupLabel("/monitoraggio/nuovo")).toBe("Partecipa");
+    expect(primaryGroupLabel("/archivio-proposte")).toBe("Partecipa");
+  });
+
+  it("does not force project-support pages into a civic macro-area", () => {
+    expect(primaryGroupLabel("/guida")).toBeNull();
+    expect(primaryGroupLabel("/roadmap")).toBeNull();
+    expect(primaryGroupLabel("/note-legali")).toBeNull();
+    expect(primaryGroupLabel("/unknown-route")).toBeNull();
   });
 });
