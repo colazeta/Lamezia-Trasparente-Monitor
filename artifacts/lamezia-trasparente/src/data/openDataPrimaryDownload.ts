@@ -1,8 +1,8 @@
-import { LAMEZIA_AIR_TRAFFIC_DATA_URL } from "@/data/lameziaAirTraffic";
-import { LAMEZIA_CLIMATE_DATA_URL } from "@/data/lameziaClimate";
-import { LAMEZIA_FAMILIES_CHILDREN_DATA_URL } from "@/data/lameziaFamiliesChildren";
-import { LAMEZIA_FOREIGN_RESIDENTS_DATA_URL } from "@/data/lameziaForeignResidents";
-import { LAMEZIA_HOUSEHOLD_COMPOSITION_2023_DATA_URL } from "@/data/lameziaHouseholdComposition2023";
+import airTrafficDataUrl from "./generated/lameziaAirTrafficMonthly.json?url";
+import climateDataUrl from "./generated/lameziaClimateDaily.json?url";
+import familiesChildrenDataUrl from "./generated/lameziaFamiliesChildren.json?url";
+import foreignResidentsDataUrl from "./generated/lameziaForeignResidentsAgeSex.json?url";
+import householdCompositionDataUrl from "../../../api-server/src/data/lameziaHouseholdComposition2023.json?url";
 import type {
   OpenDataDatasetFormat,
   OpenDataThemeDataset,
@@ -16,12 +16,12 @@ export interface OpenDataPrimaryDownload {
 
 const SPECIALIST_DOWNLOADS: Record<string, OpenDataPrimaryDownload> = {
   "lamezia-climate-daily": {
-    url: LAMEZIA_CLIMATE_DATA_URL,
+    url: climateDataUrl,
     downloadName: "lamezia-clima-giornaliero.json",
     format: "JSON",
   },
   "lamezia-air-traffic-monthly": {
-    url: LAMEZIA_AIR_TRAFFIC_DATA_URL,
+    url: airTrafficDataUrl,
     downloadName: "lamezia-traffico-aeroportuale-mensile.json",
     format: "JSON",
   },
@@ -31,17 +31,17 @@ const SPECIALIST_DOWNLOADS: Record<string, OpenDataPrimaryDownload> = {
     format: "API",
   },
   "lamezia-household-composition-2023": {
-    url: LAMEZIA_HOUSEHOLD_COMPOSITION_2023_DATA_URL,
+    url: householdCompositionDataUrl,
     downloadName: "lamezia-famiglie-componenti-2023.json",
     format: "JSON",
   },
   "lamezia-foreign-residents-age-sex": {
-    url: LAMEZIA_FOREIGN_RESIDENTS_DATA_URL,
+    url: foreignResidentsDataUrl,
     downloadName: "lamezia-stranieri-eta-sesso.json",
     format: "JSON",
   },
   "lamezia-families-children": {
-    url: LAMEZIA_FAMILIES_CHILDREN_DATA_URL,
+    url: familiesChildrenDataUrl,
     downloadName: "lamezia-famiglie-numero-figli.json",
     format: "JSON",
   },
