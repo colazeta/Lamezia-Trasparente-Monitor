@@ -41,6 +41,14 @@ const MonitoraggioDetail = lazyNamed(() => import("./pages/MonitoraggioDetail"),
 const MonitoraggioNuovo = lazyNamed(() => import("./pages/MonitoraggioNuovo"), "MonitoraggioNuovo");
 const Promessometro = lazyNamed(() => import("./pages/Promessometro"), "Promessometro");
 const PropostePubbliche = lazyNamed(() => import("./pages/PropostePubbliche"), "PropostePubbliche");
+const InterventiEvidence = lazyNamed(
+  () => import("./pages/InterventiEvidence"),
+  "InterventiEvidence",
+);
+const InterventoEvidenceDetail = lazyNamed(
+  () => import("./pages/InterventoEvidenceDetail"),
+  "InterventoEvidenceDetail",
+);
 const MacchinaComunale = lazyNamed(() => import("./pages/MacchinaComunale"), "MacchinaComunale");
 const Legalita = lazyNamed(() => import("./pages/Legalita"), "Legalita");
 const TrameFestival = lazyNamed(() => import("./pages/TrameFestival"), "TrameFestival");
@@ -216,6 +224,16 @@ export function Router() {
                 component={PropostePubbliche}
                 title="Proposte civiche"
                 description="Archivio documentale e neutro delle proposte civiche di valore pubblico censite come memoria verificabile."
+              />
+              <PublicRouteWithMeta
+                path="/interventi-locali"
+                component={InterventiEvidence}
+                title="Interventi locali basati sull'evidenza"
+                description="Archivio civico di politiche e interventi locali valutati empiricamente, con forza dell'evidenza, limiti e trasferibilità a Lamezia Terme."
+              />
+              <Route
+                path="/interventi-locali/:id"
+                component={InterventoEvidenceDetail}
               />
               <Route
                 path="/archivio-proposte"
