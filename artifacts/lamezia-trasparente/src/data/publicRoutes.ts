@@ -200,6 +200,11 @@ export const PUBLIC_INDEXABLE_ROUTES = [
     rationale: "Raccolta pubblica delle proposte civiche documentate.",
   },
   {
+    path: "/interventi-locali",
+    rationale:
+      "Archivio pubblico di interventi locali accompagnati da valutazioni empiriche.",
+  },
+  {
     path: "/legalita/trame-festival",
     rationale:
       "Raccolta pubblica selettiva di idee e analisi da Trame Festival, solo dopo verifica redazionale.",

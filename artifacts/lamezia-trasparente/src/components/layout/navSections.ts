@@ -1,6 +1,7 @@
 import {
   Archive,
   BarChart3,
+  Beaker,
   BookOpen,
   BookOpenCheck,
   Building2,
@@ -195,6 +196,17 @@ const RAW_NAV_GROUPS: NavSection[] = [
         visibility: "primary",
         hasUsefulPage: true,
         keywords: "performance indicatori kpi risultati amministrativi",
+      },
+      {
+        href: "/interventi-locali",
+        label: "Interventi evidence-based",
+        description:
+          "Politiche locali valutate empiricamente, con risultati, limiti e possibili adattamenti a Lamezia.",
+        icon: Beaker,
+        state: "available",
+        visibility: "primary",
+        keywords:
+          "interventi evidence based politiche comunali valutazione impatto buone pratiche risultati",
       },
       {
         href: "/promessometro",
