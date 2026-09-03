@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-09-03T14:58:56.569Z",
+  "generated_at": "2026-09-03T18:34:57.880Z",
   "source": "Albo Pretorio Comune di Lamezia Terme",
   "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-  "retrieved_at": "2026-09-03T14:58:56.569Z",
+  "retrieved_at": "2026-09-03T18:34:57.880Z",
   "verification_status": "official_source_acquired",
   "policy": {
     "eligibility": "Archive only HTTPS official PDFs for records classified public_visibility=publishable and privacy_risk=low.",
@@ -23,24 +23,42 @@
     "paid_storage": false
   },
   "counts": {
-    "considered": 138,
+    "considered": 140,
     "eligible": 100,
     "archived": 100,
-    "skipped": 2,
-    "excluded": 23,
+    "skipped": 3,
+    "excluded": 24,
     "human_review_required": 13,
-    "revoked": 4
+    "revoked": 2
   },
   "warnings": [
     "Detected 483 unreferenced PDF file(s) in the validated archive tree; left untouched pending a separately reviewed cleanup."
   ],
   "documents": [
     {
+      "id": "albo-2026-2853",
+      "publication_number": "2026/2853",
+      "source": "Albo Pretorio Comune di Lamezia Terme",
+      "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
+      "public_visibility": "publishable",
+      "privacy_risk": "low",
+      "verification_status": "official_source_acquired",
+      "document_url": "https://albo.tinnvision.cloud/allegati/2026_2853_3_X?ente=00301390795",
+      "preservation_status": "archived",
+      "reason": "eligible_low_risk_publishable_pdf",
+      "storage_path": "data/public/albo/documents/2026/6e0103d9391a10372fb7dc350a22c58cd96cf8dbd96fe17b47c763fa783ee216.pdf",
+      "sha256": "6e0103d9391a10372fb7dc350a22c58cd96cf8dbd96fe17b47c763fa783ee216",
+      "size_bytes": 871092,
+      "content_type": "application/pdf",
+      "verified_at": "2026-09-03T18:34:57.880Z"
+    },
+    {
       "id": "albo-2026-2849",
       "publication_number": "2026/2849",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -51,14 +69,14 @@
       "sha256": "822da6fbc8a64277ca900127733da2cea352cf8cbb976b253f502254cb6c0063",
       "size_bytes": 3536894,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2848",
       "publication_number": "2026/2848",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -69,14 +87,14 @@
       "sha256": "a93d91e754ea8192752c2e0abaea2a0cccaeebfa3e08507a7c2b4fbcfa43cdab",
       "size_bytes": 2603266,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2847",
       "publication_number": "2026/2847",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -87,14 +105,14 @@
       "sha256": "84d0ea9d42633daa9fa745d33fde2a99250b8afcecc06ec838a625af96d1fe76",
       "size_bytes": 1536379,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2846",
       "publication_number": "2026/2846",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -105,14 +123,14 @@
       "sha256": "c0ac83de611bd8ebdd9c1ca008bc13d178e12348ea2d7548895ad30d3c25e0bc",
       "size_bytes": 1359652,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2845",
       "publication_number": "2026/2845",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -123,14 +141,14 @@
       "sha256": "6369b85080fd4682594e10308f32795d17ff8834ba22e24f1347657c6077c6e3",
       "size_bytes": 1734247,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2844",
       "publication_number": "2026/2844",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -141,32 +159,14 @@
       "sha256": "b70f4c445739e583cb0816be25f84a77fd9194a66a4d45ad1c7c07bb72ccb788",
       "size_bytes": 637660,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
-    },
-    {
-      "id": "albo-2026-2843",
-      "publication_number": "2026/2843",
-      "source": "Albo Pretorio Comune di Lamezia Terme",
-      "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
-      "public_visibility": "publishable",
-      "privacy_risk": "low",
-      "verification_status": "official_source_acquired",
-      "document_url": "https://albo.tinnvision.cloud/allegati/2026_2843_14_ALLEG?ente=00301390795",
-      "preservation_status": "archived",
-      "reason": "eligible_low_risk_publishable_pdf",
-      "storage_path": "data/public/albo/documents/2026/967e68a4dfded6e1e69e14fa1b9f1ebf0cc4b85e193ad6a965427aaafe2e6b75.pdf",
-      "sha256": "967e68a4dfded6e1e69e14fa1b9f1ebf0cc4b85e193ad6a965427aaafe2e6b75",
-      "size_bytes": 774694,
-      "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2842",
       "publication_number": "2026/2842",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -177,14 +177,14 @@
       "sha256": "be611fc3d01d1d91616297bb860a29332b808aeecfe5162c6d17fdaea96ad26c",
       "size_bytes": 1686951,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2841",
       "publication_number": "2026/2841",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -195,14 +195,14 @@
       "sha256": "f654766fdc862281fcecf61b05250d216f20f2af6079de1cfaea66190b8e0c80",
       "size_bytes": 560216,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2840",
       "publication_number": "2026/2840",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -213,14 +213,14 @@
       "sha256": "365976826d174821dfcd69c4c02710fcc8eb324c24ccefe2549d3fce932abd0b",
       "size_bytes": 312526,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2839",
       "publication_number": "2026/2839",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -231,14 +231,14 @@
       "sha256": "86c992c2ab56aa89a0f1661c33da10db998fe311120f01d046e20aac498fae84",
       "size_bytes": 172300,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2836",
       "publication_number": "2026/2836",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -249,14 +249,14 @@
       "sha256": "195ad2c4acea78d674e0aba69294737b77565236bbf5c3a39954889d82e9587f",
       "size_bytes": 637979,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2833",
       "publication_number": "2026/2833",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -267,14 +267,14 @@
       "sha256": "959ecc8ea4d6ed1b2e87d1b78975f40aab06e659ee3962a524b9b673d37e49ec",
       "size_bytes": 2751836,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2832",
       "publication_number": "2026/2832",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -285,14 +285,14 @@
       "sha256": "08352a42ecc32ab69f426bf961b7e31c10559f7446547314705cd127d5305d1e",
       "size_bytes": 2409847,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2830",
       "publication_number": "2026/2830",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -303,14 +303,14 @@
       "sha256": "4a68a39c72ad72032f60d956a05b70a8b6eadeef2a9972800f281dbe0edb214c",
       "size_bytes": 1386053,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2829",
       "publication_number": "2026/2829",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -321,14 +321,14 @@
       "sha256": "c520a61b989b9d54bffd4f84a8dc12b43723e553b83dda97f2dda91786e17d02",
       "size_bytes": 1273313,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2828",
       "publication_number": "2026/2828",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -339,14 +339,14 @@
       "sha256": "e177180d5b0c5afc8fb87c362ed518bfc4127b68fad2434a39a60ec31812f4c8",
       "size_bytes": 722947,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2825",
       "publication_number": "2026/2825",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -357,14 +357,14 @@
       "sha256": "6e58c3d5a9c8baa69c8d603ea0bcffba4fbac36885733cb33e8ef9d410c012b1",
       "size_bytes": 1257676,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2822",
       "publication_number": "2026/2822",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -375,14 +375,14 @@
       "sha256": "1baf2a53b55964d3ee9df9e34a6d0cc03e1a2ba46941358235f4c848ef431ec1",
       "size_bytes": 1357458,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2814",
       "publication_number": "2026/2814",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -393,14 +393,14 @@
       "sha256": "9e4ec90eb1df5ecd8c12be6c1bdb91aa142855b654e2ea6e0fae0be435eee46a",
       "size_bytes": 1214912,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2813",
       "publication_number": "2026/2813",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -411,14 +411,14 @@
       "sha256": "41884b0f4abd5d5b254c5f4c4992b2da20977f42810ae68c1a1b84ea0a009bb1",
       "size_bytes": 1110392,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2812",
       "publication_number": "2026/2812",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -429,14 +429,14 @@
       "sha256": "003aa97f06dfb4920c33e7e7f48f217df464f7b900e5c0dedf126c2f0191fe76",
       "size_bytes": 1109550,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2811",
       "publication_number": "2026/2811",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -447,14 +447,14 @@
       "sha256": "1efa0cff7a6083e33bd1d4112434fe437664ec10d1884524c2adc3f9416ab1f9",
       "size_bytes": 1110185,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2810",
       "publication_number": "2026/2810",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -465,14 +465,14 @@
       "sha256": "cc5e63bba43ce1697324950e37a6075b1f5ec6420866c58f868d272999f8aae6",
       "size_bytes": 1101945,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2809",
       "publication_number": "2026/2809",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -483,14 +483,14 @@
       "sha256": "425477e6d1e9673cb4535d7e271999661c7d5091e87a8a9a35b09a94ddaa1852",
       "size_bytes": 1101351,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2808",
       "publication_number": "2026/2808",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -501,14 +501,14 @@
       "sha256": "92f2a8996056e9584db94fa6234d5359b65747a6224482004e40158147a7829b",
       "size_bytes": 1102219,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2807",
       "publication_number": "2026/2807",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -519,14 +519,14 @@
       "sha256": "b66417ab708a200df36e7536401ff82bc1d53452f0fd62a7ac2cfc3d86f20902",
       "size_bytes": 1322119,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2806",
       "publication_number": "2026/2806",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -537,14 +537,14 @@
       "sha256": "0437063a779a8caebf08756401ae501a89fc91cbeabfaa26ccbe80c4ca2182e4",
       "size_bytes": 1106594,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2805",
       "publication_number": "2026/2805",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -555,14 +555,14 @@
       "sha256": "a60ff3802ea194d10b2db5ffd8d94a27f6d13ae7e9e331528898afa788248f5b",
       "size_bytes": 1107707,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2804",
       "publication_number": "2026/2804",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -573,14 +573,14 @@
       "sha256": "133d8f25913a3da548c5c965062d463a264be9d5c6569acf7461d61fcc8f0624",
       "size_bytes": 1107923,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2803",
       "publication_number": "2026/2803",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -591,14 +591,14 @@
       "sha256": "b9fb723b8f92199ca7a2feff418b165ecf39346c21b9d7e103e18e58ea507ba3",
       "size_bytes": 1111244,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2802",
       "publication_number": "2026/2802",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -609,14 +609,14 @@
       "sha256": "416200bae87134717ef8d5389e3eecce06d8f4a7b774303690ec7c24892f0e54",
       "size_bytes": 1704476,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2801",
       "publication_number": "2026/2801",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -627,14 +627,14 @@
       "sha256": "c9fbea2738183e5fa07caa5ea923329cdb6b9d778f5d7ec5e841195eb2e24ef1",
       "size_bytes": 1323498,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2800",
       "publication_number": "2026/2800",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -645,14 +645,14 @@
       "sha256": "8324f42cc56e643bca2dbaffd0ec76f1cbf80f91f5a77dd83d3f7f74ae7de40f",
       "size_bytes": 1323277,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2799",
       "publication_number": "2026/2799",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -663,14 +663,14 @@
       "sha256": "d7106c9ca47af7e33409415d50dfb0123624ea128e7673991fd15330ccdefa32",
       "size_bytes": 799956,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2798",
       "publication_number": "2026/2798",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -681,14 +681,14 @@
       "sha256": "ff86900ca6aec1bffb6f9db397d2dbafc398fdba474f070dd3bee78e4941b82f",
       "size_bytes": 1115432,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2797",
       "publication_number": "2026/2797",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -699,14 +699,14 @@
       "sha256": "fce4ffa05c5fd1c050b23281a9c659cd6ed6007f431839f3c232955cbd09f42c",
       "size_bytes": 1754035,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2796",
       "publication_number": "2026/2796",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -717,14 +717,14 @@
       "sha256": "8607ed14e062acbce9cdd6b542f91147953d0c7905b35eec4f5cf66538a78198",
       "size_bytes": 1320378,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2795",
       "publication_number": "2026/2795",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -735,14 +735,14 @@
       "sha256": "b3ee930d43e47a07a544cdfc25770105ee8aee74fdf0cb3d0b9d57e2ead05076",
       "size_bytes": 1320442,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2794",
       "publication_number": "2026/2794",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -753,14 +753,14 @@
       "sha256": "1a170b9595e2191667af1773e4892b51be2d7db6fc09a9110ae9113ac92ae9a5",
       "size_bytes": 1320522,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2793",
       "publication_number": "2026/2793",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -771,14 +771,14 @@
       "sha256": "581d35ce171cf5b3857bff6ca568dfca4d2cad9df25c7aaec0e9cfae0d52f45b",
       "size_bytes": 1320529,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2792",
       "publication_number": "2026/2792",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -789,14 +789,14 @@
       "sha256": "73a4d2f9ec6bb8fe54434ca0bd27b552fd8944f810c887a06d6e7f9b8495ccab",
       "size_bytes": 1320508,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2789",
       "publication_number": "2026/2789",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -807,14 +807,14 @@
       "sha256": "69e5f98fcda918c237babeeae0968a8e9e5d2243066e32eed2e1dbbf83a8b50d",
       "size_bytes": 790286,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2788",
       "publication_number": "2026/2788",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -825,14 +825,14 @@
       "sha256": "165152190ac39451d35caf5815bfb4d7d6d7ee66c20abe630c98b47d62858c72",
       "size_bytes": 321447,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2785",
       "publication_number": "2026/2785",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -843,14 +843,14 @@
       "sha256": "0c9b320273572985286f49b1e105f2e74f83f65fa27e8c4751a2c63e08007216",
       "size_bytes": 871592,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2784",
       "publication_number": "2026/2784",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -861,14 +861,14 @@
       "sha256": "a21b69ffcc755b60e02551cb01688e50d5ab340db58e114db2a99b18d1aeaffa",
       "size_bytes": 799971,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2783",
       "publication_number": "2026/2783",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -879,14 +879,14 @@
       "sha256": "f9b4fc7f1ac8968b6de337f2f002fc6eef884da52de3e3420e8a31de0332d5b0",
       "size_bytes": 1303377,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2782",
       "publication_number": "2026/2782",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -897,14 +897,14 @@
       "sha256": "7fadb8bb36071cf03405fde469d1b61892af4383b28968dfe9034c37caa43d18",
       "size_bytes": 850838,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2781",
       "publication_number": "2026/2781",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -915,14 +915,14 @@
       "sha256": "2f91fd1510355dcfff59bf7958ba8d12a854e9cdf0a30f1edcccb86a73b893b6",
       "size_bytes": 654563,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2780",
       "publication_number": "2026/2780",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -933,14 +933,14 @@
       "sha256": "26248d5e2b077bd3f7b9884f260e808b6226c1523def6817ee150cac0a096afa",
       "size_bytes": 596061,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2779",
       "publication_number": "2026/2779",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -951,14 +951,14 @@
       "sha256": "45ab2acf4d513ab65fdf802f16b1be39d8c172436a9dd03ca47994300ce6f6f8",
       "size_bytes": 614491,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2776",
       "publication_number": "2026/2776",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -969,14 +969,14 @@
       "sha256": "4d0b603f7c768ff6d28a6f3d8237b39f9d04aa52bb9772fa5db71e972ad980cf",
       "size_bytes": 164972,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2774",
       "publication_number": "2026/2774",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -987,14 +987,14 @@
       "sha256": "f1fdf4627e8dc8c7af08d4f01ac7e7b9165f7c7893b1a71fe8f97e597510fe01",
       "size_bytes": 3663787,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2772",
       "publication_number": "2026/2772",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -1005,14 +1005,32 @@
       "sha256": "97ff9c261ce250ca7cefcd6eaf56c4651c8462391542a657883d8de741ec4bd7",
       "size_bytes": 678323,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
+    },
+    {
+      "id": "albo-2026-2770",
+      "publication_number": "2026/2770",
+      "source": "Albo Pretorio Comune di Lamezia Terme",
+      "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
+      "public_visibility": "publishable",
+      "privacy_risk": "low",
+      "verification_status": "official_source_acquired",
+      "document_url": "https://albo.tinnvision.cloud/allegati/2026_2770_17_ALLEG?ente=00301390795",
+      "preservation_status": "archived",
+      "reason": "eligible_low_risk_publishable_pdf",
+      "storage_path": "data/public/albo/documents/2026/d672de0b199c130c4c60a31c5197661a3c1e0f086812d58c913edcda600c9599.pdf",
+      "sha256": "d672de0b199c130c4c60a31c5197661a3c1e0f086812d58c913edcda600c9599",
+      "size_bytes": 1489426,
+      "content_type": "application/pdf",
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2769",
       "publication_number": "2026/2769",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -1023,14 +1041,14 @@
       "sha256": "fd4e3ad008333247207df6c4cb39776bece0e336fb9b96d85fd7df690a3a1ca0",
       "size_bytes": 784723,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2768",
       "publication_number": "2026/2768",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -1041,14 +1059,14 @@
       "sha256": "d94b8478e25c4743f48a75f9c69b8a56fdb17a826fcf652221f3a73b51e99111",
       "size_bytes": 873078,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2767",
       "publication_number": "2026/2767",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -1059,14 +1077,14 @@
       "sha256": "4674814d128b3b5aeaa7ce1b079a6a9e676c647a03c02507ad71864483186f44",
       "size_bytes": 181918,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2765",
       "publication_number": "2026/2765",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -1077,32 +1095,14 @@
       "sha256": "5609968da473ba3dc8bd6893278ff37e476bf8fe86557c6e92e88cdc73311465",
       "size_bytes": 1948041,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
-    },
-    {
-      "id": "albo-2026-2764",
-      "publication_number": "2026/2764",
-      "source": "Albo Pretorio Comune di Lamezia Terme",
-      "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
-      "public_visibility": "publishable",
-      "privacy_risk": "low",
-      "verification_status": "official_source_acquired",
-      "document_url": "https://albo.tinnvision.cloud/allegati/2026_2764_2_X?ente=00301390795",
-      "preservation_status": "archived",
-      "reason": "eligible_low_risk_publishable_pdf",
-      "storage_path": "data/public/albo/documents/2026/a2629c21f3488533bf6dec4d0f80127d3c1032f39d70a654b22949d2f49e6cde.pdf",
-      "sha256": "a2629c21f3488533bf6dec4d0f80127d3c1032f39d70a654b22949d2f49e6cde",
-      "size_bytes": 266446,
-      "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2762",
       "publication_number": "2026/2762",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -1113,14 +1113,14 @@
       "sha256": "71a38e9a3bb026b05931a8e6e0a89561c1d92d2ba3b5cdeeac958fa54b8d4ecf",
       "size_bytes": 4008617,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2761",
       "publication_number": "2026/2761",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -1131,14 +1131,14 @@
       "sha256": "06ac1612c81a6e2610a20254cb2c078a23396dcd1243dbf330eacb6ddff931aa",
       "size_bytes": 1606575,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2760",
       "publication_number": "2026/2760",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -1149,14 +1149,14 @@
       "sha256": "380610ac2bd1b3076391e3591248939a827f446550e1722144b95adb9aa216bc",
       "size_bytes": 2258540,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2759",
       "publication_number": "2026/2759",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -1167,14 +1167,14 @@
       "sha256": "0cba0efbbfa2f5c310886e11c440d78f11fefecf4d4c3c1ad411c1af481a0c95",
       "size_bytes": 1141129,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2758",
       "publication_number": "2026/2758",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -1185,14 +1185,14 @@
       "sha256": "cc7d0174d5c83cf976ecb0c3c505df8e9684005a481141a3187a1701e1f227d6",
       "size_bytes": 605001,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2757",
       "publication_number": "2026/2757",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -1203,14 +1203,14 @@
       "sha256": "ef93e7e3eefc42f4a2b537921e8726a73b7e08de61be1e7d6c49b88143703e3f",
       "size_bytes": 631337,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2756",
       "publication_number": "2026/2756",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -1221,14 +1221,14 @@
       "sha256": "edc593c622ba5543accab1d7edfb0558679056c7ac3a2cb0e86e9665c2d4b318",
       "size_bytes": 628501,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2755",
       "publication_number": "2026/2755",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -1239,14 +1239,14 @@
       "sha256": "5153a02c9fce5744a8d398798cad8867a5591fa403cfb91d762e78b6547261b3",
       "size_bytes": 964475,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2754",
       "publication_number": "2026/2754",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -1257,14 +1257,14 @@
       "sha256": "59d906fda862e4e9db3be37a5f4a39762064985d075c340b7321ef02a3dcb6fa",
       "size_bytes": 840187,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2751",
       "publication_number": "2026/2751",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -1275,14 +1275,14 @@
       "sha256": "b02f6768f54f8a9096b21adc7ce1f434bf69ae455dfce05d7124f0e9568b5908",
       "size_bytes": 1532866,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2748",
       "publication_number": "2026/2748",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -1293,14 +1293,14 @@
       "sha256": "a913b88f162926278e11629f8e72fe0dbbb667b61e298e09f23f253ddc5e657c",
       "size_bytes": 527466,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2747",
       "publication_number": "2026/2747",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -1311,14 +1311,14 @@
       "sha256": "018215911390d3e501dd7c1842db875e91c91241895cb15fb66cad4a9822f197",
       "size_bytes": 2197170,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2746",
       "publication_number": "2026/2746",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -1329,14 +1329,14 @@
       "sha256": "7e72675ef147e077273c5c510ba42acd1b57e8b0d908f1cc88af6ad7ddd9ec0c",
       "size_bytes": 2084373,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2742",
       "publication_number": "2026/2742",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -1347,14 +1347,14 @@
       "sha256": "8e2a5b0a1fce079e952602086dcdf0c92aa0b77728ffecced43b38ef3e335190",
       "size_bytes": 1436774,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2741",
       "publication_number": "2026/2741",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -1365,14 +1365,14 @@
       "sha256": "cb7b693973629d75de257690d2522c9835a365f4ab5d7542588b013e4b28e731",
       "size_bytes": 1513616,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2740",
       "publication_number": "2026/2740",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -1383,14 +1383,14 @@
       "sha256": "bae98514d1edb48267c179f3e443c354c0d29b48f6e88f88ad8e860733482dd1",
       "size_bytes": 1581800,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2739",
       "publication_number": "2026/2739",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -1401,14 +1401,14 @@
       "sha256": "da9da4ab25395b00b9d368f26c9e0f24d048b2c38db4b2d5cfc5d67ece7003e1",
       "size_bytes": 4105846,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2736",
       "publication_number": "2026/2736",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -1419,14 +1419,14 @@
       "sha256": "1e23cabcc269bc29a7d85692de54f0623f38653295a0e5630286e077e54a8eb9",
       "size_bytes": 1357614,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2735",
       "publication_number": "2026/2735",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -1437,14 +1437,14 @@
       "sha256": "f86a73c444876cb21479002b5b16684ef2bb06a956974d7ffae2d7195c9382f9",
       "size_bytes": 2730905,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2734",
       "publication_number": "2026/2734",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -1455,14 +1455,14 @@
       "sha256": "0d6e95acdf6a46edca42ed7ec9450fc6fdaf2ef6bffebbcfd99b59f0ccd68dc8",
       "size_bytes": 697644,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2733",
       "publication_number": "2026/2733",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -1473,14 +1473,14 @@
       "sha256": "e68c2842bd0a0f642e107d82fca4b7a8b392ef9ed68d1a9da2fa3cb4c50ba89e",
       "size_bytes": 2130959,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2732",
       "publication_number": "2026/2732",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -1491,14 +1491,14 @@
       "sha256": "76b73980df65098c7c6b8a9b23b46b57e460900817bf17f454aad25a4988e49c",
       "size_bytes": 2407565,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2731",
       "publication_number": "2026/2731",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -1509,14 +1509,14 @@
       "sha256": "a2f5603b696f49f7759153582c4728633acac968c437fdf5a3c1a5b6e5ab3c07",
       "size_bytes": 2702097,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2730",
       "publication_number": "2026/2730",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -1527,14 +1527,14 @@
       "sha256": "8afc9d6ebf2babc6a9f34112c015ecc56f31ec6f03badb480e9e17e37bcbd335",
       "size_bytes": 2484234,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2729",
       "publication_number": "2026/2729",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -1545,14 +1545,14 @@
       "sha256": "d6b088defa2f9ff8eb3e7d4329cd3876fc4d4b9926dd8d2c9cfbbfbb21a431e7",
       "size_bytes": 1926320,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2727",
       "publication_number": "2026/2727",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -1563,14 +1563,14 @@
       "sha256": "97b3c64999664160c7bc1ad00b9d70bf2b483eee87280771c12a5d57371695e0",
       "size_bytes": 804514,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2726",
       "publication_number": "2026/2726",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -1581,14 +1581,14 @@
       "sha256": "ede98be0620845ed117228d306b2486f397b2d478cde7be34624615760641fc5",
       "size_bytes": 2014085,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2725",
       "publication_number": "2026/2725",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -1599,14 +1599,14 @@
       "sha256": "0e9bda925b7ba95ad4eb5fcbd97df50bd7d6c5d5c32e4d78cec03c36015cce93",
       "size_bytes": 1818221,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2724",
       "publication_number": "2026/2724",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -1617,14 +1617,14 @@
       "sha256": "dc316e560d5f543135e0d40af4d102abb2183a837855ee22ae6152b8739dd3c0",
       "size_bytes": 645909,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2716",
       "publication_number": "2026/2716",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -1635,14 +1635,14 @@
       "sha256": "f4b79863c05c2d16ce8923371549c81454b99bf8d7f99525a5e5f04330f42824",
       "size_bytes": 1323122,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2715",
       "publication_number": "2026/2715",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -1653,14 +1653,14 @@
       "sha256": "8ec442d80e08552148d2d329684d1bd47d43e7e4c063098b90113571d237505e",
       "size_bytes": 1324198,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2714",
       "publication_number": "2026/2714",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -1671,14 +1671,14 @@
       "sha256": "4eafd17d9b2b71ef734e353fbb7126cb56d946699d8ad39c82c86aa7bf9aa017",
       "size_bytes": 357189,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2707",
       "publication_number": "2026/2707",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -1689,14 +1689,14 @@
       "sha256": "9920fb46577e534f8187eb42a5ea8e2aecc019654ce6ad5ab0dd3d787b5232b7",
       "size_bytes": 100928,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2706",
       "publication_number": "2026/2706",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -1707,14 +1707,14 @@
       "sha256": "a918a25d9f5dfab9fc7cedb66da7be3f232e8bdb0f56f14a2f146bccaaae4679",
       "size_bytes": 101519,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2705",
       "publication_number": "2026/2705",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -1725,14 +1725,14 @@
       "sha256": "9cbb3553c55fcc086d2e351211f8d4db61dae8bcb6a2428895fe7152c74148df",
       "size_bytes": 103014,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2704",
       "publication_number": "2026/2704",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -1743,14 +1743,14 @@
       "sha256": "685f85bc4868fa8baf706e20fd5f8c01ad98bbb4ac02653b077025cfe3117e15",
       "size_bytes": 100657,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2703",
       "publication_number": "2026/2703",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -1761,14 +1761,14 @@
       "sha256": "2581f596ad6247e53f267205e43b225493b5f270edb09ec75b7fd48c877b4530",
       "size_bytes": 100927,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2647",
       "publication_number": "2026/2647",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -1779,14 +1779,14 @@
       "sha256": "d01da25c07e27075166d609dae1cec7aa457e5ef75eaabfa912f35883b633edf",
       "size_bytes": 359629,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2627",
       "publication_number": "2026/2627",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -1797,14 +1797,14 @@
       "sha256": "93428981726c7194b493f382f0974bca7b90efe2232464a9b528078620c7efb4",
       "size_bytes": 358249,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2572",
       "publication_number": "2026/2572",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -1815,14 +1815,14 @@
       "sha256": "b23edbaff14cbc0c024849e4317eb3859ed2efb58ea66fd44375f4015f6ffad2",
       "size_bytes": 357278,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2571",
       "publication_number": "2026/2571",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -1833,16 +1833,46 @@
       "sha256": "9c09019f330a65194733f3176d9bd9c815a3b31407ac7d5107efa065cf25ea69",
       "size_bytes": 356981,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     }
   ],
   "decisions": [
+    {
+      "id": "albo-2026-2854",
+      "publication_number": "2026/2854",
+      "source": "Albo Pretorio Comune di Lamezia Terme",
+      "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
+      "public_visibility": "metadata_only",
+      "privacy_risk": "high",
+      "verification_status": "official_source_acquired",
+      "preservation_status": "excluded",
+      "reason": "privacy_excluded"
+    },
+    {
+      "id": "albo-2026-2853",
+      "publication_number": "2026/2853",
+      "source": "Albo Pretorio Comune di Lamezia Terme",
+      "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
+      "public_visibility": "publishable",
+      "privacy_risk": "low",
+      "verification_status": "official_source_acquired",
+      "document_url": "https://albo.tinnvision.cloud/allegati/2026_2853_3_X?ente=00301390795",
+      "preservation_status": "archived",
+      "reason": "eligible_low_risk_publishable_pdf",
+      "storage_path": "data/public/albo/documents/2026/6e0103d9391a10372fb7dc350a22c58cd96cf8dbd96fe17b47c763fa783ee216.pdf",
+      "sha256": "6e0103d9391a10372fb7dc350a22c58cd96cf8dbd96fe17b47c763fa783ee216",
+      "size_bytes": 871092,
+      "content_type": "application/pdf",
+      "verified_at": "2026-09-03T18:34:57.880Z"
+    },
     {
       "id": "albo-2026-2852",
       "publication_number": "2026/2852",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "metadata_only",
       "privacy_risk": "high",
       "verification_status": "official_source_acquired",
@@ -1854,7 +1884,7 @@
       "publication_number": "2026/2851",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "metadata_only",
       "privacy_risk": "high",
       "verification_status": "official_source_acquired",
@@ -1866,7 +1896,7 @@
       "publication_number": "2026/2850",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "metadata_only",
       "privacy_risk": "high",
       "verification_status": "official_source_acquired",
@@ -1878,7 +1908,7 @@
       "publication_number": "2026/2849",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -1889,14 +1919,14 @@
       "sha256": "822da6fbc8a64277ca900127733da2cea352cf8cbb976b253f502254cb6c0063",
       "size_bytes": 3536894,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2848",
       "publication_number": "2026/2848",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -1907,14 +1937,14 @@
       "sha256": "a93d91e754ea8192752c2e0abaea2a0cccaeebfa3e08507a7c2b4fbcfa43cdab",
       "size_bytes": 2603266,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2847",
       "publication_number": "2026/2847",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -1925,14 +1955,14 @@
       "sha256": "84d0ea9d42633daa9fa745d33fde2a99250b8afcecc06ec838a625af96d1fe76",
       "size_bytes": 1536379,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2846",
       "publication_number": "2026/2846",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -1943,14 +1973,14 @@
       "sha256": "c0ac83de611bd8ebdd9c1ca008bc13d178e12348ea2d7548895ad30d3c25e0bc",
       "size_bytes": 1359652,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2845",
       "publication_number": "2026/2845",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -1961,14 +1991,14 @@
       "sha256": "6369b85080fd4682594e10308f32795d17ff8834ba22e24f1347657c6077c6e3",
       "size_bytes": 1734247,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2844",
       "publication_number": "2026/2844",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -1979,32 +2009,26 @@
       "sha256": "b70f4c445739e583cb0816be25f84a77fd9194a66a4d45ad1c7c07bb72ccb788",
       "size_bytes": 637660,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2843",
       "publication_number": "2026/2843",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
-      "document_url": "https://albo.tinnvision.cloud/allegati/2026_2843_14_ALLEG?ente=00301390795",
-      "preservation_status": "archived",
-      "reason": "eligible_low_risk_publishable_pdf",
-      "storage_path": "data/public/albo/documents/2026/967e68a4dfded6e1e69e14fa1b9f1ebf0cc4b85e193ad6a965427aaafe2e6b75.pdf",
-      "sha256": "967e68a4dfded6e1e69e14fa1b9f1ebf0cc4b85e193ad6a965427aaafe2e6b75",
-      "size_bytes": 774694,
-      "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "preservation_status": "skipped",
+      "reason": "no_document_url"
     },
     {
       "id": "albo-2026-2842",
       "publication_number": "2026/2842",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -2015,14 +2039,14 @@
       "sha256": "be611fc3d01d1d91616297bb860a29332b808aeecfe5162c6d17fdaea96ad26c",
       "size_bytes": 1686951,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2841",
       "publication_number": "2026/2841",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -2033,14 +2057,14 @@
       "sha256": "f654766fdc862281fcecf61b05250d216f20f2af6079de1cfaea66190b8e0c80",
       "size_bytes": 560216,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2840",
       "publication_number": "2026/2840",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -2051,14 +2075,14 @@
       "sha256": "365976826d174821dfcd69c4c02710fcc8eb324c24ccefe2549d3fce932abd0b",
       "size_bytes": 312526,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2839",
       "publication_number": "2026/2839",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -2069,14 +2093,14 @@
       "sha256": "86c992c2ab56aa89a0f1661c33da10db998fe311120f01d046e20aac498fae84",
       "size_bytes": 172300,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2838",
       "publication_number": "2026/2838",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "metadata_only",
       "privacy_risk": "high",
       "verification_status": "official_source_acquired",
@@ -2088,7 +2112,7 @@
       "publication_number": "2026/2837",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "metadata_only",
       "privacy_risk": "high",
       "verification_status": "official_source_acquired",
@@ -2100,7 +2124,7 @@
       "publication_number": "2026/2836",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -2111,14 +2135,14 @@
       "sha256": "195ad2c4acea78d674e0aba69294737b77565236bbf5c3a39954889d82e9587f",
       "size_bytes": 637979,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2835",
       "publication_number": "2026/2835",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "metadata_only",
       "privacy_risk": "high",
       "verification_status": "official_source_acquired",
@@ -2130,7 +2154,7 @@
       "publication_number": "2026/2833",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -2141,14 +2165,14 @@
       "sha256": "959ecc8ea4d6ed1b2e87d1b78975f40aab06e659ee3962a524b9b673d37e49ec",
       "size_bytes": 2751836,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2832",
       "publication_number": "2026/2832",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -2159,14 +2183,14 @@
       "sha256": "08352a42ecc32ab69f426bf961b7e31c10559f7446547314705cd127d5305d1e",
       "size_bytes": 2409847,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2831",
       "publication_number": "2026/2831",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "metadata_only",
       "privacy_risk": "high",
       "verification_status": "official_source_acquired",
@@ -2178,7 +2202,7 @@
       "publication_number": "2026/2830",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -2189,14 +2213,14 @@
       "sha256": "4a68a39c72ad72032f60d956a05b70a8b6eadeef2a9972800f281dbe0edb214c",
       "size_bytes": 1386053,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2829",
       "publication_number": "2026/2829",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -2207,14 +2231,14 @@
       "sha256": "c520a61b989b9d54bffd4f84a8dc12b43723e553b83dda97f2dda91786e17d02",
       "size_bytes": 1273313,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2828",
       "publication_number": "2026/2828",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -2225,14 +2249,14 @@
       "sha256": "e177180d5b0c5afc8fb87c362ed518bfc4127b68fad2434a39a60ec31812f4c8",
       "size_bytes": 722947,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2827",
       "publication_number": "2026/2827",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable_with_minimisation",
       "privacy_risk": "medium",
       "verification_status": "official_source_acquired",
@@ -2244,7 +2268,7 @@
       "publication_number": "2026/2826",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable_with_minimisation",
       "privacy_risk": "medium",
       "verification_status": "official_source_acquired",
@@ -2256,7 +2280,7 @@
       "publication_number": "2026/2825",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -2267,14 +2291,14 @@
       "sha256": "6e58c3d5a9c8baa69c8d603ea0bcffba4fbac36885733cb33e8ef9d410c012b1",
       "size_bytes": 1257676,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2824",
       "publication_number": "2026/2824",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable_with_minimisation",
       "privacy_risk": "medium",
       "verification_status": "official_source_acquired",
@@ -2286,7 +2310,7 @@
       "publication_number": "2026/2823",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable_with_minimisation",
       "privacy_risk": "medium",
       "verification_status": "official_source_acquired",
@@ -2298,7 +2322,7 @@
       "publication_number": "2026/2822",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -2309,14 +2333,14 @@
       "sha256": "1baf2a53b55964d3ee9df9e34a6d0cc03e1a2ba46941358235f4c848ef431ec1",
       "size_bytes": 1357458,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2821",
       "publication_number": "2026/2821",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable_with_minimisation",
       "privacy_risk": "medium",
       "verification_status": "official_source_acquired",
@@ -2328,7 +2352,7 @@
       "publication_number": "2026/2820",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable_with_minimisation",
       "privacy_risk": "medium",
       "verification_status": "official_source_acquired",
@@ -2340,7 +2364,7 @@
       "publication_number": "2026/2819",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable_with_minimisation",
       "privacy_risk": "medium",
       "verification_status": "official_source_acquired",
@@ -2352,7 +2376,7 @@
       "publication_number": "2026/2818",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable_with_minimisation",
       "privacy_risk": "medium",
       "verification_status": "official_source_acquired",
@@ -2364,7 +2388,7 @@
       "publication_number": "2026/2817",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable_with_minimisation",
       "privacy_risk": "medium",
       "verification_status": "official_source_acquired",
@@ -2376,7 +2400,7 @@
       "publication_number": "2026/2816",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable_with_minimisation",
       "privacy_risk": "medium",
       "verification_status": "official_source_acquired",
@@ -2388,7 +2412,7 @@
       "publication_number": "2026/2815",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable_with_minimisation",
       "privacy_risk": "medium",
       "verification_status": "official_source_acquired",
@@ -2400,7 +2424,7 @@
       "publication_number": "2026/2814",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -2411,14 +2435,14 @@
       "sha256": "9e4ec90eb1df5ecd8c12be6c1bdb91aa142855b654e2ea6e0fae0be435eee46a",
       "size_bytes": 1214912,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2813",
       "publication_number": "2026/2813",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -2429,14 +2453,14 @@
       "sha256": "41884b0f4abd5d5b254c5f4c4992b2da20977f42810ae68c1a1b84ea0a009bb1",
       "size_bytes": 1110392,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2812",
       "publication_number": "2026/2812",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -2447,14 +2471,14 @@
       "sha256": "003aa97f06dfb4920c33e7e7f48f217df464f7b900e5c0dedf126c2f0191fe76",
       "size_bytes": 1109550,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2811",
       "publication_number": "2026/2811",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -2465,14 +2489,14 @@
       "sha256": "1efa0cff7a6083e33bd1d4112434fe437664ec10d1884524c2adc3f9416ab1f9",
       "size_bytes": 1110185,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2810",
       "publication_number": "2026/2810",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -2483,14 +2507,14 @@
       "sha256": "cc5e63bba43ce1697324950e37a6075b1f5ec6420866c58f868d272999f8aae6",
       "size_bytes": 1101945,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2809",
       "publication_number": "2026/2809",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -2501,14 +2525,14 @@
       "sha256": "425477e6d1e9673cb4535d7e271999661c7d5091e87a8a9a35b09a94ddaa1852",
       "size_bytes": 1101351,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2808",
       "publication_number": "2026/2808",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -2519,14 +2543,14 @@
       "sha256": "92f2a8996056e9584db94fa6234d5359b65747a6224482004e40158147a7829b",
       "size_bytes": 1102219,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2807",
       "publication_number": "2026/2807",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -2537,14 +2561,14 @@
       "sha256": "b66417ab708a200df36e7536401ff82bc1d53452f0fd62a7ac2cfc3d86f20902",
       "size_bytes": 1322119,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2806",
       "publication_number": "2026/2806",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -2555,14 +2579,14 @@
       "sha256": "0437063a779a8caebf08756401ae501a89fc91cbeabfaa26ccbe80c4ca2182e4",
       "size_bytes": 1106594,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2805",
       "publication_number": "2026/2805",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -2573,14 +2597,14 @@
       "sha256": "a60ff3802ea194d10b2db5ffd8d94a27f6d13ae7e9e331528898afa788248f5b",
       "size_bytes": 1107707,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2804",
       "publication_number": "2026/2804",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -2591,14 +2615,14 @@
       "sha256": "133d8f25913a3da548c5c965062d463a264be9d5c6569acf7461d61fcc8f0624",
       "size_bytes": 1107923,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2803",
       "publication_number": "2026/2803",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -2609,14 +2633,14 @@
       "sha256": "b9fb723b8f92199ca7a2feff418b165ecf39346c21b9d7e103e18e58ea507ba3",
       "size_bytes": 1111244,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2802",
       "publication_number": "2026/2802",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -2627,14 +2651,14 @@
       "sha256": "416200bae87134717ef8d5389e3eecce06d8f4a7b774303690ec7c24892f0e54",
       "size_bytes": 1704476,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2801",
       "publication_number": "2026/2801",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -2645,14 +2669,14 @@
       "sha256": "c9fbea2738183e5fa07caa5ea923329cdb6b9d778f5d7ec5e841195eb2e24ef1",
       "size_bytes": 1323498,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2800",
       "publication_number": "2026/2800",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -2663,14 +2687,14 @@
       "sha256": "8324f42cc56e643bca2dbaffd0ec76f1cbf80f91f5a77dd83d3f7f74ae7de40f",
       "size_bytes": 1323277,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2799",
       "publication_number": "2026/2799",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -2681,14 +2705,14 @@
       "sha256": "d7106c9ca47af7e33409415d50dfb0123624ea128e7673991fd15330ccdefa32",
       "size_bytes": 799956,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2798",
       "publication_number": "2026/2798",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -2699,14 +2723,14 @@
       "sha256": "ff86900ca6aec1bffb6f9db397d2dbafc398fdba474f070dd3bee78e4941b82f",
       "size_bytes": 1115432,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2797",
       "publication_number": "2026/2797",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -2717,14 +2741,14 @@
       "sha256": "fce4ffa05c5fd1c050b23281a9c659cd6ed6007f431839f3c232955cbd09f42c",
       "size_bytes": 1754035,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2796",
       "publication_number": "2026/2796",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -2735,14 +2759,14 @@
       "sha256": "8607ed14e062acbce9cdd6b542f91147953d0c7905b35eec4f5cf66538a78198",
       "size_bytes": 1320378,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2795",
       "publication_number": "2026/2795",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -2753,14 +2777,14 @@
       "sha256": "b3ee930d43e47a07a544cdfc25770105ee8aee74fdf0cb3d0b9d57e2ead05076",
       "size_bytes": 1320442,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2794",
       "publication_number": "2026/2794",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -2771,14 +2795,14 @@
       "sha256": "1a170b9595e2191667af1773e4892b51be2d7db6fc09a9110ae9113ac92ae9a5",
       "size_bytes": 1320522,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2793",
       "publication_number": "2026/2793",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -2789,14 +2813,14 @@
       "sha256": "581d35ce171cf5b3857bff6ca568dfca4d2cad9df25c7aaec0e9cfae0d52f45b",
       "size_bytes": 1320529,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2792",
       "publication_number": "2026/2792",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -2807,14 +2831,14 @@
       "sha256": "73a4d2f9ec6bb8fe54434ca0bd27b552fd8944f810c887a06d6e7f9b8495ccab",
       "size_bytes": 1320508,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2791",
       "publication_number": "2026/2791",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "metadata_only",
       "privacy_risk": "high",
       "verification_status": "official_source_acquired",
@@ -2826,7 +2850,7 @@
       "publication_number": "2026/2790",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "metadata_only",
       "privacy_risk": "high",
       "verification_status": "official_source_acquired",
@@ -2838,7 +2862,7 @@
       "publication_number": "2026/2789",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -2849,14 +2873,14 @@
       "sha256": "69e5f98fcda918c237babeeae0968a8e9e5d2243066e32eed2e1dbbf83a8b50d",
       "size_bytes": 790286,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2788",
       "publication_number": "2026/2788",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -2867,14 +2891,14 @@
       "sha256": "165152190ac39451d35caf5815bfb4d7d6d7ee66c20abe630c98b47d62858c72",
       "size_bytes": 321447,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2786",
       "publication_number": "2026/2786",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "metadata_only",
       "privacy_risk": "high",
       "verification_status": "official_source_acquired",
@@ -2886,7 +2910,7 @@
       "publication_number": "2026/2785",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -2897,14 +2921,14 @@
       "sha256": "0c9b320273572985286f49b1e105f2e74f83f65fa27e8c4751a2c63e08007216",
       "size_bytes": 871592,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2784",
       "publication_number": "2026/2784",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -2915,14 +2939,14 @@
       "sha256": "a21b69ffcc755b60e02551cb01688e50d5ab340db58e114db2a99b18d1aeaffa",
       "size_bytes": 799971,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2783",
       "publication_number": "2026/2783",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -2933,14 +2957,14 @@
       "sha256": "f9b4fc7f1ac8968b6de337f2f002fc6eef884da52de3e3420e8a31de0332d5b0",
       "size_bytes": 1303377,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2782",
       "publication_number": "2026/2782",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -2951,14 +2975,14 @@
       "sha256": "7fadb8bb36071cf03405fde469d1b61892af4383b28968dfe9034c37caa43d18",
       "size_bytes": 850838,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2781",
       "publication_number": "2026/2781",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -2969,14 +2993,14 @@
       "sha256": "2f91fd1510355dcfff59bf7958ba8d12a854e9cdf0a30f1edcccb86a73b893b6",
       "size_bytes": 654563,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2780",
       "publication_number": "2026/2780",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -2987,14 +3011,14 @@
       "sha256": "26248d5e2b077bd3f7b9884f260e808b6226c1523def6817ee150cac0a096afa",
       "size_bytes": 596061,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2779",
       "publication_number": "2026/2779",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -3005,14 +3029,14 @@
       "sha256": "45ab2acf4d513ab65fdf802f16b1be39d8c172436a9dd03ca47994300ce6f6f8",
       "size_bytes": 614491,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2778",
       "publication_number": "2026/2778",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "metadata_only",
       "privacy_risk": "high",
       "verification_status": "official_source_acquired",
@@ -3024,7 +3048,7 @@
       "publication_number": "2026/2777",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "metadata_only",
       "privacy_risk": "high",
       "verification_status": "official_source_acquired",
@@ -3036,7 +3060,7 @@
       "publication_number": "2026/2776",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -3047,14 +3071,14 @@
       "sha256": "4d0b603f7c768ff6d28a6f3d8237b39f9d04aa52bb9772fa5db71e972ad980cf",
       "size_bytes": 164972,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2775",
       "publication_number": "2026/2775",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "metadata_only",
       "privacy_risk": "high",
       "verification_status": "official_source_acquired",
@@ -3066,7 +3090,7 @@
       "publication_number": "2026/2774",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -3077,14 +3101,14 @@
       "sha256": "f1fdf4627e8dc8c7af08d4f01ac7e7b9165f7c7893b1a71fe8f97e597510fe01",
       "size_bytes": 3663787,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2773",
       "publication_number": "2026/2773",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "metadata_only",
       "privacy_risk": "high",
       "verification_status": "official_source_acquired",
@@ -3096,7 +3120,7 @@
       "publication_number": "2026/2772",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -3107,14 +3131,14 @@
       "sha256": "97ff9c261ce250ca7cefcd6eaf56c4651c8462391542a657883d8de741ec4bd7",
       "size_bytes": 678323,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2771",
       "publication_number": "2026/2771",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "metadata_only",
       "privacy_risk": "high",
       "verification_status": "official_source_acquired",
@@ -3126,19 +3150,25 @@
       "publication_number": "2026/2770",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
-      "preservation_status": "skipped",
-      "reason": "fetch_failed"
+      "document_url": "https://albo.tinnvision.cloud/allegati/2026_2770_17_ALLEG?ente=00301390795",
+      "preservation_status": "archived",
+      "reason": "eligible_low_risk_publishable_pdf",
+      "storage_path": "data/public/albo/documents/2026/d672de0b199c130c4c60a31c5197661a3c1e0f086812d58c913edcda600c9599.pdf",
+      "sha256": "d672de0b199c130c4c60a31c5197661a3c1e0f086812d58c913edcda600c9599",
+      "size_bytes": 1489426,
+      "content_type": "application/pdf",
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2769",
       "publication_number": "2026/2769",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -3149,14 +3179,14 @@
       "sha256": "fd4e3ad008333247207df6c4cb39776bece0e336fb9b96d85fd7df690a3a1ca0",
       "size_bytes": 784723,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2768",
       "publication_number": "2026/2768",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -3167,14 +3197,14 @@
       "sha256": "d94b8478e25c4743f48a75f9c69b8a56fdb17a826fcf652221f3a73b51e99111",
       "size_bytes": 873078,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2767",
       "publication_number": "2026/2767",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -3185,14 +3215,14 @@
       "sha256": "4674814d128b3b5aeaa7ce1b079a6a9e676c647a03c02507ad71864483186f44",
       "size_bytes": 181918,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2766",
       "publication_number": "2026/2766",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "metadata_only",
       "privacy_risk": "high",
       "verification_status": "official_source_acquired",
@@ -3204,7 +3234,7 @@
       "publication_number": "2026/2765",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -3215,32 +3245,26 @@
       "sha256": "5609968da473ba3dc8bd6893278ff37e476bf8fe86557c6e92e88cdc73311465",
       "size_bytes": 1948041,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2764",
       "publication_number": "2026/2764",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
-      "document_url": "https://albo.tinnvision.cloud/allegati/2026_2764_2_X?ente=00301390795",
-      "preservation_status": "archived",
-      "reason": "eligible_low_risk_publishable_pdf",
-      "storage_path": "data/public/albo/documents/2026/a2629c21f3488533bf6dec4d0f80127d3c1032f39d70a654b22949d2f49e6cde.pdf",
-      "sha256": "a2629c21f3488533bf6dec4d0f80127d3c1032f39d70a654b22949d2f49e6cde",
-      "size_bytes": 266446,
-      "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "preservation_status": "skipped",
+      "reason": "fetch_failed"
     },
     {
       "id": "albo-2026-2763",
       "publication_number": "2026/2763",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "metadata_only",
       "privacy_risk": "high",
       "verification_status": "official_source_acquired",
@@ -3252,7 +3276,7 @@
       "publication_number": "2026/2762",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -3263,14 +3287,14 @@
       "sha256": "71a38e9a3bb026b05931a8e6e0a89561c1d92d2ba3b5cdeeac958fa54b8d4ecf",
       "size_bytes": 4008617,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2761",
       "publication_number": "2026/2761",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -3281,14 +3305,14 @@
       "sha256": "06ac1612c81a6e2610a20254cb2c078a23396dcd1243dbf330eacb6ddff931aa",
       "size_bytes": 1606575,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2760",
       "publication_number": "2026/2760",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -3299,14 +3323,14 @@
       "sha256": "380610ac2bd1b3076391e3591248939a827f446550e1722144b95adb9aa216bc",
       "size_bytes": 2258540,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2759",
       "publication_number": "2026/2759",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -3317,14 +3341,14 @@
       "sha256": "0cba0efbbfa2f5c310886e11c440d78f11fefecf4d4c3c1ad411c1af481a0c95",
       "size_bytes": 1141129,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2758",
       "publication_number": "2026/2758",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -3335,14 +3359,14 @@
       "sha256": "cc7d0174d5c83cf976ecb0c3c505df8e9684005a481141a3187a1701e1f227d6",
       "size_bytes": 605001,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2757",
       "publication_number": "2026/2757",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -3353,14 +3377,14 @@
       "sha256": "ef93e7e3eefc42f4a2b537921e8726a73b7e08de61be1e7d6c49b88143703e3f",
       "size_bytes": 631337,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2756",
       "publication_number": "2026/2756",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -3371,14 +3395,14 @@
       "sha256": "edc593c622ba5543accab1d7edfb0558679056c7ac3a2cb0e86e9665c2d4b318",
       "size_bytes": 628501,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2755",
       "publication_number": "2026/2755",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -3389,14 +3413,14 @@
       "sha256": "5153a02c9fce5744a8d398798cad8867a5591fa403cfb91d762e78b6547261b3",
       "size_bytes": 964475,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2754",
       "publication_number": "2026/2754",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -3407,14 +3431,14 @@
       "sha256": "59d906fda862e4e9db3be37a5f4a39762064985d075c340b7321ef02a3dcb6fa",
       "size_bytes": 840187,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2753",
       "publication_number": "2026/2753",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable_with_minimisation",
       "privacy_risk": "medium",
       "verification_status": "official_source_acquired",
@@ -3426,7 +3450,7 @@
       "publication_number": "2026/2752",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "do_not_publish",
       "privacy_risk": "high",
       "verification_status": "official_source_acquired",
@@ -3438,7 +3462,7 @@
       "publication_number": "2026/2751",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -3449,14 +3473,14 @@
       "sha256": "b02f6768f54f8a9096b21adc7ce1f434bf69ae455dfce05d7124f0e9568b5908",
       "size_bytes": 1532866,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2749",
       "publication_number": "2026/2749",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable_with_minimisation",
       "privacy_risk": "medium",
       "verification_status": "official_source_acquired",
@@ -3468,7 +3492,7 @@
       "publication_number": "2026/2748",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -3479,14 +3503,14 @@
       "sha256": "a913b88f162926278e11629f8e72fe0dbbb667b61e298e09f23f253ddc5e657c",
       "size_bytes": 527466,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2747",
       "publication_number": "2026/2747",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -3497,14 +3521,14 @@
       "sha256": "018215911390d3e501dd7c1842db875e91c91241895cb15fb66cad4a9822f197",
       "size_bytes": 2197170,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2746",
       "publication_number": "2026/2746",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -3515,14 +3539,14 @@
       "sha256": "7e72675ef147e077273c5c510ba42acd1b57e8b0d908f1cc88af6ad7ddd9ec0c",
       "size_bytes": 2084373,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2745",
       "publication_number": "2026/2745",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "do_not_publish",
       "privacy_risk": "high",
       "verification_status": "official_source_acquired",
@@ -3534,7 +3558,7 @@
       "publication_number": "2026/2744",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "metadata_only",
       "privacy_risk": "high",
       "verification_status": "official_source_acquired",
@@ -3546,7 +3570,7 @@
       "publication_number": "2026/2743",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "metadata_only",
       "privacy_risk": "high",
       "verification_status": "official_source_acquired",
@@ -3558,7 +3582,7 @@
       "publication_number": "2026/2742",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -3569,14 +3593,14 @@
       "sha256": "8e2a5b0a1fce079e952602086dcdf0c92aa0b77728ffecced43b38ef3e335190",
       "size_bytes": 1436774,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2741",
       "publication_number": "2026/2741",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -3587,14 +3611,14 @@
       "sha256": "cb7b693973629d75de257690d2522c9835a365f4ab5d7542588b013e4b28e731",
       "size_bytes": 1513616,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2740",
       "publication_number": "2026/2740",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -3605,14 +3629,14 @@
       "sha256": "bae98514d1edb48267c179f3e443c354c0d29b48f6e88f88ad8e860733482dd1",
       "size_bytes": 1581800,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2739",
       "publication_number": "2026/2739",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -3623,14 +3647,14 @@
       "sha256": "da9da4ab25395b00b9d368f26c9e0f24d048b2c38db4b2d5cfc5d67ece7003e1",
       "size_bytes": 4105846,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2736",
       "publication_number": "2026/2736",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -3641,14 +3665,14 @@
       "sha256": "1e23cabcc269bc29a7d85692de54f0623f38653295a0e5630286e077e54a8eb9",
       "size_bytes": 1357614,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2735",
       "publication_number": "2026/2735",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -3659,14 +3683,14 @@
       "sha256": "f86a73c444876cb21479002b5b16684ef2bb06a956974d7ffae2d7195c9382f9",
       "size_bytes": 2730905,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2734",
       "publication_number": "2026/2734",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -3677,14 +3701,14 @@
       "sha256": "0d6e95acdf6a46edca42ed7ec9450fc6fdaf2ef6bffebbcfd99b59f0ccd68dc8",
       "size_bytes": 697644,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2733",
       "publication_number": "2026/2733",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -3695,14 +3719,14 @@
       "sha256": "e68c2842bd0a0f642e107d82fca4b7a8b392ef9ed68d1a9da2fa3cb4c50ba89e",
       "size_bytes": 2130959,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2732",
       "publication_number": "2026/2732",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -3713,14 +3737,14 @@
       "sha256": "76b73980df65098c7c6b8a9b23b46b57e460900817bf17f454aad25a4988e49c",
       "size_bytes": 2407565,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2731",
       "publication_number": "2026/2731",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -3731,14 +3755,14 @@
       "sha256": "a2f5603b696f49f7759153582c4728633acac968c437fdf5a3c1a5b6e5ab3c07",
       "size_bytes": 2702097,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2730",
       "publication_number": "2026/2730",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -3749,14 +3773,14 @@
       "sha256": "8afc9d6ebf2babc6a9f34112c015ecc56f31ec6f03badb480e9e17e37bcbd335",
       "size_bytes": 2484234,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2729",
       "publication_number": "2026/2729",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -3767,14 +3791,14 @@
       "sha256": "d6b088defa2f9ff8eb3e7d4329cd3876fc4d4b9926dd8d2c9cfbbfbb21a431e7",
       "size_bytes": 1926320,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2727",
       "publication_number": "2026/2727",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -3785,14 +3809,14 @@
       "sha256": "97b3c64999664160c7bc1ad00b9d70bf2b483eee87280771c12a5d57371695e0",
       "size_bytes": 804514,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2726",
       "publication_number": "2026/2726",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -3803,14 +3827,14 @@
       "sha256": "ede98be0620845ed117228d306b2486f397b2d478cde7be34624615760641fc5",
       "size_bytes": 2014085,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2725",
       "publication_number": "2026/2725",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -3821,14 +3845,14 @@
       "sha256": "0e9bda925b7ba95ad4eb5fcbd97df50bd7d6c5d5c32e4d78cec03c36015cce93",
       "size_bytes": 1818221,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2724",
       "publication_number": "2026/2724",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -3839,14 +3863,14 @@
       "sha256": "dc316e560d5f543135e0d40af4d102abb2183a837855ee22ae6152b8739dd3c0",
       "size_bytes": 645909,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2716",
       "publication_number": "2026/2716",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -3857,14 +3881,14 @@
       "sha256": "f4b79863c05c2d16ce8923371549c81454b99bf8d7f99525a5e5f04330f42824",
       "size_bytes": 1323122,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2715",
       "publication_number": "2026/2715",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -3875,14 +3899,14 @@
       "sha256": "8ec442d80e08552148d2d329684d1bd47d43e7e4c063098b90113571d237505e",
       "size_bytes": 1324198,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2714",
       "publication_number": "2026/2714",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -3893,14 +3917,14 @@
       "sha256": "4eafd17d9b2b71ef734e353fbb7126cb56d946699d8ad39c82c86aa7bf9aa017",
       "size_bytes": 357189,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2710",
       "publication_number": "2026/2710",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "metadata_only",
       "privacy_risk": "high",
       "verification_status": "official_source_acquired",
@@ -3912,7 +3936,7 @@
       "publication_number": "2026/2707",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -3923,14 +3947,14 @@
       "sha256": "9920fb46577e534f8187eb42a5ea8e2aecc019654ce6ad5ab0dd3d787b5232b7",
       "size_bytes": 100928,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2706",
       "publication_number": "2026/2706",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -3941,14 +3965,14 @@
       "sha256": "a918a25d9f5dfab9fc7cedb66da7be3f232e8bdb0f56f14a2f146bccaaae4679",
       "size_bytes": 101519,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2705",
       "publication_number": "2026/2705",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -3959,14 +3983,14 @@
       "sha256": "9cbb3553c55fcc086d2e351211f8d4db61dae8bcb6a2428895fe7152c74148df",
       "size_bytes": 103014,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2704",
       "publication_number": "2026/2704",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -3977,14 +4001,14 @@
       "sha256": "685f85bc4868fa8baf706e20fd5f8c01ad98bbb4ac02653b077025cfe3117e15",
       "size_bytes": 100657,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2703",
       "publication_number": "2026/2703",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -3995,14 +4019,14 @@
       "sha256": "2581f596ad6247e53f267205e43b225493b5f270edb09ec75b7fd48c877b4530",
       "size_bytes": 100927,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2647",
       "publication_number": "2026/2647",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -4013,14 +4037,14 @@
       "sha256": "d01da25c07e27075166d609dae1cec7aa457e5ef75eaabfa912f35883b633edf",
       "size_bytes": 359629,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2646",
       "publication_number": "2026/2646",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "metadata_only",
       "privacy_risk": "high",
       "verification_status": "official_source_acquired",
@@ -4032,7 +4056,7 @@
       "publication_number": "2026/2630",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -4044,7 +4068,7 @@
       "publication_number": "2026/2627",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -4055,14 +4079,14 @@
       "sha256": "93428981726c7194b493f382f0974bca7b90efe2232464a9b528078620c7efb4",
       "size_bytes": 358249,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2572",
       "publication_number": "2026/2572",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -4073,14 +4097,14 @@
       "sha256": "b23edbaff14cbc0c024849e4317eb3859ed2efb58ea66fd44375f4015f6ffad2",
       "size_bytes": 357278,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     },
     {
       "id": "albo-2026-2571",
       "publication_number": "2026/2571",
       "source": "Albo Pretorio Comune di Lamezia Terme",
       "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-      "retrieved_at": "2026-09-03T14:58:56.569Z",
+      "retrieved_at": "2026-09-03T18:34:57.880Z",
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "verification_status": "official_source_acquired",
@@ -4091,7 +4115,7 @@
       "sha256": "9c09019f330a65194733f3176d9bd9c815a3b31407ac7d5107efa065cf25ea69",
       "size_bytes": 356981,
       "content_type": "application/pdf",
-      "verified_at": "2026-09-03T14:58:56.569Z"
+      "verified_at": "2026-09-03T18:34:57.880Z"
     }
   ]
 }
