@@ -109,18 +109,37 @@ export const performanceSourceDocuments: PerformanceSourceDocument[] = [
     id: "peg-2024-2026-performance",
     cycle: "2024–2026",
     type: "PEG",
-    title: "Piano della performance — PEG 2024–2026",
+    title: "PEG finanziario 2024–2026",
     officialUrl:
       "https://www.comune.lamezia-terme.cz.it/it/page/documento-di-programmazione-e-rendicontazione",
-    sourceLocator: "Scheda «Piano della performance»",
+    sourceLocator:
+      "Scheda comunale «Piano della performance»; D.G.C. n. 173 del 23.05.2024",
     approvalAct: "D.G.C. n. 173 del 23.05.2024",
     responsibleOffice: null,
     publishedAt: null,
+    roles: ["programming"],
+    acquisitionStatus: "metadata-verified",
+    objectiveExtractionStatus: "pending",
+    note:
+      "La pagina di navigazione comunale etichetta il PEG 2024–2026 come «Piano della performance». L'atto primario di approvazione chiarisce invece che il PEG è finanziario e che gli obiettivi di performance rientrano nelle apposite sezioni del PIAO. Il registro segue il contenuto dell'atto senza qualificare il disallineamento di etichetta come errore amministrativo.",
+  },
+  {
+    id: "piao-2024-2026-approved",
+    cycle: "2024–2026",
+    type: "PIAO",
+    title: "PIAO 2024–2026 approvato",
+    officialUrl:
+      "https://piao.dfp.gov.it/data/documents/129469/PIAO_2024_2026.pdf",
+    sourceLocator:
+      "Registro Amministrazione Trasparente: pubblicazione 09.08.2024 «PIAO 2024-2026 DELIBERA DI G.C. N. 240 DEL 09.08.2024 ED ALLEGATI»",
+    approvalAct: "D.G.C. n. 240 del 09.08.2024",
+    responsibleOffice: null,
+    publishedAt: "2024-08-09",
     roles: ["programming", "objective-definition"],
     acquisitionStatus: "metadata-verified",
     objectiveExtractionStatus: "pending",
     note:
-      "La pagina istituzionale qualifica il PEG 2024–2026 come Piano della performance. Gli obiettivi non sono trascritti finché l'allegato non è verificato con locator puntuale.",
+      "Fonte primaria per la definizione degli obiettivi di performance del ciclo 2024. Il registro comunale ne attesta pubblicazione e atto di approvazione; il Portale PIAO indicizza il PDF, ma al controllo del 3 settembre 2026 il download diretto non era nuovamente servibile. Indicatori, baseline e target restano quindi da estrarre solo dopo verifica documentale con locator puntuale.",
   },
   {
     id: "dup-2025-2027-schema",
