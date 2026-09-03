@@ -3,7 +3,10 @@ import { LAMEZIA_CLIMATE_DATA_URL } from "@/data/lameziaClimate";
 import { LAMEZIA_FAMILIES_CHILDREN_DATA_URL } from "@/data/lameziaFamiliesChildren";
 import { LAMEZIA_FOREIGN_RESIDENTS_DATA_URL } from "@/data/lameziaForeignResidents";
 import { LAMEZIA_HOUSEHOLD_COMPOSITION_2023_DATA_URL } from "@/data/lameziaHouseholdComposition2023";
-import type { OpenDataDatasetFormat, OpenDataThemeDataset } from "@/data/opendataThemeCategories";
+import type {
+  OpenDataDatasetFormat,
+  OpenDataThemeDataset,
+} from "@/data/openDataDatasetRegistry";
 
 export interface OpenDataPrimaryDownload {
   url: string;
@@ -44,12 +47,16 @@ const SPECIALIST_DOWNLOADS: Record<string, OpenDataPrimaryDownload> = {
   },
 };
 
-export function getOpenDataPrimaryDownload(dataset: OpenDataThemeDataset): OpenDataPrimaryDownload | null {
+export function getOpenDataPrimaryDownload(
+  dataset: OpenDataThemeDataset,
+): OpenDataPrimaryDownload | null {
   const distribution = dataset.distributions?.[0];
   if (distribution) {
     return {
       url: distribution.url,
-      downloadName: distribution.downloadName ?? `${dataset.id}.${extensionFor(distribution.format)}`,
+      downloadName:
+        distribution.downloadName ??
+        `${dataset.id}.${extensionFor(distribution.format)}`,
       format: distribution.format,
     };
   }
