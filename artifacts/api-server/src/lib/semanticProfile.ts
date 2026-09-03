@@ -1,4 +1,4 @@
-export const SEMANTIC_PROFILE_VERSION = "1.0.0";
+export const SEMANTIC_PROFILE_VERSION = "1.1.0";
 export const SEMANTIC_PROFILE_URL =
   "https://lamezia-trasparente.pages.dev/semantic/profile.jsonld";
 export const SEMANTIC_CONTEXT_URL =
@@ -61,6 +61,12 @@ const PROCUREMENT_RECORD_MAPPINGS: SemanticMapping[] = [
     vocabulary: "eProcurement Ontology",
     version: "5.2.0",
   },
+  {
+    relation: "reference",
+    term: "https://w3id.org/italia/onto/PublicContract",
+    vocabulary: "OntoPiA Public Contracts (PC-AP_IT)",
+    version: null,
+  },
 ];
 
 const CIVIC_THEME_MAPPINGS: SemanticMapping[] = [
@@ -85,9 +91,21 @@ const PERFORMANCE_MAPPINGS: SemanticMapping[] = [
     vocabulary: "RDF Data Cube",
     version: "2014-01-16",
   },
+  {
+    relation: "reference",
+    term: "https://w3id.org/italia/onto/Indicator",
+    vocabulary: "OntoPiA Indicator",
+    version: null,
+  },
 ];
 
 const PNRR_PROJECT_MAPPINGS: SemanticMapping[] = [
+  {
+    relation: "reference",
+    term: "https://w3id.org/italia/PublicInvestment/onto/PublicInvestment",
+    vocabulary: "Ontologia degli Investimenti Pubblici (DIPE/ISTAT)",
+    version: "2026-07-13",
+  },
   {
     relation: "subClassOf",
     term: "https://schema.org/Project",
