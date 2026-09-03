@@ -6,6 +6,7 @@ import app from "../app";
 import { db, pool, publicationsTable } from "@workspace/db";
 import { publicActPublicId } from "@workspace/publication-standardisation/public-act";
 import { attestPublicationAtIngestion } from "../lib/publicActProjection";
+import { SEMANTIC_PROFILE_VERSION } from "../lib/semanticProfile";
 
 const createdIds: number[] = [];
 const ACCEPT = "application/json, text/event-stream";
@@ -244,7 +245,7 @@ describe("MCP server", () => {
           "https://lamezia-trasparente.pages.dev/semantic/context.jsonld",
         ontology:
           "https://lamezia-trasparente.pages.dev/semantic/ontology.ttl",
-        profileVersion: "1.0.0",
+        profileVersion: SEMANTIC_PROFILE_VERSION,
         entityType:
           "https://lamezia-trasparente.pages.dev/ontology#AdministrativeAct",
       },
