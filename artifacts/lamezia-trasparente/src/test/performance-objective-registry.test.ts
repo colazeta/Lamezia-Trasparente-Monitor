@@ -11,7 +11,7 @@ import {
 
 describe("performance objective registry", () => {
   it("contains only official, structurally valid sources", () => {
-    expect(performanceSourceDocuments.length).toBeGreaterThanOrEqual(5);
+    expect(performanceSourceDocuments.length).toBeGreaterThanOrEqual(6);
     expect(validatePerformanceObjectiveRegistry()).toEqual([]);
 
     const finalMonitoring = performanceSourceDocuments.find(
@@ -23,6 +23,35 @@ describe("performance objective registry", () => {
       objectiveExtractionStatus: "verified",
     });
     expect(finalMonitoring?.officialUrl).toContain("municipiumapp.it");
+  });
+
+  it("uses the approved PIAO, not the financial PEG, as the 2024 objective-definition source", () => {
+    const peg = performanceSourceDocuments.find(
+      (source) => source.id === "peg-2024-2026-performance",
+    );
+    const piao = performanceSourceDocuments.find(
+      (source) => source.id === "piao-2024-2026-approved",
+    );
+
+    expect(peg).toMatchObject({
+      type: "PEG",
+      title: "PEG finanziario 2024–2026",
+      roles: ["programming"],
+      approvalAct: "D.G.C. n. 173 del 23.05.2024",
+    });
+    expect(peg?.roles).not.toContain("objective-definition");
+    expect(peg?.note).toMatch(/obiettivi di performance.*PIAO/i);
+
+    expect(piao).toMatchObject({
+      type: "PIAO",
+      title: "PIAO 2024–2026 approvato",
+      approvalAct: "D.G.C. n. 240 del 09.08.2024",
+      publishedAt: "2024-08-09",
+      roles: ["programming", "objective-definition"],
+      acquisitionStatus: "metadata-verified",
+      objectiveExtractionStatus: "pending",
+    });
+    expect(piao?.officialUrl).toContain("piao.dfp.gov.it");
   });
 
   it("materialises the first three page-verified 2024 objective records", () => {
