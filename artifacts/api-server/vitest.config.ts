@@ -18,6 +18,7 @@ const databaseFreeTests = [
   "src/lib/confiscatedAssetsSpatial.test.ts",
   "src/lib/ingestionSchedulerConfig.test.ts",
   "src/lib/publicActProjection.unit.test.ts",
+  "src/lib/semanticContract.test.ts",
   // Parser/contract only: imports the DB schema but never opens a connection.
   // Keeping these in the DB-free suite means source-contract regressions are
   // caught by the standard CI rather than only by a full integration database.
