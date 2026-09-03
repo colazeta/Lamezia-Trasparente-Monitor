@@ -29,6 +29,10 @@ https://lamezia-trasparente.pages.dev/semantic/profile.jsonld
 https://lamezia-trasparente.pages.dev/semantic/ontology.ttl
 ```
 
+The HTML entry point advertises the JSON-LD profile and Turtle ontology through
+`rel="alternate"`, so the semantic layer is discoverable rather than an
+undocumented side channel.
+
 The local namespace is:
 
 ```text
@@ -42,7 +46,8 @@ The initial semantic profile version is `1.0.0`.
 | Layer | Standard / vocabulary | Version used | Role in LameziaTrasparente |
 | --- | --- | --- | --- |
 | Dataset catalogues | W3C DCAT | 3 | Base vocabulary for catalogues, datasets, distributions and data services. |
-| EU data catalogues | DCAT-AP | 3.0.1 | Conformance **target** for catalogue metadata; conformance must be demonstrated with the applicable validation profile, not inferred from field names. |
+| Italian data catalogues | DCAT-AP_IT | current official national profile/ontology | National interoperability profile used by the existing JSON-LD catalogue. `dct:conformsTo` is emitted only after a local mandatory-metadata gate passes; external RDF/SHACL validation remains a separate stronger gate. |
+| EU data catalogues | DCAT-AP | 3.0.1 | Forward conformance **target** for catalogue metadata; conformance must be demonstrated with the applicable validation profile, not inferred from field names. |
 | Provenance | W3C PROV-O | 2013-04-30 | Source, derivation and public-projection provenance. |
 | Controlled concepts | W3C SKOS | 2009-08-18 | Themes, categories, statuses and other governed concept schemes. |
 | Public procurement | EU eProcurement Ontology (ePO) | 5.2.0 | Domain semantics for contracts, buyers, economic operators and the procurement lifecycle. |
@@ -53,6 +58,29 @@ The initial semantic profile version is `1.0.0`.
 The national semantic catalogue at `schema.gov.it` is treated as the primary
 Italian reference for reusable public-sector ontologies and controlled
 vocabularies.
+
+### National DCAT-AP_IT vs EU DCAT-AP 3.0.1
+
+These are deliberately not collapsed into one label.
+
+The existing Open Data endpoints use the Italian `dcatapit` ontology and
+controlled vocabularies needed for national interoperability. The platform now
+validates the mandatory source-backed fields it can establish locally and
+asserts `dct:conformsTo <http://dati.gov.it/onto/dcatapit>` only for records that
+pass that gate. A public diagnostic is exposed at:
+
+```text
+/api/opendata/dcat-ap-it/validation
+```
+
+The local gate checks identifier, title, description, modification date, EU data
+theme, frequency, distributions, controlled file type, licence URI and access
+URL. It never manufactures a missing mandatory value to make a record appear
+conformant.
+
+DCAT-AP 3.0.1 remains the European forward target for the next catalogue
+hardening cycle. Full conformance to either profile requires the appropriate
+external RDF/SHACL validation in addition to local field checks.
 
 ## Conformance is not alignment
 
@@ -241,17 +269,33 @@ public-safe data and verification block:
 
 Semantic quality is a testable contract, not a styling claim.
 
-New semantic work should add progressively stronger gates:
+Current implemented gates include:
 
-1. JSON-LD parses successfully and uses stable HTTPS/HTTP ontology IRIs;
-2. Turtle parses successfully;
-3. all MCP resources resolve to a registered semantic descriptor;
-4. SKOS concept schemes have unique stable identifiers and labels;
-5. DCAT catalogue exports are validated against the chosen DCAT-AP release;
-6. RDF/JSON-LD projections are validated with SHACL where an authoritative shape
+1. semantic-profile coverage for every MCP structured resource;
+2. explicit tests that procurement uses a `describes` relation rather than OWL
+   equivalence;
+3. explicit reference-only treatment of the draft OntoPiA Transparency model;
+4. local mandatory-field validation before a DCAT record receives an Italian
+   `dct:conformsTo` assertion;
+5. public diagnostics for missing DCAT-AP_IT mandatory metadata;
+6. ordinary TypeScript, build and public-safety/fail-closed gates.
+
+The Turtle ontology and JSON-LD profile have also been syntax-parsed during the
+implementation review. The next step is to make equivalent RDF parser checks a
+permanent CI gate rather than relying on a review-time validation.
+
+Further semantic work should add progressively stronger gates:
+
+1. JSON-LD parses successfully in CI and uses stable HTTPS/HTTP ontology IRIs;
+2. Turtle parses successfully in CI;
+3. SKOS concept schemes have unique stable identifiers and labels;
+4. DCAT catalogue exports are validated with the chosen national/EU validator
+   and SHACL shapes;
+5. RDF/JSON-LD projections are validated with SHACL where an authoritative shape
    is available;
-7. ontology upgrades are explicit versioned changes, not silent namespace
-   substitutions.
+6. ontology upgrades are explicit versioned changes, not silent namespace
+   substitutions;
+7. canonical semantic URIs are dereferenceable and covered by regression tests.
 
 A failing semantic validation should block publication of the semantic artifact,
 not silently downgrade its meaning.
