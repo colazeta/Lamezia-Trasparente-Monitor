@@ -4,7 +4,7 @@ import { assessSourceHealth, SOURCE_HEALTH } from "@/data/sourceHealth";
 
 describe("SOURCE_HEALTH", () => {
   it("derives the public register from versioned evidence", () => {
-    expect(SOURCE_HEALTH.sources).toHaveLength(8);
+    expect(SOURCE_HEALTH.sources).toHaveLength(10);
     expect(SOURCE_HEALTH.generatedAt).toBeTruthy();
     expect(SOURCE_HEALTH.traceabilityScore).toBeGreaterThan(0);
     expect(SOURCE_HEALTH.freshnessScore).toBeGreaterThanOrEqual(0);
@@ -34,8 +34,8 @@ describe("SOURCE_HEALTH", () => {
 
   it("covers every dataset published in the Open Data archive", () => {
     expect(SOURCE_HEALTH.openDataCoverage).toEqual({
-      published: 6,
-      monitored: 6,
+      published: 9,
+      monitored: 9,
       percentage: 100,
       missingDatasetIds: [],
     });
@@ -43,7 +43,7 @@ describe("SOURCE_HEALTH", () => {
     const datasetIds = SOURCE_HEALTH.sources
       .map((source) => source.openDataDatasetId)
       .filter(Boolean);
-    expect(new Set(datasetIds).size).toBe(6);
+    expect(new Set(datasetIds).size).toBe(9);
   });
 
   it("keeps household verification separate from the ISTAT source update", () => {
