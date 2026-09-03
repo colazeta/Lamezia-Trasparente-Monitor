@@ -5,12 +5,12 @@
     "source": "Città di Lamezia Terme — Attuazione Misure PNRR",
     "source_url": "https://www.comune.lamezia-terme.cz.it/it/attuazione-misure-pnrr",
     "source_type": "official_municipal_project_pages",
-    "materialized_at": "2026-09-02T21:01:15.563Z",
-    "source_index_hash": "c7a08dbc6c8ea8f08d1849762aca29587dfe392cc42b1a099f42c8f2e078f1b7",
+    "materialized_at": "2026-09-03T11:10:38.924Z",
+    "source_index_hash": "be25970bf1061b2275430bde868d6f04e9ae57277de67cd68fc2803ac8ecccb0",
     "opencup_source": "OpenCUP — Sistema CUP",
     "opencup_source_url": "https://www.opencup.gov.it/portale/web/opencup/home",
     "opencup_source_type": "official_public_investment_project_pages",
-    "opencup_source_hash": "f6fa4d2b0d76e96f34983589fbc5dbf3ba07c18d66002291134bdcb3051813b2",
+    "opencup_source_hash": "90d390d44bcf6fb8b169044888c614ee1f2196bf7e820bd40f22bc1a135d4ccf",
     "albo_snapshot_generated_at": "2026-09-02T16:31:00.452Z",
     "update_policy": "Controllo automatico ogni sei ore della sezione comunale PNRR, rilevamento dei nuovi CUP, arricchimento delle schede pubbliche OpenCUP e riconciliazione con gli output pubblici dell'Albo Pretorio; il file cambia solo quando mutano dati, stato di acquisizione o collegamenti documentali.",
     "opencup_update_policy": "Ogni nuovo CUP comunale genera subito una scheda e avvia l'acquisizione OpenCUP. Se il corredo non è ancora disponibile resta in attesa e viene ritentato automaticamente; un errore temporaneo su un CUP già acquisito conserva l'ultimo corredo valido, marcandolo come non aggiornato.",
@@ -70,8 +70,8 @@
     "projects_with_opencup_total_cost": 28,
     "projects_with_opencup_public_funding": 28,
     "projects_with_albo_evidence": 8,
-    "municipal_attachments": 279,
-    "municipal_attachments_classified": 245,
+    "municipal_attachments": 286,
+    "municipal_attachments_classified": 252,
     "municipal_attachments_with_year": 221,
     "municipal_attachments_with_day": 42,
     "albo_evidence": 11,
@@ -2866,10 +2866,34 @@
           "date_basis": null,
           "phase": "completion_verification",
           "classification_basis": "title_keyword"
+        },
+        {
+          "title": "DD.Approvazione Collaudo Statico",
+          "url": "https://www.comune.lamezia-terme.cz.it/s3/3458/allegati/dd-approvazione-collaudo-statico.pdf",
+          "source_order": 17,
+          "sequence": null,
+          "document_date": null,
+          "document_year": null,
+          "date_precision": null,
+          "date_basis": null,
+          "phase": "completion_verification",
+          "classification_basis": "title_keyword"
+        },
+        {
+          "title": "DD.Approvazione Certificato di Collaudo Tecnico Amministrativo",
+          "url": "https://www.comune.lamezia-terme.cz.it/s3/3458/allegati/dd-approvazione-certificato-di-collaudo-tecnico-amministrativo.pdf",
+          "source_order": 18,
+          "sequence": null,
+          "document_date": null,
+          "document_year": null,
+          "date_precision": null,
+          "date_basis": null,
+          "phase": "completion_verification",
+          "classification_basis": "title_keyword"
         }
       ],
       "verification_status": "official_municipal_project_page",
-      "source_record_hash": "011615e937e81298d84f76a7915e795714e7557d5f171ace27313daa63dc7f52",
+      "source_record_hash": "d247256596cebe77f715a711cc6aed1b2fe323afe0638fc22e95bc14bce41dff",
       "opencup": {
         "source_url": "https://www.opencup.gov.it/portale/it/web/opencup/home/progetto/-/cup/C88C22000350006",
         "cup": "C88C22000350006",
@@ -3043,7 +3067,7 @@
           "macro_area": "SUD",
           "region": "CALABRIA",
           "province": "CATANZARO",
-          "municipality": "CORTALE, CURINGA, FALERNA, FEROLETO ANTICO, GIZZERIA, JACURSO, MAIDA, NOCERA TIRINESE, PIANOPOLI, PLATANIA, SAN PIETRO A MAIDA, LAMEZIA TERME"
+          "municipality": "FALERNA, PIANOPOLI, NOCERA TIRINESE, SAN PIETRO A MAIDA, LAMEZIA TERME, CORTALE, CURINGA, PLATANIA, FEROLETO ANTICO, GIZZERIA, JACURSO"
         },
         "holder": {
           "name": "COMUNE DI LAMEZIA TERME - CZ -",
@@ -3076,12 +3100,12 @@
           "strategic_infrastructure_law": false
         },
         "verification_status": "official_opencup_project_page",
-        "source_record_hash": "773fd5acee4de81de4e5102a5491470aa6fe500842c63e3b11f801536da99720"
+        "source_record_hash": "d44d99debac24ca97d565622dc1dc4f17ddc1d779d2dad6060c1793cf54c759e"
       },
       "opencup_acquisition": {
         "status": "fresh",
-        "acquired_at": "2026-09-01T05:31:15.965Z",
-        "status_observed_at": "2026-09-01T06:20:34.137Z",
+        "acquired_at": "2026-09-03T11:10:38.924Z",
+        "status_observed_at": "2026-09-03T11:10:38.924Z",
         "fallback_used": false
       },
       "albo_evidence_ids": []
@@ -5812,10 +5836,70 @@
           "date_basis": null,
           "phase": "completion_verification",
           "classification_basis": "title_keyword"
+        },
+        {
+          "title": "DD. Approvazione e liquidazione IV^SAL",
+          "url": "https://www.comune.lamezia-terme.cz.it/s3/3458/allegati/dd-approvazione-e-liquidazione-iv-sal.pdf",
+          "source_order": 18,
+          "sequence": null,
+          "document_date": null,
+          "document_year": null,
+          "date_precision": null,
+          "date_basis": null,
+          "phase": "execution_spending",
+          "classification_basis": "title_keyword"
+        },
+        {
+          "title": "DD. .Approvazione e liquidazione Sato finale lavori",
+          "url": "https://www.comune.lamezia-terme.cz.it/s3/3458/allegati/dd-approvazione-e-liquidazione-sato-finale-lavori.pdf",
+          "source_order": 19,
+          "sequence": null,
+          "document_date": null,
+          "document_year": null,
+          "date_precision": null,
+          "date_basis": null,
+          "phase": "execution_spending",
+          "classification_basis": "title_keyword"
+        },
+        {
+          "title": "DD. Incarico tecnico di Direttore dei Lavori, CSE.Liquidazione saldo",
+          "url": "https://www.comune.lamezia-terme.cz.it/s3/3458/allegati/dd-incarico-tecnico-di-direttore-dei-lavori-cse-liquidazione-saldo.pdf",
+          "source_order": 20,
+          "sequence": null,
+          "document_date": null,
+          "document_year": null,
+          "date_precision": null,
+          "date_basis": null,
+          "phase": "execution_spending",
+          "classification_basis": "title_keyword"
+        },
+        {
+          "title": "DD. Approvazione collaudo statico",
+          "url": "https://www.comune.lamezia-terme.cz.it/s3/3458/allegati/dd-approvazione-collaudo-statico.pdf",
+          "source_order": 21,
+          "sequence": null,
+          "document_date": null,
+          "document_year": null,
+          "date_precision": null,
+          "date_basis": null,
+          "phase": "completion_verification",
+          "classification_basis": "title_keyword"
+        },
+        {
+          "title": "DD.Approvazione Collaudo Tecnico Amministrativo. Liquidazione saldo",
+          "url": "https://www.comune.lamezia-terme.cz.it/s3/3458/allegati/dd-approvazione-collaudo-tecnico-amministrativo-liquidazione-saldo.pdf",
+          "source_order": 22,
+          "sequence": null,
+          "document_date": null,
+          "document_year": null,
+          "date_precision": null,
+          "date_basis": null,
+          "phase": "completion_verification",
+          "classification_basis": "title_keyword"
         }
       ],
       "verification_status": "official_municipal_project_page",
-      "source_record_hash": "0f4bda1071ac02d79e6fba8c2313890d74a939ec6e93481aa242a09932722303",
+      "source_record_hash": "3e61ca7a630c19af89e22ec24240a642d1c660f9cee258029f553389a1b73082",
       "opencup": {
         "source_url": "https://www.opencup.gov.it/portale/it/web/opencup/home/progetto/-/cup/C83I22000170006",
         "cup": "C83I22000170006",
