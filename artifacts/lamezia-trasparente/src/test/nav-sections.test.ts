@@ -56,16 +56,15 @@ describe("NAV_GROUPS invariants", () => {
     }
   });
 
-  it("keeps the primary civic macro-areas explicit and ordered", () => {
+  it("keeps the seven primary civic macro-areas explicit and ordered", () => {
     expect(NAV_GROUPS.map((group) => group.label)).toEqual([
-      "Cosa decide il Comune",
-      "Chi governa e come vota",
-      "Cosa viene finanziato e realizzato",
-      "Criticità e luoghi della città",
-      "Memoria civica e antimafia",
-      "Partecipazione e proposte",
-      "Dati pubblici e territorio",
-      "Stato delle fonti e monitoraggio",
+      "Atti",
+      "Comune",
+      "Spesa",
+      "Territorio",
+      "Legalità",
+      "Dati",
+      "Partecipa",
     ]);
   });
 
@@ -84,17 +83,21 @@ describe("NAV_GROUPS invariants", () => {
         "/performance/confronta",
       ]),
     );
-    expect(visibleHrefs).not.toEqual(expect.arrayContaining([
-      "/bandi",
-      "/archivio-proposte",
-      "/monitoraggio/nuovo",
-      "/legalita/timeline",
-      "/performance/confronta",
-    ]));
+    expect(visibleHrefs).not.toEqual(
+      expect.arrayContaining([
+        "/bandi",
+        "/archivio-proposte",
+        "/monitoraggio/nuovo",
+        "/legalita/timeline",
+        "/performance/confronta",
+      ]),
+    );
   });
 
-  it("keeps planned sections visible but not navigable or searchable", () => {
-    const planned = navItems.filter((item) => item.state === "planned");
+  it("keeps planned sections in the full inventory but out of nav and search", () => {
+    const allItems = ALL_NAV_GROUPS.flatMap((group) => group.items);
+    const planned = allItems.filter((item) => item.state === "planned");
+    const visibleHrefs = navItems.map((item) => item.href);
     const commandPaletteHrefs = COMMAND_PALETTE_GROUPS.flatMap((group) =>
       group.items.map((item) => item.href),
     );
@@ -107,8 +110,10 @@ describe("NAV_GROUPS invariants", () => {
         "/dataset-scaricabili",
       ]),
     );
+
     for (const item of planned) {
       expect(isNavItemNavigable(item)).toBe(false);
+      expect(visibleHrefs).not.toContain(item.href);
       expect(commandPaletteHrefs).not.toContain(item.href);
     }
   });
