@@ -10,7 +10,9 @@ LameziaTrasparente exposes a permanent, public **Model Context Protocol (MCP)** 
 
 The server supports the current MCP `2026-07-28` stateless protocol and retains stateless compatibility for 2025-era clients. The stable public tool contract covers administrative records, contracts, monitoring themes, performance indicators and PNRR projects. All tools are annotated read-only; no editorial, administrative or raw-ingestion capability is exposed.
 
-For endpoint configuration, the stable tool catalogue, protocol compatibility, safety rules and examples, see **[`docs/MCP.md`](docs/MCP.md)**.
+Structured MCP results also expose a **versioned civic semantic profile**. LameziaTrasparente reuses DCAT/DCAT-AP, PROV-O, SKOS, the EU eProcurement Ontology and Italian OntoPiA/schema.gov.it assets while keeping alignment, reference and validated conformance as distinct concepts.
+
+For endpoint configuration, the stable tool catalogue, protocol compatibility, safety rules and examples, see **[`docs/MCP.md`](docs/MCP.md)**. For ontology design, URI policy and semantic-governance rules, see **[`docs/SEMANTIC_MODEL.md`](docs/SEMANTIC_MODEL.md)**.
 
 ## WebMCP Challenge 2026
 
@@ -99,6 +101,7 @@ pnpm --filter @workspace/db seed      # aggiorna i dati di seed
 ## Documentazione aggiuntiva
 
 - [Public MCP server](docs/MCP.md)
+- [Modello semantico e ontologie](docs/SEMANTIC_MODEL.md)
 - [WebMCP Challenge 2026](docs/WEBMCP_CHALLENGE_2026.md)
 - [API pubblica (REST + MCP)](artifacts/api-server/PUBLIC_API.md)
 - [Architettura delle integrazioni](docs/architecture/README.md)
