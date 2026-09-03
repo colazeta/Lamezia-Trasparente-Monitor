@@ -40,9 +40,10 @@ the same public-safe data model:
 3. **Remote MCP** — this endpoint, for external MCP clients, research agents and
    other interoperable tools.
 
-The MCP server does not maintain a separate hidden copy of the civic data. Tool
-handlers reuse the same public projection and public data functions as the REST
-API.
+The same data core also feeds public Open Data metadata and the versioned
+semantic profile. The MCP server does not maintain a separate hidden copy of the
+civic data. Tool handlers reuse the same public projection and public data
+functions as the REST API.
 
 ## Safety and interpretation contract
 
@@ -82,7 +83,7 @@ publish `structuredContent` in this envelope:
     "profile": "https://lamezia-trasparente.pages.dev/semantic/profile.jsonld",
     "context": "https://lamezia-trasparente.pages.dev/semantic/context.jsonld",
     "ontology": "https://lamezia-trasparente.pages.dev/semantic/ontology.ttl",
-    "profileVersion": "1.0.0",
+    "profileVersion": "1.1.0",
     "entityType": "https://lamezia-trasparente.pages.dev/ontology#PublicProcurementRecord",
     "mappings": [
       {
@@ -90,6 +91,12 @@ publish `structuredContent` in this envelope:
         "term": "http://data.europa.eu/a4g/ontology#Contract",
         "vocabulary": "eProcurement Ontology",
         "version": "5.2.0"
+      },
+      {
+        "relation": "reference",
+        "term": "https://w3id.org/italia/onto/PublicContract",
+        "vocabulary": "OntoPiA Public Contracts (PC-AP_IT)",
+        "version": null
       }
     ]
   },
@@ -114,14 +121,22 @@ clients.
 
 Current baseline:
 
-- **DCAT 3 / DCAT-AP 3.0.1** for public data catalogue semantics and catalogue
-  conformance targets;
+- **DCAT 3 / DCAT-AP 3.0.1** for public data catalogue semantics and the
+  European catalogue conformance target;
+- **DCAT-AP_IT** for the existing Italian Open Data representation, with a
+  source-backed mandatory-metadata gate before a `dct:conformsTo` assertion is
+  emitted;
 - **PROV-O** for provenance-bearing public entities;
 - **SKOS** for governed themes and controlled concept schemes;
-- **EU eProcurement Ontology 5.2.0** for procurement-domain semantics;
+- **EU eProcurement Ontology 5.2.0** as the primary procurement-domain
+  alignment, with **OntoPiA Public Contracts (PC-AP_IT)** retained as the
+  Italian-domain reference;
 - **RDF Data Cube** as the observation pattern for time-specific performance
-  values;
-- **OntoPiA/schema.gov.it** as the Italian semantic reference layer. The
+  values, with **OntoPiA Indicator** as the Italian-domain reference;
+- the **DIPE/ISTAT Ontologia degli Investimenti Pubblici** as the primary
+  Italian reference for PNRR/public-investment records because it is explicitly
+  derived from CUP and OpenCUP semantics;
+- **OntoPiA/schema.gov.it** as the wider Italian semantic reference layer. The
   OntoPiA Transparency ontology is explicitly treated as a draft reference, not
   a validated ANAC conformance profile.
 
@@ -218,6 +233,7 @@ Compatibility is deliberately **stateless**. Session-oriented legacy `GET` and
 ## Versioning policy
 
 The MCP implementation has its own server version, currently `1.2.0`.
+The semantic profile is versioned separately and is currently `1.1.0`.
 
 For future changes:
 
@@ -245,6 +261,7 @@ Protocol and public-safety tests live in:
 
 ```text
 artifacts/api-server/src/routes/mcp.test.ts
+artifacts/api-server/src/lib/semanticProfile.test.ts
 ```
 
 Before merging MCP changes, run at least:
