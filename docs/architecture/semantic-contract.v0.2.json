@@ -1,0 +1,194 @@
+{
+  "schema_version": "lt-semantic-contract.v0.2",
+  "profile_version": "lt-semantic-profile.v0.2",
+  "profile_path": "docs/architecture/semantic-profile.v0.2.yaml",
+  "issue": 943,
+  "status": "runtime_candidate_validation",
+  "runtime_public_surface": false,
+  "database_migration_authorized": false,
+  "entity_types": [
+    "Person",
+    "Organization",
+    "PublicOrganization",
+    "PrivateOrganization",
+    "Place",
+    "Asset",
+    "Project",
+    "ProcurementProcess",
+    "PublicContract",
+    "Event",
+    "InformationResource",
+    "AdministrativeAct",
+    "Dataset",
+    "Indicator",
+    "TransparencyObligation",
+    "TransparencyResource"
+  ],
+  "record_types": [
+    "Source",
+    "SourceRecord",
+    "Statement",
+    "Identifier",
+    "Distribution"
+  ],
+  "associations": [
+    {
+      "type": "RoleAssignment",
+      "required_dimensions": ["agent", "role", "context", "source_statement"],
+      "temporal": true,
+      "source_statement_required": true,
+      "requires_dated_event": false,
+      "historical_event_implied": false
+    },
+    {
+      "type": "EventParticipation",
+      "required_dimensions": ["agent", "event", "participation_role", "source_statement"],
+      "temporal": true,
+      "source_statement_required": true,
+      "requires_dated_event": false,
+      "historical_event_implied": false
+    },
+    {
+      "type": "Ownership",
+      "required_dimensions": ["owner", "owned_entity_or_asset", "source_statement"],
+      "temporal": true,
+      "source_statement_required": true,
+      "requires_dated_event": false,
+      "historical_event_implied": false
+    },
+    {
+      "type": "ProcurementParticipation",
+      "required_dimensions": ["agent", "procurement_object", "role", "source_statement"],
+      "temporal": true,
+      "source_statement_required": true,
+      "requires_dated_event": false,
+      "historical_event_implied": false
+    },
+    {
+      "type": "ProjectParticipation",
+      "required_dimensions": ["agent", "project", "role", "source_statement"],
+      "temporal": true,
+      "source_statement_required": true,
+      "requires_dated_event": false,
+      "historical_event_implied": false
+    },
+    {
+      "type": "AssetStateAssertion",
+      "required_dimensions": ["asset", "state", "source_record", "source_statement"],
+      "temporal": true,
+      "source_statement_required": true,
+      "requires_dated_event": false,
+      "historical_event_implied": false
+    },
+    {
+      "type": "AssetMeasure",
+      "required_dimensions": ["asset", "measure_type", "source_statement", "event_date_or_explicit_date_precision"],
+      "temporal": true,
+      "source_statement_required": true,
+      "requires_dated_event": true,
+      "historical_event_implied": true
+    },
+    {
+      "type": "EntityMention",
+      "required_dimensions": ["information_resource", "entity", "matching_basis"],
+      "temporal": false,
+      "source_statement_required": false,
+      "requires_dated_event": false,
+      "historical_event_implied": false
+    },
+    {
+      "type": "EvidenceLink",
+      "required_dimensions": ["evidence_resource_or_source_record", "target_entity", "match_basis", "source_statement"],
+      "temporal": false,
+      "source_statement_required": true,
+      "requires_dated_event": false,
+      "historical_event_implied": false
+    },
+    {
+      "type": "IndicatorObservation",
+      "required_dimensions": ["indicator", "period", "value", "unit", "source_statement"],
+      "temporal": true,
+      "source_statement_required": true,
+      "requires_dated_event": false,
+      "historical_event_implied": false
+    },
+    {
+      "type": "EntityResolutionDecision",
+      "required_dimensions": ["candidate_record", "target_entity", "resolution_status", "basis"],
+      "temporal": true,
+      "source_statement_required": false,
+      "requires_dated_event": false,
+      "historical_event_implied": false
+    }
+  ],
+  "status_axes": {
+    "independent": true,
+    "entity_resolution_statuses": [
+      "resolved_by_qualified_identifier",
+      "resolved_by_authoritative_context",
+      "resolved_after_editorial_review",
+      "possible_match",
+      "unresolved",
+      "rejected_match"
+    ],
+    "relation_assertion_statuses": [
+      "source_explicit",
+      "deterministic_identifier_link",
+      "deterministic_rule",
+      "editorially_confirmed",
+      "candidate",
+      "mention_only",
+      "unresolved"
+    ]
+  },
+  "evidence_link_policy": {
+    "allowed_match_bases": [
+      "qualified_identifier_exact",
+      "source_explicit_reference",
+      "deterministic_rule",
+      "editorial_review"
+    ],
+    "disallowed_canonical_link_bases": [
+      "topic_only",
+      "generic_text_similarity",
+      "pnrr_keyword_only"
+    ],
+    "text_only_canonical_link_allowed": false
+  },
+  "identifier_policies": [
+    {
+      "scheme": "CUP",
+      "canonical_target_types": ["Project"],
+      "scope": "domain_qualified",
+      "public_safety_review": false
+    },
+    {
+      "scheme": "CIG",
+      "canonical_target_types": ["ProcurementProcess", "PublicContract"],
+      "scope": "domain_qualified",
+      "public_safety_review": false
+    },
+    {
+      "scheme": "source_id",
+      "canonical_target_types": ["SourceRecord"],
+      "scope": "source_specific",
+      "public_safety_review": false
+    },
+    {
+      "scheme": "tax_identifier",
+      "canonical_target_types": ["Person", "Organization"],
+      "scope": "domain_qualified",
+      "public_safety_review": true
+    }
+  ],
+  "invariants": [
+    "no_fictional_seed_as_evidence",
+    "no_name_only_entity_merge",
+    "no_status_to_history_inference",
+    "no_text_only_project_reconciliation",
+    "source_records_preserved_after_canonicalization",
+    "observation_provenance_preserved",
+    "relation_and_identity_confidence_separate"
+  ],
+  "future_exports": ["json", "jsonld", "rdf_turtle", "shacl"]
+}
