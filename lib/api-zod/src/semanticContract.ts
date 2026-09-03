@@ -133,7 +133,7 @@ export const SemanticIdentifierSchemeSchema = z.enum(
 );
 export const SemanticIdentifierScopeSchema = z.enum(SEMANTIC_IDENTIFIER_SCOPES);
 
-export const SemanticAssociationDefinitionSchema = z.object({
+export const SemanticAssociationDefinitionSchema = z.strictObject({
   type: SemanticAssociationTypeSchema,
   required_dimensions: z.array(z.string().min(1)).min(1),
   temporal: z.boolean(),
@@ -142,14 +142,14 @@ export const SemanticAssociationDefinitionSchema = z.object({
   historical_event_implied: z.boolean(),
 });
 
-export const SemanticIdentifierPolicySchema = z.object({
+export const SemanticIdentifierPolicySchema = z.strictObject({
   scheme: SemanticIdentifierSchemeSchema,
   canonical_target_types: z.array(SemanticCanonicalTargetTypeSchema),
   scope: SemanticIdentifierScopeSchema,
   public_safety_review: z.boolean(),
 });
 
-export const SemanticContractSchema = z.object({
+export const SemanticContractSchema = z.strictObject({
   schema_version: z.literal("lt-semantic-contract.v0.2"),
   profile_version: z.literal("lt-semantic-profile.v0.2"),
   profile_path: z.literal("docs/architecture/semantic-profile.v0.2.yaml"),
@@ -160,7 +160,7 @@ export const SemanticContractSchema = z.object({
   entity_types: z.array(SemanticEntityTypeSchema).min(1),
   record_types: z.array(SemanticRecordTypeSchema).min(1),
   associations: z.array(SemanticAssociationDefinitionSchema).min(1),
-  status_axes: z.object({
+  status_axes: z.strictObject({
     independent: z.literal(true),
     entity_resolution_statuses: z
       .array(SemanticEntityResolutionStatusSchema)
@@ -169,7 +169,7 @@ export const SemanticContractSchema = z.object({
       .array(SemanticRelationAssertionStatusSchema)
       .min(1),
   }),
-  evidence_link_policy: z.object({
+  evidence_link_policy: z.strictObject({
     allowed_match_bases: z.array(SemanticEvidenceMatchBasisSchema).min(1),
     disallowed_canonical_link_bases: z
       .array(SemanticDisallowedCanonicalMatchBasisSchema)
@@ -181,12 +181,12 @@ export const SemanticContractSchema = z.object({
   future_exports: z.array(SemanticFutureExportSchema).min(1),
 });
 
-export const SemanticFixtureSourceAnchorSchema = z.object({
+export const SemanticFixtureSourceAnchorSchema = z.strictObject({
   path: z.string().min(1),
   must_contain: z.array(z.string().min(1)).min(1),
 });
 
-export const SemanticContractFixtureSchema = z.object({
+export const SemanticContractFixtureSchema = z.strictObject({
   id: z.string().min(1),
   source_anchors: z.array(SemanticFixtureSourceAnchorSchema).min(1),
   entity_types: z.array(SemanticEntityTypeSchema),
@@ -198,7 +198,7 @@ export const SemanticContractFixtureSchema = z.object({
   forbidden_association_types: z.array(SemanticAssociationTypeSchema),
 });
 
-export const SemanticContractFixtureManifestSchema = z.object({
+export const SemanticContractFixtureManifestSchema = z.strictObject({
   schema_version: z.literal("lt-semantic-contract-fixtures.v0.2"),
   contract: z.literal("docs/architecture/semantic-contract.v0.2.json"),
   profile: z.literal("docs/architecture/semantic-profile.v0.2.yaml"),
