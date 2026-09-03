@@ -194,27 +194,29 @@ function checkPullRequestBody(files) {
     warnings.push("PR body does not contain a `Human Decision Ledger` section.");
   }
 
-  if (!/(source\/limitations|source limitations|fonti|limiti|methodological caveat|civic safeguard)/i.test(body)) {
-    warnings.push("PR body does not document the source/limitations or civic-safeguard check.");
-  }
-
-  if (!/(zero-cost|ubuntu-latest|no paid runner|paid runner)/i.test(body)) {
-    warnings.push("PR body does not explicitly confirm the zero-cost automation check.");
-  }
-
   const civicContentFiles = files.filter((file) =>
     /^(data|datasets|content|public\/data|docs\/(dossiers|scouting|sources|fonti|methodology)|artifacts\/lamezia-trasparente\/src\/(data|content|features|pages)|lib\/api-spec|scripts\/(source|civic|registr|check-source))/i.test(
       file,
     ),
   );
 
+  const workflowImpactFiles = files.filter((file) => /^\.github\/workflows\/.*\.ya?ml$/i.test(file));
+
   if (civicContentFiles.length > 0) {
     notes.push(`Potential civic-content/source-impact files: ${civicContentFiles.map((file) => `\`${file}\``).join(", ")}.`);
 
-    if (!/(retrieved_at|source_url|verification_status|claim_type|limitations|fonti|limiti|caveat)/i.test(body)) {
+    if (!/(retrieved_at|source_url|verification_status|claim_type|limitations|fonti|limiti|caveat|source\/limitations|source limitations|methodological caveat|civic safeguard)/i.test(body)) {
       warnings.push(
         "This PR appears to touch civic content, data, API/source logic or methodology, but the PR body does not record source metadata, limitations or verification status.",
       );
+    }
+  }
+
+  if (workflowImpactFiles.length > 0) {
+    notes.push(`Workflow-impact files: ${workflowImpactFiles.map((file) => `\`${file}\``).join(", ")}.`);
+
+    if (!/(zero-cost|ubuntu-latest|no paid runner|paid runner)/i.test(body)) {
+      warnings.push("This PR modifies workflow configuration but does not explicitly confirm the zero-cost automation check.");
     }
   }
 }
