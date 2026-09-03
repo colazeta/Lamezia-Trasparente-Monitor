@@ -5,46 +5,30 @@ import { MONITORING_FOOTER_NOTICE } from "@/lib/monitoring";
 
 const FOOTER_GROUPS = [
   {
-    label: "Esplora",
+    label: "Consulta",
     links: [
       ["Sedute e ordini del giorno", "/convocazioni"],
-      ["Delibere e atti", "/delibere"],
       ["Albo Pretorio", "/albo/"],
-      ["Organi istituzionali", "/organi"],
       ["Contratti pubblici", "/contratti"],
       ["PNRR", "/pnrr"],
+      ["Open data", "/opendata"],
     ],
   },
   {
-    label: "Dati e territorio",
+    label: "Verifica",
     links: [
-      ["Atlante territoriale", "/atlante-territoriale"],
-      ["Open data", "/opendata"],
       ["Fonti dati", "/fonti-dati"],
       ["Stato delle fonti", "/stato-monitoraggio"],
-      ["Performance", "/performance"],
-      ["API e sviluppatori", "/sviluppatori"],
+      ["Note legali", "/note-legali"],
     ],
   },
   {
     label: "Partecipa",
     links: [
-      ["Segnalazioni", "/segnalazioni"],
       ["Accesso civico", "/accesso-civico"],
       ["Proposte civiche", "/proposte-civiche"],
-      ["Iscrizioni agli aggiornamenti", "/iscrizioni"],
-      ["Feed e aggiornamenti", "/feeds"],
-    ],
-  },
-  {
-    label: "Progetto",
-    links: [
-      ["Metodologia", "/metodologia"],
-      ["Guida", "/guida"],
-      ["Roadmap", "/roadmap"],
-      ["Chi siamo", "/chi-siamo"],
+      ["Segnalazioni", "/segnalazioni"],
       ["Contatti", "/contatti"],
-      ["Note legali", "/note-legali"],
     ],
   },
 ] as const;
@@ -52,8 +36,8 @@ const FOOTER_GROUPS = [
 export function Footer() {
   return (
     <footer className="border-t border-border bg-sidebar text-sidebar-foreground">
-      <div className="container mx-auto px-4 py-14 md:px-6">
-        <div className="grid gap-10 md:grid-cols-2 xl:grid-cols-6">
+      <div className="container mx-auto px-4 py-12 md:px-6">
+        <div className="grid gap-10 md:grid-cols-2 xl:grid-cols-5">
           <div className="space-y-4 xl:col-span-2">
             <div className="flex items-center gap-2.5">
               <LogoMark className="h-9 w-9" />
@@ -61,25 +45,17 @@ export function Footer() {
                 rendiamo<span className="text-brand">Lamezia</span>Trasparente
               </span>
             </div>
-            <div className="max-w-sm space-y-3 text-sm text-sidebar-foreground/70">
-              <p className="flex gap-2">
-                <AlertTriangle
-                  className="mt-0.5 h-4 w-4 shrink-0 text-brand"
-                  aria-hidden="true"
-                />
-                <span>
-                  <strong className="text-sidebar-foreground">Attenzione:</strong>{" "}
-                  progetto civico indipendente gestito da cittadini. Non è un
-                  sito istituzionale e non ha alcun legame con il Comune di
-                  Lamezia Terme.
-                </span>
-              </p>
-              <p>
-                Raccoglie e organizza informazioni di interesse pubblico per
-                rendere più semplice consultare fonti, dati e atti
-                amministrativi.
-              </p>
-            </div>
+            <p className="flex max-w-sm gap-2 text-sm leading-6 text-sidebar-foreground/70">
+              <AlertTriangle
+                className="mt-0.5 h-4 w-4 shrink-0 text-brand"
+                aria-hidden="true"
+              />
+              <span>
+                Progetto civico indipendente gestito da cittadini. Non è un sito
+                istituzionale e non ha alcun legame con il Comune di Lamezia
+                Terme.
+              </span>
+            </p>
           </div>
 
           {FOOTER_GROUPS.map((group) => (
@@ -101,7 +77,7 @@ export function Footer() {
           ))}
         </div>
 
-        <div className="mt-12 flex flex-col gap-2 border-t border-sidebar-border pt-8 text-xs text-sidebar-foreground/70 sm:flex-row sm:items-center">
+        <div className="mt-10 flex flex-col gap-2 border-t border-sidebar-border pt-6 text-xs text-sidebar-foreground/70 sm:flex-row sm:items-center">
           <CalendarClock
             className="h-4 w-4 shrink-0 text-brand"
             aria-hidden="true"
@@ -112,43 +88,22 @@ export function Footer() {
               href="/metodologia"
               className="font-medium text-sidebar-foreground underline underline-offset-2 transition-colors hover:text-primary"
             >
-              Leggi la metodologia
+              Metodologia
             </Link>
           </p>
         </div>
 
-        <div className="mt-6 flex flex-col items-center justify-between gap-4 border-t border-sidebar-border pt-6 text-xs text-sidebar-foreground/60 md:flex-row">
+        <div className="mt-6 flex flex-col items-start justify-between gap-3 border-t border-sidebar-border pt-6 text-xs text-sidebar-foreground/60 md:flex-row md:items-center">
           <p>
-            © {new Date().getFullYear()} Iniziativa Civica Lamezia Terme. I
-            dati pubblicati sono raccolti da fonti pubbliche con i limiti
-            indicati nelle singole sezioni.
+            © {new Date().getFullYear()} Iniziativa Civica Lamezia Terme. Dati
+            da fonti pubbliche, con i limiti indicati nelle singole sezioni.
           </p>
-          <div className="flex flex-wrap justify-center gap-4">
-            <Link
-              href="/note-legali"
-              className="transition-colors hover:text-primary"
-            >
-              Note legali
-            </Link>
-            <Link
-              href="/metodologia"
-              className="transition-colors hover:text-primary"
-            >
-              Metodologia
-            </Link>
-            <Link
-              href="/contatti"
-              className="transition-colors hover:text-primary"
-            >
-              Contatti
-            </Link>
-            <Link
-              href="/redazione"
-              className="transition-colors hover:text-primary"
-            >
-              Area redazione
-            </Link>
-          </div>
+          <Link
+            href="/redazione"
+            className="transition-colors hover:text-primary"
+          >
+            Area redazione
+          </Link>
         </div>
       </div>
     </footer>
