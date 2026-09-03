@@ -38,7 +38,7 @@ describe("public semantic profile", () => {
     }
   });
 
-  it("models procurement records as descriptions of ePO contracts, not equivalence", () => {
+  it("models procurement records as descriptions of ePO contracts, not subclass equivalence", () => {
     const contract = semanticDescriptor("contract");
     expect(contract.entityType).toBe(
       "https://lamezia-trasparente.pages.dev/ontology#PublicProcurementRecord",
@@ -49,9 +49,19 @@ describe("public semantic profile", () => {
       vocabulary: "eProcurement Ontology",
       version: "5.2.0",
     });
-    expect(contract.mappings.some((mapping) => mapping.relation === "reference")).toBe(
-      false,
-    );
+    expect(contract.mappings).toContainEqual({
+      relation: "reference",
+      term: "https://w3id.org/italia/onto/PublicContract",
+      vocabulary: "OntoPiA Public Contracts (PC-AP_IT)",
+      version: null,
+    });
+    expect(
+      contract.mappings.some(
+        (mapping) =>
+          mapping.relation === "subClassOf" &&
+          mapping.term === "http://data.europa.eu/a4g/ontology#Contract",
+      ),
+    ).toBe(false);
   });
 
   it("keeps the Italian transparency ontology explicitly reference-only", () => {
@@ -64,7 +74,7 @@ describe("public semantic profile", () => {
     });
   });
 
-  it("uses SKOS for civic themes and an observation pattern for performance", () => {
+  it("uses SKOS for civic themes and governed observation semantics for performance", () => {
     expect(semanticDescriptor("theme").mappings).toContainEqual({
       relation: "subClassOf",
       term: "http://www.w3.org/2004/02/skos/core#Concept",
@@ -72,11 +82,34 @@ describe("public semantic profile", () => {
       version: "2009-08-18",
     });
 
-    expect(semanticDescriptor("performance").mappings).toContainEqual({
+    const performance = semanticDescriptor("performance");
+    expect(performance.mappings).toContainEqual({
       relation: "observationPattern",
       term: "http://purl.org/linked-data/cube#Observation",
       vocabulary: "RDF Data Cube",
       version: "2014-01-16",
+    });
+    expect(performance.mappings).toContainEqual({
+      relation: "reference",
+      term: "https://w3id.org/italia/onto/Indicator",
+      vocabulary: "OntoPiA Indicator",
+      version: null,
+    });
+  });
+
+  it("uses the DIPE/ISTAT Public Investment ontology as the primary Italian PNRR reference", () => {
+    const pnrr = semanticDescriptor("pnrr");
+    expect(pnrr.mappings[0]).toEqual({
+      relation: "reference",
+      term: "https://w3id.org/italia/PublicInvestment/onto/PublicInvestment",
+      vocabulary: "Ontologia degli Investimenti Pubblici (DIPE/ISTAT)",
+      version: "2026-07-13",
+    });
+    expect(pnrr.mappings).toContainEqual({
+      relation: "subClassOf",
+      term: "https://schema.org/Project",
+      vocabulary: "Schema.org",
+      version: null,
     });
   });
 });
