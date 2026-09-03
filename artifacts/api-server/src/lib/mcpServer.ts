@@ -23,7 +23,7 @@ const SERVER_INSTRUCTIONS =
   "Use search/list tools before detail tools when the exact identifier is unknown. " +
   "Treat missing, partial or stale data as a documentation limitation, never as evidence that an event, contract or irregularity does not exist. " +
   "Do not infer illegality or wrongdoing from amounts, procedure types, missing fields or monitoring indicators. " +
-  "Successful structured results include a versioned semantic profile with explicit ontology alignments; treat 'reference' and 'describes' mappings as alignments, not OWL equivalence or conformance claims. " +
+  "Successful structured results include a versioned semantic profile with explicit ontology alignments, SHACL validation shapes and a governed SKOS concept scheme; treat 'reference' and 'describes' mappings as alignments, not OWL equivalence or conformance claims. " +
   "For legal effect, dates and material conclusions, verify the public source links and provenance returned by the records.";
 
 const READ_ONLY_ANNOTATIONS = {
@@ -60,6 +60,8 @@ const semanticDescriptorSchema = z.object({
   profile: z.url(),
   context: z.url(),
   ontology: z.url(),
+  shapes: z.url(),
+  conceptScheme: z.url(),
   profileVersion: z.string(),
   entityType: z.url(),
   mappings: z.array(semanticMappingSchema),
