@@ -18,32 +18,35 @@ function renderNavbar(path = "/") {
 }
 
 describe("Navbar public front door", () => {
-  it("keeps public spending visible as a primary navigation entry", () => {
+  it("keeps public spending visible as the active primary macro-area", () => {
     const { container } = renderNavbar("/contratti/42");
 
-    const spendingLink = screen.getByRole("link", { name: /^Spesa$/i });
+    const spendingTrigger = screen.getByRole("button", { name: /^Spesa$/i });
 
-    expect(spendingLink).toHaveAttribute("href", "/contratti");
-    expect(container.querySelector("header nav")).toHaveClass("lg:flex");
-    expect(screen.getByRole("button", { name: "Menu" })).toHaveClass(
-      "lg:hidden",
+    expect(spendingTrigger).toHaveClass("bg-primary/10");
+    expect(container.querySelector("header nav")).toHaveClass("xl:flex");
+    expect(screen.getByRole("button", { name: "Apri menu" })).toHaveClass(
+      "xl:hidden",
     );
   });
 
-  it("keeps the three civic entry points visible in primary navigation", () => {
+  it("keeps the seven civic macro-areas visible in primary navigation", () => {
     renderNavbar("/");
 
-    expect(screen.getByRole("link", { name: /^Oggi$/i })).toHaveAttribute(
-      "href",
-      "/albo/",
-    );
-    expect(screen.getByRole("link", { name: /^Spesa$/i })).toHaveAttribute(
-      "href",
-      "/contratti",
-    );
-    expect(screen.getByRole("link", { name: /^Partecipa$/i })).toHaveAttribute(
-      "href",
-      "/accesso-civico",
-    );
+    for (const label of [
+      "Atti",
+      "Comune",
+      "Spesa",
+      "Territorio",
+      "Legalità",
+      "Dati",
+      "Partecipa",
+    ]) {
+      expect(screen.getByRole("button", { name: label })).toBeInTheDocument();
+    }
+
+    expect(
+      screen.queryByRole("link", { name: /^Oggi$/i }),
+    ).not.toBeInTheDocument();
   });
 });
