@@ -187,13 +187,10 @@ curl -H "Accept: application/json" "https://<host>/api/3/action/package_search?q
 curl -H "Accept: application/json" "https://<host>/api/3/action/package_show?id={sourceId|slug|id}"
 ```
 
-## Server MCP (per assistenti AI)
+## Server MCP pubblico
 
-La piattaforma espone un server compatibile **MCP** sugli stessi dati, su
-trasporto **Streamable HTTP** in modalità _stateless_ (nessuna sessione
-persistente: ogni richiesta è autosufficiente). Non servono API key o header
-`Authorization`; i client devono inviare `Content-Type` e `Accept` coerenti con
-il trasporto MCP.
+La piattaforma espone un server **MCP** permanente sugli stessi dati public-safe
+della REST, su trasporto **Streamable HTTP** in modalità stateless:
 
 ```
 POST /api/mcp
@@ -201,13 +198,20 @@ Content-Type: application/json
 Accept: application/json, text/event-stream
 ```
 
+Non servono API key né una sessione editoriale. Il server è montato fuori dal
+middleware Clerk e non espone dati raw, redazionali o amministrativi.
+
+Il contratto corrente supporta **MCP `2026-07-28`** e mantiene sullo stesso
+endpoint la compatibilità stateless con i client MCP della linea 2025. I nomi
+dei nove tool sotto sono considerati un contratto pubblico stabile.
+
 ### Tool disponibili (sola lettura)
 
 | Tool                    | Descrizione                                              |
 | ----------------------- | -------------------------------------------------------- |
 | `search_documents`      | Cerca/filtra gli atti (stessi filtri di `/documents`)    |
-| `get_document`          | Dettaglio di un atto per `id`                            |
-| `get_document_markdown` | Testo Markdown di un atto per `id`                       |
+| `get_document`          | Dettaglio di un atto per id numerico o `publicId`        |
+| `get_document_markdown` | Testo Markdown public-safe di un atto                    |
 | `search_contracts`      | Cerca/filtra i contratti (stessi filtri di `/contracts`) |
 | `get_contract`          | Dettaglio di un contratto per `id`                       |
 | `list_themes`           | Elenca i temi di monitoraggio                            |
@@ -215,31 +219,20 @@ Accept: application/json, text/event-stream
 | `list_performance`      | Categorie e indicatori di performance                    |
 | `list_pnrr`             | Elenca i progetti PNRR                                   |
 
-I tool di elenco restituiscono la stessa busta paginata della REST. I tool di
-dettaglio restituiscono un risultato con `isError: true` quando l'entità non
-esiste.
+Tutti i tool sono annotati come read-only, non distruttivi e idempotenti. I
+risultati di successo conservano il contenuto JSON testuale per i client legacy
+e aggiungono `structuredContent` con una busta di verifica (`publicOnly`,
+`sourceCheckRequired`, link al portale). I tool di dettaglio restituiscono un
+risultato con `isError: true` quando l'entità non esiste.
 
-### Esempi (curl)
+Il server pubblica inoltre istruzioni per impedire interpretazioni improprie:
+dati mancanti, parziali o non aggiornati sono limiti documentali e non prova di
+assenza; importi, procedure, campi mancanti o indicatori non sono prova di
+irregolarità. Le conclusioni materiali vanno verificate sulle fonti pubbliche e
+sulla provenienza restituite dai record.
 
-```bash
-# 1) Handshake initialize (senza sessione persistente)
-curl -X POST "https://<host>/api/mcp" \
-  -H "Content-Type: application/json" \
-  -H "Accept: application/json, text/event-stream" \
-  -d '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2025-06-18","capabilities":{},"clientInfo":{"name":"demo","version":"1.0"}}}'
-
-# 2) Elenca i tool con gli stessi header richiesti
-curl -X POST "https://<host>/api/mcp" \
-  -H "Content-Type: application/json" \
-  -H "Accept: application/json, text/event-stream" \
-  -d '{"jsonrpc":"2.0","id":2,"method":"tools/list","params":{}}'
-
-# 3) Chiama un tool con gli stessi header richiesti
-curl -X POST "https://<host>/api/mcp" \
-  -H "Content-Type: application/json" \
-  -H "Accept: application/json, text/event-stream" \
-  -d '{"jsonrpc":"2.0","id":3,"method":"tools/call","params":{"name":"search_documents","arguments":{"hasMarkdown":true,"pageSize":3}}}'
-```
+Per configurazione client, discovery `2026-07-28`, esempi curl, politica di
+versionamento e compatibilità legacy, vedere **[`../../docs/MCP.md`](../../docs/MCP.md)**.
 
 ### Configurazione in un client MCP
 
