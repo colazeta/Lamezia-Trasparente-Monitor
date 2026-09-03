@@ -101,6 +101,7 @@ describe("MCP server", () => {
     expect(res.body.result.instructions).toMatch(
       /do not infer illegality or wrongdoing/i,
     );
+    expect(res.body.result.instructions).toMatch(/semantic profile/i);
     expect(
       res.body.result._meta?.["io.modelcontextprotocol/serverInfo"]?.name,
     ).toBe("lamezia-trasparente-public");
@@ -194,7 +195,7 @@ describe("MCP server", () => {
     expect(res.body.result.isError).toBe(true);
   });
 
-  it("dereferences an act by stable publicId", async () => {
+  it("dereferences an act by stable publicId and returns semantic metadata", async () => {
     const unique = `${Date.now()}-${Math.random().toString(36).slice(2)}`;
     const progressivo = `mcp-lookup/${unique}`;
     const oggetto = `Atto MCP lookup ${unique}`;
@@ -234,6 +235,36 @@ describe("MCP server", () => {
     );
     expect(res.status).toBe(200);
     expect(toolResult(res.body)).toMatchObject({ id, publicId, progressivo });
+    expect(res.body.result.structuredContent).toMatchObject({
+      resource: "document",
+      semantic: {
+        profile:
+          "https://lamezia-trasparente.pages.dev/semantic/profile.jsonld",
+        context:
+          "https://lamezia-trasparente.pages.dev/semantic/context.jsonld",
+        ontology:
+          "https://lamezia-trasparente.pages.dev/semantic/ontology.ttl",
+        profileVersion: "1.0.0",
+        entityType:
+          "https://lamezia-trasparente.pages.dev/ontology#AdministrativeAct",
+      },
+      verification: {
+        publicOnly: true,
+        sourceCheckRequired: true,
+      },
+    });
+    expect(res.body.result.structuredContent.semantic.mappings).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          relation: "subClassOf",
+          term: "http://www.w3.org/ns/prov#Entity",
+        }),
+        expect.objectContaining({
+          relation: "reference",
+          term: "https://w3id.org/italia/onto/Transparency/",
+        }),
+      ]),
+    );
   });
 
   it("keeps legacy session GET unavailable in stateless mode", async () => {
