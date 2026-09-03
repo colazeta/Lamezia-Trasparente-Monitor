@@ -13,6 +13,10 @@ La documentazione ha uno scopo operativo: rendere verificabile da maintainer, re
 - [`semantic-profile.v0.2.yaml`](semantic-profile.v0.2.yaml) — raffinamento additivo della baseline dopo lo stress-test su casi reali, con partecipazioni a eventi, stati dei beni, osservazioni degli indicatori e separazione fra identità e forza della relazione.
 - [`semantic-fixtures.v0.2.yaml`](semantic-fixtures.v0.2.yaml) — sette fixture semantiche ricavate da record e policy reali già presenti nel repository, senza usare seed dichiarati fittizi.
 - [`../audits/semantic-profile-validation-v0.2.md`](../audits/semantic-profile-validation-v0.2.md) — audit dello stress-test v0.2, risultati, ambiguità e gate richiesti prima di qualsiasi migrazione DB.
+- [`semantic-contract.md`](semantic-contract.md) — confine fra profilo concettuale e contratto software, scelta TypeScript/Zod, ruolo futuro di LinkML e gate prima del database.
+- [`semantic-contract.v0.2.json`](semantic-contract.v0.2.json) — istanza eseguibile del contratto v0.2: tipi, associazioni, status, identifier policy e invarianti.
+- [`semantic-contract.v0.2.schema.json`](semantic-contract.v0.2.schema.json) — JSON Schema Draft 2020-12 generabile dalla definizione Zod e controllato dal CI.
+- [`semantic-contract-fixtures.v0.2.json`](semantic-contract-fixtures.v0.2.json) — fixture eseguibili con anchor ai file reali del repository.
 - [`semantic-mappings.csv`](semantic-mappings.csv) — registro iniziale dei mapping semantici, con relazione, stato, autorità e note per ciascun allineamento.
 - [`integration-source-catalog.md`](integration-source-catalog.md) — catalogo delle fonti che alimentano o possono alimentare il prodotto, con ruolo, stato, superficie pubblica e caveat.
 - [`cruscotto-italia-integration.md`](cruscotto-italia-integration.md) — integrazione di Cruscotto Italia come fonte federata nazionale per il comune di Lamezia Terme.
@@ -56,5 +60,5 @@ Questa cartella integra, ma non sostituisce:
 - Repository Cruscotto Italia: `https://github.com/AgID/cruscotto-italia`
 - Linee guida AgID su acquisizione e riuso software per le PA: `https://docs.italia.it/italia/developers-italia/lg-acquisizione-e-riuso-software-per-pa-docs/it/stabile/`
 - Guida Developers Italia alla pubblicazione open source: `https://docs.italia.it/italia/developers-italia/lg-acquisizione-e-riuso-software-per-pa-docs/it/stabile/attachments/allegato-a-guida-alla-pubblicazione-open-source-di-software-realizzato-per-la-pa.html`
-- Guida Developers Italia alla manutenzione open source: `https://docs.italia.it/italia/developers-italia/lg-acquisizione-e-riuso-software-per-pa-docs/it/stabile/attachments/allegato-b-guida-alla-manutenzione-di-software-open-source.html`
+- Guida Developers Italia alla manutenzione open source: `https://docs.italia.it/italia/developers-italia/lg-acquisizione-e-riuso-software-per-pa-docs/it/stabile/attachments/allegato-b-guida-alla-manutenzione-di-software-open-source-di-software-realizzato-per-la-pa.html`
 - Designers Italia / design system: `https://designers.italia.it/argomenti/design-system/`
