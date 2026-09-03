@@ -100,7 +100,7 @@ describe("Performance evidence-first landing", () => {
 
     expect(screen.getByText("Obiettivo")).toBeInTheDocument();
     expect(screen.getByText("Target")).toBeInTheDocument();
-    expect(screen.getByText("Validazione OIV")).toBeInTheDocument();
+    expect(screen.getAllByText("Validazione OIV").length).toBeGreaterThanOrEqual(2);
     expect(screen.getByText("3 obiettivi verificati")).toBeInTheDocument();
     expect(screen.getByText("3 risultati collegati")).toBeInTheDocument();
     expect(screen.getAllByText("Da acquisire").length).toBeGreaterThanOrEqual(2);
