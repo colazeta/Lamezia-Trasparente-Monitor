@@ -1,10 +1,14 @@
-export const SEMANTIC_PROFILE_VERSION = "1.1.0";
+export const SEMANTIC_PROFILE_VERSION = "1.2.0";
 export const SEMANTIC_PROFILE_URL =
   "https://lamezia-trasparente.pages.dev/semantic/profile.jsonld";
 export const SEMANTIC_CONTEXT_URL =
   "https://lamezia-trasparente.pages.dev/semantic/context.jsonld";
 export const SEMANTIC_ONTOLOGY_URL =
   "https://lamezia-trasparente.pages.dev/semantic/ontology.ttl";
+export const SEMANTIC_SHAPES_URL =
+  "https://lamezia-trasparente.pages.dev/semantic/shapes.ttl";
+export const SEMANTIC_CONCEPT_SCHEME_URL =
+  "https://lamezia-trasparente.pages.dev/semantic/civic-concepts.jsonld";
 
 const LT = "https://lamezia-trasparente.pages.dev/ontology#";
 
@@ -25,6 +29,8 @@ export type SemanticDescriptor = {
   profile: string;
   context: string;
   ontology: string;
+  shapes: string;
+  conceptScheme: string;
   profileVersion: string;
   entityType: string;
   mappings: SemanticMapping[];
@@ -165,6 +171,8 @@ export function semanticDescriptor(resource: SemanticResource): SemanticDescript
     profile: SEMANTIC_PROFILE_URL,
     context: SEMANTIC_CONTEXT_URL,
     ontology: SEMANTIC_ONTOLOGY_URL,
+    shapes: SEMANTIC_SHAPES_URL,
+    conceptScheme: SEMANTIC_CONCEPT_SCHEME_URL,
     profileVersion: SEMANTIC_PROFILE_VERSION,
     entityType: descriptor.entityType,
     mappings: descriptor.mappings.map((mapping) => ({ ...mapping })),

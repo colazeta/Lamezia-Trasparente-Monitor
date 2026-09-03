@@ -1,0 +1,100 @@
+{
+  "@context": "https://lamezia-trasparente.pages.dev/semantic/context.jsonld",
+  "@graph": [
+    {
+      "@id": "https://lamezia-trasparente.pages.dev/semantic/civic-concepts",
+      "@type": "skos:ConceptScheme",
+      "dct:identifier": "lt-civic-concepts-1.2.0",
+      "owl:versionInfo": "1.2.0",
+      "dct:title": [
+        {
+          "@value": "LameziaTrasparente civic concepts",
+          "@language": "en"
+        },
+        {
+          "@value": "Concetti civici di LameziaTrasparente",
+          "@language": "it"
+        }
+      ],
+      "skos:hasTopConcept": [
+        { "@id": "https://lamezia-trasparente.pages.dev/concept/acts" },
+        { "@id": "https://lamezia-trasparente.pages.dev/concept/governance" },
+        { "@id": "https://lamezia-trasparente.pages.dev/concept/spending" },
+        { "@id": "https://lamezia-trasparente.pages.dev/concept/territory" },
+        { "@id": "https://lamezia-trasparente.pages.dev/concept/integrity" },
+        { "@id": "https://lamezia-trasparente.pages.dev/concept/open-data" },
+        { "@id": "https://lamezia-trasparente.pages.dev/concept/participation" }
+      ]
+    },
+    {
+      "@id": "https://lamezia-trasparente.pages.dev/concept/acts",
+      "@type": "skos:Concept",
+      "skos:notation": "acts",
+      "skos:prefLabel": [
+        { "@value": "Atti", "@language": "it" },
+        { "@value": "Acts", "@language": "en" }
+      ],
+      "skos:inScheme": { "@id": "https://lamezia-trasparente.pages.dev/semantic/civic-concepts" }
+    },
+    {
+      "@id": "https://lamezia-trasparente.pages.dev/concept/governance",
+      "@type": "skos:Concept",
+      "skos:notation": "governance",
+      "skos:prefLabel": [
+        { "@value": "Comune e governance", "@language": "it" },
+        { "@value": "Municipal governance", "@language": "en" }
+      ],
+      "skos:inScheme": { "@id": "https://lamezia-trasparente.pages.dev/semantic/civic-concepts" }
+    },
+    {
+      "@id": "https://lamezia-trasparente.pages.dev/concept/spending",
+      "@type": "skos:Concept",
+      "skos:notation": "spending",
+      "skos:prefLabel": [
+        { "@value": "Spesa pubblica", "@language": "it" },
+        { "@value": "Public spending", "@language": "en" }
+      ],
+      "skos:inScheme": { "@id": "https://lamezia-trasparente.pages.dev/semantic/civic-concepts" }
+    },
+    {
+      "@id": "https://lamezia-trasparente.pages.dev/concept/territory",
+      "@type": "skos:Concept",
+      "skos:notation": "territory",
+      "skos:prefLabel": [
+        { "@value": "Territorio", "@language": "it" },
+        { "@value": "Territory", "@language": "en" }
+      ],
+      "skos:inScheme": { "@id": "https://lamezia-trasparente.pages.dev/semantic/civic-concepts" }
+    },
+    {
+      "@id": "https://lamezia-trasparente.pages.dev/concept/integrity",
+      "@type": "skos:Concept",
+      "skos:notation": "integrity",
+      "skos:prefLabel": [
+        { "@value": "Legalità e integrità", "@language": "it" },
+        { "@value": "Integrity and legality", "@language": "en" }
+      ],
+      "skos:inScheme": { "@id": "https://lamezia-trasparente.pages.dev/semantic/civic-concepts" }
+    },
+    {
+      "@id": "https://lamezia-trasparente.pages.dev/concept/open-data",
+      "@type": "skos:Concept",
+      "skos:notation": "open-data",
+      "skos:prefLabel": [
+        { "@value": "Dati aperti", "@language": "it" },
+        { "@value": "Open data", "@language": "en" }
+      ],
+      "skos:inScheme": { "@id": "https://lamezia-trasparente.pages.dev/semantic/civic-concepts" }
+    },
+    {
+      "@id": "https://lamezia-trasparente.pages.dev/concept/participation",
+      "@type": "skos:Concept",
+      "skos:notation": "participation",
+      "skos:prefLabel": [
+        { "@value": "Partecipazione", "@language": "it" },
+        { "@value": "Participation", "@language": "en" }
+      ],
+      "skos:inScheme": { "@id": "https://lamezia-trasparente.pages.dev/semantic/civic-concepts" }
+    }
+  ]
+}

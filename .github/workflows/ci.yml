@@ -31,8 +31,21 @@ jobs:
           node-version: 24
           cache: pnpm
 
+      - name: Set up Python for semantic validation
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+          cache: pip
+          cache-dependency-path: scripts/semantic/requirements.txt
+
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
+
+      - name: Install semantic validators
+        run: python -m pip install --disable-pip-version-check --requirement scripts/semantic/requirements.txt
+
+      - name: Validate RDF, JSON-LD, SKOS and SHACL contract
+        run: python scripts/semantic/validate.py
 
       - name: Typecheck
         run: pnpm run typecheck
