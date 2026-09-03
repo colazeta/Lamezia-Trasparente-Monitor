@@ -1,0 +1,103 @@
+@prefix lt: <https://lamezia-trasparente.pages.dev/ontology#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<https://lamezia-trasparente.pages.dev/semantic/shapes.ttl>
+  a sh:NodeShape ;
+  dct:title "LameziaTrasparente semantic validation shapes"@en ,
+    "Shape di validazione semantica di LameziaTrasparente"@it .
+
+lt:AdministrativeActShape a sh:NodeShape ;
+  sh:targetClass lt:AdministrativeAct ;
+  sh:property [
+    sh:path dct:identifier ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+    sh:nodeKind sh:Literal ;
+    sh:message "An administrative act must expose exactly one stable public identifier."@en
+  ] ;
+  sh:property [
+    sh:path dct:title ;
+    sh:minCount 1 ;
+    sh:nodeKind sh:Literal
+  ] ;
+  sh:property [
+    sh:path prov:wasDerivedFrom ;
+    sh:minCount 1 ;
+    sh:nodeKind sh:IRI ;
+    sh:message "A published act must retain a source/provenance IRI."@en
+  ] .
+
+lt:AdministrativeActTextRepresentationShape a sh:NodeShape ;
+  sh:targetClass lt:AdministrativeActTextRepresentation ;
+  sh:property [
+    sh:path lt:isTextRepresentationOf ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+    sh:class lt:AdministrativeAct
+  ] ;
+  sh:property [
+    sh:path prov:wasDerivedFrom ;
+    sh:minCount 1 ;
+    sh:nodeKind sh:IRI
+  ] .
+
+lt:PublicProcurementRecordShape a sh:NodeShape ;
+  sh:targetClass lt:PublicProcurementRecord ;
+  sh:property [
+    sh:path dct:identifier ;
+    sh:minCount 1 ;
+    sh:nodeKind sh:Literal
+  ] ;
+  sh:property [
+    sh:path prov:wasDerivedFrom ;
+    sh:minCount 1 ;
+    sh:nodeKind sh:IRI
+  ] .
+
+lt:CivicThemeShape a sh:NodeShape ;
+  sh:targetClass lt:CivicTheme ;
+  sh:property [
+    sh:path skos:prefLabel ;
+    sh:minCount 1 ;
+    sh:uniqueLang true ;
+    sh:nodeKind sh:Literal
+  ] ;
+  sh:property [
+    sh:path skos:inScheme ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+    sh:nodeKind sh:IRI
+  ] .
+
+lt:PerformanceIndicatorShape a sh:NodeShape ;
+  sh:targetClass lt:PerformanceIndicator ;
+  sh:property [
+    sh:path dct:identifier ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+    sh:nodeKind sh:Literal
+  ] ;
+  sh:property [
+    sh:path skos:prefLabel ;
+    sh:minCount 1 ;
+    sh:uniqueLang true ;
+    sh:nodeKind sh:Literal
+  ] .
+
+lt:PnrrProjectShape a sh:NodeShape ;
+  sh:targetClass lt:PnrrProject ;
+  sh:property [
+    sh:path dct:identifier ;
+    sh:minCount 1 ;
+    sh:nodeKind sh:Literal ;
+    sh:message "A PNRR project must retain a stable source-backed identifier such as CUP when available."@en
+  ] ;
+  sh:property [
+    sh:path prov:wasDerivedFrom ;
+    sh:minCount 1 ;
+    sh:nodeKind sh:IRI
+  ] .
