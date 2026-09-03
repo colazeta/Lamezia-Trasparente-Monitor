@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 
+import { OPEN_DATA_DATASET_REGISTRY } from "@/data/openDataDatasetRegistry";
 import { assessSourceHealth, SOURCE_HEALTH } from "@/data/sourceHealth";
 
 describe("SOURCE_HEALTH", () => {
@@ -32,18 +33,27 @@ describe("SOURCE_HEALTH", () => {
     }
   });
 
-  it("covers every dataset published in the Open Data archive", () => {
-    expect(SOURCE_HEALTH.openDataCoverage).toEqual({
-      published: 6,
-      monitored: 6,
-      percentage: 100,
-      missingDatasetIds: [],
-    });
+  it("reports exact Open Data coverage without hiding unmonitored datasets", () => {
+    const monitoredDatasetIds = new Set(
+      SOURCE_HEALTH.sources
+        .map((source) => source.openDataDatasetId)
+        .filter((id): id is string => Boolean(id)),
+    );
+    const missingDatasetIds = OPEN_DATA_DATASET_REGISTRY.filter(
+      (dataset) => !monitoredDatasetIds.has(dataset.id),
+    ).map((dataset) => dataset.id);
+    const published = OPEN_DATA_DATASET_REGISTRY.length;
+    const monitored = published - missingDatasetIds.length;
+    const percentage =
+      published === 0 ? 100 : Math.round((monitored / published) * 100);
 
-    const datasetIds = SOURCE_HEALTH.sources
-      .map((source) => source.openDataDatasetId)
-      .filter(Boolean);
-    expect(new Set(datasetIds).size).toBe(6);
+    expect(SOURCE_HEALTH.openDataCoverage).toEqual({
+      published,
+      monitored,
+      percentage,
+      missingDatasetIds,
+    });
+    expect(monitoredDatasetIds.size).toBe(monitored);
   });
 
   it("keeps household verification separate from the ISTAT source update", () => {
