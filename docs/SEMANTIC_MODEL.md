@@ -39,7 +39,9 @@ The local namespace is:
 https://lamezia-trasparente.pages.dev/ontology#
 ```
 
-The initial semantic profile version is `1.0.0`.
+The current semantic profile version is `1.1.0`. Version `1.1.0` adds explicit
+Italian-domain references for public contracts, indicators and, in particular,
+public investments/CUP data without changing the identity of the local classes.
 
 ## Standards baseline
 
@@ -50,14 +52,32 @@ The initial semantic profile version is `1.0.0`.
 | EU data catalogues | DCAT-AP | 3.0.1 | Forward conformance **target** for catalogue metadata; conformance must be demonstrated with the applicable validation profile, not inferred from field names. |
 | Provenance | W3C PROV-O | 2013-04-30 | Source, derivation and public-projection provenance. |
 | Controlled concepts | W3C SKOS | 2009-08-18 | Themes, categories, statuses and other governed concept schemes. |
-| Public procurement | EU eProcurement Ontology (ePO) | 5.2.0 | Domain semantics for contracts, buyers, economic operators and the procurement lifecycle. |
+| Public procurement | EU eProcurement Ontology (ePO) | 5.2.0 | Primary cross-European domain alignment for contracts and the procurement lifecycle. |
+| Italian public procurement | OntoPiA Public Contracts (PC-AP_IT) | current published terms | Additional Italian-domain reference. It is not used as an equivalence assertion for ANAC rows. |
 | Performance observations | W3C RDF Data Cube | 2014-01-16 | Representation pattern for time-specific indicator observations. |
+| Italian indicators | OntoPiA Indicator | current published terms | Italian-domain reference for future property-level indicator alignment. |
+| Public investment / CUP | DIPE/ISTAT Ontologia degli Investimenti Pubblici | published 2026-07-13 | Primary Italian-domain reference for PNRR/public-investment records because it was derived explicitly from CUP and OpenCUP semantics. |
 | Organisations | W3C ORG + OntoPiA COV | current published terms | Preferred model once public organisations and suppliers are resolved as first-class entities. |
 | Italian transparency | OntoPiA Transparency | 0.2 draft | **Reference only** for Italian transparency obligations and subjects; the ontology is explicitly still a draft awaiting ANAC review, so it is not used as a conformance claim. |
 
 The national semantic catalogue at `schema.gov.it` is treated as the primary
 Italian reference for reusable public-sector ontologies and controlled
 vocabularies.
+
+### Why the Public Investment ontology matters
+
+The DIPE/ISTAT **Ontologia degli Investimenti Pubblici** was published in the
+National Data Catalogue on 13 July 2026 and is explicitly described as deriving
+from the semantic analysis of the **Codice Unico di Progetto (CUP)** and the
+OpenCUP information assets. For LameziaTrasparente this makes it materially more
+relevant to the PNRR/OpenCUP pipeline than a generic project vocabulary.
+
+The current profile therefore treats it as the **primary Italian-domain
+reference** for `lt:PnrrProject`. `schema:Project` remains a lightweight general
+web interoperability superclass. We do not yet assert that `lt:PnrrProject` is
+identical to a particular class in the DIPE ontology: that stronger class-level
+mapping will be introduced only after a property-by-property crosswalk against
+the actual Lamezia/PNRR projection.
 
 ### National DCAT-AP_IT vs EU DCAT-AP 3.0.1
 
@@ -99,6 +119,8 @@ These terms must not be collapsed. In particular:
 - an Albo record is not automatically legislation;
 - a monitoring theme is not an Italian statutory transparency obligation merely
   because both are transparency-related;
+- a PNRR/OpenCUP record is not automatically identical to every public-investment
+  class in an external ontology;
 - a missing field is not equivalent to an RDF assertion that the fact is false.
 
 ## Core local classes
@@ -140,7 +162,9 @@ lt:PublicProcurementRecord owl:equivalentClass epo:Contract
 
 This distinction matters because the current ANAC projection may expose award
 and identification data without representing the complete legal contract
-lifecycle required by ePO.
+lifecycle required by ePO. OntoPiA Public Contracts (PC-AP_IT) is also recorded
+as an Italian-domain reference, but no class equivalence is inferred from the
+presence of an ANAC row.
 
 ### `lt:CivicTheme`
 
@@ -162,10 +186,16 @@ A defined municipal performance concept. Indicator definitions are treated as
 concepts; time-specific values can be represented with the RDF Data Cube
 `qb:Observation` pattern through `lt:hasObservation`.
 
+OntoPiA Indicator is retained as the Italian reference vocabulary. We do not
+replace the Data Cube observation model or claim property-level equivalence
+until the indicator unit, period, observation value and dimensions are mapped
+explicitly.
+
 ### `lt:PnrrProject`
 
 A project financed or tracked within the Italian PNRR. It is modelled as a
-`schema:Project` and `prov:Entity`.
+`schema:Project` and `prov:Entity`, with the DIPE/ISTAT Public Investment
+ontology as the primary Italian-domain reference.
 
 Procurement semantics must be attached only when there is a source-backed
 relation to a procurement record. A CUP does not by itself imply a one-to-one
@@ -180,7 +210,7 @@ over database row IDs.
 | --- | --- |
 | Administrative act | stable `publicId`; source `progressivo` retained as provenance/identifier |
 | Procurement record | CIG when present; CUP remains a project identifier and must not replace CIG |
-| PNRR project | CUP |
+| PNRR/public-investment project | CUP |
 | Civic theme | stable slug / concept URI |
 | Performance indicator | stable slug / indicator URI |
 | Public organisation | official code or authoritative registry identifier before name-based resolution |
@@ -242,7 +272,7 @@ public-safe data and verification block:
     "profile": "https://lamezia-trasparente.pages.dev/semantic/profile.jsonld",
     "context": "https://lamezia-trasparente.pages.dev/semantic/context.jsonld",
     "ontology": "https://lamezia-trasparente.pages.dev/semantic/ontology.ttl",
-    "profileVersion": "1.0.0",
+    "profileVersion": "1.1.0",
     "entityType": "https://lamezia-trasparente.pages.dev/ontology#PublicProcurementRecord",
     "mappings": [
       {
@@ -250,6 +280,12 @@ public-safe data and verification block:
         "term": "http://data.europa.eu/a4g/ontology#Contract",
         "vocabulary": "eProcurement Ontology",
         "version": "5.2.0"
+      },
+      {
+        "relation": "reference",
+        "term": "https://w3id.org/italia/onto/PublicContract",
+        "vocabulary": "OntoPiA Public Contracts (PC-AP_IT)",
+        "version": null
       }
     ]
   },
@@ -272,13 +308,16 @@ Semantic quality is a testable contract, not a styling claim.
 Current implemented gates include:
 
 1. semantic-profile coverage for every MCP structured resource;
-2. explicit tests that procurement uses a `describes` relation rather than OWL
-   equivalence;
-3. explicit reference-only treatment of the draft OntoPiA Transparency model;
-4. local mandatory-field validation before a DCAT record receives an Italian
+2. explicit tests that procurement uses a `describes` relation rather than an
+   ePO subclass/equivalence claim;
+3. explicit reference-only treatment of OntoPiA Public Contracts, Indicator and
+   the draft Transparency model where stronger equivalence has not been proved;
+4. explicit test that PNRR uses the DIPE/ISTAT Public Investment ontology as the
+   first Italian-domain reference;
+5. local mandatory-field validation before a DCAT record receives an Italian
    `dct:conformsTo` assertion;
-5. public diagnostics for missing DCAT-AP_IT mandatory metadata;
-6. ordinary TypeScript, build and public-safety/fail-closed gates.
+6. public diagnostics for missing DCAT-AP_IT mandatory metadata;
+7. ordinary TypeScript, build and public-safety/fail-closed gates.
 
 The Turtle ontology and JSON-LD profile have also been syntax-parsed during the
 implementation review. The next step is to make equivalent RDF parser checks a
@@ -291,11 +330,16 @@ Further semantic work should add progressively stronger gates:
 3. SKOS concept schemes have unique stable identifiers and labels;
 4. DCAT catalogue exports are validated with the chosen national/EU validator
    and SHACL shapes;
-5. RDF/JSON-LD projections are validated with SHACL where an authoritative shape
+5. the PNRR/OpenCUP projection is cross-walked property-by-property to the
+   DIPE/ISTAT Public Investment ontology before promoting class/property
+   equivalences;
+6. procurement records are projected to ePO and PC-AP_IT only after role and
+   organisation identity are source-backed;
+7. RDF/JSON-LD projections are validated with SHACL where an authoritative shape
    is available;
-6. ontology upgrades are explicit versioned changes, not silent namespace
+8. ontology upgrades are explicit versioned changes, not silent namespace
    substitutions;
-7. canonical semantic URIs are dereferenceable and covered by regression tests.
+9. canonical semantic URIs are dereferenceable and covered by regression tests.
 
 A failing semantic validation should block publication of the semantic artifact,
 not silently downgrade its meaning.
