@@ -100,6 +100,10 @@ Il gate successivo è disegnare **uno schema relazionale soltanto additivo** e p
 
 Solo dopo quel test una migration potrà essere proposta esplicitamente.
 
+## Validazione del merge result
+
+Una validazione storica della branch non costituisce un merge gate sufficiente quando `main` è avanzata. Prima dell'integrazione il contratto deve essere verificato sul merge result corrente contro la baseline effettiva, includendo almeno semantic validation, typecheck, build, stable workspace suites e static fallback. Questo evita di trattare come ancora valido un esito CI ottenuto su una dependency graph, su fixture o su source anchor ormai superati.
+
 ## Limiti
 
 Il JSON Schema valida la struttura rappresentabile del contratto. Gli invarianti cross-record e l'ancoraggio alle fonti sono verificati dal test TypeScript, non delegati artificialmente a JSON Schema. Analogamente, questo gate non certifica accuratezza fattuale delle fonti, completezza dei dati, correttezza giuridica o assenza di errori di entity resolution.
