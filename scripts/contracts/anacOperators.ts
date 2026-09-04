@@ -4,7 +4,10 @@ export const ANAC_OPERATORS_ADAPTER_VERSION = "anac-operator-identity.v1";
 export type AnacOperatorDataset = "participants" | "awardees";
 export type AnacOperatorRelation = "participant" | "awardee";
 export type AnacOperatorIdentifierScheme = "IT-CODICE-FISCALE" | "ANAC-FOREIGN-FISCAL-ID";
-export type AnacOperatorSourceSelection = "ckan" | "canonical-fallback";
+export type AnacOperatorSourceSelection =
+  | "ckan"
+  | "canonical-fallback"
+  | "verified-local-archive";
 
 export interface AnacEconomicOperatorRecord {
   cig: string;
