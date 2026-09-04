@@ -1,0 +1,133 @@
+{
+  "schema_version": "lt-semantic-contract-fixtures.v0.2",
+  "contract": "docs/architecture/semantic-contract.v0.2.json",
+  "profile": "docs/architecture/semantic-profile.v0.2.yaml",
+  "issue": 943,
+  "fixture_count": 7,
+  "fixtures": [
+    {
+      "id": "electoral-candidacy-doris-lo-moro-2025",
+      "source_anchors": [
+        {
+          "path": "lib/db/src/institutional-officials-data.ts",
+          "must_contain": ["doris-lo-moro", "candidato_sindaco", "maggioli_2025_totals_mayor_xml"]
+        }
+      ],
+      "entity_types": ["Person", "Event"],
+      "record_types": ["SourceRecord"],
+      "association_types": ["EventParticipation"],
+      "resolution_statuses": [],
+      "relation_statuses": ["source_explicit"],
+      "required_invariants": ["relation_and_identity_confidence_separate"],
+      "forbidden_association_types": ["RoleAssignment"]
+    },
+    {
+      "id": "pnrr-cloud-project-municipal-plus-opencup",
+      "source_anchors": [
+        {
+          "path": "artifacts/lamezia-trasparente/src/data/generated/lameziaPnrrProjects.json",
+          "must_contain": ["\"source_id\": \"3226\"", "C81C22001090006", "official_opencup_project_page", "official_municipal_project_page"]
+        }
+      ],
+      "entity_types": ["Project", "PublicOrganization"],
+      "record_types": ["SourceRecord", "Statement", "Identifier"],
+      "association_types": ["ProjectParticipation"],
+      "resolution_statuses": ["resolved_by_qualified_identifier"],
+      "relation_statuses": ["source_explicit"],
+      "required_invariants": ["source_records_preserved_after_canonicalization", "relation_and_identity_confidence_separate"],
+      "forbidden_association_types": []
+    },
+    {
+      "id": "pnrr-procurement-attachment-party-evidence",
+      "source_anchors": [
+        {
+          "path": "artifacts/lamezia-trasparente/src/data/generated/lameziaPnrrProjects.json",
+          "must_contain": ["Affidamento a soc.Register spa", "Affidamento a soc. Microvision srl", "Affidamento a soc. Maggioli spa", "Affidamento a soc.Tinn srl"]
+        }
+      ],
+      "entity_types": ["InformationResource", "Organization"],
+      "record_types": ["SourceRecord", "Statement"],
+      "association_types": ["EntityMention", "ProcurementParticipation"],
+      "resolution_statuses": ["unresolved"],
+      "relation_statuses": ["source_explicit"],
+      "required_invariants": ["no_name_only_entity_merge", "relation_and_identity_confidence_separate"],
+      "forbidden_association_types": []
+    },
+    {
+      "id": "pnrr-albo-qualified-cup-reconciliation",
+      "source_anchors": [
+        {
+          "path": "artifacts/lamezia-trasparente/src/data/generated/lameziaPnrrProjects.json",
+          "must_contain": ["\"reconciliation_rule\"", "stesso CUP normalizzato", "evidenze non riconciliate"]
+        }
+      ],
+      "entity_types": ["Project", "InformationResource"],
+      "record_types": ["SourceRecord", "Identifier"],
+      "association_types": ["EvidenceLink", "EntityMention"],
+      "resolution_statuses": ["resolved_by_qualified_identifier"],
+      "relation_statuses": ["deterministic_identifier_link", "mention_only"],
+      "required_invariants": ["no_text_only_project_reconciliation"],
+      "forbidden_association_types": []
+    },
+    {
+      "id": "confiscated-assets-state-without-reconstructed-timeline",
+      "source_anchors": [
+        {
+          "path": "lib/db/src/schema/confiscatedAssets.ts",
+          "must_contain": ["CONFISCATED_ASSET_STATUSES", "\"sequestrato\"", "\"confiscato\"", "\"assegnato\"", "\"riutilizzato\""]
+        },
+        {
+          "path": "lib/db/src/confiscatedAssetsCleanup.ts",
+          "must_contain": ["five unchanged fictional rows", "LEGACY_CONFISCATED_ASSETS_DEMO_CLEANUP_SQL"]
+        }
+      ],
+      "entity_types": ["Asset", "Organization"],
+      "record_types": ["SourceRecord", "Statement"],
+      "association_types": ["AssetStateAssertion", "AssetMeasure"],
+      "resolution_statuses": ["unresolved"],
+      "relation_statuses": ["source_explicit"],
+      "required_invariants": ["no_fictional_seed_as_evidence", "no_status_to_history_inference"],
+      "forbidden_association_types": []
+    },
+    {
+      "id": "indicator-population-resident-definition-and-observations",
+      "source_anchors": [
+        {
+          "path": "lib/db/src/performanceCatalog.ts",
+          "must_contain": ["popolazione-residente", "istat:22_289:A.079160.JAN.9.TOTAL.99"]
+        },
+        {
+          "path": "lib/db/src/schema/performanceIndicatorValues.ts",
+          "must_contain": ["performance_indicator_values", "period", "source"]
+        }
+      ],
+      "entity_types": ["Indicator"],
+      "record_types": ["SourceRecord", "Statement", "Identifier"],
+      "association_types": ["IndicatorObservation"],
+      "resolution_statuses": [],
+      "relation_statuses": ["source_explicit"],
+      "required_invariants": ["observation_provenance_preserved"],
+      "forbidden_association_types": []
+    },
+    {
+      "id": "opendata-dcat-contract",
+      "source_anchors": [
+        {
+          "path": "lib/db/src/schema/opendataDatasets.ts",
+          "must_contain": ["opendata_datasets", "source_id", "resource_count"]
+        },
+        {
+          "path": "lib/db/src/schema/opendataResources.ts",
+          "must_contain": ["opendata_resources", "dataset_id", "source_id"]
+        }
+      ],
+      "entity_types": ["Dataset", "Organization"],
+      "record_types": ["SourceRecord", "Distribution"],
+      "association_types": ["EntityResolutionDecision"],
+      "resolution_statuses": ["unresolved"],
+      "relation_statuses": [],
+      "required_invariants": ["no_name_only_entity_merge"],
+      "forbidden_association_types": []
+    }
+  ]
+}

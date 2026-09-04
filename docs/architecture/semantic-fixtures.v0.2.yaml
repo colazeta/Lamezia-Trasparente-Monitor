@@ -1,0 +1,304 @@
+schema_version: lt-semantic-fixtures.v0.2
+profile: docs/architecture/semantic-profile.v0.2.yaml
+issued: 2026-09-03
+issue: 928
+purpose: architecture_stress_test
+runtime_fixture: false
+
+fixture_policy:
+  repository_evidence_only: true
+  fictional_seed_rows_allowed: false
+  inferred_wrongdoing_or_risk_allowed: false
+  canonicalization_requires_recorded_basis: true
+  missing_dates_must_remain_missing: true
+
+fixtures:
+  - id: electoral-candidacy-doris-lo-moro-2025
+    question: >-
+      Can the same person be represented independently from a time-bounded
+      electoral participation without turning candidate status into a permanent
+      person type or organizational office?
+    repository_sources:
+      - path: lib/db/src/institutional-officials-data.ts
+        symbols:
+          - CURRENT_2025_ELECTORAL_CONTEXT
+          - CURRENT_2025_ELECTORAL_CONTEXT_SOURCE
+    input:
+      person_slug: doris-lo-moro
+      candidate_name_as_source: LO MORO DORIS
+      context_type: candidato_sindaco
+      source_doc_id: maggioli_2025_totals_mayor_xml
+      source_label: Comune/Maggioli - Elezioni comunali Lamezia Terme 25-26 maggio 2025
+    expected_graph:
+      entities:
+        - local_id: person:doris-lo-moro
+          type: Person
+        - local_id: event:lamezia-municipal-election-2025
+          type: Event
+      associations:
+        - type: EventParticipation
+          agent: person:doris-lo-moro
+          event: event:lamezia-municipal-election-2025
+          participation_role: mayoral_candidate
+          relation_assertion_status: source_explicit
+          source_record: source-record:maggioli_2025_totals_mayor_xml
+    forbidden_projection:
+      - Person:MayoralCandidate
+      - RoleAssignment:mayor
+      - inferred_election_outcome
+    verdict: pass_with_v0_2_refinement
+    refinement: EventParticipation
+
+  - id: pnrr-cloud-project-municipal-plus-opencup
+    question: >-
+      Can one public investment project retain separate municipal and OpenCUP
+      source records while resolving to one canonical Project by qualified CUP?
+    repository_sources:
+      - path: artifacts/lamezia-trasparente/src/data/generated/lameziaPnrrProjects.json
+        source_id: "3226"
+    input:
+      municipal_record:
+        source_id: "3226"
+        source_url: https://www.comune.lamezia-terme.cz.it/it/attuazione-misure-pnrr/3226
+        title: Investimento 1.2 “Abilitazione al cloud per le PA Locali” Comuni Aprile 2022”
+        cup: C81C22001090006
+        attuatore: Comune di Lamezia Terme
+        amount_eur: 419124
+        verification_status: official_municipal_project_page
+      opencup_record:
+        cup: C81C22001090006
+        title: MIGRAZIONE AL CLOUD DEI SERVIZI DIGITALI DELL'AMMINISTRAZIONE*TERRITORIO COMUNALE*N.18 SERVIZI DA MIGRARE
+        total_cost_eur: 419124
+        public_funding_eur: 419124
+        decision_year: 2022
+        cup_status: ATTIVO
+        holder_name: COMUNE DI LAMEZIA TERME - CZ -
+        holder_tax_code: "00301390795"
+        verification_status: official_opencup_project_page
+    expected_graph:
+      entities:
+        - local_id: project:cup:C81C22001090006
+          type: Project
+          identifiers:
+            - scheme: CUP
+              value: C81C22001090006
+        - local_id: organization:comune-lamezia-terme
+          type: PublicOrganization
+          identifiers:
+            - scheme: ItalianTaxCode
+              value: "00301390795"
+              publication_policy: public_safety_review
+      source_records:
+        - local_id: source-record:pnrr-municipal-3226
+          source_type: official_municipal_project_page
+        - local_id: source-record:opencup-C81C22001090006
+          source_type: official_opencup_project_page
+      statements:
+        - subject: project:cup:C81C22001090006
+          predicate: implemented_by
+          object: organization:comune-lamezia-terme
+          source_record: source-record:pnrr-municipal-3226
+        - subject: project:cup:C81C22001090006
+          predicate: held_by
+          object: organization:comune-lamezia-terme
+          source_record: source-record:opencup-C81C22001090006
+    invariants:
+      - source_records_are_not_collapsed
+      - project_identity_is_cup_based
+      - municipal_title_and_opencup_title_are_source_values_not_competing_entity_names
+      - opencup_cup_status_ATTIVO_is_not_project_execution_status
+    verdict: pass
+
+  - id: pnrr-procurement-attachment-party-evidence
+    question: >-
+      How should company names stated in procurement attachment titles be kept
+      before a qualified identifier resolves the company identity?
+    repository_sources:
+      - path: artifacts/lamezia-trasparente/src/data/generated/lameziaPnrrProjects.json
+        source_id: "3226"
+    input:
+      project_cup: C81C22001090006
+      attachment_titles:
+        - Affidamento a soc.Register spa attopubblicato_2023_3_1157.pdf
+        - Affidamento a soc. Microvision srl attopubblicato_2023_3_1158.pdf
+        - Affidamento a soc. Maggioli spa attopubblicato_2023_3_1159.pdf
+        - Affidamento a soc.Tinn srl attopubblicato_2023_3_1160.pdf
+      document_year: 2023
+      phase: procurement_contracts
+      classification_basis: title_keyword
+    expected_graph:
+      resources:
+        - type: InformationResource
+          quantity: 4
+      evidence:
+        representation: EntityMention
+        semantic_hint: procurement_award_or_assignment
+        relation_assertion_status: source_explicit_from_title
+        entity_resolution_status: unresolved
+      promotion_to_procurement_participation:
+        allowed: true
+        requires:
+          - canonical_or_reviewed_party_identity
+          - preserved_source_statement
+        automatic_name_only_merge: false
+    invariants:
+      - relation_assertion_strength_is_independent_from_entity_resolution
+      - source_title_is_preserved
+      - title_keyword_classification_does_not_prove_project_progress
+    verdict: pass_with_v0_2_refinement
+    refinement: independent_identity_and_relation_status
+
+  - id: pnrr-albo-qualified-cup-reconciliation
+    question: >-
+      Can project evidence be linked deterministically while preventing generic
+      PNRR text from becoming a project relationship?
+    repository_sources:
+      - path: artifacts/lamezia-trasparente/src/data/generated/lameziaPnrrProjects.json
+        metadata_field: reconciliation_rule
+    input:
+      repository_rule: >-
+        Albo acts are linked to a project only when they share the same normalized
+        CUP; text-only PNRR references remain unreconciled evidence.
+    expected_graph:
+      exact_cup_case:
+        association: EvidenceLink
+        match_basis: qualified_identifier_exact
+        relation_assertion_status: deterministic_identifier_link
+      text_only_case:
+        association: EntityMention_or_unlinked_evidence
+        relation_assertion_status: mention_only
+        canonical_project_link: false
+    invariants:
+      - generic_text_similarity_never_replaces_cup_match
+      - evidence_link_does_not_imply_responsibility_or_wrongdoing
+    verdict: pass_with_v0_2_refinement
+    refinement: EvidenceLink
+
+  - id: confiscated-assets-state-without-reconstructed-timeline
+    question: >-
+      Can a current confiscated-asset status be represented without inventing
+      missing seizure, confiscation, assignment or reuse event dates?
+    repository_sources:
+      - path: lib/db/src/schema/confiscatedAssets.ts
+      - path: lib/db/src/confiscatedAssetsCleanup.ts
+    input:
+      status_vocabulary:
+        - sequestrato
+        - confiscato
+        - assegnato
+        - riutilizzato
+      source_vocabulary:
+        - manual
+        - auto
+      source_id_pattern_example: anbsc-<id>
+      cleanup_fact: >-
+        The repository explicitly removes five unchanged fictional development
+        rows and preserves curated rows rather than treating demo content as evidence.
+    expected_graph:
+      current_or_observed_status:
+        association: AssetStateAssertion
+        historical_event_implied: false
+      historical_measure:
+        association: AssetMeasure
+        create_only_if:
+          - measure_is_source_supported
+          - event_date_or_explicit_date_precision_is_available
+    invariants:
+      - fictional_demo_rows_are_not_fixture_evidence
+      - current_status_is_not_a_complete_lifecycle
+      - source_auto_is_ingestion_origin_not_truth_rank
+      - assignee_string_requires_organization_resolution_before_canonical_relation
+    verdict: pass_with_v0_2_refinement
+    refinement: AssetStateAssertion
+
+  - id: indicator-population-resident-definition-and-observations
+    question: >-
+      Can the metric definition remain stable while each period/value keeps its
+      own source and correction provenance?
+    repository_sources:
+      - path: lib/db/src/performanceCatalog.ts
+        symbol: PERFORMANCE_INDICATORS
+      - path: lib/db/src/schema/performanceIndicators.ts
+      - path: lib/db/src/schema/performanceIndicatorValues.ts
+    input:
+      indicator:
+        slug: popolazione-residente
+        title: Popolazione residente
+        unit: abitanti
+        source: ISTAT
+        source_url: https://esploradati.istat.it
+        update_mode: automatic
+        polarity: neutral
+        external_key: istat:22_289:A.079160.JAN.9.TOTAL.99
+      value_contract:
+        dimensions:
+          - period
+          - value
+          - note
+          - manual
+          - source
+    expected_graph:
+      definition:
+        local_id: indicator:popolazione-residente
+        type: Indicator
+        source_specific_identifier:
+          scheme: ISTAT_series_key
+          value: istat:22_289:A.079160.JAN.9.TOTAL.99
+      each_period_value:
+        type: IndicatorObservation
+        required_provenance:
+          - source_statement
+          - period
+          - value
+          - unit
+      manual_correction:
+        overwrite_prior_provenance: false
+        representation: new_or_revised_statement_with_traceability
+    invariants:
+      - Indicator_is_not_IndicatorObservation
+      - polarity_is_not_observed_value
+      - source_on_each_value_is_not_discarded
+    verdict: pass_with_v0_2_refinement
+    refinement: IndicatorObservation
+
+  - id: opendata-dcat-contract
+    question: >-
+      Can the current Open Data relational schema expose DCAT semantics without
+      turning each distribution or serialization into a separate civic dataset?
+    repository_sources:
+      - path: lib/db/src/schema/opendataDatasets.ts
+      - path: lib/db/src/schema/opendataResources.ts
+    input:
+      dataset_fields:
+        - sourceId
+        - title
+        - description
+        - category
+        - theme
+        - frequency
+        - licenseId
+        - licenseTitle
+        - holderName
+        - portalUrl
+        - tags
+        - resourceCount
+        - metadataModified
+    expected_graph:
+      dataset: Dataset
+      resource: dcat:Distribution
+      source_id: source_record_identifier
+      theme: skos_or_dcat_theme_concept
+      license: rights_metadata
+    invariants:
+      - distribution_is_not_a_second_dataset_by_default
+      - metadata_modified_is_source_metadata_not_entity_creation_date
+      - holder_name_requires_organization_resolution_before_canonical_identity
+    verdict: pass
+
+summary:
+  fixtures: 7
+  pass_without_profile_change: 2
+  pass_with_additive_refinement: 5
+  contradictions_with_v0_1: 0
+  destructive_changes_required: 0
+  database_migration_authorized: false
