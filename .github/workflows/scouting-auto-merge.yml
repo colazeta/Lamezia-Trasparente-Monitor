@@ -1,0 +1,56 @@
+name: Scouting PR auto-merge
+
+on:
+  pull_request_target:
+    types: [opened, reopened, synchronize, ready_for_review]
+    branches: [main]
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  arm-auto-merge:
+    if: >-
+      github.event_name == 'pull_request_target' &&
+      github.event.pull_request.head.repo.full_name == github.repository &&
+      startsWith(github.event.pull_request.head.ref, 'scouting/') &&
+      github.event.pull_request.draft == false
+    runs-on: ubuntu-latest
+    steps:
+      - name: Enable auto-merge for scouting PR
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_URL: ${{ github.event.pull_request.html_url }}
+        run: gh pr merge "$PR_URL" --auto --squash
+
+  refresh-open-scouting-prs:
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Refresh open scouting PRs after main advances
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          gh pr list \
+            --repo "$REPO" \
+            --state open \
+            --base main \
+            --json number,headRefName,isDraft \
+            --jq '.[] | select(.isDraft == false) | select(.headRefName | startswith("scouting/")) | .number' \
+          | while read -r pr; do
+              [ -n "$pr" ] || continue
+
+              if ! gh pr update-branch "$pr" --repo "$REPO"; then
+                echo "::warning::Could not update scouting PR #$pr; leaving it open for conflict resolution."
+                continue
+              fi
+
+              gh pr merge "$pr" --repo "$REPO" --auto --squash
+            done
