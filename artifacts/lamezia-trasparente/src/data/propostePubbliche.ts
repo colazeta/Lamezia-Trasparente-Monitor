@@ -1,7 +1,9 @@
 import * as core from "./propostePubblicheCore";
 import { applyScoutingUpdates } from "./proposalScoutingUpdates";
+import { applyScoutingUpdates20260904 } from "./proposalScoutingUpdates20260904";
 import { SCOUTED_PUBLIC_PROPOSALS } from "./propostePubblicheScouting";
 import { SCOUTED_PUBLIC_PROPOSALS_20260903 } from "./propostePubblicheScouting20260903";
+import { SCOUTED_PUBLIC_PROPOSALS_20260904 } from "./propostePubblicheScouting20260904";
 
 export type {
   ProposalPromoterType,
@@ -113,12 +115,19 @@ export {
   hasVerifiedProposalCompetence,
 } from "./proposalInstitutionalCompetence";
 
-const UPDATED_CORE_PROPOSALS = core.PUBLIC_PROPOSALS.map(applyScoutingUpdates);
-
-export const PUBLIC_PROPOSALS = [
-  ...UPDATED_CORE_PROPOSALS,
+const EXISTING_PUBLIC_PROPOSALS = [
+  ...core.PUBLIC_PROPOSALS.map(applyScoutingUpdates),
   ...SCOUTED_PUBLIC_PROPOSALS,
   ...SCOUTED_PUBLIC_PROPOSALS_20260903,
+] as const satisfies readonly core.PublicProposal[];
+
+const UPDATED_EXISTING_PUBLIC_PROPOSALS = EXISTING_PUBLIC_PROPOSALS.map(
+  applyScoutingUpdates20260904,
+);
+
+export const PUBLIC_PROPOSALS = [
+  ...UPDATED_EXISTING_PUBLIC_PROPOSALS,
+  ...SCOUTED_PUBLIC_PROPOSALS_20260904,
 ] as const satisfies readonly core.PublicProposal[];
 
 export function getProposalThemes(
