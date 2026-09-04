@@ -18,7 +18,7 @@ describe("home daily civic pulse contract", () => {
     expect(home).toContain("ALBO_PUBLIC_DIFF_CHANGED_ITEMS");
     expect(home).toContain("ALBO_PUBLIC_DIFF_REMOVED_ITEMS");
     expect(home).toContain("ALBO_OPERATIONAL_STATUS");
-    expect(home).toContain("Ultimi aggiornamenti dell&apos;Albo");
+    expect(home).toContain("Cosa è cambiato nell&apos;Albo");
     expect(home).not.toContain("useGetRecentActivity");
   });
 
@@ -30,10 +30,13 @@ describe("home daily civic pulse contract", () => {
     expect(home).toContain("baseline pubblica precedente");
   });
 
-  it("gives council and commissions a clear sourced path from the homepage", () => {
+  it("keeps council and commissions reachable through the Decisioni domain and a sourced homepage path", () => {
     const home = readHome();
 
-    expect(home).toContain('title: "Sedute e ordini del giorno"');
+    expect(home).toContain('title: "Decisioni"');
+    expect(home).toContain(
+      'description: "Sedute, delibere, Albo e atti fondamentali del Comune."',
+    );
     expect(home).toContain('href: "/convocazioni"');
     expect(home).toContain("<HomeInstitutionalSessions />");
     expect(home).toContain("Fonte: Albo Pretorio");
