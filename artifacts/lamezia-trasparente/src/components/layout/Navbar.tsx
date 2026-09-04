@@ -1,5 +1,5 @@
 import { Link, useLocation } from "wouter";
-import { ChevronDown, FileSearch, Home, Menu, X } from "lucide-react";
+import { ChevronDown, FileSearch, Home, Megaphone, Menu, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -16,7 +16,11 @@ import {
   SearchTrigger,
   useCommandPalette,
 } from "@/components/search/CommandPalette";
-import { NAV_GROUPS, isSectionActive, type NavSection } from "./navSections";
+import { isSectionActive, type NavSection } from "./navSections";
+import {
+  PARTICIPATION_ACTIONS,
+  PRIMARY_NAV_GROUPS,
+} from "./primaryNavigation";
 
 export function Navbar() {
   const [location] = useLocation();
@@ -31,6 +35,9 @@ export function Navbar() {
   const isActive = (href: string) => isSectionActive(href, location);
   const isGroupActive = (group: NavSection) =>
     group.items.some((item) => isActive(item.href));
+  const participationActive = PARTICIPATION_ACTIONS.some((item) =>
+    isActive(item.href),
+  );
 
   const groupTriggerClass = (active: boolean) =>
     cn(
@@ -58,7 +65,7 @@ export function Navbar() {
             className="hidden min-w-0 flex-1 items-center justify-center gap-0.5 xl:flex"
             aria-label="Navigazione principale"
           >
-            {NAV_GROUPS.map((group) => {
+            {PRIMARY_NAV_GROUPS.map((group) => {
               const active = isGroupActive(group);
               return (
                 <DropdownMenu key={group.label} modal={false}>
@@ -75,7 +82,7 @@ export function Navbar() {
 
                   <DropdownMenuContent
                     align="start"
-                    className="w-[18rem] p-1.5"
+                    className="w-[19rem] p-1.5"
                     sideOffset={8}
                   >
                     {group.items.map((item) => {
@@ -114,6 +121,55 @@ export function Navbar() {
           </nav>
 
           <div className="flex shrink-0 items-center gap-1 sm:gap-2">
+            <DropdownMenu modal={false}>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant={participationActive ? "default" : "outline"}
+                  size="sm"
+                  className="hidden gap-1.5 sm:inline-flex"
+                  aria-label="Partecipa"
+                >
+                  <Megaphone className="h-4 w-4" aria-hidden="true" />
+                  Partecipa
+                  <ChevronDown className="h-3.5 w-3.5 opacity-70" aria-hidden="true" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-[18rem] p-1.5" sideOffset={8}>
+                {PARTICIPATION_ACTIONS.map((item) => {
+                  const Icon = item.icon;
+                  const itemActive = isActive(item.href);
+                  return (
+                    <DropdownMenuItem key={item.href} asChild>
+                      <Link
+                        href={item.href}
+                        aria-current={itemActive ? "page" : undefined}
+                        className={cn(
+                          "flex cursor-pointer items-center gap-2.5 rounded-md px-2.5 py-2",
+                          itemActive && "bg-primary/10 text-primary",
+                        )}
+                      >
+                        <Icon
+                          className={cn(
+                            "h-4 w-4 shrink-0",
+                            itemActive ? "text-primary" : "text-muted-foreground",
+                          )}
+                          aria-hidden="true"
+                        />
+                        <span className="min-w-0">
+                          <span className="block truncate text-sm font-semibold leading-5">
+                            {item.label}
+                          </span>
+                          <span className="mt-0.5 block line-clamp-2 text-xs leading-4 text-muted-foreground">
+                            {item.description}
+                          </span>
+                        </span>
+                      </Link>
+                    </DropdownMenuItem>
+                  );
+                })}
+              </DropdownMenuContent>
+            </DropdownMenu>
+
             <SearchTrigger onClick={() => setPaletteOpen(true)} />
             <ThemeToggle />
             <Button
@@ -169,8 +225,26 @@ export function Navbar() {
                 Home
               </Link>
 
+              <div className="rounded-xl border border-primary/25 bg-primary/5 p-2">
+                <div className="flex items-center gap-2 px-2 py-2 text-sm font-bold text-primary">
+                  <Megaphone className="h-4 w-4" aria-hidden="true" />
+                  Partecipa
+                </div>
+                <div className="border-t border-primary/15 pt-1">
+                  {PARTICIPATION_ACTIONS.map((item) => (
+                    <MobileSectionLink
+                      key={item.href}
+                      href={item.href}
+                      label={item.label}
+                      icon={item.icon}
+                      active={isActive(item.href)}
+                    />
+                  ))}
+                </div>
+              </div>
+
               <div className="space-y-2 pt-1">
-                {NAV_GROUPS.map((group) => {
+                {PRIMARY_NAV_GROUPS.map((group) => {
                   const active = isGroupActive(group);
                   const expanded = openMobileGroup === group.label;
 
