@@ -1,5 +1,5 @@
-import { useEffect, useRef } from "react";
-import { ClerkProvider, SignIn, useClerk } from "@clerk/react";
+import { useEffect, type ReactNode } from "react";
+import { ClerkProvider, SignIn, SignUp, useClerk } from "@clerk/react";
 import { shadcn } from "@clerk/themes";
 import {
   QueryClientProvider,
@@ -80,21 +80,28 @@ function buildClerkAppearance(basePath: string) {
   };
 }
 
+const clerkUserByQueryClient = new WeakMap<QueryClient, string | null>();
+
+function syncClerkQueryClientUser(
+  queryClient: QueryClient,
+  userId: string | null,
+) {
+  const previousUserId = clerkUserByQueryClient.get(queryClient);
+
+  if (previousUserId !== undefined && previousUserId !== userId) {
+    queryClient.clear();
+  }
+
+  clerkUserByQueryClient.set(queryClient, userId);
+}
+
 function ClerkQueryClientCacheInvalidator() {
   const { addListener } = useClerk();
   const queryClient = useQueryClient();
-  const previousUserId = useRef<string | null | undefined>(undefined);
 
   useEffect(() => {
     const unsubscribe = addListener(({ user }) => {
-      const userId = user?.id ?? null;
-      if (
-        previousUserId.current !== undefined &&
-        previousUserId.current !== userId
-      ) {
-        queryClient.clear();
-      }
-      previousUserId.current = userId;
+      syncClerkQueryClientUser(queryClient, user?.id ?? null);
     });
     return unsubscribe;
   }, [addListener, queryClient]);
@@ -102,16 +109,37 @@ function ClerkQueryClientCacheInvalidator() {
   return null;
 }
 
-function SignInPage({ basePath }: { basePath: string }) {
+function AuthPage({ children }: { children: ReactNode }) {
   return (
     <div className="flex min-h-[100dvh] items-center justify-center bg-sidebar px-4">
+      {children}
+    </div>
+  );
+}
+
+function SignInPage({ basePath }: { basePath: string }) {
+  return (
+    <AuthPage>
       <SignIn
         routing="path"
         path={`${basePath}/sign-in`}
         signUpUrl={`${basePath}/sign-up`}
         forceRedirectUrl={`${basePath}/redazione`}
       />
-    </div>
+    </AuthPage>
+  );
+}
+
+function SignUpPage({ basePath }: { basePath: string }) {
+  return (
+    <AuthPage>
+      <SignUp
+        routing="path"
+        path={`${basePath}/sign-up`}
+        signInUrl={`${basePath}/sign-in`}
+        forceRedirectUrl={`${basePath}/redazione`}
+      />
+    </AuthPage>
   );
 }
 
@@ -151,6 +179,9 @@ export default function ClerkApp({
               <Switch>
                 <Route path="/sign-in/*?">
                   <SignInPage basePath={basePath} />
+                </Route>
+                <Route path="/sign-up/*?">
+                  <SignUpPage basePath={basePath} />
                 </Route>
                 <Route component={Router} />
               </Switch>
