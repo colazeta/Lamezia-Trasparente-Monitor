@@ -26,7 +26,7 @@ permissions:
 
 jobs:
   smoke-static-fallback:
-    name: Build and smoke static fallback
+    name: Build and smoke v0 static fallback
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
