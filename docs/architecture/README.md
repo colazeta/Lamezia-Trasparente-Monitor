@@ -10,6 +10,13 @@ La documentazione ha uno scopo operativo: rendere verificabile da maintainer, re
 - [`publication-standardisation.md`](publication-standardisation.md) — confine versionato tra dato acquisito e presentazione pubblica, con regole di preservazione della fonte, minimizzazione e revisione.
 - [`semantic-ontology.md`](semantic-ontology.md) — profilo semantico federato per entità, relazioni e domini, con OntoPiA come riferimento primario per la PA italiana e mapping verso SEMIC/W3C/OGC, ePO/OCDS, BODS e FollowTheMoney.
 - [`semantic-profile.v0.1.yaml`](semantic-profile.v0.1.yaml) — baseline machine-readable delle classi canoniche, associazioni, moduli, provenance, entity resolution e bridge dai domini correnti.
+- [`semantic-profile.v0.2.yaml`](semantic-profile.v0.2.yaml) — raffinamento additivo della baseline dopo lo stress-test su casi reali, con partecipazioni a eventi, stati dei beni, osservazioni degli indicatori e separazione fra identità e forza della relazione.
+- [`semantic-fixtures.v0.2.yaml`](semantic-fixtures.v0.2.yaml) — sette fixture semantiche ricavate da record e policy reali già presenti nel repository, senza usare seed dichiarati fittizi.
+- [`../audits/semantic-profile-validation-v0.2.md`](../audits/semantic-profile-validation-v0.2.md) — audit dello stress-test v0.2, risultati, ambiguità e gate richiesti prima di qualsiasi migrazione DB.
+- [`semantic-contract.md`](semantic-contract.md) — confine fra profilo concettuale e contratto software, scelta TypeScript/Zod, ruolo futuro di LinkML e gate prima del database.
+- [`semantic-contract.v0.2.json`](semantic-contract.v0.2.json) — istanza eseguibile del contratto v0.2: tipi, associazioni, status, identifier policy e invarianti.
+- [`semantic-contract.v0.2.schema.json`](semantic-contract.v0.2.schema.json) — JSON Schema Draft 2020-12 generabile dalla definizione Zod e controllato dal CI.
+- [`semantic-contract-fixtures.v0.2.json`](semantic-contract-fixtures.v0.2.json) — fixture eseguibili con anchor ai file reali del repository.
 - [`semantic-mappings.csv`](semantic-mappings.csv) — registro iniziale dei mapping semantici, con relazione, stato, autorità e note per ciascun allineamento.
 - [`integration-source-catalog.md`](integration-source-catalog.md) — catalogo delle fonti che alimentano o possono alimentare il prodotto, con ruolo, stato, superficie pubblica e caveat.
 - [`cruscotto-italia-integration.md`](cruscotto-italia-integration.md) — integrazione di Cruscotto Italia come fonte federata nazionale per il comune di Lamezia Terme.
