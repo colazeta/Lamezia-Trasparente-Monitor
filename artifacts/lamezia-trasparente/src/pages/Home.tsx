@@ -8,12 +8,15 @@ import {
   Calendar,
   CalendarClock,
   CheckCircle2,
+  Database,
   FileSearch,
   FileText,
+  Gavel,
   Landmark,
-  Megaphone,
+  MapPinned,
   Newspaper,
   RefreshCw,
+  Search,
   Users,
   Video,
 } from "lucide-react";
@@ -129,26 +132,44 @@ function buildPulseItems(): PulseItem[] {
     .map((item) => ({ kind: "context" as const, item }));
 }
 
-const gateways = [
+export const HOME_PRIMARY_GATEWAYS = [
   {
-    title: "Sedute e ordini del giorno",
-    description: "Consiglio e commissioni, con documenti e stato delle fonti.",
+    title: "Decisioni",
+    description: "Sedute, delibere, Albo e atti fondamentali del Comune.",
     href: "/convocazioni",
+    icon: Gavel,
+  },
+  {
+    title: "Spesa e progetti",
+    description: "Contratti, PNRR, incarichi e risorse pubbliche documentate.",
+    href: "/contratti",
+    icon: Landmark,
+  },
+  {
+    title: "Comune e risultati",
+    description: "Organi, amministratori, macchina comunale e performance.",
+    href: "/organi",
     icon: Users,
   },
   {
-    title: "Contratti pubblici",
-    description: "Affidamenti, CIG, importi e operatori dalle fonti disponibili.",
-    href: "/contratti",
-    icon: FileText,
+    title: "Territorio e legalità",
+    description: "Mappe, criticità, monitoraggio civico, memoria e beni confiscati.",
+    href: "/atlante-territoriale",
+    icon: MapPinned,
   },
   {
-    title: "Accesso civico",
-    description: "Richiedi dati e documenti pubblici e segui il percorso della richiesta.",
-    href: "/accesso-civico",
-    icon: Megaphone,
+    title: "Dati e fonti",
+    description: "Dataset, copertura, freschezza e metodo delle fonti pubbliche.",
+    href: "/opendata",
+    icon: Database,
   },
 ] as const;
+
+export function openGlobalSearch() {
+  document.dispatchEvent(
+    new KeyboardEvent("keydown", { key: "/", bubbles: true }),
+  );
+}
 
 export function Home() {
   const {
@@ -171,8 +192,8 @@ export function Home() {
   return (
     <div className="flex flex-col">
       <PageMeta
-        title="Lamezia Trasparente — atti, spesa e partecipazione civica"
-        description="Atti, sedute, contratti e progetti del Comune di Lamezia Terme collegati alle fonti pubbliche, con stato e limiti dei dati espliciti."
+        title="Lamezia Trasparente — decisioni, spesa, territorio e dati"
+        description="Decisioni, spesa, risultati, territorio e dati del Comune di Lamezia Terme collegati alle fonti pubbliche, con stato e limiti espliciti."
         path="/"
       />
 
@@ -187,57 +208,85 @@ export function Home() {
             </h1>
 
             <p className="mt-6 max-w-3xl text-base leading-7 text-sidebar-foreground/80 sm:text-lg md:text-xl">
-              Atti, sedute, contratti e progetti collegati alle fonti pubbliche,
-              con stato e limiti dei dati espliciti.
+              Parti da una domanda, cerca una persona o un dataset, oppure
+              segui gli ultimi cambiamenti nelle fonti pubbliche.
             </p>
 
             <div className="mt-8 flex w-full flex-col gap-3 sm:w-auto sm:flex-row">
               <Button asChild variant="brand" size="lg" className="font-bold">
                 <a href="#oggi">
-                  Ultimi aggiornamenti
+                  Cosa è cambiato
                   <ArrowRight className="ml-1 h-4 w-4" aria-hidden="true" />
                 </a>
               </Button>
               <Button
-                asChild
+                type="button"
                 variant="outline"
                 size="lg"
                 className="border-white/25 bg-white/5 font-bold text-white hover:bg-white/10"
+                onClick={openGlobalSearch}
+                aria-keyshortcuts="Control+K Meta+K"
               >
-                <Link href="/contratti">Contratti pubblici</Link>
+                <Search className="mr-1 h-4 w-4" aria-hidden="true" />
+                Cerca nel sito
               </Button>
             </div>
           </div>
         </div>
       </section>
 
-      <section className="border-b border-border bg-background py-7 md:py-8">
+      <section className="border-y border-border bg-background py-10 md:py-12">
         <div className="container mx-auto px-4 md:px-6">
-          <div className="grid gap-3 md:grid-cols-3">
-            {gateways.map((gateway) => {
-              const Icon = gateway.icon;
-              return (
-                <Link
-                  key={gateway.title}
-                  href={gateway.href}
-                  className="group rounded-xl border border-card-border bg-card p-4 shadow-[var(--shadow-card)] transition-colors hover:border-primary/35 hover:bg-primary/5 md:p-5"
-                >
-                  <div className="flex items-start gap-3">
-                    <div className="rounded-lg bg-primary/10 p-2.5 text-primary">
-                      <Icon className="h-5 w-5" aria-hidden="true" />
-                    </div>
-                    <div className="min-w-0">
-                      <h2 className="font-display text-lg font-bold tracking-tight">
-                        {gateway.title}
-                      </h2>
-                      <p className="mt-1 text-sm leading-5 text-muted-foreground">
-                        {gateway.description}
-                      </p>
-                    </div>
-                  </div>
-                </Link>
-              );
-            })}
+          <div className="mb-6 flex flex-col justify-between gap-3 md:flex-row md:items-end">
+            <div>
+              <span className="eyebrow text-primary">Quadro civico</span>
+              <h2 className="mt-2 font-display text-2xl font-bold tracking-tight md:text-3xl">
+                Numeri disponibili adesso
+              </h2>
+            </div>
+            <Link
+              href="/stato-monitoraggio"
+              className="text-sm font-semibold text-primary hover:underline"
+            >
+              Copertura e freschezza
+            </Link>
+          </div>
+
+          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+            <StatCard
+              title="Atti dalla fonte"
+              value={stats?.acts ?? ALBO_OPERATIONAL_STATUS.counts.acquired}
+              loading={statsLoading}
+              href="/albo"
+              icon={FileSearch}
+            />
+            <StatCard
+              title="Contratti censiti"
+              value={stats?.contracts}
+              loading={statsLoading}
+              unavailable={statsUnavailable}
+              href="/contratti"
+              icon={FileText}
+            />
+            <StatCard
+              title="Progetti PNRR"
+              value={pnrrProjectCount}
+              loading={pnrrLoading}
+              unavailable={pnrrUnavailable}
+              href="/pnrr"
+              icon={Landmark}
+            />
+            <StatCard
+              title="Importi disponibili"
+              value={
+                stats ? formatMonitoredAmount(stats.monitoredAmount) : undefined
+              }
+              loading={statsLoading}
+              unavailable={statsUnavailable}
+              href="/contratti"
+              icon={CheckCircle2}
+              highlight
+            />
           </div>
         </div>
       </section>
@@ -245,9 +294,12 @@ export function Home() {
       <section id="oggi" className="scroll-mt-24 bg-muted/25 py-12 md:py-16">
         <div className="container mx-auto px-4 md:px-6">
           <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-            <h2 className="font-display text-3xl font-bold tracking-tight md:text-4xl">
-              Ultimi aggiornamenti dell&apos;Albo
-            </h2>
+            <div>
+              <span className="eyebrow text-primary">Attività recente</span>
+              <h2 className="mt-2 font-display text-3xl font-bold tracking-tight md:text-4xl">
+                Cosa è cambiato nell&apos;Albo
+              </h2>
+            </div>
             <Link
               href="/albo"
               className="text-sm font-semibold text-primary hover:underline"
@@ -307,60 +359,116 @@ export function Home() {
         </div>
       </section>
 
-      <section className="border-y border-border bg-background py-10 md:py-12">
+      <section
+        data-tour="home-themes"
+        className="border-b border-border bg-background py-10 md:py-12"
+        aria-labelledby="home-primary-domains"
+      >
         <div className="container mx-auto px-4 md:px-6">
-          <div className="mb-6 flex flex-col justify-between gap-3 md:flex-row md:items-end">
-            <h2 className="font-display text-2xl font-bold tracking-tight md:text-3xl">
-              Dati disponibili
-            </h2>
-            <Link
-              href="/stato-monitoraggio"
-              className="text-sm font-semibold text-primary hover:underline"
+          <div className="mb-6 max-w-3xl">
+            <span className="eyebrow text-primary">Esplora</span>
+            <h2
+              id="home-primary-domains"
+              className="mt-2 font-display text-2xl font-bold tracking-tight md:text-3xl"
             >
-              Copertura e freschezza
-            </Link>
+              Cinque porte per orientarsi
+            </h2>
+            <p className="mt-2 text-sm leading-6 text-muted-foreground md:text-base">
+              La navigazione primaria segue le domande dell&apos;utente; le
+              sezioni specialistiche restano disponibili nella ricerca globale.
+            </p>
           </div>
 
-          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-            <StatCard
-              title="Atti dalla fonte"
-              value={stats?.acts ?? ALBO_OPERATIONAL_STATUS.counts.acquired}
-              loading={statsLoading}
-              href="/albo"
-              icon={FileSearch}
-            />
-            <StatCard
-              title="Contratti censiti"
-              value={stats?.contracts}
-              loading={statsLoading}
-              unavailable={statsUnavailable}
-              href="/contratti"
-              icon={FileText}
-            />
-            <StatCard
-              title="Progetti PNRR"
-              value={pnrrProjectCount}
-              loading={pnrrLoading}
-              unavailable={pnrrUnavailable}
-              href="/pnrr"
-              icon={Landmark}
-            />
-            <StatCard
-              title="Importi disponibili"
-              value={
-                stats ? formatMonitoredAmount(stats.monitoredAmount) : undefined
-              }
-              loading={statsLoading}
-              unavailable={statsUnavailable}
-              href="/contratti"
-              icon={CheckCircle2}
-              highlight
-            />
+          <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-5">
+            {HOME_PRIMARY_GATEWAYS.map((gateway) => {
+              const Icon = gateway.icon;
+              return (
+                <Link
+                  key={gateway.title}
+                  href={gateway.href}
+                  className="group rounded-xl border border-card-border bg-card p-4 shadow-[var(--shadow-card)] transition-colors hover:border-primary/35 hover:bg-primary/5 md:p-5"
+                >
+                  <div className="rounded-lg bg-primary/10 p-2.5 text-primary w-fit">
+                    <Icon className="h-5 w-5" aria-hidden="true" />
+                  </div>
+                  <h3 className="mt-4 font-display text-lg font-bold tracking-tight">
+                    {gateway.title}
+                  </h3>
+                  <p className="mt-1 text-sm leading-5 text-muted-foreground">
+                    {gateway.description}
+                  </p>
+                </Link>
+              );
+            })}
           </div>
         </div>
       </section>
 
       <HomeInstitutionalSessions />
+
+      <section className="border-b border-border bg-muted/20 py-12 md:py-16">
+        <div className="container mx-auto grid gap-7 px-4 md:px-6 lg:grid-cols-[0.8fr_1.2fr] lg:items-start">
+          <div className="max-w-xl">
+            <span className="eyebrow text-primary">Risorse pubbliche</span>
+            <h2 className="mt-2 font-display text-3xl font-bold tracking-tight md:text-4xl">
+              Spesa e progetti
+            </h2>
+            <p className="mt-3 text-base leading-7 text-muted-foreground">
+              Segui affidamenti, progetti finanziati e incarichi senza perdere
+              il collegamento alle fonti e ai limiti di copertura.
+            </p>
+          </div>
+          <div className="grid gap-3 sm:grid-cols-3">
+            <HomeLinkCard
+              title="Contratti pubblici"
+              description="Gare, affidamenti, CIG, importi e operatori."
+              href="/contratti"
+            />
+            <HomeLinkCard
+              title="PNRR"
+              description="Progetti, CUP, finanziamenti e luoghi degli interventi."
+              href="/pnrr"
+            />
+            <HomeLinkCard
+              title="Incarichi e consulenze"
+              description="Incarichi, consulenze e ricorrenze documentali."
+              href="/incarichimetro"
+            />
+          </div>
+        </div>
+      </section>
+
+      <section className="border-b border-border bg-background py-12 md:py-16">
+        <div className="container mx-auto grid gap-7 px-4 md:px-6 lg:grid-cols-[0.8fr_1.2fr] lg:items-start">
+          <div className="max-w-xl">
+            <span className="eyebrow text-primary">Trasparenza del monitoraggio</span>
+            <h2 className="mt-2 font-display text-3xl font-bold tracking-tight md:text-4xl">
+              Qualità e copertura delle fonti
+            </h2>
+            <p className="mt-3 text-base leading-7 text-muted-foreground">
+              Ogni numero va letto insieme a fonte, freschezza, copertura e
+              cautele metodologiche.
+            </p>
+          </div>
+          <div className="grid gap-3 sm:grid-cols-3">
+            <HomeLinkCard
+              title="Stato delle fonti"
+              description="Copertura e freschezza dei collegamenti monitorati."
+              href="/stato-monitoraggio"
+            />
+            <HomeLinkCard
+              title="Fonti dati"
+              description="Indice delle fonti pubbliche e dei relativi limiti."
+              href="/fonti-dati"
+            />
+            <HomeLinkCard
+              title="Metodologia"
+              description="Criteri e cautele per leggere dati e indicatori."
+              href="/metodologia"
+            />
+          </div>
+        </div>
+      </section>
 
       <section className="bg-muted/20 py-12 md:py-16">
         <div className="container mx-auto px-4 md:px-6">
@@ -376,17 +484,17 @@ export function Home() {
             </div>
 
             <div className="grid gap-3 sm:grid-cols-3">
-              <ParticipationCard
+              <HomeLinkCard
                 title="Chiedi un dato"
                 description="Richiedi documenti o informazioni pubbliche."
                 href="/accesso-civico"
               />
-              <ParticipationCard
+              <HomeLinkCard
                 title="Proponi"
                 description="Suggerisci una proposta civica documentata."
                 href="/proposte-civiche"
               />
-              <ParticipationCard
+              <HomeLinkCard
                 title="Segnala"
                 description="Indica un dato o un atto da verificare."
                 href="/segnalazioni"
@@ -733,7 +841,7 @@ function StatCard({
   );
 }
 
-function ParticipationCard({
+function HomeLinkCard({
   title,
   description,
   href,

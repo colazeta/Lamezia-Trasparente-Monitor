@@ -21,7 +21,9 @@ describe("Navbar public front door", () => {
   it("keeps public spending visible as the active primary macro-area", () => {
     const { container } = renderNavbar("/contratti/42");
 
-    const spendingMenu = screen.getByRole("button", { name: /^Spesa$/i });
+    const spendingMenu = screen.getByRole("button", {
+      name: /^Spesa e progetti$/i,
+    });
 
     expect(spendingMenu).toHaveClass("bg-primary/10", "text-primary");
     expect(container.querySelector("header nav")).toHaveClass("xl:flex");
@@ -30,11 +32,22 @@ describe("Navbar public front door", () => {
     );
   });
 
-  it("keeps the civic macro-areas visible in primary navigation", () => {
+  it("exposes five information domains plus a separate participation action", () => {
     renderNavbar("/");
 
-    for (const label of ["Atti", "Comune", "Spesa", "Territorio", "Legalità", "Dati", "Partecipa"]) {
+    for (const label of [
+      "Decisioni",
+      "Spesa e progetti",
+      "Comune e risultati",
+      "Territorio e legalità",
+      "Dati e fonti",
+    ]) {
       expect(screen.getByRole("button", { name: label })).toBeInTheDocument();
+    }
+
+    expect(screen.getByRole("button", { name: "Partecipa" })).toBeInTheDocument();
+    for (const oldLabel of ["Atti", "Comune", "Spesa", "Territorio", "Legalità", "Dati"]) {
+      expect(screen.queryByRole("button", { name: oldLabel })).not.toBeInTheDocument();
     }
   });
 });
