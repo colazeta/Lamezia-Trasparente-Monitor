@@ -3,14 +3,19 @@ name: ANAC BDNCP sync
 on:
   workflow_dispatch:
   schedule:
-    - cron: "40 5 * * *"
+    - cron: "40 5,17 * * *"
   push:
     branches:
       - main
     paths:
       - ".github/workflows/anac-bdncp-sync.yml"
+      - "artifacts/lamezia-trasparente/src/lib/anacAuthorityDiscovery.ts"
       - "scripts/contracts/anacBdncpSyncCore.ts"
+      - "scripts/contracts/anacCkanDiscovery.ts"
+      - "scripts/contracts/anacAuthorityCsv.ts"
+      - "scripts/contracts/anacAuthorityDiscoveryCore.ts"
       - "scripts/contracts/syncOfficialAnacBdncp.ts"
+      - "scripts/contracts/syncOfficialAnacAuthority.ts"
 
 permissions:
   contents: write
@@ -21,9 +26,16 @@ concurrency:
 
 jobs:
   sync:
-    name: Refresh official ANAC CIG snapshot
+    name: Refresh official ANAC procurement census
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 60
+    env:
+      ANAC_AUTHORITY_TAX_ID: "00301390795"
+      ANAC_AUTHORITY_LABEL: "Comune di Lamezia Terme"
+      ANAC_AUTHORITY_START_YEAR: "2007"
+      ANAC_AUTHORITY_HISTORICAL_YEARS_PER_RUN: "1"
+      ANAC_AUTHORITY_MAX_RESOURCES_PER_RUN: "6"
+      ANAC_AUTHORITY_REFRESH_CURRENT_MONTHS: "2"
 
     steps:
       - name: Checkout
@@ -53,31 +65,36 @@ jobs:
           --attempts 30
           --delay-ms 10000
 
-      - name: Sync official ANAC open data
+      - name: Sync tracked-CIG ANAC open data
         run: pnpm contracts:anac-sync
 
-      - name: Commit public ANAC status and last-known-good cache
+      - name: Discover ANAC contracts by contracting authority
+        run: pnpm contracts:anac-authority-sync
+
+      - name: Commit public ANAC census and last-known-good caches
         id: commit_snapshot
         shell: bash
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-          git add data/public/contracts/anac-bdncp/latest.json
+          git add \
+            data/public/contracts/anac-bdncp/latest.json \
+            data/public/contracts/anac-authority/latest.json
 
           if git diff --cached --quiet; then
-            echo "No ANAC/BDNCP snapshot changes to commit."
+            echo "No ANAC procurement census changes to commit."
             echo "committed=false" >> "$GITHUB_OUTPUT"
             exit 0
           fi
 
-          git commit -m "Update ANAC BDNCP public snapshot"
+          git commit -m "Update ANAC procurement census"
           git pull --rebase origin main
           git push origin HEAD:main
           echo "committed=true" >> "$GITHUB_OUTPUT"
           echo "commit_sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
 
-      - name: Verify the refreshed snapshot is public
+      - name: Verify the refreshed census is public
         if: steps.commit_snapshot.outputs.committed == 'true'
         run: >-
           node scripts/check-public-contracts-page.mjs
