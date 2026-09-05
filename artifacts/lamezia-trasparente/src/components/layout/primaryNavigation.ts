@@ -70,6 +70,23 @@ export const PRIMARY_NAV_GROUPS: NavSection[] = PRIMARY_PROJECTION.map(
   }),
 );
 
+/**
+ * Resolve an internal inventory group (for example `Dati` or `Legalità`) to
+ * the five-domain public navigation projection without duplicating the IA map.
+ */
+export function findPrimaryNavGroupBySourceLabel(
+  sourceGroupLabel: string,
+): NavSection | null {
+  const projection = PRIMARY_PROJECTION.find((candidate) =>
+    candidate.sourceGroups.includes(sourceGroupLabel),
+  );
+  if (!projection) return null;
+
+  return (
+    PRIMARY_NAV_GROUPS.find((group) => group.label === projection.label) ?? null
+  );
+}
+
 export const PARTICIPATION_ACTIONS: NavItem[] = [
   "/segnalazioni",
   "/accesso-civico",

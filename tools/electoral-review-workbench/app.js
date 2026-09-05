@@ -96,6 +96,7 @@ const el = {
     streetEvidence: document.getElementById("streetEvidenceFilter"),
     labelIntegrity: document.getElementById("labelIntegrityFilter"),
     coordinateQuality: document.getElementById("coordinateQualityFilter"),
+    coordinateBatch: document.getElementById("coordinateBatchFilter"),
     parity: document.getElementById("parityFilter"),
     decisionType: document.getElementById("decisionTypeFilter"),
     sort: document.getElementById("sortSelect"),
@@ -300,6 +301,7 @@ function renderSummaryStrip() {
     `<span>${numberLabel(highOpen)} high open</span>`,
     `<span>${numberLabel(followUp)} follow-up</span>`,
     `<span>${numberLabel(summary.coordinate_suspect_points || 0)} coordinate suspects</span>`,
+    `<span>${numberLabel(summary.coordinate_review_batch_1_rows || 0)} batch 1</span>`,
     `<span>${numberLabel(summary.tasks_with_street_register_evidence)} with street evidence</span>`,
     `<span>${numberLabel(summary.tasks_without_street_register_match)} no street match</span>`,
   ].join("");
@@ -364,6 +366,11 @@ function populateFilters() {
   populateSelect(el.filters.decisionType, DECISION_TYPES, titleCase);
   populateSelect(el.filters.labelIntegrity, labelStatuses, titleCase);
   populateSelect(el.filters.coordinateQuality, coordinateQualityStatuses, titleCase);
+  populateSelect(
+    el.filters.coordinateBatch,
+    [...new Set(Object.values(state.data.coordinateReviewBatchByAccess || {}).flat().map((row) => row.review_batch_id).filter(Boolean))].sort(),
+    asString,
+  );
 }
 
 function currentFilters() {
@@ -379,6 +386,7 @@ function currentFilters() {
     streetEvidence: el.filters.streetEvidence.value,
     labelIntegrity: el.filters.labelIntegrity.value,
     coordinateQuality: el.filters.coordinateQuality.value,
+    coordinateBatch: el.filters.coordinateBatch.value,
     parity: el.filters.parity.value,
     decisionType: el.filters.decisionType.value,
     sort: el.filters.sort.value,
@@ -403,6 +411,14 @@ function taskVisibleInCurrentExtent(task) {
   return bboxIntersectsLeafletBounds(task.map_focus_bbox, state.map.getBounds());
 }
 
+function taskHasCoordinateBatch(task, batchId) {
+  if (!batchId) return true;
+  for (const civic of state.data.civicsByTask[task.task_id] || []) {
+    if (coordinateReviewBatchRowsForCivic(civic).some((row) => row.review_batch_id === batchId)) return true;
+  }
+  return false;
+}
+
 function taskMatchesFilters(task, filters) {
   if (filters.taskType && task.task_type !== filters.taskType) return false;
   if (filters.priority && task.priority !== filters.priority) return false;
@@ -418,6 +434,7 @@ function taskMatchesFilters(task, filters) {
   if (filters.streetEvidence === "none" && !task.has_no_street_register_rule) return false;
   if (filters.labelIntegrity && asString(task.label_integrity_status || "ok") !== filters.labelIntegrity) return false;
   if (filters.coordinateQuality && !Object.prototype.hasOwnProperty.call(task.coordinate_quality_flags || {}, filters.coordinateQuality)) return false;
+  if (filters.coordinateBatch && !taskHasCoordinateBatch(task, filters.coordinateBatch)) return false;
   if (filters.parity && !Object.prototype.hasOwnProperty.call(task.parity_mix || {}, filters.parity)) return false;
   if (filters.nearBoundary && task.task_type !== "boundary_civic_cluster") return false;
   const decision = taskDecision(task.task_id);
@@ -442,6 +459,7 @@ function taskMatchesFilters(task, filters) {
     task.label_integrity_status,
     task.label_integrity_notes,
     Object.keys(task.coordinate_quality_flags || {}).join(" "),
+    (state.data.civicsByTask[task.task_id] || []).flatMap((civic) => coordinateReviewBatchRowsForCivic(civic).map((row) => row.review_batch_id)).join(" "),
     task.coordinate_suspect_count,
     task.notes,
   ].join(" ").toLowerCase();
@@ -704,6 +722,11 @@ function coordinateLocalAnchorCandidatesForCivic(civic) {
   return accessId ? asArray(state.data.coordinateLocalAnchorCandidatesByAccess?.[accessId]) : [];
 }
 
+function coordinateReviewBatchRowsForCivic(civic) {
+  const accessId = asString(civic?.access_id);
+  return accessId ? asArray(state.data.coordinateReviewBatchByAccess?.[accessId]) : [];
+}
+
 function setRelocationDraft(task, civic, lon, lat, source = "manual") {
   const parsedLon = parseCoordinate(lon);
   const parsedLat = parseCoordinate(lat);
@@ -749,6 +772,7 @@ function relocationSupportModel(task, civic, draft) {
       original_street_context: originalContext,
       original_street_context_label: streetContextLabel(originalContext),
       street_register_labels: streetRegisterLabelsForTask(task, civic),
+      coordinate_review_batch: coordinateReviewBatchRowsForCivic(civic),
       external_geocode_candidates: coordinateGeocodeCandidatesForCivic(civic),
       local_anchor_candidates: coordinateLocalAnchorCandidatesForCivic(civic),
     };
@@ -785,6 +809,7 @@ function relocationSupportModel(task, civic, draft) {
       ? "The civic label and nearby validated ANNCSU street context differ. Treat relocation as a traced coordinate decision, not a raw correction."
       : "",
     street_register_labels: streetRegisterLabelsForTask(task, civic),
+    coordinate_review_batch: coordinateReviewBatchRowsForCivic(civic),
     external_geocode_candidates: coordinateGeocodeCandidatesForCivic(civic),
     local_anchor_candidates: coordinateLocalAnchorCandidatesForCivic(civic),
     nearest_deterministic_points: nearest,
@@ -827,6 +852,17 @@ function renderLocalAnchorCandidateRows(rows) {
   );
 }
 
+function renderCoordinateReviewBatchRows(rows) {
+  if (!rows.length) return `<p class="empty-state">This civic is not in the coordinate review priority queue.</p>`;
+  return renderTable(
+    ["review_rank", "review_batch_id", "review_priority_band", "candidate_review_status", "candidate_method", "candidate_confidence", "candidate_lon", "candidate_lat", "distance_from_source_m"],
+    rows.map((row) => ({
+      ...row,
+      distance_from_source_m: numberLabel(row.distance_from_source_m, 1),
+    })),
+  );
+}
+
 function renderRelocationSupportHtml(task, civic, draft) {
   const support = relocationSupportModel(task, civic, draft);
   if (!support.has_proposal) {
@@ -845,6 +881,8 @@ function renderRelocationSupportHtml(task, civic, draft) {
         ])}
         <h4>Local ANNCSU anchor candidates</h4>
         ${renderLocalAnchorCandidateRows(support.local_anchor_candidates)}
+        <h4>Coordinate review batch</h4>
+        ${renderCoordinateReviewBatchRows(support.coordinate_review_batch)}
         <h4>External geocoder candidates</h4>
         ${renderGeocodeCandidateRows(support.external_geocode_candidates)}
       </div>
@@ -869,6 +907,8 @@ function renderRelocationSupportHtml(task, civic, draft) {
       <p class="form-note">Supporto informativo: non modifica ANNCSU raw e non assegna sezioni per prossimita.</p>
       <h4>Local ANNCSU anchor candidates</h4>
       ${renderLocalAnchorCandidateRows(support.local_anchor_candidates)}
+      <h4>Coordinate review batch</h4>
+      ${renderCoordinateReviewBatchRows(support.coordinate_review_batch)}
       <h4>External geocoder candidates</h4>
       ${renderGeocodeCandidateRows(support.external_geocode_candidates)}
       <h4>Nearest deterministic civics</h4>
@@ -1536,6 +1576,7 @@ function decisionSnapshot(task) {
       source_coord_lat: selectedCivic.source_coord_lat || selectedCivic.coord_y || "",
       external_geocode_candidates: coordinateGeocodeCandidatesForCivic(selectedCivic).slice(0, 3),
       local_anchor_candidates: coordinateLocalAnchorCandidatesForCivic(selectedCivic).slice(0, 3),
+      coordinate_review_batch: coordinateReviewBatchRowsForCivic(selectedCivic).slice(0, 3),
     } : null,
     representative_census_cells: task.representative_census_cells,
     street_rules: rules,
@@ -2520,6 +2561,7 @@ async function boot() {
     nearbyByTask,
     coordinateGeocodeCandidatesByAccess,
     coordinateLocalAnchorCandidatesByAccess,
+    coordinateReviewBatchByAccess,
   ] = await Promise.all([
     fetchJson("review_summary.json"),
     fetchJson("civic_review_tasks.json"),
@@ -2537,6 +2579,7 @@ async function boot() {
     fetchJson("nearby_deterministic_by_task.json"),
     fetchJson("coordinate_geocode_candidates_by_access.json"),
     fetchJson("coordinate_local_anchor_candidates_by_access.json"),
+    fetchJson("coordinate_review_batch_by_access.json"),
   ]);
   state.data = {
     summary,
@@ -2554,6 +2597,7 @@ async function boot() {
     nearbyByTask,
     coordinateGeocodeCandidatesByAccess,
     coordinateLocalAnchorCandidatesByAccess,
+    coordinateReviewBatchByAccess,
     geoFeatureByAccessId: indexGeoJsonByAccessId(reviewPoints, resolvedPoints, deterministicPoints, coordinateSuspectPoints),
     taskIdByAccessId: indexTaskIdsByAccessId(civicsByTask),
   };
