@@ -1,0 +1,32 @@
+{
+  "schemaVersion": "anac-authority-discovery.v1",
+  "generatedAt": "1970-01-01T00:00:00.000Z",
+  "status": "pending",
+  "lastAttemptAt": null,
+  "lastSuccessAt": null,
+  "failureCategory": null,
+  "targetAuthority": {
+    "taxId": "00301390795",
+    "label": "Comune di Lamezia Terme"
+  },
+  "source": {
+    "id": "anac-open-data-cig-authority",
+    "label": "ANAC open data — CIG per stazione appaltante",
+    "catalogUrl": "https://dati.anticorruzione.it/opendata",
+    "datasetPatternUrl": "https://dati.anticorruzione.it/opendata/dataset/cig-{year}",
+    "format": "csv-in-zip",
+    "acquisitionMode": "contracting-authority-tax-id"
+  },
+  "requestedYears": [],
+  "completedYears": [],
+  "completedPeriods": [],
+  "consultedArchives": [],
+  "recordsScanned": 0,
+  "records": [],
+  "limitations": [
+    "La discovery per stazione appaltante dipende dai dataset CIG ufficiali ANAC effettivamente pubblicati e consultati; la completezza storica viene dichiarata solo per gli anni completati.",
+    "Un anno o mese non ancora acquisito resta esplicitamente fuori copertura e non viene interpretato come assenza di contratti.",
+    "Il matching usa il codice fiscale della stazione appaltante dichiarato nel dataset ANAC; record con identificativo mancante o differente restano fuori dalla discovery automatica.",
+    "I record CIG documentano procedure o lotti presenti nella fonte ANAC e non dimostrano da soli esecuzione, pagamenti, SAL o collaudo."
+  ]
+}
