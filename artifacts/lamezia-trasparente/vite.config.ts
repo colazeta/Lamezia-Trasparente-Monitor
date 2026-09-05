@@ -12,10 +12,14 @@ import {
   readVerifiedAlboDocument,
 } from "./albo-document-serving";
 import {
-  buildStaticContractsDataset,
   STATIC_CONTRACTS_DATA_PATH,
   type AlboPublicSnapshot,
 } from "./src/lib/staticContractsDataset";
+import { buildCanonicalContractsDataset } from "./src/lib/canonicalContractsDataset";
+import {
+  buildCanonicalAlboCorpus,
+  CANONICAL_ALBO_CORPUS_DATA_PATH,
+} from "./src/lib/canonicalAlboCorpus";
 import { validateAnacBdncpSyncSnapshot } from "./src/lib/anacBdncpSync";
 
 const rawPort = process.env.PORT ?? "8081";
@@ -75,6 +79,13 @@ function repoPublicDataPlugin(): Plugin {
           response.statusCode = 200;
           response.setHeader("Content-Type", "application/json; charset=utf-8");
           response.end(`${JSON.stringify(readStaticContractsDataset())}\n`);
+          return;
+        }
+
+        if (requestPath === `/${CANONICAL_ALBO_CORPUS_DATA_PATH}`) {
+          response.statusCode = 200;
+          response.setHeader("Content-Type", "application/json; charset=utf-8");
+          response.end(`${JSON.stringify(readCanonicalAlboCorpus())}\n`);
           return;
         }
 
@@ -139,6 +150,12 @@ function repoPublicDataPlugin(): Plugin {
 
       this.emitFile({
         type: "asset",
+        fileName: CANONICAL_ALBO_CORPUS_DATA_PATH,
+        source: `${JSON.stringify(readCanonicalAlboCorpus())}\n`,
+      });
+
+      this.emitFile({
+        type: "asset",
         fileName: STATIC_CONTRACTS_DATA_PATH,
         source: `${JSON.stringify(readStaticContractsDataset())}\n`,
       });
@@ -157,17 +174,16 @@ function readRepoFile(relativePath: string): Buffer | null {
   return existsSync(sourcePath) ? readFileSync(sourcePath) : null;
 }
 
-function readStaticContractsDataset() {
+function readAlboSnapshot(): AlboPublicSnapshot {
   const source = readRepoFile(alboPublicSnapshotPath);
   if (!source) {
     throw new Error(
-      `Public Albo snapshot is required to build contracts: ${alboPublicSnapshotPath}`,
+      `Public Albo snapshot is required to build canonical views: ${alboPublicSnapshotPath}`,
     );
   }
 
-  let snapshot: AlboPublicSnapshot;
   try {
-    snapshot = JSON.parse(source.toString("utf8")) as AlboPublicSnapshot;
+    return JSON.parse(source.toString("utf8")) as AlboPublicSnapshot;
   } catch (error) {
     throw new Error(
       `Public Albo snapshot is not valid JSON: ${
@@ -175,6 +191,14 @@ function readStaticContractsDataset() {
       }`,
     );
   }
+}
+
+function readCanonicalAlboCorpus() {
+  return buildCanonicalAlboCorpus(readAlboSnapshot());
+}
+
+function readStaticContractsDataset() {
+  const snapshot = readAlboSnapshot();
   const anacSource = readRepoFile(anacBdncpSnapshotPath);
   if (!anacSource) {
     throw new Error(
@@ -195,7 +219,7 @@ function readStaticContractsDataset() {
     );
   }
 
-  return buildStaticContractsDataset(snapshot, anacSnapshot);
+  return buildCanonicalContractsDataset(snapshot, anacSnapshot);
 }
 
 function contentTypeFor(filePath: string) {
