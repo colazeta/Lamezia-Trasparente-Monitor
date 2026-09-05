@@ -33,9 +33,13 @@ on:
       - 'pnpm-workspace.yaml'
       - 'scripts/check-institutional-*.ts'
       - 'scripts/check-public-contracts-page.mjs'
+      - 'scripts/check-canonical-static-fallback.mjs'
       - 'scripts/check-v0-static-fallback.mjs'
       - 'scripts/contracts/anacBdncpSyncCore.ts'
+      - 'scripts/contracts/anacAuthorityCsv.ts'
+      - 'scripts/contracts/anacAuthorityDiscoveryCore.ts'
       - 'scripts/contracts/syncOfficialAnacBdncp.ts'
+      - 'scripts/contracts/syncOfficialAnacAuthority.ts'
       - 'wrangler.toml'
 
 permissions:
@@ -92,7 +96,7 @@ jobs:
           grep -Fq '/organi' artifacts/lamezia-trasparente/dist/public/deploy-provenance.json
 
       - name: Smoke generated static fallback
-        run: node scripts/check-v0-static-fallback.mjs
+        run: node scripts/check-canonical-static-fallback.mjs
 
       - name: Resolve Cloudflare deployment mode
         id: cloudflare_mode
