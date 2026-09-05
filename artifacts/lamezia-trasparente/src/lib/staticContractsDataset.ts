@@ -56,6 +56,7 @@ export function buildStaticContractsDataset(
     "Il perimetro resta limitato alla finestra corrente dell'Albo Pretorio: non e' ancora uno storico completo dei contratti del Comune.",
     "Tutti i record dello snapshot ricevono una decisione tassonomica; gli atti procurement-related senza CIG non vengono scartati ma restano esplicitamente unresolved finche' non e' possibile collegarli a un contratto canonico.",
     "La materializzazione dell'entita' Contract nel contratto API corrente richiede ancora un CIG; questo requisito non e' usato come filtro di ingresso nella tassonomia procurement.",
+    "Il campo legacy publicClaim descrive soltanto la lista Contract materializzata con CIG; researchClaim, taxonomy e unresolvedProcurementCandidates descrivono la proiezione procurement piu' ampia.",
     "La tassonomia opera sui campi public-safe dello snapshot corrente; allegati e PDF non sono ancora analizzati per estrarre CIG, CUP, operatori o importi aggiuntivi.",
     "Ogni CIG formalmente identificato collega la vista ufficiale ANAC; la copertura strutturata resta limitata ai pacchetti dichiarati nello stato della fonte.",
     "Un CIG senza match nello snapshot ANAC consultato non risulta per questo assente dalla BDNCP.",
@@ -87,7 +88,8 @@ export function buildStaticContractsDataset(
       label: snapshot.source?.trim() || "Albo Pretorio Comune di Lamezia Terme",
       url: sourceUrl,
       scope: "current-albo-window",
-      publicClaim: "atti procurement correnti tassonomizzati",
+      publicClaim: "atti correnti con CIG",
+      researchClaim: "atti procurement correnti tassonomizzati",
       limitations,
     },
     taxonomy: {
@@ -107,6 +109,10 @@ export function buildStaticContractsDataset(
         (record) => record.identifiers.cigs.length > 0,
       ).length,
       unresolvedProcurementCandidates: unresolvedProcurementCandidates.length,
+      // Compatibility-only alias for consumers of the v1 Contract-list shape.
+      // Record-level research coverage is procurementItemsWithCig in this view
+      // and public_procurement_with_cig in the canonical corpus ledger.
+      cigBearingItems: projection.contracts.length,
       contracts: projection.contracts.length,
       lifecycleEvents: projection.lifecycleEvents,
       withCup: projection.contracts.filter((contract) => Boolean(contract.cup)).length,

@@ -10,7 +10,7 @@ import type {
 
 export const STATIC_CONTRACTS_DATA_PATH =
   "data/processed/contracts/lamezia-contracts-current.json";
-export const STATIC_CONTRACTS_SCHEMA_VERSION = "lamezia-contracts-current.v2";
+export const STATIC_CONTRACTS_SCHEMA_VERSION = "lamezia-contracts-current.v1";
 
 export type AlboAreaTheme = { theme_id?: string | null };
 
@@ -102,7 +102,10 @@ export type StaticContractsDataset = {
     label: string;
     url: string;
     scope: "current-albo-window";
-    publicClaim: "atti procurement correnti tassonomizzati";
+    /** Compatibility claim for the materialised Contract list. */
+    publicClaim: "atti correnti con CIG";
+    /** Research claim for the wider procurement projection, including unresolved candidates. */
+    researchClaim: "atti procurement correnti tassonomizzati";
     limitations: string[];
   };
   taxonomy: {
@@ -116,6 +119,8 @@ export type StaticContractsDataset = {
     procurementCandidates: number;
     procurementItemsWithCig: number;
     unresolvedProcurementCandidates: number;
+    /** @deprecated Compatibility count for the materialised CIG Contract list. */
+    cigBearingItems: number;
     contracts: number;
     lifecycleEvents: number;
     withCup: number;

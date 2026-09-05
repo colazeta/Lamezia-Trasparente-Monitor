@@ -41,7 +41,9 @@ Una pipeline research-grade non puo' quindi confondere `0 record trovati` con `r
 
 ## Derivazione della sezione Contratti
 
-La proiezione `lamezia-contracts-current.v2` parte dal corpus canonico. Gli atti `confirmed` o `possible` vengono prima identificati come candidati procurement. Solo dopo, i record con CIG possono essere materializzati nell'attuale entita' API `Contract`; quelli senza CIG restano in `unresolvedProcurementCandidates` e sono conteggiati nel coverage ledger.
+La proiezione statica Contratti mantiene per compatibilita' il contratto esterno `lamezia-contracts-current.v1`, ma ora parte dal corpus canonico. Il campo legacy `source.publicClaim = "atti correnti con CIG"` descrive soltanto la lista `Contract` materializzata; `source.researchClaim = "atti procurement correnti tassonomizzati"`, `taxonomy`, il coverage ledger e `unresolvedProcurementCandidates` descrivono invece il perimetro procurement piu' ampio.
+
+Gli atti `confirmed` o `possible` vengono prima identificati come candidati procurement. Solo dopo, i record con CIG possono essere materializzati nell'attuale entita' API `Contract`; quelli senza CIG restano in `unresolvedProcurementCandidates` e sono conteggiati nel coverage ledger. Il campo `coverage.cigBearingItems` e' mantenuto esclusivamente come alias di compatibilita' della precedente vista Contract; la copertura a livello di record va letta da `procurementItemsWithCig` e dal ledger del corpus canonico.
 
 Gli atti con lo stesso CIG vengono raggruppati in un solo contratto canonico e alimentano una storyline multi-evento. Una liquidazione o un SAL non crea quindi automaticamente un nuovo contratto solo perche' e' una nuova pubblicazione.
 

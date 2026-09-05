@@ -21,8 +21,12 @@ describe("static contracts dataset", () => {
       corpus,
     );
 
-    expect(dataset.schemaVersion).toBe("lamezia-contracts-current.v2");
-    expect(dataset.source.scope).toBe("current-albo-window");
+    expect(dataset.schemaVersion).toBe("lamezia-contracts-current.v1");
+    expect(dataset.source).toMatchObject({
+      scope: "current-albo-window",
+      publicClaim: "atti correnti con CIG",
+      researchClaim: "atti procurement correnti tassonomizzati",
+    });
     expect(dataset.taxonomy).toMatchObject({
       canonicalCorpusSchemaVersion: "albo-research-corpus.v1",
       taxonomyCoverage: 1,
@@ -33,6 +37,7 @@ describe("static contracts dataset", () => {
       procurementCandidates: 4,
       procurementItemsWithCig: 3,
       unresolvedProcurementCandidates: 1,
+      cigBearingItems: 2,
       contracts: 2,
       lifecycleEvents: 3,
       withCup: 1,
