@@ -10,22 +10,28 @@ import {
 import { createPendingAnacBdncpSnapshot } from "./anacBdncpSync";
 import { BDNCP_CIG_DETAIL_URL } from "./bdncp";
 
-describe("static contracts dataset", () => {
-  it("projects only official public Albo acts with a formal CIG", () => {
+describe("static contracts compatibility facade", () => {
+  it("projects canonical contracts rather than treating publications as contracts", () => {
     const dataset = buildStaticContractsDataset(fixtureSnapshot());
 
-    expect(dataset.schemaVersion).toBe("lamezia-contracts-current.v1");
-    expect(dataset.source.scope).toBe("current-albo-window");
+    expect(dataset.schemaVersion).toBe("lamezia-contracts-canonical.v2");
+    expect(dataset.source.scope).toBe("current-public-window");
     expect(dataset.contracts).toHaveLength(2);
     expect(dataset.coverage).toMatchObject({
-      cigBearingItems: 2,
-      contracts: 2,
+      procurementEvents: 2,
+      eventsWithCig: 2,
+      eventsWithoutCig: 0,
+      multiCigEvents: 1,
+      canonicalContracts: 2,
+      contractEventLinks: 2,
       withCup: 1,
       withExplicitAmount: 1,
       withExplicitSupplier: 1,
+      eventCoverageInvariantSatisfied: true,
+      resolutionInvariantSatisfied: true,
     });
     expect(dataset.feedStatus).toMatchObject({
-      source: "albo_pretorio_cig_current",
+      source: "canonical_albo_procurement_projection",
       status: "current-window",
       itemsTotal: 2,
     });
@@ -45,24 +51,24 @@ describe("static contracts dataset", () => {
       withoutMepa: false,
       macrotema: "scuole",
     });
-    expect(directAward?.procedureType).toContain("dichiarato nell'oggetto");
+    expect(directAward?.procedureType).toContain("dichiarato nell'atto");
     expect(directAward?.anacUrl).toBe(`${BDNCP_CIG_DETAIL_URL}?cig=B123456789`);
-    expect(
-      dataset.storylines[String(directAward?.id)].timeline[0].attachments,
-    ).toHaveLength(1);
 
     const specificContract = dataset.contracts.find(
       (contract) => contract.cig === "A01D5289C5",
     );
     expect(specificContract).toMatchObject({
-      supplier: "Non disponibile nell'oggetto pubblico dell'atto",
+      supplier: "Non disponibile negli atti pubblici collegati",
       amount: 0,
       withoutTender: false,
       withoutMepa: false,
     });
+    expect(dataset.contracts.map((contract) => contract.cig)).not.toContain(
+      "9181061337",
+    );
   });
 
-  it("does not turn unrelated numbers or missing procurement fields into facts", () => {
+  it("keeps compatibility identifier and amount helpers conservative", () => {
     expect(
       parseExplicitAmount(
         "Approvazione SAL 3. Svincolo della ritenuta per infortuni 0,5%.",
@@ -72,6 +78,7 @@ describe("static contracts dataset", () => {
     expect(
       extractCig("CIG AQ 9181061337 - CIG CONTRATTO SPECIFICO A01D5289C5"),
     ).toBe("A01D5289C5");
+    expect(extractCig("C.I.G. n. B123456789")).toBe("B123456789");
   });
 
   it("keeps structured ANAC matches separate from current-Albo facts", () => {
@@ -104,10 +111,7 @@ describe("static contracts dataset", () => {
       },
     ];
 
-    const dataset = buildStaticContractsDataset(
-      fixtureSnapshot(),
-      anacSnapshot,
-    );
+    const dataset = buildStaticContractsDataset(fixtureSnapshot(), anacSnapshot);
 
     expect(dataset.anacConnection.coverage).toMatchObject({
       structuredMatches: 1,
