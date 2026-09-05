@@ -16,7 +16,13 @@ import {
   SearchTrigger,
   useCommandPalette,
 } from "@/components/search/CommandPalette";
-import { isSectionActive, type NavSection } from "./navSections";
+import type { NavSection } from "./navSections";
+import {
+  findParticipationNavItemByPath,
+  findPrimaryNavGroupByPath,
+  findPrimaryNavItemByPath,
+  isParticipationPath,
+} from "./navState";
 import {
   PARTICIPATION_ACTIONS,
   PRIMARY_NAV_GROUPS,
@@ -28,16 +34,23 @@ export function Navbar() {
   const [openMobileGroup, setOpenMobileGroup] = useState<string | null>(null);
   const { open: paletteOpen, setOpen: setPaletteOpen } = useCommandPalette();
 
+  const activePrimaryGroup = findPrimaryNavGroupByPath(location);
+  const activePrimaryItem = findPrimaryNavItemByPath(location);
+  const activeParticipationItem = findParticipationNavItemByPath(location);
+  const activePrimaryGroupLabel = activePrimaryGroup?.label ?? null;
+  const activePrimaryItemHref = activePrimaryItem?.href ?? null;
+  const activeParticipationItemHref = activeParticipationItem?.href ?? null;
+  const participationActive = isParticipationPath(location);
+
   useEffect(() => {
     setIsOpen(false);
-  }, [location]);
+    setOpenMobileGroup(activePrimaryGroupLabel);
+  }, [location, activePrimaryGroupLabel]);
 
-  const isActive = (href: string) => isSectionActive(href, location);
+  const isActive = (href: string) =>
+    href === activePrimaryItemHref || href === activeParticipationItemHref;
   const isGroupActive = (group: NavSection) =>
-    group.items.some((item) => isActive(item.href));
-  const participationActive = PARTICIPATION_ACTIONS.some((item) =>
-    isActive(item.href),
-  );
+    group.label === activePrimaryGroupLabel;
 
   const groupTriggerClass = (active: boolean) =>
     cn(
@@ -46,6 +59,13 @@ export function Navbar() {
         ? "bg-primary/10 text-primary"
         : "text-muted-foreground hover:bg-muted/50 hover:text-foreground",
     );
+
+  const toggleMobileMenu = () => {
+    if (!isOpen) {
+      setOpenMobileGroup(activePrimaryGroupLabel);
+    }
+    setIsOpen((open) => !open);
+  };
 
   return (
     <>
@@ -87,7 +107,7 @@ export function Navbar() {
                   >
                     {group.items.map((item) => {
                       const Icon = item.icon;
-                      const itemActive = isActive(item.href);
+                      const itemActive = item.href === activePrimaryItemHref;
                       return (
                         <DropdownMenuItem key={item.href} asChild>
                           <Link
@@ -137,7 +157,7 @@ export function Navbar() {
               <DropdownMenuContent align="end" className="w-[18rem] p-1.5" sideOffset={8}>
                 {PARTICIPATION_ACTIONS.map((item) => {
                   const Icon = item.icon;
-                  const itemActive = isActive(item.href);
+                  const itemActive = item.href === activeParticipationItemHref;
                   return (
                     <DropdownMenuItem key={item.href} asChild>
                       <Link
@@ -173,10 +193,11 @@ export function Navbar() {
             <SearchTrigger onClick={() => setPaletteOpen(true)} />
             <ThemeToggle />
             <Button
+              type="button"
               variant="outline"
               size="icon"
               className="xl:hidden"
-              onClick={() => setIsOpen((open) => !open)}
+              onClick={toggleMobileMenu}
               aria-label={isOpen ? "Chiudi menu" : "Apri menu"}
               aria-expanded={isOpen}
               aria-controls="mobile-navigation"
@@ -200,6 +221,7 @@ export function Navbar() {
               aria-label="Navigazione mobile"
             >
               <button
+                type="button"
                 onClick={() => {
                   setIsOpen(false);
                   setPaletteOpen(true);
@@ -237,16 +259,18 @@ export function Navbar() {
                       href={item.href}
                       label={item.label}
                       icon={item.icon}
-                      active={isActive(item.href)}
+                      active={item.href === activeParticipationItemHref}
                     />
                   ))}
                 </div>
               </div>
 
               <div className="space-y-2 pt-1">
-                {PRIMARY_NAV_GROUPS.map((group) => {
+                {PRIMARY_NAV_GROUPS.map((group, index) => {
                   const active = isGroupActive(group);
                   const expanded = openMobileGroup === group.label;
+                  const triggerId = `mobile-nav-trigger-${index}`;
+                  const panelId = `mobile-nav-panel-${index}`;
 
                   return (
                     <div
@@ -257,6 +281,7 @@ export function Navbar() {
                       )}
                     >
                       <button
+                        id={triggerId}
                         type="button"
                         onClick={() =>
                           setOpenMobileGroup((current) =>
@@ -268,6 +293,7 @@ export function Navbar() {
                           active && "text-primary",
                         )}
                         aria-expanded={expanded}
+                        aria-controls={panelId}
                       >
                         {group.label}
                         <ChevronDown
@@ -279,19 +305,23 @@ export function Navbar() {
                         />
                       </button>
 
-                      {expanded ? (
-                        <div className="border-t border-border/70 px-2 py-2">
-                          {group.items.map((item) => (
-                            <MobileSectionLink
-                              key={item.href}
-                              href={item.href}
-                              label={item.label}
-                              icon={item.icon}
-                              active={isActive(item.href)}
-                            />
-                          ))}
-                        </div>
-                      ) : null}
+                      <div
+                        id={panelId}
+                        role="region"
+                        aria-labelledby={triggerId}
+                        hidden={!expanded}
+                        className="border-t border-border/70 px-2 py-2"
+                      >
+                        {group.items.map((item) => (
+                          <MobileSectionLink
+                            key={item.href}
+                            href={item.href}
+                            label={item.label}
+                            icon={item.icon}
+                            active={item.href === activePrimaryItemHref}
+                          />
+                        ))}
+                      </div>
                     </div>
                   );
                 })}
