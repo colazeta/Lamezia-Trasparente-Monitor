@@ -1,0 +1,42 @@
+{
+  "event_id": "0192a100-0000-7001-8000-000000000001",
+  "schema_version": "1.0-draft.1",
+  "record_status": "published",
+  "event_form": "discrete",
+  "title": "Tentato omicidio con arma da fuoco in via Cilea",
+  "summary": "Evento documentato dai Carabinieri come tentato omicidio a colpi d'arma da fuoco avvenuto in via Cilea a Lamezia Terme. Il procedimento risultava pendente al momento del comunicato istituzionale.",
+  "temporal": {"start": "2025-10-25", "precision": "exact_date"},
+  "privacy_tier": "generalised",
+  "locations": [
+    {
+      "role": "occurrence",
+      "place_name": "Via Cilea",
+      "municipality": "Lamezia Terme",
+      "precision": "street_segment",
+      "sensitivity": "non_sensitive",
+      "privacy_transform": "street_generalisation",
+      "geometry": null
+    }
+  ],
+  "offences": [
+    {
+      "offence_instance_id": "0192a100-0000-7002-8000-000000000001",
+      "iccs_code": "01",
+      "classification_basis": "behavioural_manual",
+      "attempt_status": "attempted",
+      "situational_context": [],
+      "cyber_related": "no"
+    }
+  ],
+  "sources": [
+    {
+      "source_id": "0192a100-0000-7003-8000-000000000001",
+      "source_type": "law_enforcement_primary",
+      "url": "https://www.carabinieri.it/in-vostro-aiuto/informazioni/comunicati-stampa/arrestato-un-uomo-per-tentato-omicidio-a-colpi-d-arma-da-fuoco",
+      "published_at": "2025-10-25T10:58:00+02:00"
+    }
+  ],
+  "procedural_summary": "Procedimento pendente; responsabilità da accertare nelle sedi competenti.",
+  "quality": {"source_count": 1, "has_source_conflict": false, "classification_pending": true, "privacy_review": "passed"},
+  "updated_at": "2026-09-05T23:10:00Z"
+}

@@ -1,0 +1,42 @@
+{
+  "event_id": "0192a200-0000-7001-8000-000000000001",
+  "schema_version": "1.0-draft.1",
+  "record_status": "published",
+  "event_form": "discrete",
+  "title": "Furto di offerte collegate alla Parrocchia San Giovanni Calabria",
+  "summary": "Evento documentato dalla Polizia di Stato come furto di circa 28.000 euro, in gran parte provento di offerte parrocchiali, avvenuto il 9 ottobre 2025 in locali nella disponibilità del parroco. La misura cautelare eseguita il 24 giugno 2026 è trattata come sviluppo procedurale dello stesso evento.",
+  "temporal": {"start": "2025-10-09", "precision": "exact_date"},
+  "privacy_tier": "generalised",
+  "locations": [
+    {
+      "role": "occurrence",
+      "place_name": "Area della Parrocchia San Giovanni Calabria",
+      "municipality": "Lamezia Terme",
+      "precision": "locality",
+      "sensitivity": "private_or_sensitive",
+      "privacy_transform": "suppressed",
+      "geometry": null
+    }
+  ],
+  "offences": [
+    {
+      "offence_instance_id": "0192a200-0000-7002-8000-000000000001",
+      "iccs_code": "05",
+      "classification_basis": "behavioural_manual",
+      "attempt_status": "completed",
+      "situational_context": [],
+      "cyber_related": "no"
+    }
+  ],
+  "sources": [
+    {
+      "source_id": "0192a200-0000-7003-8000-000000000001",
+      "source_type": "law_enforcement_primary",
+      "url": "https://questure.poliziadistato.it/Catanzaro/articolo/34866a3e5dd67d8ae157536795",
+      "published_at": "2026-06-27T00:00:00+02:00"
+    }
+  ],
+  "procedural_summary": "Misura cautelare eseguita il 24 giugno 2026 nella fase delle indagini preliminari.",
+  "quality": {"source_count": 1, "has_source_conflict": false, "classification_pending": true, "privacy_review": "passed"},
+  "updated_at": "2026-09-05T23:10:00Z"
+}
