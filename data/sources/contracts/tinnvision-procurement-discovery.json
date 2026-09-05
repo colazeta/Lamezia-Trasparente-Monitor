@@ -14,20 +14,43 @@
       "verified": true
     },
     {
-      "id": "bandi-gara-contratti-interactive",
+      "id": "bandi-gara-contratti-section",
+      "role": "procurement_navigation",
+      "url": "https://trasparenza.tinnvision.cloud/traspamm/sezioni/00301390795/160/?idperiodosezioni=2",
+      "section_id": 160,
+      "verified": true
+    },
+    {
+      "id": "atti-per-procedura-server-rendered",
       "role": "procurement_index",
-      "url": "https://trasparenza.tinnvision.cloud/traspamm/bandidigara/interactive/00301390795/2/?idsezione=216&idperiodosezioni=2&idannopubblicazione=-1&rows=10&page=1",
+      "url_pattern": "https://trasparenza.tinnvision.cloud/traspamm/bandidigara/00301390795/2?idsezione=216&idannopubblicazione={year_or_minus_one}&rows=30&page={page}",
       "section_id": 216,
       "supports": [
+        "server_rendered_records",
         "pagination",
         "publication_year_filter",
-        "text_search"
+        "text_search",
+        "page_size_30"
       ],
+      "verified": true,
+      "observed_2026_09_06": {
+        "all_years_total_elements": 947,
+        "rows_per_page": 30,
+        "total_pages": 32,
+        "last_page_contains_record_year": 2017,
+        "claim": "Observed discovery coverage only; not yet a completeness claim for all municipal procurement."
+      }
+    },
+    {
+      "id": "atti-per-procedura-detail-current-section",
+      "role": "procedure_detail",
+      "url_pattern": "https://trasparenza.tinnvision.cloud/traspamm/bandodigara/00301390795/2/{year}/{record}/?idsezione=216",
+      "section_id": 216,
       "verified": true
     },
     {
       "id": "atti-per-procedura-nuova-versione",
-      "role": "procedure_detail",
+      "role": "procedure_detail_alternate_section",
       "url_pattern": "https://trasparenza.tinnservice.com/traspamm/bandodigara/00301390795/2/{year}/{record}/?idsezione=10010",
       "section_id": 10010,
       "verified": true
@@ -39,14 +62,15 @@
       "verified": true
     }
   ],
-  "acquisition_status": "discovery_verified_parser_pending",
+  "acquisition_status": "server_rendered_discovery_verified_parser_pending",
   "planned_projection": {
     "identity_priority": [
-      "cig_specific_contract",
-      "cig",
+      "formally_valid_specific_contract_cig",
+      "formally_valid_cig",
       "cup_plus_procedure_reference",
       "source_record_id"
     ],
+    "invalid_identifier_policy": "CIG-looking placeholders or formally invalid tokens remain observed source evidence but must not create canonical contract identities.",
     "event_types": [
       "gara",
       "affidamento",
@@ -62,9 +86,11 @@
     "public_boundary": "Only fields and attachments that independently pass the existing public-safety policy may enter public projections."
   },
   "limitations": [
-    "The interactive pages are an official discovery surface but are not yet treated as a complete machine-readable export.",
-    "Record detail and attachment URLs must be resolved from the official page rather than guessed from identifiers.",
-    "Historical completeness must be measured by year/page traversal and reconciliation with ANAC, not inferred from the presence of a section.",
+    "The server-rendered procurement index is an official discovery surface, but its observed 947 elements are not by themselves a claim of complete municipal procurement history.",
+    "The observed final page contains 2017 records; years before the observed index boundary require independent source discovery and reconciliation.",
+    "Record detail and attachment URLs must be captured from the official page rather than inferred when the source does not expose them.",
+    "Historical completeness must be measured by full page/year traversal and reconciliation with ANAC, not inferred from the presence of a section.",
+    "CIG-looking placeholders such as 0000000000 can occur in the public table and must not be promoted to contract identity without formal validation.",
     "Attachments remain subject to the existing fail-closed privacy and document-serving policy before extraction or publication."
   ]
 }
