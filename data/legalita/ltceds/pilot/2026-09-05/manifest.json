@@ -1,0 +1,32 @@
+{
+  "schema_version": "1.0",
+  "pilot_id": "ltceds-pilot-2026-09-05",
+  "status": "source_controlled_public_projection_fixture",
+  "methodology": "Eventi criminali documentati nelle fonti istituzionali censite; il campione non rappresenta la totalità dei reati verificatisi, denunciati o perseguiti a Lamezia Terme e non è una misura del rischio criminale di un'area.",
+  "included": [
+    {"file": "event-2025-10-25-via-cilea.json", "reason": "individual occurrence, exact date, occurrence street stated by primary law-enforcement source"},
+    {"file": "event-2025-10-09-parrocchia.json", "reason": "individual occurrence and exact date; residential/private occurrence geometry suppressed"},
+    {"file": "event-2024-08-24-tutankamon.json", "reason": "individual occurrence, exact date and public-site context stated by primary source"},
+    {"file": "event-2025-06-10-aterp-via-nicotera.json", "reason": "individual continuing occupation; end/observation date documented, start date deliberately not invented"}
+  ],
+  "excluded": [
+    {"candidate": "2025-09-27 fake-carabiniere fraud/robbery", "reason": "Lamezia is documented as interception/arrest area, not as occurrence location"},
+    {"candidate": "Artemis / Artemis II", "reason": "multi-event investigation/proceeding, not a single criminal occurrence"},
+    {"candidate": "Shatter / unresolved multi-event series", "reason": "reported aggregate cardinality cannot be expanded into synthetic individual events"}
+  ],
+  "publication_rules": {
+    "no_person_identity": true,
+    "no_exact_residential_geometry": true,
+    "no_arrest_as_occurrence": true,
+    "no_inferred_guilt": true,
+    "no_invented_coordinates": true,
+    "classification_crosswalk_blocked_when_unverified": true
+  },
+  "record_count": 4,
+  "mappable_geometry_count": 0,
+  "notes": [
+    "All four public fixtures intentionally carry null geometry until a verified public anchor matches the event scope.",
+    "ICCS codes are broad behavioural categories where used; Istat catalogue/crosswalk fields remain unset while #1017 is unresolved.",
+    "This tranche does not write production DB rows."
+  ]
+}
