@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 
+import { buildCanonicalAlboResearchCorpus } from "../../../../lib/publication-standardisation/src/albo-research-corpus";
 import {
   buildStaticContractsDataset,
   extractCig,
@@ -11,27 +12,45 @@ import { createPendingAnacBdncpSnapshot } from "./anacBdncpSync";
 import { BDNCP_CIG_DETAIL_URL } from "./bdncp";
 
 describe("static contracts dataset", () => {
-  it("projects only official public Albo acts with a formal CIG", () => {
-    const dataset = buildStaticContractsDataset(fixtureSnapshot());
+  it("derives canonical contracts from the procurement taxonomy and preserves unresolved candidates", () => {
+    const snapshot = fixtureSnapshot();
+    const corpus = buildCanonicalAlboResearchCorpus(snapshot);
+    const dataset = buildStaticContractsDataset(
+      snapshot,
+      createPendingAnacBdncpSnapshot(),
+      corpus,
+    );
 
-    expect(dataset.schemaVersion).toBe("lamezia-contracts-current.v1");
+    expect(dataset.schemaVersion).toBe("lamezia-contracts-current.v2");
     expect(dataset.source.scope).toBe("current-albo-window");
+    expect(dataset.taxonomy).toMatchObject({
+      canonicalCorpusSchemaVersion: "albo-research-corpus.v1",
+      taxonomyCoverage: 1,
+      taxonomyDecided: 6,
+    });
     expect(dataset.contracts).toHaveLength(2);
     expect(dataset.coverage).toMatchObject({
-      cigBearingItems: 2,
+      procurementCandidates: 4,
+      procurementItemsWithCig: 3,
+      unresolvedProcurementCandidates: 1,
       contracts: 2,
+      lifecycleEvents: 3,
       withCup: 1,
       withExplicitAmount: 1,
       withExplicitSupplier: 1,
     });
+    expect(dataset.unresolvedProcurementCandidates).toEqual([
+      expect.objectContaining({
+        canonicalId: "albo-2026-1003",
+        publicationNumber: "2026/1003",
+        relevance: "confirmed",
+        reason: "missing_cig_in_public_safe_fields",
+      }),
+    ]);
     expect(dataset.feedStatus).toMatchObject({
-      source: "albo_pretorio_cig_current",
+      source: "albo_pretorio_procurement_current",
       status: "current-window",
       itemsTotal: 2,
-    });
-    expect(dataset.anacConnection).toMatchObject({
-      schemaVersion: "anac-bdncp-connection.v1",
-      status: "pending",
     });
 
     const directAward = dataset.contracts.find(
@@ -47,34 +66,40 @@ describe("static contracts dataset", () => {
     });
     expect(directAward?.procedureType).toContain("dichiarato nell'oggetto");
     expect(directAward?.anacUrl).toBe(`${BDNCP_CIG_DETAIL_URL}?cig=B123456789`);
-    expect(
-      dataset.storylines[String(directAward?.id)].timeline[0].attachments,
-    ).toHaveLength(1);
+    expect(dataset.storylines[String(directAward?.id)]).toMatchObject({
+      indicators: {
+        evidenceCount: 2,
+        phaseCounts: { affidamento: 1, liquidazione: 1 },
+      },
+    });
+    expect(dataset.storylines[String(directAward?.id)].timeline).toHaveLength(2);
 
     const specificContract = dataset.contracts.find(
       (contract) => contract.cig === "A01D5289C5",
     );
     expect(specificContract).toMatchObject({
-      supplier: "Non disponibile nell'oggetto pubblico dell'atto",
+      supplier: "Non disponibile nei campi public-safe degli atti",
       amount: 0,
       withoutTender: false,
       withoutMepa: false,
     });
   });
 
-  it("does not turn unrelated numbers or missing procurement fields into facts", () => {
+  it("accepts recurring official CIG/CUP notation without turning unrelated numbers into facts", () => {
     expect(
       parseExplicitAmount(
         "Approvazione SAL 3. Svincolo della ritenuta per infortuni 0,5%.",
       ),
     ).toBe(0);
     expect(extractCup("Atto senza identificativo progetto")).toBeNull();
+    expect(extractCig("CIG n. B123456789")).toBe("B123456789");
+    expect(extractCig("C.I.G. A01D5289C5")).toBe("A01D5289C5");
     expect(
       extractCig("CIG AQ 9181061337 - CIG CONTRATTO SPECIFICO A01D5289C5"),
     ).toBe("A01D5289C5");
   });
 
-  it("keeps structured ANAC matches separate from current-Albo facts", () => {
+  it("keeps structured ANAC matches separate from canonical Albo facts", () => {
     const anacSnapshot = createPendingAnacBdncpSnapshot(
       "2026-09-01T12:00:00.000Z",
     );
@@ -104,9 +129,11 @@ describe("static contracts dataset", () => {
       },
     ];
 
+    const snapshot = fixtureSnapshot();
     const dataset = buildStaticContractsDataset(
-      fixtureSnapshot(),
+      snapshot,
       anacSnapshot,
+      buildCanonicalAlboResearchCorpus(snapshot),
     );
 
     expect(dataset.anacConnection.coverage).toMatchObject({
@@ -127,7 +154,7 @@ function fixtureSnapshot(): AlboPublicSnapshot {
     source_url: "https://albo.tinnvision.cloud/?ente=00301390795",
     generated_at: "2026-09-01T12:00:00.000Z",
     retrieved_at: "2026-09-01T12:00:00.000Z",
-    counts: { acquired: 4, publishable: 3 },
+    counts: { acquired: 6, publishable: 5 },
     known_limits: ["Snapshot corrente, non storico."],
     items: [
       {
@@ -136,7 +163,7 @@ function fixtureSnapshot(): AlboPublicSnapshot {
         publication_start: "2026-08-30",
         act_date: "2026-08-29",
         subject:
-          'Decisione a contrarre e affidamento diretto alla libreria "Libreria Civica". CUP C12D34567890123. CIG B123456789. Importo € 1.234,56.',
+          'Decisione a contrarre e affidamento diretto alla libreria "Libreria Civica". CUP C12D34567890123. CIG n. B123456789. Importo € 1.234,56.',
         document_url:
           "https://albo.tinnvision.cloud/allegati/atto-1001.pdf?ente=00301390795",
         verification_status: "official_source_acquired",
@@ -150,8 +177,7 @@ function fixtureSnapshot(): AlboPublicSnapshot {
         public_id: "albo-2026-1002",
         publication_number: "2026/1002",
         publication_start: "2026-08-31",
-        subject:
-          "Liquidazione quota progettazione. CIG AQ 9181061337 - CIG CONTRATTO SPECIFICO A01D5289C5.",
+        subject: "Liquidazione fattura relativa alla fornitura. C.I.G. B123456789.",
         document_url:
           "https://albo.tinnvision.cloud/allegati/atto-1002.pdf?ente=00301390795",
         verification_status: "official_source_acquired",
@@ -161,17 +187,37 @@ function fixtureSnapshot(): AlboPublicSnapshot {
         public_id: "albo-2026-1003",
         publication_number: "2026/1003",
         publication_start: "2026-08-31",
-        subject: "Metadato minimo CIG B000000001",
+        subject:
+          "Liquidazione fattura per servizio manutenzione alla società Alfa S.r.l.",
         verification_status: "official_source_acquired",
-        public_visibility: "metadata_only",
+        public_visibility: "publishable",
       },
       {
         public_id: "albo-2026-1004",
         publication_number: "2026/1004",
         publication_start: "2026-08-31",
-        subject: "Atto pubblico senza CIG",
+        subject:
+          "Liquidazione quota progettazione. CIG AQ 9181061337 - CIG CONTRATTO SPECIFICO A01D5289C5.",
+        document_url:
+          "https://albo.tinnvision.cloud/allegati/atto-1004.pdf?ente=00301390795",
         verification_status: "official_source_acquired",
         public_visibility: "publishable",
+      },
+      {
+        public_id: "albo-2026-1005",
+        publication_number: "2026/1005",
+        publication_start: "2026-08-31",
+        subject: "Atto pubblico senza segnali di procurement",
+        verification_status: "official_source_acquired",
+        public_visibility: "publishable",
+      },
+      {
+        public_id: "albo-2026-1006",
+        publication_number: "2026/1006",
+        publication_start: "2026-08-31",
+        subject: "Liquidazione CIG B000000001",
+        verification_status: "official_source_acquired",
+        public_visibility: "metadata_only",
       },
     ],
   };
