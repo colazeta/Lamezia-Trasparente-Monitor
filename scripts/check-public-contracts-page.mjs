@@ -63,7 +63,9 @@ function parseArgs(argv) {
     const arg = argv[i];
     if (arg === "--url") {
       const value = argv[(i += 1)];
-      if (!value || value.startsWith("--")) throw new Error("Missing value for --url.");
+      if (!value || value.startsWith("--")) {
+        throw new Error("Missing value for --url.");
+      }
       options.publicUrl = value;
     } else if (arg === "--expected-commit") {
       const value = argv[(i += 1)];
@@ -189,6 +191,7 @@ async function assertExpectedOrNewerMainCommit(expectedCommit, observedCommit) {
     if (cached.ok) return cached.result;
     throw new Error(cached.message);
   }
+
   const expectedToObserved = await fetchGitHubJson(
     `/repos/${REPOSITORY}/compare/${expectedCommit}...${observedCommit}`,
     "GitHub expected-to-production comparison",
@@ -198,6 +201,7 @@ async function assertExpectedOrNewerMainCommit(expectedCommit, observedCommit) {
     requiredCommitRelationCache.set(cacheKey, { ok: false, message });
     throw new Error(message);
   }
+
   const mainBranch = await fetchGitHubJson(
     `/repos/${REPOSITORY}/branches/${MAIN_BRANCH}`,
     "GitHub main branch",
@@ -209,11 +213,12 @@ async function assertExpectedOrNewerMainCommit(expectedCommit, observedCommit) {
       "GitHub production-to-main comparison",
     );
     if (observedToMain.status !== "ahead") {
-      const message = `Deploy provenance commit ${observservedCommit} is not in current main history ending at ${mainCommit}.`;
+      const message = `Deploy provenance commit ${observedCommit} descends from ${expectedCommit} but is not in current main history ending at ${mainCommit}.`;
       requiredCommitRelationCache.set(cacheKey, { ok: false, message });
       throw new Error(message);
     }
   }
+
   const result = { mode: "superseded", observedCommit, mainCommit };
   requiredCommitRelationCache.set(cacheKey, { ok: true, result });
   return result;
@@ -255,7 +260,9 @@ function extractSitemapRoutes(sitemapXml) {
     sitemapXml.matchAll(/<loc>([^<]+)<\/loc>/gu),
     ([, loc]) => new URL(loc).pathname,
   );
-  if (routes.length === 0) throw new Error("Public sitemap does not contain any routes.");
+  if (routes.length === 0) {
+    throw new Error("Public sitemap does not contain any routes.");
+  }
   return routes;
 }
 
@@ -267,13 +274,24 @@ async function assertDeployProvenance(
     throw new Error("Deploy provenance marker must be a JSON object.");
   }
   if (provenance.repository !== REPOSITORY) {
-    throw new Error(`Deploy provenance has unexpected repository: ${String(provenance.repository)}`);
+    throw new Error(
+      `Deploy provenance has unexpected repository: ${String(provenance.repository)}`,
+    );
   }
   if (provenance.deploymentContract !== REQUIRED_DEPLOYMENT_CONTRACT) {
     throw new Error(
       `Deploy provenance has unexpected deploymentContract: ${String(provenance.deploymentContract)}`,
     );
   }
+  if (
+    typeof provenance.createdAt !== "string" ||
+    Number.isNaN(Date.parse(provenance.createdAt))
+  ) {
+    throw new Error(
+      `Deploy provenance has invalid createdAt: ${String(provenance.createdAt)}`,
+    );
+  }
+
   const observedCommit = normalizeCommit(
     provenance.commitSha,
     "deploy provenance commitSha",
@@ -293,6 +311,7 @@ async function assertDeployProvenance(
       );
     }
   }
+
   if (provenance.requiredRoute !== "/contratti") {
     throw new Error(
       `Deploy provenance has unexpected requiredRoute: ${String(provenance.requiredRoute)}`,
@@ -354,6 +373,7 @@ function assertMultiSourceStaticDataset(dataset) {
   ) {
     throw new Error("Static contracts dataset must expose the multi-source schema.");
   }
+
   const coverage = dataset.coverage;
   const reconciliation = dataset.reconciliation;
   for (const key of [
@@ -363,6 +383,7 @@ function assertMultiSourceStaticDataset(dataset) {
     "alboOnlyContracts",
     "anacOnlyContracts",
     "anacAuthorityDiscoveredContracts",
+    "anacAuthorityWithTenderAmount",
     "authorityRequestedYears",
     "authorityCompletedYears",
     "unresolvedEvents",
@@ -382,6 +403,17 @@ function assertMultiSourceStaticDataset(dataset) {
   for (const key of ["overlapCigs", "alboOnlyCigs", "anacOnlyCigs"]) {
     assertUniqueStrings(reconciliation[key], `reconciliation.${key}`);
   }
+  if (
+    !Array.isArray(reconciliation.missingYears) ||
+    reconciliation.missingYears.some(
+      (year) => !Number.isInteger(year) || year < 2000 || year > 2100,
+    ) ||
+    new Set(reconciliation.missingYears).size !==
+      reconciliation.missingYears.length
+  ) {
+    throw new Error("Multi-source reconciliation has invalid missing years.");
+  }
+
   const local = new Set([
     ...reconciliation.overlapCigs,
     ...reconciliation.alboOnlyCigs,
@@ -412,10 +444,15 @@ function assertMultiSourceStaticDataset(dataset) {
     reconciliation.sourceResolutionInvariantSatisfied !== true ||
     dataset.authorityDiscovery.records?.length !== reconciliation.anacAuthorityCigs ||
     dataset.authorityDiscovery.requestedYears?.length !== reconciliation.requestedYears ||
-    dataset.authorityDiscovery.completedYears?.length !== reconciliation.completedYears
+    dataset.authorityDiscovery.completedYears?.length !== reconciliation.completedYears ||
+    coverage.anacAuthorityWithTenderAmount !==
+      dataset.authorityDiscovery.records.filter(
+        (record) => record.tenderAmount !== null,
+      ).length
   ) {
     throw new Error("Static multi-source contracts reconciliation is inconsistent.");
   }
+
   const seenIds = new Set();
   const seenCigs = new Set();
   for (const contract of dataset.contracts) {
@@ -431,23 +468,31 @@ function assertMultiSourceStaticDataset(dataset) {
       contract.amount < 0 ||
       !dataset.storylines[String(contract.id)]
     ) {
-      throw new Error("Static multi-source contracts dataset contains an invalid contract.");
+      throw new Error(
+        "Static multi-source contracts dataset contains an invalid contract.",
+      );
     }
     seenIds.add(contract.id);
     seenCigs.add(contract.cig);
   }
+
   for (const cig of reconciliation.anacOnlyCigs) {
     const contract = dataset.contracts.find((item) => item.cig === cig);
     const storyline = contract && dataset.storylines[String(contract.id)];
     if (
       !contract ||
+      contract.amount !== 0 ||
       !storyline ||
       storyline.timeline?.length !== 1 ||
-      storyline.timeline[0]?.progressivo !== `ANAC:${cig}`
+      storyline.timeline[0]?.progressivo !== `ANAC:${cig}` ||
+      storyline.timeline[0]?.tipologia !== "Record strutturato ANAC/BDNCP"
     ) {
-      throw new Error(`ANAC-only CIG lacks explicit discovery provenance: ${cig}`);
+      throw new Error(
+        `ANAC-only CIG lacks explicit conservative discovery provenance: ${cig}`,
+      );
     }
   }
+
   return { local, authority, union };
 }
 
@@ -458,7 +503,9 @@ function assertLiveContractsData({ contracts, feedStatus, staticDataset, anacSta
   const sets = assertMultiSourceStaticDataset(staticDataset);
   if (
     feedStatus?.source !== "multi_source_procurement_census" ||
-    !["multi-source-current", "multi-source-backfill"].includes(feedStatus?.status) ||
+    !["multi-source-current", "multi-source-backfill"].includes(
+      feedStatus?.status,
+    ) ||
     feedStatus?.itemsTotal !== contracts.length ||
     staticDataset.feedStatus?.source !== feedStatus.source ||
     staticDataset.feedStatus?.status !== feedStatus.status ||
@@ -486,6 +533,7 @@ function assertLiveContractsData({ contracts, feedStatus, staticDataset, anacSta
   if (staticDataset.contracts.length !== contracts.length) {
     throw new Error("Static multi-source contracts dataset must match the API total.");
   }
+
   const staticByCig = new Map(
     staticDataset.contracts.map((contract) => [contract.cig, contract]),
   );
@@ -536,6 +584,25 @@ function extractJavaScriptReferences(sourceText) {
   return [...references];
 }
 
+function bundleAssetPriority(url) {
+  const pathname = new URL(url).pathname;
+  if (
+    /\/(?:Contracts|ContractsCitizen|ContractsCitizenSections|Organi)-[^/]+\.js$/iu.test(
+      pathname,
+    )
+  ) {
+    return 0;
+  }
+  if (
+    /\/(?:contractCitizenSignals|contractDossier|institutionalStaticData)-[^/]+\.js$/iu.test(
+      pathname,
+    )
+  ) {
+    return 1;
+  }
+  return 2;
+}
+
 function hasRequiredBundleMarkers(text) {
   return [
     ...REQUIRED_CONTRACT_BUNDLE_TEXT,
@@ -552,10 +619,17 @@ async function fetchBundleText(publicUrl, scriptPaths) {
   const queued = new Set(queue);
   const fetched = new Set();
   const parts = [];
+
   while (queue.length > 0 && fetched.size < 64) {
+    queue.sort(
+      (left, right) => bundleAssetPriority(left) - bundleAssetPriority(right),
+    );
     const scriptUrl = queue.shift();
     if (!scriptUrl || fetched.has(scriptUrl)) continue;
-    const { text } = await fetchText(scriptUrl, `JavaScript asset ${scriptUrl}`);
+    const { text } = await fetchText(
+      scriptUrl,
+      `JavaScript asset ${scriptUrl}`,
+    );
     fetched.add(scriptUrl);
     parts.push(text);
     const combined = parts.join("\n");
@@ -582,7 +656,9 @@ function assertBundleMarkers(bundleText) {
     ...REQUIRED_ORGANI_BUNDLE_TEXT,
   ].filter((marker) => !bundleText.includes(marker));
   if (missing.length > 0) {
-    throw new Error(`Public JavaScript bundle is missing markers: ${missing.join(", ")}`);
+    throw new Error(
+      `Public JavaScript bundle is missing markers: ${missing.join(", ")}`,
+    );
   }
 }
 
@@ -595,7 +671,10 @@ async function checkPublicContractsPage(
     routeUrl(publicUrl, "/contratti"),
     "Contracts route",
   );
-  const organi = await fetchText(routeUrl(publicUrl, "/organi"), "Organi route");
+  const organi = await fetchText(
+    routeUrl(publicUrl, "/organi"),
+    "Organi route",
+  );
   const provenance = await fetchJson(
     routeUrl(publicUrl, DEPLOY_PROVENANCE_PATH),
     "Deploy provenance marker",
@@ -661,18 +740,30 @@ async function checkPublicContractsPage(
   }
 
   for (const path of API_CONTENT_TYPE_PROBES) {
-    const result = await fetchProbe(routeUrl(publicUrl, path), `API probe ${path}`);
+    const result = await fetchProbe(
+      routeUrl(publicUrl, path),
+      `API probe ${path}`,
+    );
     assertContentType(result, "application/json", `API probe ${path}`);
   }
   for (const path of FEED_CONTENT_TYPE_PROBES) {
-    const result = await fetchProbe(routeUrl(publicUrl, path), `Feed probe ${path}`);
+    const result = await fetchProbe(
+      routeUrl(publicUrl, path),
+      `Feed probe ${path}`,
+    );
     assertContentType(result, "xml", `Feed probe ${path}`);
     if (path.includes("contratti.xml") && result.status !== 200) {
-      throw new Error(`Contracts feed ${path} returned HTTP ${result.status}; expected 200.`);
+      throw new Error(
+        `Contracts feed ${path} returned HTTP ${result.status}; expected 200.`,
+      );
     }
   }
 
-  const scriptPaths = extractScriptPaths(root.text, contractsPage.text, organi.text);
+  const scriptPaths = extractScriptPaths(
+    root.text,
+    contractsPage.text,
+    organi.text,
+  );
   const bundle = await fetchBundleText(publicUrl, scriptPaths);
   assertBundleMarkers(bundle.text);
   console.log(
@@ -686,7 +777,9 @@ async function main() {
   let lastError;
   for (let attempt = 1; attempt <= options.attempts; attempt += 1) {
     try {
-      console.log(`Public contracts smoke attempt ${attempt}/${options.attempts}`);
+      console.log(
+        `Public contracts smoke attempt ${attempt}/${options.attempts}`,
+      );
       const relation = await checkPublicContractsPage(options.publicUrl, {
         expectedCommit: options.expectedCommit,
         allowNewerMain: options.allowNewerMain,
