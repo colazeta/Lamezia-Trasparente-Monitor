@@ -100,6 +100,6 @@ test("pilot manifest records non-exhaustive scope and excluded false events", as
   assert.equal(manifest.record_count, 4);
   assert.equal(manifest.mappable_geometry_count, 0);
   assert.match(manifest.methodology, /non rappresenta la totalità/i);
-  assert.ok(manifest.excluded.some((item) => /finto carabiniere/i.test(item.candidate) && /occurrence/i.test(item.reason)));
+  assert.ok(manifest.excluded.some((item) => /(finto|fake)[ -]?carabiniere/i.test(item.candidate) && /occurrence/i.test(item.reason)));
   assert.ok(manifest.excluded.some((item) => /Artemis/i.test(item.candidate) && /multi-event/i.test(item.reason)));
 });
