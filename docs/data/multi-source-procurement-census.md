@@ -18,14 +18,14 @@ The authority census independently scans official annual/monthly ANAC CIG resour
 
 The authority snapshot has its own ledger:
 
-- `requestedYears`: historical years the census intends to cover;
+- `requestedYears`: years the census intends to acquire, including the open current year for refresh purposes;
 - `completedYears`: closed historical years for which every catalogued resource has been acquired;
 - `completedPeriods`: individual ANAC periods already acquired;
 - `consultedArchives`: source URL, period, rows scanned and matches;
 - `records`: unique CIG records for the target authority;
 - explicit freshness and failure state.
 
-Current-year periods are refreshed because ANAC resources can change. Historical years are consumed incrementally so the workflow remains bounded and auditable.
+Current-year periods are refreshed because ANAC resources can change. Historical years are consumed incrementally so the workflow remains bounded and auditable. The open current year is deliberately excluded from the denominator used to decide whether the historical backfill is complete.
 
 ## Reconciliation
 
@@ -41,7 +41,7 @@ An `anacOnly` record is intentionally conservative. It is identified as an ANAC/
 
 ## Historical completeness
 
-Completeness is never inferred from an empty result. The census may claim the requested ANAC historical backfill is complete only when its period ledger proves that all catalogued resources for every closed requested year were acquired successfully.
+Completeness is never inferred from an empty result. The census may claim the requested ANAC historical backfill is complete only when its period ledger proves that all catalogued resources for every closed requested year were acquired successfully. The current open year remains continuously refreshable and does not prevent that historical-completeness state.
 
 This still does not mean that the complete municipal contract dossier has been reconstructed. Further independent layers include:
 
@@ -53,3 +53,7 @@ This still does not mean that the complete municipal contract dossier has been r
 ## Tinnvision next layer
 
 The official procurement discovery surfaces are registered in `data/sources/contracts/tinnvision-procurement-discovery.json`. The parser must traverse publication years and pagination, preserve source record identifiers, collect official detail/attachment links, and pass all public document material through the existing fail-closed public-safety policy before text extraction or publication.
+
+## Merge certification
+
+Changes to this census affect both acquisition and the public read model. Required PR checks therefore need to exercise GitHub's current virtual merge with `main`, not merely a previously tested branch head. When `main` advances during review, a subsequent branch commit forces the merge ref to be regenerated so typecheck, build, stable tests, static smoke and automation-policy checks certify the actual combination that can enter production.
