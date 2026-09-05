@@ -165,12 +165,6 @@ function finitePoint(geometry: PointGeometry | null): geometry is PointGeometry 
   );
 }
 
-/**
- * A geocoder can reduce confidence/precision but can never create evidentiary
- * precision that the source did not contain. When two exact precision labels
- * have equal rank, the evidence-side label wins so a named public site is not
- * silently reinterpreted as a residential exact address, or vice versa.
- */
 export function capGeocodePrecision(
   evidencePrecision: GeoPrecision,
   candidatePrecision: GeoPrecision,
@@ -385,9 +379,6 @@ function projectionFromAnchor(
     };
   }
 
-  // The current LTCEDS public schema has no locality-centroid transform enum.
-  // Preserve locality knowledge but fail closed on geometry until a future
-  // schema version explicitly represents that transform.
   return suppressedLocation(location, "locality");
 }
 
@@ -489,3 +480,5 @@ export function projectPublicLocation(
     ],
   };
 }
+
+export type { PointGeometry };
