@@ -202,9 +202,15 @@ export function validateAnacAuthorityDiscoverySnapshot(
 export function anacAuthorityHistoricalCoverage(
   snapshot: AnacAuthorityDiscoverySnapshot,
 ) {
-  const requested = new Set(snapshot.requestedYears);
-  const completed = new Set(snapshot.completedYears);
-  const missingYears = snapshot.requestedYears.filter((year) => !completed.has(year));
+  const referenceYear = new Date(snapshot.generatedAt).getUTCFullYear();
+  const requestedClosedYears = snapshot.requestedYears.filter(
+    (year) => year < referenceYear,
+  );
+  const requested = new Set(requestedClosedYears);
+  const completed = new Set(
+    snapshot.completedYears.filter((year) => year < referenceYear),
+  );
+  const missingYears = requestedClosedYears.filter((year) => !completed.has(year));
   return {
     requestedYears: requested.size,
     completedYears: completed.size,
