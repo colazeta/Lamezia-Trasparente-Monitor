@@ -1,0 +1,87 @@
+{
+  "schema_version": "1.0",
+  "last_verified_at": "2026-09-05T21:00:00Z",
+  "sources": [
+    {
+      "source_id": "istat-iccs",
+      "namespace": "iccs",
+      "provider": "Istat",
+      "title": "Classificazione internazionale dei reati",
+      "url": "https://www.istat.it/classificazione/classificazione-internazionale-dei-reati/",
+      "source_role": "authoritative-national-rendering-of-iccs",
+      "access_mode": "server_rendered_html_table",
+      "materialisation_status": "parser_ready",
+      "licence": "CC BY 4.0",
+      "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+      "attribution": "Istat — Classificazione internazionale dei reati",
+      "known_fields": ["ID", "DESCRIZIONE", "DESCRIZIONE EN", "ID PADRE"],
+      "limitations": [
+        "This source materialises the ICCS hierarchy and labels, not Italian legal offence mappings.",
+        "Source drift is guarded by content hashes, expected roots and minimum node-count checks."
+      ]
+    },
+    {
+      "source_id": "istat-offence-catalogue",
+      "namespace": "istat_offence",
+      "provider": "Istat",
+      "title": "Catalogo dei reati",
+      "url": "https://www.istat.it/classificazione/catalogo-dei-reati/",
+      "source_role": "authoritative-national-legal-statistical-catalogue",
+      "access_mode": "interactive_search",
+      "materialisation_status": "pending_endpoint_discovery",
+      "declared_normative_coverage_through": "2024-12",
+      "licence": "CC BY 4.0",
+      "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+      "attribution": "Istat — Catalogo dei reati",
+      "known_fields": [
+        "normative source",
+        "year",
+        "number",
+        "article",
+        "sub-article references",
+        "description",
+        "penalty information where present"
+      ],
+      "limitations": [
+        "Istat currently declares the catalogue updated to legislation of interest through December 2024; this is coverage metadata, not the page publication date.",
+        "The public page is an interactive search surface; no stable machine endpoint has yet been committed to LTCEDS.",
+        "Istat itself notes that editorial normative collections may contain errors, inaccuracies or omissions."
+      ]
+    },
+    {
+      "source_id": "istat-offence-navigator",
+      "namespace": "istat_iccs_mapping",
+      "provider": "Istat",
+      "title": "Navigatore delle classificazioni dei reati",
+      "url": "https://www.istat.it/classificazione/navigatore-della-classificazione-dei-reati/",
+      "source_role": "official-navigation-and-correspondence-surface",
+      "access_mode": "interactive_navigation",
+      "materialisation_status": "pending_endpoint_discovery",
+      "licence": "CC BY 4.0",
+      "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+      "attribution": "Istat — Navigatore delle classificazioni dei reati",
+      "known_fields": [],
+      "limitations": [
+        "LTCEDS must not reconstruct correspondence from label similarity while the official correspondence surface is not yet materialised."
+      ]
+    },
+    {
+      "source_id": "unodc-iccs-implementation-manual-2025",
+      "namespace": "iccs_methodology",
+      "provider": "United Nations Office on Drugs and Crime",
+      "title": "International Classification of Crime for Statistical Purposes (ICCS): Implementation Manual",
+      "url": "https://www.unodc.org/documents/data-and-analysis/statistics/crime/ICCS/ICCS_Implementation_Manual.pdf",
+      "source_role": "methodological-reference",
+      "access_mode": "pdf",
+      "materialisation_status": "reference_only",
+      "licence": "not_asserted_by-ltceds",
+      "licence_url": null,
+      "attribution": "United Nations / UNODC, 2025",
+      "known_fields": [],
+      "limitations": [
+        "The manual is referenced for implementation guidance; this inventory does not assert a reuse licence for reproducing its text.",
+        "The Istat hierarchy snapshot remains a separate sourced artefact."
+      ]
+    }
+  ]
+}
