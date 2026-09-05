@@ -135,6 +135,8 @@ Trusted auto-merge remains behind the repository's required checks. The current 
 
 The ruleset uses strict status checks, so an eligible PR must be up to date with `main`. When `main` advances, the workflow serially refreshes open trusted PRs. A conflict or failed update leaves the PR open rather than bypassing the gate.
 
+The refresh cascade has two event paths. Ordinary/manual changes to `main` are covered by the `push` trigger. A trusted PR merged automatically by `github-actions[bot]` may not yield a new Actions `push` run because of `GITHUB_TOKEN` recursion rules, so the workflow also listens for `pull_request_target: closed` and refreshes the remaining trusted PRs only when the closed PR was actually merged by `github-actions[bot]`. The closed PR is explicitly excluded from the arm-auto-merge job. This keeps the cascade event-driven without adding duplicate refreshes for ordinary manual merges or scheduled polling.
+
 The static fallback workflow must emit its required context for every PR; a required workflow must not be path-filtered in a way that leaves an eligible PR waiting forever for a check that never starts.
 
 ## Bot-triggered required workflows
