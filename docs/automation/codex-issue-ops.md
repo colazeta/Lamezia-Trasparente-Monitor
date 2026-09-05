@@ -2,13 +2,21 @@
 
 This document defines the controlled automation protocol for using Codex on the Lamezia Trasparente Monitor backlog.
 
-The objective is not to let Codex work indiscriminately on every open issue. The objective is to operate a controlled capacity-5 queue where issues are explored, converted into precise implementation prompts, assigned to Codex on dedicated branches, reviewed by humans through pull requests, and either routed to follow-up or recommended for closure after review.
+The objective is not to let Codex work indiscriminately on every open issue. The objective is to operate a controlled capacity-5 queue where issues are explored, converted into precise implementation prompts, assigned to Codex on dedicated branches, materialized through pull requests, validated by repository gates and routed either to trusted auto-merge, manual review/merge, follow-up or closure recommendation.
+
+Merge routing is defined canonically in `docs/automation/trusted-auto-merge.md`.
 
 ## Core principle
 
-Codex may work only on issues that have been explicitly marked as ready. Human review remains mandatory before merge and before closing an issue. Codex must not auto-merge pull requests and must not close issues directly.
+Codex may work only on issues that have been explicitly marked as ready. Every implementation must use a reviewable branch and pull request; repository checks and the `Protect main` ruleset remain authoritative.
 
-Labels are nominal routing hints, not proof of active work. The source of truth for queue decisions is the derived operational state computed from labels plus verifiable evidence: latest `@codex` invocation, Codex response, branch/task evidence, linked PR status, explicit blocker, CI status, age of the last event and concrete file/module collision. Comments are operational evidence only while recent and consistent; they must not override labels when stale, contradictory, duplicated or explicitly superseded.
+Human merge is **not** required for every routine Codex pull request. A same-repository, non-draft PR may be auto-merged by the repository's `Trusted PR auto-merge` workflow when its branch/diff is eligible, it carries no manual-review labels, it touches no protected path, it is up to date with `main`, and every required check succeeds.
+
+Human review/merge remains mandatory for protected work and explicit manual cases, including workflow/CI/governance changes, protected deployment/auth/configuration paths, migrations/schema, and PRs carrying `manual-review`, `automerge:off` or `needs-human-review`.
+
+Codex must never bypass or force merge gates, and it must not close issues directly unless a future explicit closure policy authorises that behaviour.
+
+Labels are nominal routing hints, not proof of active work. The source of truth for queue decisions is the derived operational state computed from labels plus verifiable evidence: latest `@codex` invocation, Codex response, branch/task evidence, linked PR status, merge routing, CI status, age of the last event and concrete file/module collision. Comments are operational evidence only while recent and consistent; they must not override labels when stale, contradictory, duplicated or explicitly superseded.
 
 ## Derived operational state
 
@@ -21,13 +29,13 @@ For every issue inspected by the queue governor, derive and record one operation
 | `ready` | `codex:ready` plus clean acceptance criteria and no active blocker. | Does **not** count; it is eligible backlog, not active work. |
 | `invoked` | Recent `@codex` invocation or `codex:invoked` label inside the waiting window, with no terminal Codex answer yet. | Counts only while recent and unclassified. |
 | `working` | Recent Codex branch/task/commit, running response, validation log or explicit in-progress evidence. | Counts while recent. |
-| `pr-open` | Open linked Codex PR targeting `main`. | Counts only if Codex-side changes are still needed; otherwise it is human review wait. |
+| `pr-open` | Open linked Codex PR targeting `main`. | Counts only if Codex-side changes are still needed. A PR waiting only for trusted checks/merge or actual human review is outside active Codex capacity. |
 | `blocked` | Explicit unresolved blocker: permissions, secrets, unsafe scope, concrete collision, CI gate or human decision. | Counts only if the blocker is a recent Codex-side stop condition awaiting cleanup; otherwise it pauses the issue outside capacity. |
 | `stale` | Nominal active label or old comment with no PR, branch, blocker, validation, diff or recent activity. | Does not count; route to stale cleanup. |
-| `completed-by-pr` | Linked PR merged/closed with review evidence satisfying the issue or accepted follow-up. | Does not count; remove/neutralise active labels. |
+| `completed-by-pr` | Linked PR merged/closed with evidence satisfying the issue or accepted follow-up. | Does not count; remove/neutralise active labels. |
 | `superseded` | Later issue/PR/comment explicitly replaces this work. | Does not count; route to duplicate/supersession notes. |
 
-Derived state must be based on verifiable evidence, not label names alone. The governor must list the evidence used, the evidence age and any uncertainty whenever it promotes, invokes, blocks or releases an issue.
+Derived state must be based on verifiable evidence, not label names alone. The governor must list the evidence used, evidence age and any uncertainty whenever it promotes, invokes, blocks or releases an issue.
 
 ### Canonical operational vocabulary
 
@@ -52,15 +60,18 @@ Do **not** count these as occupied slots:
 - `codex:ready` by itself;
 - `codex:candidate` by itself;
 - PRs that are already merged or closed;
-- `codex:review-needed` or PRs/issues waiting only for Giovanni review or merge;
+- `codex:review-needed` or PRs/issues waiting only for Giovanni review or manual merge;
+- trusted-auto-merge-eligible PRs waiting only for branch refresh, required checks or merge execution when no Codex-side changes remain;
 - stale `codex:prompted`, `codex:invoked` or `codex:working` labels with no PR, branch, explicit blocker, validation log, diff location or recent Codex activity;
 - summary-only `output-without-PR` comments.
 
-`codex:review-needed` is a human review/merge wait state. It does **not** saturate the Codex work queue unless there is a concrete file/module collision with a candidate task or the same PR still needs Codex-side rework. A PR or issue waiting only for Giovanni's human review or merge is therefore outside the capacity count and blocks only new work that would touch the same files/modules or otherwise create an unresolved review conflict.
+`codex:review-needed` is a real human-review/merge wait state and must be applied only when human review is actually required. It does not saturate the Codex work queue unless there is a concrete file/module collision with a candidate task or the same PR still needs Codex-side rework.
 
-Effective free slots are calculated as `5 - real active Codex operational tasks`. Human-review-pending items, including `codex:review-needed` issues and PRs awaiting Giovanni's merge decision, are excluded from that arithmetic unless they become Codex-side rework or have a concrete file/module collision with the candidate work.
+A trusted PR waiting only for required checks or automatic merge is likewise outside active Codex capacity. Required checks are merge gates, not Codex work, once implementation is complete.
 
-The governor must use all five real active slots when eligible low-collision backlog exists. A queue below 5/5 is healthy only when there is no real eligible backlog, a concrete file/module collision, legal/copy/methodological risk, CI instability, or a decision that must be made by Giovanni before parallel work on the affected files/modules is safe. Giovanni review/merge wait alone is not a reason to pause the whole pipeline.
+Effective free slots are calculated as `5 - real active Codex operational tasks`. Human-review-pending and trusted-check-wait items are excluded from that arithmetic unless they become Codex-side rework or create a concrete file/module collision.
+
+The governor must use all five real active slots when eligible low-collision backlog exists. A queue below 5/5 is healthy only when there is no real eligible backlog, a concrete file/module collision, legal/copy/methodological risk, CI instability, or a decision that must be made by Giovanni before parallel work on the affected files/modules is safe. Review/merge wait for non-colliding work is not a reason to pause the whole pipeline.
 
 ### Materialization debt gate
 
@@ -68,7 +79,7 @@ Before applying anti-idle promotion, count open issues and PRs carrying any mate
 
 If the count is **greater than 5**, ordinary technical and platform invocations are blocked. The only permitted queue actions are materialization verification, complete-diff or complete-bundle application, manual UI/export recovery classification, split-required classification, blocker stabilization, PR rebase/recovery/supersede triage, and stale active-label cleanup. Do not create new ordinary technical issues, do not post new ordinary `@codex` prompts and do not fill empty slots via anti-idle while this gate is active.
 
-Debt-gated reports must include the debt count, the labels/states counted, the first page or query scope inspected, the allowed cleanup action chosen, and any real PRs that need no-merge/no-approval human decisions such as `needs-rebase` or `needs-human-decision`.
+Debt-gated reports must include the debt count, labels/states counted, query/page scope inspected, allowed cleanup action chosen, and any real PRs needing rebase, human decision or merge-routing intervention.
 
 ## Promotion SLA and anti-idle rule
 
@@ -80,7 +91,7 @@ Every new or newly discovered issue must leave ambiguity during the same governo
 4. mark or comment `duplicate`/`superseded` when another issue or PR covers the work;
 5. mark or comment `needs-human-decision` when Giovanni must decide before automation can proceed.
 
-An issue must not remain merely created, noticed or labelled without one of those outcomes. If real active capacity is below target, a report-only governor pass is insufficient. The governor must do one of the following, in order, and document the evidence:
+An issue must not remain merely created, noticed or labelled without one of those outcomes. If real active capacity is below target, a report-only governor pass is insufficient. The governor must, in order:
 
 1. invoke a ready, non-colliding issue;
 2. promote a mature, non-colliding candidate to ready and invoke it;
@@ -91,7 +102,7 @@ Do not create filler issues or artificial saturation. The action must be tied to
 
 ## Collision matrix
 
-Before preparing or invoking Codex, compare the candidate's likely files/modules against open PRs, recent Codex branches/tasks and recent Codex-side rework. Use this minimum matrix:
+Before preparing or invoking Codex, compare the candidate's likely files/modules against open PRs, recent Codex branches/tasks and recent Codex-side rework.
 
 | Candidate vs active/review item | Risk | Required action |
 | --- | --- | --- |
@@ -99,9 +110,9 @@ Before preparing or invoking Codex, compare the candidate's likely files/modules
 | Same runtime file/module, same prompt/doc section or same public copy/legal/methodological text. | High | Do not invoke; wait, split scope or request human decision. |
 | Same package/domain but different files and compatible acceptance criteria. | Medium | Invoke only with a narrow scope and explicit collision note, or defer if review risk is unclear. |
 | Different package/domain or documentation-only change outside touched sections. | Low | Invocation may proceed when other safeguards pass. |
-| Human review PR touches unrelated files and needs no Codex-side rework. | Low for capacity, file-specific for collision | Exclude from capacity; block only candidates touching the same files/modules. |
+| Manual-review or trusted-check-wait PR touches unrelated files and needs no Codex-side rework. | Low for capacity, file-specific for collision | Exclude from capacity; block only candidates touching the same files/modules. |
 
-Collision decisions must distinguish operational evidence from nominal labels and from human decisions still pending.
+Collision decisions must distinguish operational evidence from nominal labels and from merge-routing state.
 
 ## Branch and pull request requirement
 
@@ -111,7 +122,9 @@ Every implementation prompt and invocation must require Codex to:
 2. commit changes on that branch;
 3. open a pull request targeting `main`;
 4. reference the issue in the PR description;
-5. include changed files/modules, validation performed, residual limitations and safeguard impact in the PR description.
+5. include changed files/modules, validation performed, residual limitations and safeguard impact in the PR description;
+6. avoid force-merging, administrative bypass or direct writes to `main`;
+7. leave merge execution to the repository policy described below.
 
 If Codex cannot open a pull request, it must comment on the issue with the exact technical reason and indicate the branch/diff location or the blocker that prevented branch or diff creation. Delivery without a PR is not a completed implementation state; it must be routed to `codex:follow-up` unless a human reviewer explicitly accepts another path.
 
@@ -124,18 +137,43 @@ A Codex summary without a reviewable PR is classified as `output-without-PR` unl
 
 `output-without-PR` does not count as a real active Codex slot, must not be treated as completed delivery and must not keep an issue in `codex:invoked`, `codex:prompted` or `codex:working` by itself. Route it to stale-task recovery with `codex:follow-up` unless a human reviewer confirms a valid branch, PR, blocker or reviewable diff.
 
+## Merge-routing policy
+
+The executable source of truth is `.github/workflows/trusted-auto-merge.yml`; the canonical explanatory policy is `docs/automation/trusted-auto-merge.md`.
+
+A PR may be eligible for trusted auto-merge only when it is same-repository, non-draft, targets `main`, belongs to a trusted branch family or carries `automerge:allow`, contains no protected path, carries no manual-review label, can be refreshed from `main`, and passes all required checks.
+
+Merge-routing labels:
+
+- `automerge:allow` — opt-in eligibility for an otherwise non-allowlisted routine branch; never a bypass;
+- `automerge:off` — manual merge;
+- `manual-review` — manual review/merge;
+- `needs-human-review` — human review/merge required.
+
+`automerge:off`, `manual-review` and `needs-human-review` override `automerge:allow`.
+
+Protected paths always remain manual. The current protected families include workflow/automation governance, `.agents`, dependency manifests/lockfiles, environment files, Wrangler/deploy configuration, Vite configuration, migrations/Drizzle, Clerk/auth paths, semantic architecture documentation and semantic API contract paths. Consult the workflow for the exact matcher.
+
+Auto-merge is fail-closed. Conflicts, branch-refresh failure, required-check failure, missing required contexts, inability to observe the refreshed head SHA, or inability to release expected bot-triggered required workflow runs leave the PR open.
+
+The workflow may approve only expected bot-triggered required runs for the refreshed head SHA; it does not approve code reviews, waive checks or bypass the ruleset.
+
 ## Suggested labels
 
-- `codex:candidate` — issue may be considered for automation.
-- `codex:ready` — issue is sufficiently clear and may enter the automated sequence.
-- `codex:prompted` — an implementation prompt has been prepared.
-- `codex:invoked` — Codex has been invoked on the issue.
-- `codex:working` — Codex work or an implementation PR is in progress.
-- `codex:review-needed` — a PR exists and is waiting for human review/merge; not queue-saturating unless there is a concrete collision or Codex-side rework.
-- `codex:follow-up` — the issue needs clarification, additional work, stale-task recovery or a new issue.
-- `codex:done` — acceptance criteria appear satisfied after review.
-- `codex:blocked` — automation must not proceed.
-- `codex:dangerous` — issue is sensitive and requires manual handling only.
+Codex queue labels:
+
+- `codex:candidate` — issue may be considered for automation;
+- `codex:ready` — issue is sufficiently clear and may enter the automated sequence;
+- `codex:prompted` — an implementation prompt has been prepared;
+- `codex:invoked` — Codex has been invoked;
+- `codex:working` — Codex work or Codex-side PR rework is in progress;
+- `codex:review-needed` — a PR specifically requires human review/merge; do not apply merely because it is a Codex PR;
+- `codex:follow-up` — clarification, stale-task recovery or additional work is needed;
+- `codex:done` — acceptance criteria appear satisfied after verified completion evidence;
+- `codex:blocked` — automation must not proceed;
+- `codex:dangerous` — manual handling only because the issue is sensitive.
+
+Merge-routing labels are documented in `docs/automation/codex-labels.md` and `docs/automation/trusted-auto-merge.md`.
 
 ## Comment hygiene and cleanup
 
@@ -153,30 +191,31 @@ The cleanup preflight must identify:
 When Codex opens a PR, reports a blocker, produces `output-without-PR`, or otherwise reaches an outcome, cleanup must also update or neutralise stale labels:
 
 - remove or neutralise `codex:ready` when the issue is no longer eligible backlog because it was invoked, blocked, superseded or covered by a PR;
-- prefer existing labels such as `codex:review-needed`, `codex:follow-up`, `codex:blocked` or `codex:done` instead of inventing new labels;
+- apply `codex:review-needed` only when the PR actually needs human review/merge;
+- prefer existing labels such as `codex:follow-up`, `codex:blocked` or `codex:done` instead of inventing new labels;
 - if a useful state such as `codex:pr-open`, `codex:completed-by-pr`, `duplicate`, `superseded` or `needs-human-decision` has no repository label, document it in a short issue comment using that exact text as a fallback state;
 - remove stale active labels when a PR is merged/closed, a blocker is resolved, or a newer branch/PR supersedes the attempt;
 - never let a stale `codex:ready` label make an already served issue appear eligible again.
 
-When the GitHub integration allows deletion, inappropriate automation comments should be deleted. When deletion is not available, the automation should update the comment body to a short neutral supersession note, for example: `Superseded during queue cleanup. Not operative; use current labels and the latest valid prompt/blocker only.`
+When the GitHub integration allows deletion, inappropriate automation comments should be deleted. When deletion is not available, update the comment body to a short neutral supersession note.
 
-Automation must not add a final Codex prompt on top of unresolved contradictory comments. Stale comments must not block an issue when the PR, issue or dependency cited as the blocker is closed, merged, resolved or explicitly superseded; the automation must neutralise the stale comment and proceed from the current labels. If cleanup cannot be completed, the correct outcome is to add `codex:follow-up` or `codex:blocked` and explain the cleanup obstacle. Do not use placeholder comments to test connectivity or reserve a comment slot.
+Automation must not add a final Codex prompt on top of unresolved contradictory comments. Stale comments must not block an issue when the dependency they cite is closed, merged, resolved or explicitly superseded. If cleanup cannot be completed, add `codex:follow-up` or `codex:blocked` and explain the obstacle. Do not use placeholder comments to test connectivity or reserve a comment slot.
 
-At the end of cleanup, the issue thread must have at most one current operative comment for the current state: either one final Codex prompt, one blocker/follow-up comment, or one review-routing comment.
+At the end of cleanup, the issue thread must have at most one current operative comment for the current state: one final Codex prompt, one blocker/follow-up comment, or one review-routing comment.
 
 ## Triage checklist for `output-without-PR`
 
-Use this checklist whenever an issue has `codex:invoked`, `codex:prompted` or `codex:working` but no obvious reviewable PR. The goal is to distinguish real active work from a false active slot.
+Use this checklist whenever an issue has `codex:invoked`, `codex:prompted` or `codex:working` but no obvious reviewable PR:
 
-1. Check for an open pull request that references the issue, targets `main` and uses a `codex/<issue-number>-<slug>` branch.
-2. If no PR exists, check whether the branch is visible and has recent commits that match the issue scope.
-3. If no branch exists, check whether the latest Codex comment includes an explicit technical blocker, including the exact reason PR creation failed and any branch, diff or artifact location.
-4. If no blocker exists, check for recent execution evidence: concrete commit SHA, validation output, artifact, patch location or other reviewer-inspectable activity.
-5. If the only evidence is a summary or completion-style comment, classify the state as `output-without-PR`.
-6. For `output-without-PR`, remove it from the real active capacity count, recommend `codex:follow-up`, and post or prepare a recovery comment requesting a new invocation with mandatory PR to `main` or an explicit blocker.
-7. Do not promote the issue to `codex:review-needed`, `codex:done` or completion routing until a PR, branch, blocker or reviewable diff is verified.
+1. check for an open PR that references the issue, targets `main` and uses a `codex/<issue-number>-<slug>` branch;
+2. if no PR exists, check whether the branch is visible and has recent commits matching the issue scope;
+3. if no branch exists, check whether the latest Codex comment includes an explicit technical blocker and any branch/diff/artifact location;
+4. if no blocker exists, check for recent execution evidence: concrete commit SHA, validation output, artifact, patch location or other reviewer-inspectable activity;
+5. if the only evidence is a summary or completion-style comment, classify the state as `output-without-PR`;
+6. for `output-without-PR`, remove it from real active capacity, recommend `codex:follow-up`, and request a new invocation with mandatory PR to `main` or an explicit blocker;
+7. do not promote to `codex:review-needed`, `codex:done` or completion routing until a PR, branch, blocker or reviewable diff is verified.
 
-Recovery comments must use neutral wording: the issue is stalled or missing reviewable evidence; do not imply bad faith by the agent or by project maintainers.
+Recovery comments must use neutral wording and must not imply bad faith by the agent or project maintainers.
 
 ## Recommended sequence
 
@@ -190,15 +229,16 @@ Purpose:
 2. exclude issues with `codex:invoked`, `codex:working`, `codex:blocked` or `codex:dangerous`;
 3. confirm that adding the issue would keep real active operational capacity at or below 5;
 4. read title, body, labels, comments and linked context;
-5. run the comment cleanup preflight before posting anything new;
-6. classify the issue as technical, civic-methodological, UI/copy, data/API, or backlog/governance;
-7. record minimum collision-control fields: probable scope, likely files/modules, and collision risk (`low`, `medium` or `high`);
-8. generate a precise implementation prompt using the templates in `.github/codex-prompts/`;
-9. require branch `codex/<issue-number>-<slug>` and a PR targeting `main` in the final prompt;
-10. post the prompt as a GitHub comment only if the thread has no unresolved contradictory operational comments;
-11. add `codex:prompted` only after a real operational prompt has been posted or an existing prompt has been updated into final form.
+5. run the comment cleanup preflight;
+6. classify the issue as technical, civic-methodological, UI/copy, data/API, backlog/governance or manual;
+7. record probable scope, likely files/modules and collision risk;
+8. generate a precise implementation prompt using `.github/codex-prompts/`;
+9. require branch `codex/<issue-number>-<slug>` and a PR targeting `main`;
+10. classify expected merge routing as trusted-auto-merge eligible, manual-review, or unknown until diff;
+11. post the prompt only if thread cleanup and the materialization debt gate pass;
+12. add `codex:prompted` only after a real operational prompt has been posted or updated into final form.
 
-Safety rule: if the issue is ambiguous, potentially accusatory, legally sensitive, too broad, or the thread cannot be cleaned into a coherent state, the automation must add `codex:blocked` or `codex:follow-up` instead of preparing an implementation prompt.
+Safety rule: if the issue is ambiguous, potentially accusatory, legally sensitive, too broad, or the thread cannot be cleaned into a coherent state, add `codex:blocked` or `codex:follow-up` instead of preparing an implementation prompt.
 
 ### Automation 2 — Invoke Codex
 
@@ -207,15 +247,16 @@ Frequency: every 15 minutes, offset after Automation 1.
 Purpose:
 
 1. identify an issue with `codex:prompted` and without `codex:invoked`;
-2. verify that exactly one current operative Codex prompt exists in the issue thread;
-3. verify that invocation would keep real active operational capacity at or below 5;
+2. verify exactly one current operative Codex prompt exists;
+3. verify invocation would keep real active operational capacity at or below 5;
 4. refuse invocation if the thread contains unresolved contradictory prompt/blocker/status comments;
 5. post the final `@codex` instruction or use the selected Codex integration;
-6. require branch `codex/<issue-number>-<slug>`, commit, and PR targeting `main` as mandatory output;
-7. include the stop condition that Codex must report the exact blocker if the PR, branch or reviewable diff cannot be created;
-8. add `codex:invoked` and `codex:working`.
+6. require branch `codex/<issue-number>-<slug>`, commit and PR targeting `main` as mandatory output;
+7. tell Codex not to force/bypass merge; repository merge routing applies after PR creation;
+8. require exact blocker reporting if PR, branch or reviewable diff cannot be created;
+9. add `codex:invoked` and `codex:working`.
 
-Safety rule: never invoke Codex on issues labelled `codex:blocked`, `codex:dangerous`, `needs:human-decision` or equivalent.
+Safety rule: never invoke Codex on issues labelled `codex:blocked`, `codex:dangerous`, `needs-human-decision` or equivalent.
 
 ### Automation 3 — Review outcome and route issue
 
@@ -223,22 +264,23 @@ Frequency: every 15 minutes, offset after Automation 2.
 
 Purpose:
 
-1. identify issues with `codex:working`, linked pull requests or recent Codex comments;
-2. check whether a pull request exists and targets `main` from a `codex/<issue-number>-<slug>` branch;
-3. inspect whether the PR references the issue;
-4. classify summary-only attempts with no PR, visible branch, explicit blocker or recent execution evidence as `output-without-PR`;
-5. check whether the issue acceptance criteria appear satisfied;
-6. route the issue to one of four outcomes:
-   - `codex:review-needed` if a PR exists and needs human review;
-   - `codex:follow-up` if no PR was opened, the delivery is incomplete, validation is failing, the task is stale, or the implementation is too broad;
+1. identify issues with `codex:working`, linked PRs or recent Codex comments;
+2. verify that any PR targets `main` from a `codex/<issue-number>-<slug>` branch and references the issue;
+3. classify summary-only attempts with no PR, visible branch, explicit blocker or recent execution evidence as `output-without-PR`;
+4. check whether acceptance criteria appear satisfied and validation is adequate;
+5. classify merge routing from actual labels and changed files;
+6. route the issue to one of these outcomes:
+   - `pr-open` / trusted-check-wait if a routine PR is eligible for trusted auto-merge and no Codex-side work remains;
+   - `codex:review-needed` if protected paths, manual labels, sensitive scope or another concrete gate requires human review/merge;
+   - `codex:follow-up` if no PR exists, delivery is incomplete, validation is failing, the task is stale, or implementation is too broad;
    - `codex:blocked` if a safety or collision blocker prevents continuation;
-   - `codex:done` only after review/merge evidence indicates the issue appears solved.
+   - `codex:done` only after verified merge/review evidence indicates the issue appears solved.
 
-Stale-task rule: if an issue has `codex:invoked` or `codex:working` for more than 60 minutes with no PR, branch, Codex comment, commit or other concrete activity, move it to `codex:follow-up`, comment with the observed inactivity, and release operational capacity.
+Stale-task rule: if an issue has `codex:invoked` or `codex:working` for more than 60 minutes with no PR, branch, Codex comment, commit or other concrete activity, move it to `codex:follow-up`, comment with observed inactivity, and release operational capacity.
 
 No-PR recovery rule: if an issue has `codex:prompted`, `codex:invoked` or `codex:working` and the only evidence is a Codex summary, classify it as `output-without-PR`, move it to `codex:follow-up`, request a new PR-to-`main` invocation or explicit blocker, and release operational capacity.
 
-Fallback rule: if Codex reports that it could not open a PR, route to `codex:follow-up` unless the comment gives a concrete recoverable technical blocker that must become `codex:blocked`. The follow-up comment must preserve the exact technical reason and branch/diff or blocker information.
+Fallback rule: if Codex reports that it could not open a PR, route to `codex:follow-up` unless the comment gives a concrete recoverable technical blocker that must become `codex:blocked`. Preserve the exact reason and branch/diff or blocker information.
 
 Safety rule: this automation must not close issues automatically unless a future explicit policy allows it. The current policy is to comment with a closure recommendation only.
 
@@ -250,20 +292,20 @@ Purpose:
 
 1. derive state for every inspected issue from labels plus evidence before capacity arithmetic;
 2. count only real active Codex tasks against the capacity-5 limit;
-3. explicitly exclude `codex:ready`, `codex:candidate`, `output-without-PR`, merged/closed PRs and human-review-only waits from saturation;
-4. exclude `codex:review-needed` and PRs/issues awaiting Giovanni review or merge from saturation unless there is concrete file/module collision or Codex-side rework;
-5. calculate effective free slots as `5 - real active Codex operational tasks`;
-6. classify every new or newly discovered issue in the same cycle as ready-plus-invoked, candidate, blocked, duplicate/superseded or needs-human-decision;
-7. detect duplicate work across issues and pull requests;
-8. detect stale `codex:prompted`, `codex:invoked` or `codex:working` issues with no PR, branch, blocker or concrete activity;
-9. detect `output-without-PR` summaries and exclude them from active capacity;
+3. explicitly exclude `codex:ready`, `codex:candidate`, `output-without-PR`, merged/closed PRs, trusted-check-wait PRs and human-review-only waits from saturation;
+4. calculate effective free slots as `5 - real active Codex operational tasks`;
+5. classify every new or newly discovered issue in the same cycle as ready-plus-invoked, candidate, blocked, duplicate/superseded or needs-human-decision;
+6. detect duplicate work across issues and PRs;
+7. detect stale `codex:prompted`, `codex:invoked` or `codex:working` issues with no PR, branch, blocker or concrete activity;
+8. detect `output-without-PR` summaries and exclude them from active capacity;
+9. classify merge routing for open PRs where possible;
 10. stop or slow promotion when CI fails repeatedly because of recent Codex work;
-11. add `codex:blocked` where the automation must not continue;
+11. add `codex:blocked` where automation must not continue;
 12. apply stale-label cleanup whenever a PR, blocker, supersession or completed outcome means an issue is no longer eligible backlog;
-13. invoke or prepare invocation for safe tasks whenever real active capacity is below 5/5, eligible low-collision backlog exists and the materialization debt gate is not active;
-14. if materialization debt is greater than 5, pause ordinary promotion and choose only a materialization verification, recovery, split, blocker, stale-label cleanup or PR rebase/recovery/supersede action.
+13. invoke or prepare invocation for safe tasks whenever real active capacity is below 5/5, eligible low-collision backlog exists and materialization debt is not gated;
+14. if materialization debt is greater than 5, pause ordinary promotion and choose only materialization verification, recovery, split, blocker, stale-label cleanup or PR rebase/recovery/supersede action.
 
-Anti-idle rule: if materialization debt is 5 or fewer and real active operational capacity is below 5/5, the governor must not stop at a report when eligible backlog exists. It must, in order, invoke a ready non-colliding issue, promote and invoke a mature non-colliding candidate, create and invoke a concrete micro-issue from a verified maintenance need, or record a verifiable reason not to fill capacity. Valid reasons are absence of real eligible backlog, concrete file/module collision, legal/copy/methodological risk, CI instability, or a decision required from Giovanni before work on the same files/modules can proceed safely. Giovanni review/merge wait for non-colliding work must remain outside the queue and must not pause unrelated promotions. Prioritise typecheck/build/lint/test failures, small bugs and technical-debt tasks with low collision risk.
+Anti-idle rule: if materialization debt is 5 or fewer and real active operational capacity is below 5/5, the governor must not stop at a report when eligible backlog exists. In order, invoke a ready non-colliding issue, promote and invoke a mature non-colliding candidate, create and invoke a concrete micro-issue from a verified maintenance need, or record a verifiable reason not to fill capacity. Valid reasons are absence of real eligible backlog, concrete file/module collision, legal/copy/methodological risk, CI instability, or a decision required from Giovanni before same-file/module work can proceed safely.
 
 Collision-control minimum fields for every promotion, invocation, pause or block decision:
 
@@ -273,18 +315,16 @@ Collision-control minimum fields for every promotion, invocation, pause or block
 - evidence used and age;
 - matrix outcome and required action.
 
-This fourth automation is required for stable parallelism because the main risk is not prompt generation. The main risk is collision: multiple Codex tasks modifying the same files or creating overlapping pull requests.
-
 ## Technical fast lane
 
-The governor may fast-lane tightly scoped technical tasks when capacity is available and collision risk is low. Suitable fast-lane examples include:
+The governor may fast-lane tightly scoped technical tasks when capacity is available and collision risk is low. Suitable examples include:
 
 - typecheck, build, lint or test failures;
 - small regressions with clear reproduction steps;
 - limited technical-debt cleanups with no public civic-copy or methodology impact;
 - package configuration or automation fixes that do not modify generated files.
 
-Fast-lane tasks still require acceptance criteria, collision-control fields, dedicated branch, PR, validation notes, no auto-merge and no auto-close.
+Fast-lane tasks still require acceptance criteria, collision-control fields, dedicated branch, PR and validation notes. They must not auto-close issues. Merge routing follows the trusted policy: eligible routine PRs may auto-merge through the repository workflow; protected/manual PRs remain human-gated.
 
 ## Issue classes and default policy
 
@@ -293,9 +333,9 @@ Fast-lane tasks still require acceptance criteria, collision-control fields, ded
 | Technical bug/typecheck/build/lint/test | Suitable for fast lane when acceptance criteria are clear and collision risk is low. |
 | UI/accessibility/metadata | Suitable for Codex with screenshots or route checklist; assess public route and accessibility risk. |
 | Civic-methodological dashboard | Suitable only for v0, cautious copy, source notes and methodological caveats. |
-| Copy/legal tone | Suitable for limited edits; requires human review. |
-| Data/API/schema | Suitable only if source of truth and migration implications are clear. |
-| Backlog/governance | Prefer analysis and triage comment, not direct implementation. |
+| Copy/legal tone | Suitable for limited edits; normally route to explicit human review when judgement is material. |
+| Data/API/schema | Suitable only if source of truth and migration implications are clear; protected schema/migration paths remain manual. |
+| Backlog/governance | Prefer analysis and triage comment; implementation touching governance paths remains manual-review. |
 | Potentially accusatory content | Manual handling only. |
 
 ## Closure policy
@@ -324,10 +364,12 @@ Every prompt prepared for Codex must include:
 10. civic/legal/copy safeguards;
 11. mandatory branch name `codex/<issue-number>-<slug>`;
 12. mandatory PR requirement targeting `main`;
-13. PR fallback instruction if the PR cannot be opened;
-14. explicit stop condition requiring Codex to stop and report the exact blocker if it cannot open the PR or produce a reviewable branch/diff;
-15. `output-without-PR` recovery rule for summaries without PR, branch, blocker or recent execution evidence;
-16. confirmation that comment cleanup was completed or was unnecessary.
+13. expected merge routing when it can be predicted: trusted-auto-merge eligible, manual-review, or unknown until diff;
+14. explicit instruction not to force/bypass merge and to leave merge execution to repository policy;
+15. PR fallback instruction if the PR cannot be opened;
+16. explicit stop condition requiring Codex to report the exact blocker if it cannot open the PR or produce a reviewable branch/diff;
+17. `output-without-PR` recovery rule for summaries without PR, branch, blocker or recent execution evidence;
+18. confirmation that comment cleanup was completed or was unnecessary.
 
 ## Stop conditions
 
@@ -341,4 +383,5 @@ Codex or the automation must stop and ask for human decision when:
 - the same files are already touched by an open PR in a conflicting way;
 - the issue thread contains unresolved contradictory automation comments or multiple active prompts;
 - proceeding would exceed the capacity-5 real active operational queue or create medium/high collision risk without a human decision;
-- Codex cannot open the mandatory PR to `main` and cannot provide a visible branch, reviewable diff or explicit technical blocker.
+- Codex cannot open the mandatory PR to `main` and cannot provide a visible branch, reviewable diff or explicit technical blocker;
+- merge would require bypassing protected paths, explicit manual-review labels, conflicts, required checks or the `Protect main` ruleset.

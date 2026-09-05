@@ -2,6 +2,8 @@
 
 Use this template for the first automation in the sequence.
 
+Merge-routing reference: `docs/automation/trusted-auto-merge.md`.
+
 ````markdown
 You are preparing a Codex implementation prompt for `colazeta/Lamezia-Trasparente-Monitor`.
 
@@ -22,6 +24,7 @@ Repository context:
 - DB schema/migrations: `lib/db`.
 - Do not edit generated files manually.
 - Before posting any operational comment, apply the comment cleanup preflight defined in `docs/automation/codex-issue-ops.md`.
+- Merge routing is defined by `docs/automation/trusted-auto-merge.md`; routine eligible PRs may be auto-merged by the repository workflow, while protected/manual work remains human-gated.
 
 Queue model:
 - Maximum operational Codex capacity is 5 real active tasks.
@@ -46,10 +49,11 @@ Task:
 9. define validation commands;
 10. add civic/legal/copy safeguards where relevant;
 11. require a dedicated branch named `codex/{{ISSUE_NUMBER}}-<slug>` and a pull request targeting `main` as mandatory Codex output;
-12. include fallback instructions requiring Codex to stop and comment with the exact technical reason, branch/diff or blocker if a PR to `main` cannot be opened;
-13. include the `output-without-PR` rule so a summary without PR, branch, blocker or recent execution evidence is routed to follow-up and not counted as active;
-14. record the materialization debt count and whether the debt gate allows this prompt;
-15. produce a final `@codex` prompt ready to be posted as a GitHub comment only if the cleanup preflight and debt gate passed.
+12. classify expected merge routing: trusted-auto-merge eligible / manual-review / unknown until diff, without overriding the executable workflow;
+13. include fallback instructions requiring Codex to stop and comment with the exact technical reason, branch/diff or blocker if a PR to `main` cannot be opened;
+14. include the `output-without-PR` rule so a summary without PR, branch, blocker or recent execution evidence is routed to follow-up and not counted as active;
+15. record the materialization debt count and whether the debt gate allows this prompt;
+16. produce a final `@codex` prompt ready to be posted as a GitHub comment only if the cleanup preflight and debt gate passed.
 
 Safety rules:
 - If the issue is ambiguous, too broad, legally sensitive or potentially accusatory, do not produce an implementation prompt. Produce a blocker comment instead.
@@ -57,7 +61,7 @@ Safety rules:
 - If materialization debt is greater than 5, block ordinary work even when capacity appears free; choose a cleanup/recovery handoff instead.
 - If the thread contains unresolved contradictory automation comments, produce a follow-up/blocker comment instead of an implementation prompt.
 - Keep the resulting task narrow and reviewable.
-- Preserve the no-auto-merge and no-auto-close policy.
+- Preserve controlled merge routing: Codex must never bypass checks, rulesets or manual-review labels; routine eligible PRs may be auto-merged only by the repository's trusted workflow. Preserve the no-auto-close policy.
 
 Output format:
 
@@ -78,6 +82,7 @@ Output format:
 - Human review wait outside capacity:
 - Effective free slots:
 - Materialization debt count and gate result:
+- Expected merge routing: trusted-auto-merge eligible / manual-review / unknown until diff
 
 ### Decision
 Proceed / Block / Human review needed
@@ -91,6 +96,8 @@ Proceed / Block / Human review needed
 Work on GitHub issue #{{ISSUE_NUMBER}} in `colazeta/Lamezia-Trasparente-Monitor`.
 
 Create branch `codex/{{ISSUE_NUMBER}}-<slug>`, commit your changes there, and open a pull request targeting `main`. If you cannot open the pull request or produce a reviewable branch/diff, stop and comment on the issue with the exact technical reason and indicate the branch/diff or blocker. A summary without PR, branch, blocker or recent execution evidence is `output-without-PR` and does not count as active work.
+
+Do not force or bypass merge. After the PR is opened, the repository's trusted auto-merge workflow may merge it only if the branch/diff is eligible and all required checks pass; protected paths or explicit manual-review labels remain human-gated.
 ...
 ```
 ````
