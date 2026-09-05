@@ -145,7 +145,7 @@ const ACTION_RULES: readonly ActionRule[] = [
     action: "sal",
     phase: "execution",
     strength: "possible",
-    pattern: /\b(>:SAL|STATO\s+DI?\s*AVANZAMENTO(?:\s+LAVORI)?)\b/iu,
+    pattern: /\b(?:SAL|STATO\s+DI?\s*AVANZAMENTO(?:\s+LAVORI)?)\b/iu,
   },
   {
     id: "variation",
@@ -159,7 +159,7 @@ const ACTION_RULES: readonly ActionRule[] = [
     action: "extension",
     phase: "execution",
     strength: "possible",
-    pattern: /\b(>:PROROGA|RINNOVO)\b/iu,
+    pattern: /\b(?:PROROGA|RINNOVO)\b/iu,
   },
   {
     id: "liquidation",
@@ -195,11 +195,11 @@ const ACTION_RULES: readonly ActionRule[] = [
 const PROCUREMENT_CONTEXT_RULES = [
   {
     id: "public-contract",
-    pattern: /\b(>:APPALTO|CONCESSIONE|ACCORDO\s+QUADRO)\b/iu,
+    pattern: /\b(?:APPALTO|CONCESSIONE|ACCORDO\s+QUADRO)\b/iu,
   },
   {
     id: "economic-operator",
-    pattern: /\b(?:OPERATORE\s+ECONOMICO|DITTA|IMPRESA|SOCIET{AÀ])\b/iu,
+    pattern: /\b(?:OPERATORE\s+ECONOMICO|DITTA|IMPRESA|SOCIET[AÀ])\b/iu,
   },
   {
     id: "procured-object",
