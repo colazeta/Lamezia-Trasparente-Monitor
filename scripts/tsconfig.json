@@ -6,6 +6,12 @@
     "types": ["node"],
     "lib": ["es2022", "dom", "dom.iterable"]
   },
-  "include": ["src", "*.ts", "territorio/**/*.ts", "contracts/**/*.ts"],
+  "include": [
+    "src",
+    "*.ts",
+    "territorio/**/*.ts",
+    "contracts/**/*.ts",
+    "legalita/**/*.ts"
+  ],
   "exclude": ["**/*.test.ts"]
 }
