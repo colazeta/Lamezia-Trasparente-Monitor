@@ -4,7 +4,7 @@ Use this template for the second automation in the sequence.
 
 This template is goal-shaped even when the GitHub `@codex` surface does not support literal slash commands such as `/goal`. The contract below is intended to make Codex work as one coherent implementation run, with internal checkpoints, validation persistence and an explicit materialization or manual-recovery outcome.
 
-See also: `docs/automation/codex-goal-driven-manual-materialization.md`.
+See also: `docs/automation/codex-goal-driven-manual-materialization.md` and `docs/automation/trusted-auto-merge.md`.
 
 ## Pre-invocation materialization debt gate
 
@@ -87,6 +87,7 @@ Repository rules:
 - Preserve the civic, cautious and non-accusatory tone of the project.
 - Treat indicators as transparency and risk-screening signals, not as proof of wrongdoing.
 - Preserve methodological caveats, source limitations and legal notes.
+- Merge routing is controlled by `docs/automation/trusted-auto-merge.md`; do not bypass or force merge decisions.
 
 Civic and election safeguards:
 - For election, civic, public-administration or transparency work, do not introduce factual claims unless they are already present in authorised source data or explicitly required by the issue.
@@ -111,8 +112,12 @@ Branch and pull request requirements:
   - validation commands run and results;
   - screenshots or notes if UI changed;
   - residual limitations;
-  - whether copy/legal/methodological safeguards were affected.
-- Do not auto-merge the PR.
+  - whether copy/legal/methodological safeguards were affected;
+  - expected merge routing if it can be determined: trusted-auto-merge eligible / manual-review / unknown until repository classification.
+- Do not force, bypass or administratively merge the PR.
+- If the PR is eligible for `Trusted PR auto-merge`, leave merge execution to the repository workflow and required checks.
+- If the PR touches protected paths or carries `manual-review`, `automerge:off` or `needs-human-review`, leave it for manual review/merge.
+- `automerge:allow` may opt an otherwise non-allowlisted routine branch into eligibility, but never overrides protected paths, explicit manual labels, conflicts or required checks.
 - Do not close the issue directly.
 
 Fallback if PR creation fails:

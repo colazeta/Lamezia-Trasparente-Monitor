@@ -4,6 +4,8 @@ This file defines the intended label taxonomy for the controlled Codex issue wor
 
 The labels are not merely cosmetic, but they are still nominal routing hints. Automation must derive the operational state from labels plus verifiable evidence before counting slots or deciding promotion.
 
+See also: `docs/automation/trusted-auto-merge.md` for the canonical merge-routing policy.
+
 ## State labels
 
 | Label | Meaning | Queue effect | Who/what may add it |
@@ -13,11 +15,26 @@ The labels are not merely cosmetic, but they are still nominal routing hints. Au
 | `codex:prompted` | A Codex-ready prompt has been generated and posted. | Operational only while it has a current prompt and is awaiting invocation; if later evidence is only `output-without-PR`, route to follow-up and release capacity. | Automation 1. |
 | `codex:invoked` | Codex has been invoked. | Operational only with recent execution evidence, a visible branch, an open PR, a complete fallback, a sufficient manual-materialization handoff or an explicit blocker; a summary alone is `output-without-PR` and does not count. | Automation 2. |
 | `codex:working` | Codex work or an implementation PR is in progress. | Operational only while backed by a reviewable PR/branch, recent execution evidence or Codex-side rework; otherwise route to follow-up. | Automation 2 or review automation. |
-| `codex:review-needed` | A PR exists and requires human review/merge. | Human review wait; does not saturate Codex capacity unless there is concrete file/module collision or Codex-side rework. | Automation 3. |
+| `codex:review-needed` | A PR exists and specifically requires human review/merge. | Human review wait; does not saturate Codex capacity unless there is concrete file/module collision or Codex-side rework. Do not apply merely because every Codex PR used to be manual. | Automation 3. |
 | `codex:follow-up` | The issue needs additional work, clarification, stale-task recovery, manual materialization or a new issue. | Releases operational capacity unless re-promoted. | Automation 3 or human reviewer. |
-| `codex:done` | The issue appears resolved after review. | Not operational. | Automation 3 or human reviewer. |
+| `codex:done` | The issue appears resolved after review or verified merge evidence. | Not operational. | Automation 3 or human reviewer. |
 | `codex:blocked` | The automation must not continue. | Blocks automation and releases operational capacity. | Any safety check or human reviewer. |
 | `codex:dangerous` | Manual handling only because the issue is legally, reputationally or methodologically sensitive. | Blocks automation. | Human reviewer or queue-governor automation. |
+
+## Merge-routing labels
+
+These repository labels control merge routing independently from the Codex queue state:
+
+| Label | Meaning | Merge effect |
+| --- | --- | --- |
+| `automerge:allow` | Explicit opt-in for an otherwise non-allowlisted same-repository routine branch. | May make the PR eligible for trusted auto-merge, but never overrides protected paths, required checks, conflicts, draft status or manual-review labels. |
+| `automerge:off` | Explicit auto-merge opt-out. | Leaves merge manual and disables any previously armed auto-merge. |
+| `manual-review` | Explicit manual review/merge requirement. | Leaves merge manual and overrides `automerge:allow`. |
+| `needs-human-review` | Human judgement is required before merge. | Leaves merge manual and overrides `automerge:allow`. |
+
+The merge-routing labels above have been verified to exist in the repository. The executable matcher remains `.github/workflows/trusted-auto-merge.yml`; `docs/automation/trusted-auto-merge.md` explains the current policy.
+
+Do not confuse queue state with merge routing. A PR may be a valid completed Codex delivery without receiving `codex:review-needed` when it is eligible for trusted auto-merge. Conversely, a routine branch does not become auto-mergeable when it touches a protected path or carries an explicit manual label.
 
 ## Classification labels
 
@@ -51,7 +68,7 @@ Do not use `codex:ready`, `codex:prompted`, `codex:invoked` or `codex:working` t
 
 - **Candidate/triage states:** `codex:candidate`, `codex:ready`. These are nominal routing hints and never consume operational capacity by themselves.
 - **Operational states that can saturate capacity:** real active Codex work: `codex:prompted`, `codex:invoked`, `codex:working`, and open Codex PRs that still need Codex-side changes. A label alone is not enough: count only when a recent invocation, branch/task/commit, validation log, diff, open PR needing Codex-side changes, explicit blocker or in-progress Codex response exists. Summaries without PR, visible branch, explicit blocker, sufficient manual-materialization handoff or recent execution evidence are `output-without-PR` and are excluded from capacity.
-- **Human review wait:** `codex:review-needed` and PRs/issues waiting only for Giovanni review or merge; these are outside the capacity count unless there is concrete file/module collision or Codex-side rework.
+- **Human review wait:** `codex:review-needed` and PRs/issues that actually require Giovanni review or manual merge; these are outside the capacity count unless there is concrete file/module collision or Codex-side rework. Trusted auto-merge eligibility by itself is not a human-review wait state.
 - **Manual materialization recovery:** `manual-materialization-ready` and `manual-ui-recoverable` are human recovery states. They do not occupy a real active Codex slot when the handoff is sufficient, but they may remain materialization debt until Giovanni creates a verified PR/commit or supersedes the work.
 - **Follow-up/blocking states:** `codex:follow-up`, `codex:blocked`, `codex:dangerous`.
 - **Completion state:** `codex:done`, which must not be used to auto-close an issue.
@@ -68,7 +85,7 @@ Do not use `codex:ready`, `codex:prompted`, `codex:invoked` or `codex:working` t
   - likely files/modules;
   - collision risk: `low`, `medium` or `high`;
   - evidence used and age of the evidence.
-- Collision matrix: high risk means same generated files, API contract, DB schema/migrations, generated clients, runtime file/module, prompt/doc section or public copy/legal/methodological text; medium risk means same package/domain with distinct files and compatible criteria; low risk means unrelated files/modules or unrelated human-review PRs needing no Codex-side rework.
+- Collision matrix: high risk means same generated files, API contract, DB schema/migrations, generated clients, runtime file/module, prompt/doc section or public copy/legal/methodological text; medium risk means same package/domain with distinct files and compatible criteria; low risk means unrelated files/modules or unrelated manual-review PRs needing no Codex-side rework.
 - High collision blocks invocation unless a human explicitly accepts the risk. Medium collision requires a narrow prompt and explicit collision note. Low collision may proceed when other safeguards pass.
 - The queue governor must not treat `codex:review-needed` or Giovanni review/merge wait as saturation unless a concrete file/module collision exists or the PR needs Codex-side rework.
 - Pending Giovanni review/merge blocks only candidate work touching the same files/modules or creating a concrete review conflict; it must not stop unrelated queue promotion.
@@ -92,7 +109,7 @@ Do not use `codex:ready`, `codex:prompted`, `codex:invoked` or `codex:working` t
 - A Codex summary without an open PR targeting `main`, a visible branch with recent commits, an explicit technical blocker, sufficient manual-materialization-ready handoff or recent execution evidence is `output-without-PR`; it must move to `codex:follow-up` and must not count as a real active slot.
 - Triage `codex:prompted`, `codex:invoked` and `codex:working` issues without PR/branch/blocker by checking, in order: linked PR to `main`, visible `codex/<issue-number>-<slug>` branch with recent commits, explicit blocker, sufficient manual-materialization-ready handoff, recent commit/validation/diff evidence, and only then recovery as `output-without-PR`.
 - All implementation work must use a dedicated branch named `codex/<issue-number>-<slug>` and open a PR targeting `main`; every future invocation must include this PR requirement and the stop condition that Codex reports the exact blocker if it cannot open the PR, produce a reviewable branch/diff or produce a sufficient manual-materialization-ready handoff.
-- Codex must not auto-merge PRs and must not close issues directly.
+- Codex must not force, bypass or administratively merge PRs. Once a PR exists, merge routing follows `docs/automation/trusted-auto-merge.md`: eligible routine PRs may be auto-merged by the repository workflow after required checks; protected paths and explicit manual-review labels remain human-gated. Codex must not close issues directly.
 
 ## Recommended processing rule
 
