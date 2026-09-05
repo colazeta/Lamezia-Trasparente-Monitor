@@ -35,7 +35,7 @@
     "production-smoke-plan": "tsx ./production-smoke-plan.ts"
   },
   "dependencies": {
-    "@workspace/publication-standardisation": "workspace:*
+    "@workspace/publication-standardisation": "workspace:*"
   },
   "devDependencies": {
     "@types/node": "catalog:",
