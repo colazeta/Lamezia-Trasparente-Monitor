@@ -66,6 +66,7 @@ export type MultiSourceContractsDataset = Omit<
     alboOnlyContracts: number;
     anacOnlyContracts: number;
     anacAuthorityDiscoveredContracts: number;
+    anacAuthorityWithTenderAmount: number;
     authorityRequestedYears: number;
     authorityCompletedYears: number;
     authorityHistoricalBackfillComplete: boolean;
@@ -106,12 +107,15 @@ export function buildMultiSourceContractsDataset(
   const anacOnlyContracts = anacOnlyCigs.map((cig) =>
     buildAnacOnlyContract(authorityByCig.get(cig)!),
   );
+  const anacOnlyContractByCig = new Map(
+    anacOnlyContracts.map((contract) => [contract.cig!, contract] as const),
+  );
   const contracts = [...canonical.contracts, ...anacOnlyContracts].sort(
     compareContractsNewestFirst,
   );
   const anacOnlyStorylines = Object.fromEntries(
     anacOnlyCigs.map((cig) => {
-      const contract = anacOnlyContracts.find((candidate) => candidate.cig === cig)!;
+      const contract = anacOnlyContractByCig.get(cig)!;
       return [
         String(contract.id),
         buildAnacDiscoveryStoryline(contract, authorityByCig.get(cig)!),
@@ -149,6 +153,7 @@ export function buildMultiSourceContractsDataset(
   const limitations = uniqueStrings([
     "Il censimento integra il corpus canonico dell'Albo con una discovery ANAC indipendente per codice fiscale della stazione appaltante; un record ANAC-only e' mostrato come contratto/procedura individuata, non come fascicolo locale completo.",
     "Gli atti procurement dell'Albo senza CIG restano eventi irrisolti separati: non vengono eliminati e non vengono associati artificialmente a un CIG ANAC.",
+    "Per i record ANAC-only l'importo del lotto/base di gara resta un fatto della fonte ANAC e non viene trasformato nel campo amount del contratto, che richiede evidenza locale o di aggiudicazione compatibile.",
     historical.historicalBackfillComplete
       ? "La finestra storica ANAC richiesta risulta acquisita secondo il ledger dei periodi pubblicati e consultati; cio' non sostituisce le ulteriori fonti locali e di esecuzione."
       : "Il backfill storico ANAC e' ancora in corso: gli anni non completati sono dichiarati nel ledger e non vengono interpretati come anni senza contratti.",
@@ -189,6 +194,9 @@ export function buildMultiSourceContractsDataset(
       alboOnlyContracts: alboOnlyCigs.length,
       anacOnlyContracts: anacOnlyCigs.length,
       anacAuthorityDiscoveredContracts: authorityCigs.length,
+      anacAuthorityWithTenderAmount: authoritySnapshot.records.filter(
+        (record) => record.tenderAmount !== null,
+      ).length,
       authorityRequestedYears: historical.requestedYears,
       authorityCompletedYears: historical.completedYears,
       authorityHistoricalBackfillComplete: historical.historicalBackfillComplete,
@@ -224,7 +232,7 @@ function buildAnacOnlyContract(record: AnacBdncpRecord): Contract {
     title: truncate(description, 180),
     description,
     supplier: "Non disponibile nel dataset CIG ANAC",
-    amount: record.tenderAmount ?? 0,
+    amount: 0,
     procedureType: procedureType
       ? `ANAC: ${procedureType}`
       : "Non disponibile nel dataset CIG ANAC",
