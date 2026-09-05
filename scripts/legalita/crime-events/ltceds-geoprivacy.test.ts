@@ -5,7 +5,10 @@ import {
   DEFAULT_MINIMUM_RESIDENTIAL_PRIVACY_SET_SIZE,
   capGeocodePrecision,
   evaluateGeocodeCandidate,
+  neighbourhoodScopeKey,
+  localityScopeKey,
   projectPublicLocation,
+  streetScopeKey,
   validateInternalLocationPrecision,
   type LtcedsInternalLocation,
   type LtcedsPublicAnchor,
@@ -27,6 +30,9 @@ function location(
     geometry: exactPoint,
     place_name: "Synthetic address",
     neighbourhood: "Synthetic neighbourhood",
+    street_scope_key: streetScopeKey("Via Synthetic"),
+    neighbourhood_scope_key: neighbourhoodScopeKey("Synthetic neighbourhood"),
+    locality_scope_key: localityScopeKey("Lamezia Terme"),
     ...overrides,
   };
 }
@@ -41,9 +47,16 @@ function anchor(
       : kind === "neighbourhood_anchor"
         ? "neighbourhood"
         : "locality";
+  const scopeKey =
+    kind === "street_anchor"
+      ? streetScopeKey("Via Synthetic")
+      : kind === "neighbourhood_anchor"
+        ? neighbourhoodScopeKey("Synthetic neighbourhood")
+        : localityScopeKey("Lamezia Terme");
   return {
     anchor_id: `anchor-${kind}`,
     kind,
+    scope_key: scopeKey,
     geometry: {
       type: "Point",
       coordinates:
@@ -164,22 +177,32 @@ test("residential exact locations use a sufficiently large street privacy anchor
   assert.equal(decision.map_default, true);
 });
 
-test("street anchors below the privacy-set threshold fall back to neighbourhood", () => {
+test("an anchor from another street can never be selected", () => {
+  const decision = projectPublicLocation(location(), [
+    anchor("street_anchor", {
+      anchor_id: "wrong-street",
+      scope_key: streetScopeKey("Via Other"),
+      privacy_set_size: 99,
+    }),
+  ]);
+  assert.equal(decision.selected_anchor_id, null);
+  assert.equal(decision.public_location.geometry, null);
+  assert.match(decision.reasons.join(" "), /scope key/);
+});
+
+test("street anchors below the privacy-set threshold fall back to matching neighbourhood", () => {
   const decision = projectPublicLocation(location(), [
     anchor("street_anchor", { privacy_set_size: 7 }),
     anchor("neighbourhood_anchor"),
   ]);
-  assert.equal(
-    DEFAULT_MINIMUM_RESIDENTIAL_PRIVACY_SET_SIZE,
-    8,
-  );
+  assert.equal(DEFAULT_MINIMUM_RESIDENTIAL_PRIVACY_SET_SIZE, 8);
   assert.equal(decision.selected_anchor_id, "anchor-neighbourhood_anchor");
   assert.equal(decision.public_location.precision, "neighbourhood");
   assert.equal(decision.public_location.privacy_transform, "neighbourhood_centroid");
   assert.match(decision.reasons.join(" "), /below minimum 8/);
 });
 
-test("unknown publication risk skips street anchors", () => {
+test("unknown publication risk skips matching street anchors", () => {
   const decision = projectPublicLocation(
     location({ publication_risk: "unknown", sensitivity: "unknown" }),
     [anchor("street_anchor", { privacy_set_size: 99 }), anchor("neighbourhood_anchor")],
