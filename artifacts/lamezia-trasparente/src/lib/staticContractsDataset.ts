@@ -1,9 +1,16 @@
-import type { AnacBdncpSyncSnapshot } from "./anacBdncpSync";
 import {
-  buildCanonicalContractsDataset,
-  CANONICAL_CONTRACTS_SCHEMA_VERSION,
-  type CanonicalContractsDataset,
-} from "./canonicalContractsDataset";
+  createPendingAnacBdncpSnapshot,
+  type AnacBdncpSyncSnapshot,
+} from "./anacBdncpSync";
+import {
+  createPendingAnacAuthorityDiscoverySnapshot,
+  type AnacAuthorityDiscoverySnapshot,
+} from "./anacAuthorityDiscovery";
+import {
+  buildMultiSourceContractsDataset,
+  MULTI_SOURCE_CONTRACTS_SCHEMA_VERSION,
+  type MultiSourceContractsDataset,
+} from "./multiSourceContractsDataset";
 import { extractCigs, extractCups } from "./canonicalAlboTaxonomy";
 import {
   parseExplicitAmount,
@@ -13,22 +20,29 @@ import {
 export const STATIC_CONTRACTS_DATA_PATH =
   "data/processed/contracts/lamezia-contracts-current.json";
 
-export const STATIC_CONTRACTS_SCHEMA_VERSION = CANONICAL_CONTRACTS_SCHEMA_VERSION;
+export const STATIC_CONTRACTS_SCHEMA_VERSION = MULTI_SOURCE_CONTRACTS_SCHEMA_VERSION;
 
-export type StaticContractsDataset = CanonicalContractsDataset;
+export type StaticContractsDataset = MultiSourceContractsDataset;
 export type { AlboPublicSnapshot } from "./contractsSource";
 export { parseExplicitAmount } from "./contractsSource";
 
 /**
- * Compatibility entry point. The contracts dataset is now projected from the
- * canonical Albo corpus; callers that still import the historical builder are
- * deliberately routed through the same research-grade pipeline.
+ * Compatibility entry point. The public contracts dataset is a projection of
+ * the canonical Albo corpus reconciled with independent ANAC discovery by
+ * contracting-authority tax id. Callers keep one stable entry point while the
+ * source model remains explicit in the returned dataset.
  */
 export function buildStaticContractsDataset(
   snapshot: AlboPublicSnapshot,
-  anacSnapshot?: AnacBdncpSyncSnapshot,
+  anacSnapshot: AnacBdncpSyncSnapshot = createPendingAnacBdncpSnapshot(),
+  authoritySnapshot: AnacAuthorityDiscoverySnapshot =
+    createPendingAnacAuthorityDiscoverySnapshot(),
 ): StaticContractsDataset {
-  return buildCanonicalContractsDataset(snapshot, anacSnapshot);
+  return buildMultiSourceContractsDataset(
+    snapshot,
+    anacSnapshot,
+    authoritySnapshot,
+  );
 }
 
 /**
