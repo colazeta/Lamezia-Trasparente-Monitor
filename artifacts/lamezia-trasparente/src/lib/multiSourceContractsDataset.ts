@@ -264,6 +264,9 @@ function buildAnacDiscoveryStoryline(
   record: AnacBdncpRecord,
 ): ContractStoryline {
   const officialUrl = bdncpUrlForCig(record.cig);
+  if (!officialUrl) {
+    throw new Error(`Cannot build official BDNCP URL for ANAC CIG ${record.cig}`);
+  }
   const evidenceDate = contract.awardDate;
   const indicators: StorylineIndicators = {
     evidenceCount: 1,
