@@ -221,7 +221,10 @@ function deriveAdministrativeActions(text: string): AdministrativeAction[] {
   if (/\bSAL\b|STATO\s+(?:DI\s+)?AVANZAMENTO/iu.test(text)) actions.push("sal");
   if (/\bPROROG/iu.test(text)) actions.push("proroga");
   if (/\bVARIANT(?:E|I)\b|PERIZIA\s+DI\s+VARIANTE/iu.test(text)) actions.push("variante");
-  if (/\bCOLLAUD/iu.test(text)|CERTIFICATO\s+DI\s+REGOLARE\s+ESECUZIONE/iu.test(text)) {
+  if (
+    /\bCOLLAUD/iu.test(text) ||
+    /CERTIFICATO\s+DI\s+REGOLARE\s+ESECUZIONE/iu.test(text)
+  ) {
     actions.push("collaudo");
   }
   if (/\bCONTRATTO\b/iu.test(text)) actions.push("contratto");
