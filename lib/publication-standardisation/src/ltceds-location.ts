@@ -72,16 +72,25 @@ export type LtcedsInternalLocation = {
   place_name?: string | null;
   neighbourhood?: string | null;
   iccs_location_type?: string | null;
+  street_scope_key?: string | null;
+  neighbourhood_scope_key?: string | null;
+  locality_scope_key?: string | null;
 };
 
 export type LtcedsPublicAnchor = {
   anchor_id: string;
   kind: PublicAnchorKind;
+  scope_key: string;
   geometry: PointGeometry;
   precision: "street_segment" | "neighbourhood" | "locality";
   source: string;
   privacy_set_size?: number | null;
   generated_at: string;
+  scope_label?: string | null;
+  source_version?: string | null;
+  distinct_coordinate_count?: number | null;
+  spatial_span_m?: number | null;
+  member_set_sha256?: string | null;
 };
 
 export type GeocodeCandidateDecision = {
@@ -110,6 +119,38 @@ const PRECISION_RANK: Record<GeoPrecision, number> = {
   municipality: 4,
   unknown: 5,
 };
+
+export function normaliseLocationScopeLabel(value: string): string {
+  return value
+    .normalize("NFKD")
+    .replace(/\p{M}+/gu, "")
+    .toUpperCase()
+    .replace(/[’'`]/g, " ")
+    .replace(/[^A-Z0-9]+/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+export function locationScopeKey(
+  kind: "street" | "neighbourhood" | "locality",
+  label: string,
+): string {
+  const normalised = normaliseLocationScopeLabel(label);
+  if (!normalised) throw new Error(`${kind} scope label must not be empty`);
+  return `${kind}:${normalised}`;
+}
+
+export function streetScopeKey(label: string): string {
+  return locationScopeKey("street", label);
+}
+
+export function neighbourhoodScopeKey(label: string): string {
+  return locationScopeKey("neighbourhood", label);
+}
+
+export function localityScopeKey(label: string): string {
+  return locationScopeKey("locality", label);
+}
 
 function finitePoint(geometry: PointGeometry | null): geometry is PointGeometry {
   return Boolean(
@@ -230,8 +271,28 @@ function sortedAnchors(anchors: readonly LtcedsPublicAnchor[]): LtcedsPublicAnch
   return [...anchors].sort(
     (left, right) =>
       rank[left.kind] - rank[right.kind] ||
+      left.scope_key.localeCompare(right.scope_key) ||
       left.anchor_id.localeCompare(right.anchor_id),
   );
+}
+
+function scopeKeyForLocation(
+  location: LtcedsInternalLocation,
+  kind: PublicAnchorKind,
+): string | null {
+  if (kind === "street_anchor") return location.street_scope_key ?? null;
+  if (kind === "neighbourhood_anchor") {
+    return location.neighbourhood_scope_key ?? null;
+  }
+  return location.locality_scope_key ?? null;
+}
+
+export function anchorMatchesLocation(
+  location: LtcedsInternalLocation,
+  anchor: LtcedsPublicAnchor,
+): boolean {
+  const expectedScope = scopeKeyForLocation(location, anchor.kind);
+  return Boolean(expectedScope && anchor.scope_key === expectedScope);
 }
 
 function publicAnchorFor(
@@ -240,9 +301,15 @@ function publicAnchorFor(
   policy: PublicProjectionPolicy,
 ): { anchor: LtcedsPublicAnchor | null; reasons: string[] } {
   const reasons: string[] = [];
-  const candidates = sortedAnchors(anchors).filter((anchor) =>
-    coarserOrEqual(anchor, location.evidence_precision),
+  const candidates = sortedAnchors(anchors).filter(
+    (anchor) =>
+      coarserOrEqual(anchor, location.evidence_precision) &&
+      anchorMatchesLocation(location, anchor),
   );
+
+  if (candidates.length === 0 && anchors.length > 0) {
+    reasons.push("no public anchor matches the location scope key");
+  }
 
   const skipStreet =
     location.publication_risk === "unknown" ||
