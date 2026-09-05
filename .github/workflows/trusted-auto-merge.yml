@@ -137,39 +137,62 @@ jobs:
           approve_required_bot_runs() {
             local head_sha="$1"
             local attempt run_id run_name run_status run_conclusion
-            local seen_ci=0
-            local seen_static=0
-            local seen_hook=0
+            local ready_ci=0
+            local ready_static=0
+            local ready_hook=0
 
             for attempt in $(seq 1 20); do
+              ready_ci=0
+              ready_static=0
+              ready_hook=0
+
               while IFS=$'\t' read -r run_id run_name run_status run_conclusion; do
                 [ -n "$run_id" ] || continue
-
-                case "$run_name" in
-                  CI) seen_ci=1 ;;
-                  "v0 static fallback smoke") seen_static=1 ;;
-                  "hook guard") seen_hook=1 ;;
-                esac
 
                 if [ "$run_conclusion" = "action_required" ]; then
                   echo "Approving trusted bot-triggered workflow '$run_name' (run $run_id) for $head_sha."
                   if ! gh api --method POST "repos/$REPO/actions/runs/$run_id/approve" --silent; then
-                    echo "::warning::Could not approve workflow run $run_id ($run_name)."
+                    echo "::warning::Could not approve workflow run $run_id ($run_name); will retry."
+                    continue
                   fi
                 fi
+
+                case "$run_name" in
+                  CI) ready_ci=1 ;;
+                  "v0 static fallback smoke") ready_static=1 ;;
+                  "hook guard") ready_hook=1 ;;
+                esac
               done < <(
-                gh api "repos/$REPO/actions/runs?event=pull_request&per_page=100&head_sha=$head_sha" \
+                gh api -H "Cache-Control: no-cache" "repos/$REPO/actions/runs?event=pull_request&per_page=100&head_sha=$head_sha" \
                   --jq '.workflow_runs[] | select(.head_sha == "'"$head_sha"'") | select(.actor.login == "github-actions[bot]") | select(.triggering_actor.login == "github-actions[bot]") | select(.name == "CI" or .name == "v0 static fallback smoke" or .name == "hook guard") | [.id, .name, .status, (.conclusion // "")] | @tsv'
               )
 
-              if [ "$seen_ci" -eq 1 ] && [ "$seen_static" -eq 1 ] && [ "$seen_hook" -eq 1 ]; then
+              if [ "$ready_ci" -eq 1 ] && [ "$ready_static" -eq 1 ] && [ "$ready_hook" -eq 1 ]; then
                 return 0
               fi
 
               sleep 2
             done
 
-            echo "::warning::Did not observe all three required bot-triggered workflow runs for $head_sha within the approval window."
+            echo "::warning::Did not release all three required bot-triggered workflow runs for $head_sha within the approval window."
+            return 1
+          }
+
+          wait_for_ref_change() {
+            local branch="$1"
+            local old_sha="$2"
+            local attempt candidate
+
+            for attempt in $(seq 1 20); do
+              candidate="$(gh api -H "Cache-Control: no-cache" "repos/$REPO/git/ref/heads/$branch" --jq '.object.sha')"
+              if [ -n "$candidate" ] && [ "$candidate" != "$old_sha" ]; then
+                printf '%s\n' "$candidate"
+                return 0
+              fi
+              sleep 1
+            done
+
+            return 1
           }
 
           gh api --paginate "repos/$REPO/pulls?state=open&base=main&per_page=100" \
@@ -203,12 +226,20 @@ jobs:
                 continue
               fi
 
+              old_head_sha="$(gh api -H "Cache-Control: no-cache" "repos/$REPO/git/ref/heads/$branch" --jq '.object.sha')"
+
               if ! gh pr update-branch "$pr" --repo "$REPO"; then
                 echo "::warning::PR #$pr could not be updated from main; leaving it open for conflict resolution."
                 continue
               fi
 
-              head_sha="$(gh api "repos/$REPO/pulls/$pr" --jq '.head.sha')"
+              if ! head_sha="$(wait_for_ref_change "$branch" "$old_head_sha")"; then
+                echo "::warning::PR #$pr did not expose a new branch ref after update; leaving required checks untouched."
+                gh pr merge "$pr" --repo "$REPO" --auto --squash >/dev/null 2>&1 || true
+                continue
+              fi
+
+              echo "PR #$pr ($branch): head advanced from $old_head_sha to $head_sha."
 
               if gh pr merge "$pr" --repo "$REPO" --auto --squash; then
                 echo "PR #$pr ($branch): refreshed and auto-merge armed."
@@ -216,5 +247,5 @@ jobs:
                 echo "::warning::PR #$pr ($branch): could not arm auto-merge after refresh."
               fi
 
-              approve_required_bot_runs "$head_sha"
+              approve_required_bot_runs "$head_sha" || true
             done
