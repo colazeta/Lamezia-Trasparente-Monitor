@@ -169,6 +169,16 @@ const ATS_LAMEZIA: ProposalCompetentAuthority = {
     "https://comune.lamezia-terme.cz.it/it/news/lats-investe-oltre-255-mila-euro-sui-progetti-di-vita?type=2",
 };
 
+const REGION_CALABRIA_FNA: ProposalCompetentAuthority = {
+  id: "regione-calabria",
+  label: "Regione Calabria",
+  level: "regional",
+  sourceLabel:
+    "Regione Calabria — Decreto n. 11315 del 25/06/2026, trasferimento FNA agli ATS per disabili gravissimi",
+  sourceUrl:
+    "https://www.regione.calabria.it/provvedimenti-della-regione/page/392/",
+};
+
 const ASP_CATANZARO_PROJECT_OF_LIFE: ProposalCompetentAuthority = {
   id: "asp-catanzaro",
   label: "Azienda Sanitaria Provinciale di Catanzaro",
@@ -260,6 +270,13 @@ export const PROPOSAL_COMPETENCE_ASSESSMENTS: Readonly<
     ],
     note:
       "Le fonti istituzionali comunali documentano che l'ATS di Lamezia Terme, con il Comune capofila, programma e attua i Progetti di Vita; la Conferenza dei Sindaci approva la programmazione e l'ASP partecipa alla presa in carico multidisciplinare tramite protocollo. Il pacchetto civico comprende tuttavia anche trasparenza, co-progettazione e capacità amministrativa, quindi l'assessment resta prudenzialmente parziale.",
+  },
+  "fna-disabilita-gravissima-bando-futuro-nazionale-2026": {
+    status: "partially_verified",
+    primaryAuthority: ATS_LAMEZIA,
+    involvedAuthorities: [REGION_CALABRIA_FNA],
+    note:
+      "Il Decreto regionale n. 11315/2026 documenta il trasferimento delle risorse FNA agli Ambiti Territoriali Sociali per l'area disabili gravissimi, mentre le fonti istituzionali comunali identificano Lamezia Terme come Comune capofila dell'ATS. Questo sostiene l'ATS quale livello operativo della misura. L'assessment resta parziale perché lo scouting non ha verificato un atto locale specifico che documenti l'accredito indicato dalla fonte stampa, né una disciplina locale completa dei tempi di istruttoria, erogazione e pubblicità richiesti dalla proposta.",
   },
 };
 
