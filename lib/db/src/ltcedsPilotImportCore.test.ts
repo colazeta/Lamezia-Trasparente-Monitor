@@ -60,6 +60,10 @@ test("pilot provider and conservative location mappings are deterministic", () =
     providerFromSourceUrl("https://questure.poliziadistato.it/Catanzaro/articolo/example"),
     "Polizia di Stato — Questura di Catanzaro",
   );
+  assert.throws(
+    () => providerFromSourceUrl("https://example.invalid/source"),
+    /Unrecognised pilot institutional source host/,
+  );
   assert.equal(evidenceBasisForPrecision("street_segment"), "source_stated_street");
   assert.equal(evidenceBasisForPrecision("locality"), "source_stated_locality");
   assert.equal(
@@ -111,4 +115,15 @@ test("public projection operation classifier is idempotent", async () => {
   assert.equal(classifyPublicProjectionOperation(null, event.payloadSha256), "insert");
   assert.equal(classifyPublicProjectionOperation(event.payloadSha256, event.payloadSha256), "noop");
   assert.equal(classifyPublicProjectionOperation("0".repeat(64), event.payloadSha256), "update");
+});
+
+test("execute implementation contains no implicit delete path", async () => {
+  const source = await readFile(
+    path.join(path.dirname(fileURLToPath(import.meta.url)), "ltcedsPilotImport.ts"),
+    "utf8",
+  );
+  assert.doesNotMatch(source, /\.delete\s*\(/);
+  assert.doesNotMatch(source, /\btruncate\b/i);
+  assert.match(source, /\.transaction\s*\(/);
+  assert.match(source, /operation !== "noop"/);
 });
