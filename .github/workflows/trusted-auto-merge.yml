@@ -8,6 +8,7 @@ on:
     branches: [main]
 
 permissions:
+  actions: write
   contents: write
   pull-requests: write
 
@@ -90,6 +91,9 @@ jobs:
   refresh-open-trusted-prs:
     if: github.event_name == 'push'
     runs-on: ubuntu-latest
+    concurrency:
+      group: trusted-auto-merge-main-refresh
+      cancel-in-progress: false
     steps:
       - name: Refresh and arm open trusted PRs after main advances
         env:
@@ -130,6 +134,44 @@ jobs:
             esac
           }
 
+          approve_required_bot_runs() {
+            local head_sha="$1"
+            local attempt run_id run_name run_status run_conclusion
+            local seen_ci=0
+            local seen_static=0
+            local seen_hook=0
+
+            for attempt in $(seq 1 20); do
+              while IFS=$'\t' read -r run_id run_name run_status run_conclusion; do
+                [ -n "$run_id" ] || continue
+
+                case "$run_name" in
+                  CI) seen_ci=1 ;;
+                  "v0 static fallback smoke") seen_static=1 ;;
+                  "hook guard") seen_hook=1 ;;
+                esac
+
+                if [ "$run_conclusion" = "action_required" ]; then
+                  echo "Approving trusted bot-triggered workflow '$run_name' (run $run_id) for $head_sha."
+                  if ! gh api --method POST "repos/$REPO/actions/runs/$run_id/approve" --silent; then
+                    echo "::warning::Could not approve workflow run $run_id ($run_name)."
+                  fi
+                fi
+              done < <(
+                gh api "repos/$REPO/actions/runs?event=pull_request&per_page=100&head_sha=$head_sha" \
+                  --jq '.workflow_runs[] | select(.head_sha == "'"$head_sha"'") | select(.actor.login == "github-actions[bot]") | select(.triggering_actor.login == "github-actions[bot]") | select(.name == "CI" or .name == "v0 static fallback smoke" or .name == "hook guard") | [.id, .name, .status, (.conclusion // "")] | @tsv'
+              )
+
+              if [ "$seen_ci" -eq 1 ] && [ "$seen_static" -eq 1 ] && [ "$seen_hook" -eq 1 ]; then
+                return 0
+              fi
+
+              sleep 2
+            done
+
+            echo "::warning::Did not observe all three required bot-triggered workflow runs for $head_sha within the approval window."
+          }
+
           gh api --paginate "repos/$REPO/pulls?state=open&base=main&per_page=100" \
             --jq '.[] | select(.draft == false) | [.number, .head.ref, .head.repo.full_name] | @tsv' \
           | while IFS=$'\t' read -r pr branch head_repo; do
@@ -166,9 +208,13 @@ jobs:
                 continue
               fi
 
+              head_sha="$(gh api "repos/$REPO/pulls/$pr" --jq '.head.sha')"
+
               if gh pr merge "$pr" --repo "$REPO" --auto --squash; then
                 echo "PR #$pr ($branch): refreshed and auto-merge armed."
               else
                 echo "::warning::PR #$pr ($branch): could not arm auto-merge after refresh."
               fi
+
+              approve_required_bot_runs "$head_sha"
             done
