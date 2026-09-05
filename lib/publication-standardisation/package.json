@@ -8,6 +8,7 @@
     "./albo": "./src/albo.ts",
     "./albo-area-theme": "./src/albo-area-theme.ts",
     "./public-act": "./src/public-act.ts",
-    "./ltceds": "./src/ltceds.ts"
+    "./ltceds": "./src/ltceds.ts",
+    "./ltceds-location": "./src/ltceds-location.ts"
   }
 }
