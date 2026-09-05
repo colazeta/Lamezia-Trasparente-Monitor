@@ -1,0 +1,50 @@
+{
+  "event_id": "0192a300-0000-7001-8000-000000000001",
+  "schema_version": "1.0-draft.1",
+  "record_status": "published",
+  "event_form": "discrete",
+  "title": "Rissa e lesioni nelle adiacenze dell'esercizio pubblico Tutankamon",
+  "summary": "Evento documentato dalla Questura di Catanzaro sulla base dell'arresto in flagranza eseguito dai Carabinieri il 24 agosto 2024 nelle adiacenze dell'esercizio pubblico Tutankamon a Lamezia Terme.",
+  "temporal": {"start": "2024-08-24", "precision": "exact_date"},
+  "privacy_tier": "open",
+  "locations": [
+    {
+      "role": "occurrence",
+      "place_name": "Adiacenze dell'esercizio pubblico Tutankamon",
+      "municipality": "Lamezia Terme",
+      "precision": "exact_public_site",
+      "sensitivity": "public_place",
+      "privacy_transform": "none",
+      "geometry": null
+    }
+  ],
+  "offences": [
+    {
+      "offence_instance_id": "0192a300-0000-7002-8000-000000000001",
+      "iccs_code": "02",
+      "classification_basis": "behavioural_manual",
+      "attempt_status": "completed",
+      "situational_context": [],
+      "cyber_related": "no"
+    },
+    {
+      "offence_instance_id": "0192a300-0000-7002-8000-000000000002",
+      "iccs_code": "08",
+      "classification_basis": "behavioural_manual",
+      "attempt_status": "completed",
+      "situational_context": [],
+      "cyber_related": "no"
+    }
+  ],
+  "sources": [
+    {
+      "source_id": "0192a300-0000-7003-8000-000000000001",
+      "source_type": "law_enforcement_primary",
+      "url": "https://questure.poliziadistato.it/it/Catanzaro/articolo/32776710c3c387f1c581984707",
+      "published_at": "2024-10-17T00:00:00+02:00"
+    }
+  ],
+  "procedural_summary": "Arresto in flagranza e successivo provvedimento amministrativo di prevenzione; il record non attribuisce responsabilità definitiva.",
+  "quality": {"source_count": 1, "has_source_conflict": false, "classification_pending": true, "privacy_review": "passed"},
+  "updated_at": "2026-09-05T23:10:00Z"
+}
